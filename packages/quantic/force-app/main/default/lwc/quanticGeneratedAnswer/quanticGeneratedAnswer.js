@@ -4,6 +4,9 @@ import loading from '@salesforce/label/c.quantic_Loading';
 import thisAnswerWasHelpful from '@salesforce/label/c.quantic_ThisAnswerWasHelpful';
 import thisAnswerWasNotHelpful from '@salesforce/label/c.quantic_ThisAnswerWasNotHelpful';
 import tryAgain from '@salesforce/label/c.quantic_TryAgain';
+import hideGeneratedAnswer from '@salesforce/label/c.quantic_HideGeneratedAnswer';
+import showGeneratedAnswer from '@salesforce/label/c.quantic_ShowGeneratedAnswer';
+
 import {
   registerComponentForInit,
   initializeWithHeadless,
@@ -29,6 +32,8 @@ const FEEDBACK_LIKED_STATE = 'liked';
 const FEEDBACK_DISLIKED_STATE = 'disliked';
 const FEEDBACK_NEUTRAL_STATE = 'neutral';
 
+const GENERATED_ANSWER_VISIBLITY_KEY = 'generatedAnswerIsVisible';
+
 /**
  * The `QuanticGeneratedAnswer` component automatically generates an answer using Coveo machine learning models to answer the query executed by the user.
  * @category Internal
@@ -50,6 +55,8 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     thisAnswerWasHelpful,
     tryAgain,
     couldNotGenerateAnAnswer,
+    hideGeneratedAnswer,
+    showGeneratedAnswer,
   };
 
   /** @type {GeneratedAnswer} */
@@ -76,7 +83,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    */
   initialize = (engine) => {
     this.headless = getHeadlessBundle(this.engineId);
-    this.generatedAnswer = this.headless.buildGeneratedAnswer(engine);
+    this.generatedAnswer = this.buildHeadlessGeneratedAnswerController(engine);
     this.searchStatus = this.headless.buildSearchStatus(engine);
 
     this.unsubscribeGeneratedAnswer = this.generatedAnswer.subscribe(() =>
@@ -86,6 +93,20 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       this.updateSearchStatusState()
     );
   };
+
+  buildHeadlessGeneratedAnswerController(engine) {
+    const storedGeneratedAnswerVisibility = sessionStorage?.getItem(
+      GENERATED_ANSWER_VISIBLITY_KEY
+    );
+    if (['true', 'false'].includes(storedGeneratedAnswerVisibility)) {
+      return this.headless.buildGeneratedAnswer(engine, {
+        initialState: {
+          isVisible: storedGeneratedAnswerVisibility === 'true' ? true : false,
+        },
+      });
+    }
+    return this.headless.buildGeneratedAnswer(engine);
+  }
 
   disconnectedCallback() {
     this.unsubscribeGeneratedAnswer?.();
@@ -140,6 +161,16 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     this.generatedAnswer.retry();
   }
 
+  toggleGeneratedAnswer() {
+    if (this.isVisible) {
+      this.generatedAnswer.hide();
+      sessionStorage?.setItem(GENERATED_ANSWER_VISIBLITY_KEY, 'false');
+    } else {
+      this.generatedAnswer.show();
+      sessionStorage?.setItem(GENERATED_ANSWER_VISIBLITY_KEY, 'true');
+    }
+  }
+
   get answer() {
     return this?.state?.answer;
   }
@@ -160,6 +191,14 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     return this?.state?.isStreaming;
   }
 
+  get shouldDisplayFeedback() {
+    return this.isVisible && !this.isStreaming;
+  }
+
+  get isVisible() {
+    return this?.state?.isVisible;
+  }
+
   get shouldDisplayGeneratedAnswer() {
     return (
       !!this.answer ||
@@ -173,6 +212,12 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     return `generated-answer__content ${
       this.isStreaming ? 'generated-answer__content--streaming' : ''
     }`;
+  }
+
+  get toggleGeneratedAnswerLabel() {
+    return this.isVisible
+      ? this.labels.hideGeneratedAnswer
+      : this.labels.showGeneratedAnswer;
   }
 
   get hasRetryableError() {

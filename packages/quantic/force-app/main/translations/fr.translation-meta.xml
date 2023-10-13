@@ -700,4 +700,12 @@
     <label>Rechercher à la place {{0}}</label>
     <name>quantic_SearchInsteadFor</name>
   </customLabels>
+  <customLabels>
+    <label>Masquer la réponse générée</label>
+    <name>quantic_HideGeneratedAnswer</name>
+  </customLabels>
+  <customLabels>
+    <label>Afficher la réponse générée</label>
+    <name>quantic_ShowGeneratedAnswer</name>
+  </customLabels>
 </Translations>
