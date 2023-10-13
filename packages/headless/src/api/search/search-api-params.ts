@@ -2,6 +2,7 @@ import {history} from 'coveo.analytics';
 import {FacetOptions} from '../../features/facet-options/facet-options';
 import {AutomaticFacetRequest} from '../../features/facets/automatic-facet-set/interfaces/request';
 import {AnyFacetRequest} from '../../features/facets/generic/interfaces/generic-facet-request';
+import {GeneratedAnswerStyle} from '../../features/generated-answer/generated-response-format';
 import {URLPath} from '../../utils/url-utils';
 import {
   HTTPContentType,
@@ -9,7 +10,6 @@ import {
   PlatformClientCallOptions,
 } from '../platform-client';
 import {BaseParam} from '../platform-service-params';
-import {GeneratedAnswerStyle} from '../../features/generated-answer/generated-response-format';
 
 export interface QueryParam {
   q?: string;
