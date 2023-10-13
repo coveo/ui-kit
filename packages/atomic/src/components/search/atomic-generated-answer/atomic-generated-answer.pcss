@@ -64,11 +64,6 @@
   --index-height: 20px;
   --max-citation-width: 170px;
 
-  [part='citations-label'] {
-    /* Making sure the label height is the same as the citation for vertical centering. */
-    height: var(--height);
-  }
-
   .citations-container {
     [part='citation'] {
       max-width: var(--max-citation-width);
@@ -78,6 +73,77 @@
     .citation-index {
       height: var(--index-height);
       width: var(--index-height);
+    }
+  }
+}
+
+@define-mixin rephrase-with-text {
+  padding: 0 8px;
+  width: unset;
+
+  .rephrase-btn-label {
+    @apply block ml-2;
+  }
+
+  &:hover .rephrase-btn-label {
+    @apply text-primary;
+  }
+}
+
+[part='rephrase-button'] {
+  --height: 2.2em;
+  --icon-height: 1.1em;
+
+  height: var(--height);
+  width: var(--height);
+  position: relative;
+
+  .icon-container {
+    width: var(--icon-height);
+
+    atomic-icon {
+      height: var(--icon-height);
+      width: var(--icon-height);
+      margin: 0;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      -ms-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  &:hover {
+    @mixin icon-coloring var(--atomic-primary);
+
+    .icon-container {
+      @apply text-primary;
+    }
+  }
+
+  &.mobile {
+    @mixin rephrase-with-text;
+  }
+  @screen mobile-only {
+    @mixin rephrase-with-text;
+  }
+}
+
+.footer {
+  @apply flex;
+
+  .source-citations {
+    @apply mr-2;
+  }
+  .rephrase-buttons {
+    @apply ml-auto;
+  }
+
+  @screen mobile-only {
+    @apply flex-col gap-4;
+
+    .rephrase-buttons {
+      @apply ml-0;
     }
   }
 }

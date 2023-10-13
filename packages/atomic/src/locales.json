@@ -5778,5 +5778,26 @@
     "zh": "哎呀！在生成答案时出错了。",
     "zh-CN": "哎呀！在生成答案时出错了。",
     "zh-TW": "糟糕！在生成答案時出了些問題。"
+  },
+  "steps": {
+    "en": "Steps"
+  },
+  "steps-tooltip": {
+    "en": "Step-by-step instructions"
+  },
+  "bullets": {
+    "en": "Bullets"
+  },
+  "bullets-tooltip": {
+    "en": "Bullet-point summary"
+  },
+  "summary": {
+    "en": "Summary"
+  },
+  "rephrase": {
+    "en": "Rephrase"
+  },
+  "citations": {
+    "en": "Citations"
   }
 }
