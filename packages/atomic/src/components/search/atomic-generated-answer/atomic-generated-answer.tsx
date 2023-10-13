@@ -18,11 +18,17 @@ import {Heading} from '../../common/heading';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {FeedbackButton} from './feedback-button';
 import {RetryPrompt} from './retry-prompt';
-import {TypingLoader} from './typing-loader';
 import {SourceCitations} from './source-citations';
 import {GeneratedContentContainer} from './generated-content-container';
 import {LinkWithResultAnalytics} from '../../common/result-link/result-link';
 import {buildCustomEvent} from '../../../utils/event-utils';
+import {Switch} from '../../common/switch';
+import {
+  GeneratedAnswerData,
+  SafeStorage,
+  StorageItems,
+} from '../../../utils/local-storage-utils';
+import {TypingLoader} from './typing-loader';
 
 /**
  * @internal
@@ -37,7 +43,9 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   public generatedAnswer!: GeneratedAnswer;
   public searchStatus!: SearchStatus;
 
-  @BindStateToController('generatedAnswer')
+  @BindStateToController('generatedAnswer', {
+    onUpdateCallbackMethod: 'onGeneratedAnswerStateUpdate',
+  })
   @State()
   private generatedAnswerState!: GeneratedAnswerState;
 
@@ -54,9 +62,16 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   @Element() private host!: HTMLElement;
 
   private stopPropagation?: boolean;
+  private storage: SafeStorage = new SafeStorage();
+  private data?: GeneratedAnswerData;
 
   public initialize() {
-    this.generatedAnswer = buildGeneratedAnswer(this.bindings.engine);
+    this.data = this.readStoredData();
+    this.generatedAnswer = buildGeneratedAnswer(this.bindings.engine, {
+      initialState: {
+        isVisible: this.data.isVisible,
+      },
+    });
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.host.dispatchEvent(
       buildCustomEvent(
@@ -66,6 +81,27 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
         }
       )
     );
+  }
+
+  private onGeneratedAnswerStateUpdate = () => {
+    if (this.generatedAnswerState.isVisible !== this.data?.isVisible) {
+      this.data = {
+        ...this.data,
+        isVisible: this.generatedAnswerState.isVisible,
+      };
+      this.writeStoredData(this.data);
+    }
+  };
+
+  private readStoredData(): GeneratedAnswerData {
+    return this.storage.getParsedJSON<GeneratedAnswerData>(
+      StorageItems.GENERATED_ANSWER_DATA,
+      {isVisible: true}
+    );
+  }
+
+  private writeStoredData(data: GeneratedAnswerData) {
+    this.storage.setJSON(StorageItems.GENERATED_ANSWER_DATA, data);
   }
 
   private get hasRetryableError() {
@@ -81,6 +117,10 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       !(isLoading || answer !== undefined || citations.length) &&
       !this.hasRetryableError
     );
+  }
+
+  private get isAnswerVisible() {
+    return this.generatedAnswerState.isVisible;
   }
 
   private get loadingClasses() {
@@ -143,30 +183,44 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
             {this.bindings.i18n.t('generated-answer-title')}
           </Heading>
 
-          {!this.hasRetryableError && (
-            <div class="feedback-buttons flex gap-2 ml-auto">
-              <FeedbackButton
-                title={this.bindings.i18n.t('this-answer-was-helpful')}
-                variant="like"
-                active={this.generatedAnswerState.liked}
-                onClick={this.generatedAnswer.like}
-              />
-              <FeedbackButton
-                title={this.bindings.i18n.t('this-answer-was-not-helpful')}
-                variant="dislike"
-                active={this.generatedAnswerState.disliked}
-                onClick={this.generatedAnswer.dislike}
-              />
-            </div>
-          )}
+          <div class="flex gap-2 items-center ml-auto">
+            {!this.hasRetryableError && this.isAnswerVisible && (
+              <div class="feedback-buttons flex gap-2 ml-auto">
+                <FeedbackButton
+                  title={this.bindings.i18n.t('this-answer-was-helpful')}
+                  variant="like"
+                  active={this.generatedAnswerState.liked}
+                  onClick={this.generatedAnswer.like}
+                />
+                <FeedbackButton
+                  title={this.bindings.i18n.t('this-answer-was-not-helpful')}
+                  variant="dislike"
+                  active={this.generatedAnswerState.disliked}
+                  onClick={this.generatedAnswer.dislike}
+                />
+              </div>
+            )}
+
+            <Switch
+              checked={this.isAnswerVisible}
+              onToggle={(checked) => {
+                checked
+                  ? this.generatedAnswer.show()
+                  : this.generatedAnswer.hide();
+              }}
+              ariaLabel={this.bindings.i18n.t('generated-answer-title')}
+            ></Switch>
+          </div>
         </div>
-        {this.hasRetryableError ? (
+        {this.hasRetryableError && this.isAnswerVisible ? (
           <RetryPrompt
             onClick={this.generatedAnswer.retry}
             buttonLabel={this.bindings.i18n.t('retry')}
             message={this.bindings.i18n.t('retry-stream-message')}
           />
-        ) : (
+        ) : null}
+
+        {!this.hasRetryableError && this.isAnswerVisible ? (
           <GeneratedContentContainer
             answer={this.generatedAnswerState.answer}
             isStreaming={this.generatedAnswerState.isStreaming}
@@ -178,7 +232,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
               {this.renderCitations()}
             </SourceCitations>
           </GeneratedContentContainer>
-        )}
+        ) : null}
       </div>
     );
   }
