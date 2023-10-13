@@ -113,8 +113,10 @@
     }
   }
 
-  &:hover {
+  &:hover,
+  &.active {
     @mixin icon-coloring var(--atomic-primary);
+    @apply border-primary;
 
     .icon-container {
       @apply text-primary;
