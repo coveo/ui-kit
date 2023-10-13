@@ -18,7 +18,7 @@
     color: var(--atomic-on-background);
     mask-image: linear-gradient(black, black var(--gradient-start), transparent 100%);
 
-    transition: max-height cubic-bezier(0, 1, 0.22, 1) calc(var(--full-height-value) * 0.001s);
+    transition: max-height 2s cubic-bezier(0, 1, 0.16, 1) -1.82s;
   }
 
   button atomic-icon {
@@ -29,9 +29,9 @@
 :host(.expanded) {
   &::part(smart-snippet-collapse-wrapper) {
     height: auto;
-    max-height: calc(var(--full-height) + 200px);
+    max-height: 9999999px;
+    transition: max-height 2s cubic-bezier(1, 0, 1, 0) 0s;
     mask-image: none;
-    transition: max-height ease-in-out calc(var(--full-height-value) * 0.001s);
   }
 
   button atomic-icon {
