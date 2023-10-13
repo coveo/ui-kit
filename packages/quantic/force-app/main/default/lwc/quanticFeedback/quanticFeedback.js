@@ -17,7 +17,7 @@ export default class QuanticFeedback extends LightningElement {
     yes,
     no,
     wasThisUseful,
-    explainWhy
+    explainWhy,
   };
 
   /**

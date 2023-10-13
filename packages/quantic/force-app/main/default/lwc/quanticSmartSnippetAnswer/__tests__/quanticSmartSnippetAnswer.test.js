@@ -108,7 +108,6 @@ describe('c-quantic-smart-snippet-answer', () => {
   });
 
   describe('when invalid inline links are returned in the answer of the smart snippet', () => {
-
     it('should properly assign the disabled CSS class to the invalid inline link', async () => {
       const element = createTestComponent({
         ...defaultOptions,
@@ -116,7 +115,9 @@ describe('c-quantic-smart-snippet-answer', () => {
       });
       await flushPromises();
 
-      const answer = element.shadowRoot.querySelector('div .inline-link--disabled');
+      const answer = element.shadowRoot.querySelector(
+        'div .inline-link--disabled'
+      );
 
       expect(answer).not.toBeNull();
     });
