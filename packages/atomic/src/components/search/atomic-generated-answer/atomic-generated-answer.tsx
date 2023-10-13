@@ -184,7 +184,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
             {this.bindings.i18n.t('generated-answer-title')}
           </Heading>
 
-          <div class="flex gap-2 items-center ml-auto">
+          <div class="flex gap-2 h-9 items-center ml-auto">
             {!this.hasRetryableError && this.isAnswerVisible && (
               <div class="feedback-buttons flex gap-2 ml-auto">
                 <FeedbackButton

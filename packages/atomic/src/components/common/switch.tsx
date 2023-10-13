@@ -20,19 +20,19 @@ export const Switch: FunctionalComponent<SwitchProps> = (props) => {
   };
 
   const containerClasses = [
-    'w-16',
-    'h-8',
-    props.checked ? 'p-1.5' : 'p-2',
+    'w-12',
+    'h-6',
+    'p-1',
     'rounded-full',
     props.checked ? 'bg-primary' : 'bg-neutral',
   ].join(' ');
 
   const handleClasses = [
-    props.checked ? 'w-5' : 'w-4',
-    props.checked ? 'h-5' : 'h-4',
+    'w-4',
+    'h-4',
     'rounded-full',
     'bg-background',
-    props.checked ? 'ml-8' : '',
+    props.checked ? 'ml-6' : '',
   ].join(' ');
 
   return (
