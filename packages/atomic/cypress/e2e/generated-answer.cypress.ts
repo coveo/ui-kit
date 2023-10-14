@@ -9,6 +9,12 @@ import {
 import * as GeneratedAnswerAssertions from './generated-answer-assertions';
 import {GeneratedAnswerSelectors} from './generated-answer-selectors';
 
+const rephraseOptions = [
+  {label: 'Bullet', value: 'bullet'},
+  {label: 'Steps', value: 'step'},
+  {label: 'Summary', value: 'concise'},
+];
+
 describe('Generated Answer Test Suites', () => {
   describe('Generated Answer', () => {
     function setupGeneratedAnswer(streamId?: string) {
@@ -61,6 +67,31 @@ describe('Generated Answer Test Suites', () => {
           GeneratedAnswerSelectors.likeButton().should('exist');
           GeneratedAnswerSelectors.dislikeButton().should('exist');
         });
+
+        it('should display rephrase options', () => {
+          rephraseOptions.forEach((option) =>
+            GeneratedAnswerSelectors.rephraseButton(option.label).should(
+              'exist'
+            )
+          );
+        });
+
+        describe('when a rephrase option is selected', () => {
+          rephraseOptions.forEach((option) => {
+            it(`should rephrase in "${option}" format`, () => {
+              GeneratedAnswerSelectors.rephraseButton(option.label).click();
+
+              cy.wait(TestFixture.interceptAliases.Search).should(
+                (firstSearch) => {
+                  expect(
+                    firstSearch.request.body.pipelineRuleParameters.genqa
+                      .responseFormat
+                  ).to.have.property('answerStyle', option.value);
+                }
+              );
+            });
+          });
+        });
       });
 
       describe('when a citation event is received', () => {
@@ -90,7 +121,7 @@ describe('Generated Answer Test Suites', () => {
         it('should display the citation link', () => {
           GeneratedAnswerSelectors.citationsLabel().should(
             'have.text',
-            'Learn more'
+            'Citations'
           );
           GeneratedAnswerSelectors.citationTitle().should(
             'have.text',
