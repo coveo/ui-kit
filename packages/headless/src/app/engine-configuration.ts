@@ -150,6 +150,12 @@ export interface AnalyticsConfiguration {
    * Specifies the URL of the current page or component.
    */
   documentLocation?: string;
+  /**
+   * TBD
+   * @internal
+   */
+  trackingId?: string;
+  analyticsMode?: 'legacy' | 'next' | 'duplex';
 }
 
 export type AnalyticsRuntimeEnvironment = IRuntimeEnvironment;
@@ -181,6 +187,10 @@ export const engineConfigurationDefinitions: SchemaDefinition<EngineConfiguratio
           required: false,
         }),
         originLevel3: new StringValue({
+          required: false,
+        }),
+        analyticsMode: new StringValue<'legacy' | 'next' | 'duplex'>({
+          constrainTo: ['legacy', 'next', 'duplex'],
           required: false,
         }),
       },
