@@ -41,10 +41,13 @@ describe('configuration slice', () => {
       originLevel2: '2',
       originLevel3: '3',
       legacyApiBaseUrl: `${url}/rest/ua`,
+      apiBaseUrl: `${url}/rest/organizations/myorg/events/v1`,
       anonymous: false,
       deviceId: 'Chrome',
       userDisplayName: 'Someone',
       documentLocation: 'http://hello.world.com',
+      trackingId: 'someTrackingId',
+      analyticsMode: 'legacy',
     },
   };
 
@@ -146,11 +149,14 @@ describe('configuration slice', () => {
           originContext: 'fizz',
           originLevel2: 'bar',
           originLevel3: 'buzz',
+          apiBaseUrl: 'http://test.com/new-analytics',
           legacyApiBaseUrl: 'http://test.com/analytics',
           anonymous: true,
           deviceId: 'fuzz',
           userDisplayName: 'displayName',
           documentLocation: 'http://somewhere.com',
+          trackingId: 'someTrackingId',
+          analyticsMode: 'legacy',
         },
       };
       expect(
@@ -161,11 +167,13 @@ describe('configuration slice', () => {
             originContext: 'fizz',
             originLevel2: 'bar',
             originLevel3: 'buzz',
+            apiBaseUrl: 'http://test.com/new-analytics',
             legacyApiBaseUrl: 'http://test.com/analytics',
             anonymous: true,
             deviceId: 'fuzz',
             userDisplayName: 'displayName',
             documentLocation: 'http://somewhere.com',
+            trackingId: 'someTrackingId',
           })
         )
       ).toEqual(expectedState);
@@ -179,11 +187,14 @@ describe('configuration slice', () => {
           originContext: 'fizz',
           originLevel2: 'bar',
           originLevel3: 'buzz',
+          apiBaseUrl: 'http://test.com/new-analytics',
           legacyApiBaseUrl: 'http://test.com/analytics',
           anonymous: true,
           deviceId: 'fuzz',
           userDisplayName: 'displayName',
           documentLocation: 'http://somewhere.com',
+          trackingId: 'someTrackingId',
+          analyticsMode: 'legacy',
         },
       };
 
@@ -195,11 +206,13 @@ describe('configuration slice', () => {
             originContext: 'fizz',
             originLevel2: 'bar',
             originLevel3: 'buzz',
+            apiBaseUrl: 'http://test.com/new-analytics',
             legacyApiBaseUrl: 'http://test.com/analytics',
             anonymous: true,
             deviceId: 'fuzz',
             userDisplayName: 'displayName',
             documentLocation: 'http://somewhere.com',
+            trackingId: 'someTrackingId',
           })
         )
       ).toEqual(expectedState);

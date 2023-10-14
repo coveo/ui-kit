@@ -57,11 +57,19 @@ export interface AnalyticsState {
    * Specifies if analytics tracking should be enabled. By default analytics events are tracked.
    */
   enabled: boolean;
+
+  /**
+   * @internal
+   * The Analytics API base URL to use.
+   * By default, will append /rest/organizations/${organizationId}/events/v1 to the platformUrl value.
+   */
+  legacyApiBaseUrl: string;
+
   /**
    * The Analytics API base URL to use.
    * By default, will append /rest/ua to the platformUrl value.
    */
-  legacyApiBaseUrl: string;
+  apiBaseUrl: string;
 
   /**
    * Sets the Origin Context dimension on the analytic events.
@@ -114,6 +122,12 @@ export interface AnalyticsState {
    * Specifies the URL of the current page or component.
    */
   documentLocation: string;
+  /**
+   * TBD trackingId
+   */
+  trackingId: string;
+
+  analyticsMode: 'legacy' | 'next' | 'duplex';
 }
 
 export const searchAPIEndpoint = '/rest/search/v2';
@@ -132,6 +146,7 @@ export const getConfigurationInitialState: () => ConfigurationState = () => ({
   analytics: {
     enabled: true,
     legacyApiBaseUrl: `${analyticsUrl()}${analyticsAPIEndpoint}`,
+    apiBaseUrl: '',
     originContext: 'Search',
     originLevel2: 'default',
     originLevel3: 'default',
@@ -139,5 +154,7 @@ export const getConfigurationInitialState: () => ConfigurationState = () => ({
     deviceId: '',
     userDisplayName: '',
     documentLocation: '',
+    trackingId: '',
+    analyticsMode: 'legacy',
   },
 });

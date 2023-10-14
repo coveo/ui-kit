@@ -20,6 +20,7 @@ import {
   wrapAnalyticsClientSendEventHook,
   wrapPreprocessRequest,
 } from './coveo-analytics-utils';
+import {createRelay} from '@coveo/relay';
 
 export type StateNeededBySearchAnalyticsProvider = ConfigurationSection &
   Partial<Omit<SearchAppState, 'configuration'>>;
@@ -128,6 +129,19 @@ interface LegacyConfigureAnalyticsOptions {
   provider?: SearchPageClientProvider;
   getState(): StateNeededBySearchAnalyticsProvider;
 }
+
+export const configureAnalytics = (
+  state: StateNeededBySearchAnalyticsProvider
+) => {
+  const token = state.configuration.accessToken;
+  const trackingId = state.configuration.analytics.trackingId;
+  const {emit} = createRelay({
+    url: state.configuration.analytics.apiBaseUrl,
+    token,
+    trackingId,
+  });
+  return emit;
+};
 
 export const configureLegacyAnalytics = ({
   logger,
