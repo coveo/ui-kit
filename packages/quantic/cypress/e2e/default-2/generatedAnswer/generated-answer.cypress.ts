@@ -55,6 +55,10 @@ describe('quantic-generated-answer', () => {
         Expect.logStreamIdInAnalytics(streamId);
       });
 
+      it('should display the generated answer content', () => {
+        Expect.displayGeneratedAnswerContent(true);
+      });
+
       it('should display the correct message', () => {
         Expect.displayGeneratedAnswerCard(true);
         Expect.generatedAnswerContains(testText);
@@ -81,6 +85,29 @@ describe('quantic-generated-answer', () => {
           Expect.dislikeButtonIsChecked(true);
         });
       });
+
+      it('should display the toggle generated answer button', () => {
+        Expect.displayToggleGeneratedAnswerButton(true);
+        Expect.toggleGeneratedAnswerButtonIsChecked(true);
+
+        scope('when toggeling off the generated answer', () => {
+          Actions.clickToggleGeneratedAnswerButton();
+          Expect.toggleGeneratedAnswerButtonIsChecked(false);
+          Expect.displayGeneratedAnswerContent(false);
+          Expect.displayLikeButton(false);
+          Expect.displayDislikeButton(false);
+          Expect.logHideGeneratedAnswer(streamId);
+        });
+
+        scope('when toggeling on the generated answer', () => {
+          Actions.clickToggleGeneratedAnswerButton();
+          Expect.toggleGeneratedAnswerButtonIsChecked(true);
+          Expect.displayGeneratedAnswerContent(true);
+          Expect.displayLikeButton(true);
+          Expect.displayDislikeButton(true);
+          Expect.logShowGeneratedAnswer(streamId);
+        });
+      });
     });
 
     describe('when the generated answer is still streaming', () => {
@@ -104,6 +131,10 @@ describe('quantic-generated-answer', () => {
         Expect.displayGeneratedAnswerCard(true);
         Expect.generatedAnswerContains(testText);
         Expect.generatedAnswerIsStreaming(true);
+        Expect.displayLikeButton(false);
+        Expect.displayDislikeButton(false);
+        Expect.displayToggleGeneratedAnswerButton(true);
+        Expect.toggleGeneratedAnswerButtonIsChecked(true);
       });
     });
 

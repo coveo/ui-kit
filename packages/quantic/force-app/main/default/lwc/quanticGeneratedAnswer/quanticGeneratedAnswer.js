@@ -208,9 +208,9 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     );
   }
 
-  get generatedContentClass() {
-    return `generated-answer__content ${
-      this.isStreaming ? 'generated-answer__content--streaming' : ''
+  get generatedAnswerClass() {
+    return `generated-answer__answer ${
+      this.isStreaming ? 'generated-answer__answer--streaming' : ''
     }`;
   }
 
