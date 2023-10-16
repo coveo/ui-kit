@@ -172,7 +172,26 @@ describe('Color Facet Test Suites', () => {
           });
 
           describe('verify analytics', () => {
-            ColorFacetAssertions.assertLogColorFacetSelect(colorFacetField, 0);
+            it('should log the facet select results to UA ', () => {
+              cy.expectSearchEvent('facetSelect').then((analyticsBody) => {
+                expect(analyticsBody.customData).to.have.property(
+                  'facetField',
+                  colorFacetField
+                );
+                expect(analyticsBody.facetState[0]).to.have.property(
+                  'state',
+                  'selected'
+                );
+                expect(analyticsBody.facetState[0]).to.have.property(
+                  'field',
+                  colorFacetField
+                );
+                expect(analyticsBody.customData).to.have.property(
+                  'facetValue',
+                  query
+                );
+              });
+            });
           });
         });
       });
