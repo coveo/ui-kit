@@ -6,11 +6,7 @@ import { version } from "./version";
 import { createMeta, Meta } from "./event/meta/meta";
 import { createListenerManager, EventCallback } from "./listener/listener";
 import { createConfigManager, RelayConfig } from "./config/config";
-import {
-  validate,
-  ValidationError,
-  ValidationResponse,
-} from "./validate/validate";
+import { ValidationError, ValidationResponse } from "./validate/validate";
 import { buildNullEnvironment } from "./environment/null/null";
 
 type RelayPayload = Record<string, unknown>;
@@ -31,40 +27,40 @@ interface Relay {
 
 export function createRelay(initialConfig: RelayConfig): Relay {
   const configManager = createConfigManager(initialConfig);
+  const listenerManager = createListenerManager();
+
   const getEnvironment = () =>
     configManager.get().mode == "disabled"
       ? buildNullEnvironment()
       : currentEnvironment();
   const clientIdManager = createClientIdManager(getEnvironment());
 
-  const { add, call, remove } = createListenerManager();
-
   return {
     emit: (type: string, payload: RelayPayload) => {
+      const config = configManager.get();
+      const environment = getEnvironment();
+
       const event = createRelayEvent(
         type,
         payload,
-        configManager.get(),
-        getEnvironment(),
+        config,
+        environment,
         clientIdManager
       );
 
-      call(event);
-
-      const params = {
-        config: configManager.get(),
-        environment: getEnvironment(),
+      return emit({
+        config,
+        environment,
         event,
-      };
-
-      return configManager.get().mode === "validate"
-        ? validate(params)
-        : emit(params);
+        listenerManager,
+      });
     },
     getMeta: (type: string) =>
       createMeta(type, configManager.get(), getEnvironment(), clientIdManager),
-    on: (type: string, callback: EventCallback) => add({ type, callback }),
-    off: (type: string, callback?: EventCallback) => remove(type, callback),
+    on: (type: string, callback: EventCallback) =>
+      listenerManager.add({ type, callback }),
+    off: (type: string, callback?: EventCallback) =>
+      listenerManager.remove(type, callback),
     updateConfig: (config: Partial<RelayConfig>) =>
       configManager.update(config),
     version,

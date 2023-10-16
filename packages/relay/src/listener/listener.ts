@@ -9,7 +9,7 @@ interface Listener {
   callback: EventCallback;
 }
 
-interface ListenerManager {
+export interface ListenerManager {
   add: (listener: Listener) => () => void;
   call: (event: RelayEvent) => void;
   remove: (type: string, callback?: EventCallback) => void;
