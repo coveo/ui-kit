@@ -8,6 +8,7 @@ import {
   openGeneratedAnswerFeedbackModal,
   closeGeneratedAnswerFeedbackModal,
   setIsVisible,
+  copyGeneratedAnswer,
 } from '../../features/generated-answer/generated-answer-actions';
 import {
   GeneratedAnswerFeedback,
@@ -19,6 +20,7 @@ import {
   logRetryGeneratedAnswer,
   logGeneratedAnswerShowAnswers,
   logGeneratedAnswerHideAnswers,
+  logCopyGeneratedAnswer,
 } from '../../features/generated-answer/generated-answer-analytics-actions';
 import {generatedAnswerReducer as generatedAnswer} from '../../features/generated-answer/generated-answer-slice';
 import {GeneratedAnswerState} from '../../features/generated-answer/generated-answer-state';
@@ -80,6 +82,10 @@ export interface GeneratedAnswer extends Controller {
    * Hides the generated answer.
    */
   hide(): void;
+  /**
+   * Copy the generated answer to the clipboard.
+   */
+  copyToClipboard(): void;
 }
 
 export interface GeneratedAnswerProps {
@@ -203,6 +209,10 @@ export function buildGeneratedAnswer(
         dispatch(setIsVisible(false));
         dispatch(logGeneratedAnswerHideAnswers());
       }
+    },
+    copyToClipboard() {
+      dispatch(copyGeneratedAnswer());
+      dispatch(logCopyGeneratedAnswer());
     },
   };
 }

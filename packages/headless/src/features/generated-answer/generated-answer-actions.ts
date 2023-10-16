@@ -198,3 +198,16 @@ export const streamAnswer = createAsyncThunk<
     dispatch(setIsLoading(false));
   }
 });
+
+export const copyGeneratedAnswer = createAsyncThunk<
+  void,
+  void,
+  AsyncThunkGeneratedAnswerOptions<StateNeededByGeneratedAnswerStream>
+>('generatedAnswer/copy', async (_, {getState, rejectWithValue}) => {
+  const state = getState();
+  try {
+    await navigator.clipboard.writeText(state.generatedAnswer.answer!);
+  } catch (error) {
+    rejectWithValue(error);
+  }
+});

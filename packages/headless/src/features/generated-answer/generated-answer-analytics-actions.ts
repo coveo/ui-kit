@@ -164,3 +164,19 @@ export const logGeneratedAnswerHideAnswers = (): CustomAction =>
       });
     }
   );
+
+export const logCopyGeneratedAnswer = (): CustomAction =>
+  makeAnalyticsAction(
+    'analytics/generatedAnswer/copy',
+    AnalyticsType.Custom,
+    (client, state) => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      if (!generativeQuestionAnsweringId) {
+        return null;
+      }
+      return client.makeGeneratedAnswerCopyToClipboard({
+        generativeQuestionAnsweringId,
+      });
+    }
+  );
