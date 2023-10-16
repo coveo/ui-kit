@@ -27,6 +27,7 @@ import {buildStreamingRequest} from './generated-answer-request';
 import {
   GeneratedAnswerStyle,
   GeneratedResponseFormat,
+  generatedAnswerStyle,
 } from './generated-response-format';
 
 type StateNeededByGeneratedAnswerStream = ConfigurationSection &
@@ -115,7 +116,7 @@ export const updateResponseFormat = createAction(
     validatePayload(payload, {
       answerStyle: new StringValue<GeneratedAnswerStyle>({
         required: true,
-        constrainTo: ['default', 'bullet', 'step', 'concise'],
+        constrainTo: generatedAnswerStyle,
       }),
     })
 );
