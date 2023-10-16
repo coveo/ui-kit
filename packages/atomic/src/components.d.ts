@@ -474,7 +474,7 @@ export namespace Components {
     }
     interface AtomicGeneratedAnswer {
         /**
-          * The desired answer style to apply when the component first loads.
+          * The answer style to apply when the component first loads. Options:   - `default`: Generates the answer without additional formatting instructions.   - `bullet`: Requests the answer to be generated in bullet-points.   - `step`: Requests the answer to be generated in step-by-step instructions.   - `concise`: Requests the answer to be generated as concisely as possible.
          */
         "answerStyle": GeneratedAnswerStyle;
     }
@@ -4350,7 +4350,7 @@ declare namespace LocalJSX {
     }
     interface AtomicGeneratedAnswer {
         /**
-          * The desired answer style to apply when the component first loads.
+          * The answer style to apply when the component first loads. Options:   - `default`: Generates the answer without additional formatting instructions.   - `bullet`: Requests the answer to be generated in bullet-points.   - `step`: Requests the answer to be generated in step-by-step instructions.   - `concise`: Requests the answer to be generated as concisely as possible.
          */
         "answerStyle"?: GeneratedAnswerStyle;
     }
