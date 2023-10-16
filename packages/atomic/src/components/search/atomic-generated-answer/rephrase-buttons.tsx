@@ -57,9 +57,7 @@ export const RephraseButtons: FunctionalComponent<RephraseButtonProps> = (
               title={i18n.t(option.tooltipKey)}
               part="rephrase-button"
               style="outline-primary"
-              class={`feedback-button flex items-center rounded-md ${
-                isActive ? 'active' : ''
-              }`}
+              class={`flex items-center rounded-md ${isActive ? 'active' : ''}`}
               onClick={() => {
                 props.onChange(isActive ? 'default' : option.value);
               }}
