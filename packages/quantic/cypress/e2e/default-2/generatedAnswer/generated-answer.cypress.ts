@@ -107,7 +107,7 @@ describe('quantic-generated-answer', () => {
           );
         });
 
-        scope('when toggeling on the generated answer', () => {
+        scope('when toggling on the generated answer', () => {
           Actions.clickToggleGeneratedAnswerButton();
           Expect.toggleGeneratedAnswerButtonIsChecked(true);
           Expect.displayGeneratedAnswerContent(true);
