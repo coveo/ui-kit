@@ -31,7 +31,6 @@ Optionally install the [VSCode Salesforce Extension Pack](https://marketplace.vi
 ### Enable Dev Hub in Your Salesforce Organization
 
 - Connect to your salesforce developer organization [login](http://login.salesforce.com/)
-- Switch to Salesforces Classic.
 - From Setup, enter Dev Hub in the Quick Find box and select Dev Hub.
 - To enable Dev Hub, click Enable
 
