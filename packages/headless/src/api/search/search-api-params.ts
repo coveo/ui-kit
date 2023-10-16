@@ -135,13 +135,19 @@ export interface AutomaticFacetsParams {
 }
 
 export interface PipelineRuleParams {
-  pipelineRuleParameters?: {
-    genqa?: {
-      responseFormat: {
-        answerStyle: GeneratedAnswerStyle;
-      };
-    };
-  };
+  pipelineRuleParameters?: PipelineRuleParameters;
+}
+
+export interface PipelineRuleParameters {
+  genqa?: GenQAParameters;
+}
+
+export interface GenQAParameters {
+  responseFormat: ResponseFormatParameters;
+}
+
+export interface ResponseFormatParameters {
+  answerStyle: GeneratedAnswerStyle;
 }
 
 export const baseSearchRequest = (

@@ -303,7 +303,7 @@ describe('generated answer slice', () => {
   });
 
   describe('#updateResponseFormat', () => {
-    it('concatenates the given string with the answer previously in the state', () => {
+    it('should set the given response format', () => {
       const newResponseFormat: GeneratedResponseFormat = {
         answerStyle: 'step',
       };

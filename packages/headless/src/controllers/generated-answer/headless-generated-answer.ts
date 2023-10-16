@@ -96,7 +96,7 @@ export interface GeneratedAnswerProps {
      */
     isVisible?: boolean;
     /**
-     * The desired format to apply to generated answers when the controller first loads.
+     * The initial formatting options applied to generated answers when the controller first loads.
      */
     responseFormat?: GeneratedResponseFormat;
   };
