@@ -56,7 +56,12 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   @Element() private host!: HTMLElement;
 
   /**
-   * The desired answer style to apply when the component first loads.
+   * The answer style to apply when the component first loads.
+   * Options:
+   *   - `default`: Generates the answer without additional formatting instructions.
+   *   - `bullet`: Requests the answer to be generated in bullet-points.
+   *   - `step`: Requests the answer to be generated in step-by-step instructions.
+   *   - `concise`: Requests the answer to be generated as concisely as possible.
    */
   @Prop() answerStyle: GeneratedAnswerStyle = 'default';
 
