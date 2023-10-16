@@ -76,7 +76,7 @@ describe('headless product-listing-sort', () => {
       expect(sort.isSortedBy(appliedSort)).toBe(true);
     });
 
-    it('calling #isSortedBy with a criterion different to the one in state returns false', () => {
+    it('calling #isSortedBy with a criterion different from the one in state returns false', () => {
       const notAppliedSort = {
         sortCriteria: SortBy.Fields,
         fields: [{field: 'some_other_field'}],
