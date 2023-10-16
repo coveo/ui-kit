@@ -187,7 +187,7 @@ describe('analytics-utils', () => {
 
   describe('#makeAnalytics', () => {
     let engine: MockSearchEngine;
-    let analyticsMode: 'legacy' | 'next' | 'duplex';
+    let analyticsMode: 'legacy' | 'next';
     let relayEmitSpy: jest.SpyInstance;
     const fakeCAJSLog = jest.fn();
     const createRelayMocked = jest.mocked(createRelay);
@@ -228,45 +228,6 @@ describe('analytics-utils', () => {
           },
         }),
       });
-    });
-
-    describe('when analyticsMode=duplex', () => {
-      beforeAll(() => {
-        analyticsMode = 'duplex';
-      });
-
-      describe('when both `analyticsPayloadBuilder` and `analyticsType` are given', () => {
-        it('should send event with both CAJS & relay when called', async () => {
-          const action = makeAnalyticsAction({
-            ...baseMakeAnalyticParams,
-            ...additionalMakeAnalyticParamsForRelay,
-          });
-
-          await engine.dispatch(action);
-
-          expect(fakeCAJSLog).toHaveBeenCalled();
-          expect(relayEmitSpy).toHaveBeenCalledWith('🥖', {['🥔']: '🍅'});
-          1;
-        });
-      });
-
-      describe.each(['analyticsPayloadBuilder', 'analyticsType'] as const)(
-        'when %s is not given',
-        (_missingArg) => {
-          it('should send event only with CAJS when called', async () => {
-            const {[_missingArg]: _, ...makeAnalyticsParam} = {
-              ...baseMakeAnalyticParams,
-              ...additionalMakeAnalyticParamsForRelay,
-            };
-            const action = makeAnalyticsAction(makeAnalyticsParam);
-
-            await engine.dispatch(action);
-
-            expect(fakeCAJSLog).toHaveBeenCalled();
-            expect(relayEmitSpy).not.toHaveBeenCalled();
-          });
-        }
-      );
     });
 
     describe('when analyticsMode=next', () => {

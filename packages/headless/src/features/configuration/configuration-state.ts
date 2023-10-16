@@ -127,7 +127,7 @@ export interface AnalyticsState {
    */
   trackingId: string;
 
-  analyticsMode: 'legacy' | 'next' | 'duplex';
+  analyticsMode: 'legacy' | 'next';
 }
 
 export const searchAPIEndpoint = '/rest/search/v2';

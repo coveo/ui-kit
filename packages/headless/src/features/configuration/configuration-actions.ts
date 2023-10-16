@@ -149,7 +149,7 @@ export interface UpdateAnalyticsConfigurationActionCreatorPayload {
    */
   trackingId?: string;
 
-  analyticsMode?: 'legacy' | 'next' | 'duplex';
+  analyticsMode?: 'legacy' | 'next';
 }
 
 export type AnalyticsRuntimeEnvironment = IRuntimeEnvironment;
@@ -173,8 +173,8 @@ export const updateAnalyticsConfiguration = createAction(
       userDisplayName: nonEmptyString,
       documentLocation: nonEmptyString,
       trackingId: nonEmptyString,
-      analyticsMode: new StringValue<'legacy' | 'next' | 'duplex'>({
-        constrainTo: ['legacy', 'next', 'duplex'],
+      analyticsMode: new StringValue<'legacy' | 'next'>({
+        constrainTo: ['legacy', 'next'],
         required: false,
         default: 'legacy',
       }),

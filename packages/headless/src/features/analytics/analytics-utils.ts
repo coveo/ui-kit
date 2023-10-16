@@ -373,9 +373,9 @@ export function makeAnalyticsAction<
 }
 
 const shouldSendLegacyEvent = (state: ConfigurationSection) =>
-  state.configuration.analytics.analyticsMode !== 'next';
+  state.configuration.analytics.analyticsMode === 'legacy';
 const shouldSendNextEvent = (state: ConfigurationSection) =>
-  state.configuration.analytics.analyticsMode !== 'legacy';
+  state.configuration.analytics.analyticsMode === 'next';
 
 const internalLegacyMakeAnalyticsAction = <
   LegacyEventType extends AnalyticsType,

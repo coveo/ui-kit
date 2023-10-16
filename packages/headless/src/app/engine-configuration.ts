@@ -155,7 +155,7 @@ export interface AnalyticsConfiguration {
    * @internal
    */
   trackingId?: string;
-  analyticsMode?: 'legacy' | 'next' | 'duplex';
+  analyticsMode?: 'legacy' | 'next';
 }
 
 export type AnalyticsRuntimeEnvironment = IRuntimeEnvironment;
@@ -189,8 +189,8 @@ export const engineConfigurationDefinitions: SchemaDefinition<EngineConfiguratio
         originLevel3: new StringValue({
           required: false,
         }),
-        analyticsMode: new StringValue<'legacy' | 'next' | 'duplex'>({
-          constrainTo: ['legacy', 'next', 'duplex'],
+        analyticsMode: new StringValue<'legacy' | 'next'>({
+          constrainTo: ['legacy', 'next'],
           required: false,
         }),
       },
