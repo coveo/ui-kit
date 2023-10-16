@@ -89,6 +89,20 @@ describe('TextArea Search Box Test Suites', () => {
       SearchBoxSelectors.submitButton().should('be.enabled');
     });
 
+    it('should enter a line break when {shift} is held alongside {enter}', () => {
+      SearchBoxSelectors.textArea().click();
+      SearchBoxSelectors.textArea().type('{shift}{enter}', {
+        force: true,
+        release: false,
+      });
+      SearchBoxSelectors.textArea().type('12', {force: true});
+
+      SearchBoxAssertions.assertHasTextWithoutIt(
+        'test\n12',
+        SearchBoxSelectors.textArea
+      );
+    });
+
     CommonAssertions.assertConsoleError(false);
   });
 
