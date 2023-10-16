@@ -32,7 +32,7 @@ const FEEDBACK_LIKED_STATE = 'liked';
 const FEEDBACK_DISLIKED_STATE = 'disliked';
 const FEEDBACK_NEUTRAL_STATE = 'neutral';
 
-const GENERATED_ANSWER_VISIBLITY_KEY = 'generatedAnswerIsVisible';
+const GENERATED_ANSWER_VISIBILITY_KEY = 'generatedAnswerIsVisible';
 
 /**
  * The `QuanticGeneratedAnswer` component automatically generates an answer using Coveo machine learning models to answer the query executed by the user.
@@ -96,7 +96,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   buildHeadlessGeneratedAnswerController(engine) {
     const storedGeneratedAnswerVisibility = sessionStorage?.getItem(
-      GENERATED_ANSWER_VISIBLITY_KEY
+      GENERATED_ANSWER_VISIBILITY_KEY
     );
     if (['true', 'false'].includes(storedGeneratedAnswerVisibility)) {
       return this.headless.buildGeneratedAnswer(engine, {
@@ -164,10 +164,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   toggleGeneratedAnswer() {
     if (this.isVisible) {
       this.generatedAnswer.hide();
-      sessionStorage?.setItem(GENERATED_ANSWER_VISIBLITY_KEY, 'false');
+      sessionStorage?.setItem(GENERATED_ANSWER_VISIBILITY_KEY, 'false');
     } else {
       this.generatedAnswer.show();
-      sessionStorage?.setItem(GENERATED_ANSWER_VISIBLITY_KEY, 'true');
+      sessionStorage?.setItem(GENERATED_ANSWER_VISIBILITY_KEY, 'true');
     }
   }
 

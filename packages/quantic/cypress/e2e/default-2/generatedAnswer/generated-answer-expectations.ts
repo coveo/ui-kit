@@ -137,6 +137,24 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         );
     },
 
+    sessionStorageExists: (key: string, exist: boolean) => {
+      cy.window()
+        .its('sessionStorage')
+        .invoke('getItem', key)
+        .should(exist ? 'exist' : 'not.exist')
+        .log(`the key ${key} ${should(exist)} exist in the session storage`);
+    },
+
+    sessionStorageContains: (key: string, value: string) => {
+      cy.window()
+        .its('sessionStorage')
+        .invoke('getItem', key)
+        .should('equal', value)
+        .log(
+          `the key ${key} should have the value ${value} in the session storage`
+        );
+    },
+
     logStreamIdInAnalytics(streamId: string) {
       cy.wait(InterceptAliases.UA.Load)
         .then((interception) => {
