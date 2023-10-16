@@ -9,7 +9,7 @@ import {
   GeneratedAnswerCitation,
 } from '@coveo/headless';
 import {GeneratedAnswerStyle} from '@coveo/headless/dist/definitions/features/generated-answer/generated-response-format';
-import {Component, h, State, Element} from '@stencil/core';
+import {Component, h, State, Element, Prop} from '@stencil/core';
 import {buildCustomEvent} from '../../../utils/event-utils';
 import {
   BindStateToController,
@@ -55,10 +55,21 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
 
   @Element() private host!: HTMLElement;
 
+  /**
+   * The desired answer style to apply when the component first loads.
+   */
+  @Prop() answerStyle: GeneratedAnswerStyle = 'default';
+
   private stopPropagation?: boolean;
 
   public initialize() {
-    this.generatedAnswer = buildGeneratedAnswer(this.bindings.engine);
+    this.generatedAnswer = buildGeneratedAnswer(this.bindings.engine, {
+      initialState: {
+        responseFormat: {
+          answerStyle: this.answerStyle,
+        },
+      },
+    });
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.host.dispatchEvent(
       buildCustomEvent(

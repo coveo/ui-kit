@@ -1,3 +1,4 @@
+import {TagProps} from '../fixtures/fixture-common';
 import {TestFixture} from '../fixtures/test-fixture';
 import {AnalyticsTracker} from '../utils/analyticsUtils';
 import {
@@ -17,9 +18,37 @@ const rephraseOptions = [
 
 describe('Generated Answer Test Suites', () => {
   describe('Generated Answer', () => {
-    function setupGeneratedAnswer(streamId?: string) {
-      new TestFixture().with(addGeneratedAnswer(streamId)).init();
+    function setupGeneratedAnswer(streamId?: string, props: TagProps = {}) {
+      new TestFixture().with(addGeneratedAnswer(streamId, props)).init();
     }
+
+    function setupGeneratedAnswerWithoutFirstIntercept(
+      streamId?: string,
+      props: TagProps = {}
+    ) {
+      new TestFixture()
+        .with(addGeneratedAnswer(streamId, props))
+        .withoutFirstIntercept()
+        .init();
+    }
+
+    describe('when an answerStyle prop is provided', () => {
+      const answerStyle = 'bullet';
+
+      beforeEach(() => {
+        setupGeneratedAnswerWithoutFirstIntercept('dummy-stream-id', {
+          'answer-style': answerStyle,
+        });
+      });
+
+      it('should perform the first query with the provided answerStyle', () => {
+        cy.wait(TestFixture.interceptAliases.Search).should((firstSearch) => {
+          expect(
+            firstSearch.request.body.pipelineRuleParameters.genqa.responseFormat
+          ).to.have.property('answerStyle', answerStyle);
+        });
+      });
+    });
 
     describe('when no stream ID is returned', () => {
       beforeEach(() => {

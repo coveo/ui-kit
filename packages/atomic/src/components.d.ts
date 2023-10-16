@@ -11,6 +11,7 @@ import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, Relativ
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout, ResultTarget } from "./components/common/layout/display-options";
 import { ResultRenderingFunction } from "./components/common/result-list/result-list-common-interface";
+import { GeneratedAnswerStyle } from "@coveo/headless/dist/definitions/features/generated-answer/generated-response-format";
 import { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 import { FacetDisplayValues } from "./components/common/facets/facet-common";
 import { i18n } from "i18next";
@@ -34,6 +35,7 @@ export { DateFilter, DateFilterState, NumericFilter, NumericFilterState, Relativ
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 export { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout, ResultTarget } from "./components/common/layout/display-options";
 export { ResultRenderingFunction } from "./components/common/result-list/result-list-common-interface";
+export { GeneratedAnswerStyle } from "@coveo/headless/dist/definitions/features/generated-answer/generated-response-format";
 export { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 export { FacetDisplayValues } from "./components/common/facets/facet-common";
 export { i18n } from "i18next";
@@ -471,6 +473,10 @@ export namespace Components {
     interface AtomicFrequentlyBoughtTogether {
     }
     interface AtomicGeneratedAnswer {
+        /**
+          * The desired answer style to apply when the component first loads.
+         */
+        "answerStyle": GeneratedAnswerStyle;
     }
     /**
      * The `atomic-html` component renders the HTML value of a string.
@@ -4343,6 +4349,10 @@ declare namespace LocalJSX {
     interface AtomicFrequentlyBoughtTogether {
     }
     interface AtomicGeneratedAnswer {
+        /**
+          * The desired answer style to apply when the component first loads.
+         */
+        "answerStyle"?: GeneratedAnswerStyle;
     }
     /**
      * The `atomic-html` component renders the HTML value of a string.
