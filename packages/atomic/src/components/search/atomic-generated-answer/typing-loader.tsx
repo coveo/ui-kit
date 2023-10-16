@@ -7,3 +7,7 @@ export const TypingLoader: FunctionalComponent = () => (
     <span></span>
   </div>
 );
+
+/*export const LoadingBlock: FunctionalComponent = ()=> {
+  return <div class="w-32 h-32"> YO </div>
+}*/

@@ -15,6 +15,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {ResultsPlaceholder} from '../../common/atomic-result-placeholder/placeholders';
 import {Heading} from '../../common/heading';
 import {LinkWithResultAnalytics} from '../../common/result-link/result-link';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
@@ -22,7 +23,6 @@ import {FeedbackButton} from './feedback-button';
 import {GeneratedContentContainer} from './generated-content-container';
 import {RetryPrompt} from './retry-prompt';
 import {SourceCitations} from './source-citations';
-import {TypingLoader} from './typing-loader';
 
 /**
  * @internal
@@ -54,6 +54,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   @Element() private host!: HTMLElement;
 
   private stopPropagation?: boolean;
+  private genAiModal?: HTMLAtomicModalElement;
 
   public initialize() {
     this.generatedAnswer = buildGeneratedAnswer(this.bindings.engine);
@@ -73,18 +74,6 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       !this.searchStatusState.hasError &&
       this.generatedAnswerState.error?.isRetryable
     );
-  }
-
-  private get shouldBeHidden() {
-    const {isLoading, answer, citations} = this.generatedAnswerState;
-    return (
-      !(isLoading || answer !== undefined || citations.length) &&
-      !this.hasRetryableError
-    );
-  }
-
-  private get loadingClasses() {
-    return 'my-3';
   }
 
   private get contentClasses() {
@@ -183,20 +172,35 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     );
   }
 
-  public render() {
-    const {isLoading} = this.generatedAnswerState;
-    if (this.shouldBeHidden) {
-      return null;
-    }
+  private get shouldBeHidden() {
+    const {isLoading, answer, citations} = this.generatedAnswerState;
     return (
-      <aside
-        class={`mx-auto ${
-          isLoading ? this.loadingClasses : this.contentClasses
-        }`}
-        part="container"
+      !(isLoading || answer !== undefined || citations.length) &&
+      !this.hasRetryableError
+    );
+  }
+
+  public render() {
+    const {isLoading, isStreaming} = this.generatedAnswerState;
+    isLoading
+      ? this.bindings.store.setLoadingFlag('generatedAnswer')
+      : this.bindings.store.unsetLoadingFlag('generatedAnswer');
+    return (
+      <div
+        slot="body"
+        part="wrap_er"
+        class={`overflow-hidden ${this.shouldBeHidden ? 'max-h-0' : ''}`}
       >
-        <article>{isLoading ? <TypingLoader /> : this.renderContent()}</article>
-      </aside>
+        <aside class={`mx-auto ${this.contentClasses}`} part="container">
+          <article>
+            {isLoading || isStreaming || this.shouldBeHidden ? (
+              <ResultsPlaceholder density="compact" numberOfPlaceholders={1} />
+            ) : (
+              this.renderContent()
+            )}
+          </article>
+        </aside>
+      </div>
     );
   }
 }
