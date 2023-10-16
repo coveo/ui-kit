@@ -694,7 +694,7 @@ describe('Color Facet Test Suites', () => {
         .with(
           addColorFacet({
             field: 'objecttype',
-            'allowed-values': JSON.stringify(['FAQ', 'File']),
+            'allowed-values': JSON.stringify(['FAQ', 'Document']),
           })
         )
         .init();
@@ -703,7 +703,7 @@ describe('Color Facet Test Suites', () => {
     it('returns only allowed values', () => {
       ColorFacetSelectors.valueLabel()
         .should('contain.text', 'FAQ')
-        .should('contain.text', 'File')
+        .should('contain.text', 'Document')
         .should('not.contain.text', 'Message');
     });
   });
