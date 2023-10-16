@@ -1,22 +1,21 @@
-import {fetchStaticState} from '@/common/lib/react/engine';
-import {SearchPageProvider} from '@/common/components/react/search-page';
-import {
-  CoveoNextJsSearchParametersSerializer,
-  NextJSServerSideSearchParams,
-} from '@/common/components/common/search-parameters-serializer';
+import {NextJSServerSideSearchParams} from '@/common/components/common/search-parameters-serializer';
+import {AuthorFacet} from '@/common/components/react/facets';
 import ResultList from '@/common/components/react/result-list';
 import SearchBox from '@/common/components/react/search-box';
+import {SearchPageProvider} from '@/common/components/react/search-page';
 import SearchParameters from '@/common/components/react/search-parameters';
-import {AuthorFacet} from '@/common/components/react/facets';
+import {fetchStaticState} from '@/common/lib/react/engine';
 
 // Entry point SSR function
 export default async function Search(url: {
   searchParams: NextJSServerSideSearchParams;
 }) {
-  const {coveoSearchParameters} =
-    CoveoNextJsSearchParametersSerializer.fromServerSideUrlSearchParams(
-      url.searchParams
-    );
+  // TODO: Enable after URL management investigation https://coveord.atlassian.net/browse/KIT-2735
+  // const {coveoSearchParameters} =
+  //   CoveoNextJsSearchParametersSerializer.fromServerSideUrlSearchParams(
+  //     url.searchParams
+  //   );
+  const coveoSearchParameters = {};
   const staticState = await fetchStaticState({
     controllers: {
       searchParameters: {

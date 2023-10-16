@@ -1,7 +1,4 @@
-import {
-  CoveoNextJsSearchParametersSerializer,
-  NextJSServerSideSearchParams,
-} from '@/common/components/common/search-parameters-serializer';
+import {NextJSServerSideSearchParams} from '@/common/components/common/search-parameters-serializer';
 import SearchPage from '@/common/components/generic/search-page';
 import {fetchStaticState} from '@/common/lib/generic/engine';
 
@@ -9,10 +6,12 @@ import {fetchStaticState} from '@/common/lib/generic/engine';
 export default async function Search(url: {
   searchParams: NextJSServerSideSearchParams;
 }) {
-  const {coveoSearchParameters} =
-    CoveoNextJsSearchParametersSerializer.fromServerSideUrlSearchParams(
-      url.searchParams
-    );
+  // TODO: Enable after URL management investigation https://coveord.atlassian.net/browse/KIT-2735
+  // const {coveoSearchParameters} =
+  //   CoveoNextJsSearchParametersSerializer.fromServerSideUrlSearchParams(
+  //     url.searchParams
+  //   );
+  const coveoSearchParameters = {};
   const staticState = await fetchStaticState({
     controllers: {
       searchParameters: {
