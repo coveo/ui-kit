@@ -1,3 +1,9 @@
+## 1.6.1 (2023-10-16)
+
+### Bug Fixes
+
+- **relay:** only call listeners if relay is active (#50) ([bbbd3fb](/commits/bbbd3fb8f6945d46901f966fce78d5168d2ffdd3)), closes [#50](/issues/50)
+
 # 1.6.0 (2023-10-12)
 
 ### Features
