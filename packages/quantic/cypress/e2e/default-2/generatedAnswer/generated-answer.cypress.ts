@@ -93,7 +93,7 @@ describe('quantic-generated-answer', () => {
         Expect.displayToggleGeneratedAnswerButton(true);
         Expect.toggleGeneratedAnswerButtonIsChecked(true);
 
-        scope('when toggeling off the generated answer', () => {
+        scope('when toggling off the generated answer', () => {
           Actions.clickToggleGeneratedAnswerButton();
           Expect.toggleGeneratedAnswerButtonIsChecked(false);
           Expect.displayGeneratedAnswerContent(false);
