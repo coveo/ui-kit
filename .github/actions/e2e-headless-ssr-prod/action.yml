@@ -1,5 +1,5 @@
-name: 'Headless SSR E2E tests'
-description: 'Runs Cypress tests for Headless SSR'
+name: 'Headless SSR E2E tests in prod'
+description: 'Runs Cypress tests for Headless SSR in prod'
 inputs:
   github-token:
     description: The GitHub token for accurately detecting a build vs a re-run build

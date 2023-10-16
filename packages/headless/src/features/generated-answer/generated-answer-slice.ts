@@ -1,8 +1,10 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client';
 import {
+  closeGeneratedAnswerFeedbackModal,
   dislikeGeneratedAnswer,
   likeGeneratedAnswer,
+  openGeneratedAnswerFeedbackModal,
   resetAnswer,
   setIsVisible,
   setIsLoading,
@@ -52,6 +54,12 @@ export const generatedAnswerReducer = createReducer(
       .addCase(dislikeGeneratedAnswer, (state) => {
         state.liked = false;
         state.disliked = true;
+      })
+      .addCase(openGeneratedAnswerFeedbackModal, (state) => {
+        state.feedbackModalOpen = true;
+      })
+      .addCase(closeGeneratedAnswerFeedbackModal, (state) => {
+        state.feedbackModalOpen = false;
       })
       .addCase(resetAnswer, (state) => {
         return {

@@ -1,13 +1,13 @@
 import {Action} from '@reduxjs/toolkit';
-import {buildCart, Cart} from './headless-cart';
-import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
-import {cartReducer} from '../../../../features/commerce/context/cart/cart-slice';
 import {
   addItem,
   removeItem,
   setItems,
   updateItemQuantity,
 } from '../../../../features/commerce/context/cart/cart-actions';
+import {cartReducer} from '../../../../features/commerce/context/cart/cart-slice';
+import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
+import {buildCart, Cart} from './headless-cart';
 
 describe('headless commerce cart', () => {
   const options = {
