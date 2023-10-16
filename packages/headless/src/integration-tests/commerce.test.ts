@@ -3,8 +3,8 @@ import {
   buildCommerceEngine,
   buildProductListing,
 } from '../commerce.index';
-import {getOrganizationEndpoints} from '../insight.index';
 import {buildContext} from '../controllers/commerce/context/headless-context';
+import {getOrganizationEndpoints} from '../insight.index';
 import {waitForNextStateChange} from '../test/functional-test-utils';
 
 const accessToken = 'no';

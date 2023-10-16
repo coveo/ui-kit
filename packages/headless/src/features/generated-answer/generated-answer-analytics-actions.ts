@@ -9,6 +9,12 @@ import {
   generativeQuestionAnsweringIdSelector,
 } from './generated-answer-selectors';
 
+export type GeneratedAnswerFeedback =
+  | 'irrelevant'
+  | 'notAccurate'
+  | 'outOfDate'
+  | 'harmful';
+
 export const logRetryGeneratedAnswer = (): SearchAction =>
   makeAnalyticsAction(
     'analytics/generatedAnswer/retry',
@@ -32,7 +38,7 @@ export const logOpenGeneratedAnswerSource = (
       return client.makeOpenGeneratedAnswerSource({
         generativeQuestionAnsweringId,
         permanentId: citation.permanentid,
-        id: citation.id,
+        citationId: citation.id,
       });
     }
   );
@@ -69,6 +75,45 @@ export const logDislikeGeneratedAnswer = (): CustomAction =>
     }
   );
 
+export const logGeneratedAnswerFeedback = (
+  feedback: GeneratedAnswerFeedback
+): CustomAction =>
+  makeAnalyticsAction(
+    'analytics/generatedAnswer/sendFeedback',
+    AnalyticsType.Custom,
+    (client, state) => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      if (!generativeQuestionAnsweringId) {
+        return null;
+      }
+      return client.makeGeneratedAnswerFeedbackSubmit({
+        generativeQuestionAnsweringId,
+        reason: feedback,
+      });
+    }
+  );
+
+export const logGeneratedAnswerDetailedFeedback = (
+  details: string
+): CustomAction =>
+  makeAnalyticsAction(
+    'analytics/generatedAnswer/sendFeedback',
+    AnalyticsType.Custom,
+    (client, state) => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      if (!generativeQuestionAnsweringId) {
+        return null;
+      }
+      return client.makeGeneratedAnswerFeedbackSubmit({
+        generativeQuestionAnsweringId,
+        reason: 'other',
+        details,
+      });
+    }
+  );
+
 export const logGeneratedAnswerStreamEnd = (
   answerGenerated: boolean
 ): CustomAction =>
@@ -84,6 +129,38 @@ export const logGeneratedAnswerStreamEnd = (
       return client.makeGeneratedAnswerStreamEnd({
         generativeQuestionAnsweringId,
         answerGenerated,
+      });
+    }
+  );
+
+export const logGeneratedAnswerShowAnswers = (): CustomAction =>
+  makeAnalyticsAction(
+    'analytics/generatedAnswer/show',
+    AnalyticsType.Custom,
+    (client, state) => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      if (!generativeQuestionAnsweringId) {
+        return null;
+      }
+      return client.makeGeneratedAnswerShowAnswers({
+        generativeQuestionAnsweringId,
+      });
+    }
+  );
+
+export const logGeneratedAnswerHideAnswers = (): CustomAction =>
+  makeAnalyticsAction(
+    'analytics/generatedAnswer/hide',
+    AnalyticsType.Custom,
+    (client, state) => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      if (!generativeQuestionAnsweringId) {
+        return null;
+      }
+      return client.makeGeneratedAnswerHideAnswers({
+        generativeQuestionAnsweringId,
       });
     }
   );

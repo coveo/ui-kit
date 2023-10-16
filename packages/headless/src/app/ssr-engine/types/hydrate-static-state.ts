@@ -7,6 +7,7 @@ import {
   HydratedState,
   OptionsTuple,
 } from './common';
+import {FromBuildResult} from './from-build-result';
 
 export interface HydrateStaticStateOptions<TSearchAction> {
   searchAction: TSearchAction;
@@ -29,4 +30,11 @@ export type HydrateStaticState<
         EngineDefinitionControllersPropsOption<TControllersProps>
     >
   ): Promise<HydratedState<TEngine, TControllers>>;
+
+  fromBuildResult: FromBuildResult<
+    TEngine,
+    TControllers,
+    HydrateStaticStateOptions<TSearchAction>,
+    HydratedState<TEngine, TControllers>
+  >;
 };

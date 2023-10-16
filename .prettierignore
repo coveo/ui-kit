@@ -5,3 +5,6 @@
 **/stencil-generated/**/*
 .sfdx
 dist
+**/*.d.ts
+LICENSE.md
+**/.storybook/**

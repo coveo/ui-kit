@@ -1,16 +1,17 @@
-import React, {useEffect, useRef} from 'react';
 import type {JSX, i18n} from '@coveo/atomic';
 import {
   getSampleRecommendationEngineConfiguration,
   buildRecommendationEngine,
 } from '@coveo/headless/recommendation';
+import React, {useEffect, useRef} from 'react';
 import {AtomicRecsInterface} from '../stencil-generated/index';
 
 type GetRecommendations = HTMLAtomicRecsInterfaceElement['getRecommendations'];
 /**
  * The properties of the AtomicSearchInterface component
  */
-interface WrapperProps extends Omit<JSX.AtomicRecsInterface, 'i18n' | 'pipeline' | 'searchHub'> {
+interface WrapperProps
+  extends Omit<JSX.AtomicRecsInterface, 'i18n' | 'pipeline' | 'searchHub'> {
   /**
    * An optional callback function that can be used to control the execution of the first query.
    *

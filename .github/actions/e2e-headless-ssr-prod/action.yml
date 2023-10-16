@@ -1,5 +1,5 @@
-name: 'Headless SSR E2E tests'
-description: 'Runs Cypress tests for Headless SSR'
+name: 'Headless SSR E2E tests in prod'
+description: 'Runs Cypress tests for Headless SSR in prod'
 inputs:
   github-token:
     description: The GitHub token for accurately detecting a build vs a re-run build
@@ -19,7 +19,7 @@ runs:
         install: false
         record: false
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3
       if: failure()
       with:
         name: cypress-screenshots

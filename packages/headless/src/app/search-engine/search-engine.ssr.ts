@@ -3,11 +3,16 @@
  */
 import {AnyAction} from '@reduxjs/toolkit';
 import {Controller} from '../../controllers';
+import {SearchAction} from '../../features/analytics/analytics-utils';
 import {createWaitForActionMiddleware} from '../../utils/utils';
+import {
+  buildControllerDefinitions,
+  composeFunction,
+  createStaticState,
+} from '../ssr-engine/common';
 import {
   ControllerDefinitionsMap,
   InferControllerPropsMapFromDefinitions,
-  OptionsExtender,
 } from '../ssr-engine/types/common';
 import {
   EngineDefinition,
@@ -18,24 +23,26 @@ import {
   SearchEngineOptions,
   buildSearchEngine,
 } from './search-engine';
-import {SearchAction} from '../../features/analytics/analytics-utils';
-import {
-  buildControllerDefinitions,
-  createStaticState,
-} from '../ssr-engine/common';
+
+/**
+ * @internal
+ */
+export interface SSRSearchEngine extends SearchEngine {
+  waitForSearchCompletedAction(): Promise<SearchCompletedAction>;
+}
 
 /**
  * @internal
  */
 export type SearchEngineDefinition<
-  TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>,
-> = EngineDefinition<SearchEngine, TControllers, SearchEngineOptions>;
+  TControllers extends ControllerDefinitionsMap<SSRSearchEngine, Controller>,
+> = EngineDefinition<SSRSearchEngine, TControllers, SearchEngineOptions>;
 
 /**
  * @internal
  */
 export type SearchEngineDefinitionOptions<
-  TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>,
+  TControllers extends ControllerDefinitionsMap<SSRSearchEngine, Controller>,
 > = EngineDefinitionOptions<SearchEngineOptions, TControllers>;
 
 export type SearchCompletedAction = ReturnType<
@@ -46,6 +53,25 @@ function isSearchCompletedAction(
   action: AnyAction
 ): action is SearchCompletedAction {
   return /^search\/executeSearch\/(fulfilled|rejected)$/.test(action.type);
+}
+
+function buildSSRSearchEngine(options: SearchEngineOptions): SSRSearchEngine {
+  const {middleware, promise} = createWaitForActionMiddleware(
+    isSearchCompletedAction
+  );
+  const searchEngine = buildSearchEngine({
+    ...options,
+    middlewares: [...(options.middlewares ?? []), middleware],
+  });
+  return {
+    ...searchEngine,
+    get state() {
+      return searchEngine.state;
+    },
+    waitForSearchCompletedAction() {
+      return promise;
+    },
+  };
 }
 
 /**
@@ -68,12 +94,20 @@ export function defineSearchEngine<
   type BuildFunction = Definition['build'];
   type FetchStaticStateFunction = Definition['fetchStaticState'];
   type HydrateStaticStateFunction = Definition['hydrateStaticState'];
+  type FetchStaticStateFromBuildResultFunction =
+    FetchStaticStateFunction['fromBuildResult'];
+  type HydrateStaticStateFromBuildResultFunction =
+    HydrateStaticStateFunction['fromBuildResult'];
   type BuildParameters = Parameters<BuildFunction>;
   type FetchStaticStateParameters = Parameters<FetchStaticStateFunction>;
   type HydrateStaticStateParameters = Parameters<HydrateStaticStateFunction>;
+  type FetchStaticStateFromBuildResultParameters =
+    Parameters<FetchStaticStateFromBuildResultFunction>;
+  type HydrateStaticStateFromBuildResultParameters =
+    Parameters<HydrateStaticStateFromBuildResultFunction>;
 
   const build: BuildFunction = async (...[buildOptions]: BuildParameters) => {
-    const engine = buildSearchEngine(
+    const engine = buildSSRSearchEngine(
       buildOptions?.extend
         ? await buildOptions.extend(engineOptions)
         : engineOptions
@@ -91,50 +125,58 @@ export function defineSearchEngine<
     };
   };
 
-  const fetchStaticState: FetchStaticStateFunction = async (
-    ...[fetchOptions]: FetchStaticStateParameters
-  ) => {
-    const {middleware, promise: searchCompletedPromise} =
-      createWaitForActionMiddleware(isSearchCompletedAction);
+  const fetchStaticState: FetchStaticStateFunction = composeFunction(
+    async (...params: FetchStaticStateParameters) => {
+      const buildResult = await build(...params);
+      const staticState = await fetchStaticState.fromBuildResult({
+        buildResult,
+      });
+      return staticState;
+    },
+    {
+      fromBuildResult: async (
+        ...params: FetchStaticStateFromBuildResultParameters
+      ) => {
+        const [
+          {
+            buildResult: {engine, controllers},
+          },
+        ] = params;
 
-    const extend: OptionsExtender<SearchEngineOptions> = (options) => ({
-      ...options,
-      middlewares: [...(options.middlewares ?? []), middleware],
-    });
-    const {engine, controllers} = await build(
-      ...([
-        {
-          extend,
-          ...(fetchOptions &&
-            'controllers' in fetchOptions && {
-              controllers: fetchOptions.controllers,
-            }),
-        },
-      ] as BuildParameters)
-    );
+        engine.executeFirstSearch();
+        return createStaticState({
+          searchAction: await engine.waitForSearchCompletedAction(),
+          controllers,
+        });
+      },
+    }
+  );
 
-    engine.executeFirstSearch();
-    return createStaticState({
-      searchAction: await searchCompletedPromise,
-      controllers,
-    });
-  };
-
-  const hydrateStaticState: HydrateStaticStateFunction = async (
-    ...[hydrateOptions]: HydrateStaticStateParameters
-  ) => {
-    const {engine, controllers} = await build(
-      ...(('controllers' in hydrateOptions!
-        ? [
-            {
-              controllers: hydrateOptions.controllers,
-            },
-          ]
-        : []) as BuildParameters)
-    );
-    engine.dispatch(hydrateOptions!.searchAction);
-    return {engine, controllers};
-  };
+  const hydrateStaticState: HydrateStaticStateFunction = composeFunction(
+    async (...params: HydrateStaticStateParameters) => {
+      const buildResult = await build(...(params as BuildParameters));
+      const staticState = await hydrateStaticState.fromBuildResult({
+        buildResult,
+        searchAction: params[0]!.searchAction,
+      });
+      return staticState;
+    },
+    {
+      fromBuildResult: async (
+        ...params: HydrateStaticStateFromBuildResultParameters
+      ) => {
+        const [
+          {
+            buildResult: {engine, controllers},
+            searchAction,
+          },
+        ] = params;
+        engine.dispatch(searchAction);
+        await engine.waitForSearchCompletedAction();
+        return {engine, controllers};
+      },
+    }
+  );
 
   return {
     build,

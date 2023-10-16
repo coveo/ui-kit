@@ -46,6 +46,11 @@ export interface GeneratedAnswerErrorPayload {
   code?: number;
 }
 
+export const setIsVisible = createAction(
+  'generatedAnswer/setIsVisible',
+  (payload: boolean) => validatePayload(payload, booleanValue)
+);
+
 export const updateMessage = createAction(
   'generatedAnswer/updateMessage',
   (payload: GeneratedAnswerMessagePayload) =>
@@ -81,6 +86,14 @@ export const resetAnswer = createAction('generatedAnswer/resetAnswer');
 export const likeGeneratedAnswer = createAction('generatedAnswer/like');
 
 export const dislikeGeneratedAnswer = createAction('generatedAnswer/dislike');
+
+export const openGeneratedAnswerFeedbackModal = createAction(
+  'generatedAnswer/feedbackModal/open'
+);
+
+export const closeGeneratedAnswerFeedbackModal = createAction(
+  'generatedAnswer/feedbackModal/close'
+);
 
 export const setIsLoading = createAction(
   'generatedAnswer/setIsLoading',

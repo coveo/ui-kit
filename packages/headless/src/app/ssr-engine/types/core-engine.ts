@@ -28,8 +28,10 @@ export interface EngineDefinition<
   TEngineOptions,
 > {
   fetchStaticState: FetchStaticState<
-    InferControllerStaticStateMapFromDefinitions<TControllers>,
+    TEngine,
+    InferControllersMapFromDefinition<TControllers>,
     AnyAction,
+    InferControllerStaticStateMapFromDefinitions<TControllers>,
     InferControllerPropsMapFromDefinitions<TControllers>
   >;
   hydrateStaticState: HydrateStaticState<
@@ -63,3 +65,12 @@ export type InferHydratedState<
     hydrateStaticState(...args: unknown[]): Promise<unknown>;
   },
 > = Awaited<ReturnType<T['hydrateStaticState']>>;
+
+/**
+ * @internal
+ */
+export type InferBuildResult<
+  T extends {
+    build(...args: unknown[]): Promise<unknown>;
+  },
+> = Awaited<ReturnType<T['build']>>;

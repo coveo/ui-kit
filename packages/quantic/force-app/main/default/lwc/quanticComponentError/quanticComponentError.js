@@ -1,7 +1,7 @@
-import { LightningElement, api } from 'lwc';
 import componentError from '@salesforce/label/c.quantic_ComponentError';
 import LookAtDeveloperConsole from '@salesforce/label/c.quantic_LookAtDeveloperConsole';
-import { I18nUtils } from 'c/quanticUtils';
+import {I18nUtils} from 'c/quanticUtils';
+import {LightningElement, api} from 'lwc';
 
 /**
  * The `QuanticComponentError` is used by the other Quantic components to display component error messages.
@@ -12,7 +12,7 @@ import { I18nUtils } from 'c/quanticUtils';
 export default class QuanticComponentError extends LightningElement {
   labels = {
     componentError,
-    LookAtDeveloperConsole
+    LookAtDeveloperConsole,
   };
 
   /**
@@ -33,10 +33,10 @@ export default class QuanticComponentError extends LightningElement {
     return `${I18nUtils.format(
       this.labels.componentError,
       this.componentName
-    )}`
+    )}`;
   }
 
   get errorMessage() {
-    return this.message
+    return this.message;
   }
 }
