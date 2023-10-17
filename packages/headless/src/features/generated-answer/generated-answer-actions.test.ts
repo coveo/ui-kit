@@ -10,7 +10,9 @@ import {
   updateCitations,
   updateError,
   updateMessage,
+  updateResponseFormat,
 } from './generated-answer-actions';
+import {generatedAnswerStyle} from './generated-response-format';
 
 describe('generated answer', () => {
   let e: MockSearchEngine;
@@ -108,6 +110,28 @@ describe('generated answer', () => {
         type: actionType,
       });
     });
+  });
+
+  describe('#updateResponseFormat', () => {
+    const actionType = 'generatedAnswer/updateResponseFormat';
+
+    test.each(generatedAnswerStyle)(
+      'should accept a valid payload with style: "%i"',
+      (style) => {
+        expect(
+          e.dispatch(
+            updateResponseFormat({
+              answerStyle: style,
+            })
+          )
+        ).toEqual({
+          payload: {
+            answerStyle: style,
+          },
+          type: actionType,
+        });
+      }
+    );
   });
 
   describe('#setIsVisible', () => {
