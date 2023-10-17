@@ -149,7 +149,6 @@ export class AtomicInsightFacet
       facetId: this.facetId,
       withSearch: this.withSearch,
       sortCriteria: this.sortCriteria,
-      //sortOrder: this.sortOrder,
     });
 
     this.searchStatus = buildInsightSearchStatus(this.bindings.engine);

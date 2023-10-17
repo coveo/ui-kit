@@ -249,7 +249,6 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
       facetId: this.facetId,
       withSearch: this.withSearch,
       sortCriteria: this.sortCriteria,
-      //sortOrder: this.sortOrder,
     });
 
     this.searchStatus = buildSearchStatus(this.bindings.engine);
@@ -322,10 +321,13 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
       facetId: this.facetId,
       field: this.field,
       numberOfValues: this.numberOfValues,
-      sortCriteria: {
-        type: this.sortCriteria,
-        order: this.sortOrder,
-      },
+      sortCriteria:
+        this.sortCriteria !== 'automatic'
+          ? {
+              type: this.sortCriteria,
+              order: this.sortOrder,
+            }
+          : this.sortCriteria,
       facetSearch: {numberOfValues: this.numberOfValues},
       filterFacetCount: this.filterFacetCount,
       injectionDepth: this.injectionDepth,

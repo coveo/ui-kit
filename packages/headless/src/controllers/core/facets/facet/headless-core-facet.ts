@@ -467,7 +467,10 @@ export function buildCoreFacet(
       const enabled = getIsEnabled();
       let sortCriterion!: FacetSortCriterion | SpecificSortCriteriaExplicit;
 
-      if (typeof request.sortCriteria === 'object') {
+      if (
+        typeof request.sortCriteria === 'object' &&
+        request.sortCriteria.type !== 'automatic'
+      ) {
         sortCriterion = {
           type: request.sortCriteria.type,
           order: request.sortCriteria.order,

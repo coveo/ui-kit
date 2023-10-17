@@ -22,7 +22,8 @@ export type FacetSortCriterion =
   | 'score'
   | 'alphanumeric'
   | 'occurrences'
-  | 'automatic';
+  | 'automatic'
+  | 'alphanumericDescending';
 
 export type FacetSortOrder = 'ascending' | 'descending';
 

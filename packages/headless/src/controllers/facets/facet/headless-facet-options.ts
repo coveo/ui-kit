@@ -4,7 +4,10 @@ import {
   SpecificSortCriteriaExplicit,
   facetResultsMustMatch,
 } from '../../../features/facets/facet-api/request';
-import {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request';
+import {
+  FacetSortCriterion,
+  FacetSortOrder,
+} from '../../../features/facets/facet-set/interfaces/request';
 import {
   facetId,
   field,
@@ -67,6 +70,14 @@ export interface FacetOptions {
    * @defaultValue `automatic`
    */
   sortCriteria?: FacetSortCriterion | SpecificSortCriteriaExplicit;
+
+  /**
+   * The sort order to apply to the returned facet values.
+   * Possible values are 'ascending' and 'descending'.
+   *
+   * @defaultValue `ascending`
+   */
+  sortOrder?: FacetSortOrder;
 
   /**
    * The criterion to use for specifying how results must match the selected facet values.
@@ -132,6 +143,7 @@ export const facetOptionsSchema = new Schema<Required<FacetOptions>>({
   injectionDepth,
   numberOfValues,
   sortCriteria: new Value<FacetSortCriterion | SpecificSortCriteriaExplicit>(),
+  sortOrder: new Value<FacetSortOrder>(),
   resultsMustMatch: new StringValue({constrainTo: facetResultsMustMatch}),
   facetSearch,
   allowedValues,

@@ -93,7 +93,13 @@ export type SortCriteriaType =
   | 'ascending'
   | 'descending'
   | 'occurrences'
-  | 'automatic';
+  | 'automatic'
+  | 'alphanumericDescending';
+
+export type SpecificSortCriteriaType = Exclude<
+  SortCriteriaType,
+  'ascending' | 'descending'
+>;
 
 export interface SortCriteria<
   T extends SortCriteriaType | SpecificSortCriteriaExplicit,
@@ -103,7 +109,7 @@ export interface SortCriteria<
 }
 
 export interface SpecificSortCriteriaExplicit {
-  type: SortCriteriaType;
+  type: SpecificSortCriteriaType;
   order: FacetSortOrder;
 }
 

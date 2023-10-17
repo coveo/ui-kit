@@ -32,7 +32,7 @@ export const logOpenGeneratedAnswerSource = (
       return client.makeOpenGeneratedAnswerSource({
         generativeQuestionAnsweringId,
         permanentId: citation.permanentid,
-        id: citation.id,
+        citationId: citation.id,
       });
     }
   );
