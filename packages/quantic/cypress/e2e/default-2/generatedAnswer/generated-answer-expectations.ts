@@ -140,7 +140,7 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
     sessionStorageContains: (key: string, expectedData: object) => {
       cy.window()
         .its('sessionStorage')
-        .invoke('getItem', `LSKey[c]${key}`)
+        .invoke('getItem', key)
         .then((data) => {
           const storedData = JSON.parse(data ?? '{}');
           expect(storedData).eql(expectedData);
