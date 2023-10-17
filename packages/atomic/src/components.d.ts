@@ -15,12 +15,14 @@ import { GeneratedAnswerStyle } from "@coveo/headless/dist/definitions/features/
 import { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 import { FacetDisplayValues } from "./components/common/facets/facet-common";
 import { i18n } from "i18next";
+import { i18nCompatibilityVersion } from "./components/common/interface/i18n";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 import { NumericFacetDisplayValues } from "./components/common/facets/numeric-facet-common";
 import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Section } from "./components/common/atomic-layout-section/sections";
 import { PlatformEnvironment, RecommendationEngine } from "@coveo/headless/recommendation";
 import { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
+import { i18nCompatibilityVersion as i18nCompatibilityVersion1 } from "./components";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 import { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
@@ -39,12 +41,14 @@ export { GeneratedAnswerStyle } from "@coveo/headless/dist/definitions/features/
 export { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 export { FacetDisplayValues } from "./components/common/facets/facet-common";
 export { i18n } from "i18next";
+export { i18nCompatibilityVersion } from "./components/common/interface/i18n";
 export { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 export { NumericFacetDisplayValues } from "./components/common/facets/numeric-facet-common";
 export { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 export { Section } from "./components/common/atomic-layout-section/sections";
 export { PlatformEnvironment, RecommendationEngine } from "@coveo/headless/recommendation";
 export { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
+export { i18nCompatibilityVersion as i18nCompatibilityVersion1 } from "./components";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 export { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
 export { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
@@ -632,6 +636,10 @@ export namespace Components {
           * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath": string;
+        /**
+          * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
+         */
+        "localizationCompatibilityVersion": i18nCompatibilityVersion;
         /**
           * The severity level of the messages to log in the console.
          */
@@ -1368,6 +1376,10 @@ export namespace Components {
           * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath": string;
+        /**
+          * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
+         */
+        "localizationCompatibilityVersion": i18nCompatibilityVersion1;
         /**
           * The severity level of the messages to log in the console.
          */
@@ -2159,6 +2171,10 @@ export namespace Components {
           * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath": string;
+        /**
+          * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
+         */
+        "localizationCompatibilityVersion": i18nCompatibilityVersion1;
         /**
           * The severity level of the messages to log in the console.
          */
@@ -4487,6 +4503,10 @@ declare namespace LocalJSX {
          */
         "languageAssetsPath"?: string;
         /**
+          * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
+         */
+        "localizationCompatibilityVersion"?: i18nCompatibilityVersion;
+        /**
           * The severity level of the messages to log in the console.
          */
         "logLevel"?: InsightLogLevel;
@@ -5196,6 +5216,10 @@ declare namespace LocalJSX {
           * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath"?: string;
+        /**
+          * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
+         */
+        "localizationCompatibilityVersion"?: i18nCompatibilityVersion1;
         /**
           * The severity level of the messages to log in the console.
          */
@@ -5940,6 +5964,10 @@ declare namespace LocalJSX {
           * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath"?: string;
+        /**
+          * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
+         */
+        "localizationCompatibilityVersion"?: i18nCompatibilityVersion1;
         /**
           * The severity level of the messages to log in the console.
          */

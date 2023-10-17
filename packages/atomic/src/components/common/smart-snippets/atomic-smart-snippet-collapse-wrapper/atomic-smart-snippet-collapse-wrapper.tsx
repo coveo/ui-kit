@@ -53,10 +53,9 @@ export class AtomicSmartSnippetCollapseWrapper {
     this.fullHeight = this.host.getBoundingClientRect().height;
     this.showButton = this.fullHeight! > this.maximumHeight!;
     this.isExpanded = !this.showButton;
-    this.host.style.setProperty('--full-height', `${this.fullHeight}px`);
     this.host.style.setProperty(
       '--collapsed-size',
-      `${this.showButton ? this.collapsedHeight : this.fullHeight}px`
+      this.collapsedHeight + 'px'
     );
   }
 
