@@ -153,7 +153,7 @@ function getUpdateAnalyticsConfigurationPayload(
 
   const payloadWithURL = {
     ...payload,
-    apiBaseUrl,
+    legacyApiBaseUrl: apiBaseUrl,
   };
 
   if (doNotTrack()) {

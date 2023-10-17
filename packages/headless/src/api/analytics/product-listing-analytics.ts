@@ -81,7 +81,7 @@ export const configureProductListingAnalytics = ({
 }: ConfigureProductListingAnalyticsOptions) => {
   const state = getState();
   const token = state.configuration.accessToken;
-  const endpoint = state.configuration.analytics.apiBaseUrl;
+  const endpoint = state.configuration.analytics.legacyApiBaseUrl;
   const runtimeEnvironment = state.configuration.analytics.runtimeEnvironment;
   const enabled = state.configuration.analytics.enabled;
 
