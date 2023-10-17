@@ -4,6 +4,7 @@ import {
   Schema,
   StringValue,
 } from '@coveo/bueno';
+import {RelayPayload, type createRelay} from '@coveo/relay';
 import {
   AsyncThunk,
   AsyncThunkPayloadCreator,
@@ -66,7 +67,6 @@ import {requiredNonEmptyString} from '../../utils/validate-payload';
 import {ResultWithFolding} from '../folding/folding-slice';
 import {getAllIncludedResultsFrom} from '../folding/folding-utils';
 import {getPipelineInitialState} from '../pipeline/pipeline-state';
-import {RelayPayload, ValidationResponse} from '@coveo/relay';
 
 export enum AnalyticsType {
   Search,
@@ -824,13 +824,11 @@ export const makeCommerceAnalyticsAction = <
   );
 };
 
-function logNextEvent<PayloadType extends RelayPayload = RelayPayload>(
-  emitEvent: (
-    type: string,
-    payload: RelayPayload
-  ) => Promise<void | ValidationResponse>,
+async function logNextEvent<PayloadType extends RelayPayload = RelayPayload>(
+  emitEvent: ReturnType<typeof createRelay>['emit'],
   type: string,
   payload: PayloadType
-): Promise<void | ValidationResponse> {
-  return emitEvent(type, payload);
+): Promise<void> {
+  await emitEvent(type, payload);
+  return;
 }
