@@ -1,5 +1,6 @@
 'use client';
 
+import {useEffect, useState, PropsWithChildren} from 'react';
 import {
   SearchStaticState,
   SearchHydratedState,
@@ -7,7 +8,6 @@ import {
   HydratedStateProvider,
   StaticStateProvider,
 } from '../../lib/react/engine';
-import {useEffect, useState, PropsWithChildren} from 'react';
 import {HydrationMetadata} from '../common/hydration-metadata';
 
 interface SearchPageProviderProps {

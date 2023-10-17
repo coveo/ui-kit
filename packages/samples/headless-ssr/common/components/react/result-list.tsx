@@ -1,7 +1,7 @@
 'use client';
 
-import ResultListCommon from '../common/result-list';
 import {useResultList} from '../../lib/react/engine';
+import ResultListCommon from '../common/result-list';
 
 export default function ResultList() {
   const {state} = useResultList();

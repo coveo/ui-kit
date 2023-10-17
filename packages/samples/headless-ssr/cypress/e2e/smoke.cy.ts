@@ -1,3 +1,4 @@
+// eslint-disable-next-line node/no-unpublished-import
 import 'cypress-web-vitals';
 import {
   ConsoleAliases,

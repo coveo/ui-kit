@@ -1,13 +1,13 @@
 'use client';
 
+import {useEffect, useState} from 'react';
+import {useSyncSearchParameters} from '../../hooks/generic/search-parameters';
 import {
   SearchStaticState,
   SearchHydratedState,
   hydrateStaticState,
 } from '../../lib/generic/engine';
-import {useEffect, useState} from 'react';
 import {HydrationMetadata} from '../common/hydration-metadata';
-import {useSyncSearchParameters} from '../../hooks/generic/search-parameters';
 import {Facet} from './facet';
 import {ResultList} from './result-list';
 import {SearchBox} from './search-box';

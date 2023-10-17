@@ -1,9 +1,9 @@
 'use client';
 
 import {useEffect, useMemo} from 'react';
+import {useSearchParameters} from '../../lib/react/engine';
 import {useHistoryRouter} from '../common/search-parameters';
 import {CoveoNextJsSearchParametersSerializer} from '../common/search-parameters-serializer';
-import {useSearchParameters} from '../../lib/react/engine';
 
 export default function SearchParameters() {
   const historyRouter = useHistoryRouter();
@@ -19,7 +19,6 @@ export default function SearchParameters() {
           historyRouter.url.searchParams
         ).coveoSearchParameters
       ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [historyRouter.url?.searchParams]
   );
 
@@ -44,7 +43,6 @@ export default function SearchParameters() {
     } else {
       historyRouter.push(correctedUrl);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [correctedUrl]);
 
   return <></>;

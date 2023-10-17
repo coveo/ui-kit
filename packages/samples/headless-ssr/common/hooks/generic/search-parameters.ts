@@ -44,7 +44,6 @@ export function useSyncSearchParameters({
           historyRouter.url.searchParams
         ).coveoSearchParameters
       ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [historyRouter.url?.searchParams]
   );
 
@@ -69,6 +68,5 @@ export function useSyncSearchParameters({
     } else {
       historyRouter.push(correctedUrl);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [correctedUrl]);
 }
