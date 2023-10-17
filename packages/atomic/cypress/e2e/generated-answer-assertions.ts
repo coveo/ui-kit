@@ -1,3 +1,4 @@
+import {TestFixture} from '../fixtures/test-fixture';
 import {AnalyticsTracker} from '../utils/analyticsUtils';
 import {should} from './common-assertions';
 
@@ -11,5 +12,13 @@ export function assertLogOpenGeneratedAnswerSource(log: boolean) {
         .invoke('getLastCustomEvent')
         .should('not.exist');
     }
+  });
+}
+
+export function assertAnswerStyle(expected: string) {
+  cy.wait(TestFixture.interceptAliases.Search).should((firstSearch) => {
+    expect(
+      firstSearch.request.body.pipelineRuleParameters.genqa.responseFormat
+    ).to.have.property('answerStyle', expected);
   });
 }

@@ -1,3 +1,4 @@
+import {GeneratedAnswerStyle} from '@coveo/headless/dist/definitions/features/generated-answer/generated-response-format';
 import {TagProps} from '../fixtures/fixture-common';
 import {TestFixture} from '../fixtures/test-fixture';
 import {AnalyticsTracker} from '../utils/analyticsUtils';
@@ -10,11 +11,34 @@ import {
 import * as GeneratedAnswerAssertions from './generated-answer-assertions';
 import {GeneratedAnswerSelectors} from './generated-answer-selectors';
 
-const rephraseOptions = [
+const rephraseOptions: {label: string; value: GeneratedAnswerStyle}[] = [
   {label: 'Bullet', value: 'bullet'},
   {label: 'Steps', value: 'step'},
   {label: 'Summary', value: 'concise'},
 ];
+
+const testCitation = {
+  id: 'some-id-123',
+  title: 'Some Title',
+  uri: 'https://www.coveo.com',
+  permanentid: 'some-permanent-id-123',
+  clickUri: 'https://www.coveo.com/en',
+};
+const testTextDelta = 'Some text';
+const testMessagePayload = {
+  payloadType: 'genqa.messageType',
+  payload: JSON.stringify({
+    textDelta: testTextDelta,
+  }),
+  finishReason: 'COMPLETED',
+};
+const testCitationsPayload = {
+  payloadType: 'genqa.citationsType',
+  payload: JSON.stringify({
+    citations: [testCitation],
+  }),
+  finishReason: 'COMPLETED',
+};
 
 describe('Generated Answer Test Suites', () => {
   describe('Generated Answer', () => {
@@ -33,20 +57,38 @@ describe('Generated Answer Test Suites', () => {
     }
 
     describe('when an answerStyle prop is provided', () => {
-      const answerStyle = 'bullet';
+      const streamId = crypto.randomUUID();
+      const answerStyle = rephraseOptions[0];
 
       beforeEach(() => {
-        setupGeneratedAnswerWithoutFirstIntercept('dummy-stream-id', {
-          'answer-style': answerStyle,
+        mockStreamResponse(streamId, testMessagePayload);
+        setupGeneratedAnswerWithoutFirstIntercept(streamId, {
+          'answer-style': answerStyle.value,
         });
       });
 
       it('should perform the first query with the provided answerStyle', () => {
-        cy.wait(TestFixture.interceptAliases.Search).should((firstSearch) => {
-          expect(
-            firstSearch.request.body.pipelineRuleParameters.genqa.responseFormat
-          ).to.have.property('answerStyle', answerStyle);
-        });
+        GeneratedAnswerAssertions.assertAnswerStyle(answerStyle.value);
+      });
+
+      it('deselecting should return to "default" style', () => {
+        const initialButtonLabel = answerStyle.label;
+
+        cy.wait(TestFixture.interceptAliases.Search);
+
+        GeneratedAnswerSelectors.rephraseButton(initialButtonLabel).click();
+
+        GeneratedAnswerAssertions.assertAnswerStyle('default');
+      });
+    });
+
+    describe('when NO answerStyle prop is provided', () => {
+      beforeEach(() => {
+        setupGeneratedAnswerWithoutFirstIntercept('dummy-stream-id');
+      });
+
+      it('should perform the first query with the "default" answerStyle', () => {
+        GeneratedAnswerAssertions.assertAnswerStyle('default');
       });
     });
 
@@ -63,15 +105,6 @@ describe('Generated Answer Test Suites', () => {
     describe('when a stream ID is returned', () => {
       describe('when a message event is received', () => {
         const streamId = crypto.randomUUID();
-
-        const testTextDelta = 'Some text';
-        const testMessagePayload = {
-          payloadType: 'genqa.messageType',
-          payload: JSON.stringify({
-            textDelta: testTextDelta,
-          }),
-          finishReason: 'COMPLETED',
-        };
 
         beforeEach(() => {
           mockStreamResponse(streamId, testMessagePayload);
@@ -110,14 +143,7 @@ describe('Generated Answer Test Suites', () => {
             it(`should rephrase in "${option}" format`, () => {
               GeneratedAnswerSelectors.rephraseButton(option.label).click();
 
-              cy.wait(TestFixture.interceptAliases.Search).should(
-                (firstSearch) => {
-                  expect(
-                    firstSearch.request.body.pipelineRuleParameters.genqa
-                      .responseFormat
-                  ).to.have.property('answerStyle', option.value);
-                }
-              );
+              GeneratedAnswerAssertions.assertAnswerStyle(option.value);
             });
           });
         });
@@ -126,23 +152,8 @@ describe('Generated Answer Test Suites', () => {
       describe('when a citation event is received', () => {
         const streamId = crypto.randomUUID();
 
-        const testCitation = {
-          id: 'some-id-123',
-          title: 'Some Title',
-          uri: 'https://www.coveo.com',
-          permanentid: 'some-permanent-id-123',
-          clickUri: 'https://www.coveo.com/en',
-        };
-        const testMessagePayload = {
-          payloadType: 'genqa.citationsType',
-          payload: JSON.stringify({
-            citations: [testCitation],
-          }),
-          finishReason: 'COMPLETED',
-        };
-
         beforeEach(() => {
-          mockStreamResponse(streamId, testMessagePayload);
+          mockStreamResponse(streamId, testCitationsPayload);
           setupGeneratedAnswer(streamId);
           cy.wait(getStreamInterceptAlias(streamId));
         });

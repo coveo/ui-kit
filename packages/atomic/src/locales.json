@@ -5835,7 +5835,7 @@
   },
   "bullets": {
     "en": "Bullets",
-    "fr": "Balles",
+    "fr": "Points",
     "cs": "Náboje",
     "da": "Kugler",
     "de": "Geschosse",
@@ -5916,7 +5916,7 @@
   },
   "rephrase": {
     "en": "Rephrase",
-    "fr": "Reformulez",
+    "fr": "Reformuler",
     "cs": "Přeformulovat",
     "da": "Omformuler",
     "de": "Umschreiben",
