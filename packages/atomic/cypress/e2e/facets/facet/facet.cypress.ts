@@ -1091,7 +1091,7 @@ describe('Facet v1 Test Suites', () => {
         .with(
           addFacet({
             field: 'objecttype',
-            'allowed-values': JSON.stringify(['FAQ', 'File']),
+            'allowed-values': JSON.stringify(['FAQ', 'People']),
           })
         )
         .init();
@@ -1100,8 +1100,8 @@ describe('Facet v1 Test Suites', () => {
     it('returns only allowed values', () => {
       FacetSelectors.values()
         .should('contain.text', 'FAQ')
-        .should('contain.text', 'File')
-        .should('not.contain.text', 'Message');
+        .should('contain.text', 'People')
+        .should('not.contain.text', 'Page');
     });
   });
 

@@ -475,7 +475,7 @@ describe('search-slice', () => {
       beforeEach(async () => {
         analyticsStateQuerySpy = jest.fn();
         const mockLogSubmit = () =>
-          makeAnalyticsAction(
+          makeAnalyticsAction<AnalyticsType.Search>(
             'analytics/test',
             AnalyticsType.Search,
             (_, state) => analyticsStateQuerySpy(state.query?.q)

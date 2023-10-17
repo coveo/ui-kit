@@ -51,7 +51,7 @@ type SearchEngineReducers = typeof searchEngineReducers;
 type SearchEngineState = StateFromReducersMapObject<SearchEngineReducers> &
   Partial<SearchAppState>;
 
-function getUpdatSearchConfigurationPayload(
+function getUpdateSearchConfigurationPayload(
   options: SearchEngineOptions
 ): UpdateSearchConfigurationActionCreatorPayload {
   const search = options.configuration.search;
@@ -126,7 +126,7 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
 
   const engine = buildEngine(augmentedOptions, thunkArguments);
 
-  const search = getUpdatSearchConfigurationPayload(options);
+  const search = getUpdateSearchConfigurationPayload(options);
 
   if (search) {
     engine.dispatch(updateSearchConfiguration(search));
