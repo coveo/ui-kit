@@ -9,6 +9,7 @@ import {loadDayjsLocale} from '../../../utils/dayjs-locales';
 import {InitializeEvent} from '../../../utils/initialization-utils';
 import {
   i18nBackendOptions,
+  i18nCompatibilityVersion,
   i18nTranslationNamespace,
 } from '../../common/interface/i18n';
 import {AnyBindings, AnyEngineType} from './bindings';
@@ -26,6 +27,7 @@ export interface BaseAtomicInterface<EngineType extends AnyEngineType>
   host: HTMLStencilElement;
   bindings: AnyBindings;
   error?: Error;
+  localizationCompatibilityVersion: i18nCompatibilityVersion;
 
   updateIconAssetsPath(): void;
   registerFieldsToInclude(): void;
@@ -96,6 +98,7 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
       );
       return;
     }
+
     this.atomicInterface.updateIconAssetsPath();
     initEngine();
     this.atomicInterface.registerFieldsToInclude();
