@@ -26,19 +26,6 @@ import successTemplate from './success.html';
  * @category Insight Panel
  */
 export default class QuanticFeedbackModal extends LightningModal {
-  /**
-   * @api
-   * The list of options to be displayed in the modal.
-   * @type {Array<{label: string, value: string, withDetails: boolean, detailsRequired: boolean}>}
-   */
-  @api options;
-  /**
-   * @api
-   * The function that will be executed when the feedback is submitted.
-   * @type {function}
-   */
-  @api handleSubmit;
-
   labels = {
     done,
     cancel,
@@ -51,6 +38,25 @@ export default class QuanticFeedbackModal extends LightningModal {
     yourFeedbackHelps,
     thankYouForYourFeedback,
   };
+
+  /**
+   * @api
+   * The list of options to be displayed in the modal.
+   * @type {Array<{label: string, value: string, withDetails: boolean, detailsRequired: boolean}>}
+   */
+  @api options;
+  /**
+   * @api
+   * The label displayed above the options.
+   * @type {string}
+   */
+  @api optionsLabel = this.labels.selectTheReason;
+  /**
+   * @api
+   * The function that will be executed when the feedback is submitted.
+   * @type {function}
+   */
+  @api handleSubmit;
 
   /** @type {string} */
   feedbackValue;

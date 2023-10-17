@@ -40,7 +40,7 @@ describe('configuration slice', () => {
       originContext: '0',
       originLevel2: '2',
       originLevel3: '3',
-      apiBaseUrl: `${url}/rest/ua`,
+      legacyApiBaseUrl: `${url}/rest/ua`,
       anonymous: false,
       deviceId: 'Chrome',
       userDisplayName: 'Someone',
@@ -106,7 +106,7 @@ describe('configuration slice', () => {
         );
 
         expect(newState.search.apiBaseUrl).toBe(expectation.search);
-        expect(newState.analytics.apiBaseUrl).toBe(expectation.analytics);
+        expect(newState.analytics.legacyApiBaseUrl).toBe(expectation.analytics);
       });
     });
 
@@ -119,7 +119,7 @@ describe('configuration slice', () => {
       );
 
       expect(newState.search.apiBaseUrl).toBe('/foo/rest/search/v2');
-      expect(newState.analytics.apiBaseUrl).toBe('/foo');
+      expect(newState.analytics.legacyApiBaseUrl).toBe('/foo');
     });
 
     it('setting platformUrl to a non relative URL pointing to a non Coveo platform keep search and analytics url in sync', () => {
@@ -133,7 +133,7 @@ describe('configuration slice', () => {
       expect(newState.search.apiBaseUrl).toBe(
         'https://my.domain.com/rest/search/v2'
       );
-      expect(newState.analytics.apiBaseUrl).toBe('https://my.domain.com');
+      expect(newState.analytics.legacyApiBaseUrl).toBe('https://my.domain.com');
     });
   });
 
@@ -146,7 +146,7 @@ describe('configuration slice', () => {
           originContext: 'fizz',
           originLevel2: 'bar',
           originLevel3: 'buzz',
-          apiBaseUrl: 'http://test.com/analytics',
+          legacyApiBaseUrl: 'http://test.com/analytics',
           anonymous: true,
           deviceId: 'fuzz',
           userDisplayName: 'displayName',
@@ -161,7 +161,7 @@ describe('configuration slice', () => {
             originContext: 'fizz',
             originLevel2: 'bar',
             originLevel3: 'buzz',
-            apiBaseUrl: 'http://test.com/analytics',
+            legacyApiBaseUrl: 'http://test.com/analytics',
             anonymous: true,
             deviceId: 'fuzz',
             userDisplayName: 'displayName',
@@ -179,7 +179,7 @@ describe('configuration slice', () => {
           originContext: 'fizz',
           originLevel2: 'bar',
           originLevel3: 'buzz',
-          apiBaseUrl: 'http://test.com/analytics',
+          legacyApiBaseUrl: 'http://test.com/analytics',
           anonymous: true,
           deviceId: 'fuzz',
           userDisplayName: 'displayName',
@@ -195,7 +195,7 @@ describe('configuration slice', () => {
             originContext: 'fizz',
             originLevel2: 'bar',
             originLevel3: 'buzz',
-            apiBaseUrl: 'http://test.com/analytics',
+            legacyApiBaseUrl: 'http://test.com/analytics',
             anonymous: true,
             deviceId: 'fuzz',
             userDisplayName: 'displayName',
@@ -246,7 +246,9 @@ describe('configuration slice', () => {
 
     it('setting apiBaseUrl to a relative url does not return an error', () => {
       const apiBaseUrl = '/rest/ua';
-      const action = updateAnalyticsConfiguration({apiBaseUrl});
+      const action = updateAnalyticsConfiguration({
+        legacyApiBaseUrl: apiBaseUrl,
+      });
       expect('error' in action).toBe(false);
     });
   });
