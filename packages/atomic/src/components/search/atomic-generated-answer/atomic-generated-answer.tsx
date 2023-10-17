@@ -124,6 +124,13 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     return this.generatedAnswerState.isVisible;
   }
 
+  private get toggleTooltip() {
+    const key = this.isAnswerVisible
+      ? 'generated-answer-toggle-on'
+      : 'generated-answer-toggle-off';
+    return this.bindings.i18n.t(key);
+  }
+
   private get loadingClasses() {
     return 'my-3';
   }
@@ -185,22 +192,24 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
           </Heading>
 
           <div class="flex gap-2 h-9 items-center ml-auto">
-            {!this.hasRetryableError && this.isAnswerVisible && (
-              <div class="feedback-buttons flex gap-2 ml-auto">
-                <FeedbackButton
-                  title={this.bindings.i18n.t('this-answer-was-helpful')}
-                  variant="like"
-                  active={this.generatedAnswerState.liked}
-                  onClick={this.generatedAnswer.like}
-                />
-                <FeedbackButton
-                  title={this.bindings.i18n.t('this-answer-was-not-helpful')}
-                  variant="dislike"
-                  active={this.generatedAnswerState.disliked}
-                  onClick={this.generatedAnswer.dislike}
-                />
-              </div>
-            )}
+            {!this.hasRetryableError &&
+              !this.generatedAnswerState.isStreaming &&
+              this.isAnswerVisible && (
+                <div class="feedback-buttons flex gap-2 ml-auto">
+                  <FeedbackButton
+                    title={this.bindings.i18n.t('this-answer-was-helpful')}
+                    variant="like"
+                    active={this.generatedAnswerState.liked}
+                    onClick={this.generatedAnswer.like}
+                  />
+                  <FeedbackButton
+                    title={this.bindings.i18n.t('this-answer-was-not-helpful')}
+                    variant="dislike"
+                    active={this.generatedAnswerState.disliked}
+                    onClick={this.generatedAnswer.dislike}
+                  />
+                </div>
+              )}
 
             <Switch
               part="toggle"
@@ -211,6 +220,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
                   : this.generatedAnswer.hide();
               }}
               ariaLabel={this.bindings.i18n.t('generated-answer-title')}
+              title={this.toggleTooltip}
             ></Switch>
           </div>
         </div>
