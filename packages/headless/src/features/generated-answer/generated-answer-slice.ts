@@ -12,6 +12,7 @@ import {
   updateCitations,
   updateError,
   updateMessage,
+  updateResponseFormat,
 } from './generated-answer-actions';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
 
@@ -64,6 +65,7 @@ export const generatedAnswerReducer = createReducer(
       .addCase(resetAnswer, (state) => {
         return {
           ...getGeneratedAnswerInitialState(),
+          responseFormat: state.responseFormat,
           isVisible: state.isVisible,
         };
       })
@@ -72,5 +74,8 @@ export const generatedAnswerReducer = createReducer(
       })
       .addCase(setIsStreaming, (state, {payload}) => {
         state.isStreaming = payload;
+      })
+      .addCase(updateResponseFormat, (state, {payload}) => {
+        state.responseFormat = payload;
       })
 );
