@@ -10,7 +10,7 @@ import {buildMockFacetValueRequest} from '../../test/mock-facet-value-request';
 import {buildMockQueryState} from '../../test/mock-query-state';
 import {buildMockSearchState} from '../../test/mock-search-state';
 import {
-  configureAnalytics,
+  configureLegacyAnalytics,
   getPageID,
   SearchAnalyticsProvider,
   StateNeededBySearchAnalyticsProvider,
@@ -37,7 +37,7 @@ describe('search analytics', () => {
   it('should be enabled by default', () => {
     const state = createMockState();
     expect(
-      configureAnalytics({getState: () => state, logger})
+      configureLegacyAnalytics({getState: () => state, logger})
         .coveoAnalyticsClient instanceof CoveoAnalyticsClient
     ).toBe(true);
   });
@@ -47,7 +47,7 @@ describe('search analytics', () => {
     state.configuration.analytics.enabled = true;
 
     expect(
-      configureAnalytics({getState: () => state, logger})
+      configureLegacyAnalytics({getState: () => state, logger})
         .coveoAnalyticsClient instanceof CoveoAnalyticsClient
     ).toBe(true);
   });
@@ -56,7 +56,7 @@ describe('search analytics', () => {
     const state = createMockState();
     state.configuration.analytics.enabled = false;
     expect(
-      configureAnalytics({getState: () => state, logger})
+      configureLegacyAnalytics({getState: () => state, logger})
         .coveoAnalyticsClient instanceof CoveoAnalyticsClient
     ).toBe(false);
   });

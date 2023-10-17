@@ -47,11 +47,11 @@ describe('quantic-case-classification', () => {
   const coveoDefaultField = 'sfpriority';
   const nonCorrespondingCoveoField = 'sforigin';
   const allOptions = [
-    {id: '0', value: 'Very low', label: 'Very low'},
-    {id: '1', value: 'Low', label: 'Low'},
-    {id: '2', value: 'Medium', label: 'Medium'},
-    {id: '3', value: 'High', label: 'High'},
-    {id: '4', value: 'Very high', label: 'Very high'},
+    {id: '0', value: 'Very low', label: 'Very low', validFor: []},
+    {id: '1', value: 'Low', label: 'Low', validFor: []},
+    {id: '2', value: 'Medium', label: 'Medium', validFor: []},
+    {id: '3', value: 'High', label: 'High', validFor: []},
+    {id: '4', value: 'Very high', label: 'Very high', validFor: []},
   ];
   const nonCorrespondingSuggestions = [
     {id: '0', value: 'Web', label: 'Web'},

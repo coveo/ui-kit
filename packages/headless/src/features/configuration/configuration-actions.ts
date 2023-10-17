@@ -116,7 +116,7 @@ export interface UpdateAnalyticsConfigurationActionCreatorPayload {
   /**
    * The Usage Analytics API base URL to use (e.g., `https://platform.cloud.coveo.com/rest/ua`).
    */
-  apiBaseUrl?: string;
+  legacyApiBaseUrl?: string;
 
   /**
    * The Coveo analytics runtime to use, see https://github.com/coveo/coveo.analytics.js for more info.
@@ -154,7 +154,7 @@ export const updateAnalyticsConfiguration = createAction(
       originContext: originSchemaOnConfigUpdate(),
       originLevel2: originSchemaOnConfigUpdate(),
       originLevel3: originSchemaOnConfigUpdate(),
-      apiBaseUrl: nonEmptyString,
+      legacyApiBaseUrl: nonEmptyString,
       runtimeEnvironment: new Value(),
       anonymous: new BooleanValue({default: false}),
       deviceId: nonEmptyString,
