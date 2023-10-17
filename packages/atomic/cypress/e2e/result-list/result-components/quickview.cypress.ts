@@ -119,7 +119,7 @@ describe('Quickview Component', () => {
     new TestFixture()
       .with(addFacet({field: 'filetype'}))
       .with(addSearchBox())
-      .withHash('f-filetype=pdf&q=california marketing')
+      .withHash('f-filetype=pdf&q=Promega Corporation')
       .with(addQuickviewInResultList())
       .init();
 
@@ -149,9 +149,8 @@ describe('Quickview Component', () => {
   it('when used on pdf file inside a result list with exact phrase match, it should display correctly', () => {
     new TestFixture()
       .with(addFacet({field: 'author'}))
-
       .with(addSearchBox())
-      .withHash('q="the%20bank"&f-author=Jules%20Verne')
+      .withHash('q="Promega%20Corporation"&f-author=mardueng')
       .with(addQuickviewInResultList())
       .init();
 
@@ -159,28 +158,32 @@ describe('Quickview Component', () => {
 
     QuickviewModalSelectors.keywordsSidebar()
       .should('exist')
-      .should('contain.text', 'Navigate between 23 occurrences of the bank');
+      .should(
+        'contain.text',
+        'Navigate between 2 occurrences of promega corporation'
+      );
   });
 
   it('when used on an excel file with a query that returns invalid HTML, it should display correctly', () => {
     new TestFixture()
       .with(addFacet({field: 'filetype'}))
       .with(addSearchBox())
-      .withHash('f-filetype=xls&q=1/12')
+      .withHash('f-filetype=xls&q="Captain%20Atom"')
       .with(addQuickviewInResultList())
       .init();
 
     openModal();
     QuickviewModalSelectors.keywordsSidebar()
       .should('exist')
-      .should('contain.text', 'Navigate between 12 occurrences of 1 12');
+      .should('contain.text', 'Navigate between 1 occurrences of captain atom');
   });
 
   it('when used in mobile mode, it should be responsive', () => {
     cy.viewport(parseInt(DEFAULT_MOBILE_BREAKPOINT.slice(0, -2)) - 1, 1080);
     new TestFixture()
+      .with(addFacet({field: 'author'}))
       .with(addSearchBox())
-      .withHash('q="the%20bank"&f-author=Jules%20Verne')
+      .withHash('q="Promega%20Corporation"&f-author=mardueng')
       .with(addQuickviewInResultList())
       .init();
 
@@ -195,8 +198,9 @@ describe('Quickview Component', () => {
 
   it('when used in desktop mode, it should be responsive', () => {
     new TestFixture()
+      .with(addFacet({field: 'author'}))
       .with(addSearchBox())
-      .withHash('q="the%20bank"&f-author=Jules%20Verne')
+      .withHash('q="Promega%20Corporation"&f-author=mardueng')
       .with(addQuickviewInResultList())
       .init();
 
