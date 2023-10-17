@@ -1275,13 +1275,6 @@
     <shortDescription>Search instead for</shortDescription>
   </labels>
   <labels>
-    <fullName>quantic_HideGeneratedAnswer</fullName>
-    <value>Hide generated answer</value>
-    <language>en_US</language>
-    <protected>false</protected>
-    <shortDescription>Hide generated answer</shortDescription>
-  </labels>
-  <labels>
     <fullName>quantic_ShowGeneratedAnswer</fullName>
     <value>Show generated answer</value>
     <language>en_US</language>

@@ -137,21 +137,16 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         );
     },
 
-    sessionStorageExists: (key: string, exist: boolean) => {
+    sessionStorageContains: (key: string, expectedData: object) => {
       cy.window()
         .its('sessionStorage')
-        .invoke('getItem', key)
-        .should(exist ? 'exist' : 'not.exist')
-        .log(`the key ${key} ${should(exist)} exist in the session storage`);
-    },
-
-    sessionStorageContains: (key: string, value: string) => {
-      cy.window()
-        .its('sessionStorage')
-        .invoke('getItem', key)
-        .should('equal', value)
+        .invoke('getItem', `LSKey[c]${key}`)
+        .then((data) => {
+          const storedData = JSON.parse(data ?? '{}');
+          expect(storedData).eql(expectedData);
+        })
         .log(
-          `the key ${key} should have the value ${value} in the session storage`
+          `the key ${key} should have the value ${expectedData} in the session storage`
         );
     },
 

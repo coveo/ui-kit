@@ -1,12 +1,10 @@
 import couldNotGenerateAnAnswer from '@salesforce/label/c.quantic_CouldNotGenerateAnAnswer';
 import generatedAnswerForYou from '@salesforce/label/c.quantic_GeneratedAnswerForYou';
 import loading from '@salesforce/label/c.quantic_Loading';
+import showGeneratedAnswer from '@salesforce/label/c.quantic_ShowGeneratedAnswer';
 import thisAnswerWasHelpful from '@salesforce/label/c.quantic_ThisAnswerWasHelpful';
 import thisAnswerWasNotHelpful from '@salesforce/label/c.quantic_ThisAnswerWasNotHelpful';
 import tryAgain from '@salesforce/label/c.quantic_TryAgain';
-import hideGeneratedAnswer from '@salesforce/label/c.quantic_HideGeneratedAnswer';
-import showGeneratedAnswer from '@salesforce/label/c.quantic_ShowGeneratedAnswer';
-
 import {
   registerComponentForInit,
   initializeWithHeadless,
@@ -32,7 +30,7 @@ const FEEDBACK_LIKED_STATE = 'liked';
 const FEEDBACK_DISLIKED_STATE = 'disliked';
 const FEEDBACK_NEUTRAL_STATE = 'neutral';
 
-const GENERATED_ANSWER_VISIBILITY_KEY = 'generatedAnswerIsVisible';
+const GENERATED_ANSWER_DATA_KEY = 'coveo-generated-answer-data';
 
 /**
  * The `QuanticGeneratedAnswer` component automatically generates an answer using Coveo machine learning models to answer the query executed by the user.
@@ -55,7 +53,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     thisAnswerWasHelpful,
     tryAgain,
     couldNotGenerateAnAnswer,
-    hideGeneratedAnswer,
     showGeneratedAnswer,
   };
 
@@ -94,14 +91,22 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     );
   };
 
+  readStoredData() {
+    try {
+      return JSON.parse(sessionStorage?.getItem(GENERATED_ANSWER_DATA_KEY));
+    } catch {
+      return {};
+    }
+  }
+
   buildHeadlessGeneratedAnswerController(engine) {
-    const storedGeneratedAnswerVisibility = sessionStorage?.getItem(
-      GENERATED_ANSWER_VISIBILITY_KEY
-    );
-    if (['true', 'false'].includes(storedGeneratedAnswerVisibility)) {
+    const storedGeneratedAnswerData = this.readStoredData();
+    const storedGeneratedAnswerVisibility =
+      storedGeneratedAnswerData?.isVisible;
+    if (typeof storedGeneratedAnswerVisibility == 'boolean') {
       return this.headless.buildGeneratedAnswer(engine, {
         initialState: {
-          isVisible: storedGeneratedAnswerVisibility === 'true' ? true : false,
+          isVisible: storedGeneratedAnswerVisibility,
         },
       });
     }
@@ -164,11 +169,15 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   toggleGeneratedAnswer() {
     if (this.isVisible) {
       this.generatedAnswer.hide();
-      sessionStorage?.setItem(GENERATED_ANSWER_VISIBILITY_KEY, 'false');
+      this.writeStoredDate({isVisible: false});
     } else {
       this.generatedAnswer.show();
-      sessionStorage?.setItem(GENERATED_ANSWER_VISIBILITY_KEY, 'true');
+      this.writeStoredDate({isVisible: true});
     }
+  }
+
+  writeStoredDate(data) {
+    sessionStorage?.setItem(GENERATED_ANSWER_DATA_KEY, JSON.stringify(data));
   }
 
   get answer() {
@@ -212,12 +221,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     return `generated-answer__answer ${
       this.isStreaming ? 'generated-answer__answer--streaming' : ''
     }`;
-  }
-
-  get toggleGeneratedAnswerLabel() {
-    return this.isVisible
-      ? this.labels.hideGeneratedAnswer
-      : this.labels.showGeneratedAnswer;
   }
 
   get hasRetryableError() {
