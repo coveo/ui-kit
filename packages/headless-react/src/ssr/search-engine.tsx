@@ -8,7 +8,6 @@ import {
 } from '@coveo/headless/ssr';
 // Workaround to prevent Next.js erroring about importing CSR only hooks
 import React from 'react';
-import {ContextState, ReactEngineDefinition} from './types.js';
 import {singleton} from '../utils.js';
 import {
   buildControllerHooks,
@@ -16,6 +15,7 @@ import {
   buildHydratedStateProvider,
   buildStaticStateProvider,
 } from './common.js';
+import {ContextState, ReactEngineDefinition} from './types.js';
 
 export type ReactSearchEngineDefinition<
   TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>,

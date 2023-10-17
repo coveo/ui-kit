@@ -1,9 +1,9 @@
-import React, {useEffect, useRef} from 'react';
 import type {JSX as AtomicJSX} from '@coveo/atomic';
 import type {FoldedResult, Result} from '@coveo/headless';
-import {AtomicSearchBoxInstantResults} from './stencil-generated';
-import {renderToString} from 'react-dom/server';
+import React, {useEffect, useRef} from 'react';
 import {createRoot} from 'react-dom/client';
+import {renderToString} from 'react-dom/server';
+import {AtomicSearchBoxInstantResults} from './stencil-generated';
 
 /**
  * The properties of the AtomicSearchBoxInstantResults component

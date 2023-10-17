@@ -2,7 +2,7 @@ name: 'Setup & build'
 description: 'Setup node, install dependencies & build'
 inputs:
   load-cache:
-    description: "Whether to restore the Nx cache."
+    description: 'Whether to restore the Nx cache.'
     required: false
     default: 'true'
 runs:

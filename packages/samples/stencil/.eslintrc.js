@@ -5,7 +5,6 @@ const gtsPath = resolve(gtsPkgJsonPath, '..');
 module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint'],
   extends: [gtsPath],
   parserOptions: {
     jsxPragma: 'h',

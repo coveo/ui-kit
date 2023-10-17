@@ -1,11 +1,11 @@
-import {CartState, getCartInitialState} from './cart-state';
-import {cartReducer} from './cart-slice';
 import {
   addItem,
   removeItem,
   setItems,
   updateItemQuantity,
 } from './cart-actions';
+import {cartReducer} from './cart-slice';
+import {CartState, getCartInitialState} from './cart-state';
 
 describe('cart-slice', () => {
   const someItem = {
