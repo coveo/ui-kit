@@ -157,7 +157,7 @@ describe('Search Box Test Suites', () => {
       it('should log interface load with a correct number of results for query that return only one result', () => {
         new TestFixture()
           .with(setupSearchboxOnly())
-          .withHash('q=singhr')
+          .withHash('q=singhr65')
           .init();
 
         cy.expectSearchEvent('interfaceLoad').should((analyticsBody) => {
@@ -169,7 +169,7 @@ describe('Search Box Test Suites', () => {
         new TestFixture()
           .with(setupSearchboxOnly())
           .with(addResultList())
-          .withHash('q=singhr')
+          .withHash('q=singhr65')
           .init();
 
         cy.expectSearchEvent('interfaceLoad').should((analyticsBody) => {
@@ -208,7 +208,7 @@ describe('Search Box Test Suites', () => {
       it('should log search box submit with a correct number of results when the query changes', () => {
         new TestFixture()
           .with(setupSearchboxOnly())
-          .withHash('q=singhr')
+          .withHash('q=singhr65')
           .init();
 
         SearchBoxSelectors.inputBox().clear();

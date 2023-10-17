@@ -754,7 +754,7 @@ export declare interface AtomicRecsError extends Components.AtomicRecsError {}
 
 
 @ProxyCmp({
-  inputs: ['analytics', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'logLevel', 'pipeline', 'searchHub', 'timezone'],
+  inputs: ['analytics', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'localizationCompatibilityVersion', 'logLevel', 'pipeline', 'searchHub', 'timezone'],
   methods: ['initialize', 'initializeWithRecommendationEngine', 'getRecommendations', 'getOrganizationEndpoints']
 })
 @Component({
@@ -762,7 +762,7 @@ export declare interface AtomicRecsError extends Components.AtomicRecsError {}
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['analytics', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'logLevel', 'pipeline', 'searchHub', 'timezone'],
+  inputs: ['analytics', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'localizationCompatibilityVersion', 'logLevel', 'pipeline', 'searchHub', 'timezone'],
 })
 export class AtomicRecsInterface {
   protected el: HTMLElement;
@@ -1659,7 +1659,7 @@ export declare interface AtomicSearchBoxRecentQueries extends Components.AtomicS
 
 
 @ProxyCmp({
-  inputs: ['analytics', 'enableRelevanceInspector', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'logLevel', 'pipeline', 'reflectStateInUrl', 'scrollContainer', 'searchHub', 'timezone'],
+  inputs: ['analytics', 'enableRelevanceInspector', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'localizationCompatibilityVersion', 'logLevel', 'pipeline', 'reflectStateInUrl', 'scrollContainer', 'searchHub', 'timezone'],
   methods: ['initialize', 'initializeWithSearchEngine', 'executeFirstSearch', 'getOrganizationEndpoints']
 })
 @Component({
@@ -1667,7 +1667,7 @@ export declare interface AtomicSearchBoxRecentQueries extends Components.AtomicS
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['analytics', 'enableRelevanceInspector', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'logLevel', 'pipeline', 'reflectStateInUrl', 'scrollContainer', 'searchHub', 'timezone'],
+  inputs: ['analytics', 'enableRelevanceInspector', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'localizationCompatibilityVersion', 'logLevel', 'pipeline', 'reflectStateInUrl', 'scrollContainer', 'searchHub', 'timezone'],
 })
 export class AtomicSearchInterface {
   protected el: HTMLElement;
