@@ -44,7 +44,7 @@ export function assertLocalStorageData(data: {isVisible: boolean}) {
   it(`should have value in local storage: ${JSON.stringify(data)}`, () => {
     cy.window().then((win) => {
       const stored = JSON.parse(
-        win.localStorage.getItem('coveo-generated-answer-data') ?? ''
+        win.localStorage.getItem('coveo-generated-answer-data') ?? '{}'
       );
       expect(stored).eql(data);
     });
