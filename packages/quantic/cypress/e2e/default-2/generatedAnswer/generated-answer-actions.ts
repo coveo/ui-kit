@@ -34,6 +34,36 @@ function generatedAnswerActions(selector: GeneratedAnswerSelector) {
         .retryButton()
         .click()
         .logAction('When clicking on the retry button of the generated answer'),
+
+    clickFeedbackOption: (index: number) =>
+      selector
+        .feedbackOption(index)
+        .click({force: true})
+        .logAction(`When clicking the feedback option at the index ${index}`),
+
+    clickFeedbackSubmitButton: () =>
+      selector
+        .feedbackSubmitButton()
+        .click()
+        .logAction('When clicking on the feedback modal submit button'),
+
+    clickFeedbackCancelButton: () =>
+      selector
+        .feedbackCancelButton()
+        .click()
+        .logAction('When clicking on the feedback modal cancel button'),
+
+    clickFeedbackDoneButton: () =>
+      selector
+        .feedbackDoneButton()
+        .click()
+        .logAction('When clicking on the feedback modal done button'),
+
+    typeInFeedbackDetailsInput: (text: string) =>
+      selector
+        .feedbackDetailsInput()
+        .type(text)
+        .logAction('When typing in the feedback details input'),
   };
 }
 
