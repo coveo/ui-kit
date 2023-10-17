@@ -1,6 +1,7 @@
 import {Result} from '@coveo/headless';
 import {i18n} from 'i18next';
 import {SearchResponseSuccess} from '../../../headless/dist/definitions/api/search/search/search-response';
+import {i18nCompatibilityVersion} from '../../src/components';
 import {buildTestUrl} from '../utils/setupComponent';
 import {
   ConsoleAliases,
@@ -55,6 +56,7 @@ export class TestFixture {
   private hash = '';
   private style = document.createElement('style');
   private language?: string;
+  private localizationCompatibilityVersion: i18nCompatibilityVersion = 'v4';
   private disabledAnalytics = false;
   private doNotTrack = false;
   private fieldCaptions: {field: string; captions: Record<string, string>}[] =
@@ -119,6 +121,13 @@ export class TestFixture {
 
   public withLanguage(lang: string) {
     this.language = lang;
+    return this;
+  }
+
+  public withLocalizationCompatibilityVersion(
+    localizationCompatibilityVersion: i18nCompatibilityVersion
+  ) {
+    this.localizationCompatibilityVersion = localizationCompatibilityVersion;
     return this;
   }
 
@@ -223,6 +232,13 @@ export class TestFixture {
 
       if (this.language) {
         searchInterfaceComponent.setAttribute('language', this.language);
+      }
+
+      if (this.localizationCompatibilityVersion) {
+        searchInterfaceComponent.setAttribute(
+          'localization-compatibility-version',
+          this.localizationCompatibilityVersion
+        );
       }
 
       if (this.disabledAnalytics) {
