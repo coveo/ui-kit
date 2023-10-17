@@ -701,19 +701,19 @@
     <name>quantic_SearchInsteadFor</name>
   </customLabels>
   <customLabels>
-    <label>Non pertinent</label>
+    <label>Hors sujet</label>
     <name>quantic_Irrelevant</name>
   </customLabels>
   <customLabels>
-    <label>pas précis</label>
-    <name>quantic_NotAccurate</name>
+    <label>Inexacte</label>
+    <name>quantic_Inaccurate</name>
   </customLabels>
   <customLabels>
     <label>Pas à jour</label>
     <name>quantic_OutOfDate</name>
   </customLabels>
   <customLabels>
-    <label>Nocif</label>
+    <label>Nocive</label>
     <name>quantic_Harmful</name>
   </customLabels>
   <customLabels>
@@ -721,7 +721,7 @@
     <name>quantic_Feedback</name>
   </customLabels>
   <customLabels>
-    <label>Pourquoi la réponse générée n'a-t-elle pas été utile ?</label>
+    <label>Dites-nous pourquoi la réponse générée n'était pas utile.</label>
     <name>quantic_WhyGeneratedAnswerWasNotHelpful</name>
   </customLabels>
 </Translations>

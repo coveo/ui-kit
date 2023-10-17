@@ -2,9 +2,9 @@ import couldNotGenerateAnAnswer from '@salesforce/label/c.quantic_CouldNotGenera
 import feedback from '@salesforce/label/c.quantic_Feedback';
 import generatedAnswerForYou from '@salesforce/label/c.quantic_GeneratedAnswerForYou';
 import harmful from '@salesforce/label/c.quantic_Harmful';
+import inaccurate from '@salesforce/label/c.quantic_Inaccurate';
 import irrelevant from '@salesforce/label/c.quantic_Irrelevant';
 import loading from '@salesforce/label/c.quantic_Loading';
-import notAccurate from '@salesforce/label/c.quantic_NotAccurate';
 import other from '@salesforce/label/c.quantic_Other';
 import outOfDate from '@salesforce/label/c.quantic_OutOfDate';
 import thisAnswerWasHelpful from '@salesforce/label/c.quantic_ThisAnswerWasHelpful';
@@ -61,7 +61,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     other,
     harmful,
     irrelevant,
-    notAccurate,
+    inaccurate,
     outOfDate,
     feedback,
     whyGeneratedAnswerWasNotHelpful,
@@ -231,7 +231,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
         value: 'irrelevant',
       },
       {
-        label: this.labels.notAccurate,
+        label: this.labels.inaccurate,
         value: 'notAccurate',
       },
       {

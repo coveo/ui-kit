@@ -1282,11 +1282,11 @@
     <shortDescription>Irrelevant</shortDescription>
   </labels>
   <labels>
-    <fullName>quantic_NotAccurate</fullName>
-    <value>Not accurate</value>
+    <fullName>quantic_Inaccurate</fullName>
+    <value>Inaccurate</value>
     <language>en_US</language>
     <protected>false</protected>
-    <shortDescription>Not accurate</shortDescription>
+    <shortDescription>Inaccurate</shortDescription>
   </labels>
   <labels>
     <fullName>quantic_OutOfDate</fullName>
@@ -1311,9 +1311,9 @@
   </labels>
   <labels>
     <fullName>quantic_WhyGeneratedAnswerWasNotHelpful</fullName>
-    <value>Why the generated answer was not helpful?</value>
+    <value>Tell us why the generated answer was not helpful.</value>
     <language>en_US</language>
     <protected>false</protected>
-    <shortDescription>Why the generated answer was not helpful</shortDescription>
+    <shortDescription>Tell us why the generated answer was not helpful.</shortDescription>
   </labels>
 </CustomLabels>
