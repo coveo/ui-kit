@@ -333,7 +333,7 @@ export function makeAnalyticsAction<
   analyticsPayloadBuilder,
   analyticsType,
 }: AnalyticsActionOptions<
-  LegacyEventType,
+  Exclude<LegacyEventType, AnalyticsType.Search>,
   LegacyStateNeeded,
   StateNeeded,
   PayloadType
