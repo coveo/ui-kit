@@ -62,7 +62,7 @@
     "redux-mock-store": "1.5.4",
     "redux-thunk": "2.4.2",
     "ts-debounce": "3.0.0",
-    "undici": "5.25.4"
+    "undici": "5.26.3"
   },
   "devDependencies": {
     "@microsoft/api-extractor": "7.38.0",

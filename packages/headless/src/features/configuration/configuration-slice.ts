@@ -23,7 +23,7 @@ import {
   analyticsAPIEndpoint,
 } from './configuration-state';
 
-function analyticsUrlFromPlatformUrl(
+function legacyAnalyticsUrlFromPlatformUrl(
   platformUrl: string,
   organizationId: string
 ) {
@@ -64,7 +64,7 @@ export const configurationReducer = createReducer(
         if (action.payload.platformUrl) {
           state.platformUrl = action.payload.platformUrl;
           state.search.apiBaseUrl = `${action.payload.platformUrl}${searchAPIEndpoint}`;
-          state.analytics.apiBaseUrl = analyticsUrlFromPlatformUrl(
+          state.analytics.legacyApiBaseUrl = legacyAnalyticsUrlFromPlatformUrl(
             action.payload.platformUrl,
             state.organizationId
           );
@@ -102,8 +102,8 @@ export const configurationReducer = createReducer(
         if (!isNullOrUndefined(action.payload.originLevel3)) {
           state.analytics.originLevel3 = action.payload.originLevel3;
         }
-        if (!isNullOrUndefined(action.payload.apiBaseUrl)) {
-          state.analytics.apiBaseUrl = action.payload.apiBaseUrl;
+        if (!isNullOrUndefined(action.payload.legacyApiBaseUrl)) {
+          state.analytics.legacyApiBaseUrl = action.payload.legacyApiBaseUrl;
         }
         if (!isNullOrUndefined(action.payload.runtimeEnvironment)) {
           state.analytics.runtimeEnvironment =

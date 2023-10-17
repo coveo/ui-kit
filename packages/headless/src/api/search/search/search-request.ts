@@ -31,6 +31,7 @@ import {
   SortCriteriaParam,
   TabParam,
   TimezoneParam,
+  PipelineRuleParams,
 } from '../search-api-params';
 
 export type SearchRequest = BaseParam &
@@ -62,4 +63,5 @@ export type SearchRequest = BaseParam &
   ExcerptLength &
   ActionsHistoryParam &
   AuthenticationParam &
-  AutomaticFacetsParams;
+  AutomaticFacetsParams &
+  PipelineRuleParams;
