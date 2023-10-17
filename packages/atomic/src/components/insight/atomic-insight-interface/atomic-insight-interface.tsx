@@ -22,6 +22,7 @@ import {
 import {InitializeEvent} from '../../../utils/initialization-utils';
 import {ArrayProp} from '../../../utils/props-utils';
 import {CommonBindings} from '../../common/interface/bindings';
+import {i18nCompatibilityVersion} from '../../common/interface/i18n';
 import {
   BaseAtomicInterface,
   CommonAtomicInterfaceHelper,
@@ -69,6 +70,11 @@ export class AtomicInsightInterface
    * The severity level of the messages to log in the console.
    */
   @Prop({reflect: true}) public logLevel?: InsightLogLevel;
+  /**
+   * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
+   */
+  @Prop() public localizationCompatibilityVersion: i18nCompatibilityVersion =
+    'v3';
   /**
    * The service insight interface language.
    */

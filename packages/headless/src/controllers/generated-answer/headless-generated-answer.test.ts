@@ -8,6 +8,7 @@ import {
   resetAnswer,
   setIsVisible,
   streamAnswer,
+  updateResponseFormat,
 } from '../../features/generated-answer/generated-answer-actions';
 import {
   logCopyGeneratedAnswer,
@@ -24,6 +25,7 @@ import {
   GeneratedAnswerState,
   getGeneratedAnswerInitialState,
 } from '../../features/generated-answer/generated-answer-state';
+import {GeneratedResponseFormat} from '../../features/generated-answer/generated-response-format';
 import {executeSearch} from '../../features/search/search-actions';
 import {buildMockCitation} from '../../test/mock-citation';
 import {
@@ -175,21 +177,58 @@ describe('generated answer', () => {
     expect(analyticsAction).toBeDefined();
   });
 
-  describe('when passing initial state', () => {
-    it('should dispatch setIsVisible action when set to true', () => {
-      initGeneratedAnswer({initialState: {isVisible: true}});
+  describe('#rephrase', () => {
+    const responseFormat: GeneratedResponseFormat = {
+      answerStyle: 'concise',
+    };
 
-      const action = findAction(setIsVisible.type);
+    it('dispatches the update action', () => {
+      generatedAnswer.rephrase(responseFormat);
+
+      const action = findAction(updateResponseFormat.type);
       expect(action).toBeDefined();
-      expect(action).toHaveProperty('payload', true);
+      expect(action).toHaveProperty('payload', responseFormat);
     });
 
-    it('should dispatch setIsVisible action when set to false', () => {
-      initGeneratedAnswer({initialState: {isVisible: false}});
+    it('dispatches #executeSearch', () => {
+      generatedAnswer.rephrase(responseFormat);
 
-      const action = findAction(setIsVisible.type);
-      expect(action).toBeDefined();
-      expect(action).toHaveProperty('payload', false);
+      const action = engine.findAsyncAction(executeSearch.pending);
+
+      expect(action).toBeTruthy();
+    });
+  });
+
+  describe('when passing initial state', () => {
+    describe('when #isVisible is set', () => {
+      it('should dispatch setIsVisible action when set to true', () => {
+        initGeneratedAnswer({initialState: {isVisible: true}});
+
+        const action = findAction(setIsVisible.type);
+        expect(action).toBeDefined();
+        expect(action).toHaveProperty('payload', true);
+      });
+
+      it('should dispatch setIsVisible action when set to false', () => {
+        initGeneratedAnswer({initialState: {isVisible: false}});
+
+        const action = findAction(setIsVisible.type);
+        expect(action).toBeDefined();
+        expect(action).toHaveProperty('payload', false);
+      });
+    });
+
+    describe('when #responseFormat is set', () => {
+      it('should dispatch updateResponseFormat action', () => {
+        const responseFormat: GeneratedResponseFormat = {
+          answerStyle: 'concise',
+        };
+        initGeneratedAnswer({initialState: {responseFormat}});
+
+        const action = findAction(updateResponseFormat.type);
+        expect(action).toBeDefined();
+        expect(action).toHaveProperty('payload', responseFormat);
+      });
     });
   });
 

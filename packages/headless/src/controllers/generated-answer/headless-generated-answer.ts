@@ -5,6 +5,7 @@ import {
   resetAnswer,
   likeGeneratedAnswer,
   dislikeGeneratedAnswer,
+  updateResponseFormat,
   openGeneratedAnswerFeedbackModal,
   closeGeneratedAnswerFeedbackModal,
   setIsVisible,
@@ -17,6 +18,7 @@ import {
   logGeneratedAnswerFeedback,
   logLikeGeneratedAnswer,
   logOpenGeneratedAnswerSource,
+  logRephraseGeneratedAnswer,
   logRetryGeneratedAnswer,
   logGeneratedAnswerShowAnswers,
   logGeneratedAnswerHideAnswers,
@@ -24,6 +26,7 @@ import {
 } from '../../features/generated-answer/generated-answer-analytics-actions';
 import {generatedAnswerReducer as generatedAnswer} from '../../features/generated-answer/generated-answer-slice';
 import {GeneratedAnswerState} from '../../features/generated-answer/generated-answer-state';
+import {GeneratedResponseFormat} from '../../features/generated-answer/generated-response-format';
 import {executeSearch} from '../../features/search/search-actions';
 import {GeneratedAnswerSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
@@ -51,6 +54,10 @@ export interface GeneratedAnswer extends Controller {
    * Determines if the generated answer was disliked, or downvoted by the end user.
    */
   dislike(): void;
+  /**
+   * Re-executes the query to generate the answer in the specified format.
+   */
+  rephrase(responseFormat: GeneratedResponseFormat): void;
   /**
    * Opens the modal to provide feedback about why the generated answer was not relevant.
    */
@@ -89,7 +96,16 @@ export interface GeneratedAnswer extends Controller {
 }
 
 export interface GeneratedAnswerProps {
-  initialState?: {isVisible: boolean};
+  initialState?: {
+    /**
+     * Sets the component visibility state on load.
+     */
+    isVisible?: boolean;
+    /**
+     * The initial formatting options applied to generated answers when the controller first loads.
+     */
+    responseFormat?: GeneratedResponseFormat;
+  };
 }
 
 /**
@@ -153,6 +169,11 @@ export function buildGeneratedAnswer(
   if (isVisible !== undefined) {
     dispatch(setIsVisible(isVisible));
   }
+  const initialResponseFormat = props.initialState?.responseFormat;
+  if (initialResponseFormat) {
+    dispatch(updateResponseFormat(initialResponseFormat));
+  }
+
   subscribeToSearchRequests();
 
   return {
@@ -198,12 +219,18 @@ export function buildGeneratedAnswer(
       dispatch(logOpenGeneratedAnswerSource(citationId));
     },
 
+    rephrase(responseFormat: GeneratedResponseFormat) {
+      dispatch(updateResponseFormat(responseFormat));
+      dispatch(executeSearch(logRephraseGeneratedAnswer(responseFormat)));
+    },
+
     show() {
       if (!this.state.isVisible) {
         dispatch(setIsVisible(true));
         dispatch(logGeneratedAnswerShowAnswers());
       }
     },
+
     hide() {
       if (this.state.isVisible) {
         dispatch(setIsVisible(false));

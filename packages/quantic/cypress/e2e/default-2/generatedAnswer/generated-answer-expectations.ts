@@ -114,6 +114,13 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         );
     },
 
+    displayFeedbackModal: (display: boolean) => {
+      selector
+        .feedbackModal()
+        .should(display ? 'exist' : 'not.exist')
+        .log(`${should(display)} display the feedback modal`);
+    },
+
     logStreamIdInAnalytics(streamId: string) {
       cy.wait(InterceptAliases.UA.Load)
         .then((interception) => {
@@ -212,6 +219,33 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
             'generativeQuestionAnsweringId',
             streamId
           );
+        }
+      );
+    },
+
+    logGeneratedAnswerFeedbackSubmit(
+      streamId: string,
+      payload: {
+        reason: string;
+        details?: string;
+      }
+    ) {
+      logCustomGeneratedAnswerEvent(
+        InterceptAliases.UA.GeneratedAnswer.GeneratedAnswerFeedbackSubmit,
+        (analyticsBody: {customData: object; eventType: string}) => {
+          const customData = analyticsBody?.customData;
+          expect(analyticsBody).to.have.property(
+            'eventType',
+            'generatedAnswer'
+          );
+          expect(customData).to.have.property(
+            'generativeQuestionAnsweringId',
+            streamId
+          );
+          expect(customData).to.have.property('reason', payload.reason);
+          if (payload.details) {
+            expect(customData).to.have.property('details', payload.details);
+          }
         }
       );
     },
