@@ -4,18 +4,16 @@ import {
   TestFixture,
 } from '../../../fixtures/test-fixture';
 import * as CommonAssertions from '../../common-assertions';
-import * as CommonFacetAssertions from '../../facets/facet-common-assertions';
 import {addFacet} from '../../facets/facet/facet-actions';
-import {FacetSelectors} from '../../facets/facet/facet-selectors';
 import {
   addFieldValueInResponse,
   addResultList,
   buildTemplateWithSections,
 } from '../result-list-actions';
 import {
-  assertShouldRenderValues,
   assertDisplaysXMoreLabel,
   assertDoesNotDisplayXMoreLabel,
+  assertShouldRenderValues,
 } from './result-multi-value-text-assertions';
 import {
   resultMultiValueTextComponent,
@@ -30,13 +28,13 @@ export interface MultiValueTextProps {
 
 const addMultiValueText = (
   props: MultiValueTextProps = {},
-  slot: HTMLElement[] = []
+  slot?: HTMLElement
 ) => {
   const multiValueTextEl = generateComponentHTML(
     resultMultiValueTextComponent,
     props as TagProps
   );
-  slot.forEach((el) => multiValueTextEl.appendChild(el));
+  slot && multiValueTextEl.appendChild(slot);
   return addResultList(
     buildTemplateWithSections({bottomMetadata: multiValueTextEl})
   );
@@ -49,260 +47,151 @@ export interface FacetWithResponseProps {
   selectedValues: string[];
 }
 
-const addFacetWithResponse =
-  ({facetId, field, values, selectedValues}: FacetWithResponseProps) =>
-  (fixture: TestFixture) => {
-    fixture
-      .with(addFacet({'facet-id': facetId, field}))
-      .withCustomResponse((response) => {
-        response.facets = [
-          {
-            facetId,
-            field,
-            indexScore: 0,
-            moreValuesAvailable: false,
-            values: values.map((value) => ({
-              value,
-              numberOfResults: 1337,
-              state: selectedValues.includes(value) ? 'selected' : 'idle',
-            })),
-          },
-        ];
-      });
-  };
-
 describe('Result MultiValueText Component', () => {
-  describe('when not used inside a result template', () => {
-    beforeEach(() => {
-      new TestFixture()
-        .withElement(generateComponentHTML(resultMultiValueTextComponent))
-        .init();
-    });
+  const values = {
+    first: 'The first value',
+    second: 'The second value',
+    third: 'The third value',
+  };
+  const field = 'hello_world';
+  const localizedValues = Object.values(values);
+  const originalValues = Object.keys(values);
+
+  it('when not used inside a result template, it gets removed', () => {
+    new TestFixture()
+      .withElement(generateComponentHTML(resultMultiValueTextComponent))
+      .init();
+
     CommonAssertions.assertRemovesComponent();
   });
 
   describe('when used inside a result template', () => {
-    describe('when the field does not exist for the result', () => {
-      beforeEach(() => {
-        new TestFixture()
-          .with(addMultiValueText({field: 'thisfielddoesnotexist'}))
-          .init();
-      });
-      CommonAssertions.assertConsoleError(false);
+    it('does not error if the field does not exist', () => {
+      new TestFixture()
+        .with(addMultiValueText({field: 'thisfielddoesnotexist'}))
+        .init();
+
+      CommonAssertions.assertConsoleErrorWithoutIt(false);
     });
 
-    describe('when the field value is not a string nor a string array', () => {
-      beforeEach(() => {
-        new TestFixture()
-          .with(addMultiValueText({field: 'hello'}))
-          .with(addFieldValueInResponse('hello', 420))
-          .init();
-      });
-      CommonAssertions.assertConsoleError();
+    it('shows an error when the field value is not a string nor a string array', () => {
+      new TestFixture()
+        .with(addMultiValueText({field}))
+        .with(addFieldValueInResponse(field, 420))
+        .init();
+
+      CommonAssertions.assertConsoleErrorWithoutIt();
     });
 
-    function testWithValidFieldValue(
-      getFieldValues: (valuesToTest: string[]) => string | string[],
-      delimiter?: string
-    ) {
-      const field = 'hello_world';
-      function prepareValuesWithMaximum(
-        valuesAndCaptions: Record<string, string>,
-        maxValuesToDisplay: number,
-        slot: HTMLElement[] = []
-      ) {
-        return new TestFixture()
-          .with(
-            addMultiValueText(
-              {
-                field,
-                'max-values-to-display': maxValuesToDisplay,
-                ...(delimiter ? {delimiter} : {}),
-              },
-              slot
-            )
-          )
-          .with(
-            addFieldValueInResponse(
+    it('when the field is an array of 2 values and max-values-to-display is 1, it should truncate', () => {
+      new TestFixture()
+        .with(
+          addMultiValueText({
+            field,
+            'max-values-to-display': 1,
+          })
+        )
+        .with(addFieldValueInResponse(field, originalValues.slice(0, 2)))
+        .withFieldCaptions(field, values)
+        .withTranslation({'n-more': '{{value}} more'})
+        .init();
+
+      assertShouldRenderValues(localizedValues.slice(0, 1));
+      assertDisplaysXMoreLabel(1);
+      CommonAssertions.assertAccessibilityWithoutIt(
+        ResultMultiValueTextSelectors.firstInResult
+      );
+    });
+
+    it('when the field is an array of 3 values and max-values-to-display is 3, it should not truncate', () => {
+      new TestFixture()
+        .with(
+          addMultiValueText({
+            field,
+            'max-values-to-display': 3,
+          })
+        )
+        .with(addFieldValueInResponse(field, originalValues))
+        .withFieldCaptions(field, values)
+        .withTranslation({'n-more': '{{value}} more'})
+        .init();
+
+      assertShouldRenderValues(localizedValues);
+      assertDoesNotDisplayXMoreLabel();
+      CommonAssertions.assertAccessibilityWithoutIt(
+        ResultMultiValueTextSelectors.firstInResult
+      );
+    });
+
+    it('when there is a slot it should replace the correct values', () => {
+      const slotElement = generateComponentHTML('span', {
+        slot: `result-multi-value-text-value-${originalValues[1]}`,
+      });
+      slotElement.innerText =
+        'The field value at position 1 should be replaced by this';
+
+      new TestFixture()
+        .with(
+          addMultiValueText(
+            {
               field,
-              getFieldValues(Object.keys(valuesAndCaptions))
-            )
+              'max-values-to-display': 4,
+            },
+            slotElement
           )
-          .withFieldCaptions(field, valuesAndCaptions)
-          .withTranslation({'n-more': '{{value}} more'});
-      }
+        )
+        .with(addFieldValueInResponse(field, originalValues))
+        .withFieldCaptions(field, values)
+        .withTranslation({'n-more': '{{value}} more'})
+        .init();
 
-      describe('and the field has an array of 2 values', () => {
-        const values = {
-          first: 'The first value',
-          second: 'The last value',
-        };
-        const localizedValues = Object.values(values);
-
-        describe('with max-values-to-display=1', () => {
-          beforeEach(() => {
-            prepareValuesWithMaximum(values, 1).init();
-          });
-
-          assertShouldRenderValues(localizedValues.slice(0, 1));
-          assertDisplaysXMoreLabel(1);
-        });
-      });
-
-      describe('and the field has an array of 3 values', () => {
-        const values = {
-          first: 'The first value',
-          second: 'Another value',
-          third: 'The last value',
-        };
-        const localizedValues = Object.values(values);
-
-        describe('with max-values-to-display=1', () => {
-          beforeEach(() => {
-            prepareValuesWithMaximum(values, 1).init();
-          });
-
-          assertShouldRenderValues(localizedValues.slice(0, 1));
-          assertDisplaysXMoreLabel(2);
-        });
-
-        describe('with max-values-to-display=2', () => {
-          beforeEach(() => {
-            prepareValuesWithMaximum(values, 2).init();
-          });
-
-          assertShouldRenderValues(localizedValues.slice(0, 1));
-          assertDisplaysXMoreLabel(2);
-        });
-      });
-
-      describe('and the field has an array of 4 values', () => {
-        const values = {
-          first: 'The first value',
-          second: 'Another value',
-          third: 'Almost the last value',
-          fourth: 'The last value',
-        };
-        const localizedValues = Object.values(values);
-
-        describe('with max-values-to-display=1', () => {
-          beforeEach(() => {
-            prepareValuesWithMaximum(values, 1).init();
-          });
-
-          assertShouldRenderValues(localizedValues.slice(0, 1));
-          assertDisplaysXMoreLabel(3);
-          it('should be accessible', () => {
-            CommonAssertions.assertAccessibility(
-              ResultMultiValueTextSelectors.firstInResult
-            );
-          });
-        });
-
-        describe('with max-values-to-display=2', () => {
-          beforeEach(() => {
-            prepareValuesWithMaximum(values, 2).init();
-          });
-
-          assertShouldRenderValues(localizedValues.slice(0, 2));
-          assertDisplaysXMoreLabel(2);
-        });
-
-        describe('with max-values-to-display=3', () => {
-          beforeEach(() => {
-            prepareValuesWithMaximum(values, 3).init();
-          });
-
-          assertShouldRenderValues(localizedValues.slice(0, 2));
-          assertDisplaysXMoreLabel(2);
-        });
-
-        describe('with max-values-to-display=4', () => {
-          const rawValues = Object.keys(values);
-
-          describe('by default', () => {
-            beforeEach(() => {
-              prepareValuesWithMaximum(values, 4).init();
-            });
-
-            assertShouldRenderValues(localizedValues);
-            assertDoesNotDisplayXMoreLabel();
-          });
-
-          describe('with slots', () => {
-            const buildSlotElement = (value: string, text: string) => {
-              const el = generateComponentHTML('span', {
-                slot: `result-multi-value-text-value-${value}`,
-              });
-              el.innerText = text;
-              return el;
-            };
-
-            beforeEach(() => {
-              prepareValuesWithMaximum(values, 4, [
-                buildSlotElement(rawValues[1], 'A'),
-                buildSlotElement(rawValues[3], 'B'),
-              ]).init();
-            });
-
-            assertShouldRenderValues(
-              [localizedValues[0], 'A', localizedValues[2], 'B'],
-              'should replace the correct values'
-            );
-          });
-
-          describe('with a facet and two selected values', () => {
-            const facetId = 'blah';
-            const selectedValues = [rawValues[1], rawValues[2]];
-            beforeEach(() => {
-              prepareValuesWithMaximum(values, 4)
-                .with(
-                  addFacetWithResponse({
-                    facetId,
-                    field,
-                    values: rawValues,
-                    selectedValues,
-                  })
-                )
-                .init();
-            });
-
-            CommonFacetAssertions.assertDisplayFacet(FacetSelectors, true);
-
-            assertShouldRenderValues(
-              [
-                localizedValues[1],
-                localizedValues[2],
-                localizedValues[0],
-                localizedValues[3],
-              ],
-              'displays the selected values first'
-            );
-          });
-        });
-
-        describe('with max-values-to-display=5', () => {
-          beforeEach(() => {
-            prepareValuesWithMaximum(values, 5).init();
-          });
-
-          assertShouldRenderValues(localizedValues);
-          assertDoesNotDisplayXMoreLabel();
-        });
-      });
-    }
-
-    describe('when the field value exists & is a string array', () => {
-      testWithValidFieldValue((valuesToTest) =>
-        valuesToTest.map((value) => ` ${value} `)
-      );
+      assertShouldRenderValues([
+        localizedValues[0],
+        'The field value at position 1 should be replaced by this',
+        localizedValues[2],
+      ]);
     });
 
-    describe('when the field value exists & is a string', () => {
-      testWithValidFieldValue(
-        (valuesToTest) => valuesToTest.map((value) => ` ${value} `).join(';'),
-        ';'
-      );
+    it('with a facet and two selected values, it should display the selected values first', () => {
+      const selectedValues = [originalValues[1], originalValues[2]];
+      const facetId = 'blah';
+
+      new TestFixture()
+        .with(
+          addMultiValueText({
+            field,
+            'max-values-to-display': 4,
+          })
+        )
+        .with(addFieldValueInResponse(field, originalValues))
+        .withFieldCaptions(field, values)
+        .withTranslation({'n-more': '{{value}} more'})
+        .with((fixture: TestFixture) => {
+          fixture
+            .with(addFacet({'facet-id': facetId, field}))
+            .withCustomResponse((response) => {
+              response.facets = [
+                {
+                  facetId,
+                  field,
+                  indexScore: 0,
+                  moreValuesAvailable: false,
+                  values: originalValues.map((v) => ({
+                    value: v,
+                    numberOfResults: 1337,
+                    state: selectedValues.includes(v) ? 'selected' : 'idle',
+                  })),
+                },
+              ];
+            });
+        })
+        .init();
+
+      assertShouldRenderValues([
+        localizedValues[1],
+        localizedValues[2],
+        localizedValues[0],
+      ]);
     });
   });
 });

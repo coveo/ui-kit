@@ -1,4 +1,6 @@
-import fetch from 'cross-fetch';
+//TODO V3: remove this import, global fetch is a requirement now.
+//@ts-expect-error package is just an alias.
+import fetch from '@coveo/please-give-me-fetch';
 import * as BackOff from 'exponential-backoff';
 import pino from 'pino';
 import {PlatformEnvironment} from '../recommendation.index';
@@ -17,7 +19,7 @@ import {
   PreprocessRequest,
 } from './preprocess-request';
 
-jest.mock('cross-fetch');
+jest.mock('@coveo/please-give-me-fetch');
 
 const {Response} = jest.requireActual('node-fetch');
 const mockFetch = fetch as jest.Mock;

@@ -14,12 +14,14 @@ import { ResultRenderingFunction } from "./components/common/result-list/result-
 import { InsightEngine, InsightFacetSortCriterion, InsightFacetSortOrder, InsightFoldedResult, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 import { FacetDisplayValues } from "./components/common/facets/facet-common";
 import { i18n } from "i18next";
+import { i18nCompatibilityVersion } from "./components/common/interface/i18n";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 import { NumericFacetDisplayValues } from "./components/common/facets/numeric-facet-common";
 import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Section } from "./components/common/atomic-layout-section/sections";
 import { PlatformEnvironment, RecommendationEngine } from "@coveo/headless/recommendation";
 import { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
+import { i18nCompatibilityVersion as i18nCompatibilityVersion1 } from "./components";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 import { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
@@ -37,12 +39,14 @@ export { ResultRenderingFunction } from "./components/common/result-list/result-
 export { InsightEngine, InsightFacetSortCriterion, InsightFacetSortOrder, InsightFoldedResult, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 export { FacetDisplayValues } from "./components/common/facets/facet-common";
 export { i18n } from "i18next";
+export { i18nCompatibilityVersion } from "./components/common/interface/i18n";
 export { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 export { NumericFacetDisplayValues } from "./components/common/facets/numeric-facet-common";
 export { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 export { Section } from "./components/common/atomic-layout-section/sections";
 export { PlatformEnvironment, RecommendationEngine } from "@coveo/headless/recommendation";
 export { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
+export { i18nCompatibilityVersion as i18nCompatibilityVersion1 } from "./components";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 export { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
 export { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
@@ -100,6 +104,11 @@ export namespace Components {
      * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
      */
     interface AtomicBreadbox {
+        /**
+          * This prop allows you to control the display depth of the path by specifying the number of parent or ancestor breadcrumbs links relative to the currently selected value.  If the path size is equal to or less than the pathLimit, all values in the path will be displayed without truncation.  If the path size exceeds the pathLimit, it will truncate the path by replacing the middle values with ellipses ('...').  Minimum: `1`
+          * @defaultValue `3`
+         */
+        "pathLimit": number;
     }
     /**
      * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -629,6 +638,10 @@ export namespace Components {
           * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath": string;
+        /**
+          * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
+         */
+        "localizationCompatibilityVersion": i18nCompatibilityVersion;
         /**
           * The severity level of the messages to log in the console.
          */
@@ -1365,6 +1378,10 @@ export namespace Components {
           * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath": string;
+        /**
+          * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
+         */
+        "localizationCompatibilityVersion": i18nCompatibilityVersion1;
         /**
           * The severity level of the messages to log in the console.
          */
@@ -2156,6 +2173,10 @@ export namespace Components {
           * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath": string;
+        /**
+          * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
+         */
+        "localizationCompatibilityVersion": i18nCompatibilityVersion1;
         /**
           * The severity level of the messages to log in the console.
          */
@@ -3975,6 +3996,11 @@ declare namespace LocalJSX {
      * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
      */
     interface AtomicBreadbox {
+        /**
+          * This prop allows you to control the display depth of the path by specifying the number of parent or ancestor breadcrumbs links relative to the currently selected value.  If the path size is equal to or less than the pathLimit, all values in the path will be displayed without truncation.  If the path size exceeds the pathLimit, it will truncate the path by replacing the middle values with ellipses ('...').  Minimum: `1`
+          * @defaultValue `3`
+         */
+        "pathLimit"?: number;
     }
     /**
      * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -4482,6 +4508,10 @@ declare namespace LocalJSX {
           * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath"?: string;
+        /**
+          * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
+         */
+        "localizationCompatibilityVersion"?: i18nCompatibilityVersion;
         /**
           * The severity level of the messages to log in the console.
          */
@@ -5192,6 +5222,10 @@ declare namespace LocalJSX {
           * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath"?: string;
+        /**
+          * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
+         */
+        "localizationCompatibilityVersion"?: i18nCompatibilityVersion1;
         /**
           * The severity level of the messages to log in the console.
          */
@@ -5936,6 +5970,10 @@ declare namespace LocalJSX {
           * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath"?: string;
+        /**
+          * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
+         */
+        "localizationCompatibilityVersion"?: i18nCompatibilityVersion1;
         /**
           * The severity level of the messages to log in the console.
          */

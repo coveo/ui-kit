@@ -2,11 +2,9 @@ import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
 import {ProductRecommendation} from '../../../commerce.index';
-import {
-  fetchProductListing,
-} from '../../../features/commerce/product-listing/product-listing-actions';
-import {productListingV2Reducer as productListing} from '../../../features/commerce/product-listing/product-listing-slice';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
+import {fetchProductListing} from '../../../features/commerce/product-listing/product-listing-actions';
+import {productListingV2Reducer as productListing} from '../../../features/commerce/product-listing/product-listing-slice';
 import {loadReducerError} from '../../../utils/errors';
 import {
   buildController,
@@ -43,9 +41,7 @@ export type ProductListingControllerState = ProductListing['state'];
  * @param engine - The headless commerce engine.
  * @returns A `ProductListing` controller instance.
  */
-export function buildProductListing(
-  engine: CommerceEngine
-): ProductListing {
+export function buildProductListing(engine: CommerceEngine): ProductListing {
   if (!loadBaseProductListingReducers(engine)) {
     throw loadReducerError;
   }
@@ -64,7 +60,7 @@ export function buildProductListing(
         products,
         error,
         isLoading,
-        responseId
+        responseId,
       };
     },
 

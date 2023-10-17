@@ -1,6 +1,7 @@
 import {Result} from '@coveo/headless';
 import {i18n} from 'i18next';
 import {SearchResponseSuccess} from '../../../headless/dist/definitions/api/search/search/search-response';
+import {i18nCompatibilityVersion} from '../../src/components';
 import {buildTestUrl} from '../utils/setupComponent';
 import {
   ConsoleAliases,
@@ -13,7 +14,7 @@ import {
   SearchResponseModifier,
   SearchResponseModifierPredicate,
   setupIntercept,
-  stubConsole,
+  spyConsole,
   UrlParts,
   TestFeature,
   configureI18n,
@@ -55,6 +56,7 @@ export class TestFixture {
   private hash = '';
   private style = document.createElement('style');
   private language?: string;
+  private localizationCompatibilityVersion: i18nCompatibilityVersion = 'v4';
   private disabledAnalytics = false;
   private doNotTrack = false;
   private fieldCaptions: {field: string; captions: Record<string, string>}[] =
@@ -119,6 +121,13 @@ export class TestFixture {
 
   public withLanguage(lang: string) {
     this.language = lang;
+    return this;
+  }
+
+  public withLocalizationCompatibilityVersion(
+    localizationCompatibilityVersion: i18nCompatibilityVersion
+  ) {
+    this.localizationCompatibilityVersion = localizationCompatibilityVersion;
     return this;
   }
 
@@ -199,7 +208,7 @@ export class TestFixture {
     !this.redirected && cy.visit(buildTestUrl(this.hash));
     cy.injectAxe();
     setupIntercept();
-    stubConsole();
+    spyConsole();
 
     cy.window().then((win) => {
       Object.defineProperty(win.navigator, 'doNotTrack', {
@@ -225,6 +234,13 @@ export class TestFixture {
         searchInterfaceComponent.setAttribute('language', this.language);
       }
 
+      if (this.localizationCompatibilityVersion) {
+        searchInterfaceComponent.setAttribute(
+          'localization-compatibility-version',
+          this.localizationCompatibilityVersion
+        );
+      }
+
       if (this.disabledAnalytics) {
         searchInterfaceComponent.setAttribute('analytics', 'false');
       } else {
@@ -243,24 +259,26 @@ export class TestFixture {
         return;
       }
 
-      searchInterfaceComponent.initialize(sampleConfig).then(() => {
-        configureI18n(
-          searchInterfaceComponent.i18n,
-          this.translations,
-          this.fieldCaptions
-        );
-        if (this.execFirstSearch) {
-          searchInterfaceComponent.executeFirstSearch();
-        }
-      });
-    });
+      if (!searchInterfaceComponent.classList.contains('hydrated')) {
+        searchInterfaceComponent.initialize(sampleConfig).then(() => {
+          configureI18n(
+            searchInterfaceComponent.i18n,
+            this.translations,
+            this.fieldCaptions
+          );
+          if (this.execFirstSearch) {
+            searchInterfaceComponent.executeFirstSearch();
+          }
+        });
 
-    if (this.execFirstSearch && this.firstIntercept) {
-      cy.wait(TestFixture.interceptAliases.Search);
-      if (!(this.disabledAnalytics || this.doNotTrack)) {
-        cy.wait(TestFixture.interceptAliases.UA);
+        if (this.execFirstSearch && this.firstIntercept) {
+          cy.wait(TestFixture.interceptAliases.Search);
+          if (!(this.disabledAnalytics || this.doNotTrack)) {
+            cy.wait(TestFixture.interceptAliases.UA);
+          }
+        }
       }
-    }
+    });
 
     this.aliases.forEach((alias) => alias(this));
 

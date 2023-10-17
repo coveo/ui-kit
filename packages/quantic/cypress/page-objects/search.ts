@@ -78,6 +78,7 @@ export const InterceptAliases = {
     DidyoumeanClick: uaAlias('didyoumeanClick'),
     PipelineTriggers: {
       query: uaAlias('query'),
+      notify: uaAlias('notify'),
     },
     UndoQuery: uaAlias('undoQuery'),
     SearchboxSubmit: uaAlias('searchboxSubmit'),
@@ -515,6 +516,21 @@ export function mockSearchWithQueryTrigger(useCase: string, query: string) {
           content: query,
         },
       ];
+      res.send();
+    });
+  }).as(InterceptAliases.Search.substring(1));
+}
+
+export function mockSearchWithNotifyTrigger(
+  useCase: string,
+  notifications: string[]
+) {
+  cy.intercept(getRoute(useCase), (req) => {
+    req.continue((res) => {
+      res.body.triggers = notifications.map((notification) => ({
+        type: 'notify',
+        content: notification,
+      }));
       res.send();
     });
   }).as(InterceptAliases.Search.substring(1));

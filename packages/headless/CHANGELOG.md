@@ -1,3 +1,26 @@
+# 2.35.0 (2023-10-11)
+
+### Bug Fixes
+
+- import immer only as type ([#3246](https://github.com/coveo/ui-kit/issues/3246)) ([b868fc2](https://github.com/coveo/ui-kit/commits/b868fc210c66918f7acd5817e118df234234724f))
+
+### Features
+
+- **commerce:** expose sort on commerce module ([#3257](https://github.com/coveo/ui-kit/issues/3257)) ([0bd390f](https://github.com/coveo/ui-kit/commits/0bd390f888c719420a54f5d7bccbd672a2e4cded))
+- **commerce:** support sorting v2 product listings ([#3240](https://github.com/coveo/ui-kit/issues/3240)) ([79bfed5](https://github.com/coveo/ui-kit/commits/79bfed553206e6c235bf921f143f8956fdec7c0a))
+- **headless,headless-react:** added .fromBuildResult SSR utility ([#3242](https://github.com/coveo/ui-kit/issues/3242)) ([0026ae7](https://github.com/coveo/ui-kit/commits/0026ae7d47770a868be43f65b445cb2eac256aae))
+
+# 2.34.0 (2023-10-04)
+
+### Bug Fixes
+
+- **headless:** fix structuredClone for locker service ([#3238](https://github.com/coveo/ui-kit/issues/3238)) ([b836e01](https://github.com/coveo/ui-kit/commits/b836e013a6a5d630dddb29fd9640fe40a211d09f))
+
+### Features
+
+- **atomic,headless:** ga release for automatic-facets feature ([#3224](https://github.com/coveo/ui-kit/issues/3224)) ([4decff2](https://github.com/coveo/ui-kit/commits/4decff2d91f415d392177b94dfd10e4c3f8566e8))
+- **commerce:** create context & cart controllers ([#3190](https://github.com/coveo/ui-kit/issues/3190)) ([2a51106](https://github.com/coveo/ui-kit/commits/2a511068f8b7e780a4b442e655f84ca41faf65dd))
+
 # 2.33.0 (2023-09-27)
 
 ### Bug Fixes

@@ -39,25 +39,23 @@ export type {
   ContextProps,
   Context,
   ContextState,
-  ContextControllerState
+  ContextControllerState,
 } from './controllers/commerce/context/headless-context';
 export {buildContext} from './controllers/commerce/context/headless-context';
 
 export type {
   ProductListing,
   ProductListingState,
-  ProductListingControllerState
+  ProductListingControllerState,
 } from './controllers/commerce/product-listing/headless-product-listing';
 export {buildProductListing} from './controllers/commerce/product-listing/headless-product-listing';
 
 export type {
-  PagerInitialState,
-  PagerOptions,
-  PagerProps,
-  Pager,
-  PagerState,
-} from './controllers/commerce/product-listing/pager/headless-product-listing-pager';
-export {buildPager} from './controllers/commerce/product-listing/pager/headless-product-listing-pager';
+  ProductListingPagination,
+  ProductListingPaginationState,
+  ProductListingPaginationControllerState,
+} from './controllers/commerce/product-listing/pagination/headless-product-listing-pagination';
+export {buildProductListingPagination} from './controllers/commerce/product-listing/pagination/headless-product-listing-pagination';
 
 export type {
   InteractiveResult,
@@ -72,6 +70,22 @@ export type {
   CartProps,
   Cart,
   CartState,
-  CartControllerState
+  CartControllerState,
 } from './controllers/commerce/context/cart/headless-cart';
 export {buildCart} from './controllers/commerce/context/cart/headless-cart';
+
+export type {
+  SortByRelevance,
+  SortByFields,
+  SortByFieldsFields,
+  SortCriterion,
+  SortBy,
+  SortDirection,
+  buildRelevanceSortCriterion,
+  buildFieldsSortCriterion,
+  SortProps,
+  SortInitialState,
+  Sort,
+  SortState,
+} from './controllers/commerce/product-listing/sort/headless-product-listing-sort';
+export {buildSort} from './controllers/commerce/product-listing/sort/headless-product-listing-sort';

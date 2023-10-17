@@ -1,4 +1,7 @@
-import {UserParams, ViewParams} from '../../../api/commerce/commerce-api-params';
+import {
+  UserParams,
+  ViewParams,
+} from '../../../api/commerce/commerce-api-params';
 
 export interface CommerceContextState {
   trackingId: string;

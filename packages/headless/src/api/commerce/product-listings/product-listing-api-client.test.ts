@@ -1,3 +1,4 @@
+import {buildRelevanceSortCriterion} from '../../../features/sort/sort';
 import {buildMockProductListingAPIClient} from '../../../test/mock-product-listing-api-client';
 import {PlatformClient} from '../../platform-client';
 import {ProductListingAPIClient} from './product-listing-api-client';
@@ -99,6 +100,10 @@ describe('product listing api client', () => {
         },
         pagination: {
           totalCount: 31,
+        },
+        sort: {
+          appliedSort: buildRelevanceSortCriterion(),
+          availableSorts: [buildRelevanceSortCriterion()],
         },
         responseId: 'ba7e83ac-6b54-46c1-8789-01f144cfd3b1',
       };

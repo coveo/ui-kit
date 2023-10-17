@@ -12,7 +12,8 @@ export default {
       },
     ],
   },
-  collectCoverageFrom: ['./src/**.ts', './src/**.tsx'],
+  collectCoverage: true,
+  collectCoverageFrom: ['./src/**/**.ts', './src/**/**.tsx'],
   coverageThreshold: {
     global: {
       lines: 90,

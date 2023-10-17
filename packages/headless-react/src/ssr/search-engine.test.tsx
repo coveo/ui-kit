@@ -1,12 +1,14 @@
 import {
   getSampleSearchEngineConfiguration,
+  InferStaticState,
+  InferHydratedState,
   defineResultList,
   defineSearchBox,
 } from '@coveo/headless/ssr';
-import {render, renderHook, screen} from '@testing-library/react';
+import {act, render, renderHook, screen} from '@testing-library/react';
 import {PropsWithChildren} from 'react';
-import {defineSearchEngine} from './search-engine.js';
 import {MissingEngineProviderError} from './common.js';
+import {defineSearchEngine} from './search-engine.js';
 
 describe('Headless react SSR utils', () => {
   let errorSpy: jest.SpyInstance;
@@ -67,7 +69,11 @@ describe('Headless react SSR utils', () => {
     const numResults = 10;
     const engineDefinition = defineSearchEngine({
       configuration: sampleConfig,
-      controllers: {resultList: defineResultList()},
+      // TODO: Generalize tests to test all defined controllers dynamically
+      controllers: {
+        resultList: defineResultList(),
+        searchBox: defineSearchBox(),
+      },
     });
     const {
       fetchStaticState,
@@ -101,7 +107,7 @@ describe('Headless react SSR utils', () => {
       renderFunction: CallableFunction,
       expectedErrMsg: string
     ) {
-      let err: Error | undefined = undefined;
+      let err = undefined;
       // Prevent expected error from being thrown in console when running tests
       const consoleErrorStub = jest
         .spyOn(console, 'error')
@@ -148,45 +154,98 @@ describe('Headless react SSR utils', () => {
       await checkRenderedResultList();
     });
 
-    describe('useEngine hook', () => {
-      test('should throw error with no context', async () => {
-        checkRenderError(
-          () => renderHook(() => useEngine()),
-          MissingEngineProviderError.message
+    describe('hooks', () => {
+      let staticState: InferStaticState<typeof engineDefinition>;
+      let hydratedState: InferHydratedState<typeof engineDefinition>;
+
+      beforeEach(async () => {
+        staticState = await fetchStaticState();
+        hydratedState = await hydrateStaticState(staticState);
+      });
+
+      function staticStateProviderWrapper({children}: PropsWithChildren) {
+        return (
+          <StaticStateProvider controllers={staticState.controllers}>
+            {children}
+          </StaticStateProvider>
         );
+      }
+
+      function hydratedStateProviderWrapper({children}: PropsWithChildren) {
+        return (
+          <HydratedStateProvider
+            controllers={hydratedState.controllers}
+            engine={hydratedState.engine}
+          >
+            {children}
+          </HydratedStateProvider>
+        );
+      }
+
+      describe('useEngine hook', () => {
+        test('should throw error with no context', async () => {
+          checkRenderError(
+            () => renderHook(() => useEngine()),
+            MissingEngineProviderError.message
+          );
+        });
+
+        test('should not return engine with static state provider', async () => {
+          const {result} = renderHook(() => useEngine(), {
+            wrapper: staticStateProviderWrapper,
+          });
+          expect(result.current).toBeUndefined();
+        });
+
+        test('should return engine with hydrated state provider', async () => {
+          const {result} = renderHook(() => useEngine(), {
+            wrapper: hydratedStateProviderWrapper,
+          });
+          expect(result.current).toStrictEqual(hydratedState.engine);
+        });
       });
 
-      test('should not return engine with StaticStateProvider', async () => {
-        const staticState = await fetchStaticState();
-        function staticStateProviderWrapper({children}: PropsWithChildren) {
-          return (
-            <StaticStateProvider controllers={staticState.controllers}>
-              {children}
-            </StaticStateProvider>
-          );
-        }
-
-        const {result} = renderHook(() => useEngine(), {
-          wrapper: staticStateProviderWrapper,
+      describe('controller hooks', () => {
+        // TODO: Generalize to loop through all defined controllers dynamically
+        const {useSearchBox} = engineDefinition.controllers;
+        describe('with StaticStateProvider', () => {
+          test('should define state but not methods', () => {
+            const {result} = renderHook(() => useSearchBox(), {
+              wrapper: staticStateProviderWrapper,
+            });
+            expect(result.current.state).toBeDefined();
+            expect(result.current?.methods).toBeUndefined();
+          });
         });
-        expect(result.current).toBeUndefined();
-      });
 
-      test('should return engine with HydratedStateProvider', async () => {
-        const staticState = await fetchStaticState();
-        const {engine, controllers} = await hydrateStaticState(staticState);
-        function hydratedStateProviderWrapper({children}: PropsWithChildren) {
-          return (
-            <HydratedStateProvider controllers={controllers} engine={engine}>
-              {children}
-            </HydratedStateProvider>
-          );
-        }
+        describe('with HydratedStateProvider', () => {
+          test('should define both state and methods', () => {
+            const {result} = renderHook(() => useSearchBox(), {
+              wrapper: hydratedStateProviderWrapper,
+            });
+            expect(result.current.state).toBeDefined();
+            expect(result.current?.methods).toBeDefined();
+          });
 
-        const {result} = renderHook(() => useEngine(), {
-          wrapper: hydratedStateProviderWrapper,
+          // TODO(DEBUG): hydratedState might need to be passed into the wrapper
+          test.skip('should update state when method is called', () => {
+            const {result} = renderHook(() => useSearchBox(), {
+              wrapper: hydratedStateProviderWrapper,
+            });
+            const initialState = result.current.state;
+            const controllerSpy = jest.spyOn(
+              hydratedState.controllers.searchBox,
+              'updateText'
+            );
+            act(() => {
+              result.current.methods?.updateText('foo');
+            });
+
+            expect(controllerSpy).toHaveBeenCalledWith('foo');
+            expect(initialState).not.toStrictEqual(result.current.state);
+            expect(result.current.state.value).toBe('foo');
+          });
         });
-        expect(result.current).toStrictEqual(engine);
       });
     });
   });

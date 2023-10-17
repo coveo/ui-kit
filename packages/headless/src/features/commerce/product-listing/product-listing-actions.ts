@@ -4,14 +4,15 @@ import {ProductListingV2Request} from '../../../api/commerce/product-listings/v2
 import {ProductListingV2SuccessResponse} from '../../../api/commerce/product-listings/v2/product-listing-v2-response';
 import {isErrorResponse} from '../../../api/search/search-api-client';
 import {
+  CategoryFacetSection,
+  CommercePaginationSection,
   CartSection,
-  CategoryFacetSection, CommerceContextSection,
+  CommerceContextSection,
   ConfigurationSection,
   DateFacetSection,
   FacetOrderSection,
   FacetSection,
   NumericFacetSection,
-  PaginationSection,
   ProductListingV2Section,
   StructuredSortSection,
   VersionSection,
@@ -30,13 +31,13 @@ export type StateNeededByFetchProductListingV2 = ConfigurationSection &
   CommerceContextSection &
   CartSection &
   Partial<
-    FacetSection &
+    CommercePaginationSection &
+      FacetSection &
       NumericFacetSection &
       CategoryFacetSection &
       DateFacetSection &
       FacetOrderSection &
       StructuredSortSection &
-      PaginationSection &
       VersionSection
   >;
 
@@ -79,7 +80,7 @@ export const buildProductListingRequestV2 = (
 ): ProductListingV2Request => {
   const selectedFacets = getFacets(state);
 
-  const {view, user, ...restOfContext} = state.commerceContext
+  const {view, user, ...restOfContext} = state.commerceContext;
   return {
     accessToken: state.configuration.accessToken,
     url: state.configuration.platformUrl,
@@ -88,18 +89,10 @@ export const buildProductListingRequestV2 = (
     context: {
       user,
       view,
-      cart: state.cart.cartItems.map((id) => state.cart.cart[id])
+      cart: state.cart.cartItems.map((id) => state.cart.cart[id]),
     },
     selectedFacets,
-    ...(state.pagination && {
-      selectedPage: {
-        page:
-          Math.ceil(
-            state.pagination.firstResult /
-              (state.pagination.numberOfResults || 1)
-          ) + 1,
-      },
-    }),
+    ...(state.commercePagination && {page: state.commercePagination.page}),
     ...(state.sort && {
       selectedSort: state.sort,
     }),

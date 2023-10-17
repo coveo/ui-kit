@@ -1,3 +1,11 @@
+# 2.34.0 (2023-10-11)
+
+### Features
+
+- **quantic:** new quantic notifications component created ([#3223](https://github.com/coveo/ui-kit/issues/3223)) ([4f89c9e](https://github.com/coveo/ui-kit/commits/4f89c9e79cabe6401416d0ebc7ffc19eee44e48a))
+
+## 2.33.1 (2023-10-04)
+
 # 2.33.0 (2023-09-27)
 
 ### Bug Fixes

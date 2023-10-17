@@ -6,6 +6,7 @@ import {AnyEngineType} from './bindings';
 import {BaseAtomicInterface} from './interface-common';
 
 export const i18nTranslationNamespace = 'translation';
+export type i18nCompatibilityVersion = 'v3' | 'v4';
 
 function isI18nLocaleAvailable(locale: string) {
   return availableLocales.includes(locale.toLowerCase());
@@ -61,7 +62,7 @@ export function init18n(atomicInterface: BaseAtomicInterface<AnyEngineType>) {
     interpolation: {
       escape: (str) => DOMPurify.sanitize(str),
     },
-    compatibilityJSON: 'v3',
+    compatibilityJSON: atomicInterface.localizationCompatibilityVersion,
   });
 }
 

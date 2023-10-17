@@ -27,6 +27,10 @@ export function sfdx<T = SfdxResponse>(command: string): Promise<T> {
       },
       (error, stdout) => {
         let jsonOutput: unknown;
+        if (error) {
+          console.log('Error with sfdx command execution.');
+          console.error(error);
+        }
         if (stdout) {
           try {
             jsonOutput = JSON.parse(strip(stdout));

@@ -1,3 +1,15 @@
+# 2.16.0 (2023-10-11)
+
+### Features
+
+- **atomic:** add pathLimit prop to atomic-breadbox ([#3205](https://github.com/coveo/ui-kit/issues/3205)) ([62d83e6](https://github.com/coveo/ui-kit/commits/62d83e6ff7c4b83a3b86d88c1a52b1ddd8272ab0))
+
+## 2.15.3 (2023-10-04)
+
+### Bug Fixes
+
+- **atomic:** support facet-manager collapse-facets-after for automatic facets ([#3213](https://github.com/coveo/ui-kit/issues/3213)) ([0f88e94](https://github.com/coveo/ui-kit/commits/0f88e94b7a1758dd13d9c1aeb3a9d175fb88b744))
+
 ## 2.15.2 (2023-09-27)
 
 ## 2.15.1 (2023-09-20)
