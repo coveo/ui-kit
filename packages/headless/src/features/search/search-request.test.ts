@@ -88,22 +88,46 @@ describe('search request', () => {
     expect(facets).toContainEqual(request);
   });
 
-  // TODO: Rewrite test with new interface
   it('#searchRequest returns the facet state alphanumericDescending #sortCriteria', async () => {
-    const request = buildMockFacetRequest({
-      field: 'objecttype',
+    const alphanumericDescendingString = buildMockFacetRequest({
+      field: 'a',
+      sortCriteria: 'alphanumericDescending',
+    });
+    const alphanumericDescendingObject = buildMockFacetRequest({
+      field: 'b',
       sortCriteria: {
-        type: 'alphanumeric',
-        order: 'descending',
+        type: 'alphanumericDescending',
+        order: 'ascending',
       },
     });
-    state.facetSet[1] = buildMockFacetSlice({request});
+
+    state.facetSet[1] = buildMockFacetSlice({
+      request: alphanumericDescendingString,
+    });
+    state.facetSet[2] = buildMockFacetSlice({
+      request: alphanumericDescendingObject,
+    });
+
     const {facets} = (await buildSearchRequest(state)).request;
 
     expect(facets?.map((f) => f.sortCriteria)).toContainEqual({
       type: 'alphanumeric',
       order: 'descending',
     });
+  });
+
+  it('#searchRequest returns the facet state automatic #sortCriteria', async () => {
+    const request = buildMockFacetRequest({
+      field: 'objecttype',
+      sortCriteria: {
+        type: 'automatic',
+        order: 'ascending',
+      },
+    });
+    state.facetSet[1] = buildMockFacetSlice({request});
+    const {facets} = (await buildSearchRequest(state)).request;
+
+    expect(facets?.map((f) => f.sortCriteria)).toContainEqual('automatic');
   });
 
   it('#searchRequest returns the facets in the state #numericFacetSet', async () => {

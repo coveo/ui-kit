@@ -142,7 +142,7 @@ export interface CoreFacet extends Controller {
    *
    * @param criterion - The criterion to use for sorting values.
    */
-  sortBy(criterion: FacetSortCriterion): void;
+  sortBy(criterion: FacetSortCriterion | SpecificSortCriteriaExplicit): void;
 
   /**
    * Checks whether the facet values are sorted according to the specified criterion.

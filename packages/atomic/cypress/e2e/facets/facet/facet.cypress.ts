@@ -831,6 +831,23 @@ describe('Facet v1 Test Suites', () => {
     FacetAssertions.assertValuesSortedByOccurrences();
   });
 
+  describe('with custom #sortOrder, occurrences', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(
+          addFacet({
+            field,
+            label,
+            'sort-criteria': 'occurrences',
+            'sort-order': 'descending',
+          })
+        )
+        .init();
+    });
+
+    FacetAssertions.assertValuesSortedByOccurrencesDescending();
+  });
+
   describe('when defining a value caption', () => {
     const caption = 'nicecaption';
     beforeEach(() => {

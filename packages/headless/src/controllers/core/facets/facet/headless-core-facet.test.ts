@@ -1,6 +1,7 @@
 import {configuration} from '../../../../app/common-reducers';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
 import {facetOptionsReducer as facetOptions} from '../../../../features/facet-options/facet-options-slice';
+import {SpecificSortCriteriaExplicit} from '../../../../features/facets/facet-api/request';
 import {specificFacetSearchSetReducer as facetSearchSet} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {
   registerFacet,
@@ -274,6 +275,21 @@ describe('facet', () => {
   describe('#sortBy', () => {
     it('dispatches a #updateFacetSortCriterion action with the passed value', () => {
       const criterion = 'score';
+      facet.sortBy(criterion);
+
+      const action = updateFacetSortCriterion({
+        facetId,
+        criterion,
+      });
+
+      expect(engine.actions).toContainEqual(action);
+    });
+
+    it('dispatches a #updateFacetSortCriterion action with the passed explicit value', () => {
+      const criterion: SpecificSortCriteriaExplicit = {
+        type: 'score',
+        order: 'descending',
+      };
       facet.sortBy(criterion);
 
       const action = updateFacetSortCriterion({

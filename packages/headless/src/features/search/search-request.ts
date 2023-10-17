@@ -4,13 +4,13 @@ import {ConfigurationSection} from '../../state/state-sections';
 import {sortFacets} from '../../utils/facet-utils';
 import {AutomaticFacetRequest} from '../facets/automatic-facet-set/interfaces/request';
 import {AutomaticFacetResponse} from '../facets/automatic-facet-set/interfaces/response';
+import {FacetSetState} from '../facets/facet-set/facet-set-state';
 import {getFacetRequests} from '../facets/generic/interfaces/generic-facet-request';
 import {AnyFacetValue} from '../facets/generic/interfaces/generic-facet-response';
 import {RangeFacetSetState} from '../facets/range-facets/generic/interfaces/range-facet';
 import {maximumNumberOfResultsFromIndex} from '../pagination/pagination-constants';
 import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request';
 import {mapSearchRequest} from './search-mappings';
-import {FacetSetState} from '../facets/facet-set/facet-set-state';
 
 type StateNeededBySearchRequest = ConfigurationSection &
   Partial<SearchAppState>;
@@ -119,7 +119,7 @@ function getSpecificFacetRequests<T extends FacetSetState>(state: T) {
     let newSortCriteria = request.sortCriteria;
     if (
       request.sortCriteria === 'alphanumericDescending' ||
-      (request.sortCriteria as SpecificSortCriteriaExplicit)?.type ===
+      (request.sortCriteria as SpecificSortCriteriaExplicit).type ===
         'alphanumericDescending'
     ) {
       newSortCriteria = {
@@ -128,8 +128,7 @@ function getSpecificFacetRequests<T extends FacetSetState>(state: T) {
       };
     } else if (
       typeof request.sortCriteria === 'object' &&
-      request.sortCriteria.type !== 'automatic' &&
-      request.sortCriteria.type !== 'alphanumericDescending'
+      request.sortCriteria.type === 'automatic'
     ) {
       newSortCriteria = request.sortCriteria.type;
     }

@@ -24,6 +24,10 @@ export function doSortOccurrences(originalValues: string[]) {
     .sort((a, b) => getNumericalValue(b) - getNumericalValue(a));
 }
 
+export function doSortOccurrencesDescending(originalValues: string[]) {
+  return doSortOccurrences(originalValues).reverse();
+}
+
 export const aliasNoAtSignBuilder = (aliasWithAtSign: IAlias) => {
   const aliasNoAtSign = Object.assign({}, aliasWithAtSign);
   Object.keys(aliasNoAtSign).forEach((key: string) => {

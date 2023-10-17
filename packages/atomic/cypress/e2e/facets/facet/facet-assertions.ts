@@ -2,6 +2,7 @@ import {
   doSortAlphanumeric,
   doSortAlphanumericDescending,
   doSortOccurrences,
+  doSortOccurrencesDescending,
 } from '../../../utils/componentUtils';
 import {FacetSelectors} from './facet-selectors';
 
@@ -82,6 +83,17 @@ export function assertValuesSortedByOccurrences() {
     cy.getTextOfAllElements('@facetAllValuesCount').then((originalValues) => {
       expect(originalValues).to.eql(
         doSortOccurrences(originalValues as string[])
+      );
+    });
+  });
+}
+
+export function assertValuesSortedByOccurrencesDescending() {
+  it('values should be ordered by occurrences', () => {
+    FacetSelectors.valueCount().as('facetAllValuesCount');
+    cy.getTextOfAllElements('@facetAllValuesCount').then((originalValues) => {
+      expect(originalValues).to.eql(
+        doSortOccurrencesDescending(originalValues as string[])
       );
     });
   });
