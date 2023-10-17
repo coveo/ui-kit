@@ -1,5 +1,5 @@
-name: 'Headless SSR E2E tests in prod'
-description: 'Runs Cypress tests for Headless SSR in prod'
+name: 'Headless SSR E2E App router tests in prod mode'
+description: 'Runs Cypress tests for Headless SSR App router in prod mode'
 inputs:
   github-token:
     description: The GitHub token for accurately detecting a build vs a re-run build
@@ -23,4 +23,4 @@ runs:
       if: failure()
       with:
         name: cypress-screenshots
-        path: packages/samples/headless-ssr/app-router/cypress/screenshots
+        path: packages/samples/headless-ssr/cypress/screenshots
