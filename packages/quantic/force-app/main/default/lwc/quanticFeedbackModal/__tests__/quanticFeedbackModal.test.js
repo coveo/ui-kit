@@ -256,6 +256,22 @@ describe('c-quantic-fedback-modal', () => {
       });
     });
 
+    describe('when a custom options label is provided', () => {
+      it('should display the correct label', async () => {
+        const customLabel = 'example label';
+        const element = createTestComponent({
+          ...defaultOptions,
+          optionsLabel: customLabel,
+        });
+        await flushPromises();
+
+        const radioGroup = element.shadowRoot.querySelector(
+          selectors.radioGroup
+        );
+        expect(radioGroup.label).toBe(customLabel);
+      });
+    });
+
     describe('when an option without details is provided', () => {
       it('should not display the details input when the option is selected', async () => {
         const element = createTestComponent({
