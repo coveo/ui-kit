@@ -1,3 +1,13 @@
+# 2.46.0 (2023-10-11)
+
+### Bug Fixes
+
+- **atomic:** make quickview modal responsive ([#3202](https://github.com/coveo/ui-kit/issues/3202)) ([1150797](https://github.com/coveo/ui-kit/commits/11507976594053c7458a956c11c4e4666d7c1156))
+
+### Features
+
+- **atomic:** add pathLimit prop to atomic-breadbox ([#3205](https://github.com/coveo/ui-kit/issues/3205)) ([62d83e6](https://github.com/coveo/ui-kit/commits/62d83e6ff7c4b83a3b86d88c1a52b1ddd8272ab0))
+
 # 2.45.0 (2023-10-04)
 
 ### Bug Fixes
