@@ -68,7 +68,7 @@ describe('searchEngine', () => {
         expect(engine.state.configuration.search.apiBaseUrl).toBe(
           'https://bar.org.coveo.com/rest/search/v2'
         );
-        expect(engine.state.configuration.analytics.apiBaseUrl).toBe(
+        expect(engine.state.configuration.analytics.legacyApiBaseUrl).toBe(
           'https://bar.analytics.org.coveo.com'
         );
       });
@@ -92,7 +92,7 @@ describe('searchEngine', () => {
         expect(engine.state.configuration.search.apiBaseUrl).toBe(
           'https://my-custom-proxy.com'
         );
-        expect(engine.state.configuration.analytics.apiBaseUrl).toBe(
+        expect(engine.state.configuration.analytics.legacyApiBaseUrl).toBe(
           'https://myorg.analytics.org.coveo.com'
         );
       });
@@ -112,7 +112,7 @@ describe('searchEngine', () => {
         expect(engine.state.configuration.search.apiBaseUrl).toBe(
           'https://platform-eu.cloud.coveo.com/rest/search/v2'
         );
-        expect(engine.state.configuration.analytics.apiBaseUrl).toBe(
+        expect(engine.state.configuration.analytics.legacyApiBaseUrl).toBe(
           'https://analytics-eu.cloud.coveo.com/rest/ua'
         );
       });

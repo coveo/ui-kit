@@ -1,13 +1,13 @@
 import {buildMockFacetResponse} from '../../../test/mock-facet-response';
 import {buildFetchProductListingV2Response} from '../../../test/mock-product-listing-v2';
 import {buildMockProductRecommendation} from '../../../test/mock-product-recommendation';
+import {SortBy} from '../sort/sort';
 import {fetchProductListing} from './product-listing-actions';
 import {productListingV2Reducer} from './product-listing-slice';
 import {
   getProductListingV2InitialState,
   ProductListingV2State,
 } from './product-listing-state';
-import {SortBy} from '../../sort/sort';
 
 describe('product-listing-v2-slice', () => {
   let state: ProductListingV2State;

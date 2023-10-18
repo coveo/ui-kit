@@ -3,9 +3,13 @@ import noFilterForCurrentTab from '@salesforce/label/c.quantic_NoFilterForCurren
 import noFiltersAvailableForThisQuery from '@salesforce/label/c.quantic_NoFiltersAvailableForThisQuery';
 import sortAndFilters from '@salesforce/label/c.quantic_SortAndFilters';
 import viewResults from '@salesforce/label/c.quantic_ViewResults';
-import { getHeadlessBundle, initializeWithHeadless, registerComponentForInit, getAllFacetsFromStore } from 'c/quanticHeadlessLoader';
-import { LightningElement, api } from 'lwc';
-
+import {
+  getHeadlessBundle,
+  initializeWithHeadless,
+  registerComponentForInit,
+  getAllFacetsFromStore,
+} from 'c/quanticHeadlessLoader';
+import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").QuerySummary} QuerySummary */

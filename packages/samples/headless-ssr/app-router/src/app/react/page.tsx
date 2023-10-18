@@ -4,10 +4,10 @@ import {
   CoveoNextJsSearchParametersSerializer,
   NextJSServerSideSearchParams,
 } from '../../common/search-parameters-serializer';
+import {AuthorFacet} from './components/facets';
 import ResultList from './components/result-list';
 import SearchBox from './components/search-box';
 import SearchParameters from './components/search-parameters';
-import {AuthorFacet} from './components/facets';
 
 // Entry point SSR function
 export default async function Search(url: {

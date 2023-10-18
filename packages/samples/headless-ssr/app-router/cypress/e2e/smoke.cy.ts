@@ -14,7 +14,7 @@ const resultListSelector = '.result-list li';
 const searchBoxSelector = '.search-box input';
 const routes = ['generic', 'react'] as const;
 // Note: Thresholds might need to be adjusted as the page tested changes (e.g. more components are added etc)
-const vitals: Record<typeof routes[number], Cypress.ReportWebVitalsConfig> = {
+const vitals: Record<(typeof routes)[number], Cypress.ReportWebVitalsConfig> = {
   generic: {
     thresholds: {
       fcp: 200,

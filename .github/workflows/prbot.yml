@@ -189,14 +189,22 @@ jobs:
       - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-insight-panel
-  e2e-headless-ssr-test:
-    name: 'Run e2e tests on Headless SSR sample'
+  e2e-headless-ssr-test-dev:
+    name: 'Run e2e tests on Headless SSR sample in dev'
     needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/e2e-headless-ssr
+      - uses: ./.github/actions/e2e-headless-ssr-dev
+  e2e-headless-ssr-test-prod:
+    name: 'Run e2e tests on Headless SSR sample in prod'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/e2e-headless-ssr-prod
   e2e-quantic-setup:
     name: 'Setup e2e tests on Quantic'
     needs: build
@@ -254,7 +262,8 @@ jobs:
       - 'e2e-atomic-stencil-test'
       - 'e2e-atomic-hosted-page-test'
       - 'e2e-atomic-insight-panel-test'
-      - 'e2e-headless-ssr-test'
+      - 'e2e-headless-ssr-test-dev'
+      - 'e2e-headless-ssr-test-prod'
     runs-on: ubuntu-latest
     steps:
       - run: echo 'All required jobs have passed'

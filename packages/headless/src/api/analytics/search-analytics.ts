@@ -121,7 +121,7 @@ export class SearchAnalyticsProvider
   }
 }
 
-interface ConfigureAnalyticsOptions {
+interface LegacyConfigureAnalyticsOptions {
   logger: Logger;
   analyticsClientMiddleware?: AnalyticsClientSendEventHook;
   preprocessRequest?: PreprocessRequest;
@@ -129,16 +129,16 @@ interface ConfigureAnalyticsOptions {
   getState(): StateNeededBySearchAnalyticsProvider;
 }
 
-export const configureAnalytics = ({
+export const configureLegacyAnalytics = ({
   logger,
   getState,
   analyticsClientMiddleware = (_, p) => p,
   preprocessRequest,
   provider = new SearchAnalyticsProvider(getState),
-}: ConfigureAnalyticsOptions) => {
+}: LegacyConfigureAnalyticsOptions) => {
   const state = getState();
   const token = state.configuration.accessToken;
-  const endpoint = state.configuration.analytics.apiBaseUrl;
+  const endpoint = state.configuration.analytics.legacyApiBaseUrl;
   const runtimeEnvironment = state.configuration.analytics.runtimeEnvironment;
   const enableAnalytics = state.configuration.analytics.enabled;
   const client = new CoveoSearchPageClient(

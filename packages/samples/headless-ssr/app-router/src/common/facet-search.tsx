@@ -1,10 +1,4 @@
-import {
-  FacetState,
-  Facet as FacetController,
-  Controller,
-  SpecificFacetSearchResult,
-} from '@coveo/headless/ssr';
-import {FunctionComponent, useEffect, useState} from 'react';
+import {SpecificFacetSearchResult} from '@coveo/headless/ssr';
 
 interface FacetSearchProps {
   query: string;

@@ -1,15 +1,15 @@
 name: Bug Report
 description: File a bug report for @coveo/headless, @coveo/atomic or @coveo/quantic
-title: "[Bug]: "
-labels: ["bug", "triage"]
+title: '[Bug]: '
+labels: ['bug', 'triage']
 body:
   - type: markdown
     attributes:
       value: |
         Before opening a bug report, please search for the behaviour in the existing issues. 
-        
+
         ---
-        
+
         Thank you for taking the time to file a bug report. To address this bug as fast as possible, we need some information.
   - type: dropdown
     id: product

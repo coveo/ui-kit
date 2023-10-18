@@ -1,9 +1,8 @@
 // @ts-nocheck
-import { api, LightningElement, track } from 'lwc';
+import {api, LightningElement, track} from 'lwc';
 import templateWithFacets from './templateWithFacets.html';
 import templateWithFacetsWithoutInputs from './templateWithFacetsWithoutInputs.html';
 import templateWithoutFacets from './templateWithoutFacets.html';
-
 
 export default class ExampleQuanticRefineToggle extends LightningElement {
   @api engineId = 'quantic-refine-toggle';
@@ -64,7 +63,8 @@ export default class ExampleQuanticRefineToggle extends LightningElement {
     {
       attribute: 'disableDynamicNavigation',
       label: 'Disable Dynamic Navigation',
-      description: 'Indicates whether the dynamic navigation experience should be disabled.',
+      description:
+        'Indicates whether the dynamic navigation experience should be disabled.',
       defaultValue: false,
     },
   ];
