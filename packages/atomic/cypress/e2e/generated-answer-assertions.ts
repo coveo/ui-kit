@@ -18,7 +18,8 @@ export function assertLogOpenGeneratedAnswerSource(log: boolean) {
 export function assertAnswerStyle(expected: string) {
   cy.wait(TestFixture.interceptAliases.Search).should((firstSearch) => {
     expect(
-      firstSearch.request.body.pipelineRuleParameters.genqa.responseFormat
+      firstSearch.request.body.pipelineRuleParameters
+        .mlGenerativeQuestionAnswering.responseFormat
     ).to.have.property('answerStyle', expected);
   });
 }

@@ -140,7 +140,7 @@ describe('Generated Answer Test Suites', () => {
 
         describe('when a rephrase option is selected', () => {
           rephraseOptions.forEach((option) => {
-            it(`should rephrase in "${option}" format`, () => {
+            it(`should rephrase in "${option.value}" format`, () => {
               GeneratedAnswerSelectors.rephraseButton(option.label).click();
 
               GeneratedAnswerAssertions.assertAnswerStyle(option.value);
