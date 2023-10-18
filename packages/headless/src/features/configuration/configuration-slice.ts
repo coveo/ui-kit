@@ -105,8 +105,8 @@ export const configurationReducer = createReducer(
         if (!isNullOrUndefined(action.payload.legacyApiBaseUrl)) {
           state.analytics.legacyApiBaseUrl = action.payload.legacyApiBaseUrl;
         }
-        if (!isNullOrUndefined(action.payload.apiBaseUrl)) {
-          state.analytics.apiBaseUrl = action.payload.apiBaseUrl;
+        if (!isNullOrUndefined(action.payload.nextApiBaseUrl)) {
+          state.analytics.nextApiBaseUrl = action.payload.nextApiBaseUrl;
         }
         if (!isNullOrUndefined(action.payload.trackingId)) {
           state.analytics.trackingId = action.payload.trackingId;

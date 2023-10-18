@@ -69,7 +69,7 @@ export interface AnalyticsState {
    * The Analytics API base URL to use.
    * By default, will append /rest/ua to the platformUrl value.
    */
-  apiBaseUrl: string;
+  nextApiBaseUrl: string;
 
   /**
    * Sets the Origin Context dimension on the analytic events.
@@ -146,7 +146,7 @@ export const getConfigurationInitialState: () => ConfigurationState = () => ({
   analytics: {
     enabled: true,
     legacyApiBaseUrl: `${analyticsUrl()}${analyticsAPIEndpoint}`,
-    apiBaseUrl: '',
+    nextApiBaseUrl: '',
     originContext: 'Search',
     originLevel2: 'default',
     originLevel3: 'default',
