@@ -83,10 +83,6 @@
       "allowedVersions": "15.x"
     }
   ],
-  "nvm": {
-    "groupName": "NVM",
-    "description": "18.18.0 breaks see KIT-2787"
-  },
   "rangeStrategy": "auto",
   "lockFileMaintenance": {
     "enabled": false
