@@ -4,17 +4,17 @@ import {ProductListingV2Request} from '../../../api/commerce/product-listings/v2
 import {ProductListingV2SuccessResponse} from '../../../api/commerce/product-listings/v2/product-listing-v2-response';
 import {isErrorResponse} from '../../../api/search/search-api-client';
 import {
-  CategoryFacetSection,
-  CommercePaginationSection,
   CartSection,
+  CategoryFacetSection,
   CommerceContextSection,
+  CommercePaginationSection,
+  CommerceSortSection,
   ConfigurationSection,
   DateFacetSection,
   FacetOrderSection,
   FacetSection,
   NumericFacetSection,
   ProductListingV2Section,
-  StructuredSortSection,
   VersionSection,
 } from '../../../state/state-sections';
 import {sortFacets} from '../../../utils/facet-utils';
@@ -25,6 +25,8 @@ import {
 import {getFacetRequests} from '../../facets/generic/interfaces/generic-facet-request';
 import {logQueryError} from '../../search/search-analytics-actions';
 import {logProductListingV2Load} from './product-listing-analytics';
+import {SelectedSortParam} from '../../../api/commerce/commerce-api-params';
+import {SortBy, SortCriterion} from '../sort/sort';
 
 export type StateNeededByFetchProductListingV2 = ConfigurationSection &
   ProductListingV2Section &
@@ -32,12 +34,12 @@ export type StateNeededByFetchProductListingV2 = ConfigurationSection &
   CartSection &
   Partial<
     CommercePaginationSection &
+      CommerceSortSection &
       FacetSection &
       NumericFacetSection &
       CategoryFacetSection &
       DateFacetSection &
       FacetOrderSection &
-      StructuredSortSection &
       VersionSection
   >;
 
@@ -93,8 +95,8 @@ export const buildProductListingRequestV2 = (
     },
     selectedFacets,
     ...(state.commercePagination && {page: state.commercePagination.page}),
-    ...(state.sort && {
-      selectedSort: state.sort,
+    ...(state.commerceSort && {
+      sort: getSort(state.commerceSort.appliedSort),
     }),
   };
 };
@@ -110,4 +112,26 @@ function getAllFacets(state: StateNeededByFetchProductListingV2) {
     ...getFacetRequests(state.dateFacetSet ?? {}),
     ...getFacetRequests(state.categoryFacetSet ?? {}),
   ];
+}
+
+function getSort(
+  appliedSort: SortCriterion
+): SelectedSortParam['sort'] | undefined {
+  if (!appliedSort) {
+    return;
+  }
+
+  if (appliedSort.by === SortBy.Relevance) {
+    return {
+      sortCriteria: SortBy.Relevance,
+    };
+  } else {
+    return {
+      sortCriteria: SortBy.Fields,
+      fields: appliedSort.fields.map(({name, direction}) => ({
+        field: name,
+        direction,
+      })),
+    };
+  }
 }

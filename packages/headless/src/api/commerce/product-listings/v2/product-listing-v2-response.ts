@@ -5,7 +5,7 @@ import {
 } from '../../../search/search-api-error-response';
 import {ProductRecommendation} from '../../../search/search/product-recommendation';
 import {Pagination} from './pagination';
-import {Sort} from '../../../../features/commerce/product-listing/sort/product-listing-sort';
+import {Sort} from './sort';
 
 export interface ProductListingV2SuccessResponse {
   responseId: string;

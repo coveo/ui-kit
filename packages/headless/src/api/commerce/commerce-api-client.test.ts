@@ -3,7 +3,7 @@ import {PlatformClient} from '../platform-client';
 import {CommerceAPIClient} from './commerce-api-client';
 import {ProductListingV2Request} from './product-listings/v2/product-listing-v2-request';
 import {ProductListingV2} from './product-listings/v2/product-listing-v2-response';
-import {buildRelevanceSortCriterion} from '../../features/commerce/product-listing/sort/product-listing-sort';
+import {SortBy} from '../../features/sort/sort';
 
 describe('commerce api client', () => {
   const platformUrl = 'https://platformdev.cloud.coveo.com';
@@ -102,8 +102,8 @@ describe('commerce api client', () => {
         pagination: {page: 0, perPage: 0, totalCount: 0, totalPages: 0},
         responseId: '',
         sort: {
-          appliedSort: buildRelevanceSortCriterion(),
-          availableSorts: [buildRelevanceSortCriterion()],
+          appliedSort: {sortCriteria: SortBy.Relevance},
+          availableSorts: [{sortCriteria: SortBy.Relevance}],
         },
       };
 

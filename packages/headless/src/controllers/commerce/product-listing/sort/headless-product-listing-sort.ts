@@ -9,10 +9,10 @@ import {ProductListingV2Section} from '../../../../state/state-sections';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {Schema} from '@coveo/bueno';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
-import {sortReducer as sort} from '../../../../features/commerce/product-listing/sort/product-listing-sort-slice';
+import {sortReducer as commerceSort} from '../../../../features/commerce/sort/sort-slice';
 import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice';
 import {updatePage} from '../../../../features/pagination/pagination-actions';
-import {applySort} from '../../../../features/commerce/product-listing/sort/product-listing-sort-actions';
+import {applySort} from '../../../../features/commerce/sort/sort-actions';
 import {
   buildFieldsSortCriterion,
   buildRelevanceSortCriterion,
@@ -23,7 +23,7 @@ import {
   SortDirection,
   SortByFieldsFields,
   sortCriterionDefinition,
-} from '../../../../features/commerce/product-listing/sort/product-listing-sort';
+} from '../../../../features/commerce/sort/sort';
 
 export type {SortByRelevance, SortByFields, SortByFieldsFields, SortCriterion};
 export {
@@ -118,7 +118,7 @@ export function buildSort(engine: CommerceEngine, props: SortProps = {}): Sort {
 
   const {dispatch} = engine;
   const controller = buildController(engine);
-  const getState = () => engine.state.productListing;
+  const getState = () => engine.state;
 
   validateSortInitialState(engine, props.initialState);
 
@@ -132,7 +132,7 @@ export function buildSort(engine: CommerceEngine, props: SortProps = {}): Sort {
     ...controller,
 
     get state() {
-      return getState().sort;
+      return getState().commerceSort;
     },
 
     sortBy(criterion: SortCriterion) {
@@ -156,9 +156,7 @@ export function buildSort(engine: CommerceEngine, props: SortProps = {}): Sort {
   };
 }
 
-function loadSortReducers(
-  engine: CoreEngine
-): engine is CoreEngine<ProductListingV2Section> {
-  engine.addReducers({productListing, sort});
+function loadSortReducers(engine: CommerceEngine): engine is CommerceEngine {
+  engine.addReducers({productListing, commerceSort});
   return true;
 }

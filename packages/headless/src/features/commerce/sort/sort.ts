@@ -1,38 +1,30 @@
 import {ArrayValue, EnumValue, StringValue, RecordValue} from '@coveo/bueno';
-import {SortBy, SortDirection} from '../../../sort/sort';
+import {
+  SortBy,
+  SortByRelevance,
+  SortDirection,
+  SortByFields as CoreSortByFields,
+  SortByFieldsFields as CoreSortByFieldsFields,
+  buildRelevanceSortCriterion,
+} from '../../sort/sort';
 
-export {SortBy, SortDirection};
+export type {SortByRelevance};
+export {SortBy, SortDirection, buildRelevanceSortCriterion};
 
-export type SortByRelevance = {
-  sortCriteria: SortBy.Relevance;
-};
-
-export type SortByFieldsFields = {
-  field: string;
-  direction?: SortDirection;
-  displayName?: string;
-};
-
-export type SortByFields = {
-  sortCriteria: SortBy.Fields;
+export type SortByFields = Pick<CoreSortByFields, 'by'> & {
   fields: SortByFieldsFields[];
+};
+
+export type SortByFieldsFields = CoreSortByFieldsFields & {
+  displayName?: string;
 };
 
 export type SortCriterion = SortByRelevance | SortByFields;
 
-export interface Sort {
-  appliedSort: SortCriterion;
-  availableSorts: SortCriterion[];
-}
-
-export const buildRelevanceSortCriterion = (): SortByRelevance => ({
-  sortCriteria: SortBy.Relevance,
-});
-
 export const buildFieldsSortCriterion = (
   fields: SortByFieldsFields[]
 ): SortByFields => ({
-  sortCriteria: SortBy.Fields,
+  by: SortBy.Fields,
   fields,
 });
 
@@ -41,7 +33,7 @@ export const sortCriterionDefinition = new RecordValue({
     required: false,
   },
   values: {
-    sortCriteria: new EnumValue({enum: SortBy, required: true}),
+    by: new EnumValue({enum: SortBy, required: true}),
     fields: new ArrayValue({
       each: new RecordValue({
         values: {

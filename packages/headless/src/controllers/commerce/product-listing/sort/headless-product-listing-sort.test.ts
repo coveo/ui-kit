@@ -6,10 +6,10 @@ import {
   SortBy,
 } from './headless-product-listing-sort';
 import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
-import {sortReducer} from '../../../../features/commerce/product-listing/sort/product-listing-sort-slice';
+import {sortReducer} from '../../../../features/commerce/sort/sort-slice';
 import {Action} from '@reduxjs/toolkit';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
-import {applySort} from '../../../../features/commerce/product-listing/sort/product-listing-sort-actions';
+import {applySort} from '../../../../features/commerce/sort/sort-actions';
 import {updatePage} from '../../../../features/pagination/pagination-actions';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 
@@ -30,7 +30,7 @@ describe('headless product-listing-sort', () => {
   it('adds the correct reducers to engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       productListing: productListingV2Reducer,
-      sort: sortReducer,
+      commerceSort: sortReducer,
     });
   });
 
@@ -52,20 +52,17 @@ describe('headless product-listing-sort', () => {
 
   describe('when sort is populated', () => {
     const appliedSort = {
-      sortCriteria: SortBy.Fields,
-      fields: [{field: 'some_field'}],
+      by: SortBy.Fields,
+      fields: [{name: 'some_field'}],
     };
 
     beforeEach(() => {
       engine = buildMockCommerceEngine({
         state: {
           ...buildMockCommerceState(),
-          productListing: {
-            ...buildMockCommerceState().productListing,
-            sort: {
-              appliedSort: appliedSort,
-              availableSorts: [appliedSort],
-            },
+          commerceSort: {
+            appliedSort: appliedSort,
+            availableSorts: [appliedSort],
           },
         },
       });
@@ -78,8 +75,8 @@ describe('headless product-listing-sort', () => {
 
     it('calling #isSortedBy with a criterion different from the one in state returns false', () => {
       const notAppliedSort = {
-        sortCriteria: SortBy.Fields,
-        fields: [{field: 'some_other_field'}],
+        by: SortBy.Fields,
+        fields: [{name: 'some_other_field'}],
       };
       expect(sort.isSortedBy(notAppliedSort)).toBe(false);
     });
@@ -90,8 +87,8 @@ describe('headless product-listing-sort', () => {
 
     it('calling #isAvailable with an unavailable criterion returns false', () => {
       const unavailableSort = {
-        sortCriteria: SortBy.Fields,
-        fields: [{field: 'some_other_field'}],
+        by: SortBy.Fields,
+        fields: [{name: 'some_other_field'}],
       };
       expect(sort.isAvailable(unavailableSort)).toBe(false);
     });

@@ -86,7 +86,7 @@ export class PlatformClient {
       }
 
       if (response.status === 404) {
-        throw new DisconnectedError(url, response.status);
+        //throw new DisconnectedError(url, response.status);
       }
 
       logger.info({response, requestInfo}, 'Platform response');

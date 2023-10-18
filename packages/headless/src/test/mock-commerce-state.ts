@@ -4,6 +4,7 @@ import {getConfigurationInitialState} from '../features/configuration/configurat
 import {CommerceAppState} from '../state/commerce-app-state';
 import {getContextInitialState} from '../features/commerce/context/context-state';
 import {getCartInitialState} from '../features/commerce/context/cart/cart-state';
+import {getCommerceSortInitialState} from '../features/commerce/sort/sort-state';
 
 export function buildMockCommerceState(
   config: Partial<CommerceAppState> = {}
@@ -12,6 +13,7 @@ export function buildMockCommerceState(
     configuration: getConfigurationInitialState(),
     productListing: getProductListingV2InitialState(),
     commercePagination: getCommercePaginationInitialState(),
+    commerceSort: getCommerceSortInitialState(),
     commerceContext: getContextInitialState(),
     cart: getCartInitialState(),
     version: 'unit-testing-version',

@@ -49,6 +49,7 @@ import {StandaloneSearchBoxSetState} from '../features/standalone-search-box-set
 import {StaticFilterSetState} from '../features/static-filter-set/static-filter-set-state';
 import {TabSetState} from '../features/tab-set/tab-set-state';
 import {TriggerState} from '../features/triggers/triggers-state';
+import {CommerceSortState} from '../features/commerce/sort/sort-state';
 
 export interface QuerySection {
   /**
@@ -292,9 +293,16 @@ export interface ProductListingSection {
 
 export interface CommercePaginationSection {
   /**
-   * The information related to the product listing endpoint.
+   * The information related to the commerce pagination.
    */
   commercePagination: CommercePaginationState;
+}
+
+export interface CommerceSortSection {
+  /**
+   * The information related to the commerce sort.
+   */
+  commerceSort: CommerceSortState;
 }
 
 export interface CommerceContextSection {
