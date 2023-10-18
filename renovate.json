@@ -76,6 +76,14 @@
       "description": "Quantic uses JSDOC that does not support ESM modules for template"
     },
     {
+      "matchFileNames": ["packages/atomic-react/package.json"],
+      "matchPackagePatterns": ["^rollup$"],
+      "groupSlug": "react-rollup",
+      "rangeStrategy": "replace",
+      "allowedVersions": "3.x",
+      "description": "TODO-V3: Remove Node stuff?"
+    },
+    {
       "matchPackagePatterns": ["^nx$"],
       "groupName": "nx",
       "groupSlug": "nx",
