@@ -19,7 +19,7 @@
     "@angular/platform-browser": "16.2.9",
     "@angular/platform-browser-dynamic": "16.2.9",
     "@angular/router": "16.2.9",
-    "@coveo/atomic-angular": "2.16.0",
+    "@coveo/atomic-angular": "2.16.1",
     "rxjs": "7.8.1",
     "tslib": "2.4.0",
     "zone.js": "0.14.0"

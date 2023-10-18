@@ -139,7 +139,7 @@ export interface PipelineRuleParams {
 }
 
 export interface PipelineRuleParameters {
-  genqa?: GenQAParameters;
+  mlGenerativeQuestionAnswering?: GenQAParameters;
 }
 
 export interface GenQAParameters {
