@@ -23,4 +23,9 @@ export const GeneratedAnswerSelectors = {
   retryContainer: () =>
     GeneratedAnswerSelectors.shadow().find('[part="retry-container"]'),
   retryButton: () => GeneratedAnswerSelectors.retryContainer().find('button'),
+  rephraseButton: (answerStyle: string) =>
+    GeneratedAnswerSelectors.shadow()
+      .find('[part="rephrase-button"]')
+      .contains(answerStyle)
+      .parent(),
 };
