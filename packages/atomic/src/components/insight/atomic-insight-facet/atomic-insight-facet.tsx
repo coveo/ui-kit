@@ -24,6 +24,7 @@ import {
 } from '../../common/facets/facet-common';
 import {parseDependsOn} from '../../common/facets/facet-common';
 import {FacetPlaceholder} from '../../common/facets/facet-placeholder/facet-placeholder';
+import {SpecificSortCriteriaExplicit} from '../../common/types';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
@@ -118,10 +119,7 @@ export class AtomicInsightFacet
       facetId: this.facetId,
       field: this.field,
       numberOfValues: this.numberOfValues,
-      sortCriteria: {
-        type: this.sortCriteria,
-        order: this.sortOrder,
-      },
+      sortCriteria: this.facetSortCriterion,
       facetSearch: {numberOfValues: this.numberOfValues},
       filterFacetCount: this.filterFacetCount,
       injectionDepth: this.injectionDepth,
@@ -173,6 +171,18 @@ export class AtomicInsightFacet
       showMore: this.showMoreFocus,
       header: this.headerFocus,
     };
+  }
+
+  private get facetSortCriterion():
+    | InsightFacetSortCriterion
+    | SpecificSortCriteriaExplicit {
+    return this.sortCriteria !== 'automatic' &&
+      this.sortCriteria !== 'alphanumericDescending'
+      ? {
+          type: this.sortCriteria,
+          order: this.sortOrder,
+        }
+      : this.sortCriteria;
   }
 
   public disconnectedCallback() {

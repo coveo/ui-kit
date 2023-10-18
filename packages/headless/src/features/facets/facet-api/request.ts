@@ -98,7 +98,7 @@ export type SortCriteriaType =
 
 export type SpecificSortCriteriaType = Exclude<
   SortCriteriaType,
-  'ascending' | 'descending'
+  'ascending' | 'descending' | 'automatic' | 'alphanumericDescending'
 >;
 
 export interface SortCriteria<

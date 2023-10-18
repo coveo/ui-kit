@@ -9,6 +9,7 @@ import {
   SearchStatusState,
   buildSearchStatus,
   buildFacetConditionsManager,
+  SpecificSortCriteriaExplicit,
 } from '@coveo/headless';
 import {Component, h, State, Prop, Element} from '@stencil/core';
 import {
@@ -276,6 +277,18 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
     };
   }
 
+  private get facetSortCriterion():
+    | FacetSortCriterion
+    | SpecificSortCriteriaExplicit {
+    return this.sortCriteria !== 'automatic' &&
+      this.sortCriteria !== 'alphanumericDescending'
+      ? {
+          type: this.sortCriteria,
+          order: this.sortOrder,
+        }
+      : this.sortCriteria;
+  }
+
   public disconnectedCallback() {
     this.facetCommon?.disconnectedCallback();
   }
@@ -321,13 +334,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
       facetId: this.facetId,
       field: this.field,
       numberOfValues: this.numberOfValues,
-      sortCriteria:
-        this.sortCriteria !== 'automatic'
-          ? {
-              type: this.sortCriteria,
-              order: this.sortOrder,
-            }
-          : this.sortCriteria,
+      sortCriteria: this.facetSortCriterion,
       facetSearch: {numberOfValues: this.numberOfValues},
       filterFacetCount: this.filterFacetCount,
       injectionDepth: this.injectionDepth,

@@ -1,10 +1,9 @@
 import {EventDescription} from 'coveo.analytics';
-import {SearchAppState, SpecificSortCriteriaExplicit} from '../..';
+import {SearchAppState} from '../..';
 import {ConfigurationSection} from '../../state/state-sections';
 import {sortFacets} from '../../utils/facet-utils';
 import {AutomaticFacetRequest} from '../facets/automatic-facet-set/interfaces/request';
 import {AutomaticFacetResponse} from '../facets/automatic-facet-set/interfaces/response';
-import {FacetSetState} from '../facets/facet-set/facet-set-state';
 import {getFacetRequests} from '../facets/generic/interfaces/generic-facet-request';
 import {AnyFacetValue} from '../facets/generic/interfaces/generic-facet-response';
 import {RangeFacetSetState} from '../facets/range-facets/generic/interfaces/range-facet';
@@ -114,37 +113,11 @@ function getAllEnabledFacets(state: StateNeededBySearchRequest) {
 
 function getAllFacets(state: StateNeededBySearchRequest) {
   return [
-    ...getSpecificFacetRequests(state.facetSet ?? {}),
+    ...getFacetRequests(state.facetSet ?? {}),
     ...getRangeFacetRequests(state.numericFacetSet ?? {}),
     ...getRangeFacetRequests(state.dateFacetSet ?? {}),
     ...getFacetRequests(state.categoryFacetSet ?? {}),
   ];
-}
-
-function getSpecificFacetRequests<T extends FacetSetState>(state: T) {
-  return getFacetRequests(state).map((request) => {
-    let newSortCriteria = request.sortCriteria;
-    if (
-      request.sortCriteria === 'alphanumericDescending' ||
-      (request.sortCriteria as SpecificSortCriteriaExplicit).type ===
-        'alphanumericDescending'
-    ) {
-      newSortCriteria = {
-        type: 'alphanumeric',
-        order: 'descending',
-      };
-    } else if (
-      typeof request.sortCriteria === 'object' &&
-      request.sortCriteria.type === 'automatic'
-    ) {
-      newSortCriteria = request.sortCriteria.type;
-    }
-
-    return {
-      ...request,
-      sortCriteria: newSortCriteria,
-    };
-  });
 }
 
 function getRangeFacetRequests<T extends RangeFacetSetState>(state: T) {

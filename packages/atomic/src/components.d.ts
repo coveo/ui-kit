@@ -551,7 +551,7 @@ export namespace Components {
          */
         "sortCriteria": InsightFacetSortCriterion;
         /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+          * The sort order to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
          */
         "sortOrder": InsightFacetSortOrder;
     }
@@ -4443,7 +4443,7 @@ declare namespace LocalJSX {
          */
         "sortCriteria"?: InsightFacetSortCriterion;
         /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+          * The sort order to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
          */
         "sortOrder"?: InsightFacetSortOrder;
     }

@@ -465,19 +465,6 @@ export function buildCoreFacet(
       const response = getResponse();
       const isLoading = getIsLoading();
       const enabled = getIsEnabled();
-      let sortCriterion!: FacetSortCriterion | SpecificSortCriteriaExplicit;
-
-      if (
-        typeof request.sortCriteria === 'object' &&
-        request.sortCriteria.type !== 'automatic'
-      ) {
-        sortCriterion = {
-          type: request.sortCriteria.type,
-          order: request.sortCriteria.order,
-        };
-      } else {
-        sortCriterion = request.sortCriteria;
-      }
 
       const values = response ? response.values : [];
       const hasActiveValues = values.some(
@@ -490,7 +477,7 @@ export function buildCoreFacet(
       return {
         facetId,
         values,
-        sortCriterion,
+        sortCriterion: request.sortCriteria,
         resultsMustMatch,
         isLoading,
         hasActiveValues,
