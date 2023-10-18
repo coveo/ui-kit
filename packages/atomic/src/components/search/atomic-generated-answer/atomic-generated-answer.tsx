@@ -16,8 +16,14 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {
+  GeneratedAnswerData,
+  SafeStorage,
+  StorageItems,
+} from '../../../utils/local-storage-utils';
 import {Heading} from '../../common/heading';
 import {LinkWithResultAnalytics} from '../../common/result-link/result-link';
+import {Switch} from '../../common/switch';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {FeedbackButton} from './feedback-button';
 import {GeneratedContentContainer} from './generated-content-container';
@@ -39,7 +45,9 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   public generatedAnswer!: GeneratedAnswer;
   public searchStatus!: SearchStatus;
 
-  @BindStateToController('generatedAnswer')
+  @BindStateToController('generatedAnswer', {
+    onUpdateCallbackMethod: 'onGeneratedAnswerStateUpdate',
+  })
   @State()
   private generatedAnswerState!: GeneratedAnswerState;
 
@@ -66,10 +74,14 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   @Prop() answerStyle: GeneratedAnswerStyle = 'default';
 
   private stopPropagation?: boolean;
+  private storage: SafeStorage = new SafeStorage();
+  private data?: GeneratedAnswerData;
 
   public initialize() {
+    this.data = this.readStoredData();
     this.generatedAnswer = buildGeneratedAnswer(this.bindings.engine, {
       initialState: {
+        isVisible: this.data.isVisible,
         responseFormat: {
           answerStyle: this.answerStyle,
         },
@@ -86,6 +98,28 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     );
   }
 
+  // @ts-expect-error: This function is used by BindStateToController.
+  private onGeneratedAnswerStateUpdate = () => {
+    if (this.generatedAnswerState.isVisible !== this.data?.isVisible) {
+      this.data = {
+        ...this.data,
+        isVisible: this.generatedAnswerState.isVisible,
+      };
+      this.writeStoredData(this.data);
+    }
+  };
+
+  private readStoredData(): GeneratedAnswerData {
+    return this.storage.getParsedJSON<GeneratedAnswerData>(
+      StorageItems.GENERATED_ANSWER_DATA,
+      {isVisible: true}
+    );
+  }
+
+  private writeStoredData(data: GeneratedAnswerData) {
+    this.storage.setJSON(StorageItems.GENERATED_ANSWER_DATA, data);
+  }
+
   private get hasRetryableError() {
     return (
       !this.searchStatusState.hasError &&
@@ -99,6 +133,17 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       !(isLoading || answer !== undefined || citations.length) &&
       !this.hasRetryableError
     );
+  }
+
+  private get isAnswerVisible() {
+    return this.generatedAnswerState.isVisible;
+  }
+
+  private get toggleTooltip() {
+    const key = this.isAnswerVisible
+      ? 'generated-answer-toggle-on'
+      : 'generated-answer-toggle-off';
+    return this.bindings.i18n.t(key);
   }
 
   private get loadingClasses() {
@@ -161,30 +206,48 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
             {this.bindings.i18n.t('generated-answer-title')}
           </Heading>
 
-          {!this.hasRetryableError && (
-            <div class="feedback-buttons flex gap-2 ml-auto">
-              <FeedbackButton
-                title={this.bindings.i18n.t('this-answer-was-helpful')}
-                variant="like"
-                active={this.generatedAnswerState.liked}
-                onClick={this.generatedAnswer.like}
-              />
-              <FeedbackButton
-                title={this.bindings.i18n.t('this-answer-was-not-helpful')}
-                variant="dislike"
-                active={this.generatedAnswerState.disliked}
-                onClick={this.generatedAnswer.dislike}
-              />
-            </div>
-          )}
+          <div class="flex gap-2 h-9 items-center ml-auto">
+            {!this.hasRetryableError &&
+              !this.generatedAnswerState.isStreaming &&
+              this.isAnswerVisible && (
+                <div class="feedback-buttons flex gap-2 ml-auto">
+                  <FeedbackButton
+                    title={this.bindings.i18n.t('this-answer-was-helpful')}
+                    variant="like"
+                    active={this.generatedAnswerState.liked}
+                    onClick={this.generatedAnswer.like}
+                  />
+                  <FeedbackButton
+                    title={this.bindings.i18n.t('this-answer-was-not-helpful')}
+                    variant="dislike"
+                    active={this.generatedAnswerState.disliked}
+                    onClick={this.generatedAnswer.dislike}
+                  />
+                </div>
+              )}
+
+            <Switch
+              part="toggle"
+              checked={this.isAnswerVisible}
+              onToggle={(checked) => {
+                checked
+                  ? this.generatedAnswer.show()
+                  : this.generatedAnswer.hide();
+              }}
+              ariaLabel={this.bindings.i18n.t('generated-answer-title')}
+              title={this.toggleTooltip}
+            ></Switch>
+          </div>
         </div>
-        {this.hasRetryableError ? (
+        {this.hasRetryableError && this.isAnswerVisible ? (
           <RetryPrompt
             onClick={this.generatedAnswer.retry}
             buttonLabel={this.bindings.i18n.t('retry')}
             message={this.bindings.i18n.t('retry-stream-message')}
           />
-        ) : (
+        ) : null}
+
+        {!this.hasRetryableError && this.isAnswerVisible ? (
           <GeneratedContentContainer
             answer={this.generatedAnswerState.answer}
             isStreaming={this.generatedAnswerState.isStreaming}
@@ -195,15 +258,20 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
             >
               {this.renderCitations()}
             </SourceCitations>
-            <RephraseButtons
-              answerStyle={this.generatedAnswerState.responseFormat.answerStyle}
-              i18n={this.bindings.i18n}
-              onChange={(answerStyle: GeneratedAnswerStyle) =>
-                this.generatedAnswer.rephrase({answerStyle})
-              }
-            />
+
+            {!this.generatedAnswerState.isStreaming && (
+              <RephraseButtons
+                answerStyle={
+                  this.generatedAnswerState.responseFormat.answerStyle
+                }
+                i18n={this.bindings.i18n}
+                onChange={(answerStyle: GeneratedAnswerStyle) =>
+                  this.generatedAnswer.rephrase({answerStyle})
+                }
+              />
+            )}
           </GeneratedContentContainer>
-        )}
+        ) : null}
       </div>
     );
   }
