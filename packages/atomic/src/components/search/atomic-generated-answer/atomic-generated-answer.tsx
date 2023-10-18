@@ -258,13 +258,18 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
             >
               {this.renderCitations()}
             </SourceCitations>
-            <RephraseButtons
-              answerStyle={this.generatedAnswerState.responseFormat.answerStyle}
-              i18n={this.bindings.i18n}
-              onChange={(answerStyle: GeneratedAnswerStyle) =>
-                this.generatedAnswer.rephrase({answerStyle})
-              }
-            />
+
+            {!this.generatedAnswerState.isStreaming && (
+              <RephraseButtons
+                answerStyle={
+                  this.generatedAnswerState.responseFormat.answerStyle
+                }
+                i18n={this.bindings.i18n}
+                onChange={(answerStyle: GeneratedAnswerStyle) =>
+                  this.generatedAnswer.rephrase({answerStyle})
+                }
+              />
+            )}
           </GeneratedContentContainer>
         ) : null}
       </div>
