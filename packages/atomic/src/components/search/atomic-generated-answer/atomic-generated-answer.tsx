@@ -8,7 +8,8 @@ import {
   buildInteractiveCitation,
   GeneratedAnswerCitation,
 } from '@coveo/headless';
-import {Component, h, State, Element} from '@stencil/core';
+import {GeneratedAnswerStyle} from '@coveo/headless/dist/definitions/features/generated-answer/generated-response-format';
+import {Component, h, State, Element, Prop} from '@stencil/core';
 import {buildCustomEvent} from '../../../utils/event-utils';
 import {
   BindStateToController,
@@ -20,6 +21,7 @@ import {LinkWithResultAnalytics} from '../../common/result-link/result-link';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {FeedbackButton} from './feedback-button';
 import {GeneratedContentContainer} from './generated-content-container';
+import {RephraseButtons} from './rephrase-buttons';
 import {RetryPrompt} from './retry-prompt';
 import {SourceCitations} from './source-citations';
 import {TypingLoader} from './typing-loader';
@@ -53,10 +55,26 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
 
   @Element() private host!: HTMLElement;
 
+  /**
+   * The answer style to apply when the component first loads.
+   * Options:
+   *   - `default`: Generates the answer without additional formatting instructions.
+   *   - `bullet`: Requests the answer to be generated in bullet-points.
+   *   - `step`: Requests the answer to be generated in step-by-step instructions.
+   *   - `concise`: Requests the answer to be generated as concisely as possible.
+   */
+  @Prop() answerStyle: GeneratedAnswerStyle = 'default';
+
   private stopPropagation?: boolean;
 
   public initialize() {
-    this.generatedAnswer = buildGeneratedAnswer(this.bindings.engine);
+    this.generatedAnswer = buildGeneratedAnswer(this.bindings.engine, {
+      initialState: {
+        responseFormat: {
+          answerStyle: this.answerStyle,
+        },
+      },
+    });
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.host.dispatchEvent(
       buildCustomEvent(
@@ -120,7 +138,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
               }
               stopPropagation={this.stopPropagation}
             >
-              <div class="citation-index rounded-full font-medium rounded-full flex items-center text-bg-blue shrink-0">
+              <div class="citation-index rounded-full font-medium flex items-center text-bg-blue shrink-0">
                 <div class="mx-auto">{index + 1}</div>
               </div>
               <span class="citation-title truncate mx-1">{citation.title}</span>
@@ -172,11 +190,18 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
             isStreaming={this.generatedAnswerState.isStreaming}
           >
             <SourceCitations
-              label={this.bindings.i18n.t('more-info')}
+              label={this.bindings.i18n.t('citations')}
               isVisible={!!this.generatedAnswerState.citations.length}
             >
               {this.renderCitations()}
             </SourceCitations>
+            <RephraseButtons
+              answerStyle={this.generatedAnswerState.responseFormat.answerStyle}
+              i18n={this.bindings.i18n}
+              onChange={(answerStyle: GeneratedAnswerStyle) =>
+                this.generatedAnswer.rephrase({answerStyle})
+              }
+            />
           </GeneratedContentContainer>
         )}
       </div>
