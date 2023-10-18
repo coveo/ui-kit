@@ -1,7 +1,6 @@
 import {TestUtils} from '../..';
 import {
   closeGeneratedAnswerFeedbackModal,
-  copyGeneratedAnswer,
   dislikeGeneratedAnswer,
   likeGeneratedAnswer,
   openGeneratedAnswerFeedbackModal,
@@ -162,18 +161,13 @@ describe('generated answer', () => {
     expect(action).toBeTruthy();
   });
 
-  it('#copyToClipboard dispatches the right actions', () => {
-    engine = buildEngineWithGeneratedAnswer({answer: 'This is my answer'});
-    initGeneratedAnswer();
+  it('#logCopyToClipboard dispatches analytics action', () => {
+    generatedAnswer.logCopyToClipboard();
 
-    generatedAnswer.copyToClipboard();
-
-    const action = findAction(copyGeneratedAnswer.pending.type);
     const analyticsAction = engine.findAsyncAction(
       logCopyGeneratedAnswer().pending
     );
 
-    expect(action).toBeDefined();
     expect(analyticsAction).toBeDefined();
   });
 

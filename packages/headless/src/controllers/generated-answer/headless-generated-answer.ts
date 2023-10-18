@@ -9,7 +9,6 @@ import {
   openGeneratedAnswerFeedbackModal,
   closeGeneratedAnswerFeedbackModal,
   setIsVisible,
-  copyGeneratedAnswer,
 } from '../../features/generated-answer/generated-answer-actions';
 import {
   GeneratedAnswerFeedback,
@@ -90,9 +89,9 @@ export interface GeneratedAnswer extends Controller {
    */
   hide(): void;
   /**
-   * Copy the generated answer to the clipboard.
+   * Logs a custom event indicating the generated answer was copied to the clipboard.
    */
-  copyToClipboard(): void;
+  logCopyToClipboard(): void;
 }
 
 export interface GeneratedAnswerProps {
@@ -237,8 +236,7 @@ export function buildGeneratedAnswer(
         dispatch(logGeneratedAnswerHideAnswers());
       }
     },
-    copyToClipboard() {
-      dispatch(copyGeneratedAnswer());
+    logCopyToClipboard() {
       dispatch(logCopyGeneratedAnswer());
     },
   };
