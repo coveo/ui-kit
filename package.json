@@ -43,6 +43,7 @@
     "concurrently": "8.2.1",
     "cross-fetch": "4.0.0",
     "cspell": "7.3.8",
+    "cypress-split": "1.5.0",
     "cz-conventional-changelog": "3.3.0",
     "detect-indent": "7.0.1",
     "esbuild": "0.14.2",
