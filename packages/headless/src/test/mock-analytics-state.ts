@@ -4,7 +4,7 @@ export function buildMockAnalyticsState(
   config: Partial<AnalyticsState> = {}
 ): AnalyticsState {
   return {
-    legacyApiBaseUrl: '',
+    apiBaseUrl: '',
     nextApiBaseUrl: '',
     enabled: false,
     originLevel2: '',

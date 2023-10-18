@@ -59,15 +59,15 @@ export interface AnalyticsState {
   enabled: boolean;
 
   /**
+   * The Analytics API base URL to use.
+   * By default, will append /rest/ua to the platformUrl value.
+   */
+  apiBaseUrl: string;
+
+  /**
    * @internal
    * The Analytics API base URL to use.
    * By default, will append /rest/organizations/${organizationId}/events/v1 to the platformUrl value.
-   */
-  legacyApiBaseUrl: string;
-
-  /**
-   * The Analytics API base URL to use.
-   * By default, will append /rest/ua to the platformUrl value.
    */
   nextApiBaseUrl: string;
 
@@ -124,6 +124,7 @@ export interface AnalyticsState {
   documentLocation: string;
   /**
    * TBD trackingId
+   * @internal
    */
   trackingId: string;
 
@@ -145,7 +146,7 @@ export const getConfigurationInitialState: () => ConfigurationState = () => ({
   },
   analytics: {
     enabled: true,
-    legacyApiBaseUrl: `${analyticsUrl()}${analyticsAPIEndpoint}`,
+    apiBaseUrl: `${analyticsUrl()}${analyticsAPIEndpoint}`,
     nextApiBaseUrl: '',
     originContext: 'Search',
     originLevel2: 'default',
