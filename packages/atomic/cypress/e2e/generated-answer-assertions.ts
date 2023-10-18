@@ -1,3 +1,4 @@
+import {TestFixture} from '../fixtures/test-fixture';
 import {AnalyticsTracker} from '../utils/analyticsUtils';
 import {should} from './common-assertions';
 import {GeneratedAnswerSelectors} from './generated-answer-selectors';
@@ -48,5 +49,14 @@ export function assertLocalStorageData(data: {isVisible: boolean}) {
       );
       expect(stored).eql(data);
     });
+  });
+}
+
+export function assertAnswerStyle(expected: string) {
+  cy.wait(TestFixture.interceptAliases.Search).should((firstSearch) => {
+    expect(
+      firstSearch.request.body.pipelineRuleParameters
+        .mlGenerativeQuestionAnswering.responseFormat
+    ).to.have.property('answerStyle', expected);
   });
 }

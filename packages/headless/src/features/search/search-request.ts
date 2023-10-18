@@ -72,7 +72,7 @@ export const buildSearchRequest = async (
     }),
     ...(state.generatedAnswer?.responseFormat && {
       pipelineRuleParameters: {
-        genqa: {
+        mlGenerativeQuestionAnswering: {
           responseFormat: state.generatedAnswer.responseFormat,
         },
       },
