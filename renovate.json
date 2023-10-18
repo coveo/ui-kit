@@ -81,6 +81,14 @@
       "groupSlug": "nx",
       "rangeStrategy": "replace",
       "allowedVersions": "15.x"
+    },
+    {
+      "matchPackagePatterns": ["^cypress-repeat$"],
+      "groupName": "Cypress Repeat",
+      "groupSlug": "cypress-repeat",
+      "rangeStrategy": "replace",
+      "allowedVersions": "1.5.0",
+      "description": "Lock until bahmutov/cypress-repeat#52 is fixed"
     }
   ],
   "nvm": {
