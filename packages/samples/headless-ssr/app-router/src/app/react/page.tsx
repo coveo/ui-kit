@@ -1,4 +1,3 @@
-import {NextJSServerSideSearchParams} from '@/common/components/common/search-parameters-serializer';
 import {AuthorFacet} from '@/common/components/react/facets';
 import ResultList from '@/common/components/react/result-list';
 import SearchBox from '@/common/components/react/search-box';
@@ -7,9 +6,7 @@ import SearchParameters from '@/common/components/react/search-parameters';
 import {fetchStaticState} from '@/common/lib/react/engine';
 
 // Entry point SSR function
-export default async function Search(url: {
-  searchParams: NextJSServerSideSearchParams;
-}) {
+export default async function Search() {
   // TODO: Enable after URL management investigation https://coveord.atlassian.net/browse/KIT-2735
   // const {coveoSearchParameters} =
   //   CoveoNextJsSearchParametersSerializer.fromServerSideUrlSearchParams(
