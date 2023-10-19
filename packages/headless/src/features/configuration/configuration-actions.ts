@@ -116,7 +116,12 @@ export interface UpdateAnalyticsConfigurationActionCreatorPayload {
   /**
    * The Usage Analytics API base URL to use (e.g., `https://platform.cloud.coveo.com/rest/ua`).
    */
-  legacyApiBaseUrl?: string;
+  apiBaseUrl?: string;
+
+  /**
+   * The Usage Analytics API base URL to use (e.g., `https://platform.cloud.coveo.com/rest/organizations/${organizationId}/events/v1`).
+   */
+  nextApiBaseUrl?: string;
 
   /**
    * The Coveo analytics runtime to use, see https://github.com/coveo/coveo.analytics.js for more info.
@@ -139,6 +144,12 @@ export interface UpdateAnalyticsConfigurationActionCreatorPayload {
    * Specifies the URL of the current page or component.
    */
   documentLocation?: string;
+  /**
+   * TBD
+   */
+  trackingId?: string;
+
+  analyticsMode?: 'legacy' | 'next';
 }
 
 export type AnalyticsRuntimeEnvironment = IRuntimeEnvironment;
@@ -154,12 +165,19 @@ export const updateAnalyticsConfiguration = createAction(
       originContext: originSchemaOnConfigUpdate(),
       originLevel2: originSchemaOnConfigUpdate(),
       originLevel3: originSchemaOnConfigUpdate(),
-      legacyApiBaseUrl: nonEmptyString,
+      apiBaseUrl: nonEmptyString,
+      nextApiBaseUrl: nonEmptyString,
       runtimeEnvironment: new Value(),
       anonymous: new BooleanValue({default: false}),
       deviceId: nonEmptyString,
       userDisplayName: nonEmptyString,
       documentLocation: nonEmptyString,
+      trackingId: nonEmptyString,
+      analyticsMode: new StringValue<'legacy' | 'next'>({
+        constrainTo: ['legacy', 'next'],
+        required: false,
+        default: 'legacy',
+      }),
     });
   }
 );
