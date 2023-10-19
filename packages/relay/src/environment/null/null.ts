@@ -5,6 +5,7 @@ export function buildNullEnvironment(): Environment {
   return {
     runtime: "null",
     fetch: () => Promise.resolve(new Response(JSON.stringify(""))),
+    send: async () => null,
     getReferrerUrl: () => null,
     getUrl: () => null,
     getUserAgent: () => null,

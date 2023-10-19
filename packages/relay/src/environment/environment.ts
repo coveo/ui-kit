@@ -5,6 +5,7 @@ import { Storage } from "./storage";
 export interface Environment {
   runtime: "browser" | "node" | "null";
   fetch: (url: string, init?: RequestInit) => Promise<Response>;
+  send: (url: string, token: string, body: string) => Promise<null>;
   getReferrerUrl: () => string | null;
   getUrl: () => string | null;
   getUserAgent: () => string | null;

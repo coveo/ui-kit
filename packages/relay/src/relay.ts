@@ -16,7 +16,7 @@ interface Relay {
   emit: (
     type: string,
     payload: RelayPayload
-  ) => Promise<void | ValidationResponse>;
+  ) => Promise<ValidationResponse | null>;
   getMeta: (type: string) => Meta;
   on: (type: string, callback: EventCallback) => Off;
   off: (type: string, callback?: EventCallback) => void;

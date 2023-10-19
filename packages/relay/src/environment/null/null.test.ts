@@ -4,6 +4,7 @@ describe("null environment", () => {
   it("returns the correct runtime", () => {
     expect(buildNullEnvironment().runtime).toBe("null");
   });
+
   it("returns null referrerUrl", () => {
     expect(buildNullEnvironment().getReferrerUrl()).toBeNull();
   });
@@ -19,6 +20,7 @@ describe("null environment", () => {
   it("returns empty UUID", () => {
     expect(buildNullEnvironment().generateUUID()).toBe("");
   });
+
   it("does not call fetch ", async () => {
     globalThis.fetch = jest.fn(() =>
       Promise.resolve({
@@ -38,5 +40,9 @@ describe("null environment", () => {
     expect(data).toEqual("");
 
     expect(fetch).not.toBeCalled();
+  });
+
+  it("returns null send", async () => {
+    expect(await buildNullEnvironment().send("bap", "", "")).toBeNull();
   });
 });

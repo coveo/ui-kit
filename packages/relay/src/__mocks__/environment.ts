@@ -9,6 +9,7 @@ const defaultEnvironment: Environment = {
       json: () => Promise.resolve([{ valid: true }]),
     } as Response)
   ),
+  send: jest.fn(),
   getReferrerUrl: jest.fn(),
   getUrl: jest.fn(),
   getUserAgent: jest.fn(),

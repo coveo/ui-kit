@@ -31,4 +31,39 @@ describe("buildNodeEnvironment", () => {
       "2136b353-74be-42d7-904f-ea33a8f4a43c"
     );
   });
+
+  it("calls the Fetch API when using fetch", async () => {
+    const fetchSpy = jest.fn().mockImplementation(() => Promise.resolve());
+    Object.defineProperty(globalThis, "fetch", {
+      value: fetchSpy,
+    });
+
+    buildNodeEnvironment().fetch("anything");
+
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it("calls the Fetch API when using send", async () => {
+    const fetchSpy = jest.fn().mockImplementation(() => Promise.resolve());
+    Object.defineProperty(globalThis, "fetch", {
+      value: fetchSpy,
+    });
+    const expectedHeaders = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer token`,
+    };
+
+    buildNodeEnvironment().send("anything", "token", "bloup");
+
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+    expect(fetchSpy).toHaveBeenCalledWith(`anything`, {
+      method: "POST",
+      body: "bloup",
+      headers: expectedHeaders,
+    });
+  });
+
+  it("returns null when calling send", async () => {
+    expect(await buildNodeEnvironment().send("", "", "")).toBeNull();
+  });
 });

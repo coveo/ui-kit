@@ -6,6 +6,18 @@ export function buildNodeEnvironment(): Environment {
   return {
     runtime: "node",
     fetch: (url: string, init?: RequestInit) => fetchAPI(url, init),
+    send: async (url: string, token: string, body: string) => {
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+      fetchAPI(url, {
+        method: "POST",
+        body,
+        headers,
+      });
+      return null;
+    },
     getReferrerUrl: () => null,
     getUrl: () => null,
     getUserAgent: () => null,

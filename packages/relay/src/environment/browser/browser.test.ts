@@ -21,6 +21,10 @@ describe("buildBrowserEnvironment", () => {
     writable: true,
   });
 
+  Object.defineProperty(navigator, "sendBeacon", {
+    writable: true,
+  });
+
   it("environment is browser", () => {
     expect(buildBrowserEnvironment().runtime).toBe("browser");
   });
@@ -62,6 +66,50 @@ describe("buildBrowserEnvironment", () => {
   it("generates a UUID when calling generateUUID", () => {
     expect(buildBrowserEnvironment().generateUUID()).toBe(
       "2136b353-74be-42d7-904f-ea33a8f4a43c"
+    );
+  });
+
+  it("calls the Fetch API when using fetch", async () => {
+    const fetchSpy = jest.fn().mockImplementation(() => Promise.resolve());
+    Object.defineProperty(globalThis, "fetch", {
+      value: fetchSpy,
+    });
+
+    buildBrowserEnvironment().fetch("anything");
+
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it("calls the Beacon API when using send", async () => {
+    const beaconSpy = jest.fn(() => true);
+    Object.defineProperty(navigator, "sendBeacon", {
+      value: beaconSpy,
+    });
+
+    buildBrowserEnvironment().send("anything", "token", "bloup");
+
+    expect(beaconSpy).toHaveBeenCalledTimes(1);
+    expect(beaconSpy).toHaveBeenCalledWith(
+      `anything?access_token=token`,
+      new Blob(["bloup"], { type: "application/json" })
+    );
+  });
+
+  it("returns null when calling send", async () => {
+    Object.defineProperty(navigator, "sendBeacon", {
+      value: jest.fn(() => true),
+    });
+    expect(await buildBrowserEnvironment().send("", "", "")).toBeNull();
+  });
+
+  it("throws an error if the sendBeacon's response is false", async () => {
+    const beaconSpy = jest.fn(() => false);
+    Object.defineProperty(navigator, "sendBeacon", {
+      value: beaconSpy,
+    });
+
+    expect(buildBrowserEnvironment().send("", "", "")).rejects.toThrow(
+      "Failed to send the event(s) because the payload size exceeded the maximum allowed size (32 KB). Please contact support if the problem persists."
     );
   });
 });

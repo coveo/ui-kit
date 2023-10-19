@@ -25,6 +25,17 @@ describe("emit", () => {
     expect(response).toBe(undefined);
   });
 
+  it("sets expected url, token and body for the send function", () => {
+    emit(params);
+    const expectedBody = JSON.stringify([params.event]);
+
+    expect(params.environment.send).toHaveBeenCalledWith(
+      params.config.url,
+      "I am token",
+      expectedBody
+    );
+  });
+
   it("calls listeners", async () => {
     const { listenerManager, event } = params;
     await emit(params);

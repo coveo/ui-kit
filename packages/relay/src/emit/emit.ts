@@ -1,12 +1,8 @@
 import { Environment } from "../environment/environment";
-import {
-  callEventApi,
-  EventApiCallParams,
-} from "../event-api-call/event-api-caller";
-import { RelayEvent } from "../event/relay-event";
 import { ListenerManager } from "../listener/listener";
-import { RelayConfig } from "../relay";
 import { validate } from "../validate/validate";
+import { RelayEvent } from "../event/relay-event";
+import { RelayConfig } from "../relay";
 
 export interface EmitParams {
   config: RelayConfig;
@@ -23,6 +19,8 @@ export async function emit(params: EmitParams) {
   return config.mode === "validate" ? validate(params) : emitEvent(params);
 }
 
-async function emitEvent(params: EventApiCallParams) {
-  await callEventApi(params);
+export async function emitEvent({ event, config, environment }: EmitParams): Promise<null> {
+  const { url, token } = config;
+
+  return environment.send(url, token, JSON.stringify([event]));
 }
