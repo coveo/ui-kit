@@ -8,11 +8,13 @@ import {
 const searchStateKey = 'search-state';
 
 describe('headless ssr with search parameter manager example', () => {
-  describe('generic', () => {
-    test('/generic');
+  const generic = '/generic';
+  const react = '/react';
+  describe(`when using the ${generic} route`, () => {
+    test(generic);
   });
-  describe('react', () => {
-    test('/react');
+  describe(`when using the ${react} route`, () => {
+    test(react);
   });
 });
 
