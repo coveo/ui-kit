@@ -6,7 +6,6 @@ import {
   validatePayload,
 } from '../../../utils/validate-payload';
 import {
-  AnalyticsType,
   makeAnalyticsAction,
   SearchAction,
 } from '../../analytics/analytics-utils';
@@ -53,14 +52,8 @@ const getCategoryFacetMetadata = (
 export const logCategoryFacetBreadcrumb = (
   payload: LogCategoryFacetBreadcrumbActionCreatorPayload
 ): SearchAction =>
-  makeAnalyticsAction(
-    'analytics/categoryFacet/breadcrumb',
-    AnalyticsType.Search,
-    (client, state) => {
-      validatePayload(payload, categoryFacetBreadcrumbPayloadDefinition);
+  makeAnalyticsAction('analytics/categoryFacet/breadcrumb', (client, state) => {
+    validatePayload(payload, categoryFacetBreadcrumbPayloadDefinition);
 
-      return client.makeBreadcrumbFacet(
-        getCategoryFacetMetadata(state, payload)
-      );
-    }
-  );
+    return client.makeBreadcrumbFacet(getCategoryFacetMetadata(state, payload));
+  });

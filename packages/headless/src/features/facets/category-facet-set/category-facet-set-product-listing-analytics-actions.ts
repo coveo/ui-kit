@@ -6,7 +6,6 @@ import {
   validatePayload,
 } from '../../../utils/validate-payload';
 import {
-  AnalyticsType,
   makeProductListingAnalyticsAction,
   ProductListingAction,
 } from '../../analytics/analytics-utils';
@@ -55,7 +54,6 @@ export const logCategoryFacetBreadcrumb = (
 ): ProductListingAction =>
   makeProductListingAnalyticsAction(
     'analytics/categoryFacet/breadcrumb',
-    AnalyticsType.Search,
     (client, state) => {
       validatePayload(payload, categoryFacetBreadcrumbPayloadDefinition);
 
