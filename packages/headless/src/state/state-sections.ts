@@ -9,6 +9,7 @@ import {CartState} from '../features/commerce/context/cart/cart-state';
 import {CommerceContextState} from '../features/commerce/context/context-state';
 import {CommercePaginationState} from '../features/commerce/pagination/pagination-state';
 import {ProductListingV2State} from '../features/commerce/product-listing/product-listing-state';
+import {CommerceSortState} from '../features/commerce/sort/sort-state';
 import {ConfigurationState} from '../features/configuration/configuration-state';
 import {ContextState} from '../features/context/context-state';
 import {DictionaryFieldContextState} from '../features/dictionary-field-context/dictionary-field-context-state';
@@ -49,7 +50,6 @@ import {StandaloneSearchBoxSetState} from '../features/standalone-search-box-set
 import {StaticFilterSetState} from '../features/static-filter-set/static-filter-set-state';
 import {TabSetState} from '../features/tab-set/tab-set-state';
 import {TriggerState} from '../features/triggers/triggers-state';
-import {CommerceSortState} from '../features/commerce/sort/sort-state';
 
 export interface QuerySection {
   /**

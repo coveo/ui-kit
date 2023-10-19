@@ -1,9 +1,9 @@
-import {sortReducer} from './sort-slice';
-import {applySort} from './sort-actions';
-import {SortBy, SortDirection} from '../../sort/sort';
-import {CommerceSortState, getCommerceSortInitialState} from './sort-state';
-import {fetchProductListing} from '../product-listing/product-listing-actions';
 import {buildFetchProductListingV2Response} from '../../../test/mock-product-listing-v2';
+import {SortBy, SortDirection} from '../../sort/sort';
+import {fetchProductListing} from '../product-listing/product-listing-actions';
+import {applySort} from './sort-actions';
+import {sortReducer} from './sort-slice';
+import {CommerceSortState, getCommerceSortInitialState} from './sort-state';
 
 describe('product-listing-sort-slice', () => {
   let state: CommerceSortState;

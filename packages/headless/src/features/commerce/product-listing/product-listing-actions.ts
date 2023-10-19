@@ -1,5 +1,6 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
+import {SelectedSortParam} from '../../../api/commerce/commerce-api-params';
 import {ProductListingV2Request} from '../../../api/commerce/product-listings/v2/product-listing-v2-request';
 import {ProductListingV2SuccessResponse} from '../../../api/commerce/product-listings/v2/product-listing-v2-response';
 import {isErrorResponse} from '../../../api/search/search-api-client';
@@ -24,9 +25,8 @@ import {
 } from '../../analytics/analytics-utils';
 import {getFacetRequests} from '../../facets/generic/interfaces/generic-facet-request';
 import {logQueryError} from '../../search/search-analytics-actions';
-import {logProductListingV2Load} from './product-listing-analytics';
-import {SelectedSortParam} from '../../../api/commerce/commerce-api-params';
 import {SortBy, SortCriterion} from '../sort/sort';
+import {logProductListingV2Load} from './product-listing-analytics';
 
 export type StateNeededByFetchProductListingV2 = ConfigurationSection &
   ProductListingV2Section &
