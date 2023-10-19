@@ -1,8 +1,7 @@
-import {SchemaDefinition} from '@coveo/bueno';
-import {EnumValue} from '@coveo/bueno';
+import {EnumValue, SchemaDefinition} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
-import {validatePayload} from '../../../../utils/validate-payload';
-import {SortBy, SortCriterion} from '../../../sort/sort';
+import {validatePayload} from '../../../utils/validate-payload';
+import {SortBy, SortCriterion} from './sort';
 
 export const applySort = createAction(
   'commerce/productListing/sort/apply',
