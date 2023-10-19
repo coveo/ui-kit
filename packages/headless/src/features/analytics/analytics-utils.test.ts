@@ -1,3 +1,4 @@
+import {createRelay} from '@coveo/relay';
 import {
   MockSearchEngine,
   buildMockSearchAppEngine,
@@ -15,7 +16,7 @@ import {
   partialDocumentInformation,
   partialRecommendationInformation,
 } from './analytics-utils';
-import {createRelay} from '@coveo/relay';
+
 jest.mock('@coveo/relay');
 
 /* cSpell:ignore CAJS */
