@@ -176,6 +176,12 @@ export class AtomicInsightFacet
   private get facetSortCriterion():
     | InsightFacetSortCriterion
     | SpecificSortCriteriaExplicit {
+    if (this.sortCriteria === 'automatic' && this.sortOrder !== 'ascending') {
+      this.bindings.engine.logger.warn(
+        'When using the `automatic` sort criteria, the specified sort order will have no effect.'
+      );
+    }
+
     return this.sortCriteria !== 'automatic' &&
       this.sortCriteria !== 'alphanumericDescending'
       ? {
