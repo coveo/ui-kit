@@ -1,6 +1,6 @@
+import {isNullOrUndefined} from '@coveo/bueno';
 //@ts-expect-error package is just an alias resolved in esbuild
 import hasMagicCookie from '@coveo/pendragon';
-import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer} from '@reduxjs/toolkit';
 import {clearAnalyticsClient} from '../../api/analytics/coveo-analytics-utils';
 import {getOrganizationEndpoints} from '../../api/platform-client';
