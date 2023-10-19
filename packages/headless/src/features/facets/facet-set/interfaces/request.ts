@@ -14,6 +14,7 @@ import {
 export const facetSortCriteria: FacetSortCriterion[] = [
   'score',
   'alphanumeric',
+  'alphanumericDescending',
   'occurrences',
   'automatic',
 ];

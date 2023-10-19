@@ -311,7 +311,7 @@ export namespace Components {
          */
         "numberOfValues": number;
         /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', and 'automatic'.
          */
         "sortCriteria": FacetSortCriterion;
         /**
@@ -4207,7 +4207,7 @@ declare namespace LocalJSX {
          */
         "numberOfValues"?: number;
         /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', and 'automatic'.
          */
         "sortCriteria"?: FacetSortCriterion;
         /**

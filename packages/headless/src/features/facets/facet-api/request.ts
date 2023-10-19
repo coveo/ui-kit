@@ -1,3 +1,4 @@
+import {RangeFacetSortCriterion} from '../../../insight.index';
 import {FacetSortOrder} from '../facet-set/interfaces/request';
 import {FacetValueState} from './value';
 
@@ -90,19 +91,20 @@ export type FacetType =
 export type SortCriteriaType =
   | 'score'
   | 'alphanumeric'
-  | 'ascending'
-  | 'descending'
   | 'occurrences'
-  | 'automatic'
   | 'alphanumericDescending';
 
 export type SpecificSortCriteriaType = Exclude<
   SortCriteriaType,
-  'ascending' | 'descending' | 'automatic' | 'alphanumericDescending'
+  'alphanumericDescending'
 >;
 
 export interface SortCriteria<
-  T extends SortCriteriaType | SpecificSortCriteriaExplicit,
+  T extends
+    | SortCriteriaType
+    | SpecificSortCriteriaExplicit
+    | RangeFacetSortCriterion
+    | 'automatic',
 > {
   /** The sort criterion to apply to the returned facet values. */
   sortCriteria: T;
