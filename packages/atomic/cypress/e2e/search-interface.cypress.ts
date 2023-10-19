@@ -275,7 +275,7 @@ describe('Search Interface Component', () => {
     });
 
     it('should support changing a translation value without overriding other strings', () => {
-      setTranslation('fr', 'showing-results-of_plural', 'patate');
+      setTranslation('fr', 'showing-results-of_other', 'patate');
       setLanguageAndWait('fr');
 
       QuerySummarySelectors.text()

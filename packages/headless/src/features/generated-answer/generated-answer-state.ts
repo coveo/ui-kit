@@ -1,4 +1,5 @@
 import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload';
+import {GeneratedResponseFormat} from './generated-response-format';
 
 export interface GeneratedAnswerState {
   /**
@@ -30,6 +31,10 @@ export interface GeneratedAnswerState {
    */
   disliked: boolean;
   /**
+   * The desired format options for the generated answer.
+   */
+  responseFormat: GeneratedResponseFormat;
+  /**
    * Determines if the feedback modal is currently opened.
    */
   feedbackModalOpen: boolean;
@@ -51,6 +56,9 @@ export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
     citations: [],
     liked: false,
     disliked: false,
+    responseFormat: {
+      answerStyle: 'default',
+    },
     feedbackModalOpen: false,
   };
 }

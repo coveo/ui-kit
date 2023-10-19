@@ -1,3 +1,9 @@
+## 2.46.1 (2023-10-18)
+
+### Bug Fixes
+
+- screw it, max-height transition ! ([#3254](https://github.com/coveo/ui-kit/issues/3254)) ([0d7e550](https://github.com/coveo/ui-kit/commits/0d7e550c3bb966a3c1ab69ef3e8268c71402245c))
+
 # 2.46.0 (2023-10-11)
 
 ### Bug Fixes

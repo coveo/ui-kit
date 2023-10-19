@@ -93,12 +93,14 @@ export const SearchTextArea: FunctionalComponent<Props> = ({
           syncTextWithReplica(textAreaRef);
         }}
         onKeyDown={(e) => {
-          onKeyDown?.(e);
-          if (e.key === 'Enter') {
-            e.preventDefault();
-            return;
-          }
           syncTextWithReplica(textAreaRef);
+          if (e.key === 'Enter') {
+            if (e.shiftKey) {
+              return;
+            }
+            e.preventDefault();
+          }
+          onKeyDown?.(e);
         }}
         onKeyUp={(e) => {
           onKeyUp?.(e);

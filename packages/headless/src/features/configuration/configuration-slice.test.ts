@@ -41,10 +41,13 @@ describe('configuration slice', () => {
       originLevel2: '2',
       originLevel3: '3',
       apiBaseUrl: `${url}/rest/ua`,
+      nextApiBaseUrl: `${url}/rest/organizations/myorg/events/v1`,
       anonymous: false,
       deviceId: 'Chrome',
       userDisplayName: 'Someone',
       documentLocation: 'http://hello.world.com',
+      trackingId: 'someTrackingId',
+      analyticsMode: 'legacy',
     },
   };
 
@@ -146,11 +149,14 @@ describe('configuration slice', () => {
           originContext: 'fizz',
           originLevel2: 'bar',
           originLevel3: 'buzz',
+          nextApiBaseUrl: 'http://test.com/new-analytics',
           apiBaseUrl: 'http://test.com/analytics',
           anonymous: true,
           deviceId: 'fuzz',
           userDisplayName: 'displayName',
           documentLocation: 'http://somewhere.com',
+          trackingId: 'someTrackingId',
+          analyticsMode: 'legacy',
         },
       };
       expect(
@@ -161,11 +167,13 @@ describe('configuration slice', () => {
             originContext: 'fizz',
             originLevel2: 'bar',
             originLevel3: 'buzz',
+            nextApiBaseUrl: 'http://test.com/new-analytics',
             apiBaseUrl: 'http://test.com/analytics',
             anonymous: true,
             deviceId: 'fuzz',
             userDisplayName: 'displayName',
             documentLocation: 'http://somewhere.com',
+            trackingId: 'someTrackingId',
           })
         )
       ).toEqual(expectedState);
@@ -179,11 +187,14 @@ describe('configuration slice', () => {
           originContext: 'fizz',
           originLevel2: 'bar',
           originLevel3: 'buzz',
+          nextApiBaseUrl: 'http://test.com/new-analytics',
           apiBaseUrl: 'http://test.com/analytics',
           anonymous: true,
           deviceId: 'fuzz',
           userDisplayName: 'displayName',
           documentLocation: 'http://somewhere.com',
+          trackingId: 'someTrackingId',
+          analyticsMode: 'legacy',
         },
       };
 
@@ -195,11 +206,13 @@ describe('configuration slice', () => {
             originContext: 'fizz',
             originLevel2: 'bar',
             originLevel3: 'buzz',
+            nextApiBaseUrl: 'http://test.com/new-analytics',
             apiBaseUrl: 'http://test.com/analytics',
             anonymous: true,
             deviceId: 'fuzz',
             userDisplayName: 'displayName',
             documentLocation: 'http://somewhere.com',
+            trackingId: 'someTrackingId',
           })
         )
       ).toEqual(expectedState);
@@ -246,7 +259,9 @@ describe('configuration slice', () => {
 
     it('setting apiBaseUrl to a relative url does not return an error', () => {
       const apiBaseUrl = '/rest/ua';
-      const action = updateAnalyticsConfiguration({apiBaseUrl});
+      const action = updateAnalyticsConfiguration({
+        apiBaseUrl: apiBaseUrl,
+      });
       expect('error' in action).toBe(false);
     });
   });
