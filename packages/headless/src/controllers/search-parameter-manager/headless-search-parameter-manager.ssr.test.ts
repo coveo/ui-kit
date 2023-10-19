@@ -20,6 +20,7 @@ type SearchParameterManagerDefinitionType = ControllerDefinitionWithProps<
   SearchParameterManager,
   SearchParameterManagerBuildProps
 >;
+
 describe('define search parameter manager', () => {
   let searchParameterManagerDefinition: SearchParameterManagerDefinitionType;
 
