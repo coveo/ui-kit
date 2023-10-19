@@ -129,28 +129,6 @@ export class PlatformClient {
   }
 }
 
-/*interface URLOptions<E extends PlatformEnvironment> {
-  environment?: E;
-  region?: Extract<PlatformCombination, {env: E}>['region'];
-  multiRegionSubDomain?: string;
-}
-
-function coveoCloudURL<E extends PlatformEnvironment>(
-  subdomain: string,
-  options?: URLOptions<E>
-) {
-  const urlEnv =
-    !options || !options.environment || options.environment === 'prod'
-      ? ''
-      : options.environment;
-  const urlRegion =
-    !options || !options.region || options.region === 'us'
-      ? ''
-      : `-${options.region}`;
-
-  return `https://${subdomain}${urlEnv}${urlRegion}.cloud.coveo.com`;
-}*/
-
 /**
  * Returns the unique endpoint(s) for a given organization identifier.
  * @param orgId The organization identifier.
