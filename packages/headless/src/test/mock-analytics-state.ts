@@ -4,7 +4,8 @@ export function buildMockAnalyticsState(
   config: Partial<AnalyticsState> = {}
 ): AnalyticsState {
   return {
-    legacyApiBaseUrl: '',
+    apiBaseUrl: '',
+    nextApiBaseUrl: '',
     enabled: false,
     originLevel2: '',
     originLevel3: '',
@@ -13,6 +14,8 @@ export function buildMockAnalyticsState(
     originContext: '',
     userDisplayName: '',
     documentLocation: '',
+    trackingId: '',
+    analyticsMode: 'legacy',
     ...config,
   };
 }
