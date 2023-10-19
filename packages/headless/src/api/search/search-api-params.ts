@@ -117,7 +117,7 @@ export interface AnalyticsParam {
     userDisplayName?: string;
     documentLocation?: string;
     trackingId?: string;
-    enabled?: boolean;
+    capture?: boolean;
   };
 }
 

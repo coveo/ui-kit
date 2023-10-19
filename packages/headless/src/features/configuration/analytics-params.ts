@@ -23,7 +23,7 @@ export const fromAnalyticsStateToAnalyticsParams = async (
       ...(s.deviceId && {deviceId: s.deviceId}),
       ...(getPageID() && {pageId: getPageID()}),
       ...(s.analyticsMode && s.trackingId && {trackingId: s.trackingId}),
-      ...{enabled: s.analyticsMode === 'next' ?? false},
+      ...{capture: s.analyticsMode === 'next' ?? false},
     },
   };
 };
