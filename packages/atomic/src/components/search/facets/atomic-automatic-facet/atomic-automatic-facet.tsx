@@ -23,7 +23,7 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  * **Note:** This component should never be used on it's own. It's used internally by the `atomic-automatic-facet-generator`
  * component to automatically render updated facets. However, you can use the shadow parts to style the automatically generated facets.
  *
- * To read more about the automatic facet generator feature, see: https://docs.coveo.com/en/n9sd0159/
+ * To learn more about the automatic facet generator feature, see: https://docs.coveo.com/en/n9sd0159/
  *
  * @part facet - The wrapper for the entire facet.
  *
