@@ -19,7 +19,11 @@ export async function emit(params: EmitParams) {
   return config.mode === "validate" ? validate(params) : emitEvent(params);
 }
 
-export async function emitEvent({ event, config, environment }: EmitParams): Promise<null> {
+export async function emitEvent({
+  event,
+  config,
+  environment,
+}: EmitParams): Promise<null> {
   const { url, token } = config;
 
   return environment.send(url, token, JSON.stringify([event]));
