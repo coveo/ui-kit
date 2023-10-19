@@ -11,11 +11,16 @@ export const FacetValueCheckbox: FunctionalComponent<
 > = (props, children) => {
   const id = randomID('facet-value-');
   const count = props.numberOfResults.toLocaleString(props.i18n.language);
-  const ariaLabel = props.i18n.t('facet-value', {
+  const ariaLabelAttributes = {
     value: props.displayValue,
     count: props.numberOfResults,
     interpolation: {escapeValue: false},
-  });
+  };
+  const selectedAriaLabel = props.i18n.t('facet-value', ariaLabelAttributes);
+  const excludedAriaLabel = props.i18n.t(
+    'facet-value-exclude',
+    ariaLabelAttributes
+  );
   let labelRef: HTMLLabelElement;
 
   const isTriStateCheckbox = (
@@ -30,7 +35,7 @@ export const FacetValueCheckbox: FunctionalComponent<
       onToggle: () => props.onClick(),
       part: 'value-checkbox',
       class: 'value-checkbox',
-      ariaLabel: ariaLabel,
+      ariaLabel: selectedAriaLabel,
       ref: props.buttonRef,
       onMouseDown: (e: MouseEvent) =>
         createRipple(e, {color: 'neutral', parent: labelRef}),
@@ -49,8 +54,7 @@ export const FacetValueCheckbox: FunctionalComponent<
       return (
         <FacetValueExclude
           onClick={() => props.onExclude?.()}
-          part="value-exclude"
-          class="value-exclude"
+          ariaLabel={excludedAriaLabel}
         ></FacetValueExclude>
       );
     }
@@ -67,8 +71,8 @@ export const FacetValueCheckbox: FunctionalComponent<
         onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
         aria-hidden="true"
       >
-        {renderExclusion()}
         {children}
+        {renderExclusion()}
         <span part="value-count" class="value-count">
           {props.i18n.t('between-parentheses', {
             text: count,

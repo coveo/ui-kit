@@ -15,11 +15,13 @@ export const TriStateCheckbox: FunctionalComponent<TriStateCheckboxProps> = (
   const isExcluded = props.state === 'excluded';
   const partName = props.part ?? 'checkbox';
 
-  const classNames = ['w-4 h-4 grid place-items-center rounded no-outline '];
+  const classNames = [
+    'w-4 h-4 grid place-items-center rounded no-outline hover:border-primary-light focus-visible:border-primary-light',
+  ];
   const parts = [partName];
   if (isSelected) {
     classNames.push(
-      'selected bg-primary hover:bg-primary-light focus-visible:bg-primary-light hover:border-primary-light focus-visible:border-primary-light'
+      'selected bg-primary hover:bg-primary-light focus-visible:bg-primary-light'
     );
     parts.push(`${partName}-checked`);
   } else if (isExcluded) {

@@ -4,26 +4,20 @@ import Tick from '../../../../images/clear.svg';
 export interface ExcludeProps {
   onClick(): void;
   key?: string | number;
-  id?: string;
   class?: string;
   text?: string;
-  part?: string;
-  iconPart?: string;
   ariaLabel?: string;
-  ariaCurrent?: string;
   ref?(element?: HTMLElement): void;
   onMouseEnter?(evt: MouseEvent): void;
 }
 
 export const FacetValueExclude: FunctionalComponent<ExcludeProps> = (props) => {
-  const partName = props.part ?? 'checkbox';
-  const parts = [partName];
   const classNames = [
+    'value-exclude-button',
     'peer',
     'order-last',
+    'flex',
     'ml-auto',
-    'group-hover:visible',
-    'invisible',
   ];
   if (props.class) {
     classNames.push(props.class);
@@ -31,8 +25,11 @@ export const FacetValueExclude: FunctionalComponent<ExcludeProps> = (props) => {
 
   const attributes = {
     class: classNames.join(' '),
-    part: parts.join(' '),
+    part: 'value-exclude-button',
     ref: props.ref,
+    key: props.key,
+    'aria-label': props.ariaLabel ?? props.text,
+    value: props.text,
   };
 
   return (
@@ -43,10 +40,9 @@ export const FacetValueExclude: FunctionalComponent<ExcludeProps> = (props) => {
     >
       <atomic-icon
         class={
-          'w-4 p-1 rounded bg-neutral order-last hover:bg-error hover:fill-white'
+          'w-4 p-1 rounded bg-neutral order-last hover:bg-error hover:fill-white invisible group-hover:visible'
         }
         icon={Tick}
-        part="value-exclude-button"
       ></atomic-icon>
     </button>
   );
