@@ -2,7 +2,8 @@ import {IRuntimeEnvironment} from 'coveo.analytics';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
-import {analyticsUrl, platformUrl} from '../../api/platform-client';
+import {getOrganizationEndpoints} from '../../api/platform-client';
+import {getSampleEngineConfiguration} from '../../app/engine-configuration';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -134,28 +135,33 @@ export interface AnalyticsState {
 export const searchAPIEndpoint = '/rest/search/v2';
 export const analyticsAPIEndpoint = '/rest/ua';
 
-export const getConfigurationInitialState: () => ConfigurationState = () => ({
-  organizationId: '',
-  accessToken: '',
-  platformUrl: platformUrl(),
-  search: {
-    apiBaseUrl: `${platformUrl()}${searchAPIEndpoint}`,
-    locale: 'en-US',
-    timezone: dayjs.tz.guess(),
-    authenticationProviders: [],
-  },
-  analytics: {
-    enabled: true,
-    apiBaseUrl: `${analyticsUrl()}${analyticsAPIEndpoint}`,
-    nextApiBaseUrl: '',
-    originContext: 'Search',
-    originLevel2: 'default',
-    originLevel3: 'default',
-    anonymous: false,
-    deviceId: '',
-    userDisplayName: '',
-    documentLocation: '',
-    trackingId: '',
-    analyticsMode: 'legacy',
-  },
-});
+export const getConfigurationInitialState: () => ConfigurationState = () => {
+  const defaultEndpoints = getOrganizationEndpoints(
+    getSampleEngineConfiguration().organizationId
+  );
+  return {
+    organizationId: '',
+    accessToken: '',
+    platformUrl: defaultEndpoints.platform,
+    search: {
+      apiBaseUrl: defaultEndpoints.search,
+      locale: 'en-US',
+      timezone: dayjs.tz.guess(),
+      authenticationProviders: [],
+    },
+    analytics: {
+      enabled: true,
+      apiBaseUrl: defaultEndpoints.analytics,
+      nextApiBaseUrl: '',
+      originContext: 'Search',
+      originLevel2: 'default',
+      originLevel3: 'default',
+      anonymous: false,
+      deviceId: '',
+      userDisplayName: '',
+      documentLocation: '',
+      trackingId: '',
+      analyticsMode: 'legacy',
+    },
+  };
+};
