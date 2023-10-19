@@ -8,7 +8,15 @@ import {
 const searchStateKey = 'search-state';
 
 describe('headless ssr with search parameter manager example', () => {
-  const route = '/generic';
+  describe('generic', () => {
+    test('/generic');
+  });
+  describe('react', () => {
+    test('/react');
+  });
+});
+
+function test(route: string) {
   describe('when loading a page without search parameters, after hydration', () => {
     beforeEach(() => {
       spyOnConsole();
@@ -93,7 +101,7 @@ describe('headless ssr with search parameter manager example', () => {
     }
 
     it('renders page in SSR as expected', () => {
-      cy.intercept('/generic/**', (req) => {
+      cy.intercept(`${route}/**`, (req) => {
         req.continue((resp) => {
           const dom = new DOMParser().parseFromString(resp.body, 'text/html');
           expect(dom.querySelector('.search-box input')).to.have.value(query);
@@ -139,7 +147,7 @@ describe('headless ssr with search parameter manager example', () => {
     }
 
     it('renders page in SSR as expected', () => {
-      cy.intercept('/generic/**', (req) => {
+      cy.intercept(`${route}/**`, (req) => {
         req.continue((resp) => {
           const dom = new DOMParser().parseFromString(resp.body, 'text/html');
           expect(dom.querySelector('.search-box input')).to.have.value('');
@@ -172,4 +180,4 @@ describe('headless ssr with search parameter manager example', () => {
       });
     });
   });
-});
+}
