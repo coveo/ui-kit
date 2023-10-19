@@ -21,6 +21,7 @@ import {
   logRetryGeneratedAnswer,
   logGeneratedAnswerShowAnswers,
   logGeneratedAnswerHideAnswers,
+  logCopyGeneratedAnswer,
 } from '../../features/generated-answer/generated-answer-analytics-actions';
 import {generatedAnswerReducer as generatedAnswer} from '../../features/generated-answer/generated-answer-slice';
 import {GeneratedAnswerState} from '../../features/generated-answer/generated-answer-state';
@@ -87,6 +88,10 @@ export interface GeneratedAnswer extends Controller {
    * Hides the generated answer.
    */
   hide(): void;
+  /**
+   * Logs a custom event indicating the generated answer was copied to the clipboard.
+   */
+  logCopyToClipboard(): void;
 }
 
 export interface GeneratedAnswerProps {
@@ -230,6 +235,9 @@ export function buildGeneratedAnswer(
         dispatch(setIsVisible(false));
         dispatch(logGeneratedAnswerHideAnswers());
       }
+    },
+    logCopyToClipboard() {
+      dispatch(logCopyGeneratedAnswer());
     },
   };
 }
