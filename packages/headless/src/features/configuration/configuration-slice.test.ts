@@ -1,5 +1,5 @@
 import {clearAnalyticsClient} from '../../api/analytics/coveo-analytics-utils';
-import {platformUrl} from '../../api/platform-client';
+import {getOrganizationEndpoints} from '../../api/platform-client';
 import {allValidPlatformCombination} from '../../test/platform-url';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 import {updateActiveTab} from '../tab-set/tab-set-actions';
@@ -24,7 +24,7 @@ describe('configuration slice', () => {
   afterEach(() => {
     (clearAnalyticsClient as jest.Mock).mockClear();
   });
-  const url = platformUrl({environment: 'dev', region: 'eu'});
+  const url = getOrganizationEndpoints('myorg', 'dev').platform;
   const existingState: ConfigurationState = {
     ...getConfigurationInitialState(),
     accessToken: 'mytoken123',
