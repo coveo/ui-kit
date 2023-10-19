@@ -54,7 +54,7 @@ export class AtomicAutomaticFacetGenerator implements InitializableComponent {
    * Maximum: `10`
    * @defaultValue `5`
    */
-  @Prop() public desiredCount!: number;
+  @Prop({reflect: true}) public desiredCount = 5;
 
   /**
    * The desired number of automatically generated facet values.
@@ -62,7 +62,7 @@ export class AtomicAutomaticFacetGenerator implements InitializableComponent {
    * Minimum: `1`
    * @defaultValue `8`
    */
-  @Prop() public numberOfValues = 8;
+  @Prop({reflect: true}) public numberOfValues = 8;
 
   @State() private collapseFacetsAfter = -1;
 

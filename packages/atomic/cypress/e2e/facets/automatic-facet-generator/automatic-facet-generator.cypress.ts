@@ -6,8 +6,10 @@ import {
 import {addAutomaticFacetGenerator} from './automatic-facet-generator-actions';
 import {
   assertContainsAutomaticFacet,
+  assertDesiredCountIsDefaultValue,
   assertDisplayNothing,
   assertDisplayPlaceholder,
+  assertNumberOfValuesIsDefaultValue,
   automaticFacetGeneratorComponent,
 } from './automatic-facet-generator-assertions';
 
@@ -67,5 +69,18 @@ describe('Automatic Facet Generator Test Suites', () => {
       .withoutAutomaticFacets()
       .init();
     assertDisplayNothing();
+  });
+
+  it('should display atomic-automatic-facet when props are empty', () => {
+    new TestFixture().with(addAutomaticFacetGenerator({})).init();
+
+    assertContainsAutomaticFacet();
+  });
+
+  it('should have the default values when props are empty', () => {
+    new TestFixture().with(addAutomaticFacetGenerator({})).init();
+
+    assertDesiredCountIsDefaultValue();
+    assertNumberOfValuesIsDefaultValue();
   });
 });
