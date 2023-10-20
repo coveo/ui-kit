@@ -31,6 +31,7 @@ import {GeneratedContentContainer} from './generated-content-container';
 import {RephraseButtons} from './rephrase-buttons';
 import {RetryPrompt} from './retry-prompt';
 import {SourceCitations} from './source-citations';
+import {TypingLoader} from './typing-loader';
 
 /**
  * @internal
@@ -272,32 +273,37 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     );
   }
 
-  public render() {
+  private loadingAnimationContent() {
     const {isLoading, isStreaming} = this.generatedAnswerState;
-    isLoading
-      ? this.bindings.store.setLoadingFlag('generatedAnswer')
-      : this.bindings.store.unsetLoadingFlag('generatedAnswer');
-
-    let content;
 
     if (isLoading || this.shouldBeHidden) {
-      content = (
-        <div class="relative" style={{minHeight: '400px'}}>
+      return (
+        <div class="placeholder-wrapper relative overflow-hidden">
           <GeneratedAnswerPlaceholder />
         </div>
       );
     } else if (isStreaming) {
-      content = (
-        <div class="relative" style={{minHeight: '400px'}}>
+      return (
+        <div class="placeholder-wrapper relative overflow-hidden">
           <div class="z-1 bg-white relative">{this.renderContent()}</div>
           <div class="absolute inset-0">
             <GeneratedAnswerPlaceholder />
           </div>
+          <div class="typing-loader-wrapper absolute inset-x-0 bottom-0 w-full z-1 pt-40">
+            <TypingLoader />
+          </div>
         </div>
       );
     } else {
-      content = this.renderContent();
+      return this.renderContent();
     }
+  }
+
+  public render() {
+    const {isLoading} = this.generatedAnswerState;
+    isLoading
+      ? this.bindings.store.setLoadingFlag('generatedAnswer')
+      : this.bindings.store.unsetLoadingFlag('generatedAnswer');
 
     return (
       <div
@@ -306,7 +312,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
         class={`overflow-hidden ${this.shouldBeHidden ? 'max-h-0' : ''}`}
       >
         <aside class={`mx-auto ${this.contentClasses}`} part="container">
-          <article>{content}</article>
+          <article>{this.loadingAnimationContent()}</article>
         </aside>
       </div>
     );
