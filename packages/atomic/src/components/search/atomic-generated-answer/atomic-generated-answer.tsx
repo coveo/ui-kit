@@ -308,7 +308,6 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     return (
       <div
         slot="body"
-        part="wrap_er"
         class={`overflow-hidden ${this.shouldBeHidden ? 'max-h-0' : ''}`}
       >
         <aside class={`mx-auto ${this.contentClasses}`} part="container">
