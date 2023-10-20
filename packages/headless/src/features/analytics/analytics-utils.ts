@@ -464,6 +464,24 @@ export const makeNoopAnalyticsAction = () =>
 export const noopSearchAnalyticsAction = (): SearchAction =>
   makeNoopAnalyticsAction();
 
+const fromLogToLegacyBuilder =
+  (
+    log: (
+      client: CaseAssistClient,
+      state: StateNeededByCaseAssistAnalytics
+    ) => Promise<void | SearchEventResponse> | void
+  ): ((
+    client: CaseAssistClient,
+    state: StateNeededByCaseAssistAnalytics
+  ) => Promise<EventBuilder>) =>
+  (client, state) =>
+    Promise.resolve({
+      description: {actionCause: 'caseAssist'},
+      log: async (_metadata: {searchUID: string}) => {
+        log(client, state);
+      },
+    });
+
 export const makeCaseAssistAnalyticsAction = (
   prefix: string,
   log: (
@@ -471,31 +489,11 @@ export const makeCaseAssistAnalyticsAction = (
     state: StateNeededByCaseAssistAnalytics
   ) => Promise<void | SearchEventResponse> | void
 ): PreparableAnalyticsAction<StateNeededByCaseAssistAnalytics> => {
-  return makePreparableAnalyticsAction(
+  return internalMakeAnalyticsAction({
     prefix,
-    async ({
-      getState,
-      analyticsClientMiddleware,
-      preprocessRequest,
-      logger,
-    }) => {
-      const client = configureCaseAssistAnalytics({
-        getState,
-        logger,
-        analyticsClientMiddleware,
-        preprocessRequest,
-      });
-      return {
-        log: async () => {
-          const response = await log(client, getState());
-          logger.info(
-            {client: client.coveoAnalyticsClient, response},
-            'Analytics response'
-          );
-        },
-      };
-    }
-  );
+    __legacy__getBuilder: fromLogToLegacyBuilder(log),
+    analyticsConfigurator: configureCaseAssistAnalytics,
+  });
 };
 
 export const makeInsightAnalyticsAction = (
