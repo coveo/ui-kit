@@ -3,19 +3,19 @@ import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {CoreEngine} from '../../../../app/engine';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice';
-import {applySort} from '../../../../features/commerce/product-listing/sort/product-listing-sort-actions';
-import {sortReducer as sort} from '../../../../features/commerce/product-listing/sort/product-listing-sort-slice';
+import {applySort} from '../../../../features/commerce/sort/sort-actions';
+import {sortReducer as commerceSort} from '../../../../features/commerce/sort/sort-slice';
 import {updatePage} from '../../../../features/pagination/pagination-actions';
 import {
+  buildFieldsSortCriterion,
+  buildRelevanceSortCriterion,
+  SortBy,
   SortByFields,
-  SortCriterion,
-  sortCriterionDefinition,
   SortByFieldsFields,
   SortByRelevance,
-  SortBy,
-  buildRelevanceSortCriterion,
+  SortCriterion,
   SortDirection,
-  buildFieldsSortCriterion,
+  sortCriterionDefinition,
 } from '../../../../features/sort/sort';
 import {ProductListingV2Section} from '../../../../state/state-sections';
 import {loadReducerError} from '../../../../utils/errors';
@@ -118,7 +118,7 @@ export function buildSort(engine: CommerceEngine, props: SortProps = {}): Sort {
 
   const {dispatch} = engine;
   const controller = buildController(engine);
-  const getState = () => engine.state.productListing;
+  const getState = () => engine.state;
 
   validateSortInitialState(engine, props.initialState);
 
@@ -132,7 +132,7 @@ export function buildSort(engine: CommerceEngine, props: SortProps = {}): Sort {
     ...controller,
 
     get state() {
-      return getState().sort;
+      return getState().commerceSort;
     },
 
     sortBy(criterion: SortCriterion) {
@@ -142,7 +142,9 @@ export function buildSort(engine: CommerceEngine, props: SortProps = {}): Sort {
     },
 
     isSortedBy(criterion: SortCriterion) {
-      return this.state.appliedSort === criterion;
+      return (
+        JSON.stringify(this.state.appliedSort) === JSON.stringify(criterion)
+      );
     },
 
     isAvailable(criterion: SortCriterion) {
@@ -154,9 +156,7 @@ export function buildSort(engine: CommerceEngine, props: SortProps = {}): Sort {
   };
 }
 
-function loadSortReducers(
-  engine: CoreEngine
-): engine is CoreEngine<ProductListingV2Section> {
-  engine.addReducers({productListing, sort});
+function loadSortReducers(engine: CommerceEngine): engine is CommerceEngine {
+  engine.addReducers({productListing, commerceSort});
   return true;
 }
