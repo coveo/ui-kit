@@ -295,11 +295,15 @@ export function makeAnalyticsAction<
     | [AnalyticsActionOptions<LegacyStateNeeded>]
 ): PreparableAnalyticsAction<LegacyStateNeeded> {
   return params.length === 1
-    ? internalLegacyMakeAnalyticsAction(params[0])
-    : internalLegacyMakeAnalyticsAction({
+    ? internalMakeAnalyticsAction({
+        ...params[0],
+        analyticsConfigurator: configureLegacyAnalytics,
+      })
+    : internalMakeAnalyticsAction({
         prefix: params[0],
         __legacy__getBuilder: params[1],
         __legacy__provider: params[2],
+        analyticsConfigurator: configureLegacyAnalytics,
       });
 }
 
@@ -308,7 +312,15 @@ const shouldSendLegacyEvent = (state: ConfigurationSection) =>
 const shouldSendNextEvent = (state: ConfigurationSection) =>
   state.configuration.analytics.analyticsMode === 'next';
 
-const internalLegacyMakeAnalyticsAction = <
+type InternalMakeAnalyticsActionOptions<
+  LegacyStateNeeded extends StateNeededBySearchAnalyticsProvider,
+  StateNeeded extends StateNeededBySearchAnalyticsProvider,
+  PayloadType extends RelayPayload,
+> = AnalyticsActionOptions<LegacyStateNeeded, StateNeeded, PayloadType> & {
+  analyticsConfigurator: typeof configureLegacyAnalytics;
+};
+
+const internalMakeAnalyticsAction = <
   LegacyStateNeeded extends
     StateNeededBySearchAnalyticsProvider = StateNeededBySearchAnalyticsProvider,
   StateNeeded extends
@@ -320,7 +332,8 @@ const internalLegacyMakeAnalyticsAction = <
   __legacy__provider,
   analyticsPayloadBuilder,
   analyticsType,
-}: AnalyticsActionOptions<
+  analyticsConfigurator,
+}: InternalMakeAnalyticsActionOptions<
   LegacyStateNeeded,
   StateNeeded,
   PayloadType
@@ -350,7 +363,7 @@ const internalLegacyMakeAnalyticsAction = <
         },
       };
       const state = getState();
-      const client = configureLegacyAnalytics({
+      const client = analyticsConfigurator({
         getState,
         logger,
         analyticsClientMiddleware,
