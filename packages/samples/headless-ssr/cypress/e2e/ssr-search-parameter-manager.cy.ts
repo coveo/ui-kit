@@ -6,7 +6,7 @@ import {
 } from './utils';
 
 const searchStateKey = 'search-state';
-const routes = ['generic', 'react'];
+const routes = ['generic', 'react'] as const;
 
 routes.forEach((route) => {
   describe(`${route} Headless ssr with search parameter manager example`, () => {
