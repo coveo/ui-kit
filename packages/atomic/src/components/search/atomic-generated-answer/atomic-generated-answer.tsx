@@ -21,7 +21,7 @@ import {
   SafeStorage,
   StorageItems,
 } from '../../../utils/local-storage-utils';
-import {ResultsPlaceholder} from '../../common/atomic-result-placeholder/placeholders';
+import {GeneratedAnswerPlaceholder} from '../../common/atomic-result-placeholder/placeholders';
 import {Heading} from '../../common/heading';
 import {LinkWithResultAnalytics} from '../../common/result-link/result-link';
 import {Switch} from '../../common/switch';
@@ -277,23 +277,28 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     isLoading
       ? this.bindings.store.setLoadingFlag('generatedAnswer')
       : this.bindings.store.unsetLoadingFlag('generatedAnswer');
+
     let content;
+
     if (isLoading || this.shouldBeHidden) {
       content = (
-        <ResultsPlaceholder density="compact" numberOfPlaceholders={3} />
+        <div class="relative" style={{minHeight: '400px'}}>
+          <GeneratedAnswerPlaceholder />
+        </div>
       );
     } else if (isStreaming) {
       content = (
-        <div class="relative h-80">
+        <div class="relative" style={{minHeight: '400px'}}>
           <div class="z-1 bg-white relative">{this.renderContent()}</div>
           <div class="absolute inset-0">
-            <ResultsPlaceholder density="compact" numberOfPlaceholders={3} />
+            <GeneratedAnswerPlaceholder />
           </div>
         </div>
       );
     } else {
       content = this.renderContent();
     }
+
     return (
       <div
         slot="body"
