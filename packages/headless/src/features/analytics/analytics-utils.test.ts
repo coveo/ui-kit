@@ -198,7 +198,7 @@ describe('analytics-utils', () => {
           log: fakeCAJSLog,
           description: {actionCause: '🍷'},
         }),
-    };
+    } as const;
     const additionalMakeAnalyticParamsForRelay = {
       analyticsPayloadBuilder: () => ({['🥔']: '🍅'}),
       analyticsType: '🥖',
