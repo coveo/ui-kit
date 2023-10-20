@@ -111,6 +111,3 @@ export function buildAutomaticFacet(
     },
   };
 }
-// should not show up in the generated documentation
-// buildAutomaticFacet
-// AutomaticFacetProps
