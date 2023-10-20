@@ -21,13 +21,13 @@ import {
   SafeStorage,
   StorageItems,
 } from '../../../utils/local-storage-utils';
-import {GeneratedAnswerPlaceholder} from '../../common/atomic-result-placeholder/placeholders';
 import {Heading} from '../../common/heading';
 import {LinkWithResultAnalytics} from '../../common/result-link/result-link';
 import {Switch} from '../../common/switch';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {FeedbackButton} from './feedback-button';
 import {GeneratedContentContainer} from './generated-content-container';
+import {GeneratedAnswerPlaceholder} from './placeholders';
 import {RephraseButtons} from './rephrase-buttons';
 import {RetryPrompt} from './retry-prompt';
 import {SourceCitations} from './source-citations';
