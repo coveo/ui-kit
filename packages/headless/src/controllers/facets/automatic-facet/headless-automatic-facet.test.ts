@@ -1,9 +1,13 @@
-import {AutomaticFacet, SearchAppState, buildAutomaticFacet} from '../../..';
+import {
+  AutomaticFacet,
+  buildAutomaticFacet,
+} from '../../../controllers/facets/automatic-facet/headless-automatic-facet';
 import {
   deselectAllAutomaticFacetValues,
   toggleSelectAutomaticFacetValue,
 } from '../../../features/facets/automatic-facet-set/automatic-facet-set-actions';
 import {executeSearch} from '../../../features/search/search-actions';
+import {SearchAppState} from '../../../state/search-app-state';
 import {
   MockSearchEngine,
   buildMockSearchAppEngine,

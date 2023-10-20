@@ -30,7 +30,7 @@ export interface AutomaticFacetState {
   values: FacetValue[];
 }
 /**
- * The props for the `AutomaticFacet` controller.
+ * This prop is used internally by the `AutomaticFacetGenerator` controller.
  */
 export interface AutomaticFacetProps {
   /**
@@ -66,10 +66,10 @@ export interface AutomaticFacet extends Controller {
   state: AutomaticFacetState;
 }
 /**
- * Creates a `AutomaticFacet` controller instance.
+ * This initializer is used internally by the AutomaticFacetGenerator controller.
  *
  * @param engine - The headless engine.
- * @param props - The configurable `AutomaticFacet` properties.
+ * @param props - The configurable `AutomaticFacet` properties used internally.
  * @returns A `AutomaticFacet` controller instance.
  * */
 export function buildAutomaticFacet(
@@ -111,3 +111,6 @@ export function buildAutomaticFacet(
     },
   };
 }
+// should not show up in the generated documentation
+// buildAutomaticFacet
+// AutomaticFacetProps
