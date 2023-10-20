@@ -27,7 +27,6 @@ const vitals: Record<(typeof routes)[number], Cypress.ReportWebVitalsConfig> =
             lcp: 2000,
             cls: 0,
             ttfb: 60,
-            // TODO: Ensure validity of following input based vitals with interactive elements
             fid: 400,
             inp: 400,
           },
@@ -38,7 +37,6 @@ const vitals: Record<(typeof routes)[number], Cypress.ReportWebVitalsConfig> =
             lcp: 2000,
             cls: 0,
             ttfb: 120,
-            // TODO: Ensure validity of following input based vitals with interactive elements
             fid: 800,
             inp: 800,
           },
@@ -51,7 +49,6 @@ const vitals: Record<(typeof routes)[number], Cypress.ReportWebVitalsConfig> =
             lcp: 200,
             cls: 0,
             ttfb: 60,
-            // TODO: Ensure validity of following input based vitals with interactive elements
             fid: 400,
             inp: 400,
           },
@@ -62,7 +59,6 @@ const vitals: Record<(typeof routes)[number], Cypress.ReportWebVitalsConfig> =
             lcp: 400,
             cls: 0,
             ttfb: 120,
-            // TODO: Ensure validity of following input based vitals with interactive elements
             fid: 800,
             inp: 800,
           },
