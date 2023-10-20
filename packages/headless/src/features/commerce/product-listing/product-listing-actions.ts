@@ -4,7 +4,6 @@ import {ProductListingV2Request} from '../../../api/commerce/product-listings/v2
 import {ProductListingV2SuccessResponse} from '../../../api/commerce/product-listings/v2/product-listing-v2-response';
 import {isErrorResponse} from '../../../api/search/search-api-client';
 import {
-  CategoryFacetSection,
   CommercePaginationSection,
   CartSection,
   CommerceContextSection,
@@ -16,6 +15,7 @@ import {
   ProductListingV2Section,
   StructuredSortSection,
   VersionSection,
+  CategoryFacetSection,
 } from '../../../state/state-sections';
 import {sortFacets} from '../../../utils/facet-utils';
 import {

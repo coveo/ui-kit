@@ -4,6 +4,7 @@ import {CommerceAPIClient} from '../../api/commerce/commerce-api-client';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {cartReducer} from '../../features/commerce/context/cart/cart-slice';
 import {contextReducer} from '../../features/commerce/context/context-slice';
+import {commerceCategoryFacetSetReducer} from '../../features/commerce/facets/category-facet-set/category-facet-set-slice';
 import {paginationReducer} from '../../features/commerce/pagination/pagination-slice';
 import {productListingV2Reducer} from '../../features/commerce/product-listing/product-listing-slice';
 import {CommerceAppState} from '../../state/commerce-app-state';
@@ -28,6 +29,7 @@ const commerceEngineReducers = {
   commercePagination: paginationReducer,
   commerceContext: contextReducer,
   cart: cartReducer,
+  commerceCategoryFacetSet: commerceCategoryFacetSetReducer,
 };
 type CommerceEngineReducers = typeof commerceEngineReducers;
 

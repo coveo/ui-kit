@@ -1,3 +1,4 @@
+import {CommerceCategoryFacetValueRequest} from '../../commerce/facets/category-facet-set/interfaces/request';
 import {CategoryFacetValueCommon} from './interfaces/commons';
 import {CategoryFacetValueRequest} from './interfaces/request';
 import {CategoryFacetValue} from './interfaces/response';
@@ -42,7 +43,10 @@ export function findActiveValueAncestry(
 ): CategoryFacetValue[];
 export function findActiveValueAncestry(
   valuesAsTree: CategoryFacetValueCommon[]
-): CategoryFacetValueCommon[] {
+): CategoryFacetValueCommon[];
+export function findActiveValueAncestry(
+  valuesAsTree: CommerceCategoryFacetValueRequest[]
+): CommerceCategoryFacetValueRequest[] {
   const {activeValue, ancestryMap} =
     getActiveValueAndAncestryFromValueTree(valuesAsTree);
   return activeValue ? getActiveValueAncestry(activeValue, ancestryMap) : [];

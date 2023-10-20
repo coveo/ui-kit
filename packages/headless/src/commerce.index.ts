@@ -89,3 +89,12 @@ export type {
   SortState,
 } from './controllers/commerce/product-listing/sort/headless-product-listing-sort';
 export {buildSort} from './controllers/commerce/product-listing/sort/headless-product-listing-sort';
+
+export type {
+  CommerceCategoryFacet,
+  CommerceCategoryFacetProps,
+  CommerceCategoryFacetState,
+} from './controllers/commerce/facets/category-facet/headless-commerce-category-facet';
+export {buildCommerceCategoryFacet} from './controllers/commerce/facets/category-facet/headless-commerce-category-facet';
+
+export type {CategoryFacetValue} from './controllers/facets/category-facet/headless-category-facet';

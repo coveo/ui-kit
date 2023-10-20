@@ -7,6 +7,7 @@ import {CaseFieldState} from '../features/case-field/case-field-state';
 import {CaseInputState} from '../features/case-input/case-input-state';
 import {CartState} from '../features/commerce/context/cart/cart-state';
 import {CommerceContextState} from '../features/commerce/context/context-state';
+import {CommerceCategoryFacetSetState} from '../features/commerce/facets/category-facet-set/category-facet-set-state';
 import {CommercePaginationState} from '../features/commerce/pagination/pagination-state';
 import {ProductListingV2State} from '../features/commerce/product-listing/product-listing-state';
 import {ConfigurationState} from '../features/configuration/configuration-state';
@@ -288,6 +289,13 @@ export interface ProductListingSection {
    * The information related to the product listing endpoint.
    */
   productListing: ProductListingState;
+}
+
+export interface CommerceCategoryFacetSection {
+  /**
+   * The set of commerce category facets.
+   */
+  commerceCategoryFacetSet: CommerceCategoryFacetSetState;
 }
 
 export interface CommercePaginationSection {

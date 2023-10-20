@@ -63,7 +63,10 @@ export interface SelectedFacetsParam {
 }
 
 export interface SelectedFacetParams
-  extends Pick<AnyFacetRequest, 'field' | 'type' | 'facetId'> {
+  extends Pick<
+    AnyFacetRequest,
+    'field' | 'type' | 'facetId' | 'numberOfValues'
+  > {
   values?: (FacetValueRequest | RangeValueRequest)[];
 }
 

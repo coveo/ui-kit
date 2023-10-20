@@ -1,4 +1,8 @@
 import {
+  CommerceCategoryFacetRequest,
+  CommerceCategoryFacetValueRequest,
+} from '../../../commerce/facets/category-facet-set/interfaces/request';
+import {
   CategoryFacetRequest,
   CategoryFacetValueRequest,
 } from '../../category-facet-set/interfaces/request';
@@ -14,11 +18,13 @@ import {AnyFacetSetState} from './generic-facet-section';
 export type AnyFacetRequest =
   | FacetRequest
   | RangeFacetRequest
-  | CategoryFacetRequest;
+  | CategoryFacetRequest
+  | CommerceCategoryFacetRequest;
 
 export type AnyFacetValueRequest =
   | FacetValueRequest
   | CategoryFacetValueRequest
+  | CommerceCategoryFacetValueRequest
   | NumericRangeRequest
   | DateRangeRequest;
 
