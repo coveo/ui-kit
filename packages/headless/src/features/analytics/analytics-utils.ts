@@ -729,36 +729,13 @@ export const makeCommerceAnalyticsAction = <
   ) => SearchPageClientProvider = (getState) =>
     new CommerceAnalyticsProvider(getState)
 ): PreparableAnalyticsAction<StateNeeded> => {
-  return makePreparableAnalyticsAction(
+  const options = {
     prefix,
-    async ({
-      getState,
-      analyticsClientMiddleware,
-      preprocessRequest,
-      logger,
-    }) => {
-      const client = configureCommerceAnalytics({
-        getState,
-        logger,
-        analyticsClientMiddleware,
-        preprocessRequest,
-        provider: provider(getState),
-      });
-      const builder = await getBuilder(client, getState());
-      return {
-        description: builder?.description,
-        log: async ({state}) => {
-          const response = await builder?.log({
-            searchUID: provider(() => state).getSearchUID(),
-          });
-          logger.info(
-            {client: client.coveoAnalyticsClient, response},
-            'Analytics response'
-          );
-        },
-      };
-    }
-  );
+    __legacy__getBuilder: getBuilder,
+    __legacy__provider: provider,
+    analyticsConfigurator: configureCommerceAnalytics,
+  };
+  return internalMakeAnalyticsAction(options);
 };
 
 async function logNextEvent<PayloadType extends RelayPayload>(
