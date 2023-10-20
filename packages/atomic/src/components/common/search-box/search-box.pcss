@@ -16,6 +16,10 @@
     visibility: hidden;
   }
 
+  > [part='textarea'] {
+    @mixin hide-scrollbar;
+  }
+
   > [part='textarea'],
   &::after {
     @apply whitespace-nowrap z-10 h-full outline-none resize-none bg-transparent text-neutral-dark text-lg grow p-3.5 px-4 overflow-hidden;
@@ -27,8 +31,8 @@
     > [part='textarea'],
     &::after {
       @apply whitespace-pre-wrap;
-      max-height: 8em;
       @apply overflow-y-auto;
+      max-height: 8em;
     }
   }
 }
