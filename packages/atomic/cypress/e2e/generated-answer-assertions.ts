@@ -35,8 +35,9 @@ export function assertFeedbackButtonsVisibility(isVisible: boolean) {
 export function assertToggleValue(checked: boolean) {
   it(`toggle ${should(checked)} be checked`, () => {
     GeneratedAnswerSelectors.toggle().should(
-      checked ? 'have.attr' : 'not.have.attr',
-      'aria-checked'
+      'have.attr',
+      'aria-checked',
+      String(!!checked)
     );
   });
 }
