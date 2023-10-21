@@ -25,12 +25,12 @@
     "zone.js": "0.14.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^16.2.6",
+    "@angular-devkit/build-angular": "16.2.6",
     "@angular/cli": "16.2.6",
     "@angular/compiler-cli": "16.2.9",
     "@types/jasmine": "5.1.0",
     "@types/node": "20.8.6",
-    "@typescript-eslint/eslint-plugin": "^6.8.0",
+    "@typescript-eslint/eslint-plugin": "6.8.0",
     "cypress": "13.3.1",
     "cypress-repeat": "2.3.4",
     "gts": "5.2.0",

@@ -11,9 +11,9 @@
     "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@types/react": "^18.2.21",
+    "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
-    "@typescript-eslint/eslint-plugin": "^6.8.0",
+    "@typescript-eslint/eslint-plugin": "6.8.0",
     "css-loader": "6.8.1",
     "cypress": "13.3.1",
     "cypress-repeat": "2.3.4",
@@ -23,7 +23,7 @@
     "style-loader": "3.3.3",
     "ts-loader": "9.5.0",
     "typescript": "5.2.2",
-    "webpack": "^5.83.1",
+    "webpack": "5.83.1",
     "webpack-cli": "5.1.4",
     "webpack-dev-server": "4.15.1"
   },

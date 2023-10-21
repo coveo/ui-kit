@@ -20,8 +20,8 @@
     "@storybook/html-webpack5": "",
     "@storybook/react": "7.4.6",
     "@storybook/react-webpack5": "7.4.6",
-    "@types/lodash": "^4.14.199",
-    "@types/react": "^18.2.21",
+    "@types/lodash": "4.14.199",
+    "@types/react": "18.2.21",
     "lit-analyzer": "2.0.0-pre.3",
     "lodash": "4.17.21",
     "monaco-editor-webpack-plugin": "7.1.0",
@@ -34,7 +34,7 @@
     "dev": "storybook dev -p 6006"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^6.8.0",
+    "@typescript-eslint/eslint-plugin": "6.8.0",
     "gts": "5.2.0"
   }
 }
