@@ -1,5 +1,8 @@
 # Headless React Utils for SSR
 
+** :warning: Alpha release**
+This is an alpha release with several features such as analytics, URL management (search params) etc yet to be implemented.
+
 `@coveo/headless-react/ssr` provides react utilities for Server side rendering with headless controllers.
 
 - Refer to [samples/headless-ssr](https://github.com/coveo/ui-kit/tree/master/packages/samples/headless-ssr/) for examples.
