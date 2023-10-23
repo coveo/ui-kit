@@ -2461,6 +2461,8 @@ export namespace Components {
          */
         "withDatePicker": boolean;
     }
+    interface RgaNegativeFeedbackModal {
+    }
     interface TabBar {
     }
     interface TabPopover {
@@ -3789,6 +3791,12 @@ declare global {
         prototype: HTMLAtomicTimeframeFacetElement;
         new (): HTMLAtomicTimeframeFacetElement;
     };
+    interface HTMLRgaNegativeFeedbackModalElement extends Components.RgaNegativeFeedbackModal, HTMLStencilElement {
+    }
+    var HTMLRgaNegativeFeedbackModalElement: {
+        prototype: HTMLRgaNegativeFeedbackModalElement;
+        new (): HTMLRgaNegativeFeedbackModalElement;
+    };
     interface HTMLTabBarElement extends Components.TabBar, HTMLStencilElement {
     }
     var HTMLTabBarElement: {
@@ -3938,6 +3946,7 @@ declare global {
         "atomic-text": HTMLAtomicTextElement;
         "atomic-timeframe": HTMLAtomicTimeframeElement;
         "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
+        "rga-negative-feedback-modal": HTMLRgaNegativeFeedbackModalElement;
         "tab-bar": HTMLTabBarElement;
         "tab-popover": HTMLTabPopoverElement;
     }
@@ -6263,6 +6272,8 @@ declare namespace LocalJSX {
          */
         "withDatePicker"?: boolean;
     }
+    interface RgaNegativeFeedbackModal {
+    }
     interface TabBar {
     }
     interface TabPopover {
@@ -6404,6 +6415,7 @@ declare namespace LocalJSX {
         "atomic-text": AtomicText;
         "atomic-timeframe": AtomicTimeframe;
         "atomic-timeframe-facet": AtomicTimeframeFacet;
+        "rga-negative-feedback-modal": RgaNegativeFeedbackModal;
         "tab-bar": TabBar;
         "tab-popover": TabPopover;
     }
@@ -6980,6 +6992,7 @@ declare module "@stencil/core" {
              * An `atomic-timeframe-facet` displays a facet of the results for the current query as date intervals.
              */
             "atomic-timeframe-facet": LocalJSX.AtomicTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicTimeframeFacetElement>;
+            "rga-negative-feedback-modal": LocalJSX.RgaNegativeFeedbackModal & JSXBase.HTMLAttributes<HTMLRgaNegativeFeedbackModalElement>;
             "tab-bar": LocalJSX.TabBar & JSXBase.HTMLAttributes<HTMLTabBarElement>;
             "tab-popover": LocalJSX.TabPopover & JSXBase.HTMLAttributes<HTMLTabPopoverElement>;
         }

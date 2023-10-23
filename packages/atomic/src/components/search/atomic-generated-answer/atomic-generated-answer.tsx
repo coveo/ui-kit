@@ -55,7 +55,42 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
 
   private stopPropagation?: boolean;
 
+  // @State()
+  // private isOpen: boolean;
+
+  // private rgaNegativeFeedbackModal!: RgaNegativeFeedbackModal;
+
+  private modalRef?: HTMLRgaNegativeFeedbackModalElement;
+
+  private loadModal() {
+    if (this.modalRef) {
+      return;
+    }
+    // const modalRef = document.createElement(this.props.modalTagName);
+    // modalRef.addEventListener('feedbackSent', () => {
+    //   // this.props.setFeedbackSent(true);
+    // });
+    // this.props.setModalRef(modalRef);
+    this.modalRef = document.createElement('rga-negative-feedback-modal');
+
+    // modalRef.addEventListener('feedbackSent', () => {
+    //   this.props.setFeedbackSent(true);
+    // });
+    // this.props.setModalRef(modalRef);
+    console.log('parent', this.host?.parentElement?.parentElement);
+    this.host?.parentElement?.parentElement?.insertAdjacentElement(
+      'beforebegin',
+      this.modalRef
+    );
+    // this.host.insertAdjacentElement(
+    //   'beforebegin',
+    //   this.rgaNegativeFeedbackModal as unknown as HTMLRgaNegativeFeedbackModal
+    // );
+  }
+
   public initialize() {
+    console.log('searstatus', this.searchStatusState);
+    console.log('inhere1', this.generatedAnswerState);
     this.generatedAnswer = buildGeneratedAnswer(this.bindings.engine);
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.host.dispatchEvent(
@@ -66,6 +101,11 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
         }
       )
     );
+    console.log('generated', this.generatedAnswer);
+    // this.rgaNegativeFeedbackModal = new RgaNegativeFeedbackModal();
+    // console.log('inhere3', this.rgaNegativeFeedbackModal);
+    this.loadModal();
+    console.log('inhere1', this.generatedAnswerState);
   }
 
   private get hasRetryableError() {
@@ -131,6 +171,14 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     );
   }
 
+  private clickDislike() {
+    // this.generatedAnswer.dislike();
+    // if (this.modalRef) {
+    this.generatedAnswer.openFeedbackModal();
+    console.log('disliked');
+    // }
+  }
+
   private renderContent() {
     return (
       <div part="generated-content">
@@ -142,6 +190,8 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
           >
             {this.bindings.i18n.t('generated-answer-title')}
           </Heading>
+
+          {/* <rga-negative-feedback-modal /> */}
 
           {!this.hasRetryableError && (
             <div class="feedback-buttons flex gap-2 ml-auto">
@@ -155,7 +205,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
                 title={this.bindings.i18n.t('this-answer-was-not-helpful')}
                 variant="dislike"
                 active={this.generatedAnswerState.disliked}
-                onClick={this.generatedAnswer.dislike}
+                onClick={this.generatedAnswer.openFeedbackModal}
               />
             </div>
           )}
@@ -189,14 +239,18 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       return null;
     }
     return (
-      <aside
-        class={`mx-auto ${
-          isLoading ? this.loadingClasses : this.contentClasses
-        }`}
-        part="container"
-      >
-        <article>{isLoading ? <TypingLoader /> : this.renderContent()}</article>
-      </aside>
+      <div>
+        <aside
+          class={`mx-auto ${
+            isLoading ? this.loadingClasses : this.contentClasses
+          }`}
+          part="container"
+        >
+          <article>
+            {isLoading ? <TypingLoader /> : this.renderContent()}
+          </article>
+        </aside>
+      </div>
     );
   }
 }

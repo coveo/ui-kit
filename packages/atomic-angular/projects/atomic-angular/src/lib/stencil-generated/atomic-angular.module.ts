@@ -91,7 +91,8 @@ AtomicSortExpression,
 AtomicTableElement,
 AtomicText,
 AtomicTimeframe,
-AtomicTimeframeFacet
+AtomicTimeframeFacet,
+RgaNegativeFeedbackModal
 } from './components';
 
         
@@ -186,7 +187,8 @@ AtomicSortExpression,
 AtomicTableElement,
 AtomicText,
 AtomicTimeframe,
-AtomicTimeframeFacet
+AtomicTimeframeFacet,
+RgaNegativeFeedbackModal
 ]
 
         

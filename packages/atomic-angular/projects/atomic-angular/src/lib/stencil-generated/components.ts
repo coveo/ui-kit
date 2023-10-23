@@ -1947,3 +1947,25 @@ export class AtomicTimeframeFacet {
 export declare interface AtomicTimeframeFacet extends Components.AtomicTimeframeFacet {}
 
 
+@ProxyCmp({
+  inputs: ['isOpen']
+})
+@Component({
+  selector: 'rga-negative-feedback-modal',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['isOpen'],
+})
+export class RgaNegativeFeedbackModal {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface RgaNegativeFeedbackModal extends Components.RgaNegativeFeedbackModal {}
+
+

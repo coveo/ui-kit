@@ -92,3 +92,4 @@ export const AtomicTableElement = /*@__PURE__*/createReactComponent<JSX.AtomicTa
 export const AtomicText = /*@__PURE__*/createReactComponent<JSX.AtomicText, HTMLAtomicTextElement>('atomic-text');
 export const AtomicTimeframe = /*@__PURE__*/createReactComponent<JSX.AtomicTimeframe, HTMLAtomicTimeframeElement>('atomic-timeframe');
 export const AtomicTimeframeFacet = /*@__PURE__*/createReactComponent<JSX.AtomicTimeframeFacet, HTMLAtomicTimeframeFacetElement>('atomic-timeframe-facet');
+export const RgaNegativeFeedbackModal = /*@__PURE__*/createReactComponent<JSX.RgaNegativeFeedbackModal, HTMLRgaNegativeFeedbackModalElement>('rga-negative-feedback-modal');
