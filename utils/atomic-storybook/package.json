@@ -26,7 +26,7 @@
     "lodash": "4.17.21",
     "monaco-editor-webpack-plugin": "7.1.0",
     "prop-types": "15.8.1",
-    "storybook": "7.5.0",
+    "storybook": "7.5.1",
     "typescript": "5.2.2"
   },
   "scripts": {
@@ -34,7 +34,7 @@
     "dev": "storybook dev -p 6006"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "6.8.0",
+    "@typescript-eslint/eslint-plugin": "6.9.0",
     "gts": "5.2.0"
   }
 }
