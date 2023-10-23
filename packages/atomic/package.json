@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "2.46.0",
+  "version": "2.46.1",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -47,7 +47,7 @@
     "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts"
   },
   "dependencies": {
-    "@coveo/bueno": "0.44.2",
+    "@coveo/bueno": "0.44.3",
     "@popperjs/core": "^2.11.6",
     "@salesforce-ux/design-system": "^2.16.1",
     "@stencil/core": "4.3.0",
@@ -63,7 +63,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.23.2",
-    "@coveo/headless": "2.35.0",
+    "@coveo/headless": "2.36.0",
     "@fullhuman/postcss-purgecss": "5.0.0",
     "@rollup/plugin-alias": "5.0.1",
     "@rollup/plugin-replace": "5.0.4",
@@ -81,7 +81,7 @@
     "cypress": "13.3.1",
     "cypress-axe": "1.5.0",
     "cypress-repeat": "2.3.4",
-    "cypress-split": "1.15.0",
+    "cypress-split": "1.5.0",
     "html-loader-jest": "0.2.1",
     "jest": "27.5.1",
     "jest-cli": "27.5.1",
@@ -100,7 +100,7 @@
     "typescript": "5.1.6"
   },
   "peerDependencies": {
-    "@coveo/headless": "2.35.0"
+    "@coveo/headless": "2.36.0"
   },
   "license": "Apache-2.0",
   "engines": {

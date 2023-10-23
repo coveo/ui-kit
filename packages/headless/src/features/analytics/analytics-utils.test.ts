@@ -1,12 +1,24 @@
-import {createMockState} from '../../test';
+import {createRelay} from '@coveo/relay';
+import {
+  MockSearchEngine,
+  buildMockSearchAppEngine,
+  createMockState,
+} from '../../test';
 import {buildMockResult} from '../../test';
+import {buildMockAnalyticsState} from '../../test/mock-analytics-state';
 import {createMockRecommendationState} from '../../test/mock-recommendation-state';
 import {buildMockResultWithFolding} from '../../test/mock-result-with-folding';
+import {getConfigurationInitialState} from '../configuration/configuration-state';
 import {
   documentIdentifier,
+  makeAnalyticsAction,
   partialDocumentInformation,
   partialRecommendationInformation,
 } from './analytics-utils';
+
+jest.mock('@coveo/relay');
+
+/* cSpell:ignore CAJS */
 
 describe('analytics-utils', () => {
   describe('#partialDocumentInformation', () => {
@@ -139,7 +151,7 @@ describe('analytics-utils', () => {
     });
   });
 
-  describe('documentIdentifier', () => {
+  describe('#documentIdentifier', () => {
     it('should extract permanentid properly if available on a result', () => {
       const result = buildMockResult();
       result.raw.permanentid = 'qwerty';
@@ -170,6 +182,107 @@ describe('analytics-utils', () => {
 
       expect(spyConsole).toHaveBeenCalled();
       spyConsole.mockRestore();
+    });
+  });
+
+  describe('#makeAnalytics', () => {
+    let engine: MockSearchEngine;
+    let analyticsMode: 'legacy' | 'next';
+    let relayEmitSpy: jest.SpyInstance;
+    const fakeCAJSLog = jest.fn();
+    const createRelayMocked = jest.mocked(createRelay);
+    const baseMakeAnalyticParams = {
+      prefix: 'analytics/noop',
+      __legacy__getBuilder: () =>
+        Promise.resolve({
+          log: fakeCAJSLog,
+          description: {actionCause: '🍷'},
+        }),
+    } as const;
+    const additionalMakeAnalyticParamsForRelay = {
+      analyticsPayloadBuilder: () => ({['🥔']: '🍅'}),
+      analyticsType: '🥖',
+    };
+    function buildMockRelay() {
+      relayEmitSpy = jest.fn();
+      createRelayMocked.mockReturnValue({
+        emit: relayEmitSpy as unknown as ReturnType<typeof createRelay>['emit'],
+        on: jest.fn(),
+        off: jest.fn(),
+        clearStorage: jest.fn(),
+        getMeta: jest.fn(),
+        updateConfig: jest.fn(),
+        version: 'test',
+      });
+    }
+
+    beforeEach(() => {
+      jest.resetAllMocks();
+      buildMockRelay();
+      engine = buildMockSearchAppEngine({
+        state: createMockState({
+          configuration: {
+            ...getConfigurationInitialState(),
+            analytics: buildMockAnalyticsState({analyticsMode}),
+          },
+        }),
+      });
+    });
+
+    describe('when analyticsMode=next', () => {
+      beforeAll(() => {
+        analyticsMode = 'next';
+      });
+
+      describe('when both `analyticsPayloadBuilder` and `analyticsType` are given', () => {
+        it('should send event with only with relay when called', async () => {
+          const action = makeAnalyticsAction({
+            ...baseMakeAnalyticParams,
+            ...additionalMakeAnalyticParamsForRelay,
+          });
+
+          await engine.dispatch(action);
+
+          expect(fakeCAJSLog).not.toHaveBeenCalled();
+          expect(relayEmitSpy).toHaveBeenCalled();
+        });
+      });
+
+      describe.each(['analyticsPayloadBuilder', 'analyticsType'] as const)(
+        'when %s is not given',
+        (_missingArg) => {
+          it('should not send any analytics when called', async () => {
+            const {[_missingArg]: _, ...makeAnalyticsParam} = {
+              ...baseMakeAnalyticParams,
+              ...additionalMakeAnalyticParamsForRelay,
+            };
+            const action = makeAnalyticsAction(makeAnalyticsParam);
+
+            await engine.dispatch(action);
+
+            expect(fakeCAJSLog).not.toHaveBeenCalled();
+            expect(relayEmitSpy).not.toHaveBeenCalled();
+          });
+        }
+      );
+    });
+
+    describe('when analyticsMode=legacy', () => {
+      beforeAll(() => {
+        analyticsMode = 'legacy';
+      });
+
+      it('should send event only with CAJS when called', async () => {
+        const action = makeAnalyticsAction({
+          ...baseMakeAnalyticParams,
+          ...additionalMakeAnalyticParamsForRelay,
+        });
+
+        await engine.dispatch(action);
+
+        expect(fakeCAJSLog).toHaveBeenCalled();
+        expect(relayEmitSpy).not.toHaveBeenCalled();
+      });
     });
   });
 });

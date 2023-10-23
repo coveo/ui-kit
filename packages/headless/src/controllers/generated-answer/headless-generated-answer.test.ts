@@ -10,6 +10,7 @@ import {
   updateResponseFormat,
 } from '../../features/generated-answer/generated-answer-actions';
 import {
+  logCopyGeneratedAnswer,
   logDislikeGeneratedAnswer,
   logGeneratedAnswerDetailedFeedback,
   logGeneratedAnswerFeedback,
@@ -158,6 +159,16 @@ describe('generated answer', () => {
     );
 
     expect(action).toBeTruthy();
+  });
+
+  it('#logCopyToClipboard dispatches analytics action', () => {
+    generatedAnswer.logCopyToClipboard();
+
+    const analyticsAction = engine.findAsyncAction(
+      logCopyGeneratedAnswer().pending
+    );
+
+    expect(analyticsAction).toBeDefined();
   });
 
   describe('#rephrase', () => {

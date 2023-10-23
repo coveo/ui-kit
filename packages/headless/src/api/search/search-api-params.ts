@@ -116,6 +116,8 @@ export interface AnalyticsParam {
     originContext: string;
     userDisplayName?: string;
     documentLocation?: string;
+    trackingId?: string;
+    capture?: boolean;
   };
 }
 
@@ -139,7 +141,7 @@ export interface PipelineRuleParams {
 }
 
 export interface PipelineRuleParameters {
-  genqa?: GenQAParameters;
+  mlGenerativeQuestionAnswering?: GenQAParameters;
 }
 
 export interface GenQAParameters {

@@ -5,7 +5,6 @@ import {
   documentIdentifier,
   validateResultPayload,
   makeAnalyticsAction,
-  AnalyticsType,
   InstantResultsSearchAction,
   InstantResultsClickAction,
 } from '../analytics/analytics-utils';
@@ -15,7 +14,6 @@ export const logInstantResultOpen = (
 ): InstantResultsClickAction =>
   makeAnalyticsAction(
     'analytics/instantResult/open',
-    AnalyticsType.Click,
     (client, state) => {
       validateResultPayload(result);
       return client.makeDocumentOpen(
@@ -29,7 +27,6 @@ export const logInstantResultOpen = (
 export const logInstantResultsSearch = (): InstantResultsSearchAction =>
   makeAnalyticsAction(
     'analytics/instantResult/searchboxAsYouType',
-    AnalyticsType.Search,
     (client) => client.makeSearchboxAsYouType(),
     (getState) => new InstantResultsAnalyticsProvider(getState)
   );

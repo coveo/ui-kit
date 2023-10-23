@@ -11,5 +11,5 @@
     "noUnusedParameters": true,
     "types": ["node", "jest"]
   },
-  "exclude": ["./temp/**", "./dist/**", "./docs/**"]
+  "exclude": ["./temp/**", "./dist/**", "./docs/**", "./ponyfills/**"]
 }
