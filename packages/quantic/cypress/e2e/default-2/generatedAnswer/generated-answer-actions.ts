@@ -35,6 +35,13 @@ function generatedAnswerActions(selector: GeneratedAnswerSelector) {
         .click()
         .logAction('When clicking on the retry button of the generated answer'),
 
+    clickToggleGeneratedAnswerButton: () =>
+      selector
+        .toggleGeneratedAnswerButton()
+        .click()
+        .logAction(
+          'When clicking on the toggle button of the generated answer'
+        ),
     clickFeedbackOption: (index: number) =>
       selector
         .feedbackOption(index)
