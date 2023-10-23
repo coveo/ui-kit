@@ -34,6 +34,11 @@ module.exports = {
       },
     },
     {
+      files: ['**/package.json'],
+      parser: 'eslint-plugin-package-json-dependencies',
+      plugins: ['package-json-dependencies'],
+    },
+    {
       // Note: *.md files are directly checked using cspell cli in lint-staged
       files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx', '**/*.mjs'],
       extends: ['plugin:@cspell/recommended'],
@@ -66,6 +71,10 @@ module.exports = {
             allowSingleExtends: true,
           },
         ],
+        // 'package-json-dependencies/controlled-versions': [
+        //   'warn',
+        //   {granularity: {dependencies: 'fixed', devDependencies: 'fixed'}},
+        // ],
       },
     },
     {
