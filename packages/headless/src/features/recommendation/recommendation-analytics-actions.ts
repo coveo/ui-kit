@@ -1,7 +1,6 @@
 import {RecommendationAnalyticsProvider} from '../../api/analytics/recommendations-analytics';
 import {Result} from '../../api/search/search/result';
 import {
-  AnalyticsType,
   ClickAction,
   documentIdentifier,
   makeAnalyticsAction,
@@ -13,7 +12,6 @@ import {
 export const logRecommendationUpdate = (): SearchAction =>
   makeAnalyticsAction(
     'analytics/recommendation/update',
-    AnalyticsType.Search,
     (client) => client.makeRecommendationInterfaceLoad(),
     (getState) => new RecommendationAnalyticsProvider(getState)
   );
@@ -21,7 +19,6 @@ export const logRecommendationUpdate = (): SearchAction =>
 export const logRecommendationOpen = (result: Result): ClickAction =>
   makeAnalyticsAction(
     'analytics/recommendation/open',
-    AnalyticsType.Click,
     (client, state) => {
       validateResultPayload(result);
       return client.makeRecommendationOpen(
