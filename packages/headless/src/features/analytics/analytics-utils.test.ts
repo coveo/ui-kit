@@ -10,7 +10,6 @@ import {createMockRecommendationState} from '../../test/mock-recommendation-stat
 import {buildMockResultWithFolding} from '../../test/mock-result-with-folding';
 import {getConfigurationInitialState} from '../configuration/configuration-state';
 import {
-  AnalyticsType,
   documentIdentifier,
   makeAnalyticsAction,
   partialDocumentInformation,
@@ -194,7 +193,6 @@ describe('analytics-utils', () => {
     const createRelayMocked = jest.mocked(createRelay);
     const baseMakeAnalyticParams = {
       prefix: 'analytics/noop',
-      __legacy__analyticsType: AnalyticsType.Click,
       __legacy__getBuilder: () =>
         Promise.resolve({
           log: fakeCAJSLog,
