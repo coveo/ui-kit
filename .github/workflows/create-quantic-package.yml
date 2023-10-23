@@ -60,9 +60,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
+      - name: Check SHA
+        id: check_sha
+        uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84 # v3
+        with:
+          path: check-SHA
+          key: check-SHA-${{ github.sha }}
       - run: |
           url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          if [[ ${{ contains(needs.*.result, 'failure') }} == "false" ]]; then
+          if [[ ${{ contains(needs.*.result, 'failure') }} == "false" || ${{ steps.check_sha.outputs.cache-hit }} == "true" ]]; then
             message="🟢 Create Quantic Package build run success"
           else
             message="🔴 Create Quantic Package build run failure"
