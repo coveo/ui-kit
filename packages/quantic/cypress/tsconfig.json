@@ -5,7 +5,10 @@
     "baseUrl": "../node_modules",
     "target": "es6",
     "lib": ["esnext", "dom"],
-    "types": ["node", "cypress", "cypress-real-events"]
+    "types": ["node", "cypress", "cypress-real-events"],
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "esModuleInterop": true
   },
   "include": ["**/*.ts", "**/*.js"]
 }
