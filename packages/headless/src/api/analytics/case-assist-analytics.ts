@@ -21,7 +21,10 @@ export type StateNeededByCaseAssistAnalytics = ConfigurationSection &
   Partial<SearchHubSection>;
 
 export class CaseAssistAnalyticsProvider implements CaseAssistClientProvider {
-  constructor(private state: StateNeededByCaseAssistAnalytics) {}
+  private state: StateNeededByCaseAssistAnalytics;
+  constructor(getState: () => StateNeededByCaseAssistAnalytics) {
+    this.state = getState();
+  }
 
   public getOriginLevel1() {
     return this.state.searchHub || getSearchHubInitialState();
@@ -29,7 +32,7 @@ export class CaseAssistAnalyticsProvider implements CaseAssistClientProvider {
 }
 
 interface ConfigureCaseAssistAnalyticsOptions {
-  state: StateNeededByCaseAssistAnalytics;
+  getState: () => StateNeededByCaseAssistAnalytics;
   logger: Logger;
   analyticsClientMiddleware?: AnalyticsClientSendEventHook;
   preprocessRequest?: PreprocessRequest;
@@ -38,11 +41,12 @@ interface ConfigureCaseAssistAnalyticsOptions {
 
 export const configureCaseAssistAnalytics = ({
   logger,
-  state,
+  getState,
   analyticsClientMiddleware = (_, p) => p,
   preprocessRequest,
-  provider = new CaseAssistAnalyticsProvider(state),
+  provider = new CaseAssistAnalyticsProvider(getState),
 }: ConfigureCaseAssistAnalyticsOptions) => {
+  const state = getState();
   const token = state.configuration.accessToken;
   const endpoint = state.configuration.analytics.apiBaseUrl;
   const runtimeEnvironment = state.configuration.analytics.runtimeEnvironment;
