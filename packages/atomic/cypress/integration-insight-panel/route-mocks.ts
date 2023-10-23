@@ -72,14 +72,13 @@ export const mockSearchWithSmartSnippet = (
         relatedQuestions: [],
       };
       res.body.results = [
-        {
+        buildMockResult({
           uri: uri,
           title: title,
-          ClickUri: uri,
           clickUri: uri,
           uniqueId: '123',
-          raw: {permanentid: permanentId},
-        },
+          raw: buildMockRaw({permanentid: permanentId, urihash: 'potato'}),
+        }),
       ];
       res.send();
     });
