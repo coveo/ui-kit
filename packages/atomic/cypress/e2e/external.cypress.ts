@@ -10,7 +10,7 @@ describe('External Test Suite', () => {
 
       cy.get('atomic-external > atomic-search-box')
         .shadow()
-        .find('input')
+        .find('textarea')
         .type('hello{enter}');
       cy.wait(RouteAlias.UA);
     });
