@@ -208,7 +208,7 @@ export class AtomicSearchBox {
    * </style>
    * ```
    *
-   * NB: The textarea attribute will be enforced on the next major version of Atomic (3.0.0)
+   * NB: The textarea functionality will be enforced on the next major version of Atomic (3.0.0)
    */
   @Prop({reflect: true}) public textarea = false;
 
