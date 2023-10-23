@@ -244,7 +244,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get isVisible() {
-    return this?.state?.isVisible;
+    return this.state.isVisible;
   }
 
   get shouldDisplayGeneratedAnswer() {
