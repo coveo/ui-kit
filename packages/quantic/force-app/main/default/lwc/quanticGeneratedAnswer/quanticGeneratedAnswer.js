@@ -91,26 +91,15 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     );
   };
 
-  readStoredData() {
-    try {
-      return JSON.parse(sessionStorage?.getItem(GENERATED_ANSWER_DATA_KEY));
-    } catch {
-      return {};
-    }
-  }
-
   buildHeadlessGeneratedAnswerController(engine) {
     const storedGeneratedAnswerData = this.readStoredData();
     const storedGeneratedAnswerVisibility =
       storedGeneratedAnswerData?.isVisible;
-    if (typeof storedGeneratedAnswerVisibility == 'boolean') {
-      return this.headless.buildGeneratedAnswer(engine, {
-        initialState: {
-          isVisible: storedGeneratedAnswerVisibility,
-        },
-      });
-    }
-    return this.headless.buildGeneratedAnswer(engine);
+    return this.headless.buildGeneratedAnswer(engine, {
+      initialState: {
+        isVisible: storedGeneratedAnswerVisibility === false ? false : true,
+      },
+    });
   }
 
   disconnectedCallback() {
@@ -173,6 +162,14 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     } else {
       this.generatedAnswer.show();
       this.writeStoredDate({isVisible: true});
+    }
+  }
+
+  readStoredData() {
+    try {
+      return JSON.parse(sessionStorage?.getItem(GENERATED_ANSWER_DATA_KEY));
+    } catch {
+      return {};
     }
   }
 
