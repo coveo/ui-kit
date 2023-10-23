@@ -704,4 +704,28 @@
     <label>Afficher la réponse générée</label>
     <name>quantic_ShowGeneratedAnswer</name>
   </customLabels>
+  <customLabels>
+    <label>Hors sujet</label>
+    <name>quantic_Irrelevant</name>
+  </customLabels>
+  <customLabels>
+    <label>Inexacte</label>
+    <name>quantic_Inaccurate</name>
+  </customLabels>
+  <customLabels>
+    <label>Pas à jour</label>
+    <name>quantic_OutOfDate</name>
+  </customLabels>
+  <customLabels>
+    <label>Nocive</label>
+    <name>quantic_Harmful</name>
+  </customLabels>
+  <customLabels>
+    <label>Commentaires</label>
+    <name>quantic_Feedback</name>
+  </customLabels>
+  <customLabels>
+    <label>Dites-nous pourquoi la réponse générée n'était pas utile.</label>
+    <name>quantic_WhyGeneratedAnswerWasNotHelpful</name>
+  </customLabels>
 </Translations>

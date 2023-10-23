@@ -79,13 +79,15 @@ export type {
   SortByFields,
   SortByFieldsFields,
   SortCriterion,
-  SortBy,
-  SortDirection,
-  buildRelevanceSortCriterion,
-  buildFieldsSortCriterion,
   SortProps,
   SortInitialState,
   Sort,
   SortState,
 } from './controllers/commerce/product-listing/sort/headless-product-listing-sort';
-export {buildSort} from './controllers/commerce/product-listing/sort/headless-product-listing-sort';
+export {
+  buildSort,
+  buildRelevanceSortCriterion,
+  buildFieldsSortCriterion,
+  SortBy,
+  SortDirection,
+} from './controllers/commerce/product-listing/sort/headless-product-listing-sort';

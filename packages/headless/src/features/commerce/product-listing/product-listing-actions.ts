@@ -1,20 +1,21 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
+import {SelectedSortParam} from '../../../api/commerce/commerce-api-params';
 import {ProductListingV2Request} from '../../../api/commerce/product-listings/v2/product-listing-v2-request';
 import {ProductListingV2SuccessResponse} from '../../../api/commerce/product-listings/v2/product-listing-v2-response';
 import {isErrorResponse} from '../../../api/search/search-api-client';
 import {
-  CategoryFacetSection,
-  CommercePaginationSection,
   CartSection,
+  CategoryFacetSection,
   CommerceContextSection,
+  CommercePaginationSection,
+  CommerceSortSection,
   ConfigurationSection,
   DateFacetSection,
   FacetOrderSection,
   FacetSection,
   NumericFacetSection,
   ProductListingV2Section,
-  StructuredSortSection,
   VersionSection,
 } from '../../../state/state-sections';
 import {sortFacets} from '../../../utils/facet-utils';
@@ -24,6 +25,7 @@ import {
 } from '../../analytics/analytics-utils';
 import {getFacetRequests} from '../../facets/generic/interfaces/generic-facet-request';
 import {logQueryError} from '../../search/search-analytics-actions';
+import {SortBy, SortCriterion} from '../sort/sort';
 import {logProductListingV2Load} from './product-listing-analytics';
 
 export type StateNeededByFetchProductListingV2 = ConfigurationSection &
@@ -32,12 +34,12 @@ export type StateNeededByFetchProductListingV2 = ConfigurationSection &
   CartSection &
   Partial<
     CommercePaginationSection &
+      CommerceSortSection &
       FacetSection &
       NumericFacetSection &
       CategoryFacetSection &
       DateFacetSection &
       FacetOrderSection &
-      StructuredSortSection &
       VersionSection
   >;
 
@@ -93,8 +95,8 @@ export const buildProductListingRequestV2 = (
     },
     selectedFacets,
     ...(state.commercePagination && {page: state.commercePagination.page}),
-    ...(state.sort && {
-      selectedSort: state.sort,
+    ...(state.commerceSort && {
+      sort: getSort(state.commerceSort.appliedSort),
     }),
   };
 };
@@ -110,4 +112,26 @@ function getAllFacets(state: StateNeededByFetchProductListingV2) {
     ...getFacetRequests(state.dateFacetSet ?? {}),
     ...getFacetRequests(state.categoryFacetSet ?? {}),
   ];
+}
+
+function getSort(
+  appliedSort: SortCriterion
+): SelectedSortParam['sort'] | undefined {
+  if (!appliedSort) {
+    return;
+  }
+
+  if (appliedSort.by === SortBy.Relevance) {
+    return {
+      sortCriteria: SortBy.Relevance,
+    };
+  } else {
+    return {
+      sortCriteria: SortBy.Fields,
+      fields: appliedSort.fields.map(({name, direction}) => ({
+        field: name,
+        direction,
+      })),
+    };
+  }
 }

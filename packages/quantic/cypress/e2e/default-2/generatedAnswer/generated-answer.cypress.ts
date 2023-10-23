@@ -13,6 +13,15 @@ import {GeneratedAnswerActions as Actions} from './generated-answer-actions';
 import {GeneratedAnswerExpectations as Expect} from './generated-answer-expectations';
 
 const GENERATED_ANSWER_DATA_KEY = 'coveo-generated-answer-data';
+const otherOption = 'other';
+const irrelevantOption = 'irrelevant';
+const feedbackOptions = [
+  'irrelevant',
+  'notAccurate',
+  'outOfDate',
+  'harmful',
+  otherOption,
+];
 
 describe('quantic-generated-answer', () => {
   const pageUrl = 's/quantic-generated-answer';
@@ -86,6 +95,79 @@ describe('quantic-generated-answer', () => {
           Expect.logDislikeGeneratedAnswer(streamId);
           Expect.likeButtonIsChecked(false);
           Expect.dislikeButtonIsChecked(true);
+          Expect.displayFeedbackModal(true);
+        });
+
+        scope('when closing the feedback modal', () => {
+          Actions.clickFeedbackCancelButton();
+          Expect.displayFeedbackModal(false);
+        });
+
+        scope('when selecting a feedback option', () => {
+          Actions.dislikeGeneratedAnswer();
+          Expect.logDislikeGeneratedAnswer(streamId);
+          Actions.clickFeedbackOption(
+            feedbackOptions.indexOf(irrelevantOption)
+          );
+          Actions.clickFeedbackSubmitButton();
+          Expect.logGeneratedAnswerFeedbackSubmit(streamId, {
+            reason: irrelevantOption,
+          });
+          Actions.clickFeedbackDoneButton();
+        });
+
+        scope(
+          'when clicking the dislike button after submiting a feedback',
+          () => {
+            Actions.dislikeGeneratedAnswer();
+            Expect.displayFeedbackModal(false);
+          }
+        );
+      });
+    });
+
+    describe('when providing detailed feedback', () => {
+      const streamId = crypto.randomUUID();
+
+      const testText = 'Some text';
+      const testMessagePayload = {
+        payloadType: 'genqa.messageType',
+        payload: JSON.stringify({
+          textDelta: testText,
+        }),
+        finishReason: 'COMPLETED',
+      };
+
+      beforeEach(() => {
+        mockSearchWithGeneratedAnswer(streamId);
+        mockStreamResponse(streamId, testMessagePayload);
+        visitGeneratedAnswer();
+      });
+
+      it('should send detailed feedback', () => {
+        Expect.displayLikeButton(true);
+        Expect.displayDislikeButton(true);
+        Expect.likeButtonIsChecked(false);
+        Expect.dislikeButtonIsChecked(false);
+
+        scope('when disliking the generated answer', () => {
+          Actions.dislikeGeneratedAnswer();
+          Expect.logDislikeGeneratedAnswer(streamId);
+          Expect.likeButtonIsChecked(false);
+          Expect.dislikeButtonIsChecked(true);
+          Expect.displayFeedbackModal(true);
+        });
+
+        scope('when selecting a feedback option', () => {
+          const exampleDetails = 'example details';
+          Actions.clickFeedbackOption(feedbackOptions.indexOf(otherOption));
+          Actions.typeInFeedbackDetailsInput(exampleDetails);
+          Actions.clickFeedbackSubmitButton();
+          Expect.logGeneratedAnswerFeedbackSubmit(streamId, {
+            reason: otherOption,
+            details: exampleDetails,
+          });
+          Actions.clickFeedbackDoneButton();
         });
       });
 

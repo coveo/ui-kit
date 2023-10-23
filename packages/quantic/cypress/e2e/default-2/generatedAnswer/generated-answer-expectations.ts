@@ -140,7 +140,7 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
     sessionStorageContains: (key: string, expectedData: object) => {
       cy.window()
         .its('sessionStorage')
-        .invoke('getItem', key)
+        .invoke('getItem', `LSKey[c]${key}`)
         .then((data) => {
           const storedData = JSON.parse(data ?? '{}');
           expect(storedData).eql(expectedData);
@@ -148,6 +148,13 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         .log(
           `the key ${key} should have the value ${expectedData} in the session storage`
         );
+    },
+
+    displayFeedbackModal: (display: boolean) => {
+      selector
+        .feedbackModal()
+        .should(display ? 'exist' : 'not.exist')
+        .log(`${should(display)} display the feedback modal`);
     },
 
     logStreamIdInAnalytics(streamId: string) {
@@ -248,6 +255,33 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
             'generativeQuestionAnsweringId',
             streamId
           );
+        }
+      );
+    },
+
+    logGeneratedAnswerFeedbackSubmit(
+      streamId: string,
+      payload: {
+        reason: string;
+        details?: string;
+      }
+    ) {
+      logCustomGeneratedAnswerEvent(
+        InterceptAliases.UA.GeneratedAnswer.GeneratedAnswerFeedbackSubmit,
+        (analyticsBody: {customData: object; eventType: string}) => {
+          const customData = analyticsBody?.customData;
+          expect(analyticsBody).to.have.property(
+            'eventType',
+            'generatedAnswer'
+          );
+          expect(customData).to.have.property(
+            'generativeQuestionAnsweringId',
+            streamId
+          );
+          expect(customData).to.have.property('reason', payload.reason);
+          if (payload.details) {
+            expect(customData).to.have.property('details', payload.details);
+          }
         }
       );
     },

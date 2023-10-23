@@ -9,25 +9,21 @@
     "build:next": "next build",
     "prod": "next start",
     "lint": "next lint",
-    "e2e": "cypress run --browser chrome --e2e",
-    "e2e:watch": "cypress open --browser chrome --e2e"
+    "e2e": "cypress run --browser chrome --e2e --project ../",
+    "e2e:watch": "cypress open --browser chrome --e2e --project ../"
   },
   "dependencies": {
-    "@coveo/headless-react": "0.1.2",
-    "@coveo/headless": "2.35.0",
-    "next": "13.5.4",
+    "@coveo/headless-ssr-samples-common": "0.0.0",
+    "next": "13.5.5",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@types/node": "20.8.4",
+    "@types/node": "20.8.6",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
     "eslint": "8.51.0",
-    "eslint-config-next": "13.5.4",
-    "typescript": "5.2.2",
-    "cypress": "13.3.0",
-    "cypress-repeat": "2.3.4",
-    "cypress-web-vitals": "4.1.0"
+    "eslint-config-next": "13.5.5",
+    "typescript": "5.2.2"
   }
 }

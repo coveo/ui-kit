@@ -8,6 +8,7 @@ import {
   citationSourceSelector,
   generativeQuestionAnsweringIdSelector,
 } from './generated-answer-selectors';
+import {GeneratedResponseFormat} from './generated-response-format';
 
 export type GeneratedAnswerFeedback =
   | 'irrelevant'
@@ -20,6 +21,25 @@ export const logRetryGeneratedAnswer = (): SearchAction =>
     'analytics/generatedAnswer/retry',
     AnalyticsType.Search,
     (client) => client.makeRetryGeneratedAnswer()
+  );
+
+export const logRephraseGeneratedAnswer = (
+  responseFormat: GeneratedResponseFormat
+): SearchAction =>
+  makeAnalyticsAction(
+    'analytics/generatedAnswer/rephrase',
+    AnalyticsType.Search,
+    (client, state) => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      if (!generativeQuestionAnsweringId) {
+        return null;
+      }
+      return client.makeRephraseGeneratedAnswer({
+        generativeQuestionAnsweringId,
+        rephraseFormat: responseFormat.answerStyle,
+      });
+    }
   );
 
 export const logOpenGeneratedAnswerSource = (
@@ -160,6 +180,22 @@ export const logGeneratedAnswerHideAnswers = (): CustomAction =>
         return null;
       }
       return client.makeGeneratedAnswerHideAnswers({
+        generativeQuestionAnsweringId,
+      });
+    }
+  );
+
+export const logCopyGeneratedAnswer = (): CustomAction =>
+  makeAnalyticsAction(
+    'analytics/generatedAnswer/copy',
+    AnalyticsType.Custom,
+    (client, state) => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      if (!generativeQuestionAnsweringId) {
+        return null;
+      }
+      return client.makeGeneratedAnswerCopyToClipboard({
         generativeQuestionAnsweringId,
       });
     }

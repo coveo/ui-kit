@@ -1,10 +1,18 @@
 import couldNotGenerateAnAnswer from '@salesforce/label/c.quantic_CouldNotGenerateAnAnswer';
+import feedback from '@salesforce/label/c.quantic_Feedback';
 import generatedAnswerForYou from '@salesforce/label/c.quantic_GeneratedAnswerForYou';
+import harmful from '@salesforce/label/c.quantic_Harmful';
+import inaccurate from '@salesforce/label/c.quantic_Inaccurate';
+import irrelevant from '@salesforce/label/c.quantic_Irrelevant';
 import loading from '@salesforce/label/c.quantic_Loading';
+import other from '@salesforce/label/c.quantic_Other';
+import outOfDate from '@salesforce/label/c.quantic_OutOfDate';
 import showGeneratedAnswer from '@salesforce/label/c.quantic_ShowGeneratedAnswer';
 import thisAnswerWasHelpful from '@salesforce/label/c.quantic_ThisAnswerWasHelpful';
 import thisAnswerWasNotHelpful from '@salesforce/label/c.quantic_ThisAnswerWasNotHelpful';
 import tryAgain from '@salesforce/label/c.quantic_TryAgain';
+import whyGeneratedAnswerWasNotHelpful from '@salesforce/label/c.quantic_WhyGeneratedAnswerWasNotHelpful';
+import FeedbackModal from 'c/quanticFeedbackModal';
 import {
   registerComponentForInit,
   initializeWithHeadless,
@@ -54,6 +62,13 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     tryAgain,
     couldNotGenerateAnAnswer,
     showGeneratedAnswer,
+    other,
+    harmful,
+    irrelevant,
+    inaccurate,
+    outOfDate,
+    feedback,
+    whyGeneratedAnswerWasNotHelpful,
   };
 
   /** @type {GeneratedAnswer} */
@@ -66,6 +81,8 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   searchStatus;
   /** @type {SearchStatusState} */
   searchStatusState;
+  /** @type {boolean} */
+  feedbackSubmitted = false;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -146,9 +163,34 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * handles disliking the generated answer.
    * @param {CustomEvent} event
    */
-  handleDislike(event) {
+  async handleDislike(event) {
     event.stopPropagation();
     this.generatedAnswer.dislike?.();
+    if (!this.feedbackSubmitted) {
+      // @ts-ignore
+      await FeedbackModal.open({
+        label: this.labels.feedback,
+        size: 'small',
+        description: this.labels.feedback,
+        options: this.options,
+        handleSubmit: this.submitFeedback.bind(this),
+        optionsLabel: this.labels.whyGeneratedAnswerWasNotHelpful,
+      });
+      this.generatedAnswer.closeFeedbackModal();
+    }
+  }
+
+  /**
+   * Submits the feedback
+   * @returns {void}
+   */
+  submitFeedback(feedbackPayload) {
+    if (feedbackPayload?.details) {
+      this.generatedAnswer.sendDetailedFeedback(feedbackPayload.details);
+    } else if (feedbackPayload?.value) {
+      this.generatedAnswer.sendFeedback(feedbackPayload.value);
+    }
+    this.feedbackSubmitted = true;
   }
 
   handleRetry() {
@@ -222,6 +264,36 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   get hasRetryableError() {
     return !this?.searchStatusState?.hasError && this.state?.error?.isRetryable;
+  }
+
+  /**
+   * Returns the options displayed in the Quantic Feedback Modal.
+   */
+  get options() {
+    return [
+      {
+        label: this.labels.irrelevant,
+        value: 'irrelevant',
+      },
+      {
+        label: this.labels.inaccurate,
+        value: 'notAccurate',
+      },
+      {
+        label: this.labels.outOfDate,
+        value: 'outOfDate',
+      },
+      {
+        label: this.labels.harmful,
+        value: 'harmful',
+      },
+      {
+        label: this.labels.other,
+        value: 'other',
+        withDetails: true,
+        detailsRequired: true,
+      },
+    ];
   }
 
   render() {

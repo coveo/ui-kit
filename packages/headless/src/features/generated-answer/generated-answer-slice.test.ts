@@ -10,21 +10,15 @@ import {
   updateCitations,
   updateError,
   updateMessage,
+  updateResponseFormat,
   openGeneratedAnswerFeedbackModal,
   closeGeneratedAnswerFeedbackModal,
 } from './generated-answer-actions';
 import {generatedAnswerReducer} from './generated-answer-slice';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
+import {GeneratedResponseFormat} from './generated-response-format';
 
-const baseState = {
-  isVisible: true,
-  isLoading: false,
-  isStreaming: false,
-  citations: [],
-  liked: false,
-  disliked: false,
-  feedbackModalOpen: false,
-};
+const baseState = getGeneratedAnswerInitialState();
 
 describe('generated answer slice', () => {
   it('initializes the state correctly', () => {
@@ -187,22 +181,38 @@ describe('generated answer slice', () => {
     });
   });
 
-  it('#resetAnswer should reset the state to the initial state', () => {
-    const state = {
-      ...baseState,
-      isStreaming: true,
-      isLoading: true,
-      answer: 'Tomato Tomato',
-      citations: [],
-      error: {
-        message: 'Execute order',
-        error: 66,
-      },
-    };
+  describe('#resetAnswer', () => {
+    it('should reset the answer', () => {
+      const state = {
+        ...baseState,
+        isStreaming: true,
+        isLoading: true,
+        answer: 'Tomato Tomato',
+        citations: [],
+        error: {
+          message: 'Execute order',
+          error: 66,
+        },
+      };
 
-    const finalState = generatedAnswerReducer(state, resetAnswer());
+      const finalState = generatedAnswerReducer(state, resetAnswer());
 
-    expect(finalState).toEqual(getGeneratedAnswerInitialState());
+      expect(finalState).toEqual(getGeneratedAnswerInitialState());
+    });
+
+    it('should not reset the response format', () => {
+      const responseFormat: GeneratedResponseFormat = {
+        answerStyle: 'step',
+      };
+      const state = {
+        ...baseState,
+        responseFormat: responseFormat,
+      };
+
+      const finalState = generatedAnswerReducer(state, resetAnswer());
+
+      expect(finalState.responseFormat).toEqual(responseFormat);
+    });
   });
 
   it('#likeGeneratedAnswer should set the answer as liked in the state', () => {
@@ -289,6 +299,25 @@ describe('generated answer slice', () => {
       );
 
       expect(finalState.isStreaming).toEqual(false);
+    });
+  });
+
+  describe('#updateResponseFormat', () => {
+    it('should set the given response format', () => {
+      const newResponseFormat: GeneratedResponseFormat = {
+        answerStyle: 'step',
+      };
+      const finalState = generatedAnswerReducer(
+        {
+          ...getGeneratedAnswerInitialState(),
+          responseFormat: {
+            answerStyle: 'default',
+          },
+        },
+        updateResponseFormat(newResponseFormat)
+      );
+
+      expect(finalState.responseFormat).toBe(newResponseFormat);
     });
   });
 

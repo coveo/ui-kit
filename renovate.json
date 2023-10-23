@@ -76,17 +76,29 @@
       "description": "Quantic uses JSDOC that does not support ESM modules for template"
     },
     {
+      "matchFileNames": ["packages/atomic-react/package.json"],
+      "matchPackagePatterns": ["^rollup$"],
+      "groupSlug": "react-rollup",
+      "rangeStrategy": "replace",
+      "allowedVersions": "3.x",
+      "description": "TODO-V3: Remove Node stuff?"
+    },
+    {
       "matchPackagePatterns": ["^nx$"],
       "groupName": "nx",
       "groupSlug": "nx",
       "rangeStrategy": "replace",
       "allowedVersions": "15.x"
+    },
+    {
+      "matchPackagePatterns": ["^cypress-split$"],
+      "groupName": "Cypress Split",
+      "groupSlug": "cypress-split",
+      "rangeStrategy": "replace",
+      "allowedVersions": "1.5.0",
+      "description": "Lock until bahmutov/cypress-repeat#52 is fixed"
     }
   ],
-  "nvm": {
-    "groupName": "NVM",
-    "description": "18.18.0 breaks see KIT-2787"
-  },
   "rangeStrategy": "auto",
   "lockFileMaintenance": {
     "enabled": false
