@@ -1,7 +1,7 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import ThumbsDownIcon from '../../../images/thumbs-down.svg';
-import ThumbsUpIcon from '../../../images/thumbs-up.svg';
-import {Button} from '../../common/button';
+import ThumbsDownIcon from '../../../../images/thumbs-down.svg';
+import ThumbsUpIcon from '../../../../images/thumbs-up.svg';
+import {Button} from '../../../common/button';
 
 type FeedbackVariant = 'like' | 'dislike';
 

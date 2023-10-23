@@ -22,6 +22,7 @@ AtomicFormatCurrency,
 AtomicFormatNumber,
 AtomicFormatUnit,
 AtomicFrequentlyBoughtTogether,
+AtomicGeneratedAnswerFeedbackModal,
 AtomicHtml,
 AtomicIcon,
 AtomicLayoutSection,
@@ -91,8 +92,7 @@ AtomicSortExpression,
 AtomicTableElement,
 AtomicText,
 AtomicTimeframe,
-AtomicTimeframeFacet,
-RgaNegativeFeedbackModal
+AtomicTimeframeFacet
 } from './components';
 
         
@@ -118,6 +118,7 @@ AtomicFormatCurrency,
 AtomicFormatNumber,
 AtomicFormatUnit,
 AtomicFrequentlyBoughtTogether,
+AtomicGeneratedAnswerFeedbackModal,
 AtomicHtml,
 AtomicIcon,
 AtomicLayoutSection,
@@ -187,8 +188,7 @@ AtomicSortExpression,
 AtomicTableElement,
 AtomicText,
 AtomicTimeframe,
-AtomicTimeframeFacet,
-RgaNegativeFeedbackModal
+AtomicTimeframeFacet
 ]
 
         

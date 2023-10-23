@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { AutomaticFacet, CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, InlineLink, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+import { AutomaticFacet, CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, GeneratedAnswer, InlineLink, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
@@ -30,7 +30,7 @@ import { RedirectionPayload } from "./components/search/atomic-search-box/redire
 import { AriaLabelGenerator } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
-export { AutomaticFacet, CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, InlineLink, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+export { AutomaticFacet, CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, GeneratedAnswer, InlineLink, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
@@ -475,6 +475,10 @@ export namespace Components {
     interface AtomicFrequentlyBoughtTogether {
     }
     interface AtomicGeneratedAnswer {
+    }
+    interface AtomicGeneratedAnswerFeedbackModal {
+        "generatedAnswer": GeneratedAnswer;
+        "isOpen": boolean;
     }
     /**
      * The `atomic-html` component renders the HTML value of a string.
@@ -2461,8 +2465,6 @@ export namespace Components {
          */
         "withDatePicker": boolean;
     }
-    interface RgaNegativeFeedbackModal {
-    }
     interface TabBar {
     }
     interface TabPopover {
@@ -2481,6 +2483,10 @@ export interface AtomicFacetNumberInputCustomEvent<T> extends CustomEvent<T> {
 export interface AtomicFocusDetectorCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicFocusDetectorElement;
+}
+export interface AtomicGeneratedAnswerFeedbackModalCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicGeneratedAnswerFeedbackModalElement;
 }
 export interface AtomicInsightPagerCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -2750,6 +2756,12 @@ declare global {
     var HTMLAtomicGeneratedAnswerElement: {
         prototype: HTMLAtomicGeneratedAnswerElement;
         new (): HTMLAtomicGeneratedAnswerElement;
+    };
+    interface HTMLAtomicGeneratedAnswerFeedbackModalElement extends Components.AtomicGeneratedAnswerFeedbackModal, HTMLStencilElement {
+    }
+    var HTMLAtomicGeneratedAnswerFeedbackModalElement: {
+        prototype: HTMLAtomicGeneratedAnswerFeedbackModalElement;
+        new (): HTMLAtomicGeneratedAnswerFeedbackModalElement;
     };
     /**
      * The `atomic-html` component renders the HTML value of a string.
@@ -3791,12 +3803,6 @@ declare global {
         prototype: HTMLAtomicTimeframeFacetElement;
         new (): HTMLAtomicTimeframeFacetElement;
     };
-    interface HTMLRgaNegativeFeedbackModalElement extends Components.RgaNegativeFeedbackModal, HTMLStencilElement {
-    }
-    var HTMLRgaNegativeFeedbackModalElement: {
-        prototype: HTMLRgaNegativeFeedbackModalElement;
-        new (): HTMLRgaNegativeFeedbackModalElement;
-    };
     interface HTMLTabBarElement extends Components.TabBar, HTMLStencilElement {
     }
     var HTMLTabBarElement: {
@@ -3832,6 +3838,7 @@ declare global {
         "atomic-format-unit": HTMLAtomicFormatUnitElement;
         "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
         "atomic-generated-answer": HTMLAtomicGeneratedAnswerElement;
+        "atomic-generated-answer-feedback-modal": HTMLAtomicGeneratedAnswerFeedbackModalElement;
         "atomic-html": HTMLAtomicHtmlElement;
         "atomic-icon": HTMLAtomicIconElement;
         "atomic-insight-edit-toggle": HTMLAtomicInsightEditToggleElement;
@@ -3946,7 +3953,6 @@ declare global {
         "atomic-text": HTMLAtomicTextElement;
         "atomic-timeframe": HTMLAtomicTimeframeElement;
         "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
-        "rga-negative-feedback-modal": HTMLRgaNegativeFeedbackModalElement;
         "tab-bar": HTMLTabBarElement;
         "tab-popover": HTMLTabPopoverElement;
     }
@@ -4368,6 +4374,11 @@ declare namespace LocalJSX {
     interface AtomicFrequentlyBoughtTogether {
     }
     interface AtomicGeneratedAnswer {
+    }
+    interface AtomicGeneratedAnswerFeedbackModal {
+        "generatedAnswer": GeneratedAnswer;
+        "isOpen"?: boolean;
+        "onFeedbackSent"?: (event: AtomicGeneratedAnswerFeedbackModalCustomEvent<any>) => void;
     }
     /**
      * The `atomic-html` component renders the HTML value of a string.
@@ -6272,8 +6283,6 @@ declare namespace LocalJSX {
          */
         "withDatePicker"?: boolean;
     }
-    interface RgaNegativeFeedbackModal {
-    }
     interface TabBar {
     }
     interface TabPopover {
@@ -6301,6 +6310,7 @@ declare namespace LocalJSX {
         "atomic-format-unit": AtomicFormatUnit;
         "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
         "atomic-generated-answer": AtomicGeneratedAnswer;
+        "atomic-generated-answer-feedback-modal": AtomicGeneratedAnswerFeedbackModal;
         "atomic-html": AtomicHtml;
         "atomic-icon": AtomicIcon;
         "atomic-insight-edit-toggle": AtomicInsightEditToggle;
@@ -6415,7 +6425,6 @@ declare namespace LocalJSX {
         "atomic-text": AtomicText;
         "atomic-timeframe": AtomicTimeframe;
         "atomic-timeframe-facet": AtomicTimeframeFacet;
-        "rga-negative-feedback-modal": RgaNegativeFeedbackModal;
         "tab-bar": TabBar;
         "tab-popover": TabPopover;
     }
@@ -6522,6 +6531,7 @@ declare module "@stencil/core" {
              */
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
             "atomic-generated-answer": LocalJSX.AtomicGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicGeneratedAnswerElement>;
+            "atomic-generated-answer-feedback-modal": LocalJSX.AtomicGeneratedAnswerFeedbackModal & JSXBase.HTMLAttributes<HTMLAtomicGeneratedAnswerFeedbackModalElement>;
             /**
              * The `atomic-html` component renders the HTML value of a string.
              * There is an inherent XSS security concern associated with the usage of this component.
@@ -6992,7 +7002,6 @@ declare module "@stencil/core" {
              * An `atomic-timeframe-facet` displays a facet of the results for the current query as date intervals.
              */
             "atomic-timeframe-facet": LocalJSX.AtomicTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicTimeframeFacetElement>;
-            "rga-negative-feedback-modal": LocalJSX.RgaNegativeFeedbackModal & JSXBase.HTMLAttributes<HTMLRgaNegativeFeedbackModalElement>;
             "tab-bar": LocalJSX.TabBar & JSXBase.HTMLAttributes<HTMLTabBarElement>;
             "tab-popover": LocalJSX.TabPopover & JSXBase.HTMLAttributes<HTMLTabPopoverElement>;
         }

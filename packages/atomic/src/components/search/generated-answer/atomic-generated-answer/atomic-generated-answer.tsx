@@ -8,16 +8,16 @@ import {
   buildInteractiveCitation,
   GeneratedAnswerCitation,
 } from '@coveo/headless';
-import {Component, h, State, Element} from '@stencil/core';
-import {buildCustomEvent} from '../../../utils/event-utils';
+import {Component, h, State, Element, Host} from '@stencil/core';
+import {buildCustomEvent} from '../../../../utils/event-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
-} from '../../../utils/initialization-utils';
-import {Heading} from '../../common/heading';
-import {LinkWithResultAnalytics} from '../../common/result-link/result-link';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+} from '../../../../utils/initialization-utils';
+import {Heading} from '../../../common/heading';
+import {LinkWithResultAnalytics} from '../../../common/result-link/result-link';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {FeedbackButton} from './feedback-button';
 import {GeneratedContentContainer} from './generated-content-container';
 import {RetryPrompt} from './retry-prompt';
@@ -48,49 +48,14 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   @State()
   public error!: Error;
 
-  @State()
-  hidden = true;
+  @State() hidden = true;
+  @State() feedbackSent = false;
 
   @Element() private host!: HTMLElement;
 
   private stopPropagation?: boolean;
 
-  // @State()
-  // private isOpen: boolean;
-
-  // private rgaNegativeFeedbackModal!: RgaNegativeFeedbackModal;
-
-  private modalRef?: HTMLRgaNegativeFeedbackModalElement;
-
-  private loadModal() {
-    if (this.modalRef) {
-      return;
-    }
-    // const modalRef = document.createElement(this.props.modalTagName);
-    // modalRef.addEventListener('feedbackSent', () => {
-    //   // this.props.setFeedbackSent(true);
-    // });
-    // this.props.setModalRef(modalRef);
-    this.modalRef = document.createElement('rga-negative-feedback-modal');
-
-    // modalRef.addEventListener('feedbackSent', () => {
-    //   this.props.setFeedbackSent(true);
-    // });
-    // this.props.setModalRef(modalRef);
-    console.log('parent', this.host?.parentElement?.parentElement);
-    this.host?.parentElement?.parentElement?.insertAdjacentElement(
-      'beforebegin',
-      this.modalRef
-    );
-    // this.host.insertAdjacentElement(
-    //   'beforebegin',
-    //   this.rgaNegativeFeedbackModal as unknown as HTMLRgaNegativeFeedbackModal
-    // );
-  }
-
   public initialize() {
-    console.log('searstatus', this.searchStatusState);
-    console.log('inhere1', this.generatedAnswerState);
     this.generatedAnswer = buildGeneratedAnswer(this.bindings.engine);
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.host.dispatchEvent(
@@ -101,11 +66,6 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
         }
       )
     );
-    console.log('generated', this.generatedAnswer);
-    // this.rgaNegativeFeedbackModal = new RgaNegativeFeedbackModal();
-    // console.log('inhere3', this.rgaNegativeFeedbackModal);
-    this.loadModal();
-    console.log('inhere1', this.generatedAnswerState);
   }
 
   private get hasRetryableError() {
@@ -129,6 +89,12 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
 
   private get contentClasses() {
     return 'mt-0 mb-4 border border-neutral shadow-lg p-6 bg-background rounded-lg p-6 text-on-background';
+  }
+
+  private get modalRef() {
+    return this.host.shadowRoot?.querySelector(
+      'atomic-generated-answer-feedback-modal'
+    );
   }
 
   private renderCitations() {
@@ -160,7 +126,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
               }
               stopPropagation={this.stopPropagation}
             >
-              <div class="citation-index rounded-full font-medium rounded-full flex items-center text-bg-blue shrink-0">
+              <div class="citation-index rounded-full font-medium flex items-center text-bg-blue shrink-0">
                 <div class="mx-auto">{index + 1}</div>
               </div>
               <span class="citation-title truncate mx-1">{citation.title}</span>
@@ -169,14 +135,6 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
         );
       }
     );
-  }
-
-  private clickDislike() {
-    // this.generatedAnswer.dislike();
-    // if (this.modalRef) {
-    this.generatedAnswer.openFeedbackModal();
-    console.log('disliked');
-    // }
   }
 
   private renderContent() {
@@ -190,9 +148,6 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
           >
             {this.bindings.i18n.t('generated-answer-title')}
           </Heading>
-
-          {/* <rga-negative-feedback-modal /> */}
-
           {!this.hasRetryableError && (
             <div class="feedback-buttons flex gap-2 ml-auto">
               <FeedbackButton
@@ -205,7 +160,10 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
                 title={this.bindings.i18n.t('this-answer-was-not-helpful')}
                 variant="dislike"
                 active={this.generatedAnswerState.disliked}
-                onClick={this.generatedAnswer.openFeedbackModal}
+                onClick={() => {
+                  this.modalRef!.isOpen = true;
+                  this.generatedAnswer.dislike();
+                }}
               />
             </div>
           )}
@@ -239,18 +197,23 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       return null;
     }
     return (
-      <div>
-        <aside
-          class={`mx-auto ${
-            isLoading ? this.loadingClasses : this.contentClasses
-          }`}
-          part="container"
-        >
-          <article>
-            {isLoading ? <TypingLoader /> : this.renderContent()}
-          </article>
-        </aside>
-      </div>
+      <Host>
+        <atomic-generated-answer-feedback-modal
+          generatedAnswer={this.generatedAnswer}
+        />
+        <div>
+          <aside
+            class={`mx-auto ${
+              isLoading ? this.loadingClasses : this.contentClasses
+            }`}
+            part="container"
+          >
+            <article>
+              {isLoading ? <TypingLoader /> : this.renderContent()}
+            </article>
+          </aside>
+        </div>
+      </Host>
     );
   }
 }
