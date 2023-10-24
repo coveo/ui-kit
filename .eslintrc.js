@@ -37,6 +37,18 @@ module.exports = {
       files: ['**/package.json'],
       parser: 'eslint-plugin-package-json-dependencies',
       plugins: ['package-json-dependencies'],
+      rules: {
+        'package-json-dependencies/controlled-versions': [
+          'warn',
+          {
+            granularity: {
+              dependencies: 'fixed',
+              devDependencies: 'fixed',
+              peerDependencies: 'minor',
+            },
+          },
+        ],
+      },
     },
     {
       // Note: *.md files are directly checked using cspell cli in lint-staged
@@ -71,10 +83,6 @@ module.exports = {
             allowSingleExtends: true,
           },
         ],
-        // 'package-json-dependencies/controlled-versions': [
-        //   'warn',
-        //   {granularity: {dependencies: 'fixed', devDependencies: 'fixed'}},
-        // ],
       },
     },
     {
