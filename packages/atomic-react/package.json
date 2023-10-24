@@ -32,10 +32,10 @@
   },
   "devDependencies": {
     "@coveo/headless": "2.36.0",
-    "@rollup/plugin-commonjs": "^25.0.0",
-    "@rollup/plugin-node-resolve": "^15.0.0",
-    "@rollup/plugin-replace": "^5.0.0",
-    "@rollup/plugin-typescript": "^11.0.0",
+    "@rollup/plugin-commonjs": "25.0.0",
+    "@rollup/plugin-node-resolve": "15.0.0",
+    "@rollup/plugin-replace": "5.0.0",
+    "@rollup/plugin-typescript": "11.0.0",
     "@types/node": "20.8.7",
     "@types/react": "18.0.17",
     "@types/react-dom": "18.0.6",
@@ -43,12 +43,12 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "rollup": "3.29.4",
-    "rollup-plugin-polyfill-node": "^0.12.0",
+    "rollup-plugin-polyfill-node": "0.12.0",
     "@rollup/plugin-terser": "0.4.4"
   },
   "peerDependencies": {
     "@coveo/headless": "2.36.0",
-    "react": ">=18.0.0",
-    "react-dom": ">=18.0.0"
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
   }
 }
