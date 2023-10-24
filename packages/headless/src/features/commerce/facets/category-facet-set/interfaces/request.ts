@@ -1,9 +1,5 @@
 import {FacetValueState} from '../../../../../product-listing.index';
-import {
-  BaseFacetRequest,
-  CurrentValues,
-  Type,
-} from '../../../../facets/facet-api/request';
+import {BaseFacetRequest, Type} from '../../../../facets/facet-api/request';
 
 export interface CommerceCategoryFacetValueRequest {
   state: FacetValueState;
@@ -13,5 +9,6 @@ export interface CommerceCategoryFacetValueRequest {
 
 export interface CommerceCategoryFacetRequest
   extends Pick<BaseFacetRequest, 'facetId' | 'field' | 'numberOfValues'>,
-    CurrentValues<CommerceCategoryFacetValueRequest>,
-    Type<'hierarchical'> {}
+    Type<'hierarchical'> {
+  values: CommerceCategoryFacetValueRequest[];
+}

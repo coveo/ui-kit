@@ -91,10 +91,10 @@ export type {
 export {buildSort} from './controllers/commerce/product-listing/sort/headless-product-listing-sort';
 
 export type {
-  CommerceCategoryFacet,
-  CommerceCategoryFacetProps,
-  CommerceCategoryFacetState,
-} from './controllers/commerce/facets/category-facet/headless-commerce-category-facet';
-export {buildCommerceCategoryFacet} from './controllers/commerce/facets/category-facet/headless-commerce-category-facet';
+  ProductListingCategoryFacet,
+  ProductListingCategoryFacetProps,
+  ProductListingCategoryFacetState,
+} from './controllers/commerce/product-listing/facets/category-facet/headless-product-listing-category-facet';
+export {buildProductListingCategoryFacet} from './controllers/commerce/product-listing/facets/category-facet/headless-product-listing-category-facet';
 
 export type {CategoryFacetValue} from './controllers/facets/category-facet/headless-category-facet';

@@ -14,7 +14,7 @@ export function buildMockCommerceState(
     productListing: getProductListingV2InitialState(),
     commercePagination: getCommercePaginationInitialState(),
     commerceContext: getContextInitialState(),
-    commerceCategoryFacetSet: getCategoryFacetSetInitialState(),
+    categoryFacetSet: getCategoryFacetSetInitialState(),
     cart: getCartInitialState(),
     version: 'unit-testing-version',
     ...config,

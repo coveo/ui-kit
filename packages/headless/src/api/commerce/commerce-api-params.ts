@@ -1,3 +1,4 @@
+import {CommerceCategoryFacetValueRequest} from '../../features/commerce/facets/category-facet-set/interfaces/request';
 import {FacetValueRequest} from '../../features/facets/facet-set/interfaces/request';
 import {AnyFacetRequest} from '../../features/facets/generic/interfaces/generic-facet-request';
 import {RangeValueRequest} from '../../features/facets/range-facets/generic/interfaces/range-facet';
@@ -58,16 +59,20 @@ export interface CartItemParam {
   quantity: number;
 }
 
-export interface SelectedFacetsParam {
-  selectedFacets?: SelectedFacetParams[];
+export interface FacetsParam {
+  facets?: FacetsParams[];
 }
 
-export interface SelectedFacetParams
+export interface FacetsParams
   extends Pick<
     AnyFacetRequest,
     'field' | 'type' | 'facetId' | 'numberOfValues'
   > {
-  values?: (FacetValueRequest | RangeValueRequest)[];
+  currentValues?: (
+    | FacetValueRequest
+    | RangeValueRequest
+    | CommerceCategoryFacetValueRequest
+  )[];
 }
 
 export interface SelectedPageParam {

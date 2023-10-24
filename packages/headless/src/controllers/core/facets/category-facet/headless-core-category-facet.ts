@@ -332,6 +332,7 @@ export function buildCoreCategoryFacet(
   };
 
   const getIsLoading = () => isFacetLoadingResponseSelector(engine.state);
+
   const getIsEnabled = () => isFacetEnabledSelector(engine.state, facetId);
 
   dispatch(registerCategoryFacet(registrationOptions));
@@ -359,7 +360,9 @@ export function buildCoreCategoryFacet(
 
     isSortedBy(criterion: CategoryFacetSortCriterion) {
       const request = getRequest();
-      return request!.sortCriteria === criterion;
+      return 'sortCriteria' in request && request.sortCriteria === criterion
+        ? true
+        : false;
     },
 
     showMoreValues() {
@@ -421,7 +424,10 @@ export function buildCoreCategoryFacet(
         hasActiveValues,
         canShowMoreValues,
         canShowLessValues,
-        sortCriteria: request!.sortCriteria,
+        sortCriteria:
+          request && 'sortCriteria' in request
+            ? request!.sortCriteria
+            : 'alphanumeric',
         enabled,
       };
     },
