@@ -26,6 +26,10 @@ export class CaseAssistAnalyticsProvider implements CaseAssistClientProvider {
     this.state = getState();
   }
 
+  public getSearchUID() {
+    return null as unknown as string;
+  }
+
   public getOriginLevel1() {
     return this.state.searchHub || getSearchHubInitialState();
   }
