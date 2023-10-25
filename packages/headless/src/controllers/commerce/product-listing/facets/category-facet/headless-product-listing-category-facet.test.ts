@@ -16,12 +16,12 @@ import {
 
 describe('ProductListingCategoryFacet', () => {
   let engine: MockCommerceEngine;
-  let commerceCategoryFacet: ProductListingCategoryFacet;
+  let productListingCategoryFacet: ProductListingCategoryFacet;
 
   function initProductListingCategoryFacet() {
     engine = buildMockCommerceEngine();
 
-    commerceCategoryFacet = buildProductListingCategoryFacet(engine, {
+    productListingCategoryFacet = buildProductListingCategoryFacet(engine, {
       options: {field: 'ec_category', facetId: 'ec_category'},
     });
   }
@@ -42,7 +42,7 @@ describe('ProductListingCategoryFacet', () => {
 
   describe('#toggleSelect', () => {
     it('dispatches #fetchProductListing', () => {
-      commerceCategoryFacet.toggleSelect({
+      productListingCategoryFacet.toggleSelect({
         children: [],
         isLeafValue: true,
         moreValuesAvailable: false,
@@ -55,7 +55,7 @@ describe('ProductListingCategoryFacet', () => {
     });
 
     it('when state is "selected", dispatches #logFacetDeselect', () => {
-      commerceCategoryFacet.toggleSelect({
+      productListingCategoryFacet.toggleSelect({
         children: [],
         isLeafValue: true,
         moreValuesAvailable: false,
@@ -76,7 +76,7 @@ describe('ProductListingCategoryFacet', () => {
     });
 
     it('when state is "idle", dispatches #logFacetSelect', () => {
-      commerceCategoryFacet.toggleSelect({
+      productListingCategoryFacet.toggleSelect({
         children: [],
         isLeafValue: true,
         moreValuesAvailable: false,
@@ -98,7 +98,7 @@ describe('ProductListingCategoryFacet', () => {
   });
 
   it('#deselectAll dispatches #fetchProductListing & #logFacetClearAll', () => {
-    commerceCategoryFacet.deselectAll();
+    productListingCategoryFacet.deselectAll();
 
     expect(findDispatchedFetchProductListingAction()).toBeTruthy();
 
@@ -108,7 +108,7 @@ describe('ProductListingCategoryFacet', () => {
   });
 
   it('#showMoreValues dispatches #fetchProductListing & #logFacetShowMore', () => {
-    commerceCategoryFacet.showMoreValues();
+    productListingCategoryFacet.showMoreValues();
 
     expect(findDispatchedFetchProductListingAction()).toBeTruthy();
 
@@ -118,7 +118,7 @@ describe('ProductListingCategoryFacet', () => {
   });
 
   it('#showLessValues dispatches #fetchProductListing & #logFacetShowLess', () => {
-    commerceCategoryFacet.showLessValues();
+    productListingCategoryFacet.showLessValues();
 
     expect(findDispatchedFetchProductListingAction()).toBeTruthy();
 
