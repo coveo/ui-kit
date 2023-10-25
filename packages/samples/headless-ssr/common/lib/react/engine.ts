@@ -19,5 +19,4 @@ export const {
   useSearchBox,
   useAuthorFacet,
   useSearchParameters,
-  useContext,
 } = engineDefinition.controllers;
