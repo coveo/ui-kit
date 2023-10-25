@@ -4,7 +4,6 @@ import {CommerceAnalyticsProvider} from '../../../api/analytics/commerce-analyti
 import {ProductRecommendation, Result} from '../../../product-listing.index';
 import {CommerceAppState} from '../../../state/commerce-app-state';
 import {
-  AnalyticsType,
   makeAnalyticsAction,
   resultPartialDefinition,
   ProductListingV2Action,
@@ -14,17 +13,15 @@ import {
 export const logProductListingV2Load = (): ProductListingV2Action =>
   makeCommerceAnalyticsAction(
     'analytics/commerce/productListing/load',
-    AnalyticsType.Search,
     (client) => client.makeInterfaceLoad(),
     (getState) => new CommerceAnalyticsProvider(getState)
   );
 
 export const logProductListingV2Open = (
   productRec: ProductRecommendation
-): ProductListingV2Action<AnalyticsType.Click> =>
+): ProductListingV2Action =>
   makeAnalyticsAction(
     'analytics/commerce/productListing/open',
-    AnalyticsType.Click,
     (client, state) => {
       validateResultPayload(productRec);
       return client.makeDocumentOpen(
