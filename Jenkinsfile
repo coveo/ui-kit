@@ -44,6 +44,7 @@ node('heavy && linux && docker') {
         --resolve ATOMIC_HOSTED_PAGE_MAJOR_VERSION=${atomicHostedPageMajor} \
         --resolve ATOMIC_HOSTED_PAGE_MINOR_VERSION=${atomicHostedPageMinor} \
         --resolve ATOMIC_HOSTED_PAGE_PATCH_VERSION=${atomicHostedPagePatch} \
+        --changeset ${env.GIT_COMMIT}
         || true"
       }
     }
