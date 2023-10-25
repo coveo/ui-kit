@@ -1,3 +1,4 @@
+import {RecordValue, Schema} from '@coveo/bueno';
 import {CoreEngine} from '../../../app/engine';
 import {
   setContext,
@@ -11,12 +12,27 @@ import {
 } from '../../../features/context/context-state';
 import {ContextSection} from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
+import {validateInitialState} from '../../../utils/validate-payload';
 import {
   buildController,
   Controller,
 } from '../../controller/headless-controller';
 
 export type {ContextPayload, ContextValue};
+
+export interface ContextProps {
+  initialState?: ContextInitialState;
+}
+
+export interface ContextInitialState {
+  values: ContextPayload;
+}
+
+const initialStateSchema = new Schema<ContextInitialState>({
+  values: new RecordValue({
+    options: {required: false},
+  }),
+});
 
 /**
  * The `Context` controller injects [custom contextual information](https://docs.coveo.com/en/3389/)
@@ -57,7 +73,10 @@ export interface ContextState {
   values: Record<string, ContextValue>;
 }
 
-export function buildCoreContext(engine: CoreEngine): Context {
+export function buildCoreContext(
+  engine: CoreEngine,
+  props: ContextProps = {}
+): Context {
   if (!loadContextReducers(engine)) {
     throw loadReducerError;
   }
@@ -65,6 +84,17 @@ export function buildCoreContext(engine: CoreEngine): Context {
   const controller = buildController(engine);
   const {dispatch} = engine;
   const getState = () => engine.state;
+
+  const initialState = validateInitialState(
+    engine,
+    initialStateSchema,
+    props.initialState,
+    'buildContext'
+  );
+
+  if (initialState.values) {
+    dispatch(setContext(initialState.values));
+  }
 
   return {
     ...controller,
