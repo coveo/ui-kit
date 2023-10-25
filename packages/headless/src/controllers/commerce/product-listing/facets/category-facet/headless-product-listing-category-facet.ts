@@ -3,12 +3,12 @@ import {fetchProductListing} from '../../../../../features/commerce/product-list
 import {productListingV2Reducer as productListing} from '../../../../../features/commerce/product-listing/product-listing-slice';
 import {configurationReducer as configuration} from '../../../../../features/configuration/configuration-slice';
 import {categoryFacetSetReducer as categoryFacetSet} from '../../../../../features/facets/category-facet-set/category-facet-set-slice';
+import {getProductListingAnalyticsActionForToggleFacetSelect} from '../../../../../features/facets/facet-set/facet-set-product-listing-utils';
 import {
   logFacetClearAll,
   logFacetShowLess,
   logFacetShowMore,
 } from '../../../../../features/facets/facet-set/facet-set-product-listing-v2-analytics-actions';
-import {getProductListingAnalyticsActionForToggleFacetSelect} from '../../../../../features/facets/facet-set/facet-set-product-listing-v2-utils';
 import {
   CategoryFacetSection,
   ConfigurationSection,
