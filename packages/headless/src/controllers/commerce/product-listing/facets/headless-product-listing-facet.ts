@@ -1,7 +1,4 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {CommerceThunkExtraArguments} from '../../../../app/commerce-thunk-extra-arguments';
-import {configuration} from '../../../../app/common-reducers';
-import {CoreEngine} from '../../../../app/engine';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {
   logFacetClearAll,
@@ -13,10 +10,7 @@ import {
   getProductListingAnalyticsActionForToggleFacetSelect,
 } from '../../../../features/facets/facet-set/facet-set-product-listing-utils';
 import {facetSetReducer as facetSet} from '../../../../features/facets/facet-set/facet-set-slice';
-import {
-  ConfigurationSection,
-  FacetSection,
-} from '../../../../state/state-sections';
+import {FacetSection} from '../../../../state/state-sections';
 import {loadReducerError} from '../../../../utils/errors';
 import {
   buildCoreFacet,
@@ -105,11 +99,8 @@ export function buildFacet(engine: CommerceEngine, props: FacetProps): Facet {
 }
 
 function loadFacetReducers(
-  engine: CoreEngine
-): engine is CoreEngine<
-  FacetSection & ConfigurationSection,
-  CommerceThunkExtraArguments
-> {
-  engine.addReducers({facetSet, configuration});
+  engine: CommerceEngine
+): engine is CommerceEngine<FacetSection> {
+  engine.addReducers({facetSet});
   return true;
 }
