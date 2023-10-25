@@ -21,6 +21,8 @@ export {buildRelevanceInspector} from './relevance-inspector/headless-relevance-
 
 export type {
   Context,
+  ContextInitialState,
+  ContextProps,
   ContextState,
   ContextValue,
   ContextPayload,
