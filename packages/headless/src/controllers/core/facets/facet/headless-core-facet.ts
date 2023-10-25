@@ -34,7 +34,10 @@ import {
   isFacetValueExcluded,
   isFacetValueSelected,
 } from '../../../../features/facets/facet-set/facet-set-utils';
-import {FacetSortCriterion} from '../../../../features/facets/facet-set/interfaces/request';
+import {
+  FacetSortCriterion,
+  facetSortCriteria,
+} from '../../../../features/facets/facet-set/interfaces/request';
 import {
   ConfigurationSection,
   FacetOptionsSection,
@@ -356,6 +359,16 @@ export function buildCoreFacet(
     facetSearch: {...defaultFacetSearchOptions, ...props.options.facetSearch},
     ...registrationOptions,
   };
+
+  /* TODO: KIT-2578 remove string sortCriteria validation */
+  if (typeof options.sortCriteria === 'string') {
+    if (!facetSortCriteria.some((c) => options.sortCriteria === c)) {
+      const errorMessage = 'Controller initialization error';
+      const error = new Error(errorMessage);
+      engine.logger.error(error, errorMessage);
+      throw error;
+    }
+  }
 
   validateOptions(engine, optionsSchema, options, 'buildFacet');
 
