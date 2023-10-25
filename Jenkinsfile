@@ -6,17 +6,6 @@ def parseSemanticVersion(String version) {
 
 node('heavy && linux && docker') {
   checkout scm
-  def tag = sh(script: "git tag --contains", returnStdout: true).trim()
-  def isBump = !!tag
-  def isOnReleaseBranch = env.BRANCH_NAME == 'master'
-
-  if (!isOnReleaseBranch) {
-    return
-  }
-
-  if (!isBump) {
-    return
-  }
 
   withEnv(['npm_config_cache=npm-cache', 'CI=true', 'NODE_OPTIONS=--max_old_space_size=8192']) {
     withDockerContainer(image: 'node:18', args: '-u=root -e HOME=/tmp -e NPM_CONFIG_PREFIX=/tmp/.npm') {
