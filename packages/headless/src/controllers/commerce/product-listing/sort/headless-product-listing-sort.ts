@@ -3,9 +3,6 @@ import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {CoreEngine} from '../../../../app/engine';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice';
-import {applySort} from '../../../../features/commerce/sort/sort-actions';
-import {sortReducer as commerceSort} from '../../../../features/commerce/sort/sort-slice';
-import {updatePage} from '../../../../features/pagination/pagination-actions';
 import {
   buildFieldsSortCriterion,
   buildRelevanceSortCriterion,
@@ -16,7 +13,10 @@ import {
   SortCriterion,
   SortDirection,
   sortCriterionDefinition,
-} from '../../../../features/sort/sort';
+} from '../../../../features/commerce/sort/sort';
+import {applySort} from '../../../../features/commerce/sort/sort-actions';
+import {sortReducer as commerceSort} from '../../../../features/commerce/sort/sort-slice';
+import {updatePage} from '../../../../features/pagination/pagination-actions';
 import {ProductListingV2Section} from '../../../../state/state-sections';
 import {loadReducerError} from '../../../../utils/errors';
 import {validateInitialState} from '../../../../utils/validate-payload';

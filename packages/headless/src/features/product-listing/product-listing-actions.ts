@@ -22,10 +22,7 @@ import {
 } from '../../state/state-sections';
 import {sortFacets} from '../../utils/facet-utils';
 import {validatePayload} from '../../utils/validate-payload';
-import {
-  AnalyticsType,
-  PreparableAnalyticsAction,
-} from '../analytics/analytics-utils';
+import {PreparableAnalyticsAction} from '../analytics/analytics-utils';
 import {getFacetRequests} from '../facets/generic/interfaces/generic-facet-request';
 import {logQueryError} from '../search/search-analytics-actions';
 import {SortBy} from '../sort/sort';
@@ -88,10 +85,7 @@ export type StateNeededByFetchProductListing = ConfigurationSection &
 export interface FetchProductListingThunkReturn {
   /** The successful search response. */
   response: ProductListingSuccessResponse;
-  analyticsAction: PreparableAnalyticsAction<
-    {analyticsType: AnalyticsType.Search},
-    StateNeededByFetchProductListing
-  >;
+  analyticsAction: PreparableAnalyticsAction<StateNeededByFetchProductListing>;
 }
 
 export const fetchProductListing = createAsyncThunk<

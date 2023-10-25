@@ -12,6 +12,7 @@ import {scope} from '../../../reporters/detailed-collector';
 import {GeneratedAnswerActions as Actions} from './generated-answer-actions';
 import {GeneratedAnswerExpectations as Expect} from './generated-answer-expectations';
 
+const GENERATED_ANSWER_DATA_KEY = 'coveo-generated-answer-data';
 const otherOption = 'other';
 const irrelevantOption = 'irrelevant';
 const feedbackOptions = [
@@ -63,6 +64,11 @@ describe('quantic-generated-answer', () => {
 
       it('should log the stream ID in the search event custom data', () => {
         Expect.logStreamIdInAnalytics(streamId);
+      });
+
+      it('should display the generated answer content', () => {
+        Expect.displayGeneratedAnswerContent(true);
+        Expect.sessionStorageContains(GENERATED_ANSWER_DATA_KEY, {});
       });
 
       it('should display the correct message', () => {
@@ -164,6 +170,35 @@ describe('quantic-generated-answer', () => {
           Actions.clickFeedbackDoneButton();
         });
       });
+
+      it('should display the toggle generated answer button', () => {
+        Expect.displayToggleGeneratedAnswerButton(true);
+        Expect.toggleGeneratedAnswerButtonIsChecked(true);
+
+        scope('when toggling off the generated answer', () => {
+          Actions.clickToggleGeneratedAnswerButton();
+          Expect.toggleGeneratedAnswerButtonIsChecked(false);
+          Expect.displayGeneratedAnswerContent(false);
+          Expect.displayLikeButton(false);
+          Expect.displayDislikeButton(false);
+          Expect.logHideGeneratedAnswer(streamId);
+          Expect.sessionStorageContains(GENERATED_ANSWER_DATA_KEY, {
+            isVisible: false,
+          });
+        });
+
+        scope('when toggling on the generated answer', () => {
+          Actions.clickToggleGeneratedAnswerButton();
+          Expect.toggleGeneratedAnswerButtonIsChecked(true);
+          Expect.displayGeneratedAnswerContent(true);
+          Expect.displayLikeButton(true);
+          Expect.displayDislikeButton(true);
+          Expect.logShowGeneratedAnswer(streamId);
+          Expect.sessionStorageContains(GENERATED_ANSWER_DATA_KEY, {
+            isVisible: true,
+          });
+        });
+      });
     });
 
     describe('when the generated answer is still streaming', () => {
@@ -187,6 +222,10 @@ describe('quantic-generated-answer', () => {
         Expect.displayGeneratedAnswerCard(true);
         Expect.generatedAnswerContains(testText);
         Expect.generatedAnswerIsStreaming(true);
+        Expect.displayLikeButton(false);
+        Expect.displayDislikeButton(false);
+        Expect.displayToggleGeneratedAnswerButton(true);
+        Expect.toggleGeneratedAnswerButtonIsChecked(true);
       });
     });
 
