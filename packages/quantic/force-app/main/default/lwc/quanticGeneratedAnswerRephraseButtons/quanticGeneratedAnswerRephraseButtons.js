@@ -1,8 +1,8 @@
 import bulletPointSummary from '@salesforce/label/c.quantic_BulletPointSummary';
 import bullets from '@salesforce/label/c.quantic_Bullets';
-import steps from '@salesforce/label/c.quantic_Harmful';
 import rephrase from '@salesforce/label/c.quantic_Rephrase';
 import stepByStepInstructions from '@salesforce/label/c.quantic_StepByStepInstructions';
+import steps from '@salesforce/label/c.quantic_Steps';
 import summary from '@salesforce/label/c.quantic_Summary';
 import {LightningElement, api} from 'lwc';
 
