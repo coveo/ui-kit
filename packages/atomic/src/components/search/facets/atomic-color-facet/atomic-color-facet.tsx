@@ -10,6 +10,8 @@ import {
   FacetValue,
   buildFacetConditionsManager,
   FacetConditionsManager,
+  FacetSortOrder,
+  SpecificSortCriteriaExplicit,
 } from '@coveo/headless';
 import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
 import {
@@ -139,6 +141,11 @@ export class AtomicColorFacet
    * Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
    */
   @Prop({reflect: true}) public sortCriteria: FacetSortCriterion = 'automatic';
+  /**
+   * The sort order to apply to the returned facet values.
+   * Possible values are 'ascending' and 'descending'.
+   */
+  @Prop({reflect: true}) public sortOrder: FacetSortOrder = 'ascending';
   /**
    * Whether to display the facet values as checkboxes (multiple selection) or boxes (multiple selection).
    * Possible values are 'checkbox', and 'box'.
@@ -534,7 +541,7 @@ export class AtomicColorFacet
       facetId: this.facetId,
       field: this.field,
       numberOfValues: this.numberOfValues,
-      sortCriteria: this.sortCriteria,
+      sortCriteria: this.facetSortCriterion,
       facetSearch: {numberOfValues: this.numberOfValues},
       injectionDepth: this.injectionDepth,
       filterFacetCount: this.filterFacetCount,
@@ -543,6 +550,24 @@ export class AtomicColorFacet
         : undefined,
       customSort: this.customSort.length ? [...this.customSort] : undefined,
     };
+  }
+
+  private get facetSortCriterion():
+    | FacetSortCriterion
+    | SpecificSortCriteriaExplicit {
+    if (this.sortCriteria === 'automatic' && this.sortOrder !== 'ascending') {
+      this.bindings.engine.logger.warn(
+        'When using the `automatic` sort criteria, the specified sort order will have no effect.'
+      );
+    }
+
+    return this.sortCriteria !== 'automatic' &&
+      this.sortCriteria !== 'alphanumericDescending'
+      ? {
+          type: this.sortCriteria,
+          order: this.sortOrder,
+        }
+      : this.sortCriteria;
   }
 
   public render() {

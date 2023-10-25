@@ -831,7 +831,7 @@ describe('Facet v1 Test Suites', () => {
     FacetAssertions.assertValuesSortedByOccurrences();
   });
 
-  describe('with custom #sortOrder, occurrences', () => {
+  describe('with custom #sortOrder, descending', () => {
     beforeEach(() => {
       new TestFixture()
         .with(

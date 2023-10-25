@@ -231,6 +231,10 @@ export namespace Components {
          */
         "sortCriteria": FacetSortCriterion;
         /**
+          * The sort order to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
+         */
+        "sortOrder": FacetSortOrder;
+        /**
           * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
          */
         "withSearch": boolean;
@@ -4333,6 +4337,10 @@ declare namespace LocalJSX {
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */
         "sortCriteria"?: FacetSortCriterion;
+        /**
+          * The sort order to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
+         */
+        "sortOrder"?: FacetSortOrder;
         /**
           * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
          */
