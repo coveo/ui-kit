@@ -29,7 +29,7 @@ export interface AutomaticFacetProps {
  *
  * @param engine - The headless engine.
  * @param props - The configurable `AutomaticFacet` properties used internally.
- * @returns A `AutomaticFacet` controller instance.
+ * @returns An `AutomaticFacet` controller instance.
  * */
 export function buildAutomaticFacet(
   engine: SearchEngine,
