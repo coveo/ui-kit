@@ -19,10 +19,7 @@ import {
   VersionSection,
 } from '../../../state/state-sections';
 import {sortFacets} from '../../../utils/facet-utils';
-import {
-  AnalyticsType,
-  PreparableAnalyticsAction,
-} from '../../analytics/analytics-utils';
+import {PreparableAnalyticsAction} from '../../analytics/analytics-utils';
 import {getFacetRequests} from '../../facets/generic/interfaces/generic-facet-request';
 import {logQueryError} from '../../search/search-analytics-actions';
 import {SortBy, SortCriterion} from '../sort/sort';
@@ -46,10 +43,7 @@ export type StateNeededByFetchProductListingV2 = ConfigurationSection &
 export interface FetchProductListingV2ThunkReturn {
   /** The successful search response. */
   response: ProductListingV2SuccessResponse;
-  analyticsAction: PreparableAnalyticsAction<
-    {analyticsType: AnalyticsType.Search},
-    StateNeededByFetchProductListingV2
-  >;
+  analyticsAction: PreparableAnalyticsAction<StateNeededByFetchProductListingV2>;
 }
 
 export const fetchProductListing = createAsyncThunk<

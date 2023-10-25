@@ -10,11 +10,7 @@ import {
   requiredNonEmptyString,
   validatePayload,
 } from '../../utils/validate-payload';
-import {
-  AnalyticsAsyncThunk,
-  AnalyticsType,
-  SearchAction,
-} from '../analytics/analytics-utils';
+import {AnalyticsAsyncThunk, SearchAction} from '../analytics/analytics-utils';
 import {
   deselectAllBreadcrumbs,
   deselectAllNonBreadcrumbs,
@@ -54,7 +50,7 @@ export interface ExecuteSearchThunkReturn {
   /** The original query that was performed when an automatic correction is executed.*/
   originalQuery: string;
   /** The analytics action to log after the query. */
-  analyticsAction: AnalyticsAsyncThunk<{analyticsType: AnalyticsType.Search}>;
+  analyticsAction: AnalyticsAsyncThunk;
 }
 
 interface PrepareForSearchWithQueryOptions {

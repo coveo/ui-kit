@@ -22,6 +22,8 @@ export const fromAnalyticsStateToAnalyticsParams = async (
       ...(s.documentLocation && {documentLocation: s.documentLocation}),
       ...(s.deviceId && {deviceId: s.deviceId}),
       ...(getPageID() && {pageId: getPageID()}),
+      ...(s.analyticsMode && s.trackingId && {trackingId: s.trackingId}),
+      ...{capture: s.analyticsMode === 'next' ?? false},
     },
   };
 };
