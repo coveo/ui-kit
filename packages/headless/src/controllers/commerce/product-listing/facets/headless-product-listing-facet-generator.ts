@@ -1,6 +1,10 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
+import {facetsReducer as commerceFacets} from '../../../../features/commerce/facets/facets-slice';
 import {facetSetReducer as facetSet} from '../../../../features/facets/facet-set/facet-set-slice';
-import {FacetSection} from '../../../../state/state-sections';
+import {
+  CommerceFacetSection,
+  FacetSection,
+} from '../../../../state/state-sections';
 import {loadReducerError} from '../../../../utils/errors';
 import {
   buildController,
@@ -27,7 +31,7 @@ export function buildFacetGenerator(engine: CommerceEngine): FacetGenerator {
 
     get state() {
       return {
-        facets: (engine.state.productListing.facets ?? []).map((facet) =>
+        facets: (engine.state.commerceFacets.facets ?? []).map((facet) =>
           // TODO: Eventually, we'll use different controllers for different facet types taken from facet.type
           buildFacet(engine, {
             options: {
@@ -43,7 +47,7 @@ export function buildFacetGenerator(engine: CommerceEngine): FacetGenerator {
 
 function loadFacetGeneratorReducers(
   engine: CommerceEngine
-): engine is CommerceEngine<FacetSection> {
-  engine.addReducers({facetSet});
+): engine is CommerceEngine<FacetSection & CommerceFacetSection> {
+  engine.addReducers({facetSet, commerceFacets});
   return true;
 }

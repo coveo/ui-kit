@@ -8,6 +8,7 @@ import {
   CartSection,
   CategoryFacetSection,
   CommerceContextSection,
+  CommerceFacetSection,
   CommercePaginationSection,
   CommerceSortSection,
   ConfigurationSection,
@@ -31,6 +32,7 @@ export type StateNeededByFetchProductListingV2 = ConfigurationSection &
   CartSection &
   Partial<
     CommercePaginationSection &
+      CommerceFacetSection &
       CommerceSortSection &
       FacetSection &
       NumericFacetSection &

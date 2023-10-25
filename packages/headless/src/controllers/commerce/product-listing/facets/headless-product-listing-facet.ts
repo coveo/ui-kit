@@ -1,4 +1,5 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
+import {facetsReducer as commerceFacets} from '../../../../features/commerce/facets/facets-slice';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {
   logFacetClearAll,
@@ -10,7 +11,10 @@ import {
   getProductListingAnalyticsActionForToggleFacetSelect,
 } from '../../../../features/facets/facet-set/facet-set-product-listing-utils';
 import {facetSetReducer as facetSet} from '../../../../features/facets/facet-set/facet-set-slice';
-import {FacetSection} from '../../../../state/state-sections';
+import {
+  CommerceFacetSection,
+  FacetSection,
+} from '../../../../state/state-sections';
 import {loadReducerError} from '../../../../utils/errors';
 import {
   buildCoreFacet,
@@ -100,7 +104,7 @@ export function buildFacet(engine: CommerceEngine, props: FacetProps): Facet {
 
 function loadFacetReducers(
   engine: CommerceEngine
-): engine is CommerceEngine<FacetSection> {
-  engine.addReducers({facetSet});
+): engine is CommerceEngine<FacetSection & CommerceFacetSection> {
+  engine.addReducers({facetSet, commerceFacets});
   return true;
 }
