@@ -14,9 +14,10 @@ const timestampSelector = '#timestamp';
 const resultListSelector = '.result-list li';
 const searchBoxSelector = '.search-box input';
 const routes = ['generic', 'react'] as const;
-const nodeEnv = process.env.NODE_ENV;
-const nextJSRouter = Cypress.env('NEXTJS_ROUTER');
-const isPageDev = nodeEnv === 'development' && nextJSRouter === 'pages';
+
+const isPageDev =
+  process.env.NODE_ENV === 'development' &&
+  Cypress.env('NEXTJS_ROUTER') === 'pages';
 
 // Note: Thresholds might need to be adjusted as the page tested changes (e.g. more components are added etc)
 const vitals: Record<(typeof routes)[number], Cypress.ReportWebVitalsConfig> = {
