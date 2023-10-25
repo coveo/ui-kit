@@ -272,7 +272,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     return this?.state?.isStreaming;
   }
 
-  get shouldDisplayFeedback() {
+  get shouldDisplayActions() {
     return this.isVisible && !this.isStreaming;
   }
 
@@ -331,10 +331,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   get responseFormat() {
     return this.state?.responseFormat.answerStyle;
-  }
-
-  get shouldDisplayActions() {
-    return !this.isStreaming;
   }
 
   get generatedAnswerFooterCssClass() {
