@@ -1,5 +1,6 @@
 import {fetchProductListing} from '../../../../../features/commerce/product-listing/product-listing-actions';
 import {productListingV2Reducer as productListing} from '../../../../../features/commerce/product-listing/product-listing-slice';
+import {configurationReducer as configuration} from '../../../../../features/configuration/configuration-slice';
 import {categoryFacetSetReducer as categoryFacetSet} from '../../../../../features/facets/category-facet-set/category-facet-set-slice';
 import {logFacetClearAll} from '../../../../../features/facets/facet-set/facet-set-analytics-actions';
 import {
@@ -35,6 +36,7 @@ describe('ProductListingCategoryFacet', () => {
   });
   it('adds correct reducers to engine', () => {
     expect(engine.addReducers).toBeCalledWith({
+      configuration,
       productListing,
       categoryFacetSet,
     });

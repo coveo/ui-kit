@@ -1,6 +1,7 @@
 import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
 import {fetchProductListing} from '../../../../../features/commerce/product-listing/product-listing-actions';
 import {productListingV2Reducer as productListing} from '../../../../../features/commerce/product-listing/product-listing-slice';
+import {configurationReducer as configuration} from '../../../../../features/configuration/configuration-slice';
 import {categoryFacetSetReducer as categoryFacetSet} from '../../../../../features/facets/category-facet-set/category-facet-set-slice';
 import {
   logFacetClearAll,
@@ -10,6 +11,7 @@ import {
 import {getProductListingAnalyticsActionForToggleFacetSelect} from '../../../../../features/facets/facet-set/facet-set-product-listing-v2-utils';
 import {
   CategoryFacetSection,
+  ConfigurationSection,
   ProductListingV2Section,
 } from '../../../../../state/state-sections';
 import {loadReducerError} from '../../../../../utils/errors';
@@ -115,8 +117,11 @@ export function buildProductListingCategoryFacet(
 
 function loadProductListingCategoryFacetReducers(
   engine: CommerceEngine
-): engine is CommerceEngine<CategoryFacetSection & ProductListingV2Section> {
+): engine is CommerceEngine<
+  ConfigurationSection & CategoryFacetSection & ProductListingV2Section
+> {
   engine.addReducers({
+    configuration,
     productListing,
     categoryFacetSet,
   });
