@@ -407,8 +407,6 @@ export type {
 
 export {buildCategoryFieldSuggestions} from './field-suggestions/category-facet/headless-category-field-suggestions';
 
-// export {buildAutomaticFacet} from './facets/automatic-facet/headless-automatic-facet';
-
 export type {
   AutomaticFacet,
   AutomaticFacetState,
