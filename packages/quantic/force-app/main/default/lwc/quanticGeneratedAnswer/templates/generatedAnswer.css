@@ -1,6 +1,6 @@
 @import '../quanticGeneratedAnswer.css';
 
-.generated-answer__content {
+.generated-answer__answer {
   white-space: pre-wrap;
 }
 

@@ -6,7 +6,6 @@ import {
   validatePayload,
 } from '../../../utils/validate-payload';
 import {
-  AnalyticsType,
   InsightAction,
   makeInsightAnalyticsAction,
 } from '../../analytics/analytics-utils';
@@ -45,7 +44,6 @@ export const logCategoryFacetBreadcrumb = (
 ): InsightAction =>
   makeInsightAnalyticsAction(
     'analytics/categoryFacet/breadcrumb',
-    AnalyticsType.Search,
     (client, state) => {
       validatePayload(payload, categoryFacetBreadcrumbPayloadDefinition);
       const metadata = {

@@ -4,7 +4,7 @@ export const generatedAnswerComponent = 'c-quantic-generated-answer';
 
 export interface GeneratedAnswerSelector extends ComponentSelector {
   generatedAnswerCard: () => CypressSelector;
-  generatedAnswerContent: () => CypressSelector;
+  generatedAnswer: () => CypressSelector;
   likeButton: () => CypressSelector;
   dislikeButton: () => CypressSelector;
   citations: () => CypressSelector;
@@ -12,6 +12,8 @@ export interface GeneratedAnswerSelector extends ComponentSelector {
   citationIndex: (index: number) => CypressSelector;
   citationLink: (index: number) => CypressSelector;
   retryButton: () => CypressSelector;
+  toggleGeneratedAnswerButton: () => CypressSelector;
+  generatedAnswerContent: () => CypressSelector;
   feedbackModal: () => CypressSelector;
   feedbackOption: (index: number) => CypressSelector;
   feedbackSubmitButton: () => CypressSelector;
@@ -28,10 +30,8 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
 
   generatedAnswerCard: () =>
     GeneratedAnswerSelectors.get().find('[data-cy="generated-answer__card"]'),
-  generatedAnswerContent: () =>
-    GeneratedAnswerSelectors.get().find(
-      '[data-cy="generated-answer__content"]'
-    ),
+  generatedAnswer: () =>
+    GeneratedAnswerSelectors.get().find('[data-cy="generated-answer__answer"]'),
   likeButton: () =>
     GeneratedAnswerSelectors.get().find(
       '[data-cy="generated-answer__feedback"] [data-cy="feedback__like-button"]'
@@ -61,6 +61,14 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
   retryButton: () =>
     GeneratedAnswerSelectors.get().find(
       '[data-cy="generated-answer__retry-button"]'
+    ),
+  toggleGeneratedAnswerButton: () =>
+    GeneratedAnswerSelectors.get().find(
+      '[data-cy="generated-answer__toggle-button"]'
+    ),
+  generatedAnswerContent: () =>
+    GeneratedAnswerSelectors.get().find(
+      '[data-cy="generated-answer__content"]'
     ),
   feedbackModal: () => cy.get('lightning-modal'),
   feedbackOption: (index: number) =>

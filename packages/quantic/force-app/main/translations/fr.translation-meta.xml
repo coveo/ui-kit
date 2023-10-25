@@ -701,6 +701,10 @@
     <name>quantic_SearchInsteadFor</name>
   </customLabels>
   <customLabels>
+    <label>Afficher la réponse générée</label>
+    <name>quantic_ShowGeneratedAnswer</name>
+  </customLabels>
+  <customLabels>
     <label>Hors sujet</label>
     <name>quantic_Irrelevant</name>
   </customLabels>
