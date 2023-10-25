@@ -53,9 +53,7 @@ export class CommerceAPIClient {
     const body = await response.json();
 
     return response.ok
-      ? {
-          success: body as ProductListingV2SuccessResponse,
-        }
+      ? {success: body as ProductListingV2SuccessResponse}
       : {error: body as CommerceAPIErrorStatusResponse};
   }
 }
