@@ -1,6 +1,14 @@
-import {SortCriterion} from '../../../../features/sort/sort';
+import {SortBy, SortDirection} from '../../../../features/sort/sort';
 
-export interface Sort {
-  appliedSort: SortCriterion;
-  availableSorts: SortCriterion[];
-}
+export type SortOption = {sortCriteria: SortBy} & {
+  fields?: {
+    field: string;
+    direction?: SortDirection;
+    displayName?: string;
+  }[];
+};
+
+export type Sort = {
+  appliedSort: SortOption;
+  availableSorts: SortOption[];
+};

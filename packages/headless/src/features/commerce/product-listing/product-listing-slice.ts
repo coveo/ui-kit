@@ -16,7 +16,6 @@ export const productListingV2Reducer = createReducer(
         state.facets = action.payload.response.facets;
         state.products = action.payload.response.products;
         state.responseId = action.payload.response.responseId;
-        state.sort = action.payload.response.sort;
         state.isLoading = false;
       })
       .addCase(fetchProductListing.pending, (state) => {

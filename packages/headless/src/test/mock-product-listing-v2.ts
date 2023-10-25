@@ -9,8 +9,8 @@ export function buildFetchProductListingV2Response(
   return {
     response: {
       sort: response.sort ?? {
-        appliedSort: {by: SortBy.Relevance},
-        availableSorts: [{by: SortBy.Relevance}],
+        appliedSort: {sortCriteria: SortBy.Relevance},
+        availableSorts: [{sortCriteria: SortBy.Relevance}],
       },
       pagination: response.pagination ?? {
         page: 0,

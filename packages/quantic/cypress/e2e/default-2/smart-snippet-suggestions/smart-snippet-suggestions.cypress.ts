@@ -16,14 +16,10 @@ import {SmartSnippetSuggestionsActions as Actions} from './smart-snippet-suggest
 import {SmartSnippetSuggestionsExpectations as Expect} from './smart-snippet-suggestions-expectations';
 
 const inactiveLink = 'javascript:void(0);';
+const exampleInlineLink =
+  'https://saas-inspiration-5437-dev-ed.scratch.my.site.com/examples/s/';
 const exampleInlineLinkText = 'Example inline link';
-const exampleInlineLinkUrl = inactiveLink;
-const exampleSmartSnippetAnswer = `
-  <div>
-    <p>Example smart snippet answer</p>
-    <a data-cy="smart-snippet__inline-link" href="${exampleInlineLinkUrl}">${exampleInlineLinkText}</a>
-  </div>
-`;
+const exampleSmartSnippetAnswer = `<div data-cy="smart-snippet__inline-link"><p>Example smart snippet answer</p><a href="${exampleInlineLink}">${exampleInlineLinkText}</a></div>`;
 
 const exampleRelatedQuestions = [
   {
@@ -165,9 +161,10 @@ describe('quantic-smart-snippet-suggestions', () => {
               Expect.logOpenSmartSnippetSuggestionInlineLink({
                 ...exampleRelatedQuestions[index],
                 position: index + 1,
-                linkUrl: exampleInlineLinkUrl,
+                linkUrl: exampleInlineLink,
                 linkText: exampleInlineLinkText,
               });
+              visitPage({useCase: param.useCase});
             }
           );
         });

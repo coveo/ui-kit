@@ -3,7 +3,6 @@ import {
   partialDocumentInformation,
   documentIdentifier,
   validateResultPayload,
-  AnalyticsType,
   makeInsightAnalyticsAction,
 } from '../analytics/analytics-utils';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
@@ -11,7 +10,6 @@ import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-stat
 export const logDocumentOpen = (result: Result) =>
   makeInsightAnalyticsAction(
     'analytics/insight/result/open',
-    AnalyticsType.Click,
     (client, state) => {
       validateResultPayload(result);
       const metadata = getCaseContextAnalyticsMetadata(
