@@ -16,54 +16,31 @@ const searchBoxSelector = '.search-box input';
 const routes = ['generic', 'react'] as const;
 const nodeEnv = process.env.NODE_ENV;
 const nextJSRouter = Cypress.env('NEXTJS_ROUTER');
+const isPageDev = nodeEnv === 'development' && nextJSRouter === 'pages';
 
 // Note: Thresholds might need to be adjusted as the page tested changes (e.g. more components are added etc)
-const vitals: Record<(typeof routes)[number], Cypress.ReportWebVitalsConfig> =
-  nodeEnv === 'development' && nextJSRouter === 'pages'
-    ? {
-        generic: {
-          thresholds: {
-            fcp: 2000,
-            lcp: 2000,
-            cls: 0,
-            ttfb: 60,
-            fid: 400,
-            inp: 400,
-          },
-        },
-        react: {
-          thresholds: {
-            fcp: 2000,
-            lcp: 2000,
-            cls: 0,
-            ttfb: 120,
-            fid: 800,
-            inp: 800,
-          },
-        },
-      }
-    : {
-        generic: {
-          thresholds: {
-            fcp: 200,
-            lcp: 200,
-            cls: 0,
-            ttfb: 60,
-            fid: 400,
-            inp: 400,
-          },
-        },
-        react: {
-          thresholds: {
-            fcp: 400,
-            lcp: 400,
-            cls: 0,
-            ttfb: 120,
-            fid: 800,
-            inp: 800,
-          },
-        },
-      };
+const vitals: Record<(typeof routes)[number], Cypress.ReportWebVitalsConfig> = {
+  generic: {
+    thresholds: {
+      fcp: isPageDev ? 2000 : 200,
+      lcp: isPageDev ? 2000 : 200,
+      cls: 0,
+      ttfb: 60,
+      fid: 400,
+      inp: 400,
+    },
+  },
+  react: {
+    thresholds: {
+      fcp: isPageDev ? 2000 : 400,
+      lcp: isPageDev ? 2000 : 400,
+      cls: 0,
+      ttfb: 120,
+      fid: 800,
+      inp: 800,
+    },
+  },
+};
 
 routes.forEach((route) => {
   describe(`${route} Headless SSR utils`, () => {
