@@ -149,7 +149,11 @@ async function buildBrowserConfig(options, outDir) {
     plugins: [
       alias({
         'coveo.analytics': resolveEsm('coveo.analytics'),
-        'cross-fetch': resolve('.', 'fetch-ponyfill.js'),
+        '@coveo/please-give-me-fetch': resolve(
+          './ponyfills',
+          'fetch-ponyfill-browser.js'
+        ),
+        '@coveo/pendragon': resolve('./ponyfills', 'magic-cookie-browser.js'),
       }),
     ],
     ...options,
@@ -200,6 +204,11 @@ async function buildNodeConfig(options, outDir) {
     plugins: [
       alias({
         'coveo.analytics': require.resolve('coveo.analytics'),
+        '@coveo/please-give-me-fetch': resolve(
+          './ponyfills',
+          'fetch-ponyfill-node.js'
+        ),
+        '@coveo/pendragon': resolve('./ponyfills', 'magic-cookie-node.js'),
       }),
     ],
     ...options,

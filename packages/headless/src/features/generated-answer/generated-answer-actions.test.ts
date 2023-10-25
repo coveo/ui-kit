@@ -5,11 +5,14 @@ import {
 } from '../../test';
 import {buildMockCitation} from '../../test/mock-citation';
 import {
+  setIsVisible,
   setIsLoading,
   updateCitations,
   updateError,
   updateMessage,
+  updateResponseFormat,
 } from './generated-answer-actions';
+import {generatedAnswerStyle} from './generated-response-format';
 
 describe('generated answer', () => {
   let e: MockSearchEngine;
@@ -104,6 +107,39 @@ describe('generated answer', () => {
         payload: {
           citations: testCitations,
         },
+        type: actionType,
+      });
+    });
+  });
+
+  describe('#updateResponseFormat', () => {
+    const actionType = 'generatedAnswer/updateResponseFormat';
+
+    test.each(generatedAnswerStyle)(
+      'should accept a valid payload with style: "%i"',
+      (style) => {
+        expect(
+          e.dispatch(
+            updateResponseFormat({
+              answerStyle: style,
+            })
+          )
+        ).toEqual({
+          payload: {
+            answerStyle: style,
+          },
+          type: actionType,
+        });
+      }
+    );
+  });
+
+  describe('#setIsVisible', () => {
+    const actionType = 'generatedAnswer/setIsVisible';
+
+    it('should accept a valid payload', () => {
+      expect(e.dispatch(setIsVisible(true))).toEqual({
+        payload: true,
         type: actionType,
       });
     });

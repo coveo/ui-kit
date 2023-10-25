@@ -4,22 +4,21 @@ import {
   dislikeGeneratedAnswer,
   likeGeneratedAnswer,
   resetAnswer,
+  setIsVisible,
   setIsLoading,
   setIsStreaming,
   updateCitations,
   updateError,
   updateMessage,
+  updateResponseFormat,
+  openGeneratedAnswerFeedbackModal,
+  closeGeneratedAnswerFeedbackModal,
 } from './generated-answer-actions';
 import {generatedAnswerReducer} from './generated-answer-slice';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
+import {GeneratedResponseFormat} from './generated-response-format';
 
-const baseState = {
-  isLoading: false,
-  isStreaming: false,
-  citations: [],
-  liked: false,
-  disliked: false,
-};
+const baseState = getGeneratedAnswerInitialState();
 
 describe('generated answer slice', () => {
   it('initializes the state correctly', () => {
@@ -182,22 +181,38 @@ describe('generated answer slice', () => {
     });
   });
 
-  it('#resetAnswer should reset the state to the initial state', () => {
-    const state = {
-      ...baseState,
-      isStreaming: true,
-      isLoading: true,
-      answer: 'Tomato Tomato',
-      citations: [],
-      error: {
-        message: 'Execute order',
-        error: 66,
-      },
-    };
+  describe('#resetAnswer', () => {
+    it('should reset the answer', () => {
+      const state = {
+        ...baseState,
+        isStreaming: true,
+        isLoading: true,
+        answer: 'Tomato Tomato',
+        citations: [],
+        error: {
+          message: 'Execute order',
+          error: 66,
+        },
+      };
 
-    const finalState = generatedAnswerReducer(state, resetAnswer());
+      const finalState = generatedAnswerReducer(state, resetAnswer());
 
-    expect(finalState).toEqual(getGeneratedAnswerInitialState());
+      expect(finalState).toEqual(getGeneratedAnswerInitialState());
+    });
+
+    it('should not reset the response format', () => {
+      const responseFormat: GeneratedResponseFormat = {
+        answerStyle: 'step',
+      };
+      const state = {
+        ...baseState,
+        responseFormat: responseFormat,
+      };
+
+      const finalState = generatedAnswerReducer(state, resetAnswer());
+
+      expect(finalState.responseFormat).toEqual(responseFormat);
+    });
   });
 
   it('#likeGeneratedAnswer should set the answer as liked in the state', () => {
@@ -220,6 +235,30 @@ describe('generated answer slice', () => {
       ...getGeneratedAnswerInitialState(),
       liked: false,
       disliked: true,
+    });
+  });
+
+  it('#openGeneratedAnswerFeedbackModal should set the feedbackModalOpen attribute in the state to true', () => {
+    const finalState = generatedAnswerReducer(
+      baseState,
+      openGeneratedAnswerFeedbackModal()
+    );
+
+    expect(finalState).toEqual({
+      ...getGeneratedAnswerInitialState(),
+      feedbackModalOpen: true,
+    });
+  });
+
+  it('#closeGeneratedAnswerFeedbackModal should set the feedbackModalOpen attribute in the state to false', () => {
+    const finalState = generatedAnswerReducer(
+      {...baseState, feedbackModalOpen: true},
+      closeGeneratedAnswerFeedbackModal()
+    );
+
+    expect(finalState).toEqual({
+      ...getGeneratedAnswerInitialState(),
+      feedbackModalOpen: false,
     });
   });
 
@@ -260,6 +299,45 @@ describe('generated answer slice', () => {
       );
 
       expect(finalState.isStreaming).toEqual(false);
+    });
+  });
+
+  describe('#updateResponseFormat', () => {
+    it('should set the given response format', () => {
+      const newResponseFormat: GeneratedResponseFormat = {
+        answerStyle: 'step',
+      };
+      const finalState = generatedAnswerReducer(
+        {
+          ...getGeneratedAnswerInitialState(),
+          responseFormat: {
+            answerStyle: 'default',
+          },
+        },
+        updateResponseFormat(newResponseFormat)
+      );
+
+      expect(finalState.responseFormat).toBe(newResponseFormat);
+    });
+  });
+
+  describe('#setIsVisible', () => {
+    it('should set isVisible to true when given true', () => {
+      const finalState = generatedAnswerReducer(
+        {...baseState, isVisible: false},
+        setIsVisible(true)
+      );
+
+      expect(finalState.isVisible).toEqual(true);
+    });
+
+    it('should set isVisible to false when given false', () => {
+      const finalState = generatedAnswerReducer(
+        {...baseState, isVisible: true},
+        setIsVisible(false)
+      );
+
+      expect(finalState.isVisible).toEqual(false);
     });
   });
 });

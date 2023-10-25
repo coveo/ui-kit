@@ -1,8 +1,5 @@
 import {selectResults} from '../../../page-objects/actions/action-select-results';
-import {
-  clearLocalStorage,
-  setRecentResultsListLocalStorage,
-} from '../../../page-objects/actions/action-set-local-storage';
+import {setRecentResultsListLocalStorage} from '../../../page-objects/actions/action-set-local-storage';
 import {configure} from '../../../page-objects/configurator';
 import {
   interceptSearch,
@@ -45,10 +42,6 @@ describe('quantic-recent-results-list', () => {
   });
 
   describe('with default options', () => {
-    beforeEach(() => {
-      clearLocalStorage();
-    });
-
     it('should work as expected', () => {
       visitRecentResultsList({
         maxLength: 3,
@@ -95,11 +88,11 @@ describe('quantic-recent-results-list', () => {
     });
 
     it('should retrieve recent result list from localStorage', () => {
-      setRecentResultsListLocalStorage();
-
       visitRecentResultsList({
         maxLength: 2,
       });
+
+      setRecentResultsListLocalStorage();
 
       Expect.displayResults(true);
       Expect.numberOfResults(2);
@@ -125,7 +118,7 @@ describe('quantic-recent-results-list', () => {
         visitRecentResultsList({
           isCollapsed: true,
         });
-
+        Expect.labelContains(defaultLabel);
         selectResults();
         Expect.displayResults(false);
       });
@@ -136,6 +129,7 @@ describe('quantic-recent-results-list', () => {
           target: '_blank',
         });
 
+        Expect.labelContains(defaultLabel);
         selectResults();
         Expect.targetContainsAtResult('1', customTarget);
       });

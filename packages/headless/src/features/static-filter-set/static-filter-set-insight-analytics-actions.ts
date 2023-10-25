@@ -1,5 +1,4 @@
 import {
-  AnalyticsType,
   InsightAction,
   makeInsightAnalyticsAction,
 } from '../analytics/analytics-utils';
@@ -11,7 +10,6 @@ export const logInsightStaticFilterDeselect = (
 ): InsightAction =>
   makeInsightAnalyticsAction(
     'analytics/staticFilter/deselect',
-    AnalyticsType.Search,
     (client, state) =>
       client.logStaticFilterDeselect({
         ...metadata,

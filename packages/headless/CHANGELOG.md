@@ -1,3 +1,27 @@
+# 2.36.0 (2023-10-18)
+
+### Bug Fixes
+
+- **headless:** prioritize root result when filtering out duplicates in folded collection ([#3265](https://github.com/coveo/ui-kit/issues/3265)) ([0ae8c4b](https://github.com/coveo/ui-kit/commits/0ae8c4b9f6852ae878d47ec63355086f765abd7f))
+
+### Features
+
+- **headless:** added RGA answer rephrasing ([#3279](https://github.com/coveo/ui-kit/issues/3279)) ([bb46537](https://github.com/coveo/ui-kit/commits/bb465377b913085ffcac06c32456c31c8536b6af))
+- **headless:** create the toggle on/off controller action for GenQA component ([#3276](https://github.com/coveo/ui-kit/issues/3276)) ([8ba5550](https://github.com/coveo/ui-kit/commits/8ba55501d04199b01e4deae903a6183ab289b073))
+- **headless:** feedback modal feature for RGA added ([#3255](https://github.com/coveo/ui-kit/issues/3255)) ([824ab09](https://github.com/coveo/ui-kit/commits/824ab097178b1439f90686d65efdcaee578fd57b))
+
+# 2.35.0 (2023-10-11)
+
+### Bug Fixes
+
+- import immer only as type ([#3246](https://github.com/coveo/ui-kit/issues/3246)) ([b868fc2](https://github.com/coveo/ui-kit/commits/b868fc210c66918f7acd5817e118df234234724f))
+
+### Features
+
+- **commerce:** expose sort on commerce module ([#3257](https://github.com/coveo/ui-kit/issues/3257)) ([0bd390f](https://github.com/coveo/ui-kit/commits/0bd390f888c719420a54f5d7bccbd672a2e4cded))
+- **commerce:** support sorting v2 product listings ([#3240](https://github.com/coveo/ui-kit/issues/3240)) ([79bfed5](https://github.com/coveo/ui-kit/commits/79bfed553206e6c235bf921f143f8956fdec7c0a))
+- **headless,headless-react:** added .fromBuildResult SSR utility ([#3242](https://github.com/coveo/ui-kit/issues/3242)) ([0026ae7](https://github.com/coveo/ui-kit/commits/0026ae7d47770a868be43f65b445cb2eac256aae))
+
 # 2.34.0 (2023-10-04)
 
 ### Bug Fixes

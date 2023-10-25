@@ -1,9 +1,9 @@
 {
-    "compilerOptions": {
-      "module": "CommonJS",
-      "esModuleInterop": true,
-      "resolveJsonModule": true,
-      "types": ["node"],
-    },
-    "include": ["./**/*.ts"]
-  }
+  "compilerOptions": {
+    "module": "CommonJS",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "types": ["node"]
+  },
+  "include": ["./**/*.ts"]
+}

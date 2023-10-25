@@ -1274,4 +1274,53 @@
     <protected>false</protected>
     <shortDescription>Search instead for</shortDescription>
   </labels>
+  <labels>
+    <fullName>quantic_ShowGeneratedAnswer</fullName>
+    <value>Show generated answer</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Show generated answer</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_Irrelevant</fullName>
+    <value>Irrelevant</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Irrelevant</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_Inaccurate</fullName>
+    <value>Inaccurate</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Inaccurate</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_OutOfDate</fullName>
+    <value>Out-of-date</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Out-of-date</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_Harmful</fullName>
+    <value>Harmful</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Harmful</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_Feedback</fullName>
+    <value>Feedback</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Feedback</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_WhyGeneratedAnswerWasNotHelpful</fullName>
+    <value>Tell us why the generated answer was not helpful.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Tell us why the generated answer was not helpful.</shortDescription>
+  </labels>
 </CustomLabels>

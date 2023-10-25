@@ -1,5 +1,3 @@
-import {registerStandaloneSearchBox} from '@coveo/headless/dist/definitions/features/standalone-search-box-set/standalone-search-box-set-actions';
-
 export interface ResultSectionWithHighlights {
   name: string;
   highlightColor: string;
@@ -44,36 +42,26 @@ export const resultComponentArgTypes = {
   resultSection: {
     description:
       'In a list or grid layout, result templates may be divided into multiple building blocks called “result sections”. See https://docs.coveo.com/en/atomic/latest/usage/layouts/ for more information.',
-    control: {
-      type: 'radio',
-      table: {
-        defaultValue: {summary: 'none'},
-      },
-      options: resultSections.map((s) => s.name).concat(['none']),
-    },
+    control: 'radio',
+    defaultValue: 'none',
+    options: resultSections.map((s) => s.name).concat(['none']),
   },
   resultListLayout: {
     description:
       'A layout defines how you organize the results of a query. Layouts affect how many results to display per row and how visually distinct they are from each other.  See https://docs.coveo.com/en/atomic/latest/usage/layouts/ for more information',
-    control: {
-      type: 'radio',
-      options: ['grid', 'list'],
-    },
+    control: 'radio',
+    options: ['list', 'grid'],
   },
   resultListDensity: {
     description:
       'The density attribute defines the spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts of a result. See https://docs.coveo.com/en/atomic/latest/usage/displaying-results/list-or-grid/#optional-choosing-a-density for more information',
-    control: {
-      type: 'radio',
-      options: ['comfortable', 'normal', 'compact'],
-    },
+    control: 'radio',
+    options: ['comfortable', 'normal', 'compact'],
   },
   resultListImageSize: {
     description:
       'The image attribute defines the expected size of the image (visual-section). See https://docs.coveo.com/en/atomic/latest/usage/displaying-results/list-or-grid/#optional-choosing-an-image-size for more information',
-    control: {
-      type: 'radio',
-      options: ['none', 'icon', 'small', 'large'],
-    },
+    control: 'radio',
+    options: ['none', 'small', 'normal', 'large'],
   },
 };

@@ -1,14 +1,18 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client';
 import {
+  closeGeneratedAnswerFeedbackModal,
   dislikeGeneratedAnswer,
   likeGeneratedAnswer,
+  openGeneratedAnswerFeedbackModal,
   resetAnswer,
+  setIsVisible,
   setIsLoading,
   setIsStreaming,
   updateCitations,
   updateError,
   updateMessage,
+  updateResponseFormat,
 } from './generated-answer-actions';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
 
@@ -16,6 +20,9 @@ export const generatedAnswerReducer = createReducer(
   getGeneratedAnswerInitialState(),
   (builder) =>
     builder
+      .addCase(setIsVisible, (state, {payload}) => {
+        state.isVisible = payload;
+      })
       .addCase(updateMessage, (state, {payload}) => {
         state.isLoading = false;
         state.isStreaming = true;
@@ -49,13 +56,26 @@ export const generatedAnswerReducer = createReducer(
         state.liked = false;
         state.disliked = true;
       })
-      .addCase(resetAnswer, () => {
-        return getGeneratedAnswerInitialState();
+      .addCase(openGeneratedAnswerFeedbackModal, (state) => {
+        state.feedbackModalOpen = true;
+      })
+      .addCase(closeGeneratedAnswerFeedbackModal, (state) => {
+        state.feedbackModalOpen = false;
+      })
+      .addCase(resetAnswer, (state) => {
+        return {
+          ...getGeneratedAnswerInitialState(),
+          responseFormat: state.responseFormat,
+          isVisible: state.isVisible,
+        };
       })
       .addCase(setIsLoading, (state, {payload}) => {
         state.isLoading = payload;
       })
       .addCase(setIsStreaming, (state, {payload}) => {
         state.isStreaming = payload;
+      })
+      .addCase(updateResponseFormat, (state, {payload}) => {
+        state.responseFormat = payload;
       })
 );

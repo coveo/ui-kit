@@ -6,6 +6,6 @@
     "types": ["node", "cypress", "chalk"]
   },
   "typeAcquisition": {
-    "include": [ "chalk" ]
+    "include": ["chalk"]
   }
 }

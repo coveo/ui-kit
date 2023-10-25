@@ -2,7 +2,11 @@ import {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
 import {CommerceAPIClient} from '../../api/commerce/commerce-api-client';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
+import {cartReducer} from '../../features/commerce/context/cart/cart-slice';
+import {contextReducer} from '../../features/commerce/context/context-slice';
+import {paginationReducer} from '../../features/commerce/pagination/pagination-slice';
 import {productListingV2Reducer} from '../../features/commerce/product-listing/product-listing-slice';
+import {sortReducer} from '../../features/commerce/sort/sort-slice';
 import {CommerceAppState} from '../../state/commerce-app-state';
 import {CommerceThunkExtraArguments} from '../commerce-thunk-extra-arguments';
 import {
@@ -17,13 +21,13 @@ import {
   CommerceEngineConfiguration,
   commerceEngineConfigurationSchema,
 } from './commerce-engine-configuration';
-import {contextReducer} from '../../features/commerce/context/context-slice';
-import {cartReducer} from '../../features/commerce/context/cart/cart-slice';
 
 export type {CommerceEngineConfiguration};
 
 const commerceEngineReducers = {
   productListing: productListingV2Reducer,
+  commercePagination: paginationReducer,
+  commerceSort: sortReducer,
   commerceContext: contextReducer,
   cart: cartReducer,
 };

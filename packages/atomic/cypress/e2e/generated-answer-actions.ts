@@ -1,4 +1,4 @@
-import {RouteAlias} from '../fixtures/fixture-common';
+import {RouteAlias, TagProps} from '../fixtures/fixture-common';
 import {TestFixture, generateComponentHTML} from '../fixtures/test-fixture';
 
 export const getStreamInterceptAlias = (streamId: string) =>
@@ -37,8 +37,9 @@ export function mockStreamError(streamId: string, errorCode: number) {
 }
 
 export const addGeneratedAnswer =
-  (streamId?: string) => (fixture: TestFixture) => {
-    const element = generateComponentHTML('atomic-generated-answer');
+  (streamId?: string, props: TagProps = {}) =>
+  (fixture: TestFixture) => {
+    const element = generateComponentHTML('atomic-generated-answer', props);
     fixture.withElement(element).withCustomResponse((response) => {
       if (streamId) {
         response.extendedResults = {

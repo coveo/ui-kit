@@ -14,3 +14,15 @@ export function assertDisplayPlaceholder() {
 export function assertDisplayNothing() {
   cy.get(automaticFacetGeneratorComponent).children().should('not.exist');
 }
+
+export function assertDesiredCountIsDefaultValue() {
+  cy.get(automaticFacetGeneratorComponent)
+    .invoke('attr', 'desired-count')
+    .should('eq', '5');
+}
+
+export function assertNumberOfValuesIsDefaultValue() {
+  cy.get(automaticFacetGeneratorComponent)
+    .invoke('attr', 'number-of-values')
+    .should('eq', '8');
+}

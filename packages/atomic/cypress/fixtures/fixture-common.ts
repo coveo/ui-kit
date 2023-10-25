@@ -44,11 +44,11 @@ export const UrlParts = {
   UASearch: 'https://analytics.cloud.coveo.com/rest/ua/v15/analytics/search',
 };
 
-export function stubConsole() {
+export function spyConsole() {
   cy.window().then((win) => {
-    cy.stub(win.console, 'error').as(ConsoleAliases.error.substring(1));
-    cy.stub(win.console, 'warn').as(ConsoleAliases.warn.substring(1));
-    cy.stub(win.console, 'log').as(ConsoleAliases.log.substring(1));
+    cy.spy(win.console, 'error').as(ConsoleAliases.error.substring(1));
+    cy.spy(win.console, 'warn').as(ConsoleAliases.warn.substring(1));
+    cy.spy(win.console, 'log').as(ConsoleAliases.log.substring(1));
   });
 }
 

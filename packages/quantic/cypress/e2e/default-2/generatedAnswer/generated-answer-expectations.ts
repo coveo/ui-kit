@@ -37,6 +37,20 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         .log(`${should(display)} display the dislike button`);
     },
 
+    displayToggleGeneratedAnswerButton: (display: boolean) => {
+      selector
+        .toggleGeneratedAnswerButton()
+        .should(display ? 'exist' : 'not.exist')
+        .log(`${should(display)} display the generated answer toggle button`);
+    },
+
+    displayGeneratedAnswerContent: (display: boolean) => {
+      selector
+        .generatedAnswerContent()
+        .should(display ? 'exist' : 'not.exist')
+        .log(`${should(display)} display the generated answer content`);
+    },
+
     displayCitations: (display: boolean) => {
       selector
         .citations()
@@ -64,19 +78,28 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         .log(`the dislike button ${should(checked)} be in a disliked state`);
     },
 
+    toggleGeneratedAnswerButtonIsChecked: (checked: boolean) => {
+      selector
+        .toggleGeneratedAnswerButton()
+        .should(checked ? 'have.attr' : 'not.have.attr', 'checked', 'checked')
+        .log(
+          `the generated answer toggle button ${should(checked)} be checked`
+        );
+    },
+
     generatedAnswerContains: (answer: string) => {
       selector
-        .generatedAnswerContent()
+        .generatedAnswer()
         .contains(answer)
         .log(`the generated answer should contain "${answer}"`);
     },
 
     generatedAnswerIsStreaming: (isStreaming: boolean) => {
       selector
-        .generatedAnswerContent()
+        .generatedAnswer()
         .should(
           isStreaming ? 'have.class' : 'not.have.class',
-          'generated-answer__content--streaming'
+          'generated-answer__answer--streaming'
         )
         .log(`the generated answer ${should(isStreaming)} be streaming`);
     },
@@ -112,6 +135,26 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         .log(
           `the citation ar the index ${index} should contain link "${value}"`
         );
+    },
+
+    sessionStorageContains: (key: string, expectedData: object) => {
+      cy.window()
+        .its('sessionStorage')
+        .invoke('getItem', `LSKey[c]${key}`)
+        .then((data) => {
+          const storedData = JSON.parse(data ?? '{}');
+          expect(storedData).eql(expectedData);
+        })
+        .log(
+          `the key ${key} should have the value ${expectedData} in the session storage`
+        );
+    },
+
+    displayFeedbackModal: (display: boolean) => {
+      selector
+        .feedbackModal()
+        .should(display ? 'exist' : 'not.exist')
+        .log(`${should(display)} display the feedback modal`);
     },
 
     logStreamIdInAnalytics(streamId: string) {
@@ -194,7 +237,7 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
             'generativeQuestionAnsweringId',
             streamId
           );
-          expect(customData).to.have.property('id', citation.id);
+          expect(customData).to.have.property('citationId', citation.id);
           expect(customData).to.have.property(
             'permanentId',
             citation.permanentid
@@ -208,6 +251,67 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         InterceptAliases.UA.GeneratedAnswer.RetryGeneratedAnswer,
         (analyticsBody: {customData: object; eventType: string}) => {
           const customData = analyticsBody?.customData;
+          expect(customData).to.have.property(
+            'generativeQuestionAnsweringId',
+            streamId
+          );
+        }
+      );
+    },
+
+    logGeneratedAnswerFeedbackSubmit(
+      streamId: string,
+      payload: {
+        reason: string;
+        details?: string;
+      }
+    ) {
+      logCustomGeneratedAnswerEvent(
+        InterceptAliases.UA.GeneratedAnswer.GeneratedAnswerFeedbackSubmit,
+        (analyticsBody: {customData: object; eventType: string}) => {
+          const customData = analyticsBody?.customData;
+          expect(analyticsBody).to.have.property(
+            'eventType',
+            'generatedAnswer'
+          );
+          expect(customData).to.have.property(
+            'generativeQuestionAnsweringId',
+            streamId
+          );
+          expect(customData).to.have.property('reason', payload.reason);
+          if (payload.details) {
+            expect(customData).to.have.property('details', payload.details);
+          }
+        }
+      );
+    },
+
+    logShowGeneratedAnswer(streamId: string) {
+      logCustomGeneratedAnswerEvent(
+        InterceptAliases.UA.GeneratedAnswer.ShowGeneratedAnswer,
+        (analyticsBody: {customData: object; eventType: string}) => {
+          const customData = analyticsBody?.customData;
+          expect(analyticsBody).to.have.property(
+            'eventType',
+            'generatedAnswer'
+          );
+          expect(customData).to.have.property(
+            'generativeQuestionAnsweringId',
+            streamId
+          );
+        }
+      );
+    },
+
+    logHideGeneratedAnswer(streamId: string) {
+      logCustomGeneratedAnswerEvent(
+        InterceptAliases.UA.GeneratedAnswer.HideGeneratedAnswer,
+        (analyticsBody: {customData: object; eventType: string}) => {
+          const customData = analyticsBody?.customData;
+          expect(analyticsBody).to.have.property(
+            'eventType',
+            'generatedAnswer'
+          );
           expect(customData).to.have.property(
             'generativeQuestionAnsweringId',
             streamId

@@ -1,5 +1,5 @@
 import {InsightEngine} from '../../insight.index';
-import {AnalyticsType, InsightAction} from '../analytics/analytics-utils';
+import {InsightAction} from '../analytics/analytics-utils';
 import {
   logContextChanged,
   logExpandToFullUI,
@@ -32,7 +32,7 @@ export interface InsightSearchAnalyticsActionCreators {
     caseNumber: string,
     fullSearchComponentName: string,
     triggeredBy: string
-  ): InsightAction<AnalyticsType.Custom>;
+  ): InsightAction;
 }
 
 /**

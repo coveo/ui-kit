@@ -41,7 +41,9 @@ export const SmartSnippetSelectors: SmartSnippetSelector = {
       '[data-cy="expandable-smart-snippet-answer"]'
     ),
   smartSnippetInlineLink: () =>
-    SmartSnippetSelectors.get().find('[data-cy="smart-snippet__inline-link"]'),
+    SmartSnippetSelectors.get().find(
+      '[data-cy="smart-snippet__inline-link"] > a'
+    ),
   smartSnippetLikeButton: () =>
     SmartSnippetSelectors.get().find('[data-cy="feedback__like-button"]'),
   smartSnippetDislikeButton: () =>

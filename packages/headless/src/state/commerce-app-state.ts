@@ -1,25 +1,17 @@
 import {
+  CommercePaginationSection,
   CartSection,
-  CategoryFacetSection,
   CommerceContextSection,
   ConfigurationSection,
-  DateFacetSection,
-  FacetOrderSection,
-  FacetSection,
-  NumericFacetSection,
-  PaginationSection,
   ProductListingV2Section,
   VersionSection,
+  CommerceSortSection,
 } from './state-sections';
 
 export type CommerceAppState = ConfigurationSection &
   ProductListingV2Section &
+  CommercePaginationSection &
+  CommerceSortSection &
   CommerceContextSection &
   CartSection &
-  FacetSection &
-  NumericFacetSection &
-  CategoryFacetSection &
-  DateFacetSection &
-  FacetOrderSection &
-  PaginationSection &
   VersionSection;

@@ -1,29 +1,29 @@
+import {Schema} from '@coveo/bueno';
+import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {CoreEngine} from '../../../../app/engine';
+import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
+import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice';
 import {
+  buildFieldsSortCriterion,
+  buildRelevanceSortCriterion,
+  SortBy,
   SortByFields,
-  SortCriterion,
-  sortCriterionDefinition,
   SortByFieldsFields,
   SortByRelevance,
-  SortBy,
-  buildRelevanceSortCriterion,
+  SortCriterion,
   SortDirection,
-  buildFieldsSortCriterion,
-} from '../../../../features/sort/sort';
+  sortCriterionDefinition,
+} from '../../../../features/commerce/sort/sort';
+import {applySort} from '../../../../features/commerce/sort/sort-actions';
+import {sortReducer as commerceSort} from '../../../../features/commerce/sort/sort-slice';
+import {updatePage} from '../../../../features/pagination/pagination-actions';
+import {ProductListingV2Section} from '../../../../state/state-sections';
+import {loadReducerError} from '../../../../utils/errors';
 import {validateInitialState} from '../../../../utils/validate-payload';
 import {
   buildController,
   Controller,
 } from '../../../controller/headless-controller';
-import {loadReducerError} from '../../../../utils/errors';
-import {ProductListingV2Section} from '../../../../state/state-sections';
-import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {Schema} from '@coveo/bueno';
-import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
-import {sortReducer as sort} from '../../../../features/commerce/product-listing/sort/product-listing-sort-slice';
-import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice';
-import {updatePage} from '../../../../features/pagination/pagination-actions';
-import {applySort} from '../../../../features/commerce/product-listing/sort/product-listing-sort-actions';
 
 export type {SortByRelevance, SortByFields, SortByFieldsFields, SortCriterion};
 export {
@@ -118,7 +118,7 @@ export function buildSort(engine: CommerceEngine, props: SortProps = {}): Sort {
 
   const {dispatch} = engine;
   const controller = buildController(engine);
-  const getState = () => engine.state.productListing;
+  const getState = () => engine.state;
 
   validateSortInitialState(engine, props.initialState);
 
@@ -132,7 +132,7 @@ export function buildSort(engine: CommerceEngine, props: SortProps = {}): Sort {
     ...controller,
 
     get state() {
-      return getState().sort;
+      return getState().commerceSort;
     },
 
     sortBy(criterion: SortCriterion) {
@@ -142,7 +142,9 @@ export function buildSort(engine: CommerceEngine, props: SortProps = {}): Sort {
     },
 
     isSortedBy(criterion: SortCriterion) {
-      return this.state.appliedSort === criterion;
+      return (
+        JSON.stringify(this.state.appliedSort) === JSON.stringify(criterion)
+      );
     },
 
     isAvailable(criterion: SortCriterion) {
@@ -154,9 +156,7 @@ export function buildSort(engine: CommerceEngine, props: SortProps = {}): Sort {
   };
 }
 
-function loadSortReducers(
-  engine: CoreEngine
-): engine is CoreEngine<ProductListingV2Section> {
-  engine.addReducers({productListing, sort});
+function loadSortReducers(engine: CommerceEngine): engine is CommerceEngine {
+  engine.addReducers({productListing, commerceSort});
   return true;
 }
