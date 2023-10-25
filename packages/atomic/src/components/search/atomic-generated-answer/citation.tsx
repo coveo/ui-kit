@@ -40,7 +40,7 @@ export const Citation: FunctionalComponent<CitationProps> = ({
         part="citation"
         target="_blank"
         rel="noopener"
-        className="flex items-center p-1 bg-background btn-text-neutral border rounded-full border-neutral text-on-background"
+        className="flex items-center p-1 bg-background btn-outline-primary border rounded-full border-neutral text-on-background"
         onSelect={() => interactiveCitation.select()}
         onBeginDelayedSelect={() => interactiveCitation.beginDelayedSelect()}
         onCancelPendingSelect={() => interactiveCitation.cancelPendingSelect()}

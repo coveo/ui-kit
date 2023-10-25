@@ -1,4 +1,4 @@
-import {GeneratedAnswerStyle} from '@coveo/headless/dist/definitions/features/generated-answer/generated-response-format';
+import {GeneratedAnswerStyle} from '@coveo/headless';
 import {TagProps} from '../fixtures/fixture-common';
 import {TestFixture} from '../fixtures/test-fixture';
 import {AnalyticsTracker} from '../utils/analyticsUtils';

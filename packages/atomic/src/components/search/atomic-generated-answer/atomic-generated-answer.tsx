@@ -6,8 +6,8 @@ import {
   GeneratedAnswer,
   GeneratedAnswerState,
   GeneratedAnswerCitation,
+  GeneratedAnswerStyle,
 } from '@coveo/headless';
-import {GeneratedAnswerStyle} from '@coveo/headless/dist/definitions/features/generated-answer/generated-response-format';
 import {Component, h, State, Element, Prop} from '@stencil/core';
 import {buildCustomEvent} from '../../../utils/event-utils';
 import {
