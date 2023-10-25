@@ -4,6 +4,14 @@
   white-space: pre-wrap;
 }
 
+.generated-answer__footer--multiline {
+  flex-direction: column;
+}
+
+.generated-answer__footer--standard {
+  gap: 1rem;
+}
+
 .generated-answer__content--streaming::after {
   content: '';
   width: 0.5rem;

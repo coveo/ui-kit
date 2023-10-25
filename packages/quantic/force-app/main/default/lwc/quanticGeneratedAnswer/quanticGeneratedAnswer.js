@@ -41,7 +41,7 @@ const FEEDBACK_NEUTRAL_STATE = 'neutral';
  * The `QuanticGeneratedAnswer` component automatically generates an answer using Coveo machine learning models to answer the query executed by the user.
  * @category Internal
  * @example
- * <c-quantic-generated-answer engine-id={engineId}></c-quantic-generated-answer>
+ * <c-quantic-generated-answer engine-id={engineId} answer-style="step"></c-quantic-generated-answer>
  */
 export default class QuanticGeneratedAnswer extends LightningElement {
   /**
@@ -50,6 +50,25 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * @type {string}
    */
   @api engineId;
+  /**
+   * The answer style to apply when the component first loads.
+   * Options:
+   *   - `default`: Generates the answer without additional formatting instructions.
+   *   - `bullet`: Requests the answer to be generated in bullet-points.
+   *   - `step`: Requests the answer to be generated in step-by-step instructions.
+   *   - `concise`: Requests the answer to be generated as concisely as possible.
+   * @api
+   * @type {'default' | 'step' | 'bullet' | 'concise'}
+   * @default {'default'}
+   */
+  @api answerStyle = 'default';
+  /**
+   * Indicates whether footer sections should be displayed on multiple lines.
+   * @api
+   * @type {boolean}
+   * @default {false}
+   */
+  @api multilineFooter;
 
   labels = {
     generatedAnswerForYou,
@@ -82,6 +101,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
+    this.template.addEventListener(
+      'quantic__generatedanswerrephrase',
+      this.handleGeneratedAnswerRephrase.bind(this)
+    );
   }
 
   renderedCallback() {
@@ -93,7 +116,11 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    */
   initialize = (engine) => {
     this.headless = getHeadlessBundle(this.engineId);
-    this.generatedAnswer = this.headless.buildGeneratedAnswer(engine);
+    this.generatedAnswer = this.headless.buildGeneratedAnswer(engine, {
+      initialState: {
+        responseFormat: {answerStyle: this.answerStyle},
+      },
+    });
     this.searchStatus = this.headless.buildSearchStatus(engine);
 
     this.unsubscribeGeneratedAnswer = this.generatedAnswer.subscribe(() =>
@@ -106,6 +133,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   disconnectedCallback() {
     this.unsubscribeGeneratedAnswer?.();
+    this.template.removeEventListener(
+      'quantic__generatedanswerrephrase',
+      this.handleGeneratedAnswerRephrase.bind(this)
+    );
   }
 
   updateState() {
@@ -182,6 +213,11 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     this.generatedAnswer.retry();
   }
 
+  handleGeneratedAnswerRephrase(event) {
+    event.stopPropagation();
+    this.generatedAnswer.rephrase({answerStyle: event?.detail});
+  }
+
   get answer() {
     return this?.state?.answer;
   }
@@ -249,6 +285,26 @@ export default class QuanticGeneratedAnswer extends LightningElement {
         detailsRequired: true,
       },
     ];
+  }
+
+  get responseFormat() {
+    return this.state?.responseFormat.answerStyle;
+  }
+
+  get shouldDisplayActions() {
+    return !this.isStreaming;
+  }
+
+  get generatedAnswerFooterCssClass() {
+    return `slds-grid ${
+      this.multilineFooter
+        ? 'generated-answer__footer--multiline'
+        : 'generated-answer__footer--standard'
+    }`;
+  }
+
+  get rephraseLabelsShouldBeHidden() {
+    return this.multilineFooter ? false : true;
   }
 
   render() {

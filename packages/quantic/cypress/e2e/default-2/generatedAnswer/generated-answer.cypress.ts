@@ -12,6 +12,11 @@ import {scope} from '../../../reporters/detailed-collector';
 import {GeneratedAnswerActions as Actions} from './generated-answer-actions';
 import {GeneratedAnswerExpectations as Expect} from './generated-answer-expectations';
 
+interface GeneratedAnswerOptions {
+  answerStyle: string;
+  multilineFooter: boolean;
+}
+
 const otherOption = 'other';
 const irrelevantOption = 'irrelevant';
 const feedbackOptions = [
@@ -22,13 +27,33 @@ const feedbackOptions = [
   otherOption,
 ];
 
+const defaultRephraseOption = 'default';
+const stepRephraseOption = 'step';
+const bulletRephraseOption = 'bullet';
+const conciseRephraseOption = 'concise';
+
+const rephraseOptions = [
+  stepRephraseOption,
+  bulletRephraseOption,
+  conciseRephraseOption,
+];
+
+const testText = 'Some text';
+const genQaMessageTypePayload = {
+  payloadType: 'genqa.messageType',
+  payload: JSON.stringify({
+    textDelta: testText,
+  }),
+  finishReason: 'COMPLETED',
+};
+
 describe('quantic-generated-answer', () => {
   const pageUrl = 's/quantic-generated-answer';
 
-  function visitGeneratedAnswer() {
+  function visitGeneratedAnswer(options: Partial<GeneratedAnswerOptions> = {}) {
     interceptSearch();
     cy.visit(pageUrl);
-    configure();
+    configure(options);
   }
 
   describe('when no stream ID is returned', () => {
@@ -46,18 +71,9 @@ describe('quantic-generated-answer', () => {
     describe('when a message event is received', () => {
       const streamId = crypto.randomUUID();
 
-      const testText = 'Some text';
-      const testMessagePayload = {
-        payloadType: 'genqa.messageType',
-        payload: JSON.stringify({
-          textDelta: testText,
-        }),
-        finishReason: 'COMPLETED',
-      };
-
       beforeEach(() => {
         mockSearchWithGeneratedAnswer(streamId);
-        mockStreamResponse(streamId, testMessagePayload);
+        mockStreamResponse(streamId, genQaMessageTypePayload);
         visitGeneratedAnswer();
       });
 
@@ -69,6 +85,16 @@ describe('quantic-generated-answer', () => {
         Expect.displayGeneratedAnswerCard(true);
         Expect.generatedAnswerContains(testText);
         Expect.generatedAnswerIsStreaming(false);
+      });
+
+      it('should perform a search query with the default rephrase button', () => {
+        cy.wait(InterceptAliases.Search);
+        Expect.searchQueryContainsCorrectAnswerStyle(defaultRephraseOption);
+      });
+
+      it('should display rephrase buttons', () => {
+        Expect.displayRephraseButtons(true);
+        Expect.displayRephraseLabel(true);
       });
 
       it('should display feedback buttons', () => {
@@ -123,18 +149,9 @@ describe('quantic-generated-answer', () => {
     describe('when providing detailed feedback', () => {
       const streamId = crypto.randomUUID();
 
-      const testText = 'Some text';
-      const testMessagePayload = {
-        payloadType: 'genqa.messageType',
-        payload: JSON.stringify({
-          textDelta: testText,
-        }),
-        finishReason: 'COMPLETED',
-      };
-
       beforeEach(() => {
         mockSearchWithGeneratedAnswer(streamId);
-        mockStreamResponse(streamId, testMessagePayload);
+        mockStreamResponse(streamId, genQaMessageTypePayload);
         visitGeneratedAnswer();
       });
 
@@ -166,10 +183,87 @@ describe('quantic-generated-answer', () => {
       });
     });
 
+    rephraseOptions.forEach((option) => {
+      const rephraseOption = option;
+
+      describe(`when clicking the ${rephraseOption} rephrase button`, () => {
+        const streamId = crypto.randomUUID();
+        const secondStreamId = crypto.randomUUID();
+        const thirdStreamId = crypto.randomUUID();
+
+        beforeEach(() => {
+          mockSearchWithGeneratedAnswer(streamId);
+          mockStreamResponse(streamId, genQaMessageTypePayload);
+          visitGeneratedAnswer();
+        });
+
+        it('should send a new search query with the right rephrase option as a parameter', () => {
+          scope('when loading the page', () => {
+            Expect.displayRephraseButton(rephraseOption);
+            Expect.rephraseButtonIsSelected(rephraseOption, false);
+          });
+
+          scope('when selecting the rephrase button', () => {
+            mockSearchWithGeneratedAnswer(secondStreamId);
+            mockStreamResponse(secondStreamId, genQaMessageTypePayload);
+
+            Actions.clickRephraseButton(rephraseOption);
+            Expect.displayRephraseButton(rephraseOption);
+            Expect.rephraseButtonIsSelected(rephraseOption, true);
+            rephraseOptions
+              .filter((item) => {
+                return item !== rephraseOption;
+              })
+              .forEach((unselectedOption) => {
+                Expect.displayRephraseButton(unselectedOption);
+                Expect.rephraseButtonIsSelected(unselectedOption, false);
+              });
+            Expect.searchQueryContainsCorrectAnswerStyle(rephraseOption);
+            Expect.logRephraseGeneratedAnswer(rephraseOption, secondStreamId);
+          });
+
+          scope('when unselecting the rephrase button', () => {
+            mockSearchWithGeneratedAnswer(thirdStreamId);
+            mockStreamResponse(thirdStreamId, genQaMessageTypePayload);
+
+            Actions.clickRephraseButton(rephraseOption);
+            rephraseOptions.forEach((unselectedOption) => {
+              Expect.displayRephraseButton(unselectedOption);
+              Expect.rephraseButtonIsSelected(unselectedOption, false);
+            });
+            Expect.searchQueryContainsCorrectAnswerStyle(defaultRephraseOption);
+            Expect.logRephraseGeneratedAnswer(
+              defaultRephraseOption,
+              thirdStreamId
+            );
+          });
+        });
+      });
+    });
+
+    describe('when a custom answer style is provided', () => {
+      const streamId = crypto.randomUUID();
+
+      beforeEach(() => {
+        mockSearchWithGeneratedAnswer(streamId);
+        mockStreamResponse(streamId, genQaMessageTypePayload);
+        visitGeneratedAnswer({answerStyle: bulletRephraseOption});
+      });
+
+      it('should send a search query with the right rephrase option as a parameter', () => {
+        scope('when loading the page', () => {
+          Expect.displayRephraseButtons(true);
+          Expect.rephraseButtonIsSelected(stepRephraseOption, false);
+          Expect.rephraseButtonIsSelected(conciseRephraseOption, false);
+          Expect.rephraseButtonIsSelected(bulletRephraseOption, true);
+          Expect.searchQueryContainsCorrectAnswerStyle(bulletRephraseOption);
+        });
+      });
+    });
+
     describe('when the generated answer is still streaming', () => {
       const streamId = crypto.randomUUID();
 
-      const testText = 'Some text';
       const testMessagePayload = {
         payloadType: 'genqa.messageType',
         payload: JSON.stringify({
@@ -187,6 +281,7 @@ describe('quantic-generated-answer', () => {
         Expect.displayGeneratedAnswerCard(true);
         Expect.generatedAnswerContains(testText);
         Expect.generatedAnswerIsStreaming(true);
+        Expect.displayRephraseButtons(false);
       });
     });
 
@@ -240,7 +335,6 @@ describe('quantic-generated-answer', () => {
     describe('when an end of stream event is received', () => {
       const streamId = crypto.randomUUID();
 
-      const testText = 'Some text';
       const testMessagePayload = {
         payloadType: 'genqa.endOfStreamType',
         payload: JSON.stringify({

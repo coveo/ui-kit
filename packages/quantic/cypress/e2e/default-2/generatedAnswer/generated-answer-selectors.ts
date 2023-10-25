@@ -18,6 +18,9 @@ export interface GeneratedAnswerSelector extends ComponentSelector {
   feedbackCancelButton: () => CypressSelector;
   feedbackDoneButton: () => CypressSelector;
   feedbackDetailsInput: () => CypressSelector;
+  rephraseButtons: () => CypressSelector;
+  rephraseLabel: () => CypressSelector;
+  rephraseButton: (label: string) => CypressSelector;
 }
 
 export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
@@ -72,4 +75,14 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
     cy
       .get('lightning-modal')
       .find('[data-cy="feedback-modal-body__details-input"] textarea'),
+  rephraseButtons: () =>
+    GeneratedAnswerSelectors.get().find(
+      '[data-cy="generated-answer__rephrase-buttons"]'
+    ),
+  rephraseLabel: () =>
+    GeneratedAnswerSelectors.get().find('[data-cy="rephrase-buttons__label"]'),
+  rephraseButton: (name: string) =>
+    GeneratedAnswerSelectors.get().find(
+      `[data-cy="rephrase-buttons__content"] c-quantic-stateful-button[data-cy="${name}"] button`
+    ),
 };

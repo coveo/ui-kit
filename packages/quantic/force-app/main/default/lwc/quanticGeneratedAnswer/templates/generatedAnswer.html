@@ -1,9 +1,6 @@
 <template>
   <template lwc:if={shouldDisplayGeneratedAnswer}>
-    <div
-      data-cy="generated-answer__card"
-      class="slds-box"
-    >
+    <div data-cy="generated-answer__card" class="slds-box">
       <div
         class="slds-var-m-bottom_medium slds-grid generated-answer__card-header"
       >
@@ -29,15 +26,26 @@
       <div data-cy="generated-answer__content" class={generatedContentClass}>
         {answer}
       </div>
-      <template lwc:if={hasCitations}>
-        <div class="slds-var-m-top_small">
-          <c-quantic-source-citations
-            data-cy="generated-answer__citations"
-            citations={citations}
-            citation-click-handler={handleCitationClick}
-          ></c-quantic-source-citations>
-        </div>
-      </template>
+      <div class={generatedAnswerFooterCssClass}>
+        <template lwc:if={hasCitations}>
+          <div class="slds-var-m-top_small">
+            <c-quantic-source-citations
+              data-cy="generated-answer__citations"
+              citations={citations}
+              citation-click-handler={handleCitationClick}
+            ></c-quantic-source-citations>
+          </div>
+        </template>
+        <template lwc:if={shouldDisplayActions}>
+          <div class="slds-var-m-top_small">
+            <c-quantic-generated-answer-rephrase-buttons
+              data-cy="generated-answer__rephrase-buttons"
+              value={responseFormat}
+              hide-labels={rephraseLabelsShouldBeHidden}
+            ></c-quantic-generated-answer-rephrase-buttons>
+          </div>
+        </template>
+      </div>
     </div>
   </template>
 </template>

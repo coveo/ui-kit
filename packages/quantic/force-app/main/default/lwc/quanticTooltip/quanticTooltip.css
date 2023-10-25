@@ -1,0 +1,19 @@
+.tooltip__content {
+  top: -3rem;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+.tooltip__content--visible {
+  visibility: visible;
+  opacity: 1;
+}
+
+.slds-nubbin_bottom-left:before,
+.slds-nubbin_bottom-left:after {
+  left: 50%;
+}
+
+.slds-popover_tooltip {
+  width: max-content;
+}

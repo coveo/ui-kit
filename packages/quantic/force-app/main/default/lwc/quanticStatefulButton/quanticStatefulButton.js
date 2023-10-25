@@ -1,0 +1,70 @@
+import {LightningElement, api} from 'lwc';
+
+/**
+ * The `QuanticStatefulButton` displays a stateful button with an icon and a tooltip.
+ * @category Internal
+ * @example
+ * <c-quantic-stateful-button value={value}></c-quantic-stateful-button>
+ */
+export default class QuanticStatefulButton extends LightningElement {
+  /**
+   * The label of the button.
+   * @api
+   * @type {string}
+   */
+  @api label;
+  /**
+   * The icon name of the icon displayed in the button.
+   * @api
+   * @type {string}
+   */
+  @api iconName;
+  /**
+   * The tooltip of the button.
+   * @api
+   * @type {string}
+   */
+  @api tooltip;
+  /**
+   * Indicates whether the button is selected.
+   * @api
+   * @type {boolean}
+   */
+  @api selected = false;
+
+  handleClick(event) {
+    event.stopPropagation();
+    if (this.selected) {
+      this.dispatchEvent(new CustomEvent('deselect'));
+    } else {
+      this.dispatchEvent(new CustomEvent('select'));
+    }
+  }
+
+  handleMouseEnter() {
+    this.tooltipComponent.showTooltip();
+  }
+
+  handleMouseLeave() {
+    this.tooltipComponent.hideTooltip();
+  }
+
+  get buttonCSSClass() {
+    return `slds-button slds-grid stateful-button slds-var-p-horizontal_x-small ${
+      this.selected
+        ? 'slds-button_outline-brand stateful-button--selected'
+        : 'slds-button_neutral stateful-button--unselected'
+    }`;
+  }
+
+  get iconCSSClass() {
+    return `${this.selected ? 'stateful-button__icon--selected' : ''}`;
+  }
+
+  /**
+   * @returns {Object}
+   */
+  get tooltipComponent() {
+    return this.template.querySelector('c-quantic-tooltip');
+  }
+}

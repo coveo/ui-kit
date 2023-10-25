@@ -64,6 +64,12 @@ function generatedAnswerActions(selector: GeneratedAnswerSelector) {
         .feedbackDetailsInput()
         .type(text)
         .logAction('When typing in the feedback details input'),
+
+    clickRephraseButton: (name: string) =>
+      selector
+        .rephraseButton(name)
+        .click()
+        .logAction(`When clicking on the ${name} rephrase button`),
   };
 }
 
