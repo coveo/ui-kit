@@ -407,14 +407,11 @@ export type {
 
 export {buildCategoryFieldSuggestions} from './field-suggestions/category-facet/headless-category-field-suggestions';
 
-export type {
-  AutomaticFacet,
-  AutomaticFacetProps,
-  AutomaticFacetState,
-} from './facets/automatic-facet/headless-automatic-facet';
-export {buildAutomaticFacet} from './facets/automatic-facet/headless-automatic-facet';
+// export {buildAutomaticFacet} from './facets/automatic-facet/headless-automatic-facet';
 
 export type {
+  AutomaticFacet,
+  AutomaticFacetState,
   AutomaticFacetGenerator,
   AutomaticFacetGeneratorProps,
   AutomaticFacetGeneratorState,

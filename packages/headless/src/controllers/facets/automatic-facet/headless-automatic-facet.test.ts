@@ -1,7 +1,4 @@
-import {
-  AutomaticFacet,
-  buildAutomaticFacet,
-} from '../../../controllers/facets/automatic-facet/headless-automatic-facet';
+import {buildAutomaticFacet} from '../../../controllers/facets/automatic-facet/headless-automatic-facet';
 import {
   deselectAllAutomaticFacetValues,
   toggleSelectAutomaticFacetValue,
@@ -15,6 +12,7 @@ import {
 } from '../../../test';
 import {buildMockAutomaticFacetSlice} from '../../../test/mock-automatic-facet-slice';
 import {buildMockFacetValue} from '../../../test/mock-facet-value';
+import {AutomaticFacet} from '../automatic-facet-generator/headless-automatic-facet-generator';
 
 describe('automatic facet', () => {
   const field = 'field';
