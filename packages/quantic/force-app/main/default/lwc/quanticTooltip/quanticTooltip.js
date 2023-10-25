@@ -2,6 +2,7 @@ import {LightningElement, api} from 'lwc';
 
 /**
  * The `QuanticTooltip` displays a tooltip containing a small amount of text that can be displayed when hovering over certain elements.
+ * This component should be used inside a container with a CSS position attribute set to the value `relative`
  * @category Internal
  * @example
  * <c-quantic-tooltip value={value}></c-quantic-tooltip>
