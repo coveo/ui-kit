@@ -23,6 +23,7 @@ export interface GeneratedAnswerSelector extends ComponentSelector {
   rephraseButtons: () => CypressSelector;
   rephraseLabel: () => CypressSelector;
   rephraseButton: (label: string) => CypressSelector;
+  generatedAnswerFooter: () => CypressSelector;
 }
 
 export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
@@ -93,4 +94,6 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
     GeneratedAnswerSelectors.get().find(
       `[data-cy="rephrase-buttons__content"] c-quantic-stateful-button[data-cy="${name}"] button`
     ),
+  generatedAnswerFooter: () =>
+    GeneratedAnswerSelectors.get().find('[data-cy="generated-answer__footer"]'),
 };

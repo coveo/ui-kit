@@ -88,6 +88,20 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         );
     },
 
+    generatedAnswerFooterIsOnMultiline: (multilineDisplay: boolean) => {
+      selector
+        .generatedAnswerFooter()
+        .should(
+          multilineDisplay ? 'have.class' : 'not.have.class',
+          'generated-answer__footer--multiline'
+        )
+        .log(
+          `the generated answer footer ${should(
+            multilineDisplay
+          )} be displayed on multiple lines`
+        );
+    },
+
     generatedAnswerContains: (answer: string) => {
       selector
         .generatedAnswer()

@@ -44,7 +44,7 @@
           <div data-cy="generated-answer__answer" class={generatedAnswerClass}>
             {answer}
           </div>
-          <div class={generatedAnswerFooterCssClass}>
+          <div data-cy="generated-answer__footer" class={generatedAnswerFooterCssClass}>
             <template lwc:if={hasCitations}>
               <div class="slds-var-m-top_small">
                 <c-quantic-source-citations

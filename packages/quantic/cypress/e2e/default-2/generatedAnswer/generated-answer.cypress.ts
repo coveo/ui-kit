@@ -85,6 +85,7 @@ describe('quantic-generated-answer', () => {
       it('should display the generated answer content', () => {
         Expect.displayGeneratedAnswerContent(true);
         Expect.sessionStorageContains(GENERATED_ANSWER_DATA_KEY, {});
+        Expect.generatedAnswerFooterIsOnMultiline(false);
       });
 
       it('should display the correct message', () => {
@@ -292,6 +293,23 @@ describe('quantic-generated-answer', () => {
           Expect.rephraseButtonIsSelected(conciseRephraseOption, false);
           Expect.rephraseButtonIsSelected(bulletRephraseOption, true);
           Expect.searchQueryContainsCorrectAnswerStyle(bulletRephraseOption);
+        });
+      });
+    });
+
+    describe('when the property multilineFooter is set to true', () => {
+      const streamId = crypto.randomUUID();
+
+      beforeEach(() => {
+        mockSearchWithGeneratedAnswer(streamId);
+        mockStreamResponse(streamId, genQaMessageTypePayload);
+        visitGeneratedAnswer({multilineFooter: true});
+      });
+
+      it('should properly display the generated answer footer on multiple lines', () => {
+        scope('when loading the page', () => {
+          Expect.displayGeneratedAnswerCard(true);
+          Expect.generatedAnswerFooterIsOnMultiline(true);
         });
       });
     });
