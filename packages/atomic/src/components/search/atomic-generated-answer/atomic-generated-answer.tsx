@@ -5,7 +5,6 @@ import {
   buildGeneratedAnswer,
   GeneratedAnswer,
   GeneratedAnswerState,
-  buildInteractiveCitation,
   GeneratedAnswerCitation,
 } from '@coveo/headless';
 import {GeneratedAnswerStyle} from '@coveo/headless/dist/definitions/features/generated-answer/generated-response-format';
@@ -22,9 +21,9 @@ import {
   StorageItems,
 } from '../../../utils/local-storage-utils';
 import {Heading} from '../../common/heading';
-import {LinkWithResultAnalytics} from '../../common/result-link/result-link';
 import {Switch} from '../../common/switch';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {Citation} from './citation';
 import {FeedbackButton} from './feedback-button';
 import {GeneratedContentContainer} from './generated-content-container';
 import {RephraseButtons} from './rephrase-buttons';
@@ -156,41 +155,14 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
 
   private renderCitations() {
     return this.generatedAnswerState.citations.map(
-      (citation: GeneratedAnswerCitation, index: number) => {
-        const interactiveCitation = buildInteractiveCitation(
-          this.bindings.engine,
-          {
-            options: {
-              citation,
-            },
-          }
-        );
-        return (
-          <li key={citation.id}>
-            <LinkWithResultAnalytics
-              href={citation.clickUri ?? citation.uri}
-              title={citation.title}
-              part="citation"
-              target="_blank"
-              rel="noopener"
-              className="flex items-center p-1 bg-background btn-text-neutral border rounded-full border-neutral text-on-background"
-              onSelect={() => interactiveCitation.select()}
-              onBeginDelayedSelect={() =>
-                interactiveCitation.beginDelayedSelect()
-              }
-              onCancelPendingSelect={() =>
-                interactiveCitation.cancelPendingSelect()
-              }
-              stopPropagation={this.stopPropagation}
-            >
-              <div class="citation-index rounded-full font-medium flex items-center text-bg-blue shrink-0">
-                <div class="mx-auto">{index + 1}</div>
-              </div>
-              <span class="citation-title truncate mx-1">{citation.title}</span>
-            </LinkWithResultAnalytics>
-          </li>
-        );
-      }
+      (citation: GeneratedAnswerCitation, index: number) => (
+        <Citation
+          engine={this.bindings.engine}
+          citation={citation}
+          index={index}
+          stopPropagation={this.stopPropagation}
+        />
+      )
     );
   }
 

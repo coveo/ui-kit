@@ -4,14 +4,31 @@
   --max-citation-width: 170px;
 
   .citations-container {
-    [part='citation'] {
-      max-width: var(--max-citation-width);
-      height: var(--height);
-    }
+    .citation-item {
+      [part='citation'] {
+        max-width: var(--max-citation-width);
+        height: var(--height);
+      }
 
-    .citation-index {
-      height: var(--index-height);
-      width: var(--index-height);
+      [part='citation-popover'] {
+        width: 350px;
+        display: none;
+
+        p {
+          @mixin set-font-size var(--atomic-text-sm);
+        }
+      }
+
+      &:hover {
+        [part='citation-popover'] {
+          display: flex;
+        }
+      }
+
+      .citation-index {
+        height: var(--index-height);
+        width: var(--index-height);
+      }
     }
   }
 }
