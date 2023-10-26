@@ -8,8 +8,7 @@ import {
   GeneratedAnswerCitation,
   GeneratedAnswerStyle,
 } from '@coveo/headless';
-import {Component, h, State, Element, Prop} from '@stencil/core';
-import {buildCustomEvent} from '../../../utils/event-utils';
+import {Component, h, State, Prop} from '@stencil/core';
 import {
   BindStateToController,
   InitializableComponent,
@@ -23,7 +22,6 @@ import {
 import {Heading} from '../../common/heading';
 import {Switch} from '../../common/switch';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
-import {Citation} from './citation';
 import {FeedbackButton} from './feedback-button';
 import {GeneratedContentContainer} from './generated-content-container';
 import {RephraseButtons} from './rephrase-buttons';
@@ -60,8 +58,6 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   @State()
   hidden = true;
 
-  @Element() private host!: HTMLElement;
-
   /**
    * The answer style to apply when the component first loads.
    * Options:
@@ -72,7 +68,6 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
    */
   @Prop() answerStyle: GeneratedAnswerStyle = 'default';
 
-  private stopPropagation?: boolean;
   private storage: SafeStorage = new SafeStorage();
   private data?: GeneratedAnswerData;
 
@@ -87,14 +82,6 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       },
     });
     this.searchStatus = buildSearchStatus(this.bindings.engine);
-    this.host.dispatchEvent(
-      buildCustomEvent(
-        'atomic/resolveStopPropagation',
-        (stopPropagation: boolean) => {
-          this.stopPropagation = stopPropagation;
-        }
-      )
-    );
   }
 
   // @ts-expect-error: This function is used by BindStateToController.
@@ -156,12 +143,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   private renderCitations() {
     return this.generatedAnswerState.citations.map(
       (citation: GeneratedAnswerCitation, index: number) => (
-        <Citation
-          engine={this.bindings.engine}
-          citation={citation}
-          index={index}
-          stopPropagation={this.stopPropagation}
-        />
+        <atomic-citation citation={citation} index={index} />
       )
     );
   }
@@ -173,7 +155,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
           <Heading
             level={0}
             part="header-label"
-            class="text-bg-blue font-medium inline-block rounded-md py-2 px-2.5"
+            class="text-bg-primary font-medium inline-block rounded-md py-2 px-2.5"
           >
             {this.bindings.i18n.t('generated-answer-title')}
           </Heading>

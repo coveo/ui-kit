@@ -21,6 +21,8 @@ export interface ResultLinkProps extends ResultLinkEventProps {
   ariaHidden?: boolean;
   target?: ResultTarget;
   rel?: string;
+  onMouseOver?: () => void;
+  onMouseLeave?: () => void;
 }
 
 export const bindAnalyticsToLink = (
@@ -63,6 +65,8 @@ export const LinkWithResultAnalytics: FunctionalComponent<ResultLinkProps> = (
     onSelect,
     onBeginDelayedSelect,
     onCancelPendingSelect,
+    onMouseOver,
+    onMouseLeave,
     ref,
     attributes,
     tabIndex,
@@ -108,6 +112,8 @@ export const LinkWithResultAnalytics: FunctionalComponent<ResultLinkProps> = (
         }
       }}
       tabIndex={tabIndex}
+      onMouseOver={onMouseOver}
+      onMouseLeave={onMouseLeave}
     >
       {children}
     </a>

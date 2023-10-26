@@ -46,7 +46,7 @@ export const Citation: FunctionalComponent<CitationProps> = ({
         onCancelPendingSelect={() => interactiveCitation.cancelPendingSelect()}
         stopPropagation={stopPropagation}
       >
-        <div class="citation-index rounded-full font-medium flex items-center text-bg-blue shrink-0">
+        <div class="citation-index rounded-full font-medium flex items-center text-bg-primary shrink-0">
           <div class="mx-auto">{index + 1}</div>
         </div>
         <span class="citation-title truncate mx-1">{citation.title}</span>
