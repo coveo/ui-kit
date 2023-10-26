@@ -143,7 +143,9 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   private renderCitations() {
     return this.generatedAnswerState.citations.map(
       (citation: GeneratedAnswerCitation, index: number) => (
-        <atomic-citation citation={citation} index={index} />
+        <li key={citation.id}>
+          <atomic-citation citation={citation} index={index} />
+        </li>
       )
     );
   }

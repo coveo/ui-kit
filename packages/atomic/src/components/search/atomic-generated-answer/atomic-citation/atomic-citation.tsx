@@ -4,7 +4,7 @@ import {
   buildInteractiveCitation,
 } from '@coveo/headless';
 import {
-  createPopperLite as createPopper,
+  createPopper,
   preventOverflow,
   Instance as PopperInstance,
 } from '@popperjs/core';
@@ -24,7 +24,6 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 @Component({
   tag: 'atomic-citation',
   styleUrl: 'atomic-citation.pcss',
-  shadow: true,
 })
 export class AtomicCitation implements InitializableComponent {
   @Element() public host!: HTMLElement;
@@ -69,7 +68,15 @@ export class AtomicCitation implements InitializableComponent {
 
     this.popperInstance = createPopper(this.citationRef, this.popupRef, {
       placement: 'top-start',
-      modifiers: [preventOverflow],
+      modifiers: [
+        {
+          name: 'offset',
+          options: {
+            offset: [0, 6],
+          },
+        },
+        preventOverflow,
+      ],
     });
   }
 
@@ -109,14 +116,7 @@ export class AtomicCitation implements InitializableComponent {
 
   public render() {
     return (
-      <li
-        key={this.citation.id}
-        class="citation-item relative"
-        tabIndex={0}
-        onFocus={() => (this.isOpen = true)}
-        onBlur={() => (this.isOpen = false)}
-        aria-haspopup="dialog"
-      >
+      <div class="relative">
         <LinkWithResultAnalytics
           href={this.citation.clickUri ?? this.citation.uri}
           ref={(el) => (this.citationRef = el!)}
@@ -124,6 +124,7 @@ export class AtomicCitation implements InitializableComponent {
           part="citation"
           target="_blank"
           rel="noopener"
+          aria-haspopup="dialog"
           className="flex items-center p-1 bg-background btn-outline-primary border rounded-full border-neutral text-on-background"
           onSelect={() => this.interactiveCitation.select()}
           onBeginDelayedSelect={() =>
@@ -135,6 +136,8 @@ export class AtomicCitation implements InitializableComponent {
           stopPropagation={this.stopPropagation}
           onMouseLeave={() => (this.isOpen = false)}
           onMouseOver={() => (this.isOpen = true)}
+          onFocus={() => (this.isOpen = true)}
+          onBlur={() => (this.isOpen = false)}
         >
           <div class="citation-index rounded-full font-medium flex items-center text-bg-primary shrink-0">
             <div class="mx-auto">{this.index + 1}</div>
@@ -144,7 +147,7 @@ export class AtomicCitation implements InitializableComponent {
           </span>
         </LinkWithResultAnalytics>
         {this.renderPopover()}
-      </li>
+      </div>
     );
   }
 }

@@ -1,29 +1,26 @@
 @import '../../../../global/global.pcss';
 @import '../../../../global/mixins.pcss';
 
-:host {
+[part='citation'] {
   --height: 2.2em;
   --index-height: 20px;
   --max-citation-width: 170px;
-  --citation-width: 350px;
 
-  .citation-item {
-    [part='citation'] {
-      max-width: var(--max-citation-width);
-      height: var(--height);
+  max-width: var(--max-citation-width);
+  height: var(--height);
 
-      .citation-index {
-        height: var(--index-height);
-        width: var(--index-height);
-      }
-    }
+  .citation-index {
+    height: var(--index-height);
+    width: var(--index-height);
+  }
+}
 
-    [part='citation-popover'] {
-      width: var(--citation-width);
+[part='citation-popover'] {
+  --popover-width: 350px;
 
-      p {
-        @mixin set-font-size var(--atomic-text-sm);
-      }
-    }
+  width: var(--popover-width);
+
+  p {
+    @mixin set-font-size var(--atomic-text-sm);
   }
 }
