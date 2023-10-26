@@ -6480,5 +6480,35 @@
     "zh": "哎呀！在生成答案时出错了。",
     "zh-CN": "哎呀！在生成答案时出错了。",
     "zh-TW": "糟糕！在生成答案時出了些問題。"
+  },
+  "generated-answer-feedback-header": {
+    "en": "Feedback"
+  },
+  "generated-answer-feedback-instructions": {
+    "en": "Tell us why the generated answer was not helpful."
+  },
+  "generated-answer-feedback-irrelevant": {
+    "en": "Irrelevant"
+  },
+  "generated-answer-feedback-not-accurate": {
+    "en": "Not accurate"
+  },
+  "generated-answer-feedback-out-of-date": {
+    "en": "Out-of-date"
+  },
+  "generated-answer-feedback-harmful": {
+    "en": "Harmful"
+  },
+  "generated-answer-feedback-other": {
+    "en": "Other"
+  },
+  "generated-answer-feedback-textarea-add-details": {
+    "en": "Add details"
+  },
+  "generated-answer-feedback-success": {
+    "en": "Thank you! Your answer helps us improve the search experience."
+  },
+  "modal-done": {
+    "en": "Done"
   }
 }

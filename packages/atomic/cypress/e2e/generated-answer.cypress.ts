@@ -7,7 +7,10 @@ import {
   mockStreamResponse,
 } from './generated-answer-actions';
 import * as GeneratedAnswerAssertions from './generated-answer-assertions';
-import {GeneratedAnswerSelectors} from './generated-answer-selectors';
+import {
+  GeneratedAnswerSelectors,
+  feedbackModalSelectors,
+} from './generated-answer-selectors';
 
 describe('Generated Answer Test Suites', () => {
   describe('Generated Answer', () => {
@@ -22,6 +25,45 @@ describe('Generated Answer Test Suites', () => {
 
       it('should not display the component', () => {
         GeneratedAnswerSelectors.container().should('not.exist');
+      });
+    });
+
+    describe('feedback modal', () => {
+      const streamId = crypto.randomUUID();
+
+      const testTextDelta = 'Some text';
+      const testMessagePayload = {
+        payloadType: 'genqa.messageType',
+        payload: JSON.stringify({
+          textDelta: testTextDelta,
+        }),
+        finishReason: 'COMPLETED',
+      };
+
+      beforeEach(() => {
+        mockStreamResponse(streamId, testMessagePayload);
+        setupGeneratedAnswer(streamId);
+        cy.wait(getStreamInterceptAlias(streamId));
+        GeneratedAnswerSelectors.answer();
+        GeneratedAnswerSelectors.dislikeButton().click();
+      });
+
+      it('should open when an answer is disliked', () => {
+        feedbackModalSelectors.modalBody().should('exist');
+        feedbackModalSelectors.modalHeader().should('exist');
+        feedbackModalSelectors.modalFooter().should('exist');
+      });
+
+      describe('add details text area', () => {
+        it('should be visible when other is selected', () => {
+          feedbackModalSelectors.detailsTextArea().should('not.exist');
+          feedbackModalSelectors.submitButton().should('be.disabled');
+
+          feedbackModalSelectors.reason().last().click({force: true});
+
+          feedbackModalSelectors.detailsInput().should('exist');
+          feedbackModalSelectors.submitButton().should('be.enabled');
+        });
       });
     });
 

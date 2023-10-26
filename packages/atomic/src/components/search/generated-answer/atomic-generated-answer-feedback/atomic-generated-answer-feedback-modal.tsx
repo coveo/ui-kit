@@ -10,6 +10,8 @@ import {
   Event,
   EventEmitter,
 } from '@stencil/core/internal';
+import CloseIcon from '../../../../images/close.svg';
+import Success from '../../../../images/success.svg';
 import {
   InitializableComponent,
   InitializeBindings,
@@ -35,6 +37,7 @@ export class AtomicGeneratedAnswerFeedbackModal
 
   @State() public error!: Error;
   @State() currentAnswer?: GeneratedAnswerFeedback | 'other' | undefined;
+  @State() feedbackSubmitted: boolean = false;
 
   private readonly formId = randomID(
     'atomic-generated-answer-feedback-modal-form-'
@@ -55,6 +58,7 @@ export class AtomicGeneratedAnswerFeedbackModal
   }
 
   private close() {
+    this.feedbackSubmitted = false;
     this.setIsOpen(false);
     this.generatedAnswer.closeFeedbackModal();
   }
@@ -74,14 +78,24 @@ export class AtomicGeneratedAnswerFeedbackModal
       );
     }
     this.feedbackSent.emit();
-    this.setIsOpen(false);
   }
 
   private renderHeader() {
     return (
-      <h1 slot="header">
-        {this.bindings.i18n.t('smart-snippet-feedback-explain-why')}
-      </h1>
+      <div
+        slot="header"
+        part="modalHeader"
+        class="w-full p-2 flex justify-between items-center"
+      >
+        <h1>{this.bindings.i18n.t('generated-answer-feedback-header')}</h1>
+        <Button
+          style="text-transparent"
+          class="search-clear-button"
+          onClick={() => this.close()}
+        >
+          <atomic-icon icon={CloseIcon} class="w-3 my-auto m-0" />
+        </Button>
+      </div>
     );
   }
 
@@ -93,36 +107,42 @@ export class AtomicGeneratedAnswerFeedbackModal
     }[] = [
       {
         id: 'irrelevant',
-        localeKey: 'smart-snippet-feedback-reason-does-not-answer',
+        localeKey: 'generated-answer-feedback-irrelevant',
         correspondingAnswer: 'irrelevant',
       },
       {
         id: 'notAccurate',
-        localeKey: 'smart-snippet-feedback-reason-partially-answers',
+        localeKey: 'generated-answer-feedback-not-accurate',
         correspondingAnswer: 'notAccurate',
       },
       {
         id: 'outOfDate',
-        localeKey: 'smart-snippet-feedback-reason-was-not-a-question',
+        localeKey: 'generated-answer-feedback-out-of-date',
         correspondingAnswer: 'outOfDate',
       },
       {
         id: 'harmful',
-        localeKey: 'smart-snippet-feedback-reason-other',
+        localeKey: 'generated-answer-feedback-harmful',
         correspondingAnswer: 'harmful',
+      },
+      {
+        id: 'other',
+        localeKey: 'generated-answer-feedback-other',
+        correspondingAnswer: 'other',
       },
     ];
 
     return (
       <fieldset>
-        <legend
-          part="reason-title"
-          class="font-bold text-on-background text-lg"
-        >
-          {this.bindings.i18n.t('smart-snippet-feedback-select-reason')}
+        <legend part="reason-title" class="text-base">
+          {this.bindings.i18n.t('generated-answer-feedback-instructions')}
         </legend>
         {options.map(({id, localeKey, correspondingAnswer}) => (
-          <div class="flex items-center" key={id} part="reason">
+          <div
+            class={`flex items-center ${correspondingAnswer}`}
+            key={id}
+            part="reason"
+          >
             <input
               part="reason-radio"
               type="radio"
@@ -152,18 +172,15 @@ export class AtomicGeneratedAnswerFeedbackModal
 
     return (
       <fieldset>
-        <legend
-          part="details-title"
-          class="font-bold text-on-background text-lg"
-        >
-          {this.bindings.i18n.t('smart-snippet-feedback-details')}
-        </legend>
         <textarea
           part="details-input"
           name="answer-details"
           ref={(detailsInput) => (this.detailsInputRef = detailsInput)}
           class="mt-2 p-2 w-full text-base leading-5 border border-neutral resize-none rounded"
           rows={4}
+          placeholder={this.bindings.i18n.t(
+            'generated-answer-feedback-textarea-add-details'
+          )}
           required
         ></textarea>
       </fieldset>
@@ -171,7 +188,8 @@ export class AtomicGeneratedAnswerFeedbackModal
   }
 
   private renderBody() {
-    return (
+    console.log('feedbackSubmitted', this.feedbackSubmitted);
+    return !this.feedbackSubmitted ? (
       <form
         part="form"
         id={this.formId}
@@ -185,28 +203,53 @@ export class AtomicGeneratedAnswerFeedbackModal
         {this.renderOptions()}
         {this.renderDetails()}
       </form>
+    ) : (
+      <div slot="body" class="flex flex-col items-center">
+        <atomic-icon icon={Success} class="w-48" />
+        <p class="text-sm">
+          {this.bindings.i18n.t('generated-answer-feedback-success')}
+        </p>
+      </div>
     );
   }
 
   private renderFooter() {
     return (
-      <div part="buttons" slot="footer" class="flex justify-end gap-2">
-        <Button
-          part="cancel-button"
-          style="outline-neutral"
-          class="text-primary"
-          onClick={() => this.close()}
-        >
-          {this.bindings.i18n.t('cancel')}
-        </Button>
-        <Button
-          part="submit-button"
-          style="primary"
-          type="submit"
-          form={this.formId}
-        >
-          {this.bindings.i18n.t('smart-snippet-feedback-send')}
-        </Button>
+      <div slot="footer" part="modalFooter">
+        {!this.feedbackSubmitted ? (
+          <div part="buttons" class="flex justify-end gap-2 p-2">
+            <Button
+              part="cancel-button"
+              style="outline-neutral"
+              class="text-primary"
+              onClick={() => this.close()}
+            >
+              {this.bindings.i18n.t('cancel')}
+            </Button>
+            <Button
+              part="submit-button"
+              style="primary"
+              type="submit"
+              form={this.formId}
+              disabled={!this.currentAnswer ? true : false}
+              onClick={() => {
+                this.feedbackSubmitted = true;
+              }}
+            >
+              {this.bindings.i18n.t('smart-snippet-feedback-send')}
+            </Button>
+          </div>
+        ) : (
+          <div part="buttons" class="flex justify-end gap-2 p-2">
+            <Button
+              part="cancel-button"
+              style="primary"
+              onClick={() => this.close()}
+            >
+              {this.bindings.i18n.t('modal-done')}
+            </Button>
+          </div>
+        )}
       </div>
     );
   }

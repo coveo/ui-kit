@@ -1,4 +1,5 @@
 export const generatedAnswerComponent = 'atomic-generated-answer';
+export const feedbackModal = 'atomic-generated-answer-feedback-modal';
 export const GeneratedAnswerSelectors = {
   shadow: () => cy.get(generatedAnswerComponent).shadow(),
   container: () => GeneratedAnswerSelectors.shadow().find('[part="container"]'),
@@ -23,4 +24,30 @@ export const GeneratedAnswerSelectors = {
   retryContainer: () =>
     GeneratedAnswerSelectors.shadow().find('[part="retry-container"]'),
   retryButton: () => GeneratedAnswerSelectors.retryContainer().find('button'),
+};
+
+export const feedbackModalSelectors = {
+  shadow: () => GeneratedAnswerSelectors.shadow().find(feedbackModal).shadow(),
+  atomicModal: () => feedbackModalSelectors.shadow().find('atomic-modal'),
+  atomicModalShadow: () => feedbackModalSelectors.atomicModal().shadow(),
+  container: () =>
+    feedbackModalSelectors.atomicModalShadow().find('[part="container"]'),
+  backdrop: () =>
+    feedbackModalSelectors.atomicModalShadow().find('[part="backdrop"]'),
+  modalBody: () => feedbackModalSelectors.atomicModal().find('[part="form"]'),
+  modalHeader: () =>
+    feedbackModalSelectors.atomicModal().find('[part="modalHeader"]'),
+  modalFooter: () =>
+    feedbackModalSelectors.atomicModal().find('[part="modalFooter"]'),
+  detailsTextArea: () =>
+    feedbackModalSelectors.atomicModal().find('[part="details-input"]'),
+  other: () => feedbackModalSelectors.atomicModal().find('.other'),
+  reason: () =>
+    feedbackModalSelectors.atomicModal().find('[part="reason-radio"]'),
+  submitButton: () =>
+    feedbackModalSelectors.atomicModal().find('[part="submit-button"]'),
+  detailsInput: () =>
+    feedbackModalSelectors.shadow().find('[part="details-input"]', {
+      includeShadowDom: true,
+    }),
 };
