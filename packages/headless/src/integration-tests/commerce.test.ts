@@ -16,7 +16,7 @@ const accessToken = 'no';
 
 // eslint-disable-next-line @cspell/spellchecker
 // TODO CAPI-149: Skipped since we do not currently have test fixtures for commerce
-describe('commerce', () => {
+describe.skip('commerce', () => {
   let engine: CommerceEngine;
 
   beforeEach(() => {
