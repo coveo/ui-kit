@@ -41,4 +41,6 @@ if (!(await isPublished(name, version))) {
     },
     {retries: 30}
   );
+} else {
+  console.log(`Version ${version} is already published.`);
 }
