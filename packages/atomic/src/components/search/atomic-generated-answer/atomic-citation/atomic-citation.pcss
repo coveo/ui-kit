@@ -5,6 +5,7 @@
   --height: 2.2em;
   --index-height: 20px;
   --max-citation-width: 170px;
+  --citation-width: 350px;
 
   .citation-item {
     [part='citation'] {
@@ -18,7 +19,7 @@
     }
 
     [part='citation-popover'] {
-      width: 350px;
+      width: var(--citation-width);
 
       p {
         @mixin set-font-size var(--atomic-text-sm);
