@@ -12,7 +12,7 @@ export const BreadboxSelectors = {
   breadcrumbValueAtIndex: (index: number) =>
     BreadboxSelectors.breadcrumbButtonValue().eq(index),
   breadcrumbClearFacetValueButton: () =>
-    BreadboxSelectors.breadcrumbButton().find('atomic-icon'),
+    BreadboxSelectors.breadcrumbButton().find('atomic-icon', {timeout: 8000}),
   breadcrumbClearFacetValueButtonAtIndex: (index: number) =>
     BreadboxSelectors.breadcrumbClearFacetValueButton().eq(index),
   clearAllButton: () => BreadboxSelectors.shadow().find('[part="clear"]'),
