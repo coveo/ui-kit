@@ -5,6 +5,8 @@ import {getCommercePaginationInitialState} from '../features/commerce/pagination
 import {getProductListingV2InitialState} from '../features/commerce/product-listing/product-listing-state';
 import {getCommerceSortInitialState} from '../features/commerce/sort/sort-state';
 import {getConfigurationInitialState} from '../features/configuration/configuration-state';
+import {getFacetOptionsInitialState} from '../features/facet-options/facet-options-state';
+import {getFacetSetInitialState} from '../features/facets/facet-set/facet-set-state';
 import {CommerceAppState} from '../state/commerce-app-state';
 
 export function buildMockCommerceState(
@@ -14,6 +16,8 @@ export function buildMockCommerceState(
     configuration: getConfigurationInitialState(),
     productListing: getProductListingV2InitialState(),
     commerceFacets: getCommerceFacetsInitialState(),
+    facetSet: getFacetSetInitialState(),
+    facetOptions: getFacetOptionsInitialState(),
     commercePagination: getCommercePaginationInitialState(),
     commerceSort: getCommerceSortInitialState(),
     commerceContext: getContextInitialState(),

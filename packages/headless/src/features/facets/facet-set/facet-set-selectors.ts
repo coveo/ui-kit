@@ -20,6 +20,7 @@ export const baseFacetResponseSelector = (
   if (
     'productListing' in state &&
     state.productListing &&
+    'facets' in state.productListing &&
     'results' in state.productListing.facets
   ) {
     return state.productListing.facets.results.find(findById);

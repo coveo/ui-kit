@@ -1,8 +1,10 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {facetsReducer as commerceFacets} from '../../../../features/commerce/facets/facets-slice';
+import {facetOptionsReducer as facetOptions} from '../../../../features/facet-options/facet-options-slice';
 import {facetSetReducer as facetSet} from '../../../../features/facets/facet-set/facet-set-slice';
 import {
   CommerceFacetSection,
+  FacetOptionsSection,
   FacetSection,
 } from '../../../../state/state-sections';
 import {loadReducerError} from '../../../../utils/errors';
@@ -47,7 +49,9 @@ export function buildFacetGenerator(engine: CommerceEngine): FacetGenerator {
 
 function loadFacetGeneratorReducers(
   engine: CommerceEngine
-): engine is CommerceEngine<FacetSection & CommerceFacetSection> {
-  engine.addReducers({facetSet, commerceFacets});
+): engine is CommerceEngine<
+  FacetSection & FacetOptionsSection & CommerceFacetSection
+> {
+  engine.addReducers({facetSet, facetOptions, commerceFacets});
   return true;
 }
