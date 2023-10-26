@@ -74,7 +74,7 @@ export const fetchProductListing = createAsyncThunk<
 export const buildProductListingRequestV2 = (
   state: StateNeededByFetchProductListingV2
 ): ProductListingV2Request => {
-  const selectedFacets = getFacets(state);
+  const facets = getFacets(state);
 
   const {view, user, ...restOfContext} = state.commerceContext;
   return {
@@ -87,7 +87,7 @@ export const buildProductListingRequestV2 = (
       view,
       cart: state.cart.cartItems.map((id) => state.cart.cart[id]),
     },
-    selectedFacets,
+    facets,
     ...(state.commercePagination && {page: state.commercePagination.page}),
     ...(state.commerceSort && {
       sort: getSort(state.commerceSort.appliedSort),

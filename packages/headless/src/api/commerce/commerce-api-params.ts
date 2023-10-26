@@ -58,11 +58,11 @@ export interface CartItemParam {
   quantity: number;
 }
 
-export interface SelectedFacetsParam {
-  selectedFacets?: SelectedFacetParams[];
+export interface FacetsParam {
+  facets?: FacetParams[];
 }
 
-export interface SelectedFacetParams
+export interface FacetParams
   extends Pick<AnyFacetRequest, 'field' | 'type' | 'facetId'> {
   values?: (FacetValueRequest | RangeValueRequest)[];
 }

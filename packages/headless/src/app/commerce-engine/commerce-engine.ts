@@ -7,6 +7,7 @@ import {contextReducer} from '../../features/commerce/context/context-slice';
 import {paginationReducer} from '../../features/commerce/pagination/pagination-slice';
 import {productListingV2Reducer} from '../../features/commerce/product-listing/product-listing-slice';
 import {sortReducer} from '../../features/commerce/sort/sort-slice';
+import {numericFacetSetReducer} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {CommerceAppState} from '../../state/commerce-app-state';
 import {CommerceThunkExtraArguments} from '../commerce-thunk-extra-arguments';
 import {
@@ -29,6 +30,7 @@ const commerceEngineReducers = {
   commercePagination: paginationReducer,
   commerceSort: sortReducer,
   commerceContext: contextReducer,
+  numericFacetSet: numericFacetSetReducer,
   cart: cartReducer,
 };
 type CommerceEngineReducers = typeof commerceEngineReducers;

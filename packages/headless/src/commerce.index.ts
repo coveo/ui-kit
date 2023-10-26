@@ -91,3 +91,10 @@ export {
   SortBy,
   SortDirection,
 } from './controllers/commerce/product-listing/sort/headless-product-listing-sort';
+export type {
+  ProductListingNumericFacet,
+  ProductListingNumericFacetOptions,
+  ProductListingNumericFacetProps,
+  ProductListingNumericFacetState,
+} from './controllers/commerce/product-listing/facet/range-facet/numeric-facet/headless-product-listing-numeric-facet';
+export {buildProductListingNumericFacet} from './controllers/commerce/product-listing/facet/range-facet/numeric-facet/headless-product-listing-numeric-facet';

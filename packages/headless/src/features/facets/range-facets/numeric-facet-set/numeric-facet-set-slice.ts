@@ -1,5 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
+import {fetchProductListing as fetchProductListingV2} from '../../../commerce/product-listing/product-listing-actions';
 import {disableFacet} from '../../../facet-options/facet-options-actions';
 import {change} from '../../../history/history-actions';
 import {fetchProductListing} from '../../../product-listing/product-listing-actions';
@@ -78,6 +79,11 @@ export const numericFacetSetReducer = createReducer(
       })
       .addCase(fetchProductListing.fulfilled, (state, action) => {
         const facets = (action.payload.response?.facets?.results ||
+          []) as NumericFacetResponse[];
+        onRangeFacetRequestFulfilled(state, facets, convertToRangeRequests);
+      })
+      .addCase(fetchProductListingV2.fulfilled, (state, action) => {
+        const facets = (action.payload.response?.facets ||
           []) as NumericFacetResponse[];
         onRangeFacetRequestFulfilled(state, facets, convertToRangeRequests);
       })
