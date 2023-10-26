@@ -6,17 +6,7 @@ def parseSemanticVersion(String version) {
 
 node('heavy && linux && docker') {
   checkout scm
-  def tag = sh(script: "git tag --contains", returnStdout: true).trim()
-  def isBump = !!tag
-  def isOnReleaseBranch = env.BRANCH_NAME == 'master'
-
-  if (!isOnReleaseBranch) {
-    return
-  }
-
-  if (!isBump) {
-    return
-  }
+  def releaseCommit
 
   withEnv(['npm_config_cache=npm-cache', 'CI=true', 'NODE_OPTIONS=--max_old_space_size=8192']) {
     withDockerContainer(image: 'node:18', args: '-u=root -e HOME=/tmp -e NPM_CONFIG_PREFIX=/tmp/.npm') {
@@ -36,6 +26,7 @@ node('heavy && linux && docker') {
         atomic = readJSON file: 'packages/atomic/package.json'
         atomicReact = readJSON file: 'packages/atomic-react/package.json'
         atomicHostedPage = readJSON file: 'packages/atomic-hosted-page/package.json'
+        releaseCommit = sh(returnStdout:true, script: 'git rev-parse HEAD').trim()
 
         (headlessMajor, headlessMinor, headlessPatch) = parseSemanticVersion(headless.version)
         (atomicMajor, atomicMinor, atomicPatch) = parseSemanticVersion(atomic.version)
@@ -55,6 +46,7 @@ node('heavy && linux && docker') {
         --resolve ATOMIC_HOSTED_PAGE_MAJOR_VERSION=${atomicHostedPageMajor} \
         --resolve ATOMIC_HOSTED_PAGE_MINOR_VERSION=${atomicHostedPageMinor} \
         --resolve ATOMIC_HOSTED_PAGE_PATCH_VERSION=${atomicHostedPagePatch} \
+        --changeset ${releaseCommit} \
         || true"
       }
     }
