@@ -3,12 +3,17 @@ import {StandaloneSearchBoxAnalytics} from '@coveo/headless';
 export enum StorageItems {
   RECENT_QUERIES = 'coveo-recent-queries',
   STANDALONE_SEARCH_BOX_DATA = 'coveo-standalone-search-box-data',
+  GENERATED_ANSWER_DATA = 'coveo-generated-answer-data',
 }
 
 export interface StandaloneSearchBoxData {
   value: string;
   enableQuerySyntax?: boolean;
   analytics: StandaloneSearchBoxAnalytics;
+}
+
+export interface GeneratedAnswerData {
+  isVisible: boolean;
 }
 
 export class SafeStorage implements Storage {

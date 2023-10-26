@@ -84,7 +84,6 @@ export const AtomicSearchLayout = /*@__PURE__*/createReactComponent<JSX.AtomicSe
 export const AtomicSegmentedFacet = /*@__PURE__*/createReactComponent<JSX.AtomicSegmentedFacet, HTMLAtomicSegmentedFacetElement>('atomic-segmented-facet');
 export const AtomicSegmentedFacetScrollable = /*@__PURE__*/createReactComponent<JSX.AtomicSegmentedFacetScrollable, HTMLAtomicSegmentedFacetScrollableElement>('atomic-segmented-facet-scrollable');
 export const AtomicSmartSnippet = /*@__PURE__*/createReactComponent<JSX.AtomicSmartSnippet, HTMLAtomicSmartSnippetElement>('atomic-smart-snippet');
-export const AtomicSmartSnippetCollapseWrapper = /*@__PURE__*/createReactComponent<JSX.AtomicSmartSnippetCollapseWrapper, HTMLAtomicSmartSnippetCollapseWrapperElement>('atomic-smart-snippet-collapse-wrapper');
 export const AtomicSmartSnippetFeedbackModal = /*@__PURE__*/createReactComponent<JSX.AtomicSmartSnippetFeedbackModal, HTMLAtomicSmartSnippetFeedbackModalElement>('atomic-smart-snippet-feedback-modal');
 export const AtomicSmartSnippetSuggestions = /*@__PURE__*/createReactComponent<JSX.AtomicSmartSnippetSuggestions, HTMLAtomicSmartSnippetSuggestionsElement>('atomic-smart-snippet-suggestions');
 export const AtomicSortDropdown = /*@__PURE__*/createReactComponent<JSX.AtomicSortDropdown, HTMLAtomicSortDropdownElement>('atomic-sort-dropdown');

@@ -26,6 +26,7 @@ import {
   State,
 } from '@stencil/core';
 import i18next, {i18n} from 'i18next';
+import {i18nCompatibilityVersion} from '../../../components';
 import {InitializeEvent} from '../../../utils/initialization-utils';
 import {
   SafeStorage,
@@ -120,6 +121,12 @@ export class AtomicSearchInterface
   @Prop({reflect: true}) public logLevel?: LogLevel;
 
   /**
+   * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
+   */
+  @Prop() public localizationCompatibilityVersion: i18nCompatibilityVersion =
+    'v3';
+
+  /**
    * The search interface i18next instance.
    */
   @Prop() public i18n: i18n = i18next.createInstance();
@@ -169,6 +176,11 @@ export class AtomicSearchInterface
    */
   @Prop({reflect: true}) public enableRelevanceInspector = true;
 
+  /**
+   * A reference clone of the search interface i18next instance.
+   */
+  private i18nClone!: i18n;
+
   public constructor() {
     this.initRelevanceInspector();
     this.commonInterfaceHelper = new CommonAtomicInterfaceHelper(
@@ -180,6 +192,14 @@ export class AtomicSearchInterface
   public connectedCallback() {
     this.store.setLoadingFlag(FirstSearchExecutedFlag);
     this.updateMobileBreakpoint();
+    this.i18nClone = this.i18n.cloneInstance();
+    this.i18n.addResourceBundle = (
+      lng: string,
+      ns: string,
+      resources: object,
+      deep?: boolean,
+      overwrite?: boolean
+    ) => this.addResourceBundleWithWarning(lng, ns, resources, deep, overwrite);
   }
 
   componentWillLoad() {
@@ -319,6 +339,12 @@ export class AtomicSearchInterface
         this.host
       );
       return;
+    }
+
+    if (this.localizationCompatibilityVersion !== 'v4') {
+      this.engine.logger.warn(
+        `As of Atomic version 3.0.0, support for JSON compatibility ${this.localizationCompatibilityVersion} will be deprecated. Please update the JSON compatibility to v4: <atomic-search-interface localization-compatibility-version="v4" ...></atomic-search-interface> For more information, see i18next Migration Guide: https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0.`
+      );
     }
 
     const safeStorage = new SafeStorage();
@@ -522,6 +548,29 @@ export class AtomicSearchInterface
     this.initSearchStatus();
     this.initUrlManager();
     this.initialized = true;
+  }
+
+  private addResourceBundleWithWarning(
+    lng: string,
+    ns: string,
+    resources: object,
+    deep?: boolean,
+    overwrite?: boolean
+  ) {
+    const hasV3Keys = Object.keys(resources).some((k) => k.includes('_plural'));
+    if (hasV3Keys && ns === 'translation') {
+      this.engine &&
+        this.engine.logger.warn(
+          `Translation keys using the v3 JSON compatibility format have been detected. As of Atomic version 3.0.0, support for JSON compatibility ${this.localizationCompatibilityVersion} will be deprecated. Please update your translation JSON keys to v4 format: { my-key_other: 'My translations!' } For more information, see i18next Migration Guide: https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0.`
+        );
+    }
+    return this.i18nClone.addResourceBundle(
+      lng,
+      ns,
+      resources,
+      deep,
+      overwrite
+    );
   }
 
   public render() {

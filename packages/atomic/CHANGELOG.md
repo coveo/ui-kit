@@ -1,3 +1,47 @@
+# 2.47.0 (2023-10-25)
+
+### Bug Fixes
+
+- **atomic-react:** fix for Vite by enabling import injection ([#3312](https://github.com/coveo/ui-kit/issues/3312)) ([ae8ee81](https://github.com/coveo/ui-kit/commits/ae8ee81dcb40cd46c3a7820fc876939267e6761e))
+- **atomic:** improve screen reader support ([#3306](https://github.com/coveo/ui-kit/issues/3306)) ([ed97883](https://github.com/coveo/ui-kit/commits/ed978837f643f690fedf03b5031a1db552ba337d))
+- **deps:** update stencil j:kit-282 ([#3322](https://github.com/coveo/ui-kit/issues/3322)) ([5f02c7e](https://github.com/coveo/ui-kit/commits/5f02c7efaf6d1de34abc5bb21da9a45b2e5061b2))
+
+### Features
+
+- **atomic:** add toggle to disable atomic-generated-answer component ([#3281](https://github.com/coveo/ui-kit/issues/3281)) ([877a9ef](https://github.com/coveo/ui-kit/commits/877a9ef1eb313c54ddbf018293dc28227780475b))
+- **atomic:** added buttons to rephrase a generated answer ([#3287](https://github.com/coveo/ui-kit/issues/3287)) ([60a841a](https://github.com/coveo/ui-kit/commits/60a841a229a77bfb14b825ab3e5d75a2203ea9d3))
+- **atomic:** enabled newline insertion in text area search box ([#3291](https://github.com/coveo/ui-kit/issues/3291)) ([82e8036](https://github.com/coveo/ui-kit/commits/82e8036da73e30c855c0a48fe5e52b2843bf6cbb))
+
+## 2.46.1 (2023-10-18)
+
+### Bug Fixes
+
+- screw it, max-height transition ! ([#3254](https://github.com/coveo/ui-kit/issues/3254)) ([0d7e550](https://github.com/coveo/ui-kit/commits/0d7e550c3bb966a3c1ab69ef3e8268c71402245c))
+
+# 2.46.0 (2023-10-11)
+
+### Bug Fixes
+
+- **atomic:** make quickview modal responsive ([#3202](https://github.com/coveo/ui-kit/issues/3202)) ([1150797](https://github.com/coveo/ui-kit/commits/11507976594053c7458a956c11c4e4666d7c1156))
+
+### Features
+
+- **atomic:** add pathLimit prop to atomic-breadbox ([#3205](https://github.com/coveo/ui-kit/issues/3205)) ([62d83e6](https://github.com/coveo/ui-kit/commits/62d83e6ff7c4b83a3b86d88c1a52b1ddd8272ab0))
+
+# 2.45.0 (2023-10-04)
+
+### Bug Fixes
+
+- **atomic:** css part and css variable for facet-search-icon / facet-search-clear-icon ([#3200](https://github.com/coveo/ui-kit/issues/3200)) ([426f9e2](https://github.com/coveo/ui-kit/commits/426f9e268d0aa55e39a46987d0856f0c53b06b21))
+- **atomic:** search text area scroll ([#3219](https://github.com/coveo/ui-kit/issues/3219)) ([f998f63](https://github.com/coveo/ui-kit/commits/f998f63ee5dacddad77c2fbdc7c5a6801d975862))
+- **atomic:** support facet-manager collapse-facets-after for automatic facets ([#3213](https://github.com/coveo/ui-kit/issues/3213)) ([0f88e94](https://github.com/coveo/ui-kit/commits/0f88e94b7a1758dd13d9c1aeb3a9d175fb88b744))
+- **genAI:** set loading dots to atomic-primary ([#3225](https://github.com/coveo/ui-kit/issues/3225)) ([f8e4993](https://github.com/coveo/ui-kit/commits/f8e4993d6a58b6b3431adaecf7936620d78bfa9c))
+- **IPX:** remove max width of ipx body and footer ([#3235](https://github.com/coveo/ui-kit/issues/3235)) ([44cbb35](https://github.com/coveo/ui-kit/commits/44cbb3579f262c2797946843b04e0958d0f54123))
+
+### Features
+
+- **atomic,headless:** ga release for automatic-facets feature ([#3224](https://github.com/coveo/ui-kit/issues/3224)) ([4decff2](https://github.com/coveo/ui-kit/commits/4decff2d91f415d392177b94dfd10e4c3f8566e8))
+
 # 2.44.0 (2023-09-27)
 
 ### Features

@@ -17,6 +17,6 @@ export const GeneratedContentContainer: FunctionalComponent<
     >
       {props.answer}
     </p>
-    {children}
+    <div class="footer mt-6">{children}</div>
   </div>
 );

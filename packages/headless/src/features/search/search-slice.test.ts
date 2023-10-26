@@ -1,4 +1,3 @@
-import {Response} from 'cross-fetch';
 import {PlatformClient} from '../../api/platform-client';
 import {Result} from '../../api/search/search/result';
 import {
@@ -12,7 +11,7 @@ import {buildMockSearch} from '../../test/mock-search';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {buildMockSearchState} from '../../test/mock-search-state';
 import {createMockState} from '../../test/mock-state';
-import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
+import {makeAnalyticsAction} from '../analytics/analytics-utils';
 import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
 import {logFacetShowMore} from '../facets/facet-set/facet-set-analytics-actions';
 import {logPageNext} from '../pagination/pagination-analytics-actions';
@@ -476,10 +475,8 @@ describe('search-slice', () => {
       beforeEach(async () => {
         analyticsStateQuerySpy = jest.fn();
         const mockLogSubmit = () =>
-          makeAnalyticsAction(
-            'analytics/test',
-            AnalyticsType.Search,
-            (_, state) => analyticsStateQuerySpy(state.query?.q)
+          makeAnalyticsAction('analytics/test', (_, state) =>
+            analyticsStateQuerySpy(state.query?.q)
           );
 
         const fetched = () => {

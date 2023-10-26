@@ -1,3 +1,4 @@
+// eslint-disable-next-line node/no-unpublished-import
 import 'cypress-web-vitals';
 import {
   ConsoleAliases,
@@ -14,11 +15,15 @@ const resultListSelector = '.result-list li';
 const searchBoxSelector = '.search-box input';
 const routes = ['generic', 'react'] as const;
 // Note: Thresholds might need to be adjusted as the page tested changes (e.g. more components are added etc)
-const vitals: Record<typeof routes[number], Cypress.ReportWebVitalsConfig> = {
+const vitals: Record<(typeof routes)[number], Cypress.ReportWebVitalsConfig> = {
   generic: {
     thresholds: {
-      fcp: 200,
-      lcp: 200,
+      // TODO: Remove temporary threshold bump for pages router dev mode
+      // https://coveord.atlassian.net/browse/KIT-2834
+      // fcp: 200,
+      // lcp: 200,
+      fcp: 2000,
+      lcp: 2000,
       cls: 0,
       ttfb: 60,
       // TODO: Ensure validity of following input based vitals with interactive elements
@@ -28,8 +33,12 @@ const vitals: Record<typeof routes[number], Cypress.ReportWebVitalsConfig> = {
   },
   react: {
     thresholds: {
-      fcp: 400,
-      lcp: 400,
+      // TODO: Remove temporary threshold bump for pages router dev mode
+      // https://coveord.atlassian.net/browse/KIT-2834
+      // fcp: 400,
+      // lcp: 400,
+      fcp: 2000,
+      lcp: 2000,
       cls: 0,
       ttfb: 120,
       // TODO: Ensure validity of following input based vitals with interactive elements

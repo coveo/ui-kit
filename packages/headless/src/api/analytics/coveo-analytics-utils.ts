@@ -5,6 +5,7 @@ import {
   history,
 } from 'coveo.analytics';
 import {Logger} from 'pino';
+import {clone} from '../../utils/utils';
 import {PreprocessRequest} from '../preprocess-request';
 
 export const getVisitorID = (options: {
@@ -27,7 +28,7 @@ export const wrapPreprocessRequest = (
 ) => {
   return typeof preprocessRequest === 'function'
     ? (...args: Parameters<PreprocessRequest>) => {
-        const untaintedOutput = structuredClone(args[0]);
+        const untaintedOutput = clone(args[0]);
         try {
           return preprocessRequest.apply(preprocessRequest, args);
         } catch (e) {
@@ -46,7 +47,7 @@ export const wrapAnalyticsClientSendEventHook = (
   hook: AnalyticsClientSendEventHook
 ) => {
   return (...args: Parameters<AnalyticsClientSendEventHook>) => {
-    const untaintedOutput = structuredClone(args[1]);
+    const untaintedOutput = clone(args[1]);
     try {
       return hook.apply(hook, args);
     } catch (e) {

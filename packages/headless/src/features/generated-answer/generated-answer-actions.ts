@@ -24,6 +24,11 @@ import {
 import {validatePayload} from '../../utils/validate-payload';
 import {logGeneratedAnswerStreamEnd} from './generated-answer-analytics-actions';
 import {buildStreamingRequest} from './generated-answer-request';
+import {
+  GeneratedAnswerStyle,
+  GeneratedResponseFormat,
+  generatedAnswerStyle,
+} from './generated-response-format';
 
 type StateNeededByGeneratedAnswerStream = ConfigurationSection &
   SearchSection &
@@ -45,6 +50,11 @@ export interface GeneratedAnswerErrorPayload {
   message?: string;
   code?: number;
 }
+
+export const setIsVisible = createAction(
+  'generatedAnswer/setIsVisible',
+  (payload: boolean) => validatePayload(payload, booleanValue)
+);
 
 export const updateMessage = createAction(
   'generatedAnswer/updateMessage',
@@ -82,6 +92,14 @@ export const likeGeneratedAnswer = createAction('generatedAnswer/like');
 
 export const dislikeGeneratedAnswer = createAction('generatedAnswer/dislike');
 
+export const openGeneratedAnswerFeedbackModal = createAction(
+  'generatedAnswer/feedbackModal/open'
+);
+
+export const closeGeneratedAnswerFeedbackModal = createAction(
+  'generatedAnswer/feedbackModal/close'
+);
+
 export const setIsLoading = createAction(
   'generatedAnswer/setIsLoading',
   (payload: boolean) => validatePayload(payload, booleanValue)
@@ -90,6 +108,17 @@ export const setIsLoading = createAction(
 export const setIsStreaming = createAction(
   'generatedAnswer/setIsStreaming',
   (payload: boolean) => validatePayload(payload, booleanValue)
+);
+
+export const updateResponseFormat = createAction(
+  'generatedAnswer/updateResponseFormat',
+  (payload: GeneratedResponseFormat) =>
+    validatePayload(payload, {
+      answerStyle: new StringValue<GeneratedAnswerStyle>({
+        required: true,
+        constrainTo: generatedAnswerStyle,
+      }),
+    })
 );
 
 interface StreamAnswerArgs {

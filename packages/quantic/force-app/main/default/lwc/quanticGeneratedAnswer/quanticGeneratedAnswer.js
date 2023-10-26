@@ -1,9 +1,18 @@
 import couldNotGenerateAnAnswer from '@salesforce/label/c.quantic_CouldNotGenerateAnAnswer';
+import feedback from '@salesforce/label/c.quantic_Feedback';
 import generatedAnswerForYou from '@salesforce/label/c.quantic_GeneratedAnswerForYou';
+import harmful from '@salesforce/label/c.quantic_Harmful';
+import inaccurate from '@salesforce/label/c.quantic_Inaccurate';
+import irrelevant from '@salesforce/label/c.quantic_Irrelevant';
 import loading from '@salesforce/label/c.quantic_Loading';
+import other from '@salesforce/label/c.quantic_Other';
+import outOfDate from '@salesforce/label/c.quantic_OutOfDate';
+import showGeneratedAnswer from '@salesforce/label/c.quantic_ShowGeneratedAnswer';
 import thisAnswerWasHelpful from '@salesforce/label/c.quantic_ThisAnswerWasHelpful';
 import thisAnswerWasNotHelpful from '@salesforce/label/c.quantic_ThisAnswerWasNotHelpful';
 import tryAgain from '@salesforce/label/c.quantic_TryAgain';
+import whyGeneratedAnswerWasNotHelpful from '@salesforce/label/c.quantic_WhyGeneratedAnswerWasNotHelpful';
+import FeedbackModal from 'c/quanticFeedbackModal';
 import {
   registerComponentForInit,
   initializeWithHeadless,
@@ -29,6 +38,8 @@ const FEEDBACK_LIKED_STATE = 'liked';
 const FEEDBACK_DISLIKED_STATE = 'disliked';
 const FEEDBACK_NEUTRAL_STATE = 'neutral';
 
+const GENERATED_ANSWER_DATA_KEY = 'coveo-generated-answer-data';
+
 /**
  * The `QuanticGeneratedAnswer` component automatically generates an answer using Coveo machine learning models to answer the query executed by the user.
  * @category Internal
@@ -50,6 +61,14 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     thisAnswerWasHelpful,
     tryAgain,
     couldNotGenerateAnAnswer,
+    showGeneratedAnswer,
+    other,
+    harmful,
+    irrelevant,
+    inaccurate,
+    outOfDate,
+    feedback,
+    whyGeneratedAnswerWasNotHelpful,
   };
 
   /** @type {GeneratedAnswer} */
@@ -62,6 +81,8 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   searchStatus;
   /** @type {SearchStatusState} */
   searchStatusState;
+  /** @type {boolean} */
+  feedbackSubmitted = false;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -76,7 +97,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    */
   initialize = (engine) => {
     this.headless = getHeadlessBundle(this.engineId);
-    this.generatedAnswer = this.headless.buildGeneratedAnswer(engine);
+    this.generatedAnswer = this.buildHeadlessGeneratedAnswerController(engine);
     this.searchStatus = this.headless.buildSearchStatus(engine);
 
     this.unsubscribeGeneratedAnswer = this.generatedAnswer.subscribe(() =>
@@ -86,6 +107,17 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       this.updateSearchStatusState()
     );
   };
+
+  buildHeadlessGeneratedAnswerController(engine) {
+    const storedGeneratedAnswerData = this.readStoredData();
+    const storedGeneratedAnswerVisibility =
+      storedGeneratedAnswerData?.isVisible;
+    return this.headless.buildGeneratedAnswer(engine, {
+      initialState: {
+        isVisible: storedGeneratedAnswerVisibility === false ? false : true,
+      },
+    });
+  }
 
   disconnectedCallback() {
     this.unsubscribeGeneratedAnswer?.();
@@ -131,13 +163,60 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * handles disliking the generated answer.
    * @param {CustomEvent} event
    */
-  handleDislike(event) {
+  async handleDislike(event) {
     event.stopPropagation();
     this.generatedAnswer.dislike?.();
+    if (!this.feedbackSubmitted) {
+      // @ts-ignore
+      await FeedbackModal.open({
+        label: this.labels.feedback,
+        size: 'small',
+        description: this.labels.feedback,
+        options: this.options,
+        handleSubmit: this.submitFeedback.bind(this),
+        optionsLabel: this.labels.whyGeneratedAnswerWasNotHelpful,
+      });
+      this.generatedAnswer.closeFeedbackModal();
+    }
+  }
+
+  /**
+   * Submits the feedback
+   * @returns {void}
+   */
+  submitFeedback(feedbackPayload) {
+    if (feedbackPayload?.details) {
+      this.generatedAnswer.sendDetailedFeedback(feedbackPayload.details);
+    } else if (feedbackPayload?.value) {
+      this.generatedAnswer.sendFeedback(feedbackPayload.value);
+    }
+    this.feedbackSubmitted = true;
   }
 
   handleRetry() {
     this.generatedAnswer.retry();
+  }
+
+  toggleGeneratedAnswer() {
+    if (this.isVisible) {
+      this.generatedAnswer.hide();
+      this.writeStoredDate({isVisible: false});
+    } else {
+      this.generatedAnswer.show();
+      this.writeStoredDate({isVisible: true});
+    }
+  }
+
+  readStoredData() {
+    try {
+      return JSON.parse(sessionStorage?.getItem(GENERATED_ANSWER_DATA_KEY));
+    } catch {
+      return {};
+    }
+  }
+
+  writeStoredDate(data) {
+    sessionStorage?.setItem(GENERATED_ANSWER_DATA_KEY, JSON.stringify(data));
   }
 
   get answer() {
@@ -160,6 +239,14 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     return this?.state?.isStreaming;
   }
 
+  get shouldDisplayFeedback() {
+    return this.isVisible && !this.isStreaming;
+  }
+
+  get isVisible() {
+    return this.state.isVisible;
+  }
+
   get shouldDisplayGeneratedAnswer() {
     return (
       !!this.answer ||
@@ -169,14 +256,44 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     );
   }
 
-  get generatedContentClass() {
-    return `generated-answer__content ${
-      this.isStreaming ? 'generated-answer__content--streaming' : ''
+  get generatedAnswerClass() {
+    return `generated-answer__answer ${
+      this.isStreaming ? 'generated-answer__answer--streaming' : ''
     }`;
   }
 
   get hasRetryableError() {
     return !this?.searchStatusState?.hasError && this.state?.error?.isRetryable;
+  }
+
+  /**
+   * Returns the options displayed in the Quantic Feedback Modal.
+   */
+  get options() {
+    return [
+      {
+        label: this.labels.irrelevant,
+        value: 'irrelevant',
+      },
+      {
+        label: this.labels.inaccurate,
+        value: 'notAccurate',
+      },
+      {
+        label: this.labels.outOfDate,
+        value: 'outOfDate',
+      },
+      {
+        label: this.labels.harmful,
+        value: 'harmful',
+      },
+      {
+        label: this.labels.other,
+        value: 'other',
+        withDetails: true,
+        detailsRequired: true,
+      },
+    ];
   }
 
   render() {

@@ -57,7 +57,7 @@ export interface AutomaticFacetGeneratorProps {
  * Creates a `AutomaticFacetGenerator` instance.
  *
  * @param engine - The headless engine.
- * @param props - The automatic facets props. Automatic facets are currently in beta testing and should be available soon.
+ * @param props - The automatic facets props.
  * @returns A `AutomaticFacetGenerator` controller instance.
  */
 export function buildAutomaticFacetGenerator(

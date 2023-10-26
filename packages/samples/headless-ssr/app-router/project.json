@@ -1,0 +1,17 @@
+{
+  "name": "headless-ssr-samples-app-router",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "targets": {
+    "cached:build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm run build:next",
+        "cwd": "packages/samples/headless-ssr/app-router"
+      }
+    },
+    "build": {
+      "dependsOn": ["cached:build"],
+      "executor": "nx:noop"
+    }
+  }
+}

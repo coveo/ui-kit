@@ -31,6 +31,16 @@ const getExpectedMappings = () => ({
 });
 
 describe('#mapSearchRequest', () => {
+  beforeAll(() => {
+    const frozenInTime = new Date();
+    jest.useFakeTimers();
+    jest.setSystemTime(frozenInTime);
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
   it('should return the full request along with mappings', () => {
     const originalRequest = buildMockSearchRequest();
     const {request, mappings} = mapSearchRequest(originalRequest);
@@ -79,6 +89,16 @@ describe('#mapSearchRequest', () => {
 });
 
 describe('#mapSearchResponse', () => {
+  beforeAll(() => {
+    const frozenInTime = new Date();
+    jest.useFakeTimers();
+    jest.setSystemTime(frozenInTime);
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
   it('should return the full response', () => {
     expect(
       mapSearchResponse(

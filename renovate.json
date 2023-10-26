@@ -1,7 +1,11 @@
 {
   "enabled": true,
-  "extends": [":semanticPrefixFixDepsChoreOthers"],
-  "schedule": ["before 2am"],
+  "extends": [
+    ":semanticPrefixFixDepsChoreOthers",
+    "helpers:pinGitHubActionDigests",
+    "schedule:earlyMondays"
+  ],
+  "labels": ["dependencies"],
   "packageRules": [
     {
       "matchPackagePatterns": ["*"],
@@ -9,7 +13,11 @@
       "groupSlug": "all"
     },
     {
-      "matchPackagePatterns": ["^@angular/*", "^@angular-devkit/*", "ng-packagr"],
+      "matchPackagePatterns": [
+        "^@angular/*",
+        "^@angular-devkit/*",
+        "ng-packagr"
+      ],
       "groupName": "Angular",
       "groupSlug": "angular",
       "rangeStrategy": "replace",
@@ -27,16 +35,25 @@
       "rangeStrategy": "replace"
     },
     {
-      "matchPackagePatterns": [
-        "^@storybook/*"
-      ],
+      "matchPackagePatterns": ["^@storybook/*"],
       "groupName": "Storybook",
       "groupSlug": "storybook",
       "rangeStrategy": "replace"
     },
     {
+      "matchPackagePatterns": ["^@stencil/*"],
+      "groupName": "Stencil",
+      "groupSlug": "stencil",
+      "rangeStrategy": "replace"
+    },
+    {
       "matchFileNames": ["packages/atomic/package.json"],
-      "matchPackagePatterns": ["^jest$", "^jest-cli$", "@types/jest", "jest-environment-node"],
+      "matchPackagePatterns": [
+        "^jest$",
+        "^jest-cli$",
+        "@types/jest",
+        "jest-environment-node"
+      ],
       "groupSlug": "atomic-jest",
       "rangeStrategy": "replace",
       "allowedVersions": "27.x",
@@ -49,6 +66,37 @@
       "rangeStrategy": "replace",
       "allowedVersions": "4.x",
       "description": "Cypress custom reporter are CJS, and Chalk 5.x is ESM only"
+    },
+    {
+      "matchFileNames": ["packages/quantic/package.json"],
+      "matchPackagePatterns": ["^change-case$"],
+      "groupSlug": "change-case",
+      "rangeStrategy": "replace",
+      "allowedVersions": "4.x",
+      "description": "Quantic uses JSDOC that does not support ESM modules for template"
+    },
+    {
+      "matchFileNames": ["packages/atomic-react/package.json"],
+      "matchPackagePatterns": ["^rollup$"],
+      "groupSlug": "react-rollup",
+      "rangeStrategy": "replace",
+      "allowedVersions": "3.x",
+      "description": "TODO-V3: Remove Node stuff?"
+    },
+    {
+      "matchPackagePatterns": ["^nx$"],
+      "groupName": "nx",
+      "groupSlug": "nx",
+      "rangeStrategy": "replace",
+      "allowedVersions": "15.x"
+    },
+    {
+      "matchPackagePatterns": ["^cypress-split$"],
+      "groupName": "Cypress Split",
+      "groupSlug": "cypress-split",
+      "rangeStrategy": "replace",
+      "allowedVersions": "1.5.0",
+      "description": "Lock until bahmutov/cypress-repeat#52 is fixed"
     }
   ],
   "rangeStrategy": "auto",
@@ -59,8 +107,5 @@
   "vulnerabilityAlerts": {
     "enabled": false
   },
-  "ignoreDeps": [
-    "esbuild",
-    "@monaco-editor/react"
-  ]
+  "ignoreDeps": ["esbuild", "@monaco-editor/react"]
 }

@@ -1,0 +1,187 @@
+import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
+import {
+  setContext,
+  setUser,
+  setView,
+} from '../../../features/commerce/context/context-actions';
+import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
+import {contextSchema} from '../../../features/commerce/context/context-validation';
+import {loadReducerError} from '../../../utils/errors';
+import {validateOptions} from '../../../utils/validate-payload';
+import {
+  buildController,
+  Controller,
+} from '../../controller/headless-controller';
+
+export interface ContextOptions {
+  trackingId: string;
+  language: string;
+  currency: string;
+  clientId: string;
+  user?: User;
+  view: View;
+}
+
+interface UserId {
+  userId: string;
+}
+
+interface Email {
+  email: string;
+}
+
+export type User = (UserId | Email | (UserId & Email)) & {
+  userIp?: string;
+  userAgent?: string;
+};
+
+export interface View {
+  url: string;
+}
+
+export interface ContextProps {
+  /**
+   * The initial options that should be applied to this `Context` controller.
+   */
+  options: ContextOptions;
+}
+
+/**
+ * The `Context` controller exposes methods for managing the global context in a commerce interface.
+ */
+export interface Context extends Controller {
+  /**
+   * Sets the tracking ID.
+   * @param trackingId - The new tracking ID.
+   */
+  setTrackingId(trackingId: string): void;
+
+  /**
+   * Sets the language.
+   * @param language - The new language.
+   */
+  setLanguage(language: string): void;
+
+  /**
+   * Sets the currency.
+   * @param currency - The new currency.
+   */
+  setCurrency(currency: string): void;
+
+  /**
+   * Sets the client ID.
+   * @param clientId - The new client ID.
+   */
+  setClientId(clientId: string): void;
+
+  /**
+   * Sets the user.
+   * @param user - The new user.
+   */
+  setUser(user: User): void;
+
+  /**
+   * Sets the view.
+   * @param view - The new view.
+   */
+  setView(view: View): void;
+
+  /**
+   * A scoped and simplified part of the headless state that is relevant to the `Context` controller.
+   */
+  state: ContextState;
+}
+
+export interface ContextState {
+  trackingId: string;
+  language: string;
+  currency: string;
+  clientId: string;
+  user?: User;
+  view: View;
+}
+
+export type ContextControllerState = Context['state'];
+
+/**
+ * Creates a `Context` controller instance.
+ *
+ * @param engine - The headless commerce engine.
+ * @param props - The configurable `Context` properties.
+ * @returns A `Context` controller instance.
+ */
+export function buildContext(
+  engine: CommerceEngine,
+  props: ContextProps
+): Context {
+  if (!loadBaseContextReducers(engine)) {
+    throw loadReducerError;
+  }
+
+  const controller = buildController(engine);
+  const {dispatch} = engine;
+  const getState = () => engine.state;
+
+  const options = {
+    ...props.options,
+  };
+
+  validateOptions(engine, contextSchema, options, 'buildContext');
+
+  dispatch(
+    setContext({
+      ...options,
+    })
+  );
+
+  return {
+    ...controller,
+
+    get state() {
+      return getState().commerceContext;
+    },
+
+    setTrackingId: (trackingId: string) =>
+      dispatch(
+        setContext({
+          ...getState().commerceContext,
+          trackingId,
+        })
+      ),
+
+    setLanguage: (language: string) =>
+      dispatch(
+        setContext({
+          ...getState().commerceContext,
+          language,
+        })
+      ),
+
+    setCurrency: (currency: string) =>
+      dispatch(
+        setContext({
+          ...getState().commerceContext,
+          currency,
+        })
+      ),
+
+    setClientId: (clientId: string) =>
+      dispatch(
+        setContext({
+          ...getState().commerceContext,
+          clientId,
+        })
+      ),
+
+    setUser: (user: User) => dispatch(setUser(user)),
+
+    setView: (view: View) => dispatch(setView(view)),
+  };
+}
+
+function loadBaseContextReducers(
+  engine: CommerceEngine
+): engine is CommerceEngine {
+  engine.addReducers({commerceContext});
+  return true;
+}

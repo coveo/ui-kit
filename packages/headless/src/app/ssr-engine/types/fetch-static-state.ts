@@ -1,31 +1,22 @@
 import {AnyAction} from '@reduxjs/toolkit';
+import {CoreEngine} from '../../engine';
 import {
   ControllerStaticStateMap,
+  ControllersMap,
   ControllersPropsMap,
+  EngineDefinitionControllersPropsOption,
   EngineStaticState,
+  OptionsTuple,
 } from './common';
+import {FromBuildResult} from './from-build-result';
 
-export type EngineDefinitionFetchStaticStateOptions<
-  TControllersStaticState extends ControllersPropsMap,
-> = {controllers: TControllersStaticState};
+export type FetchStaticStateOptions = {};
 
-export type FetchStaticStateWithoutProps<
-  TControllersStaticState extends ControllerStaticStateMap,
+export type FetchStaticState<
+  TEngine extends CoreEngine,
+  TControllers extends ControllersMap,
   TSearchAction extends AnyAction,
-> = {
-  /**
-   * Executes only the initial search for a given configuration, then returns a resumable snapshot of engine state along with the state of the controllers.
-   *
-   * Useful for static generation and server-side rendering.
-   */
-  fetchStaticState(): Promise<
-    EngineStaticState<TSearchAction, TControllersStaticState>
-  >;
-};
-
-export type FetchStaticStateWithProps<
   TControllersStaticState extends ControllerStaticStateMap,
-  TSearchAction extends AnyAction,
   TControllersProps extends ControllersPropsMap,
 > = {
   /**
@@ -33,7 +24,17 @@ export type FetchStaticStateWithProps<
    *
    * Useful for static generation and server-side rendering.
    */
-  fetchStaticState(
-    options: EngineDefinitionFetchStaticStateOptions<TControllersProps>
+  (
+    ...params: OptionsTuple<
+      FetchStaticStateOptions &
+        EngineDefinitionControllersPropsOption<TControllersProps>
+    >
   ): Promise<EngineStaticState<TSearchAction, TControllersStaticState>>;
+
+  fromBuildResult: FromBuildResult<
+    TEngine,
+    TControllers,
+    FetchStaticStateOptions,
+    EngineStaticState<TSearchAction, TControllersStaticState>
+  >;
 };

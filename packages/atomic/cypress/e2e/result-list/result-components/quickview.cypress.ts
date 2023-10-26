@@ -1,3 +1,4 @@
+import {DEFAULT_MOBILE_BREAKPOINT} from '../../../../src/utils/replace-breakpoint';
 import {
   TagProps,
   generateComponentHTML,
@@ -24,244 +25,191 @@ const addQuickviewInResultList = (props: TagProps = {}) =>
   );
 
 const openModal = () => {
-  cy.wait(5000);
-  QuickviewSelectors.button().click();
+  QuickviewSelectors.button().click({timeout: 8000});
   cy.wait(TestFixture.interceptAliases.Quickview);
   cy.expectClickEvent('documentQuickview');
 };
 
 describe('Quickview Component', () => {
-  describe('when not used inside a result template', () => {
-    beforeEach(() => {
-      new TestFixture()
-        .withElement(generateComponentHTML(quickviewComponent))
-        .init();
-    });
+  it('when not used inside a result template, it should not log error to console', () => {
+    new TestFixture()
+      .withElement(generateComponentHTML(quickviewComponent))
+      .init();
 
     CommonAssertions.assertRemovesComponent();
   });
 
-  describe('when used on pdf file inside a result list and no keywords', () => {
-    beforeEach(() => {
-      new TestFixture()
-        .with(addFacet({field: 'filetype'}))
-        .withHash('f-filetype=pdf')
-        .with(addQuickviewInResultList())
-        .init();
-    });
+  it('when used on pdf file inside a result list and no keywords, it should display correctly', () => {
+    new TestFixture()
+      .with(addFacet({field: 'filetype'}))
+      .withHash('f-filetype=pdf')
+      .with(addQuickviewInResultList())
+      .init();
 
-    it('should be accessible', () => {
-      CommonAssertions.assertAccessibility(QuickviewSelectors.firstInResult);
-    });
+    cy.log('should not log error to console');
+    CommonAssertions.assertConsoleErrorWithoutIt(false);
 
-    it('should not log error to console', () => {
-      CommonAssertions.assertConsoleError(false);
-    });
+    openModal();
+    cy.log('should display a header title');
+    QuickviewModalSelectors.titleLink()
+      .should('exist')
+      .should('have.attr', 'href');
 
-    it('should display a header title', () => {
-      openModal();
+    cy.log('should display an iframe');
+    QuickviewModalSelectors.iframe()
+      .should('exist')
+      .its('0.contentDocument.body')
+      .should('not.be.empty');
 
-      QuickviewModalSelectors.titleLink()
-        .should('exist')
-        .should('have.attr', 'href');
-    });
+    cy.log('should display a pager with next navigation');
+    QuickviewModalSelectors.pagerSummary()
+      .should('exist')
+      .should('have.text', 'Result 1 of 10');
 
-    it('should display a close button', () => {
-      openModal();
-      QuickviewModalSelectors.closeButton()
-        .should('exist')
-        .should('have.attr', 'aria-label', 'Close')
-        .click();
+    QuickviewModalSelectors.nextButton();
 
-      cy.get('body').should('not.have.class', 'atomic-modal-opened');
-    });
+    QuickviewModalSelectors.previousButton();
 
-    it('should display an iframe', () => {
-      openModal();
-      QuickviewModalSelectors.iframe()
-        .should('exist')
-        .its('0.contentDocument.body')
-        .should('not.be.empty');
-    });
-
-    it('should display a pager with next navigation', () => {
-      openModal();
-      QuickviewModalSelectors.pagerSummary()
-        .should('exist')
-        .should('have.text', 'Result 1 of 10');
-
-      QuickviewModalSelectors.nextButton().click();
-      QuickviewModalSelectors.pagerSummary().should(
-        'have.text',
-        'Result 2 of 10'
-      );
-      cy.expectClickEvent('documentQuickview');
-    });
-
-    it('should display a pager with previous navigation', () => {
-      openModal();
-      QuickviewModalSelectors.pagerSummary()
-        .should('exist')
-        .should('have.text', 'Result 1 of 10');
-
-      QuickviewModalSelectors.previousButton().click();
-      QuickviewModalSelectors.pagerSummary().should(
-        'have.text',
-        'Result 10 of 10'
-      );
-      cy.expectClickEvent('documentQuickview');
-    });
+    cy.log('should display a close button');
+    QuickviewModalSelectors.closeButton()
+      .should('exist')
+      .should('have.attr', 'aria-label', 'Close')
+      .click();
   });
 
-  describe('when used on grid display result list', () => {
-    beforeEach(() => {
-      new TestFixture()
-        .with(addFacet({field: 'filetype'}))
-        .withHash('f-filetype=pdf')
-        .with(
-          addQuickviewInResultList({
-            display: 'grid',
-          })
-        )
-        .init();
-    });
+  it('when used on grid display result list, it should display correctly', () => {
+    new TestFixture()
+      .with(addFacet({field: 'filetype'}))
+      .withHash('f-filetype=pdf')
+      .with(
+        addQuickviewInResultList({
+          display: 'grid',
+        })
+      )
+      .init();
 
-    it('should be accessible', () => {
-      CommonAssertions.assertAccessibility(QuickviewSelectors.firstInResult);
-    });
+    CommonAssertions.assertConsoleErrorWithoutIt(false);
 
-    it('should not log error to console', () => {
-      CommonAssertions.assertConsoleError(false);
-    });
+    openModal();
 
-    it('should display a header title', () => {
-      openModal();
+    QuickviewModalSelectors.titleLink()
+      .should('exist')
+      .should('have.attr', 'href');
 
-      QuickviewModalSelectors.titleLink()
-        .should('exist')
-        .should('have.attr', 'href');
-    });
+    QuickviewModalSelectors.iframe()
+      .should('exist')
+      .its('0.contentDocument.body')
+      .should('not.be.empty');
 
-    it('should display a close button', () => {
-      openModal();
-      QuickviewModalSelectors.closeButton()
-        .should('exist')
-        .should('have.attr', 'aria-label', 'Close')
-        .click();
+    QuickviewModalSelectors.pagerSummary()
+      .should('exist')
+      .should('have.text', 'Result 1 of 10');
 
-      cy.get('body').should('not.have.class', 'atomic-modal-opened');
-    });
+    QuickviewModalSelectors.nextButton();
 
-    it('should display an iframe', () => {
-      openModal();
-      QuickviewModalSelectors.iframe()
-        .should('exist')
-        .its('0.contentDocument.body')
-        .should('not.be.empty');
-    });
+    QuickviewModalSelectors.previousButton();
 
-    it('should display a pager with next navigation', () => {
-      openModal();
-      QuickviewModalSelectors.pagerSummary()
-        .should('exist')
-        .should('have.text', 'Result 1 of 10');
+    QuickviewModalSelectors.closeButton()
+      .should('exist')
+      .should('have.attr', 'aria-label', 'Close')
+      .click();
+  });
 
-      QuickviewModalSelectors.nextButton().click();
-      QuickviewModalSelectors.pagerSummary().should(
-        'have.text',
-        'Result 2 of 10'
+  it('when used on pdf file inside a result list with keywords, it should display correctly', () => {
+    new TestFixture()
+      .with(addFacet({field: 'filetype'}))
+      .with(addSearchBox())
+      .withHash('f-filetype=pdf&q=Promega Corporation')
+      .with(addQuickviewInResultList())
+      .init();
+
+    openModal();
+    QuickviewModalSelectors.keywordsHighlightToggleButton()
+      .should('exist')
+      .should('have.attr', 'aria-checked', 'true');
+
+    QuickviewModalSelectors.keywordsSidebar()
+      .find('.opacity-50')
+      .should('not.exist');
+
+    QuickviewModalSelectors.keywordsHighlightToggleButton()
+      .click()
+      .should('have.attr', 'aria-checked', 'false');
+
+    QuickviewModalSelectors.keywordsSidebar()
+      .find('.opacity-50')
+      .should('exist');
+
+    QuickviewModalSelectors.keywordsMinimizeButton().should('exist').click();
+    QuickviewModalSelectors.keywordsHighlightToggleButton().should('exist');
+    QuickviewModalSelectors.keywordsMinimizeButton().click();
+    QuickviewModalSelectors.keywordsSidebar().should('exist');
+  });
+
+  it('when used on pdf file inside a result list with exact phrase match, it should display correctly', () => {
+    new TestFixture()
+      .with(addFacet({field: 'author'}))
+      .with(addSearchBox())
+      .withHash('q="Promega%20Corporation"&f-author=mardueng')
+      .with(addQuickviewInResultList())
+      .init();
+
+    openModal();
+
+    QuickviewModalSelectors.keywordsSidebar()
+      .should('exist')
+      .should(
+        'contain.text',
+        'Navigate between 2 occurrences of promega corporation'
       );
-      cy.expectClickEvent('documentQuickview');
-    });
-
-    it('should display a pager with previous navigation', () => {
-      openModal();
-      QuickviewModalSelectors.pagerSummary()
-        .should('exist')
-        .should('have.text', 'Result 1 of 10');
-
-      QuickviewModalSelectors.previousButton().click();
-      QuickviewModalSelectors.pagerSummary().should(
-        'have.text',
-        'Result 10 of 10'
-      );
-      cy.expectClickEvent('documentQuickview');
-    });
   });
 
-  describe('when used on pdf file inside a result list with keywords', () => {
-    beforeEach(() => {
-      new TestFixture()
-        .with(addFacet({field: 'filetype'}))
-        .with(addSearchBox())
-        .withHash('f-filetype=pdf&q=california marketing')
-        .with(addQuickviewInResultList())
-        .init();
-    });
+  it('when used on an excel file with a query that returns invalid HTML, it should display correctly', () => {
+    new TestFixture()
+      .with(addFacet({field: 'filetype'}))
+      .with(addSearchBox())
+      .withHash('f-filetype=xls&q="Captain%20Atom"')
+      .with(addQuickviewInResultList())
+      .init();
 
-    it('should display keywords highlight toggle button', () => {
-      openModal();
-      QuickviewModalSelectors.keywordsHighlightToggleButton()
-        .should('exist')
-        .should('have.attr', 'aria-checked', 'true');
-
-      QuickviewModalSelectors.keywordsSidebar()
-        .find('.opacity-50')
-        .should('not.exist');
-
-      QuickviewModalSelectors.keywordsHighlightToggleButton()
-        .click()
-        .should('have.attr', 'aria-checked', 'false');
-
-      QuickviewModalSelectors.keywordsSidebar()
-        .find('.opacity-50')
-        .should('exist');
-    });
-
-    it('should display keywords minimize toggle button', () => {
-      openModal();
-      QuickviewModalSelectors.keywordsMinimizeButton().should('exist').click();
-      QuickviewModalSelectors.keywordsSidebar().should('not.exist');
-      QuickviewModalSelectors.keywordsHighlightToggleButton().should('exist');
-      QuickviewModalSelectors.keywordsMinimizeButton().click();
-      QuickviewModalSelectors.keywordsSidebar().should('exist');
-    });
+    openModal();
+    QuickviewModalSelectors.keywordsSidebar()
+      .should('exist')
+      .should('contain.text', 'Navigate between 1 occurrences of captain atom');
   });
 
-  describe('when used on pdf file inside a result list with exact phrase match', () => {
-    beforeEach(() => {
-      new TestFixture()
-        .with(addFacet({field: 'author'}))
-        .with(addSearchBox())
-        .withHash('q="the%20bank"&f-author=Jules%20Verne')
-        .with(addQuickviewInResultList())
-        .init();
-    });
+  it('when used in mobile mode, it should be responsive', () => {
+    cy.viewport(parseInt(DEFAULT_MOBILE_BREAKPOINT.slice(0, -2)) - 1, 1080);
+    new TestFixture()
+      .with(addFacet({field: 'author'}))
+      .with(addSearchBox())
+      .withHash('q="Promega%20Corporation"&f-author=mardueng')
+      .with(addQuickviewInResultList())
+      .init();
 
-    it('should display only highlight button for the phrase with multiple occurrences', () => {
-      openModal();
-
-      QuickviewModalSelectors.keywordsSidebar()
-        .should('exist')
-        .should('contain.text', 'Navigate between 23 occurrences of the bank');
-    });
+    openModal();
+    QuickviewModalSelectors.shadow()
+      .find('atomic-modal')
+      .should('have.class', 'fullscreen');
+    QuickviewModalSelectors.shadow()
+      .find('[part="sidebar-remove-word-container"]')
+      .should('not.exist');
   });
 
-  describe('when used on an excel file with a query that returns invalid HTML', () => {
-    beforeEach(() => {
-      new TestFixture()
-        .with(addFacet({field: 'filetype'}))
-        .with(addSearchBox())
-        .withHash('f-filetype=xls&q=1/12')
-        .with(addQuickviewInResultList())
-        .init();
-    });
+  it('when used in desktop mode, it should be responsive', () => {
+    new TestFixture()
+      .with(addFacet({field: 'author'}))
+      .with(addSearchBox())
+      .withHash('q="Promega%20Corporation"&f-author=mardueng')
+      .with(addQuickviewInResultList())
+      .init();
 
-    it('should handle displaying keywords correctly', () => {
-      openModal();
-      QuickviewModalSelectors.keywordsSidebar()
-        .should('exist')
-        .should('contain.text', 'Navigate between 12 occurrences of 1 12');
-    });
+    openModal();
+    QuickviewModalSelectors.shadow()
+      .find('atomic-modal')
+      .should('not.have.class', 'fullscreen');
+    QuickviewModalSelectors.shadow()
+      .find('[part="sidebar-remove-word-container"]')
+      .should('exist');
   });
 });

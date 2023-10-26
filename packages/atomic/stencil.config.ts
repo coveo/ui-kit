@@ -196,4 +196,7 @@ export const config: Config = {
       isDevWatch && replaceHeadlessMap(),
     ],
   },
+  extras: {
+    enableImportInjection: true,
+  },
 };

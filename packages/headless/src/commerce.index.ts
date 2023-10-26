@@ -33,22 +33,29 @@ export type {
 export {buildController} from './controllers/controller/headless-controller';
 
 export type {
+  ContextOptions,
+  User,
+  View,
+  ContextProps,
+  Context,
+  ContextState,
+  ContextControllerState,
+} from './controllers/commerce/context/headless-context';
+export {buildContext} from './controllers/commerce/context/headless-context';
+
+export type {
   ProductListing,
   ProductListingState,
   ProductListingControllerState,
-  ProductListingOptions,
-  ProductListingProps,
 } from './controllers/commerce/product-listing/headless-product-listing';
 export {buildProductListing} from './controllers/commerce/product-listing/headless-product-listing';
 
 export type {
-  PagerInitialState,
-  PagerOptions,
-  PagerProps,
-  Pager,
-  PagerState,
-} from './controllers/commerce/product-listing/pager/headless-product-listing-pager';
-export {buildPager} from './controllers/commerce/product-listing/pager/headless-product-listing-pager';
+  ProductListingPagination,
+  ProductListingPaginationState,
+  ProductListingPaginationControllerState,
+} from './controllers/commerce/product-listing/pagination/headless-product-listing-pagination';
+export {buildProductListingPagination} from './controllers/commerce/product-listing/pagination/headless-product-listing-pagination';
 
 export type {
   InteractiveResult,
@@ -56,3 +63,31 @@ export type {
   InteractiveResultProps,
 } from './controllers/commerce/product-listing/result-list/headless-product-listing-interactive-result';
 export {buildInteractiveResult} from './controllers/commerce/product-listing/result-list/headless-product-listing-interactive-result';
+
+export type {
+  CartOptions,
+  CartItem,
+  CartProps,
+  Cart,
+  CartState,
+  CartControllerState,
+} from './controllers/commerce/context/cart/headless-cart';
+export {buildCart} from './controllers/commerce/context/cart/headless-cart';
+
+export type {
+  SortByRelevance,
+  SortByFields,
+  SortByFieldsFields,
+  SortCriterion,
+  SortProps,
+  SortInitialState,
+  Sort,
+  SortState,
+} from './controllers/commerce/product-listing/sort/headless-product-listing-sort';
+export {
+  buildSort,
+  buildRelevanceSortCriterion,
+  buildFieldsSortCriterion,
+  SortBy,
+  SortDirection,
+} from './controllers/commerce/product-listing/sort/headless-product-listing-sort';

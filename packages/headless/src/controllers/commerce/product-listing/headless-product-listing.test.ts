@@ -1,30 +1,18 @@
 import {Action} from '@reduxjs/toolkit';
 import {configuration} from '../../../app/common-reducers';
-import {
-  fetchProductListing,
-  setProductListingUrl,
-} from '../../../features/commerce/product-listing/product-listing-actions';
+import {contextReducer} from '../../../features/commerce/context/context-slice';
+import {fetchProductListing} from '../../../features/commerce/product-listing/product-listing-actions';
 import {productListingV2Reducer} from '../../../features/commerce/product-listing/product-listing-slice';
 import {buildMockCommerceEngine, MockCommerceEngine} from '../../../test';
-import {
-  buildProductListing,
-  ProductListing,
-  ProductListingOptions,
-} from './headless-product-listing';
+import {buildProductListing, ProductListing} from './headless-product-listing';
 
 describe('headless product-listing', () => {
   let productListing: ProductListing;
   let engine: MockCommerceEngine;
 
-  const baseOptions: ProductListingOptions = {
-    url: 'https://someurl.com',
-  };
-
   beforeEach(() => {
     engine = buildMockCommerceEngine();
-    productListing = buildProductListing(engine, {
-      options: baseOptions,
-    });
+    productListing = buildProductListing(engine);
   });
 
   const expectContainAction = (action: Action) => {
@@ -35,27 +23,9 @@ describe('headless product-listing', () => {
   it('adds the correct reducers to engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       productListing: productListingV2Reducer,
+      commerceContext: contextReducer,
       configuration,
     });
-  });
-
-  it('should validate if #url is missing', () => {
-    expect(() => {
-      buildProductListing(engine, {
-        options: {
-          url: '',
-        },
-      });
-    }).toThrow();
-  });
-
-  it('dispatches #setProductListingUrl on load', () => {
-    expectContainAction(setProductListingUrl);
-  });
-
-  it('setUrl dispatches #setProductListingUrl', () => {
-    productListing.setUrl('http://example.org');
-    expectContainAction(setProductListingUrl);
   });
 
   it('refresh dispatches #fetchProductListing', () => {

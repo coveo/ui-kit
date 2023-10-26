@@ -1,68 +1,49 @@
-import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
+import {createAsyncThunk} from '@reduxjs/toolkit';
 import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
+import {SelectedSortParam} from '../../../api/commerce/commerce-api-params';
 import {ProductListingV2Request} from '../../../api/commerce/product-listings/v2/product-listing-v2-request';
 import {ProductListingV2SuccessResponse} from '../../../api/commerce/product-listings/v2/product-listing-v2-response';
 import {isErrorResponse} from '../../../api/search/search-api-client';
 import {
+  CartSection,
   CategoryFacetSection,
+  CommerceContextSection,
+  CommercePaginationSection,
+  CommerceSortSection,
   ConfigurationSection,
   DateFacetSection,
   FacetOrderSection,
   FacetSection,
   NumericFacetSection,
-  PaginationSection,
   ProductListingV2Section,
-  StructuredSortSection,
   VersionSection,
 } from '../../../state/state-sections';
 import {sortFacets} from '../../../utils/facet-utils';
-import {
-  requiredNonEmptyString,
-  validatePayload,
-} from '../../../utils/validate-payload';
-import {
-  AnalyticsType,
-  PreparableAnalyticsAction,
-} from '../../analytics/analytics-utils';
+import {PreparableAnalyticsAction} from '../../analytics/analytics-utils';
 import {getFacetRequests} from '../../facets/generic/interfaces/generic-facet-request';
 import {logQueryError} from '../../search/search-analytics-actions';
+import {SortBy, SortCriterion} from '../sort/sort';
 import {logProductListingV2Load} from './product-listing-analytics';
-
-export interface SetProductListingUrlPayload {
-  /**
-   * The URL used to determine which product listing to fetch.
-   */
-  url: string;
-}
-
-export const setProductListingUrl = createAction(
-  'commerce/productListing/setUrl',
-  (payload: SetProductListingUrlPayload) =>
-    validatePayload(payload, {
-      url: requiredNonEmptyString,
-    })
-);
 
 export type StateNeededByFetchProductListingV2 = ConfigurationSection &
   ProductListingV2Section &
+  CommerceContextSection &
+  CartSection &
   Partial<
-    FacetSection &
+    CommercePaginationSection &
+      CommerceSortSection &
+      FacetSection &
       NumericFacetSection &
       CategoryFacetSection &
       DateFacetSection &
       FacetOrderSection &
-      StructuredSortSection &
-      PaginationSection &
       VersionSection
   >;
 
 export interface FetchProductListingV2ThunkReturn {
   /** The successful search response. */
   response: ProductListingV2SuccessResponse;
-  analyticsAction: PreparableAnalyticsAction<
-    {analyticsType: AnalyticsType.Search},
-    StateNeededByFetchProductListingV2
-  >;
+  analyticsAction: PreparableAnalyticsAction<StateNeededByFetchProductListingV2>;
 }
 
 export const fetchProductListing = createAsyncThunk<
@@ -75,7 +56,7 @@ export const fetchProductListing = createAsyncThunk<
     const state = getState();
     const {apiClient} = extra;
     const fetched = await apiClient.getProductListing(
-      await buildProductListingRequestV2(state)
+      buildProductListingRequestV2(state)
     );
 
     if (isErrorResponse(fetched)) {
@@ -90,32 +71,26 @@ export const fetchProductListing = createAsyncThunk<
   }
 );
 
-export const buildProductListingRequestV2 = async (
+export const buildProductListingRequestV2 = (
   state: StateNeededByFetchProductListingV2
-): Promise<ProductListingV2Request> => {
+): ProductListingV2Request => {
   const selectedFacets = getFacets(state);
 
+  const {view, user, ...restOfContext} = state.commerceContext;
   return {
     accessToken: state.configuration.accessToken,
     url: state.configuration.platformUrl,
     organizationId: state.configuration.organizationId,
-    trackingId: state.productListing.trackingId,
-    language: state.productListing.language,
-    currency: state.productListing.currency,
-    clientId: state.productListing.clientId,
-    context: state.productListing.context,
+    ...restOfContext,
+    context: {
+      user,
+      view,
+      cart: state.cart.cartItems.map((id) => state.cart.cart[id]),
+    },
     selectedFacets,
-    ...(state.pagination && {
-      selectedPage: {
-        page:
-          Math.ceil(
-            state.pagination.firstResult /
-              (state.pagination.numberOfResults || 1)
-          ) + 1,
-      },
-    }),
-    ...(state.sort && {
-      selectedSort: state.sort,
+    ...(state.commercePagination && {page: state.commercePagination.page}),
+    ...(state.commerceSort && {
+      sort: getSort(state.commerceSort.appliedSort),
     }),
   };
 };
@@ -131,4 +106,26 @@ function getAllFacets(state: StateNeededByFetchProductListingV2) {
     ...getFacetRequests(state.dateFacetSet ?? {}),
     ...getFacetRequests(state.categoryFacetSet ?? {}),
   ];
+}
+
+function getSort(
+  appliedSort: SortCriterion
+): SelectedSortParam['sort'] | undefined {
+  if (!appliedSort) {
+    return;
+  }
+
+  if (appliedSort.by === SortBy.Relevance) {
+    return {
+      sortCriteria: SortBy.Relevance,
+    };
+  } else {
+    return {
+      sortCriteria: SortBy.Fields,
+      fields: appliedSort.fields.map(({name, direction}) => ({
+        field: name,
+        direction,
+      })),
+    };
+  }
 }

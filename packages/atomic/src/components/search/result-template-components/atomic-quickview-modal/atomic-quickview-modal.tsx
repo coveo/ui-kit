@@ -82,6 +82,10 @@ export class AtomicQuickviewModal implements InitializableComponent {
 
   private interactiveResult?: InteractiveResult;
 
+  public componentWillRender(): void {
+    this.minimizeSidebar = this.bindings.store.isMobile();
+  }
+
   @Method()
   public async reset() {
     this.highlightKeywords = {
@@ -112,6 +116,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
             onCancelPendingSelect={() =>
               this.interactiveResult?.cancelPendingSelect()
             }
+            className="truncate"
           >
             {this.result.title}
           </LinkWithResultAnalytics>
@@ -186,7 +191,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
           onClick={() => this.previousQuickview?.emit()}
           text={this.bindings.i18n.t('quickview-previous')}
         ></Button>
-        <p>
+        <p class="text-center">
           {this.bindings.i18n.t('showing-results-of', {
             first: this.current,
             total: this.total,
@@ -321,6 +326,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
   public render() {
     return (
       <atomic-modal
+        fullscreen={this.bindings.store.isMobile()}
         class={'atomic-quickview-modal'}
         isOpen={this.isOpen}
         close={() => this.onClose()}

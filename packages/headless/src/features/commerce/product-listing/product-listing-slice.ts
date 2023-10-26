@@ -1,8 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {
-  fetchProductListing,
-  setProductListingUrl,
-} from './product-listing-actions';
+import {fetchProductListing} from './product-listing-actions';
 import {getProductListingV2InitialState} from './product-listing-state';
 
 export const productListingV2Reducer = createReducer(
@@ -10,9 +7,6 @@ export const productListingV2Reducer = createReducer(
 
   (builder) => {
     builder
-      .addCase(setProductListingUrl, (state, action) => {
-        state.context.view.url = action.payload.url;
-      })
       .addCase(fetchProductListing.rejected, (state, action) => {
         state.error = action.payload ? action.payload : null;
         state.isLoading = false;

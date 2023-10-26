@@ -1,0 +1,11 @@
+{
+  "activeViewId": "34e23962-77db-4585-90cf-1fb5a28f0ad8",
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "configurationTags": [],
+  "id": "b2993cfb-d24d-4f1e-ac9a-e48ef4a82c1a",
+  "label": "Quantic Notifications",
+  "pageAccess": "UseParent",
+  "routeType": "custom-quantic-notifications",
+  "type": "route",
+  "urlPrefix": "quantic-notifications"
+}

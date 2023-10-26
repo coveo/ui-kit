@@ -23,6 +23,12 @@ export function assertBreadcrumbLabel(label: string) {
   });
 }
 
+export function assertBreadcrumbButtonValue(label: string) {
+  it(`should have the button value"${label}"`, () => {
+    BreadboxSelectors.breadcrumbButtonValue().should('have.text', label);
+  });
+}
+
 export function assertDisplayBreadcrumbClearAllButton(display: true) {
   it(`${should(display)} display a "Clear filter" button`, () => {
     BreadboxSelectors.clearAllButton().should(
@@ -82,22 +88,36 @@ export function assertCategoryPathInBreadcrumb(path: string[]) {
 function assertBreadcrumbValueText(facetSelector: string, facetLabel: string) {
   cy.getTextOfAllElements(facetSelector).then((facetValues) => {
     facetValues.forEach((element: string) => {
-      BreadboxSelectors.breadcrumbButton().contains(`${facetLabel}:${element}`);
+      BreadboxSelectors.breadcrumbButtonLabel().contains(facetLabel);
+      BreadboxSelectors.breadcrumbButtonValue().contains(element);
     });
   });
 }
 
+/**
+ * @deprecated use assertSelectedCheckboxFacetsInBreadcrumbAssertions instead
+ */
 export function assertSelectedCheckboxFacetsInBreadcrumb(
   BaseFacetSelector: FacetWithCheckboxSelector,
   facetLabelValue = label
 ) {
   it('should display the selected checkbox facets in the breadcrumbs', () => {
-    BaseFacetSelector.selectedCheckboxValue()
-      .parent()
-      .find('[part="value-label"]')
-      .as('facetAllValuesLabel');
-    assertBreadcrumbValueText('@facetAllValuesLabel', facetLabelValue);
+    assertSelectedCheckboxFacetsInBreadcrumbAssertions(
+      BaseFacetSelector,
+      facetLabelValue
+    );
   });
+}
+
+export function assertSelectedCheckboxFacetsInBreadcrumbAssertions(
+  BaseFacetSelector: FacetWithCheckboxSelector,
+  facetLabelValue = label
+) {
+  BaseFacetSelector.selectedCheckboxValue()
+    .parent()
+    .find('[part="value-label"]')
+    .as('facetAllValuesLabel');
+  assertBreadcrumbValueText('@facetAllValuesLabel', facetLabelValue);
 }
 
 export function assertSelectedLinkFacetsInBreadcrumb(

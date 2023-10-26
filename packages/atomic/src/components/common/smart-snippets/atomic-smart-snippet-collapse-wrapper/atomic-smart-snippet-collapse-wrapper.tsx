@@ -3,6 +3,9 @@ import ArrowDown from '../../../../images/arrow-down.svg';
 import {InitializeBindings} from '../../../../utils/initialization-utils';
 import {AnyBindings} from '../../interface/bindings';
 
+/**
+ * @internal
+ */
 @Component({
   tag: 'atomic-smart-snippet-collapse-wrapper',
   styleUrl: 'atomic-smart-snippet-collapse-wrapper.pcss',
@@ -25,6 +28,21 @@ export class AtomicSmartSnippetCollapseWrapper {
 
   private shouldRenderButton = !!this.maximumHeight;
 
+  private validateProps() {
+    if (
+      this.maximumHeight &&
+      (!this.collapsedHeight || this.maximumHeight < this.collapsedHeight)
+    ) {
+      throw new Error(
+        'snippetMaximumHeight must be equal or greater than snippetCollapsedHeight'
+      );
+    }
+  }
+
+  public initialize() {
+    this.validateProps();
+  }
+
   public componentDidRender() {
     if (this.fullHeight === undefined && this.shouldRenderButton) {
       this.initializeFullHeight();
@@ -35,10 +53,9 @@ export class AtomicSmartSnippetCollapseWrapper {
     this.fullHeight = this.host.getBoundingClientRect().height;
     this.showButton = this.fullHeight! > this.maximumHeight!;
     this.isExpanded = !this.showButton;
-    this.host.style.setProperty('--full-height', `${this.fullHeight}px`);
     this.host.style.setProperty(
       '--collapsed-size',
-      `${this.showButton ? this.collapsedHeight : this.fullHeight}px`
+      this.collapsedHeight + 'px'
     );
   }
 

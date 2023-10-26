@@ -3,15 +3,14 @@
   "private": true,
   "scripts": {
     "postinstall": "husky install && patch-package && nx run-many --target=install:isolated",
-    "reset:install": "git checkout origin/master package-lock.json && npm ci",
-    "clean:install": "rimraf **/node_modules && npm run reset:install",
+    "reset:install": "git checkout origin/master package-lock.json && npm i",
+    "clean:install": "git clean -xfd && npm run reset:install",
     "dev:atomic": "concurrently \"npm run -w @coveo/headless dev\" \"npm run -w @coveo/atomic dev\"",
     "build": "nx run-many --target=build",
     "test": "nx run-many --target=test",
     "e2e": "nx run-many --target=e2e",
-    "lint:spell": "cspell --no-progress '**/*.md'",
-    "lint:check": "npx eslint . ; npm run lint:spell",
-    "lint:fix": "npx eslint --fix .",
+    "lint:check": "eslint . && cspell '**/*.md' --no-progress --show-suggestions --show-context && prettier --check '**/*.{css,pcss,html,md,yml,ts,tsx,js,mjs,json}'",
+    "lint:fix": "eslint --fix . && prettier --write '**/*.{css,pcss,html,md,yml,ts,tsx,js,mjs,json}'",
     "pr:report": "node ./scripts/reports/pr-report.mjs",
     "report:bundle-size:time-series": "node ./scripts/reports/bundle-size/time-series.mjs",
     "commit": "git-cz",
@@ -21,41 +20,43 @@
     "release": "npm run nx:graph && npm run release:phase0 && npm run release:phase1-3 && npm run release:phase4",
     "nx:graph": "nx graph --file=topology.json",
     "release:phase0": "npx -p=@coveo/release git-lock",
-    "release:phase1-3": "nx run-many --targets=release:phase2 --all --parallel=false --output-style=stream && npx -p=@coveo/release reify",
-    "release:phase4": "npx -p=@coveo/release git-publish-all"
+    "release:phase1-3": "npm run release:phase2 && npx -p=@coveo/release reify",
+    "release:phase2": "nx run-many --targets=release:phase2 --all --parallel=false --output-style=stream",
+    "release:phase4": "npx -p=@coveo/release git-publish-all",
+    "release:phase5": "nx run-many --targets=release:phase5 --all"
   },
   "devDependencies": {
     "@actions/core": "1.10.1",
-    "@actions/github": "5.1.1",
-    "@commitlint/config-conventional": "17.7.0",
-    "@commitlint/lint": "17.7.0",
+    "@actions/github": "6.0.0",
+    "@commitlint/config-conventional": "17.8.1",
+    "@commitlint/lint": "17.8.1",
     "@cspell/dict-fr-fr": "2.2.2",
-    "@cspell/eslint-plugin": "7.3.6",
-    "@octokit/rest": "20.0.1",
-    "@rollup/plugin-typescript": "11.1.3",
-    "@trivago/prettier-plugin-sort-imports": "4.2.0",
+    "@cspell/eslint-plugin": "7.3.8",
+    "@octokit/rest": "20.0.2",
+    "@rollup/plugin-typescript": "11.1.5",
+    "@trivago/prettier-plugin-sort-imports": "4.2.1",
     "@types/execa": "^2.0.0",
-    "@types/jest": "29.5.4",
-    "@types/node": "20.6.1",
-    "@typescript-eslint/eslint-plugin": "6.7.0",
-    "@typescript-eslint/parser": "6.7.0",
-    "aws-sdk": "2.1458.0",
+    "@types/jest": "29.5.6",
+    "@types/node": "20.8.7",
+    "@typescript-eslint/eslint-plugin": "6.9.0",
+    "@typescript-eslint/parser": "6.9.0",
+    "aws-sdk": "2.1479.0",
     "commitizen": "4.3.0",
-    "concurrently": "8.2.1",
+    "concurrently": "8.2.2",
     "cross-fetch": "4.0.0",
-    "cspell": "7.3.6",
+    "cspell": "7.3.8",
     "cz-conventional-changelog": "3.3.0",
     "detect-indent": "7.0.1",
     "esbuild": "0.14.2",
     "esbuild-plugin-alias": "0.2.1",
-    "eslint": "8.49.0",
+    "eslint": "8.52.0",
     "eslint-config-prettier": "9.0.0",
-    "eslint-plugin-cypress": "2.14.0",
+    "eslint-plugin-cypress": "2.15.1",
     "eslint-plugin-package-lock": "1.0.0",
     "execa": "^8.0.0",
     "exponential-backoff": "^3.1.0",
     "glob": "^10.2.6",
-    "gts": "5.0.1",
+    "gts": "5.2.0",
     "husky": "8.0.3",
     "lint-staged": "14.0.1",
     "nx": "15.9.7",
@@ -63,17 +64,14 @@
     "prettier": "3.0.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "rimraf": "5.0.1",
+    "rimraf": "5.0.5",
     "semver": "7.5.4",
     "typescript": "5.2.2"
   },
   "overrides": {
-    "@coveo/quantic": {
-      "@lwc/compiler": "3.3.0"
-    },
     "@coveo/release": {
       "@types/async-retry": {
-        "@types/retry": "0.12.2"
+        "@types/retry": "0.12.4"
       }
     }
   },
@@ -89,6 +87,7 @@
     "packages/atomic-angular",
     "packages/atomic-angular/projects/*",
     "packages/samples/*",
+    "packages/samples/headless-ssr/*",
     "utils/*",
     "!utils/atomic-storybook"
   ],
@@ -115,5 +114,6 @@
   },
   "dependencies": {
     "upgrade": "1.1.0"
-  }
+  },
+  "version": "0.0.0"
 }

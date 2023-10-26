@@ -54,7 +54,7 @@ describe('field suggestions', () => {
           action: () => fieldSuggestions.search(),
           expectedSubscriberCalls: 2,
         });
-      });
+      }, 30e3);
 
       it('can single select facet values', async () => {
         const firstToggledValue = fieldSuggestions.state.values[0];

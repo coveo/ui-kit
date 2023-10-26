@@ -426,6 +426,36 @@ describe('folding slice', () => {
       );
     });
 
+    it('should prioritize root result over parent / child with same uniqueId when filtering out duplicates', () => {
+      const duplicateRootResultBaseConfig: Partial<ResultWithFolding> = {
+        uniqueId: '123',
+        raw: {
+          urihash: '',
+          collection: 'duplicates_test',
+          id: 'a',
+          parent: 'a',
+        },
+      };
+      const rootResult = buildMockResultWithFolding({
+        ...duplicateRootResultBaseConfig,
+        isRecommendation: true,
+      });
+
+      rootResult.parentResult = buildMockResultWithFolding(
+        duplicateRootResultBaseConfig
+      );
+
+      rootResult.childResults = [
+        buildMockResultWithFolding(duplicateRootResultBaseConfig),
+      ];
+
+      dispatchSearch([rootResult]);
+
+      expect(state.collections.duplicates_test.result.isRecommendation).toBe(
+        true
+      );
+    });
+
     it('should still resolve the hierarchy when child fields are single-value arrays', () => {
       const indexedResults = buildMockResultsFromHierarchy(
         'thread',
@@ -602,8 +632,14 @@ describe('folding slice', () => {
     });
 
     it('creates a collection when a result has a parentResult', () => {
-      const childResult = buildMockResultWithFolding();
-      childResult.parentResult = buildMockResultWithFolding();
+      const childResult = buildMockResultWithFolding({
+        uniqueId: 'child',
+        raw: {urihash: '', parent: 'a', id: 'b'},
+      });
+      childResult.parentResult = buildMockResultWithFolding({
+        uniqueId: 'parent',
+        raw: {urihash: '', parent: '', id: 'a'},
+      });
       childResult.raw.collection = childResult.parentResult.raw.collection =
         'the_collection';
       dispatchSearch([childResult]);

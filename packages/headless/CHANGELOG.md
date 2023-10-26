@@ -1,3 +1,49 @@
+# 2.37.0 (2023-10-25)
+
+### Features
+
+- add analyticsMode & relay ([#3277](https://github.com/coveo/ui-kit/issues/3277)) ([8b33bb5](https://github.com/coveo/ui-kit/commits/8b33bb5f511926f7b7bb49ecb01aee9e4611ab95))
+- add trackingId if analyticsMode=next ([#3295](https://github.com/coveo/ui-kit/issues/3295)) ([13f69a9](https://github.com/coveo/ui-kit/commits/13f69a960c24cb9d0007d0c9a079ed5d334ec881))
+- add ze magic cookie ([#3299](https://github.com/coveo/ui-kit/issues/3299)) ([eda1e3c](https://github.com/coveo/ui-kit/commits/eda1e3c6c59a53b30fa11ff37bd715e03bc912f7))
+- **atomic:** added buttons to rephrase a generated answer ([#3287](https://github.com/coveo/ui-kit/issues/3287)) ([60a841a](https://github.com/coveo/ui-kit/commits/60a841a229a77bfb14b825ab3e5d75a2203ea9d3))
+- **commerce:** make sort comply with api ([#3271](https://github.com/coveo/ui-kit/issues/3271)) ([24a16ce](https://github.com/coveo/ui-kit/commits/24a16cee07ae268a1595459ab7af22b8d14b8e0f))
+- **headless:** add Copy generated answer controller action for GenQA… ([#3290](https://github.com/coveo/ui-kit/issues/3290)) ([49a68d5](https://github.com/coveo/ui-kit/commits/49a68d5fa458d34d1f7936048a91c7dbc0f37aa8))
+
+# 2.36.0 (2023-10-18)
+
+### Bug Fixes
+
+- **headless:** prioritize root result when filtering out duplicates in folded collection ([#3265](https://github.com/coveo/ui-kit/issues/3265)) ([0ae8c4b](https://github.com/coveo/ui-kit/commits/0ae8c4b9f6852ae878d47ec63355086f765abd7f))
+
+### Features
+
+- **headless:** added RGA answer rephrasing ([#3279](https://github.com/coveo/ui-kit/issues/3279)) ([bb46537](https://github.com/coveo/ui-kit/commits/bb465377b913085ffcac06c32456c31c8536b6af))
+- **headless:** create the toggle on/off controller action for GenQA component ([#3276](https://github.com/coveo/ui-kit/issues/3276)) ([8ba5550](https://github.com/coveo/ui-kit/commits/8ba55501d04199b01e4deae903a6183ab289b073))
+- **headless:** feedback modal feature for RGA added ([#3255](https://github.com/coveo/ui-kit/issues/3255)) ([824ab09](https://github.com/coveo/ui-kit/commits/824ab097178b1439f90686d65efdcaee578fd57b))
+
+# 2.35.0 (2023-10-11)
+
+### Bug Fixes
+
+- import immer only as type ([#3246](https://github.com/coveo/ui-kit/issues/3246)) ([b868fc2](https://github.com/coveo/ui-kit/commits/b868fc210c66918f7acd5817e118df234234724f))
+
+### Features
+
+- **commerce:** expose sort on commerce module ([#3257](https://github.com/coveo/ui-kit/issues/3257)) ([0bd390f](https://github.com/coveo/ui-kit/commits/0bd390f888c719420a54f5d7bccbd672a2e4cded))
+- **commerce:** support sorting v2 product listings ([#3240](https://github.com/coveo/ui-kit/issues/3240)) ([79bfed5](https://github.com/coveo/ui-kit/commits/79bfed553206e6c235bf921f143f8956fdec7c0a))
+- **headless,headless-react:** added .fromBuildResult SSR utility ([#3242](https://github.com/coveo/ui-kit/issues/3242)) ([0026ae7](https://github.com/coveo/ui-kit/commits/0026ae7d47770a868be43f65b445cb2eac256aae))
+
+# 2.34.0 (2023-10-04)
+
+### Bug Fixes
+
+- **headless:** fix structuredClone for locker service ([#3238](https://github.com/coveo/ui-kit/issues/3238)) ([b836e01](https://github.com/coveo/ui-kit/commits/b836e013a6a5d630dddb29fd9640fe40a211d09f))
+
+### Features
+
+- **atomic,headless:** ga release for automatic-facets feature ([#3224](https://github.com/coveo/ui-kit/issues/3224)) ([4decff2](https://github.com/coveo/ui-kit/commits/4decff2d91f415d392177b94dfd10e4c3f8566e8))
+- **commerce:** create context & cart controllers ([#3190](https://github.com/coveo/ui-kit/issues/3190)) ([2a51106](https://github.com/coveo/ui-kit/commits/2a511068f8b7e780a4b442e655f84ca41faf65dd))
+
 # 2.33.0 (2023-09-27)
 
 ### Bug Fixes

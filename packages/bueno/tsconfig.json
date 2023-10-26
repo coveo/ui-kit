@@ -10,8 +10,6 @@
     "isolatedModules": true,
     "types": []
   },
-  "include": [
-    "src"
-  ],
+  "include": ["src"],
   "exclude": ["**/*.test.ts"]
 }

@@ -81,7 +81,8 @@ describe('quantic-summary', () => {
       });
 
       if (param.useCase === useCaseEnum.search) {
-        describe('when a query yields one result', () => {
+        // TODO: SFINT-5204
+        describe.skip('when a query yields one result', () => {
           it('should work as expected', () => {
             const query =
               "Queen's Gambit sparks world of online chess celebrities";

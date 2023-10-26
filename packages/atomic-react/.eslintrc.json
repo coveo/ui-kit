@@ -2,8 +2,5 @@
   "env": {
     "browser": true
   },
-  "ignorePatterns": [
-    "dist/",
-    "src/"
-  ]
+  "ignorePatterns": ["dist/", "src/"]
 }

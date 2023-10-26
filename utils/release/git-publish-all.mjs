@@ -13,6 +13,8 @@ import {
   gitUpdateRef,
   gitPublishBranch,
   gitPull,
+  gitSetRefOnCommit,
+  gitPush,
 } from '@coveo/semantic-monorepo-tools';
 import {createAppAuth} from '@octokit/auth-app';
 import {spawnSync} from 'child_process';
@@ -62,6 +64,17 @@ import {removeWriteAccessRestrictions} from './lock-master.mjs';
 
   // And push them
   await gitPushTags();
+
+  // Current release branch
+  // TODO v3: Bump to release/v3
+  const currentReleaseBranch = 'release/v2';
+  await gitCheckoutBranch('release/v2');
+  await gitSetRefOnCommit(
+    'origin',
+    `refs/heads/${currentReleaseBranch}`,
+    commit
+  );
+  await gitPush({refs: [currentReleaseBranch], force: true});
 
   // Unlock the main branch
   await removeWriteAccessRestrictions();
