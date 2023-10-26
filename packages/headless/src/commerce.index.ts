@@ -94,6 +94,7 @@ export {
 
 export type {
   Facet,
+  FacetState,
   FacetOptions,
   FacetProps,
 } from './controllers/commerce/product-listing/facets/headless-product-listing-facet';

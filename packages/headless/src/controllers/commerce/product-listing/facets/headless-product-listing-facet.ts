@@ -27,8 +27,13 @@ export type Facet = Omit<
   CoreFacet,
   'sortBy' | 'isSortedBy' | 'enable' | 'disable' | 'state'
 > & {
-  state: Omit<CoreFacetState, 'enabled' | 'sortCriterion' | 'isLoading'>;
+  state: FacetState;
 };
+
+export type FacetState = Omit<
+  CoreFacetState,
+  'enabled' | 'sortCriterion' | 'isLoading'
+>;
 
 export interface FacetProps {
   options: FacetOptions;
