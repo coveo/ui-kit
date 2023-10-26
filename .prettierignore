@@ -8,3 +8,6 @@ dist
 **/*.d.ts
 LICENSE.md
 **/.storybook/**
+**/.angular/**
+**/.next/**
+**/www/**
