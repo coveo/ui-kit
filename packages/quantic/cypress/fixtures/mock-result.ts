@@ -1,3 +1,4 @@
+//TODO: Refactor with ./packages/atomic/cypress/utils/mock-result.ts
 import {Raw, Result} from '@coveo/headless';
 
 export function buildMockResult(config: Partial<Result> = {}): Result {
