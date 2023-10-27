@@ -7,6 +7,7 @@ import {
   VersionSection,
   CommerceSortSection,
   NumericFacetSection,
+  DateFacetSection,
 } from './state-sections';
 
 export type CommerceAppState = ConfigurationSection &
@@ -16,4 +17,5 @@ export type CommerceAppState = ConfigurationSection &
   CommerceContextSection &
   CartSection &
   NumericFacetSection &
+  DateFacetSection &
   VersionSection;
