@@ -942,6 +942,7 @@ describe('Facet v1 Test Suites', () => {
           setupSelectedFacet();
           cy.wait(TestFixture.interceptAliases.Search);
         });
+
         CommonAssertions.assertAccessibility(breadboxComponent);
         BreadboxAssertions.assertDisplayBreadcrumb(true);
         BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
