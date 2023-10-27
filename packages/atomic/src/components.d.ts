@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { AutomaticFacet, CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, GeneratedAnswer, InlineLink, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+import { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, InlineLink, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
@@ -31,7 +31,7 @@ import { RedirectionPayload } from "./components/search/atomic-search-box/redire
 import { AriaLabelGenerator } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
-export { AutomaticFacet, CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, GeneratedAnswer, InlineLink, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+export { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, InlineLink, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
@@ -227,6 +227,10 @@ export namespace Components {
          */
         "numberOfValues": number;
         /**
+          * Specifies how a result must match the selected facet values. Allowed values: - `atLeastOneValue`: A result will match if at least one of the corresponding facet values is selected. - `allValues`: A result will match if all corresponding facet values are selected.
+         */
+        "resultsMustMatch": FacetResultsMustMatch;
+        /**
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */
         "sortCriteria": FacetSortCriterion;
@@ -309,6 +313,10 @@ export namespace Components {
           * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
          */
         "numberOfValues": number;
+        /**
+          * Specifies how a result must match the selected facet values. Allowed values: - `atLeastOneValue`: A result will match if at least one of the corresponding facet values is selected. - `allValues`: A result will match if all corresponding facet values are selected.
+         */
+        "resultsMustMatch": FacetResultsMustMatch;
         /**
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', and 'automatic'.
          */
@@ -551,6 +559,10 @@ export namespace Components {
           * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
          */
         "numberOfValues": number;
+        /**
+          * Specifies how a result must match the selected facet values. Allowed values: - `atLeastOneValue`: A result will match if at least one of the corresponding facet values is selected. - `allValues`: A result will match if all corresponding facet values are selected.
+         */
+        "resultsMustMatch": FacetResultsMustMatch;
         /**
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */
@@ -4348,6 +4360,10 @@ declare namespace LocalJSX {
          */
         "numberOfValues"?: number;
         /**
+          * Specifies how a result must match the selected facet values. Allowed values: - `atLeastOneValue`: A result will match if at least one of the corresponding facet values is selected. - `allValues`: A result will match if all corresponding facet values are selected.
+         */
+        "resultsMustMatch"?: FacetResultsMustMatch;
+        /**
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */
         "sortCriteria"?: FacetSortCriterion;
@@ -4430,6 +4446,10 @@ declare namespace LocalJSX {
           * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
          */
         "numberOfValues"?: number;
+        /**
+          * Specifies how a result must match the selected facet values. Allowed values: - `atLeastOneValue`: A result will match if at least one of the corresponding facet values is selected. - `allValues`: A result will match if all corresponding facet values are selected.
+         */
+        "resultsMustMatch"?: FacetResultsMustMatch;
         /**
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', and 'automatic'.
          */
@@ -4673,6 +4693,10 @@ declare namespace LocalJSX {
           * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
          */
         "numberOfValues"?: number;
+        /**
+          * Specifies how a result must match the selected facet values. Allowed values: - `atLeastOneValue`: A result will match if at least one of the corresponding facet values is selected. - `allValues`: A result will match if all corresponding facet values are selected.
+         */
+        "resultsMustMatch"?: FacetResultsMustMatch;
         /**
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */
