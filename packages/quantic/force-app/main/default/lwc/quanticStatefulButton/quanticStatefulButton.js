@@ -31,6 +31,22 @@ export default class QuanticStatefulButton extends LightningElement {
    * @type {boolean}
    */
   @api selected = false;
+  /**
+   * The color of stateful button in a selected state.
+   * @api
+   * @type {string}
+   */
+  @api selectedStateColor;
+  /**
+   * Indicates whether to make the stateful button without borders.
+   * @api
+   * @type {boolean}
+   */
+  @api withoutBorders = false;
+
+  connectedCallback() {
+    this.updateCSSVariables();
+  }
 
   handleClick(event) {
     event.stopPropagation();
@@ -49,8 +65,20 @@ export default class QuanticStatefulButton extends LightningElement {
     this.tooltipComponent.hideTooltip();
   }
 
+  /**
+   * Sets the value of the CSS variable "--maxHeight" to the value of the selectedStateColor property.
+   */
+  updateCSSVariables() {
+    if (this.selectedStateColor) {
+      const styles = this.template.host?.style;
+      styles.setProperty('--selected-state-color', this.selectedStateColor);
+    }
+  }
+
   get buttonCSSClass() {
     return `slds-button slds-grid stateful-button slds-var-p-horizontal_x-small ${
+      this.withoutBorders ? 'stateful-button--without-borders' : ''
+    } ${
       this.selected
         ? 'slds-button_outline-brand stateful-button--selected'
         : 'slds-button_neutral stateful-button--unselected'

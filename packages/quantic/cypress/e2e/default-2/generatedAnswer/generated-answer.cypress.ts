@@ -314,6 +314,29 @@ describe('quantic-generated-answer', () => {
       });
     });
 
+    describe('when clicking the copy to clipboard button', () => {
+      const streamId = crypto.randomUUID();
+
+      beforeEach(() => {
+        mockSearchWithGeneratedAnswer(streamId);
+        mockStreamResponse(streamId, genQaMessageTypePayload);
+        visitGeneratedAnswer({multilineFooter: true});
+      });
+
+      it('should properly copy the answer to clipboard', () => {
+        scope('when loading the page', () => {
+          Expect.displayCopyToClipboardButton(true);
+          Actions.clickCopyToClipboardButton();
+          Expect.logCopyGeneratedAnswer(streamId);
+          cy.window().then((win) => {
+            win.navigator.clipboard.readText().then((text) => {
+              expect(text).to.eq(testText);
+            });
+          });
+        });
+      });
+    });
+
     describe('when the generated answer is still streaming', () => {
       const streamId = crypto.randomUUID();
 
@@ -337,6 +360,7 @@ describe('quantic-generated-answer', () => {
         Expect.displayRephraseButtons(false);
         Expect.displayLikeButton(false);
         Expect.displayDislikeButton(false);
+        Expect.displayCopyToClipboardButton(false);
         Expect.displayToggleGeneratedAnswerButton(true);
         Expect.toggleGeneratedAnswerButtonIsChecked(true);
       });

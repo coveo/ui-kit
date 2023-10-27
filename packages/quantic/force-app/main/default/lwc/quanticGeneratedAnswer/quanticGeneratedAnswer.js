@@ -109,6 +109,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       'quantic__generatedanswerrephrase',
       this.handleGeneratedAnswerRephrase.bind(this)
     );
+    this.template.addEventListener(
+      'quantic__generatedanswer_copytoclipboard',
+      this.handleGeneratedAnswerCopyToClipboard.bind(this)
+    );
   }
 
   renderedCallback() {
@@ -148,6 +152,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     this.template.removeEventListener(
       'quantic__generatedanswerrephrase',
       this.handleGeneratedAnswerRephrase.bind(this)
+    );
+    this.template.removeEventListener(
+      'quantic__generatedanswer_copytoclipboard',
+      this.handleGeneratedAnswerCopyToClipboard.bind(this)
     );
   }
 
@@ -228,6 +236,11 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   handleGeneratedAnswerRephrase(event) {
     event.stopPropagation();
     this.generatedAnswer.rephrase({answerStyle: event?.detail});
+  }
+
+  handleGeneratedAnswerCopyToClipboard(event) {
+    event.stopPropagation();
+    this.generatedAnswer.logCopyToClipboard();
   }
 
   toggleGeneratedAnswer() {
