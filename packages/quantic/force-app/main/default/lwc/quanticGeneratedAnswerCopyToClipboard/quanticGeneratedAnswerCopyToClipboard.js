@@ -24,7 +24,7 @@ export default class QuanticGeneratedAnswerCopyToClipboard extends LightningElem
 
   dispatchCopyToClipboardEvent(option) {
     this.dispatchEvent(
-      new CustomEvent('quantic__generatedanswer_copytoclipboard', {
+      new CustomEvent('quantic__generatedanswercopy', {
         detail: option,
         bubbles: true,
       })
