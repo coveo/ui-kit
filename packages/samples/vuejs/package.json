@@ -11,8 +11,8 @@
     "build:assets": "ncp ../../atomic/dist/atomic/assets public/assets && ncp ../../atomic/dist/atomic/lang public/lang"
   },
   "dependencies": {
-    "@coveo/atomic": "2.46.1",
-    "@coveo/headless": "2.36.0",
+    "@coveo/atomic": "2.47.0",
+    "@coveo/headless": "2.37.0",
     "core-js": "3.33.1",
     "vue": "3.3.6"
   },

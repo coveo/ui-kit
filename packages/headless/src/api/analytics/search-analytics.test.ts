@@ -1,6 +1,7 @@
 import {CoveoAnalyticsClient} from 'coveo.analytics';
 import pino from 'pino';
 import {getConfigurationInitialState} from '../../features/configuration/configuration-state';
+import {getGeneratedAnswerInitialState} from '../../features/generated-answer/generated-answer-state';
 import {buildMockResult, createMockState} from '../../test';
 import {buildMockFacetRequest} from '../../test/mock-facet-request';
 import {buildMockFacetResponse} from '../../test/mock-facet-response';
@@ -216,6 +217,15 @@ describe('search analytics', () => {
       expect(
         new SearchAnalyticsProvider(() => state).getSplitTestRunVersion()
       ).toBe('pipeline-from-state');
+    });
+
+    it('should properly return the generated answer metadata from the state', () => {
+      const state = getBaseState();
+      state.generatedAnswer = getGeneratedAnswerInitialState();
+      state.generatedAnswer.isVisible = false;
+      expect(
+        new SearchAnalyticsProvider(() => state).getGeneratedAnswerMetadata()
+      ).toEqual({showGeneratedAnswer: false});
     });
   });
 });
