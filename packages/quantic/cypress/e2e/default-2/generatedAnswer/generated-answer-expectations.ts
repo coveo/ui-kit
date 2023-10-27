@@ -186,16 +186,16 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         .log(`${should(display)} display the rephrase label`);
     },
 
-    displayRephraseButton: (label: string) => {
+    displayRephraseButtonWithLabel: (label: string) => {
       selector
-        .rephraseButton(label)
+        .rephraseButtonByLabel(label)
         .should('exist')
         .log(`should display the rephrase button with the label ${label}`);
     },
 
     rephraseButtonIsSelected: (name: string, selected: boolean) => {
       selector
-        .rephraseButton(name)
+        .rephraseButtonByLabel(name)
         .should(
           selected ? 'have.class' : 'not.have.class',
           'stateful-button--selected'
@@ -207,7 +207,7 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         .log(`the ${name} rephrase button ${should(selected)} be selected`);
     },
 
-    searchQueryContainsCorrectAnswerStyle: (expectedAnswerStyle: string) => {
+    searchQueryContainsCorrectRephraseOption: (expectedAnswerStyle: string) => {
       cy.get<Interception>(InterceptAliases.Search)
         .then((interception) => {
           const answerStyle =

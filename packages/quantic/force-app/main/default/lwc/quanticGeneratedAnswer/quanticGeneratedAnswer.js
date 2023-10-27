@@ -107,7 +107,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     registerComponentForInit(this, this.engineId);
     this.template.addEventListener(
       'quantic__generatedanswerrephrase',
-      this.handleGeneratedAnswerRephrase.bind(this)
+      this.handleGeneratedAnswerRephrase
     );
   }
 
@@ -147,7 +147,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     this.unsubscribeGeneratedAnswer?.();
     this.template.removeEventListener(
       'quantic__generatedanswerrephrase',
-      this.handleGeneratedAnswerRephrase.bind(this)
+      this.handleGeneratedAnswerRephrase
     );
   }
 
@@ -225,10 +225,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     this.generatedAnswer.retry();
   }
 
-  handleGeneratedAnswerRephrase(event) {
+  handleGeneratedAnswerRephrase = (event) => {
     event.stopPropagation();
     this.generatedAnswer.rephrase({answerStyle: event?.detail});
-  }
+  };
 
   toggleGeneratedAnswer() {
     if (this.isVisible) {
@@ -334,14 +334,12 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get generatedAnswerFooterCssClass() {
-    return `slds-grid ${
-      this.multilineFooter
-        ? 'generated-answer__footer--multiline'
-        : 'generated-answer__footer--standard'
+    return `slds-grid generated-answer__footer--${
+      this.multilineFooter ? 'multiline' : 'standard'
     }`;
   }
 
-  get rephraseLabelsShouldBeHidden() {
+  get shouldHideRephraseLabels() {
     return this.multilineFooter ? false : true;
   }
 

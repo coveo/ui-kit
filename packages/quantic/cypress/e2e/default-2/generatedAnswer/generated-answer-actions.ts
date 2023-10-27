@@ -74,7 +74,7 @@ function generatedAnswerActions(selector: GeneratedAnswerSelector) {
 
     clickRephraseButton: (name: string) =>
       selector
-        .rephraseButton(name)
+        .rephraseButtonByLabel(name)
         .click()
         .logAction(`When clicking on the ${name} rephrase button`),
   };
