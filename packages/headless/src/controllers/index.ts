@@ -373,7 +373,11 @@ export type {
 } from './recent-results-list/headless-recent-results-list';
 export {buildRecentResultsList} from './recent-results-list/headless-recent-results-list';
 
-export type {InteractiveRecentResult} from './recent-results-list/headless-interactive-recent-result';
+export type {
+  InteractiveRecentResult,
+  InteractiveRecentResultProps,
+  InteractiveRecentResultOptions,
+} from './recent-results-list/headless-interactive-recent-result';
 export {buildInteractiveRecentResult} from './recent-results-list/headless-interactive-recent-result';
 
 export type {
