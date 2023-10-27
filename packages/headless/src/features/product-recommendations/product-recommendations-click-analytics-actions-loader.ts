@@ -1,9 +1,6 @@
 import {ProductRecommendation} from '../../api/search/search/product-recommendation';
 import {ProductRecommendationEngine} from '../../app/product-recommendation-engine/product-recommendation-engine';
-import {
-  AnalyticsType,
-  ProductRecommendationAction,
-} from '../analytics/analytics-utils';
+import {ProductRecommendationAction} from '../analytics/analytics-utils';
 import {logProductRecommendationOpen} from './product-recommendations-analytics.actions';
 
 /**
@@ -18,7 +15,7 @@ export interface ClickAnalyticsActionCreators {
    */
   logProductRecommendationOpen(
     productRecommendation: ProductRecommendation
-  ): ProductRecommendationAction<AnalyticsType.Click>;
+  ): ProductRecommendationAction;
 }
 
 /**

@@ -1,4 +1,3 @@
-import {Sort} from '../../../features/commerce/product-listing/sort/product-listing-sort';
 import {AnyFacetResponse} from '../../../features/facets/generic/interfaces/generic-facet-response';
 import {ProductRecommendation} from '../../search/search/product-recommendation';
 import {
@@ -35,7 +34,6 @@ export interface ProductListingSuccessResponse {
     results: AnyFacetResponse[];
   };
   products: ProductRecommendation[];
-  sort: Sort;
   pagination: {
     totalCount: number;
   };

@@ -1,6 +1,7 @@
 # Server side rendering examples
 
 - Demonstrates usage of the framework agnostic `@coveo/headless/ssr` and React specific `@coveo/headless-react/ssr` utils for Server-Side Rendering with headless using Next.js [app router](https://nextjs.org/docs/app) and [pages router](https://nextjs.org/docs/pages).
+  - The files common between both pages and app router are placed in [./common](./common/).
 - Although Next.js is used to demonstrate SSR usage for convenience, the utils are not specific to Next.js.
 
 ## Getting Started

@@ -1,3 +1,20 @@
+# 2.36.0 (2023-10-25)
+
+### Features
+
+- **quantic:** toggle button to show and hide generated answer added ([#3286](https://github.com/coveo/ui-kit/issues/3286)) ([d82f5ab](https://github.com/coveo/ui-kit/commits/d82f5ab4cadd038b87d43c999fd19953fb3cadec))
+
+# 2.35.0 (2023-10-18)
+
+### Bug Fixes
+
+- **headless:** prioritize root result when filtering out duplicates in folded collection ([#3265](https://github.com/coveo/ui-kit/issues/3265)) ([0ae8c4b](https://github.com/coveo/ui-kit/commits/0ae8c4b9f6852ae878d47ec63355086f765abd7f))
+- **quantic:** fixed case classification cypress test ([#3289](https://github.com/coveo/ui-kit/issues/3289)) ([76b9590](https://github.com/coveo/ui-kit/commits/76b9590865ac6975d3e23e7b43707808fa0e9462))
+
+### Features
+
+- **quantic:** feedback modal feature added to the quantic generated answer ([#3280](https://github.com/coveo/ui-kit/issues/3280)) ([b6c78d8](https://github.com/coveo/ui-kit/commits/b6c78d892379523ad1bf9ee2ed09d1d35f625d12))
+
 # 2.34.0 (2023-10-11)
 
 ### Features

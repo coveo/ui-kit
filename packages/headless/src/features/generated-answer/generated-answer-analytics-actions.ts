@@ -1,5 +1,4 @@
 import {
-  AnalyticsType,
   CustomAction,
   SearchAction,
   makeAnalyticsAction,
@@ -8,6 +7,7 @@ import {
   citationSourceSelector,
   generativeQuestionAnsweringIdSelector,
 } from './generated-answer-selectors';
+import {GeneratedResponseFormat} from './generated-response-format';
 
 export type GeneratedAnswerFeedback =
   | 'irrelevant'
@@ -16,18 +16,30 @@ export type GeneratedAnswerFeedback =
   | 'harmful';
 
 export const logRetryGeneratedAnswer = (): SearchAction =>
-  makeAnalyticsAction(
-    'analytics/generatedAnswer/retry',
-    AnalyticsType.Search,
-    (client) => client.makeRetryGeneratedAnswer()
+  makeAnalyticsAction('analytics/generatedAnswer/retry', (client) =>
+    client.makeRetryGeneratedAnswer()
   );
+
+export const logRephraseGeneratedAnswer = (
+  responseFormat: GeneratedResponseFormat
+): SearchAction =>
+  makeAnalyticsAction('analytics/generatedAnswer/rephrase', (client, state) => {
+    const generativeQuestionAnsweringId =
+      generativeQuestionAnsweringIdSelector(state);
+    if (!generativeQuestionAnsweringId) {
+      return null;
+    }
+    return client.makeRephraseGeneratedAnswer({
+      generativeQuestionAnsweringId,
+      rephraseFormat: responseFormat.answerStyle,
+    });
+  });
 
 export const logOpenGeneratedAnswerSource = (
   citationId: string
 ): CustomAction =>
   makeAnalyticsAction(
     'analytics/generatedAnswer/openAnswerSource',
-    AnalyticsType.Custom,
     (client, state) => {
       const generativeQuestionAnsweringId =
         generativeQuestionAnsweringIdSelector(state);
@@ -44,43 +56,34 @@ export const logOpenGeneratedAnswerSource = (
   );
 
 export const logLikeGeneratedAnswer = (): CustomAction =>
-  makeAnalyticsAction(
-    'analytics/generatedAnswer/like',
-    AnalyticsType.Custom,
-    (client, state) => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
-      if (!generativeQuestionAnsweringId) {
-        return null;
-      }
-      return client.makeLikeGeneratedAnswer({
-        generativeQuestionAnsweringId,
-      });
+  makeAnalyticsAction('analytics/generatedAnswer/like', (client, state) => {
+    const generativeQuestionAnsweringId =
+      generativeQuestionAnsweringIdSelector(state);
+    if (!generativeQuestionAnsweringId) {
+      return null;
     }
-  );
+    return client.makeLikeGeneratedAnswer({
+      generativeQuestionAnsweringId,
+    });
+  });
 
 export const logDislikeGeneratedAnswer = (): CustomAction =>
-  makeAnalyticsAction(
-    'analytics/generatedAnswer/dislike',
-    AnalyticsType.Custom,
-    (client, state) => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
-      if (!generativeQuestionAnsweringId) {
-        return null;
-      }
-      return client.makeDislikeGeneratedAnswer({
-        generativeQuestionAnsweringId,
-      });
+  makeAnalyticsAction('analytics/generatedAnswer/dislike', (client, state) => {
+    const generativeQuestionAnsweringId =
+      generativeQuestionAnsweringIdSelector(state);
+    if (!generativeQuestionAnsweringId) {
+      return null;
     }
-  );
+    return client.makeDislikeGeneratedAnswer({
+      generativeQuestionAnsweringId,
+    });
+  });
 
 export const logGeneratedAnswerFeedback = (
   feedback: GeneratedAnswerFeedback
 ): CustomAction =>
   makeAnalyticsAction(
     'analytics/generatedAnswer/sendFeedback',
-    AnalyticsType.Custom,
     (client, state) => {
       const generativeQuestionAnsweringId =
         generativeQuestionAnsweringIdSelector(state);
@@ -99,7 +102,6 @@ export const logGeneratedAnswerDetailedFeedback = (
 ): CustomAction =>
   makeAnalyticsAction(
     'analytics/generatedAnswer/sendFeedback',
-    AnalyticsType.Custom,
     (client, state) => {
       const generativeQuestionAnsweringId =
         generativeQuestionAnsweringIdSelector(state);
@@ -119,7 +121,6 @@ export const logGeneratedAnswerStreamEnd = (
 ): CustomAction =>
   makeAnalyticsAction(
     'analytics/generatedAnswer/streamEnd',
-    AnalyticsType.Custom,
     (client, state) => {
       const generativeQuestionAnsweringId =
         generativeQuestionAnsweringIdSelector(state);
@@ -134,33 +135,37 @@ export const logGeneratedAnswerStreamEnd = (
   );
 
 export const logGeneratedAnswerShowAnswers = (): CustomAction =>
-  makeAnalyticsAction(
-    'analytics/generatedAnswer/show',
-    AnalyticsType.Custom,
-    (client, state) => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
-      if (!generativeQuestionAnsweringId) {
-        return null;
-      }
-      return client.makeGeneratedAnswerShowAnswers({
-        generativeQuestionAnsweringId,
-      });
+  makeAnalyticsAction('analytics/generatedAnswer/show', (client, state) => {
+    const generativeQuestionAnsweringId =
+      generativeQuestionAnsweringIdSelector(state);
+    if (!generativeQuestionAnsweringId) {
+      return null;
     }
-  );
+    return client.makeGeneratedAnswerShowAnswers({
+      generativeQuestionAnsweringId,
+    });
+  });
 
 export const logGeneratedAnswerHideAnswers = (): CustomAction =>
-  makeAnalyticsAction(
-    'analytics/generatedAnswer/hide',
-    AnalyticsType.Custom,
-    (client, state) => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
-      if (!generativeQuestionAnsweringId) {
-        return null;
-      }
-      return client.makeGeneratedAnswerHideAnswers({
-        generativeQuestionAnsweringId,
-      });
+  makeAnalyticsAction('analytics/generatedAnswer/hide', (client, state) => {
+    const generativeQuestionAnsweringId =
+      generativeQuestionAnsweringIdSelector(state);
+    if (!generativeQuestionAnsweringId) {
+      return null;
     }
-  );
+    return client.makeGeneratedAnswerHideAnswers({
+      generativeQuestionAnsweringId,
+    });
+  });
+
+export const logCopyGeneratedAnswer = (): CustomAction =>
+  makeAnalyticsAction('analytics/generatedAnswer/copy', (client, state) => {
+    const generativeQuestionAnsweringId =
+      generativeQuestionAnsweringIdSelector(state);
+    if (!generativeQuestionAnsweringId) {
+      return null;
+    }
+    return client.makeGeneratedAnswerCopyToClipboard({
+      generativeQuestionAnsweringId,
+    });
+  });

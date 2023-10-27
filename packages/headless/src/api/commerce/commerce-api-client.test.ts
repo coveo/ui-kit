@@ -1,4 +1,4 @@
-import {SortBy} from '../../product-listing.index';
+import {SortBy} from '../../features/sort/sort';
 import {buildMockCommerceAPIClient} from '../../test/mock-commerce-api-client';
 import {PlatformClient} from '../platform-client';
 import {CommerceAPIClient} from './commerce-api-client';
@@ -102,8 +102,8 @@ describe('commerce api client', () => {
         pagination: {page: 0, perPage: 0, totalCount: 0, totalPages: 0},
         responseId: '',
         sort: {
-          appliedSort: {by: SortBy.Relevance},
-          availableSorts: [{by: SortBy.Relevance}],
+          appliedSort: {sortCriteria: SortBy.Relevance},
+          availableSorts: [{sortCriteria: SortBy.Relevance}],
         },
       };
 

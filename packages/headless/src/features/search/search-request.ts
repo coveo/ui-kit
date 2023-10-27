@@ -70,6 +70,13 @@ export const buildSearchRequest = async (
         currentFacets: automaticFacets,
       },
     }),
+    ...(state.generatedAnswer?.responseFormat && {
+      pipelineRuleParameters: {
+        mlGenerativeQuestionAnswering: {
+          responseFormat: state.generatedAnswer.responseFormat,
+        },
+      },
+    }),
   });
 };
 

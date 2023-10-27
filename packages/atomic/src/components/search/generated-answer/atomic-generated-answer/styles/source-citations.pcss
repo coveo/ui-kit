@@ -1,0 +1,17 @@
+.source-citations {
+  --height: 2.2em;
+  --index-height: 20px;
+  --max-citation-width: 170px;
+
+  .citations-container {
+    [part='citation'] {
+      max-width: var(--max-citation-width);
+      height: var(--height);
+    }
+
+    .citation-index {
+      height: var(--index-height);
+      width: var(--index-height);
+    }
+  }
+}

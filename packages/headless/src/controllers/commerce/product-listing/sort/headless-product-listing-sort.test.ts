@@ -1,8 +1,8 @@
 import {Action} from '@reduxjs/toolkit';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {productListingV2Reducer} from '../../../../features/commerce/product-listing/product-listing-slice';
-import {applySort} from '../../../../features/commerce/product-listing/sort/product-listing-sort-actions';
-import {sortReducer} from '../../../../features/commerce/product-listing/sort/product-listing-sort-slice';
+import {applySort} from '../../../../features/commerce/sort/sort-actions';
+import {sortReducer} from '../../../../features/commerce/sort/sort-slice';
 import {updatePage} from '../../../../features/pagination/pagination-actions';
 import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
@@ -30,7 +30,7 @@ describe('headless product-listing-sort', () => {
   it('adds the correct reducers to engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       productListing: productListingV2Reducer,
-      sort: sortReducer,
+      commerceSort: sortReducer,
     });
   });
 
@@ -60,12 +60,9 @@ describe('headless product-listing-sort', () => {
       engine = buildMockCommerceEngine({
         state: {
           ...buildMockCommerceState(),
-          productListing: {
-            ...buildMockCommerceState().productListing,
-            sort: {
-              appliedSort: appliedSort,
-              availableSorts: [appliedSort],
-            },
+          commerceSort: {
+            appliedSort: appliedSort,
+            availableSorts: [appliedSort],
           },
         },
       });
@@ -76,10 +73,10 @@ describe('headless product-listing-sort', () => {
       expect(sort.isSortedBy(appliedSort)).toBe(true);
     });
 
-    it('calling #isSortedBy with a criterion different to the one in state returns false', () => {
+    it('calling #isSortedBy with a criterion different from the one in state returns false', () => {
       const notAppliedSort = {
         by: SortBy.Fields,
-        fields: [{name: 'some_field'}],
+        fields: [{name: 'some_other_field'}],
       };
       expect(sort.isSortedBy(notAppliedSort)).toBe(false);
     });
