@@ -5,7 +5,7 @@ import {Context, buildContext} from './headless-context';
 export * from './headless-context';
 
 /**
- * @internal
+ * @alpha
  */
 export const defineContext = (): ControllerDefinitionWithoutProps<
   SearchEngine,

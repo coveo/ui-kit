@@ -9,7 +9,7 @@ import {
 export * from './headless-date-filter';
 
 /**
- * @internal
+ * @alpha
  */
 export const defineDateFilter = (
   props: DateFilterProps

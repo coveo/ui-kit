@@ -8,7 +8,7 @@ import {
 export * from './headless-dictionary-field-context';
 
 /**
- * @internal
+ * @alpha
  */
 export const defineDictionaryFieldContext =
   (): ControllerDefinitionWithoutProps<CoreEngine, DictionaryFieldContext> => ({

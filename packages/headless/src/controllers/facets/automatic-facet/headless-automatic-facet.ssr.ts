@@ -9,7 +9,7 @@ import {
 export * from './headless-automatic-facet';
 
 /**
- * @internal
+ * @alpha // EXPLORE ? MAY NEED TO REMOVE
  */
 export const defineAutomaticFacet = (
   props: AutomaticFacetProps

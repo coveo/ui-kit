@@ -11,7 +11,7 @@ export * from './headless-static-filter';
 export {buildStaticFilterValue} from './headless-static-filter';
 
 /**
- * @internal
+ * @alpha
  */
 export const defineStaticFilter = (
   props: StaticFilterProps

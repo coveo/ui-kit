@@ -9,7 +9,7 @@ import {
 export * from './headless-numeric-filter';
 
 /**
- * @internal
+ * @alpha
  */
 export const defineNumericFilter = (
   props: NumericFilterProps

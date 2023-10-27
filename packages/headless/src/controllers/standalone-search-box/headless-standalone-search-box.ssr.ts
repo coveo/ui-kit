@@ -9,7 +9,7 @@ import {
 export * from './headless-standalone-search-box';
 
 /**
- * @internal
+ * @alpha
  */
 export const defineStandaloneSearchBox = (
   props: StandaloneSearchBoxProps

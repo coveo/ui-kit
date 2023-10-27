@@ -5,7 +5,7 @@ import {FacetManager, buildFacetManager} from './headless-facet-manager';
 export * from './headless-facet-manager';
 
 /**
- * @internal
+ * @alpha
  */
 export const defineFacetManager = (): ControllerDefinitionWithoutProps<
   SearchEngine,

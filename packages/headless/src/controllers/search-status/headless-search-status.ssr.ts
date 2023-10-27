@@ -5,7 +5,7 @@ import {SearchStatus, buildSearchStatus} from './headless-search-status';
 export * from './headless-search-status';
 
 /**
- * @internal
+ * @alpha
  */
 export const defineSearchStatus = (): ControllerDefinitionWithoutProps<
   SearchEngine,

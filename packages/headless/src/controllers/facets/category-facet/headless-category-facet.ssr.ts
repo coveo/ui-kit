@@ -9,7 +9,7 @@ import {
 export * from './headless-category-facet';
 
 /**
- * @internal
+ * @alpha
  */
 export const defineCategoryFacet = (
   props: CategoryFacetProps

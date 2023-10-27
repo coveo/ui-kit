@@ -9,7 +9,7 @@ import {
 export * from './headless-relevance-inspector';
 
 /**
- * @internal
+ * @alpha
  */
 export const defineRelevanceInspector = (
   props?: RelevanceInspectorProps

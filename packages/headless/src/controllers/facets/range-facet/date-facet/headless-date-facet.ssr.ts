@@ -7,7 +7,7 @@ export * from './headless-date-facet';
 export {buildDateRange} from './headless-date-facet';
 
 /**
- * @internal
+ * @alpha
  */
 export const defineDateFacet = (
   props: DateFacetProps

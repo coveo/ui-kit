@@ -9,7 +9,7 @@ import {
 export * from './headless-category-field-suggestions';
 
 /**
- * @internal
+ * @alpha
  */
 export const defineCategoryFieldSuggestions = (
   props: CategoryFieldSuggestionsProps

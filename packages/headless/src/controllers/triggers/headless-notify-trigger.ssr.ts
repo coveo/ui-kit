@@ -5,7 +5,7 @@ import {NotifyTrigger, buildNotifyTrigger} from './headless-notify-trigger';
 export * from './headless-notify-trigger';
 
 /**
- * @internal
+ * @alpha
  */
 export const defineNotifyTrigger = (): ControllerDefinitionWithoutProps<
   SearchEngine,

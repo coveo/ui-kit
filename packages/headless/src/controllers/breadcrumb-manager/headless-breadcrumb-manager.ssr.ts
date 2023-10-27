@@ -8,7 +8,7 @@ import {
 export * from './headless-breadcrumb-manager';
 
 /**
- * @internal
+ * @alpha
  */
 export const defineBreadcrumbManager = (): ControllerDefinitionWithoutProps<
   SearchEngine,

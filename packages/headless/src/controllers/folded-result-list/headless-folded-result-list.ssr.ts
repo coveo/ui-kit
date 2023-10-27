@@ -9,7 +9,7 @@ import {
 export * from './headless-folded-result-list';
 
 /**
- * @internal
+ * @alpha
  */
 export const defineFoldedResultList = (
   props?: FoldedResultListProps

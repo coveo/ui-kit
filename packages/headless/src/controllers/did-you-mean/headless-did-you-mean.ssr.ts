@@ -5,7 +5,7 @@ import {DidYouMean, buildDidYouMean} from './headless-did-you-mean';
 export * from './headless-did-you-mean';
 
 /**
- * @internal
+ * @alpha
  */
 export const defineDidYouMean = (): ControllerDefinitionWithoutProps<
   SearchEngine,

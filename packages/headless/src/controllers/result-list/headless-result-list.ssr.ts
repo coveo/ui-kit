@@ -9,7 +9,7 @@ import {
 export * from './headless-result-list';
 
 /**
- * @internal
+ * @alpha
  */
 export const defineResultList = (
   props?: ResultListProps

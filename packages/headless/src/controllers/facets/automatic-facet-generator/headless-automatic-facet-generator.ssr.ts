@@ -9,7 +9,7 @@ import {
 export * from './headless-automatic-facet-generator';
 
 /**
- * @internal
+ * @alpha
  */
 export const defineAutomaticFacetGenerator = (
   props: AutomaticFacetGeneratorProps

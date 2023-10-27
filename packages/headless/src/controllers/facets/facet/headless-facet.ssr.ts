@@ -5,7 +5,7 @@ import {Facet, FacetProps, buildFacet} from './headless-facet';
 export * from './headless-facet';
 
 /**
- * @internal
+ * @alpha
  */
 export const defineFacet = (
   props: FacetProps

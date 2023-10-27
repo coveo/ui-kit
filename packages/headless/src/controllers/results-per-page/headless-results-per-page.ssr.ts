@@ -9,7 +9,7 @@ import {
 export * from './headless-results-per-page';
 
 /**
- * @internal
+ * @alpha
  */
 export const defineResultsPerPage = (
   props?: ResultsPerPageProps

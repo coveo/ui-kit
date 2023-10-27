@@ -5,7 +5,7 @@ import {Pager, PagerProps, buildPager} from './headless-pager';
 export * from './headless-pager';
 
 /**
- * @internal
+ * @alpha
  */
 export const definePager = (
   props?: PagerProps

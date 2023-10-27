@@ -5,7 +5,7 @@ import {QueryTrigger, buildQueryTrigger} from './headless-query-trigger';
 export * from './headless-query-trigger';
 
 /**
- * @internal
+ * @alpha
  */
 export const defineQueryTrigger = (): ControllerDefinitionWithoutProps<
   SearchEngine,

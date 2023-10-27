@@ -9,7 +9,7 @@ import {
 export * from './headless-recent-queries-list';
 
 /**
- * @internal
+ * @alpha
  */
 export const defineRecentQueriesList = (
   props?: RecentQueriesListProps

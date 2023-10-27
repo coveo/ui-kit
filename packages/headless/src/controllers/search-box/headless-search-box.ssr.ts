@@ -5,7 +5,7 @@ import {SearchBox, SearchBoxProps, buildSearchBox} from './headless-search-box';
 export * from './headless-search-box';
 
 /**
- * @internal
+ * @alpha
  */
 export const defineSearchBox = (
   props?: SearchBoxProps

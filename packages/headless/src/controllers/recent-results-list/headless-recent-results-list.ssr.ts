@@ -9,7 +9,7 @@ import {
 export * from './headless-recent-results-list';
 
 /**
- * @internal
+ * @alpha
  */
 export const defineRecentResultsList = (
   props?: RecentResultsListProps

@@ -5,7 +5,7 @@ import {Quickview, QuickviewProps, buildQuickview} from './headless-quickview';
 export * from './headless-quickview';
 
 /**
- * @internal
+ * @alpha
  */
 export const defineQuickview = (
   props: QuickviewProps

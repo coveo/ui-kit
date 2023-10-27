@@ -5,7 +5,7 @@ import {QuerySummary, buildQuerySummary} from './headless-query-summary';
 export * from './headless-query-summary';
 
 /**
- * @internal
+ * @alpha
  */
 export const defineQuerySummary = (): ControllerDefinitionWithoutProps<
   SearchEngine,

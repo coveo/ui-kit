@@ -8,7 +8,7 @@ import {
 export * from './headless-redirection-trigger';
 
 /**
- * @internal
+ * @alpha
  */
 export const defineRedirectionTrigger = (): ControllerDefinitionWithoutProps<
   SearchEngine,

@@ -5,7 +5,7 @@ import {Sort, SortProps, buildSort} from './headless-sort';
 export * from './headless-sort';
 
 /**
- * @internal
+ * @alpha
  */
 export const defineSort = (
   props?: SortProps

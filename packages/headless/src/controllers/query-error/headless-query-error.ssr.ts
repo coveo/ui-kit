@@ -5,7 +5,7 @@ import {QueryError, buildQueryError} from './headless-query-error';
 export * from './headless-query-error';
 
 /**
- * @internal
+ * @alpha
  */
 export const defineQueryError = (): ControllerDefinitionWithoutProps<
   SearchEngine,

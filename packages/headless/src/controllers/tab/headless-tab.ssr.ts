@@ -5,7 +5,7 @@ import {Tab, TabProps, buildTab} from './headless-tab';
 export * from './headless-tab';
 
 /**
- * @internal
+ * @alpha
  */
 export const defineTab = (
   props: TabProps

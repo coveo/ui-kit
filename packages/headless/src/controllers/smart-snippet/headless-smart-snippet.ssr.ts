@@ -9,7 +9,7 @@ import {
 export * from './headless-smart-snippet';
 
 /**
- * @internal
+ * @alpha
  */
 export const defineSmartSnippet = (
   props?: SmartSnippetProps

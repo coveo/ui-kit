@@ -9,14 +9,14 @@ import {
 export * from './headless-search-parameter-manager';
 
 /**
- * @internal
+ * @alpha
  */
 export interface SearchParameterManagerBuildProps {
   initialState: SearchParameterManagerInitialState;
 }
 
 /**
- * @internal
+ * @alpha
  */
 export const defineSearchParameterManager = (): ControllerDefinitionWithProps<
   SearchEngine,

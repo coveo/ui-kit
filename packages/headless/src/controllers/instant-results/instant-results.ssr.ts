@@ -9,7 +9,7 @@ import {
 export * from './instant-results';
 
 /**
- * @internal
+ * @alpha
  */
 export const defineInstantResults = (
   props: InstantResultProps

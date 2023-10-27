@@ -5,7 +5,7 @@ import {HistoryManager, buildHistoryManager} from './headless-history-manager';
 export * from './headless-history-manager';
 
 /**
- * @internal
+ * @alpha
  */
 export const defineHistoryManager = (): ControllerDefinitionWithoutProps<
   SearchEngine,

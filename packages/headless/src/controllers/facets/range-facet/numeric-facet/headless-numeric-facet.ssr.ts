@@ -11,7 +11,7 @@ export * from './headless-numeric-facet';
 export {buildNumericRange} from './headless-numeric-facet';
 
 /**
- * @internal
+ * @alpha
  */
 export const defineNumericFacet = (
   props: NumericFacetProps

@@ -5,7 +5,7 @@ import {ExecuteTrigger, buildExecuteTrigger} from './headless-execute-trigger';
 export * from './headless-execute-trigger';
 
 /**
- * @internal
+ * @alpha
  */
 export const defineExecuteTrigger = (): ControllerDefinitionWithoutProps<
   SearchEngine,
