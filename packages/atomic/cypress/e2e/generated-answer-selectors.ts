@@ -20,7 +20,7 @@ export const GeneratedAnswerSelectors = {
   citationIndex: () =>
     GeneratedAnswerSelectors.citation().find('.citation-index'),
   citationCard: () =>
-    GeneratedAnswerSelectors.citation().find('[part="citation-popover"]'),
+    GeneratedAnswerSelectors.shadow().find('[part="citation-popover"]'),
   loader: () => GeneratedAnswerSelectors.shadow().find('.typing-indicator'),
   retryContainer: () =>
     GeneratedAnswerSelectors.shadow().find('[part="retry-container"]'),

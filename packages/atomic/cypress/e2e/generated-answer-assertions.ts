@@ -16,9 +16,9 @@ export function assertLogOpenGeneratedAnswerSource(log: boolean) {
   });
 }
 
-export function assertLogHoverGeneratedAnswerSource(log: boolean) {
+export function assertLogGeneratedAnswerSourceHover(log: boolean) {
   if (log) {
-    cy.expectCustomEvent('generatedAnswer', 'openGeneratedAnswerSource');
+    cy.expectCustomEvent('generatedAnswer', 'generatedAnswerSourceHover');
   } else {
     cy.wait(50);
     cy.wrap(AnalyticsTracker).invoke('getLastCustomEvent').should('not.exist');

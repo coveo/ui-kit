@@ -144,7 +144,16 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     return this.generatedAnswerState.citations.map(
       (citation: GeneratedAnswerCitation, index: number) => (
         <li key={citation.id}>
-          <atomic-citation citation={citation} index={index} />
+          <atomic-citation
+            citation={citation}
+            index={index}
+            sendHoverEndEvent={(citationHoverTimeMs: number) => {
+              this.generatedAnswer.logCitationHover(
+                citation.id,
+                citationHoverTimeMs
+              );
+            }}
+          />
         </li>
       )
     );

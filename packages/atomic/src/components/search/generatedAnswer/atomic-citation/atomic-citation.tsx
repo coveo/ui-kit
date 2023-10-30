@@ -8,7 +8,7 @@ import {
   preventOverflow,
   Instance as PopperInstance,
 } from '@popperjs/core';
-import {Component, h, State, Prop, Element} from '@stencil/core';
+import {Component, h, State, Prop, Element, Watch} from '@stencil/core';
 import {buildCustomEvent} from '../../../../utils/event-utils';
 import {
   InitializableComponent,
@@ -32,6 +32,7 @@ export class AtomicCitation implements InitializableComponent {
 
   @Prop() citation!: GeneratedAnswerCitation;
   @Prop() index!: number;
+  @Prop() sendHoverEndEvent!: (citationHoverTimeMs: number) => void;
 
   @State()
   public error!: Error;
@@ -44,6 +45,26 @@ export class AtomicCitation implements InitializableComponent {
   private stopPropagation?: boolean;
 
   private interactiveCitation!: InteractiveCitation;
+
+  private hoverStart?: number;
+  private hoverAnalyticsTimeout = 1000;
+
+  @Watch('isOpen')
+  sendHoverAnalytics() {
+    if (this.isOpen) {
+      this.hoverStart = new Date().getTime();
+      return;
+    } else {
+      if (!this.hoverStart) {
+        return;
+      }
+      const difference = new Date().getTime() - this.hoverStart;
+      if (difference > this.hoverAnalyticsTimeout) {
+        this.sendHoverEndEvent(difference);
+      }
+      this.hoverStart = undefined;
+    }
+  }
 
   public initialize() {
     this.interactiveCitation = buildInteractiveCitation(this.bindings.engine, {

@@ -246,9 +246,10 @@ describe('Generated Answer Test Suites', () => {
           });
 
           it('should send analytics when the hover ends', () => {
+            cy.wait(2000); // The debounce requires minimum 1000ms
             GeneratedAnswerSelectors.citation().trigger('mouseleave');
 
-            GeneratedAnswerAssertions.assertLogHoverGeneratedAnswerSource(true);
+            GeneratedAnswerAssertions.assertLogGeneratedAnswerSourceHover(true);
           });
         });
 
