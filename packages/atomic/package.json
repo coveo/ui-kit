@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "2.46.1",
+  "version": "2.47.0",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -42,7 +42,9 @@
     "e2e:insight": "cypress run --config-file cypress-insight-panel.config.ts --browser chrome",
     "e2e:insight:watch": "cypress open --config-file cypress-insight-panel.config.ts --browser chrome",
     "release:phase1": "npx -p=@coveo/release bump",
-    "release:phase2": "npx -p=@coveo/release npm-publish",
+    "release:phase2": "npm run publish:npm",
+    "release:phase5": "npm run publish:npm",
+    "publish:npm": "npx -p=@coveo/release npm-publish",
     "promote:npm:latest": "node ../../scripts/deploy/update-npm-tag.mjs latest",
     "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts"
   },
@@ -63,7 +65,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.23.2",
-    "@coveo/headless": "2.36.0",
+    "@coveo/headless": "2.37.0",
     "@fullhuman/postcss-purgecss": "5.0.0",
     "@rollup/plugin-alias": "5.0.1",
     "@rollup/plugin-replace": "5.0.4",
@@ -100,7 +102,7 @@
     "typescript": "5.1.6"
   },
   "peerDependencies": {
-    "@coveo/headless": "2.36.0"
+    "@coveo/headless": "2.37.0"
   },
   "license": "Apache-2.0",
   "engines": {

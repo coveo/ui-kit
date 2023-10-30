@@ -22,7 +22,7 @@ export interface GeneratedAnswerSelector extends ComponentSelector {
   feedbackDetailsInput: () => CypressSelector;
   rephraseButtons: () => CypressSelector;
   rephraseLabel: () => CypressSelector;
-  rephraseButton: (label: string) => CypressSelector;
+  rephraseButtonByLabel: (label: string) => CypressSelector;
   generatedAnswerFooter: () => CypressSelector;
   copyToClipboardButton: () => CypressSelector;
 }
@@ -91,9 +91,9 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
     ),
   rephraseLabel: () =>
     GeneratedAnswerSelectors.get().find('[data-cy="rephrase-buttons__label"]'),
-  rephraseButton: (name: string) =>
+  rephraseButtonByLabel: (label: string) =>
     GeneratedAnswerSelectors.get().find(
-      `[data-cy="rephrase-buttons__content"] c-quantic-stateful-button[data-cy="${name}"] button`
+      `[data-cy="rephrase-buttons__content"] c-quantic-stateful-button[data-cy="${label}"] button`
     ),
   generatedAnswerFooter: () =>
     GeneratedAnswerSelectors.get().find('[data-cy="generated-answer__footer"]'),

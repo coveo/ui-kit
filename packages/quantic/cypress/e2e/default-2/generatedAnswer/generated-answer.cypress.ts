@@ -96,7 +96,7 @@ describe('quantic-generated-answer', () => {
 
       it('should perform a search query with the default rephrase button', () => {
         cy.wait(InterceptAliases.Search);
-        Expect.searchQueryContainsCorrectAnswerStyle(defaultRephraseOption);
+        Expect.searchQueryContainsCorrectRephraseOption(defaultRephraseOption);
       });
 
       it('should display rephrase buttons', () => {
@@ -233,9 +233,9 @@ describe('quantic-generated-answer', () => {
           visitGeneratedAnswer();
         });
 
-        it('should send a new search query with the right rephrase option as a parameter', () => {
+        it(`should send a new search query with the rephrase option ${option} as a parameter`, () => {
           scope('when loading the page', () => {
-            Expect.displayRephraseButton(rephraseOption);
+            Expect.displayRephraseButtonWithLabel(rephraseOption);
             Expect.rephraseButtonIsSelected(rephraseOption, false);
           });
 
@@ -244,17 +244,17 @@ describe('quantic-generated-answer', () => {
             mockStreamResponse(secondStreamId, genQaMessageTypePayload);
 
             Actions.clickRephraseButton(rephraseOption);
-            Expect.displayRephraseButton(rephraseOption);
+            Expect.displayRephraseButtonWithLabel(rephraseOption);
             Expect.rephraseButtonIsSelected(rephraseOption, true);
             rephraseOptions
               .filter((item) => {
                 return item !== rephraseOption;
               })
               .forEach((unselectedOption) => {
-                Expect.displayRephraseButton(unselectedOption);
+                Expect.displayRephraseButtonWithLabel(unselectedOption);
                 Expect.rephraseButtonIsSelected(unselectedOption, false);
               });
-            Expect.searchQueryContainsCorrectAnswerStyle(rephraseOption);
+            Expect.searchQueryContainsCorrectRephraseOption(rephraseOption);
             Expect.logRephraseGeneratedAnswer(rephraseOption, secondStreamId);
           });
 
@@ -264,10 +264,12 @@ describe('quantic-generated-answer', () => {
 
             Actions.clickRephraseButton(rephraseOption);
             rephraseOptions.forEach((unselectedOption) => {
-              Expect.displayRephraseButton(unselectedOption);
+              Expect.displayRephraseButtonWithLabel(unselectedOption);
               Expect.rephraseButtonIsSelected(unselectedOption, false);
             });
-            Expect.searchQueryContainsCorrectAnswerStyle(defaultRephraseOption);
+            Expect.searchQueryContainsCorrectRephraseOption(
+              defaultRephraseOption
+            );
             Expect.logRephraseGeneratedAnswer(
               defaultRephraseOption,
               thirdStreamId
@@ -277,7 +279,7 @@ describe('quantic-generated-answer', () => {
       });
     });
 
-    describe('when a custom answer style is provided', () => {
+    describe('when a value is provided to the answer style attribute', () => {
       const streamId = crypto.randomUUID();
 
       beforeEach(() => {
@@ -292,7 +294,7 @@ describe('quantic-generated-answer', () => {
           Expect.rephraseButtonIsSelected(stepRephraseOption, false);
           Expect.rephraseButtonIsSelected(conciseRephraseOption, false);
           Expect.rephraseButtonIsSelected(bulletRephraseOption, true);
-          Expect.searchQueryContainsCorrectAnswerStyle(bulletRephraseOption);
+          Expect.searchQueryContainsCorrectRephraseOption(bulletRephraseOption);
         });
       });
     });

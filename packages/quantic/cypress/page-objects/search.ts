@@ -5,6 +5,7 @@ import {
   StaticResponse, // eslint-disable-next-line node/no-unpublished-import
 } from 'cypress/types/net-stubbing';
 import {getAnalyticsBodyFromRequest} from '../e2e/common-expectations';
+import {buildMockRaw, buildMockResult} from '../fixtures/mock-result';
 import {useCaseEnum} from './use-case';
 
 type RequestParams = Record<string, string | number | boolean | undefined>;
@@ -295,7 +296,11 @@ export function mockSearchWithoutAnyFacetValues(useCase: string) {
         facet.values = [];
       });
       res.body.results = [
-        {title: 'Result', uri: 'uri', raw: {urihash: 'resulthash'}},
+        buildMockResult({
+          title: 'Result',
+          uri: 'uri',
+          raw: buildMockRaw({urihash: 'resulthash'}),
+        }),
       ];
       res.body.totalCount = 1;
       res.body.totalCountFiltered = 1;
@@ -311,10 +316,12 @@ export function mockSearchWithSmartSnippet(
     title: string;
     uri: string;
     permanentId: string;
+    uriHash: string;
   },
   useCase?: string
 ) {
-  const {question, answer, title, uri, permanentId} = smartSnippetOptions;
+  const {question, answer, title, uri, permanentId, uriHash} =
+    smartSnippetOptions;
   cy.intercept(getRoute(useCase), (req) => {
     req.continue((res) => {
       res.body.questionAnswer = {
@@ -328,14 +335,13 @@ export function mockSearchWithSmartSnippet(
         relatedQuestions: [],
       };
       res.body.results = [
-        {
+        buildMockResult({
           uri: uri,
           title: title,
-          ClickUri: uri,
           clickUri: uri,
           uniqueId: '123',
-          raw: {permanentid: permanentId},
-        },
+          raw: buildMockRaw({permanentid: permanentId, urihash: uriHash}),
+        }),
       ];
       res.send();
     });
@@ -364,6 +370,7 @@ export function mockSearchWithSmartSnippetSuggestions(
       contentIdKey: string;
       contentIdValue: string;
     };
+    uriHash: string;
   }>,
   useCase?: string
 ) {
@@ -376,14 +383,19 @@ export function mockSearchWithSmartSnippetSuggestions(
           contentIdValue: 'example permanentId',
         },
       };
-      res.body.results = relatedQuestions.map(({title, uri, documentId}) => ({
-        uri,
-        title,
-        ClickUri: uri,
-        clickUri: uri,
-        uniqueId: '123',
-        raw: {permanentid: documentId.contentIdValue},
-      }));
+      res.body.results = relatedQuestions.map(
+        ({title, uri, documentId, uriHash}) =>
+          buildMockResult({
+            uri,
+            title,
+            clickUri: uri,
+            uniqueId: '123',
+            raw: buildMockRaw({
+              permanentid: documentId.contentIdValue,
+              urihash: uriHash,
+            }),
+          })
+      );
       res.send();
     });
   }).as(InterceptAliases.Search.substring(1));
@@ -476,7 +488,11 @@ export function mockSearchWithDidYouMean(
         },
       ];
       res.body.results = [
-        {title: 'Result', uri: 'uri', raw: {urihash: 'resulthash'}},
+        buildMockResult({
+          title: 'Result',
+          uri: 'uri',
+          raw: {urihash: 'resulthash'},
+        }),
       ];
       res.body.totalCount = 1;
       res.send();

@@ -2,7 +2,10 @@
 import {createElement} from 'lwc';
 import QuanticTooltip from '../quanticTooltip';
 
+const exampleItemOne = document.createElement('div');
+exampleItemOne.innerText = 'Item One';
 const exampleValue = 'Example value';
+const exampleAssignedElements = [exampleItemOne];
 
 const selectors = {
   tooltip: '.tooltip__content',
@@ -12,7 +15,12 @@ const exampleOptions = {
   value: exampleValue,
 };
 
-function createTestComponent(options = exampleOptions) {
+function createTestComponent(
+  options = exampleOptions,
+  assignedElements = exampleAssignedElements
+) {
+  mockSlotAssignedNodes(assignedElements);
+
   const element = createElement('c-quantic-tooltip', {
     is: QuanticTooltip,
   });
@@ -29,6 +37,16 @@ function createTestComponent(options = exampleOptions) {
 function flushPromises() {
   // eslint-disable-next-line @lwc/lwc/no-async-operation
   return new Promise((resolve) => setTimeout(resolve, 0));
+}
+
+/**
+ * Mocks the return value of the assignedNodes method.
+ * @param {Array<Element>} assignedElements
+ */
+function mockSlotAssignedNodes(assignedElements) {
+  HTMLSlotElement.prototype.assignedNodes = function () {
+    return assignedElements;
+  };
 }
 
 describe('c-quantic-tooltip', () => {
@@ -51,7 +69,6 @@ describe('c-quantic-tooltip', () => {
     const tooltip = element.shadowRoot.querySelector(selectors.tooltip);
 
     expect(tooltip).not.toBeNull();
-    expect(tooltip.textContent).toBe(exampleValue);
     expect(tooltip.classList.contains('tooltip__content--visible')).toBe(false);
 
     await element.showTooltip();
@@ -67,10 +84,23 @@ describe('c-quantic-tooltip', () => {
     const tooltip = element.shadowRoot.querySelector(selectors.tooltip);
 
     expect(tooltip).not.toBeNull();
-    expect(tooltip.textContent).toBe(exampleValue);
     expect(tooltip.classList.contains('tooltip__content--visible')).toBe(true);
 
     await element.hideTooltip();
+
+    expect(tooltip.classList.contains('tooltip__content--visible')).toBe(false);
+  });
+
+  it('shouldnot display the tooltip when the slot content is empty', async () => {
+    const element = createTestComponent(exampleOptions, []);
+    await flushPromises();
+
+    const tooltip = element.shadowRoot.querySelector(selectors.tooltip);
+
+    expect(tooltip).not.toBeNull();
+    expect(tooltip.classList.contains('tooltip__content--visible')).toBe(false);
+
+    await element.showTooltip();
 
     expect(tooltip.classList.contains('tooltip__content--visible')).toBe(false);
   });

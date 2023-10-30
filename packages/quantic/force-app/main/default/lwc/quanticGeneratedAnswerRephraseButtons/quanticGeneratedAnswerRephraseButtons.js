@@ -75,10 +75,10 @@ export default class QuanticGeneratedAnswerRephraseButtons extends LightningElem
     return this.value === option;
   }
 
-  handleRephrase(option) {
+  handleRephrase(optionValue) {
     this.dispatchEvent(
       new CustomEvent('quantic__generatedanswerrephrase', {
-        detail: option,
+        detail: optionValue,
         bubbles: true,
       })
     );

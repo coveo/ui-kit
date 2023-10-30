@@ -49,10 +49,7 @@
           <div data-cy="generated-answer__answer" class={generatedAnswerClass}>
             {answer}
           </div>
-          <div
-            data-cy="generated-answer__footer"
-            class={generatedAnswerFooterCssClass}
-          >
+          <div data-cy="generated-answer__footer" class={generatedAnswerFooterCssClass}>
             <template lwc:if={hasCitations}>
               <div class="slds-var-m-top_small">
                 <c-quantic-source-citations
@@ -67,7 +64,7 @@
                 <c-quantic-generated-answer-rephrase-buttons
                   data-cy="generated-answer__rephrase-buttons"
                   value={responseFormat}
-                  hide-labels={rephraseLabelsShouldBeHidden}
+                  hide-labels={shouldHideRephraseLabels}
                 ></c-quantic-generated-answer-rephrase-buttons>
               </div>
             </template>

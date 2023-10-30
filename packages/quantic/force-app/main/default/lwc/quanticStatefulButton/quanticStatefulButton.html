@@ -10,6 +10,10 @@
         <span>{label}</span>
       </template>
     </button>
-    <c-quantic-tooltip value={tooltip}></c-quantic-tooltip>
+    <template lwc:if={tooltip}>
+      <c-quantic-tooltip>
+        <div slot="content">{tooltip}</div>
+      </c-quantic-tooltip>
+    </template>
   </div>
 </template>

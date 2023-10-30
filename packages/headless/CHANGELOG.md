@@ -1,3 +1,14 @@
+# 2.37.0 (2023-10-25)
+
+### Features
+
+- add analyticsMode & relay ([#3277](https://github.com/coveo/ui-kit/issues/3277)) ([8b33bb5](https://github.com/coveo/ui-kit/commits/8b33bb5f511926f7b7bb49ecb01aee9e4611ab95))
+- add trackingId if analyticsMode=next ([#3295](https://github.com/coveo/ui-kit/issues/3295)) ([13f69a9](https://github.com/coveo/ui-kit/commits/13f69a960c24cb9d0007d0c9a079ed5d334ec881))
+- add ze magic cookie ([#3299](https://github.com/coveo/ui-kit/issues/3299)) ([eda1e3c](https://github.com/coveo/ui-kit/commits/eda1e3c6c59a53b30fa11ff37bd715e03bc912f7))
+- **atomic:** added buttons to rephrase a generated answer ([#3287](https://github.com/coveo/ui-kit/issues/3287)) ([60a841a](https://github.com/coveo/ui-kit/commits/60a841a229a77bfb14b825ab3e5d75a2203ea9d3))
+- **commerce:** make sort comply with api ([#3271](https://github.com/coveo/ui-kit/issues/3271)) ([24a16ce](https://github.com/coveo/ui-kit/commits/24a16cee07ae268a1595459ab7af22b8d14b8e0f))
+- **headless:** add Copy generated answer controller action for GenQA… ([#3290](https://github.com/coveo/ui-kit/issues/3290)) ([49a68d5](https://github.com/coveo/ui-kit/commits/49a68d5fa458d34d1f7936048a91c7dbc0f37aa8))
+
 # 2.36.0 (2023-10-18)
 
 ### Bug Fixes

@@ -18,8 +18,6 @@ on:
 jobs:
   release:
     environment: 'Release'
-    env:
-      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
@@ -45,3 +43,12 @@ jobs:
           RELEASER_CLIENT_SECRET: ${{ secrets.RELEASER_CLIENT_SECRET }}
           RELEASER_INSTALLATION_ID: ${{ secrets.RELEASER_INSTALLATION_ID }}
           DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - uses: actions/setup-node@v3
+        with:
+          registry-url: 'https://npm.pkg.github.com'
+          node-version-file: '.nvmrc'
+      - name: Publish to GitHub Packages
+        run: npm run release:phase5
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

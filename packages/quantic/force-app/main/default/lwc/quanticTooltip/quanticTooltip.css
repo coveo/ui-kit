@@ -1,7 +1,7 @@
 .tooltip__content {
-  top: -3rem;
   left: 50%;
-  transform: translate(-50%, 0);
+  transform: translate(-50%, -100%);
+  top: -0.7rem;
 }
 
 .tooltip__content--visible {
