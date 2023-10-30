@@ -42,6 +42,7 @@ function generatedAnswerActions(selector: GeneratedAnswerSelector) {
         .logAction(
           'When clicking on the toggle button of the generated answer'
         ),
+
     clickFeedbackOption: (index: number) =>
       selector
         .feedbackOption(index)
@@ -77,6 +78,12 @@ function generatedAnswerActions(selector: GeneratedAnswerSelector) {
         .rephraseButtonByLabel(name)
         .click()
         .logAction(`When clicking on the ${name} rephrase button`),
+
+    clickCopyToClipboardButton: () =>
+      selector
+        .copyToClipboardButton()
+        .click()
+        .logAction('When clicking on the copy to clipboard button'),
   };
 }
 
