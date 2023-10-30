@@ -86,6 +86,9 @@ describe('c-quantic-stateful-button', () => {
       expect(button.classList.contains('stateful-button--unselected')).toBe(
         false
       );
+      expect(
+        button.classList.contains('stateful-button--without-borders')
+      ).toBe(false);
       expect(tooltipContent.textContent).toBe(exampleTooltip);
     });
 
@@ -104,6 +107,42 @@ describe('c-quantic-stateful-button', () => {
         await button.click();
 
         expect(functionsMocks.exampleHandleDeselect).toHaveBeenCalledTimes(1);
+      });
+    });
+
+    describe('when the withoutBorders property is set to true', () => {
+      it('should display the button without border', async () => {
+        const element = createTestComponent({
+          ...exampleOptions,
+          selected: true,
+          withoutBorders: true,
+        });
+        setupEventListeners(element);
+        await flushPromises();
+
+        const button = element.shadowRoot.querySelector(
+          selectors.statefulButton
+        );
+
+        expect(
+          button.classList.contains('stateful-button--without-borders')
+        ).toBe(true);
+      });
+    });
+
+    describe('when a vlue of the selectedStateColor property is provided', () => {
+      it('should display the button with the correct colors', async () => {
+        const exampleColor = '#FFF';
+        const element = createTestComponent({
+          ...exampleOptions,
+          selectedStateColor: exampleColor,
+        });
+        setupEventListeners(element);
+        await flushPromises();
+
+        expect(element.shadowRoot.host?.style?._values).toEqual({
+          '--selected-state-color': exampleColor,
+        });
       });
     });
   });
@@ -133,6 +172,9 @@ describe('c-quantic-stateful-button', () => {
       expect(button.classList.contains('stateful-button--unselected')).toBe(
         true
       );
+      expect(
+        button.classList.contains('stateful-button--without-borders')
+      ).toBe(false);
       expect(tooltipContent.textContent).toBe(exampleTooltip);
     });
 
@@ -148,6 +190,26 @@ describe('c-quantic-stateful-button', () => {
         await button.click();
 
         expect(functionsMocks.exampleHandleSelect).toHaveBeenCalledTimes(1);
+      });
+    });
+
+    describe('when the withoutBorders property is set to true', () => {
+      it('should display the button without border', async () => {
+        const element = createTestComponent({
+          ...exampleOptions,
+          selected: true,
+          withoutBorders: true,
+        });
+        setupEventListeners(element);
+        await flushPromises();
+
+        const button = element.shadowRoot.querySelector(
+          selectors.statefulButton
+        );
+
+        expect(
+          button.classList.contains('stateful-button--without-borders')
+        ).toBe(true);
       });
     });
   });
