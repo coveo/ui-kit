@@ -55,6 +55,28 @@ export const logOpenGeneratedAnswerSource = (
     }
   );
 
+export const logHoverGeneratedAnswerSource = (
+  citationId: string,
+  citationHoverTimeMs: number
+): CustomAction =>
+  makeAnalyticsAction(
+    'analytics/generatedAnswer/hoverAnswerSource',
+    (client, state) => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      const citation = citationSourceSelector(state, citationId);
+      if (!generativeQuestionAnsweringId || !citation) {
+        return null;
+      }
+      return client.makeGeneratedAnswerSourceHover({
+        generativeQuestionAnsweringId,
+        permanentId: citation.permanentid,
+        citationId: citation.id,
+        citationHoverTimeMs,
+      });
+    }
+  );
+
 export const logLikeGeneratedAnswer = (): CustomAction =>
   makeAnalyticsAction('analytics/generatedAnswer/like', (client, state) => {
     const generativeQuestionAnsweringId =
