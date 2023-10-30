@@ -66,7 +66,7 @@ export default class QuanticStatefulButton extends LightningElement {
   }
 
   /**
-   * Sets the value of the CSS variable "--maxHeight" to the value of the selectedStateColor property.
+   * Sets the value of the CSS variable "--selected-state-color" to the value of the selectedStateColor property.
    */
   updateCSSVariables() {
     if (this.selectedStateColor) {
