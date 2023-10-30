@@ -918,8 +918,16 @@ describe('Facet v1 Test Suites', () => {
         })
         .init();
 
-    it('with less or equal to 8 values, it should not display the search input', () => {
+    it('with less than 8 values, it should not display the search input', () => {
       setup(3);
+      CommonFacetAssertions.assertDisplaySearchInputWithoutIt(
+        FacetSelectors,
+        false
+      );
+    });
+
+    it('with exactly 8 values, it should not display the search input', () => {
+      setup(8);
       CommonFacetAssertions.assertDisplaySearchInputWithoutIt(
         FacetSelectors,
         false

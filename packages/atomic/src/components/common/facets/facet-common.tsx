@@ -457,7 +457,7 @@ export class FacetCommon {
     }
 
     // Hide the input if there are no more values to load from the index and there are less than 8 values to display.
-    // 8 is an arbitrary number, discussed with UX as a good compromise.
+    // 8 is an arbitrary number, discussed with UX as a good compromise: A list long enough where it's worth searching.
     if (
       !this.facet.state.canShowMoreValues &&
       this.facet.state.values.length <= 8
