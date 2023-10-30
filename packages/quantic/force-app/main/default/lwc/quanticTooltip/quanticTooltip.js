@@ -19,7 +19,9 @@ export default class QuanticTooltip extends LightningElement {
    * Method tha shows the tooltip.
    */
   @api showTooltip() {
-    this.isVisible = true;
+    if (this.tooltipIsNotEmpty) {
+      this.isVisible = true;
+    }
   }
   /**
    * @api
@@ -35,5 +37,11 @@ export default class QuanticTooltip extends LightningElement {
     return `slds-popover slds-popover_tooltip slds-nubbin_bottom-left slds-is-absolute tooltip__content slds-fall-into-ground ${
       this.isVisible ? 'tooltip__content--visible' : ''
     }`;
+  }
+
+  get tooltipIsNotEmpty() {
+    /** @type {HTMLSlotElement} */
+    const slot = this.template.querySelector('slot[name="content"]');
+    return !!slot?.assignedNodes()?.length;
   }
 }

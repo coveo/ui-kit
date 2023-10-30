@@ -15,6 +15,8 @@ const selectors = {
   statefulButton: '.stateful-button',
   icon: '.stateful-button__container lightning-icon',
   tooltip: '.stateful-button__container > c-quantic-tooltip',
+  tooltipContent:
+    '.stateful-button__container > c-quantic-tooltip > div[slot="content"]',
 };
 
 function setupEventListeners(element) {
@@ -69,9 +71,14 @@ describe('c-quantic-stateful-button', () => {
       const button = element.shadowRoot.querySelector(selectors.statefulButton);
       const icon = element.shadowRoot.querySelector(selectors.icon);
       const tooltip = element.shadowRoot.querySelector(selectors.tooltip);
+      const tooltipContent = element.shadowRoot.querySelector(
+        selectors.tooltipContent
+      );
 
       expect(button).not.toBeNull();
       expect(icon).not.toBeNull();
+      expect(tooltip).not.toBeNull();
+      expect(tooltipContent).not.toBeNull();
       expect(button.ariaLabel).toBe(exampleTooltip);
       expect(button.textContent).toBe(exampleLabel);
       expect(icon.iconName).toBe(exampleIcon);
@@ -79,7 +86,7 @@ describe('c-quantic-stateful-button', () => {
       expect(button.classList.contains('stateful-button--unselected')).toBe(
         false
       );
-      expect(tooltip.value).toBe(exampleTooltip);
+      expect(tooltipContent.textContent).toBe(exampleTooltip);
     });
 
     describe('when the selected stateful button is clicked', () => {
@@ -109,9 +116,14 @@ describe('c-quantic-stateful-button', () => {
       const button = element.shadowRoot.querySelector(selectors.statefulButton);
       const icon = element.shadowRoot.querySelector(selectors.icon);
       const tooltip = element.shadowRoot.querySelector(selectors.tooltip);
+      const tooltipContent = element.shadowRoot.querySelector(
+        selectors.tooltipContent
+      );
 
       expect(button).not.toBeNull();
       expect(icon).not.toBeNull();
+      expect(tooltip).not.toBeNull();
+      expect(tooltipContent).not.toBeNull();
       expect(button.ariaLabel).toBe(exampleTooltip);
       expect(button.textContent).toBe(exampleLabel);
       expect(icon.iconName).toBe(exampleIcon);
@@ -121,7 +133,7 @@ describe('c-quantic-stateful-button', () => {
       expect(button.classList.contains('stateful-button--unselected')).toBe(
         true
       );
-      expect(tooltip.value).toBe(exampleTooltip);
+      expect(tooltipContent.textContent).toBe(exampleTooltip);
     });
 
     describe('when the unselected stateful button is clicked', () => {
