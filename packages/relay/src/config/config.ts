@@ -1,9 +1,28 @@
 export type RelayMode = "emit" | "validate" | "disabled";
 
 export interface RelayConfig {
+  /**
+   * Endpoint defined to communicate with the Event API.
+   */
   url: string;
+
+  /**
+   * Token to authorize the access to the Event API endpoint.
+   */
   token: string;
+
+  /**
+   * The unique identifier of a web property. See [Tracking ID](https://docs.coveo.com/en/n8tg0567/).
+   */
   trackingId: string;
+
+  /**
+   * Defines the library mode. The possible values are:
+   * "emit": Sends analytics events to Coveo to be stored.
+   * "validate": Validates events without storing them. This mode is for debugging and development purposes only and should not be used in production.
+   * "disabled": Prevents the emission of events and does not trigger callbacks.
+   * @default emit
+   */
   mode?: RelayMode;
 }
 

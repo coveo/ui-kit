@@ -2,6 +2,12 @@ import { RelayEvent } from "../event/relay-event";
 
 const ANY_EVENT_TYPE = "*";
 
+/**
+ * Callback to perform an action when a specified event is emitted.
+ * @typedef {function} EventCallback
+ * @param {RelayEvent} event
+ * @returns {void}
+ */
 export type EventCallback = (event: RelayEvent) => void;
 
 interface Listener {

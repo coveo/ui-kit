@@ -4,17 +4,47 @@ import { RelayConfig } from "../../config/config";
 import { version } from "../../version";
 
 interface EventConfig {
+  /**
+   * The unique identifier of a web property. See [Tracking ID](https://docs.coveo.com/en/n8tg0567/).
+   */
   trackingId: string;
 }
 
 export interface Meta {
+  /**
+   * Event's type that was emitted.
+   */
   type: string;
   config: EventConfig;
+
+  /**
+   * Timestamp when the event was emitted.
+   */
   ts: number;
+
+  /**
+   * Library and version in which the event is built and emitted.
+   */
   source: string;
+
+  /**
+   * Persistent unique identifier of a device.
+   */
   clientId: string;
+
+  /**
+   * Browser Navigator's [user agent](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/userAgent) property if set.
+   */
   userAgent: string | null;
+
+  /**
+   * Browser Document's [referrer](https://developer.mozilla.org/en-US/docs/Web/API/Document/referrer) property if set.
+   */
   referrerUrl: string | null;
+
+  /**
+   * Browser Location's [href](https://developer.mozilla.org/en-US/docs/Web/API/Location/href) property if set.
+   */
   url: string | null;
 }
 

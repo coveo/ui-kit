@@ -9,13 +9,32 @@ export interface ValidateParams {
 }
 
 export interface ValidationError {
+  /**
+   * Type of syntax error of an event's property.
+   */
   type: string;
+
+  /**
+   * Message describing the syntax error of an event's property.
+   */
   message: string;
+
+  /**
+   * Path of the property with a syntax error in the event's payload.
+   */
   path: string;
 }
 
 export interface ValidationResponse {
+  /**
+   * Indicates whether the payload is valid.
+   */
   valid: boolean;
+
+  /**
+   * List of syntax errors found in the emitted event(s).
+   * Each syntax error for a given property in a given event will be represented as a single ValidationError object.
+   */
   errors: ValidationError[];
 }
 
