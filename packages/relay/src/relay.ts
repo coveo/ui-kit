@@ -37,7 +37,7 @@ interface Relay {
    * Setting type as "*" will trigger the callback for all event types.
    * Returns the "off" function to detach the event callback.
    * @param {string} type - event's type.
-   * @param {EventCallback} callback 
+   * @param {EventCallback} callback
    * @returns {Off}
    */
   on: (type: string, callback: EventCallback) => Off;
@@ -72,7 +72,7 @@ interface Relay {
 
 /**
  * Initializes the Relay library object.
- * @param {RelayConfig} initialConfig 
+ * @param {RelayConfig} initialConfig
  * @returns {Relay}
  */
 export function createRelay(initialConfig: RelayConfig): Relay {
