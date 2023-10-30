@@ -69,3 +69,11 @@ export function assertCopyButtonVisibility(isVisible: boolean) {
     );
   });
 }
+
+export function assertAnswerCopiedToClipboard(answer: string) {
+  cy.window().then((win) => {
+    win.navigator.clipboard.readText().then((text) => {
+      expect(text).to.eq(answer);
+    });
+  });
+}

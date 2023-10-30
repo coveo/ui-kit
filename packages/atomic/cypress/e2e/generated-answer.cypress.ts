@@ -189,6 +189,15 @@ describe('Generated Answer Test Suites', () => {
             });
           });
         });
+
+        describe('when we click on copy button', () => {
+          it('should copy the generated answer to the clipboard', async () => {
+            GeneratedAnswerSelectors.copyButton().focus().click();
+            GeneratedAnswerAssertions.assertAnswerCopiedToClipboard(
+              testTextDelta
+            );
+          });
+        });
       });
 
       describe('when a citation event is received', () => {
