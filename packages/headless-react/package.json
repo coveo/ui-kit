@@ -42,7 +42,7 @@
     "@types/jest": "29.5.6",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
-    "@typescript-eslint/eslint-plugin": "6.9.0",
+    "@typescript-eslint/eslint-plugin": "6.9.1",
     "eslint-plugin-jest-dom": "5.1.0",
     "eslint-plugin-react": "7.33.2",
     "eslint-plugin-testing-library": "6.1.0",
@@ -53,7 +53,7 @@
     "rimraf": "5.0.5",
     "ts-jest": "29.1.1",
     "typescript": "5.2.2",
-    "undici": "5.26.5"
+    "undici": "5.27.0"
   },
   "peerDependencies": {
     "react": "^18",

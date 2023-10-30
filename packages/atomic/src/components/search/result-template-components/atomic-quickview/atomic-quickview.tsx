@@ -27,6 +27,8 @@ import {ResultContext} from '../result-template-decorators';
  * The `atomic-quickview` is not meant to replace the `atomic-result-link` to access an item in a result template; it has certain limitations (e.g., custom styles and embedded
  * images/links may not work as expected in an `atomic-quickview`).
  *
+ * @part button - The button that opens the quickview modal on click.
+ * @part icon - The icon for the quickview button.
  */
 @Component({
   tag: 'atomic-quickview',
@@ -143,13 +145,18 @@ export class AtomicQuickview implements InitializableComponent {
     if (this.quickviewState.resultHasPreview) {
       return (
         <Button
+          part="button"
           title={this.bindings.i18n.t('quickview')}
           style="outline-primary"
           class="p-2"
           onClick={(event) => this.onClick(event)}
           ref={this.focusTarget.setTarget}
         >
-          <atomic-icon class="w-5" icon={QuickviewIcon}></atomic-icon>
+          <atomic-icon
+            part="icon"
+            class="w-5"
+            icon={QuickviewIcon}
+          ></atomic-icon>
         </Button>
       );
     }

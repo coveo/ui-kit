@@ -24,6 +24,7 @@ export interface GeneratedAnswerSelector extends ComponentSelector {
   rephraseLabel: () => CypressSelector;
   rephraseButtonByLabel: (label: string) => CypressSelector;
   generatedAnswerFooter: () => CypressSelector;
+  copyToClipboardButton: () => CypressSelector;
 }
 
 export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
@@ -96,4 +97,8 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
     ),
   generatedAnswerFooter: () =>
     GeneratedAnswerSelectors.get().find('[data-cy="generated-answer__footer"]'),
+  copyToClipboardButton: () =>
+    GeneratedAnswerSelectors.get().find(
+      '[data-cy="generated-answer__copy-to-clipboard"]'
+    ),
 };
