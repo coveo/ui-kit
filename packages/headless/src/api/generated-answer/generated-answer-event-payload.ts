@@ -11,6 +11,7 @@ export interface GeneratedAnswerCitation {
   uri: string;
   permanentid: string;
   clickUri?: string;
+  text?: string;
 }
 
 export interface GeneratedAnswerMessagePayload {
