@@ -61,3 +61,11 @@ export function assertAnswerStyle(expected: string) {
     ).to.have.property('answerStyle', expected);
   });
 }
+
+export function assertCopyButtonVisibility(isVisible: boolean) {
+  it(`${should(isVisible)} show the copy button`, () => {
+    GeneratedAnswerSelectors.copyButton().should(
+      isVisible ? 'be.visible' : 'not.exist'
+    );
+  });
+}
