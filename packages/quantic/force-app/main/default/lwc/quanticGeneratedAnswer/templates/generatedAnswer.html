@@ -1,41 +1,74 @@
 <template>
   <template lwc:if={shouldDisplayGeneratedAnswer}>
-    <div
-      data-cy="generated-answer__card"
-      class="slds-box"
-    >
+    <div data-cy="generated-answer__card" class="slds-box">
       <div
-        class="slds-var-m-bottom_medium slds-grid generated-answer__card-header"
+        class="generated-answer__card-header slds-var-m-bottom_medium slds-grid"
       >
         <span
           class="generated-answer__badge slds-var-p-around_x-small slds-text-title_bold"
           >{labels.generatedAnswerForYou}</span
         >
-        <c-quantic-feedback
-          state={feedbackState}
-          onlike={handleLike}
-          ondislike={handleDislike}
-          like-icon-name="utility:like"
-          like-label={labels.thisAnswerWasHelpful}
-          dislike-icon-name="utility:dislike"
-          dislike-label={labels.thisAnswerWasNotHelpful}
-          size="x-small"
-          question=""
-          hide-explain-why-button
-          hide-labels
-          data-cy="generated-answer__feedback"
-        ></c-quantic-feedback>
+        <div class="generated-answer__header-actions slds-grid">
+          <template lwc:if={shouldDisplayActions}>
+            <c-quantic-feedback
+              state={feedbackState}
+              onlike={handleLike}
+              ondislike={handleDislike}
+              like-icon-name="utility:like"
+              like-label={labels.thisAnswerWasHelpful}
+              dislike-icon-name="utility:dislike"
+              dislike-label={labels.thisAnswerWasNotHelpful}
+              size="x-small"
+              question=""
+              hide-explain-why-button
+              hide-labels
+              data-cy="generated-answer__feedback"
+            ></c-quantic-feedback>
+            <c-quantic-generated-answer-copy-to-clipboard
+              data-cy="generated-answer__copy-to-clipboard"
+              answer={answer}
+            ></c-quantic-generated-answer-copy-to-clipboard>
+          </template>
+          <lightning-input
+            data-cy="generated-answer__toggle-button"
+            type="toggle"
+            onchange={toggleGeneratedAnswer}
+            checked={isVisible}
+            variant="label-hidden"
+            message-toggle-active=""
+            message-toggle-inactive=""
+            label={labels.showGeneratedAnswer}
+          ></lightning-input>
+        </div>
       </div>
-      <div data-cy="generated-answer__content" class={generatedContentClass}>
-        {answer}
-      </div>
-      <template lwc:if={hasCitations}>
-        <div class="slds-var-m-top_small">
-          <c-quantic-source-citations
-            data-cy="generated-answer__citations"
-            citations={citations}
-            citation-click-handler={handleCitationClick}
-          ></c-quantic-source-citations>
+      <template lwc:if={isVisible}>
+        <div
+          data-cy="generated-answer__content"
+          class="generated-answer__content slds-var-m-top_medium"
+        >
+          <div data-cy="generated-answer__answer" class={generatedAnswerClass}>
+            {answer}
+          </div>
+          <div data-cy="generated-answer__footer" class={generatedAnswerFooterCssClass}>
+            <template lwc:if={hasCitations}>
+              <div class="slds-var-m-top_small">
+                <c-quantic-source-citations
+                  data-cy="generated-answer__citations"
+                  citations={citations}
+                  citation-click-handler={handleCitationClick}
+                ></c-quantic-source-citations>
+              </div>
+            </template>
+            <template lwc:if={shouldDisplayActions}>
+              <div class="slds-var-m-top_small">
+                <c-quantic-generated-answer-rephrase-buttons
+                  data-cy="generated-answer__rephrase-buttons"
+                  value={responseFormat}
+                  hide-labels={shouldHideRephraseLabels}
+                ></c-quantic-generated-answer-rephrase-buttons>
+              </div>
+            </template>
+          </div>
         </div>
       </template>
     </div>

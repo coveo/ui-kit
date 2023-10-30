@@ -1,3 +1,9 @@
+# 2.36.0 (2023-10-25)
+
+### Features
+
+- **quantic:** toggle button to show and hide generated answer added ([#3286](https://github.com/coveo/ui-kit/issues/3286)) ([d82f5ab](https://github.com/coveo/ui-kit/commits/d82f5ab4cadd038b87d43c999fd19953fb3cadec))
+
 # 2.35.0 (2023-10-18)
 
 ### Bug Fixes

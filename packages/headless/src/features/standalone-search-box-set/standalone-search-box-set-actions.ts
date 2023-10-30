@@ -18,11 +18,7 @@ import {
   requiredNonEmptyString,
   validatePayload,
 } from '../../utils/validate-payload';
-import {
-  AnalyticsType,
-  CustomAction,
-  makeAnalyticsAction,
-} from '../analytics/analytics-utils';
+import {CustomAction, makeAnalyticsAction} from '../analytics/analytics-utils';
 import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-params';
 import {OmniboxSuggestionMetadata} from '../query-suggest/query-suggest-analytics-actions';
 
@@ -131,10 +127,8 @@ export const fetchRedirectUrl = createAsyncThunk<
 );
 
 const logRedirect = (url: string): CustomAction =>
-  makeAnalyticsAction(
-    'analytics/standaloneSearchBox/redirect',
-    AnalyticsType.Custom,
-    (client) => client.makeTriggerRedirect({redirectedTo: url})
+  makeAnalyticsAction('analytics/standaloneSearchBox/redirect', (client) =>
+    client.makeTriggerRedirect({redirectedTo: url})
   );
 
 export const buildPlanRequest = async (

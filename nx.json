@@ -107,6 +107,9 @@
     },
     "release:phase2": {
       "dependsOn": ["release:build", "release:phase1"]
+    },
+    "release:phase5": {
+      "dependsOn": ["^release:phase5"]
     }
   },
   "defaultBase": "master",

@@ -34,7 +34,7 @@ import {
   SortSection,
   TriggerSection,
 } from '../../state/state-sections';
-import {AnalyticsAsyncThunk, AnalyticsType} from '../analytics/analytics-utils';
+import {AnalyticsAsyncThunk} from '../analytics/analytics-utils';
 import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
 import {logDidYouMeanAutomatic} from '../did-you-mean/did-you-mean-analytics-actions';
 import {snapshot} from '../history/history-actions';
@@ -103,9 +103,7 @@ export interface AsyncThunkConfig {
   >;
 
   rejectWithValue: (err: SearchAPIErrorWithStatusCode) => unknown;
-  analyticsAction: AnalyticsAsyncThunk<{
-    analyticsType: AnalyticsType.Search;
-  }> | null;
+  analyticsAction: AnalyticsAsyncThunk | null;
   extra: ClientThunkExtraArguments<SearchAPIClient>;
 }
 

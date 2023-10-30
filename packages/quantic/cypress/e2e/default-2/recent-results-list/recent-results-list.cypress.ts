@@ -118,7 +118,7 @@ describe('quantic-recent-results-list', () => {
         visitRecentResultsList({
           isCollapsed: true,
         });
-
+        Expect.labelContains(defaultLabel);
         selectResults();
         Expect.displayResults(false);
       });
@@ -129,6 +129,7 @@ describe('quantic-recent-results-list', () => {
           target: '_blank',
         });
 
+        Expect.labelContains(defaultLabel);
         selectResults();
         Expect.targetContainsAtResult('1', customTarget);
       });
