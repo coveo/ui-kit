@@ -16,7 +16,7 @@ import {
   logGeneratedAnswerFeedback,
   logGeneratedAnswerHideAnswers,
   logGeneratedAnswerShowAnswers,
-  logHoverGeneratedAnswerSource,
+  logHoverCitation,
   logLikeGeneratedAnswer,
   logOpenGeneratedAnswerSource,
 } from '../../features/generated-answer/generated-answer-analytics-actions';
@@ -168,7 +168,7 @@ describe('generated answer', () => {
 
     generatedAnswer.logCitationHover(testCitation.id, exampleDuration);
     const action = engine.findAsyncAction(
-      logHoverGeneratedAnswerSource(testCitation.id, exampleDuration).pending
+      logHoverCitation(testCitation.id, exampleDuration).pending
     );
 
     expect(action).toBeTruthy();

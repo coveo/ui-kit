@@ -22,7 +22,7 @@ import {
   logGeneratedAnswerShowAnswers,
   logGeneratedAnswerHideAnswers,
   logCopyGeneratedAnswer,
-  logHoverGeneratedAnswerSource,
+  logHoverCitation,
 } from '../../features/generated-answer/generated-answer-analytics-actions';
 import {generatedAnswerReducer as generatedAnswer} from '../../features/generated-answer/generated-answer-slice';
 import {GeneratedAnswerState} from '../../features/generated-answer/generated-answer-state';
@@ -226,7 +226,7 @@ export function buildGeneratedAnswer(
     },
 
     logCitationHover(citationId: string, citationHoverTimeMs: number) {
-      dispatch(logHoverGeneratedAnswerSource(citationId, citationHoverTimeMs));
+      dispatch(logHoverCitation(citationId, citationHoverTimeMs));
     },
 
     rephrase(responseFormat: GeneratedResponseFormat) {
