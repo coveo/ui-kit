@@ -4,8 +4,8 @@ import {
   buildInteractiveCitation,
 } from '@coveo/headless';
 import {FunctionalComponent, h} from '@stencil/core';
-import {Heading} from '../../common/heading';
-import {LinkWithResultAnalytics} from '../../common/result-link/result-link';
+import {Heading} from '../../../common/heading';
+import {LinkWithResultAnalytics} from '../../../common/result-link/result-link';
 
 interface CitationProps {
   engine: SearchEngine;

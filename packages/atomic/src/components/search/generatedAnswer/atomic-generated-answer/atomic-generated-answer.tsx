@@ -13,15 +13,15 @@ import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
-} from '../../../utils/initialization-utils';
+} from '../../../../utils/initialization-utils';
 import {
   GeneratedAnswerData,
   SafeStorage,
   StorageItems,
-} from '../../../utils/local-storage-utils';
-import {Heading} from '../../common/heading';
-import {Switch} from '../../common/switch';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+} from '../../../../utils/local-storage-utils';
+import {Heading} from '../../../common/heading';
+import {Switch} from '../../../common/switch';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {FeedbackButton} from './feedback-button';
 import {GeneratedContentContainer} from './generated-content-container';
 import {RephraseButtons} from './rephrase-buttons';

@@ -16,6 +16,15 @@ export function assertLogOpenGeneratedAnswerSource(log: boolean) {
   });
 }
 
+export function assertLogHoverGeneratedAnswerSource(log: boolean) {
+  if (log) {
+    cy.expectCustomEvent('generatedAnswer', 'openGeneratedAnswerSource');
+  } else {
+    cy.wait(50);
+    cy.wrap(AnalyticsTracker).invoke('getLastCustomEvent').should('not.exist');
+  }
+}
+
 export function assertAnswerVisibility(isVisible: boolean) {
   it(`${should(isVisible)} show the generated answer`, () => {
     GeneratedAnswerSelectors.answer().should(

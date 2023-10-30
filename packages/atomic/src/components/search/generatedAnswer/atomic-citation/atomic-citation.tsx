@@ -93,13 +93,13 @@ export class AtomicCitation implements InitializableComponent {
     );
   }
 
-  private openPopover() {
+  private openPopover = () => {
     this.isOpen = true;
-  }
+  };
 
-  private closePopover() {
+  private closePopover = () => {
     this.isOpen = false;
-  }
+  };
 
   private renderPopover() {
     return (
@@ -112,7 +112,7 @@ export class AtomicCitation implements InitializableComponent {
         role="dialog"
       >
         <div class="truncate text-neutral-dark text-sm">
-          {this.citation.clickUri}
+          {this.citation.uri}
         </div>
         <Heading level={0} class="font-bold text-md">
           {this.citation.title}
@@ -142,10 +142,10 @@ export class AtomicCitation implements InitializableComponent {
             this.interactiveCitation.cancelPendingSelect()
           }
           stopPropagation={this.stopPropagation}
-          onMouseLeave={() => this.closePopover()}
-          onMouseOver={() => this.openPopover()}
-          onFocus={() => this.openPopover()}
-          onBlur={() => this.closePopover()}
+          onMouseLeave={this.closePopover}
+          onMouseOver={this.openPopover}
+          onFocus={this.openPopover}
+          onBlur={this.closePopover}
         >
           <div class="citation-index rounded-full font-medium flex items-center text-bg-primary shrink-0">
             <div class="mx-auto">{this.index + 1}</div>

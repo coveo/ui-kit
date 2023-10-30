@@ -23,6 +23,7 @@ const testCitation = {
   uri: 'https://www.coveo.com',
   permanentid: 'some-permanent-id-123',
   clickUri: 'https://www.coveo.com/en',
+  text: 'This is the snippet given to the generative model.',
 };
 const testTextDelta = 'Some text';
 const testMessagePayload = {
@@ -220,6 +221,35 @@ describe('Generated Answer Test Suites', () => {
           });
 
           GeneratedAnswerAssertions.assertLogOpenGeneratedAnswerSource(true);
+        });
+
+        describe('when a citation is hovered', () => {
+          beforeEach(() => {
+            AnalyticsTracker.reset();
+            GeneratedAnswerSelectors.citation().trigger('mouseover');
+          });
+
+          it('should display the citation card', () => {
+            GeneratedAnswerSelectors.citationCard().should('be.visible');
+            GeneratedAnswerSelectors.citationCard().should(
+              'contain.text',
+              testCitation.uri
+            );
+            GeneratedAnswerSelectors.citationCard().should(
+              'contain.text',
+              testCitation.title
+            );
+            GeneratedAnswerSelectors.citationCard().should(
+              'contain.text',
+              testCitation.text
+            );
+          });
+
+          it('should send analytics when the hover ends', () => {
+            GeneratedAnswerSelectors.citation().trigger('mouseleave');
+
+            GeneratedAnswerAssertions.assertLogHoverGeneratedAnswerSource(true);
+          });
         });
 
         describe('when a citation is right-clicked', () => {
