@@ -1,3 +1,4 @@
+import {Interception} from '../../../../../../node_modules/cypress/types/net-stubbing';
 import {InterceptAliases} from '../../../page-objects/search';
 import {should} from '../../common-selectors';
 import {
@@ -5,7 +6,7 @@ import {
   GeneratedAnswerSelectors,
 } from './generated-answer-selectors';
 
-function logCustomGeneratedAnswerEvent(event: string, checkPayload: Function) {
+function logGeneratedAnswerEvent(event: string, checkPayload: Function) {
   cy.wait(event)
     .then((interception) => {
       const analyticsBody = interception.request.body;
@@ -87,6 +88,20 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         );
     },
 
+    generatedAnswerFooterIsOnMultiline: (multilineDisplay: boolean) => {
+      selector
+        .generatedAnswerFooter()
+        .should(
+          multilineDisplay ? 'have.class' : 'not.have.class',
+          'generated-answer__footer--multiline'
+        )
+        .log(
+          `the generated answer footer ${should(
+            multilineDisplay
+          )} be displayed on multiple lines`
+        );
+    },
+
     generatedAnswerContains: (answer: string) => {
       selector
         .generatedAnswer()
@@ -157,6 +172,54 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         .log(`${should(display)} display the feedback modal`);
     },
 
+    displayRephraseButtons: (display: boolean) => {
+      selector
+        .rephraseButtons()
+        .should(display ? 'exist' : 'not.exist')
+        .log(`${should(display)} display the rephrase buttons`);
+    },
+
+    displayRephraseLabel: (display: boolean) => {
+      selector
+        .rephraseLabel()
+        .should(display ? 'exist' : 'not.exist')
+        .log(`${should(display)} display the rephrase label`);
+    },
+
+    displayRephraseButtonWithLabel: (label: string) => {
+      selector
+        .rephraseButtonByLabel(label)
+        .should('exist')
+        .log(`should display the rephrase button with the label ${label}`);
+    },
+
+    rephraseButtonIsSelected: (name: string, selected: boolean) => {
+      selector
+        .rephraseButtonByLabel(name)
+        .should(
+          selected ? 'have.class' : 'not.have.class',
+          'stateful-button--selected'
+        )
+        .should(
+          selected ? 'not.have.class' : 'have.class',
+          'stateful-button--unselected'
+        )
+        .log(`the ${name} rephrase button ${should(selected)} be selected`);
+    },
+
+    searchQueryContainsCorrectRephraseOption: (expectedAnswerStyle: string) => {
+      cy.get<Interception>(InterceptAliases.Search)
+        .then((interception) => {
+          const answerStyle =
+            interception?.request?.body?.pipelineRuleParameters
+              ?.mlGenerativeQuestionAnswering?.responseFormat?.answerStyle;
+          expect(answerStyle).to.eq(expectedAnswerStyle);
+        })
+        .log(
+          `the search query should contain the correct ${expectedAnswerStyle} parameter`
+        );
+    },
+
     logStreamIdInAnalytics(streamId: string) {
       cy.wait(InterceptAliases.UA.Load)
         .then((interception) => {
@@ -171,7 +234,7 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
     },
 
     logLikeGeneratedAnswer(streamId: string) {
-      logCustomGeneratedAnswerEvent(
+      logGeneratedAnswerEvent(
         InterceptAliases.UA.GeneratedAnswer.LikeGeneratedAnswer,
         (analyticsBody: {customData: object; eventType: string}) => {
           const customData = analyticsBody?.customData;
@@ -188,7 +251,7 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
     },
 
     logDislikeGeneratedAnswer(streamId: string) {
-      logCustomGeneratedAnswerEvent(
+      logGeneratedAnswerEvent(
         InterceptAliases.UA.GeneratedAnswer.DislikeGeneratedAnswer,
         (analyticsBody: {customData: object; eventType: string}) => {
           const customData = analyticsBody?.customData;
@@ -205,7 +268,7 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
     },
 
     logGeneratedAnswerStreamEnd(streamId: string) {
-      logCustomGeneratedAnswerEvent(
+      logGeneratedAnswerEvent(
         InterceptAliases.UA.GeneratedAnswer.GeneratedAnswerStreamEnd,
         (analyticsBody: {customData: object; eventType: string}) => {
           const customData = analyticsBody?.customData;
@@ -225,7 +288,7 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
       streamId: string,
       citation: {id: string; permanentid: string}
     ) {
-      logCustomGeneratedAnswerEvent(
+      logGeneratedAnswerEvent(
         InterceptAliases.UA.GeneratedAnswer.OpenGeneratedAnswerSource,
         (analyticsBody: {customData: object; eventType: string}) => {
           const customData = analyticsBody?.customData;
@@ -247,7 +310,7 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
     },
 
     logRetryGeneratedAnswer(streamId: string) {
-      logCustomGeneratedAnswerEvent(
+      logGeneratedAnswerEvent(
         InterceptAliases.UA.GeneratedAnswer.RetryGeneratedAnswer,
         (analyticsBody: {customData: object; eventType: string}) => {
           const customData = analyticsBody?.customData;
@@ -266,7 +329,7 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         details?: string;
       }
     ) {
-      logCustomGeneratedAnswerEvent(
+      logGeneratedAnswerEvent(
         InterceptAliases.UA.GeneratedAnswer.GeneratedAnswerFeedbackSubmit,
         (analyticsBody: {customData: object; eventType: string}) => {
           const customData = analyticsBody?.customData;
@@ -287,7 +350,7 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
     },
 
     logShowGeneratedAnswer(streamId: string) {
-      logCustomGeneratedAnswerEvent(
+      logGeneratedAnswerEvent(
         InterceptAliases.UA.GeneratedAnswer.ShowGeneratedAnswer,
         (analyticsBody: {customData: object; eventType: string}) => {
           const customData = analyticsBody?.customData;
@@ -304,7 +367,7 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
     },
 
     logHideGeneratedAnswer(streamId: string) {
-      logCustomGeneratedAnswerEvent(
+      logGeneratedAnswerEvent(
         InterceptAliases.UA.GeneratedAnswer.HideGeneratedAnswer,
         (analyticsBody: {customData: object; eventType: string}) => {
           const customData = analyticsBody?.customData;
@@ -315,6 +378,23 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
           expect(customData).to.have.property(
             'generativeQuestionAnsweringId',
             streamId
+          );
+        }
+      );
+    },
+
+    logRephraseGeneratedAnswer(expectedAnswerStyle: string, streamId: string) {
+      logGeneratedAnswerEvent(
+        InterceptAliases.UA.GeneratedAnswer.RephraseGeneratedAnswer,
+        (analyticsBody: {customData: object; eventType: string}) => {
+          const customData = analyticsBody?.customData;
+          expect(customData).to.have.property(
+            'generativeQuestionAnsweringId',
+            streamId
+          );
+          expect(customData).to.have.property(
+            'rephraseFormat',
+            expectedAnswerStyle
           );
         }
       );
