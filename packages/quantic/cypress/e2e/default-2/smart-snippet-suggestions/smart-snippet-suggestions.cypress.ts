@@ -20,13 +20,14 @@ const exampleInlineLink =
   'https://saas-inspiration-5437-dev-ed.scratch.my.site.com/examples/s/';
 const exampleInlineLinkText = 'Example inline link';
 const exampleSmartSnippetAnswer = `<div data-cy="smart-snippet__inline-link"><p>Example smart snippet answer</p><a href="${exampleInlineLink}">${exampleInlineLinkText}</a></div>`;
-
+const exampleUriHash = 'exampleUriHash';
 const exampleRelatedQuestions = [
   {
     question: 'first example question',
     answerSnippet: exampleSmartSnippetAnswer,
     title: 'first example title',
     uri: inactiveLink,
+    uriHash: exampleUriHash,
     documentId: {
       contentIdKey: 'permanentid',
       contentIdValue: '123',
@@ -37,6 +38,7 @@ const exampleRelatedQuestions = [
     answerSnippet: exampleSmartSnippetAnswer,
     title: 'second example title',
     uri: inactiveLink,
+    uriHash: exampleUriHash,
     documentId: {
       contentIdKey: 'permanentid',
       contentIdValue: '456',
