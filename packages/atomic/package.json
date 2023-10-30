@@ -70,7 +70,7 @@
     "@rollup/plugin-alias": "5.0.1",
     "@rollup/plugin-replace": "5.0.4",
     "@stencil-community/postcss": "2.2.0",
-    "@stencil/angular-output-target": "0.8.2",
+    "@stencil/angular-output-target": "0.8.3",
     "@stencil/react-output-target": "0.5.3",
     "@types/dompurify": "3.0.4",
     "@types/escape-html": "1.0.3",
