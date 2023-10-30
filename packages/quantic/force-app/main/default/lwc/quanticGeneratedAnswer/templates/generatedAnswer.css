@@ -1,5 +1,10 @@
 @import '../quanticGeneratedAnswer.css';
 
+.generated-answer__header-actions {
+  align-items: center;
+  gap: 10px;
+}
+
 .generated-answer__answer {
   white-space: pre-wrap;
 }
