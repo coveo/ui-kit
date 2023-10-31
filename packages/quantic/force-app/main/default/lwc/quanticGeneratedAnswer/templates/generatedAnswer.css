@@ -1,7 +1,20 @@
 @import '../quanticGeneratedAnswer.css';
 
-.generated-answer__content {
+.generated-answer__header-actions {
+  align-items: center;
+  gap: 10px;
+}
+
+.generated-answer__answer {
   white-space: pre-wrap;
+}
+
+.generated-answer__footer--multiline {
+  flex-direction: column;
+}
+
+.generated-answer__footer--standard {
+  gap: 1rem;
 }
 
 .generated-answer__content--streaming::after {

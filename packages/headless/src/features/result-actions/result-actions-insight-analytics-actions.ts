@@ -1,6 +1,5 @@
 import {Result} from '../../insight.index';
 import {
-  AnalyticsType,
   documentIdentifier,
   InsightAction,
   makeInsightAnalyticsAction,
@@ -9,12 +8,9 @@ import {
 } from '../analytics/analytics-utils';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
 
-export const logCopyToClipboard = (
-  result: Result
-): InsightAction<AnalyticsType.Click> =>
+export const logCopyToClipboard = (result: Result): InsightAction =>
   makeInsightAnalyticsAction(
     'analytics/resultAction/insight/copyToClipboard',
-    AnalyticsType.Click,
     (client, state) => {
       validateResultPayload(result);
       const metadata = getCaseContextAnalyticsMetadata(
@@ -28,12 +24,9 @@ export const logCopyToClipboard = (
     }
   );
 
-export const logCaseSendEmail = (
-  result: Result
-): InsightAction<AnalyticsType.Click> =>
+export const logCaseSendEmail = (result: Result): InsightAction =>
   makeInsightAnalyticsAction(
     'analytics/resultAction/insight/caseSendEmail',
-    AnalyticsType.Click,
     (client, state) => {
       validateResultPayload(result);
       const metadata = getCaseContextAnalyticsMetadata(
@@ -47,12 +40,9 @@ export const logCaseSendEmail = (
     }
   );
 
-export const logFeedItemTextPost = (
-  result: Result
-): InsightAction<AnalyticsType.Click> =>
+export const logFeedItemTextPost = (result: Result): InsightAction =>
   makeInsightAnalyticsAction(
     'analytics/resultAction/insight/feedItemTextPost',
-    AnalyticsType.Click,
     (client, state) => {
       validateResultPayload(result);
       const metadata = getCaseContextAnalyticsMetadata(

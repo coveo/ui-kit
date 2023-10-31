@@ -21,6 +21,8 @@ import {
   logRetryGeneratedAnswer,
   logGeneratedAnswerShowAnswers,
   logGeneratedAnswerHideAnswers,
+  logCopyGeneratedAnswer,
+  logHoverCitation,
 } from '../../features/generated-answer/generated-answer-analytics-actions';
 import {generatedAnswerReducer as generatedAnswer} from '../../features/generated-answer/generated-answer-slice';
 import {GeneratedAnswerState} from '../../features/generated-answer/generated-answer-state';
@@ -87,6 +89,16 @@ export interface GeneratedAnswer extends Controller {
    * Hides the generated answer.
    */
   hide(): void;
+  /**
+   * Logs a custom event indicating the generated answer was copied to the clipboard.
+   */
+  logCopyToClipboard(): void;
+  /**
+   * Logs a custom event indicating a cited source link was hovered.
+   * @param citationId The ID of the clicked citation.
+   * @param citationHoverTimeMs The number of milliseconds spent hovering over the citation.
+   */
+  logCitationHover(citationId: string, citationHoverTimeMs: number): void;
 }
 
 export interface GeneratedAnswerProps {
@@ -213,6 +225,10 @@ export function buildGeneratedAnswer(
       dispatch(logOpenGeneratedAnswerSource(citationId));
     },
 
+    logCitationHover(citationId: string, citationHoverTimeMs: number) {
+      dispatch(logHoverCitation(citationId, citationHoverTimeMs));
+    },
+
     rephrase(responseFormat: GeneratedResponseFormat) {
       dispatch(updateResponseFormat(responseFormat));
       dispatch(executeSearch(logRephraseGeneratedAnswer(responseFormat)));
@@ -230,6 +246,9 @@ export function buildGeneratedAnswer(
         dispatch(setIsVisible(false));
         dispatch(logGeneratedAnswerHideAnswers());
       }
+    },
+    logCopyToClipboard() {
+      dispatch(logCopyGeneratedAnswer());
     },
   };
 }

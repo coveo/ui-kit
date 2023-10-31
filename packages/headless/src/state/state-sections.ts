@@ -9,6 +9,7 @@ import {CartState} from '../features/commerce/context/cart/cart-state';
 import {CommerceContextState} from '../features/commerce/context/context-state';
 import {CommercePaginationState} from '../features/commerce/pagination/pagination-state';
 import {ProductListingV2State} from '../features/commerce/product-listing/product-listing-state';
+import {CommerceSortState} from '../features/commerce/sort/sort-state';
 import {ConfigurationState} from '../features/configuration/configuration-state';
 import {ContextState} from '../features/context/context-state';
 import {DictionaryFieldContextState} from '../features/dictionary-field-context/dictionary-field-context-state';
@@ -292,9 +293,16 @@ export interface ProductListingSection {
 
 export interface CommercePaginationSection {
   /**
-   * The information related to the product listing endpoint.
+   * The information related to the commerce pagination.
    */
   commercePagination: CommercePaginationState;
+}
+
+export interface CommerceSortSection {
+  /**
+   * The information related to the commerce sort.
+   */
+  commerceSort: CommerceSortState;
 }
 
 export interface CommerceContextSection {

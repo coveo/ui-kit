@@ -38,7 +38,7 @@ import {
   StaticFilterValueMetadata,
 } from '../static-filter-set/static-filter-set-actions';
 import {logInsightStaticFilterDeselect} from '../static-filter-set/static-filter-set-insight-analytics-actions';
-import {AnalyticsType, InsightAction} from './analytics-utils';
+import {InsightAction} from './analytics-utils';
 import {
   logInsightInterfaceChange,
   logInsightInterfaceLoad,
@@ -218,7 +218,7 @@ export interface InsightAnalyticsActionCreators {
    * @param result - The result.
    * @returns A dispatchable action.
    */
-  logCopyToClipboard(result: Result): InsightAction<AnalyticsType.Click>;
+  logCopyToClipboard(result: Result): InsightAction;
 
   /**
    * The event to log when the Case Send As Email result action is clicked.
@@ -226,7 +226,7 @@ export interface InsightAnalyticsActionCreators {
    * @param result - The result.
    * @returns A dispatchable action.
    */
-  logCaseSendEmail(result: Result): InsightAction<AnalyticsType.Click>;
+  logCaseSendEmail(result: Result): InsightAction;
 
   /**
    * The event to log when the Feed Item Text Post result action is clicked.
@@ -234,7 +234,7 @@ export interface InsightAnalyticsActionCreators {
    * @param result - The result.
    * @returns A dispatchable action.
    */
-  logFeedItemTextPost(result: Result): InsightAction<AnalyticsType.Click>;
+  logFeedItemTextPost(result: Result): InsightAction;
 }
 
 /**

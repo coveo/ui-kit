@@ -1,5 +1,4 @@
 import {
-  AnalyticsType,
   CustomAction,
   SearchAction,
   makeAnalyticsAction,
@@ -17,37 +16,30 @@ export type GeneratedAnswerFeedback =
   | 'harmful';
 
 export const logRetryGeneratedAnswer = (): SearchAction =>
-  makeAnalyticsAction(
-    'analytics/generatedAnswer/retry',
-    AnalyticsType.Search,
-    (client) => client.makeRetryGeneratedAnswer()
+  makeAnalyticsAction('analytics/generatedAnswer/retry', (client) =>
+    client.makeRetryGeneratedAnswer()
   );
 
 export const logRephraseGeneratedAnswer = (
   responseFormat: GeneratedResponseFormat
 ): SearchAction =>
-  makeAnalyticsAction(
-    'analytics/generatedAnswer/rephrase',
-    AnalyticsType.Search,
-    (client, state) => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
-      if (!generativeQuestionAnsweringId) {
-        return null;
-      }
-      return client.makeRephraseGeneratedAnswer({
-        generativeQuestionAnsweringId,
-        rephraseFormat: responseFormat.answerStyle,
-      });
+  makeAnalyticsAction('analytics/generatedAnswer/rephrase', (client, state) => {
+    const generativeQuestionAnsweringId =
+      generativeQuestionAnsweringIdSelector(state);
+    if (!generativeQuestionAnsweringId) {
+      return null;
     }
-  );
+    return client.makeRephraseGeneratedAnswer({
+      generativeQuestionAnsweringId,
+      rephraseFormat: responseFormat.answerStyle,
+    });
+  });
 
 export const logOpenGeneratedAnswerSource = (
   citationId: string
 ): CustomAction =>
   makeAnalyticsAction(
     'analytics/generatedAnswer/openAnswerSource',
-    AnalyticsType.Custom,
     (client, state) => {
       const generativeQuestionAnsweringId =
         generativeQuestionAnsweringIdSelector(state);
@@ -63,44 +55,57 @@ export const logOpenGeneratedAnswerSource = (
     }
   );
 
-export const logLikeGeneratedAnswer = (): CustomAction =>
+export const logHoverCitation = (
+  citationId: string,
+  citationHoverTimeMs: number
+): CustomAction =>
   makeAnalyticsAction(
-    'analytics/generatedAnswer/like',
-    AnalyticsType.Custom,
+    'analytics/generatedAnswer/hoverCitation',
     (client, state) => {
       const generativeQuestionAnsweringId =
         generativeQuestionAnsweringIdSelector(state);
-      if (!generativeQuestionAnsweringId) {
+      const citation = citationSourceSelector(state, citationId);
+      if (!generativeQuestionAnsweringId || !citation) {
         return null;
       }
-      return client.makeLikeGeneratedAnswer({
+      return client.makeGeneratedAnswerSourceHover({
         generativeQuestionAnsweringId,
+        permanentId: citation.permanentid,
+        citationId: citation.id,
+        citationHoverTimeMs,
       });
     }
   );
 
-export const logDislikeGeneratedAnswer = (): CustomAction =>
-  makeAnalyticsAction(
-    'analytics/generatedAnswer/dislike',
-    AnalyticsType.Custom,
-    (client, state) => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
-      if (!generativeQuestionAnsweringId) {
-        return null;
-      }
-      return client.makeDislikeGeneratedAnswer({
-        generativeQuestionAnsweringId,
-      });
+export const logLikeGeneratedAnswer = (): CustomAction =>
+  makeAnalyticsAction('analytics/generatedAnswer/like', (client, state) => {
+    const generativeQuestionAnsweringId =
+      generativeQuestionAnsweringIdSelector(state);
+    if (!generativeQuestionAnsweringId) {
+      return null;
     }
-  );
+    return client.makeLikeGeneratedAnswer({
+      generativeQuestionAnsweringId,
+    });
+  });
+
+export const logDislikeGeneratedAnswer = (): CustomAction =>
+  makeAnalyticsAction('analytics/generatedAnswer/dislike', (client, state) => {
+    const generativeQuestionAnsweringId =
+      generativeQuestionAnsweringIdSelector(state);
+    if (!generativeQuestionAnsweringId) {
+      return null;
+    }
+    return client.makeDislikeGeneratedAnswer({
+      generativeQuestionAnsweringId,
+    });
+  });
 
 export const logGeneratedAnswerFeedback = (
   feedback: GeneratedAnswerFeedback
 ): CustomAction =>
   makeAnalyticsAction(
     'analytics/generatedAnswer/sendFeedback',
-    AnalyticsType.Custom,
     (client, state) => {
       const generativeQuestionAnsweringId =
         generativeQuestionAnsweringIdSelector(state);
@@ -119,7 +124,6 @@ export const logGeneratedAnswerDetailedFeedback = (
 ): CustomAction =>
   makeAnalyticsAction(
     'analytics/generatedAnswer/sendFeedback',
-    AnalyticsType.Custom,
     (client, state) => {
       const generativeQuestionAnsweringId =
         generativeQuestionAnsweringIdSelector(state);
@@ -139,7 +143,6 @@ export const logGeneratedAnswerStreamEnd = (
 ): CustomAction =>
   makeAnalyticsAction(
     'analytics/generatedAnswer/streamEnd',
-    AnalyticsType.Custom,
     (client, state) => {
       const generativeQuestionAnsweringId =
         generativeQuestionAnsweringIdSelector(state);
@@ -154,33 +157,37 @@ export const logGeneratedAnswerStreamEnd = (
   );
 
 export const logGeneratedAnswerShowAnswers = (): CustomAction =>
-  makeAnalyticsAction(
-    'analytics/generatedAnswer/show',
-    AnalyticsType.Custom,
-    (client, state) => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
-      if (!generativeQuestionAnsweringId) {
-        return null;
-      }
-      return client.makeGeneratedAnswerShowAnswers({
-        generativeQuestionAnsweringId,
-      });
+  makeAnalyticsAction('analytics/generatedAnswer/show', (client, state) => {
+    const generativeQuestionAnsweringId =
+      generativeQuestionAnsweringIdSelector(state);
+    if (!generativeQuestionAnsweringId) {
+      return null;
     }
-  );
+    return client.makeGeneratedAnswerShowAnswers({
+      generativeQuestionAnsweringId,
+    });
+  });
 
 export const logGeneratedAnswerHideAnswers = (): CustomAction =>
-  makeAnalyticsAction(
-    'analytics/generatedAnswer/hide',
-    AnalyticsType.Custom,
-    (client, state) => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
-      if (!generativeQuestionAnsweringId) {
-        return null;
-      }
-      return client.makeGeneratedAnswerHideAnswers({
-        generativeQuestionAnsweringId,
-      });
+  makeAnalyticsAction('analytics/generatedAnswer/hide', (client, state) => {
+    const generativeQuestionAnsweringId =
+      generativeQuestionAnsweringIdSelector(state);
+    if (!generativeQuestionAnsweringId) {
+      return null;
     }
-  );
+    return client.makeGeneratedAnswerHideAnswers({
+      generativeQuestionAnsweringId,
+    });
+  });
+
+export const logCopyGeneratedAnswer = (): CustomAction =>
+  makeAnalyticsAction('analytics/generatedAnswer/copy', (client, state) => {
+    const generativeQuestionAnsweringId =
+      generativeQuestionAnsweringIdSelector(state);
+    if (!generativeQuestionAnsweringId) {
+      return null;
+    }
+    return client.makeGeneratedAnswerCopyToClipboard({
+      generativeQuestionAnsweringId,
+    });
+  });

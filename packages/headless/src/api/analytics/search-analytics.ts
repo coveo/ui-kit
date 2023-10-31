@@ -1,3 +1,4 @@
+import {createRelay} from '@coveo/relay';
 import {
   CoveoSearchPageClient,
   SearchPageClientProvider,
@@ -94,6 +95,15 @@ export class SearchAnalyticsProvider
     return baseObject;
   }
 
+  public getGeneratedAnswerMetadata() {
+    const state = this.getState();
+    const formattedObject: Record<string, string | boolean> = {};
+    if (state.generatedAnswer?.isVisible !== undefined) {
+      formattedObject['showGeneratedAnswer'] = state.generatedAnswer.isVisible;
+    }
+    return formattedObject;
+  }
+
   private get resultURIs() {
     return this.results?.map((r) => ({
       documentUri: r.uri,
@@ -129,6 +139,19 @@ interface LegacyConfigureAnalyticsOptions {
   getState(): StateNeededBySearchAnalyticsProvider;
 }
 
+export const configureAnalytics = (
+  state: StateNeededBySearchAnalyticsProvider
+) => {
+  const token = state.configuration.accessToken;
+  const trackingId = state.configuration.analytics.trackingId;
+  const {emit} = createRelay({
+    url: state.configuration.analytics.nextApiBaseUrl,
+    token,
+    trackingId,
+  });
+  return emit;
+};
+
 export const configureLegacyAnalytics = ({
   logger,
   getState,
@@ -138,7 +161,7 @@ export const configureLegacyAnalytics = ({
 }: LegacyConfigureAnalyticsOptions) => {
   const state = getState();
   const token = state.configuration.accessToken;
-  const endpoint = state.configuration.analytics.legacyApiBaseUrl;
+  const endpoint = state.configuration.analytics.apiBaseUrl;
   const runtimeEnvironment = state.configuration.analytics.runtimeEnvironment;
   const enableAnalytics = state.configuration.analytics.enabled;
   const client = new CoveoSearchPageClient(

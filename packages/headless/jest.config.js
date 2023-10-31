@@ -5,6 +5,8 @@ module.exports = {
   silent: true,
   setupFiles: ['./jest.setup.js'],
   moduleNameMapper: {
-    '@coveo/please-give-me-fetch': '<rootDir>/fetch-ponyfill.js',
+    '@coveo/please-give-me-fetch':
+      '<rootDir>/ponyfills/fetch-ponyfill-browser.js',
+    '@coveo/pendragon': '<rootDir>/ponyfills/magic-cookie-node.js',
   },
 };

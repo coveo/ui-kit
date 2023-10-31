@@ -10,11 +10,13 @@ import {
   updateResponseFormat,
 } from '../../features/generated-answer/generated-answer-actions';
 import {
+  logCopyGeneratedAnswer,
   logDislikeGeneratedAnswer,
   logGeneratedAnswerDetailedFeedback,
   logGeneratedAnswerFeedback,
   logGeneratedAnswerHideAnswers,
   logGeneratedAnswerShowAnswers,
+  logHoverCitation,
   logLikeGeneratedAnswer,
   logOpenGeneratedAnswerSource,
 } from '../../features/generated-answer/generated-answer-analytics-actions';
@@ -158,6 +160,28 @@ describe('generated answer', () => {
     );
 
     expect(action).toBeTruthy();
+  });
+
+  it('#logCitationHover dispatches analytics action', () => {
+    const testCitation = buildMockCitation();
+    const exampleDuration = 100;
+
+    generatedAnswer.logCitationHover(testCitation.id, exampleDuration);
+    const action = engine.findAsyncAction(
+      logHoverCitation(testCitation.id, exampleDuration).pending
+    );
+
+    expect(action).toBeTruthy();
+  });
+
+  it('#logCopyToClipboard dispatches analytics action', () => {
+    generatedAnswer.logCopyToClipboard();
+
+    const analyticsAction = engine.findAsyncAction(
+      logCopyGeneratedAnswer().pending
+    );
+
+    expect(analyticsAction).toBeDefined();
   });
 
   describe('#rephrase', () => {
