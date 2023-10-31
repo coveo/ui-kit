@@ -1,1 +1,3 @@
-module.exports = () => document.cookie.includes('Coveo-Pendagron');
+const pendragonCookieValueMatcher = /(^|; )Coveo-Pendragon=([^;]*)/;
+module.exports = () =>
+  pendragonCookieValueMatcher.exec(document.cookie).pop() || null;

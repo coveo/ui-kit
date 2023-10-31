@@ -1,6 +1,6 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 //@ts-expect-error package is just an alias resolved in esbuild
-import hasMagicCookie from '@coveo/pendragon';
+import getMagicCookie from '@coveo/pendragon';
 import {createReducer} from '@reduxjs/toolkit';
 import {clearAnalyticsClient} from '../../api/analytics/coveo-analytics-utils';
 import {getOrganizationEndpoints} from '../../api/platform-client';
@@ -116,8 +116,9 @@ export const configurationReducer = createReducer(
         if (!isNullOrUndefined(action.payload.analyticsMode)) {
           state.analytics.analyticsMode = action.payload.analyticsMode;
         }
-        if (hasMagicCookie()) {
+        if (getMagicCookie()) {
           state.analytics.analyticsMode = 'next';
+          state.analytics.trackingId = getMagicCookie();
         }
         if (!isNullOrUndefined(action.payload.runtimeEnvironment)) {
           state.analytics.runtimeEnvironment =
