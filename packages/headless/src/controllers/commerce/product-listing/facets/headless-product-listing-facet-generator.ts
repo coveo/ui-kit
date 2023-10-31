@@ -34,7 +34,8 @@ export function buildFacetGenerator(engine: CommerceEngine): FacetGenerator {
     get state() {
       return {
         facets: (engine.state.commerceFacets.facets ?? []).map((facet) =>
-          // TODO: Eventually, we'll use different controllers for different facet types taken from facet.type
+          // eslint-disable-next-line @cspell/spellchecker
+          // TODO CAPI-90, CAPI-91: Use different controllers for different facet types taken from facet.type
           buildFacet(engine, {
             options: {
               facetId: facet.facetId,
