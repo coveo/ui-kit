@@ -1,6 +1,6 @@
 :host {
+  --main-color: var(--selected-state-color, #0176d3);
   --neutral-color: rgb(94, 94, 94);
-  --main-color: var(--lwc-brand-accessible, #0176d3);
   --color-gray-6: rgb(201, 199, 197);
 }
 
@@ -19,19 +19,26 @@
 .stateful-button--unselected:hover,
 .stateful-button--unselected:focus {
   color: var(--neutral-color);
+  background-color: white;
 }
 
 .stateful-button--selected {
   --slds-c-button-outline-brand-color-border-hover: var(--main-color);
   --slds-c-button-outline-brand-color-border: var(--main-color);
+  --slds-c-button-shadow-focus: 0 0 3px var(--main-color);
 }
 
 .stateful-button--selected,
 .stateful-button--selected:hover,
 .stateful-button--selected:focus {
   color: var(--main-color);
+  background-color: white;
 }
 
 .stateful-button__icon--selected {
   --slds-c-icon-color-foreground-default: var(--main-color);
+}
+
+.stateful-button--without-borders {
+  border: 0;
 }

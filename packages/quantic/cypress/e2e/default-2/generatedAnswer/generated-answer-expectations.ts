@@ -59,6 +59,13 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         .log(`${should(display)} display the source citations`);
     },
 
+    displayCopyToClipboardButton: (display: boolean) => {
+      selector
+        .copyToClipboardButton()
+        .should(display ? 'exist' : 'not.exist')
+        .log(`${should(display)} display the copy to clipboard button`);
+    },
+
     likeButtonIsChecked: (checked: boolean) => {
       selector
         .likeButton()
@@ -421,6 +428,23 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
           expect(customData).to.have.property(
             'rephraseFormat',
             expectedAnswerStyle
+          );
+        }
+      );
+    },
+
+    logCopyGeneratedAnswer(streamId: string) {
+      logGeneratedAnswerEvent(
+        InterceptAliases.UA.GeneratedAnswer.GeneratedAnswerCopyToClipboard,
+        (analyticsBody: {customData: object; eventType: string}) => {
+          const customData = analyticsBody?.customData;
+          expect(analyticsBody).to.have.property(
+            'eventType',
+            'generatedAnswer'
+          );
+          expect(customData).to.have.property(
+            'generativeQuestionAnsweringId',
+            streamId
           );
         }
       );

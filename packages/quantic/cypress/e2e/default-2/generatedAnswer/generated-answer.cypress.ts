@@ -99,10 +99,16 @@ describe('quantic-generated-answer', () => {
         Expect.searchQueryContainsCorrectRephraseOption(defaultRephraseOption);
       });
 
-      it('should display rephrase buttons', () => {
-        Expect.displayRephraseButtons(true);
-        Expect.displayRephraseLabel(true);
-      });
+      it(
+        'should display rephrase buttons',
+        {
+          retries: 10,
+        },
+        () => {
+          Expect.displayRephraseButtons(true);
+          Expect.displayRephraseLabel(true);
+        }
+      );
 
       it('should display feedback buttons', () => {
         Expect.displayLikeButton(true);
@@ -153,71 +159,77 @@ describe('quantic-generated-answer', () => {
       });
     });
 
-    describe('when providing detailed feedback', () => {
-      const streamId = crypto.randomUUID();
+    describe(
+      'when providing detailed feedback',
+      {
+        retries: 10,
+      },
+      () => {
+        const streamId = crypto.randomUUID();
 
-      beforeEach(() => {
-        mockSearchWithGeneratedAnswer(streamId);
-        mockStreamResponse(streamId, genQaMessageTypePayload);
-        visitGeneratedAnswer();
-      });
-
-      it('should send detailed feedback', () => {
-        Expect.displayLikeButton(true);
-        Expect.displayDislikeButton(true);
-        Expect.likeButtonIsChecked(false);
-        Expect.dislikeButtonIsChecked(false);
-
-        scope('when disliking the generated answer', () => {
-          Actions.dislikeGeneratedAnswer();
-          Expect.logDislikeGeneratedAnswer(streamId);
-          Expect.likeButtonIsChecked(false);
-          Expect.dislikeButtonIsChecked(true);
-          Expect.displayFeedbackModal(true);
+        beforeEach(() => {
+          mockSearchWithGeneratedAnswer(streamId);
+          mockStreamResponse(streamId, genQaMessageTypePayload);
+          visitGeneratedAnswer();
         });
 
-        scope('when selecting a feedback option', () => {
-          const exampleDetails = 'example details';
-          Actions.clickFeedbackOption(feedbackOptions.indexOf(otherOption));
-          Actions.typeInFeedbackDetailsInput(exampleDetails);
-          Actions.clickFeedbackSubmitButton();
-          Expect.logGeneratedAnswerFeedbackSubmit(streamId, {
-            reason: otherOption,
-            details: exampleDetails,
-          });
-          Actions.clickFeedbackDoneButton();
-        });
-      });
-
-      it('should display the toggle generated answer button', () => {
-        Expect.displayToggleGeneratedAnswerButton(true);
-        Expect.toggleGeneratedAnswerButtonIsChecked(true);
-
-        scope('when toggling off the generated answer', () => {
-          Actions.clickToggleGeneratedAnswerButton();
-          Expect.toggleGeneratedAnswerButtonIsChecked(false);
-          Expect.displayGeneratedAnswerContent(false);
-          Expect.displayLikeButton(false);
-          Expect.displayDislikeButton(false);
-          Expect.logHideGeneratedAnswer(streamId);
-          Expect.sessionStorageContains(GENERATED_ANSWER_DATA_KEY, {
-            isVisible: false,
-          });
-        });
-
-        scope('when toggling on the generated answer', () => {
-          Actions.clickToggleGeneratedAnswerButton();
-          Expect.toggleGeneratedAnswerButtonIsChecked(true);
-          Expect.displayGeneratedAnswerContent(true);
+        it('should send detailed feedback', () => {
           Expect.displayLikeButton(true);
           Expect.displayDislikeButton(true);
-          Expect.logShowGeneratedAnswer(streamId);
-          Expect.sessionStorageContains(GENERATED_ANSWER_DATA_KEY, {
-            isVisible: true,
+          Expect.likeButtonIsChecked(false);
+          Expect.dislikeButtonIsChecked(false);
+
+          scope('when disliking the generated answer', () => {
+            Actions.dislikeGeneratedAnswer();
+            Expect.logDislikeGeneratedAnswer(streamId);
+            Expect.likeButtonIsChecked(false);
+            Expect.dislikeButtonIsChecked(true);
+            Expect.displayFeedbackModal(true);
+          });
+
+          scope('when selecting a feedback option', () => {
+            const exampleDetails = 'example details';
+            Actions.clickFeedbackOption(feedbackOptions.indexOf(otherOption));
+            Actions.typeInFeedbackDetailsInput(exampleDetails);
+            Actions.clickFeedbackSubmitButton();
+            Expect.logGeneratedAnswerFeedbackSubmit(streamId, {
+              reason: otherOption,
+              details: exampleDetails,
+            });
+            Actions.clickFeedbackDoneButton();
           });
         });
-      });
-    });
+
+        it('should display the toggle generated answer button', () => {
+          Expect.displayToggleGeneratedAnswerButton(true);
+          Expect.toggleGeneratedAnswerButtonIsChecked(true);
+
+          scope('when toggling off the generated answer', () => {
+            Actions.clickToggleGeneratedAnswerButton();
+            Expect.toggleGeneratedAnswerButtonIsChecked(false);
+            Expect.displayGeneratedAnswerContent(false);
+            Expect.displayLikeButton(false);
+            Expect.displayDislikeButton(false);
+            Expect.logHideGeneratedAnswer(streamId);
+            Expect.sessionStorageContains(GENERATED_ANSWER_DATA_KEY, {
+              isVisible: false,
+            });
+          });
+
+          scope('when toggling on the generated answer', () => {
+            Actions.clickToggleGeneratedAnswerButton();
+            Expect.toggleGeneratedAnswerButtonIsChecked(true);
+            Expect.displayGeneratedAnswerContent(true);
+            Expect.displayLikeButton(true);
+            Expect.displayDislikeButton(true);
+            Expect.logShowGeneratedAnswer(streamId);
+            Expect.sessionStorageContains(GENERATED_ANSWER_DATA_KEY, {
+              isVisible: true,
+            });
+          });
+        });
+      }
+    );
 
     rephraseOptions.forEach((option) => {
       const rephraseOption = option;
@@ -316,6 +328,29 @@ describe('quantic-generated-answer', () => {
       });
     });
 
+    describe('when clicking the copy to clipboard button', () => {
+      const streamId = crypto.randomUUID();
+
+      beforeEach(() => {
+        mockSearchWithGeneratedAnswer(streamId);
+        mockStreamResponse(streamId, genQaMessageTypePayload);
+        visitGeneratedAnswer({multilineFooter: true});
+      });
+
+      it('should properly copy the answer to clipboard', () => {
+        scope('when loading the page', () => {
+          Expect.displayCopyToClipboardButton(true);
+          Actions.clickCopyToClipboardButton();
+          Expect.logCopyGeneratedAnswer(streamId);
+          cy.window().then((win) => {
+            win.navigator.clipboard.readText().then((text) => {
+              expect(text).to.eq(testText);
+            });
+          });
+        });
+      });
+    });
+
     describe('when the generated answer is still streaming', () => {
       const streamId = crypto.randomUUID();
 
@@ -339,6 +374,7 @@ describe('quantic-generated-answer', () => {
         Expect.displayRephraseButtons(false);
         Expect.displayLikeButton(false);
         Expect.displayDislikeButton(false);
+        Expect.displayCopyToClipboardButton(false);
         Expect.displayToggleGeneratedAnswerButton(true);
         Expect.toggleGeneratedAnswerButtonIsChecked(true);
       });

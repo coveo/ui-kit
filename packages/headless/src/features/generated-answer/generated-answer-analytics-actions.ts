@@ -55,12 +55,12 @@ export const logOpenGeneratedAnswerSource = (
     }
   );
 
-export const logHoverGeneratedAnswerSource = (
+export const logHoverCitation = (
   citationId: string,
   citationHoverTimeMs: number
 ): CustomAction =>
   makeAnalyticsAction(
-    'analytics/generatedAnswer/hoverAnswerSource',
+    'analytics/generatedAnswer/hoverCitation',
     (client, state) => {
       const generativeQuestionAnsweringId =
         generativeQuestionAnsweringIdSelector(state);

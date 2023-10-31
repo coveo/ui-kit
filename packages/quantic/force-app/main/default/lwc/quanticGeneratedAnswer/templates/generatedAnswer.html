@@ -8,7 +8,7 @@
           class="generated-answer__badge slds-var-p-around_x-small slds-text-title_bold"
           >{labels.generatedAnswerForYou}</span
         >
-        <div class="slds-grid">
+        <div class="generated-answer__header-actions slds-grid">
           <template lwc:if={shouldDisplayActions}>
             <c-quantic-feedback
               state={feedbackState}
@@ -24,23 +24,28 @@
               hide-labels
               data-cy="generated-answer__feedback"
             ></c-quantic-feedback>
+            <c-quantic-generated-answer-copy-to-clipboard
+              data-cy="generated-answer__copy-to-clipboard"
+              answer={answer}
+            ></c-quantic-generated-answer-copy-to-clipboard>
           </template>
-          <div class="slds-var-m-left_medium">
-            <lightning-input
-              data-cy="generated-answer__toggle-button"
-              type="toggle"
-              onchange={toggleGeneratedAnswer}
-              checked={isVisible}
-              variant="label-hidden"
-              message-toggle-active=""
-              message-toggle-inactive=""
-              label={labels.showGeneratedAnswer}
-            ></lightning-input>
-          </div>
+          <lightning-input
+            data-cy="generated-answer__toggle-button"
+            type="toggle"
+            onchange={toggleGeneratedAnswer}
+            checked={isVisible}
+            variant="label-hidden"
+            message-toggle-active=""
+            message-toggle-inactive=""
+            label={labels.showGeneratedAnswer}
+          ></lightning-input>
         </div>
       </div>
       <template lwc:if={isVisible}>
-        <div data-cy="generated-answer__content" class="generated-answer__content slds-var-m-top_medium">
+        <div
+          data-cy="generated-answer__content"
+          class="generated-answer__content slds-var-m-top_medium"
+        >
           <div data-cy="generated-answer__answer" class={generatedAnswerClass}>
             {answer}
           </div>
