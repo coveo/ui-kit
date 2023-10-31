@@ -1,15 +1,15 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {facetsReducer as commerceFacets} from '../../../../features/commerce/facets/facets-slice';
+import {
+  getProductListingAnalyticsActionForToggleFacetExclude,
+  getProductListingAnalyticsActionForToggleFacetSelect,
+} from '../../../../features/commerce/facets/facets-utils';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {
   logFacetClearAll,
   logFacetShowLess,
   logFacetShowMore,
 } from '../../../../features/facets/facet-set/facet-set-product-listing-analytics-actions';
-import {
-  getProductListingAnalyticsActionForToggleFacetExclude,
-  getProductListingAnalyticsActionForToggleFacetSelect,
-} from '../../../../features/facets/facet-set/facet-set-product-listing-utils';
 import {facetSetReducer as facetSet} from '../../../../features/facets/facet-set/facet-set-slice';
 import {
   CommerceFacetSection,
@@ -22,6 +22,7 @@ import {
   CoreFacetState,
   FacetValue,
 } from '../../../core/facets/facet/headless-core-facet';
+import {FacetOptions as CoreFacetOptions} from '../../../core/facets/facet/headless-core-facet-options';
 
 export type Facet = Omit<
   CoreFacet,
@@ -39,10 +40,10 @@ export interface FacetProps {
   options: FacetOptions;
 }
 
-export interface FacetOptions {
-  facetId: string;
-  field: string;
-}
+export type FacetOptions = Pick<
+  CoreFacetOptions,
+  'facetId' | 'field' | 'numberOfValues'
+>;
 
 export function buildFacet(engine: CommerceEngine, props: FacetProps): Facet {
   if (!loadFacetReducers(engine)) {
@@ -51,7 +52,8 @@ export function buildFacet(engine: CommerceEngine, props: FacetProps): Facet {
 
   const {dispatch} = engine;
   const coreController = buildCoreFacet(engine, props);
-  const {sortBy, isSortedBy, ...restOfCoreController} = coreController;
+  const {sortBy, isSortedBy, enable, disable, ...restOfCoreController} =
+    coreController;
   const getFacetId = () => coreController.state.facetId;
 
   return {

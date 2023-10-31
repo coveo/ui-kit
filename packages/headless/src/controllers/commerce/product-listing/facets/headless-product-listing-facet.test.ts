@@ -1,5 +1,10 @@
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {registerFacet} from '../../../../features/facets/facet-set/facet-set-actions';
+import {
+  logFacetDeselect,
+  logFacetExclude,
+  logFacetSelect,
+} from '../../../../features/facets/facet-set/facet-set-product-listing-v2-analytics-actions';
 import {FacetRequest} from '../../../../features/facets/facet-set/interfaces/request';
 import {CommerceAppState} from '../../../../state/commerce-app-state';
 import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
@@ -93,6 +98,34 @@ describe('Facet', () => {
         })
       );
     });
+
+    it('when state is "selected", dispatches #logFacetDeselect', () => {
+      const facetValue = buildMockFacetValue({state: 'selected'});
+      facet.toggleSelect(facetValue);
+
+      const expectedAnalyticsActionType = logFacetDeselect({
+        facetId,
+        facetValue: 'some_field',
+      }).pending.type;
+
+      expect(
+        engine.actions.find((a) => a.type === expectedAnalyticsActionType)
+      ).toBeTruthy();
+    });
+
+    it('when state is "idle", dispatches #logFacetSelect', () => {
+      const facetValue = buildMockFacetValue({state: 'idle'});
+      facet.toggleSelect(facetValue);
+
+      const expectedAnalyticsActionType = logFacetSelect({
+        facetId,
+        facetValue: 'some_field',
+      }).pending.type;
+
+      expect(
+        engine.actions.find((a) => a.type === expectedAnalyticsActionType)
+      ).toBeTruthy();
+    });
   });
 
   describe('#toggleExclude', () => {
@@ -105,6 +138,34 @@ describe('Facet', () => {
           type: fetchProductListing.pending.type,
         })
       );
+    });
+
+    it('when state is "excluded", dispatches #logFacetDeselect', () => {
+      const facetValue = buildMockFacetValue({state: 'excluded'});
+      facet.toggleExclude(facetValue);
+
+      const expectedAnalyticsActionType = logFacetDeselect({
+        facetId,
+        facetValue: 'some_field',
+      }).pending.type;
+
+      expect(
+        engine.actions.find((a) => a.type === expectedAnalyticsActionType)
+      ).toBeTruthy();
+    });
+
+    it('when state is "idle", dispatches #logFacetExclude', () => {
+      const facetValue = buildMockFacetValue({state: 'idle'});
+      facet.toggleExclude(facetValue);
+
+      const expectedAnalyticsActionType = logFacetExclude({
+        facetId,
+        facetValue: 'some_field',
+      }).pending.type;
+
+      expect(
+        engine.actions.find((a) => a.type === expectedAnalyticsActionType)
+      ).toBeTruthy();
     });
   });
 
@@ -150,7 +211,7 @@ describe('Facet', () => {
     );
   });
 
-  it('#showLessValues  dispatches a fetchProductListing', () => {
+  it('#showLessValues dispatches a fetchProductListing', () => {
     facet.showLessValues();
 
     expect(engine.actions).toContainEqual(
