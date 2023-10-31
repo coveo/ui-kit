@@ -38,6 +38,8 @@ describe('FacetGenerator', () => {
   });
 
   it('should return facet controllers', () => {
+    // eslint-disable-next-line @cspell/spellchecker
+    // TODO CAPI-90, CAPI-91: Add test cases that ensure proper facet controllers are created from the facet.type
     const facet = {
       facetId: 'some-facet-id',
       field: 'some_field',

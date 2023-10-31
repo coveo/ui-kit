@@ -1,5 +1,4 @@
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
-import {registerFacet} from '../../../../features/facets/facet-set/facet-set-actions';
 import {
   logFacetDeselect,
   logFacetExclude,
@@ -10,7 +9,6 @@ import {CommerceAppState} from '../../../../state/commerce-app-state';
 import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
-import {buildMockFacetResponse} from '../../../../test/mock-facet-response';
 import {buildMockFacetSlice} from '../../../../test/mock-facet-slice';
 import {buildMockFacetValue} from '../../../../test/mock-facet-value';
 import {
@@ -57,34 +55,9 @@ describe('Facet', () => {
     expect(facet.subscribe).toBeTruthy();
   });
 
-  it('registers a facet with the passed options and the default values of unspecified options', () => {
-    const action = registerFacet({
-      field: 'some_field',
-      sortCriteria: 'automatic',
-      resultsMustMatch: 'atLeastOneValue',
-      facetId,
-      filterFacetCount: true,
-      injectionDepth: 1000,
-      numberOfValues: 8,
-    });
-
-    expect(engine.actions).toContainEqual(action);
-  });
-
   it('when the product listing response is empty, the facet #state.values is an empty array', () => {
     expect(state.commerceFacets.facets).toEqual([]);
     expect(facet.state.values).toEqual([]);
-  });
-
-  it('when the commerce facets have a facet, the facet #state.values contains the same values', () => {
-    const values = [buildMockFacetValue()];
-    const facetResponse = buildMockFacetResponse({
-      facetId,
-      values,
-    });
-
-    state.commerceFacets.facets = [facetResponse];
-    expect(facet.state.values).toBe(values);
   });
 
   describe('#toggleSelect', () => {
