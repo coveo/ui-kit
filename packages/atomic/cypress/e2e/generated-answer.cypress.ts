@@ -226,8 +226,9 @@ describe('Generated Answer Test Suites', () => {
         describe('when a citation is hovered', () => {
           beforeEach(() => {
             AnalyticsTracker.reset();
+            cy.clock();
             GeneratedAnswerSelectors.citation().trigger('mouseover');
-            cy.wait(200);
+            cy.tick(1300).invoke('restore');
           });
 
           it('should display the citation card', () => {
@@ -247,7 +248,6 @@ describe('Generated Answer Test Suites', () => {
           });
 
           it('should send analytics when the hover ends', () => {
-            cy.wait(1100); // The debounce requires minimum 1000ms
             GeneratedAnswerSelectors.citation().trigger('mouseleave');
 
             GeneratedAnswerAssertions.assertLogGeneratedAnswerSourceHover(true);
