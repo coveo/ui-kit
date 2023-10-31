@@ -83,26 +83,29 @@ async function main() {
     );
 
     try {
-      const res = await fetch(env.COVEO_AZURE_OPEN_AI_ENDPOINT, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'api-key': env.COVEO_AZURE_OPEN_AI_KEY,
-        },
-        body: JSON.stringify({
-          messages: [
-            {
-              role: 'user',
-              content: prompt(
-                translationKey,
-                englishTranslation,
-                languagesThatNeedTranslation
-              ),
-            },
-          ],
-          stream: false,
-        }),
-      });
+      const res = await fetch(
+        ' https://coveo-cloud-dev-us.openai.azure.com/openai/deployments/gpt35-1/chat/completions?api-version=2023-03-15-preview',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'api-key': 'a5f29e1ac6ee4cd688945535738e5780',
+          },
+          body: JSON.stringify({
+            messages: [
+              {
+                role: 'user',
+                content: prompt(
+                  translationKey,
+                  englishTranslation,
+                  languagesThatNeedTranslation
+                ),
+              },
+            ],
+            stream: false,
+          }),
+        }
+      );
 
       const data = await res.json();
       const answer = data.choices[0].message.content;
