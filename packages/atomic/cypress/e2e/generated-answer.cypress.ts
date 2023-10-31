@@ -227,6 +227,7 @@ describe('Generated Answer Test Suites', () => {
           beforeEach(() => {
             AnalyticsTracker.reset();
             GeneratedAnswerSelectors.citation().trigger('mouseover');
+            cy.wait(200);
           });
 
           it('should display the citation card', () => {

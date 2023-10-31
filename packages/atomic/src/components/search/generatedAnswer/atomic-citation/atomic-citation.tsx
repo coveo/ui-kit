@@ -49,6 +49,9 @@ export class AtomicCitation implements InitializableComponent {
   private hoverStart?: number;
   private hoverAnalyticsTimeout = 1000;
 
+  private hoverTimeout?: ReturnType<typeof setTimeout>;
+  private hoverDebounceTimeoutMs = 200;
+
   @Watch('isOpen')
   sendHoverAnalytics() {
     if (this.isOpen) {
@@ -119,7 +122,16 @@ export class AtomicCitation implements InitializableComponent {
   };
 
   private closePopover = () => {
+    clearTimeout(this.hoverTimeout);
     this.isOpen = false;
+  };
+
+  private delayedPopoverOpen = () => {
+    clearTimeout(this.hoverTimeout);
+    this.hoverTimeout = setTimeout(
+      this.openPopover,
+      this.hoverDebounceTimeoutMs
+    );
   };
 
   private renderPopover() {
@@ -164,7 +176,7 @@ export class AtomicCitation implements InitializableComponent {
           }
           stopPropagation={this.stopPropagation}
           onMouseLeave={this.closePopover}
-          onMouseOver={this.openPopover}
+          onMouseOver={this.delayedPopoverOpen}
           onFocus={this.openPopover}
           onBlur={this.closePopover}
         >
