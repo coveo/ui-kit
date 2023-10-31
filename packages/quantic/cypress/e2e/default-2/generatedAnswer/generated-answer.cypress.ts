@@ -385,6 +385,13 @@ describe('quantic-generated-answer', () => {
         });
       });
 
+      it('should log the correct analytics event when a citation is hovered', () => {
+        Actions.hoverOverCitation(0);
+        cy.wait(600);
+        Actions.stopHoverOverCitation(0);
+        Expect.logHoverGeneratedAnswerSource(streamId, testCitations[0], 100);
+      });
+
       it('should log the correct analytics event when a citation is clicked', () => {
         Actions.clickCitation(0);
         Expect.logOpenGeneratedAnswerSource(streamId, testCitations[0]);

@@ -6,7 +6,7 @@
     <c-quantic-search-interface
       engine-id={engineId}
       search-hub={searchHub}
-      pipeline={pipeline}
+      pipeline="genqatest"
       disable-state-in-url={disableStateInUrl}
       skip-first-search={skipFirstSearch}
     >
@@ -123,6 +123,9 @@
                   engine-id={engineId}
                 ></c-quantic-tab>
               </c-quantic-tab-bar>
+              <div class="slds-var-m-top_small">
+                <c-quantic-generated-answer engine-id={engineId}></c-quantic-generated-answer>
+              </div>
               <div class="slds-grid slds-var-m-top_small">
                 <c-quantic-summary
                   class="slds-var-m-vertical_x-small slds-small-size_8-of-12 slds-large-size_7-of-12"

@@ -14,6 +14,7 @@ export default class QuanticTooltip extends LightningElement {
    * Text value to be shown in the tooltip.
    */
   @api value;
+  @api lightTheme = false;
   /**
    * @api
    * Method tha shows the tooltip.
@@ -34,7 +35,9 @@ export default class QuanticTooltip extends LightningElement {
   isVisible = false;
 
   get tooltipCSSClass() {
-    return `slds-popover slds-popover_tooltip slds-nubbin_bottom-left slds-is-absolute tooltip__content slds-fall-into-ground ${
+    return `slds-popover ${
+      this.lightTheme ? 'tooltip__content--light' : 'slds-popover_tooltip'
+    } slds-nubbin_bottom-left slds-is-absolute tooltip__content slds-fall-into-ground ${
       this.isVisible ? 'tooltip__content--visible' : ''
     }`;
   }

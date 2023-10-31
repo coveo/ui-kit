@@ -78,6 +78,7 @@ export const InterceptAliases = {
       HideGeneratedAnswer: uaAlias('generatedAnswerHideAnswers'),
       GeneratedAnswerFeedbackSubmit: uaAlias('generatedAnswerFeedbackSubmit'),
       RephraseGeneratedAnswer: uaAlias('rephraseGeneratedAnswer'),
+      GeneratedAnswerSourceHover: uaAlias('generatedAnswerSourceHover'),
     },
     DidYouMean: uaAlias('didyoumeanAutomatic'),
     DidyoumeanClick: uaAlias('didyoumeanClick'),

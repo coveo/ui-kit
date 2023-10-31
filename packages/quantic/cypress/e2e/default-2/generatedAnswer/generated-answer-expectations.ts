@@ -309,6 +309,32 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
       );
     },
 
+    logHoverGeneratedAnswerSource(
+      streamId: string,
+      citation: {id: string; permanentid: string}
+    ) {
+      logGeneratedAnswerEvent(
+        InterceptAliases.UA.GeneratedAnswer.GeneratedAnswerSourceHover,
+        (analyticsBody: {customData: object; eventType: string}) => {
+          const customData = analyticsBody?.customData;
+          expect(customData).to.have.property('citationHoverTimeMs');
+          expect(analyticsBody).to.have.property(
+            'eventType',
+            'generatedAnswer'
+          );
+          expect(customData).to.have.property(
+            'generativeQuestionAnsweringId',
+            streamId
+          );
+          expect(customData).to.have.property('citationId', citation.id);
+          expect(customData).to.have.property(
+            'permanentId',
+            citation.permanentid
+          );
+        }
+      );
+    },
+
     logRetryGeneratedAnswer(streamId: string) {
       logGeneratedAnswerEvent(
         InterceptAliases.UA.GeneratedAnswer.RetryGeneratedAnswer,
