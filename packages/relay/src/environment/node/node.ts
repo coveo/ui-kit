@@ -18,8 +18,8 @@ export function buildNodeEnvironment(): Environment {
       });
       return null;
     },
-    getReferrerUrl: () => null,
-    getUrl: () => null,
+    getReferrer: () => null,
+    getLocation: () => null,
     getUserAgent: () => null,
     generateUUID: () => crypto.randomUUID(),
     storage: createNullStorage(),

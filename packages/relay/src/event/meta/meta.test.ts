@@ -11,8 +11,8 @@ describe("createMeta", () => {
   const mockEnv = createMockEnvironment({
     runtime: "browser",
     fetch: jest.fn(),
-    getReferrerUrl: () => "https://www.perdu.com",
-    getUrl: () => "https://www.perdu.com/whoops",
+    getReferrer: () => "https://www.perdu.com",
+    getLocation: () => "https://www.perdu.com/whoops",
     getUserAgent: () => "I am userAgent",
   });
   const defaultConfig = createMockConfig();
@@ -28,12 +28,12 @@ describe("createMeta", () => {
     expect(defaultMeta.clientId).toBe("2136b353-74be-42d7-904f-ea33a8f4a43c");
   });
 
-  it("returns meta with the referrerUrl field", () => {
-    expect(defaultMeta.referrerUrl).toBe("https://www.perdu.com");
+  it("returns meta with the referrer field", () => {
+    expect(defaultMeta.referrer).toBe("https://www.perdu.com");
   });
 
-  it("returns meta with the url field if a url is defined in the environment", () => {
-    expect(defaultMeta.url).toBe("https://www.perdu.com/whoops");
+  it("returns meta with the location field if a location is defined in the environment", () => {
+    expect(defaultMeta.location).toBe("https://www.perdu.com/whoops");
   });
 
   it("returns meta with the ts field, being the current timestamp", () => {

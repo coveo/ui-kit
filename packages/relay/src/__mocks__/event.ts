@@ -11,8 +11,8 @@ const defaultMeta: Meta = {
   source: "relay@0.0.5",
   clientId: "2136b353-74be-42d7-904f-ea33a8f4a43c",
   userAgent: null,
-  referrerUrl: null,
-  url: null,
+  referrer: null,
+  location: null,
 };
 
 const defaultPayload: RelayPayload = {

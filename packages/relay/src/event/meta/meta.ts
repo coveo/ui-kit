@@ -40,12 +40,12 @@ export interface Meta {
   /**
    * Browser Document's [referrer](https://developer.mozilla.org/en-US/docs/Web/API/Document/referrer) property if set.
    */
-  referrerUrl: string | null;
+  referrer: string | null;
 
   /**
    * Browser Location's [href](https://developer.mozilla.org/en-US/docs/Web/API/Location/href) property if set.
    */
-  url: string | null;
+  location: string | null;
 }
 
 function getEventConfig(config: RelayConfig): EventConfig {
@@ -63,7 +63,7 @@ export function createMeta(
   environment: Environment,
   clientIdManager: ClientIdManager
 ): Readonly<Meta> {
-  const { getReferrerUrl, getUrl, getUserAgent } = environment;
+  const { getReferrer, getLocation, getUserAgent } = environment;
   const eventConfig = getEventConfig(config);
   const clientId = clientIdManager.getClientId();
 
@@ -74,7 +74,7 @@ export function createMeta(
     source: getSource(),
     clientId,
     userAgent: getUserAgent(),
-    referrerUrl: getReferrerUrl(),
-    url: getUrl(),
+    referrer: getReferrer(),
+    location: getLocation(),
   });
 }

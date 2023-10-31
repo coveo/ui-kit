@@ -6,8 +6,8 @@ export interface Environment {
   runtime: "browser" | "node" | "null";
   fetch: (url: string, init?: RequestInit) => Promise<Response>;
   send: (url: string, token: string, body: string) => Promise<null>;
-  getReferrerUrl: () => string | null;
-  getUrl: () => string | null;
+  getReferrer: () => string | null;
+  getLocation: () => string | null;
   getUserAgent: () => string | null;
   generateUUID: () => string;
   storage: Storage;

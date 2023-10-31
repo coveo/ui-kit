@@ -29,29 +29,29 @@ describe("buildBrowserEnvironment", () => {
     expect(buildBrowserEnvironment().runtime).toBe("browser");
   });
 
-  it("retrieves the referrerUrl", () => {
+  it("retrieves the referrer", () => {
     Object.defineProperty(window.document, "referrer", {
       value: "https://www.coveo.com/",
     });
-    expect(buildBrowserEnvironment().getReferrerUrl()).toBe(
+    expect(buildBrowserEnvironment().getReferrer()).toBe(
       "https://www.coveo.com/"
     );
   });
 
-  it("returns null when the referrerUrl is an empty string", () => {
+  it("returns null when the referrer is an empty string", () => {
     Object.defineProperty(window.document, "referrer", {
       value: "",
     });
-    expect(buildBrowserEnvironment().getReferrerUrl()).toBe(null);
+    expect(buildBrowserEnvironment().getReferrer()).toBe(null);
   });
 
-  it("retrieves the url", () => {
+  it("retrieves the location", () => {
     Object.defineProperty(window, "location", {
       value: {
         href: "https://www.patate.com/recettes",
       },
     });
-    expect(buildBrowserEnvironment().getUrl()).toBe(
+    expect(buildBrowserEnvironment().getLocation()).toBe(
       "https://www.patate.com/recettes"
     );
   });

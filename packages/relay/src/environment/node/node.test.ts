@@ -14,12 +14,12 @@ describe("buildNodeEnvironment", () => {
     expect(buildNodeEnvironment().runtime).toBe("node");
   });
 
-  it("getReferrerUrl returns null", () => {
-    expect(buildNodeEnvironment().getReferrerUrl()).toBe(null);
+  it("getReferrer returns null", () => {
+    expect(buildNodeEnvironment().getReferrer()).toBe(null);
   });
 
-  it("getUrl returns null", () => {
-    expect(buildNodeEnvironment().getUrl()).toBe(null);
+  it("getLocation returns null", () => {
+    expect(buildNodeEnvironment().getLocation()).toBe(null);
   });
 
   it("getUserAgent returns null", () => {

@@ -5,12 +5,12 @@ describe("null environment", () => {
     expect(buildNullEnvironment().runtime).toBe("null");
   });
 
-  it("returns null referrerUrl", () => {
-    expect(buildNullEnvironment().getReferrerUrl()).toBeNull();
+  it("returns null referrer", () => {
+    expect(buildNullEnvironment().getReferrer()).toBeNull();
   });
 
-  it("returns null url", () => {
-    expect(buildNullEnvironment().getUrl()).toBeNull();
+  it("returns null location", () => {
+    expect(buildNullEnvironment().getLocation()).toBeNull();
   });
 
   it("returns null userAgent", () => {

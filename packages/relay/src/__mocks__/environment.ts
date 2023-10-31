@@ -10,8 +10,8 @@ const defaultEnvironment: Environment = {
     } as Response)
   ),
   send: jest.fn(),
-  getReferrerUrl: jest.fn(),
-  getUrl: jest.fn(),
+  getReferrer: jest.fn(),
+  getLocation: jest.fn(),
   getUserAgent: jest.fn(),
   generateUUID: jest.fn(),
   storage: createMockStorage(),

@@ -2,7 +2,7 @@ import { Environment } from "../environment";
 import { createBrowserStorage } from "./storage/storage";
 import { fetchAPI } from "../utils/fetch";
 
-function getReferrerUrl() {
+function getReferrer() {
   const referrer = document.referrer;
 
   return referrer === "" ? null : referrer;
@@ -28,8 +28,8 @@ export function buildBrowserEnvironment(): Environment {
 
       return null;
     },
-    getReferrerUrl: () => getReferrerUrl(),
-    getUrl: () => window.location.href,
+    getReferrer: () => getReferrer(),
+    getLocation: () => window.location.href,
     getUserAgent: () => navigator.userAgent,
     generateUUID: () => crypto.randomUUID(),
     storage: createBrowserStorage(),
