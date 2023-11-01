@@ -367,14 +367,11 @@ export type {
 } from './field-suggestions/category-facet/headless-category-field-suggestions.ssr';
 export {defineCategoryFieldSuggestions} from './field-suggestions/category-facet/headless-category-field-suggestions.ssr';
 
-export type {
-  AutomaticFacet,
-  AutomaticFacetProps,
-  AutomaticFacetState,
-} from './facets/automatic-facet/headless-automatic-facet.ssr';
 export {defineAutomaticFacet} from './facets/automatic-facet/headless-automatic-facet.ssr';
 
 export type {
+  AutomaticFacet,
+  AutomaticFacetState,
   AutomaticFacetGenerator,
   AutomaticFacetGeneratorProps,
   AutomaticFacetGeneratorState,

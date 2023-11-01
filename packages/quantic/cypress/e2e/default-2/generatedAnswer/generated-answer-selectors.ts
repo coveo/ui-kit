@@ -20,6 +20,11 @@ export interface GeneratedAnswerSelector extends ComponentSelector {
   feedbackCancelButton: () => CypressSelector;
   feedbackDoneButton: () => CypressSelector;
   feedbackDetailsInput: () => CypressSelector;
+  rephraseButtons: () => CypressSelector;
+  rephraseLabel: () => CypressSelector;
+  rephraseButtonByLabel: (label: string) => CypressSelector;
+  generatedAnswerFooter: () => CypressSelector;
+  copyToClipboardButton: () => CypressSelector;
 }
 
 export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
@@ -80,4 +85,20 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
     cy
       .get('lightning-modal')
       .find('[data-cy="feedback-modal-body__details-input"] textarea'),
+  rephraseButtons: () =>
+    GeneratedAnswerSelectors.get().find(
+      '[data-cy="generated-answer__rephrase-buttons"]'
+    ),
+  rephraseLabel: () =>
+    GeneratedAnswerSelectors.get().find('[data-cy="rephrase-buttons__label"]'),
+  rephraseButtonByLabel: (label: string) =>
+    GeneratedAnswerSelectors.get().find(
+      `[data-cy="rephrase-buttons__content"] c-quantic-stateful-button[data-cy="${label}"] button`
+    ),
+  generatedAnswerFooter: () =>
+    GeneratedAnswerSelectors.get().find('[data-cy="generated-answer__footer"]'),
+  copyToClipboardButton: () =>
+    GeneratedAnswerSelectors.get().find(
+      '[data-cy="generated-answer__copy-to-clipboard"]'
+    ),
 };
