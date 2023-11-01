@@ -6,21 +6,6 @@
 @import './styles/typing-indicator.pcss';
 @import './styles/source-citations.pcss';
 
-[part='generated-text'] {
-  @mixin set-font-size var(--atomic-text-lg);
-
-  &.cursor::after {
-    content: '';
-    width: 8px;
-    height: 1em;
-    margin-left: 0.1em;
-    background: var(--atomic-neutral-dark);
-    display: inline-block;
-    animation: cursor-blink 1.5s steps(2) infinite;
-    vertical-align: text-bottom;
-  }
-}
-
 @keyframes cursor-blink {
   0% {
     opacity: 0;
@@ -30,16 +15,6 @@
 .text-bg-blue {
   color: var(--atomic-primary);
   background: var(--atomic-primary-background);
-}
-
-atomic-modal {
-  width: 100%;
-}
-
-.source-citations {
-  --height: 2.2em;
-  --index-height: 20px;
-  --max-citation-width: 170px;
 }
 
 .footer {

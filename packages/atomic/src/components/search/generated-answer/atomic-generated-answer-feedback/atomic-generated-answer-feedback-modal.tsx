@@ -1,5 +1,4 @@
-import {GeneratedAnswer} from '@coveo/headless';
-import {GeneratedAnswerFeedback} from '@coveo/headless/dist/definitions/features/generated-answer/generated-answer-analytics-actions';
+import {GeneratedAnswer, GeneratedAnswerFeedback} from '@coveo/headless';
 import {
   Component,
   State,
@@ -10,6 +9,7 @@ import {
   Event,
   EventEmitter,
 } from '@stencil/core/internal';
+import {capitalize} from 'lodash';
 import CloseIcon from '../../../../images/close.svg';
 import Success from '../../../../images/success.svg';
 import {
@@ -19,8 +19,12 @@ import {
 import {updateBreakpoints} from '../../../../utils/replace-breakpoint';
 import {once, randomID} from '../../../../utils/utils';
 import {Button} from '../../../common/button';
+import {IconButton} from '../../../common/iconButton';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
+/**
+ * @internal
+ */
 @Component({
   tag: 'atomic-generated-answer-feedback-modal',
   styleUrl: 'atomic-generated-answer-feedback-modal.pcss',
@@ -33,7 +37,7 @@ export class AtomicGeneratedAnswerFeedbackModal
   @Element() public host!: HTMLElement;
 
   @Prop({reflect: true, mutable: true}) isOpen = false;
-  @Prop() generatedAnswer!: GeneratedAnswer;
+  @Prop({reflect: true, mutable: true}) generatedAnswer!: GeneratedAnswer;
 
   @State() public error!: Error;
   @State() currentAnswer?: GeneratedAnswerFeedback | 'other' | undefined;
@@ -59,6 +63,10 @@ export class AtomicGeneratedAnswerFeedbackModal
 
   private close() {
     this.feedbackSubmitted = false;
+    if (this.detailsInputRef) {
+      this.detailsInputRef.value = '';
+    }
+    this.currentAnswer = undefined;
     this.setIsOpen(false);
     this.generatedAnswer.closeFeedbackModal();
   }
@@ -84,17 +92,18 @@ export class AtomicGeneratedAnswerFeedbackModal
     return (
       <div
         slot="header"
-        part="modalHeader"
+        part="modal-header"
         class="w-full p-2 flex justify-between items-center"
       >
-        <h1>{this.bindings.i18n.t('generated-answer-feedback-header')}</h1>
-        <Button
+        <h1>{this.bindings.i18n.t('feedback')}</h1>
+        <IconButton
           style="text-transparent"
           class="search-clear-button"
           onClick={() => this.close()}
-        >
-          <atomic-icon icon={CloseIcon} class="w-3 my-auto m-0" />
-        </Button>
+          icon={CloseIcon}
+          partPrefix={'close'}
+          ariaLabel={this.bindings.i18n.t('modal-done')}
+        />
       </div>
     );
   }
@@ -107,27 +116,27 @@ export class AtomicGeneratedAnswerFeedbackModal
     }[] = [
       {
         id: 'irrelevant',
-        localeKey: 'generated-answer-feedback-irrelevant',
+        localeKey: 'irrelevant',
         correspondingAnswer: 'irrelevant',
       },
       {
         id: 'notAccurate',
-        localeKey: 'generated-answer-feedback-not-accurate',
+        localeKey: 'not-accurate',
         correspondingAnswer: 'notAccurate',
       },
       {
         id: 'outOfDate',
-        localeKey: 'generated-answer-feedback-out-of-date',
+        localeKey: 'out-of-date',
         correspondingAnswer: 'outOfDate',
       },
       {
         id: 'harmful',
-        localeKey: 'generated-answer-feedback-harmful',
+        localeKey: 'harmful',
         correspondingAnswer: 'harmful',
       },
       {
         id: 'other',
-        localeKey: 'generated-answer-feedback-other',
+        localeKey: 'other',
         correspondingAnswer: 'other',
       },
     ];
@@ -139,7 +148,7 @@ export class AtomicGeneratedAnswerFeedbackModal
         </legend>
         {options.map(({id, localeKey, correspondingAnswer}) => (
           <div
-            class={`flex items-center ${correspondingAnswer}`}
+            class={`flex items-center ${correspondingAnswer} mobile-only:mt-4 desktop-only:mt-6`}
             key={id}
             part="reason"
           >
@@ -172,15 +181,19 @@ export class AtomicGeneratedAnswerFeedbackModal
 
     return (
       <fieldset>
+        <legend
+          part="details-title"
+          class="font-bold text-on-background text-lg"
+        >
+          {capitalize(this.bindings.i18n.t('details'))}
+        </legend>
         <textarea
           part="details-input"
           name="answer-details"
           ref={(detailsInput) => (this.detailsInputRef = detailsInput)}
           class="mt-2 p-2 w-full text-base leading-5 border border-neutral resize-none rounded"
           rows={4}
-          placeholder={this.bindings.i18n.t(
-            'generated-answer-feedback-textarea-add-details'
-          )}
+          placeholder={this.bindings.i18n.t('add-details')}
           required
         ></textarea>
       </fieldset>
@@ -188,7 +201,6 @@ export class AtomicGeneratedAnswerFeedbackModal
   }
 
   private renderBody() {
-    console.log('feedbackSubmitted', this.feedbackSubmitted);
     return !this.feedbackSubmitted ? (
       <form
         part="form"
@@ -198,7 +210,7 @@ export class AtomicGeneratedAnswerFeedbackModal
           e.preventDefault();
           this.sendFeedback();
         }}
-        class="flex flex-col gap-8"
+        class="flex flex-col gap-8 text-base leading-4 text-neutral-dark p-2"
       >
         {this.renderOptions()}
         {this.renderDetails()}
@@ -221,7 +233,8 @@ export class AtomicGeneratedAnswerFeedbackModal
             <Button
               part="cancel-button"
               style="outline-neutral"
-              class="text-primary"
+              class="text-primary flex justify-center text-sm leading-4 p-2"
+              ariaLabel={this.bindings.i18n.t('cancel')}
               onClick={() => this.close()}
             >
               {this.bindings.i18n.t('cancel')}
@@ -231,12 +244,14 @@ export class AtomicGeneratedAnswerFeedbackModal
               style="primary"
               type="submit"
               form={this.formId}
-              disabled={!this.currentAnswer ? true : false}
+              class="flex justify-center text-sm leading-4 p-2"
+              disabled={!this.currentAnswer}
+              ariaLabel={this.bindings.i18n.t('feedback-send')}
               onClick={() => {
                 this.feedbackSubmitted = true;
               }}
             >
-              {this.bindings.i18n.t('smart-snippet-feedback-send')}
+              {this.bindings.i18n.t('send')}
             </Button>
           </div>
         ) : (
@@ -245,6 +260,8 @@ export class AtomicGeneratedAnswerFeedbackModal
               part="cancel-button"
               style="primary"
               onClick={() => this.close()}
+              class="flex justify-center text-sm leading-4 p-2"
+              ariaLabel={this.bindings.i18n.t('modal-done')}
             >
               {this.bindings.i18n.t('modal-done')}
             </Button>
@@ -260,7 +277,6 @@ export class AtomicGeneratedAnswerFeedbackModal
     return (
       <atomic-modal
         fullscreen={false}
-        id="rga-feedback-modal"
         isOpen={this.isOpen}
         close={() => this.close()}
         container={this.host}

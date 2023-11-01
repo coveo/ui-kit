@@ -33,7 +33,7 @@ export const GeneratedAnswerSelectors = {
 };
 
 export const feedbackModalSelectors = {
-  shadow: () => GeneratedAnswerSelectors.shadow().find(feedbackModal).shadow(),
+  shadow: () => cy.get(feedbackModal).shadow(),
   atomicModal: () => feedbackModalSelectors.shadow().find('atomic-modal'),
   atomicModalShadow: () => feedbackModalSelectors.atomicModal().shadow(),
   container: () =>
@@ -42,7 +42,7 @@ export const feedbackModalSelectors = {
     feedbackModalSelectors.atomicModalShadow().find('[part="backdrop"]'),
   modalBody: () => feedbackModalSelectors.atomicModal().find('[part="form"]'),
   modalHeader: () =>
-    feedbackModalSelectors.atomicModal().find('[part="modalHeader"]'),
+    feedbackModalSelectors.atomicModal().find('[part="modal-header"]'),
   modalFooter: () =>
     feedbackModalSelectors.atomicModal().find('[part="modalFooter"]'),
   detailsTextArea: () =>
@@ -52,6 +52,8 @@ export const feedbackModalSelectors = {
     feedbackModalSelectors.atomicModal().find('[part="reason-radio"]'),
   submitButton: () =>
     feedbackModalSelectors.atomicModal().find('[part="submit-button"]'),
+  cancelButton: () =>
+    feedbackModalSelectors.atomicModal().find('[part="cancel-button"]'),
   detailsInput: () =>
     feedbackModalSelectors.shadow().find('[part="details-input"]', {
       includeShadowDom: true,

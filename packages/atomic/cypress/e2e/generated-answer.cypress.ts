@@ -1,5 +1,5 @@
 import {GeneratedAnswerStyle} from '@coveo/headless/dist/definitions/features/generated-answer/generated-response-format';
-import {TagProps} from '../fixtures/fixture-common';
+import {RouteAlias, TagProps} from '../fixtures/fixture-common';
 import {TestFixture} from '../fixtures/test-fixture';
 import {AnalyticsTracker} from '../utils/analyticsUtils';
 import {
@@ -131,12 +131,31 @@ describe('Generated Answer Test Suites', () => {
         feedbackModalSelectors.modalFooter().should('exist');
       });
 
+      describe('select button', () => {
+        it('should submit proper reason', () => {
+          const notAccurateReason = feedbackModalSelectors.reason().eq(1);
+          notAccurateReason.should('have.id', 'notAccurate');
+          notAccurateReason.click({force: true});
+
+          feedbackModalSelectors.submitButton().click();
+          feedbackModalSelectors.submitButton().should('not.exist');
+          feedbackModalSelectors.cancelButton().should('exist');
+
+          cy.get(`${RouteAlias.UA}.3`)
+            .its('request.body.customData.reason')
+            .should('equal', 'notAccurate');
+        });
+      });
+
       describe('add details text area', () => {
         it('should be visible when other is selected', () => {
           feedbackModalSelectors.detailsTextArea().should('not.exist');
           feedbackModalSelectors.submitButton().should('be.disabled');
 
-          feedbackModalSelectors.reason().last().click({force: true});
+          const reasons = feedbackModalSelectors.reason();
+          reasons.last().should('have.id', 'other');
+
+          reasons.last().click({force: true});
 
           feedbackModalSelectors.detailsInput().should('exist');
           feedbackModalSelectors.submitButton().should('be.enabled');

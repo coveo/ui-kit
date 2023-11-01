@@ -9,7 +9,7 @@ import {
   GeneratedAnswerCitation,
 } from '@coveo/headless';
 import {GeneratedAnswerStyle} from '@coveo/headless/dist/definitions/features/generated-answer/generated-response-format';
-import {Component, h, State, Element, Prop, Host} from '@stencil/core';
+import {Component, h, State, Element, Prop} from '@stencil/core';
 import {buildCustomEvent} from '../../../../utils/event-utils';
 import {
   BindStateToController,
@@ -58,6 +58,9 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   @State()
   public error!: Error;
 
+  @State()
+  private modalRef!: HTMLAtomicGeneratedAnswerFeedbackModalElement;
+
   @State() hidden = true;
   @State() feedbackSent = false;
 
@@ -96,6 +99,12 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
         }
       )
     );
+    const modalRef = document.createElement(
+      'atomic-generated-answer-feedback-modal'
+    );
+    this.modalRef = modalRef;
+    modalRef.generatedAnswer = this.generatedAnswer;
+    this.host.insertAdjacentElement('beforebegin', modalRef);
   }
 
   // @ts-expect-error: This function is used by BindStateToController.
@@ -152,12 +161,6 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
 
   private get contentClasses() {
     return 'mt-0 mb-4 border border-neutral shadow-lg p-6 bg-background rounded-lg p-6 text-on-background';
-  }
-
-  private get modalRef() {
-    return this.host.shadowRoot?.querySelector(
-      'atomic-generated-answer-feedback-modal'
-    );
   }
 
   private renderCitations() {
@@ -290,23 +293,18 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       return null;
     }
     return (
-      <Host>
-        <atomic-generated-answer-feedback-modal
-          generatedAnswer={this.generatedAnswer}
-        />
-        <div>
-          <aside
-            class={`mx-auto ${
-              isLoading ? this.loadingClasses : this.contentClasses
-            }`}
-            part="container"
-          >
-            <article>
-              {isLoading ? <TypingLoader /> : this.renderContent()}
-            </article>
-          </aside>
-        </div>
-      </Host>
+      <div>
+        <aside
+          class={`mx-auto ${
+            isLoading ? this.loadingClasses : this.contentClasses
+          }`}
+          part="container"
+        >
+          <article>
+            {isLoading ? <TypingLoader /> : this.renderContent()}
+          </article>
+        </aside>
+      </div>
     );
   }
 }

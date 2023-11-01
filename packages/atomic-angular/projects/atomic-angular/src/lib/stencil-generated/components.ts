@@ -380,32 +380,6 @@ export declare interface AtomicFrequentlyBoughtTogether extends Components.Atomi
 
 
 @ProxyCmp({
-  inputs: ['generatedAnswer', 'isOpen']
-})
-@Component({
-  selector: 'atomic-generated-answer-feedback-modal',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['generatedAnswer', 'isOpen'],
-})
-export class AtomicGeneratedAnswerFeedbackModal {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-    proxyOutputs(this, this.el, ['feedbackSent']);
-  }
-}
-
-
-export declare interface AtomicGeneratedAnswerFeedbackModal extends Components.AtomicGeneratedAnswerFeedbackModal {
-
-  feedbackSent: EventEmitter<CustomEvent<any>>;
-}
-
-
-@ProxyCmp({
   inputs: ['sanitize', 'value']
 })
 @Component({
