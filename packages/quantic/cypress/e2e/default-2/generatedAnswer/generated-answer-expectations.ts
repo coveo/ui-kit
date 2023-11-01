@@ -235,7 +235,7 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
           expect(element.get(0).textContent).to.equal(url);
         })
         .log(
-          `the citation tooltip at the index ${index} should contain the url "${url}"`
+          `the citation tooltip url at the index ${index} should contain the url "${url}"`
         );
     },
 
