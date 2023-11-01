@@ -1,28 +1,31 @@
 import {LightningElement, api} from 'lwc';
 
+const minimumTooltipDisplayDurationMs = 1000;
+const debounceDurationBeforeHoverMs = 200;
+
 /**
  * The `QuanticCitation` component renders an individual citation.
  * @fires CustomEvent#click
  * @fires CustomEvent#hover
  * @category Internal
  * @example
- * <c-quantic-citation id={id} title={title} index={index} text={text} click-uri={clickUri} onclick={handleClick} onhover={handleHover}></c-quantic-citation>
+ * <c-quantic-citation citation={citation} onclick={handleClick} onhover={handleHover}></c-quantic-citation>
  */
 export default class QuanticCitation extends LightningElement {
   /**
    * @api
-   * @type {string}
+   * @type {{title: string, index: number, text: string, clickUri: string}}
    * The id of the citation.
    */
-  @api id;
-  @api title;
-  @api index;
-  @api text;
-  @api clickUri;
+  @api citation;
 
+  /** @type {Object} */
   timeout;
-  shouldShowTooltipAfterDelay = false;
+  /** @type {number} */
   hoverStartTimestamp;
+  /** @type {boolean} */
+  shouldShowTooltipAfterDelay = false;
+  /** @type {boolean} */
   tooltipIsDisplayed = false;
 
   handleMouseEnter() {
@@ -34,18 +37,23 @@ export default class QuanticCitation extends LightningElement {
         this.tooltipIsDisplayed = true;
         this.tooltipComponent.showTooltip();
       }
-    }, 200);
+    }, debounceDurationBeforeHoverMs);
   }
 
   handleMouseLeave() {
     clearTimeout(this.timeout);
     if (this.tooltipIsDisplayed) {
-      this.dispatchEvent(
-        new CustomEvent('hover', {
-          detail: {citationHoverTimeMs: Date.now() - this.hoverStartTimestamp},
-          bubbles: true,
-        })
-      );
+      const tooltipDisplayDuration = Date.now() - this.hoverStartTimestamp;
+      if (tooltipDisplayDuration >= minimumTooltipDisplayDurationMs) {
+        this.dispatchEvent(
+          new CustomEvent('hover', {
+            detail: {
+              citationHoverTimeMs: Date.now() - this.hoverStartTimestamp,
+            },
+            bubbles: true,
+          })
+        );
+      }
     }
 
     this.tooltipIsDisplayed = false;
@@ -58,5 +66,21 @@ export default class QuanticCitation extends LightningElement {
    */
   get tooltipComponent() {
     return this.template.querySelector(`c-quantic-tooltip`);
+  }
+
+  get citationTitle() {
+    return this.citation?.title;
+  }
+
+  get text() {
+    return this.citation?.text;
+  }
+
+  get clickUri() {
+    return this.citation?.clickUri;
+  }
+
+  get index() {
+    return this.citation?.index;
   }
 }

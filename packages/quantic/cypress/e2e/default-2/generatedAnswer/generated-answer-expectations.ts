@@ -214,6 +214,53 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         .log(`the ${name} rephrase button ${should(selected)} be selected`);
     },
 
+    citationTooltipIsDisplayed: (index: number, displayed: boolean) => {
+      selector
+        .citationTooltip(index)
+        .should(
+          displayed ? 'have.class' : 'not.have.class',
+          'tooltip__content--visible'
+        )
+        .log(
+          `the tooltip of the citation at index ${index} ${should(
+            displayed
+          )} be displayed`
+        );
+    },
+
+    citationTooltipUrlContains: (index: number, url: string) => {
+      selector
+        .citationTooltipUri(index)
+        .then((element) => {
+          expect(element.get(0).textContent).to.equal(url);
+        })
+        .log(
+          `the citation tooltip at the index ${index} should contain the url "${url}"`
+        );
+    },
+
+    citationTooltipTitleContains: (index: number, title: string) => {
+      selector
+        .citationTooltipTitle(index)
+        .then((element) => {
+          expect(element.get(0).textContent).to.equal(title);
+        })
+        .log(
+          `the citation tooltip title at the index ${index} should contain the text "${title}"`
+        );
+    },
+
+    citationTooltipTextContains: (index: number, text: string) => {
+      selector
+        .citationTooltipText(index)
+        .then((element) => {
+          expect(element.get(0).textContent).to.equal(text);
+        })
+        .log(
+          `the citation tooltip text at the index ${index} should contain the text "${text}"`
+        );
+    },
+
     searchQueryContainsCorrectRephraseOption: (expectedAnswerStyle: string) => {
       cy.get<Interception>(InterceptAliases.Search)
         .then((interception) => {

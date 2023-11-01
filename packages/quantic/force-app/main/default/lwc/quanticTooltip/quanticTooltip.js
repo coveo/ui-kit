@@ -5,7 +5,9 @@ import {LightningElement, api} from 'lwc';
  * This component should be used inside a container with a CSS position attribute set to the value `relative`
  * @category Internal
  * @example
- * <c-quantic-tooltip value={value}></c-quantic-tooltip>
+ * <c-quantic-tooltip light-theme>
+ *  <div slot="content">Tooltip content</div>
+ * </c-quantic-tooltip>
  */
 export default class QuanticTooltip extends LightningElement {
   /**
@@ -14,6 +16,11 @@ export default class QuanticTooltip extends LightningElement {
    * Text value to be shown in the tooltip.
    */
   @api value;
+  /**
+   * Whether to apply the light theme styles on the tooltip.
+   * @api
+   * @type {boolean}
+   */
   @api lightTheme = false;
   /**
    * @api
@@ -32,6 +39,7 @@ export default class QuanticTooltip extends LightningElement {
     this.isVisible = false;
   }
 
+  /** @type {boolean} */
   isVisible = false;
 
   get tooltipCSSClass() {
