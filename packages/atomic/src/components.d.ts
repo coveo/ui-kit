@@ -174,7 +174,7 @@ export namespace Components {
     interface AtomicCitation {
         "citation": GeneratedAnswerCitation;
         "index": number;
-        "sendHoverEndEvent": (citationHoverTimeMs: number) => void;
+        "onHoverEnd": (citationHoverTimeMs: number) => void;
     }
     /**
      * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -4293,7 +4293,7 @@ declare namespace LocalJSX {
     interface AtomicCitation {
         "citation": GeneratedAnswerCitation;
         "index": number;
-        "sendHoverEndEvent": (citationHoverTimeMs: number) => void;
+        "onHoverEnd": (citationHoverTimeMs: number) => void;
     }
     /**
      * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).

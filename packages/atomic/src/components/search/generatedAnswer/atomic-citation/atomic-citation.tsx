@@ -1,22 +1,12 @@
-import {
-  GeneratedAnswerCitation,
-  InteractiveCitation,
-  buildInteractiveCitation,
-} from '@coveo/headless';
+import {GeneratedAnswerCitation, InteractiveCitation} from '@coveo/headless';
 import {
   createPopper,
   preventOverflow,
   Instance as PopperInstance,
 } from '@popperjs/core';
 import {Component, h, State, Prop, Element, Watch} from '@stencil/core';
-import {buildCustomEvent} from '../../../../utils/event-utils';
-import {
-  InitializableComponent,
-  InitializeBindings,
-} from '../../../../utils/initialization-utils';
 import {Heading} from '../../../common/heading';
 import {LinkWithResultAnalytics} from '../../../common/result-link/result-link';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * @internal
@@ -25,26 +15,20 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
   tag: 'atomic-citation',
   styleUrl: 'atomic-citation.pcss',
 })
-export class AtomicCitation implements InitializableComponent {
+export class AtomicCitation {
   @Element() public host!: HTMLElement;
-  @InitializeBindings()
-  public bindings!: Bindings;
 
   @Prop() citation!: GeneratedAnswerCitation;
   @Prop() index!: number;
   @Prop() sendHoverEndEvent!: (citationHoverTimeMs: number) => void;
+  @Prop() interactiveCitation!: InteractiveCitation;
 
-  @State()
-  public error!: Error;
-  @State()
-  public isOpen = false;
+  @State() public isOpen = false;
 
   private citationRef!: HTMLElement;
   private popupRef!: HTMLElement;
   private popperInstance?: PopperInstance;
   private stopPropagation?: boolean;
-
-  private interactiveCitation!: InteractiveCitation;
 
   private hoverStart?: number;
   private hoverAnalyticsTimeout = 1000;
@@ -67,22 +51,6 @@ export class AtomicCitation implements InitializableComponent {
       }
       this.hoverStart = undefined;
     }
-  }
-
-  public initialize() {
-    this.interactiveCitation = buildInteractiveCitation(this.bindings.engine, {
-      options: {
-        citation: this.citation,
-      },
-    });
-    this.host.dispatchEvent(
-      buildCustomEvent(
-        'atomic/resolveStopPropagation',
-        (stopPropagation: boolean) => {
-          this.stopPropagation = stopPropagation;
-        }
-      )
-    );
   }
 
   public componentDidRender() {

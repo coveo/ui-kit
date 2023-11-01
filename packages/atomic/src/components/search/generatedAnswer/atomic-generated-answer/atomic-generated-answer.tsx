@@ -7,6 +7,7 @@ import {
   GeneratedAnswerState,
   GeneratedAnswerCitation,
   GeneratedAnswerStyle,
+  buildInteractiveCitation,
 } from '@coveo/headless';
 import {Component, h, State, Prop} from '@stencil/core';
 import {
@@ -142,20 +143,31 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
 
   private renderCitations() {
     return this.generatedAnswerState.citations.map(
-      (citation: GeneratedAnswerCitation, index: number) => (
-        <li key={citation.id} class="max-w-full">
-          <atomic-citation
-            citation={citation}
-            index={index}
-            sendHoverEndEvent={(citationHoverTimeMs: number) => {
-              this.generatedAnswer.logCitationHover(
-                citation.id,
-                citationHoverTimeMs
-              );
-            }}
-          />
-        </li>
-      )
+      (citation: GeneratedAnswerCitation, index: number) => {
+        const interactiveCitation = buildInteractiveCitation(
+          this.bindings.engine,
+          {
+            options: {
+              citation,
+            },
+          }
+        );
+        return (
+          <li key={citation.id} class="max-w-full">
+            <atomic-citation
+              citation={citation}
+              index={index}
+              sendHoverEndEvent={(citationHoverTimeMs: number) => {
+                this.generatedAnswer.logCitationHover(
+                  citation.id,
+                  citationHoverTimeMs
+                );
+              }}
+              interactiveCitation={interactiveCitation}
+            />
+          </li>
+        );
+      }
     );
   }
 
