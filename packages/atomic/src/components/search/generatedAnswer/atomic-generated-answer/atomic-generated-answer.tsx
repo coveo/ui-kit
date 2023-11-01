@@ -143,7 +143,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   private renderCitations() {
     return this.generatedAnswerState.citations.map(
       (citation: GeneratedAnswerCitation, index: number) => (
-        <li key={citation.id}>
+        <li key={citation.id} class="max-w-full">
           <atomic-citation
             citation={citation}
             index={index}
