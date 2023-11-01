@@ -454,6 +454,7 @@ describe('quantic-generated-answer', () => {
 
           cy.tick(500).invoke('restore');
           Actions.stopHoverOverCitation(0);
+          Expect.citationTooltipIsDisplayed(hoveredCitationIndex, false);
 
           cy.on('fail', (err) => {
             expect(err.message).to.include(
@@ -464,7 +465,6 @@ describe('quantic-generated-answer', () => {
           });
 
           cy.wait(analyticsAlias, {timeout: timeoutMs});
-          Expect.citationTooltipIsDisplayed(hoveredCitationIndex, false);
         });
 
         it('should log the analytics only after hovering more than 1000ms', () => {

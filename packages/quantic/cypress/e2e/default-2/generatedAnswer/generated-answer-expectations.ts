@@ -246,7 +246,7 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
           expect(element.get(0).textContent).to.equal(title);
         })
         .log(
-          `the citation tooltip title at the index ${index} should contain the text "${title}"`
+          `the citation tooltip title at the index ${index} should contain the title "${title}"`
         );
     },
 
