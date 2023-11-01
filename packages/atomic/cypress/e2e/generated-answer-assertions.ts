@@ -4,16 +4,12 @@ import {should} from './common-assertions';
 import {GeneratedAnswerSelectors} from './generated-answer-selectors';
 
 export function assertLogOpenGeneratedAnswerSource(log: boolean) {
-  it(`${should(log)} log a openGeneratedAnswerSource click event`, () => {
-    if (log) {
-      cy.expectCustomEvent('generatedAnswer', 'openGeneratedAnswerSource');
-    } else {
-      cy.wait(50);
-      cy.wrap(AnalyticsTracker)
-        .invoke('getLastCustomEvent')
-        .should('not.exist');
-    }
-  });
+  if (log) {
+    cy.expectCustomEvent('generatedAnswer', 'openGeneratedAnswerSource');
+  } else {
+    cy.wait(50);
+    cy.wrap(AnalyticsTracker).invoke('getLastCustomEvent').should('not.exist');
+  }
 }
 
 export function assertLogGeneratedAnswerSourceHover(log: boolean) {

@@ -212,17 +212,6 @@ describe('Generated Answer Test Suites', () => {
           );
         });
 
-        describe('when a citation is clicked', () => {
-          beforeEach(() => {
-            AnalyticsTracker.reset();
-            GeneratedAnswerSelectors.citation()
-              .invoke('removeAttr', 'target') // Otherwise opens a new tab that messes with the tests
-              .click();
-          });
-
-          GeneratedAnswerAssertions.assertLogOpenGeneratedAnswerSource(true);
-        });
-
         describe('when a citation is hovered', () => {
           beforeEach(() => {
             AnalyticsTracker.reset();
@@ -254,13 +243,28 @@ describe('Generated Answer Test Suites', () => {
           });
         });
 
+        describe('when a citation is clicked', () => {
+          beforeEach(() => {
+            AnalyticsTracker.reset();
+            GeneratedAnswerSelectors.citation()
+              .invoke('removeAttr', 'target') // Otherwise opens a new tab that messes with the tests
+              .click();
+          });
+
+          it('should log an openGeneratedAnswerSource click event', () => {
+            GeneratedAnswerAssertions.assertLogOpenGeneratedAnswerSource(true);
+          });
+        });
+
         describe('when a citation is right-clicked', () => {
           beforeEach(() => {
             AnalyticsTracker.reset();
             GeneratedAnswerSelectors.citation().rightclick();
           });
 
-          GeneratedAnswerAssertions.assertLogOpenGeneratedAnswerSource(true);
+          it('should log an openGeneratedAnswerSource click event', () => {
+            GeneratedAnswerAssertions.assertLogOpenGeneratedAnswerSource(true);
+          });
         });
       });
 
