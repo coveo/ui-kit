@@ -61,3 +61,19 @@ export function assertAnswerStyle(expected: string) {
     ).to.have.property('answerStyle', expected);
   });
 }
+
+export function assertCopyButtonVisibility(isVisible: boolean) {
+  it(`${should(isVisible)} show the copy button`, () => {
+    GeneratedAnswerSelectors.copyButton().should(
+      isVisible ? 'be.visible' : 'not.exist'
+    );
+  });
+}
+
+export function assertAnswerCopiedToClipboard(answer: string) {
+  cy.window().then((win) => {
+    win.navigator.clipboard.readText().then((text) => {
+      expect(text).to.eq(answer);
+    });
+  });
+}
