@@ -1,36 +1,34 @@
 <template>
   <template if:true={shouldDisplayCitations}>
-    <div class="source-citations slds-grid slds-align_vertical-center">
-      <span
-        class="source-citations__label slds-shrink-none slds-m-top_xx-small slds-grid slds-grid_vertical-align-center"
-        >{labels.learnMore}</span
-      >
-      <ol class="slds-list_horizontal slds-wrap slds-m-left_x-small">
-        <template for:each={indexedCitations} for:item="citation">
-          <li
-            key={citation.id}
-            class="citation slds-m-around_xx-small"
-            onclick={citation.handleCitationClick}
+    <span
+      class="source-citations__label slds-m-top_xx-small"
+      >{labels.learnMore}</span
+    >
+    <ol class="slds-list_horizontal slds-wrap">
+      <template for:each={indexedCitations} for:item="citation">
+        <li
+          key={citation.id}
+          class="citation slds-m-around_xx-small"
+          onclick={citation.handleCitationClick}
+        >
+          <a
+            class="citation__badge slds-badge slds-badge_lightest slds-align_absolute-center slds-text-link_reset slds-p-left_xx-small slds-p-right_x-small"
+            title={citation.title}
+            href={citation.clickUri}
+            target="_blank"
           >
-            <a
-              class="citation__badge slds-badge slds-badge_lightest slds-align_absolute-center slds-text-link_reset slds-p-left_xx-small slds-p-right_x-small"
+            <div class="citation__index slds-align_absolute-center">
+              {citation.index}
+            </div>
+            <p
+              class="citation__title slds-m-left_x-small slds-truncate slds-has-flexi-truncate"
               title={citation.title}
-              href={citation.clickUri}
-              target="_blank"
             >
-              <div class="citation__index slds-align_absolute-center">
-                {citation.index}
-              </div>
-              <p
-                class="citation__title slds-m-left_x-small slds-truncate slds-has-flexi-truncate"
-                title={citation.title}
-              >
-                {citation.title}
-              </p>
-            </a>
-          </li>
-        </template>
-      </ol>
-    </div>
+              {citation.title}
+            </p>
+          </a>
+        </li>
+      </template>
+    </ol>
   </template>
 </template>
