@@ -31,4 +31,6 @@ export const GeneratedAnswerSelectors = {
       .find('[part="rephrase-button"]')
       .contains(answerStyle)
       .parent(),
+  copyButton: () =>
+    GeneratedAnswerSelectors.shadow().find('[part="copy-button"]'),
 };

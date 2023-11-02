@@ -23,6 +23,7 @@ import {
 import {Heading} from '../../../common/heading';
 import {Switch} from '../../../common/switch';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {CopyButton} from './copy-button';
 import {FeedbackButton} from './feedback-button';
 import {GeneratedContentContainer} from './generated-content-container';
 import {RephraseButtons} from './rephrase-buttons';
@@ -58,6 +59,9 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
 
   @State()
   hidden = true;
+
+  @State()
+  copied = false;
 
   /**
    * The answer style to apply when the component first loads.
@@ -141,6 +145,14 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     return 'mt-0 mb-4 border border-neutral shadow-lg p-6 bg-background rounded-lg p-6 text-on-background';
   }
 
+  private async copyToClipboard(answer: string) {
+    await navigator.clipboard.writeText(answer);
+    this.copied = true;
+    setTimeout(() => {
+      this.copied = false;
+    }, 2000);
+  }
+
   private renderCitations() {
     return this.generatedAnswerState.citations.map(
       (citation: GeneratedAnswerCitation, index: number) => {
@@ -187,7 +199,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
             {!this.hasRetryableError &&
               !this.generatedAnswerState.isStreaming &&
               this.isAnswerVisible && (
-                <div class="feedback-buttons flex flex-wrap gap-2 ml-auto">
+                <div class="feedback-buttons flex shrink-0 gap-2 ml-auto">
                   <FeedbackButton
                     title={this.bindings.i18n.t('this-answer-was-helpful')}
                     variant="like"
@@ -199,6 +211,18 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
                     variant="dislike"
                     active={this.generatedAnswerState.disliked}
                     onClick={this.generatedAnswer.dislike}
+                  />
+                  <CopyButton
+                    title={
+                      !this.copied
+                        ? this.bindings.i18n.t('copy-generated-answer')
+                        : this.bindings.i18n.t('generated-answer-copied')
+                    }
+                    isCopied={this.copied}
+                    onClick={() => {
+                      this.copyToClipboard(this.generatedAnswerState.answer!);
+                      this.generatedAnswer.logCopyToClipboard();
+                    }}
                   />
                 </div>
               )}

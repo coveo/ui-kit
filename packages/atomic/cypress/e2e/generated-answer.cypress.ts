@@ -126,6 +126,7 @@ describe('Generated Answer Test Suites', () => {
         GeneratedAnswerAssertions.assertAnswerVisibility(false);
         GeneratedAnswerAssertions.assertFeedbackButtonsVisibility(false);
         GeneratedAnswerAssertions.assertToggleValue(false);
+        GeneratedAnswerAssertions.assertCopyButtonVisibility(false);
         GeneratedAnswerAssertions.assertLocalStorageData({isVisible: false});
 
         describe('when component is re-activated', () => {
@@ -136,6 +137,7 @@ describe('Generated Answer Test Suites', () => {
           GeneratedAnswerAssertions.assertAnswerVisibility(true);
           GeneratedAnswerAssertions.assertFeedbackButtonsVisibility(true);
           GeneratedAnswerAssertions.assertToggleValue(true);
+          GeneratedAnswerAssertions.assertCopyButtonVisibility(true);
           GeneratedAnswerAssertions.assertLocalStorageData({isVisible: true});
         });
       });
@@ -167,6 +169,10 @@ describe('Generated Answer Test Suites', () => {
           GeneratedAnswerSelectors.dislikeButton().should('exist');
         });
 
+        it('should display copy button', () => {
+          GeneratedAnswerSelectors.copyButton().should('exist');
+        });
+
         it('should display rephrase options', () => {
           rephraseOptions.forEach((option) =>
             GeneratedAnswerSelectors.rephraseButton(option.label).should(
@@ -182,6 +188,15 @@ describe('Generated Answer Test Suites', () => {
 
               GeneratedAnswerAssertions.assertAnswerStyle(option.value);
             });
+          });
+        });
+
+        describe('when we click on copy button', () => {
+          it('should copy the generated answer to the clipboard', async () => {
+            GeneratedAnswerSelectors.copyButton().focus().click();
+            GeneratedAnswerAssertions.assertAnswerCopiedToClipboard(
+              testTextDelta
+            );
           });
         });
       });
