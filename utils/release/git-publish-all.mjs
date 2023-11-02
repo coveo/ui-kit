@@ -92,7 +92,7 @@ async function commitChanges(commitMessage, octokit) {
   const mainBranchCurrentSHA = await getSHA1fromRef(mainBranchName);
 
   // Create a temporary branch and check it out.
-  const tempBranchName = `release/${randomUUID()}`;
+  const tempBranchName = `release-temp/${randomUUID()}`;
   await gitCreateBranch(tempBranchName);
   await gitCheckoutBranch(tempBranchName);
   // Stage all the changes...
