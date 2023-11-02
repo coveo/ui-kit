@@ -187,7 +187,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
             {!this.hasRetryableError &&
               !this.generatedAnswerState.isStreaming &&
               this.isAnswerVisible && (
-                <div class="feedback-buttons flex gap-2 ml-auto">
+                <div class="feedback-buttons flex flex-wrap gap-2 ml-auto">
                   <FeedbackButton
                     title={this.bindings.i18n.t('this-answer-was-helpful')}
                     variant="like"
