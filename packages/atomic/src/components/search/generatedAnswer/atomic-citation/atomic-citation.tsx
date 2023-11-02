@@ -41,16 +41,15 @@ export class AtomicCitation {
     if (this.isOpen) {
       this.hoverStart = new Date().getTime();
       return;
-    } else {
-      if (!this.hoverStart) {
-        return;
-      }
-      const difference = new Date().getTime() - this.hoverStart;
-      if (difference > this.hoverAnalyticsTimeout) {
-        this.sendHoverEndEvent(difference);
-      }
-      this.hoverStart = undefined;
     }
+    if (!this.hoverStart) {
+      return;
+    }
+    const difference = new Date().getTime() - this.hoverStart;
+    if (difference > this.hoverAnalyticsTimeout) {
+      this.sendHoverEndEvent(difference);
+    }
+    this.hoverStart = undefined;
   }
 
   public componentDidRender() {

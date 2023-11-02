@@ -239,7 +239,7 @@ describe('Generated Answer Test Suites', () => {
           it('should send analytics when the hover ends', () => {
             GeneratedAnswerSelectors.citation().trigger('mouseleave');
 
-            GeneratedAnswerAssertions.assertLogGeneratedAnswerSourceHover(true);
+            GeneratedAnswerAssertions.assertLogGeneratedAnswerSourceHover();
           });
         });
 
@@ -252,7 +252,7 @@ describe('Generated Answer Test Suites', () => {
           });
 
           it('should log an openGeneratedAnswerSource click event', () => {
-            GeneratedAnswerAssertions.assertLogOpenGeneratedAnswerSource(true);
+            GeneratedAnswerAssertions.assertLogOpenGeneratedAnswerSource();
           });
         });
 
@@ -263,7 +263,7 @@ describe('Generated Answer Test Suites', () => {
           });
 
           it('should log an openGeneratedAnswerSource click event', () => {
-            GeneratedAnswerAssertions.assertLogOpenGeneratedAnswerSource(true);
+            GeneratedAnswerAssertions.assertLogOpenGeneratedAnswerSource();
           });
         });
       });
