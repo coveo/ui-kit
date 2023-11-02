@@ -130,11 +130,11 @@ export default class QuanticResultAction extends LightningElement {
     this.dispatchEvent(resultActionEvent);
   }
 
-  handleMouseEnter() {
+  showTooltip() {
     this.tooltipComponent?.showTooltip();
   }
 
-  handleMouseLeave() {
+  hideTooltip() {
     this.tooltipComponent?.hideTooltip();
   }
 

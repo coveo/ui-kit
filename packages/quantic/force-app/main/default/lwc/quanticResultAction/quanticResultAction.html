@@ -1,5 +1,5 @@
 <template>
-  <div class="slds-is-relative slds-show_inline result-action_container result-action_white-container" onmouseenter={handleMouseEnter} onmouseleave={handleMouseLeave}>
+  <div class="slds-is-relative slds-show_inline result-action_container result-action_white-container" onmouseenter={showTooltip} onmouseleave={hideTooltip}>
     <template if:true={loading}>
       <button class={loadingClasses} aria-label={displayedLabel}>
         <div class="slds-spinner_container slds-var-m-around_xx-small">

@@ -1,5 +1,5 @@
 <template>
-  <div data-cy="quick-view-button__container" class={buttonContainerClass} onmouseenter={handleMouseEnter} onmouseleave={handleMouseLeave}>
+  <div data-cy="quick-view-button__container" class={buttonContainerClass} onmouseenter={showTooltip} onmouseleave={hideTooltip}>
     <button data-cy="quick-view-button" aria-hidden={isQuickviewOpen} class={buttonClass} onclick={openQuickview} title={buttonTitle}
       disabled={hasNoPreview} aria-label={buttonAriaLabelValue}>
       <template if:true={hasButtonLabel}> {previewButtonLabel} </template>

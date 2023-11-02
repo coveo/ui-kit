@@ -229,11 +229,11 @@ export default class QuanticResultQuickview extends LightningElement {
     this._isLoading = false;
   }
 
-  handleMouseEnter() {
+  showTooltip() {
     this.tooltipComponent?.showTooltip();
   }
 
-  handleMouseLeave() {
+  hideTooltip() {
     this.tooltipComponent?.hideTooltip();
   }
 
