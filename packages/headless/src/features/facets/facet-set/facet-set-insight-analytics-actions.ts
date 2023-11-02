@@ -4,7 +4,6 @@ import {
   requiredNonEmptyString,
 } from '../../../utils/validate-payload';
 import {
-  AnalyticsType,
   InsightAction,
   makeInsightAnalyticsAction,
 } from '../../analytics/analytics-utils';
@@ -20,39 +19,25 @@ import {
 import {FacetSortCriterion} from './interfaces/request';
 
 export const logFacetShowMore = (facetId: string): InsightAction =>
-  makeInsightAnalyticsAction(
-    'analytics/facet/showMore',
-    AnalyticsType.Search,
-    (client, state) => {
-      validatePayload(facetId, facetIdDefinition);
-      const metadata = {
-        ...buildFacetBaseMetadata(
-          facetId,
-          getStateNeededForFacetMetadata(state)
-        ),
-        ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
-      };
-      return client.logFacetShowMore(metadata);
-    }
-  );
+  makeInsightAnalyticsAction('analytics/facet/showMore', (client, state) => {
+    validatePayload(facetId, facetIdDefinition);
+    const metadata = {
+      ...buildFacetBaseMetadata(facetId, getStateNeededForFacetMetadata(state)),
+      ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
+    };
+    return client.logFacetShowMore(metadata);
+  });
 
 export const logFacetShowLess = (facetId: string): InsightAction =>
-  makeInsightAnalyticsAction(
-    'analytics/facet/showLess',
-    AnalyticsType.Search,
-    (client, state) => {
-      validatePayload(facetId, facetIdDefinition);
-      const metadata = {
-        ...buildFacetBaseMetadata(
-          facetId,
-          getStateNeededForFacetMetadata(state)
-        ),
-        ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
-      };
+  makeInsightAnalyticsAction('analytics/facet/showLess', (client, state) => {
+    validatePayload(facetId, facetIdDefinition);
+    const metadata = {
+      ...buildFacetBaseMetadata(facetId, getStateNeededForFacetMetadata(state)),
+      ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
+    };
 
-      return client.logFacetShowLess(metadata);
-    }
-  );
+    return client.logFacetShowLess(metadata);
+  });
 
 export interface LogFacetUpdateSortActionCreatorPayload {
   /**
@@ -69,47 +54,39 @@ export interface LogFacetUpdateSortActionCreatorPayload {
 export const logFacetUpdateSort = (
   payload: LogFacetUpdateSortActionCreatorPayload
 ): InsightAction =>
-  makeInsightAnalyticsAction(
-    'analytics/facet/sortChange',
-    AnalyticsType.Search,
-    (client, state) => {
-      validatePayload(payload, {
-        facetId: facetIdDefinition,
-        sortCriterion: new Value<FacetSortCriterion | RangeFacetSortCriterion>({
-          required: true,
-        }),
-      });
+  makeInsightAnalyticsAction('analytics/facet/sortChange', (client, state) => {
+    validatePayload(payload, {
+      facetId: facetIdDefinition,
+      sortCriterion: new Value<FacetSortCriterion | RangeFacetSortCriterion>({
+        required: true,
+      }),
+    });
 
-      const {facetId, sortCriterion} = payload;
-      const stateForAnalytics = getStateNeededForFacetMetadata(state);
+    const {facetId, sortCriterion} = payload;
+    const stateForAnalytics = getStateNeededForFacetMetadata(state);
 
-      const base = buildFacetBaseMetadata(facetId, stateForAnalytics);
-      const metadata = {
-        ...base,
-        criteria: sortCriterion,
-        ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
-      };
+    const base = buildFacetBaseMetadata(facetId, stateForAnalytics);
+    const metadata = {
+      ...base,
+      criteria: sortCriterion,
+      ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
+    };
 
-      return client.logFacetUpdateSort(metadata);
-    }
-  );
+    return client.logFacetUpdateSort(metadata);
+  });
 
 export const logFacetClearAll = (facetId: string): InsightAction =>
-  makeInsightAnalyticsAction(
-    'analytics/facet/reset',
-    AnalyticsType.Search,
-    (client, state) => {
-      validatePayload(facetId, facetIdDefinition);
+  makeInsightAnalyticsAction('analytics/facet/reset', (client, state) => {
+    validatePayload(facetId, facetIdDefinition);
 
-      const stateForAnalytics = getStateNeededForFacetMetadata(state);
-      const metadata = {
-        ...buildFacetBaseMetadata(facetId, stateForAnalytics),
-        ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
-      };
+    const stateForAnalytics = getStateNeededForFacetMetadata(state);
+    const metadata = {
+      ...buildFacetBaseMetadata(facetId, stateForAnalytics),
+      ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
+    };
 
-      return client.logFacetClearAll(metadata);
-    }
-  );
+    return client.logFacetClearAll(metadata);
+  });
 
 export interface LogFacetSelectActionCreatorPayload {
   /**
@@ -126,23 +103,19 @@ export interface LogFacetSelectActionCreatorPayload {
 export const logFacetSelect = (
   payload: LogFacetSelectActionCreatorPayload
 ): InsightAction =>
-  makeInsightAnalyticsAction(
-    'analytics/facet/select',
-    AnalyticsType.Search,
-    (client, state) => {
-      validatePayload(payload, {
-        facetId: facetIdDefinition,
-        facetValue: requiredNonEmptyString,
-      });
-      const stateForAnalytics = getStateNeededForFacetMetadata(state);
-      const metadata = {
-        ...buildFacetSelectionChangeMetadata(payload, stateForAnalytics),
-        ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
-      };
+  makeInsightAnalyticsAction('analytics/facet/select', (client, state) => {
+    validatePayload(payload, {
+      facetId: facetIdDefinition,
+      facetValue: requiredNonEmptyString,
+    });
+    const stateForAnalytics = getStateNeededForFacetMetadata(state);
+    const metadata = {
+      ...buildFacetSelectionChangeMetadata(payload, stateForAnalytics),
+      ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
+    };
 
-      return client.logFacetSelect(metadata);
-    }
-  );
+    return client.logFacetSelect(metadata);
+  });
 
 export interface LogFacetDeselectActionCreatorPayload {
   /**
@@ -159,43 +132,35 @@ export interface LogFacetDeselectActionCreatorPayload {
 export const logFacetDeselect = (
   payload: LogFacetDeselectActionCreatorPayload
 ): InsightAction =>
-  makeInsightAnalyticsAction(
-    'analytics/facet/deselect',
-    AnalyticsType.Search,
-    (client, state) => {
-      validatePayload(payload, {
-        facetId: facetIdDefinition,
-        facetValue: requiredNonEmptyString,
-      });
-      const stateForAnalytics = getStateNeededForFacetMetadata(state);
-      const metadata = {
-        ...buildFacetSelectionChangeMetadata(payload, stateForAnalytics),
-        ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
-      };
+  makeInsightAnalyticsAction('analytics/facet/deselect', (client, state) => {
+    validatePayload(payload, {
+      facetId: facetIdDefinition,
+      facetValue: requiredNonEmptyString,
+    });
+    const stateForAnalytics = getStateNeededForFacetMetadata(state);
+    const metadata = {
+      ...buildFacetSelectionChangeMetadata(payload, stateForAnalytics),
+      ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
+    };
 
-      return client.logFacetDeselect(metadata);
-    }
-  );
+    return client.logFacetDeselect(metadata);
+  });
 
 export const logFacetBreadcrumb = (
   payload: LogFacetBreadcrumbActionCreatorPayload
 ): InsightAction =>
-  makeInsightAnalyticsAction(
-    'analytics/facet/breadcrumb',
-    AnalyticsType.Search,
-    (client, state) => {
-      validatePayload(payload, {
-        facetId: facetIdDefinition,
-        facetValue: requiredNonEmptyString,
-      });
-      const metadata = {
-        ...buildFacetSelectionChangeMetadata(
-          payload,
-          getStateNeededForFacetMetadata(state)
-        ),
-        ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
-      };
+  makeInsightAnalyticsAction('analytics/facet/breadcrumb', (client, state) => {
+    validatePayload(payload, {
+      facetId: facetIdDefinition,
+      facetValue: requiredNonEmptyString,
+    });
+    const metadata = {
+      ...buildFacetSelectionChangeMetadata(
+        payload,
+        getStateNeededForFacetMetadata(state)
+      ),
+      ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
+    };
 
-      return client.logBreadcrumbFacet(metadata);
-    }
-  );
+    return client.logBreadcrumbFacet(metadata);
+  });

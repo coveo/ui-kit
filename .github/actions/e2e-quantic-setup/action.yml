@@ -1,5 +1,5 @@
-name: "Setup Quantic E2E"
-description: "Setup Cypress tests for Quantic"
+name: 'Setup Quantic E2E'
+description: 'Setup Cypress tests for Quantic'
 inputs:
   clientid:
     description: The SFDX client ID
@@ -30,7 +30,7 @@ runs:
         SFDX_AUTH_JWT_KEY: ${{inputs.jwtkey}}
         SFDX_AUTH_JWT_USERNAME: rdaccess@coveo.com
         SFDX_AUTH_JWT_INSTANCE_URL: https://login.salesforce.com
-    - uses: actions/cache@v3
+    - uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84 # v3
       with:
         path: packages/quantic/cypress/plugins/config
         key: quantic-cypress-config-${{ github.sha }}

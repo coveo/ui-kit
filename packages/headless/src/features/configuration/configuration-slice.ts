@@ -1,4 +1,6 @@
 import {isNullOrUndefined} from '@coveo/bueno';
+//@ts-expect-error package is just an alias resolved in esbuild
+import hasMagicCookie from '@coveo/pendragon';
 import {createReducer} from '@reduxjs/toolkit';
 import {clearAnalyticsClient} from '../../api/analytics/coveo-analytics-utils';
 import {getOrganizationEndpoints} from '../../api/platform-client';
@@ -23,7 +25,7 @@ import {
   analyticsAPIEndpoint,
 } from './configuration-state';
 
-function analyticsUrlFromPlatformUrl(
+function legacyAnalyticsUrlFromPlatformUrl(
   platformUrl: string,
   organizationId: string
 ) {
@@ -64,7 +66,7 @@ export const configurationReducer = createReducer(
         if (action.payload.platformUrl) {
           state.platformUrl = action.payload.platformUrl;
           state.search.apiBaseUrl = `${action.payload.platformUrl}${searchAPIEndpoint}`;
-          state.analytics.apiBaseUrl = analyticsUrlFromPlatformUrl(
+          state.analytics.apiBaseUrl = legacyAnalyticsUrlFromPlatformUrl(
             action.payload.platformUrl,
             state.organizationId
           );
@@ -104,6 +106,18 @@ export const configurationReducer = createReducer(
         }
         if (!isNullOrUndefined(action.payload.apiBaseUrl)) {
           state.analytics.apiBaseUrl = action.payload.apiBaseUrl;
+        }
+        if (!isNullOrUndefined(action.payload.nextApiBaseUrl)) {
+          state.analytics.nextApiBaseUrl = action.payload.nextApiBaseUrl;
+        }
+        if (!isNullOrUndefined(action.payload.trackingId)) {
+          state.analytics.trackingId = action.payload.trackingId;
+        }
+        if (!isNullOrUndefined(action.payload.analyticsMode)) {
+          state.analytics.analyticsMode = action.payload.analyticsMode;
+        }
+        if (hasMagicCookie()) {
+          state.analytics.analyticsMode = 'next';
         }
         if (!isNullOrUndefined(action.payload.runtimeEnvironment)) {
           state.analytics.runtimeEnvironment =

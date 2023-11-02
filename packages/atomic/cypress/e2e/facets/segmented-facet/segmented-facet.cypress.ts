@@ -163,7 +163,7 @@ describe('Segmented Facet Test Suites', () => {
         .with(
           addSegmentedFacet({
             field: 'objecttype',
-            'allowed-values': JSON.stringify(['FAQ', 'File']),
+            'allowed-values': JSON.stringify(['FAQ', 'People']),
           })
         )
         .init();
@@ -172,8 +172,8 @@ describe('Segmented Facet Test Suites', () => {
     it('returns only allowed values', () => {
       SegmentedFacetSelectors.valueLabel()
         .should('contain.text', 'FAQ')
-        .should('contain.text', 'File')
-        .should('not.contain.text', 'Message');
+        .should('contain.text', 'People')
+        .should('not.contain.text', 'Page');
     });
   });
 

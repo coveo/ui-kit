@@ -1,9 +1,9 @@
 import {createAction} from '@reduxjs/toolkit';
+import {CartItemParam} from '../../../../api/commerce/commerce-api-params';
 import {
   requiredNonEmptyString,
   validatePayload,
 } from '../../../../utils/validate-payload';
-import {CartItemParam} from '../../../../api/commerce/commerce-api-params';
 import {cartItemDefinition, itemsDefinition} from './cart-validation';
 
 export const setItems = createAction(

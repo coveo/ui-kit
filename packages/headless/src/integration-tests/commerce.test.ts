@@ -1,10 +1,14 @@
 import {
   buildCart,
   buildCommerceEngine,
+  buildContext,
   buildProductListing,
+  buildRelevanceSortCriterion,
+  buildSort,
+  CommerceEngine,
+  ProductListing,
 } from '../commerce.index';
 import {getOrganizationEndpoints} from '../insight.index';
-import {buildContext} from '../controllers/commerce/context/headless-context';
 import {waitForNextStateChange} from '../test/functional-test-utils';
 
 const accessToken = 'no';
@@ -12,8 +16,10 @@ const accessToken = 'no';
 // eslint-disable-next-line @cspell/spellchecker
 // TODO CAPI-149: Skipped since we do not currently have test fixtures for commerce
 describe.skip('commerce', () => {
-  it("'s working great", async () => {
-    const engine = buildCommerceEngine({
+  let engine: CommerceEngine;
+
+  beforeEach(() => {
+    engine = buildCommerceEngine({
       configuration: {
         organizationId: 'commercestore',
         accessToken,
@@ -46,7 +52,9 @@ describe.skip('commerce', () => {
       productId: 'nicer shoes',
       quantity: 3,
     });
+  });
 
+  const fetchProductListing = async (): Promise<ProductListing> => {
     const productListing = buildProductListing(engine);
     await waitForNextStateChange(engine, {
       action: () => {
@@ -54,6 +62,12 @@ describe.skip('commerce', () => {
       },
       expectedSubscriberCalls: 2,
     });
+
+    return productListing;
+  };
+
+  it('uses the context to fetch the product listing', async () => {
+    const productListing = await fetchProductListing();
 
     expect(productListing.state.products).toEqual(
       expect.arrayContaining([
@@ -68,5 +82,17 @@ describe.skip('commerce', () => {
         }),
       ])
     );
+  });
+
+  it('applies sort to product listing', async () => {
+    const sort = buildSort(engine);
+    const relevance = buildRelevanceSortCriterion();
+    sort.sortBy(relevance);
+
+    await fetchProductListing();
+
+    expect(sort.isSortedBy(relevance)).toBeTruthy();
+    expect(sort.isAvailable(relevance)).toBeTruthy();
+    expect(sort.state.availableSorts.length).toEqual(2);
   });
 });

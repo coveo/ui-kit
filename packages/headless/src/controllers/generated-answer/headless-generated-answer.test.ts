@@ -1,16 +1,31 @@
+import {TestUtils} from '../..';
 import {
+  closeGeneratedAnswerFeedbackModal,
   dislikeGeneratedAnswer,
   likeGeneratedAnswer,
+  openGeneratedAnswerFeedbackModal,
   resetAnswer,
+  setIsVisible,
   streamAnswer,
+  updateResponseFormat,
 } from '../../features/generated-answer/generated-answer-actions';
 import {
+  logCopyGeneratedAnswer,
   logDislikeGeneratedAnswer,
+  logGeneratedAnswerDetailedFeedback,
+  logGeneratedAnswerFeedback,
+  logGeneratedAnswerHideAnswers,
+  logGeneratedAnswerShowAnswers,
+  logHoverCitation,
   logLikeGeneratedAnswer,
   logOpenGeneratedAnswerSource,
 } from '../../features/generated-answer/generated-answer-analytics-actions';
 import {generatedAnswerReducer} from '../../features/generated-answer/generated-answer-slice';
-import {getGeneratedAnswerInitialState} from '../../features/generated-answer/generated-answer-state';
+import {
+  GeneratedAnswerState,
+  getGeneratedAnswerInitialState,
+} from '../../features/generated-answer/generated-answer-state';
+import {GeneratedResponseFormat} from '../../features/generated-answer/generated-response-format';
 import {executeSearch} from '../../features/search/search-actions';
 import {buildMockCitation} from '../../test/mock-citation';
 import {
@@ -20,18 +35,34 @@ import {
 import {
   buildGeneratedAnswer,
   GeneratedAnswer,
+  GeneratedAnswerProps,
 } from './headless-generated-answer';
 
 describe('generated answer', () => {
   let generatedAnswer: GeneratedAnswer;
   let engine: MockSearchEngine;
 
-  function initGeneratedAnswer() {
-    generatedAnswer = buildGeneratedAnswer(engine);
+  function initGeneratedAnswer(props: GeneratedAnswerProps = {}) {
+    generatedAnswer = buildGeneratedAnswer(engine, props);
   }
 
   function findAction(actionType: string) {
     return engine.actions.find((a) => a.type === actionType);
+  }
+
+  function buildEngineWithGeneratedAnswer(
+    initialState: Partial<GeneratedAnswerState> = {}
+  ) {
+    const mockState = TestUtils.createMockState();
+    return buildMockSearchAppEngine({
+      state: {
+        ...mockState,
+        generatedAnswer: {
+          ...mockState.generatedAnswer,
+          ...initialState,
+        },
+      },
+    });
   }
 
   beforeEach(() => {
@@ -45,12 +76,12 @@ describe('generated answer', () => {
     });
   });
 
-  it('should return the state', () => {
-    expect(generatedAnswer.state).toEqual(getGeneratedAnswerInitialState());
-  });
-
   it('should subscribe to state updates', () => {
     expect(engine.subscribe).toHaveBeenCalledTimes(1);
+  });
+
+  it('should return the state', () => {
+    expect(generatedAnswer.state).toEqual(getGeneratedAnswerInitialState());
   });
 
   it('#retry dispatches #executeSearch', () => {
@@ -82,6 +113,44 @@ describe('generated answer', () => {
     expect(analyticsAction).toBeTruthy();
   });
 
+  it('#openFeedbackModal dispatches the right actions', () => {
+    generatedAnswer.openFeedbackModal();
+    const action = findAction(openGeneratedAnswerFeedbackModal.type);
+
+    expect(action).toBeTruthy();
+  });
+
+  it('#closeFeedbackModal dispatches the right actions', () => {
+    generatedAnswer.closeFeedbackModal();
+    const action = findAction(closeGeneratedAnswerFeedbackModal.type);
+
+    expect(action).toBeTruthy();
+  });
+
+  it('#sendFeedback dispatches the right actions', () => {
+    const exampleFeedback = 'notAccurate';
+    generatedAnswer.sendFeedback(exampleFeedback);
+    const action = findAction(closeGeneratedAnswerFeedbackModal.type);
+    const analyticsAction = engine.findAsyncAction(
+      logGeneratedAnswerFeedback(exampleFeedback).pending
+    );
+
+    expect(action).toBeTruthy();
+    expect(analyticsAction).toBeTruthy();
+  });
+
+  it('#sendDetailedFeedback dispatches the right actions', () => {
+    const exampleDetails = 'Example details';
+    generatedAnswer.sendDetailedFeedback(exampleDetails);
+    const action = findAction(closeGeneratedAnswerFeedbackModal.type);
+    const analyticsAction = engine.findAsyncAction(
+      logGeneratedAnswerDetailedFeedback(exampleDetails).pending
+    );
+
+    expect(action).toBeTruthy();
+    expect(analyticsAction).toBeTruthy();
+  });
+
   it('#logCitationClick dispatches analytics action', () => {
     const testCitation = buildMockCitation();
 
@@ -91,6 +160,83 @@ describe('generated answer', () => {
     );
 
     expect(action).toBeTruthy();
+  });
+
+  it('#logCitationHover dispatches analytics action', () => {
+    const testCitation = buildMockCitation();
+    const exampleDuration = 100;
+
+    generatedAnswer.logCitationHover(testCitation.id, exampleDuration);
+    const action = engine.findAsyncAction(
+      logHoverCitation(testCitation.id, exampleDuration).pending
+    );
+
+    expect(action).toBeTruthy();
+  });
+
+  it('#logCopyToClipboard dispatches analytics action', () => {
+    generatedAnswer.logCopyToClipboard();
+
+    const analyticsAction = engine.findAsyncAction(
+      logCopyGeneratedAnswer().pending
+    );
+
+    expect(analyticsAction).toBeDefined();
+  });
+
+  describe('#rephrase', () => {
+    const responseFormat: GeneratedResponseFormat = {
+      answerStyle: 'concise',
+    };
+
+    it('dispatches the update action', () => {
+      generatedAnswer.rephrase(responseFormat);
+
+      const action = findAction(updateResponseFormat.type);
+      expect(action).toBeDefined();
+      expect(action).toHaveProperty('payload', responseFormat);
+    });
+
+    it('dispatches #executeSearch', () => {
+      generatedAnswer.rephrase(responseFormat);
+
+      const action = engine.findAsyncAction(executeSearch.pending);
+
+      expect(action).toBeTruthy();
+    });
+  });
+
+  describe('when passing initial state', () => {
+    describe('when #isVisible is set', () => {
+      it('should dispatch setIsVisible action when set to true', () => {
+        initGeneratedAnswer({initialState: {isVisible: true}});
+
+        const action = findAction(setIsVisible.type);
+        expect(action).toBeDefined();
+        expect(action).toHaveProperty('payload', true);
+      });
+
+      it('should dispatch setIsVisible action when set to false', () => {
+        initGeneratedAnswer({initialState: {isVisible: false}});
+
+        const action = findAction(setIsVisible.type);
+        expect(action).toBeDefined();
+        expect(action).toHaveProperty('payload', false);
+      });
+    });
+
+    describe('when #responseFormat is set', () => {
+      it('should dispatch updateResponseFormat action', () => {
+        const responseFormat: GeneratedResponseFormat = {
+          answerStyle: 'concise',
+        };
+        initGeneratedAnswer({initialState: {responseFormat}});
+
+        const action = findAction(updateResponseFormat.type);
+        expect(action).toBeDefined();
+        expect(action).toHaveProperty('payload', responseFormat);
+      });
+    });
   });
 
   describe('subscription to changes', () => {
@@ -128,6 +274,84 @@ describe('generated answer', () => {
       const action = findAction(streamAnswer.pending.type);
 
       expect(action).toBeTruthy();
+    });
+  });
+
+  describe('#show', () => {
+    describe('when already visible', () => {
+      it('should not make any changes', () => {
+        engine = buildEngineWithGeneratedAnswer({isVisible: true});
+        initGeneratedAnswer();
+
+        generatedAnswer.show();
+
+        const action = findAction(setIsVisible.type);
+        expect(action).toBeUndefined();
+      });
+    });
+
+    describe('when not visible', () => {
+      it('should dispatch the setIsVisible action', () => {
+        engine = buildEngineWithGeneratedAnswer({isVisible: false});
+        initGeneratedAnswer();
+
+        generatedAnswer.show();
+
+        const action = findAction(setIsVisible.type);
+        expect(action).toBeDefined();
+        expect(action).toHaveProperty('payload', true);
+      });
+
+      it('should dispatch the analytics action', () => {
+        engine = buildEngineWithGeneratedAnswer({isVisible: false});
+        initGeneratedAnswer();
+
+        generatedAnswer.show();
+
+        const analyticsAction = findAction(
+          logGeneratedAnswerShowAnswers().pending.type
+        );
+        expect(analyticsAction).toBeDefined();
+      });
+    });
+  });
+
+  describe('#hide', () => {
+    describe('when not visible', () => {
+      it('should not make any changes', () => {
+        engine = buildEngineWithGeneratedAnswer({isVisible: false});
+        initGeneratedAnswer();
+
+        generatedAnswer.hide();
+
+        const action = findAction(setIsVisible.type);
+        expect(action).toBeUndefined();
+      });
+    });
+
+    describe('when visible', () => {
+      it('should dispatch the setIsVisible action', () => {
+        engine = buildEngineWithGeneratedAnswer({isVisible: true});
+        initGeneratedAnswer();
+
+        generatedAnswer.hide();
+
+        const action = findAction(setIsVisible.type);
+        expect(action).toBeDefined();
+        expect(action).toHaveProperty('payload', false);
+      });
+
+      it('should dispatch the analytics action', () => {
+        engine = buildEngineWithGeneratedAnswer({isVisible: true});
+        initGeneratedAnswer();
+
+        generatedAnswer.hide();
+
+        const analyticsAction = findAction(
+          logGeneratedAnswerHideAnswers().pending.type
+        );
+        expect(analyticsAction).toBeDefined();
+      });
     });
   });
 });

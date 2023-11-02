@@ -25,14 +25,10 @@ const exampleSmartSnippetSourceUri = inactiveLink;
 const exampleSmartSnippetSourceTitle = 'Example result title';
 const examplePermanentId = '123';
 const exampleInlineLinkText = 'Example inline link';
-const exampleInlineLinkUrl = inactiveLink;
-const exampleSmartSnippetAnswer = `
-  <div>
-    <p>Example smart snippet answer</p>
-    <a data-cy="smart-snippet__inline-link" href="${exampleInlineLinkUrl}">${exampleInlineLinkText}</a>
-  </div>
-`;
-
+const exampleInlineLinkUrl =
+  'https://saas-inspiration-5437-dev-ed.scratch.my.site.com/examples/s/';
+const exampleSmartSnippetAnswer = `<div data-cy="smart-snippet__inline-link"><p>Example smart snippet answer</p><a href="${exampleInlineLinkUrl}">${exampleInlineLinkText}</a></div>`;
+const exampleUriHash = 'exampleUriHash';
 const otherOption = 'other';
 const feedbackOptions = [
   'does_not_answer',
@@ -59,6 +55,7 @@ describe('quantic-smart-snippet', {browser: 'chrome'}, () => {
           title: exampleSmartSnippetSourceTitle,
           uri: exampleSmartSnippetSourceUri,
           permanentId: examplePermanentId,
+          uriHash: exampleUriHash,
         },
         options.useCase
       );
@@ -101,20 +98,6 @@ describe('quantic-smart-snippet', {browser: 'chrome'}, () => {
               Expect.displaySmartSnippetAnswerToggle(false);
             });
 
-            scope(
-              'when an inlink within the smart snippet answer is clicked',
-              () => {
-                Actions.clickSmartSnippetInlineLink();
-                Expect.logOpenSmartSnippetInlineLink({
-                  title: exampleSmartSnippetSourceTitle,
-                  uri: exampleSmartSnippetSourceUri,
-                  permanentId: examplePermanentId,
-                  linkUrl: exampleInlineLinkUrl,
-                  linkText: exampleInlineLinkText,
-                });
-              }
-            );
-
             scope('when the source title is clicked', () => {
               Actions.clickSmartSnippetSourceTitle();
               Expect.logOpenSmartSnippetSource({
@@ -133,6 +116,21 @@ describe('quantic-smart-snippet', {browser: 'chrome'}, () => {
                 permanentId: examplePermanentId,
               });
             });
+
+            scope(
+              'when an inlink within the smart snippet answer is clicked',
+              () => {
+                Actions.clickSmartSnippetInlineLink();
+                Expect.logOpenSmartSnippetInlineLink({
+                  title: exampleSmartSnippetSourceTitle,
+                  uri: exampleSmartSnippetSourceUri,
+                  permanentId: examplePermanentId,
+                  linkUrl: exampleInlineLinkUrl,
+                  linkText: exampleInlineLinkText,
+                });
+                visitPage({useCase: param.useCase});
+              }
+            );
           });
         });
 

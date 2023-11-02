@@ -1,6 +1,7 @@
 import {CoveoAnalyticsClient} from 'coveo.analytics';
 import pino from 'pino';
 import {getConfigurationInitialState} from '../../features/configuration/configuration-state';
+import {getGeneratedAnswerInitialState} from '../../features/generated-answer/generated-answer-state';
 import {buildMockResult, createMockState} from '../../test';
 import {buildMockFacetRequest} from '../../test/mock-facet-request';
 import {buildMockFacetResponse} from '../../test/mock-facet-response';
@@ -10,7 +11,7 @@ import {buildMockFacetValueRequest} from '../../test/mock-facet-value-request';
 import {buildMockQueryState} from '../../test/mock-query-state';
 import {buildMockSearchState} from '../../test/mock-search-state';
 import {
-  configureAnalytics,
+  configureLegacyAnalytics,
   getPageID,
   SearchAnalyticsProvider,
   StateNeededBySearchAnalyticsProvider,
@@ -37,7 +38,7 @@ describe('search analytics', () => {
   it('should be enabled by default', () => {
     const state = createMockState();
     expect(
-      configureAnalytics({getState: () => state, logger})
+      configureLegacyAnalytics({getState: () => state, logger})
         .coveoAnalyticsClient instanceof CoveoAnalyticsClient
     ).toBe(true);
   });
@@ -47,7 +48,7 @@ describe('search analytics', () => {
     state.configuration.analytics.enabled = true;
 
     expect(
-      configureAnalytics({getState: () => state, logger})
+      configureLegacyAnalytics({getState: () => state, logger})
         .coveoAnalyticsClient instanceof CoveoAnalyticsClient
     ).toBe(true);
   });
@@ -56,7 +57,7 @@ describe('search analytics', () => {
     const state = createMockState();
     state.configuration.analytics.enabled = false;
     expect(
-      configureAnalytics({getState: () => state, logger})
+      configureLegacyAnalytics({getState: () => state, logger})
         .coveoAnalyticsClient instanceof CoveoAnalyticsClient
     ).toBe(false);
   });
@@ -216,6 +217,15 @@ describe('search analytics', () => {
       expect(
         new SearchAnalyticsProvider(() => state).getSplitTestRunVersion()
       ).toBe('pipeline-from-state');
+    });
+
+    it('should properly return the generated answer metadata from the state', () => {
+      const state = getBaseState();
+      state.generatedAnswer = getGeneratedAnswerInitialState();
+      state.generatedAnswer.isVisible = false;
+      expect(
+        new SearchAnalyticsProvider(() => state).getGeneratedAnswerMetadata()
+      ).toEqual({showGeneratedAnswer: false});
     });
   });
 });

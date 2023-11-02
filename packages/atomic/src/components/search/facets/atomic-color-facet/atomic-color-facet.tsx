@@ -10,6 +10,7 @@ import {
   FacetValue,
   buildFacetConditionsManager,
   FacetConditionsManager,
+  FacetResultsMustMatch,
 } from '@coveo/headless';
 import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
 import {
@@ -139,6 +140,14 @@ export class AtomicColorFacet
    * Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
    */
   @Prop({reflect: true}) public sortCriteria: FacetSortCriterion = 'automatic';
+  /**
+   * Specifies how a result must match the selected facet values.
+   * Allowed values:
+   * - `atLeastOneValue`: A result will match if at least one of the corresponding facet values is selected.
+   * - `allValues`: A result will match if all corresponding facet values are selected.
+   */
+  @Prop({reflect: true}) public resultsMustMatch: FacetResultsMustMatch =
+    'atLeastOneValue';
   /**
    * Whether to display the facet values as checkboxes (multiple selection) or boxes (multiple selection).
    * Possible values are 'checkbox', and 'box'.
@@ -537,6 +546,7 @@ export class AtomicColorFacet
       field: this.field,
       numberOfValues: this.numberOfValues,
       sortCriteria: this.sortCriteria,
+      resultsMustMatch: this.resultsMustMatch,
       facetSearch: {numberOfValues: this.numberOfValues},
       injectionDepth: this.injectionDepth,
       filterFacetCount: this.filterFacetCount,

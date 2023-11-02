@@ -5,15 +5,28 @@ import {
   resetAnswer,
   likeGeneratedAnswer,
   dislikeGeneratedAnswer,
+  updateResponseFormat,
+  openGeneratedAnswerFeedbackModal,
+  closeGeneratedAnswerFeedbackModal,
+  setIsVisible,
 } from '../../features/generated-answer/generated-answer-actions';
 import {
+  GeneratedAnswerFeedback,
   logDislikeGeneratedAnswer,
+  logGeneratedAnswerDetailedFeedback,
+  logGeneratedAnswerFeedback,
   logLikeGeneratedAnswer,
   logOpenGeneratedAnswerSource,
+  logRephraseGeneratedAnswer,
   logRetryGeneratedAnswer,
+  logGeneratedAnswerShowAnswers,
+  logGeneratedAnswerHideAnswers,
+  logCopyGeneratedAnswer,
+  logHoverCitation,
 } from '../../features/generated-answer/generated-answer-analytics-actions';
 import {generatedAnswerReducer as generatedAnswer} from '../../features/generated-answer/generated-answer-slice';
 import {GeneratedAnswerState} from '../../features/generated-answer/generated-answer-state';
+import {GeneratedResponseFormat} from '../../features/generated-answer/generated-response-format';
 import {executeSearch} from '../../features/search/search-actions';
 import {GeneratedAnswerSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
@@ -42,16 +55,72 @@ export interface GeneratedAnswer extends Controller {
    */
   dislike(): void;
   /**
+   * Re-executes the query to generate the answer in the specified format.
+   */
+  rephrase(responseFormat: GeneratedResponseFormat): void;
+  /**
+   * Opens the modal to provide feedback about why the generated answer was not relevant.
+   */
+  openFeedbackModal(): void;
+  /**
+   * Closes the modal to provide feedback about why the generated answer was not relevant.
+   */
+  closeFeedbackModal(): void;
+  /**
+   * Sends feedback about why the generated answer was not relevant.
+   * @param feedback - The feedback that the end user wishes to send.
+   */
+  sendFeedback(feedback: GeneratedAnswerFeedback): void;
+  /**
+   * Sends detailed feedback about why the generated answer was not relevant.
+   * @param details - Details on why the generated answer was not relevant.
+   */
+  sendDetailedFeedback(details: string): void;
+  /**
    * Logs a custom event indicating a cited source link was clicked.
    * @param id The ID of the clicked citation.
    */
   logCitationClick(id: string): void;
+  /**
+   * Displays the generated answer.
+   */
+  show(): void;
+  /**
+   * Hides the generated answer.
+   */
+  hide(): void;
+  /**
+   * Logs a custom event indicating the generated answer was copied to the clipboard.
+   */
+  logCopyToClipboard(): void;
+  /**
+   * Logs a custom event indicating a cited source link was hovered.
+   * @param citationId The ID of the clicked citation.
+   * @param citationHoverTimeMs The number of milliseconds spent hovering over the citation.
+   */
+  logCitationHover(citationId: string, citationHoverTimeMs: number): void;
+}
+
+export interface GeneratedAnswerProps {
+  initialState?: {
+    /**
+     * Sets the component visibility state on load.
+     */
+    isVisible?: boolean;
+    /**
+     * The initial formatting options applied to generated answers when the controller first loads.
+     */
+    responseFormat?: GeneratedResponseFormat;
+  };
 }
 
 /**
  * @internal
  */
-export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
+export function buildGeneratedAnswer(
+  engine: SearchEngine,
+  props: GeneratedAnswerProps = {}
+): GeneratedAnswer {
   if (!loadGeneratedAnswerReducer(engine)) {
     throw loadReducerError;
   }
@@ -102,6 +171,15 @@ export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
     return engine.subscribe(strictListener);
   };
 
+  const isVisible = props.initialState?.isVisible;
+  if (isVisible !== undefined) {
+    dispatch(setIsVisible(isVisible));
+  }
+  const initialResponseFormat = props.initialState?.responseFormat;
+  if (initialResponseFormat) {
+    dispatch(updateResponseFormat(initialResponseFormat));
+  }
+
   subscribeToSearchRequests();
 
   return {
@@ -125,8 +203,52 @@ export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
       dispatch(logDislikeGeneratedAnswer());
     },
 
+    openFeedbackModal() {
+      dispatch(openGeneratedAnswerFeedbackModal());
+    },
+
+    closeFeedbackModal() {
+      dispatch(closeGeneratedAnswerFeedbackModal());
+    },
+
+    sendFeedback(feedback) {
+      dispatch(logGeneratedAnswerFeedback(feedback));
+      dispatch(closeGeneratedAnswerFeedbackModal());
+    },
+
+    sendDetailedFeedback(details) {
+      dispatch(logGeneratedAnswerDetailedFeedback(details));
+      dispatch(closeGeneratedAnswerFeedbackModal());
+    },
+
     logCitationClick(citationId: string) {
       dispatch(logOpenGeneratedAnswerSource(citationId));
+    },
+
+    logCitationHover(citationId: string, citationHoverTimeMs: number) {
+      dispatch(logHoverCitation(citationId, citationHoverTimeMs));
+    },
+
+    rephrase(responseFormat: GeneratedResponseFormat) {
+      dispatch(updateResponseFormat(responseFormat));
+      dispatch(executeSearch(logRephraseGeneratedAnswer(responseFormat)));
+    },
+
+    show() {
+      if (!this.state.isVisible) {
+        dispatch(setIsVisible(true));
+        dispatch(logGeneratedAnswerShowAnswers());
+      }
+    },
+
+    hide() {
+      if (this.state.isVisible) {
+        dispatch(setIsVisible(false));
+        dispatch(logGeneratedAnswerHideAnswers());
+      }
+    },
+    logCopyToClipboard() {
+      dispatch(logCopyGeneratedAnswer());
     },
   };
 }

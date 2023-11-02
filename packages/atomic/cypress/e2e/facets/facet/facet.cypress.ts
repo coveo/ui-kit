@@ -844,6 +844,48 @@ describe('Facet v1 Test Suites', () => {
     FacetAssertions.assertValuesSortedByOccurrences();
   });
 
+  describe('with #resultsMustMatch set to "allValues"', () => {
+    function setupSelectCheckboxValue() {
+      new TestFixture()
+        .with(addFacet({field, label, 'results-must-match': 'allValues'}))
+        .init();
+      selectIdleCheckboxValueAt(FacetSelectors, 0);
+    }
+
+    beforeEach(() => {
+      setupSelectCheckboxValue();
+    });
+
+    it('should set resultsMustMatch to `allValues`', () => {
+      cy.wait(TestFixture.interceptAliases.Search).should((search) => {
+        expect(search.request.body.facets[0]).to.have.property(
+          'resultsMustMatch',
+          'allValues'
+        );
+      });
+    });
+  });
+
+  describe('with #resultsMustMatch set to default value', () => {
+    function setupSelectCheckboxValue() {
+      new TestFixture().with(addFacet({field, label})).init();
+      selectIdleCheckboxValueAt(FacetSelectors, 0);
+    }
+
+    beforeEach(() => {
+      setupSelectCheckboxValue();
+    });
+
+    it('should set resultsMustMatch to `atLeastOneValue`', () => {
+      cy.wait(TestFixture.interceptAliases.Search).should((search) => {
+        expect(search.request.body.facets[0]).to.have.property(
+          'resultsMustMatch',
+          'atLeastOneValue'
+        );
+      });
+    });
+  });
+
   describe('when defining a value caption', () => {
     const caption = 'nicecaption';
     beforeEach(() => {
@@ -1123,7 +1165,7 @@ describe('Facet v1 Test Suites', () => {
         .with(
           addFacet({
             field: 'objecttype',
-            'allowed-values': JSON.stringify(['FAQ', 'File']),
+            'allowed-values': JSON.stringify(['FAQ', 'People']),
           })
         )
         .init();
@@ -1132,8 +1174,8 @@ describe('Facet v1 Test Suites', () => {
     it('returns only allowed values', () => {
       FacetSelectors.values()
         .should('contain.text', 'FAQ')
-        .should('contain.text', 'File')
-        .should('not.contain.text', 'Message');
+        .should('contain.text', 'People')
+        .should('not.contain.text', 'Page');
     });
   });
 

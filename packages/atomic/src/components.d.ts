@@ -5,21 +5,24 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { AutomaticFacet, CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, InlineLink, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+import { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, InlineLink, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout, ResultTarget } from "./components/common/layout/display-options";
 import { ResultRenderingFunction } from "./components/common/result-list/result-list-common-interface";
+import { GeneratedAnswerStyle } from "@coveo/headless/dist/definitions/features/generated-answer/generated-response-format";
 import { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 import { FacetDisplayValues } from "./components/common/facets/facet-common";
 import { i18n } from "i18next";
+import { i18nCompatibilityVersion } from "./components/common/interface/i18n";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 import { NumericFacetDisplayValues } from "./components/common/facets/numeric-facet-common";
 import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Section } from "./components/common/atomic-layout-section/sections";
 import { PlatformEnvironment, RecommendationEngine } from "@coveo/headless/recommendation";
 import { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
+import { i18nCompatibilityVersion as i18nCompatibilityVersion1 } from "./components";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 import { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
@@ -28,21 +31,24 @@ import { RedirectionPayload } from "./components/search/atomic-search-box/redire
 import { AriaLabelGenerator } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
-export { AutomaticFacet, CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, InlineLink, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+export { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, InlineLink, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 export { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout, ResultTarget } from "./components/common/layout/display-options";
 export { ResultRenderingFunction } from "./components/common/result-list/result-list-common-interface";
+export { GeneratedAnswerStyle } from "@coveo/headless/dist/definitions/features/generated-answer/generated-response-format";
 export { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 export { FacetDisplayValues } from "./components/common/facets/facet-common";
 export { i18n } from "i18next";
+export { i18nCompatibilityVersion } from "./components/common/interface/i18n";
 export { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 export { NumericFacetDisplayValues } from "./components/common/facets/numeric-facet-common";
 export { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 export { Section } from "./components/common/atomic-layout-section/sections";
 export { PlatformEnvironment, RecommendationEngine } from "@coveo/headless/recommendation";
 export { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
+export { i18nCompatibilityVersion as i18nCompatibilityVersion1 } from "./components";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 export { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
 export { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
@@ -61,11 +67,11 @@ export namespace Components {
     }
     /**
      * An automatic facet is a special type of facet generated by the automatic facets feature.
-     * Unlike traditional facets that need to be explicitly defined and requested in the query, automatic facets are dynamically generated by the index
-     * in response to the query.
-     * It's important to note that this component is not typically used on its own.
-     * It is internally used by the `atomic-automatic-facet-generator` component to automatically render updated facets.
-     * To read more about the automatic facet generator feature, see: https://docs.coveo.com/en/n9sd0159/
+     * Unlike regular facets, which need to be explicitly defined and requested in the query,
+     * automatic facets are dynamically generated by the index in response to the query.
+     * **Note:** This component should never be used on its own. It is used internally by the `atomic-automatic-facet-generator`
+     * component to automatically render updated facets. However, you can use the shadow parts to style the automatically generated facets.
+     * To learn more about the automatic facet generator feature, see: [About the Facet Generator](https://docs.coveo.com/en/n9sd0159/).
      */
     interface AtomicAutomaticFacet {
         "facet": AutomaticFacet;
@@ -76,12 +82,11 @@ export namespace Components {
     }
     /**
      * The `atomic-automatic-facet-generator` is a component that renders the facets from
-     * the automatic facets feature.
-     * Unlike traditional facets that need to be explicitly defined and requested in the query, automatic facets are dynamically generated by the index
+     * the automatic facets feature. Unlike regular facets, which need to be explicitly defined
+     * and requested in the query, automatic facets are dynamically generated by the index
      * in response to the search query.
-     * It dynamically creates multiple `atomic-automatic-facet`
-     * components based on the desiredCount prop.
-     * To read more about the automatic facet generator feature, see: https://docs.coveo.com/en/n9sd0159/
+     * **Note:** This component renders one or more [automatic facets](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-automatic-facet/) based on the `desiredCount` property.
+     * To learn more about the automatic facet generator feature, see: [About the Facet Generator](https://docs.coveo.com/en/n9sd0159/).
      */
     interface AtomicAutomaticFacetGenerator {
         /**
@@ -222,6 +227,10 @@ export namespace Components {
          */
         "numberOfValues": number;
         /**
+          * Specifies how a result must match the selected facet values. Allowed values: - `atLeastOneValue`: A result will match if at least one of the corresponding facet values is selected. - `allValues`: A result will match if all corresponding facet values are selected.
+         */
+        "resultsMustMatch": FacetResultsMustMatch;
+        /**
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */
         "sortCriteria": FacetSortCriterion;
@@ -308,6 +317,10 @@ export namespace Components {
           * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
          */
         "numberOfValues": number;
+        /**
+          * Specifies how a result must match the selected facet values. Allowed values: - `atLeastOneValue`: A result will match if at least one of the corresponding facet values is selected. - `allValues`: A result will match if all corresponding facet values are selected.
+         */
+        "resultsMustMatch": FacetResultsMustMatch;
         /**
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', and 'automatic'.
          */
@@ -475,6 +488,10 @@ export namespace Components {
     interface AtomicFrequentlyBoughtTogether {
     }
     interface AtomicGeneratedAnswer {
+        /**
+          * The answer style to apply when the component first loads. Options:   - `default`: Generates the answer without additional formatting instructions.   - `bullet`: Requests the answer to be generated in bullet-points.   - `step`: Requests the answer to be generated in step-by-step instructions.   - `concise`: Requests the answer to be generated as concisely as possible.
+         */
+        "answerStyle": GeneratedAnswerStyle;
     }
     /**
      * The `atomic-html` component renders the HTML value of a string.
@@ -546,6 +563,10 @@ export namespace Components {
           * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
          */
         "numberOfValues": number;
+        /**
+          * Specifies how a result must match the selected facet values. Allowed values: - `atLeastOneValue`: A result will match if at least one of the corresponding facet values is selected. - `allValues`: A result will match if all corresponding facet values are selected.
+         */
+        "resultsMustMatch": FacetResultsMustMatch;
         /**
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */
@@ -634,6 +655,10 @@ export namespace Components {
           * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath": string;
+        /**
+          * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
+         */
+        "localizationCompatibilityVersion": i18nCompatibilityVersion;
         /**
           * The severity level of the messages to log in the console.
          */
@@ -1371,6 +1396,10 @@ export namespace Components {
          */
         "languageAssetsPath": string;
         /**
+          * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
+         */
+        "localizationCompatibilityVersion": i18nCompatibilityVersion1;
+        /**
           * The severity level of the messages to log in the console.
          */
         "logLevel"?: RecsLogLevel;
@@ -2042,7 +2071,7 @@ export namespace Components {
          */
         "suggestionTimeout": number;
         /**
-          * Whether to render the search box using a [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea) element. The resulting component will expand to support multi-line queries. When customizing the dimensions of the textarea element using the `"textarea"` CSS part, it is important to also apply the styling to its container's ::after pseudo-element as well as the `"textarea-spacer"` part. The buttons within the search box are likely to need adjusting as well.  Example: ```css <style>   atomic-search-box::part(textarea),   atomic-search-box::part(textarea-expander)::after,   atomic-search-box::part(textarea-spacer) {     font-size: x-large;   }    atomic-search-box::part(submit-button-wrapper),   atomic-search-box::part(clear-button-wrapper) {     padding-top: 0.75rem;   } </style> ```
+          * Whether to render the search box using a [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea) element. The resulting component will expand to support multi-line queries. When customizing the dimensions of the textarea element using the `"textarea"` CSS part, it is important to also apply the styling to its container's ::after pseudo-element as well as the `"textarea-spacer"` part. The buttons within the search box are likely to need adjusting as well.  Example: ```css <style>   atomic-search-box::part(textarea),   atomic-search-box::part(textarea-expander)::after,   atomic-search-box::part(textarea-spacer) {     font-size: x-large;   }    atomic-search-box::part(submit-button-wrapper),   atomic-search-box::part(clear-button-wrapper) {     padding-top: 0.75rem;   } </style> ```  NB: The textarea functionality will be enforced on the next major version of Atomic (3.0.0)
          */
         "textarea": boolean;
     }
@@ -2161,6 +2190,10 @@ export namespace Components {
           * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath": string;
+        /**
+          * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
+         */
+        "localizationCompatibilityVersion": i18nCompatibilityVersion1;
         /**
           * The severity level of the messages to log in the console.
          */
@@ -2544,11 +2577,11 @@ declare global {
     };
     /**
      * An automatic facet is a special type of facet generated by the automatic facets feature.
-     * Unlike traditional facets that need to be explicitly defined and requested in the query, automatic facets are dynamically generated by the index
-     * in response to the query.
-     * It's important to note that this component is not typically used on its own.
-     * It is internally used by the `atomic-automatic-facet-generator` component to automatically render updated facets.
-     * To read more about the automatic facet generator feature, see: https://docs.coveo.com/en/n9sd0159/
+     * Unlike regular facets, which need to be explicitly defined and requested in the query,
+     * automatic facets are dynamically generated by the index in response to the query.
+     * **Note:** This component should never be used on its own. It is used internally by the `atomic-automatic-facet-generator`
+     * component to automatically render updated facets. However, you can use the shadow parts to style the automatically generated facets.
+     * To learn more about the automatic facet generator feature, see: [About the Facet Generator](https://docs.coveo.com/en/n9sd0159/).
      */
     interface HTMLAtomicAutomaticFacetElement extends Components.AtomicAutomaticFacet, HTMLStencilElement {
     }
@@ -2558,12 +2591,11 @@ declare global {
     };
     /**
      * The `atomic-automatic-facet-generator` is a component that renders the facets from
-     * the automatic facets feature.
-     * Unlike traditional facets that need to be explicitly defined and requested in the query, automatic facets are dynamically generated by the index
+     * the automatic facets feature. Unlike regular facets, which need to be explicitly defined
+     * and requested in the query, automatic facets are dynamically generated by the index
      * in response to the search query.
-     * It dynamically creates multiple `atomic-automatic-facet`
-     * components based on the desiredCount prop.
-     * To read more about the automatic facet generator feature, see: https://docs.coveo.com/en/n9sd0159/
+     * **Note:** This component renders one or more [automatic facets](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-automatic-facet/) based on the `desiredCount` property.
+     * To learn more about the automatic facet generator feature, see: [About the Facet Generator](https://docs.coveo.com/en/n9sd0159/).
      */
     interface HTMLAtomicAutomaticFacetGeneratorElement extends Components.AtomicAutomaticFacetGenerator, HTMLStencilElement {
     }
@@ -2637,10 +2669,21 @@ declare global {
         prototype: HTMLAtomicFacetElement;
         new (): HTMLAtomicFacetElement;
     };
+    interface HTMLAtomicFacetDateInputElementEventMap {
+        "atomic/dateInputApply": any;
+    }
     /**
      * Internal component made to be integrated in a TimeframeFacet.
      */
     interface HTMLAtomicFacetDateInputElement extends Components.AtomicFacetDateInput, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicFacetDateInputElementEventMap>(type: K, listener: (this: HTMLAtomicFacetDateInputElement, ev: AtomicFacetDateInputCustomEvent<HTMLAtomicFacetDateInputElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicFacetDateInputElementEventMap>(type: K, listener: (this: HTMLAtomicFacetDateInputElement, ev: AtomicFacetDateInputCustomEvent<HTMLAtomicFacetDateInputElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLAtomicFacetDateInputElement: {
         prototype: HTMLAtomicFacetDateInputElement;
@@ -2655,10 +2698,21 @@ declare global {
         prototype: HTMLAtomicFacetManagerElement;
         new (): HTMLAtomicFacetManagerElement;
     };
+    interface HTMLAtomicFacetNumberInputElementEventMap {
+        "atomic/numberInputApply": any;
+    }
     /**
      * Internal component made to be integrated in a NumericFacet.
      */
     interface HTMLAtomicFacetNumberInputElement extends Components.AtomicFacetNumberInput, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicFacetNumberInputElementEventMap>(type: K, listener: (this: HTMLAtomicFacetNumberInputElement, ev: AtomicFacetNumberInputCustomEvent<HTMLAtomicFacetNumberInputElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicFacetNumberInputElementEventMap>(type: K, listener: (this: HTMLAtomicFacetNumberInputElement, ev: AtomicFacetNumberInputCustomEvent<HTMLAtomicFacetNumberInputElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLAtomicFacetNumberInputElement: {
         prototype: HTMLAtomicFacetNumberInputElement;
@@ -2675,7 +2729,19 @@ declare global {
         prototype: HTMLAtomicFieldConditionElement;
         new (): HTMLAtomicFieldConditionElement;
     };
+    interface HTMLAtomicFocusDetectorElementEventMap {
+        "focusEnter": any;
+        "focusExit": any;
+    }
     interface HTMLAtomicFocusDetectorElement extends Components.AtomicFocusDetector, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicFocusDetectorElementEventMap>(type: K, listener: (this: HTMLAtomicFocusDetectorElement, ev: AtomicFocusDetectorCustomEvent<HTMLAtomicFocusDetectorElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicFocusDetectorElementEventMap>(type: K, listener: (this: HTMLAtomicFocusDetectorElement, ev: AtomicFocusDetectorCustomEvent<HTMLAtomicFocusDetectorElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLAtomicFocusDetectorElement: {
         prototype: HTMLAtomicFocusDetectorElement;
@@ -2816,7 +2882,18 @@ declare global {
         prototype: HTMLAtomicInsightNumericFacetElement;
         new (): HTMLAtomicInsightNumericFacetElement;
     };
+    interface HTMLAtomicInsightPagerElementEventMap {
+        "atomic/scrollToTop": any;
+    }
     interface HTMLAtomicInsightPagerElement extends Components.AtomicInsightPager, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicInsightPagerElementEventMap>(type: K, listener: (this: HTMLAtomicInsightPagerElement, ev: AtomicInsightPagerCustomEvent<HTMLAtomicInsightPagerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicInsightPagerElementEventMap>(type: K, listener: (this: HTMLAtomicInsightPagerElement, ev: AtomicInsightPagerCustomEvent<HTMLAtomicInsightPagerElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLAtomicInsightPagerElement: {
         prototype: HTMLAtomicInsightPagerElement;
@@ -2900,7 +2977,18 @@ declare global {
         prototype: HTMLAtomicInsightSmartSnippetElement;
         new (): HTMLAtomicInsightSmartSnippetElement;
     };
+    interface HTMLAtomicInsightSmartSnippetFeedbackModalElementEventMap {
+        "feedbackSent": any;
+    }
     interface HTMLAtomicInsightSmartSnippetFeedbackModalElement extends Components.AtomicInsightSmartSnippetFeedbackModal, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicInsightSmartSnippetFeedbackModalElementEventMap>(type: K, listener: (this: HTMLAtomicInsightSmartSnippetFeedbackModalElement, ev: AtomicInsightSmartSnippetFeedbackModalCustomEvent<HTMLAtomicInsightSmartSnippetFeedbackModalElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicInsightSmartSnippetFeedbackModalElementEventMap>(type: K, listener: (this: HTMLAtomicInsightSmartSnippetFeedbackModalElement, ev: AtomicInsightSmartSnippetFeedbackModalCustomEvent<HTMLAtomicInsightSmartSnippetFeedbackModalElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLAtomicInsightSmartSnippetFeedbackModalElement: {
         prototype: HTMLAtomicInsightSmartSnippetFeedbackModalElement;
@@ -2930,7 +3018,18 @@ declare global {
         prototype: HTMLAtomicInsightTimeframeFacetElement;
         new (): HTMLAtomicInsightTimeframeFacetElement;
     };
+    interface HTMLAtomicIpxBodyElementEventMap {
+        "animationEnded": never;
+    }
     interface HTMLAtomicIpxBodyElement extends Components.AtomicIpxBody, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicIpxBodyElementEventMap>(type: K, listener: (this: HTMLAtomicIpxBodyElement, ev: AtomicIpxBodyCustomEvent<HTMLAtomicIpxBodyElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicIpxBodyElementEventMap>(type: K, listener: (this: HTMLAtomicIpxBodyElement, ev: AtomicIpxBodyCustomEvent<HTMLAtomicIpxBodyElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLAtomicIpxBodyElement: {
         prototype: HTMLAtomicIpxBodyElement;
@@ -2942,13 +3041,35 @@ declare global {
         prototype: HTMLAtomicIpxButtonElement;
         new (): HTMLAtomicIpxButtonElement;
     };
+    interface HTMLAtomicIpxEmbeddedElementEventMap {
+        "animationEnded": never;
+    }
     interface HTMLAtomicIpxEmbeddedElement extends Components.AtomicIpxEmbedded, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicIpxEmbeddedElementEventMap>(type: K, listener: (this: HTMLAtomicIpxEmbeddedElement, ev: AtomicIpxEmbeddedCustomEvent<HTMLAtomicIpxEmbeddedElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicIpxEmbeddedElementEventMap>(type: K, listener: (this: HTMLAtomicIpxEmbeddedElement, ev: AtomicIpxEmbeddedCustomEvent<HTMLAtomicIpxEmbeddedElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLAtomicIpxEmbeddedElement: {
         prototype: HTMLAtomicIpxEmbeddedElement;
         new (): HTMLAtomicIpxEmbeddedElement;
     };
+    interface HTMLAtomicIpxModalElementEventMap {
+        "animationEnded": never;
+    }
     interface HTMLAtomicIpxModalElement extends Components.AtomicIpxModal, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicIpxModalElementEventMap>(type: K, listener: (this: HTMLAtomicIpxModalElement, ev: AtomicIpxModalCustomEvent<HTMLAtomicIpxModalElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicIpxModalElementEventMap>(type: K, listener: (this: HTMLAtomicIpxModalElement, ev: AtomicIpxModalCustomEvent<HTMLAtomicIpxModalElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLAtomicIpxModalElement: {
         prototype: HTMLAtomicIpxModalElement;
@@ -3005,10 +3126,21 @@ declare global {
         prototype: HTMLAtomicLoadMoreResultsElement;
         new (): HTMLAtomicLoadMoreResultsElement;
     };
+    interface HTMLAtomicModalElementEventMap {
+        "animationEnded": never;
+    }
     /**
      * When the modal is opened, the class `atomic-modal-opened` is added to the interfaceElement and the body, allowing further customization.
      */
     interface HTMLAtomicModalElement extends Components.AtomicModal, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicModalElementEventMap>(type: K, listener: (this: HTMLAtomicModalElement, ev: AtomicModalCustomEvent<HTMLAtomicModalElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicModalElementEventMap>(type: K, listener: (this: HTMLAtomicModalElement, ev: AtomicModalCustomEvent<HTMLAtomicModalElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLAtomicModalElement: {
         prototype: HTMLAtomicModalElement;
@@ -3051,10 +3183,21 @@ declare global {
         prototype: HTMLAtomicNumericRangeElement;
         new (): HTMLAtomicNumericRangeElement;
     };
+    interface HTMLAtomicPagerElementEventMap {
+        "atomic/scrollToTop": any;
+    }
     /**
      * The `atomic-pager` provides buttons that allow the end user to navigate through the different result pages.
      */
     interface HTMLAtomicPagerElement extends Components.AtomicPager, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicPagerElementEventMap>(type: K, listener: (this: HTMLAtomicPagerElement, ev: AtomicPagerCustomEvent<HTMLAtomicPagerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicPagerElementEventMap>(type: K, listener: (this: HTMLAtomicPagerElement, ev: AtomicPagerCustomEvent<HTMLAtomicPagerElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLAtomicPagerElement: {
         prototype: HTMLAtomicPagerElement;
@@ -3099,7 +3242,19 @@ declare global {
         prototype: HTMLAtomicQuickviewElement;
         new (): HTMLAtomicQuickviewElement;
     };
+    interface HTMLAtomicQuickviewModalElementEventMap {
+        "atomic/quickview/next": any;
+        "atomic/quickview/previous": any;
+    }
     interface HTMLAtomicQuickviewModalElement extends Components.AtomicQuickviewModal, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicQuickviewModalElementEventMap>(type: K, listener: (this: HTMLAtomicQuickviewModalElement, ev: AtomicQuickviewModalCustomEvent<HTMLAtomicQuickviewModalElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicQuickviewModalElementEventMap>(type: K, listener: (this: HTMLAtomicQuickviewModalElement, ev: AtomicQuickviewModalCustomEvent<HTMLAtomicQuickviewModalElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLAtomicQuickviewModalElement: {
         prototype: HTMLAtomicQuickviewModalElement;
@@ -3195,10 +3350,21 @@ declare global {
         prototype: HTMLAtomicRefineToggleElement;
         new (): HTMLAtomicRefineToggleElement;
     };
+    interface HTMLAtomicRelevanceInspectorElementEventMap {
+        "atomic/relevanceInspector/close": any;
+    }
     /**
      * The `atomic-relevance-inspector` component is used internally to offer insight on search page relevance, as well as information to help troubleshoot issues during development.
      */
     interface HTMLAtomicRelevanceInspectorElement extends Components.AtomicRelevanceInspector, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicRelevanceInspectorElementEventMap>(type: K, listener: (this: HTMLAtomicRelevanceInspectorElement, ev: AtomicRelevanceInspectorCustomEvent<HTMLAtomicRelevanceInspectorElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicRelevanceInspectorElementEventMap>(type: K, listener: (this: HTMLAtomicRelevanceInspectorElement, ev: AtomicRelevanceInspectorCustomEvent<HTMLAtomicRelevanceInspectorElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLAtomicRelevanceInspectorElement: {
         prototype: HTMLAtomicRelevanceInspectorElement;
@@ -3567,19 +3733,41 @@ declare global {
         prototype: HTMLAtomicResultTimespanElement;
         new (): HTMLAtomicResultTimespanElement;
     };
+    interface HTMLAtomicResultsPerPageElementEventMap {
+        "atomic/scrollToTop": any;
+    }
     /**
      * The `atomic-results-per-page` component determines how many results to display per page.
      */
     interface HTMLAtomicResultsPerPageElement extends Components.AtomicResultsPerPage, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicResultsPerPageElementEventMap>(type: K, listener: (this: HTMLAtomicResultsPerPageElement, ev: AtomicResultsPerPageCustomEvent<HTMLAtomicResultsPerPageElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicResultsPerPageElementEventMap>(type: K, listener: (this: HTMLAtomicResultsPerPageElement, ev: AtomicResultsPerPageCustomEvent<HTMLAtomicResultsPerPageElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLAtomicResultsPerPageElement: {
         prototype: HTMLAtomicResultsPerPageElement;
         new (): HTMLAtomicResultsPerPageElement;
     };
+    interface HTMLAtomicSearchBoxElementEventMap {
+        "redirect": RedirectionPayload;
+    }
     /**
      * The `atomic-search-box` component creates a search box with built-in support for suggestions.
      */
     interface HTMLAtomicSearchBoxElement extends Components.AtomicSearchBox, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicSearchBoxElementEventMap>(type: K, listener: (this: HTMLAtomicSearchBoxElement, ev: AtomicSearchBoxCustomEvent<HTMLAtomicSearchBoxElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicSearchBoxElementEventMap>(type: K, listener: (this: HTMLAtomicSearchBoxElement, ev: AtomicSearchBoxCustomEvent<HTMLAtomicSearchBoxElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLAtomicSearchBoxElement: {
         prototype: HTMLAtomicSearchBoxElement;
@@ -3670,7 +3858,21 @@ declare global {
         prototype: HTMLAtomicSmartSnippetElement;
         new (): HTMLAtomicSmartSnippetElement;
     };
+    interface HTMLAtomicSmartSnippetAnswerElementEventMap {
+        "answerSizeUpdated": {height: number};
+        "selectInlineLink": InlineLink;
+        "beginDelayedSelectInlineLink": InlineLink;
+        "cancelPendingSelectInlineLink": InlineLink;
+    }
     interface HTMLAtomicSmartSnippetAnswerElement extends Components.AtomicSmartSnippetAnswer, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicSmartSnippetAnswerElementEventMap>(type: K, listener: (this: HTMLAtomicSmartSnippetAnswerElement, ev: AtomicSmartSnippetAnswerCustomEvent<HTMLAtomicSmartSnippetAnswerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicSmartSnippetAnswerElementEventMap>(type: K, listener: (this: HTMLAtomicSmartSnippetAnswerElement, ev: AtomicSmartSnippetAnswerCustomEvent<HTMLAtomicSmartSnippetAnswerElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLAtomicSmartSnippetAnswerElement: {
         prototype: HTMLAtomicSmartSnippetAnswerElement;
@@ -3682,23 +3884,62 @@ declare global {
         prototype: HTMLAtomicSmartSnippetCollapseWrapperElement;
         new (): HTMLAtomicSmartSnippetCollapseWrapperElement;
     };
+    interface HTMLAtomicSmartSnippetExpandableAnswerElementEventMap {
+        "expand": any;
+        "collapse": any;
+        "selectInlineLink": InlineLink;
+        "beginDelayedSelectInlineLink": InlineLink;
+        "cancelPendingSelectInlineLink": InlineLink;
+    }
     interface HTMLAtomicSmartSnippetExpandableAnswerElement extends Components.AtomicSmartSnippetExpandableAnswer, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicSmartSnippetExpandableAnswerElementEventMap>(type: K, listener: (this: HTMLAtomicSmartSnippetExpandableAnswerElement, ev: AtomicSmartSnippetExpandableAnswerCustomEvent<HTMLAtomicSmartSnippetExpandableAnswerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicSmartSnippetExpandableAnswerElementEventMap>(type: K, listener: (this: HTMLAtomicSmartSnippetExpandableAnswerElement, ev: AtomicSmartSnippetExpandableAnswerCustomEvent<HTMLAtomicSmartSnippetExpandableAnswerElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLAtomicSmartSnippetExpandableAnswerElement: {
         prototype: HTMLAtomicSmartSnippetExpandableAnswerElement;
         new (): HTMLAtomicSmartSnippetExpandableAnswerElement;
     };
+    interface HTMLAtomicSmartSnippetFeedbackModalElementEventMap {
+        "feedbackSent": any;
+    }
     /**
      * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
      * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
      */
     interface HTMLAtomicSmartSnippetFeedbackModalElement extends Components.AtomicSmartSnippetFeedbackModal, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicSmartSnippetFeedbackModalElementEventMap>(type: K, listener: (this: HTMLAtomicSmartSnippetFeedbackModalElement, ev: AtomicSmartSnippetFeedbackModalCustomEvent<HTMLAtomicSmartSnippetFeedbackModalElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicSmartSnippetFeedbackModalElementEventMap>(type: K, listener: (this: HTMLAtomicSmartSnippetFeedbackModalElement, ev: AtomicSmartSnippetFeedbackModalCustomEvent<HTMLAtomicSmartSnippetFeedbackModalElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLAtomicSmartSnippetFeedbackModalElement: {
         prototype: HTMLAtomicSmartSnippetFeedbackModalElement;
         new (): HTMLAtomicSmartSnippetFeedbackModalElement;
     };
+    interface HTMLAtomicSmartSnippetSourceElementEventMap {
+        "selectSource": any;
+        "beginDelayedSelectSource": any;
+        "cancelPendingSelectSource": any;
+    }
     interface HTMLAtomicSmartSnippetSourceElement extends Components.AtomicSmartSnippetSource, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicSmartSnippetSourceElementEventMap>(type: K, listener: (this: HTMLAtomicSmartSnippetSourceElement, ev: AtomicSmartSnippetSourceCustomEvent<HTMLAtomicSmartSnippetSourceElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicSmartSnippetSourceElementEventMap>(type: K, listener: (this: HTMLAtomicSmartSnippetSourceElement, ev: AtomicSmartSnippetSourceCustomEvent<HTMLAtomicSmartSnippetSourceElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLAtomicSmartSnippetSourceElement: {
         prototype: HTMLAtomicSmartSnippetSourceElement;
@@ -3942,11 +4183,11 @@ declare namespace LocalJSX {
     }
     /**
      * An automatic facet is a special type of facet generated by the automatic facets feature.
-     * Unlike traditional facets that need to be explicitly defined and requested in the query, automatic facets are dynamically generated by the index
-     * in response to the query.
-     * It's important to note that this component is not typically used on its own.
-     * It is internally used by the `atomic-automatic-facet-generator` component to automatically render updated facets.
-     * To read more about the automatic facet generator feature, see: https://docs.coveo.com/en/n9sd0159/
+     * Unlike regular facets, which need to be explicitly defined and requested in the query,
+     * automatic facets are dynamically generated by the index in response to the query.
+     * **Note:** This component should never be used on its own. It is used internally by the `atomic-automatic-facet-generator`
+     * component to automatically render updated facets. However, you can use the shadow parts to style the automatically generated facets.
+     * To learn more about the automatic facet generator feature, see: [About the Facet Generator](https://docs.coveo.com/en/n9sd0159/).
      */
     interface AtomicAutomaticFacet {
         "facet": AutomaticFacet;
@@ -3957,19 +4198,18 @@ declare namespace LocalJSX {
     }
     /**
      * The `atomic-automatic-facet-generator` is a component that renders the facets from
-     * the automatic facets feature.
-     * Unlike traditional facets that need to be explicitly defined and requested in the query, automatic facets are dynamically generated by the index
+     * the automatic facets feature. Unlike regular facets, which need to be explicitly defined
+     * and requested in the query, automatic facets are dynamically generated by the index
      * in response to the search query.
-     * It dynamically creates multiple `atomic-automatic-facet`
-     * components based on the desiredCount prop.
-     * To read more about the automatic facet generator feature, see: https://docs.coveo.com/en/n9sd0159/
+     * **Note:** This component renders one or more [automatic facets](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-automatic-facet/) based on the `desiredCount` property.
+     * To learn more about the automatic facet generator feature, see: [About the Facet Generator](https://docs.coveo.com/en/n9sd0159/).
      */
     interface AtomicAutomaticFacetGenerator {
         /**
           * The desired count of automatic facets.  Minimum: `1` Maximum: `10`
           * @defaultValue `5`
          */
-        "desiredCount": number;
+        "desiredCount"?: number;
         /**
           * The desired number of automatically generated facet values.  Minimum: `1`
           * @defaultValue `8`
@@ -4102,6 +4342,10 @@ declare namespace LocalJSX {
          */
         "numberOfValues"?: number;
         /**
+          * Specifies how a result must match the selected facet values. Allowed values: - `atLeastOneValue`: A result will match if at least one of the corresponding facet values is selected. - `allValues`: A result will match if all corresponding facet values are selected.
+         */
+        "resultsMustMatch"?: FacetResultsMustMatch;
+        /**
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */
         "sortCriteria"?: FacetSortCriterion;
@@ -4188,6 +4432,10 @@ declare namespace LocalJSX {
           * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
          */
         "numberOfValues"?: number;
+        /**
+          * Specifies how a result must match the selected facet values. Allowed values: - `atLeastOneValue`: A result will match if at least one of the corresponding facet values is selected. - `allValues`: A result will match if all corresponding facet values are selected.
+         */
+        "resultsMustMatch"?: FacetResultsMustMatch;
         /**
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', and 'automatic'.
          */
@@ -4355,6 +4603,10 @@ declare namespace LocalJSX {
     interface AtomicFrequentlyBoughtTogether {
     }
     interface AtomicGeneratedAnswer {
+        /**
+          * The answer style to apply when the component first loads. Options:   - `default`: Generates the answer without additional formatting instructions.   - `bullet`: Requests the answer to be generated in bullet-points.   - `step`: Requests the answer to be generated in step-by-step instructions.   - `concise`: Requests the answer to be generated as concisely as possible.
+         */
+        "answerStyle"?: GeneratedAnswerStyle;
     }
     /**
      * The `atomic-html` component renders the HTML value of a string.
@@ -4427,6 +4679,10 @@ declare namespace LocalJSX {
          */
         "numberOfValues"?: number;
         /**
+          * Specifies how a result must match the selected facet values. Allowed values: - `atLeastOneValue`: A result will match if at least one of the corresponding facet values is selected. - `allValues`: A result will match if all corresponding facet values are selected.
+         */
+        "resultsMustMatch"?: FacetResultsMustMatch;
+        /**
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */
         "sortCriteria"?: InsightFacetSortCriterion;
@@ -4492,6 +4748,10 @@ declare namespace LocalJSX {
           * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath"?: string;
+        /**
+          * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
+         */
+        "localizationCompatibilityVersion"?: i18nCompatibilityVersion;
         /**
           * The severity level of the messages to log in the console.
          */
@@ -5203,6 +5463,10 @@ declare namespace LocalJSX {
          */
         "languageAssetsPath"?: string;
         /**
+          * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
+         */
+        "localizationCompatibilityVersion"?: i18nCompatibilityVersion1;
+        /**
           * The severity level of the messages to log in the console.
          */
         "logLevel"?: RecsLogLevel;
@@ -5850,7 +6114,7 @@ declare namespace LocalJSX {
          */
         "suggestionTimeout"?: number;
         /**
-          * Whether to render the search box using a [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea) element. The resulting component will expand to support multi-line queries. When customizing the dimensions of the textarea element using the `"textarea"` CSS part, it is important to also apply the styling to its container's ::after pseudo-element as well as the `"textarea-spacer"` part. The buttons within the search box are likely to need adjusting as well.  Example: ```css <style>   atomic-search-box::part(textarea),   atomic-search-box::part(textarea-expander)::after,   atomic-search-box::part(textarea-spacer) {     font-size: x-large;   }    atomic-search-box::part(submit-button-wrapper),   atomic-search-box::part(clear-button-wrapper) {     padding-top: 0.75rem;   } </style> ```
+          * Whether to render the search box using a [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea) element. The resulting component will expand to support multi-line queries. When customizing the dimensions of the textarea element using the `"textarea"` CSS part, it is important to also apply the styling to its container's ::after pseudo-element as well as the `"textarea-spacer"` part. The buttons within the search box are likely to need adjusting as well.  Example: ```css <style>   atomic-search-box::part(textarea),   atomic-search-box::part(textarea-expander)::after,   atomic-search-box::part(textarea-spacer) {     font-size: x-large;   }    atomic-search-box::part(submit-button-wrapper),   atomic-search-box::part(clear-button-wrapper) {     padding-top: 0.75rem;   } </style> ```  NB: The textarea functionality will be enforced on the next major version of Atomic (3.0.0)
          */
         "textarea"?: boolean;
     }
@@ -5946,6 +6210,10 @@ declare namespace LocalJSX {
           * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath"?: string;
+        /**
+          * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
+         */
+        "localizationCompatibilityVersion"?: i18nCompatibilityVersion1;
         /**
           * The severity level of the messages to log in the console.
          */
@@ -6406,21 +6674,20 @@ declare module "@stencil/core" {
             "atomic-aria-live": LocalJSX.AtomicAriaLive & JSXBase.HTMLAttributes<HTMLAtomicAriaLiveElement>;
             /**
              * An automatic facet is a special type of facet generated by the automatic facets feature.
-             * Unlike traditional facets that need to be explicitly defined and requested in the query, automatic facets are dynamically generated by the index
-             * in response to the query.
-             * It's important to note that this component is not typically used on its own.
-             * It is internally used by the `atomic-automatic-facet-generator` component to automatically render updated facets.
-             * To read more about the automatic facet generator feature, see: https://docs.coveo.com/en/n9sd0159/
+             * Unlike regular facets, which need to be explicitly defined and requested in the query,
+             * automatic facets are dynamically generated by the index in response to the query.
+             * **Note:** This component should never be used on its own. It is used internally by the `atomic-automatic-facet-generator`
+             * component to automatically render updated facets. However, you can use the shadow parts to style the automatically generated facets.
+             * To learn more about the automatic facet generator feature, see: [About the Facet Generator](https://docs.coveo.com/en/n9sd0159/).
              */
             "atomic-automatic-facet": LocalJSX.AtomicAutomaticFacet & JSXBase.HTMLAttributes<HTMLAtomicAutomaticFacetElement>;
             /**
              * The `atomic-automatic-facet-generator` is a component that renders the facets from
-             * the automatic facets feature.
-             * Unlike traditional facets that need to be explicitly defined and requested in the query, automatic facets are dynamically generated by the index
+             * the automatic facets feature. Unlike regular facets, which need to be explicitly defined
+             * and requested in the query, automatic facets are dynamically generated by the index
              * in response to the search query.
-             * It dynamically creates multiple `atomic-automatic-facet`
-             * components based on the desiredCount prop.
-             * To read more about the automatic facet generator feature, see: https://docs.coveo.com/en/n9sd0159/
+             * **Note:** This component renders one or more [automatic facets](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-automatic-facet/) based on the `desiredCount` property.
+             * To learn more about the automatic facet generator feature, see: [About the Facet Generator](https://docs.coveo.com/en/n9sd0159/).
              */
             "atomic-automatic-facet-generator": LocalJSX.AtomicAutomaticFacetGenerator & JSXBase.HTMLAttributes<HTMLAtomicAutomaticFacetGeneratorElement>;
             /**

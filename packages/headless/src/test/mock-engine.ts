@@ -23,6 +23,7 @@ import {ProductListingEngine} from '../app/product-listing-engine/product-listin
 import {ProductRecommendationEngine} from '../app/product-recommendation-engine/product-recommendation-engine';
 import {RecommendationEngine} from '../app/recommendation-engine/recommendation-engine';
 import {SearchEngine} from '../app/search-engine/search-engine';
+import {SearchCompletedAction} from '../app/search-engine/search-engine.ssr';
 import {SearchThunkExtraArguments} from '../app/search-thunk-extra-arguments';
 import {CaseAssistEngine} from '../case-assist.index';
 import {CaseAssistAppState} from '../state/case-assist-app-state';
@@ -71,6 +72,24 @@ interface MockEngine {
 }
 
 type DispatchExts = ThunkDispatch<AppState, void, AnyAction>;
+
+export interface MockSSRSearchEngine extends MockSearchEngine {
+  waitForSearchCompletedAction(): Promise<SearchCompletedAction>;
+}
+
+/**
+ * For internal use only.
+ *
+ * Returns a non-functional `SSRSearchEngine`.
+ * To be used only for unit testing SSR controllers, not for functional tests.
+ */
+export function buildMockSSRSearchEngine(): MockSSRSearchEngine {
+  const engine = buildMockSearchAppEngine();
+  return {
+    ...engine,
+    waitForSearchCompletedAction: jest.fn(),
+  };
+}
 
 export interface MockSearchEngine
   extends SearchEngine<SearchAppState>,
