@@ -50,7 +50,7 @@ export interface ResultListProps {
    * The action creator to build the `fetchMoreResults` action.
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  fetchMoreResultsActionCreator?: () => AsyncThunkAction<unknown, void, any>;
+  fetchMoreResultsActionCreator: () => AsyncThunkAction<unknown, void, any>;
 }
 
 /**
