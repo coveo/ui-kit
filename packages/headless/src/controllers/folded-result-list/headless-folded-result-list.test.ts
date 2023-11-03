@@ -28,7 +28,7 @@ describe('folded result list', () => {
     initFoldedResultList();
   });
 
-  it('#loadCollection dispatches the search #loadCollection action', () => {
+  it('#loadCollection dispatches the folding #loadCollection action', () => {
     foldedResultList.loadCollection({
       children: [],
       isLoadingMoreResults: false,
