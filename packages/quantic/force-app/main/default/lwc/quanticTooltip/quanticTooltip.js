@@ -13,6 +13,7 @@ export default class QuanticTooltip extends LightningElement {
   /**
    * @api
    * @type {string}
+   * @deprecated
    * Text value to be shown in the tooltip.
    */
   @api value;
