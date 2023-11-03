@@ -12,7 +12,7 @@ import {
   buildFoldedResultList,
 } from './headless-folded-result-list';
 
-describe('FoldedResultList', () => {
+describe('folded result list', () => {
   let state: SearchAppState;
   let engine: MockSearchEngine;
   let foldedResultList: FoldedResultList;

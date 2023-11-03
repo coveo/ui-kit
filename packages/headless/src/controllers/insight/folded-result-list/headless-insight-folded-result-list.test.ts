@@ -12,7 +12,7 @@ import {
   buildFoldedResultList,
 } from './headless-insight-folded-result-list';
 
-describe('InsightFoldedResultList', () => {
+describe('insight folded result list', () => {
   let state: InsightAppState;
   let engine: MockInsightEngine;
   let foldedResultList: FoldedResultList;
