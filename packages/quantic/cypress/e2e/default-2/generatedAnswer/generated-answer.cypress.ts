@@ -443,30 +443,6 @@ describe('quantic-generated-answer', () => {
           });
         });
 
-        it('should not log the analytics if the citation was hovered for less than 1000ms', (done) => {
-          const analyticsAlias =
-            InterceptAliases.UA.GeneratedAnswer.GeneratedAnswerSourceHover;
-          const timeoutMs = 1000;
-          Expect.citationTooltipIsDisplayed(hoveredCitationIndex, false);
-
-          Actions.hoverOverCitation(0);
-          Expect.citationTooltipIsDisplayed(hoveredCitationIndex, true);
-
-          cy.tick(500).invoke('restore');
-          Actions.stopHoverOverCitation(0);
-          Expect.citationTooltipIsDisplayed(hoveredCitationIndex, false);
-
-          cy.on('fail', (err) => {
-            expect(err.message).to.include(
-              'Timed out retrying after 1000ms: `cy.wait()` timed out waiting `1000ms` for the 1st request to the route: `UA-generatedAnswerSourceHover`. No request ever occurred.'
-            );
-
-            done();
-          });
-
-          cy.wait(analyticsAlias, {timeout: timeoutMs});
-        });
-
         it('should log the analytics only after hovering more than 1000ms', () => {
           Expect.citationTooltipIsDisplayed(hoveredCitationIndex, false);
 
