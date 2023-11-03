@@ -100,7 +100,7 @@ export interface ResultListState extends SearchStatusState {
  */
 export function buildCoreResultList(
   engine: CoreEngine,
-  props?: ResultListProps
+  props: ResultListProps
 ): ResultList {
   if (!loadResultListReducers(engine)) {
     throw loadReducerError;
@@ -114,7 +114,7 @@ export function buildCoreResultList(
   const options = validateOptions(
     engine,
     optionsSchema,
-    props?.options,
+    props.options,
     'buildCoreResultList'
   );
 
@@ -161,11 +161,9 @@ export function buildCoreResultList(
     }
 
     errorLogged = false;
-    if (props?.fetchMoreResultsActionCreator) {
-      dispatch(props?.fetchMoreResultsActionCreator()).then(
-        () => (lastFetchCompleted = Date.now())
-      );
-    }
+    dispatch(props.fetchMoreResultsActionCreator()).then(
+      () => (lastFetchCompleted = Date.now())
+    );
   };
 
   return {
