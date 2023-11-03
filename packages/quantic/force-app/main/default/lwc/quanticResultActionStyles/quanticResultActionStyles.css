@@ -1,28 +1,7 @@
-.slds-nubbin_bottom-left:before,
-.slds-nubbin_bottom-left:after {
-  left: 50%;
-}
-
-.slds-popover_tooltip {
-  width: max-content;
-}
-
-.result-action_tooltip {
-  position: absolute;
-  top: -3rem;
-  left: 50%;
-  transform: translate(-50%, 0);
-}
-
 .result-action_white-container {
   background-color: white;
   display: inline-block;
   border-radius: var(--lwc-borderRadiusMedium, 0.25rem);
-}
-
-.result-action_container:hover > .result-action_tooltip {
-  visibility: visible;
-  opacity: 1;
 }
 
 .result-action_button {
