@@ -103,16 +103,26 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       this.writeStoredData(this.data);
     }
 
-    if (this.generatedAnswerState.isVisible) {
-      this.ariaMessage =
-        this.generatedAnswerState.isLoading ||
-        this.generatedAnswerState.isStreaming
-          ? 'to do: generating answer'
-          : 'to do: answer generated';
-    } else {
-      this.ariaMessage = 'to do: answer hidden';
-    }
+    this.ariaMessage = this.getGeneratedAnswerStatus();
   };
+
+  private getGeneratedAnswerStatus() {
+    const isVisible = this.generatedAnswerState.isVisible;
+    const isGenerating =
+      this.generatedAnswerState.isLoading ||
+      this.generatedAnswerState.isStreaming;
+    const hasAnswer = !!this.generatedAnswerState.answer;
+
+    if (!isVisible) {
+      return this.bindings.i18n.t('generated-answer-hidden');
+    }
+
+    if (isGenerating) {
+      return this.bindings.i18n.t('generating-answer');
+    }
+
+    return hasAnswer ? this.bindings.i18n.t('answer-generated') : '';
+  }
 
   private readStoredData(): GeneratedAnswerData {
     return this.storage.getParsedJSON<GeneratedAnswerData>(
