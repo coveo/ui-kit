@@ -50,7 +50,7 @@ export interface ResultListProps {
    * The action creator to build the `fetchMoreResults` action.
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  fetchMoreResultsActionCreator: () => AsyncThunkAction<unknown, void, any>;
+  fetchMoreResultsActionCreator?: () => AsyncThunkAction<unknown, void, any>;
 }
 
 /**
@@ -100,7 +100,7 @@ export interface ResultListState extends SearchStatusState {
  */
 export function buildCoreResultList(
   engine: CoreEngine,
-  props: ResultListProps
+  props?: ResultListProps
 ): ResultList {
   if (!loadResultListReducers(engine)) {
     throw loadReducerError;
@@ -114,7 +114,7 @@ export function buildCoreResultList(
   const options = validateOptions(
     engine,
     optionsSchema,
-    props.options,
+    props?.options,
     'buildCoreResultList'
   );
 
@@ -161,9 +161,11 @@ export function buildCoreResultList(
     }
 
     errorLogged = false;
-    dispatch(props.fetchMoreResultsActionCreator()).then(
-      () => (lastFetchCompleted = Date.now())
-    );
+    if (props?.fetchMoreResultsActionCreator) {
+      dispatch(props?.fetchMoreResultsActionCreator()).then(
+        () => (lastFetchCompleted = Date.now())
+      );
+    }
   };
 
   return {

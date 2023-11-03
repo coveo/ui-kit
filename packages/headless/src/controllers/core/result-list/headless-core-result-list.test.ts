@@ -47,7 +47,6 @@ describe('CoreResultList', () => {
     expect(
       buildCoreResultList(engine, {
         options: {fieldsToInclude: ['test']},
-        fetchMoreResultsActionCreator: fetchMoreResults,
       })
     ).toBeTruthy();
     expect(engine.actions).toContainEqual(registerFieldsToInclude(['test']));
@@ -57,7 +56,6 @@ describe('CoreResultList', () => {
     expect(() =>
       buildCoreResultList(engine, {
         options: {fieldsToInclude: [1 as unknown as string]},
-        fetchMoreResultsActionCreator: fetchMoreResults,
       })
     ).toThrowError(SchemaValidationError);
   });
