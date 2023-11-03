@@ -130,6 +130,21 @@ export default class QuanticResultAction extends LightningElement {
     this.dispatchEvent(resultActionEvent);
   }
 
+  showTooltip() {
+    this.tooltipComponent?.showTooltip();
+  }
+
+  hideTooltip() {
+    this.tooltipComponent?.hideTooltip();
+  }
+
+  /**
+   * @returns {Object}
+   */
+  get tooltipComponent() {
+    return this.template.querySelector('c-quantic-tooltip');
+  }
+
   /**
    * Returns the label to be displayed in the tooltip.
    */
