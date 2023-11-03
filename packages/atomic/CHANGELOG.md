@@ -1,3 +1,19 @@
+## 2.48.3 (2023-11-02)
+
+### Bug Fixes
+
+- **atomic:** Hide scroll bar from search component ([#3302](https://github.com/coveo/ui-kit/issues/3302)) ([fa58a98](https://github.com/coveo/ui-kit/commits/fa58a98feccb96f18258a2beaa39f125e66a6960))
+- **deps:** update all dependencies j:kit-282 ([#3347](https://github.com/coveo/ui-kit/issues/3347)) ([047b2a8](https://github.com/coveo/ui-kit/commits/047b2a8e8d82445c1fb800c5ac19428223cf4e56))
+
+### Features
+
+- **atomic:** add `resultsMustMatch` option to facet components ([#3169](https://github.com/coveo/ui-kit/issues/3169)) ([6a4581a](https://github.com/coveo/ui-kit/commits/6a4581aba955923d3e10c07fece3b7f28bf0074b))
+- **atomic:** add copy button for generated answer ([#3349](https://github.com/coveo/ui-kit/issues/3349)) ([87b5c6e](https://github.com/coveo/ui-kit/commits/87b5c6e9fc8c9c6de6757ea4433f5709db0c71fb))
+- **atomic:** add parts to customize quickview icon and button ([#3342](https://github.com/coveo/ui-kit/issues/3342)) ([0f9d6b8](https://github.com/coveo/ui-kit/commits/0f9d6b81c6679dd9e54dac09807279d89a609f6d))
+- **atomic:** generated answer citation details on hover ([#3340](https://github.com/coveo/ui-kit/issues/3340)) ([894129f](https://github.com/coveo/ui-kit/commits/894129fde1a9ef95655a44d5f46510265bf1dc11))
+- **atomic:** mark searchbox as input for deprecation in favour of textarea ([#3326](https://github.com/coveo/ui-kit/issues/3326)) ([410c235](https://github.com/coveo/ui-kit/commits/410c235b8db09ad398d68257bc4774c184a4d3f2))
+- double publish the NPM packages into GitHub packages for use by internal repositories also using the [@coveo](https://github.com/coveo) scope ([#3251](https://github.com/coveo/ui-kit/issues/3251)) ([4d413e6](https://github.com/coveo/ui-kit/commits/4d413e6bb27065b6667f4705db17b21d6112128b))
+
 # 2.47.0 (2023-10-25)
 
 ### Bug Fixes
