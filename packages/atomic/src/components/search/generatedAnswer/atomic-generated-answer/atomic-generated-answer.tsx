@@ -10,6 +10,7 @@ import {
   buildInteractiveCitation,
 } from '@coveo/headless';
 import {Component, h, State, Prop} from '@stencil/core';
+import {AriaLiveRegion} from '../../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
@@ -73,6 +74,9 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
    */
   @Prop() answerStyle: GeneratedAnswerStyle = 'default';
 
+  @AriaLiveRegion('generated-answer')
+  protected ariaMessage!: string;
+
   private storage: SafeStorage = new SafeStorage();
   private data?: GeneratedAnswerData;
 
@@ -97,6 +101,16 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
         isVisible: this.generatedAnswerState.isVisible,
       };
       this.writeStoredData(this.data);
+    }
+
+    if (this.generatedAnswerState.isVisible) {
+      this.ariaMessage =
+        this.generatedAnswerState.isLoading ||
+        this.generatedAnswerState.isStreaming
+          ? 'to do: generating answer'
+          : 'to do: answer generated';
+    } else {
+      this.ariaMessage = 'to do: answer hidden';
     }
   };
 
