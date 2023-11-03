@@ -1,19 +1,13 @@
 import {TestFixture} from '../fixtures/test-fixture';
-import {AnalyticsTracker} from '../utils/analyticsUtils';
 import {should} from './common-assertions';
 import {GeneratedAnswerSelectors} from './generated-answer-selectors';
 
-export function assertLogOpenGeneratedAnswerSource(log: boolean) {
-  it(`${should(log)} log a openGeneratedAnswerSource click event`, () => {
-    if (log) {
-      cy.expectCustomEvent('generatedAnswer', 'openGeneratedAnswerSource');
-    } else {
-      cy.wait(50);
-      cy.wrap(AnalyticsTracker)
-        .invoke('getLastCustomEvent')
-        .should('not.exist');
-    }
-  });
+export function assertLogOpenGeneratedAnswerSource() {
+  cy.expectCustomEvent('generatedAnswer', 'openGeneratedAnswerSource');
+}
+
+export function assertLogGeneratedAnswerSourceHover() {
+  cy.expectCustomEvent('generatedAnswer', 'generatedAnswerSourceHover');
 }
 
 export function assertAnswerVisibility(isVisible: boolean) {

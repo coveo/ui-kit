@@ -19,6 +19,8 @@ export const GeneratedAnswerSelectors = {
     GeneratedAnswerSelectors.citation().find('.citation-title'),
   citationIndex: () =>
     GeneratedAnswerSelectors.citation().find('.citation-index'),
+  citationCard: () =>
+    GeneratedAnswerSelectors.shadow().find('[part="citation-popover"]'),
   loader: () => GeneratedAnswerSelectors.shadow().find('.typing-indicator'),
   retryContainer: () =>
     GeneratedAnswerSelectors.shadow().find('[part="retry-container"]'),
