@@ -116,9 +116,10 @@ export const configurationReducer = createReducer(
         if (!isNullOrUndefined(action.payload.analyticsMode)) {
           state.analytics.analyticsMode = action.payload.analyticsMode;
         }
-        if (getMagicCookie()) {
+        const magicCookie = getMagicCookie();
+        if (magicCookie) {
           state.analytics.analyticsMode = 'next';
-          state.analytics.trackingId = getMagicCookie();
+          state.analytics.trackingId = magicCookie;
         }
         if (!isNullOrUndefined(action.payload.runtimeEnvironment)) {
           state.analytics.runtimeEnvironment =
