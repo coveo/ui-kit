@@ -62,6 +62,9 @@ export type {
   RecommendationInteractiveResultOptions,
   RecommendationInteractiveResultProps,
   InteractiveResult,
+  InteractiveResultCoreOptions,
+  InteractiveResultCoreProps,
+  InteractiveResultCore,
 } from './controllers/recommendation/result-list/headless-recommendation-interactive-result';
 export {buildInteractiveResult} from './controllers/recommendation/result-list/headless-recommendation-interactive-result';
 
