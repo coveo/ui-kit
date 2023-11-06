@@ -38,6 +38,7 @@ describe('insight folded result list', () => {
 
     expect(engine.findAsyncAction(loadCollection.pending)).toBeTruthy();
   });
+
   it('#fetchMoreResults dispatches the insight search #fetchMoreResults action', () => {
     foldedResultList.fetchMoreResults();
 
