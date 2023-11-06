@@ -19,6 +19,7 @@ import {
   EventDescription,
   AnalyticsClientSendEventHook,
 } from 'coveo.analytics';
+import {AnalyticsClient} from 'coveo.analytics/dist/definitions/client/analytics';
 import {SearchEventResponse} from 'coveo.analytics/dist/definitions/events';
 import {
   PartialDocumentInformation,
@@ -26,6 +27,7 @@ import {
 } from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
 import {Logger} from 'pino';
 import {
+  CaseAssistAnalyticsProvider,
   configureCaseAssistAnalytics,
   StateNeededByCaseAssistAnalytics,
 } from '../../api/analytics/case-assist-analytics';
@@ -68,12 +70,6 @@ import {ResultWithFolding} from '../folding/folding-slice';
 import {getAllIncludedResultsFrom} from '../folding/folding-utils';
 import {getPipelineInitialState} from '../pipeline/pipeline-state';
 
-export enum AnalyticsType {
-  Search,
-  Custom,
-  Click,
-}
-
 export interface PreparableAnalyticsActionOptions<
   StateNeeded extends ConfigurationSection,
 > {
@@ -83,101 +79,62 @@ export interface PreparableAnalyticsActionOptions<
   getState(): StateNeeded;
 }
 
-type WrappedAnalyticsType<T extends AnalyticsType = AnalyticsType> = {
-  analyticsType: T;
-};
-
 export type AnalyticsAsyncThunk<
-  EventType extends WrappedAnalyticsType | void,
   StateNeeded extends
     ConfigurationSection = StateNeededBySearchAnalyticsProvider,
-> = AsyncThunk<
-  EventType extends void ? void : EventType,
-  void,
-  AsyncThunkAnalyticsOptions<StateNeeded>
->;
+> = AsyncThunk<void, void, AsyncThunkAnalyticsOptions<StateNeeded>>;
 
 export interface PreparedAnalyticsAction<
-  EventType extends WrappedAnalyticsType | void,
   StateNeeded extends
     ConfigurationSection = StateNeededBySearchAnalyticsProvider,
 > {
   description?: EventDescription;
-  action: AnalyticsAsyncThunk<EventType, StateNeeded>;
+  action: AnalyticsAsyncThunk<StateNeeded>;
 }
 
 type PrepareAnalyticsFunction<
-  EventType extends WrappedAnalyticsType | void,
   StateNeeded extends
     ConfigurationSection = StateNeededBySearchAnalyticsProvider,
 > = (
   options: PreparableAnalyticsActionOptions<StateNeeded>
-) => Promise<PreparedAnalyticsAction<EventType, StateNeeded>>;
+) => Promise<PreparedAnalyticsAction<StateNeeded>>;
 
 export interface PreparableAnalyticsAction<
-  EventType extends WrappedAnalyticsType | void,
   StateNeeded extends
     ConfigurationSection = StateNeededBySearchAnalyticsProvider,
-> extends AnalyticsAsyncThunk<EventType, StateNeeded> {
-  prepare: PrepareAnalyticsFunction<EventType, StateNeeded>;
+> extends AnalyticsAsyncThunk<StateNeeded> {
+  prepare: PrepareAnalyticsFunction<StateNeeded>;
 }
 
-export type SearchAction = PreparableAnalyticsAction<
-  {analyticsType: AnalyticsType.Search},
-  StateNeededBySearchAnalyticsProvider
->;
+export type SearchAction =
+  PreparableAnalyticsAction<StateNeededBySearchAnalyticsProvider>;
 
-export type CustomAction = PreparableAnalyticsAction<
-  {analyticsType: AnalyticsType.Custom},
-  StateNeededBySearchAnalyticsProvider
->;
+export type CustomAction =
+  PreparableAnalyticsAction<StateNeededBySearchAnalyticsProvider>;
 
-export type ClickAction = PreparableAnalyticsAction<
-  {analyticsType: AnalyticsType.Click},
-  StateNeededBySearchAnalyticsProvider
->;
+export type ClickAction =
+  PreparableAnalyticsAction<StateNeededBySearchAnalyticsProvider>;
 
-export type InstantResultsSearchAction = PreparableAnalyticsAction<
-  {analyticsType: AnalyticsType.Search},
-  StateNeededByInstantResultsAnalyticsProvider
->;
+export type InstantResultsSearchAction =
+  PreparableAnalyticsAction<StateNeededByInstantResultsAnalyticsProvider>;
 
-export type InstantResultsClickAction = PreparableAnalyticsAction<
-  {analyticsType: AnalyticsType.Click},
-  StateNeededByInstantResultsAnalyticsProvider
->;
+export type InstantResultsClickAction =
+  PreparableAnalyticsAction<StateNeededByInstantResultsAnalyticsProvider>;
 
-export type InsightAction<T extends AnalyticsType = AnalyticsType.Search> =
-  PreparableAnalyticsAction<
-    {analyticsType: T},
-    StateNeededByInsightAnalyticsProvider
-  >;
+export type InsightAction =
+  PreparableAnalyticsAction<StateNeededByInsightAnalyticsProvider>;
 
-export type CaseAssistAction = PreparableAnalyticsAction<
-  void,
-  StateNeededByCaseAssistAnalytics
->;
+export type CaseAssistAction =
+  PreparableAnalyticsAction<StateNeededByCaseAssistAnalytics>;
 
-export type ProductRecommendationAction<
-  T extends AnalyticsType = AnalyticsType.Search,
-> = PreparableAnalyticsAction<
-  {analyticsType: T},
-  StateNeededByProductRecommendationsAnalyticsProvider
->;
+export type ProductRecommendationAction =
+  PreparableAnalyticsAction<StateNeededByProductRecommendationsAnalyticsProvider>;
 
-export type ProductListingAction<
-  T extends AnalyticsType = AnalyticsType.Search,
-> = PreparableAnalyticsAction<
-  {analyticsType: T},
-  StateNeededByProductListingAnalyticsProvider
->;
+export type ProductListingAction =
+  PreparableAnalyticsAction<StateNeededByProductListingAnalyticsProvider>;
 
-export type ProductListingV2Action<
-  T extends AnalyticsType = AnalyticsType.Search,
-> = PreparableAnalyticsAction<
-  {analyticsType: T},
-  StateNeededByCommerceAnalyticsProvider
->;
+export type ProductListingV2Action =
+  PreparableAnalyticsAction<StateNeededByCommerceAnalyticsProvider>;
 
 export interface AsyncThunkAnalyticsOptions<
   T extends StateNeededBySearchAnalyticsProvider,
@@ -198,7 +155,7 @@ function makeInstantlyCallable<T extends object>(action: T) {
 }
 
 function makePreparableAnalyticsAction<
-  EventType extends WrappedAnalyticsType | void,
+  EventType extends void,
   StateNeeded extends ConfigurationSection,
 >(
   prefix: string,
@@ -210,7 +167,7 @@ function makePreparableAnalyticsAction<
     ) => Promise<EventType>;
     description?: EventDescription;
   }>
-): PreparableAnalyticsAction<EventType, StateNeeded> {
+): PreparableAnalyticsAction<StateNeeded> {
   const createAnalyticsAction = (
     body: AsyncThunkPayloadCreator<
       EventType,
@@ -223,7 +180,7 @@ function makePreparableAnalyticsAction<
         EventType,
         void,
         AsyncThunkAnalyticsOptions<StateNeeded>
-      >(prefix, body) as unknown as AnalyticsAsyncThunk<EventType, StateNeeded>
+      >(prefix, body) as unknown as AnalyticsAsyncThunk<StateNeeded>
     );
 
   const rootAction = createAnalyticsAction(async (_, {getState, extra}) => {
@@ -238,7 +195,7 @@ function makePreparableAnalyticsAction<
     ).log({state: getState(), extra});
   });
 
-  const prepare: PrepareAnalyticsFunction<EventType, StateNeeded> = async ({
+  const prepare: PrepareAnalyticsFunction<StateNeeded> = async ({
     getState,
     analyticsClientMiddleware,
     preprocessRequest,
@@ -264,143 +221,239 @@ function makePreparableAnalyticsAction<
     prepare,
   });
 
-  return rootAction as PreparableAnalyticsAction<EventType, StateNeeded>;
+  return rootAction as PreparableAnalyticsAction<StateNeeded>;
 }
 
 export type AnalyticsActionOptions<
-  LegacyEventType extends AnalyticsType,
-  LegacyStateNeeded extends
-    StateNeededBySearchAnalyticsProvider = StateNeededBySearchAnalyticsProvider,
-  StateNeeded extends
-    StateNeededBySearchAnalyticsProvider = StateNeededBySearchAnalyticsProvider,
-  PayloadType extends RelayPayload = RelayPayload,
-> = LegacyAnalyticsOptions<LegacyEventType, LegacyStateNeeded> &
-  Partial<NextAnalyticsOptions<StateNeeded, PayloadType>>;
+  LegacyStateNeeded extends StateNeededBySearchAnalyticsProvider,
+  StateNeeded extends StateNeededBySearchAnalyticsProvider,
+  LegacyGetBuilderType,
+  LegacyProvider,
+  Client,
+  PayloadType extends RelayPayload,
+> = Exclude<
+  LegacyAnalyticsOptions<LegacyStateNeeded, Client, LegacyProvider>,
+  '__legacy__getBuilder'
+> &
+  Partial<NextAnalyticsOptions<StateNeeded, PayloadType>> & {
+    __legacy__getBuilder: LegacyGetBuilderType;
+  };
 
 export interface NextAnalyticsOptions<
-  StateNeeded extends
-    StateNeededBySearchAnalyticsProvider = StateNeededBySearchAnalyticsProvider,
-  PayloadType extends RelayPayload = RelayPayload,
+  StateNeeded extends InternalLegacyStateNeeded,
+  PayloadType extends RelayPayload,
 > {
   analyticsType: string;
   analyticsPayloadBuilder: (state: StateNeeded) => PayloadType;
 }
 export interface LegacyAnalyticsOptions<
-  EventType extends AnalyticsType,
-  StateNeeded extends
-    StateNeededBySearchAnalyticsProvider = StateNeededBySearchAnalyticsProvider,
+  StateNeeded extends InternalLegacyStateNeeded,
+  Client,
+  Provider,
 > {
   prefix: string;
-  __legacy__analyticsType: EventType;
   __legacy__getBuilder: (
-    client: CoveoSearchPageClient,
+    client: Client,
     state: StateNeeded
   ) => Promise<EventBuilder | null> | null;
-  __legacy__provider?: (
-    getState: () => StateNeeded
-  ) => SearchPageClientProvider;
+  __legacy__provider?: (getState: () => StateNeeded) => Provider;
 }
 
-export function makeAnalyticsAction<
-  LegacyEventType extends AnalyticsType,
-  LegacyStateNeeded extends
-    StateNeededBySearchAnalyticsProvider = StateNeededBySearchAnalyticsProvider,
-  ComputedLegacyAnalyticsOptions extends LegacyAnalyticsOptions<
-    LegacyEventType,
-    LegacyStateNeeded
-  > = LegacyAnalyticsOptions<LegacyEventType, LegacyStateNeeded>,
->(
-  prefix: string,
-  __legacy__analyticsType: ComputedLegacyAnalyticsOptions['__legacy__analyticsType'],
-  __legacy__getBuilder: ComputedLegacyAnalyticsOptions['__legacy__getBuilder'],
-  __legacy__provider?: ComputedLegacyAnalyticsOptions['__legacy__provider']
-): PreparableAnalyticsAction<
-  WrappedAnalyticsType<LegacyEventType>,
-  LegacyStateNeeded
->;
-export function makeAnalyticsAction<
-  LegacyEventType extends AnalyticsType,
-  LegacyStateNeeded extends
-    StateNeededBySearchAnalyticsProvider = StateNeededBySearchAnalyticsProvider,
-  StateNeeded extends
-    StateNeededBySearchAnalyticsProvider = StateNeededBySearchAnalyticsProvider,
-  PayloadType extends RelayPayload = RelayPayload,
->({
-  prefix,
-  __legacy__analyticsType,
-  __legacy__getBuilder,
-  __legacy__provider,
-  analyticsPayloadBuilder,
-  analyticsType,
-}: AnalyticsActionOptions<
-  LegacyEventType,
-  LegacyStateNeeded,
-  StateNeeded,
-  PayloadType
->): PreparableAnalyticsAction<
-  WrappedAnalyticsType<LegacyEventType>,
-  StateNeeded
->;
-export function makeAnalyticsAction<
-  LegacyEventType extends AnalyticsType,
-  LegacyStateNeeded extends
-    StateNeededBySearchAnalyticsProvider = StateNeededBySearchAnalyticsProvider,
-  ComputedLegacyAnalyticsOptions extends LegacyAnalyticsOptions<
-    LegacyEventType,
-    LegacyStateNeeded
-  > = LegacyAnalyticsOptions<LegacyEventType, LegacyStateNeeded>,
->(
-  ...params:
-    | [
-        ComputedLegacyAnalyticsOptions['prefix'],
-        ComputedLegacyAnalyticsOptions['__legacy__analyticsType'],
-        ComputedLegacyAnalyticsOptions['__legacy__getBuilder'],
-        ComputedLegacyAnalyticsOptions['__legacy__provider']?,
-      ]
-    | [AnalyticsActionOptions<LegacyEventType, LegacyStateNeeded>]
-): PreparableAnalyticsAction<
-  WrappedAnalyticsType<LegacyEventType>,
-  LegacyStateNeeded
-> {
-  return params.length === 1
-    ? internalLegacyMakeAnalyticsAction(params[0])
-    : internalLegacyMakeAnalyticsAction({
-        prefix: params[0],
-        __legacy__analyticsType: params[1],
-        __legacy__getBuilder: params[2],
-        __legacy__provider: params[3],
-      });
+interface ProviderClass<StateNeeded, LegacyProvider> {
+  new (param: () => StateNeeded): LegacyProvider;
 }
+
+const makeAnalyticsActionFactory = <
+  LegacyStateNeededByProvider extends InternalLegacyStateNeeded,
+  StateNeededByProvider extends InternalLegacyStateNeeded,
+  Client extends CommonClient,
+  LegacyProvider extends LegacyProviderCommon,
+  LegacyGetBuilderType = LegacyAnalyticsOptions<
+    LegacyStateNeededByProvider,
+    Client,
+    LegacyProvider
+  >['__legacy__getBuilder'],
+  Configurator extends AnalyticsConfiguratorFromStateNeeded<
+    LegacyStateNeededByProvider,
+    Client,
+    LegacyProvider
+  > = AnalyticsConfiguratorFromStateNeeded<
+    LegacyStateNeededByProvider,
+    Client,
+    LegacyProvider
+  >,
+>(
+  configurator: Configurator,
+  legacyGetBuilderConverter: (
+    original: LegacyGetBuilderType
+  ) => LegacyAnalyticsOptions<
+    LegacyStateNeededByProvider,
+    Client,
+    LegacyProvider
+  >['__legacy__getBuilder'],
+  providerClass: ProviderClass<LegacyStateNeededByProvider, LegacyProvider>
+) => {
+  function makeAnalyticsAction<
+    LegacyStateNeeded extends
+      LegacyStateNeededByProvider = LegacyStateNeededByProvider,
+    ComputedLegacyAnalyticsOptions extends LegacyAnalyticsOptions<
+      LegacyStateNeeded,
+      Client,
+      LegacyProvider
+    > = LegacyAnalyticsOptions<LegacyStateNeeded, Client, LegacyProvider>,
+  >(
+    prefix: string,
+    __legacy__getBuilder: LegacyGetBuilderType,
+    __legacy__provider?: ComputedLegacyAnalyticsOptions['__legacy__provider']
+  ): PreparableAnalyticsAction<LegacyStateNeeded>;
+  function makeAnalyticsAction<
+    LegacyStateNeeded extends
+      LegacyStateNeededByProvider = LegacyStateNeededByProvider,
+    StateNeeded extends StateNeededByProvider = StateNeededByProvider,
+    PayloadType extends RelayPayload = RelayPayload,
+  >({
+    prefix,
+    __legacy__getBuilder,
+    __legacy__provider,
+    analyticsPayloadBuilder,
+    analyticsType,
+  }: AnalyticsActionOptions<
+    LegacyStateNeeded,
+    StateNeeded,
+    LegacyGetBuilderType,
+    LegacyProvider,
+    Client,
+    PayloadType
+  >): PreparableAnalyticsAction<StateNeeded>;
+  function makeAnalyticsAction<
+    LegacyStateNeeded extends
+      LegacyStateNeededByProvider = LegacyStateNeededByProvider,
+    ComputedLegacyAnalyticsOptions extends LegacyAnalyticsOptions<
+      LegacyStateNeeded,
+      Client,
+      LegacyProvider
+    > = LegacyAnalyticsOptions<LegacyStateNeeded, Client, LegacyProvider>,
+    StateNeeded extends StateNeededByProvider = StateNeededByProvider,
+    PayloadType extends RelayPayload = RelayPayload,
+  >(
+    ...params:
+      | [
+          ComputedLegacyAnalyticsOptions['prefix'],
+          LegacyGetBuilderType,
+          ComputedLegacyAnalyticsOptions['__legacy__provider']?,
+        ]
+      | [
+          AnalyticsActionOptions<
+            LegacyStateNeeded,
+            StateNeeded,
+            LegacyGetBuilderType,
+            LegacyProvider,
+            Client,
+            PayloadType
+          >,
+        ]
+  ): PreparableAnalyticsAction<LegacyStateNeeded & StateNeeded> {
+    const options =
+      params.length === 1
+        ? {
+            ...params[0],
+            __legacy__getBuilder: legacyGetBuilderConverter(
+              params[0].__legacy__getBuilder
+            ),
+            analyticsConfigurator: configurator,
+            providerClass: providerClass,
+          }
+        : {
+            prefix: params[0],
+            __legacy__getBuilder: legacyGetBuilderConverter(params[1]),
+            __legacy__provider: params[2],
+            analyticsConfigurator: configurator,
+            providerClass: providerClass,
+          };
+    return internalMakeAnalyticsAction(options);
+  }
+  return makeAnalyticsAction;
+};
 
 const shouldSendLegacyEvent = (state: ConfigurationSection) =>
   state.configuration.analytics.analyticsMode === 'legacy';
 const shouldSendNextEvent = (state: ConfigurationSection) =>
   state.configuration.analytics.analyticsMode === 'next';
 
-const internalLegacyMakeAnalyticsAction = <
-  LegacyEventType extends AnalyticsType,
-  LegacyStateNeeded extends
-    StateNeededBySearchAnalyticsProvider = StateNeededBySearchAnalyticsProvider,
-  StateNeeded extends
-    StateNeededBySearchAnalyticsProvider = StateNeededBySearchAnalyticsProvider,
-  PayloadType extends RelayPayload = RelayPayload,
+type CommonClient = {coveoAnalyticsClient: AnalyticsClient};
+
+type AnalyticsConfiguratorFromStateNeeded<
+  StateNeeded extends InternalLegacyStateNeeded,
+  ReturnType extends CommonClient,
+  LegacyProvider,
+> = (
+  options: AnalyticsConfiguratorOptions<StateNeeded, LegacyProvider>
+) => ReturnType;
+interface AnalyticsConfiguratorOptions<
+  StateNeeded extends InternalLegacyStateNeeded,
+  LegacyProvider,
+> {
+  logger: Logger;
+  analyticsClientMiddleware?: AnalyticsClientSendEventHook;
+  preprocessRequest?: PreprocessRequest;
+  provider?: LegacyProvider;
+  getState(): StateNeeded;
+}
+
+type InternalMakeAnalyticsActionOptions<
+  LegacyStateNeeded extends InternalLegacyStateNeeded,
+  StateNeeded extends InternalLegacyStateNeeded,
+  PayloadType extends RelayPayload,
+  AnalyticsConfigurator extends AnalyticsConfiguratorFromStateNeeded<
+    LegacyStateNeeded,
+    Client,
+    LegacyProvider
+  >,
+  Client extends CommonClient,
+  LegacyProvider,
+> = LegacyAnalyticsOptions<LegacyStateNeeded, Client, LegacyProvider> &
+  Partial<NextAnalyticsOptions<StateNeeded, PayloadType>> & {
+    analyticsConfigurator: AnalyticsConfigurator;
+  } & {
+    providerClass: ProviderClass<LegacyStateNeeded, LegacyProvider>;
+  };
+
+type InternalLegacyStateNeeded =
+  | StateNeededBySearchAnalyticsProvider
+  | StateNeededByProductListingAnalyticsProvider
+  | StateNeededByCaseAssistAnalytics;
+
+interface LegacyProviderCommon {
+  getSearchUID: () => string;
+}
+
+const internalMakeAnalyticsAction = <
+  LegacyStateNeeded extends InternalLegacyStateNeeded,
+  StateNeeded extends InternalLegacyStateNeeded,
+  PayloadType extends RelayPayload,
+  Client extends CommonClient,
+  LegacyProvider extends LegacyProviderCommon,
 >({
   prefix,
-  __legacy__analyticsType,
   __legacy__getBuilder,
   __legacy__provider,
   analyticsPayloadBuilder,
   analyticsType,
-}: AnalyticsActionOptions<
-  LegacyEventType,
+  analyticsConfigurator,
+  providerClass,
+}: InternalMakeAnalyticsActionOptions<
   LegacyStateNeeded,
   StateNeeded,
-  PayloadType
->): PreparableAnalyticsAction<
-  WrappedAnalyticsType<LegacyEventType>,
-  LegacyStateNeeded & StateNeeded
-> => {
-  __legacy__provider ??= (getState) => new SearchAnalyticsProvider(getState);
+  PayloadType,
+  AnalyticsConfiguratorFromStateNeeded<
+    LegacyStateNeeded,
+    Client,
+    LegacyProvider
+  >,
+  Client,
+  LegacyProvider
+>): PreparableAnalyticsAction<LegacyStateNeeded & StateNeeded> => {
+  __legacy__provider ??= (getState) => new providerClass(getState);
   return makePreparableAnalyticsAction(
     prefix,
     async ({
@@ -415,18 +468,17 @@ const internalLegacyMakeAnalyticsAction = <
       const analyticsAction: {
         log: (
           options: AsyncThunkAnalyticsOptions<LegacyStateNeeded & StateNeeded>
-        ) => Promise<WrappedAnalyticsType<LegacyEventType>>;
+        ) => Promise<void>;
         description?: EventDescription;
       } = {
         log: async ({state}) => {
           for (const log of loggers) {
             await log(state);
           }
-          return {analyticsType: __legacy__analyticsType};
         },
       };
       const state = getState();
-      const client = configureLegacyAnalytics({
+      const client = analyticsConfigurator({
         getState,
         logger,
         analyticsClientMiddleware,
@@ -437,12 +489,12 @@ const internalLegacyMakeAnalyticsAction = <
       analyticsAction.description = builder?.description;
       loggers.push(async (state: LegacyStateNeeded & StateNeeded) => {
         if (shouldSendLegacyEvent(state)) {
-          await logLegacyEvent<LegacyStateNeeded>(
+          await logLegacyEvent<LegacyStateNeeded, LegacyProvider>(
             builder,
-            __legacy__provider,
+            __legacy__provider!,
             state,
             logger,
-            client
+            client.coveoAnalyticsClient
           );
         }
       });
@@ -463,110 +515,96 @@ const internalLegacyMakeAnalyticsAction = <
 };
 
 async function logLegacyEvent<
-  StateNeeded extends
-    StateNeededBySearchAnalyticsProvider = StateNeededBySearchAnalyticsProvider,
+  StateNeeded extends InternalLegacyStateNeeded,
+  Provider extends LegacyProviderCommon,
 >(
   builder: EventBuilder | null,
-  __legacy__provider:
-    | ((getState: () => StateNeeded) => SearchPageClientProvider)
-    | undefined,
+  __legacy__provider: (getState: () => StateNeeded) => Provider,
   state: StateNeeded,
   logger: Logger,
-  client: CoveoSearchPageClient
+  client: AnalyticsClient
 ) {
+  __legacy__provider(() => state);
   const response = await builder?.log({
     searchUID: __legacy__provider!(() => state).getSearchUID(),
   });
-  logger.info(
-    {client: client.coveoAnalyticsClient, response},
-    'Analytics response'
-  );
+  logger.info({client, response}, 'Analytics response');
 }
 
-export const makeNoopAnalyticsAction = <T extends AnalyticsType>(
-  analyticsType: T
-) => makeAnalyticsAction<T>('analytics/noop', analyticsType, () => null);
+type LogFunction<Client, StateNeeded> = (
+  client: Client,
+  state: StateNeeded
+) => Promise<void | SearchEventResponse> | void | null;
+
+const fromLogToLegacyBuilder =
+  <Client extends CommonClient, StateNeeded>(
+    log: (
+      client: Client,
+      state: StateNeeded
+    ) => Promise<void | SearchEventResponse> | void | null
+  ): ((client: Client, state: StateNeeded) => Promise<EventBuilder>) =>
+  (client, state) =>
+    Promise.resolve({
+      description: {actionCause: 'caseAssist'},
+      log: async (_metadata: {searchUID: string}) => {
+        log(client, state);
+      },
+    });
+
+export const makeAnalyticsAction = makeAnalyticsActionFactory<
+  StateNeededBySearchAnalyticsProvider,
+  StateNeededBySearchAnalyticsProvider,
+  CoveoSearchPageClient,
+  SearchPageClientProvider
+>(configureLegacyAnalytics, (original) => original, SearchAnalyticsProvider);
+
+export const makeCaseAssistAnalyticsAction = makeAnalyticsActionFactory<
+  StateNeededByCaseAssistAnalytics,
+  StateNeededByCaseAssistAnalytics,
+  CaseAssistClient,
+  CaseAssistAnalyticsProvider,
+  LogFunction<CaseAssistClient, StateNeededByCaseAssistAnalytics>
+>(
+  configureCaseAssistAnalytics,
+  fromLogToLegacyBuilder,
+  CaseAssistAnalyticsProvider
+);
+
+export const makeInsightAnalyticsAction = makeAnalyticsActionFactory<
+  StateNeededByInsightAnalyticsProvider,
+  StateNeededByInsightAnalyticsProvider,
+  CoveoInsightClient,
+  InsightAnalyticsProvider,
+  LogFunction<CoveoInsightClient, StateNeededByInsightAnalyticsProvider>
+>(configureInsightAnalytics, fromLogToLegacyBuilder, InsightAnalyticsProvider);
+
+export const makeCommerceAnalyticsAction = makeAnalyticsActionFactory<
+  StateNeededByCommerceAnalyticsProvider,
+  StateNeededByCommerceAnalyticsProvider,
+  CoveoSearchPageClient,
+  CommerceAnalyticsProvider
+>(
+  configureCommerceAnalytics,
+  (original) => original,
+  CommerceAnalyticsProvider
+);
+
+export const makeProductListingAnalyticsAction = makeAnalyticsActionFactory<
+  StateNeededByProductListingAnalyticsProvider,
+  StateNeededByProductListingAnalyticsProvider,
+  CoveoSearchPageClient,
+  ProductListingAnalyticsProvider
+>(
+  configureProductListingAnalytics,
+  (original) => original,
+  ProductListingAnalyticsProvider
+);
+
+export const makeNoopAnalyticsAction = () =>
+  makeAnalyticsAction('analytics/noop', () => null);
 
 export const noopSearchAnalyticsAction = (): SearchAction =>
-  makeNoopAnalyticsAction(AnalyticsType.Search);
-
-export const makeCaseAssistAnalyticsAction = (
-  prefix: string,
-  log: (
-    client: CaseAssistClient,
-    state: StateNeededByCaseAssistAnalytics
-  ) => Promise<void | SearchEventResponse> | void
-): PreparableAnalyticsAction<void, StateNeededByCaseAssistAnalytics> => {
-  return makePreparableAnalyticsAction(
-    prefix,
-    async ({
-      getState,
-      analyticsClientMiddleware,
-      preprocessRequest,
-      logger,
-    }) => {
-      const client = configureCaseAssistAnalytics({
-        state: getState(),
-        logger,
-        analyticsClientMiddleware,
-        preprocessRequest,
-      });
-      return {
-        log: async () => {
-          const response = await log(client, getState());
-          logger.info(
-            {client: client.coveoAnalyticsClient, response},
-            'Analytics response'
-          );
-        },
-      };
-    }
-  );
-};
-
-export const makeInsightAnalyticsAction = <EventType extends AnalyticsType>(
-  prefix: string,
-  analyticsType: EventType,
-  log: (
-    client: CoveoInsightClient,
-    state: StateNeededByInsightAnalyticsProvider
-  ) => Promise<void | SearchEventResponse> | void | null,
-  provider: (
-    getState: () => StateNeededByInsightAnalyticsProvider
-  ) => InsightAnalyticsProvider = (getState) =>
-    new InsightAnalyticsProvider(getState)
-): PreparableAnalyticsAction<
-  WrappedAnalyticsType<EventType>,
-  StateNeededBySearchAnalyticsProvider
-> => {
-  return makePreparableAnalyticsAction(
-    prefix,
-    async ({
-      getState,
-      analyticsClientMiddleware,
-      preprocessRequest,
-      logger,
-    }) => {
-      const client = configureInsightAnalytics({
-        getState,
-        logger,
-        analyticsClientMiddleware,
-        preprocessRequest,
-        provider: provider(getState),
-      });
-      return {
-        log: async () => {
-          const response = await log(client, getState());
-          logger.info(
-            {client: client.coveoAnalyticsClient, response},
-            'Analytics response'
-          );
-          return {analyticsType};
-        },
-      };
-    }
-  );
-};
+  makeNoopAnalyticsAction();
 
 export const partialDocumentInformation = (
   result: Result,
@@ -726,105 +764,7 @@ export const validateProductRecommendationPayload = (
   productRec: ProductRecommendation
 ) => new Schema(productRecommendationPartialDefinition).validate(productRec);
 
-export const makeProductListingAnalyticsAction = <
-  EventType extends AnalyticsType,
-  StateNeeded extends
-    StateNeededByProductListingAnalyticsProvider = StateNeededByProductListingAnalyticsProvider,
->(
-  prefix: string,
-  analyticsType: EventType,
-  getBuilder: (
-    client: CoveoSearchPageClient,
-    state: StateNeeded
-  ) => Promise<EventBuilder | null> | null,
-  provider: (
-    getState: () => StateNeededByProductListingAnalyticsProvider
-  ) => SearchPageClientProvider = (getState) =>
-    new ProductListingAnalyticsProvider(getState)
-): PreparableAnalyticsAction<WrappedAnalyticsType<EventType>, StateNeeded> => {
-  return makePreparableAnalyticsAction(
-    prefix,
-    async ({
-      getState,
-      analyticsClientMiddleware,
-      preprocessRequest,
-      logger,
-    }) => {
-      const client = configureProductListingAnalytics({
-        getState,
-        logger,
-        analyticsClientMiddleware,
-        preprocessRequest,
-        provider: provider(getState),
-      });
-      const builder = await getBuilder(client, getState());
-      return {
-        description: builder?.description,
-        log: async ({state}) => {
-          const response = await builder?.log({
-            searchUID: provider(() => state).getSearchUID(),
-          });
-          logger.info(
-            {client: client.coveoAnalyticsClient, response},
-            'Analytics response'
-          );
-          return {analyticsType};
-        },
-      };
-    }
-  );
-};
-
-export const makeCommerceAnalyticsAction = <
-  EventType extends AnalyticsType,
-  StateNeeded extends
-    StateNeededByCommerceAnalyticsProvider = StateNeededByCommerceAnalyticsProvider,
->(
-  prefix: string,
-  analyticsType: EventType,
-  getBuilder: (
-    client: CoveoSearchPageClient,
-    state: StateNeeded
-  ) => Promise<EventBuilder | null> | null,
-  provider: (
-    getState: () => StateNeededByCommerceAnalyticsProvider
-  ) => SearchPageClientProvider = (getState) =>
-    new CommerceAnalyticsProvider(getState)
-): PreparableAnalyticsAction<WrappedAnalyticsType<EventType>, StateNeeded> => {
-  return makePreparableAnalyticsAction(
-    prefix,
-    async ({
-      getState,
-      analyticsClientMiddleware,
-      preprocessRequest,
-      logger,
-    }) => {
-      const client = configureCommerceAnalytics({
-        getState,
-        logger,
-        analyticsClientMiddleware,
-        preprocessRequest,
-        provider: provider(getState),
-      });
-      const builder = await getBuilder(client, getState());
-      return {
-        description: builder?.description,
-        log: async ({state}) => {
-          const response = await builder?.log({
-            searchUID: provider(() => state).getSearchUID(),
-          });
-          logger.info(
-            {client: client.coveoAnalyticsClient, response},
-            'Analytics response'
-          );
-          return {analyticsType};
-        },
-      };
-    }
-  );
-};
-
-async function logNextEvent<PayloadType extends RelayPayload = RelayPayload>(
+async function logNextEvent<PayloadType extends RelayPayload>(
   emitEvent: ReturnType<typeof createRelay>['emit'],
   type: string,
   payload: PayloadType

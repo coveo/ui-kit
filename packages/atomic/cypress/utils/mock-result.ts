@@ -28,7 +28,7 @@ export function buildMockResult(config: Partial<Result> = {}): Result {
   };
 }
 
-function buildMockRaw(config: Partial<Raw> = {}): Raw {
+export function buildMockRaw(config: Partial<Raw> = {}): Raw {
   return {
     urihash: '',
     parents: '',

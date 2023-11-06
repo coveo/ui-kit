@@ -8,7 +8,6 @@ import {ProductRecommendation} from '../../api/search/search/product-recommendat
 import {Result} from '../../api/search/search/result';
 import {ProductRecommendationsAppState} from '../../state/product-recommendations-app-state';
 import {
-  AnalyticsType,
   makeAnalyticsAction,
   ProductRecommendationAction,
   resultPartialDefinition,
@@ -17,7 +16,6 @@ import {
 export const logProductRecommendations = (): ProductRecommendationAction =>
   makeAnalyticsAction(
     'analytics/productRecommendations/load',
-    AnalyticsType.Search,
     (client) => client.makeRecommendationInterfaceLoad(),
     (getState) => new ProductRecommendationAnalyticsProvider(getState)
   );
@@ -96,10 +94,9 @@ const validateResultPayload = (productRecommendation: ProductRecommendation) =>
 
 export const logProductRecommendationOpen = (
   productRecommendation: ProductRecommendation
-): ProductRecommendationAction<AnalyticsType.Click> =>
+): ProductRecommendationAction =>
   makeAnalyticsAction(
     'analytics/productRecommendation/open',
-    AnalyticsType.Click,
     (client, state) => {
       validateResultPayload(productRecommendation);
       return client.makeRecommendationOpen(

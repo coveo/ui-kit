@@ -4,7 +4,6 @@ import {
   requiredNonEmptyString,
 } from '../../../utils/validate-payload';
 import {
-  AnalyticsType,
   makeAnalyticsAction,
   SearchAction,
 } from '../../analytics/analytics-utils';
@@ -18,33 +17,25 @@ import {
 import {FacetSortCriterion} from './interfaces/request';
 
 export const logFacetShowMore = (facetId: string): SearchAction =>
-  makeAnalyticsAction(
-    'analytics/facet/showMore',
-    AnalyticsType.Search,
-    (client, state) => {
-      validatePayload(facetId, facetIdDefinition);
-      const metadata = buildFacetBaseMetadata(
-        facetId,
-        getStateNeededForFacetMetadata(state)
-      );
-      return client.makeFacetShowMore(metadata);
-    }
-  );
+  makeAnalyticsAction('analytics/facet/showMore', (client, state) => {
+    validatePayload(facetId, facetIdDefinition);
+    const metadata = buildFacetBaseMetadata(
+      facetId,
+      getStateNeededForFacetMetadata(state)
+    );
+    return client.makeFacetShowMore(metadata);
+  });
 
 export const logFacetShowLess = (facetId: string): SearchAction =>
-  makeAnalyticsAction(
-    'analytics/facet/showLess',
-    AnalyticsType.Search,
-    (client, state) => {
-      validatePayload(facetId, facetIdDefinition);
-      const metadata = buildFacetBaseMetadata(
-        facetId,
-        getStateNeededForFacetMetadata(state)
-      );
+  makeAnalyticsAction('analytics/facet/showLess', (client, state) => {
+    validatePayload(facetId, facetIdDefinition);
+    const metadata = buildFacetBaseMetadata(
+      facetId,
+      getStateNeededForFacetMetadata(state)
+    );
 
-      return client.makeFacetShowLess(metadata);
-    }
-  );
+    return client.makeFacetShowLess(metadata);
+  });
 
 export interface LogFacetUpdateSortActionCreatorPayload {
   /**
@@ -61,40 +52,32 @@ export interface LogFacetUpdateSortActionCreatorPayload {
 export const logFacetUpdateSort = (
   payload: LogFacetUpdateSortActionCreatorPayload
 ): SearchAction =>
-  makeAnalyticsAction(
-    'analytics/facet/sortChange',
-    AnalyticsType.Search,
-    (client, state) => {
-      validatePayload(payload, {
-        facetId: facetIdDefinition,
-        criterion: new Value<FacetSortCriterion | RangeFacetSortCriterion>({
-          required: true,
-        }),
-      });
+  makeAnalyticsAction('analytics/facet/sortChange', (client, state) => {
+    validatePayload(payload, {
+      facetId: facetIdDefinition,
+      criterion: new Value<FacetSortCriterion | RangeFacetSortCriterion>({
+        required: true,
+      }),
+    });
 
-      const {facetId, criterion} = payload;
-      const stateForAnalytics = getStateNeededForFacetMetadata(state);
+    const {facetId, criterion} = payload;
+    const stateForAnalytics = getStateNeededForFacetMetadata(state);
 
-      const base = buildFacetBaseMetadata(facetId, stateForAnalytics);
-      const metadata = {...base, criteria: criterion};
+    const base = buildFacetBaseMetadata(facetId, stateForAnalytics);
+    const metadata = {...base, criteria: criterion};
 
-      return client.makeFacetUpdateSort(metadata);
-    }
-  );
+    return client.makeFacetUpdateSort(metadata);
+  });
 
 export const logFacetClearAll = (facetId: string): SearchAction =>
-  makeAnalyticsAction(
-    'analytics/facet/reset',
-    AnalyticsType.Search,
-    (client, state) => {
-      validatePayload(facetId, facetIdDefinition);
+  makeAnalyticsAction('analytics/facet/reset', (client, state) => {
+    validatePayload(facetId, facetIdDefinition);
 
-      const stateForAnalytics = getStateNeededForFacetMetadata(state);
-      const metadata = buildFacetBaseMetadata(facetId, stateForAnalytics);
+    const stateForAnalytics = getStateNeededForFacetMetadata(state);
+    const metadata = buildFacetBaseMetadata(facetId, stateForAnalytics);
 
-      return client.makeFacetClearAll(metadata);
-    }
-  );
+    return client.makeFacetClearAll(metadata);
+  });
 
 export interface LogFacetSelectActionCreatorPayload {
   /**
@@ -111,46 +94,38 @@ export interface LogFacetSelectActionCreatorPayload {
 export const logFacetSelect = (
   payload: LogFacetSelectActionCreatorPayload
 ): SearchAction =>
-  makeAnalyticsAction(
-    'analytics/facet/select',
-    AnalyticsType.Search,
-    (client, state) => {
-      validatePayload(payload, {
-        facetId: facetIdDefinition,
-        facetValue: requiredNonEmptyString,
-      });
+  makeAnalyticsAction('analytics/facet/select', (client, state) => {
+    validatePayload(payload, {
+      facetId: facetIdDefinition,
+      facetValue: requiredNonEmptyString,
+    });
 
-      const stateForAnalytics = getStateNeededForFacetMetadata(state);
-      const metadata = buildFacetSelectionChangeMetadata(
-        payload,
-        stateForAnalytics
-      );
+    const stateForAnalytics = getStateNeededForFacetMetadata(state);
+    const metadata = buildFacetSelectionChangeMetadata(
+      payload,
+      stateForAnalytics
+    );
 
-      return client.makeFacetSelect(metadata);
-    }
-  );
+    return client.makeFacetSelect(metadata);
+  });
 
 export const logFacetExclude = (
   payload: LogFacetSelectActionCreatorPayload
 ): SearchAction =>
-  makeAnalyticsAction(
-    'analytics/facet/exclude',
-    AnalyticsType.Search,
-    (client, state) => {
-      validatePayload(payload, {
-        facetId: facetIdDefinition,
-        facetValue: requiredNonEmptyString,
-      });
+  makeAnalyticsAction('analytics/facet/exclude', (client, state) => {
+    validatePayload(payload, {
+      facetId: facetIdDefinition,
+      facetValue: requiredNonEmptyString,
+    });
 
-      const stateForAnalytics = getStateNeededForFacetMetadata(state);
-      const metadata = buildFacetSelectionChangeMetadata(
-        payload,
-        stateForAnalytics
-      );
+    const stateForAnalytics = getStateNeededForFacetMetadata(state);
+    const metadata = buildFacetSelectionChangeMetadata(
+      payload,
+      stateForAnalytics
+    );
 
-      return client.makeFacetExclude(metadata);
-    }
-  );
+    return client.makeFacetExclude(metadata);
+  });
 
 export interface LogFacetDeselectActionCreatorPayload {
   /**
@@ -167,23 +142,19 @@ export interface LogFacetDeselectActionCreatorPayload {
 export const logFacetDeselect = (
   payload: LogFacetDeselectActionCreatorPayload
 ): SearchAction =>
-  makeAnalyticsAction(
-    'analytics/facet/deselect',
-    AnalyticsType.Search,
-    (client, state) => {
-      validatePayload(payload, {
-        facetId: facetIdDefinition,
-        facetValue: requiredNonEmptyString,
-      });
-      const stateForAnalytics = getStateNeededForFacetMetadata(state);
-      const metadata = buildFacetSelectionChangeMetadata(
-        payload,
-        stateForAnalytics
-      );
+  makeAnalyticsAction('analytics/facet/deselect', (client, state) => {
+    validatePayload(payload, {
+      facetId: facetIdDefinition,
+      facetValue: requiredNonEmptyString,
+    });
+    const stateForAnalytics = getStateNeededForFacetMetadata(state);
+    const metadata = buildFacetSelectionChangeMetadata(
+      payload,
+      stateForAnalytics
+    );
 
-      return client.makeFacetDeselect(metadata);
-    }
-  );
+    return client.makeFacetDeselect(metadata);
+  });
 
 export interface LogFacetBreadcrumbActionCreatorPayload {
   /**
@@ -200,19 +171,15 @@ export interface LogFacetBreadcrumbActionCreatorPayload {
 export const logFacetBreadcrumb = (
   payload: LogFacetBreadcrumbActionCreatorPayload
 ): SearchAction =>
-  makeAnalyticsAction(
-    'analytics/facet/breadcrumb',
-    AnalyticsType.Search,
-    (client, state) => {
-      validatePayload(payload, {
-        facetId: facetIdDefinition,
-        facetValue: requiredNonEmptyString,
-      });
-      const metadata = buildFacetSelectionChangeMetadata(
-        payload,
-        getStateNeededForFacetMetadata(state)
-      );
+  makeAnalyticsAction('analytics/facet/breadcrumb', (client, state) => {
+    validatePayload(payload, {
+      facetId: facetIdDefinition,
+      facetValue: requiredNonEmptyString,
+    });
+    const metadata = buildFacetSelectionChangeMetadata(
+      payload,
+      getStateNeededForFacetMetadata(state)
+    );
 
-      return client.makeBreadcrumbFacet(metadata);
-    }
-  );
+    return client.makeBreadcrumbFacet(metadata);
+  });

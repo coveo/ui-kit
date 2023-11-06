@@ -13,7 +13,7 @@ export const Switch: FunctionalComponent<SwitchProps> = (props) => {
   const attributes = {
     onClick: () => props.onToggle?.(!props.checked),
     'arial-label': props.ariaLabel,
-    'aria-checked': props.checked,
+    'aria-checked': String(!!props.checked),
     part: props.part,
     tabIndex: props.tabIndex,
     title: props.title,
@@ -31,7 +31,7 @@ export const Switch: FunctionalComponent<SwitchProps> = (props) => {
     'w-4',
     'h-4',
     'rounded-full',
-    'bg-background',
+    'bg-white',
     props.checked ? 'ml-6' : '',
   ].join(' ');
 

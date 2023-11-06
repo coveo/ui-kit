@@ -35,6 +35,14 @@ function generatedAnswerActions(selector: GeneratedAnswerSelector) {
         .click()
         .logAction('When clicking on the retry button of the generated answer'),
 
+    clickToggleGeneratedAnswerButton: () =>
+      selector
+        .toggleGeneratedAnswerButton()
+        .click()
+        .logAction(
+          'When clicking on the toggle button of the generated answer'
+        ),
+
     clickFeedbackOption: (index: number) =>
       selector
         .feedbackOption(index)
@@ -64,6 +72,18 @@ function generatedAnswerActions(selector: GeneratedAnswerSelector) {
         .feedbackDetailsInput()
         .type(text)
         .logAction('When typing in the feedback details input'),
+
+    clickRephraseButton: (name: string) =>
+      selector
+        .rephraseButtonByLabel(name)
+        .click()
+        .logAction(`When clicking on the ${name} rephrase button`),
+
+    clickCopyToClipboardButton: () =>
+      selector
+        .copyToClipboardButton()
+        .click()
+        .logAction('When clicking on the copy to clipboard button'),
   };
 }
 

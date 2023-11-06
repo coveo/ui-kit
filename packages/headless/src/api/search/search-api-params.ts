@@ -116,6 +116,8 @@ export interface AnalyticsParam {
     originContext: string;
     userDisplayName?: string;
     documentLocation?: string;
+    trackingId?: string;
+    capture?: boolean;
   };
 }
 

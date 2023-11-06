@@ -1,8 +1,8 @@
 diff --git a/node_modules/@stencil/core/compiler/stencil.js b/node_modules/@stencil/core/compiler/stencil.js
-index 29cef69..83d57c6 100644
+index 6bf2c4f..4384d0f 100644
 --- a/node_modules/@stencil/core/compiler/stencil.js
 +++ b/node_modules/@stencil/core/compiler/stencil.js
-@@ -229941,7 +229941,7 @@ const visitClassDeclaration = (config, diagnostics, typeChecker, program, classN
+@@ -232794,7 +232794,7 @@ const visitClassDeclaration = (config, diagnostics, typeChecker, program, classN
    // We call the `handleClassFields` method which handles transforming any
    // class fields, removing them from the class and adding statements to the
    // class' constructor which instantiate them there instead.
@@ -11,7 +11,7 @@ index 29cef69..83d57c6 100644
    validateMethods(diagnostics, classMembers);
    const currentDecorators = retrieveTsDecorators(classNode);
    return ts.factory.updateClassDeclaration(classNode, [
-@@ -229975,19 +229975,8 @@ const removeStencilMethodDecorators = (classMembers, diagnostics) => {
+@@ -232828,19 +232828,8 @@ const removeStencilMethodDecorators = (classMembers, diagnostics) => {
          return ts.factory.updateMethodDeclaration(member, [...(newDecorators !== null && newDecorators !== void 0 ? newDecorators : []), ...((_a = retrieveTsModifiers(member)) !== null && _a !== void 0 ? _a : [])], member.asteriskToken, member.name, member.questionToken, member.typeParameters, member.parameters, member.type, member.body);
        }
        else if (ts.isPropertyDeclaration(member)) {
@@ -33,7 +33,7 @@ index 29cef69..83d57c6 100644
        }
        else {
          const err = buildError(diagnostics);
-@@ -230126,10 +230115,9 @@ const filterDecorators = (decorators, excludeList) => {
+@@ -232979,10 +232968,9 @@ const filterDecorators = (decorators, excludeList) => {
   * @param typeChecker a reference to the {@link ts.TypeChecker}
   * @returns a list of updated class elements which can be inserted into the class
   */
@@ -45,7 +45,7 @@ index 29cef69..83d57c6 100644
    for (const member of classMembers) {
      if (shouldInitializeInConstructor(member) && ts.isPropertyDeclaration(member)) {
        const memberName = tsPropDeclNameAsString(member, typeChecker);
-@@ -230140,11 +230128,6 @@ function handleClassFields(classNode, classMembers, typeChecker) {
+@@ -232993,11 +232981,6 @@ function handleClassFields(classNode, classMembers, typeChecker) {
        // just 'undefined'
        (_a = member.initializer) !== null && _a !== void 0 ? _a : ts.factory.createIdentifier('undefined'))));
      }
