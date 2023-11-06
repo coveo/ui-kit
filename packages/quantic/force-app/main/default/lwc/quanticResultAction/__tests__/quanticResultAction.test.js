@@ -6,6 +6,11 @@ const functionsMocks = {
   listener: jest.fn(() => {}),
 };
 
+const selectors = {
+  tooltip: 'c-quantic-tooltip',
+  tooltipContent: 'c-quantic-tooltip > div[slot="content"]',
+};
+
 const exampleLabel = 'example label';
 const exampleSelectedLabel = 'example label on';
 const exampleIconName = 'example icon name';
@@ -91,11 +96,15 @@ describe('c-quantic-result-action', () => {
     const resultActionButton = element.shadowRoot.querySelector(
       'lightning-button-icon-stateful'
     );
-    const tooltip = element.shadowRoot.querySelector('.slds-popover_tooltip');
+    const tooltip = element.shadowRoot.querySelector(selectors.tooltip);
+    const tooltipContent = element.shadowRoot.querySelector(
+      selectors.tooltipContent
+    );
 
     expect(resultActionButton).not.toBeNull();
     expect(tooltip).not.toBeNull();
-    expect(tooltip.textContent).toBe(exampleLabel);
+    expect(tooltipContent).not.toBeNull();
+    expect(tooltipContent.textContent).toBe(exampleLabel);
     expect(resultActionButton.iconName).toBe(exampleIconName);
   });
 
@@ -190,10 +199,14 @@ describe('c-quantic-result-action', () => {
       const element = createTestComponent({...defaultOptions, selected: true});
       await flushPromises();
 
-      const tooltip = element.shadowRoot.querySelector('.slds-popover_tooltip');
+      const tooltip = element.shadowRoot.querySelector(selectors.tooltip);
+      const tooltipContent = element.shadowRoot.querySelector(
+        selectors.tooltipContent
+      );
 
       expect(tooltip).not.toBeNull();
-      expect(tooltip.textContent).toBe(exampleSelectedLabel);
+      expect(tooltipContent).not.toBeNull();
+      expect(tooltipContent.textContent).toBe(exampleSelectedLabel);
     });
 
     it('should display the correct icon', async () => {
