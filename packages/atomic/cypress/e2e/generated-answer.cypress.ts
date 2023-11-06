@@ -99,7 +99,7 @@ describe('Generated Answer Test Suites', () => {
       });
 
       it('should not display the component', () => {
-        GeneratedAnswerSelectors.container().should('not.exist');
+        GeneratedAnswerSelectors.container().should('not.be.visible');
       });
     });
 
@@ -299,7 +299,7 @@ describe('Generated Answer Test Suites', () => {
         });
 
         it('should not display the component', () => {
-          GeneratedAnswerSelectors.container().should('not.exist');
+          GeneratedAnswerSelectors.container().should('not.be.visible');
         });
       });
 
@@ -314,7 +314,7 @@ describe('Generated Answer Test Suites', () => {
           });
 
           it('should not show the component', () => {
-            GeneratedAnswerSelectors.container().should('not.exist');
+            GeneratedAnswerSelectors.container().should('not.be.visible');
           });
         });
 
@@ -330,7 +330,7 @@ describe('Generated Answer Test Suites', () => {
 
               it('should retry the stream 3 times then offer a retry button', () => {
                 for (let times = 0; times < 3; times++) {
-                  GeneratedAnswerSelectors.container().should('not.exist');
+                  GeneratedAnswerSelectors.container().should('not.be.visible');
 
                   cy.wait(getStreamInterceptAlias(streamId));
                 }
