@@ -12,6 +12,11 @@ import {
   Engine,
   resolveEngine,
 } from './src/headless-export-resolvers/engine-resolver';
+import {
+  SSRController,
+  resolveSSRController,
+} from './src/headless-export-resolvers/ssr-controller-resolver';
+import {SSREngine} from './src/headless-export-resolvers/ssr-engine-resolver';
 import {caseAssistUseCase} from './use-cases/case-assist';
 // eslint-disable-next-line @cspell/spellchecker
 // TODO CAPI-89: Uncomment when we're ready to make the Commerce sub-package public.
@@ -21,7 +26,11 @@ import {productListingUseCase} from './use-cases/product-listing';
 import {productRecommendationUseCase} from './use-cases/product-recommendation';
 import {recommendationUseCase} from './use-cases/recommendation';
 import {searchUseCase} from './use-cases/search';
-import {UseCaseConfiguration} from './use-cases/use-case-configuration';
+import {ssrSearchUseCase} from './use-cases/ssr.search';
+import {
+  SSRUseCaseConfiguration,
+  UseCaseConfiguration,
+} from './use-cases/use-case-configuration';
 
 interface UseCase {
   name: string;
@@ -67,6 +76,7 @@ const useCases: UseCase[] = [
     entryFile: 'temp/insight.api.json',
     config: insightUseCase,
   },
+
   // eslint-disable-next-line @cspell/spellchecker
   // TODO CAPI-89: Uncomment when we're ready to make the Commerce sub-package public.
   //{
@@ -74,6 +84,26 @@ const useCases: UseCase[] = [
   //  entryFile: 'temp/commerce.api.json',
   //  config: commerceUseCase,
   //},
+];
+
+interface SSRUseCase {
+  name: string;
+  entryFile: string;
+  config: SSRUseCaseConfiguration;
+}
+
+interface ResolvedSSRUseCase {
+  name: string;
+  controllers: SSRController[];
+  engine: SSREngine;
+}
+
+const ssrUseCases: SSRUseCase[] = [
+  {
+    name: 'ssr.search',
+    entryFile: 'temp/ssr.search.api.json',
+    config: ssrSearchUseCase,
+  },
 ];
 
 function resolveUseCase(useCase: UseCase): ResolvedUseCase {
@@ -86,6 +116,7 @@ function resolveUseCase(useCase: UseCase): ResolvedUseCase {
   const controllers = config.controllers.map((controller) =>
     resolveController(entryPoint, controller)
   );
+
   const actions = config.actionLoaders.map((loader) =>
     resolveActionLoader(entryPoint, loader)
   );
@@ -95,6 +126,25 @@ function resolveUseCase(useCase: UseCase): ResolvedUseCase {
   return {name, controllers, actions, engine};
 }
 
+function resolveSSRUseCase(ssrUseCase: SSRUseCase): ResolvedSSRUseCase {
+  const {name, entryFile, config} = ssrUseCase;
+  process.env['currentUseCaseName'] = name;
+  const apiModel = new ApiModel();
+  const apiPackage = apiModel.loadPackage(entryFile);
+  const entryPoint = apiPackage.entryPoints[0];
+
+  const controllers = config.controllers.map((controller) =>
+    resolveSSRController(entryPoint, controller.initializer)
+  );
+
+  const engine: SSREngine = {initializer: config.engine.initializer};
+
+  return {name, controllers, engine};
+}
+
 const resolved = useCases.map(resolveUseCase);
+const ssrResolved = ssrUseCases.map(resolveSSRUseCase);
 
 writeFileSync('dist/parsed_doc.json', JSON.stringify(resolved, null, 2));
+// BAD BAD BAD
+writeFileSync('dist/ssr_parsed_doc.json', JSON.stringify(ssrResolved, null, 2));
