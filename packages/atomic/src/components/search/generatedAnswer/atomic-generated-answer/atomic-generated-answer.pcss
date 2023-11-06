@@ -12,17 +12,21 @@
   }
 }
 
-.text-bg-blue {
-  color: var(--atomic-primary);
-  background: var(--atomic-primary-background);
-}
+[part='container'] {
+  --placeholder-height: 400px;
 
-.placeholder-wrapper {
-  height: 400px;
+  .placeholder-wrapper {
+    height: var(--placeholder-height);
+  }
 }
 
 .typing-loader-wrapper {
   background: linear-gradient(0deg, rgba(255, 255, 255, 1), transparent) no-repeat;
+}
+
+.text-bg-blue {
+  color: var(--atomic-primary);
+  background: var(--atomic-primary-background);
 }
 
 .footer {
