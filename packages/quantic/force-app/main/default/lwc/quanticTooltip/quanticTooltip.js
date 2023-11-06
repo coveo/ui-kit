@@ -11,13 +11,6 @@ import {LightningElement, api} from 'lwc';
  */
 export default class QuanticTooltip extends LightningElement {
   /**
-   * @api
-   * @type {string}
-   * @deprecated
-   * Text value to be shown in the tooltip.
-   */
-  @api value;
-  /**
    * Whether to apply the light theme styles on the tooltip.
    * @api
    * @type {boolean}
