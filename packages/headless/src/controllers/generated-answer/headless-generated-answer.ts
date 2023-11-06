@@ -1,3 +1,4 @@
+import {Unsubscribe} from '@reduxjs/toolkit';
 import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
@@ -114,6 +115,68 @@ export interface GeneratedAnswerProps {
   };
 }
 
+interface SubscribeStateManager {
+  abortController: AbortController | undefined;
+  lastRequestId: string;
+  lastStreamId: string;
+  getIsStreamInProgress: () => boolean;
+  setAbortControllerRef: (ref: AbortController) => void;
+  subscribeToSearchRequests: (
+    engine: SearchEngine<GeneratedAnswerSection>
+  ) => Unsubscribe;
+}
+
+const subscribeStateManager: SubscribeStateManager = {
+  abortController: undefined,
+  lastRequestId: '',
+  lastStreamId: '',
+
+  setAbortControllerRef: (ref: AbortController) => {
+    subscribeStateManager.abortController = ref;
+  },
+
+  getIsStreamInProgress: () => {
+    if (
+      !subscribeStateManager.abortController ||
+      subscribeStateManager.abortController?.signal.aborted
+    ) {
+      subscribeStateManager.abortController = undefined;
+      return false;
+    }
+    return true;
+  },
+
+  subscribeToSearchRequests: (engine) => {
+    const strictListener = () => {
+      const state = engine.state;
+      const requestId = state.search.requestId;
+      const streamId =
+        state.search.extendedResults.generativeQuestionAnsweringId;
+
+      if (subscribeStateManager.lastRequestId !== requestId) {
+        subscribeStateManager.lastRequestId = requestId;
+        subscribeStateManager.abortController?.abort();
+        engine.dispatch(resetAnswer());
+      }
+
+      const isStreamInProgress = subscribeStateManager.getIsStreamInProgress();
+      if (
+        !isStreamInProgress &&
+        streamId &&
+        streamId !== subscribeStateManager.lastStreamId
+      ) {
+        subscribeStateManager.lastStreamId = streamId;
+        engine.dispatch(
+          streamAnswer({
+            setAbortControllerRef: subscribeStateManager.setAbortControllerRef,
+          })
+        );
+      }
+    };
+    return engine.subscribe(strictListener);
+  },
+};
+
 /**
  * @internal
  */
@@ -129,48 +192,6 @@ export function buildGeneratedAnswer(
   const controller = buildController(engine);
   const getState = () => engine.state;
 
-  let abortController: AbortController | undefined;
-  let lastRequestId: string;
-  let lastStreamId: string;
-
-  const setAbortControllerRef = (ref: AbortController) => {
-    abortController = ref;
-  };
-
-  const getIsStreamInProgress = () => {
-    if (!abortController || abortController?.signal.aborted) {
-      abortController = undefined;
-      return false;
-    }
-    return true;
-  };
-
-  const subscribeToSearchRequests = () => {
-    const strictListener = () => {
-      const state = getState();
-      const requestId = state.search.requestId;
-      const streamId =
-        state.search.extendedResults.generativeQuestionAnsweringId;
-
-      if (lastRequestId !== requestId) {
-        lastRequestId = requestId;
-        abortController?.abort();
-        dispatch(resetAnswer());
-      }
-
-      const isStreamInProgress = getIsStreamInProgress();
-      if (!isStreamInProgress && streamId && streamId !== lastStreamId) {
-        lastStreamId = streamId;
-        dispatch(
-          streamAnswer({
-            setAbortControllerRef,
-          })
-        );
-      }
-    };
-    return engine.subscribe(strictListener);
-  };
-
   const isVisible = props.initialState?.isVisible;
   if (isVisible !== undefined) {
     dispatch(setIsVisible(isVisible));
@@ -180,7 +201,7 @@ export function buildGeneratedAnswer(
     dispatch(updateResponseFormat(initialResponseFormat));
   }
 
-  subscribeToSearchRequests();
+  subscribeStateManager.subscribeToSearchRequests(engine);
 
   return {
     ...controller,
