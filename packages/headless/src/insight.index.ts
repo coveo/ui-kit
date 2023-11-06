@@ -1,4 +1,5 @@
 import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
+import * as HighlightUtils from './utils/highlight';
 
 polyfillCryptoNode();
 // 3rd Party Libraries
@@ -334,6 +335,7 @@ export type {
 export type {Raw} from './api/search/search/raw';
 export type {InsightAPIErrorStatusResponse} from './api/service/insight/insight-api-client';
 export type {Result} from './api/search/search/result';
+export {HighlightUtils};
 
 export {
   SortOrder,
