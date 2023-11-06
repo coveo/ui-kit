@@ -66,24 +66,32 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         .log(`${should(display)} display the copy to clipboard button`);
     },
 
-    likeButtonIsChecked: (checked: boolean) => {
+    likeButtonIsChecked: (selected: boolean) => {
       selector
         .likeButton()
         .should(
-          checked ? 'have.class' : 'not.have.class',
-          'feedback__button--liked'
+          selected ? 'have.class' : 'not.have.class',
+          'stateful-button--selected'
         )
-        .log(`the like button ${should(checked)} be in a liked state`);
+        .should(
+          selected ? 'not.have.class' : 'have.class',
+          'stateful-button--unselected'
+        )
+        .log(`the like button ${should(selected)} be in a liked state`);
     },
 
-    dislikeButtonIsChecked: (checked: boolean) => {
+    dislikeButtonIsChecked: (selected: boolean) => {
       selector
         .dislikeButton()
         .should(
-          checked ? 'have.class' : 'not.have.class',
-          'feedback__button--disliked'
+          selected ? 'have.class' : 'not.have.class',
+          'stateful-button--selected'
         )
-        .log(`the dislike button ${should(checked)} be in a disliked state`);
+        .should(
+          selected ? 'not.have.class' : 'have.class',
+          'stateful-button--unselected'
+        )
+        .log(`the dislike button ${should(selected)} be in a disliked state`);
     },
 
     toggleGeneratedAnswerButtonIsChecked: (checked: boolean) => {

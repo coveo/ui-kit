@@ -43,6 +43,23 @@ export default class QuanticStatefulButton extends LightningElement {
    * @type {boolean}
    */
   @api withoutBorders = false;
+  /**
+   * The size of the feedback icons.
+   * @api
+   * @type {'xx-small' | 'x-small' | 'small' | 'medium' | 'large'}
+   */
+  @api
+  get size() {
+    return this._size;
+  }
+  set size(value) {
+    if (['xx-small', 'x-small', 'small', 'medium', 'large'].includes(value)) {
+      this._size = value;
+    }
+  }
+
+  /** @type {'xx-small' | 'x-small' | 'small' | 'medium' | 'large'} */
+  _size = 'xx-small';
 
   connectedCallback() {
     this.updateCSSVariables();

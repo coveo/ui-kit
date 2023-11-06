@@ -1,23 +1,13 @@
 <template>
   <div class="slds-grid feedback__main-section">
-    <span class="slds-var-p-right_medium slds-text-color_weak feedback__question"
+    <span class="slds-var-p-right_small slds-text-color_weak feedback__question"
       id="feedback__question">{question}</span>
-    <button aria-label={likeLabel} data-cy="feedback__like-button" title={likeLabel} aria-describedby="feedback__question" onclick={handleLike}
-      class={likeButtonClass}>
-      <lightning-icon aria-hidden="true" class={likeIconClass} icon-name={likeIconName} size={size}
-        variant={likeIconVariant}></lightning-icon>
-      <template if:false={hideLabels}>
-        <span class="feedback__button-label slds-var-m-left_xx-small">{likeLabel}</span>
-      </template>
-    </button>
-    <button aria-label={dislikeLabel} data-cy="feedback__dislike-button" title={dislikeLabel} aria-describedby="feedback__question" onclick={handleDislike}
-      class={dislikeButtonClass}>
-      <lightning-icon aria-hidden="true" class={dislikeIconClass} icon-name={dislikeIconName} size={size}
-        variant={dislikeIconVariant}></lightning-icon>
-      <template if:false={hideLabels}>
-        <span class="feedback__button-label slds-var-m-left_xx-small">{dislikeLabel}</span>
-      </template>
-    </button>
+    <c-quantic-stateful-button selected={liked} data-cy="feedback__like-button" tooltip={likeLabel}
+      icon-name={likeIconName} onselect={handleLike} ondeselect={handleLike} without-borders selected-state-color="#2e844a"
+      label={likeButtonLabel} size={size}></c-quantic-stateful-button>
+    <c-quantic-stateful-button selected={disliked} data-cy="feedback__dislike-button" tooltip={dislikeLabel}
+      icon-name={dislikeIconName} onselect={handleDislike} ondeselect={handleDislike} without-borders selected-state-color="#ea001e"
+      label={dislikeButtonLabel} size={size}></c-quantic-stateful-button>
   </div>
   <template if:true={displaySuccessMessage}>
     <div class="slds-grid feedback__success-message">
