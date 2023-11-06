@@ -283,7 +283,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
           <GeneratedAnswerPlaceholder />
         </div>
       );
-    } else if (isStreaming) {
+    } else if (isStreaming && this.isAnswerVisible) {
       return (
         <div class="placeholder-wrapper relative overflow-hidden">
           <div class="z-1 bg-white relative">{this.renderContent()}</div>
