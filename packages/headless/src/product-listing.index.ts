@@ -186,6 +186,9 @@ export type {
 export {buildContext} from './controllers/product-listing/context/headless-product-listing-context';
 
 export type {
+  InteractiveResultCore,
+  InteractiveResultCoreOptions,
+  InteractiveResultCoreProps,
   InteractiveResultOptions,
   InteractiveResultProps,
   InteractiveResult,

@@ -182,6 +182,7 @@ export {buildPager} from './controllers/insight/pager/headless-insight-pager';
 
 export type {
   AttachToCaseProps,
+  AttachToCaseOptions,
   AttachToCase,
 } from './controllers/insight/attach-to-case/headless-attach-to-case';
 export {buildAttachToCase} from './controllers/insight/attach-to-case/headless-attach-to-case';
@@ -220,6 +221,9 @@ export type {
 export {buildFoldedResultList} from './controllers/insight/folded-result-list/headless-insight-folded-result-list';
 
 export type {
+  InteractiveResultCoreOptions,
+  InteractiveResultCoreProps,
+  InteractiveResultCore,
   InsightInteractiveResultOptions,
   InsightInteractiveResultProps,
   InteractiveResult,
@@ -281,6 +285,7 @@ export type {InsightInterface} from './controllers/insight-interface/insight-int
 export {buildInsightInterface} from './controllers/insight-interface/insight-interface';
 
 export type {
+  InlineLink,
   SmartSnippet,
   SmartSnippetOptions,
   SmartSnippetProps,

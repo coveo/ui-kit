@@ -32,6 +32,11 @@ export type {
   NumericFilter,
 };
 
+/**
+ * @param engine - The headless engine.
+ * @param props - The configurable `NumericFilter` properties.
+ * @returns - A `NumericFilter` controller instance.
+ */
 export function buildNumericFilter(
   engine: ProductListingEngine,
   props: NumericFilterProps
