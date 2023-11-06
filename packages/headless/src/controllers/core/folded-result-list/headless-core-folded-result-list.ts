@@ -21,6 +21,7 @@ import {CoreEngine, Result} from '../../../recommendation.index';
 import {
   ConfigurationSection,
   FoldingSection,
+  QuerySection,
   SearchSection,
 } from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
@@ -81,6 +82,11 @@ export interface CoreFoldedResultListProps {
     collectionId: CollectionId
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ) => AsyncThunkAction<any, CollectionId, any>;
+  /**
+   * The action creator to build the `fetchMoreResults` action.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  fetchMoreResultsActionCreator: () => AsyncThunkAction<unknown, void, any>;
 }
 
 /**
@@ -249,7 +255,9 @@ export function buildCoreFoldedResultList(
 
 function loadFoldingReducer(
   engine: CoreEngine
-): engine is CoreEngine<SearchSection & ConfigurationSection & FoldingSection> {
+): engine is CoreEngine<
+  SearchSection & ConfigurationSection & FoldingSection & QuerySection
+> {
   engine.addReducers({search, configuration, folding, query});
   return true;
 }
