@@ -98,7 +98,7 @@ export default class QuanticResultHighlightedTextField extends LightningElement 
     );
 
     if (highlights) {
-      const openingDelimiter = '<b>';
+      const openingDelimiter = '<b class="highlighted-field__highlight">';
       const closingDelimiter = '</b>';
       const highlightedValue = this.headless.HighlightUtils.highlightString({
         content: fieldValue,

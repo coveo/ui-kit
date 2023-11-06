@@ -6,6 +6,8 @@ import QuanticResultHighlightedTextField from '../quanticResultHighlightedTextFi
 
 const componentName = 'c-quantic-result-highlighted-text-field';
 
+const expectedConsoleErrorMessage = `The ${componentName} requires a result and a field to be specified.`;
+
 const exampleField = 'examplefield';
 const exampleFieldValue = 'example highlight';
 const highlightedValue = 'highlight';
@@ -96,57 +98,53 @@ describe('c-quantic-result-highlighted-text-field', () => {
     cleanup();
   });
 
-  describe('when no result is given', () => {
-    it('should show an error', async () => {
-      // @ts-ignore
-      const element = createTestComponent({field: exampleField});
-      await flushPromises();
+  describe('error handeling when the componentis used with missing properties', () => {
+    describe('when no result is given', () => {
+      it('should show an error', async () => {
+        // @ts-ignore
+        const element = createTestComponent({field: exampleField});
+        await flushPromises();
 
-      const errorMessage = element.shadowRoot.querySelector(
-        selectors.errorSelector
-      );
+        const errorMessage = element.shadowRoot.querySelector(
+          selectors.errorSelector
+        );
 
-      expect(errorMessage).not.toBeNull();
-      expect(console.error).toHaveBeenCalledWith(
-        `The ${componentName} requires a result and a field to be specified.`
-      );
+        expect(errorMessage).not.toBeNull();
+        expect(console.error).toHaveBeenCalledWith(expectedConsoleErrorMessage);
+      });
+    });
+
+    describe('when no field is given', () => {
+      it('should show an error', async () => {
+        // @ts-ignore
+        const element = createTestComponent({result: exampleResult});
+        await flushPromises();
+
+        const errorMessage = element.shadowRoot.querySelector(
+          selectors.errorSelector
+        );
+
+        expect(errorMessage).not.toBeNull();
+        expect(console.error).toHaveBeenCalledWith(expectedConsoleErrorMessage);
+      });
+    });
+
+    describe('when an empty string is given as a field', () => {
+      it('should show an error', async () => {
+        const element = createTestComponent({...defaultOptions, field: ''});
+        await flushPromises();
+
+        const errorMessage = element.shadowRoot.querySelector(
+          selectors.errorSelector
+        );
+
+        expect(errorMessage).not.toBeNull();
+        expect(console.error).toHaveBeenCalledWith(expectedConsoleErrorMessage);
+      });
     });
   });
 
-  describe('when no field is given', () => {
-    it('should show an error', async () => {
-      // @ts-ignore
-      const element = createTestComponent({result: exampleResult});
-      await flushPromises();
-
-      const errorMessage = element.shadowRoot.querySelector(
-        selectors.errorSelector
-      );
-
-      expect(errorMessage).not.toBeNull();
-      expect(console.error).toHaveBeenCalledWith(
-        `The ${componentName} requires a result and a field to be specified.`
-      );
-    });
-  });
-
-  describe('when field is given as am empty string', () => {
-    it('should show an error', async () => {
-      const element = createTestComponent({...defaultOptions, field: ''});
-      await flushPromises();
-
-      const errorMessage = element.shadowRoot.querySelector(
-        selectors.errorSelector
-      );
-
-      expect(errorMessage).not.toBeNull();
-      expect(console.error).toHaveBeenCalledWith(
-        `The ${componentName} requires a result and a field to be specified.`
-      );
-    });
-  });
-
-  describe('when required props are given', () => {
+  describe('displaying highlights', () => {
     describe('when field highlights are found in the result', () => {
       it('should render the result field value with proper highlights', async () => {
         const element = createTestComponent({
@@ -189,7 +187,7 @@ describe('c-quantic-result-highlighted-text-field', () => {
     });
   });
 
-  describe('when a label is given', () => {
+  describe('displaying the component with a label', () => {
     it('should render the field value with a label', async () => {
       const element = createTestComponent({
         ...defaultOptions,
