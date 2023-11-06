@@ -22,16 +22,16 @@
     "@coveo/atomic-angular": "2.16.2",
     "rxjs": "7.8.1",
     "tslib": "2.4.0",
-    "zone.js": "0.14.0"
+    "zone.js": "0.14.1"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^16.2.1",
     "@angular/cli": "16.2.7",
     "@angular/compiler-cli": "16.2.10",
     "@types/jasmine": "5.1.1",
-    "@types/node": "20.8.7",
+    "@types/node": "20.8.9",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "cypress": "13.3.2",
+    "cypress": "13.3.3",
     "cypress-repeat": "2.3.4",
     "gts": "5.2.0",
     "ncp": "2.0.0",
