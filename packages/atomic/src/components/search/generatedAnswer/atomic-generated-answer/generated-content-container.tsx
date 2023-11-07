@@ -14,8 +14,6 @@ export const GeneratedContentContainer: FunctionalComponent<
       class={`mb-0 text-on-background whitespace-pre-wrap ${
         props.isStreaming ? 'cursor' : ''
       }`}
-      aria-live="polite"
-      aria-hidden={String(props.isStreaming)}
     >
       {props.answer}
     </p>

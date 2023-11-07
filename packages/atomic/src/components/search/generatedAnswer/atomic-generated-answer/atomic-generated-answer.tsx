@@ -121,7 +121,11 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       return this.bindings.i18n.t('generating-answer');
     }
 
-    return hasAnswer ? this.bindings.i18n.t('answer-generated') : '';
+    return hasAnswer
+      ? this.bindings.i18n.t('answer-generated', {
+          answer: this.generatedAnswerState.answer,
+        })
+      : '';
   }
 
   private readStoredData(): GeneratedAnswerData {
