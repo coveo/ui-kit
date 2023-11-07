@@ -22,9 +22,6 @@ const controllers: SSRControllerConfiguration[] = [
     initializer: 'defineFacetManager',
   },
   {
-    initializer: 'defineAutomaticFacet',
-  },
-  {
     initializer: 'defineAutomaticFacetGenerator',
   },
   {
