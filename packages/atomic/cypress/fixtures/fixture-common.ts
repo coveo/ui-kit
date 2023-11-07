@@ -83,6 +83,11 @@ export function setupIntercept() {
     method: 'GET',
     url: /.*\/build\/[\w|-]+-[\d|\w]+\.js/,
   }).as(RouteAlias.Build.substring(1));
+
+  cy.intercept({
+    method: 'GET',
+    path: '/build/lang/**.json',
+  }).as(RouteAlias.Locale.substring(1));
 }
 
 export function getUABody() {
