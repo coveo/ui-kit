@@ -11,6 +11,11 @@ import {
   InteractiveResultCoreProps,
 } from '../../core/interactive-result/headless-core-interactive-result';
 
+export type {
+  InteractiveResultCore,
+  InteractiveResultCoreOptions,
+  InteractiveResultCoreProps,
+};
 export interface InteractiveResultOptions extends InteractiveResultCoreOptions {
   /**
    * The query result.

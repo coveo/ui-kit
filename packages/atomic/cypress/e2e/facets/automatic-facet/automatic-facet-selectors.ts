@@ -35,13 +35,13 @@ export const AutomaticFacetSelectors = {
     return this.shadow().find('[part="label-button"]');
   },
   labelButtonIcon() {
-    return this.shadow().find('[part="label-button-icon"]');
+    return this.shadow().find('[part="label-button-icon"]', {timeout: 8000});
   },
   clearButton() {
     return this.shadow().find('[part="clear-button"]');
   },
   clearButtonIcon() {
-    return this.shadow().find('[part="clear-button-icon"]');
+    return this.shadow().find('[part="clear-button-icon"]', {timeout: 8000});
   },
   values() {
     return this.shadow().find('[part="values"]');
@@ -62,7 +62,7 @@ export const AutomaticFacetSelectors = {
     return this.shadow().find('[part="value-checkbox-label"]');
   },
   valueCheckboxIcon() {
-    return this.shadow().find('[part="value-checkbox-icon"]');
+    return this.shadow().find('[part="value-checkbox-icon"]', {timeout: 8000});
   },
   facetValueLabelAtIndex(index: number) {
     return this.valueLabel().eq(index);

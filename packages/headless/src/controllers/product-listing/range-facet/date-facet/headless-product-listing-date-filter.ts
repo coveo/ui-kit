@@ -32,6 +32,11 @@ export type {
   DateFilter,
 };
 
+/**
+ * @param engine - The headless engine.
+ * @param props - The configurable `DateFilter` properties.
+ * @returns - A `DateFilter` controller instance.
+ */
 export function buildDateFilter(
   engine: ProductListingEngine,
   props: DateFilterProps

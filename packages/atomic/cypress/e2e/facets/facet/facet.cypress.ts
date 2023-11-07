@@ -1,3 +1,4 @@
+import {FacetValue} from '@coveo/headless';
 import {SearchInterface, TestFixture} from '../../../fixtures/test-fixture';
 import {AnalyticsTracker} from '../../../utils/analyticsUtils';
 import {
@@ -831,6 +832,48 @@ describe('Facet v1 Test Suites', () => {
     FacetAssertions.assertValuesSortedByOccurrences();
   });
 
+  describe('with #resultsMustMatch set to "allValues"', () => {
+    function setupSelectCheckboxValue() {
+      new TestFixture()
+        .with(addFacet({field, label, 'results-must-match': 'allValues'}))
+        .init();
+      selectIdleCheckboxValueAt(FacetSelectors, 0);
+    }
+
+    beforeEach(() => {
+      setupSelectCheckboxValue();
+    });
+
+    it('should set resultsMustMatch to `allValues`', () => {
+      cy.wait(TestFixture.interceptAliases.Search).should((search) => {
+        expect(search.request.body.facets[0]).to.have.property(
+          'resultsMustMatch',
+          'allValues'
+        );
+      });
+    });
+  });
+
+  describe('with #resultsMustMatch set to default value', () => {
+    function setupSelectCheckboxValue() {
+      new TestFixture().with(addFacet({field, label})).init();
+      selectIdleCheckboxValueAt(FacetSelectors, 0);
+    }
+
+    beforeEach(() => {
+      setupSelectCheckboxValue();
+    });
+
+    it('should set resultsMustMatch to `atLeastOneValue`', () => {
+      cy.wait(TestFixture.interceptAliases.Search).should((search) => {
+        expect(search.request.body.facets[0]).to.have.property(
+          'resultsMustMatch',
+          'atLeastOneValue'
+        );
+      });
+    });
+  });
+
   describe('when defining a value caption', () => {
     const caption = 'nicecaption';
     beforeEach(() => {
@@ -861,6 +904,43 @@ describe('Facet v1 Test Suites', () => {
 
     CommonFacetAssertions.assertDisplayFacet(FacetSelectors, true);
     CommonFacetAssertions.assertDisplaySearchInput(FacetSelectors, false);
+  });
+
+  describe('with #withSearch to true and expanded (moreValuesAvailable=false)', () => {
+    const setup = (numValues: number) =>
+      new TestFixture()
+        .with(addFacet({field, label, 'with-search': 'true'}))
+        .withCustomResponse((response) => {
+          response.facets[0].values = [...Array(numValues).keys()].map((i) => {
+            return {value: i.toString(), numberOfResults: 1};
+          }) as FacetValue[];
+          response.facets[0].moreValuesAvailable = false;
+        })
+        .init();
+
+    it('with less than 8 values, it should not display the search input', () => {
+      setup(3);
+      CommonFacetAssertions.assertDisplaySearchInputWithoutIt(
+        FacetSelectors,
+        false
+      );
+    });
+
+    it('with exactly 8 values, it should not display the search input', () => {
+      setup(8);
+      CommonFacetAssertions.assertDisplaySearchInputWithoutIt(
+        FacetSelectors,
+        false
+      );
+    });
+
+    it('with more than 8 values, it should display the search input', () => {
+      setup(10);
+      CommonFacetAssertions.assertDisplaySearchInputWithoutIt(
+        FacetSelectors,
+        true
+      );
+    });
   });
 
   describe('when no search has yet been executed', () => {
@@ -942,6 +1022,7 @@ describe('Facet v1 Test Suites', () => {
           setupSelectedFacet();
           cy.wait(TestFixture.interceptAliases.Search);
         });
+
         CommonAssertions.assertAccessibility(breadboxComponent);
         BreadboxAssertions.assertDisplayBreadcrumb(true);
         BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
