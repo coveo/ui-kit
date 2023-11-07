@@ -37,6 +37,7 @@ function handleFulfilledSearch(
   state.queryExecuted = action.payload.queryExecuted;
   state.duration = action.payload.duration;
   state.isLoading = false;
+  state.extendedResults = action.payload.response.extendedResults;
 }
 
 function handleFulfilledNewSearch(
@@ -47,7 +48,6 @@ function handleFulfilledNewSearch(
   state.results = action.payload.response.results;
   state.searchResponseId = action.payload.response.searchUid;
   state.questionAnswer = action.payload.response.questionAnswer;
-  state.extendedResults = action.payload.response.extendedResults;
 }
 
 function handlePendingSearch(

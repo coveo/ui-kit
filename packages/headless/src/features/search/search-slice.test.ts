@@ -226,6 +226,27 @@ describe('search-slice', () => {
 
       expect(finalState.questionAnswer).toEqual(originalQuestionAnswers);
     });
+
+    it('when a fetchMoreResults fulfilled is received, it updates the #extendedResults', () => {
+      state.extendedResults = {
+        generativeQuestionAnsweringId: 'an_initial_id',
+      };
+      const response = buildMockSearchResponse({results: [newResult]});
+      const expected = {
+        generativeQuestionAnsweringId: 'a_new_id',
+      };
+      response.extendedResults = expected;
+      const search = buildMockSearch({
+        response,
+      });
+
+      const finalState = searchReducer(
+        state,
+        fetchMoreResults.fulfilled(search, '')
+      );
+
+      expect(finalState.extendedResults).toBe(expected);
+    });
   });
 
   describe('handles rejected searches correctly', () => {
