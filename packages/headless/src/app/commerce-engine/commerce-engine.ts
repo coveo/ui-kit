@@ -21,6 +21,7 @@ import {
   CommerceEngineConfiguration,
   commerceEngineConfigurationSchema,
 } from './commerce-engine-configuration';
+import {searchReducer} from '../../features/commerce/search/search-slice';
 
 export type {CommerceEngineConfiguration};
 
@@ -29,6 +30,7 @@ const commerceEngineReducers = {
   commercePagination: paginationReducer,
   commerceSort: sortReducer,
   commerceContext: contextReducer,
+  commerceSearch: searchReducer,
   cart: cartReducer,
 };
 type CommerceEngineReducers = typeof commerceEngineReducers;

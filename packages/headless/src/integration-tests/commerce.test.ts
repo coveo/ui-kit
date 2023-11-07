@@ -8,6 +8,10 @@ import {
   CommerceEngine,
   ProductListing,
 } from '../commerce.index';
+import {
+  buildSearch,
+  Search,
+} from '../controllers/commerce/search/headless-search';
 import {getOrganizationEndpoints} from '../insight.index';
 import {waitForNextStateChange} from '../test/functional-test-utils';
 
@@ -66,6 +70,18 @@ describe.skip('commerce', () => {
     return productListing;
   };
 
+  const query = async (): Promise<Search> => {
+    const search = buildSearch(engine);
+    await waitForNextStateChange(engine, {
+      action: () => {
+        search.executeFirstSearch();
+      },
+      expectedSubscriberCalls: 2,
+    });
+
+    return search;
+  };
+
   it('uses the context to fetch the product listing', async () => {
     const productListing = await fetchProductListing();
 
@@ -90,6 +106,36 @@ describe.skip('commerce', () => {
     sort.sortBy(relevance);
 
     await fetchProductListing();
+
+    expect(sort.isSortedBy(relevance)).toBeTruthy();
+    expect(sort.isAvailable(relevance)).toBeTruthy();
+    expect(sort.state.availableSorts.length).toEqual(2);
+  });
+
+  it('uses the context to search', async () => {
+    const search = await query();
+
+    expect(search.state.products).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          ec_name: 'adidas_sale',
+        }),
+        expect.objectContaining({
+          ec_name: 'nike_sale',
+        }),
+        expect.objectContaining({
+          ec_name: 'puma_sale',
+        }),
+      ])
+    );
+  });
+
+  it('applies sort to search', async () => {
+    const sort = buildSort(engine);
+    const relevance = buildRelevanceSortCriterion();
+    sort.sortBy(relevance);
+
+    await query();
 
     expect(sort.isSortedBy(relevance)).toBeTruthy();
     expect(sort.isAvailable(relevance)).toBeTruthy();

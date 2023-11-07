@@ -1,5 +1,4 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice';
 import {
   buildFieldsSortCriterion,
   buildRelevanceSortCriterion,
@@ -11,9 +10,8 @@ import {
   SortDirection,
 } from '../../../../features/commerce/sort/sort';
 import {buildCoreSort, CoreSortProps, CoreSortInitialState, CoreSort, CoreSortState} from '../../sort/headless-sort';
-import {applySort} from '../../../../features/commerce/sort/sort-actions';
-import {updatePage} from '../../../../features/pagination/pagination-actions';
-import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
+import {searchReducer as commerceSearch} from '../../../../features/commerce/search/search-slice';
+import {executeSearch} from '../../../../features/commerce/search/search-actions';
 
 export type {
   SortByRelevance, SortByFields, SortByFieldsFields, SortCriterion,
@@ -31,21 +29,21 @@ export {
 export type Sort = CoreSort;
 
 /**
- * Creates a `Sort` controller instance for the product listing.
+ * Creates a `Sort` controller instance for the search.
  *
  * @param engine - The headless engine.
  * @param props - The configurable `Sort` controller properties.
  * @returns A `Sort` controller instance.
  */
 export function buildSort(engine: CommerceEngine, props: CoreSortProps = {}): Sort {
-  const controller = buildCoreSort(engine, props, {productListing});
+  const controller = buildCoreSort(engine, props, {commerceSearch})
 
   return {
     ...controller,
 
     sortBy(criterion: SortCriterion) {
       controller.sortBy(criterion);
-      engine.dispatch(fetchProductListing());
+      engine.dispatch(executeSearch());
     },
   }
 }

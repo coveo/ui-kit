@@ -136,6 +136,9 @@ export type ProductListingAction =
 export type ProductListingV2Action =
   PreparableAnalyticsAction<StateNeededByCommerceAnalyticsProvider>;
 
+export type CommerceSearchAction =
+  PreparableAnalyticsAction<StateNeededByCommerceAnalyticsProvider>;
+
 export interface AsyncThunkAnalyticsOptions<
   T extends StateNeededBySearchAnalyticsProvider,
 > {

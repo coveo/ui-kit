@@ -79,10 +79,10 @@ export type {
   SortByFields,
   SortByFieldsFields,
   SortCriterion,
-  SortProps,
-  SortInitialState,
+  CoreSortProps,
+  CoreSortInitialState,
   Sort,
-  SortState,
+  CoreSortState,
 } from './controllers/commerce/product-listing/sort/headless-product-listing-sort';
 export {
   buildSort,

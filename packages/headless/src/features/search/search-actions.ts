@@ -293,7 +293,7 @@ const buildFetchFacetValuesRequest = async (
   return mappedRequest;
 };
 
-const addEntryInActionsHistory = (state: StateNeededByExecuteSearch) => {
+export const addEntryInActionsHistory = (state: StateNeededByExecuteSearch) => {
   if (state.configuration.analytics.enabled) {
     historyStore.addElement({
       name: 'Query',
