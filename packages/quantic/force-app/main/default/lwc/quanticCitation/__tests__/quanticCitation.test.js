@@ -48,7 +48,7 @@ async function flushPromises() {
 
 function setupEventDispatchTest(eventName) {
   const handler = (event) => {
-    functionsMocks.eventHandler(event);
+    functionsMocks.eventHandler(event?.detail);
     document.removeEventListener(eventName, handler);
   };
   document.addEventListener(eventName, handler);
@@ -124,7 +124,7 @@ describe('c-quantic-citation', () => {
       jest.useRealTimers();
     });
 
-    it('should dispatch a citation hover event after hovering over the the citation for more than 1200ms', async () => {
+    it('should dispatch a citation hover event after hovering over the the citation for more than 1200ms, 200ms debounce duration before hover + 1000ms minimum hover duration', async () => {
       const element = createTestComponent();
       await flushPromises();
       setupEventDispatchTest('citationhover');
@@ -137,12 +137,15 @@ describe('c-quantic-citation', () => {
       await citationLink.dispatchEvent(
         new CustomEvent('mouseenter', {bubbles: true})
       );
-      jest.advanceTimersByTime(1500);
+      jest.advanceTimersByTime(1200);
       await citationLink.dispatchEvent(
         new CustomEvent('mouseleave', {bubbles: true})
       );
 
       expect(functionsMocks.eventHandler).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.eventHandler).toHaveBeenCalledWith({
+        citationHoverTimeMs: 1000,
+      });
     });
 
     it('should not dispatch a citation hover event after hovering over the the citation for more than 1200ms', async () => {
