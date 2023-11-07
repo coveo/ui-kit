@@ -97,3 +97,6 @@ export type {
   CaseAssistInteractiveResultProps,
 } from './controllers/document-suggestion-list/case-assist-headless-interactive-result';
 export {buildCaseAssistInteractiveResult} from './controllers/document-suggestion-list/case-assist-headless-interactive-result';
+
+// Features
+export {ResultTemplatesHelpers} from './features';
