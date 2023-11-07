@@ -7,7 +7,7 @@ index 376d086..367d384 100644
                  ]);
              }
 -            const BATCH_SIZE = 500;
-+            const BATCH_SIZE = process.env.plattform === 'win32' ? 1 : 500;
++            const BATCH_SIZE = process.env.platform === 'win32' ? 1 : 500;
              for(let i = 0; i < regexParserContent.length; i += BATCH_SIZE){
                  let batch = regexParserContent.slice(i, i + BATCH_SIZE);
                  await Promise.all(batch.map(async ([{ file , content  }, { transformer , extractor  }])=>{
