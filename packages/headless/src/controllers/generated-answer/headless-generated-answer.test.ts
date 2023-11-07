@@ -278,16 +278,24 @@ describe('generated answer', () => {
 
     describe('when we have multiple controllers', () => {
       let secondEngine: MockSearchEngine;
+      function callSecondListener() {
+        return (secondEngine.subscribe as jest.Mock).mock.calls.map(
+          (args) => args[0]
+        )[0]();
+      }
+
       beforeEach(() => {
         secondEngine = buildMockSearchAppEngine();
         buildGeneratedAnswer(secondEngine);
       });
+
       it('should dispatch the stream action only once', () => {
         engine.state.search.extendedResults = {
           generativeQuestionAnsweringId: 'another-fake-test-id',
         };
 
         callListener();
+        callSecondListener();
 
         const count = engine.actions.filter(
           (a) => a.type === streamAnswer.pending.type
