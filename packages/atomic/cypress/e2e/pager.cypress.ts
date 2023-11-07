@@ -152,17 +152,26 @@ describe('Pager Test Suites', () => {
 
   describe('Should allow customization of', () => {
     const iconTypes = ['previous', 'next'];
+    const testCustomIcon =
+      'https://raw.githubusercontent.com/coveo/ui-kit/master/packages/atomic/src/images/arrow-top-rounded.svg';
+
+    beforeEach(() => {
+      cy.intercept({
+        method: 'GET',
+        url: testCustomIcon,
+      }).as('custom-logo');
+    });
+
     iconTypes.forEach((iconType) => {
       it(`${iconType} icon`, () => {
         const iconSelector = `${iconType}-button-icon`;
-        const testCustomIcon =
-          'https://raw.githubusercontent.com/coveo/ui-kit/master/packages/atomic/src/images/arrow-top-rounded.svg';
 
         new TestFixture()
           .with(addPager({[iconSelector]: testCustomIcon}))
           .init();
 
-        cy.get('atomic-pager')
+        cy.wait('@custom-logo')
+          .get('atomic-pager')
           .shadow()
           .find(`[part="${iconSelector}"]`)
           .should('have.attr', 'icon')

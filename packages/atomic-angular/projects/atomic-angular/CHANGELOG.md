@@ -1,3 +1,9 @@
+## 2.17.2 (2023-11-02)
+
+### Features
+
+- **atomic:** add `resultsMustMatch` option to facet components ([#3169](https://github.com/coveo/ui-kit/issues/3169)) ([6a4581a](https://github.com/coveo/ui-kit/commits/6a4581aba955923d3e10c07fece3b7f28bf0074b))
+
 ## 2.16.2 (2023-10-25)
 
 ## 2.16.1 (2023-10-18)

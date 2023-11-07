@@ -2,7 +2,7 @@
   <template lwc:if={shouldDisplayGeneratedAnswer}>
     <div data-cy="generated-answer__card" class="slds-box">
       <div
-        class="generated-answer__card-header slds-var-m-bottom_medium slds-grid"
+        class="generated-answer__card-header slds-grid"
       >
         <span
           class="generated-answer__badge slds-var-p-around_x-small slds-text-title_bold"
@@ -56,6 +56,7 @@
                   data-cy="generated-answer__citations"
                   citations={citations}
                   citation-click-handler={handleCitationClick}
+                  citation-hover-handler={handleCitationHover}
                 ></c-quantic-source-citations>
               </div>
             </template>

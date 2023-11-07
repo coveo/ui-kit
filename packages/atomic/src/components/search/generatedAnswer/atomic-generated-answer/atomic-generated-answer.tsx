@@ -5,26 +5,24 @@ import {
   buildGeneratedAnswer,
   GeneratedAnswer,
   GeneratedAnswerState,
-  buildInteractiveCitation,
   GeneratedAnswerCitation,
+  GeneratedAnswerStyle,
+  buildInteractiveCitation,
 } from '@coveo/headless';
-import {GeneratedAnswerStyle} from '@coveo/headless/dist/definitions/features/generated-answer/generated-response-format';
-import {Component, h, State, Element, Prop} from '@stencil/core';
-import {buildCustomEvent} from '../../../utils/event-utils';
+import {Component, h, State, Prop} from '@stencil/core';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
-} from '../../../utils/initialization-utils';
+} from '../../../../utils/initialization-utils';
 import {
   GeneratedAnswerData,
   SafeStorage,
   StorageItems,
-} from '../../../utils/local-storage-utils';
-import {Heading} from '../../common/heading';
-import {LinkWithResultAnalytics} from '../../common/result-link/result-link';
-import {Switch} from '../../common/switch';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+} from '../../../../utils/local-storage-utils';
+import {Heading} from '../../../common/heading';
+import {Switch} from '../../../common/switch';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {CopyButton} from './copy-button';
 import {FeedbackButton} from './feedback-button';
 import {GeneratedContentContainer} from './generated-content-container';
@@ -65,8 +63,6 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   @State()
   copied = false;
 
-  @Element() private host!: HTMLElement;
-
   /**
    * The answer style to apply when the component first loads.
    * Options:
@@ -77,7 +73,6 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
    */
   @Prop() answerStyle: GeneratedAnswerStyle = 'default';
 
-  private stopPropagation?: boolean;
   private storage: SafeStorage = new SafeStorage();
   private data?: GeneratedAnswerData;
 
@@ -92,14 +87,6 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       },
     });
     this.searchStatus = buildSearchStatus(this.bindings.engine);
-    this.host.dispatchEvent(
-      buildCustomEvent(
-        'atomic/resolveStopPropagation',
-        (stopPropagation: boolean) => {
-          this.stopPropagation = stopPropagation;
-        }
-      )
-    );
   }
 
   // @ts-expect-error: This function is used by BindStateToController.
@@ -178,28 +165,18 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
           }
         );
         return (
-          <li key={citation.id}>
-            <LinkWithResultAnalytics
-              href={citation.clickUri ?? citation.uri}
-              title={citation.title}
-              part="citation"
-              target="_blank"
-              rel="noopener"
-              className="flex items-center p-1 bg-background btn-text-neutral border rounded-full border-neutral text-on-background"
-              onSelect={() => interactiveCitation.select()}
-              onBeginDelayedSelect={() =>
-                interactiveCitation.beginDelayedSelect()
-              }
-              onCancelPendingSelect={() =>
-                interactiveCitation.cancelPendingSelect()
-              }
-              stopPropagation={this.stopPropagation}
-            >
-              <div class="citation-index rounded-full font-medium flex items-center text-bg-blue shrink-0">
-                <div class="mx-auto">{index + 1}</div>
-              </div>
-              <span class="citation-title truncate mx-1">{citation.title}</span>
-            </LinkWithResultAnalytics>
+          <li key={citation.id} class="max-w-full">
+            <atomic-citation
+              citation={citation}
+              index={index}
+              sendHoverEndEvent={(citationHoverTimeMs: number) => {
+                this.generatedAnswer.logCitationHover(
+                  citation.id,
+                  citationHoverTimeMs
+                );
+              }}
+              interactiveCitation={interactiveCitation}
+            />
           </li>
         );
       }
@@ -213,7 +190,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
           <Heading
             level={0}
             part="header-label"
-            class="text-bg-blue font-medium inline-block rounded-md py-2 px-2.5"
+            class="text-bg-primary font-medium inline-block rounded-md py-2 px-2.5"
           >
             {this.bindings.i18n.t('generated-answer-title')}
           </Heading>
@@ -222,7 +199,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
             {!this.hasRetryableError &&
               !this.generatedAnswerState.isStreaming &&
               this.isAnswerVisible && (
-                <div class="feedback-buttons flex gap-2 ml-auto">
+                <div class="feedback-buttons flex shrink-0 gap-2 ml-auto">
                   <FeedbackButton
                     title={this.bindings.i18n.t('this-answer-was-helpful')}
                     variant="like"

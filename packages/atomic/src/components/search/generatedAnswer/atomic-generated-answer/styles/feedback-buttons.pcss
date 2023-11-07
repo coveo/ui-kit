@@ -16,14 +16,13 @@
 
     @mixin icon-coloring var(--atomic-neutral-dark);
 
+    &:hover,
     &.active {
       &.like {
-        background: var(--atomic-success-background);
         @mixin icon-coloring var(--atomic-success);
       }
 
       &.dislike {
-        background: var(--atomic-error-background);
         @mixin icon-coloring var(--atomic-error);
       }
     }
