@@ -39,8 +39,10 @@ export default class QuanticSourceCitations extends LightningElement {
    */
   get indexedCitations() {
     return this.citations.map((citation, index) => ({
-      ...citation,
-      index: index + 1,
+      data: {
+        ...citation,
+        index: index + 1,
+      },
       handleCitationClick: () => {
         this.citationClickHandler?.(citation.id);
       },

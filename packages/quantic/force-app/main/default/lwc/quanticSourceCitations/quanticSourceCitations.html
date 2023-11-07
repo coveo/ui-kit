@@ -6,8 +6,8 @@
     <ol class="slds-list_horizontal slds-wrap">
       <template for:each={indexedCitations} for:item="citation">
         <c-quantic-citation
-          key={citation.id}
-          citation={citation}
+          key={citation.data.id}
+          citation={citation.data}
           onclick={citation.handleCitationClick}
           oncitationhover={citation.handleCitationHover}
         ></c-quantic-citation>
