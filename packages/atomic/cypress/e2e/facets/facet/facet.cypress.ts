@@ -1,3 +1,4 @@
+import {FacetValue} from '@coveo/headless';
 import {SearchInterface, TestFixture} from '../../../fixtures/test-fixture';
 import {AnalyticsTracker} from '../../../utils/analyticsUtils';
 import {
@@ -905,6 +906,43 @@ describe('Facet v1 Test Suites', () => {
     CommonFacetAssertions.assertDisplaySearchInput(FacetSelectors, false);
   });
 
+  describe('with #withSearch to true and expanded (moreValuesAvailable=false)', () => {
+    const setup = (numValues: number) =>
+      new TestFixture()
+        .with(addFacet({field, label, 'with-search': 'true'}))
+        .withCustomResponse((response) => {
+          response.facets[0].values = [...Array(numValues).keys()].map((i) => {
+            return {value: i.toString(), numberOfResults: 1};
+          }) as FacetValue[];
+          response.facets[0].moreValuesAvailable = false;
+        })
+        .init();
+
+    it('with less than 8 values, it should not display the search input', () => {
+      setup(3);
+      CommonFacetAssertions.assertDisplaySearchInputWithoutIt(
+        FacetSelectors,
+        false
+      );
+    });
+
+    it('with exactly 8 values, it should not display the search input', () => {
+      setup(8);
+      CommonFacetAssertions.assertDisplaySearchInputWithoutIt(
+        FacetSelectors,
+        false
+      );
+    });
+
+    it('with more than 8 values, it should display the search input', () => {
+      setup(10);
+      CommonFacetAssertions.assertDisplaySearchInputWithoutIt(
+        FacetSelectors,
+        true
+      );
+    });
+  });
+
   describe('when no search has yet been executed', () => {
     beforeEach(() => {
       new TestFixture()
@@ -984,6 +1022,7 @@ describe('Facet v1 Test Suites', () => {
           setupSelectedFacet();
           cy.wait(TestFixture.interceptAliases.Search);
         });
+
         CommonAssertions.assertAccessibility(breadboxComponent);
         BreadboxAssertions.assertDisplayBreadcrumb(true);
         BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);

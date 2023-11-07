@@ -1,4 +1,4 @@
-import {GeneratedAnswerStyle} from '@coveo/headless/dist/definitions/features/generated-answer/generated-response-format';
+import {GeneratedAnswerStyle} from '@coveo/headless';
 import {FunctionalComponent, h} from '@stencil/core';
 import {i18n} from 'i18next';
 import BubbleIcon from '../../../../images/bubble.svg';

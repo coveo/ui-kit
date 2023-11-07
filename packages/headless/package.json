@@ -14,7 +14,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "2.37.0",
+  "version": "2.38.3",
   "files": [
     "dist/",
     "recommendation/",
@@ -50,8 +50,8 @@
     "pino-pretty": "^6.0.0 || ^10.0.0"
   },
   "dependencies": {
-    "@coveo/bueno": "0.44.3",
-    "@coveo/relay": "0.6.3",
+    "@coveo/bueno": "0.45.3",
+    "@coveo/relay": "0.6.4",
     "@microsoft/fetch-event-source": "2.0.1",
     "@reduxjs/toolkit": "1.9.7",
     "@types/redux-mock-store": "1.0.5",
@@ -65,10 +65,10 @@
     "redux-mock-store": "1.5.4",
     "redux-thunk": "2.4.2",
     "ts-debounce": "3.0.0",
-    "undici": "5.27.0"
+    "undici": "5.27.2"
   },
   "devDependencies": {
-    "@microsoft/api-extractor": "7.38.0",
+    "@microsoft/api-extractor": "7.38.2",
     "@microsoft/api-extractor-model": "7.28.2",
     "@microsoft/tsdoc": "0.14.2",
     "execa": "8.0.1",
