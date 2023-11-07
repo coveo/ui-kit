@@ -7,6 +7,11 @@ import {
   InteractiveResultCoreProps,
 } from '../core/interactive-result/headless-core-interactive-result';
 
+export type {
+  InteractiveResultCore,
+  InteractiveResultCoreOptions,
+  InteractiveResultCoreProps,
+};
 export interface CaseAssistInteractiveResultOptions
   extends InteractiveResultCoreOptions {
   /**

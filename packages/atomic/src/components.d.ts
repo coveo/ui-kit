@@ -5,13 +5,12 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { AutomaticFacet, CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, InlineLink, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+import { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout, ResultTarget } from "./components/common/layout/display-options";
 import { ResultRenderingFunction } from "./components/common/result-list/result-list-common-interface";
-import { GeneratedAnswerStyle } from "@coveo/headless/dist/definitions/features/generated-answer/generated-response-format";
 import { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 import { FacetDisplayValues } from "./components/common/facets/facet-common";
 import { i18n } from "i18next";
@@ -31,13 +30,12 @@ import { RedirectionPayload } from "./components/search/atomic-search-box/redire
 import { AriaLabelGenerator } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
-export { AutomaticFacet, CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, InlineLink, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+export { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 export { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout, ResultTarget } from "./components/common/layout/display-options";
 export { ResultRenderingFunction } from "./components/common/result-list/result-list-common-interface";
-export { GeneratedAnswerStyle } from "@coveo/headless/dist/definitions/features/generated-answer/generated-response-format";
 export { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 export { FacetDisplayValues } from "./components/common/facets/facet-common";
 export { i18n } from "i18next";
@@ -173,6 +171,12 @@ export namespace Components {
          */
         "withSearch": boolean;
     }
+    interface AtomicCitation {
+        "citation": GeneratedAnswerCitation;
+        "index": number;
+        "interactiveCitation": InteractiveCitation;
+        "sendHoverEndEvent": (citationHoverTimeMs: number) => void;
+    }
     /**
      * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
      * An `atomic-color-facet` displays a facet of the results for the current query as colors.
@@ -226,6 +230,10 @@ export namespace Components {
           * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
          */
         "numberOfValues": number;
+        /**
+          * Specifies how a result must match the selected facet values. Allowed values: - `atLeastOneValue`: A result will match if at least one of the corresponding facet values is selected. - `allValues`: A result will match if all corresponding facet values are selected.
+         */
+        "resultsMustMatch": FacetResultsMustMatch;
         /**
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */
@@ -309,6 +317,10 @@ export namespace Components {
           * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
          */
         "numberOfValues": number;
+        /**
+          * Specifies how a result must match the selected facet values. Allowed values: - `atLeastOneValue`: A result will match if at least one of the corresponding facet values is selected. - `allValues`: A result will match if all corresponding facet values are selected.
+         */
+        "resultsMustMatch": FacetResultsMustMatch;
         /**
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', and 'automatic'.
          */
@@ -547,6 +559,10 @@ export namespace Components {
           * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
          */
         "numberOfValues": number;
+        /**
+          * Specifies how a result must match the selected facet values. Allowed values: - `atLeastOneValue`: A result will match if at least one of the corresponding facet values is selected. - `allValues`: A result will match if all corresponding facet values are selected.
+         */
+        "resultsMustMatch": FacetResultsMustMatch;
         /**
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */
@@ -2051,7 +2067,7 @@ export namespace Components {
          */
         "suggestionTimeout": number;
         /**
-          * Whether to render the search box using a [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea) element. The resulting component will expand to support multi-line queries. When customizing the dimensions of the textarea element using the `"textarea"` CSS part, it is important to also apply the styling to its container's ::after pseudo-element as well as the `"textarea-spacer"` part. The buttons within the search box are likely to need adjusting as well.  Example: ```css <style>   atomic-search-box::part(textarea),   atomic-search-box::part(textarea-expander)::after,   atomic-search-box::part(textarea-spacer) {     font-size: x-large;   }    atomic-search-box::part(submit-button-wrapper),   atomic-search-box::part(clear-button-wrapper) {     padding-top: 0.75rem;   } </style> ```
+          * Whether to render the search box using a [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea) element. The resulting component will expand to support multi-line queries. When customizing the dimensions of the textarea element using the `"textarea"` CSS part, it is important to also apply the styling to its container's ::after pseudo-element as well as the `"textarea-spacer"` part. The buttons within the search box are likely to need adjusting as well.  Example: ```css <style>   atomic-search-box::part(textarea),   atomic-search-box::part(textarea-expander)::after,   atomic-search-box::part(textarea-spacer) {     font-size: x-large;   }    atomic-search-box::part(submit-button-wrapper),   atomic-search-box::part(clear-button-wrapper) {     padding-top: 0.75rem;   } </style> ```  NB: The textarea functionality will be enforced on the next major version of Atomic (3.0.0)
          */
         "textarea": boolean;
     }
@@ -2601,6 +2617,12 @@ declare global {
     var HTMLAtomicCategoryFacetElement: {
         prototype: HTMLAtomicCategoryFacetElement;
         new (): HTMLAtomicCategoryFacetElement;
+    };
+    interface HTMLAtomicCitationElement extends Components.AtomicCitation, HTMLStencilElement {
+    }
+    var HTMLAtomicCitationElement: {
+        prototype: HTMLAtomicCitationElement;
+        new (): HTMLAtomicCitationElement;
     };
     /**
      * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -4020,6 +4042,7 @@ declare global {
         "atomic-automatic-facet-generator": HTMLAtomicAutomaticFacetGeneratorElement;
         "atomic-breadbox": HTMLAtomicBreadboxElement;
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
+        "atomic-citation": HTMLAtomicCitationElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
         "atomic-component-error": HTMLAtomicComponentErrorElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
@@ -4268,6 +4291,12 @@ declare namespace LocalJSX {
          */
         "withSearch"?: boolean;
     }
+    interface AtomicCitation {
+        "citation": GeneratedAnswerCitation;
+        "index": number;
+        "interactiveCitation": InteractiveCitation;
+        "sendHoverEndEvent": (citationHoverTimeMs: number) => void;
+    }
     /**
      * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
      * An `atomic-color-facet` displays a facet of the results for the current query as colors.
@@ -4321,6 +4350,10 @@ declare namespace LocalJSX {
           * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
          */
         "numberOfValues"?: number;
+        /**
+          * Specifies how a result must match the selected facet values. Allowed values: - `atLeastOneValue`: A result will match if at least one of the corresponding facet values is selected. - `allValues`: A result will match if all corresponding facet values are selected.
+         */
+        "resultsMustMatch"?: FacetResultsMustMatch;
         /**
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */
@@ -4404,6 +4437,10 @@ declare namespace LocalJSX {
           * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
          */
         "numberOfValues"?: number;
+        /**
+          * Specifies how a result must match the selected facet values. Allowed values: - `atLeastOneValue`: A result will match if at least one of the corresponding facet values is selected. - `allValues`: A result will match if all corresponding facet values are selected.
+         */
+        "resultsMustMatch"?: FacetResultsMustMatch;
         /**
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', and 'automatic'.
          */
@@ -4642,6 +4679,10 @@ declare namespace LocalJSX {
           * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
          */
         "numberOfValues"?: number;
+        /**
+          * Specifies how a result must match the selected facet values. Allowed values: - `atLeastOneValue`: A result will match if at least one of the corresponding facet values is selected. - `allValues`: A result will match if all corresponding facet values are selected.
+         */
+        "resultsMustMatch"?: FacetResultsMustMatch;
         /**
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */
@@ -6074,7 +6115,7 @@ declare namespace LocalJSX {
          */
         "suggestionTimeout"?: number;
         /**
-          * Whether to render the search box using a [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea) element. The resulting component will expand to support multi-line queries. When customizing the dimensions of the textarea element using the `"textarea"` CSS part, it is important to also apply the styling to its container's ::after pseudo-element as well as the `"textarea-spacer"` part. The buttons within the search box are likely to need adjusting as well.  Example: ```css <style>   atomic-search-box::part(textarea),   atomic-search-box::part(textarea-expander)::after,   atomic-search-box::part(textarea-spacer) {     font-size: x-large;   }    atomic-search-box::part(submit-button-wrapper),   atomic-search-box::part(clear-button-wrapper) {     padding-top: 0.75rem;   } </style> ```
+          * Whether to render the search box using a [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea) element. The resulting component will expand to support multi-line queries. When customizing the dimensions of the textarea element using the `"textarea"` CSS part, it is important to also apply the styling to its container's ::after pseudo-element as well as the `"textarea-spacer"` part. The buttons within the search box are likely to need adjusting as well.  Example: ```css <style>   atomic-search-box::part(textarea),   atomic-search-box::part(textarea-expander)::after,   atomic-search-box::part(textarea-spacer) {     font-size: x-large;   }    atomic-search-box::part(submit-button-wrapper),   atomic-search-box::part(clear-button-wrapper) {     padding-top: 0.75rem;   } </style> ```  NB: The textarea functionality will be enforced on the next major version of Atomic (3.0.0)
          */
         "textarea"?: boolean;
     }
@@ -6489,6 +6530,7 @@ declare namespace LocalJSX {
         "atomic-automatic-facet-generator": AtomicAutomaticFacetGenerator;
         "atomic-breadbox": AtomicBreadbox;
         "atomic-category-facet": AtomicCategoryFacet;
+        "atomic-citation": AtomicCitation;
         "atomic-color-facet": AtomicColorFacet;
         "atomic-component-error": AtomicComponentError;
         "atomic-did-you-mean": AtomicDidYouMean;
@@ -6659,6 +6701,7 @@ declare module "@stencil/core" {
              * An `atomic-category-facet` displays a facet of values in a browsable, hierarchical fashion.
              */
             "atomic-category-facet": LocalJSX.AtomicCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCategoryFacetElement>;
+            "atomic-citation": LocalJSX.AtomicCitation & JSXBase.HTMLAttributes<HTMLAtomicCitationElement>;
             /**
              * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
              * An `atomic-color-facet` displays a facet of the results for the current query as colors.

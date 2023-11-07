@@ -31,7 +31,7 @@ export const Switch: FunctionalComponent<SwitchProps> = (props) => {
     'w-4',
     'h-4',
     'rounded-full',
-    'bg-background',
+    'bg-white',
     props.checked ? 'ml-6' : '',
   ].join(' ');
 

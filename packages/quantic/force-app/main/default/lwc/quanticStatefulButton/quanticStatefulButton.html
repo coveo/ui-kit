@@ -1,0 +1,19 @@
+<template>
+  <div class="slds-is-relative stateful-button__container" onmouseenter={handleMouseEnter} onmouseleave={handleMouseLeave}>
+    <button class={buttonCSSClass} onclick={handleClick} aria-label={tooltip} aria-pressed={selected}>
+      <template lwc:if={iconName}>
+        <span class="slds-grid slds-var-p-vertical_x-small">
+          <lightning-icon class={iconCSSClass} icon-name={iconName} size="xx-small"></lightning-icon>
+        </span>
+      </template>
+      <template lwc:if={label}>
+        <span>{label}</span>
+      </template>
+    </button>
+    <template lwc:if={tooltip}>
+      <c-quantic-tooltip>
+        <div slot="content">{tooltip}</div>
+      </c-quantic-tooltip>
+    </template>
+  </div>
+</template>

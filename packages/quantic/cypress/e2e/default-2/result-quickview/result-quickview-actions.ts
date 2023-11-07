@@ -5,11 +5,17 @@ import {
 
 const resultQuickviewActions = (selector: ResultQuickviewSelector) => {
   return {
-    clickPreview: (variant?: string) =>
+    clickPreview: () =>
       selector
-        .buttonPreview(variant)
+        .buttonPreview()
         .click()
         .logAction('When clicking preview button'),
+
+    hoverOverPreview: () =>
+      selector
+        .buttonPreviewContainer()
+        .trigger('mouseenter')
+        .logAction('When hovering over the preview button'),
   };
 };
 

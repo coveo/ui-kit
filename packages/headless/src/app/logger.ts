@@ -14,6 +14,8 @@ export interface LoggerOptions {
   logFormatter?: (object: {}) => {};
   /**
    * Function which will be called after writing the log message in the browser.
+   *
+   * @deprecated This option is deprecated and will be removed in a future version.
    */
   browserPostLogHook?: (level: LogLevel, logEvent: LogEvent) => void;
 }
@@ -24,11 +26,6 @@ export function buildLogger(options: LoggerOptions | undefined) {
     level: options?.level || 'warn',
     formatters: {
       log: options?.logFormatter,
-    },
-    browser: {
-      transmit: {
-        send: options?.browserPostLogHook || (() => {}),
-      },
     },
   });
 }

@@ -35,7 +35,7 @@ jobs:
         uses: actions/github-script@d7906e4ad0b1822421a7e6a35d5ca353c962f410 # v6
         with:
           script: |
-            github.actions.cancelWorkflowRun({
+            github.rest.actions.cancelWorkflowRun({
               owner: context.repo.owner,
               repo: context.repo.repo,
               run_id: context.runId

@@ -9,6 +9,11 @@ import {
   InteractiveResultCoreProps,
 } from '../../core/interactive-result/headless-core-interactive-result';
 
+export type {
+  InteractiveResultCoreOptions,
+  InteractiveResultCoreProps,
+  InteractiveResultCore,
+};
 export interface InsightInteractiveResultOptions
   extends InteractiveResultCoreOptions {
   /**

@@ -5,6 +5,7 @@ import {
   SmartSnippetProps,
   buildCoreSmartSnippet,
 } from '../../core/smart-snippet/headless-core-smart-snippet';
+import {InlineLink} from '../../smart-snippet/headless-smart-snippet-interactive-inline-links';
 import {buildSmartSnippetInteractiveInlineLinks} from './headless-insight-smart-snippet-interactive-inline-links';
 
 export type {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering';
@@ -16,6 +17,7 @@ export type {
   SmartSnippetCore,
 } from '../../core/smart-snippet/headless-core-smart-snippet';
 
+export type {InlineLink};
 /**
  * Creates an insight `SmartSnippet` controller instance.
  *

@@ -89,8 +89,14 @@ export {buildCaseAssistInteractiveResult as buildInteractiveResult} from './cont
 export {buildDocumentSuggestionList as buildDocumentSuggestion} from './controllers/document-suggestion-list/headless-document-suggestion-list';
 
 export type {
+  InteractiveResultCore,
+  InteractiveResultCoreOptions,
+  InteractiveResultCoreProps,
   CaseAssistInteractiveResult,
   CaseAssistInteractiveResultOptions,
   CaseAssistInteractiveResultProps,
 } from './controllers/document-suggestion-list/case-assist-headless-interactive-result';
 export {buildCaseAssistInteractiveResult} from './controllers/document-suggestion-list/case-assist-headless-interactive-result';
+
+// Features
+export {ResultTemplatesHelpers} from './features';

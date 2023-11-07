@@ -14,34 +14,29 @@ const timestampSelector = '#timestamp';
 const resultListSelector = '.result-list li';
 const searchBoxSelector = '.search-box input';
 const routes = ['generic', 'react'] as const;
+
+const isPageDev =
+  process.env.NODE_ENV === 'development' &&
+  Cypress.env('NEXTJS_ROUTER') === 'pages';
+
 // Note: Thresholds might need to be adjusted as the page tested changes (e.g. more components are added etc)
 const vitals: Record<(typeof routes)[number], Cypress.ReportWebVitalsConfig> = {
   generic: {
     thresholds: {
-      // TODO: Remove temporary threshold bump for pages router dev mode
-      // https://coveord.atlassian.net/browse/KIT-2834
-      // fcp: 200,
-      // lcp: 200,
-      fcp: 2000,
-      lcp: 2000,
+      fcp: isPageDev ? 2000 : 200,
+      lcp: isPageDev ? 2000 : 200,
       cls: 0,
       ttfb: 60,
-      // TODO: Ensure validity of following input based vitals with interactive elements
       fid: 400,
       inp: 400,
     },
   },
   react: {
     thresholds: {
-      // TODO: Remove temporary threshold bump for pages router dev mode
-      // https://coveord.atlassian.net/browse/KIT-2834
-      // fcp: 400,
-      // lcp: 400,
-      fcp: 2000,
-      lcp: 2000,
+      fcp: isPageDev ? 2000 : 400,
+      lcp: isPageDev ? 2000 : 400,
       cls: 0,
       ttfb: 120,
-      // TODO: Ensure validity of following input based vitals with interactive elements
       fid: 800,
       inp: 800,
     },

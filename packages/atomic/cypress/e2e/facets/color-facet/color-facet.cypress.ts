@@ -397,6 +397,55 @@ describe('Color Facet Test Suites', () => {
     });
   });
 
+  describe('with #resultsMustMatch set to default value', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(
+          addColorFacet({
+            field: colorFacetField,
+            label: colorFacetLabel,
+          })
+        )
+        .init();
+
+      selectIdleBoxValueAt(0);
+    });
+
+    it('should set resultsMustMatch to `atLeastOneValue`', () => {
+      cy.wait(TestFixture.interceptAliases.Search).should((firstSearch) => {
+        expect(firstSearch.request.body.facets[0]).to.have.property(
+          'resultsMustMatch',
+          'atLeastOneValue'
+        );
+      });
+    });
+  });
+
+  describe('with #resultsMustMatch set to "allValues"', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(
+          addColorFacet({
+            field: colorFacetField,
+            label: colorFacetLabel,
+            'results-must-match': 'allValues',
+          })
+        )
+        .init();
+
+      selectIdleBoxValueAt(0);
+    });
+
+    it('should set resultsMustMatch to `allValues`', () => {
+      cy.wait(TestFixture.interceptAliases.Search).should((firstSearch) => {
+        expect(firstSearch.request.body.facets[0]).to.have.property(
+          'resultsMustMatch',
+          'allValues'
+        );
+      });
+    });
+  });
+
   describe('with #withSearch to false', () => {
     beforeEach(() => {
       new TestFixture()

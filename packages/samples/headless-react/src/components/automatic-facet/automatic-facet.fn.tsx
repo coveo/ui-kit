@@ -28,3 +28,9 @@ export const AutomaticFacet: FunctionComponent<AutomaticFacetProps> = (
     </ul>
   );
 };
+
+// usage
+
+/**
+ * This component is meant to be used inside the `AutomaticFacetGenerator` component.
+ */

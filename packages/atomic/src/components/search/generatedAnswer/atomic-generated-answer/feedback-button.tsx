@@ -1,7 +1,7 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import ThumbsDownIcon from '../../../images/thumbs-down.svg';
-import ThumbsUpIcon from '../../../images/thumbs-up.svg';
-import {Button} from '../../common/button';
+import ThumbsDownIcon from '../../../../images/thumbs-down.svg';
+import ThumbsUpIcon from '../../../../images/thumbs-up.svg';
+import {Button} from '../../../common/button';
 
 type FeedbackVariant = 'like' | 'dislike';
 
@@ -22,7 +22,8 @@ export const FeedbackButton: FunctionalComponent<FeedbackButtonProps> = (
   return (
     <Button
       title={props.title}
-      style="text-neutral"
+      style="text-transparent"
+      part="feedback-button"
       class={`feedback-button p-2 rounded-md ${props.variant} ${
         props.active ? 'active' : ''
       }`}

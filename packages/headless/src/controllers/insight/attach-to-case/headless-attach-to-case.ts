@@ -48,6 +48,7 @@ export interface AttachToCase extends Controller {
   /**
    * Check if a specific result is part of the list of AttachedResults in the state.
    * @param result A result to check if attached, with SearchAPI fields
+   * @returns A boolean indicating if the result is attached.
    */
   isAttached(): boolean;
   /**
@@ -62,6 +63,12 @@ export interface AttachToCase extends Controller {
   detach(): void;
 }
 
+/**
+ *
+ * @param engine - The headless engine.
+ * @param props - The configurable `AttachToCase` properties.
+ * @returns - A `AttachToCase` controller instance.
+ */
 export function buildAttachToCase(
   engine: InsightEngine,
   props: AttachToCaseProps

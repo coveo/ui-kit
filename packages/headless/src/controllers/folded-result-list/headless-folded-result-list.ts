@@ -1,6 +1,7 @@
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {loadCollection} from '../../features/folding/folding-actions';
 import {foldedResultAnalyticsClient} from '../../features/folding/folding-analytics-actions';
+import {fetchMoreResults} from '../../features/search/search-actions';
 import {
   buildCoreFoldedResultList,
   FoldingOptions,
@@ -40,7 +41,11 @@ export function buildFoldedResultList(
 ): FoldedResultList {
   const foldedResultList = buildCoreFoldedResultList(
     engine,
-    {...props, loadCollectionActionCreator: loadCollection},
+    {
+      ...props,
+      loadCollectionActionCreator: loadCollection,
+      fetchMoreResultsActionCreator: fetchMoreResults,
+    },
     foldedResultAnalyticsClient
   );
   return {

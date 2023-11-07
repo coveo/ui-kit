@@ -1,9 +1,10 @@
-import {AutomaticFacet, SearchAppState, buildAutomaticFacet} from '../../..';
+import {buildAutomaticFacet} from '../../../controllers/facets/automatic-facet/headless-automatic-facet';
 import {
   deselectAllAutomaticFacetValues,
   toggleSelectAutomaticFacetValue,
 } from '../../../features/facets/automatic-facet-set/automatic-facet-set-actions';
 import {executeSearch} from '../../../features/search/search-actions';
+import {SearchAppState} from '../../../state/search-app-state';
 import {
   MockSearchEngine,
   buildMockSearchAppEngine,
@@ -11,6 +12,7 @@ import {
 } from '../../../test';
 import {buildMockAutomaticFacetSlice} from '../../../test/mock-automatic-facet-slice';
 import {buildMockFacetValue} from '../../../test/mock-facet-value';
+import {AutomaticFacet} from '../automatic-facet-generator/headless-automatic-facet-generator';
 
 describe('automatic facet', () => {
   const field = 'field';

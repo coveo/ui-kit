@@ -7,13 +7,28 @@ import {
   ResultQuickviewSelectors,
 } from './result-quickview-selectors';
 
+export type PreviewVariantType = 'brand' | 'outline-brand' | 'result-action';
+
 function resultQuickviewExpectations(selector: ResultQuickviewSelector) {
   return {
-    displayButtonPreview: (display: boolean, variant?: string) => {
+    displayButtonPreview: (display: boolean) => {
       selector
-        .buttonPreview(variant)
+        .buttonPreview()
         .should(display ? 'exist' : 'not.exist')
         .logDetail(`${should(display)} display the button preview`);
+    },
+    displayCorrectPreviewButtonVariant: (variant: PreviewVariantType) => {
+      const expectedCssVariantClasses = {
+        brand: 'slds-button_brand',
+        'outline-brand': 'slds-button_outline-brand',
+        'result-action': 'slds-button_icon-border-filled',
+      };
+      selector
+        .buttonPreview()
+        .should('have.class', expectedCssVariantClasses[`${variant}`])
+        .log(
+          `the preview button should be displayed in the ${variant} variant`
+        );
     },
     displayButtonPreviewIcon: (display: boolean) => {
       selector
@@ -29,9 +44,9 @@ function resultQuickviewExpectations(selector: ResultQuickviewSelector) {
         .should('contain', iconName)
         .logDetail(`the icon in button preview should contain "${iconName}"`);
     },
-    buttonPreviewIsDisabled: (disabled: boolean, variant?: string) => {
+    buttonPreviewIsDisabled: (disabled: boolean) => {
       selector
-        .buttonPreview(variant)
+        .buttonPreview()
         .invoke('attr', 'disabled')
         .should(disabled ? 'exist' : 'not.exist')
         .logDetail(`The button preview ${should(disabled)} be disabled`);

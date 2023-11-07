@@ -29,6 +29,7 @@ export const RouteAlias = {
   Quickview: '@coveoQuickview',
   Locale: '@locale',
   GenQAStream: '@genQAStream',
+  Build: '@build',
 };
 
 export const ConsoleAliases = {
@@ -77,6 +78,11 @@ export function setupIntercept() {
     method: 'POST',
     path: '**/rest/search/v2/facet?*',
   }).as(RouteAlias.FacetSearch.substring(1));
+
+  cy.intercept({
+    method: 'GET',
+    url: /.*\/build\/[\w|-]+-[\d|\w]+\.js/,
+  }).as(RouteAlias.Build.substring(1));
 
   cy.intercept({
     method: 'GET',

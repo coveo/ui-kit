@@ -16,6 +16,7 @@ import {
   logGeneratedAnswerFeedback,
   logGeneratedAnswerHideAnswers,
   logGeneratedAnswerShowAnswers,
+  logHoverCitation,
   logLikeGeneratedAnswer,
   logOpenGeneratedAnswerSource,
 } from '../../features/generated-answer/generated-answer-analytics-actions';
@@ -156,6 +157,18 @@ describe('generated answer', () => {
     generatedAnswer.logCitationClick(testCitation.id);
     const action = engine.findAsyncAction(
       logOpenGeneratedAnswerSource(testCitation.id).pending
+    );
+
+    expect(action).toBeTruthy();
+  });
+
+  it('#logCitationHover dispatches analytics action', () => {
+    const testCitation = buildMockCitation();
+    const exampleDuration = 100;
+
+    generatedAnswer.logCitationHover(testCitation.id, exampleDuration);
+    const action = engine.findAsyncAction(
+      logHoverCitation(testCitation.id, exampleDuration).pending
     );
 
     expect(action).toBeTruthy();

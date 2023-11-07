@@ -138,8 +138,8 @@ export default class QuanticResultLink extends NavigationMixin(
   /**
    * Returns the title of the link to display.
    */
-  get displayedTitle() {
-    return this.result.title || this.result.clickUri;
+  get displayedField() {
+    return this.result.title ? 'title' : 'clickUri';
   }
 
   /**

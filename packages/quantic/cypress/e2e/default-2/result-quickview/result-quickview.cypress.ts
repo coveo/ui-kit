@@ -5,14 +5,19 @@ import {
 } from '../../../page-objects/search';
 import {scope} from '../../../reporters/detailed-collector';
 import {ResultQuickviewActions as Actions} from './result-quickview-actions';
-import {ResultQuickviewExpectations as Expect} from './result-quickview-expectations';
+import {
+  ResultQuickviewExpectations as Expect,
+  PreviewVariantType,
+} from './result-quickview-expectations';
+
+const variants = ['brand', 'outline-brand', 'result-action'];
 
 interface ResultQuickviewOptions {
   result: string;
   maximumPreviewSize: number;
   previewButtonIcon: string;
   previewButtonLabel: string;
-  previewButtonVariant: string;
+  previewButtonVariant: PreviewVariantType;
   tooltip: string;
 }
 
@@ -101,17 +106,6 @@ describe('quantic-result-quickview', () => {
         Expect.displaySectionPreview(true);
       });
 
-      scope('custom #previewButtonVariant', () => {
-        visitResultQuickview({
-          previewButtonVariant: 'outline-brand',
-        });
-        mockResultHtmlContent('div');
-
-        Expect.displayButtonPreview(true, 'outline-brand');
-        Actions.clickPreview('outline-brand');
-        Expect.displaySectionPreview(true);
-      });
-
       scope('custom #tooltip', () => {
         const customTooltip = 'Quick view';
         visitResultQuickview({
@@ -120,21 +114,29 @@ describe('quantic-result-quickview', () => {
         mockResultHtmlContent('div');
 
         Expect.displayButtonPreview(true);
+        Actions.hoverOverPreview();
         Expect.displayTooltip(customTooltip);
       });
     });
   });
 
-  describe('with #previewButtonVariant set to result-action', () => {
-    it('should display the quickview button as a result action', () => {
-      visitResultQuickview({
-        previewButtonVariant: 'result-action',
-      });
-      mockResultHtmlContent('div');
+  describe('the preview button with custom variants', () => {
+    variants.forEach((variantValue) => {
+      it(`should display the quick view button in the ${variantValue} variant`, () => {
+        visitResultQuickview({
+          previewButtonVariant: <PreviewVariantType>variantValue,
+        });
+        mockResultHtmlContent('div');
 
-      scope('when loading the page', () => {
-        Expect.events.receivedEvent(true, resultActionRegister);
-        Expect.displayButtonPreview(true, 'icon-border-filled');
+        scope('when loading the page', () => {
+          if (variantValue === 'result-action') {
+            Expect.events.receivedEvent(true, resultActionRegister);
+          }
+          Expect.displayButtonPreview(true);
+          Expect.displayCorrectPreviewButtonVariant(
+            <PreviewVariantType>variantValue
+          );
+        });
       });
     });
   });

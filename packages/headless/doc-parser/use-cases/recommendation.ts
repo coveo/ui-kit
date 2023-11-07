@@ -30,6 +30,10 @@ const controllers: ControllerConfiguration[] = [
       ],
     },
   },
+  {
+    initializer: 'buildInteractiveResult',
+    samplePaths: {},
+  },
 ];
 
 const actionLoaders: ActionLoaderConfiguration[] = [

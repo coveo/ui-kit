@@ -1,5 +1,5 @@
 <template>
-  <div class="slds-is-relative slds-show_inline result-action_container result-action_white-container">
+  <div class="slds-is-relative slds-show_inline result-action_container result-action_white-container" onmouseenter={showTooltip} onmouseleave={hideTooltip}>
     <template if:true={loading}>
       <button class={loadingClasses} aria-label={displayedLabel}>
         <div class="slds-spinner_container slds-var-m-around_xx-small">
@@ -16,10 +16,9 @@
       </lightning-button-icon-stateful>
     </template>
     <template if:true={displayedLabel}>
-      <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left result-action_tooltip slds-fall-into-ground"
-        aria-hidden="true">
-        <div class="slds-popover__body">{displayedLabel}</div>
-      </div>
+      <c-quantic-tooltip>
+        <div slot="content">{displayedLabel}</div>
+      </c-quantic-tooltip>
     </template>
   </div>
 </template>

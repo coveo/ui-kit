@@ -1,4 +1,4 @@
-import {GeneratedAnswerStyle} from '@coveo/headless/dist/definitions/features/generated-answer/generated-response-format';
+import {GeneratedAnswerStyle} from '@coveo/headless';
 import {TagProps} from '../fixtures/fixture-common';
 import {TestFixture} from '../fixtures/test-fixture';
 import {AnalyticsTracker} from '../utils/analyticsUtils';
@@ -23,6 +23,7 @@ const testCitation = {
   uri: 'https://www.coveo.com',
   permanentid: 'some-permanent-id-123',
   clickUri: 'https://www.coveo.com/en',
+  text: 'This is the snippet given to the generative model.',
 };
 const testTextDelta = 'Some text';
 const testMessagePayload = {
@@ -125,6 +126,7 @@ describe('Generated Answer Test Suites', () => {
         GeneratedAnswerAssertions.assertAnswerVisibility(false);
         GeneratedAnswerAssertions.assertFeedbackButtonsVisibility(false);
         GeneratedAnswerAssertions.assertToggleValue(false);
+        GeneratedAnswerAssertions.assertCopyButtonVisibility(false);
         GeneratedAnswerAssertions.assertLocalStorageData({isVisible: false});
 
         describe('when component is re-activated', () => {
@@ -135,6 +137,7 @@ describe('Generated Answer Test Suites', () => {
           GeneratedAnswerAssertions.assertAnswerVisibility(true);
           GeneratedAnswerAssertions.assertFeedbackButtonsVisibility(true);
           GeneratedAnswerAssertions.assertToggleValue(true);
+          GeneratedAnswerAssertions.assertCopyButtonVisibility(true);
           GeneratedAnswerAssertions.assertLocalStorageData({isVisible: true});
         });
       });
@@ -166,6 +169,10 @@ describe('Generated Answer Test Suites', () => {
           GeneratedAnswerSelectors.dislikeButton().should('exist');
         });
 
+        it('should display copy button', () => {
+          GeneratedAnswerSelectors.copyButton().should('exist');
+        });
+
         it('should display rephrase options', () => {
           rephraseOptions.forEach((option) =>
             GeneratedAnswerSelectors.rephraseButton(option.label).should(
@@ -181,6 +188,15 @@ describe('Generated Answer Test Suites', () => {
 
               GeneratedAnswerAssertions.assertAnswerStyle(option.value);
             });
+          });
+        });
+
+        describe('when we click on copy button', () => {
+          it('should copy the generated answer to the clipboard', async () => {
+            GeneratedAnswerSelectors.copyButton().focus().click();
+            GeneratedAnswerAssertions.assertAnswerCopiedToClipboard(
+              testTextDelta
+            );
           });
         });
       });
@@ -211,6 +227,37 @@ describe('Generated Answer Test Suites', () => {
           );
         });
 
+        describe('when a citation is hovered', () => {
+          beforeEach(() => {
+            AnalyticsTracker.reset();
+            cy.clock();
+            GeneratedAnswerSelectors.citation().trigger('mouseover');
+            cy.tick(1300).invoke('restore');
+          });
+
+          it('should display the citation card', () => {
+            GeneratedAnswerSelectors.citationCard().should('be.visible');
+            GeneratedAnswerSelectors.citationCard().should(
+              'contain.text',
+              testCitation.uri
+            );
+            GeneratedAnswerSelectors.citationCard().should(
+              'contain.text',
+              testCitation.title
+            );
+            GeneratedAnswerSelectors.citationCard().should(
+              'contain.text',
+              testCitation.text
+            );
+          });
+
+          it('should send analytics when the hover ends', () => {
+            GeneratedAnswerSelectors.citation().trigger('mouseleave');
+
+            GeneratedAnswerAssertions.assertLogGeneratedAnswerSourceHover();
+          });
+        });
+
         describe('when a citation is clicked', () => {
           beforeEach(() => {
             AnalyticsTracker.reset();
@@ -219,7 +266,9 @@ describe('Generated Answer Test Suites', () => {
               .click();
           });
 
-          GeneratedAnswerAssertions.assertLogOpenGeneratedAnswerSource(true);
+          it('should log an openGeneratedAnswerSource click event', () => {
+            GeneratedAnswerAssertions.assertLogOpenGeneratedAnswerSource();
+          });
         });
 
         describe('when a citation is right-clicked', () => {
@@ -228,7 +277,9 @@ describe('Generated Answer Test Suites', () => {
             GeneratedAnswerSelectors.citation().rightclick();
           });
 
-          GeneratedAnswerAssertions.assertLogOpenGeneratedAnswerSource(true);
+          it('should log an openGeneratedAnswerSource click event', () => {
+            GeneratedAnswerAssertions.assertLogOpenGeneratedAnswerSource();
+          });
         });
       });
 

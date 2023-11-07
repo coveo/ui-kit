@@ -19,6 +19,14 @@ const controllers: ControllerConfiguration[] = [
     initializer: 'buildDocumentSuggestionList',
     samplePaths: {},
   },
+  {
+    initializer: 'buildDocumentSuggestionList',
+    samplePaths: {},
+  },
+  {
+    initializer: 'buildCaseAssistInteractiveResult',
+    samplePaths: {},
+  },
 ];
 
 const actionLoaders: ActionLoaderConfiguration[] = [

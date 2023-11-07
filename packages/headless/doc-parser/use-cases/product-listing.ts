@@ -101,6 +101,22 @@ const controllers: ControllerConfiguration[] = [
     },
     utils: ['buildDateRange'],
   },
+  {
+    initializer: 'buildDateFilter',
+    samplePaths: {},
+  },
+  {
+    initializer: 'buildNumericFilter',
+    samplePaths: {},
+  },
+  {
+    initializer: 'buildContext',
+    samplePaths: {},
+  },
+  {
+    initializer: 'buildInteractiveResult',
+    samplePaths: {},
+  },
 ];
 
 const actionLoaders: ActionLoaderConfiguration[] = [

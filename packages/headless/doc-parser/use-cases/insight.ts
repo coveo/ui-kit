@@ -87,6 +87,34 @@ const controllers: ControllerConfiguration[] = [
     initializer: 'buildInsightInterface',
     samplePaths: {},
   },
+  {
+    initializer: 'buildAttachToCase',
+    samplePaths: {},
+  },
+  {
+    initializer: 'buildFoldedResultList',
+    samplePaths: {},
+  },
+  {
+    initializer: 'buildInteractiveResult',
+    samplePaths: {},
+  },
+  {
+    initializer: 'buildFacetConditionsManager',
+    samplePaths: {},
+  },
+  {
+    initializer: 'buildSmartSnippet',
+    samplePaths: {},
+  },
+  {
+    initializer: 'buildSmartSnippetQuestionsList',
+    samplePaths: {},
+  },
+  {
+    initializer: 'buildQueryError',
+    samplePaths: {},
+  },
 ];
 
 const actionLoaders: ActionLoaderConfiguration[] = [

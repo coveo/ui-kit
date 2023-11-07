@@ -8,6 +8,12 @@ import {
   InteractiveResultCoreProps,
 } from '../../core/interactive-result/headless-core-interactive-result';
 
+export type {
+  InteractiveResultCoreOptions,
+  InteractiveResultCoreProps,
+  InteractiveResultCore,
+};
+
 export interface RecommendationInteractiveResultOptions
   extends InteractiveResultCoreOptions {
   /**

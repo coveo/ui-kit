@@ -18,7 +18,7 @@
     </div>
     <p slot="metadata" class="slds-text-body_small slds-m-bottom_xx-small" style="color:#3E3E3C">From: {result.raw.sfcreatedbyname}</p>
     <div slot="excerpt">
-      {result.Excerpt}
+      <c-quantic-result-highlighted-text-field engine-id={engineId} result={result} field="excerpt"></c-quantic-result-highlighted-text-field>
     </div>
     <div slot="bottom-metadata" class="slds-m-top_x-small">
       <c-quantic-result-printable-uri result={result} max-number-of-parts="3"></c-quantic-result-printable-uri>

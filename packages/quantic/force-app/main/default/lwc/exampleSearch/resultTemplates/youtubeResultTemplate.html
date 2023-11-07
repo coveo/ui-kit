@@ -20,7 +20,7 @@
       <img loading="lazy" style="border-radius: 4px; border: none;" src={videoThumbnail}></img>
     </div>
     <div slot="excerpt">
-      {result.Excerpt}
+      <c-quantic-result-highlighted-text-field engine-id={engineId} result={result} field="excerpt"></c-quantic-result-highlighted-text-field>
     </div>
     <div slot="bottom-metadata" class="slds-grid slds-text-align_left slds-m-top_xx-small" style="font-size: 10px">
       <lightning-icon icon-name="utility:clock" size="xx-small"></lightning-icon>

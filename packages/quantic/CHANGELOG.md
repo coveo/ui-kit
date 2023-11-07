@@ -1,3 +1,15 @@
+## 2.37.3 (2023-11-02)
+
+### Bug Fixes
+
+- **deps:** update all dependencies j:kit-282 ([#3347](https://github.com/coveo/ui-kit/issues/3347)) ([047b2a8](https://github.com/coveo/ui-kit/commits/047b2a8e8d82445c1fb800c5ac19428223cf4e56))
+
+### Features
+
+- double publish the NPM packages into GitHub packages for use by internal repositories also using the [@coveo](https://github.com/coveo) scope ([#3251](https://github.com/coveo/ui-kit/issues/3251)) ([4d413e6](https://github.com/coveo/ui-kit/commits/4d413e6bb27065b6667f4705db17b21d6112128b))
+- **quantic:** added support for the reformulate feature for rga in quantic ([#3333](https://github.com/coveo/ui-kit/issues/3333)) ([0236019](https://github.com/coveo/ui-kit/commits/02360194a75e3726a944da1c45529885b6626c94))
+- **quantic:** copy to clipboard button added to quantic rga ([#3341](https://github.com/coveo/ui-kit/issues/3341)) ([a524fe2](https://github.com/coveo/ui-kit/commits/a524fe2a5e5ec0eb9da3111244c91787bbb64fb8))
+
 # 2.36.0 (2023-10-25)
 
 ### Features

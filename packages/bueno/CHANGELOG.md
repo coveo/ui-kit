@@ -1,3 +1,9 @@
+## 0.45.3 (2023-11-02)
+
+### Features
+
+- double publish the NPM packages into GitHub packages for use by internal repositories also using the [@coveo](https://github.com/coveo) scope ([#3251](https://github.com/coveo/ui-kit/issues/3251)) ([4d413e6](https://github.com/coveo/ui-kit/commits/4d413e6bb27065b6667f4705db17b21d6112128b))
+
 ## 0.44.3 (2023-10-18)
 
 ## 0.44.2 (2023-10-04)
