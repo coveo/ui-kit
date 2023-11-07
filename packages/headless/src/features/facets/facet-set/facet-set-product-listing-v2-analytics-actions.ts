@@ -4,7 +4,6 @@ import {
   requiredNonEmptyString,
 } from '../../../utils/validate-payload';
 import {
-  AnalyticsType,
   ProductListingV2Action,
   makeCommerceAnalyticsAction,
 } from '../../analytics/analytics-utils';
@@ -21,7 +20,6 @@ import {FacetSortCriterion} from './interfaces/request';
 export const logFacetShowMore = (facetId: string): ProductListingV2Action =>
   makeCommerceAnalyticsAction(
     'analytics/commerce/facet/showMore',
-    AnalyticsType.Search,
     (client, state) => {
       validatePayload(facetId, facetIdDefinition);
       const metadata = buildFacetBaseMetadata(
@@ -35,7 +33,6 @@ export const logFacetShowMore = (facetId: string): ProductListingV2Action =>
 export const logFacetShowLess = (facetId: string): ProductListingV2Action =>
   makeCommerceAnalyticsAction(
     'analytics/commerce/facet/showLess',
-    AnalyticsType.Search,
     (client, state) => {
       validatePayload(facetId, facetIdDefinition);
       const metadata = buildFacetBaseMetadata(
@@ -64,7 +61,6 @@ export const logFacetUpdateSort = (
 ): ProductListingV2Action =>
   makeCommerceAnalyticsAction(
     'analytics/commerce/facet/sortChange',
-    AnalyticsType.Search,
     (client, state) => {
       validatePayload(payload, {
         facetId: facetIdDefinition,
@@ -86,7 +82,6 @@ export const logFacetUpdateSort = (
 export const logFacetClearAll = (facetId: string): ProductListingV2Action =>
   makeCommerceAnalyticsAction(
     'analytics/commerce/facet/reset',
-    AnalyticsType.Search,
     (client, state) => {
       validatePayload(facetId, facetIdDefinition);
 
@@ -114,7 +109,6 @@ export const logFacetSelect = (
 ): ProductListingV2Action =>
   makeCommerceAnalyticsAction(
     'analytics/commerce/facet/select',
-    AnalyticsType.Search,
     (client, state) => {
       validatePayload(payload, {
         facetId: facetIdDefinition,
@@ -136,7 +130,6 @@ export const logFacetExclude = (
 ): ProductListingV2Action =>
   makeCommerceAnalyticsAction(
     'analytics/commerce/facet/exclude',
-    AnalyticsType.Search,
     (client, state) => {
       validatePayload(payload, {
         facetId: facetIdDefinition,
@@ -170,7 +163,6 @@ export const logFacetDeselect = (
 ): ProductListingV2Action =>
   makeCommerceAnalyticsAction(
     'analytics/commerce/facet/deselect',
-    AnalyticsType.Search,
     (client, state) => {
       validatePayload(payload, {
         facetId: facetIdDefinition,
@@ -191,7 +183,6 @@ export const logFacetBreadcrumb = (
 ): ProductListingV2Action =>
   makeCommerceAnalyticsAction(
     'analytics/commerce/facet/breadcrumb',
-    AnalyticsType.Search,
     (client, state) => {
       validatePayload(payload, {
         facetId: facetIdDefinition,

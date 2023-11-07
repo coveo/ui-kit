@@ -1,0 +1,24 @@
+<template>
+  <span
+    class="rephrase-buttons__label slds-m-top_xx-small"
+    data-cy="rephrase-buttons__label"
+    >{labels.rephrase}</span
+  >
+  <div
+    class="rephrase-buttons__content slds-grid slds-m-top_xx-small"
+    data-cy="rephrase-buttons__content"
+  >
+    <template for:each={rephraseOptions} for:item="option">
+      <c-quantic-stateful-button
+        data-cy={option.value}
+        key={option.label}
+        selected={option.isSelected}
+        tooltip={option.tooltip}
+        label={option.label}
+        icon-name={option.iconName}
+        onselect={option.handleSelect}
+        ondeselect={handleDeselect}
+      ></c-quantic-stateful-button>
+    </template>
+  </div>
+</template>

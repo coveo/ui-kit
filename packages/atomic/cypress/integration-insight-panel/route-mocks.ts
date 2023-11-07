@@ -1,3 +1,5 @@
+import {buildMockResult, buildMockRaw} from '../utils/mock-result';
+
 export const insightSearchAlias = '@CoveoInsight';
 const searchRouteMatcher =
   '**/rest/organizations/*/insight/v1/configs/*/search';
@@ -70,14 +72,13 @@ export const mockSearchWithSmartSnippet = (
         relatedQuestions: [],
       };
       res.body.results = [
-        {
+        buildMockResult({
           uri: uri,
           title: title,
-          ClickUri: uri,
           clickUri: uri,
           uniqueId: '123',
-          raw: {permanentid: permanentId},
-        },
+          raw: buildMockRaw({permanentid: permanentId, urihash: 'potato'}),
+        }),
       ];
       res.send();
     });
@@ -124,14 +125,18 @@ export const mockSearchWithSmartSnippetSuggestions = (
           contentIdValue: 'example permanentId',
         },
       };
-      res.body.results = relatedQuestions.map(({title, uri, documentId}) => ({
-        uri,
-        title,
-        ClickUri: uri,
-        clickUri: uri,
-        uniqueId: '123',
-        raw: {permanentid: documentId.contentIdValue},
-      }));
+      res.body.results = relatedQuestions.map(({title, uri, documentId}) =>
+        buildMockResult({
+          uri,
+          title,
+          clickUri: uri,
+          uniqueId: '123',
+          raw: buildMockRaw({
+            permanentid: documentId.contentIdValue,
+            urihash: 'someUriHash',
+          }),
+        })
+      );
       res.send();
     });
   }).as(insightSearchAlias.substring(1));

@@ -1,3 +1,30 @@
+## 2.38.3 (2023-11-02)
+
+### Bug Fixes
+
+- **deps:** update all dependencies j:kit-282 ([#3347](https://github.com/coveo/ui-kit/issues/3347)) ([047b2a8](https://github.com/coveo/ui-kit/commits/047b2a8e8d82445c1fb800c5ac19428223cf4e56))
+- **headless:** fix pino logging incorrectly ([#3352](https://github.com/coveo/ui-kit/issues/3352)) ([4106362](https://github.com/coveo/ui-kit/commits/41063622930c33722b81991a77802c0ee62037a0))
+- remove defineAutomaticFacet ([#3344](https://github.com/coveo/ui-kit/issues/3344)) ([f2f2913](https://github.com/coveo/ui-kit/commits/f2f2913dcf96a55dd29a5f095c11eea6f6e27e03))
+
+### Features
+
+- **atomic:** generated answer citation details on hover ([#3340](https://github.com/coveo/ui-kit/issues/3340)) ([894129f](https://github.com/coveo/ui-kit/commits/894129fde1a9ef95655a44d5f46510265bf1dc11))
+- double publish the NPM packages into GitHub packages for use by internal repositories also using the [@coveo](https://github.com/coveo) scope ([#3251](https://github.com/coveo/ui-kit/issues/3251)) ([4d413e6](https://github.com/coveo/ui-kit/commits/4d413e6bb27065b6667f4705db17b21d6112128b))
+- **headless:** expose generated answer text content ([#3316](https://github.com/coveo/ui-kit/issues/3316)) ([fd91e90](https://github.com/coveo/ui-kit/commits/fd91e90c7f3cf3f0a3b3ea9b255de3c870c25122))
+- **headless:** new logCitationHover method added to the generated answer controller ([#3350](https://github.com/coveo/ui-kit/issues/3350)) ([78f3b5f](https://github.com/coveo/ui-kit/commits/78f3b5f68c3472992736c2bfe3ae69ca1b9d24f4))
+- **hedless:** show generated answer metadata added to ua search events custom data ([#3325](https://github.com/coveo/ui-kit/issues/3325)) ([af5f035](https://github.com/coveo/ui-kit/commits/af5f035ea615f074f29e7ee6b489b6f72ea26a66))
+
+# 2.37.0 (2023-10-25)
+
+### Features
+
+- add analyticsMode & relay ([#3277](https://github.com/coveo/ui-kit/issues/3277)) ([8b33bb5](https://github.com/coveo/ui-kit/commits/8b33bb5f511926f7b7bb49ecb01aee9e4611ab95))
+- add trackingId if analyticsMode=next ([#3295](https://github.com/coveo/ui-kit/issues/3295)) ([13f69a9](https://github.com/coveo/ui-kit/commits/13f69a960c24cb9d0007d0c9a079ed5d334ec881))
+- add ze magic cookie ([#3299](https://github.com/coveo/ui-kit/issues/3299)) ([eda1e3c](https://github.com/coveo/ui-kit/commits/eda1e3c6c59a53b30fa11ff37bd715e03bc912f7))
+- **atomic:** added buttons to rephrase a generated answer ([#3287](https://github.com/coveo/ui-kit/issues/3287)) ([60a841a](https://github.com/coveo/ui-kit/commits/60a841a229a77bfb14b825ab3e5d75a2203ea9d3))
+- **commerce:** make sort comply with api ([#3271](https://github.com/coveo/ui-kit/issues/3271)) ([24a16ce](https://github.com/coveo/ui-kit/commits/24a16cee07ae268a1595459ab7af22b8d14b8e0f))
+- **headless:** add Copy generated answer controller action for GenQA… ([#3290](https://github.com/coveo/ui-kit/issues/3290)) ([49a68d5](https://github.com/coveo/ui-kit/commits/49a68d5fa458d34d1f7936048a91c7dbc0f37aa8))
+
 # 2.36.0 (2023-10-18)
 
 ### Bug Fixes

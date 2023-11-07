@@ -373,7 +373,11 @@ export type {
 } from './recent-results-list/headless-recent-results-list';
 export {buildRecentResultsList} from './recent-results-list/headless-recent-results-list';
 
-export type {InteractiveRecentResult} from './recent-results-list/headless-interactive-recent-result';
+export type {
+  InteractiveRecentResult,
+  InteractiveRecentResultProps,
+  InteractiveRecentResultOptions,
+} from './recent-results-list/headless-interactive-recent-result';
 export {buildInteractiveRecentResult} from './recent-results-list/headless-interactive-recent-result';
 
 export type {
@@ -409,12 +413,7 @@ export {buildCategoryFieldSuggestions} from './field-suggestions/category-facet/
 
 export type {
   AutomaticFacet,
-  AutomaticFacetProps,
   AutomaticFacetState,
-} from './facets/automatic-facet/headless-automatic-facet';
-export {buildAutomaticFacet} from './facets/automatic-facet/headless-automatic-facet';
-
-export type {
   AutomaticFacetGenerator,
   AutomaticFacetGeneratorProps,
   AutomaticFacetGeneratorState,
