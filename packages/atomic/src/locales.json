@@ -6591,7 +6591,7 @@
   },
   "irrelevant": {
     "en": "Irrelevant",
-    "fr": "Non pertinent",
+    "fr": "Non pertinente",
     "cs": "Nepodstatné",
     "da": "Irrelevant",
     "de": "Irrelevant",
@@ -6618,7 +6618,7 @@
   },
   "not-accurate": {
     "en": "Not accurate",
-    "fr": "Inexact",
+    "fr": "Inexacte",
     "cs": "Nepřesné",
     "da": "Ikke præcist",
     "de": "Nicht genau",
@@ -6672,7 +6672,7 @@
   },
   "harmful": {
     "en": "Harmful",
-    "fr": "Nocif",
+    "fr": "Nocive",
     "cs": "Škodlivý",
     "da": "Skadelig",
     "de": "Schädlich",

@@ -194,6 +194,11 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     );
   }
 
+  private clickDislike() {
+    this.modalRef!.isOpen = true;
+    this.generatedAnswer.dislike();
+  }
+
   private renderContent() {
     return (
       <div part="generated-content">
@@ -220,10 +225,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
                     title={this.bindings.i18n.t('this-answer-was-not-helpful')}
                     variant="dislike"
                     active={this.generatedAnswerState.disliked}
-                    onClick={() => {
-                      this.modalRef!.isOpen = true;
-                      this.generatedAnswer.dislike();
-                    }}
+                    onClick={this.clickDislike}
                   />
                   <CopyButton
                     title={
