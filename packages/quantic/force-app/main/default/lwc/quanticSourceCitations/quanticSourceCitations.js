@@ -26,6 +26,12 @@ export default class QuanticSourceCitations extends LightningElement {
    * @type {function}
    */
   @api citationClickHandler;
+  /**
+   * The function to be executed when a citation is clicked.
+   * @api
+   * @type {function}
+   */
+  @api citationHoverHandler;
 
   /**
    * Returns the indexed citations.
@@ -33,10 +39,18 @@ export default class QuanticSourceCitations extends LightningElement {
    */
   get indexedCitations() {
     return this.citations.map((citation, index) => ({
-      ...citation,
-      index: index + 1,
+      data: {
+        ...citation,
+        index: index + 1,
+      },
       handleCitationClick: () => {
         this.citationClickHandler?.(citation.id);
+      },
+      handleCitationHover: (event) => {
+        this.citationHoverHandler?.(
+          citation.id,
+          event.detail.citationHoverTimeMs
+        );
       },
     }));
   }
