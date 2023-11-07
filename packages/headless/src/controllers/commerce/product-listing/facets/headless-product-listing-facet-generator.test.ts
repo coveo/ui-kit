@@ -1,4 +1,5 @@
 import {facetsReducer as commerceFacets} from '../../../../features/commerce/facets/facets-slice';
+import {facetOptionsReducer as facetOptions} from '../../../../features/facet-options/facet-options-slice';
 import {facetSetReducer as facetSet} from '../../../../features/facets/facet-set/facet-set-slice';
 import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
@@ -29,6 +30,7 @@ describe('FacetGenerator', () => {
   it('adds correct reducers to engine', () => {
     expect(engine.addReducers).toBeCalledWith({
       facetSet,
+      facetOptions,
       commerceFacets,
     });
   });

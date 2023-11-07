@@ -38,7 +38,6 @@ describe('product-listing-v2-slice', () => {
     const finalState = productListingV2Reducer(state, action);
 
     expect(finalState.products[0]).toEqual(result);
-    expect(finalState.facets[0]).toEqual(facet);
     expect(finalState.isLoading).toBe(false);
   });
 
