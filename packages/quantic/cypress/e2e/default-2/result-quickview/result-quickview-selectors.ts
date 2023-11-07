@@ -3,7 +3,8 @@ import {ComponentSelector, CypressSelector} from '../../common-selectors';
 export const resultQuickviewComponent = 'c-quantic-result-quickview';
 
 export interface ResultQuickviewSelector extends ComponentSelector {
-  buttonPreview: (variant?: string) => CypressSelector;
+  buttonPreview: () => CypressSelector;
+  buttonPreviewContainer: () => CypressSelector;
   buttonPreviewIcon: () => CypressSelector;
   sectionPreview: () => CypressSelector;
   closeButton: () => CypressSelector;
@@ -19,10 +20,12 @@ export interface ResultQuickviewSelector extends ComponentSelector {
 export const ResultQuickviewSelectors: ResultQuickviewSelector = {
   get: () => cy.get(resultQuickviewComponent),
 
-  buttonPreview: (variant?: string) =>
-    variant
-      ? ResultQuickviewSelectors.get().find('.slds-button_' + variant)
-      : ResultQuickviewSelectors.get().find('.quickview__button-base'),
+  buttonPreviewContainer: () =>
+    ResultQuickviewSelectors.get().find(
+      '[data-cy="quick-view-button__container"]'
+    ),
+  buttonPreview: () =>
+    ResultQuickviewSelectors.get().find('[data-cy="quick-view-button"]'),
   buttonPreviewIcon: () =>
     ResultQuickviewSelectors.buttonPreview().find('lightning-icon'),
   sectionPreview: () => ResultQuickviewSelectors.get().find('section'),
@@ -40,5 +43,5 @@ export const ResultQuickviewSelectors: ResultQuickviewSelector = {
     ResultQuickviewSelectors.get().find(
       '.quickview__content-container .iframe-wrapper .quickview__spinner-container'
     ),
-  tooltip: () => ResultQuickviewSelectors.get().find('.slds-popover'),
+  tooltip: () => ResultQuickviewSelectors.get().find('[data-cy="tooltip"]'),
 };
