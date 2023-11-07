@@ -241,9 +241,11 @@ describe('generated answer', () => {
 
   describe('subscription to changes', () => {
     function callListener() {
-      return (engine.subscribe as jest.Mock).mock.calls.map(
-        (args) => args[0]
-      )[0]();
+      return (engine.subscribe as jest.Mock).mock.calls
+        .map((args) => args[0])
+        .forEach((listener) => {
+          listener();
+        });
     }
 
     it('should not dispatch the stream action when there is no stream ID', () => {
@@ -278,11 +280,6 @@ describe('generated answer', () => {
 
     describe('when we have multiple controllers', () => {
       let secondEngine: MockSearchEngine;
-      function callSecondListener() {
-        return (secondEngine.subscribe as jest.Mock).mock.calls.map(
-          (args) => args[0]
-        )[0]();
-      }
 
       beforeEach(() => {
         secondEngine = buildMockSearchAppEngine();
@@ -295,7 +292,6 @@ describe('generated answer', () => {
         };
 
         callListener();
-        callSecondListener();
 
         const count = engine.actions.filter(
           (a) => a.type === streamAnswer.pending.type
