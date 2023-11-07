@@ -38,7 +38,7 @@
     "@stencil/core": "4.6.0"
   },
   "devDependencies": {
-    "cypress": "13.3.3",
+    "cypress": "13.4.0",
     "cypress-repeat": "2.3.4"
   }
 }
