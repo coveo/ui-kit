@@ -10,20 +10,28 @@
 }
 
 .feedback-buttons {
-  .feedback-button {
+  [part='feedback-button'] {
     width: 2.2rem;
     height: 2.2rem;
 
     @mixin icon-coloring var(--atomic-neutral-dark);
 
+    &:hover,
     &.active {
       &.like {
-        background: var(--atomic-success-background);
         @mixin icon-coloring var(--atomic-success);
       }
 
       &.dislike {
-        background: var(--atomic-error-background);
+        @mixin icon-coloring var(--atomic-error);
+      }
+    }
+
+    &:hover {
+      &.like {
+        @mixin icon-coloring var(--atomic-success);
+      }
+      &.dislike {
         @mixin icon-coloring var(--atomic-error);
       }
     }

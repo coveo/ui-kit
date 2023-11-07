@@ -229,6 +229,21 @@ export default class QuanticResultQuickview extends LightningElement {
     this._isLoading = false;
   }
 
+  showTooltip() {
+    this.tooltipComponent?.showTooltip();
+  }
+
+  hideTooltip() {
+    this.tooltipComponent?.hideTooltip();
+  }
+
+  /**
+   * @returns {Object}
+   */
+  get tooltipComponent() {
+    return this.template.querySelector('c-quantic-tooltip');
+  }
+
   get contentURL() {
     return this.state.contentURL?.includes(
       encodeURIComponent(this.result.uniqueId)
