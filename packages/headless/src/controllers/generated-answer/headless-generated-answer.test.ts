@@ -275,6 +275,26 @@ describe('generated answer', () => {
 
       expect(action).toBeTruthy();
     });
+
+    describe('when we have multiple controllers', () => {
+      let secondEngine: MockSearchEngine;
+      beforeEach(() => {
+        secondEngine = buildMockSearchAppEngine();
+        buildGeneratedAnswer(secondEngine);
+      });
+      it('should dispatch the stream action only once', () => {
+        engine.state.search.extendedResults = {
+          generativeQuestionAnsweringId: 'another-fake-test-id',
+        };
+
+        callListener();
+
+        const count = engine.actions.filter(
+          (a) => a.type === streamAnswer.pending.type
+        ).length;
+        expect(count).toEqual(1);
+      });
+    });
   });
 
   describe('#show', () => {
