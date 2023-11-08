@@ -172,7 +172,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   updateState() {
     this.state = this.generatedAnswer.state;
     this.updateFeedbackState();
-    console.log(this.getGeneratedAnswerStatus());
     this.ariaLiveMessage.dispatchMessage(this.getGeneratedAnswerStatus());
   }
 
@@ -180,17 +179,17 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     if (!this.state.isVisible) {
       return this.labels.generatedAnswerIshidden;
     }
-    const isGenerating = this.state.isLoading || this.state.isStreaming;
-    const hasAnswer = !!this.state.answer;
-    const hasError = this.hasRetryableError;
 
-    if (hasError) {
+    if (this.hasRetryableError) {
       return this.labels.couldNotGenerateAnAnswer;
     }
+
+    const isGenerating = this.state.isStreaming;
     if (isGenerating) {
       return this.labels.generatingAnswer;
     }
 
+    const hasAnswer = !!this.state.answer;
     return hasAnswer
       ? I18nUtils.format(this.labels.answerGenerated, this.answer)
       : '';

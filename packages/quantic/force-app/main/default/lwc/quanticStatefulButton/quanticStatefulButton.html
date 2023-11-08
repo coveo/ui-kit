@@ -4,7 +4,7 @@
     <button class={buttonCSSClass} onclick={handleClick} aria-label={tooltip} aria-pressed={selected}>
       <template lwc:if={iconName}>
         <span class="slds-grid slds-var-p-vertical_x-small">
-          <lightning-icon class={iconCSSClass} icon-name={iconName} size={size}></lightning-icon>
+          <lightning-icon class={iconCSSClass} icon-name={iconName} size={iconSize}></lightning-icon>
         </span>
       </template>
       <template lwc:if={label}>
