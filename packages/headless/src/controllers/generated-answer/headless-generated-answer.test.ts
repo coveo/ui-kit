@@ -241,9 +241,11 @@ describe('generated answer', () => {
 
   describe('subscription to changes', () => {
     function callListener() {
-      return (engine.subscribe as jest.Mock).mock.calls.map(
-        (args) => args[0]
-      )[0]();
+      return (engine.subscribe as jest.Mock).mock.calls
+        .map((args) => args[0])
+        .forEach((listener) => {
+          listener();
+        });
     }
 
     it('should not dispatch the stream action when there is no stream ID', () => {
@@ -274,6 +276,28 @@ describe('generated answer', () => {
       const action = findAction(streamAnswer.pending.type);
 
       expect(action).toBeTruthy();
+    });
+
+    describe('when we have multiple controllers', () => {
+      let secondEngine: MockSearchEngine;
+
+      beforeEach(() => {
+        secondEngine = buildMockSearchAppEngine();
+        buildGeneratedAnswer(secondEngine);
+      });
+
+      it('should dispatch the stream action only once', () => {
+        engine.state.search.extendedResults = {
+          generativeQuestionAnsweringId: 'another-fake-test-id',
+        };
+
+        callListener();
+
+        const count = engine.actions.filter(
+          (a) => a.type === streamAnswer.pending.type
+        ).length;
+        expect(count).toEqual(1);
+      });
     });
   });
 

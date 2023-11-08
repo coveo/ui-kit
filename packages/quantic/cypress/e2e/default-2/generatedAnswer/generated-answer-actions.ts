@@ -79,6 +79,18 @@ function generatedAnswerActions(selector: GeneratedAnswerSelector) {
         .click()
         .logAction(`When clicking on the ${name} rephrase button`),
 
+    hoverOverCitation: (index: number) =>
+      selector
+        .citationLink(index)
+        .trigger('mouseenter')
+        .logAction(`When hovering over the citation at index ${index}`),
+
+    stopHoverOverCitation: (index: number) =>
+      selector
+        .citationLink(index)
+        .trigger('mouseleave')
+        .logAction(`When stop hovering over the citation at index ${index}`),
+
     clickCopyToClipboardButton: () =>
       selector
         .copyToClipboardButton()
