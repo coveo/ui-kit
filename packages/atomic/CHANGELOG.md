@@ -1,3 +1,13 @@
+# 2.49.0 (2023-11-08)
+
+### Bug Fixes
+
+- **deps:** update all dependencies j:kit-282 ([#3366](https://github.com/coveo/ui-kit/issues/3366)) ([da241a8](https://github.com/coveo/ui-kit/commits/da241a81d2747c57968caf6da55778fe8db9e6d5))
+
+### Features
+
+- **atomic:** dynamically display search input depending on the length of values displayed ([#3351](https://github.com/coveo/ui-kit/issues/3351)) ([9d77cfe](https://github.com/coveo/ui-kit/commits/9d77cfe1818aee1f92bb2884b3f6e3582e8d70a8))
+
 ## 2.48.3 (2023-11-02)
 
 ### Bug Fixes
