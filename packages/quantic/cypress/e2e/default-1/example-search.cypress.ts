@@ -5,7 +5,6 @@ import {
   setupAliases,
   sortByDateDescending,
   selectRegularFacetValue,
-  selectors,
 } from '../../page-objects/example-search';
 import {InterceptAliases} from '../../page-objects/search';
 
@@ -48,27 +47,13 @@ describe('example-search', () => {
 
   describe('when typing a search query', () => {
     it('should trigger query when typing in searchbox', () => {
-      const exampleQuery = 'term A';
-      searchFor(exampleQuery)
+      searchFor('test')
         .wait(InterceptAliases.Search)
         .then((interception) =>
-          assert.equal(interception.request.body.q, exampleQuery)
+          assert.equal(interception.request.body.q, 'test')
         )
         .get(search.summary)
-        .contains(exampleQuery);
-    });
-
-    it('should trigger query when pasting a query in the searchbox then clicking the ENTER key', () => {
-      const exampleQuery = 'term B';
-      cy.get(selectors.searchbox)
-        .invoke('val', exampleQuery)
-        .trigger('keyup', {key: 'Enter'})
-        .wait(InterceptAliases.Search)
-        .then((interception) =>
-          assert.equal(interception.request.body.q, exampleQuery)
-        )
-        .get(search.summary)
-        .contains(exampleQuery);
+        .contains('test');
     });
   });
 

@@ -259,12 +259,15 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
     if (this.suggestionsOpen && selectedSuggestion) {
       this.standaloneSearchBox.selectSuggestion(selectedSuggestion.rawValue);
     } else {
-      if (this.standaloneSearchBox.state.value !== this.input.value) {
-        this.standaloneSearchBox.updateText(this.input.value);
-      }
       this.standaloneSearchBox.submit();
     }
     this.input.blur();
+  }
+
+  handleValueChange() {
+    if (this.standaloneSearchBox.state.value !== this.input.value) {
+      this.standaloneSearchBox.updateText(this.input.value);
+    }
   }
 
   onSubmit(event) {
@@ -323,6 +326,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   }
 
   onTextAreaInput() {
+    this.handleValueChange();
     this.adjustTextAreaHeight();
   }
 

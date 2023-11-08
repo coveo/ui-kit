@@ -115,23 +115,6 @@ describe('quantic-standalone-search-box', () => {
           );
         });
 
-        scope(
-          'when pasting a query in the searchbox then clicking the ENTER key',
-          () => {
-            const query = 'query';
-            mockSuggestions();
-            visitStandaloneSearchBox({textarea});
-
-            Expect.inputInitialized(textarea);
-            Actions.pasteTermInSearchBox(query, textarea);
-            Actions.pressEnter(textarea);
-            Expect.displayClearButton(true);
-            Expect.urlContains(
-              `/global-search/%40uri#q=${encodeURIComponent(query)}`
-            );
-          }
-        );
-
         scope('when submitting script', () => {
           const query = '<script>alert("test")</script>';
           visitStandaloneSearchBox({textarea});

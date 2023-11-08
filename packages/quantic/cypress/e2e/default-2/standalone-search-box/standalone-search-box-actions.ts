@@ -21,15 +21,6 @@ const standaloneSearchBoxActions = (selector: StandaloneSearchBoxSelector) => {
         })
         .logAction(`when typing "${query}" in search box`);
     },
-
-    pasteTermInSearchBox: (query: string, textarea = false) => {
-      selector
-        .input(textarea)
-        .then((searchbox) => {
-          cy.wrap(searchbox).invoke('val', query);
-        })
-        .logAction(`when pasting "${query}" in search box`);
-    },
     submitSearch: () => {
       selector.searchButton().click().logAction('when submitting query');
     },
