@@ -1,3 +1,15 @@
+# 2.38.0 (2023-11-08)
+
+### Bug Fixes
+
+- **deps:** update all dependencies j:kit-282 ([#3366](https://github.com/coveo/ui-kit/issues/3366)) ([da241a8](https://github.com/coveo/ui-kit/commits/da241a81d2747c57968caf6da55778fe8db9e6d5))
+
+### Features
+
+- **quantic:** added the ability to have text highlighting in a quantic search interface ([#3361](https://github.com/coveo/ui-kit/issues/3361)) ([24f7bd6](https://github.com/coveo/ui-kit/commits/24f7bd6437126cd14556dc499e19e6bca0b8e67e))
+- **quantic:** citations details feature added when hovering over a citation ([#3356](https://github.com/coveo/ui-kit/issues/3356)) ([f8b807f](https://github.com/coveo/ui-kit/commits/f8b807f8cf616bff07edd5530abdd80e38ef742f))
+- **quantic:** refactored QuanticResultAction to make it use the QuanticTooltip component ([#3359](https://github.com/coveo/ui-kit/issues/3359)) ([9221f84](https://github.com/coveo/ui-kit/commits/9221f84316b8dfd060e4285950241fc57ba2e7ac))
+
 ## 2.37.3 (2023-11-02)
 
 ### Bug Fixes

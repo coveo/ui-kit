@@ -1,3 +1,16 @@
+# 2.39.0 (2023-11-08)
+
+### Bug Fixes
+
+- **deps:** update all dependencies j:kit-282 ([#3366](https://github.com/coveo/ui-kit/issues/3366)) ([da241a8](https://github.com/coveo/ui-kit/commits/da241a81d2747c57968caf6da55778fe8db9e6d5))
+- **headless:** dispatch action when fetchMoreResults() is called from a folded result list controller ([#3363](https://github.com/coveo/ui-kit/issues/3363)) ([d33048f](https://github.com/coveo/ui-kit/commits/d33048f6901139b3a7a4a84078d53bc59b3e1647))
+- **headless:** rga controller ([#3370](https://github.com/coveo/ui-kit/issues/3370)) ([9ecca09](https://github.com/coveo/ui-kit/commits/9ecca0948f8806e5983436499745b39ad8556e91))
+
+### Features
+
+- **analytics:** extract the trackingId from the Coveo-Pendragon cookie ([#3353](https://github.com/coveo/ui-kit/issues/3353)) ([4a56285](https://github.com/coveo/ui-kit/commits/4a562859002190cd3623ce98fd01f126c9870a34))
+- **headless:** exported highlights and result templates utilities in case assist, insight and recommendation bundles ([#3371](https://github.com/coveo/ui-kit/issues/3371)) ([403cc0a](https://github.com/coveo/ui-kit/commits/403cc0a7cda51979d1ba35ed047f18bbbaff8d19))
+
 ## 2.38.3 (2023-11-02)
 
 ### Bug Fixes
