@@ -1,5 +1,6 @@
 import {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
+import {SearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {GeneratedAnswerAPIClient} from '../../api/generated-answer/generated-answer-client';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {SearchAPIClient} from '../../api/search/search-api-client';
@@ -13,7 +14,11 @@ import {
   logOmniboxFromLink,
   logSearchFromLink,
 } from '../../features/analytics/analytics-actions';
-import {SearchAction} from '../../features/analytics/analytics-utils';
+import {
+  SearchAction,
+  makeBasicNewSearchAnalyticsAction,
+} from '../../features/analytics/analytics-utils';
+import {SearchPageEvents} from '../../features/analytics/search-action-cause';
 import {
   updateSearchConfiguration,
   UpdateSearchConfigurationActionCreatorPayload,
@@ -146,7 +151,15 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
         return;
       }
 
-      const action = executeSearch({legacy: analyticsEvent});
+      makeBasicNewSearchAnalyticsAction;
+      const action = executeSearch({
+        legacy: analyticsEvent,
+        next: {
+          actionCause: SearchPageEvents.interfaceLoad,
+          getEventExtraPayload: (state) =>
+            new SearchAnalyticsProvider(() => state).getBaseMetadata(),
+        },
+      });
       engine.dispatch(action);
     },
 
