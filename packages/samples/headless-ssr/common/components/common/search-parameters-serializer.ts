@@ -1,4 +1,7 @@
-import {SearchParameters} from '@coveo/headless/ssr';
+import {
+  buildSearchParameterSerializer,
+  type SearchParameters,
+} from '@coveo/headless/ssr';
 import {ReadonlyURLSearchParams} from 'next/navigation';
 
 export type NextJSServerSideSearchParams = Record<
@@ -6,37 +9,34 @@ export type NextJSServerSideSearchParams = Record<
   string | string[] | undefined
 >;
 
-const searchStateKey = 'search-state';
+// TODO: rework
+// const searchStateKey = 'search-state';
 
 export class CoveoNextJsSearchParametersSerializer {
   public static fromServerSideUrlSearchParams(
     serverSideUrlSearchParams: NextJSServerSideSearchParams
   ): CoveoNextJsSearchParametersSerializer {
-    if (!(searchStateKey in serverSideUrlSearchParams)) {
-      return new CoveoNextJsSearchParametersSerializer({});
-    }
-    const stringifiedSearchParameters =
-      serverSideUrlSearchParams[searchStateKey];
-    if (
-      !stringifiedSearchParameters ||
-      Array.isArray(stringifiedSearchParameters)
-    ) {
-      return new CoveoNextJsSearchParametersSerializer({});
-    }
-    return new CoveoNextJsSearchParametersSerializer(
-      JSON.parse(stringifiedSearchParameters)
-    );
+    // for (const param in serverSideUrlSearchParams) {
+    //   // TODO: filter out non coveo search param
+    // }
+    return new CoveoNextJsSearchParametersSerializer({
+      ...serverSideUrlSearchParams,
+    });
   }
 
   public static fromClientSideUrlSearchParams(
     clientSideUrlSearchParams: URLSearchParams | ReadonlyURLSearchParams
   ) {
-    if (clientSideUrlSearchParams.getAll(searchStateKey).length !== 1) {
-      return new CoveoNextJsSearchParametersSerializer({});
-    }
-    return new CoveoNextJsSearchParametersSerializer(
-      JSON.parse(clientSideUrlSearchParams.get(searchStateKey)!)
-    );
+    // if (clientSideUrlSearchParams.getAll(searchStateKey).length < 1) {
+    // TODO: do something
+    //   return new CoveoNextJsSearchParametersSerializer({});
+    // }
+    const res: Record<string, string> = {}; // TODO: remove any
+    clientSideUrlSearchParams.forEach((value, key) => {
+      res[key] = value;
+    });
+
+    return new CoveoNextJsSearchParametersSerializer(res);
   }
 
   public static fromCoveoSearchParameters(
@@ -50,13 +50,30 @@ export class CoveoNextJsSearchParametersSerializer {
   ) {}
 
   public applyToUrlSearchParams(urlSearchParams: URLSearchParams) {
+    Object.entries(this.coveoSearchParameters).forEach(([key, value]) =>
+      this.applyToUrlSearchParam(urlSearchParams, key, value)
+    );
+  }
+
+  public get fragment(): string {
+    return buildSearchParameterSerializer().serialize(
+      this.coveoSearchParameters
+    );
+  }
+
+  private applyToUrlSearchParam(
+    urlSearchParams: URLSearchParams,
+    key: string, // TODO: better type
+    value: string // TODO: better type
+  ) {
     if (!Object.keys(this.coveoSearchParameters).length) {
-      urlSearchParams.delete(searchStateKey);
+      urlSearchParams.delete(key);
       return;
     }
-    urlSearchParams.set(
-      searchStateKey,
-      JSON.stringify(this.coveoSearchParameters)
-    );
+
+    if (value) {
+      // TODO: serialize facet value
+      urlSearchParams.set(key, value);
+    }
   }
 }

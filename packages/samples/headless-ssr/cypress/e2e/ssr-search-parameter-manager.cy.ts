@@ -112,14 +112,12 @@ routes.forEach((route) => {
           waitForHydration();
         });
 
-        // TODO: Enable after URL management investigation https://coveord.atlassian.net/browse/KIT-2735
-        it.skip("doesn't update the page", () => {
+        it("doesn't update the page", () => {
           cy.wait(1000);
           cy.get('.search-box input').should('have.value', query);
         });
 
-        // TODO: Enable after URL management investigation https://coveord.atlassian.net/browse/KIT-2735
-        it.skip('should not update the parameters', () => {
+        it('should not update the parameters', () => {
           cy.wait(1000);
           cy.url().should((href) => {
             expect(href.endsWith(getInitialUrl())).to.equal(true);

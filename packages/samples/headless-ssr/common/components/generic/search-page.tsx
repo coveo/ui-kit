@@ -1,7 +1,7 @@
 'use client';
 
 import {useEffect, useState} from 'react';
-import {useSyncSearchParameters} from '../../hooks/generic/search-parameters';
+import {useSyncUrlManager} from '../../hooks/generic/url-manager';
 import {
   SearchStaticState,
   SearchHydratedState,
@@ -25,8 +25,8 @@ export default function SearchPage({
     hydrateStaticState({
       searchAction: staticState.searchAction,
       controllers: {
-        searchParameters: {
-          initialState: staticState.controllers.searchParameters.state,
+        urlManager: {
+          initialState: staticState.controllers.urlManager.state,
         },
       },
     }).then(({engine, controllers}) => {
@@ -34,9 +34,9 @@ export default function SearchPage({
     });
   }, [staticState]);
 
-  useSyncSearchParameters({
-    staticState: staticState.controllers.searchParameters.state,
-    controller: hydratedState?.controllers.searchParameters,
+  useSyncUrlManager({
+    staticState: staticState.controllers.urlManager.state,
+    controller: hydratedState?.controllers.urlManager,
   });
 
   return (

@@ -1,20 +1,17 @@
+import {NextJSServerSideSearchParams} from '@/common/components/common/search-parameters-serializer';
 import SearchPage from '@/common/components/generic/search-page';
 import {fetchStaticState} from '@/common/lib/generic/engine';
+import {buildSearchParameterSerializer} from '@coveo/headless';
 
 // Entry point SSR function
-export default async function Search() {
-  // TODO: Enable after URL management investigation https://coveord.atlassian.net/browse/KIT-2735
-  // const {coveoSearchParameters} =
-  //   CoveoNextJsSearchParametersSerializer.fromServerSideUrlSearchParams(
-  //     url.searchParams
-  //   );
-  const coveoSearchParameters = {};
+export default async function Search(url: {
+  searchParams: NextJSServerSideSearchParams;
+}) {
+  const fragment = buildSearchParameterSerializer().serialize(url.searchParams);
   const staticState = await fetchStaticState({
     controllers: {
-      searchParameters: {
-        initialState: {
-          parameters: coveoSearchParameters,
-        },
+      urlManager: {
+        initialState: {fragment},
       },
     },
   });

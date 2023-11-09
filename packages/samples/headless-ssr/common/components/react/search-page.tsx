@@ -26,8 +26,8 @@ export function SearchPageProvider({
     hydrateStaticState({
       searchAction: staticState.searchAction,
       controllers: {
-        searchParameters: {
-          initialState: staticState.controllers.searchParameters.state,
+        urlManager: {
+          initialState: staticState.controllers.urlManager.state,
         },
       },
     }).then(({engine, controllers}) => {

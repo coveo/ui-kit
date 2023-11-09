@@ -7,7 +7,7 @@ import {
   defineFacet,
   defineResultList,
   defineSearchBox,
-  defineSearchParameterManager,
+  defineUrlManager,
 } from '@coveo/headless/ssr';
 
 export const config = {
@@ -19,7 +19,7 @@ export const config = {
     searchBox: defineSearchBox(),
     resultList: defineResultList(),
     authorFacet: defineFacet({options: {facetId: 'author-1', field: 'author'}}),
-    searchParameters: defineSearchParameterManager(),
+    urlManager: defineUrlManager(),
   },
 } satisfies SearchEngineDefinitionOptions<
   ControllerDefinitionsMap<SearchEngine, Controller>
