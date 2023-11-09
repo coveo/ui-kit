@@ -91,7 +91,6 @@ export function makeBasicNewSearchAnalyticsAction(
   return {
     ...new SearchAnalyticsProvider(getState).getBaseMetadata(),
     actionCause,
-    type: actionCause,
   };
 }
 
