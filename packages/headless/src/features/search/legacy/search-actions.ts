@@ -1,56 +1,43 @@
 import {BooleanValue, NumberValue, StringValue} from '@coveo/bueno';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {EventDescription} from 'coveo.analytics';
-import {historyStore} from '../../api/analytics/coveo-analytics-utils';
-import {AsyncThunkSearchOptions} from '../../api/search/search-api-client';
-import {SearchResponseSuccess} from '../../api/search/search/search-response';
-import {AsyncThunkOptions} from '../../app/async-thunk-options';
-import {InstantResultSection} from '../../state/state-sections';
+import {historyStore} from '../../../api/analytics/coveo-analytics-utils';
+import {AsyncThunkSearchOptions} from '../../../api/search/search-api-client';
+import {SearchResponseSuccess} from '../../../api/search/search/search-response';
+import {AsyncThunkOptions} from '../../../app/async-thunk-options';
+import {InstantResultSection} from '../../../state/state-sections';
 import {
   requiredNonEmptyString,
   validatePayload,
-} from '../../utils/validate-payload';
+} from '../../../utils/validate-payload';
 import {
-  SearchAction as LegacySearchAction,
-  makeBasicNewSearchAnalyticsAction,
-} from '../analytics/analytics-utils';
-import {SearchPageEvents} from '../analytics/search-action-cause';
+  AnalyticsAsyncThunk,
+  SearchAction,
+} from '../../analytics/analytics-utils';
 import {
   deselectAllBreadcrumbs,
   deselectAllNonBreadcrumbs,
-} from '../breadcrumb/breadcrumb-actions';
-import {updateFacetAutoSelection} from '../facets/generic/facet-actions';
+} from '../../breadcrumb/breadcrumb-actions';
+import {updateFacetAutoSelection} from '../../facets/generic/facet-actions';
+import {logInstantResultsSearch} from '../../instant-results/instant-result-analytics-actions';
 import {
   FetchInstantResultsActionCreatorPayload,
   FetchInstantResultsThunkReturn,
   updateInstantResultsQuery,
-} from '../instant-results/instant-results-actions';
-import {updatePage} from '../pagination/pagination-actions';
+} from '../../instant-results/instant-results-actions';
+import {updatePage} from '../../pagination/pagination-actions';
 import {
   updateQuery,
   UpdateQueryActionCreatorPayload,
-} from '../query/query-actions';
-import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request';
+} from '../../query/query-actions';
+import {buildSearchAndFoldingLoadCollectionRequest} from '../../search-and-folding/search-and-folding-request';
+import {logFetchMoreResults} from '../search-analytics-actions';
+import {MappedSearchRequest, mapSearchRequest} from '../search-mappings';
+import {buildSearchRequest} from '../search-request';
 import {
-  legacyExecuteSearch,
-  legacyFetchMoreResults,
-  legacyFetchPage,
-} from './legacy/search-actions';
-import {
-  AnalyticsAction,
   AsyncSearchThunkProcessor,
   StateNeededByExecuteSearch,
 } from './search-actions-thunk-processor';
-import {MappedSearchRequest, mapSearchRequest} from './search-mappings';
-import {buildSearchRequest} from './search-request';
-
-export interface SearchAction<
-  State extends StateNeededByExecuteSearch = StateNeededByExecuteSearch,
-  Payload extends Object = {},
-> {
-  actionCause: string;
-  getEventExtraPayload: (state: State) => Payload;
-}
 
 export type {StateNeededByExecuteSearch} from './search-actions-thunk-processor';
 
@@ -66,7 +53,7 @@ export interface ExecuteSearchThunkReturn {
   /** The original query that was performed when an automatic correction is executed.*/
   originalQuery: string;
   /** The analytics action to log after the query. */
-  analyticsAction: AnalyticsAction;
+  analyticsAction: AnalyticsAsyncThunk;
 }
 
 interface PrepareForSearchWithQueryOptions {
@@ -101,68 +88,22 @@ export const prepareForSearchWithQuery = createAsyncThunk<
   dispatch(updatePage(1));
 });
 
-export interface TransitiveSearchAction {
-  legacy: LegacySearchAction;
-  next?: SearchAction;
-}
-
 export const executeSearch = createAsyncThunk<
   ExecuteSearchThunkReturn,
-  TransitiveSearchAction,
+  SearchAction,
   AsyncThunkSearchOptions<StateNeededByExecuteSearch>
->(
-  'search/executeSearch',
-  async (searchAction: TransitiveSearchAction, config) => {
-    const state = config.getState();
-    if (
-      state.configuration.analytics.analyticsMode === 'legacy' ||
-      !searchAction.next
-    ) {
-      return legacyExecuteSearch(state, config, searchAction.legacy);
-    }
-    addEntryInActionsHistory(state);
-    const analyticsAction = buildSearchAction(searchAction.next, state);
-
-    const request = await buildSearchRequest(state, analyticsAction);
-
-    const processor = new AsyncSearchThunkProcessor<
-      ReturnType<typeof config.rejectWithValue>
-    >({...config, analyticsAction});
-
-    const fetched = await processor.fetchFromAPI(request, {
-      origin: 'mainSearch',
-    });
-
-    return await processor.process(fetched);
-  }
-);
+>('search/executeSearch', async (searchAction: SearchAction, config) => {
+  const state = config.getState();
+  return await legacyExecuteSearch(state, config, searchAction);
+});
 
 export const fetchPage = createAsyncThunk<
   ExecuteSearchThunkReturn,
-  TransitiveSearchAction,
+  SearchAction,
   AsyncThunkSearchOptions<StateNeededByExecuteSearch>
->('search/fetchPage', async (searchAction: TransitiveSearchAction, config) => {
+>('search/fetchPage', async (searchAction: SearchAction, config) => {
   const state = config.getState();
-  addEntryInActionsHistory(state);
-
-  if (
-    state.configuration.analytics.analyticsMode === 'legacy' ||
-    !searchAction.next
-  ) {
-    return legacyFetchPage(state, config, searchAction.legacy);
-  }
-
-  const processor = new AsyncSearchThunkProcessor<
-    ReturnType<typeof config.rejectWithValue>
-  >({
-    ...config,
-    analyticsAction: searchAction.next,
-  });
-
-  const request = await buildSearchRequest(state, searchAction.next);
-  const fetched = await processor.fetchFromAPI(request, {origin: 'mainSearch'});
-
-  return await processor.process(fetched);
+  return await legacyFetchPage(state, config, searchAction);
 });
 
 export const fetchMoreResults = createAsyncThunk<
@@ -171,56 +112,19 @@ export const fetchMoreResults = createAsyncThunk<
   AsyncThunkSearchOptions<StateNeededByExecuteSearch>
 >('search/fetchMoreResults', async (_, config) => {
   const state = config.getState();
-  if (state.configuration.analytics.analyticsMode === 'legacy') {
-    return legacyFetchMoreResults(config, state);
-  }
 
-  const analyticsAction = makeBasicNewSearchAnalyticsAction(
-    SearchPageEvents.pagerScrolling,
-    config.getState
-  );
-
-  const processor = new AsyncSearchThunkProcessor<
-    ReturnType<typeof config.rejectWithValue>
-  >({
-    ...config,
-    analyticsAction,
-  });
-
-  const request = await buildFetchMoreRequest(state, analyticsAction);
-  const fetched = await processor.fetchFromAPI(request, {origin: 'mainSearch'});
-
-  return await processor.process(fetched);
+  return await legacyFetchMoreResults(config, state);
 });
 
 export const fetchFacetValues = createAsyncThunk<
   ExecuteSearchThunkReturn,
-  TransitiveSearchAction,
+  SearchAction,
   AsyncThunkSearchOptions<StateNeededByExecuteSearch>
->(
-  'search/fetchFacetValues',
-  async (searchAction: TransitiveSearchAction, config) => {
-    const state = config.getState();
-    if (
-      state.configuration.analytics.analyticsMode === 'legacy' ||
-      !searchAction.next
-    ) {
-      return legacyExecuteSearch(state, config, searchAction.legacy);
-    }
-    const analyticsAction = buildSearchAction(searchAction.next, state);
+>('search/fetchFacetValues', async (searchAction: SearchAction, config) => {
+  const state = config.getState();
 
-    const processor = new AsyncSearchThunkProcessor<
-      ReturnType<typeof config.rejectWithValue>
-    >({...config, analyticsAction});
-
-    const request = await buildFetchFacetValuesRequest(state, analyticsAction);
-    const fetched = await processor.fetchFromAPI(request, {
-      origin: 'facetValues',
-    });
-
-    return await processor.process(fetched);
-  }
-);
+  return await legacyFetchFacetValues(config, searchAction, state);
+});
 
 export const fetchInstantResults = createAsyncThunk<
   FetchInstantResultsThunkReturn,
@@ -240,17 +144,17 @@ export const fetchInstantResults = createAsyncThunk<
     });
     const {q, maxResultsPerQuery} = payload;
     const state = config.getState();
-    const analyticsAction = makeBasicNewSearchAnalyticsAction(
-      SearchPageEvents.searchboxAsYouType,
-      config.getState
-    );
+
     const processor = new AsyncSearchThunkProcessor<
       ReturnType<typeof config.rejectWithValue>
-    >({...config, analyticsAction}, (modification) => {
-      config.dispatch(
-        updateInstantResultsQuery({q: modification, id: payload.id})
-      );
-    });
+    >(
+      {...config, analyticsAction: logInstantResultsSearch()},
+      (modification) => {
+        config.dispatch(
+          updateInstantResultsQuery({q: modification, id: payload.id})
+        );
+      }
+    );
 
     const request = await buildInstantResultSearchRequest(
       state,
@@ -331,10 +235,106 @@ const addEntryInActionsHistory = (state: StateNeededByExecuteSearch) => {
   }
 };
 
-const buildSearchAction = (
-  action: SearchAction,
+export async function legacyFetchPage(
+  state: StateNeededByExecuteSearch,
+  config: any, //eslint-disable-line @typescript-eslint/no-explicit-any
+  searchAction: SearchAction
+) {
+  addEntryInActionsHistory(state);
+
+  const {analyticsClientMiddleware, preprocessRequest, logger} = config.extra;
+  const {description: eventDescription} = await searchAction.prepare({
+    getState: () => config.getState(),
+    analyticsClientMiddleware,
+    preprocessRequest,
+    logger,
+  });
+
+  const processor = new AsyncSearchThunkProcessor<
+    ReturnType<typeof config.rejectWithValue>
+  >({
+    ...config,
+    analyticsAction: searchAction,
+  });
+
+  const request = await buildSearchRequest(state, eventDescription);
+  const fetched = await processor.fetchFromAPI(request, {origin: 'mainSearch'});
+
+  return await processor.process(fetched);
+}
+
+export async function legacyFetchMoreResults(
+  config: any, //eslint-disable-line @typescript-eslint/no-explicit-any
   state: StateNeededByExecuteSearch
-) => ({
-  ...action.getEventExtraPayload(state),
-  actionCause: action.actionCause,
-});
+) {
+  const {analyticsClientMiddleware, preprocessRequest, logger} = config.extra;
+  const {description: eventDescription} = await logFetchMoreResults().prepare({
+    getState: () => config.getState(),
+    analyticsClientMiddleware,
+    preprocessRequest,
+    logger,
+  });
+
+  const processor = new AsyncSearchThunkProcessor<
+    ReturnType<typeof config.rejectWithValue>
+  >({
+    ...config,
+    analyticsAction: logFetchMoreResults(),
+  });
+
+  const request = await buildFetchMoreRequest(state, eventDescription);
+  const fetched = await processor.fetchFromAPI(request, {origin: 'mainSearch'});
+
+  return await processor.process(fetched);
+}
+
+export async function legacyFetchFacetValues(
+  config: any, //eslint-disable-line @typescript-eslint/no-explicit-any
+  searchAction: SearchAction,
+  state: StateNeededByExecuteSearch
+) {
+  const {analyticsClientMiddleware, preprocessRequest, logger} = config.extra;
+  const {description: eventDescription} = await searchAction.prepare({
+    getState: () => config.getState(),
+    analyticsClientMiddleware,
+    preprocessRequest,
+    logger,
+  });
+
+  const processor = new AsyncSearchThunkProcessor<
+    ReturnType<typeof config.rejectWithValue>
+  >({...config, analyticsAction: searchAction});
+
+  const request = await buildFetchFacetValuesRequest(state, eventDescription);
+  const fetched = await processor.fetchFromAPI(request, {
+    origin: 'facetValues',
+  });
+
+  return await processor.process(fetched);
+}
+
+export async function legacyExecuteSearch(
+  state: StateNeededByExecuteSearch,
+  config: any, //eslint-disable-line @typescript-eslint/no-explicit-any
+  searchAction: SearchAction
+) {
+  addEntryInActionsHistory(state);
+
+  const {analyticsClientMiddleware, preprocessRequest, logger} = config.extra;
+  const {description: eventDescription} = await searchAction.prepare({
+    getState: () => config.getState(),
+    analyticsClientMiddleware,
+    preprocessRequest,
+    logger,
+  });
+
+  const request = await buildSearchRequest(state, eventDescription);
+
+  const processor = new AsyncSearchThunkProcessor<
+    ReturnType<typeof config.rejectWithValue>
+  >({...config, analyticsAction: searchAction});
+
+  const fetched = await processor.fetchFromAPI(request, {origin: 'mainSearch'});
+
+  return await processor.process(fetched);
+}

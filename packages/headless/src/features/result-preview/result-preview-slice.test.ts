@@ -1,6 +1,6 @@
 import {buildMockResult} from '../../test';
 import {buildMockResultPreviewRequest} from '../../test/mock-result-preview-request-builder';
-import {buildMockSearch} from '../../test/mock-search';
+import {buildMockLegacySearch, buildMockSearch} from '../../test/mock-search';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {logInterfaceLoad} from '../analytics/analytics-actions';
 import {executeSearch} from '../insight-search/insight-search-actions';
@@ -44,7 +44,7 @@ describe('ResultPreview', () => {
       state.isLoading = true;
       state.uniqueId = 'uniqueId';
       const action = executeSearch.fulfilled(
-        buildMockSearch(),
+        buildMockLegacySearch(),
         '',
         logInterfaceLoad()
       );
@@ -57,7 +57,7 @@ describe('ResultPreview', () => {
     it('updates #resultsWithPreview property with the new results', () => {
       state.resultsWithPreview = ['foo', 'bar'];
 
-      const search = buildMockSearch({
+      const search = buildMockLegacySearch({
         response: buildMockSearchResponse({
           results: [
             buildMockResult({hasHtmlVersion: true, uniqueId: 'first'}),
@@ -115,7 +115,9 @@ describe('ResultPreview', () => {
       state.contentURL = 'url';
       state.isLoading = true;
       state.uniqueId = 'uniqueId';
-      const action = fetchPage.fulfilled(buildMockSearch(), '', logPageNext());
+      const action = fetchPage.fulfilled(buildMockSearch(), '', {
+        legacy: logPageNext(),
+      });
 
       const finalState = resultPreviewReducer(state, action);
 

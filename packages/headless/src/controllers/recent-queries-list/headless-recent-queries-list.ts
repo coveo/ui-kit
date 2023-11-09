@@ -200,7 +200,7 @@ export function buildRecentQueriesList(
           clearFilters: registrationOptions.clearFilters,
         })
       );
-      dispatch(executeSearch(logRecentQueryClick()));
+      dispatch(executeSearch({legacy: logRecentQueryClick()}));
     },
   };
 }
