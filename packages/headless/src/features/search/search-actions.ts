@@ -33,6 +33,7 @@ import {
 import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request';
 import {
   legacyExecuteSearch,
+  legacyFetchInstantResults,
   legacyFetchMoreResults,
   legacyFetchPage,
 } from './legacy/search-actions';
@@ -229,6 +230,10 @@ export const fetchInstantResults = createAsyncThunk<
 >(
   'search/fetchInstantResults',
   async (payload: FetchInstantResultsActionCreatorPayload, config) => {
+    const state = config.getState();
+    if (state.configuration.analytics.analyticsMode === 'legacy') {
+      return legacyFetchInstantResults(payload, config);
+    }
     validatePayload(payload, {
       id: requiredNonEmptyString,
       q: requiredNonEmptyString,
@@ -239,7 +244,6 @@ export const fetchInstantResults = createAsyncThunk<
       cacheTimeout: new NumberValue(),
     });
     const {q, maxResultsPerQuery} = payload;
-    const state = config.getState();
     const analyticsAction = makeBasicNewSearchAnalyticsAction(
       SearchPageEvents.searchboxAsYouType,
       config.getState

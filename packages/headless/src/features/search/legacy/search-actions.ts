@@ -133,50 +133,7 @@ export const fetchInstantResults = createAsyncThunk<
 >(
   'search/fetchInstantResults',
   async (payload: FetchInstantResultsActionCreatorPayload, config) => {
-    validatePayload(payload, {
-      id: requiredNonEmptyString,
-      q: requiredNonEmptyString,
-      maxResultsPerQuery: new NumberValue({
-        required: true,
-        min: 1,
-      }),
-      cacheTimeout: new NumberValue(),
-    });
-    const {q, maxResultsPerQuery} = payload;
-    const state = config.getState();
-
-    const processor = new AsyncSearchThunkProcessor<
-      ReturnType<typeof config.rejectWithValue>
-    >(
-      {...config, analyticsAction: logInstantResultsSearch()},
-      (modification) => {
-        config.dispatch(
-          updateInstantResultsQuery({q: modification, id: payload.id})
-        );
-      }
-    );
-
-    const request = await buildInstantResultSearchRequest(
-      state,
-      q,
-      maxResultsPerQuery
-    );
-
-    const fetched = await processor.fetchFromAPI(request, {
-      origin: 'instantResults',
-      disableAbortWarning: true,
-    });
-    const processed = await processor.process(fetched);
-    if ('response' in processed) {
-      return {
-        results: processed.response.results,
-        searchUid: processed.response.searchUid,
-        analyticsAction: processed.analyticsAction,
-        totalCountFiltered: processed.response.totalCountFiltered,
-        duration: processed.duration,
-      };
-    }
-    return processed as ReturnType<typeof config.rejectWithValue>;
+    return legacyFetchInstantResults(payload, config);
   }
 );
 
@@ -234,6 +191,53 @@ const addEntryInActionsHistory = (state: StateNeededByExecuteSearch) => {
     });
   }
 };
+
+export async function legacyFetchInstantResults(
+  payload: FetchInstantResultsActionCreatorPayload,
+  config: any //eslint-disable-line @typescript-eslint/no-explicit-any
+) {
+  validatePayload(payload, {
+    id: requiredNonEmptyString,
+    q: requiredNonEmptyString,
+    maxResultsPerQuery: new NumberValue({
+      required: true,
+      min: 1,
+    }),
+    cacheTimeout: new NumberValue(),
+  });
+  const {q, maxResultsPerQuery} = payload;
+  const state = config.getState();
+
+  const processor = new AsyncSearchThunkProcessor<
+    ReturnType<typeof config.rejectWithValue>
+  >({...config, analyticsAction: logInstantResultsSearch()}, (modification) => {
+    config.dispatch(
+      updateInstantResultsQuery({q: modification, id: payload.id})
+    );
+  });
+
+  const request = await buildInstantResultSearchRequest(
+    state,
+    q,
+    maxResultsPerQuery
+  );
+
+  const fetched = await processor.fetchFromAPI(request, {
+    origin: 'instantResults',
+    disableAbortWarning: true,
+  });
+  const processed = await processor.process(fetched);
+  if ('response' in processed) {
+    return {
+      results: processed.response.results,
+      searchUid: processed.response.searchUid,
+      analyticsAction: processed.analyticsAction,
+      totalCountFiltered: processed.response.totalCountFiltered,
+      duration: processed.duration,
+    };
+  }
+  return processed as ReturnType<typeof config.rejectWithValue>;
+}
 
 export async function legacyFetchPage(
   state: StateNeededByExecuteSearch,
