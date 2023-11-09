@@ -1,26 +1,5 @@
-.feedback__button--neutral {
-  --slds-c-button-text-color-hover: var(
-    --lwc-colorTextIconDefault,
-    rgb(116, 116, 116)
-  );
-  --slds-c-button-text-color-active: var(
-    --lwc-colorTextIconDefault,
-    rgb(116, 116, 116)
-  );
-}
-
-.feedback__button--liked {
-  color: #2e844a;
-  --slds-c-button-text-color-hover: #2e844a;
-  --slds-c-button-text-color-active: #2e844a;
-  --slds-c-button-shadow-focus: 0 0 3px #2e844a;
-}
-
-.feedback__button--disliked {
-  color: var(--lwc-colorTextError, rgb(234, 0, 30));
-  --slds-c-button-text-color-hover: var(--lwc-colorTextError, rgb(234, 0, 30));
-  --slds-c-button-text-color-active: var(--lwc-colorTextError, rgb(234, 0, 30));
-  --slds-c-button-shadow-focus: 0 0 3px var(--lwc-colorTextError, rgb(234, 0, 30));
+.feedback__main-section {
+  gap: 4px;
 }
 
 .feedback__main-section,
