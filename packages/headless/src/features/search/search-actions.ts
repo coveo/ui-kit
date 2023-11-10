@@ -339,6 +339,7 @@ const buildSearchAction = (
   action: SearchAction,
   state: StateNeededByExecuteSearch
 ) => ({
-  ...action.getEventExtraPayload(state),
+  customData: action.getEventExtraPayload(state),
   actionCause: action.actionCause,
+  type: action.actionCause,
 });
