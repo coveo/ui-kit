@@ -40,11 +40,11 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
     GeneratedAnswerSelectors.get().find('[data-cy="generated-answer__answer"]'),
   likeButton: () =>
     GeneratedAnswerSelectors.get().find(
-      '[data-cy="generated-answer__feedback"] [data-cy="feedback__like-button"]'
+      '[data-cy="generated-answer__feedback"] c-quantic-stateful-button[data-cy="feedback__like-button"] button'
     ),
   dislikeButton: () =>
     GeneratedAnswerSelectors.get().find(
-      '[data-cy="generated-answer__feedback"] [data-cy="feedback__dislike-button"]'
+      '[data-cy="generated-answer__feedback"] c-quantic-stateful-button[data-cy="feedback__dislike-button"] button'
     ),
   citations: () =>
     GeneratedAnswerSelectors.get().find(
