@@ -9,7 +9,12 @@
     <script nomodule src="/build/atomic.js"></script>
     <link rel="stylesheet" href="/themes/coveo.css" />
     <script type="module">
-      import {loadAdvancedSearchQueryActions, loadContextActions} from '/build/headless/headless.esm.js';
+      import {
+        loadAdvancedSearchQueryActions,
+        loadContextActions,
+        buildSearchEngine,
+        getOrganizationEndpoints,
+      } from '/build/headless/headless.esm.js';
 
       // CDN example: 'https://static.cloud.coveo.com/atomic/v1/headless/headless.esm.js'
 
@@ -31,15 +36,22 @@
       async function main() {
         await customElements.whenDefined('atomic-search-interface');
         const searchInterface = document.querySelector('atomic-search-interface');
-        await searchInterface.initialize({
-          accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
-          organizationId: 'searchuisamples',
-          organizationEndpoints: await searchInterface.getOrganizationEndpoints('searchuisamples'),
+        const engine = buildSearchEngine({
+          configuration: {
+            accessToken: 'xx92f1d139-a37c-47f4-80b3-a5e1fb608d59',
+            organizationId: 'barcasportsmcy01fvu',
+            pipeline: 'Sports',
+            organizationEndpoints: getOrganizationEndpoints('barcasportsmcy01fvu', 'dev'),
+            analytics: {
+              analyticsMode: 'next',
+              trackingId: 'baguette',
+            },
+          },
         });
+        await searchInterface.initializeWithSearchEngine(engine);
 
-        const engine = searchInterface.engine;
-        setExpression(engine);
-        setContext(engine);
+        // setExpression(engine);
+        // setContext(engine);
 
         searchInterface.executeFirstSearch();
       }
@@ -48,7 +60,7 @@
   </head>
   <body>
     <atomic-search-interface>
-      <atomic-search-box textarea></atomic-search-box>
+      <atomic-search-box></atomic-search-box>
       <atomic-query-summary></atomic-query-summary>
       <atomic-result-list></atomic-result-list>
     </atomic-search-interface>
