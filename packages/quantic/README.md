@@ -114,11 +114,12 @@ npm run e2e:detailed
 After you have cloned the repository and have run `npm install`, run the following commands:
 
 - `npm run build`
-- `sfdx force:source:deploy -m LightningComponentBundle`
+- `sf project deploy start --source-dir force-app/main/default`
 
 ## Other Useful Commands
 
-- `-m LightningComponentBundle` can be changed for different types of "resources". To know which name, check the related `meta.xml` file for each type of resource.
+- `sf project deploy start --metadata LightningComponentBundle`
+- `--metadata LightningComponentBundle` can be changed for different types of "resources". To know which name, check the related `meta.xml` file for each type of resource.
 - Create new web components. In VS Code, press Command + Shift P, enter sfdx, and select SFDX: Create Lightning Web Component.
 
 ## Learn About LWC

@@ -12,7 +12,7 @@ export interface SfdxResponse {
 
 /**
  * Executes the given sfdx function and returns the result as an object.
- * @param command The command to be executed, starting with force:.
+ * @param command The command to be executed.
  * @returns {SfdxResponse} The result of the command, if successful.
  * @throws {Error} The error thrown by the sfdx command if unsuccessful.
  */
