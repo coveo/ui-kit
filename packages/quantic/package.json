@@ -89,6 +89,7 @@
     "force-app/main/default/lwc/*",
     "force-app/main/default/cspTrustedSites/*",
     "force-app/main/default/staticresources/*",
-    "scripts/npm"
+    "scripts/npm",
+    "docs/out/quantic-docs.json"
   ]
 }
