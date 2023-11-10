@@ -15,16 +15,18 @@
 
 ### Setup SFDX CLI
 
-[SFDX cli](https://developer.salesforce.com/tools/sfdxcli)
+[Salesforce cli](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli.htm#sfdx_setup_install_cli_npm)
+
+- Run `npm install --global @salesforce/cli`
+- Optional: [Setup CLI autocomplete](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_dev_cli_autocomplete.htm)
 
 ### Update SFDX CLI Plugins
 
-- Run `sfdx plugins:install @salesforce/lwc-dev-server`
-- Run `sfdx plugins:update`
+- Run `sf plugins update`
 
 ### Install VSCode Extension
 
-Optionally install the [VSCode Salesforce Extension Pack](https://marketplace.visualstudio.com/items?itemName=salesforce.salesforcedx-vscode) if you do not want use the equivalent `sfdx-cli` commands to setup.
+Optionally install the [VSCode Salesforce Extension Pack](https://marketplace.visualstudio.com/items?itemName=salesforce.salesforcedx-vscode) if you do not want use the equivalent `Salesforce cli` commands to setup.
 
 **Note** Make sure you open the quantic project at the root (`/packages/quantic/`) in vscode in order for the extension to work properly.
 
@@ -37,39 +39,18 @@ Optionally install the [VSCode Salesforce Extension Pack](https://marketplace.vi
 ### Authorize Your Dev Hub
 
 - In VS Code, press Command + Shift P, enter sfdx, and select SFDX: Authorize a Dev Hub.
-- You can also run this command from the command line. `sfdx force:auth:web:login -d -a LWC-Hub`
+- You can also run this command from the command line. `sf org login web --set-default-dev-hub --alias LWC-Hub`
 - Running this command opens a browser to the Salesforce login page. Enter your Salesforce username and password. Authorize only once, not every time you work on your project.
 
 ### Create a Default Scratch Org
 
 - In VS Code, press Command + Shift P, enter sfdx, and select SFDX: Create a Default Scratch Org.
-- You can also run this command from the command line. `sfdx force:org:create -s -f config/project-scratch-def.json -a "LWC"`
+- You can also run this command from the command line. `sf org create scratch --set-default --definition-file config/project-scratch-def.json --alias "LWC"`
 - `LWC` is an alias for the scratch org that you can use in other Salesforce CLI commands. You can create any alias that you like.
 
-### Start the Local Development Server
+### Deploy the Quantic code
 
-Before starting the Local Development Server, you need to comment the Styling Hooks override because they are not supported.
-In the file force-app/main/default/lwc/exampleSearch/exampleSearch.css
-
-Remove or comment out the overrides under the `:host` property:
-
-```
-:host {
-  --slds-c-checkbox-color-border: var(--lwc-colorTextIconDefault, #747474);
-}
-```
-
-Otherwise you will get an error similar to this:
-
-`CssSyntaxError: LWC1009: postcss-plugin-lwc: 2:3: Invalid definition of custom property "--slds-c-checkbox-color-border".`
-
-Start the server.
-
-- Run `npm run dev`
-- You can also run this command from the command line. `sfdx force:lightning:lwc:start`
-- View the server at http://localhost:3334/.
-
-The Local Development Server should be used to speed up development process, but is not a replacement to deploying your code to an actual Salesforce community to try it out. (There exists some variations of functionality and styling).
+- Run this command from the command line. `sf project deploy start --source-dir force-app/main/default`.
 
 ## Testing
 

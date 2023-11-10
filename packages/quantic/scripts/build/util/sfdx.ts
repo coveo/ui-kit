@@ -19,7 +19,7 @@ export interface SfdxResponse {
 export function sfdx<T = SfdxResponse>(command: string): Promise<T> {
   return new Promise<T>((resolve, reject) => {
     exec(
-      `"${path.resolve('../../node_modules/.bin/sfdx')}" ${command} --json`,
+      `"${path.resolve('../../node_modules/.bin/sf')}" ${command} --json`,
       {
         cwd: process.cwd(),
         env: process.env,
@@ -36,8 +36,7 @@ export function sfdx<T = SfdxResponse>(command: string): Promise<T> {
             jsonOutput = JSON.parse(strip(stdout));
             if (error) {
               console.error({
-                error,
-                jsonOutput,
+                sfdxErrorStdout: stdout,
               });
               reject(jsonOutput || error);
             }
