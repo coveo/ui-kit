@@ -315,7 +315,7 @@ export async function createPackageVersion(
   args: CreatePackageVersionArguments
 ): Promise<SfdxCreatePackageVersionResponse> {
   return await sfdx<SfdxCreatePackageVersionResponse>(
-    `force:package:version:create --package ${args.packageId} --versionnumber "${args.packageVersion}" --installationkeybypass --codecoverage --wait ${args.timeout}`
+    `package version create --package ${args.packageId} --version-number "${args.packageVersion}" --installation-key-bypass --code-coverage --wait ${args.timeout}`
   );
 }
 
@@ -327,7 +327,7 @@ export async function promotePackageVersion(
   args: PromotePackageVersionArguments
 ) {
   return await sfdx(
-    `force:package:version:promote --package ${args.packageVersionId} --noprompt`
+    `package version promote --package ${args.packageVersionId} --no-prompt`
   );
 }
 
@@ -335,6 +335,6 @@ export async function getPackageVersionList(
   createdLastDays: number
 ): Promise<SfdxGetPackageListResponse> {
   return await sfdx<SfdxGetPackageListResponse>(
-    `force:package:version:list -c ${createdLastDays}`
+    `package version list --created-last-days ${createdLastDays}`
   );
 }
