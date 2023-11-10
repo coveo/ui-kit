@@ -84,6 +84,7 @@ export class SearchAnalyticsProvider
     const state = this.getState();
     const baseObject = super.getBaseMetadata();
 
+    // why is genAi in the baseMetadata ?
     const generativeQuestionAnsweringId =
       state.search?.response?.extendedResults?.generativeQuestionAnsweringId;
 
@@ -93,6 +94,17 @@ export class SearchAnalyticsProvider
     }
 
     return baseObject;
+  }
+
+  // a sort of pattern we could use fro special search cases
+  public getFacetMetadata(facetId: string, facetValue: string) {
+    return {
+      ...this.getBaseMetadata(),
+      facetId: facetId,
+      facetValue: facetValue,
+      facetTitle: 'title',
+      facetField: 'field',
+    };
   }
 
   public getGeneratedAnswerMetadata() {
