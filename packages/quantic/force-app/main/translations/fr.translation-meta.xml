@@ -681,8 +681,8 @@
       <name>quantic_ThisAnswerWasHelpful</name>
     </customLabels>
     <customLabels>
-        <label>En savoir plus</label>
-        <name>quantic_LearnMore</name>
+        <label>Citations</label>
+        <name>quantic_Citations</name>
     </customLabels>
     <customLabels>
       <label>Réessayer</label>
