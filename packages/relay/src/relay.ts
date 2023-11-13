@@ -3,7 +3,7 @@ import { createClientIdManager } from "./client-id/client-id";
 import { currentEnvironment } from "./environment/environment";
 import { createRelayEvent } from "./event/relay-event";
 import { version } from "./version";
-import { createMeta, Meta } from "./event/meta/meta";
+import { createMeta, Meta, EventConfig } from "./event/meta/meta";
 import { createListenerManager, EventCallback } from "./listener/listener";
 import { createConfigManager, RelayConfig } from "./config/config";
 import { ValidationError, ValidationResponse } from "./validate/validate";
@@ -12,6 +12,10 @@ import { buildNullEnvironment } from "./environment/null/null";
 type RelayPayload = Record<string, unknown>;
 type Off = () => void;
 
+/**
+ * Relay instance.
+ * This object provides a comprehensive set of variables and methods for interacting with the Event API.
+ */
 interface Relay {
   /**
    * Sends an event to the Event API.
@@ -120,4 +124,13 @@ export function createRelay(initialConfig: RelayConfig): Relay {
   };
 }
 
-export type { RelayPayload, RelayConfig, ValidationError, ValidationResponse };
+export type {
+  Relay, 
+  Meta, 
+  EventConfig, 
+  EventCallback, 
+  RelayPayload, 
+  RelayConfig, 
+  ValidationError, 
+  ValidationResponse
+};

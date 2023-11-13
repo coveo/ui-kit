@@ -8,6 +8,9 @@ export interface ValidateParams {
   event: Readonly<RelayEvent>;
 }
 
+/**
+ * The `ValidationError` object represents a syntax error identified in an event's property during the validation process.
+ */
 export interface ValidationError {
   /**
    * Type of syntax error of an event's property.
@@ -25,6 +28,9 @@ export interface ValidationError {
   path: string;
 }
 
+/**
+ * The `ValidationResponse` object represents the results of an event validation process. It indicates whether the event's payload is valid and provides a list of any syntax errors that were found.
+ */
 export interface ValidationResponse {
   /**
    * Indicates whether the payload is valid.

@@ -5,5 +5,13 @@
     "target": "ES2022"
   },
   "include": ["**/*.ts"],
-  "exclude": ["node_modules", "lib"]
+  "exclude": ["node_modules", "lib"],
+  "typedocOptions": {
+    "entryPointStrategy": "expand",
+    "json": "relay-docs.json",
+    "entryPoints": ["src/relay.ts"],
+    "includeVersion": true,
+    "excludePrivate": true,
+    "excludeNotDocumented": true,
+  }
 }

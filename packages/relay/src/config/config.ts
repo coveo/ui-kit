@@ -1,5 +1,8 @@
 export type RelayMode = "emit" | "validate" | "disabled";
 
+/**
+ * The `RelayConfig` object defines the configuration options for initializing a Relay instance.
+ */
 export interface RelayConfig {
   /**
    * Endpoint defined to communicate with the Event API.

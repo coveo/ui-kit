@@ -3,18 +3,28 @@ import { Environment } from "../../environment/environment";
 import { RelayConfig } from "../../config/config";
 import { version } from "../../version";
 
-interface EventConfig {
+/**
+ * The `EventConfig` object provides additonal information for the configuration associated with the event.
+ */
+export interface EventConfig {
   /**
    * The unique identifier of a web property. See [Tracking ID](https://docs.coveo.com/en/n8tg0567/).
    */
   trackingId: string;
 }
 
+/**
+ * The `Meta` object provides a structured representation of metadata associated with an emitted event.
+ */
 export interface Meta {
   /**
    * Event's type that was emitted.
    */
   type: string;
+
+  /**
+   * Configuration associated with the event.
+   */
   config: EventConfig;
 
   /**
