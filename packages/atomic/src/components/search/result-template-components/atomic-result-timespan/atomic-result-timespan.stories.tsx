@@ -20,4 +20,4 @@ export default {
   ...defaultModuleExport,
   title: 'Atomic/ResultList/ResultTimespan',
 };
-export const DefaultResultText = exportedStory;
+export const Default = exportedStory;
