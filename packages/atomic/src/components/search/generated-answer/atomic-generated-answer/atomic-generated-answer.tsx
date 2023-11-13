@@ -226,10 +226,12 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     );
   }
 
-  private clickDislike() {
-    this.modalRef!.isOpen = true;
+  private clickDislike = () => {
+    if (this.modalRef) {
+      this.modalRef.isOpen = true;
+    }
     this.generatedAnswer.dislike();
-  }
+  };
 
   private renderContent() {
     return (
