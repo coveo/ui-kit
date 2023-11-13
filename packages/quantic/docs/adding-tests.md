@@ -107,13 +107,13 @@ Next, execute the following steps:
 3. Publish your changes and validate that everything works as expected.
 
    ```
-   sfdx force:community:publish -u LWC -n "Quantic Examples"
+   sf community publish --target-org LWC --name "Quantic Examples"
    ```
 
 It is now time to backup the changes you made to the community. Run:
 
 ```bash
-sfdx force:mdapi:retrieve -u LWC -k quantic-examples-community/package.xml -r temp -w 10
+sf project retrieve start --target-org LWC --manifest quantic-examples-community/package.xml --output-dir temp --wait 10
 ```
 
 Executing this command will download the community metadata from your org and save it as `temp/unpackaged.zip`.
