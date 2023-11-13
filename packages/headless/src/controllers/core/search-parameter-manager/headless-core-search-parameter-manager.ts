@@ -1,18 +1,8 @@
 import {RecordValue, Schema} from '@coveo/bueno';
 import {CoreEngine} from '../../../app/engine';
-import {configurationReducer as configuration} from '../../../features/configuration/configuration-slice';
-import {debugReducer as debug} from '../../../features/debug/debug-slice';
-import {facetOptionsReducer as facetOptions} from '../../../features/facet-options/facet-options-slice';
-import {automaticFacetSetReducer as automaticFacetSet} from '../../../features/facets/automatic-facet-set/automatic-facet-set-slice';
-import {categoryFacetSetReducer as categoryFacetSet} from '../../../features/facets/category-facet-set/category-facet-set-slice';
 import {findActiveValueAncestry} from '../../../features/facets/category-facet-set/category-facet-utils';
-import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice';
 import {FacetValueRequest} from '../../../features/facets/facet-set/interfaces/request';
-import {dateFacetSetReducer as dateFacetSet} from '../../../features/facets/range-facets/date-facet-set/date-facet-set-slice';
 import {RangeValueRequest} from '../../../features/facets/range-facets/generic/interfaces/range-facet';
-import {numericFacetSetReducer as numericFacetSet} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
-import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice';
-import {queryReducer as query} from '../../../features/query/query-slice';
 import {getQueryInitialState} from '../../../features/query/query-state';
 import {
   restoreSearchParameters,
@@ -20,18 +10,13 @@ import {
 } from '../../../features/search-parameters/search-parameter-actions';
 import {searchParametersDefinition} from '../../../features/search-parameters/search-parameter-schema';
 import {initialSearchParameterSelector} from '../../../features/search-parameters/search-parameter-selectors';
-import {sortCriteriaReducer as sortCriteria} from '../../../features/sort-criteria/sort-criteria-slice';
 import {getSortCriteriaInitialState} from '../../../features/sort-criteria/sort-criteria-state';
-import {staticFilterSetReducer as staticFilterSet} from '../../../features/static-filter-set/static-filter-set-slice';
-import {tabSetReducer as tabSet} from '../../../features/tab-set/tab-set-slice';
 import {SearchParametersState} from '../../../state/search-app-state';
-import {loadReducerError} from '../../../utils/errors';
 import {validateInitialState} from '../../../utils/validate-payload';
 import {
   buildController,
   Controller,
 } from '../../controller/headless-controller';
-import {advancedSearchQueriesReducer as advancedSearchQueries} from './../../../features/advanced-search-queries/advanced-search-queries-slice';
 
 export type {SearchParameters};
 
@@ -93,10 +78,6 @@ export function buildCoreSearchParameterManager(
   engine: CoreEngine,
   props: SearchParameterManagerProps
 ): SearchParameterManager {
-  if (!loadSearchParameterManagerReducers(engine)) {
-    throw loadReducerError;
-  }
-
   const {dispatch} = engine;
   const controller = buildController(engine);
 
@@ -300,26 +281,4 @@ function getAutomaticFacets(state: Partial<SearchParametersState>) {
     .reduce((acc, obj) => ({...acc, ...obj}), {});
 
   return Object.keys(af).length ? {af} : {};
-}
-
-function loadSearchParameterManagerReducers(
-  engine: CoreEngine
-): engine is CoreEngine<SearchParameterManager> {
-  engine.addReducers({
-    advancedSearchQueries,
-    automaticFacetSet,
-    categoryFacetSet,
-    configuration,
-    dateFacetSet,
-    debug,
-    facetOptions,
-    facetSet,
-    numericFacetSet,
-    pagination,
-    query,
-    sortCriteria,
-    staticFilterSet,
-    tabSet,
-  });
-  return true;
 }

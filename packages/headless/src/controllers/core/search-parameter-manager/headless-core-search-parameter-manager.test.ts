@@ -1,19 +1,5 @@
-import {advancedSearchQueriesReducer} from '../../../features/advanced-search-queries/advanced-search-queries-slice';
-import {configurationReducer} from '../../../features/configuration/configuration-slice';
-import {debugReducer} from '../../../features/debug/debug-slice';
-import {facetOptionsReducer} from '../../../features/facet-options/facet-options-slice';
-import {automaticFacetSetReducer} from '../../../features/facets/automatic-facet-set/automatic-facet-set-slice';
-import {categoryFacetSetReducer} from '../../../features/facets/category-facet-set/category-facet-set-slice';
-import {facetSetReducer} from '../../../features/facets/facet-set/facet-set-slice';
-import {dateFacetSetReducer} from '../../../features/facets/range-facets/date-facet-set/date-facet-set-slice';
-import {numericFacetSetReducer} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
-import {paginationReducer} from '../../../features/pagination/pagination-slice';
-import {queryReducer} from '../../../features/query/query-slice';
 import {restoreSearchParameters} from '../../../features/search-parameters/search-parameter-actions';
 import {initialSearchParameterSelector} from '../../../features/search-parameters/search-parameter-selectors';
-import {sortCriteriaReducer} from '../../../features/sort-criteria/sort-criteria-slice';
-import {staticFilterSetReducer} from '../../../features/static-filter-set/static-filter-set-slice';
-import {tabSetReducer} from '../../../features/tab-set/tab-set-slice';
 import {buildMockSearchAppEngine, MockSearchEngine} from '../../../test';
 import {buildMockAutomaticFacetResponse} from '../../../test/mock-automatic-facet-response';
 import {buildMockAutomaticFacetSlice} from '../../../test/mock-automatic-facet-slice';
@@ -59,25 +45,6 @@ describe('search parameter manager', () => {
     };
 
     initSearchParameterManager();
-  });
-
-  it('it adds the correct reducers to engine', () => {
-    expect(engine.addReducers).toHaveBeenCalledWith({
-      advancedSearchQueries: advancedSearchQueriesReducer,
-      automaticFacetSet: automaticFacetSetReducer,
-      categoryFacetSet: categoryFacetSetReducer,
-      configuration: configurationReducer,
-      dateFacetSet: dateFacetSetReducer,
-      debug: debugReducer,
-      facetOptions: facetOptionsReducer,
-      facetSet: facetSetReducer,
-      numericFacetSet: numericFacetSetReducer,
-      pagination: paginationReducer,
-      query: queryReducer,
-      sortCriteria: sortCriteriaReducer,
-      staticFilterSet: staticFilterSetReducer,
-      tabSet: tabSetReducer,
-    });
   });
 
   it('exposes a #subscribe method', () => {
