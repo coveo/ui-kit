@@ -9,7 +9,7 @@ import {
   GeneratedAnswerStyle,
   buildInteractiveCitation,
 } from '@coveo/headless';
-import {Component, h, State, Prop} from '@stencil/core';
+import {Component, h, Element, State, Prop} from '@stencil/core';
 import {AriaLiveRegion} from '../../../../utils/accessibility-utils';
 import {
   BindStateToController,
@@ -59,7 +59,12 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   public error!: Error;
 
   @State()
-  hidden = true;
+  private modalRef!: HTMLAtomicGeneratedAnswerFeedbackModalElement;
+
+  @State() hidden = true;
+  @State() feedbackSent = false;
+
+  @Element() private host!: HTMLElement;
 
   @State()
   copied = false;
@@ -91,6 +96,12 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       },
     });
     this.searchStatus = buildSearchStatus(this.bindings.engine);
+    const modalRef = document.createElement(
+      'atomic-generated-answer-feedback-modal'
+    );
+    this.modalRef = modalRef;
+    modalRef.generatedAnswer = this.generatedAnswer;
+    this.host.insertAdjacentElement('beforebegin', modalRef);
   }
 
   // @ts-expect-error: This function is used by BindStateToController.
@@ -215,6 +226,13 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     );
   }
 
+  private clickDislike = () => {
+    if (this.modalRef) {
+      this.modalRef.isOpen = true;
+    }
+    this.generatedAnswer.dislike();
+  };
+
   private renderContent() {
     return (
       <div part="generated-content">
@@ -226,7 +244,6 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
           >
             {this.bindings.i18n.t('generated-answer-title')}
           </Heading>
-
           <div class="flex gap-2 h-9 items-center ml-auto">
             {!this.hasRetryableError &&
               !this.generatedAnswerState.isStreaming &&
@@ -242,7 +259,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
                     title={this.bindings.i18n.t('this-answer-was-not-helpful')}
                     variant="dislike"
                     active={this.generatedAnswerState.disliked}
-                    onClick={this.generatedAnswer.dislike}
+                    onClick={this.clickDislike}
                   />
                   <CopyButton
                     title={
@@ -315,14 +332,18 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       return null;
     }
     return (
-      <aside
-        class={`mx-auto ${
-          isLoading ? this.loadingClasses : this.contentClasses
-        }`}
-        part="container"
-      >
-        <article>{isLoading ? <TypingLoader /> : this.renderContent()}</article>
-      </aside>
+      <div>
+        <aside
+          class={`mx-auto ${
+            isLoading ? this.loadingClasses : this.contentClasses
+          }`}
+          part="container"
+        >
+          <article>
+            {isLoading ? <TypingLoader /> : this.renderContent()}
+          </article>
+        </aside>
+      </div>
     );
   }
 }
