@@ -30,9 +30,9 @@
         "uuid": "^9.0.0"
     },
     "devDependencies": {
-        "@babel/core": "^7.19.6",
-        "@babel/preset-env": "7.21.4",
-        "@babel/register": "^7.21.0",
+        "@babel/core": "^7.23.2",
+        "@babel/preset-env": "7.23.2",
+        "@babel/register": "^7.22.15",
         "@rollup/plugin-alias": "^5.0.0",
         "@rollup/plugin-commonjs": "^24.1.0",
         "@rollup/plugin-json": "^6.0.0",
