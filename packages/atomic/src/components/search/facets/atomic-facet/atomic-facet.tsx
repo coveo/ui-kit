@@ -108,7 +108,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   @Prop({reflect: true}) public numberOfValues = 8;
   /**
    * Whether this facet should contain a search box.
-   * When "true", the search is only enabled when more facet values are available.
+   *
    */
   @Prop({reflect: true}) public withSearch = true;
   /**

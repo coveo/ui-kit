@@ -9,7 +9,8 @@ import {
   GeneratedAnswerStyle,
   buildInteractiveCitation,
 } from '@coveo/headless';
-import {Component, h, State, Element, Prop} from '@stencil/core';
+import {Component, h, Element, State, Prop} from '@stencil/core';
+import {AriaLiveRegion} from '../../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
@@ -78,6 +79,9 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
    */
   @Prop() answerStyle: GeneratedAnswerStyle = 'default';
 
+  @AriaLiveRegion('generated-answer')
+  protected ariaMessage!: string;
+
   private storage: SafeStorage = new SafeStorage();
   private data?: GeneratedAnswerData;
 
@@ -109,7 +113,35 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       };
       this.writeStoredData(this.data);
     }
+
+    this.ariaMessage = this.getGeneratedAnswerStatus();
   };
+
+  private getGeneratedAnswerStatus() {
+    const isVisible = this.generatedAnswerState.isVisible;
+    const isGenerating =
+      this.generatedAnswerState.isLoading ||
+      this.generatedAnswerState.isStreaming;
+    const hasAnswer = !!this.generatedAnswerState.answer;
+
+    if (!isVisible) {
+      return this.bindings.i18n.t('generated-answer-hidden');
+    }
+
+    if (isGenerating) {
+      return this.bindings.i18n.t('generating-answer');
+    }
+
+    if (this.error) {
+      return this.bindings.i18n.t('answer-could-not-be-generated');
+    }
+
+    return hasAnswer
+      ? this.bindings.i18n.t('answer-generated', {
+          answer: this.generatedAnswerState.answer,
+        })
+      : '';
+  }
 
   private readStoredData(): GeneratedAnswerData {
     return this.storage.getParsedJSON<GeneratedAnswerData>(
