@@ -218,7 +218,7 @@ export class AtomicGeneratedAnswerFeedbackModal
         {this.renderDetails()}
       </form>
     ) : (
-      <div slot="body" class="flex flex-col items-center">
+      <div slot="body" class="flex flex-col items-center gap-4 my-4">
         <atomic-icon icon={Success} class="w-48" />
         <p class="text-sm">
           {this.bindings.i18n.t('generated-answer-feedback-success')}
