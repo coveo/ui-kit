@@ -125,12 +125,12 @@ export function createRelay(initialConfig: RelayConfig): Relay {
 }
 
 export type {
-  Relay, 
-  Meta, 
-  EventConfig, 
-  EventCallback, 
-  RelayPayload, 
-  RelayConfig, 
-  ValidationError, 
-  ValidationResponse
+  Relay,
+  Meta,
+  EventConfig,
+  EventCallback,
+  RelayPayload,
+  RelayConfig,
+  ValidationError,
+  ValidationResponse,
 };

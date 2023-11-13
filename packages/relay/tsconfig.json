@@ -12,6 +12,6 @@
     "entryPoints": ["src/relay.ts"],
     "includeVersion": true,
     "excludePrivate": true,
-    "excludeNotDocumented": true,
+    "excludeNotDocumented": true
   }
 }
