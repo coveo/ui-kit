@@ -40,7 +40,7 @@ describe('Context', () => {
     expectContainAction(setContext);
   });
 
-  it('setContext dispatches #setContext', () => {
+  it('initialize context with values dispatches #setContext', () => {
     buildCoreContext(engine, {
       initialState: {values: {foo: ['bar']}},
     });

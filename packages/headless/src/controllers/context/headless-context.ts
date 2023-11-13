@@ -24,6 +24,8 @@ export type {
  * Creates a `Context` controller instance.
  *
  * @param engine - The headless engine.
+ * @param props - The configurable `Context` controller properties.
+ *
  * @returns A `Context` controller instance.
  */
 export function buildContext(

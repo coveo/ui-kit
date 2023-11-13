@@ -21,10 +21,17 @@ import {
 export type {ContextPayload, ContextValue};
 
 export interface ContextProps {
+  /**
+   * Represents the initial state of the context.
+   * If provided, it should adhere to the structure defined by the `ContextInitialState` interface.
+   */
   initialState?: ContextInitialState;
 }
 
 export interface ContextInitialState {
+  /**
+   * Represents the initial key/value pair of the context.
+   */
   values: ContextPayload;
 }
 
@@ -73,6 +80,14 @@ export interface ContextState {
   values: Record<string, ContextValue>;
 }
 
+/**
+ * Creates a `Context` controller instance
+ *
+ * @param engine - The headless engine.
+ * @param props - The configurable `Context` controller properties.
+ *
+ * @returns a `Context` controller instance.
+ */
 export function buildCoreContext(
   engine: CoreEngine,
   props: ContextProps = {}
