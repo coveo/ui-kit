@@ -163,7 +163,7 @@ export class AtomicGeneratedAnswerFeedbackModal
                   (e.currentTarget as HTMLInputElement | null)?.checked &&
                   this.setCurrentAnswer(correspondingAnswer)
                 }
-                class="mr-2 w-4 h-4"
+                class="mr-2"
                 required
               />
               <label part="reason-label" htmlFor={id}>
