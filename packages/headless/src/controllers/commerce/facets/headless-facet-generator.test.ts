@@ -1,17 +1,14 @@
-import {facetsReducer as commerceFacets} from '../../../../features/commerce/facets/facets-slice';
-import {facetOptionsReducer as facetOptions} from '../../../../features/facet-options/facet-options-slice';
-import {facetSetReducer as facetSet} from '../../../../features/facets/facet-set/facet-set-slice';
-import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
-import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
-import {buildMockFacetOptions} from '../../../../test/mock-facet-options';
-import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
-import {buildMockFacetResponse} from '../../../../test/mock-facet-response';
-import {buildMockFacetSlice} from '../../../../test/mock-facet-slice';
-import {buildFacet} from './headless-product-listing-facet';
-import {
-  buildFacetGenerator,
-  FacetGenerator,
-} from './headless-product-listing-facet-generator';
+import {facetsReducer as commerceFacets} from '../../../features/commerce/facets/facets-slice';
+import {facetOptionsReducer as facetOptions} from '../../../features/facet-options/facet-options-slice';
+import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice';
+import {buildMockCommerceEngine, MockCommerceEngine} from '../../../test';
+import {buildMockCommerceState} from '../../../test/mock-commerce-state';
+import {buildMockFacetOptions} from '../../../test/mock-facet-options';
+import {buildMockFacetRequest} from '../../../test/mock-facet-request';
+import {buildMockFacetResponse} from '../../../test/mock-facet-response';
+import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
+import {buildFacet} from './headless-facet';
+import {buildFacetGenerator, FacetGenerator} from './headless-facet-generator';
 
 describe('FacetGenerator', () => {
   let engine: MockCommerceEngine;

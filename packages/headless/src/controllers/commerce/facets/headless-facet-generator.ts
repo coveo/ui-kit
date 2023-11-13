@@ -1,18 +1,18 @@
-import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {facetsReducer as commerceFacets} from '../../../../features/commerce/facets/facets-slice';
-import {facetOptionsReducer as facetOptions} from '../../../../features/facet-options/facet-options-slice';
-import {facetSetReducer as facetSet} from '../../../../features/facets/facet-set/facet-set-slice';
+import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
+import {facetsReducer as commerceFacets} from '../../../features/commerce/facets/facets-slice';
+import {facetOptionsReducer as facetOptions} from '../../../features/facet-options/facet-options-slice';
+import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice';
 import {
   CommerceFacetSection,
   FacetOptionsSection,
   FacetSection,
-} from '../../../../state/state-sections';
-import {loadReducerError} from '../../../../utils/errors';
+} from '../../../state/state-sections';
+import {loadReducerError} from '../../../utils/errors';
 import {
   buildController,
   Controller,
-} from '../../../controller/headless-controller';
-import {buildFacet, Facet} from './headless-product-listing-facet';
+} from '../../controller/headless-controller';
+import {buildFacet, Facet} from './headless-facet';
 
 export interface FacetGenerator extends Controller {
   state: FacetGeneratorState;

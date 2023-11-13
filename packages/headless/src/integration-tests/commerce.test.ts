@@ -16,7 +16,7 @@ const accessToken = 'no';
 
 // eslint-disable-next-line @cspell/spellchecker
 // TODO CAPI-149: Skipped since we do not currently have test fixtures for commerce
-describe.skip('commerce', () => {
+describe('commerce', () => {
   let engine: CommerceEngine;
 
   beforeEach(() => {
@@ -28,7 +28,7 @@ describe.skip('commerce', () => {
         accessToken,
         organizationEndpoints: {
           ...getOrganizationEndpoints(organizationId, 'dev'),
-          platform: 'https://platformdev.cloud.coveo.com',
+          platform: 'http://localhost:8100',
         },
       },
       loggerOptions: {level: 'silent'},
@@ -99,11 +99,27 @@ describe.skip('commerce', () => {
     expect(sort.state.availableSorts.length).toEqual(2);
   });
 
-  it('has no facets', async () => {
+  it('has selectable facets', async () => {
+    // Query the commerce api
     await fetchProductListing();
 
+    // Generate the facets from the response
     const facetGenerator = buildFacetGenerator(engine);
+    const controllers = facetGenerator.state.facets;
+    const facetController = controllers[0];
 
-    expect(facetGenerator.state.facets).toEqual([]);
+    // Select a facet
+    await waitForNextStateChange(engine, {
+      action: () => {
+        facetController.toggleSelect({
+          ...facetController.state.values[0],
+          state: 'selected',
+        });
+      },
+      expectedSubscriberCalls: 9,
+    });
+
+    // Have it reflected on the local state
+    expect(facetController.state.values[0].state).toEqual('selected');
   });
 });
