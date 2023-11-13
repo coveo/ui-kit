@@ -26,4 +26,4 @@ const {defaultModuleExport, exportedStory} = defaultStory(
 );
 
 export default {...defaultModuleExport, title: 'Atomic/RefineToggle'};
-export const DefaultRefineToggle = exportedStory;
+export const Default = exportedStory;

@@ -59,4 +59,4 @@ export default {
   ...defaultModuleExport,
   title: 'Atomic/AutomaticFacetGenerator',
 };
-export const DefaultAutomaticFacetGenerator = exportedStory;
+export const Default = exportedStory;

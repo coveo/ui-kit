@@ -7,4 +7,4 @@ const {defaultModuleExport, exportedStory} = defaultStory(
 );
 
 export default {...defaultModuleExport, title: 'Atomic/ResultsPerPage'};
-export const DefaultResultsPerPage = exportedStory;
+export const Default = exportedStory;
