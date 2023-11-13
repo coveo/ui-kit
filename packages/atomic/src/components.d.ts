@@ -167,7 +167,7 @@ export namespace Components {
          */
         "sortCriteria": CategoryFacetSortCriterion;
         /**
-          * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
+          * Whether this facet should contain a search box.
          */
         "withSearch": boolean;
     }
@@ -239,7 +239,7 @@ export namespace Components {
          */
         "sortCriteria": FacetSortCriterion;
         /**
-          * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
+          * Whether this facet should contain a search box.
          */
         "withSearch": boolean;
     }
@@ -326,7 +326,7 @@ export namespace Components {
          */
         "sortCriteria": FacetSortCriterion;
         /**
-          * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
+          * Whether this facet should contain a search box.
          */
         "withSearch": boolean;
     }
@@ -4287,7 +4287,7 @@ declare namespace LocalJSX {
          */
         "sortCriteria"?: CategoryFacetSortCriterion;
         /**
-          * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
+          * Whether this facet should contain a search box.
          */
         "withSearch"?: boolean;
     }
@@ -4359,7 +4359,7 @@ declare namespace LocalJSX {
          */
         "sortCriteria"?: FacetSortCriterion;
         /**
-          * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
+          * Whether this facet should contain a search box.
          */
         "withSearch"?: boolean;
     }
@@ -4446,7 +4446,7 @@ declare namespace LocalJSX {
          */
         "sortCriteria"?: FacetSortCriterion;
         /**
-          * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
+          * Whether this facet should contain a search box.
          */
         "withSearch"?: boolean;
     }
