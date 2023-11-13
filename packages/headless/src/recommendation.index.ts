@@ -6,6 +6,7 @@ import {
   fieldMustMatch as fieldMustMatchAlias,
   fieldMustNotMatch as fieldMustNotMatchAlias,
 } from './features/result-templates/result-templates-helpers';
+import * as HighlightUtils from './utils/highlight';
 
 polyfillCryptoNode();
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
@@ -62,6 +63,9 @@ export type {
   RecommendationInteractiveResultOptions,
   RecommendationInteractiveResultProps,
   InteractiveResult,
+  InteractiveResultCoreOptions,
+  InteractiveResultCoreProps,
+  InteractiveResultCore,
 } from './controllers/recommendation/result-list/headless-recommendation-interactive-result';
 export {buildInteractiveResult} from './controllers/recommendation/result-list/headless-recommendation-interactive-result';
 
@@ -109,3 +113,6 @@ export {
 
 export {getOrganizationEndpoints} from './api/platform-client';
 export type {PlatformEnvironment} from './utils/url-utils';
+
+// Helpers
+export {HighlightUtils};

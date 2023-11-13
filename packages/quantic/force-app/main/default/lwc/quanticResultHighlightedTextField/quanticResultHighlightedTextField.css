@@ -1,0 +1,7 @@
+.result-text__label {
+    font-weight: var(--lwc-fontWeightBold, 700);
+}
+
+b {
+  font-weight: bolder;
+}

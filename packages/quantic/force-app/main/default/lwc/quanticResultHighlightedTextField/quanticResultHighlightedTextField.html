@@ -1,0 +1,11 @@
+<template>
+  <template if:true={error}>
+    <div class="error-message slds-text-color_destructive">{error}</div>
+  </template>
+  <template if:true={isValid}>
+    <template if:true={label}>
+      <span class="result-text__label slds-m-right_xx-small">{label}:</span>
+    </template>
+    <span class="result-text__value" lwc:dom="manual"></span>
+  </template>
+</template>
