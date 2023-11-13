@@ -113,6 +113,16 @@ describe('facet', () => {
     expect(() => initFacet()).toThrow('Check the options of buildFacet');
   });
 
+  it('skips registering the facet if explicitly told to', () => {
+    engine = buildMockSearchAppEngine({state});
+    facet = buildCoreFacet(engine, {
+      options,
+      registerFacet: false,
+    });
+    const action = engine.actions.find((a) => a.type === registerFacet.type);
+    expect(action).toBeUndefined();
+  });
+
   it('#state.facetId exposes the facet id', () => {
     expect(facet.state.facetId).toBe(facetId);
   });

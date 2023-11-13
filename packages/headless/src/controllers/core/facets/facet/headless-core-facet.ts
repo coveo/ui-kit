@@ -63,6 +63,13 @@ export interface CoreFacetProps {
    * The options for the core `Facet` controller.
    * */
   options: FacetOptions;
+
+  /**
+   * Whether the facet should be registered.
+   *
+   * @defaultValue `true`
+   */
+  registerFacet?: boolean;
 }
 
 /**
@@ -376,7 +383,9 @@ export function buildCoreFacet(
     return initialNumberOfValues < currentValues.length && hasIdleValues;
   };
 
-  dispatch(registerFacet(registrationOptions));
+  if (props.registerFacet !== false) {
+    dispatch(registerFacet(registrationOptions));
+  }
 
   return {
     ...controller,
