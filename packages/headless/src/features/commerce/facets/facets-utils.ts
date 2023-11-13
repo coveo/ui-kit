@@ -5,13 +5,8 @@ import {
   logFacetSelect,
 } from '../../facets/facet-set/facet-set-product-listing-v2-analytics-actions';
 import {FacetValue} from '../../facets/facet-set/interfaces/response';
+import {isFacetValueExcluded, isFacetValueSelected} from '../../facets/facet-set/facet-set-utils';
 
-export const isFacetValueSelected = (value: FacetValue) => {
-  return value.state === 'selected';
-};
-export const isFacetValueExcluded = (value: FacetValue) => {
-  return value.state === 'excluded';
-};
 
 export const getProductListingAnalyticsActionForToggleFacetSelect = (
   facetId: string,

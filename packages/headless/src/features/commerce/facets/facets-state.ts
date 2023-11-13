@@ -1,7 +1,7 @@
-import {AnyFacetResponse} from '../../facets/generic/interfaces/generic-facet-response';
+import {CommerceFacetResponse} from '../../../api/commerce/product-listings/v2/facet';
 
 export interface CommerceFacetsState {
-  facets: AnyFacetResponse[];
+  facets: CommerceFacetResponse[];
 }
 
 export const getCommerceFacetsInitialState = (): CommerceFacetsState => ({

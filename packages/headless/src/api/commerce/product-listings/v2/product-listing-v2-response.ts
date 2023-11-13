@@ -1,4 +1,3 @@
-import {AnyFacetResponse} from '../../../../features/facets/generic/interfaces/generic-facet-response';
 import {
   SearchAPIErrorWithExceptionInBody,
   SearchAPIErrorWithStatusCode,
@@ -6,11 +5,12 @@ import {
 import {ProductRecommendation} from '../../../search/search/product-recommendation';
 import {Pagination} from './pagination';
 import {Sort} from './sort';
+import {CommerceFacetResponse} from './facet';
 
 export interface ProductListingV2SuccessResponse {
   responseId: string;
   products: ProductRecommendation[];
-  facets: AnyFacetResponse[];
+  facets: CommerceFacetResponse[];
   pagination: Pagination;
   sort: Sort;
 }

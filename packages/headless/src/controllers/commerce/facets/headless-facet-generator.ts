@@ -13,6 +13,8 @@ import {
   Controller,
 } from '../../controller/headless-controller';
 import {buildFacet, Facet} from './headless-facet';
+import {registerFacet} from '../../../features/facets/facet-set/facet-set-actions';
+import {CommerceFacetResponse} from '../../../api/commerce/product-listings/v2/facet';
 
 export interface FacetGenerator extends Controller {
   state: FacetGeneratorState;
@@ -26,23 +28,40 @@ export function buildFacetGenerator(engine: CommerceEngine): FacetGenerator {
   if (!loadFacetGeneratorReducers(engine)) {
     throw loadReducerError;
   }
+  const { dispatch } = engine;
   const controller = buildController(engine);
+
+  const createFacet = (facet: CommerceFacetResponse) =>           {
+    const options = {
+      field: facet.field,
+      facetId: facet.facetId,
+      displayName: facet.displayName
+    };
+
+    let facetController;
+    switch (facet.type) {
+      case 'regular':
+      default:
+        // eslint-disable-next-line @cspell/spellchecker
+        // TODO CAPI-90, CAPI-91: Use different controllers for different facet types taken from facet.type
+        facetController = buildFacet(engine, {
+          options,
+        });
+    }
+
+    if (!engine.state.facetSet[facet.facetId]) {
+      dispatch(registerFacet(options));
+    }
+
+    return facetController
+  }
 
   return {
     ...controller,
 
     get state() {
       return {
-        facets: (engine.state.commerceFacets.facets ?? []).map((facet) =>
-          // eslint-disable-next-line @cspell/spellchecker
-          // TODO CAPI-90, CAPI-91: Use different controllers for different facet types taken from facet.type
-          buildFacet(engine, {
-            options: {
-              facetId: facet.facetId,
-              field: facet.field,
-            },
-          })
-        ),
+        facets: engine.state.commerceFacets.facets?.map(createFacet) ?? [],
       };
     },
   };

@@ -1,16 +1,26 @@
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {facetsReducer as commerceFacets} from '../../../features/commerce/facets/facets-slice';
+import {
+  getProductListingAnalyticsActionForToggleFacetExclude,
+  getProductListingAnalyticsActionForToggleFacetSelect,
+} from '../../../features/commerce/facets/facets-utils';
+import {fetchProductListing} from '../../../features/commerce/product-listing/product-listing-actions';
+import {
+  logFacetClearAll,
+  logFacetShowLess,
+  logFacetShowMore,
+} from '../../../features/facets/facet-set/facet-set-product-listing-analytics-actions';
 import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice';
 import {
   CommerceFacetSection,
   FacetSection,
 } from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
-import {buildController} from '../../controller/headless-controller';
-import {determineFacetId} from '../../core/facets/_common/facet-id-determinor';
 import {
+  buildCoreFacet,
   CoreFacet,
   CoreFacetState,
+  FacetValue,
 } from '../../core/facets/facet/headless-core-facet';
 import {FacetOptions as CoreFacetOptions} from '../../core/facets/facet/headless-core-facet-options';
 
@@ -24,7 +34,10 @@ export type Facet = Omit<
 export type FacetState = Omit<
   CoreFacetState,
   'enabled' | 'sortCriterion' | 'isLoading'
->;
+> & {
+  field: string;
+  displayName?: string;
+};
 
 export interface FacetProps {
   options: FacetOptions;
@@ -35,20 +48,74 @@ export type FacetOptions = Pick<
   'facetId' | 'field' | 'numberOfValues'
 >;
 
-export function buildFacet(engine: CommerceEngine, props: FacetProps): any {
+export function buildFacet(engine: CommerceEngine, props: FacetProps): Facet {
   if (!loadFacetReducers(engine)) {
     throw loadReducerError;
   }
 
-  const coreController = buildController(engine);
-  const facetId = determineFacetId(engine, props.options);
+  const {dispatch} = engine;
+  const coreController = buildCoreFacet(engine, {
+    options: props.options,
+    registerFacet: false
+  });
+  const {sortBy, isSortedBy, enable, disable, ...restOfCoreController} =
+    coreController;
+  const getFacetId = () => coreController.state.facetId;
+  const getResponse = () => engine.state.commerceFacets.facets.find((facet) => facet.facetId === getFacetId());
 
   return {
-    ...coreController,
+    ...restOfCoreController,
+
+    toggleSelect: (selection: FacetValue) => {
+      coreController.toggleSelect(selection);
+      dispatch(fetchProductListing());
+      dispatch(
+        getProductListingAnalyticsActionForToggleFacetSelect(
+          getFacetId(),
+          selection
+        )
+      );
+    },
+
+    toggleExclude: (selection: FacetValue) => {
+      coreController.toggleExclude(selection);
+      dispatch(fetchProductListing());
+      dispatch(
+        getProductListingAnalyticsActionForToggleFacetExclude(
+          getFacetId(),
+          selection
+        )
+      );
+    },
+
+    deselectAll() {
+      coreController.deselectAll();
+      dispatch(fetchProductListing());
+      dispatch(logFacetClearAll(getFacetId()));
+    },
+
+    showMoreValues() {
+      coreController.showMoreValues();
+      dispatch(fetchProductListing()).then(() =>
+        dispatch(logFacetShowMore(getFacetId()))
+      );
+    },
+
+    showLessValues() {
+      coreController.showLessValues();
+      dispatch(fetchProductListing()).then(() =>
+        dispatch(logFacetShowLess(getFacetId()))
+      );
+    },
 
     get state() {
+      const {isLoading, enabled, sortCriterion, ...state} =
+        coreController.state;
+      const {field, displayName} = getResponse()!;
       return {
-        facetId,
+        ...state,
+        field,
+        displayName,
       };
     },
   };
