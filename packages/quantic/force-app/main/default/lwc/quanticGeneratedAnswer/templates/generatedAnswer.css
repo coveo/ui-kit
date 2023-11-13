@@ -6,6 +6,7 @@
 
 .generated-answer__answer {
   white-space: pre-wrap;
+  line-height: 1.5rem;
 }
 
 .generated-answer__footer--multiline {

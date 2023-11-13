@@ -344,7 +344,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get generatedAnswerClass() {
-    return `generated-answer__answer ${
+    return `generated-answer__answer slds-text-heading_small ${
       this.isStreaming ? 'generated-answer__answer--streaming' : ''
     }`;
   }
