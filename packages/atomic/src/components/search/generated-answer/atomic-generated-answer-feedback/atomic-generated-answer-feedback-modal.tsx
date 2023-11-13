@@ -57,6 +57,38 @@ export class AtomicGeneratedAnswerFeedbackModal
     }
   }
 
+  private static options: {
+    id: string;
+    localeKey: string;
+    correspondingAnswer: GeneratedAnswerFeedback | 'other';
+  }[] = [
+    {
+      id: 'irrelevant',
+      localeKey: 'irrelevant',
+      correspondingAnswer: 'irrelevant',
+    },
+    {
+      id: 'notAccurate',
+      localeKey: 'not-accurate',
+      correspondingAnswer: 'notAccurate',
+    },
+    {
+      id: 'outOfDate',
+      localeKey: 'out-of-date',
+      correspondingAnswer: 'outOfDate',
+    },
+    {
+      id: 'harmful',
+      localeKey: 'harmful',
+      correspondingAnswer: 'harmful',
+    },
+    {
+      id: 'other',
+      localeKey: 'other',
+      correspondingAnswer: 'other',
+    },
+  ];
+
   private setIsOpen(isOpen: boolean) {
     this.isOpen = isOpen;
   }
@@ -109,67 +141,37 @@ export class AtomicGeneratedAnswerFeedbackModal
   }
 
   private renderOptions() {
-    const options: {
-      id: string;
-      localeKey: string;
-      correspondingAnswer: GeneratedAnswerFeedback | 'other';
-    }[] = [
-      {
-        id: 'irrelevant',
-        localeKey: 'irrelevant',
-        correspondingAnswer: 'irrelevant',
-      },
-      {
-        id: 'notAccurate',
-        localeKey: 'not-accurate',
-        correspondingAnswer: 'notAccurate',
-      },
-      {
-        id: 'outOfDate',
-        localeKey: 'out-of-date',
-        correspondingAnswer: 'outOfDate',
-      },
-      {
-        id: 'harmful',
-        localeKey: 'harmful',
-        correspondingAnswer: 'harmful',
-      },
-      {
-        id: 'other',
-        localeKey: 'other',
-        correspondingAnswer: 'other',
-      },
-    ];
-
     return (
       <fieldset>
         <legend part="reason-title" class="text-base">
           {this.bindings.i18n.t('generated-answer-feedback-instructions')}
         </legend>
-        {options.map(({id, localeKey, correspondingAnswer}) => (
-          <div
-            class={`flex items-center ${correspondingAnswer} mobile-only:mt-4 desktop-only:mt-6`}
-            key={id}
-            part="reason"
-          >
-            <input
-              part="reason-radio"
-              type="radio"
-              name="answer"
-              id={id}
-              checked={this.currentAnswer === correspondingAnswer}
-              onChange={(e) =>
-                (e.currentTarget as HTMLInputElement | null)?.checked &&
-                this.setCurrentAnswer(correspondingAnswer)
-              }
-              class="mr-2 w-4 h-4"
-              required
-            />
-            <label part="reason-label" htmlFor={id}>
-              {this.bindings.i18n.t(localeKey)}
-            </label>
-          </div>
-        ))}
+        {AtomicGeneratedAnswerFeedbackModal.options.map(
+          ({id, localeKey, correspondingAnswer}) => (
+            <div
+              class={`flex items-center ${correspondingAnswer} mobile-only:mt-4 desktop-only:mt-6`}
+              key={id}
+              part="reason"
+            >
+              <input
+                part="reason-radio"
+                type="radio"
+                name="answer"
+                id={id}
+                checked={this.currentAnswer === correspondingAnswer}
+                onChange={(e) =>
+                  (e.currentTarget as HTMLInputElement | null)?.checked &&
+                  this.setCurrentAnswer(correspondingAnswer)
+                }
+                class="mr-2 w-4 h-4"
+                required
+              />
+              <label part="reason-label" htmlFor={id}>
+                {this.bindings.i18n.t(localeKey)}
+              </label>
+            </div>
+          )
+        )}
       </fieldset>
     );
   }
