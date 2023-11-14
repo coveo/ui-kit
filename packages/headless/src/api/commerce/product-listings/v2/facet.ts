@@ -1,11 +1,66 @@
-import {AnyFacetResponse} from '../../../../features/facets/generic/interfaces/generic-facet-response';
+import {FacetValueState} from '../../../../features/facets/facet-api/value';
 
-export type CommerceFacetType = 'regular';
-
-export type CommerceFacetResponse = AnyFacetResponse & {
-  type: CommerceFacetType;
+export interface BaseFacetResponse<Value, Type extends FacetType> {
+  facetId: string;
+  field: string;
   displayName: string;
   isFieldExpanded: boolean;
   numberOfResults: number;
+  moreValuesAvailable: boolean;
   fromAutoSelect: boolean;
-};
+  values: Value[];
+  type: Type;
+}
+
+export type FacetResponse = BaseFacetResponse<FacetValue, 'regular'>;
+export type DateRangeFacetResponse = BaseFacetResponse<DateFacetValue, 'dateRange'>;
+export type NumericalRangeFacetResponse = BaseFacetResponse<NumericFacetValue, 'numericalRange'>;
+export type CategoryFacetResponse = BaseFacetResponse<CategoryFacetValue, 'hierarchical'>;
+
+export type FacetType =
+  | 'regular'
+  | 'dateRange'
+  | 'numericalRange'
+  | 'hierarchical';
+
+export interface BaseFacetValue {
+  facetId: string;
+  state: FacetValueState;
+  numberOfResults: number;
+  isAutoSelected: boolean;
+  isSuggested: boolean;
+  moreValuesAvailable: boolean;
+}
+
+export interface FacetValue extends BaseFacetValue {
+  value: string;
+}
+
+export interface RangeFacetValue<T> extends BaseFacetValue {
+  start: T;
+  end: T;
+  endInclusive: boolean;
+}
+
+export type DateFacetValue = RangeFacetValue<string>;
+
+export type NumericFacetValue = RangeFacetValue<number>;
+
+export interface CategoryFacetValue extends BaseFacetValue {
+  value: string;
+  path: string[];
+  isLeafValue: boolean;
+  children: CategoryFacetValue[];
+}
+
+export type AnyFacetResponse =
+  | FacetResponse
+  | DateRangeFacetResponse
+  | NumericalRangeFacetResponse
+  | CategoryFacetResponse;
+
+export type AnyFacetValue =
+  | FacetValue
+  | NumericFacetValue
+  | DateFacetValue
+  | CategoryFacetValue;

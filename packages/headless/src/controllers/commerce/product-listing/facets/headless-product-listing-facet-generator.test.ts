@@ -1,14 +1,13 @@
-import {facetsReducer as commerceFacets} from '../../../features/commerce/facets/facets-slice';
-import {facetOptionsReducer as facetOptions} from '../../../features/facet-options/facet-options-slice';
-import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice';
-import {buildMockCommerceEngine, MockCommerceEngine} from '../../../test';
-import {buildMockCommerceFacetResponse} from '../../../test/mock-commerce-facet-response';
-import {buildMockCommerceState} from '../../../test/mock-commerce-state';
-import {buildMockFacetOptions} from '../../../test/mock-facet-options';
-import {buildMockFacetRequest} from '../../../test/mock-facet-request';
-import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
-import {buildFacet} from './headless-facet';
-import {buildFacetGenerator, FacetGenerator} from './headless-facet-generator';
+import {FacetGenerator} from '../../facets/core/headless-core-facet-generator';
+import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
+import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
+import {buildMockCommerceFacetResponse} from '../../../../test/mock-commerce-facet-response';
+import {buildMockFacetSlice} from '../../../../test/mock-facet-slice';
+import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
+import {buildMockFacetOptions} from '../../../../test/mock-facet-options';
+import {buildProductListingFacetGenerator} from './headless-product-listing-facet-generator';
+import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice';
+import {buildProductListingFacet} from './headless-product-listing-facet';
 
 describe('FacetGenerator', () => {
   let engine: MockCommerceEngine;
@@ -17,7 +16,7 @@ describe('FacetGenerator', () => {
   function initFacetGenerator() {
     engine = buildMockCommerceEngine();
 
-    facetGenerator = buildFacetGenerator(engine);
+    facetGenerator = buildProductListingFacetGenerator(engine);
   }
 
   beforeEach(() => {
@@ -26,9 +25,7 @@ describe('FacetGenerator', () => {
 
   it('adds correct reducers to engine', () => {
     expect(engine.addReducers).toBeCalledWith({
-      facetSet,
-      facetOptions,
-      commerceFacets,
+      productListing,
     });
   });
 
@@ -46,7 +43,7 @@ describe('FacetGenerator', () => {
     const engine = buildMockCommerceEngine({
       state: {
         ...buildMockCommerceState(),
-        commerceFacets: {
+        commerceFacetSet: {
           facets: [buildMockCommerceFacetResponse(facet)],
         },
         facetSet: {
@@ -61,11 +58,11 @@ describe('FacetGenerator', () => {
         }),
       },
     });
-    facetGenerator = buildFacetGenerator(engine);
+    facetGenerator = buildProductListingFacetGenerator(engine);
 
     expect(facetGenerator.state.facets.length).toEqual(1);
     expect(facetGenerator.state.facets[0].state).toEqual(
-      buildFacet(engine, {options: facet}).state
+      buildProductListingFacet(engine, {options: facet}).state
     );
   });
 });
