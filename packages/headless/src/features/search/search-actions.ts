@@ -53,21 +53,32 @@ export interface SearchAction<
   getEventExtraPayload: (state: State) => Payload;
 }
 
+type SingleOrArray<T> = T | T[];
+
 export const buildSearchAction = <
   State extends StateNeededByExecuteSearch = StateNeededByExecuteSearch,
   Payload extends Object = {},
 >(
   actionCause: string,
-  getEventExtraPayload: ((
-    state: StateNeededByExecuteSearch,
-    payload: Partial<Payload>
-  ) => void)[]
+  getEventExtraPayload: SingleOrArray<
+    ({
+      state,
+      payload,
+    }: {
+      state: StateNeededByExecuteSearch;
+      payload: Partial<Payload>;
+    }) => void
+  >
 ) => {
+  const getEventExtraPayloadFunctionArray = Array.isArray(getEventExtraPayload)
+    ? getEventExtraPayload
+    : [getEventExtraPayload];
   const combinedGetEventExtraPayload = (state: State) => {
     const payload = {};
-    for (const payloadTransformer of getEventExtraPayload) {
-      payloadTransformer(state, payload);
+    for (const payloadTransformer of getEventExtraPayloadFunctionArray) {
+      payloadTransformer({state, payload});
     }
+    return payload;
   };
   return {
     actionCause,
