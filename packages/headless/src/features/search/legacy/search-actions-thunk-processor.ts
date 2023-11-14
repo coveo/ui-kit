@@ -1,14 +1,16 @@
 import {AnyAction} from '@reduxjs/toolkit';
 import {ThunkDispatch} from 'redux-thunk';
+import {StateNeededBySearchAnalyticsProvider} from '../../../api/analytics/search-analytics';
 import {
   isErrorResponse,
   isSuccessResponse,
   SearchAPIClient,
-} from '../../api/search/search-api-client';
-import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
-import {SearchOrigin} from '../../api/search/search-metadata';
-import {SearchRequest} from '../../api/search/search/search-request';
-import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
+} from '../../../api/search/search-api-client';
+import {SearchAPIErrorWithStatusCode} from '../../../api/search/search-api-error-response';
+import {SearchOrigin} from '../../../api/search/search-metadata';
+import {SearchRequest} from '../../../api/search/search/search-request';
+import {SearchResponseSuccess} from '../../../api/search/search/search-response';
+import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
 import {
   AdvancedSearchQueriesSection,
   CategoryFacetSection,
@@ -31,30 +33,29 @@ import {
   SearchSection,
   SortSection,
   TriggerSection,
-} from '../../state/state-sections';
-import {makeBasicNewSearchAnalyticsAction} from '../analytics/analytics-utils';
-import {SearchPageEvents} from '../analytics/search-action-cause';
-import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
-import {snapshot} from '../history/history-actions';
-import {extractHistory} from '../history/history-state';
-import {updateQuery} from '../query/query-actions';
+} from '../../../state/state-sections';
+import {AnalyticsAsyncThunk} from '../../analytics/analytics-utils';
+import {applyDidYouMeanCorrection} from '../../did-you-mean/did-you-mean-actions';
+import {logDidYouMeanAutomatic} from '../../did-you-mean/did-you-mean-analytics-actions';
+import {snapshot} from '../../history/history-actions';
+import {extractHistory} from '../../history/history-state';
+import {updateQuery} from '../../query/query-actions';
+import {getQueryInitialState} from '../../query/query-state';
+import {logTriggerQuery} from '../../triggers/trigger-analytics-actions';
 import {
   applyQueryTriggerModification,
   updateIgnoreQueryTrigger,
-} from '../triggers/triggers-actions';
-import {ExecuteSearchThunkReturn} from './search-actions';
-import {logQueryError} from './search-analytics-actions';
+} from '../../triggers/triggers-actions';
+import {logQueryError} from '../search-analytics-actions';
 import {
   ErrorResponse,
   MappedSearchRequest,
   mapSearchResponse,
   SuccessResponse,
-} from './search-mappings';
-import {buildSearchRequest} from './search-request';
-
-export interface AnalyticsAction {
-  actionCause: string;
-}
+} from '../search-mappings';
+import {buildSearchRequest} from '../search-request';
+import {getSearchInitialState} from '../search-state';
+import {ExecuteSearchThunkReturn} from './search-actions';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   Partial<
@@ -102,7 +103,7 @@ export interface AsyncThunkConfig {
   >;
 
   rejectWithValue: (err: SearchAPIErrorWithStatusCode) => unknown;
-  analyticsAction: AnalyticsAction;
+  analyticsAction: AnalyticsAsyncThunk | null;
   extra: ClientThunkExtraArguments<SearchAPIClient>;
 }
 
@@ -192,6 +193,18 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       return this.rejectWithValue(retried.response.error) as RejectionType;
     }
 
+    this.analyticsAction &&
+      this.analyticsAction()(
+        this.dispatch,
+        () =>
+          this.getStateAfterResponse(
+            fetched.queryExecuted,
+            fetched.duration,
+            state,
+            successResponse
+          ),
+        this.extra
+      );
     this.dispatch(snapshot(extractHistory(this.getState())));
 
     return {
@@ -202,10 +215,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       },
       automaticallyCorrected: true,
       originalQuery,
-      analyticsAction: makeBasicNewSearchAnalyticsAction(
-        SearchPageEvents.didyoumeanAutomatic,
-        this.getState
-      ),
+      analyticsAction: logDidYouMeanAutomatic(),
     };
   }
 
@@ -231,6 +241,10 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       return null;
     }
 
+    if (this.analyticsAction) {
+      await this.dispatch(this.analyticsAction);
+    }
+
     const originalQuery = this.getCurrentQuery();
     const retried =
       await this.automaticallyRetryQueryWithTriggerModification(correctedQuery);
@@ -248,10 +262,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       },
       automaticallyCorrected: false,
       originalQuery,
-      analyticsAction: makeBasicNewSearchAnalyticsAction(
-        SearchPageEvents.triggerQuery,
-        this.getState
-      ),
+      analyticsAction: logTriggerQuery(),
     };
   }
 
@@ -301,6 +312,29 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     );
 
     return fetched;
+  }
+
+  private getStateAfterResponse(
+    query: string,
+    duration: number,
+    previousState: StateNeededByExecuteSearch,
+    response: SearchResponseSuccess
+  ): StateNeededBySearchAnalyticsProvider {
+    return {
+      ...previousState,
+      query: {
+        q: query,
+        enableQuerySyntax:
+          previousState.query?.enableQuerySyntax ??
+          getQueryInitialState().enableQuerySyntax,
+      },
+      search: {
+        ...getSearchInitialState(),
+        duration,
+        response,
+        results: response.results,
+      },
+    };
   }
 
   private getCurrentQuery() {
