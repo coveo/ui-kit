@@ -101,7 +101,7 @@ export async function getActiveScratchOrgUsernames(
   scratchOrgName: string
 ): Promise<string[]> {
   const response = await sfdx<SfdxActiveScratchOrgsResponse>(
-    `force:data:soql:query -u ${devHubAlias} -q "SELECT SignupUsername FROM ScratchOrgInfo WHERE OrgName='${scratchOrgName}' AND Status != 'Deleted'"`
+    `data query --target-org ${devHubAlias} --query "SELECT SignupUsername FROM ScratchOrgInfo WHERE OrgName='${scratchOrgName}' AND Status != 'Deleted'"`
   );
 
   return response.result.records.map((r) => r.SignupUsername);
@@ -112,7 +112,7 @@ export async function getOldScratchOrgUsernames(
   scratchOrgName: string
 ): Promise<string[]> {
   const response = await sfdx<SfdxOldScratchOrgsResponse>(
-    `force:data:soql:query -u ${devHubAlias} -q "SELECT SignupUsername, CreatedDate FROM ScratchOrgInfo WHERE OrgName='${scratchOrgName}' AND Status != 'Deleted'"`
+    `data query --target-org ${devHubAlias} --query "SELECT SignupUsername, CreatedDate FROM ScratchOrgInfo WHERE OrgName='${scratchOrgName}' AND Status != 'Deleted'"`
   );
 
   const ageThresholdMsec = 2 * 60 * 60 * 1000;
@@ -139,7 +139,7 @@ export async function authorizeOrg(args: AuthorizeOrgArguments) {
     args.isScratchOrg ? 'test' : 'login'
   }.salesforce.com`;
   await sfdx(
-    `force:auth:jwt:grant --clientid ${args.jwtClientId} --jwtkeyfile "${args.jwtKeyFile}" --username ${args.username} --instanceurl ${instanceUrl} --setdefaultdevhubusername`
+    `org login jwt --client-id ${args.jwtClientId} --jwt-key-file "${args.jwtKeyFile}" --username ${args.username} --instance-url ${instanceUrl} --set-default-dev-hub`
   );
 }
 
@@ -151,7 +151,7 @@ export interface CreateScratchOrgArguments {
 
 export async function createScratchOrg(args: CreateScratchOrgArguments) {
   await sfdx(
-    `force:org:create -s -f "${args.defFile}" -a ${args.alias} -t scratch -d ${args.duration}`
+    `org create scratch --set-default --definition-file "${args.defFile}" --alias ${args.alias} --duration-days ${args.duration}`
   );
 }
 
@@ -222,7 +222,7 @@ export async function deleteOldScratchOrgs(
 }
 
 export async function orgExists(alias: string): Promise<boolean> {
-  const response = await sfdx<SfdxListOrgsResponse>('force:org:list');
+  const response = await sfdx<SfdxListOrgsResponse>('org list');
 
   const org = response.result.scratchOrgs.find((o) => o.alias === alias);
 
@@ -239,7 +239,7 @@ export async function orgExists(alias: string): Promise<boolean> {
 }
 
 export async function deleteOrg(alias: string): Promise<void> {
-  await sfdx(`force:org:delete -u ${alias} --noprompt`);
+  await sfdx(`org delete scratch --target-org ${alias} --no-prompt`);
 }
 
 export interface CreateCommunityArguments {
@@ -255,7 +255,7 @@ export async function createCommunity(
   args: CreateCommunityArguments
 ): Promise<void> {
   await sfdx(
-    `force:community:create -u ${args.alias} -n "${args.community.name}" -p "${args.community.path}" -t "${args.community.template}"`
+    `community create --target-org ${args.alias} --name "${args.community.name}" --url-path-prefix "${args.community.path}" --template-name "${args.community.template}"`
   );
 }
 
@@ -265,9 +265,13 @@ export interface DeploySourceArguments {
 }
 
 export async function deploySource(args: DeploySourceArguments): Promise<void> {
-  const paths = args.packagePaths.map((p) => `"${p}"`).join(',');
+  const sourceDirs = args.packagePaths
+    .map((p) => `--source-dir "${p}"`)
+    .join(' ');
 
-  await sfdx(`force:source:deploy -u ${args.alias} -p ${paths}`);
+  await sfdx(
+    `project deploy start --ignore-conflicts --target-org ${args.alias} ${sourceDirs}`
+  );
 }
 
 export interface DeployCommunityMetadataArguments {
@@ -280,7 +284,7 @@ export async function deployCommunityMetadata(
   args: DeployCommunityMetadataArguments
 ): Promise<void> {
   await sfdx(
-    `force:mdapi:deploy -u ${args.alias} -d "${args.communityMetadataPath}" -w ${args.timeout}`
+    `project deploy start --target-org ${args.alias} --ignore-conflicts --metadata-dir "${args.communityMetadataPath}" --wait ${args.timeout}`
   );
 }
 
@@ -293,7 +297,7 @@ export async function publishCommunity(
   args: PublishCommunityArguments
 ): Promise<SfdxPublishCommunityResponse> {
   return await sfdx<SfdxPublishCommunityResponse>(
-    `force:community:publish -u ${args.alias} -n "${args.communityName}"`
+    `community publish --target-org ${args.alias} --name "${args.communityName}"`
   );
 }
 
@@ -311,7 +315,7 @@ export async function createPackageVersion(
   args: CreatePackageVersionArguments
 ): Promise<SfdxCreatePackageVersionResponse> {
   return await sfdx<SfdxCreatePackageVersionResponse>(
-    `force:package:version:create --package ${args.packageId} --versionnumber "${args.packageVersion}" --installationkeybypass --codecoverage --wait ${args.timeout}`
+    `package version create --package ${args.packageId} --version-number "${args.packageVersion}" --installation-key-bypass --code-coverage --wait ${args.timeout}`
   );
 }
 
@@ -323,7 +327,7 @@ export async function promotePackageVersion(
   args: PromotePackageVersionArguments
 ) {
   return await sfdx(
-    `force:package:version:promote --package ${args.packageVersionId} --noprompt`
+    `package version promote --package ${args.packageVersionId} --no-prompt`
   );
 }
 
@@ -331,6 +335,6 @@ export async function getPackageVersionList(
   createdLastDays: number
 ): Promise<SfdxGetPackageListResponse> {
   return await sfdx<SfdxGetPackageListResponse>(
-    `force:package:version:list -c ${createdLastDays}`
+    `package version list --created-last-days ${createdLastDays}`
   );
 }

@@ -9,8 +9,17 @@ export default async function Search() {
   //     url.searchParams
   //   );
   const coveoSearchParameters = {};
+  const contextValues = {
+    ageGroup: '30-45',
+    mainInterest: 'sports',
+  };
   const staticState = await fetchStaticState({
     controllers: {
+      context: {
+        initialState: {
+          values: contextValues,
+        },
+      },
       searchParameters: {
         initialState: {
           parameters: coveoSearchParameters,
