@@ -19,8 +19,8 @@ export type ExtractRequiredOptions<TOptions> = {
 export type OptionsTuple<TOptions> = HasKeys<TOptions> extends false
   ? []
   : HasKeys<ExtractRequiredOptions<TOptions>> extends false
-  ? [options?: TOptions]
-  : [options: TOptions];
+    ? [options?: TOptions]
+    : [options: TOptions];
 
 export interface OptionsExtender<TOptions> {
   (options: TOptions): TOptions | Promise<TOptions>;
@@ -112,8 +112,8 @@ export type InferControllerPropsFromDefinition<
 >
   ? Props
   : TController extends ControllerDefinitionWithoutProps<CoreEngine, Controller>
-  ? {}
-  : unknown;
+    ? {}
+    : unknown;
 
 export type InferControllerPropsMapFromDefinitions<
   TControllers extends ControllerDefinitionsMap<CoreEngine, Controller>,
