@@ -19,4 +19,4 @@ export default {
   ...defaultModuleExport,
   title: 'Atomic/NumericFacet/Format/Number',
 };
-export const DefaultFormatNumber = exportedStory;
+export const Default = exportedStory;

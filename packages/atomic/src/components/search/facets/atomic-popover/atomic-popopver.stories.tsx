@@ -12,4 +12,4 @@ const {defaultModuleExport, exportedStory} = defaultStory(
 );
 
 export default {...defaultModuleExport, title: 'Atomic/Popover'};
-export const DefaultPopover = exportedStory;
+export const Default = exportedStory;

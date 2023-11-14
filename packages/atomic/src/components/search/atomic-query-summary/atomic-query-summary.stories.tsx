@@ -6,4 +6,4 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   {}
 );
 export default {...defaultModuleExport, title: 'Atomic/QuerySummary'};
-export const DefaultQuerySummary = exportedStory;
+export const Default = exportedStory;

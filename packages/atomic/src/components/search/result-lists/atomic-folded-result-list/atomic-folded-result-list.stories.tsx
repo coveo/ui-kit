@@ -132,4 +132,4 @@ const {defaultModuleExport, exportedStory} = defaultStory(
 );
 
 export default {...defaultModuleExport, title: 'Atomic/FoldedResultList'};
-export const DefaultFoldedResultList = exportedStory;
+export const Default = exportedStory;

@@ -34,4 +34,4 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
 );
 
 export default {...defaultModuleExport, title: 'Atomic/ResultList/Quickview'};
-export const DefaultQuickview = exportedStory;
+export const Default = exportedStory;

@@ -15,5 +15,5 @@ const {defaultModuleExport, exportedStory} = defaultStory(
       </style>`,
   }
 );
-export default {...defaultModuleExport, title: 'Atomic/CategoryFacet'};
-export const DefaultCategoryFacet = exportedStory;
+export default {...defaultModuleExport};
+export const Default = exportedStory;
