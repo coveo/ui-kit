@@ -16,4 +16,4 @@ const {defaultModuleExport, exportedStory} = recsStory(
 );
 
 export default {...defaultModuleExport, title: 'Atomic/RecsList'};
-export const DefaultRecsList = exportedStory;
+export const Default = exportedStory;

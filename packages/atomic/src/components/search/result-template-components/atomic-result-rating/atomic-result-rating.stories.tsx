@@ -21,4 +21,4 @@ export default {
   ...defaultModuleExport,
   title: 'Atomic/ResultList/ResultRating',
 };
-export const DefaultResultRating = exportedStory;
+export const Default = exportedStory;

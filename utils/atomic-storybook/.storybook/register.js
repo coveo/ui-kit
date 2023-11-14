@@ -55,6 +55,8 @@ addons.register('SELECT-FIRST-STORY-BY-DEFAULT-ONCE', (api) => {
     if (!currentId) {
       return api.selectFirstStory();
     }
-    api.selectStory(currentId);
+    // The first parameter expects the PascalCase story ID whereas the second expects the sluggified one.
+    // See: https://github.com/storybookjs/storybook/blob/b0052ad9f71f5763dcb25af31bc8832097682d29/code/lib/manager-api/src/modules/stories.ts#L401
+    api.selectStory(undefined, "default");
   });
 });

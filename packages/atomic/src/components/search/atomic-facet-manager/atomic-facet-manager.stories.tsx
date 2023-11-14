@@ -33,4 +33,4 @@ const {defaultModuleExport, exportedStory} = defaultStory(
 );
 
 export default {...defaultModuleExport, title: 'Atomic/FacetManager'};
-export const DefaultFacetManager = exportedStory;
+export const Default = exportedStory;

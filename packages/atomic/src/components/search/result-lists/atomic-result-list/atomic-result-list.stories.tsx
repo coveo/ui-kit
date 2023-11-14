@@ -6,4 +6,4 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   {}
 );
 export default {...defaultModuleExport, title: 'Atomic/ResultList'};
-export const DefaultResultList = exportedStory;
+export const Default = exportedStory;
