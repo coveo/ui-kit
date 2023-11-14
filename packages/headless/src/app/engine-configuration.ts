@@ -193,6 +193,12 @@ export const engineConfigurationDefinitions: SchemaDefinition<EngineConfiguratio
           constrainTo: ['legacy', 'next'],
           required: false,
         }),
+        frameworks: new RecordValue({
+          options: {required: false},
+          values: {
+            atomic: new StringValue({required: false, emptyAllowed: false}),
+          },
+        }),
       },
     }),
   };

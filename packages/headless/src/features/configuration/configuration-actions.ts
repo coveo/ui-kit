@@ -1,4 +1,10 @@
-import {ArrayValue, BooleanValue, StringValue, Value} from '@coveo/bueno';
+import {
+  ArrayValue,
+  BooleanValue,
+  RecordValue,
+  StringValue,
+  Value,
+} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {IRuntimeEnvironment} from 'coveo.analytics';
 import {doNotTrack} from '../../utils/utils';
@@ -89,6 +95,10 @@ export const updateSearchConfiguration = createAction(
   }
 );
 
+export interface FrameworkAnalyticsEnvironment {
+  atomic?: string;
+}
+
 export interface UpdateAnalyticsConfigurationActionCreatorPayload {
   /**
    * Whether to enable usage analytics tracking.
@@ -150,6 +160,11 @@ export interface UpdateAnalyticsConfigurationActionCreatorPayload {
   trackingId?: string;
 
   analyticsMode?: 'legacy' | 'next';
+
+  /**
+   * Specifies the versions of the Coveo libraries being used
+   */
+  frameworks?: FrameworkAnalyticsEnvironment;
 }
 
 export type AnalyticsRuntimeEnvironment = IRuntimeEnvironment;
@@ -177,6 +192,14 @@ export const updateAnalyticsConfiguration = createAction(
         constrainTo: ['legacy', 'next'],
         required: false,
         default: 'legacy',
+      }),
+      frameworks: new RecordValue({
+        options: {
+          required: false,
+        },
+        values: {
+          atomic: new StringValue({required: false, emptyAllowed: false}),
+        },
       }),
     });
   }

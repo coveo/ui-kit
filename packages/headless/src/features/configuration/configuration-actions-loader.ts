@@ -13,12 +13,14 @@ import {
   updateBasicConfiguration,
   UpdateBasicConfigurationActionCreatorPayload,
   AnalyticsRuntimeEnvironment,
+  FrameworkAnalyticsEnvironment,
 } from './configuration-actions';
 
 export type {
   SetOriginLevel2ActionCreatorPayload,
   SetOriginLevel3ActionCreatorPayload,
   UpdateAnalyticsConfigurationActionCreatorPayload,
+  FrameworkAnalyticsEnvironment,
   AnalyticsRuntimeEnvironment,
   UpdateBasicConfigurationActionCreatorPayload,
 };

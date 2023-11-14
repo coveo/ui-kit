@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import {analyticsUrl, platformUrl} from '../../api/platform-client';
+import {FrameworkAnalyticsEnvironment} from './configuration-actions';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -129,6 +130,8 @@ export interface AnalyticsState {
   trackingId: string;
 
   analyticsMode: 'legacy' | 'next';
+
+  frameworks?: FrameworkAnalyticsEnvironment;
 }
 
 export const searchAPIEndpoint = '/rest/search/v2';
