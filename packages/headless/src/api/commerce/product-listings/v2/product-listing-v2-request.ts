@@ -41,17 +41,7 @@ const prepareRequestParams = (req: ProductListingV2Request) => {
     language,
     currency,
     page,
-    facets: (facets || [])
-      .filter((facet) => facet.currentValues && facet.currentValues.length > 0)
-      .map(({currentValues, ...facet}) => {
-        return {
-          ...facet,
-          values: currentValues,
-          // eslint-disable-next-line @cspell/spellchecker
-          // TODO CAPI-90, CAPI-91: Handle other facet types
-          type: 'regular',
-        };
-      }),
+    facets,
     sort,
   };
 };

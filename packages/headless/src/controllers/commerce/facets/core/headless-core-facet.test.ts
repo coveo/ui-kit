@@ -36,6 +36,9 @@ describe('facet', () => {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, field, ...config}),
     });
+    state.productListing.facets = [
+      buildMockCommerceFacetResponse({facetId, field}),
+    ];
   }
 
   beforeEach(() => {
@@ -69,11 +72,6 @@ describe('facet', () => {
 
   it('#state.facetId exposes the facetId', () => {
     expect(facet.state.facetId).toBe(facetId);
-  });
-
-  it('when the product listing facets are empty, the facet #state.values is an empty array', () => {
-    expect(state.productListing.facets).toEqual([]);
-    expect(facet.state.values).toEqual([]);
   });
 
   it('when the product listing response has a facet, the facet #state.values contains the same values', () => {

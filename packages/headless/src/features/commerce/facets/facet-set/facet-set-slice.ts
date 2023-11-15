@@ -1,6 +1,6 @@
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
 import {createReducer, FacetValueRequest} from '../../../../ssr.index';
-import {getCommerceFacetSetInitialState} from './facet-set-state';
+import {CommerceFacetSetState, getCommerceFacetSetInitialState} from './facet-set-state';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
@@ -20,8 +20,9 @@ export const commerceFacetSetReducer = createReducer(
       .addCase(fetchProductListing.fulfilled, (state, action) => {
         const facets = action.payload.response.facets;
         facets.forEach((facetResponse) =>
-          mutateStateFromFacetResponse(
-            state[facetResponse.facetId ?? facetResponse.field]?.request,
+          updateStateFromFacetResponse(
+            state,
+            facetResponse.facetId ?? facetResponse.field,
             facetResponse
           )
         );
@@ -92,14 +93,18 @@ export const commerceFacetSetReducer = createReducer(
   }
 );
 
-function mutateStateFromFacetResponse(
-  facetRequest: WritableDraft<CommerceFacetRequest> | undefined,
+function updateStateFromFacetResponse(
+  state: WritableDraft<CommerceFacetSetState>,
+  facetId: string,
   facetResponse: AnyFacetResponse
 ) {
+  let facetRequest = state[facetId]?.request;
   if (!facetRequest) {
-    return;
+    state[facetId] = {request: {} as CommerceFacetRequest};
+    facetRequest = state[facetId].request;
   }
 
+  facetRequest.facetId = facetId;
   facetRequest.numberOfValues = facetResponse.values.length;
   facetRequest.field = facetResponse.field;
   facetRequest.type = facetResponse.type;
