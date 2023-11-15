@@ -7,7 +7,7 @@ const debounceDurationBeforeHoverMs = 200;
  * The `QuanticCitation` component renders an individual citation.
  * @fires CustomEvent#click
  * @fires CustomEvent#citationhover
- * @category Internal
+ * @category Search
  * @example
  * <c-quantic-citation citation={citation} onclick={handleClick} onhover={handleHover}></c-quantic-citation>
  */
@@ -15,7 +15,7 @@ export default class QuanticCitation extends LightningElement {
   /**
    * @api
    * @type {{title: string, index: number, text: string, clickUri: string}}
-   * The id of the citation.
+   * The citation item information.
    */
   @api citation;
 

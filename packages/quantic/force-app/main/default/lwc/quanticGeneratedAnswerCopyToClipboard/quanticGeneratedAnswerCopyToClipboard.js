@@ -5,7 +5,7 @@ import {LightningElement, api} from 'lwc';
 
 /**
  * The `QuanticGeneratedAnswerCopyToClipboard` component displays a button responsible for copying the generated answer to clipboard.
- * @category Internal
+ * @category Search
  * @example
  * <c-quantic-generated-answer-copy-to-clipboard answer={answer}></c-quantic-c-quantic-generated-answer-copy-to-clipboard>
  */

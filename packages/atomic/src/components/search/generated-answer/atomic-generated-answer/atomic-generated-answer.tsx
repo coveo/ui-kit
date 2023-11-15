@@ -33,7 +33,18 @@ import {SourceCitations} from './source-citations';
 import {TypingLoader} from './typing-loader';
 
 /**
- * @internal
+ * The `atomic-generated-answer` component displays a generated answer to a particular query.
+ *
+ * @part container - The container displaying the generated answer.
+ * @part header-label - The header of the generated answer container.
+ * @part feedback-button - The "like" and "dislike" buttons.
+ * @part toggle - The switch to toggle the visibility of the generated answer.
+ * @part copy-button - The "Copy answer" button.
+ * @part retry-container - The container for the "retry" section.
+ * @part generated-text - The text of the generated answer.
+ * @part citations-label - The header of the citations list.
+ * @part rephrase-label - The header of the rephrase options.
+ * @part rephrase-button - The button for each of the rephrase options (e.g., step-by-step instructions, bullet-point list, summary).
  */
 @Component({
   tag: 'atomic-generated-answer',

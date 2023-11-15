@@ -171,10 +171,25 @@ export namespace Components {
          */
         "withSearch": boolean;
     }
+    /**
+     * The `atomic-citation` component displays an item used for generating an answer to a particular query.
+     */
     interface AtomicCitation {
+        /**
+          * The citation item information.
+         */
         "citation": GeneratedAnswerCitation;
+        /**
+          * The citation index.
+         */
         "index": number;
+        /**
+          * An `InteractiveCitation` controller instance. It is used when the user interacts with the citation by selecting or hovering it.
+         */
         "interactiveCitation": InteractiveCitation;
+        /**
+          * Callback function invoked when the use stops hovering a citation. `citationHoverTimeMs` is the amount of time the citation has been hovered.
+         */
         "sendHoverEndEvent": (citationHoverTimeMs: number) => void;
     }
     /**
@@ -487,14 +502,26 @@ export namespace Components {
      */
     interface AtomicFrequentlyBoughtTogether {
     }
+    /**
+     * The `atomic-generated-answer` component displays a generated answer to a particular query.
+     */
     interface AtomicGeneratedAnswer {
         /**
           * The answer style to apply when the component first loads. Options:   - `default`: Generates the answer without additional formatting instructions.   - `bullet`: Requests the answer to be generated in bullet-points.   - `step`: Requests the answer to be generated in step-by-step instructions.   - `concise`: Requests the answer to be generated as concisely as possible.
          */
         "answerStyle": GeneratedAnswerStyle;
     }
+    /**
+     * The `atomic-generated-answer-feedback-modal` component displays a modal allowing the user to send feedback regarding an irrelevant generated answer.
+     */
     interface AtomicGeneratedAnswerFeedbackModal {
+        /**
+          * A `GeneratedAnswer` controller instance. It is used when user interacts with the modal.
+         */
         "generatedAnswer": GeneratedAnswer;
+        /**
+          * Indicates whether the modal is opened.
+         */
         "isOpen": boolean;
     }
     /**
@@ -2626,6 +2653,9 @@ declare global {
         prototype: HTMLAtomicCategoryFacetElement;
         new (): HTMLAtomicCategoryFacetElement;
     };
+    /**
+     * The `atomic-citation` component displays an item used for generating an answer to a particular query.
+     */
     interface HTMLAtomicCitationElement extends Components.AtomicCitation, HTMLStencilElement {
     }
     var HTMLAtomicCitationElement: {
@@ -2811,6 +2841,9 @@ declare global {
         prototype: HTMLAtomicFrequentlyBoughtTogetherElement;
         new (): HTMLAtomicFrequentlyBoughtTogetherElement;
     };
+    /**
+     * The `atomic-generated-answer` component displays a generated answer to a particular query.
+     */
     interface HTMLAtomicGeneratedAnswerElement extends Components.AtomicGeneratedAnswer, HTMLStencilElement {
     }
     var HTMLAtomicGeneratedAnswerElement: {
@@ -2820,6 +2853,9 @@ declare global {
     interface HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap {
         "feedbackSent": any;
     }
+    /**
+     * The `atomic-generated-answer-feedback-modal` component displays a modal allowing the user to send feedback regarding an irrelevant generated answer.
+     */
     interface HTMLAtomicGeneratedAnswerFeedbackModalElement extends Components.AtomicGeneratedAnswerFeedbackModal, HTMLStencilElement {
         addEventListener<K extends keyof HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap>(type: K, listener: (this: HTMLAtomicGeneratedAnswerFeedbackModalElement, ev: AtomicGeneratedAnswerFeedbackModalCustomEvent<HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
@@ -4317,10 +4353,25 @@ declare namespace LocalJSX {
          */
         "withSearch"?: boolean;
     }
+    /**
+     * The `atomic-citation` component displays an item used for generating an answer to a particular query.
+     */
     interface AtomicCitation {
+        /**
+          * The citation item information.
+         */
         "citation": GeneratedAnswerCitation;
+        /**
+          * The citation index.
+         */
         "index": number;
+        /**
+          * An `InteractiveCitation` controller instance. It is used when the user interacts with the citation by selecting or hovering it.
+         */
         "interactiveCitation": InteractiveCitation;
+        /**
+          * Callback function invoked when the use stops hovering a citation. `citationHoverTimeMs` is the amount of time the citation has been hovered.
+         */
         "sendHoverEndEvent": (citationHoverTimeMs: number) => void;
     }
     /**
@@ -4633,14 +4684,26 @@ declare namespace LocalJSX {
      */
     interface AtomicFrequentlyBoughtTogether {
     }
+    /**
+     * The `atomic-generated-answer` component displays a generated answer to a particular query.
+     */
     interface AtomicGeneratedAnswer {
         /**
           * The answer style to apply when the component first loads. Options:   - `default`: Generates the answer without additional formatting instructions.   - `bullet`: Requests the answer to be generated in bullet-points.   - `step`: Requests the answer to be generated in step-by-step instructions.   - `concise`: Requests the answer to be generated as concisely as possible.
          */
         "answerStyle"?: GeneratedAnswerStyle;
     }
+    /**
+     * The `atomic-generated-answer-feedback-modal` component displays a modal allowing the user to send feedback regarding an irrelevant generated answer.
+     */
     interface AtomicGeneratedAnswerFeedbackModal {
+        /**
+          * A `GeneratedAnswer` controller instance. It is used when user interacts with the modal.
+         */
         "generatedAnswer": GeneratedAnswer;
+        /**
+          * Indicates whether the modal is opened.
+         */
         "isOpen"?: boolean;
         "onFeedbackSent"?: (event: AtomicGeneratedAnswerFeedbackModalCustomEvent<any>) => void;
     }
@@ -6733,6 +6796,9 @@ declare module "@stencil/core" {
              * An `atomic-category-facet` displays a facet of values in a browsable, hierarchical fashion.
              */
             "atomic-category-facet": LocalJSX.AtomicCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCategoryFacetElement>;
+            /**
+             * The `atomic-citation` component displays an item used for generating an answer to a particular query.
+             */
             "atomic-citation": LocalJSX.AtomicCitation & JSXBase.HTMLAttributes<HTMLAtomicCitationElement>;
             /**
              * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -6799,7 +6865,13 @@ declare module "@stencil/core" {
              * The `atomic-frequently-bought-together` component suggests products frequently bought with the current product based on the shopping cart of other users.
              */
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
+            /**
+             * The `atomic-generated-answer` component displays a generated answer to a particular query.
+             */
             "atomic-generated-answer": LocalJSX.AtomicGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicGeneratedAnswerElement>;
+            /**
+             * The `atomic-generated-answer-feedback-modal` component displays a modal allowing the user to send feedback regarding an irrelevant generated answer.
+             */
             "atomic-generated-answer-feedback-modal": LocalJSX.AtomicGeneratedAnswerFeedbackModal & JSXBase.HTMLAttributes<HTMLAtomicGeneratedAnswerFeedbackModalElement>;
             /**
              * The `atomic-html` component renders the HTML value of a string.

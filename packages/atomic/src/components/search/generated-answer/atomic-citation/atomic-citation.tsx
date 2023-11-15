@@ -9,7 +9,10 @@ import {Heading} from '../../../common/heading';
 import {LinkWithResultAnalytics} from '../../../common/result-link/result-link';
 
 /**
- * @internal
+ * The `atomic-citation` component displays an item used for generating an answer to a particular query.
+ *
+ * @part citation - The link allowing to navigate to the item.
+ * @part citation-popover - The pop-up showing the item preview when citation is hovered.
  */
 @Component({
   tag: 'atomic-citation',
@@ -18,9 +21,21 @@ import {LinkWithResultAnalytics} from '../../../common/result-link/result-link';
 export class AtomicCitation {
   @Element() public host!: HTMLElement;
 
+  /**
+   * The citation item information.
+   */
   @Prop() citation!: GeneratedAnswerCitation;
+  /**
+   * The citation index.
+   */
   @Prop() index!: number;
+  /**
+   * Callback function invoked when the use stops hovering a citation. `citationHoverTimeMs` is the amount of time the citation has been hovered.
+   */
   @Prop() sendHoverEndEvent!: (citationHoverTimeMs: number) => void;
+  /**
+   * An `InteractiveCitation` controller instance. It is used when the user interacts with the citation by selecting or hovering it.
+   */
   @Prop() interactiveCitation!: InteractiveCitation;
 
   @State() public isOpen = false;
