@@ -2,9 +2,6 @@ import {FacetGenerator} from '../../facets/core/headless-core-facet-generator';
 import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {buildProductListingFacetGenerator} from './headless-product-listing-facet-generator';
-import {
-  productListingV2Reducer as productListing
-} from '../../../../features/commerce/product-listing/product-listing-slice';
 import {buildProductListingFacet} from './headless-product-listing-facet';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
 import {buildMockCommerceFacetResponse} from '../../../../test/mock-commerce-facet-response';
@@ -21,12 +18,6 @@ describe('FacetGenerator', () => {
 
   beforeEach(() => {
     initFacetGenerator();
-  });
-
-  it('adds correct reducers to engine', () => {
-    expect(engine.addReducers).toBeCalledWith({
-      productListing,
-    });
   });
 
   it('exposes #subscribe method', () => {

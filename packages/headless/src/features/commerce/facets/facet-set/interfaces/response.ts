@@ -5,7 +5,6 @@ export interface BaseFacetResponse<Value, Type extends FacetType> {
   field: string;
   displayName: string;
   isFieldExpanded: boolean;
-  numberOfResults: number;
   moreValuesAvailable: boolean;
   fromAutoSelect: boolean;
   values: Value[];
@@ -23,7 +22,6 @@ export type FacetType =
   | 'hierarchical';
 
 export interface BaseFacetValue {
-  facetId: string; // TODO(nico): This should be removed from spec
   state: FacetValueState;
   numberOfResults: number;
   isAutoSelected: boolean;

@@ -5,7 +5,6 @@ export function buildMockCommerceFacetValue(
 ): FacetValue {
   return {
     value: '',
-    facetId: '',
     state: 'idle',
     numberOfResults: 0,
     isAutoSelected: false,

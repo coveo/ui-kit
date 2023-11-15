@@ -43,10 +43,8 @@ export const commerceFacetSetReducer = createReducer(
         if (!existingValue) {
           insertNewValue(facetRequest, selection);
           return;
+
         }
-
-        facetRequest.preventAutoSelect = true;
-
         const isSelected = existingValue.state === 'selected';
         existingValue.state = isSelected ? 'idle' : 'selected';
         facetRequest.freezeCurrentValues = true;
@@ -58,6 +56,8 @@ export const commerceFacetSetReducer = createReducer(
         if (!facetRequest) {
           return;
         }
+
+        facetRequest.preventAutoSelect = true;
 
         const existingValue = facetRequest.values.find(
           (req) => req.value === selection.value
@@ -109,7 +109,6 @@ function updateStateFromFacetResponse(
   facetRequest.field = facetResponse.field;
   facetRequest.type = facetResponse.type;
   facetRequest.values = (facetResponse as FacetResponse).values.map(
-    // TODO(nico): Ensure facet values work with our api
     convertFacetValueToRequest
   );
   facetRequest.freezeCurrentValues = false;

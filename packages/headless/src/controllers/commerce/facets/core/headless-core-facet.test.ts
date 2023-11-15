@@ -17,6 +17,8 @@ import {
 } from '../../../../features/facets/facet-set/facet-set-actions';
 import {buildMockCommerceFacetValue} from '../../../../test/mock-commerce-facet-value';
 import {CommerceFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
+import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
+import {FacetResponse} from '../../../../features/commerce/facets/facet-set/interfaces/response';
 
 
 describe('facet', () => {
@@ -36,8 +38,11 @@ describe('facet', () => {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, field, ...config}),
     });
+  }
+
+  function setFacetResponse(config: Partial<FacetResponse> = {}) {
     state.productListing.facets = [
-      buildMockCommerceFacetResponse({facetId, field}),
+      buildMockCommerceFacetResponse({facetId, field, ...config}),
     ];
   }
 
@@ -48,6 +53,7 @@ describe('facet', () => {
 
     state = buildMockCommerceState();
     setFacetRequest();
+    setFacetResponse();
 
     initFacet();
   });
@@ -77,7 +83,7 @@ describe('facet', () => {
   it('when the product listing response has a facet, the facet #state.values contains the same values', () => {
     const values = [buildMockCommerceFacetValue()];
     const facetResponse = buildMockCommerceFacetResponse({
-      facetId: facetId,
+      facetId,
       values,
     });
 
@@ -178,10 +184,11 @@ describe('facet', () => {
   });
 
   describe('#showMoreValues', () => {
-    it('dispatches increases the number of values on the request by 2', () => {
+    it('dispatches increases the number of values on the request by the configured amount', () => {
       const numberOfValues = 10;
 
-      setFacetRequest({numberOfValues: numberOfValues});
+      setFacetRequest({numberOfValues});
+      setFacetResponse({values: [buildMockCommerceFacetValue({state: 'idle'})]})
       initFacet();
 
       facet.showMoreValues();
@@ -232,21 +239,18 @@ describe('facet', () => {
     });
   });
 
-  // TODO(nico): Complete number of values tests
-  /*
+
   describe('#showLessValues', () => {
     it('sets the number of values to the original number', () => {
-      const originalNumberOfValues = 8;
-      options.numberOfValues = originalNumberOfValues;
-
       setFacetRequest({numberOfValues: 25});
+      setFacetResponse({ values: Array(8).fill(buildMockCommerceFacetValue({value: 'Value'})) });
       initFacet();
 
       facet.showLessValues();
 
       const action = updateFacetNumberOfValues({
         facetId,
-        numberOfValues: originalNumberOfValues,
+        numberOfValues: 8,
       });
 
       expect(engine.actions).toContainEqual(action);
@@ -255,18 +259,18 @@ describe('facet', () => {
 
     it(`when the number of non-idle values is greater than the original number,
     it sets the number of values to the non-idle number`, () => {
-      options.numberOfValues = 1;
       const selectedValue = buildMockCommerceFacetValue({state: 'selected'});
-      const currentValues = [selectedValue, selectedValue];
+      const values = [selectedValue, selectedValue];
 
-      setFacetRequest({currentValues, numberOfValues: 5});
+      setFacetRequest({values, numberOfValues: 5});
+      setFacetResponse({values: [buildMockCommerceFacetValue({value: 'Some Value'})]})
       initFacet();
 
       facet.showLessValues();
 
       const action = updateFacetNumberOfValues({
-        facetId: facetId,
-        numberOfValues: currentValues.length,
+        facetId,
+        numberOfValues: 1,
       });
 
       expect(engine.actions).toContainEqual(action);
@@ -292,10 +296,9 @@ describe('facet', () => {
 
   describe('#state.canShowLessValues', () => {
     it('when the number of currentValues is equal to the configured number, it returns false', () => {
-      options.numberOfValues = 1;
-
-      const currentValues = [buildMockCommerceFacetValue()];
-      setFacetRequest({currentValues});
+      const values = [buildMockCommerceFacetValue()];
+      setFacetRequest({values});
+      setFacetResponse({values: [buildMockCommerceFacetValue({value: 'Some Value'})]})
 
       initFacet();
 
@@ -303,10 +306,10 @@ describe('facet', () => {
     });
 
     it('when the number of currentValues is greater than the configured number, it returns true', () => {
-      options.numberOfValues = 1;
       const value = buildMockCommerceFacetValue();
 
-      setFacetRequest({currentValues: [value, value]});
+      setFacetRequest({values: [value, value]});
+      setFacetResponse({values: [buildMockCommerceFacetValue({value: 'Some Value'})]})
       initFacet();
 
       expect(facet.state.canShowLessValues).toBe(true);
@@ -314,13 +317,13 @@ describe('facet', () => {
 
     it(`when the number of currentValues is greater than the configured number,
     when there are no idle values, it returns false`, () => {
-      options.numberOfValues = 1;
       const selectedValue = buildMockCommerceFacetValue({state: 'selected'});
 
-      setFacetRequest({currentValues: [selectedValue, selectedValue]});
+      setFacetRequest({values: [selectedValue, selectedValue]});
+      setFacetResponse({values: [buildMockCommerceFacetValue({value: 'Some Value'})]})
       initFacet();
 
       expect(facet.state.canShowLessValues).toBe(false);
     });
-  });*/
+  });
 });

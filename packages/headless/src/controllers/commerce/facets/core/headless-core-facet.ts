@@ -142,15 +142,17 @@ export function buildCoreFacet(
 
     showMoreValues() {
       const numberInState = getRequest().numberOfValues;
-      const initialNumberOfValues = getResponse()?.values.length ?? 0;
-      const numberOfValues = numberInState + initialNumberOfValues;
+      const initialNumberOfValues = getResponse().values.length;
+      const numberToNextMultipleOfConfigured =
+        initialNumberOfValues - (numberInState % initialNumberOfValues);
+      const numberOfValues = numberInState + numberToNextMultipleOfConfigured;
 
-      dispatch(updateFacetNumberOfValues({facetId, numberOfValues: numberOfValues * 2}));
+      dispatch(updateFacetNumberOfValues({facetId, numberOfValues}));
       dispatch(updateFacetIsFieldExpanded({facetId, isFieldExpanded: true}));
     },
 
     showLessValues() {
-      const initialNumberOfValues = getRequest().numberOfValues;
+      const initialNumberOfValues = getResponse().values.length;
       const newNumberOfValues = Math.max(
         initialNumberOfValues,
         getNumberOfActiveValues()

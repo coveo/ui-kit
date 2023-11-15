@@ -7,7 +7,6 @@ export function buildMockCommerceFacetResponse(
     type: 'regular',
     displayName: '',
     isFieldExpanded: false,
-    numberOfResults: 0,
     fromAutoSelect: false,
     facetId: '',
     field: '',
