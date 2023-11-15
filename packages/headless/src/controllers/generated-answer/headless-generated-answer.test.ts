@@ -127,9 +127,9 @@ describe('generated answer', () => {
   it('#dislike dispatches no analytics action when #disliked is set to true', () => {
     engine.state.generatedAnswer.disliked = true;
     generatedAnswer.dislike();
-    const action = findAction(likeGeneratedAnswer.type);
+    const action = findAction(dislikeGeneratedAnswer.type);
     const analyticsAction = engine.findAsyncAction(
-      logLikeGeneratedAnswer().pending
+      logDislikeGeneratedAnswer().pending
     );
 
     expect(action).not.toBeTruthy();
