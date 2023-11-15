@@ -12,18 +12,15 @@ import {buildMockCommerceFacetResponse} from '../../../../test/mock-commerce-fac
 import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceFacetValue} from '../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
-import {FacetOptions} from '../../facets/core/headless-core-facet';
-import {
-  buildProductListingFacet,
-  ProductListingFacet,
-} from './headless-product-listing-facet';
+import {Facet, FacetOptions} from '../../facets/core/headless-core-facet';
+import {buildProductListingFacet} from './headless-product-listing-facet';
 
 describe('facet', () => {
   const facetId: string = 'some_field';
   let options: FacetOptions;
   let state: CommerceAppState;
   let engine: MockCommerceEngine;
-  let facet: ProductListingFacet;
+  let facet: Facet;
 
   function initFacet() {
     engine = buildMockCommerceEngine({state});
