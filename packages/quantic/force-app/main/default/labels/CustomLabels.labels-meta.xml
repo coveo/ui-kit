@@ -1240,11 +1240,11 @@
       <shortDescription>This answer was helpful</shortDescription>
     </labels>
     <labels>
-      <fullName>quantic_LearnMore</fullName>
-      <value>Learn more</value>
+      <fullName>quantic_Citations</fullName>
+      <value>Citations</value>
       <language>en_US</language>
       <protected>false</protected>
-      <shortDescription>Learn more</shortDescription>
+      <shortDescription>Citations</shortDescription>
     </labels>
     <labels>
       <fullName>quantic_TryAgain</fullName>
@@ -1361,6 +1361,27 @@
   <labels>
     <fullName>quantic_Summary</fullName>
     <value>Summary</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Summary</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_GeneratedAnswerIsHidden</fullName>
+    <value>Generated answer is hidden</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Generated answer is hidden</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_AnswerGenerated</fullName>
+    <value>Answer generated: {{0}}</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Answer generated: example answer</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_GeneratingAnswer</fullName>
+    <value>Generating answer</value>
     <language>en_US</language>
     <protected>false</protected>
     <shortDescription>Summary</shortDescription>

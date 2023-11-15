@@ -30,4 +30,4 @@ export default {
   ...defaultModuleExport,
   title: 'Atomic/ResultList/ResultNumber/Format/Currency',
 };
-export const DefaultFormatCurrency = exportedStory;
+export const Default = exportedStory;

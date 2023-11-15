@@ -1,6 +1,9 @@
+import answerGenerated from '@salesforce/label/c.quantic_AnswerGenerated';
 import couldNotGenerateAnAnswer from '@salesforce/label/c.quantic_CouldNotGenerateAnAnswer';
 import feedback from '@salesforce/label/c.quantic_Feedback';
 import generatedAnswerForYou from '@salesforce/label/c.quantic_GeneratedAnswerForYou';
+import generatedAnswerIshidden from '@salesforce/label/c.quantic_GeneratedAnswerIsHidden';
+import generatingAnswer from '@salesforce/label/c.quantic_GeneratingAnswer';
 import harmful from '@salesforce/label/c.quantic_Harmful';
 import inaccurate from '@salesforce/label/c.quantic_Inaccurate';
 import irrelevant from '@salesforce/label/c.quantic_Irrelevant';
@@ -18,6 +21,7 @@ import {
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
+import {AriaLiveRegion, I18nUtils} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 // @ts-ignore
 import generatedAnswerTemplate from './templates/generatedAnswer.html';
@@ -88,6 +92,9 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     outOfDate,
     feedback,
     whyGeneratedAnswerWasNotHelpful,
+    generatingAnswer,
+    generatedAnswerIshidden,
+    answerGenerated,
   };
 
   /** @type {GeneratedAnswer} */
@@ -102,6 +109,8 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   searchStatusState;
   /** @type {boolean} */
   feedbackSubmitted = false;
+  /** @type {import('c/quanticUtils').AriaLiveUtils} */
+  ariaLiveMessage;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -123,6 +132,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
+    this.ariaLiveMessage = AriaLiveRegion('GeneratedAnswer', this);
     this.headless = getHeadlessBundle(this.engineId);
     this.generatedAnswer = this.buildHeadlessGeneratedAnswerController(engine);
     this.searchStatus = this.headless.buildSearchStatus(engine);
@@ -162,6 +172,27 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   updateState() {
     this.state = this.generatedAnswer.state;
     this.updateFeedbackState();
+    this.ariaLiveMessage.dispatchMessage(this.getGeneratedAnswerStatus());
+  }
+
+  getGeneratedAnswerStatus() {
+    if (!this.state.isVisible) {
+      return this.labels.generatedAnswerIshidden;
+    }
+
+    if (this.hasRetryableError) {
+      return this.labels.couldNotGenerateAnAnswer;
+    }
+
+    const isGenerating = this.state.isStreaming;
+    if (isGenerating) {
+      return this.labels.generatingAnswer;
+    }
+
+    const hasAnswer = !!this.state.answer;
+    return hasAnswer
+      ? I18nUtils.format(this.labels.answerGenerated, this.answer)
+      : '';
   }
 
   updateSearchStatusState() {
@@ -245,6 +276,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   handleGeneratedAnswerRephrase = (event) => {
     event.stopPropagation();
     this.generatedAnswer.rephrase({answerStyle: event?.detail});
+    this.feedbackSubmitted = false;
   };
 
   handleGeneratedAnswerCopyToClipboard = (event) => {

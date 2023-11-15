@@ -67,4 +67,4 @@ export default {
   ...defaultModuleExport,
   title: 'Atomic/ResultList/ResultFieldsList',
 };
-export const DefaultResultFieldsList = exportedStory;
+export const Default = exportedStory;

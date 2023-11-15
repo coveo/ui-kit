@@ -53,6 +53,39 @@ export interface SearchAction<
   getEventExtraPayload: (state: State) => Payload;
 }
 
+type SingleOrArray<T> = T | T[];
+
+export const buildSearchAction = <
+  State extends StateNeededByExecuteSearch = StateNeededByExecuteSearch,
+  Payload extends Object = {},
+>(
+  actionCause: string,
+  getEventExtraPayload: SingleOrArray<
+    ({
+      state,
+      payload,
+    }: {
+      state: StateNeededByExecuteSearch;
+      payload: Partial<Payload>;
+    }) => void
+  >
+) => {
+  const getEventExtraPayloadFunctionArray = Array.isArray(getEventExtraPayload)
+    ? getEventExtraPayload
+    : [getEventExtraPayload];
+  const combinedGetEventExtraPayload = (state: State) => {
+    const payload = {};
+    for (const payloadTransformer of getEventExtraPayloadFunctionArray) {
+      payloadTransformer({state, payload});
+    }
+    return payload;
+  };
+  return {
+    actionCause,
+    getEventExtraPayload: combinedGetEventExtraPayload,
+  };
+};
+
 export type {StateNeededByExecuteSearch} from './search-actions-thunk-processor';
 
 export interface ExecuteSearchThunkReturn {
@@ -122,7 +155,7 @@ export const executeSearch = createAsyncThunk<
       return legacyExecuteSearch(state, config, searchAction.legacy);
     }
     addEntryInActionsHistory(state);
-    const analyticsAction = buildSearchAction(searchAction.next, state);
+    const analyticsAction = buildSearchReduxAction(searchAction.next, state);
 
     const request = await buildSearchRequest(state, analyticsAction);
 
@@ -208,7 +241,7 @@ export const fetchFacetValues = createAsyncThunk<
     ) {
       return legacyExecuteSearch(state, config, searchAction.legacy);
     }
-    const analyticsAction = buildSearchAction(searchAction.next, state);
+    const analyticsAction = buildSearchReduxAction(searchAction.next, state);
 
     const processor = new AsyncSearchThunkProcessor<
       ReturnType<typeof config.rejectWithValue>
@@ -335,10 +368,11 @@ const addEntryInActionsHistory = (state: StateNeededByExecuteSearch) => {
   }
 };
 
-const buildSearchAction = (
+const buildSearchReduxAction = (
   action: SearchAction,
   state: StateNeededByExecuteSearch
 ) => ({
-  ...action.getEventExtraPayload(state),
+  customData: action.getEventExtraPayload(state),
   actionCause: action.actionCause,
+  type: action.actionCause,
 });
