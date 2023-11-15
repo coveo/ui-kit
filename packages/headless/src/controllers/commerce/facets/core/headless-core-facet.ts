@@ -105,9 +105,8 @@ export function buildCoreFacet(
   };
 
   const computeCanShowLessValues = () => {
-    const response = getResponse();
     const request = getRequest();
-    const initialNumberOfValues = response.values.length;
+    const initialNumberOfValues = request.initialNumberOfValues;
     const hasIdleValues = !!request.values.find((v) => v.state === 'idle');
 
     return initialNumberOfValues < request.numberOfValues && hasIdleValues;
@@ -150,7 +149,7 @@ export function buildCoreFacet(
 
     showMoreValues() {
       const numberInState = getRequest().numberOfValues;
-      const initialNumberOfValues = getResponse().values.length;
+      const initialNumberOfValues = getRequest().initialNumberOfValues;
       const numberToNextMultipleOfConfigured =
         initialNumberOfValues - (numberInState % initialNumberOfValues);
       const numberOfValues = numberInState + numberToNextMultipleOfConfigured;
@@ -160,7 +159,7 @@ export function buildCoreFacet(
     },
 
     showLessValues() {
-      const initialNumberOfValues = getResponse().values.length;
+      const initialNumberOfValues = getRequest().initialNumberOfValues;
       const newNumberOfValues = Math.max(
         initialNumberOfValues,
         getNumberOfActiveValues()

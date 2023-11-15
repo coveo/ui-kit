@@ -15,4 +15,5 @@ export type CommerceFacetRequest = Pick<
 > & {
   type: FacetType;
   values: FacetValueRequest[];
+  initialNumberOfValues: number;
 };

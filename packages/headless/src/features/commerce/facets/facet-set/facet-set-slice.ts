@@ -104,6 +104,7 @@ function updateStateFromFacetResponse(
   if (!facetRequest) {
     state[facetId] = {request: {} as CommerceFacetRequest};
     facetRequest = state[facetId].request;
+    facetRequest.initialNumberOfValues = facetResponse.values.length;
   }
 
   facetRequest.facetId = facetId;

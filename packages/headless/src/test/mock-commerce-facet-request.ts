@@ -12,6 +12,7 @@ export function buildMockCommerceFacetRequest(
     isFieldExpanded: false,
     freezeCurrentValues: false,
     preventAutoSelect: false,
+    initialNumberOfValues: 0,
     ...config,
   };
 }

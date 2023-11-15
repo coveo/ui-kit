@@ -184,7 +184,7 @@ describe('facet', () => {
     it('dispatches increases the number of values on the request by the configured amount', () => {
       const numberOfValues = 10;
 
-      setFacetRequest({numberOfValues});
+      setFacetRequest({numberOfValues, initialNumberOfValues: 10});
       setFacetResponse({
         values: [buildMockCommerceFacetValue({state: 'idle'})],
       });
@@ -194,7 +194,7 @@ describe('facet', () => {
 
       const action = updateFacetNumberOfValues({
         facetId,
-        numberOfValues: numberOfValues + 1,
+        numberOfValues: 20,
       });
 
       expect(engine.actions).toContainEqual(action);
@@ -240,9 +240,12 @@ describe('facet', () => {
 
   describe('#showLessValues', () => {
     it('sets the number of values to the original number', () => {
-      setFacetRequest({numberOfValues: 25});
+      const initialNumberOfValues = 10;
+      setFacetRequest({numberOfValues: 25, initialNumberOfValues: 10});
       setFacetResponse({
-        values: Array(8).fill(buildMockCommerceFacetValue({value: 'Value'})),
+        values: Array(initialNumberOfValues).fill(
+          buildMockCommerceFacetValue({value: 'Value'})
+        ),
       });
       initFacet();
 
@@ -250,7 +253,7 @@ describe('facet', () => {
 
       const action = updateFacetNumberOfValues({
         facetId,
-        numberOfValues: 8,
+        numberOfValues: initialNumberOfValues,
       });
 
       expect(engine.actions).toContainEqual(action);
@@ -292,7 +295,7 @@ describe('facet', () => {
   describe('#state.canShowLessValues', () => {
     it('when the number of currentValues is equal to the configured number, it returns false', () => {
       const values = [buildMockCommerceFacetValue()];
-      setFacetRequest({values, numberOfValues: 1});
+      setFacetRequest({values, initialNumberOfValues: 1, numberOfValues: 1});
       setFacetResponse({
         values: [buildMockCommerceFacetValue({value: 'Some Value'})],
       });
