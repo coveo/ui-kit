@@ -34,7 +34,7 @@ export type {FacetValue, FacetValueState};
 
 /**
  * @internal
- * This prop is used internally by the `FacetGenerator` controller.
+ * This prop is used internally by the `Facet` controller.
  */
 export interface FacetProps {
   options: FacetOptions;
@@ -48,7 +48,7 @@ export interface FacetOptions {
 }
 
 /**
- * The `Facet` headless controller offers a high-level interface for designing a common facet UI controller.
+ * The `Facet` headless controller offers a high-level interface for designing a commerce facet UI controller.
  */
 export type Facet = Omit<
   HeadlessCoreFacet,
@@ -61,7 +61,7 @@ export type Facet = Omit<
 };
 
 /**
- * A scoped and simplified part of the headless state that is relevant to the `CommerceCoreFacet` controller.
+ * A scoped and simplified part of the headless state that is relevant to the `Facet` controller.
  */
 export type FacetState = Omit<CoreFacetState, 'enabled' | 'sortCriterion'> & {
   /** The facet field. */
@@ -72,6 +72,13 @@ export type FacetState = Omit<CoreFacetState, 'enabled' | 'sortCriterion'> & {
 
 export type FacetBuilder = typeof buildCoreFacet;
 
+/**
+ * Creates a `Facet` controller instance.
+ *
+ * @param engine - The headless commerce engine.
+ * @param props - The configurable `Facet` properties.
+ * @returns A `Facet` controller instance.
+ * */
 export function buildCoreFacet(
   engine: CommerceEngine,
   props: FacetProps

@@ -26,8 +26,8 @@ import {
  * **Important:** This initializer is meant for internal use by Headless only. As an implementer, you should never import or use this initializer directly in your code.
  *
  * @param engine - The headless commerce engine.
- * @param props - The configurable `AutomaticFacet` properties used internally.
- * @returns An `AutomaticFacet` controller instance.
+ * @param props - The configurable `Facet` properties used internally.
+ * @returns An `Facet` controller instance.
  * */
 export function buildProductListingFacet(
   engine: CommerceEngine,

@@ -12,18 +12,45 @@ import {
 } from '../../../controller/headless-controller';
 import {Facet, FacetBuilder} from './headless-core-facet';
 
+/**
+ * The `FacetGenerator` headless controller offers a high-level interface for rendering commerce facets.
+ *
+ * Unlike regular facets that need to be explicitly defined and requested in the query, commerce facets are merchandiser-configured.
+ */
 export interface FacetGenerator extends Controller {
+  /**
+   * The state of the `FacetGenerator` controller.
+   */
   state: FacetGeneratorState;
 }
 
+/**
+ * A scoped and simplified part of the headless state that is relevant to the `FacetGenerator` controller.
+ */
 export interface FacetGeneratorState {
+  /**
+   * The list of commerce facet controllers.
+   */
   facets: Facet[];
 }
 
+/**
+ * The options for the `FacetGenerator` controller.
+ */
 export interface FacetGeneratorOptions {
+  /**
+   * The facet builder for the `FacetGenerator` controller.
+   */
   buildFacet: FacetBuilder;
 }
 
+/**
+ * Creates a `FacetGenerator` instance.
+ *
+ * @param engine - The headless engine.
+ * @param options - The facet generator options.
+ * @returns A `FacetGenerator` controller instance.
+ */
 export function buildCoreFacetGenerator(
   engine: CommerceEngine,
   options: FacetGeneratorOptions
