@@ -14,6 +14,5 @@ export type CommerceFacetRequest = Pick<
   | 'preventAutoSelect'
 > & {
   type: FacetType;
-  // TODO(nico): Will need to narrow down FacetValueRequest type
   values: FacetValueRequest[];
 };

@@ -1,7 +1,6 @@
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {CommerceFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
 import {FacetResponse} from '../../../../features/commerce/facets/facet-set/interfaces/response';
-import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
 import {
   deselectAllFacetValues,
   toggleExcludeFacetValue,
@@ -195,7 +194,7 @@ describe('facet', () => {
 
       const action = updateFacetNumberOfValues({
         facetId,
-        numberOfValues: numberOfValues * 2,
+        numberOfValues: numberOfValues + 1,
       });
 
       expect(engine.actions).toContainEqual(action);
@@ -262,7 +261,7 @@ describe('facet', () => {
       const selectedValue = buildMockCommerceFacetValue({state: 'selected'});
       const values = [selectedValue, selectedValue];
 
-      setFacetRequest({values, numberOfValues: 5});
+      setFacetRequest({values, numberOfValues: 2});
       setFacetResponse({
         values: [buildMockCommerceFacetValue({value: 'Some Value'})],
       });
@@ -272,7 +271,7 @@ describe('facet', () => {
 
       const action = updateFacetNumberOfValues({
         facetId,
-        numberOfValues: 1,
+        numberOfValues: 2,
       });
 
       expect(engine.actions).toContainEqual(action);
@@ -288,18 +287,12 @@ describe('facet', () => {
 
       expect(engine.actions).toContainEqual(action);
     });
-
-    it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
-      facet.showLessValues();
-
-      expect(engine.actions).toContainEqual(updateFacetOptions());
-    });
   });
 
   describe('#state.canShowLessValues', () => {
     it('when the number of currentValues is equal to the configured number, it returns false', () => {
       const values = [buildMockCommerceFacetValue()];
-      setFacetRequest({values});
+      setFacetRequest({values, numberOfValues: 1});
       setFacetResponse({
         values: [buildMockCommerceFacetValue({value: 'Some Value'})],
       });

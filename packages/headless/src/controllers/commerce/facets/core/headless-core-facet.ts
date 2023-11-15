@@ -105,11 +105,12 @@ export function buildCoreFacet(
   };
 
   const computeCanShowLessValues = () => {
-    const facet = getRequest();
-    const initialNumberOfValues = facet.numberOfValues;
-    const hasIdleValues = !!facet.values.find((v) => v.state === 'idle');
+    const response = getResponse();
+    const request = getRequest();
+    const initialNumberOfValues = response.values.length;
+    const hasIdleValues = !!request.values.find((v) => v.state === 'idle');
 
-    return initialNumberOfValues < facet.values.length && hasIdleValues;
+    return initialNumberOfValues < request.numberOfValues && hasIdleValues;
   };
 
   return {
