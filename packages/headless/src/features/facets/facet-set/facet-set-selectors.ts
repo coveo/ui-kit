@@ -6,9 +6,7 @@ import {FacetSection} from '../../../state/state-sections';
 import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
 import {FacetResponse, FacetValue} from './interfaces/response';
 
-export type FacetResponseSection =
-  | SearchSection
-  | ProductListingSection;
+export type FacetResponseSection = SearchSection | ProductListingSection;
 
 export const baseFacetResponseSelector = (
   state: Partial<FacetResponseSection>,

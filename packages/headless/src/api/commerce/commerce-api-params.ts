@@ -1,5 +1,5 @@
-import {SortOption} from './product-listings/v2/sort';
 import {CommerceFacetRequest} from '../../features/commerce/facets/facet-set/interfaces/request';
+import {SortOption} from './product-listings/v2/sort';
 
 export interface TrackingIdParam {
   trackingId: string;

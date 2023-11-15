@@ -92,7 +92,8 @@ function getFacets(state: StateNeededByFetchProductListingV2) {
     return [];
   }
 
-  return state.facetOrder.map((facetId) => state.commerceFacetSet![facetId].request)
+  return state.facetOrder
+    .map((facetId) => state.commerceFacetSet![facetId].request)
     .filter((facet) => facet.values.length > 0);
 }
 

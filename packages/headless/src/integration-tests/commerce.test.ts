@@ -6,7 +6,8 @@ import {
   buildRelevanceSortCriterion,
   buildSort,
   CommerceEngine,
-  ProductListing, buildProductListingFacetGenerator,
+  ProductListing,
+  buildProductListingFacetGenerator,
 } from '../commerce.index';
 import {getOrganizationEndpoints} from '../insight.index';
 import {waitForNextStateChange} from '../test/functional-test-utils';

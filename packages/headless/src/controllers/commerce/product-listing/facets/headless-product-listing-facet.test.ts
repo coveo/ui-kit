@@ -1,19 +1,22 @@
-import {CommerceAppState} from '../../../../state/commerce-app-state';
-import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
-import {buildProductListingFacet, ProductListingFacet} from './headless-product-listing-facet';
-import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
-import {FacetOptions} from '../../facets/core/headless-core-facet';
-import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
-import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
 import {CommerceFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {
   logFacetDeselect,
   logFacetExclude,
-  logFacetSelect
+  logFacetSelect,
 } from '../../../../features/facets/facet-set/facet-set-product-listing-v2-analytics-actions';
-import {buildMockCommerceFacetValue} from '../../../../test/mock-commerce-facet-value';
+import {CommerceAppState} from '../../../../state/commerce-app-state';
+import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
+import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
 import {buildMockCommerceFacetResponse} from '../../../../test/mock-commerce-facet-response';
+import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
+import {buildMockCommerceFacetValue} from '../../../../test/mock-commerce-facet-value';
+import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
+import {FacetOptions} from '../../facets/core/headless-core-facet';
+import {
+  buildProductListingFacet,
+  ProductListingFacet,
+} from './headless-product-listing-facet';
 
 describe('facet', () => {
   const facetId: string = 'some_field';
@@ -31,14 +34,12 @@ describe('facet', () => {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, ...config}),
     });
-    state.productListing.facets = [
-      buildMockCommerceFacetResponse({facetId}),
-    ];
+    state.productListing.facets = [buildMockCommerceFacetResponse({facetId})];
   }
 
   beforeEach(() => {
     options = {
-      facetId
+      facetId,
     };
 
     state = buildMockCommerceState();

@@ -1,6 +1,8 @@
-import {CommerceFacetSetSection, ProductListingV2Section} from '../../../../state/state-sections';
+import {
+  CommerceFacetSetSection,
+  ProductListingV2Section,
+} from '../../../../state/state-sections';
 import {AnyFacetResponse, FacetResponse} from './interfaces/response';
-
 
 function isFacetResponse(
   state: CommerceFacetSetSection,
@@ -13,10 +15,11 @@ function baseCommerceFacetResponseSelector(
   state: ProductListingV2Section,
   facetId: string
 ) {
-  const findById = (response: { facetId: string }) => response.facetId === facetId;
+  const findById = (response: {facetId: string}) =>
+    response.facetId === facetId;
 
   if ('productListing' in state) {
-    return state.productListing.facets.find(findById)
+    return state.productListing.facets.find(findById);
   }
 
   return undefined;

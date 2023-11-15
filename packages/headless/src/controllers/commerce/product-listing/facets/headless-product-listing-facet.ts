@@ -9,11 +9,15 @@ import {
   logFacetShowLess,
   logFacetShowMore,
 } from '../../../../features/facets/facet-set/facet-set-product-listing-analytics-actions';
-import {buildCoreFacet, CoreFacet, FacetProps} from '../../facets/core/headless-core-facet';
-import {FacetValue} from '../../../core/facets/facet/headless-core-facet';
-import {loadReducerError} from '../../../../utils/errors';
 import {productListingReducer as productListing} from '../../../../features/product-listing/product-listing-slice';
 import {ProductListingV2Section} from '../../../../state/state-sections';
+import {loadReducerError} from '../../../../utils/errors';
+import {FacetValue} from '../../../core/facets/facet/headless-core-facet';
+import {
+  buildCoreFacet,
+  CoreFacet,
+  FacetProps,
+} from '../../facets/core/headless-core-facet';
 
 export type ProductListingFacet = CoreFacet;
 
@@ -27,7 +31,10 @@ export type ProductListingFacet = CoreFacet;
  * @param props - The configurable `AutomaticFacet` properties used internally.
  * @returns An `AutomaticFacet` controller instance.
  * */
-export function buildProductListingFacet(engine: CommerceEngine, props: FacetProps): ProductListingFacet {
+export function buildProductListingFacet(
+  engine: CommerceEngine,
+  props: FacetProps
+): ProductListingFacet {
   if (!loadFacetReducers(engine)) {
     throw loadReducerError;
   }
@@ -44,10 +51,7 @@ export function buildProductListingFacet(engine: CommerceEngine, props: FacetPro
       coreController.toggleSelect(selection);
       dispatch(fetchProductListing());
       dispatch(
-        getProductListingAnalyticsActionForToggleFacetSelect(
-          facetId,
-          selection
-        )
+        getProductListingAnalyticsActionForToggleFacetSelect(facetId, selection)
       );
     },
 

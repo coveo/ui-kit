@@ -1,8 +1,6 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
+import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {facetOrderReducer as facetOrder} from '../../../../features/facets/facet-order/facet-order-slice';
-import {
-  commerceFacetSetReducer as commerceFacetSet
-} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {
   CommerceFacetSetSection,
   FacetOrderSection,
@@ -12,10 +10,7 @@ import {
   buildController,
   Controller,
 } from '../../../controller/headless-controller';
-import {
-  CoreFacet,
-  FacetBuilder,
-} from './headless-core-facet';
+import {CoreFacet, FacetBuilder} from './headless-core-facet';
 
 export interface FacetGenerator extends Controller {
   state: FacetGeneratorState;
@@ -29,7 +24,10 @@ export interface FacetGeneratorOptions {
   buildFacet: FacetBuilder;
 }
 
-export function buildCoreFacetGenerator(engine: CommerceEngine, options: FacetGeneratorOptions): FacetGenerator {
+export function buildCoreFacetGenerator(
+  engine: CommerceEngine,
+  options: FacetGeneratorOptions
+): FacetGenerator {
   if (!loadFacetGeneratorReducers(engine)) {
     throw loadReducerError;
   }
@@ -37,7 +35,7 @@ export function buildCoreFacetGenerator(engine: CommerceEngine, options: FacetGe
   const controller = buildController(engine);
 
   const createFacet = (facetId: string) => {
-    const {type} = engine.state.commerceFacetSet[facetId].request
+    const {type} = engine.state.commerceFacetSet[facetId].request;
 
     switch (type) {
       case 'regular':
@@ -47,7 +45,7 @@ export function buildCoreFacetGenerator(engine: CommerceEngine, options: FacetGe
         return options.buildFacet(engine, {
           options: {
             facetId,
-          }
+          },
         });
     }
   };
@@ -65,9 +63,7 @@ export function buildCoreFacetGenerator(engine: CommerceEngine, options: FacetGe
 
 function loadFacetGeneratorReducers(
   engine: CommerceEngine
-): engine is CommerceEngine<
-  FacetOrderSection & CommerceFacetSetSection
-> {
+): engine is CommerceEngine<FacetOrderSection & CommerceFacetSetSection> {
   engine.addReducers({facetOrder, commerceFacetSet});
   return true;
 }

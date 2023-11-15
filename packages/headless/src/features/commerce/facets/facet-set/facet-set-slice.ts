@@ -1,15 +1,18 @@
-import {fetchProductListing} from '../../product-listing/product-listing-actions';
+import {type Draft as WritableDraft} from '@reduxjs/toolkit';
 import {createReducer, FacetValueRequest} from '../../../../ssr.index';
-import {CommerceFacetSetState, getCommerceFacetSetInitialState} from './facet-set-state';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
   updateFacetIsFieldExpanded,
-  updateFacetNumberOfValues
+  updateFacetNumberOfValues,
 } from '../../../facets/facet-set/facet-set-actions';
-import {CommerceFacetRequest} from './interfaces/request';
-import { type Draft as WritableDraft } from '@reduxjs/toolkit';
 import {convertFacetValueToRequest} from '../../../facets/facet-set/facet-set-slice';
+import {fetchProductListing} from '../../product-listing/product-listing-actions';
+import {
+  CommerceFacetSetState,
+  getCommerceFacetSetInitialState,
+} from './facet-set-state';
+import {CommerceFacetRequest} from './interfaces/request';
 import {AnyFacetResponse, FacetResponse} from './interfaces/response';
 
 export const commerceFacetSetReducer = createReducer(
@@ -43,7 +46,6 @@ export const commerceFacetSetReducer = createReducer(
         if (!existingValue) {
           insertNewValue(facetRequest, selection);
           return;
-
         }
         const isSelected = existingValue.state === 'selected';
         existingValue.state = isSelected ? 'idle' : 'selected';

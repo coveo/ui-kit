@@ -1,25 +1,22 @@
-import {CommerceAppState} from '../../../../state/commerce-app-state';
-import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
-import {buildCoreFacet, CoreFacet, FacetOptions} from './headless-core-facet';
-import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
-import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
-import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
-import {
-  commerceFacetSetReducer as commerceFacetSet
-} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
-import {buildMockCommerceFacetResponse} from '../../../../test/mock-commerce-facet-response';
+import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
+import {CommerceFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
+import {FacetResponse} from '../../../../features/commerce/facets/facet-set/interfaces/response';
+import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
 import {
   deselectAllFacetValues,
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
   updateFacetIsFieldExpanded,
-  updateFacetNumberOfValues
+  updateFacetNumberOfValues,
 } from '../../../../features/facets/facet-set/facet-set-actions';
+import {CommerceAppState} from '../../../../state/commerce-app-state';
+import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
+import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
+import {buildMockCommerceFacetResponse} from '../../../../test/mock-commerce-facet-response';
+import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceFacetValue} from '../../../../test/mock-commerce-facet-value';
-import {CommerceFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
-import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
-import {FacetResponse} from '../../../../features/commerce/facets/facet-set/interfaces/response';
-
+import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
+import {buildCoreFacet, CoreFacet, FacetOptions} from './headless-core-facet';
 
 describe('facet', () => {
   const facetId = 'facet_id';
@@ -48,7 +45,7 @@ describe('facet', () => {
 
   beforeEach(() => {
     options = {
-      facetId
+      facetId,
     };
 
     state = buildMockCommerceState();
@@ -110,7 +107,8 @@ describe('facet', () => {
   });
 
   describe('#toggleSingleSelect when the value state is "idle"', () => {
-    const facetValue = () => buildMockCommerceFacetValue({value: 'TED', state: 'idle'});
+    const facetValue = () =>
+      buildMockCommerceFacetValue({value: 'TED', state: 'idle'});
 
     it('dispatches a #toggleSelect action with the passed facet value', () => {
       facet.toggleSingleSelect(facetValue());
@@ -188,7 +186,9 @@ describe('facet', () => {
       const numberOfValues = 10;
 
       setFacetRequest({numberOfValues});
-      setFacetResponse({values: [buildMockCommerceFacetValue({state: 'idle'})]})
+      setFacetResponse({
+        values: [buildMockCommerceFacetValue({state: 'idle'})],
+      });
       initFacet();
 
       facet.showMoreValues();
@@ -239,11 +239,12 @@ describe('facet', () => {
     });
   });
 
-
   describe('#showLessValues', () => {
     it('sets the number of values to the original number', () => {
       setFacetRequest({numberOfValues: 25});
-      setFacetResponse({ values: Array(8).fill(buildMockCommerceFacetValue({value: 'Value'})) });
+      setFacetResponse({
+        values: Array(8).fill(buildMockCommerceFacetValue({value: 'Value'})),
+      });
       initFacet();
 
       facet.showLessValues();
@@ -256,14 +257,15 @@ describe('facet', () => {
       expect(engine.actions).toContainEqual(action);
     });
 
-
     it(`when the number of non-idle values is greater than the original number,
     it sets the number of values to the non-idle number`, () => {
       const selectedValue = buildMockCommerceFacetValue({state: 'selected'});
       const values = [selectedValue, selectedValue];
 
       setFacetRequest({values, numberOfValues: 5});
-      setFacetResponse({values: [buildMockCommerceFacetValue({value: 'Some Value'})]})
+      setFacetResponse({
+        values: [buildMockCommerceFacetValue({value: 'Some Value'})],
+      });
       initFacet();
 
       facet.showLessValues();
@@ -298,7 +300,9 @@ describe('facet', () => {
     it('when the number of currentValues is equal to the configured number, it returns false', () => {
       const values = [buildMockCommerceFacetValue()];
       setFacetRequest({values});
-      setFacetResponse({values: [buildMockCommerceFacetValue({value: 'Some Value'})]})
+      setFacetResponse({
+        values: [buildMockCommerceFacetValue({value: 'Some Value'})],
+      });
 
       initFacet();
 
@@ -309,7 +313,9 @@ describe('facet', () => {
       const value = buildMockCommerceFacetValue();
 
       setFacetRequest({values: [value, value]});
-      setFacetResponse({values: [buildMockCommerceFacetValue({value: 'Some Value'})]})
+      setFacetResponse({
+        values: [buildMockCommerceFacetValue({value: 'Some Value'})],
+      });
       initFacet();
 
       expect(facet.state.canShowLessValues).toBe(true);
@@ -320,7 +326,9 @@ describe('facet', () => {
       const selectedValue = buildMockCommerceFacetValue({state: 'selected'});
 
       setFacetRequest({values: [selectedValue, selectedValue]});
-      setFacetResponse({values: [buildMockCommerceFacetValue({value: 'Some Value'})]})
+      setFacetResponse({
+        values: [buildMockCommerceFacetValue({value: 'Some Value'})],
+      });
       initFacet();
 
       expect(facet.state.canShowLessValues).toBe(false);

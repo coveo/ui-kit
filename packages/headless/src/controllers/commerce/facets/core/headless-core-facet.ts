@@ -1,30 +1,34 @@
-import {FacetValueState} from '../../../../features/facets/facet-api/value';
-import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
-import {isFacetValueExcluded, isFacetValueSelected,} from '../../../../features/facets/facet-set/facet-set-utils';
-import {
-  CommerceFacetSetSection,
-} from '../../../../state/state-sections';
-import {loadReducerError} from '../../../../utils/errors';
-import {requiredNonEmptyString, validateOptions} from '../../../../utils/validate-payload';
-import {buildController,} from '../../../controller/headless-controller';
+import {Schema} from '@coveo/bueno';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {
-  CoreFacet as HeadlessCoreFacet,
-  CoreFacetState,
-  FacetValue
-} from '../../../core/facets/facet/headless-core-facet';
-import {Schema} from '@coveo/bueno';
-import {
   commerceFacetResponseSelector,
-  isCommerceFacetLoadingResponseSelector
+  isCommerceFacetLoadingResponseSelector,
 } from '../../../../features/commerce/facets/facet-set/facet-set-selector';
+import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
+import {FacetValueState} from '../../../../features/facets/facet-api/value';
 import {
   deselectAllFacetValues,
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
   updateFacetIsFieldExpanded,
-  updateFacetNumberOfValues
+  updateFacetNumberOfValues,
 } from '../../../../features/facets/facet-set/facet-set-actions';
+import {
+  isFacetValueExcluded,
+  isFacetValueSelected,
+} from '../../../../features/facets/facet-set/facet-set-utils';
+import {CommerceFacetSetSection} from '../../../../state/state-sections';
+import {loadReducerError} from '../../../../utils/errors';
+import {
+  requiredNonEmptyString,
+  validateOptions,
+} from '../../../../utils/validate-payload';
+import {buildController} from '../../../controller/headless-controller';
+import {
+  CoreFacet as HeadlessCoreFacet,
+  CoreFacetState,
+  FacetValue,
+} from '../../../core/facets/facet/headless-core-facet';
 
 export type {FacetValue, FacetValueState};
 
@@ -35,7 +39,6 @@ export type {FacetValue, FacetValueState};
 export interface FacetProps {
   options: FacetOptions;
 }
-
 
 export interface FacetOptions {
   /**
@@ -60,10 +63,7 @@ export type CoreFacet = Omit<
 /**
  * A scoped and simplified part of the headless state that is relevant to the `CommerceCoreFacet` controller.
  */
-export type FacetState = Omit<
-  CoreFacetState,
-  'enabled' | 'sortCriterion'
-> & {
+export type FacetState = Omit<CoreFacetState, 'enabled' | 'sortCriterion'> & {
   /** The facet field. */
   field: string;
   /** The facet display name. */
@@ -83,15 +83,22 @@ export function buildCoreFacet(
   const {dispatch} = engine;
   const controller = buildController(engine);
 
-  validateOptions(engine, new Schema<Required<FacetOptions>>({
-    facetId: requiredNonEmptyString,
-  }), props.options, 'buildCoreFacet');
+  validateOptions(
+    engine,
+    new Schema<Required<FacetOptions>>({
+      facetId: requiredNonEmptyString,
+    }),
+    props.options,
+    'buildCoreFacet'
+  );
 
-  const facetId = props.options.facetId
+  const facetId = props.options.facetId;
 
   const getRequest = () => engine.state.commerceFacetSet[facetId].request;
-  const getResponse = () => commerceFacetResponseSelector(engine.state, facetId)!;
-  const getIsLoading = () => isCommerceFacetLoadingResponseSelector(engine.state);
+  const getResponse = () =>
+    commerceFacetResponseSelector(engine.state, facetId)!;
+  const getIsLoading = () =>
+    isCommerceFacetLoadingResponseSelector(engine.state);
 
   const getNumberOfActiveValues = () => {
     return getRequest().values.filter((v) => v.state !== 'idle').length;

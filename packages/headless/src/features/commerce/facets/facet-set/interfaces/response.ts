@@ -12,9 +12,18 @@ export interface BaseFacetResponse<Value, Type extends FacetType> {
 }
 
 export type FacetResponse = BaseFacetResponse<FacetValue, 'regular'>;
-export type DateRangeFacetResponse = BaseFacetResponse<DateFacetValue, 'dateRange'>;
-export type NumericalRangeFacetResponse = BaseFacetResponse<NumericFacetValue, 'numericalRange'>;
-export type CategoryFacetResponse = BaseFacetResponse<CategoryFacetValue, 'hierarchical'>;
+export type DateRangeFacetResponse = BaseFacetResponse<
+  DateFacetValue,
+  'dateRange'
+>;
+export type NumericalRangeFacetResponse = BaseFacetResponse<
+  NumericFacetValue,
+  'numericalRange'
+>;
+export type CategoryFacetResponse = BaseFacetResponse<
+  CategoryFacetValue,
+  'hierarchical'
+>;
 export type FacetType =
   | 'regular'
   | 'dateRange'

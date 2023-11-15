@@ -7,6 +7,7 @@ import {CaseFieldState} from '../features/case-field/case-field-state';
 import {CaseInputState} from '../features/case-input/case-input-state';
 import {CartState} from '../features/commerce/context/cart/cart-state';
 import {CommerceContextState} from '../features/commerce/context/context-state';
+import {CommerceFacetSetState} from '../features/commerce/facets/facet-set/facet-set-state';
 import {CommercePaginationState} from '../features/commerce/pagination/pagination-state';
 import {ProductListingV2State} from '../features/commerce/product-listing/product-listing-state';
 import {CommerceSortState} from '../features/commerce/sort/sort-state';
@@ -50,7 +51,6 @@ import {StandaloneSearchBoxSetState} from '../features/standalone-search-box-set
 import {StaticFilterSetState} from '../features/static-filter-set/static-filter-set-state';
 import {TabSetState} from '../features/tab-set/tab-set-state';
 import {TriggerState} from '../features/triggers/triggers-state';
-import {CommerceFacetSetState} from '../features/commerce/facets/facet-set/facet-set-state';
 
 export interface QuerySection {
   /**

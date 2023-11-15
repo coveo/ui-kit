@@ -1,10 +1,10 @@
-import {FacetGenerator} from '../../facets/core/headless-core-facet-generator';
 import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
-import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
-import {buildProductListingFacetGenerator} from './headless-product-listing-facet-generator';
-import {buildProductListingFacet} from './headless-product-listing-facet';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
 import {buildMockCommerceFacetResponse} from '../../../../test/mock-commerce-facet-response';
+import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
+import {FacetGenerator} from '../../facets/core/headless-core-facet-generator';
+import {buildProductListingFacet} from './headless-product-listing-facet';
+import {buildProductListingFacetGenerator} from './headless-product-listing-facet-generator';
 
 describe('FacetGenerator', () => {
   let engine: MockCommerceEngine;
@@ -28,22 +28,24 @@ describe('FacetGenerator', () => {
     // eslint-disable-next-line @cspell/spellchecker
     // TODO CAPI-90, CAPI-91: Add test cases that ensure proper facet controllers are created from the facet.type
     const facet = {
-      facetId: 'some_facet_field'
-    }
+      facetId: 'some_facet_field',
+    };
     const mockState = buildMockCommerceState();
     const engine = buildMockCommerceEngine({
       state: {
         ...mockState,
         productListing: {
           ...mockState.productListing,
-          facets: [buildMockCommerceFacetResponse({
-            ...facet,
-            field: 'some_field',
-          })]
+          facets: [
+            buildMockCommerceFacetResponse({
+              ...facet,
+              field: 'some_field',
+            }),
+          ],
         },
         facetOrder: [facet.facetId],
         commerceFacetSet: {
-          [facet.facetId]: { request: buildMockCommerceFacetRequest(facet)},
+          [facet.facetId]: {request: buildMockCommerceFacetRequest(facet)},
         },
       },
     });

@@ -1,17 +1,29 @@
-import {convertFacetValueToRequest} from '../../../facets/facet-set/facet-set-slice';
-import {FacetValueState, facetValueStates} from '../../../facets/facet-api/value';
-import {CommerceFacetSetState, getCommerceFacetSetInitialState} from './facet-set-state';
-import {commerceFacetSetReducer} from './facet-set-slice';
-import {toggleExcludeFacetValue, toggleSelectFacetValue, updateFacetIsFieldExpanded} from '../../../facets/facet-set/facet-set-actions';
-import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
-import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
-import {buildFetchProductListingV2Response} from '../../../../test/mock-product-listing-v2';
-import {fetchProductListing, FetchProductListingV2ThunkReturn} from '../../product-listing/product-listing-actions';
 import {PayloadAction} from '@reduxjs/toolkit';
+import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
 import {buildMockCommerceFacetResponse} from '../../../../test/mock-commerce-facet-response';
+import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceFacetValue} from '../../../../test/mock-commerce-facet-value';
+import {buildFetchProductListingV2Response} from '../../../../test/mock-product-listing-v2';
+import {
+  FacetValueState,
+  facetValueStates,
+} from '../../../facets/facet-api/value';
+import {
+  toggleExcludeFacetValue,
+  toggleSelectFacetValue,
+  updateFacetIsFieldExpanded,
+} from '../../../facets/facet-set/facet-set-actions';
+import {convertFacetValueToRequest} from '../../../facets/facet-set/facet-set-slice';
+import {
+  fetchProductListing,
+  FetchProductListingV2ThunkReturn,
+} from '../../product-listing/product-listing-actions';
+import {commerceFacetSetReducer} from './facet-set-slice';
+import {
+  CommerceFacetSetState,
+  getCommerceFacetSetInitialState,
+} from './facet-set-state';
 import {FacetResponse} from './interfaces/response';
-
 
 describe('facet-set slice', () => {
   let state: CommerceFacetSetState;
@@ -78,7 +90,6 @@ describe('facet-set slice', () => {
         });
 
         const action = toggleAction({
-
           facetId,
           selection: facetValue,
         });
@@ -104,7 +115,6 @@ describe('facet-set slice', () => {
         });
 
         const action = toggleAction({
-
           facetId,
           selection: facetValue,
         });
@@ -127,7 +137,6 @@ describe('facet-set slice', () => {
         });
 
         const action = toggleAction({
-
           facetId,
           selection: facetValue,
         });
@@ -284,15 +293,15 @@ describe('facet-set slice', () => {
   function testFulfilledSearchRequest(
     searchBuilder: (
       facets: FacetResponse[]
-    ) => PayloadAction<
-      FetchProductListingV2ThunkReturn,
-      string
-    >
+    ) => PayloadAction<FetchProductListingV2ThunkReturn, string>
   ) {
     it('updates the currentValues of facet requests to the values in the response', () => {
       const facetId = '1';
       const facetValue = buildMockCommerceFacetValue({value: 'TED'});
-      const facet = buildMockCommerceFacetResponse({facetId, values: [facetValue]});
+      const facet = buildMockCommerceFacetResponse({
+        facetId,
+        values: [facetValue],
+      });
 
       state[facetId] = buildMockCommerceFacetSlice({
         request: buildMockCommerceFacetRequest({facetId}),
@@ -314,7 +323,7 @@ describe('facet-set slice', () => {
       });
 
       const facet = buildMockCommerceFacetResponse({
-        facetId
+        facetId,
       });
       const action = searchBuilder([facet]);
 
@@ -323,14 +332,13 @@ describe('facet-set slice', () => {
     });
 
     it('sets #preventAutoSelect to false', () => {
-
       const facetId = '1';
       state[facetId] = buildMockCommerceFacetSlice({
         request: buildMockCommerceFacetRequest({preventAutoSelect: true}),
       });
 
       const facet = buildMockCommerceFacetResponse({
-        facetId
+        facetId,
       });
       const action = searchBuilder([facet]);
 
@@ -341,7 +349,7 @@ describe('facet-set slice', () => {
     it('response containing unregistered facet ids does not throw', () => {
       const facetId = '1';
       const facet = buildMockCommerceFacetResponse({
-        facetId
+        facetId,
       });
       const action = searchBuilder([facet]);
 
