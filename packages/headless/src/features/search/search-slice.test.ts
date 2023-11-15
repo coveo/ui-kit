@@ -62,11 +62,9 @@ describe('search-slice', () => {
         queryExecuted: 'foo',
       });
 
-      const action = executeSearch.fulfilled(
-        searchState,
-        '',
-        logSearchboxSubmit()
-      );
+      const action = executeSearch.fulfilled(searchState, '', {
+        legacy: logSearchboxSubmit(),
+      });
       const finalState = searchReducer(state, action);
 
       expect(finalState.response).toEqual(response);
@@ -107,7 +105,9 @@ describe('search-slice', () => {
         searchResponseId: 'a_new_id',
       });
 
-      const action = fetchPage.fulfilled(searchState, '', logPageNext());
+      const action = fetchPage.fulfilled(searchState, '', {
+        legacy: logPageNext(),
+      });
       const finalState = searchReducer(state, action);
 
       expect(finalState.response).toEqual(response);
@@ -135,7 +135,7 @@ describe('search-slice', () => {
             response: buildMockSearchResponse({results: [newResult]}),
           }),
           '',
-          logSearchboxSubmit()
+          {legacy: logSearchboxSubmit()}
         )
       );
 
@@ -152,7 +152,7 @@ describe('search-slice', () => {
 
       const finalState = searchReducer(
         state,
-        executeSearch.fulfilled(search, '', logSearchboxSubmit())
+        executeSearch.fulfilled(search, '', {legacy: logSearchboxSubmit()})
       );
 
       expect(finalState.searchResponseId).toBe('a_new_id');
@@ -174,7 +174,7 @@ describe('search-slice', () => {
 
       const finalState = searchReducer(
         state,
-        executeSearch.fulfilled(search, '', logSearchboxSubmit())
+        executeSearch.fulfilled(search, '', {legacy: logSearchboxSubmit()})
       );
 
       expect(finalState.questionAnswer).toEqual(response.questionAnswer);
@@ -337,11 +337,9 @@ describe('search-slice', () => {
     });
 
     it('when a executeSearch fulfilled is received', () => {
-      const action = executeSearch.fulfilled(
-        searchState,
-        '',
-        logSearchboxSubmit()
-      );
+      const action = executeSearch.fulfilled(searchState, '', {
+        legacy: logSearchboxSubmit(),
+      });
       const finalState = searchReducer(state, action);
       expect(finalState.error).toBeNull();
     });
@@ -353,7 +351,9 @@ describe('search-slice', () => {
     });
 
     it('when a fetchPage fulfilled is received', () => {
-      const action = fetchPage.fulfilled(searchState, '', logPageNext());
+      const action = fetchPage.fulfilled(searchState, '', {
+        legacy: logPageNext(),
+      });
       const finalState = searchReducer(state, action);
       expect(finalState.error).toBeNull();
     });
@@ -376,7 +376,7 @@ describe('search-slice', () => {
     });
 
     it('on a executeSearch error', async () => {
-      await e.dispatch(executeSearch(logSearchboxSubmit()));
+      await e.dispatch(executeSearch({legacy: logSearchboxSubmit()}));
       expect(e.actions).toContainEqual(
         expect.objectContaining({
           type: 'search/queryError/pending',
@@ -394,7 +394,7 @@ describe('search-slice', () => {
     });
 
     it('on a fetchPage error', async () => {
-      await e.dispatch(fetchPage(logPageNext()));
+      await e.dispatch(fetchPage({legacy: logPageNext()}));
       expect(e.actions).toContainEqual(
         expect.objectContaining({
           type: 'search/queryError/pending',
@@ -404,7 +404,9 @@ describe('search-slice', () => {
   });
 
   it('set the isloading state to true during executeSearch.pending', () => {
-    const pendingAction = executeSearch.pending('asd', logSearchboxSubmit());
+    const pendingAction = executeSearch.pending('asd', {
+      legacy: logSearchboxSubmit(),
+    });
     const finalState = searchReducer(state, pendingAction);
     expect(finalState.isLoading).toBe(true);
   });
@@ -416,13 +418,15 @@ describe('search-slice', () => {
   });
 
   it('set the isloading state to true during fetchPage.pending', () => {
-    const pendingAction = fetchPage.pending('asd', logPageNext());
+    const pendingAction = fetchPage.pending('asd', {legacy: logPageNext()});
     const finalState = searchReducer(state, pendingAction);
     expect(finalState.isLoading).toBe(true);
   });
 
   it('update the requestId during executeSearch.pending', () => {
-    const pendingAction = executeSearch.pending('asd', logSearchboxSubmit());
+    const pendingAction = executeSearch.pending('asd', {
+      legacy: logSearchboxSubmit(),
+    });
     const finalState = searchReducer(state, pendingAction);
     expect(finalState.requestId).toBe(pendingAction.meta.requestId);
   });
@@ -434,7 +438,7 @@ describe('search-slice', () => {
   });
 
   it('update the requestId during fetchPage.pending', () => {
-    const pendingAction = fetchPage.pending('asd', logPageNext());
+    const pendingAction = fetchPage.pending('asd', {legacy: logPageNext()});
     const finalState = searchReducer(state, pendingAction);
     expect(finalState.requestId).toBe(pendingAction.meta.requestId);
   });
@@ -462,7 +466,7 @@ describe('search-slice', () => {
         return Promise.resolve(response);
       });
 
-      await e.dispatch(executeSearch(logSearchboxSubmit()));
+      await e.dispatch(executeSearch({legacy: logSearchboxSubmit()}));
       expect(e.actions).toContainEqual({
         type: applyDidYouMeanCorrection.type,
         payload: 'foo',
@@ -506,7 +510,7 @@ describe('search-slice', () => {
           .fn()
           .mockImplementationOnce(fetched)
           .mockImplementationOnce(retried);
-        await e.dispatch(executeSearch(mockLogSubmit()));
+        await e.dispatch(executeSearch({legacy: mockLogSubmit()}));
       });
 
       it('should log the original query to the executeSearch analytics action', () => {
@@ -532,7 +536,7 @@ describe('search-slice', () => {
           }),
         })
       );
-      await e.dispatch(executeSearch(logSearchboxSubmit()));
+      await e.dispatch(executeSearch({legacy: logSearchboxSubmit()}));
       expect(e.actions).not.toContainEqual({
         type: applyDidYouMeanCorrection.type,
         payload: 'foo',
@@ -548,7 +552,7 @@ describe('search-slice', () => {
           }),
         })
       );
-      await e.dispatch(executeSearch(logSearchboxSubmit()));
+      await e.dispatch(executeSearch({legacy: logSearchboxSubmit()}));
       expect(e.actions).not.toContainEqual({
         type: applyDidYouMeanCorrection.type,
       });
@@ -563,11 +567,9 @@ describe('search-slice', () => {
       const initialState = buildMockSearch({
         response,
       });
-      const action = fetchFacetValues.fulfilled(
-        initialState,
-        '',
-        logFacetShowMore('')
-      );
+      const action = fetchFacetValues.fulfilled(initialState, '', {
+        legacy: logFacetShowMore(''),
+      });
 
       const finalState = searchReducer(state, action);
       expect(finalState.response.facets).toEqual(response.facets);
@@ -581,11 +583,9 @@ describe('search-slice', () => {
         response,
         searchResponseId: 'test',
       });
-      const action = fetchFacetValues.fulfilled(
-        initialState,
-        '',
-        logFacetShowMore('')
-      );
+      const action = fetchFacetValues.fulfilled(initialState, '', {
+        legacy: logFacetShowMore(''),
+      });
 
       const finalState = searchReducer(state, action);
       expect(finalState.response.searchUid).toEqual(response.searchUid);

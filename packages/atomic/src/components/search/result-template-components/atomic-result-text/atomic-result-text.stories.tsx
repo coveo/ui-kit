@@ -6,4 +6,4 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
   {field: 'excerpt'}
 );
 export default {...defaultModuleExport, title: 'Atomic/ResultList/ResultText'};
-export const DefaultResultText = exportedStory;
+export const Default = exportedStory;

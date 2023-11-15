@@ -22,7 +22,7 @@ export type {Sort, SortProps, SortState, SortInitialState};
 export function buildSort(engine: SearchEngine, props: SortProps = {}): Sort {
   const {dispatch} = engine;
   const sort = buildCoreSort(engine, props);
-  const search = () => dispatch(executeSearch(logResultsSort()));
+  const search = () => dispatch(executeSearch({legacy: logResultsSort()}));
 
   return {
     ...sort,

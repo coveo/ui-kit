@@ -21,4 +21,4 @@ export default {
   ...defaultModuleExport,
   title: 'Atomic/NumericFacet/Format/Currency',
 };
-export const DefaultFormatCurrency = exportedStory;
+export const Default = exportedStory;

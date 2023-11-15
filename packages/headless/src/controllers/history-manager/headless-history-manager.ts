@@ -79,7 +79,7 @@ export function buildHistoryManager(engine: SearchEngine): HistoryManager {
         return;
       }
       await dispatch(back());
-      dispatch(executeSearch(logNavigateBackward()));
+      dispatch(executeSearch({legacy: logNavigateBackward()}));
     },
 
     async forward() {
@@ -87,7 +87,7 @@ export function buildHistoryManager(engine: SearchEngine): HistoryManager {
         return;
       }
       await dispatch(forward());
-      dispatch(executeSearch(logNavigateForward()));
+      dispatch(executeSearch({legacy: logNavigateForward()}));
     },
 
     async backOnNoResults() {
@@ -95,7 +95,7 @@ export function buildHistoryManager(engine: SearchEngine): HistoryManager {
         return;
       }
       await dispatch(back());
-      dispatch(executeSearch(logNoResultsBack()));
+      dispatch(executeSearch({legacy: logNoResultsBack()}));
     },
   };
 }

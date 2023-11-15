@@ -52,8 +52,8 @@ export default class QuanticResultActionBar extends LightningElement {
           index === 0
             ? 'first'
             : index === array.length - 1
-            ? 'last'
-            : 'middle';
+              ? 'last'
+              : 'middle';
         resultActionButton.callbacks.applyCssOrderClass(order);
       });
     }

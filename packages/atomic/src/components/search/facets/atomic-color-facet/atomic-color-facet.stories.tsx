@@ -97,4 +97,4 @@ const {defaultModuleExport, exportedStory} = defaultStory(
 );
 
 export default {...defaultModuleExport, title: 'Atomic/ColorFacet'};
-export const DefaultColorFacet = exportedStory;
+export const Default = exportedStory;
