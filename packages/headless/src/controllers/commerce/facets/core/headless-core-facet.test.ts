@@ -15,7 +15,7 @@ import {buildMockCommerceFacetResponse} from '../../../../test/mock-commerce-fac
 import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceFacetValue} from '../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
-import {buildCoreFacet, CoreFacet, FacetOptions} from './headless-core-facet';
+import {buildCoreFacet, Facet, FacetOptions} from './headless-core-facet';
 
 describe('facet', () => {
   const facetId = 'facet_id';
@@ -23,7 +23,7 @@ describe('facet', () => {
   let options: FacetOptions;
   let state: CommerceAppState;
   let engine: MockCommerceEngine;
-  let facet: CoreFacet;
+  let facet: Facet;
 
   function initFacet() {
     engine = buildMockCommerceEngine({state});

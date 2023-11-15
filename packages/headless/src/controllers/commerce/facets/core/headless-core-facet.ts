@@ -50,7 +50,7 @@ export interface FacetOptions {
 /**
  * The `Facet` headless controller offers a high-level interface for designing a common facet UI controller.
  */
-export type CoreFacet = Omit<
+export type Facet = Omit<
   HeadlessCoreFacet,
   'sortBy' | 'isSortedBy' | 'enable' | 'disable' | 'state'
 > & {
@@ -75,7 +75,7 @@ export type FacetBuilder = typeof buildCoreFacet;
 export function buildCoreFacet(
   engine: CommerceEngine,
   props: FacetProps
-): CoreFacet {
+): Facet {
   if (!loadFacetReducers(engine)) {
     throw loadReducerError;
   }

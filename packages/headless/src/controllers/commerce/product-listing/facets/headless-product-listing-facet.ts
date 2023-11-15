@@ -15,11 +15,9 @@ import {loadReducerError} from '../../../../utils/errors';
 import {FacetValue} from '../../../core/facets/facet/headless-core-facet';
 import {
   buildCoreFacet,
-  CoreFacet,
+  Facet,
   FacetProps,
 } from '../../facets/core/headless-core-facet';
-
-export type ProductListingFacet = CoreFacet;
 
 /**
  * @internal
@@ -34,7 +32,7 @@ export type ProductListingFacet = CoreFacet;
 export function buildProductListingFacet(
   engine: CommerceEngine,
   props: FacetProps
-): ProductListingFacet {
+): Facet {
   if (!loadFacetReducers(engine)) {
     throw loadReducerError;
   }

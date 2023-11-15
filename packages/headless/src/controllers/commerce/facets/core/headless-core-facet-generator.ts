@@ -10,14 +10,14 @@ import {
   buildController,
   Controller,
 } from '../../../controller/headless-controller';
-import {CoreFacet, FacetBuilder} from './headless-core-facet';
+import {Facet, FacetBuilder} from './headless-core-facet';
 
 export interface FacetGenerator extends Controller {
   state: FacetGeneratorState;
 }
 
 export interface FacetGeneratorState {
-  facets: CoreFacet[];
+  facets: Facet[];
 }
 
 export interface FacetGeneratorOptions {
