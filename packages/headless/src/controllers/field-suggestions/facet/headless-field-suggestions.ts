@@ -180,13 +180,17 @@ export function buildFieldSuggestions(
     select: (value) => {
       engine.dispatch(updateFacetOptions());
       engine.dispatch(
-        executeSearch(logFacetSelect({facetId, facetValue: value.rawValue}))
+        executeSearch({
+          legacy: logFacetSelect({facetId, facetValue: value.rawValue}),
+        })
       );
     },
     exclude: (value) => {
       engine.dispatch(updateFacetOptions());
       engine.dispatch(
-        executeSearch(logFacetExclude({facetId, facetValue: value.rawValue}))
+        executeSearch({
+          legacy: logFacetExclude({facetId, facetValue: value.rawValue}),
+        })
       );
     },
     isForFieldSuggestions: true,

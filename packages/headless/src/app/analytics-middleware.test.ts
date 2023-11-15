@@ -2,9 +2,9 @@ import {logSearchboxSubmit} from '../features/query/query-analytics-actions';
 import {
   executeSearch,
   ExecuteSearchThunkReturn,
-} from '../features/search/search-actions';
+} from '../features/search/legacy/search-actions';
 import {buildMockSearchAppEngine} from '../test/mock-engine';
-import {buildMockSearch} from '../test/mock-search';
+import {buildMockLegacySearch} from '../test/mock-search';
 
 describe('analytics middleware', () => {
   beforeEach(() => {
@@ -22,7 +22,8 @@ describe('analytics middleware', () => {
 
   it('correctly pass through a search action with no analytics payload', () => {
     const e = buildMockSearchAppEngine();
-    const {analyticsAction, ...mockSearchWithoutAnalytics} = buildMockSearch();
+    const {analyticsAction, ...mockSearchWithoutAnalytics} =
+      buildMockLegacySearch();
 
     const action = executeSearch.fulfilled(
       mockSearchWithoutAnalytics as ExecuteSearchThunkReturn,
@@ -35,7 +36,7 @@ describe('analytics middleware', () => {
 
   it('correctly pass through a search action with an analytics payload', () => {
     const e = buildMockSearchAppEngine();
-    const mockSearch = buildMockSearch();
+    const mockSearch = buildMockLegacySearch();
 
     const action = executeSearch.fulfilled(
       mockSearch,
@@ -48,7 +49,7 @@ describe('analytics middleware', () => {
 
   it('correctly queue log analytics after search action', () => {
     const e = buildMockSearchAppEngine();
-    const mockSearch = buildMockSearch();
+    const mockSearch = buildMockLegacySearch();
 
     const action = executeSearch.fulfilled(
       mockSearch,
@@ -62,7 +63,7 @@ describe('analytics middleware', () => {
 
   it('correctly remove analytics payload from action', () => {
     const e = buildMockSearchAppEngine();
-    const mockSearch = buildMockSearch();
+    const mockSearch = buildMockLegacySearch();
 
     const action = executeSearch.fulfilled(
       mockSearch,
