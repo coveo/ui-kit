@@ -3,7 +3,6 @@ import {
   deselectAllBreadcrumbs,
   deselectAllNonBreadcrumbs,
 } from '../../breadcrumb/breadcrumb-actions';
-import {fetchProductListing as fetchProductListingV2} from '../../commerce/product-listing/product-listing-actions';
 import {disableFacet} from '../../facet-options/facet-options-actions';
 import {change} from '../../history/history-actions';
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
@@ -195,15 +194,6 @@ export const facetSetReducer = createReducer(
       })
       .addCase(fetchProductListing.fulfilled, (state, action) => {
         const facets = action.payload.response?.facets?.results || [];
-        facets.forEach((facetResponse) =>
-          mutateStateFromFacetResponse(
-            state[facetResponse.facetId]?.request,
-            facetResponse
-          )
-        );
-      })
-      .addCase(fetchProductListingV2.fulfilled, (state, action) => {
-        const facets = action.payload.response?.facets || [];
         facets.forEach((facetResponse) =>
           mutateStateFromFacetResponse(
             state[facetResponse.facetId]?.request,

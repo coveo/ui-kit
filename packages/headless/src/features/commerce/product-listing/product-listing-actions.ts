@@ -6,22 +6,16 @@ import {ProductListingV2SuccessResponse} from '../../../api/commerce/product-lis
 import {isErrorResponse} from '../../../api/search/search-api-client';
 import {
   CartSection,
-  CategoryFacetSection,
   CommerceContextSection,
-  CommerceFacetSection,
+  CommerceFacetSetSection,
   CommercePaginationSection,
   CommerceSortSection,
   ConfigurationSection,
-  DateFacetSection,
   FacetOrderSection,
-  FacetSection,
-  NumericFacetSection,
   ProductListingV2Section,
   VersionSection,
 } from '../../../state/state-sections';
-import {sortFacets} from '../../../utils/facet-utils';
 import {PreparableAnalyticsAction} from '../../analytics/analytics-utils';
-import {getFacetRequests} from '../../facets/generic/interfaces/generic-facet-request';
 import {logQueryError} from '../../search/search-analytics-actions';
 import {SortBy, SortCriterion} from '../sort/sort';
 import {logProductListingV2Load} from './product-listing-analytics';
@@ -32,12 +26,8 @@ export type StateNeededByFetchProductListingV2 = ConfigurationSection &
   CartSection &
   Partial<
     CommercePaginationSection &
-      CommerceFacetSection &
+      CommerceFacetSetSection &
       CommerceSortSection &
-      FacetSection &
-      NumericFacetSection &
-      CategoryFacetSection &
-      DateFacetSection &
       FacetOrderSection &
       VersionSection
   >;
@@ -98,16 +88,12 @@ export const buildProductListingRequestV2 = (
 };
 
 function getFacets(state: StateNeededByFetchProductListingV2) {
-  return sortFacets(getAllFacets(state), state.facetOrder ?? []);
-}
+  if (!state.facetOrder || !state.commerceFacetSet) {
+    return [];
+  }
 
-function getAllFacets(state: StateNeededByFetchProductListingV2) {
-  return [
-    ...getFacetRequests(state.facetSet ?? {}),
-    ...getFacetRequests(state.numericFacetSet ?? {}),
-    ...getFacetRequests(state.dateFacetSet ?? {}),
-    ...getFacetRequests(state.categoryFacetSet ?? {}),
-  ];
+  return state.facetOrder.map((facetId) => state.commerceFacetSet![facetId].request)
+    .filter((facet) => facet.values.length > 0);
 }
 
 function getSort(

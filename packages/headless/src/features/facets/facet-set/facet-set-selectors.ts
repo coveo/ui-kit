@@ -1,5 +1,4 @@
 import {
-  CommerceFacetSection,
   ProductListingSection,
   SearchSection,
 } from '../../../state/state-sections';
@@ -9,8 +8,7 @@ import {FacetResponse, FacetValue} from './interfaces/response';
 
 export type FacetResponseSection =
   | SearchSection
-  | ProductListingSection
-  | CommerceFacetSection;
+  | ProductListingSection;
 
 export const baseFacetResponseSelector = (
   state: Partial<FacetResponseSection>,
@@ -24,10 +22,6 @@ export const baseFacetResponseSelector = (
     'results' in state.productListing.facets
   ) {
     return state.productListing.facets.results.find(findById);
-  }
-
-  if ('commerceFacets' in state && state.commerceFacets) {
-    return state.commerceFacets.facets.find(findById);
   }
 
   if ('search' in state && state.search) {
@@ -85,10 +79,6 @@ export const facetResponseActiveValuesSelector = (
 export const isFacetLoadingResponseSelector = (state: FacetResponseSection) => {
   if ('productListing' in state) {
     return state.productListing.isLoading;
-  }
-
-  if ('commerceFacets' in state) {
-    return false;
   }
 
   return state.search.isLoading;

@@ -93,15 +93,20 @@ export {
 } from './controllers/commerce/product-listing/sort/headless-product-listing-sort';
 
 export type {
-  Facet,
-  FacetState,
-  FacetOptions,
-  FacetProps,
-} from './controllers/commerce/facets/headless-facet';
-export {buildFacet} from './controllers/commerce/facets/headless-facet';
-
-export type {
   FacetGenerator,
   FacetGeneratorState,
-} from './controllers/commerce/facets/headless-facet-generator';
-export {buildFacetGenerator} from './controllers/commerce/facets/headless-facet-generator';
+} from './controllers/commerce/facets/core/headless-core-facet-generator';
+export type {
+  FacetValue,
+  FacetValueState,
+  FacetProps,
+  FacetOptions,
+  CoreFacet,
+  FacetState
+} from './controllers/commerce/facets/core/headless-core-facet';
+export {buildCoreFacet} from './controllers/commerce/facets/core/headless-core-facet';
+
+export type { ProductListingFacet } from './controllers/commerce/product-listing/facets/headless-product-listing-facet';
+export { buildProductListingFacet } from './controllers/commerce/product-listing/facets/headless-product-listing-facet';
+export type {ProductListingFacetGenerator} from './controllers/commerce/product-listing/facets/headless-product-listing-facet-generator';
+export {buildProductListingFacetGenerator} from './controllers/commerce/product-listing/facets/headless-product-listing-facet-generator';

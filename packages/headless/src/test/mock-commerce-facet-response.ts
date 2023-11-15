@@ -1,17 +1,15 @@
-import {CommerceFacetResponse} from '../api/commerce/product-listings/v2/facet';
+import {FacetResponse} from '../features/commerce/facets/facet-set/interfaces/response';
 
 export function buildMockCommerceFacetResponse(
-  config: Partial<CommerceFacetResponse> = {}
-): CommerceFacetResponse {
+  config: Partial<FacetResponse> = {}
+): FacetResponse {
   return {
     type: 'regular',
     displayName: '',
     isFieldExpanded: false,
-    numberOfResults: 0,
     fromAutoSelect: false,
     facetId: '',
     field: '',
-    indexScore: 0,
     moreValuesAvailable: false,
     values: [],
     ...config,
