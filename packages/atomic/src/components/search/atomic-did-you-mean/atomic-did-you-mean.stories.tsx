@@ -19,4 +19,4 @@ const {defaultModuleExport, exportedStory} = defaultStory(
 );
 
 export default {...defaultModuleExport, title: 'Atomic/DidYouMean'};
-export const DefaultDidYouMean = exportedStory;
+export const Default = exportedStory;

@@ -1,3 +1,4 @@
+import {RecordValue, Schema} from '@coveo/bueno';
 import {CoreEngine} from '../../../app/engine';
 import {
   setContext,
@@ -11,12 +12,34 @@ import {
 } from '../../../features/context/context-state';
 import {ContextSection} from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
+import {validateInitialState} from '../../../utils/validate-payload';
 import {
   buildController,
   Controller,
 } from '../../controller/headless-controller';
 
 export type {ContextPayload, ContextValue};
+
+export interface ContextProps {
+  /**
+   * Represents the initial state of the context.
+   * If provided, it should adhere to the structure defined by the `ContextInitialState` interface.
+   */
+  initialState?: ContextInitialState;
+}
+
+export interface ContextInitialState {
+  /**
+   * Represents the initial key/value pair of the context.
+   */
+  values: ContextPayload;
+}
+
+const initialStateSchema = new Schema<ContextInitialState>({
+  values: new RecordValue({
+    options: {required: false},
+  }),
+});
 
 /**
  * The `Context` controller injects [custom contextual information](https://docs.coveo.com/en/3389/)
@@ -57,7 +80,18 @@ export interface ContextState {
   values: Record<string, ContextValue>;
 }
 
-export function buildCoreContext(engine: CoreEngine): Context {
+/**
+ * Creates a `Context` controller instance
+ *
+ * @param engine - The headless engine.
+ * @param props - The configurable `Context` controller properties.
+ *
+ * @returns a `Context` controller instance.
+ */
+export function buildCoreContext(
+  engine: CoreEngine,
+  props: ContextProps = {}
+): Context {
   if (!loadContextReducers(engine)) {
     throw loadReducerError;
   }
@@ -65,6 +99,17 @@ export function buildCoreContext(engine: CoreEngine): Context {
   const controller = buildController(engine);
   const {dispatch} = engine;
   const getState = () => engine.state;
+
+  const initialState = validateInitialState(
+    engine,
+    initialStateSchema,
+    props.initialState,
+    'buildContext'
+  );
+
+  if (initialState.values) {
+    dispatch(setContext(initialState.values));
+  }
 
   return {
     ...controller,
