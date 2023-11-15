@@ -1,22 +1,27 @@
-import {FacetGenerator} from '../../facets/core/headless-core-facet-generator';
+import {buildCoreFacetGenerator, FacetGenerator, FacetGeneratorOptions} from './headless-core-facet-generator';
 import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
-import {buildProductListingFacetGenerator} from './headless-product-listing-facet-generator';
-import {
-  productListingV2Reducer as productListing
-} from '../../../../features/commerce/product-listing/product-listing-slice';
-import {buildProductListingFacet} from './headless-product-listing-facet';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
+import {buildProductListingFacet} from '../../product-listing/facets/headless-product-listing-facet';
+import {buildCoreFacet} from './headless-core-facet';
+import {facetOrderReducer as facetOrder} from '../../../../features/facets/facet-order/facet-order-slice';
+import {
+  commerceFacetSetReducer as commerceFacetSet
+} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {buildMockCommerceFacetResponse} from '../../../../test/mock-commerce-facet-response';
 
-describe('FacetGenerator', () => {
+describe('facet generator', () => {
   let engine: MockCommerceEngine;
   let facetGenerator: FacetGenerator;
+  let options: FacetGeneratorOptions;
 
   function initFacetGenerator() {
     engine = buildMockCommerceEngine();
 
-    facetGenerator = buildProductListingFacetGenerator(engine);
+    options = {
+      buildFacet: buildCoreFacet
+    }
+    facetGenerator = buildCoreFacetGenerator(engine, options);
   }
 
   beforeEach(() => {
@@ -25,7 +30,8 @@ describe('FacetGenerator', () => {
 
   it('adds correct reducers to engine', () => {
     expect(engine.addReducers).toBeCalledWith({
-      productListing,
+      facetOrder,
+      commerceFacetSet
     });
   });
 
@@ -37,7 +43,7 @@ describe('FacetGenerator', () => {
     // eslint-disable-next-line @cspell/spellchecker
     // TODO CAPI-90, CAPI-91: Add test cases that ensure proper facet controllers are created from the facet.type
     const facet = {
-      facetId: 'some_facet_field'
+      facetId: 'facet_id'
     }
     const mockState = buildMockCommerceState();
     const engine = buildMockCommerceEngine({
@@ -56,7 +62,7 @@ describe('FacetGenerator', () => {
         },
       },
     });
-    facetGenerator = buildProductListingFacetGenerator(engine);
+    facetGenerator = buildCoreFacetGenerator(engine, options);
 
     expect(facetGenerator.state.facets.length).toEqual(1);
     expect(facetGenerator.state.facets[0].state).toEqual(

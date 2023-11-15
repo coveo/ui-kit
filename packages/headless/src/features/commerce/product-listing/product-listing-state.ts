@@ -1,6 +1,7 @@
 import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
 import {ProductRecommendation} from '../../../api/search/search/product-recommendation';
-import {AnyFacetResponse} from '../../../api/commerce/product-listings/v2/facet';
+
+import {AnyFacetResponse} from '../facets/facet-set/interfaces/response';
 
 export interface ProductListingV2State {
   error: CommerceAPIErrorStatusResponse | null;

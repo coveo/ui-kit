@@ -1,40 +1,44 @@
-import {fetchProductListing} from '../../../features/commerce/product-listing/product-listing-actions';
+import {CommerceAppState} from '../../../../state/commerce-app-state';
+import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
+import {buildProductListingFacet, ProductListingFacet} from './headless-product-listing-facet';
+import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
+import {FacetOptions} from '../../facets/core/headless-core-facet';
+import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
+import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
+import {CommerceFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
+import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {
   logFacetDeselect,
   logFacetExclude,
-  logFacetSelect,
-} from '../../../features/facets/facet-set/facet-set-product-listing-v2-analytics-actions';
-import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request';
-import {CommerceAppState} from '../../../state/commerce-app-state';
-import {buildMockCommerceEngine, MockCommerceEngine} from '../../../test';
-import {buildMockCommerceState} from '../../../test/mock-commerce-state';
-import {buildMockFacetRequest} from '../../../test/mock-facet-request';
-import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
-import {buildMockFacetValue} from '../../../test/mock-facet-value';
-import {buildProductListingFacet, Facet, FacetOptions} from './headless-product-listing-facet';
+  logFacetSelect
+} from '../../../../features/facets/facet-set/facet-set-product-listing-v2-analytics-actions';
+import {buildMockCommerceFacetValue} from '../../../../test/mock-commerce-facet-value';
+import {buildMockCommerceFacetResponse} from '../../../../test/mock-commerce-facet-response';
 
-describe('Facet', () => {
-  const facetId: string = 'some_facet_id';
+describe('facet', () => {
+  const facetId: string = 'some_field';
   let options: FacetOptions;
   let state: CommerceAppState;
   let engine: MockCommerceEngine;
-  let facet: Facet;
+  let facet: ProductListingFacet;
 
   function initFacet() {
     engine = buildMockCommerceEngine({state});
     facet = buildProductListingFacet(engine, {options});
   }
 
-  function setFacetRequest(config: Partial<FacetRequest> = {}) {
-    state.facetSet[facetId] = buildMockFacetSlice({
-      request: buildMockFacetRequest({facetId, ...config}),
+  function setFacetRequest(config: Partial<CommerceFacetRequest> = {}) {
+    state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
+      request: buildMockCommerceFacetRequest({facetId, ...config}),
     });
+    state.productListing.facets = [
+      buildMockCommerceFacetResponse({facetId}),
+    ];
   }
 
   beforeEach(() => {
     options = {
-      facetId,
-      field: 'some_field',
+      facetId
     };
 
     state = buildMockCommerceState();
@@ -53,7 +57,7 @@ describe('Facet', () => {
 
   describe('#toggleSelect', () => {
     it('dispatches a fetch product listing', () => {
-      const facetValue = buildMockFacetValue({value: 'TED'});
+      const facetValue = buildMockCommerceFacetValue({value: 'TED'});
       facet.toggleSelect(facetValue);
 
       expect(engine.actions).toContainEqual(
@@ -64,7 +68,7 @@ describe('Facet', () => {
     });
 
     it('when state is "selected", dispatches #logFacetDeselect', () => {
-      const facetValue = buildMockFacetValue({state: 'selected'});
+      const facetValue = buildMockCommerceFacetValue({state: 'selected'});
       facet.toggleSelect(facetValue);
 
       const expectedAnalyticsActionType = logFacetDeselect({
@@ -78,7 +82,7 @@ describe('Facet', () => {
     });
 
     it('when state is "idle", dispatches #logFacetSelect', () => {
-      const facetValue = buildMockFacetValue({state: 'idle'});
+      const facetValue = buildMockCommerceFacetValue({state: 'idle'});
       facet.toggleSelect(facetValue);
 
       const expectedAnalyticsActionType = logFacetSelect({
@@ -94,7 +98,7 @@ describe('Facet', () => {
 
   describe('#toggleExclude', () => {
     it('dispatches a fetch product listing', () => {
-      const facetValue = buildMockFacetValue({value: 'TED'});
+      const facetValue = buildMockCommerceFacetValue({value: 'TED'});
       facet.toggleExclude(facetValue);
 
       expect(engine.actions).toContainEqual(
@@ -105,7 +109,7 @@ describe('Facet', () => {
     });
 
     it('when state is "excluded", dispatches #logFacetDeselect', () => {
-      const facetValue = buildMockFacetValue({state: 'excluded'});
+      const facetValue = buildMockCommerceFacetValue({state: 'excluded'});
       facet.toggleExclude(facetValue);
 
       const expectedAnalyticsActionType = logFacetDeselect({
@@ -119,7 +123,7 @@ describe('Facet', () => {
     });
 
     it('when state is "idle", dispatches #logFacetExclude', () => {
-      const facetValue = buildMockFacetValue({state: 'idle'});
+      const facetValue = buildMockCommerceFacetValue({state: 'idle'});
       facet.toggleExclude(facetValue);
 
       const expectedAnalyticsActionType = logFacetExclude({
@@ -134,7 +138,7 @@ describe('Facet', () => {
   });
 
   it('#toggleSingleSelect dispatches a fetchProductListing', () => {
-    const facetValue = buildMockFacetValue({value: 'TED'});
+    const facetValue = buildMockCommerceFacetValue({value: 'TED'});
     facet.toggleSingleSelect(facetValue);
 
     expect(engine.actions).toContainEqual(
@@ -145,7 +149,7 @@ describe('Facet', () => {
   });
 
   it('#toggleSingleExclude dispatches a fetchProductListing', () => {
-    const facetValue = buildMockFacetValue({value: 'TED'});
+    const facetValue = buildMockCommerceFacetValue({value: 'TED'});
     facet.toggleSingleExclude(facetValue);
 
     expect(engine.actions).toContainEqual(

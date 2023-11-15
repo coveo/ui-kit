@@ -101,9 +101,12 @@ export type {
   FacetValueState,
   FacetProps,
   FacetOptions,
-  Facet,
+  CoreFacet,
   FacetState
 } from './controllers/commerce/facets/core/headless-core-facet';
 export {buildCoreFacet} from './controllers/commerce/facets/core/headless-core-facet';
 
+export type { ProductListingFacet } from './controllers/commerce/product-listing/facets/headless-product-listing-facet';
+export { buildProductListingFacet } from './controllers/commerce/product-listing/facets/headless-product-listing-facet';
+export type {ProductListingFacetGenerator} from './controllers/commerce/product-listing/facets/headless-product-listing-facet-generator';
 export {buildProductListingFacetGenerator} from './controllers/commerce/product-listing/facets/headless-product-listing-facet-generator';

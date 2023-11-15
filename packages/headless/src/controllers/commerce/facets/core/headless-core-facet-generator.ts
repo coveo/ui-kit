@@ -13,7 +13,7 @@ import {
   Controller,
 } from '../../../controller/headless-controller';
 import {
-  Facet,
+  CoreFacet,
   FacetBuilder,
 } from './headless-core-facet';
 
@@ -22,7 +22,7 @@ export interface FacetGenerator extends Controller {
 }
 
 export interface FacetGeneratorState {
-  facets: Facet[];
+  facets: CoreFacet[];
 }
 
 export interface FacetGeneratorOptions {
@@ -36,8 +36,8 @@ export function buildCoreFacetGenerator(engine: CommerceEngine, options: FacetGe
 
   const controller = buildController(engine);
 
-  const createFacet = (field: string) => {
-    const {type} = engine.state.commerceFacetSet[field].request
+  const createFacet = (facetId: string) => {
+    const {type} = engine.state.commerceFacetSet[facetId].request
 
     switch (type) {
       case 'regular':
@@ -46,7 +46,7 @@ export function buildCoreFacetGenerator(engine: CommerceEngine, options: FacetGe
         // TODO CAPI-90, CAPI-91: Use different controllers for different facet types taken from facet.type
         return options.buildFacet(engine, {
           options: {
-            field,
+            facetId,
           }
         });
     }

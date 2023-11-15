@@ -8,7 +8,11 @@ import {loadReducerError} from '../../../../utils/errors';
 import {requiredNonEmptyString, validateOptions} from '../../../../utils/validate-payload';
 import {buildController,} from '../../../controller/headless-controller';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {CoreFacet, CoreFacetState, FacetValue} from '../../../core/facets/facet/headless-core-facet';
+import {
+  CoreFacet as HeadlessCoreFacet,
+  CoreFacetState,
+  FacetValue
+} from '../../../core/facets/facet/headless-core-facet';
 import {Schema} from '@coveo/bueno';
 import {
   commerceFacetResponseSelector,
@@ -20,7 +24,7 @@ import {
   toggleSelectFacetValue,
   updateFacetIsFieldExpanded,
   updateFacetNumberOfValues
-} from '../../../../features/commerce/facets/facet-set/facet-set-actions';
+} from '../../../../features/facets/facet-set/facet-set-actions';
 
 export type {FacetValue, FacetValueState};
 
@@ -35,16 +39,16 @@ export interface FacetProps {
 
 export interface FacetOptions {
   /**
-   * The field whose values you want to display in the facet.
-   */
-  field: string;
+   * A unique identifier for the controller.
+   * */
+  facetId: string;
 }
 
 /**
  * The `Facet` headless controller offers a high-level interface for designing a common facet UI controller.
  */
-export type Facet = Omit<
-  CoreFacet,
+export type CoreFacet = Omit<
+  HeadlessCoreFacet,
   'sortBy' | 'isSortedBy' | 'enable' | 'disable' | 'state'
 > & {
   /**
@@ -58,7 +62,7 @@ export type Facet = Omit<
  */
 export type FacetState = Omit<
   CoreFacetState,
-  'facetId' | 'enabled' | 'sortCriterion'
+  'enabled' | 'sortCriterion'
 > & {
   /** The facet field. */
   field: string;
@@ -71,7 +75,7 @@ export type FacetBuilder = typeof buildCoreFacet;
 export function buildCoreFacet(
   engine: CommerceEngine,
   props: FacetProps
-): Facet {
+): CoreFacet {
   if (!loadFacetReducers(engine)) {
     throw loadReducerError;
   }
@@ -80,13 +84,13 @@ export function buildCoreFacet(
   const controller = buildController(engine);
 
   validateOptions(engine, new Schema<Required<FacetOptions>>({
-    field: requiredNonEmptyString,
+    facetId: requiredNonEmptyString,
   }), props.options, 'buildCoreFacet');
 
-  const field = props.options.field
+  const facetId = props.options.facetId
 
-  const getRequest = () => engine.state.commerceFacetSet[field].request;
-  const getResponse = () => commerceFacetResponseSelector(engine.state, field);
+  const getRequest = () => engine.state.commerceFacetSet[facetId].request;
+  const getResponse = () => commerceFacetResponseSelector(engine.state, facetId)!;
   const getIsLoading = () => isCommerceFacetLoadingResponseSelector(engine.state);
 
   const getNumberOfActiveValues = () => {
@@ -105,15 +109,15 @@ export function buildCoreFacet(
     ...controller,
 
     toggleSelect: (selection: FacetValue) =>
-      dispatch(toggleSelectFacetValue({field, selection})),
+      dispatch(toggleSelectFacetValue({facetId, selection})),
 
     toggleExclude: (selection: FacetValue) =>
-      dispatch(toggleExcludeFacetValue({field, selection})),
+      dispatch(toggleExcludeFacetValue({facetId, selection})),
 
     // Must use a function here to properly support inheritance with `this`.
     toggleSingleSelect: function (selection: FacetValue) {
       if (selection.state === 'idle') {
-        dispatch(deselectAllFacetValues(field));
+        dispatch(deselectAllFacetValues(facetId));
       }
 
       this.toggleSelect(selection);
@@ -122,7 +126,7 @@ export function buildCoreFacet(
     // Must use a function here to properly support inheritance with `this`.
     toggleSingleExclude: function (selection: FacetValue) {
       if (selection.state === 'idle') {
-        dispatch(deselectAllFacetValues(field));
+        dispatch(deselectAllFacetValues(facetId));
       }
 
       this.toggleExclude(selection);
@@ -133,18 +137,16 @@ export function buildCoreFacet(
     isValueExcluded: isFacetValueExcluded,
 
     deselectAll() {
-      dispatch(deselectAllFacetValues(field));
+      dispatch(deselectAllFacetValues(facetId));
     },
 
     showMoreValues() {
       const numberInState = getRequest().numberOfValues;
-      const initialNumberOfValues = getRequest().numberOfValues;
-      const numberToNextMultipleOfConfigured =
-        initialNumberOfValues - (numberInState % initialNumberOfValues);
-      const numberOfValues = numberInState + numberToNextMultipleOfConfigured;
+      const initialNumberOfValues = getResponse()?.values.length ?? 0;
+      const numberOfValues = numberInState + initialNumberOfValues;
 
-      dispatch(updateFacetNumberOfValues({field, numberOfValues}));
-      dispatch(updateFacetIsFieldExpanded({field, isFieldExpanded: true}));
+      dispatch(updateFacetNumberOfValues({facetId, numberOfValues: numberOfValues * 2}));
+      dispatch(updateFacetIsFieldExpanded({facetId, isFieldExpanded: true}));
     },
 
     showLessValues() {
@@ -155,9 +157,9 @@ export function buildCoreFacet(
       );
 
       dispatch(
-        updateFacetNumberOfValues({field, numberOfValues: newNumberOfValues})
+        updateFacetNumberOfValues({facetId, numberOfValues: newNumberOfValues})
       );
-      dispatch(updateFacetIsFieldExpanded({field, isFieldExpanded: false}));
+      dispatch(updateFacetIsFieldExpanded({facetId, isFieldExpanded: false}));
     },
 
     get state() {
@@ -170,8 +172,9 @@ export function buildCoreFacet(
       const canShowMoreValues = response ? response.moreValuesAvailable : false;
 
       return {
-        displayName: response?.displayName ?? '',
-        field,
+        facetId,
+        field: response.field,
+        displayName: response.displayName,
         values,
         isLoading: getIsLoading() ?? false,
         hasActiveValues,

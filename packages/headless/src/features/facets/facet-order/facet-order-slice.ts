@@ -12,7 +12,8 @@ export const facetOrderReducer = createReducer(
         return action.payload.response.facets.map((facet) => facet.facetId);
       })
       .addCase(fetchProductListing.fulfilled, (_, action) => {
-        return action.payload.response.facets.map((facet) => facet.field);
+        const generateFacetId = (facet: {facetId?: string, field: string}) => facet.facetId ?? facet.field;
+        return action.payload.response.facets.map(generateFacetId);
       })
       .addCase(change.fulfilled, (state, action) => {
         return action.payload?.facetOrder ?? state;

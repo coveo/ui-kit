@@ -1,4 +1,4 @@
-import {FacetValueState} from '../../../../features/facets/facet-api/value';
+import {FacetValueState} from '../../../../facets/facet-api/value';
 
 export interface BaseFacetResponse<Value, Type extends FacetType> {
   facetId: string;
@@ -16,7 +16,6 @@ export type FacetResponse = BaseFacetResponse<FacetValue, 'regular'>;
 export type DateRangeFacetResponse = BaseFacetResponse<DateFacetValue, 'dateRange'>;
 export type NumericalRangeFacetResponse = BaseFacetResponse<NumericFacetValue, 'numericalRange'>;
 export type CategoryFacetResponse = BaseFacetResponse<CategoryFacetValue, 'hierarchical'>;
-
 export type FacetType =
   | 'regular'
   | 'dateRange'
@@ -24,7 +23,7 @@ export type FacetType =
   | 'hierarchical';
 
 export interface BaseFacetValue {
-  facetId: string;
+  facetId: string; // TODO(nico): This should be removed from spec
   state: FacetValueState;
   numberOfResults: number;
   isAutoSelected: boolean;
@@ -43,8 +42,17 @@ export interface RangeFacetValue<T> extends BaseFacetValue {
 }
 
 export type DateFacetValue = RangeFacetValue<string>;
-
 export type NumericFacetValue = RangeFacetValue<number>;
+export type AnyFacetValue =
+  | FacetValue
+  | NumericFacetValue
+  | DateFacetValue
+  | CategoryFacetValue;
+export type AnyFacetResponse =
+  | FacetResponse
+  | DateRangeFacetResponse
+  | NumericalRangeFacetResponse
+  | CategoryFacetResponse;
 
 export interface CategoryFacetValue extends BaseFacetValue {
   value: string;
@@ -52,15 +60,3 @@ export interface CategoryFacetValue extends BaseFacetValue {
   isLeafValue: boolean;
   children: CategoryFacetValue[];
 }
-
-export type AnyFacetResponse =
-  | FacetResponse
-  | DateRangeFacetResponse
-  | NumericalRangeFacetResponse
-  | CategoryFacetResponse;
-
-export type AnyFacetValue =
-  | FacetValue
-  | NumericFacetValue
-  | DateFacetValue
-  | CategoryFacetValue;

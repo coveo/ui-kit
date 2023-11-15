@@ -1,11 +1,16 @@
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
 import {createReducer, FacetValueRequest} from '../../../../ssr.index';
 import {getCommerceFacetSetInitialState} from './facet-set-state';
-import {toggleExcludeFacetValue, toggleSelectFacetValue, updateFacetNumberOfValues} from './facet-set-actions';
+import {
+  toggleExcludeFacetValue,
+  toggleSelectFacetValue,
+  updateFacetIsFieldExpanded,
+  updateFacetNumberOfValues
+} from '../../../facets/facet-set/facet-set-actions';
 import {CommerceFacetRequest} from './interfaces/request';
 import { type Draft as WritableDraft } from '@reduxjs/toolkit';
 import {convertFacetValueToRequest} from '../../../facets/facet-set/facet-set-slice';
-import {AnyFacetResponse, FacetResponse} from '../../../../api/commerce/product-listings/v2/facet';
+import {AnyFacetResponse, FacetResponse} from './interfaces/response';
 
 export const commerceFacetSetReducer = createReducer(
   getCommerceFacetSetInitialState(),
@@ -16,18 +21,20 @@ export const commerceFacetSetReducer = createReducer(
         const facets = action.payload.response.facets;
         facets.forEach((facetResponse) =>
           mutateStateFromFacetResponse(
-            state[facetResponse.facetId]?.request,
+            state[facetResponse.facetId ?? facetResponse.field]?.request,
             facetResponse
           )
         );
       })
       .addCase(toggleSelectFacetValue, (state, action) => {
-        const {field, selection} = action.payload;
-        const facetRequest = state[field]?.request;
+        const {facetId, selection} = action.payload;
+        const facetRequest = state[facetId]?.request;
 
         if (!facetRequest) {
           return;
         }
+
+        facetRequest.preventAutoSelect = true;
 
         const existingValue = facetRequest.values.find(
           (req) => req.value === selection.value
@@ -37,12 +44,15 @@ export const commerceFacetSetReducer = createReducer(
           return;
         }
 
+        facetRequest.preventAutoSelect = true;
+
         const isSelected = existingValue.state === 'selected';
         existingValue.state = isSelected ? 'idle' : 'selected';
+        facetRequest.freezeCurrentValues = true;
       })
       .addCase(toggleExcludeFacetValue, (state, action) => {
-        const {field, selection} = action.payload;
-        const facetRequest = state[field]?.request;
+        const {facetId, selection} = action.payload;
+        const facetRequest = state[facetId]?.request;
 
         if (!facetRequest) {
           return;
@@ -58,15 +68,26 @@ export const commerceFacetSetReducer = createReducer(
 
         const isExcluded = existingValue.state === 'excluded';
         existingValue.state = isExcluded ? 'idle' : 'excluded';
+        facetRequest.freezeCurrentValues = true;
       })
       .addCase(updateFacetNumberOfValues, (state, action) => {
-        const {field, numberOfValues} = action.payload;
+        const {facetId, numberOfValues} = action.payload;
 
-        if (!state[field]?.request) {
+        if (!state[facetId]?.request) {
           return;
         }
 
-        state[field].request.numberOfValues = numberOfValues;
+        state[facetId].request.numberOfValues = numberOfValues;
+      })
+      .addCase(updateFacetIsFieldExpanded, (state, action) => {
+        const {facetId, isFieldExpanded} = action.payload;
+        const facetRequest = state[facetId]?.request;
+
+        if (!facetRequest) {
+          return;
+        }
+
+        facetRequest.isFieldExpanded = isFieldExpanded;
       });
   }
 );
@@ -86,6 +107,8 @@ function mutateStateFromFacetResponse(
     // TODO(nico): Ensure facet values work with our api
     convertFacetValueToRequest
   );
+  facetRequest.freezeCurrentValues = false;
+  facetRequest.preventAutoSelect = false;
 }
 
 function insertNewValue(

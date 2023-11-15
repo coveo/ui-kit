@@ -1,5 +1,5 @@
 import {CommerceFacetSetSection, ProductListingV2Section} from '../../../../state/state-sections';
-import {AnyFacetResponse, FacetResponse} from '../../../../api/commerce/product-listings/v2/facet';
+import {AnyFacetResponse, FacetResponse} from './interfaces/response';
 
 
 function isFacetResponse(
@@ -11,12 +11,12 @@ function isFacetResponse(
 
 function baseCommerceFacetResponseSelector(
   state: ProductListingV2Section,
-  field: string
+  facetId: string
 ) {
-  const findByField = (response: { field: string }) => response.field === field;
+  const findById = (response: { facetId: string }) => response.facetId === facetId;
 
   if ('productListing' in state) {
-    return state.productListing.facets.find(findByField)
+    return state.productListing.facets.find(findById)
   }
 
   return undefined;
@@ -24,9 +24,9 @@ function baseCommerceFacetResponseSelector(
 
 export const commerceFacetResponseSelector = (
   state: ProductListingV2Section & CommerceFacetSetSection,
-  field: string
+  facetId: string
 ) => {
-  const response = baseCommerceFacetResponseSelector(state, field);
+  const response = baseCommerceFacetResponseSelector(state, facetId);
   if (isFacetResponse(state, response)) {
     return response;
   }
@@ -43,6 +43,3 @@ export const isCommerceFacetLoadingResponseSelector = (
 
   return undefined;
 };
-
-export type CommerceFacetResponseSelector = typeof commerceFacetResponseSelector;
-export type CommerceFacetIsLoadingSelector = typeof isCommerceFacetLoadingResponseSelector;

@@ -9,11 +9,13 @@ import {
   logFacetShowLess,
   logFacetShowMore,
 } from '../../../../features/facets/facet-set/facet-set-product-listing-analytics-actions';
-import {buildCoreFacet, Facet, FacetProps} from '../../facets/core/headless-core-facet';
+import {buildCoreFacet, CoreFacet, FacetProps} from '../../facets/core/headless-core-facet';
 import {FacetValue} from '../../../core/facets/facet/headless-core-facet';
 import {loadReducerError} from '../../../../utils/errors';
 import {productListingReducer as productListing} from '../../../../features/product-listing/product-listing-slice';
 import {ProductListingV2Section} from '../../../../state/state-sections';
+
+export type ProductListingFacet = CoreFacet;
 
 /**
  * @internal
@@ -25,7 +27,7 @@ import {ProductListingV2Section} from '../../../../state/state-sections';
  * @param props - The configurable `AutomaticFacet` properties used internally.
  * @returns An `AutomaticFacet` controller instance.
  * */
-export function buildProductListingFacet(engine: CommerceEngine, props: FacetProps): Facet {
+export function buildProductListingFacet(engine: CommerceEngine, props: FacetProps): ProductListingFacet {
   if (!loadFacetReducers(engine)) {
     throw loadReducerError;
   }
@@ -33,7 +35,7 @@ export function buildProductListingFacet(engine: CommerceEngine, props: FacetPro
   const {dispatch} = engine;
   const coreController = buildCoreFacet(engine, props);
 
-  const field = props.options.field;
+  const facetId = props.options.facetId;
 
   return {
     ...coreController,
@@ -43,7 +45,7 @@ export function buildProductListingFacet(engine: CommerceEngine, props: FacetPro
       dispatch(fetchProductListing());
       dispatch(
         getProductListingAnalyticsActionForToggleFacetSelect(
-          field,
+          facetId,
           selection
         )
       );
@@ -54,7 +56,7 @@ export function buildProductListingFacet(engine: CommerceEngine, props: FacetPro
       dispatch(fetchProductListing());
       dispatch(
         getProductListingAnalyticsActionForToggleFacetExclude(
-          field,
+          facetId,
           selection
         )
       );
@@ -63,20 +65,20 @@ export function buildProductListingFacet(engine: CommerceEngine, props: FacetPro
     deselectAll() {
       coreController.deselectAll();
       dispatch(fetchProductListing());
-      dispatch(logFacetClearAll(field));
+      dispatch(logFacetClearAll(facetId));
     },
 
     showMoreValues() {
       coreController.showMoreValues();
       dispatch(fetchProductListing()).then(() =>
-        dispatch(logFacetShowMore(field))
+        dispatch(logFacetShowMore(facetId))
       );
     },
 
     showLessValues() {
       coreController.showLessValues();
       dispatch(fetchProductListing()).then(() =>
-        dispatch(logFacetShowLess(field))
+        dispatch(logFacetShowLess(facetId))
       );
     },
 

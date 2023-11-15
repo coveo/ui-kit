@@ -5,7 +5,8 @@ import {
 import {ProductRecommendation} from '../../../search/search/product-recommendation';
 import {Pagination} from './pagination';
 import {Sort} from './sort';
-import {AnyFacetResponse} from './facet';
+
+import {AnyFacetResponse} from '../../../../features/commerce/facets/facet-set/interfaces/response';
 
 export interface ProductListingV2SuccessResponse {
   responseId: string;
