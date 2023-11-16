@@ -29,6 +29,11 @@ import {
 } from './common/constants.mjs';
 import {removeWriteAccessRestrictions} from './lock-master.mjs';
 
+if (!process.env.INIT_CWD) {
+  throw new Error('Should be called using npm run-script');
+}
+process.chdir(process.env.INIT_CWD);
+
 // Commit, tag and push
 (async () => {
   const octokit = new Octokit({
