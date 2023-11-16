@@ -52,6 +52,7 @@
     "node": ">=14.0.0"
   },
   "devDependencies": {
+    "@coveo/release": "1.0.0",
     "@ckeditor/jsdoc-plugins": "39.2.1",
     "@lwc/compiler": "3.8.0",
     "@lwc/eslint-plugin-lwc": "1.6.4",

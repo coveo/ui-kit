@@ -68,6 +68,7 @@
     "undici": "5.27.2"
   },
   "devDependencies": {
+    "@coveo/release": "1.0.0",
     "@microsoft/api-extractor": "7.38.3",
     "@microsoft/api-extractor-model": "7.28.2",
     "@microsoft/tsdoc": "0.14.2",
