@@ -23,27 +23,7 @@ import {IconButton} from '../../../common/iconButton';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
- * The `atomic-generated-answer-feedback-modal` component displays a modal allowing the user to send feedback regarding an irrelevant generated answer.
- *
- * @slot header - Lets you set a custom header element for the modal.
- * @slot body - Lets you set the form content.
- * @slot footer - Lets you set the modal footer.
- *
- * @part modal-header - The modal header element.
- * @part close-container - The close button container element.
- * @part close-button - The close button element.
- * @part close-icon - The close button icon element.
- * @part form - The feedback form.
- * @part reason-title - The header of the reasons list.
- * @part reason - Each of the reason list items.
- * @part reason-radio - The radio button for each of the reasons.
- * @part reason-label - The label for each of the reasons.
- * @part details-title - The header of the details input box.
- * @part details-input - The details input box.
- * @part modalFooter - The modal footer section.
- * @part buttons - The modal footer buttons.
- * @part cancel-button - The button to cancel feedback.
- * @part submit-button - The button to submit feedback.
+ * @internal
  */
 @Component({
   tag: 'atomic-generated-answer-feedback-modal',
@@ -57,11 +37,11 @@ export class AtomicGeneratedAnswerFeedbackModal
   @Element() public host!: HTMLElement;
 
   /**
-   * Indicates whether the modal is opened.
+   * Indicates whether the modal is open.
    */
   @Prop({reflect: true, mutable: true}) isOpen = false;
   /**
-   * A `GeneratedAnswer` controller instance. It is used when user interacts with the modal.
+   * A `GeneratedAnswer` controller instance. It is used when the user interacts with the modal.
    */
   @Prop({reflect: true, mutable: true}) generatedAnswer!: GeneratedAnswer;
 

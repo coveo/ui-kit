@@ -117,28 +117,6 @@ export declare interface AtomicCategoryFacet extends Components.AtomicCategoryFa
 
 
 @ProxyCmp({
-  inputs: ['citation', 'index', 'interactiveCitation', 'sendHoverEndEvent']
-})
-@Component({
-  selector: 'atomic-citation',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['citation', 'index', 'interactiveCitation', 'sendHoverEndEvent'],
-})
-export class AtomicCitation {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicCitation extends Components.AtomicCitation {}
-
-
-@ProxyCmp({
   inputs: ['allowedValues', 'customSort', 'dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'resultsMustMatch', 'sortCriteria', 'withSearch']
 })
 @Component({
@@ -421,32 +399,6 @@ export class AtomicGeneratedAnswer {
 
 
 export declare interface AtomicGeneratedAnswer extends Components.AtomicGeneratedAnswer {}
-
-
-@ProxyCmp({
-  inputs: ['generatedAnswer', 'isOpen']
-})
-@Component({
-  selector: 'atomic-generated-answer-feedback-modal',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['generatedAnswer', 'isOpen'],
-})
-export class AtomicGeneratedAnswerFeedbackModal {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-    proxyOutputs(this, this.el, ['feedbackSent']);
-  }
-}
-
-
-export declare interface AtomicGeneratedAnswerFeedbackModal extends Components.AtomicGeneratedAnswerFeedbackModal {
-
-  feedbackSent: EventEmitter<CustomEvent<any>>;
-}
 
 
 @ProxyCmp({

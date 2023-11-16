@@ -7,7 +7,7 @@ const debounceDurationBeforeHoverMs = 200;
  * The `QuanticCitation` component renders an individual citation.
  * @fires CustomEvent#click
  * @fires CustomEvent#citationhover
- * @category Search
+ * @category Internal
  * @example
  * <c-quantic-citation citation={citation} onclick={handleClick} onhover={handleHover}></c-quantic-citation>
  */

@@ -33,7 +33,8 @@ import {SourceCitations} from './source-citations';
 import {TypingLoader} from './typing-loader';
 
 /**
- * The `atomic-generated-answer` component displays a generated answer to a particular query.
+ * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
+ * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
  *
  * @part container - The container displaying the generated answer.
  * @part header-label - The header of the generated answer container.
@@ -44,7 +45,7 @@ import {TypingLoader} from './typing-loader';
  * @part generated-text - The text of the generated answer.
  * @part citations-label - The header of the citations list.
  * @part rephrase-label - The header of the rephrase options.
- * @part rephrase-button - The button for each of the rephrase options (e.g., step-by-step instructions, bullet-point list, summary).
+ * @part rephrase-button - The button for each of the rephrase options (step-by-step instructions, bulleted list, and summary).
  */
 @Component({
   tag: 'atomic-generated-answer',
@@ -84,9 +85,9 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
    * The answer style to apply when the component first loads.
    * Options:
    *   - `default`: Generates the answer without additional formatting instructions.
-   *   - `bullet`: Requests the answer to be generated in bullet-points.
-   *   - `step`: Requests the answer to be generated in step-by-step instructions.
-   *   - `concise`: Requests the answer to be generated as concisely as possible.
+   *   - `bullet`: Requests that the answer is formatted as a bulleted list.
+   *   - `step`: Requests that the answer is formatted as a series of step-by-step instructions.
+   *   - `concise`: Requests that the generated answer is as concise as possible.
    */
   @Prop() answerStyle: GeneratedAnswerStyle = 'default';
 

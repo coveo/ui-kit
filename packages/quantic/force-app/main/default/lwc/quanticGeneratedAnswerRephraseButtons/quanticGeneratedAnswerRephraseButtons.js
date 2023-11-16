@@ -8,7 +8,7 @@ import {LightningElement, api} from 'lwc';
 
 /**
  * The `QuanticGeneratedAnswerRephraseButtons` component displays a set of rephrase buttons allowing the modification of the answer style of the generated answer.
- * @category Search
+ * @category Internal
  * @example
  * <c-quantic-generated-answer-rephrase-buttons value={value}"></c-quantic-generated-answer-rephrase-buttons>
  */
