@@ -1,7 +1,13 @@
 import citations from '@salesforce/label/c.quantic_Citations';
 import {LightningElement, api} from 'lwc';
+import {
+  registerComponentForInit,
+  initializeWithHeadless,
+  getHeadlessBundle,
+} from 'c/quanticHeadlessLoader';
 
 /** @typedef {import("coveo").GeneratedAnswerCitation} GeneratedAnswerCitation */
+/** @typedef {import("coveo").SearchEngine} SearchEngine */
 
 /**
  * The `QuanticSourceCitations` component renders the citations used to generate the answer in the quantic generated answer component.
@@ -14,6 +20,7 @@ export default class QuanticSourceCitations extends LightningElement {
     citations,
   };
 
+  @api engineId;
   /**
    * The citations used in the generated answer.
    * @api
@@ -33,6 +40,27 @@ export default class QuanticSourceCitations extends LightningElement {
    */
   @api citationHoverHandler;
 
+  headless;
+  engine;
+  
+
+  connectedCallback() {
+    registerComponentForInit(this, this.engineId);
+  }
+
+  renderedCallback() {
+    initializeWithHeadless(this, this.engineId, this.initialize);
+  }
+
+  /**
+   * @param {SearchEngine} engine
+   */
+  initialize = (engine) => {
+    this.headless = getHeadlessBundle(this.engineId);
+    this.engine = engine;
+    // this.generatedAnswer = this.buildInteractiveCitation(engine);
+  };
+
   /**
    * Returns the indexed citations.
    * @returns {Object}
@@ -43,6 +71,14 @@ export default class QuanticSourceCitations extends LightningElement {
         ...citation,
         index: index + 1,
       },
+      interactiveCitation: this.headless?.buildInteractiveCitation(
+        this.engine,
+        {
+          options: {
+            citation,
+          },
+        }
+      ),
       handleCitationClick: () => {
         this.citationClickHandler?.(citation.id);
       },

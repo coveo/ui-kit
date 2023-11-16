@@ -1,4 +1,8 @@
 import {LightningElement, api} from 'lwc';
+import {LinkUtils} from 'c/quanticUtils';
+
+
+/** @typedef {import("coveo").InteractiveCitation} InteractiveCitation */
 
 const minimumTooltipDisplayDurationMs = 1000;
 const debounceDurationBeforeHoverMs = 200;
@@ -18,6 +22,11 @@ export default class QuanticCitation extends LightningElement {
    * The id of the citation.
    */
   @api citation;
+  /**
+   * @api
+   * @type {InteractiveCitation}
+   */
+  @api interactiveCitation;
 
   /** @type {Object} */
   timeout;
@@ -59,6 +68,27 @@ export default class QuanticCitation extends LightningElement {
     this.tooltipIsDisplayed = false;
     this.shouldShowTooltipAfterDelay = false;
     this.tooltipComponent.hideTooltip();
+  }
+
+  /**
+   * Binds the inline links to the proper actions.
+   * @returns {void}
+   */
+  bindAnalyticsToSmartSnippetInlineLinks() {
+      const linkInfo = {
+        linkText: 'link?.innerText',
+        linkURL: 'link.href',
+      };
+
+      const removeBindings = LinkUtils.bindAnalyticsToLink(this.link, this.interactiveCitation);
+      // this.bindingsRemovalFunctions.push(removeBindings);
+  }
+
+  /**
+   * @returns {Object}
+   */
+  get link() {
+    return this.template.querySelector(`a`);
   }
 
   /**
