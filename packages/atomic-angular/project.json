@@ -22,7 +22,7 @@
     "release:phase1": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "npx -p=@coveo/release bump",
+        "command": "npx --offline -p=@coveo/release bump",
         "cwd": "packages/atomic-angular/projects/atomic-angular"
       }
     }

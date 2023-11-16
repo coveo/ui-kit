@@ -19,10 +19,10 @@
     "build:bundles": "node esbuild.mjs",
     "build:definitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
     "clean": "rimraf -rf dist/*",
-    "release:phase1": "npx -p=@coveo/release bump",
+    "release:phase1": "npx --offline -p=@coveo/release bump",
     "release:phase2": "npm run publish:npm",
     "release:phase5": "npm run publish:npm",
-    "publish:npm": "npx -p=@coveo/release npm-publish",
+    "publish:npm": "npx --offline -p=@coveo/release npm-publish",
     "promote:npm:latest": "node ../../scripts/deploy/update-npm-tag.mjs latest",
     "e2e": "npm run e2e:saml",
     "e2e:saml": "vite manual-e2e/saml/"
