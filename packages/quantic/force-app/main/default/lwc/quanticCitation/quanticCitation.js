@@ -21,6 +21,7 @@ export default class QuanticCitation extends LightningElement {
    */
   @api citation;
   /**
+   * An interface containing actions for triggering desirable side effects on the citation link.
    * @api
    * @type {InteractiveCitation}
    */
@@ -40,7 +41,7 @@ export default class QuanticCitation extends LightningElement {
   isInitialRender = true;
 
   renderedCallback() {
-    if(this.isInitialRender){
+    if (this.isInitialRender) {
       this.bindAnalyticsToCitationLink();
       this.isInitialRender = false;
     }
@@ -98,7 +99,7 @@ export default class QuanticCitation extends LightningElement {
    * @returns {Object}
    */
   get link() {
-    return this.template.querySelector(`a`);
+    return this.template.querySelector('.citation__link');
   }
 
   /**
