@@ -123,7 +123,7 @@ export class SmartSnippetFeedbackModalCommon {
           part="details-title"
           class="font-bold text-on-background text-lg"
         >
-          {this.props.getBindings().i18n.t('smart-snippet-feedback-details')}
+          {this.props.getBindings().i18n.t('details')}
         </legend>
         <textarea
           part="details-input"
@@ -172,7 +172,7 @@ export class SmartSnippetFeedbackModalCommon {
           type="submit"
           form={this.props.formId}
         >
-          {this.props.getBindings().i18n.t('smart-snippet-feedback-send')}
+          {this.props.getBindings().i18n.t('feedback-send')}
         </Button>
       </div>
     );

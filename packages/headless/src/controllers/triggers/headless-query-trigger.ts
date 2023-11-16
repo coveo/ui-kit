@@ -78,11 +78,11 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
       dispatch(updateIgnoreQueryTrigger(modification()));
       dispatch(updateQuery({q: originalQuery()}));
       dispatch(
-        executeSearch(
-          logUndoTriggerQuery({
+        executeSearch({
+          legacy: logUndoTriggerQuery({
             undoneQuery: modification(),
-          })
-        )
+          }),
+        })
       );
     },
   };

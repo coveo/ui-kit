@@ -187,7 +187,7 @@ describe('question answering slice', () => {
       executeSearch.fulfilled(
         buildMockSearch({response: firstSearchResponse}),
         '',
-        null as never
+        {legacy: null as never}
       )
     );
 
@@ -204,7 +204,7 @@ describe('question answering slice', () => {
       executeSearch.fulfilled(
         buildMockSearch({response: secondSearchResponse}),
         '',
-        null as never
+        {legacy: null as never}
       )
     );
 
@@ -218,7 +218,7 @@ describe('question answering slice', () => {
       executeSearch.fulfilled(
         buildMockSearch({response: firstSearchResponse}),
         '',
-        null as never
+        {legacy: null as never}
       )
     );
 
@@ -236,7 +236,7 @@ describe('question answering slice', () => {
       executeSearch.fulfilled(
         buildMockSearch({response: secondSearchResponse}),
         '',
-        null as never
+        {legacy: null as never}
       )
     );
 
@@ -254,7 +254,7 @@ describe('question answering slice', () => {
       executeSearch.fulfilled(
         buildMockSearch({response: firstSearchResponse}),
         '',
-        null as never
+        {legacy: null as never}
       )
     );
 
@@ -285,7 +285,7 @@ describe('question answering slice', () => {
       executeSearch.fulfilled(
         buildMockSearch({response: secondSearchResponse}),
         '',
-        null as never
+        {legacy: null as never}
       )
     );
 

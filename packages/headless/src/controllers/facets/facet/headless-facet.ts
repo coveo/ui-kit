@@ -109,17 +109,23 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
       select: (value) => {
         dispatch(updateFacetOptions());
         dispatch(
-          executeSearch(
-            logFacetSelect({facetId: getFacetId(), facetValue: value.rawValue})
-          )
+          executeSearch({
+            legacy: logFacetSelect({
+              facetId: getFacetId(),
+              facetValue: value.rawValue,
+            }),
+          })
         );
       },
       exclude: (value) => {
         dispatch(updateFacetOptions());
         dispatch(
-          executeSearch(
-            logFacetExclude({facetId: getFacetId(), facetValue: value.rawValue})
-          )
+          executeSearch({
+            legacy: logFacetExclude({
+              facetId: getFacetId(),
+              facetValue: value.rawValue,
+            }),
+          })
         );
       },
       isForFieldSuggestions: false,
@@ -137,30 +143,38 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
     toggleSelect(selection) {
       coreController.toggleSelect(selection);
       dispatch(
-        executeSearch(
-          getAnalyticsActionForToggleFacetSelect(getFacetId(), selection)
-        )
+        executeSearch({
+          legacy: getAnalyticsActionForToggleFacetSelect(
+            getFacetId(),
+            selection
+          ),
+        })
       );
     },
 
     toggleExclude(selection) {
       coreController.toggleExclude(selection);
       dispatch(
-        executeSearch(
-          getAnalyticsActionForToggleFacetExclude(getFacetId(), selection)
-        )
+        executeSearch({
+          legacy: getAnalyticsActionForToggleFacetExclude(
+            getFacetId(),
+            selection
+          ),
+        })
       );
     },
 
     deselectAll() {
       coreController.deselectAll();
-      dispatch(executeSearch(logFacetClearAll(getFacetId())));
+      dispatch(executeSearch({legacy: logFacetClearAll(getFacetId())}));
     },
 
     sortBy(criterion: FacetSortCriterion) {
       coreController.sortBy(criterion);
       dispatch(
-        executeSearch(logFacetUpdateSort({facetId: getFacetId(), criterion}))
+        executeSearch({
+          legacy: logFacetUpdateSort({facetId: getFacetId(), criterion}),
+        })
       );
     },
 
@@ -170,12 +184,12 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
 
     showMoreValues() {
       coreController.showMoreValues();
-      dispatch(fetchFacetValues(logFacetShowMore(getFacetId())));
+      dispatch(fetchFacetValues({legacy: logFacetShowMore(getFacetId())}));
     },
 
     showLessValues() {
       coreController.showLessValues();
-      dispatch(fetchFacetValues(logFacetShowLess(getFacetId())));
+      dispatch(fetchFacetValues({legacy: logFacetShowLess(getFacetId())}));
     },
 
     get state() {
