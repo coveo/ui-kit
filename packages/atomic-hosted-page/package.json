@@ -26,10 +26,10 @@
     "e2e:watch": "cypress open --browser chrome --e2e",
     "e2e": "cypress run --browser chrome",
     "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts",
-    "release:phase1": "npx -p=@coveo/release bump",
+    "release:phase1": "npx --offline -p=@coveo/release bump",
     "release:phase2": "npm run publish:npm",
     "release:phase5": "npm run publish:npm",
-    "publish:npm": "npx -p=@coveo/release npm-publish",
+    "publish:npm": "npx --offline -p=@coveo/release npm-publish",
     "promote:npm:latest": "node ../../scripts/deploy/update-npm-tag.mjs latest"
   },
   "dependencies": {
