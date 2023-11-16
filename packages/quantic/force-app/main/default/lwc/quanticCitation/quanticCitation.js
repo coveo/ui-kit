@@ -1,6 +1,5 @@
-import {LightningElement, api} from 'lwc';
 import {LinkUtils} from 'c/quanticUtils';
-
+import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").InteractiveCitation} InteractiveCitation */
 
@@ -36,6 +35,16 @@ export default class QuanticCitation extends LightningElement {
   shouldShowTooltipAfterDelay = false;
   /** @type {boolean} */
   tooltipIsDisplayed = false;
+  /** @type {function} */
+  removeBindings;
+
+  renderedCallback() {
+    this.bindAnalyticsToCitationLink();
+  }
+
+  disconnectedCallback() {
+    this.removeBindings?.();
+  }
 
   handleMouseEnter() {
     this.shouldShowTooltipAfterDelay = true;
@@ -71,17 +80,14 @@ export default class QuanticCitation extends LightningElement {
   }
 
   /**
-   * Binds the inline links to the proper actions.
+   * Binds the citation link to the proper actions.
    * @returns {void}
    */
-  bindAnalyticsToSmartSnippetInlineLinks() {
-      const linkInfo = {
-        linkText: 'link?.innerText',
-        linkURL: 'link.href',
-      };
-
-      const removeBindings = LinkUtils.bindAnalyticsToLink(this.link, this.interactiveCitation);
-      // this.bindingsRemovalFunctions.push(removeBindings);
+  bindAnalyticsToCitationLink() {
+    this.removeBindings = LinkUtils.bindAnalyticsToLink(
+      this.link,
+      this.interactiveCitation
+    );
   }
 
   /**

@@ -1,25 +1,29 @@
 import citations from '@salesforce/label/c.quantic_Citations';
-import {LightningElement, api} from 'lwc';
 import {
   registerComponentForInit,
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
+import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").GeneratedAnswerCitation} GeneratedAnswerCitation */
-/** @typedef {import("coveo").SearchEngine} SearchEngine */
 
 /**
  * The `QuanticSourceCitations` component renders the citations used to generate the answer in the quantic generated answer component.
  * @category Internal
  * @example
- * <c-quantic-source-citations citations={citations} citation-click-handler={citationClickHandler}></c-quantic-source-citations>
+ * <c-quantic-source-citations engine-id={engineId} citations={citations} citation-click-handler={citationClickHandler}></c-quantic-source-citations>
  */
 export default class QuanticSourceCitations extends LightningElement {
   labels = {
     citations,
   };
 
+  /**
+   * The ID of the engine instance the component registers to.
+   * @api
+   * @type {string}
+   */
   @api engineId;
   /**
    * The citations used in the generated answer.
@@ -40,9 +44,10 @@ export default class QuanticSourceCitations extends LightningElement {
    */
   @api citationHoverHandler;
 
+  /** @type {AnyHeadless} */
   headless;
   engine;
-  
+  isInitialized = false
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -52,13 +57,11 @@ export default class QuanticSourceCitations extends LightningElement {
     initializeWithHeadless(this, this.engineId, this.initialize);
   }
 
-  /**
-   * @param {SearchEngine} engine
-   */
   initialize = (engine) => {
+    console.log('test-------------');
     this.headless = getHeadlessBundle(this.engineId);
     this.engine = engine;
-    // this.generatedAnswer = this.buildInteractiveCitation(engine);
+    this.isInitialized = true;
   };
 
   /**
@@ -66,7 +69,7 @@ export default class QuanticSourceCitations extends LightningElement {
    * @returns {Object}
    */
   get indexedCitations() {
-    return this.citations.map((citation, index) => ({
+    return this.citations?.map((citation, index) => ({
       data: {
         ...citation,
         index: index + 1,
@@ -95,6 +98,6 @@ export default class QuanticSourceCitations extends LightningElement {
    * Indicates whether or not to display citations.
    */
   get shouldDisplayCitations() {
-    return !!this.citations?.length;
+    return this.isInitialized && !!this.citations?.length;
   }
 }
