@@ -14,7 +14,7 @@ runs:
       shell: bash
     - run: |
         echo "${{ env.SFDX_AUTH_JWT_KEY }}" > server.key
-        npx --no-install sf org login jwt \
+        ./isolated-sfdx/node_modules/.bin/sf org login jwt \
           --client-id ${{ env.SFDX_AUTH_CLIENT_ID }} \
           --jwt-key-file server.key \
           --username ${{ env.SFDX_AUTH_JWT_USERNAME }} \
