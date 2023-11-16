@@ -10,13 +10,16 @@ import {
   requiredNonEmptyString,
   validatePayload,
 } from '../../utils/validate-payload';
-import {AnalyticsAsyncThunk, SearchAction} from '../analytics/analytics-utils';
+import {
+  SearchAction as LegacySearchAction,
+  makeBasicNewSearchAnalyticsAction,
+} from '../analytics/analytics-utils';
+import {SearchPageEvents} from '../analytics/search-action-cause';
 import {
   deselectAllBreadcrumbs,
   deselectAllNonBreadcrumbs,
 } from '../breadcrumb/breadcrumb-actions';
 import {updateFacetAutoSelection} from '../facets/generic/facet-actions';
-import {logInstantResultsSearch} from '../instant-results/instant-result-analytics-actions';
 import {
   FetchInstantResultsActionCreatorPayload,
   FetchInstantResultsThunkReturn,
@@ -29,12 +32,59 @@ import {
 } from '../query/query-actions';
 import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request';
 import {
+  legacyExecuteSearch,
+  legacyFetchInstantResults,
+  legacyFetchMoreResults,
+  legacyFetchPage,
+} from './legacy/search-actions';
+import {
+  AnalyticsAction,
   AsyncSearchThunkProcessor,
   StateNeededByExecuteSearch,
 } from './search-actions-thunk-processor';
-import {logFetchMoreResults} from './search-analytics-actions';
 import {MappedSearchRequest, mapSearchRequest} from './search-mappings';
 import {buildSearchRequest} from './search-request';
+
+export interface SearchAction<
+  State extends StateNeededByExecuteSearch = StateNeededByExecuteSearch,
+  Payload extends Object = {},
+> {
+  actionCause: string;
+  getEventExtraPayload: (state: State) => Payload;
+}
+
+type SingleOrArray<T> = T | T[];
+
+export const buildSearchAction = <
+  State extends StateNeededByExecuteSearch = StateNeededByExecuteSearch,
+  Payload extends Object = {},
+>(
+  actionCause: string,
+  getEventExtraPayload: SingleOrArray<
+    ({
+      state,
+      payload,
+    }: {
+      state: StateNeededByExecuteSearch;
+      payload: Partial<Payload>;
+    }) => void
+  >
+) => {
+  const getEventExtraPayloadFunctionArray = Array.isArray(getEventExtraPayload)
+    ? getEventExtraPayload
+    : [getEventExtraPayload];
+  const combinedGetEventExtraPayload = (state: State) => {
+    const payload = {};
+    for (const payloadTransformer of getEventExtraPayloadFunctionArray) {
+      payloadTransformer({state, payload});
+    }
+    return payload;
+  };
+  return {
+    actionCause,
+    getEventExtraPayload: combinedGetEventExtraPayload,
+  };
+};
 
 export type {StateNeededByExecuteSearch} from './search-actions-thunk-processor';
 
@@ -50,7 +100,7 @@ export interface ExecuteSearchThunkReturn {
   /** The original query that was performed when an automatic correction is executed.*/
   originalQuery: string;
   /** The analytics action to log after the query. */
-  analyticsAction: AnalyticsAsyncThunk;
+  analyticsAction: AnalyticsAction;
 }
 
 interface PrepareForSearchWithQueryOptions {
@@ -85,57 +135,65 @@ export const prepareForSearchWithQuery = createAsyncThunk<
   dispatch(updatePage(1));
 });
 
+export interface TransitiveSearchAction {
+  legacy: LegacySearchAction;
+  next?: SearchAction;
+}
+
 export const executeSearch = createAsyncThunk<
   ExecuteSearchThunkReturn,
-  SearchAction,
+  TransitiveSearchAction,
   AsyncThunkSearchOptions<StateNeededByExecuteSearch>
->('search/executeSearch', async (searchAction: SearchAction, config) => {
-  const state = config.getState();
-  addEntryInActionsHistory(state);
+>(
+  'search/executeSearch',
+  async (searchAction: TransitiveSearchAction, config) => {
+    const state = config.getState();
+    if (
+      state.configuration.analytics.analyticsMode === 'legacy' ||
+      !searchAction.next
+    ) {
+      return legacyExecuteSearch(state, config, searchAction.legacy);
+    }
+    addEntryInActionsHistory(state);
+    const analyticsAction = buildSearchReduxAction(searchAction.next, state);
 
-  const {analyticsClientMiddleware, preprocessRequest, logger} = config.extra;
-  const {description: eventDescription} = await searchAction.prepare({
-    getState: () => config.getState(),
-    analyticsClientMiddleware,
-    preprocessRequest,
-    logger,
-  });
+    const request = await buildSearchRequest(state, analyticsAction);
 
-  const request = await buildSearchRequest(state, eventDescription);
+    const processor = new AsyncSearchThunkProcessor<
+      ReturnType<typeof config.rejectWithValue>
+    >({...config, analyticsAction});
 
-  const processor = new AsyncSearchThunkProcessor<
-    ReturnType<typeof config.rejectWithValue>
-  >({...config, analyticsAction: searchAction});
+    const fetched = await processor.fetchFromAPI(request, {
+      origin: 'mainSearch',
+    });
 
-  const fetched = await processor.fetchFromAPI(request, {origin: 'mainSearch'});
-
-  return await processor.process(fetched);
-});
+    return await processor.process(fetched);
+  }
+);
 
 export const fetchPage = createAsyncThunk<
   ExecuteSearchThunkReturn,
-  SearchAction,
+  TransitiveSearchAction,
   AsyncThunkSearchOptions<StateNeededByExecuteSearch>
->('search/fetchPage', async (searchAction: SearchAction, config) => {
+>('search/fetchPage', async (searchAction: TransitiveSearchAction, config) => {
   const state = config.getState();
   addEntryInActionsHistory(state);
 
-  const {analyticsClientMiddleware, preprocessRequest, logger} = config.extra;
-  const {description: eventDescription} = await searchAction.prepare({
-    getState: () => config.getState(),
-    analyticsClientMiddleware,
-    preprocessRequest,
-    logger,
-  });
+  if (
+    state.configuration.analytics.analyticsMode === 'legacy' ||
+    !searchAction.next
+  ) {
+    return legacyFetchPage(state, config, searchAction.legacy);
+  }
 
   const processor = new AsyncSearchThunkProcessor<
     ReturnType<typeof config.rejectWithValue>
   >({
     ...config,
-    analyticsAction: searchAction,
+    analyticsAction: searchAction.next,
   });
 
-  const request = await buildSearchRequest(state, eventDescription);
+  const request = await buildSearchRequest(state, searchAction.next);
   const fetched = await processor.fetchFromAPI(request, {origin: 'mainSearch'});
 
   return await processor.process(fetched);
@@ -147,23 +205,23 @@ export const fetchMoreResults = createAsyncThunk<
   AsyncThunkSearchOptions<StateNeededByExecuteSearch>
 >('search/fetchMoreResults', async (_, config) => {
   const state = config.getState();
+  if (state.configuration.analytics.analyticsMode === 'legacy') {
+    return legacyFetchMoreResults(config, state);
+  }
 
-  const {analyticsClientMiddleware, preprocessRequest, logger} = config.extra;
-  const {description: eventDescription} = await logFetchMoreResults().prepare({
-    getState: () => config.getState(),
-    analyticsClientMiddleware,
-    preprocessRequest,
-    logger,
-  });
+  const analyticsAction = makeBasicNewSearchAnalyticsAction(
+    SearchPageEvents.pagerScrolling,
+    config.getState
+  );
 
   const processor = new AsyncSearchThunkProcessor<
     ReturnType<typeof config.rejectWithValue>
   >({
     ...config,
-    analyticsAction: logFetchMoreResults(),
+    analyticsAction,
   });
 
-  const request = await buildFetchMoreRequest(state, eventDescription);
+  const request = await buildFetchMoreRequest(state, analyticsAction);
   const fetched = await processor.fetchFromAPI(request, {origin: 'mainSearch'});
 
   return await processor.process(fetched);
@@ -171,30 +229,32 @@ export const fetchMoreResults = createAsyncThunk<
 
 export const fetchFacetValues = createAsyncThunk<
   ExecuteSearchThunkReturn,
-  SearchAction,
+  TransitiveSearchAction,
   AsyncThunkSearchOptions<StateNeededByExecuteSearch>
->('search/fetchFacetValues', async (searchAction: SearchAction, config) => {
-  const state = config.getState();
+>(
+  'search/fetchFacetValues',
+  async (searchAction: TransitiveSearchAction, config) => {
+    const state = config.getState();
+    if (
+      state.configuration.analytics.analyticsMode === 'legacy' ||
+      !searchAction.next
+    ) {
+      return legacyExecuteSearch(state, config, searchAction.legacy);
+    }
+    const analyticsAction = buildSearchReduxAction(searchAction.next, state);
 
-  const {analyticsClientMiddleware, preprocessRequest, logger} = config.extra;
-  const {description: eventDescription} = await searchAction.prepare({
-    getState: () => config.getState(),
-    analyticsClientMiddleware,
-    preprocessRequest,
-    logger,
-  });
+    const processor = new AsyncSearchThunkProcessor<
+      ReturnType<typeof config.rejectWithValue>
+    >({...config, analyticsAction});
 
-  const processor = new AsyncSearchThunkProcessor<
-    ReturnType<typeof config.rejectWithValue>
-  >({...config, analyticsAction: searchAction});
+    const request = await buildFetchFacetValuesRequest(state, analyticsAction);
+    const fetched = await processor.fetchFromAPI(request, {
+      origin: 'facetValues',
+    });
 
-  const request = await buildFetchFacetValuesRequest(state, eventDescription);
-  const fetched = await processor.fetchFromAPI(request, {
-    origin: 'facetValues',
-  });
-
-  return await processor.process(fetched);
-});
+    return await processor.process(fetched);
+  }
+);
 
 export const fetchInstantResults = createAsyncThunk<
   FetchInstantResultsThunkReturn,
@@ -203,6 +263,10 @@ export const fetchInstantResults = createAsyncThunk<
 >(
   'search/fetchInstantResults',
   async (payload: FetchInstantResultsActionCreatorPayload, config) => {
+    const state = config.getState();
+    if (state.configuration.analytics.analyticsMode === 'legacy') {
+      return legacyFetchInstantResults(payload, config);
+    }
     validatePayload(payload, {
       id: requiredNonEmptyString,
       q: requiredNonEmptyString,
@@ -213,18 +277,17 @@ export const fetchInstantResults = createAsyncThunk<
       cacheTimeout: new NumberValue(),
     });
     const {q, maxResultsPerQuery} = payload;
-    const state = config.getState();
-
+    const analyticsAction = makeBasicNewSearchAnalyticsAction(
+      SearchPageEvents.searchboxAsYouType,
+      config.getState
+    );
     const processor = new AsyncSearchThunkProcessor<
       ReturnType<typeof config.rejectWithValue>
-    >(
-      {...config, analyticsAction: logInstantResultsSearch()},
-      (modification) => {
-        config.dispatch(
-          updateInstantResultsQuery({q: modification, id: payload.id})
-        );
-      }
-    );
+    >({...config, analyticsAction}, (modification) => {
+      config.dispatch(
+        updateInstantResultsQuery({q: modification, id: payload.id})
+      );
+    });
 
     const request = await buildInstantResultSearchRequest(
       state,
@@ -304,3 +367,12 @@ const addEntryInActionsHistory = (state: StateNeededByExecuteSearch) => {
     });
   }
 };
+
+const buildSearchReduxAction = (
+  action: SearchAction,
+  state: StateNeededByExecuteSearch
+) => ({
+  customData: action.getEventExtraPayload(state),
+  actionCause: action.actionCause,
+  type: action.actionCause,
+});

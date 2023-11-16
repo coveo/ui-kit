@@ -6,4 +6,4 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
   {}
 );
 export default {...defaultModuleExport, title: 'Atomic/ResultList/ResultDate'};
-export const DefaultResultDate = exportedStory;
+export const Default = exportedStory;

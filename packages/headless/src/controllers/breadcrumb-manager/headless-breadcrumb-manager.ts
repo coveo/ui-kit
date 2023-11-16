@@ -138,7 +138,7 @@ export function buildBreadcrumbManager(
         dispatch(
           updateFreezeCurrentValues({facetId, freezeCurrentValues: false})
         );
-        dispatch(executeSearch(analyticsAction));
+        dispatch(executeSearch({legacy: analyticsAction}));
       },
       executeToggleExclude: ({facetId, selection}) => {
         const analyticsAction = logFacetBreadcrumb({
@@ -149,7 +149,7 @@ export function buildBreadcrumbManager(
         dispatch(
           updateFreezeCurrentValues({facetId, freezeCurrentValues: false})
         );
-        dispatch(executeSearch(analyticsAction));
+        dispatch(executeSearch({legacy: analyticsAction}));
       },
       facetValuesSelector: facetResponseActiveValuesSelector,
     };
@@ -165,11 +165,11 @@ export function buildBreadcrumbManager(
       facetSet: getState().numericFacetSet,
       executeToggleSelect: (payload) => {
         dispatch(toggleSelectNumericFacetValue(payload));
-        dispatch(executeSearch(logNumericFacetBreadcrumb(payload)));
+        dispatch(executeSearch({legacy: logNumericFacetBreadcrumb(payload)}));
       },
       executeToggleExclude: (payload) => {
         dispatch(toggleExcludeNumericFacetValue(payload));
-        dispatch(executeSearch(logNumericFacetBreadcrumb(payload)));
+        dispatch(executeSearch({legacy: logNumericFacetBreadcrumb(payload)}));
       },
       facetValuesSelector: numericFacetActiveValuesSelector,
     };
@@ -183,11 +183,11 @@ export function buildBreadcrumbManager(
         facetSet: getState().dateFacetSet,
         executeToggleSelect: (payload) => {
           dispatch(toggleSelectDateFacetValue(payload));
-          dispatch(executeSearch(logDateFacetBreadcrumb(payload)));
+          dispatch(executeSearch({legacy: logDateFacetBreadcrumb(payload)}));
         },
         executeToggleExclude: (payload) => {
           dispatch(toggleExcludeDateFacetValue(payload));
-          dispatch(executeSearch(logDateFacetBreadcrumb(payload)));
+          dispatch(executeSearch({legacy: logDateFacetBreadcrumb(payload)}));
         },
         facetValuesSelector: dateFacetActiveValuesSelector,
       };
@@ -213,14 +213,14 @@ export function buildBreadcrumbManager(
       deselect: () => {
         dispatch(deselectAllCategoryFacetValues(facetId));
         dispatch(
-          executeSearch(
-            logCategoryFacetBreadcrumb({
+          executeSearch({
+            legacy: logCategoryFacetBreadcrumb({
               categoryFacetPath: path.map(
                 (categoryFacetValue) => categoryFacetValue.value
               ),
               categoryFacetId: facetId,
-            })
-          )
+            }),
+          })
         );
       },
     };
@@ -260,7 +260,7 @@ export function buildBreadcrumbManager(
         } else if (value.state === 'excluded') {
           dispatch(toggleExcludeStaticFilterValue({id, value}));
         }
-        dispatch(executeSearch(analytics));
+        dispatch(executeSearch({legacy: analytics}));
       },
     };
   };
@@ -304,7 +304,7 @@ export function buildBreadcrumbManager(
             selection,
           })
         );
-        dispatch(executeSearch(analyticsAction));
+        dispatch(executeSearch({legacy: analyticsAction}));
       },
     };
   };
@@ -337,7 +337,7 @@ export function buildBreadcrumbManager(
 
     deselectAll: () => {
       controller.deselectAll();
-      dispatch(executeSearch(logClearBreadcrumbs()));
+      dispatch(executeSearch({legacy: logClearBreadcrumbs()}));
     },
   };
 }

@@ -169,7 +169,7 @@ export function buildStaticFilter(
       const analytics = getAnalyticsActionForToggledValue(id, value);
 
       dispatch(toggleSelectStaticFilterValue({id, value}));
-      dispatch(executeSearch(analytics));
+      dispatch(executeSearch({legacy: analytics}));
     },
 
     toggleSingleSelect(value: StaticFilterValue) {
@@ -180,14 +180,14 @@ export function buildStaticFilter(
       }
 
       dispatch(toggleSelectStaticFilterValue({id, value}));
-      dispatch(executeSearch(analytics));
+      dispatch(executeSearch({legacy: analytics}));
     },
 
     toggleExclude(value: StaticFilterValue) {
       const analytics = getAnalyticsActionForToggledValue(id, value);
 
       dispatch(toggleExcludeStaticFilterValue({id, value}));
-      dispatch(executeSearch(analytics));
+      dispatch(executeSearch({legacy: analytics}));
     },
 
     toggleSingleExclude(value: StaticFilterValue) {
@@ -198,14 +198,14 @@ export function buildStaticFilter(
       }
 
       dispatch(toggleExcludeStaticFilterValue({id, value}));
-      dispatch(executeSearch(analytics));
+      dispatch(executeSearch({legacy: analytics}));
     },
 
     deselectAll() {
       const analytics = logStaticFilterClearAll({staticFilterId: id});
 
       dispatch(deselectAllStaticFilterValues(id));
-      dispatch(executeSearch(analytics));
+      dispatch(executeSearch({legacy: analytics}));
     },
 
     isValueSelected(value: StaticFilterValue) {

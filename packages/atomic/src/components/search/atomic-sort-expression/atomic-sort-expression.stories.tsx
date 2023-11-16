@@ -15,4 +15,4 @@ export default {
   ...defaultModuleExport,
   title: 'Atomic/SortDropdown/SortExpression',
 };
-export const DefaultSortExpression = exportedStory;
+export const Default = exportedStory;

@@ -211,7 +211,7 @@ export function buildGeneratedAnswer(
     },
 
     retry() {
-      dispatch(executeSearch(logRetryGeneratedAnswer()));
+      dispatch(executeSearch({legacy: logRetryGeneratedAnswer()}));
     },
 
     like() {
@@ -252,7 +252,9 @@ export function buildGeneratedAnswer(
 
     rephrase(responseFormat: GeneratedResponseFormat) {
       dispatch(updateResponseFormat(responseFormat));
-      dispatch(executeSearch(logRephraseGeneratedAnswer(responseFormat)));
+      dispatch(
+        executeSearch({legacy: logRephraseGeneratedAnswer(responseFormat)})
+      );
     },
 
     show() {

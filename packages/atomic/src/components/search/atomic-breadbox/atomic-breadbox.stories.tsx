@@ -32,4 +32,4 @@ const {defaultModuleExport, exportedStory} = defaultStory(
 );
 
 export default {...defaultModuleExport, title: 'Atomic/Breadbox'};
-export const DefaultBreadbox = exportedStory;
+export const Default = exportedStory;

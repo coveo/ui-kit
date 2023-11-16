@@ -146,7 +146,7 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
         return;
       }
 
-      const action = executeSearch(analyticsEvent);
+      const action = executeSearch({legacy: analyticsEvent});
       engine.dispatch(action);
     },
 
