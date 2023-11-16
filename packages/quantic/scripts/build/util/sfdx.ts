@@ -12,14 +12,16 @@ export interface SfdxResponse {
 
 /**
  * Executes the given sfdx function and returns the result as an object.
- * @param command The command to be executed, starting with force:.
+ * @param command The command to be executed.
  * @returns {SfdxResponse} The result of the command, if successful.
  * @throws {Error} The error thrown by the sfdx command if unsuccessful.
  */
 export function sfdx<T = SfdxResponse>(command: string): Promise<T> {
   return new Promise<T>((resolve, reject) => {
     exec(
-      `"${path.resolve('../../node_modules/.bin/sfdx')}" ${command} --json`,
+      `"${path.resolve(
+        './isolated-sfdx/node_modules/.bin/sf'
+      )}" ${command} --json`,
       {
         cwd: process.cwd(),
         env: process.env,
@@ -36,8 +38,7 @@ export function sfdx<T = SfdxResponse>(command: string): Promise<T> {
             jsonOutput = JSON.parse(strip(stdout));
             if (error) {
               console.error({
-                error,
-                jsonOutput,
+                sfdxErrorStdout: stdout,
               });
               reject(jsonOutput || error);
             }

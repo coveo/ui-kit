@@ -95,11 +95,9 @@ describe('FacetSearch slice', () => {
 
   it('#executeFacetSearch.fulfilled calls #handleFacetSearchSetClear', () => {
     jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchSetClear');
-    const action = executeSearch.fulfilled(
-      {} as ExecuteSearchThunkReturn,
-      '',
-      null as never
-    );
+    const action = executeSearch.fulfilled({} as ExecuteSearchThunkReturn, '', {
+      legacy: null as never,
+    });
     facetSearchSetReducer(state, action);
 
     expect(

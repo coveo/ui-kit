@@ -16,4 +16,4 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   }
 );
 export default {...defaultModuleExport, title: 'Atomic/RatingRangeFacet'};
-export const DefaultRatingRangeFacet = exportedStory;
+export const Default = exportedStory;

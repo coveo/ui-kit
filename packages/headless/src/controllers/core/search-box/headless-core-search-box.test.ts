@@ -68,6 +68,7 @@ describe('headless CoreSearchBox', () => {
       options,
       executeSearchActionCreator: executeSearch,
       fetchQuerySuggestionsActionCreator: fetchQuerySuggestions,
+      isNextAnalyticsReady: true,
     };
 
     initState();

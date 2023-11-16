@@ -17,6 +17,11 @@ import {
   removeWriteAccessRestrictions,
 } from './lock-master.mjs';
 
+if (!process.env.INIT_CWD) {
+  throw new Error('Should be called using npm run-script');
+}
+process.chdir(process.env.INIT_CWD);
+
 const isPrerelease = process.env.IS_PRERELEASE === 'true';
 const PATH = '.';
 const GIT_SSH_REMOTE = 'deploy';

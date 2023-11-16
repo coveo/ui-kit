@@ -22,7 +22,7 @@ export type {Tab, TabProps, TabState, TabInitialState, TabOptions};
 export function buildTab(engine: SearchEngine, props: TabProps): Tab {
   const {dispatch} = engine;
   const tab = buildCoreTab(engine, props);
-  const search = () => dispatch(executeSearch(logInterfaceChange()));
+  const search = () => dispatch(executeSearch({legacy: logInterfaceChange()}));
 
   return {
     ...tab,

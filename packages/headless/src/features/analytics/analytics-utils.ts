@@ -84,6 +84,17 @@ export type AnalyticsAsyncThunk<
     ConfigurationSection = StateNeededBySearchAnalyticsProvider,
 > = AsyncThunk<void, void, AsyncThunkAnalyticsOptions<StateNeeded>>;
 
+export function makeBasicNewSearchAnalyticsAction(
+  actionCause: string,
+  getState: () => StateNeededBySearchAnalyticsProvider
+) {
+  return {
+    ...new SearchAnalyticsProvider(getState).getBaseMetadata(),
+    actionCause,
+    type: actionCause,
+  };
+}
+
 export interface PreparedAnalyticsAction<
   StateNeeded extends
     ConfigurationSection = StateNeededBySearchAnalyticsProvider,

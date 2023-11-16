@@ -1,5 +1,4 @@
 import {RecommendationEngineConfiguration} from '@coveo/headless/recommendation';
-import {h} from '@stencil/core';
 import {Args} from '@storybook/api';
 import defaultStory from '../default-story';
 import {DefaultStoryAdvancedConfig} from '../default-story-shared';

@@ -765,7 +765,9 @@ describe('category facet slice', () => {
       const search = buildMockSearch();
       search.response.facets = facets;
 
-      return executeSearch.fulfilled(search, '', logSearchEvent({evt: 'foo'}));
+      return executeSearch.fulfilled(search, '', {
+        legacy: logSearchEvent({evt: 'foo'}),
+      });
     }
 
     it('when an invalid path is requested, it sets the request #currentValues to an empty array', () => {
@@ -830,11 +832,9 @@ describe('category facet slice', () => {
       const search = buildMockSearch();
       search.response.facets = facets;
 
-      return fetchFacetValues.fulfilled(
-        search,
-        '',
-        logSearchEvent({evt: 'foo'})
-      );
+      return fetchFacetValues.fulfilled(search, '', {
+        legacy: logSearchEvent({evt: 'foo'}),
+      });
     }
 
     it('when an valid path is requested, it does not adjust the #currentValues of the request', () => {

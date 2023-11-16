@@ -163,7 +163,9 @@ describe('date-facet-set slice', () => {
     const search = buildMockSearch();
     dateFacetSetReducer(
       state,
-      executeSearch.fulfilled(search, '', logSearchEvent({evt: 'foo'}))
+      executeSearch.fulfilled(search, '', {
+        legacy: logSearchEvent({evt: 'foo'}),
+      })
     );
 
     expect(
