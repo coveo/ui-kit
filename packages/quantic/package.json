@@ -36,10 +36,10 @@
     "publish:sfdx": "../../node_modules/.bin/ts-node scripts/build/create-package.ts --remove-translations",
     "promote:sfdx": "npm run publish:sfdx -- --promote",
     "promote:sfdx:ci": "npm run publish:sfdx -- --promote --ci",
-    "release:phase1": "npx -p=@coveo/release bump",
+    "release:phase1": "npx --offline -p=@coveo/release bump",
     "release:phase2": "npm run publish:npm",
     "release:phase5": "npm run publish:npm",
-    "publish:npm": "npx -p=@coveo/release npm-publish",
+    "publish:npm": "npx --offline -p=@coveo/release npm-publish",
     "promote:npm:latest": "node ../../scripts/deploy/update-npm-tag.mjs latest",
     "preinstall": "node scripts/npm/check-sfdx-project.js",
     "postinstall": "node scripts/npm/setup-quantic.js"
@@ -52,6 +52,7 @@
     "node": ">=14.0.0"
   },
   "devDependencies": {
+    "@coveo/release": "1.0.0",
     "@ckeditor/jsdoc-plugins": "39.2.1",
     "@lwc/compiler": "3.8.0",
     "@lwc/eslint-plugin-lwc": "1.6.4",
