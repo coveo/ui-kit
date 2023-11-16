@@ -1,3 +1,4 @@
+import {ItemClick} from '@coveo/relay-event-types';
 import {RecommendationAnalyticsProvider} from '../../api/analytics/recommendations-analytics';
 import {Result} from '../../api/search/search/result';
 import {
@@ -31,14 +32,14 @@ export const logRecommendationOpen = (result: Result): ClickAction =>
       new RecommendationAnalyticsProvider(getState),
 
     analyticsType: 'itemClick',
-    analyticsPayloadBuilder: (state) => {
+    analyticsPayloadBuilder: (state): ItemClick => {
       const docInfo = partialDocumentInformation(result, state);
       const docId = documentIdentifier(result);
       return {
-        searchUid: state.search?.response.searchUid,
+        searchUid: state.search?.response.searchUid ?? '',
         position: docInfo.documentPosition,
         itemMetadata: {
-          uniqueFieldIdentifier: docId.contentIDKey,
+          uniqueFieldName: docId.contentIDKey,
           uniqueFieldValue: docId.contentIDValue,
           title: docInfo.documentTitle,
           author: docInfo.documentAuthor,
