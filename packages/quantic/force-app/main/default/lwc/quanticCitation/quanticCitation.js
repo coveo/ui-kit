@@ -8,7 +8,6 @@ const debounceDurationBeforeHoverMs = 200;
 
 /**
  * The `QuanticCitation` component renders an individual citation.
- * @fires CustomEvent#click
  * @fires CustomEvent#citationhover
  * @category Internal
  * @example
@@ -37,9 +36,14 @@ export default class QuanticCitation extends LightningElement {
   tooltipIsDisplayed = false;
   /** @type {function} */
   removeBindings;
+  /** @type {boolean} */
+  isInitialRender = true;
 
   renderedCallback() {
-    this.bindAnalyticsToCitationLink();
+    if(this.isInitialRender){
+      this.bindAnalyticsToCitationLink();
+      this.isInitialRender = false;
+    }
   }
 
   disconnectedCallback() {

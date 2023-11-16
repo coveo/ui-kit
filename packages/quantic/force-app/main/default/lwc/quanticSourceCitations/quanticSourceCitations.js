@@ -36,12 +36,6 @@ export default class QuanticSourceCitations extends LightningElement {
    * @api
    * @type {function}
    */
-  @api citationClickHandler;
-  /**
-   * The function to be executed when a citation is clicked.
-   * @api
-   * @type {function}
-   */
   @api citationHoverHandler;
 
   /** @type {AnyHeadless} */
@@ -58,7 +52,6 @@ export default class QuanticSourceCitations extends LightningElement {
   }
 
   initialize = (engine) => {
-    console.log('test-------------');
     this.headless = getHeadlessBundle(this.engineId);
     this.engine = engine;
     this.isInitialized = true;
@@ -82,9 +75,6 @@ export default class QuanticSourceCitations extends LightningElement {
           },
         }
       ),
-      handleCitationClick: () => {
-        this.citationClickHandler?.(citation.id);
-      },
       handleCitationHover: (event) => {
         this.citationHoverHandler?.(
           citation.id,
