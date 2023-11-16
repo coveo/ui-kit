@@ -41,7 +41,7 @@ export default class QuanticSourceCitations extends LightningElement {
   /** @type {AnyHeadless} */
   headless;
   engine;
-  isInitialized = false
+  isInitialized = false;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -62,7 +62,7 @@ export default class QuanticSourceCitations extends LightningElement {
    * @returns {Object}
    */
   get indexedCitations() {
-    return this.citations?.map((citation, index) => ({
+    return this.citations.map((citation, index) => ({
       data: {
         ...citation,
         index: index + 1,
