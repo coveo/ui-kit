@@ -91,3 +91,6 @@ export {
   SortBy,
   SortDirection,
 } from './controllers/commerce/product-listing/sort/headless-product-listing-sort';
+
+export type {Search} from './controllers/commerce/search/headless-search';
+export {buildSearch} from './controllers/commerce/search/headless-search';

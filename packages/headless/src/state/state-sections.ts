@@ -9,6 +9,8 @@ import {CartState} from '../features/commerce/context/cart/cart-state';
 import {CommerceContextState} from '../features/commerce/context/context-state';
 import {CommercePaginationState} from '../features/commerce/pagination/pagination-state';
 import {ProductListingV2State} from '../features/commerce/product-listing/product-listing-state';
+import {CommerceQueryState} from '../features/commerce/query/query-state';
+import {CommerceSearchState} from '../features/commerce/search/search-state';
 import {CommerceSortState} from '../features/commerce/sort/sort-state';
 import {ConfigurationState} from '../features/configuration/configuration-state';
 import {ContextState} from '../features/context/context-state';
@@ -324,6 +326,20 @@ export interface ProductListingV2Section {
    * The information related to the product listing endpoint.
    */
   productListing: ProductListingV2State;
+}
+
+export interface CommerceSearchSection {
+  /**
+   * The information related to the commerce search endpoint.
+   */
+  commerceSearch: CommerceSearchState;
+}
+
+export interface CommerceQuerySection {
+  /**
+   * The expressions that constitute the current commerce query.
+   */
+  commerceQuery: CommerceQueryState;
 }
 
 export interface StructuredSortSection {

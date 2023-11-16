@@ -1,21 +1,17 @@
-import {
-  HTTPContentType,
-  HttpMethods,
-  PlatformClientCallOptions,
-} from '../../../platform-client';
-import {BaseParam} from '../../../platform-service-params';
+import {PlatformClientCallOptions} from '../../platform-client';
+import {BaseParam} from '../../platform-service-params';
 import {
   ClientIdParam,
   ContextParam,
-  LanguageParam,
   CurrencyParam,
+  LanguageParam,
   SelectedFacetsParam,
   SelectedPageParam,
   SelectedSortParam,
   TrackingIdParam,
-} from '../../commerce-api-params';
+} from '../commerce-api-params';
 
-export type ProductListingV2Request = BaseParam &
+export type CommerceAPIRequest = BaseParam &
   TrackingIdParam &
   LanguageParam &
   CurrencyParam &
@@ -25,14 +21,14 @@ export type ProductListingV2Request = BaseParam &
   SelectedPageParam &
   SelectedSortParam;
 
-export const buildProductListingV2Request = (req: ProductListingV2Request) => {
+export const buildRequest = (req: CommerceAPIRequest, path: string) => {
   return {
-    ...baseProductListingV2Request(req, 'POST', 'application/json'),
+    ...baseRequest(req, path),
     requestParams: prepareRequestParams(req),
   };
 };
 
-const prepareRequestParams = (req: ProductListingV2Request) => {
+const prepareRequestParams = (req: CommerceAPIRequest) => {
   const {clientId, context, language, currency, page, selectedFacets, sort} =
     req;
   return {
@@ -46,21 +42,20 @@ const prepareRequestParams = (req: ProductListingV2Request) => {
   };
 };
 
-export const baseProductListingV2Request = (
-  req: ProductListingV2Request,
-  method: HttpMethods,
-  contentType: HTTPContentType
+export const baseRequest = (
+  req: CommerceAPIRequest,
+  path: string
 ): Pick<
   PlatformClientCallOptions,
   'accessToken' | 'method' | 'contentType' | 'url' | 'origin'
 > => {
   const {url, organizationId, accessToken, trackingId} = req;
-  const baseUrl = `${url}/rest/organizations/${organizationId}/trackings/${trackingId}/commerce/v2/listing`;
+  const baseUrl = `${url}/rest/organizations/${organizationId}/trackings/${trackingId}/commerce/v2/${path}`;
 
   return {
     accessToken,
-    method,
-    contentType,
+    method: 'POST',
+    contentType: 'application/json',
     url: baseUrl,
     origin: 'commerceApiFetch',
   };

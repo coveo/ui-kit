@@ -6,10 +6,14 @@ import {
   ProductListingV2Section,
   VersionSection,
   CommerceSortSection,
+  CommerceSearchSection,
+  CommerceQuerySection,
 } from './state-sections';
 
 export type CommerceAppState = ConfigurationSection &
   ProductListingV2Section &
+  CommerceSearchSection &
+  CommerceQuerySection &
   CommercePaginationSection &
   CommerceSortSection &
   CommerceContextSection &

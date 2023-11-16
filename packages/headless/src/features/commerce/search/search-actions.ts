@@ -1,26 +1,31 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
 import {isErrorResponse} from '../../../api/search/search-api-client';
+import {CommerceQuerySection} from '../../../state/state-sections';
 import {logQueryError} from '../../search/search-analytics-actions';
 import {
   buildCommerceAPIRequest,
   QueryCommerceAPIThunkReturn,
   StateNeededByQueryCommerceAPI,
 } from '../common/actions';
-import {logProductListingV2Load} from './product-listing-analytics';
+import {logProductListingV2Load} from '../product-listing/product-listing-analytics';
 
-export const fetchProductListing = createAsyncThunk<
+export type StateNeededByExecuteSearch = StateNeededByQueryCommerceAPI &
+  CommerceQuerySection;
+
+export const executeSearch = createAsyncThunk<
   QueryCommerceAPIThunkReturn,
   void,
-  AsyncThunkCommerceOptions<StateNeededByQueryCommerceAPI>
+  AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
 >(
-  'commerce/productListing/fetch',
+  'commerce/search/executeSearch',
   async (_action, {getState, dispatch, rejectWithValue, extra}) => {
     const state = getState();
     const {apiClient} = extra;
-    const fetched = await apiClient.getProductListing(
-      buildCommerceAPIRequest(state)
-    );
+    const fetched = await apiClient.search({
+      ...buildCommerceAPIRequest(state),
+      query: state.commerceQuery?.query,
+    });
 
     if (isErrorResponse(fetched)) {
       dispatch(logQueryError(fetched.error));

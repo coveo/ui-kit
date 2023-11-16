@@ -6,6 +6,8 @@ import {cartReducer} from '../../features/commerce/context/cart/cart-slice';
 import {contextReducer} from '../../features/commerce/context/context-slice';
 import {paginationReducer} from '../../features/commerce/pagination/pagination-slice';
 import {productListingV2Reducer} from '../../features/commerce/product-listing/product-listing-slice';
+import {queryReducer} from '../../features/commerce/query/query-slice';
+import {commerceSearchReducer} from '../../features/commerce/search/search-slice';
 import {sortReducer} from '../../features/commerce/sort/sort-slice';
 import {CommerceAppState} from '../../state/commerce-app-state';
 import {CommerceThunkExtraArguments} from '../commerce-thunk-extra-arguments';
@@ -26,9 +28,11 @@ export type {CommerceEngineConfiguration};
 
 const commerceEngineReducers = {
   productListing: productListingV2Reducer,
+  commerceSearch: commerceSearchReducer,
   commercePagination: paginationReducer,
   commerceSort: sortReducer,
   commerceContext: contextReducer,
+  commerceQuery: queryReducer,
   cart: cartReducer,
 };
 type CommerceEngineReducers = typeof commerceEngineReducers;
