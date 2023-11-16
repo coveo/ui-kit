@@ -26,7 +26,6 @@ textarea.searchbox__input {
 }
 
 .searchbox_floating-container {
-  position: absolute;
   width: 100%;
   background-color: var(--lwc-colorBackgroundAlt, rgb(255, 255, 255));
   border-radius: 0.25rem;
