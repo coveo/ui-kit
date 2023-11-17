@@ -144,7 +144,6 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
 
     toggleSelect(selection) {
       coreController.toggleSelect(selection);
-      // have to define a function similar to getAnalyticsActionForToggleFacetSelect for getting the custom data
       dispatch(
         executeSearch({
           legacy: getAnalyticsActionForToggleFacetSelect(
