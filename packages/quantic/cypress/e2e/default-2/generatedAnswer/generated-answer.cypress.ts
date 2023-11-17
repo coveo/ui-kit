@@ -197,6 +197,23 @@ describe('quantic-generated-answer', () => {
             });
             Actions.clickFeedbackDoneButton();
           });
+
+          scope('when trying to open the feedback modal again', () => {
+            Actions.dislikeGeneratedAnswer();
+            Expect.displayFeedbackModal(false);
+          });
+
+          scope(
+            'when trying to open the feedback modal after rephrasing the generated answer',
+            () => {
+              const secondStreamId = crypto.randomUUID();
+              mockSearchWithGeneratedAnswer(secondStreamId);
+              mockStreamResponse(secondStreamId, genQaMessageTypePayload);
+              Actions.clickRephraseButton(rephraseOptions[0]);
+              Actions.dislikeGeneratedAnswer();
+              Expect.displayFeedbackModal(true);
+            }
+          );
         });
 
         it('should display the toggle generated answer button', () => {

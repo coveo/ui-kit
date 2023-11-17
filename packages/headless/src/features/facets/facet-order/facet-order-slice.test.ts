@@ -26,7 +26,7 @@ describe('facet-order slice', () => {
           }),
         }),
         '',
-        null as never
+        {legacy: null as never}
       )
     );
   }

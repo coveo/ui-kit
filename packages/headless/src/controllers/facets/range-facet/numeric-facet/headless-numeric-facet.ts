@@ -62,22 +62,27 @@ export function buildNumericFacet(
 
     deselectAll() {
       coreController.deselectAll();
-      dispatch(executeSearch(logFacetClearAll(getFacetId())));
+      dispatch(executeSearch({legacy: logFacetClearAll(getFacetId())}));
     },
 
     sortBy(criterion: RangeFacetSortCriterion) {
       coreController.sortBy(criterion);
       dispatch(
-        executeSearch(logFacetUpdateSort({facetId: getFacetId(), criterion}))
+        executeSearch({
+          legacy: logFacetUpdateSort({facetId: getFacetId(), criterion}),
+        })
       );
     },
 
     toggleSelect: (selection: NumericFacetValue) => {
       coreController.toggleSelect(selection);
       dispatch(
-        executeSearch(
-          getAnalyticsActionForToggleRangeFacetSelect(getFacetId(), selection)
-        )
+        executeSearch({
+          legacy: getAnalyticsActionForToggleRangeFacetSelect(
+            getFacetId(),
+            selection
+          ),
+        })
       );
     },
 
