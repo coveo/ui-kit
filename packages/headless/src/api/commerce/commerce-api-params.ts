@@ -1,5 +1,5 @@
 import {CommerceFacetRequest} from '../../features/commerce/facets/facet-set/interfaces/request';
-import {SortOption} from './product-listings/v2/sort';
+import {SortOption} from './common/sort';
 
 export interface TrackingIdParam {
   trackingId: string;
@@ -60,10 +60,14 @@ export interface FacetsParam {
   facets?: CommerceFacetRequest[];
 }
 
-export interface SelectedPageParam {
+export interface PageParam {
   page?: number;
 }
 
-export interface SelectedSortParam {
+export interface SortParam {
   sort?: SortOption;
+}
+
+export interface QueryParam {
+  query?: string;
 }

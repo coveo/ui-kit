@@ -4,11 +4,13 @@ import {
   buildCommerceEngine,
   buildProductListing,
   buildRelevanceSortCriterion,
+  buildSearch,
   buildSort,
   CommerceEngine,
   ProductListing,
   buildProductListingFacetGenerator,
 } from '../commerce.index';
+import {updateQuery} from '../features/commerce/query/query-actions';
 import {getOrganizationEndpoints} from '../insight.index';
 import {waitForNextStateChange} from '../test/functional-test-utils';
 
@@ -120,5 +122,18 @@ describe.skip('commerce', () => {
 
     // Have it reflected on the local state
     expect(facetController.state.values[0].state).toEqual('selected');
+  });
+
+  it('searches', async () => {
+    engine.dispatch(updateQuery({query: 'yellow'}));
+    const search = buildSearch(engine);
+    await waitForNextStateChange(engine, {
+      action: () => {
+        search.executeFirstSearch();
+      },
+      expectedSubscriberCalls: 4,
+    });
+
+    expect(search.state.products).not.toEqual([]);
   });
 });

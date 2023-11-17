@@ -107,3 +107,6 @@ export type {
 
 export {buildProductListingFacet} from './controllers/commerce/product-listing/facets/headless-product-listing-facet';
 export {buildProductListingFacetGenerator} from './controllers/commerce/product-listing/facets/headless-product-listing-facet-generator';
+
+export type {Search} from './controllers/commerce/search/headless-search';
+export {buildSearch} from './controllers/commerce/search/headless-search';
