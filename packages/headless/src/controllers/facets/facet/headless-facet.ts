@@ -154,7 +154,10 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
           next: {
             actionCause: SearchPageEvents.facetSelect,
             getEventExtraPayload: (state) =>
-              new SearchAnalyticsProvider(() => state).getBaseMetadata(),
+              new SearchAnalyticsProvider(() => state).getFacetMetadata(
+                getFacetId(),
+                selection.value
+              ),
           },
         })
       );
