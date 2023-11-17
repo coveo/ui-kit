@@ -5,11 +5,11 @@ import {
   waitForHydration,
 } from './utils';
 
-const searchStateKey = 'search-state';
+const searchStateKey = 'q';
 const routes = ['generic', 'react'] as const;
 
 routes.forEach((route) => {
-  describe(`${route} Headless ssr with search parameter manager example`, () => {
+  describe(`${route} Headless ssr with url manager example`, () => {
     describe('when loading a page without search parameters, after hydration', () => {
       beforeEach(() => {
         spyOnConsole();
@@ -49,9 +49,7 @@ routes.forEach((route) => {
               const searchState = new URL(href).searchParams.get(
                 searchStateKey
               );
-              expect(searchState && JSON.parse(searchState)).to.deep.equal({
-                q: query,
-              });
+              expect(searchState).to.equal(query);
             });
           });
 

@@ -10,6 +10,7 @@ export default function UrlManager() {
 
   // Update the search interface.
   useEffect(() => {
+    console.log('-----> update');
     methods &&
       historyRouter.url &&
       methods.synchronize(historyRouter.url.search.slice(1));
@@ -26,6 +27,10 @@ export default function UrlManager() {
   }, [historyRouter.url, state.fragment]);
 
   useEffect(() => {
+    console.log('*********************');
+    console.log(history);
+    console.log('*********************');
+
     if (!correctedUrl || correctedUrl === historyRouter.url?.href) {
       return;
     }
@@ -35,5 +40,10 @@ export default function UrlManager() {
     historyRouter[isStaticState ? 'replace' : 'push'](correctedUrl);
   }, [correctedUrl]);
 
-  return <></>;
+  return (
+    <>
+      <h1>{state.fragment}</h1>
+      <h1>{historyRouter.url?.href}</h1>
+    </>
+  );
 }
