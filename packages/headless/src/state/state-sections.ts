@@ -337,7 +337,7 @@ export interface CommerceSearchSection {
 
 export interface CommerceQuerySection {
   /**
-   * The expressions that constitute the current commerce query.
+   * The current user query.
    */
   commerceQuery: CommerceQueryState;
 }

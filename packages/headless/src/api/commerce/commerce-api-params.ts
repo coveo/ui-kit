@@ -71,7 +71,7 @@ export interface SelectedPageParam {
   page?: number;
 }
 
-export interface SelectedSortParam {
+export interface SortParam {
   sort?: SortOption;
 }
 

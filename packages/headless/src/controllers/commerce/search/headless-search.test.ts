@@ -30,6 +30,8 @@ describe('headless search', () => {
     });
   });
 
+  // eslint-disable-next-line @cspell/spellchecker
+  // TODO CAPI-244: Handle analytics
   it('executeFirstSearch dispatches #executeSearch', () => {
     search.executeFirstSearch();
     expectContainAction(executeSearch.pending);

@@ -7,7 +7,7 @@ import {
   LanguageParam,
   SelectedFacetsParam,
   SelectedPageParam,
-  SelectedSortParam,
+  SortParam,
   TrackingIdParam,
 } from '../commerce-api-params';
 
@@ -19,7 +19,7 @@ export type CommerceAPIRequest = BaseParam &
   ContextParam &
   SelectedFacetsParam &
   SelectedPageParam &
-  SelectedSortParam;
+  SortParam;
 
 export const buildRequest = (req: CommerceAPIRequest, path: string) => {
   return {

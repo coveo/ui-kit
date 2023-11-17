@@ -34,6 +34,8 @@ export const executeSearch = createAsyncThunk<
 
     return {
       response: fetched.success,
+      // eslint-disable-next-line @cspell/spellchecker
+      // TODO CAPI-244: Use actual search analytics action
       analyticsAction: logProductListingV2Load(),
     };
   }

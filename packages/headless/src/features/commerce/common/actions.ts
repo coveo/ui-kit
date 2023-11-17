@@ -1,4 +1,4 @@
-import {SelectedSortParam} from '../../../api/commerce/commerce-api-params';
+import {SortParam} from '../../../api/commerce/commerce-api-params';
 import {CommerceAPIRequest} from '../../../api/commerce/common/request';
 import {CommerceSuccessResponse} from '../../../api/commerce/common/response';
 import {
@@ -78,9 +78,7 @@ function getAllFacets(state: StateNeededByQueryCommerceAPI) {
   ];
 }
 
-function getSort(
-  appliedSort: SortCriterion
-): SelectedSortParam['sort'] | undefined {
+function getSort(appliedSort: SortCriterion): SortParam['sort'] | undefined {
   if (!appliedSort) {
     return;
   }
