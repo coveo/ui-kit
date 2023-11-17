@@ -5,7 +5,7 @@ export type CommerceFacetSlice = {
 };
 
 /**
- * A map of specific facet identifier (the facetId) to a facet request
+ * An object in which each key is a facet identifier, and each value is the corresponding facet request.
  */
 export type CommerceFacetSetState = Record<string, CommerceFacetSlice>;
 

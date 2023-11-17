@@ -9,7 +9,7 @@ import {
   ContextParam,
   LanguageParam,
   CurrencyParam,
-  SelectedFacetsParam,
+  FacetsParam,
   SelectedPageParam,
   SelectedSortParam,
   TrackingIdParam,
@@ -21,7 +21,7 @@ export type ProductListingV2Request = BaseParam &
   CurrencyParam &
   ClientIdParam &
   ContextParam &
-  SelectedFacetsParam &
+  FacetsParam &
   SelectedPageParam &
   SelectedSortParam;
 
@@ -35,7 +35,6 @@ export const buildProductListingV2Request = (req: ProductListingV2Request) => {
 const prepareRequestParams = (req: ProductListingV2Request) => {
   const {clientId, context, language, currency, page, facets, sort} = req;
   return {
-    refreshCache: true,
     clientId,
     context,
     language,

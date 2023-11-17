@@ -21,14 +21,15 @@ export const commerceFacetSetReducer = createReducer(
   (builder) => {
     builder
       .addCase(fetchProductListing.fulfilled, (state, action) => {
+        const existingFacets = new Set(Object.keys(state));
         const facets = action.payload.response.facets;
-        facets.forEach((facetResponse) =>
-          updateStateFromFacetResponse(
-            state,
-            facetResponse.facetId ?? facetResponse.field,
-            facetResponse
-          )
-        );
+        for (const facetResponse of facets) {
+          updateStateFromFacetResponse(state, facetResponse, existingFacets);
+        }
+
+        for (const facetId of existingFacets) {
+          delete state[facetId];
+        }
       })
       .addCase(toggleSelectFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
@@ -49,7 +50,6 @@ export const commerceFacetSetReducer = createReducer(
         }
         const isSelected = existingValue.state === 'selected';
         existingValue.state = isSelected ? 'idle' : 'selected';
-        facetRequest.freezeCurrentValues = true;
       })
       .addCase(toggleExcludeFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
@@ -71,7 +71,6 @@ export const commerceFacetSetReducer = createReducer(
 
         const isExcluded = existingValue.state === 'excluded';
         existingValue.state = isExcluded ? 'idle' : 'excluded';
-        facetRequest.freezeCurrentValues = true;
       })
       .addCase(updateFacetNumberOfValues, (state, action) => {
         const {facetId, numberOfValues} = action.payload;
@@ -97,14 +96,17 @@ export const commerceFacetSetReducer = createReducer(
 
 function updateStateFromFacetResponse(
   state: WritableDraft<CommerceFacetSetState>,
-  facetId: string,
-  facetResponse: AnyFacetResponse
+  facetResponse: AnyFacetResponse,
+  facetsToRemove: Set<string>
 ) {
+  const facetId = facetResponse.facetId ?? facetResponse.field;
   let facetRequest = state[facetId]?.request;
   if (!facetRequest) {
     state[facetId] = {request: {} as CommerceFacetRequest};
     facetRequest = state[facetId].request;
     facetRequest.initialNumberOfValues = facetResponse.values.length;
+  } else {
+    facetsToRemove.delete(facetId);
   }
 
   facetRequest.facetId = facetId;
@@ -114,7 +116,6 @@ function updateStateFromFacetResponse(
   facetRequest.values = (facetResponse as FacetResponse).values.map(
     convertFacetValueToRequest
   );
-  facetRequest.freezeCurrentValues = false;
   facetRequest.preventAutoSelect = false;
 }
 

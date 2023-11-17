@@ -10,7 +10,6 @@ export type CommerceFacetRequest = Pick<
   | 'field'
   | 'numberOfValues'
   | 'isFieldExpanded'
-  | 'freezeCurrentValues'
   | 'preventAutoSelect'
 > & {
   type: FacetType;

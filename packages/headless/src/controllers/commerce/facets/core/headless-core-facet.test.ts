@@ -15,7 +15,12 @@ import {buildMockCommerceFacetResponse} from '../../../../test/mock-commerce-fac
 import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceFacetValue} from '../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
-import {buildCoreFacet, Facet, FacetOptions} from './headless-core-facet';
+import {
+  buildCoreFacet,
+  Facet,
+  FacetOptions,
+  FacetValueState,
+} from './headless-core-facet';
 
 describe('facet', () => {
   const facetId = 'facet_id';
@@ -145,15 +150,19 @@ describe('facet', () => {
     });
   });
 
-  it('#isValueSelected returns true when the passed value is selected', () => {
-    const facetValue = buildMockCommerceFacetValue({state: 'selected'});
-    expect(facet.isValueSelected(facetValue)).toBe(true);
-  });
-
-  it('#isValueSelected returns false when the passed value is not selected (e.g. idle)', () => {
-    const facetValue = buildMockCommerceFacetValue({state: 'idle'});
-    expect(facet.isValueSelected(facetValue)).toBe(false);
-  });
+  it.each([
+    {state: 'selected', expected: true},
+    {state: 'excluded', expected: false},
+    {state: 'idle', expected: false},
+  ])(
+    '#isValueSelected returns $expected when the passed value is "$state"',
+    ({state, expected}) => {
+      const facetValue = buildMockCommerceFacetValue({
+        state: state as FacetValueState,
+      });
+      expect(facet.isValueSelected(facetValue)).toBe(expected);
+    }
+  );
 
   describe('#deselectAll', () => {
     it('dispatches #deselectAllFacetValues with the facet id', () => {
@@ -181,7 +190,7 @@ describe('facet', () => {
   });
 
   describe('#showMoreValues', () => {
-    it('dispatches increases the number of values on the request by the configured amount', () => {
+    it('increases the number of values on the request by the configured amount', () => {
       const numberOfValues = 10;
 
       setFacetRequest({numberOfValues, initialNumberOfValues: 10});

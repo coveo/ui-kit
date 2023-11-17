@@ -13,9 +13,9 @@ import {
 import {Facet, FacetBuilder} from './headless-core-facet';
 
 /**
- * The `FacetGenerator` headless controller offers a high-level interface for rendering commerce facets.
+ * The `FacetGenerator` headless controller creates commerce facet controllers from the Commerce API search or product listing response.
  *
- * Unlike regular facets that need to be explicitly defined and requested in the query, commerce facets are merchandiser-configured.
+ * Commerce facets are not requested by the implementer, but rather pre-configured through the Coveo Merchandising Hub (CMH). The implementer is only responsible for leveraging the facet controllers created by the `FacetGenerator` controller to properly render facets in their application.
  */
 export interface FacetGenerator extends Controller {
   /**

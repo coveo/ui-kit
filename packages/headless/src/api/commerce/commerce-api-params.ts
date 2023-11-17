@@ -56,7 +56,7 @@ export interface CartItemParam {
   quantity: number;
 }
 
-export interface SelectedFacetsParam {
+export interface FacetsParam {
   facets?: CommerceFacetRequest[];
 }
 

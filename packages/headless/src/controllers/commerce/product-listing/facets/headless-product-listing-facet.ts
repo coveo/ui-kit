@@ -8,7 +8,7 @@ import {
   logFacetClearAll,
   logFacetShowLess,
   logFacetShowMore,
-} from '../../../../features/facets/facet-set/facet-set-product-listing-analytics-actions';
+} from '../../../../features/facets/facet-set/facet-set-product-listing-v2-analytics-actions';
 import {productListingReducer as productListing} from '../../../../features/product-listing/product-listing-slice';
 import {ProductListingV2Section} from '../../../../state/state-sections';
 import {loadReducerError} from '../../../../utils/errors';
@@ -27,7 +27,7 @@ import {
  *
  * @param engine - The headless commerce engine.
  * @param props - The configurable `Facet` properties used internally.
- * @returns An `Facet` controller instance.
+ * @returns A `Facet` controller instance.
  * */
 export function buildProductListingFacet(
   engine: CommerceEngine,
@@ -72,16 +72,14 @@ export function buildProductListingFacet(
 
     showMoreValues() {
       coreController.showMoreValues();
-      dispatch(fetchProductListing()).then(() =>
-        dispatch(logFacetShowMore(facetId))
-      );
+      dispatch(fetchProductListing());
+      dispatch(logFacetShowMore(facetId));
     },
 
     showLessValues() {
       coreController.showLessValues();
-      dispatch(fetchProductListing()).then(() =>
-        dispatch(logFacetShowLess(facetId))
-      );
+      dispatch(fetchProductListing());
+      dispatch(logFacetShowLess(facetId));
     },
 
     get state() {

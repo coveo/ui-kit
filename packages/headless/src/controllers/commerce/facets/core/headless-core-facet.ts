@@ -73,7 +73,10 @@ export type FacetState = Omit<CoreFacetState, 'enabled' | 'sortCriterion'> & {
 export type FacetBuilder = typeof buildCoreFacet;
 
 /**
- * Creates a `Facet` controller instance.
+ * @internal
+ * This initializer is used internally by the `FacetGenerator` controller.
+ *
+ * **Important:** This initializer is meant for internal use by Headless only. As an implementer, you should never import or use this initializer directly in your code.
  *
  * @param engine - The headless commerce engine.
  * @param props - The configurable `Facet` properties.

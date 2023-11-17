@@ -10,7 +10,6 @@ export function buildMockCommerceFacetRequest(
     numberOfValues: 8,
     values: [],
     isFieldExpanded: false,
-    freezeCurrentValues: false,
     preventAutoSelect: false,
     initialNumberOfValues: 0,
     ...config,

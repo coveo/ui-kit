@@ -1,9 +1,13 @@
+import {Action} from '@reduxjs/toolkit';
 import {CommerceFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {
+  logFacetClearAll,
   logFacetDeselect,
   logFacetExclude,
   logFacetSelect,
+  logFacetShowLess,
+  logFacetShowMore,
 } from '../../../../features/facets/facet-set/facet-set-product-listing-v2-analytics-actions';
 import {CommerceAppState} from '../../../../state/commerce-app-state';
 import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
@@ -12,7 +16,11 @@ import {buildMockCommerceFacetResponse} from '../../../../test/mock-commerce-fac
 import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceFacetValue} from '../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
-import {Facet, FacetOptions} from '../../facets/core/headless-core-facet';
+import {
+  Facet,
+  FacetOptions,
+  FacetValueState,
+} from '../../facets/core/headless-core-facet';
 import {buildProductListingFacet} from './headless-product-listing-facet';
 
 describe('facet', () => {
@@ -33,6 +41,14 @@ describe('facet', () => {
     });
     state.productListing.facets = [buildMockCommerceFacetResponse({facetId})];
   }
+
+  const expectContainAction = (action: Action) => {
+    expect(engine.actions).toContainEqual(
+      expect.objectContaining({
+        type: action.type,
+      })
+    );
+  };
 
   beforeEach(() => {
     options = {
@@ -58,39 +74,25 @@ describe('facet', () => {
       const facetValue = buildMockCommerceFacetValue({value: 'TED'});
       facet.toggleSelect(facetValue);
 
-      expect(engine.actions).toContainEqual(
-        expect.objectContaining({
-          type: fetchProductListing.pending.type,
-        })
+      expectContainAction(fetchProductListing.pending);
+    });
+
+    it.each([
+      {state: 'selected', expected: logFacetDeselect},
+      {state: 'excluded', expected: logFacetSelect},
+      {state: 'idle', expected: logFacetSelect},
+    ])('when state is "$state", dispatches #$expected', ({state, expected}) => {
+      const facetValue = buildMockCommerceFacetValue({
+        state: state as FacetValueState,
+      });
+      facet.toggleSelect(facetValue);
+
+      expectContainAction(
+        expected({
+          facetId,
+          facetValue: 'some_field',
+        }).pending
       );
-    });
-
-    it('when state is "selected", dispatches #logFacetDeselect', () => {
-      const facetValue = buildMockCommerceFacetValue({state: 'selected'});
-      facet.toggleSelect(facetValue);
-
-      const expectedAnalyticsActionType = logFacetDeselect({
-        facetId,
-        facetValue: 'some_field',
-      }).pending.type;
-
-      expect(
-        engine.actions.find((a) => a.type === expectedAnalyticsActionType)
-      ).toBeTruthy();
-    });
-
-    it('when state is "idle", dispatches #logFacetSelect', () => {
-      const facetValue = buildMockCommerceFacetValue({state: 'idle'});
-      facet.toggleSelect(facetValue);
-
-      const expectedAnalyticsActionType = logFacetSelect({
-        facetId,
-        facetValue: 'some_field',
-      }).pending.type;
-
-      expect(
-        engine.actions.find((a) => a.type === expectedAnalyticsActionType)
-      ).toBeTruthy();
     });
   });
 
@@ -99,91 +101,52 @@ describe('facet', () => {
       const facetValue = buildMockCommerceFacetValue({value: 'TED'});
       facet.toggleExclude(facetValue);
 
-      expect(engine.actions).toContainEqual(
-        expect.objectContaining({
-          type: fetchProductListing.pending.type,
-        })
+      expectContainAction(fetchProductListing.pending);
+    });
+
+    it.each([
+      {state: 'selected', expected: logFacetExclude},
+      {state: 'excluded', expected: logFacetDeselect},
+      {state: 'idle', expected: logFacetExclude},
+    ])('when state is "$state", dispatches #$expected', ({state, expected}) => {
+      const facetValue = buildMockCommerceFacetValue({
+        state: state as FacetValueState,
+      });
+      facet.toggleExclude(facetValue);
+
+      expectContainAction(
+        expected({
+          facetId,
+          facetValue: 'some_field',
+        }).pending
       );
     });
-
-    it('when state is "excluded", dispatches #logFacetDeselect', () => {
-      const facetValue = buildMockCommerceFacetValue({state: 'excluded'});
-      facet.toggleExclude(facetValue);
-
-      const expectedAnalyticsActionType = logFacetDeselect({
-        facetId,
-        facetValue: 'some_field',
-      }).pending.type;
-
-      expect(
-        engine.actions.find((a) => a.type === expectedAnalyticsActionType)
-      ).toBeTruthy();
-    });
-
-    it('when state is "idle", dispatches #logFacetExclude', () => {
-      const facetValue = buildMockCommerceFacetValue({state: 'idle'});
-      facet.toggleExclude(facetValue);
-
-      const expectedAnalyticsActionType = logFacetExclude({
-        facetId,
-        facetValue: 'some_field',
-      }).pending.type;
-
-      expect(
-        engine.actions.find((a) => a.type === expectedAnalyticsActionType)
-      ).toBeTruthy();
-    });
   });
 
-  it('#toggleSingleSelect dispatches a fetchProductListing', () => {
-    const facetValue = buildMockCommerceFacetValue({value: 'TED'});
-    facet.toggleSingleSelect(facetValue);
-
-    expect(engine.actions).toContainEqual(
-      expect.objectContaining({
-        type: fetchProductListing.pending.type,
-      })
-    );
-  });
-
-  it('#toggleSingleExclude dispatches a fetchProductListing', () => {
-    const facetValue = buildMockCommerceFacetValue({value: 'TED'});
-    facet.toggleSingleExclude(facetValue);
-
-    expect(engine.actions).toContainEqual(
-      expect.objectContaining({
-        type: fetchProductListing.pending.type,
-      })
-    );
-  });
-
-  it('#deselectAll dispatches a fetchProductListing', () => {
+  it.each([
+    {expected: fetchProductListing},
+    {expected: logFacetClearAll(facetId)},
+  ])('#deselectAll dispatches a #$expected', ({expected}) => {
     facet.deselectAll();
 
-    expect(engine.actions).toContainEqual(
-      expect.objectContaining({
-        type: fetchProductListing.pending.type,
-      })
-    );
+    expectContainAction(expected.pending);
   });
 
-  it('#showMoreValues dispatches a fetchProductListing', () => {
+  it.each([
+    {expected: fetchProductListing},
+    {expected: logFacetShowMore(facetId)},
+  ])('#showMoreValues dispatches a #$expected', ({expected}) => {
     facet.showMoreValues();
 
-    expect(engine.actions).toContainEqual(
-      expect.objectContaining({
-        type: fetchProductListing.pending.type,
-      })
-    );
+    expectContainAction(expected.pending);
   });
 
-  it('#showLessValues dispatches a fetchProductListing', () => {
+  it.each([
+    {expected: fetchProductListing},
+    {expected: logFacetShowLess(facetId)},
+  ])('#showLessValues dispatches a #$expected', ({expected}) => {
     facet.showLessValues();
 
-    expect(engine.actions).toContainEqual(
-      expect.objectContaining({
-        type: fetchProductListing.pending.type,
-      })
-    );
+    expectContainAction(expected.pending);
   });
 });
