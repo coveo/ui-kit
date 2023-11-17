@@ -2,7 +2,7 @@
 
 import {useEffect, useMemo} from 'react';
 import {useUrlManager} from '../../lib/react/engine';
-import {useHistoryRouter} from '../common/search-parameters';
+import {useHistoryRouter} from '../common/history-router';
 
 export default function UrlManager() {
   const historyRouter = useHistoryRouter();
@@ -10,11 +10,10 @@ export default function UrlManager() {
 
   // Update the search interface.
   useEffect(() => {
-    console.log('-----> update');
     methods &&
       historyRouter.url &&
       methods.synchronize(historyRouter.url.search.slice(1));
-  }, [historyRouter.url?.search]);
+  }, [historyRouter.url?.searchParams]);
 
   // Update the URL.
   const correctedUrl = useMemo(() => {
@@ -27,10 +26,6 @@ export default function UrlManager() {
   }, [historyRouter.url, state.fragment]);
 
   useEffect(() => {
-    console.log('*********************');
-    console.log(history);
-    console.log('*********************');
-
     if (!correctedUrl || correctedUrl === historyRouter.url?.href) {
       return;
     }
@@ -40,10 +35,5 @@ export default function UrlManager() {
     historyRouter[isStaticState ? 'replace' : 'push'](correctedUrl);
   }, [correctedUrl]);
 
-  return (
-    <>
-      <h1>{state.fragment}</h1>
-      <h1>{historyRouter.url?.href}</h1>
-    </>
-  );
+  return <></>;
 }

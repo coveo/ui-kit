@@ -2,7 +2,7 @@
 
 import {UrlManager, UrlManagerState} from '@coveo/headless/ssr';
 import {useEffect, useMemo, useState} from 'react';
-import {useHistoryRouter} from '../../components/common/search-parameters';
+import {useHistoryRouter} from '../../components/common/history-router';
 
 interface UseSyncUrlManagerProps {
   staticState: UrlManagerState;
