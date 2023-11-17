@@ -1,11 +1,10 @@
-import {NextJSServerSideSearchParams} from '@/common/components/common/search-parameters-serializer';
 import SearchPage from '@/common/components/generic/search-page';
 import {fetchStaticState} from '@/common/lib/generic/engine';
 import {buildSearchParameterSerializer} from '@coveo/headless';
 
 // Entry point SSR function
 export default async function Search(url: {
-  searchParams: NextJSServerSideSearchParams;
+  searchParams: {[key: string]: string | string[] | undefined};
 }) {
   const fragment = buildSearchParameterSerializer().serialize(url.searchParams);
   const staticState = await fetchStaticState({
