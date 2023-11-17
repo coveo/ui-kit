@@ -5,6 +5,7 @@ import {
   likeGeneratedAnswer,
   openGeneratedAnswerFeedbackModal,
   resetAnswer,
+  sendGeneratedAnswerFeedback,
   setIsVisible,
   streamAnswer,
   updateResponseFormat,
@@ -130,7 +131,7 @@ describe('generated answer', () => {
   it('#sendFeedback dispatches the right actions', () => {
     const exampleFeedback = 'notAccurate';
     generatedAnswer.sendFeedback(exampleFeedback);
-    const action = findAction(closeGeneratedAnswerFeedbackModal.type);
+    const action = findAction(sendGeneratedAnswerFeedback.type);
     const analyticsAction = engine.findAsyncAction(
       logGeneratedAnswerFeedback(exampleFeedback).pending
     );
@@ -142,7 +143,7 @@ describe('generated answer', () => {
   it('#sendDetailedFeedback dispatches the right actions', () => {
     const exampleDetails = 'Example details';
     generatedAnswer.sendDetailedFeedback(exampleDetails);
-    const action = findAction(closeGeneratedAnswerFeedbackModal.type);
+    const action = findAction(sendGeneratedAnswerFeedback.type);
     const analyticsAction = engine.findAsyncAction(
       logGeneratedAnswerDetailedFeedback(exampleDetails).pending
     );
