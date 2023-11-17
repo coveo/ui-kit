@@ -46,6 +46,9 @@ import {TypingLoader} from './typing-loader';
  * @part citations-label - The header of the citations list.
  * @part rephrase-label - The header of the rephrase options.
  * @part rephrase-button - The button for each of the rephrase options (step-by-step instructions, bulleted list, and summary).
+ *
+ * @part citation - The link that allows the user to navigate to the item.
+ * @part citation-popover - The pop-up that shows an item preview when the user hovers over the citation.
  */
 @Component({
   tag: 'atomic-generated-answer',
@@ -231,6 +234,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
                 );
               }}
               interactiveCitation={interactiveCitation}
+              exportparts="citation,citation-popover"
             />
           </li>
         );

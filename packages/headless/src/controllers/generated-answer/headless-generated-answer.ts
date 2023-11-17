@@ -45,7 +45,7 @@ export interface GeneratedAnswer extends Controller {
    */
   retry(): void;
   /**
-   * Marks the generated answer as relevant to the end user.
+   * Indicates that the generated answer met the user expectations.
    */
   like(): void;
   /**
