@@ -217,10 +217,10 @@ export type InferFacetSliceValueType<T extends AnyFacetSetState> =
   InferFacetSliceValueRequestType<T> extends FacetValueRequest
     ? FacetValue
     : InferFacetSliceValueRequestType<T> extends NumericRangeRequest
-    ? NumericFacetValue
-    : InferFacetSliceValueRequestType<T> extends DateRangeRequest
-    ? DateFacetValue
-    : CategoryFacetValue;
+      ? NumericFacetValue
+      : InferFacetSliceValueRequestType<T> extends DateRangeRequest
+        ? DateFacetValue
+        : CategoryFacetValue;
 
 export const getBreadcrumbs = <T extends AnyFacetSetState>(
   config: GetBreadcrumbsConfiguration<T>
