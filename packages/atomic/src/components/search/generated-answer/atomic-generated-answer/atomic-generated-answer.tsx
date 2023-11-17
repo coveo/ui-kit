@@ -253,7 +253,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
                     title={this.bindings.i18n.t('this-answer-was-helpful')}
                     variant="like"
                     active={this.generatedAnswerState.liked}
-                    onClick={this.generatedAnswer.like}
+                    onClick={() => this.generatedAnswer.like()}
                   />
                   <FeedbackButton
                     title={this.bindings.i18n.t('this-answer-was-not-helpful')}
