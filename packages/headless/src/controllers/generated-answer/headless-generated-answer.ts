@@ -212,17 +212,21 @@ export function buildGeneratedAnswer(
     },
 
     retry() {
-      dispatch(executeSearch(logRetryGeneratedAnswer()));
+      dispatch(executeSearch({legacy: logRetryGeneratedAnswer()}));
     },
 
     like() {
-      dispatch(likeGeneratedAnswer());
-      dispatch(logLikeGeneratedAnswer());
+      if (!this.state.liked) {
+        dispatch(likeGeneratedAnswer());
+        dispatch(logLikeGeneratedAnswer());
+      }
     },
 
     dislike() {
-      dispatch(dislikeGeneratedAnswer());
-      dispatch(logDislikeGeneratedAnswer());
+      if (!this.state.disliked) {
+        dispatch(dislikeGeneratedAnswer());
+        dispatch(logDislikeGeneratedAnswer());
+      }
     },
 
     openFeedbackModal() {
@@ -253,7 +257,9 @@ export function buildGeneratedAnswer(
 
     rephrase(responseFormat: GeneratedResponseFormat) {
       dispatch(updateResponseFormat(responseFormat));
-      dispatch(executeSearch(logRephraseGeneratedAnswer(responseFormat)));
+      dispatch(
+        executeSearch({legacy: logRephraseGeneratedAnswer(responseFormat)})
+      );
     },
 
     show() {

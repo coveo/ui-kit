@@ -1,12 +1,12 @@
 import {Logger} from 'pino';
-import {SearchAPIClient} from '../../api/search/search-api-client';
-import {buildMockResult} from '../../test';
-import {buildMockSearchRequest} from '../../test/mock-search-request';
-import {buildMockSearchResponse} from '../../test/mock-search-response';
-import {buildMockSearchState} from '../../test/mock-search-state';
-import {getConfigurationInitialState} from '../configuration/configuration-state';
-import {updateQuery} from '../query/query-actions';
-import {logSearchboxSubmit} from '../query/query-analytics-actions';
+import {SearchAPIClient} from '../../../api/search/search-api-client';
+import {buildMockResult} from '../../../test';
+import {buildMockSearchRequest} from '../../../test/mock-search-request';
+import {buildMockSearchResponse} from '../../../test/mock-search-response';
+import {buildMockSearchState} from '../../../test/mock-search-state';
+import {getConfigurationInitialState} from '../../configuration/configuration-state';
+import {updateQuery} from '../../query/query-actions';
+import {logSearchboxSubmit} from '../../query/query-analytics-actions';
 import {ExecuteSearchThunkReturn} from './search-actions';
 import {
   AsyncSearchThunkProcessor,

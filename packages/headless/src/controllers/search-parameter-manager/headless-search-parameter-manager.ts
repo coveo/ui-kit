@@ -58,7 +58,9 @@ export function buildSearchParameterManager(
       }
 
       controller.synchronize(parameters);
-      dispatch(executeSearch(logParametersChange(oldParams, newParams)));
+      dispatch(
+        executeSearch({legacy: logParametersChange(oldParams, newParams)})
+      );
     },
 
     get state() {

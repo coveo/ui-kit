@@ -97,7 +97,7 @@ describe('querySet slice', () => {
     const searchState = buildMockSearch({queryExecuted: 'world'});
     const nextState = querySetReducer(
       state,
-      executeSearch.fulfilled(searchState, '', logSearchboxSubmit())
+      executeSearch.fulfilled(searchState, '', {legacy: logSearchboxSubmit()})
     );
     expect(nextState).toEqual(expectedQuerySet);
   });
