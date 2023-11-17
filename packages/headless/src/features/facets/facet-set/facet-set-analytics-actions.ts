@@ -91,6 +91,9 @@ export interface LogFacetSelectActionCreatorPayload {
   facetValue: string;
 }
 
+/**
+ * @deprecated
+ */
 export const logFacetSelect = (
   payload: LogFacetSelectActionCreatorPayload
 ): SearchAction =>
