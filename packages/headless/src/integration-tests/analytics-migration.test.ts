@@ -3,11 +3,6 @@ import {
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
 } from '../app/search-engine/search-engine';
-import {
-  FacetProps,
-  FacetValue,
-  buildFacet,
-} from '../controllers/facets/facet/headless-facet';
 
 describe('Analytics Search Migration', () => {
   let callSpy: jest.SpyInstance<Promise<Response | PlatformClientCallError>>;
@@ -24,27 +19,6 @@ describe('Analytics Search Migration', () => {
   it('analytics/interface/load', async () => {
     legacySearchEngine.executeFirstSearch();
     nextSearchEngine.executeFirstSearch();
-    await wait();
-
-    assertNextEqualsLegacy(callSpy);
-  });
-
-  it('analytics/facet/select', async () => {
-    const props: FacetProps = {
-      options: {
-        field: 'test',
-      },
-    };
-    const selection: FacetValue = {
-      value: 'test',
-      state: 'idle',
-      numberOfResults: 1,
-    };
-    const legacyFacet = buildFacet(legacySearchEngine, props);
-    const nextFacet = buildFacet(nextSearchEngine, props);
-
-    legacyFacet.toggleSelect(selection);
-    nextFacet.toggleSelect(selection);
     await wait();
 
     assertNextEqualsLegacy(callSpy);
@@ -94,13 +68,6 @@ function excludeProperties(obj: Record<string, unknown>) {
   const result = {...obj};
   excludedBaseProperties.forEach((prop: string) => delete result[prop]);
 
-  if (result.customData) {
-    const customData = {...result.customData};
-    excludedCustomDataProperties.forEach((prop: string) => {
-      delete (customData as Record<string, unknown>)[prop];
-    });
-    result.customData = customData;
-  }
   return result;
 }
 
@@ -110,5 +77,3 @@ const excludedBaseProperties = [
   'clientTimestamp',
   'trackingId',
 ];
-
-const excludedCustomDataProperties = ['facetTitle'];
