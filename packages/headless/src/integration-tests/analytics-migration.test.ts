@@ -1,8 +1,12 @@
+import {SearchAnalyticsProvider} from '../api/analytics/search-analytics';
 import {PlatformClient, PlatformClientCallError} from '../api/platform-client';
 import {
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
 } from '../app/search-engine/search-engine';
+import {logInterfaceLoad} from '../features/analytics/analytics-actions';
+import {SearchPageEvents} from '../features/analytics/search-action-cause';
+import {executeSearch} from '../features/search/search-actions';
 
 describe('Analytics Search Migration', () => {
   let callSpy: jest.SpyInstance<Promise<Response | PlatformClientCallError>>;
@@ -17,8 +21,17 @@ describe('Analytics Search Migration', () => {
   });
 
   it('analytics/interface/load', async () => {
-    legacySearchEngine.executeFirstSearch();
-    nextSearchEngine.executeFirstSearch();
+    const action = executeSearch({
+      legacy: logInterfaceLoad(),
+      next: {
+        actionCause: SearchPageEvents.interfaceLoad,
+        getEventExtraPayload: (state) =>
+          new SearchAnalyticsProvider(() => state).getBaseMetadata(),
+      },
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
     await wait();
 
     assertNextEqualsLegacy(callSpy);
