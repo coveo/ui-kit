@@ -6,7 +6,7 @@ import {
   CurrencyParam,
   LanguageParam,
   FacetsParam,
-  SelectedPageParam,
+  PageParam,
   SortParam,
   TrackingIdParam,
 } from '../commerce-api-params';
@@ -18,7 +18,7 @@ export type CommerceAPIRequest = BaseParam &
   ClientIdParam &
   ContextParam &
   FacetsParam &
-  SelectedPageParam &
+  PageParam &
   SortParam;
 
 export const buildRequest = (req: CommerceAPIRequest, path: string) => {

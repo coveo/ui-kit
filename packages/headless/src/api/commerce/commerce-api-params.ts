@@ -60,7 +60,7 @@ export interface FacetsParam {
   facets?: CommerceFacetRequest[];
 }
 
-export interface SelectedPageParam {
+export interface PageParam {
   page?: number;
 }
 
