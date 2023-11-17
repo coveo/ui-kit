@@ -26,7 +26,7 @@ describe('Analytics Search Migration', () => {
     nextSearchEngine.executeFirstSearch();
     await wait();
 
-    assertFirstEqualsSecond(callSpy);
+    assertNextEqualsLegacy(callSpy);
   });
 
   it('analytics/facet/select', async () => {
@@ -47,7 +47,7 @@ describe('Analytics Search Migration', () => {
     nextFacet.toggleSelect(selection);
     await wait();
 
-    assertFirstEqualsSecond(callSpy);
+    assertNextEqualsLegacy(callSpy);
   });
 });
 
@@ -67,7 +67,7 @@ const legacySearchEngine = buildSearchEngine({
   },
 });
 
-function assertFirstEqualsSecond(call: jest.SpyInstance) {
+function assertNextEqualsLegacy(call: jest.SpyInstance) {
   expect(extractAndExcludeProperties(call, 0)).toEqual(
     extractAndExcludeProperties(call, 1)
   );
