@@ -118,8 +118,8 @@ export class AtomicCitation {
       <div
         part="citation-popover"
         class={`rounded-md border border-neutral p-4 shadow z-10 bg-background ${
-          this.isOpen ? 'flex' : 'hidden'
-        } flex-col gap-3`}
+          this.isOpen ? 'desktop-only:flex' : 'hidden'
+        } flex-col gap-3 mobile-only:hidden`}
         ref={(el) => (this.popupRef = el!)}
         role="dialog"
       >

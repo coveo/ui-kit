@@ -1,3 +1,14 @@
+## 2.40.2 (2023-11-16)
+
+### Bug Fixes
+
+- add missing reducers to `SearchParameterManager` controller ([#3360](https://github.com/coveo/ui-kit/issues/3360)) ([ea0b47f](https://github.com/coveo/ui-kit/commits/ea0b47fb920a6d7c00469b9694294b09ca245a77))
+
+### Features
+
+- **atomic:** added negative feedback modal for rga ([#3339](https://github.com/coveo/ui-kit/issues/3339)) ([194db3c](https://github.com/coveo/ui-kit/commits/194db3c0819aaa70e0e4089e5eb620c17fa21b88))
+- support initialState in context controller ([#3337](https://github.com/coveo/ui-kit/issues/3337)) ([f3c4623](https://github.com/coveo/ui-kit/commits/f3c4623727d319f992915f5557fad8f78abf7cab))
+
 # 2.39.0 (2023-11-08)
 
 ### Bug Fixes
