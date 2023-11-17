@@ -55,7 +55,7 @@ export default class QuanticGeneratedAnswerRephraseButtons extends LightningElem
     {
       tooltip: this.labels.summary,
       value: 'concise',
-      iconName: 'utility:share_post',
+      iconName: 'utility:light_bulb',
     },
   ];
 
