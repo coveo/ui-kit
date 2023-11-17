@@ -2,6 +2,7 @@ import {
   InsightAction,
   makeInsightAnalyticsAction,
 } from '../analytics/analytics-utils';
+import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
 import {
   citationSourceSelector,
   generativeQuestionAnsweringIdSelector,
@@ -15,8 +16,12 @@ export type GeneratedAnswerFeedback =
   | 'harmful';
 
 export const logRetryGeneratedAnswer = (): InsightAction =>
-  makeInsightAnalyticsAction('analytics/generatedAnswer/retry', (client) =>
-    client.logRetryGeneratedAnswer()
+  makeInsightAnalyticsAction(
+    'analytics/generatedAnswer/retry',
+    (client, state) =>
+      client.logRetryGeneratedAnswer(
+        getCaseContextAnalyticsMetadata(state.insightCaseContext)
+      )
   );
 
 export const logRephraseGeneratedAnswer = (
@@ -30,10 +35,13 @@ export const logRephraseGeneratedAnswer = (
       if (!generativeQuestionAnsweringId) {
         return null;
       }
-      return client.logRephraseGeneratedAnswer({
-        generativeQuestionAnsweringId,
-        rephraseFormat: responseFormat.answerStyle,
-      });
+      return client.logRephraseGeneratedAnswer(
+        {
+          generativeQuestionAnsweringId,
+          rephraseFormat: responseFormat.answerStyle,
+        },
+        getCaseContextAnalyticsMetadata(state.insightCaseContext)
+      );
     }
   );
 
@@ -49,11 +57,14 @@ export const logOpenGeneratedAnswerSource = (
       if (!generativeQuestionAnsweringId || !citation) {
         return null;
       }
-      return client.logOpenGeneratedAnswerSource({
-        generativeQuestionAnsweringId,
-        permanentId: citation.permanentid,
-        citationId: citation.id,
-      });
+      return client.logOpenGeneratedAnswerSource(
+        {
+          generativeQuestionAnsweringId,
+          permanentId: citation.permanentid,
+          citationId: citation.id,
+        },
+        getCaseContextAnalyticsMetadata(state.insightCaseContext)
+      );
     }
   );
 
@@ -70,12 +81,15 @@ export const logHoverCitation = (
       if (!generativeQuestionAnsweringId || !citation) {
         return null;
       }
-      return client.logGeneratedAnswerSourceHover({
-        generativeQuestionAnsweringId,
-        permanentId: citation.permanentid,
-        citationId: citation.id,
-        citationHoverTimeMs,
-      });
+      return client.logGeneratedAnswerSourceHover(
+        {
+          generativeQuestionAnsweringId,
+          permanentId: citation.permanentid,
+          citationId: citation.id,
+          citationHoverTimeMs,
+        },
+        getCaseContextAnalyticsMetadata(state.insightCaseContext)
+      );
     }
   );
 
@@ -88,9 +102,12 @@ export const logLikeGeneratedAnswer = (): InsightAction =>
       if (!generativeQuestionAnsweringId) {
         return null;
       }
-      return client.logLikeGeneratedAnswer({
-        generativeQuestionAnsweringId,
-      });
+      return client.logLikeGeneratedAnswer(
+        {
+          generativeQuestionAnsweringId,
+        },
+        getCaseContextAnalyticsMetadata(state.insightCaseContext)
+      );
     }
   );
 
@@ -103,9 +120,12 @@ export const logDislikeGeneratedAnswer = (): InsightAction =>
       if (!generativeQuestionAnsweringId) {
         return null;
       }
-      return client.logDislikeGeneratedAnswer({
-        generativeQuestionAnsweringId,
-      });
+      return client.logDislikeGeneratedAnswer(
+        {
+          generativeQuestionAnsweringId,
+        },
+        getCaseContextAnalyticsMetadata(state.insightCaseContext)
+      );
     }
   );
 
@@ -120,10 +140,13 @@ export const logGeneratedAnswerFeedback = (
       if (!generativeQuestionAnsweringId) {
         return null;
       }
-      return client.logGeneratedAnswerFeedbackSubmit({
-        generativeQuestionAnsweringId,
-        reason: feedback,
-      });
+      return client.logGeneratedAnswerFeedbackSubmit(
+        {
+          generativeQuestionAnsweringId,
+          reason: feedback,
+        },
+        getCaseContextAnalyticsMetadata(state.insightCaseContext)
+      );
     }
   );
 
@@ -138,11 +161,14 @@ export const logGeneratedAnswerDetailedFeedback = (
       if (!generativeQuestionAnsweringId) {
         return null;
       }
-      return client.logGeneratedAnswerFeedbackSubmit({
-        generativeQuestionAnsweringId,
-        reason: 'other',
-        details,
-      });
+      return client.logGeneratedAnswerFeedbackSubmit(
+        {
+          generativeQuestionAnsweringId,
+          reason: 'other',
+          details,
+        },
+        getCaseContextAnalyticsMetadata(state.insightCaseContext)
+      );
     }
   );
 
@@ -157,10 +183,13 @@ export const logGeneratedAnswerStreamEnd = (
       if (!generativeQuestionAnsweringId) {
         return null;
       }
-      return client.logGeneratedAnswerStreamEnd({
-        generativeQuestionAnsweringId,
-        answerGenerated,
-      });
+      return client.logGeneratedAnswerStreamEnd(
+        {
+          generativeQuestionAnsweringId,
+          answerGenerated,
+        },
+        getCaseContextAnalyticsMetadata(state.insightCaseContext)
+      );
     }
   );
 
@@ -173,9 +202,12 @@ export const logGeneratedAnswerShowAnswers = (): InsightAction =>
       if (!generativeQuestionAnsweringId) {
         return null;
       }
-      return client.logGeneratedAnswerShowAnswers({
-        generativeQuestionAnsweringId,
-      });
+      return client.logGeneratedAnswerShowAnswers(
+        {
+          generativeQuestionAnsweringId,
+        },
+        getCaseContextAnalyticsMetadata(state.insightCaseContext)
+      );
     }
   );
 
@@ -188,9 +220,12 @@ export const logGeneratedAnswerHideAnswers = (): InsightAction =>
       if (!generativeQuestionAnsweringId) {
         return null;
       }
-      return client.logGeneratedAnswerHideAnswers({
-        generativeQuestionAnsweringId,
-      });
+      return client.logGeneratedAnswerHideAnswers(
+        {
+          generativeQuestionAnsweringId,
+        },
+        getCaseContextAnalyticsMetadata(state.insightCaseContext)
+      );
     }
   );
 
@@ -203,8 +238,11 @@ export const logCopyGeneratedAnswer = (): InsightAction =>
       if (!generativeQuestionAnsweringId) {
         return null;
       }
-      return client.logGeneratedAnswerCopyToClipboard({
-        generativeQuestionAnsweringId,
-      });
+      return client.logGeneratedAnswerCopyToClipboard(
+        {
+          generativeQuestionAnsweringId,
+        },
+        getCaseContextAnalyticsMetadata(state.insightCaseContext)
+      );
     }
   );

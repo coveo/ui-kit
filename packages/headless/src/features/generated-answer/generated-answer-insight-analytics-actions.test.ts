@@ -58,6 +58,19 @@ const exampleGenerativeQuestionAnsweringId = '123';
 const exampleDetails = 'example details';
 const exampleCitationId = 'citation_id';
 const exampleCitationPermanentid = 'citation_permanentid';
+const exampleSubject = 'example subject';
+const exampleDescription = 'example description';
+const exampleCaseId = '1234';
+const exampleCaseNumber = '5678';
+
+const expectedCaseContext = {
+  caseContext: {
+    Case_Subject: exampleSubject,
+    Case_Description: exampleDescription,
+  },
+  caseId: exampleCaseId,
+  caseNumber: exampleCaseNumber,
+};
 
 describe('the analytics related to the generated answer feature in the insight use case', () => {
   let engine: MockInsightEngine;
@@ -75,6 +88,14 @@ describe('the analytics related to the generated answer feature in the insight u
         uri: 'example: uri',
       },
     ];
+    state.insightCaseContext = {
+      caseContext: {
+        Case_Subject: exampleSubject,
+        Case_Description: exampleDescription,
+      },
+      caseId: exampleCaseId,
+      caseNumber: exampleCaseNumber,
+    };
     engine = buildMockInsightEngine({state});
   });
 
@@ -86,12 +107,9 @@ describe('the analytics related to the generated answer feature in the insight u
     await engine.dispatch(logRetryGeneratedAnswer());
 
     const mockToUse = mockLogRetryGeneratedAnswer;
-    // const expectedMetadata = {
-    //   generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
-    // };
 
     expect(mockToUse).toHaveBeenCalledTimes(1);
-    // expect(mockToUse).toHaveBeenCalledWith(expectedMetadata);
+    expect(mockToUse).toHaveBeenCalledWith(expectedCaseContext);
   });
 
   it('should log #logRephraseGeneratedAnswer with the right payload', async () => {
@@ -109,7 +127,10 @@ describe('the analytics related to the generated answer feature in the insight u
     };
 
     expect(mockToUse).toHaveBeenCalledTimes(1);
-    expect(mockToUse).toHaveBeenCalledWith(expectedMetadata);
+    expect(mockToUse).toHaveBeenCalledWith(
+      expectedMetadata,
+      expectedCaseContext
+    );
   });
 
   it('should log #logOpenGeneratedAnswerSource with the right payload', async () => {
@@ -123,7 +144,10 @@ describe('the analytics related to the generated answer feature in the insight u
     };
 
     expect(mockToUse).toHaveBeenCalledTimes(1);
-    expect(mockToUse).toHaveBeenCalledWith(expectedMetadata);
+    expect(mockToUse).toHaveBeenCalledWith(
+      expectedMetadata,
+      expectedCaseContext
+    );
   });
 
   it('should log #logHoverCitation with the right payload', async () => {
@@ -141,7 +165,10 @@ describe('the analytics related to the generated answer feature in the insight u
     };
 
     expect(mockToUse).toHaveBeenCalledTimes(1);
-    expect(mockToUse).toHaveBeenCalledWith(expectedMetadata);
+    expect(mockToUse).toHaveBeenCalledWith(
+      expectedMetadata,
+      expectedCaseContext
+    );
   });
 
   it('should log #logLikeGeneratedAnswer with the right payload', async () => {
@@ -153,7 +180,10 @@ describe('the analytics related to the generated answer feature in the insight u
     };
 
     expect(mockToUse).toHaveBeenCalledTimes(1);
-    expect(mockToUse).toHaveBeenCalledWith(expectedMetadata);
+    expect(mockToUse).toHaveBeenCalledWith(
+      expectedMetadata,
+      expectedCaseContext
+    );
   });
 
   it('should log #logDislikeGeneratedAnswer with the right payload', async () => {
@@ -165,7 +195,10 @@ describe('the analytics related to the generated answer feature in the insight u
     };
 
     expect(mockToUse).toHaveBeenCalledTimes(1);
-    expect(mockToUse).toHaveBeenCalledWith(expectedMetadata);
+    expect(mockToUse).toHaveBeenCalledWith(
+      expectedMetadata,
+      expectedCaseContext
+    );
   });
 
   it('should log #logGeneratedAnswerFeedback with the right payload', async () => {
@@ -178,7 +211,10 @@ describe('the analytics related to the generated answer feature in the insight u
     };
 
     expect(mockToUse).toHaveBeenCalledTimes(1);
-    expect(mockToUse).toHaveBeenCalledWith(expectedMetadata);
+    expect(mockToUse).toHaveBeenCalledWith(
+      expectedMetadata,
+      expectedCaseContext
+    );
   });
 
   it('should log #logGeneratedAnswerDetailedFeedback with the right payload', async () => {
@@ -192,7 +228,10 @@ describe('the analytics related to the generated answer feature in the insight u
     };
 
     expect(mockToUse).toHaveBeenCalledTimes(1);
-    expect(mockToUse).toHaveBeenCalledWith(expectedMetadata);
+    expect(mockToUse).toHaveBeenCalledWith(
+      expectedMetadata,
+      expectedCaseContext
+    );
   });
 
   it('should log #logGeneratedAnswerStreamEnd with the right payload', async () => {
@@ -205,7 +244,10 @@ describe('the analytics related to the generated answer feature in the insight u
     };
 
     expect(mockToUse).toHaveBeenCalledTimes(1);
-    expect(mockToUse).toHaveBeenCalledWith(expectedMetadata);
+    expect(mockToUse).toHaveBeenCalledWith(
+      expectedMetadata,
+      expectedCaseContext
+    );
   });
 
   it('should log #logGeneratedAnswerShowAnswers with the right payload', async () => {
@@ -217,7 +259,10 @@ describe('the analytics related to the generated answer feature in the insight u
     };
 
     expect(mockToUse).toHaveBeenCalledTimes(1);
-    expect(mockToUse).toHaveBeenCalledWith(expectedMetadata);
+    expect(mockToUse).toHaveBeenCalledWith(
+      expectedMetadata,
+      expectedCaseContext
+    );
   });
 
   it('should log #logGeneratedAnswerHideAnswers with the right payload', async () => {
@@ -229,7 +274,10 @@ describe('the analytics related to the generated answer feature in the insight u
     };
 
     expect(mockToUse).toHaveBeenCalledTimes(1);
-    expect(mockToUse).toHaveBeenCalledWith(expectedMetadata);
+    expect(mockToUse).toHaveBeenCalledWith(
+      expectedMetadata,
+      expectedCaseContext
+    );
   });
 
   it('should log #logCopyGeneratedAnswer with the right payload', async () => {
@@ -241,6 +289,9 @@ describe('the analytics related to the generated answer feature in the insight u
     };
 
     expect(mockToUse).toHaveBeenCalledTimes(1);
-    expect(mockToUse).toHaveBeenCalledWith(expectedMetadata);
+    expect(mockToUse).toHaveBeenCalledWith(
+      expectedMetadata,
+      expectedCaseContext
+    );
   });
 });
