@@ -15,9 +15,8 @@ import {
   ProductListingV2Section,
   VersionSection,
 } from '../../../state/state-sections';
-import {sortFacets} from '../../../utils/facet-utils';
 import {PreparableAnalyticsAction} from '../../analytics/analytics-utils';
-import {getFacetRequests} from '../../facets/generic/interfaces/generic-facet-request';
+import {StateNeededByFetchProductListingV2} from '../product-listing/product-listing-actions';
 import {SortBy, SortCriterion} from '../sort/sort';
 
 export type StateNeededByQueryCommerceAPI = ConfigurationSection &
@@ -44,7 +43,7 @@ export interface QueryCommerceAPIThunkReturn {
 export const buildCommerceAPIRequest = (
   state: StateNeededByQueryCommerceAPI
 ): CommerceAPIRequest => {
-  const selectedFacets = getFacets(state);
+  const facets = getFacets(state);
 
   const {view, user, ...restOfContext} = state.commerceContext;
   return {
@@ -57,7 +56,7 @@ export const buildCommerceAPIRequest = (
       view,
       cart: state.cart.cartItems.map((id) => state.cart.cart[id]),
     },
-    selectedFacets,
+    facets,
     ...(state.commercePagination && {page: state.commercePagination.page}),
     ...(state.commerceSort && {
       sort: getSort(state.commerceSort.appliedSort),
@@ -65,17 +64,14 @@ export const buildCommerceAPIRequest = (
   };
 };
 
-function getFacets(state: StateNeededByQueryCommerceAPI) {
-  return sortFacets(getAllFacets(state), state.facetOrder ?? []);
-}
+function getFacets(state: StateNeededByFetchProductListingV2) {
+  if (!state.facetOrder || !state.commerceFacetSet) {
+    return [];
+  }
 
-function getAllFacets(state: StateNeededByQueryCommerceAPI) {
-  return [
-    ...getFacetRequests(state.facetSet ?? {}),
-    ...getFacetRequests(state.numericFacetSet ?? {}),
-    ...getFacetRequests(state.dateFacetSet ?? {}),
-    ...getFacetRequests(state.categoryFacetSet ?? {}),
-  ];
+  return state.facetOrder
+    .map((facetId) => state.commerceFacetSet![facetId].request)
+    .filter((facet) => facet.values.length > 0);
 }
 
 function getSort(appliedSort: SortCriterion): SortParam['sort'] | undefined {

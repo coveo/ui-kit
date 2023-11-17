@@ -1,6 +1,6 @@
 import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
 import {ProductRecommendation} from '../../../api/search/search/product-recommendation';
-import {AnyFacetResponse} from '../../facets/generic/interfaces/generic-facet-response';
+import {AnyFacetResponse} from '../facets/facet-set/interfaces/response';
 
 export interface CommerceSearchState {
   error: CommerceAPIErrorStatusResponse | null;

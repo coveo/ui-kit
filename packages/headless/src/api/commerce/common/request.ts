@@ -5,7 +5,7 @@ import {
   ContextParam,
   CurrencyParam,
   LanguageParam,
-  SelectedFacetsParam,
+  FacetsParam,
   SelectedPageParam,
   SortParam,
   TrackingIdParam,
@@ -17,7 +17,7 @@ export type CommerceAPIRequest = BaseParam &
   CurrencyParam &
   ClientIdParam &
   ContextParam &
-  SelectedFacetsParam &
+  FacetsParam &
   SelectedPageParam &
   SortParam;
 
@@ -29,15 +29,14 @@ export const buildRequest = (req: CommerceAPIRequest, path: string) => {
 };
 
 const prepareRequestParams = (req: CommerceAPIRequest) => {
-  const {clientId, context, language, currency, page, selectedFacets, sort} =
-    req;
+  const {clientId, context, language, currency, page, facets, sort} = req;
   return {
     clientId,
     context,
     language,
     currency,
     page,
-    selectedFacets,
+    facets,
     sort,
   };
 };

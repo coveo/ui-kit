@@ -1,4 +1,4 @@
-import {AnyFacetResponse} from '../../../features/facets/generic/interfaces/generic-facet-response';
+import {AnyFacetResponse} from '../../../features/commerce/facets/facet-set/interfaces/response';
 import {
   SearchAPIErrorWithExceptionInBody,
   SearchAPIErrorWithStatusCode,

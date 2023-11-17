@@ -1,13 +1,14 @@
 import {
   buildCart,
-  buildCommerceEngine,
   buildContext,
+  buildCommerceEngine,
   buildProductListing,
   buildRelevanceSortCriterion,
   buildSearch,
   buildSort,
   CommerceEngine,
   ProductListing,
+  buildProductListingFacetGenerator,
 } from '../commerce.index';
 import {updateQuery} from '../features/commerce/query/query-actions';
 import {getOrganizationEndpoints} from '../insight.index';
@@ -97,6 +98,30 @@ describe.skip('commerce', () => {
     expect(sort.isSortedBy(relevance)).toBeTruthy();
     expect(sort.isAvailable(relevance)).toBeTruthy();
     expect(sort.state.availableSorts.length).toEqual(2);
+  });
+
+  it('has selectable facets', async () => {
+    // Query the commerce api
+    await fetchProductListing();
+
+    // Generate the facets from the response
+    const facetGenerator = buildProductListingFacetGenerator(engine);
+    const controllers = facetGenerator.state.facets;
+    const facetController = controllers[0];
+
+    // Select a facet
+    await waitForNextStateChange(engine, {
+      action: () => {
+        facetController.toggleSelect({
+          ...facetController.state.values[0],
+          state: 'selected',
+        });
+      },
+      expectedSubscriberCalls: 8,
+    });
+
+    // Have it reflected on the local state
+    expect(facetController.state.values[0].state).toEqual('selected');
   });
 
   it('searches', async () => {
