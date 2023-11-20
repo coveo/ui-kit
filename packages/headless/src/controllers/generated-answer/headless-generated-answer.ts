@@ -10,6 +10,7 @@ import {
   openGeneratedAnswerFeedbackModal,
   closeGeneratedAnswerFeedbackModal,
   setIsVisible,
+  sendGeneratedAnswerFeedback,
 } from '../../features/generated-answer/generated-answer-actions';
 import {
   GeneratedAnswerFeedback,
@@ -238,12 +239,12 @@ export function buildGeneratedAnswer(
 
     sendFeedback(feedback) {
       dispatch(logGeneratedAnswerFeedback(feedback));
-      dispatch(closeGeneratedAnswerFeedbackModal());
+      dispatch(sendGeneratedAnswerFeedback());
     },
 
     sendDetailedFeedback(details) {
       dispatch(logGeneratedAnswerDetailedFeedback(details));
-      dispatch(closeGeneratedAnswerFeedbackModal());
+      dispatch(sendGeneratedAnswerFeedback());
     },
 
     logCitationClick(citationId: string) {
