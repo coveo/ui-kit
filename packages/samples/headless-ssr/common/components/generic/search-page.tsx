@@ -38,6 +38,9 @@ export default function SearchPage({
     });
   }, [staticState]);
 
+  /**
+   * This hook is used to synchronize the URL with the state of the search interface.
+   */
   useSyncUrlManager({
     staticState: staticState.controllers.urlManager.state,
     controller: hydratedState?.controllers.urlManager,

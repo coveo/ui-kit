@@ -4,18 +4,25 @@ import {useEffect, useMemo} from 'react';
 import {useUrlManager} from '../../lib/react/engine';
 import {useHistoryRouter} from '../common/history-router';
 
+/**
+ * The UrlManager hook is responsible for synchronizing the URL with the state of the search interface.
+ *
+ * It uses two custom hooks: `useHistoryRouter` and `useUrlManager`. `useHistoryRouter` is used to manage the current URL and
+ * provides functions to replace or push a new URL to the browser's history. `useUrlManager` is used to manage the state of
+ * the search interface.
+ */
 export default function UrlManager() {
   const historyRouter = useHistoryRouter();
   const {state, methods} = useUrlManager();
 
-  // Update the search interface.
+  // Synchronize the search interface with the current URL whenever the URL's search parameters change.
   useEffect(() => {
     methods &&
       historyRouter.url &&
       methods.synchronize(historyRouter.url.search.slice(1));
   }, [historyRouter.url?.searchParams]);
 
-  // Update the URL.
+  // Update the browser's URL
   const correctedUrl = useMemo(() => {
     if (!historyRouter.url) {
       return null;
