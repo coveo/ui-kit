@@ -1,5 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {SortOption} from '../../../api/commerce/product-listings/v2/sort';
+import {SortOption} from '../../../api/commerce/common/sort';
 import {
   buildRelevanceSortCriterion,
   SortBy,

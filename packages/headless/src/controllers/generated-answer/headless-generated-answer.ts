@@ -216,13 +216,17 @@ export function buildGeneratedAnswer(
     },
 
     like() {
-      dispatch(likeGeneratedAnswer());
-      dispatch(logLikeGeneratedAnswer());
+      if (!this.state.liked) {
+        dispatch(likeGeneratedAnswer());
+        dispatch(logLikeGeneratedAnswer());
+      }
     },
 
     dislike() {
-      dispatch(dislikeGeneratedAnswer());
-      dispatch(logDislikeGeneratedAnswer());
+      if (!this.state.disliked) {
+        dispatch(dislikeGeneratedAnswer());
+        dispatch(logDislikeGeneratedAnswer());
+      }
     },
 
     openFeedbackModal() {

@@ -1,7 +1,5 @@
-import {FacetValueRequest} from '../../features/facets/facet-set/interfaces/request';
-import {AnyFacetRequest} from '../../features/facets/generic/interfaces/generic-facet-request';
-import {RangeValueRequest} from '../../features/facets/range-facets/generic/interfaces/range-facet';
-import {SortOption} from './product-listings/v2/sort';
+import {CommerceFacetRequest} from '../../features/commerce/facets/facet-set/interfaces/request';
+import {SortOption} from './common/sort';
 
 export interface TrackingIdParam {
   trackingId: string;
@@ -58,19 +56,18 @@ export interface CartItemParam {
   quantity: number;
 }
 
-export interface SelectedFacetsParam {
-  selectedFacets?: SelectedFacetParams[];
+export interface FacetsParam {
+  facets?: CommerceFacetRequest[];
 }
 
-export interface SelectedFacetParams
-  extends Pick<AnyFacetRequest, 'field' | 'type' | 'facetId'> {
-  values?: (FacetValueRequest | RangeValueRequest)[];
-}
-
-export interface SelectedPageParam {
+export interface PageParam {
   page?: number;
 }
 
-export interface SelectedSortParam {
+export interface SortParam {
   sort?: SortOption;
+}
+
+export interface QueryParam {
+  query?: string;
 }
