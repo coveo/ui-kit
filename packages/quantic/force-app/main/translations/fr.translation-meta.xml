@@ -681,8 +681,8 @@
       <name>quantic_ThisAnswerWasHelpful</name>
     </customLabels>
     <customLabels>
-        <label>En savoir plus</label>
-        <name>quantic_LearnMore</name>
+        <label>Citations</label>
+        <name>quantic_Citations</name>
     </customLabels>
     <customLabels>
       <label>Réessayer</label>
@@ -752,4 +752,16 @@
     <label>Résumé</label>
     <name>quantic_Summary</name>
   </customLabels>
+  <customLabels>
+    <label>La réponse générée est cachée</label>
+    <name>quantic_GeneratedAnswerIsHidden</name>
+</customLabels>
+<customLabels>
+  <label>Réponse générée: {{0}}</label>
+  <name>quantic_AnswerGenerated</name>
+</customLabels>
+<customLabels>
+  <label>Génération de la réponse</label>
+  <name>quantic_GeneratingAnswer</name>
+</customLabels>
 </Translations>

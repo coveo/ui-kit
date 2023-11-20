@@ -11,9 +11,17 @@ export default async function Search(url: {
   searchParams: {[key: string]: string | string[] | undefined};
 }) {
   const fragment = buildSearchParameterSerializer().serialize(url.searchParams);
-
+  const contextValues = {
+    ageGroup: '30-45',
+    mainInterest: 'sports',
+  };
   const staticState = await fetchStaticState({
     controllers: {
+      context: {
+        initialState: {
+          values: contextValues,
+        },
+      },
       urlManager: {
         initialState: {fragment},
       },

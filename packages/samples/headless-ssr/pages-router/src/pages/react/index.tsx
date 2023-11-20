@@ -10,11 +10,11 @@ export async function getServerSideProps(context: {
   query: {[key: string]: string | string[] | undefined};
 }) {
   const fragment = buildSearchParameterSerializer().serialize(context.query);
+  const contextValues = {ageGroup: '30-45', mainInterest: 'sports'};
   const staticState = await fetchStaticState({
     controllers: {
-      urlManager: {
-        initialState: {fragment},
-      },
+      context: {initialState: {values: contextValues}},
+      urlManager: {initialState: {fragment}},
     },
   });
   return {props: {staticState}};

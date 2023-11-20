@@ -8,6 +8,7 @@ import {
   defineResultList,
   defineSearchBox,
   defineUrlManager,
+  defineContext,
 } from '@coveo/headless/ssr';
 
 export const config = {
@@ -16,6 +17,7 @@ export const config = {
     analytics: {enabled: false},
   },
   controllers: {
+    context: defineContext(),
     searchBox: defineSearchBox(),
     resultList: defineResultList(),
     authorFacet: defineFacet({options: {facetId: 'author-1', field: 'author'}}),

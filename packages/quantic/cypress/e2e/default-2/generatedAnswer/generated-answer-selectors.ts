@@ -25,6 +25,10 @@ export interface GeneratedAnswerSelector extends ComponentSelector {
   rephraseButtonByLabel: (label: string) => CypressSelector;
   generatedAnswerFooter: () => CypressSelector;
   copyToClipboardButton: () => CypressSelector;
+  citationTooltip: (index: number) => CypressSelector;
+  citationTooltipUri: (index: number) => CypressSelector;
+  citationTooltipTitle: (index: number) => CypressSelector;
+  citationTooltipText: (index: number) => CypressSelector;
 }
 
 export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
@@ -36,11 +40,11 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
     GeneratedAnswerSelectors.get().find('[data-cy="generated-answer__answer"]'),
   likeButton: () =>
     GeneratedAnswerSelectors.get().find(
-      '[data-cy="generated-answer__feedback"] [data-cy="feedback__like-button"]'
+      '[data-cy="generated-answer__feedback"] c-quantic-stateful-button[data-cy="feedback__like-button"] button'
     ),
   dislikeButton: () =>
     GeneratedAnswerSelectors.get().find(
-      '[data-cy="generated-answer__feedback"] [data-cy="feedback__dislike-button"]'
+      '[data-cy="generated-answer__feedback"] c-quantic-stateful-button[data-cy="feedback__dislike-button"] button'
     ),
   citations: () =>
     GeneratedAnswerSelectors.get().find(
@@ -50,12 +54,10 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
     GeneratedAnswerSelectors.get()
       .find('[data-cy="generated-answer__citations"] .citation__title')
       .eq(index),
-
   citationIndex: (index: number) =>
     GeneratedAnswerSelectors.get()
       .find('[data-cy="generated-answer__citations"] .citation__index')
       .eq(index),
-
   citationLink: (index: number) =>
     GeneratedAnswerSelectors.get()
       .find('[data-cy="generated-answer__citations"] .citation__badge')
@@ -101,4 +103,27 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
     GeneratedAnswerSelectors.get().find(
       '[data-cy="generated-answer__copy-to-clipboard"]'
     ),
+  citationTooltip: (index: number) =>
+    GeneratedAnswerSelectors.get()
+      .find('[data-cy="generated-answer__citations"] [data-cy="tooltip"]')
+      .eq(index),
+  citationTooltipUri: (index: number) =>
+    GeneratedAnswerSelectors.get()
+      .find(
+        '[data-cy="generated-answer__citations"] [data-cy="citation__tooltip-uri"]'
+      )
+      .eq(index),
+  citationTooltipTitle: (index: number) =>
+    GeneratedAnswerSelectors.get()
+      .find(
+        '[data-cy="generated-answer__citations"] [data-cy="citation__tooltip-title"]'
+      )
+      .eq(index),
+
+  citationTooltipText: (index: number) =>
+    GeneratedAnswerSelectors.get()
+      .find(
+        '[data-cy="generated-answer__citations"] [data-cy="citation__tooltip-text"]'
+      )
+      .eq(index),
 };

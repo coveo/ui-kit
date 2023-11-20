@@ -22,6 +22,8 @@ export type {
   ContextState,
   ContextValue,
   ContextPayload,
+  ContextProps,
+  ContextInitialState,
 } from './context/headless-context.ssr';
 export {defineContext} from './context/headless-context.ssr';
 

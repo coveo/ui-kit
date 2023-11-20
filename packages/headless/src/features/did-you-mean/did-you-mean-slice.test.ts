@@ -58,7 +58,7 @@ describe('did you mean slice', () => {
         }),
       }),
       '',
-      logSearchEvent({evt: 'foo'})
+      {legacy: logSearchEvent({evt: 'foo'})}
     );
 
     expect(
@@ -74,7 +74,7 @@ describe('did you mean slice', () => {
         }),
       }),
       '',
-      logSearchEvent({evt: 'foo'})
+      {legacy: logSearchEvent({evt: 'foo'})}
     );
 
     expect(
@@ -91,7 +91,7 @@ describe('did you mean slice', () => {
         }),
       }),
       '',
-      logSearchEvent({evt: 'foo'})
+      {legacy: logSearchEvent({evt: 'foo'})}
     );
 
     expect(didYouMeanReducer(state, searchAction).originalQuery).toBe('');

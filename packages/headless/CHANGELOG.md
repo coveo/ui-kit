@@ -1,3 +1,27 @@
+## 2.40.2 (2023-11-16)
+
+### Bug Fixes
+
+- add missing reducers to `SearchParameterManager` controller ([#3360](https://github.com/coveo/ui-kit/issues/3360)) ([ea0b47f](https://github.com/coveo/ui-kit/commits/ea0b47fb920a6d7c00469b9694294b09ca245a77))
+
+### Features
+
+- **atomic:** added negative feedback modal for rga ([#3339](https://github.com/coveo/ui-kit/issues/3339)) ([194db3c](https://github.com/coveo/ui-kit/commits/194db3c0819aaa70e0e4089e5eb620c17fa21b88))
+- support initialState in context controller ([#3337](https://github.com/coveo/ui-kit/issues/3337)) ([f3c4623](https://github.com/coveo/ui-kit/commits/f3c4623727d319f992915f5557fad8f78abf7cab))
+
+# 2.39.0 (2023-11-08)
+
+### Bug Fixes
+
+- **deps:** update all dependencies j:kit-282 ([#3366](https://github.com/coveo/ui-kit/issues/3366)) ([da241a8](https://github.com/coveo/ui-kit/commits/da241a81d2747c57968caf6da55778fe8db9e6d5))
+- **headless:** dispatch action when fetchMoreResults() is called from a folded result list controller ([#3363](https://github.com/coveo/ui-kit/issues/3363)) ([d33048f](https://github.com/coveo/ui-kit/commits/d33048f6901139b3a7a4a84078d53bc59b3e1647))
+- **headless:** rga controller ([#3370](https://github.com/coveo/ui-kit/issues/3370)) ([9ecca09](https://github.com/coveo/ui-kit/commits/9ecca0948f8806e5983436499745b39ad8556e91))
+
+### Features
+
+- **analytics:** extract the trackingId from the Coveo-Pendragon cookie ([#3353](https://github.com/coveo/ui-kit/issues/3353)) ([4a56285](https://github.com/coveo/ui-kit/commits/4a562859002190cd3623ce98fd01f126c9870a34))
+- **headless:** exported highlights and result templates utilities in case assist, insight and recommendation bundles ([#3371](https://github.com/coveo/ui-kit/issues/3371)) ([403cc0a](https://github.com/coveo/ui-kit/commits/403cc0a7cda51979d1ba35ed047f18bbbaff8d19))
+
 ## 2.38.3 (2023-11-02)
 
 ### Bug Fixes

@@ -453,6 +453,18 @@ const controllers: ControllerConfiguration[] = [
       ],
     },
   },
+  {
+    initializer: 'buildInteractiveInstantResult',
+    samplePaths: {},
+  },
+  {
+    initializer: 'buildInteractiveRecentResult',
+    samplePaths: {},
+  },
+  {
+    initializer: 'buildInteractiveCitation',
+    samplePaths: {},
+  },
 ];
 
 const actionLoaders: ActionLoaderConfiguration[] = [

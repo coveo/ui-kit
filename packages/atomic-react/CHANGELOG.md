@@ -1,3 +1,11 @@
+## 2.7.7 (2023-11-16)
+
+## 2.7.4 (2023-11-08)
+
+### Bug Fixes
+
+- **deps:** update all dependencies j:kit-282 ([#3366](https://github.com/coveo/ui-kit/issues/3366)) ([da241a8](https://github.com/coveo/ui-kit/commits/da241a81d2747c57968caf6da55778fe8db9e6d5))
+
 ## 2.7.3 (2023-11-02)
 
 ### Bug Fixes

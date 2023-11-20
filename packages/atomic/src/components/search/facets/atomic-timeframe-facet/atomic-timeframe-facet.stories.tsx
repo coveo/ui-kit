@@ -28,4 +28,4 @@ const {defaultModuleExport, exportedStory} = defaultStory(
 );
 
 export default {...defaultModuleExport, title: 'Atomic/TimeframeFacet'};
-export const DefaultTimeframeFacet = exportedStory;
+export const Default = exportedStory;
