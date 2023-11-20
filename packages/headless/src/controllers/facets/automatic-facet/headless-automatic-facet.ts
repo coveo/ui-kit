@@ -46,13 +46,15 @@ export function buildAutomaticFacet(
     toggleSelect(selection: FacetValue) {
       dispatch(toggleSelectAutomaticFacetValue({field, selection}));
       dispatch(
-        executeSearch(getAnalyticsActionForToggleFacetSelect(field, selection))
+        executeSearch({
+          legacy: getAnalyticsActionForToggleFacetSelect(field, selection),
+        })
       );
     },
 
     deselectAll() {
       dispatch(deselectAllAutomaticFacetValues(field));
-      dispatch(executeSearch(logFacetClearAll(field)));
+      dispatch(executeSearch({legacy: logFacetClearAll(field)}));
     },
 
     get state() {

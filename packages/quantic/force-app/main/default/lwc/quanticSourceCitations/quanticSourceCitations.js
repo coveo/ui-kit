@@ -1,4 +1,4 @@
-import learnMore from '@salesforce/label/c.quantic_LearnMore';
+import citations from '@salesforce/label/c.quantic_Citations';
 import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").GeneratedAnswerCitation} GeneratedAnswerCitation */
@@ -11,7 +11,7 @@ import {LightningElement, api} from 'lwc';
  */
 export default class QuanticSourceCitations extends LightningElement {
   labels = {
-    learnMore,
+    citations,
   };
 
   /**

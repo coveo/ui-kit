@@ -4,9 +4,13 @@ import {CommerceAPIClient} from '../../api/commerce/commerce-api-client';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {cartReducer} from '../../features/commerce/context/cart/cart-slice';
 import {contextReducer} from '../../features/commerce/context/context-slice';
+import {commerceFacetSetReducer} from '../../features/commerce/facets/facet-set/facet-set-slice';
 import {paginationReducer} from '../../features/commerce/pagination/pagination-slice';
 import {productListingV2Reducer} from '../../features/commerce/product-listing/product-listing-slice';
+import {queryReducer} from '../../features/commerce/query/query-slice';
+import {commerceSearchReducer} from '../../features/commerce/search/search-slice';
 import {sortReducer} from '../../features/commerce/sort/sort-slice';
+import {facetOrderReducer} from '../../features/facets/facet-order/facet-order-slice';
 import {CommerceAppState} from '../../state/commerce-app-state';
 import {CommerceThunkExtraArguments} from '../commerce-thunk-extra-arguments';
 import {
@@ -26,9 +30,13 @@ export type {CommerceEngineConfiguration};
 
 const commerceEngineReducers = {
   productListing: productListingV2Reducer,
+  commerceSearch: commerceSearchReducer,
   commercePagination: paginationReducer,
   commerceSort: sortReducer,
+  facetOrder: facetOrderReducer,
+  commerceFacetSet: commerceFacetSetReducer,
   commerceContext: contextReducer,
+  commerceQuery: queryReducer,
   cart: cartReducer,
 };
 type CommerceEngineReducers = typeof commerceEngineReducers;

@@ -1,6 +1,7 @@
 {
   "name": "quantic",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "implicitDependencies": ["quantic-isolated-sfdx"],
   "namedInputs": {
     "negativeBuildOutputs": [
       "!{projectRoot}/docs/out",

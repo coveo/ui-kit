@@ -587,7 +587,9 @@ describe('facet-set slice', () => {
       const search = buildMockSearch();
       search.response.facets = facets;
 
-      return executeSearch.fulfilled(search, '', logSearchEvent({evt: 'foo'}));
+      return executeSearch.fulfilled(search, '', {
+        legacy: logSearchEvent({evt: 'foo'}),
+      });
     }
 
     testFulfilledSearchRequest(buildExecuteSearchAction);
@@ -598,11 +600,9 @@ describe('facet-set slice', () => {
       const search = buildMockSearch();
       search.response.facets = facets;
 
-      return fetchFacetValues.fulfilled(
-        search,
-        '',
-        logSearchEvent({evt: 'foo'})
-      );
+      return fetchFacetValues.fulfilled(search, '', {
+        legacy: logSearchEvent({evt: 'foo'}),
+      });
     }
 
     testFulfilledSearchRequest(buildFetchFacetValuesAction);

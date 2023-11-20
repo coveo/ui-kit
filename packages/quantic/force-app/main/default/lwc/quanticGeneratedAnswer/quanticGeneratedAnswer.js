@@ -276,6 +276,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   handleGeneratedAnswerRephrase = (event) => {
     event.stopPropagation();
     this.generatedAnswer.rephrase({answerStyle: event?.detail});
+    this.feedbackSubmitted = false;
   };
 
   handleGeneratedAnswerCopyToClipboard = (event) => {
@@ -387,7 +388,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get generatedAnswerFooterCssClass() {
-    return `slds-grid generated-answer__footer--${
+    return `slds-grid slds-grid_align-spread generated-answer__footer--${
       this.multilineFooter ? 'multiline' : 'standard'
     }`;
   }
