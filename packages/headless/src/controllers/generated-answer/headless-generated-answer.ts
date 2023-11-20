@@ -10,6 +10,7 @@ import {
   openGeneratedAnswerFeedbackModal,
   closeGeneratedAnswerFeedbackModal,
   setIsVisible,
+  sendGeneratedAnswerFeedback,
 } from '../../features/generated-answer/generated-answer-actions';
 import {
   GeneratedAnswerFeedback,
@@ -215,13 +216,17 @@ export function buildGeneratedAnswer(
     },
 
     like() {
-      dispatch(likeGeneratedAnswer());
-      dispatch(logLikeGeneratedAnswer());
+      if (!this.state.liked) {
+        dispatch(likeGeneratedAnswer());
+        dispatch(logLikeGeneratedAnswer());
+      }
     },
 
     dislike() {
-      dispatch(dislikeGeneratedAnswer());
-      dispatch(logDislikeGeneratedAnswer());
+      if (!this.state.disliked) {
+        dispatch(dislikeGeneratedAnswer());
+        dispatch(logDislikeGeneratedAnswer());
+      }
     },
 
     openFeedbackModal() {
@@ -234,12 +239,12 @@ export function buildGeneratedAnswer(
 
     sendFeedback(feedback) {
       dispatch(logGeneratedAnswerFeedback(feedback));
-      dispatch(closeGeneratedAnswerFeedbackModal());
+      dispatch(sendGeneratedAnswerFeedback());
     },
 
     sendDetailedFeedback(details) {
       dispatch(logGeneratedAnswerDetailedFeedback(details));
-      dispatch(closeGeneratedAnswerFeedbackModal());
+      dispatch(sendGeneratedAnswerFeedback());
     },
 
     logCitationClick(citationId: string) {

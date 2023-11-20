@@ -9,7 +9,6 @@ import {
   Event,
   EventEmitter,
 } from '@stencil/core/internal';
-import {capitalize} from 'lodash';
 import CloseIcon from '../../../../images/close.svg';
 import Success from '../../../../images/success.svg';
 import {
@@ -125,7 +124,7 @@ export class AtomicGeneratedAnswerFeedbackModal
       <div
         slot="header"
         part="modal-header"
-        class="w-full p-2 flex justify-between items-center"
+        class="w-full flex justify-between items-center"
       >
         <h1>{this.bindings.i18n.t('feedback')}</h1>
         <IconButton
@@ -183,12 +182,6 @@ export class AtomicGeneratedAnswerFeedbackModal
 
     return (
       <fieldset>
-        <legend
-          part="details-title"
-          class="font-bold text-on-background text-lg"
-        >
-          {capitalize(this.bindings.i18n.t('details'))}
-        </legend>
         <textarea
           part="details-input"
           name="answer-details"
@@ -210,6 +203,7 @@ export class AtomicGeneratedAnswerFeedbackModal
         slot="body"
         onSubmit={(e) => {
           e.preventDefault();
+          this.feedbackSubmitted = true;
           this.sendFeedback();
         }}
         class="flex flex-col gap-8 text-base leading-4 text-neutral-dark p-2"
@@ -220,7 +214,7 @@ export class AtomicGeneratedAnswerFeedbackModal
     ) : (
       <div slot="body" class="flex flex-col items-center gap-4 my-4">
         <atomic-icon icon={Success} class="w-48" />
-        <p class="text-sm">
+        <p class="text-base">
           {this.bindings.i18n.t('generated-answer-feedback-success')}
         </p>
       </div>
@@ -231,15 +225,15 @@ export class AtomicGeneratedAnswerFeedbackModal
     return (
       <div slot="footer" part="modalFooter">
         {!this.feedbackSubmitted ? (
-          <div part="buttons" class="flex justify-end gap-2 p-2">
+          <div part="buttons" class="flex justify-end gap-2 px-4">
             <Button
               part="cancel-button"
               style="outline-neutral"
               class="text-primary flex justify-center text-sm leading-4 p-2"
-              ariaLabel={this.bindings.i18n.t('cancel')}
+              ariaLabel={this.bindings.i18n.t('close')}
               onClick={() => this.close()}
             >
-              {this.bindings.i18n.t('cancel')}
+              {this.bindings.i18n.t('close')}
             </Button>
             <Button
               part="submit-button"
@@ -247,13 +241,9 @@ export class AtomicGeneratedAnswerFeedbackModal
               type="submit"
               form={this.formId}
               class="flex justify-center text-sm leading-4 p-2"
-              disabled={!this.currentAnswer}
               ariaLabel={this.bindings.i18n.t('feedback-send')}
-              onClick={() => {
-                this.feedbackSubmitted = true;
-              }}
             >
-              {this.bindings.i18n.t('send')}
+              {this.bindings.i18n.t('feedback-send')}
             </Button>
           </div>
         ) : (

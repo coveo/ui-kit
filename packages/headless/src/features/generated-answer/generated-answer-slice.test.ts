@@ -13,6 +13,7 @@ import {
   updateResponseFormat,
   openGeneratedAnswerFeedbackModal,
   closeGeneratedAnswerFeedbackModal,
+  sendGeneratedAnswerFeedback,
 } from './generated-answer-actions';
 import {generatedAnswerReducer} from './generated-answer-slice';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
@@ -259,6 +260,18 @@ describe('generated answer slice', () => {
     expect(finalState).toEqual({
       ...getGeneratedAnswerInitialState(),
       feedbackModalOpen: false,
+    });
+  });
+
+  it('#sendGeneratedAnswerFeedback should set feedbackSubmitted to true in the state', () => {
+    const finalState = generatedAnswerReducer(
+      baseState,
+      sendGeneratedAnswerFeedback()
+    );
+
+    expect(finalState).toEqual({
+      ...getGeneratedAnswerInitialState(),
+      feedbackSubmitted: true,
     });
   });
 

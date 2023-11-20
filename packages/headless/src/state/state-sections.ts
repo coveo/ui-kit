@@ -7,8 +7,11 @@ import {CaseFieldState} from '../features/case-field/case-field-state';
 import {CaseInputState} from '../features/case-input/case-input-state';
 import {CartState} from '../features/commerce/context/cart/cart-state';
 import {CommerceContextState} from '../features/commerce/context/context-state';
+import {CommerceFacetSetState} from '../features/commerce/facets/facet-set/facet-set-state';
 import {CommercePaginationState} from '../features/commerce/pagination/pagination-state';
 import {ProductListingV2State} from '../features/commerce/product-listing/product-listing-state';
+import {CommerceQueryState} from '../features/commerce/query/query-state';
+import {CommerceSearchState} from '../features/commerce/search/search-state';
 import {CommerceSortState} from '../features/commerce/sort/sort-state';
 import {ConfigurationState} from '../features/configuration/configuration-state';
 import {ContextState} from '../features/context/context-state';
@@ -312,6 +315,13 @@ export interface CommerceContextSection {
   commerceContext: CommerceContextState;
 }
 
+export interface CommerceFacetSetSection {
+  /**
+   * The information related to the commerce facets.
+   */
+  commerceFacetSet: CommerceFacetSetState;
+}
+
 export interface CartSection {
   /**
    * The information related to the cart.
@@ -324,6 +334,20 @@ export interface ProductListingV2Section {
    * The information related to the product listing endpoint.
    */
   productListing: ProductListingV2State;
+}
+
+export interface CommerceSearchSection {
+  /**
+   * The information related to the commerce search endpoint.
+   */
+  commerceSearch: CommerceSearchState;
+}
+
+export interface CommerceQuerySection {
+  /**
+   * The current user query.
+   */
+  commerceQuery: CommerceQueryState;
 }
 
 export interface StructuredSortSection {

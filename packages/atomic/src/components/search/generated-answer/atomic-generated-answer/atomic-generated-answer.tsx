@@ -61,9 +61,6 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   @State()
   private modalRef!: HTMLAtomicGeneratedAnswerFeedbackModalElement;
 
-  @State() hidden = true;
-  @State() feedbackSent = false;
-
   @Element() private host!: HTMLElement;
 
   @State()
@@ -227,7 +224,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   }
 
   private clickDislike = () => {
-    if (this.modalRef) {
+    if (this.modalRef && !this.generatedAnswerState.feedbackSubmitted) {
       this.modalRef.isOpen = true;
     }
     this.generatedAnswer.dislike();
@@ -253,7 +250,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
                     title={this.bindings.i18n.t('this-answer-was-helpful')}
                     variant="like"
                     active={this.generatedAnswerState.liked}
-                    onClick={this.generatedAnswer.like}
+                    onClick={() => this.generatedAnswer.like()}
                   />
                   <FeedbackButton
                     title={this.bindings.i18n.t('this-answer-was-not-helpful')}
