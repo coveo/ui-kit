@@ -32,7 +32,7 @@ export function useSyncUrlManager({
     controller &&
       historyRouter.url &&
       controller.synchronize(historyRouter.url.search.slice(1));
-  }, [historyRouter.url?.search]);
+  }, [historyRouter.url?.searchParams]);
 
   // Update the URL.
   const correctedUrl = useMemo(() => {
