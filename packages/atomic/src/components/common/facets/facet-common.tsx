@@ -94,12 +94,12 @@ export type BaseFacetElement<FacetType extends AnyFacetType = AnyFacetType> =
 type StateProp<FacetType extends AnyFacetType> = FacetType extends Facet
   ? {facetState: FacetState}
   : FacetType extends NumericFacet
-  ? {facetState: NumericFacetState}
-  : FacetType extends CategoryFacet
-  ? {facetState: CategoryFacetState}
-  : FacetType extends DateFacet
-  ? {facetState: DateFacetState}
-  : {facetState: never};
+    ? {facetState: NumericFacetState}
+    : FacetType extends CategoryFacet
+      ? {facetState: CategoryFacetState}
+      : FacetType extends DateFacet
+        ? {facetState: DateFacetState}
+        : {facetState: never};
 
 type SearchProp<FacetType extends AnyFacetType> = FacetType extends
   | Facet
@@ -125,8 +125,8 @@ type SortCriterionProp<FacetType extends AnyFacetType> = FacetType extends
         : CategoryFacetSortCriterion;
     }
   : FacetType extends NumericFacet
-  ? {sortCriteria?: RangeFacetSortCriterion}
-  : {};
+    ? {sortCriteria?: RangeFacetSortCriterion}
+    : {};
 
 type DisplayValuesAsProp = {
   displayValueAs?: 'checkbox' | 'box' | 'link';
