@@ -75,7 +75,7 @@ export type {
   ContextValue,
   ContextPayload,
 } from './controllers/context/headless-context';
-export {buildContext} from './controllers/recommendation/context/headless-recommendation-context';
+export {buildContext} from './controllers/context/headless-context';
 
 export type {
   DictionaryFieldContext,

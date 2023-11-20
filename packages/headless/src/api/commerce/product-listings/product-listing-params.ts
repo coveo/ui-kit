@@ -1,4 +1,4 @@
-import {ContextPayload} from '../../../controllers/product-listing/context/headless-product-listing-context';
+import {ContextPayload} from '../../../features/context/context-state';
 import {FacetOptions} from '../../../features/facet-options/facet-options';
 import {AnyFacetRequest} from '../../../features/facets/generic/interfaces/generic-facet-request';
 import {SortCriterion} from '../../../features/sort/sort';

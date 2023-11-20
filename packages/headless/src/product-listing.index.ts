@@ -182,8 +182,8 @@ export type {
   ContextState,
   ContextPayload,
   ContextValue,
-} from './controllers/product-listing/context/headless-product-listing-context';
-export {buildContext} from './controllers/product-listing/context/headless-product-listing-context';
+} from './controllers/context/headless-context';
+export {buildContext} from './controllers/context/headless-context';
 
 export type {
   InteractiveResultCore,
