@@ -1,3 +1,38 @@
+## 2.39.1 (2023-11-16)
+
+### Bug Fixes
+
+- **quantic:** fixed issue with pasting query in search box ([#3375](https://github.com/coveo/ui-kit/issues/3375)) ([1ef3674](https://github.com/coveo/ui-kit/commits/1ef36747a5804f4b31cbad95edacea2b6d9b526e))
+- **quantic:** minor issues fixed in the Quantic Generated answer component ([#3391](https://github.com/coveo/ui-kit/issues/3391)) ([902d3e8](https://github.com/coveo/ui-kit/commits/902d3e8e9d174134a86d78e4df0c69fb31d66ab7))
+
+### Features
+
+- **quantic:** improved accessibility of the Quantic Generated Answer component ([#3372](https://github.com/coveo/ui-kit/issues/3372)) ([c9e418d](https://github.com/coveo/ui-kit/commits/c9e418de84dafda467acc7ec8f71c0f54d54d0f4))
+
+# 2.38.0 (2023-11-08)
+
+### Bug Fixes
+
+- **deps:** update all dependencies j:kit-282 ([#3366](https://github.com/coveo/ui-kit/issues/3366)) ([da241a8](https://github.com/coveo/ui-kit/commits/da241a81d2747c57968caf6da55778fe8db9e6d5))
+
+### Features
+
+- **quantic:** added the ability to have text highlighting in a quantic search interface ([#3361](https://github.com/coveo/ui-kit/issues/3361)) ([24f7bd6](https://github.com/coveo/ui-kit/commits/24f7bd6437126cd14556dc499e19e6bca0b8e67e))
+- **quantic:** citations details feature added when hovering over a citation ([#3356](https://github.com/coveo/ui-kit/issues/3356)) ([f8b807f](https://github.com/coveo/ui-kit/commits/f8b807f8cf616bff07edd5530abdd80e38ef742f))
+- **quantic:** refactored QuanticResultAction to make it use the QuanticTooltip component ([#3359](https://github.com/coveo/ui-kit/issues/3359)) ([9221f84](https://github.com/coveo/ui-kit/commits/9221f84316b8dfd060e4285950241fc57ba2e7ac))
+
+## 2.37.3 (2023-11-02)
+
+### Bug Fixes
+
+- **deps:** update all dependencies j:kit-282 ([#3347](https://github.com/coveo/ui-kit/issues/3347)) ([047b2a8](https://github.com/coveo/ui-kit/commits/047b2a8e8d82445c1fb800c5ac19428223cf4e56))
+
+### Features
+
+- double publish the NPM packages into GitHub packages for use by internal repositories also using the [@coveo](https://github.com/coveo) scope ([#3251](https://github.com/coveo/ui-kit/issues/3251)) ([4d413e6](https://github.com/coveo/ui-kit/commits/4d413e6bb27065b6667f4705db17b21d6112128b))
+- **quantic:** added support for the reformulate feature for rga in quantic ([#3333](https://github.com/coveo/ui-kit/issues/3333)) ([0236019](https://github.com/coveo/ui-kit/commits/02360194a75e3726a944da1c45529885b6626c94))
+- **quantic:** copy to clipboard button added to quantic rga ([#3341](https://github.com/coveo/ui-kit/issues/3341)) ([a524fe2](https://github.com/coveo/ui-kit/commits/a524fe2a5e5ec0eb9da3111244c91787bbb64fb8))
+
 # 2.36.0 (2023-10-25)
 
 ### Features

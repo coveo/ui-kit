@@ -681,8 +681,8 @@
       <name>quantic_ThisAnswerWasHelpful</name>
     </customLabels>
     <customLabels>
-        <label>En savoir plus</label>
-        <name>quantic_LearnMore</name>
+        <label>Citations</label>
+        <name>quantic_Citations</name>
     </customLabels>
     <customLabels>
       <label>Réessayer</label>
@@ -728,4 +728,40 @@
     <label>Dites-nous pourquoi la réponse générée n'était pas utile.</label>
     <name>quantic_WhyGeneratedAnswerWasNotHelpful</name>
   </customLabels>
+  <customLabels>
+    <label>Reformuler</label>
+    <name>quantic_Rephrase</name>
+  </customLabels>
+  <customLabels>
+    <label>Instructions étape par étape</label>
+    <name>quantic_StepByStepInstructions</name>
+  </customLabels>
+  <customLabels>
+    <label>Étapes</label>
+    <name>quantic_Steps</name>
+  </customLabels>
+  <customLabels>
+    <label>Résumé avec des points</label>
+    <name>quantic_BulletPointSummary</name>
+  </customLabels>
+  <customLabels>
+    <label>Points</label>
+    <name>quantic_Bullets</name>
+  </customLabels>
+  <customLabels>
+    <label>Résumé</label>
+    <name>quantic_Summary</name>
+  </customLabels>
+  <customLabels>
+    <label>La réponse générée est cachée</label>
+    <name>quantic_GeneratedAnswerIsHidden</name>
+</customLabels>
+<customLabels>
+  <label>Réponse générée: {{0}}</label>
+  <name>quantic_AnswerGenerated</name>
+</customLabels>
+<customLabels>
+  <label>Génération de la réponse</label>
+  <name>quantic_GeneratingAnswer</name>
+</customLabels>
 </Translations>

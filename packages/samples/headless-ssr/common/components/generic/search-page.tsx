@@ -22,11 +22,15 @@ export default function SearchPage({
   >(undefined);
 
   useEffect(() => {
+    const {searchParameters, context} = staticState.controllers;
     hydrateStaticState({
       searchAction: staticState.searchAction,
       controllers: {
+        context: {
+          initialState: context.state,
+        },
         searchParameters: {
-          initialState: staticState.controllers.searchParameters.state,
+          initialState: searchParameters.state,
         },
       },
     }).then(({engine, controllers}) => {

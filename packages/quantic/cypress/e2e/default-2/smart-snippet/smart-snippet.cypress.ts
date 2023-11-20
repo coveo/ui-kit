@@ -28,7 +28,7 @@ const exampleInlineLinkText = 'Example inline link';
 const exampleInlineLinkUrl =
   'https://saas-inspiration-5437-dev-ed.scratch.my.site.com/examples/s/';
 const exampleSmartSnippetAnswer = `<div data-cy="smart-snippet__inline-link"><p>Example smart snippet answer</p><a href="${exampleInlineLinkUrl}">${exampleInlineLinkText}</a></div>`;
-
+const exampleUriHash = 'exampleUriHash';
 const otherOption = 'other';
 const feedbackOptions = [
   'does_not_answer',
@@ -55,6 +55,7 @@ describe('quantic-smart-snippet', {browser: 'chrome'}, () => {
           title: exampleSmartSnippetSourceTitle,
           uri: exampleSmartSnippetSourceUri,
           permanentId: examplePermanentId,
+          uriHash: exampleUriHash,
         },
         options.useCase
       );

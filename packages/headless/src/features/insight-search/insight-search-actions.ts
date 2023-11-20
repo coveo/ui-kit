@@ -43,7 +43,7 @@ import {
 } from '../query-suggest/query-suggest-actions';
 import {updateQuery} from '../query/query-actions';
 import {getQueryInitialState} from '../query/query-state';
-import {ExecuteSearchThunkReturn} from '../search/search-actions';
+import {ExecuteSearchThunkReturn} from '../search/legacy/search-actions';
 import {
   MappedSearchRequest,
   mapSearchResponse,

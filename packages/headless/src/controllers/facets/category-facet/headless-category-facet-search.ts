@@ -51,7 +51,9 @@ export function buildCategoryFacetSearch(
       coreFacetSearch.select(value);
       dispatch(updateFacetOptions());
       dispatch(
-        executeSearch(logFacetSelect({facetId, facetValue: value.rawValue}))
+        executeSearch({
+          legacy: logFacetSelect({facetId, facetValue: value.rawValue}),
+        })
       );
     },
 

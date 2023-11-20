@@ -149,58 +149,6 @@ export default class QuanticFeedback extends LightningElement {
   }
 
   /**
-   * Returns the variant of the like button icon.
-   * @returns {'success' | null}
-   */
-  get likeIconVariant() {
-    return this.liked ? 'success' : null;
-  }
-
-  /**
-   * Returns the variant of the dislike button icon.
-   * @returns {'error' | null}
-   */
-  get dislikeIconVariant() {
-    return this.disliked ? 'error' : null;
-  }
-
-  /**
-   * Returns the class of the like button icon.
-   * @returns {string}
-   */
-  get likeIconClass() {
-    return this.liked ? 'feedback__icon--liked' : '';
-  }
-
-  /**
-   * Returns the class of the dislike button icon.
-   * @returns {string}
-   */
-  get dislikeIconClass() {
-    return this.disliked ? 'feedback__icon--disliked' : '';
-  }
-
-  /**
-   * Returns the class of the like button.
-   * @returns {string}
-   */
-  get likeButtonClass() {
-    return `feedback__like-button slds-button slds-button_icon slds-var-m-right_small ${
-      this.liked ? 'feedback__button--liked' : 'feedback__button--neutral'
-    } `;
-  }
-
-  /**
-   * Returns the class of the dislike button.
-   * @returns {string}
-   */
-  get dislikeButtonClass() {
-    return `feedback__dislike-button slds-button slds-button_icon ${
-      this.disliked ? 'feedback__button--disliked' : 'feedback__button--neutral'
-    } `;
-  }
-
-  /**
    * Indicates whether the success message should be displayed.
    * @returns {boolean}
    */
@@ -209,5 +157,15 @@ export default class QuanticFeedback extends LightningElement {
       (!!this.successMessage || !this.hideExplainWhyButton) &&
       this.state !== 'neutral'
     );
+  }
+
+  get likeButtonLabel() {
+    if (this.hideLabels) return '';
+    return this.likeLabel;
+  }
+
+  get dislikeButtonLabel() {
+    if (this.hideLabels) return '';
+    return this.dislikeLabel;
   }
 }

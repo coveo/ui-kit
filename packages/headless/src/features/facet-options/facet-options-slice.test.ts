@@ -47,7 +47,7 @@ describe('facet options slice', () => {
     const search = buildMockSearch();
     state = facetOptionsReducer(
       state,
-      executeSearch.fulfilled(search, '', logSearchEvent({evt: ''}))
+      executeSearch.fulfilled(search, '', {legacy: logSearchEvent({evt: ''})})
     );
 
     expect(state.freezeFacetOrder).toBe(false);
@@ -58,11 +58,9 @@ describe('facet options slice', () => {
 
     state = facetOptionsReducer(
       state,
-      executeSearch.rejected(
-        {message: '', name: ''},
-        '',
-        logSearchEvent({evt: ''})
-      )
+      executeSearch.rejected({message: '', name: ''}, '', {
+        legacy: logSearchEvent({evt: ''}),
+      })
     );
 
     expect(state.freezeFacetOrder).toBe(false);

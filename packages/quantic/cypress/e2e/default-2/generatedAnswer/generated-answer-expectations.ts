@@ -1,3 +1,4 @@
+import {Interception} from '../../../../../../node_modules/cypress/types/net-stubbing';
 import {InterceptAliases} from '../../../page-objects/search';
 import {should} from '../../common-selectors';
 import {
@@ -5,7 +6,7 @@ import {
   GeneratedAnswerSelectors,
 } from './generated-answer-selectors';
 
-function logCustomGeneratedAnswerEvent(event: string, checkPayload: Function) {
+function logGeneratedAnswerEvent(event: string, checkPayload: Function) {
   cy.wait(event)
     .then((interception) => {
       const analyticsBody = interception.request.body;
@@ -58,24 +59,39 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         .log(`${should(display)} display the source citations`);
     },
 
-    likeButtonIsChecked: (checked: boolean) => {
+    displayCopyToClipboardButton: (display: boolean) => {
+      selector
+        .copyToClipboardButton()
+        .should(display ? 'exist' : 'not.exist')
+        .log(`${should(display)} display the copy to clipboard button`);
+    },
+
+    likeButtonIsChecked: (selected: boolean) => {
       selector
         .likeButton()
         .should(
-          checked ? 'have.class' : 'not.have.class',
-          'feedback__button--liked'
+          selected ? 'have.class' : 'not.have.class',
+          'stateful-button--selected'
         )
-        .log(`the like button ${should(checked)} be in a liked state`);
+        .should(
+          selected ? 'not.have.class' : 'have.class',
+          'stateful-button--unselected'
+        )
+        .log(`the like button ${should(selected)} be in a liked state`);
     },
 
-    dislikeButtonIsChecked: (checked: boolean) => {
+    dislikeButtonIsChecked: (selected: boolean) => {
       selector
         .dislikeButton()
         .should(
-          checked ? 'have.class' : 'not.have.class',
-          'feedback__button--disliked'
+          selected ? 'have.class' : 'not.have.class',
+          'stateful-button--selected'
         )
-        .log(`the dislike button ${should(checked)} be in a disliked state`);
+        .should(
+          selected ? 'not.have.class' : 'have.class',
+          'stateful-button--unselected'
+        )
+        .log(`the dislike button ${should(selected)} be in a disliked state`);
     },
 
     toggleGeneratedAnswerButtonIsChecked: (checked: boolean) => {
@@ -84,6 +100,20 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         .should(checked ? 'have.attr' : 'not.have.attr', 'checked', 'checked')
         .log(
           `the generated answer toggle button ${should(checked)} be checked`
+        );
+    },
+
+    generatedAnswerFooterIsOnMultiline: (multilineDisplay: boolean) => {
+      selector
+        .generatedAnswerFooter()
+        .should(
+          multilineDisplay ? 'have.class' : 'not.have.class',
+          'generated-answer__footer--multiline'
+        )
+        .log(
+          `the generated answer footer ${should(
+            multilineDisplay
+          )} be displayed on multiple lines`
         );
     },
 
@@ -157,6 +187,101 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         .log(`${should(display)} display the feedback modal`);
     },
 
+    displayRephraseButtons: (display: boolean) => {
+      selector
+        .rephraseButtons()
+        .should(display ? 'exist' : 'not.exist')
+        .log(`${should(display)} display the rephrase buttons`);
+    },
+
+    displayRephraseLabel: (display: boolean) => {
+      selector
+        .rephraseLabel()
+        .should(display ? 'exist' : 'not.exist')
+        .log(`${should(display)} display the rephrase label`);
+    },
+
+    displayRephraseButtonWithLabel: (label: string) => {
+      selector
+        .rephraseButtonByLabel(label)
+        .should('exist')
+        .log(`should display the rephrase button with the label ${label}`);
+    },
+
+    rephraseButtonIsSelected: (name: string, selected: boolean) => {
+      selector
+        .rephraseButtonByLabel(name)
+        .should(
+          selected ? 'have.class' : 'not.have.class',
+          'stateful-button--selected'
+        )
+        .should(
+          selected ? 'not.have.class' : 'have.class',
+          'stateful-button--unselected'
+        )
+        .log(`the ${name} rephrase button ${should(selected)} be selected`);
+    },
+
+    citationTooltipIsDisplayed: (index: number, displayed: boolean) => {
+      selector
+        .citationTooltip(index)
+        .should(
+          displayed ? 'have.class' : 'not.have.class',
+          'tooltip__content--visible'
+        )
+        .log(
+          `the tooltip of the citation at index ${index} ${should(
+            displayed
+          )} be displayed`
+        );
+    },
+
+    citationTooltipUrlContains: (index: number, url: string) => {
+      selector
+        .citationTooltipUri(index)
+        .then((element) => {
+          expect(element.get(0).textContent).to.equal(url);
+        })
+        .log(
+          `the citation tooltip url at the index ${index} should contain the url "${url}"`
+        );
+    },
+
+    citationTooltipTitleContains: (index: number, title: string) => {
+      selector
+        .citationTooltipTitle(index)
+        .then((element) => {
+          expect(element.get(0).textContent).to.equal(title);
+        })
+        .log(
+          `the citation tooltip title at the index ${index} should contain the title "${title}"`
+        );
+    },
+
+    citationTooltipTextContains: (index: number, text: string) => {
+      selector
+        .citationTooltipText(index)
+        .then((element) => {
+          expect(element.get(0).textContent).to.equal(text);
+        })
+        .log(
+          `the citation tooltip text at the index ${index} should contain the text "${text}"`
+        );
+    },
+
+    searchQueryContainsCorrectRephraseOption: (expectedAnswerStyle: string) => {
+      cy.get<Interception>(InterceptAliases.Search)
+        .then((interception) => {
+          const answerStyle =
+            interception?.request?.body?.pipelineRuleParameters
+              ?.mlGenerativeQuestionAnswering?.responseFormat?.answerStyle;
+          expect(answerStyle).to.eq(expectedAnswerStyle);
+        })
+        .log(
+          `the search query should contain the correct ${expectedAnswerStyle} parameter`
+        );
+    },
+
     logStreamIdInAnalytics(streamId: string) {
       cy.wait(InterceptAliases.UA.Load)
         .then((interception) => {
@@ -171,7 +296,7 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
     },
 
     logLikeGeneratedAnswer(streamId: string) {
-      logCustomGeneratedAnswerEvent(
+      logGeneratedAnswerEvent(
         InterceptAliases.UA.GeneratedAnswer.LikeGeneratedAnswer,
         (analyticsBody: {customData: object; eventType: string}) => {
           const customData = analyticsBody?.customData;
@@ -188,7 +313,7 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
     },
 
     logDislikeGeneratedAnswer(streamId: string) {
-      logCustomGeneratedAnswerEvent(
+      logGeneratedAnswerEvent(
         InterceptAliases.UA.GeneratedAnswer.DislikeGeneratedAnswer,
         (analyticsBody: {customData: object; eventType: string}) => {
           const customData = analyticsBody?.customData;
@@ -205,7 +330,7 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
     },
 
     logGeneratedAnswerStreamEnd(streamId: string) {
-      logCustomGeneratedAnswerEvent(
+      logGeneratedAnswerEvent(
         InterceptAliases.UA.GeneratedAnswer.GeneratedAnswerStreamEnd,
         (analyticsBody: {customData: object; eventType: string}) => {
           const customData = analyticsBody?.customData;
@@ -225,7 +350,7 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
       streamId: string,
       citation: {id: string; permanentid: string}
     ) {
-      logCustomGeneratedAnswerEvent(
+      logGeneratedAnswerEvent(
         InterceptAliases.UA.GeneratedAnswer.OpenGeneratedAnswerSource,
         (analyticsBody: {customData: object; eventType: string}) => {
           const customData = analyticsBody?.customData;
@@ -246,8 +371,34 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
       );
     },
 
+    logHoverGeneratedAnswerSource(
+      streamId: string,
+      citation: {id: string; permanentid: string}
+    ) {
+      logGeneratedAnswerEvent(
+        InterceptAliases.UA.GeneratedAnswer.GeneratedAnswerSourceHover,
+        (analyticsBody: {customData: object; eventType: string}) => {
+          const customData = analyticsBody?.customData;
+          expect(customData).to.have.property('citationHoverTimeMs');
+          expect(analyticsBody).to.have.property(
+            'eventType',
+            'generatedAnswer'
+          );
+          expect(customData).to.have.property(
+            'generativeQuestionAnsweringId',
+            streamId
+          );
+          expect(customData).to.have.property('citationId', citation.id);
+          expect(customData).to.have.property(
+            'permanentId',
+            citation.permanentid
+          );
+        }
+      );
+    },
+
     logRetryGeneratedAnswer(streamId: string) {
-      logCustomGeneratedAnswerEvent(
+      logGeneratedAnswerEvent(
         InterceptAliases.UA.GeneratedAnswer.RetryGeneratedAnswer,
         (analyticsBody: {customData: object; eventType: string}) => {
           const customData = analyticsBody?.customData;
@@ -266,7 +417,7 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         details?: string;
       }
     ) {
-      logCustomGeneratedAnswerEvent(
+      logGeneratedAnswerEvent(
         InterceptAliases.UA.GeneratedAnswer.GeneratedAnswerFeedbackSubmit,
         (analyticsBody: {customData: object; eventType: string}) => {
           const customData = analyticsBody?.customData;
@@ -287,7 +438,7 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
     },
 
     logShowGeneratedAnswer(streamId: string) {
-      logCustomGeneratedAnswerEvent(
+      logGeneratedAnswerEvent(
         InterceptAliases.UA.GeneratedAnswer.ShowGeneratedAnswer,
         (analyticsBody: {customData: object; eventType: string}) => {
           const customData = analyticsBody?.customData;
@@ -304,8 +455,42 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
     },
 
     logHideGeneratedAnswer(streamId: string) {
-      logCustomGeneratedAnswerEvent(
+      logGeneratedAnswerEvent(
         InterceptAliases.UA.GeneratedAnswer.HideGeneratedAnswer,
+        (analyticsBody: {customData: object; eventType: string}) => {
+          const customData = analyticsBody?.customData;
+          expect(analyticsBody).to.have.property(
+            'eventType',
+            'generatedAnswer'
+          );
+          expect(customData).to.have.property(
+            'generativeQuestionAnsweringId',
+            streamId
+          );
+        }
+      );
+    },
+
+    logRephraseGeneratedAnswer(expectedAnswerStyle: string, streamId: string) {
+      logGeneratedAnswerEvent(
+        InterceptAliases.UA.GeneratedAnswer.RephraseGeneratedAnswer,
+        (analyticsBody: {customData: object; eventType: string}) => {
+          const customData = analyticsBody?.customData;
+          expect(customData).to.have.property(
+            'generativeQuestionAnsweringId',
+            streamId
+          );
+          expect(customData).to.have.property(
+            'rephraseFormat',
+            expectedAnswerStyle
+          );
+        }
+      );
+    },
+
+    logCopyGeneratedAnswer(streamId: string) {
+      logGeneratedAnswerEvent(
+        InterceptAliases.UA.GeneratedAnswer.GeneratedAnswerCopyToClipboard,
         (analyticsBody: {customData: object; eventType: string}) => {
           const customData = analyticsBody?.customData;
           expect(analyticsBody).to.have.property(

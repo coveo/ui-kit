@@ -22,6 +22,8 @@ export type {
   ContextState,
   ContextValue,
   ContextPayload,
+  ContextProps,
+  ContextInitialState,
 } from './context/headless-context.ssr';
 export {defineContext} from './context/headless-context.ssr';
 
@@ -369,12 +371,7 @@ export {defineCategoryFieldSuggestions} from './field-suggestions/category-facet
 
 export type {
   AutomaticFacet,
-  AutomaticFacetProps,
   AutomaticFacetState,
-} from './facets/automatic-facet/headless-automatic-facet.ssr';
-export {defineAutomaticFacet} from './facets/automatic-facet/headless-automatic-facet.ssr';
-
-export type {
   AutomaticFacetGenerator,
   AutomaticFacetGeneratorProps,
   AutomaticFacetGeneratorState,

@@ -16,22 +16,18 @@ export const baseFacetResponseSelector = (
   state: Partial<FacetResponseSection>,
   id: string
 ) => {
-  if ('productListing' in state && state.productListing) {
-    if ('results' in state.productListing.facets) {
-      return state.productListing.facets.results.find(
-        (response) => response.facetId === id
-      );
-    } else {
-      return state.productListing.facets.find(
-        (response) => response.facetId === id
-      );
-    }
+  const findById = (response: {facetId: string}) => response.facetId === id;
+  if (
+    'productListing' in state &&
+    state.productListing &&
+    'facets' in state.productListing &&
+    'results' in state.productListing.facets
+  ) {
+    return state.productListing.facets.results.find(findById);
   }
 
   if ('search' in state && state.search) {
-    return state.search.response.facets.find(
-      (response) => response.facetId === id
-    );
+    return state.search.response.facets.find(findById);
   }
   return undefined;
 };

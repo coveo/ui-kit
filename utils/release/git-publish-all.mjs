@@ -13,6 +13,8 @@ import {
   gitUpdateRef,
   gitPublishBranch,
   gitPull,
+  gitPush,
+  gitReset,
 } from '@coveo/semantic-monorepo-tools';
 import {createAppAuth} from '@octokit/auth-app';
 import {spawnSync} from 'child_process';
@@ -26,6 +28,11 @@ import {
   REPO_OWNER,
 } from './common/constants.mjs';
 import {removeWriteAccessRestrictions} from './lock-master.mjs';
+
+if (!process.env.INIT_CWD) {
+  throw new Error('Should be called using npm run-script');
+}
+process.chdir(process.env.INIT_CWD);
 
 // Commit, tag and push
 (async () => {
@@ -63,6 +70,13 @@ import {removeWriteAccessRestrictions} from './lock-master.mjs';
   // And push them
   await gitPushTags();
 
+  // Current release branch
+  // TODO v3: Bump to release/v3
+  const currentReleaseBranch = 'release/v2';
+  await gitCheckoutBranch(currentReleaseBranch);
+  await gitReset({resetMode: 'hard', ref: commit});
+  await gitPush({refs: [currentReleaseBranch], force: true});
+
   // Unlock the main branch
   await removeWriteAccessRestrictions();
 })();
@@ -79,7 +93,7 @@ async function commitChanges(commitMessage, octokit) {
   const mainBranchCurrentSHA = await getSHA1fromRef(mainBranchName);
 
   // Create a temporary branch and check it out.
-  const tempBranchName = `release/${randomUUID()}`;
+  const tempBranchName = `release-temp/${randomUUID()}`;
   await gitCreateBranch(tempBranchName);
   await gitCheckoutBranch(tempBranchName);
   // Stage all the changes...
@@ -117,7 +131,7 @@ async function commitChanges(commitMessage, octokit) {
     repo: REPO_NAME,
     ref: `heads/${mainBranchName}`,
     sha: commit.data.sha,
-    force: true, // Needed since the remote main branch contains a "lock" commit.
+    force: false,
   });
   await gitCheckoutBranch(mainBranchName);
   await gitPull();

@@ -77,7 +77,7 @@ describe('recent-queries-slice', () => {
         ),
       }),
       '',
-      logSearchEvent({evt: 'foo'})
+      {legacy: logSearchEvent({evt: 'foo'})}
     );
 
     expect(recentQueriesReducer(state, searchAction).queries).toEqual(
@@ -99,7 +99,7 @@ describe('recent-queries-slice', () => {
         ),
       }),
       '',
-      logSearchEvent({evt: 'foo'})
+      {legacy: logSearchEvent({evt: 'foo'})}
     );
 
     expect(recentQueriesReducer(state, searchAction).queries).toEqual([
@@ -117,7 +117,7 @@ describe('recent-queries-slice', () => {
         response: buildMockSearchResponse(withResult()),
       }),
       '',
-      logSearchEvent({evt: 'foo'})
+      {legacy: logSearchEvent({evt: 'foo'})}
     );
 
     expect(recentQueriesReducer(state, searchAction).queries).toEqual([
@@ -140,7 +140,7 @@ describe('recent-queries-slice', () => {
           response: buildMockSearchResponse(withResult()),
         }),
         '',
-        logSearchEvent({evt: 'foo'})
+        {legacy: logSearchEvent({evt: 'foo'})}
       );
 
       expect(recentQueriesReducer(state, searchAction).queries).toEqual(
@@ -157,7 +157,7 @@ describe('recent-queries-slice', () => {
         response: buildMockSearchResponse({}),
       }),
       '',
-      logSearchEvent({evt: 'foo'})
+      {legacy: logSearchEvent({evt: 'foo'})}
     );
 
     expect(recentQueriesReducer(state, searchAction).queries).toEqual([]);
@@ -172,7 +172,7 @@ describe('recent-queries-slice', () => {
           response: buildMockSearchResponse(withResult()),
         }),
         '',
-        logSearchEvent({evt: 'foo'})
+        {legacy: logSearchEvent({evt: 'foo'})}
       );
 
       expect(recentQueriesReducer(state, searchAction).queries.length).toEqual(
@@ -190,7 +190,7 @@ describe('recent-queries-slice', () => {
         response: buildMockSearchResponse(withResult()),
       }),
       '',
-      logSearchEvent({evt: 'foo'})
+      {legacy: logSearchEvent({evt: 'foo'})}
     );
 
     expect(recentQueriesReducer(state, searchAction).queries).toEqual([
