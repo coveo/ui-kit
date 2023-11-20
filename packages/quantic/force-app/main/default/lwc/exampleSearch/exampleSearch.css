@@ -20,3 +20,7 @@
   border-radius: .25rem;
   background-clip: padding-box;
 }
+
+.searchbox__container {
+  min-height: 4.625rem;
+}
