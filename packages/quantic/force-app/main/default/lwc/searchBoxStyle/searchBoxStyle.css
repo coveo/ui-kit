@@ -31,18 +31,20 @@
   height: 48px;
 }
 
-.searchbox__clear-button {
-  height: 48px;
-}
-
 .searchbox__submit-button:focus {
   border: none;
   border-top-right-radius: 0.25rem;
   border-bottom-right-radius: 0.25rem;
 }
 
+.searchbox__clear-button-container {
+  height: 48px;
+  margin-right: 2px;
+}
+
 .searchbox__clear-button {
   box-shadow: none;
+  height: 15px;
 }
 
 .slds-input-has-icon .slds-input__icon.input__icon_cursor:not(button) {
