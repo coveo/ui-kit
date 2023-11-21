@@ -41,7 +41,7 @@ export enum InsightEvents {
      */
     clickPageView = 'clickPageView',
     /**
-     * Identifies the event that gets logged when the user clicks the create knowledge article button.
+     * Identifies the event that gets logged when the user clicks the create article button.
      */
     createArticle = 'createArticle',
 }

@@ -623,7 +623,7 @@ describe('InsightClient', () => {
             expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerStreamEnd, exampleGeneratedAnswerMetadata);
         });
 
-        it('should send proper payload for #createKnowledgeArticle', async () => {
+        it('should send proper payload for #createArticle', async () => {
             await client.logCreateArticle();
             expectMatchCustomEventPayload(InsightEvents.createArticle);
         });
@@ -1386,7 +1386,7 @@ describe('InsightClient', () => {
             expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerStreamEnd, expectedMetadata);
         });
 
-        it('should send proper payload for #createKnowledgeArticle', async () => {
+        it('should send proper payload for #createArticle', async () => {
             const expectedMetadata = {
                 ...expectedBaseCaseMetadata,
             };
