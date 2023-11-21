@@ -32,7 +32,7 @@ describe('search-slice', () => {
         responseId,
       });
 
-      const action = executeSearch.fulfilled(response, '');
+      const action = executeSearch.fulfilled(response, '', null as never);
       const finalState = commerceSearchReducer(state, action);
 
       expect(finalState.products).toEqual(products);
@@ -46,7 +46,7 @@ describe('search-slice', () => {
 
       const response = buildSearchResponse();
 
-      const action = executeSearch.fulfilled(response, '');
+      const action = executeSearch.fulfilled(response, '', null as never);
       const finalState = commerceSearchReducer(state, action);
       expect(finalState.error).toBeNull();
     });
@@ -82,7 +82,7 @@ describe('search-slice', () => {
     it('sets isLoading to true', () => {
       state.isLoading = false;
 
-      const pendingAction = executeSearch.pending('');
+      const pendingAction = executeSearch.pending('', null as never);
       const finalState = commerceSearchReducer(state, pendingAction);
 
       expect(finalState.isLoading).toBe(true);
