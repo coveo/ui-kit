@@ -20,6 +20,35 @@ import {
 
 export type {ContextPayload, ContextValue};
 
+export const ReservedContextKeys = ['caseId', 'caseNumber'] as const;
+type ReservedContextKey = (typeof ReservedContextKeys)[number];
+const ReservedContextKeysToControllerMap: Record<ReservedContextKey, string> = {
+  caseId: 'caseContext',
+  caseNumber: 'caseContext',
+};
+
+class ReservedContextKeyError extends Error {
+  constructor(key: ReservedContextKey) {
+    super(
+      `The key ${key} is reserved for internal use. Use ${ReservedContextKeysToControllerMap[key]} to set this value.}`
+    );
+  }
+}
+
+class UnreservedContextKeyError extends Error {
+  constructor(key: ReservedContextKey) {
+    super(
+      `The key ${key} has not been reserved. Please report this error to Coveo on https://github.com/coveo/ui-kit/issues/new.`
+    );
+  }
+}
+
+function isReservedContextKey(
+  contextKey: string
+): contextKey is ReservedContextKey {
+  return (ReservedContextKeys as readonly string[]).includes(contextKey);
+}
+
 export interface ContextProps {
   /**
    * Represents the initial state of the context.
@@ -125,11 +154,35 @@ export function buildCoreContext(
     },
 
     add(contextKey: string, contextValue: ContextValue) {
+      if (isReservedContextKey(contextKey)) {
+        throw new ReservedContextKeyError(contextKey);
+      }
       dispatch(addContext({contextKey, contextValue}));
     },
 
     remove(key: string) {
       dispatch(removeContext(key));
+    },
+  };
+}
+
+interface InternalCoreContext {
+  internalAddContext: Context['add'];
+}
+
+export function buildInternalCoreContext(
+  engine: CoreEngine
+): InternalCoreContext {
+  const {dispatch} = engine;
+  return {
+    internalAddContext: (
+      contextKey: ReservedContextKey,
+      contextValue: string
+    ) => {
+      if (!isReservedContextKey(contextKey)) {
+        throw new UnreservedContextKeyError(contextKey);
+      }
+      dispatch(addContext({contextKey, contextValue}));
     },
   };
 }
