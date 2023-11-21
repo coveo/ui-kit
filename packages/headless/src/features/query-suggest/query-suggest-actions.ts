@@ -159,6 +159,7 @@ export const buildQuerySuggestRequest = async (
     actionsHistory: s.configuration.analytics.enabled
       ? historyStore.getHistory()
       : [],
+    //todo: handle contextSettings.
     ...(s.context && {context: s.context.contextValues}),
     ...(s.pipeline && {pipeline: s.pipeline}),
     ...(s.searchHub && {searchHub: s.searchHub}),

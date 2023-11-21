@@ -101,6 +101,7 @@ export const buildRecommendationRequest = async (
   ...(s.searchHub && {
     searchHub: s.searchHub,
   }),
+  //todo: handle contextSettings.
   ...(s.context && {
     context: s.context.contextValues,
   }),

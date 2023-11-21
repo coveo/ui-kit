@@ -262,6 +262,7 @@ export const buildProductRecommendationsRequest = async (
     actionsHistory: s.configuration.analytics.enabled
       ? historyStore.getHistory()
       : [],
+    //todo: handle contextSettings.
     ...(s.context && {
       context: s.context.contextValues,
     }),

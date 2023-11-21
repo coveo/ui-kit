@@ -156,6 +156,7 @@ export const buildProductListingRequest = async (
     ...((state.sort?.by || SortBy.Relevance) !== SortBy.Relevance && {
       sort: state.sort,
     }),
+    //todo: handle contextSettings.
     ...(state.context && {
       userContext: state.context.contextValues,
     }),

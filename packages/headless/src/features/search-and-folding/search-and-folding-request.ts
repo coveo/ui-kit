@@ -41,6 +41,7 @@ export const buildSearchAndFoldingLoadCollectionRequest = async (
     ...(state.advancedSearchQueries?.dq && {
       dq: state.advancedSearchQueries.dq,
     }),
+    //todo: handle contextSettings.
     ...(state.context && {
       context: state.context.contextValues,
     }),

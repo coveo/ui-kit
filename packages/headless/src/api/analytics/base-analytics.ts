@@ -1,6 +1,8 @@
 import {SearchPageClientProvider} from 'coveo.analytics';
 import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events';
+import {ContextSetting} from '../../features/context/context-state';
 import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state';
+import {ContextPayload} from '../../product-listing.index';
 import {
   ConfigurationSection,
   ContextSection,
@@ -45,12 +47,13 @@ export abstract class BaseAnalyticsProvider<
     const {context} = this.state;
     const contextValues = context?.contextValues || {};
     const formattedObject: Record<string, string | string[]> = {};
-    for (const [key, value] of Object.entries(contextValues)) {
-      const formattedKey = `context_${key}`;
-      formattedObject[formattedKey] = value;
-    }
-    formattedObject['coveoHeadlessVersion'] = VERSION;
-    return formattedObject;
+    return this.state.configuration.analytics.analyticsMode === 'legacy'
+      ? legacyBaseMetadata(contextValues, formattedObject)
+      : nextBaseMetadata(
+          contextValues,
+          context?.contextSettings ?? {},
+          formattedObject
+        );
   }
 
   public getOriginContext() {
@@ -72,4 +75,31 @@ export abstract class BaseAnalyticsProvider<
   public getIsAnonymous() {
     return this.state.configuration.analytics.anonymous;
   }
+}
+
+function legacyBaseMetadata(
+  contextValues: ContextPayload,
+  formattedObject: Record<string, string | string[]>
+) {
+  for (const [key, value] of Object.entries(contextValues)) {
+    const formattedKey = `context_${key}`;
+    formattedObject[formattedKey] = value;
+  }
+  formattedObject['coveoHeadlessVersion'] = VERSION;
+  return formattedObject;
+}
+
+function nextBaseMetadata(
+  contextValues: ContextPayload,
+  contextSettings: ContextSetting,
+  formattedObject: Record<string, string | string[]>
+) {
+  for (const [key, value] of Object.entries(contextValues).filter(
+    ([key]) => contextSettings[key]?.useForReporting
+  )) {
+    const formattedKey = `context_${key}`;
+    formattedObject[formattedKey] = value;
+  }
+  formattedObject['coveoHeadlessVersion'] = VERSION;
+  return formattedObject;
 }

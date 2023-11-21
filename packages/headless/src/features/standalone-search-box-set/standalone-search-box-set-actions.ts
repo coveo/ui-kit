@@ -141,6 +141,7 @@ export const buildPlanRequest = async (
     locale: state.configuration.search.locale,
     timezone: state.configuration.search.timezone,
     q: state.query.q,
+    //todo: handle contextSettings.
     ...(state.context && {context: state.context.contextValues}),
     ...(state.pipeline && {pipeline: state.pipeline}),
     ...(state.searchHub && {searchHub: state.searchHub}),

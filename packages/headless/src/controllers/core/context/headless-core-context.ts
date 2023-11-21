@@ -4,10 +4,14 @@ import {
   setContext,
   addContext,
   removeContext,
+  setContextSettings,
+  addContextSettings,
 } from '../../../features/context/context-actions';
 import {contextReducer as context} from '../../../features/context/context-slice';
 import {
   ContextPayload,
+  ContextSetting,
+  ContextSettingEntry,
   ContextValue,
 } from '../../../features/context/context-state';
 import {ContextSection} from '../../../state/state-sections';
@@ -19,35 +23,6 @@ import {
 } from '../../controller/headless-controller';
 
 export type {ContextPayload, ContextValue};
-
-export const ReservedContextKeys = ['caseId', 'caseNumber'] as const;
-type ReservedContextKey = (typeof ReservedContextKeys)[number];
-const ReservedContextKeysToControllerMap: Record<ReservedContextKey, string> = {
-  caseId: 'caseContext',
-  caseNumber: 'caseContext',
-};
-
-class ReservedContextKeyError extends Error {
-  constructor(key: ReservedContextKey) {
-    super(
-      `The key ${key} is reserved for internal use. Use ${ReservedContextKeysToControllerMap[key]} to set this value.}`
-    );
-  }
-}
-
-class UnreservedContextKeyError extends Error {
-  constructor(key: ReservedContextKey) {
-    super(
-      `The key ${key} has not been reserved. Please report this error to Coveo on https://github.com/coveo/ui-kit/issues/new.`
-    );
-  }
-}
-
-function isReservedContextKey(
-  contextKey: string
-): contextKey is ReservedContextKey {
-  return (ReservedContextKeys as readonly string[]).includes(contextKey);
-}
 
 export interface ContextProps {
   /**
@@ -80,7 +55,7 @@ export interface Context extends Controller {
    *
    *  @param context - The context to set for the query.
    */
-  set(context: ContextPayload): void;
+  set(context: ContextPayload, settings?: ContextSetting): void;
 
   /**
    * Adds (or, if one is already present, replaces) a new context key-value pair.
@@ -149,40 +124,26 @@ export function buildCoreContext(
       };
     },
 
-    set(context: ContextPayload) {
+    set(context: ContextPayload, settings?: ContextSetting) {
       dispatch(setContext(context));
+      if (settings) {
+        dispatch(setContextSettings(settings));
+      }
     },
 
-    add(contextKey: string, contextValue: ContextValue) {
-      if (isReservedContextKey(contextKey)) {
-        throw new ReservedContextKeyError(contextKey);
-      }
+    add(
+      contextKey: string,
+      contextValue: ContextValue,
+      settings?: ContextSettingEntry
+    ) {
       dispatch(addContext({contextKey, contextValue}));
+      if (settings) {
+        dispatch(addContextSettings({contextKey, settings}));
+      }
     },
 
     remove(key: string) {
       dispatch(removeContext(key));
-    },
-  };
-}
-
-interface InternalCoreContext {
-  internalAddContext: Context['add'];
-}
-
-export function buildInternalCoreContext(
-  engine: CoreEngine
-): InternalCoreContext {
-  const {dispatch} = engine;
-  return {
-    internalAddContext: (
-      contextKey: ReservedContextKey,
-      contextValue: string
-    ) => {
-      if (!isReservedContextKey(contextKey)) {
-        throw new UnreservedContextKeyError(contextKey);
-      }
-      dispatch(addContext({contextKey, contextValue}));
     },
   };
 }
