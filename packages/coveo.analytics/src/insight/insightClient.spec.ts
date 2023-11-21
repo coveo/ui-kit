@@ -622,6 +622,11 @@ describe('InsightClient', () => {
             await client.logGeneratedAnswerStreamEnd(exampleGeneratedAnswerMetadata);
             expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerStreamEnd, exampleGeneratedAnswerMetadata);
         });
+
+        it('should send proper payload for #createKnowledgeArticle', async () => {
+            await client.logCreateArticle();
+            expectMatchCustomEventPayload(InsightEvents.createArticle);
+        });
     });
 
     describe('when the case metadata is included', () => {
@@ -1379,6 +1384,14 @@ describe('InsightClient', () => {
 
             await client.logGeneratedAnswerStreamEnd(exampleGeneratedAnswerMetadata, baseCaseMetadata);
             expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerStreamEnd, expectedMetadata);
+        });
+
+        it('should send proper payload for #createKnowledgeArticle', async () => {
+            const expectedMetadata = {
+                ...expectedBaseCaseMetadata,
+            };
+            await client.logCreateArticle(baseCaseMetadata);
+            expectMatchCustomEventPayload(InsightEvents.createArticle, expectedMetadata);
         });
     });
 
