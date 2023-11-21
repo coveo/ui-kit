@@ -39,6 +39,7 @@
 
 .searchbox__clear-button-container {
   height: 48px;
+  margin: inherit;
   margin-right: 2px;
 }
 
