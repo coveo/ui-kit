@@ -5,9 +5,14 @@ import {
 import {OmniboxSuggestionMetadata} from '../../query-suggest/query-suggest-analytics-actions';
 
 export const logInterfaceLoad = (): CommerceSearchAction =>
-  makeCommerceAnalyticsAction('analytics/commerce/interface/load', (client) =>
-    client.makeInterfaceLoad()
-  );
+  makeCommerceAnalyticsAction({
+    prefix: 'analytics/commerce/interface/load',
+    __legacy__getBuilder: (client) => client.makeInterfaceLoad(),
+    analyticsType: '',
+    analyticsPayloadBuilder: (_state) => {
+      return {};
+    },
+  });
 
 export const logSearchFromLink = (): CommerceSearchAction =>
   makeCommerceAnalyticsAction({
