@@ -15,7 +15,7 @@ export default class QuanticCitation extends LightningElement {
   /**
    * @api
    * @type {{title: string, index: number, text: string, clickUri: string}}
-   * The id of the citation.
+   * The citation item information.
    */
   @api citation;
 
