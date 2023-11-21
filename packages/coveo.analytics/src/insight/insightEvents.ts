@@ -40,6 +40,10 @@ export enum InsightEvents {
      * Identifies the event that gets logged when the user clicks a viewed page link on the user actions timeline.
      */
     clickPageView = 'clickPageView',
+    /**
+     * Identifies the event that gets logged when the user clicks the create knowledge article button.
+     */
+    createArticle = 'createArticle',
 }
 
 export interface CaseMetadata {

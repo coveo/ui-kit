@@ -389,6 +389,7 @@ export const CustomEventsTypes: Partial<Record<SearchPageEvents | InsightEvents,
     [SearchPageEvents.generatedAnswerHideAnswers]: 'generatedAnswer',
     [SearchPageEvents.generatedAnswerShowAnswers]: 'generatedAnswer',
     [SearchPageEvents.generatedAnswerFeedbackSubmit]: 'generatedAnswer',
+    [InsightEvents.createArticle]: 'createArticle',
 };
 
 export interface StaticFilterMetadata {
