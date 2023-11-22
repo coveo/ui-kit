@@ -624,8 +624,12 @@ describe('InsightClient', () => {
         });
 
         it('should send proper payload for #createArticle', async () => {
-            await client.logCreateArticle();
-            expectMatchCustomEventPayload(InsightEvents.createArticle);
+            const exampleCreateArticleMetadata = {
+                articleType: 'Knowledge__kav',
+                triggeredBy: 'CreateArticleButton',
+            };
+            await client.logCreateArticle(exampleCreateArticleMetadata);
+            expectMatchCustomEventPayload(InsightEvents.createArticle, exampleCreateArticleMetadata);
         });
     });
 
@@ -1386,11 +1390,16 @@ describe('InsightClient', () => {
             expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerStreamEnd, expectedMetadata);
         });
 
-        it('should send proper payload for #createArticle', async () => {
+        it.only('should send proper payload for #createArticle', async () => {
+            const exampleCreateArticleMetadata = {
+                articleType: 'Knowledge__kav',
+                triggeredBy: 'CreateArticleButton',
+            };
             const expectedMetadata = {
+                ...exampleCreateArticleMetadata,
                 ...expectedBaseCaseMetadata,
             };
-            await client.logCreateArticle(baseCaseMetadata);
+            await client.logCreateArticle(exampleCreateArticleMetadata, baseCaseMetadata);
             expectMatchCustomEventPayload(InsightEvents.createArticle, expectedMetadata);
         });
     });

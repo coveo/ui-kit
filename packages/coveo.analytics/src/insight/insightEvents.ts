@@ -70,6 +70,11 @@ export interface UserActionsPageViewMetadata {
     contentIdValue: string;
 }
 
+export interface CreateArticleMetadata {
+    articleType: string;
+    triggeredBy: string;
+}
+
 export interface InsightInterfaceChangeMetadata extends InterfaceChangeMetadata, CaseMetadata {}
 
 export interface InsightFacetMetadata extends FacetMetadata, CaseMetadata {}
