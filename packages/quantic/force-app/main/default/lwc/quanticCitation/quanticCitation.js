@@ -15,9 +15,9 @@ const debounceDurationBeforeHoverMs = 200;
  */
 export default class QuanticCitation extends LightningElement {
   /**
-   * The id of the citation.
    * @api
    * @type {{title: string, index: number, text: string, clickUri: string}}
+   * The citation item information.
    */
   @api citation;
   /**
