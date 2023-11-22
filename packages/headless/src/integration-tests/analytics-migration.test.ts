@@ -8,36 +8,6 @@ import {logInterfaceLoad} from '../features/analytics/analytics-actions';
 import {SearchPageEvents} from '../features/analytics/search-action-cause';
 import {executeSearch} from '../features/search/search-actions';
 
-describe('Analytics Search Migration', () => {
-  let callSpy: jest.SpyInstance<Promise<Response | PlatformClientCallError>>;
-
-  beforeEach(() => {
-    callSpy = jest.spyOn(PlatformClient, 'call');
-    callSpy.mockImplementation(() => Promise.resolve(new Response()));
-  });
-
-  afterEach(() => {
-    callSpy.mockClear();
-  });
-
-  it('analytics/interface/load', async () => {
-    const action = executeSearch({
-      legacy: logInterfaceLoad(),
-      next: {
-        actionCause: SearchPageEvents.interfaceLoad,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getBaseMetadata(),
-      },
-    });
-
-    legacySearchEngine.dispatch(action);
-    nextSearchEngine.dispatch(action);
-    await wait();
-
-    assertNextEqualsLegacy(callSpy);
-  });
-});
-
 const nextSearchEngine = buildSearchEngine({
   configuration: {
     ...getSampleSearchEngineConfiguration(),
@@ -90,3 +60,33 @@ const excludedBaseProperties = [
   'clientTimestamp',
   'trackingId',
 ];
+
+describe('Analytics Search Migration', () => {
+  let callSpy: jest.SpyInstance<Promise<Response | PlatformClientCallError>>;
+
+  beforeEach(() => {
+    callSpy = jest.spyOn(PlatformClient, 'call');
+    callSpy.mockImplementation(() => Promise.resolve(new Response()));
+  });
+
+  afterEach(() => {
+    callSpy.mockClear();
+  });
+
+  it('analytics/interface/load', async () => {
+    const action = executeSearch({
+      legacy: logInterfaceLoad(),
+      next: {
+        actionCause: SearchPageEvents.interfaceLoad,
+        getEventExtraPayload: (state) =>
+          new SearchAnalyticsProvider(() => state).getBaseMetadata(),
+      },
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+});
