@@ -1,15 +1,17 @@
+import {LinkUtils} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
+
+/** @typedef {import("coveo").InteractiveCitation} InteractiveCitation */
 
 const minimumTooltipDisplayDurationMs = 1000;
 const debounceDurationBeforeHoverMs = 200;
 
 /**
  * The `QuanticCitation` component renders an individual citation.
- * @fires CustomEvent#click
  * @fires CustomEvent#citationhover
  * @category Internal
  * @example
- * <c-quantic-citation citation={citation} onclick={handleClick} onhover={handleHover}></c-quantic-citation>
+ * <c-quantic-citation citation={citation} interactive-citation={interactiveCitation} onclick={handleClick} onhover={handleHover}></c-quantic-citation>
  */
 export default class QuanticCitation extends LightningElement {
   /**
@@ -18,6 +20,12 @@ export default class QuanticCitation extends LightningElement {
    * The citation item information.
    */
   @api citation;
+  /**
+   * An interface containing actions for triggering desirable side effects on the citation link.
+   * @api
+   * @type {InteractiveCitation}
+   */
+  @api interactiveCitation;
 
   /** @type {Object} */
   timeout;
@@ -27,6 +35,21 @@ export default class QuanticCitation extends LightningElement {
   shouldShowTooltipAfterDelay = false;
   /** @type {boolean} */
   tooltipIsDisplayed = false;
+  /** @type {function} */
+  removeBindings;
+  /** @type {boolean} */
+  isInitialRender = true;
+
+  renderedCallback() {
+    if (this.isInitialRender) {
+      this.bindAnalyticsToCitationLink();
+      this.isInitialRender = false;
+    }
+  }
+
+  disconnectedCallback() {
+    this.removeBindings?.();
+  }
 
   handleMouseEnter() {
     this.shouldShowTooltipAfterDelay = true;
@@ -59,6 +82,24 @@ export default class QuanticCitation extends LightningElement {
     this.tooltipIsDisplayed = false;
     this.shouldShowTooltipAfterDelay = false;
     this.tooltipComponent.hideTooltip();
+  }
+
+  /**
+   * Binds the citation link to the proper actions.
+   * @returns {void}
+   */
+  bindAnalyticsToCitationLink() {
+    this.removeBindings = LinkUtils.bindAnalyticsToLink(
+      this.link,
+      this.interactiveCitation
+    );
+  }
+
+  /**
+   * @returns {Object}
+   */
+  get link() {
+    return this.template.querySelector('.citation__link');
   }
 
   /**

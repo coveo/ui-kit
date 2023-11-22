@@ -210,14 +210,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   /**
-   * handles clicking on a citation.
-   * @param {string} id
-   */
-  handleCitationClick = (id) => {
-    this.generatedAnswer.logCitationClick(id);
-  };
-
-  /**
    * handles hovering over a citation.
    * @param {string} id
    * @param {number} citationHoverTimeMs
