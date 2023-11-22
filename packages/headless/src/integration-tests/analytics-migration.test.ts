@@ -4,6 +4,11 @@ import {
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
 } from '../app/search-engine/search-engine';
+import {
+  FacetProps,
+  FacetValue,
+  buildFacet,
+} from '../controllers/facets/facet/headless-facet';
 import {logInterfaceLoad} from '../features/analytics/analytics-actions';
 import {SearchPageEvents} from '../features/analytics/search-action-cause';
 import {executeSearch} from '../features/search/search-actions';
@@ -32,6 +37,27 @@ describe('Analytics Search Migration', () => {
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/facet/select', async () => {
+    const props: FacetProps = {
+      options: {
+        field: 'test',
+      },
+    };
+    const selection: FacetValue = {
+      value: 'test',
+      state: 'idle',
+      numberOfResults: 1,
+    };
+    const legacyFacet = buildFacet(legacySearchEngine, props);
+    const nextFacet = buildFacet(nextSearchEngine, props);
+
+    legacyFacet.toggleSelect(selection);
+    nextFacet.toggleSelect(selection);
     await wait();
 
     assertNextEqualsLegacy(callSpy);
@@ -81,6 +107,14 @@ function excludeProperties(obj: Record<string, unknown>) {
   const result = {...obj};
   excludedBaseProperties.forEach((prop: string) => delete result[prop]);
 
+  if (result.customData) {
+    const customData = {...result.customData};
+    excludedCustomDataProperties.forEach((prop: string) => {
+      delete (customData as Record<string, unknown>)[prop];
+    });
+    result.customData = customData;
+  }
+
   return result;
 }
 
@@ -90,3 +124,5 @@ const excludedBaseProperties = [
   'clientTimestamp',
   'trackingId',
 ];
+
+const excludedCustomDataProperties = ['facetTitle'];

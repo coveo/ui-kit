@@ -91,6 +91,7 @@ export interface LogFacetSelectActionCreatorPayload {
   facetValue: string;
 }
 
+//TODO: KIT-2859
 export const logFacetSelect = (
   payload: LogFacetSelectActionCreatorPayload
 ): SearchAction =>

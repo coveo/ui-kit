@@ -95,6 +95,15 @@ export class SearchAnalyticsProvider
     return baseObject;
   }
 
+  public getFacetMetadata(facetId: string, facetValue: string) {
+    return {
+      ...this.getBaseMetadata(),
+      facetId: facetId,
+      facetValue: facetValue,
+      facetField: facetId,
+    };
+  }
+
   public getGeneratedAnswerMetadata() {
     const state = this.getState();
     const formattedObject: Record<string, string | boolean> = {};

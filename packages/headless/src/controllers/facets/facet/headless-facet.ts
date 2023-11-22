@@ -1,7 +1,9 @@
 import {CoreEngine} from '../../..';
+import {SearchAnalyticsProvider} from '../../../api/analytics/search-analytics';
 import {configuration} from '../../../app/common-reducers';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments';
+import {SearchPageEvents} from '../../../features/analytics/search-action-cause';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {FacetValueState} from '../../../features/facets/facet-api/value';
 import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
@@ -148,6 +150,14 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
             getFacetId(),
             selection
           ),
+          next: {
+            actionCause: SearchPageEvents.facetSelect,
+            getEventExtraPayload: (state) =>
+              new SearchAnalyticsProvider(() => state).getFacetMetadata(
+                getFacetId(),
+                selection.value
+              ),
+          },
         })
       );
     },
