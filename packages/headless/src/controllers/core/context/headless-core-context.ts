@@ -5,10 +5,14 @@ import {
   setContext,
   addContext,
   removeContext,
+  setContextSettings,
+  addContextSettings,
 } from '../../../features/context/context-actions';
 import {contextReducer as context} from '../../../features/context/context-slice';
 import {
   ContextPayload,
+  ContextSetting,
+  ContextSettingEntry,
   ContextValue,
 } from '../../../features/context/context-state';
 import {ContextSection} from '../../../state/state-sections';
@@ -56,7 +60,7 @@ export interface Context extends Controller {
    *
    *  @param context - The context to set for the query.
    */
-  set(context: ContextPayload): void;
+  set(context: ContextPayload, settings?: ContextSetting): void;
 
   /**
    * Adds (or, if one is already present, replaces) a new context key-value pair.
@@ -124,9 +128,7 @@ export function buildCoreContext(
         values: getState().context.contextValues,
       };
     },
-    set(context: ContextPayload) {
-      dispatch(setContext(context));
-    },
+
     ...(getState().configuration.analytics.analyticsMode === 'legacy'
       ? legacyCoreContext(dispatch)
       : nextCoreContext(dispatch)),
@@ -134,6 +136,10 @@ export function buildCoreContext(
 }
 
 const legacyCoreContext = (dispatch: Dispatch<AnyAction>) => ({
+  set(context: ContextPayload) {
+    dispatch(setContext(context));
+  },
+
   add(contextKey: string, contextValue: ContextValue) {
     dispatch(addContext({contextKey, contextValue}));
   },
@@ -144,11 +150,24 @@ const legacyCoreContext = (dispatch: Dispatch<AnyAction>) => ({
 });
 
 const nextCoreContext = (dispatch: Dispatch<AnyAction>) => ({
-  add(contextKey: string, contextValue: ContextValue) {
+  set(context: ContextPayload, settings?: ContextSetting) {
+    dispatch(setContext(context));
+    if (settings) {
+      dispatch(setContextSettings(settings));
+    }
+  },
+  add(
+    contextKey: string,
+    contextValue: ContextValue,
+    settings?: ContextSettingEntry
+  ) {
     if (isReservedContextKey(contextKey)) {
       throw new ReservedContextKeyError(contextKey);
     }
     dispatch(addContext({contextKey, contextValue}));
+    if (settings) {
+      dispatch(addContextSettings({contextKey, settings}));
+    }
   },
 
   remove(contextKey: string) {

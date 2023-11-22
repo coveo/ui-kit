@@ -1,10 +1,15 @@
-import {isString, ArrayValue} from '@coveo/bueno';
+import {isString, ArrayValue, BooleanValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {
   validatePayload,
   requiredNonEmptyString,
 } from '../../utils/validate-payload';
-import {ContextPayload, ContextValue} from './context-state';
+import {
+  ContextPayload,
+  ContextSetting,
+  ContextSettingEntry,
+  ContextValue,
+} from './context-state';
 
 const nonEmptyArray = new ArrayValue({
   each: requiredNonEmptyString,
@@ -31,6 +36,38 @@ export const setContext = createAction(
   }
 );
 
+export const setContextSettings = createAction(
+  'context/settings/set',
+  (payload: ContextSetting) => {
+    for (const [k, v] of Object.entries(payload)) {
+      validatePayload(k, requiredNonEmptyString);
+      validateContextSettingPayload(v);
+    }
+    return {payload};
+  }
+);
+
+export interface AddContextSettingsActionCreatorPayload {
+  /**
+   * The name of the key to store the context value in.
+   */
+  contextKey: string;
+
+  /**
+   * The context value.
+   */
+  settings: ContextSettingEntry;
+}
+
+export const addContextSettings = createAction(
+  'context/settings/add',
+  (payload: AddContextSettingsActionCreatorPayload) => {
+    validatePayload(payload.contextKey, requiredNonEmptyString);
+    validateContextSettingPayload(payload.settings);
+    return {payload};
+  }
+);
+
 export interface AddContextActionCreatorPayload {
   /**
    * The name of the key to store the context value in.
@@ -52,3 +89,9 @@ export const addContext = createAction(
 export const removeContext = createAction('context/remove', (payload: string) =>
   validatePayload(payload, requiredNonEmptyString)
 );
+function validateContextSettingPayload(v: ContextSettingEntry) {
+  validatePayload(v, {
+    useForML: new BooleanValue({required: true}),
+    useForReporting: new BooleanValue({required: true}),
+  });
+}

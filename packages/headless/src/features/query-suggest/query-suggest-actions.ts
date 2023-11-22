@@ -159,7 +159,9 @@ export const buildQuerySuggestRequest = async (
     actionsHistory: s.configuration.analytics.enabled
       ? historyStore.getHistory()
       : [],
-    ...(s.context && {context: s.context.contextValues}),
+    ...(s.configuration.analytics.analyticsMode === 'legacy'
+      ? getLegacyContext(s)
+      : getNextContext(s)),
     ...(s.pipeline && {pipeline: s.pipeline}),
     ...(s.searchHub && {searchHub: s.searchHub}),
     ...(s.configuration.analytics.enabled && {
@@ -170,5 +172,29 @@ export const buildQuerySuggestRequest = async (
     ...(s.configuration.search.authenticationProviders.length && {
       authentication: s.configuration.search.authenticationProviders.join(','),
     }),
+  };
+};
+
+const getLegacyContext = (state: StateNeededByQuerySuggest) =>
+  state.context
+    ? {
+        context: state.context.contextValues,
+      }
+    : {};
+
+const getNextContext = (state: StateNeededByQuerySuggest) => {
+  if (!state.context) {
+    return {};
+  }
+  const contextValues = state.context?.contextValues || {};
+  const contextSettings = state.context?.contextSettings || {};
+  const formattedObject: Record<string, string | string[]> = {};
+  for (const [key, value] of Object.entries(contextValues).filter(
+    ([key]) => contextSettings[key]?.useForML
+  )) {
+    formattedObject[key] = value;
+  }
+  return {
+    context: formattedObject,
   };
 };

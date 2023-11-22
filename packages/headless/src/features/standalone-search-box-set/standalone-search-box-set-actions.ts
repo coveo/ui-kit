@@ -141,7 +141,9 @@ export const buildPlanRequest = async (
     locale: state.configuration.search.locale,
     timezone: state.configuration.search.timezone,
     q: state.query.q,
-    ...(state.context && {context: state.context.contextValues}),
+    ...(state.configuration.analytics.analyticsMode === 'legacy'
+      ? getLegacyContext(state)
+      : getNextContext(state)),
     ...(state.pipeline && {pipeline: state.pipeline}),
     ...(state.searchHub && {searchHub: state.searchHub}),
     ...(state.configuration.analytics.enabled && {
@@ -155,5 +157,29 @@ export const buildPlanRequest = async (
       authentication:
         state.configuration.search.authenticationProviders.join(','),
     }),
+  };
+};
+
+const getLegacyContext = (state: StateNeededForRedirect) =>
+  state.context
+    ? {
+        context: state.context.contextValues,
+      }
+    : {};
+
+const getNextContext = (state: StateNeededForRedirect) => {
+  if (!state.context) {
+    return {};
+  }
+  const contextValues = state.context?.contextValues || {};
+  const contextSettings = state.context?.contextSettings || {};
+  const formattedObject: Record<string, string | string[]> = {};
+  for (const [key, value] of Object.entries(contextValues).filter(
+    ([key]) => contextSettings[key]?.useForML
+  )) {
+    formattedObject[key] = value;
+  }
+  return {
+    context: formattedObject,
   };
 };

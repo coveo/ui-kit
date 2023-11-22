@@ -156,9 +156,33 @@ export const buildProductListingRequest = async (
     ...((state.sort?.by || SortBy.Relevance) !== SortBy.Relevance && {
       sort: state.sort,
     }),
-    ...(state.context && {
-      userContext: state.context.contextValues,
-    }),
+    ...(state.configuration.analytics.analyticsMode === 'legacy'
+      ? getLegacyContext(state)
+      : getNextContext(state)),
+  };
+};
+
+const getLegacyContext = (state: StateNeededByFetchProductListing) =>
+  state.context
+    ? {
+        userContext: state.context.contextValues,
+      }
+    : {};
+
+const getNextContext = (state: StateNeededByFetchProductListing) => {
+  if (!state.context) {
+    return {};
+  }
+  const contextValues = state.context?.contextValues || {};
+  const contextSettings = state.context?.contextSettings || {};
+  const formattedObject: Record<string, string | string[]> = {};
+  for (const [key, value] of Object.entries(contextValues).filter(
+    ([key]) => contextSettings[key]?.useForML
+  )) {
+    formattedObject[key] = value;
+  }
+  return {
+    userContext: formattedObject,
   };
 };
 

@@ -41,9 +41,9 @@ export const buildSearchAndFoldingLoadCollectionRequest = async (
     ...(state.advancedSearchQueries?.dq && {
       dq: state.advancedSearchQueries.dq,
     }),
-    ...(state.context && {
-      context: state.context.contextValues,
-    }),
+    ...(state.configuration.analytics.analyticsMode === 'legacy'
+      ? getLegacyContext(state)
+      : getNextContext(state)),
     ...(state.fields &&
       !state.fields.fetchAllFields && {
         fieldsToInclude: state.fields.fieldsToInclude,
@@ -77,5 +77,29 @@ export const buildSearchAndFoldingLoadCollectionRequest = async (
       authentication:
         state.configuration.search.authenticationProviders.join(','),
     }),
+  };
+};
+
+const getLegacyContext = (state: StateNeededByExecuteSearchAndFolding) =>
+  state.context
+    ? {
+        context: state.context.contextValues,
+      }
+    : {};
+
+const getNextContext = (state: StateNeededByExecuteSearchAndFolding) => {
+  if (!state.context) {
+    return {};
+  }
+  const contextValues = state.context?.contextValues || {};
+  const contextSettings = state.context?.contextSettings || {};
+  const formattedObject: Record<string, string | string[]> = {};
+  for (const [key, value] of Object.entries(contextValues).filter(
+    ([key]) => contextSettings[key]?.useForML
+  )) {
+    formattedObject[key] = value;
+  }
+  return {
+    context: formattedObject,
   };
 };
