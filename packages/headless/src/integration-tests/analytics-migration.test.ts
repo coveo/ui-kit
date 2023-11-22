@@ -44,7 +44,7 @@ function extractAndExcludeProperties(
 }
 
 async function wait() {
-  return new Promise((resolve) => setTimeout(resolve, 500));
+  return new Promise((resolve) => setTimeout(resolve, 0));
 }
 
 function excludeProperties(obj: Record<string, unknown>) {
