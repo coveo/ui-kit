@@ -1,4 +1,6 @@
+import {SearchAnalyticsProvider} from '../../../../api/analytics/search-analytics';
 import {SearchEngine} from '../../../../app/search-engine/search-engine';
+import {SearchPageEvents} from '../../../../features/analytics/search-action-cause';
 import {
   logFacetClearAll,
   logFacetUpdateSort,
@@ -73,6 +75,14 @@ export function buildDateFacet(
             getFacetId(),
             selection
           ),
+          next: {
+            actionCause: SearchPageEvents.facetSelect,
+            getEventExtraPayload: (state) =>
+              new SearchAnalyticsProvider(() => state).getFacetMetadata(
+                getFacetId(),
+                `${selection.start}..${selection.end}`
+              ),
+          },
         })
       );
     },

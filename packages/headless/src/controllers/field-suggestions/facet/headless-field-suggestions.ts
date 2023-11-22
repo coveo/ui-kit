@@ -1,7 +1,9 @@
+import {SearchAnalyticsProvider} from '../../../api/analytics/search-analytics';
 import {configuration} from '../../../app/common-reducers';
 import {CoreEngine} from '../../../app/engine';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments';
+import {SearchPageEvents} from '../../../features/analytics/search-action-cause';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {registerFacet} from '../../../features/facets/facet-set/facet-set-actions';
@@ -182,6 +184,14 @@ export function buildFieldSuggestions(
       engine.dispatch(
         executeSearch({
           legacy: logFacetSelect({facetId, facetValue: value.rawValue}),
+          next: {
+            actionCause: SearchPageEvents.facetSelect,
+            getEventExtraPayload: (state) =>
+              new SearchAnalyticsProvider(() => state).getFacetMetadata(
+                facetId,
+                value.rawValue
+              ),
+          },
         })
       );
     },

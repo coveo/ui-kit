@@ -1,5 +1,7 @@
+import {SearchAnalyticsProvider} from '../../../api/analytics/search-analytics';
 import {configuration} from '../../../app/common-reducers';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
+import {SearchPageEvents} from '../../../features/analytics/search-action-cause';
 import {categoryFacetSetReducer as categoryFacetSet} from '../../../features/facets/category-facet-set/category-facet-set-slice';
 import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
 import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response';
@@ -94,7 +96,20 @@ export function buildCategoryFacet(
         getFacetId(),
         selection
       );
-      dispatch(executeSearch({legacy: analyticsAction}));
+
+      dispatch(
+        executeSearch({
+          legacy: analyticsAction,
+          next: {
+            actionCause: SearchPageEvents.facetSelect,
+            getEventExtraPayload: (state) =>
+              new SearchAnalyticsProvider(() => state).getFacetMetadata(
+                getFacetId(),
+                selection.value
+              ),
+          },
+        })
+      );
     },
 
     deselectAll() {

@@ -116,6 +116,14 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
               facetId: getFacetId(),
               facetValue: value.rawValue,
             }),
+            next: {
+              actionCause: SearchPageEvents.facetSelect,
+              getEventExtraPayload: (state) =>
+                new SearchAnalyticsProvider(() => state).getFacetMetadata(
+                  getFacetId(),
+                  value.rawValue
+                ),
+            },
           })
         );
       },
