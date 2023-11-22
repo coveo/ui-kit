@@ -267,10 +267,10 @@ export class CoveoInsightClient {
         });
     }
 
-    public logCreateArticle(createArticle: CreateArticleMetadata, metadata?: CaseMetadata) {
+    public logCreateArticle(createArticleMetadata: CreateArticleMetadata, metadata?: CaseMetadata) {
         return this.logCustomEvent(
             InsightEvents.createArticle,
-            metadata ? {...generateMetadataToSend(metadata, false), ...createArticle} : {createArticle}
+            metadata ? {...generateMetadataToSend(metadata, false), ...createArticleMetadata} : createArticleMetadata
         );
     }
 
