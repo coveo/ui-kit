@@ -25,12 +25,6 @@ mockHeadlessLoader.getHeadlessBundle = () => {
   };
 };
 
-const functionsMocks = {
-  mockCitationClickHandler: jest.fn((citationId) => {
-    return citationId;
-  }),
-};
-
 const mockCitations = [
   {
     id: '1',
@@ -52,7 +46,6 @@ const mockCitations = [
 
 const defaultOptions = {
   citations: mockCitations,
-  citationClickHandler: functionsMocks.mockCitationClickHandler,
 };
 
 const selectors = {

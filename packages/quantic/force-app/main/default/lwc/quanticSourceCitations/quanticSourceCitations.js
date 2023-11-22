@@ -12,7 +12,7 @@ import {LightningElement, api} from 'lwc';
  * The `QuanticSourceCitations` component renders the citations used to generate the answer in the quantic generated answer component.
  * @category Internal
  * @example
- * <c-quantic-source-citations engine-id={engineId} citations={citations} citation-click-handler={citationClickHandler}></c-quantic-source-citations>
+ * <c-quantic-source-citations engine-id={engineId} citations={citations} citation-hover-handler={citationHoverHandler}></c-quantic-source-citations>
  */
 export default class QuanticSourceCitations extends LightningElement {
   labels = {
@@ -32,7 +32,7 @@ export default class QuanticSourceCitations extends LightningElement {
    */
   @api citations;
   /**
-   * The function to be executed when a citation is clicked.
+   * The function to be executed when a citation is hovered.
    * @api
    * @type {function}
    */
