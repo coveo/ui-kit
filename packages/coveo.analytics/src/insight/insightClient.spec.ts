@@ -622,6 +622,15 @@ describe('InsightClient', () => {
             await client.logGeneratedAnswerStreamEnd(exampleGeneratedAnswerMetadata);
             expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerStreamEnd, exampleGeneratedAnswerMetadata);
         });
+
+        it('should send proper payload for #createArticle', async () => {
+            const exampleCreateArticleMetadata = {
+                articleType: 'Knowledge__kav',
+                triggeredBy: 'CreateArticleButton',
+            };
+            await client.logCreateArticle(exampleCreateArticleMetadata);
+            expectMatchCustomEventPayload(InsightEvents.createArticle, exampleCreateArticleMetadata);
+        });
     });
 
     describe('when the case metadata is included', () => {
@@ -1379,6 +1388,19 @@ describe('InsightClient', () => {
 
             await client.logGeneratedAnswerStreamEnd(exampleGeneratedAnswerMetadata, baseCaseMetadata);
             expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerStreamEnd, expectedMetadata);
+        });
+
+        it.only('should send proper payload for #createArticle', async () => {
+            const exampleCreateArticleMetadata = {
+                articleType: 'Knowledge__kav',
+                triggeredBy: 'CreateArticleButton',
+            };
+            const expectedMetadata = {
+                ...exampleCreateArticleMetadata,
+                ...expectedBaseCaseMetadata,
+            };
+            await client.logCreateArticle(exampleCreateArticleMetadata, baseCaseMetadata);
+            expectMatchCustomEventPayload(InsightEvents.createArticle, expectedMetadata);
         });
     });
 

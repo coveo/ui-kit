@@ -35,6 +35,7 @@ import {
     InsightResultsSortMetadata,
     UserActionsDocumentMetadata,
     UserActionsPageViewMetadata,
+    CreateArticleMetadata,
 } from './insightEvents';
 
 export interface InsightClientProvider {
@@ -264,6 +265,13 @@ export class CoveoInsightClient {
             ...generateMetadataToSend(metadata, false),
             pageView,
         });
+    }
+
+    public logCreateArticle(createArticleMetadata: CreateArticleMetadata, metadata?: CaseMetadata) {
+        return this.logCustomEvent(
+            InsightEvents.createArticle,
+            metadata ? {...generateMetadataToSend(metadata, false), ...createArticleMetadata} : createArticleMetadata
+        );
     }
 
     public logDocumentOpen(info: PartialDocumentInformation, identifier: DocumentIdentifier, metadata?: CaseMetadata) {
