@@ -46,7 +46,7 @@ const GENERATED_ANSWER_DATA_KEY = 'coveo-generated-answer-data';
 
 /**
  * The `QuanticGeneratedAnswer` component automatically generates an answer using Coveo machine learning models to answer the query executed by the user.
- * @category Internal
+ * @category Search
  * @example
  * <c-quantic-generated-answer engine-id={engineId} answer-style="step"></c-quantic-generated-answer>
  */
