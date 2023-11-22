@@ -35,7 +35,7 @@ export default class QuanticFoldedResultList extends LightningElement {
    * @defaultValue `'date,author,source,language,filetype,parents,sfknowledgearticleid'`
    */
   @api fieldsToInclude =
-    'date,author,source,language,filetype,parents,sfknowledgearticleid';
+    'date,author,source,language,filetype,parents,sfknowledgearticleid,sfid,sfkbid,sfkavid';
   /**
    * The name of the field on which to do the folding.
    * @api
