@@ -18,7 +18,8 @@ import {
 import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice';
 import {
   getAnalyticsActionForToggleFacetExclude,
-  getAnalyticsActionForToggleFacetSelect,
+  getLegacyAnalyticsActionForToggleFacetSelect,
+  getNextAnalyticsActionForToggleFacetSelect,
 } from '../../../features/facets/facet-set/facet-set-utils';
 import {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request';
 import {
@@ -154,18 +155,14 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
       coreController.toggleSelect(selection);
       dispatch(
         executeSearch({
-          legacy: getAnalyticsActionForToggleFacetSelect(
+          legacy: getLegacyAnalyticsActionForToggleFacetSelect(
             getFacetId(),
             selection
           ),
-          next: {
-            actionCause: SearchPageEvents.facetSelect,
-            getEventExtraPayload: (state) =>
-              new SearchAnalyticsProvider(() => state).getFacetMetadata(
-                getFacetId(),
-                selection.value
-              ),
-          },
+          next: getNextAnalyticsActionForToggleFacetSelect(
+            getFacetId(),
+            selection
+          ),
         })
       );
     },

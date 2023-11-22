@@ -1,13 +1,14 @@
-import {SearchAnalyticsProvider} from '../../../../api/analytics/search-analytics';
 import {configuration} from '../../../../app/common-reducers';
 import {SearchEngine} from '../../../../app/search-engine/search-engine';
-import {SearchPageEvents} from '../../../../features/analytics/search-action-cause';
 import {
   logFacetClearAll,
   logFacetUpdateSort,
 } from '../../../../features/facets/facet-set/facet-set-analytics-actions';
 import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
-import {getAnalyticsActionForToggleRangeFacetSelect} from '../../../../features/facets/range-facets/generic/range-facet-utils';
+import {
+  getLegacyAnalyticsActionForToggleRangeFacetSelect,
+  getNextAnalyticsActionForToggleFacetSelect,
+} from '../../../../features/facets/range-facets/generic/range-facet-utils';
 import {NumericRangeRequest} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/request';
 import {NumericFacetValue} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
 import {numericFacetSetReducer as numericFacetSet} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
@@ -80,18 +81,14 @@ export function buildNumericFacet(
       coreController.toggleSelect(selection);
       dispatch(
         executeSearch({
-          legacy: getAnalyticsActionForToggleRangeFacetSelect(
+          legacy: getLegacyAnalyticsActionForToggleRangeFacetSelect(
             getFacetId(),
             selection
           ),
-          next: {
-            actionCause: SearchPageEvents.facetSelect,
-            getEventExtraPayload: (state) =>
-              new SearchAnalyticsProvider(() => state).getFacetMetadata(
-                getFacetId(),
-                `${selection.start}..${selection.end}`
-              ),
-          },
+          next: getNextAnalyticsActionForToggleFacetSelect(
+            getFacetId(),
+            selection
+          ),
         })
       );
     },

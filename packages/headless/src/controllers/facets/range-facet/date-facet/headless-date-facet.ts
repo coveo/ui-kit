@@ -1,6 +1,4 @@
-import {SearchAnalyticsProvider} from '../../../../api/analytics/search-analytics';
 import {SearchEngine} from '../../../../app/search-engine/search-engine';
-import {SearchPageEvents} from '../../../../features/analytics/search-action-cause';
 import {
   logFacetClearAll,
   logFacetUpdateSort,
@@ -10,7 +8,8 @@ import {DateFacetValue} from '../../../../features/facets/range-facets/date-face
 import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
 import {
   getAnalyticsActionForToggleRangeFacetExclude,
-  getAnalyticsActionForToggleRangeFacetSelect,
+  getLegacyAnalyticsActionForToggleRangeFacetSelect,
+  getNextAnalyticsActionForToggleFacetSelect,
 } from '../../../../features/facets/range-facets/generic/range-facet-utils';
 import {executeSearch} from '../../../../features/search/search-actions';
 import {
@@ -71,18 +70,14 @@ export function buildDateFacet(
       coreController.toggleSelect(selection);
       dispatch(
         executeSearch({
-          legacy: getAnalyticsActionForToggleRangeFacetSelect(
+          legacy: getLegacyAnalyticsActionForToggleRangeFacetSelect(
             getFacetId(),
             selection
           ),
-          next: {
-            actionCause: SearchPageEvents.facetSelect,
-            getEventExtraPayload: (state) =>
-              new SearchAnalyticsProvider(() => state).getFacetMetadata(
-                getFacetId(),
-                `${selection.start}..${selection.end}`
-              ),
-          },
+          next: getNextAnalyticsActionForToggleFacetSelect(
+            getFacetId(),
+            selection
+          ),
         })
       );
     },

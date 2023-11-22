@@ -1,3 +1,6 @@
+import {SearchPageEvents} from 'coveo.analytics';
+import {SearchAnalyticsProvider} from '../../../api/analytics/search-analytics';
+import {SearchAction} from '../../search/search-actions';
 import {
   logFacetDeselect,
   logFacetExclude,
@@ -14,7 +17,7 @@ export const isFacetValueExcluded = (value: FacetValue) => {
   return value.state === 'excluded';
 };
 
-export const getAnalyticsActionForToggleFacetSelect = (
+export const getLegacyAnalyticsActionForToggleFacetSelect = (
   facetId: string,
   selection: FacetValue
 ) => {
@@ -26,6 +29,22 @@ export const getAnalyticsActionForToggleFacetSelect = (
   return isFacetValueSelected(selection)
     ? logFacetDeselect(payload)
     : logFacetSelect(payload);
+};
+
+export const getNextAnalyticsActionForToggleFacetSelect = (
+  facetId: string,
+  selection: FacetValue
+): SearchAction => {
+  return {
+    actionCause: isFacetValueSelected(selection)
+      ? SearchPageEvents.facetSelect
+      : SearchPageEvents.facetDeselect,
+    getEventExtraPayload: (state) =>
+      new SearchAnalyticsProvider(() => state).getFacetMetadata(
+        facetId,
+        selection.value
+      ),
+  };
 };
 
 export const getAnalyticsActionForToggleFacetExclude = (

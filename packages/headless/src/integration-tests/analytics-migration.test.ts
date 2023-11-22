@@ -10,7 +10,7 @@ import {
 } from '../controllers/facets/facet/headless-facet';
 import {logInterfaceLoad} from '../features/analytics/analytics-actions';
 import {SearchPageEvents} from '../features/analytics/search-action-cause';
-import {getAnalyticsActionForToggleFacetSelect} from '../features/facets/facet-set/facet-set-utils';
+import {getLegacyAnalyticsActionForToggleFacetSelect} from '../features/facets/facet-set/facet-set-utils';
 import {executeSearch} from '../features/search/search-actions';
 
 const nextSearchEngine = buildSearchEngine({
@@ -117,7 +117,7 @@ describe('Analytics Search Migration', () => {
       numberOfResults: 1,
     };
     const action = executeSearch({
-      legacy: getAnalyticsActionForToggleFacetSelect(
+      legacy: getLegacyAnalyticsActionForToggleFacetSelect(
         props.options.field,
         selection
       ),

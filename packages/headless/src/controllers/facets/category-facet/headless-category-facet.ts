@@ -15,6 +15,7 @@ import {
   logFacetSelect,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {
+  SearchAction,
   executeSearch,
   fetchFacetValues,
 } from '../../../features/search/search-actions';
@@ -92,22 +93,10 @@ export function buildCategoryFacet(
 
     toggleSelect(selection: CategoryFacetValue) {
       coreController.toggleSelect(selection);
-      const analyticsAction = getToggleSelectAnalyticsAction(
-        getFacetId(),
-        selection
-      );
-
       dispatch(
         executeSearch({
-          legacy: analyticsAction,
-          next: {
-            actionCause: SearchPageEvents.facetSelect,
-            getEventExtraPayload: (state) =>
-              new SearchAnalyticsProvider(() => state).getFacetMetadata(
-                getFacetId(),
-                selection.value
-              ),
-          },
+          legacy: getLegacyToggleSelectAnalyticsAction(getFacetId(), selection),
+          next: getNextToggleSelectAnalyticsAction(getFacetId(), selection),
         })
       );
     },
@@ -162,7 +151,7 @@ function loadCategoryFacetReducers(
   return true;
 }
 
-function getToggleSelectAnalyticsAction(
+function getLegacyToggleSelectAnalyticsAction(
   facetId: string,
   selection: CategoryFacetValue
 ) {
@@ -173,4 +162,21 @@ function getToggleSelectAnalyticsAction(
 
   const isSelected = selection.state === 'selected';
   return isSelected ? logFacetDeselect(payload) : logFacetSelect(payload);
+}
+
+function getNextToggleSelectAnalyticsAction(
+  facetId: string,
+  selection: CategoryFacetValue
+): SearchAction {
+  const isSelected = selection.state === 'selected';
+  return {
+    actionCause: isSelected
+      ? SearchPageEvents.facetDeselect
+      : SearchPageEvents.facetSelect,
+    getEventExtraPayload: (state) =>
+      new SearchAnalyticsProvider(() => state).getFacetMetadata(
+        facetId,
+        selection.value
+      ),
+  };
 }

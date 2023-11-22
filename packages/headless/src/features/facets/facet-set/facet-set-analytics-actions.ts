@@ -140,6 +140,7 @@ export interface LogFacetDeselectActionCreatorPayload {
   facetValue: string;
 }
 
+//TODO: KIT-2859
 export const logFacetDeselect = (
   payload: LogFacetDeselectActionCreatorPayload
 ): SearchAction =>
