@@ -7,10 +7,10 @@ import {
 import {
   FacetProps,
   FacetValue,
-  buildFacet,
 } from '../controllers/facets/facet/headless-facet';
 import {logInterfaceLoad} from '../features/analytics/analytics-actions';
 import {SearchPageEvents} from '../features/analytics/search-action-cause';
+import {getAnalyticsActionForToggleFacetSelect} from '../features/facets/facet-set/facet-set-utils';
 import {executeSearch} from '../features/search/search-actions';
 
 const nextSearchEngine = buildSearchEngine({
@@ -116,11 +116,23 @@ describe('Analytics Search Migration', () => {
       state: 'idle',
       numberOfResults: 1,
     };
-    const legacyFacet = buildFacet(legacySearchEngine, props);
-    const nextFacet = buildFacet(nextSearchEngine, props);
+    const action = executeSearch({
+      legacy: getAnalyticsActionForToggleFacetSelect(
+        props.options.field,
+        selection
+      ),
+      next: {
+        actionCause: SearchPageEvents.facetSelect,
+        getEventExtraPayload: (state) =>
+          new SearchAnalyticsProvider(() => state).getFacetMetadata(
+            props.options.field,
+            selection.value
+          ),
+      },
+    });
 
-    legacyFacet.toggleSelect(selection);
-    nextFacet.toggleSelect(selection);
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
     await wait();
 
     assertNextEqualsLegacy(callSpy);
