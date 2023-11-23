@@ -14,7 +14,7 @@ import {LightningElement, api} from 'lwc';
  */
 export default class QuanticGeneratedAnswerRephraseButtons extends LightningElement {
   /**
-   * The value of th rephrase button that should be selected.
+   * The value of the rephrase button that should be selected.
    * @api
    * @type {string}
    */

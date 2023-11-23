@@ -15,6 +15,7 @@ import {getSearchInitialState} from '../../features/search/search-state';
 import {InsightAppState} from '../../state/insight-app-state';
 import {
   ConfigurationSection,
+  GeneratedAnswerSection,
   PipelineSection,
   QuerySection,
   SearchHubSection,
@@ -34,7 +35,8 @@ export type StateNeededByInsightAnalyticsProvider = ConfigurationSection &
       SearchSection &
       PipelineSection &
       QuerySection &
-      SectionNeededForFacetMetadata
+      SectionNeededForFacetMetadata &
+      GeneratedAnswerSection
   >;
 
 export class InsightAnalyticsProvider
