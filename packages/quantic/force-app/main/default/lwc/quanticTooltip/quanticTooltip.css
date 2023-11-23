@@ -1,6 +1,6 @@
 :host {
   --x-translation: var(--adapted-x-translation, 0px);
-  --max-width: var(--adapted-max-width, fit-content);
+  --max-width: var(--adapted-max-width, 20rem);
 }
 
 .tooltip__content {
