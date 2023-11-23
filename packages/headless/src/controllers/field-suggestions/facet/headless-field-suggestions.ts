@@ -200,6 +200,14 @@ export function buildFieldSuggestions(
       engine.dispatch(
         executeSearch({
           legacy: logFacetExclude({facetId, facetValue: value.rawValue}),
+          next: {
+            actionCause: SearchPageEvents.facetExclude,
+            getEventExtraPayload: (state) =>
+              new SearchAnalyticsProvider(() => state).getFacetMetadata(
+                facetId,
+                value.rawValue
+              ),
+          },
         })
       );
     },

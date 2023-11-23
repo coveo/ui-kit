@@ -17,8 +17,9 @@ import {
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice';
 import {
-  getAnalyticsActionForToggleFacetExclude,
+  getLegacyAnalyticsActionForToggleFacetExclude,
   getLegacyAnalyticsActionForToggleFacetSelect,
+  getNextAnalyticsActionForToggleFacetExclude,
   getNextAnalyticsActionForToggleFacetSelect,
 } from '../../../features/facets/facet-set/facet-set-utils';
 import {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request';
@@ -136,6 +137,14 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
               facetId: getFacetId(),
               facetValue: value.rawValue,
             }),
+            next: {
+              actionCause: SearchPageEvents.facetExclude,
+              getEventExtraPayload: (state) =>
+                new SearchAnalyticsProvider(() => state).getFacetMetadata(
+                  getFacetId(),
+                  value.rawValue
+                ),
+            },
           })
         );
       },
@@ -171,7 +180,11 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
       coreController.toggleExclude(selection);
       dispatch(
         executeSearch({
-          legacy: getAnalyticsActionForToggleFacetExclude(
+          legacy: getLegacyAnalyticsActionForToggleFacetExclude(
+            getFacetId(),
+            selection
+          ),
+          next: getNextAnalyticsActionForToggleFacetExclude(
             getFacetId(),
             selection
           ),

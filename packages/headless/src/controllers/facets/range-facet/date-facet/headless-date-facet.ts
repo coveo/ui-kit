@@ -7,7 +7,7 @@ import {DateRangeRequest} from '../../../../features/facets/range-facets/date-fa
 import {DateFacetValue} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
 import {
-  getAnalyticsActionForToggleRangeFacetExclude,
+  getLegacyAnalyticsActionForToggleRangeFacetExclude,
   getLegacyAnalyticsActionForToggleRangeFacetSelect,
   getNextAnalyticsActionForToggleFacetSelect,
 } from '../../../../features/facets/range-facets/generic/range-facet-utils';
@@ -86,7 +86,7 @@ export function buildDateFacet(
       coreController.toggleExclude(selection);
       dispatch(
         executeSearch({
-          legacy: getAnalyticsActionForToggleRangeFacetExclude(
+          legacy: getLegacyAnalyticsActionForToggleRangeFacetExclude(
             getFacetId(),
             selection
           ),

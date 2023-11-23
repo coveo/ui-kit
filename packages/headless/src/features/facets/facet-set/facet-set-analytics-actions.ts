@@ -110,6 +110,7 @@ export const logFacetSelect = (
     return client.makeFacetSelect(metadata);
   });
 
+//TODO: KIT-2859
 export const logFacetExclude = (
   payload: LogFacetSelectActionCreatorPayload
 ): SearchAction =>

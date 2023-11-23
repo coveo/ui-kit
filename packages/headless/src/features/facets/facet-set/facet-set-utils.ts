@@ -37,8 +37,8 @@ export const getNextAnalyticsActionForToggleFacetSelect = (
 ): SearchAction => {
   return {
     actionCause: isFacetValueSelected(selection)
-      ? SearchPageEvents.facetSelect
-      : SearchPageEvents.facetDeselect,
+      ? SearchPageEvents.facetDeselect
+      : SearchPageEvents.facetSelect,
     getEventExtraPayload: (state) =>
       new SearchAnalyticsProvider(() => state).getFacetMetadata(
         facetId,
@@ -47,7 +47,7 @@ export const getNextAnalyticsActionForToggleFacetSelect = (
   };
 };
 
-export const getAnalyticsActionForToggleFacetExclude = (
+export const getLegacyAnalyticsActionForToggleFacetExclude = (
   facetId: string,
   selection: FacetValue
 ) => {
@@ -59,4 +59,20 @@ export const getAnalyticsActionForToggleFacetExclude = (
   return isFacetValueExcluded(selection)
     ? logFacetDeselect(payload)
     : logFacetExclude(payload);
+};
+
+export const getNextAnalyticsActionForToggleFacetExclude = (
+  facetId: string,
+  selection: FacetValue
+): SearchAction => {
+  return {
+    actionCause: isFacetValueExcluded(selection)
+      ? SearchPageEvents.facetUnexclude
+      : SearchPageEvents.facetExclude,
+    getEventExtraPayload: (state) =>
+      new SearchAnalyticsProvider(() => state).getFacetMetadata(
+        facetId,
+        selection.value
+      ),
+  };
 };

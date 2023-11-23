@@ -45,7 +45,7 @@ export const getNextAnalyticsActionForToggleFacetSelect = (
   };
 };
 
-export const getAnalyticsActionForToggleRangeFacetExclude = (
+export const getLegacyAnalyticsActionForToggleRangeFacetExclude = (
   facetId: string,
   selection: RangeFacetValue
 ) => {
@@ -55,4 +55,20 @@ export const getAnalyticsActionForToggleRangeFacetExclude = (
   return isRangeFacetValueExcluded(selection)
     ? logFacetDeselect(payload)
     : logFacetExclude(payload);
+};
+
+export const getNextAnalyticsActionForToggleRangeFacetExclude = (
+  facetId: string,
+  selection: RangeFacetValue
+): SearchAction => {
+  return {
+    actionCause: isRangeFacetValueExcluded(selection)
+      ? SearchPageEvents.facetUnexclude
+      : SearchPageEvents.facetExclude,
+    getEventExtraPayload: (state) =>
+      new SearchAnalyticsProvider(() => state).getFacetMetadata(
+        facetId,
+        `${selection.start}..${selection.end}`
+      ),
+  };
 };
