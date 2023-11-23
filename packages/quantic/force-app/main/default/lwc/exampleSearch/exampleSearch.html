@@ -16,7 +16,7 @@
           class="slds-col slds-size_1-of-1 slds-large-size_6-of-12 slds-align-middle"
         >
           <div class="slds-m-vertical_small">
-            <c-quantic-search-box engine-id={engineId} textarea="true"></c-quantic-search-box>
+            <c-quantic-search-box engine-id={engineId}></c-quantic-search-box>
           </div>
         </div>
         <div class="slds-col">
@@ -123,9 +123,6 @@
                   engine-id={engineId}
                 ></c-quantic-tab>
               </c-quantic-tab-bar>
-              <div class="slds-var-m-vertical_x-small">
-                <c-quantic-generated-answer engine-id={engineId} answer-style="default"></c-quantic-generated-answer>
-              </div>
               <div class="slds-grid slds-var-m-top_small">
                 <c-quantic-summary
                   class="slds-var-m-vertical_x-small slds-small-size_8-of-12 slds-large-size_7-of-12"
