@@ -27,7 +27,7 @@ textarea.searchbox__input {
 }
 
 .searchbox__container-min-height {
-  min-height: 74px;
+  min-height: 3.125rem;
 }
 
 .searchbox_floating-container {
