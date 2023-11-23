@@ -4,13 +4,13 @@ import {
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
 } from '../app/search-engine/search-engine';
-import {
-  FacetProps,
-  FacetValue,
-} from '../controllers/facets/facet/headless-facet';
 import {logInterfaceLoad} from '../features/analytics/analytics-actions';
 import {SearchPageEvents} from '../features/analytics/search-action-cause';
-import {getLegacyAnalyticsActionForToggleFacetSelect} from '../features/facets/facet-set/facet-set-utils';
+import {
+  logFacetDeselect,
+  logFacetExclude,
+  logFacetSelect,
+} from '../features/facets/facet-set/facet-set-analytics-actions';
 import {executeSearch} from '../features/search/search-actions';
 
 const nextSearchEngine = buildSearchEngine({
@@ -56,14 +56,6 @@ function excludeProperties(obj: Record<string, unknown>) {
   const result = {...obj};
   excludedBaseProperties.forEach((prop: string) => delete result[prop]);
 
-  if (result.customData) {
-    const customData = {...result.customData};
-    excludedCustomDataProperties.forEach((prop: string) => {
-      delete (customData as Record<string, unknown>)[prop];
-    });
-    result.customData = customData;
-  }
-
   return result;
 }
 
@@ -74,7 +66,8 @@ const excludedBaseProperties = [
   'trackingId',
 ];
 
-const excludedCustomDataProperties = ['facetTitle'];
+const ANY_FACET_VALUE = 'any facet value';
+const ANY_FACET_ID = 'any facet id';
 
 describe('Analytics Search Migration', () => {
   let callSpy: jest.SpyInstance<Promise<Response | PlatformClientCallError>>;
@@ -106,27 +99,63 @@ describe('Analytics Search Migration', () => {
   });
 
   it('analytics/facet/select', async () => {
-    const props: FacetProps = {
-      options: {
-        field: 'test',
-      },
-    };
-    const selection: FacetValue = {
-      value: 'test',
-      state: 'idle',
-      numberOfResults: 1,
-    };
     const action = executeSearch({
-      legacy: getLegacyAnalyticsActionForToggleFacetSelect(
-        props.options.field,
-        selection
-      ),
+      legacy: logFacetSelect({
+        facetId: ANY_FACET_ID,
+        facetValue: ANY_FACET_VALUE,
+      }),
       next: {
         actionCause: SearchPageEvents.facetSelect,
         getEventExtraPayload: (state) =>
           new SearchAnalyticsProvider(() => state).getFacetMetadata(
-            props.options.field,
-            selection.value
+            ANY_FACET_ID,
+            ANY_FACET_VALUE
+          ),
+      },
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/facet/deselect', async () => {
+    const action = executeSearch({
+      legacy: logFacetDeselect({
+        facetId: ANY_FACET_ID,
+        facetValue: ANY_FACET_VALUE,
+      }),
+      next: {
+        actionCause: SearchPageEvents.facetDeselect,
+        getEventExtraPayload: (state) =>
+          new SearchAnalyticsProvider(() => state).getFacetMetadata(
+            ANY_FACET_ID,
+            ANY_FACET_VALUE
+          ),
+      },
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/facet/exclude', async () => {
+    const action = executeSearch({
+      legacy: logFacetExclude({
+        facetId: ANY_FACET_ID,
+        facetValue: ANY_FACET_VALUE,
+      }),
+      next: {
+        actionCause: SearchPageEvents.facetExclude,
+        getEventExtraPayload: (state) =>
+          new SearchAnalyticsProvider(() => state).getFacetMetadata(
+            ANY_FACET_ID,
+            ANY_FACET_VALUE
           ),
       },
     });

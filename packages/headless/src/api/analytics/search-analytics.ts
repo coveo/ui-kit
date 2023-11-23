@@ -95,14 +95,27 @@ export class SearchAnalyticsProvider
     return baseObject;
   }
 
-  public getFacetMetadata(facetId: string, facetValue: string) {
+  public getFacetMetadata(id: string, value: string) {
+    const facetRequest = this.getFacetRequest(id);
+    const field = facetRequest?.field ?? '';
     return {
       ...this.getBaseMetadata(),
-      facetId: facetId,
-      facetValue: facetValue,
-      facetField: facetId,
+      facetId: id,
+      facetField: facetRequest?.field ?? '',
+      facetValue: value,
+      facetTitle: `${field}_${id}`,
     };
   }
+
+  private getFacetRequest = (facetId: string) => {
+    return (
+      this.state.facetSet?.[facetId]?.request ||
+      this.state.categoryFacetSet?.[facetId]?.request ||
+      this.state.dateFacetSet?.[facetId]?.request ||
+      this.state.numericFacetSet?.[facetId]?.request ||
+      this.state.automaticFacetSet?.set[facetId]?.response
+    );
+  };
 
   public getGeneratedAnswerMetadata() {
     const state = this.getState();
