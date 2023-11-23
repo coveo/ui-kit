@@ -1,4 +1,4 @@
-export type RelayMode = "emit" | "validate" | "disabled";
+export type RelayMode = "emit" | "disabled";
 
 /**
  * The `RelayConfig` object defines the configuration options for initializing a Relay instance.
@@ -22,7 +22,6 @@ export interface RelayConfig {
   /**
    * Defines the library mode. The possible values are:
    * "emit": Sends analytics events to Coveo to be stored.
-   * "validate": Validates events without storing them. This mode is for debugging and development purposes only and should not be used in production.
    * "disabled": Prevents the emission of events and does not trigger callbacks.
    * @default emit
    */

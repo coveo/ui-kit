@@ -27,30 +27,33 @@ describe("emit", () => {
 
   it("sets expected url, token and body for the send function", () => {
     emit(params);
-    const expectedBody = JSON.stringify([params.event]);
 
     expect(params.environment.send).toHaveBeenCalledWith(
       params.config.url,
       "I am token",
-      expectedBody
+      params.event
     );
   });
 
-  it("calls listeners", async () => {
+  it("calls listeners", () => {
     const { listenerManager, event } = params;
-    await emit(params);
+    emit(params);
     expect(listenerManager.call).toHaveBeenCalledWith(event);
   });
 
-  it("returns a response when in validate mode", async () => {
-    params.config.mode = "validate";
-    const response = await emit(params);
-    expect(response).toBeTruthy();
+  it("does not call listeners when in disabled mode", () => {
+    params.config.mode = "disabled";
+    emit(params);
+    expect(params.listenerManager.call).not.toBeCalled();
   });
 
-  it("does not call listeners when in disabled mode", async () => {
+  it("does not call the environment send function when in disabled mode", () => {
+    const sendSpy = jest.fn();
+    const environment = createMockEnvironment({ send: sendSpy });
     params.config.mode = "disabled";
-    await emit(params);
-    expect(params.listenerManager.call).not.toBeCalled();
+    params.environment = environment;
+    emit(params);
+
+    expect(sendSpy).toHaveBeenCalledTimes(0);
   });
 });

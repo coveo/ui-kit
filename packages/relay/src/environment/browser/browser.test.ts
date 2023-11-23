@@ -2,8 +2,10 @@
  * @jest-environment jsdom
  */
 
+import messenger from "@coveo/explorer-messenger";
 import { currentEnvironment } from "../environment";
 import { buildBrowserEnvironment } from "./browser";
+import { createMockEvent } from "../../__mocks__/event";
 
 // Should be replace by a jest.spy once jest-environment-jsdom updates to jsdom 22
 Object.defineProperty(window, "crypto", {
@@ -23,6 +25,12 @@ describe("buildBrowserEnvironment", () => {
 
   Object.defineProperty(navigator, "sendBeacon", {
     writable: true,
+  });
+
+  beforeEach(() => {
+    Object.defineProperty(navigator, "sendBeacon", {
+      value: jest.fn(() => true),
+    });
   });
 
   it("environment is browser", () => {
@@ -86,30 +94,46 @@ describe("buildBrowserEnvironment", () => {
       value: beaconSpy,
     });
 
-    buildBrowserEnvironment().send("anything", "token", "bloup");
+    buildBrowserEnvironment().send("anything", "token", createMockEvent());
 
     expect(beaconSpy).toHaveBeenCalledTimes(1);
     expect(beaconSpy).toHaveBeenCalledWith(
       `anything?access_token=token`,
-      new Blob(["bloup"], { type: "application/json" })
+      new Blob(['{"bloup": "something"}'], { type: "application/json" })
     );
   });
 
-  it("returns null when calling send", async () => {
-    Object.defineProperty(navigator, "sendBeacon", {
-      value: jest.fn(() => true),
-    });
-    expect(await buildBrowserEnvironment().send("", "", "")).toBeNull();
+  it("returns undefined when calling send", async () => {
+    expect(
+      await buildBrowserEnvironment().send("", "", createMockEvent())
+    ).toBeUndefined();
   });
 
-  it("throws an error if the sendBeacon's response is false", async () => {
-    const beaconSpy = jest.fn(() => false);
+  it("throws an error if the sendBeacon's response is false", () => {
     Object.defineProperty(navigator, "sendBeacon", {
-      value: beaconSpy,
+      value: jest.fn(() => false),
     });
-
-    expect(buildBrowserEnvironment().send("", "", "")).rejects.toThrow(
+    expect(
+      buildBrowserEnvironment().send("", "", createMockEvent())
+    ).rejects.toThrow(
       "Failed to send the event(s) because the payload size exceeded the maximum allowed size (32 KB). Please contact support if the problem persists."
     );
+  });
+
+  it("calls sendMessage when calling send", () => {
+    const sendMessageSpy = jest.fn();
+    jest
+      .spyOn(messenger, "createExplorerMessenger")
+      .mockImplementationOnce(() => ({ sendMessage: sendMessageSpy }));
+    const event = createMockEvent();
+
+    buildBrowserEnvironment().send("url", "token", event);
+    expect(sendMessageSpy).toHaveBeenCalledTimes(1);
+    expect(sendMessageSpy).toHaveBeenCalledWith({
+      kind: "EVENT_PROTOCOL",
+      url: "url",
+      token: "token",
+      event,
+    });
   });
 });

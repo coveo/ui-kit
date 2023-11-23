@@ -28,7 +28,7 @@ describe("createConfigManager", () => {
     it("returns the config with optional parameters if set", () => {
       const configWithOptionalParams = createMockConfig({
         ...initialConfig,
-        mode: "validate",
+        mode: "disabled",
       });
       const { get } = createConfigManager(configWithOptionalParams);
 

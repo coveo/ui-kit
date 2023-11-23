@@ -1,3 +1,4 @@
+import { createMockEvent } from "../../__mocks__/event";
 import { currentEnvironment } from "../environment";
 import { buildNodeEnvironment } from "./node";
 
@@ -53,17 +54,20 @@ describe("buildNodeEnvironment", () => {
       Authorization: `Bearer token`,
     };
 
-    buildNodeEnvironment().send("anything", "token", "bloup");
+    const event = createMockEvent();
+    buildNodeEnvironment().send("anything", "token", event);
 
     expect(fetchSpy).toHaveBeenCalledTimes(1);
     expect(fetchSpy).toHaveBeenCalledWith(`anything`, {
       method: "POST",
-      body: "bloup",
+      body: JSON.stringify([event]),
       headers: expectedHeaders,
     });
   });
 
   it("returns null when calling send", async () => {
-    expect(await buildNodeEnvironment().send("", "", "")).toBeNull();
+    expect(
+      await buildNodeEnvironment().send("", "", createMockEvent())
+    ).toBeUndefined();
   });
 });

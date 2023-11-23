@@ -6,7 +6,6 @@ import { version } from "./version";
 import { createMeta, Meta, EventConfig } from "./event/meta/meta";
 import { createListenerManager, EventCallback } from "./listener/listener";
 import { createConfigManager, RelayConfig } from "./config/config";
-import { ValidationError, ValidationResponse } from "./validate/validate";
 import { buildNullEnvironment } from "./environment/null/null";
 
 type RelayPayload = Record<string, unknown>;
@@ -21,12 +20,9 @@ interface Relay {
    * Sends an event to the Event API.
    * @param {string} type - event's type to be emitted.
    * @param {RelayPayload} payload - payload to include within the event.
-   * @returns {Promise<ValidationResponse | null>} the return value is typed ValidationResponse if the library configuration's mode is validate.
+   * @returns {Promise<void>}
    */
-  emit: (
-    type: string,
-    payload: RelayPayload
-  ) => Promise<ValidationResponse | null>;
+  emit: (type: string, payload: RelayPayload) => Promise<void>;
 
   /**
    * Gets the client-side generated meta object.
@@ -131,6 +127,4 @@ export type {
   EventCallback,
   RelayPayload,
   RelayConfig,
-  ValidationError,
-  ValidationResponse,
 };

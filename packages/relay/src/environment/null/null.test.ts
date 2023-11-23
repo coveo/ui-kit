@@ -1,3 +1,4 @@
+import { createMockEvent } from "../../__mocks__/event";
 import { buildNullEnvironment } from "./null";
 
 describe("null environment", () => {
@@ -42,7 +43,9 @@ describe("null environment", () => {
     expect(fetch).not.toBeCalled();
   });
 
-  it("returns null send", async () => {
-    expect(await buildNullEnvironment().send("bap", "", "")).toBeNull();
+  it("returns undefined send", async () => {
+    expect(
+      await buildNullEnvironment().send("bap", "", createMockEvent())
+    ).toBeUndefined();
   });
 });

@@ -1,4 +1,6 @@
 .container {
+  all: initial;
+  display: block;
   width: 960px;
   margin: 0 auto;
 }
@@ -21,15 +23,8 @@
   margin-right: 8px;
 }
 
-.validation-box {
-  border: solid black 1px;
-  font-family: Consolas, monospace;
-  padding: 8px;
-}
-
 .events-selector {
   margin: 16px;
   width: 240px;
   padding: 8px 0;
 }
-

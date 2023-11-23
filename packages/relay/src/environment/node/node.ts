@@ -1,3 +1,4 @@
+import { RelayEvent } from "../../event/relay-event";
 import { Environment } from "../environment";
 import { createNullStorage } from "../storage";
 import { fetchAPI } from "../utils/fetch";
@@ -6,17 +7,16 @@ export function buildNodeEnvironment(): Environment {
   return {
     runtime: "node",
     fetch: (url: string, init?: RequestInit) => fetchAPI(url, init),
-    send: async (url: string, token: string, body: string) => {
+    send: async (url: string, token: string, event: RelayEvent) => {
       const headers = {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       };
       fetchAPI(url, {
         method: "POST",
-        body,
+        body: JSON.stringify([event]),
         headers,
       });
-      return null;
     },
     getReferrer: () => null,
     getLocation: () => null,

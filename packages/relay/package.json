@@ -64,6 +64,7 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
+    "@coveo/explorer-messenger": "^0.1.1",
     "uuid": "^9.0.1"
   },
   "engines": {

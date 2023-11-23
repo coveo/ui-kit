@@ -1,6 +1,5 @@
 import { Environment } from "../environment/environment";
 import { ListenerManager } from "../listener/listener";
-import { validate } from "../validate/validate";
 import { RelayEvent } from "../event/relay-event";
 import { RelayConfig } from "../relay";
 
@@ -11,20 +10,17 @@ export interface EmitParams {
   listenerManager: ListenerManager;
 }
 
-export async function emit(params: EmitParams) {
-  const { listenerManager, event, config } = params;
-  const isEnabled = config.mode !== "disabled";
-
-  isEnabled && listenerManager.call(event);
-  return config.mode === "validate" ? validate(params) : emitEvent(params);
-}
-
-export async function emitEvent({
-  event,
+export async function emit({
   config,
   environment,
-}: EmitParams): Promise<null> {
-  const { url, token } = config;
+  event,
+  listenerManager,
+}: EmitParams) {
+  const { url, token, mode } = config;
+  const isEnabled = mode !== "disabled";
 
-  return environment.send(url, token, JSON.stringify([event]));
+  if (isEnabled) {
+    listenerManager.call(event);
+    environment.send(url, token, event);
+  }
 }

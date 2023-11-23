@@ -87,6 +87,9 @@ importers:
 
   packages/relay:
     dependencies:
+      '@coveo/explorer-messenger':
+        specifier: ^0.1.1
+        version: 0.1.1
       uuid:
         specifier: ^9.0.1
         version: 9.0.1
@@ -511,6 +514,10 @@ packages:
   /@bcoe/v8-coverage@0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
     dev: true
+
+  /@coveo/explorer-messenger@0.1.1:
+    resolution: {integrity: sha512-jZEtAc4BJ5MTEP9/FDwmkwM7bHVc/N3HHdnuOEJ+4vMnTBxBecndaxojFqoPcqJsINmRkD71XSUPQZUbbKXRrA==}
+    dev: false
 
   /@coveo/semantic-monorepo-tools@2.1.20:
     resolution: {integrity: sha512-PDkervezclSQIUAkWfb+0W2ap/qPSXYSPD36Dp3S0GZ6M/pP+Ah6gaVoLUAYano3C8rxiUbxZ1WBzh9EsQUzHg==}
