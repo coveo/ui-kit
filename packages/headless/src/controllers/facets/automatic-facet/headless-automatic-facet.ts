@@ -6,7 +6,7 @@ import {
 import {logFacetClearAll} from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {
   getLegacyAnalyticsActionForToggleFacetSelect,
-  getNextAnalyticsActionForToggleFacetSelect,
+  getAnalyticsActionForToggleFacetSelect,
 } from '../../../features/facets/facet-set/facet-set-utils';
 import {FacetValue} from '../../../features/facets/facet-set/interfaces/response';
 import {executeSearch} from '../../../features/search/search-actions';
@@ -54,7 +54,7 @@ export function buildAutomaticFacet(
             field,
             selection
           ),
-          next: getNextAnalyticsActionForToggleFacetSelect(field, selection),
+          next: getAnalyticsActionForToggleFacetSelect(field, selection),
         })
       );
     },

@@ -19,8 +19,8 @@ import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/fa
 import {
   getLegacyAnalyticsActionForToggleFacetExclude,
   getLegacyAnalyticsActionForToggleFacetSelect,
-  getNextAnalyticsActionForToggleFacetExclude,
-  getNextAnalyticsActionForToggleFacetSelect,
+  getAnalyticsActionForToggleFacetExclude,
+  getAnalyticsActionForToggleFacetSelect,
 } from '../../../features/facets/facet-set/facet-set-utils';
 import {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request';
 import {
@@ -168,10 +168,7 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
             getFacetId(),
             selection
           ),
-          next: getNextAnalyticsActionForToggleFacetSelect(
-            getFacetId(),
-            selection
-          ),
+          next: getAnalyticsActionForToggleFacetSelect(getFacetId(), selection),
         })
       );
     },
@@ -184,7 +181,7 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
             getFacetId(),
             selection
           ),
-          next: getNextAnalyticsActionForToggleFacetExclude(
+          next: getAnalyticsActionForToggleFacetExclude(
             getFacetId(),
             selection
           ),

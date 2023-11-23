@@ -7,7 +7,7 @@ import {
 import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
 import {
   getLegacyAnalyticsActionForToggleRangeFacetSelect,
-  getNextAnalyticsActionForToggleFacetSelect,
+  getAnalyticsActionForToggleFacetSelect,
 } from '../../../../features/facets/range-facets/generic/range-facet-utils';
 import {NumericRangeRequest} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/request';
 import {NumericFacetValue} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
@@ -85,10 +85,7 @@ export function buildNumericFacet(
             getFacetId(),
             selection
           ),
-          next: getNextAnalyticsActionForToggleFacetSelect(
-            getFacetId(),
-            selection
-          ),
+          next: getAnalyticsActionForToggleFacetSelect(getFacetId(), selection),
         })
       );
     },

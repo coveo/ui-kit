@@ -31,7 +31,7 @@ export const getLegacyAnalyticsActionForToggleFacetSelect = (
     : logFacetSelect(payload);
 };
 
-export const getNextAnalyticsActionForToggleFacetSelect = (
+export const getAnalyticsActionForToggleFacetSelect = (
   facetId: string,
   selection: FacetValue
 ): SearchAction => {
@@ -61,7 +61,7 @@ export const getLegacyAnalyticsActionForToggleFacetExclude = (
     : logFacetExclude(payload);
 };
 
-export const getNextAnalyticsActionForToggleFacetExclude = (
+export const getAnalyticsActionForToggleFacetExclude = (
   facetId: string,
   selection: FacetValue
 ): SearchAction => {

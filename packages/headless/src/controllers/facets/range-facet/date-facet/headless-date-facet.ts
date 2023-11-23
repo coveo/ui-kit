@@ -9,7 +9,7 @@ import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/
 import {
   getLegacyAnalyticsActionForToggleRangeFacetExclude,
   getLegacyAnalyticsActionForToggleRangeFacetSelect,
-  getNextAnalyticsActionForToggleFacetSelect,
+  getAnalyticsActionForToggleFacetSelect,
 } from '../../../../features/facets/range-facets/generic/range-facet-utils';
 import {executeSearch} from '../../../../features/search/search-actions';
 import {
@@ -74,10 +74,7 @@ export function buildDateFacet(
             getFacetId(),
             selection
           ),
-          next: getNextAnalyticsActionForToggleFacetSelect(
-            getFacetId(),
-            selection
-          ),
+          next: getAnalyticsActionForToggleFacetSelect(getFacetId(), selection),
         })
       );
     },

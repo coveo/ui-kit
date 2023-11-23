@@ -29,7 +29,7 @@ export const getLegacyAnalyticsActionForToggleRangeFacetSelect = (
     : logFacetSelect(payload);
 };
 
-export const getNextAnalyticsActionForToggleFacetSelect = (
+export const getAnalyticsActionForToggleFacetSelect = (
   facetId: string,
   selection: RangeFacetValue
 ): SearchAction => {
@@ -57,7 +57,7 @@ export const getLegacyAnalyticsActionForToggleRangeFacetExclude = (
     : logFacetExclude(payload);
 };
 
-export const getNextAnalyticsActionForToggleRangeFacetExclude = (
+export const getAnalyticsActionForToggleRangeFacetExclude = (
   facetId: string,
   selection: RangeFacetValue
 ): SearchAction => {

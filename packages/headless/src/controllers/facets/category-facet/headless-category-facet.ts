@@ -96,7 +96,7 @@ export function buildCategoryFacet(
       dispatch(
         executeSearch({
           legacy: getLegacyToggleSelectAnalyticsAction(getFacetId(), selection),
-          next: getNextToggleSelectAnalyticsAction(getFacetId(), selection),
+          next: getToggleSelectAnalyticsAction(getFacetId(), selection),
         })
       );
     },
@@ -164,7 +164,7 @@ function getLegacyToggleSelectAnalyticsAction(
   return isSelected ? logFacetDeselect(payload) : logFacetSelect(payload);
 }
 
-function getNextToggleSelectAnalyticsAction(
+function getToggleSelectAnalyticsAction(
   facetId: string,
   selection: CategoryFacetValue
 ): SearchAction {
