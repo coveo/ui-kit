@@ -1,5 +1,5 @@
-import {SearchPageEvents} from 'coveo.analytics';
 import {SearchAnalyticsProvider} from '../../../api/analytics/search-analytics';
+import {SearchPageEvents} from '../../analytics/search-action-cause';
 import {SearchAction} from '../../search/search-actions';
 import {
   logFacetDeselect,
