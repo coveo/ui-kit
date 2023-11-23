@@ -95,15 +95,15 @@ export class SearchAnalyticsProvider
     return baseObject;
   }
 
-  public getFacetMetadata(id: string, value: string) {
-    const facetRequest = this.getFacetRequest(id);
-    const field = facetRequest?.field ?? '';
+  public getFacetMetadata(facetId: string, facetValue: string) {
+    const facetRequest = this.getFacetRequest(facetId);
+    const facetField = facetRequest?.field ?? '';
     return {
       ...this.getBaseMetadata(),
-      facetId: id,
-      facetField: facetRequest?.field ?? '',
-      facetValue: value,
-      facetTitle: `${field}_${id}`,
+      facetId,
+      facetField,
+      facetValue,
+      facetTitle: `${facetField}_${facetId}`,
     };
   }
 
