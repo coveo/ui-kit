@@ -73,7 +73,7 @@ export default class QuanticTooltip extends LightningElement {
     clearTimeout(this.resizeTimer);
     // eslint-disable-next-line @lwc/lwc/no-async-operation
     this.resizeTimer = setTimeout(() => {
-      this.updateTooltipHorizontalPosition();
+      this.updateTooltipMaxWidth();
       this.updateTooltipVerticalPosition();
     }, 300);
   };

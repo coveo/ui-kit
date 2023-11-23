@@ -5,7 +5,6 @@
 
 .tooltip__content {
   left: 50%;
-  transform: translate(calc(-50% + var(--x-translation)), -100%);
   transition: transform 0.05s linear 0.05s, opacity 0.1s linear 0s, visibility 0.1s linear 0s;
   z-index: 2;
 }
