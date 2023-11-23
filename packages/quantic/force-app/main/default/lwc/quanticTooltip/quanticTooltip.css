@@ -32,7 +32,7 @@
 .tooltip__arrow {
   left: 50%;
   transform: translate(-50%, -100%);
-  transition: opacity 0.06s linear 0s, visibility 0.06s linear 0s;
+  transition: opacity 0.08s linear 0s, visibility 0.06s linear 0s;
   z-index: 2;
 }
 
