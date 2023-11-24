@@ -109,6 +109,17 @@ export class SearchAnalyticsProvider
     };
   }
 
+  public getFacetClearAllMetadata(facetId: string) {
+    const facetRequest = this.getFacetRequest(facetId);
+    const facetField = facetRequest?.field ?? '';
+    return {
+      ...this.getBaseMetadata(),
+      facetId,
+      facetField,
+      facetTitle: `${facetField}_${facetId}`,
+    };
+  }
+
   public getFacetSortMetadata(
     facetId: string,
     facetSortCriterion: FacetSortCriterion | RangeFacetSortCriterion

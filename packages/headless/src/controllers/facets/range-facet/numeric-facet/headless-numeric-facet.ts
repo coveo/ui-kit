@@ -67,7 +67,18 @@ export function buildNumericFacet(
 
     deselectAll() {
       coreController.deselectAll();
-      dispatch(executeSearch({legacy: logFacetClearAll(getFacetId())}));
+      dispatch(
+        executeSearch({
+          legacy: logFacetClearAll(getFacetId()),
+          next: {
+            actionCause: SearchPageEvents.facetClearAll,
+            getEventExtraPayload: (state) =>
+              new SearchAnalyticsProvider(() => state).getFacetClearAllMetadata(
+                getFacetId()
+              ),
+          },
+        })
+      );
     },
 
     sortBy(criterion: RangeFacetSortCriterion) {

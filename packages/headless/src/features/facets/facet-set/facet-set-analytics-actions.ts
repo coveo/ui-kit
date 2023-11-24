@@ -70,6 +70,7 @@ export const logFacetUpdateSort = (
     return client.makeFacetUpdateSort(metadata);
   });
 
+//TODO: KIT-2859
 export const logFacetClearAll = (facetId: string): SearchAction =>
   makeAnalyticsAction('analytics/facet/reset', (client, state) => {
     validatePayload(facetId, facetIdDefinition);

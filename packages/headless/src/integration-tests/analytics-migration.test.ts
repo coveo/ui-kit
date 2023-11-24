@@ -8,6 +8,7 @@ import {logInterfaceLoad} from '../features/analytics/analytics-actions';
 import {SearchPageEvents} from '../features/analytics/search-action-cause';
 import {
   logFacetBreadcrumb,
+  logFacetClearAll,
   logFacetDeselect,
   logFacetExclude,
   logFacetSelect,
@@ -206,6 +207,25 @@ describe('Analytics Search Migration', () => {
           new SearchAnalyticsProvider(() => state).getFacetMetadata(
             ANY_FACET_ID,
             ANY_FACET_VALUE
+          ),
+      },
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/facet/reset', async () => {
+    const action = executeSearch({
+      legacy: logFacetClearAll(ANY_FACET_ID),
+      next: {
+        actionCause: SearchPageEvents.facetClearAll,
+        getEventExtraPayload: (state) =>
+          new SearchAnalyticsProvider(() => state).getFacetClearAllMetadata(
+            ANY_FACET_ID
           ),
       },
     });
