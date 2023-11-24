@@ -1,3 +1,5 @@
+import {SearchPageEvents} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
+import {SearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {
   QueryCorrection,
   WordCorrection,
@@ -33,7 +35,16 @@ export function buildDidYouMean(engine: SearchEngine): DidYouMean {
 
     applyCorrection() {
       controller.applyCorrection();
-      dispatch(executeSearch({legacy: logDidYouMeanClick()}));
+      dispatch(
+        executeSearch({
+          legacy: logDidYouMeanClick(),
+          next: {
+            actionCause: SearchPageEvents.didyoumeanClick,
+            getEventExtraPayload: (state) =>
+              new SearchAnalyticsProvider(() => state).getBaseMetadata(),
+          },
+        })
+      );
     },
   };
 }
