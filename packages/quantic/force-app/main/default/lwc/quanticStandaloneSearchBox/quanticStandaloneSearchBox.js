@@ -6,7 +6,7 @@ import {
   getHeadlessBindings,
   destroyEngine,
 } from 'c/quanticHeadlessLoader';
-import {STANDALONE_SEARCH_BOX_STORAGE_KEY, keys} from 'c/quanticUtils';
+import {STANDALONE_SEARCH_BOX_STORAGE_KEY} from 'c/quanticUtils';
 import {CurrentPageReference, NavigationMixin} from 'lightning/navigation';
 import {LightningElement, api, track, wire} from 'lwc';
 // @ts-ignore
@@ -15,11 +15,6 @@ import defaultStandaloneSearchBox from './templates/defaultStandaloneSearchBox.h
 import errorTemplate from './templates/errorTemplate.html';
 // @ts-ignore
 import expandableStandaloneSearchBox from './templates/expandableStandaloneSearchBox.html';
-
-const CLASS_WITH_SUBMIT =
-  'slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right slds-input-has-fixed-addon';
-const CLASS_WITHOUT_SUBMIT =
-  'slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").StandaloneSearchBoxState} StandaloneSearchBoxState */
@@ -220,141 +215,8 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
     this.navigateToSearchPage();
   }
 
-  get searchBoxContainerClass() {
-    if (this.withoutSubmitButton) {
-      this.input?.setAttribute('aria-labelledby', 'fixed-text-label');
-      return CLASS_WITHOUT_SUBMIT;
-    }
-    this.input?.setAttribute(
-      'aria-labelledby',
-      'fixed-text-label fixed-text-addon-post'
-    );
-    return CLASS_WITH_SUBMIT;
-  }
-
-  get searchBoxInputClass() {
-    return `slds-input searchbox__input ${
-      this.withoutSubmitButton ? '' : 'searchbox__input-with-button'
-    }`;
-  }
-
-  showSuggestions() {
-    this.standaloneSearchBox?.showSuggestions();
-    this.combobox?.classList.add('slds-is-open');
-    this.combobox?.setAttribute('aria-expanded', 'true');
-  }
-
-  hideSuggestions() {
-    this.combobox?.classList.remove('slds-is-open');
-    this.combobox?.setAttribute('aria-expanded', 'false');
-    this.suggestionList?.resetSelection();
-  }
-
   handleHighlightChange(event) {
     this.input.value = event.detail?.rawValue;
-  }
-
-  handleEnter() {
-    const selectedSuggestion = this.suggestionList?.getCurrentSelectedValue();
-    if (this.suggestionsOpen && selectedSuggestion) {
-      this.standaloneSearchBox.selectSuggestion(selectedSuggestion.rawValue);
-    } else {
-      this.standaloneSearchBox.submit();
-    }
-    this.input.blur();
-  }
-
-  handleValueChange() {
-    if (this.standaloneSearchBox.state.value !== this.input.value) {
-      this.standaloneSearchBox.updateText(this.input.value);
-    }
-  }
-
-  onSubmit(event) {
-    event.stopPropagation();
-    if (this.standaloneSearchBox?.state?.value !== this.input.value) {
-      this.standaloneSearchBox.updateText(this.input.value);
-    }
-    this.standaloneSearchBox.submit();
-    this.input.blur();
-  }
-
-  handleKeyValues() {
-    if (this.standaloneSearchBox?.state?.value !== this.input.value) {
-      this.suggestionList?.resetSelection();
-      this.standaloneSearchBox?.updateText(this.input.value);
-    }
-  }
-
-  /**
-   * Prevent default behavior of enter key, on textArea, to prevent skipping a line.
-   * @param {KeyboardEvent} event
-   */
-  onKeydown(event) {
-    if (event.key === keys.ENTER) {
-      event.preventDefault();
-    }
-  }
-
-  /**
-   * @param {KeyboardEvent} event
-   */
-  onKeyup(event) {
-    switch (event.key) {
-      case keys.ENTER:
-        this.handleEnter();
-        break;
-      case keys.ARROWUP:
-        this.suggestionList.selectionUp();
-        break;
-      case keys.ARROWDOWN:
-        this.suggestionList.selectionDown();
-        break;
-      default:
-        this.handleKeyValues();
-    }
-  }
-
-  onFocus() {
-    this.showSuggestions();
-    this.adjustTextAreaHeight();
-  }
-
-  onBlur() {
-    this.hideSuggestions();
-    this.collapseTextArea();
-  }
-
-  onTextAreaInput() {
-    this.handleValueChange();
-    this.adjustTextAreaHeight();
-  }
-
-  adjustTextAreaHeight() {
-    if (!this.textarea) {
-      return;
-    }
-    this.input.value = this.input.value.replace(/\n/g, '');
-    this.input.style.height = '';
-    this.input.style.whiteSpace = 'pre-wrap';
-    this.input.style.height = this.input.scrollHeight + 'px';
-  }
-
-  collapseTextArea() {
-    if (!this.textarea) {
-      return;
-    }
-    this.input.style.height = '';
-    this.input.style.whiteSpace = 'nowrap';
-  }
-
-  clearInput() {
-    this.input.value = '';
-    this.standaloneSearchBox.updateText(this.input.value);
-    this.input.focus();
-    if (this.textarea) {
-      this.adjustTextAreaHeight();
-    }
   }
 
   handleSuggestionSelection(event) {
@@ -394,35 +256,6 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
     return this.textarea
       ? this.template.querySelector('textarea')
       : this.template.querySelector('input');
-  }
-
-  /**
-   * @returns {HTMLElement}
-   */
-  get combobox() {
-    return this.template.querySelector('.slds-combobox');
-  }
-
-  /**
-   * @returns {quanticSearchBoxSuggestionsList}
-   */
-  get suggestionList() {
-    // @ts-ignore
-    return this.template.querySelector('c-quantic-search-box-suggestions-list');
-  }
-
-  /**
-   * @returns {boolean}
-   */
-  get isQueryEmpty() {
-    return !this.input?.value?.length;
-  }
-
-  /**
-   * @returns {boolean}
-   */
-  get suggestionsOpen() {
-    return this.combobox?.classList.contains('slds-is-open');
   }
 
   handleSuggestionListEvent = (event) => {
