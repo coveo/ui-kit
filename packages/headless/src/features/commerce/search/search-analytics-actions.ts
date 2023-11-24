@@ -5,33 +5,20 @@ import {
 import {OmniboxSuggestionMetadata} from '../../query-suggest/query-suggest-analytics-actions';
 
 export const logInterfaceLoad = (): CommerceSearchAction =>
-  makeCommerceAnalyticsAction({
-    prefix: 'analytics/commerce/interface/load',
-    __legacy__getBuilder: (client) => client.makeInterfaceLoad(),
-    analyticsType: '',
-    analyticsPayloadBuilder: (_state) => {
-      return {};
-    },
-  });
+  makeCommerceAnalyticsAction('analytics/commerce/interface/load', (client) =>
+    client.makeInterfaceLoad()
+  );
 
 export const logSearchFromLink = (): CommerceSearchAction =>
-  makeCommerceAnalyticsAction({
-    prefix: 'analytics/commerce/interface/searchFromLink',
-    __legacy__getBuilder: (client) => client.makeSearchFromLink(),
-    analyticsType: '',
-    analyticsPayloadBuilder: (_state) => {
-      return {};
-    },
-  });
+  makeCommerceAnalyticsAction(
+    'analytics/commerce/interface/searchFromLink',
+    (client) => client.makeSearchFromLink()
+  );
 
 export const logOmniboxFromLink = (
   metadata: OmniboxSuggestionMetadata
 ): CommerceSearchAction =>
-  makeCommerceAnalyticsAction({
-    prefix: 'analytics/commerce/interface/omniboxFromLink',
-    __legacy__getBuilder: (client) => client.makeOmniboxFromLink(metadata),
-    analyticsType: '',
-    analyticsPayloadBuilder: (_state) => {
-      return {};
-    },
-  });
+  makeCommerceAnalyticsAction(
+    'analytics/commerce/interface/omniboxFromLink',
+    (client) => client.makeOmniboxFromLink(metadata)
+  );
