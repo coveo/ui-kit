@@ -3,7 +3,7 @@ import {ProductListingEngine} from '../../../../app/product-listing-engine/produ
 import {
   logFacetClearAll,
   logFacetUpdateSort,
-} from '../../../../features/facets/facet-set/facet-set-analytics-actions';
+} from '../../../../features/facets/facet-set/facet-set-product-listing-analytics-actions';
 import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
 import {getLegacyAnalyticsActionForToggleRangeFacetSelect} from '../../../../features/facets/range-facets/generic/range-facet-utils';
 import {NumericRangeRequest} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/request';
