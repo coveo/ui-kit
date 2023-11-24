@@ -20,9 +20,9 @@
       aria-autocomplete="list"
       autocomplete="off"
       role="textbox"
+      value={value}
     />
     <template if:false={isQueryEmpty}>
-      <!-- might want to double check if searchbox__clear-button can go here -->
       <lightning-button-icon
         onclick={clearInput}
         icon-name="utility:close"

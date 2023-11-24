@@ -122,7 +122,7 @@ export default class QuanticSearchBox extends LightningElement {
 
   updateState() {
     if (this.state?.value !== this.searchBox.state.value) {
-      this.input.value = this.searchBox.state.value;
+      this.quanticSearchBoxInput.value = this.searchBox.state.value;
     }
     this.state = this.searchBox.state;
     this.suggestions =
@@ -136,27 +136,32 @@ export default class QuanticSearchBox extends LightningElement {
   /**
    * @returns {HTMLInputElement|HTMLTextAreaElement}
    */
-  get input() {
-    return this.textarea
-      ? this.template.querySelector('textarea')
-      : this.template.querySelector('input');
+  get quanticSearchBoxInput() {
+    return this.template.querySelector('c-quantic-search-box-input');
+  }
+
+  /**
+   * @returns {string}
+   */
+  get value() {
+    return this?.state?.value;
   }
 
   handleHighlightChange(event) {
     const suggestion = event.detail;
-    this.input.value = suggestion.rawValue;
+    this.quanticSearchBoxInput.value = suggestion.rawValue;
   }
 
   handleSuggestionSelection(event) {
     const textValue = event.detail;
     this.searchBox.selectSuggestion(textValue);
-    this.input.blur();
+    this.quanticSearchBoxInput.blur();
   }
 
   handleSuggestionListEvent = (event) => {
     event.stopPropagation();
     const id = event.detail;
-    this.input.setAttribute('aria-controls', id);
+    this.quanticSearchBoxInput.setAttribute('aria-controls', id);
   };
 
   /**

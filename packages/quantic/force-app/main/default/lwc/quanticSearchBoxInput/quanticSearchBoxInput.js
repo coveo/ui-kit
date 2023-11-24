@@ -1,3 +1,4 @@
+// @ts-nocheck
 import clear from '@salesforce/label/c.quantic_Clear';
 import search from '@salesforce/label/c.quantic_Search';
 import {keys} from 'c/quanticUtils';
@@ -28,13 +29,6 @@ export default class QuanticSearchBoxInput extends LightningElement {
     clear,
   };
   /**
-   * Whether the search box is standalone or not.
-   * @api
-   * @type {boolean}
-   * @defaultValue 'false'
-   */
-  @api isStandalone = false;
-  /**
    * Whether not to render a submit button.
    * @api
    * @type {boolean}
@@ -50,12 +44,6 @@ export default class QuanticSearchBoxInput extends LightningElement {
    */
   @api textarea = false;
   /**
-   * Input type of the search box.
-   * @api
-   * @type {HTMLInputElement|HTMLTextAreaElement}
-   */
-  @api input;
-  /**
    * The placeholder text to display in the search box input area.
    * @api
    * @type {string}
@@ -68,6 +56,20 @@ export default class QuanticSearchBoxInput extends LightningElement {
    * @type {SearchBox | StandaloneSearchBox}
    */
   @api searchBoxEngine;
+  /**
+   * The input value.
+   * @api
+   * @type {string}
+   */
+  @api value;
+  /**
+   * The blur function.
+   * @api
+   * @type {function}
+   */
+  @api blur() {
+    this.input.blur();
+  }
 
   /**
    * @returns {quanticSearchBoxSuggestionsList}
@@ -75,6 +77,15 @@ export default class QuanticSearchBoxInput extends LightningElement {
   get suggestionList() {
     // @ts-ignore
     return this.template.querySelector('c-quantic-search-box-suggestions-list');
+  }
+
+  /**
+   * @returns {HTMLInputElement|HTMLTextAreaElement}
+   */
+  get input() {
+    return this.textarea
+      ? this.template.querySelector('textarea')
+      : this.template.querySelector('input');
   }
 
   handleEnter() {
@@ -226,6 +237,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
   }
 
   render() {
+    console.log('this textarea;: ' + this.textarea);
     return this?.textarea ? expandableSearchBoxInput : defaultSearchBoxInput;
   }
 }
