@@ -172,9 +172,21 @@ export namespace Components {
         "withSearch": boolean;
     }
     interface AtomicCitation {
+        /**
+          * The citation item information.
+         */
         "citation": GeneratedAnswerCitation;
+        /**
+          * The citation index.
+         */
         "index": number;
+        /**
+          * An `InteractiveCitation` controller instance. It is used when the user interacts with the citation by selecting or hovering over it.
+         */
         "interactiveCitation": InteractiveCitation;
+        /**
+          * Callback function invoked when the user stops hovering over a citation. `citationHoverTimeMs` is the amount of time over which the citation has been hovered.
+         */
         "sendHoverEndEvent": (citationHoverTimeMs: number) => void;
     }
     /**
@@ -487,14 +499,24 @@ export namespace Components {
      */
     interface AtomicFrequentlyBoughtTogether {
     }
+    /**
+     * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
+     * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
+     */
     interface AtomicGeneratedAnswer {
         /**
-          * The answer style to apply when the component first loads. Options:   - `default`: Generates the answer without additional formatting instructions.   - `bullet`: Requests the answer to be generated in bullet-points.   - `step`: Requests the answer to be generated in step-by-step instructions.   - `concise`: Requests the answer to be generated as concisely as possible.
+          * The answer style to apply when the component first loads. Options:   - `default`: Generates the answer without additional formatting instructions.   - `bullet`: Requests that the answer is formatted as a bulleted list.   - `step`: Requests that the answer is formatted as a series of step-by-step instructions.   - `concise`: Requests that the generated answer is as concise as possible.
          */
         "answerStyle": GeneratedAnswerStyle;
     }
     interface AtomicGeneratedAnswerFeedbackModal {
+        /**
+          * A `GeneratedAnswer` controller instance. It is used when the user interacts with the modal.
+         */
         "generatedAnswer": GeneratedAnswer;
+        /**
+          * Indicates whether the modal is open.
+         */
         "isOpen": boolean;
     }
     /**
@@ -2811,6 +2833,10 @@ declare global {
         prototype: HTMLAtomicFrequentlyBoughtTogetherElement;
         new (): HTMLAtomicFrequentlyBoughtTogetherElement;
     };
+    /**
+     * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
+     * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
+     */
     interface HTMLAtomicGeneratedAnswerElement extends Components.AtomicGeneratedAnswer, HTMLStencilElement {
     }
     var HTMLAtomicGeneratedAnswerElement: {
@@ -4318,9 +4344,21 @@ declare namespace LocalJSX {
         "withSearch"?: boolean;
     }
     interface AtomicCitation {
+        /**
+          * The citation item information.
+         */
         "citation": GeneratedAnswerCitation;
+        /**
+          * The citation index.
+         */
         "index": number;
+        /**
+          * An `InteractiveCitation` controller instance. It is used when the user interacts with the citation by selecting or hovering over it.
+         */
         "interactiveCitation": InteractiveCitation;
+        /**
+          * Callback function invoked when the user stops hovering over a citation. `citationHoverTimeMs` is the amount of time over which the citation has been hovered.
+         */
         "sendHoverEndEvent": (citationHoverTimeMs: number) => void;
     }
     /**
@@ -4633,14 +4671,24 @@ declare namespace LocalJSX {
      */
     interface AtomicFrequentlyBoughtTogether {
     }
+    /**
+     * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
+     * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
+     */
     interface AtomicGeneratedAnswer {
         /**
-          * The answer style to apply when the component first loads. Options:   - `default`: Generates the answer without additional formatting instructions.   - `bullet`: Requests the answer to be generated in bullet-points.   - `step`: Requests the answer to be generated in step-by-step instructions.   - `concise`: Requests the answer to be generated as concisely as possible.
+          * The answer style to apply when the component first loads. Options:   - `default`: Generates the answer without additional formatting instructions.   - `bullet`: Requests that the answer is formatted as a bulleted list.   - `step`: Requests that the answer is formatted as a series of step-by-step instructions.   - `concise`: Requests that the generated answer is as concise as possible.
          */
         "answerStyle"?: GeneratedAnswerStyle;
     }
     interface AtomicGeneratedAnswerFeedbackModal {
+        /**
+          * A `GeneratedAnswer` controller instance. It is used when the user interacts with the modal.
+         */
         "generatedAnswer": GeneratedAnswer;
+        /**
+          * Indicates whether the modal is open.
+         */
         "isOpen"?: boolean;
         "onFeedbackSent"?: (event: AtomicGeneratedAnswerFeedbackModalCustomEvent<any>) => void;
     }
@@ -6799,6 +6847,10 @@ declare module "@stencil/core" {
              * The `atomic-frequently-bought-together` component suggests products frequently bought with the current product based on the shopping cart of other users.
              */
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
+            /**
+             * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
+             * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
+             */
             "atomic-generated-answer": LocalJSX.AtomicGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicGeneratedAnswerElement>;
             "atomic-generated-answer-feedback-modal": LocalJSX.AtomicGeneratedAnswerFeedbackModal & JSXBase.HTMLAttributes<HTMLAtomicGeneratedAnswerFeedbackModalElement>;
             /**

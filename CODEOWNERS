@@ -3,6 +3,7 @@
 
 # Owners of the Quantic package
 /packages/quantic/ @coveo/salesforce-integration
+/packages/quantic/package.json @coveo/salesforce-integration @coveo/search
 
 # Owners of the Atomic Insight components
 /packages/atomic/src/components/insight @coveo/service-core

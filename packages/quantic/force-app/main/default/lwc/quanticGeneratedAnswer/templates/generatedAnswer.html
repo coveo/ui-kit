@@ -54,9 +54,9 @@
             <template lwc:if={hasCitations}>
               <div class="slds-var-m-top_small">
                 <c-quantic-source-citations
+                  engine-id={engineId}
                   data-cy="generated-answer__citations"
                   citations={citations}
-                  citation-click-handler={handleCitationClick}
                   citation-hover-handler={handleCitationHover}
                 ></c-quantic-source-citations>
               </div>

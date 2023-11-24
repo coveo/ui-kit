@@ -18,9 +18,21 @@ import {LinkWithResultAnalytics} from '../../../common/result-link/result-link';
 export class AtomicCitation {
   @Element() public host!: HTMLElement;
 
+  /**
+   * The citation item information.
+   */
   @Prop() citation!: GeneratedAnswerCitation;
+  /**
+   * The citation index.
+   */
   @Prop() index!: number;
+  /**
+   * Callback function invoked when the user stops hovering over a citation. `citationHoverTimeMs` is the amount of time over which the citation has been hovered.
+   */
   @Prop() sendHoverEndEvent!: (citationHoverTimeMs: number) => void;
+  /**
+   * An `InteractiveCitation` controller instance. It is used when the user interacts with the citation by selecting or hovering over it.
+   */
   @Prop() interactiveCitation!: InteractiveCitation;
 
   @State() public isOpen = false;

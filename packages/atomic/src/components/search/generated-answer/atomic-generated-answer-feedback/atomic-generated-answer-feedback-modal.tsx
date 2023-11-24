@@ -35,7 +35,13 @@ export class AtomicGeneratedAnswerFeedbackModal
   @InitializeBindings() public bindings!: Bindings;
   @Element() public host!: HTMLElement;
 
+  /**
+   * Indicates whether the modal is open.
+   */
   @Prop({reflect: true, mutable: true}) isOpen = false;
+  /**
+   * A `GeneratedAnswer` controller instance. It is used when the user interacts with the modal.
+   */
   @Prop({reflect: true, mutable: true}) generatedAnswer!: GeneratedAnswer;
 
   @State() public error!: Error;

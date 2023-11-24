@@ -60,7 +60,7 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
       .eq(index),
   citationLink: (index: number) =>
     GeneratedAnswerSelectors.get()
-      .find('[data-cy="generated-answer__citations"] .citation__badge')
+      .find('[data-cy="generated-answer__citations"] .citation__link')
       .eq(index),
   retryButton: () =>
     GeneratedAnswerSelectors.get().find(

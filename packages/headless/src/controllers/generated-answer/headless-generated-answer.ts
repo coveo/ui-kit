@@ -36,9 +36,6 @@ import {Controller, buildController} from '../controller/headless-controller';
 
 export type {GeneratedAnswerState, GeneratedAnswerCitation};
 
-/**
- * @internal
- */
 export interface GeneratedAnswer extends Controller {
   /**
    * The state of the GeneratedAnswer controller.
@@ -49,11 +46,11 @@ export interface GeneratedAnswer extends Controller {
    */
   retry(): void;
   /**
-   * Determines if the generated answer was liked, or upvoted by the end user.
+   * Indicates that the generated answer met the user expectations.
    */
   like(): void;
   /**
-   * Determines if the generated answer was disliked, or downvoted by the end user.
+   * Marks the generated answer as not relevant to the end user.
    */
   dislike(): void;
   /**
@@ -179,7 +176,11 @@ const subscribeStateManager: SubscribeStateManager = {
 };
 
 /**
- * @internal
+ * Creates a `GeneratedAnswer` controller instance.
+ *
+ * @param engine - The headless engine.
+ * @param props - The configurable `GeneratedAnswer` properties.
+ * @returns A `GeneratedAnswer` controller instance.
  */
 export function buildGeneratedAnswer(
   engine: SearchEngine,

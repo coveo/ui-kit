@@ -1,11 +1,28 @@
+/* eslint-disable no-import-assign */
+import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 // @ts-ignore
 import {createElement} from 'lwc';
 import QuanticSourceCitations from '../quanticSourceCitations';
 
-const functionsMocks = {
-  mockCitationClickHandler: jest.fn((citationId) => {
-    return citationId;
-  }),
+jest.mock('c/quanticHeadlessLoader');
+
+let isInitialized = false;
+
+// @ts-ignore
+mockHeadlessLoader.initializeWithHeadless = (element, engineId, initialize) => {
+  if (element instanceof QuanticSourceCitations) {
+    if (!isInitialized) {
+      isInitialized = true;
+      initialize();
+    }
+  }
+};
+
+// @ts-ignore
+mockHeadlessLoader.getHeadlessBundle = () => {
+  return {
+    buildInteractiveCitation: jest.fn((engine, {options}) => options.citation),
+  };
 };
 
 const mockCitations = [
@@ -29,7 +46,6 @@ const mockCitations = [
 
 const defaultOptions = {
   citations: mockCitations,
-  citationClickHandler: functionsMocks.mockCitationClickHandler,
 };
 
 const selectors = {
@@ -60,6 +76,7 @@ describe('c-quantic-source-citations', () => {
     while (document.body.firstChild) {
       document.body.removeChild(document.body.firstChild);
     }
+    isInitialized = false;
     jest.clearAllMocks();
   }
 
@@ -81,24 +98,10 @@ describe('c-quantic-source-citations', () => {
           ...mockCitations[index],
           index: index + 1,
         });
+        expect(citationElement.interactiveCitation).toEqual(
+          mockCitations[index]
+        );
       });
-    });
-
-    it('should execute the citationClickHandler function on citation click', async () => {
-      const element = createTestComponent();
-      await flushPromises();
-
-      const citations = element.shadowRoot.querySelectorAll(selectors.citation);
-      expect(citations).not.toBeNull();
-      expect(citations.length).toEqual(mockCitations.length);
-
-      citations[0].click();
-      await flushPromises();
-
-      expect(functionsMocks.mockCitationClickHandler).toHaveBeenCalled();
-      expect(functionsMocks.mockCitationClickHandler).toHaveBeenCalledWith(
-        mockCitations[0].id
-      );
     });
   });
 
