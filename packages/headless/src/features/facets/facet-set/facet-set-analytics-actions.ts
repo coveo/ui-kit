@@ -172,6 +172,7 @@ export interface LogFacetBreadcrumbActionCreatorPayload {
   facetValue: string;
 }
 
+//TODO: KIT-2859
 export const logFacetBreadcrumb = (
   payload: LogFacetBreadcrumbActionCreatorPayload
 ): SearchAction =>
