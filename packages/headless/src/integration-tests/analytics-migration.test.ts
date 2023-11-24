@@ -10,8 +10,10 @@ import {
   logFacetDeselect,
   logFacetExclude,
   logFacetSelect,
+  logFacetUpdateSort,
 } from '../features/facets/facet-set/facet-set-analytics-actions';
 import {executeSearch} from '../features/search/search-actions';
+import {FacetSortCriterion} from '../ssr.index';
 
 const nextSearchEngine = buildSearchEngine({
   configuration: {
@@ -68,6 +70,7 @@ const excludedBaseProperties = [
 
 const ANY_FACET_VALUE = 'any facet value';
 const ANY_FACET_ID = 'any facet id';
+const ANY_CRITERION: FacetSortCriterion = 'alphanumeric';
 
 describe('Analytics Search Migration', () => {
   let callSpy: jest.SpyInstance<Promise<Response | PlatformClientCallError>>;
@@ -156,6 +159,29 @@ describe('Analytics Search Migration', () => {
           new SearchAnalyticsProvider(() => state).getFacetMetadata(
             ANY_FACET_ID,
             ANY_FACET_VALUE
+          ),
+      },
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/facet/sortChange', async () => {
+    const action = executeSearch({
+      legacy: logFacetUpdateSort({
+        facetId: ANY_FACET_ID,
+        criterion: ANY_CRITERION,
+      }),
+      next: {
+        actionCause: SearchPageEvents.facetUpdateSort,
+        getEventExtraPayload: (state) =>
+          new SearchAnalyticsProvider(() => state).getFacetSortMetadata(
+            ANY_FACET_ID,
+            ANY_CRITERION
           ),
       },
     });

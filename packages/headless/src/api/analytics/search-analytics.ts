@@ -10,6 +10,7 @@ import {
   buildFacetStateMetadata,
   getStateNeededForFacetMetadata,
 } from '../../features/facets/facet-set/facet-set-analytics-actions-utils';
+import {FacetSortCriterion} from '../../features/facets/facet-set/interfaces/request';
 import {getQueryInitialState} from '../../features/query/query-state';
 import {getSearchInitialState} from '../../features/search/search-state';
 import {SearchAppState} from '../../state/search-app-state';
@@ -103,6 +104,21 @@ export class SearchAnalyticsProvider
       facetId,
       facetField,
       facetValue,
+      facetTitle: `${facetField}_${facetId}`,
+    };
+  }
+
+  public getFacetSortMetadata(
+    facetId: string,
+    facetSortCriterion: FacetSortCriterion
+  ) {
+    const facetRequest = this.getFacetRequest(facetId);
+    const facetField = facetRequest?.field ?? '';
+    return {
+      ...this.getBaseMetadata(),
+      facetId,
+      facetField,
+      criteria: facetSortCriterion,
       facetTitle: `${facetField}_${facetId}`,
     };
   }
