@@ -111,6 +111,14 @@ export function buildCategoryFacet(
       dispatch(
         executeSearch({
           legacy: logFacetUpdateSort({facetId: getFacetId(), criterion}),
+          next: {
+            actionCause: SearchPageEvents.facetUpdateSort,
+            getEventExtraPayload: (state) =>
+              new SearchAnalyticsProvider(() => state).getFacetSortMetadata(
+                getFacetId(),
+                criterion
+              ),
+          },
         })
       );
     },

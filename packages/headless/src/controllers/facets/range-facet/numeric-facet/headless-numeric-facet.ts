@@ -1,5 +1,7 @@
+import {SearchAnalyticsProvider} from '../../../../api/analytics/search-analytics';
 import {configuration} from '../../../../app/common-reducers';
 import {SearchEngine} from '../../../../app/search-engine/search-engine';
+import {SearchPageEvents} from '../../../../features/analytics/search-action-cause';
 import {
   logFacetClearAll,
   logFacetUpdateSort,
@@ -73,6 +75,14 @@ export function buildNumericFacet(
       dispatch(
         executeSearch({
           legacy: logFacetUpdateSort({facetId: getFacetId(), criterion}),
+          next: {
+            actionCause: SearchPageEvents.facetUpdateSort,
+            getEventExtraPayload: (state) =>
+              new SearchAnalyticsProvider(() => state).getFacetSortMetadata(
+                getFacetId(),
+                criterion
+              ),
+          },
         })
       );
     },

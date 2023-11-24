@@ -49,6 +49,7 @@ export interface LogFacetUpdateSortActionCreatorPayload {
   criterion: FacetSortCriterion | RangeFacetSortCriterion;
 }
 
+//TODO: KIT-2859
 export const logFacetUpdateSort = (
   payload: LogFacetUpdateSortActionCreatorPayload
 ): SearchAction =>

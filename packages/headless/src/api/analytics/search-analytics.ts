@@ -11,6 +11,7 @@ import {
   getStateNeededForFacetMetadata,
 } from '../../features/facets/facet-set/facet-set-analytics-actions-utils';
 import {FacetSortCriterion} from '../../features/facets/facet-set/interfaces/request';
+import {RangeFacetSortCriterion} from '../../features/facets/range-facets/generic/interfaces/request';
 import {getQueryInitialState} from '../../features/query/query-state';
 import {getSearchInitialState} from '../../features/search/search-state';
 import {SearchAppState} from '../../state/search-app-state';
@@ -110,7 +111,7 @@ export class SearchAnalyticsProvider
 
   public getFacetSortMetadata(
     facetId: string,
-    facetSortCriterion: FacetSortCriterion
+    facetSortCriterion: FacetSortCriterion | RangeFacetSortCriterion
   ) {
     const facetRequest = this.getFacetRequest(facetId);
     const facetField = facetRequest?.field ?? '';
