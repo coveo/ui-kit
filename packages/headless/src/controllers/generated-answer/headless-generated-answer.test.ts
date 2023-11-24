@@ -5,6 +5,7 @@ import {
   likeGeneratedAnswer,
   openGeneratedAnswerFeedbackModal,
   resetAnswer,
+  sendGeneratedAnswerFeedback,
   setIsVisible,
   streamAnswer,
   updateResponseFormat,
@@ -101,6 +102,17 @@ describe('generated answer', () => {
     expect(action).toBeTruthy();
     expect(analyticsAction).toBeTruthy();
   });
+  it('#like dispatches no analytics action when #liked is set to true', () => {
+    engine.state.generatedAnswer.liked = true;
+    generatedAnswer.like();
+    const action = findAction(likeGeneratedAnswer.type);
+    const analyticsAction = engine.findAsyncAction(
+      logLikeGeneratedAnswer().pending
+    );
+
+    expect(action).not.toBeTruthy();
+    expect(analyticsAction).not.toBeTruthy();
+  });
 
   it('#dislike dispatches analytics action', () => {
     generatedAnswer.dislike();
@@ -111,6 +123,18 @@ describe('generated answer', () => {
 
     expect(action).toBeTruthy();
     expect(analyticsAction).toBeTruthy();
+  });
+
+  it('#dislike dispatches no analytics action when #disliked is set to true', () => {
+    engine.state.generatedAnswer.disliked = true;
+    generatedAnswer.dislike();
+    const action = findAction(dislikeGeneratedAnswer.type);
+    const analyticsAction = engine.findAsyncAction(
+      logDislikeGeneratedAnswer().pending
+    );
+
+    expect(action).not.toBeTruthy();
+    expect(analyticsAction).not.toBeTruthy();
   });
 
   it('#openFeedbackModal dispatches the right actions', () => {
@@ -130,7 +154,7 @@ describe('generated answer', () => {
   it('#sendFeedback dispatches the right actions', () => {
     const exampleFeedback = 'notAccurate';
     generatedAnswer.sendFeedback(exampleFeedback);
-    const action = findAction(closeGeneratedAnswerFeedbackModal.type);
+    const action = findAction(sendGeneratedAnswerFeedback.type);
     const analyticsAction = engine.findAsyncAction(
       logGeneratedAnswerFeedback(exampleFeedback).pending
     );
@@ -142,7 +166,7 @@ describe('generated answer', () => {
   it('#sendDetailedFeedback dispatches the right actions', () => {
     const exampleDetails = 'Example details';
     generatedAnswer.sendDetailedFeedback(exampleDetails);
-    const action = findAction(closeGeneratedAnswerFeedbackModal.type);
+    const action = findAction(sendGeneratedAnswerFeedback.type);
     const analyticsAction = engine.findAsyncAction(
       logGeneratedAnswerDetailedFeedback(exampleDetails).pending
     );

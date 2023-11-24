@@ -1,3 +1,14 @@
+## 2.39.1 (2023-11-16)
+
+### Bug Fixes
+
+- **quantic:** fixed issue with pasting query in search box ([#3375](https://github.com/coveo/ui-kit/issues/3375)) ([1ef3674](https://github.com/coveo/ui-kit/commits/1ef36747a5804f4b31cbad95edacea2b6d9b526e))
+- **quantic:** minor issues fixed in the Quantic Generated answer component ([#3391](https://github.com/coveo/ui-kit/issues/3391)) ([902d3e8](https://github.com/coveo/ui-kit/commits/902d3e8e9d174134a86d78e4df0c69fb31d66ab7))
+
+### Features
+
+- **quantic:** improved accessibility of the Quantic Generated Answer component ([#3372](https://github.com/coveo/ui-kit/issues/3372)) ([c9e418d](https://github.com/coveo/ui-kit/commits/c9e418de84dafda467acc7ec8f71c0f54d54d0f4))
+
 # 2.38.0 (2023-11-08)
 
 ### Bug Fixes

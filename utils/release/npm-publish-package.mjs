@@ -3,6 +3,11 @@ import {describeNpmTag, npmPublish} from '@coveo/semantic-monorepo-tools';
 import retry from 'async-retry';
 import {readFileSync} from 'node:fs';
 
+if (!process.env.INIT_CWD) {
+  throw new Error('Should be called using npm run-script');
+}
+process.chdir(process.env.INIT_CWD);
+
 /**
  * @param {string} name
  * @param {string} version

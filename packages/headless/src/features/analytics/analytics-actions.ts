@@ -132,6 +132,7 @@ export const logCustomEvent = (
     return client.makeCustomEventWithType(p.evt, p.type, p.meta);
   });
 
+//TODO: KIT-2859
 export const logInterfaceLoad = (): SearchAction =>
   makeAnalyticsAction('analytics/interface/load', (client) =>
     client.makeInterfaceLoad()
