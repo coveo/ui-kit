@@ -14,7 +14,7 @@ type AdditionalProperties<AdditionalContext extends CoreContext> = Omit<
 
 /**
  * @internal
- * @param additionalPropertiesFactory what functions does the strict context will have.
+ * @param additionalPropertiesFactory what functions will the strict context have.
  * @returns two functions to create and mixin the strict context.
  */
 export const generateStrictContextFunctions = <
@@ -44,7 +44,7 @@ export const generateStrictContextFunctions = <
       throw loadReducerError;
     }
 
-    for (const [key, value] of Object.entries(props.initialState || {})) {
+    for (const [key, value] of Object.entries(props.initialState ?? {})) {
       context.add(key, value as string);
     }
     return context;
