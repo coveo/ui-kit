@@ -10,6 +10,7 @@ import {
   buildFacetStateMetadata,
   getStateNeededForFacetMetadata,
 } from '../../features/facets/facet-set/facet-set-analytics-actions-utils';
+import {OmniboxSuggestionMetadata} from '../../features/query-suggest/query-suggest-analytics-actions';
 import {getQueryInitialState} from '../../features/query/query-state';
 import {getSearchInitialState} from '../../features/search/search-state';
 import {SearchAppState} from '../../state/search-app-state';
@@ -93,6 +94,20 @@ export class SearchAnalyticsProvider
     }
 
     return baseObject;
+  }
+
+  public getOmniboxFromLinkMetadata(metadata: OmniboxSuggestionMetadata) {
+    return {
+      ...this.getBaseMetadata(),
+      ...metadata,
+    };
+  }
+
+  public getInterfaceChangeMetadata(interfaceChangeTo: string) {
+    return {
+      ...this.getBaseMetadata(),
+      interfaceChangeTo,
+    };
   }
 
   public getGeneratedAnswerMetadata() {

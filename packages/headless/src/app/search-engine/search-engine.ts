@@ -23,9 +23,13 @@ import {
 import {debugReducer as debug} from '../../features/debug/debug-slice';
 import {pipelineReducer as pipeline} from '../../features/pipeline/pipeline-slice';
 import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice';
-import {executeSearch} from '../../features/search/search-actions';
+import {
+  StateNeededByExecuteSearch,
+  executeSearch,
+} from '../../features/search/search-actions';
 import {firstSearchExecutedSelector} from '../../features/search/search-selectors';
 import {searchReducer as search} from '../../features/search/search-slice';
+import {SearchState} from '../../features/search/search-state';
 import {StandaloneSearchBoxAnalytics} from '../../features/standalone-search-box-set/standalone-search-box-set-state';
 import {SearchAppState} from '../../state/search-app-state';
 import {
@@ -142,35 +146,72 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
     },
 
     executeFirstSearch(analyticsEvent = logInterfaceLoad()) {
-      const firstSearchExecuted = firstSearchExecutedSelector(engine.state);
-
-      if (firstSearchExecuted) {
-        return;
-      }
-
-      const action = executeSearch({
-        legacy: analyticsEvent,
-        next: {
-          actionCause: SearchPageEvents.interfaceLoad,
-          getEventExtraPayload: (state) =>
-            new SearchAnalyticsProvider(() => state).getBaseMetadata(),
-        },
-      });
-      engine.dispatch(action);
+      const getEventExtraPayload = (state: StateNeededByExecuteSearch) =>
+        new SearchAnalyticsProvider(() => state).getBaseMetadata();
+      executeSearchAction(
+        analyticsEvent,
+        engine,
+        SearchPageEvents.interfaceLoad,
+        getEventExtraPayload
+      );
     },
 
     executeFirstSearchAfterStandaloneSearchBoxRedirect(
       analytics: StandaloneSearchBoxAnalytics
     ) {
       const {cause, metadata} = analytics;
-      const event =
-        metadata && cause === 'omniboxFromLink'
-          ? logOmniboxFromLink(metadata)
-          : logSearchFromLink();
+      const isOmnibox = metadata && cause === 'omniboxFromLink';
+      const event = isOmnibox
+        ? logOmniboxFromLink(metadata)
+        : logSearchFromLink();
+      const actionCause = isOmnibox
+        ? SearchPageEvents.omniboxFromLink
+        : SearchPageEvents.searchFromLink;
 
-      this.executeFirstSearch(event);
+      const getEventExtraPayload = isOmnibox
+        ? (state: StateNeededByExecuteSearch) =>
+            new SearchAnalyticsProvider(() => state).getOmniboxFromLinkMetadata(
+              metadata
+            )
+        : (state: StateNeededByExecuteSearch) =>
+            new SearchAnalyticsProvider(() => state).getBaseMetadata();
+      executeSearchAction(event, engine, actionCause, getEventExtraPayload);
     },
   };
+}
+
+// jesus this type, it's a monster, need to fix
+function executeSearchAction(
+  analyticsEvent: SearchAction,
+  engine: CoreEngine<
+    {debug: boolean; pipeline: string; searchHub: string; search: SearchState},
+    SearchThunkExtraArguments
+  >,
+  actionCause: SearchPageEvents,
+  getEventExtraPayload:
+    | ((state: StateNeededByExecuteSearch) => {
+        suggestionRanking: number;
+        partialQueries: string | string[];
+        suggestions: string | string[];
+        partialQuery: string;
+        querySuggestResponseId: string;
+      })
+    | ((state: StateNeededByExecuteSearch) => Record<string, string | string[]>)
+) {
+  const firstSearchExecuted = firstSearchExecutedSelector(engine.state);
+
+  if (firstSearchExecuted) {
+    return;
+  }
+
+  const action = executeSearch({
+    legacy: analyticsEvent,
+    next: {
+      actionCause,
+      getEventExtraPayload,
+    },
+  });
+  engine.dispatch(action);
 }
 
 function validateConfiguration(
