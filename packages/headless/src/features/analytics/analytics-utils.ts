@@ -10,7 +10,7 @@ import {
   AsyncThunkPayloadCreator,
   createAsyncThunk,
 } from '@reduxjs/toolkit';
-import {
+import type {
   CoveoSearchPageClient,
   SearchPageClientProvider,
   CaseAssistClient,
@@ -780,7 +780,7 @@ async function logNextEvent<PayloadType>(
   type: string,
   payload: PayloadType
 ): Promise<void> {
-  //@ts-expect-error
+  //@ts-expect-error will be fixed when relay updates
   await emitEvent(type, payload);
   return;
 }
