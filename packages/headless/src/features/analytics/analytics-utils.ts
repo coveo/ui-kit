@@ -4,7 +4,7 @@ import {
   Schema,
   StringValue,
 } from '@coveo/bueno';
-import {RelayPayload, type createRelay} from '@coveo/relay';
+import {type createRelay} from '@coveo/relay';
 import {
   AsyncThunk,
   AsyncThunkPayloadCreator,
@@ -241,7 +241,7 @@ export type AnalyticsActionOptions<
   LegacyGetBuilderType,
   LegacyProvider,
   Client,
-  PayloadType extends RelayPayload,
+  PayloadType,
 > = Exclude<
   LegacyAnalyticsOptions<LegacyStateNeeded, Client, LegacyProvider>,
   '__legacy__getBuilder'
@@ -252,7 +252,7 @@ export type AnalyticsActionOptions<
 
 export interface NextAnalyticsOptions<
   StateNeeded extends InternalLegacyStateNeeded,
-  PayloadType extends RelayPayload,
+  PayloadType,
 > {
   analyticsType: string;
   analyticsPayloadBuilder: (state: StateNeeded) => PayloadType;
@@ -321,7 +321,7 @@ const makeAnalyticsActionFactory = <
     LegacyStateNeeded extends
       LegacyStateNeededByProvider = LegacyStateNeededByProvider,
     StateNeeded extends StateNeededByProvider = StateNeededByProvider,
-    PayloadType extends RelayPayload = RelayPayload,
+    PayloadType = {},
   >({
     prefix,
     __legacy__getBuilder,
@@ -345,7 +345,7 @@ const makeAnalyticsActionFactory = <
       LegacyProvider
     > = LegacyAnalyticsOptions<LegacyStateNeeded, Client, LegacyProvider>,
     StateNeeded extends StateNeededByProvider = StateNeededByProvider,
-    PayloadType extends RelayPayload = RelayPayload,
+    PayloadType = {},
   >(
     ...params:
       | [
@@ -414,7 +414,7 @@ interface AnalyticsConfiguratorOptions<
 type InternalMakeAnalyticsActionOptions<
   LegacyStateNeeded extends InternalLegacyStateNeeded,
   StateNeeded extends InternalLegacyStateNeeded,
-  PayloadType extends RelayPayload,
+  PayloadType,
   AnalyticsConfigurator extends AnalyticsConfiguratorFromStateNeeded<
     LegacyStateNeeded,
     Client,
@@ -441,7 +441,7 @@ interface LegacyProviderCommon {
 const internalMakeAnalyticsAction = <
   LegacyStateNeeded extends InternalLegacyStateNeeded,
   StateNeeded extends InternalLegacyStateNeeded,
-  PayloadType extends RelayPayload,
+  PayloadType,
   Client extends CommonClient,
   LegacyProvider extends LegacyProviderCommon,
 >({
@@ -775,11 +775,12 @@ export const validateProductRecommendationPayload = (
   productRec: ProductRecommendation
 ) => new Schema(productRecommendationPartialDefinition).validate(productRec);
 
-async function logNextEvent<PayloadType extends RelayPayload>(
+async function logNextEvent<PayloadType>(
   emitEvent: ReturnType<typeof createRelay>['emit'],
   type: string,
   payload: PayloadType
 ): Promise<void> {
+  //@ts-expect-error
   await emitEvent(type, payload);
   return;
 }
