@@ -11,7 +11,6 @@ import {
 export const logDocumentOpen = (result: Result): ClickAction =>
   makeAnalyticsAction({
     prefix: 'analytics/result/open',
-    __legacy__analyticsType: AnalyticsType.Click,
     __legacy__getBuilder: (client, state) => {
       validateResultPayload(result);
       return client.makeDocumentOpen(
