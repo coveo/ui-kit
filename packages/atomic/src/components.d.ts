@@ -380,7 +380,7 @@ export namespace Components {
      */
     interface AtomicFieldCondition {
         /**
-          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  Use only when the condition you need to define can’t be expressed through exsisting `if-defined`,`if-not-defined`,`must-match`, etc. markup attributes of the component.  For example, the following targets an `atomic-field-condition` component and sets a condition to make it apply only to results whose title contains singapore: `document.querySelector('atomic-result-template#templateId').conditions = [(result) => /singapore/i.test(result.title)];`
+          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  Use only when the condition you need to define can't be expressed through `if-defined`, `if-not-defined`, `must-match`, etc. markup attributes of the component. For example, the following targets an `atomic-field-condition` component and sets a condition to make it apply only to results whose title contains singapore: `document.querySelector('atomic-result-template#templateId').conditions = [(result) => /singapore/i.test(result.title)];`
          */
         "conditions": ResultTemplateCondition[];
         /**
@@ -4556,7 +4556,7 @@ declare namespace LocalJSX {
      */
     interface AtomicFieldCondition {
         /**
-          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  Use only when the condition you need to define can’t be expressed through exsisting `if-defined`,`if-not-defined`,`must-match`, etc. markup attributes of the component.  For example, the following targets an `atomic-field-condition` component and sets a condition to make it apply only to results whose title contains singapore: `document.querySelector('atomic-result-template#templateId').conditions = [(result) => /singapore/i.test(result.title)];`
+          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  Use only when the condition you need to define can't be expressed through `if-defined`, `if-not-defined`, `must-match`, etc. markup attributes of the component. For example, the following targets an `atomic-field-condition` component and sets a condition to make it apply only to results whose title contains singapore: `document.querySelector('atomic-result-template#templateId').conditions = [(result) => /singapore/i.test(result.title)];`
          */
         "conditions"?: ResultTemplateCondition[];
         /**
