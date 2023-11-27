@@ -2,7 +2,7 @@ import {ProductListingEngine} from '../../../../app/product-listing-engine/produ
 import {
   logFacetClearAll,
   logFacetUpdateSort,
-} from '../../../../features/facets/facet-set/facet-set-analytics-actions';
+} from '../../../../features/facets/facet-set/facet-set-product-listing-analytics-actions';
 import {DateRangeRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
 import {DateFacetValue} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';

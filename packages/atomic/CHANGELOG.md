@@ -1,3 +1,11 @@
+## 2.50.2 (2023-11-16)
+
+### Features
+
+- **atomic:** added negative feedback modal for rga ([#3339](https://github.com/coveo/ui-kit/issues/3339)) ([194db3c](https://github.com/coveo/ui-kit/commits/194db3c0819aaa70e0e4089e5eb620c17fa21b88))
+- **atomic:** improve generated answer accessibility ([#3373](https://github.com/coveo/ui-kit/issues/3373)) ([2e3cb57](https://github.com/coveo/ui-kit/commits/2e3cb57372c3ba43f0400ec6014caa7fed26e482))
+- **atomic:** swapped summary answer icon ([#3379](https://github.com/coveo/ui-kit/issues/3379)) ([2c736c5](https://github.com/coveo/ui-kit/commits/2c736c5d10938e8f74c17f1ca1a9f0a7031f9dcf))
+
 # 2.49.0 (2023-11-08)
 
 ### Bug Fixes
