@@ -2,7 +2,7 @@ import answerGenerated from '@salesforce/label/c.quantic_AnswerGenerated';
 import couldNotGenerateAnAnswer from '@salesforce/label/c.quantic_CouldNotGenerateAnAnswer';
 import feedback from '@salesforce/label/c.quantic_Feedback';
 import generatedAnswerForYou from '@salesforce/label/c.quantic_GeneratedAnswerForYou';
-import generatedAnswerIshidden from '@salesforce/label/c.quantic_GeneratedAnswerIsHidden';
+import generatedAnswerIsHidden from '@salesforce/label/c.quantic_GeneratedAnswerIsHidden';
 import generatingAnswer from '@salesforce/label/c.quantic_GeneratingAnswer';
 import harmful from '@salesforce/label/c.quantic_Harmful';
 import inaccurate from '@salesforce/label/c.quantic_Inaccurate';
@@ -93,7 +93,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     feedback,
     whyGeneratedAnswerWasNotHelpful,
     generatingAnswer,
-    generatedAnswerIshidden,
+    generatedAnswerIsHidden,
     answerGenerated,
   };
 
@@ -121,6 +121,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     this.template.addEventListener(
       'quantic__generatedanswercopy',
       this.handleGeneratedAnswerCopyToClipboard
+    );
+    this.template.addEventListener(
+      'quantic__generatedanswertoggle',
+      this.handleGeneratedAnswerToggle
     );
   }
 
@@ -167,6 +171,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       'quantic__generatedanswercopy',
       this.handleGeneratedAnswerCopyToClipboard
     );
+    this.template.removeEventListener(
+      'quantic__generatedanswertoggle',
+      this.handleGeneratedAnswerToggle
+    );
   }
 
   updateState() {
@@ -177,7 +185,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   getGeneratedAnswerStatus() {
     if (!this.state.isVisible) {
-      return this.labels.generatedAnswerIshidden;
+      return this.labels.generatedAnswerIsHidden;
     }
 
     if (this.hasRetryableError) {
@@ -276,7 +284,8 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     this.generatedAnswer.logCopyToClipboard();
   };
 
-  toggleGeneratedAnswer() {
+  handleGeneratedAnswerToggle = (event) => {
+    event.stopPropagation();
     if (this.isVisible) {
       this.generatedAnswer.hide();
       this.writeStoredDate({isVisible: false});
@@ -284,7 +293,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       this.generatedAnswer.show();
       this.writeStoredDate({isVisible: true});
     }
-  }
+  };
 
   readStoredData() {
     try {
