@@ -18,9 +18,21 @@ import {LinkWithResultAnalytics} from '../../../common/result-link/result-link';
 export class AtomicCitation {
   @Element() public host!: HTMLElement;
 
+  /**
+   * The citation item information.
+   */
   @Prop() citation!: GeneratedAnswerCitation;
+  /**
+   * The citation index.
+   */
   @Prop() index!: number;
+  /**
+   * Callback function invoked when the user stops hovering over a citation. `citationHoverTimeMs` is the amount of time over which the citation has been hovered.
+   */
   @Prop() sendHoverEndEvent!: (citationHoverTimeMs: number) => void;
+  /**
+   * An `InteractiveCitation` controller instance. It is used when the user interacts with the citation by selecting or hovering over it.
+   */
   @Prop() interactiveCitation!: InteractiveCitation;
 
   @State() public isOpen = false;
@@ -106,8 +118,8 @@ export class AtomicCitation {
       <div
         part="citation-popover"
         class={`rounded-md border border-neutral p-4 shadow z-10 bg-background ${
-          this.isOpen ? 'flex' : 'hidden'
-        } flex-col gap-3`}
+          this.isOpen ? 'desktop-only:flex' : 'hidden'
+        } flex-col gap-3 mobile-only:hidden`}
         ref={(el) => (this.popupRef = el!)}
         role="dialog"
       >

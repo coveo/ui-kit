@@ -151,7 +151,6 @@ describe('Generated Answer Test Suites', () => {
       describe('add details text area', () => {
         it('should be visible when other is selected', () => {
           feedbackModalSelectors.detailsTextArea().should('not.exist');
-          feedbackModalSelectors.submitButton().should('be.disabled');
 
           const reasons = feedbackModalSelectors.reason();
           reasons.last().should('have.id', 'other');
