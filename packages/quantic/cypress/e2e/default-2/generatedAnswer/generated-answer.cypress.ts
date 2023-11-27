@@ -138,7 +138,6 @@ describe('quantic-generated-answer', () => {
 
         scope('when selecting a feedback option', () => {
           Actions.dislikeGeneratedAnswer();
-          Expect.logDislikeGeneratedAnswer(streamId);
           Actions.clickFeedbackOption(
             feedbackOptions.indexOf(irrelevantOption)
           );

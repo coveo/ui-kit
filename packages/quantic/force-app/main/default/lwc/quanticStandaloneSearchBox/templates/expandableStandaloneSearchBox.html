@@ -2,7 +2,7 @@
 <template>
   <template if:true={isStandalone}>
     <c-quantic-search-interface engine-id={standaloneEngineId} search-hub={searchHub} pipeline={pipeline} skip-first-search disable-state-in-url>
-      <div class="slds-form-element z-index-high">
+      <div class="slds-form-element z-index-high searchbox__container-wrapper">
         <div class="slds-form-element__control searchbox_floating-container">
           <div class="slds-combobox_container">
             <div
@@ -34,16 +34,18 @@
                     style="white-space: nowrap;">
                 </textarea>
                   <template if:false={isQueryEmpty}>
-                    <lightning-button-icon
-                      onclick={clearInput}
-                      icon-name="utility:close"
-                      variant="bare"
-                      class="slds-grid searchbox__clear-button"
-                      size="medium"
-                      name={labels.clear}
-                      title={labels.clear}
-                      aria-label={labels.clear}
-                      alternative-text={labels.clear}></lightning-button-icon>
+                    <div class="slds-grid slds-align_absolute-center slds-var-m-right_xxx-small searchbox__clear-button-container">
+                      <lightning-button-icon
+                        onclick={clearInput}
+                        icon-name="utility:close"
+                        variant="bare"
+                        class="slds-grid searchbox__clear-button"
+                        size="medium"
+                        name={labels.clear}
+                        title={labels.clear}
+                        aria-label={labels.clear}
+                        alternative-text={labels.clear}></lightning-button-icon>
+                    </div>
                   </template>
                 </div>
                 <template if:false={withoutSubmitButton}>

@@ -1,3 +1,4 @@
+import {loadRecommendationActions} from '@coveo/headless/recommendation';
 import {Component, Element, Fragment, h, Prop, State} from '@stencil/core';
 import CloseIcon from '../../../images/close.svg';
 import SearchIcon from '../../../images/search.svg';
@@ -45,7 +46,24 @@ export class AtomicIPXButton implements InitializableComponent {
    */
   @Prop({mutable: true, reflect: true}) public isModalOpen = false;
 
+  private recommendationsLoaded = false;
+
+  private async getRecommendations() {
+    const recsEngine = this.bindings.interfaceElement.querySelector(
+      'atomic-recs-interface'
+    )?.engine;
+    if (recsEngine) {
+      this.recommendationsLoaded = true;
+      recsEngine.dispatch(
+        loadRecommendationActions(recsEngine).getRecommendations()
+      );
+    }
+  }
+
   private async onClick() {
+    if (!this.recommendationsLoaded) {
+      this.getRecommendations();
+    }
     this.isModalOpen ? this.close() : this.open();
     this.render();
   }
@@ -77,6 +95,9 @@ export class AtomicIPXButton implements InitializableComponent {
     const [displayedIcon, hiddenIcon] = this.isModalOpen
       ? ['ipx-close-icon', 'ipx-open-icon']
       : ['ipx-open-icon', 'ipx-close-icon'];
+    if (this.isModalOpen && !this.recommendationsLoaded) {
+      this.getRecommendations();
+    }
 
     return (
       <Fragment>

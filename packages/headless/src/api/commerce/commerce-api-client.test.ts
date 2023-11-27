@@ -2,8 +2,8 @@ import {SortBy} from '../../features/sort/sort';
 import {buildMockCommerceAPIClient} from '../../test/mock-commerce-api-client';
 import {PlatformClient} from '../platform-client';
 import {CommerceAPIClient} from './commerce-api-client';
-import {ProductListingV2Request} from './product-listings/v2/product-listing-v2-request';
-import {ProductListingV2} from './product-listings/v2/product-listing-v2-response';
+import {CommerceAPIRequest} from './common/request';
+import {CommerceResponse} from './common/response';
 
 describe('commerce api client', () => {
   const platformUrl = 'https://platformdev.cloud.coveo.com';
@@ -29,94 +29,123 @@ describe('commerce api client', () => {
     PlatformClient.call = platformCallMock;
   };
 
-  describe('getProductListing', () => {
-    const buildGetListingV2Request = (
-      req: Partial<ProductListingV2Request> = {}
-    ): ProductListingV2Request => ({
-      accessToken: accessToken,
-      organizationId: organizationId,
-      url: platformUrl,
-      trackingId: trackingId,
-      language: req.language ?? '',
-      currency: req.currency ?? '',
-      clientId: req.clientId ?? '',
-      context: req.context ?? {
-        view: {url: ''},
+  const buildCommerceAPIRequest = (
+    req: Partial<CommerceAPIRequest> = {}
+  ): CommerceAPIRequest => ({
+    accessToken: accessToken,
+    organizationId: organizationId,
+    url: platformUrl,
+    trackingId: trackingId,
+    language: req.language ?? '',
+    currency: req.currency ?? '',
+    clientId: req.clientId ?? '',
+    context: req.context ?? {
+      view: {url: ''},
+    },
+  });
+
+  it('#getProductListing should call the platform endpoint with the correct arguments', async () => {
+    const request = buildCommerceAPIRequest();
+
+    mockPlatformCall({
+      ok: true,
+      json: () => Promise.resolve('some content'),
+    });
+
+    await client.getProductListing(request);
+
+    expect(platformCallMock).toBeCalled();
+    const mockRequest = platformCallMock.mock.calls[0][0];
+    expect(mockRequest).toMatchObject({
+      method: 'POST',
+      contentType: 'application/json',
+      url: `${platformUrl}/rest/organizations/${organizationId}/trackings/${trackingId}/commerce/v2/listing`,
+      accessToken: request.accessToken,
+      origin: 'commerceApiFetch',
+      requestParams: {
+        clientId: request.clientId,
+        context: request.context,
+        language: request.language,
+        currency: request.currency,
       },
     });
+  });
 
-    it('should call the platform endpoint with the correct arguments', async () => {
-      const request = buildGetListingV2Request();
+  it('#search should call the platform endpoint with the correct arguments', async () => {
+    const request = {
+      ...buildCommerceAPIRequest(),
+      query: 'some query',
+    };
 
-      mockPlatformCall({
-        ok: true,
-        json: () => Promise.resolve('some content'),
-      });
-
-      await client.getProductListing(request);
-
-      expect(platformCallMock).toBeCalled();
-      const mockRequest = platformCallMock.mock.calls[0][0];
-      expect(mockRequest).toMatchObject({
-        method: 'POST',
-        contentType: 'application/json',
-        url: `${platformUrl}/rest/organizations/${organizationId}/trackings/${trackingId}/commerce/v2/listing`,
-        accessToken: request.accessToken,
-        origin: 'commerceApiFetch',
-        requestParams: {
-          clientId: request.clientId,
-          context: request.context,
-          language: request.language,
-          currency: request.currency,
-        },
-      });
+    mockPlatformCall({
+      ok: true,
+      json: () => Promise.resolve('some content'),
     });
 
-    it('should return error response on failure', async () => {
-      const request = buildGetListingV2Request();
+    await client.search(request);
 
-      const expectedError = {
-        statusCode: 401,
-        message: 'Unauthorized',
-        type: 'authorization',
-      };
+    expect(platformCallMock).toBeCalled();
+    const mockRequest = platformCallMock.mock.calls[0][0];
+    expect(mockRequest).toMatchObject({
+      method: 'POST',
+      contentType: 'application/json',
+      url: `${platformUrl}/rest/organizations/${organizationId}/trackings/${trackingId}/commerce/v2/search`,
+      accessToken: request.accessToken,
+      origin: 'commerceApiFetch',
+      requestParams: {
+        query: 'some query',
+        clientId: request.clientId,
+        context: request.context,
+        language: request.language,
+        currency: request.currency,
+      },
+    });
+  });
 
-      mockPlatformCall({
-        ok: false,
-        json: () => Promise.resolve(expectedError),
-      });
+  it('should return error response on failure', async () => {
+    const request = buildCommerceAPIRequest();
 
-      const response = await client.getProductListing(request);
+    const expectedError = {
+      statusCode: 401,
+      message: 'Unauthorized',
+      type: 'authorization',
+    };
 
-      expect(response).toMatchObject({
-        error: expectedError,
-      });
+    mockPlatformCall({
+      ok: false,
+      json: () => Promise.resolve(expectedError),
     });
 
-    it('should return success response on success', async () => {
-      const request = buildGetListingV2Request();
+    const response = await client.getProductListing(request);
 
-      const expectedBody: ProductListingV2 = {
-        products: [],
-        facets: [],
-        pagination: {page: 0, perPage: 0, totalCount: 0, totalPages: 0},
-        responseId: '',
-        sort: {
-          appliedSort: {sortCriteria: SortBy.Relevance},
-          availableSorts: [{sortCriteria: SortBy.Relevance}],
-        },
-      };
+    expect(response).toMatchObject({
+      error: expectedError,
+    });
+  });
 
-      mockPlatformCall({
-        ok: true,
-        json: () => Promise.resolve(expectedBody),
-      });
+  it('should return success response on success', async () => {
+    const request = buildCommerceAPIRequest();
 
-      const response = await client.getProductListing(request);
+    const expectedBody: CommerceResponse = {
+      products: [],
+      facets: [],
+      pagination: {page: 0, perPage: 0, totalCount: 0, totalPages: 0},
+      responseId: '',
+      sort: {
+        appliedSort: {sortCriteria: SortBy.Relevance},
+        availableSorts: [{sortCriteria: SortBy.Relevance}],
+      },
+    };
 
-      expect(response).toMatchObject({
-        success: expectedBody,
-      });
+    mockPlatformCall({
+      ok: true,
+      json: () => Promise.resolve(expectedBody),
+    });
+
+    const response = await client.getProductListing(request);
+
+    expect(response).toMatchObject({
+      success: expectedBody,
     });
   });
 });

@@ -15,10 +15,10 @@ import {
   LogFacetUpdateSortActionCreatorPayload,
 } from '../../facets/facet-set/facet-set-product-listing-v2-analytics-actions';
 import {
-  FetchProductListingV2ThunkReturn,
-  fetchProductListing,
-  StateNeededByFetchProductListingV2,
-} from './product-listing-actions';
+  QueryCommerceAPIThunkReturn,
+  StateNeededByQueryCommerceAPI,
+} from '../common/actions';
+import {fetchProductListing} from './product-listing-actions';
 
 /**
  * The product listing action creators.
@@ -32,9 +32,9 @@ export interface ProductListingActionCreators {
    * @returns A dispatchable action.
    */
   fetchProductListing(): AsyncThunkAction<
-    FetchProductListingV2ThunkReturn,
+    QueryCommerceAPIThunkReturn,
     void,
-    AsyncThunkCommerceOptions<StateNeededByFetchProductListingV2>
+    AsyncThunkCommerceOptions<StateNeededByQueryCommerceAPI>
   >;
 }
 
