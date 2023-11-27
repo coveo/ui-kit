@@ -48,7 +48,7 @@
 }
 
 .tooltip__arrow--positioned-below {
-  transform: translate(-50%, 0.7rem);
+  bottom: -0.7rem;
 }
 
 .tooltip__body {
