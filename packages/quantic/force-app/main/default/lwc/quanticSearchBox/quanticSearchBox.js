@@ -163,13 +163,6 @@ export default class QuanticSearchBox extends LightningElement {
     return this.template.querySelector('.slds-combobox');
   }
 
-  /**
-   * @returns {HTMLElement}
-   */
-  get floatingContainer() {
-    return this.template.querySelector('.searchbox_floating-container');
-  }
-
   get searchBoxContainerClass() {
     if (this.withoutSubmitButton) {
       this.input?.setAttribute('aria-labelledby', 'fixed-text-label');
@@ -298,12 +291,6 @@ export default class QuanticSearchBox extends LightningElement {
     this.input.style.height = '';
     this.input.style.whiteSpace = 'pre-wrap';
     this.input.style.height = this.input.scrollHeight + 'px';
-
-    // Fix to prevent the expanding searchbox to hide tabs.
-    const isSearchBoxExpanded = this.input.style.height !== '48px';
-    this.floatingContainer.style.position = isSearchBoxExpanded
-      ? 'absolute'
-      : 'relative';
   }
 
   collapseTextArea() {
