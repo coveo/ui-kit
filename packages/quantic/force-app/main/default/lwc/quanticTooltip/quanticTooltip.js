@@ -35,7 +35,7 @@ export default class QuanticTooltip extends LightningElement {
   }
   /**
    * @api
-   * Method tha hides the tooltip.
+   * Method that hides the tooltip.
    */
   @api hideTooltip() {
     this.resetPosition();
