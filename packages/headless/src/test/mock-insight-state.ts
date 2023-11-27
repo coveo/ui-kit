@@ -10,6 +10,7 @@ import {getDateFacetSetInitialState} from '../features/facets/range-facets/date-
 import {getNumericFacetSetInitialState} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-set-state';
 import {getFieldsInitialState} from '../features/fields/fields-state';
 import {getFoldingInitialState} from '../features/folding/folding-state';
+import {getGeneratedAnswerInitialState} from '../features/generated-answer/generated-answer-state';
 import {getInsightConfigurationInitialState} from '../features/insight-configuration/insight-configuration-state';
 import {getInsightInterfaceInitialState} from '../features/insight-interface/insight-interface-state';
 import {getPaginationInitialState} from '../features/pagination/pagination-state';
@@ -55,6 +56,7 @@ export function buildMockInsightState(
     attachedResults: getAttachedResultsInitialState(),
     questionAnswering: getQuestionAnsweringInitialState(),
     folding: getFoldingInitialState(),
+    generatedAnswer: getGeneratedAnswerInitialState(),
     ...config,
   };
 }
