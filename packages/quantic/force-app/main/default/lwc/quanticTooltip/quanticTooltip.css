@@ -5,7 +5,7 @@
 
 .tooltip__content {
   left: 50%;
-  transition: transform 0.05s linear 0.05s, opacity 0.1s linear 0s, visibility 0.1s linear 0s;
+  transition: transform 0s linear 0s, opacity 0.1s linear 0s, visibility 0.1s linear 0s;
   z-index: 2;
 }
 
@@ -31,7 +31,7 @@
 .tooltip__arrow {
   left: 50%;
   transform: translate(-50%, -100%);
-  transition: opacity 0.08s linear 0s, visibility 0.06s linear 0s;
+  transition: opacity 0.1s linear 0s, visibility 0.1s linear 0s;
   z-index: 2;
 }
 

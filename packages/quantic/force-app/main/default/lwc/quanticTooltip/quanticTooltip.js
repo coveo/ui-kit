@@ -25,11 +25,11 @@ export default class QuanticTooltip extends LightningElement {
   @api target;
   /**
    * @api
-   * Method tha shows the tooltip.
+   * Method that shows the tooltip.
    */
   @api showTooltip() {
     if (this.tooltipIsNotEmpty) {
-      this.updateTooltipHorizontalPosition();
+      this.updateTooltipDisplay();
       this.isVisible = true;
     }
   }
@@ -51,9 +51,10 @@ export default class QuanticTooltip extends LightningElement {
   /** @type {boolean} */
   isVisible = false;
 
-  connectedCallback() {
-    window.addEventListener('resize', this.handleResizeAndScroll);
-    window.addEventListener('scroll', this.handleResizeAndScroll);
+  updateTooltipDisplay() {
+    this.updateTooltipMaxWidth();
+    this.updateTooltipVerticalPosition();
+    this.updateTooltipHorizontalPosition();
   }
 
   renderedCallback() {
@@ -63,20 +64,6 @@ export default class QuanticTooltip extends LightningElement {
       this.updateTooltipVerticalPosition();
     }
   }
-
-  disconnectedCallback() {
-    window.removeEventListener('resize', this.handleResizeAndScroll);
-    window.removeEventListener('scroll', this.handleResizeAndScroll);
-  }
-
-  handleResizeAndScroll = () => {
-    clearTimeout(this.resizeTimer);
-    // eslint-disable-next-line @lwc/lwc/no-async-operation
-    this.resizeTimer = setTimeout(() => {
-      this.updateTooltipMaxWidth();
-      this.updateTooltipVerticalPosition();
-    }, 300);
-  };
 
   updateTooltipMaxWidth() {
     const windowWidth = window.innerWidth;
@@ -159,6 +146,12 @@ export default class QuanticTooltip extends LightningElement {
         : 'tooltip__arrow--positioned-below slds-nubbin_top'
     } ${this.lightTheme ? 'tooltip__arrow--light' : 'tooltip__arrow--dark'} ${
       this.isVisible ? 'tooltip__content--visible' : ''
+    }`;
+  }
+
+  get tooltipArrowDirectionClass() {
+    return `${
+      this.displayTooltipAboveTarget ? 'slds-nubbin_bottom' : 'slds-nubbin_top'
     }`;
   }
 }
