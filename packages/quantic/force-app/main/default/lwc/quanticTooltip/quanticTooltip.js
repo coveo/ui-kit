@@ -43,10 +43,6 @@ export default class QuanticTooltip extends LightningElement {
   }
 
   /** @type {boolean} */
-  isInitialLoad = true;
-  /** @type {NodeJS.Timeout} */
-  resizeTimer;
-  /** @type {boolean} */
   displayTooltipAboveTarget = true;
   /** @type {boolean} */
   isVisible = false;
@@ -55,14 +51,6 @@ export default class QuanticTooltip extends LightningElement {
     this.updateTooltipMaxWidth();
     this.updateTooltipVerticalPosition();
     this.updateTooltipHorizontalPosition();
-  }
-
-  renderedCallback() {
-    if (this.isInitialLoad) {
-      this.isInitialLoad = false;
-      this.updateTooltipMaxWidth();
-      this.updateTooltipVerticalPosition();
-    }
   }
 
   updateTooltipMaxWidth() {
