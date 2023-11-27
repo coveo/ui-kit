@@ -39,6 +39,10 @@ export interface GeneratedAnswerState {
    */
   feedbackModalOpen: boolean;
   /**
+   * Determines if the generated text consists of an answer to the query.
+   */
+  answerGenerated: boolean;
+  /**
    * The generated answer error.
    */
   error?: {
@@ -59,6 +63,7 @@ export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
     responseFormat: {
       answerStyle: 'default',
     },
+    answerGenerated: false,
     feedbackModalOpen: false,
   };
 }

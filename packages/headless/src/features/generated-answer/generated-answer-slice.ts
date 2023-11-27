@@ -13,6 +13,7 @@ import {
   updateError,
   updateMessage,
   updateResponseFormat,
+  setAnswerGenerated,
 } from './generated-answer-actions';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
 
@@ -77,5 +78,8 @@ export const generatedAnswerReducer = createReducer(
       })
       .addCase(updateResponseFormat, (state, {payload}) => {
         state.responseFormat = payload;
+      })
+      .addCase(setAnswerGenerated, (state, {payload}) => {
+        state.answerGenerated = payload;
       })
 );

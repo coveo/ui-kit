@@ -56,6 +56,11 @@ export const setIsVisible = createAction(
   (payload: boolean) => validatePayload(payload, booleanValue)
 );
 
+export const setAnswerGenerated = createAction(
+  'generatedAnswer/setAnswerGenerated',
+  (payload: boolean) => validatePayload(payload, booleanValue)
+);
+
 export const updateMessage = createAction(
   'generatedAnswer/updateMessage',
   (payload: GeneratedAnswerMessagePayload) =>
@@ -155,6 +160,12 @@ export const streamAnswer = createAsyncThunk<
         );
         break;
       case 'genqa.endOfStreamType':
+        dispatch(
+          setAnswerGenerated(
+            (JSON.parse(payload) as GeneratedAnswerEndOfStreamPayload)
+              .answerGenerated
+          )
+        );
         dispatch(setIsStreaming(false));
         dispatch(
           logGeneratedAnswerStreamEnd(

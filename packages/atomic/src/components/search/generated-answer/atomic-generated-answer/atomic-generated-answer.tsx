@@ -188,6 +188,15 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     return 'mt-0 mb-4 border border-neutral shadow-lg p-6 bg-background rounded-lg p-6 text-on-background';
   }
 
+  private get showActionButtons() {
+    return (
+      !this.hasRetryableError &&
+      !this.generatedAnswerState.isStreaming &&
+      this.isAnswerVisible &&
+      this.generatedAnswerState.answerGenerated
+    );
+  }
+
   private async copyToClipboard(answer: string) {
     await navigator.clipboard.writeText(answer);
     this.copied = true;
@@ -245,36 +254,34 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
             {this.bindings.i18n.t('generated-answer-title')}
           </Heading>
           <div class="flex gap-2 h-9 items-center ml-auto">
-            {!this.hasRetryableError &&
-              !this.generatedAnswerState.isStreaming &&
-              this.isAnswerVisible && (
-                <div class="feedback-buttons flex shrink-0 gap-2 ml-auto">
-                  <FeedbackButton
-                    title={this.bindings.i18n.t('this-answer-was-helpful')}
-                    variant="like"
-                    active={this.generatedAnswerState.liked}
-                    onClick={this.generatedAnswer.like}
-                  />
-                  <FeedbackButton
-                    title={this.bindings.i18n.t('this-answer-was-not-helpful')}
-                    variant="dislike"
-                    active={this.generatedAnswerState.disliked}
-                    onClick={this.clickDislike}
-                  />
-                  <CopyButton
-                    title={
-                      !this.copied
-                        ? this.bindings.i18n.t('copy-generated-answer')
-                        : this.bindings.i18n.t('generated-answer-copied')
-                    }
-                    isCopied={this.copied}
-                    onClick={() => {
-                      this.copyToClipboard(this.generatedAnswerState.answer!);
-                      this.generatedAnswer.logCopyToClipboard();
-                    }}
-                  />
-                </div>
-              )}
+            {this.showActionButtons && (
+              <div class="feedback-buttons flex shrink-0 gap-2 ml-auto">
+                <FeedbackButton
+                  title={this.bindings.i18n.t('this-answer-was-helpful')}
+                  variant="like"
+                  active={this.generatedAnswerState.liked}
+                  onClick={this.generatedAnswer.like}
+                />
+                <FeedbackButton
+                  title={this.bindings.i18n.t('this-answer-was-not-helpful')}
+                  variant="dislike"
+                  active={this.generatedAnswerState.disliked}
+                  onClick={this.clickDislike}
+                />
+                <CopyButton
+                  title={
+                    !this.copied
+                      ? this.bindings.i18n.t('copy-generated-answer')
+                      : this.bindings.i18n.t('generated-answer-copied')
+                  }
+                  isCopied={this.copied}
+                  onClick={() => {
+                    this.copyToClipboard(this.generatedAnswerState.answer!);
+                    this.generatedAnswer.logCopyToClipboard();
+                  }}
+                />
+              </div>
+            )}
 
             <Switch
               part="toggle"
@@ -301,6 +308,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
           <GeneratedContentContainer
             answer={this.generatedAnswerState.answer}
             isStreaming={this.generatedAnswerState.isStreaming}
+            showFooter={this.showActionButtons}
           >
             <SourceCitations
               label={this.bindings.i18n.t('citations')}
@@ -309,17 +317,13 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
               {this.renderCitations()}
             </SourceCitations>
 
-            {!this.generatedAnswerState.isStreaming && (
-              <RephraseButtons
-                answerStyle={
-                  this.generatedAnswerState.responseFormat.answerStyle
-                }
-                i18n={this.bindings.i18n}
-                onChange={(answerStyle: GeneratedAnswerStyle) =>
-                  this.generatedAnswer.rephrase({answerStyle})
-                }
-              />
-            )}
+            <RephraseButtons
+              answerStyle={this.generatedAnswerState.responseFormat.answerStyle}
+              i18n={this.bindings.i18n}
+              onChange={(answerStyle: GeneratedAnswerStyle) =>
+                this.generatedAnswer.rephrase({answerStyle})
+              }
+            />
           </GeneratedContentContainer>
         ) : null}
       </div>

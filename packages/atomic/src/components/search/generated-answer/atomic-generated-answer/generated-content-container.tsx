@@ -3,6 +3,7 @@ import {FunctionalComponent, h} from '@stencil/core';
 interface GeneratedContentContainerProps {
   answer?: string;
   isStreaming: boolean;
+  showFooter: boolean;
 }
 
 export const GeneratedContentContainer: FunctionalComponent<
@@ -17,6 +18,6 @@ export const GeneratedContentContainer: FunctionalComponent<
     >
       {props.answer}
     </p>
-    <div class="footer mt-6">{children}</div>
+    {props.showFooter && <div class="footer mt-6">{children}</div>}
   </div>
 );
