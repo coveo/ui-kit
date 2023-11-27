@@ -148,10 +148,4 @@ export default class QuanticTooltip extends LightningElement {
       this.isVisible ? 'tooltip__content--visible' : ''
     }`;
   }
-
-  get tooltipArrowDirectionClass() {
-    return `${
-      this.displayTooltipAboveTarget ? 'slds-nubbin_bottom' : 'slds-nubbin_top'
-    }`;
-  }
 }

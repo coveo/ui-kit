@@ -55,3 +55,17 @@
   max-width: min(20rem, var(--max-width));
   width: fit-content;
 }
+
+.slds-nubbin_bottom:after,
+.slds-nubbin--bottom:after,
+.slds-nubbin_bottom:before,
+.slds-nubbin--bottom:before {
+  clip-path: polygon(100% 0, 0% 100%, 100% 100%);
+}
+
+.slds-nubbin_top:after,
+.slds-nubbin--top:after,
+.slds-nubbin_top:before,
+.slds-nubbin--top:before {
+  clip-path: polygon(100% 0, 0 0, 0 100%);
+}
