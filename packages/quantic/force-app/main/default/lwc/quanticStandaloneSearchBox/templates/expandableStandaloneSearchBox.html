@@ -1,14 +1,8 @@
 <!-- sldsValidatorIgnore -->
 <template>
   <template if:true={isStandalone}>
-    <c-quantic-search-interface
-      engine-id={standaloneEngineId}
-      search-hub={searchHub}
-      pipeline={pipeline}
-      skip-first-search
-      disable-state-in-url
-    >
-      <div class="slds-form-element z-index-high">
+    <c-quantic-search-interface engine-id={standaloneEngineId} search-hub={searchHub} pipeline={pipeline} skip-first-search disable-state-in-url>
+      <div class="slds-form-element z-index-high searchbox__container-wrapper">
         <div class="slds-form-element__control searchbox_floating-container">
           <div class="slds-combobox_container">
             <div
