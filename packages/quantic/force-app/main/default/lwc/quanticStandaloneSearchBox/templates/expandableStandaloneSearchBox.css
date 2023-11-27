@@ -25,6 +25,10 @@ textarea.searchbox__input {
   border-radius: 0 var(--lwc-borderRadiusMedium, 0.25rem) var(--lwc-borderRadiusMedium, 0.25rem) 0;
 }
 
+.searchbox__container-wrapper {
+  min-height: 3.125rem;
+}
+
 .searchbox_floating-container {
   position: absolute;
   width: 100%;
