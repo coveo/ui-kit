@@ -140,7 +140,6 @@ export class AtomicCitation {
         <LinkWithResultAnalytics
           href={this.citation.clickUri ?? this.citation.uri}
           ref={(el) => (this.citationRef = el!)}
-          title={this.citation.title}
           part="citation"
           target="_blank"
           rel="noopener"

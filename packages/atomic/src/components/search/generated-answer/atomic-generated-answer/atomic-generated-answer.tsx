@@ -126,7 +126,10 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       this.writeStoredData(this.data);
     }
 
-    this.ariaMessage = this.getGeneratedAnswerStatus();
+    const message = this.getGeneratedAnswerStatus();
+    if (message !== this.ariaMessage) {
+      this.ariaMessage = message;
+    }
   };
 
   private getGeneratedAnswerStatus() {
