@@ -14,8 +14,8 @@ type AdditionalProperties<AdditionalContext extends CoreContext> = Omit<
 
 /**
  * @internal
- * @param additionalPropertiesFactory what functions will the strict context have.
- * @returns two functions to create and mixin the strict context.
+ * @param additionalPropertiesFactory - The functions that the strict context will have.
+ * @returns Two functions to create and mixin the strict context.
  */
 export const generateStrictContextFunctions = <
   AdditionalContext extends CoreContext,

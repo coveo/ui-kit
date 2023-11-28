@@ -16,10 +16,10 @@ import {loadReducerError} from '../../../utils/errors';
  */
 export interface InternalContext {
   /**
-   * Adds (or, if one is already present, replaces) a new context key-value pair.
+   * Sets or updates a context key-value pair.
    *
-   * @param contextKey - The context key to add.
-   * @param contextValue - The context value to add.
+   * @param contextKey - The context key.
+   * @param contextValue - The context value.
    */
   add(contextKey: string, contextValue: ContextValue): void;
 
