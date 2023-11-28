@@ -1,3 +1,9 @@
+## 1.6.7 (2023-11-28)
+
+### Bug Fixes
+
+- loosen RelayPayload value type from unknown to any (#56) ([c3cc15b](/commits/c3cc15bf758c1a247de9de616bb73522a5028a2e)), closes [#56](/issues/56)
+
 ## 1.6.6 (2023-11-23)
 
 ## 1.6.5 (2023-11-13)
