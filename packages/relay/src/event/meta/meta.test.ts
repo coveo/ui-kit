@@ -3,10 +3,6 @@ import { createMockEnvironment } from "../../__mocks__/environment";
 import { createMockConfig } from "../../__mocks__/config";
 import { createMeta } from "./meta";
 
-jest.mock("../../version", () => ({
-  version: "0.0.5",
-}));
-
 describe("createMeta", () => {
   const mockEnv = createMockEnvironment({
     runtime: "browser",
@@ -48,8 +44,8 @@ describe("createMeta", () => {
     expect(specfiedtimeMeta.ts).toBe(1692057600000);
   });
 
-  it("returns meta with the source field, base on the current version of relay", () => {
-    expect(defaultMeta.source).toBe("relay@0.0.5");
+  it("returns meta with the source field with a version placeholder", () => {
+    expect(defaultMeta.source).toBe("relay@process.env.VERSION");
   });
 
   it("returns meta with the userAgent field if a userAgent is defined in the environment", () => {

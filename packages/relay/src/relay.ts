@@ -8,7 +8,6 @@ import { createListenerManager, EventCallback } from "./listener/listener";
 import { createConfigManager, RelayConfig } from "./config/config";
 import { buildNullEnvironment } from "./environment/null/null";
 
-type RelayPayload = Record<string, unknown>;
 type Off = () => void;
 
 /**
@@ -19,10 +18,10 @@ interface Relay {
   /**
    * Sends an event to the Event API.
    * @param {string} type - event's type to be emitted.
-   * @param {RelayPayload} payload - payload to include within the event.
+   * @param {Record<string,any>} payload - payload to include within the event.
    * @returns {Promise<void>}
    */
-  emit: (type: string, payload: RelayPayload) => Promise<void>;
+  emit: (type: string, payload: Record<string, any>) => Promise<void>;
 
   /**
    * Gets the client-side generated meta object.
@@ -86,7 +85,7 @@ export function createRelay(initialConfig: RelayConfig): Relay {
   const clientIdManager = createClientIdManager(getEnvironment());
 
   return {
-    emit: (type: string, payload: RelayPayload) => {
+    emit: (type: string, payload: Record<string, any>) => {
       const config = configManager.get();
       const environment = getEnvironment();
 
@@ -120,11 +119,4 @@ export function createRelay(initialConfig: RelayConfig): Relay {
   };
 }
 
-export type {
-  Relay,
-  Meta,
-  EventConfig,
-  EventCallback,
-  RelayPayload,
-  RelayConfig,
-};
+export type { Relay, Meta, EventConfig, EventCallback, RelayConfig };

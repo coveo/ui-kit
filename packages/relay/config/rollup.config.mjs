@@ -4,11 +4,11 @@ import typescript from "@rollup/plugin-typescript";
 import terser from "@rollup/plugin-terser";
 import { readFileSync } from "fs";
 
-const getStringifyVersion = () => {
+const getVersion = () => {
   const { version } = JSON.parse(
     readFileSync("./package.json", { encoding: "utf-8" })
   );
-  return JSON.stringify(version);
+  return version;
 };
 
 const commonPlugins = [
@@ -16,7 +16,7 @@ const commonPlugins = [
   replace({
     preventAssignment: true,
     values: {
-      "process.env.VERSION": getStringifyVersion(),
+      "process.env.VERSION": getVersion(),
     },
   }),
 ];

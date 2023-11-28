@@ -1,6 +1,7 @@
 import { ClientIdManager } from "../client-id/client-id";
 import { Environment } from "../environment/environment";
-import { RelayConfig, RelayPayload } from "../relay";
+import { RelayPayload } from "../internal-types";
+import { RelayConfig } from "../relay";
 import { createMeta, Meta } from "./meta/meta";
 
 export interface RelayEvent extends RelayPayload {

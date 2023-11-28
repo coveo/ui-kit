@@ -1,6 +1,6 @@
 import { Meta } from "../event/meta/meta";
 import { RelayEvent } from "../event/relay-event";
-import { RelayPayload } from "../relay";
+import { RelayPayload } from "../internal-types";
 
 const defaultMeta: Meta = {
   type: "itemClick",
