@@ -172,6 +172,25 @@ export class SearchAnalyticsProvider
     };
   }
 
+  public getOmniboxAnalyticsMetadata(id: string, suggestion: string) {
+    const querySuggest = this.state.querySuggest && this.state.querySuggest[id];
+    const suggestions = querySuggest!.completions.map(
+      (completion) => completion.expression
+    );
+
+    const lastIndex = querySuggest!.partialQueries.length - 1;
+    const partialQuery = querySuggest!.partialQueries[lastIndex] || '';
+    const querySuggestResponseId = querySuggest!.responseId;
+    return {
+      ...this.getBaseMetadata(),
+      suggestionRanking: suggestions.indexOf(suggestion),
+      partialQuery,
+      partialQueries: querySuggest!.partialQueries,
+      suggestions,
+      querySuggestResponseId,
+    };
+  }
+
   public getGeneratedAnswerMetadata() {
     const state = this.getState();
     const formattedObject: Record<string, string | boolean> = {};

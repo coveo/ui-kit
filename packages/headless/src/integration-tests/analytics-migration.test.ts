@@ -316,4 +316,59 @@ describe('Analytics Search Migration', () => {
 
     assertNextEqualsLegacy(callSpy);
   });
+
+  // it('analytics/querySuggest', async () => {
+  //   nextSearchEngine.addReducers({
+  //     querySuggestReducer,
+  //   });
+  //   legacySearchEngine.addReducers({
+  //     querySuggestReducer,
+  //   });
+
+  //   nextSearchEngine.state.querySuggest = {} as Record<
+  //     string,
+  //     QuerySuggestState
+  //   >;
+
+  //   legacySearchEngine.state.querySuggest = {} as Record<
+  //     string,
+  //     QuerySuggestState
+  //   >;
+
+  //   nextSearchEngine.state.querySuggest['sd'] = {
+  //     id: 'sd',
+  //     completions: [],
+  //     responseId: 'sd',
+  //     partialQueries: [],
+  //     count: 3,
+  //     currentRequestId: 'sd',
+  //     error: null,
+  //     isLoading: false,
+  //   };
+
+  //   legacySearchEngine.state.querySuggest['sd'] = {
+  //     id: 'sd',
+  //     completions: [],
+  //     responseId: 'sd',
+  //     partialQueries: [],
+  //     count: 3,
+  //     currentRequestId: 'sd',
+  //     error: null,
+  //     isLoading: false,
+  //   };
+  //   const action = executeSearch({
+  //     legacy: logQuerySuggestionClick({id: 'sd', suggestion: 'Sd'}),
+  //     next: {
+  //       actionCause: SearchPageEvents.omniboxAnalytics,
+  //       getEventExtraPayload: (state) =>
+  //         new SearchAnalyticsProvider(() => state).getBaseMetadata(),
+  //     },
+  //   });
+
+  //   legacySearchEngine.dispatch(action);
+  //   nextSearchEngine.dispatch(action);
+  //   await wait();
+
+  //   assertNextEqualsLegacy(callSpy);
+  // });
 });
