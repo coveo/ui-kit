@@ -1390,7 +1390,7 @@ describe('InsightClient', () => {
             expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerStreamEnd, expectedMetadata);
         });
 
-        it.only('should send proper payload for #createArticle', async () => {
+        it('should send proper payload for #createArticle', async () => {
             const exampleCreateArticleMetadata = {
                 articleType: 'Knowledge__kav',
                 triggeredBy: 'CreateArticleButton',

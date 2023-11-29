@@ -48,7 +48,6 @@ export class CoveoUA {
                 ...payload,
                 ...this.params,
             }));
-            this.client.addEventTypeMapping(EventType.view, {newEventType: EventType.view, addClientIdParameter: true});
         } else {
             throw new Error(`You must pass either your token or a valid object when you call 'init'`);
         }

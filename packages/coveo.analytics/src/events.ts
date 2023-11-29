@@ -71,19 +71,19 @@ export interface SearchEventRequest extends EventBaseRequest {
 export interface PreparedSearchEventRequest extends Omit<SearchEventRequest, 'searchQueryUid'> {}
 
 export interface DocumentInformation {
-    documentUri: string;
+    documentUri?: string;
     documentUriHash: string;
-    collectionName: string;
+    collectionName?: string;
     sourceName: string;
     documentPosition: number;
     actionCause: string;
 
     searchQueryUid: string;
-    documentTitle: string;
-    documentUrl: string;
-    documentAuthor: string;
-    queryPipeline: string;
-    rankingModifier: string;
+    documentTitle?: string;
+    documentUrl?: string;
+    documentAuthor?: string;
+    queryPipeline?: string;
+    rankingModifier?: string;
 }
 
 export interface ClickEventRequest extends EventBaseRequest, DocumentInformation {}

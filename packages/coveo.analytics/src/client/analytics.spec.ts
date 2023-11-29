@@ -1,4 +1,11 @@
-import {DefaultEventResponse, EventType, ViewEventRequest} from '../events';
+import {
+    ClickEventRequest,
+    CustomEventRequest,
+    DefaultEventResponse,
+    EventType,
+    SearchEventRequest,
+    ViewEventRequest,
+} from '../events';
 import {CoveoAnalyticsClient} from './analytics';
 import {IAnalyticsRequestOptions} from './analyticsRequestClient';
 import {CookieAndLocalStorage, CookieStorage, NullStorage} from '../storage';
@@ -29,6 +36,24 @@ describe('Analytics', () => {
         contentIdValue: 'value',
         language: 'en',
     };
+    const searchEvent: SearchEventRequest = {
+        searchQueryUid: 'sqUid',
+        actionCause: 'interfaceLoad',
+        queryText: 'test',
+        responseTime: 50,
+    };
+    const clickEvent: ClickEventRequest = {
+        searchQueryUid: 'sqUid',
+        actionCause: 'documentOpen',
+        documentPosition: 1,
+        documentUriHash: 'docUriHash',
+        sourceName: 'source',
+    };
+    const customEvent: CustomEventRequest = {
+        eventType: 'custom',
+        eventValue: 'value',
+    };
+
     const eventResponse: DefaultEventResponse = {
         visitId: 'firsttimevisiting',
         visitorId: aVisitorId,
@@ -158,7 +183,46 @@ describe('Analytics', () => {
         const [body] = getParsedBodyCalls();
 
         expect(body).toMatchObject({
-            language: 'en',
+            clientId: '123',
+            userAgent: navigator.userAgent,
+        });
+    });
+
+    it('should append default values to the search event', async () => {
+        mockFetchRequestForEventType(EventType.search);
+
+        await client.sendSearchEvent(searchEvent);
+
+        const [body] = getParsedBodyCalls();
+
+        expect(body).toMatchObject({
+            clientId: '123',
+            userAgent: navigator.userAgent,
+        });
+    });
+
+    it('should append default values to the click event', async () => {
+        mockFetchRequestForEventType(EventType.click);
+
+        await client.sendClickEvent(clickEvent);
+
+        const [body] = getParsedBodyCalls();
+
+        expect(body).toMatchObject({
+            clientId: '123',
+            userAgent: navigator.userAgent,
+        });
+    });
+
+    it('should append default values to the custom event', async () => {
+        mockFetchRequestForEventType(EventType.custom);
+
+        await client.sendCustomEvent(customEvent);
+
+        const [body] = getParsedBodyCalls();
+
+        expect(body).toMatchObject({
+            clientId: '123',
             userAgent: navigator.userAgent,
         });
     });

@@ -187,6 +187,11 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
             this.clear();
             this.runtime.storage = new NullStorage();
         }
+
+        this.addEventTypeMapping(EventType.view, {newEventType: EventType.view, addClientIdParameter: true});
+        this.addEventTypeMapping(EventType.click, {newEventType: EventType.click, addClientIdParameter: true});
+        this.addEventTypeMapping(EventType.custom, {newEventType: EventType.custom, addClientIdParameter: true});
+        this.addEventTypeMapping(EventType.search, {newEventType: EventType.search, addClientIdParameter: true});
     }
 
     private initRuntime(clientsOptions: IAnalyticsClientOptions) {
