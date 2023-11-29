@@ -1,3 +1,9 @@
+## 1.6.8 (2023-11-29)
+
+### Bug Fixes
+
+- **relay:** update clientIdManager when environment is changed (#59) ([9cba29d](/commits/9cba29d38d58a0358284b4de4578bfa1b981473b)), closes [#59](/issues/59)
+
 ## 1.6.7 (2023-11-28)
 
 ### Bug Fixes

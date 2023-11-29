@@ -30,7 +30,7 @@ describe("relay", () => {
 
     expect(relay.getMeta("type").clientId).toEqual(mockedUUID);
     relay.updateConfig({ mode: "disabled" });
-    
+
     expect(relay.getMeta("type").clientId).toEqual("");
   });
 });
