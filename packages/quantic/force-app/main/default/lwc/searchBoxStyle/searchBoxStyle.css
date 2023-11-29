@@ -1,7 +1,7 @@
 /* Shared style between the searchBox and the standaloneSearchBox */
 
 .searchbox__container {
-  display: flex;
+  /* display: flex; */
   position: relative;
   min-height: 48px;
   box-sizing: border-box;
@@ -10,6 +10,9 @@
   border: var(--lwc-borderWidthThin, 1px) solid var(--lwc-brandAccessible, #0176d3);
 }
 
+.searchbox__container-expandable {
+  display: block;
+}
 .searchbox_floating-container {
   position: absolute;
   width: 100%;
@@ -17,8 +20,12 @@
   border-radius: 0.25rem;
 }
 
+.searchbox__container-wrapper {
+  min-height: 3.125rem;
+}
+
 .searchbox__input {
-  display: flex;
+  /* display: flex; */
   border-radius: 0.25rem;
   border-bottom-left-radius: 0.25rem;
   position: relative;

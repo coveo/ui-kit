@@ -10,11 +10,9 @@ import {STANDALONE_SEARCH_BOX_STORAGE_KEY} from 'c/quanticUtils';
 import {CurrentPageReference, NavigationMixin} from 'lightning/navigation';
 import {LightningElement, api, track, wire} from 'lwc';
 // @ts-ignore
-import defaultStandaloneSearchBox from './templates/defaultStandaloneSearchBox.html';
-// @ts-ignore
 import errorTemplate from './templates/errorTemplate.html';
 // @ts-ignore
-import expandableStandaloneSearchBox from './templates/expandableStandaloneSearchBox.html';
+import standaloneSearchBox from './templates/standaloneSearchBox.html';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").StandaloneSearchBoxState} StandaloneSearchBoxState */
@@ -258,6 +256,13 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
       : this.template.querySelector('input');
   }
 
+  /**
+   * @returns {Array}
+   */
+  get suggestionsArray() {
+    return this?.state?.suggestions;
+  }
+
   handleSuggestionListEvent = (event) => {
     event.stopPropagation();
     const id = event.detail;
@@ -272,11 +277,6 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   }
 
   render() {
-    if (this.hasInitializationError) {
-      return errorTemplate;
-    }
-    return this?.textarea
-      ? expandableStandaloneSearchBox
-      : defaultStandaloneSearchBox;
+    return !this.hasInitializationError ? standaloneSearchBox : errorTemplate;
   }
 }

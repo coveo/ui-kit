@@ -57,6 +57,13 @@ export default class QuanticSearchBoxInput extends LightningElement {
    */
   @api searchBoxEngine;
   /**
+   * The search suggestions.
+   * @api
+   * @type {Array}
+   * @defaultValue []
+   */
+  @api suggestions = [];
+  /**
    * The input value.
    * @api
    * @type {string}
@@ -92,10 +99,11 @@ export default class QuanticSearchBoxInput extends LightningElement {
     const selectedSuggestion = this.suggestionList?.getCurrentSelectedValue();
     if (this.suggestionsOpen && selectedSuggestion) {
       this.searchBoxEngine.selectSuggestion(selectedSuggestion.rawValue);
+      this.input.blur();
     } else {
       this.searchBoxEngine.submit();
+      this.input.blur();
     }
-    this.input.blur();
   }
 
   handleValueChange() {
@@ -203,6 +211,15 @@ export default class QuanticSearchBoxInput extends LightningElement {
     this.suggestionList?.resetSelection();
   }
 
+  handleHighlightChange(event) {
+    this.input.value = event.detail?.rawValue;
+  }
+
+  handleSuggestionSelection(event) {
+    const textValue = event.detail;
+    this.standaloneSearchBox.selectSuggestion(textValue);
+  }
+
   get searchBoxContainerClass() {
     if (this.withoutSubmitButton) {
       this.input?.setAttribute('aria-labelledby', 'fixed-text-label');
@@ -222,10 +239,11 @@ export default class QuanticSearchBoxInput extends LightningElement {
   }
 
   get suggestionsOpen() {
-    return this.combobox.classList.contains('slds-is-open');
+    return this.combobox?.classList.contains('slds-is-open');
   }
 
   get isQueryEmpty() {
+    console.log('!this.input?.value?.length: ' + this.input?.value);
     return !this.input?.value?.length;
   }
 

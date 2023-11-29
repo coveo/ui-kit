@@ -7,11 +7,9 @@ import {
 } from 'c/quanticHeadlessLoader';
 import {LightningElement, api, track} from 'lwc';
 // @ts-ignore
-import defaultSearchBox from './templates/defaultSearchBox.html';
-// @ts-ignore
 import errorTemplate from './templates/errorTemplate.html';
 // @ts-ignore
-import expandableSearchBox from './templates/expandableSearchBox.html';
+import searchBoxTemplate from './templates/searchBox.html';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").SearchBoxState} SearchBoxState */
@@ -147,6 +145,13 @@ export default class QuanticSearchBox extends LightningElement {
     return this?.state?.value;
   }
 
+  /**
+   * @returns {Array}
+   */
+  get suggestionsArray() {
+    return this?.state?.suggestions;
+  }
+
   handleHighlightChange(event) {
     const suggestion = event.detail;
     this.quanticSearchBoxInput.value = suggestion.rawValue;
@@ -172,9 +177,6 @@ export default class QuanticSearchBox extends LightningElement {
   }
 
   render() {
-    if (this.hasInitializationError) {
-      return errorTemplate;
-    }
-    return this?.textarea ? expandableSearchBox : defaultSearchBox;
+    return !this.hasInitializationError ? searchBoxTemplate : errorTemplate;
   }
 }
