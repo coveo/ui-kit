@@ -17,6 +17,7 @@ import {NumericFacetValue} from '../../features/facets/range-facets/numeric-face
 import {getQueryInitialState} from '../../features/query/query-state';
 import {getSearchInitialState} from '../../features/search/search-state';
 import {getSortCriteriaInitialState} from '../../features/sort-criteria/sort-criteria-state';
+import {StaticFilterValueMetadata} from '../../features/static-filter-set/static-filter-set-actions';
 import {SearchAppState} from '../../state/search-app-state';
 import {ConfigurationSection} from '../../state/state-sections';
 import {PreprocessRequest} from '../preprocess-request';
@@ -169,6 +170,14 @@ export class SearchAnalyticsProvider
     return {
       ...this.getBaseMetadata(),
       resultsSortBy: this.state.sortCriteria ?? getSortCriteriaInitialState(),
+    };
+  }
+
+  public getStaticFilterMetadata(id: string, value: StaticFilterValueMetadata) {
+    return {
+      ...this.getBaseMetadata(),
+      staticFilterId: id,
+      staticFilterValue: value,
     };
   }
 

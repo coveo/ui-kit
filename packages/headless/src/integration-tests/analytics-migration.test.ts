@@ -21,6 +21,11 @@ import {NumericFacetValue} from '../features/facets/range-facets/numeric-facet-s
 import {logNumericFacetBreadcrumb} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-analytics-actions';
 import {executeSearch} from '../features/search/search-actions';
 import {logResultsSort} from '../features/sort-criteria/sort-criteria-analytics-actions';
+import {
+  StaticFilterValueMetadata,
+  logStaticFilterDeselect,
+  logStaticFilterSelect,
+} from '../features/static-filter-set/static-filter-set-actions';
 
 const nextSearchEngine = buildSearchEngine({
   configuration: {
@@ -84,6 +89,11 @@ const ANY_RANGE_FACET_BREADCRUMB_VALUE: DateFacetValue = {
   endInclusive: true,
   state: 'idle',
   numberOfResults: 1,
+};
+const ANY_STATIC_FILTER_ID = 'any static filter id';
+const ANY_STATIC_FILTER_VALUE: StaticFilterValueMetadata = {
+  caption: 'any static filter value caption',
+  expression: 'any static filter value expression',
 };
 
 describe('Analytics Search Migration', () => {
@@ -371,4 +381,50 @@ describe('Analytics Search Migration', () => {
 
   //   assertNextEqualsLegacy(callSpy);
   // });
+
+  it('analytics/staticFilter/select', async () => {
+    const action = executeSearch({
+      legacy: logStaticFilterSelect({
+        staticFilterId: ANY_STATIC_FILTER_ID,
+        staticFilterValue: ANY_STATIC_FILTER_VALUE,
+      }),
+      next: {
+        actionCause: SearchPageEvents.staticFilterSelect,
+        getEventExtraPayload: (state) =>
+          new SearchAnalyticsProvider(() => state).getStaticFilterMetadata(
+            ANY_STATIC_FILTER_ID,
+            ANY_STATIC_FILTER_VALUE
+          ),
+      },
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/staticFilter/deselect', async () => {
+    const action = executeSearch({
+      legacy: logStaticFilterDeselect({
+        staticFilterId: ANY_STATIC_FILTER_ID,
+        staticFilterValue: ANY_STATIC_FILTER_VALUE,
+      }),
+      next: {
+        actionCause: SearchPageEvents.staticFilterDeselect,
+        getEventExtraPayload: (state) =>
+          new SearchAnalyticsProvider(() => state).getStaticFilterMetadata(
+            ANY_STATIC_FILTER_ID,
+            ANY_STATIC_FILTER_VALUE
+          ),
+      },
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
 });
