@@ -20,6 +20,7 @@ import {DateFacetValue} from '../features/facets/range-facets/date-facet-set/int
 import {NumericFacetValue} from '../features/facets/range-facets/numeric-facet-set/interfaces/response';
 import {logNumericFacetBreadcrumb} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-analytics-actions';
 import {executeSearch} from '../features/search/search-actions';
+import {logResultsSort} from '../features/sort-criteria/sort-criteria-analytics-actions';
 
 const nextSearchEngine = buildSearchEngine({
   configuration: {
@@ -289,6 +290,23 @@ describe('Analytics Search Migration', () => {
             ANY_FACET_ID,
             ANY_RANGE_FACET_BREADCRUMB_VALUE
           ),
+      },
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/sort/results', async () => {
+    const action = executeSearch({
+      legacy: logResultsSort(),
+      next: {
+        actionCause: SearchPageEvents.resultsSort,
+        getEventExtraPayload: (state) =>
+          new SearchAnalyticsProvider(() => state).getResultSortMetadata(),
       },
     });
 

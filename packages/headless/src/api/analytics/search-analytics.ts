@@ -16,6 +16,7 @@ import {RangeFacetSortCriterion} from '../../features/facets/range-facets/generi
 import {NumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/interfaces/response';
 import {getQueryInitialState} from '../../features/query/query-state';
 import {getSearchInitialState} from '../../features/search/search-state';
+import {getSortCriteriaInitialState} from '../../features/sort-criteria/sort-criteria-state';
 import {SearchAppState} from '../../state/search-app-state';
 import {ConfigurationSection} from '../../state/state-sections';
 import {PreprocessRequest} from '../preprocess-request';
@@ -163,6 +164,13 @@ export class SearchAnalyticsProvider
       this.state.automaticFacetSet?.set[facetId]?.response
     );
   };
+
+  public getResultSortMetadata() {
+    return {
+      ...this.getBaseMetadata(),
+      resultsSortBy: this.state.sortCriteria ?? getSortCriteriaInitialState(),
+    };
+  }
 
   public getGeneratedAnswerMetadata() {
     const state = this.getState();
