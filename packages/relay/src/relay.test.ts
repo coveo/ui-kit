@@ -1,3 +1,4 @@
+import { createMockConfig } from "./__mocks__/config";
 import { createRelay } from "./relay";
 
 describe("relay", () => {
@@ -20,5 +21,16 @@ describe("relay", () => {
 
   it("version holds the expected placeholder", () => {
     expect(relay.version).toBe("process.env.VERSION");
+  });
+
+  it("updates the clientId to an empty string when disconnecting to its environment on disabled mode", () => {
+    const mockedUUID = "1234-1234-1234-1234-1234";
+    jest.spyOn(crypto, "randomUUID").mockReturnValueOnce(mockedUUID);
+    const relay = createRelay(createMockConfig());
+
+    expect(relay.getMeta("type").clientId).toEqual(mockedUUID);
+    relay.updateConfig({ mode: "disabled" });
+    
+    expect(relay.getMeta("type").clientId).toEqual("");
   });
 });

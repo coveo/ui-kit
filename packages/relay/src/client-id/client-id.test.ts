@@ -1,29 +1,43 @@
-import { createMockEnvironment } from "../__mocks__/environment";
+import {
+  createMockEnvironment,
+  createMockEnvironmentManager,
+} from "../__mocks__/environment";
 import { createMockStorage } from "../__mocks__/storage";
 import { createClientIdManager } from "./client-id";
 
 describe("createClientIdManager", () => {
   it("generates a clientId if storage does not contain one", () => {
-    const environmentWithoutStorage = createMockEnvironment({
-      generateUUID: () => "UUID-generated",
-      storage: createMockStorage(),
+    const environmentManagerWithoutStorage = createMockEnvironmentManager({
+      get: () =>
+        createMockEnvironment({
+          generateUUID: () => "UUID-generated",
+          storage: createMockStorage(),
+        }),
     });
 
-    const clientIdManager = createClientIdManager(environmentWithoutStorage);
+    const clientIdManager = createClientIdManager(
+      environmentManagerWithoutStorage
+    );
 
     expect(clientIdManager.getClientId()).toBe("UUID-generated");
   });
+
   it("returns a clientId from storage if it already exists", () => {
     const uuidStored = "2136b353-74be-42d7-904f-ea33a8f4a43c";
     const storage = createMockStorage({
       getItem: () => uuidStored,
     });
-    const environmentWithStorage = createMockEnvironment({
-      generateUUID: () => "UUID-generated",
-      storage,
+    const environmentManagerWithStorage = createMockEnvironmentManager({
+      get: () =>
+        createMockEnvironment({
+          generateUUID: () => "UUID-generated",
+          storage,
+        }),
     });
 
-    const clientIdManager = createClientIdManager(environmentWithStorage);
+    const clientIdManager = createClientIdManager(
+      environmentManagerWithStorage
+    );
     expect(clientIdManager.getClientId()).toBe(uuidStored);
   });
 
@@ -31,12 +45,17 @@ describe("createClientIdManager", () => {
     const storage = createMockStorage({
       getItem: () => "corrupted_uuid_stored",
     });
-    const environmentWithStorage = createMockEnvironment({
-      generateUUID: () => "UUID-generated",
-      storage,
+    const environmentManagerWithStorage = createMockEnvironmentManager({
+      get: () =>
+        createMockEnvironment({
+          generateUUID: () => "UUID-generated",
+          storage,
+        }),
     });
 
-    const clientIdManager = createClientIdManager(environmentWithStorage);
+    const clientIdManager = createClientIdManager(
+      environmentManagerWithStorage
+    );
     expect(clientIdManager.getClientId()).toBe("UUID-generated");
   });
 
@@ -46,12 +65,17 @@ describe("createClientIdManager", () => {
       getItem: jest.fn(),
       removeItem: jest.fn(),
     });
-    const environmentWithStorage = createMockEnvironment({
-      generateUUID: () => "UUID-generated-" + increment++,
-      storage,
+    const environmentManagerWithStorage = createMockEnvironmentManager({
+      get: () =>
+        createMockEnvironment({
+          generateUUID: () => "UUID-generated-" + increment++,
+          storage,
+        }),
     });
 
-    const clientIdManager = createClientIdManager(environmentWithStorage);
+    const clientIdManager = createClientIdManager(
+      environmentManagerWithStorage
+    );
 
     expect(clientIdManager.getClientId()).toBe("UUID-generated-0");
 

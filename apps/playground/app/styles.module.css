@@ -23,6 +23,10 @@
   margin-right: 8px;
 }
 
+.mode button {
+  margin-top: 8px;
+}
+
 .events-selector {
   margin: 16px;
   width: 240px;

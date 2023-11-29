@@ -1,5 +1,5 @@
 import { validate } from "uuid";
-import { Environment } from "../environment/environment";
+import { EnvironmentManager } from "../environment/manager/manager";
 
 export interface ClientIdManager {
   getClientId: () => string;
@@ -7,11 +7,13 @@ export interface ClientIdManager {
 }
 
 export function createClientIdManager(
-  environment: Environment
+  environmentManager: EnvironmentManager
 ): ClientIdManager {
   const key = "visitorId";
+
   return {
     getClientId: () => {
+      const environment = environmentManager.get();
       const storage = environment.storage;
 
       const existingClientId = storage.getItem(key);
@@ -23,7 +25,7 @@ export function createClientIdManager(
       return clientId;
     },
     clear: () => {
-      environment.storage.removeItem(key);
+      environmentManager.get().storage.removeItem(key);
     },
   };
 }

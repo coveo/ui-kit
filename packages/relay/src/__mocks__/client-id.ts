@@ -5,7 +5,7 @@ export function createMockClientIdManager(
 ): ClientIdManager {
   return {
     getClientId: () => "2136b353-74be-42d7-904f-ea33a8f4a43c",
-    clear: () => {},
+    clear: () => jest.fn(),
     ...clientIdManager,
   };
 }
