@@ -173,11 +173,21 @@ export class SearchAnalyticsProvider
     };
   }
 
-  public getStaticFilterMetadata(id: string, value: StaticFilterValueMetadata) {
+  public getStaticFilterToggleMetadata(
+    id: string,
+    value: StaticFilterValueMetadata
+  ) {
     return {
       ...this.getBaseMetadata(),
       staticFilterId: id,
       staticFilterValue: value,
+    };
+  }
+
+  public getStaticFilterClearAll(id: string) {
+    return {
+      ...this.getBaseMetadata(),
+      staticFilterId: id,
     };
   }
 

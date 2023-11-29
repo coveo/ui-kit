@@ -219,10 +219,19 @@ export function buildStaticFilter(
     },
 
     deselectAll() {
-      const analytics = logStaticFilterClearAll({staticFilterId: id});
-
       dispatch(deselectAllStaticFilterValues(id));
-      dispatch(executeSearch({legacy: analytics}));
+      dispatch(
+        executeSearch({
+          legacy: logStaticFilterClearAll({staticFilterId: id}),
+          next: {
+            actionCause: SearchPageEvents.staticFilterClearAll,
+            getEventExtraPayload: (state) =>
+              new SearchAnalyticsProvider(() => state).getStaticFilterClearAll(
+                id
+              ),
+          },
+        })
+      );
     },
 
     isValueSelected(value: StaticFilterValue) {
@@ -278,7 +287,7 @@ function getAnalyticsActionForToggledValue(
       ? SearchPageEvents.staticFilterDeselect
       : SearchPageEvents.staticFilterSelect,
     getEventExtraPayload: (state) =>
-      new SearchAnalyticsProvider(() => state).getStaticFilterMetadata(
+      new SearchAnalyticsProvider(() => state).getStaticFilterToggleMetadata(
         id,
         value
       ),

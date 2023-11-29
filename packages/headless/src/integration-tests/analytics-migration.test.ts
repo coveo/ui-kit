@@ -23,6 +23,7 @@ import {executeSearch} from '../features/search/search-actions';
 import {logResultsSort} from '../features/sort-criteria/sort-criteria-analytics-actions';
 import {
   StaticFilterValueMetadata,
+  logStaticFilterClearAll,
   logStaticFilterDeselect,
   logStaticFilterSelect,
 } from '../features/static-filter-set/static-filter-set-actions';
@@ -391,7 +392,9 @@ describe('Analytics Search Migration', () => {
       next: {
         actionCause: SearchPageEvents.staticFilterSelect,
         getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getStaticFilterMetadata(
+          new SearchAnalyticsProvider(
+            () => state
+          ).getStaticFilterToggleMetadata(
             ANY_STATIC_FILTER_ID,
             ANY_STATIC_FILTER_VALUE
           ),
@@ -414,9 +417,32 @@ describe('Analytics Search Migration', () => {
       next: {
         actionCause: SearchPageEvents.staticFilterDeselect,
         getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getStaticFilterMetadata(
+          new SearchAnalyticsProvider(
+            () => state
+          ).getStaticFilterToggleMetadata(
             ANY_STATIC_FILTER_ID,
             ANY_STATIC_FILTER_VALUE
+          ),
+      },
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/staticFilter/clearAll', async () => {
+    const action = executeSearch({
+      legacy: logStaticFilterClearAll({
+        staticFilterId: ANY_STATIC_FILTER_ID,
+      }),
+      next: {
+        actionCause: SearchPageEvents.staticFilterClearAll,
+        getEventExtraPayload: (state) =>
+          new SearchAnalyticsProvider(() => state).getStaticFilterClearAll(
+            ANY_STATIC_FILTER_ID
           ),
       },
     });
