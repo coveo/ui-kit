@@ -100,6 +100,7 @@ const ANY_STATIC_FILTER_VALUE: StaticFilterValueMetadata = {
 };
 const ANY_QUERY = 'any query';
 const ANY_CATEGORY_FACET_PATH = ['any category facet path'];
+
 describe('Analytics Search Migration', () => {
   let callSpy: jest.SpyInstance<Promise<Response | PlatformClientCallError>>;
 
