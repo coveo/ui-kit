@@ -9,6 +9,10 @@ function getUrl() {
   return new URL(document.location.href);
 }
 
+/**
+ * Custom hook for managing browser history and URL updates.
+ * @returns An object containing the current URL, replace function, and push function.
+ */
 export function useHistoryRouter() {
   const [url, updateUrl] = useReducer(() => getUrl(), getUrl());
   useEffect(() => {
