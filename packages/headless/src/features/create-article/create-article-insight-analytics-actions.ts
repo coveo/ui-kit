@@ -1,3 +1,4 @@
+import {CreateArticleMetadata} from 'coveo.analytics';
 import {
   InsightAction,
   makeInsightAnalyticsAction,
@@ -5,16 +6,11 @@ import {
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
 
 export const logCreateArticle = (
-  articleType: string,
-  triggeredBy: string
+  createArticleMetadata: CreateArticleMetadata
 ): InsightAction =>
   makeInsightAnalyticsAction('analytics/createArticle', (client, state) => {
-    const articleMetadata = {
-      articleType,
-      triggeredBy,
-    };
     return client.logCreateArticle(
-      articleMetadata,
+      createArticleMetadata,
       getCaseContextAnalyticsMetadata(state.insightCaseContext)
     );
   });

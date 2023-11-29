@@ -9,8 +9,10 @@ const exampleSubject = 'example subject';
 const exampleDescription = 'example description';
 const exampleCaseId = '1234';
 const exampleCaseNumber = '5678';
-const articleType = 'Knowledge__article';
-const triggeredBy = 'button-id';
+const exampleCreateArticleMetadata = {
+  articleType: 'Knowledge__kav',
+  triggeredBy: 'CreateArticleButton',
+};
 
 const expectedCaseContext = {
   caseContext: {
@@ -58,13 +60,12 @@ describe('the analytics related to the create article feature in the insight use
   });
 
   it('should log #logCreateArticle with the right payload', async () => {
-    await engine.dispatch(logCreateArticle(articleType, triggeredBy));
+    await engine.dispatch(logCreateArticle(exampleCreateArticleMetadata));
     const mockToUse = mockLogCreateArticle;
     expect(mockToUse).toHaveBeenCalledTimes(1);
-    expect(mockToUse.mock.calls[0][0]).toStrictEqual({
-      articleType,
-      triggeredBy,
-    });
+    expect(mockToUse.mock.calls[0][0]).toStrictEqual(
+      exampleCreateArticleMetadata
+    );
     expect(mockToUse.mock.calls[0][1]).toStrictEqual(expectedCaseContext);
   });
 });
