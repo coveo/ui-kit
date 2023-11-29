@@ -14,6 +14,8 @@ import {
   logFacetSelect,
   logFacetUpdateSort,
 } from '../features/facets/facet-set/facet-set-analytics-actions';
+import {logDateFacetBreadcrumb} from '../features/facets/range-facets/date-facet-set/date-facet-analytics-actions';
+import {DateFacetValue} from '../features/facets/range-facets/date-facet-set/interfaces/response';
 import {executeSearch} from '../features/search/search-actions';
 import {FacetSortCriterion} from '../ssr.index';
 
@@ -73,6 +75,13 @@ const excludedBaseProperties = [
 const ANY_FACET_VALUE = 'any facet value';
 const ANY_FACET_ID = 'any facet id';
 const ANY_CRITERION: FacetSortCriterion = 'alphanumeric';
+const ANY_RANGE_FACET_BREADCRUMB_VALUE: DateFacetValue = {
+  start: 'start',
+  end: 'end',
+  endInclusive: true,
+  state: 'idle',
+  numberOfResults: 1,
+};
 
 describe('Analytics Search Migration', () => {
   let callSpy: jest.SpyInstance<Promise<Response | PlatformClientCallError>>;
@@ -226,6 +235,31 @@ describe('Analytics Search Migration', () => {
         getEventExtraPayload: (state) =>
           new SearchAnalyticsProvider(() => state).getFacetClearAllMetadata(
             ANY_FACET_ID
+          ),
+      },
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/dateFacet/breadcrumb', async () => {
+    const action = executeSearch({
+      legacy: logDateFacetBreadcrumb({
+        facetId: ANY_FACET_ID,
+        selection: ANY_RANGE_FACET_BREADCRUMB_VALUE,
+      }),
+      next: {
+        actionCause: SearchPageEvents.breadcrumbFacet,
+        getEventExtraPayload: (state) =>
+          new SearchAnalyticsProvider(
+            () => state
+          ).getRangeFacetBreadcrumbMetadata(
+            ANY_FACET_ID,
+            ANY_RANGE_FACET_BREADCRUMB_VALUE
           ),
       },
     });

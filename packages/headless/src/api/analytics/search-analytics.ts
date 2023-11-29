@@ -11,6 +11,7 @@ import {
   getStateNeededForFacetMetadata,
 } from '../../features/facets/facet-set/facet-set-analytics-actions-utils';
 import {FacetSortCriterion} from '../../features/facets/facet-set/interfaces/request';
+import {DateFacetValue} from '../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {RangeFacetSortCriterion} from '../../features/facets/range-facets/generic/interfaces/request';
 import {getQueryInitialState} from '../../features/query/query-state';
 import {getSearchInitialState} from '../../features/search/search-state';
@@ -131,6 +132,23 @@ export class SearchAnalyticsProvider
       facetId,
       facetField,
       criteria: facetSortCriterion,
+      facetTitle: `${facetField}_${facetId}`,
+    };
+  }
+
+  public getRangeFacetBreadcrumbMetadata(
+    facetId: string,
+    facetValue: DateFacetValue
+  ) {
+    const facetRequest = this.getFacetRequest(facetId);
+    const facetField = facetRequest?.field ?? '';
+    return {
+      ...this.getBaseMetadata(),
+      facetId,
+      facetField,
+      facetRangeEnd: facetValue.end,
+      facetRangeEndInclusive: facetValue.endInclusive,
+      facetRangeStart: facetValue.start,
       facetTitle: `${facetField}_${facetId}`,
     };
   }

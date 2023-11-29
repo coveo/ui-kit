@@ -207,11 +207,39 @@ export function buildBreadcrumbManager(
         facetSet: getState().dateFacetSet,
         executeToggleSelect: (payload) => {
           dispatch(toggleSelectDateFacetValue(payload));
-          dispatch(executeSearch({legacy: logDateFacetBreadcrumb(payload)}));
+          dispatch(
+            executeSearch({
+              legacy: logDateFacetBreadcrumb(payload),
+              next: {
+                actionCause: SearchPageEvents.breadcrumbFacet,
+                getEventExtraPayload: (state) =>
+                  new SearchAnalyticsProvider(
+                    () => state
+                  ).getRangeFacetBreadcrumbMetadata(
+                    payload.facetId,
+                    payload.selection
+                  ),
+              },
+            })
+          );
         },
         executeToggleExclude: (payload) => {
           dispatch(toggleExcludeDateFacetValue(payload));
-          dispatch(executeSearch({legacy: logDateFacetBreadcrumb(payload)}));
+          dispatch(
+            executeSearch({
+              legacy: logDateFacetBreadcrumb(payload),
+              next: {
+                actionCause: SearchPageEvents.breadcrumbFacet,
+                getEventExtraPayload: (state) =>
+                  new SearchAnalyticsProvider(
+                    () => state
+                  ).getRangeFacetBreadcrumbMetadata(
+                    payload.facetId,
+                    payload.selection
+                  ),
+              },
+            })
+          );
         },
         facetValuesSelector: dateFacetActiveValuesSelector,
       };
