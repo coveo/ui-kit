@@ -13,6 +13,7 @@ import {
 import {FacetSortCriterion} from '../../features/facets/facet-set/interfaces/request';
 import {DateFacetValue} from '../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {RangeFacetSortCriterion} from '../../features/facets/range-facets/generic/interfaces/request';
+import {NumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/interfaces/response';
 import {getQueryInitialState} from '../../features/query/query-state';
 import {getSearchInitialState} from '../../features/search/search-state';
 import {SearchAppState} from '../../state/search-app-state';
@@ -138,7 +139,7 @@ export class SearchAnalyticsProvider
 
   public getRangeFacetBreadcrumbMetadata(
     facetId: string,
-    facetValue: DateFacetValue
+    facetValue: DateFacetValue | NumericFacetValue
   ) {
     const facetRequest = this.getFacetRequest(facetId);
     const facetField = facetRequest?.field ?? '';

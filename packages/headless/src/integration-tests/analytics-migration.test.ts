@@ -14,10 +14,12 @@ import {
   logFacetSelect,
   logFacetUpdateSort,
 } from '../features/facets/facet-set/facet-set-analytics-actions';
+import {FacetSortCriterion} from '../features/facets/facet-set/interfaces/request';
 import {logDateFacetBreadcrumb} from '../features/facets/range-facets/date-facet-set/date-facet-analytics-actions';
 import {DateFacetValue} from '../features/facets/range-facets/date-facet-set/interfaces/response';
+import {NumericFacetValue} from '../features/facets/range-facets/numeric-facet-set/interfaces/response';
+import {logNumericFacetBreadcrumb} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-analytics-actions';
 import {executeSearch} from '../features/search/search-actions';
-import {FacetSortCriterion} from '../ssr.index';
 
 const nextSearchEngine = buildSearchEngine({
   configuration: {
@@ -251,6 +253,32 @@ describe('Analytics Search Migration', () => {
       legacy: logDateFacetBreadcrumb({
         facetId: ANY_FACET_ID,
         selection: ANY_RANGE_FACET_BREADCRUMB_VALUE,
+      }),
+      next: {
+        actionCause: SearchPageEvents.breadcrumbFacet,
+        getEventExtraPayload: (state) =>
+          new SearchAnalyticsProvider(
+            () => state
+          ).getRangeFacetBreadcrumbMetadata(
+            ANY_FACET_ID,
+            ANY_RANGE_FACET_BREADCRUMB_VALUE
+          ),
+      },
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/numericFacet/breadcrumb', async () => {
+    const action = executeSearch({
+      legacy: logNumericFacetBreadcrumb({
+        facetId: ANY_FACET_ID,
+        selection:
+          ANY_RANGE_FACET_BREADCRUMB_VALUE as unknown as NumericFacetValue,
       }),
       next: {
         actionCause: SearchPageEvents.breadcrumbFacet,

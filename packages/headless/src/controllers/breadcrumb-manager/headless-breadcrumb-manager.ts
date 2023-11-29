@@ -189,11 +189,39 @@ export function buildBreadcrumbManager(
       facetSet: getState().numericFacetSet,
       executeToggleSelect: (payload) => {
         dispatch(toggleSelectNumericFacetValue(payload));
-        dispatch(executeSearch({legacy: logNumericFacetBreadcrumb(payload)}));
+        dispatch(
+          executeSearch({
+            legacy: logNumericFacetBreadcrumb(payload),
+            next: {
+              actionCause: SearchPageEvents.breadcrumbFacet,
+              getEventExtraPayload: (state) =>
+                new SearchAnalyticsProvider(
+                  () => state
+                ).getRangeFacetBreadcrumbMetadata(
+                  payload.facetId,
+                  payload.selection
+                ),
+            },
+          })
+        );
       },
       executeToggleExclude: (payload) => {
         dispatch(toggleExcludeNumericFacetValue(payload));
-        dispatch(executeSearch({legacy: logNumericFacetBreadcrumb(payload)}));
+        dispatch(
+          executeSearch({
+            legacy: logNumericFacetBreadcrumb(payload),
+            next: {
+              actionCause: SearchPageEvents.breadcrumbFacet,
+              getEventExtraPayload: (state) =>
+                new SearchAnalyticsProvider(
+                  () => state
+                ).getRangeFacetBreadcrumbMetadata(
+                  payload.facetId,
+                  payload.selection
+                ),
+            },
+          })
+        );
       },
       facetValuesSelector: numericFacetActiveValuesSelector,
     };
