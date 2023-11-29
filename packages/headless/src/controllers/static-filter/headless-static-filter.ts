@@ -226,9 +226,9 @@ export function buildStaticFilter(
           next: {
             actionCause: SearchPageEvents.staticFilterClearAll,
             getEventExtraPayload: (state) =>
-              new SearchAnalyticsProvider(() => state).getStaticFilterClearAll(
-                id
-              ),
+              new SearchAnalyticsProvider(
+                () => state
+              ).getStaticFilterClearAllMetadata(id),
           },
         })
       );

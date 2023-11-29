@@ -27,6 +27,7 @@ import {
   logStaticFilterDeselect,
   logStaticFilterSelect,
 } from '../features/static-filter-set/static-filter-set-actions';
+import {logUndoTriggerQuery} from '../features/triggers/trigger-analytics-actions';
 
 const nextSearchEngine = buildSearchEngine({
   configuration: {
@@ -96,6 +97,7 @@ const ANY_STATIC_FILTER_VALUE: StaticFilterValueMetadata = {
   caption: 'any static filter value caption',
   expression: 'any static filter value expression',
 };
+const ANY_QUERY = 'any query';
 
 describe('Analytics Search Migration', () => {
   let callSpy: jest.SpyInstance<Promise<Response | PlatformClientCallError>>;
@@ -441,8 +443,29 @@ describe('Analytics Search Migration', () => {
       next: {
         actionCause: SearchPageEvents.staticFilterClearAll,
         getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getStaticFilterClearAll(
-            ANY_STATIC_FILTER_ID
+          new SearchAnalyticsProvider(
+            () => state
+          ).getStaticFilterClearAllMetadata(ANY_STATIC_FILTER_ID),
+      },
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/trigger/query/undo', async () => {
+    const action = executeSearch({
+      legacy: logUndoTriggerQuery({
+        undoneQuery: ANY_QUERY,
+      }),
+      next: {
+        actionCause: SearchPageEvents.undoTriggerQuery,
+        getEventExtraPayload: (state) =>
+          new SearchAnalyticsProvider(() => state).getUndoTriggerQueryMetadata(
+            ANY_QUERY
           ),
       },
     });

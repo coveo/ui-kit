@@ -184,10 +184,17 @@ export class SearchAnalyticsProvider
     };
   }
 
-  public getStaticFilterClearAll(id: string) {
+  public getStaticFilterClearAllMetadata(id: string) {
     return {
       ...this.getBaseMetadata(),
       staticFilterId: id,
+    };
+  }
+
+  public getUndoTriggerQueryMetadata(undoneQuery: string) {
+    return {
+      ...this.getBaseMetadata(),
+      undoneQuery,
     };
   }
 
