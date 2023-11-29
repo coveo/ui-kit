@@ -300,6 +300,16 @@ export function buildBreadcrumbManager(
               ),
               categoryFacetId: facetId,
             }),
+            next: {
+              actionCause: SearchPageEvents.breadcrumbFacet,
+              getEventExtraPayload: (state) =>
+                new SearchAnalyticsProvider(
+                  () => state
+                ).getCategoryFacetBreadcrumbMetadata(
+                  facetId,
+                  path.map((categoryFacetValue) => categoryFacetValue.value)
+                ),
+            },
           })
         );
       },

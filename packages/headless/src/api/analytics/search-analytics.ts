@@ -198,6 +198,18 @@ export class SearchAnalyticsProvider
     };
   }
 
+  public getCategoryFacetBreadcrumbMetadata(id: string, path: string[]) {
+    const facet = this.state.categoryFacetSet?.[id];
+    const field = facet?.request.field ?? '';
+    return {
+      ...this.getBaseMetadata(),
+      categoryFacetId: id,
+      categoryFacetField: field,
+      categoryFacetPath: path,
+      categoryFacetTitle: `${field}_${id}`,
+    };
+  }
+
   public getOmniboxAnalyticsMetadata(id: string, suggestion: string) {
     const querySuggest = this.state.querySuggest && this.state.querySuggest[id];
     const suggestions = querySuggest!.completions.map(

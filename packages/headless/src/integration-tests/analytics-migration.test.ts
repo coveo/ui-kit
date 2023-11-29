@@ -6,6 +6,7 @@ import {
 } from '../app/search-engine/search-engine';
 import {logInterfaceLoad} from '../features/analytics/analytics-actions';
 import {SearchPageEvents} from '../features/analytics/search-action-cause';
+import {logCategoryFacetBreadcrumb} from '../features/facets/category-facet-set/category-facet-set-analytics-actions';
 import {
   logFacetBreadcrumb,
   logFacetClearAll,
@@ -98,7 +99,7 @@ const ANY_STATIC_FILTER_VALUE: StaticFilterValueMetadata = {
   expression: 'any static filter value expression',
 };
 const ANY_QUERY = 'any query';
-
+const ANY_CATEGORY_FACET_PATH = ['any category facet path'];
 describe('Analytics Search Migration', () => {
   let callSpy: jest.SpyInstance<Promise<Response | PlatformClientCallError>>;
 
@@ -466,6 +467,31 @@ describe('Analytics Search Migration', () => {
         getEventExtraPayload: (state) =>
           new SearchAnalyticsProvider(() => state).getUndoTriggerQueryMetadata(
             ANY_QUERY
+          ),
+      },
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/categoryFacet/breadcrumb', async () => {
+    const action = executeSearch({
+      legacy: logCategoryFacetBreadcrumb({
+        categoryFacetId: ANY_FACET_ID,
+        categoryFacetPath: ANY_CATEGORY_FACET_PATH,
+      }),
+      next: {
+        actionCause: SearchPageEvents.breadcrumbFacet,
+        getEventExtraPayload: (state) =>
+          new SearchAnalyticsProvider(
+            () => state
+          ).getCategoryFacetBreadcrumbMetadata(
+            ANY_FACET_ID,
+            ANY_CATEGORY_FACET_PATH
           ),
       },
     });
