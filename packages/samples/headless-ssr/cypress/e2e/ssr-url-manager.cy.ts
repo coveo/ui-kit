@@ -5,11 +5,10 @@ import {
   waitForHydration,
 } from './utils';
 
-const searchStateKey = 'search-state';
 const routes = ['generic', 'react'] as const;
 
 routes.forEach((route) => {
-  describe(`${route} Headless ssr with search parameter manager example`, () => {
+  describe(`${route} Headless ssr with url manager example`, () => {
     describe('when loading a page without search parameters, after hydration', () => {
       beforeEach(() => {
         spyOnConsole();
@@ -35,9 +34,7 @@ routes.forEach((route) => {
         describe('after the url was updated', () => {
           beforeEach(() => {
             cy.url().should((href) =>
-              expect(new URL(href).searchParams.has(searchStateKey)).to.equal(
-                true
-              )
+              expect(new URL(href).searchParams.has('q')).to.equal(true)
             );
             cy.get<string>('@initial-results').then((initialResults) => {
               getResultTitles().should('not.deep.equal', initialResults);
@@ -46,12 +43,8 @@ routes.forEach((route) => {
 
           it('should have the correct search parameters', () => {
             cy.url().should((href) => {
-              const searchState = new URL(href).searchParams.get(
-                searchStateKey
-              );
-              expect(searchState && JSON.parse(searchState)).to.deep.equal({
-                q: query,
-              });
+              const searchState = new URL(href).searchParams.get('q');
+              expect(searchState).to.equal(query);
             });
           });
 
@@ -89,10 +82,7 @@ routes.forEach((route) => {
     describe('when loading a page with search parameters', () => {
       const query = 'def';
       function getInitialUrl() {
-        const searchParams = new URLSearchParams({
-          [searchStateKey]: JSON.stringify({q: query}),
-        });
-        return `${route}?${searchParams.toString()}`;
+        return `${route}?q=${query}`;
       }
 
       it('renders page in SSR as expected', () => {
@@ -112,14 +102,12 @@ routes.forEach((route) => {
           waitForHydration();
         });
 
-        // TODO: Enable after URL management investigation https://coveord.atlassian.net/browse/KIT-2735
-        it.skip("doesn't update the page", () => {
+        it("doesn't update the page", () => {
           cy.wait(1000);
           cy.get('.search-box input').should('have.value', query);
         });
 
-        // TODO: Enable after URL management investigation https://coveord.atlassian.net/browse/KIT-2735
-        it.skip('should not update the parameters', () => {
+        it('should not update the parameters', () => {
           cy.wait(1000);
           cy.url().should((href) => {
             expect(href.endsWith(getInitialUrl())).to.equal(true);
@@ -135,10 +123,7 @@ routes.forEach((route) => {
 
     describe('when loading a page with invalid search parameters', () => {
       function getInitialUrl() {
-        const searchParams = new URLSearchParams({
-          [searchStateKey]: JSON.stringify({q: ''}),
-        });
-        return `${route}?${searchParams.toString()}`;
+        return `${route}?q=`;
       }
 
       it('renders page in SSR as expected', () => {

@@ -438,7 +438,16 @@ export function buildBreadcrumbManager(
 
     deselectAll: () => {
       controller.deselectAll();
-      dispatch(executeSearch({legacy: logClearBreadcrumbs()}));
+      dispatch(
+        executeSearch({
+          legacy: logClearBreadcrumbs(),
+          next: {
+            actionCause: SearchPageEvents.breadcrumbResetAll,
+            getEventExtraPayload: (state) =>
+              new SearchAnalyticsProvider(() => state).getBaseMetadata(),
+          },
+        })
+      );
     },
   };
 }

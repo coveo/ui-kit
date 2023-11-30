@@ -9,7 +9,6 @@ import {
 } from '../../analytics/analytics-utils';
 import {facetIdDefinition} from '../generic/facet-actions-validation';
 import {RangeFacetSortCriterion} from '../range-facets/generic/interfaces/request';
-import {LogFacetBreadcrumbActionCreatorPayload} from './facet-set-analytics-actions';
 import {
   buildFacetBaseMetadata,
   getStateNeededForFacetMetadata,
@@ -175,24 +174,5 @@ export const logFacetDeselect = (
       );
 
       return client.makeFacetDeselect(metadata);
-    }
-  );
-
-export const logFacetBreadcrumb = (
-  payload: LogFacetBreadcrumbActionCreatorPayload
-): ProductListingAction =>
-  makeProductListingAnalyticsAction(
-    'analytics/facet/breadcrumb',
-    (client, state) => {
-      validatePayload(payload, {
-        facetId: facetIdDefinition,
-        facetValue: requiredNonEmptyString,
-      });
-      const metadata = buildFacetSelectionChangeMetadata(
-        payload,
-        getStateNeededForFacetMetadata(state)
-      );
-
-      return client.makeBreadcrumbFacet(metadata);
     }
   );

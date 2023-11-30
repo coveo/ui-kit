@@ -11,6 +11,7 @@ import {
 } from '../controllers/core/search-box/headless-core-search-box';
 import {logInterfaceLoad} from '../features/analytics/analytics-actions';
 import {SearchPageEvents} from '../features/analytics/search-action-cause';
+import {logDidYouMeanClick} from '../features/did-you-mean/did-you-mean-analytics-actions';
 import {registerCategoryFacet} from '../features/facets/category-facet-set/category-facet-set-actions';
 import {logCategoryFacetBreadcrumb} from '../features/facets/category-facet-set/category-facet-set-analytics-actions';
 import {categoryFacetSetReducer} from '../features/facets/category-facet-set/category-facet-set-slice';
@@ -23,6 +24,7 @@ import {
   logFacetUpdateSort,
 } from '../features/facets/facet-set/facet-set-analytics-actions';
 import {FacetSortCriterion} from '../features/facets/facet-set/interfaces/request';
+import {logClearBreadcrumbs} from '../features/facets/generic/facet-generic-analytics-actions';
 import {registerDateFacet} from '../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {logDateFacetBreadcrumb} from '../features/facets/range-facets/date-facet-set/date-facet-analytics-actions';
 import {dateFacetSetReducer} from '../features/facets/range-facets/date-facet-set/date-facet-set-slice';
@@ -31,7 +33,13 @@ import {NumericFacetValue} from '../features/facets/range-facets/numeric-facet-s
 import {registerNumericFacet} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {logNumericFacetBreadcrumb} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-analytics-actions';
 import {numericFacetSetReducer} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
+import {
+  logNavigateBackward,
+  logNavigateForward,
+  logNoResultsBack,
+} from '../features/history/history-analytics-actions';
 import {fetchQuerySuggestions} from '../features/query-suggest/query-suggest-actions';
+import {logRecentQueryClick} from '../features/recent-queries/recent-queries-analytics-actions';
 import {executeSearch} from '../features/search/search-actions';
 import {logResultsSort} from '../features/sort-criteria/sort-criteria-analytics-actions';
 import {
@@ -165,6 +173,23 @@ describe('Analytics Search Migration', () => {
     assertNextEqualsLegacy(callSpy);
   });
 
+  it('analytics/didyoumean/click', async () => {
+    const action = executeSearch({
+      legacy: logDidYouMeanClick(),
+      next: {
+        actionCause: SearchPageEvents.didyoumeanClick,
+        getEventExtraPayload: (state) =>
+          new SearchAnalyticsProvider(() => state).getBaseMetadata(),
+      },
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
   it('analytics/facet/deselect', async () => {
     const action = executeSearch({
       legacy: logFacetDeselect({
@@ -178,6 +203,22 @@ describe('Analytics Search Migration', () => {
             ANY_FACET_ID,
             ANY_FACET_VALUE
           ),
+      },
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+  it('analytics/facet/deselectAllBreadcrumbs', async () => {
+    const action = executeSearch({
+      legacy: logClearBreadcrumbs(),
+      next: {
+        actionCause: SearchPageEvents.breadcrumbResetAll,
+        getEventExtraPayload: (state) =>
+          new SearchAnalyticsProvider(() => state).getBaseMetadata(),
       },
     });
 
@@ -234,6 +275,23 @@ describe('Analytics Search Migration', () => {
     assertNextEqualsLegacy(callSpy);
   });
 
+  it('history/analytics/forward', async () => {
+    const action = executeSearch({
+      legacy: logNavigateForward(),
+      next: {
+        actionCause: SearchPageEvents.historyForward,
+        getEventExtraPayload: (state) =>
+          new SearchAnalyticsProvider(() => state).getBaseMetadata(),
+      },
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
   it('analytics/facet/breadcrumb', async () => {
     const action = executeSearch({
       legacy: logFacetBreadcrumb({
@@ -257,6 +315,23 @@ describe('Analytics Search Migration', () => {
     assertNextEqualsLegacy(callSpy);
   });
 
+  it('history/analytics/backward', async () => {
+    const action = executeSearch({
+      legacy: logNavigateBackward(),
+      next: {
+        actionCause: SearchPageEvents.historyBackward,
+        getEventExtraPayload: (state) =>
+          new SearchAnalyticsProvider(() => state).getBaseMetadata(),
+      },
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
   it('analytics/facet/reset', async () => {
     const action = executeSearch({
       legacy: logFacetClearAll(ANY_FACET_ID),
@@ -266,6 +341,23 @@ describe('Analytics Search Migration', () => {
           new SearchAnalyticsProvider(() => state).getFacetClearAllMetadata(
             ANY_FACET_ID
           ),
+      },
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('history/analytics/noresultsback', async () => {
+    const action = executeSearch({
+      legacy: logNoResultsBack(),
+      next: {
+        actionCause: SearchPageEvents.noResultsBack,
+        getEventExtraPayload: (state) =>
+          new SearchAnalyticsProvider(() => state).getBaseMetadata(),
       },
     });
 
@@ -541,6 +633,23 @@ describe('Analytics Search Migration', () => {
             ANY_FACET_ID,
             ANY_CATEGORY_FACET_PATH
           ),
+      },
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/recentQueries/click', async () => {
+    const action = executeSearch({
+      legacy: logRecentQueryClick(),
+      next: {
+        actionCause: SearchPageEvents.recentQueryClick,
+        getEventExtraPayload: (state) =>
+          new SearchAnalyticsProvider(() => state).getBaseMetadata(),
       },
     });
 
