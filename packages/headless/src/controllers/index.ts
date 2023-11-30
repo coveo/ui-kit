@@ -426,7 +426,9 @@ export {buildAutomaticFacetGenerator} from './facets/automatic-facet-generator/h
 export type {
   GeneratedAnswer,
   GeneratedAnswerState,
+  GeneratedAnswerProps,
   GeneratedAnswerCitation,
+  GeneratedResponseFormat,
 } from './generated-answer/headless-generated-answer';
 export {buildGeneratedAnswer} from './generated-answer/headless-generated-answer';
 
