@@ -16,10 +16,14 @@ import {
   logFacetUpdateSort,
 } from '../features/facets/facet-set/facet-set-analytics-actions';
 import {FacetSortCriterion} from '../features/facets/facet-set/interfaces/request';
+import {registerDateFacet} from '../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {logDateFacetBreadcrumb} from '../features/facets/range-facets/date-facet-set/date-facet-analytics-actions';
+import {dateFacetSetReducer} from '../features/facets/range-facets/date-facet-set/date-facet-set-slice';
 import {DateFacetValue} from '../features/facets/range-facets/date-facet-set/interfaces/response';
 import {NumericFacetValue} from '../features/facets/range-facets/numeric-facet-set/interfaces/response';
+import {registerNumericFacet} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {logNumericFacetBreadcrumb} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-analytics-actions';
+import {numericFacetSetReducer} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {executeSearch} from '../features/search/search-actions';
 import {logResultsSort} from '../features/sort-criteria/sort-criteria-analytics-actions';
 import {
@@ -265,6 +269,26 @@ describe('Analytics Search Migration', () => {
   });
 
   it('analytics/dateFacet/breadcrumb', async () => {
+    legacySearchEngine.addReducers({
+      dateFacetSet: dateFacetSetReducer,
+    });
+    nextSearchEngine.addReducers({
+      dateFacetSet: dateFacetSetReducer,
+    });
+    legacySearchEngine.dispatch(
+      registerDateFacet({
+        facetId: ANY_FACET_ID,
+        field: ANY_FACET_ID,
+        generateAutomaticRanges: true,
+      })
+    );
+    nextSearchEngine.dispatch(
+      registerDateFacet({
+        facetId: ANY_FACET_ID,
+        field: ANY_FACET_ID,
+        generateAutomaticRanges: true,
+      })
+    );
     const action = executeSearch({
       legacy: logDateFacetBreadcrumb({
         facetId: ANY_FACET_ID,
@@ -290,6 +314,26 @@ describe('Analytics Search Migration', () => {
   });
 
   it('analytics/numericFacet/breadcrumb', async () => {
+    legacySearchEngine.addReducers({
+      dateFacetSet: numericFacetSetReducer,
+    });
+    nextSearchEngine.addReducers({
+      dateFacetSet: numericFacetSetReducer,
+    });
+    legacySearchEngine.dispatch(
+      registerNumericFacet({
+        facetId: ANY_FACET_ID,
+        field: ANY_FACET_ID,
+        generateAutomaticRanges: true,
+      })
+    );
+    nextSearchEngine.dispatch(
+      registerNumericFacet({
+        facetId: ANY_FACET_ID,
+        field: ANY_FACET_ID,
+        generateAutomaticRanges: true,
+      })
+    );
     const action = executeSearch({
       legacy: logNumericFacetBreadcrumb({
         facetId: ANY_FACET_ID,
@@ -340,37 +384,20 @@ describe('Analytics Search Migration', () => {
   //     querySuggestReducer,
   //   });
 
-  //   nextSearchEngine.state.querySuggest = {} as Record<
-  //     string,
-  //     QuerySuggestState
-  //   >;
+  //   nextSearchEngine.dispatch(
+  //     registerQuerySuggest({
+  //       id: 'sd',
+  //       count: 12,
+  //     })
+  //   );
 
-  //   legacySearchEngine.state.querySuggest = {} as Record<
-  //     string,
-  //     QuerySuggestState
-  //   >;
+  //   legacySearchEngine.dispatch(
+  //     registerQuerySuggest({
+  //       id: 'sd',
+  //       count: 12,
+  //     })
+  //   );
 
-  //   nextSearchEngine.state.querySuggest['sd'] = {
-  //     id: 'sd',
-  //     completions: [],
-  //     responseId: 'sd',
-  //     partialQueries: [],
-  //     count: 3,
-  //     currentRequestId: 'sd',
-  //     error: null,
-  //     isLoading: false,
-  //   };
-
-  //   legacySearchEngine.state.querySuggest['sd'] = {
-  //     id: 'sd',
-  //     completions: [],
-  //     responseId: 'sd',
-  //     partialQueries: [],
-  //     count: 3,
-  //     currentRequestId: 'sd',
-  //     error: null,
-  //     isLoading: false,
-  //   };
   //   const action = executeSearch({
   //     legacy: logQuerySuggestionClick({id: 'sd', suggestion: 'Sd'}),
   //     next: {

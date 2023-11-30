@@ -6,10 +6,8 @@ export const getRangeFacetMetadata = (
   state: Partial<SearchAppState>,
   {facetId, selection}: RangeFacetSelectionPayload
 ): FacetRangeMetadata => {
-  const facet =
-    state.dateFacetSet?.[facetId] || state.numericFacetSet?.[facetId];
-
-  const facetField = facet?.request.field ?? '';
+  const facet = state.dateFacetSet![facetId] || state.numericFacetSet![facetId];
+  const facetField = facet.request.field;
   const facetTitle = `${facetField}_${facetId}`;
   return {
     facetId,
