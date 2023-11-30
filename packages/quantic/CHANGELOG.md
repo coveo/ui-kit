@@ -1,3 +1,21 @@
+# 2.40.0 (2023-11-29)
+
+### Bug Fixes
+
+- **genai:** dispatch like and dislike properly ([#3393](https://github.com/coveo/ui-kit/issues/3393)) ([43ca99a](https://github.com/coveo/ui-kit/commits/43ca99a3be81fd2948d6eb457419d978255cd72f))
+- **quantic:** added needed salesforce fields to default fields to include ([#3413](https://github.com/coveo/ui-kit/issues/3413)) ([047e780](https://github.com/coveo/ui-kit/commits/047e780c1d3a27f83308b587774afa92c4dd2243))
+- **quantic:** fix citation pop over glitch ([#3394](https://github.com/coveo/ui-kit/issues/3394)) ([521f4d4](https://github.com/coveo/ui-kit/commits/521f4d42679e772dcf97b821a013f33b318bd300))
+- **quantic:** fix clear button outline styling of expandable search box ([#3421](https://github.com/coveo/ui-kit/issues/3421)) ([0cf0481](https://github.com/coveo/ui-kit/commits/0cf048122759a2cf44fc3a43882be9a5eef16267))
+- **quantic:** fix issue with expandable searchbox hiding tabs ([#3404](https://github.com/coveo/ui-kit/issues/3404)) ([8ab8716](https://github.com/coveo/ui-kit/commits/8ab87167f2fd0328ad13f0321ccc0876747d7cd1))
+- **quantic:** make sure the rephrase buttons in rga are right aligned ([#3402](https://github.com/coveo/ui-kit/issues/3402)) ([5549745](https://github.com/coveo/ui-kit/commits/554974531a51a8ebb8ea614078ea20be04c94f2f))
+- **RGA:** no longer showing citation popover on small screens ([#3398](https://github.com/coveo/ui-kit/issues/3398)) ([4b170f6](https://github.com/coveo/ui-kit/commits/4b170f6949812a8218fef0deae115597728bc421))
+
+### Features
+
+- **doc:** generate documentation for generated answer in headless, atomic and quantic ([#3397](https://github.com/coveo/ui-kit/issues/3397)) ([c5df083](https://github.com/coveo/ui-kit/commits/c5df0835dde13ea54376a04ba4945427ac7155e9))
+- **quantic:** make quantic citations use the headless interactive citation controller ([#3412](https://github.com/coveo/ui-kit/issues/3412)) ([0438978](https://github.com/coveo/ui-kit/commits/0438978f3b8e85da793f5da51780a85bcec2d7d4))
+- **quantic:** quantic tooltip made responsive ([#3428](https://github.com/coveo/ui-kit/issues/3428)) ([633784d](https://github.com/coveo/ui-kit/commits/633784d19da510499c9f8fffe17ea9d4a65009a6))
+
 ## 2.39.1 (2023-11-16)
 
 ### Bug Fixes
