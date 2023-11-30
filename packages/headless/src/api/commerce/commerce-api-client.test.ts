@@ -37,6 +37,7 @@ describe('commerce api client', () => {
     url: platformUrl,
     trackingId: trackingId,
     language: req.language ?? '',
+    country: req.country ?? '',
     currency: req.currency ?? '',
     clientId: req.clientId ?? '',
     context: req.context ?? {

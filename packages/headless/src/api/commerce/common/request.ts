@@ -9,11 +9,13 @@ import {
   PageParam,
   SortParam,
   TrackingIdParam,
+  CountryParam,
 } from '../commerce-api-params';
 
 export type CommerceAPIRequest = BaseParam &
   TrackingIdParam &
   LanguageParam &
+  CountryParam &
   CurrencyParam &
   ClientIdParam &
   ContextParam &
@@ -34,6 +36,7 @@ const prepareRequestParams = (req: CommerceAPIRequest) => {
     clientId,
     context,
     language,
+    country,
     currency,
     page,
     facets,
@@ -44,6 +47,7 @@ const prepareRequestParams = (req: CommerceAPIRequest) => {
     clientId,
     context,
     language,
+    country,
     currency,
     page,
     facets,
