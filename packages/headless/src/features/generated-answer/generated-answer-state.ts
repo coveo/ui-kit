@@ -46,6 +46,10 @@ export interface GeneratedAnswerState {
     code?: number;
     isRetryable?: boolean;
   };
+  /**
+   * Determines if the generated answer feedback was submitted.
+   */
+  feedbackSubmitted: boolean;
 }
 
 export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
@@ -60,5 +64,6 @@ export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
       answerStyle: 'default',
     },
     feedbackModalOpen: false,
+    feedbackSubmitted: false,
   };
 }

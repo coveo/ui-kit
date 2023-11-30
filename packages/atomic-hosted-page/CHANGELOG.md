@@ -1,3 +1,9 @@
+## 0.5.7 (2023-11-29)
+
+### Bug Fixes
+
+- **deps:** update dependency @stencil/core to v4.7.2 j:kit-282 ([#3418](https://github.com/coveo/ui-kit/issues/3418)) ([d142351](https://github.com/coveo/ui-kit/commits/d142351f38b1c8dd8cba935991e0fd70a80122d8))
+
 ## 0.5.6 (2023-11-16)
 
 ## 0.5.4 (2023-11-08)

@@ -19,7 +19,7 @@ export interface InteractiveCitationOptions
 export interface InteractiveCitationProps extends InteractiveResultCoreProps {
   /**
    * The options for the `InteractiveCitation` controller.
-   * */
+   */
   options: InteractiveCitationOptions;
 }
 
