@@ -1,5 +1,5 @@
 import {NextRequest} from 'next/server';
-import {analyticsMiddleware} from '../../common/components/common/analytics-middleware';
+import {analyticsNextMiddleware} from '../../common/components/common/analytics-next-middleware';
 
 /**
  * This will assign users a new client ID when it is their first visit, unless they have opted out of tracking.
@@ -8,7 +8,7 @@ import {analyticsMiddleware} from '../../common/components/common/analytics-midd
  * For more info on middlewares, visit https://nextjs.org/docs/app/building-your-application/routing/middleware.
  */
 export default function middleware(request: NextRequest) {
-  const response = analyticsMiddleware(request);
+  const response = analyticsNextMiddleware(request);
 
   // Your other middleware functions here
 
