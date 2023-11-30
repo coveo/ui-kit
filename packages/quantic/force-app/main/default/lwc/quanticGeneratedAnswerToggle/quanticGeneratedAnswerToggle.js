@@ -5,10 +5,16 @@ import {LightningElement, api} from 'lwc';
  * The `QuanticGeneratedAnswerToggle` component displays a toggle button responsible for displaying or hiding the generated answer.
  * @category Internal
  * @example
- * <c-quantic-generated-answer-toggle></c-quantic-c-quantic-generated-answer-toggle>
+ * <c-quantic-generated-answer-toggle is-generated-answer-visible></c-quantic-c-quantic-generated-answer-toggle>
  */
 export default class QuanticGeneratedAnswerToggle extends LightningElement {
+  /**
+   * Indicates whether the generated answer is visible.
+   * @api
+   * @type {boolean}
+   */
   @api isGeneratedAnswerVisible;
+
   labels = {
     showGeneratedAnswer,
   };
