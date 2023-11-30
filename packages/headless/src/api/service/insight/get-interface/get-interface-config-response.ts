@@ -85,6 +85,7 @@ interface Tab {
 interface SettingsSection {
   createArticle: InsightOption;
   fullSearch: InsightOption;
+  genQA: InsightOption;
   userActions: InsightUserActionOptions;
 }
 
