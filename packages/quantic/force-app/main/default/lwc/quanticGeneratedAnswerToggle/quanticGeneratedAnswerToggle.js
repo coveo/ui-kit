@@ -46,7 +46,7 @@ export default class QuanticGeneratedAnswerToggle extends LightningElement {
     return this.template.querySelector('c-quantic-tooltip');
   }
 
-  get genratedAnswerToggleTooltip() {
+  get generatedAnswerToggleTooltip() {
     return this.isGeneratedAnswerVisible
       ? this.labels.generatedAnswerOn
       : this.labels.generatedAnswerOff;
