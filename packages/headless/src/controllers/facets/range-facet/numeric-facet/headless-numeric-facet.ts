@@ -5,7 +5,10 @@ import {
   logFacetUpdateSort,
 } from '../../../../features/facets/facet-set/facet-set-analytics-actions';
 import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
-import {getAnalyticsActionForToggleRangeFacetSelect} from '../../../../features/facets/range-facets/generic/range-facet-utils';
+import {
+  getLegacyAnalyticsActionForToggleRangeFacetSelect,
+  getAnalyticsActionForToggleFacetSelect,
+} from '../../../../features/facets/range-facets/generic/range-facet-utils';
 import {NumericRangeRequest} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/request';
 import {NumericFacetValue} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
 import {numericFacetSetReducer as numericFacetSet} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
@@ -78,10 +81,11 @@ export function buildNumericFacet(
       coreController.toggleSelect(selection);
       dispatch(
         executeSearch({
-          legacy: getAnalyticsActionForToggleRangeFacetSelect(
+          legacy: getLegacyAnalyticsActionForToggleRangeFacetSelect(
             getFacetId(),
             selection
           ),
+          next: getAnalyticsActionForToggleFacetSelect(getFacetId(), selection),
         })
       );
     },
