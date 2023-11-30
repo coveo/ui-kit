@@ -23,5 +23,3 @@ export default function middleware(request: NextRequest) {
 export const config = {
   matcher: ['/react', '/generic'],
 };
-
-// TODO: add example in page router
