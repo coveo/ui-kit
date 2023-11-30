@@ -29,8 +29,18 @@ export const buildRequest = (req: CommerceAPIRequest, path: string) => {
 };
 
 const prepareRequestParams = (req: CommerceAPIRequest) => {
-  const {clientId, context, language, currency, page, facets, sort} = req;
+  const {
+    trackingId,
+    clientId,
+    context,
+    language,
+    currency,
+    page,
+    facets,
+    sort,
+  } = req;
   return {
+    trackingId,
     clientId,
     context,
     language,
@@ -48,8 +58,8 @@ export const baseRequest = (
   PlatformClientCallOptions,
   'accessToken' | 'method' | 'contentType' | 'url' | 'origin'
 > => {
-  const {url, organizationId, accessToken, trackingId} = req;
-  const baseUrl = `${url}/rest/organizations/${organizationId}/trackings/${trackingId}/commerce/v2/${path}`;
+  const {url, organizationId, accessToken} = req;
+  const baseUrl = `${url}/rest/organizations/${organizationId}/commerce/v2/${path}`;
 
   return {
     accessToken,
