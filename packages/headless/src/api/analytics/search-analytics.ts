@@ -156,13 +156,13 @@ export class SearchAnalyticsProvider
     };
   }
 
-  private getFacetRequest = (facetId: string) => {
+  private getFacetRequest = (id: string) => {
     return (
-      this.state.facetSet?.[facetId]?.request ||
-      this.state.categoryFacetSet?.[facetId]?.request ||
-      this.state.dateFacetSet?.[facetId]?.request ||
-      this.state.numericFacetSet?.[facetId]?.request ||
-      this.state.automaticFacetSet?.set[facetId]?.response
+      this.state.facetSet?.[id]?.request ||
+      this.state.categoryFacetSet?.[id]?.request ||
+      this.state.dateFacetSet?.[id]?.request ||
+      this.state.numericFacetSet?.[id]?.request ||
+      this.state.automaticFacetSet?.set[id]?.response
     );
   };
 
@@ -174,20 +174,20 @@ export class SearchAnalyticsProvider
   }
 
   public getStaticFilterToggleMetadata(
-    id: string,
-    value: StaticFilterValueMetadata
+    staticFilterId: string,
+    staticFilterValue: StaticFilterValueMetadata
   ) {
     return {
       ...this.getBaseMetadata(),
-      staticFilterId: id,
-      staticFilterValue: value,
+      staticFilterId: staticFilterId,
+      staticFilterValue: staticFilterValue,
     };
   }
 
-  public getStaticFilterClearAllMetadata(id: string) {
+  public getStaticFilterClearAllMetadata(staticFilterId: string) {
     return {
       ...this.getBaseMetadata(),
-      staticFilterId: id,
+      staticFilterId: staticFilterId,
     };
   }
 
@@ -198,15 +198,18 @@ export class SearchAnalyticsProvider
     };
   }
 
-  public getCategoryFacetBreadcrumbMetadata(id: string, path: string[]) {
-    const facet = this.state.categoryFacetSet?.[id];
+  public getCategoryFacetBreadcrumbMetadata(
+    categoryFacetId: string,
+    categoryFacetPath: string[]
+  ) {
+    const facet = this.state.categoryFacetSet?.[categoryFacetId];
     const field = facet?.request.field ?? '';
     return {
       ...this.getBaseMetadata(),
-      categoryFacetId: id,
+      categoryFacetId: categoryFacetId,
       categoryFacetField: field,
-      categoryFacetPath: path,
-      categoryFacetTitle: `${field}_${id}`,
+      categoryFacetPath: categoryFacetPath,
+      categoryFacetTitle: `${field}_${categoryFacetId}`,
     };
   }
 
