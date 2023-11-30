@@ -1,3 +1,5 @@
+import generatedAnswerOff from '@salesforce/label/c.quantic_GeneratedAnswerOff';
+import generatedAnswerOn from '@salesforce/label/c.quantic_GeneratedAnswerOn';
 import showGeneratedAnswer from '@salesforce/label/c.quantic_ShowGeneratedAnswer';
 import {LightningElement, api} from 'lwc';
 
@@ -17,6 +19,8 @@ export default class QuanticGeneratedAnswerToggle extends LightningElement {
 
   labels = {
     showGeneratedAnswer,
+    generatedAnswerOn,
+    generatedAnswerOff,
   };
 
   handleMouseEnter() {
@@ -40,5 +44,11 @@ export default class QuanticGeneratedAnswerToggle extends LightningElement {
    */
   get tooltipComponent() {
     return this.template.querySelector('c-quantic-tooltip');
+  }
+
+  get genratedAnswerToggleTooltip() {
+    return this.isGeneratedAnswerVisible
+      ? this.labels.generatedAnswerOn
+      : this.labels.generatedAnswerOff;
   }
 }
