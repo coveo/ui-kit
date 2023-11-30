@@ -3,7 +3,7 @@ import {analyticsNextMiddleware} from '../../common/components/common/analytics-
 
 /**
  * This will assign users a new client ID when it is their first visit, unless they have opted out of tracking.
- * make sure to return the response object from the middleware function.
+ * Make sure to return the response object from the middleware function.
  *
  * For more info on middlewares, visit https://nextjs.org/docs/app/building-your-application/routing/middleware.
  */
