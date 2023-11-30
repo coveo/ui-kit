@@ -16,6 +16,7 @@ import {
 export interface ContextOptions {
   trackingId: string;
   language: string;
+  country: string;
   currency: string;
   clientId: string;
   user?: User;
@@ -63,6 +64,12 @@ export interface Context extends Controller {
   setLanguage(language: string): void;
 
   /**
+   * Sets the country.
+   * @param country - The new country.
+   */
+  setCountry(country: string): void;
+
+  /**
    * Sets the currency.
    * @param currency - The new currency.
    */
@@ -95,6 +102,7 @@ export interface Context extends Controller {
 export interface ContextState {
   trackingId: string;
   language: string;
+  country: string;
   currency: string;
   clientId: string;
   user?: User;
@@ -154,6 +162,14 @@ export function buildContext(
         setContext({
           ...getState().commerceContext,
           language,
+        })
+      ),
+
+    setCountry: (country: string) =>
+      dispatch(
+        setContext({
+          ...getState().commerceContext,
+          country,
         })
       ),
 
