@@ -10,7 +10,6 @@ import irrelevant from '@salesforce/label/c.quantic_Irrelevant';
 import loading from '@salesforce/label/c.quantic_Loading';
 import other from '@salesforce/label/c.quantic_Other';
 import outOfDate from '@salesforce/label/c.quantic_OutOfDate';
-import showGeneratedAnswer from '@salesforce/label/c.quantic_ShowGeneratedAnswer';
 import thisAnswerWasHelpful from '@salesforce/label/c.quantic_ThisAnswerWasHelpful';
 import thisAnswerWasNotHelpful from '@salesforce/label/c.quantic_ThisAnswerWasNotHelpful';
 import tryAgain from '@salesforce/label/c.quantic_TryAgain';
@@ -84,7 +83,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     thisAnswerWasHelpful,
     tryAgain,
     couldNotGenerateAnAnswer,
-    showGeneratedAnswer,
     other,
     harmful,
     irrelevant,
