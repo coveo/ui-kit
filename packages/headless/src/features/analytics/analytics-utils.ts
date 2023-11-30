@@ -780,7 +780,7 @@ async function logNextEvent<PayloadType>(
   type: string,
   payload: PayloadType
 ): Promise<void> {
-  //@ts-ignore
+  //@ts-expect-error
   await emitEvent(type, payload);
   return;
 }

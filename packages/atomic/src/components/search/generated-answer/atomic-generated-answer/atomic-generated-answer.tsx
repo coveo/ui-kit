@@ -33,7 +33,22 @@ import {SourceCitations} from './source-citations';
 import {TypingLoader} from './typing-loader';
 
 /**
- * @internal
+ * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
+ * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
+ *
+ * @part container - The container displaying the generated answer.
+ * @part header-label - The header of the generated answer container.
+ * @part feedback-button - The "like" and "dislike" buttons.
+ * @part toggle - The switch to toggle the visibility of the generated answer.
+ * @part copy-button - The "Copy answer" button.
+ * @part retry-container - The container for the "retry" section.
+ * @part generated-text - The text of the generated answer.
+ * @part citations-label - The header of the citations list.
+ * @part rephrase-label - The header of the rephrase options.
+ * @part rephrase-button - The button for each of the rephrase options (step-by-step instructions, bulleted list, and summary).
+ *
+ * @part citation - The link that allows the user to navigate to the item.
+ * @part citation-popover - The pop-up that shows an item preview when the user hovers over the citation.
  */
 @Component({
   tag: 'atomic-generated-answer',
@@ -61,9 +76,6 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   @State()
   private modalRef!: HTMLAtomicGeneratedAnswerFeedbackModalElement;
 
-  @State() hidden = true;
-  @State() feedbackSent = false;
-
   @Element() private host!: HTMLElement;
 
   @State()
@@ -73,9 +85,9 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
    * The answer style to apply when the component first loads.
    * Options:
    *   - `default`: Generates the answer without additional formatting instructions.
-   *   - `bullet`: Requests the answer to be generated in bullet-points.
-   *   - `step`: Requests the answer to be generated in step-by-step instructions.
-   *   - `concise`: Requests the answer to be generated as concisely as possible.
+   *   - `bullet`: Requests that the answer is formatted as a bulleted list.
+   *   - `step`: Requests that the answer is formatted as a series of step-by-step instructions.
+   *   - `concise`: Requests that the generated answer is as concise as possible.
    */
   @Prop() answerStyle: GeneratedAnswerStyle = 'default';
 
@@ -219,6 +231,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
                 );
               }}
               interactiveCitation={interactiveCitation}
+              exportparts="citation,citation-popover"
             />
           </li>
         );
@@ -227,7 +240,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   }
 
   private clickDislike = () => {
-    if (this.modalRef) {
+    if (this.modalRef && !this.generatedAnswerState.feedbackSubmitted) {
       this.modalRef.isOpen = true;
     }
     this.generatedAnswer.dislike();
@@ -253,7 +266,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
                     title={this.bindings.i18n.t('this-answer-was-helpful')}
                     variant="like"
                     active={this.generatedAnswerState.liked}
-                    onClick={this.generatedAnswer.like}
+                    onClick={() => this.generatedAnswer.like()}
                   />
                   <FeedbackButton
                     title={this.bindings.i18n.t('this-answer-was-not-helpful')}

@@ -46,7 +46,7 @@ const GENERATED_ANSWER_DATA_KEY = 'coveo-generated-answer-data';
 
 /**
  * The `QuanticGeneratedAnswer` component automatically generates an answer using Coveo machine learning models to answer the query executed by the user.
- * @category Internal
+ * @category Search
  * @example
  * <c-quantic-generated-answer engine-id={engineId} answer-style="step"></c-quantic-generated-answer>
  */
@@ -208,14 +208,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       this.feedbackState = FEEDBACK_NEUTRAL_STATE;
     }
   }
-
-  /**
-   * handles clicking on a citation.
-   * @param {string} id
-   */
-  handleCitationClick = (id) => {
-    this.generatedAnswer.logCitationClick(id);
-  };
 
   /**
    * handles hovering over a citation.
@@ -388,7 +380,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get generatedAnswerFooterCssClass() {
-    return `slds-grid generated-answer__footer--${
+    return `slds-grid slds-grid_align-spread generated-answer__footer--${
       this.multilineFooter ? 'multiline' : 'standard'
     }`;
   }

@@ -100,6 +100,10 @@ export const closeGeneratedAnswerFeedbackModal = createAction(
   'generatedAnswer/feedbackModal/close'
 );
 
+export const sendGeneratedAnswerFeedback = createAction(
+  'generatedAnswer/sendFeedback'
+);
+
 export const setIsLoading = createAction(
   'generatedAnswer/setIsLoading',
   (payload: boolean) => validatePayload(payload, booleanValue)
