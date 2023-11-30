@@ -4,7 +4,7 @@ import type {NextRequest} from 'next/server';
 /* cspell:disable-next-line */
 import {v4 as uuidv4} from 'uuid';
 
-class AnalyticsMiddleware {
+class AnalyticsNextMiddleware {
   private static cookieName = 'coveo_visitorId';
   private response: NextResponse;
 
@@ -34,23 +34,23 @@ class AnalyticsMiddleware {
   }
 
   private get clientId() {
-    return this.request.cookies.get(AnalyticsMiddleware.cookieName)?.value;
+    return this.request.cookies.get(AnalyticsNextMiddleware.cookieName)?.value;
   }
 
   private setCurrentClientId() {
     /* cspell:disable-next-line */
-    this.response.cookies.set(AnalyticsMiddleware.cookieName, uuidv4(), {
+    this.response.cookies.set(AnalyticsNextMiddleware.cookieName, uuidv4(), {
       maxAge: 31556926000,
     }); // 1 year first party cookie
   }
 
   private deleteCookie() {
-    this.request.cookies.delete(AnalyticsMiddleware.cookieName);
-    this.response.cookies.delete(AnalyticsMiddleware.cookieName);
+    this.request.cookies.delete(AnalyticsNextMiddleware.cookieName);
+    this.response.cookies.delete(AnalyticsNextMiddleware.cookieName);
   }
 }
 
-export function analyticsMiddleware(request: NextRequest) {
-  const middleware = new AnalyticsMiddleware(request);
+export function analyticsNextMiddleware(request: NextRequest) {
+  const middleware = new AnalyticsNextMiddleware(request);
   return middleware.init();
 }
