@@ -1,8 +1,6 @@
 import {NextResponse} from 'next/server';
 import type {NextRequest} from 'next/server';
-
-/* cspell:disable-next-line */
-import {v4 as uuidv4} from 'uuid';
+import {v4 as uuid} from 'uuid';
 
 class AnalyticsNextMiddleware {
   private static cookieName = 'coveo_visitorId';
@@ -23,7 +21,7 @@ class AnalyticsNextMiddleware {
 
   private doNotTrack() {
     const {headers, cookies} = this.request;
-    const hasGlobalPrivacyControlHeader = headers.get('Sec-GPC') === 'true';
+    const hasGlobalPrivacyControlHeader = headers.get('Sec-GPC') === '1';
     const hasDoNotTrackHeader = headers.get('DNT') === '1';
     const hasOptOutCookie = cookies.get('coveo_do_not_track')?.value === '1';
     return (
@@ -36,8 +34,7 @@ class AnalyticsNextMiddleware {
   }
 
   private setCurrentClientId() {
-    /* cspell:disable-next-line */
-    this.response.cookies.set(AnalyticsNextMiddleware.cookieName, uuidv4(), {
+    this.response.cookies.set(AnalyticsNextMiddleware.cookieName, uuid(), {
       maxAge: 31556926000,
     }); // 1 year first party cookie
   }
