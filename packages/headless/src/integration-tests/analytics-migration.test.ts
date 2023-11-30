@@ -7,6 +7,11 @@ import {
 import {logInterfaceLoad} from '../features/analytics/analytics-actions';
 import {SearchPageEvents} from '../features/analytics/search-action-cause';
 import {logDidYouMeanClick} from '../features/did-you-mean/did-you-mean-analytics-actions';
+import {
+  logFacetDeselect,
+  logFacetExclude,
+  logFacetSelect,
+} from '../features/facets/facet-set/facet-set-analytics-actions';
 import {logClearBreadcrumbs} from '../features/facets/generic/facet-generic-analytics-actions';
 import {
   logNavigateBackward,
@@ -69,6 +74,9 @@ const excludedBaseProperties = [
   'trackingId',
 ];
 
+const ANY_FACET_VALUE = 'any facet value';
+const ANY_FACET_ID = 'any facet id';
+
 describe('Analytics Search Migration', () => {
   let callSpy: jest.SpyInstance<Promise<Response | PlatformClientCallError>>;
 
@@ -98,6 +106,29 @@ describe('Analytics Search Migration', () => {
     assertNextEqualsLegacy(callSpy);
   });
 
+  it('analytics/facet/select', async () => {
+    const action = executeSearch({
+      legacy: logFacetSelect({
+        facetId: ANY_FACET_ID,
+        facetValue: ANY_FACET_VALUE,
+      }),
+      next: {
+        actionCause: SearchPageEvents.facetSelect,
+        getEventExtraPayload: (state) =>
+          new SearchAnalyticsProvider(() => state).getFacetMetadata(
+            ANY_FACET_ID,
+            ANY_FACET_VALUE
+          ),
+      },
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
   it('analytics/didyoumean/click', async () => {
     const action = executeSearch({
       legacy: logDidYouMeanClick(),
@@ -115,6 +146,28 @@ describe('Analytics Search Migration', () => {
     assertNextEqualsLegacy(callSpy);
   });
 
+  it('analytics/facet/deselect', async () => {
+    const action = executeSearch({
+      legacy: logFacetDeselect({
+        facetId: ANY_FACET_ID,
+        facetValue: ANY_FACET_VALUE,
+      }),
+      next: {
+        actionCause: SearchPageEvents.facetDeselect,
+        getEventExtraPayload: (state) =>
+          new SearchAnalyticsProvider(() => state).getFacetMetadata(
+            ANY_FACET_ID,
+            ANY_FACET_VALUE
+          ),
+      },
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
   it('analytics/facet/deselectAllBreadcrumbs', async () => {
     const action = executeSearch({
       legacy: logClearBreadcrumbs(),
@@ -132,6 +185,28 @@ describe('Analytics Search Migration', () => {
     assertNextEqualsLegacy(callSpy);
   });
 
+  it('analytics/facet/exclude', async () => {
+    const action = executeSearch({
+      legacy: logFacetExclude({
+        facetId: ANY_FACET_ID,
+        facetValue: ANY_FACET_VALUE,
+      }),
+      next: {
+        actionCause: SearchPageEvents.facetExclude,
+        getEventExtraPayload: (state) =>
+          new SearchAnalyticsProvider(() => state).getFacetMetadata(
+            ANY_FACET_ID,
+            ANY_FACET_VALUE
+          ),
+      },
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
   it('history/analytics/forward', async () => {
     const action = executeSearch({
       legacy: logNavigateForward(),
