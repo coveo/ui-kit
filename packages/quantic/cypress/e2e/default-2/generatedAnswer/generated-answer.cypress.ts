@@ -1,3 +1,4 @@
+import {performSearch} from '../../../page-objects/actions/action-perform-search';
 import {configure} from '../../../page-objects/configurator';
 import {
   interceptSearch,
@@ -173,6 +174,8 @@ describe('quantic-generated-answer', () => {
         });
 
         it('should send detailed feedback', () => {
+          const exampleDetails = 'example details';
+
           Expect.displayLikeButton(true);
           Expect.displayDislikeButton(true);
           Expect.likeButtonIsChecked(false);
@@ -187,7 +190,6 @@ describe('quantic-generated-answer', () => {
           });
 
           scope('when selecting a feedback option', () => {
-            const exampleDetails = 'example details';
             Actions.clickFeedbackOption(feedbackOptions.indexOf(otherOption));
             Actions.typeInFeedbackDetailsInput(exampleDetails);
             Actions.clickFeedbackSubmitButton();
@@ -207,11 +209,41 @@ describe('quantic-generated-answer', () => {
             'when trying to open the feedback modal after rephrasing the generated answer',
             () => {
               const secondStreamId = crypto.randomUUID();
+
               mockSearchWithGeneratedAnswer(secondStreamId);
               mockStreamResponse(secondStreamId, genQaMessageTypePayload);
               Actions.clickRephraseButton(rephraseOptions[0]);
               Actions.dislikeGeneratedAnswer();
               Expect.displayFeedbackModal(true);
+              Actions.clickFeedbackOption(feedbackOptions.indexOf(otherOption));
+              Actions.typeInFeedbackDetailsInput(exampleDetails);
+              Actions.clickFeedbackSubmitButton();
+              Expect.logGeneratedAnswerFeedbackSubmit(secondStreamId, {
+                reason: otherOption,
+                details: exampleDetails,
+              });
+              Actions.clickFeedbackDoneButton();
+            }
+          );
+
+          scope(
+            'when trying to open the feedback modal after executing a new query',
+            () => {
+              const thirdStreamId = crypto.randomUUID();
+
+              mockSearchWithGeneratedAnswer(thirdStreamId);
+              mockStreamResponse(thirdStreamId, genQaMessageTypePayload);
+              performSearch();
+              Actions.dislikeGeneratedAnswer();
+              Expect.displayFeedbackModal(true);
+              Actions.clickFeedbackOption(feedbackOptions.indexOf(otherOption));
+              Actions.typeInFeedbackDetailsInput(exampleDetails);
+              Actions.clickFeedbackSubmitButton();
+              Expect.logGeneratedAnswerFeedbackSubmit(thirdStreamId, {
+                reason: otherOption,
+                details: exampleDetails,
+              });
+              Actions.clickFeedbackDoneButton();
             }
           );
         });
