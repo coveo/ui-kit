@@ -14,7 +14,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "2.40.2",
+  "version": "2.41.0",
   "files": [
     "dist/",
     "recommendation/",
@@ -69,6 +69,7 @@
   },
   "devDependencies": {
     "@coveo/release": "1.0.0",
+    "@coveo/relay-event-types": "6.24.2",
     "@microsoft/api-extractor": "7.38.3",
     "@microsoft/api-extractor-model": "7.28.2",
     "@microsoft/tsdoc": "0.14.2",
