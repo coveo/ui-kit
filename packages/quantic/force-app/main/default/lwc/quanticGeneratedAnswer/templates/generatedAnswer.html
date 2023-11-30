@@ -1,9 +1,7 @@
 <template>
   <template lwc:if={shouldDisplayGeneratedAnswer}>
     <div data-cy="generated-answer__card" class="slds-box">
-      <div
-        class="generated-answer__card-header slds-grid"
-      >
+      <div class="generated-answer__card-header slds-grid">
         <span
           class="generated-answer__badge slds-var-p-around_x-small slds-text-title_bold"
           >{labels.generatedAnswerForYou}</span
@@ -30,16 +28,9 @@
               class="slds-var-m-horizontal_xx-small"
             ></c-quantic-generated-answer-copy-to-clipboard>
           </template>
-          <lightning-input
-            data-cy="generated-answer__toggle-button"
-            type="toggle"
-            onchange={toggleGeneratedAnswer}
-            checked={isVisible}
-            variant="label-hidden"
-            message-toggle-active=""
-            message-toggle-inactive=""
-            label={labels.showGeneratedAnswer}
-          ></lightning-input>
+          <c-quantic-generated-answer-toggle
+            is-generated-answer-visible={isVisible}
+          ></c-quantic-generated-answer-toggle>
         </div>
       </div>
       <template lwc:if={isVisible}>
