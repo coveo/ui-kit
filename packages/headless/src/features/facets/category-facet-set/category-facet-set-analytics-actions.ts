@@ -38,8 +38,8 @@ const getCategoryFacetMetadata = (
     categoryFacetPath,
   }: LogCategoryFacetBreadcrumbActionCreatorPayload
 ): CategoryFacetMetadata => {
-  const facet = state.categoryFacetSet?.[categoryFacetId];
-  const categoryFacetField = facet?.request.field ?? '';
+  const facet = state.categoryFacetSet![categoryFacetId]!;
+  const categoryFacetField = facet?.request.field;
   const categoryFacetTitle = `${categoryFacetField}_${categoryFacetId}`;
   return {
     categoryFacetId,

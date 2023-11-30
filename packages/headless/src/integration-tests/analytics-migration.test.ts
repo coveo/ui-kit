@@ -6,7 +6,9 @@ import {
 } from '../app/search-engine/search-engine';
 import {logInterfaceLoad} from '../features/analytics/analytics-actions';
 import {SearchPageEvents} from '../features/analytics/search-action-cause';
+import {registerCategoryFacet} from '../features/facets/category-facet-set/category-facet-set-actions';
 import {logCategoryFacetBreadcrumb} from '../features/facets/category-facet-set/category-facet-set-analytics-actions';
+import {categoryFacetSetReducer} from '../features/facets/category-facet-set/category-facet-set-slice';
 import {
   logFacetBreadcrumb,
   logFacetClearAll,
@@ -315,10 +317,10 @@ describe('Analytics Search Migration', () => {
 
   it('analytics/numericFacet/breadcrumb', async () => {
     legacySearchEngine.addReducers({
-      dateFacetSet: numericFacetSetReducer,
+      numericFacetSet: numericFacetSetReducer,
     });
     nextSearchEngine.addReducers({
-      dateFacetSet: numericFacetSetReducer,
+      numericFacetSet: numericFacetSetReducer,
     });
     legacySearchEngine.dispatch(
       registerNumericFacet({
@@ -507,6 +509,24 @@ describe('Analytics Search Migration', () => {
   });
 
   it('analytics/categoryFacet/breadcrumb', async () => {
+    legacySearchEngine.addReducers({
+      categoryFacetSet: categoryFacetSetReducer,
+    });
+    nextSearchEngine.addReducers({
+      categoryFacetSet: categoryFacetSetReducer,
+    });
+    legacySearchEngine.dispatch(
+      registerCategoryFacet({
+        facetId: ANY_FACET_ID,
+        field: ANY_FACET_ID,
+      })
+    );
+    nextSearchEngine.dispatch(
+      registerCategoryFacet({
+        facetId: ANY_FACET_ID,
+        field: ANY_FACET_ID,
+      })
+    );
     const action = executeSearch({
       legacy: logCategoryFacetBreadcrumb({
         categoryFacetId: ANY_FACET_ID,
