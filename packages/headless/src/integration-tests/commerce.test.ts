@@ -39,7 +39,7 @@ describe.skip('commerce', () => {
       options: {
         trackingId: 'barca',
         language: 'en-gb',
-        country: 'ca',
+        country: 'gb',
         currency: 'gbp',
         clientId: '41915baa-621c-4408-b9c0-6e59b3cde129',
         view: {

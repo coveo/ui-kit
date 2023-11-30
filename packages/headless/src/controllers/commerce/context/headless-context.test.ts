@@ -13,7 +13,7 @@ describe('headless commerce context', () => {
   const options = {
     trackingId: 'some-tracking-id',
     language: 'en',
-    country: 'ca',
+    country: 'us',
     currency: 'USD',
     clientId: 'some-client-id',
     view: {
