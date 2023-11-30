@@ -1,14 +1,14 @@
 {
   "name": "@coveo/atomic-angular",
-  "version": "2.17.5",
+  "version": "2.18.0",
   "license": "Apache-2.0",
   "peerDependencies": {
     "@angular/common": "14 - 16",
     "@angular/core": "14 - 16",
-    "@coveo/headless": "2.40.2"
+    "@coveo/headless": "2.41.0"
   },
   "dependencies": {
-    "@coveo/atomic": "2.50.2",
+    "@coveo/atomic": "2.51.0",
     "tslib": "2.4.0"
   }
 }

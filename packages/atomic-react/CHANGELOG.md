@@ -1,3 +1,9 @@
+# 2.8.0 (2023-11-29)
+
+### Features
+
+- **doc:** generate documentation for generated answer in headless, atomic and quantic ([#3397](https://github.com/coveo/ui-kit/issues/3397)) ([c5df083](https://github.com/coveo/ui-kit/commits/c5df0835dde13ea54376a04ba4945427ac7155e9))
+
 ## 2.7.7 (2023-11-16)
 
 ## 2.7.4 (2023-11-08)
