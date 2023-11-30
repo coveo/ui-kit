@@ -14,7 +14,10 @@ import {
 export const config = {
   configuration: {
     ...getSampleSearchEngineConfiguration(),
-    analytics: {enabled: false},
+    analytics: {
+      enabled: true,
+      analyticsMode: 'next',
+    },
   },
   controllers: {
     context: defineContext(),
