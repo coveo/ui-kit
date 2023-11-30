@@ -16,7 +16,7 @@ export default function middleware(request: NextRequest) {
 }
 
 /**
- * Middlewares run by default for every request, incluing the ones for getting assets like JavaScritp, CSS, and image files.
+ * Middlewares run by default for every request, incluing the ones for getting assets like JavaScript, CSS, and image files.
  * We use the `matcher` property to ensure the AnalyticsMiddleware only runs on the page load.
  * More info [here](https://nextjs.org/docs/pages/building-your-application/routing/middleware#matching-paths)
  */
