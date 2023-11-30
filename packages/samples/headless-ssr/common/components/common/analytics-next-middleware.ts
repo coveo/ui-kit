@@ -15,9 +15,7 @@ class AnalyticsNextMiddleware {
   init() {
     if (this.doNotTrack()) {
       this.deleteCookie();
-      return this.response;
-    }
-    if (!this.clientId) {
+    } else if (!this.clientId) {
       this.setCurrentClientId();
     }
     return this.response;
