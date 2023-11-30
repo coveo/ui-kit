@@ -1,3 +1,7 @@
+import {
+  requiredNonEmptyString,
+  validatePayload,
+} from '../../utils/validate-payload';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
 import {InsightAction, makeInsightAnalyticsAction} from './analytics-utils';
 
@@ -24,9 +28,16 @@ export const logInsightInterfaceChange = (): InsightAction =>
 export const logInsightCreateArticle = (
   createArticleMetadata: CreateArticleMetadata
 ): InsightAction =>
-  makeInsightAnalyticsAction('analytics/createArticle', (client, state) => {
-    return client.logCreateArticle(
-      createArticleMetadata,
-      getCaseContextAnalyticsMetadata(state.insightCaseContext)
-    );
-  });
+  makeInsightAnalyticsAction(
+    'analytics/insight/createArticle',
+    (client, state) => {
+      validatePayload(createArticleMetadata, {
+        articleType: requiredNonEmptyString,
+        triggeredBy: requiredNonEmptyString,
+      });
+      return client.logCreateArticle(
+        createArticleMetadata,
+        getCaseContextAnalyticsMetadata(state.insightCaseContext)
+      );
+    }
+  );

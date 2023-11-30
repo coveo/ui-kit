@@ -88,7 +88,7 @@ export interface InsightAnalyticsActionCreators {
   /**
    * The event to log when the create article button is clicked.
    *
-   * @param payload - The metadata of tied to the create article event.
+   * @param payload - The metadata tied to the create article event.
    * @returns A dispatchable action.
    */
   logCreateArticle(payload: CreateArticleMetadata): InsightAction;

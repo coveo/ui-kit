@@ -1,5 +1,8 @@
 import {buildMockAnalyticsState} from '../../test/mock-analytics-state';
-import {buildMockInsightEngine} from '../../test/mock-engine';
+import {
+  MockInsightEngine,
+  buildMockInsightEngine,
+} from '../../test/mock-engine';
 import {buildMockInsightState} from '../../test/mock-insight-state';
 import {getConfigurationInitialState} from '../configuration/configuration-state';
 import {
@@ -36,9 +39,10 @@ jest.mock('coveo.analytics', () => {
   };
 });
 
-describe('logInterfaceLoad', () => {
-  it('should log #logInterfaceLoad with the right payload', async () => {
-    const engine = buildMockInsightEngine({
+describe('insight analytics actions', () => {
+  let engine: MockInsightEngine;
+  beforeEach(() => {
+    engine = buildMockInsightEngine({
       state: buildMockInsightState({
         insightCaseContext: {
           caseContext: {
@@ -50,7 +54,9 @@ describe('logInterfaceLoad', () => {
         },
       }),
     });
+  });
 
+  it('should log #logInterfaceLoad with the right payload', async () => {
     await engine.dispatch(logInsightInterfaceLoad());
 
     const expectedPayload = {
@@ -62,14 +68,12 @@ describe('logInterfaceLoad', () => {
       caseNumber: exampleCaseNumber,
     };
 
-    expect(mockLogInterfaceLoad).toBeCalledTimes(1);
+    expect(mockLogInterfaceLoad).toHaveBeenCalledTimes(1);
     expect(mockLogInterfaceLoad.mock.calls[0][0]).toStrictEqual(
       expectedPayload
     );
   });
-});
 
-describe('logInterfaceChange', () => {
   it('should log #logInterfaceChange with the right payload', async () => {
     const engine = buildMockInsightEngine({
       state: buildMockInsightState({
@@ -102,32 +106,18 @@ describe('logInterfaceChange', () => {
       interfaceChangeTo: exampleOriginLevel2,
     };
 
-    expect(mockLogInterfaceChange).toBeCalledTimes(1);
+    expect(mockLogInterfaceChange).toHaveBeenCalledTimes(1);
     expect(mockLogInterfaceChange.mock.calls[0][0]).toStrictEqual(
       expectedPayload
     );
-  });
-});
-
-describe('the analytics related to the create article feature in the insight use case', () => {
-  const engine = buildMockInsightEngine({
-    state: buildMockInsightState({
-      insightCaseContext: {
-        caseContext: {
-          Case_Subject: exampleSubject,
-          Case_Description: exampleDescription,
-        },
-        caseId: exampleCaseId,
-        caseNumber: exampleCaseNumber,
-      },
-    }),
   });
 
   it('should log #logCreateArticle with the right payload', async () => {
     await engine.dispatch(
       logInsightCreateArticle(exampleCreateArticleMetadata)
     );
-    const expectedCaseContext = {
+
+    const expectedPayload = {
       caseContext: {
         Case_Subject: exampleSubject,
         Case_Description: exampleDescription,
@@ -135,12 +125,13 @@ describe('the analytics related to the create article feature in the insight use
       caseId: exampleCaseId,
       caseNumber: exampleCaseNumber,
     };
+
     expect(mockLogCreateArticle).toHaveBeenCalledTimes(1);
     expect(mockLogCreateArticle.mock.calls[0][0]).toStrictEqual(
       exampleCreateArticleMetadata
     );
     expect(mockLogCreateArticle.mock.calls[0][1]).toStrictEqual(
-      expectedCaseContext
+      expectedPayload
     );
   });
 });
