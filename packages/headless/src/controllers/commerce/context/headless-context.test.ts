@@ -13,6 +13,7 @@ describe('headless commerce context', () => {
   const options = {
     trackingId: 'some-tracking-id',
     language: 'en',
+    country: 'ca',
     currency: 'USD',
     clientId: 'some-client-id',
     view: {
@@ -69,6 +70,11 @@ describe('headless commerce context', () => {
   it('setLanguage dispatches #setContext', () => {
     context.setLanguage('new-language');
     expectContainActionWithPayload(setContext, {language: 'new-language'});
+  });
+
+  it('setCountry dispatches #setContext', () => {
+    context.setCountry('new-country');
+    expectContainActionWithPayload(setContext, {country: 'new-country'});
   });
 
   it('setCurrency dispatches #setContext', () => {
