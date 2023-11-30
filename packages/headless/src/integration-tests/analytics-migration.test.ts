@@ -6,11 +6,19 @@ import {
 } from '../app/search-engine/search-engine';
 import {logInterfaceLoad} from '../features/analytics/analytics-actions';
 import {SearchPageEvents} from '../features/analytics/search-action-cause';
+import {logDidYouMeanClick} from '../features/did-you-mean/did-you-mean-analytics-actions';
 import {
   logFacetDeselect,
   logFacetExclude,
   logFacetSelect,
 } from '../features/facets/facet-set/facet-set-analytics-actions';
+import {logClearBreadcrumbs} from '../features/facets/generic/facet-generic-analytics-actions';
+import {
+  logNavigateBackward,
+  logNavigateForward,
+  logNoResultsBack,
+} from '../features/history/history-analytics-actions';
+import {logRecentQueryClick} from '../features/recent-queries/recent-queries-analytics-actions';
 import {executeSearch} from '../features/search/search-actions';
 
 const nextSearchEngine = buildSearchEngine({
@@ -121,6 +129,23 @@ describe('Analytics Search Migration', () => {
     assertNextEqualsLegacy(callSpy);
   });
 
+  it('analytics/didyoumean/click', async () => {
+    const action = executeSearch({
+      legacy: logDidYouMeanClick(),
+      next: {
+        actionCause: SearchPageEvents.didyoumeanClick,
+        getEventExtraPayload: (state) =>
+          new SearchAnalyticsProvider(() => state).getBaseMetadata(),
+      },
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
   it('analytics/facet/deselect', async () => {
     const action = executeSearch({
       legacy: logFacetDeselect({
@@ -134,6 +159,22 @@ describe('Analytics Search Migration', () => {
             ANY_FACET_ID,
             ANY_FACET_VALUE
           ),
+      },
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+  it('analytics/facet/deselectAllBreadcrumbs', async () => {
+    const action = executeSearch({
+      legacy: logClearBreadcrumbs(),
+      next: {
+        actionCause: SearchPageEvents.breadcrumbResetAll,
+        getEventExtraPayload: (state) =>
+          new SearchAnalyticsProvider(() => state).getBaseMetadata(),
       },
     });
 
@@ -157,6 +198,73 @@ describe('Analytics Search Migration', () => {
             ANY_FACET_ID,
             ANY_FACET_VALUE
           ),
+      },
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+  it('history/analytics/forward', async () => {
+    const action = executeSearch({
+      legacy: logNavigateForward(),
+      next: {
+        actionCause: SearchPageEvents.historyForward,
+        getEventExtraPayload: (state) =>
+          new SearchAnalyticsProvider(() => state).getBaseMetadata(),
+      },
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('history/analytics/backward', async () => {
+    const action = executeSearch({
+      legacy: logNavigateBackward(),
+      next: {
+        actionCause: SearchPageEvents.historyBackward,
+        getEventExtraPayload: (state) =>
+          new SearchAnalyticsProvider(() => state).getBaseMetadata(),
+      },
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('history/analytics/noresultsback', async () => {
+    const action = executeSearch({
+      legacy: logNoResultsBack(),
+      next: {
+        actionCause: SearchPageEvents.noResultsBack,
+        getEventExtraPayload: (state) =>
+          new SearchAnalyticsProvider(() => state).getBaseMetadata(),
+      },
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/recentQueries/click', async () => {
+    const action = executeSearch({
+      legacy: logRecentQueryClick(),
+      next: {
+        actionCause: SearchPageEvents.recentQueryClick,
+        getEventExtraPayload: (state) =>
+          new SearchAnalyticsProvider(() => state).getBaseMetadata(),
       },
     });
 
