@@ -32,16 +32,18 @@
                 style="white-space: nowrap;">
                 </textarea>
               <template if:false={isQueryEmpty}>
-                <lightning-button-icon
-                  onclick={clearInput}
-                  icon-name="utility:close"
-                  class="slds-grid searchbox__clear-button"
-                  variant="bare"
-                  size="medium"
-                  name={labels.clear}
-                  title={labels.clear}
-                  aria-label={labels.clear}
-                  alternative-text={labels.clear}></lightning-button-icon>
+                <div class="slds-grid slds-align_absolute-center slds-var-m-right_xxx-small searchbox__clear-button-container">
+                  <lightning-button-icon
+                    onclick={clearInput}
+                    icon-name="utility:close"
+                    class="slds-grid searchbox__clear-button"
+                    variant="bare"
+                    size="medium"
+                    name={labels.clear}
+                    title={labels.clear}
+                    aria-label={labels.clear}
+                    alternative-text={labels.clear}></lightning-button-icon>
+                </div>
               </template>
               <template if:false={withoutSubmitButton}>
                 <button

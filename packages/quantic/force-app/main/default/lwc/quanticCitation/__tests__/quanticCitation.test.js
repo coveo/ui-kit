@@ -4,6 +4,9 @@ import QuanticCitation from '../quanticCitation';
 
 const functionsMocks = {
   eventHandler: jest.fn((event) => event),
+  exampleSelect: jest.fn(() => {}),
+  exampleBeginDelayedSelect: jest.fn(() => {}),
+  exampleCancelPendingSelect: jest.fn(() => {}),
 };
 
 const exampleCitation = {
@@ -18,12 +21,17 @@ const exampleCitation = {
 
 const defaultOptions = {
   citation: exampleCitation,
+  interactiveCitation: {
+    select: () => functionsMocks.exampleSelect(),
+    beginDelayedSelect: () => functionsMocks.exampleBeginDelayedSelect(),
+    cancelPendingSelect: () => functionsMocks.exampleCancelPendingSelect(),
+  },
 };
 
 const selectors = {
   citation: '.citation',
   citationIndex: '.citation__index',
-  citationLink: '.citation__badge',
+  citationLink: '.citation__link',
   citationTitle: '.citation__title',
   citationTooltip: 'c-quantic-tooltip',
 };
@@ -45,6 +53,15 @@ function createTestComponent(options = defaultOptions) {
 async function flushPromises() {
   return Promise.resolve();
 }
+
+const bindingsMap = {
+  contextmenu: functionsMocks.exampleSelect,
+  click: functionsMocks.exampleSelect,
+  mouseup: functionsMocks.exampleSelect,
+  mousedown: functionsMocks.exampleSelect,
+  touchstart: functionsMocks.exampleBeginDelayedSelect,
+  touchend: functionsMocks.exampleCancelPendingSelect,
+};
 
 function setupEventDispatchTest(eventName) {
   const handler = (event) => {
@@ -97,22 +114,18 @@ describe('c-quantic-citation', () => {
     expect(citationTitle.textContent).toBe(exampleCitation.title);
   });
 
-  describe('clicking on the citation', () => {
-    it('should dispatch a click event', async () => {
-      const element = createTestComponent();
-      await flushPromises();
-      setupEventDispatchTest('click');
+  describe('the analytics bindings of the link within the citation', () => {
+    for (const [eventName, action] of Object.entries(bindingsMap)) {
+      it(`should execute the proper action when the ${eventName} is triggered on the link`, async () => {
+        const element = createTestComponent();
+        await flushPromises();
 
-      const citationLink = element.shadowRoot.querySelector(
-        selectors.citationLink
-      );
+        const link = element.shadowRoot.querySelector(selectors.citationLink);
+        link.dispatchEvent(new CustomEvent(eventName));
 
-      expect(citationLink).not.toBeNull();
-
-      await citationLink.click();
-
-      expect(functionsMocks.eventHandler).toHaveBeenCalledTimes(1);
-    });
+        expect(action).toHaveBeenCalledTimes(1);
+      });
+    }
   });
 
   describe('hovering over the citation', () => {

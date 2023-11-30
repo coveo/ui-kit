@@ -23,6 +23,11 @@ import {
   REPO_OWNER,
 } from './common/constants.mjs';
 
+if (!process.env.INIT_CWD) {
+  throw new Error('Should be called using npm run-script');
+}
+process.chdir(process.env.INIT_CWD);
+
 /**
  * Check if the package json in the provided folder has changed since the last commit
  * @param {string} directoryPath
