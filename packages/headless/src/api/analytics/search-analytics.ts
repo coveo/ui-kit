@@ -223,8 +223,11 @@ export class SearchAnalyticsProvider
       ...this.getBaseMetadata(),
       suggestionRanking: suggestions.indexOf(suggestion),
       partialQuery,
-      partialQueries: querySuggest!.partialQueries,
-      suggestions,
+      partialQueries:
+        querySuggest!.partialQueries.length > 0
+          ? querySuggest!.partialQueries
+          : '',
+      suggestions: suggestions.length > 0 ? suggestions : '',
       querySuggestResponseId,
     };
   }

@@ -4,6 +4,11 @@ import {
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
 } from '../app/search-engine/search-engine';
+import {
+  SearchBoxOptions,
+  SearchBoxProps,
+  buildCoreSearchBox,
+} from '../controllers/core/search-box/headless-core-search-box';
 import {logInterfaceLoad} from '../features/analytics/analytics-actions';
 import {SearchPageEvents} from '../features/analytics/search-action-cause';
 import {registerCategoryFacet} from '../features/facets/category-facet-set/category-facet-set-actions';
@@ -26,6 +31,7 @@ import {NumericFacetValue} from '../features/facets/range-facets/numeric-facet-s
 import {registerNumericFacet} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {logNumericFacetBreadcrumb} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-analytics-actions';
 import {numericFacetSetReducer} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
+import {fetchQuerySuggestions} from '../features/query-suggest/query-suggest-actions';
 import {executeSearch} from '../features/search/search-actions';
 import {logResultsSort} from '../features/sort-criteria/sort-criteria-analytics-actions';
 import {
@@ -378,43 +384,37 @@ describe('Analytics Search Migration', () => {
     assertNextEqualsLegacy(callSpy);
   });
 
-  // it('analytics/querySuggest', async () => {
-  //   nextSearchEngine.addReducers({
-  //     querySuggestReducer,
-  //   });
-  //   legacySearchEngine.addReducers({
-  //     querySuggestReducer,
-  //   });
+  it('analytics/querySuggest', async () => {
+    const options: SearchBoxOptions = {
+      id: 'search-box-123',
+      numberOfSuggestions: 10,
+      highlightOptions: {
+        notMatchDelimiters: {
+          open: '<a>',
+          close: '<a>',
+        },
+        correctionDelimiters: {
+          open: '<i>',
+          close: '<i>',
+        },
+      },
+    };
+    const props: SearchBoxProps = {
+      options,
+      executeSearchActionCreator: executeSearch,
+      fetchQuerySuggestionsActionCreator: fetchQuerySuggestions,
+      isNextAnalyticsReady: true,
+    };
+    const nextSearchBox = buildCoreSearchBox(nextSearchEngine, props);
+    const legacySearchBox = buildCoreSearchBox(legacySearchEngine, props);
 
-  //   nextSearchEngine.dispatch(
-  //     registerQuerySuggest({
-  //       id: 'sd',
-  //       count: 12,
-  //     })
-  //   );
+    const value = 'i like this expression';
+    nextSearchBox.selectSuggestion(value);
+    legacySearchBox.selectSuggestion(value);
+    await wait();
 
-  //   legacySearchEngine.dispatch(
-  //     registerQuerySuggest({
-  //       id: 'sd',
-  //       count: 12,
-  //     })
-  //   );
-
-  //   const action = executeSearch({
-  //     legacy: logQuerySuggestionClick({id: 'sd', suggestion: 'Sd'}),
-  //     next: {
-  //       actionCause: SearchPageEvents.omniboxAnalytics,
-  //       getEventExtraPayload: (state) =>
-  //         new SearchAnalyticsProvider(() => state).getBaseMetadata(),
-  //     },
-  //   });
-
-  //   legacySearchEngine.dispatch(action);
-  //   nextSearchEngine.dispatch(action);
-  //   await wait();
-
-  //   assertNextEqualsLegacy(callSpy);
-  // });
+    assertNextEqualsLegacy(callSpy);
+  });
 
   it('analytics/staticFilter/select', async () => {
     const action = executeSearch({
