@@ -1,0 +1,83 @@
+{
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "componentName": "siteforce:dynamicLayout",
+  "dataProviders": [],
+  "id": "27d477db-01c7-4f6b-b918-ab4734a27cd5",
+  "label": "Relevant Generative Answering Example",
+  "regions": [
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "background": "background: rgba(0,0,0,0)",
+            "backgroundOverlay": "rgba(0,0,0,0.5)",
+            "contentAreaWidth": 100,
+            "sectionConfig": {
+              "UUID": "4e535adc-a136-4f54-b8a6-e9e2f381972f",
+              "columns": [
+                {
+                  "UUID": "0b2fe4b1-91e6-4bae-abe4-1ef68b7686c2",
+                  "columnKey": "1",
+                  "columnName": "Column 1",
+                  "columnWidth": "12",
+                  "seedComponents": []
+                }
+              ]
+            },
+            "sectionHeight": 300
+          },
+          "componentName": "forceCommunity:section",
+          "id": "4e535adc-a136-4f54-b8a6-e9e2f381972f",
+          "regions": [
+            {
+              "components": [
+                {
+                  "componentAttributes": {
+                    "engineId": "example-relevant-generative-answering"
+                  },
+                  "componentName": "c:exampleRelevantGenerativeAnswering",
+                  "id": "8b766029-754a-4d58-9a8b-efb59c50e8e1",
+                  "renderPriority": "NEUTRAL",
+                  "renditionMap": {},
+                  "type": "component"
+                }
+              ],
+              "id": "0b2fe4b1-91e6-4bae-abe4-1ef68b7686c2",
+              "regionLabel": "Column 1",
+              "regionName": "1",
+              "renditionMap": {},
+              "type": "region"
+            }
+          ],
+          "renderPriority": "NEUTRAL",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "4c1e87ae-f521-49ca-a7a7-7e9e2fab53b0",
+      "regionName": "content",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "customHeadTags": "",
+            "description": "",
+            "title": "Relevant Generative Answering Example"
+          },
+          "componentName": "forceCommunity:seoAssistant",
+          "id": "5c710339-d717-4911-bd05-1e4357a3806a",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "7481b0e7-7f4b-463f-ac2b-7d772b6545d0",
+      "regionName": "sfdcHiddenRegion",
+      "type": "region"
+    }
+  ],
+  "themeLayoutType": "Inner",
+  "type": "view",
+  "viewType": "custom-relevant-generative-answering-example"
+}
