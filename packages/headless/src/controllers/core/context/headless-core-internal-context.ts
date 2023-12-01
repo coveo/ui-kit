@@ -7,9 +7,14 @@ import {contextReducer as context} from '../../../features/context/context-slice
 import {ContextValue} from '../../../features/context/context-state';
 import {ContextSection} from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
+import {
+  ReservedContextKey,
+  UnreservedContextKeyError,
+  isReservedContextKey,
+} from './headless-context-reserved-keys';
 
 /**
- * The `InternalContext` controller injects [custom contextual information](https://docs.coveo.com/en/3389/)
+ * The `InternalContext` controller injects reserved [custom contextual information](https://docs.coveo.com/en/3389/) key-values.
  * into the search requests and usage analytics search events sent from a search interface.
  * Reserved for strict context.
  * @internal
@@ -44,11 +49,17 @@ export function buildInternalCoreContext(engine: CoreEngine): InternalContext {
   }
   const {dispatch} = engine;
   return {
-    add(contextKey: string, contextValue: ContextValue) {
+    add(contextKey: ReservedContextKey, contextValue: ContextValue) {
+      if (!isReservedContextKey(contextKey)) {
+        throw new UnreservedContextKeyError(contextKey);
+      }
       dispatch(addContext({contextKey, contextValue}));
     },
-    remove(key: string) {
-      dispatch(removeContext(key));
+    remove(contextKey: ReservedContextKey) {
+      if (!isReservedContextKey(contextKey)) {
+        throw new UnreservedContextKeyError(contextKey);
+      }
+      dispatch(removeContext(contextKey));
     },
   };
 }
