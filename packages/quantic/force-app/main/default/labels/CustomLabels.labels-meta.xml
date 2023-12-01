@@ -1391,6 +1391,20 @@
     <value>Generating answer</value>
     <language>en_US</language>
     <protected>false</protected>
-    <shortDescription>Summary</shortDescription>
+    <shortDescription>Generating answer</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_GeneratedAnswerOn</fullName>
+    <value>Generated answer ON</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Generated answer ON</shortDescription>
+  </labels>
+    <labels>
+    <fullName>quantic_GeneratedAnswerOff</fullName>
+    <value>Generated answer OFF</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Generated answer OFF</shortDescription>
   </labels>
 </CustomLabels>

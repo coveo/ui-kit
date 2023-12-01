@@ -1,5 +1,7 @@
+import {SearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {configuration} from '../../app/common-reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {SearchPageEvents} from '../../features/analytics/search-action-cause';
 import {toggleSelectAutomaticFacetValue} from '../../features/facets/automatic-facet-set/automatic-facet-set-actions';
 import {AutomaticFacetResponse} from '../../features/facets/automatic-facet-set/interfaces/response';
 import {deselectAllCategoryFacetValues} from '../../features/facets/category-facet-set/category-facet-set-actions';
@@ -337,7 +339,16 @@ export function buildBreadcrumbManager(
 
     deselectAll: () => {
       controller.deselectAll();
-      dispatch(executeSearch({legacy: logClearBreadcrumbs()}));
+      dispatch(
+        executeSearch({
+          legacy: logClearBreadcrumbs(),
+          next: {
+            actionCause: SearchPageEvents.breadcrumbResetAll,
+            getEventExtraPayload: (state) =>
+              new SearchAnalyticsProvider(() => state).getBaseMetadata(),
+          },
+        })
+      );
     },
   };
 }
