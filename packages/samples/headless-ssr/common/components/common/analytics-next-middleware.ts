@@ -1,4 +1,3 @@
-import {randomUUID as uuid} from 'crypto';
 import {NextResponse} from 'next/server';
 import type {NextRequest} from 'next/server';
 
@@ -34,7 +33,8 @@ class AnalyticsNextMiddleware {
   }
 
   private setCurrentClientId() {
-    this.response.cookies.set(AnalyticsNextMiddleware.cookieName, uuid(), {
+    const uuid = crypto.randomUUID();
+    this.response.cookies.set(AnalyticsNextMiddleware.cookieName, uuid, {
       maxAge: 31556926000,
     }); // 1 year first party cookie
   }
