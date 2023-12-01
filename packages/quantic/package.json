@@ -54,7 +54,7 @@
   "devDependencies": {
     "@coveo/release": "1.0.0",
     "@ckeditor/jsdoc-plugins": "39.2.1",
-    "@lwc/compiler": "3.8.0",
+    "@lwc/compiler": "5.1.0",
     "@lwc/eslint-plugin-lwc": "1.6.4",
     "@octokit/graphql": "7.0.2",
     "@octokit/graphql-schema": "14.40.1",

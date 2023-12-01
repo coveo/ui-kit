@@ -308,10 +308,39 @@ describe('Analytics Search Migration', () => {
     assertNextEqualsLegacy(callSpy);
   });
 
+  it('analytics/facet/breadcrumb', async () => {
+    const action = executeSearch({
+      legacy: logFacetBreadcrumb({
+        facetId: ANY_FACET_ID,
+        facetValue: ANY_FACET_VALUE,
+      }),
+      next: breadcrumbFacet(ANY_FACET_ID, ANY_FACET_VALUE),
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
   it('history/analytics/backward', async () => {
     const action = executeSearch({
       legacy: logNavigateBackward(),
       next: navigateBackward(),
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/facet/reset', async () => {
+    const action = executeSearch({
+      legacy: logFacetClearAll(ANY_FACET_ID),
+      next: facetClearAll(ANY_FACET_ID),
     });
 
     legacySearchEngine.dispatch(action);
@@ -564,10 +593,274 @@ describe('Analytics Search Migration', () => {
     assertNextEqualsLegacy(callSpy);
   });
 
+  it('analytics/dateFacet/breadcrumb', async () => {
+    legacySearchEngine.addReducers({
+      dateFacetSet: dateFacetSetReducer,
+    });
+    nextSearchEngine.addReducers({
+      dateFacetSet: dateFacetSetReducer,
+    });
+    legacySearchEngine.dispatch(
+      registerDateFacet({
+        facetId: ANY_FACET_ID,
+        field: ANY_FACET_ID,
+        generateAutomaticRanges: true,
+      })
+    );
+    nextSearchEngine.dispatch(
+      registerDateFacet({
+        facetId: ANY_FACET_ID,
+        field: ANY_FACET_ID,
+        generateAutomaticRanges: true,
+      })
+    );
+    const action = executeSearch({
+      legacy: logDateFacetBreadcrumb({
+        facetId: ANY_FACET_ID,
+        selection: ANY_RANGE_FACET_BREADCRUMB_VALUE,
+      }),
+      next: dateBreadcrumbFacet(ANY_FACET_ID, ANY_RANGE_FACET_BREADCRUMB_VALUE),
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/numericFacet/breadcrumb', async () => {
+    legacySearchEngine.addReducers({
+      numericFacetSet: numericFacetSetReducer,
+    });
+    nextSearchEngine.addReducers({
+      numericFacetSet: numericFacetSetReducer,
+    });
+    legacySearchEngine.dispatch(
+      registerNumericFacet({
+        facetId: ANY_FACET_ID,
+        field: ANY_FACET_ID,
+        generateAutomaticRanges: true,
+      })
+    );
+    nextSearchEngine.dispatch(
+      registerNumericFacet({
+        facetId: ANY_FACET_ID,
+        field: ANY_FACET_ID,
+        generateAutomaticRanges: true,
+      })
+    );
+    const action = executeSearch({
+      legacy: logNumericFacetBreadcrumb({
+        facetId: ANY_FACET_ID,
+        selection:
+          ANY_RANGE_FACET_BREADCRUMB_VALUE as unknown as NumericFacetValue,
+      }),
+      next: numericBreadcrumbFacet(
+        ANY_FACET_ID,
+        ANY_RANGE_FACET_BREADCRUMB_VALUE as unknown as NumericFacetValue
+      ),
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/sort/results', async () => {
+    const action = executeSearch({
+      legacy: logResultsSort(),
+      next: resultsSort(),
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/querySuggest', async () => {
+    const options: SearchBoxOptions = {
+      id: 'search-box-123',
+      numberOfSuggestions: 10,
+      highlightOptions: {
+        notMatchDelimiters: {
+          open: '<a>',
+          close: '<a>',
+        },
+        correctionDelimiters: {
+          open: '<i>',
+          close: '<i>',
+        },
+      },
+    };
+    const props: SearchBoxProps = {
+      options,
+      executeSearchActionCreator: executeSearch,
+      fetchQuerySuggestionsActionCreator: fetchQuerySuggestions,
+      isNextAnalyticsReady: true,
+    };
+    const nextSearchBox = buildCoreSearchBox(nextSearchEngine, props);
+    const legacySearchBox = buildCoreSearchBox(legacySearchEngine, props);
+
+    const value = 'i like this expression';
+    nextSearchBox.selectSuggestion(value);
+    legacySearchBox.selectSuggestion(value);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/staticFilter/select', async () => {
+    const action = executeSearch({
+      legacy: logStaticFilterSelect({
+        staticFilterId: ANY_STATIC_FILTER_ID,
+        staticFilterValue: ANY_STATIC_FILTER_VALUE,
+      }),
+      next: staticFilterSelect(ANY_STATIC_FILTER_ID, ANY_STATIC_FILTER_VALUE),
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/staticFilter/deselect', async () => {
+    const action = executeSearch({
+      legacy: logStaticFilterDeselect({
+        staticFilterId: ANY_STATIC_FILTER_ID,
+        staticFilterValue: ANY_STATIC_FILTER_VALUE,
+      }),
+      next: staticFilterDeselect(ANY_STATIC_FILTER_ID, ANY_STATIC_FILTER_VALUE),
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/staticFilter/clearAll', async () => {
+    const action = executeSearch({
+      legacy: logStaticFilterClearAll({
+        staticFilterId: ANY_STATIC_FILTER_ID,
+      }),
+      next: staticFilterClearAll(ANY_STATIC_FILTER_ID),
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/trigger/query/undo', async () => {
+    const action = executeSearch({
+      legacy: logUndoTriggerQuery({
+        undoneQuery: ANY_QUERY,
+      }),
+      next: undoTriggerQuery(ANY_QUERY),
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/categoryFacet/breadcrumb', async () => {
+    legacySearchEngine.addReducers({
+      categoryFacetSet: categoryFacetSetReducer,
+    });
+    nextSearchEngine.addReducers({
+      categoryFacetSet: categoryFacetSetReducer,
+    });
+    legacySearchEngine.dispatch(
+      registerCategoryFacet({
+        facetId: ANY_FACET_ID,
+        field: ANY_FACET_ID,
+      })
+    );
+    nextSearchEngine.dispatch(
+      registerCategoryFacet({
+        facetId: ANY_FACET_ID,
+        field: ANY_FACET_ID,
+      })
+    );
+    const action = executeSearch({
+      legacy: logCategoryFacetBreadcrumb({
+        categoryFacetId: ANY_FACET_ID,
+        categoryFacetPath: ANY_CATEGORY_FACET_PATH,
+      }),
+      next: categoryBreadcrumbFacet(ANY_FACET_ID, ANY_CATEGORY_FACET_PATH),
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
   it('analytics/recentQueries/click', async () => {
     const action = executeSearch({
       legacy: logRecentQueryClick(),
       next: recentQueryClick(),
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/interface/change', async () => {
+    const action = executeSearch({
+      legacy: logInterfaceChange(),
+      next: interfaceChange(),
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/interface/searchFromLink', async () => {
+    const action = executeSearch({
+      legacy: logSearchFromLink(),
+      next: searchFromLink(),
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/interface/omniboxFromLink', async () => {
+    const metadata: OmniboxSuggestionMetadata = {
+      suggestionRanking: 1,
+      partialQuery: 'partialQuery',
+      partialQueries: 'partialQueries',
+      suggestions: 'suggestions',
+      querySuggestResponseId: 'querySuggestResponseId',
+    };
+
+    const action = executeSearch({
+      legacy: logOmniboxFromLink(metadata),
+      next: omniboxFromLink(metadata),
     });
 
     legacySearchEngine.dispatch(action);

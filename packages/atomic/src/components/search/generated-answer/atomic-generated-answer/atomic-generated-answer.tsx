@@ -130,13 +130,12 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   };
 
   private getGeneratedAnswerStatus() {
-    const isVisible = this.generatedAnswerState.isVisible;
-    const isGenerating =
-      this.generatedAnswerState.isLoading ||
-      this.generatedAnswerState.isStreaming;
+    const isHidden = !this.generatedAnswerState.isVisible;
+    const isGenerating = this.generatedAnswerState.isStreaming;
     const hasAnswer = !!this.generatedAnswerState.answer;
+    const hasError = !!this.generatedAnswerState.error;
 
-    if (!isVisible) {
+    if (isHidden) {
       return this.bindings.i18n.t('generated-answer-hidden');
     }
 
@@ -144,15 +143,17 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       return this.bindings.i18n.t('generating-answer');
     }
 
-    if (this.error) {
+    if (hasError) {
       return this.bindings.i18n.t('answer-could-not-be-generated');
     }
 
-    return hasAnswer
-      ? this.bindings.i18n.t('answer-generated', {
-          answer: this.generatedAnswerState.answer,
-        })
-      : '';
+    if (hasAnswer) {
+      return this.bindings.i18n.t('answer-generated', {
+        answer: this.generatedAnswerState.answer,
+      });
+    }
+
+    return '';
   }
 
   private readStoredData(): GeneratedAnswerData {
