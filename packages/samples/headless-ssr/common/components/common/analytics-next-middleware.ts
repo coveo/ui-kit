@@ -1,6 +1,6 @@
+import {randomUUID as uuid} from 'crypto';
 import {NextResponse} from 'next/server';
 import type {NextRequest} from 'next/server';
-import {v4 as uuid} from 'uuid';
 
 class AnalyticsNextMiddleware {
   private static cookieName = 'coveo_visitorId';
