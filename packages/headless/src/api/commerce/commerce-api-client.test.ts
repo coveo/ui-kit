@@ -37,6 +37,7 @@ describe('commerce api client', () => {
     url: platformUrl,
     trackingId: trackingId,
     language: req.language ?? '',
+    country: req.country ?? '',
     currency: req.currency ?? '',
     clientId: req.clientId ?? '',
     context: req.context ?? {
@@ -59,10 +60,11 @@ describe('commerce api client', () => {
     expect(mockRequest).toMatchObject({
       method: 'POST',
       contentType: 'application/json',
-      url: `${platformUrl}/rest/organizations/${organizationId}/trackings/${trackingId}/commerce/v2/listing`,
+      url: `${platformUrl}/rest/organizations/${organizationId}/commerce/v2/listing`,
       accessToken: request.accessToken,
       origin: 'commerceApiFetch',
       requestParams: {
+        trackingId: request.trackingId,
         clientId: request.clientId,
         context: request.context,
         language: request.language,
@@ -89,11 +91,12 @@ describe('commerce api client', () => {
     expect(mockRequest).toMatchObject({
       method: 'POST',
       contentType: 'application/json',
-      url: `${platformUrl}/rest/organizations/${organizationId}/trackings/${trackingId}/commerce/v2/search`,
+      url: `${platformUrl}/rest/organizations/${organizationId}/commerce/v2/search`,
       accessToken: request.accessToken,
       origin: 'commerceApiFetch',
       requestParams: {
         query: 'some query',
+        trackingId: request.trackingId,
         clientId: request.clientId,
         context: request.context,
         language: request.language,
