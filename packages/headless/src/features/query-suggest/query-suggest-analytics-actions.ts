@@ -1,9 +1,12 @@
 import type {OmniboxSuggestionsMetadata} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
+import {SearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {SearchAppState} from '../../state/search-app-state';
 import {
   makeAnalyticsAction,
   LegacySearchAction,
 } from '../analytics/analytics-utils';
+import {SearchPageEvents} from '../analytics/search-action-cause';
+import {SearchAction} from '../search/search-actions';
 
 export interface LogQuerySuggestionClickActionCreatorPayload {
   /**
@@ -25,6 +28,20 @@ export const logQuerySuggestionClick = (
     const metadata = buildOmniboxSuggestionMetadata(state, payload);
     return client.makeOmniboxAnalytics(metadata);
   });
+
+export const querySuggestionClick = (
+  id: string,
+  suggestion: string
+): SearchAction => {
+  return {
+    actionCause: SearchPageEvents.omniboxAnalytics,
+    getEventExtraPayload: (state) =>
+      new SearchAnalyticsProvider(() => state).getOmniboxAnalyticsMetadata(
+        id,
+        suggestion
+      ),
+  };
+};
 
 export type OmniboxSuggestionMetadata = OmniboxSuggestionsMetadata;
 

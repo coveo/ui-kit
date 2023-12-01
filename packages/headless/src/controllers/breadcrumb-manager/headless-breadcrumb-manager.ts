@@ -21,12 +21,18 @@ import {facetResponseActiveValuesSelector} from '../../features/facets/facet-set
 import {facetSetReducer as facetSet} from '../../features/facets/facet-set/facet-set-slice';
 import {FacetSlice} from '../../features/facets/facet-set/facet-set-state';
 import {FacetValue} from '../../features/facets/facet-set/interfaces/response';
-import {logClearBreadcrumbs} from '../../features/facets/generic/facet-generic-analytics-actions';
+import {
+  breadcrumbResetAll,
+  logClearBreadcrumbs,
+} from '../../features/facets/generic/facet-generic-analytics-actions';
 import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
 } from '../../features/facets/range-facets/date-facet-set/date-facet-actions';
-import {logDateFacetBreadcrumb} from '../../features/facets/range-facets/date-facet-set/date-facet-analytics-actions';
+import {
+  dateBreadcrumbFacet,
+  logDateFacetBreadcrumb,
+} from '../../features/facets/range-facets/date-facet-set/date-facet-analytics-actions';
 import {dateFacetActiveValuesSelector} from '../../features/facets/range-facets/date-facet-set/date-facet-selectors';
 import {dateFacetSetReducer as dateFacetSet} from '../../features/facets/range-facets/date-facet-set/date-facet-set-slice';
 import {DateFacetSlice} from '../../features/facets/range-facets/date-facet-set/date-facet-set-state';
@@ -34,7 +40,10 @@ import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
 } from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {logNumericFacetBreadcrumb} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-analytics-actions';
+import {
+  logNumericFacetBreadcrumb,
+  numericBreadcrumbFacet,
+} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-analytics-actions';
 import {numericFacetActiveValuesSelector} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-selectors';
 import {numericFacetSetReducer as numericFacetSet} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {NumericFacetSlice} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-state';
@@ -181,16 +190,7 @@ export function buildBreadcrumbManager(
         dispatch(
           executeSearch({
             legacy: logNumericFacetBreadcrumb(payload),
-            next: {
-              actionCause: SearchPageEvents.breadcrumbFacet,
-              getEventExtraPayload: (state) =>
-                new SearchAnalyticsProvider(
-                  () => state
-                ).getRangeFacetBreadcrumbMetadata(
-                  payload.facetId,
-                  payload.selection
-                ),
-            },
+            next: numericBreadcrumbFacet(payload.facetId, payload.selection),
           })
         );
       },
@@ -199,16 +199,7 @@ export function buildBreadcrumbManager(
         dispatch(
           executeSearch({
             legacy: logNumericFacetBreadcrumb(payload),
-            next: {
-              actionCause: SearchPageEvents.breadcrumbFacet,
-              getEventExtraPayload: (state) =>
-                new SearchAnalyticsProvider(
-                  () => state
-                ).getRangeFacetBreadcrumbMetadata(
-                  payload.facetId,
-                  payload.selection
-                ),
-            },
+            next: numericBreadcrumbFacet(payload.facetId, payload.selection),
           })
         );
       },
@@ -227,16 +218,7 @@ export function buildBreadcrumbManager(
           dispatch(
             executeSearch({
               legacy: logDateFacetBreadcrumb(payload),
-              next: {
-                actionCause: SearchPageEvents.breadcrumbFacet,
-                getEventExtraPayload: (state) =>
-                  new SearchAnalyticsProvider(
-                    () => state
-                  ).getRangeFacetBreadcrumbMetadata(
-                    payload.facetId,
-                    payload.selection
-                  ),
-              },
+              next: dateBreadcrumbFacet(payload.facetId, payload.selection),
             })
           );
         },
@@ -245,16 +227,7 @@ export function buildBreadcrumbManager(
           dispatch(
             executeSearch({
               legacy: logDateFacetBreadcrumb(payload),
-              next: {
-                actionCause: SearchPageEvents.breadcrumbFacet,
-                getEventExtraPayload: (state) =>
-                  new SearchAnalyticsProvider(
-                    () => state
-                  ).getRangeFacetBreadcrumbMetadata(
-                    payload.facetId,
-                    payload.selection
-                  ),
-              },
+              next: dateBreadcrumbFacet(payload.facetId, payload.selection),
             })
           );
         },
@@ -423,11 +396,7 @@ export function buildBreadcrumbManager(
       dispatch(
         executeSearch({
           legacy: logClearBreadcrumbs(),
-          next: {
-            actionCause: SearchPageEvents.breadcrumbResetAll,
-            getEventExtraPayload: (state) =>
-              new SearchAnalyticsProvider(() => state).getBaseMetadata(),
-          },
+          next: breadcrumbResetAll(),
         })
       );
     },

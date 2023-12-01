@@ -20,7 +20,10 @@ import {
   searchFromLink,
 } from '../features/analytics/analytics-actions';
 import {SearchPageEvents} from '../features/analytics/search-action-cause';
-import {logDidYouMeanClick} from '../features/did-you-mean/did-you-mean-analytics-actions';
+import {
+  didYouMeanClick,
+  logDidYouMeanClick,
+} from '../features/did-you-mean/did-you-mean-analytics-actions';
 import {registerCategoryFacet} from '../features/facets/category-facet-set/category-facet-set-actions';
 import {logCategoryFacetBreadcrumb} from '../features/facets/category-facet-set/category-facet-set-analytics-actions';
 import {categoryFacetSetReducer} from '../features/facets/category-facet-set/category-facet-set-slice';
@@ -39,25 +42,40 @@ import {
   logFacetUpdateSort,
 } from '../features/facets/facet-set/facet-set-analytics-actions';
 import {FacetSortCriterion} from '../features/facets/facet-set/interfaces/request';
-import {logClearBreadcrumbs} from '../features/facets/generic/facet-generic-analytics-actions';
+import {
+  breadcrumbResetAll,
+  logClearBreadcrumbs,
+} from '../features/facets/generic/facet-generic-analytics-actions';
 import {registerDateFacet} from '../features/facets/range-facets/date-facet-set/date-facet-actions';
-import {logDateFacetBreadcrumb} from '../features/facets/range-facets/date-facet-set/date-facet-analytics-actions';
+import {
+  dateBreadcrumbFacet,
+  logDateFacetBreadcrumb,
+} from '../features/facets/range-facets/date-facet-set/date-facet-analytics-actions';
 import {dateFacetSetReducer} from '../features/facets/range-facets/date-facet-set/date-facet-set-slice';
 import {DateFacetValue} from '../features/facets/range-facets/date-facet-set/interfaces/response';
 import {NumericFacetValue} from '../features/facets/range-facets/numeric-facet-set/interfaces/response';
 import {registerNumericFacet} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {logNumericFacetBreadcrumb} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-analytics-actions';
+import {
+  logNumericFacetBreadcrumb,
+  numericBreadcrumbFacet,
+} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-analytics-actions';
 import {numericFacetSetReducer} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {
   logNavigateBackward,
   logNavigateForward,
   logNoResultsBack,
+  navigateBackward,
+  navigateForward,
+  noResultsBack,
 } from '../features/history/history-analytics-actions';
 import {fetchQuerySuggestions} from '../features/query-suggest/query-suggest-actions';
 import {OmniboxSuggestionMetadata} from '../features/query-suggest/query-suggest-analytics-actions';
 import {logRecentQueryClick} from '../features/recent-queries/recent-queries-analytics-actions';
 import {executeSearch} from '../features/search/search-actions';
-import {logResultsSort} from '../features/sort-criteria/sort-criteria-analytics-actions';
+import {
+  logResultsSort,
+  resultsSort,
+} from '../features/sort-criteria/sort-criteria-analytics-actions';
 import {
   StaticFilterValueMetadata,
   logStaticFilterClearAll,
@@ -181,11 +199,7 @@ describe('Analytics Search Migration', () => {
   it('analytics/didyoumean/click', async () => {
     const action = executeSearch({
       legacy: logDidYouMeanClick(),
-      next: {
-        actionCause: SearchPageEvents.didyoumeanClick,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getBaseMetadata(),
-      },
+      next: didYouMeanClick(),
     });
 
     legacySearchEngine.dispatch(action);
@@ -213,11 +227,7 @@ describe('Analytics Search Migration', () => {
   it('analytics/facet/deselectAllBreadcrumbs', async () => {
     const action = executeSearch({
       legacy: logClearBreadcrumbs(),
-      next: {
-        actionCause: SearchPageEvents.breadcrumbResetAll,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getBaseMetadata(),
-      },
+      next: breadcrumbResetAll(),
     });
 
     legacySearchEngine.dispatch(action);
@@ -262,11 +272,7 @@ describe('Analytics Search Migration', () => {
   it('history/analytics/forward', async () => {
     const action = executeSearch({
       legacy: logNavigateForward(),
-      next: {
-        actionCause: SearchPageEvents.historyForward,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getBaseMetadata(),
-      },
+      next: navigateForward(),
     });
 
     legacySearchEngine.dispatch(action);
@@ -295,11 +301,7 @@ describe('Analytics Search Migration', () => {
   it('history/analytics/backward', async () => {
     const action = executeSearch({
       legacy: logNavigateBackward(),
-      next: {
-        actionCause: SearchPageEvents.historyBackward,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getBaseMetadata(),
-      },
+      next: navigateBackward(),
     });
 
     legacySearchEngine.dispatch(action);
@@ -325,11 +327,7 @@ describe('Analytics Search Migration', () => {
   it('history/analytics/noresultsback', async () => {
     const action = executeSearch({
       legacy: logNoResultsBack(),
-      next: {
-        actionCause: SearchPageEvents.noResultsBack,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getBaseMetadata(),
-      },
+      next: noResultsBack(),
     });
 
     legacySearchEngine.dispatch(action);
@@ -365,16 +363,7 @@ describe('Analytics Search Migration', () => {
         facetId: ANY_FACET_ID,
         selection: ANY_RANGE_FACET_BREADCRUMB_VALUE,
       }),
-      next: {
-        actionCause: SearchPageEvents.breadcrumbFacet,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(
-            () => state
-          ).getRangeFacetBreadcrumbMetadata(
-            ANY_FACET_ID,
-            ANY_RANGE_FACET_BREADCRUMB_VALUE
-          ),
-      },
+      next: dateBreadcrumbFacet(ANY_FACET_ID, ANY_RANGE_FACET_BREADCRUMB_VALUE),
     });
 
     legacySearchEngine.dispatch(action);
@@ -411,16 +400,10 @@ describe('Analytics Search Migration', () => {
         selection:
           ANY_RANGE_FACET_BREADCRUMB_VALUE as unknown as NumericFacetValue,
       }),
-      next: {
-        actionCause: SearchPageEvents.breadcrumbFacet,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(
-            () => state
-          ).getRangeFacetBreadcrumbMetadata(
-            ANY_FACET_ID,
-            ANY_RANGE_FACET_BREADCRUMB_VALUE
-          ),
-      },
+      next: numericBreadcrumbFacet(
+        ANY_FACET_ID,
+        ANY_RANGE_FACET_BREADCRUMB_VALUE as unknown as NumericFacetValue
+      ),
     });
 
     legacySearchEngine.dispatch(action);
@@ -433,11 +416,7 @@ describe('Analytics Search Migration', () => {
   it('analytics/sort/results', async () => {
     const action = executeSearch({
       legacy: logResultsSort(),
-      next: {
-        actionCause: SearchPageEvents.resultsSort,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getResultSortMetadata(),
-      },
+      next: resultsSort(),
     });
 
     legacySearchEngine.dispatch(action);

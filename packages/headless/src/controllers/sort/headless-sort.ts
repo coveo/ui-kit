@@ -1,9 +1,10 @@
-import {SearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {SearchPageEvents} from '../../features/analytics/search-action-cause';
 import {executeSearch} from '../../features/search/search-actions';
 import {SortCriterion} from '../../features/sort-criteria/criteria';
-import {logResultsSort} from '../../features/sort-criteria/sort-criteria-analytics-actions';
+import {
+  logResultsSort,
+  resultsSort,
+} from '../../features/sort-criteria/sort-criteria-analytics-actions';
 import {
   buildCoreSort,
   Sort,
@@ -28,11 +29,7 @@ export function buildSort(engine: SearchEngine, props: SortProps = {}): Sort {
     dispatch(
       executeSearch({
         legacy: logResultsSort(),
-        next: {
-          actionCause: SearchPageEvents.resultsSort,
-          getEventExtraPayload: (state) =>
-            new SearchAnalyticsProvider(() => state).getResultSortMetadata(),
-        },
+        next: resultsSort(),
       })
     );
 
