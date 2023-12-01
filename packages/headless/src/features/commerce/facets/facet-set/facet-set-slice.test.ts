@@ -1,7 +1,8 @@
+import {FacetValueRequest} from '../../../../ssr.index';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
-import {buildMockCommerceFacetResponse} from '../../../../test/mock-commerce-facet-response';
+import {buildMockCommerceRegularFacetResponse} from '../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
-import {buildMockCommerceFacetValue} from '../../../../test/mock-commerce-facet-value';
+import {buildMockCommerceRegularFacetValue} from '../../../../test/mock-commerce-facet-value';
 import {buildFetchProductListingV2Response} from '../../../../test/mock-product-listing-v2';
 import {
   FacetValueState,
@@ -19,7 +20,7 @@ import {
   CommerceFacetSetState,
   getCommerceFacetSetInitialState,
 } from './facet-set-state';
-import {FacetResponse} from './interfaces/response';
+import {RegularFacetResponse} from './interfaces/response';
 
 describe('facet-set slice', () => {
   let state: CommerceFacetSetState;
@@ -32,6 +33,8 @@ describe('facet-set slice', () => {
     const finalState = commerceFacetSetReducer(undefined, {type: ''});
     expect(finalState).toEqual({});
   });
+
+  // TODO: #toggleSelectNumericFacetValue + #toggleExcludeNumericFacetValue tests
 
   describe.each([
     {
@@ -51,7 +54,7 @@ describe('facet-set slice', () => {
     );
     describe('when the facet value exists', () => {
       it(`sets the state of an idle value to ${facetValueState}`, () => {
-        const facetValue = buildMockCommerceFacetValue({value: 'TED'});
+        const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
         const facetValueRequest = convertFacetValueToRequest(facetValue);
 
         state[facetId] = buildMockCommerceFacetSlice({
@@ -66,14 +69,14 @@ describe('facet-set slice', () => {
         });
         const finalState = commerceFacetSetReducer(state, action);
 
-        const targetValue = finalState[facetId]?.request.values.find(
-          (req) => req.value === facetValue.value
-        );
+        const targetValue = (
+          finalState[facetId]?.request.values as FacetValueRequest[]
+        ).find((req) => req.value === facetValue.value);
         expect(targetValue?.state).toBe(facetValueState);
       });
 
       it(`sets the state of an ${oppositeFacetValueState} value to ${facetValueState}`, () => {
-        const facetValue = buildMockCommerceFacetValue({
+        const facetValue = buildMockCommerceRegularFacetValue({
           value: 'TED',
           state: oppositeFacetValueState,
         });
@@ -91,14 +94,14 @@ describe('facet-set slice', () => {
         });
         const finalState = commerceFacetSetReducer(state, action);
 
-        const targetValue = finalState[facetId]?.request.values.find(
-          (req) => req.value === facetValue.value
-        );
+        const targetValue = (
+          finalState[facetId]?.request.values as FacetValueRequest[]
+        ).find((req) => req.value === facetValue.value);
         expect(targetValue?.state).toBe(facetValueState);
       });
 
       it(`sets the state of a ${facetValueState} value to idle`, () => {
-        const facetValue = buildMockCommerceFacetValue({
+        const facetValue = buildMockCommerceRegularFacetValue({
           value: 'TED',
           state: facetValueState,
         });
@@ -116,14 +119,14 @@ describe('facet-set slice', () => {
         });
         const finalState = commerceFacetSetReducer(state, action);
 
-        const targetValue = finalState[facetId]?.request.values.find(
-          (req) => req.value === facetValue.value
-        );
+        const targetValue = (
+          finalState[facetId]?.request.values as FacetValueRequest[]
+        ).find((req) => req.value === facetValue.value);
         expect(targetValue?.state).toBe('idle');
       });
 
       it('sets #preventAutoSelect to true', () => {
-        const facetValue = buildMockCommerceFacetValue({value: 'TED'});
+        const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
         const facetValueRequest = convertFacetValueToRequest(facetValue);
 
         state[facetId] = buildMockCommerceFacetSlice({
@@ -155,7 +158,7 @@ describe('facet-set slice', () => {
       'when the facet value does not exist',
       ({facetValueState, toggleAction}) => {
         it('replaces the first idle value with the new value', () => {
-          const newFacetValue = buildMockCommerceFacetValue({
+          const newFacetValue = buildMockCommerceRegularFacetValue({
             value: 'TED',
             state: facetValueState,
           });
@@ -163,16 +166,22 @@ describe('facet-set slice', () => {
           state[facetId] = buildMockCommerceFacetSlice({
             request: buildMockCommerceFacetRequest({
               values: [
-                buildMockCommerceFacetValue({
+                buildMockCommerceRegularFacetValue({
                   value: 'active1',
                   state: facetValueState,
                 }),
-                buildMockCommerceFacetValue({
+                buildMockCommerceRegularFacetValue({
                   value: 'active2',
                   state: facetValueState,
                 }),
-                buildMockCommerceFacetValue({value: 'idle1', state: 'idle'}),
-                buildMockCommerceFacetValue({value: 'idle2', state: 'idle'}),
+                buildMockCommerceRegularFacetValue({
+                  value: 'idle1',
+                  state: 'idle',
+                }),
+                buildMockCommerceRegularFacetValue({
+                  value: 'idle2',
+                  state: 'idle',
+                }),
               ],
             }),
           });
@@ -184,7 +193,9 @@ describe('facet-set slice', () => {
 
           const finalState = commerceFacetSetReducer(state, action);
           expect(
-            finalState[facetId]?.request.values.indexOf(newFacetValue)
+            (
+              finalState[facetId]?.request.values as FacetValueRequest[]
+            ).indexOf(newFacetValue)
           ).toBe(2);
           expect(finalState[facetId]?.request.values.length).toBe(4);
         });
@@ -196,7 +207,7 @@ describe('facet-set slice', () => {
 
           const action = toggleAction({
             facetId,
-            selection: buildMockCommerceFacetValue({value: 'TED'}),
+            selection: buildMockCommerceRegularFacetValue({value: 'TED'}),
           });
           const finalState = commerceFacetSetReducer(state, action);
 
@@ -207,7 +218,7 @@ describe('facet-set slice', () => {
   });
 
   it('dispatching #toggleSelectFacetValue with an invalid id does not throw', () => {
-    const facetValue = buildMockCommerceFacetValue({value: 'TED'});
+    const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
     const action = toggleSelectFacetValue({
       facetId: '1',
       selection: facetValue,
@@ -217,7 +228,7 @@ describe('facet-set slice', () => {
   });
 
   it('dispatching #toggleExcludeFacetValue with an invalid id does not throw', () => {
-    const facetValue = buildMockCommerceFacetValue({value: 'TED'});
+    const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
     const action = toggleExcludeFacetValue({
       facetId: '1',
       selection: facetValue,
@@ -254,7 +265,7 @@ describe('facet-set slice', () => {
   });
 
   describe('#fetchProductListing.fulfilled', () => {
-    function buildFetchProductListingAction(facets: FacetResponse[]) {
+    function buildFetchProductListingAction(facets: RegularFacetResponse[]) {
       const productListing = buildFetchProductListingV2Response();
       productListing.response.facets = facets;
 
@@ -263,8 +274,8 @@ describe('facet-set slice', () => {
 
     it('updates the currentValues of facet requests to the values in the response', () => {
       const facetId = '1';
-      const facetValue = buildMockCommerceFacetValue({value: 'TED'});
-      const facet = buildMockCommerceFacetResponse({
+      const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
+      const facet = buildMockCommerceRegularFacetResponse({
         facetId,
         values: [facetValue],
       });
@@ -288,7 +299,7 @@ describe('facet-set slice', () => {
         request: buildMockCommerceFacetRequest({preventAutoSelect: true}),
       });
 
-      const facet = buildMockCommerceFacetResponse({
+      const facet = buildMockCommerceRegularFacetResponse({
         facetId,
       });
       const action = buildFetchProductListingAction([facet]);
@@ -299,7 +310,7 @@ describe('facet-set slice', () => {
 
     it('response containing unregistered facet ids does not throw', () => {
       const facetId = '1';
-      const facet = buildMockCommerceFacetResponse({
+      const facet = buildMockCommerceRegularFacetResponse({
         facetId,
       });
       const action = buildFetchProductListingAction([facet]);
@@ -314,7 +325,7 @@ describe('facet-set slice', () => {
         request: buildMockCommerceFacetRequest(),
       });
 
-      const newFacet = buildMockCommerceFacetResponse({
+      const newFacet = buildMockCommerceRegularFacetResponse({
         facetId: newFacetId,
       });
       const action = buildFetchProductListingAction([newFacet]);

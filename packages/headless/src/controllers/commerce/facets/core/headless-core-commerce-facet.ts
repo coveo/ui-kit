@@ -1,15 +1,18 @@
 import {Schema} from '@coveo/bueno';
+import {
+  ActionCreatorWithPreparedPayload,
+  AsyncThunkAction,
+} from '@reduxjs/toolkit';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {
   commerceFacetResponseSelector,
   isCommerceFacetLoadingResponseSelector,
 } from '../../../../features/commerce/facets/facet-set/facet-set-selector';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
+import {CategoryFacetValue} from '../../../../features/facets/category-facet-set/interfaces/response';
 import {FacetValueState} from '../../../../features/facets/facet-api/value';
 import {
   deselectAllFacetValues,
-  toggleExcludeFacetValue,
-  toggleSelectFacetValue,
   updateFacetIsFieldExpanded,
   updateFacetNumberOfValues,
 } from '../../../../features/facets/facet-set/facet-set-actions';
@@ -17,6 +20,7 @@ import {
   isFacetValueExcluded,
   isFacetValueSelected,
 } from '../../../../features/facets/facet-set/facet-set-utils';
+import {DateFacetValue} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {CommerceFacetSetSection} from '../../../../state/state-sections';
 import {loadReducerError} from '../../../../utils/errors';
 import {
@@ -27,66 +31,93 @@ import {buildController} from '../../../controller/headless-controller';
 import {
   CoreFacet as HeadlessCoreFacet,
   CoreFacetState,
-  FacetValue,
+  FacetValue as RegularFacetValue,
 } from '../../../core/facets/facet/headless-core-facet';
+import {NumericFacetValue} from '../../../core/facets/range-facet/numeric-facet/headless-core-numeric-facet';
 
-export type {FacetValue, FacetValueState};
+export type {FacetValueState, RegularFacetValue, NumericFacetValue};
 
-/**
- * @internal
- * This prop is used internally by the `Facet` controller.
- */
-export interface FacetProps {
-  options: FacetOptions;
-}
+export type AnyFacetValue =
+  | RegularFacetValue
+  | NumericFacetValue
+  | DateFacetValue
+  | CategoryFacetValue;
 
-export interface FacetOptions {
-  /**
-   * A unique identifier for the controller.
-   * */
+interface AnyToggleFacetValueActionCreatorPayload {
+  selection: any; // eslint-disable-line @typescript-eslint/no-explicit-any
   facetId: string;
 }
 
 /**
- * The `Facet` headless controller offers a high-level interface for designing a commerce facet UI controller.
+ * @internal
+ *
+ * The configurable `CoreCommerceFacet` properties used internally.
  */
-export type Facet = Omit<
+export interface CoreCommerceFacetProps {
+  options: CoreCommerceFacetOptions;
+}
+
+export interface CoreCommerceFacetOptions {
+  facetId: string;
+  toggleSelectActionCreator?: ActionCreatorWithPreparedPayload<
+    [payload: AnyToggleFacetValueActionCreatorPayload],
+    any, // eslint-disable-line @typescript-eslint/no-explicit-any
+    string,
+    never,
+    never
+  >;
+  toggleExcludeActionCreator?: ActionCreatorWithPreparedPayload<
+    [payload: AnyToggleFacetValueActionCreatorPayload],
+    any, // eslint-disable-line @typescript-eslint/no-explicit-any
+    string,
+    never,
+    never
+  >;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  fetchResultsActionCreator?: () => AsyncThunkAction<unknown, void, any>;
+}
+
+export type CoreCommerceFacet = Pick<
   HeadlessCoreFacet,
-  'sortBy' | 'isSortedBy' | 'enable' | 'disable' | 'state'
+  'deselectAll' | 'showLessValues' | 'showMoreValues' | 'subscribe'
+> & {
+  toggleSelect(selection: AnyFacetValue): void;
+  toggleExclude(selection: AnyFacetValue): void;
+  toggleSingleSelect(selection: AnyFacetValue): void;
+  toggleSingleExclude(selection: AnyFacetValue): void;
+  isValueSelected(value: AnyFacetValue): boolean;
+  isValueExcluded(value: AnyFacetValue): boolean;
+  state: CoreCommerceFacetState;
+};
+
+/**
+ * A scoped and simplified part of the headless state that is relevant to the `CoreCommerceFacet` controller.
+ */
+export type CoreCommerceFacetState = Omit<
+  CoreFacetState,
+  'enabled' | 'sortCriterion' | 'values'
 > & {
   /**
-   * The state of the `CommerceCoreFacet` controller.
-   * */
-  state: FacetState;
-};
-
-/**
- * A scoped and simplified part of the headless state that is relevant to the `Facet` controller.
- */
-export type FacetState = Omit<CoreFacetState, 'enabled' | 'sortCriterion'> & {
-  /** The facet field. */
+   * The facet field.
+   */
   field: string;
-  /** The facet display name. */
+  /**
+   * The facet display name.
+   */
   displayName?: string;
+  /**
+   * The facet values
+   */
+  values: AnyFacetValue[];
 };
 
-export type FacetBuilder = typeof buildCoreFacet;
+export type CoreCommerceFacetBuilder = typeof buildCoreCommerceFacet;
 
-/**
- * @internal
- * This initializer is used internally by the `FacetGenerator` controller.
- *
- * **Important:** This initializer is meant for internal use by Headless only. As an implementer, you should never import or use this initializer directly in your code.
- *
- * @param engine - The headless commerce engine.
- * @param props - The configurable `Facet` properties.
- * @returns A `Facet` controller instance.
- * */
-export function buildCoreFacet(
+export function buildCoreCommerceFacet(
   engine: CommerceEngine,
-  props: FacetProps
-): Facet {
-  if (!loadFacetReducers(engine)) {
+  props: CoreCommerceFacetProps
+): CoreCommerceFacet {
+  if (!loadCommerceFacetReducers(engine)) {
     throw loadReducerError;
   }
 
@@ -95,7 +126,7 @@ export function buildCoreFacet(
 
   validateOptions(
     engine,
-    new Schema<Required<FacetOptions>>({
+    new Schema<CoreCommerceFacetOptions>({
       facetId: requiredNonEmptyString,
     }),
     props.options,
@@ -125,14 +156,34 @@ export function buildCoreFacet(
   return {
     ...controller,
 
-    toggleSelect: (selection: FacetValue) =>
-      dispatch(toggleSelectFacetValue({facetId, selection})),
+    toggleSelect: (selection: AnyFacetValue) => {
+      if (props.options.toggleSelectActionCreator) {
+        dispatch(props.options.toggleSelectActionCreator({selection, facetId}));
+        if (props.options.fetchResultsActionCreator) {
+          dispatch(props.options.fetchResultsActionCreator());
+          // TODO: analytics
+        }
+      } else {
+        throw new Error('No toggleSelectActionCreator was provided');
+      }
+    },
 
-    toggleExclude: (selection: FacetValue) =>
-      dispatch(toggleExcludeFacetValue({facetId, selection})),
+    toggleExclude: (selection: AnyFacetValue) => {
+      if (props.options.toggleExcludeActionCreator) {
+        dispatch(
+          props.options.toggleExcludeActionCreator({selection, facetId})
+        );
+        if (props.options.fetchResultsActionCreator) {
+          dispatch(props.options.fetchResultsActionCreator());
+          // TODO: analytics
+        }
+      } else {
+        throw new Error('No toggleExcludeActionCreator was provided');
+      }
+    },
 
     // Must use a function here to properly support inheritance with `this`.
-    toggleSingleSelect: function (selection: FacetValue) {
+    toggleSingleSelect: function (selection: AnyFacetValue) {
       if (selection.state === 'idle') {
         dispatch(deselectAllFacetValues(facetId));
       }
@@ -141,7 +192,7 @@ export function buildCoreFacet(
     },
 
     // Must use a function here to properly support inheritance with `this`.
-    toggleSingleExclude: function (selection: FacetValue) {
+    toggleSingleExclude: function (selection: AnyFacetValue) {
       if (selection.state === 'idle') {
         dispatch(deselectAllFacetValues(facetId));
       }
@@ -155,6 +206,9 @@ export function buildCoreFacet(
 
     deselectAll() {
       dispatch(deselectAllFacetValues(facetId));
+      if (props.options.fetchResultsActionCreator) {
+        dispatch(props.options.fetchResultsActionCreator());
+      }
     },
 
     showMoreValues() {
@@ -166,6 +220,9 @@ export function buildCoreFacet(
 
       dispatch(updateFacetNumberOfValues({facetId, numberOfValues}));
       dispatch(updateFacetIsFieldExpanded({facetId, isFieldExpanded: true}));
+      if (props.options.fetchResultsActionCreator) {
+        dispatch(props.options.fetchResultsActionCreator());
+      }
     },
 
     showLessValues() {
@@ -179,6 +236,9 @@ export function buildCoreFacet(
         updateFacetNumberOfValues({facetId, numberOfValues: newNumberOfValues})
       );
       dispatch(updateFacetIsFieldExpanded({facetId, isFieldExpanded: false}));
+      if (props.options.fetchResultsActionCreator) {
+        dispatch(props.options.fetchResultsActionCreator());
+      }
     },
 
     get state() {
@@ -204,7 +264,7 @@ export function buildCoreFacet(
   };
 }
 
-function loadFacetReducers(
+function loadCommerceFacetReducers(
   engine: CommerceEngine
 ): engine is CommerceEngine<CommerceFacetSetSection> {
   engine.addReducers({commerceFacetSet});

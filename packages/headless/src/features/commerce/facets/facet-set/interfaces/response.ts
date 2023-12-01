@@ -11,12 +11,15 @@ export interface BaseFacetResponse<Value, Type extends FacetType> {
   type: Type;
 }
 
-export type FacetResponse = BaseFacetResponse<FacetValue, 'regular'>;
+export type RegularFacetResponse = BaseFacetResponse<
+  RegularFacetValue,
+  'regular'
+>;
 export type DateRangeFacetResponse = BaseFacetResponse<
   DateFacetValue,
   'dateRange'
 >;
-export type NumericalRangeFacetResponse = BaseFacetResponse<
+export type NumericFacetResponse = BaseFacetResponse<
   NumericFacetValue,
   'numericalRange'
 >;
@@ -38,7 +41,7 @@ export interface BaseFacetValue {
   moreValuesAvailable: boolean;
 }
 
-export interface FacetValue extends BaseFacetValue {
+export interface RegularFacetValue extends BaseFacetValue {
   value: string;
 }
 
@@ -51,14 +54,14 @@ export interface RangeFacetValue<T> extends BaseFacetValue {
 export type DateFacetValue = RangeFacetValue<string>;
 export type NumericFacetValue = RangeFacetValue<number>;
 export type AnyFacetValue =
-  | FacetValue
+  | RegularFacetValue
   | NumericFacetValue
   | DateFacetValue
   | CategoryFacetValue;
 export type AnyFacetResponse =
-  | FacetResponse
+  | RegularFacetResponse
   | DateRangeFacetResponse
-  | NumericalRangeFacetResponse
+  | NumericFacetResponse
   | CategoryFacetResponse;
 
 export interface CategoryFacetValue extends BaseFacetValue {
