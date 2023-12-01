@@ -487,6 +487,17 @@ describe('Search Box Test Suites', () => {
         .and('contain', 'active-suggestion');
     });
 
+    it('should collapse suggestions when clicking on the search button', () => {
+      //Arrange
+      SearchBoxSelectors.inputBox().focus();
+      SearchBoxSelectors.querySuggestions().should('exist');
+      //Act
+      SearchBoxSelectors.submitButton().click();
+      cy.wait(TestFixture.interceptAliases.Search);
+      //Assert
+      SearchBoxSelectors.querySuggestions().should('not.exist');
+    });
+
     CommonAssertions.assertConsoleError(false);
   });
 
