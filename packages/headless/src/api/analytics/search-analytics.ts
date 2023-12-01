@@ -126,7 +126,7 @@ export class SearchAnalyticsProvider
 
   public getFacetSortMetadata(
     facetId: string,
-    facetSortCriterion: FacetSortCriterion | RangeFacetSortCriterion
+    criteria: FacetSortCriterion | RangeFacetSortCriterion
   ) {
     const facetRequest = this.getFacetRequest(facetId);
     const facetField = facetRequest?.field ?? '';
@@ -134,7 +134,7 @@ export class SearchAnalyticsProvider
       ...this.getBaseMetadata(),
       facetId,
       facetField,
-      criteria: facetSortCriterion,
+      criteria,
       facetTitle: `${facetField}_${facetId}`,
     };
   }
@@ -179,15 +179,15 @@ export class SearchAnalyticsProvider
   ) {
     return {
       ...this.getBaseMetadata(),
-      staticFilterId: staticFilterId,
-      staticFilterValue: staticFilterValue,
+      staticFilterId,
+      staticFilterValue,
     };
   }
 
   public getStaticFilterClearAllMetadata(staticFilterId: string) {
     return {
       ...this.getBaseMetadata(),
-      staticFilterId: staticFilterId,
+      staticFilterId,
     };
   }
 
@@ -202,14 +202,14 @@ export class SearchAnalyticsProvider
     categoryFacetId: string,
     categoryFacetPath: string[]
   ) {
-    const facet = this.state.categoryFacetSet?.[categoryFacetId];
-    const field = facet?.request.field ?? '';
+    const facetRequest = this.getFacetRequest(categoryFacetId);
+    const categoryFacetField = facetRequest?.field ?? '';
     return {
       ...this.getBaseMetadata(),
-      categoryFacetId: categoryFacetId,
-      categoryFacetField: field,
-      categoryFacetPath: categoryFacetPath,
-      categoryFacetTitle: `${field}_${categoryFacetId}`,
+      categoryFacetId,
+      categoryFacetField,
+      categoryFacetPath,
+      categoryFacetTitle: `${categoryFacetField}_${categoryFacetId}`,
     };
   }
 
