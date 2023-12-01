@@ -1,6 +1,9 @@
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 // @ts-ignore
-import {getNavigateCalledWith} from 'lightning/navigation';
+import {
+  getNavigateCalledWith,
+  getGenerateUrlCalledWith,
+} from 'lightning/navigation';
 // @ts-ignore
 import {createElement} from 'lwc';
 import QuanticResultLink from '../quanticResultLink';
@@ -80,6 +83,17 @@ describe('c-quantic-result-link', () => {
   });
 
   describe('when the result is of type Salesforce', () => {
+    it('should call the navigation mixin to get the Salesforce record URL', async () => {
+      createTestComponent({...mockSalesforceResult});
+      await flushPromises();
+
+      const {pageReference} = getGenerateUrlCalledWith();
+
+      expect(pageReference.attributes.recordId).toBe(
+        mockSalesforceResult.result.raw.sfid
+      );
+    });
+
     it('should open the result link in a Salesforce console subtab', async () => {
       const element = createTestComponent({...mockSalesforceResult});
       await flushPromises();
