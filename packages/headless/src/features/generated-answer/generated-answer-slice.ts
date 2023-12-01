@@ -35,7 +35,6 @@ export const generatedAnswerReducer = createReducer(
         delete state.error;
       })
       .addCase(updateCitations, (state, {payload}) => {
-        console.log(payload.citations);
         state.isLoading = false;
         state.isStreaming = true;
         state.citations = state.citations.concat(payload.citations);
