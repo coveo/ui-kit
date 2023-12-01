@@ -1,4 +1,4 @@
-import {SearchPageEvents} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
+import {SearchPageEvents as LegacySearchPageEvents} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
 import {SearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {Result} from '../../api/search/search/result';
 import {
@@ -17,10 +17,11 @@ import {
   LegacySearchAction,
   validateResultPayload,
 } from './analytics-utils';
+import {SearchPageEvents} from './search-action-cause';
 
 export interface SearchEventPayload {
   /** The identifier of the search action (e.g., `interfaceLoad`). */
-  evt: SearchPageEvents | string;
+  evt: LegacySearchPageEvents | string;
   /** The event metadata. */
   meta?: Record<string, unknown>;
 }
@@ -29,7 +30,7 @@ export interface ClickEventPayload {
   /**
    * The identifier of the click action.
    */
-  evt: SearchPageEvents | string;
+  evt: LegacySearchPageEvents | string;
   /**
    * The result associated with the click event.
    */
@@ -44,7 +45,7 @@ export interface CustomEventPayload {
   /**
    * The event cause identifier of the custom action
    */
-  evt: SearchPageEvents | string;
+  evt: LegacySearchPageEvents | string;
   /**
    * The event type identifier of the custom action
    */
@@ -76,7 +77,7 @@ export const logSearchEvent = (
   makeAnalyticsAction('analytics/generic/search', (client) => {
     validateEvent(p);
     const {evt, meta} = p;
-    return client.makeSearchEvent(evt as SearchPageEvents, meta);
+    return client.makeSearchEvent(evt as LegacySearchPageEvents, meta);
   });
 
 export interface LogClickEventActionCreatorPayload {
@@ -104,7 +105,7 @@ export const logClickEvent = (
     validateEvent(p);
 
     return client.makeClickEvent(
-      p.evt as SearchPageEvents,
+      p.evt as LegacySearchPageEvents,
       partialDocumentInformation(p.result, state),
       documentIdentifier(p.result),
       p.meta

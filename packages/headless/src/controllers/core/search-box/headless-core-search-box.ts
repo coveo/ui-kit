@@ -18,7 +18,7 @@ import {
 } from '../../../features/query-suggest/query-suggest-actions';
 import {
   logQuerySuggestionClick,
-  querySuggestionClick,
+  omniboxAnalytics,
 } from '../../../features/query-suggest/query-suggest-analytics-actions';
 import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice';
 import {QuerySuggestState} from '../../../features/query-suggest/query-suggest-state';
@@ -271,7 +271,7 @@ export function buildCoreSearchBox(
       dispatch(selectQuerySuggestion({id, expression: value}));
       performSearch({
         legacy: logQuerySuggestionClick({id, suggestion: value}),
-        next: querySuggestionClick(id, value),
+        next: omniboxAnalytics(id, value),
       }).then(() => {
         dispatch(clearQuerySuggest({id}));
       });

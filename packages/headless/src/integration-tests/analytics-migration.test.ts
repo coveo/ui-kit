@@ -81,6 +81,9 @@ import {
   logStaticFilterClearAll,
   logStaticFilterDeselect,
   logStaticFilterSelect,
+  staticFilterClearAll,
+  staticFilterDeselect,
+  staticFilterSelect,
 } from '../features/static-filter-set/static-filter-set-actions';
 import {logUndoTriggerQuery} from '../features/triggers/trigger-analytics-actions';
 
@@ -464,16 +467,7 @@ describe('Analytics Search Migration', () => {
         staticFilterId: ANY_STATIC_FILTER_ID,
         staticFilterValue: ANY_STATIC_FILTER_VALUE,
       }),
-      next: {
-        actionCause: SearchPageEvents.staticFilterSelect,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(
-            () => state
-          ).getStaticFilterToggleMetadata(
-            ANY_STATIC_FILTER_ID,
-            ANY_STATIC_FILTER_VALUE
-          ),
-      },
+      next: staticFilterSelect(ANY_STATIC_FILTER_ID, ANY_STATIC_FILTER_VALUE),
     });
 
     legacySearchEngine.dispatch(action);
@@ -489,16 +483,7 @@ describe('Analytics Search Migration', () => {
         staticFilterId: ANY_STATIC_FILTER_ID,
         staticFilterValue: ANY_STATIC_FILTER_VALUE,
       }),
-      next: {
-        actionCause: SearchPageEvents.staticFilterDeselect,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(
-            () => state
-          ).getStaticFilterToggleMetadata(
-            ANY_STATIC_FILTER_ID,
-            ANY_STATIC_FILTER_VALUE
-          ),
-      },
+      next: staticFilterDeselect(ANY_STATIC_FILTER_ID, ANY_STATIC_FILTER_VALUE),
     });
 
     legacySearchEngine.dispatch(action);
@@ -513,13 +498,7 @@ describe('Analytics Search Migration', () => {
       legacy: logStaticFilterClearAll({
         staticFilterId: ANY_STATIC_FILTER_ID,
       }),
-      next: {
-        actionCause: SearchPageEvents.staticFilterClearAll,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(
-            () => state
-          ).getStaticFilterClearAllMetadata(ANY_STATIC_FILTER_ID),
-      },
+      next: staticFilterClearAll(ANY_STATIC_FILTER_ID),
     });
 
     legacySearchEngine.dispatch(action);

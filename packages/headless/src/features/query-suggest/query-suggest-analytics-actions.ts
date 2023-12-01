@@ -29,7 +29,7 @@ export const logQuerySuggestionClick = (
     return client.makeOmniboxAnalytics(metadata);
   });
 
-export const querySuggestionClick = (
+export const omniboxAnalytics = (
   id: string,
   suggestion: string
 ): SearchAction => {
