@@ -12,7 +12,7 @@ import {
 } from '../../../utils/validate-payload';
 import {
   AnalyticsAsyncThunk,
-  SearchAction,
+  LegacySearchAction,
 } from '../../analytics/analytics-utils';
 import {
   deselectAllBreadcrumbs,
@@ -90,18 +90,18 @@ export const prepareForSearchWithQuery = createAsyncThunk<
 
 export const executeSearch = createAsyncThunk<
   ExecuteSearchThunkReturn,
-  SearchAction,
+  LegacySearchAction,
   AsyncThunkSearchOptions<StateNeededByExecuteSearch>
->('search/executeSearch', async (searchAction: SearchAction, config) => {
+>('search/executeSearch', async (searchAction: LegacySearchAction, config) => {
   const state = config.getState();
   return await legacyExecuteSearch(state, config, searchAction);
 });
 
 export const fetchPage = createAsyncThunk<
   ExecuteSearchThunkReturn,
-  SearchAction,
+  LegacySearchAction,
   AsyncThunkSearchOptions<StateNeededByExecuteSearch>
->('search/fetchPage', async (searchAction: SearchAction, config) => {
+>('search/fetchPage', async (searchAction: LegacySearchAction, config) => {
   const state = config.getState();
   return await legacyFetchPage(state, config, searchAction);
 });
@@ -118,13 +118,16 @@ export const fetchMoreResults = createAsyncThunk<
 
 export const fetchFacetValues = createAsyncThunk<
   ExecuteSearchThunkReturn,
-  SearchAction,
+  LegacySearchAction,
   AsyncThunkSearchOptions<StateNeededByExecuteSearch>
->('search/fetchFacetValues', async (searchAction: SearchAction, config) => {
-  const state = config.getState();
+>(
+  'search/fetchFacetValues',
+  async (searchAction: LegacySearchAction, config) => {
+    const state = config.getState();
 
-  return await legacyFetchFacetValues(config, searchAction, state);
-});
+    return await legacyFetchFacetValues(config, searchAction, state);
+  }
+);
 
 export const fetchInstantResults = createAsyncThunk<
   FetchInstantResultsThunkReturn,
@@ -242,7 +245,7 @@ export async function legacyFetchInstantResults(
 export async function legacyFetchPage(
   state: StateNeededByExecuteSearch,
   config: any, //eslint-disable-line @typescript-eslint/no-explicit-any
-  searchAction: SearchAction
+  searchAction: LegacySearchAction
 ) {
   addEntryInActionsHistory(state);
 
@@ -294,7 +297,7 @@ export async function legacyFetchMoreResults(
 
 export async function legacyFetchFacetValues(
   config: any, //eslint-disable-line @typescript-eslint/no-explicit-any
-  searchAction: SearchAction,
+  searchAction: LegacySearchAction,
   state: StateNeededByExecuteSearch
 ) {
   const {analyticsClientMiddleware, preprocessRequest, logger} = config.extra;
@@ -320,7 +323,7 @@ export async function legacyFetchFacetValues(
 export async function legacyExecuteSearch(
   state: StateNeededByExecuteSearch,
   config: any, //eslint-disable-line @typescript-eslint/no-explicit-any
-  searchAction: SearchAction
+  searchAction: LegacySearchAction
 ) {
   addEntryInActionsHistory(state);
 

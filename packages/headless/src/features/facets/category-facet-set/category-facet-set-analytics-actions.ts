@@ -7,7 +7,7 @@ import {
 } from '../../../utils/validate-payload';
 import {
   makeAnalyticsAction,
-  SearchAction,
+  LegacySearchAction,
 } from '../../analytics/analytics-utils';
 import {facetIdDefinition} from '../generic/facet-actions-validation';
 
@@ -52,7 +52,7 @@ const getCategoryFacetMetadata = (
 //TODO: KIT-2859
 export const logCategoryFacetBreadcrumb = (
   payload: LogCategoryFacetBreadcrumbActionCreatorPayload
-): SearchAction =>
+): LegacySearchAction =>
   makeAnalyticsAction('analytics/categoryFacet/breadcrumb', (client, state) => {
     validatePayload(payload, categoryFacetBreadcrumbPayloadDefinition);
 

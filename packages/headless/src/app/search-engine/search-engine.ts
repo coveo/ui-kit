@@ -14,7 +14,7 @@ import {
   logOmniboxFromLink,
   logSearchFromLink,
 } from '../../features/analytics/analytics-actions';
-import {SearchAction} from '../../features/analytics/analytics-utils';
+import {LegacySearchAction} from '../../features/analytics/analytics-utils';
 import {SearchPageEvents} from '../../features/analytics/search-action-cause';
 import {
   updateSearchConfiguration,
@@ -78,7 +78,7 @@ export interface SearchEngine<State extends object = {}>
    *
    * @param analyticsEvent - The analytics event to log in association with the first search. If unspecified, `logInterfaceLoad` will be used.
    */
-  executeFirstSearch(analyticsEvent?: SearchAction): void;
+  executeFirstSearch(analyticsEvent?: LegacySearchAction): void;
 
   /**
    * Executes the first search, and logs the analytics event that triggered a redirection from a standalone search box.

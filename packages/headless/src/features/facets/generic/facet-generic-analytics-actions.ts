@@ -1,10 +1,10 @@
 import {
   makeAnalyticsAction,
-  SearchAction,
+  LegacySearchAction,
 } from '../../analytics/analytics-utils';
 
 //TODO: KIT-2859
-export const logClearBreadcrumbs = (): SearchAction =>
+export const logClearBreadcrumbs = (): LegacySearchAction =>
   makeAnalyticsAction('analytics/facet/deselectAllBreadcrumbs', (client) => {
     return client.makeBreadcrumbResetAll();
   });

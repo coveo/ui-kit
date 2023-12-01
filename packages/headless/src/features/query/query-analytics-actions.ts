@@ -1,6 +1,9 @@
-import {makeAnalyticsAction, SearchAction} from '../analytics/analytics-utils';
+import {
+  makeAnalyticsAction,
+  LegacySearchAction,
+} from '../analytics/analytics-utils';
 
-export const logSearchboxSubmit = (): SearchAction =>
+export const logSearchboxSubmit = (): LegacySearchAction =>
   makeAnalyticsAction('analytics/searchbox/submit', (client) =>
     client.makeSearchboxSubmit()
   );

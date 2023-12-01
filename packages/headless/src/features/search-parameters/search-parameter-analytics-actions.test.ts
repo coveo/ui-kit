@@ -1,6 +1,6 @@
 import {buildMockSearchAppEngine} from '../../test';
 import {logInterfaceChange} from '../analytics/analytics-actions';
-import {SearchAction} from '../analytics/analytics-utils';
+import {LegacySearchAction} from '../analytics/analytics-utils';
 import {
   logFacetClearAll,
   logFacetDeselect,
@@ -17,8 +17,8 @@ import {logParametersChange} from './search-parameter-analytics-actions';
 
 describe('logParametersChange', () => {
   function expectIdenticalActionType(
-    action1: SearchAction,
-    action2: SearchAction
+    action1: LegacySearchAction,
+    action2: LegacySearchAction
   ) {
     const engine = buildMockSearchAppEngine();
     engine.dispatch(action1);
@@ -73,8 +73,8 @@ describe('logParametersChange', () => {
 function testFacetSelectLogging(
   parameter: string,
   expectIdenticalActionType: (
-    action1: SearchAction,
-    action2: SearchAction
+    action1: LegacySearchAction,
+    action2: LegacySearchAction
   ) => void
 ) {
   testFacetLogging(parameter, expectIdenticalActionType);
@@ -99,8 +99,8 @@ function testFacetSelectLogging(
 
 function testFacetExcludeLogging(
   expectIdenticalActionType: (
-    action1: SearchAction,
-    action2: SearchAction
+    action1: LegacySearchAction,
+    action2: LegacySearchAction
   ) => void
 ) {
   testFacetLogging('fExcluded', expectIdenticalActionType);
@@ -126,8 +126,8 @@ function testFacetExcludeLogging(
 function testFacetLogging(
   parameter: string,
   expectIdenticalActionType: (
-    action1: SearchAction,
-    action2: SearchAction
+    action1: LegacySearchAction,
+    action2: LegacySearchAction
   ) => void
 ) {
   it(`should log #logFacetDeselect when an ${parameter} parameter with a single value is removed`, () => {

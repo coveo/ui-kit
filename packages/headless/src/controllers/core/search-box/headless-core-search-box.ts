@@ -4,7 +4,7 @@ import {SearchAnalyticsProvider} from '../../../api/analytics/search-analytics';
 import {configuration} from '../../../app/common-reducers';
 import {
   InsightAction,
-  SearchAction,
+  LegacySearchAction,
 } from '../../../features/analytics/analytics-utils';
 import {SearchPageEvents} from '../../../features/analytics/search-action-cause';
 import {
@@ -75,9 +75,9 @@ interface LegacySearchBoxProps {
    * The action creator for the `executeSearch` thunk action.
    */
   executeSearchActionCreator: (
-    arg: SearchAction
+    arg: LegacySearchAction
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ) => AsyncThunkAction<any, SearchAction, any>;
+  ) => AsyncThunkAction<any, LegacySearchAction, any>;
 
   isNextAnalyticsReady: false;
 }
@@ -97,9 +97,9 @@ interface SearchBoxPropsBase {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ) => AsyncThunkAction<any, TransitiveSearchAction, any>)
     | ((
-        arg: SearchAction
+        arg: LegacySearchAction
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ) => AsyncThunkAction<any, SearchAction, any>);
+      ) => AsyncThunkAction<any, LegacySearchAction, any>);
 
   /**
    * The action creator for the `fetchQuerySuggestions` thunk action.
@@ -183,7 +183,7 @@ export interface SearchBox extends Controller {
    *
    * @param analytics -  The analytics action to log after submitting a query.
    */
-  submit(analytics?: SearchAction): void;
+  submit(analytics?: LegacySearchAction): void;
 
   /**
    * The state of the `SearchBox` controller.
@@ -282,7 +282,9 @@ export function buildCoreSearchBox(
       });
     },
 
-    submit(analytics: SearchAction | InsightAction = logSearchboxSubmit()) {
+    submit(
+      analytics: LegacySearchAction | InsightAction = logSearchboxSubmit()
+    ) {
       performSearch({legacy: analytics});
       dispatch(clearQuerySuggest({id}));
     },

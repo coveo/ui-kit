@@ -1,7 +1,7 @@
 import {
   makeAnalyticsAction,
   CustomAction,
-  SearchAction,
+  LegacySearchAction,
 } from '../analytics/analytics-utils';
 
 export const logClearRecentQueries = (): CustomAction =>
@@ -10,7 +10,7 @@ export const logClearRecentQueries = (): CustomAction =>
   });
 
 //TODO: KIT-2859
-export const logRecentQueryClick = (): SearchAction =>
+export const logRecentQueryClick = (): LegacySearchAction =>
   makeAnalyticsAction('analytics/recentQueries/click', (client) => {
     return client.makeRecentQueryClick();
   });

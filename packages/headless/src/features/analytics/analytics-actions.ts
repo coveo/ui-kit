@@ -12,7 +12,7 @@ import {
   documentIdentifier,
   makeAnalyticsAction,
   partialDocumentInformation,
-  SearchAction,
+  LegacySearchAction,
   validateResultPayload,
 } from './analytics-utils';
 
@@ -70,7 +70,7 @@ export interface LogSearchEventActionCreatorPayload {
 
 export const logSearchEvent = (
   p: LogSearchEventActionCreatorPayload
-): SearchAction =>
+): LegacySearchAction =>
   makeAnalyticsAction('analytics/generic/search', (client) => {
     validateEvent(p);
     const {evt, meta} = p;
@@ -133,13 +133,13 @@ export const logCustomEvent = (
   });
 
 //TODO: KIT-2859
-export const logInterfaceLoad = (): SearchAction =>
+export const logInterfaceLoad = (): LegacySearchAction =>
   makeAnalyticsAction('analytics/interface/load', (client) =>
     client.makeInterfaceLoad()
   );
 
 //TODO: KIT-2859
-export const logInterfaceChange = (): SearchAction =>
+export const logInterfaceChange = (): LegacySearchAction =>
   makeAnalyticsAction('analytics/interface/change', (client, state) =>
     client.makeInterfaceChange({
       interfaceChangeTo: state.configuration.analytics.originLevel2,
@@ -147,7 +147,7 @@ export const logInterfaceChange = (): SearchAction =>
   );
 
 //TODO: KIT-2859
-export const logSearchFromLink = (): SearchAction =>
+export const logSearchFromLink = (): LegacySearchAction =>
   makeAnalyticsAction('analytics/interface/searchFromLink', (client) =>
     client.makeSearchFromLink()
   );
@@ -155,7 +155,7 @@ export const logSearchFromLink = (): SearchAction =>
 //TODO: KIT-2859
 export const logOmniboxFromLink = (
   metadata: OmniboxSuggestionMetadata
-): SearchAction =>
+): LegacySearchAction =>
   makeAnalyticsAction('analytics/interface/omniboxFromLink', (client) =>
     client.makeOmniboxFromLink(metadata)
   );

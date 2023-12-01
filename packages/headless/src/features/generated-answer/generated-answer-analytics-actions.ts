@@ -1,6 +1,6 @@
 import {
   CustomAction,
-  SearchAction,
+  LegacySearchAction,
   makeAnalyticsAction,
 } from '../analytics/analytics-utils';
 import {
@@ -15,14 +15,14 @@ export type GeneratedAnswerFeedback =
   | 'outOfDate'
   | 'harmful';
 
-export const logRetryGeneratedAnswer = (): SearchAction =>
+export const logRetryGeneratedAnswer = (): LegacySearchAction =>
   makeAnalyticsAction('analytics/generatedAnswer/retry', (client) =>
     client.makeRetryGeneratedAnswer()
   );
 
 export const logRephraseGeneratedAnswer = (
   responseFormat: GeneratedResponseFormat
-): SearchAction =>
+): LegacySearchAction =>
   makeAnalyticsAction('analytics/generatedAnswer/rephrase', (client, state) => {
     const generativeQuestionAnsweringId =
       generativeQuestionAnsweringIdSelector(state);

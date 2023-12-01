@@ -1,7 +1,7 @@
 import {validatePayload} from '../../../../utils/validate-payload';
 import {
   makeAnalyticsAction,
-  SearchAction,
+  LegacySearchAction,
 } from '../../../analytics/analytics-utils';
 import {getRangeFacetMetadata} from '../generic/range-facet-analytics-actions';
 import {rangeFacetSelectionPayloadDefinition} from '../generic/range-facet-validate-payload';
@@ -22,7 +22,7 @@ export interface LogNumericFacetBreadcrumbActionCreatorPayload {
 //TODO: KIT-2859
 export const logNumericFacetBreadcrumb = (
   payload: LogNumericFacetBreadcrumbActionCreatorPayload
-): SearchAction =>
+): LegacySearchAction =>
   makeAnalyticsAction('analytics/numericFacet/breadcrumb', (client, state) => {
     validatePayload(
       payload,

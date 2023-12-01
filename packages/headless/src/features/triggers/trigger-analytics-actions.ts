@@ -3,7 +3,10 @@ import {
   requiredEmptyAllowedString,
   validatePayload,
 } from '../../utils/validate-payload';
-import {makeAnalyticsAction, SearchAction} from '../analytics/analytics-utils';
+import {
+  makeAnalyticsAction,
+  LegacySearchAction,
+} from '../analytics/analytics-utils';
 
 export interface LogUndoTriggerQueryActionCreatorPayload {
   /**
@@ -19,7 +22,7 @@ const logUndoTriggerQueryPayloadDefinition = new RecordValue({
   options: {required: true},
 });
 
-export const logTriggerQuery = (): SearchAction =>
+export const logTriggerQuery = (): LegacySearchAction =>
   makeAnalyticsAction('analytics/trigger/query', (client, state) => {
     if (state.triggers?.queryModification.newQuery) {
       return client.makeTriggerQuery();
@@ -30,13 +33,13 @@ export const logTriggerQuery = (): SearchAction =>
 //TODO: KIT-2859
 export const logUndoTriggerQuery = (
   payload: LogUndoTriggerQueryActionCreatorPayload
-): SearchAction =>
+): LegacySearchAction =>
   makeAnalyticsAction('analytics/trigger/query/undo', (client) => {
     validatePayload(payload, logUndoTriggerQueryPayloadDefinition);
     return client.makeUndoTriggerQuery(payload);
   });
 
-export const logNotifyTrigger = (): SearchAction =>
+export const logNotifyTrigger = (): LegacySearchAction =>
   makeAnalyticsAction('analytics/trigger/notify', (client, state) => {
     if (!state.triggers?.notifications.length) {
       return null;
@@ -46,7 +49,7 @@ export const logNotifyTrigger = (): SearchAction =>
     });
   });
 
-export const logTriggerRedirect = (): SearchAction =>
+export const logTriggerRedirect = (): LegacySearchAction =>
   makeAnalyticsAction('analytics/trigger/redirect', (client, state) => {
     if (state.triggers?.redirectTo) {
       return client.makeTriggerRedirect({
@@ -59,7 +62,7 @@ export const logTriggerRedirect = (): SearchAction =>
 /**
  * Log trigger execute
  */
-export const logTriggerExecute = (): SearchAction =>
+export const logTriggerExecute = (): LegacySearchAction =>
   makeAnalyticsAction('analytics/trigger/execute', (client, state) => {
     if (!state.triggers?.executions.length) {
       return null;

@@ -1,6 +1,9 @@
 import {createAction} from '@reduxjs/toolkit';
 import {validatePayload} from '../../utils/validate-payload';
-import {makeAnalyticsAction, SearchAction} from '../analytics/analytics-utils';
+import {
+  makeAnalyticsAction,
+  LegacySearchAction,
+} from '../analytics/analytics-utils';
 import {
   staticFilterIdSchema,
   staticFilterValueSchema,
@@ -102,7 +105,7 @@ export interface StaticFilterValueMetadata {
 //TODO: KIT-2859
 export const logStaticFilterSelect = (
   metadata: LogStaticFilterToggleValueActionCreatorPayload
-): SearchAction =>
+): LegacySearchAction =>
   makeAnalyticsAction('analytics/staticFilter/select', (client) =>
     client.makeStaticFilterSelect(metadata)
   );
@@ -110,7 +113,7 @@ export const logStaticFilterSelect = (
 //TODO: KIT-2859
 export const logStaticFilterDeselect = (
   metadata: LogStaticFilterToggleValueActionCreatorPayload
-): SearchAction =>
+): LegacySearchAction =>
   makeAnalyticsAction('analytics/staticFilter/deselect', (client) =>
     client.makeStaticFilterDeselect(metadata)
   );
@@ -125,7 +128,7 @@ export interface LogStaticFilterClearAllActionCreatorPayload {
 //TODO: KIT-2859
 export const logStaticFilterClearAll = (
   metadata: LogStaticFilterClearAllActionCreatorPayload
-): SearchAction =>
+): LegacySearchAction =>
   makeAnalyticsAction('analytics/staticFilter/clearAll', (client) =>
     client.makeStaticFilterClearAll(metadata)
   );

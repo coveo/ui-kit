@@ -5,7 +5,7 @@ import {
 } from '../../../utils/validate-payload';
 import {
   makeAnalyticsAction,
-  SearchAction,
+  LegacySearchAction,
 } from '../../analytics/analytics-utils';
 import {facetIdDefinition} from '../generic/facet-actions-validation';
 import {RangeFacetSortCriterion} from '../range-facets/generic/interfaces/request';
@@ -16,7 +16,7 @@ import {
 } from './facet-set-analytics-actions-utils';
 import {FacetSortCriterion} from './interfaces/request';
 
-export const logFacetShowMore = (facetId: string): SearchAction =>
+export const logFacetShowMore = (facetId: string): LegacySearchAction =>
   makeAnalyticsAction('analytics/facet/showMore', (client, state) => {
     validatePayload(facetId, facetIdDefinition);
     const metadata = buildFacetBaseMetadata(
@@ -26,7 +26,7 @@ export const logFacetShowMore = (facetId: string): SearchAction =>
     return client.makeFacetShowMore(metadata);
   });
 
-export const logFacetShowLess = (facetId: string): SearchAction =>
+export const logFacetShowLess = (facetId: string): LegacySearchAction =>
   makeAnalyticsAction('analytics/facet/showLess', (client, state) => {
     validatePayload(facetId, facetIdDefinition);
     const metadata = buildFacetBaseMetadata(
@@ -52,7 +52,7 @@ export interface LogFacetUpdateSortActionCreatorPayload {
 //TODO: KIT-2859
 export const logFacetUpdateSort = (
   payload: LogFacetUpdateSortActionCreatorPayload
-): SearchAction =>
+): LegacySearchAction =>
   makeAnalyticsAction('analytics/facet/sortChange', (client, state) => {
     validatePayload(payload, {
       facetId: facetIdDefinition,
@@ -71,7 +71,7 @@ export const logFacetUpdateSort = (
   });
 
 //TODO: KIT-2859
-export const logFacetClearAll = (facetId: string): SearchAction =>
+export const logFacetClearAll = (facetId: string): LegacySearchAction =>
   makeAnalyticsAction('analytics/facet/reset', (client, state) => {
     validatePayload(facetId, facetIdDefinition);
 
@@ -96,7 +96,7 @@ export interface LogFacetSelectActionCreatorPayload {
 //TODO: KIT-2859
 export const logFacetSelect = (
   payload: LogFacetSelectActionCreatorPayload
-): SearchAction =>
+): LegacySearchAction =>
   makeAnalyticsAction('analytics/facet/select', (client, state) => {
     validatePayload(payload, {
       facetId: facetIdDefinition,
@@ -115,7 +115,7 @@ export const logFacetSelect = (
 //TODO: KIT-2859
 export const logFacetExclude = (
   payload: LogFacetSelectActionCreatorPayload
-): SearchAction =>
+): LegacySearchAction =>
   makeAnalyticsAction('analytics/facet/exclude', (client, state) => {
     validatePayload(payload, {
       facetId: facetIdDefinition,
@@ -146,7 +146,7 @@ export interface LogFacetDeselectActionCreatorPayload {
 //TODO: KIT-2859
 export const logFacetDeselect = (
   payload: LogFacetDeselectActionCreatorPayload
-): SearchAction =>
+): LegacySearchAction =>
   makeAnalyticsAction('analytics/facet/deselect', (client, state) => {
     validatePayload(payload, {
       facetId: facetIdDefinition,
@@ -176,7 +176,7 @@ export interface LogFacetBreadcrumbActionCreatorPayload {
 //TODO: KIT-2859
 export const logFacetBreadcrumb = (
   payload: LogFacetBreadcrumbActionCreatorPayload
-): SearchAction =>
+): LegacySearchAction =>
   makeAnalyticsAction('analytics/facet/breadcrumb', (client, state) => {
     validatePayload(payload, {
       facetId: facetIdDefinition,
