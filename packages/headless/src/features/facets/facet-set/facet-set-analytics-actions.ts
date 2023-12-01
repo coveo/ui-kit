@@ -201,7 +201,7 @@ export const facetUpdateSort = (
   return {
     actionCause: SearchPageEvents.facetUpdateSort,
     getEventExtraPayload: (state) =>
-      new SearchAnalyticsProvider(() => state).getFacetSortMetadata(
+      new SearchAnalyticsProvider(() => state).getFacetUpdateSortMetadata(
         id,
         criterion
       ),

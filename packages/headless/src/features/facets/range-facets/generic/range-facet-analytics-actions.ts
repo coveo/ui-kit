@@ -31,7 +31,7 @@ export const rangeBreadcrumbFacet = (
   return {
     actionCause: SearchPageEvents.breadcrumbFacet,
     getEventExtraPayload: (state) =>
-      new SearchAnalyticsProvider(() => state).getRangeFacetBreadcrumbMetadata(
+      new SearchAnalyticsProvider(() => state).getRangeBreadcrumbFacetMetadata(
         id,
         value
       ),

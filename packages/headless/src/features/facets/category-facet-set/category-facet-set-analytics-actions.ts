@@ -71,6 +71,6 @@ export const categoryBreadcrumbFacet = (
     getEventExtraPayload: (state) =>
       new SearchAnalyticsProvider(
         () => state
-      ).getCategoryFacetBreadcrumbMetadata(id, path),
+      ).getCategoryBreadcrumbFacetMetadata(id, path),
   };
 };
