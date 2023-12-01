@@ -235,6 +235,13 @@ export class SearchAnalyticsProvider
     };
   }
 
+  public getInterfaceChangeMetadata() {
+    return {
+      ...this.getBaseMetadata(),
+      interfaceChangeTo: this.state.configuration.analytics.originLevel2,
+    };
+  }
+
   public getGeneratedAnswerMetadata() {
     const state = this.getState();
     const formattedObject: Record<string, string | boolean> = {};

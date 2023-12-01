@@ -138,6 +138,7 @@ export const logInterfaceLoad = (): SearchAction =>
     client.makeInterfaceLoad()
   );
 
+//TODO: KIT-2859
 export const logInterfaceChange = (): SearchAction =>
   makeAnalyticsAction('analytics/interface/change', (client, state) =>
     client.makeInterfaceChange({

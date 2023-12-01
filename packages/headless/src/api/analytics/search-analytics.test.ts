@@ -435,5 +435,18 @@ describe('search analytics', () => {
         suggestions: completions.map((completion) => completion.expression),
       });
     });
+
+    it('should properly return the interface change metadata from the state', () => {
+      const originLevel2 = 'the origin level 2';
+      const state = getBaseState();
+      state.configuration.analytics.originLevel2 = originLevel2;
+
+      expect(
+        new SearchAnalyticsProvider(() => state).getInterfaceChangeMetadata()
+      ).toEqual({
+        coveoHeadlessVersion: 'Test version',
+        interfaceChangeTo: originLevel2,
+      });
+    });
   });
 });

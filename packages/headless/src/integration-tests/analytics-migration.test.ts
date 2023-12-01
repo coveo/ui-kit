@@ -9,7 +9,10 @@ import {
   SearchBoxProps,
   buildCoreSearchBox,
 } from '../controllers/core/search-box/headless-core-search-box';
-import {logInterfaceLoad} from '../features/analytics/analytics-actions';
+import {
+  logInterfaceChange,
+  logInterfaceLoad,
+} from '../features/analytics/analytics-actions';
 import {SearchPageEvents} from '../features/analytics/search-action-cause';
 import {logDidYouMeanClick} from '../features/did-you-mean/did-you-mean-analytics-actions';
 import {registerCategoryFacet} from '../features/facets/category-facet-set/category-facet-set-actions';
@@ -650,6 +653,23 @@ describe('Analytics Search Migration', () => {
         actionCause: SearchPageEvents.recentQueryClick,
         getEventExtraPayload: (state) =>
           new SearchAnalyticsProvider(() => state).getBaseMetadata(),
+      },
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/interface/change', async () => {
+    const action = executeSearch({
+      legacy: logInterfaceChange(),
+      next: {
+        actionCause: SearchPageEvents.interfaceChange,
+        getEventExtraPayload: (state) =>
+          new SearchAnalyticsProvider(() => state).getInterfaceChangeMetadata(),
       },
     });
 
