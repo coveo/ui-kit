@@ -13,7 +13,10 @@ import {
   toggleSelectFacetValue,
   updateFreezeCurrentValues,
 } from '../../features/facets/facet-set/facet-set-actions';
-import {logFacetBreadcrumb} from '../../features/facets/facet-set/facet-set-analytics-actions';
+import {
+  breadcrumbFacet,
+  logFacetBreadcrumb,
+} from '../../features/facets/facet-set/facet-set-analytics-actions';
 import {facetResponseActiveValuesSelector} from '../../features/facets/facet-set/facet-set-selectors';
 import {facetSetReducer as facetSet} from '../../features/facets/facet-set/facet-set-slice';
 import {FacetSlice} from '../../features/facets/facet-set/facet-set-state';
@@ -142,14 +145,7 @@ export function buildBreadcrumbManager(
               facetId: facetId,
               facetValue: selection.value,
             }),
-            next: {
-              actionCause: SearchPageEvents.breadcrumbFacet,
-              getEventExtraPayload: (state) =>
-                new SearchAnalyticsProvider(() => state).getFacetMetadata(
-                  facetId,
-                  selection.value
-                ),
-            },
+            next: breadcrumbFacet(facetId, selection.value),
           })
         );
       },
@@ -164,14 +160,7 @@ export function buildBreadcrumbManager(
               facetId: facetId,
               facetValue: selection.value,
             }),
-            next: {
-              actionCause: SearchPageEvents.breadcrumbFacet,
-              getEventExtraPayload: (state) =>
-                new SearchAnalyticsProvider(() => state).getFacetMetadata(
-                  facetId,
-                  selection.value
-                ),
-            },
+            next: breadcrumbFacet(facetId, selection.value),
           })
         );
       },
@@ -396,14 +385,7 @@ export function buildBreadcrumbManager(
               facetId: field,
               facetValue: selection.value,
             }),
-            next: {
-              actionCause: SearchPageEvents.breadcrumbFacet,
-              getEventExtraPayload: (state) =>
-                new SearchAnalyticsProvider(() => state).getFacetMetadata(
-                  field,
-                  selection.value
-                ),
-            },
+            next: breadcrumbFacet(field, selection.value),
           })
         );
       },

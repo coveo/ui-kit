@@ -21,6 +21,12 @@ import {registerCategoryFacet} from '../features/facets/category-facet-set/categ
 import {logCategoryFacetBreadcrumb} from '../features/facets/category-facet-set/category-facet-set-analytics-actions';
 import {categoryFacetSetReducer} from '../features/facets/category-facet-set/category-facet-set-slice';
 import {
+  breadcrumbFacet,
+  facetClearAll,
+  facetDeselect,
+  facetExclude,
+  facetSelect,
+  facetUpdateSort,
   logFacetBreadcrumb,
   logFacetClearAll,
   logFacetDeselect,
@@ -162,14 +168,7 @@ describe('Analytics Search Migration', () => {
         facetId: ANY_FACET_ID,
         facetValue: ANY_FACET_VALUE,
       }),
-      next: {
-        actionCause: SearchPageEvents.facetSelect,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getFacetMetadata(
-            ANY_FACET_ID,
-            ANY_FACET_VALUE
-          ),
-      },
+      next: facetSelect(ANY_FACET_ID, ANY_FACET_VALUE),
     });
 
     legacySearchEngine.dispatch(action);
@@ -202,14 +201,7 @@ describe('Analytics Search Migration', () => {
         facetId: ANY_FACET_ID,
         facetValue: ANY_FACET_VALUE,
       }),
-      next: {
-        actionCause: SearchPageEvents.facetDeselect,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getFacetMetadata(
-            ANY_FACET_ID,
-            ANY_FACET_VALUE
-          ),
-      },
+      next: facetDeselect(ANY_FACET_ID, ANY_FACET_VALUE),
     });
 
     legacySearchEngine.dispatch(action);
@@ -241,14 +233,7 @@ describe('Analytics Search Migration', () => {
         facetId: ANY_FACET_ID,
         facetValue: ANY_FACET_VALUE,
       }),
-      next: {
-        actionCause: SearchPageEvents.facetExclude,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getFacetMetadata(
-            ANY_FACET_ID,
-            ANY_FACET_VALUE
-          ),
-      },
+      next: facetExclude(ANY_FACET_ID, ANY_FACET_VALUE),
     });
 
     legacySearchEngine.dispatch(action);
@@ -264,14 +249,7 @@ describe('Analytics Search Migration', () => {
         facetId: ANY_FACET_ID,
         criterion: ANY_CRITERION,
       }),
-      next: {
-        actionCause: SearchPageEvents.facetUpdateSort,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getFacetSortMetadata(
-            ANY_FACET_ID,
-            ANY_CRITERION
-          ),
-      },
+      next: facetUpdateSort(ANY_FACET_ID, ANY_CRITERION),
     });
 
     legacySearchEngine.dispatch(action);
@@ -304,14 +282,7 @@ describe('Analytics Search Migration', () => {
         facetId: ANY_FACET_ID,
         facetValue: ANY_FACET_VALUE,
       }),
-      next: {
-        actionCause: SearchPageEvents.breadcrumbFacet,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getFacetMetadata(
-            ANY_FACET_ID,
-            ANY_FACET_VALUE
-          ),
-      },
+      next: breadcrumbFacet(ANY_FACET_ID, ANY_FACET_VALUE),
     });
 
     legacySearchEngine.dispatch(action);
@@ -341,13 +312,7 @@ describe('Analytics Search Migration', () => {
   it('analytics/facet/reset', async () => {
     const action = executeSearch({
       legacy: logFacetClearAll(ANY_FACET_ID),
-      next: {
-        actionCause: SearchPageEvents.facetClearAll,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getFacetClearAllMetadata(
-            ANY_FACET_ID
-          ),
-      },
+      next: facetClearAll(ANY_FACET_ID),
     });
 
     legacySearchEngine.dispatch(action);

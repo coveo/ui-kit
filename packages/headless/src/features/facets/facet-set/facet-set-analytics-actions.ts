@@ -1,4 +1,5 @@
 import {Value} from '@coveo/bueno';
+import {SearchAnalyticsProvider} from '../../../api/analytics/search-analytics';
 import {
   validatePayload,
   requiredNonEmptyString,
@@ -7,6 +8,8 @@ import {
   makeAnalyticsAction,
   LegacySearchAction,
 } from '../../analytics/analytics-utils';
+import {SearchPageEvents} from '../../analytics/search-action-cause';
+import {SearchAction} from '../../search/search-actions';
 import {facetIdDefinition} from '../generic/facet-actions-validation';
 import {RangeFacetSortCriterion} from '../range-facets/generic/interfaces/request';
 import {
@@ -189,3 +192,58 @@ export const logFacetBreadcrumb = (
 
     return client.makeBreadcrumbFacet(metadata);
   });
+
+// --------------------- KIT-2859 : Everything above this will get deleted ! :) ---------------------
+export const facetUpdateSort = (
+  id: string,
+  criterion: FacetSortCriterion | RangeFacetSortCriterion
+): SearchAction => {
+  return {
+    actionCause: SearchPageEvents.facetUpdateSort,
+    getEventExtraPayload: (state) =>
+      new SearchAnalyticsProvider(() => state).getFacetSortMetadata(
+        id,
+        criterion
+      ),
+  };
+};
+
+export const facetClearAll = (id: string): SearchAction => {
+  return {
+    actionCause: SearchPageEvents.facetClearAll,
+    getEventExtraPayload: (state) =>
+      new SearchAnalyticsProvider(() => state).getFacetClearAllMetadata(id),
+  };
+};
+
+export const facetSelect = (id: string, value: string): SearchAction => {
+  return {
+    actionCause: SearchPageEvents.facetSelect,
+    getEventExtraPayload: (state) =>
+      new SearchAnalyticsProvider(() => state).getFacetMetadata(id, value),
+  };
+};
+
+export const facetExclude = (id: string, value: string): SearchAction => {
+  return {
+    actionCause: SearchPageEvents.facetExclude,
+    getEventExtraPayload: (state) =>
+      new SearchAnalyticsProvider(() => state).getFacetMetadata(id, value),
+  };
+};
+
+export const facetDeselect = (id: string, value: string): SearchAction => {
+  return {
+    actionCause: SearchPageEvents.facetDeselect,
+    getEventExtraPayload: (state) =>
+      new SearchAnalyticsProvider(() => state).getFacetMetadata(id, value),
+  };
+};
+
+export const breadcrumbFacet = (id: string, value: string): SearchAction => {
+  return {
+    actionCause: SearchPageEvents.breadcrumbFacet,
+    getEventExtraPayload: (state) =>
+      new SearchAnalyticsProvider(() => state).getFacetMetadata(id, value),
+  };
+};
