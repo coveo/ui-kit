@@ -10,10 +10,14 @@ import {
   buildCoreSearchBox,
 } from '../controllers/core/search-box/headless-core-search-box';
 import {
+  interfaceChange,
+  interfaceLoad,
   logInterfaceChange,
   logInterfaceLoad,
   logOmniboxFromLink,
   logSearchFromLink,
+  omniboxFromLink,
+  searchFromLink,
 } from '../features/analytics/analytics-actions';
 import {SearchPageEvents} from '../features/analytics/search-action-cause';
 import {logDidYouMeanClick} from '../features/did-you-mean/did-you-mean-analytics-actions';
@@ -148,11 +152,7 @@ describe('Analytics Search Migration', () => {
   it('analytics/interface/load', async () => {
     const action = executeSearch({
       legacy: logInterfaceLoad(),
-      next: {
-        actionCause: SearchPageEvents.interfaceLoad,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getBaseMetadata(),
-      },
+      next: interfaceLoad(),
     });
 
     legacySearchEngine.dispatch(action);
@@ -634,11 +634,7 @@ describe('Analytics Search Migration', () => {
   it('analytics/interface/change', async () => {
     const action = executeSearch({
       legacy: logInterfaceChange(),
-      next: {
-        actionCause: SearchPageEvents.interfaceChange,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getInterfaceChangeMetadata(),
-      },
+      next: interfaceChange(),
     });
 
     legacySearchEngine.dispatch(action);
@@ -651,11 +647,7 @@ describe('Analytics Search Migration', () => {
   it('analytics/interface/searchFromLink', async () => {
     const action = executeSearch({
       legacy: logSearchFromLink(),
-      next: {
-        actionCause: SearchPageEvents.searchFromLink,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getBaseMetadata(),
-      },
+      next: searchFromLink(),
     });
 
     legacySearchEngine.dispatch(action);
@@ -676,13 +668,7 @@ describe('Analytics Search Migration', () => {
 
     const action = executeSearch({
       legacy: logOmniboxFromLink(metadata),
-      next: {
-        actionCause: SearchPageEvents.omniboxFromLink,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getOmniboxFromLinkMetadata(
-            metadata
-          ),
-      },
+      next: omniboxFromLink(metadata),
     });
 
     legacySearchEngine.dispatch(action);
