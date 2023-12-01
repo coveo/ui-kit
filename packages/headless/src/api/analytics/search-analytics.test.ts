@@ -5,6 +5,7 @@ import {getCategoryFacetSetInitialState} from '../../features/facets/category-fa
 import {getFacetSetInitialState} from '../../features/facets/facet-set/facet-set-state';
 import {FacetSortCriterion} from '../../features/facets/facet-set/interfaces/request';
 import {getGeneratedAnswerInitialState} from '../../features/generated-answer/generated-answer-state';
+import {OmniboxSuggestionMetadata} from '../../features/query-suggest/query-suggest-analytics-actions';
 import {getQuerySuggestSetInitialState} from '../../features/query-suggest/query-suggest-state';
 import {
   DateFacetValue,
@@ -446,6 +447,27 @@ describe('search analytics', () => {
       ).toEqual({
         coveoHeadlessVersion: 'Test version',
         interfaceChangeTo: originLevel2,
+      });
+    });
+
+    it('should properly return the omnibox from link metadata from the state', () => {
+      const metadata: OmniboxSuggestionMetadata = {
+        suggestionRanking: 1,
+        partialQuery: 'partialQuery',
+        partialQueries: 'partialQueries',
+        suggestions: 'suggestions',
+        querySuggestResponseId: 'querySuggestResponseId',
+      };
+
+      const state = getBaseState();
+
+      expect(
+        new SearchAnalyticsProvider(() => state).getOmniboxFromLinkMetadata(
+          metadata
+        )
+      ).toEqual({
+        coveoHeadlessVersion: 'Test version',
+        ...metadata,
       });
     });
   });

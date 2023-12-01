@@ -12,6 +12,8 @@ import {
 import {
   logInterfaceChange,
   logInterfaceLoad,
+  logOmniboxFromLink,
+  logSearchFromLink,
 } from '../features/analytics/analytics-actions';
 import {SearchPageEvents} from '../features/analytics/search-action-cause';
 import {logDidYouMeanClick} from '../features/did-you-mean/did-you-mean-analytics-actions';
@@ -42,6 +44,7 @@ import {
   logNoResultsBack,
 } from '../features/history/history-analytics-actions';
 import {fetchQuerySuggestions} from '../features/query-suggest/query-suggest-actions';
+import {OmniboxSuggestionMetadata} from '../features/query-suggest/query-suggest-analytics-actions';
 import {logRecentQueryClick} from '../features/recent-queries/recent-queries-analytics-actions';
 import {executeSearch} from '../features/search/search-actions';
 import {logResultsSort} from '../features/sort-criteria/sort-criteria-analytics-actions';
@@ -670,6 +673,50 @@ describe('Analytics Search Migration', () => {
         actionCause: SearchPageEvents.interfaceChange,
         getEventExtraPayload: (state) =>
           new SearchAnalyticsProvider(() => state).getInterfaceChangeMetadata(),
+      },
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/interface/searchFromLink', async () => {
+    const action = executeSearch({
+      legacy: logSearchFromLink(),
+      next: {
+        actionCause: SearchPageEvents.searchFromLink,
+        getEventExtraPayload: (state) =>
+          new SearchAnalyticsProvider(() => state).getBaseMetadata(),
+      },
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/interface/omniboxFromLink', async () => {
+    const metadata: OmniboxSuggestionMetadata = {
+      suggestionRanking: 1,
+      partialQuery: 'partialQuery',
+      partialQueries: 'partialQueries',
+      suggestions: 'suggestions',
+      querySuggestResponseId: 'querySuggestResponseId',
+    };
+
+    const action = executeSearch({
+      legacy: logOmniboxFromLink(metadata),
+      next: {
+        actionCause: SearchPageEvents.omniboxFromLink,
+        getEventExtraPayload: (state) =>
+          new SearchAnalyticsProvider(() => state).getOmniboxFromLinkMetadata(
+            metadata
+          ),
       },
     });
 

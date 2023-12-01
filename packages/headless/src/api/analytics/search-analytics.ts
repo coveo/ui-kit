@@ -14,6 +14,7 @@ import {FacetSortCriterion} from '../../features/facets/facet-set/interfaces/req
 import {DateFacetValue} from '../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {RangeFacetSortCriterion} from '../../features/facets/range-facets/generic/interfaces/request';
 import {NumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/interfaces/response';
+import {OmniboxSuggestionMetadata} from '../../features/query-suggest/query-suggest-analytics-actions';
 import {getQueryInitialState} from '../../features/query/query-state';
 import {getSearchInitialState} from '../../features/search/search-state';
 import {getSortCriteriaInitialState} from '../../features/sort-criteria/sort-criteria-state';
@@ -239,6 +240,13 @@ export class SearchAnalyticsProvider
     return {
       ...this.getBaseMetadata(),
       interfaceChangeTo: this.state.configuration.analytics.originLevel2,
+    };
+  }
+
+  public getOmniboxFromLinkMetadata(metadata: OmniboxSuggestionMetadata) {
+    return {
+      ...this.getBaseMetadata(),
+      ...metadata,
     };
   }
 

@@ -146,11 +146,13 @@ export const logInterfaceChange = (): SearchAction =>
     })
   );
 
+//TODO: KIT-2859
 export const logSearchFromLink = (): SearchAction =>
   makeAnalyticsAction('analytics/interface/searchFromLink', (client) =>
     client.makeSearchFromLink()
   );
 
+//TODO: KIT-2859
 export const logOmniboxFromLink = (
   metadata: OmniboxSuggestionMetadata
 ): SearchAction =>
