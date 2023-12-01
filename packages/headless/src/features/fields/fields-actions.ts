@@ -1,4 +1,3 @@
-import {ArrayValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {FieldDescription} from '../../api/search/fields/fields-response';
 import {
@@ -6,15 +5,7 @@ import {
   isErrorResponse,
 } from '../../api/search/search-api-client';
 import {ConfigurationSection} from '../../state/state-sections';
-import {
-  validatePayload,
-  requiredNonEmptyString,
-} from '../../utils/validate-payload';
-
-const nonEmptyArray = new ArrayValue({
-  each: requiredNonEmptyString,
-  required: true,
-});
+import {validatePayload, nonEmptyArray} from '../../utils/validate-payload';
 
 export const registerFieldsToInclude = createAction(
   'fields/registerFieldsToInclude',

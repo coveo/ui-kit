@@ -146,6 +146,7 @@ export interface PipelineRuleParameters {
 
 export interface GenQAParameters {
   responseFormat: ResponseFormatParameters;
+  citationsFieldToInclude: string[];
 }
 
 export interface ResponseFormatParameters {

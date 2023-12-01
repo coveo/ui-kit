@@ -1,3 +1,5 @@
+import {Raw} from '../../ssr.index';
+
 export type GeneratedAnswerStreamFinishReason = 'COMPLETED' | 'ERROR';
 
 export type GeneratedAnswerPayloadType =
@@ -12,6 +14,7 @@ export interface GeneratedAnswerCitation {
   permanentid: string;
   clickUri?: string;
   text?: string;
+  fields?: Raw;
 }
 
 export interface GeneratedAnswerMessagePayload {
