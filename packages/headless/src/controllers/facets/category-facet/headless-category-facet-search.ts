@@ -1,11 +1,12 @@
-import {SearchAnalyticsProvider} from '../../../api/analytics/search-analytics';
 import {CoreEngine} from '../../../app/engine';
 import {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments';
-import {SearchPageEvents} from '../../../features/analytics/search-action-cause';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {registerCategoryFacetSearch} from '../../../features/facets/facet-search-set/category/category-facet-search-actions';
 import {defaultFacetSearchOptions} from '../../../features/facets/facet-search-set/facet-search-reducer-helpers';
-import {logFacetSelect} from '../../../features/facets/facet-set/facet-set-analytics-actions';
+import {
+  facetSelect,
+  logFacetSelect,
+} from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {executeSearch} from '../../../features/search/search-actions';
 import {
   CategoryFacetSearchSection,
@@ -55,14 +56,7 @@ export function buildCategoryFacetSearch(
       dispatch(
         executeSearch({
           legacy: logFacetSelect({facetId, facetValue: value.rawValue}),
-          next: {
-            actionCause: SearchPageEvents.facetSelect,
-            getEventExtraPayload: (state) =>
-              new SearchAnalyticsProvider(() => state).getFacetMetadata(
-                facetId,
-                value.rawValue
-              ),
-          },
+          next: facetSelect(facetId, value.rawValue),
         })
       );
     },

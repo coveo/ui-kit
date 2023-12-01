@@ -287,7 +287,7 @@ describe('search analytics', () => {
       state.facetSet[facetId] = buildMockFacetSlice({});
 
       expect(
-        new SearchAnalyticsProvider(() => state).getFacetSortMetadata(
+        new SearchAnalyticsProvider(() => state).getFacetUpdateSortMetadata(
           facetId,
           criteria
         )
@@ -316,7 +316,7 @@ describe('search analytics', () => {
       expect(
         new SearchAnalyticsProvider(
           () => state
-        ).getRangeFacetBreadcrumbMetadata(facetId, facetValue)
+        ).getRangeBreadcrumbFacetMetadata(facetId, facetValue)
       ).toEqual({
         coveoHeadlessVersion: 'Test version',
         facetField: state.facetSet[facetId].request.field,
@@ -385,7 +385,7 @@ describe('search analytics', () => {
       expect(
         new SearchAnalyticsProvider(
           () => state
-        ).getCategoryFacetBreadcrumbMetadata(categoryFacetId, categoryFacetPath)
+        ).getCategoryBreadcrumbFacetMetadata(categoryFacetId, categoryFacetPath)
       ).toEqual({
         coveoHeadlessVersion: 'Test version',
         categoryFacetField:

@@ -1,4 +1,3 @@
-import {SearchAnalyticsProvider} from '../api/analytics/search-analytics';
 import {PlatformClient, PlatformClientCallError} from '../api/platform-client';
 import {
   buildSearchEngine,
@@ -10,17 +9,32 @@ import {
   buildCoreSearchBox,
 } from '../controllers/core/search-box/headless-core-search-box';
 import {
+  interfaceChange,
+  interfaceLoad,
   logInterfaceChange,
   logInterfaceLoad,
   logOmniboxFromLink,
   logSearchFromLink,
+  omniboxFromLink,
+  searchFromLink,
 } from '../features/analytics/analytics-actions';
-import {SearchPageEvents} from '../features/analytics/search-action-cause';
-import {logDidYouMeanClick} from '../features/did-you-mean/did-you-mean-analytics-actions';
+import {
+  didYouMeanClick,
+  logDidYouMeanClick,
+} from '../features/did-you-mean/did-you-mean-analytics-actions';
 import {registerCategoryFacet} from '../features/facets/category-facet-set/category-facet-set-actions';
-import {logCategoryFacetBreadcrumb} from '../features/facets/category-facet-set/category-facet-set-analytics-actions';
+import {
+  categoryBreadcrumbFacet,
+  logCategoryFacetBreadcrumb,
+} from '../features/facets/category-facet-set/category-facet-set-analytics-actions';
 import {categoryFacetSetReducer} from '../features/facets/category-facet-set/category-facet-set-slice';
 import {
+  breadcrumbFacet,
+  facetClearAll,
+  facetDeselect,
+  facetExclude,
+  facetSelect,
+  facetUpdateSort,
   logFacetBreadcrumb,
   logFacetClearAll,
   logFacetDeselect,
@@ -29,32 +43,56 @@ import {
   logFacetUpdateSort,
 } from '../features/facets/facet-set/facet-set-analytics-actions';
 import {FacetSortCriterion} from '../features/facets/facet-set/interfaces/request';
-import {logClearBreadcrumbs} from '../features/facets/generic/facet-generic-analytics-actions';
+import {
+  breadcrumbResetAll,
+  logClearBreadcrumbs,
+} from '../features/facets/generic/facet-generic-analytics-actions';
 import {registerDateFacet} from '../features/facets/range-facets/date-facet-set/date-facet-actions';
-import {logDateFacetBreadcrumb} from '../features/facets/range-facets/date-facet-set/date-facet-analytics-actions';
+import {
+  dateBreadcrumbFacet,
+  logDateFacetBreadcrumb,
+} from '../features/facets/range-facets/date-facet-set/date-facet-analytics-actions';
 import {dateFacetSetReducer} from '../features/facets/range-facets/date-facet-set/date-facet-set-slice';
 import {DateFacetValue} from '../features/facets/range-facets/date-facet-set/interfaces/response';
 import {NumericFacetValue} from '../features/facets/range-facets/numeric-facet-set/interfaces/response';
 import {registerNumericFacet} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {logNumericFacetBreadcrumb} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-analytics-actions';
+import {
+  logNumericFacetBreadcrumb,
+  numericBreadcrumbFacet,
+} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-analytics-actions';
 import {numericFacetSetReducer} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {
   logNavigateBackward,
   logNavigateForward,
   logNoResultsBack,
+  navigateBackward,
+  navigateForward,
+  noResultsBack,
 } from '../features/history/history-analytics-actions';
 import {fetchQuerySuggestions} from '../features/query-suggest/query-suggest-actions';
 import {OmniboxSuggestionMetadata} from '../features/query-suggest/query-suggest-analytics-actions';
-import {logRecentQueryClick} from '../features/recent-queries/recent-queries-analytics-actions';
+import {
+  logRecentQueryClick,
+  recentQueryClick,
+} from '../features/recent-queries/recent-queries-analytics-actions';
 import {executeSearch} from '../features/search/search-actions';
-import {logResultsSort} from '../features/sort-criteria/sort-criteria-analytics-actions';
+import {
+  logResultsSort,
+  resultsSort,
+} from '../features/sort-criteria/sort-criteria-analytics-actions';
 import {
   StaticFilterValueMetadata,
   logStaticFilterClearAll,
   logStaticFilterDeselect,
   logStaticFilterSelect,
+  staticFilterClearAll,
+  staticFilterDeselect,
+  staticFilterSelect,
 } from '../features/static-filter-set/static-filter-set-actions';
-import {logUndoTriggerQuery} from '../features/triggers/trigger-analytics-actions';
+import {
+  logUndoTriggerQuery,
+  undoTriggerQuery,
+} from '../features/triggers/trigger-analytics-actions';
 
 const nextSearchEngine = buildSearchEngine({
   configuration: {
@@ -142,11 +180,7 @@ describe('Analytics Search Migration', () => {
   it('analytics/interface/load', async () => {
     const action = executeSearch({
       legacy: logInterfaceLoad(),
-      next: {
-        actionCause: SearchPageEvents.interfaceLoad,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getBaseMetadata(),
-      },
+      next: interfaceLoad(),
     });
 
     legacySearchEngine.dispatch(action);
@@ -162,14 +196,7 @@ describe('Analytics Search Migration', () => {
         facetId: ANY_FACET_ID,
         facetValue: ANY_FACET_VALUE,
       }),
-      next: {
-        actionCause: SearchPageEvents.facetSelect,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getFacetMetadata(
-            ANY_FACET_ID,
-            ANY_FACET_VALUE
-          ),
-      },
+      next: facetSelect(ANY_FACET_ID, ANY_FACET_VALUE),
     });
 
     legacySearchEngine.dispatch(action);
@@ -182,11 +209,7 @@ describe('Analytics Search Migration', () => {
   it('analytics/didyoumean/click', async () => {
     const action = executeSearch({
       legacy: logDidYouMeanClick(),
-      next: {
-        actionCause: SearchPageEvents.didyoumeanClick,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getBaseMetadata(),
-      },
+      next: didYouMeanClick(),
     });
 
     legacySearchEngine.dispatch(action);
@@ -202,14 +225,7 @@ describe('Analytics Search Migration', () => {
         facetId: ANY_FACET_ID,
         facetValue: ANY_FACET_VALUE,
       }),
-      next: {
-        actionCause: SearchPageEvents.facetDeselect,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getFacetMetadata(
-            ANY_FACET_ID,
-            ANY_FACET_VALUE
-          ),
-      },
+      next: facetDeselect(ANY_FACET_ID, ANY_FACET_VALUE),
     });
 
     legacySearchEngine.dispatch(action);
@@ -221,11 +237,7 @@ describe('Analytics Search Migration', () => {
   it('analytics/facet/deselectAllBreadcrumbs', async () => {
     const action = executeSearch({
       legacy: logClearBreadcrumbs(),
-      next: {
-        actionCause: SearchPageEvents.breadcrumbResetAll,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getBaseMetadata(),
-      },
+      next: breadcrumbResetAll(),
     });
 
     legacySearchEngine.dispatch(action);
@@ -241,14 +253,7 @@ describe('Analytics Search Migration', () => {
         facetId: ANY_FACET_ID,
         facetValue: ANY_FACET_VALUE,
       }),
-      next: {
-        actionCause: SearchPageEvents.facetExclude,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getFacetMetadata(
-            ANY_FACET_ID,
-            ANY_FACET_VALUE
-          ),
-      },
+      next: facetExclude(ANY_FACET_ID, ANY_FACET_VALUE),
     });
 
     legacySearchEngine.dispatch(action);
@@ -264,14 +269,7 @@ describe('Analytics Search Migration', () => {
         facetId: ANY_FACET_ID,
         criterion: ANY_CRITERION,
       }),
-      next: {
-        actionCause: SearchPageEvents.facetUpdateSort,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getFacetSortMetadata(
-            ANY_FACET_ID,
-            ANY_CRITERION
-          ),
-      },
+      next: facetUpdateSort(ANY_FACET_ID, ANY_CRITERION),
     });
 
     legacySearchEngine.dispatch(action);
@@ -284,11 +282,7 @@ describe('Analytics Search Migration', () => {
   it('history/analytics/forward', async () => {
     const action = executeSearch({
       legacy: logNavigateForward(),
-      next: {
-        actionCause: SearchPageEvents.historyForward,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getBaseMetadata(),
-      },
+      next: navigateForward(),
     });
 
     legacySearchEngine.dispatch(action);
@@ -304,14 +298,7 @@ describe('Analytics Search Migration', () => {
         facetId: ANY_FACET_ID,
         facetValue: ANY_FACET_VALUE,
       }),
-      next: {
-        actionCause: SearchPageEvents.breadcrumbFacet,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getFacetMetadata(
-            ANY_FACET_ID,
-            ANY_FACET_VALUE
-          ),
-      },
+      next: breadcrumbFacet(ANY_FACET_ID, ANY_FACET_VALUE),
     });
 
     legacySearchEngine.dispatch(action);
@@ -324,11 +311,7 @@ describe('Analytics Search Migration', () => {
   it('history/analytics/backward', async () => {
     const action = executeSearch({
       legacy: logNavigateBackward(),
-      next: {
-        actionCause: SearchPageEvents.historyBackward,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getBaseMetadata(),
-      },
+      next: navigateBackward(),
     });
 
     legacySearchEngine.dispatch(action);
@@ -341,13 +324,7 @@ describe('Analytics Search Migration', () => {
   it('analytics/facet/reset', async () => {
     const action = executeSearch({
       legacy: logFacetClearAll(ANY_FACET_ID),
-      next: {
-        actionCause: SearchPageEvents.facetClearAll,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getFacetClearAllMetadata(
-            ANY_FACET_ID
-          ),
-      },
+      next: facetClearAll(ANY_FACET_ID),
     });
 
     legacySearchEngine.dispatch(action);
@@ -360,11 +337,7 @@ describe('Analytics Search Migration', () => {
   it('history/analytics/noresultsback', async () => {
     const action = executeSearch({
       legacy: logNoResultsBack(),
-      next: {
-        actionCause: SearchPageEvents.noResultsBack,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getBaseMetadata(),
-      },
+      next: noResultsBack(),
     });
 
     legacySearchEngine.dispatch(action);
@@ -400,16 +373,7 @@ describe('Analytics Search Migration', () => {
         facetId: ANY_FACET_ID,
         selection: ANY_RANGE_FACET_BREADCRUMB_VALUE,
       }),
-      next: {
-        actionCause: SearchPageEvents.breadcrumbFacet,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(
-            () => state
-          ).getRangeFacetBreadcrumbMetadata(
-            ANY_FACET_ID,
-            ANY_RANGE_FACET_BREADCRUMB_VALUE
-          ),
-      },
+      next: dateBreadcrumbFacet(ANY_FACET_ID, ANY_RANGE_FACET_BREADCRUMB_VALUE),
     });
 
     legacySearchEngine.dispatch(action);
@@ -446,16 +410,10 @@ describe('Analytics Search Migration', () => {
         selection:
           ANY_RANGE_FACET_BREADCRUMB_VALUE as unknown as NumericFacetValue,
       }),
-      next: {
-        actionCause: SearchPageEvents.breadcrumbFacet,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(
-            () => state
-          ).getRangeFacetBreadcrumbMetadata(
-            ANY_FACET_ID,
-            ANY_RANGE_FACET_BREADCRUMB_VALUE
-          ),
-      },
+      next: numericBreadcrumbFacet(
+        ANY_FACET_ID,
+        ANY_RANGE_FACET_BREADCRUMB_VALUE as unknown as NumericFacetValue
+      ),
     });
 
     legacySearchEngine.dispatch(action);
@@ -468,11 +426,7 @@ describe('Analytics Search Migration', () => {
   it('analytics/sort/results', async () => {
     const action = executeSearch({
       legacy: logResultsSort(),
-      next: {
-        actionCause: SearchPageEvents.resultsSort,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getResultSortMetadata(),
-      },
+      next: resultsSort(),
     });
 
     legacySearchEngine.dispatch(action);
@@ -520,16 +474,7 @@ describe('Analytics Search Migration', () => {
         staticFilterId: ANY_STATIC_FILTER_ID,
         staticFilterValue: ANY_STATIC_FILTER_VALUE,
       }),
-      next: {
-        actionCause: SearchPageEvents.staticFilterSelect,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(
-            () => state
-          ).getStaticFilterToggleMetadata(
-            ANY_STATIC_FILTER_ID,
-            ANY_STATIC_FILTER_VALUE
-          ),
-      },
+      next: staticFilterSelect(ANY_STATIC_FILTER_ID, ANY_STATIC_FILTER_VALUE),
     });
 
     legacySearchEngine.dispatch(action);
@@ -545,16 +490,7 @@ describe('Analytics Search Migration', () => {
         staticFilterId: ANY_STATIC_FILTER_ID,
         staticFilterValue: ANY_STATIC_FILTER_VALUE,
       }),
-      next: {
-        actionCause: SearchPageEvents.staticFilterDeselect,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(
-            () => state
-          ).getStaticFilterToggleMetadata(
-            ANY_STATIC_FILTER_ID,
-            ANY_STATIC_FILTER_VALUE
-          ),
-      },
+      next: staticFilterDeselect(ANY_STATIC_FILTER_ID, ANY_STATIC_FILTER_VALUE),
     });
 
     legacySearchEngine.dispatch(action);
@@ -569,13 +505,7 @@ describe('Analytics Search Migration', () => {
       legacy: logStaticFilterClearAll({
         staticFilterId: ANY_STATIC_FILTER_ID,
       }),
-      next: {
-        actionCause: SearchPageEvents.staticFilterClearAll,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(
-            () => state
-          ).getStaticFilterClearAllMetadata(ANY_STATIC_FILTER_ID),
-      },
+      next: staticFilterClearAll(ANY_STATIC_FILTER_ID),
     });
 
     legacySearchEngine.dispatch(action);
@@ -590,13 +520,7 @@ describe('Analytics Search Migration', () => {
       legacy: logUndoTriggerQuery({
         undoneQuery: ANY_QUERY,
       }),
-      next: {
-        actionCause: SearchPageEvents.undoTriggerQuery,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getUndoTriggerQueryMetadata(
-            ANY_QUERY
-          ),
-      },
+      next: undoTriggerQuery(ANY_QUERY),
     });
 
     legacySearchEngine.dispatch(action);
@@ -630,16 +554,7 @@ describe('Analytics Search Migration', () => {
         categoryFacetId: ANY_FACET_ID,
         categoryFacetPath: ANY_CATEGORY_FACET_PATH,
       }),
-      next: {
-        actionCause: SearchPageEvents.breadcrumbFacet,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(
-            () => state
-          ).getCategoryFacetBreadcrumbMetadata(
-            ANY_FACET_ID,
-            ANY_CATEGORY_FACET_PATH
-          ),
-      },
+      next: categoryBreadcrumbFacet(ANY_FACET_ID, ANY_CATEGORY_FACET_PATH),
     });
 
     legacySearchEngine.dispatch(action);
@@ -652,11 +567,7 @@ describe('Analytics Search Migration', () => {
   it('analytics/recentQueries/click', async () => {
     const action = executeSearch({
       legacy: logRecentQueryClick(),
-      next: {
-        actionCause: SearchPageEvents.recentQueryClick,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getBaseMetadata(),
-      },
+      next: recentQueryClick(),
     });
 
     legacySearchEngine.dispatch(action);
@@ -669,11 +580,7 @@ describe('Analytics Search Migration', () => {
   it('analytics/interface/change', async () => {
     const action = executeSearch({
       legacy: logInterfaceChange(),
-      next: {
-        actionCause: SearchPageEvents.interfaceChange,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getInterfaceChangeMetadata(),
-      },
+      next: interfaceChange(),
     });
 
     legacySearchEngine.dispatch(action);
@@ -686,11 +593,7 @@ describe('Analytics Search Migration', () => {
   it('analytics/interface/searchFromLink', async () => {
     const action = executeSearch({
       legacy: logSearchFromLink(),
-      next: {
-        actionCause: SearchPageEvents.searchFromLink,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getBaseMetadata(),
-      },
+      next: searchFromLink(),
     });
 
     legacySearchEngine.dispatch(action);
@@ -711,13 +614,7 @@ describe('Analytics Search Migration', () => {
 
     const action = executeSearch({
       legacy: logOmniboxFromLink(metadata),
-      next: {
-        actionCause: SearchPageEvents.omniboxFromLink,
-        getEventExtraPayload: (state) =>
-          new SearchAnalyticsProvider(() => state).getOmniboxFromLinkMetadata(
-            metadata
-          ),
-      },
+      next: omniboxFromLink(metadata),
     });
 
     legacySearchEngine.dispatch(action);

@@ -1,7 +1,10 @@
+import {SearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {
   makeAnalyticsAction,
   LegacySearchAction,
 } from '../analytics/analytics-utils';
+import {SearchPageEvents} from '../analytics/search-action-cause';
+import {SearchAction} from '../search/search-actions';
 import {getSortCriteriaInitialState} from './sort-criteria-state';
 
 //TODO: KIT-2859
@@ -11,3 +14,11 @@ export const logResultsSort = (): LegacySearchAction =>
       resultsSortBy: state.sortCriteria || getSortCriteriaInitialState(),
     })
   );
+
+export const resultsSort = (): SearchAction => {
+  return {
+    actionCause: SearchPageEvents.resultsSort,
+    getEventExtraPayload: (state) =>
+      new SearchAnalyticsProvider(() => state).getResultSortMetadata(),
+  };
+};

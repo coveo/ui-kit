@@ -1,4 +1,5 @@
-import {SearchPageEvents} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
+import {SearchPageEvents as LegacySearchPageEvents} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
+import {SearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {Result} from '../../api/search/search/result';
 import {
   validatePayload,
@@ -6,6 +7,7 @@ import {
   nonEmptyString,
 } from '../../utils/validate-payload';
 import {OmniboxSuggestionMetadata} from '../query-suggest/query-suggest-analytics-actions';
+import {SearchAction} from '../search/search-actions';
 import {
   ClickAction,
   CustomAction,
@@ -15,10 +17,11 @@ import {
   LegacySearchAction,
   validateResultPayload,
 } from './analytics-utils';
+import {SearchPageEvents} from './search-action-cause';
 
 export interface SearchEventPayload {
   /** The identifier of the search action (e.g., `interfaceLoad`). */
-  evt: SearchPageEvents | string;
+  evt: LegacySearchPageEvents | string;
   /** The event metadata. */
   meta?: Record<string, unknown>;
 }
@@ -27,7 +30,7 @@ export interface ClickEventPayload {
   /**
    * The identifier of the click action.
    */
-  evt: SearchPageEvents | string;
+  evt: LegacySearchPageEvents | string;
   /**
    * The result associated with the click event.
    */
@@ -42,7 +45,7 @@ export interface CustomEventPayload {
   /**
    * The event cause identifier of the custom action
    */
-  evt: SearchPageEvents | string;
+  evt: LegacySearchPageEvents | string;
   /**
    * The event type identifier of the custom action
    */
@@ -74,7 +77,7 @@ export const logSearchEvent = (
   makeAnalyticsAction('analytics/generic/search', (client) => {
     validateEvent(p);
     const {evt, meta} = p;
-    return client.makeSearchEvent(evt as SearchPageEvents, meta);
+    return client.makeSearchEvent(evt as LegacySearchPageEvents, meta);
   });
 
 export interface LogClickEventActionCreatorPayload {
@@ -102,7 +105,7 @@ export const logClickEvent = (
     validateEvent(p);
 
     return client.makeClickEvent(
-      p.evt as SearchPageEvents,
+      p.evt as LegacySearchPageEvents,
       partialDocumentInformation(p.result, state),
       documentIdentifier(p.result),
       p.meta
@@ -159,3 +162,40 @@ export const logOmniboxFromLink = (
   makeAnalyticsAction('analytics/interface/omniboxFromLink', (client) =>
     client.makeOmniboxFromLink(metadata)
   );
+
+// --------------------- KIT-2859 : Everything above this will get deleted ! :) ---------------------
+export const interfaceLoad = (): SearchAction => {
+  return {
+    actionCause: SearchPageEvents.interfaceLoad,
+    getEventExtraPayload: (state) =>
+      new SearchAnalyticsProvider(() => state).getBaseMetadata(),
+  };
+};
+
+export const interfaceChange = (): SearchAction => {
+  return {
+    actionCause: SearchPageEvents.interfaceChange,
+    getEventExtraPayload: (state) =>
+      new SearchAnalyticsProvider(() => state).getInterfaceChangeMetadata(),
+  };
+};
+
+export const searchFromLink = (): SearchAction => {
+  return {
+    actionCause: SearchPageEvents.searchFromLink,
+    getEventExtraPayload: (state) =>
+      new SearchAnalyticsProvider(() => state).getBaseMetadata(),
+  };
+};
+
+export const omniboxFromLink = (
+  metadata: OmniboxSuggestionMetadata
+): SearchAction => {
+  return {
+    actionCause: SearchPageEvents.omniboxFromLink,
+    getEventExtraPayload: (state) =>
+      new SearchAnalyticsProvider(() => state).getOmniboxFromLinkMetadata(
+        metadata
+      ),
+  };
+};

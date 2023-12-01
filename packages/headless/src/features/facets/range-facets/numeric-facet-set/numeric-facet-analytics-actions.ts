@@ -3,7 +3,11 @@ import {
   makeAnalyticsAction,
   LegacySearchAction,
 } from '../../../analytics/analytics-utils';
-import {getRangeFacetMetadata} from '../generic/range-facet-analytics-actions';
+import {SearchAction} from '../../../search/search-actions';
+import {
+  getRangeFacetMetadata,
+  rangeBreadcrumbFacet,
+} from '../generic/range-facet-analytics-actions';
 import {rangeFacetSelectionPayloadDefinition} from '../generic/range-facet-validate-payload';
 import {NumericFacetValue} from './interfaces/response';
 
@@ -32,3 +36,10 @@ export const logNumericFacetBreadcrumb = (
 
     return client.makeBreadcrumbFacet(metadata);
   });
+
+export const numericBreadcrumbFacet = (
+  id: string,
+  value: NumericFacetValue
+): SearchAction => {
+  return rangeBreadcrumbFacet(id, value);
+};
