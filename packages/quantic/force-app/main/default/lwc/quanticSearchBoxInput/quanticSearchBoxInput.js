@@ -1,4 +1,3 @@
-// @ts-nocheck
 import clear from '@salesforce/label/c.quantic_Clear';
 import search from '@salesforce/label/c.quantic_Search';
 import {keys} from 'c/quanticUtils';
@@ -11,6 +10,13 @@ import expandableSearchBoxInput from './templates/expandableSearchBoxInput.html'
 /** @typedef {import("coveo").SearchBox} SearchBox */
 /** @typedef {import("coveo").StandaloneSearchBox} StandaloneSearchBox */
 /** @typedef {import("c/quanticSearchBoxSuggestionsList").default} quanticSearchBoxSuggestionsList */
+
+/**
+ * @typedef Suggestion
+ * @property {number} key
+ * @property {string} value
+ * @property {string} rawValue
+ */
 
 const CLASS_WITH_SUBMIT =
   'slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right slds-input-has-fixed-addon';
@@ -57,10 +63,9 @@ export default class QuanticSearchBoxInput extends LightningElement {
    */
   @api searchBoxEngine;
   /**
-   * The search suggestions.
+   * The query suggestions to display.
    * @api
-   * @type {Array}
-   * @defaultValue []
+   * @type {Suggestion[]}
    */
   @api suggestions = [];
   /**
@@ -76,6 +81,20 @@ export default class QuanticSearchBoxInput extends LightningElement {
    */
   @api blur() {
     this.input.blur();
+  }
+
+  connectedCallback() {
+    this.addEventListener(
+      'suggestionlistrender',
+      this.handleSuggestionListEvent
+    );
+  }
+
+  disconnectedCallback() {
+    this.removeEventListener(
+      'suggestionlistrender',
+      this.handleSuggestionListEvent
+    );
   }
 
   /**
@@ -124,7 +143,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
   handleKeyValues() {
     if (this.searchBoxEngine?.state?.value !== this.input.value) {
       this.suggestionList?.resetSelection();
-      this.searchBoxEngine.updateText(this.input.value);
+      this.searchBoxEngine?.updateText(this.input.value);
     }
   }
 
@@ -217,8 +236,15 @@ export default class QuanticSearchBoxInput extends LightningElement {
 
   handleSuggestionSelection(event) {
     const textValue = event.detail;
-    this.standaloneSearchBox.selectSuggestion(textValue);
+    this.searchBoxEngine.selectSuggestion(textValue);
+    this.blur();
   }
+
+  handleSuggestionListEvent = (event) => {
+    event.stopPropagation();
+    const id = event.detail;
+    this.input.setAttribute('aria-controls', id);
+  };
 
   get searchBoxContainerClass() {
     if (this.withoutSubmitButton) {
@@ -243,7 +269,6 @@ export default class QuanticSearchBoxInput extends LightningElement {
   }
 
   get isQueryEmpty() {
-    console.log('!this.input?.value?.length: ' + this.input?.value);
     return !this.input?.value?.length;
   }
 
@@ -255,7 +280,6 @@ export default class QuanticSearchBoxInput extends LightningElement {
   }
 
   render() {
-    console.log('this textarea;: ' + this.textarea);
     return this?.textarea ? expandableSearchBoxInput : defaultSearchBoxInput;
   }
 }

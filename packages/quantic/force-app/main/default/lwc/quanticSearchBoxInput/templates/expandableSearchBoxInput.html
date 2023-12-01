@@ -8,7 +8,7 @@
           aria-haspopup="listbox"
           role="combobox"
         >
-          <div class="searchbox__container searchbox__container-expandable">
+          <div class="searchbox__container">
             <div class={searchBoxContainerClass} role="none">
               <template if:true={withoutSubmitButton}>
                 <lightning-icon
@@ -71,6 +71,11 @@
               </template>
             </div>
           </div>
+          <c-quantic-search-box-suggestions-list
+            suggestions={suggestions}
+            onhighlightchange={handleHighlightChange}
+            onsuggestionselected={handleSuggestionSelection}
+          ></c-quantic-search-box-suggestions-list>
         </div>
       </div>
     </div>

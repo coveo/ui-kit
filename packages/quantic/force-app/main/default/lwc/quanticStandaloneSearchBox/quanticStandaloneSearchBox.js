@@ -1,4 +1,3 @@
-import clear from '@salesforce/label/c.quantic_Clear';
 import search from '@salesforce/label/c.quantic_Search';
 import {
   registerComponentForInit,
@@ -32,7 +31,6 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
 ) {
   labels = {
     search,
-    clear,
   };
 
   /**
@@ -130,16 +128,16 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
 
   connectedCallback() {
     registerComponentForInit(this, this.standaloneEngineId);
-    this.addEventListener(
-      'suggestionlistrender',
-      this.handleSuggestionListEvent
-    );
   }
 
   renderedCallback() {
     initializeWithHeadless(this, this.standaloneEngineId, this.initialize);
-    if (!this.isInitialized && !!this.standaloneSearchBox && !!this.input) {
-      this.input.setAttribute('is-initialized', 'true');
+    if (
+      !this.isInitialized &&
+      !!this.standaloneSearchBox &&
+      !!this.quanticSearchBoxInput
+    ) {
+      this.quanticSearchBoxInput.setAttribute('is-initialized', 'true');
       this.isInitialized = true;
     }
   }
@@ -179,17 +177,13 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
 
   disconnectedCallback() {
     this.unsubscribe?.();
-    this.removeEventListener(
-      'suggestionlistrender',
-      this.handleSuggestionListEvent
-    );
   }
 
   updateStandaloneState() {
-    if (this.state.value !== this.standaloneSearchBox.state.value) {
-      this.input.value = this.standaloneSearchBox.state.value;
+    if (this.state?.value !== this.standaloneSearchBox.state.value) {
+      this.quanticSearchBoxInput.value = this.standaloneSearchBox.state.value;
     }
-    this.state = this.standaloneSearchBox.state;
+    this.state = this.standaloneSearchBox?.state;
     this.suggestions =
       this.state?.suggestions?.map((s, index) => ({
         key: index,
@@ -213,15 +207,6 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
     this.navigateToSearchPage();
   }
 
-  handleHighlightChange(event) {
-    this.input.value = event.detail?.rawValue;
-  }
-
-  handleSuggestionSelection(event) {
-    const textValue = event.detail;
-    this.standaloneSearchBox.selectSuggestion(textValue);
-  }
-
   resetStandaloneSearchboxState() {
     const engine = getHeadlessBindings(this.standaloneEngineId)?.engine;
     if (!engine) {
@@ -233,7 +218,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   }
 
   navigateToSearchPage() {
-    const value = this.standaloneSearchBox.state.value;
+    const value = this.value;
 
     this.resetStandaloneSearchboxState();
     this[NavigationMixin.Navigate](
@@ -250,24 +235,23 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   /**
    * @returns {HTMLInputElement|HTMLTextAreaElement}
    */
-  get input() {
-    return this.textarea
-      ? this.template.querySelector('textarea')
-      : this.template.querySelector('input');
+  get quanticSearchBoxInput() {
+    return this.template.querySelector('c-quantic-search-box-input');
+  }
+
+  /**
+   * @returns {string}
+   */
+  get value() {
+    return this?.state?.value;
   }
 
   /**
    * @returns {Array}
    */
   get suggestionsArray() {
-    return this?.state?.suggestions;
+    return this.suggestions;
   }
-
-  handleSuggestionListEvent = (event) => {
-    event.stopPropagation();
-    const id = event.detail;
-    this.input.setAttribute('aria-controls', id);
-  };
 
   /**
    * Sets the component in the initialization error state.

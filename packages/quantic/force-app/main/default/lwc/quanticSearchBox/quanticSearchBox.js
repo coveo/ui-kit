@@ -1,4 +1,3 @@
-import clear from '@salesforce/label/c.quantic_Clear';
 import search from '@salesforce/label/c.quantic_Search';
 import {
   registerComponentForInit,
@@ -26,7 +25,6 @@ import searchBoxTemplate from './templates/searchBox.html';
 export default class QuanticSearchBox extends LightningElement {
   labels = {
     search,
-    clear,
   };
 
   /**
@@ -100,10 +98,6 @@ export default class QuanticSearchBox extends LightningElement {
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
-    this.addEventListener(
-      'suggestionlistrender',
-      this.handleSuggestionListEvent
-    );
   }
 
   renderedCallback() {
@@ -112,17 +106,13 @@ export default class QuanticSearchBox extends LightningElement {
 
   disconnectedCallback() {
     this.unsubscribe?.();
-    this.removeEventListener(
-      'suggestionlistrender',
-      this.handleSuggestionListEvent
-    );
   }
 
   updateState() {
     if (this.state?.value !== this.searchBox.state.value) {
       this.quanticSearchBoxInput.value = this.searchBox.state.value;
     }
-    this.state = this.searchBox.state;
+    this.state = this.searchBox?.state;
     this.suggestions =
       this.state?.suggestions?.map((s, index) => ({
         key: index,
@@ -149,25 +139,8 @@ export default class QuanticSearchBox extends LightningElement {
    * @returns {Array}
    */
   get suggestionsArray() {
-    return this?.state?.suggestions;
+    return this.suggestions;
   }
-
-  handleHighlightChange(event) {
-    const suggestion = event.detail;
-    this.quanticSearchBoxInput.value = suggestion.rawValue;
-  }
-
-  handleSuggestionSelection(event) {
-    const textValue = event.detail;
-    this.searchBox.selectSuggestion(textValue);
-    this.quanticSearchBoxInput.blur();
-  }
-
-  handleSuggestionListEvent = (event) => {
-    event.stopPropagation();
-    const id = event.detail;
-    this.quanticSearchBoxInput.setAttribute('aria-controls', id);
-  };
 
   /**
    * Sets the component in the initialization error state.
