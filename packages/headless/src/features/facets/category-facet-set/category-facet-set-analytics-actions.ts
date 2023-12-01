@@ -49,6 +49,7 @@ const getCategoryFacetMetadata = (
   };
 };
 
+//TODO: KIT-2859
 export const logCategoryFacetBreadcrumb = (
   payload: LogCategoryFacetBreadcrumbActionCreatorPayload
 ): SearchAction =>

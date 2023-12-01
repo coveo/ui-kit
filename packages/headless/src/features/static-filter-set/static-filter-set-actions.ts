@@ -99,6 +99,7 @@ export interface StaticFilterValueMetadata {
   expression: string;
 }
 
+//TODO: KIT-2859
 export const logStaticFilterSelect = (
   metadata: LogStaticFilterToggleValueActionCreatorPayload
 ): SearchAction =>
@@ -106,6 +107,7 @@ export const logStaticFilterSelect = (
     client.makeStaticFilterSelect(metadata)
   );
 
+//TODO: KIT-2859
 export const logStaticFilterDeselect = (
   metadata: LogStaticFilterToggleValueActionCreatorPayload
 ): SearchAction =>
@@ -120,6 +122,7 @@ export interface LogStaticFilterClearAllActionCreatorPayload {
   staticFilterId: string;
 }
 
+//TODO: KIT-2859
 export const logStaticFilterClearAll = (
   metadata: LogStaticFilterClearAllActionCreatorPayload
 ): SearchAction =>

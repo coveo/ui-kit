@@ -1,4 +1,6 @@
+import {SearchAnalyticsProvider} from '../../../api/analytics/search-analytics';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
+import {SearchPageEvents} from '../../../features/analytics/search-action-cause';
 import {
   deselectAllAutomaticFacetValues,
   toggleSelectAutomaticFacetValue,
@@ -61,7 +63,18 @@ export function buildAutomaticFacet(
 
     deselectAll() {
       dispatch(deselectAllAutomaticFacetValues(field));
-      dispatch(executeSearch({legacy: logFacetClearAll(field)}));
+      dispatch(
+        executeSearch({
+          legacy: logFacetClearAll(field),
+          next: {
+            actionCause: SearchPageEvents.facetClearAll,
+            getEventExtraPayload: (state) =>
+              new SearchAnalyticsProvider(() => state).getFacetClearAllMetadata(
+                field
+              ),
+          },
+        })
+      );
     },
 
     get state() {

@@ -103,7 +103,18 @@ export function buildCategoryFacet(
 
     deselectAll() {
       coreController.deselectAll();
-      dispatch(executeSearch({legacy: logFacetClearAll(getFacetId())}));
+      dispatch(
+        executeSearch({
+          legacy: logFacetClearAll(getFacetId()),
+          next: {
+            actionCause: SearchPageEvents.facetClearAll,
+            getEventExtraPayload: (state) =>
+              new SearchAnalyticsProvider(() => state).getFacetClearAllMetadata(
+                getFacetId()
+              ),
+          },
+        })
+      );
     },
 
     sortBy(criterion: CategoryFacetSortCriterion) {
@@ -111,6 +122,14 @@ export function buildCategoryFacet(
       dispatch(
         executeSearch({
           legacy: logFacetUpdateSort({facetId: getFacetId(), criterion}),
+          next: {
+            actionCause: SearchPageEvents.facetUpdateSort,
+            getEventExtraPayload: (state) =>
+              new SearchAnalyticsProvider(() => state).getFacetSortMetadata(
+                getFacetId(),
+                criterion
+              ),
+          },
         })
       );
     },

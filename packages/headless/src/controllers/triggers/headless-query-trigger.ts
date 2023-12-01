@@ -1,4 +1,6 @@
+import {SearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {SearchPageEvents} from '../../features/analytics/search-action-cause';
 import {updateQuery} from '../../features/query/query-actions';
 import {queryReducer as query} from '../../features/query/query-slice';
 import {executeSearch} from '../../features/search/search-actions';
@@ -82,6 +84,13 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
           legacy: logUndoTriggerQuery({
             undoneQuery: modification(),
           }),
+          next: {
+            actionCause: SearchPageEvents.undoTriggerQuery,
+            getEventExtraPayload: () =>
+              new SearchAnalyticsProvider(getState).getUndoTriggerQueryMetadata(
+                modification()
+              ),
+          },
         })
       );
     },
