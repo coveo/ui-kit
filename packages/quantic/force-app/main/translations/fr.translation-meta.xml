@@ -755,13 +755,21 @@
   <customLabels>
     <label>La réponse générée est cachée</label>
     <name>quantic_GeneratedAnswerIsHidden</name>
-</customLabels>
-<customLabels>
-  <label>Réponse générée: {{0}}</label>
-  <name>quantic_AnswerGenerated</name>
-</customLabels>
-<customLabels>
-  <label>Génération de la réponse</label>
-  <name>quantic_GeneratingAnswer</name>
-</customLabels>
+  </customLabels>
+  <customLabels>
+    <label>Réponse générée: {{0}}</label>
+    <name>quantic_AnswerGenerated</name>
+  </customLabels>
+  <customLabels>
+    <label>Génération de la réponse</label>
+    <name>quantic_GeneratingAnswer</name>
+  </customLabels>
+  <customLabels>
+    <label>Réponse générée ON</label>
+    <name>quantic_GeneratedAnswerOn</name>
+  </customLabels>
+  <customLabels>
+    <label>Réponse générée OFF</label>
+    <name>quantic_GeneratedAnswerOff</name>
+  </customLabels>
 </Translations>

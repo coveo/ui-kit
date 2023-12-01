@@ -647,6 +647,29 @@ describe('search api client', () => {
     });
 
     describe('SearchAPIClient.html', () => {
+      function encodeUTF16(str: string) {
+        const buf = new ArrayBuffer(str.length * 2);
+        const bufView = new Uint16Array(buf);
+
+        for (let i = 0, strLen = str.length; i < strLen; i++) {
+          bufView[i] = str.charCodeAt(i);
+        }
+
+        return bufView;
+      }
+
+      it('when the response is UTF-16 encoded, it decodes the response correctly', async () => {
+        const payload = encodeUTF16('hello');
+        const headers = {'content-type': 'text/html; charset=UTF-16'};
+        const response = new Response(payload, {headers});
+        PlatformClient.call = () => Promise.resolve(response);
+
+        const req = await buildResultPreviewRequest(state, {uniqueId: '1'});
+        const res = await searchAPIClient.html(req);
+
+        expect(res.success).toBe('hello');
+      });
+
       it('when calling SearchAPIClient.html should call PlatformClient.call with the right options', async () => {
         const req = await buildResultPreviewRequest(state, {uniqueId: '1'});
         searchAPIClient.html(req);

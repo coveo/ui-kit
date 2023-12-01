@@ -17,6 +17,7 @@ import {
 export interface SetContextPayload {
   trackingId: string;
   language: string;
+  country: string;
   currency: string;
   clientId: string;
   user?: UserParams;

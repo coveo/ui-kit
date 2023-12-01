@@ -68,7 +68,7 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
     ),
   toggleGeneratedAnswerButton: () =>
     GeneratedAnswerSelectors.get().find(
-      '[data-cy="generated-answer__toggle-button"]'
+      'c-quantic-generated-answer-toggle [data-cy="generated-answer__toggle-button"]'
     ),
   generatedAnswerContent: () =>
     GeneratedAnswerSelectors.get().find(

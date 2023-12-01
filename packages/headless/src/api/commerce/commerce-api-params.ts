@@ -9,6 +9,10 @@ export interface LanguageParam {
   language: string;
 }
 
+export interface CountryParam {
+  country: string;
+}
+
 export interface CurrencyParam {
   currency: string;
 }
