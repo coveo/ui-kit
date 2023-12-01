@@ -1,4 +1,5 @@
 import {RecordValue} from '@coveo/bueno';
+import {SearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {
   requiredEmptyAllowedString,
   validatePayload,
@@ -7,6 +8,8 @@ import {
   makeAnalyticsAction,
   LegacySearchAction,
 } from '../analytics/analytics-utils';
+import {SearchPageEvents} from '../analytics/search-action-cause';
+import {SearchAction} from '../search/search-actions';
 
 export interface LogUndoTriggerQueryActionCreatorPayload {
   /**
@@ -59,9 +62,6 @@ export const logTriggerRedirect = (): LegacySearchAction =>
     return null;
   });
 
-/**
- * Log trigger execute
- */
 export const logTriggerExecute = (): LegacySearchAction =>
   makeAnalyticsAction('analytics/trigger/execute', (client, state) => {
     if (!state.triggers?.executions.length) {
@@ -71,3 +71,14 @@ export const logTriggerExecute = (): LegacySearchAction =>
       executions: state.triggers.executions,
     });
   });
+
+// --------------------- KIT-2859 : Everything above this will get deleted ! :) ---------------------
+export const undoTriggerQuery = (undoneQuery: string): SearchAction => {
+  return {
+    actionCause: SearchPageEvents.undoTriggerQuery,
+    getEventExtraPayload: (state) =>
+      new SearchAnalyticsProvider(() => state).getUndoTriggerQueryMetadata(
+        undoneQuery
+      ),
+  };
+};
