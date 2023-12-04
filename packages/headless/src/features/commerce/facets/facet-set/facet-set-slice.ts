@@ -62,8 +62,8 @@ export const commerceFacetSetReducer = createReducer(
           insertNewValue(facetRequest, selection);
           return;
         }
-        const isSelected = existingValue.state === 'selected';
-        existingValue.state = isSelected ? 'idle' : 'selected';
+
+        updateExistingFacetValueState(existingValue, 'select');
       })
       .addCase(toggleSelectNumericFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
@@ -87,8 +87,7 @@ export const commerceFacetSetReducer = createReducer(
           insertNewValue(facetRequest, selection);
           return;
         }
-        const isSelected = existingValue.state === 'selected';
-        existingValue.state = isSelected ? 'idle' : 'selected';
+        updateExistingFacetValueState(existingValue, 'select');
       })
       // TODO: toggleSelectDateFacetValue, toggleSelectCategoryFacetValue
       .addCase(toggleExcludeFacetValue, (state, action) => {
@@ -109,8 +108,7 @@ export const commerceFacetSetReducer = createReducer(
           return;
         }
 
-        const isExcluded = existingValue.state === 'excluded';
-        existingValue.state = isExcluded ? 'idle' : 'excluded';
+        updateExistingFacetValueState(existingValue, 'exclude');
       })
       .addCase(toggleExcludeNumericFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
@@ -135,8 +133,7 @@ export const commerceFacetSetReducer = createReducer(
           return;
         }
 
-        const isExcluded = existingValue.state === 'excluded';
-        existingValue.state = isExcluded ? 'idle' : 'excluded';
+        updateExistingFacetValueState(existingValue, 'exclude');
       })
       // TODO: toggleExcludeDateFacetValue, toggleExcludeCategoryFacetValue
       .addCase(updateFacetNumberOfValues, (state, action) => {
@@ -160,6 +157,26 @@ export const commerceFacetSetReducer = createReducer(
       });
   }
 );
+
+function updateExistingFacetValueState(
+  existingFacetValue: WritableDraft<FacetValueRequest | NumericRangeRequest>,
+  toggleAction: 'select' | 'exclude'
+) {
+  switch (existingFacetValue.state) {
+    case 'idle':
+      existingFacetValue.state =
+        toggleAction === 'exclude' ? 'excluded' : 'selected';
+      break;
+    case 'excluded':
+      existingFacetValue.state =
+        toggleAction === 'exclude' ? 'idle' : 'selected';
+      break;
+    case 'selected':
+      existingFacetValue.state =
+        toggleAction === 'exclude' ? 'excluded' : 'idle';
+      break;
+  }
+}
 
 function updateStateFromFacetResponse(
   state: WritableDraft<CommerceFacetSetState>,
