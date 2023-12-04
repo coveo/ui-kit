@@ -192,6 +192,8 @@ function getFacetRequestValuesFromFacetResponse(
       return convertToRangeRequests(
         (facetResponse as NumericFacetResponse).values
       );
+    case 'dateRange': // TODO
+    case 'hierarchical': // TODO
     case 'regular':
     default:
       return (facetResponse as RegularFacetResponse).values.map(
