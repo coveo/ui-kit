@@ -19,6 +19,7 @@ export interface LogNumericFacetBreadcrumbActionCreatorPayload {
   selection: NumericFacetValue;
 }
 
+//TODO: KIT-2859
 export const logNumericFacetBreadcrumb = (
   payload: LogNumericFacetBreadcrumbActionCreatorPayload
 ): SearchAction =>

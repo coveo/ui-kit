@@ -1,5 +1,7 @@
+import {SearchAnalyticsProvider} from '../../../../api/analytics/search-analytics';
 import {configuration} from '../../../../app/common-reducers';
 import {SearchEngine} from '../../../../app/search-engine/search-engine';
+import {SearchPageEvents} from '../../../../features/analytics/search-action-cause';
 import {
   logFacetClearAll,
   logFacetSelect,
@@ -54,7 +56,18 @@ export function buildNumericFilter(
     ...coreController,
     clear: () => {
       coreController.clear();
-      dispatch(executeSearch({legacy: logFacetClearAll(getFacetId())}));
+      dispatch(
+        executeSearch({
+          legacy: logFacetClearAll(getFacetId()),
+          next: {
+            actionCause: SearchPageEvents.facetClearAll,
+            getEventExtraPayload: (state) =>
+              new SearchAnalyticsProvider(() => state).getFacetClearAllMetadata(
+                getFacetId()
+              ),
+          },
+        })
+      );
     },
     setRange: (range) => {
       const success = coreController.setRange(range);
@@ -65,6 +78,14 @@ export function buildNumericFilter(
               facetId: getFacetId(),
               facetValue: `${range.start}..${range.end}`,
             }),
+            next: {
+              actionCause: SearchPageEvents.facetSelect,
+              getEventExtraPayload: (state) =>
+                new SearchAnalyticsProvider(() => state).getFacetMetadata(
+                  getFacetId(),
+                  `${range.start}..${range.end}`
+                ),
+            },
           })
         );
       }

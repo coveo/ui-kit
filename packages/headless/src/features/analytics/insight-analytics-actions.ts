@@ -1,5 +1,14 @@
+import {
+  requiredNonEmptyString,
+  validatePayload,
+} from '../../utils/validate-payload';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
 import {InsightAction, makeInsightAnalyticsAction} from './analytics-utils';
+
+export interface CreateArticleMetadata {
+  articleType: string;
+  triggeredBy: string;
+}
 
 export const logInsightInterfaceLoad = (): InsightAction =>
   makeInsightAnalyticsAction('analytics/interface/load', (client, state) =>
@@ -15,3 +24,20 @@ export const logInsightInterfaceChange = (): InsightAction =>
       interfaceChangeTo: state.configuration.analytics.originLevel2,
     });
   });
+
+export const logInsightCreateArticle = (
+  createArticleMetadata: CreateArticleMetadata
+): InsightAction =>
+  makeInsightAnalyticsAction(
+    'analytics/insight/createArticle',
+    (client, state) => {
+      validatePayload(createArticleMetadata, {
+        articleType: requiredNonEmptyString,
+        triggeredBy: requiredNonEmptyString,
+      });
+      return client.logCreateArticle(
+        createArticleMetadata,
+        getCaseContextAnalyticsMetadata(state.insightCaseContext)
+      );
+    }
+  );

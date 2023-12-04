@@ -1,3 +1,6 @@
+import {SearchAnalyticsProvider} from '../../../api/analytics/search-analytics';
+import {SearchPageEvents} from '../../analytics/search-action-cause';
+import {SearchAction} from '../../search/search-actions';
 import {
   logFacetDeselect,
   logFacetExclude,
@@ -14,7 +17,7 @@ export const isFacetValueExcluded = (value: FacetValue) => {
   return value.state === 'excluded';
 };
 
-export const getAnalyticsActionForToggleFacetSelect = (
+export const getLegacyAnalyticsActionForToggleFacetSelect = (
   facetId: string,
   selection: FacetValue
 ) => {
@@ -28,7 +31,23 @@ export const getAnalyticsActionForToggleFacetSelect = (
     : logFacetSelect(payload);
 };
 
-export const getAnalyticsActionForToggleFacetExclude = (
+export const getAnalyticsActionForToggleFacetSelect = (
+  facetId: string,
+  selection: FacetValue
+): SearchAction => {
+  return {
+    actionCause: isFacetValueSelected(selection)
+      ? SearchPageEvents.facetDeselect
+      : SearchPageEvents.facetSelect,
+    getEventExtraPayload: (state) =>
+      new SearchAnalyticsProvider(() => state).getFacetMetadata(
+        facetId,
+        selection.value
+      ),
+  };
+};
+
+export const getLegacyAnalyticsActionForToggleFacetExclude = (
   facetId: string,
   selection: FacetValue
 ) => {
@@ -40,4 +59,20 @@ export const getAnalyticsActionForToggleFacetExclude = (
   return isFacetValueExcluded(selection)
     ? logFacetDeselect(payload)
     : logFacetExclude(payload);
+};
+
+export const getAnalyticsActionForToggleFacetExclude = (
+  facetId: string,
+  selection: FacetValue
+): SearchAction => {
+  return {
+    actionCause: isFacetValueExcluded(selection)
+      ? SearchPageEvents.facetUnexclude
+      : SearchPageEvents.facetExclude,
+    getEventExtraPayload: (state) =>
+      new SearchAnalyticsProvider(() => state).getFacetMetadata(
+        facetId,
+        selection.value
+      ),
+  };
 };
