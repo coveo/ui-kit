@@ -100,6 +100,9 @@ describe('insight interface slice', () => {
             fullSearch: {
               enabled: false,
             },
+            genQA: {
+              enabled: false,
+            },
             userActions: {
               enabled: false,
               recentClickedDocuments: {

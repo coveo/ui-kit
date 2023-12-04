@@ -312,4 +312,8 @@ export enum SearchPageEvents {
    * Identified the custom event that gets logged when a generated answer stream is completed.
    */
   generatedAnswerStreamEnd = 'generatedAnswerStreamEnd',
+
+  historyForward = 'historyForward',
+
+  historyBackward = 'historyBackward',
 }

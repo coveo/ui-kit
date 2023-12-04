@@ -95,6 +95,28 @@ export class SearchAnalyticsProvider
     return baseObject;
   }
 
+  public getFacetMetadata(facetId: string, facetValue: string) {
+    const facetRequest = this.getFacetRequest(facetId);
+    const facetField = facetRequest?.field ?? '';
+    return {
+      ...this.getBaseMetadata(),
+      facetId,
+      facetField,
+      facetValue,
+      facetTitle: `${facetField}_${facetId}`,
+    };
+  }
+
+  private getFacetRequest = (facetId: string) => {
+    return (
+      this.state.facetSet?.[facetId]?.request ||
+      this.state.categoryFacetSet?.[facetId]?.request ||
+      this.state.dateFacetSet?.[facetId]?.request ||
+      this.state.numericFacetSet?.[facetId]?.request ||
+      this.state.automaticFacetSet?.set[facetId]?.response
+    );
+  };
+
   public getGeneratedAnswerMetadata() {
     const state = this.getState();
     const formattedObject: Record<string, string | boolean> = {};

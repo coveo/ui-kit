@@ -91,6 +91,7 @@ export interface LogFacetSelectActionCreatorPayload {
   facetValue: string;
 }
 
+//TODO: KIT-2859
 export const logFacetSelect = (
   payload: LogFacetSelectActionCreatorPayload
 ): SearchAction =>
@@ -109,6 +110,7 @@ export const logFacetSelect = (
     return client.makeFacetSelect(metadata);
   });
 
+//TODO: KIT-2859
 export const logFacetExclude = (
   payload: LogFacetSelectActionCreatorPayload
 ): SearchAction =>
@@ -139,6 +141,7 @@ export interface LogFacetDeselectActionCreatorPayload {
   facetValue: string;
 }
 
+//TODO: KIT-2859
 export const logFacetDeselect = (
   payload: LogFacetDeselectActionCreatorPayload
 ): SearchAction =>

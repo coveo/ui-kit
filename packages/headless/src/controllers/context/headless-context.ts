@@ -1,8 +1,8 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   ContextPayload,
   ContextValue,
 } from '../../features/context/context-state';
+import {CoreEngine} from '../../product-listing.index';
 import {
   buildCoreContext,
   Context,
@@ -29,7 +29,7 @@ export type {
  * @returns A `Context` controller instance.
  */
 export function buildContext(
-  engine: SearchEngine,
+  engine: CoreEngine,
   props?: ContextProps
 ): Context {
   return buildCoreContext(engine, props);
