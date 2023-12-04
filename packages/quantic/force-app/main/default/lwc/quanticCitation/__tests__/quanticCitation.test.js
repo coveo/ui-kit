@@ -221,7 +221,7 @@ describe('c-quantic-citation', () => {
       expect(link.href).toBe(exampleSalesforceLink);
     });
 
-    it('should open the result link in a Salesforce console subtab', async () => {
+    it('should open the citation link inside Salesforce', async () => {
       const element = createTestComponent({
         ...defaultOptions,
         citation: exampleSalesforceCitation,
@@ -239,7 +239,7 @@ describe('c-quantic-citation', () => {
     });
 
     describe('when the result is a knowledge article', () => {
-      it('should open the result link in a Salesforce console subtab', async () => {
+      it('should open the citation link inside Salesforce', async () => {
         const element = createTestComponent({
           ...defaultOptions,
           citation: exampleSalesforceKnowledgeArticleCitation,
