@@ -180,26 +180,24 @@ function updateStateFromFacetResponse(
   facetRequest.numberOfValues = facetResponse.values.length;
   facetRequest.field = facetResponse.field;
   facetRequest.type = facetResponse.type;
+  facetRequest.values = getFacetRequestValuesFromFacetResponse(facetResponse);
+  facetRequest.preventAutoSelect = false;
+}
+
+function getFacetRequestValuesFromFacetResponse(
+  facetResponse: AnyFacetResponse
+) {
   switch (facetResponse.type) {
-    case 'regular':
-      facetRequest.values = (facetResponse as RegularFacetResponse).values.map(
-        convertFacetValueToRequest
-      );
-      break;
     case 'numericalRange':
-      facetRequest.values = convertToRangeRequests(
+      return convertToRangeRequests(
         (facetResponse as NumericFacetResponse).values
       );
-      break;
-    case 'dateRange':
-      // TODO
-      break;
-    case 'hierarchical':
-      // TODO
-      break;
+    case 'regular':
+    default:
+      return (facetResponse as RegularFacetResponse).values.map(
+        convertFacetValueToRequest
+      );
   }
-
-  facetRequest.preventAutoSelect = false;
 }
 
 function insertNewValue(
