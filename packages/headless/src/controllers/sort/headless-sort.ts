@@ -1,4 +1,6 @@
+import {SearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {SearchPageEvents} from '../../features/analytics/search-action-cause';
 import {executeSearch} from '../../features/search/search-actions';
 import {SortCriterion} from '../../features/sort-criteria/criteria';
 import {logResultsSort} from '../../features/sort-criteria/sort-criteria-analytics-actions';
@@ -22,7 +24,17 @@ export type {Sort, SortProps, SortState, SortInitialState};
 export function buildSort(engine: SearchEngine, props: SortProps = {}): Sort {
   const {dispatch} = engine;
   const sort = buildCoreSort(engine, props);
-  const search = () => dispatch(executeSearch({legacy: logResultsSort()}));
+  const search = () =>
+    dispatch(
+      executeSearch({
+        legacy: logResultsSort(),
+        next: {
+          actionCause: SearchPageEvents.resultsSort,
+          getEventExtraPayload: (state) =>
+            new SearchAnalyticsProvider(() => state).getResultSortMetadata(),
+        },
+      })
+    );
 
   return {
     ...sort,
