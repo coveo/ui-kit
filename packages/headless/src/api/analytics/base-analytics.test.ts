@@ -1,4 +1,4 @@
-import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events';
+import type {SearchEventRequest} from 'coveo.analytics/dist/definitions/events';
 import {getConfigurationInitialState} from '../../features/configuration/configuration-state';
 import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state';
 import {buildMockAnalyticsState} from '../../test/mock-analytics-state';
@@ -47,11 +47,57 @@ describe('base analytics provider', () => {
         contextValues: {
           test: 'value',
         },
+        contextSettings: {},
       },
     };
     const provider = new TestProvider(() => state);
     expect(provider.getBaseMetadata()).toEqual({
       context_test: 'value',
+      coveoHeadlessVersion: expect.any(String),
+    });
+  });
+
+  it('when analyticsMode is legacy, it should ignore context settings', () => {
+    const state = {
+      ...baseState,
+      context: {
+        contextValues: {
+          test: 'value',
+        },
+        contextSettings: {
+          test: {
+            useForReporting: false,
+            useForML: true,
+          },
+        },
+      },
+    };
+    state.configuration.analytics.analyticsMode = 'legacy';
+    const provider = new TestProvider(() => state);
+    expect(provider.getBaseMetadata()).toEqual({
+      context_test: 'value',
+      coveoHeadlessVersion: expect.any(String),
+    });
+  });
+
+  it('when analyticsMode is next, it should follow context settings', () => {
+    const state = {
+      ...baseState,
+      context: {
+        contextValues: {
+          test: 'value',
+        },
+        contextSettings: {
+          test: {
+            useForReporting: false,
+            useForML: true,
+          },
+        },
+      },
+    };
+    state.configuration.analytics.analyticsMode = 'next';
+    const provider = new TestProvider(() => state);
+    expect(provider.getBaseMetadata()).toEqual({
       coveoHeadlessVersion: expect.any(String),
     });
   });

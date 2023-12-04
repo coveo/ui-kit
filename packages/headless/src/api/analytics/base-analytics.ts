@@ -94,9 +94,10 @@ function nextBaseMetadata(
   contextSettings: ContextSetting,
   formattedObject: Record<string, string | string[]>
 ) {
-  for (const [key, value] of Object.entries(contextValues).filter(
+  const contextValueEntries = Object.entries(contextValues).filter(
     ([key]) => contextSettings[key]?.useForReporting
-  )) {
+  );
+  for (const [key, value] of contextValueEntries) {
     const formattedKey = `context_${key}`;
     formattedObject[formattedKey] = value;
   }

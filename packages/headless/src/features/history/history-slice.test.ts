@@ -73,7 +73,7 @@ describe('history slice', () => {
 
   it('allows to add a snapshot to the state', () => {
     const expectedSnapshot: HistoryState = {
-      context: {contextValues: {foo: 'bar'}},
+      context: {contextValues: {foo: 'bar'}, contextSettings: {}},
       dictionaryFieldContext: {contextValues: {price: 'cad'}},
       tabSet: {a: buildMockTabSlice({id: 'a'})},
       staticFilterSet: {a: buildMockStaticFilterSlice({id: 'a'})},
@@ -186,15 +186,23 @@ describe('history slice', () => {
 
     it('for #context keys', () => {
       expectHistoryToHaveCreatedDifferentSnapshots(
-        getSnapshot({context: {contextValues: {foo: 'bar'}}}),
-        getSnapshot({context: {contextValues: {foo2: 'bar'}}})
+        getSnapshot({
+          context: {contextValues: {foo: 'bar'}, contextSettings: {}},
+        }),
+        getSnapshot({
+          context: {contextValues: {foo2: 'bar'}, contextSettings: {}},
+        })
       );
     });
 
     it('for #context values', () => {
       expectHistoryToHaveCreatedDifferentSnapshots(
-        getSnapshot({context: {contextValues: {foo: 'bar'}}}),
-        getSnapshot({context: {contextValues: {foo: 'bazz'}}})
+        getSnapshot({
+          context: {contextValues: {foo: 'bar'}, contextSettings: {}},
+        }),
+        getSnapshot({
+          context: {contextValues: {foo: 'bazz'}, contextSettings: {}},
+        })
       );
     });
 
