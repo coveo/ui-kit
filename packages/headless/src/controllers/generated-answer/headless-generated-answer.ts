@@ -34,7 +34,11 @@ import {GeneratedAnswerSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
 import {Controller, buildController} from '../controller/headless-controller';
 
-export type {GeneratedAnswerState, GeneratedAnswerCitation};
+export type {
+  GeneratedAnswerCitation,
+  GeneratedResponseFormat,
+  GeneratedAnswerState,
+};
 
 export interface GeneratedAnswer extends Controller {
   /**
@@ -55,6 +59,7 @@ export interface GeneratedAnswer extends Controller {
   dislike(): void;
   /**
    * Re-executes the query to generate the answer in the specified format.
+   * @param responseFormat - The formatting options to apply to generated answers.
    */
   rephrase(responseFormat: GeneratedResponseFormat): void;
   /**
@@ -77,7 +82,7 @@ export interface GeneratedAnswer extends Controller {
   sendDetailedFeedback(details: string): void;
   /**
    * Logs a custom event indicating a cited source link was clicked.
-   * @param id The ID of the clicked citation.
+   * @param id - The ID of the clicked citation.
    */
   logCitationClick(id: string): void;
   /**
@@ -94,8 +99,8 @@ export interface GeneratedAnswer extends Controller {
   logCopyToClipboard(): void;
   /**
    * Logs a custom event indicating a cited source link was hovered.
-   * @param citationId The ID of the clicked citation.
-   * @param citationHoverTimeMs The number of milliseconds spent hovering over the citation.
+   * @param citationId - The ID of the clicked citation.
+   * @param citationHoverTimeMs - The number of milliseconds spent hovering over the citation.
    */
   logCitationHover(citationId: string, citationHoverTimeMs: number): void;
 }
