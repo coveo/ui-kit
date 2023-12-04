@@ -142,9 +142,7 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
     },
 
     executeFirstSearch(analyticsEvent = logInterfaceLoad()) {
-      const firstSearchExecuted = firstSearchExecutedSelector(engine.state);
-
-      if (firstSearchExecuted) {
+      if (firstSearchExecutedSelector(engine.state)) {
         return;
       }
 
@@ -163,12 +161,31 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
       analytics: StandaloneSearchBoxAnalytics
     ) {
       const {cause, metadata} = analytics;
-      const event =
-        metadata && cause === 'omniboxFromLink'
-          ? logOmniboxFromLink(metadata)
-          : logSearchFromLink();
 
-      this.executeFirstSearch(event);
+      if (firstSearchExecutedSelector(engine.state)) {
+        return;
+      }
+
+      const isOmniboxFromLink = metadata && cause === 'omniboxFromLink';
+
+      const action = executeSearch({
+        legacy: isOmniboxFromLink
+          ? logOmniboxFromLink(metadata)
+          : logSearchFromLink(),
+        next: {
+          actionCause: isOmniboxFromLink
+            ? SearchPageEvents.omniboxFromLink
+            : SearchPageEvents.searchFromLink,
+          getEventExtraPayload: isOmniboxFromLink
+            ? (state) =>
+                new SearchAnalyticsProvider(
+                  () => state
+                ).getOmniboxFromLinkMetadata(metadata)
+            : (state) =>
+                new SearchAnalyticsProvider(() => state).getBaseMetadata(),
+        },
+      });
+      engine.dispatch(action);
     },
   };
 }

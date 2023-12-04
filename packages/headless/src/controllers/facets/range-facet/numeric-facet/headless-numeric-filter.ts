@@ -56,7 +56,18 @@ export function buildNumericFilter(
     ...coreController,
     clear: () => {
       coreController.clear();
-      dispatch(executeSearch({legacy: logFacetClearAll(getFacetId())}));
+      dispatch(
+        executeSearch({
+          legacy: logFacetClearAll(getFacetId()),
+          next: {
+            actionCause: SearchPageEvents.facetClearAll,
+            getEventExtraPayload: (state) =>
+              new SearchAnalyticsProvider(() => state).getFacetClearAllMetadata(
+                getFacetId()
+              ),
+          },
+        })
+      );
     },
     setRange: (range) => {
       const success = coreController.setRange(range);

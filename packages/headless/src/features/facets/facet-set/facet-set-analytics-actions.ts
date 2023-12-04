@@ -49,6 +49,7 @@ export interface LogFacetUpdateSortActionCreatorPayload {
   criterion: FacetSortCriterion | RangeFacetSortCriterion;
 }
 
+//TODO: KIT-2859
 export const logFacetUpdateSort = (
   payload: LogFacetUpdateSortActionCreatorPayload
 ): SearchAction =>
@@ -69,6 +70,7 @@ export const logFacetUpdateSort = (
     return client.makeFacetUpdateSort(metadata);
   });
 
+//TODO: KIT-2859
 export const logFacetClearAll = (facetId: string): SearchAction =>
   makeAnalyticsAction('analytics/facet/reset', (client, state) => {
     validatePayload(facetId, facetIdDefinition);
@@ -171,6 +173,7 @@ export interface LogFacetBreadcrumbActionCreatorPayload {
   facetValue: string;
 }
 
+//TODO: KIT-2859
 export const logFacetBreadcrumb = (
   payload: LogFacetBreadcrumbActionCreatorPayload
 ): SearchAction =>
