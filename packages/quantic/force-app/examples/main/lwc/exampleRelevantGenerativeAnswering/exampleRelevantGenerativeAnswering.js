@@ -1,28 +1,82 @@
-// @ts-ignore
-import 'c/quanticHeadlessLoader';
 import {LightningElement, api} from 'lwc';
+// @ts-ignore
+import caseTemplate from './resultTemplates/caseResultTemplate.html';
+// @ts-ignore
+import chatterTemplate from './resultTemplates/chatterResultTemplate.html';
+// @ts-ignore
+import childTemplate from './resultTemplates/childTemplate.html';
+// @ts-ignore
+import parentTemplate from './resultTemplates/parentTemplate.html';
+// @ts-ignore
+import youtubeTemplate from './resultTemplates/youtubeResultTemplate.html';
 
 export default class ExampleRelevantGenerativeAnswering extends LightningElement {
   /** @type {string} */
   @api engineId = 'example-relevant-generative-answering';
-
-  connectedCallback() {}
-
-  disconnectedCallback() {}
-
-  // handleInterfaceLoad = (event) => {
-  //   event.stopPropagation();
-  //   getHeadlessEnginePromise(this.engineId).then((engine) => {
-  //     engine.executeFirstSearch();
-  //   });
-  // };
+  /** @type {string} */
+  @api searchHub = 'default';
+  /** @type {string} */
+  @api pipeline = 'genqatest';
+  /** @type {boolean} */
+  @api disableStateInUrl = false;
+  /** @type {boolean} */
+  @api skipFirstSearch = false;
+  /** @type {string} */
+  @api answerStyle = 'default';
+  /** @type {boolean} */
+  @api multilineFooter = false;
 
   handleResultTemplateRegistration(event) {
-    // const headless = getHeadlessBundle(this.engineId);
     event.stopPropagation();
 
     const resultTemplatesManager = event.detail;
 
-    resultTemplatesManager.registerTemplates();
+    const isCase = CoveoHeadless.ResultTemplatesHelpers.fieldMustMatch(
+      'objecttype',
+      ['Case']
+    );
+    const isYouTube = CoveoHeadless.ResultTemplatesHelpers.fieldMustMatch(
+      'filetype',
+      ['YouTubeVideo']
+    );
+    const isChatter = CoveoHeadless.ResultTemplatesHelpers.fieldMustMatch(
+      'objecttype',
+      ['FeedItem']
+    );
+    const isThread = CoveoHeadless.ResultTemplatesHelpers.fieldMustMatch(
+      'source',
+      ['iNaturalistTaxons']
+    );
+    const isChild = CoveoHeadless.ResultTemplatesHelpers.fieldMustMatch(
+      'quantic__templateId',
+      ['myChildTemplate']
+    );
+
+    resultTemplatesManager.registerTemplates(
+      {
+        content: youtubeTemplate,
+        conditions: [isYouTube],
+        fields: ['ytvideoid', 'ytvideoduration'],
+      },
+      {
+        content: caseTemplate,
+        conditions: [isCase],
+        fields: ['sfstatus', 'sfcasestatus', 'sfcasenumber'],
+      },
+      {
+        content: chatterTemplate,
+        conditions: [isChatter],
+        fields: ['sfcreatedbyname'],
+      },
+      {
+        content: childTemplate,
+        conditions: [isChild],
+        priority: 1,
+      },
+      {
+        content: parentTemplate,
+        conditions: [isThread],
+      }
+    );
   }
 }
