@@ -21,10 +21,7 @@ import {
   GeneratedAnswerSection,
   SearchSection,
 } from '../../state/state-sections';
-import {
-  requiredNonEmptyString,
-  validatePayload,
-} from '../../utils/validate-payload';
+import {nonEmptyArray, validatePayload} from '../../utils/validate-payload';
 import {logGeneratedAnswerStreamEnd} from './generated-answer-analytics-actions';
 import {buildStreamingRequest} from './generated-answer-request';
 import {
@@ -127,11 +124,6 @@ export const updateResponseFormat = createAction(
       }),
     })
 );
-
-const nonEmptyArray = new ArrayValue({
-  each: requiredNonEmptyString,
-  required: true,
-});
 
 export const registerFieldsToIncludeInCitations = createAction(
   'generatedAnswer/registerFieldsToIncludeInCitations',

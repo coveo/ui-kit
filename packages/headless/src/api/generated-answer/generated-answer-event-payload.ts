@@ -1,4 +1,4 @@
-import {Raw} from '../../ssr.index';
+import {Raw} from '../search/search/raw';
 
 export type GeneratedAnswerStreamFinishReason = 'COMPLETED' | 'ERROR';
 
