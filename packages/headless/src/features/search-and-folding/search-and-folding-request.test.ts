@@ -102,6 +102,32 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
     });
   });
 
+  describe('#context', () => {
+    it('when analyticsMode is legacy it should ignore context settings', async () => {
+      const state = createMockState();
+      state.configuration.analytics.analyticsMode = 'legacy';
+      state.context = {
+        contextValues: {a: 'b'},
+        contextSettings: {a: {useForReporting: false, useForML: false}},
+      };
+
+      const request = await buildSearchAndFoldingLoadCollectionRequest(state);
+      expect(request.context?.a).toBe('b');
+    });
+
+    it('when analyticsMode is next it should follows context settings', async () => {
+      const state = createMockState();
+      state.configuration.analytics.analyticsMode = 'next';
+      state.context = {
+        contextValues: {a: 'b'},
+        contextSettings: {a: {useForReporting: false, useForML: false}},
+      };
+
+      const request = await buildSearchAndFoldingLoadCollectionRequest(state);
+      expect(request.context?.a).toBeUndefined();
+    });
+  });
+
   describe('when analytics are enabled', () => {
     let state: SearchAppState;
     beforeEach(() => {
