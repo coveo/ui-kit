@@ -217,7 +217,7 @@ async function deployCommunity(
         throw error;
       }
       // The deployment may fail because the community is still being created.
-      // Wait for 30 seconds then retry.
+      // Wait for 40 seconds then retry.
       await new Promise((resolve) => setTimeout(resolve, 40000));
       retry++;
     }
