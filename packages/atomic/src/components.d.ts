@@ -374,7 +374,7 @@ export namespace Components {
     }
     /**
      * The `atomic-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
-     * The condition properties can be based on any top-level result property of the `result` object, not restricted to fields (for example, `isRecommendation`).
+     * The condition properties can be based on any top-level result property of the `result` object, not restricted to fields (e.g., `isRecommendation`).
      * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
      * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
@@ -2753,7 +2753,7 @@ declare global {
     };
     /**
      * The `atomic-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
-     * The condition properties can be based on any top-level result property of the `result` object, not restricted to fields (for example, `isRecommendation`).
+     * The condition properties can be based on any top-level result property of the `result` object, not restricted to fields (e.g., `isRecommendation`).
      * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
      * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
@@ -4550,7 +4550,7 @@ declare namespace LocalJSX {
     }
     /**
      * The `atomic-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
-     * The condition properties can be based on any top-level result property of the `result` object, not restricted to fields (for example, `isRecommendation`).
+     * The condition properties can be based on any top-level result property of the `result` object, not restricted to fields (e.g., `isRecommendation`).
      * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
      * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
@@ -6821,7 +6821,7 @@ declare module "@stencil/core" {
             "atomic-facet-number-input": LocalJSX.AtomicFacetNumberInput & JSXBase.HTMLAttributes<HTMLAtomicFacetNumberInputElement>;
             /**
              * The `atomic-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
-             * The condition properties can be based on any top-level result property of the `result` object, not restricted to fields (for example, `isRecommendation`).
+             * The condition properties can be based on any top-level result property of the `result` object, not restricted to fields (e.g., `isRecommendation`).
              * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
              * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
              */
