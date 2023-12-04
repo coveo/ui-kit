@@ -6,7 +6,7 @@
 .tooltip__content {
   left: 50%;
   transition: transform 0s linear 0s, opacity 0.1s linear 0s, visibility 0.1s linear 0s;
-  z-index: 2;
+  z-index: 9001;
 }
 
 .tooltip__content--positioned-above {
@@ -32,7 +32,7 @@
   left: 50%;
   transform: translate(-50%, -100%);
   transition: opacity 0.1s linear 0s, visibility 0.1s linear 0s;
-  z-index: 2;
+  z-index: 9001;
 }
 
 .tooltip__arrow--dark {
