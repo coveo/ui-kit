@@ -1,12 +1,13 @@
 import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
+import {RegularFacetValue} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
 } from '../../../../../features/facets/facet-set/facet-set-actions';
+import {FacetValueRequest} from '../../../../../features/facets/facet-set/interfaces/request';
 import {
   CoreCommerceFacet,
   CoreCommerceFacetOptions,
-  RegularFacetValue,
   buildCoreCommerceFacet,
 } from '../headless-core-commerce-facet';
 
@@ -20,7 +21,7 @@ export type CommerceRegularFacetOptions = Omit<
  * facet UI component.
  */
 export interface CommerceRegularFacet
-  extends CoreCommerceFacet<RegularFacetValue> {}
+  extends CoreCommerceFacet<FacetValueRequest, RegularFacetValue> {}
 
 /**
  * @internal
@@ -38,7 +39,10 @@ export function buildCommerceRegularFacet(
   engine: CommerceEngine,
   options: CommerceRegularFacetOptions
 ): CommerceRegularFacet {
-  const coreController = buildCoreCommerceFacet<RegularFacetValue>(engine, {
+  const coreController = buildCoreCommerceFacet<
+    FacetValueRequest,
+    RegularFacetValue
+  >(engine, {
     options: {
       ...options,
       toggleSelectActionCreator: toggleSelectFacetValue,

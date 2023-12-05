@@ -53,7 +53,7 @@ export interface RangeFacetValue<T> extends BaseFacetValue {
 
 export type DateFacetValue = RangeFacetValue<string>;
 export type NumericFacetValue = RangeFacetValue<number>;
-export type AnyFacetValue =
+export type AnyFacetValueResponse =
   | RegularFacetValue
   | NumericFacetValue
   | DateFacetValue

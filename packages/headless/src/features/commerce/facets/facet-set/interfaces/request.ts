@@ -1,8 +1,5 @@
-import {
-  FacetRequest,
-  FacetValueRequest,
-} from '../../../../facets/facet-set/interfaces/request';
-import {NumericRangeRequest} from '../../../../facets/range-facets/numeric-facet-set/interfaces/request';
+import {FacetRequest} from '../../../../facets/facet-set/interfaces/request';
+import {AnyFacetValueRequest} from '../../../../facets/generic/interfaces/generic-facet-request';
 import {FacetType} from './response';
 
 export type CommerceFacetRequest = Pick<
@@ -14,6 +11,6 @@ export type CommerceFacetRequest = Pick<
   | 'preventAutoSelect'
 > & {
   type: FacetType;
-  values: FacetValueRequest[] | NumericRangeRequest[];
+  values: AnyFacetValueRequest[];
   initialNumberOfValues: number;
 };

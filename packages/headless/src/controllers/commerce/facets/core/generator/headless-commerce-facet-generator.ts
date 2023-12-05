@@ -1,7 +1,8 @@
 import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../../features/commerce/facets/facet-set/facet-set-slice';
-import {AnyFacetValue} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
+import {AnyFacetValueResponse} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
 import {facetOrderReducer as facetOrder} from '../../../../../features/facets/facet-order/facet-order-slice';
+import {AnyFacetValueRequest} from '../../../../../features/facets/generic/interfaces/generic-facet-request';
 import {
   CommerceFacetSetSection,
   FacetOrderSection,
@@ -37,7 +38,7 @@ export interface CommerceFacetGeneratorState {
   /**
    * The generated commerce facet controllers.
    */
-  facets: CoreCommerceFacet<AnyFacetValue>[];
+  facets: CoreCommerceFacet<AnyFacetValueRequest, AnyFacetValueResponse>[];
 }
 
 type CommerceRegularFacetBuilder = ProductListingRegularFacetBuilder; // TODO: | CommerceSearchRegularFacetBuilder;

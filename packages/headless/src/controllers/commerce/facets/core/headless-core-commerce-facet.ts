@@ -8,19 +8,13 @@ import {
   isCommerceFacetLoadingResponseSelector,
 } from '../../../../features/commerce/facets/facet-set/facet-set-selector';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
-import {
-  DateFacetValue,
-  NumericFacetValue,
-  RegularFacetValue,
-  CategoryFacetValue,
-  AnyFacetValue,
-} from '../../../../features/commerce/facets/facet-set/interfaces/response';
-import {FacetValueState} from '../../../../features/facets/facet-api/value';
+import {AnyFacetValueResponse} from '../../../../features/commerce/facets/facet-set/interfaces/response';
 import {
   deselectAllFacetValues,
   updateFacetIsFieldExpanded,
   updateFacetNumberOfValues,
 } from '../../../../features/facets/facet-set/facet-set-actions';
+import {AnyFacetValueRequest} from '../../../../features/facets/generic/interfaces/generic-facet-request';
 import {CommerceFacetSetSection} from '../../../../state/state-sections';
 import {loadReducerError} from '../../../../utils/errors';
 import {buildController} from '../../../controller/headless-controller';
@@ -28,14 +22,6 @@ import {
   CoreFacet as HeadlessCoreFacet,
   CoreFacetState,
 } from '../../../core/facets/facet/headless-core-facet';
-
-export type {
-  FacetValueState,
-  RegularFacetValue,
-  NumericFacetValue,
-  DateFacetValue,
-  CategoryFacetValue,
-};
 
 interface AnyToggleFacetValueActionCreatorPayload {
   selection: any; // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -71,7 +57,10 @@ export interface CoreCommerceFacetOptions {
   fetchResultsActionCreator: () => AsyncThunkAction<unknown, void, any>;
 }
 
-export type CoreCommerceFacet<T extends AnyFacetValue> = Pick<
+export type CoreCommerceFacet<
+  T1 extends AnyFacetValueRequest,
+  T2 extends AnyFacetValueResponse,
+> = Pick<
   HeadlessCoreFacet,
   'deselectAll' | 'showLessValues' | 'showMoreValues' | 'subscribe'
 > & {
@@ -80,47 +69,47 @@ export type CoreCommerceFacet<T extends AnyFacetValue> = Pick<
    *
    * @param selection - The facet value to select.
    */
-  toggleSelect(selection: T): void;
+  toggleSelect(selection: T1): void;
   /**
    * Toggles exclusion of the specified facet value.
    *
    * @param selection - The facet value to exclude.
    */
-  toggleExclude(selection: T): void;
+  toggleExclude(selection: T1): void;
   /**
    * Toggles selection of the specified facet value, deselecting all others.
    *
    * @param selection - The facet value to single select.
    */
-  toggleSingleSelect(selection: T): void;
+  toggleSingleSelect(selection: T1): void;
   /**
    * Toggles exclusion of the specified facet value, deselecting all others.
    *
    * @param selection - The facet value to single exclude.
    */
-  toggleSingleExclude(selection: T): void;
+  toggleSingleExclude(selection: T1): void;
   /**
    * Whether the specified facet value is selected.
    *
    * @param value - The facet value to evaluate.
    */
-  isValueSelected(value: T): boolean;
+  isValueSelected(value: T1): boolean;
   /**
    * Whether the specified facet value is excluded.
    *
    * @param value - The facet value to evaluate.
    */
-  isValueExcluded(value: T): boolean;
+  isValueExcluded(value: T1): boolean;
   /**
    * The state of this commerce facet controller instance.
    */
-  state: CoreCommerceFacetState<T>;
+  state: CoreCommerceFacetState<T2>;
 };
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `CoreCommerceFacet` controller.
  */
-export type CoreCommerceFacetState<T extends AnyFacetValue> = Omit<
+export type CoreCommerceFacetState<T extends AnyFacetValueResponse> = Omit<
   CoreFacetState,
   'enabled' | 'sortCriterion' | 'values'
 > & {
@@ -140,10 +129,13 @@ export type CoreCommerceFacetState<T extends AnyFacetValue> = Omit<
 
 export type CoreCommerceFacetBuilder = typeof buildCoreCommerceFacet;
 
-export function buildCoreCommerceFacet<T extends AnyFacetValue>(
+export function buildCoreCommerceFacet<
+  T1 extends AnyFacetValueRequest,
+  T2 extends AnyFacetValueResponse,
+>(
   engine: CommerceEngine,
   props: CoreCommerceFacetProps
-): CoreCommerceFacet<T> {
+): CoreCommerceFacet<T1, T2> {
   if (!loadCommerceFacetReducers(engine)) {
     throw loadReducerError;
   }
@@ -174,20 +166,20 @@ export function buildCoreCommerceFacet<T extends AnyFacetValue>(
   return {
     ...controller,
 
-    toggleSelect: (selection: T) => {
+    toggleSelect: (selection: T1) => {
       dispatch(props.options.toggleSelectActionCreator({selection, facetId}));
       dispatch(props.options.fetchResultsActionCreator());
       // TODO: analytics
     },
 
-    toggleExclude: (selection: T) => {
+    toggleExclude: (selection: T1) => {
       dispatch(props.options.toggleExcludeActionCreator({selection, facetId}));
       dispatch(props.options.fetchResultsActionCreator());
       // TODO: analytics
     },
 
     // Must use a function here to properly support inheritance with `this`.
-    toggleSingleSelect: function (selection: T) {
+    toggleSingleSelect: function (selection: T1) {
       if (selection.state === 'idle') {
         dispatch(deselectAllFacetValues(facetId));
       }
@@ -196,7 +188,7 @@ export function buildCoreCommerceFacet<T extends AnyFacetValue>(
     },
 
     // Must use a function here to properly support inheritance with `this`.
-    toggleSingleExclude: function (selection: T) {
+    toggleSingleExclude: function (selection: T1) {
       if (selection.state === 'idle') {
         dispatch(deselectAllFacetValues(facetId));
       }
@@ -204,11 +196,11 @@ export function buildCoreCommerceFacet<T extends AnyFacetValue>(
       this.toggleExclude(selection);
     },
 
-    isValueSelected: (value: AnyFacetValue) => {
+    isValueSelected: (value: T1) => {
       return value.state === 'selected';
     },
 
-    isValueExcluded: (value: AnyFacetValue) => {
+    isValueExcluded: (value: T1) => {
       return value.state === 'excluded';
     },
 
@@ -246,7 +238,7 @@ export function buildCoreCommerceFacet<T extends AnyFacetValue>(
     get state() {
       const response = getResponse();
 
-      const values = response.values as T[];
+      const values = response.values as T2[];
       const hasActiveValues = values.some(
         (facetValue) => facetValue.state !== 'idle'
       );

@@ -1,7 +1,7 @@
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {CommerceFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
 import {
-  AnyFacetValue,
+  AnyFacetValueResponse,
   RegularFacetResponse,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
@@ -12,6 +12,7 @@ import {
   updateFacetIsFieldExpanded,
   updateFacetNumberOfValues,
 } from '../../../../features/facets/facet-set/facet-set-actions';
+import {AnyFacetValueRequest} from '../../../../features/facets/generic/interfaces/generic-facet-request';
 import {CommerceAppState} from '../../../../state/commerce-app-state';
 import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
@@ -19,11 +20,11 @@ import {buildMockCommerceRegularFacetResponse} from '../../../../test/mock-comme
 import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceRegularFacetValue} from '../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
+import {FacetValueState} from '../../../core/facets/facet/headless-core-facet';
 import {
   buildCoreCommerceFacet,
   CoreCommerceFacet,
   CoreCommerceFacetOptions,
-  FacetValueState,
 } from './headless-core-commerce-facet';
 
 describe('CoreCommerceFacet', () => {
@@ -32,7 +33,7 @@ describe('CoreCommerceFacet', () => {
   let options: CoreCommerceFacetOptions;
   let state: CommerceAppState;
   let engine: MockCommerceEngine;
-  let facet: CoreCommerceFacet<AnyFacetValue>;
+  let facet: CoreCommerceFacet<AnyFacetValueRequest, AnyFacetValueResponse>;
 
   function initFacet() {
     engine = buildMockCommerceEngine({state});
