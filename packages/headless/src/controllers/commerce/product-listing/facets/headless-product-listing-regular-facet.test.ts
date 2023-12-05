@@ -9,19 +9,21 @@ import {buildMockCommerceRegularFacetResponse} from '../../../../test/mock-comme
 import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceRegularFacetValue} from '../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
-import {CoreCommerceFacetOptions} from '../../facets/core/headless-core-commerce-facet';
-import {buildProductListingRegularFacet} from './headless-product-listing-regular-facet';
+import {
+  buildProductListingRegularFacet,
+  ProductListingRegularFacetOptions,
+} from './headless-product-listing-regular-facet';
 
 describe('ProductListingRegularFacet', () => {
   const facetId: string = 'regular_facet_id';
-  let options: CoreCommerceFacetOptions;
+  let options: ProductListingRegularFacetOptions;
   let state: CommerceAppState;
   let engine: MockCommerceEngine;
   let facet: CommerceRegularFacet;
 
   function initFacet() {
     engine = buildMockCommerceEngine({state});
-    facet = buildProductListingRegularFacet(engine, {options});
+    facet = buildProductListingRegularFacet(engine, options);
   }
 
   function setFacetRequest(config: Partial<CommerceFacetRequest> = {}) {

@@ -11,9 +11,9 @@ import {
   buildController,
   Controller,
 } from '../../../../controller/headless-controller';
+import {ProductListingNumericFacetBuilder} from '../../../product-listing/facets/headless-product-listing-numeric-facet';
+import {ProductListingRegularFacetBuilder} from '../../../product-listing/facets/headless-product-listing-regular-facet';
 import {CoreCommerceFacet} from '../headless-core-commerce-facet';
-import {CommerceNumericFacetBuilder} from '../numeric/headless-commerce-numeric-facet';
-import {CommerceRegularFacetBuilder} from '../regular/headless-commerce-regular-facet';
 
 /**
  * The `CommerceFacetGenerator` headless controller creates commerce facet controllers from the Commerce API search or
@@ -39,6 +39,11 @@ export interface CommerceFacetGeneratorState {
    */
   facets: CoreCommerceFacet<AnyFacetValue>[];
 }
+
+type CommerceRegularFacetBuilder = ProductListingRegularFacetBuilder; // TODO: | CommerceSearchRegularFacetBuilder;
+type CommerceNumericFacetBuilder = ProductListingNumericFacetBuilder; // TODO: | CommerceSearchNumericFacetBuilder;
+// TODO: type CommerceDateFacetBuilder = ProductListingDateFacetBuilder | CommerceSearchDateFacetBuilder;
+// TODO: type CommerceCategoryFacetBuilder = ProductListingCategoryFacetBuilder | CommerceSearchCategoryFacetBuilder;
 
 /**
  * @internal
@@ -76,20 +81,12 @@ export function buildCommerceFacetGenerator(
 
     switch (type) {
       case 'numericalRange':
-        return options.buildNumericFacet(engine, {
-          options: {
-            facetId,
-          },
-        });
-      case 'dateRange': // TODO
-      case 'hierarchical': // TODO
+        return options.buildNumericFacet(engine, {facetId});
+      case 'dateRange': // TODO: return options.buildDateFacet(engine, {facetId});
+      case 'hierarchical': // TODO return options.buildCategoryFacet(engine, {facetId});
       case 'regular':
       default:
-        return options.buildRegularFacet(engine, {
-          options: {
-            facetId,
-          },
-        });
+        return options.buildRegularFacet(engine, {facetId});
     }
   };
 

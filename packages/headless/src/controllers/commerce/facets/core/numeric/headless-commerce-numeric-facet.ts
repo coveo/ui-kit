@@ -5,10 +5,15 @@ import {
 } from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {
   CoreCommerceFacet,
-  CoreCommerceFacetProps,
+  CoreCommerceFacetOptions,
   NumericFacetValue,
   buildCoreCommerceFacet,
 } from '../headless-core-commerce-facet';
+
+export type CommerceNumericFacetOptions = Omit<
+  CoreCommerceFacetOptions,
+  'toggleSelectActionCreator' | 'toggleExcludeActionCreator'
+>;
 
 /**
  * The `CommerceNumericFacet` controller offers a high-level programming interface for implementing numeric commerce
@@ -16,8 +21,6 @@ import {
  */
 export interface CommerceNumericFacet
   extends CoreCommerceFacet<NumericFacetValue> {}
-
-export type CommerceNumericFacetBuilder = typeof buildCommerceNumericFacet;
 
 /**
  * @internal
@@ -27,17 +30,17 @@ export type CommerceNumericFacetBuilder = typeof buildCommerceNumericFacet;
  * You will instead interact with `CommerceNumericFacet` controller instances through the state of a `FacetGenerator`
  * controller.
  *
- * @param engine The headless commerce engine.
- * @param props The configurable `CommerceNumericFacet` properties used internally.
+ * @param engine - The headless commerce engine.
+ * @param options - The `CommerceNumericFacet` options used internally.
  * @returns A `CommerceNumericFacet` controller instance.
  */
 export function buildCommerceNumericFacet(
   engine: CommerceEngine,
-  props: CoreCommerceFacetProps
+  options: CommerceNumericFacetOptions
 ): CommerceNumericFacet {
   const coreController = buildCoreCommerceFacet<NumericFacetValue>(engine, {
     options: {
-      ...props.options,
+      ...options,
       toggleSelectActionCreator: toggleSelectNumericFacetValue,
       toggleExcludeActionCreator: toggleExcludeNumericFacetValue,
     },

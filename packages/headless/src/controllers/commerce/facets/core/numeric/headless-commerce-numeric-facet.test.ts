@@ -1,6 +1,7 @@
 import {Action} from '@reduxjs/toolkit';
 import {CommerceFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
 import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
+import {fetchProductListing} from '../../../../../features/commerce/product-listing/product-listing-actions';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
@@ -12,23 +13,23 @@ import {buildMockCommerceNumericFacetResponse} from '../../../../../test/mock-co
 import {buildMockCommerceFacetSlice} from '../../../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceNumericFacetValue} from '../../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
-import {CoreCommerceFacetOptions} from '../headless-core-commerce-facet';
 import {
   CommerceNumericFacet,
+  CommerceNumericFacetOptions,
   buildCommerceNumericFacet,
 } from './headless-commerce-numeric-facet';
 
 describe('CommerceNumericFacet', () => {
   const facetId: string = 'numeric_facet_id';
   const type: FacetType = 'numericalRange';
-  let options: CoreCommerceFacetOptions;
+  let options: CommerceNumericFacetOptions;
   let state: CommerceAppState;
   let engine: MockCommerceEngine;
   let facet: CommerceNumericFacet;
 
   function initFacet() {
     engine = buildMockCommerceEngine({state});
-    facet = buildCommerceNumericFacet(engine, {options});
+    facet = buildCommerceNumericFacet(engine, options);
   }
 
   function setFacetRequest(config: Partial<CommerceFacetRequest> = {}) {
@@ -51,6 +52,7 @@ describe('CommerceNumericFacet', () => {
   beforeEach(() => {
     options = {
       facetId,
+      fetchResultsActionCreator: fetchProductListing,
     };
 
     state = buildMockCommerceState();

@@ -8,20 +8,22 @@ import {buildMockCommerceRegularFacetResponse} from '../../../../test/mock-comme
 import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceNumericFacetValue} from '../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
-import {CoreCommerceFacetOptions} from '../../facets/core/headless-core-commerce-facet';
 import {CommerceNumericFacet} from '../../facets/core/numeric/headless-commerce-numeric-facet';
-import {buildProductListingNumericFacet} from './headless-product-listing-numeric-facet';
+import {
+  ProductListingNumericFacetOptions,
+  buildProductListingNumericFacet,
+} from './headless-product-listing-numeric-facet';
 
 describe('ProductListingNumericFacet', () => {
   const facetId: string = 'numeric_facet_id';
-  let options: CoreCommerceFacetOptions;
+  let options: ProductListingNumericFacetOptions;
   let state: CommerceAppState;
   let engine: MockCommerceEngine;
   let facet: CommerceNumericFacet;
 
   function initFacet() {
     engine = buildMockCommerceEngine({state});
-    facet = buildProductListingNumericFacet(engine, {options});
+    facet = buildProductListingNumericFacet(engine, options);
   }
 
   function setFacetRequest(config: Partial<CommerceFacetRequest> = {}) {

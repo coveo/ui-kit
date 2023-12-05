@@ -8,8 +8,8 @@ import {
   buildMockCommerceNumericFacetResponse,
 } from '../../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
-import {buildCommerceNumericFacet} from '../numeric/headless-commerce-numeric-facet';
-import {buildCommerceRegularFacet} from '../regular/headless-commerce-regular-facet';
+import {buildProductListingNumericFacet} from '../../../product-listing/facets/headless-product-listing-numeric-facet';
+import {buildProductListingRegularFacet} from '../../../product-listing/facets/headless-product-listing-regular-facet';
 import {
   buildCommerceFacetGenerator,
   CommerceFacetGenerator,
@@ -67,8 +67,8 @@ describe('CommerceFacetGenerator', () => {
       },
     });
     options = {
-      buildNumericFacet: buildCommerceNumericFacet,
-      buildRegularFacet: buildCommerceRegularFacet,
+      buildNumericFacet: buildProductListingNumericFacet,
+      buildRegularFacet: buildProductListingRegularFacet,
     };
     facetGenerator = buildCommerceFacetGenerator(engine, options);
   }
@@ -99,7 +99,7 @@ describe('CommerceFacetGenerator', () => {
 
     expect(facetGenerator.state.facets.length).toEqual(1);
     expect(facetGenerator.state.facets[0].state).toEqual(
-      buildCommerceRegularFacet(engine, {options: {facetId}}).state
+      buildProductListingRegularFacet(engine, {facetId}).state
     );
   });
   it('should generate numeric facet controllers', () => {
@@ -108,7 +108,7 @@ describe('CommerceFacetGenerator', () => {
 
     expect(facetGenerator.state.facets.length).toEqual(1);
     expect(facetGenerator.state.facets[0].state).toEqual(
-      buildCommerceNumericFacet(engine, {options: {facetId}}).state
+      buildProductListingNumericFacet(engine, {facetId}).state
     );
   });
 

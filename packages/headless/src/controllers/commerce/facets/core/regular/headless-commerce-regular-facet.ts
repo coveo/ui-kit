@@ -5,10 +5,15 @@ import {
 } from '../../../../../features/facets/facet-set/facet-set-actions';
 import {
   CoreCommerceFacet,
-  CoreCommerceFacetProps,
+  CoreCommerceFacetOptions,
   RegularFacetValue,
   buildCoreCommerceFacet,
 } from '../headless-core-commerce-facet';
+
+export type CommerceRegularFacetOptions = Omit<
+  CoreCommerceFacetOptions,
+  'toggleSelectActionCreator' | 'toggleExcludeActionCreator'
+>;
 
 /**
  * The `CommerceRegularFacet` controller offers a high-level programming interface for implementing a regular commerce
@@ -16,8 +21,6 @@ import {
  */
 export interface CommerceRegularFacet
   extends CoreCommerceFacet<RegularFacetValue> {}
-
-export type CommerceRegularFacetBuilder = typeof buildCommerceRegularFacet;
 
 /**
  * @internal
@@ -27,17 +30,17 @@ export type CommerceRegularFacetBuilder = typeof buildCommerceRegularFacet;
  * You will instead interact with `CommerceRegularFacet` controller instances through the state of a `FacetGenerator`
  * controller.
  *
- * @param engine The headless commerce engine.
- * @param props The configurable `CommerceRegularFacet` properties used internally.
+ * @param engine - The headless commerce engine.
+ * @param props - The `CommerceRegularFacet` options used internally.
  * @returns A `CommerceRegularFacet` controller instance.
  * */
 export function buildCommerceRegularFacet(
   engine: CommerceEngine,
-  props: CoreCommerceFacetProps
+  options: CommerceRegularFacetOptions
 ): CommerceRegularFacet {
   const coreController = buildCoreCommerceFacet<RegularFacetValue>(engine, {
     options: {
-      ...props.options,
+      ...options,
       toggleSelectActionCreator: toggleSelectFacetValue,
       toggleExcludeActionCreator: toggleExcludeFacetValue,
     },

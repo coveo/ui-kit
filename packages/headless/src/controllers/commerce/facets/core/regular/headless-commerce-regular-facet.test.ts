@@ -1,5 +1,6 @@
 import {Action} from '@reduxjs/toolkit';
 import {CommerceFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
+import {fetchProductListing} from '../../../../../features/commerce/product-listing/product-listing-actions';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
@@ -11,22 +12,22 @@ import {buildMockCommerceRegularFacetResponse} from '../../../../../test/mock-co
 import {buildMockCommerceFacetSlice} from '../../../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceRegularFacetValue} from '../../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
-import {CoreCommerceFacetOptions} from '../headless-core-commerce-facet';
 import {
   CommerceRegularFacet,
+  CommerceRegularFacetOptions,
   buildCommerceRegularFacet,
 } from './headless-commerce-regular-facet';
 
 describe('CommerceRegularFacet', () => {
   const facetId: string = 'regular_facet_id';
-  let options: CoreCommerceFacetOptions;
+  let options: CommerceRegularFacetOptions;
   let state: CommerceAppState;
   let engine: MockCommerceEngine;
   let facet: CommerceRegularFacet;
 
   function initFacet() {
     engine = buildMockCommerceEngine({state});
-    facet = buildCommerceRegularFacet(engine, {options});
+    facet = buildCommerceRegularFacet(engine, options);
   }
 
   function setFacetRequest(config: Partial<CommerceFacetRequest> = {}) {
@@ -49,6 +50,7 @@ describe('CommerceRegularFacet', () => {
   beforeEach(() => {
     options = {
       facetId,
+      fetchResultsActionCreator: fetchProductListing,
     };
 
     state = buildMockCommerceState();

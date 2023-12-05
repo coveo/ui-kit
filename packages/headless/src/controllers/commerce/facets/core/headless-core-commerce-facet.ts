@@ -1,4 +1,3 @@
-import {Schema} from '@coveo/bueno';
 import {
   ActionCreatorWithPreparedPayload,
   AsyncThunkAction,
@@ -16,10 +15,6 @@ import {
   CategoryFacetValue,
   AnyFacetValue,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response';
-import {
-  isFacetValueExcluded,
-  isFacetValueSelected,
-} from '../../../../features/commerce/facets/facet-utils';
 import {FacetValueState} from '../../../../features/facets/facet-api/value';
 import {
   deselectAllFacetValues,
@@ -28,10 +23,6 @@ import {
 } from '../../../../features/facets/facet-set/facet-set-actions';
 import {CommerceFacetSetSection} from '../../../../state/state-sections';
 import {loadReducerError} from '../../../../utils/errors';
-import {
-  requiredNonEmptyString,
-  validateOptions,
-} from '../../../../utils/validate-payload';
 import {buildController} from '../../../controller/headless-controller';
 import {
   CoreFacet as HeadlessCoreFacet,
@@ -62,14 +53,14 @@ export interface CoreCommerceFacetProps {
 
 export interface CoreCommerceFacetOptions {
   facetId: string;
-  toggleSelectActionCreator?: ActionCreatorWithPreparedPayload<
+  toggleSelectActionCreator: ActionCreatorWithPreparedPayload<
     [payload: AnyToggleFacetValueActionCreatorPayload],
     any, // eslint-disable-line @typescript-eslint/no-explicit-any
     string,
     never,
     never
   >;
-  toggleExcludeActionCreator?: ActionCreatorWithPreparedPayload<
+  toggleExcludeActionCreator: ActionCreatorWithPreparedPayload<
     [payload: AnyToggleFacetValueActionCreatorPayload],
     any, // eslint-disable-line @typescript-eslint/no-explicit-any
     string,
@@ -77,7 +68,7 @@ export interface CoreCommerceFacetOptions {
     never
   >;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  fetchResultsActionCreator?: () => AsyncThunkAction<unknown, void, any>;
+  fetchResultsActionCreator: () => AsyncThunkAction<unknown, void, any>;
 }
 
 export type CoreCommerceFacet<T extends AnyFacetValue> = Pick<
@@ -160,15 +151,6 @@ export function buildCoreCommerceFacet<T extends AnyFacetValue>(
   const {dispatch} = engine;
   const controller = buildController(engine);
 
-  validateOptions(
-    engine,
-    new Schema<CoreCommerceFacetOptions>({
-      facetId: requiredNonEmptyString,
-    }),
-    props.options,
-    'buildCoreFacet'
-  );
-
   const facetId = props.options.facetId;
 
   const getRequest = () => engine.state.commerceFacetSet[facetId].request;
@@ -193,29 +175,15 @@ export function buildCoreCommerceFacet<T extends AnyFacetValue>(
     ...controller,
 
     toggleSelect: (selection: T) => {
-      if (props.options.toggleSelectActionCreator) {
-        dispatch(props.options.toggleSelectActionCreator({selection, facetId}));
-        if (props.options.fetchResultsActionCreator) {
-          dispatch(props.options.fetchResultsActionCreator());
-          // TODO: analytics
-        }
-      } else {
-        throw new Error('No toggleSelectActionCreator was provided');
-      }
+      dispatch(props.options.toggleSelectActionCreator({selection, facetId}));
+      dispatch(props.options.fetchResultsActionCreator());
+      // TODO: analytics
     },
 
     toggleExclude: (selection: T) => {
-      if (props.options.toggleExcludeActionCreator) {
-        dispatch(
-          props.options.toggleExcludeActionCreator({selection, facetId})
-        );
-        if (props.options.fetchResultsActionCreator) {
-          dispatch(props.options.fetchResultsActionCreator());
-          // TODO: analytics
-        }
-      } else {
-        throw new Error('No toggleExcludeActionCreator was provided');
-      }
+      dispatch(props.options.toggleExcludeActionCreator({selection, facetId}));
+      dispatch(props.options.fetchResultsActionCreator());
+      // TODO: analytics
     },
 
     // Must use a function here to properly support inheritance with `this`.
@@ -236,15 +204,17 @@ export function buildCoreCommerceFacet<T extends AnyFacetValue>(
       this.toggleExclude(selection);
     },
 
-    isValueSelected: isFacetValueSelected,
+    isValueSelected: (value: AnyFacetValue) => {
+      return value.state === 'selected';
+    },
 
-    isValueExcluded: isFacetValueExcluded,
+    isValueExcluded: (value: AnyFacetValue) => {
+      return value.state === 'excluded';
+    },
 
     deselectAll() {
       dispatch(deselectAllFacetValues(facetId));
-      if (props.options.fetchResultsActionCreator) {
-        dispatch(props.options.fetchResultsActionCreator());
-      }
+      dispatch(props.options.fetchResultsActionCreator());
     },
 
     showMoreValues() {
@@ -256,9 +226,7 @@ export function buildCoreCommerceFacet<T extends AnyFacetValue>(
 
       dispatch(updateFacetNumberOfValues({facetId, numberOfValues}));
       dispatch(updateFacetIsFieldExpanded({facetId, isFieldExpanded: true}));
-      if (props.options.fetchResultsActionCreator) {
-        dispatch(props.options.fetchResultsActionCreator());
-      }
+      dispatch(props.options.fetchResultsActionCreator());
     },
 
     showLessValues() {
@@ -272,9 +240,7 @@ export function buildCoreCommerceFacet<T extends AnyFacetValue>(
         updateFacetNumberOfValues({facetId, numberOfValues: newNumberOfValues})
       );
       dispatch(updateFacetIsFieldExpanded({facetId, isFieldExpanded: false}));
-      if (props.options.fetchResultsActionCreator) {
-        dispatch(props.options.fetchResultsActionCreator());
-      }
+      dispatch(props.options.fetchResultsActionCreator());
     },
 
     get state() {
