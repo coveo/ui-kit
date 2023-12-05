@@ -73,7 +73,7 @@ describe('CommerceFacetGenerator', () => {
     facetGenerator = buildCommerceFacetGenerator(engine, options);
   }
 
-  describe('in general', () => {
+  describe('when created', () => {
     beforeEach(() => {
       initFacetGenerator();
     });
