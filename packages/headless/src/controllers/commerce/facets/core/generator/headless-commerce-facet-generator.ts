@@ -1,5 +1,6 @@
 import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../../features/commerce/facets/facet-set/facet-set-slice';
+import {AnyFacetValue} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
 import {facetOrderReducer as facetOrder} from '../../../../../features/facets/facet-order/facet-order-slice';
 import {
   CommerceFacetSetSection,
@@ -36,7 +37,7 @@ export interface CommerceFacetGeneratorState {
   /**
    * The generated commerce facet controllers.
    */
-  facets: CoreCommerceFacet[];
+  facets: CoreCommerceFacet<AnyFacetValue>[];
 }
 
 /**

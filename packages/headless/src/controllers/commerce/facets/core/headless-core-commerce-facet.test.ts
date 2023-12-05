@@ -1,6 +1,9 @@
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {CommerceFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
-import {RegularFacetResponse} from '../../../../features/commerce/facets/facet-set/interfaces/response';
+import {
+  AnyFacetValue,
+  RegularFacetResponse,
+} from '../../../../features/commerce/facets/facet-set/interfaces/response';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {
   deselectAllFacetValues,
@@ -29,7 +32,7 @@ describe('CoreCommerceFacet', () => {
   let options: CoreCommerceFacetOptions;
   let state: CommerceAppState;
   let engine: MockCommerceEngine;
-  let facet: CoreCommerceFacet;
+  let facet: CoreCommerceFacet<AnyFacetValue>;
 
   function initFacet() {
     engine = buildMockCommerceEngine({state});
