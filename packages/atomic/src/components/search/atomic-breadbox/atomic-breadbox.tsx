@@ -244,10 +244,6 @@ export class AtomicBreadbox implements InitializableComponent {
     const isLastBreadcrumb = totalBreadcrumbs === 1;
     const isExclusion = breadcrumb.state === 'excluded';
     const activeColor = isExclusion ? 'error' : 'primary';
-    const ariaLabel = this.bindings.i18n.t(
-      `remove-${isExclusion ? 'exclusion-' : ''}filter-on`,
-      {value: title}
-    );
 
     return (
       <li class="breadcrumb" key={value}>
@@ -256,7 +252,6 @@ export class AtomicBreadbox implements InitializableComponent {
           style={isExclusion ? 'outline-error' : 'outline-bg-neutral'}
           class={classNames.join(' ')}
           title={title}
-          ariaLabel={ariaLabel}
           onClick={() => {
             if (isLastBreadcrumb) {
               this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
