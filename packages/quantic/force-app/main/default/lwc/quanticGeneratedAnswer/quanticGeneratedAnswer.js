@@ -2,7 +2,7 @@ import answerGenerated from '@salesforce/label/c.quantic_AnswerGenerated';
 import couldNotGenerateAnAnswer from '@salesforce/label/c.quantic_CouldNotGenerateAnAnswer';
 import feedback from '@salesforce/label/c.quantic_Feedback';
 import generatedAnswerForYou from '@salesforce/label/c.quantic_GeneratedAnswerForYou';
-import generatedAnswerIshidden from '@salesforce/label/c.quantic_GeneratedAnswerIsHidden';
+import generatedAnswerIsHidden from '@salesforce/label/c.quantic_GeneratedAnswerIsHidden';
 import generatingAnswer from '@salesforce/label/c.quantic_GeneratingAnswer';
 import harmful from '@salesforce/label/c.quantic_Harmful';
 import inaccurate from '@salesforce/label/c.quantic_Inaccurate';
@@ -10,7 +10,6 @@ import irrelevant from '@salesforce/label/c.quantic_Irrelevant';
 import loading from '@salesforce/label/c.quantic_Loading';
 import other from '@salesforce/label/c.quantic_Other';
 import outOfDate from '@salesforce/label/c.quantic_OutOfDate';
-import showGeneratedAnswer from '@salesforce/label/c.quantic_ShowGeneratedAnswer';
 import thisAnswerWasHelpful from '@salesforce/label/c.quantic_ThisAnswerWasHelpful';
 import thisAnswerWasNotHelpful from '@salesforce/label/c.quantic_ThisAnswerWasNotHelpful';
 import tryAgain from '@salesforce/label/c.quantic_TryAgain';
@@ -46,7 +45,7 @@ const GENERATED_ANSWER_DATA_KEY = 'coveo-generated-answer-data';
 
 /**
  * The `QuanticGeneratedAnswer` component automatically generates an answer using Coveo machine learning models to answer the query executed by the user.
- * @category Internal
+ * @category Search
  * @example
  * <c-quantic-generated-answer engine-id={engineId} answer-style="step"></c-quantic-generated-answer>
  */
@@ -84,7 +83,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     thisAnswerWasHelpful,
     tryAgain,
     couldNotGenerateAnAnswer,
-    showGeneratedAnswer,
     other,
     harmful,
     irrelevant,
@@ -93,7 +91,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     feedback,
     whyGeneratedAnswerWasNotHelpful,
     generatingAnswer,
-    generatedAnswerIshidden,
+    generatedAnswerIsHidden,
     answerGenerated,
   };
 
@@ -121,6 +119,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     this.template.addEventListener(
       'quantic__generatedanswercopy',
       this.handleGeneratedAnswerCopyToClipboard
+    );
+    this.template.addEventListener(
+      'quantic__generatedanswertoggle',
+      this.handleGeneratedAnswerToggle
     );
   }
 
@@ -167,6 +169,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       'quantic__generatedanswercopy',
       this.handleGeneratedAnswerCopyToClipboard
     );
+    this.template.removeEventListener(
+      'quantic__generatedanswertoggle',
+      this.handleGeneratedAnswerToggle
+    );
   }
 
   updateState() {
@@ -177,7 +183,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   getGeneratedAnswerStatus() {
     if (!this.state.isVisible) {
-      return this.labels.generatedAnswerIshidden;
+      return this.labels.generatedAnswerIsHidden;
     }
 
     if (this.hasRetryableError) {
@@ -196,6 +202,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   updateSearchStatusState() {
+    this.feedbackSubmitted = false;
     this.searchStatusState = this.searchStatus.state;
   }
 
@@ -208,14 +215,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       this.feedbackState = FEEDBACK_NEUTRAL_STATE;
     }
   }
-
-  /**
-   * handles clicking on a citation.
-   * @param {string} id
-   */
-  handleCitationClick = (id) => {
-    this.generatedAnswer.logCitationClick(id);
-  };
 
   /**
    * handles hovering over a citation.
@@ -276,7 +275,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   handleGeneratedAnswerRephrase = (event) => {
     event.stopPropagation();
     this.generatedAnswer.rephrase({answerStyle: event?.detail});
-    this.feedbackSubmitted = false;
   };
 
   handleGeneratedAnswerCopyToClipboard = (event) => {
@@ -284,7 +282,8 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     this.generatedAnswer.logCopyToClipboard();
   };
 
-  toggleGeneratedAnswer() {
+  handleGeneratedAnswerToggle = (event) => {
+    event.stopPropagation();
     if (this.isVisible) {
       this.generatedAnswer.hide();
       this.writeStoredDate({isVisible: false});
@@ -292,7 +291,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       this.generatedAnswer.show();
       this.writeStoredDate({isVisible: true});
     }
-  }
+  };
 
   readStoredData() {
     try {

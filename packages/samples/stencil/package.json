@@ -8,14 +8,14 @@
     "e2e:watch": "cypress open --browser chrome --e2e"
   },
   "dependencies": {
-    "@coveo/atomic": "2.50.2",
-    "@coveo/headless": "2.40.2",
-    "@stencil/core": "4.6.0",
+    "@coveo/atomic": "2.51.0",
+    "@coveo/headless": "2.41.0",
+    "@stencil/core": "4.7.2",
     "stencil-router-v2": "0.6.0"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "cypress": "13.5.0",
+    "cypress": "13.6.0",
     "cypress-repeat": "2.3.4",
     "gts": "5.2.0",
     "rollup-plugin-html": "0.2.1"

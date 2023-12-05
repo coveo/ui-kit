@@ -34,11 +34,12 @@ import {GeneratedAnswerSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
 import {Controller, buildController} from '../controller/headless-controller';
 
-export type {GeneratedAnswerState, GeneratedAnswerCitation};
+export type {
+  GeneratedAnswerCitation,
+  GeneratedResponseFormat,
+  GeneratedAnswerState,
+};
 
-/**
- * @internal
- */
 export interface GeneratedAnswer extends Controller {
   /**
    * The state of the GeneratedAnswer controller.
@@ -49,15 +50,16 @@ export interface GeneratedAnswer extends Controller {
    */
   retry(): void;
   /**
-   * Determines if the generated answer was liked, or upvoted by the end user.
+   * Indicates that the generated answer met the user expectations.
    */
   like(): void;
   /**
-   * Determines if the generated answer was disliked, or downvoted by the end user.
+   * Marks the generated answer as not relevant to the end user.
    */
   dislike(): void;
   /**
    * Re-executes the query to generate the answer in the specified format.
+   * @param responseFormat - The formatting options to apply to generated answers.
    */
   rephrase(responseFormat: GeneratedResponseFormat): void;
   /**
@@ -80,7 +82,7 @@ export interface GeneratedAnswer extends Controller {
   sendDetailedFeedback(details: string): void;
   /**
    * Logs a custom event indicating a cited source link was clicked.
-   * @param id The ID of the clicked citation.
+   * @param id - The ID of the clicked citation.
    */
   logCitationClick(id: string): void;
   /**
@@ -97,8 +99,8 @@ export interface GeneratedAnswer extends Controller {
   logCopyToClipboard(): void;
   /**
    * Logs a custom event indicating a cited source link was hovered.
-   * @param citationId The ID of the clicked citation.
-   * @param citationHoverTimeMs The number of milliseconds spent hovering over the citation.
+   * @param citationId - The ID of the clicked citation.
+   * @param citationHoverTimeMs - The number of milliseconds spent hovering over the citation.
    */
   logCitationHover(citationId: string, citationHoverTimeMs: number): void;
 }
@@ -179,7 +181,11 @@ const subscribeStateManager: SubscribeStateManager = {
 };
 
 /**
- * @internal
+ * Creates a `GeneratedAnswer` controller instance.
+ *
+ * @param engine - The headless engine.
+ * @param props - The configurable `GeneratedAnswer` properties.
+ * @returns A `GeneratedAnswer` controller instance.
  */
 export function buildGeneratedAnswer(
   engine: SearchEngine,

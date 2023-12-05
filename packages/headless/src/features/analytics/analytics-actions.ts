@@ -132,11 +132,13 @@ export const logCustomEvent = (
     return client.makeCustomEventWithType(p.evt, p.type, p.meta);
   });
 
+//TODO: KIT-2859
 export const logInterfaceLoad = (): SearchAction =>
   makeAnalyticsAction('analytics/interface/load', (client) =>
     client.makeInterfaceLoad()
   );
 
+//TODO: KIT-2859
 export const logInterfaceChange = (): SearchAction =>
   makeAnalyticsAction('analytics/interface/change', (client, state) =>
     client.makeInterfaceChange({
@@ -144,11 +146,13 @@ export const logInterfaceChange = (): SearchAction =>
     })
   );
 
+//TODO: KIT-2859
 export const logSearchFromLink = (): SearchAction =>
   makeAnalyticsAction('analytics/interface/searchFromLink', (client) =>
     client.makeSearchFromLink()
   );
 
+//TODO: KIT-2859
 export const logOmniboxFromLink = (
   metadata: OmniboxSuggestionMetadata
 ): SearchAction =>

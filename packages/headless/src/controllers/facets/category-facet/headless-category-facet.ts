@@ -1,5 +1,7 @@
+import {SearchAnalyticsProvider} from '../../../api/analytics/search-analytics';
 import {configuration} from '../../../app/common-reducers';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
+import {SearchPageEvents} from '../../../features/analytics/search-action-cause';
 import {categoryFacetSetReducer as categoryFacetSet} from '../../../features/facets/category-facet-set/category-facet-set-slice';
 import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
 import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response';
@@ -13,6 +15,7 @@ import {
   logFacetSelect,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {
+  SearchAction,
   executeSearch,
   fetchFacetValues,
 } from '../../../features/search/search-actions';
@@ -90,16 +93,28 @@ export function buildCategoryFacet(
 
     toggleSelect(selection: CategoryFacetValue) {
       coreController.toggleSelect(selection);
-      const analyticsAction = getToggleSelectAnalyticsAction(
-        getFacetId(),
-        selection
+      dispatch(
+        executeSearch({
+          legacy: getLegacyToggleSelectAnalyticsAction(getFacetId(), selection),
+          next: getToggleSelectAnalyticsAction(getFacetId(), selection),
+        })
       );
-      dispatch(executeSearch({legacy: analyticsAction}));
     },
 
     deselectAll() {
       coreController.deselectAll();
-      dispatch(executeSearch({legacy: logFacetClearAll(getFacetId())}));
+      dispatch(
+        executeSearch({
+          legacy: logFacetClearAll(getFacetId()),
+          next: {
+            actionCause: SearchPageEvents.facetClearAll,
+            getEventExtraPayload: (state) =>
+              new SearchAnalyticsProvider(() => state).getFacetClearAllMetadata(
+                getFacetId()
+              ),
+          },
+        })
+      );
     },
 
     sortBy(criterion: CategoryFacetSortCriterion) {
@@ -107,6 +122,14 @@ export function buildCategoryFacet(
       dispatch(
         executeSearch({
           legacy: logFacetUpdateSort({facetId: getFacetId(), criterion}),
+          next: {
+            actionCause: SearchPageEvents.facetUpdateSort,
+            getEventExtraPayload: (state) =>
+              new SearchAnalyticsProvider(() => state).getFacetSortMetadata(
+                getFacetId(),
+                criterion
+              ),
+          },
         })
       );
     },
@@ -147,7 +170,7 @@ function loadCategoryFacetReducers(
   return true;
 }
 
-function getToggleSelectAnalyticsAction(
+function getLegacyToggleSelectAnalyticsAction(
   facetId: string,
   selection: CategoryFacetValue
 ) {
@@ -158,4 +181,21 @@ function getToggleSelectAnalyticsAction(
 
   const isSelected = selection.state === 'selected';
   return isSelected ? logFacetDeselect(payload) : logFacetSelect(payload);
+}
+
+function getToggleSelectAnalyticsAction(
+  facetId: string,
+  selection: CategoryFacetValue
+): SearchAction {
+  const isSelected = selection.state === 'selected';
+  return {
+    actionCause: isSelected
+      ? SearchPageEvents.facetDeselect
+      : SearchPageEvents.facetSelect,
+    getEventExtraPayload: (state) =>
+      new SearchAnalyticsProvider(() => state).getFacetMetadata(
+        facetId,
+        selection.value
+      ),
+  };
 }

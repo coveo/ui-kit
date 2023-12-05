@@ -1,3 +1,17 @@
+# 2.51.0 (2023-11-29)
+
+### Bug Fixes
+
+- **deps:** update dependency @stencil/core to v4.7.2 j:kit-282 ([#3418](https://github.com/coveo/ui-kit/issues/3418)) ([d142351](https://github.com/coveo/ui-kit/commits/d142351f38b1c8dd8cba935991e0fd70a80122d8))
+- **genai:** dispatch like and dislike properly ([#3393](https://github.com/coveo/ui-kit/issues/3393)) ([43ca99a](https://github.com/coveo/ui-kit/commits/43ca99a3be81fd2948d6eb457419d978255cd72f))
+- **genai:** feedback modal fixes ([#3414](https://github.com/coveo/ui-kit/issues/3414)) ([6c2ed62](https://github.com/coveo/ui-kit/commits/6c2ed629a75796b040dfa8ab5aba44deed91ae48))
+- **RGA:** no longer showing citation popover on small screens ([#3398](https://github.com/coveo/ui-kit/issues/3398)) ([4b170f6](https://github.com/coveo/ui-kit/commits/4b170f6949812a8218fef0deae115597728bc421))
+
+### Features
+
+- **doc:** generate documentation for generated answer in headless, atomic and quantic ([#3397](https://github.com/coveo/ui-kit/issues/3397)) ([c5df083](https://github.com/coveo/ui-kit/commits/c5df0835dde13ea54376a04ba4945427ac7155e9))
+- **IPX:** make button load recs on click ([#3406](https://github.com/coveo/ui-kit/issues/3406)) ([c7c72f5](https://github.com/coveo/ui-kit/commits/c7c72f546f252284d5efc53901bac0421ac4da37))
+
 ## 2.50.2 (2023-11-16)
 
 ### Features

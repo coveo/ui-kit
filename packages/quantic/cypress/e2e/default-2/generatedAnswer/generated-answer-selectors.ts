@@ -60,7 +60,7 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
       .eq(index),
   citationLink: (index: number) =>
     GeneratedAnswerSelectors.get()
-      .find('[data-cy="generated-answer__citations"] .citation__badge')
+      .find('[data-cy="generated-answer__citations"] .citation__link')
       .eq(index),
   retryButton: () =>
     GeneratedAnswerSelectors.get().find(
@@ -68,7 +68,7 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
     ),
   toggleGeneratedAnswerButton: () =>
     GeneratedAnswerSelectors.get().find(
-      '[data-cy="generated-answer__toggle-button"]'
+      'c-quantic-generated-answer-toggle [data-cy="generated-answer__toggle-button"]'
     ),
   generatedAnswerContent: () =>
     GeneratedAnswerSelectors.get().find(
