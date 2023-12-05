@@ -78,8 +78,6 @@ describe('CommerceFacetGenerator', () => {
       initFacetGenerator();
     });
     it('should add correct reducers to engine', () => {
-      initFacetGenerator();
-
       expect(engine.addReducers).toHaveBeenCalledWith({
         facetOrder,
         commerceFacetSet,
@@ -87,8 +85,6 @@ describe('CommerceFacetGenerator', () => {
     });
 
     it('should expose a #subscribe method', () => {
-      initFacetGenerator();
-
       expect(facetGenerator.subscribe).toBeTruthy();
     });
   });
