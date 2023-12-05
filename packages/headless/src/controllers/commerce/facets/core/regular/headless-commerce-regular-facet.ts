@@ -1,13 +1,13 @@
 import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
-import {RegularFacetValue} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
 } from '../../../../../features/facets/facet-set/facet-set-actions';
-import {FacetValueRequest} from '../../../../../features/facets/facet-set/interfaces/request';
 import {
   CoreCommerceFacet,
   CoreCommerceFacetOptions,
+  FacetValueRequest,
+  RegularFacetValue,
   buildCoreCommerceFacet,
 } from '../headless-core-commerce-facet';
 

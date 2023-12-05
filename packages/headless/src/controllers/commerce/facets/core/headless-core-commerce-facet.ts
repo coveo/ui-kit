@@ -8,12 +8,17 @@ import {
   isCommerceFacetLoadingResponseSelector,
 } from '../../../../features/commerce/facets/facet-set/facet-set-selector';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
-import {AnyFacetValueResponse} from '../../../../features/commerce/facets/facet-set/interfaces/response';
+import {
+  AnyFacetValueResponse,
+  NumericFacetValue,
+  RegularFacetValue,
+} from '../../../../features/commerce/facets/facet-set/interfaces/response';
 import {
   deselectAllFacetValues,
   updateFacetIsFieldExpanded,
   updateFacetNumberOfValues,
 } from '../../../../features/facets/facet-set/facet-set-actions';
+import {FacetValueRequest} from '../../../../features/facets/facet-set/interfaces/request';
 import {AnyFacetValueRequest} from '../../../../features/facets/generic/interfaces/generic-facet-request';
 import {CommerceFacetSetSection} from '../../../../state/state-sections';
 import {loadReducerError} from '../../../../utils/errors';
@@ -22,6 +27,14 @@ import {
   CoreFacet as HeadlessCoreFacet,
   CoreFacetState,
 } from '../../../core/facets/facet/headless-core-facet';
+import {NumericRangeRequest} from '../../../core/facets/range-facet/numeric-facet/headless-core-numeric-facet';
+
+export type {
+  FacetValueRequest,
+  RegularFacetValue,
+  NumericRangeRequest,
+  NumericFacetValue,
+};
 
 interface AnyToggleFacetValueActionCreatorPayload {
   selection: any; // eslint-disable-line @typescript-eslint/no-explicit-any

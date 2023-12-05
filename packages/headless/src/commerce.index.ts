@@ -95,9 +95,10 @@ export {
 export type {CommerceRegularFacet} from './controllers/commerce/facets/core/regular/headless-commerce-regular-facet';
 export type {CommerceNumericFacet} from './controllers/commerce/facets/core/numeric/headless-commerce-numeric-facet';
 export type {
+  FacetValueRequest,
   RegularFacetValue,
+  NumericRangeRequest,
   NumericFacetValue,
-  FacetValueState,
 } from './controllers/commerce/facets/core/headless-core-commerce-facet';
 export type {ProductListingFacetGenerator} from './controllers/commerce/product-listing/facets/headless-product-listing-facet-generator';
 export {buildProductListingFacetGenerator} from './controllers/commerce/product-listing/facets/headless-product-listing-facet-generator';

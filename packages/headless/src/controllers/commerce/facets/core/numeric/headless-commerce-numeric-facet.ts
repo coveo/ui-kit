@@ -1,6 +1,4 @@
 import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
-import {NumericFacetValue} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
-import {RangeValueRequest} from '../../../../../features/facets/range-facets/generic/interfaces/range-facet';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
@@ -8,6 +6,8 @@ import {
 import {
   CoreCommerceFacet,
   CoreCommerceFacetOptions,
+  NumericFacetValue,
+  NumericRangeRequest,
   buildCoreCommerceFacet,
 } from '../headless-core-commerce-facet';
 
@@ -21,7 +21,7 @@ export type CommerceNumericFacetOptions = Omit<
  * facet UI component.
  */
 export interface CommerceNumericFacet
-  extends CoreCommerceFacet<RangeValueRequest, NumericFacetValue> {}
+  extends CoreCommerceFacet<NumericRangeRequest, NumericFacetValue> {}
 
 /**
  * @internal
@@ -40,7 +40,7 @@ export function buildCommerceNumericFacet(
   options: CommerceNumericFacetOptions
 ): CommerceNumericFacet {
   const coreController = buildCoreCommerceFacet<
-    RangeValueRequest,
+    NumericRangeRequest,
     NumericFacetValue
   >(engine, {
     options: {
