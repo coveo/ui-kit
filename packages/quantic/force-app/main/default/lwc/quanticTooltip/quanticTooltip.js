@@ -112,7 +112,7 @@ export default class QuanticTooltip extends LightningElement {
   }
 
   get tooltipCSSClass() {
-    return `slds-popover  slds-is-absolute slds-fall-into-ground tooltip__content ${
+    return `slds-popover slds-is-absolute slds-fall-into-ground tooltip__content ${
       this.lightTheme ? 'tooltip__content--light' : 'slds-popover_tooltip'
     } ${
       this.displayTooltipAboveTarget
