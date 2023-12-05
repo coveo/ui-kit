@@ -10,6 +10,7 @@ import {
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {
   AnyFacetValueResponse,
+  FacetType,
   NumericFacetValue,
   RegularFacetValue,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response';
@@ -30,6 +31,7 @@ import {
 import {NumericRangeRequest} from '../../../core/facets/range-facet/numeric-facet/headless-core-numeric-facet';
 
 export type {
+  FacetType,
   FacetValueRequest,
   RegularFacetValue,
   NumericRangeRequest,
@@ -126,6 +128,10 @@ export type CoreCommerceFacetState<T extends AnyFacetValueResponse> = Omit<
   CoreFacetState,
   'enabled' | 'sortCriterion' | 'values'
 > & {
+  /**
+   * The type of facet.
+   */
+  type: FacetType;
   /**
    * The facet field.
    */
@@ -259,6 +265,7 @@ export function buildCoreCommerceFacet<
 
       return {
         facetId,
+        type: response.type,
         field: response.field,
         displayName: response.displayName,
         values,
