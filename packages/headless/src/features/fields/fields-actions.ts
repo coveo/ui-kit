@@ -1,4 +1,3 @@
-import {ArrayValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {FieldDescription} from '../../api/search/fields/fields-response';
 import {
@@ -8,17 +7,12 @@ import {
 import {ConfigurationSection} from '../../state/state-sections';
 import {
   validatePayload,
-  requiredNonEmptyString,
+  nonEmptyStringArray,
 } from '../../utils/validate-payload';
-
-const nonEmptyArray = new ArrayValue({
-  each: requiredNonEmptyString,
-  required: true,
-});
 
 export const registerFieldsToInclude = createAction(
   'fields/registerFieldsToInclude',
-  (payload: string[]) => validatePayload<string[]>(payload, nonEmptyArray)
+  (payload: string[]) => validatePayload<string[]>(payload, nonEmptyStringArray)
 );
 
 export const enableFetchAllFields = createAction('fields/fetchall/enable');
