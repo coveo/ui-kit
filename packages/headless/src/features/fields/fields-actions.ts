@@ -5,11 +5,14 @@ import {
   isErrorResponse,
 } from '../../api/search/search-api-client';
 import {ConfigurationSection} from '../../state/state-sections';
-import {validatePayload, nonEmptyArray} from '../../utils/validate-payload';
+import {
+  validatePayload,
+  nonEmptyStringArray,
+} from '../../utils/validate-payload';
 
 export const registerFieldsToInclude = createAction(
   'fields/registerFieldsToInclude',
-  (payload: string[]) => validatePayload<string[]>(payload, nonEmptyArray)
+  (payload: string[]) => validatePayload<string[]>(payload, nonEmptyStringArray)
 );
 
 export const enableFetchAllFields = createAction('fields/fetchall/enable');
