@@ -132,26 +132,48 @@ export function buildBreadcrumbManager(
       engine,
       facetSet: getState().facetSet,
       executeToggleSelect: ({facetId, selection}) => {
-        const analyticsAction = logFacetBreadcrumb({
-          facetId: facetId,
-          facetValue: selection.value,
-        });
         dispatch(toggleSelectFacetValue({facetId, selection}));
         dispatch(
           updateFreezeCurrentValues({facetId, freezeCurrentValues: false})
         );
-        dispatch(executeSearch({legacy: analyticsAction}));
+        dispatch(
+          executeSearch({
+            legacy: logFacetBreadcrumb({
+              facetId: facetId,
+              facetValue: selection.value,
+            }),
+            next: {
+              actionCause: SearchPageEvents.breadcrumbFacet,
+              getEventExtraPayload: (state) =>
+                new SearchAnalyticsProvider(() => state).getFacetMetadata(
+                  facetId,
+                  selection.value
+                ),
+            },
+          })
+        );
       },
       executeToggleExclude: ({facetId, selection}) => {
-        const analyticsAction = logFacetBreadcrumb({
-          facetId: facetId,
-          facetValue: selection.value,
-        });
         dispatch(toggleExcludeFacetValue({facetId, selection}));
         dispatch(
           updateFreezeCurrentValues({facetId, freezeCurrentValues: false})
         );
-        dispatch(executeSearch({legacy: analyticsAction}));
+        dispatch(
+          executeSearch({
+            legacy: logFacetBreadcrumb({
+              facetId: facetId,
+              facetValue: selection.value,
+            }),
+            next: {
+              actionCause: SearchPageEvents.breadcrumbFacet,
+              getEventExtraPayload: (state) =>
+                new SearchAnalyticsProvider(() => state).getFacetMetadata(
+                  facetId,
+                  selection.value
+                ),
+            },
+          })
+        );
       },
       facetValuesSelector: facetResponseActiveValuesSelector,
     };
@@ -167,11 +189,39 @@ export function buildBreadcrumbManager(
       facetSet: getState().numericFacetSet,
       executeToggleSelect: (payload) => {
         dispatch(toggleSelectNumericFacetValue(payload));
-        dispatch(executeSearch({legacy: logNumericFacetBreadcrumb(payload)}));
+        dispatch(
+          executeSearch({
+            legacy: logNumericFacetBreadcrumb(payload),
+            next: {
+              actionCause: SearchPageEvents.breadcrumbFacet,
+              getEventExtraPayload: (state) =>
+                new SearchAnalyticsProvider(
+                  () => state
+                ).getRangeFacetBreadcrumbMetadata(
+                  payload.facetId,
+                  payload.selection
+                ),
+            },
+          })
+        );
       },
       executeToggleExclude: (payload) => {
         dispatch(toggleExcludeNumericFacetValue(payload));
-        dispatch(executeSearch({legacy: logNumericFacetBreadcrumb(payload)}));
+        dispatch(
+          executeSearch({
+            legacy: logNumericFacetBreadcrumb(payload),
+            next: {
+              actionCause: SearchPageEvents.breadcrumbFacet,
+              getEventExtraPayload: (state) =>
+                new SearchAnalyticsProvider(
+                  () => state
+                ).getRangeFacetBreadcrumbMetadata(
+                  payload.facetId,
+                  payload.selection
+                ),
+            },
+          })
+        );
       },
       facetValuesSelector: numericFacetActiveValuesSelector,
     };
@@ -185,11 +235,39 @@ export function buildBreadcrumbManager(
         facetSet: getState().dateFacetSet,
         executeToggleSelect: (payload) => {
           dispatch(toggleSelectDateFacetValue(payload));
-          dispatch(executeSearch({legacy: logDateFacetBreadcrumb(payload)}));
+          dispatch(
+            executeSearch({
+              legacy: logDateFacetBreadcrumb(payload),
+              next: {
+                actionCause: SearchPageEvents.breadcrumbFacet,
+                getEventExtraPayload: (state) =>
+                  new SearchAnalyticsProvider(
+                    () => state
+                  ).getRangeFacetBreadcrumbMetadata(
+                    payload.facetId,
+                    payload.selection
+                  ),
+              },
+            })
+          );
         },
         executeToggleExclude: (payload) => {
           dispatch(toggleExcludeDateFacetValue(payload));
-          dispatch(executeSearch({legacy: logDateFacetBreadcrumb(payload)}));
+          dispatch(
+            executeSearch({
+              legacy: logDateFacetBreadcrumb(payload),
+              next: {
+                actionCause: SearchPageEvents.breadcrumbFacet,
+                getEventExtraPayload: (state) =>
+                  new SearchAnalyticsProvider(
+                    () => state
+                  ).getRangeFacetBreadcrumbMetadata(
+                    payload.facetId,
+                    payload.selection
+                  ),
+              },
+            })
+          );
         },
         facetValuesSelector: dateFacetActiveValuesSelector,
       };
@@ -222,6 +300,16 @@ export function buildBreadcrumbManager(
               ),
               categoryFacetId: facetId,
             }),
+            next: {
+              actionCause: SearchPageEvents.breadcrumbFacet,
+              getEventExtraPayload: (state) =>
+                new SearchAnalyticsProvider(
+                  () => state
+                ).getCategoryFacetBreadcrumbMetadata(
+                  facetId,
+                  path.map((categoryFacetValue) => categoryFacetValue.value)
+                ),
+            },
           })
         );
       },
@@ -296,17 +384,28 @@ export function buildBreadcrumbManager(
     return {
       value: selection,
       deselect: () => {
-        const analyticsAction = logFacetBreadcrumb({
-          facetId: field,
-          facetValue: selection.value,
-        });
         dispatch(
           toggleSelectAutomaticFacetValue({
             field,
             selection,
           })
         );
-        dispatch(executeSearch({legacy: analyticsAction}));
+        dispatch(
+          executeSearch({
+            legacy: logFacetBreadcrumb({
+              facetId: field,
+              facetValue: selection.value,
+            }),
+            next: {
+              actionCause: SearchPageEvents.breadcrumbFacet,
+              getEventExtraPayload: (state) =>
+                new SearchAnalyticsProvider(() => state).getFacetMetadata(
+                  field,
+                  selection.value
+                ),
+            },
+          })
+        );
       },
     };
   };

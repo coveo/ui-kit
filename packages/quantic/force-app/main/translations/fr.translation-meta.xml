@@ -597,6 +597,10 @@
       <name>quantic_OpensInSalesforceSubTab</name>
     </customLabels>
     <customLabels>
+      <label>Naviguer vers l'enregistrement</label>
+      <name>quantic_NavigateToRecord</name>
+    </customLabels>
+    <customLabels>
       <label>Ouvre dans un onglet du navigateur web</label>
       <name>quantic_OpensInBrowserTab</name>
     </customLabels>
