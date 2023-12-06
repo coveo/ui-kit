@@ -1,4 +1,4 @@
-import {buildMockFacetResponse} from '../../../test/mock-facet-response';
+import {buildMockCommerceFacetResponse} from '../../../test/mock-commerce-facet-response';
 import {buildFetchProductListingV2Response} from '../../../test/mock-product-listing-v2';
 import {buildMockProductRecommendation} from '../../../test/mock-product-recommendation';
 import {fetchProductListing} from './product-listing-actions';
@@ -7,7 +7,6 @@ import {
   getProductListingV2InitialState,
   ProductListingV2State,
 } from './product-listing-state';
-import {buildRelevanceSortCriterion} from '../../sort/sort';
 
 describe('product-listing-v2-slice', () => {
   let state: ProductListingV2State;
@@ -22,16 +21,12 @@ describe('product-listing-v2-slice', () => {
 
   it('when a fetchProductListing fulfilled is received, should set the state to the received payload', () => {
     const result = buildMockProductRecommendation();
-    const facet = buildMockFacetResponse();
-    const sortByRelevance = buildRelevanceSortCriterion();
-    const sort = {
-      appliedSort: sortByRelevance,
-      availableSorts: [sortByRelevance],
-    };
+    const facet = buildMockCommerceFacetResponse();
+    const responseId = 'some-response-id';
     const response = buildFetchProductListingV2Response({
       products: [result],
       facets: [facet],
-      sort,
+      responseId,
     });
 
     const action = fetchProductListing.fulfilled(response, '');
@@ -39,7 +34,7 @@ describe('product-listing-v2-slice', () => {
 
     expect(finalState.products[0]).toEqual(result);
     expect(finalState.facets[0]).toEqual(facet);
-    expect(finalState.sort).toEqual(sort);
+    expect(finalState.responseId).toEqual(responseId);
     expect(finalState.isLoading).toBe(false);
   });
 

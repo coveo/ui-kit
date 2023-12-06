@@ -1,5 +1,5 @@
-name: "Setup Quantic E2E"
-description: "Setup Cypress tests for Quantic"
+name: 'Setup Quantic E2E'
+description: 'Setup Cypress tests for Quantic'
 inputs:
   clientid:
     description: The SFDX client ID
@@ -14,12 +14,12 @@ runs:
       shell: bash
     - run: |
         echo "${{ env.SFDX_AUTH_JWT_KEY }}" > server.key
-        npx --no-install sfdx force:auth:jwt:grant \
-          --clientid ${{ env.SFDX_AUTH_CLIENT_ID }} \
-          --jwtkeyfile server.key \
+        ./isolated-sfdx/node_modules/.bin/sf org login jwt \
+          --client-id ${{ env.SFDX_AUTH_CLIENT_ID }} \
+          --jwt-key-file server.key \
           --username ${{ env.SFDX_AUTH_JWT_USERNAME }} \
-          --instanceurl ${{ env.SFDX_AUTH_JWT_INSTANCE_URL }} \
-          --setdefaultdevhubusername
+          --instance-url ${{ env.SFDX_AUTH_JWT_INSTANCE_URL }} \
+          --set-default-dev-hub
         npx --no-install ts-node scripts/build/deploy-community.ts --ci
         rm server.key
       shell: bash
@@ -30,7 +30,7 @@ runs:
         SFDX_AUTH_JWT_KEY: ${{inputs.jwtkey}}
         SFDX_AUTH_JWT_USERNAME: rdaccess@coveo.com
         SFDX_AUTH_JWT_INSTANCE_URL: https://login.salesforce.com
-    - uses: actions/cache@v3
+    - uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84 # v3
       with:
         path: packages/quantic/cypress/plugins/config
         key: quantic-cypress-config-${{ github.sha }}

@@ -22,6 +22,8 @@ export type {
   ContextState,
   ContextValue,
   ContextPayload,
+  ContextProps,
+  ContextInitialState,
 } from './context/headless-context.ssr';
 export {defineContext} from './context/headless-context.ssr';
 
@@ -254,6 +256,15 @@ export type {
 export {defineSearchParameterManager} from './search-parameter-manager/headless-search-parameter-manager.ssr';
 
 export type {
+  UrlManager,
+  UrlManagerBuildProps,
+  UrlManagerInitialState,
+  UrlManagerProps,
+  UrlManagerState,
+} from './url-manager/headless-url-manager.ssr';
+export {defineUrlManager} from './url-manager/headless-url-manager.ssr';
+
+export type {
   SearchStatus,
   SearchStatusState,
 } from './search-status/headless-search-status.ssr';
@@ -369,12 +380,7 @@ export {defineCategoryFieldSuggestions} from './field-suggestions/category-facet
 
 export type {
   AutomaticFacet,
-  AutomaticFacetProps,
   AutomaticFacetState,
-} from './facets/automatic-facet/headless-automatic-facet.ssr';
-export {defineAutomaticFacet} from './facets/automatic-facet/headless-automatic-facet.ssr';
-
-export type {
   AutomaticFacetGenerator,
   AutomaticFacetGeneratorProps,
   AutomaticFacetGeneratorState,

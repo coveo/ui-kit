@@ -18,21 +18,6 @@
     "build": {
       "dependsOn": ["cached:build"],
       "executor": "nx:noop"
-    },
-    "release:phase1": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx -p=@coveo/release bump",
-        "cwd": "packages/atomic-angular/projects/atomic-angular"
-      }
-    },
-    "release:phase2": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": ["npm run release:phase2"],
-        "parallel": false,
-        "cwd": "packages/atomic-angular"
-      }
     }
   }
 }

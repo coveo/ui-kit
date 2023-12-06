@@ -42,7 +42,8 @@ export const FieldSuggestions: FunctionComponent<FieldSuggestionsProps> = (
 
 /**
  * ```tsx
- * const options: FieldSuggestionsOptions = {field: 'author'};
+ * const facetOptions: FacetOptions = {field: 'author'};
+ * const options: FieldSuggestionsOptions = {facet: facetOptions};
  * const controller = buildFieldSuggestions(engine, {options});
  *
  * <FieldSuggestions controller={controller} />;

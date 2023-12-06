@@ -153,6 +153,7 @@ function getUpdateAnalyticsConfigurationPayload(
 
   const payloadWithURL = {
     ...payload,
+    nextApiBaseUrl: `${apiBaseUrl}/rest/organizations/${options.configuration.organizationId}/events/v1`,
     apiBaseUrl,
   };
 

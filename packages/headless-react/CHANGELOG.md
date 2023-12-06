@@ -1,3 +1,29 @@
+## 0.2.8 (2023-12-06)
+
+## 0.2.6 (2023-11-16)
+
+## 0.2.3 (2023-11-08)
+
+### Bug Fixes
+
+- **deps:** update all dependencies j:kit-282 ([#3366](https://github.com/coveo/ui-kit/issues/3366)) ([da241a8](https://github.com/coveo/ui-kit/commits/da241a81d2747c57968caf6da55778fe8db9e6d5))
+
+## 0.2.2 (2023-11-02)
+
+### Bug Fixes
+
+- **deps:** update all dependencies j:kit-282 ([#3347](https://github.com/coveo/ui-kit/issues/3347)) ([047b2a8](https://github.com/coveo/ui-kit/commits/047b2a8e8d82445c1fb800c5ac19428223cf4e56))
+
+### Features
+
+- double publish the NPM packages into GitHub packages for use by internal repositories also using the [@coveo](https://github.com/coveo) scope ([#3251](https://github.com/coveo/ui-kit/issues/3251)) ([4d413e6](https://github.com/coveo/ui-kit/commits/4d413e6bb27065b6667f4705db17b21d6112128b))
+
+## 0.1.4 (2023-10-25)
+
+## 0.1.3 (2023-10-18)
+
+## 0.1.2 (2023-10-11)
+
 ## 0.1.1 (2023-10-04)
 
 ### Bug Fixes

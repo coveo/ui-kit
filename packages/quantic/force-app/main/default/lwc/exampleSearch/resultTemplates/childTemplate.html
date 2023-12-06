@@ -17,9 +17,9 @@
       <c-quantic-result-link result={result} engine-id={engineId}></c-quantic-result-link>
     </div>
     <div slot="excerpt">
-      {result.Excerpt}
+      <c-quantic-result-highlighted-text-field engine-id={engineId} result={result} field="excerpt"></c-quantic-result-highlighted-text-field>
     </div>
-    <div slot="bottom-metadata" class="slds-m-top_x-small slds-grid">
+    <div slot="bottom-metadata" class="slds-m-top_x-small">
       <c-quantic-result-printable-uri result={result} max-number-of-parts="3"></c-quantic-result-printable-uri>
     </div>
     <div slot="children">

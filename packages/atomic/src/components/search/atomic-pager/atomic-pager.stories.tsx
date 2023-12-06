@@ -7,4 +7,4 @@ const {defaultModuleExport, exportedStory} = defaultStory(
 );
 
 export default {...defaultModuleExport, title: 'Atomic/Pager'};
-export const DefaultPager = exportedStory;
+export const Default = exportedStory;

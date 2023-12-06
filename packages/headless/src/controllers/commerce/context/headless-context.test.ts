@@ -1,18 +1,19 @@
-import {buildMockCommerceEngine, MockCommerceEngine} from '../../../test';
-import {contextReducer} from '../../../features/commerce/context/context-slice';
-import {buildContext, Context} from './headless-context';
+import {Action} from '@reduxjs/toolkit';
 import {
   setContext,
   setUser,
   setView,
 } from '../../../features/commerce/context/context-actions';
-import {Action} from '@reduxjs/toolkit';
+import {contextReducer} from '../../../features/commerce/context/context-slice';
+import {buildMockCommerceEngine, MockCommerceEngine} from '../../../test';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state';
+import {buildContext, Context} from './headless-context';
 
 describe('headless commerce context', () => {
   const options = {
     trackingId: 'some-tracking-id',
     language: 'en',
+    country: 'us',
     currency: 'USD',
     clientId: 'some-client-id',
     view: {
@@ -69,6 +70,11 @@ describe('headless commerce context', () => {
   it('setLanguage dispatches #setContext', () => {
     context.setLanguage('new-language');
     expectContainActionWithPayload(setContext, {language: 'new-language'});
+  });
+
+  it('setCountry dispatches #setContext', () => {
+    context.setCountry('new-country');
+    expectContainActionWithPayload(setContext, {country: 'new-country'});
   });
 
   it('setCurrency dispatches #setContext', () => {

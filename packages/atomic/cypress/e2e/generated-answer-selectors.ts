@@ -1,4 +1,5 @@
 export const generatedAnswerComponent = 'atomic-generated-answer';
+export const feedbackModal = 'atomic-generated-answer-feedback-modal';
 export const GeneratedAnswerSelectors = {
   shadow: () => cy.get(generatedAnswerComponent).shadow(),
   container: () => GeneratedAnswerSelectors.shadow().find('[part="container"]'),
@@ -19,8 +20,46 @@ export const GeneratedAnswerSelectors = {
     GeneratedAnswerSelectors.citation().find('.citation-title'),
   citationIndex: () =>
     GeneratedAnswerSelectors.citation().find('.citation-index'),
+  citationCard: () =>
+    GeneratedAnswerSelectors.shadow().find('[part="citation-popover"]'),
   loader: () => GeneratedAnswerSelectors.shadow().find('.typing-indicator'),
   retryContainer: () =>
     GeneratedAnswerSelectors.shadow().find('[part="retry-container"]'),
   retryButton: () => GeneratedAnswerSelectors.retryContainer().find('button'),
+  toggle: () => GeneratedAnswerSelectors.shadow().find('[part="toggle"]'),
+  rephraseButton: (answerStyle: string) =>
+    GeneratedAnswerSelectors.shadow()
+      .find('[part="rephrase-button"]')
+      .contains(answerStyle)
+      .parent(),
+  copyButton: () =>
+    GeneratedAnswerSelectors.shadow().find('[part="copy-button"]'),
+};
+
+export const feedbackModalSelectors = {
+  shadow: () => cy.get(feedbackModal).shadow(),
+  atomicModal: () => feedbackModalSelectors.shadow().find('atomic-modal'),
+  atomicModalShadow: () => feedbackModalSelectors.atomicModal().shadow(),
+  container: () =>
+    feedbackModalSelectors.atomicModalShadow().find('[part="container"]'),
+  backdrop: () =>
+    feedbackModalSelectors.atomicModalShadow().find('[part="backdrop"]'),
+  modalBody: () => feedbackModalSelectors.atomicModal().find('[part="form"]'),
+  modalHeader: () =>
+    feedbackModalSelectors.atomicModal().find('[part="modal-header"]'),
+  modalFooter: () =>
+    feedbackModalSelectors.atomicModal().find('[part="modalFooter"]'),
+  detailsTextArea: () =>
+    feedbackModalSelectors.atomicModal().find('[part="details-input"]'),
+  other: () => feedbackModalSelectors.atomicModal().find('.other'),
+  reason: () =>
+    feedbackModalSelectors.atomicModal().find('[part="reason-radio"]'),
+  submitButton: () =>
+    feedbackModalSelectors.atomicModal().find('[part="submit-button"]'),
+  cancelButton: () =>
+    feedbackModalSelectors.atomicModal().find('[part="cancel-button"]'),
+  detailsInput: () =>
+    feedbackModalSelectors.shadow().find('[part="details-input"]', {
+      includeShadowDom: true,
+    }),
 };

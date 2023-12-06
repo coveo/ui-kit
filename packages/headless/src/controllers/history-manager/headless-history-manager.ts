@@ -1,7 +1,9 @@
 import {isNullOrUndefined} from '@coveo/bueno';
+import {SearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {configuration} from '../../app/common-reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {StateWithHistory} from '../../app/undoable';
+import {SearchPageEvents} from '../../features/analytics/search-action-cause';
 import {facetOrderReducer as facetOrder} from '../../features/facets/facet-order/facet-order-slice';
 import {back, forward} from '../../features/history/history-actions';
 import {
@@ -79,7 +81,16 @@ export function buildHistoryManager(engine: SearchEngine): HistoryManager {
         return;
       }
       await dispatch(back());
-      dispatch(executeSearch(logNavigateBackward()));
+      dispatch(
+        executeSearch({
+          legacy: logNavigateBackward(),
+          next: {
+            actionCause: SearchPageEvents.historyBackward,
+            getEventExtraPayload: (state) =>
+              new SearchAnalyticsProvider(() => state).getBaseMetadata(),
+          },
+        })
+      );
     },
 
     async forward() {
@@ -87,7 +98,16 @@ export function buildHistoryManager(engine: SearchEngine): HistoryManager {
         return;
       }
       await dispatch(forward());
-      dispatch(executeSearch(logNavigateForward()));
+      dispatch(
+        executeSearch({
+          legacy: logNavigateForward(),
+          next: {
+            actionCause: SearchPageEvents.historyForward,
+            getEventExtraPayload: (state) =>
+              new SearchAnalyticsProvider(() => state).getBaseMetadata(),
+          },
+        })
+      );
     },
 
     async backOnNoResults() {
@@ -95,7 +115,16 @@ export function buildHistoryManager(engine: SearchEngine): HistoryManager {
         return;
       }
       await dispatch(back());
-      dispatch(executeSearch(logNoResultsBack()));
+      dispatch(
+        executeSearch({
+          legacy: logNoResultsBack(),
+          next: {
+            actionCause: SearchPageEvents.noResultsBack,
+            getEventExtraPayload: (state) =>
+              new SearchAnalyticsProvider(() => state).getBaseMetadata(),
+          },
+        })
+      );
     },
   };
 }

@@ -1,9 +1,9 @@
-name: "Create deployment package"
-description: "Create a deployment package for Headless and Atomic"
+name: 'Create deployment package'
+description: 'Create a deployment package for Headless and Atomic'
 runs:
   using: composite
   steps:
-    - uses: actions/setup-python@v4
+    - uses: actions/setup-python@65d7f2d534ac1bc67fcd62888c5f4f3d2cb2b236 # v4
       with:
         python-version: '3.8'
     - name: Install deployment package

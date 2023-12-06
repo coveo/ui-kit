@@ -1,6 +1,6 @@
-import {CommerceContextState, getContextInitialState} from './context-state';
-import {contextReducer} from './context-slice';
 import {setContext, setUser, SetUserPayload, setView} from './context-actions';
+import {contextReducer} from './context-slice';
+import {CommerceContextState, getContextInitialState} from './context-state';
 
 describe('context-slice', () => {
   let state: CommerceContextState;
@@ -20,8 +20,9 @@ describe('context-slice', () => {
         state,
         setContext({
           trackingId: 'some-tracking-id',
-          currency: 'CAD',
           language: 'fr',
+          country: 'ca',
+          currency: 'CAD',
           clientId: 'some-client-id',
           view: {
             url: 'https://example.org',
@@ -30,8 +31,9 @@ describe('context-slice', () => {
       )
     ).toEqual({
       trackingId: 'some-tracking-id',
-      currency: 'CAD',
       language: 'fr',
+      country: 'ca',
+      currency: 'CAD',
       clientId: 'some-client-id',
       view: {
         url: 'https://example.org',

@@ -8,6 +8,7 @@ import {
   SearchStatusState,
   buildSearchStatus,
   buildFacetConditionsManager,
+  FacetResultsMustMatch,
 } from '@coveo/headless';
 import {Component, h, State, Prop, Element} from '@stencil/core';
 import {
@@ -107,7 +108,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   @Prop({reflect: true}) public numberOfValues = 8;
   /**
    * Whether this facet should contain a search box.
-   * When "true", the search is only enabled when more facet values are available.
+   *
    */
   @Prop({reflect: true}) public withSearch = true;
   /**
@@ -115,6 +116,14 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
    * Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', and 'automatic'.
    */
   @Prop({reflect: true}) public sortCriteria: FacetSortCriterion = 'automatic';
+  /**
+   * Specifies how a result must match the selected facet values.
+   * Allowed values:
+   * - `atLeastOneValue`: A result will match if at least one of the corresponding facet values is selected.
+   * - `allValues`: A result will match if all corresponding facet values are selected.
+   */
+  @Prop({reflect: true}) public resultsMustMatch: FacetResultsMustMatch =
+    'atLeastOneValue';
   /**
    * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection).
    * Possible values are 'checkbox', 'link', and 'box'.
@@ -316,6 +325,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
       field: this.field,
       numberOfValues: this.numberOfValues,
       sortCriteria: this.sortCriteria,
+      resultsMustMatch: this.resultsMustMatch,
       facetSearch: {numberOfValues: this.numberOfValues},
       filterFacetCount: this.filterFacetCount,
       injectionDepth: this.injectionDepth,

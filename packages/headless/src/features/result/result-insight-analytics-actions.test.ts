@@ -1,6 +1,6 @@
-import {buildMockRaw, buildMockResult} from '../../test';
 import {buildMockInsightEngine} from '../../test/mock-engine';
 import {buildMockInsightState} from '../../test/mock-insight-state';
+import {buildMockNonEmptyResult} from '../../test/mock-result';
 import {buildMockSearchState} from '../../test/mock-search-state';
 import {logDocumentOpen} from './result-insight-analytics-actions';
 
@@ -50,25 +50,7 @@ const expectedDocumentIdentifier = {
   contentIDValue: 'example contentIDValue',
 };
 
-const resultParams = {
-  title: 'example documentTitle',
-  uri: 'example documentUri',
-  printableUri: 'printable-uri',
-  clickUri: 'example documentUrl',
-  uniqueId: 'unique-id',
-  excerpt: 'excerpt',
-  firstSentences: 'first-sentences',
-  flags: 'flags',
-  rankingModifier: 'example rankingModifier',
-  raw: buildMockRaw({
-    urihash: 'example documentUriHash',
-    source: 'example sourceName',
-    collection: 'example collectionName',
-    permanentid: 'example contentIDValue',
-  }),
-};
-
-const testResult = buildMockResult(resultParams);
+const testResult = buildMockNonEmptyResult();
 
 describe('logDocumentOpen', () => {
   it('should log #logDocumentOpen with the right payload', async () => {

@@ -1,10 +1,24 @@
 @import '../quanticGeneratedAnswer.css';
 
-.generated-answer__content {
-  white-space: pre-wrap;
+.generated-answer__header-actions {
+  align-items: center;
 }
 
-.generated-answer__content--streaming::after {
+.generated-answer__answer {
+  white-space: pre-wrap;
+  line-height: 1.5rem;
+  font-size: 15px;
+}
+
+.generated-answer__footer--multiline {
+  flex-direction: column;
+}
+
+.generated-answer__footer--standard {
+  gap: 1rem;
+}
+
+.generated-answer__answer--streaming::after {
   content: '';
   width: 0.5rem;
   height: 0.9rem;

@@ -47,7 +47,8 @@ export const CategoryFieldSuggestions: FunctionComponent<
 
 /**
  * ```tsx
- * const options: CategoryFieldSuggestionsOptions = {field: 'geographicalhierarchy'};
+ * const facetOptions: CategoryFacetOptions = {field: 'geographicalhierarchy'}
+ * const options: CategoryFieldSuggestionsOptions = {facet: facetOptions};
  * const controller = buildCategoryFieldSuggestions(engine, {options});
  *
  * <CategoryFieldSuggestions controller={controller} />;

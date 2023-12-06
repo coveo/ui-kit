@@ -185,6 +185,15 @@ export function assertDisplaySearchInput(
   });
 }
 
+export function assertDisplaySearchInputWithoutIt(
+  FacetWithSearchSelector: FacetWithSearchSelector,
+  display: boolean
+) {
+  FacetWithSearchSelector.searchInput().should(
+    display ? 'be.visible' : 'not.exist'
+  );
+}
+
 export function assertDisplaySearchClearButton(
   FacetWithSearchSelector: FacetWithSearchSelector,
   display: boolean

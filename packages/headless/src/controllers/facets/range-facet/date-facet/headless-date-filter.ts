@@ -1,5 +1,7 @@
+import {SearchAnalyticsProvider} from '../../../../api/analytics/search-analytics';
 import {configuration} from '../../../../app/common-reducers';
 import {SearchEngine} from '../../../../app/search-engine/search-engine';
+import {SearchPageEvents} from '../../../../features/analytics/search-action-cause';
 import {
   logFacetClearAll,
   logFacetSelect,
@@ -54,18 +56,37 @@ export function buildDateFilter(
     ...coreController,
     clear: () => {
       coreController.clear();
-      dispatch(executeSearch(logFacetClearAll(getFacetId())));
+      dispatch(
+        executeSearch({
+          legacy: logFacetClearAll(getFacetId()),
+          next: {
+            actionCause: SearchPageEvents.facetClearAll,
+            getEventExtraPayload: (state) =>
+              new SearchAnalyticsProvider(() => state).getFacetClearAllMetadata(
+                getFacetId()
+              ),
+          },
+        })
+      );
     },
     setRange: (range) => {
       const success = coreController.setRange(range);
       if (success) {
         dispatch(
-          executeSearch(
-            logFacetSelect({
+          executeSearch({
+            legacy: logFacetSelect({
               facetId: getFacetId(),
               facetValue: `${range.start}..${range.end}`,
-            })
-          )
+            }),
+            next: {
+              actionCause: SearchPageEvents.facetSelect,
+              getEventExtraPayload: (state) =>
+                new SearchAnalyticsProvider(() => state).getFacetMetadata(
+                  getFacetId(),
+                  `${range.start}..${range.end}`
+                ),
+            },
+          })
         );
       }
       return success;

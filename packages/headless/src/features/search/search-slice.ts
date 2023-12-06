@@ -4,7 +4,7 @@ import {
   fetchFacetValues,
   fetchMoreResults,
   fetchPage,
-} from './search-actions';
+} from './legacy/search-actions';
 import {
   emptyQuestionAnswer,
   getSearchInitialState,

@@ -1,6 +1,5 @@
 import {validatePayload} from '../../../../utils/validate-payload';
 import {
-  AnalyticsType,
   makeAnalyticsAction,
   SearchAction,
 } from '../../../analytics/analytics-utils';
@@ -20,19 +19,16 @@ export interface LogNumericFacetBreadcrumbActionCreatorPayload {
   selection: NumericFacetValue;
 }
 
+//TODO: KIT-2859
 export const logNumericFacetBreadcrumb = (
   payload: LogNumericFacetBreadcrumbActionCreatorPayload
 ): SearchAction =>
-  makeAnalyticsAction(
-    'analytics/numericFacet/breadcrumb',
-    AnalyticsType.Search,
-    (client, state) => {
-      validatePayload(
-        payload,
-        rangeFacetSelectionPayloadDefinition(payload.selection)
-      );
-      const metadata = getRangeFacetMetadata(state, payload);
+  makeAnalyticsAction('analytics/numericFacet/breadcrumb', (client, state) => {
+    validatePayload(
+      payload,
+      rangeFacetSelectionPayloadDefinition(payload.selection)
+    );
+    const metadata = getRangeFacetMetadata(state, payload);
 
-      return client.makeBreadcrumbFacet(metadata);
-    }
-  );
+    return client.makeBreadcrumbFacet(metadata);
+  });

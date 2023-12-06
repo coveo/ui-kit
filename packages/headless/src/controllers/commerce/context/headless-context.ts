@@ -1,10 +1,4 @@
-import {validateOptions} from '../../../utils/validate-payload';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
-import {
-  buildController,
-  Controller,
-} from '../../controller/headless-controller';
-import {loadReducerError} from '../../../utils/errors';
 import {
   setContext,
   setUser,
@@ -12,10 +6,17 @@ import {
 } from '../../../features/commerce/context/context-actions';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
 import {contextSchema} from '../../../features/commerce/context/context-validation';
+import {loadReducerError} from '../../../utils/errors';
+import {validateOptions} from '../../../utils/validate-payload';
+import {
+  buildController,
+  Controller,
+} from '../../controller/headless-controller';
 
 export interface ContextOptions {
   trackingId: string;
   language: string;
+  country: string;
   currency: string;
   clientId: string;
   user?: User;
@@ -63,6 +64,12 @@ export interface Context extends Controller {
   setLanguage(language: string): void;
 
   /**
+   * Sets the country.
+   * @param country - The new country.
+   */
+  setCountry(country: string): void;
+
+  /**
    * Sets the currency.
    * @param currency - The new currency.
    */
@@ -95,6 +102,7 @@ export interface Context extends Controller {
 export interface ContextState {
   trackingId: string;
   language: string;
+  country: string;
   currency: string;
   clientId: string;
   user?: User;
@@ -154,6 +162,14 @@ export function buildContext(
         setContext({
           ...getState().commerceContext,
           language,
+        })
+      ),
+
+    setCountry: (country: string) =>
+      dispatch(
+        setContext({
+          ...getState().commerceContext,
+          country,
         })
       ),
 

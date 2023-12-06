@@ -1,3 +1,89 @@
+## 2.51.1 (2023-12-06)
+
+### Bug Fixes
+
+- **atomic-search-box:** close suggestions when clicking search button ([#3448](https://github.com/coveo/ui-kit/issues/3448)) ([7cb5aa5](https://github.com/coveo/ui-kit/commits/7cb5aa5b7ff3fd622c411eb2ffa324011c5d9621))
+- **atomic:** improve accessibility for generated answer ([#3435](https://github.com/coveo/ui-kit/issues/3435)) ([59296d5](https://github.com/coveo/ui-kit/commits/59296d5d874e8bf2b097eef23297b26516361edb))
+- **deps:** update dependency @stencil/core to v4.8.1 j:kit-282 ([#3451](https://github.com/coveo/ui-kit/issues/3451)) ([b5874d6](https://github.com/coveo/ui-kit/commits/b5874d6784ff2b7cfc71b4dc8f477592e6b0ad32))
+
+# 2.51.0 (2023-11-29)
+
+### Bug Fixes
+
+- **deps:** update dependency @stencil/core to v4.7.2 j:kit-282 ([#3418](https://github.com/coveo/ui-kit/issues/3418)) ([d142351](https://github.com/coveo/ui-kit/commits/d142351f38b1c8dd8cba935991e0fd70a80122d8))
+- **genai:** dispatch like and dislike properly ([#3393](https://github.com/coveo/ui-kit/issues/3393)) ([43ca99a](https://github.com/coveo/ui-kit/commits/43ca99a3be81fd2948d6eb457419d978255cd72f))
+- **genai:** feedback modal fixes ([#3414](https://github.com/coveo/ui-kit/issues/3414)) ([6c2ed62](https://github.com/coveo/ui-kit/commits/6c2ed629a75796b040dfa8ab5aba44deed91ae48))
+- **RGA:** no longer showing citation popover on small screens ([#3398](https://github.com/coveo/ui-kit/issues/3398)) ([4b170f6](https://github.com/coveo/ui-kit/commits/4b170f6949812a8218fef0deae115597728bc421))
+
+### Features
+
+- **doc:** generate documentation for generated answer in headless, atomic and quantic ([#3397](https://github.com/coveo/ui-kit/issues/3397)) ([c5df083](https://github.com/coveo/ui-kit/commits/c5df0835dde13ea54376a04ba4945427ac7155e9))
+- **IPX:** make button load recs on click ([#3406](https://github.com/coveo/ui-kit/issues/3406)) ([c7c72f5](https://github.com/coveo/ui-kit/commits/c7c72f546f252284d5efc53901bac0421ac4da37))
+
+## 2.50.2 (2023-11-16)
+
+### Features
+
+- **atomic:** added negative feedback modal for rga ([#3339](https://github.com/coveo/ui-kit/issues/3339)) ([194db3c](https://github.com/coveo/ui-kit/commits/194db3c0819aaa70e0e4089e5eb620c17fa21b88))
+- **atomic:** improve generated answer accessibility ([#3373](https://github.com/coveo/ui-kit/issues/3373)) ([2e3cb57](https://github.com/coveo/ui-kit/commits/2e3cb57372c3ba43f0400ec6014caa7fed26e482))
+- **atomic:** swapped summary answer icon ([#3379](https://github.com/coveo/ui-kit/issues/3379)) ([2c736c5](https://github.com/coveo/ui-kit/commits/2c736c5d10938e8f74c17f1ca1a9f0a7031f9dcf))
+
+# 2.49.0 (2023-11-08)
+
+### Bug Fixes
+
+- **deps:** update all dependencies j:kit-282 ([#3366](https://github.com/coveo/ui-kit/issues/3366)) ([da241a8](https://github.com/coveo/ui-kit/commits/da241a81d2747c57968caf6da55778fe8db9e6d5))
+
+### Features
+
+- **atomic:** dynamically display search input depending on the length of values displayed ([#3351](https://github.com/coveo/ui-kit/issues/3351)) ([9d77cfe](https://github.com/coveo/ui-kit/commits/9d77cfe1818aee1f92bb2884b3f6e3582e8d70a8))
+
+## 2.48.3 (2023-11-02)
+
+### Bug Fixes
+
+- **atomic:** Hide scroll bar from search component ([#3302](https://github.com/coveo/ui-kit/issues/3302)) ([fa58a98](https://github.com/coveo/ui-kit/commits/fa58a98feccb96f18258a2beaa39f125e66a6960))
+- **deps:** update all dependencies j:kit-282 ([#3347](https://github.com/coveo/ui-kit/issues/3347)) ([047b2a8](https://github.com/coveo/ui-kit/commits/047b2a8e8d82445c1fb800c5ac19428223cf4e56))
+
+### Features
+
+- **atomic:** add `resultsMustMatch` option to facet components ([#3169](https://github.com/coveo/ui-kit/issues/3169)) ([6a4581a](https://github.com/coveo/ui-kit/commits/6a4581aba955923d3e10c07fece3b7f28bf0074b))
+- **atomic:** add copy button for generated answer ([#3349](https://github.com/coveo/ui-kit/issues/3349)) ([87b5c6e](https://github.com/coveo/ui-kit/commits/87b5c6e9fc8c9c6de6757ea4433f5709db0c71fb))
+- **atomic:** add parts to customize quickview icon and button ([#3342](https://github.com/coveo/ui-kit/issues/3342)) ([0f9d6b8](https://github.com/coveo/ui-kit/commits/0f9d6b81c6679dd9e54dac09807279d89a609f6d))
+- **atomic:** generated answer citation details on hover ([#3340](https://github.com/coveo/ui-kit/issues/3340)) ([894129f](https://github.com/coveo/ui-kit/commits/894129fde1a9ef95655a44d5f46510265bf1dc11))
+- **atomic:** mark searchbox as input for deprecation in favour of textarea ([#3326](https://github.com/coveo/ui-kit/issues/3326)) ([410c235](https://github.com/coveo/ui-kit/commits/410c235b8db09ad398d68257bc4774c184a4d3f2))
+- double publish the NPM packages into GitHub packages for use by internal repositories also using the [@coveo](https://github.com/coveo) scope ([#3251](https://github.com/coveo/ui-kit/issues/3251)) ([4d413e6](https://github.com/coveo/ui-kit/commits/4d413e6bb27065b6667f4705db17b21d6112128b))
+
+# 2.47.0 (2023-10-25)
+
+### Bug Fixes
+
+- **atomic-react:** fix for Vite by enabling import injection ([#3312](https://github.com/coveo/ui-kit/issues/3312)) ([ae8ee81](https://github.com/coveo/ui-kit/commits/ae8ee81dcb40cd46c3a7820fc876939267e6761e))
+- **atomic:** improve screen reader support ([#3306](https://github.com/coveo/ui-kit/issues/3306)) ([ed97883](https://github.com/coveo/ui-kit/commits/ed978837f643f690fedf03b5031a1db552ba337d))
+- **deps:** update stencil j:kit-282 ([#3322](https://github.com/coveo/ui-kit/issues/3322)) ([5f02c7e](https://github.com/coveo/ui-kit/commits/5f02c7efaf6d1de34abc5bb21da9a45b2e5061b2))
+
+### Features
+
+- **atomic:** add toggle to disable atomic-generated-answer component ([#3281](https://github.com/coveo/ui-kit/issues/3281)) ([877a9ef](https://github.com/coveo/ui-kit/commits/877a9ef1eb313c54ddbf018293dc28227780475b))
+- **atomic:** added buttons to rephrase a generated answer ([#3287](https://github.com/coveo/ui-kit/issues/3287)) ([60a841a](https://github.com/coveo/ui-kit/commits/60a841a229a77bfb14b825ab3e5d75a2203ea9d3))
+- **atomic:** enabled newline insertion in text area search box ([#3291](https://github.com/coveo/ui-kit/issues/3291)) ([82e8036](https://github.com/coveo/ui-kit/commits/82e8036da73e30c855c0a48fe5e52b2843bf6cbb))
+
+## 2.46.1 (2023-10-18)
+
+### Bug Fixes
+
+- screw it, max-height transition ! ([#3254](https://github.com/coveo/ui-kit/issues/3254)) ([0d7e550](https://github.com/coveo/ui-kit/commits/0d7e550c3bb966a3c1ab69ef3e8268c71402245c))
+
+# 2.46.0 (2023-10-11)
+
+### Bug Fixes
+
+- **atomic:** make quickview modal responsive ([#3202](https://github.com/coveo/ui-kit/issues/3202)) ([1150797](https://github.com/coveo/ui-kit/commits/11507976594053c7458a956c11c4e4666d7c1156))
+
+### Features
+
+- **atomic:** add pathLimit prop to atomic-breadbox ([#3205](https://github.com/coveo/ui-kit/issues/3205)) ([62d83e6](https://github.com/coveo/ui-kit/commits/62d83e6ff7c4b83a3b86d88c1a52b1ddd8272ab0))
+
 # 2.45.0 (2023-10-04)
 
 ### Bug Fixes

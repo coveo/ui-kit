@@ -172,7 +172,26 @@ describe('Color Facet Test Suites', () => {
           });
 
           describe('verify analytics', () => {
-            ColorFacetAssertions.assertLogColorFacetSelect(colorFacetField, 0);
+            it('should log the facet select results to UA ', () => {
+              cy.expectSearchEvent('facetSelect').then((analyticsBody) => {
+                expect(analyticsBody.customData).to.have.property(
+                  'facetField',
+                  colorFacetField
+                );
+                expect(analyticsBody.facetState[0]).to.have.property(
+                  'state',
+                  'selected'
+                );
+                expect(analyticsBody.facetState[0]).to.have.property(
+                  'field',
+                  colorFacetField
+                );
+                expect(analyticsBody.customData).to.have.property(
+                  'facetValue',
+                  query
+                );
+              });
+            });
           });
         });
       });
@@ -378,6 +397,55 @@ describe('Color Facet Test Suites', () => {
     });
   });
 
+  describe('with #resultsMustMatch set to default value', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(
+          addColorFacet({
+            field: colorFacetField,
+            label: colorFacetLabel,
+          })
+        )
+        .init();
+
+      selectIdleBoxValueAt(0);
+    });
+
+    it('should set resultsMustMatch to `atLeastOneValue`', () => {
+      cy.wait(TestFixture.interceptAliases.Search).should((firstSearch) => {
+        expect(firstSearch.request.body.facets[0]).to.have.property(
+          'resultsMustMatch',
+          'atLeastOneValue'
+        );
+      });
+    });
+  });
+
+  describe('with #resultsMustMatch set to "allValues"', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(
+          addColorFacet({
+            field: colorFacetField,
+            label: colorFacetLabel,
+            'results-must-match': 'allValues',
+          })
+        )
+        .init();
+
+      selectIdleBoxValueAt(0);
+    });
+
+    it('should set resultsMustMatch to `allValues`', () => {
+      cy.wait(TestFixture.interceptAliases.Search).should((firstSearch) => {
+        expect(firstSearch.request.body.facets[0]).to.have.property(
+          'resultsMustMatch',
+          'allValues'
+        );
+      });
+    });
+  });
+
   describe('with #withSearch to false', () => {
     beforeEach(() => {
       new TestFixture()
@@ -580,7 +648,7 @@ describe('Color Facet Test Suites', () => {
     describe('as a dependent', () => {
       const parentFacetId = 'def';
       const parentField = 'author';
-      const expectedValue = 'BPA';
+      const expectedValue = 'amoreau';
       beforeEach(() => {
         new TestFixture()
           .with(
@@ -675,7 +743,7 @@ describe('Color Facet Test Suites', () => {
         .with(
           addColorFacet({
             field: 'objecttype',
-            'allowed-values': JSON.stringify(['FAQ', 'File']),
+            'allowed-values': JSON.stringify(['FAQ', 'People']),
           })
         )
         .init();
@@ -684,8 +752,8 @@ describe('Color Facet Test Suites', () => {
     it('returns only allowed values', () => {
       ColorFacetSelectors.valueLabel()
         .should('contain.text', 'FAQ')
-        .should('contain.text', 'File')
-        .should('not.contain.text', 'Message');
+        .should('contain.text', 'People')
+        .should('not.contain.text', 'Page');
     });
   });
 

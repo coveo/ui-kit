@@ -1,5 +1,5 @@
-import './commands';
 import 'cypress-real-events';
+import './commands';
 
 Cypress.on('uncaught:exception', (err) => {
   if (

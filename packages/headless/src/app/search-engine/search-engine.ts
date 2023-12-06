@@ -1,5 +1,6 @@
 import {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
+import {SearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {GeneratedAnswerAPIClient} from '../../api/generated-answer/generated-answer-client';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {SearchAPIClient} from '../../api/search/search-api-client';
@@ -14,6 +15,7 @@ import {
   logSearchFromLink,
 } from '../../features/analytics/analytics-actions';
 import {SearchAction} from '../../features/analytics/analytics-utils';
+import {SearchPageEvents} from '../../features/analytics/search-action-cause';
 import {
   updateSearchConfiguration,
   UpdateSearchConfigurationActionCreatorPayload,
@@ -51,7 +53,7 @@ type SearchEngineReducers = typeof searchEngineReducers;
 type SearchEngineState = StateFromReducersMapObject<SearchEngineReducers> &
   Partial<SearchAppState>;
 
-function getUpdatSearchConfigurationPayload(
+function getUpdateSearchConfigurationPayload(
   options: SearchEngineOptions
 ): UpdateSearchConfigurationActionCreatorPayload {
   const search = options.configuration.search;
@@ -126,7 +128,7 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
 
   const engine = buildEngine(augmentedOptions, thunkArguments);
 
-  const search = getUpdatSearchConfigurationPayload(options);
+  const search = getUpdateSearchConfigurationPayload(options);
 
   if (search) {
     engine.dispatch(updateSearchConfiguration(search));
@@ -140,13 +142,18 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
     },
 
     executeFirstSearch(analyticsEvent = logInterfaceLoad()) {
-      const firstSearchExecuted = firstSearchExecutedSelector(engine.state);
-
-      if (firstSearchExecuted) {
+      if (firstSearchExecutedSelector(engine.state)) {
         return;
       }
 
-      const action = executeSearch(analyticsEvent);
+      const action = executeSearch({
+        legacy: analyticsEvent,
+        next: {
+          actionCause: SearchPageEvents.interfaceLoad,
+          getEventExtraPayload: (state) =>
+            new SearchAnalyticsProvider(() => state).getBaseMetadata(),
+        },
+      });
       engine.dispatch(action);
     },
 
@@ -154,12 +161,31 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
       analytics: StandaloneSearchBoxAnalytics
     ) {
       const {cause, metadata} = analytics;
-      const event =
-        metadata && cause === 'omniboxFromLink'
-          ? logOmniboxFromLink(metadata)
-          : logSearchFromLink();
 
-      this.executeFirstSearch(event);
+      if (firstSearchExecutedSelector(engine.state)) {
+        return;
+      }
+
+      const isOmniboxFromLink = metadata && cause === 'omniboxFromLink';
+
+      const action = executeSearch({
+        legacy: isOmniboxFromLink
+          ? logOmniboxFromLink(metadata)
+          : logSearchFromLink(),
+        next: {
+          actionCause: isOmniboxFromLink
+            ? SearchPageEvents.omniboxFromLink
+            : SearchPageEvents.searchFromLink,
+          getEventExtraPayload: isOmniboxFromLink
+            ? (state) =>
+                new SearchAnalyticsProvider(
+                  () => state
+                ).getOmniboxFromLinkMetadata(metadata)
+            : (state) =>
+                new SearchAnalyticsProvider(() => state).getBaseMetadata(),
+        },
+      });
+      engine.dispatch(action);
     },
   };
 }

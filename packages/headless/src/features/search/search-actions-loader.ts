@@ -21,7 +21,7 @@ import {
   fetchFacetValues,
   fetchPage,
   fetchInstantResults,
-} from './search-actions';
+} from './legacy/search-actions';
 
 /**
  * The search action creators.
@@ -36,7 +36,7 @@ export interface SearchActionCreators {
    * const {logInterfaceLoad} = loadSearchAnalyticsActions(engine);
    * const {executeSearch} = loadSearchActions(engine);
    *
-   * engine.dispatch(executeSearch(interfaceLoad()));
+   * engine.dispatch(executeSearch({legacy: interfaceLoad()}))
    * ```
    *
    * @param analyticsSearchAction - The analytics action to log after a successful query. See `loadSearchAnalyticsActions` for possible values.

@@ -52,7 +52,7 @@ export function buildResultsPerPage(
 
     set(num: number) {
       coreController.set(num);
-      dispatch(fetchPage(logPagerResize()));
+      dispatch(fetchPage({legacy: logPagerResize()}));
     },
   };
 }

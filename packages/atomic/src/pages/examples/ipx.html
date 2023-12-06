@@ -19,7 +19,7 @@
         hostDiv.style.display = 'inline';
       };
 
-      const initializeSearchInterface = async (searchInterface) => {
+      const initializeSearchInterface = async (searchInterface, usesTargetSelector = false) => {
         await searchInterface.initialize({
           accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
           organizationId: 'searchuisamples',
@@ -33,7 +33,7 @@
           organizationId: 'searchuisamples',
           organizationEndpoints: await recsInterface.getOrganizationEndpoints('searchuisamples'),
         });
-        recsInterface.getRecommendations();
+        usesTargetSelector && recsInterface.getRecommendations();
 
         searchInterface.i18n.addResourceBundle('en', 'caption-filetype', {
           '.html': 'html',
@@ -46,7 +46,7 @@
           hostDiv.querySelector('atomic-ipx-embedded').appendChild(element);
         });
         const searchInterface = hostDiv.querySelector('atomic-search-interface');
-        await initializeSearchInterface(searchInterface);
+        await initializeSearchInterface(searchInterface, true);
       };
 
       (async () => {
@@ -203,7 +203,7 @@
       <atomic-ipx-modal is-open="true">
         <div slot="header">
           <atomic-layout-section class="search-section" section="search">
-            <atomic-search-box class="search-box"></atomic-search-box>
+            <atomic-search-box class="search-box" textarea></atomic-search-box>
             <atomic-ipx-refine-toggle></atomic-ipx-refine-toggle>
             <atomic-ipx-tabs>
               <atomic-ipx-tab label="All" expression="" active></atomic-ipx-tab>
@@ -246,7 +246,11 @@
           </atomic-layout-section>
           <atomic-layout-section section="results">
             <atomic-generated-answer></atomic-generated-answer>
-            <atomic-smart-snippet source-url-max-length="50" snippet-maximum-height="50" snippet-collapsed-height="50">
+            <atomic-smart-snippet
+              source-url-max-length="50"
+              snippet-maximum-height="120"
+              snippet-collapsed-height="120"
+            >
               <a slot="source-anchor-attributes" target="_blank" rel="noopener"></a>
             </atomic-smart-snippet>
             <atomic-smart-snippet-suggestions>

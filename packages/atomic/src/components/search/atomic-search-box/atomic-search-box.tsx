@@ -207,6 +207,8 @@ export class AtomicSearchBox {
    *   }
    * </style>
    * ```
+   *
+   * NB: The textarea functionality will be enforced on the next major version of Atomic (3.0.0)
    */
   @Prop({reflect: true}) public textarea = false;
 
@@ -240,6 +242,12 @@ export class AtomicSearchBox {
     this.id = randomID('atomic-search-box-');
     this.querySetActions = loadQuerySetActions(this.bindings.engine);
     this.isSearchDisabled = this.disableSearch || this.minimumQueryLength > 0;
+    if (!this.textarea) {
+      this.bindings.engine.logger.warn(
+        'As of Atomic version 3.0.0, the searchbox will be enabled as a text area by default. To remove this warning, set textarea="true" on the search box.',
+        this.host
+      );
+    }
 
     const searchBoxOptions: SearchBoxOptions = {
       id: this.id,
@@ -859,7 +867,10 @@ export class AtomicSearchBox {
               <Submit
                 bindings={this.bindings}
                 disabled={this.isSearchDisabled}
-                onClick={() => this.searchBox.submit()}
+                onClick={() => {
+                  this.searchBox.submit();
+                  this.clearSuggestions();
+                }}
                 title={searchLabel}
               />
               {this.renderSuggestions()}

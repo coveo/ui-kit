@@ -1,22 +1,23 @@
+import {SchemaValidationError, isNullOrUndefined} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
-import {
-  serializeSchemaValidationError,
-  validatePayload,
-} from '../../../utils/validate-payload';
 import {
   UserParams,
   ViewParams,
 } from '../../../api/commerce/commerce-api-params';
 import {
+  serializeSchemaValidationError,
+  validatePayload,
+} from '../../../utils/validate-payload';
+import {
   contextDefinition,
   userDefinition,
   viewDefinition,
 } from './context-validation';
-import {SchemaValidationError, isNullOrUndefined} from '@coveo/bueno';
 
 export interface SetContextPayload {
   trackingId: string;
   language: string;
+  country: string;
   currency: string;
   clientId: string;
   user?: UserParams;

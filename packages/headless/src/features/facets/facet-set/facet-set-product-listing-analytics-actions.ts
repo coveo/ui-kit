@@ -4,13 +4,11 @@ import {
   requiredNonEmptyString,
 } from '../../../utils/validate-payload';
 import {
-  AnalyticsType,
   ProductListingAction,
   makeProductListingAnalyticsAction,
 } from '../../analytics/analytics-utils';
 import {facetIdDefinition} from '../generic/facet-actions-validation';
 import {RangeFacetSortCriterion} from '../range-facets/generic/interfaces/request';
-import {LogFacetBreadcrumbActionCreatorPayload} from './facet-set-analytics-actions';
 import {
   buildFacetBaseMetadata,
   getStateNeededForFacetMetadata,
@@ -21,7 +19,6 @@ import {FacetSortCriterion} from './interfaces/request';
 export const logFacetShowMore = (facetId: string): ProductListingAction =>
   makeProductListingAnalyticsAction(
     'analytics/facet/showMore',
-    AnalyticsType.Search,
     (client, state) => {
       validatePayload(facetId, facetIdDefinition);
       const metadata = buildFacetBaseMetadata(
@@ -35,7 +32,6 @@ export const logFacetShowMore = (facetId: string): ProductListingAction =>
 export const logFacetShowLess = (facetId: string): ProductListingAction =>
   makeProductListingAnalyticsAction(
     'analytics/facet/showLess',
-    AnalyticsType.Search,
     (client, state) => {
       validatePayload(facetId, facetIdDefinition);
       const metadata = buildFacetBaseMetadata(
@@ -64,7 +60,6 @@ export const logFacetUpdateSort = (
 ): ProductListingAction =>
   makeProductListingAnalyticsAction(
     'analytics/facet/sortChange',
-    AnalyticsType.Search,
     (client, state) => {
       validatePayload(payload, {
         facetId: facetIdDefinition,
@@ -86,7 +81,6 @@ export const logFacetUpdateSort = (
 export const logFacetClearAll = (facetId: string): ProductListingAction =>
   makeProductListingAnalyticsAction(
     'analytics/facet/reset',
-    AnalyticsType.Search,
     (client, state) => {
       validatePayload(facetId, facetIdDefinition);
 
@@ -114,7 +108,6 @@ export const logFacetSelect = (
 ): ProductListingAction =>
   makeProductListingAnalyticsAction(
     'analytics/facet/select',
-    AnalyticsType.Search,
     (client, state) => {
       validatePayload(payload, {
         facetId: facetIdDefinition,
@@ -136,7 +129,6 @@ export const logFacetExclude = (
 ): ProductListingAction =>
   makeProductListingAnalyticsAction(
     'analytics/facet/exclude',
-    AnalyticsType.Search,
     (client, state) => {
       validatePayload(payload, {
         facetId: facetIdDefinition,
@@ -170,7 +162,6 @@ export const logFacetDeselect = (
 ): ProductListingAction =>
   makeProductListingAnalyticsAction(
     'analytics/facet/deselect',
-    AnalyticsType.Search,
     (client, state) => {
       validatePayload(payload, {
         facetId: facetIdDefinition,
@@ -183,25 +174,5 @@ export const logFacetDeselect = (
       );
 
       return client.makeFacetDeselect(metadata);
-    }
-  );
-
-export const logFacetBreadcrumb = (
-  payload: LogFacetBreadcrumbActionCreatorPayload
-): ProductListingAction =>
-  makeProductListingAnalyticsAction(
-    'analytics/facet/breadcrumb',
-    AnalyticsType.Search,
-    (client, state) => {
-      validatePayload(payload, {
-        facetId: facetIdDefinition,
-        facetValue: requiredNonEmptyString,
-      });
-      const metadata = buildFacetSelectionChangeMetadata(
-        payload,
-        getStateNeededForFacetMetadata(state)
-      );
-
-      return client.makeBreadcrumbFacet(metadata);
     }
   );

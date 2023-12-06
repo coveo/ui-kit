@@ -5,10 +5,10 @@
   "version": "1.0.0",
   "type": "commonjs",
   "dependencies": {
-    "@nrwl/devkit": "16.9.1"
+    "@nrwl/devkit": "16.10.0"
   },
   "devDependencies": {
-    "typescript": "5.2.2"
+    "typescript": "5.3.2"
   },
   "scripts": {
     "test": "tsc"

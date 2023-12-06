@@ -10,12 +10,12 @@ export type {AnalyticsClientSendEventHook} from 'coveo.analytics';
 // Main App
 // ⚠️ NOTE: All exported SSR types, APIs should be marked as `@internal` until MVP is complete
 export type {
-  SearchEngine,
   SearchEngineOptions,
   SearchEngineConfiguration,
   SearchConfigurationOptions,
 } from './app/search-engine/search-engine';
 export type {
+  SSRSearchEngine as SearchEngine,
   SearchEngineDefinition,
   SearchEngineDefinitionOptions,
   SearchCompletedAction,
@@ -43,6 +43,7 @@ export type {
   EngineDefinition,
   InferStaticState,
   InferHydratedState,
+  InferBuildResult,
 } from './app/ssr-engine/types/core-engine';
 export type {LoggerOptions} from './app/logger';
 

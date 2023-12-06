@@ -8,10 +8,6 @@ inputs:
 runs:
   using: composite
   steps:
-    - run: |
-        npm i
-      shell: bash
-      working-directory: ./packages/samples/angular
     - uses: cypress-io/github-action@v5
       name: Run Cypress
       with:
@@ -23,7 +19,7 @@ runs:
         wait-on-timeout: 600000
         install: false
         record: false
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3
       if: failure()
       with:
         name: cypress-screenshots

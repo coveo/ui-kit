@@ -7,7 +7,6 @@ import {
 } from '../../utils/validate-payload';
 import {OmniboxSuggestionMetadata} from '../query-suggest/query-suggest-analytics-actions';
 import {
-  AnalyticsType,
   ClickAction,
   CustomAction,
   documentIdentifier,
@@ -72,15 +71,11 @@ export interface LogSearchEventActionCreatorPayload {
 export const logSearchEvent = (
   p: LogSearchEventActionCreatorPayload
 ): SearchAction =>
-  makeAnalyticsAction(
-    'analytics/generic/search',
-    AnalyticsType.Search,
-    (client) => {
-      validateEvent(p);
-      const {evt, meta} = p;
-      return client.makeSearchEvent(evt as SearchPageEvents, meta);
-    }
-  );
+  makeAnalyticsAction('analytics/generic/search', (client) => {
+    validateEvent(p);
+    const {evt, meta} = p;
+    return client.makeSearchEvent(evt as SearchPageEvents, meta);
+  });
 
 export interface LogClickEventActionCreatorPayload {
   /**
@@ -102,21 +97,17 @@ export interface LogClickEventActionCreatorPayload {
 export const logClickEvent = (
   p: LogClickEventActionCreatorPayload
 ): ClickAction =>
-  makeAnalyticsAction(
-    'analytics/generic/click',
-    AnalyticsType.Click,
-    (client, state) => {
-      validateResultPayload(p.result);
-      validateEvent(p);
+  makeAnalyticsAction('analytics/generic/click', (client, state) => {
+    validateResultPayload(p.result);
+    validateEvent(p);
 
-      return client.makeClickEvent(
-        p.evt as SearchPageEvents,
-        partialDocumentInformation(p.result, state),
-        documentIdentifier(p.result),
-        p.meta
-      );
-    }
-  );
+    return client.makeClickEvent(
+      p.evt as SearchPageEvents,
+      partialDocumentInformation(p.result, state),
+      documentIdentifier(p.result),
+      p.meta
+    );
+  });
 
 export interface LogCustomEventActionCreatorPayload {
   /**
@@ -136,44 +127,35 @@ export interface LogCustomEventActionCreatorPayload {
 export const logCustomEvent = (
   p: LogCustomEventActionCreatorPayload
 ): CustomAction =>
-  makeAnalyticsAction(
-    'analytics/generic/custom',
-    AnalyticsType.Custom,
-    (client) => {
-      validateEvent(p);
-      return client.makeCustomEventWithType(p.evt, p.type, p.meta);
-    }
-  );
+  makeAnalyticsAction('analytics/generic/custom', (client) => {
+    validateEvent(p);
+    return client.makeCustomEventWithType(p.evt, p.type, p.meta);
+  });
 
+//TODO: KIT-2859
 export const logInterfaceLoad = (): SearchAction =>
-  makeAnalyticsAction(
-    'analytics/interface/load',
-    AnalyticsType.Search,
-    (client) => client.makeInterfaceLoad()
+  makeAnalyticsAction('analytics/interface/load', (client) =>
+    client.makeInterfaceLoad()
   );
 
+//TODO: KIT-2859
 export const logInterfaceChange = (): SearchAction =>
-  makeAnalyticsAction(
-    'analytics/interface/change',
-    AnalyticsType.Search,
-    (client, state) =>
-      client.makeInterfaceChange({
-        interfaceChangeTo: state.configuration.analytics.originLevel2,
-      })
+  makeAnalyticsAction('analytics/interface/change', (client, state) =>
+    client.makeInterfaceChange({
+      interfaceChangeTo: state.configuration.analytics.originLevel2,
+    })
   );
 
+//TODO: KIT-2859
 export const logSearchFromLink = (): SearchAction =>
-  makeAnalyticsAction(
-    'analytics/interface/searchFromLink',
-    AnalyticsType.Search,
-    (client) => client.makeSearchFromLink()
+  makeAnalyticsAction('analytics/interface/searchFromLink', (client) =>
+    client.makeSearchFromLink()
   );
 
+//TODO: KIT-2859
 export const logOmniboxFromLink = (
   metadata: OmniboxSuggestionMetadata
 ): SearchAction =>
-  makeAnalyticsAction(
-    'analytics/interface/omniboxFromLink',
-    AnalyticsType.Search,
-    (client) => client.makeOmniboxFromLink(metadata)
+  makeAnalyticsAction('analytics/interface/omniboxFromLink', (client) =>
+    client.makeOmniboxFromLink(metadata)
   );

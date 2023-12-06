@@ -1,5 +1,5 @@
+import navigateToRecord from '@salesforce/label/c.quantic_NavigateToRecord';
 import opensInBrowserTab from '@salesforce/label/c.quantic_OpensInBrowserTab';
-import opensInSalesforceSubTab from '@salesforce/label/c.quantic_OpensInSalesforceSubTab';
 import {
   getHeadlessBundle,
   getHeadlessEnginePromise,
@@ -71,9 +71,11 @@ export default class QuanticResultLink extends NavigationMixin(
   engine;
   /** @type {AnyHeadless} */
   headless;
+  /** @type {string} */
+  salesforceRecordUrl;
 
   labels = {
-    opensInSalesforceSubTab,
+    navigateToRecord,
     opensInBrowserTab,
   };
 
@@ -85,6 +87,18 @@ export default class QuanticResultLink extends NavigationMixin(
       .catch((error) => {
         console.error(error.message);
       });
+
+    if (this.isSalesforceLink) {
+      this[NavigationMixin.GenerateUrl]({
+        type: 'standard__recordPage',
+        attributes: {
+          recordId: this.recordIdAttribute,
+          actionName: 'view',
+        },
+      }).then((url) => {
+        this.salesforceRecordUrl = url;
+      });
+    }
   }
 
   /**
@@ -138,8 +152,8 @@ export default class QuanticResultLink extends NavigationMixin(
   /**
    * Returns the title of the link to display.
    */
-  get displayedTitle() {
-    return this.result.title || this.result.clickUri;
+  get displayedField() {
+    return this.result.title ? 'title' : 'clickUri';
   }
 
   /**
@@ -157,8 +171,15 @@ export default class QuanticResultLink extends NavigationMixin(
    */
   get ariaLabelValue() {
     if (this.isSalesforceLink) {
-      return this.labels.opensInSalesforceSubTab;
+      return this.labels.navigateToRecord;
     }
     return this.labels.opensInBrowserTab;
+  }
+
+  get hrefValue() {
+    if (this.isSalesforceLink) {
+      return this.salesforceRecordUrl;
+    }
+    return this.result.clickUri;
   }
 }

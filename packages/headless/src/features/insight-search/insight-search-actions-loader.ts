@@ -7,7 +7,7 @@ import {
   FetchQuerySuggestionsActionCreatorPayload,
   FetchQuerySuggestionsThunkReturn,
 } from '../query-suggest/query-suggest-actions';
-import {ExecuteSearchThunkReturn} from '../search/search-actions';
+import {ExecuteSearchThunkReturn} from '../search/legacy/search-actions';
 import {
   executeSearch,
   fetchFacetValues,
@@ -31,7 +31,7 @@ export interface InsightSearchActionCreators {
    * const {executeSearch} = loadInsightSearchActions(engine);
    * ```
    *
-   * engine.dispatch(executeSearch(interfaceLoad()));
+   * engine.dispatch(executeSearch({legacy: interfaceLoad()}))
    * @param analyticsSearchAction  - The analytics action to log after a successful query. See `loadSearchAnalyticsActions` for possible values.
    * @returns A dispatchable action.
    */

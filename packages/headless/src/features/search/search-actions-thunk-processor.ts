@@ -1,7 +1,6 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {AnyAction} from '@reduxjs/toolkit';
 import {ThunkDispatch} from 'redux-thunk';
-import {StateNeededBySearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {
   isErrorResponse,
   isSuccessResponse,
@@ -35,14 +34,12 @@ import {
   SortSection,
   TriggerSection,
 } from '../../state/state-sections';
-import {AnalyticsAsyncThunk, AnalyticsType} from '../analytics/analytics-utils';
+import {makeBasicNewSearchAnalyticsAction} from '../analytics/analytics-utils';
+import {SearchPageEvents} from '../analytics/search-action-cause';
 import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
-import {logDidYouMeanAutomatic} from '../did-you-mean/did-you-mean-analytics-actions';
 import {snapshot} from '../history/history-actions';
 import {extractHistory} from '../history/history-state';
 import {updateQuery} from '../query/query-actions';
-import {getQueryInitialState} from '../query/query-state';
-import {logTriggerQuery} from '../triggers/trigger-analytics-actions';
 import {
   applyQueryTriggerModification,
   updateIgnoreQueryTrigger,
@@ -56,7 +53,10 @@ import {
   SuccessResponse,
 } from './search-mappings';
 import {buildSearchRequest} from './search-request';
-import {getSearchInitialState} from './search-state';
+
+export interface AnalyticsAction {
+  actionCause: string;
+}
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   Partial<
@@ -104,9 +104,7 @@ export interface AsyncThunkConfig {
   >;
 
   rejectWithValue: (err: SearchAPIErrorWithStatusCode) => unknown;
-  analyticsAction: AnalyticsAsyncThunk<{
-    analyticsType: AnalyticsType.Search;
-  }> | null;
+  analyticsAction: AnalyticsAction;
   extra: ClientThunkExtraArguments<SearchAPIClient>;
 }
 
@@ -196,18 +194,6 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       ? await this.processClassicDidYouMeanAutoCorrection(successResponse)
       : this.processFallbackQueryResultsDidYouMeanAutoCorrection(fetched);
 
-    this.analyticsAction &&
-      this.analyticsAction()(
-        this.dispatch,
-        () =>
-          this.getStateAfterResponse(
-            fetched.queryExecuted,
-            fetched.duration,
-            state,
-            successResponse
-          ),
-        this.extra
-      );
     this.dispatch(snapshot(extractHistory(this.getState())));
 
     return ret;
@@ -235,10 +221,6 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       return null;
     }
 
-    if (this.analyticsAction) {
-      await this.dispatch(this.analyticsAction);
-    }
-
     const originalQuery = this.getCurrentQuery();
     const retried =
       await this.automaticallyRetryQueryWithTriggerModification(correctedQuery);
@@ -256,7 +238,10 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       },
       automaticallyCorrected: false,
       originalQuery,
-      analyticsAction: logTriggerQuery(),
+      analyticsAction: makeBasicNewSearchAnalyticsAction(
+        SearchPageEvents.triggerQuery,
+        this.getState
+      ),
     };
   }
 
@@ -283,7 +268,10 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       },
       automaticallyCorrected: true,
       originalQuery,
-      analyticsAction: logDidYouMeanAutomatic(),
+      analyticsAction: makeBasicNewSearchAnalyticsAction(
+        SearchPageEvents.didyoumeanAutomatic,
+        this.getState
+      ),
     };
   }
 
@@ -304,7 +292,10 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       queryExecuted: correctedQuery,
       automaticallyCorrected: true,
       originalQuery,
-      analyticsAction: logDidYouMeanAutomatic(),
+      analyticsAction: makeBasicNewSearchAnalyticsAction(
+        SearchPageEvents.didyoumeanAutomatic,
+        this.getState
+      ),
     };
   }
 
@@ -354,29 +345,6 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     );
 
     return fetched;
-  }
-
-  private getStateAfterResponse(
-    query: string,
-    duration: number,
-    previousState: StateNeededByExecuteSearch,
-    response: SearchResponseSuccess
-  ): StateNeededBySearchAnalyticsProvider {
-    return {
-      ...previousState,
-      query: {
-        q: query,
-        enableQuerySyntax:
-          previousState.query?.enableQuerySyntax ??
-          getQueryInitialState().enableQuerySyntax,
-      },
-      search: {
-        ...getSearchInitialState(),
-        duration,
-        response,
-        results: response.results,
-      },
-    };
   }
 
   private getCurrentQuery() {

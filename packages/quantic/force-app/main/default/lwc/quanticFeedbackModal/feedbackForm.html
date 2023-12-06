@@ -1,9 +1,9 @@
 <template>
   <template if:true={isValidated}>
-    <lightning-modal-header label={labels.explainWhy}></lightning-modal-header>
+    <lightning-modal-header label={label}></lightning-modal-header>
     <lightning-modal-body>
       <div class="slds-var-p-around_x-large">
-        <lightning-radio-group required class="slds-var-m-bottom_large" name="feedback" label={labels.selectTheReason}
+        <lightning-radio-group required class="slds-var-m-bottom_large" name="feedback" label={optionsLabel}
           options={options} value={feedbackValue} type="radio" onchange={handleFeedbackChange}
           message-when-value-missing={labels.selectOneOfOptions}></lightning-radio-group>
         <div class="details-input__container">

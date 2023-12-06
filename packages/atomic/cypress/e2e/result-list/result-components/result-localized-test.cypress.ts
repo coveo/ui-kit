@@ -55,7 +55,7 @@ describe('Result Localized Text Component', () => {
   });
 
   describe('when the i18n resource does exist', () => {
-    const setup = (props: TagProps) => {
+    const setup = (props: TagProps) =>
       new TestFixture()
         .withCustomResponse((r) => {
           r.results.forEach((result) => {
@@ -75,24 +75,39 @@ describe('Result Localized Text Component', () => {
         .withTranslation({
           foo: 'foo {{replace_me}}',
           foo_plural: 'foo plural {{replace_me}}',
-        })
-        .init();
-    };
+          foo_other: 'foo v4 plural {{replace_me}}',
+        });
 
     it('output the singular key', () => {
-      setup({'field-count': 'countsingular'});
+      setup({'field-count': 'countsingular'}).init();
       ResultLocalizedTextSelectors.firstInResult().should(
         'have.text',
         'foo somevalue'
       );
     });
 
-    it('output the plural key', () => {
-      setup({'field-count': 'countplural'});
-      ResultLocalizedTextSelectors.firstInResult().should(
-        'have.text',
-        'foo plural somevalue'
-      );
+    describe('using jsonCompatibility v3', () => {
+      it('output the plural key', () => {
+        setup({'field-count': 'countplural'})
+          .withLocalizationCompatibilityVersion('v3')
+          .init();
+
+        ResultLocalizedTextSelectors.firstInResult().should(
+          'have.text',
+          'foo plural somevalue'
+        );
+      });
+    });
+
+    describe('using jsonCompatibility v4', () => {
+      it('output the plural key', () => {
+        setup({'field-count': 'countplural'}).init();
+
+        ResultLocalizedTextSelectors.firstInResult().should(
+          'have.text',
+          'foo v4 plural somevalue'
+        );
+      });
     });
   });
 });
