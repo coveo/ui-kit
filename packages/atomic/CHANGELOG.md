@@ -1,3 +1,11 @@
+## 2.51.1 (2023-12-06)
+
+### Bug Fixes
+
+- **atomic-search-box:** close suggestions when clicking search button ([#3448](https://github.com/coveo/ui-kit/issues/3448)) ([7cb5aa5](https://github.com/coveo/ui-kit/commits/7cb5aa5b7ff3fd622c411eb2ffa324011c5d9621))
+- **atomic:** improve accessibility for generated answer ([#3435](https://github.com/coveo/ui-kit/issues/3435)) ([59296d5](https://github.com/coveo/ui-kit/commits/59296d5d874e8bf2b097eef23297b26516361edb))
+- **deps:** update dependency @stencil/core to v4.8.1 j:kit-282 ([#3451](https://github.com/coveo/ui-kit/issues/3451)) ([b5874d6](https://github.com/coveo/ui-kit/commits/b5874d6784ff2b7cfc71b4dc8f477592e6b0ad32))
+
 # 2.51.0 (2023-11-29)
 
 ### Bug Fixes
