@@ -125,7 +125,7 @@ export class SearchAnalyticsProvider
     };
   }
 
-  public getFacetSortMetadata(
+  public getFacetUpdateSortMetadata(
     facetId: string,
     criteria: FacetSortCriterion | RangeFacetSortCriterion
   ) {
@@ -140,7 +140,7 @@ export class SearchAnalyticsProvider
     };
   }
 
-  public getRangeFacetBreadcrumbMetadata(
+  public getRangeBreadcrumbFacetMetadata(
     facetId: string,
     facetValue: DateFacetValue | NumericFacetValue
   ) {
@@ -199,7 +199,7 @@ export class SearchAnalyticsProvider
     };
   }
 
-  public getCategoryFacetBreadcrumbMetadata(
+  public getCategoryBreadcrumbFacetMetadata(
     categoryFacetId: string,
     categoryFacetPath: string[]
   ) {

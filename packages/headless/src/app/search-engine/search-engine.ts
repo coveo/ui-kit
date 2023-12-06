@@ -1,6 +1,5 @@
 import {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
-import {SearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {GeneratedAnswerAPIClient} from '../../api/generated-answer/generated-answer-client';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {SearchAPIClient} from '../../api/search/search-api-client';
@@ -10,12 +9,14 @@ import {
   NoopPostprocessSearchResponseMiddleware,
 } from '../../api/search/search-api-client-middleware';
 import {
+  interfaceLoad,
   logInterfaceLoad,
   logOmniboxFromLink,
   logSearchFromLink,
+  omniboxFromLink,
+  searchFromLink,
 } from '../../features/analytics/analytics-actions';
-import {SearchAction} from '../../features/analytics/analytics-utils';
-import {SearchPageEvents} from '../../features/analytics/search-action-cause';
+import {LegacySearchAction} from '../../features/analytics/analytics-utils';
 import {
   updateSearchConfiguration,
   UpdateSearchConfigurationActionCreatorPayload,
@@ -78,7 +79,7 @@ export interface SearchEngine<State extends object = {}>
    *
    * @param analyticsEvent - The analytics event to log in association with the first search. If unspecified, `logInterfaceLoad` will be used.
    */
-  executeFirstSearch(analyticsEvent?: SearchAction): void;
+  executeFirstSearch(analyticsEvent?: LegacySearchAction): void;
 
   /**
    * Executes the first search, and logs the analytics event that triggered a redirection from a standalone search box.
@@ -148,11 +149,7 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
 
       const action = executeSearch({
         legacy: analyticsEvent,
-        next: {
-          actionCause: SearchPageEvents.interfaceLoad,
-          getEventExtraPayload: (state) =>
-            new SearchAnalyticsProvider(() => state).getBaseMetadata(),
-        },
+        next: interfaceLoad(),
       });
       engine.dispatch(action);
     },
@@ -172,18 +169,7 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
         legacy: isOmniboxFromLink
           ? logOmniboxFromLink(metadata)
           : logSearchFromLink(),
-        next: {
-          actionCause: isOmniboxFromLink
-            ? SearchPageEvents.omniboxFromLink
-            : SearchPageEvents.searchFromLink,
-          getEventExtraPayload: isOmniboxFromLink
-            ? (state) =>
-                new SearchAnalyticsProvider(
-                  () => state
-                ).getOmniboxFromLinkMetadata(metadata)
-            : (state) =>
-                new SearchAnalyticsProvider(() => state).getBaseMetadata(),
-        },
+        next: isOmniboxFromLink ? omniboxFromLink(metadata) : searchFromLink(),
       });
       engine.dispatch(action);
     },

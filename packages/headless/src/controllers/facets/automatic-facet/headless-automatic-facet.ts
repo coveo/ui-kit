@@ -1,11 +1,12 @@
-import {SearchAnalyticsProvider} from '../../../api/analytics/search-analytics';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
-import {SearchPageEvents} from '../../../features/analytics/search-action-cause';
 import {
   deselectAllAutomaticFacetValues,
   toggleSelectAutomaticFacetValue,
 } from '../../../features/facets/automatic-facet-set/automatic-facet-set-actions';
-import {logFacetClearAll} from '../../../features/facets/facet-set/facet-set-analytics-actions';
+import {
+  facetClearAll,
+  logFacetClearAll,
+} from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {
   getLegacyAnalyticsActionForToggleFacetSelect,
   getAnalyticsActionForToggleFacetSelect,
@@ -66,13 +67,7 @@ export function buildAutomaticFacet(
       dispatch(
         executeSearch({
           legacy: logFacetClearAll(field),
-          next: {
-            actionCause: SearchPageEvents.facetClearAll,
-            getEventExtraPayload: (state) =>
-              new SearchAnalyticsProvider(() => state).getFacetClearAllMetadata(
-                field
-              ),
-          },
+          next: facetClearAll(field),
         })
       );
     },

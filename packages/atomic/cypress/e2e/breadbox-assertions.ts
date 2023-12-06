@@ -112,6 +112,19 @@ export function assertSelectedCheckboxFacetsInBreadcrumb(
   });
 }
 
+export function assertExcludedCheckboxFacetsInBreadcrumb(
+  BaseFacetSelector: FacetWithCheckboxSelector,
+  facetLabelValue = label
+) {
+  it('should display the excluded checkbox facets in the breadcrumbs', () => {
+    BaseFacetSelector.excludedCheckboxValue()
+      .parent()
+      .find('[part="value-label"]')
+      .as('facetAllValuesLabel');
+    assertBreadcrumbValueText('@facetAllValuesLabel', facetLabelValue);
+  });
+}
+
 export function assertSelectedCheckboxFacetsInBreadcrumbAssertions(
   BaseFacetSelector: FacetWithCheckboxSelector,
   facetLabelValue = label

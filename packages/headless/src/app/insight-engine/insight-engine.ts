@@ -2,7 +2,7 @@ import {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {InsightAPIClient} from '../../api/service/insight/insight-api-client';
-import {SearchAction} from '../../features/analytics/analytics-utils';
+import {LegacySearchAction} from '../../features/analytics/analytics-utils';
 import {logInsightInterfaceLoad} from '../../features/analytics/insight-analytics-actions';
 import {setInsightConfiguration} from '../../features/insight-configuration/insight-configuration-actions';
 import {insightConfigurationReducer as insightConfiguration} from '../../features/insight-configuration/insight-configuration-slice';
@@ -48,7 +48,7 @@ export interface InsightEngine<State extends object = {}>
    *
    * @param analyticsEvent - The analytics event to log in association with the first search. If unspecified, `logInsightInterfaceLoad` will be used.
    */
-  executeFirstSearch(analyticsEvent?: SearchAction): void;
+  executeFirstSearch(analyticsEvent?: LegacySearchAction): void;
 }
 
 /**
