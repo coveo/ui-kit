@@ -16,7 +16,7 @@ import {LightningElement, api} from 'lwc';
  * @example
  * <c-quantic-notifications engine-id={engineId}></c-quantic-notifications>
  */
-export default class QuanticGeneratedAnswer extends LightningElement {
+export default class QuanticNotifications extends LightningElement {
   /**
    * The ID of the engine instance the component registers to.
    * @api

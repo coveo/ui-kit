@@ -23,11 +23,9 @@ describe('trigger slice', () => {
       response,
     });
 
-    const action = executeSearch.fulfilled(
-      searchState,
-      '',
-      logSearchboxSubmit()
-    );
+    const action = executeSearch.fulfilled(searchState, '', {
+      legacy: logSearchboxSubmit(),
+    });
     const finalState = triggerReducer(state, action);
 
     expect(finalState.redirectTo).toEqual('');
@@ -47,11 +45,9 @@ describe('trigger slice', () => {
       response,
     });
 
-    const action = executeSearch.fulfilled(
-      searchState,
-      '',
-      logSearchboxSubmit()
-    );
+    const action = executeSearch.fulfilled(searchState, '', {
+      legacy: logSearchboxSubmit(),
+    });
     const finalState = triggerReducer(state, action);
 
     expect(finalState.redirectTo).toEqual('');
@@ -69,11 +65,9 @@ describe('trigger slice', () => {
       response,
     });
 
-    const action = executeSearch.fulfilled(
-      searchState,
-      '',
-      logSearchboxSubmit()
-    );
+    const action = executeSearch.fulfilled(searchState, '', {
+      legacy: logSearchboxSubmit(),
+    });
     const finalState = triggerReducer(state, action);
 
     expect(finalState.redirectTo).toEqual('https://www.coveo.com');
@@ -92,11 +86,9 @@ describe('trigger slice', () => {
       response,
     });
 
-    const action = executeSearch.fulfilled(
-      searchState,
-      '',
-      logSearchboxSubmit()
-    );
+    const action = executeSearch.fulfilled(searchState, '', {
+      legacy: logSearchboxSubmit(),
+    });
     const finalState = triggerReducer(state, action);
 
     expect(finalState.query).toEqual('');
@@ -115,11 +107,9 @@ describe('trigger slice', () => {
       response,
     });
 
-    const action = executeSearch.fulfilled(
-      searchState,
-      '',
-      logSearchboxSubmit()
-    );
+    const action = executeSearch.fulfilled(searchState, '', {
+      legacy: logSearchboxSubmit(),
+    });
     const finalState = triggerReducer(state, action);
 
     expect(finalState.executions).toEqual([]);
@@ -140,11 +130,9 @@ describe('trigger slice', () => {
       response,
     });
 
-    const action = executeSearch.fulfilled(
-      searchState,
-      '',
-      logSearchboxSubmit()
-    );
+    const action = executeSearch.fulfilled(searchState, '', {
+      legacy: logSearchboxSubmit(),
+    });
     const finalState = triggerReducer(state, action);
 
     expect(finalState.executions).toEqual([
@@ -168,11 +156,9 @@ describe('trigger slice', () => {
       response,
     });
 
-    const action = executeSearch.fulfilled(
-      searchState,
-      '',
-      logSearchboxSubmit()
-    );
+    const action = executeSearch.fulfilled(searchState, '', {
+      legacy: logSearchboxSubmit(),
+    });
     const finalState = triggerReducer(state, action);
 
     expect(finalState.notifications).toEqual([]);
@@ -188,11 +174,9 @@ describe('trigger slice', () => {
       response,
     });
 
-    const action = executeSearch.fulfilled(
-      searchState,
-      '',
-      logSearchboxSubmit()
-    );
+    const action = executeSearch.fulfilled(searchState, '', {
+      legacy: logSearchboxSubmit(),
+    });
     const finalState = triggerReducer(state, action);
 
     expect(finalState.notifications).toEqual(['Hello world']);
@@ -235,11 +219,9 @@ describe('trigger slice', () => {
       response,
     });
 
-    const action = executeSearch.fulfilled(
-      searchState,
-      '',
-      logSearchboxSubmit()
-    );
+    const action = executeSearch.fulfilled(searchState, '', {
+      legacy: logSearchboxSubmit(),
+    });
     const finalState = triggerReducer(state, action);
 
     expect(finalState.redirectTo).toEqual(expectedRedirections[0]);

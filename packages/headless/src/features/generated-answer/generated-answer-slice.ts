@@ -13,6 +13,7 @@ import {
   updateError,
   updateMessage,
   updateResponseFormat,
+  sendGeneratedAnswerFeedback,
 } from './generated-answer-actions';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
 
@@ -61,6 +62,9 @@ export const generatedAnswerReducer = createReducer(
       })
       .addCase(closeGeneratedAnswerFeedbackModal, (state) => {
         state.feedbackModalOpen = false;
+      })
+      .addCase(sendGeneratedAnswerFeedback, (state) => {
+        state.feedbackSubmitted = true;
       })
       .addCase(resetAnswer, (state) => {
         return {

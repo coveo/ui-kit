@@ -1,5 +1,5 @@
-import {GeneratedAnswerStyle} from '@coveo/headless/dist/definitions/features/generated-answer/generated-response-format';
-import {TagProps} from '../fixtures/fixture-common';
+import {GeneratedAnswerStyle} from '@coveo/headless';
+import {RouteAlias, TagProps} from '../fixtures/fixture-common';
 import {TestFixture} from '../fixtures/test-fixture';
 import {AnalyticsTracker} from '../utils/analyticsUtils';
 import {
@@ -9,7 +9,10 @@ import {
   mockStreamResponse,
 } from './generated-answer-actions';
 import * as GeneratedAnswerAssertions from './generated-answer-assertions';
-import {GeneratedAnswerSelectors} from './generated-answer-selectors';
+import {
+  GeneratedAnswerSelectors,
+  feedbackModalSelectors,
+} from './generated-answer-selectors';
 
 const rephraseOptions: {label: string; value: GeneratedAnswerStyle}[] = [
   {label: 'Bullet', value: 'bullet'},
@@ -23,6 +26,7 @@ const testCitation = {
   uri: 'https://www.coveo.com',
   permanentid: 'some-permanent-id-123',
   clickUri: 'https://www.coveo.com/en',
+  text: 'This is the snippet given to the generative model.',
 };
 const testTextDelta = 'Some text';
 const testMessagePayload = {
@@ -99,6 +103,63 @@ describe('Generated Answer Test Suites', () => {
 
       it('should not display the component', () => {
         GeneratedAnswerSelectors.container().should('not.exist');
+      });
+    });
+
+    describe('feedback modal', () => {
+      const streamId = crypto.randomUUID();
+
+      const testTextDelta = 'Some text';
+      const testMessagePayload = {
+        payloadType: 'genqa.messageType',
+        payload: JSON.stringify({
+          textDelta: testTextDelta,
+        }),
+        finishReason: 'COMPLETED',
+      };
+
+      beforeEach(() => {
+        mockStreamResponse(streamId, testMessagePayload);
+        setupGeneratedAnswer(streamId);
+        cy.wait(getStreamInterceptAlias(streamId));
+        GeneratedAnswerSelectors.answer();
+        GeneratedAnswerSelectors.dislikeButton().click();
+      });
+
+      it('should open when an answer is disliked', () => {
+        feedbackModalSelectors.modalBody().should('exist');
+        feedbackModalSelectors.modalHeader().should('exist');
+        feedbackModalSelectors.modalFooter().should('exist');
+      });
+
+      describe('select button', () => {
+        it('should submit proper reason', () => {
+          const notAccurateReason = feedbackModalSelectors.reason().eq(1);
+          notAccurateReason.should('have.id', 'notAccurate');
+          notAccurateReason.click({force: true});
+
+          feedbackModalSelectors.submitButton().click();
+          feedbackModalSelectors.submitButton().should('not.exist');
+          feedbackModalSelectors.cancelButton().should('exist');
+
+          cy.get(`${RouteAlias.UA}.3`)
+            .its('request.body.customData.reason')
+            .should('equal', 'notAccurate');
+        });
+      });
+
+      describe('add details text area', () => {
+        it('should be visible when other is selected', () => {
+          feedbackModalSelectors.detailsTextArea().should('not.exist');
+
+          const reasons = feedbackModalSelectors.reason();
+          reasons.last().should('have.id', 'other');
+
+          reasons.last().click({force: true});
+
+          feedbackModalSelectors.detailsInput().should('exist');
+          feedbackModalSelectors.submitButton().should('be.enabled');
+        });
       });
     });
 
@@ -226,6 +287,37 @@ describe('Generated Answer Test Suites', () => {
           );
         });
 
+        describe('when a citation is hovered', () => {
+          beforeEach(() => {
+            AnalyticsTracker.reset();
+            cy.clock();
+            GeneratedAnswerSelectors.citation().trigger('mouseover');
+            cy.tick(1300).invoke('restore');
+          });
+
+          it('should display the citation card', () => {
+            GeneratedAnswerSelectors.citationCard().should('be.visible');
+            GeneratedAnswerSelectors.citationCard().should(
+              'contain.text',
+              testCitation.uri
+            );
+            GeneratedAnswerSelectors.citationCard().should(
+              'contain.text',
+              testCitation.title
+            );
+            GeneratedAnswerSelectors.citationCard().should(
+              'contain.text',
+              testCitation.text
+            );
+          });
+
+          it('should send analytics when the hover ends', () => {
+            GeneratedAnswerSelectors.citation().trigger('mouseleave');
+
+            GeneratedAnswerAssertions.assertLogGeneratedAnswerSourceHover();
+          });
+        });
+
         describe('when a citation is clicked', () => {
           beforeEach(() => {
             AnalyticsTracker.reset();
@@ -234,7 +326,9 @@ describe('Generated Answer Test Suites', () => {
               .click();
           });
 
-          GeneratedAnswerAssertions.assertLogOpenGeneratedAnswerSource(true);
+          it('should log an openGeneratedAnswerSource click event', () => {
+            GeneratedAnswerAssertions.assertLogOpenGeneratedAnswerSource();
+          });
         });
 
         describe('when a citation is right-clicked', () => {
@@ -243,7 +337,9 @@ describe('Generated Answer Test Suites', () => {
             GeneratedAnswerSelectors.citation().rightclick();
           });
 
-          GeneratedAnswerAssertions.assertLogOpenGeneratedAnswerSource(true);
+          it('should log an openGeneratedAnswerSource click event', () => {
+            GeneratedAnswerAssertions.assertLogOpenGeneratedAnswerSource();
+          });
         });
       });
 

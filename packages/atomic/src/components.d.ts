@@ -5,13 +5,12 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, InlineLink, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+import { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout, ResultTarget } from "./components/common/layout/display-options";
 import { ResultRenderingFunction } from "./components/common/result-list/result-list-common-interface";
-import { GeneratedAnswerStyle } from "@coveo/headless/dist/definitions/features/generated-answer/generated-response-format";
 import { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 import { FacetDisplayValues } from "./components/common/facets/facet-common";
 import { i18n } from "i18next";
@@ -31,13 +30,12 @@ import { RedirectionPayload } from "./components/search/atomic-search-box/redire
 import { AriaLabelGenerator } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
-export { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, InlineLink, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+export { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 export { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout, ResultTarget } from "./components/common/layout/display-options";
 export { ResultRenderingFunction } from "./components/common/result-list/result-list-common-interface";
-export { GeneratedAnswerStyle } from "@coveo/headless/dist/definitions/features/generated-answer/generated-response-format";
 export { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 export { FacetDisplayValues } from "./components/common/facets/facet-common";
 export { i18n } from "i18next";
@@ -169,9 +167,27 @@ export namespace Components {
          */
         "sortCriteria": CategoryFacetSortCriterion;
         /**
-          * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
+          * Whether this facet should contain a search box.
          */
         "withSearch": boolean;
+    }
+    interface AtomicCitation {
+        /**
+          * The citation item information.
+         */
+        "citation": GeneratedAnswerCitation;
+        /**
+          * The citation index.
+         */
+        "index": number;
+        /**
+          * An `InteractiveCitation` controller instance. It is used when the user interacts with the citation by selecting or hovering over it.
+         */
+        "interactiveCitation": InteractiveCitation;
+        /**
+          * Callback function invoked when the user stops hovering over a citation. `citationHoverTimeMs` is the amount of time over which the citation has been hovered.
+         */
+        "sendHoverEndEvent": (citationHoverTimeMs: number) => void;
     }
     /**
      * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -235,7 +251,7 @@ export namespace Components {
          */
         "sortCriteria": FacetSortCriterion;
         /**
-          * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
+          * Whether this facet should contain a search box.
          */
         "withSearch": boolean;
     }
@@ -326,7 +342,7 @@ export namespace Components {
          */
         "sortCriteria": FacetSortCriterion;
         /**
-          * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
+          * Whether this facet should contain a search box.
          */
         "withSearch": boolean;
     }
@@ -487,11 +503,25 @@ export namespace Components {
      */
     interface AtomicFrequentlyBoughtTogether {
     }
+    /**
+     * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
+     * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
+     */
     interface AtomicGeneratedAnswer {
         /**
-          * The answer style to apply when the component first loads. Options:   - `default`: Generates the answer without additional formatting instructions.   - `bullet`: Requests the answer to be generated in bullet-points.   - `step`: Requests the answer to be generated in step-by-step instructions.   - `concise`: Requests the answer to be generated as concisely as possible.
+          * The answer style to apply when the component first loads. Options:   - `default`: Generates the answer without additional formatting instructions.   - `bullet`: Requests that the answer is formatted as a bulleted list.   - `step`: Requests that the answer is formatted as a series of step-by-step instructions.   - `concise`: Requests that the generated answer is as concise as possible.
          */
         "answerStyle": GeneratedAnswerStyle;
+    }
+    interface AtomicGeneratedAnswerFeedbackModal {
+        /**
+          * A `GeneratedAnswer` controller instance. It is used when the user interacts with the modal.
+         */
+        "generatedAnswer": GeneratedAnswer;
+        /**
+          * Indicates whether the modal is open.
+         */
+        "isOpen": boolean;
     }
     /**
      * The `atomic-html` component renders the HTML value of a string.
@@ -2505,6 +2535,10 @@ export interface AtomicFocusDetectorCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicFocusDetectorElement;
 }
+export interface AtomicGeneratedAnswerFeedbackModalCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicGeneratedAnswerFeedbackModalElement;
+}
 export interface AtomicInsightPagerCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicInsightPagerElement;
@@ -2621,6 +2655,12 @@ declare global {
     var HTMLAtomicCategoryFacetElement: {
         prototype: HTMLAtomicCategoryFacetElement;
         new (): HTMLAtomicCategoryFacetElement;
+    };
+    interface HTMLAtomicCitationElement extends Components.AtomicCitation, HTMLStencilElement {
+    }
+    var HTMLAtomicCitationElement: {
+        prototype: HTMLAtomicCitationElement;
+        new (): HTMLAtomicCitationElement;
     };
     /**
      * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -2801,11 +2841,32 @@ declare global {
         prototype: HTMLAtomicFrequentlyBoughtTogetherElement;
         new (): HTMLAtomicFrequentlyBoughtTogetherElement;
     };
+    /**
+     * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
+     * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
+     */
     interface HTMLAtomicGeneratedAnswerElement extends Components.AtomicGeneratedAnswer, HTMLStencilElement {
     }
     var HTMLAtomicGeneratedAnswerElement: {
         prototype: HTMLAtomicGeneratedAnswerElement;
         new (): HTMLAtomicGeneratedAnswerElement;
+    };
+    interface HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap {
+        "feedbackSent": any;
+    }
+    interface HTMLAtomicGeneratedAnswerFeedbackModalElement extends Components.AtomicGeneratedAnswerFeedbackModal, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap>(type: K, listener: (this: HTMLAtomicGeneratedAnswerFeedbackModalElement, ev: AtomicGeneratedAnswerFeedbackModalCustomEvent<HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap>(type: K, listener: (this: HTMLAtomicGeneratedAnswerFeedbackModalElement, ev: AtomicGeneratedAnswerFeedbackModalCustomEvent<HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLAtomicGeneratedAnswerFeedbackModalElement: {
+        prototype: HTMLAtomicGeneratedAnswerFeedbackModalElement;
+        new (): HTMLAtomicGeneratedAnswerFeedbackModalElement;
     };
     /**
      * The `atomic-html` component renders the HTML value of a string.
@@ -4040,6 +4101,7 @@ declare global {
         "atomic-automatic-facet-generator": HTMLAtomicAutomaticFacetGeneratorElement;
         "atomic-breadbox": HTMLAtomicBreadboxElement;
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
+        "atomic-citation": HTMLAtomicCitationElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
         "atomic-component-error": HTMLAtomicComponentErrorElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
@@ -4057,6 +4119,7 @@ declare global {
         "atomic-format-unit": HTMLAtomicFormatUnitElement;
         "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
         "atomic-generated-answer": HTMLAtomicGeneratedAnswerElement;
+        "atomic-generated-answer-feedback-modal": HTMLAtomicGeneratedAnswerFeedbackModalElement;
         "atomic-html": HTMLAtomicHtmlElement;
         "atomic-icon": HTMLAtomicIconElement;
         "atomic-insight-edit-toggle": HTMLAtomicInsightEditToggleElement;
@@ -4284,9 +4347,27 @@ declare namespace LocalJSX {
          */
         "sortCriteria"?: CategoryFacetSortCriterion;
         /**
-          * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
+          * Whether this facet should contain a search box.
          */
         "withSearch"?: boolean;
+    }
+    interface AtomicCitation {
+        /**
+          * The citation item information.
+         */
+        "citation": GeneratedAnswerCitation;
+        /**
+          * The citation index.
+         */
+        "index": number;
+        /**
+          * An `InteractiveCitation` controller instance. It is used when the user interacts with the citation by selecting or hovering over it.
+         */
+        "interactiveCitation": InteractiveCitation;
+        /**
+          * Callback function invoked when the user stops hovering over a citation. `citationHoverTimeMs` is the amount of time over which the citation has been hovered.
+         */
+        "sendHoverEndEvent": (citationHoverTimeMs: number) => void;
     }
     /**
      * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -4350,7 +4431,7 @@ declare namespace LocalJSX {
          */
         "sortCriteria"?: FacetSortCriterion;
         /**
-          * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
+          * Whether this facet should contain a search box.
          */
         "withSearch"?: boolean;
     }
@@ -4441,7 +4522,7 @@ declare namespace LocalJSX {
          */
         "sortCriteria"?: FacetSortCriterion;
         /**
-          * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
+          * Whether this facet should contain a search box.
          */
         "withSearch"?: boolean;
     }
@@ -4602,11 +4683,26 @@ declare namespace LocalJSX {
      */
     interface AtomicFrequentlyBoughtTogether {
     }
+    /**
+     * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
+     * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
+     */
     interface AtomicGeneratedAnswer {
         /**
-          * The answer style to apply when the component first loads. Options:   - `default`: Generates the answer without additional formatting instructions.   - `bullet`: Requests the answer to be generated in bullet-points.   - `step`: Requests the answer to be generated in step-by-step instructions.   - `concise`: Requests the answer to be generated as concisely as possible.
+          * The answer style to apply when the component first loads. Options:   - `default`: Generates the answer without additional formatting instructions.   - `bullet`: Requests that the answer is formatted as a bulleted list.   - `step`: Requests that the answer is formatted as a series of step-by-step instructions.   - `concise`: Requests that the generated answer is as concise as possible.
          */
         "answerStyle"?: GeneratedAnswerStyle;
+    }
+    interface AtomicGeneratedAnswerFeedbackModal {
+        /**
+          * A `GeneratedAnswer` controller instance. It is used when the user interacts with the modal.
+         */
+        "generatedAnswer": GeneratedAnswer;
+        /**
+          * Indicates whether the modal is open.
+         */
+        "isOpen"?: boolean;
+        "onFeedbackSent"?: (event: AtomicGeneratedAnswerFeedbackModalCustomEvent<any>) => void;
     }
     /**
      * The `atomic-html` component renders the HTML value of a string.
@@ -6529,6 +6625,7 @@ declare namespace LocalJSX {
         "atomic-automatic-facet-generator": AtomicAutomaticFacetGenerator;
         "atomic-breadbox": AtomicBreadbox;
         "atomic-category-facet": AtomicCategoryFacet;
+        "atomic-citation": AtomicCitation;
         "atomic-color-facet": AtomicColorFacet;
         "atomic-component-error": AtomicComponentError;
         "atomic-did-you-mean": AtomicDidYouMean;
@@ -6546,6 +6643,7 @@ declare namespace LocalJSX {
         "atomic-format-unit": AtomicFormatUnit;
         "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
         "atomic-generated-answer": AtomicGeneratedAnswer;
+        "atomic-generated-answer-feedback-modal": AtomicGeneratedAnswerFeedbackModal;
         "atomic-html": AtomicHtml;
         "atomic-icon": AtomicIcon;
         "atomic-insight-edit-toggle": AtomicInsightEditToggle;
@@ -6699,6 +6797,7 @@ declare module "@stencil/core" {
              * An `atomic-category-facet` displays a facet of values in a browsable, hierarchical fashion.
              */
             "atomic-category-facet": LocalJSX.AtomicCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCategoryFacetElement>;
+            "atomic-citation": LocalJSX.AtomicCitation & JSXBase.HTMLAttributes<HTMLAtomicCitationElement>;
             /**
              * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
              * An `atomic-color-facet` displays a facet of the results for the current query as colors.
@@ -6764,7 +6863,12 @@ declare module "@stencil/core" {
              * The `atomic-frequently-bought-together` component suggests products frequently bought with the current product based on the shopping cart of other users.
              */
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
+            /**
+             * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
+             * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
+             */
             "atomic-generated-answer": LocalJSX.AtomicGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicGeneratedAnswerElement>;
+            "atomic-generated-answer-feedback-modal": LocalJSX.AtomicGeneratedAnswerFeedbackModal & JSXBase.HTMLAttributes<HTMLAtomicGeneratedAnswerFeedbackModalElement>;
             /**
              * The `atomic-html` component renders the HTML value of a string.
              * There is an inherent XSS security concern associated with the usage of this component.

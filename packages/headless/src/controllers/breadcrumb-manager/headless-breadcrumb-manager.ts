@@ -1,5 +1,7 @@
+import {SearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {configuration} from '../../app/common-reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {SearchPageEvents} from '../../features/analytics/search-action-cause';
 import {toggleSelectAutomaticFacetValue} from '../../features/facets/automatic-facet-set/automatic-facet-set-actions';
 import {AutomaticFacetResponse} from '../../features/facets/automatic-facet-set/interfaces/response';
 import {deselectAllCategoryFacetValues} from '../../features/facets/category-facet-set/category-facet-set-actions';
@@ -130,26 +132,48 @@ export function buildBreadcrumbManager(
       engine,
       facetSet: getState().facetSet,
       executeToggleSelect: ({facetId, selection}) => {
-        const analyticsAction = logFacetBreadcrumb({
-          facetId: facetId,
-          facetValue: selection.value,
-        });
         dispatch(toggleSelectFacetValue({facetId, selection}));
         dispatch(
           updateFreezeCurrentValues({facetId, freezeCurrentValues: false})
         );
-        dispatch(executeSearch(analyticsAction));
+        dispatch(
+          executeSearch({
+            legacy: logFacetBreadcrumb({
+              facetId: facetId,
+              facetValue: selection.value,
+            }),
+            next: {
+              actionCause: SearchPageEvents.breadcrumbFacet,
+              getEventExtraPayload: (state) =>
+                new SearchAnalyticsProvider(() => state).getFacetMetadata(
+                  facetId,
+                  selection.value
+                ),
+            },
+          })
+        );
       },
       executeToggleExclude: ({facetId, selection}) => {
-        const analyticsAction = logFacetBreadcrumb({
-          facetId: facetId,
-          facetValue: selection.value,
-        });
         dispatch(toggleExcludeFacetValue({facetId, selection}));
         dispatch(
           updateFreezeCurrentValues({facetId, freezeCurrentValues: false})
         );
-        dispatch(executeSearch(analyticsAction));
+        dispatch(
+          executeSearch({
+            legacy: logFacetBreadcrumb({
+              facetId: facetId,
+              facetValue: selection.value,
+            }),
+            next: {
+              actionCause: SearchPageEvents.breadcrumbFacet,
+              getEventExtraPayload: (state) =>
+                new SearchAnalyticsProvider(() => state).getFacetMetadata(
+                  facetId,
+                  selection.value
+                ),
+            },
+          })
+        );
       },
       facetValuesSelector: facetResponseActiveValuesSelector,
     };
@@ -165,11 +189,39 @@ export function buildBreadcrumbManager(
       facetSet: getState().numericFacetSet,
       executeToggleSelect: (payload) => {
         dispatch(toggleSelectNumericFacetValue(payload));
-        dispatch(executeSearch(logNumericFacetBreadcrumb(payload)));
+        dispatch(
+          executeSearch({
+            legacy: logNumericFacetBreadcrumb(payload),
+            next: {
+              actionCause: SearchPageEvents.breadcrumbFacet,
+              getEventExtraPayload: (state) =>
+                new SearchAnalyticsProvider(
+                  () => state
+                ).getRangeFacetBreadcrumbMetadata(
+                  payload.facetId,
+                  payload.selection
+                ),
+            },
+          })
+        );
       },
       executeToggleExclude: (payload) => {
         dispatch(toggleExcludeNumericFacetValue(payload));
-        dispatch(executeSearch(logNumericFacetBreadcrumb(payload)));
+        dispatch(
+          executeSearch({
+            legacy: logNumericFacetBreadcrumb(payload),
+            next: {
+              actionCause: SearchPageEvents.breadcrumbFacet,
+              getEventExtraPayload: (state) =>
+                new SearchAnalyticsProvider(
+                  () => state
+                ).getRangeFacetBreadcrumbMetadata(
+                  payload.facetId,
+                  payload.selection
+                ),
+            },
+          })
+        );
       },
       facetValuesSelector: numericFacetActiveValuesSelector,
     };
@@ -183,11 +235,39 @@ export function buildBreadcrumbManager(
         facetSet: getState().dateFacetSet,
         executeToggleSelect: (payload) => {
           dispatch(toggleSelectDateFacetValue(payload));
-          dispatch(executeSearch(logDateFacetBreadcrumb(payload)));
+          dispatch(
+            executeSearch({
+              legacy: logDateFacetBreadcrumb(payload),
+              next: {
+                actionCause: SearchPageEvents.breadcrumbFacet,
+                getEventExtraPayload: (state) =>
+                  new SearchAnalyticsProvider(
+                    () => state
+                  ).getRangeFacetBreadcrumbMetadata(
+                    payload.facetId,
+                    payload.selection
+                  ),
+              },
+            })
+          );
         },
         executeToggleExclude: (payload) => {
           dispatch(toggleExcludeDateFacetValue(payload));
-          dispatch(executeSearch(logDateFacetBreadcrumb(payload)));
+          dispatch(
+            executeSearch({
+              legacy: logDateFacetBreadcrumb(payload),
+              next: {
+                actionCause: SearchPageEvents.breadcrumbFacet,
+                getEventExtraPayload: (state) =>
+                  new SearchAnalyticsProvider(
+                    () => state
+                  ).getRangeFacetBreadcrumbMetadata(
+                    payload.facetId,
+                    payload.selection
+                  ),
+              },
+            })
+          );
         },
         facetValuesSelector: dateFacetActiveValuesSelector,
       };
@@ -213,14 +293,24 @@ export function buildBreadcrumbManager(
       deselect: () => {
         dispatch(deselectAllCategoryFacetValues(facetId));
         dispatch(
-          executeSearch(
-            logCategoryFacetBreadcrumb({
+          executeSearch({
+            legacy: logCategoryFacetBreadcrumb({
               categoryFacetPath: path.map(
                 (categoryFacetValue) => categoryFacetValue.value
               ),
               categoryFacetId: facetId,
-            })
-          )
+            }),
+            next: {
+              actionCause: SearchPageEvents.breadcrumbFacet,
+              getEventExtraPayload: (state) =>
+                new SearchAnalyticsProvider(
+                  () => state
+                ).getCategoryFacetBreadcrumbMetadata(
+                  facetId,
+                  path.map((categoryFacetValue) => categoryFacetValue.value)
+                ),
+            },
+          })
         );
       },
     };
@@ -260,7 +350,7 @@ export function buildBreadcrumbManager(
         } else if (value.state === 'excluded') {
           dispatch(toggleExcludeStaticFilterValue({id, value}));
         }
-        dispatch(executeSearch(analytics));
+        dispatch(executeSearch({legacy: analytics}));
       },
     };
   };
@@ -294,17 +384,28 @@ export function buildBreadcrumbManager(
     return {
       value: selection,
       deselect: () => {
-        const analyticsAction = logFacetBreadcrumb({
-          facetId: field,
-          facetValue: selection.value,
-        });
         dispatch(
           toggleSelectAutomaticFacetValue({
             field,
             selection,
           })
         );
-        dispatch(executeSearch(analyticsAction));
+        dispatch(
+          executeSearch({
+            legacy: logFacetBreadcrumb({
+              facetId: field,
+              facetValue: selection.value,
+            }),
+            next: {
+              actionCause: SearchPageEvents.breadcrumbFacet,
+              getEventExtraPayload: (state) =>
+                new SearchAnalyticsProvider(() => state).getFacetMetadata(
+                  field,
+                  selection.value
+                ),
+            },
+          })
+        );
       },
     };
   };
@@ -337,7 +438,16 @@ export function buildBreadcrumbManager(
 
     deselectAll: () => {
       controller.deselectAll();
-      dispatch(executeSearch(logClearBreadcrumbs()));
+      dispatch(
+        executeSearch({
+          legacy: logClearBreadcrumbs(),
+          next: {
+            actionCause: SearchPageEvents.breadcrumbResetAll,
+            getEventExtraPayload: (state) =>
+              new SearchAnalyticsProvider(() => state).getBaseMetadata(),
+          },
+        })
+      );
     },
   };
 }

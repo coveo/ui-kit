@@ -180,7 +180,9 @@ describe('numeric-facet-set slice', () => {
     const search = buildMockSearch();
     numericFacetSetReducer(
       state,
-      executeSearch.fulfilled(search, '', logSearchEvent({evt: 'foo'}))
+      executeSearch.fulfilled(search, '', {
+        legacy: logSearchEvent({evt: 'foo'}),
+      })
     );
 
     expect(

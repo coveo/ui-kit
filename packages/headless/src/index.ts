@@ -152,5 +152,8 @@ export {
   deserializeRelativeDate,
   validateRelativeDate,
 } from './api/search/date/relative-date';
+export type {GeneratedAnswerStyle} from './features/generated-answer/generated-response-format';
 
 export * from './utils/query-expression/query-expression';
+
+export type {GeneratedAnswerFeedback} from './features/generated-answer/generated-answer-analytics-actions';

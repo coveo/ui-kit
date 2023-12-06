@@ -264,6 +264,12 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
     this.input.blur();
   }
 
+  handleValueChange() {
+    if (this.standaloneSearchBox.state.value !== this.input.value) {
+      this.standaloneSearchBox.updateText(this.input.value);
+    }
+  }
+
   onSubmit(event) {
     event.stopPropagation();
     if (this.standaloneSearchBox?.state?.value !== this.input.value) {
@@ -320,6 +326,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   }
 
   onTextAreaInput() {
+    this.handleValueChange();
     this.adjustTextAreaHeight();
   }
 

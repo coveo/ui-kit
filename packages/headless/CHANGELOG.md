@@ -1,3 +1,74 @@
+# 2.42.0 (2023-12-06)
+
+### Features
+
+- **commerce:** use `trackingId` in body ([#3441](https://github.com/coveo/ui-kit/issues/3441)) ([5c26108](https://github.com/coveo/ui-kit/commits/5c26108880fb4f5db208bd9e362b17f29e5d68fa))
+- **context:** add reserved keys context ([#3424](https://github.com/coveo/ui-kit/issues/3424)) ([667a764](https://github.com/coveo/ui-kit/commits/667a764cc194d19fa682bd96c2a9cb01dad0cd37))
+- **context:** create strict context factory ([#3423](https://github.com/coveo/ui-kit/issues/3423)) ([f4abf46](https://github.com/coveo/ui-kit/commits/f4abf465c4fdba9994cd9a7f35ca9942ec614f92))
+- **headless:** Add RGA option to the Insight Interface Config Response ([#3408](https://github.com/coveo/ui-kit/issues/3408)) ([4e8d811](https://github.com/coveo/ui-kit/commits/4e8d81110f35058f34efa7caae9550beb39db33a))
+- **headless:** create article insight analytics action created ([#3439](https://github.com/coveo/ui-kit/issues/3439)) ([c067a3d](https://github.com/coveo/ui-kit/commits/c067a3d6b2831b9d7b736f135b5405b910e0abb3))
+- **relay:** add support for analytics/instantResult/open ([#3425](https://github.com/coveo/ui-kit/issues/3425)) ([a9c1b82](https://github.com/coveo/ui-kit/commits/a9c1b82f9a4080d486017cdfe330c3cbb4d19c0a))
+- **relay:** add support for analytics/recommendation/open ([#3396](https://github.com/coveo/ui-kit/issues/3396)) ([05cd812](https://github.com/coveo/ui-kit/commits/05cd8126b0e94b55277e0bb17dc896244162d39c))
+
+# 2.41.0 (2023-11-29)
+
+### Bug Fixes
+
+- decode HTML content ([#3436](https://github.com/coveo/ui-kit/issues/3436)) ([ac676c9](https://github.com/coveo/ui-kit/commits/ac676c9beeda18f72bcba8dacbecbe06207045e3))
+- **genai:** dispatch like and dislike properly ([#3393](https://github.com/coveo/ui-kit/issues/3393)) ([43ca99a](https://github.com/coveo/ui-kit/commits/43ca99a3be81fd2948d6eb457419d978255cd72f))
+- **genai:** feedback modal fixes ([#3414](https://github.com/coveo/ui-kit/issues/3414)) ([6c2ed62](https://github.com/coveo/ui-kit/commits/6c2ed629a75796b040dfa8ab5aba44deed91ae48))
+- **headless:** import correct analytics in product listing ([#3432](https://github.com/coveo/ui-kit/issues/3432)) ([4987aa2](https://github.com/coveo/ui-kit/commits/4987aa20da02e6fbab976134c640ca683fcb2fcd))
+
+### Features
+
+- **commerce:** create core facet generator, core facet, plp facet generator and plp facet for commerce ([#3389](https://github.com/coveo/ui-kit/issues/3389)) ([b5e479b](https://github.com/coveo/ui-kit/commits/b5e479b673e06b5eea850bddedc0d8646ec0eae0)), closes [#3392](https://github.com/coveo/ui-kit/issues/3392)
+- **commerce:** create very basic search controller, actions and slice ([#3400](https://github.com/coveo/ui-kit/issues/3400)) ([2432693](https://github.com/coveo/ui-kit/commits/2432693a597e89fb128bb1a3ddb71c07a469fceb))
+- **doc:** generate documentation for generated answer in headless, atomic and quantic ([#3397](https://github.com/coveo/ui-kit/issues/3397)) ([c5df083](https://github.com/coveo/ui-kit/commits/c5df0835dde13ea54376a04ba4945427ac7155e9))
+- **headless:** generated answer insight analytics actions created ([#3416](https://github.com/coveo/ui-kit/issues/3416)) ([8233b30](https://github.com/coveo/ui-kit/commits/8233b3054a874e65e04707ec5d3f5f10ed630053))
+- **relay:** add support for analytics/result/open ([#3282](https://github.com/coveo/ui-kit/issues/3282)) ([a38e686](https://github.com/coveo/ui-kit/commits/a38e686aaed83aa093055bb236bdd7e6c95b23fe))
+- **relay:** add type safety for event types ([#3405](https://github.com/coveo/ui-kit/issues/3405)) ([440fcbc](https://github.com/coveo/ui-kit/commits/440fcbc04bece9cec3044e44dddd03a4f0163aa0))
+- support url management with both `UrlManager` and `SearchParametersManager` ([#3420](https://github.com/coveo/ui-kit/issues/3420)) ([4f140a6](https://github.com/coveo/ui-kit/commits/4f140a6097622ec5588c1deb062f363911546fbe))
+
+## 2.40.2 (2023-11-16)
+
+### Bug Fixes
+
+- add missing reducers to `SearchParameterManager` controller ([#3360](https://github.com/coveo/ui-kit/issues/3360)) ([ea0b47f](https://github.com/coveo/ui-kit/commits/ea0b47fb920a6d7c00469b9694294b09ca245a77))
+
+### Features
+
+- **atomic:** added negative feedback modal for rga ([#3339](https://github.com/coveo/ui-kit/issues/3339)) ([194db3c](https://github.com/coveo/ui-kit/commits/194db3c0819aaa70e0e4089e5eb620c17fa21b88))
+- support initialState in context controller ([#3337](https://github.com/coveo/ui-kit/issues/3337)) ([f3c4623](https://github.com/coveo/ui-kit/commits/f3c4623727d319f992915f5557fad8f78abf7cab))
+
+# 2.39.0 (2023-11-08)
+
+### Bug Fixes
+
+- **deps:** update all dependencies j:kit-282 ([#3366](https://github.com/coveo/ui-kit/issues/3366)) ([da241a8](https://github.com/coveo/ui-kit/commits/da241a81d2747c57968caf6da55778fe8db9e6d5))
+- **headless:** dispatch action when fetchMoreResults() is called from a folded result list controller ([#3363](https://github.com/coveo/ui-kit/issues/3363)) ([d33048f](https://github.com/coveo/ui-kit/commits/d33048f6901139b3a7a4a84078d53bc59b3e1647))
+- **headless:** rga controller ([#3370](https://github.com/coveo/ui-kit/issues/3370)) ([9ecca09](https://github.com/coveo/ui-kit/commits/9ecca0948f8806e5983436499745b39ad8556e91))
+
+### Features
+
+- **analytics:** extract the trackingId from the Coveo-Pendragon cookie ([#3353](https://github.com/coveo/ui-kit/issues/3353)) ([4a56285](https://github.com/coveo/ui-kit/commits/4a562859002190cd3623ce98fd01f126c9870a34))
+- **headless:** exported highlights and result templates utilities in case assist, insight and recommendation bundles ([#3371](https://github.com/coveo/ui-kit/issues/3371)) ([403cc0a](https://github.com/coveo/ui-kit/commits/403cc0a7cda51979d1ba35ed047f18bbbaff8d19))
+
+## 2.38.3 (2023-11-02)
+
+### Bug Fixes
+
+- **deps:** update all dependencies j:kit-282 ([#3347](https://github.com/coveo/ui-kit/issues/3347)) ([047b2a8](https://github.com/coveo/ui-kit/commits/047b2a8e8d82445c1fb800c5ac19428223cf4e56))
+- **headless:** fix pino logging incorrectly ([#3352](https://github.com/coveo/ui-kit/issues/3352)) ([4106362](https://github.com/coveo/ui-kit/commits/41063622930c33722b81991a77802c0ee62037a0))
+- remove defineAutomaticFacet ([#3344](https://github.com/coveo/ui-kit/issues/3344)) ([f2f2913](https://github.com/coveo/ui-kit/commits/f2f2913dcf96a55dd29a5f095c11eea6f6e27e03))
+
+### Features
+
+- **atomic:** generated answer citation details on hover ([#3340](https://github.com/coveo/ui-kit/issues/3340)) ([894129f](https://github.com/coveo/ui-kit/commits/894129fde1a9ef95655a44d5f46510265bf1dc11))
+- double publish the NPM packages into GitHub packages for use by internal repositories also using the [@coveo](https://github.com/coveo) scope ([#3251](https://github.com/coveo/ui-kit/issues/3251)) ([4d413e6](https://github.com/coveo/ui-kit/commits/4d413e6bb27065b6667f4705db17b21d6112128b))
+- **headless:** expose generated answer text content ([#3316](https://github.com/coveo/ui-kit/issues/3316)) ([fd91e90](https://github.com/coveo/ui-kit/commits/fd91e90c7f3cf3f0a3b3ea9b255de3c870c25122))
+- **headless:** new logCitationHover method added to the generated answer controller ([#3350](https://github.com/coveo/ui-kit/issues/3350)) ([78f3b5f](https://github.com/coveo/ui-kit/commits/78f3b5f68c3472992736c2bfe3ae69ca1b9d24f4))
+- **hedless:** show generated answer metadata added to ua search events custom data ([#3325](https://github.com/coveo/ui-kit/issues/3325)) ([af5f035](https://github.com/coveo/ui-kit/commits/af5f035ea615f074f29e7ee6b489b6f72ea26a66))
+
 # 2.37.0 (2023-10-25)
 
 ### Features

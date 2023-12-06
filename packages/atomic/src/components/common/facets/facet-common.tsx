@@ -95,12 +95,12 @@ export type BaseFacetElement<FacetType extends AnyFacetType = AnyFacetType> =
 type StateProp<FacetType extends AnyFacetType> = FacetType extends Facet
   ? {facetState: FacetState}
   : FacetType extends NumericFacet
-  ? {facetState: NumericFacetState}
-  : FacetType extends CategoryFacet
-  ? {facetState: CategoryFacetState}
-  : FacetType extends DateFacet
-  ? {facetState: DateFacetState}
-  : {facetState: never};
+    ? {facetState: NumericFacetState}
+    : FacetType extends CategoryFacet
+      ? {facetState: CategoryFacetState}
+      : FacetType extends DateFacet
+        ? {facetState: DateFacetState}
+        : {facetState: never};
 
 type SearchProp<FacetType extends AnyFacetType> = FacetType extends
   | Facet
@@ -126,8 +126,8 @@ type SortCriterionProp<FacetType extends AnyFacetType> = FacetType extends
         : CategoryFacetSortCriterion;
     }
   : FacetType extends NumericFacet
-  ? {sortCriteria?: RangeFacetSortCriterion}
-  : {};
+    ? {sortCriteria?: RangeFacetSortCriterion}
+    : {};
 
 type DisplayValuesAsProp = {
   displayValueAs?: 'checkbox' | 'box' | 'link';
@@ -461,6 +461,15 @@ export class FacetCommon {
 
   private renderSearchInput() {
     if (!this.withSearch) {
+      return;
+    }
+
+    // Hide the input if there are no more values to load from the index and there are less than 8 values to display.
+    // 8 is an arbitrary number, discussed with UX as a good compromise: A list long enough where it's worth searching.
+    if (
+      !this.facet.state.canShowMoreValues &&
+      this.facet.state.values.length <= 8
+    ) {
       return;
     }
 

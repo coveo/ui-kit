@@ -22,6 +22,8 @@ export type {
   ContextState,
   ContextValue,
   ContextPayload,
+  ContextProps,
+  ContextInitialState,
 } from './context/headless-context.ssr';
 export {defineContext} from './context/headless-context.ssr';
 
@@ -252,6 +254,15 @@ export type {
   SearchParameters,
 } from './search-parameter-manager/headless-search-parameter-manager.ssr';
 export {defineSearchParameterManager} from './search-parameter-manager/headless-search-parameter-manager.ssr';
+
+export type {
+  UrlManager,
+  UrlManagerBuildProps,
+  UrlManagerInitialState,
+  UrlManagerProps,
+  UrlManagerState,
+} from './url-manager/headless-url-manager.ssr';
+export {defineUrlManager} from './url-manager/headless-url-manager.ssr';
 
 export type {
   SearchStatus,

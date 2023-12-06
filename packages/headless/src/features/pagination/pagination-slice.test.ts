@@ -172,7 +172,9 @@ describe('pagination slice', () => {
   it('executeSearch.fulfilled updates totalCountFiltered to the response value', () => {
     const search = buildMockSearch();
     search.response.totalCountFiltered = 100;
-    const action = executeSearch.fulfilled(search, '', logSearchboxSubmit());
+    const action = executeSearch.fulfilled(search, '', {
+      legacy: logSearchboxSubmit(),
+    });
 
     const finalState = paginationReducer(state, action);
     expect(finalState.totalCountFiltered).toBe(

@@ -40,6 +40,13 @@ describe('Context', () => {
     expectContainAction(setContext);
   });
 
+  it('initialize context with values dispatches #setContext', () => {
+    buildCoreContext(engine, {
+      initialState: {values: {foo: ['bar']}},
+    });
+    expectContainAction(setContext);
+  });
+
   it('addContext dispatches #addContext', () => {
     context.add('foo', ['bar']);
     expectContainAction(addContext);

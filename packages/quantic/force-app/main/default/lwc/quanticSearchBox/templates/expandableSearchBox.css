@@ -6,7 +6,7 @@
 }
 
 .z-index-high {
-  z-index: 30;
+  z-index: 20;
 }
 
 textarea.searchbox__input {
@@ -24,6 +24,10 @@ textarea.searchbox__input {
 .searchbox__submit-button {
   border: none;
   border-radius: 0 var(--lwc-borderRadiusMedium, 0.25rem) var(--lwc-borderRadiusMedium, 0.25rem) 0;
+}
+
+.searchbox__container-wrapper {
+  min-height: 3.125rem;
 }
 
 .searchbox_floating-container {

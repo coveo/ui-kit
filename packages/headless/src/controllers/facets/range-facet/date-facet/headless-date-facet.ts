@@ -1,4 +1,6 @@
+import {SearchAnalyticsProvider} from '../../../../api/analytics/search-analytics';
 import {SearchEngine} from '../../../../app/search-engine/search-engine';
+import {SearchPageEvents} from '../../../../features/analytics/search-action-cause';
 import {
   logFacetClearAll,
   logFacetUpdateSort,
@@ -7,8 +9,9 @@ import {DateRangeRequest} from '../../../../features/facets/range-facets/date-fa
 import {DateFacetValue} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
 import {
-  getAnalyticsActionForToggleRangeFacetExclude,
-  getAnalyticsActionForToggleRangeFacetSelect,
+  getLegacyAnalyticsActionForToggleRangeFacetExclude,
+  getLegacyAnalyticsActionForToggleRangeFacetSelect,
+  getAnalyticsActionForToggleFacetSelect,
 } from '../../../../features/facets/range-facets/generic/range-facet-utils';
 import {executeSearch} from '../../../../features/search/search-actions';
 import {
@@ -53,31 +56,59 @@ export function buildDateFacet(
 
     deselectAll() {
       coreController.deselectAll();
-      dispatch(executeSearch(logFacetClearAll(getFacetId())));
+      dispatch(
+        executeSearch({
+          legacy: logFacetClearAll(getFacetId()),
+          next: {
+            actionCause: SearchPageEvents.facetClearAll,
+            getEventExtraPayload: (state) =>
+              new SearchAnalyticsProvider(() => state).getFacetClearAllMetadata(
+                getFacetId()
+              ),
+          },
+        })
+      );
     },
 
     sortBy(criterion: RangeFacetSortCriterion) {
       coreController.sortBy(criterion);
       dispatch(
-        executeSearch(logFacetUpdateSort({facetId: getFacetId(), criterion}))
+        executeSearch({
+          legacy: logFacetUpdateSort({facetId: getFacetId(), criterion}),
+          next: {
+            actionCause: SearchPageEvents.facetUpdateSort,
+            getEventExtraPayload: (state) =>
+              new SearchAnalyticsProvider(() => state).getFacetSortMetadata(
+                getFacetId(),
+                criterion
+              ),
+          },
+        })
       );
     },
 
     toggleSelect: (selection: DateFacetValue) => {
       coreController.toggleSelect(selection);
       dispatch(
-        executeSearch(
-          getAnalyticsActionForToggleRangeFacetSelect(getFacetId(), selection)
-        )
+        executeSearch({
+          legacy: getLegacyAnalyticsActionForToggleRangeFacetSelect(
+            getFacetId(),
+            selection
+          ),
+          next: getAnalyticsActionForToggleFacetSelect(getFacetId(), selection),
+        })
       );
     },
 
     toggleExclude: (selection: DateFacetValue) => {
       coreController.toggleExclude(selection);
       dispatch(
-        executeSearch(
-          getAnalyticsActionForToggleRangeFacetExclude(getFacetId(), selection)
-        )
+        executeSearch({
+          legacy: getLegacyAnalyticsActionForToggleRangeFacetExclude(
+            getFacetId(),
+            selection
+          ),
+        })
       );
     },
 

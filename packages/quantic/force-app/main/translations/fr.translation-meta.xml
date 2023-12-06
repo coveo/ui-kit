@@ -597,6 +597,10 @@
       <name>quantic_OpensInSalesforceSubTab</name>
     </customLabels>
     <customLabels>
+      <label>Naviguer vers l'enregistrement</label>
+      <name>quantic_NavigateToRecord</name>
+    </customLabels>
+    <customLabels>
       <label>Ouvre dans un onglet du navigateur web</label>
       <name>quantic_OpensInBrowserTab</name>
     </customLabels>
@@ -681,8 +685,8 @@
       <name>quantic_ThisAnswerWasHelpful</name>
     </customLabels>
     <customLabels>
-        <label>En savoir plus</label>
-        <name>quantic_LearnMore</name>
+        <label>Citations</label>
+        <name>quantic_Citations</name>
     </customLabels>
     <customLabels>
       <label>Réessayer</label>
@@ -751,5 +755,25 @@
   <customLabels>
     <label>Résumé</label>
     <name>quantic_Summary</name>
+  </customLabels>
+  <customLabels>
+    <label>La réponse générée est cachée</label>
+    <name>quantic_GeneratedAnswerIsHidden</name>
+  </customLabels>
+  <customLabels>
+    <label>Réponse générée: {{0}}</label>
+    <name>quantic_AnswerGenerated</name>
+  </customLabels>
+  <customLabels>
+    <label>Génération de la réponse</label>
+    <name>quantic_GeneratingAnswer</name>
+  </customLabels>
+  <customLabels>
+    <label>Réponse générée ON</label>
+    <name>quantic_GeneratedAnswerOn</name>
+  </customLabels>
+  <customLabels>
+    <label>Réponse générée OFF</label>
+    <name>quantic_GeneratedAnswerOff</name>
   </customLabels>
 </Translations>

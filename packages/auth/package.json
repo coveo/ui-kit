@@ -1,6 +1,6 @@
 {
   "name": "@coveo/auth",
-  "version": "1.10.13",
+  "version": "1.11.5",
   "description": "Functions to help authenticate with the Coveo platform.",
   "main": "./dist/auth.js",
   "module": "./dist/auth.esm.js",
@@ -19,10 +19,10 @@
     "build:bundles": "node esbuild.mjs",
     "build:definitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
     "clean": "rimraf -rf dist/*",
-    "release:phase1": "npx -p=@coveo/release bump",
+    "release:phase1": "npm run-script -w=@coveo/release bump",
     "release:phase2": "npm run publish:npm",
     "release:phase5": "npm run publish:npm",
-    "publish:npm": "npx -p=@coveo/release npm-publish",
+    "publish:npm": "npm run-script -w=@coveo/release npm-publish",
     "promote:npm:latest": "node ../../scripts/deploy/update-npm-tag.mjs latest",
     "e2e": "npm run e2e:saml",
     "e2e:saml": "vite manual-e2e/saml/"
@@ -43,8 +43,9 @@
   },
   "homepage": "https://github.com/coveo/ui-kit/packages/auth#readme",
   "devDependencies": {
+    "@coveo/release": "1.0.0",
     "rimraf": "5.0.5",
-    "vite": "4.5.0",
+    "vite": "4.5.1",
     "jest": "29.7.0",
     "ts-jest": "29.1.1"
   },

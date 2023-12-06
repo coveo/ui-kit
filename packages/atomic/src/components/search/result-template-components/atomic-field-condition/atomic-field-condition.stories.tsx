@@ -42,4 +42,4 @@ export default {
   ...defaultModuleExport,
   title: 'Atomic/ResultList/FieldCondition',
 };
-export const DefaultFieldCondition = exportedStory;
+export const Default = exportedStory;

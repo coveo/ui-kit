@@ -1,10 +1,12 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {CoreEngine} from '../../..';
+import {SearchAnalyticsProvider} from '../../../api/analytics/search-analytics';
 import {configuration} from '../../../app/common-reducers';
 import {
   InsightAction,
   SearchAction,
 } from '../../../features/analytics/analytics-utils';
+import {SearchPageEvents} from '../../../features/analytics/search-action-cause';
 import {
   registerQuerySetQuery,
   updateQuerySetQuery,
@@ -21,7 +23,10 @@ import {querySuggestReducer as querySuggest} from '../../../features/query-sugge
 import {QuerySuggestState} from '../../../features/query-suggest/query-suggest-state';
 import {logSearchboxSubmit} from '../../../features/query/query-analytics-actions';
 import {queryReducer as query} from '../../../features/query/query-slice';
-import {prepareForSearchWithQuery} from '../../../features/search/search-actions';
+import {
+  TransitiveSearchAction,
+  prepareForSearchWithQuery,
+} from '../../../features/search/search-actions';
 import {searchReducer as search} from '../../../features/search/search-slice';
 import {
   ConfigurationSection,
@@ -50,12 +55,22 @@ import {
 
 export type {SearchBoxOptions, SuggestionHighlightingOptions, Delimiters};
 
-export interface SearchBoxProps {
-  /**
-   * The `SearchBox` controller options.
-   */
-  options?: SearchBoxOptions;
+export type SearchBoxProps = SearchBoxPropsBase &
+  (NextSearchBoxProps | LegacySearchBoxProps);
 
+interface NextSearchBoxProps {
+  /**
+   * The action creator for the `executeSearch` thunk action.
+   */
+  executeSearchActionCreator: (
+    arg: TransitiveSearchAction
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ) => AsyncThunkAction<any, TransitiveSearchAction, any>;
+
+  isNextAnalyticsReady: true;
+}
+
+interface LegacySearchBoxProps {
   /**
    * The action creator for the `executeSearch` thunk action.
    */
@@ -64,6 +79,28 @@ export interface SearchBoxProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ) => AsyncThunkAction<any, SearchAction, any>;
 
+  isNextAnalyticsReady: false;
+}
+
+interface SearchBoxPropsBase {
+  /**
+   * The `SearchBox` controller options.
+   */
+  options?: SearchBoxOptions;
+
+  /**
+   * The action creator for the `executeSearch` thunk action.
+   */
+  executeSearchActionCreator:
+    | ((
+        arg: TransitiveSearchAction
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ) => AsyncThunkAction<any, TransitiveSearchAction, any>)
+    | ((
+        arg: SearchAction
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ) => AsyncThunkAction<any, SearchAction, any>);
+
   /**
    * The action creator for the `fetchQuerySuggestions` thunk action.
    */
@@ -71,6 +108,8 @@ export interface SearchBoxProps {
     arg: FetchQuerySuggestionsActionCreatorPayload
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ) => AsyncThunkAction<any, FetchQuerySuggestionsActionCreatorPayload, any>;
+  //Indicate if the executeSearchActionCreator can use the new analytics logic.
+  isNextAnalyticsReady: boolean;
 }
 
 /**
@@ -191,7 +230,7 @@ export function buildCoreSearchBox(
 
   const getValue = () => engine.state.querySet[options.id];
 
-  const performSearch = async (analytics: SearchAction) => {
+  const performSearch = async (analytics: TransitiveSearchAction) => {
     const {enableQuerySyntax, clearFilters} = options;
 
     dispatch(
@@ -201,8 +240,11 @@ export function buildCoreSearchBox(
         clearFilters,
       })
     );
-
-    await dispatch(props.executeSearchActionCreator(analytics));
+    if (props.isNextAnalyticsReady) {
+      dispatch(props.executeSearchActionCreator(analytics));
+    } else {
+      dispatch(props.executeSearchActionCreator(analytics.legacy));
+    }
   };
 
   return {
@@ -226,15 +268,22 @@ export function buildCoreSearchBox(
 
     selectSuggestion(value: string) {
       dispatch(selectQuerySuggestion({id, expression: value}));
-      performSearch(logQuerySuggestionClick({id, suggestion: value})).then(
-        () => {
-          dispatch(clearQuerySuggest({id}));
-        }
-      );
+      performSearch({
+        legacy: logQuerySuggestionClick({id, suggestion: value}),
+        next: {
+          actionCause: SearchPageEvents.omniboxAnalytics,
+          getEventExtraPayload: (state) =>
+            new SearchAnalyticsProvider(
+              () => state
+            ).getOmniboxAnalyticsMetadata(id, value),
+        },
+      }).then(() => {
+        dispatch(clearQuerySuggest({id}));
+      });
     },
 
     submit(analytics: SearchAction | InsightAction = logSearchboxSubmit()) {
-      performSearch(analytics);
+      performSearch({legacy: analytics});
       dispatch(clearQuerySuggest({id}));
     },
 

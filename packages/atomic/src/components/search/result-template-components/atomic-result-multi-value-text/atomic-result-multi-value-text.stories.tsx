@@ -1,7 +1,7 @@
 import defaultResultComponentStory from 'atomic-storybook/default-result-component-story';
 
 const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
-  'Atomic/ResultList/ResultMultiValue',
+  'Atomic/ResultList/ResultMultiValueText',
   'atomic-result-multi-value-text',
   {field: 'language'},
   {
@@ -19,6 +19,6 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
 
 export default {
   ...defaultModuleExport,
-  title: 'Atomic/ResultList/ResultMultiValue',
+  title: 'Atomic/ResultList/ResultMultiValueText',
 };
-export const DefaultMultiValueText = exportedStory;
+export const Default = exportedStory;

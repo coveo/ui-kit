@@ -1,11 +1,28 @@
+/* eslint-disable no-import-assign */
+import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 // @ts-ignore
 import {createElement} from 'lwc';
 import QuanticSourceCitations from '../quanticSourceCitations';
 
-const functionsMocks = {
-  mockCitationClickHandler: jest.fn((citationId) => {
-    return citationId;
-  }),
+jest.mock('c/quanticHeadlessLoader');
+
+let isInitialized = false;
+
+// @ts-ignore
+mockHeadlessLoader.initializeWithHeadless = (element, engineId, initialize) => {
+  if (element instanceof QuanticSourceCitations) {
+    if (!isInitialized) {
+      isInitialized = true;
+      initialize();
+    }
+  }
+};
+
+// @ts-ignore
+mockHeadlessLoader.getHeadlessBundle = () => {
+  return {
+    buildInteractiveCitation: jest.fn((engine, {options}) => options.citation),
+  };
 };
 
 const mockCitations = [
@@ -15,6 +32,7 @@ const mockCitations = [
     uri: 'https://example.com/',
     clickUri: 'https://example.com/',
     permanentid: '1',
+    text: 'text 01',
   },
   {
     id: '2',
@@ -22,18 +40,16 @@ const mockCitations = [
     uri: 'https://example.com/',
     clickUri: 'https://example.com/',
     permanentid: '2',
+    text: 'text 02',
   },
 ];
 
 const defaultOptions = {
   citations: mockCitations,
-  citationClickHandler: functionsMocks.mockCitationClickHandler,
 };
 
 const selectors = {
-  citation: '.citation',
-  citationIndex: '.citation__index',
-  citationBadge: '.citation__badge',
+  citation: 'c-quantic-citation',
 };
 
 function createTestComponent(options = defaultOptions) {
@@ -60,6 +76,7 @@ describe('c-quantic-source-citations', () => {
     while (document.body.firstChild) {
       document.body.removeChild(document.body.firstChild);
     }
+    isInitialized = false;
     jest.clearAllMocks();
   }
 
@@ -76,64 +93,13 @@ describe('c-quantic-source-citations', () => {
       expect(citations).not.toBeNull();
       expect(citations.length).toEqual(mockCitations.length);
 
-      const citationsIndices = element.shadowRoot.querySelectorAll(
-        selectors.citationIndex
-      );
-      expect(citationsIndices).not.toBeNull();
-      expect(citationsIndices.length).toEqual(mockCitations.length);
-
-      const citationLinks = element.shadowRoot.querySelectorAll(
-        selectors.citationBadge
-      );
-      expect(citationLinks).not.toBeNull();
-      expect(citationLinks.length).toEqual(mockCitations.length);
-
-      for (let i = 0; i < citations.length; i++) {
-        const indexAsString = (i + 1).toString();
-        expect(citationsIndices[i].textContent).toEqual(indexAsString);
-
-        expect(citationLinks[i].getAttribute('title')).toEqual(
-          mockCitations[i].title
-        );
-        expect(citationLinks[i].getAttribute('href')).toEqual(
-          mockCitations[i].clickUri
-        );
-      }
-    });
-
-    describe('when a citation is clicked', () => {
-      it('should properly open the citation in a new tab', async () => {
-        const element = createTestComponent();
-        await flushPromises();
-
-        const citationLinks = element.shadowRoot.querySelectorAll(
-          selectors.citationBadge
-        );
-
-        expect(citationLinks).not.toBeNull();
-        expect(citationLinks.length).toEqual(mockCitations.length);
-
-        for (let i = 0; i < citationLinks.length; i++) {
-          expect(citationLinks[i].getAttribute('target')).toEqual('_blank');
-        }
-      });
-
-      it('should execute the citationClickHandler function', async () => {
-        const element = createTestComponent();
-        await flushPromises();
-
-        const citations = element.shadowRoot.querySelectorAll(
-          selectors.citation
-        );
-        expect(citations).not.toBeNull();
-        expect(citations.length).toEqual(mockCitations.length);
-
-        citations[0].click();
-        await flushPromises();
-
-        expect(functionsMocks.mockCitationClickHandler).toHaveBeenCalled();
-        expect(functionsMocks.mockCitationClickHandler).toHaveBeenCalledWith(
-          mockCitations[0].id
+      citations.forEach((citationElement, index) => {
+        expect(citationElement.citation).toEqual({
+          ...mockCitations[index],
+          index: index + 1,
+        });
+        expect(citationElement.interactiveCitation).toEqual(
+          mockCitations[index]
         );
       });
     });

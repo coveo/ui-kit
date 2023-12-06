@@ -3,7 +3,7 @@ import {ProductListingEngine} from '../../../../app/product-listing-engine/produ
 import {
   logFacetClearAll,
   logFacetSelect,
-} from '../../../../features/facets/facet-set/facet-set-analytics-actions';
+} from '../../../../features/facets/facet-set/facet-set-product-listing-analytics-actions';
 import {dateFacetSetReducer as dateFacetSet} from '../../../../features/facets/range-facets/date-facet-set/date-facet-set-slice';
 import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions';
 import {searchReducer as search} from '../../../../features/search/search-slice';
@@ -32,6 +32,11 @@ export type {
   DateFilter,
 };
 
+/**
+ * @param engine - The headless engine.
+ * @param props - The configurable `DateFilter` properties.
+ * @returns - A `DateFilter` controller instance.
+ */
 export function buildDateFilter(
   engine: ProductListingEngine,
   props: DateFilterProps

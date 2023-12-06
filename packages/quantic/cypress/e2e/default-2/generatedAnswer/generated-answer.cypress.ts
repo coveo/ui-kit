@@ -1,3 +1,4 @@
+import {performSearch} from '../../../page-objects/actions/action-perform-search';
 import {configure} from '../../../page-objects/configurator';
 import {
   interceptSearch,
@@ -138,7 +139,6 @@ describe('quantic-generated-answer', () => {
 
         scope('when selecting a feedback option', () => {
           Actions.dislikeGeneratedAnswer();
-          Expect.logDislikeGeneratedAnswer(streamId);
           Actions.clickFeedbackOption(
             feedbackOptions.indexOf(irrelevantOption)
           );
@@ -174,6 +174,8 @@ describe('quantic-generated-answer', () => {
         });
 
         it('should send detailed feedback', () => {
+          const exampleDetails = 'example details';
+
           Expect.displayLikeButton(true);
           Expect.displayDislikeButton(true);
           Expect.likeButtonIsChecked(false);
@@ -188,7 +190,6 @@ describe('quantic-generated-answer', () => {
           });
 
           scope('when selecting a feedback option', () => {
-            const exampleDetails = 'example details';
             Actions.clickFeedbackOption(feedbackOptions.indexOf(otherOption));
             Actions.typeInFeedbackDetailsInput(exampleDetails);
             Actions.clickFeedbackSubmitButton();
@@ -198,6 +199,53 @@ describe('quantic-generated-answer', () => {
             });
             Actions.clickFeedbackDoneButton();
           });
+
+          scope('when trying to open the feedback modal again', () => {
+            Actions.dislikeGeneratedAnswer();
+            Expect.displayFeedbackModal(false);
+          });
+
+          scope(
+            'when trying to open the feedback modal after rephrasing the generated answer',
+            () => {
+              const secondStreamId = crypto.randomUUID();
+
+              mockSearchWithGeneratedAnswer(secondStreamId);
+              mockStreamResponse(secondStreamId, genQaMessageTypePayload);
+              Actions.clickRephraseButton(rephraseOptions[0]);
+              Actions.dislikeGeneratedAnswer();
+              Expect.displayFeedbackModal(true);
+              Actions.clickFeedbackOption(feedbackOptions.indexOf(otherOption));
+              Actions.typeInFeedbackDetailsInput(exampleDetails);
+              Actions.clickFeedbackSubmitButton();
+              Expect.logGeneratedAnswerFeedbackSubmit(secondStreamId, {
+                reason: otherOption,
+                details: exampleDetails,
+              });
+              Actions.clickFeedbackDoneButton();
+            }
+          );
+
+          scope(
+            'when trying to open the feedback modal after executing a new query',
+            () => {
+              const thirdStreamId = crypto.randomUUID();
+
+              mockSearchWithGeneratedAnswer(thirdStreamId);
+              mockStreamResponse(thirdStreamId, genQaMessageTypePayload);
+              performSearch();
+              Actions.dislikeGeneratedAnswer();
+              Expect.displayFeedbackModal(true);
+              Actions.clickFeedbackOption(feedbackOptions.indexOf(otherOption));
+              Actions.typeInFeedbackDetailsInput(exampleDetails);
+              Actions.clickFeedbackSubmitButton();
+              Expect.logGeneratedAnswerFeedbackSubmit(thirdStreamId, {
+                reason: otherOption,
+                details: exampleDetails,
+              });
+              Actions.clickFeedbackDoneButton();
+            }
+          );
         });
 
         it('should display the toggle generated answer button', () => {
@@ -381,21 +429,24 @@ describe('quantic-generated-answer', () => {
     });
 
     describe('when a citation event is received', () => {
-      const inactiveLink = 'javascript:void(0);';
+      const exampleLinkUrl =
+        'https://saas-inspiration-5437-dev-ed.scratch.my.site.com/examples/s/';
       const streamId = crypto.randomUUID();
       const firstTestCitation = {
         id: 'some-id-1',
         title: 'Some Title 1',
         uri: 'https://www.coveo.com',
         permanentid: 'some-permanent-id-1',
-        clickUri: inactiveLink,
+        clickUri: exampleLinkUrl,
+        text: 'example text 1',
       };
       const secondTestCitation = {
         id: 'some-id-2',
         title: 'Some Title 2',
         uri: 'https://www.coveo.com',
         permanentid: 'some-permanent-id-2',
-        clickUri: inactiveLink,
+        clickUri: exampleLinkUrl,
+        text: 'example text 2',
       };
       const testCitations = [firstTestCitation, secondTestCitation];
       const testMessagePayload = {
@@ -418,6 +469,38 @@ describe('quantic-generated-answer', () => {
           Expect.citationTitleContains(index, citation.title);
           Expect.citationNumberContains(index, `${index + 1}`);
           Expect.citationLinkContains(index, citation.clickUri);
+        });
+      });
+
+      describe('hovering over a generated answer citation', () => {
+        const hoveredCitationIndex = 0;
+
+        beforeEach(() => {
+          cy.clock(0, ['Date']);
+        });
+
+        it('should properly display the tooltip', () => {
+          Expect.displayCitations(true);
+          testCitations.forEach((citation, index) => {
+            Expect.citationTooltipIsDisplayed(index, false);
+            Actions.hoverOverCitation(index);
+            Expect.citationTooltipIsDisplayed(index, true);
+            Expect.citationTooltipUrlContains(index, citation.clickUri);
+            Expect.citationTooltipTitleContains(index, citation.title);
+            Expect.citationTooltipTextContains(index, citation.text);
+          });
+        });
+
+        it('should log the analytics only after hovering more than 1000ms', () => {
+          Expect.citationTooltipIsDisplayed(hoveredCitationIndex, false);
+
+          Actions.hoverOverCitation(0);
+          Expect.citationTooltipIsDisplayed(hoveredCitationIndex, true);
+
+          cy.tick(1000).invoke('restore');
+          Actions.stopHoverOverCitation(0);
+          Expect.logHoverGeneratedAnswerSource(streamId, testCitations[0]);
+          Expect.citationTooltipIsDisplayed(hoveredCitationIndex, false);
         });
       });
 

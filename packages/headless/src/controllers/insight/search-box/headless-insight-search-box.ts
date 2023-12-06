@@ -45,6 +45,7 @@ export function buildSearchBox(
     ...props,
     executeSearchActionCreator: executeSearch,
     fetchQuerySuggestionsActionCreator: fetchQuerySuggestions,
+    isNextAnalyticsReady: false,
   });
 
   return {

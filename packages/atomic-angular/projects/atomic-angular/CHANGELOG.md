@@ -1,3 +1,15 @@
+# 2.18.0 (2023-11-29)
+
+### Features
+
+- **doc:** generate documentation for generated answer in headless, atomic and quantic ([#3397](https://github.com/coveo/ui-kit/issues/3397)) ([c5df083](https://github.com/coveo/ui-kit/commits/c5df0835dde13ea54376a04ba4945427ac7155e9))
+
+## 2.17.2 (2023-11-02)
+
+### Features
+
+- **atomic:** add `resultsMustMatch` option to facet components ([#3169](https://github.com/coveo/ui-kit/issues/3169)) ([6a4581a](https://github.com/coveo/ui-kit/commits/6a4581aba955923d3e10c07fece3b7f28bf0074b))
+
 ## 2.16.2 (2023-10-25)
 
 ## 2.16.1 (2023-10-18)
