@@ -1,21 +1,33 @@
 import {buildMockSearchAppEngine} from '../../test';
-import {logInterfaceChange} from '../analytics/analytics-actions';
+import {
+  interfaceChange,
+  logInterfaceChange,
+} from '../analytics/analytics-actions';
 import {LegacySearchAction} from '../analytics/analytics-utils';
 import {
   logFacetClearAll,
   logFacetDeselect,
   logFacetSelect,
   logFacetExclude,
+  facetDeselect,
+  facetClearAll,
+  facetExclude,
 } from '../facets/facet-set/facet-set-analytics-actions';
 import {
   logPageNumber,
   logPagerResize,
 } from '../pagination/pagination-analytics-actions';
 import {logSearchboxSubmit} from '../query/query-analytics-actions';
-import {logResultsSort} from '../sort-criteria/sort-criteria-analytics-actions';
-import {legacyLogParametersChange} from './search-parameter-analytics-actions';
+import {
+  logResultsSort,
+  resultsSort,
+} from '../sort-criteria/sort-criteria-analytics-actions';
+import {
+  legacyLogParametersChange,
+  parametersChange,
+} from './search-parameter-analytics-actions';
 
-describe('logParametersChange', () => {
+describe('legacyLogParametersChange', () => {
   function expectIdenticalActionType(
     action1: LegacySearchAction,
     action2: LegacySearchAction
@@ -54,13 +66,13 @@ describe('logParametersChange', () => {
     );
   });
 
-  testFacetSelectLogging('f', expectIdenticalActionType);
+  legacyTestFacetSelectLogging('f', expectIdenticalActionType);
 
-  testFacetSelectLogging('af', expectIdenticalActionType);
+  legacyTestFacetSelectLogging('af', expectIdenticalActionType);
 
-  testFacetSelectLogging('cf', expectIdenticalActionType);
+  legacyTestFacetSelectLogging('cf', expectIdenticalActionType);
 
-  testFacetExcludeLogging(expectIdenticalActionType);
+  legacyTestFacetExcludeLogging(expectIdenticalActionType);
 
   it('should log a generic #logInterfaceChange when an unmanaged parameter', () => {
     expectIdenticalActionType(
@@ -70,14 +82,14 @@ describe('logParametersChange', () => {
   });
 });
 
-function testFacetSelectLogging(
+function legacyTestFacetSelectLogging(
   parameter: string,
   expectIdenticalActionType: (
     action1: LegacySearchAction,
     action2: LegacySearchAction
   ) => void
 ) {
-  testFacetLogging(parameter, expectIdenticalActionType);
+  legacyTestFacetLogging(parameter, expectIdenticalActionType);
 
   it(`should log #logFacetSelect when an ${parameter} parameter is added`, () => {
     expectIdenticalActionType(
@@ -97,13 +109,13 @@ function testFacetSelectLogging(
   });
 }
 
-function testFacetExcludeLogging(
+function legacyTestFacetExcludeLogging(
   expectIdenticalActionType: (
     action1: LegacySearchAction,
     action2: LegacySearchAction
   ) => void
 ) {
-  testFacetLogging('fExcluded', expectIdenticalActionType);
+  legacyTestFacetLogging('fExcluded', expectIdenticalActionType);
 
   it('should log #logFacetSelect when an fExcluded parameter is added', () => {
     expectIdenticalActionType(
@@ -123,7 +135,7 @@ function testFacetExcludeLogging(
   });
 }
 
-function testFacetLogging(
+function legacyTestFacetLogging(
   parameter: string,
   expectIdenticalActionType: (
     action1: LegacySearchAction,
@@ -155,5 +167,93 @@ function testFacetLogging(
       ),
       logFacetDeselect({facetId: 'author', facetValue: 'Orwell'})
     );
+  });
+}
+
+// --------------------- KIT-2859 : Everything above this will get deleted ! :) ---------------------
+
+describe('parametersChange', () => {
+  it('should log #logSearchboxSubmit when #q parameter changes', () => {
+    // const action = parametersChange({}, {q: 'test'});
+    // expect(action).toEqual(logSearchboxSubmit());
+  });
+
+  it('should log #resultsSort when #sortCriteria parameter changes', () => {
+    const action = parametersChange({}, {sortCriteria: 'size ascending'});
+
+    expect(action.actionCause).toEqual(resultsSort().actionCause);
+  });
+
+  it('should log #logPageNumber when #firstResult parameter changes', () => {
+    // expectIdenticalActionType(
+    //   legacyLogParametersChange({}, {firstResult: 10}),
+    //   logPageNumber()
+    // );
+  });
+
+  it('should log #logPagerResize when #firstResult parameter changes', () => {
+    // expectIdenticalActionType(
+    //   legacyLogParametersChange({}, {numberOfResults: 25}),
+    //   logPagerResize()
+    // );
+  });
+
+  testFacetSelectLogging('f');
+
+  testFacetSelectLogging('af');
+
+  testFacetSelectLogging('cf');
+
+  testFacetExcludeLogging();
+
+  it('should log a generic #logInterfaceChange when an unmanaged parameter', () => {
+    const action = parametersChange({}, {cq: 'hello'});
+
+    expect(action.actionCause).toEqual(interfaceChange().actionCause);
+  });
+});
+
+function testFacetSelectLogging(parameter: string) {
+  it(`should log #logFacetDeselect when an ${parameter} parameter with a single value is removed`, () => {
+    const action = parametersChange({[parameter]: {author: ['Cervantes']}}, {});
+
+    expect(action.actionCause).toEqual(facetDeselect('s', 's').actionCause);
+  });
+
+  it(`should log #logFacetClearAll when an ${parameter} parameter with multiple values is removed`, () => {
+    const action = parametersChange(
+      {[parameter]: {author: ['Cervantes', 'Orwell']}},
+      {}
+    );
+
+    expect(action.actionCause).toEqual(facetClearAll('s').actionCause);
+  });
+
+  it(`should log #logFacetDeselect when an ${parameter} parameter is modified & a value removed`, () => {
+    const action = parametersChange(
+      {[parameter]: {author: ['Cervantes', 'Orwell']}},
+      {[parameter]: {author: ['Cervantes']}}
+    );
+
+    expect(action.actionCause).toEqual(facetDeselect('s', 's').actionCause);
+  });
+}
+
+function testFacetExcludeLogging() {
+  testFacetSelectLogging('fExcluded');
+
+  it('should log #logFacetSelect when an fExcluded parameter is added', () => {
+    const action = parametersChange({}, {fExcluded: {author: ['Cervantes']}});
+
+    expect(action.actionCause).toEqual(facetExclude('s', 's').actionCause);
+  });
+
+  it('should log #logFacetSelect when an fExcluded parameter is modified & a value added', () => {
+    const action = parametersChange(
+      {fExcluded: {author: ['Cervantes']}},
+      {fExcluded: {author: ['Cervantes', 'Orwell']}}
+    );
+
+    expect(action.actionCause).toEqual(facetExclude('s', 's').actionCause);
   });
 }
