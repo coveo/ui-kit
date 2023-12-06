@@ -108,13 +108,13 @@ export type CoreCommerceFacet<
    *
    * @param value - The facet value to evaluate.
    */
-  isValueSelected(value: T1): boolean;
+  isValueSelected(value: T2): boolean;
   /**
    * Whether the specified facet value is excluded.
    *
    * @param value - The facet value to evaluate.
    */
-  isValueExcluded(value: T1): boolean;
+  isValueExcluded(value: T2): boolean;
   /**
    * The state of this commerce facet controller instance.
    */
@@ -215,11 +215,11 @@ export function buildCoreCommerceFacet<
       this.toggleExclude(selection);
     },
 
-    isValueSelected: (value: T1) => {
+    isValueSelected: (value: T2) => {
       return value.state === 'selected';
     },
 
-    isValueExcluded: (value: T1) => {
+    isValueExcluded: (value: T2) => {
       return value.state === 'excluded';
     },
 
