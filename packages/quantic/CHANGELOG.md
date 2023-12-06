@@ -1,3 +1,15 @@
+# 2.41.0 (2023-12-06)
+
+### Bug Fixes
+
+- **quantic:** Fix few issues related to overflow in mobile view ([#3454](https://github.com/coveo/ui-kit/issues/3454)) ([268edb9](https://github.com/coveo/ui-kit/commits/268edb9ce08d1bfc63251a6c08a2e4ac43265843))
+- **quantic:** Fix issue where tooltip is displayed under elements above the generated answer component ([#3455](https://github.com/coveo/ui-kit/issues/3455)) ([8d747a0](https://github.com/coveo/ui-kit/commits/8d747a06ed3e05399d01d366b6289780b5e02898))
+- **quantic:** issue fixed with negative generated answer feedback modal ([#3433](https://github.com/coveo/ui-kit/issues/3433)) ([eb20591](https://github.com/coveo/ui-kit/commits/eb2059190308ff1ad4bb8e4e2447a406f322e21a))
+
+### Features
+
+- **quantic:** Better handling of Salesforce Result links ([#3427](https://github.com/coveo/ui-kit/issues/3427)) ([020f87e](https://github.com/coveo/ui-kit/commits/020f87ea1fead4cea6ad87dbf63441fbbe118774))
+
 # 2.40.0 (2023-11-29)
 
 ### Bug Fixes
