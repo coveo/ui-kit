@@ -1,10 +1,13 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {
   deselectAllFacetValues,
+  toggleExcludeFacetValue,
   toggleSelectFacetValue,
 } from '../../facets/facet-set/facet-set-actions';
-import {toggleSelectDateFacetValue} from '../../facets/range-facets/date-facet-set/date-facet-actions';
-import {toggleSelectNumericFacetValue} from '../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {
+  toggleExcludeNumericFacetValue,
+  toggleSelectNumericFacetValue,
+} from '../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {fetchProductListing} from '../product-listing/product-listing-actions';
 import {nextPage, previousPage, selectPage} from './pagination-actions';
 import {
@@ -45,10 +48,13 @@ export const paginationReducer = createReducer(
       .addCase(toggleSelectFacetValue, (state) => {
         handlePaginationReset(state);
       })
-      .addCase(toggleSelectDateFacetValue, (state) => {
+      .addCase(toggleExcludeFacetValue, (state) => {
         handlePaginationReset(state);
       })
       .addCase(toggleSelectNumericFacetValue, (state) => {
+        handlePaginationReset(state);
+      })
+      .addCase(toggleExcludeNumericFacetValue, (state) => {
         handlePaginationReset(state);
       });
   }
