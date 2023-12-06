@@ -1,3 +1,4 @@
+import {type Draft as WritableDraft} from '@reduxjs/toolkit';
 import {createReducer} from '@reduxjs/toolkit';
 import {
   clearQuerySuggest,
@@ -5,8 +6,9 @@ import {
   registerQuerySuggest,
   unregisterQuerySuggest,
 } from './query-suggest-actions';
+import { fetchQuerySuggestions as fetchCommerceQuerySuggestions } from '../commerce/query-suggest/query-suggest-actions';
 import {
-  getQuerySuggestSetInitialState,
+  getQuerySuggestSetInitialState, QuerySuggestSet,
   QuerySuggestState,
 } from './query-suggest-state';
 
@@ -26,16 +28,7 @@ export const querySuggestReducer = createReducer(
       .addCase(unregisterQuerySuggest, (state, action) => {
         delete state[action.payload.id];
       })
-      .addCase(fetchQuerySuggestions.pending, (state, action) => {
-        const querySuggest = state[action.meta.arg.id];
-
-        if (!querySuggest) {
-          return;
-        }
-
-        querySuggest.currentRequestId = action.meta.requestId;
-        querySuggest.isLoading = true;
-      })
+      .addCase(fetchQuerySuggestions.pending, handleFetchPending)
       .addCase(fetchQuerySuggestions.fulfilled, (state, action) => {
         const querySuggest = state[action.meta.arg.id];
 
@@ -57,16 +50,35 @@ export const querySuggestReducer = createReducer(
         querySuggest.isLoading = false;
         querySuggest.error = null;
       })
-      .addCase(fetchQuerySuggestions.rejected, (state, action) => {
+      .addCase(fetchQuerySuggestions.rejected, handleFetchRejected)
+      .addCase(fetchCommerceQuerySuggestions.pending, handleFetchPending)
+      .addCase(fetchCommerceQuerySuggestions.fulfilled, (state, action) => {
         const querySuggest = state[action.meta.arg.id];
 
-        if (!querySuggest) {
+        if (
+          !querySuggest ||
+          action.meta.requestId !== querySuggest.currentRequestId
+        ) {
           return;
         }
 
-        querySuggest.error = action.payload || null;
+        const {query} = action.payload;
+        if (query) {
+          querySuggest.partialQueries.push(
+            query.replace(/;/, encodeURIComponent(';'))
+          );
+        }
+        querySuggest.responseId = action.payload.responseId;
+        querySuggest.completions = action.payload.completions.map((completion) => ({
+          expression: completion.expression,
+          highlighted: completion.highlighted,
+          score: 0,
+          executableConfidence: 0,
+        }));
         querySuggest.isLoading = false;
+        querySuggest.error = null;
       })
+      .addCase(fetchCommerceQuerySuggestions.rejected, handleFetchRejected)
       .addCase(clearQuerySuggest, (state, action) => {
         const querySuggest = state[action.payload.id];
 
@@ -94,4 +106,28 @@ function buildQuerySuggest(
     isLoading: false,
     ...config,
   };
+}
+
+// TODO(nico): Use actual type for action
+function handleFetchPending(state: WritableDraft<QuerySuggestSet>, action: any)  {
+  const querySuggest = state[action.meta.arg.id];
+
+  if (!querySuggest) {
+    return;
+  }
+
+  querySuggest.currentRequestId = action.meta.requestId;
+  querySuggest.isLoading = true;
+}
+
+// TODO(nico): Use actual type for action
+function handleFetchRejected(state: WritableDraft<QuerySuggestSet>, action: any) {
+  const querySuggest = state[action.meta.arg.id];
+
+  if (!querySuggest) {
+    return;
+  }
+
+  querySuggest.error = action.payload || null;
+  querySuggest.isLoading = false;
 }

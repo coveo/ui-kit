@@ -305,7 +305,7 @@ export function buildCoreSearchBox(
   };
 }
 
-function getSuggestions(
+export function getSuggestions(
   state: QuerySuggestState | undefined,
   highlightOptions: SuggestionHighlightingOptions
 ) {

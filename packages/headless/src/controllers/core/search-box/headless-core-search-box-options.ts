@@ -54,7 +54,7 @@ export const defaultSearchBoxOptions: Required<DefaultSearchBoxOptions> = {
   clearFilters: true,
 };
 
-const openCloseDelimitersDefinition = {
+export const openCloseDelimitersDefinition = {
   open: new StringValue(),
   close: new StringValue(),
 };

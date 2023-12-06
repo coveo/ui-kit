@@ -350,6 +350,13 @@ export interface CommerceQuerySection {
   commerceQuery: CommerceQueryState;
 }
 
+export interface CommerceQuerySuggestionSection {
+  /**
+   * The query suggestions returned by Coveo ML.
+   */
+  querySuggest: QuerySuggestSet;
+}
+
 export interface StructuredSortSection {
   /**
    * The information related to sort when using a structured sort format.

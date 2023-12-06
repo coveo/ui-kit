@@ -14,6 +14,7 @@ import {
 } from './facet-set-state';
 import {CommerceFacetRequest} from './interfaces/request';
 import {AnyFacetResponse, FacetResponse} from './interfaces/response';
+import {updateFacetAutoSelection} from '../../../facets/generic/facet-actions';
 
 export const commerceFacetSetReducer = createReducer(
   getCommerceFacetSetInitialState(),
@@ -90,7 +91,12 @@ export const commerceFacetSetReducer = createReducer(
         }
 
         facetRequest.isFieldExpanded = isFieldExpanded;
-      });
+      })
+      .addCase(updateFacetAutoSelection, (state, action) =>
+        Object.values(state).forEach((slice) => {
+          slice.request.preventAutoSelect = !action.payload.allow;
+        })
+      );
   }
 );
 
