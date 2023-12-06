@@ -189,7 +189,7 @@ export class AtomicSegmentedFacet implements InitializableComponent {
       facetValue.value,
       this.bindings.i18n
     );
-    const isSelected = facetValue.state === 'selected';
+    const isSelected = facetValue.state !== 'idle';
 
     return (
       <FacetSegmentedValue

@@ -7,7 +7,7 @@ import {
   logCustomEvent,
   LogCustomEventActionCreatorPayload,
 } from './analytics-actions';
-import {ClickAction, CustomAction, SearchAction} from './analytics-utils';
+import {ClickAction, CustomAction, LegacySearchAction} from './analytics-utils';
 
 export type {
   LogSearchEventActionCreatorPayload,
@@ -25,7 +25,9 @@ export interface GenericAnalyticsActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  logSearchEvent(payload: LogSearchEventActionCreatorPayload): SearchAction;
+  logSearchEvent(
+    payload: LogSearchEventActionCreatorPayload
+  ): LegacySearchAction;
 
   /**
    * Creates a click analytics event.

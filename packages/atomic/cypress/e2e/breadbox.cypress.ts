@@ -24,6 +24,7 @@ import {
 } from './facets/color-facet/color-facet-actions';
 import * as ColorFacetAssertions from './facets/color-facet/color-facet-assertions';
 import {
+  excludeIdleCheckboxValueAt,
   selectIdleCheckboxValueAt,
   selectIdleLinkValueAt,
 } from './facets/facet-common-actions';
@@ -265,6 +266,31 @@ describe('Breadbox Test Suites', () => {
         BreadboxAssertions.assertDisplayBreadcrumbShowMore(true);
         BreadboxAssertions.assertDisplayAllBreadcrumb(false);
       });
+    });
+  });
+
+  describe('when excluding from a standard facet', () => {
+    const selectionIndex = 2;
+
+    function setupFacetWithMultipleExcludedValues() {
+      new TestFixture()
+        .with(addBreadbox())
+        .with(addFacet({field: 'author', label, 'enable-exclusion': 'true'}))
+        .init();
+      excludeIdleCheckboxValueAt(FacetSelectors, selectionIndex);
+    }
+
+    describe('verify rendering', () => {
+      beforeEach(setupFacetWithMultipleExcludedValues);
+      CommonAssertions.assertAccessibility(breadboxComponent);
+      BreadboxAssertions.assertDisplayBreadcrumb(true);
+      BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
+      BreadboxAssertions.assertBreadcrumbLabel(breadboxLabel);
+      BreadboxAssertions.assertExcludedCheckboxFacetsInBreadcrumb(
+        FacetSelectors
+      );
+      BreadboxAssertions.assertBreadcrumbDisplayLength(1);
+      BreadboxAssertions.assertDisplayBreadcrumbShowMore(false);
     });
   });
 

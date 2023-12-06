@@ -9,31 +9,49 @@ import {
 
 export function selectIdleCheckboxValueAt(
   FacetWithCheckboxSelector: FacetWithCheckboxSelector,
-  index: number
+  index: number,
+  isExclusionEnabled = false
 ) {
-  FacetWithCheckboxSelector.idleCheckboxValueLabel()
+  FacetWithCheckboxSelector.idleCheckboxValueLabel(isExclusionEnabled)
     .eq(index)
     .then((idleCheckboxValueLabel) => {
-      const hasAriaLabel = !!idleCheckboxValueLabel.attr('aria-label');
-      const text = hasAriaLabel
-        ? idleCheckboxValueLabel.attr('aria-label')!
-        : idleCheckboxValueLabel.text();
-      FacetWithCheckboxSelector.idleCheckboxValueLabel()
-        .filter(
-          hasAriaLabel ? `[aria-label="${text}"]` : `:contains("${text}")`
-        )
-        .its('length')
-        .should(
-          'eq',
-          1,
-          'There should not be any other value similar to this one.'
-        );
+      const text = ensureLabelUniqueness(
+        FacetWithCheckboxSelector,
+        idleCheckboxValueLabel
+      );
       cy.wrap(idleCheckboxValueLabel).click().wait(2000);
       FacetWithCheckboxSelector.checkboxValueWithText(text).should(
         'have.attr',
-        'aria-checked',
+        isExclusionEnabled ? 'aria-pressed' : 'aria-checked',
         'true'
       );
+    });
+}
+
+export function excludeIdleCheckboxValueAt(
+  FacetWithCheckboxSelector: FacetWithCheckboxSelector,
+  index: number
+) {
+  const exclusionEnabled = true;
+  FacetWithCheckboxSelector.idleCheckboxValueLabel(exclusionEnabled)
+    .eq(index)
+    .then((idleCheckboxValueLabel) => {
+      const text = ensureLabelUniqueness(
+        FacetWithCheckboxSelector,
+        idleCheckboxValueLabel,
+        exclusionEnabled
+      );
+
+      FacetWithCheckboxSelector.excludeButton()
+        .eq(index)
+        .then((excludeButton) => {
+          cy.wrap(excludeButton).click({force: true}).wait(2000);
+          FacetWithCheckboxSelector.checkboxValueWithText(text).should(
+            'have.attr',
+            'aria-pressed',
+            'mixed'
+          );
+        });
     });
 }
 
@@ -132,4 +150,25 @@ export function pressClearSearchButton(
 ) {
   FacetWithSearchSelector.searchClearButton().click();
   FacetWithSearchSelector.searchClearButton().should('not.exist');
+}
+
+function ensureLabelUniqueness(
+  FacetWithCheckboxSelector: FacetWithCheckboxSelector,
+  idleCheckboxValueLabel: JQuery<HTMLElement>,
+  isExclusionEnabled = false
+) {
+  const hasAriaLabel = !!idleCheckboxValueLabel.attr('aria-label');
+  const text = hasAriaLabel
+    ? idleCheckboxValueLabel.attr('aria-label')!
+    : idleCheckboxValueLabel.text();
+
+  FacetWithCheckboxSelector.idleCheckboxValueLabel(isExclusionEnabled)
+    .filter(hasAriaLabel ? `[aria-label="${text}"]` : `:contains("${text}")`)
+    .its('length')
+    .should(
+      'eq',
+      1,
+      'There should not be any other value similar to this one.'
+    );
+  return text;
 }

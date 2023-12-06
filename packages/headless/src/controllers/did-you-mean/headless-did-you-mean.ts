@@ -1,11 +1,12 @@
-import {SearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {
   QueryCorrection,
   WordCorrection,
 } from '../../api/search/search/query-corrections';
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {SearchPageEvents} from '../../features/analytics/search-action-cause';
-import {logDidYouMeanClick} from '../../features/did-you-mean/did-you-mean-analytics-actions';
+import {
+  didYouMeanClick,
+  logDidYouMeanClick,
+} from '../../features/did-you-mean/did-you-mean-analytics-actions';
 import {executeSearch} from '../../features/search/search-actions';
 import {
   buildCoreDidYouMean,
@@ -38,11 +39,7 @@ export function buildDidYouMean(engine: SearchEngine): DidYouMean {
       dispatch(
         executeSearch({
           legacy: logDidYouMeanClick(),
-          next: {
-            actionCause: SearchPageEvents.didyoumeanClick,
-            getEventExtraPayload: (state) =>
-              new SearchAnalyticsProvider(() => state).getBaseMetadata(),
-          },
+          next: didYouMeanClick(),
         })
       );
     },

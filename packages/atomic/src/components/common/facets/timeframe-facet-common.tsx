@@ -217,7 +217,7 @@ export class TimeframeFacetCommon {
     initializePopover(this.props.host, {
       ...facetInfo,
       hasValues: () => this.hasValues,
-      numberOfSelectedValues: () => this.numberOfSelectedValues,
+      numberOfActiveValues: () => this.numberOfSelectedValues,
     });
 
     if (this.filter) {
@@ -279,6 +279,7 @@ export class TimeframeFacetCommon {
   private renderValue(facetValue: DateFacetValue) {
     const displayValue = this.formatFacetValue(facetValue);
     const isSelected = facetValue.state === 'selected';
+    const isExcluded = facetValue.state === 'excluded';
     return (
       <FacetValueLink
         displayValue={displayValue}
@@ -290,6 +291,7 @@ export class TimeframeFacetCommon {
         <FacetValueLabelHighlight
           displayValue={displayValue}
           isSelected={isSelected}
+          isExcluded={isExcluded}
         ></FacetValueLabelHighlight>
       </FacetValueLink>
     );
@@ -325,7 +327,7 @@ export class TimeframeFacetCommon {
           }
           this.facetForDateRange?.deselectAll();
         }}
-        numberOfSelectedValues={this.numberOfSelectedValues}
+        numberOfActiveValues={this.numberOfSelectedValues}
         isCollapsed={isCollapsed}
         headingLevel={this.props.headingLevel}
         onToggleCollapse={onToggleCollapse}
