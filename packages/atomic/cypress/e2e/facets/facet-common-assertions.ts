@@ -10,12 +10,20 @@ export interface BaseFacetSelector extends ComponentSelector {
 }
 
 export interface FacetWithCheckboxSelector extends ComponentSelector {
-  selectedCheckboxValue: () => Cypress.Chainable<JQuery<HTMLElement>>;
-  idleCheckboxValue: () => Cypress.Chainable<JQuery<HTMLElement>>;
+  selectedCheckboxValue: (
+    exclusionEnabled?: boolean
+  ) => Cypress.Chainable<JQuery<HTMLElement>>;
+  excludedCheckboxValue: () => Cypress.Chainable<JQuery<HTMLElement>>;
+  excludeButton: () => Cypress.Chainable<JQuery<HTMLElement>>;
+  idleCheckboxValue: (
+    exclusionEnabled?: boolean
+  ) => Cypress.Chainable<JQuery<HTMLElement>>;
   checkboxValueWithText: (
     text: string
   ) => Cypress.Chainable<JQuery<HTMLElement>>;
-  idleCheckboxValueLabel: () => Cypress.Chainable<JQuery<HTMLElement>>;
+  idleCheckboxValueLabel: (
+    exclusionEnabled?: boolean
+  ) => Cypress.Chainable<JQuery<HTMLElement>>;
 }
 
 export interface FacetWithLinkSelector extends ComponentSelector {
@@ -71,6 +79,30 @@ export function assertDisplayValues(
 ) {
   it(`${should(display)} display facet values`, () => {
     BaseFacetSelector.values().should(display ? 'be.visible' : 'not.exist');
+  });
+}
+
+export function assertDisplayTwoStateCheckbox(
+  facetWithCheckboxSelector: FacetWithCheckboxSelector
+) {
+  it('Should display two state checkbox', () => {
+    facetWithCheckboxSelector.idleCheckboxValue(false);
+  });
+}
+
+export function assertDisplayTriStateCheckbox(
+  facetWithCheckboxSelector: FacetWithCheckboxSelector
+) {
+  it('Should display tri state checkbox', () => {
+    facetWithCheckboxSelector.idleCheckboxValue(true);
+  });
+}
+
+export function assertDisplayExcludeButton(
+  facetWithCheckboxSelector: FacetWithCheckboxSelector
+) {
+  it('Should display exclude button on facet values', () => {
+    facetWithCheckboxSelector.excludeButton().should('exist');
   });
 }
 

@@ -223,7 +223,7 @@ export class AtomicRatingRangeFacet
     initializePopover(this.host, {
       ...facetInfo,
       hasValues: () => !!this.valuesToRender.length,
-      numberOfSelectedValues: () => this.numberOfSelectedValues,
+      numberOfActiveValues: () => this.numberOfSelectedValues,
     });
   }
 
@@ -295,7 +295,7 @@ export class AtomicRatingRangeFacet
           this.focusTarget.focusAfterSearch();
           this.facet.deselectAll();
         }}
-        numberOfSelectedValues={this.numberOfSelectedValues}
+        numberOfActiveValues={this.numberOfSelectedValues}
         isCollapsed={this.isCollapsed}
         headingLevel={this.headingLevel}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
