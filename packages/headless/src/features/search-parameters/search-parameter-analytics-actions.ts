@@ -15,7 +15,7 @@ import {
   logPagerResize,
 } from '../pagination/pagination-analytics-actions';
 
-export function logParametersChange(
+export function legacyLogParametersChange(
   previousParameters: SearchParameters,
   newParameters: SearchParameters
 ): LegacySearchAction {
