@@ -7,11 +7,11 @@ import {
   makeAnalyticsAction,
   partialDocumentInformation,
   partialRecommendationInformation,
-  SearchAction,
+  LegacySearchAction,
   validateResultPayload,
 } from '../analytics/analytics-utils';
 
-export const logRecommendationUpdate = (): SearchAction =>
+export const logRecommendationUpdate = (): LegacySearchAction =>
   makeAnalyticsAction(
     'analytics/recommendation/update',
     (client) => client.makeRecommendationInterfaceLoad(),

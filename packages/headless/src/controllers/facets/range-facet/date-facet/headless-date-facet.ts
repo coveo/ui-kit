@@ -1,7 +1,7 @@
-import {SearchAnalyticsProvider} from '../../../../api/analytics/search-analytics';
 import {SearchEngine} from '../../../../app/search-engine/search-engine';
-import {SearchPageEvents} from '../../../../features/analytics/search-action-cause';
 import {
+  facetClearAll,
+  facetUpdateSort,
   logFacetClearAll,
   logFacetUpdateSort,
 } from '../../../../features/facets/facet-set/facet-set-analytics-actions';
@@ -59,13 +59,7 @@ export function buildDateFacet(
       dispatch(
         executeSearch({
           legacy: logFacetClearAll(getFacetId()),
-          next: {
-            actionCause: SearchPageEvents.facetClearAll,
-            getEventExtraPayload: (state) =>
-              new SearchAnalyticsProvider(() => state).getFacetClearAllMetadata(
-                getFacetId()
-              ),
-          },
+          next: facetClearAll(getFacetId()),
         })
       );
     },
@@ -75,14 +69,7 @@ export function buildDateFacet(
       dispatch(
         executeSearch({
           legacy: logFacetUpdateSort({facetId: getFacetId(), criterion}),
-          next: {
-            actionCause: SearchPageEvents.facetUpdateSort,
-            getEventExtraPayload: (state) =>
-              new SearchAnalyticsProvider(() => state).getFacetSortMetadata(
-                getFacetId(),
-                criterion
-              ),
-          },
+          next: facetUpdateSort(getFacetId(), criterion),
         })
       );
     },

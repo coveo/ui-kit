@@ -6,6 +6,7 @@ import {
   FacetManager,
   FacetManagerState,
   buildFacetManager,
+  FacetValueState,
 } from '@coveo/headless';
 import {Component, h, State, Element, VNode, Prop} from '@stencil/core';
 import CloseIcon from '../../../images/close.svg';
@@ -24,6 +25,7 @@ interface Breadcrumb {
   facetId: string;
   label: string;
   formattedValue: string[];
+  state?: FacetValueState;
   content?: VNode;
   deselect: () => void;
 }
@@ -223,6 +225,15 @@ export class AtomicBreadbox implements InitializableComponent {
     index: number,
     totalBreadcrumbs: number
   ) {
+    const classNames = [
+      'py-2',
+      'px-3',
+      'flex',
+      'items-center',
+      'btn-pill',
+      'group',
+    ];
+
     const fullValue = Array.isArray(breadcrumb.formattedValue)
       ? breadcrumb.formattedValue.join(SEPARATOR)
       : breadcrumb.formattedValue;
@@ -231,17 +242,16 @@ export class AtomicBreadbox implements InitializableComponent {
       : breadcrumb.formattedValue;
     const title = `${breadcrumb.label}: ${fullValue}`;
     const isLastBreadcrumb = totalBreadcrumbs === 1;
+    const isExclusion = breadcrumb.state === 'excluded';
+    const activeColor = isExclusion ? 'error' : 'primary';
 
     return (
       <li class="breadcrumb" key={value}>
         <Button
           part="breadcrumb-button"
-          style="outline-bg-neutral"
-          class="py-2 px-3 flex items-center btn-pill group"
+          style={isExclusion ? 'outline-error' : 'outline-bg-neutral'}
+          class={classNames.join(' ')}
           title={title}
-          ariaLabel={this.bindings.i18n.t('remove-filter-on', {
-            value: title,
-          })}
           onClick={() => {
             if (isLastBreadcrumb) {
               this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
@@ -263,13 +273,17 @@ export class AtomicBreadbox implements InitializableComponent {
         >
           <span
             part="breadcrumb-label"
-            class="max-w-snippet truncate text-neutral-dark mr-0.5 group-hover:text-primary group-focus-visible:text-primary"
+            class={`max-w-snippet truncate group-hover:text-${activeColor} group-focus-visible:text-${activeColor} ${breadcrumb.state}`}
           >
             {this.bindings.i18n.t('with-colon', {text: breadcrumb.label})}
           </span>
           <span
             part="breadcrumb-value"
-            class={breadcrumb.content ? '' : 'max-w-snippet truncate'}
+            class={
+              breadcrumb.content
+                ? ''
+                : `max-w-snippet truncate ${breadcrumb.state}`
+            }
           >
             {breadcrumb.content ?? value}
           </span>
@@ -378,6 +392,7 @@ export class AtomicBreadbox implements InitializableComponent {
       .map(({value, facetId, field}) => ({
         facetId,
         label: this.bindings.store.state.facets[facetId]?.label(),
+        state: value.value.state,
         deselect: value.deselect,
         formattedValue: [
           getFieldValueCaption(field, value.value.value, this.bindings.i18n),
@@ -407,6 +422,7 @@ export class AtomicBreadbox implements InitializableComponent {
       .map(({value, facetId}) => ({
         facetId,
         label: this.bindings.store.state.numericFacets[facetId].label(),
+        state: value.value.state,
         deselect: value.deselect,
         formattedValue: [
           this.bindings.store.state.numericFacets[facetId].format(value.value),
@@ -426,6 +442,7 @@ export class AtomicBreadbox implements InitializableComponent {
       .map(({value, facetId}) => ({
         facetId,
         label: this.bindings.store.state.dateFacets[facetId].label(),
+        state: value.value.state,
         deselect: value.deselect,
         formattedValue: [
           this.bindings.store.state.dateFacets[facetId].format(value.value),
@@ -440,6 +457,7 @@ export class AtomicBreadbox implements InitializableComponent {
       )
       .map(({value, facetId, field, label}) => ({
         facetId,
+        state: value.value.state,
         label: label ? label : field,
         deselect: value.deselect,
         formattedValue: [

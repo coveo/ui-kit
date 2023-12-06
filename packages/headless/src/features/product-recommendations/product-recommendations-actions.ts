@@ -24,7 +24,7 @@ import {
   requiredNonEmptyString,
   nonEmptyString,
 } from '../../utils/validate-payload';
-import {SearchAction} from '../analytics/analytics-utils';
+import {LegacySearchAction} from '../analytics/analytics-utils';
 import {logProductRecommendations} from './product-recommendations-analytics.actions';
 
 interface ResultWithChildren extends Result {
@@ -44,7 +44,7 @@ export type StateNeededByGetProductRecommendations = ConfigurationSection &
 
 export interface GetProductRecommendationsThunkReturn {
   recommendations: ProductRecommendation[];
-  analyticsAction: SearchAction;
+  analyticsAction: LegacySearchAction;
   searchUid: string;
   duration: number;
 }
