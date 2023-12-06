@@ -1,10 +1,12 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {CoreEngine} from '../../..';
+import {SearchAnalyticsProvider} from '../../../api/analytics/search-analytics';
 import {configuration} from '../../../app/common-reducers';
 import {
   InsightAction,
   SearchAction,
 } from '../../../features/analytics/analytics-utils';
+import {SearchPageEvents} from '../../../features/analytics/search-action-cause';
 import {
   registerQuerySetQuery,
   updateQuerySetQuery,
@@ -268,6 +270,13 @@ export function buildCoreSearchBox(
       dispatch(selectQuerySuggestion({id, expression: value}));
       performSearch({
         legacy: logQuerySuggestionClick({id, suggestion: value}),
+        next: {
+          actionCause: SearchPageEvents.omniboxAnalytics,
+          getEventExtraPayload: (state) =>
+            new SearchAnalyticsProvider(
+              () => state
+            ).getOmniboxAnalyticsMetadata(id, value),
+        },
       }).then(() => {
         dispatch(clearQuerySuggest({id}));
       });

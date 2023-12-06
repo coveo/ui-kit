@@ -91,6 +91,13 @@
       "allowedVersions": "15.x"
     },
     {
+      "matchPackagePatterns": ["^@nrwl/devkit$"],
+      "groupName": "nx-devkit",
+      "groupSlug": "nx-devkit",
+      "rangeStrategy": "replace",
+      "allowedVersions": "16.x"
+    },
+    {
       "matchPackagePatterns": ["^cypress-split$"],
       "groupName": "Cypress Split",
       "groupSlug": "cypress-split",

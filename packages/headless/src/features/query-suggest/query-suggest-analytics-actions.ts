@@ -14,6 +14,7 @@ export interface LogQuerySuggestionClickActionCreatorPayload {
   suggestion: string;
 }
 
+//TODO: KIT-2859
 export const logQuerySuggestionClick = (
   payload: LogQuerySuggestionClickActionCreatorPayload
 ): SearchAction =>

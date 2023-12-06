@@ -1,10 +1,15 @@
+import {SearchAnalyticsProvider} from '../../../api/analytics/search-analytics';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
+import {SearchPageEvents} from '../../../features/analytics/search-action-cause';
 import {
   deselectAllAutomaticFacetValues,
   toggleSelectAutomaticFacetValue,
 } from '../../../features/facets/automatic-facet-set/automatic-facet-set-actions';
 import {logFacetClearAll} from '../../../features/facets/facet-set/facet-set-analytics-actions';
-import {getAnalyticsActionForToggleFacetSelect} from '../../../features/facets/facet-set/facet-set-utils';
+import {
+  getLegacyAnalyticsActionForToggleFacetSelect,
+  getAnalyticsActionForToggleFacetSelect,
+} from '../../../features/facets/facet-set/facet-set-utils';
 import {FacetValue} from '../../../features/facets/facet-set/interfaces/response';
 import {executeSearch} from '../../../features/search/search-actions';
 import {buildController} from '../../controller/headless-controller';
@@ -47,14 +52,29 @@ export function buildAutomaticFacet(
       dispatch(toggleSelectAutomaticFacetValue({field, selection}));
       dispatch(
         executeSearch({
-          legacy: getAnalyticsActionForToggleFacetSelect(field, selection),
+          legacy: getLegacyAnalyticsActionForToggleFacetSelect(
+            field,
+            selection
+          ),
+          next: getAnalyticsActionForToggleFacetSelect(field, selection),
         })
       );
     },
 
     deselectAll() {
       dispatch(deselectAllAutomaticFacetValues(field));
-      dispatch(executeSearch({legacy: logFacetClearAll(field)}));
+      dispatch(
+        executeSearch({
+          legacy: logFacetClearAll(field),
+          next: {
+            actionCause: SearchPageEvents.facetClearAll,
+            getEventExtraPayload: (state) =>
+              new SearchAnalyticsProvider(() => state).getFacetClearAllMetadata(
+                field
+              ),
+          },
+        })
+      );
     },
 
     get state() {

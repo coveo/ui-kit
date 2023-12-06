@@ -3,6 +3,6 @@
   "version": "1.0.0",
   "main": "pathToMain",
   "dependencies": {
-    "@salesforce/cli": "2.17.14"
+    "@salesforce/cli": "2.19.8"
   }
 }

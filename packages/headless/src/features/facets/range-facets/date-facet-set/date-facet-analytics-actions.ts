@@ -19,6 +19,7 @@ export interface LogDateFacetBreadcrumbActionCreatorPayload {
   selection: DateFacetValue;
 }
 
+//TODO: KIT-2859
 export const logDateFacetBreadcrumb = (
   payload: LogDateFacetBreadcrumbActionCreatorPayload
 ): SearchAction =>

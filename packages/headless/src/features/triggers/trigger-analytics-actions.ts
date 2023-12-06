@@ -27,6 +27,7 @@ export const logTriggerQuery = (): SearchAction =>
     return null;
   });
 
+//TODO: KIT-2859
 export const logUndoTriggerQuery = (
   payload: LogUndoTriggerQueryActionCreatorPayload
 ): SearchAction =>

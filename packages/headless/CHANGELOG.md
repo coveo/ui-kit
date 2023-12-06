@@ -1,3 +1,22 @@
+# 2.41.0 (2023-11-29)
+
+### Bug Fixes
+
+- decode HTML content ([#3436](https://github.com/coveo/ui-kit/issues/3436)) ([ac676c9](https://github.com/coveo/ui-kit/commits/ac676c9beeda18f72bcba8dacbecbe06207045e3))
+- **genai:** dispatch like and dislike properly ([#3393](https://github.com/coveo/ui-kit/issues/3393)) ([43ca99a](https://github.com/coveo/ui-kit/commits/43ca99a3be81fd2948d6eb457419d978255cd72f))
+- **genai:** feedback modal fixes ([#3414](https://github.com/coveo/ui-kit/issues/3414)) ([6c2ed62](https://github.com/coveo/ui-kit/commits/6c2ed629a75796b040dfa8ab5aba44deed91ae48))
+- **headless:** import correct analytics in product listing ([#3432](https://github.com/coveo/ui-kit/issues/3432)) ([4987aa2](https://github.com/coveo/ui-kit/commits/4987aa20da02e6fbab976134c640ca683fcb2fcd))
+
+### Features
+
+- **commerce:** create core facet generator, core facet, plp facet generator and plp facet for commerce ([#3389](https://github.com/coveo/ui-kit/issues/3389)) ([b5e479b](https://github.com/coveo/ui-kit/commits/b5e479b673e06b5eea850bddedc0d8646ec0eae0)), closes [#3392](https://github.com/coveo/ui-kit/issues/3392)
+- **commerce:** create very basic search controller, actions and slice ([#3400](https://github.com/coveo/ui-kit/issues/3400)) ([2432693](https://github.com/coveo/ui-kit/commits/2432693a597e89fb128bb1a3ddb71c07a469fceb))
+- **doc:** generate documentation for generated answer in headless, atomic and quantic ([#3397](https://github.com/coveo/ui-kit/issues/3397)) ([c5df083](https://github.com/coveo/ui-kit/commits/c5df0835dde13ea54376a04ba4945427ac7155e9))
+- **headless:** generated answer insight analytics actions created ([#3416](https://github.com/coveo/ui-kit/issues/3416)) ([8233b30](https://github.com/coveo/ui-kit/commits/8233b3054a874e65e04707ec5d3f5f10ed630053))
+- **relay:** add support for analytics/result/open ([#3282](https://github.com/coveo/ui-kit/issues/3282)) ([a38e686](https://github.com/coveo/ui-kit/commits/a38e686aaed83aa093055bb236bdd7e6c95b23fe))
+- **relay:** add type safety for event types ([#3405](https://github.com/coveo/ui-kit/issues/3405)) ([440fcbc](https://github.com/coveo/ui-kit/commits/440fcbc04bece9cec3044e44dddd03a4f0163aa0))
+- support url management with both `UrlManager` and `SearchParametersManager` ([#3420](https://github.com/coveo/ui-kit/issues/3420)) ([4f140a6](https://github.com/coveo/ui-kit/commits/4f140a6097622ec5588c1deb062f363911546fbe))
+
 ## 2.40.2 (2023-11-16)
 
 ### Bug Fixes

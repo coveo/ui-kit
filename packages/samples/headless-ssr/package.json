@@ -8,18 +8,18 @@
     "e2e:watch": "cypress open --browser chrome --e2e"
   },
   "dependencies": {
-    "@coveo/headless-react": "0.2.6",
-    "@coveo/headless": "2.40.2",
-    "next": "13.5.6",
+    "@coveo/headless-react": "0.2.7",
+    "@coveo/headless": "2.41.0",
+    "next": "14.0.3",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@types/node": "20.9.0",
+    "@types/node": "20.10.3",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
-    "typescript": "5.2.2",
-    "cypress": "13.5.0",
+    "typescript": "5.3.2",
+    "cypress": "13.6.0",
     "cypress-repeat": "2.3.4",
     "cypress-web-vitals": "4.1.0"
   },
