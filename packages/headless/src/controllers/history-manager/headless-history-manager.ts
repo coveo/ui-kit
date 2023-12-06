@@ -8,8 +8,8 @@ import {
   logNavigateBackward,
   logNavigateForward,
   logNoResultsBack,
-  navigateBackward,
-  navigateForward,
+  historyBackward,
+  historyForward,
   noResultsBack,
 } from '../../features/history/history-analytics-actions';
 import {history} from '../../features/history/history-slice';
@@ -85,7 +85,7 @@ export function buildHistoryManager(engine: SearchEngine): HistoryManager {
       dispatch(
         executeSearch({
           legacy: logNavigateBackward(),
-          next: navigateBackward(),
+          next: historyBackward(),
         })
       );
     },
@@ -98,7 +98,7 @@ export function buildHistoryManager(engine: SearchEngine): HistoryManager {
       dispatch(
         executeSearch({
           legacy: logNavigateForward(),
-          next: navigateForward(),
+          next: historyForward(),
         })
       );
     },

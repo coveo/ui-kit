@@ -65,8 +65,8 @@ import {
   logNavigateBackward,
   logNavigateForward,
   logNoResultsBack,
-  navigateBackward,
-  navigateForward,
+  historyBackward,
+  historyForward,
   noResultsBack,
 } from '../features/history/history-analytics-actions';
 import {fetchQuerySuggestions} from '../features/query-suggest/query-suggest-actions';
@@ -282,7 +282,7 @@ describe('Analytics Search Migration', () => {
   it('history/analytics/forward', async () => {
     const action = executeSearch({
       legacy: logNavigateForward(),
-      next: navigateForward(),
+      next: historyForward(),
     });
 
     legacySearchEngine.dispatch(action);
@@ -327,7 +327,7 @@ describe('Analytics Search Migration', () => {
   it('history/analytics/backward', async () => {
     const action = executeSearch({
       legacy: logNavigateBackward(),
-      next: navigateBackward(),
+      next: historyBackward(),
     });
 
     legacySearchEngine.dispatch(action);

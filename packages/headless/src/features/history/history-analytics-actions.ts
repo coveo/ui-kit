@@ -30,7 +30,7 @@ export const logNoResultsBack = (): LegacySearchAction =>
   );
 
 // --------------------- KIT-2859 : Everything above this will get deleted ! :) ---------------------
-export const navigateForward = (): SearchAction => {
+export const historyForward = (): SearchAction => {
   return {
     actionCause: SearchPageEvents.historyForward,
     getEventExtraPayload: (state) =>
@@ -38,7 +38,7 @@ export const navigateForward = (): SearchAction => {
   };
 };
 
-export const navigateBackward = (): SearchAction => {
+export const historyBackward = (): SearchAction => {
   return {
     actionCause: SearchPageEvents.historyBackward,
     getEventExtraPayload: (state) =>
