@@ -3,3 +3,7 @@
 .searchbox__input-container {
   display: flex;
 }
+
+input {
+  border: none;
+}

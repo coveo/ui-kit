@@ -1,7 +1,7 @@
 /* Shared style between the searchBox and the standaloneSearchBox */
 
 .searchbox__container {
-  /* display: flex; */
+  display: flex;
   position: relative;
   min-height: 48px;
   box-sizing: border-box;
@@ -25,7 +25,6 @@
 }
 
 .searchbox__input {
-  /* display: flex; */
   border-radius: 0.25rem;
   border-bottom-left-radius: 0.25rem;
   position: relative;
@@ -65,10 +64,13 @@ textarea.searchbox__input {
 
 .searchbox__clear-button-container {
   height: 48px;
-  margin: inherit;
 }
 
 .searchbox__clear-button {
+  right: 2%;
+}
+
+.searchbox__clear-button-expandable {
   box-shadow: none;
   height: 15px;
 }
@@ -82,5 +84,5 @@ input[type='search'] {
 }
 
 .z-index-high {
-  z-index: 30;
+  z-index: 20;
 }
