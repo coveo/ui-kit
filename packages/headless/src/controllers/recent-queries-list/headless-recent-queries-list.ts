@@ -1,7 +1,5 @@
 import {ArrayValue, BooleanValue, NumberValue, Schema} from '@coveo/bueno';
-import {SearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {SearchPageEvents} from '../../features/analytics/search-action-cause';
 import {
   clearRecentQueries,
   registerRecentQueries,
@@ -9,6 +7,7 @@ import {
 import {
   logClearRecentQueries,
   logRecentQueryClick,
+  recentQueryClick,
 } from '../../features/recent-queries/recent-queries-analytics-actions';
 import {recentQueriesReducer as recentQueries} from '../../features/recent-queries/recent-queries-slice';
 import {
@@ -205,11 +204,7 @@ export function buildRecentQueriesList(
       dispatch(
         executeSearch({
           legacy: logRecentQueryClick(),
-          next: {
-            actionCause: SearchPageEvents.recentQueryClick,
-            getEventExtraPayload: (state) =>
-              new SearchAnalyticsProvider(() => state).getBaseMetadata(),
-          },
+          next: recentQueryClick(),
         })
       );
     },

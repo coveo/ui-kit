@@ -1,10 +1,11 @@
-import {SearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {SearchPageEvents} from '../../features/analytics/search-action-cause';
 import {updateQuery} from '../../features/query/query-actions';
 import {queryReducer as query} from '../../features/query/query-slice';
 import {executeSearch} from '../../features/search/search-actions';
-import {logUndoTriggerQuery} from '../../features/triggers/trigger-analytics-actions';
+import {
+  logUndoTriggerQuery,
+  undoTriggerQuery,
+} from '../../features/triggers/trigger-analytics-actions';
 import {updateIgnoreQueryTrigger} from '../../features/triggers/triggers-actions';
 import {triggerReducer as triggers} from '../../features/triggers/triggers-slice';
 import {TriggerSection, QuerySection} from '../../state/state-sections';
@@ -84,13 +85,7 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
           legacy: logUndoTriggerQuery({
             undoneQuery: modification(),
           }),
-          next: {
-            actionCause: SearchPageEvents.undoTriggerQuery,
-            getEventExtraPayload: () =>
-              new SearchAnalyticsProvider(getState).getUndoTriggerQueryMetadata(
-                modification()
-              ),
-          },
+          next: undoTriggerQuery(modification()),
         })
       );
     },
