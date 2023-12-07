@@ -17,7 +17,10 @@ import {
   logPageNumber,
   logPagerResize,
 } from '../pagination/pagination-analytics-actions';
-import {logSearchboxSubmit} from '../query/query-analytics-actions';
+import {
+  logSearchboxSubmit,
+  searchboxSubmit,
+} from '../query/query-analytics-actions';
 import {
   logResultsSort,
   resultsSort,
@@ -199,8 +202,9 @@ function testFacetExcludeLogging() {
 
 describe('parametersChange', () => {
   it('should log #logSearchboxSubmit when #q parameter changes', () => {
-    // const action = parametersChange({}, {q: 'test'});
-    // expect(action).toEqual(logSearchboxSubmit());
+    const action = parametersChange({}, {q: 'test'});
+
+    expect(action.actionCause).toEqual(searchboxSubmit().actionCause);
   });
 
   it('should log #resultsSort when #sortCriteria parameter changes', () => {

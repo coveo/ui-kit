@@ -9,7 +9,10 @@ import {
   facetExclude,
   facetSelect,
 } from '../../features/facets/facet-set/facet-set-analytics-actions';
-import {logSearchboxSubmit} from '../../features/query/query-analytics-actions';
+import {
+  logSearchboxSubmit,
+  searchboxSubmit,
+} from '../../features/query/query-analytics-actions';
 import {SearchParameters} from '../../features/search-parameters/search-parameter-actions';
 import {
   logResultsSort,
@@ -185,8 +188,7 @@ export function parametersChange(
   newParameters: SearchParameters
 ): SearchAction {
   if (previousParameters.q !== newParameters.q) {
-    // Need to implement this in next analytics :woo:
-    // return logSearchboxSubmit();
+    return searchboxSubmit();
   }
 
   if (previousParameters.sortCriteria !== newParameters.sortCriteria) {
