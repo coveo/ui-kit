@@ -514,12 +514,6 @@ export class AtomicSearchBox {
   }
 
   private onSubmit() {
-    if (this.activeDescendantElement) {
-      this.activeDescendantElement.click();
-      this.updateActiveDescendant();
-      return;
-    }
-
     this.searchBox.submit();
     this.updateActiveDescendant();
     this.clearSuggestions();
