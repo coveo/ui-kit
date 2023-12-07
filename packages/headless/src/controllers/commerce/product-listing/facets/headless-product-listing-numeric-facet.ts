@@ -22,16 +22,12 @@ export function buildProductListingNumericFacet(
   engine: CommerceEngine,
   options: ProductListingNumericFacetOptions
 ): CommerceNumericFacet {
-  const coreController = buildCommerceNumericFacet(engine, {
-    ...options,
-    fetchResultsActionCreator: fetchProductListing,
-  });
-
   if (!loadProductListingReducer(engine)) {
     throw loadReducerError;
   }
 
-  return {
-    ...coreController,
-  };
+  return buildCommerceNumericFacet(engine, {
+    ...options,
+    fetchResultsActionCreator: fetchProductListing,
+  });
 }

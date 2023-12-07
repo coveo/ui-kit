@@ -20,8 +20,10 @@ export type CommerceRegularFacetOptions = Omit<
  * The `CommerceRegularFacet` controller offers a high-level programming interface for implementing a regular commerce
  * facet UI component.
  */
-export interface CommerceRegularFacet
-  extends CoreCommerceFacet<FacetValueRequest, RegularFacetValue> {}
+export type CommerceRegularFacet = CoreCommerceFacet<
+  FacetValueRequest,
+  RegularFacetValue
+>;
 
 /**
  * @internal
@@ -39,18 +41,11 @@ export function buildCommerceRegularFacet(
   engine: CommerceEngine,
   options: CommerceRegularFacetOptions
 ): CommerceRegularFacet {
-  const coreController = buildCoreCommerceFacet<
-    FacetValueRequest,
-    RegularFacetValue
-  >(engine, {
+  return buildCoreCommerceFacet<FacetValueRequest, RegularFacetValue>(engine, {
     options: {
       ...options,
       toggleSelectActionCreator: toggleSelectFacetValue,
       toggleExcludeActionCreator: toggleExcludeFacetValue,
     },
   });
-
-  return {
-    ...coreController,
-  };
 }

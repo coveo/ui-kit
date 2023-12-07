@@ -22,16 +22,12 @@ export function buildProductListingRegularFacet(
   engine: CommerceEngine,
   options: ProductListingRegularFacetOptions
 ): CommerceRegularFacet {
-  const coreController = buildCommerceRegularFacet(engine, {
-    ...options,
-    fetchResultsActionCreator: fetchProductListing,
-  });
-
   if (!loadProductListingReducer(engine)) {
     throw loadReducerError;
   }
 
-  return {
-    ...coreController,
-  };
+  return buildCommerceRegularFacet(engine, {
+    ...options,
+    fetchResultsActionCreator: fetchProductListing,
+  });
 }

@@ -73,8 +73,8 @@ export interface CoreCommerceFacetOptions {
 }
 
 export type CoreCommerceFacet<
-  T1 extends AnyFacetValueRequest,
-  T2 extends AnyFacetValueResponse,
+  ValueRequest extends AnyFacetValueRequest,
+  ValueResponse extends AnyFacetValueResponse,
 > = Pick<
   HeadlessCoreFacet,
   'deselectAll' | 'showLessValues' | 'showMoreValues' | 'subscribe'
@@ -84,50 +84,49 @@ export type CoreCommerceFacet<
    *
    * @param selection - The facet value to select.
    */
-  toggleSelect(selection: T1): void;
+  toggleSelect(selection: ValueRequest): void;
   /**
    * Toggles exclusion of the specified facet value.
    *
    * @param selection - The facet value to exclude.
    */
-  toggleExclude(selection: T1): void;
+  toggleExclude(selection: ValueRequest): void;
   /**
    * Toggles selection of the specified facet value, deselecting all others.
    *
    * @param selection - The facet value to single select.
    */
-  toggleSingleSelect(selection: T1): void;
+  toggleSingleSelect(selection: ValueRequest): void;
   /**
    * Toggles exclusion of the specified facet value, deselecting all others.
    *
    * @param selection - The facet value to single exclude.
    */
-  toggleSingleExclude(selection: T1): void;
+  toggleSingleExclude(selection: ValueRequest): void;
   /**
    * Whether the specified facet value is selected.
    *
    * @param value - The facet value to evaluate.
    */
-  isValueSelected(value: T2): boolean;
+  isValueSelected(value: ValueResponse): boolean;
   /**
    * Whether the specified facet value is excluded.
    *
    * @param value - The facet value to evaluate.
    */
-  isValueExcluded(value: T2): boolean;
+  isValueExcluded(value: ValueResponse): boolean;
   /**
    * The state of this commerce facet controller instance.
    */
-  state: CoreCommerceFacetState<T2>;
+  state: CoreCommerceFacetState<ValueResponse>;
 };
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `CoreCommerceFacet` controller.
  */
-export type CoreCommerceFacetState<T extends AnyFacetValueResponse> = Omit<
-  CoreFacetState,
-  'enabled' | 'sortCriterion' | 'values'
-> & {
+export type CoreCommerceFacetState<
+  ValueResponse extends AnyFacetValueResponse,
+> = Omit<CoreFacetState, 'enabled' | 'sortCriterion' | 'values'> & {
   /**
    * The type of facet.
    */
@@ -143,18 +142,18 @@ export type CoreCommerceFacetState<T extends AnyFacetValueResponse> = Omit<
   /**
    * The facet values
    */
-  values: T[];
+  values: ValueResponse[];
 };
 
 export type CoreCommerceFacetBuilder = typeof buildCoreCommerceFacet;
 
 export function buildCoreCommerceFacet<
-  T1 extends AnyFacetValueRequest,
-  T2 extends AnyFacetValueResponse,
+  ValueRequest extends AnyFacetValueRequest,
+  ValueResponse extends AnyFacetValueResponse,
 >(
   engine: CommerceEngine,
   props: CoreCommerceFacetProps
-): CoreCommerceFacet<T1, T2> {
+): CoreCommerceFacet<ValueRequest, ValueResponse> {
   if (!loadCommerceFacetReducers(engine)) {
     throw loadReducerError;
   }
@@ -185,20 +184,20 @@ export function buildCoreCommerceFacet<
   return {
     ...controller,
 
-    toggleSelect: (selection: T1) => {
+    toggleSelect: (selection: ValueRequest) => {
       dispatch(props.options.toggleSelectActionCreator({selection, facetId}));
       dispatch(props.options.fetchResultsActionCreator());
       // TODO: analytics
     },
 
-    toggleExclude: (selection: T1) => {
+    toggleExclude: (selection: ValueRequest) => {
       dispatch(props.options.toggleExcludeActionCreator({selection, facetId}));
       dispatch(props.options.fetchResultsActionCreator());
       // TODO: analytics
     },
 
     // Must use a function here to properly support inheritance with `this`.
-    toggleSingleSelect: function (selection: T1) {
+    toggleSingleSelect: function (selection: ValueRequest) {
       if (selection.state === 'idle') {
         dispatch(deselectAllFacetValues(facetId));
       }
@@ -207,7 +206,7 @@ export function buildCoreCommerceFacet<
     },
 
     // Must use a function here to properly support inheritance with `this`.
-    toggleSingleExclude: function (selection: T1) {
+    toggleSingleExclude: function (selection: ValueRequest) {
       if (selection.state === 'idle') {
         dispatch(deselectAllFacetValues(facetId));
       }
@@ -215,11 +214,11 @@ export function buildCoreCommerceFacet<
       this.toggleExclude(selection);
     },
 
-    isValueSelected: (value: T2) => {
+    isValueSelected: (value: ValueResponse) => {
       return value.state === 'selected';
     },
 
-    isValueExcluded: (value: T2) => {
+    isValueExcluded: (value: ValueResponse) => {
       return value.state === 'excluded';
     },
 
@@ -257,7 +256,7 @@ export function buildCoreCommerceFacet<
     get state() {
       const response = getResponse();
 
-      const values = response.values as T2[];
+      const values = response.values as ValueResponse[];
       const hasActiveValues = values.some(
         (facetValue) => facetValue.state !== 'idle'
       );
