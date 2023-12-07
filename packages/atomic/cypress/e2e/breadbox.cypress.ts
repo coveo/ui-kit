@@ -155,7 +155,7 @@ describe('Breadbox Test Suites', () => {
       );
       BreadboxAssertions.assertDisplayBreadcrumbClearIcon();
       BreadboxAssertions.assertBreadcrumbDisplayLength(2);
-      BreadboxAssertions.assertAriaLabel('include');
+      BreadboxAssertions.assertAriaLabel('inclusion');
     });
 
     describe('when selecting "Clear all" button', () => {
@@ -292,7 +292,7 @@ describe('Breadbox Test Suites', () => {
       );
       BreadboxAssertions.assertBreadcrumbDisplayLength(1);
       BreadboxAssertions.assertDisplayBreadcrumbShowMore(false);
-      BreadboxAssertions.assertAriaLabel('exclude');
+      BreadboxAssertions.assertAriaLabel('exclusion');
     });
   });
 

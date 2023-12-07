@@ -18,7 +18,7 @@ export function assertDisplayBreadcrumb(display: boolean) {
   });
 }
 
-export function assertAriaLabel(includeOrExclude: 'include' | 'exclude') {
+export function assertAriaLabel(includeOrExclude: 'inclusion' | 'exclusion') {
   it(`should have aria-label "${includeOrExclude} filter"`, () => {
     BreadboxSelectors.breadcrumbButton()
       .should('have.attr', 'aria-label')
