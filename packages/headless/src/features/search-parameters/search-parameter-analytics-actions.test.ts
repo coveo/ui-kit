@@ -1,6 +1,6 @@
 import {buildMockSearchAppEngine} from '../../test';
 import {
-  interfaceLoad,
+  interfaceChange,
   logInterfaceChange,
 } from '../analytics/analytics-actions';
 import {LegacySearchAction} from '../analytics/analytics-utils';
@@ -224,7 +224,7 @@ describe('parametersChange', () => {
   it('should log a generic #interfaceLoad when an unmanaged parameter', () => {
     const action = parametersChange({}, {cq: 'hello'});
 
-    expect(action.actionCause).toEqual(interfaceLoad().actionCause);
+    expect(action.actionCause).toEqual(interfaceChange().actionCause);
   });
 });
 

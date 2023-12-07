@@ -19,7 +19,7 @@ import {
   resultsSort,
 } from '../../features/sort-criteria/sort-criteria-analytics-actions';
 import {
-  interfaceLoad,
+  interfaceChange,
   logInterfaceChange,
 } from '../analytics/analytics-actions';
 import {LegacySearchAction} from '../analytics/analytics-utils';
@@ -234,7 +234,7 @@ export function parametersChange(
     );
   }
 
-  return interfaceLoad();
+  return interfaceChange();
 }
 
 function areFacetParamsNotEqual(
@@ -283,7 +283,7 @@ function facetAction(
     )
   );
   if (!facetIdWithDifferentValues) {
-    return interfaceLoad();
+    return interfaceChange();
   }
 
   const previousValues = previousFacets[facetIdWithDifferentValues];
@@ -307,7 +307,7 @@ function facetAction(
     return facetDeselect(facetIdWithDifferentValues, removedValues[0]);
   }
 
-  return interfaceLoad();
+  return interfaceChange();
 }
 
 function parseRangeFacetParams(facetsParams: RangeFacetParameters = {}) {
