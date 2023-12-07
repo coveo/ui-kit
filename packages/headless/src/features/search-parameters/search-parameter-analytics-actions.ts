@@ -19,7 +19,7 @@ import {
   resultsSort,
 } from '../../features/sort-criteria/sort-criteria-analytics-actions';
 import {
-  interfaceChange,
+  interfaceLoad,
   logInterfaceChange,
 } from '../analytics/analytics-actions';
 import {LegacySearchAction} from '../analytics/analytics-utils';
@@ -195,18 +195,6 @@ export function parametersChange(
     return resultsSort();
   }
 
-  if (previousParameters.firstResult !== newParameters.firstResult) {
-    // Replaced server side :thinking:
-    // Also this doesn't seem to work
-    // return logPageNumber();
-  }
-
-  if (previousParameters.numberOfResults !== newParameters.numberOfResults) {
-    // Replaced server side :thinking:
-    // Also this doesn't seem to work, the numberOfResults is always 10 when I test
-    // return logPageNumber();
-  }
-
   if (areFacetParamsNotEqual(previousParameters.f, newParameters.f)) {
     return facetAction(previousParameters.f, newParameters.f);
   }
@@ -246,7 +234,7 @@ export function parametersChange(
     );
   }
 
-  return interfaceChange();
+  return interfaceLoad();
 }
 
 function areFacetParamsNotEqual(
@@ -295,7 +283,7 @@ function facetAction(
     )
   );
   if (!facetIdWithDifferentValues) {
-    return interfaceChange();
+    return interfaceLoad();
   }
 
   const previousValues = previousFacets[facetIdWithDifferentValues];
@@ -319,7 +307,7 @@ function facetAction(
     return facetDeselect(facetIdWithDifferentValues, removedValues[0]);
   }
 
-  return interfaceChange();
+  return interfaceLoad();
 }
 
 function parseRangeFacetParams(facetsParams: RangeFacetParameters = {}) {

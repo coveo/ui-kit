@@ -1,6 +1,6 @@
 import {buildMockSearchAppEngine} from '../../test';
 import {
-  interfaceChange,
+  interfaceLoad,
   logInterfaceChange,
 } from '../analytics/analytics-actions';
 import {LegacySearchAction} from '../analytics/analytics-utils';
@@ -201,7 +201,7 @@ function testFacetExcludeLogging() {
 }
 
 describe('parametersChange', () => {
-  it('should log #logSearchboxSubmit when #q parameter changes', () => {
+  it('should log #searchboxSubmit when #q parameter changes', () => {
     const action = parametersChange({}, {q: 'test'});
 
     expect(action.actionCause).toEqual(searchboxSubmit().actionCause);
@@ -213,20 +213,6 @@ describe('parametersChange', () => {
     expect(action.actionCause).toEqual(resultsSort().actionCause);
   });
 
-  it('should log #logPageNumber when #firstResult parameter changes', () => {
-    // expectIdenticalActionType(
-    //   legacyLogParametersChange({}, {firstResult: 10}),
-    //   logPageNumber()
-    // );
-  });
-
-  it('should log #logPagerResize when #firstResult parameter changes', () => {
-    // expectIdenticalActionType(
-    //   legacyLogParametersChange({}, {numberOfResults: 25}),
-    //   logPagerResize()
-    // );
-  });
-
   testFacetSelectLogging('f');
 
   testFacetSelectLogging('af');
@@ -235,15 +221,15 @@ describe('parametersChange', () => {
 
   testFacetExcludeLogging();
 
-  it('should log a generic #logInterfaceChange when an unmanaged parameter', () => {
+  it('should log a generic #interfaceLoad when an unmanaged parameter', () => {
     const action = parametersChange({}, {cq: 'hello'});
 
-    expect(action.actionCause).toEqual(interfaceChange().actionCause);
+    expect(action.actionCause).toEqual(interfaceLoad().actionCause);
   });
 });
 
 function testFacetSelectLogging(parameter: string) {
-  it(`should log #logFacetDeselect when an ${parameter} parameter with a single value is removed`, () => {
+  it(`should log #facetDeselect when an ${parameter} parameter with a single value is removed`, () => {
     const action = parametersChange({[parameter]: {author: ['Cervantes']}}, {});
 
     expect(action.actionCause).toEqual(
@@ -251,7 +237,7 @@ function testFacetSelectLogging(parameter: string) {
     );
   });
 
-  it(`should log #logFacetClearAll when an ${parameter} parameter with multiple values is removed`, () => {
+  it(`should log #facetClearAll when an ${parameter} parameter with multiple values is removed`, () => {
     const action = parametersChange(
       {[parameter]: {author: ['Cervantes', 'Orwell']}},
       {}
@@ -260,7 +246,7 @@ function testFacetSelectLogging(parameter: string) {
     expect(action.actionCause).toEqual(facetClearAll(ANY_FACET_ID).actionCause);
   });
 
-  it(`should log #logFacetDeselect when an ${parameter} parameter is modified & a value removed`, () => {
+  it(`should log #facetDeselect when an ${parameter} parameter is modified & a value removed`, () => {
     const action = parametersChange(
       {[parameter]: {author: ['Cervantes', 'Orwell']}},
       {[parameter]: {author: ['Cervantes']}}
