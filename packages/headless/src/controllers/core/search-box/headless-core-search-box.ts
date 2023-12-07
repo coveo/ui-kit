@@ -25,6 +25,7 @@ import {QuerySuggestState} from '../../../features/query-suggest/query-suggest-s
 import {logSearchboxSubmit} from '../../../features/query/query-analytics-actions';
 import {queryReducer as query} from '../../../features/query/query-slice';
 import {
+  SearchAction,
   TransitiveSearchAction,
   prepareForSearchWithQuery,
 } from '../../../features/search/search-actions';
@@ -151,6 +152,7 @@ export interface Suggestion {
 }
 
 /**
+ * @internal
  * The `SearchBox` headless controller offers a high-level interface for designing a common search box UI controller
  * with [highlighting for query suggestions](https://docs.coveo.com/en/headless/latest/usage/highlighting/).
  */
@@ -182,9 +184,13 @@ export interface SearchBox extends Controller {
   /**
    * Deselects all facets and triggers a search query.
    *
-   * @param analytics -  The analytics action to log after submitting a query.
+   * @param legacyAnalytics -  The legacy analytics action to log after submitting a query.
+   * @param nextAnalytics - The next analytics action to log after submitting a query.
    */
-  submit(analytics?: LegacySearchAction): void;
+  submit(
+    legacyAnalytics?: LegacySearchAction,
+    nextAnalytics?: SearchAction
+  ): void;
 
   /**
    * The state of the `SearchBox` controller.
@@ -193,6 +199,7 @@ export interface SearchBox extends Controller {
 }
 
 /**
+ * @internal
  * Creates a `SearchBox` controller instance.
  *
  * @param engine - The headless engine instance.
@@ -278,9 +285,12 @@ export function buildCoreSearchBox(
     },
 
     submit(
-      analytics: LegacySearchAction | InsightAction = logSearchboxSubmit()
+      legacyAnalytics:
+        | LegacySearchAction
+        | InsightAction = logSearchboxSubmit(),
+      nextAnalytics: SearchAction
     ) {
-      performSearch({legacy: analytics});
+      performSearch({legacy: legacyAnalytics, next: nextAnalytics});
       dispatch(clearQuerySuggest({id}));
     },
 
