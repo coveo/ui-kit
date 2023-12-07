@@ -171,6 +171,31 @@ function legacyTestFacetLogging(
 }
 
 // --------------------- KIT-2859 : Everything above this will get deleted ! :) ---------------------
+const ANY_FACET_ID = 'author';
+const ANY_FACET_VALUE = 'Cervantes';
+
+function testFacetExcludeLogging() {
+  testFacetSelectLogging('fExcluded');
+
+  it('should log #logFacetSelect when an fExcluded parameter is added', () => {
+    const action = parametersChange({}, {fExcluded: {author: ['Cervantes']}});
+
+    expect(action.actionCause).toEqual(
+      facetExclude(ANY_FACET_ID, ANY_FACET_VALUE).actionCause
+    );
+  });
+
+  it('should log #logFacetSelect when an fExcluded parameter is modified & a value added', () => {
+    const action = parametersChange(
+      {fExcluded: {author: ['Cervantes']}},
+      {fExcluded: {author: ['Cervantes', 'Orwell']}}
+    );
+
+    expect(action.actionCause).toEqual(
+      facetExclude(ANY_FACET_ID, ANY_FACET_VALUE).actionCause
+    );
+  });
+}
 
 describe('parametersChange', () => {
   it('should log #logSearchboxSubmit when #q parameter changes', () => {
@@ -217,7 +242,9 @@ function testFacetSelectLogging(parameter: string) {
   it(`should log #logFacetDeselect when an ${parameter} parameter with a single value is removed`, () => {
     const action = parametersChange({[parameter]: {author: ['Cervantes']}}, {});
 
-    expect(action.actionCause).toEqual(facetDeselect('s', 's').actionCause);
+    expect(action.actionCause).toEqual(
+      facetDeselect(ANY_FACET_ID, ANY_FACET_VALUE).actionCause
+    );
   });
 
   it(`should log #logFacetClearAll when an ${parameter} parameter with multiple values is removed`, () => {
@@ -226,7 +253,7 @@ function testFacetSelectLogging(parameter: string) {
       {}
     );
 
-    expect(action.actionCause).toEqual(facetClearAll('s').actionCause);
+    expect(action.actionCause).toEqual(facetClearAll(ANY_FACET_ID).actionCause);
   });
 
   it(`should log #logFacetDeselect when an ${parameter} parameter is modified & a value removed`, () => {
@@ -235,25 +262,8 @@ function testFacetSelectLogging(parameter: string) {
       {[parameter]: {author: ['Cervantes']}}
     );
 
-    expect(action.actionCause).toEqual(facetDeselect('s', 's').actionCause);
-  });
-}
-
-function testFacetExcludeLogging() {
-  testFacetSelectLogging('fExcluded');
-
-  it('should log #logFacetSelect when an fExcluded parameter is added', () => {
-    const action = parametersChange({}, {fExcluded: {author: ['Cervantes']}});
-
-    expect(action.actionCause).toEqual(facetExclude('s', 's').actionCause);
-  });
-
-  it('should log #logFacetSelect when an fExcluded parameter is modified & a value added', () => {
-    const action = parametersChange(
-      {fExcluded: {author: ['Cervantes']}},
-      {fExcluded: {author: ['Cervantes', 'Orwell']}}
+    expect(action.actionCause).toEqual(
+      facetDeselect(ANY_FACET_ID, ANY_FACET_VALUE).actionCause
     );
-
-    expect(action.actionCause).toEqual(facetExclude('s', 's').actionCause);
   });
 }
