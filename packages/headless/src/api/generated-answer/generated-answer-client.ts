@@ -47,14 +47,18 @@ interface StreamCallbacks {
 }
 
 class TimeoutStateManager {
-  private usedTimeouts: Set<ReturnType<typeof setTimeout>> = new Set();
+  private timeouts: Set<ReturnType<typeof setTimeout>> = new Set();
 
-  public recordUsedTimeout(timeout: ReturnType<typeof setTimeout>) {
-    this.usedTimeouts.add(timeout);
+  public add(timeout: ReturnType<typeof setTimeout>) {
+    this.timeouts.add(timeout);
   }
 
-  public isTimeoutUsed(timeout: ReturnType<typeof setTimeout>): boolean {
-    return this.usedTimeouts.has(timeout);
+  public remove(timeout: ReturnType<typeof setTimeout>) {
+    this.timeouts.delete(timeout);
+  }
+
+  public isActive(timeout: ReturnType<typeof setTimeout>): boolean {
+    return this.timeouts.has(timeout);
   }
 }
 
@@ -82,7 +86,7 @@ export class GeneratedAnswerAPIClient {
     let timeout: ReturnType<typeof setTimeout> | undefined;
 
     const retryStream = () => {
-      if (timeout && !timeoutStateManager.isTimeoutUsed(timeout)) {
+      if (timeout && !timeoutStateManager.isActive(timeout)) {
         abortController?.abort();
         resetAnswer();
         stream();
@@ -90,8 +94,9 @@ export class GeneratedAnswerAPIClient {
     };
 
     const refreshTimeout = () => {
+      timeoutStateManager.remove(timeout!);
       timeout = resetTimeout(retryStream, timeout, MAX_TIMEOUT);
-      timeoutStateManager.recordUsedTimeout(timeout);
+      timeoutStateManager.add(timeout);
     };
 
     const abortController = createAbortController();
