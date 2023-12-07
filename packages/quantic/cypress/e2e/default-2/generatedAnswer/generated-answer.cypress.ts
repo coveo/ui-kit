@@ -102,7 +102,7 @@ describe('quantic-generated-answer', () => {
         Expect.searchQueryContainsCorrectRephraseOption(defaultRephraseOption);
       });
 
-      it('should perform a search query with the default fields to include iin citations', () => {
+      it('should perform a search query with the default fields to include in citations', () => {
         cy.wait(InterceptAliases.Search);
         Expect.searchQueryContainsCorrectFieldsToIncludeInCitations(
           defaultFieldsToIncludeInCitations.split(',')
