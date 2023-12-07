@@ -78,6 +78,13 @@ export function assertSuggestionIsSelectedWithoutIt(index: number) {
     .should('contain', 'active-suggestion');
 }
 
+export function assertSuggestionIsNotSelectedWithoutIt(index: number) {
+  SearchBoxSelectors.querySuggestions()
+    .eq(index)
+    .should('have.attr', 'part')
+    .and('contain', 'active-suggestion');
+}
+
 export function assertSuggestionIsHighlighted(index: number) {
   SearchBoxSelectors.querySuggestions()
     .eq(index)

@@ -215,7 +215,7 @@ describe('Instant Results Test Suites', () => {
     SearchBoxSelectors.inputBox().click();
     SearchBoxSelectors.querySuggestions().eq(0).trigger('mouseover');
 
-    SearchBoxAssertions.assertSuggestionIsSelectedWithoutIt(0);
+    SearchBoxAssertions.assertSuggestionIsNotSelectedWithoutIt(0);
     SearchBoxAssertions.assertHasTextWithoutIt('');
 
     cy.log('when hovering over an instant result');
@@ -231,7 +231,7 @@ describe('Instant Results Test Suites', () => {
     SearchBoxSelectors.querySuggestions().eq(1).trigger('mouseover');
 
     InstantResultsAssertions.assertHasResultCount(4);
-    SearchBoxAssertions.assertSuggestionIsSelectedWithoutIt(1);
+    SearchBoxAssertions.assertSuggestionIsNotSelectedWithoutIt(1);
 
     cy.log('when clicking a result');
     cy.wait(1000);
