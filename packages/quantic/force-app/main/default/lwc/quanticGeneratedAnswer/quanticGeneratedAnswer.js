@@ -69,6 +69,13 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    */
   @api answerStyle = 'default';
   /**
+   * A list of fields to fetch with the citations used to generate the answer.
+   * @api
+   * @type {string}
+   * @defaultValue `'sfid,sfkbid,sfkavid'`
+   */
+  @api fieldsToIncludeInCitations = 'sfid,sfkbid,sfkavid';
+  /**
    * Indicates whether footer sections should be displayed on multiple lines.
    * @api
    * @type {boolean}
@@ -156,6 +163,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
         isVisible: storedGeneratedAnswerVisibility === false ? false : true,
         responseFormat: {answerStyle: this.answerStyle},
       },
+      fieldsToIncludeInCitations: this.citationFields,
     });
   }
 
@@ -394,6 +402,13 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   get shouldHideRephraseLabels() {
     return this.multilineFooter ? false : true;
+  }
+
+  get citationFields() {
+    return this.fieldsToIncludeInCitations
+      .split(',')
+      .map((field) => field.trim())
+      .filter((field) => field.length > 0);
   }
 
   render() {

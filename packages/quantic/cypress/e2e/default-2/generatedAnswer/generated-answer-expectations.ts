@@ -272,6 +272,8 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
     searchQueryContainsCorrectRephraseOption: (expectedAnswerStyle: string) => {
       cy.get<Interception>(InterceptAliases.Search)
         .then((interception) => {
+          console.log(interception);
+
           const answerStyle =
             interception?.request?.body?.pipelineRuleParameters
               ?.mlGenerativeQuestionAnswering?.responseFormat?.answerStyle;
@@ -279,6 +281,22 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         })
         .log(
           `the search query should contain the correct ${expectedAnswerStyle} parameter`
+        );
+    },
+
+    searchQueryContainsCorrectFieldsToIncludeInCitations: (
+      expectedFields: string[]
+    ) => {
+      cy.get<Interception>(InterceptAliases.Search)
+        .then((interception) => {
+          const fieldsToIncludeInCitations =
+            interception?.request?.body?.pipelineRuleParameters
+              ?.mlGenerativeQuestionAnswering?.citationsFieldToInclude;
+          console.log(interception);
+          expect(fieldsToIncludeInCitations).to.eql(expectedFields);
+        })
+        .log(
+          'the search query should contain the correct fields to include in citations parameter'
         );
     },
 
