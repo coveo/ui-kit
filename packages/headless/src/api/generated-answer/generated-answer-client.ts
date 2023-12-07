@@ -54,6 +54,7 @@ class TimeoutStateManager {
   }
 
   public remove(timeout: ReturnType<typeof setTimeout>) {
+    clearTimeout(timeout);
     this.timeouts.delete(timeout);
   }
 
@@ -132,7 +133,7 @@ export class GeneratedAnswerAPIClient {
         onmessage: (event) => {
           const data: GeneratedAnswerStreamEventData = JSON.parse(event.data);
           if (data.finishReason === 'ERROR') {
-            clearTimeout(timeout);
+            timeoutStateManager.remove(timeout!);
             abortController?.abort();
             abort({
               message: data.errorMessage,
@@ -143,14 +144,14 @@ export class GeneratedAnswerAPIClient {
           write(data);
           retryCount = 0;
           if (data.finishReason === 'COMPLETED') {
-            clearTimeout(timeout);
+            timeoutStateManager.remove(timeout!);
             close();
           } else {
             refreshTimeout();
           }
         },
         onerror: (err) => {
-          clearTimeout(timeout);
+          timeoutStateManager.remove(timeout!);
           if (err instanceof FatalError) {
             abortController?.abort();
             abort(err);
