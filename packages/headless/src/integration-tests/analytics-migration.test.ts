@@ -72,6 +72,10 @@ import {
 import {fetchQuerySuggestions} from '../features/query-suggest/query-suggest-actions';
 import {OmniboxSuggestionMetadata} from '../features/query-suggest/query-suggest-analytics-actions';
 import {
+  logSearchboxSubmit,
+  searchboxSubmit,
+} from '../features/query/query-analytics-actions';
+import {
   logRecentQueryClick,
   recentQueryClick,
 } from '../features/recent-queries/recent-queries-analytics-actions';
@@ -908,6 +912,19 @@ describe('Analytics Search Migration', () => {
     const action = executeSearch({
       legacy: logOmniboxFromLink(metadata),
       next: omniboxFromLink(metadata),
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/searchbox/submit', async () => {
+    const action = executeSearch({
+      legacy: logSearchboxSubmit(),
+      next: searchboxSubmit(),
     });
 
     legacySearchEngine.dispatch(action);
