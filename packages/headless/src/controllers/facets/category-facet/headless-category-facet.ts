@@ -11,8 +11,13 @@ import {
   logFacetClearAll,
   logFacetDeselect,
   logFacetSelect,
+  facetUpdateSort,
+  facetClearAll,
+  facetDeselect,
+  facetSelect,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {
+  SearchAction,
   executeSearch,
   fetchFacetValues,
 } from '../../../features/search/search-actions';
@@ -90,16 +95,22 @@ export function buildCategoryFacet(
 
     toggleSelect(selection: CategoryFacetValue) {
       coreController.toggleSelect(selection);
-      const analyticsAction = getToggleSelectAnalyticsAction(
-        getFacetId(),
-        selection
+      dispatch(
+        executeSearch({
+          legacy: getLegacyToggleSelectAnalyticsAction(getFacetId(), selection),
+          next: getToggleSelectAnalyticsAction(getFacetId(), selection),
+        })
       );
-      dispatch(executeSearch({legacy: analyticsAction}));
     },
 
     deselectAll() {
       coreController.deselectAll();
-      dispatch(executeSearch({legacy: logFacetClearAll(getFacetId())}));
+      dispatch(
+        executeSearch({
+          legacy: logFacetClearAll(getFacetId()),
+          next: facetClearAll(getFacetId()),
+        })
+      );
     },
 
     sortBy(criterion: CategoryFacetSortCriterion) {
@@ -107,6 +118,7 @@ export function buildCategoryFacet(
       dispatch(
         executeSearch({
           legacy: logFacetUpdateSort({facetId: getFacetId(), criterion}),
+          next: facetUpdateSort(getFacetId(), criterion),
         })
       );
     },
@@ -147,7 +159,7 @@ function loadCategoryFacetReducers(
   return true;
 }
 
-function getToggleSelectAnalyticsAction(
+function getLegacyToggleSelectAnalyticsAction(
   facetId: string,
   selection: CategoryFacetValue
 ) {
@@ -158,4 +170,14 @@ function getToggleSelectAnalyticsAction(
 
   const isSelected = selection.state === 'selected';
   return isSelected ? logFacetDeselect(payload) : logFacetSelect(payload);
+}
+
+function getToggleSelectAnalyticsAction(
+  facetId: string,
+  selection: CategoryFacetValue
+): SearchAction {
+  const isSelected = selection.state === 'selected';
+  return isSelected
+    ? facetDeselect(facetId, selection.value)
+    : facetSelect(facetId, selection.value);
 }

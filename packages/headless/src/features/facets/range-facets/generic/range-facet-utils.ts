@@ -1,4 +1,8 @@
+import {SearchAction} from '../../../search/search-actions';
 import {
+  facetDeselect,
+  facetExclude,
+  facetSelect,
   logFacetDeselect,
   logFacetExclude,
   logFacetSelect,
@@ -14,7 +18,7 @@ export const isRangeFacetValueExcluded = (selection: RangeFacetValue) => {
   return selection.state === 'excluded';
 };
 
-export const getAnalyticsActionForToggleRangeFacetSelect = (
+export const getLegacyAnalyticsActionForToggleRangeFacetSelect = (
   facetId: string,
   selection: RangeFacetValue
 ) => {
@@ -26,7 +30,17 @@ export const getAnalyticsActionForToggleRangeFacetSelect = (
     : logFacetSelect(payload);
 };
 
-export const getAnalyticsActionForToggleRangeFacetExclude = (
+export const getAnalyticsActionForToggleFacetSelect = (
+  facetId: string,
+  selection: RangeFacetValue
+): SearchAction => {
+  const facetValue = `${selection.start}..${selection.end}`;
+  return isRangeFacetValueSelected(selection)
+    ? facetDeselect(facetId, facetValue)
+    : facetSelect(facetId, facetValue);
+};
+
+export const getLegacyAnalyticsActionForToggleRangeFacetExclude = (
   facetId: string,
   selection: RangeFacetValue
 ) => {
@@ -36,4 +50,14 @@ export const getAnalyticsActionForToggleRangeFacetExclude = (
   return isRangeFacetValueExcluded(selection)
     ? logFacetDeselect(payload)
     : logFacetExclude(payload);
+};
+
+export const getAnalyticsActionForToggleRangeFacetExclude = (
+  facetId: string,
+  selection: RangeFacetValue
+): SearchAction => {
+  const facetValue = `${selection.start}..${selection.end}`;
+  return isRangeFacetValueExcluded(selection)
+    ? facetDeselect(facetId, facetValue)
+    : facetExclude(facetId, facetValue);
 };

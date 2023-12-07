@@ -1,6 +1,12 @@
 import {createAction} from '@reduxjs/toolkit';
+import {SearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {validatePayload} from '../../utils/validate-payload';
-import {makeAnalyticsAction, SearchAction} from '../analytics/analytics-utils';
+import {
+  makeAnalyticsAction,
+  LegacySearchAction,
+} from '../analytics/analytics-utils';
+import {SearchPageEvents} from '../analytics/search-action-cause';
+import {SearchAction} from '../search/search-actions';
 import {
   staticFilterIdSchema,
   staticFilterValueSchema,
@@ -99,16 +105,18 @@ export interface StaticFilterValueMetadata {
   expression: string;
 }
 
+//TODO: KIT-2859
 export const logStaticFilterSelect = (
   metadata: LogStaticFilterToggleValueActionCreatorPayload
-): SearchAction =>
+): LegacySearchAction =>
   makeAnalyticsAction('analytics/staticFilter/select', (client) =>
     client.makeStaticFilterSelect(metadata)
   );
 
+//TODO: KIT-2859
 export const logStaticFilterDeselect = (
   metadata: LogStaticFilterToggleValueActionCreatorPayload
-): SearchAction =>
+): LegacySearchAction =>
   makeAnalyticsAction('analytics/staticFilter/deselect', (client) =>
     client.makeStaticFilterDeselect(metadata)
   );
@@ -120,9 +128,49 @@ export interface LogStaticFilterClearAllActionCreatorPayload {
   staticFilterId: string;
 }
 
+//TODO: KIT-2859
 export const logStaticFilterClearAll = (
   metadata: LogStaticFilterClearAllActionCreatorPayload
-): SearchAction =>
+): LegacySearchAction =>
   makeAnalyticsAction('analytics/staticFilter/clearAll', (client) =>
     client.makeStaticFilterClearAll(metadata)
   );
+
+// --------------------- KIT-2859 : Everything above this will get deleted ! :) ---------------------
+export const staticFilterSelect = (
+  id: string,
+  value: StaticFilterValueMetadata
+): SearchAction => {
+  return {
+    actionCause: SearchPageEvents.staticFilterSelect,
+    getEventExtraPayload: (state) =>
+      new SearchAnalyticsProvider(() => state).getStaticFilterToggleMetadata(
+        id,
+        value
+      ),
+  };
+};
+
+export const staticFilterDeselect = (
+  id: string,
+  value: StaticFilterValueMetadata
+): SearchAction => {
+  return {
+    actionCause: SearchPageEvents.staticFilterDeselect,
+    getEventExtraPayload: (state) =>
+      new SearchAnalyticsProvider(() => state).getStaticFilterToggleMetadata(
+        id,
+        value
+      ),
+  };
+};
+
+export const staticFilterClearAll = (id: string): SearchAction => {
+  return {
+    actionCause: SearchPageEvents.staticFilterClearAll,
+    getEventExtraPayload: (state) =>
+      new SearchAnalyticsProvider(() => state).getStaticFilterClearAllMetadata(
+        id
+      ),
+  };
+};

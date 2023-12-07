@@ -1,3 +1,8 @@
+import {
+  // @ts-ignore
+  getNavigateCalledWith, // @ts-ignore
+  getGenerateUrlCalledWith,
+} from 'lightning/navigation';
 // @ts-ignore
 import {createElement} from 'lwc';
 import QuanticCitation from '../quanticCitation';
@@ -18,6 +23,22 @@ const exampleCitation = {
   permanentid: '1',
   text: 'text 01',
 };
+
+const exampleSalesforceCitation = {
+  ...exampleCitation,
+  fields: {
+    sfid: '123',
+  },
+};
+const exampleSalesforceKnowledgeArticleCitation = {
+  ...exampleCitation,
+  fields: {
+    sfid: '123',
+    sfkbid: 'foo',
+    sfkavid: 'bar',
+  },
+};
+const exampleSalesforceLink = 'https://www.example-salesforce.com/';
 
 const defaultOptions = {
   citation: exampleCitation,
@@ -180,6 +201,61 @@ describe('c-quantic-citation', () => {
       );
 
       expect(functionsMocks.eventHandler).toHaveBeenCalledTimes(0);
+    });
+  });
+
+  describe('when the citation source is of type Salesforce', () => {
+    it('should call the navigation mixin to get the Salesforce record URL', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        citation: exampleSalesforceCitation,
+      });
+      await flushPromises();
+
+      const link = element.shadowRoot.querySelector(selectors.citationLink);
+      const {pageReference} = getGenerateUrlCalledWith();
+
+      expect(pageReference.attributes.recordId).toBe(
+        exampleSalesforceCitation.fields.sfid
+      );
+      expect(link.href).toBe(exampleSalesforceLink);
+    });
+
+    it('should open the citation link inside Salesforce', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        citation: exampleSalesforceCitation,
+      });
+      await flushPromises();
+
+      const link = element.shadowRoot.querySelector(selectors.citationLink);
+      link.click();
+
+      const {pageReference} = getNavigateCalledWith();
+
+      expect(pageReference.attributes.recordId).toBe(
+        exampleSalesforceCitation.fields.sfid
+      );
+    });
+
+    describe('when the result is a knowledge article', () => {
+      it('should open the citation link inside Salesforce', async () => {
+        const element = createTestComponent({
+          ...defaultOptions,
+          citation: exampleSalesforceKnowledgeArticleCitation,
+        });
+        await flushPromises();
+
+        const link = element.shadowRoot.querySelector(selectors.citationLink);
+        link.click();
+
+        const {pageReference} = getNavigateCalledWith();
+
+        expect(pageReference.attributes.recordId).toBe(
+          exampleSalesforceKnowledgeArticleCitation.fields.sfkavid
+        );
+        expect(link.href).toBe(exampleSalesforceLink);
+      });
     });
   });
 });

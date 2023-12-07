@@ -1,3 +1,15 @@
+# 2.42.0 (2023-12-06)
+
+### Features
+
+- **commerce:** use `trackingId` in body ([#3441](https://github.com/coveo/ui-kit/issues/3441)) ([5c26108](https://github.com/coveo/ui-kit/commits/5c26108880fb4f5db208bd9e362b17f29e5d68fa))
+- **context:** add reserved keys context ([#3424](https://github.com/coveo/ui-kit/issues/3424)) ([667a764](https://github.com/coveo/ui-kit/commits/667a764cc194d19fa682bd96c2a9cb01dad0cd37))
+- **context:** create strict context factory ([#3423](https://github.com/coveo/ui-kit/issues/3423)) ([f4abf46](https://github.com/coveo/ui-kit/commits/f4abf465c4fdba9994cd9a7f35ca9942ec614f92))
+- **headless:** Add RGA option to the Insight Interface Config Response ([#3408](https://github.com/coveo/ui-kit/issues/3408)) ([4e8d811](https://github.com/coveo/ui-kit/commits/4e8d81110f35058f34efa7caae9550beb39db33a))
+- **headless:** create article insight analytics action created ([#3439](https://github.com/coveo/ui-kit/issues/3439)) ([c067a3d](https://github.com/coveo/ui-kit/commits/c067a3d6b2831b9d7b736f135b5405b910e0abb3))
+- **relay:** add support for analytics/instantResult/open ([#3425](https://github.com/coveo/ui-kit/issues/3425)) ([a9c1b82](https://github.com/coveo/ui-kit/commits/a9c1b82f9a4080d486017cdfe330c3cbb4d19c0a))
+- **relay:** add support for analytics/recommendation/open ([#3396](https://github.com/coveo/ui-kit/issues/3396)) ([05cd812](https://github.com/coveo/ui-kit/commits/05cd8126b0e94b55277e0bb17dc896244162d39c))
+
 # 2.41.0 (2023-11-29)
 
 ### Bug Fixes

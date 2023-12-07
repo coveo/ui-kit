@@ -3,7 +3,10 @@ import {
   WordCorrection,
 } from '../../api/search/search/query-corrections';
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {logDidYouMeanClick} from '../../features/did-you-mean/did-you-mean-analytics-actions';
+import {
+  didYouMeanClick,
+  logDidYouMeanClick,
+} from '../../features/did-you-mean/did-you-mean-analytics-actions';
 import {executeSearch} from '../../features/search/search-actions';
 import {
   buildCoreDidYouMean,
@@ -33,7 +36,12 @@ export function buildDidYouMean(engine: SearchEngine): DidYouMean {
 
     applyCorrection() {
       controller.applyCorrection();
-      dispatch(executeSearch({legacy: logDidYouMeanClick()}));
+      dispatch(
+        executeSearch({
+          legacy: logDidYouMeanClick(),
+          next: didYouMeanClick(),
+        })
+      );
     },
   };
 }

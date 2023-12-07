@@ -11,6 +11,7 @@ import {
   closeGeneratedAnswerFeedbackModal,
   setIsVisible,
   sendGeneratedAnswerFeedback,
+  registerFieldsToIncludeInCitations,
 } from '../../features/generated-answer/generated-answer-actions';
 import {
   GeneratedAnswerFeedback,
@@ -34,7 +35,11 @@ import {GeneratedAnswerSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
 import {Controller, buildController} from '../controller/headless-controller';
 
-export type {GeneratedAnswerState, GeneratedAnswerCitation};
+export type {
+  GeneratedAnswerCitation,
+  GeneratedResponseFormat,
+  GeneratedAnswerState,
+};
 
 export interface GeneratedAnswer extends Controller {
   /**
@@ -55,6 +60,7 @@ export interface GeneratedAnswer extends Controller {
   dislike(): void;
   /**
    * Re-executes the query to generate the answer in the specified format.
+   * @param responseFormat - The formatting options to apply to generated answers.
    */
   rephrase(responseFormat: GeneratedResponseFormat): void;
   /**
@@ -77,7 +83,7 @@ export interface GeneratedAnswer extends Controller {
   sendDetailedFeedback(details: string): void;
   /**
    * Logs a custom event indicating a cited source link was clicked.
-   * @param id The ID of the clicked citation.
+   * @param id - The ID of the clicked citation.
    */
   logCitationClick(id: string): void;
   /**
@@ -94,8 +100,8 @@ export interface GeneratedAnswer extends Controller {
   logCopyToClipboard(): void;
   /**
    * Logs a custom event indicating a cited source link was hovered.
-   * @param citationId The ID of the clicked citation.
-   * @param citationHoverTimeMs The number of milliseconds spent hovering over the citation.
+   * @param citationId - The ID of the clicked citation.
+   * @param citationHoverTimeMs - The number of milliseconds spent hovering over the citation.
    */
   logCitationHover(citationId: string, citationHoverTimeMs: number): void;
 }
@@ -111,6 +117,10 @@ export interface GeneratedAnswerProps {
      */
     responseFormat?: GeneratedResponseFormat;
   };
+  /**
+   * A list of indexed fields to include in the citations returned with the generated answer.
+   */
+  fieldsToIncludeInCitations?: string[];
 }
 
 interface SubscribeStateManager {
@@ -201,6 +211,11 @@ export function buildGeneratedAnswer(
   const initialResponseFormat = props.initialState?.responseFormat;
   if (initialResponseFormat) {
     dispatch(updateResponseFormat(initialResponseFormat));
+  }
+
+  const fieldsToIncludeInCitations = props.fieldsToIncludeInCitations;
+  if (fieldsToIncludeInCitations) {
+    dispatch(registerFieldsToIncludeInCitations(fieldsToIncludeInCitations));
   }
 
   subscribeStateManager.subscribeToSearchRequests(engine);

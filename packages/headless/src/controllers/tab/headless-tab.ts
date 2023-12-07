@@ -1,5 +1,8 @@
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {logInterfaceChange} from '../../features/analytics/analytics-actions';
+import {
+  interfaceChange,
+  logInterfaceChange,
+} from '../../features/analytics/analytics-actions';
 import {executeSearch} from '../../features/search/search-actions';
 import {
   buildCoreTab,
@@ -22,7 +25,13 @@ export type {Tab, TabProps, TabState, TabInitialState, TabOptions};
 export function buildTab(engine: SearchEngine, props: TabProps): Tab {
   const {dispatch} = engine;
   const tab = buildCoreTab(engine, props);
-  const search = () => dispatch(executeSearch({legacy: logInterfaceChange()}));
+  const search = () =>
+    dispatch(
+      executeSearch({
+        legacy: logInterfaceChange(),
+        next: interfaceChange(),
+      })
+    );
 
   return {
     ...tab,

@@ -3,7 +3,7 @@ import {CoreEngine} from '../../..';
 import {configuration} from '../../../app/common-reducers';
 import {
   InsightAction,
-  SearchAction,
+  LegacySearchAction,
 } from '../../../features/analytics/analytics-utils';
 import {
   registerQuerySetQuery,
@@ -16,7 +16,10 @@ import {
   registerQuerySuggest,
   selectQuerySuggestion,
 } from '../../../features/query-suggest/query-suggest-actions';
-import {logQuerySuggestionClick} from '../../../features/query-suggest/query-suggest-analytics-actions';
+import {
+  logQuerySuggestionClick,
+  omniboxAnalytics,
+} from '../../../features/query-suggest/query-suggest-analytics-actions';
 import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice';
 import {QuerySuggestState} from '../../../features/query-suggest/query-suggest-state';
 import {logSearchboxSubmit} from '../../../features/query/query-analytics-actions';
@@ -73,9 +76,9 @@ interface LegacySearchBoxProps {
    * The action creator for the `executeSearch` thunk action.
    */
   executeSearchActionCreator: (
-    arg: SearchAction
+    arg: LegacySearchAction
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ) => AsyncThunkAction<any, SearchAction, any>;
+  ) => AsyncThunkAction<any, LegacySearchAction, any>;
 
   isNextAnalyticsReady: false;
 }
@@ -95,9 +98,9 @@ interface SearchBoxPropsBase {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ) => AsyncThunkAction<any, TransitiveSearchAction, any>)
     | ((
-        arg: SearchAction
+        arg: LegacySearchAction
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ) => AsyncThunkAction<any, SearchAction, any>);
+      ) => AsyncThunkAction<any, LegacySearchAction, any>);
 
   /**
    * The action creator for the `fetchQuerySuggestions` thunk action.
@@ -181,7 +184,7 @@ export interface SearchBox extends Controller {
    *
    * @param analytics -  The analytics action to log after submitting a query.
    */
-  submit(analytics?: SearchAction): void;
+  submit(analytics?: LegacySearchAction): void;
 
   /**
    * The state of the `SearchBox` controller.
@@ -268,12 +271,15 @@ export function buildCoreSearchBox(
       dispatch(selectQuerySuggestion({id, expression: value}));
       performSearch({
         legacy: logQuerySuggestionClick({id, suggestion: value}),
+        next: omniboxAnalytics(id, value),
       }).then(() => {
         dispatch(clearQuerySuggest({id}));
       });
     },
 
-    submit(analytics: SearchAction | InsightAction = logSearchboxSubmit()) {
+    submit(
+      analytics: LegacySearchAction | InsightAction = logSearchboxSubmit()
+    ) {
       performSearch({legacy: analytics});
       dispatch(clearQuerySuggest({id}));
     },

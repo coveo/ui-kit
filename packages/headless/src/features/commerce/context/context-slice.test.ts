@@ -20,8 +20,9 @@ describe('context-slice', () => {
         state,
         setContext({
           trackingId: 'some-tracking-id',
-          currency: 'CAD',
           language: 'fr',
+          country: 'ca',
+          currency: 'CAD',
           clientId: 'some-client-id',
           view: {
             url: 'https://example.org',
@@ -30,8 +31,9 @@ describe('context-slice', () => {
       )
     ).toEqual({
       trackingId: 'some-tracking-id',
-      currency: 'CAD',
       language: 'fr',
+      country: 'ca',
+      currency: 'CAD',
       clientId: 'some-client-id',
       view: {
         url: 'https://example.org',
