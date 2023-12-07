@@ -254,7 +254,7 @@ export class AtomicBreadbox implements InitializableComponent {
           title={title}
           // TODO: [KIT-2939] Replace `remove-filter-on` by `remove-include-filter-on`.
           ariaLabel={this.bindings.i18n.t(
-            isExclusion ? 'remove-exclude-filter-on' : 'remove-filter-on',
+            isExclusion ? 'remove-exclusion-filter-on' : 'remove-filter-on',
             {
               value: title,
             }
