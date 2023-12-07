@@ -1,8 +1,8 @@
-import {SearchAnalyticsProvider} from '../../../../api/analytics/search-analytics';
 import {configuration} from '../../../../app/common-reducers';
 import {SearchEngine} from '../../../../app/search-engine/search-engine';
-import {SearchPageEvents} from '../../../../features/analytics/search-action-cause';
 import {
+  facetClearAll,
+  facetSelect,
   logFacetClearAll,
   logFacetSelect,
 } from '../../../../features/facets/facet-set/facet-set-analytics-actions';
@@ -59,13 +59,7 @@ export function buildNumericFilter(
       dispatch(
         executeSearch({
           legacy: logFacetClearAll(getFacetId()),
-          next: {
-            actionCause: SearchPageEvents.facetClearAll,
-            getEventExtraPayload: (state) =>
-              new SearchAnalyticsProvider(() => state).getFacetClearAllMetadata(
-                getFacetId()
-              ),
-          },
+          next: facetClearAll(getFacetId()),
         })
       );
     },
@@ -78,14 +72,7 @@ export function buildNumericFilter(
               facetId: getFacetId(),
               facetValue: `${range.start}..${range.end}`,
             }),
-            next: {
-              actionCause: SearchPageEvents.facetSelect,
-              getEventExtraPayload: (state) =>
-                new SearchAnalyticsProvider(() => state).getFacetMetadata(
-                  getFacetId(),
-                  `${range.start}..${range.end}`
-                ),
-            },
+            next: facetSelect(getFacetId(), `${range.start}..${range.end}`),
           })
         );
       }

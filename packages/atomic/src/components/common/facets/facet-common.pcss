@@ -2,6 +2,10 @@
 
 .value-count {
   @apply ml-1.5 text-neutral-dark;
+
+  [part='value-exclude-button'] + & {
+    @apply mr-2;
+  }
 }
 
 :host(.popover-nested) {

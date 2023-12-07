@@ -40,7 +40,8 @@ describe('quantic-recent-queries-list', () => {
 
   function visitRecentQueries(
     options: Partial<RecentQueriesListOptions> = {},
-    returnResults = true
+    returnResults = true,
+    waitForFirstSearch = true
   ) {
     interceptSearch();
     if (returnResults) {
@@ -50,6 +51,9 @@ describe('quantic-recent-queries-list', () => {
     }
     cy.visit(pageUrl);
     configure(options);
+    if (waitForFirstSearch) {
+      cy.wait(InterceptAliases.Search);
+    }
   }
   function loadFromUrlHash(
     urlHash: string,
@@ -62,7 +66,7 @@ describe('quantic-recent-queries-list', () => {
   }
 
   it('should render a placeholder before results have returned', () => {
-    visitRecentQueries();
+    visitRecentQueries({}, true, false);
 
     Expect.displayPlaceholder(true);
     Expect.displayQueries(false);
