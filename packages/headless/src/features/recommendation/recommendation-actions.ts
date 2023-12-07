@@ -101,9 +101,9 @@ export const buildRecommendationRequest = async (
   ...(s.searchHub && {
     searchHub: s.searchHub,
   }),
-  ...(s.context && {
-    context: s.context.contextValues,
-  }),
+  ...(s.configuration.analytics.analyticsMode === 'legacy'
+    ? getLegacyContext(s)
+    : getNextContext(s)),
   ...(s.dictionaryFieldContext && {
     dictionaryFieldContext: s.dictionaryFieldContext.contextValues,
   }),
@@ -122,3 +122,27 @@ export const buildRecommendationRequest = async (
     numberOfResults: s.pagination.numberOfResults,
   }),
 });
+
+const getLegacyContext = (state: StateNeededByGetRecommendations) =>
+  state.context
+    ? {
+        context: state.context.contextValues,
+      }
+    : {};
+
+const getNextContext = (state: StateNeededByGetRecommendations) => {
+  if (!state.context) {
+    return {};
+  }
+  const contextValues = state.context?.contextValues || {};
+  const contextSettings = state.context?.contextSettings || {};
+  const formattedObject: Record<string, string | string[]> = {};
+  for (const [key, value] of Object.entries(contextValues).filter(
+    ([key]) => contextSettings[key]?.useForML
+  )) {
+    formattedObject[key] = value;
+  }
+  return {
+    context: formattedObject,
+  };
+};

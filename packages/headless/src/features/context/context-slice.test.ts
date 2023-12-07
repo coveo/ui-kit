@@ -15,6 +15,7 @@ describe('context slice', () => {
     const finalState = contextReducer(undefined, {type: ''});
     expect(finalState).toEqual({
       contextValues: {},
+      contextSettings: {},
     });
   });
 
@@ -22,6 +23,7 @@ describe('context slice', () => {
     const finalState = contextReducer(state, setContext({foo: 'bar'}));
     expect(finalState).toEqual({
       contextValues: {foo: 'bar'},
+      contextSettings: {},
     });
   });
 
@@ -30,20 +32,28 @@ describe('context slice', () => {
     const secondState = contextReducer(state, setContext({hello: 'world'}));
     expect(secondState).toEqual({
       contextValues: {hello: 'world'},
+      contextSettings: {},
     });
   });
 
   it('allows to add a context', () => {
     let modifiedState = contextReducer(
       state,
-      addContext({contextKey: 'foo', contextValue: ['1', '2', '3']})
+      addContext({
+        contextKey: 'foo',
+        contextValue: ['1', '2', '3'],
+      })
     );
     modifiedState = contextReducer(
       modifiedState,
-      addContext({contextKey: 'hello', contextValue: 'world'})
+      addContext({
+        contextKey: 'hello',
+        contextValue: 'world',
+      })
     );
     expect(modifiedState).toEqual({
       contextValues: {foo: ['1', '2', '3'], hello: 'world'},
+      contextSettings: {},
     });
   });
 
@@ -53,6 +63,7 @@ describe('context slice', () => {
     modifiedState = contextReducer(modifiedState, removeContext('foo'));
     expect(modifiedState).toEqual({
       contextValues: {hello: 'world'},
+      contextSettings: {},
     });
   });
 
@@ -60,7 +71,7 @@ describe('context slice', () => {
     const state = getContextInitialState();
     const historyChange = {
       ...getHistoryInitialState(),
-      context: {contextValues: {foo: 'bar'}},
+      context: {contextValues: {foo: 'bar'}, contextSettings: {}},
     };
 
     const nextState = contextReducer(
