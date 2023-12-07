@@ -22,6 +22,7 @@ import {
 } from '../../../features/query-suggest/query-suggest-analytics-actions';
 import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice';
 import {QuerySuggestState} from '../../../features/query-suggest/query-suggest-state';
+import {logSearchboxSubmit} from '../../../features/query/query-analytics-actions';
 import {queryReducer as query} from '../../../features/query/query-slice';
 import {
   SearchAction,
@@ -186,7 +187,7 @@ export interface SearchBox extends Controller {
    * @param nextAnalytics - The next analytics action to log after submitting a query.
    */
   submit(
-    legacyAnalytics: LegacySearchAction,
+    legacyAnalytics?: LegacySearchAction,
     nextAnalytics?: SearchAction
   ): void;
 
@@ -282,7 +283,9 @@ export function buildCoreSearchBox(
     },
 
     submit(
-      legacyAnalytics: LegacySearchAction | InsightAction,
+      legacyAnalytics:
+        | LegacySearchAction
+        | InsightAction = logSearchboxSubmit(),
       nextAnalytics: SearchAction
     ) {
       performSearch({legacy: legacyAnalytics, next: nextAnalytics});
