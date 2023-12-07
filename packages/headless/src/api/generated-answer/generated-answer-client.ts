@@ -46,6 +46,23 @@ interface StreamCallbacks {
   resetAnswer: () => void;
 }
 
+class TimeoutStateManager {
+  private timeouts: Set<ReturnType<typeof setTimeout>> = new Set();
+
+  public add(timeout: ReturnType<typeof setTimeout>) {
+    this.timeouts.add(timeout);
+  }
+
+  public remove(timeout: ReturnType<typeof setTimeout>) {
+    clearTimeout(timeout);
+    this.timeouts.delete(timeout);
+  }
+
+  public isActive(timeout: ReturnType<typeof setTimeout>): boolean {
+    return this.timeouts.has(timeout);
+  }
+}
+
 export class GeneratedAnswerAPIClient {
   private logger: Logger;
 
@@ -59,6 +76,7 @@ export class GeneratedAnswerAPIClient {
   ) {
     const {url, organizationId, streamId, accessToken} = params;
     const {write, abort, close, resetAnswer} = callbacks;
+    const timeoutStateManager = new TimeoutStateManager();
 
     if (!streamId) {
       this.logger.error('No stream ID found');
@@ -69,13 +87,17 @@ export class GeneratedAnswerAPIClient {
     let timeout: ReturnType<typeof setTimeout> | undefined;
 
     const retryStream = () => {
-      abortController?.abort();
-      resetAnswer();
-      stream();
+      if (timeout && !timeoutStateManager.isActive(timeout)) {
+        abortController?.abort();
+        resetAnswer();
+        stream();
+      }
     };
 
     const refreshTimeout = () => {
+      timeoutStateManager.remove(timeout!);
       timeout = resetTimeout(retryStream, timeout, MAX_TIMEOUT);
+      timeoutStateManager.add(timeout);
     };
 
     const abortController = createAbortController();
@@ -111,7 +133,7 @@ export class GeneratedAnswerAPIClient {
         onmessage: (event) => {
           const data: GeneratedAnswerStreamEventData = JSON.parse(event.data);
           if (data.finishReason === 'ERROR') {
-            clearTimeout(timeout);
+            timeoutStateManager.remove(timeout!);
             abortController?.abort();
             abort({
               message: data.errorMessage,
@@ -122,14 +144,14 @@ export class GeneratedAnswerAPIClient {
           write(data);
           retryCount = 0;
           if (data.finishReason === 'COMPLETED') {
-            clearTimeout(timeout);
+            timeoutStateManager.remove(timeout!);
             close();
           } else {
             refreshTimeout();
           }
         },
         onerror: (err) => {
-          clearTimeout(timeout);
+          timeoutStateManager.remove(timeout!);
           if (err instanceof FatalError) {
             abortController?.abort();
             abort(err);
