@@ -374,6 +374,23 @@ describe('Search Box Test Suites', () => {
         });
       });
 
+      describe('after focusing a suggestion with the mouse', () => {
+        beforeEach(() => {
+          setupWithSuggestionsAndRecentQueries();
+          SearchBoxSelectors.inputBox().focus();
+          SearchBoxSelectors.inputBox().type('not a suggestion', {
+            delay: 200,
+            force: true,
+          });
+          SearchBoxSelectors.querySuggestions().eq(1).trigger('mouseover');
+          SearchBoxSelectors.inputBox().type('{enter}', {force: true});
+        });
+
+        it('has recent query', () => {
+          SearchBoxAssertions.assertHasText('not a suggestion');
+        });
+      });
+
       describe('with duplicate recent queries and suggestions', () => {
         function setupDuplicateRecentQueriesAndSuggestions() {
           new SafeStorage().setJSON(StorageItems.RECENT_QUERIES, [
