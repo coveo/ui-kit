@@ -18,6 +18,14 @@ export function assertDisplayBreadcrumb(display: boolean) {
   });
 }
 
+export function assertAriaLabel(includeOrExclude: 'include' | 'exclude') {
+  it(`should have aria-label "${includeOrExclude} filter"`, () => {
+    BreadboxSelectors.breadcrumbButton()
+      .should('have.attr', 'aria-label')
+      .and('include', `Remove ${includeOrExclude} filter on`);
+  });
+}
+
 export function assertBreadcrumbLabel(label: string) {
   it(`should have the label "${label}"`, () => {
     BreadboxSelectors.breadboxLabel().contains(label);

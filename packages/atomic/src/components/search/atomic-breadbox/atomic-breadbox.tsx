@@ -252,6 +252,13 @@ export class AtomicBreadbox implements InitializableComponent {
           style={isExclusion ? 'outline-error' : 'outline-bg-neutral'}
           class={classNames.join(' ')}
           title={title}
+          // TODO: [KIT-2939] Replace `remove-filter-on` by `remove-include-filter-on`.
+          ariaLabel={this.bindings.i18n.t(
+            isExclusion ? 'remove-exclude-filter-on' : 'remove-filter-on',
+            {
+              value: title,
+            }
+          )}
           onClick={() => {
             if (isLastBreadcrumb) {
               this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
