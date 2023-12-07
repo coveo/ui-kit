@@ -11,6 +11,7 @@ import {
   closeGeneratedAnswerFeedbackModal,
   setIsVisible,
   sendGeneratedAnswerFeedback,
+  registerFieldsToIncludeInCitations,
 } from '../../features/generated-answer/generated-answer-actions';
 import {
   GeneratedAnswerFeedback,
@@ -116,6 +117,10 @@ export interface GeneratedAnswerProps {
      */
     responseFormat?: GeneratedResponseFormat;
   };
+  /**
+   * A list of indexed fields to include in the citations returned with the generated answer.
+   */
+  fieldsToIncludeInCitations?: string[];
 }
 
 interface SubscribeStateManager {
@@ -206,6 +211,11 @@ export function buildGeneratedAnswer(
   const initialResponseFormat = props.initialState?.responseFormat;
   if (initialResponseFormat) {
     dispatch(updateResponseFormat(initialResponseFormat));
+  }
+
+  const fieldsToIncludeInCitations = props.fieldsToIncludeInCitations;
+  if (fieldsToIncludeInCitations) {
+    dispatch(registerFieldsToIncludeInCitations(fieldsToIncludeInCitations));
   }
 
   subscribeStateManager.subscribeToSearchRequests(engine);

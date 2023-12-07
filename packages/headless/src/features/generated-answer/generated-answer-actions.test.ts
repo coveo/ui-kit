@@ -11,6 +11,7 @@ import {
   updateError,
   updateMessage,
   updateResponseFormat,
+  registerFieldsToIncludeInCitations,
 } from './generated-answer-actions';
 import {generatedAnswerStyle} from './generated-response-format';
 
@@ -132,6 +133,22 @@ describe('generated answer', () => {
         });
       }
     );
+  });
+
+  describe('#registerFieldsToIncludeInCitations', () => {
+    const actionType = 'generatedAnswer/registerFieldsToIncludeInCitations';
+    const exampleFieldsToIncludeInCitations = ['foo', 'bar'];
+
+    it('should accept a valid payload', () => {
+      expect(
+        e.dispatch(
+          registerFieldsToIncludeInCitations(exampleFieldsToIncludeInCitations)
+        )
+      ).toEqual({
+        payload: exampleFieldsToIncludeInCitations,
+        type: actionType,
+      });
+    });
   });
 
   describe('#setIsVisible', () => {

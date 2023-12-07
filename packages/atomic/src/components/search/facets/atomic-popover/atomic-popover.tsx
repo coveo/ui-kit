@@ -122,8 +122,8 @@ export class AtomicPopover implements InitializableComponent {
 
   private renderDropdownButton() {
     const label = this.label;
-    const hasSelectedValues = !!this.childFacet!.numberOfSelectedValues();
-    const count = this.childFacet!.numberOfSelectedValues().toLocaleString();
+    const hasActiveValues = !!this.childFacet!.numberOfActiveValues();
+    const count = this.childFacet!.numberOfActiveValues().toLocaleString();
     const ariaLabel = this.bindings.i18n.t('popover', {label});
 
     return (
@@ -155,7 +155,7 @@ export class AtomicPopover implements InitializableComponent {
         <span
           part="value-count"
           class={`truncate mr-1.5 text-sm group-hover:text-primary-light group-focus:text-primary ${
-            hasSelectedValues ? '' : 'hidden'
+            hasActiveValues ? '' : 'hidden'
           } ${this.isOpen ? 'text-primary' : 'text-neutral-dark'}`}
         >
           {this.bindings.i18n.t('between-parentheses', {

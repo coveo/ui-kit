@@ -50,6 +50,10 @@ export interface GeneratedAnswerState {
    * Determines if the generated answer feedback was submitted.
    */
   feedbackSubmitted: boolean;
+  /**
+   * A list of indexed fields to include in the citations returned with the generated answer.
+   */
+  fieldsToIncludeInCitations: string[];
 }
 
 export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
@@ -65,5 +69,6 @@ export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
     },
     feedbackModalOpen: false,
     feedbackSubmitted: false,
+    fieldsToIncludeInCitations: [],
   };
 }

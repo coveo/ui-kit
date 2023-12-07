@@ -1,9 +1,7 @@
 import {CoreEngine} from '../../..';
-import {SearchAnalyticsProvider} from '../../../api/analytics/search-analytics';
 import {configuration} from '../../../app/common-reducers';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments';
-import {SearchPageEvents} from '../../../features/analytics/search-action-cause';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {FacetValueState} from '../../../features/facets/facet-api/value';
 import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
@@ -14,6 +12,10 @@ import {
   logFacetShowLess,
   logFacetSelect,
   logFacetExclude,
+  facetSelect,
+  facetUpdateSort,
+  facetClearAll,
+  facetExclude,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice';
 import {
@@ -118,14 +120,7 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
               facetId: getFacetId(),
               facetValue: value.rawValue,
             }),
-            next: {
-              actionCause: SearchPageEvents.facetSelect,
-              getEventExtraPayload: (state) =>
-                new SearchAnalyticsProvider(() => state).getFacetMetadata(
-                  getFacetId(),
-                  value.rawValue
-                ),
-            },
+            next: facetSelect(getFacetId(), value.rawValue),
           })
         );
       },
@@ -137,14 +132,7 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
               facetId: getFacetId(),
               facetValue: value.rawValue,
             }),
-            next: {
-              actionCause: SearchPageEvents.facetExclude,
-              getEventExtraPayload: (state) =>
-                new SearchAnalyticsProvider(() => state).getFacetMetadata(
-                  getFacetId(),
-                  value.rawValue
-                ),
-            },
+            next: facetExclude(getFacetId(), value.rawValue),
           })
         );
       },
@@ -194,13 +182,7 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
       dispatch(
         executeSearch({
           legacy: logFacetClearAll(getFacetId()),
-          next: {
-            actionCause: SearchPageEvents.facetClearAll,
-            getEventExtraPayload: (state) =>
-              new SearchAnalyticsProvider(() => state).getFacetClearAllMetadata(
-                getFacetId()
-              ),
-          },
+          next: facetClearAll(getFacetId()),
         })
       );
     },
@@ -210,14 +192,7 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
       dispatch(
         executeSearch({
           legacy: logFacetUpdateSort({facetId: getFacetId(), criterion}),
-          next: {
-            actionCause: SearchPageEvents.facetUpdateSort,
-            getEventExtraPayload: (state) =>
-              new SearchAnalyticsProvider(() => state).getFacetSortMetadata(
-                getFacetId(),
-                criterion
-              ),
-          },
+          next: facetUpdateSort(getFacetId(), criterion),
         })
       );
     },
