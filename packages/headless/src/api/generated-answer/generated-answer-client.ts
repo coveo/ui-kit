@@ -46,6 +46,18 @@ interface StreamCallbacks {
   resetAnswer: () => void;
 }
 
+class TimeoutStateManager {
+  private usedTimeouts: Set<ReturnType<typeof setTimeout>> = new Set();
+
+  public recordUsedTimeout(timeout: ReturnType<typeof setTimeout>) {
+    this.usedTimeouts.add(timeout);
+  }
+
+  public isTimeoutUsed(timeout: ReturnType<typeof setTimeout>): boolean {
+    return this.usedTimeouts.has(timeout);
+  }
+}
+
 export class GeneratedAnswerAPIClient {
   private logger: Logger;
 
@@ -59,6 +71,7 @@ export class GeneratedAnswerAPIClient {
   ) {
     const {url, organizationId, streamId, accessToken} = params;
     const {write, abort, close, resetAnswer} = callbacks;
+    const timeoutStateManager = new TimeoutStateManager();
 
     if (!streamId) {
       this.logger.error('No stream ID found');
@@ -69,13 +82,16 @@ export class GeneratedAnswerAPIClient {
     let timeout: ReturnType<typeof setTimeout> | undefined;
 
     const retryStream = () => {
-      abortController?.abort();
-      resetAnswer();
-      stream();
+      if (timeout && !timeoutStateManager.isTimeoutUsed(timeout)) {
+        abortController?.abort();
+        resetAnswer();
+        stream();
+      }
     };
 
     const refreshTimeout = () => {
       timeout = resetTimeout(retryStream, timeout, MAX_TIMEOUT);
+      timeoutStateManager.recordUsedTimeout(timeout);
     };
 
     const abortController = createAbortController();
