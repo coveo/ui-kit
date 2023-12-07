@@ -272,8 +272,6 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
     searchQueryContainsCorrectRephraseOption: (expectedAnswerStyle: string) => {
       cy.get<Interception>(InterceptAliases.Search)
         .then((interception) => {
-          console.log(interception);
-
           const answerStyle =
             interception?.request?.body?.pipelineRuleParameters
               ?.mlGenerativeQuestionAnswering?.responseFormat?.answerStyle;
@@ -292,7 +290,6 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
           const fieldsToIncludeInCitations =
             interception?.request?.body?.pipelineRuleParameters
               ?.mlGenerativeQuestionAnswering?.citationsFieldToInclude;
-          console.log(interception);
           expect(fieldsToIncludeInCitations).to.eql(expectedFields);
         })
         .log(
