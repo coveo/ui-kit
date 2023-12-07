@@ -514,6 +514,12 @@ export class AtomicSearchBox {
   }
 
   private onSubmit() {
+    if (this.activeDescendantElement) {
+      this.activeDescendantElement.click();
+      this.updateActiveDescendant();
+      return;
+    }
+
     this.searchBox.submit();
     this.updateActiveDescendant();
     this.clearSuggestions();
@@ -627,17 +633,7 @@ export class AtomicSearchBox {
     this.searchBoxAriaMessage = '';
   }
 
-  private onSuggestionMouseOver(
-    item: SearchBoxSuggestionElement,
-    side: 'left' | 'right',
-    id: string
-  ) {
-    const thisPanel = side === 'left' ? this.leftPanelRef : this.rightPanelRef;
-    if (this.panelInFocus === thisPanel) {
-      this.updateActiveDescendant(id);
-    } else {
-      this.updateDescendants(id);
-    }
+  private onSuggestionMouseOver(item: SearchBoxSuggestionElement) {
     if (item.query) {
       this.updateSuggestedQuery(item.query);
     }
@@ -695,7 +691,7 @@ export class AtomicSearchBox {
           }
         }}
         onMouseOver={() => {
-          this.onSuggestionMouseOver(item, side, id);
+          this.onSuggestionMouseOver(item);
         }}
       ></ButtonSearchSuggestion>
     );
