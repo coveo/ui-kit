@@ -180,7 +180,7 @@ const ANY_FACET_VALUE = 'Cervantes';
 function testFacetExcludeLogging() {
   testFacetSelectLogging('fExcluded');
 
-  it('should log #logFacetSelect when an fExcluded parameter is added', () => {
+  it('should log #facetSelect when an fExcluded parameter is added', () => {
     const action = parametersChange({}, {fExcluded: {author: ['Cervantes']}});
 
     expect(action.actionCause).toEqual(
@@ -188,7 +188,7 @@ function testFacetExcludeLogging() {
     );
   });
 
-  it('should log #logFacetSelect when an fExcluded parameter is modified & a value added', () => {
+  it('should log #facetSelect when an fExcluded parameter is modified & a value added', () => {
     const action = parametersChange(
       {fExcluded: {author: ['Cervantes']}},
       {fExcluded: {author: ['Cervantes', 'Orwell']}}
