@@ -1,6 +1,8 @@
 import {configuration} from '../../../../app/common-reducers';
 import {SearchEngine} from '../../../../app/search-engine/search-engine';
 import {
+  facetClearAll,
+  facetSelect,
   logFacetClearAll,
   logFacetSelect,
 } from '../../../../features/facets/facet-set/facet-set-analytics-actions';
@@ -54,7 +56,12 @@ export function buildNumericFilter(
     ...coreController,
     clear: () => {
       coreController.clear();
-      dispatch(executeSearch({legacy: logFacetClearAll(getFacetId())}));
+      dispatch(
+        executeSearch({
+          legacy: logFacetClearAll(getFacetId()),
+          next: facetClearAll(getFacetId()),
+        })
+      );
     },
     setRange: (range) => {
       const success = coreController.setRange(range);
@@ -65,6 +72,7 @@ export function buildNumericFilter(
               facetId: getFacetId(),
               facetValue: `${range.start}..${range.end}`,
             }),
+            next: facetSelect(getFacetId(), `${range.start}..${range.end}`),
           })
         );
       }

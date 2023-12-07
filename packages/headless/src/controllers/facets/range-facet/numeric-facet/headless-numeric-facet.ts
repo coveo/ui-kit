@@ -1,11 +1,16 @@
 import {configuration} from '../../../../app/common-reducers';
 import {SearchEngine} from '../../../../app/search-engine/search-engine';
 import {
+  facetClearAll,
+  facetUpdateSort,
   logFacetClearAll,
   logFacetUpdateSort,
 } from '../../../../features/facets/facet-set/facet-set-analytics-actions';
 import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
-import {getAnalyticsActionForToggleRangeFacetSelect} from '../../../../features/facets/range-facets/generic/range-facet-utils';
+import {
+  getLegacyAnalyticsActionForToggleRangeFacetSelect,
+  getAnalyticsActionForToggleFacetSelect,
+} from '../../../../features/facets/range-facets/generic/range-facet-utils';
 import {NumericRangeRequest} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/request';
 import {NumericFacetValue} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
 import {numericFacetSetReducer as numericFacetSet} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
@@ -62,7 +67,12 @@ export function buildNumericFacet(
 
     deselectAll() {
       coreController.deselectAll();
-      dispatch(executeSearch({legacy: logFacetClearAll(getFacetId())}));
+      dispatch(
+        executeSearch({
+          legacy: logFacetClearAll(getFacetId()),
+          next: facetClearAll(getFacetId()),
+        })
+      );
     },
 
     sortBy(criterion: RangeFacetSortCriterion) {
@@ -70,6 +80,7 @@ export function buildNumericFacet(
       dispatch(
         executeSearch({
           legacy: logFacetUpdateSort({facetId: getFacetId(), criterion}),
+          next: facetUpdateSort(getFacetId(), criterion),
         })
       );
     },
@@ -78,10 +89,11 @@ export function buildNumericFacet(
       coreController.toggleSelect(selection);
       dispatch(
         executeSearch({
-          legacy: getAnalyticsActionForToggleRangeFacetSelect(
+          legacy: getLegacyAnalyticsActionForToggleRangeFacetSelect(
             getFacetId(),
             selection
           ),
+          next: getAnalyticsActionForToggleFacetSelect(getFacetId(), selection),
         })
       );
     },

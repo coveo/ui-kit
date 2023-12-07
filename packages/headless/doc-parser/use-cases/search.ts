@@ -465,6 +465,10 @@ const controllers: ControllerConfiguration[] = [
     initializer: 'buildInteractiveCitation',
     samplePaths: {},
   },
+  {
+    initializer: 'buildGeneratedAnswer',
+    samplePaths: {},
+  },
 ];
 
 const actionLoaders: ActionLoaderConfiguration[] = [

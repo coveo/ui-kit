@@ -1,12 +1,18 @@
 import {Schema} from '@coveo/bueno';
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {executeSearch} from '../../features/search/search-actions';
+import {
+  SearchAction,
+  executeSearch,
+} from '../../features/search/search-actions';
 import {
   deselectAllStaticFilterValues,
   logStaticFilterClearAll,
   logStaticFilterDeselect,
   logStaticFilterSelect,
   registerStaticFilter,
+  staticFilterClearAll,
+  staticFilterDeselect,
+  staticFilterSelect,
   toggleExcludeStaticFilterValue,
   toggleSelectStaticFilterValue,
 } from '../../features/static-filter-set/static-filter-set-actions';
@@ -166,46 +172,61 @@ export function buildStaticFilter(
     ...controller,
 
     toggleSelect(value: StaticFilterValue) {
-      const analytics = getAnalyticsActionForToggledValue(id, value);
-
       dispatch(toggleSelectStaticFilterValue({id, value}));
-      dispatch(executeSearch({legacy: analytics}));
+      dispatch(
+        executeSearch({
+          legacy: getLegacyAnalyticsActionForToggledValue(id, value),
+          next: getAnalyticsActionForToggledValue(id, value),
+        })
+      );
     },
 
     toggleSingleSelect(value: StaticFilterValue) {
-      const analytics = getAnalyticsActionForToggledValue(id, value);
-
       if (value.state === 'idle') {
         dispatch(deselectAllStaticFilterValues(id));
       }
 
       dispatch(toggleSelectStaticFilterValue({id, value}));
-      dispatch(executeSearch({legacy: analytics}));
+      dispatch(
+        executeSearch({
+          legacy: getLegacyAnalyticsActionForToggledValue(id, value),
+          next: getAnalyticsActionForToggledValue(id, value),
+        })
+      );
     },
 
     toggleExclude(value: StaticFilterValue) {
-      const analytics = getAnalyticsActionForToggledValue(id, value);
-
       dispatch(toggleExcludeStaticFilterValue({id, value}));
-      dispatch(executeSearch({legacy: analytics}));
+      dispatch(
+        executeSearch({
+          legacy: getLegacyAnalyticsActionForToggledValue(id, value),
+          next: getAnalyticsActionForToggledValue(id, value),
+        })
+      );
     },
 
     toggleSingleExclude(value: StaticFilterValue) {
-      const analytics = getAnalyticsActionForToggledValue(id, value);
-
       if (value.state === 'idle') {
         dispatch(deselectAllStaticFilterValues(id));
       }
 
       dispatch(toggleExcludeStaticFilterValue({id, value}));
-      dispatch(executeSearch({legacy: analytics}));
+      dispatch(
+        executeSearch({
+          legacy: getLegacyAnalyticsActionForToggledValue(id, value),
+          next: getAnalyticsActionForToggledValue(id, value),
+        })
+      );
     },
 
     deselectAll() {
-      const analytics = logStaticFilterClearAll({staticFilterId: id});
-
       dispatch(deselectAllStaticFilterValues(id));
-      dispatch(executeSearch({legacy: analytics}));
+      dispatch(
+        executeSearch({
+          legacy: logStaticFilterClearAll({staticFilterId: id}),
+          next: staticFilterClearAll(id),
+        })
+      );
     },
 
     isValueSelected(value: StaticFilterValue) {
@@ -236,7 +257,7 @@ function loadReducers(
   return true;
 }
 
-function getAnalyticsActionForToggledValue(
+function getLegacyAnalyticsActionForToggledValue(
   id: string,
   value: StaticFilterValue
 ) {
@@ -248,4 +269,15 @@ function getAnalyticsActionForToggledValue(
     staticFilterId: id,
     staticFilterValue: {caption, expression},
   });
+}
+
+function getAnalyticsActionForToggledValue(
+  id: string,
+  value: StaticFilterValue
+): SearchAction {
+  const isSelected = value.state === 'selected';
+
+  return isSelected
+    ? staticFilterSelect(id, value)
+    : staticFilterDeselect(id, value);
 }

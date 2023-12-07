@@ -1,4 +1,5 @@
 import {RecordValue, Schema} from '@coveo/bueno';
+import type {AnyAction, Dispatch} from '@reduxjs/toolkit';
 import {CoreEngine} from '../../../app/engine';
 import {
   setContext,
@@ -17,6 +18,10 @@ import {
   buildController,
   Controller,
 } from '../../controller/headless-controller';
+import {
+  ReservedContextKeyError,
+  isReservedContextKey,
+} from './headless-context-reserved-keys';
 
 export type {ContextPayload, ContextValue};
 
@@ -119,20 +124,40 @@ export function buildCoreContext(
         values: getState().context.contextValues,
       };
     },
-
     set(context: ContextPayload) {
       dispatch(setContext(context));
     },
-
-    add(contextKey: string, contextValue: ContextValue) {
-      dispatch(addContext({contextKey, contextValue}));
-    },
-
-    remove(key: string) {
-      dispatch(removeContext(key));
-    },
+    ...(getState().configuration.analytics.analyticsMode === 'legacy'
+      ? legacyCoreContext(dispatch)
+      : nextCoreContext(dispatch)),
   };
 }
+
+const legacyCoreContext = (dispatch: Dispatch<AnyAction>) => ({
+  add(contextKey: string, contextValue: ContextValue) {
+    dispatch(addContext({contextKey, contextValue}));
+  },
+
+  remove(key: string) {
+    dispatch(removeContext(key));
+  },
+});
+
+const nextCoreContext = (dispatch: Dispatch<AnyAction>) => ({
+  add(contextKey: string, contextValue: ContextValue) {
+    if (isReservedContextKey(contextKey)) {
+      throw new ReservedContextKeyError(contextKey);
+    }
+    dispatch(addContext({contextKey, contextValue}));
+  },
+
+  remove(contextKey: string) {
+    if (isReservedContextKey(contextKey)) {
+      throw new ReservedContextKeyError(contextKey);
+    }
+    dispatch(removeContext(contextKey));
+  },
+});
 
 function loadContextReducers(
   engine: CoreEngine

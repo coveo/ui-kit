@@ -9,6 +9,7 @@ import {
   setIsVisible,
   streamAnswer,
   updateResponseFormat,
+  registerFieldsToIncludeInCitations,
 } from '../../features/generated-answer/generated-answer-actions';
 import {
   logCopyGeneratedAnswer,
@@ -260,6 +261,23 @@ describe('generated answer', () => {
         expect(action).toBeDefined();
         expect(action).toHaveProperty('payload', responseFormat);
       });
+    });
+  });
+
+  describe('when passing fields to include in citations', () => {
+    it('should dispatch registerFieldsToIncludeInCitations to register the fields to include in citations', () => {
+      const exampleFieldsToIncludeInCitations = ['foo', 'bar'];
+
+      initGeneratedAnswer({
+        fieldsToIncludeInCitations: exampleFieldsToIncludeInCitations,
+      });
+
+      const action = findAction(registerFieldsToIncludeInCitations.type);
+      expect(action).toBeDefined();
+      expect(action).toHaveProperty(
+        'payload',
+        exampleFieldsToIncludeInCitations
+      );
     });
   });
 

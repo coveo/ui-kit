@@ -1,15 +1,27 @@
 import {CoveoAnalyticsClient} from 'coveo.analytics';
 import pino from 'pino';
 import {getConfigurationInitialState} from '../../features/configuration/configuration-state';
+import {getCategoryFacetSetInitialState} from '../../features/facets/category-facet-set/category-facet-set-state';
+import {getFacetSetInitialState} from '../../features/facets/facet-set/facet-set-state';
+import {FacetSortCriterion} from '../../features/facets/facet-set/interfaces/request';
 import {getGeneratedAnswerInitialState} from '../../features/generated-answer/generated-answer-state';
+import {OmniboxSuggestionMetadata} from '../../features/query-suggest/query-suggest-analytics-actions';
+import {getQuerySuggestSetInitialState} from '../../features/query-suggest/query-suggest-state';
+import {
+  DateFacetValue,
+  StaticFilterValueMetadata,
+} from '../../product-listing.index';
 import {buildMockResult, createMockState} from '../../test';
+import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
 import {buildMockFacetRequest} from '../../test/mock-facet-request';
 import {buildMockFacetResponse} from '../../test/mock-facet-response';
 import {buildMockFacetSlice} from '../../test/mock-facet-slice';
 import {buildMockFacetValue} from '../../test/mock-facet-value';
 import {buildMockFacetValueRequest} from '../../test/mock-facet-value-request';
 import {buildMockQueryState} from '../../test/mock-query-state';
+import {buildMockQuerySuggestSet} from '../../test/mock-query-suggest-slice';
 import {buildMockSearchState} from '../../test/mock-search-state';
+import {QuerySuggestCompletion} from '../search/query-suggest/query-suggest-response';
 import {
   configureLegacyAnalytics,
   getPageID,
@@ -226,6 +238,237 @@ describe('search analytics', () => {
       expect(
         new SearchAnalyticsProvider(() => state).getGeneratedAnswerMetadata()
       ).toEqual({showGeneratedAnswer: false});
+    });
+
+    it('should properly return the facet metadata from the state', () => {
+      const facetId = 'the_facet';
+      const facetValue = 'the_value';
+      const state = getBaseState();
+      state.facetSet = getFacetSetInitialState();
+      state.facetSet[facetId] = buildMockFacetSlice({});
+
+      expect(
+        new SearchAnalyticsProvider(() => state).getFacetMetadata(
+          facetId,
+          facetValue
+        )
+      ).toEqual({
+        coveoHeadlessVersion: 'Test version',
+        facetField: state.facetSet[facetId].request.field,
+        facetId,
+        facetTitle: `${state.facetSet[facetId].request.field}_${facetId}`,
+        facetValue,
+      });
+    });
+
+    it('should properly return the facet clear all metadata from the state', () => {
+      const facetId = 'the_facet';
+      const state = getBaseState();
+      state.facetSet = getFacetSetInitialState();
+      state.facetSet[facetId] = buildMockFacetSlice({});
+
+      expect(
+        new SearchAnalyticsProvider(() => state).getFacetClearAllMetadata(
+          facetId
+        )
+      ).toEqual({
+        coveoHeadlessVersion: 'Test version',
+        facetField: state.facetSet[facetId].request.field,
+        facetId,
+        facetTitle: `${state.facetSet[facetId].request.field}_${facetId}`,
+      });
+    });
+
+    it('should properly return the facet sort metadata from the state', () => {
+      const facetId = 'the_facet';
+      const criteria: FacetSortCriterion = 'score';
+      const state = getBaseState();
+      state.facetSet = getFacetSetInitialState();
+      state.facetSet[facetId] = buildMockFacetSlice({});
+
+      expect(
+        new SearchAnalyticsProvider(() => state).getFacetUpdateSortMetadata(
+          facetId,
+          criteria
+        )
+      ).toEqual({
+        coveoHeadlessVersion: 'Test version',
+        facetField: state.facetSet[facetId].request.field,
+        facetId,
+        facetTitle: `${state.facetSet[facetId].request.field}_${facetId}`,
+        criteria,
+      });
+    });
+
+    it('should properly return the range facet breadcrumb metadata from the state', () => {
+      const facetId = 'the_facet';
+      const facetValue: DateFacetValue = {
+        start: '1',
+        end: '10',
+        endInclusive: false,
+        state: 'selected',
+        numberOfResults: 1,
+      };
+      const state = getBaseState();
+      state.facetSet = getFacetSetInitialState();
+      state.facetSet[facetId] = buildMockFacetSlice({});
+
+      expect(
+        new SearchAnalyticsProvider(
+          () => state
+        ).getRangeBreadcrumbFacetMetadata(facetId, facetValue)
+      ).toEqual({
+        coveoHeadlessVersion: 'Test version',
+        facetField: state.facetSet[facetId].request.field,
+        facetId,
+        facetTitle: `${state.facetSet[facetId].request.field}_${facetId}`,
+        facetRangeEnd: facetValue.end,
+        facetRangeStart: facetValue.start,
+        facetRangeEndInclusive: facetValue.endInclusive,
+      });
+    });
+
+    it('should properly return the result sort metadata from the state', () => {
+      const resultsSortBy = 'relevancy';
+      const state = getBaseState();
+      state.sortCriteria = resultsSortBy;
+
+      expect(
+        new SearchAnalyticsProvider(() => state).getResultSortMetadata()
+      ).toEqual({
+        coveoHeadlessVersion: 'Test version',
+        resultsSortBy,
+      });
+    });
+
+    it('should properly return the static filter toggle metadata from the state', () => {
+      const staticFilterId = 'the_field';
+      const staticFilterValue: StaticFilterValueMetadata = {
+        caption: 'selected',
+        expression: 'the_value',
+      };
+      const state = getBaseState();
+
+      expect(
+        new SearchAnalyticsProvider(() => state).getStaticFilterToggleMetadata(
+          staticFilterId,
+          staticFilterValue
+        )
+      ).toEqual({
+        coveoHeadlessVersion: 'Test version',
+        staticFilterId,
+        staticFilterValue,
+      });
+    });
+
+    it('should properly return the undo trigger query metadata from the state', () => {
+      const undoneQuery = 'the_query';
+      const state = getBaseState();
+
+      expect(
+        new SearchAnalyticsProvider(() => state).getUndoTriggerQueryMetadata(
+          undoneQuery
+        )
+      ).toEqual({
+        coveoHeadlessVersion: 'Test version',
+        undoneQuery,
+      });
+    });
+
+    it('should properly return the category facet breadcrumb metadata from the state', () => {
+      const categoryFacetId = 'the_facet';
+      const categoryFacetPath = ['the_value'];
+      const state = getBaseState();
+      state.categoryFacetSet = getCategoryFacetSetInitialState();
+      state.categoryFacetSet[categoryFacetId] = buildMockCategoryFacetSlice({});
+
+      expect(
+        new SearchAnalyticsProvider(
+          () => state
+        ).getCategoryBreadcrumbFacetMetadata(categoryFacetId, categoryFacetPath)
+      ).toEqual({
+        coveoHeadlessVersion: 'Test version',
+        categoryFacetField:
+          state.categoryFacetSet[categoryFacetId].request.field,
+        categoryFacetId,
+        categoryFacetTitle: `${state.categoryFacetSet[categoryFacetId].request.field}_${categoryFacetId}`,
+        categoryFacetPath,
+      });
+    });
+
+    it('should properly return the omnibox analytics metadata from the state', () => {
+      const id = 'the query suggest id';
+      const suggestion = 'the suggestion';
+      const partialQueries = ['the partial query', 'another partial query'];
+      const completions: QuerySuggestCompletion[] = [
+        {
+          expression: 'the expression',
+          highlighted: 'the highlighted',
+          score: 1,
+          executableConfidence: 1,
+        },
+        {
+          expression: 'another expression',
+          highlighted: 'another highlighted',
+          score: 1,
+          executableConfidence: 1,
+        },
+      ];
+      const state = getBaseState();
+      state.querySuggest = getQuerySuggestSetInitialState();
+      state.querySuggest[id] = buildMockQuerySuggestSet({
+        id,
+        partialQueries,
+        completions,
+      });
+
+      expect(
+        new SearchAnalyticsProvider(() => state).getOmniboxAnalyticsMetadata(
+          id,
+          suggestion
+        )
+      ).toEqual({
+        coveoHeadlessVersion: 'Test version',
+        partialQueries,
+        partialQuery: partialQueries[partialQueries.length - 1],
+        querySuggestResponseId: '',
+        suggestionRanking: -1,
+        suggestions: completions.map((completion) => completion.expression),
+      });
+    });
+
+    it('should properly return the interface change metadata from the state', () => {
+      const originLevel2 = 'the origin level 2';
+      const state = getBaseState();
+      state.configuration.analytics.originLevel2 = originLevel2;
+
+      expect(
+        new SearchAnalyticsProvider(() => state).getInterfaceChangeMetadata()
+      ).toEqual({
+        coveoHeadlessVersion: 'Test version',
+        interfaceChangeTo: originLevel2,
+      });
+    });
+
+    it('should properly return the omnibox from link metadata from the state', () => {
+      const metadata: OmniboxSuggestionMetadata = {
+        suggestionRanking: 1,
+        partialQuery: 'partialQuery',
+        partialQueries: 'partialQueries',
+        suggestions: 'suggestions',
+        querySuggestResponseId: 'querySuggestResponseId',
+      };
+
+      const state = getBaseState();
+
+      expect(
+        new SearchAnalyticsProvider(() => state).getOmniboxFromLinkMetadata(
+          metadata
+        )
+      ).toEqual({
+        coveoHeadlessVersion: 'Test version',
+        ...metadata,
+      });
     });
   });
 });

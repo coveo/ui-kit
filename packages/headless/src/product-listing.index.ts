@@ -179,11 +179,13 @@ export {buildNumericFilter} from './controllers/product-listing/range-facet/nume
 
 export type {
   Context,
+  ContextInitialState,
+  ContextProps,
   ContextState,
-  ContextPayload,
   ContextValue,
-} from './controllers/product-listing/context/headless-product-listing-context';
-export {buildContext} from './controllers/product-listing/context/headless-product-listing-context';
+  ContextPayload,
+} from './controllers/context/headless-context';
+export {buildContext} from './controllers/context/headless-context';
 
 export type {
   InteractiveResultCore,

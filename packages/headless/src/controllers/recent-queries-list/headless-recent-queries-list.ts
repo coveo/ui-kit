@@ -7,6 +7,7 @@ import {
 import {
   logClearRecentQueries,
   logRecentQueryClick,
+  recentQueryClick,
 } from '../../features/recent-queries/recent-queries-analytics-actions';
 import {recentQueriesReducer as recentQueries} from '../../features/recent-queries/recent-queries-slice';
 import {
@@ -200,7 +201,12 @@ export function buildRecentQueriesList(
           clearFilters: registrationOptions.clearFilters,
         })
       );
-      dispatch(executeSearch({legacy: logRecentQueryClick()}));
+      dispatch(
+        executeSearch({
+          legacy: logRecentQueryClick(),
+          next: recentQueryClick(),
+        })
+      );
     },
   };
 }

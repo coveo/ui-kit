@@ -9,7 +9,7 @@ import {Heading} from '../../heading';
 export interface FacetHeaderProps {
   i18n: i18n;
   label: string;
-  numberOfSelectedValues: number;
+  numberOfActiveValues: number;
   isCollapsed: boolean;
   headingLevel: number;
   onToggleCollapse(): void;
@@ -22,10 +22,10 @@ export const FacetHeader: FunctionalComponent<FacetHeaderProps> = (props) => {
   const expandFacet = props.i18n.t('expand-facet', {label});
   const collapseFacet = props.i18n.t('collapse-facet', {label});
   const clearFilters = props.i18n.t('clear-filters', {
-    count: props.numberOfSelectedValues,
+    count: props.numberOfActiveValues,
   });
   const clearFiltersForFacet = props.i18n.t('clear-filters-for-facet', {
-    count: props.numberOfSelectedValues,
+    count: props.numberOfActiveValues,
     label,
   });
 
@@ -48,7 +48,7 @@ export const FacetHeader: FunctionalComponent<FacetHeaderProps> = (props) => {
         icon={props.isCollapsed ? ArrowBottomIcon : ArrowTopIcon}
       ></atomic-icon>
     </Button>,
-    props.onClearFilters && props.numberOfSelectedValues > 0 && (
+    props.onClearFilters && props.numberOfActiveValues > 0 && (
       <Button
         style="text-primary"
         part="clear-button"

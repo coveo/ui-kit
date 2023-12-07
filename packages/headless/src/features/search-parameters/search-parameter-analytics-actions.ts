@@ -9,7 +9,7 @@ import {logSearchboxSubmit} from '../../features/query/query-analytics-actions';
 import {SearchParameters} from '../../features/search-parameters/search-parameter-actions';
 import {logResultsSort} from '../../features/sort-criteria/sort-criteria-analytics-actions';
 import {logInterfaceChange} from '../analytics/analytics-actions';
-import {SearchAction} from '../analytics/analytics-utils';
+import {LegacySearchAction} from '../analytics/analytics-utils';
 import {
   logPageNumber,
   logPagerResize,
@@ -18,7 +18,7 @@ import {
 export function logParametersChange(
   previousParameters: SearchParameters,
   newParameters: SearchParameters
-): SearchAction {
+): LegacySearchAction {
   if (previousParameters.q !== newParameters.q) {
     return logSearchboxSubmit();
   }
@@ -105,7 +105,7 @@ function logFacetAnalyticsAction(
   previousFacets: FacetParameters = {},
   newFacets: FacetParameters = {},
   excluded = false
-): SearchAction {
+): LegacySearchAction {
   const previousIds = Object.keys(previousFacets);
   const newIds = Object.keys(newFacets);
 
@@ -176,7 +176,7 @@ function logFacetAnalyticsAction(
 function logRangeFacetAnalyticsAction(
   previousFacets: RangeFacetParameters = {},
   newFacets: RangeFacetParameters = {}
-): SearchAction {
+): LegacySearchAction {
   return logFacetAnalyticsAction(
     parseRangeFacetParams(previousFacets),
     parseRangeFacetParams(newFacets)
