@@ -6,12 +6,17 @@ import {
   toggleSelectCategoryFacetValue,
 } from '../facets/category-facet-set/category-facet-set-actions';
 import {selectCategoryFacetSearchResult} from '../facets/facet-search-set/category/category-facet-search-actions';
-import {selectFacetSearchResult} from '../facets/facet-search-set/specific/specific-facet-search-actions';
 import {
+  excludeFacetSearchResult,
+  selectFacetSearchResult,
+} from '../facets/facet-search-set/specific/specific-facet-search-actions';
+import {
+  toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
   updateDateFacetValues,
 } from '../facets/range-facets/date-facet-set/date-facet-actions';
 import {
+  toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
   updateNumericFacetValues,
 } from '../facets/range-facets/numeric-facet-set/numeric-facet-actions';
@@ -22,6 +27,7 @@ import {executeSearch} from '../search/search-actions';
 import {updateActiveTab} from '../tab-set/tab-set-actions';
 import {
   deselectAllFacetValues,
+  toggleExcludeFacetValue,
   toggleSelectFacetValue,
 } from './../facets/facet-set/facet-set-actions';
 import {
@@ -103,6 +109,18 @@ export const paginationReducer = createReducer(
         state.totalCountFiltered = response.pagination.totalCount;
       })
       .addCase(deselectAllFacetValues, (state) => {
+        handlePaginationReset(state);
+      })
+      .addCase(toggleExcludeDateFacetValue, (state) => {
+        handlePaginationReset(state);
+      })
+      .addCase(toggleExcludeFacetValue, (state) => {
+        handlePaginationReset(state);
+      })
+      .addCase(toggleExcludeNumericFacetValue, (state) => {
+        handlePaginationReset(state);
+      })
+      .addCase(excludeFacetSearchResult, (state) => {
         handlePaginationReset(state);
       })
       .addCase(toggleSelectFacetValue, (state) => {
