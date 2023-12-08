@@ -4,7 +4,7 @@ Relay is managed by the Coveo Data Platform unit, but we welcome contributions. 
 
 ## Install and build
 
-Relay uses [pnpm](https://pnpm.io) as a package manager, see its [installation instructions](https://pnpm.io/installation) for installing pnpm. Run `pnpm install` to install dependencies. Run `pnpm build` to generate built packages.
+Relay uses [pnpm](https://pnpm.io) as a package manager, see its [installation instructions](https://pnpm.io/installation) for installing pnpm. Run `pnpm install` to install dependencies. Run `pnpm build` to generate built packages. Relay requires a node.js version of 20 and higher.
 
 ## Tests
 

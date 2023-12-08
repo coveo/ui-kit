@@ -27,6 +27,7 @@ export default function Page() {
         token: "xx3d20bc92-afb6-4b7f-90b6-abb568085ea8",
         trackingId: "playground",
         mode: "emit",
+        source: [`relay-playground@${process.env["version"]}`]
       })
     );
   }, []);

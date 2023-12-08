@@ -33,9 +33,9 @@ export interface Meta {
   ts: number;
 
   /**
-   * Library and version in which the event is built and emitted.
+   * Names and versions of the client side libraries which built and emitted this event.
    */
-  source: string;
+  source: string[];
 
   /**
    * Persistent unique identifier of a device.
@@ -63,8 +63,8 @@ function getEventConfig(config: RelayConfig): EventConfig {
   return { trackingId };
 }
 
-function getSource(): string {
-  return `relay@${version}`;
+function getSource(config: RelayConfig): string[] {
+  return (config.source || []).concat([`relay@${version}`]);
 }
 
 export function createMeta(
@@ -81,7 +81,7 @@ export function createMeta(
     type,
     config: eventConfig,
     ts: Date.now(),
-    source: getSource(),
+    source: getSource(config),
     clientId,
     userAgent: getUserAgent(),
     referrer: getReferrer(),

@@ -12,6 +12,9 @@
     "npm:tag:latest": "turbo run npm:tag -- latest",
     "npm:login:ci": "node ./scripts/npm-login.mjs"
   },
+  "engines": {
+    "node" : ">=20.0.0"
+  },
   "devDependencies": {
     "@actions/github": "^5.1.1",
     "@coveo/semantic-monorepo-tools": "^2.1.9",

@@ -44,8 +44,18 @@ describe("createMeta", () => {
     expect(specfiedtimeMeta.ts).toBe(1692057600000);
   });
 
+  it("returns meta with a concatenated version if additional sources were set", () => {
+    const sourcedMeta = createMeta(
+      "itemView",
+      createMockConfig({source:["atomic@1.2", "headless@3.4"]}),
+      mockEnv,
+      defaultClientIdManager
+    );
+    expect(sourcedMeta.source).toEqual(["atomic@1.2", "headless@3.4", "relay@process.env.VERSION"]);
+  });
+
   it("returns meta with the source field with a version placeholder", () => {
-    expect(defaultMeta.source).toBe("relay@process.env.VERSION");
+    expect(defaultMeta.source).toEqual(["relay@process.env.VERSION"]);
   });
 
   it("returns meta with the userAgent field if a userAgent is defined in the environment", () => {

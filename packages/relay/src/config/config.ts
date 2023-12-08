@@ -26,6 +26,13 @@ export interface RelayConfig {
    * @default emit
    */
   mode?: RelayMode;
+
+  /**
+   * Optionally allows a Relay integration to specify the name(s) of software package(s) relay is
+   * being called from. These names will be transmitted with each event, along with Relay's own
+   * version. The recommendation is to specify them using a 'softwarename@softwareversion' string.
+   */
+  source?: string[];
 }
 
 export interface ConfigManager {
@@ -44,6 +51,7 @@ function pick({
     token,
     trackingId,
     ...(!!rest.mode && { mode: rest.mode }),
+    ...(!!rest.source && { source: rest.source })
   });
 }
 
