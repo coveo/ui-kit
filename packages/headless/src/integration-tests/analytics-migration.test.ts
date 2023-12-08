@@ -18,6 +18,7 @@ import {
   omniboxFromLink,
   searchFromLink,
 } from '../features/analytics/analytics-actions';
+import {LegacySearchAction} from '../features/analytics/analytics-utils';
 import {
   didYouMeanClick,
   logDidYouMeanClick,
@@ -69,6 +70,10 @@ import {
   historyForward,
   noResultsBack,
 } from '../features/history/history-analytics-actions';
+import {
+  logInstantResultsSearch,
+  searchboxAsYouType,
+} from '../features/instant-results/instant-result-analytics-actions';
 import {fetchQuerySuggestions} from '../features/query-suggest/query-suggest-actions';
 import {OmniboxSuggestionMetadata} from '../features/query-suggest/query-suggest-analytics-actions';
 import {
@@ -908,6 +913,19 @@ describe('Analytics Search Migration', () => {
     const action = executeSearch({
       legacy: logOmniboxFromLink(metadata),
       next: omniboxFromLink(metadata),
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/instantResult/searchboxAsYouType', async () => {
+    const action = executeSearch({
+      legacy: logInstantResultsSearch() as LegacySearchAction,
+      next: searchboxAsYouType(),
     });
 
     legacySearchEngine.dispatch(action);
