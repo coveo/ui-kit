@@ -1,31 +1,35 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "type": "node",
-            "runtimeVersion": "20",
-            "request": "launch",
-            "name": "Jest All",
-            "program": "${workspaceFolder}/packages/relay/node_modules/jest/bin/jest.js",
-            "args": ["--runInBand", "--config", "packages/relay/jest.config.js"],
-            "console": "integratedTerminal",
-            "internalConsoleOptions": "neverOpen",
-            "windows": {
-                "program": "${workspaceFolder}/packages/relay/node_modules/jest/bin/jest.js"
-            }
-        },
-        {
-            "type": "node",
-            "runtimeVersion": "20",
-            "request": "launch",
-            "name": "Jest Current File",
-            "program": "${workspaceFolder}/packages/relay/node_modules/jest/bin/jest.js",
-            "args": ["${fileBasenameNoExtension}", "--config", "packages/relay/jest.config.js"],
-            "console": "integratedTerminal",
-            "internalConsoleOptions": "neverOpen",
-            "windows": {
-                "program": "${workspaceFolder}/packages/relay/node_modules/jest/bin/jest.js"
-            }
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "runtimeVersion": "20",
+      "request": "launch",
+      "name": "Jest All",
+      "program": "${workspaceFolder}/packages/relay/node_modules/jest/bin/jest.js",
+      "args": ["--runInBand", "--config", "packages/relay/jest.config.js"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "windows": {
+        "program": "${workspaceFolder}/packages/relay/node_modules/jest/bin/jest.js"
+      }
+    },
+    {
+      "type": "node",
+      "runtimeVersion": "20",
+      "request": "launch",
+      "name": "Jest Current File",
+      "program": "${workspaceFolder}/packages/relay/node_modules/jest/bin/jest.js",
+      "args": [
+        "${fileBasenameNoExtension}",
+        "--config",
+        "packages/relay/jest.config.js"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "windows": {
+        "program": "${workspaceFolder}/packages/relay/node_modules/jest/bin/jest.js"
+      }
+    }
+  ]
 }

@@ -51,7 +51,7 @@ function pick({
     token,
     trackingId,
     ...(!!rest.mode && { mode: rest.mode }),
-    ...(!!rest.source && { source: rest.source })
+    ...(!!rest.source && { source: rest.source }),
   });
 }
 
