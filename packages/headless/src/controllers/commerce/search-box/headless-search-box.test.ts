@@ -29,10 +29,6 @@ import {
   buildSearchBox,
 } from './headless-search-box';
 
-jest.mock('../../../features/query/query-analytics-actions', () => ({
-  logSearchboxSubmit: jest.fn(() => () => {}),
-}));
-
 describe('headless search box', () => {
   const id = 'search-box-123';
   let state: CommerceAppState;
