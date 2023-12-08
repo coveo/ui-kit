@@ -3,6 +3,7 @@ import {buildMockCommerceFacetResponse} from '../../../../test/mock-commerce-fac
 import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceFacetValue} from '../../../../test/mock-commerce-facet-value';
 import {buildFetchProductListingV2Response} from '../../../../test/mock-product-listing-v2';
+import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
 import {
   FacetValueState,
   facetValueStates,
@@ -13,6 +14,7 @@ import {
   updateFacetIsFieldExpanded,
 } from '../../../facets/facet-set/facet-set-actions';
 import {convertFacetValueToRequest} from '../../../facets/facet-set/facet-set-slice';
+import {updateFacetAutoSelection} from '../../../facets/generic/facet-actions';
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
 import {commerceFacetSetReducer} from './facet-set-slice';
 import {
@@ -323,5 +325,38 @@ describe('facet-set slice', () => {
       expect(facetIdToRemove in finalState).toBe(false);
       expect(newFacetId in finalState).toBe(true);
     });
+  });
+
+  it('dispatching #updateFacetAutoSelection updates autoSelection for all facets', () => {
+    const facetId = '1';
+    const anotherFacetId = '2';
+    state[facetId] = buildMockCommerceFacetSlice({
+      request: buildMockCommerceFacetRequest({preventAutoSelect: true}),
+    });
+    state[anotherFacetId] = buildMockCommerceFacetSlice({
+      request: buildMockCommerceFacetRequest({preventAutoSelect: true}),
+    });
+
+    const finalState = commerceFacetSetReducer(
+      state,
+      updateFacetAutoSelection({allow: true})
+    );
+
+    expect(finalState[facetId]!.request.preventAutoSelect).toBe(false);
+    expect(finalState[anotherFacetId]!.request.preventAutoSelect).toBe(false);
+  });
+
+  it('#deselectAllBreadcrumbs sets all responses #values to "idle"', () => {
+    const facetId = '1';
+    state[facetId] = buildMockCommerceFacetSlice({
+      request: buildMockCommerceFacetRequest({
+        values: [{value: 'facet value', state: 'selected'}],
+      }),
+    });
+    const action = deselectAllBreadcrumbs();
+
+    const finalState = commerceFacetSetReducer(state, action);
+
+    expect(finalState[facetId].request.values[0].state).toEqual('idle');
   });
 });

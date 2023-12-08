@@ -1,5 +1,6 @@
 import {type Draft as WritableDraft} from '@reduxjs/toolkit';
 import {createReducer, FacetValueRequest} from '../../../../ssr.index';
+import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
@@ -7,6 +8,7 @@ import {
   updateFacetNumberOfValues,
 } from '../../../facets/facet-set/facet-set-actions';
 import {convertFacetValueToRequest} from '../../../facets/facet-set/facet-set-slice';
+import {updateFacetAutoSelection} from '../../../facets/generic/facet-actions';
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
 import {
   CommerceFacetSetState,
@@ -90,6 +92,16 @@ export const commerceFacetSetReducer = createReducer(
         }
 
         facetRequest.isFieldExpanded = isFieldExpanded;
+      })
+      .addCase(updateFacetAutoSelection, (state, action) =>
+        Object.values(state).forEach((slice) => {
+          slice.request.preventAutoSelect = !action.payload.allow;
+        })
+      )
+      .addCase(deselectAllBreadcrumbs, (state) => {
+        Object.values(state).forEach((facet) => {
+          facet.request.values.forEach((value) => (value.state = 'idle'));
+        });
       });
   }
 );
