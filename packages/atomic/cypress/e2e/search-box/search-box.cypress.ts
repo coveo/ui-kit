@@ -386,7 +386,7 @@ describe('Search Box Test Suites', () => {
           SearchBoxSelectors.inputBox().type('{enter}', {force: true});
         });
 
-        it('has recent query', () => {
+        it('has same query as before', () => {
           SearchBoxAssertions.assertHasText('not a suggestion');
         });
       });
