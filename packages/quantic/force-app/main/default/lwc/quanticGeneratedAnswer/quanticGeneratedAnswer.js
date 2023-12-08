@@ -23,6 +23,8 @@ import {
 import {AriaLiveRegion, I18nUtils} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 // @ts-ignore
+import errorTemplate from './templates/errorTemplate.html';
+// @ts-ignore
 import generatedAnswerTemplate from './templates/generatedAnswer.html';
 // @ts-ignore
 import loadingTemplate from './templates/loading.html';
@@ -116,6 +118,8 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   feedbackSubmitted = false;
   /** @type {import('c/quanticUtils').AriaLiveUtils} */
   ariaLiveMessage;
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -406,12 +410,22 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   get citationFields() {
     return this.fieldsToIncludeInCitations
-      .split(',')
+      ?.split(',')
       .map((field) => field.trim())
       .filter((field) => field.length > 0);
   }
 
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
+  }
+
   render() {
+    if (this.hasInitializationError) {
+      return errorTemplate;
+    }
     if (this.isLoading) {
       return loadingTemplate;
     }
