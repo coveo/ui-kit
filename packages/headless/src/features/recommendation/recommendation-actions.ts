@@ -20,7 +20,11 @@ import {
 } from '../../utils/validate-payload';
 import {AnalyticsAsyncThunk} from '../analytics/analytics-utils';
 import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-params';
-import {logRecommendationUpdate} from './recommendation-analytics-actions';
+import {SearchAction} from '../search/search-actions';
+import {
+  logRecommendationUpdate,
+  recommendationInterfaceLoad,
+} from './recommendation-analytics-actions';
 
 export type StateNeededByGetRecommendations = ConfigurationSection &
   RecommendationSection &
@@ -59,9 +63,15 @@ export const getRecommendations = createAsyncThunk<
   async (_, {getState, rejectWithValue, extra: {apiClient}}) => {
     const state = getState();
     const startedAt = new Date().getTime();
-    const fetched = await apiClient.recommendations(
-      await buildRecommendationRequest(state)
-    );
+    const request =
+      state.configuration.analytics.analyticsMode === 'legacy'
+        ? await buildRecommendationRequest(state)
+        : await buildRecommendationRequest(
+            state,
+            recommendationInterfaceLoad()
+          );
+
+    const fetched = await apiClient.recommendations(request);
     const duration = new Date().getTime() - startedAt;
     if (isErrorResponse(fetched)) {
       return rejectWithValue(fetched.error);
@@ -78,7 +88,8 @@ export const getRecommendations = createAsyncThunk<
 );
 
 export const buildRecommendationRequest = async (
-  s: StateNeededByGetRecommendations
+  s: StateNeededByGetRecommendations,
+  searchAction?: SearchAction
 ): Promise<RecommendationRequest> => ({
   accessToken: s.configuration.accessToken,
   organizationId: s.configuration.organizationId,
@@ -114,11 +125,23 @@ export const buildRecommendationRequest = async (
     visitorId: await getVisitorID(s.configuration.analytics),
   }),
   ...(s.configuration.analytics.enabled &&
-    (await fromAnalyticsStateToAnalyticsParams(s.configuration.analytics))),
+    (await fromAnalyticsStateToAnalyticsParams(
+      s.configuration.analytics,
+      searchAction ? buildAnalyticsSection(searchAction, s) : undefined
+    ))),
   ...(s.configuration.search.authenticationProviders.length && {
     authentication: s.configuration.search.authenticationProviders.join(','),
   }),
   ...(s.pagination && {
     numberOfResults: s.pagination.numberOfResults,
   }),
+});
+
+const buildAnalyticsSection = (
+  action: SearchAction,
+  state: StateNeededByGetRecommendations
+) => ({
+  customData: action.getEventExtraPayload(state),
+  actionCause: action.actionCause,
+  type: action.actionCause,
 });
