@@ -674,6 +674,7 @@
     "zh-TW": "移除包含{{value}}的篩選器"
   },
   "remove-exclusion-filter-on": {
+    "en": "Remove exclusion filter on {{value}}",
     "fr": "Supprimer le filtre d'exclusion sur {{value}}",
     "cs": "Odstranit filtr vyloučení na {{value}}",
     "da": "Fjern udelukkelsesfilter på {{value}}",
