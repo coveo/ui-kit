@@ -63,14 +63,10 @@ export const getRecommendations = createAsyncThunk<
   async (_, {getState, rejectWithValue, extra: {apiClient}}) => {
     const state = getState();
     const startedAt = new Date().getTime();
-    const request =
-      state.configuration.analytics.analyticsMode === 'legacy'
-        ? await buildRecommendationRequest(state)
-        : await buildRecommendationRequest(
-            state,
-            recommendationInterfaceLoad()
-          );
-
+    const request = await buildRecommendationRequest(
+      state,
+      recommendationInterfaceLoad()
+    );
     const fetched = await apiClient.recommendations(request);
     const duration = new Date().getTime() - startedAt;
     if (isErrorResponse(fetched)) {
@@ -89,7 +85,7 @@ export const getRecommendations = createAsyncThunk<
 
 export const buildRecommendationRequest = async (
   s: StateNeededByGetRecommendations,
-  searchAction?: SearchAction
+  searchAction: SearchAction
 ): Promise<RecommendationRequest> => ({
   accessToken: s.configuration.accessToken,
   organizationId: s.configuration.organizationId,
@@ -125,10 +121,7 @@ export const buildRecommendationRequest = async (
     visitorId: await getVisitorID(s.configuration.analytics),
   }),
   ...(s.configuration.analytics.enabled &&
-    (await fromAnalyticsStateToAnalyticsParams(
-      s.configuration.analytics,
-      searchAction ? buildAnalyticsSection(searchAction, s) : undefined
-    ))),
+    (await buildAnalyticsSection(s, searchAction))),
   ...(s.configuration.search.authenticationProviders.length && {
     authentication: s.configuration.search.authenticationProviders.join(','),
   }),
@@ -137,11 +130,21 @@ export const buildRecommendationRequest = async (
   }),
 });
 
-const buildAnalyticsSection = (
-  action: SearchAction,
-  state: StateNeededByGetRecommendations
-) => ({
-  customData: action.getEventExtraPayload(state),
-  actionCause: action.actionCause,
-  type: action.actionCause,
-});
+const buildAnalyticsSection = async (
+  state: StateNeededByGetRecommendations,
+  action: SearchAction
+) => {
+  const eventDescription =
+    state.configuration.analytics.analyticsMode === 'legacy'
+      ? undefined
+      : {
+          customData: action.getEventExtraPayload(state),
+          actionCause: action.actionCause,
+          type: action.actionCause,
+        };
+
+  return await fromAnalyticsStateToAnalyticsParams(
+    state.configuration.analytics,
+    eventDescription
+  );
+};
