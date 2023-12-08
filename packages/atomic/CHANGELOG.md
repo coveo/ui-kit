@@ -1,3 +1,14 @@
+# 2.52.0 (2023-12-08)
+
+### Bug Fixes
+
+- **atomic:** icons in textarea search box are not centered ([#3468](https://github.com/coveo/ui-kit/issues/3468)) ([bffe657](https://github.com/coveo/ui-kit/commits/bffe65760b2c52db79787a552dfe07434c2d292e))
+- **breadcrumbs:** include/exclude aria labels ([#3469](https://github.com/coveo/ui-kit/issues/3469)) ([ce4f5a3](https://github.com/coveo/ui-kit/commits/ce4f5a3586e8070855ae5be27bfd66f0c3176d13))
+
+### Features
+
+- **atomic:** support core facet value exclusion ([#3103](https://github.com/coveo/ui-kit/issues/3103)) ([7b678c3](https://github.com/coveo/ui-kit/commits/7b678c3ba9ff8733fe6d0c6897679c4f2d67a213))
+
 ## 2.51.1 (2023-12-06)
 
 ### Bug Fixes
