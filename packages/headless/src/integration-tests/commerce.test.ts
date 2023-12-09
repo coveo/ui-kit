@@ -5,7 +5,7 @@ import {
   buildProductListing,
   buildRelevanceSortCriterion,
   buildSearch,
-  buildSort,
+  buildProductListingSort,
   CommerceEngine,
   ProductListing,
   buildProductListingFacetGenerator,
@@ -90,7 +90,7 @@ describe.skip('commerce', () => {
   });
 
   it('applies sort to product listing', async () => {
-    const sort = buildSort(engine);
+    const sort = buildProductListingSort(engine);
     const relevance = buildRelevanceSortCriterion();
     sort.sortBy(relevance);
 

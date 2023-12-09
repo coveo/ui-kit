@@ -1,20 +1,20 @@
 import {Action} from '@reduxjs/toolkit';
-import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
-import {productListingV2Reducer} from '../../../../features/commerce/product-listing/product-listing-slice';
+import {executeSearch} from '../../../../features/commerce/search/search-actions';
+import {commerceSearchReducer as commerceSearch} from '../../../../features/commerce/search/search-slice';
 import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
 import {
   buildRelevanceSortCriterion,
   Sort,
 } from '../../sort/core/headless-core-commerce-sort';
-import {buildProductListingSort} from './headless-product-listing-sort';
+import {buildSearchSort} from './headless-search-sort';
 
-describe('headless product listing sort', () => {
+describe('headless search sort', () => {
   let sort: Sort;
   let engine: MockCommerceEngine;
 
   beforeEach(() => {
     engine = buildMockCommerceEngine();
-    sort = buildProductListingSort(engine);
+    sort = buildSearchSort(engine);
   });
 
   const expectContainAction = (action: Action) => {
@@ -24,12 +24,12 @@ describe('headless product listing sort', () => {
 
   it('adds the correct reducers to engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
-      productListing: productListingV2Reducer,
+      commerceSearch,
     });
   });
 
   it('sortBy dispatches #fetchProductListing', () => {
     sort.sortBy(buildRelevanceSortCriterion());
-    expectContainAction(fetchProductListing.pending);
+    expectContainAction(executeSearch.pending);
   });
 });

@@ -83,14 +83,16 @@ export type {
   SortInitialState,
   Sort,
   SortState,
-} from './controllers/commerce/product-listing/sort/headless-product-listing-sort';
+} from './controllers/commerce/sort/core/headless-core-commerce-sort';
 export {
-  buildSort,
   buildRelevanceSortCriterion,
   buildFieldsSortCriterion,
   SortBy,
   SortDirection,
-} from './controllers/commerce/product-listing/sort/headless-product-listing-sort';
+} from './controllers/commerce/sort/core/headless-core-commerce-sort';
+
+export {buildProductListingSort} from './controllers/commerce/product-listing/sort/headless-product-listing-sort';
+export {buildSearchSort} from './controllers/commerce/search/sort/headless-search-sort';
 
 export type {
   FacetGenerator,
