@@ -1,6 +1,6 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
-import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice';
+import {executeSearch} from '../../../../features/commerce/search/search-actions';
+import {commerceSearchReducer as commerceSearch} from '../../../../features/commerce/search/search-slice';
 import {loadReducerError} from '../../../../utils/errors';
 import {
   buildCorePagination,
@@ -13,21 +13,19 @@ import {
  * @param engine - The headless commerce engine.
  * @returns A `Pagination` controller instance.
  * */
-export function buildProductListingPagination(
-  engine: CommerceEngine
-): Pagination {
-  if (!loadProductListingPaginationReducers(engine)) {
+export function buildSearchPagination(engine: CommerceEngine): Pagination {
+  if (!loadSearchPagination(engine)) {
     throw loadReducerError;
   }
 
   return buildCorePagination(engine, {
-    fetchResultsActionCreator: fetchProductListing,
+    fetchResultsActionCreator: executeSearch,
   });
 }
 
-function loadProductListingPaginationReducers(
+function loadSearchPagination(
   engine: CommerceEngine
 ): engine is CommerceEngine {
-  engine.addReducers({productListing});
+  engine.addReducers({commerceSearch});
   return true;
 }

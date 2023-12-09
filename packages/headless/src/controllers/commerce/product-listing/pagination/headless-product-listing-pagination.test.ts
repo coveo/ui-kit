@@ -1,20 +1,12 @@
-import {
-  selectPage,
-  nextPage,
-  previousPage,
-} from '../../../../features/commerce/pagination/pagination-actions';
-import {paginationReducer as commercePagination} from '../../../../features/commerce/pagination/pagination-slice';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice';
 import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
-import {
-  buildProductListingPagination,
-  ProductListingPagination,
-} from './headless-product-listing-pagination';
+import {Pagination} from '../../pagination/core/headless-core-commerce-pagination';
+import {buildProductListingPagination} from './headless-product-listing-pagination';
 
-describe('ProductListingPagination', () => {
+describe('product listing pagination', () => {
   let engine: MockCommerceEngine;
-  let productListingPagination: ProductListingPagination;
+  let productListingPagination: Pagination;
 
   function initProductListingPagination() {
     engine = buildMockCommerceEngine();
@@ -29,7 +21,6 @@ describe('ProductListingPagination', () => {
   it('adds correct reducers to engine', () => {
     expect(engine.addReducers).toBeCalledWith({
       productListing,
-      commercePagination,
     });
   });
 
@@ -37,25 +28,20 @@ describe('ProductListingPagination', () => {
     expect(productListingPagination.subscribe).toBeTruthy();
   });
 
-  it('#selectPage dispatches #selectPage & #fetchProductListing', () => {
+  it('#selectPage dispatches #fetchProductListing', () => {
     productListingPagination.selectPage(0);
-    expect(engine.actions.find((a) => a.type === selectPage.type)).toBeTruthy();
     const action = engine.findAsyncAction(fetchProductListing.pending);
     expect(action).toBeTruthy();
   });
 
-  it('#nextPage dispatches #nextPage & #fetchProductListing', () => {
+  it('#nextPage dispatches #fetchProductListing', () => {
     productListingPagination.nextPage();
-    expect(engine.actions.find((a) => a.type === nextPage.type)).toBeTruthy();
     const action = engine.findAsyncAction(fetchProductListing.pending);
     expect(action).toBeTruthy();
   });
 
-  it('#previousPage dispatches #previousPage & #fetchProductListing', () => {
+  it('#previousPage dispatches #fetchProductListing', () => {
     productListingPagination.previousPage();
-    expect(
-      engine.actions.find((a) => a.type === previousPage.type)
-    ).toBeTruthy();
     const action = engine.findAsyncAction(fetchProductListing.pending);
     expect(action).toBeTruthy();
   });

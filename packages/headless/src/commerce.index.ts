@@ -51,11 +51,12 @@ export type {
 export {buildProductListing} from './controllers/commerce/product-listing/headless-product-listing';
 
 export type {
-  ProductListingPagination,
-  ProductListingPaginationState,
-  ProductListingPaginationControllerState,
-} from './controllers/commerce/product-listing/pagination/headless-product-listing-pagination';
+  Pagination,
+  PaginationState,
+  PaginationControllerState,
+} from './controllers/commerce/pagination/core/headless-core-commerce-pagination';
 export {buildProductListingPagination} from './controllers/commerce/product-listing/pagination/headless-product-listing-pagination';
+export {buildSearchPagination} from './controllers/commerce/search/pagination/headless-search-pagination';
 
 export type {
   InteractiveResult,
