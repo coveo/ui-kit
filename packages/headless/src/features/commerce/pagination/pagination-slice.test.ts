@@ -1,3 +1,7 @@
+import {buildSearchResponse} from '../../../test/mock-commerce-search';
+import {buildFetchProductListingV2Response} from '../../../test/mock-product-listing-v2';
+import {fetchProductListing} from '../product-listing/product-listing-actions';
+import {executeSearch} from '../search/search-actions';
 import {nextPage, previousPage, selectPage} from './pagination-actions';
 import {paginationReducer} from './pagination-slice';
 import {
@@ -69,5 +73,37 @@ describe('pagination slice', () => {
     const finalState = paginationReducer(state, previousPage());
 
     expect(finalState.page).toBe(0);
+  });
+
+  it('sets the pagination on #fetchProductListing.fulfilled', () => {
+    const pagination = {
+      page: 999,
+      perPage: 999,
+      totalCount: 999,
+      totalPages: 999,
+    };
+    const response = buildFetchProductListingV2Response({
+      pagination,
+    });
+
+    expect(
+      paginationReducer(state, fetchProductListing.fulfilled(response, ''))
+    ).toEqual(pagination);
+  });
+
+  it('sets the pagination on product #executeSearch.fulfilled', () => {
+    const pagination = {
+      page: 999,
+      perPage: 999,
+      totalCount: 999,
+      totalPages: 999,
+    };
+    const response = buildSearchResponse({
+      pagination,
+    });
+
+    expect(
+      paginationReducer(state, executeSearch.fulfilled(response, ''))
+    ).toEqual(pagination);
   });
 });

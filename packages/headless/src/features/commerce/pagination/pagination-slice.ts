@@ -1,5 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {fetchProductListing} from '../product-listing/product-listing-actions';
+import {executeSearch} from '../search/search-actions';
 import {nextPage, previousPage, selectPage} from './pagination-actions';
 import {getCommercePaginationInitialState} from './pagination-state';
 
@@ -22,12 +23,13 @@ export const paginationReducer = createReducer(
           state.page = action.payload;
         }
       })
-      .addCase(fetchProductListing.fulfilled, (state, action) => {
-        const responsePagination = action.payload.response.pagination;
-        state.perPage = responsePagination.perPage;
-        state.totalCount = responsePagination.totalCount;
-        state.totalPages = responsePagination.totalPages;
-        // TODO: replace with state = responsePagination once the API response pagination returns the current page.
-      });
+      .addCase(
+        fetchProductListing.fulfilled,
+        (_, action) => action.payload.response.pagination
+      )
+      .addCase(
+        executeSearch.fulfilled,
+        (_, action) => action.payload.response.pagination
+      );
   }
 );
