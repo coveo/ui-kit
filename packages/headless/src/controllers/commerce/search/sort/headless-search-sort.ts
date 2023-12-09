@@ -11,7 +11,7 @@ import {
 /**
  * Creates a `Sort` controller instance for commerce search.
  *
- * @param engine - The headless engine.
+ * @param engine - The headless commerce engine.
  * @param props - The configurable `Sort` controller properties.
  * @returns A `Sort` controller instance.
  */

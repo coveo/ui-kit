@@ -110,7 +110,7 @@ export interface SortState {
  * @internal
  * Creates a core `Sort` controller instance for commerce solution types.
  *
- * @param engine - The headless engine.
+ * @param engine - The headless commerce engine.
  * @param props - The configurable `Sort` controller properties.
  * @returns A `Sort` controller instance.
  */
