@@ -106,9 +106,8 @@ describe('CoreCommerceFacet', () => {
     it('dispatches #fetchResultsActionCreator', () => {
       facet.toggleSelect(facetValue());
 
-      expect(
-        engine.findAsyncAction(fetchResultsActionCreator.pending)
-      ).toBeTruthy();
+      const action = engine.findAsyncAction(fetchResultsActionCreator.pending);
+      expect(action).toBeTruthy();
     });
   });
 
@@ -126,9 +125,8 @@ describe('CoreCommerceFacet', () => {
     it('dispatches #fetchResultsActionCreator', () => {
       facet.toggleExclude(facetValue());
 
-      expect(
-        engine.findAsyncAction(fetchResultsActionCreator.pending)
-      ).toBeTruthy();
+      const action = engine.findAsyncAction(fetchResultsActionCreator.pending);
+      expect(action).toBeTruthy();
     });
   });
 
@@ -147,9 +145,10 @@ describe('CoreCommerceFacet', () => {
       it('dispatches #fetchResultsActionCreator', () => {
         facet.toggleSingleSelect(facetValue());
 
-        expect(
-          engine.findAsyncAction(fetchResultsActionCreator.pending)
-        ).toBeTruthy();
+        const action = engine.findAsyncAction(
+          fetchResultsActionCreator.pending
+        );
+        expect(action).toBeTruthy();
       });
 
       it('dispatches the #deselectAllFacetValues action with the facetId', () => {
@@ -180,9 +179,10 @@ describe('CoreCommerceFacet', () => {
       it('dispatches #fetchResultsActionCreator', () => {
         facet.toggleSingleSelect(facetValue());
 
-        expect(
-          engine.findAsyncAction(fetchResultsActionCreator.pending)
-        ).toBeTruthy();
+        const action = engine.findAsyncAction(
+          fetchResultsActionCreator.pending
+        );
+        expect(action).toBeTruthy();
       });
 
       it('does not dispatch the #deselectAllFacetValues action', () => {
@@ -210,9 +210,10 @@ describe('CoreCommerceFacet', () => {
       it('dispatches #fetchResultsActionCreator', () => {
         facet.toggleSingleExclude(facetValue());
 
-        expect(
-          engine.findAsyncAction(fetchResultsActionCreator.pending)
-        ).toBeTruthy();
+        const action = engine.findAsyncAction(
+          fetchResultsActionCreator.pending
+        );
+        expect(action).toBeTruthy();
       });
 
       it('dispatches the #deselectAllFacetValues action with the facetId', () => {
@@ -243,9 +244,10 @@ describe('CoreCommerceFacet', () => {
       it('dispatches #fetchResultsActionCreator', () => {
         facet.toggleSingleExclude(facetValue());
 
-        expect(
-          engine.findAsyncAction(fetchResultsActionCreator.pending)
-        ).toBeTruthy();
+        const action = engine.findAsyncAction(
+          fetchResultsActionCreator.pending
+        );
+        expect(action).toBeTruthy();
       });
 
       it('does not dispatch the #deselectAllFacetValues action', () => {
@@ -331,9 +333,8 @@ describe('CoreCommerceFacet', () => {
     it('dispatches #fetchResultsActionCreator', () => {
       facet.showMoreValues();
 
-      expect(
-        engine.findAsyncAction(fetchResultsActionCreator.pending)
-      ).toBeTruthy();
+      const action = engine.findAsyncAction(fetchResultsActionCreator.pending);
+      expect(action).toBeTruthy();
     });
   });
 
@@ -394,9 +395,8 @@ describe('CoreCommerceFacet', () => {
     it('dispatches #fetchResultsActionCreator', () => {
       facet.showLessValues();
 
-      expect(
-        engine.findAsyncAction(fetchResultsActionCreator.pending)
-      ).toBeTruthy();
+      const action = engine.findAsyncAction(fetchResultsActionCreator.pending);
+      expect(action).toBeTruthy();
     });
   });
 
