@@ -1,1 +1,5 @@
 @import 'c/searchBoxStyle';
+
+.searchbox__clear-button-container {
+  margin: inherit;
+}
