@@ -29,6 +29,9 @@ import {
 
 describe('CoreCommerceFacet', () => {
   const facetId = 'facet_id';
+  const fetchResultsActionCreator = fetchProductListing;
+  const toggleExcludeActionCreator = toggleExcludeFacetValue;
+  const toggleSelectActionCreator = toggleSelectFacetValue;
   const field = 'some_field';
   const type = 'regular';
   const displayName = 'Some Facet';
@@ -63,9 +66,9 @@ describe('CoreCommerceFacet', () => {
   beforeEach(() => {
     options = {
       facetId,
-      fetchResultsActionCreator: fetchProductListing,
-      toggleExcludeActionCreator: toggleExcludeFacetValue,
-      toggleSelectActionCreator: toggleSelectFacetValue,
+      fetchResultsActionCreator,
+      toggleExcludeActionCreator,
+      toggleSelectActionCreator,
     };
 
     state = buildMockCommerceState();
@@ -96,7 +99,7 @@ describe('CoreCommerceFacet', () => {
       facet.toggleSelect(facetValue());
 
       expect(engine.actions).toContainEqual(
-        options.toggleSelectActionCreator({facetId, selection: facetValue()})
+        toggleSelectActionCreator({facetId, selection: facetValue()})
       );
     });
 
@@ -104,10 +107,7 @@ describe('CoreCommerceFacet', () => {
       facet.toggleSelect(facetValue());
 
       expect(
-        engine.findAsyncAction(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (options.fetchResultsActionCreator as any).pending
-        )
+        engine.findAsyncAction(fetchResultsActionCreator.pending)
       ).toBeTruthy();
     });
   });
@@ -119,7 +119,7 @@ describe('CoreCommerceFacet', () => {
       facet.toggleExclude(facetValue());
 
       expect(engine.actions).toContainEqual(
-        options.toggleExcludeActionCreator({facetId, selection: facetValue()})
+        toggleExcludeActionCreator({facetId, selection: facetValue()})
       );
     });
 
@@ -127,10 +127,7 @@ describe('CoreCommerceFacet', () => {
       facet.toggleExclude(facetValue());
 
       expect(
-        engine.findAsyncAction(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (options.fetchResultsActionCreator as any).pending
-        )
+        engine.findAsyncAction(fetchResultsActionCreator.pending)
       ).toBeTruthy();
     });
   });
@@ -143,7 +140,7 @@ describe('CoreCommerceFacet', () => {
         facet.toggleSingleSelect(facetValue());
 
         expect(engine.actions).toContainEqual(
-          options.toggleSelectActionCreator({facetId, selection: facetValue()})
+          toggleSelectActionCreator({facetId, selection: facetValue()})
         );
       });
 
@@ -151,10 +148,7 @@ describe('CoreCommerceFacet', () => {
         facet.toggleSingleSelect(facetValue());
 
         expect(
-          engine.findAsyncAction(
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (options.fetchResultsActionCreator as any).pending
-          )
+          engine.findAsyncAction(fetchResultsActionCreator.pending)
         ).toBeTruthy();
       });
 
@@ -179,7 +173,7 @@ describe('CoreCommerceFacet', () => {
         facet.toggleSingleSelect(facetValue());
 
         expect(engine.actions).toContainEqual(
-          options.toggleSelectActionCreator({facetId, selection: facetValue()})
+          toggleSelectActionCreator({facetId, selection: facetValue()})
         );
       });
 
@@ -187,10 +181,7 @@ describe('CoreCommerceFacet', () => {
         facet.toggleSingleSelect(facetValue());
 
         expect(
-          engine.findAsyncAction(
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (options.fetchResultsActionCreator as any).pending
-          )
+          engine.findAsyncAction(fetchResultsActionCreator.pending)
         ).toBeTruthy();
       });
 
@@ -212,7 +203,7 @@ describe('CoreCommerceFacet', () => {
         facet.toggleSingleExclude(facetValue());
 
         expect(engine.actions).toContainEqual(
-          options.toggleExcludeActionCreator({facetId, selection: facetValue()})
+          toggleExcludeActionCreator({facetId, selection: facetValue()})
         );
       });
 
@@ -220,10 +211,7 @@ describe('CoreCommerceFacet', () => {
         facet.toggleSingleExclude(facetValue());
 
         expect(
-          engine.findAsyncAction(
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (options.fetchResultsActionCreator as any).pending
-          )
+          engine.findAsyncAction(fetchResultsActionCreator.pending)
         ).toBeTruthy();
       });
 
@@ -248,7 +236,7 @@ describe('CoreCommerceFacet', () => {
         facet.toggleSingleExclude(facetValue());
 
         expect(engine.actions).toContainEqual(
-          options.toggleExcludeActionCreator({facetId, selection: facetValue()})
+          toggleExcludeActionCreator({facetId, selection: facetValue()})
         );
       });
 
@@ -256,10 +244,7 @@ describe('CoreCommerceFacet', () => {
         facet.toggleSingleExclude(facetValue());
 
         expect(
-          engine.findAsyncAction(
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (options.fetchResultsActionCreator as any).pending
-          )
+          engine.findAsyncAction(fetchResultsActionCreator.pending)
         ).toBeTruthy();
       });
 
@@ -347,10 +332,7 @@ describe('CoreCommerceFacet', () => {
       facet.showMoreValues();
 
       expect(
-        engine.findAsyncAction(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (options.fetchResultsActionCreator as any).pending
-        )
+        engine.findAsyncAction(fetchResultsActionCreator.pending)
       ).toBeTruthy();
     });
   });
@@ -413,10 +395,7 @@ describe('CoreCommerceFacet', () => {
       facet.showLessValues();
 
       expect(
-        engine.findAsyncAction(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (options.fetchResultsActionCreator as any).pending
-        )
+        engine.findAsyncAction(fetchResultsActionCreator.pending)
       ).toBeTruthy();
     });
   });
