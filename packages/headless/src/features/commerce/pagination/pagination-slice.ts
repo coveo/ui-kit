@@ -1,7 +1,19 @@
 import {createReducer} from '@reduxjs/toolkit';
+import {
+  deselectAllFacetValues,
+  toggleExcludeFacetValue,
+  toggleSelectFacetValue,
+} from '../../facets/facet-set/facet-set-actions';
+import {
+  toggleExcludeNumericFacetValue,
+  toggleSelectNumericFacetValue,
+} from '../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {fetchProductListing} from '../product-listing/product-listing-actions';
 import {nextPage, previousPage, selectPage} from './pagination-actions';
-import {getCommercePaginationInitialState} from './pagination-state';
+import {
+  CommercePaginationState,
+  getCommercePaginationInitialState,
+} from './pagination-state';
 
 export const paginationReducer = createReducer(
   getCommercePaginationInitialState(),
@@ -23,11 +35,31 @@ export const paginationReducer = createReducer(
         }
       })
       .addCase(fetchProductListing.fulfilled, (state, action) => {
-        const responsePagination = action.payload.response.pagination;
-        state.perPage = responsePagination.perPage;
-        state.totalCount = responsePagination.totalCount;
-        state.totalPages = responsePagination.totalPages;
-        // TODO: replace with state = responsePagination once the API response pagination returns the current page.
+        const {page, perPage, totalCount, totalPages} =
+          action.payload.response.pagination;
+        state.page = page;
+        state.perPage = perPage;
+        state.totalCount = totalCount;
+        state.totalPages = totalPages;
+      })
+      .addCase(deselectAllFacetValues, (state) => {
+        handlePaginationReset(state);
+      })
+      .addCase(toggleSelectFacetValue, (state) => {
+        handlePaginationReset(state);
+      })
+      .addCase(toggleExcludeFacetValue, (state) => {
+        handlePaginationReset(state);
+      })
+      .addCase(toggleSelectNumericFacetValue, (state) => {
+        handlePaginationReset(state);
+      })
+      .addCase(toggleExcludeNumericFacetValue, (state) => {
+        handlePaginationReset(state);
       });
   }
 );
+
+function handlePaginationReset(state: CommercePaginationState) {
+  state.page = 0;
+}
