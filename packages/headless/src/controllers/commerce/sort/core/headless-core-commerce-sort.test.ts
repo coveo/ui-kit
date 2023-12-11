@@ -64,7 +64,7 @@ describe('commerce core sort', () => {
     });
   });
 
-  describe('when sort is populated', () => {
+  describe('when sort is populated with non-default sort', () => {
     const appliedSort = {
       by: SortBy.Fields,
       fields: [{name: 'some_field'}],
