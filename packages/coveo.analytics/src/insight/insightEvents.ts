@@ -72,7 +72,6 @@ export interface UserActionsPageViewMetadata {
 
 export interface CreateArticleMetadata {
     articleType: string;
-    triggeredBy: string;
 }
 
 export interface InsightInterfaceChangeMetadata extends InterfaceChangeMetadata, CaseMetadata {}
