@@ -30,6 +30,8 @@ import {
 describe('CoreCommerceFacet', () => {
   const facetId = 'facet_id';
   const field = 'some_field';
+  const type = 'regular';
+  const displayName = 'Some Facet';
   let options: CoreCommerceFacetOptions;
   let state: CommerceAppState;
   let engine: MockCommerceEngine;
@@ -42,13 +44,19 @@ describe('CoreCommerceFacet', () => {
 
   function setFacetRequest(config: Partial<CommerceFacetRequest> = {}) {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
-      request: buildMockCommerceFacetRequest({facetId, field, ...config}),
+      request: buildMockCommerceFacetRequest({facetId, field, type, ...config}),
     });
   }
 
   function setFacetResponse(config: Partial<RegularFacetResponse> = {}) {
     state.productListing.facets = [
-      buildMockCommerceRegularFacetResponse({facetId, field, ...config}),
+      buildMockCommerceRegularFacetResponse({
+        facetId,
+        field,
+        type,
+        displayName,
+        ...config,
+      }),
     ];
   }
 
@@ -67,137 +75,240 @@ describe('CoreCommerceFacet', () => {
     initFacet();
   });
 
-  it('renders', () => {
+  it('initializes', () => {
     expect(facet).toBeTruthy();
   });
 
-  it('adds the correct reducers to engine', () => {
+  it('adds correct reducers to engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       commerceFacetSet,
     });
   });
 
-  it('exposes a #subscribe method', () => {
+  it('exposes #subscribe method', () => {
     expect(facet.subscribe).toBeTruthy();
   });
 
-  it('#state.field exposes the field', () => {
-    expect(facet.state.field).toBe(field);
-  });
+  describe('#toggleSelect', () => {
+    const facetValue = () => buildMockCommerceRegularFacetValue({value: 'TED'});
 
-  it('#state.facetId exposes the facetId', () => {
-    expect(facet.state.facetId).toBe(facetId);
-  });
-
-  it('when the product listing response has a facet, the facet #state.values contains the same values', () => {
-    const values = [buildMockCommerceRegularFacetValue()];
-    const facetResponse = buildMockCommerceRegularFacetResponse({
-      facetId,
-      values,
-    });
-
-    state.productListing.facets = [facetResponse];
-    expect(facet.state.values).toBe(values);
-  });
-
-  it('#toggleSelect dispatches a #toggleSelect action with the passed facet value', () => {
-    const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
-    facet.toggleSelect(facetValue);
-
-    expect(engine.actions).toContainEqual(
-      toggleSelectFacetValue({facetId, selection: facetValue})
-    );
-  });
-
-  it('#toggleExclude dispatches a #toggleExclude action with the passed facet value', () => {
-    const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
-    facet.toggleExclude(facetValue);
-
-    expect(engine.actions).toContainEqual(
-      toggleExcludeFacetValue({facetId, selection: facetValue})
-    );
-  });
-
-  describe('#toggleSingleSelect when the value state is "idle"', () => {
-    const facetValue = () =>
-      buildMockCommerceRegularFacetValue({value: 'TED', state: 'idle'});
-
-    it('dispatches a #toggleSelect action with the passed facet value', () => {
-      facet.toggleSingleSelect(facetValue());
+    it('dispatches the correct #toggleSelect action with the passed facet value', () => {
+      facet.toggleSelect(facetValue());
 
       expect(engine.actions).toContainEqual(
-        toggleSelectFacetValue({facetId, selection: facetValue()})
+        options.toggleSelectActionCreator({facetId, selection: facetValue()})
       );
     });
 
-    it('dispatches a #deselectAllFacetValues action', () => {
-      facet.toggleSingleSelect(facetValue());
+    it('dispatches the correct #fetchResults action', () => {
+      facet.toggleSelect(facetValue());
 
-      expect(engine.actions).toContainEqual(deselectAllFacetValues(facetId));
+      expect(
+        engine.findAsyncAction(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (options.fetchResultsActionCreator as any).pending
+        )
+      ).toBeTruthy();
     });
   });
 
-  describe('#toggleSingleSelect when the value state is not "idle"', () => {
-    const facetValue = () =>
-      buildMockCommerceRegularFacetValue({value: 'TED', state: 'selected'});
+  describe('#toggleExclude', () => {
+    const facetValue = () => buildMockCommerceRegularFacetValue({value: 'TED'});
 
-    it('dispatches a #toggleSelect action with the passed facet value', () => {
-      facet.toggleSingleSelect(facetValue());
+    it('dispatches the correct #toggleExclude action with the passed facet value', () => {
+      facet.toggleExclude(facetValue());
 
       expect(engine.actions).toContainEqual(
-        toggleSelectFacetValue({facetId, selection: facetValue()})
+        options.toggleExcludeActionCreator({facetId, selection: facetValue()})
       );
     });
 
-    it('does not dispatch a #deselectAllFacetValues action', () => {
-      facet.toggleSingleSelect(facetValue());
+    it('dispatches the correct #fetchResults action', () => {
+      facet.toggleExclude(facetValue());
 
-      expect(engine.actions).not.toContainEqual(
-        deselectAllFacetValues(facetId)
-      );
+      expect(
+        engine.findAsyncAction(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (options.fetchResultsActionCreator as any).pending
+        )
+      ).toBeTruthy();
     });
   });
 
-  it.each([
-    {state: 'selected', expected: true},
-    {state: 'excluded', expected: false},
-    {state: 'idle', expected: false},
-  ])(
-    '#isValueSelected returns $expected when the passed value is "$state"',
-    ({state, expected}) => {
-      const facetValue = buildMockCommerceRegularFacetValue({
-        state: state as FacetValueState,
+  describe('#toggleSingleSelect', () => {
+    describe('when toggled facet value state is "idle"', () => {
+      const facetValue = () =>
+        buildMockCommerceRegularFacetValue({value: 'TED', state: 'idle'});
+      it('dispatches the correct #toggleSelect action with the passed facet value', () => {
+        facet.toggleSingleSelect(facetValue());
+
+        expect(engine.actions).toContainEqual(
+          options.toggleSelectActionCreator({facetId, selection: facetValue()})
+        );
       });
-      expect(facet.isValueSelected(facetValue)).toBe(expected);
-    }
-  );
+
+      it('dispatches the correct #fetchResults action', () => {
+        facet.toggleSingleSelect(facetValue());
+
+        expect(
+          engine.findAsyncAction(
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (options.fetchResultsActionCreator as any).pending
+          )
+        ).toBeTruthy();
+      });
+
+      it('dispatches the #deselectAllFacetValues action with the facetId', () => {
+        facet.toggleSingleSelect(facetValue());
+
+        expect(engine.actions).toContainEqual(deselectAllFacetValues(facetId));
+      });
+    });
+
+    describe.each([
+      {
+        state: 'excluded' as FacetValueState,
+      },
+      {
+        state: 'selected' as FacetValueState,
+      },
+    ])('when toggled facet value state is $state', ({state}) => {
+      const facetValue = () =>
+        buildMockCommerceRegularFacetValue({value: 'TED', state});
+      it('dispatches the correct #toggleSelect action with the passed facet value', () => {
+        facet.toggleSingleSelect(facetValue());
+
+        expect(engine.actions).toContainEqual(
+          options.toggleSelectActionCreator({facetId, selection: facetValue()})
+        );
+      });
+
+      it('dispatches the correct #fetchResults action', () => {
+        facet.toggleSingleSelect(facetValue());
+
+        expect(
+          engine.findAsyncAction(
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (options.fetchResultsActionCreator as any).pending
+          )
+        ).toBeTruthy();
+      });
+
+      it('does not dispatch the #deselectAllFacetValues action', () => {
+        facet.toggleSingleSelect(facetValue());
+
+        expect(engine.actions).not.toContainEqual(
+          deselectAllFacetValues(facetId)
+        );
+      });
+    });
+  });
+
+  describe('#toggleSingleExclude', () => {
+    describe('when toggled facet value state is "idle"', () => {
+      const facetValue = () =>
+        buildMockCommerceRegularFacetValue({value: 'TED', state: 'idle'});
+      it('dispatches the correct #toggleExclude action with the passed facet value', () => {
+        facet.toggleSingleExclude(facetValue());
+
+        expect(engine.actions).toContainEqual(
+          options.toggleExcludeActionCreator({facetId, selection: facetValue()})
+        );
+      });
+
+      it('dispatches the correct #fetchResults action', () => {
+        facet.toggleSingleExclude(facetValue());
+
+        expect(
+          engine.findAsyncAction(
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (options.fetchResultsActionCreator as any).pending
+          )
+        ).toBeTruthy();
+      });
+
+      it('dispatches the #deselectAllFacetValues action with the facetId', () => {
+        facet.toggleSingleExclude(facetValue());
+
+        expect(engine.actions).toContainEqual(deselectAllFacetValues(facetId));
+      });
+    });
+
+    describe.each([
+      {
+        state: 'excluded' as FacetValueState,
+      },
+      {
+        state: 'selected' as FacetValueState,
+      },
+    ])('when toggled facet value state is "$state"', ({state}) => {
+      const facetValue = () =>
+        buildMockCommerceRegularFacetValue({value: 'TED', state});
+      it('dispatches the correct #toggleSelect action with the passed facet value', () => {
+        facet.toggleSingleExclude(facetValue());
+
+        expect(engine.actions).toContainEqual(
+          options.toggleExcludeActionCreator({facetId, selection: facetValue()})
+        );
+      });
+
+      it('dispatches the correct #fetchResults action', () => {
+        facet.toggleSingleExclude(facetValue());
+
+        expect(
+          engine.findAsyncAction(
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (options.fetchResultsActionCreator as any).pending
+          )
+        ).toBeTruthy();
+      });
+
+      it('does not dispatch the #deselectAllFacetValues action', () => {
+        facet.toggleSingleExclude(facetValue());
+
+        expect(engine.actions).not.toContainEqual(
+          deselectAllFacetValues(facetId)
+        );
+      });
+    });
+  });
+
+  describe('#isValueSelected', () => {
+    it.each([
+      {state: 'selected', expected: true},
+      {state: 'excluded', expected: false},
+      {state: 'idle', expected: false},
+    ])(
+      'when the passed value is "$state", returns $expected',
+      ({state, expected}) => {
+        const facetValue = buildMockCommerceRegularFacetValue({
+          state: state as FacetValueState,
+        });
+        expect(facet.isValueSelected(facetValue)).toBe(expected);
+      }
+    );
+  });
+
+  describe('#isValueExcluded', () => {
+    it.each([
+      {state: 'selected', expected: false},
+      {state: 'excluded', expected: true},
+      {state: 'idle', expected: false},
+    ])(
+      'when the passed value is "$state", returns $expected',
+      ({state, expected}) => {
+        const facetValue = buildMockCommerceRegularFacetValue({
+          state: state as FacetValueState,
+        });
+        expect(facet.isValueExcluded(facetValue)).toBe(expected);
+      }
+    );
+  });
 
   describe('#deselectAll', () => {
     it('dispatches #deselectAllFacetValues with the facet id', () => {
       facet.deselectAll();
       expect(engine.actions).toContainEqual(deselectAllFacetValues(facetId));
-    });
-  });
-
-  describe('#state.hasActiveValues', () => {
-    it('when #state.values has a value with a non-idle state, it returns true', () => {
-      const facetResponse = buildMockCommerceRegularFacetResponse({facetId});
-      facetResponse.values = [
-        buildMockCommerceRegularFacetValue({state: 'selected'}),
-      ];
-      state.productListing.facets = [facetResponse];
-
-      expect(facet.state.hasActiveValues).toBe(true);
-    });
-
-    it('when #state.values only has idle values, it returns false', () => {
-      const facetResponse = buildMockCommerceRegularFacetResponse({facetId});
-      facetResponse.values = [
-        buildMockCommerceRegularFacetValue({state: 'idle'}),
-      ];
-      state.productListing.facets = [facetResponse];
-
-      expect(facet.state.hasActiveValues).toBe(false);
     });
   });
 
@@ -231,31 +342,16 @@ describe('CoreCommerceFacet', () => {
 
       expect(engine.actions).toContainEqual(action);
     });
-  });
 
-  describe('#state.canShowMoreValues', () => {
-    it('when there is no response, it returns false', () => {
-      expect(facet.state.canShowMoreValues).toBe(false);
-    });
+    it('dispatches the correct #fetchResults action', () => {
+      facet.showMoreValues();
 
-    it('when #moreValuesAvailable on the response is true, it returns true', () => {
-      const facetResponse = buildMockCommerceRegularFacetResponse({
-        facetId,
-        moreValuesAvailable: true,
-      });
-
-      state.productListing.facets = [facetResponse];
-      expect(facet.state.canShowMoreValues).toBe(true);
-    });
-
-    it('when #moreValuesAvailable on the response is false, it returns false', () => {
-      const facetResponse = buildMockCommerceRegularFacetResponse({
-        facetId,
-        moreValuesAvailable: false,
-      });
-
-      state.productListing.facets = [facetResponse];
-      expect(facet.state.canShowMoreValues).toBe(false);
+      expect(
+        engine.findAsyncAction(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (options.fetchResultsActionCreator as any).pending
+        )
+      ).toBeTruthy();
     });
   });
 
@@ -280,8 +376,7 @@ describe('CoreCommerceFacet', () => {
       expect(engine.actions).toContainEqual(action);
     });
 
-    it(`when the number of non-idle values is greater than the original number,
-    it sets the number of values to the non-idle number`, () => {
+    it('when number of non-idle values > original number, sets number of values to non-idle number', () => {
       const selectedValue = buildMockCommerceRegularFacetValue({
         state: 'selected',
       });
@@ -303,7 +398,7 @@ describe('CoreCommerceFacet', () => {
       expect(engine.actions).toContainEqual(action);
     });
 
-    it('updates isFieldExpanded to false', () => {
+    it('updates isFieldExpanded to "false"', () => {
       facet.showLessValues();
 
       const action = updateFacetIsFieldExpanded({
@@ -313,46 +408,133 @@ describe('CoreCommerceFacet', () => {
 
       expect(engine.actions).toContainEqual(action);
     });
+
+    it('dispatches the correct #fetchResults action', () => {
+      facet.showLessValues();
+
+      expect(
+        engine.findAsyncAction(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (options.fetchResultsActionCreator as any).pending
+        )
+      ).toBeTruthy();
+    });
   });
 
-  describe('#state.canShowLessValues', () => {
-    it('when the number of currentValues is equal to the configured number, it returns false', () => {
+  describe('#state', () => {
+    it('#state.facetId exposes the facetId', () => {
+      expect(facet.state.facetId).toBe(facetId);
+    });
+
+    it('#state.type exposes the type', () => {
+      expect(facet.state.type).toBe(type);
+    });
+
+    it('#state.field exposes the field', () => {
+      expect(facet.state.field).toBe(field);
+    });
+
+    it('#state.displayName exposes the displayName', () => {
+      expect(facet.state.displayName).toBe(displayName);
+    });
+
+    it('#state.values contains the same values as from the response', () => {
       const values = [buildMockCommerceRegularFacetValue()];
-      setFacetRequest({values, initialNumberOfValues: 1, numberOfValues: 1});
-      setFacetResponse({
-        values: [buildMockCommerceRegularFacetValue({value: 'Some Value'})],
+      const facetResponse = buildMockCommerceRegularFacetResponse({
+        facetId,
+        values,
       });
 
-      initFacet();
-
-      expect(facet.state.canShowLessValues).toBe(false);
+      state.productListing.facets = [facetResponse];
+      expect(facet.state.values).toBe(values);
     });
 
-    it('when the number of currentValues is greater than the configured number, it returns true', () => {
-      const value = buildMockCommerceRegularFacetValue();
+    describe('#state.hasActiveValues', () => {
+      it('when #state.values has a value with a non-idle state, returns "true"', () => {
+        const facetResponse = buildMockCommerceRegularFacetResponse({facetId});
+        facetResponse.values = [
+          buildMockCommerceRegularFacetValue({state: 'selected'}),
+        ];
+        state.productListing.facets = [facetResponse];
 
-      setFacetRequest({values: [value, value]});
-      setFacetResponse({
-        values: [buildMockCommerceRegularFacetValue({value: 'Some Value'})],
+        expect(facet.state.hasActiveValues).toBe(true);
       });
-      initFacet();
 
-      expect(facet.state.canShowLessValues).toBe(true);
+      it('when #state.values only has idle values, returns "false"', () => {
+        const facetResponse = buildMockCommerceRegularFacetResponse({facetId});
+        facetResponse.values = [
+          buildMockCommerceRegularFacetValue({state: 'idle'}),
+        ];
+        state.productListing.facets = [facetResponse];
+
+        expect(facet.state.hasActiveValues).toBe(false);
+      });
     });
 
-    it(`when the number of currentValues is greater than the configured number,
-    when there are no idle values, it returns false`, () => {
-      const selectedValue = buildMockCommerceRegularFacetValue({
-        state: 'selected',
+    describe('#state.canShowMoreValues', () => {
+      it('when there is no response, returns "false"', () => {
+        expect(facet.state.canShowMoreValues).toBe(false);
       });
 
-      setFacetRequest({values: [selectedValue, selectedValue]});
-      setFacetResponse({
-        values: [buildMockCommerceRegularFacetValue({value: 'Some Value'})],
-      });
-      initFacet();
+      it('when #moreValuesAvailable in the response is "true", returns "true"', () => {
+        const facetResponse = buildMockCommerceRegularFacetResponse({
+          facetId,
+          moreValuesAvailable: true,
+        });
 
-      expect(facet.state.canShowLessValues).toBe(false);
+        state.productListing.facets = [facetResponse];
+        expect(facet.state.canShowMoreValues).toBe(true);
+      });
+
+      it('when #moreValuesAvailable in the response is "false", returns "false"', () => {
+        const facetResponse = buildMockCommerceRegularFacetResponse({
+          facetId,
+          moreValuesAvailable: false,
+        });
+
+        state.productListing.facets = [facetResponse];
+        expect(facet.state.canShowMoreValues).toBe(false);
+      });
+    });
+
+    describe('#state.canShowLessValues', () => {
+      it('when the number of currentValues is equal to the configured number, it returns false', () => {
+        const values = [buildMockCommerceRegularFacetValue()];
+        setFacetRequest({values, initialNumberOfValues: 1, numberOfValues: 1});
+        setFacetResponse({
+          values: [buildMockCommerceRegularFacetValue({value: 'Some Value'})],
+        });
+
+        initFacet();
+
+        expect(facet.state.canShowLessValues).toBe(false);
+      });
+
+      it('when the number of currentValues is greater than the configured number, it returns true', () => {
+        const value = buildMockCommerceRegularFacetValue();
+
+        setFacetRequest({values: [value, value]});
+        setFacetResponse({
+          values: [buildMockCommerceRegularFacetValue({value: 'Some Value'})],
+        });
+        initFacet();
+
+        expect(facet.state.canShowLessValues).toBe(true);
+      });
+
+      it('when number of currentValues > configured number and there are no idle values, returns "false"', () => {
+        const selectedValue = buildMockCommerceRegularFacetValue({
+          state: 'selected',
+        });
+
+        setFacetRequest({values: [selectedValue, selectedValue]});
+        setFacetResponse({
+          values: [buildMockCommerceRegularFacetValue({value: 'Some Value'})],
+        });
+        initFacet();
+
+        expect(facet.state.canShowLessValues).toBe(false);
+      });
     });
   });
 });
