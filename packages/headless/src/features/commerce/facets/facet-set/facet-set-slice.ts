@@ -22,12 +22,7 @@ import {
   getCommerceFacetSetInitialState,
 } from './facet-set-state';
 import {CommerceFacetRequest} from './interfaces/request';
-import {
-  AnyFacetResponse,
-  RegularFacetResponse,
-  RegularFacetValue,
-  NumericFacetResponse,
-} from './interfaces/response';
+import {AnyFacetResponse, RegularFacetValue} from './interfaces/response';
 
 export const commerceFacetSetReducer = createReducer(
   getCommerceFacetSetInitialState(),
@@ -197,7 +192,8 @@ function updateStateFromFacetResponse(
   facetRequest.numberOfValues = facetResponse.values.length;
   facetRequest.field = facetResponse.field;
   facetRequest.type = facetResponse.type;
-  facetRequest.values = getFacetRequestValuesFromFacetResponse(facetResponse);
+  facetRequest.values =
+    getFacetRequestValuesFromFacetResponse(facetResponse) ?? [];
   facetRequest.preventAutoSelect = false;
 }
 
@@ -206,16 +202,13 @@ function getFacetRequestValuesFromFacetResponse(
 ) {
   switch (facetResponse.type) {
     case 'numericalRange':
-      return convertToRangeRequests(
-        (facetResponse as NumericFacetResponse).values
-      );
-    case 'dateRange': // TODO
-    case 'hierarchical': // TODO
+      return convertToRangeRequests(facetResponse.values);
+    // TODO case 'dateRange':
+    // TODO case 'hierarchical':
     case 'regular':
+      return facetResponse.values.map(convertFacetValueToRequest);
     default:
-      return (facetResponse as RegularFacetResponse).values.map(
-        convertFacetValueToRequest
-      );
+      return;
   }
 }
 
