@@ -95,7 +95,7 @@ describe('CoreCommerceFacet', () => {
   describe('#toggleSelect', () => {
     const facetValue = () => buildMockCommerceRegularFacetValue({value: 'TED'});
 
-    it('dispatches the correct #toggleSelect action with the passed facet value', () => {
+    it('dispatches #toggleSelectActionCreatorwith the passed facet value', () => {
       facet.toggleSelect(facetValue());
 
       expect(engine.actions).toContainEqual(
@@ -103,7 +103,7 @@ describe('CoreCommerceFacet', () => {
       );
     });
 
-    it('dispatches the correct #fetchResults action', () => {
+    it('dispatches #fetchResultsActionCreator', () => {
       facet.toggleSelect(facetValue());
 
       expect(
@@ -115,7 +115,7 @@ describe('CoreCommerceFacet', () => {
   describe('#toggleExclude', () => {
     const facetValue = () => buildMockCommerceRegularFacetValue({value: 'TED'});
 
-    it('dispatches the correct #toggleExclude action with the passed facet value', () => {
+    it('dispatches #toggleExcludeActionCreator with the passed facet value', () => {
       facet.toggleExclude(facetValue());
 
       expect(engine.actions).toContainEqual(
@@ -123,7 +123,7 @@ describe('CoreCommerceFacet', () => {
       );
     });
 
-    it('dispatches the correct #fetchResults action', () => {
+    it('dispatches #fetchResultsActionCreator', () => {
       facet.toggleExclude(facetValue());
 
       expect(
@@ -136,7 +136,7 @@ describe('CoreCommerceFacet', () => {
     describe('when toggled facet value state is "idle"', () => {
       const facetValue = () =>
         buildMockCommerceRegularFacetValue({value: 'TED', state: 'idle'});
-      it('dispatches the correct #toggleSelect action with the passed facet value', () => {
+      it('dispatches #toggleSelectActionCreator with the passed facet value', () => {
         facet.toggleSingleSelect(facetValue());
 
         expect(engine.actions).toContainEqual(
@@ -144,7 +144,7 @@ describe('CoreCommerceFacet', () => {
         );
       });
 
-      it('dispatches the correct #fetchResults action', () => {
+      it('dispatches #fetchResultsActionCreator', () => {
         facet.toggleSingleSelect(facetValue());
 
         expect(
@@ -169,7 +169,7 @@ describe('CoreCommerceFacet', () => {
     ])('when toggled facet value state is $state', ({state}) => {
       const facetValue = () =>
         buildMockCommerceRegularFacetValue({value: 'TED', state});
-      it('dispatches the correct #toggleSelect action with the passed facet value', () => {
+      it('dispatches #toggleSelectActionCreator with the passed facet value', () => {
         facet.toggleSingleSelect(facetValue());
 
         expect(engine.actions).toContainEqual(
@@ -177,7 +177,7 @@ describe('CoreCommerceFacet', () => {
         );
       });
 
-      it('dispatches the correct #fetchResults action', () => {
+      it('dispatches #fetchResultsActionCreator', () => {
         facet.toggleSingleSelect(facetValue());
 
         expect(
@@ -199,7 +199,7 @@ describe('CoreCommerceFacet', () => {
     describe('when toggled facet value state is "idle"', () => {
       const facetValue = () =>
         buildMockCommerceRegularFacetValue({value: 'TED', state: 'idle'});
-      it('dispatches the correct #toggleExclude action with the passed facet value', () => {
+      it('dispatches #toggleExcludeActionCreator with the passed facet value', () => {
         facet.toggleSingleExclude(facetValue());
 
         expect(engine.actions).toContainEqual(
@@ -207,7 +207,7 @@ describe('CoreCommerceFacet', () => {
         );
       });
 
-      it('dispatches the correct #fetchResults action', () => {
+      it('dispatches #fetchResultsActionCreator', () => {
         facet.toggleSingleExclude(facetValue());
 
         expect(
@@ -232,7 +232,7 @@ describe('CoreCommerceFacet', () => {
     ])('when toggled facet value state is "$state"', ({state}) => {
       const facetValue = () =>
         buildMockCommerceRegularFacetValue({value: 'TED', state});
-      it('dispatches the correct #toggleSelect action with the passed facet value', () => {
+      it('dispatches #toggleExcludeActionCreator with the passed facet value', () => {
         facet.toggleSingleExclude(facetValue());
 
         expect(engine.actions).toContainEqual(
@@ -240,7 +240,7 @@ describe('CoreCommerceFacet', () => {
         );
       });
 
-      it('dispatches the correct #fetchResults action', () => {
+      it('dispatches #fetchResultsActionCreator', () => {
         facet.toggleSingleExclude(facetValue());
 
         expect(
@@ -328,7 +328,7 @@ describe('CoreCommerceFacet', () => {
       expect(engine.actions).toContainEqual(action);
     });
 
-    it('dispatches the correct #fetchResults action', () => {
+    it('dispatches #fetchResultsActionCreator', () => {
       facet.showMoreValues();
 
       expect(
@@ -391,7 +391,7 @@ describe('CoreCommerceFacet', () => {
       expect(engine.actions).toContainEqual(action);
     });
 
-    it('dispatches the correct #fetchResults action', () => {
+    it('dispatches #fetchResultsActionCreator', () => {
       facet.showLessValues();
 
       expect(
