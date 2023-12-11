@@ -19,7 +19,7 @@ export interface Pagination extends Controller {
   /**
    * Navigates to a specific page.
    *
-   * @param page The page to navigate to.
+   * @param page - The page to navigate to.
    */
   selectPage(page: number): void;
 

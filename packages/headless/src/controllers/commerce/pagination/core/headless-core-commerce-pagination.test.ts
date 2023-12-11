@@ -36,26 +36,48 @@ describe('core pagination', () => {
     expect(pagination.subscribe).toBeTruthy();
   });
 
-  it('#selectPage dispatches #selectPage & #fetchResultsActionCreator', () => {
-    pagination.selectPage(0);
-    expect(engine.actions.find((a) => a.type === selectPage.type)).toBeTruthy();
-    const action = engine.findAsyncAction(fetchResultsActionCreator.pending);
-    expect(action).toBeTruthy();
+  describe('#selectPage', () => {
+    beforeEach(() => {
+      pagination.selectPage(0);
+    });
+
+    it('dispatches #selectPage', () => {
+      expect(engine.actions).toContainEqual(selectPage(0));
+    });
+
+    it('dispatches #fetchResultsActionCreator', () => {
+      const action = engine.findAsyncAction(fetchResultsActionCreator.pending);
+      expect(action).toBeTruthy();
+    });
   });
 
-  it('#nextPage dispatches #nextPage & #fetchResultsActionCreator', () => {
-    pagination.nextPage();
-    expect(engine.actions.find((a) => a.type === nextPage.type)).toBeTruthy();
-    const action = engine.findAsyncAction(fetchResultsActionCreator.pending);
-    expect(action).toBeTruthy();
+  describe('#nextPage', () => {
+    beforeEach(() => {
+      pagination.nextPage();
+    });
+
+    it('dispatches #nextPage', () => {
+      expect(engine.actions).toContainEqual(nextPage());
+    });
+
+    it('dispatches #fetchResultsActionCreator', () => {
+      const action = engine.findAsyncAction(fetchResultsActionCreator.pending);
+      expect(action).toBeTruthy();
+    });
   });
 
-  it('#previousPage dispatches #previousPage & #fetchResultsActionCreator', () => {
-    pagination.previousPage();
-    expect(
-      engine.actions.find((a) => a.type === previousPage.type)
-    ).toBeTruthy();
-    const action = engine.findAsyncAction(fetchResultsActionCreator.pending);
-    expect(action).toBeTruthy();
+  describe('#previousPage', () => {
+    beforeEach(() => {
+      pagination.previousPage();
+    });
+
+    it('dispatches #previousPage', () => {
+      expect(engine.actions).toContainEqual(previousPage());
+    });
+
+    it('dispatches #fetchResultsActionCreator', () => {
+      const action = engine.findAsyncAction(fetchResultsActionCreator.pending);
+      expect(action).toBeTruthy();
+    });
   });
 });
