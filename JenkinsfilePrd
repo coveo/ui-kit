@@ -19,5 +19,19 @@ node('linux && docker') {
     stage('Npm tag') {
       sh 'npm run npm:tag:latest'
     }
+
+    stage('Build using pnpm') { 
+        sh 'corepack enable'
+        sh 'corepack prepare pnpm@latest-7 --activate'
+        sh 'pnpm install'
+    }
+
+    stage('Notify docs') {
+      withCredentials([
+        usernamePassword(credentialsId: 'github-commit-token', usernameVariable: 'GITHUB_USERNAME', passwordVariable: 'GITHUB_TOKEN')
+      ]) {
+        sh 'npm run docs:notify'
+      }
+    }
   }
 }

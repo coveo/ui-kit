@@ -38,7 +38,7 @@
   },
   "homepage": "https://github.com/coveo/relay#readme",
   "scripts": {
-    "build": "npm run clean && rollup --config ./config/rollup.config.mjs",
+    "build": "npm run clean && rollup --config ./config/rollup.config.mjs && npm run typedoc",
     "clean": "rimraf -rf ./lib",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -46,6 +46,7 @@
     "typedoc": "typedoc"
   },
   "devDependencies": {
+    "@octokit/rest": "^20.0.2",
     "@rollup/plugin-node-resolve": "^15.2.1",
     "@rollup/plugin-replace": "^5.0.2",
     "@rollup/plugin-terser": "^0.4.3",

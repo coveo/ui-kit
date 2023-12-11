@@ -8,7 +8,7 @@
   "exclude": ["node_modules", "lib"],
   "typedocOptions": {
     "entryPointStrategy": "expand",
-    "json": "relay-docs.json",
+    "json": "lib/docs/relay-docs.json",
     "entryPoints": ["src/relay.ts"],
     "includeVersion": true,
     "excludePrivate": true,
