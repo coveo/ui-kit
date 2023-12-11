@@ -1,4 +1,3 @@
-import {Action} from '@reduxjs/toolkit';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {productListingV2Reducer} from '../../../../features/commerce/product-listing/product-listing-slice';
 import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
@@ -17,19 +16,15 @@ describe('headless product listing sort', () => {
     sort = buildProductListingSort(engine);
   });
 
-  const expectContainAction = (action: Action) => {
-    const found = engine.actions.find((a) => a.type === action.type);
-    expect(engine.actions).toContainEqual(found);
-  };
-
   it('adds the correct reducers to engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       productListing: productListingV2Reducer,
     });
   });
 
-  it('sortBy dispatches #fetchProductListing', () => {
+  it('#sortBy dispatches #fetchProductListing', () => {
     sort.sortBy(buildRelevanceSortCriterion());
-    expectContainAction(fetchProductListing.pending);
+    const action = engine.findAsyncAction(fetchProductListing.pending);
+    expect(action).toBeTruthy();
   });
 });

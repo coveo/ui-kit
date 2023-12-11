@@ -12,7 +12,7 @@ import {
   SortBy,
 } from './headless-core-commerce-sort';
 
-describe('headless core sort', () => {
+describe('commerce core sort', () => {
   let sort: Sort;
   let engine: MockCommerceEngine;
   const fetchResultsActionCreator = fetchProductListing;
@@ -45,11 +45,23 @@ describe('headless core sort', () => {
     expectContainAction(applySort);
   });
 
-  it('sortBy dispatches #applySort, #updatePage, and #fetchResultsActionCreator', () => {
-    sort.sortBy(buildRelevanceSortCriterion());
-    expectContainAction(applySort);
-    expectContainAction(updatePage);
-    expectContainAction(fetchResultsActionCreator.pending);
+  describe('#sortBy', () => {
+    beforeEach(() => {
+      sort.sortBy(buildRelevanceSortCriterion());
+    });
+
+    it('dispatches #applySort', () => {
+      expectContainAction(applySort);
+    });
+
+    it('dispatches #updatePage', () => {
+      expectContainAction(updatePage);
+    });
+
+    it('dispatches #fetchResultsActionCreator', () => {
+      const action = engine.findAsyncAction(fetchResultsActionCreator.pending);
+      expect(action).toBeTruthy();
+    });
   });
 
   describe('when sort is populated', () => {
