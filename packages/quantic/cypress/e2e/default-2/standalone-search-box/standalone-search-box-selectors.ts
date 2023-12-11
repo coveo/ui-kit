@@ -14,16 +14,22 @@ export const StandaloneSearchBoxSelectors: StandaloneSearchBoxSelector = {
   get: () => cy.get(standaloneSearchBoxComponent),
   input: (textarea = false) =>
     StandaloneSearchBoxSelectors.get().find(
-      textarea ? 'textarea[type="search"]' : 'input[type="search"]'
+      textarea
+        ? 'c-quantic-search-box-input textarea[type="search"]'
+        : 'c-quantic-search-box-input input[type="search"]'
     ),
   suggestionList: () =>
     StandaloneSearchBoxSelectors.get().find(
-      'c-quantic-search-box-suggestions-list li'
+      'c-quantic-search-box-input c-quantic-search-box-suggestions-list li'
     ),
   clearButton: () =>
-    StandaloneSearchBoxSelectors.get().find('.searchbox__clear-button'),
+    StandaloneSearchBoxSelectors.get().find('button[name="Clear"]'),
   searchIcon: () =>
-    StandaloneSearchBoxSelectors.get().find('.searchbox__search-icon'),
+    StandaloneSearchBoxSelectors.get().find(
+      'c-quantic-search-box-input .searchbox__search-icon'
+    ),
   searchButton: () =>
-    StandaloneSearchBoxSelectors.get().find('.searchbox__submit-button'),
+    StandaloneSearchBoxSelectors.get().find(
+      'c-quantic-search-box-input .searchbox__submit-button'
+    ),
 };
