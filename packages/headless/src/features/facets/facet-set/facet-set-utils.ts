@@ -3,9 +3,11 @@ import {
   facetDeselect,
   facetExclude,
   facetSelect,
+  facetUnexclude,
   logFacetDeselect,
   logFacetExclude,
   logFacetSelect,
+  logFacetUnexclude,
 } from './facet-set-analytics-actions';
 import {FacetSelectionChangeMetadata} from './facet-set-analytics-actions-utils';
 import {FacetValue} from './interfaces/response';
@@ -51,7 +53,7 @@ export const getLegacyAnalyticsActionForToggleFacetExclude = (
   };
 
   return isFacetValueExcluded(selection)
-    ? logFacetDeselect(payload)
+    ? logFacetUnexclude(payload)
     : logFacetExclude(payload);
 };
 
@@ -60,6 +62,6 @@ export const getAnalyticsActionForToggleFacetExclude = (
   selection: FacetValue
 ): SearchAction => {
   return isFacetValueExcluded(selection)
-    ? facetDeselect(facetId, selection.value)
+    ? facetUnexclude(facetId, selection.value)
     : facetExclude(facetId, selection.value);
 };

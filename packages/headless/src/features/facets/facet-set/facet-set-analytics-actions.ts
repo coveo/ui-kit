@@ -164,6 +164,24 @@ export const logFacetDeselect = (
     return client.makeFacetDeselect(metadata);
   });
 
+//TODO: KIT-2859
+export const logFacetUnexclude = (
+  payload: LogFacetDeselectActionCreatorPayload
+): LegacySearchAction =>
+  makeAnalyticsAction('analytics/facet/unexclude', (client, state) => {
+    validatePayload(payload, {
+      facetId: facetIdDefinition,
+      facetValue: requiredNonEmptyString,
+    });
+    const stateForAnalytics = getStateNeededForFacetMetadata(state);
+    const metadata = buildFacetSelectionChangeMetadata(
+      payload,
+      stateForAnalytics
+    );
+
+    return client.makeFacetUnexclude(metadata);
+  });
+
 export interface LogFacetBreadcrumbActionCreatorPayload {
   /**
    * The facet id associated with the breadcrumb.
@@ -235,6 +253,14 @@ export const facetExclude = (id: string, value: string): SearchAction => {
 export const facetDeselect = (id: string, value: string): SearchAction => {
   return {
     actionCause: SearchPageEvents.facetDeselect,
+    getEventExtraPayload: (state) =>
+      new SearchAnalyticsProvider(() => state).getFacetMetadata(id, value),
+  };
+};
+
+export const facetUnexclude = (id: string, value: string): SearchAction => {
+  return {
+    actionCause: SearchPageEvents.facetUnexclude,
     getEventExtraPayload: (state) =>
       new SearchAnalyticsProvider(() => state).getFacetMetadata(id, value),
   };
