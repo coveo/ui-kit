@@ -1,6 +1,6 @@
 {
   "name": "@coveo/relay",
-  "version": "0.6.9",
+  "version": "0.6.10",
   "description": "A library for sending analytics events using Coveo's Event protocol.",
   "files": [
     "lib/**/*"
