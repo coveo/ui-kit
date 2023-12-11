@@ -2,6 +2,7 @@ import {Action} from '@reduxjs/toolkit';
 import {CommerceRegularFacet} from '../../../../commerce.index';
 import {CommerceFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
+import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice';
 import {CommerceAppState} from '../../../../state/commerce-app-state';
 import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
@@ -54,16 +55,16 @@ describe('ProductListingRegularFacet', () => {
     initFacet();
   });
 
-  it('renders', () => {
+  it('initializes', () => {
     expect(facet).toBeTruthy();
   });
 
-  it('exposes a #subscribe method', () => {
-    expect(facet.subscribe).toBeTruthy();
+  it('adds #productListing reducer to engine', () => {
+    expect(engine.addReducers).toHaveBeenCalledWith({productListing});
   });
 
   describe('#toggleSelect', () => {
-    it('dispatches a #fetchProductListing', () => {
+    it('dispatches #fetchProductListing', () => {
       const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
       facet.toggleSelect(facetValue);
 
@@ -72,7 +73,7 @@ describe('ProductListingRegularFacet', () => {
   });
 
   describe('#toggleExclude', () => {
-    it('dispatches a #fetchproductlisting', () => {
+    it('dispatches #fetchproductlisting', () => {
       const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
       facet.toggleExclude(facetValue);
 
@@ -81,7 +82,7 @@ describe('ProductListingRegularFacet', () => {
   });
 
   describe('#deselectAll', () => {
-    it('dispatches a #fetchProductListing', () => {
+    it('dispatches #fetchProductListing', () => {
       facet.deselectAll();
 
       expectContainAction(fetchProductListing.pending);
@@ -89,7 +90,7 @@ describe('ProductListingRegularFacet', () => {
   });
 
   describe('#showMoreValues', () => {
-    it('dispatches a #fetchProductListing', () => {
+    it('dispatches #fetchProductListing', () => {
       facet.showMoreValues();
 
       expectContainAction(fetchProductListing.pending);
@@ -97,7 +98,7 @@ describe('ProductListingRegularFacet', () => {
   });
 
   describe('#showLessValues', () => {
-    it('dispatches a #fetchProductListing', () => {
+    it('dispatches #fetchProductListing', () => {
       facet.showLessValues();
 
       expectContainAction(fetchProductListing.pending);

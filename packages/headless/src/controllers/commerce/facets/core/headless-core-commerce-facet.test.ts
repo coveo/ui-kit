@@ -82,7 +82,7 @@ describe('CoreCommerceFacet', () => {
     expect(facet).toBeTruthy();
   });
 
-  it('adds correct reducers to engine', () => {
+  it('adds #commerceFacetSet reducer to engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       commerceFacetSet,
     });

@@ -1,4 +1,3 @@
-import {Action} from '@reduxjs/toolkit';
 import {CommerceFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
 import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
 import {fetchProductListing} from '../../../../../features/commerce/product-listing/product-listing-actions';
@@ -41,14 +40,6 @@ describe('CommerceNumericFacet', () => {
     ];
   }
 
-  const expectContainAction = (action: Action) => {
-    expect(engine.actions).toContainEqual(
-      expect.objectContaining({
-        type: action.type,
-      })
-    );
-  };
-
   beforeEach(() => {
     options = {
       facetId,
@@ -61,29 +52,55 @@ describe('CommerceNumericFacet', () => {
     initFacet();
   });
 
-  it('renders', () => {
+  it('initializes', () => {
     expect(facet).toBeTruthy();
   });
 
-  it('exposes a #subscribe method', () => {
+  it('exposes #subscribe method', () => {
     expect(facet.subscribe).toBeTruthy();
   });
 
   describe('#toggleSelect', () => {
-    it('dispatches a #toggleSelectNumericFacetValue', () => {
+    it('dispatches #toggleSelectNumericFacetValue', () => {
       const facetValue = buildMockCommerceNumericFacetValue();
       facet.toggleSelect(facetValue);
 
-      expectContainAction(toggleSelectNumericFacetValue);
+      expect(engine.actions).toContainEqual(
+        toggleSelectNumericFacetValue({facetId, selection: facetValue})
+      );
     });
   });
 
   describe('#toggleExclude', () => {
-    it('dispatches a #toggleExcludeNumericFacetValue', () => {
+    it('dispatches #toggleExcludeNumericFacetValue', () => {
       const facetValue = buildMockCommerceNumericFacetValue();
       facet.toggleExclude(facetValue);
 
-      expectContainAction(toggleExcludeNumericFacetValue);
+      expect(engine.actions).toContainEqual(
+        toggleExcludeNumericFacetValue({facetId, selection: facetValue})
+      );
+    });
+  });
+
+  describe('#toggleSingleSelect', () => {
+    it('dispatches #toggleSelectNumericFacetValue', () => {
+      const facetValue = buildMockCommerceNumericFacetValue();
+      facet.toggleSingleSelect(facetValue);
+
+      expect(engine.actions).toContainEqual(
+        toggleSelectNumericFacetValue({facetId, selection: facetValue})
+      );
+    });
+  });
+
+  describe('#toggleSingleExclude', () => {
+    it('dispatches #toggleExcludeNumericFacetValue', () => {
+      const facetValue = buildMockCommerceNumericFacetValue();
+      facet.toggleSingleExclude(facetValue);
+
+      expect(engine.actions).toContainEqual(
+        toggleExcludeNumericFacetValue({facetId, selection: facetValue})
+      );
     });
   });
 });

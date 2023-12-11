@@ -1,4 +1,3 @@
-import {Action} from '@reduxjs/toolkit';
 import {CommerceFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
 import {fetchProductListing} from '../../../../../features/commerce/product-listing/product-listing-actions';
 import {
@@ -39,14 +38,6 @@ describe('CommerceRegularFacet', () => {
     ];
   }
 
-  const expectContainAction = (action: Action) => {
-    expect(engine.actions).toContainEqual(
-      expect.objectContaining({
-        type: action.type,
-      })
-    );
-  };
-
   beforeEach(() => {
     options = {
       facetId,
@@ -59,11 +50,11 @@ describe('CommerceRegularFacet', () => {
     initFacet();
   });
 
-  it('renders', () => {
+  it('initializes', () => {
     expect(facet).toBeTruthy();
   });
 
-  it('exposes a #subscribe method', () => {
+  it('exposes #subscribe method', () => {
     expect(facet.subscribe).toBeTruthy();
   });
 
@@ -72,7 +63,9 @@ describe('CommerceRegularFacet', () => {
       const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
       facet.toggleSelect(facetValue);
 
-      expectContainAction(toggleSelectFacetValue);
+      expect(engine.actions).toContainEqual(
+        toggleSelectFacetValue({facetId, selection: facetValue})
+      );
     });
   });
 
@@ -81,7 +74,31 @@ describe('CommerceRegularFacet', () => {
       const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
       facet.toggleExclude(facetValue);
 
-      expectContainAction(toggleExcludeFacetValue);
+      expect(engine.actions).toContainEqual(
+        toggleExcludeFacetValue({facetId, selection: facetValue})
+      );
+    });
+  });
+
+  describe('#toggleSingleSelect', () => {
+    it('dispatches a #toggleSelectFacetValue', () => {
+      const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
+      facet.toggleSingleSelect(facetValue);
+
+      expect(engine.actions).toContainEqual(
+        toggleSelectFacetValue({facetId, selection: facetValue})
+      );
+    });
+  });
+
+  describe('#toggleSingleExclude', () => {
+    it('dispatches a #toggleExcludeFacetValue', () => {
+      const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
+      facet.toggleSingleExclude(facetValue);
+
+      expect(engine.actions).toContainEqual(
+        toggleExcludeFacetValue({facetId, selection: facetValue})
+      );
     });
   });
 });

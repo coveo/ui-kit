@@ -73,39 +73,50 @@ describe('CommerceFacetGenerator', () => {
     facetGenerator = buildCommerceFacetGenerator(engine, options);
   }
 
-  describe('when created', () => {
-    beforeEach(() => {
-      initFacetGenerator();
+  describe('upon initialization', () => {
+    describe('regardless of the current facet state', () => {
+      beforeEach(() => {
+        initFacetGenerator();
+      });
+
+      it('initializes', () => {
+        expect(facetGenerator).toBeTruthy();
+      });
+
+      it('adds correct reducers to engine', () => {
+        expect(engine.addReducers).toHaveBeenCalledWith({
+          facetOrder,
+          commerceFacetSet,
+        });
+      });
+
+      it('exposes #subscribe method', () => {
+        expect(facetGenerator.subscribe).toBeTruthy();
+      });
     });
-    it('should add correct reducers to engine', () => {
-      expect(engine.addReducers).toHaveBeenCalledWith({
-        facetOrder,
-        commerceFacetSet,
+    describe('when facet state contains regular facets', () => {
+      it('should generate regular facet controllers', () => {
+        const facetId = 'regular_facet_id';
+        initFacetGenerator(facetId, 'regular');
+
+        expect(facetGenerator.state.facets.length).toEqual(1);
+        expect(facetGenerator.state.facets[0].state).toEqual(
+          buildProductListingRegularFacet(engine, {facetId}).state
+        );
       });
     });
 
-    it('should expose a #subscribe method', () => {
-      expect(facetGenerator.subscribe).toBeTruthy();
+    describe('when facet state contains numeric facets', () => {
+      it('should generate numeric facet controllers', () => {
+        const facetId = 'numeric_facet_id';
+        initFacetGenerator(facetId, 'numericalRange');
+
+        expect(facetGenerator.state.facets.length).toEqual(1);
+        expect(facetGenerator.state.facets[0].state).toEqual(
+          buildProductListingNumericFacet(engine, {facetId}).state
+        );
+      });
     });
-  });
-
-  it('should generate regular facet controllers', () => {
-    const facetId = 'regular_facet_id';
-    initFacetGenerator(facetId, 'regular');
-
-    expect(facetGenerator.state.facets.length).toEqual(1);
-    expect(facetGenerator.state.facets[0].state).toEqual(
-      buildProductListingRegularFacet(engine, {facetId}).state
-    );
-  });
-  it('should generate numeric facet controllers', () => {
-    const facetId = 'numeric_facet_id';
-    initFacetGenerator(facetId, 'numericalRange');
-
-    expect(facetGenerator.state.facets.length).toEqual(1);
-    expect(facetGenerator.state.facets[0].state).toEqual(
-      buildProductListingNumericFacet(engine, {facetId}).state
-    );
   });
 
   it('should generate date facet controllers', () => {
