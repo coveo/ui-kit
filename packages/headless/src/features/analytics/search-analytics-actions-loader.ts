@@ -16,6 +16,8 @@ import {
   logFacetUpdateSort,
   LogFacetBreadcrumbActionCreatorPayload,
   LogFacetDeselectActionCreatorPayload,
+  LogFacetExcludeActionCreatorPayload,
+  LogFacetUnexcludeActionCreatorPayload,
   LogFacetSelectActionCreatorPayload,
   LogFacetUpdateSortActionCreatorPayload,
 } from '../facets/facet-set/facet-set-analytics-actions';
@@ -90,6 +92,8 @@ import {CustomAction, LegacySearchAction} from './analytics-utils';
 export type {
   LogCategoryFacetBreadcrumbActionCreatorPayload,
   LogFacetBreadcrumbActionCreatorPayload,
+  LogFacetExcludeActionCreatorPayload,
+  LogFacetUnexcludeActionCreatorPayload,
   LogFacetDeselectActionCreatorPayload,
   LogFacetSelectActionCreatorPayload,
   LogFacetUpdateSortActionCreatorPayload,
