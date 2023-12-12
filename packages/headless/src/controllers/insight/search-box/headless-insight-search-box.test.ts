@@ -36,11 +36,11 @@ describe('headless searchBox', () => {
       highlightOptions: {
         notMatchDelimiters: {
           open: '<a>',
-          close: '<a>',
+          close: '</a>',
         },
         correctionDelimiters: {
           open: '<i>',
-          close: '<i>',
+          close: '</i>',
         },
       },
     };

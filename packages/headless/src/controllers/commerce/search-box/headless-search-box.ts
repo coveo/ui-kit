@@ -62,12 +62,12 @@ export interface SearchBoxProps {
 }
 
 /**
- * The `SearchBox` headless controller offers a high-level interface for designing a common search box UI controller
+ * The `SearchBox` headless controller offers a high-level interface for designing a common search box UI component
  * with [highlighting for query suggestions](https://docs.coveo.com/en/headless/latest/usage/highlighting/).
  */
 export type SearchBox = Omit<CoreSearchBox, 'submit'> & {
   /**
-   * Deselects all facets and triggers a commerce search query.
+   * Triggers a commerce search query.
    */
   submit(): void;
 };

@@ -85,6 +85,14 @@ describe('headless search box', () => {
     searchBox = buildSearchBox(engine, props);
   }
 
+  it('initializes', () => {
+    expect(searchBox).toBeTruthy();
+  });
+
+  it('exposes #subscribe method', () => {
+    expect(searchBox.subscribe).toBeTruthy();
+  });
+
   it('it adds the correct reducers to engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       commerceQuery,
@@ -116,7 +124,7 @@ describe('headless search box', () => {
     });
   });
 
-  it('should return the right state', () => {
+  it('returns the right state', () => {
     expect(searchBox.state).toEqual({
       value: state.querySet[id],
       suggestions: state.querySuggest[id]!.completions.map((completion) => ({
@@ -128,21 +136,23 @@ describe('headless search box', () => {
     });
   });
 
-  it('should dispatch a registerQuerySetQuery action at initialization', () => {
-    expect(engine.actions).toContainEqual(
-      registerQuerySetQuery({id, query: state.commerceQuery.query!})
-    );
+  describe('upon initialization', () => {
+    it('dispatches #registerQuerySetQuery', () => {
+      expect(engine.actions).toContainEqual(
+        registerQuerySetQuery({id, query: state.commerceQuery.query!})
+      );
+    });
+
+    it('dispatches #registerQuerySuggest', () => {
+      expect(engine.actions).toContainEqual(
+        registerQuerySuggest({
+          id,
+        })
+      );
+    });
   });
 
-  it('should dispatch a registerQuerySuggest action at initialization', () => {
-    expect(engine.actions).toContainEqual(
-      registerQuerySuggest({
-        id,
-      })
-    );
-  });
-
-  describe('when calling updateText', () => {
+  describe('#updateText', () => {
     it('updates the search box query in the querySet', () => {
       const text = 'query';
       searchBox.updateText(text);
@@ -151,7 +161,7 @@ describe('headless search box', () => {
       expect(engine.actions).toContainEqual(action);
     });
 
-    it('should call the showSuggestions method', () => {
+    it('calls #showSuggestions', () => {
       jest.spyOn(searchBox, 'showSuggestions');
       searchBox.updateText('how can i fix');
 
@@ -159,22 +169,24 @@ describe('headless search box', () => {
     });
   });
 
-  it(`when calling clear
-      should dispatch a updateQuerySetQuery action`, () => {
-    searchBox.clear();
-    expect(engine.actions).toContainEqual(
-      updateQuerySetQuery({id: id, query: ''})
-    );
-  });
+  describe('#clear', () => {
+    beforeEach(() => {
+      searchBox.clear();
+    });
 
-  it(`when calling clear
-      should dispatch a clearQuerySuggest action`, () => {
-    searchBox.clear();
-    expect(engine.actions).toContainEqual(clearQuerySuggest({id}));
+    it('dispatches #updateQuerySetQuery', () => {
+      expect(engine.actions).toContainEqual(
+        updateQuerySetQuery({id: id, query: ''})
+      );
+    });
+
+    it('dispatches #clearQuerySuggest', () => {
+      expect(engine.actions).toContainEqual(clearQuerySuggest({id}));
+    });
   });
 
   describe('#showSuggestions', () => {
-    it('dispatches fetchQuerySuggestions', async () => {
+    it('dispatches #fetchQuerySuggestions', async () => {
       searchBox.showSuggestions();
 
       const action = engine.actions.find(
@@ -187,7 +199,7 @@ describe('headless search box', () => {
   });
 
   describe('#selectSuggestion', () => {
-    it('dispatches a selectQuerySuggestion action', () => {
+    it('dispatches #selectQuerySuggestion', () => {
       const value = 'i like this expression';
       searchBox.selectSuggestion(value);
 
@@ -196,7 +208,7 @@ describe('headless search box', () => {
       );
     });
 
-    it('dispatches executeSearch', () => {
+    it('dispatches #executeSearch', () => {
       const suggestion = 'a';
       searchBox.selectSuggestion(suggestion);
 
@@ -204,24 +216,32 @@ describe('headless search box', () => {
     });
   });
 
-  describe('when calling submit', () => {
-    it('it deselects all facets', () => {
+  describe('#submit', () => {
+    beforeEach(() => {
       searchBox.submit();
+    });
 
+    it('deselects all facets when clearFilters is true', () => {
       expect(engine.actions).toContainEqual(deselectAllBreadcrumbs());
     });
 
-    it('allows autoSelection', () => {
+    it('does not deselect facets when clearFilters is false', () => {
+      searchBox = buildSearchBox(engine, {
+        ...props,
+        options: {clearFilters: false},
+      });
       searchBox.submit();
 
+      expect(engine.actions).not.toContainEqual(deselectAllBreadcrumbs());
+    });
+
+    it('allows autoSelection', () => {
       expect(engine.actions).toContainEqual(
         updateFacetAutoSelection({allow: true})
       );
     });
 
-    it('autoSelection should be allowed after deselecting facets', () => {
-      searchBox.submit();
-
+    it('allows autoSelection after deselecting facets', () => {
       const deselectAllBreadcrumbsIndex = engine.actions.findIndex(
         (action) => action.type === deselectAllBreadcrumbs.type
       );
@@ -233,9 +253,8 @@ describe('headless search box', () => {
       );
     });
 
-    it('dispatches updateQuery with the correct parameters', () => {
+    it('dispatches #updateQuery', () => {
       const expectedQuery = state.querySet[id];
-      searchBox.submit();
 
       const action = updateQuery({
         query: expectedQuery,
@@ -245,20 +264,15 @@ describe('headless search box', () => {
     });
 
     it('updates the page to the first one', () => {
-      searchBox.submit();
       expect(engine.actions).toContainEqual(selectPage(1));
     });
 
-    it('it dispatches an executeSearch action', () => {
-      searchBox.submit();
-
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
+    it('dispatches #executeSearch', () => {
+      const action = engine.findAsyncAction(executeSearch.pending);
       expect(action).toBeTruthy();
     });
 
-    it('it dispatches a clear suggestions action', () => {
+    it('dispatches #clearQuerySuggest', () => {
       searchBox.submit();
       expect(engine.actions).toContainEqual(clearQuerySuggest({id}));
     });

@@ -8,12 +8,12 @@ import {
  */
 export interface QuerySuggestCompletion {
   /**
-   * Contains the expression to complete.
+   * The original query expression.
    */
   expression: string;
 
   /**
-   * Contains the highlighted expression to complete.
+   * The highlighted query completion suggestion.
    */
   highlighted: string;
 }
@@ -23,12 +23,12 @@ export interface QuerySuggestCompletion {
  */
 export interface QuerySuggestSuccessResponse {
   /**
-   * Contains an array of completions.
+   * Contains an array of query suggestions.
    */
   completions: QuerySuggestCompletion[];
 
   /**
-   * The query suggest response id.
+   * The query suggest response ID.
    */
   responseId: string;
 }

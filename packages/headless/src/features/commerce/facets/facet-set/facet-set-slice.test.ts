@@ -327,7 +327,7 @@ describe('facet-set slice', () => {
     });
   });
 
-  it('dispatching #updateFacetAutoSelection updates autoSelection for all facets', () => {
+  it('#updateFacetAutoSelection updates autoSelection for all facets', () => {
     const facetId = '1';
     const anotherFacetId = '2';
     state[facetId] = buildMockCommerceFacetSlice({
