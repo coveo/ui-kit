@@ -9,6 +9,7 @@ import {
   toggleSelectNumericFacetValue,
 } from '../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {fetchProductListing} from '../product-listing/product-listing-actions';
+import {executeSearch} from '../search/search-actions';
 import {nextPage, previousPage, selectPage} from './pagination-actions';
 import {
   CommercePaginationState,
@@ -34,29 +35,19 @@ export const paginationReducer = createReducer(
           state.page = action.payload;
         }
       })
-      .addCase(fetchProductListing.fulfilled, (state, action) => {
-        const {page, perPage, totalCount, totalPages} =
-          action.payload.response.pagination;
-        state.page = page;
-        state.perPage = perPage;
-        state.totalCount = totalCount;
-        state.totalPages = totalPages;
-      })
-      .addCase(deselectAllFacetValues, (state) => {
-        handlePaginationReset(state);
-      })
-      .addCase(toggleSelectFacetValue, (state) => {
-        handlePaginationReset(state);
-      })
-      .addCase(toggleExcludeFacetValue, (state) => {
-        handlePaginationReset(state);
-      })
-      .addCase(toggleSelectNumericFacetValue, (state) => {
-        handlePaginationReset(state);
-      })
-      .addCase(toggleExcludeNumericFacetValue, (state) => {
-        handlePaginationReset(state);
-      });
+      .addCase(
+        fetchProductListing.fulfilled,
+        (_, action) => action.payload.response.pagination
+      )
+      .addCase(
+        executeSearch.fulfilled,
+        (_, action) => action.payload.response.pagination
+      )
+      .addCase(deselectAllFacetValues, handlePaginationReset)
+      .addCase(toggleSelectFacetValue, handlePaginationReset)
+      .addCase(toggleExcludeFacetValue, handlePaginationReset)
+      .addCase(toggleSelectNumericFacetValue, handlePaginationReset)
+      .addCase(toggleExcludeNumericFacetValue, handlePaginationReset);
   }
 );
 

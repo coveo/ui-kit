@@ -4,7 +4,7 @@ import {validatePayload} from '../../../utils/validate-payload';
 import {SortBy, SortCriterion} from './sort';
 
 export const applySort = createAction(
-  'commerce/productListing/sort/apply',
+  'commerce/sort/apply',
   (payload: SortCriterion) =>
     validatePayload(payload, {
       by: new EnumValue<SortBy>({

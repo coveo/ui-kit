@@ -1,3 +1,5 @@
+import {buildSearchResponse} from '../../../test/mock-commerce-search';
+import {buildFetchProductListingV2Response} from '../../../test/mock-product-listing-v2';
 import {
   deselectAllFacetValues,
   toggleExcludeFacetValue,
@@ -7,6 +9,8 @@ import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
 } from '../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {fetchProductListing} from '../product-listing/product-listing-actions';
+import {executeSearch} from '../search/search-actions';
 import {nextPage, previousPage, selectPage} from './pagination-actions';
 import {paginationReducer} from './pagination-slice';
 import {
@@ -16,6 +20,12 @@ import {
 
 describe('pagination slice', () => {
   let state: CommercePaginationState;
+  const pagination = {
+    page: 999,
+    perPage: 999,
+    totalCount: 999,
+    totalPages: 999,
+  };
 
   beforeEach(() => {
     state = getCommercePaginationInitialState();
@@ -78,6 +88,26 @@ describe('pagination slice', () => {
     const finalState = paginationReducer(state, previousPage());
 
     expect(finalState.page).toBe(0);
+  });
+
+  it('sets the pagination on #fetchProductListing.fulfilled', () => {
+    const response = buildFetchProductListingV2Response({
+      pagination,
+    });
+
+    expect(
+      paginationReducer(state, fetchProductListing.fulfilled(response, ''))
+    ).toEqual(pagination);
+  });
+
+  it('sets the pagination on product #executeSearch.fulfilled', () => {
+    const response = buildSearchResponse({
+      pagination,
+    });
+
+    expect(
+      paginationReducer(state, executeSearch.fulfilled(response, ''))
+    ).toEqual(pagination);
   });
 
   describe.each([
