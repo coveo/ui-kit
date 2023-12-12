@@ -1,12 +1,12 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
-import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice';
 import {loadReducerError} from '../../../../utils/errors';
 import {
   Sort,
   buildCoreSort,
   SortProps,
 } from '../../sort/core/headless-core-commerce-sort';
+import {loadProductListingReducer} from '../utils/load-product-listing-reducers';
 
 /**
  * Creates a `Sort` controller instance for the product listing.
@@ -19,7 +19,7 @@ export function buildProductListingSort(
   engine: CommerceEngine,
   props: SortProps = {}
 ): Sort {
-  if (!loadSortReducers(engine)) {
+  if (!loadProductListingReducer(engine)) {
     throw loadReducerError;
   }
 
@@ -27,9 +27,4 @@ export function buildProductListingSort(
     ...props,
     fetchResultsActionCreator: fetchProductListing,
   });
-}
-
-function loadSortReducers(engine: CommerceEngine): engine is CommerceEngine {
-  engine.addReducers({productListing});
-  return true;
 }
