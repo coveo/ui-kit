@@ -94,7 +94,7 @@ describe('ProductListingFacetGenerator', () => {
     expect(engine.findAsyncAction(fetchProductListing.pending)).toBeTruthy();
   });
 
-  it('generated date facet controllers should dispatch #fetchProductListing', () => {
+  it('generated date facet controllers dispatches #fetchProductListing', () => {
     initFacetGenerator('dateRange');
 
     facetGenerator.state.facets[0].deselectAll();
