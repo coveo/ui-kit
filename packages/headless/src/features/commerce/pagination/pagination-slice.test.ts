@@ -11,6 +11,12 @@ import {
 
 describe('pagination slice', () => {
   let state: CommercePaginationState;
+  const pagination = {
+    page: 999,
+    perPage: 999,
+    totalCount: 999,
+    totalPages: 999,
+  };
 
   beforeEach(() => {
     state = getCommercePaginationInitialState();
@@ -76,12 +82,6 @@ describe('pagination slice', () => {
   });
 
   it('sets the pagination on #fetchProductListing.fulfilled', () => {
-    const pagination = {
-      page: 999,
-      perPage: 999,
-      totalCount: 999,
-      totalPages: 999,
-    };
     const response = buildFetchProductListingV2Response({
       pagination,
     });
@@ -92,12 +92,6 @@ describe('pagination slice', () => {
   });
 
   it('sets the pagination on product #executeSearch.fulfilled', () => {
-    const pagination = {
-      page: 999,
-      perPage: 999,
-      totalCount: 999,
-      totalPages: 999,
-    };
     const response = buildSearchResponse({
       pagination,
     });
