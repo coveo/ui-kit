@@ -99,7 +99,7 @@ function buildNumericFacetRequest(
   };
 }
 
-function convertToRangeRequests(
+export function convertToRangeRequests(
   values: NumericFacetValue[]
 ): NumericRangeRequest[] {
   return values.map((value) => {
