@@ -131,6 +131,10 @@ describe('pagination slice', () => {
       actionName: '#toggleExcludeNumericFacetValue',
       action: toggleExcludeNumericFacetValue,
     },
+    {
+      actionName: '#executeSearch.pending',
+      action: executeSearch.pending,
+    },
   ])('$actionName', ({action}) => {
     it('resets pagination', () => {
       state.page = 5;

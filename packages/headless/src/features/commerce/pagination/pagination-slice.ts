@@ -47,7 +47,8 @@ export const paginationReducer = createReducer(
       .addCase(toggleSelectFacetValue, handlePaginationReset)
       .addCase(toggleExcludeFacetValue, handlePaginationReset)
       .addCase(toggleSelectNumericFacetValue, handlePaginationReset)
-      .addCase(toggleExcludeNumericFacetValue, handlePaginationReset);
+      .addCase(toggleExcludeNumericFacetValue, handlePaginationReset)
+      .addCase(executeSearch.pending, handlePaginationReset);
   }
 );
 

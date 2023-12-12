@@ -1,7 +1,6 @@
 import {configuration} from '../../../app/common-reducers';
 import {updateQuery} from '../../../commerce.index';
 import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions';
-import {selectPage} from '../../../features/commerce/pagination/pagination-actions';
 import {fetchQuerySuggestions} from '../../../features/commerce/query-suggest/query-suggest-actions';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
 import {executeSearch} from '../../../features/commerce/search/search-actions';
@@ -128,7 +127,7 @@ describe('headless search box', () => {
     expect(searchBox.state).toEqual({
       value: state.querySet[id],
       suggestions: state.querySuggest[id]!.completions.map((completion) => ({
-        highlightedValue: '<a>hi<a>light<i>ed<i>',
+        highlightedValue: '<a>hi</a>light<i>ed</i>',
         rawValue: completion.expression,
       })),
       isLoading: false,
@@ -226,6 +225,7 @@ describe('headless search box', () => {
     });
 
     it('does not deselect facets when clearFilters is false', () => {
+      engine = buildMockCommerceEngine({state});
       searchBox = buildSearchBox(engine, {
         ...props,
         options: {clearFilters: false},
@@ -261,10 +261,6 @@ describe('headless search box', () => {
       });
 
       expect(engine.actions).toContainEqual(action);
-    });
-
-    it('updates the page to the first one', () => {
-      expect(engine.actions).toContainEqual(selectPage(1));
     });
 
     it('dispatches #executeSearch', () => {
