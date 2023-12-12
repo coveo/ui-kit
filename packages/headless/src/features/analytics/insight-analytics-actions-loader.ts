@@ -4,6 +4,8 @@ import {logCategoryFacetBreadcrumb} from '../facets/category-facet-set/category-
 import {
   LogFacetBreadcrumbActionCreatorPayload,
   LogFacetDeselectActionCreatorPayload,
+  LogFacetExcludeActionCreatorPayload,
+  LogFacetUnexcludeActionCreatorPayload,
   LogFacetSelectActionCreatorPayload,
 } from '../facets/facet-set/facet-set-analytics-actions';
 import {
@@ -54,6 +56,8 @@ export type {
   LogFacetBreadcrumbActionCreatorPayload,
   LogFacetUpdateSortActionCreatorPayload,
   LogFacetDeselectActionCreatorPayload,
+  LogFacetUnexcludeActionCreatorPayload,
+  LogFacetExcludeActionCreatorPayload,
   LogFacetSelectActionCreatorPayload,
   SmartSnippetFeedback,
   StaticFilterValueMetadata,

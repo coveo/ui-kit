@@ -4,6 +4,7 @@ import {
   logFacetDeselect,
   logFacetSelect,
   logFacetExclude,
+  logFacetUnexclude,
 } from '../../features/facets/facet-set/facet-set-analytics-actions';
 import {logSearchboxSubmit} from '../../features/query/query-analytics-actions';
 import {SearchParameters} from '../../features/search-parameters/search-parameter-actions';
@@ -112,9 +113,20 @@ function logFacetAnalyticsAction(
   const removedIds = previousIds.filter((id) => !newIds.includes(id));
   if (removedIds.length) {
     const facetId = removedIds[0];
-    return previousFacets[facetId].length > 1
-      ? logFacetClearAll(facetId)
-      : logFacetDeselect({facetId, facetValue: previousFacets[facetId][0]});
+    switch (true) {
+      case previousFacets[facetId].length > 1:
+        return logFacetClearAll(facetId);
+      case excluded:
+        return logFacetUnexclude({
+          facetId,
+          facetValue: previousFacets[facetId][0],
+        });
+      default:
+        return logFacetDeselect({
+          facetId,
+          facetValue: previousFacets[facetId][0],
+        });
+    }
   }
 
   const addedIds = newIds.filter((id) => !previousIds.includes(id));
@@ -164,10 +176,15 @@ function logFacetAnalyticsAction(
   );
 
   if (removedValues.length) {
-    return logFacetDeselect({
-      facetId: facetIdWithDifferentValues,
-      facetValue: removedValues[0],
-    });
+    return excluded
+      ? logFacetUnexclude({
+          facetId: facetIdWithDifferentValues,
+          facetValue: removedValues[0],
+        })
+      : logFacetDeselect({
+          facetId: facetIdWithDifferentValues,
+          facetValue: removedValues[0],
+        });
   }
 
   return logInterfaceChange();
