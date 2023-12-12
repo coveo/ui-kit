@@ -84,14 +84,16 @@ export type {
   SortInitialState,
   Sort,
   SortState,
-} from './controllers/commerce/product-listing/sort/headless-product-listing-sort';
+} from './controllers/commerce/sort/core/headless-core-commerce-sort';
 export {
-  buildSort,
   buildRelevanceSortCriterion,
   buildFieldsSortCriterion,
   SortBy,
   SortDirection,
-} from './controllers/commerce/product-listing/sort/headless-product-listing-sort';
+} from './controllers/commerce/sort/core/headless-core-commerce-sort';
+
+export {buildProductListingSort} from './controllers/commerce/product-listing/sort/headless-product-listing-sort';
+export {buildSearchSort} from './controllers/commerce/search/sort/headless-search-sort';
 
 export type {CommerceRegularFacet} from './controllers/commerce/facets/core/regular/headless-commerce-regular-facet';
 export type {CommerceNumericFacet} from './controllers/commerce/facets/core/numeric/headless-commerce-numeric-facet';
