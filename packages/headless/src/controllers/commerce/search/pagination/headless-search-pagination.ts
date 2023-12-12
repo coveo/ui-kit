@@ -5,7 +5,7 @@ import {
   buildCorePagination,
   Pagination,
 } from '../../pagination/core/headless-core-commerce-pagination';
-import {loadSearchReducer} from '../utils/headless-search-reducers';
+import {loadSearchReducer} from '../utils/load-search-reducers';
 
 /**
  * Creates a `Pagination` controller instance.

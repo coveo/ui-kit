@@ -6,7 +6,7 @@ import {
   buildCoreSort,
   SortProps,
 } from '../../sort/core/headless-core-commerce-sort';
-import {loadSearchReducer} from '../utils/headless-search-reducers';
+import {loadSearchReducer} from '../utils/load-search-reducers';
 
 /**
  * Creates a `Sort` controller instance for commerce search.
