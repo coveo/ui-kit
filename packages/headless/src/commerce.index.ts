@@ -107,3 +107,11 @@ export {buildProductListingFacetGenerator} from './controllers/commerce/product-
 
 export type {Search} from './controllers/commerce/search/headless-search';
 export {buildSearch} from './controllers/commerce/search/headless-search';
+
+export {updateQuery} from './features/commerce/query/query-actions';
+
+export {buildSearchBox} from './controllers/commerce/search-box/headless-search-box';
+export type {
+  SearchBox,
+  SearchBoxState,
+} from './controllers/commerce/search-box/headless-search-box';

@@ -1,9 +1,5 @@
-import {type Draft as WritableDraft} from '@reduxjs/toolkit';
-import {
-  createReducer,
-  FacetValueRequest,
-  NumericRangeRequest,
-} from '../../../../ssr.index';
+import {createReducer, type Draft as WritableDraft} from '@reduxjs/toolkit';
+import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
@@ -11,6 +7,9 @@ import {
   updateFacetNumberOfValues,
 } from '../../../facets/facet-set/facet-set-actions';
 import {convertFacetValueToRequest} from '../../../facets/facet-set/facet-set-slice';
+import {FacetValueRequest} from '../../../facets/facet-set/interfaces/request';
+import {updateFacetAutoSelection} from '../../../facets/generic/facet-actions';
+import {NumericRangeRequest} from '../../../facets/range-facets/numeric-facet-set/interfaces/request';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
@@ -149,6 +148,16 @@ export const commerceFacetSetReducer = createReducer(
         }
 
         facetRequest.isFieldExpanded = isFieldExpanded;
+      })
+      .addCase(updateFacetAutoSelection, (state, action) =>
+        Object.values(state).forEach((slice) => {
+          slice.request.preventAutoSelect = !action.payload.allow;
+        })
+      )
+      .addCase(deselectAllBreadcrumbs, (state) => {
+        Object.values(state).forEach((facet) => {
+          facet.request.values.forEach((value) => (value.state = 'idle'));
+        });
       });
   }
 );
