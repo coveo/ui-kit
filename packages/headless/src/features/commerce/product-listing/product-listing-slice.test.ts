@@ -1,4 +1,4 @@
-import {buildMockCommerceFacetResponse} from '../../../test/mock-commerce-facet-response';
+import {buildMockCommerceRegularFacetResponse} from '../../../test/mock-commerce-facet-response';
 import {buildFetchProductListingV2Response} from '../../../test/mock-product-listing-v2';
 import {buildMockProductRecommendation} from '../../../test/mock-product-recommendation';
 import {fetchProductListing} from './product-listing-actions';
@@ -21,7 +21,7 @@ describe('product-listing-v2-slice', () => {
 
   it('when a fetchProductListing fulfilled is received, should set the state to the received payload', () => {
     const result = buildMockProductRecommendation();
-    const facet = buildMockCommerceFacetResponse();
+    const facet = buildMockCommerceRegularFacetResponse();
     const responseId = 'some-response-id';
     const response = buildFetchProductListingV2Response({
       products: [result],

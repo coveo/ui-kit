@@ -1,8 +1,20 @@
 import {createReducer} from '@reduxjs/toolkit';
+import {
+  deselectAllFacetValues,
+  toggleExcludeFacetValue,
+  toggleSelectFacetValue,
+} from '../../facets/facet-set/facet-set-actions';
+import {
+  toggleExcludeNumericFacetValue,
+  toggleSelectNumericFacetValue,
+} from '../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {fetchProductListing} from '../product-listing/product-listing-actions';
 import {executeSearch} from '../search/search-actions';
 import {nextPage, previousPage, selectPage} from './pagination-actions';
-import {getCommercePaginationInitialState} from './pagination-state';
+import {
+  CommercePaginationState,
+  getCommercePaginationInitialState,
+} from './pagination-state';
 
 export const paginationReducer = createReducer(
   getCommercePaginationInitialState(),
@@ -30,6 +42,15 @@ export const paginationReducer = createReducer(
       .addCase(
         executeSearch.fulfilled,
         (_, action) => action.payload.response.pagination
-      );
+      )
+      .addCase(deselectAllFacetValues, handlePaginationReset)
+      .addCase(toggleSelectFacetValue, handlePaginationReset)
+      .addCase(toggleExcludeFacetValue, handlePaginationReset)
+      .addCase(toggleSelectNumericFacetValue, handlePaginationReset)
+      .addCase(toggleExcludeNumericFacetValue, handlePaginationReset);
   }
 );
+
+function handlePaginationReset(state: CommercePaginationState) {
+  state.page = 0;
+}
