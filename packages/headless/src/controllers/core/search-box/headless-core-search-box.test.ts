@@ -100,7 +100,7 @@ describe('headless CoreSearchBox', () => {
     searchBox = buildCoreSearchBox(engine, props);
   }
 
-  it('it adds the correct reducers to engine', () => {
+  it('adds the correct reducers to engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       query,
       querySuggest,

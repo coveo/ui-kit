@@ -10,6 +10,7 @@ import {
   ProductListing,
   buildProductListingFacetGenerator,
 } from '../commerce.index';
+import {buildSearchBox} from '../controllers/commerce/search-box/headless-search-box';
 import {updateQuery} from '../features/commerce/query/query-actions';
 import {getOrganizationEndpoints} from '../insight.index';
 import {waitForNextStateChange} from '../test/functional-test-utils';
@@ -136,5 +137,17 @@ describe.skip('commerce', () => {
     });
 
     expect(search.state.products).not.toEqual([]);
+  });
+
+  it('provides suggestions', async () => {
+    const box = buildSearchBox(engine);
+    await waitForNextStateChange(engine, {
+      action: () => {
+        box.updateText('l');
+      },
+      expectedSubscriberCalls: 3,
+    });
+
+    expect(box.state.suggestions).not.toEqual([]);
   });
 });
