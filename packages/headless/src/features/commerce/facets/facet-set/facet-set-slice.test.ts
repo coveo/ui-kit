@@ -931,7 +931,7 @@ describe('commerceFacetSetReducer', () => {
       expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
     });
 
-    it('dispatching #toggleExcludeNumericFacetValue with an invalid id does not throw', () => {
+    it('dispatching #toggleExcludeDateFacetValue with an invalid id does not throw', () => {
       const facetValue = buildMockCommerceDateFacetValue();
       const action = toggleExcludeDateFacetValue({
         facetId: '1',
