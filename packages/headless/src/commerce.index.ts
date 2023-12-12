@@ -94,12 +94,15 @@ export {
 
 export type {CommerceRegularFacet} from './controllers/commerce/facets/core/regular/headless-commerce-regular-facet';
 export type {CommerceNumericFacet} from './controllers/commerce/facets/core/numeric/headless-commerce-numeric-facet';
+export type {CommerceDateFacet} from './controllers/commerce/facets/core/date/headless-commerce-date-facet';
 export type {
   FacetType,
   FacetValueRequest,
   RegularFacetValue,
   NumericRangeRequest,
   NumericFacetValue,
+  DateRangeRequest,
+  DateFacetValue,
 } from './controllers/commerce/facets/core/headless-core-commerce-facet';
 export type {ProductListingFacetGenerator} from './controllers/commerce/product-listing/facets/headless-product-listing-facet-generator';
 export {buildProductListingFacetGenerator} from './controllers/commerce/product-listing/facets/headless-product-listing-facet-generator';
