@@ -43,11 +43,11 @@ describe('headless search box', () => {
       highlightOptions: {
         notMatchDelimiters: {
           open: '<a>',
-          close: '<a>',
+          close: '</a>',
         },
         correctionDelimiters: {
           open: '<i>',
-          close: '<i>',
+          close: '</i>',
         },
       },
     };
@@ -103,7 +103,7 @@ describe('headless search box', () => {
     });
   });
 
-  describe('validating options', () => {
+  describe('validate options', () => {
     it(`when passing an invalid id as option
       creating the controller should throw`, () => {
       props.options!.id = 1 as unknown as string;
@@ -235,7 +235,7 @@ describe('headless search box', () => {
       expect(engine.actions).not.toContainEqual(deselectAllBreadcrumbs());
     });
 
-    it('allows autoSelection', () => {
+    it('dispatches #updateFacetAutoSelection with proper payload', () => {
       expect(engine.actions).toContainEqual(
         updateFacetAutoSelection({allow: true})
       );
