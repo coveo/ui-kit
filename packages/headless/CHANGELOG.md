@@ -1,3 +1,15 @@
+# 2.43.0 (2023-12-08)
+
+### Bug Fixes
+
+- **headless:** 404 error in query stream ([#3462](https://github.com/coveo/ui-kit/issues/3462)) ([392ada3](https://github.com/coveo/ui-kit/commits/392ada3d59b172156317f6027dae12edf9e912fd))
+- **headless:** add cases reducers in pagination slice ([#3464](https://github.com/coveo/ui-kit/issues/3464)) ([702a04a](https://github.com/coveo/ui-kit/commits/702a04a919cce2df64e4555df5acdc6e787b0bc5))
+
+### Features
+
+- **atomic:** support core facet value exclusion ([#3103](https://github.com/coveo/ui-kit/issues/3103)) ([7b678c3](https://github.com/coveo/ui-kit/commits/7b678c3ba9ff8733fe6d0c6897679c4f2d67a213))
+- **headless:** added feature to fetch additional fields in generated answer citations ([#3445](https://github.com/coveo/ui-kit/issues/3445)) ([90c28c9](https://github.com/coveo/ui-kit/commits/90c28c9ae69121aeba8e9ba959128ef60c6421f3))
+
 # 2.42.0 (2023-12-06)
 
 ### Features

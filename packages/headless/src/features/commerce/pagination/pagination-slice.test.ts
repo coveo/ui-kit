@@ -1,3 +1,12 @@
+import {
+  deselectAllFacetValues,
+  toggleExcludeFacetValue,
+  toggleSelectFacetValue,
+} from '../../facets/facet-set/facet-set-actions';
+import {
+  toggleExcludeNumericFacetValue,
+  toggleSelectNumericFacetValue,
+} from '../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {nextPage, previousPage, selectPage} from './pagination-actions';
 import {paginationReducer} from './pagination-slice';
 import {
@@ -69,5 +78,35 @@ describe('pagination slice', () => {
     const finalState = paginationReducer(state, previousPage());
 
     expect(finalState.page).toBe(0);
+  });
+
+  describe.each([
+    {
+      actionName: '#deselectAllFacetValues',
+      action: deselectAllFacetValues,
+    },
+    {
+      actionName: '#toggleSelectFacetValue',
+      action: toggleSelectFacetValue,
+    },
+    {
+      actionName: '#toggleExcludeFacetValue',
+      action: toggleExcludeFacetValue,
+    },
+    {
+      actionName: '#toggleSelectNumericFacetValue',
+      action: toggleSelectNumericFacetValue,
+    },
+    {
+      actionName: '#toggleExcludeNumericFacetValue',
+      action: toggleExcludeNumericFacetValue,
+    },
+  ])('$actionName', ({action}) => {
+    it('resets pagination', () => {
+      state.page = 5;
+      const finalState = paginationReducer(state, action);
+
+      expect(finalState.page).toBe(0);
+    });
   });
 });

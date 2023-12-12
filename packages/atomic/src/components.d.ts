@@ -306,6 +306,10 @@ export namespace Components {
          */
         "displayValuesAs": 'checkbox' | 'link' | 'box';
         /**
+          * Whether to allow excluding values from the facet.
+         */
+        "enableExclusion": boolean;
+        /**
           * Specifies a unique identifier for the facet.
          */
         "facetId"?: string;
@@ -561,6 +565,10 @@ export namespace Components {
           * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
          */
         "displayValuesAs": FacetDisplayValues;
+        /**
+          * Whether to allow excluding values from the facet.
+         */
+        "enableExclusion": boolean;
         /**
           * Specifies a unique identifier for the facet.
          */
@@ -4486,6 +4494,10 @@ declare namespace LocalJSX {
          */
         "displayValuesAs"?: 'checkbox' | 'link' | 'box';
         /**
+          * Whether to allow excluding values from the facet.
+         */
+        "enableExclusion"?: boolean;
+        /**
           * Specifies a unique identifier for the facet.
          */
         "facetId"?: string;
@@ -4742,6 +4754,10 @@ declare namespace LocalJSX {
           * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
          */
         "displayValuesAs"?: FacetDisplayValues;
+        /**
+          * Whether to allow excluding values from the facet.
+         */
+        "enableExclusion"?: boolean;
         /**
           * Specifies a unique identifier for the facet.
          */

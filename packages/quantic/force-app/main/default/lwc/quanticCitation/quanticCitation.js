@@ -1,4 +1,5 @@
 import {LinkUtils} from 'c/quanticUtils';
+import {NavigationMixin} from 'lightning/navigation';
 import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").InteractiveCitation} InteractiveCitation */
@@ -13,10 +14,10 @@ const debounceDurationBeforeHoverMs = 200;
  * @example
  * <c-quantic-citation citation={citation} interactive-citation={interactiveCitation} onclick={handleClick} onhover={handleHover}></c-quantic-citation>
  */
-export default class QuanticCitation extends LightningElement {
+export default class QuanticCitation extends NavigationMixin(LightningElement) {
   /**
    * @api
-   * @type {{title: string, index: number, text: string, clickUri: string}}
+   * @type {{title: string, index: number, text: string, clickUri: string, fields: object}}
    * The citation item information.
    */
   @api citation;
@@ -39,11 +40,25 @@ export default class QuanticCitation extends LightningElement {
   removeBindings;
   /** @type {boolean} */
   isInitialRender = true;
+  /** @type {string} */
+  salesforceRecordUrl;
 
   renderedCallback() {
     if (this.isInitialRender) {
       this.bindAnalyticsToCitationLink();
       this.isInitialRender = false;
+
+      if (this.isSalesforceLink) {
+        this[NavigationMixin.GenerateUrl]({
+          type: 'standard__recordPage',
+          attributes: {
+            recordId: this.recordIdAttribute,
+            actionName: 'view',
+          },
+        }).then((url) => {
+          this.salesforceRecordUrl = url;
+        });
+      }
     }
   }
 
@@ -93,6 +108,47 @@ export default class QuanticCitation extends LightningElement {
       this.link,
       this.interactiveCitation
     );
+  }
+
+  handleClick(event) {
+    if (this.isSalesforceLink) {
+      event.preventDefault();
+      this.navigateToSalesforceRecord(event);
+    }
+  }
+
+  navigateToSalesforceRecord(event) {
+    event.stopPropagation();
+    const targetPageRef = {
+      type: 'standard__recordPage',
+      attributes: {
+        recordId: this.recordIdAttribute,
+        actionName: 'view',
+      },
+    };
+    this[NavigationMixin.Navigate](targetPageRef);
+  }
+
+  /**
+   * Checks if the citation source type is Salesforce.
+   */
+  get isSalesforceLink() {
+    return !!this.citation?.fields?.sfid;
+  }
+
+  get recordIdAttribute() {
+    // Knowledge article uses the knowledge article version id to navigate.
+    if (this.citation?.fields?.sfkbid && this.citation?.fields?.sfkavid) {
+      return this.citation.fields.sfkavid;
+    }
+    return this.citation.fields.sfid;
+  }
+
+  get hrefValue() {
+    if (this.isSalesforceLink) {
+      return this.salesforceRecordUrl;
+    }
+    return this.clickUri;
   }
 
   /**

@@ -1,7 +1,5 @@
 import {Schema} from '@coveo/bueno';
-import {SearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {SearchPageEvents} from '../../features/analytics/search-action-cause';
 import {
   SearchAction,
   executeSearch,
@@ -12,6 +10,9 @@ import {
   logStaticFilterDeselect,
   logStaticFilterSelect,
   registerStaticFilter,
+  staticFilterClearAll,
+  staticFilterDeselect,
+  staticFilterSelect,
   toggleExcludeStaticFilterValue,
   toggleSelectStaticFilterValue,
 } from '../../features/static-filter-set/static-filter-set-actions';
@@ -223,13 +224,7 @@ export function buildStaticFilter(
       dispatch(
         executeSearch({
           legacy: logStaticFilterClearAll({staticFilterId: id}),
-          next: {
-            actionCause: SearchPageEvents.staticFilterClearAll,
-            getEventExtraPayload: (state) =>
-              new SearchAnalyticsProvider(
-                () => state
-              ).getStaticFilterClearAllMetadata(id),
-          },
+          next: staticFilterClearAll(id),
         })
       );
     },
@@ -282,14 +277,7 @@ function getAnalyticsActionForToggledValue(
 ): SearchAction {
   const isSelected = value.state === 'selected';
 
-  return {
-    actionCause: isSelected
-      ? SearchPageEvents.staticFilterDeselect
-      : SearchPageEvents.staticFilterSelect,
-    getEventExtraPayload: (state) =>
-      new SearchAnalyticsProvider(() => state).getStaticFilterToggleMetadata(
-        id,
-        value
-      ),
-  };
+  return isSelected
+    ? staticFilterSelect(id, value)
+    : staticFilterDeselect(id, value);
 }

@@ -1,10 +1,13 @@
-import {SearchAnalyticsProvider} from '../../../../api/analytics/search-analytics';
-import {SearchPageEvents} from '../../../analytics/search-action-cause';
 import {SearchAction} from '../../../search/search-actions';
 import {
+  facetDeselect,
+  facetExclude,
+  facetSelect,
+  facetUnexclude,
   logFacetDeselect,
   logFacetExclude,
   logFacetSelect,
+  logFacetUnexclude,
 } from '../../facet-set/facet-set-analytics-actions';
 import {FacetSelectionChangeMetadata} from '../../facet-set/facet-set-analytics-actions-utils';
 import {RangeFacetValue} from './interfaces/range-facet';
@@ -33,16 +36,10 @@ export const getAnalyticsActionForToggleFacetSelect = (
   facetId: string,
   selection: RangeFacetValue
 ): SearchAction => {
-  return {
-    actionCause: isRangeFacetValueSelected(selection)
-      ? SearchPageEvents.facetSelect
-      : SearchPageEvents.facetDeselect,
-    getEventExtraPayload: (state) =>
-      new SearchAnalyticsProvider(() => state).getFacetMetadata(
-        facetId,
-        `${selection.start}..${selection.end}`
-      ),
-  };
+  const facetValue = `${selection.start}..${selection.end}`;
+  return isRangeFacetValueSelected(selection)
+    ? facetDeselect(facetId, facetValue)
+    : facetSelect(facetId, facetValue);
 };
 
 export const getLegacyAnalyticsActionForToggleRangeFacetExclude = (
@@ -53,7 +50,7 @@ export const getLegacyAnalyticsActionForToggleRangeFacetExclude = (
   const payload: FacetSelectionChangeMetadata = {facetId, facetValue};
 
   return isRangeFacetValueExcluded(selection)
-    ? logFacetDeselect(payload)
+    ? logFacetUnexclude(payload)
     : logFacetExclude(payload);
 };
 
@@ -61,14 +58,8 @@ export const getAnalyticsActionForToggleRangeFacetExclude = (
   facetId: string,
   selection: RangeFacetValue
 ): SearchAction => {
-  return {
-    actionCause: isRangeFacetValueExcluded(selection)
-      ? SearchPageEvents.facetUnexclude
-      : SearchPageEvents.facetExclude,
-    getEventExtraPayload: (state) =>
-      new SearchAnalyticsProvider(() => state).getFacetMetadata(
-        facetId,
-        `${selection.start}..${selection.end}`
-      ),
-  };
+  const facetValue = `${selection.start}..${selection.end}`;
+  return isRangeFacetValueExcluded(selection)
+    ? facetUnexclude(facetId, facetValue)
+    : facetExclude(facetId, facetValue);
 };

@@ -16,6 +16,7 @@ import {GeneratedAnswerExpectations as Expect} from './generated-answer-expectat
 interface GeneratedAnswerOptions {
   answerStyle: string;
   multilineFooter: boolean;
+  fieldsToIncludeInCitations: string;
 }
 
 const GENERATED_ANSWER_DATA_KEY = 'coveo-generated-answer-data';
@@ -29,6 +30,7 @@ const feedbackOptions = [
   otherOption,
 ];
 
+const defaultFieldsToIncludeInCitations = 'sfid,sfkbid,sfkavid';
 const defaultRephraseOption = 'default';
 const stepRephraseOption = 'step';
 const bulletRephraseOption = 'bullet';
@@ -98,6 +100,13 @@ describe('quantic-generated-answer', () => {
       it('should perform a search query with the default rephrase button', () => {
         cy.wait(InterceptAliases.Search);
         Expect.searchQueryContainsCorrectRephraseOption(defaultRephraseOption);
+      });
+
+      it('should perform a search query with the default fields to include in citations', () => {
+        cy.wait(InterceptAliases.Search);
+        Expect.searchQueryContainsCorrectFieldsToIncludeInCitations(
+          defaultFieldsToIncludeInCitations.split(',')
+        );
       });
 
       it(
@@ -355,6 +364,27 @@ describe('quantic-generated-answer', () => {
           Expect.rephraseButtonIsSelected(conciseRephraseOption, false);
           Expect.rephraseButtonIsSelected(bulletRephraseOption, true);
           Expect.searchQueryContainsCorrectRephraseOption(bulletRephraseOption);
+        });
+      });
+    });
+
+    describe('when a custom value is provided to the fields to include in citations attribute', () => {
+      const streamId = crypto.randomUUID();
+      const customFields = 'foo,bar';
+
+      beforeEach(() => {
+        mockSearchWithGeneratedAnswer(streamId);
+        mockStreamResponse(streamId, genQaMessageTypePayload);
+        visitGeneratedAnswer({fieldsToIncludeInCitations: customFields});
+      });
+
+      it('should send a search query with the right fields to include in citations option as a parameter', () => {
+        scope('when loading the page', () => {
+          Expect.displayGeneratedAnswerContent(true);
+          Expect.displayRephraseButtons(true);
+          Expect.searchQueryContainsCorrectFieldsToIncludeInCitations(
+            customFields.split(',')
+          );
         });
       });
     });

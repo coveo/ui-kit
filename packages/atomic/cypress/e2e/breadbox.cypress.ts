@@ -24,6 +24,7 @@ import {
 } from './facets/color-facet/color-facet-actions';
 import * as ColorFacetAssertions from './facets/color-facet/color-facet-assertions';
 import {
+  excludeIdleCheckboxValueAt,
   selectIdleCheckboxValueAt,
   selectIdleLinkValueAt,
 } from './facets/facet-common-actions';
@@ -154,6 +155,7 @@ describe('Breadbox Test Suites', () => {
       );
       BreadboxAssertions.assertDisplayBreadcrumbClearIcon();
       BreadboxAssertions.assertBreadcrumbDisplayLength(2);
+      BreadboxAssertions.assertAriaLabel('inclusion');
     });
 
     describe('when selecting "Clear all" button', () => {
@@ -268,6 +270,32 @@ describe('Breadbox Test Suites', () => {
     });
   });
 
+  describe('when excluding from a standard facet', () => {
+    const selectionIndex = 2;
+
+    function setupFacetWithMultipleExcludedValues() {
+      new TestFixture()
+        .with(addBreadbox())
+        .with(addFacet({field: 'author', label, 'enable-exclusion': 'true'}))
+        .init();
+      excludeIdleCheckboxValueAt(FacetSelectors, selectionIndex);
+    }
+
+    describe('verify rendering', () => {
+      beforeEach(setupFacetWithMultipleExcludedValues);
+      CommonAssertions.assertAccessibility(breadboxComponent);
+      BreadboxAssertions.assertDisplayBreadcrumb(true);
+      BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
+      BreadboxAssertions.assertBreadcrumbLabel(breadboxLabel);
+      BreadboxAssertions.assertExcludedCheckboxFacetsInBreadcrumb(
+        FacetSelectors
+      );
+      BreadboxAssertions.assertBreadcrumbDisplayLength(1);
+      BreadboxAssertions.assertDisplayBreadcrumbShowMore(false);
+      BreadboxAssertions.assertAriaLabel('exclusion');
+    });
+  });
+
   describe('when using path-limit', () => {
     const SEPARATOR = ' / ';
     const ELLIPSIS = '...';
@@ -284,15 +312,7 @@ describe('Breadbox Test Suites', () => {
     }
 
     describe('when path-limit is lower than min', () => {
-      const pathLimit = 1;
-      beforeEach(() => {
-        setupBreadboxWithPathLimit({'path-limit': pathLimit});
-      });
-      CommonAssertions.assertConsoleError();
-    });
-
-    describe('when path-limit is higher than max', () => {
-      const pathLimit = 11;
+      const pathLimit = 0;
       beforeEach(() => {
         setupBreadboxWithPathLimit({'path-limit': pathLimit});
       });

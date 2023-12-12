@@ -244,6 +244,26 @@ describe('search request', () => {
     expect(generateAutomaticFacets?.currentFacets).toContainEqual(request);
   });
 
+  it('#searchRequest returns the state #generatedAnswer.responseFormat', async () => {
+    state.generatedAnswer.responseFormat = {answerStyle: 'concise'};
+    const params = (await buildSearchRequest(state)).request;
+
+    expect(
+      params.pipelineRuleParameters?.mlGenerativeQuestionAnswering
+        ?.responseFormat
+    ).toBe(state.generatedAnswer.responseFormat);
+  });
+
+  it('#searchRequest returns the state #generatedAnswer.citationsFieldToInclude', async () => {
+    state.generatedAnswer.fieldsToIncludeInCitations = ['foo', 'bar'];
+    const params = (await buildSearchRequest(state)).request;
+
+    expect(
+      params.pipelineRuleParameters?.mlGenerativeQuestionAnswering
+        ?.citationsFieldToInclude
+    ).toBe(state.generatedAnswer.fieldsToIncludeInCitations);
+  });
+
   it('#searchRequestParams returns the facets in the #categoryFacetSet', async () => {
     const request = buildMockCategoryFacetRequest({field: 'objecttype'});
     state.categoryFacetSet[1] = buildMockCategoryFacetSlice({request});

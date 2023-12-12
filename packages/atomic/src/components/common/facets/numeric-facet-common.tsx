@@ -215,7 +215,7 @@ export class NumericFacetCommon {
     initializePopover(this.props.host, {
       ...facetInfo,
       hasValues: () => this.hasValues,
-      numberOfSelectedValues: () => this.numberOfSelectedValues,
+      numberOfActiveValues: () => this.numberOfSelectedValues,
     });
 
     if (this.filter) {
@@ -364,7 +364,7 @@ export class NumericFacetCommon {
           }
           this.facetForRange?.deselectAll();
         }}
-        numberOfSelectedValues={this.numberOfSelectedValues}
+        numberOfActiveValues={this.numberOfSelectedValues}
         isCollapsed={isCollapsed}
         headingLevel={this.props.headingLevel}
         onToggleCollapse={onToggleCollapse}

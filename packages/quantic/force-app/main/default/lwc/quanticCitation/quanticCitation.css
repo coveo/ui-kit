@@ -47,6 +47,6 @@
 }
 
 .citation__tooltip {
-  color: var(--lwc-brandContrast);
+  color: rgb(26, 27, 30);
   cursor: default;
 }

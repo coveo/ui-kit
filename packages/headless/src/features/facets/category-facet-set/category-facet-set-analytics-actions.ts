@@ -1,5 +1,6 @@
 import {ArrayValue} from '@coveo/bueno';
 import type {CategoryFacetMetadata} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
+import {SearchAnalyticsProvider} from '../../../api/analytics/search-analytics';
 import {SearchAppState} from '../../../state/search-app-state';
 import {
   requiredNonEmptyString,
@@ -7,8 +8,10 @@ import {
 } from '../../../utils/validate-payload';
 import {
   makeAnalyticsAction,
-  SearchAction,
+  LegacySearchAction,
 } from '../../analytics/analytics-utils';
+import {SearchPageEvents} from '../../analytics/search-action-cause';
+import {SearchAction} from '../../search/search-actions';
 import {facetIdDefinition} from '../generic/facet-actions-validation';
 
 export interface LogCategoryFacetBreadcrumbActionCreatorPayload {
@@ -52,9 +55,22 @@ const getCategoryFacetMetadata = (
 //TODO: KIT-2859
 export const logCategoryFacetBreadcrumb = (
   payload: LogCategoryFacetBreadcrumbActionCreatorPayload
-): SearchAction =>
+): LegacySearchAction =>
   makeAnalyticsAction('analytics/categoryFacet/breadcrumb', (client, state) => {
     validatePayload(payload, categoryFacetBreadcrumbPayloadDefinition);
 
     return client.makeBreadcrumbFacet(getCategoryFacetMetadata(state, payload));
   });
+
+export const categoryBreadcrumbFacet = (
+  id: string,
+  path: string[]
+): SearchAction => {
+  return {
+    actionCause: SearchPageEvents.breadcrumbFacet,
+    getEventExtraPayload: (state) =>
+      new SearchAnalyticsProvider(
+        () => state
+      ).getCategoryBreadcrumbFacetMetadata(id, path),
+  };
+};

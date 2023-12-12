@@ -1,7 +1,8 @@
-import {SearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {logInterfaceChange} from '../../features/analytics/analytics-actions';
-import {SearchPageEvents} from '../../features/analytics/search-action-cause';
+import {
+  interfaceChange,
+  logInterfaceChange,
+} from '../../features/analytics/analytics-actions';
 import {executeSearch} from '../../features/search/search-actions';
 import {
   buildCoreTab,
@@ -28,13 +29,7 @@ export function buildTab(engine: SearchEngine, props: TabProps): Tab {
     dispatch(
       executeSearch({
         legacy: logInterfaceChange(),
-        next: {
-          actionCause: SearchPageEvents.interfaceChange,
-          getEventExtraPayload: (state) =>
-            new SearchAnalyticsProvider(
-              () => state
-            ).getInterfaceChangeMetadata(),
-        },
+        next: interfaceChange(),
       })
     );
 

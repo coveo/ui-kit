@@ -73,10 +73,12 @@ export const buildSearchRequest = async (
         currentFacets: automaticFacets,
       },
     }),
-    ...(state.generatedAnswer?.responseFormat && {
+    ...(state.generatedAnswer && {
       pipelineRuleParameters: {
         mlGenerativeQuestionAnswering: {
           responseFormat: state.generatedAnswer.responseFormat,
+          citationsFieldToInclude:
+            state.generatedAnswer.fieldsToIncludeInCitations,
         },
       },
     }),

@@ -117,7 +117,7 @@ export interface PreparableAnalyticsAction<
   prepare: PrepareAnalyticsFunction<StateNeeded>;
 }
 
-export type SearchAction =
+export type LegacySearchAction =
   PreparableAnalyticsAction<StateNeededBySearchAnalyticsProvider>;
 
 export type CustomAction =
@@ -614,7 +614,7 @@ export const makeProductListingAnalyticsAction = makeAnalyticsActionFactory<
 export const makeNoopAnalyticsAction = () =>
   makeAnalyticsAction('analytics/noop', () => null);
 
-export const noopSearchAnalyticsAction = (): SearchAction =>
+export const noopSearchAnalyticsAction = (): LegacySearchAction =>
   makeNoopAnalyticsAction();
 
 export const partialDocumentInformation = (
