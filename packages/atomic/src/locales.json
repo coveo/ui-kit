@@ -643,9 +643,9 @@
     "sv": "Uteslutningsfilter på {{value}}; {{count}} resultat",
     "th": "ตัวกรองการยกเว้นบน {{value}}; {{count}} ผลลัพธ์",
     "tr": "{{value}} için dışlama filtresi; {{count}} sonuç",
-    "zh": "排除过滤器在{{value}}; {{count}}个结果",
-    "zh-CN": "排除过滤器在{{value}}; {{count}}个结果",
-    "zh-TW": "排除過濾器在{{value}}; {{count}}個結果"
+    "zh": "排除过滤器在 {{value}}; {{count}}个结果",
+    "zh-CN": "排除过滤器在 {{value}}; {{count}}个结果",
+    "zh-TW": "排除過濾器在 {{value}}; {{count}}個結果"
   },
   "facet-value-exclude_plural": {
     "en": "Exclusion filter on {{value}}; {{count}} results",
@@ -670,9 +670,9 @@
     "sv": "Uteslutningsfilter på {{value}}; {{count}} resultat",
     "th": "ตัวกรองการยกเว้นบน {{value}}; {{count}} ผลลัพธ์",
     "tr": "{{value}} için dışlama filtresi; {{count}} sonuç",
-    "zh": "排除过滤器在{{value}}; {{count}}个结果",
-    "zh-CN": "排除过滤器在{{value}}; {{count}}个结果",
-    "zh-TW": "排除過濾器在{{value}}; {{count}}個結果"
+    "zh": "排除过滤器在 {{value}}; {{count}}个结果",
+    "zh-CN": "排除过滤器在 {{value}}; {{count}}个结果",
+    "zh-TW": "排除過濾器在 {{value}}; {{count}}個結果"
   },
   "facet-value-exclude_other": {
     "en": "Exclusion filter on {{value}}; {{count}} results",
@@ -697,9 +697,9 @@
     "sv": "Uteslutningsfilter på {{value}}; {{count}} resultat",
     "th": "ตัวกรองการยกเว้นบน {{value}}; {{count}} ผลลัพธ์",
     "tr": "{{value}} için dışlama filtresi; {{count}} sonuç",
-    "zh": "排除过滤器在{{value}}; {{count}}个结果",
-    "zh-CN": "排除过滤器在{{value}}; {{count}}个结果",
-    "zh-TW": "排除過濾器在{{value}}; {{count}}個結果"
+    "zh": "排除过滤器在 {{value}}; {{count}}个结果",
+    "zh-CN": "排除过滤器在 {{value}}; {{count}}个结果",
+    "zh-TW": "排除過濾器在 {{value}}; {{count}}個結果"
   },
   "remove-filter-on": {
     "en": "Remove inclusion filter on {{value}}",
