@@ -16,6 +16,7 @@ import {
   toggleSelectDateFacetValue,
 } from '../../../facets/range-facets/date-facet-set/date-facet-actions';
 import {convertToDateRangeRequests} from '../../../facets/range-facets/date-facet-set/date-facet-set-slice';
+import {findExactRangeValue} from '../../../facets/range-facets/generic/range-facet-reducers';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
@@ -75,13 +76,9 @@ export const commerceFacetSetReducer = createReducer(
 
         facetRequest.preventAutoSelect = true;
 
-        const existingValue = (
-          facetRequest.values as WritableDraft<NumericRangeRequest>[]
-        ).find(
-          (req) =>
-            req.start === selection.start &&
-            req.end === selection.end &&
-            req.endInclusive === selection.endInclusive
+        const existingValue = findExactRangeValue(
+          facetRequest.values as NumericRangeRequest[],
+          selection
         );
         if (!existingValue) {
           insertNewValue(facetRequest, selection);
@@ -99,13 +96,9 @@ export const commerceFacetSetReducer = createReducer(
 
         facetRequest.preventAutoSelect = true;
 
-        const existingValue = (
-          facetRequest.values as WritableDraft<DateRangeRequest>[]
-        ).find(
-          (req) =>
-            req.start === selection.start &&
-            req.end === selection.end &&
-            req.endInclusive === selection.endInclusive
+        const existingValue = findExactRangeValue(
+          facetRequest.values as DateRangeRequest[],
+          selection
         );
         if (!existingValue) {
           insertNewValue(facetRequest, selection);
@@ -144,13 +137,9 @@ export const commerceFacetSetReducer = createReducer(
 
         facetRequest.preventAutoSelect = true;
 
-        const existingValue = (
-          facetRequest.values as WritableDraft<NumericRangeRequest>[]
-        ).find(
-          (req) =>
-            req.start === selection.start &&
-            req.end === selection.end &&
-            req.endInclusive === selection.endInclusive
+        const existingValue = findExactRangeValue(
+          facetRequest.values as NumericRangeRequest[],
+          selection
         );
         if (!existingValue) {
           insertNewValue(facetRequest, selection);
@@ -169,13 +158,9 @@ export const commerceFacetSetReducer = createReducer(
 
         facetRequest.preventAutoSelect = true;
 
-        const existingValue = (
-          facetRequest.values as WritableDraft<DateRangeRequest>[]
-        ).find(
-          (req) =>
-            req.start === selection.start &&
-            req.end === selection.end &&
-            req.endInclusive === selection.endInclusive
+        const existingValue = findExactRangeValue(
+          facetRequest.values as DateRangeRequest[],
+          selection
         );
         if (!existingValue) {
           insertNewValue(facetRequest, selection);

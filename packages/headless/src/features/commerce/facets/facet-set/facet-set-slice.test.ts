@@ -31,6 +31,7 @@ import {
   toggleSelectDateFacetValue,
 } from '../../../facets/range-facets/date-facet-set/date-facet-actions';
 import {convertToDateRangeRequests} from '../../../facets/range-facets/date-facet-set/date-facet-set-slice';
+import {findExactRangeValue} from '../../../facets/range-facets/generic/range-facet-reducers';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
@@ -471,13 +472,9 @@ describe('commerceFacetSetReducer', () => {
           });
           const finalState = commerceFacetSetReducer(state, action);
 
-          const targetValue = (
-            finalState[facetId]?.request.values as NumericRangeRequest[]
-          ).find(
-            (req) =>
-              req.start === facetValue.start &&
-              req.end === facetValue.end &&
-              req.endInclusive === facetValue.endInclusive
+          const targetValue = findExactRangeValue(
+            finalState[facetId]?.request.values as NumericRangeRequest[],
+            facetValue
           );
           expect(targetValue?.state).toBe(facetValueState);
         });
@@ -506,13 +503,9 @@ describe('commerceFacetSetReducer', () => {
           });
           const finalState = commerceFacetSetReducer(state, action);
 
-          const targetValue = (
-            finalState[facetId]?.request.values as NumericRangeRequest[]
-          ).find(
-            (req) =>
-              req.start === facetValue.start &&
-              req.end === facetValue.end &&
-              req.endInclusive === facetValue.endInclusive
+          const targetValue = findExactRangeValue(
+            finalState[facetId]?.request.values as NumericRangeRequest[],
+            facetValue
           );
           expect(targetValue?.state).toBe(facetValueState);
         });
@@ -541,13 +534,9 @@ describe('commerceFacetSetReducer', () => {
           });
           const finalState = commerceFacetSetReducer(state, action);
 
-          const targetValue = (
-            finalState[facetId]?.request.values as NumericRangeRequest[]
-          ).find(
-            (req) =>
-              req.start === facetValue.start &&
-              req.end === facetValue.end &&
-              req.endInclusive === facetValue.endInclusive
+          const targetValue = findExactRangeValue(
+            finalState[facetId]?.request.values as NumericRangeRequest[],
+            facetValue
           );
           expect(targetValue?.state).toBe('idle');
         });
@@ -730,13 +719,9 @@ describe('commerceFacetSetReducer', () => {
           });
           const finalState = commerceFacetSetReducer(state, action);
 
-          const targetValue = (
-            finalState[facetId]?.request.values as DateRangeRequest[]
-          ).find(
-            (req) =>
-              req.start === facetValue.start &&
-              req.end === facetValue.end &&
-              req.endInclusive === facetValue.endInclusive
+          const targetValue = findExactRangeValue(
+            finalState[facetId]?.request.values as DateRangeRequest[],
+            facetValue
           );
           expect(targetValue?.state).toBe(facetValueState);
         });
@@ -763,13 +748,9 @@ describe('commerceFacetSetReducer', () => {
           });
           const finalState = commerceFacetSetReducer(state, action);
 
-          const targetValue = (
-            finalState[facetId]?.request.values as DateRangeRequest[]
-          ).find(
-            (req) =>
-              req.start === facetValue.start &&
-              req.end === facetValue.end &&
-              req.endInclusive === facetValue.endInclusive
+          const targetValue = findExactRangeValue(
+            finalState[facetId]?.request.values as DateRangeRequest[],
+            facetValue
           );
           expect(targetValue?.state).toBe(facetValueState);
         });
@@ -796,13 +777,9 @@ describe('commerceFacetSetReducer', () => {
           });
           const finalState = commerceFacetSetReducer(state, action);
 
-          const targetValue = (
-            finalState[facetId]?.request.values as DateRangeRequest[]
-          ).find(
-            (req) =>
-              req.start === facetValue.start &&
-              req.end === facetValue.end &&
-              req.endInclusive === facetValue.endInclusive
+          const targetValue = findExactRangeValue(
+            finalState[facetId]?.request.values as DateRangeRequest[],
+            facetValue
           );
           expect(targetValue?.state).toBe('idle');
         });
@@ -921,7 +898,7 @@ describe('commerceFacetSetReducer', () => {
         }
       );
     });
-    
+
     it('dispatching #toggleSelectDateFacetValue with an invalid id does not throw', () => {
       const facetValue = buildMockCommerceDateFacetValue();
       const action = toggleSelectDateFacetValue({
