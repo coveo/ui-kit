@@ -3,6 +3,7 @@ import {
   buildCommerceFacetGenerator,
   CommerceFacetGenerator,
 } from '../../facets/core/generator/headless-commerce-facet-generator';
+import {buildProductListingDateFacet} from './headless-product-listing-date-facet';
 import {buildProductListingNumericFacet} from './headless-product-listing-numeric-facet';
 import {buildProductListingRegularFacet} from './headless-product-listing-regular-facet';
 
@@ -28,7 +29,7 @@ export function buildProductListingFacetGenerator(
   return buildCommerceFacetGenerator(engine, {
     buildRegularFacet: buildProductListingRegularFacet,
     buildNumericFacet: buildProductListingNumericFacet,
-    // TODO: buildDateFacet: buildProductListingDateFacet,
+    buildDateFacet: buildProductListingDateFacet,
     // TODO: buildCategoryFacet: buildProductListingCategoryFacet,
   }) as ProductListingFacetGenerator;
 }

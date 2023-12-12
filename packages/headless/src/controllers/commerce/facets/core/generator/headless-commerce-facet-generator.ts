@@ -12,6 +12,7 @@ import {
   buildController,
   Controller,
 } from '../../../../controller/headless-controller';
+import {ProductListingDateFacetBuilder} from '../../../product-listing/facets/headless-product-listing-date-facet';
 import {ProductListingNumericFacetBuilder} from '../../../product-listing/facets/headless-product-listing-numeric-facet';
 import {ProductListingRegularFacetBuilder} from '../../../product-listing/facets/headless-product-listing-regular-facet';
 import {CoreCommerceFacet} from '../headless-core-commerce-facet';
@@ -43,7 +44,7 @@ export interface CommerceFacetGeneratorState {
 
 type CommerceRegularFacetBuilder = ProductListingRegularFacetBuilder; // TODO: | CommerceSearchRegularFacetBuilder;
 type CommerceNumericFacetBuilder = ProductListingNumericFacetBuilder; // TODO: | CommerceSearchNumericFacetBuilder;
-// TODO: type CommerceDateFacetBuilder = ProductListingDateFacetBuilder | CommerceSearchDateFacetBuilder;
+type CommerceDateFacetBuilder = ProductListingDateFacetBuilder; // TODO: | CommerceSearchDateFacetBuilder;
 // TODO: type CommerceCategoryFacetBuilder = ProductListingCategoryFacetBuilder | CommerceSearchCategoryFacetBuilder;
 
 /**
@@ -54,7 +55,7 @@ type CommerceNumericFacetBuilder = ProductListingNumericFacetBuilder; // TODO: |
 export interface CommerceFacetGeneratorOptions {
   buildRegularFacet: CommerceRegularFacetBuilder;
   buildNumericFacet: CommerceNumericFacetBuilder;
-  // TODO: buildDateFacet: CommerceDateFacetBuilder;
+  buildDateFacet: CommerceDateFacetBuilder;
   // TODO: buildCategoryFacet: CommerceNumericFacetBuilder;
 }
 
@@ -83,7 +84,8 @@ export function buildCommerceFacetGenerator(
     switch (type) {
       case 'numericalRange':
         return options.buildNumericFacet(engine, {facetId});
-      case 'dateRange': // TODO: return options.buildDateFacet(engine, {facetId});
+      case 'dateRange':
+        return options.buildDateFacet(engine, {facetId});
       case 'hierarchical': // TODO return options.buildCategoryFacet(engine, {facetId});
       case 'regular':
       default:

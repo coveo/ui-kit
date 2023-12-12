@@ -5,6 +5,7 @@ import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-face
 import {
   buildMockCommerceRegularFacetResponse,
   buildMockCommerceNumericFacetResponse,
+  buildMockCommerceDateFacetResponse,
 } from '../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {
@@ -24,6 +25,14 @@ describe('ProductListingFacetGenerator', () => {
     const mockState = buildMockCommerceState();
     const facets = [];
     switch (facetType) {
+      case 'regular':
+        facets.push(
+          buildMockCommerceRegularFacetResponse({
+            facetId: facet.facetId,
+            field: 'some_regular_field',
+          })
+        );
+        break;
       case 'numericalRange':
         facets.push(
           buildMockCommerceNumericFacetResponse({
@@ -32,14 +41,16 @@ describe('ProductListingFacetGenerator', () => {
           })
         );
         break;
-      case 'regular':
-      default:
+      case 'dateRange':
         facets.push(
-          buildMockCommerceRegularFacetResponse({
+          buildMockCommerceDateFacetResponse({
             facetId: facet.facetId,
-            field: 'some_regular_field',
+            field: 'some_date_field',
           })
         );
+        break;
+      case 'hierarchical': // TODO
+      default:
         break;
     }
     engine = buildMockCommerceEngine({
@@ -77,6 +88,14 @@ describe('ProductListingFacetGenerator', () => {
   });
   it('generated regular numeric facet controllers should dispatch #fetchProductListing', () => {
     initFacetGenerator('numericalRange');
+
+    facetGenerator.state.facets[0].deselectAll();
+
+    expect(engine.findAsyncAction(fetchProductListing.pending)).toBeTruthy();
+  });
+
+  it('generated date facet controllers should dispatch #fetchProductListing', () => {
+    initFacetGenerator('dateRange');
 
     facetGenerator.state.facets[0].deselectAll();
 

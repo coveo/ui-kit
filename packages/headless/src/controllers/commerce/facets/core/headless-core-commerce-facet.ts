@@ -10,6 +10,7 @@ import {
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {
   AnyFacetValueResponse,
+  DateFacetValue,
   FacetType,
   NumericFacetValue,
   RegularFacetValue,
@@ -28,6 +29,7 @@ import {
   CoreFacet as HeadlessCoreFacet,
   CoreFacetState,
 } from '../../../core/facets/facet/headless-core-facet';
+import {DateRangeRequest} from '../../../core/facets/range-facet/date-facet/headless-core-date-facet';
 import {NumericRangeRequest} from '../../../core/facets/range-facet/numeric-facet/headless-core-numeric-facet';
 
 export type {
@@ -36,6 +38,8 @@ export type {
   RegularFacetValue,
   NumericRangeRequest,
   NumericFacetValue,
+  DateRangeRequest,
+  DateFacetValue,
 };
 
 interface AnyToggleFacetValueActionCreatorPayload {
