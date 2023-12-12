@@ -921,7 +921,7 @@ describe('commerceFacetSetReducer', () => {
         }
       );
     });
-    it('dispatching #toggleSelectNumericFacetValue with an invalid id does not throw', () => {
+    it('dispatching #toggleSelectDateFacetValue with an invalid id does not throw', () => {
       const facetValue = buildMockCommerceDateFacetValue();
       const action = toggleSelectDateFacetValue({
         facetId: '1',
