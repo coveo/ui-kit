@@ -13,17 +13,17 @@
   "dependencies": {
     "@coveo/atomic": "2.52.0",
     "@coveo/headless": "2.43.0",
-    "core-js": "3.33.3",
-    "vue": "3.3.10"
+    "core-js": "3.34.0",
+    "vue": "3.3.11"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "5.0.8",
     "@vue/cli-plugin-typescript": "5.0.8",
     "@vue/cli-service": "5.0.8",
-    "cypress": "13.6.0",
+    "cypress": "13.6.1",
     "cypress-repeat": "2.3.4",
     "html-loader": "4.2.0",
     "ncp": "2.0.0",
-    "typescript": "5.3.2"
+    "typescript": "5.3.3"
   }
 }
