@@ -10,6 +10,7 @@ import {
 } from '../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {fetchProductListing} from '../product-listing/product-listing-actions';
 import {executeSearch} from '../search/search-actions';
+import {applySort} from '../sort/sort-actions';
 import {nextPage, previousPage, selectPage} from './pagination-actions';
 import {
   CommercePaginationState,
@@ -47,7 +48,8 @@ export const paginationReducer = createReducer(
       .addCase(toggleSelectFacetValue, handlePaginationReset)
       .addCase(toggleExcludeFacetValue, handlePaginationReset)
       .addCase(toggleSelectNumericFacetValue, handlePaginationReset)
-      .addCase(toggleExcludeNumericFacetValue, handlePaginationReset);
+      .addCase(toggleExcludeNumericFacetValue, handlePaginationReset)
+      .addCase(applySort, handlePaginationReset);
   }
 );
 
