@@ -15,6 +15,9 @@ import {
 import {ProductListingDateFacetBuilder} from '../../../product-listing/facets/headless-product-listing-date-facet';
 import {ProductListingNumericFacetBuilder} from '../../../product-listing/facets/headless-product-listing-numeric-facet';
 import {ProductListingRegularFacetBuilder} from '../../../product-listing/facets/headless-product-listing-regular-facet';
+import {SearchDateFacetBuilder} from '../../../search/facets/headless-search-date-facet';
+import {SearchNumericFacetBuilder} from '../../../search/facets/headless-search-numeric-facet';
+import {SearchRegularFacetBuilder} from '../../../search/facets/headless-search-regular-facet';
 import {CoreCommerceFacet} from '../headless-core-commerce-facet';
 
 /**
@@ -42,9 +45,15 @@ export interface CommerceFacetGeneratorState {
   facets: CoreCommerceFacet<AnyFacetValueRequest, AnyFacetValueResponse>[];
 }
 
-type CommerceRegularFacetBuilder = ProductListingRegularFacetBuilder; // TODO: | CommerceSearchRegularFacetBuilder;
-type CommerceNumericFacetBuilder = ProductListingNumericFacetBuilder; // TODO: | CommerceSearchNumericFacetBuilder;
-type CommerceDateFacetBuilder = ProductListingDateFacetBuilder; // TODO: | CommerceSearchDateFacetBuilder;
+type CommerceRegularFacetBuilder =
+  | ProductListingRegularFacetBuilder
+  | SearchRegularFacetBuilder;
+type CommerceNumericFacetBuilder =
+  | ProductListingNumericFacetBuilder
+  | SearchNumericFacetBuilder;
+type CommerceDateFacetBuilder =
+  | ProductListingDateFacetBuilder
+  | SearchDateFacetBuilder;
 // TODO: type CommerceCategoryFacetBuilder = ProductListingCategoryFacetBuilder | CommerceSearchCategoryFacetBuilder;
 
 /**

@@ -9,7 +9,7 @@ import {buildSearchRegularFacet} from './headless-search-regular-facet';
 
 /**
  * The `SearchFacetGenerator` headless controller creates commerce facet controllers from Commerce API
- * product listing responses.
+ * search responses.
  *
  * Commerce facets are not requested by the implementer, but rather pre-configured through the Coveo Merchandising Hub
  * (CMH). The implementer is only responsible for leveraging the facet controllers created by this controller to
