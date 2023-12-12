@@ -123,15 +123,23 @@ describe('headless search box', () => {
     });
   });
 
-  it('returns the right state', () => {
-    expect(searchBox.state).toEqual({
-      value: state.querySet[id],
-      suggestions: state.querySuggest[id]!.completions.map((completion) => ({
-        highlightedValue: '<a>hi</a>light<i>ed</i>',
-        rawValue: completion.expression,
-      })),
-      isLoading: false,
-      isLoadingSuggestions: false,
+  describe('#state', () => {
+    it('is as expected', () => {
+      expect(searchBox.state).toEqual({
+        value: state.querySet[id],
+        suggestions: state.querySuggest[id]!.completions.map((completion) => ({
+          highlightedValue: '<a>hi</a>light<i>ed</i>',
+          rawValue: completion.expression,
+        })),
+        isLoading: false,
+        isLoadingSuggestions: false,
+      });
+    });
+
+    it(`when querySuggest #isLoading is true,
+    #state.isLoadingSuggestions is true`, () => {
+      state.querySuggest[id]!.isLoading = true;
+      expect(searchBox.state.isLoadingSuggestions).toBe(true);
     });
   });
 
@@ -272,11 +280,5 @@ describe('headless search box', () => {
       searchBox.submit();
       expect(engine.actions).toContainEqual(clearQuerySuggest({id}));
     });
-  });
-
-  it(`when querySuggest #isLoading state is true,
-    #state.isLoadingSuggestions is true`, () => {
-    state.querySuggest[id]!.isLoading = true;
-    expect(searchBox.state.isLoadingSuggestions).toBe(true);
   });
 });
