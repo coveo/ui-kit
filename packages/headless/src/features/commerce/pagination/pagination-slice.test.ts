@@ -11,7 +11,6 @@ import {
 } from '../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {fetchProductListing} from '../product-listing/product-listing-actions';
 import {executeSearch} from '../search/search-actions';
-import {applySort} from '../sort/sort-actions';
 import {nextPage, previousPage, selectPage} from './pagination-actions';
 import {paginationReducer} from './pagination-slice';
 import {
@@ -131,10 +130,6 @@ describe('pagination slice', () => {
     {
       actionName: '#toggleExcludeNumericFacetValue',
       action: toggleExcludeNumericFacetValue,
-    },
-    {
-      actionName: '#applySort',
-      action: applySort,
     },
   ])('$actionName', ({action}) => {
     it('resets pagination', () => {

@@ -2,6 +2,7 @@ import {Action} from '@reduxjs/toolkit';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {applySort} from '../../../../features/commerce/sort/sort-actions';
 import {sortReducer} from '../../../../features/commerce/sort/sort-slice';
+import {updatePage} from '../../../../features/pagination/pagination-actions';
 import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {
@@ -51,6 +52,10 @@ describe('commerce core sort', () => {
 
     it('dispatches #applySort', () => {
       expectContainAction(applySort);
+    });
+
+    it('dispatches #updatePage', () => {
+      expectContainAction(updatePage);
     });
 
     it('dispatches #fetchResultsActionCreator', () => {
