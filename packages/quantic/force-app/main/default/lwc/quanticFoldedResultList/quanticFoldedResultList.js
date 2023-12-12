@@ -32,7 +32,7 @@ export default class QuanticFoldedResultList extends LightningElement {
    * A list of fields to include in the query results, separated by commas.
    * @api
    * @type {string}
-   * @defaultValue `'date,author,source,language,filetype,parents,sfknowledgearticleid'`
+   * @defaultValue `'date,author,source,language,filetype,parents,sfknowledgearticleid,sfid,sfkbid,sfkavid'`
    */
   @api fieldsToInclude =
     'date,author,source,language,filetype,parents,sfknowledgearticleid,sfid,sfkbid,sfkavid';

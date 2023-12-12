@@ -298,6 +298,10 @@ export namespace Components {
          */
         "displayValuesAs": 'checkbox' | 'link' | 'box';
         /**
+          * Whether to allow excluding values from the facet.
+         */
+        "enableExclusion": boolean;
+        /**
           * Specifies a unique identifier for the facet.
          */
         "facetId"?: string;
@@ -554,6 +558,10 @@ export namespace Components {
           * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
          */
         "displayValuesAs": FacetDisplayValues;
+        /**
+          * Whether to allow excluding values from the facet.
+         */
+        "enableExclusion": boolean;
         /**
           * Specifies a unique identifier for the facet.
          */
@@ -2184,7 +2192,7 @@ export namespace Components {
          */
         "fieldsToInclude": string[] | string;
         /**
-          * Returns the unique, organization-specific endpoint(s)
+          * Returns the unique, organization-specific endpoint(s).
           * @param organizationId
           * @param env
          */
@@ -2202,7 +2210,7 @@ export namespace Components {
          */
         "initialize": (options: InitializationOptions) => Promise<void>;
         /**
-          * Initializes the connection with an already preconfigured headless search engine, as opposed to the `initialize` method which will internally create a new search engine instance. This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
+          * Initializes the connection with an already preconfigured [headless search engine](https://docs.coveo.com/en/headless/latest/reference/search/), as opposed to the `initialize` method, which will internally create a new search engine instance. This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
          */
         "initializeWithSearchEngine": (engine: SearchEngine) => Promise<void>;
         /**
@@ -4472,6 +4480,10 @@ declare namespace LocalJSX {
          */
         "displayValuesAs"?: 'checkbox' | 'link' | 'box';
         /**
+          * Whether to allow excluding values from the facet.
+         */
+        "enableExclusion"?: boolean;
+        /**
           * Specifies a unique identifier for the facet.
          */
         "facetId"?: string;
@@ -4729,6 +4741,10 @@ declare namespace LocalJSX {
           * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
          */
         "displayValuesAs"?: FacetDisplayValues;
+        /**
+          * Whether to allow excluding values from the facet.
+         */
+        "enableExclusion"?: boolean;
         /**
           * Specifies a unique identifier for the facet.
          */

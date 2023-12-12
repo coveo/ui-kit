@@ -18,6 +18,14 @@ export function assertDisplayBreadcrumb(display: boolean) {
   });
 }
 
+export function assertAriaLabel(includeOrExclude: 'inclusion' | 'exclusion') {
+  it(`should have aria-label "${includeOrExclude} filter"`, () => {
+    BreadboxSelectors.breadcrumbButton()
+      .should('have.attr', 'aria-label')
+      .and('include', `Remove ${includeOrExclude} filter on`);
+  });
+}
+
 export function assertBreadcrumbLabel(label: string) {
   it(`should have the label "${label}"`, () => {
     BreadboxSelectors.breadboxLabel().contains(label);
@@ -109,6 +117,19 @@ export function assertSelectedCheckboxFacetsInBreadcrumb(
       BaseFacetSelector,
       facetLabelValue
     );
+  });
+}
+
+export function assertExcludedCheckboxFacetsInBreadcrumb(
+  BaseFacetSelector: FacetWithCheckboxSelector,
+  facetLabelValue = label
+) {
+  it('should display the excluded checkbox facets in the breadcrumbs', () => {
+    BaseFacetSelector.excludedCheckboxValue()
+      .parent()
+      .find('[part="value-label"]')
+      .as('facetAllValuesLabel');
+    assertBreadcrumbValueText('@facetAllValuesLabel', facetLabelValue);
   });
 }
 

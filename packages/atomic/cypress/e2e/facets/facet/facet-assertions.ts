@@ -1,3 +1,4 @@
+import {FacetValueState} from '@coveo/headless';
 import {
   doSortAlphanumeric,
   doSortAlphanumericDescending,
@@ -27,14 +28,15 @@ export function assertNumberOfIdleBoxValues(value: number) {
   });
 }
 
-export function assertLogFacetSelect(field: string, index: number) {
+export function assertLogFacetAction(
+  field: string,
+  index: number,
+  action: FacetValueState
+) {
   it('should log the facet select results to UA ', () => {
     cy.expectSearchEvent('facetSelect').then((analyticsBody) => {
       expect(analyticsBody.customData).to.have.property('facetField', field);
-      expect(analyticsBody.facetState![0]).to.have.property(
-        'state',
-        'selected'
-      );
+      expect(analyticsBody.facetState![0]).to.have.property('state', action);
       expect(analyticsBody.facetState![0]).to.have.property('field', field);
 
       FacetSelectors.facetValueLabelAtIndex(index)
@@ -44,6 +46,14 @@ export function assertLogFacetSelect(field: string, index: number) {
         });
     });
   });
+}
+
+export function assertLogFacetSelect(field: string, index: number) {
+  assertLogFacetAction(field, index, 'selected');
+}
+
+export function assertLogFacetExclude(field: string, index: number) {
+  assertLogFacetAction(field, index, 'excluded');
 }
 
 export function assertLogFacetClearAll(facetId: string) {

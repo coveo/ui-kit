@@ -18,6 +18,7 @@ import {
   selectIdleLinkValueAt,
   typeFacetSearchQuery,
   pressClearSearchButton,
+  excludeIdleCheckboxValueAt,
 } from '../facet-common-actions';
 import * as CommonFacetAssertions from '../facet-common-assertions';
 import {
@@ -57,6 +58,7 @@ describe('Facet v1 Test Suites', () => {
       CommonFacetAssertions.assertDisplayShowMoreButton(FacetSelectors, true);
       CommonFacetAssertions.assertDisplayShowLessButton(FacetSelectors, false);
       CommonFacetAssertions.assertDisplaySearchInput(FacetSelectors, true);
+      CommonFacetAssertions.assertDisplayTwoStateCheckbox(FacetSelectors);
     });
 
     describe('when selecting a value', () => {
@@ -339,6 +341,17 @@ describe('Facet v1 Test Suites', () => {
             true
           );
         });
+      });
+
+      describe('with #enableExclusion to true', () => {
+        beforeEach(() => {
+          new TestFixture()
+            .with(addFacet({field, label, 'enable-exclusion': 'true'}))
+            .init();
+        });
+
+        CommonFacetAssertions.assertDisplayTriStateCheckbox(FacetSelectors);
+        CommonFacetAssertions.assertDisplayExcludeButton(FacetSelectors);
       });
     });
   });
@@ -999,12 +1012,23 @@ describe('Facet v1 Test Suites', () => {
   });
 
   describe('with breadbox', () => {
-    function setupBreadboxWithFacet() {
+    function breadboxFactory(enableExclusion: boolean) {
       new TestFixture()
         .with(addBreadbox())
-        .with(addFacet({field, label}))
+        .with(
+          addFacet({field, label, 'enable-exclusion': String(enableExclusion)})
+        )
         .init();
     }
+
+    function setupBreadboxWithFacet() {
+      breadboxFactory(false);
+    }
+
+    function setupBreadboxWithFacetWithExclusionEnabled() {
+      breadboxFactory(true);
+    }
+
     describe('verify rendering', () => {
       beforeEach(setupBreadboxWithFacet);
       BreadboxAssertions.assertDisplayBreadcrumb(false);
@@ -1081,6 +1105,31 @@ describe('Facet v1 Test Suites', () => {
         BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
         BreadboxAssertions.assertBreadcrumbLabel(breadboxLabel);
         BreadboxAssertions.assertSelectedCheckboxFacetsInBreadcrumb(
+          FacetSelectors
+        );
+        BreadboxAssertions.assertDisplayBreadcrumbShowMore(false);
+        BreadboxAssertions.assertBreadcrumbDisplayLength(index.length);
+      });
+    });
+
+    describe('when excluding 3 values', () => {
+      const index = [0, 1, 2];
+      function setupSelectedMultipleFacets() {
+        setupBreadboxWithFacetWithExclusionEnabled();
+        index.forEach((position, i) => {
+          excludeIdleCheckboxValueAt(FacetSelectors, position);
+          cy.wait(TestFixture.interceptAliases.Search);
+          BreadboxSelectors.breadcrumbButton().should('have.length', i + 1);
+        });
+      }
+
+      describe('verify rendering', () => {
+        beforeEach(setupSelectedMultipleFacets);
+        CommonAssertions.assertAccessibility(breadboxComponent);
+        BreadboxAssertions.assertDisplayBreadcrumb(true);
+        BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
+        BreadboxAssertions.assertBreadcrumbLabel(breadboxLabel);
+        BreadboxAssertions.assertExcludedCheckboxFacetsInBreadcrumb(
           FacetSelectors
         );
         BreadboxAssertions.assertDisplayBreadcrumbShowMore(false);

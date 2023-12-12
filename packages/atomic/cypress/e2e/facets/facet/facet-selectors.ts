@@ -17,14 +17,23 @@ export const FacetSelectors = {
   placeholder() {
     return this.shadow().find('[part="placeholder"]');
   },
-  selectedCheckboxValue() {
+  selectedCheckboxValue(exclusionEnabled = false) {
     return this.shadow().find(
-      '[part~="value-checkbox"][part~="value-checkbox-checked"][aria-checked="true"]'
+      `[part~="value-checkbox"][part~="value-checkbox-checked"][aria-${
+        exclusionEnabled ? 'pressed' : 'checked'
+      }="true"]`
     );
   },
-  idleCheckboxValue() {
+  idleCheckboxValue(exclusionEnabled = false) {
     return this.shadow().find(
-      '[part~="value-checkbox"]:not([part~="value-checkbox-checked"])[aria-checked="false"]'
+      `[part~="value-checkbox"]:not([part~="value-checkbox-checked"])[aria-${
+        exclusionEnabled ? 'pressed' : 'checked'
+      }="false"]`
+    );
+  },
+  excludedCheckboxValue() {
+    return this.shadow().find(
+      '[part~="value-checkbox"][part~="value-checkbox-checked"][aria-pressed="mixed"]'
     );
   },
   checkboxValueWithText(text: string) {
@@ -35,8 +44,15 @@ export const FacetSelectors = {
       .parent()
       .find('[part~="value-checkbox"]');
   },
-  idleCheckboxValueLabel() {
-    return this.idleCheckboxValue().parent().find('[part="value-label"]');
+  idleCheckboxValueLabel(exclusionEnabled = false) {
+    return this.idleCheckboxValue(exclusionEnabled)
+      .parent()
+      .find('[part="value-label"]');
+  },
+  excludeButton() {
+    return this.idleCheckboxValue(true)
+      .parent()
+      .find('[part="value-exclude-button"]');
   },
   selectedLinkValue() {
     return this.shadow().find(

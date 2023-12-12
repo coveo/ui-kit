@@ -8,7 +8,7 @@ import {SearchEngine} from '../../app/search-engine/search-engine';
 import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {searchReducer as search} from '../../features/search/search-slice';
 import {InstantResultSection} from '../../state/state-sections';
-import {SearchAction} from '../analytics/analytics-utils';
+import {LegacySearchAction} from '../analytics/analytics-utils';
 import {
   FetchInstantResultsActionCreatorPayload,
   FetchInstantResultsThunkReturn,
@@ -43,10 +43,10 @@ export interface SearchActionCreators {
    * @returns A dispatchable action.
    */
   executeSearch(
-    analyticsSearchAction: SearchAction
+    analyticsSearchAction: LegacySearchAction
   ): AsyncThunkAction<
     ExecuteSearchThunkReturn,
-    SearchAction,
+    LegacySearchAction,
     AsyncThunkOptions<
       StateNeededByExecuteSearch,
       ClientThunkExtraArguments<SearchAPIClient>
@@ -74,10 +74,10 @@ export interface SearchActionCreators {
    * @returns A dispatchable action.
    */
   fetchFacetValues(
-    analyticsSearchAction: SearchAction
+    analyticsSearchAction: LegacySearchAction
   ): AsyncThunkAction<
     ExecuteSearchThunkReturn,
-    SearchAction,
+    LegacySearchAction,
     AsyncThunkOptions<
       StateNeededByExecuteSearch,
       ClientThunkExtraArguments<SearchAPIClient>
@@ -100,10 +100,10 @@ export interface SearchActionCreators {
    * @returns A dispatchable action.
    */
   fetchPage(
-    analyticsSearchAction: SearchAction
+    analyticsSearchAction: LegacySearchAction
   ): AsyncThunkAction<
     ExecuteSearchThunkReturn,
-    SearchAction,
+    LegacySearchAction,
     AsyncThunkOptions<
       StateNeededByExecuteSearch,
       ClientThunkExtraArguments<SearchAPIClient>

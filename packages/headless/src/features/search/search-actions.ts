@@ -11,7 +11,7 @@ import {
   validatePayload,
 } from '../../utils/validate-payload';
 import {
-  SearchAction as LegacySearchAction,
+  LegacySearchAction,
   makeBasicNewSearchAnalyticsAction,
 } from '../analytics/analytics-utils';
 import {SearchPageEvents} from '../analytics/search-action-cause';
