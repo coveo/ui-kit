@@ -27,7 +27,15 @@ const CLASS_WITHOUT_SUBMIT =
  * The `QuanticSearchBoxInput` component renders the searchBox input.
  * @category Internal
  * @example
- * <c-quantic-search-box-input></c-quantic-search-box-input>
+ * <c-quantic-search-box-input
+    textarea={textarea}
+    input={input}
+    without-submit-button
+    placeholder="Placeholder"
+    search-box-engine={searchBox}
+    value={value}
+    suggestions={suggestionsArray}>
+  * </c-quantic-search-box-input>
  */
 export default class QuanticSearchBoxInput extends LightningElement {
   labels = {
@@ -69,7 +77,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
    */
   @api suggestions = [];
   /**
-   * The input value.
+   * Returns and set the input value.
    * @api
    * @type {string}
    */
