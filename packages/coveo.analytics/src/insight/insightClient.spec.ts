@@ -1393,7 +1393,6 @@ describe('InsightClient', () => {
         it('should send proper payload for #createArticle', async () => {
             const exampleCreateArticleMetadata = {
                 articleType: 'Knowledge__kav',
-                triggeredBy: 'CreateArticleButton',
             };
             const expectedMetadata = {
                 ...exampleCreateArticleMetadata,
