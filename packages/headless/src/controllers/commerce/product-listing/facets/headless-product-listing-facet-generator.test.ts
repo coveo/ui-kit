@@ -1,45 +1,56 @@
+import {FacetType} from '../../../../features/commerce/facets/facet-set/interfaces/response';
+import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
-import {buildMockCommerceFacetResponse} from '../../../../test/mock-commerce-facet-response';
+import {
+  buildMockCommerceRegularFacetResponse,
+  buildMockCommerceNumericFacetResponse,
+} from '../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
-import {FacetGenerator} from '../../facets/core/headless-core-facet-generator';
-import {buildProductListingFacet} from './headless-product-listing-facet';
-import {buildProductListingFacetGenerator} from './headless-product-listing-facet-generator';
+import {
+  buildProductListingFacetGenerator,
+  ProductListingFacetGenerator,
+} from './headless-product-listing-facet-generator';
 
-describe('FacetGenerator', () => {
+describe('ProductListingFacetGenerator', () => {
   let engine: MockCommerceEngine;
-  let facetGenerator: FacetGenerator;
+  let facetGenerator: ProductListingFacetGenerator;
 
-  function initFacetGenerator() {
-    engine = buildMockCommerceEngine();
-
-    facetGenerator = buildProductListingFacetGenerator(engine);
-  }
-
-  beforeEach(() => {
-    initFacetGenerator();
-  });
-
-  it('exposes #subscribe method', () => {
-    expect(facetGenerator.subscribe).toBeTruthy();
-  });
-
-  it('should return facet controllers', () => {
-    // eslint-disable-next-line @cspell/spellchecker
-    // TODO CAPI-90, CAPI-91: Add test cases that ensure proper facet controllers are created from the facet.type
+  function initFacetGenerator(facetType: FacetType = 'regular') {
     const facet = {
-      facetId: 'some_facet_field',
+      facetId: 'regular_facet_id',
+      type: facetType,
     };
     const mockState = buildMockCommerceState();
-    const engine = buildMockCommerceEngine({
+    const facets = [];
+    switch (facetType) {
+      case 'numericalRange':
+        facets.push(
+          buildMockCommerceNumericFacetResponse({
+            facetId: facet.facetId,
+            field: 'some_numeric_field',
+          })
+        );
+        break;
+      case 'regular':
+      default:
+        facets.push(
+          buildMockCommerceRegularFacetResponse({
+            facetId: facet.facetId,
+            field: 'some_regular_field',
+          })
+        );
+        break;
+    }
+    engine = buildMockCommerceEngine({
       state: {
         ...mockState,
         productListing: {
           ...mockState.productListing,
           facets: [
-            buildMockCommerceFacetResponse({
-              ...facet,
-              field: 'some_field',
+            buildMockCommerceRegularFacetResponse({
+              facetId: facet.facetId,
+              field: 'some_regular_field',
             }),
           ],
         },
@@ -50,10 +61,25 @@ describe('FacetGenerator', () => {
       },
     });
     facetGenerator = buildProductListingFacetGenerator(engine);
+  }
 
-    expect(facetGenerator.state.facets.length).toEqual(1);
-    expect(facetGenerator.state.facets[0].state).toEqual(
-      buildProductListingFacet(engine, {options: facet}).state
-    );
+  it('exposes #subscribe method', () => {
+    initFacetGenerator();
+    expect(facetGenerator.subscribe).toBeTruthy();
+  });
+
+  it('generated regular facet controllers should dispatch #fetchProductListing', () => {
+    initFacetGenerator('regular');
+
+    facetGenerator.state.facets[0].deselectAll();
+
+    expect(engine.findAsyncAction(fetchProductListing.pending)).toBeTruthy();
+  });
+  it('generated regular numeric facet controllers should dispatch #fetchProductListing', () => {
+    initFacetGenerator('numericalRange');
+
+    facetGenerator.state.facets[0].deselectAll();
+
+    expect(engine.findAsyncAction(fetchProductListing.pending)).toBeTruthy();
   });
 });

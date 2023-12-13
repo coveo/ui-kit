@@ -307,7 +307,7 @@ export class AtomicSearchInterface
   }
 
   /**
-   * Initializes the connection with an already preconfigured headless search engine, as opposed to the `initialize` method which will internally create a new search engine instance.
+   * Initializes the connection with an already preconfigured [headless search engine](https://docs.coveo.com/en/headless/latest/reference/search/), as opposed to the `initialize` method, which will internally create a new search engine instance.
    * This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
    */
   @Method() public initializeWithSearchEngine(engine: SearchEngine) {
@@ -367,7 +367,7 @@ export class AtomicSearchInterface
   }
 
   /**
-   * Returns the unique, organization-specific endpoint(s)
+   * Returns the unique, organization-specific endpoint(s).
    * @param {string} organizationId
    * @param {'prod'|'hipaa'|'staging'|'dev'} [env=Prod]
    */

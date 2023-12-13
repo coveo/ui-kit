@@ -1,3 +1,15 @@
+# 2.44.0 (2023-12-13)
+
+### Bug Fixes
+
+- **exclude:** use unexclude actionCause when unexcluding ([#3478](https://github.com/coveo/ui-kit/issues/3478)) ([8f7071e](https://github.com/coveo/ui-kit/commits/8f7071e0b0e15fee425b60db81cc7bd5ffddebec))
+
+### Features
+
+- **commerce:** commerce search box + query suggest ([#3461](https://github.com/coveo/ui-kit/issues/3461)) ([74c3b65](https://github.com/coveo/ui-kit/commits/74c3b65cf2933e292744f48dd7e5987b8d8ae948))
+- **commerce:** extract core pagination for plp and search ([#3475](https://github.com/coveo/ui-kit/issues/3475)) ([023fa90](https://github.com/coveo/ui-kit/commits/023fa902dc1a38a6d1c0ab57d945ca623a75a45a))
+- **commerce:** extract core sort for plp and search ([#3474](https://github.com/coveo/ui-kit/issues/3474)) ([74c899a](https://github.com/coveo/ui-kit/commits/74c899a5ff7cd75e218a9bb9f9afd67de097a831))
+
 # 2.43.0 (2023-12-08)
 
 ### Bug Fixes

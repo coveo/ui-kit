@@ -1,16 +1,35 @@
-import {FacetResponse} from '../features/commerce/facets/facet-set/interfaces/response';
+import {
+  RegularFacetResponse,
+  NumericFacetResponse,
+} from '../features/commerce/facets/facet-set/interfaces/response';
 
-export function buildMockCommerceFacetResponse(
-  config: Partial<FacetResponse> = {}
-): FacetResponse {
+export function buildMockCommerceRegularFacetResponse(
+  config: Partial<RegularFacetResponse> = {}
+): RegularFacetResponse {
   return {
-    type: 'regular',
     displayName: '',
-    isFieldExpanded: false,
-    fromAutoSelect: false,
     facetId: '',
     field: '',
+    fromAutoSelect: false,
+    isFieldExpanded: false,
     moreValuesAvailable: false,
+    type: 'regular',
+    values: [],
+    ...config,
+  };
+}
+
+export function buildMockCommerceNumericFacetResponse(
+  config: Partial<NumericFacetResponse> = {}
+): NumericFacetResponse {
+  return {
+    displayName: '',
+    facetId: '',
+    field: '',
+    fromAutoSelect: false,
+    isFieldExpanded: false,
+    moreValuesAvailable: false,
+    type: 'numericalRange',
     values: [],
     ...config,
   };
