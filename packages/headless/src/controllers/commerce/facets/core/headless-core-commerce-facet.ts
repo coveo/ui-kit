@@ -76,6 +76,13 @@ export interface CoreCommerceFacetOptions {
   fetchResultsActionCreator: () => AsyncThunkAction<unknown, void, any>;
 }
 
+export type CommerceFacetOptions = Omit<
+  CoreCommerceFacetOptions,
+  | 'fetchResultsActionCreator'
+  | 'toggleSelectActionCreator'
+  | 'toggleExcludeActionCreator'
+>;
+
 export type CoreCommerceFacet<
   ValueRequest extends AnyFacetValueRequest,
   ValueResponse extends AnyFacetValueResponse,

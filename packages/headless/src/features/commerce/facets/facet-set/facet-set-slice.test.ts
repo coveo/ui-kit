@@ -15,6 +15,7 @@ import {
   buildMockCommerceNumericFacetValue,
   buildMockCommerceRegularFacetValue,
 } from '../../../../test/mock-commerce-facet-value';
+import {buildSearchResponse} from '../../../../test/mock-commerce-search';
 import {buildFetchProductListingV2Response} from '../../../../test/mock-product-listing-v2';
 import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
 import {
@@ -40,6 +41,7 @@ import {
 } from '../../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {convertToNumericRangeRequests} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
+import {executeSearch} from '../../search/search-actions';
 import {commerceFacetSetReducer} from './facet-set-slice';
 import {
   CommerceFacetSetState,
@@ -59,15 +61,27 @@ describe('commerceFacetSetReducer', () => {
     expect(finalState).toEqual({});
   });
 
-  describe('#fetchProductListing.fulfilled', () => {
-    function buildFetchProductListingAction(facets: AnyFacetResponse[]) {
-      const productListing = buildFetchProductListingV2Response();
-      productListing.response.facets = facets;
+  describe.each([
+    {
+      actionName: '#fetchProductListing.fulfilled',
+      action: fetchProductListing.fulfilled,
+      responseBuilder: buildFetchProductListingV2Response,
+    },
+    {
+      actionName: '#executeSearch.fulfilled',
+      action: executeSearch.fulfilled,
+      responseBuilder: buildSearchResponse,
+    },
+  ])('$actionName ', ({action, responseBuilder}) => {
+    const facetId = '1';
+    function buildQueryAction(facets: AnyFacetResponse[]) {
+      const response = responseBuilder();
+      response.response.facets = facets;
 
-      return fetchProductListing.fulfilled(productListing, '');
+      return action(response, '');
     }
+
     it('updates the values of regular facet requests to the corresponding values in the response', () => {
-      const facetId = '1';
       const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
       const facet = buildMockCommerceRegularFacetResponse({
         facetId,
@@ -78,7 +92,7 @@ describe('commerceFacetSetReducer', () => {
         request: buildMockCommerceFacetRequest({type: 'regular', facetId}),
       });
 
-      const action = buildFetchProductListingAction([facet]);
+      const action = buildQueryAction([facet]);
       const finalState = commerceFacetSetReducer(state, action);
 
       const expectedFacetValueRequest = convertFacetValueToRequest(facetValue);
@@ -88,7 +102,6 @@ describe('commerceFacetSetReducer', () => {
     });
 
     it('updates the values of numeric facet requests to the corresponding values in the response', () => {
-      const facetId = '1';
       const facetValue = buildMockCommerceNumericFacetValue();
       const facet = buildMockCommerceNumericFacetResponse({
         facetId,
@@ -102,7 +115,7 @@ describe('commerceFacetSetReducer', () => {
         }),
       });
 
-      const action = buildFetchProductListingAction([facet]);
+      const action = buildQueryAction([facet]);
       const finalState = commerceFacetSetReducer(state, action);
 
       const expectedFacetValueRequests = convertToNumericRangeRequests([
@@ -114,7 +127,6 @@ describe('commerceFacetSetReducer', () => {
     });
 
     it('updates the values of date facet requests to the corresponding values in the response', () => {
-      const facetId = '1';
       const facetValue = buildMockCommerceDateFacetValue({
         start: '2023-01-01',
         end: '2024-01-01',
@@ -131,7 +143,7 @@ describe('commerceFacetSetReducer', () => {
         }),
       });
 
-      const action = buildFetchProductListingAction([facet]);
+      const action = buildQueryAction([facet]);
       const finalState = commerceFacetSetReducer(state, action);
 
       const expectedFacetValueRequests = convertToDateRangeRequests([
@@ -160,7 +172,6 @@ describe('commerceFacetSetReducer', () => {
       // TODO: { type: 'hierarchical' as FacetType, facetResponseBuilder: buildMockCommerceCategoryFacetResponse, },
     ])('for $type facets', ({type, facetResponseBuilder}) => {
       it('sets #preventAutoSelect to false', () => {
-        const facetId = '1';
         state[facetId] = buildMockCommerceFacetSlice({
           request: buildMockCommerceFacetRequest({
             type,
@@ -171,18 +182,17 @@ describe('commerceFacetSetReducer', () => {
         const facet = facetResponseBuilder({
           facetId,
         });
-        const action = buildFetchProductListingAction([facet]);
+        const action = buildQueryAction([facet]);
 
         const finalState = commerceFacetSetReducer(state, action);
         expect(finalState[facetId]?.request.preventAutoSelect).toBe(false);
       });
 
       it('response containing unregistered facet ids does not throw', () => {
-        const facetId = '1';
         const facet = facetResponseBuilder({
           facetId,
         });
-        const action = buildFetchProductListingAction([facet]);
+        const action = buildQueryAction([facet]);
 
         expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
       });
@@ -197,7 +207,7 @@ describe('commerceFacetSetReducer', () => {
         const newFacet = facetResponseBuilder({
           facetId: newFacetId,
         });
-        const action = buildFetchProductListingAction([newFacet]);
+        const action = buildQueryAction([newFacet]);
 
         const finalState = commerceFacetSetReducer(state, action);
         expect(facetIdToRemove in finalState).toBe(false);

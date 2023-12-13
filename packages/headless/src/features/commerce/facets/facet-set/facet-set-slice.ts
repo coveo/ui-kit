@@ -1,4 +1,13 @@
-import {createReducer, type Draft as WritableDraft} from '@reduxjs/toolkit';
+import {
+  AnyAction,
+  createReducer,
+  type Draft as WritableDraft,
+} from '@reduxjs/toolkit';
+import {
+  DateRangeRequest,
+  FacetValueRequest,
+  NumericRangeRequest,
+} from '../../../../controllers/commerce/facets/core/headless-core-commerce-facet';
 import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
 import {
   toggleExcludeFacetValue,
@@ -7,22 +16,20 @@ import {
   updateFacetNumberOfValues,
 } from '../../../facets/facet-set/facet-set-actions';
 import {convertFacetValueToRequest} from '../../../facets/facet-set/facet-set-slice';
-import {FacetValueRequest} from '../../../facets/facet-set/interfaces/request';
 import {updateFacetAutoSelection} from '../../../facets/generic/facet-actions';
 import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
 } from '../../../facets/range-facets/date-facet-set/date-facet-actions';
 import {convertToDateRangeRequests} from '../../../facets/range-facets/date-facet-set/date-facet-set-slice';
-import {DateRangeRequest} from '../../../facets/range-facets/date-facet-set/interfaces/request';
 import {findExactRangeValue} from '../../../facets/range-facets/generic/range-facet-reducers';
-import {NumericRangeRequest} from '../../../facets/range-facets/numeric-facet-set/interfaces/request';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
 } from '../../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {convertToNumericRangeRequests} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
+import {executeSearch} from '../../search/search-actions';
 import {
   CommerceFacetSetState,
   getCommerceFacetSetInitialState,
@@ -35,17 +42,8 @@ export const commerceFacetSetReducer = createReducer(
 
   (builder) => {
     builder
-      .addCase(fetchProductListing.fulfilled, (state, action) => {
-        const existingFacets = new Set(Object.keys(state));
-        const facets = action.payload.response.facets;
-        for (const facetResponse of facets) {
-          updateStateFromFacetResponse(state, facetResponse, existingFacets);
-        }
-
-        for (const facetId of existingFacets) {
-          delete state[facetId];
-        }
-      })
+      .addCase(fetchProductListing.fulfilled, handleQueryFulfilled)
+      .addCase(executeSearch.fulfilled, handleQueryFulfilled)
       .addCase(toggleSelectFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
         const facetRequest = state[facetId]?.request;
@@ -201,6 +199,21 @@ export const commerceFacetSetReducer = createReducer(
       });
   }
 );
+
+function handleQueryFulfilled(
+  state: WritableDraft<CommerceFacetSetState>,
+  action: AnyAction
+) {
+  const existingFacets = new Set(Object.keys(state));
+  const facets = action.payload.response.facets;
+  for (const facetResponse of facets) {
+    updateStateFromFacetResponse(state, facetResponse, existingFacets);
+  }
+
+  for (const facetId of existingFacets) {
+    delete state[facetId];
+  }
+}
 
 function updateExistingFacetValueState(
   existingFacetValue: WritableDraft<
