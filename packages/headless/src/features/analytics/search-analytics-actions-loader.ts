@@ -7,6 +7,8 @@ import {
 import {
   logFacetBreadcrumb,
   logFacetClearAll,
+  logFacetUnexclude,
+  logFacetExclude,
   logFacetDeselect,
   logFacetSelect,
   logFacetShowLess,
@@ -14,6 +16,8 @@ import {
   logFacetUpdateSort,
   LogFacetBreadcrumbActionCreatorPayload,
   LogFacetDeselectActionCreatorPayload,
+  LogFacetExcludeActionCreatorPayload,
+  LogFacetUnexcludeActionCreatorPayload,
   LogFacetSelectActionCreatorPayload,
   LogFacetUpdateSortActionCreatorPayload,
 } from '../facets/facet-set/facet-set-analytics-actions';
@@ -88,6 +92,8 @@ import {CustomAction, LegacySearchAction} from './analytics-utils';
 export type {
   LogCategoryFacetBreadcrumbActionCreatorPayload,
   LogFacetBreadcrumbActionCreatorPayload,
+  LogFacetExcludeActionCreatorPayload,
+  LogFacetUnexcludeActionCreatorPayload,
   LogFacetDeselectActionCreatorPayload,
   LogFacetSelectActionCreatorPayload,
   LogFacetUpdateSortActionCreatorPayload,
@@ -195,6 +201,26 @@ export interface SearchAnalyticsActionCreators {
    * @returns A dispatchable action.
    */
   logFacetSelect(
+    payload: LogFacetSelectActionCreatorPayload
+  ): LegacySearchAction;
+
+  /**
+   * The event to log when a selected facet value is unexcluded.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  logFacetUnexclude(
+    payload: LogFacetDeselectActionCreatorPayload
+  ): LegacySearchAction;
+
+  /**
+   * The event to log when an idle facet value is excluded.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  logFacetExclude(
     payload: LogFacetSelectActionCreatorPayload
   ): LegacySearchAction;
 
@@ -486,6 +512,8 @@ export function loadSearchAnalyticsActions(
     logCategoryFacetBreadcrumb,
     logFacetBreadcrumb,
     logFacetClearAll,
+    logFacetUnexclude,
+    logFacetExclude,
     logFacetDeselect,
     logFacetSelect,
     logFacetShowLess,

@@ -1,4 +1,4 @@
-import {buildMockCommerceFacetResponse} from '../../../test/mock-commerce-facet-response';
+import {buildMockCommerceRegularFacetResponse} from '../../../test/mock-commerce-facet-response';
 import {buildSearchResponse} from '../../../test/mock-commerce-search';
 import {buildMockProductRecommendation} from '../../../test/mock-product-recommendation';
 import {executeSearch} from './search-actions';
@@ -24,7 +24,7 @@ describe('search-slice', () => {
   describe('when executeSearch.fulfilled', () => {
     it('it updates the state with the received payload', () => {
       const products = [buildMockProductRecommendation()];
-      const facets = [buildMockCommerceFacetResponse()];
+      const facets = [buildMockCommerceRegularFacetResponse()];
       const responseId = 'some-response-id';
       const response = buildSearchResponse({
         products,

@@ -14,7 +14,7 @@ export const TextAreaSubmitButton: FunctionalComponent<Props> = ({
 }) => (
   <div
     part="submit-button-wrapper"
-    class="py-2 flex items-start justify-center mr-2"
+    class="py-2 flex items-start justify-center items-center mr-2"
   >
     <Button
       style="text-primary"

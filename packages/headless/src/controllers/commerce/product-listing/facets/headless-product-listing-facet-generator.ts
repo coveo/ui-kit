@@ -1,20 +1,34 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {
-  buildCoreFacetGenerator,
-  FacetGenerator,
-} from '../../facets/core/headless-core-facet-generator';
-import {buildProductListingFacet} from './headless-product-listing-facet';
+  buildCommerceFacetGenerator,
+  CommerceFacetGenerator,
+} from '../../facets/core/generator/headless-commerce-facet-generator';
+import {buildProductListingNumericFacet} from './headless-product-listing-numeric-facet';
+import {buildProductListingRegularFacet} from './headless-product-listing-regular-facet';
 
 /**
- * Creates a product listing `FacetGenerator` instance.
+ * The `ProductListingFacetGenerator` headless controller creates commerce facet controllers from Commerce API
+ * product listing responses.
  *
- * @param engine - The headless engine.
- * @returns A `FacetGenerator` controller instance.
+ * Commerce facets are not requested by the implementer, but rather pre-configured through the Coveo Merchandising Hub
+ * (CMH). The implementer is only responsible for leveraging the facet controllers created by this controller to
+ * properly render facets in their application.
+ */
+export interface ProductListingFacetGenerator extends CommerceFacetGenerator {}
+
+/**
+ * Creates `ProductListingFacetGenerator` controller instance.
+ *
+ * @param engine - The headless commerce engine.
+ * @returns A `ProductListingFacetGenerator` controller instance.
  */
 export function buildProductListingFacetGenerator(
   engine: CommerceEngine
-): FacetGenerator {
-  return buildCoreFacetGenerator(engine, {
-    buildFacet: buildProductListingFacet,
-  });
+): ProductListingFacetGenerator {
+  return buildCommerceFacetGenerator(engine, {
+    buildRegularFacet: buildProductListingRegularFacet,
+    buildNumericFacet: buildProductListingNumericFacet,
+    // TODO: buildDateFacet: buildProductListingDateFacet,
+    // TODO: buildCategoryFacet: buildProductListingCategoryFacet,
+  }) as ProductListingFacetGenerator;
 }

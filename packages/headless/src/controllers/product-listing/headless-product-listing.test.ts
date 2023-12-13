@@ -36,7 +36,7 @@ describe('headless product-listing', () => {
     expect(engine.actions).toContainEqual(found);
   };
 
-  it('adds the correct reducers to engine', () => {
+  it('adds the correct reducers to the engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       productListing: productListingReducer,
       configuration,

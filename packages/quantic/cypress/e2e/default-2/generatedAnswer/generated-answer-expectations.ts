@@ -282,6 +282,21 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         );
     },
 
+    searchQueryContainsCorrectFieldsToIncludeInCitations: (
+      expectedFields: string[]
+    ) => {
+      cy.get<Interception>(InterceptAliases.Search)
+        .then((interception) => {
+          const fieldsToIncludeInCitations =
+            interception?.request?.body?.pipelineRuleParameters
+              ?.mlGenerativeQuestionAnswering?.citationsFieldToInclude;
+          expect(fieldsToIncludeInCitations).to.eql(expectedFields);
+        })
+        .log(
+          'the search query should contain the correct fields to include in citations parameter'
+        );
+    },
+
     logStreamIdInAnalytics(streamId: string) {
       cy.wait(InterceptAliases.UA.Load)
         .then((interception) => {
