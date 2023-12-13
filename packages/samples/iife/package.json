@@ -12,10 +12,10 @@
   },
   "dependencies": {
     "@babel/standalone": "7.23.6",
-    "@coveo/atomic": "2.52.0",
-    "@coveo/atomic-hosted-page": "0.5.9",
-    "@coveo/atomic-react": "2.8.2",
-    "@coveo/headless": "2.43.0",
+    "@coveo/atomic": "2.52.1",
+    "@coveo/atomic-hosted-page": "0.5.10",
+    "@coveo/atomic-react": "2.8.3",
+    "@coveo/headless": "2.44.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
