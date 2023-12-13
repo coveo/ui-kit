@@ -9,17 +9,15 @@ import {buildMockCommerceNumericFacetResponse} from '../../../../test/mock-comme
 import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceNumericFacetValue} from '../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
+import {CommerceFacetOptions} from '../../facets/core/headless-core-commerce-facet';
 import {CommerceNumericFacet} from '../../facets/core/numeric/headless-commerce-numeric-facet';
-import {
-  SearchNumericFacetOptions,
-  buildSearchNumericFacet,
-} from './headless-search-numeric-facet';
+import {buildSearchNumericFacet} from './headless-search-numeric-facet';
 
 describe('SearchNumericFacet', () => {
   const facetId: string = 'numeric_facet_id';
   const start = 0;
   const end = 100;
-  let options: SearchNumericFacetOptions;
+  let options: CommerceFacetOptions;
   let state: CommerceAppState;
   let engine: MockCommerceEngine;
   let facet: CommerceNumericFacet;

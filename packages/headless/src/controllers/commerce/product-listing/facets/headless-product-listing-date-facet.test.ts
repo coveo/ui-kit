@@ -10,16 +10,14 @@ import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-
 import {buildMockCommerceDateFacetValue} from '../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {CommerceDateFacet} from '../../facets/core/date/headless-commerce-date-facet';
-import {
-  ProductListingDateFacetOptions,
-  buildProductListingDateFacet,
-} from './headless-product-listing-date-facet';
+import {CommerceFacetOptions} from '../../facets/core/headless-core-commerce-facet';
+import {buildProductListingDateFacet} from './headless-product-listing-date-facet';
 
 describe('ProductListingDateFacet', () => {
   const facetId: string = 'date_facet_id';
   const start = '2023-01-01';
   const end = '2024-01-01';
-  let options: ProductListingDateFacetOptions;
+  let options: CommerceFacetOptions;
   let state: CommerceAppState;
   let engine: MockCommerceEngine;
   let facet: CommerceDateFacet;

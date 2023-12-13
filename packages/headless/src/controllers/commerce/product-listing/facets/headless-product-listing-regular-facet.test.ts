@@ -10,14 +10,12 @@ import {buildMockCommerceRegularFacetResponse} from '../../../../test/mock-comme
 import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceRegularFacetValue} from '../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
-import {
-  buildProductListingRegularFacet,
-  ProductListingRegularFacetOptions,
-} from './headless-product-listing-regular-facet';
+import {CommerceFacetOptions} from '../../facets/core/headless-core-commerce-facet';
+import {buildProductListingRegularFacet} from './headless-product-listing-regular-facet';
 
 describe('ProductListingRegularFacet', () => {
   const facetId: string = 'regular_facet_id';
-  let options: ProductListingRegularFacetOptions;
+  let options: CommerceFacetOptions;
   let state: CommerceAppState;
   let engine: MockCommerceEngine;
   let facet: CommerceRegularFacet;

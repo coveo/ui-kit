@@ -12,13 +12,13 @@ import {
   buildController,
   Controller,
 } from '../../../../controller/headless-controller';
-import {ProductListingDateFacetBuilder} from '../../../product-listing/facets/headless-product-listing-date-facet';
-import {ProductListingNumericFacetBuilder} from '../../../product-listing/facets/headless-product-listing-numeric-facet';
-import {ProductListingRegularFacetBuilder} from '../../../product-listing/facets/headless-product-listing-regular-facet';
-import {SearchDateFacetBuilder} from '../../../search/facets/headless-search-date-facet';
-import {SearchNumericFacetBuilder} from '../../../search/facets/headless-search-numeric-facet';
-import {SearchRegularFacetBuilder} from '../../../search/facets/headless-search-regular-facet';
-import {CoreCommerceFacet} from '../headless-core-commerce-facet';
+import {CommerceDateFacet} from '../date/headless-commerce-date-facet';
+import {
+  CommerceFacetOptions,
+  CoreCommerceFacet,
+} from '../headless-core-commerce-facet';
+import {CommerceNumericFacet} from '../numeric/headless-commerce-numeric-facet';
+import {CommerceRegularFacet} from '../regular/headless-commerce-regular-facet';
 
 /**
  * The `CommerceFacetGenerator` headless controller creates commerce facet controllers from the Commerce API search or
@@ -45,16 +45,11 @@ export interface CommerceFacetGeneratorState {
   facets: CoreCommerceFacet<AnyFacetValueRequest, AnyFacetValueResponse>[];
 }
 
-type CommerceRegularFacetBuilder =
-  | ProductListingRegularFacetBuilder
-  | SearchRegularFacetBuilder;
-type CommerceNumericFacetBuilder =
-  | ProductListingNumericFacetBuilder
-  | SearchNumericFacetBuilder;
-type CommerceDateFacetBuilder =
-  | ProductListingDateFacetBuilder
-  | SearchDateFacetBuilder;
-// TODO: type CommerceCategoryFacetBuilder = ProductListingCategoryFacetBuilder | CommerceSearchCategoryFacetBuilder;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type CommerceFacetBuilder<Facet extends CoreCommerceFacet<any, any>> = (
+  engine: CommerceEngine,
+  options: CommerceFacetOptions
+) => Facet;
 
 /**
  * @internal
@@ -62,10 +57,10 @@ type CommerceDateFacetBuilder =
  * The `CommerceFacetGenerator` options used internally.
  */
 export interface CommerceFacetGeneratorOptions {
-  buildRegularFacet: CommerceRegularFacetBuilder;
-  buildNumericFacet: CommerceNumericFacetBuilder;
-  buildDateFacet: CommerceDateFacetBuilder;
-  // TODO: buildCategoryFacet: CommerceNumericFacetBuilder;
+  buildRegularFacet: CommerceFacetBuilder<CommerceRegularFacet>;
+  buildNumericFacet: CommerceFacetBuilder<CommerceNumericFacet>;
+  buildDateFacet: CommerceFacetBuilder<CommerceDateFacet>;
+  // TODO: buildCategoryFacet: CommerceFacetBuilder<CommerceCategoryFacet>;
 }
 
 /**

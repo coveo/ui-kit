@@ -5,21 +5,12 @@ import {
   CommerceDateFacet,
   buildCommerceDateFacet,
 } from '../../facets/core/date/headless-commerce-date-facet';
-import {CoreCommerceFacetOptions} from '../../facets/core/headless-core-commerce-facet';
+import {CommerceFacetOptions} from '../../facets/core/headless-core-commerce-facet';
 import {loadSearchReducer} from '../utils/load-search-reducers';
-
-export type SearchDateFacetOptions = Omit<
-  CoreCommerceFacetOptions,
-  | 'fetchResultsActionCreator'
-  | 'toggleSelectActionCreator'
-  | 'toggleExcludeActionCreator'
->;
-
-export type SearchDateFacetBuilder = typeof buildSearchDateFacet;
 
 export function buildSearchDateFacet(
   engine: CommerceEngine,
-  options: SearchDateFacetOptions
+  options: CommerceFacetOptions
 ): CommerceDateFacet {
   if (!loadSearchReducer(engine)) {
     throw loadReducerError;
