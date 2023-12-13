@@ -63,10 +63,7 @@ export const getRecommendations = createAsyncThunk<
   async (_, {getState, rejectWithValue, extra: {apiClient}}) => {
     const state = getState();
     const startedAt = new Date().getTime();
-    const request = await buildRecommendationRequest(
-      state,
-      recommendationInterfaceLoad()
-    );
+    const request = await buildRecommendationRequest(state);
     const fetched = await apiClient.recommendations(request);
     const duration = new Date().getTime() - startedAt;
     if (isErrorResponse(fetched)) {
@@ -84,8 +81,7 @@ export const getRecommendations = createAsyncThunk<
 );
 
 export const buildRecommendationRequest = async (
-  s: StateNeededByGetRecommendations,
-  searchAction: SearchAction
+  s: StateNeededByGetRecommendations
 ): Promise<RecommendationRequest> => ({
   accessToken: s.configuration.accessToken,
   organizationId: s.configuration.organizationId,
@@ -121,7 +117,7 @@ export const buildRecommendationRequest = async (
     visitorId: await getVisitorID(s.configuration.analytics),
   }),
   ...(s.configuration.analytics.enabled &&
-    (await buildAnalyticsSection(s, searchAction))),
+    (await buildAnalyticsSection(s, recommendationInterfaceLoad()))),
   ...(s.configuration.search.authenticationProviders.length && {
     authentication: s.configuration.search.authenticationProviders.join(','),
   }),
