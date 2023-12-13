@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "2.51.0",
+  "version": "2.52.1",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -58,15 +58,15 @@
     "dompurify": "3.0.6",
     "escape-html": "1.0.3",
     "focus-visible": "5.2.0",
-    "i18next": "23.7.7",
+    "i18next": "23.7.8",
     "i18next-http-backend": "2.4.2",
     "stencil-inline-svg": "1.1.0",
     "ts-debounce": "^4.0.0"
   },
   "devDependencies": {
-    "@babel/core": "7.23.5",
+    "@babel/core": "7.23.6",
     "@coveo/release": "1.0.0",
-    "@coveo/headless": "2.41.0",
+    "@coveo/headless": "2.44.0",
     "@fullhuman/postcss-purgecss": "5.0.0",
     "@rollup/plugin-alias": "5.1.0",
     "@rollup/plugin-replace": "5.0.5",
@@ -81,7 +81,7 @@
     "@types/puppeteer": "5.4.7",
     "autoprefixer": "10.4.16",
     "axe-core": "4.8.2",
-    "cypress": "13.6.0",
+    "cypress": "13.6.1",
     "cypress-axe": "1.5.0",
     "cypress-repeat": "2.3.4",
     "cypress-split": "1.5.0",
@@ -97,13 +97,13 @@
     "postcss-import": "15.1.0",
     "postcss-mixins": "9.0.4",
     "postcss-nested": "6.0.1",
-    "puppeteer": "21.5.2",
+    "puppeteer": "21.6.0",
     "rollup-plugin-html": "0.2.1",
     "tailwindcss": "3.3.6",
-    "typescript": "5.3.2"
+    "typescript": "5.3.3"
   },
   "peerDependencies": {
-    "@coveo/headless": "2.41.0"
+    "@coveo/headless": "2.44.0"
   },
   "license": "Apache-2.0",
   "engines": {

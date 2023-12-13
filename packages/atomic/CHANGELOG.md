@@ -1,3 +1,29 @@
+## 2.52.1 (2023-12-13)
+
+### Bug Fixes
+
+- **exclude:** use unexclude actionCause when unexcluding ([#3478](https://github.com/coveo/ui-kit/issues/3478)) ([8f7071e](https://github.com/coveo/ui-kit/commits/8f7071e0b0e15fee425b60db81cc7bd5ffddebec))
+- **exclusion:** add missing locales for accessibility ([#3480](https://github.com/coveo/ui-kit/issues/3480)) ([8277b29](https://github.com/coveo/ui-kit/commits/8277b297fb95a7e0137a85ab1ae8d855db42e2ec))
+
+# 2.52.0 (2023-12-08)
+
+### Bug Fixes
+
+- **atomic:** icons in textarea search box are not centered ([#3468](https://github.com/coveo/ui-kit/issues/3468)) ([bffe657](https://github.com/coveo/ui-kit/commits/bffe65760b2c52db79787a552dfe07434c2d292e))
+- **breadcrumbs:** include/exclude aria labels ([#3469](https://github.com/coveo/ui-kit/issues/3469)) ([ce4f5a3](https://github.com/coveo/ui-kit/commits/ce4f5a3586e8070855ae5be27bfd66f0c3176d13))
+
+### Features
+
+- **atomic:** support core facet value exclusion ([#3103](https://github.com/coveo/ui-kit/issues/3103)) ([7b678c3](https://github.com/coveo/ui-kit/commits/7b678c3ba9ff8733fe6d0c6897679c4f2d67a213))
+
+## 2.51.1 (2023-12-06)
+
+### Bug Fixes
+
+- **atomic-search-box:** close suggestions when clicking search button ([#3448](https://github.com/coveo/ui-kit/issues/3448)) ([7cb5aa5](https://github.com/coveo/ui-kit/commits/7cb5aa5b7ff3fd622c411eb2ffa324011c5d9621))
+- **atomic:** improve accessibility for generated answer ([#3435](https://github.com/coveo/ui-kit/issues/3435)) ([59296d5](https://github.com/coveo/ui-kit/commits/59296d5d874e8bf2b097eef23297b26516361edb))
+- **deps:** update dependency @stencil/core to v4.8.1 j:kit-282 ([#3451](https://github.com/coveo/ui-kit/issues/3451)) ([b5874d6](https://github.com/coveo/ui-kit/commits/b5874d6784ff2b7cfc71b4dc8f477592e6b0ad32))
+
 # 2.51.0 (2023-11-29)
 
 ### Bug Fixes

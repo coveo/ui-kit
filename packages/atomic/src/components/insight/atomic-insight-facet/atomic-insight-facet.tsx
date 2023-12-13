@@ -109,6 +109,10 @@ export class AtomicInsightFacet
    * Default: `1000`
    */
   @Prop() public injectionDepth = 1000;
+  /**
+   * Whether to allow excluding values from the facet.
+   */
+  @Prop({reflect: true}) public enableExclusion = false;
 
   private showLessFocus?: FocusTargetController;
 
@@ -149,6 +153,7 @@ export class AtomicInsightFacet
       facetId: this.facetId,
       withSearch: this.withSearch,
       sortCriteria: this.sortCriteria,
+      enableExclusion: this.enableExclusion,
     });
 
     this.searchStatus = buildInsightSearchStatus(this.bindings.engine);

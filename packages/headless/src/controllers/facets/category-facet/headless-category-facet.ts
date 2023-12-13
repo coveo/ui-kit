@@ -1,7 +1,5 @@
-import {SearchAnalyticsProvider} from '../../../api/analytics/search-analytics';
 import {configuration} from '../../../app/common-reducers';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
-import {SearchPageEvents} from '../../../features/analytics/search-action-cause';
 import {categoryFacetSetReducer as categoryFacetSet} from '../../../features/facets/category-facet-set/category-facet-set-slice';
 import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
 import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response';
@@ -13,6 +11,10 @@ import {
   logFacetClearAll,
   logFacetDeselect,
   logFacetSelect,
+  facetUpdateSort,
+  facetClearAll,
+  facetDeselect,
+  facetSelect,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {
   SearchAction,
@@ -106,13 +108,7 @@ export function buildCategoryFacet(
       dispatch(
         executeSearch({
           legacy: logFacetClearAll(getFacetId()),
-          next: {
-            actionCause: SearchPageEvents.facetClearAll,
-            getEventExtraPayload: (state) =>
-              new SearchAnalyticsProvider(() => state).getFacetClearAllMetadata(
-                getFacetId()
-              ),
-          },
+          next: facetClearAll(getFacetId()),
         })
       );
     },
@@ -122,14 +118,7 @@ export function buildCategoryFacet(
       dispatch(
         executeSearch({
           legacy: logFacetUpdateSort({facetId: getFacetId(), criterion}),
-          next: {
-            actionCause: SearchPageEvents.facetUpdateSort,
-            getEventExtraPayload: (state) =>
-              new SearchAnalyticsProvider(() => state).getFacetSortMetadata(
-                getFacetId(),
-                criterion
-              ),
-          },
+          next: facetUpdateSort(getFacetId(), criterion),
         })
       );
     },
@@ -188,14 +177,7 @@ function getToggleSelectAnalyticsAction(
   selection: CategoryFacetValue
 ): SearchAction {
   const isSelected = selection.state === 'selected';
-  return {
-    actionCause: isSelected
-      ? SearchPageEvents.facetDeselect
-      : SearchPageEvents.facetSelect,
-    getEventExtraPayload: (state) =>
-      new SearchAnalyticsProvider(() => state).getFacetMetadata(
-        facetId,
-        selection.value
-      ),
-  };
+  return isSelected
+    ? facetDeselect(facetId, selection.value)
+    : facetSelect(facetId, selection.value);
 }

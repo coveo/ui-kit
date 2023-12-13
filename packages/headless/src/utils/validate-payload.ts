@@ -5,6 +5,7 @@ import {
   SchemaValidationError,
   StringValue,
   RecordValue,
+  ArrayValue,
 } from '@coveo/bueno';
 import {SerializedError} from '@reduxjs/toolkit';
 import {CoreEngine} from '../app/engine';
@@ -22,6 +23,11 @@ export const nonEmptyString = new StringValue({
 export const requiredEmptyAllowedString = new StringValue({
   required: true,
   emptyAllowed: true,
+});
+
+export const nonEmptyStringArray = new ArrayValue({
+  each: requiredNonEmptyString,
+  required: true,
 });
 
 export const serializeSchemaValidationError = ({

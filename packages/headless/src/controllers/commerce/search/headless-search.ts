@@ -2,7 +2,7 @@ import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api
 import {ProductRecommendation} from '../../../api/search/search/product-recommendation';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
-import {SearchAction} from '../../../features/analytics/analytics-utils';
+import {LegacySearchAction} from '../../../features/analytics/analytics-utils';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
 import {executeSearch} from '../../../features/commerce/search/search-actions';
@@ -17,7 +17,7 @@ export interface Search extends Controller {
   /**
    * Executes the first search.
    */
-  executeFirstSearch(analyticsEvent?: SearchAction): void;
+  executeFirstSearch(analyticsEvent?: LegacySearchAction): void;
 
   /**
    * A scoped and simplified part of the headless state that is relevant to the `Search` controller.

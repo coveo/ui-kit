@@ -55,8 +55,16 @@
     @apply rounded border border-neutral hover:border-primary focus-visible:border-primary bg-background text-on-background hover:text-primary focus-visible:text-primary focus-visible:ring-2 focus-visible:ring-ring-primary no-outline disabled:text-on-background disabled:border-neutral disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
+  .btn-outline-error {
+    @apply rounded border border-neutral hover:border-error focus-visible:border-error bg-background text-on-background hover:text-error focus-visible:text-error focus-visible:ring-2 focus-visible:ring-ring-primary no-outline disabled:text-on-background disabled:border-neutral disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
   .btn-outline-bg-neutral {
     @apply btn-outline-neutral hover:bg-neutral-light focus-visible:bg-neutral-light;
+  }
+
+  .btn-outline-bg-error {
+    @apply btn-outline-error hover:bg-neutral-light focus-visible:bg-neutral-light;
   }
 
   .btn-text-neutral {
