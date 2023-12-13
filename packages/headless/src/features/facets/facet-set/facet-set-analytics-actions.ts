@@ -115,9 +115,21 @@ export const logFacetSelect = (
     return client.makeFacetSelect(metadata);
   });
 
+export interface LogFacetExcludeActionCreatorPayload {
+  /**
+   * The facet id.
+   */
+  facetId: string;
+
+  /**
+   * The facet value that was excluded.
+   */
+  facetValue: string;
+}
+
 //TODO: KIT-2859
 export const logFacetExclude = (
-  payload: LogFacetSelectActionCreatorPayload
+  payload: LogFacetExcludeActionCreatorPayload
 ): LegacySearchAction =>
   makeAnalyticsAction('analytics/facet/exclude', (client, state) => {
     validatePayload(payload, {
@@ -162,6 +174,36 @@ export const logFacetDeselect = (
     );
 
     return client.makeFacetDeselect(metadata);
+  });
+
+export interface LogFacetUnexcludeActionCreatorPayload {
+  /**
+   * The facet id.
+   */
+  facetId: string;
+
+  /**
+   * The facet value that was unexcluded.
+   */
+  facetValue: string;
+}
+
+//TODO: KIT-2859
+export const logFacetUnexclude = (
+  payload: LogFacetUnexcludeActionCreatorPayload
+): LegacySearchAction =>
+  makeAnalyticsAction('analytics/facet/unexclude', (client, state) => {
+    validatePayload(payload, {
+      facetId: facetIdDefinition,
+      facetValue: requiredNonEmptyString,
+    });
+    const stateForAnalytics = getStateNeededForFacetMetadata(state);
+    const metadata = buildFacetSelectionChangeMetadata(
+      payload,
+      stateForAnalytics
+    );
+
+    return client.makeFacetUnexclude(metadata);
   });
 
 export interface LogFacetBreadcrumbActionCreatorPayload {
@@ -235,6 +277,14 @@ export const facetExclude = (id: string, value: string): SearchAction => {
 export const facetDeselect = (id: string, value: string): SearchAction => {
   return {
     actionCause: SearchPageEvents.facetDeselect,
+    getEventExtraPayload: (state) =>
+      new SearchAnalyticsProvider(() => state).getFacetMetadata(id, value),
+  };
+};
+
+export const facetUnexclude = (id: string, value: string): SearchAction => {
+  return {
+    actionCause: SearchPageEvents.facetUnexclude,
     getEventExtraPayload: (state) =>
       new SearchAnalyticsProvider(() => state).getFacetMetadata(id, value),
   };
