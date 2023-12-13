@@ -73,11 +73,17 @@ export default class QuanticSearchBoxInput extends LightningElement {
    * @api
    * @type {string}
    */
-  @api value;
+  @api
+  get inputValue() {
+    return this.input.value;
+  }
+  set inputValue(newValue) {
+    this.input.value = newValue;
+  }
   /**
    * The blur function.
    * @api
-   * @type {function}
+   * @type {VoidFunction}
    */
   @api blur() {
     this.input.blur();

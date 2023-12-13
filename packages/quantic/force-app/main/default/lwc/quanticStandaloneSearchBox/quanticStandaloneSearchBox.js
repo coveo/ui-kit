@@ -115,7 +115,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   /** @type {Function} */
   unsubscribe;
   /** @type {boolean} */
-  isInitialized;
+  isInitialized = false;
   /** @type {Suggestion[]} */
   suggestions = [];
   /** @type {boolean} */
@@ -181,7 +181,9 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
 
   updateStandaloneState() {
     if (this.state?.value !== this.standaloneSearchBox.state.value) {
-      this.quanticSearchBoxInput.value = this.standaloneSearchBox.state.value;
+      // @ts-ignore
+      this.quanticSearchBoxInput.inputValue =
+        this.standaloneSearchBox.state.value;
     }
     this.state = this.standaloneSearchBox?.state;
     this.suggestions =
@@ -232,9 +234,6 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
     );
   }
 
-  /**
-   * @returns {HTMLInputElement|HTMLTextAreaElement}
-   */
   get quanticSearchBoxInput() {
     return this.template.querySelector('c-quantic-search-box-input');
   }

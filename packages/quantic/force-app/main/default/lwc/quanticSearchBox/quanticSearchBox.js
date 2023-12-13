@@ -110,7 +110,8 @@ export default class QuanticSearchBox extends LightningElement {
 
   updateState() {
     if (this.state?.value !== this.searchBox.state.value) {
-      this.quanticSearchBoxInput.value = this.searchBox.state.value;
+      // @ts-ignore
+      this.quanticSearchBoxInput.inputValue = this.searchBox.state.value;
     }
     this.state = this.searchBox?.state;
     this.suggestions =
@@ -121,9 +122,6 @@ export default class QuanticSearchBox extends LightningElement {
       })) ?? [];
   }
 
-  /**
-   * @returns {HTMLInputElement|HTMLTextAreaElement}
-   */
   get quanticSearchBoxInput() {
     return this.template.querySelector('c-quantic-search-box-input');
   }
