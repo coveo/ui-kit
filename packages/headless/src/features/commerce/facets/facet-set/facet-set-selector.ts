@@ -2,12 +2,12 @@ import {
   CommerceFacetSetSection,
   ProductListingV2Section,
 } from '../../../../state/state-sections';
-import {AnyFacetResponse, FacetResponse} from './interfaces/response';
+import {AnyFacetResponse} from './interfaces/response';
 
 function isFacetResponse(
   state: CommerceFacetSetSection,
   response: AnyFacetResponse | undefined
-): response is FacetResponse {
+): response is AnyFacetResponse {
   return !!response && response.facetId in state.commerceFacetSet;
 }
 

@@ -10,6 +10,11 @@ import {
 } from './commerce-api-error-response';
 import {buildRequest, CommerceAPIRequest} from './common/request';
 import {CommerceSuccessResponse} from './common/response';
+import {
+  buildQuerySuggestRequest,
+  QuerySuggestRequest,
+} from './search/query-suggest/query-suggest-request';
+import {QuerySuggestSuccessResponse} from './search/query-suggest/query-suggest-response';
 import {CommerceSearchRequest} from './search/request';
 
 export interface AsyncThunkCommerceOptions<
@@ -59,7 +64,23 @@ export class CommerceAPIClient {
     });
   }
 
-  private async query(options: PlatformClientCallOptions) {
+  async querySuggest(
+    req: QuerySuggestRequest
+  ): Promise<CommerceAPIResponse<QuerySuggestSuccessResponse>> {
+    const requestOptions = buildQuerySuggestRequest(req);
+    return this.query<QuerySuggestSuccessResponse>({
+      ...requestOptions,
+      requestParams: {
+        ...requestOptions.requestParams,
+        query: req?.query,
+      },
+      ...this.options,
+    });
+  }
+
+  private async query<T = CommerceSuccessResponse>(
+    options: PlatformClientCallOptions
+  ) {
     const response = await PlatformClient.call(options);
 
     if (response instanceof Error) {
@@ -68,7 +89,7 @@ export class CommerceAPIClient {
 
     const body = await response.json();
     return response.ok
-      ? {success: body as CommerceSuccessResponse}
+      ? {success: body as T}
       : {error: body as CommerceAPIErrorStatusResponse};
   }
 }

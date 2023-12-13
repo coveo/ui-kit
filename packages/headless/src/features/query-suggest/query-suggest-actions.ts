@@ -30,7 +30,7 @@ export type StateNeededByQuerySuggest = ConfigurationSection &
   QuerySetSection &
   Partial<ContextSection & PipelineSection & SearchHubSection>;
 
-const idDefinition = {
+export const idDefinition = {
   id: requiredNonEmptyString,
 };
 
