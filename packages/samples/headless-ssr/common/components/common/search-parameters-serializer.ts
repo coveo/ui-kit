@@ -1,0 +1,223 @@
+import {RangeValueRequest} from '@coveo/headless/dist/definitions/features/facets/range-facets/generic/interfaces/range-facet';
+import {type SearchParameters} from '@coveo/headless/ssr';
+import {ReadonlyURLSearchParams} from 'next/navigation';
+
+type SearchParameterKey = keyof SearchParameters;
+
+export type NextJSServerSideSearchParams = Record<
+  string,
+  string | string[] | undefined
+>;
+
+// Duplicate code START
+function isObject(obj: unknown): obj is object {
+  return obj && typeof obj === 'object' ? true : false;
+}
+
+function allEntriesAreValid(
+  obj: object,
+  isValidValue: (v: unknown) => boolean
+) {
+  const invalidEntries = Object.entries(obj).filter((entry) => {
+    const values = entry[1];
+    return !Array.isArray(values) || !values.every(isValidValue);
+  });
+
+  return invalidEntries.length === 0;
+}
+
+function isValidKey(key: string): key is SearchParameterKey {
+  const supportedParameters: Record<keyof Required<SearchParameters>, boolean> =
+    {
+      q: true,
+      aq: true,
+      cq: true,
+      enableQuerySyntax: true,
+      firstResult: true,
+      numberOfResults: true,
+      sortCriteria: true,
+      f: true,
+      fExcluded: true,
+      cf: true,
+      nf: true,
+      df: true,
+      debug: true,
+      sf: true,
+      tab: true,
+      af: true,
+    };
+  return key in supportedParameters;
+}
+
+// Duplicate code END
+
+// duplicated with slight changes
+function isSpecificFacetKey(
+  key: string // This was a slight type change
+): key is 'f' | 'af' | 'cf' | 'sf' | 'fExcluded' {
+  const keys = ['f', 'af', 'cf', 'sf', 'fExcluded'];
+  return keys.includes(key);
+}
+function processObjectValue(
+  key: string,
+  value: string
+  // ): string | NumericRangeRequest | DateRangeRequest {
+): string {
+  if (key === 'nf') {
+    throw 'TODO: To implement';
+    // return buildNumericRanges(values);
+  }
+
+  if (key === 'df') {
+    throw 'TODO: To implement';
+    // return buildDateRanges(values);
+  }
+
+  return value;
+}
+
+export class CoveoNextJsSearchParametersSerializer {
+  public static fromServerSideUrlSearchParams(
+    serverSideUrlSearchParams: NextJSServerSideSearchParams
+  ): CoveoNextJsSearchParametersSerializer {
+    return new CoveoNextJsSearchParametersSerializer({
+      ...serverSideUrlSearchParams,
+    });
+  }
+
+  public static fromCoveoSearchParameters(
+    coveoSearchParameters: SearchParameters
+  ) {
+    return new CoveoNextJsSearchParametersSerializer(coveoSearchParameters);
+  }
+
+  public static parseSearchParameters(
+    clientSideUrlSearchParams: URLSearchParams | ReadonlyURLSearchParams
+  ): SearchParameters {
+    console.log(clientSideUrlSearchParams);
+    const res: SearchParameters = {}; // TODO: not sure about the type
+
+    clientSideUrlSearchParams.forEach((value, key) => {
+      const objectKey = /^(f|fExcluded|cf|nf|df|sf|af)-(.+)$/;
+      const result = objectKey.exec(key);
+      if (result) {
+        const paramKey = result[1];
+        const facetId = result[2];
+        if (!isSpecificFacetKey(paramKey)) {
+          // TODO: merge with regex above
+          // THIS does not handle range facets
+          return res;
+        }
+        const processedValue = processObjectValue(paramKey, value);
+
+        if (paramKey in res) {
+          const record = {...res[paramKey]};
+          record[facetId] = [...(record[facetId] || []), processedValue];
+          res[paramKey] = record;
+        } else {
+          res[paramKey] = {[facetId]: [processedValue]};
+        }
+      }
+    });
+
+    return res;
+  }
+
+  private constructor(
+    public readonly coveoSearchParameters: SearchParameters
+  ) {}
+
+  public applyToUrlSearchParams(urlSearchParams: URLSearchParams) {
+    // TODO: WHY
+    // if (!Object.keys(this.coveoSearchParameters).length) {
+    //   urlSearchParams.delete(key);
+    //   return;
+    // }
+    Object.entries(this.coveoSearchParameters).forEach(([key, value]) => {
+      if (!isValidKey(key)) {
+        return;
+      }
+      this.applyToUrlSearchParam(urlSearchParams, key, value);
+    });
+  }
+
+  private applyToUrlSearchParam(
+    urlSearchParams: URLSearchParams,
+    key: SearchParameterKey,
+    value: SearchParameters[typeof key]
+  ) {
+    // TODO: handle facet deselection => clear all facet values and start again to support deselection
+    if (!value) {
+      return;
+    }
+
+    if (this.isFacetPair(key, value)) {
+      return this.applyFacetValuesToSearchParams(value, key, urlSearchParams);
+    }
+
+    if (this.isRangeFacetPair(key, value)) {
+      return this.applyRangeFacetValuesToSearchParams(
+        value,
+        key,
+        urlSearchParams
+      );
+    }
+
+    urlSearchParams.set(key, value.toString());
+  }
+
+  private isRangeFacetPair(
+    key: SearchParameterKey,
+    obj: unknown
+  ): obj is Record<string, RangeValueRequest[]> {
+    if (!isObject(obj)) {
+      return false;
+    }
+    if (key !== 'nf' && key !== 'df') {
+      return false;
+    }
+
+    const isRangeValue = (v: unknown) =>
+      isObject(v) && 'start' in v && 'end' in v;
+    return allEntriesAreValid(obj, isRangeValue);
+  }
+
+  private isFacetPair(
+    key: SearchParameterKey,
+    obj: unknown
+  ): obj is Record<string, string[]> {
+    if (!isObject(obj)) {
+      return false;
+    }
+    if (!isSpecificFacetKey(key)) {
+      return false;
+    }
+
+    const isValidValue = (v: unknown) => typeof v === 'string';
+    return allEntriesAreValid(obj, isValidValue);
+  }
+
+  private applyFacetValuesToSearchParams(
+    value: Record<string, string[]>,
+    key: string,
+    urlSearchParams: URLSearchParams
+  ) {
+    Object.entries(value).forEach(([facetId, facetValues]) => {
+      const id = `${key}-${facetId}`;
+      // TODO: reset array
+      // urlSearchParams.delete(id);
+      facetValues.forEach((v) => {
+        const alreadyInSearchParams = urlSearchParams.getAll(id).includes(v);
+        !alreadyInSearchParams && urlSearchParams.append(id, v);
+      });
+    });
+  }
+
+  private applyRangeFacetValuesToSearchParams(
+    _value: Record<string, RangeValueRequest[]>,
+    _key: string,
+    _urlSearchParams: URLSearchParams
+  ) {
+    throw 'TODO: To implement';
+  }
+}
