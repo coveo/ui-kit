@@ -16,7 +16,6 @@ import {
   SSRController,
   resolveSSRController,
 } from './src/headless-export-resolvers/ssr-controller-resolver';
-import {SSREngine} from './src/headless-export-resolvers/ssr-engine-resolver';
 import {caseAssistUseCase} from './use-cases/case-assist';
 // eslint-disable-next-line @cspell/spellchecker
 // TODO CAPI-89: Uncomment when we're ready to make the Commerce sub-package public.
@@ -118,7 +117,7 @@ interface SSRUseCase {
 interface ResolvedSSRUseCase {
   name: string;
   controllers: SSRController[];
-  engine: SSREngine;
+  engine: {initializer: string};
 }
 
 const ssrUseCases: SSRUseCase[] = [
@@ -128,6 +127,7 @@ const ssrUseCases: SSRUseCase[] = [
     config: ssrSearchUseCase,
   },
 ];
+
 function resolveSSRUseCase(ssrUseCase: SSRUseCase): ResolvedSSRUseCase {
   const {name, entryFile, config} = ssrUseCase;
   process.env['currentUseCaseName'] = name;
@@ -139,12 +139,11 @@ function resolveSSRUseCase(ssrUseCase: SSRUseCase): ResolvedSSRUseCase {
     resolveSSRController(entryPoint, controller.initializer)
   );
 
-  const engine: SSREngine = {initializer: config.engine.initializer};
+  const engine = {initializer: config.engine.initializer};
 
   return {name, controllers, engine};
 }
 
 const ssrResolved = ssrUseCases.map(resolveSSRUseCase);
 
-//maybe instead of writing on a whole new file, just modify the parsed_doc.json file
 writeFileSync('dist/ssr_parsed_doc.json', JSON.stringify(ssrResolved, null, 2));
