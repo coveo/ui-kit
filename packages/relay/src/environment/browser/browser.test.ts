@@ -3,7 +3,6 @@
  */
 
 import messenger from "@coveo/explorer-messenger";
-import { currentEnvironment } from "../environment";
 import { buildBrowserEnvironment } from "./browser";
 import { createMockEvent } from "../../__mocks__/event";
 
@@ -12,10 +11,6 @@ Object.defineProperty(window, "crypto", {
   value: {
     randomUUID: () => "2136b353-74be-42d7-904f-ea33a8f4a43c",
   },
-});
-
-it("currentEnvironment returns the browser runtime", () => {
-  expect(currentEnvironment().runtime).toBe("browser");
 });
 
 describe("buildBrowserEnvironment", () => {
@@ -75,17 +70,6 @@ describe("buildBrowserEnvironment", () => {
     expect(buildBrowserEnvironment().generateUUID()).toBe(
       "2136b353-74be-42d7-904f-ea33a8f4a43c"
     );
-  });
-
-  it("calls the Fetch API when using fetch", async () => {
-    const fetchSpy = jest.fn().mockImplementation(() => Promise.resolve());
-    Object.defineProperty(globalThis, "fetch", {
-      value: fetchSpy,
-    });
-
-    buildBrowserEnvironment().fetch("anything");
-
-    expect(fetchSpy).toHaveBeenCalledTimes(1);
   });
 
   it("calls the Beacon API when using send", async () => {

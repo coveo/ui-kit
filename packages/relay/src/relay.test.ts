@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import { createMockConfig } from "./__mocks__/config";
 import { createRelay } from "./relay";
 
@@ -25,7 +29,14 @@ describe("relay", () => {
 
   it("updates the clientId to an empty string when disconnecting to its environment on disabled mode", () => {
     const mockedUUID = "1234-1234-1234-1234-1234";
-    jest.spyOn(crypto, "randomUUID").mockReturnValueOnce(mockedUUID);
+
+    Object.defineProperty(window, "crypto", {
+      writable: true,
+      value: {
+        randomUUID: () => mockedUUID,
+      },
+    });
+
     const relay = createRelay(createMockConfig());
 
     expect(relay.getMeta("type").clientId).toEqual(mockedUUID);

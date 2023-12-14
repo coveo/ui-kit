@@ -6,7 +6,6 @@ import { createMeta } from "./meta";
 describe("createMeta", () => {
   const mockEnv = createMockEnvironment({
     runtime: "browser",
-    fetch: jest.fn(),
     getReferrer: () => "https://www.perdu.com",
     getLocation: () => "https://www.perdu.com/whoops",
     getUserAgent: () => "I am userAgent",

@@ -1,5 +1,6 @@
 import { ConfigManager } from "../../config/config";
-import { Environment, currentEnvironment } from "../environment";
+import { buildBrowserEnvironment } from "../browser/browser";
+import { Environment } from "../environment";
 import { buildNullEnvironment } from "../null/null";
 
 export interface EnvironmentManager {
@@ -7,9 +8,21 @@ export interface EnvironmentManager {
 }
 
 function buildEnvironment(configManager: ConfigManager) {
-  return configManager.get().mode == "disabled"
-    ? buildNullEnvironment()
-    : currentEnvironment();
+  const active = configManager.get().mode !== "disabled";
+
+  if (active && isBrowser()) {
+    return buildBrowserEnvironment();
+  }
+
+  return buildNullEnvironment();
+}
+
+function isBrowser() {
+  try {
+    return typeof window === "object";
+  } catch (e) {
+    return false;
+  }
 }
 
 export function createEnvironmentManager(

@@ -22,27 +22,6 @@ describe("null environment", () => {
     expect(buildNullEnvironment().generateUUID()).toBe("");
   });
 
-  it("does not call fetch ", async () => {
-    globalThis.fetch = jest.fn(() =>
-      Promise.resolve({
-        ok: true,
-        json: () =>
-          Promise.resolve([
-            {
-              valid: true,
-            },
-          ]),
-      } as Response)
-    );
-
-    const response = await buildNullEnvironment().fetch("anything");
-    expect(response.ok).toBeTruthy();
-    const data = await response.json();
-    expect(data).toEqual("");
-
-    expect(fetch).not.toBeCalled();
-  });
-
   it("returns undefined send", async () => {
     expect(
       await buildNullEnvironment().send("bap", "", createMockEvent())

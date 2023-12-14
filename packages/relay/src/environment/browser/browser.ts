@@ -1,7 +1,6 @@
 import { createExplorerMessenger } from "@coveo/explorer-messenger";
 import { Environment } from "../environment";
 import { createBrowserStorage } from "./storage/storage";
-import { fetchAPI } from "../utils/fetch";
 import { RelayEvent } from "../../event/relay-event";
 
 function getReferrer() {
@@ -13,7 +12,6 @@ function getReferrer() {
 export function buildBrowserEnvironment(): Environment {
   return {
     runtime: "browser",
-    fetch: (url: string, init?: RequestInit) => fetchAPI(url, init),
     send: async (url: string, token: string, event: RelayEvent) => {
       const response = navigator.sendBeacon(
         `${url}?access_token=${token}`,

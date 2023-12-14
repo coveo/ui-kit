@@ -3,13 +3,7 @@ import { EnvironmentManager } from "../environment/manager/manager";
 import { createMockStorage } from "./storage";
 
 const defaultEnvironment: Environment = {
-  runtime: "node",
-  fetch: jest.fn(() =>
-    Promise.resolve({
-      ok: true,
-      json: () => Promise.resolve([{ valid: true }]),
-    } as Response)
-  ),
+  runtime: "null",
   send: jest.fn(),
   getReferrer: jest.fn(),
   getLocation: jest.fn(),
