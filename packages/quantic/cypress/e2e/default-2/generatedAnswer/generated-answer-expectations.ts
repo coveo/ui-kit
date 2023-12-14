@@ -66,24 +66,32 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         .log(`${should(display)} display the copy to clipboard button`);
     },
 
-    likeButtonIsChecked: (checked: boolean) => {
+    likeButtonIsChecked: (selected: boolean) => {
       selector
         .likeButton()
         .should(
-          checked ? 'have.class' : 'not.have.class',
-          'feedback__button--liked'
+          selected ? 'have.class' : 'not.have.class',
+          'stateful-button--selected'
         )
-        .log(`the like button ${should(checked)} be in a liked state`);
+        .should(
+          selected ? 'not.have.class' : 'have.class',
+          'stateful-button--unselected'
+        )
+        .log(`the like button ${should(selected)} be in a liked state`);
     },
 
-    dislikeButtonIsChecked: (checked: boolean) => {
+    dislikeButtonIsChecked: (selected: boolean) => {
       selector
         .dislikeButton()
         .should(
-          checked ? 'have.class' : 'not.have.class',
-          'feedback__button--disliked'
+          selected ? 'have.class' : 'not.have.class',
+          'stateful-button--selected'
         )
-        .log(`the dislike button ${should(checked)} be in a disliked state`);
+        .should(
+          selected ? 'not.have.class' : 'have.class',
+          'stateful-button--unselected'
+        )
+        .log(`the dislike button ${should(selected)} be in a disliked state`);
     },
 
     toggleGeneratedAnswerButtonIsChecked: (checked: boolean) => {
@@ -214,6 +222,53 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         .log(`the ${name} rephrase button ${should(selected)} be selected`);
     },
 
+    citationTooltipIsDisplayed: (index: number, displayed: boolean) => {
+      selector
+        .citationTooltip(index)
+        .should(
+          displayed ? 'have.class' : 'not.have.class',
+          'tooltip__content--visible'
+        )
+        .log(
+          `the tooltip of the citation at index ${index} ${should(
+            displayed
+          )} be displayed`
+        );
+    },
+
+    citationTooltipUrlContains: (index: number, url: string) => {
+      selector
+        .citationTooltipUri(index)
+        .then((element) => {
+          expect(element.get(0).textContent).to.equal(url);
+        })
+        .log(
+          `the citation tooltip url at the index ${index} should contain the url "${url}"`
+        );
+    },
+
+    citationTooltipTitleContains: (index: number, title: string) => {
+      selector
+        .citationTooltipTitle(index)
+        .then((element) => {
+          expect(element.get(0).textContent).to.equal(title);
+        })
+        .log(
+          `the citation tooltip title at the index ${index} should contain the title "${title}"`
+        );
+    },
+
+    citationTooltipTextContains: (index: number, text: string) => {
+      selector
+        .citationTooltipText(index)
+        .then((element) => {
+          expect(element.get(0).textContent).to.equal(text);
+        })
+        .log(
+          `the citation tooltip text at the index ${index} should contain the text "${text}"`
+        );
+    },
+
     searchQueryContainsCorrectRephraseOption: (expectedAnswerStyle: string) => {
       cy.get<Interception>(InterceptAliases.Search)
         .then((interception) => {
@@ -224,6 +279,21 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         })
         .log(
           `the search query should contain the correct ${expectedAnswerStyle} parameter`
+        );
+    },
+
+    searchQueryContainsCorrectFieldsToIncludeInCitations: (
+      expectedFields: string[]
+    ) => {
+      cy.get<Interception>(InterceptAliases.Search)
+        .then((interception) => {
+          const fieldsToIncludeInCitations =
+            interception?.request?.body?.pipelineRuleParameters
+              ?.mlGenerativeQuestionAnswering?.citationsFieldToInclude;
+          expect(fieldsToIncludeInCitations).to.eql(expectedFields);
+        })
+        .log(
+          'the search query should contain the correct fields to include in citations parameter'
         );
     },
 
@@ -299,6 +369,32 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         InterceptAliases.UA.GeneratedAnswer.OpenGeneratedAnswerSource,
         (analyticsBody: {customData: object; eventType: string}) => {
           const customData = analyticsBody?.customData;
+          expect(analyticsBody).to.have.property(
+            'eventType',
+            'generatedAnswer'
+          );
+          expect(customData).to.have.property(
+            'generativeQuestionAnsweringId',
+            streamId
+          );
+          expect(customData).to.have.property('citationId', citation.id);
+          expect(customData).to.have.property(
+            'permanentId',
+            citation.permanentid
+          );
+        }
+      );
+    },
+
+    logHoverGeneratedAnswerSource(
+      streamId: string,
+      citation: {id: string; permanentid: string}
+    ) {
+      logGeneratedAnswerEvent(
+        InterceptAliases.UA.GeneratedAnswer.GeneratedAnswerSourceHover,
+        (analyticsBody: {customData: object; eventType: string}) => {
+          const customData = analyticsBody?.customData;
+          expect(customData).to.have.property('citationHoverTimeMs');
           expect(analyticsBody).to.have.property(
             'eventType',
             'generatedAnswer'

@@ -2,11 +2,11 @@ import {ProductListingEngine} from '../../../../app/product-listing-engine/produ
 import {
   logFacetClearAll,
   logFacetUpdateSort,
-} from '../../../../features/facets/facet-set/facet-set-analytics-actions';
+} from '../../../../features/facets/facet-set/facet-set-product-listing-analytics-actions';
 import {DateRangeRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
 import {DateFacetValue} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
-import {getAnalyticsActionForToggleRangeFacetSelect} from '../../../../features/facets/range-facets/generic/range-facet-utils';
+import {getLegacyAnalyticsActionForToggleRangeFacetSelect} from '../../../../features/facets/range-facets/generic/range-facet-utils';
 import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions';
 import {
   buildCoreDateFacet,
@@ -67,7 +67,10 @@ export function buildDateFacet(
       coreController.toggleSelect(selection);
       dispatch(fetchProductListing()).then(() =>
         dispatch(
-          getAnalyticsActionForToggleRangeFacetSelect(getFacetId(), selection)
+          getLegacyAnalyticsActionForToggleRangeFacetSelect(
+            getFacetId(),
+            selection
+          )
         )
       );
     },

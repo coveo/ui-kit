@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+import { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
@@ -30,7 +30,7 @@ import { RedirectionPayload } from "./components/search/atomic-search-box/redire
 import { AriaLabelGenerator } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
-export { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+export { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
@@ -167,14 +167,26 @@ export namespace Components {
          */
         "sortCriteria": CategoryFacetSortCriterion;
         /**
-          * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
+          * Whether this facet should contain a search box.
          */
         "withSearch": boolean;
     }
     interface AtomicCitation {
+        /**
+          * The citation item information.
+         */
         "citation": GeneratedAnswerCitation;
+        /**
+          * The citation index.
+         */
         "index": number;
+        /**
+          * An `InteractiveCitation` controller instance. It is used when the user interacts with the citation by selecting or hovering over it.
+         */
         "interactiveCitation": InteractiveCitation;
+        /**
+          * Callback function invoked when the user stops hovering over a citation. `citationHoverTimeMs` is the amount of time over which the citation has been hovered.
+         */
         "sendHoverEndEvent": (citationHoverTimeMs: number) => void;
     }
     /**
@@ -239,7 +251,7 @@ export namespace Components {
          */
         "sortCriteria": FacetSortCriterion;
         /**
-          * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
+          * Whether this facet should contain a search box.
          */
         "withSearch": boolean;
     }
@@ -286,6 +298,10 @@ export namespace Components {
          */
         "displayValuesAs": 'checkbox' | 'link' | 'box';
         /**
+          * Whether to allow excluding values from the facet.
+         */
+        "enableExclusion": boolean;
+        /**
           * Specifies a unique identifier for the facet.
          */
         "facetId"?: string;
@@ -326,7 +342,7 @@ export namespace Components {
          */
         "sortCriteria": FacetSortCriterion;
         /**
-          * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
+          * Whether this facet should contain a search box.
          */
         "withSearch": boolean;
     }
@@ -362,12 +378,13 @@ export namespace Components {
     }
     /**
      * The `atomic-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
+     * The condition properties can be based on any top-level result property of the `result` object, not restricted to fields (e.g., `isRecommendation`).
      * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
      * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
     interface AtomicFieldCondition {
         /**
-          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
+          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  Use only when the condition you need to define can't be expressed through `if-defined`, `if-not-defined`, `must-match`, etc. markup attributes of the component. For example, the following targets an `atomic-field-condition` component and sets a condition to make it apply only to results whose title contains singapore: `document.querySelector('atomic-result-template#templateId').conditions = [(result) => /singapore/i.test(result.title)];`
          */
         "conditions": ResultTemplateCondition[];
         /**
@@ -487,11 +504,25 @@ export namespace Components {
      */
     interface AtomicFrequentlyBoughtTogether {
     }
+    /**
+     * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
+     * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
+     */
     interface AtomicGeneratedAnswer {
         /**
-          * The answer style to apply when the component first loads. Options:   - `default`: Generates the answer without additional formatting instructions.   - `bullet`: Requests the answer to be generated in bullet-points.   - `step`: Requests the answer to be generated in step-by-step instructions.   - `concise`: Requests the answer to be generated as concisely as possible.
+          * The answer style to apply when the component first loads. Options:   - `default`: Generates the answer without additional formatting instructions.   - `bullet`: Requests that the answer is formatted as a bulleted list.   - `step`: Requests that the answer is formatted as a series of step-by-step instructions.   - `concise`: Requests that the generated answer is as concise as possible.
          */
         "answerStyle": GeneratedAnswerStyle;
+    }
+    interface AtomicGeneratedAnswerFeedbackModal {
+        /**
+          * A `GeneratedAnswer` controller instance. It is used when the user interacts with the modal.
+         */
+        "generatedAnswer": GeneratedAnswer;
+        /**
+          * Indicates whether the modal is open.
+         */
+        "isOpen": boolean;
     }
     /**
      * The `atomic-html` component renders the HTML value of a string.
@@ -527,6 +558,10 @@ export namespace Components {
           * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
          */
         "displayValuesAs": FacetDisplayValues;
+        /**
+          * Whether to allow excluding values from the facet.
+         */
+        "enableExclusion": boolean;
         /**
           * Specifies a unique identifier for the facet.
          */
@@ -2157,7 +2192,7 @@ export namespace Components {
          */
         "fieldsToInclude": string[] | string;
         /**
-          * Returns the unique, organization-specific endpoint(s)
+          * Returns the unique, organization-specific endpoint(s).
           * @param organizationId
           * @param env
          */
@@ -2175,7 +2210,7 @@ export namespace Components {
          */
         "initialize": (options: InitializationOptions) => Promise<void>;
         /**
-          * Initializes the connection with an already preconfigured headless search engine, as opposed to the `initialize` method which will internally create a new search engine instance. This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
+          * Initializes the connection with an already preconfigured [headless search engine](https://docs.coveo.com/en/headless/latest/reference/search/), as opposed to the `initialize` method, which will internally create a new search engine instance. This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
          */
         "initializeWithSearchEngine": (engine: SearchEngine) => Promise<void>;
         /**
@@ -2501,6 +2536,10 @@ export interface AtomicFocusDetectorCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicFocusDetectorElement;
 }
+export interface AtomicGeneratedAnswerFeedbackModalCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicGeneratedAnswerFeedbackModalElement;
+}
 export interface AtomicInsightPagerCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicInsightPagerElement;
@@ -2722,6 +2761,7 @@ declare global {
     };
     /**
      * The `atomic-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
+     * The condition properties can be based on any top-level result property of the `result` object, not restricted to fields (e.g., `isRecommendation`).
      * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
      * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
@@ -2803,11 +2843,32 @@ declare global {
         prototype: HTMLAtomicFrequentlyBoughtTogetherElement;
         new (): HTMLAtomicFrequentlyBoughtTogetherElement;
     };
+    /**
+     * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
+     * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
+     */
     interface HTMLAtomicGeneratedAnswerElement extends Components.AtomicGeneratedAnswer, HTMLStencilElement {
     }
     var HTMLAtomicGeneratedAnswerElement: {
         prototype: HTMLAtomicGeneratedAnswerElement;
         new (): HTMLAtomicGeneratedAnswerElement;
+    };
+    interface HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap {
+        "feedbackSent": any;
+    }
+    interface HTMLAtomicGeneratedAnswerFeedbackModalElement extends Components.AtomicGeneratedAnswerFeedbackModal, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap>(type: K, listener: (this: HTMLAtomicGeneratedAnswerFeedbackModalElement, ev: AtomicGeneratedAnswerFeedbackModalCustomEvent<HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap>(type: K, listener: (this: HTMLAtomicGeneratedAnswerFeedbackModalElement, ev: AtomicGeneratedAnswerFeedbackModalCustomEvent<HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLAtomicGeneratedAnswerFeedbackModalElement: {
+        prototype: HTMLAtomicGeneratedAnswerFeedbackModalElement;
+        new (): HTMLAtomicGeneratedAnswerFeedbackModalElement;
     };
     /**
      * The `atomic-html` component renders the HTML value of a string.
@@ -4060,6 +4121,7 @@ declare global {
         "atomic-format-unit": HTMLAtomicFormatUnitElement;
         "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
         "atomic-generated-answer": HTMLAtomicGeneratedAnswerElement;
+        "atomic-generated-answer-feedback-modal": HTMLAtomicGeneratedAnswerFeedbackModalElement;
         "atomic-html": HTMLAtomicHtmlElement;
         "atomic-icon": HTMLAtomicIconElement;
         "atomic-insight-edit-toggle": HTMLAtomicInsightEditToggleElement;
@@ -4287,14 +4349,26 @@ declare namespace LocalJSX {
          */
         "sortCriteria"?: CategoryFacetSortCriterion;
         /**
-          * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
+          * Whether this facet should contain a search box.
          */
         "withSearch"?: boolean;
     }
     interface AtomicCitation {
+        /**
+          * The citation item information.
+         */
         "citation": GeneratedAnswerCitation;
+        /**
+          * The citation index.
+         */
         "index": number;
+        /**
+          * An `InteractiveCitation` controller instance. It is used when the user interacts with the citation by selecting or hovering over it.
+         */
         "interactiveCitation": InteractiveCitation;
+        /**
+          * Callback function invoked when the user stops hovering over a citation. `citationHoverTimeMs` is the amount of time over which the citation has been hovered.
+         */
         "sendHoverEndEvent": (citationHoverTimeMs: number) => void;
     }
     /**
@@ -4359,7 +4433,7 @@ declare namespace LocalJSX {
          */
         "sortCriteria"?: FacetSortCriterion;
         /**
-          * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
+          * Whether this facet should contain a search box.
          */
         "withSearch"?: boolean;
     }
@@ -4406,6 +4480,10 @@ declare namespace LocalJSX {
          */
         "displayValuesAs"?: 'checkbox' | 'link' | 'box';
         /**
+          * Whether to allow excluding values from the facet.
+         */
+        "enableExclusion"?: boolean;
+        /**
           * Specifies a unique identifier for the facet.
          */
         "facetId"?: string;
@@ -4446,7 +4524,7 @@ declare namespace LocalJSX {
          */
         "sortCriteria"?: FacetSortCriterion;
         /**
-          * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
+          * Whether this facet should contain a search box.
          */
         "withSearch"?: boolean;
     }
@@ -4484,12 +4562,13 @@ declare namespace LocalJSX {
     }
     /**
      * The `atomic-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
+     * The condition properties can be based on any top-level result property of the `result` object, not restricted to fields (e.g., `isRecommendation`).
      * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
      * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
     interface AtomicFieldCondition {
         /**
-          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
+          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  Use only when the condition you need to define can't be expressed through `if-defined`, `if-not-defined`, `must-match`, etc. markup attributes of the component. For example, the following targets an `atomic-field-condition` component and sets a condition to make it apply only to results whose title contains singapore: `document.querySelector('atomic-result-template#templateId').conditions = [(result) => /singapore/i.test(result.title)];`
          */
         "conditions"?: ResultTemplateCondition[];
         /**
@@ -4607,11 +4686,26 @@ declare namespace LocalJSX {
      */
     interface AtomicFrequentlyBoughtTogether {
     }
+    /**
+     * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
+     * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
+     */
     interface AtomicGeneratedAnswer {
         /**
-          * The answer style to apply when the component first loads. Options:   - `default`: Generates the answer without additional formatting instructions.   - `bullet`: Requests the answer to be generated in bullet-points.   - `step`: Requests the answer to be generated in step-by-step instructions.   - `concise`: Requests the answer to be generated as concisely as possible.
+          * The answer style to apply when the component first loads. Options:   - `default`: Generates the answer without additional formatting instructions.   - `bullet`: Requests that the answer is formatted as a bulleted list.   - `step`: Requests that the answer is formatted as a series of step-by-step instructions.   - `concise`: Requests that the generated answer is as concise as possible.
          */
         "answerStyle"?: GeneratedAnswerStyle;
+    }
+    interface AtomicGeneratedAnswerFeedbackModal {
+        /**
+          * A `GeneratedAnswer` controller instance. It is used when the user interacts with the modal.
+         */
+        "generatedAnswer": GeneratedAnswer;
+        /**
+          * Indicates whether the modal is open.
+         */
+        "isOpen"?: boolean;
+        "onFeedbackSent"?: (event: AtomicGeneratedAnswerFeedbackModalCustomEvent<any>) => void;
     }
     /**
      * The `atomic-html` component renders the HTML value of a string.
@@ -4647,6 +4741,10 @@ declare namespace LocalJSX {
           * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
          */
         "displayValuesAs"?: FacetDisplayValues;
+        /**
+          * Whether to allow excluding values from the facet.
+         */
+        "enableExclusion"?: boolean;
         /**
           * Specifies a unique identifier for the facet.
          */
@@ -6548,6 +6646,7 @@ declare namespace LocalJSX {
         "atomic-format-unit": AtomicFormatUnit;
         "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
         "atomic-generated-answer": AtomicGeneratedAnswer;
+        "atomic-generated-answer-feedback-modal": AtomicGeneratedAnswerFeedbackModal;
         "atomic-html": AtomicHtml;
         "atomic-icon": AtomicIcon;
         "atomic-insight-edit-toggle": AtomicInsightEditToggle;
@@ -6738,6 +6837,7 @@ declare module "@stencil/core" {
             "atomic-facet-number-input": LocalJSX.AtomicFacetNumberInput & JSXBase.HTMLAttributes<HTMLAtomicFacetNumberInputElement>;
             /**
              * The `atomic-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
+             * The condition properties can be based on any top-level result property of the `result` object, not restricted to fields (e.g., `isRecommendation`).
              * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
              * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
              */
@@ -6767,7 +6867,12 @@ declare module "@stencil/core" {
              * The `atomic-frequently-bought-together` component suggests products frequently bought with the current product based on the shopping cart of other users.
              */
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
+            /**
+             * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
+             * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
+             */
             "atomic-generated-answer": LocalJSX.AtomicGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicGeneratedAnswerElement>;
+            "atomic-generated-answer-feedback-modal": LocalJSX.AtomicGeneratedAnswerFeedbackModal & JSXBase.HTMLAttributes<HTMLAtomicGeneratedAnswerFeedbackModalElement>;
             /**
              * The `atomic-html` component renders the HTML value of a string.
              * There is an inherent XSS security concern associated with the usage of this component.

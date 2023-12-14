@@ -1,13 +1,17 @@
 import {
   buildCart,
-  buildCommerceEngine,
   buildContext,
+  buildCommerceEngine,
   buildProductListing,
   buildRelevanceSortCriterion,
-  buildSort,
+  buildSearch,
+  buildProductListingSort,
   CommerceEngine,
   ProductListing,
+  buildProductListingFacetGenerator,
 } from '../commerce.index';
+import {buildSearchBox} from '../controllers/commerce/search-box/headless-search-box';
+import {updateQuery} from '../features/commerce/query/query-actions';
 import {getOrganizationEndpoints} from '../insight.index';
 import {waitForNextStateChange} from '../test/functional-test-utils';
 
@@ -19,13 +23,14 @@ describe.skip('commerce', () => {
   let engine: CommerceEngine;
 
   beforeEach(() => {
+    // eslint-disable-next-line @cspell/spellchecker
+    const organizationId = 'barcasportsmcy01fvu';
     engine = buildCommerceEngine({
       configuration: {
-        organizationId: 'commercestore',
+        organizationId,
         accessToken,
         organizationEndpoints: {
-          ...getOrganizationEndpoints('commercestore', 'dev'),
-          platform: 'https://platformdev.cloud.coveo.com',
+          ...getOrganizationEndpoints(organizationId, 'dev'),
         },
       },
       loggerOptions: {level: 'silent'},
@@ -33,12 +38,13 @@ describe.skip('commerce', () => {
 
     buildContext(engine, {
       options: {
-        trackingId: 'commercestore-tracking-id',
-        language: 'en',
-        currency: 'USD',
+        trackingId: 'barca',
+        language: 'en-gb',
+        country: 'gb',
+        currency: 'gbp',
         clientId: '41915baa-621c-4408-b9c0-6e59b3cde129',
         view: {
-          url: 'http://mystore.com/sales',
+          url: 'https://sports-dev.barca.group/browse/promotions/surf-with-us-this-year',
         },
       },
     });
@@ -85,7 +91,7 @@ describe.skip('commerce', () => {
   });
 
   it('applies sort to product listing', async () => {
-    const sort = buildSort(engine);
+    const sort = buildProductListingSort(engine);
     const relevance = buildRelevanceSortCriterion();
     sort.sortBy(relevance);
 
@@ -94,5 +100,54 @@ describe.skip('commerce', () => {
     expect(sort.isSortedBy(relevance)).toBeTruthy();
     expect(sort.isAvailable(relevance)).toBeTruthy();
     expect(sort.state.availableSorts.length).toEqual(2);
+  });
+
+  it('has selectable facets', async () => {
+    // Query the commerce api
+    await fetchProductListing();
+
+    // Generate the facets from the response
+    const facetGenerator = buildProductListingFacetGenerator(engine);
+    const controllers = facetGenerator.state.facets;
+    const facetController = controllers[0];
+
+    // Select a facet
+    await waitForNextStateChange(engine, {
+      action: () => {
+        facetController.toggleSelect({
+          ...facetController.state.values[0],
+          state: 'selected',
+        });
+      },
+      expectedSubscriberCalls: 8,
+    });
+
+    // Have it reflected on the local state
+    expect(facetController.state.values[0].state).toEqual('selected');
+  });
+
+  it('searches', async () => {
+    engine.dispatch(updateQuery({query: 'yellow'}));
+    const search = buildSearch(engine);
+    await waitForNextStateChange(engine, {
+      action: () => {
+        search.executeFirstSearch();
+      },
+      expectedSubscriberCalls: 4,
+    });
+
+    expect(search.state.products).not.toEqual([]);
+  });
+
+  it('provides suggestions', async () => {
+    const box = buildSearchBox(engine);
+    await waitForNextStateChange(engine, {
+      action: () => {
+        box.updateText('l');
+      },
+      expectedSubscriberCalls: 3,
+    });
+
+    expect(box.state.suggestions).not.toEqual([]);
   });
 });

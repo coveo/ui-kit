@@ -2,7 +2,10 @@ import {SearchEngine} from '../../app/search-engine/search-engine';
 import {updateQuery} from '../../features/query/query-actions';
 import {queryReducer as query} from '../../features/query/query-slice';
 import {executeSearch} from '../../features/search/search-actions';
-import {logUndoTriggerQuery} from '../../features/triggers/trigger-analytics-actions';
+import {
+  logUndoTriggerQuery,
+  undoTriggerQuery,
+} from '../../features/triggers/trigger-analytics-actions';
 import {updateIgnoreQueryTrigger} from '../../features/triggers/triggers-actions';
 import {triggerReducer as triggers} from '../../features/triggers/triggers-slice';
 import {TriggerSection, QuerySection} from '../../state/state-sections';
@@ -78,11 +81,12 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
       dispatch(updateIgnoreQueryTrigger(modification()));
       dispatch(updateQuery({q: originalQuery()}));
       dispatch(
-        executeSearch(
-          logUndoTriggerQuery({
+        executeSearch({
+          legacy: logUndoTriggerQuery({
             undoneQuery: modification(),
-          })
-        )
+          }),
+          next: undoTriggerQuery(modification()),
+        })
       );
     },
   };

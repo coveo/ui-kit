@@ -63,6 +63,7 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  * @part value-link-selected - The selected facet value when display is 'link'.
  * @part value-box - The facet value when display is 'box'.
  * @part value-box-selected - The selected facet value when display is 'box'.
+ * @part value-exclude-button - The button to exclude a facet value, available when display is 'checkbox'.
  *
  * @part show-more - The show more results button.
  * @part show-less - The show less results button.
@@ -108,7 +109,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   @Prop({reflect: true}) public numberOfValues = 8;
   /**
    * Whether this facet should contain a search box.
-   * When "true", the search is only enabled when more facet values are available.
+   *
    */
   @Prop({reflect: true}) public withSearch = true;
   /**
@@ -142,6 +143,10 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    */
   @Prop({reflect: true}) public filterFacetCount = true;
+  /**
+   * Whether to allow excluding values from the facet.
+   */
+  @Prop({reflect: true}) public enableExclusion = false;
   /**
    * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
    * Note: A high injectionDepth may negatively impact the facet request performance.
@@ -243,6 +248,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
       field: this.field,
       headingLevel: this.headingLevel,
       displayValuesAs: this.displayValuesAs,
+      enableExclusion: this.enableExclusion,
       dependsOn: this.dependsOn,
       dependenciesManager: buildFacetConditionsManager(this.bindings.engine, {
         facetId: this.facetId!,

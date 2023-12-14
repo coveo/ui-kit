@@ -587,7 +587,9 @@ describe('facet-set slice', () => {
       const search = buildMockSearch();
       search.response.facets = facets;
 
-      return executeSearch.fulfilled(search, '', logSearchEvent({evt: 'foo'}));
+      return executeSearch.fulfilled(search, '', {
+        legacy: logSearchEvent({evt: 'foo'}),
+      });
     }
 
     testFulfilledSearchRequest(buildExecuteSearchAction);
@@ -598,11 +600,9 @@ describe('facet-set slice', () => {
       const search = buildMockSearch();
       search.response.facets = facets;
 
-      return fetchFacetValues.fulfilled(
-        search,
-        '',
-        logSearchEvent({evt: 'foo'})
-      );
+      return fetchFacetValues.fulfilled(search, '', {
+        legacy: logSearchEvent({evt: 'foo'}),
+      });
     }
 
     testFulfilledSearchRequest(buildFetchFacetValuesAction);
@@ -784,7 +784,7 @@ describe('facet-set slice', () => {
 
     it.each([
       {hash: 'f', facetValueState: 'selected' as FacetValueState},
-      {hash: 'f-excluded', facetValueState: 'excluded' as FacetValueState},
+      {hash: 'fExcluded', facetValueState: 'excluded' as FacetValueState},
     ])(
       `when a facet is not found in the #$hash payload,
     it deselects all values by setting the state of each facet value in #currentValues to idle`,

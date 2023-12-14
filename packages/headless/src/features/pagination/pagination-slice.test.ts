@@ -8,9 +8,13 @@ import {
   toggleSelectCategoryFacetValue,
 } from '../facets/category-facet-set/category-facet-set-actions';
 import {selectCategoryFacetSearchResult} from '../facets/facet-search-set/category/category-facet-search-actions';
-import {selectFacetSearchResult} from '../facets/facet-search-set/specific/specific-facet-search-actions';
+import {
+  excludeFacetSearchResult,
+  selectFacetSearchResult,
+} from '../facets/facet-search-set/specific/specific-facet-search-actions';
 import {
   deselectAllDateFacetValues,
+  toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
   updateDateFacetValues,
 } from '../facets/range-facets/date-facet-set/date-facet-actions';
@@ -18,6 +22,7 @@ import {
   toggleSelectNumericFacetValue,
   deselectAllNumericFacetValues,
   updateNumericFacetValues,
+  toggleExcludeNumericFacetValue,
 } from '../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {change} from '../history/history-actions';
 import {getHistoryInitialState} from '../history/history-state';
@@ -28,6 +33,7 @@ import {executeSearch} from '../search/search-actions';
 import {updateActiveTab} from '../tab-set/tab-set-actions';
 import {
   deselectAllFacetValues,
+  toggleExcludeFacetValue,
   toggleSelectFacetValue,
 } from './../facets/facet-set/facet-set-actions';
 import {
@@ -172,7 +178,9 @@ describe('pagination slice', () => {
   it('executeSearch.fulfilled updates totalCountFiltered to the response value', () => {
     const search = buildMockSearch();
     search.response.totalCountFiltered = 100;
-    const action = executeSearch.fulfilled(search, '', logSearchboxSubmit());
+    const action = executeSearch.fulfilled(search, '', {
+      legacy: logSearchboxSubmit(),
+    });
 
     const finalState = paginationReducer(state, action);
     expect(finalState.totalCountFiltered).toBe(
@@ -270,12 +278,28 @@ describe('pagination slice', () => {
       testResetPagination(selectFacetSearchResult);
     });
 
+    it('when a facet excluded search result is deselected, #firstResult is set to 0', () => {
+      testResetPagination(excludeFacetSearchResult);
+    });
+
     it('when a category facet search result is selected, #firstResult is set to 0', () => {
       testResetPagination(selectCategoryFacetSearchResult);
     });
 
     it('when all facet values are deselected, #firstResult is set to 0', () => {
       testResetPagination(deselectAllFacetValues);
+    });
+
+    it('when all date facet excluded values are deselected, #firstResult is set to 0', () => {
+      testResetPagination(toggleExcludeDateFacetValue);
+    });
+
+    it('when all numeric facet excluded values are deselected, #firstResult is set to 0', () => {
+      testResetPagination(toggleExcludeNumericFacetValue);
+    });
+
+    it('when all facet excluded values are deselected, #firstResult is set to 0', () => {
+      testResetPagination(toggleExcludeFacetValue);
     });
 
     it('when all category facet values are deselected, #firstResult is set to 0', () => {

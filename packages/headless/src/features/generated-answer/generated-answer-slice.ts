@@ -13,6 +13,8 @@ import {
   updateError,
   updateMessage,
   updateResponseFormat,
+  sendGeneratedAnswerFeedback,
+  registerFieldsToIncludeInCitations,
 } from './generated-answer-actions';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
 
@@ -62,10 +64,14 @@ export const generatedAnswerReducer = createReducer(
       .addCase(closeGeneratedAnswerFeedbackModal, (state) => {
         state.feedbackModalOpen = false;
       })
+      .addCase(sendGeneratedAnswerFeedback, (state) => {
+        state.feedbackSubmitted = true;
+      })
       .addCase(resetAnswer, (state) => {
         return {
           ...getGeneratedAnswerInitialState(),
           responseFormat: state.responseFormat,
+          fieldsToIncludeInCitations: state.fieldsToIncludeInCitations,
           isVisible: state.isVisible,
         };
       })
@@ -77,5 +83,10 @@ export const generatedAnswerReducer = createReducer(
       })
       .addCase(updateResponseFormat, (state, {payload}) => {
         state.responseFormat = payload;
+      })
+      .addCase(registerFieldsToIncludeInCitations, (state, action) => {
+        state.fieldsToIncludeInCitations = [
+          ...new Set(state.fieldsToIncludeInCitations.concat(action.payload)),
+        ];
       })
 );

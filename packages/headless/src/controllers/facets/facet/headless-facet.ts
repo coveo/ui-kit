@@ -12,9 +12,15 @@ import {
   logFacetShowLess,
   logFacetSelect,
   logFacetExclude,
+  facetSelect,
+  facetUpdateSort,
+  facetClearAll,
+  facetExclude,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice';
 import {
+  getLegacyAnalyticsActionForToggleFacetExclude,
+  getLegacyAnalyticsActionForToggleFacetSelect,
   getAnalyticsActionForToggleFacetExclude,
   getAnalyticsActionForToggleFacetSelect,
 } from '../../../features/facets/facet-set/facet-set-utils';
@@ -109,17 +115,25 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
       select: (value) => {
         dispatch(updateFacetOptions());
         dispatch(
-          executeSearch(
-            logFacetSelect({facetId: getFacetId(), facetValue: value.rawValue})
-          )
+          executeSearch({
+            legacy: logFacetSelect({
+              facetId: getFacetId(),
+              facetValue: value.rawValue,
+            }),
+            next: facetSelect(getFacetId(), value.rawValue),
+          })
         );
       },
       exclude: (value) => {
         dispatch(updateFacetOptions());
         dispatch(
-          executeSearch(
-            logFacetExclude({facetId: getFacetId(), facetValue: value.rawValue})
-          )
+          executeSearch({
+            legacy: logFacetExclude({
+              facetId: getFacetId(),
+              facetValue: value.rawValue,
+            }),
+            next: facetExclude(getFacetId(), value.rawValue),
+          })
         );
       },
       isForFieldSuggestions: false,
@@ -137,30 +151,49 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
     toggleSelect(selection) {
       coreController.toggleSelect(selection);
       dispatch(
-        executeSearch(
-          getAnalyticsActionForToggleFacetSelect(getFacetId(), selection)
-        )
+        executeSearch({
+          legacy: getLegacyAnalyticsActionForToggleFacetSelect(
+            getFacetId(),
+            selection
+          ),
+          next: getAnalyticsActionForToggleFacetSelect(getFacetId(), selection),
+        })
       );
     },
 
     toggleExclude(selection) {
       coreController.toggleExclude(selection);
       dispatch(
-        executeSearch(
-          getAnalyticsActionForToggleFacetExclude(getFacetId(), selection)
-        )
+        executeSearch({
+          legacy: getLegacyAnalyticsActionForToggleFacetExclude(
+            getFacetId(),
+            selection
+          ),
+          next: getAnalyticsActionForToggleFacetExclude(
+            getFacetId(),
+            selection
+          ),
+        })
       );
     },
 
     deselectAll() {
       coreController.deselectAll();
-      dispatch(executeSearch(logFacetClearAll(getFacetId())));
+      dispatch(
+        executeSearch({
+          legacy: logFacetClearAll(getFacetId()),
+          next: facetClearAll(getFacetId()),
+        })
+      );
     },
 
     sortBy(criterion: FacetSortCriterion) {
       coreController.sortBy(criterion);
       dispatch(
-        executeSearch(logFacetUpdateSort({facetId: getFacetId(), criterion}))
+        executeSearch({
+          legacy: logFacetUpdateSort({facetId: getFacetId(), criterion}),
+          next: facetUpdateSort(getFacetId(), criterion),
+        })
       );
     },
 
@@ -170,12 +203,12 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
 
     showMoreValues() {
       coreController.showMoreValues();
-      dispatch(fetchFacetValues(logFacetShowMore(getFacetId())));
+      dispatch(fetchFacetValues({legacy: logFacetShowMore(getFacetId())}));
     },
 
     showLessValues() {
       coreController.showLessValues();
-      dispatch(fetchFacetValues(logFacetShowLess(getFacetId())));
+      dispatch(fetchFacetValues({legacy: logFacetShowLess(getFacetId())}));
     },
 
     get state() {

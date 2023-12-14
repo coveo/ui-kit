@@ -132,7 +132,7 @@ export class AtomicColorFacet
   @Prop({reflect: true}) public numberOfValues = 8;
   /**
    * Whether this facet should contain a search box.
-   * When "true", the search is only enabled when more facet values are available.
+   *
    */
   @Prop({reflect: true}) public withSearch = true;
   /**
@@ -276,7 +276,7 @@ export class AtomicColorFacet
     initializePopover(this.host, {
       ...facetInfo,
       hasValues: () => !!this.facet.state.values.length,
-      numberOfSelectedValues: () => this.numberOfSelectedValues,
+      numberOfActiveValues: () => this.numberOfSelectedValues,
     });
     this.initializeDependenciesManager();
   }
@@ -353,7 +353,7 @@ export class AtomicColorFacet
           this.focusTargets.headerFocus.focusAfterSearch();
           this.facet.deselectAll();
         }}
-        numberOfSelectedValues={this.numberOfSelectedValues}
+        numberOfActiveValues={this.numberOfSelectedValues}
         isCollapsed={this.isCollapsed}
         headingLevel={this.headingLevel}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
@@ -400,6 +400,7 @@ export class AtomicColorFacet
       this.bindings.i18n
     );
     const isSelected = facetValue.state === 'selected';
+    const isExcluded = facetValue.state === 'excluded';
     const partValueWithDisplayValue = displayValue.replace(/[^a-z0-9]/gi, '');
     const partValueWithAPIValue = facetValue.value.replace(/[^a-z0-9]/gi, '');
     switch (this.displayValuesAs) {
@@ -449,6 +450,7 @@ export class AtomicColorFacet
             <FacetValueLabelHighlight
               displayValue={displayValue}
               isSelected={isSelected}
+              isExcluded={isExcluded}
               searchQuery={this.facetState.facetSearch.query}
             ></FacetValueLabelHighlight>
           </FacetValueBox>

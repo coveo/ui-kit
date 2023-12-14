@@ -1,6 +1,9 @@
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 // @ts-ignore
-import {getNavigateCalledWith} from 'lightning/navigation';
+import {
+  getNavigateCalledWith,
+  getGenerateUrlCalledWith,
+} from 'lightning/navigation';
 // @ts-ignore
 import {createElement} from 'lwc';
 import QuanticResultLink from '../quanticResultLink';
@@ -32,7 +35,7 @@ function flushPromises() {
 }
 
 // Helper function to mock headless for this suite of tests.
-function mockHeadless() {
+function mockHeadlessAndBueno() {
   jest.spyOn(mockHeadlessLoader, 'getHeadlessBundle').mockReturnValue({
     buildInteractiveResult: () => ({
       select: jest.fn(),
@@ -44,6 +47,20 @@ function mockHeadless() {
   jest.spyOn(mockHeadlessLoader, 'getHeadlessEnginePromise').mockReturnValue(
     new Promise((resolve) => {
       resolve();
+    })
+  );
+
+  jest.spyOn(mockHeadlessLoader, 'getBueno').mockReturnValue(
+    new Promise(() => {
+      // @ts-ignore
+      global.Bueno = {
+        isString: jest
+          .fn()
+          .mockImplementation(
+            (value) =>
+              Object.prototype.toString.call(value) === '[object String]'
+          ),
+      };
     })
   );
 }
@@ -58,7 +75,7 @@ describe('c-quantic-result-link', () => {
   }
 
   beforeEach(() => {
-    mockHeadless();
+    mockHeadlessAndBueno();
   });
 
   afterEach(() => {
@@ -66,6 +83,17 @@ describe('c-quantic-result-link', () => {
   });
 
   describe('when the result is of type Salesforce', () => {
+    it('should call the navigation mixin to get the Salesforce record URL', async () => {
+      createTestComponent({...mockSalesforceResult});
+      await flushPromises();
+
+      const {pageReference} = getGenerateUrlCalledWith();
+
+      expect(pageReference.attributes.recordId).toBe(
+        mockSalesforceResult.result.raw.sfid
+      );
+    });
+
     it('should open the result link in a Salesforce console subtab', async () => {
       const element = createTestComponent({...mockSalesforceResult});
       await flushPromises();

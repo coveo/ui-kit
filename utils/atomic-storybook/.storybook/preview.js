@@ -25,8 +25,8 @@ export const decorators = [
 
 export const parameters = {
   options: {
-    storySort: (firstStory, secondStory) => {
-      return firstStory[0].length - secondStory[0].length;
+    storySort: {
+      method: 'alphabetical',
     },
   },
   controls: {expanded: true, hideNoControlsWarning: true},

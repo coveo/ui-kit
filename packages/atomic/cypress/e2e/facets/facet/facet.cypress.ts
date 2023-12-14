@@ -1,3 +1,4 @@
+import {FacetValue} from '@coveo/headless';
 import {SearchInterface, TestFixture} from '../../../fixtures/test-fixture';
 import {AnalyticsTracker} from '../../../utils/analyticsUtils';
 import {
@@ -17,6 +18,7 @@ import {
   selectIdleLinkValueAt,
   typeFacetSearchQuery,
   pressClearSearchButton,
+  excludeIdleCheckboxValueAt,
 } from '../facet-common-actions';
 import * as CommonFacetAssertions from '../facet-common-assertions';
 import {
@@ -56,6 +58,7 @@ describe('Facet v1 Test Suites', () => {
       CommonFacetAssertions.assertDisplayShowMoreButton(FacetSelectors, true);
       CommonFacetAssertions.assertDisplayShowLessButton(FacetSelectors, false);
       CommonFacetAssertions.assertDisplaySearchInput(FacetSelectors, true);
+      CommonFacetAssertions.assertDisplayTwoStateCheckbox(FacetSelectors);
     });
 
     describe('when selecting a value', () => {
@@ -338,6 +341,17 @@ describe('Facet v1 Test Suites', () => {
             true
           );
         });
+      });
+
+      describe('with #enableExclusion to true', () => {
+        beforeEach(() => {
+          new TestFixture()
+            .with(addFacet({field, label, 'enable-exclusion': 'true'}))
+            .init();
+        });
+
+        CommonFacetAssertions.assertDisplayTriStateCheckbox(FacetSelectors);
+        CommonFacetAssertions.assertDisplayExcludeButton(FacetSelectors);
       });
     });
   });
@@ -905,6 +919,43 @@ describe('Facet v1 Test Suites', () => {
     CommonFacetAssertions.assertDisplaySearchInput(FacetSelectors, false);
   });
 
+  describe('with #withSearch to true and expanded (moreValuesAvailable=false)', () => {
+    const setup = (numValues: number) =>
+      new TestFixture()
+        .with(addFacet({field, label, 'with-search': 'true'}))
+        .withCustomResponse((response) => {
+          response.facets[0].values = [...Array(numValues).keys()].map((i) => {
+            return {value: i.toString(), numberOfResults: 1};
+          }) as FacetValue[];
+          response.facets[0].moreValuesAvailable = false;
+        })
+        .init();
+
+    it('with less than 8 values, it should not display the search input', () => {
+      setup(3);
+      CommonFacetAssertions.assertDisplaySearchInputWithoutIt(
+        FacetSelectors,
+        false
+      );
+    });
+
+    it('with exactly 8 values, it should not display the search input', () => {
+      setup(8);
+      CommonFacetAssertions.assertDisplaySearchInputWithoutIt(
+        FacetSelectors,
+        false
+      );
+    });
+
+    it('with more than 8 values, it should display the search input', () => {
+      setup(10);
+      CommonFacetAssertions.assertDisplaySearchInputWithoutIt(
+        FacetSelectors,
+        true
+      );
+    });
+  });
+
   describe('when no search has yet been executed', () => {
     beforeEach(() => {
       new TestFixture()
@@ -961,12 +1012,23 @@ describe('Facet v1 Test Suites', () => {
   });
 
   describe('with breadbox', () => {
-    function setupBreadboxWithFacet() {
+    function breadboxFactory(enableExclusion: boolean) {
       new TestFixture()
         .with(addBreadbox())
-        .with(addFacet({field, label}))
+        .with(
+          addFacet({field, label, 'enable-exclusion': String(enableExclusion)})
+        )
         .init();
     }
+
+    function setupBreadboxWithFacet() {
+      breadboxFactory(false);
+    }
+
+    function setupBreadboxWithFacetWithExclusionEnabled() {
+      breadboxFactory(true);
+    }
+
     describe('verify rendering', () => {
       beforeEach(setupBreadboxWithFacet);
       BreadboxAssertions.assertDisplayBreadcrumb(false);
@@ -984,6 +1046,7 @@ describe('Facet v1 Test Suites', () => {
           setupSelectedFacet();
           cy.wait(TestFixture.interceptAliases.Search);
         });
+
         CommonAssertions.assertAccessibility(breadboxComponent);
         BreadboxAssertions.assertDisplayBreadcrumb(true);
         BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
@@ -1042,6 +1105,31 @@ describe('Facet v1 Test Suites', () => {
         BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
         BreadboxAssertions.assertBreadcrumbLabel(breadboxLabel);
         BreadboxAssertions.assertSelectedCheckboxFacetsInBreadcrumb(
+          FacetSelectors
+        );
+        BreadboxAssertions.assertDisplayBreadcrumbShowMore(false);
+        BreadboxAssertions.assertBreadcrumbDisplayLength(index.length);
+      });
+    });
+
+    describe('when excluding 3 values', () => {
+      const index = [0, 1, 2];
+      function setupSelectedMultipleFacets() {
+        setupBreadboxWithFacetWithExclusionEnabled();
+        index.forEach((position, i) => {
+          excludeIdleCheckboxValueAt(FacetSelectors, position);
+          cy.wait(TestFixture.interceptAliases.Search);
+          BreadboxSelectors.breadcrumbButton().should('have.length', i + 1);
+        });
+      }
+
+      describe('verify rendering', () => {
+        beforeEach(setupSelectedMultipleFacets);
+        CommonAssertions.assertAccessibility(breadboxComponent);
+        BreadboxAssertions.assertDisplayBreadcrumb(true);
+        BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
+        BreadboxAssertions.assertBreadcrumbLabel(breadboxLabel);
+        BreadboxAssertions.assertExcludedCheckboxFacetsInBreadcrumb(
           FacetSelectors
         );
         BreadboxAssertions.assertDisplayBreadcrumbShowMore(false);

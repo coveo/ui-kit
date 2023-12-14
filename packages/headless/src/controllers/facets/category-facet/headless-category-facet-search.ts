@@ -3,7 +3,10 @@ import {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-argumen
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {registerCategoryFacetSearch} from '../../../features/facets/facet-search-set/category/category-facet-search-actions';
 import {defaultFacetSearchOptions} from '../../../features/facets/facet-search-set/facet-search-reducer-helpers';
-import {logFacetSelect} from '../../../features/facets/facet-set/facet-set-analytics-actions';
+import {
+  facetSelect,
+  logFacetSelect,
+} from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {executeSearch} from '../../../features/search/search-actions';
 import {
   CategoryFacetSearchSection,
@@ -51,7 +54,10 @@ export function buildCategoryFacetSearch(
       coreFacetSearch.select(value);
       dispatch(updateFacetOptions());
       dispatch(
-        executeSearch(logFacetSelect({facetId, facetValue: value.rawValue}))
+        executeSearch({
+          legacy: logFacetSelect({facetId, facetValue: value.rawValue}),
+          next: facetSelect(facetId, value.rawValue),
+        })
       );
     },
 

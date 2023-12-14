@@ -1,18 +1,21 @@
 import {Logger} from 'pino';
 import {CommerceThunkExtraArguments} from '../../app/commerce-thunk-extra-arguments';
 import {CommerceAppState} from '../../state/commerce-app-state';
-import {PlatformClient} from '../platform-client';
+import {PlatformClient, PlatformClientCallOptions} from '../platform-client';
 import {PreprocessRequest} from '../preprocess-request';
 import {buildAPIResponseFromErrorOrThrow} from '../search/search-api-error-response';
 import {
   CommerceAPIErrorResponse,
   CommerceAPIErrorStatusResponse,
 } from './commerce-api-error-response';
+import {buildRequest, CommerceAPIRequest} from './common/request';
+import {CommerceSuccessResponse} from './common/response';
 import {
-  buildProductListingV2Request,
-  ProductListingV2Request,
-} from './product-listings/v2/product-listing-v2-request';
-import {ProductListingV2SuccessResponse} from './product-listings/v2/product-listing-v2-response';
+  buildQuerySuggestRequest,
+  QuerySuggestRequest,
+} from './search/query-suggest/query-suggest-request';
+import {QuerySuggestSuccessResponse} from './search/query-suggest/query-suggest-response';
+import {CommerceSearchRequest} from './search/request';
 
 export interface AsyncThunkCommerceOptions<
   T extends Partial<CommerceAppState>,
@@ -39,12 +42,46 @@ export class CommerceAPIClient {
   constructor(private options: CommerceAPIClientOptions) {}
 
   async getProductListing(
-    req: ProductListingV2Request
-  ): Promise<CommerceAPIResponse<ProductListingV2SuccessResponse>> {
-    const response = await PlatformClient.call({
-      ...buildProductListingV2Request(req),
+    req: CommerceAPIRequest
+  ): Promise<CommerceAPIResponse<CommerceSuccessResponse>> {
+    return this.query({
+      ...buildRequest(req, 'listing'),
       ...this.options,
     });
+  }
+
+  async search(
+    req: CommerceSearchRequest
+  ): Promise<CommerceAPIResponse<CommerceSuccessResponse>> {
+    const requestOptions = buildRequest(req, 'search');
+    return this.query({
+      ...requestOptions,
+      requestParams: {
+        ...requestOptions.requestParams,
+        query: req?.query,
+      },
+      ...this.options,
+    });
+  }
+
+  async querySuggest(
+    req: QuerySuggestRequest
+  ): Promise<CommerceAPIResponse<QuerySuggestSuccessResponse>> {
+    const requestOptions = buildQuerySuggestRequest(req);
+    return this.query<QuerySuggestSuccessResponse>({
+      ...requestOptions,
+      requestParams: {
+        ...requestOptions.requestParams,
+        query: req?.query,
+      },
+      ...this.options,
+    });
+  }
+
+  private async query<T = CommerceSuccessResponse>(
+    options: PlatformClientCallOptions
+  ) {
+    const response = await PlatformClient.call(options);
 
     if (response instanceof Error) {
       return buildAPIResponseFromErrorOrThrow(response);
@@ -52,7 +89,7 @@ export class CommerceAPIClient {
 
     const body = await response.json();
     return response.ok
-      ? {success: body as ProductListingV2SuccessResponse}
+      ? {success: body as T}
       : {error: body as CommerceAPIErrorStatusResponse};
   }
 }

@@ -8,6 +8,9 @@ import {
   logNavigateBackward,
   logNavigateForward,
   logNoResultsBack,
+  historyBackward,
+  historyForward,
+  noResultsBack,
 } from '../../features/history/history-analytics-actions';
 import {history} from '../../features/history/history-slice';
 import {HistoryState} from '../../features/history/history-state';
@@ -79,7 +82,12 @@ export function buildHistoryManager(engine: SearchEngine): HistoryManager {
         return;
       }
       await dispatch(back());
-      dispatch(executeSearch(logNavigateBackward()));
+      dispatch(
+        executeSearch({
+          legacy: logNavigateBackward(),
+          next: historyBackward(),
+        })
+      );
     },
 
     async forward() {
@@ -87,7 +95,12 @@ export function buildHistoryManager(engine: SearchEngine): HistoryManager {
         return;
       }
       await dispatch(forward());
-      dispatch(executeSearch(logNavigateForward()));
+      dispatch(
+        executeSearch({
+          legacy: logNavigateForward(),
+          next: historyForward(),
+        })
+      );
     },
 
     async backOnNoResults() {
@@ -95,7 +108,12 @@ export function buildHistoryManager(engine: SearchEngine): HistoryManager {
         return;
       }
       await dispatch(back());
-      dispatch(executeSearch(logNoResultsBack()));
+      dispatch(
+        executeSearch({
+          legacy: logNoResultsBack(),
+          next: noResultsBack(),
+        })
+      );
     },
   };
 }

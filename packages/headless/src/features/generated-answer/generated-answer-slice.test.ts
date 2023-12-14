@@ -13,10 +13,15 @@ import {
   updateResponseFormat,
   openGeneratedAnswerFeedbackModal,
   closeGeneratedAnswerFeedbackModal,
+  sendGeneratedAnswerFeedback,
+  registerFieldsToIncludeInCitations,
 } from './generated-answer-actions';
 import {generatedAnswerReducer} from './generated-answer-slice';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
-import {GeneratedResponseFormat} from './generated-response-format';
+import {
+  GeneratedAnswerStyle,
+  GeneratedResponseFormat,
+} from './generated-response-format';
 
 const baseState = getGeneratedAnswerInitialState();
 
@@ -183,8 +188,16 @@ describe('generated answer slice', () => {
 
   describe('#resetAnswer', () => {
     it('should reset the answer', () => {
+      const persistentGeneratedAnswerState = {
+        isVisible: false,
+        responseFormat: {
+          answerStyle: 'step' as GeneratedAnswerStyle,
+        },
+        fieldsToIncludeInCitations: ['foo'],
+      };
       const state = {
         ...baseState,
+        ...persistentGeneratedAnswerState,
         isStreaming: true,
         isLoading: true,
         answer: 'Tomato Tomato',
@@ -197,7 +210,10 @@ describe('generated answer slice', () => {
 
       const finalState = generatedAnswerReducer(state, resetAnswer());
 
-      expect(finalState).toEqual(getGeneratedAnswerInitialState());
+      expect(finalState).toEqual({
+        ...getGeneratedAnswerInitialState(),
+        ...persistentGeneratedAnswerState,
+      });
     });
 
     it('should not reset the response format', () => {
@@ -262,6 +278,18 @@ describe('generated answer slice', () => {
     });
   });
 
+  it('#sendGeneratedAnswerFeedback should set feedbackSubmitted to true in the state', () => {
+    const finalState = generatedAnswerReducer(
+      baseState,
+      sendGeneratedAnswerFeedback()
+    );
+
+    expect(finalState).toEqual({
+      ...getGeneratedAnswerInitialState(),
+      feedbackSubmitted: true,
+    });
+  });
+
   describe('#setIsLoading', () => {
     it('should set isLoading to true when given true', () => {
       const finalState = generatedAnswerReducer(
@@ -318,6 +346,23 @@ describe('generated answer slice', () => {
       );
 
       expect(finalState.responseFormat).toBe(newResponseFormat);
+    });
+  });
+
+  describe('#registerFieldsToIncludeInCitations', () => {
+    it('should register the given fields to include in citations', () => {
+      const exampleFieldsToIncludeInCitations = ['foo', 'bar'];
+      const finalState = generatedAnswerReducer(
+        {
+          ...getGeneratedAnswerInitialState(),
+          fieldsToIncludeInCitations: [],
+        },
+        registerFieldsToIncludeInCitations(exampleFieldsToIncludeInCitations)
+      );
+
+      expect(finalState.fieldsToIncludeInCitations).toEqual(
+        exampleFieldsToIncludeInCitations
+      );
     });
   });
 

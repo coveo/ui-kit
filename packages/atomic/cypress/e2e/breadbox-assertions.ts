@@ -1,3 +1,4 @@
+import {TestFixture} from '../fixtures/test-fixture';
 import {deselectBreadcrumbAtIndex} from './breadbox-actions';
 import {BreadboxSelectors} from './breadbox-selectors';
 import {should} from './common-assertions';
@@ -14,6 +15,14 @@ import {timeframeFacetLabel} from './facets/timeframe-facet/timeframe-facet-acti
 export function assertDisplayBreadcrumb(display: boolean) {
   it(`${should(display)} display the breadcrumb`, () => {
     BreadboxSelectors.wrapper().should(display ? 'be.visible' : 'not.exist');
+  });
+}
+
+export function assertAriaLabel(includeOrExclude: 'inclusion' | 'exclusion') {
+  it(`should have aria-label "${includeOrExclude} filter"`, () => {
+    BreadboxSelectors.breadcrumbButton()
+      .should('have.attr', 'aria-label')
+      .and('include', `Remove ${includeOrExclude} filter on`);
   });
 }
 
@@ -61,15 +70,17 @@ export function assertRemoveBreadcrumbShowMoreInDOM() {
 
 export function assertDisplayBreadcrumbClearIcon() {
   it('should display a "Clear" icon next to each facetValue', () => {
-    BreadboxSelectors.breadcrumbClearFacetValueButton()
-      .its('length')
-      .then((count) => {
-        for (let i = 0; i < count; i++) {
-          BreadboxSelectors.breadcrumbClearFacetValueButtonAtIndex(i).should(
-            'be.visible'
-          );
-        }
-      });
+    cy.wait(TestFixture.interceptAliases.Build).then(() =>
+      BreadboxSelectors.breadcrumbClearFacetValueButton()
+        .its('length')
+        .then((count) => {
+          for (let i = 0; i < count; i++) {
+            BreadboxSelectors.breadcrumbClearFacetValueButtonAtIndex(i).should(
+              'be.visible'
+            );
+          }
+        })
+    );
   });
 }
 
@@ -106,6 +117,19 @@ export function assertSelectedCheckboxFacetsInBreadcrumb(
       BaseFacetSelector,
       facetLabelValue
     );
+  });
+}
+
+export function assertExcludedCheckboxFacetsInBreadcrumb(
+  BaseFacetSelector: FacetWithCheckboxSelector,
+  facetLabelValue = label
+) {
+  it('should display the excluded checkbox facets in the breadcrumbs', () => {
+    BaseFacetSelector.excludedCheckboxValue()
+      .parent()
+      .find('[part="value-label"]')
+      .as('facetAllValuesLabel');
+    assertBreadcrumbValueText('@facetAllValuesLabel', facetLabelValue);
   });
 }
 

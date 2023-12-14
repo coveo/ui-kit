@@ -1,30 +1,62 @@
+import {ItemClick} from '@coveo/relay-event-types';
 import {RecommendationAnalyticsProvider} from '../../api/analytics/recommendations-analytics';
+import {SearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {Result} from '../../api/search/search/result';
 import {
   ClickAction,
   documentIdentifier,
   makeAnalyticsAction,
+  partialDocumentInformation,
   partialRecommendationInformation,
-  SearchAction,
+  LegacySearchAction,
   validateResultPayload,
 } from '../analytics/analytics-utils';
+import {SearchPageEvents} from '../analytics/search-action-cause';
+import {SearchAction} from '../search/search-actions';
 
-export const logRecommendationUpdate = (): SearchAction =>
+//TODO: KIT-2859
+export const logRecommendationUpdate = (): LegacySearchAction =>
   makeAnalyticsAction(
     'analytics/recommendation/update',
     (client) => client.makeRecommendationInterfaceLoad(),
     (getState) => new RecommendationAnalyticsProvider(getState)
   );
 
+export const recommendationInterfaceLoad = (): SearchAction => {
+  return {
+    actionCause: SearchPageEvents.recommendationInterfaceLoad,
+    getEventExtraPayload: (state) =>
+      new SearchAnalyticsProvider(() => state).getBaseMetadata(),
+  };
+};
+
 export const logRecommendationOpen = (result: Result): ClickAction =>
-  makeAnalyticsAction(
-    'analytics/recommendation/open',
-    (client, state) => {
+  makeAnalyticsAction({
+    prefix: 'analytics/recommendation/open',
+    __legacy__getBuilder: (client, state) => {
       validateResultPayload(result);
       return client.makeRecommendationOpen(
         partialRecommendationInformation(result, state),
         documentIdentifier(result)
       );
     },
-    (getState) => new RecommendationAnalyticsProvider(getState)
-  );
+    __legacy__provider: (getState) =>
+      new RecommendationAnalyticsProvider(getState),
+
+    analyticsType: 'itemClick',
+    analyticsPayloadBuilder: (state): ItemClick => {
+      const docInfo = partialDocumentInformation(result, state);
+      const docId = documentIdentifier(result);
+      return {
+        searchUid: state.search?.response.searchUid ?? '',
+        position: docInfo.documentPosition,
+        itemMetadata: {
+          uniqueFieldName: docId.contentIDKey,
+          uniqueFieldValue: docId.contentIDValue,
+          title: docInfo.documentTitle,
+          author: docInfo.documentAuthor,
+          url: docInfo.documentUrl,
+        },
+      };
+    },
+  });

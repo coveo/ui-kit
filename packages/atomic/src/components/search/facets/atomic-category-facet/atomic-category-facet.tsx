@@ -135,7 +135,7 @@ export class AtomicCategoryFacet
   @Prop({reflect: true}) public numberOfValues = 8;
   /**
    * Whether this facet should contain a search box.
-   * When "true", the search is only enabled when more facet values are available.
+   *
    */
   @Prop({reflect: true}) public withSearch = false;
   /**
@@ -257,7 +257,7 @@ export class AtomicCategoryFacet
     initializePopover(this.host, {
       ...facetInfo,
       hasValues: () => !!this.facet.state.values.length,
-      numberOfSelectedValues: () => (this.facetState.hasActiveValues ? 1 : 0),
+      numberOfActiveValues: () => (this.facetState.hasActiveValues ? 1 : 0),
     });
     this.initializeDependenciesManager();
   }
@@ -333,7 +333,7 @@ export class AtomicCategoryFacet
       <FacetHeader
         i18n={this.bindings.i18n}
         label={this.label}
-        numberOfSelectedValues={
+        numberOfActiveValues={
           this.facetState.hasActiveValues && this.isCollapsed ? 1 : 0
         }
         isCollapsed={this.isCollapsed}

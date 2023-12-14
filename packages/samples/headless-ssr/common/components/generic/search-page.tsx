@@ -1,7 +1,7 @@
 'use client';
 
 import {useEffect, useState} from 'react';
-import {useSyncSearchParameters} from '../../hooks/generic/search-parameters';
+import {useSyncUrlManager} from '../../hooks/generic/url-manager';
 import {
   SearchStaticState,
   SearchHydratedState,
@@ -22,11 +22,15 @@ export default function SearchPage({
   >(undefined);
 
   useEffect(() => {
+    const {urlManager, context} = staticState.controllers;
     hydrateStaticState({
       searchAction: staticState.searchAction,
       controllers: {
-        searchParameters: {
-          initialState: staticState.controllers.searchParameters.state,
+        context: {
+          initialState: context.state,
+        },
+        urlManager: {
+          initialState: urlManager.state,
         },
       },
     }).then(({engine, controllers}) => {
@@ -34,9 +38,12 @@ export default function SearchPage({
     });
   }, [staticState]);
 
-  useSyncSearchParameters({
-    staticState: staticState.controllers.searchParameters.state,
-    controller: hydratedState?.controllers.searchParameters,
+  /**
+   * This hook is used to synchronize the URL with the state of the search interface.
+   */
+  useSyncUrlManager({
+    staticState: staticState.controllers.urlManager.state,
+    controller: hydratedState?.controllers.urlManager,
   });
 
   return (

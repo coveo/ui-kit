@@ -5,6 +5,7 @@ interface FacetValueLabelHighlightProps {
   displayValue: string;
   searchQuery?: string;
   isSelected: boolean;
+  isExcluded?: boolean;
 }
 
 export const FacetValueLabelHighlight: FunctionalComponent<
@@ -15,8 +16,8 @@ export const FacetValueLabelHighlight: FunctionalComponent<
     <span
       title={props.displayValue}
       part="value-label"
-      class={`value-label truncate group-hover:text-primary group-focus:text-primary ${
-        props.isSelected ? 'font-bold' : ''
+      class={`value-label truncate peer-hover:text-error ${
+        props.isSelected || !!props.isExcluded ? 'font-bold' : ''
       }`}
       innerHTML={highlightSearchResult(props.displayValue, props.searchQuery)}
     ></span>

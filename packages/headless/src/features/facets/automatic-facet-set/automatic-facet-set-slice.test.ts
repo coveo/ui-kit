@@ -42,7 +42,9 @@ describe('automatic-facet-set slice', () => {
         facets,
       };
 
-      return executeSearch.fulfilled(search, '', logSearchEvent({evt: 'foo'}));
+      return executeSearch.fulfilled(search, '', {
+        legacy: logSearchEvent({evt: 'foo'}),
+      });
     }
 
     it('registers facets', () => {

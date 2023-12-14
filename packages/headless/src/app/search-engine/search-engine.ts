@@ -9,11 +9,14 @@ import {
   NoopPostprocessSearchResponseMiddleware,
 } from '../../api/search/search-api-client-middleware';
 import {
+  interfaceLoad,
   logInterfaceLoad,
   logOmniboxFromLink,
   logSearchFromLink,
+  omniboxFromLink,
+  searchFromLink,
 } from '../../features/analytics/analytics-actions';
-import {SearchAction} from '../../features/analytics/analytics-utils';
+import {LegacySearchAction} from '../../features/analytics/analytics-utils';
 import {
   updateSearchConfiguration,
   UpdateSearchConfigurationActionCreatorPayload,
@@ -76,7 +79,7 @@ export interface SearchEngine<State extends object = {}>
    *
    * @param analyticsEvent - The analytics event to log in association with the first search. If unspecified, `logInterfaceLoad` will be used.
    */
-  executeFirstSearch(analyticsEvent?: SearchAction): void;
+  executeFirstSearch(analyticsEvent?: LegacySearchAction): void;
 
   /**
    * Executes the first search, and logs the analytics event that triggered a redirection from a standalone search box.
@@ -140,13 +143,14 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
     },
 
     executeFirstSearch(analyticsEvent = logInterfaceLoad()) {
-      const firstSearchExecuted = firstSearchExecutedSelector(engine.state);
-
-      if (firstSearchExecuted) {
+      if (firstSearchExecutedSelector(engine.state)) {
         return;
       }
 
-      const action = executeSearch(analyticsEvent);
+      const action = executeSearch({
+        legacy: analyticsEvent,
+        next: interfaceLoad(),
+      });
       engine.dispatch(action);
     },
 
@@ -154,12 +158,20 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
       analytics: StandaloneSearchBoxAnalytics
     ) {
       const {cause, metadata} = analytics;
-      const event =
-        metadata && cause === 'omniboxFromLink'
-          ? logOmniboxFromLink(metadata)
-          : logSearchFromLink();
 
-      this.executeFirstSearch(event);
+      if (firstSearchExecutedSelector(engine.state)) {
+        return;
+      }
+
+      const isOmniboxFromLink = metadata && cause === 'omniboxFromLink';
+
+      const action = executeSearch({
+        legacy: isOmniboxFromLink
+          ? logOmniboxFromLink(metadata)
+          : logSearchFromLink(),
+        next: isOmniboxFromLink ? omniboxFromLink(metadata) : searchFromLink(),
+      });
+      engine.dispatch(action);
     },
   };
 }

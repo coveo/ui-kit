@@ -3,7 +3,7 @@ import {CoreEngine} from '../../..';
 import {configuration} from '../../../app/common-reducers';
 import {
   InsightAction,
-  SearchAction,
+  LegacySearchAction,
 } from '../../../features/analytics/analytics-utils';
 import {
   registerQuerySetQuery,
@@ -16,12 +16,19 @@ import {
   registerQuerySuggest,
   selectQuerySuggestion,
 } from '../../../features/query-suggest/query-suggest-actions';
-import {logQuerySuggestionClick} from '../../../features/query-suggest/query-suggest-analytics-actions';
+import {
+  logQuerySuggestionClick,
+  omniboxAnalytics,
+} from '../../../features/query-suggest/query-suggest-analytics-actions';
 import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice';
 import {QuerySuggestState} from '../../../features/query-suggest/query-suggest-state';
 import {logSearchboxSubmit} from '../../../features/query/query-analytics-actions';
 import {queryReducer as query} from '../../../features/query/query-slice';
-import {prepareForSearchWithQuery} from '../../../features/search/search-actions';
+import {
+  SearchAction,
+  TransitiveSearchAction,
+  prepareForSearchWithQuery,
+} from '../../../features/search/search-actions';
 import {searchReducer as search} from '../../../features/search/search-slice';
 import {
   ConfigurationSection,
@@ -50,7 +57,34 @@ import {
 
 export type {SearchBoxOptions, SuggestionHighlightingOptions, Delimiters};
 
-export interface SearchBoxProps {
+export type SearchBoxProps = SearchBoxPropsBase &
+  (NextSearchBoxProps | LegacySearchBoxProps);
+
+interface NextSearchBoxProps {
+  /**
+   * The action creator for the `executeSearch` thunk action.
+   */
+  executeSearchActionCreator: (
+    arg: TransitiveSearchAction
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ) => AsyncThunkAction<any, TransitiveSearchAction, any>;
+
+  isNextAnalyticsReady: true;
+}
+
+interface LegacySearchBoxProps {
+  /**
+   * The action creator for the `executeSearch` thunk action.
+   */
+  executeSearchActionCreator: (
+    arg: LegacySearchAction
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ) => AsyncThunkAction<any, LegacySearchAction, any>;
+
+  isNextAnalyticsReady: false;
+}
+
+interface SearchBoxPropsBase {
   /**
    * The `SearchBox` controller options.
    */
@@ -59,10 +93,15 @@ export interface SearchBoxProps {
   /**
    * The action creator for the `executeSearch` thunk action.
    */
-  executeSearchActionCreator: (
-    arg: SearchAction
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ) => AsyncThunkAction<any, SearchAction, any>;
+  executeSearchActionCreator:
+    | ((
+        arg: TransitiveSearchAction
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ) => AsyncThunkAction<any, TransitiveSearchAction, any>)
+    | ((
+        arg: LegacySearchAction
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ) => AsyncThunkAction<any, LegacySearchAction, any>);
 
   /**
    * The action creator for the `fetchQuerySuggestions` thunk action.
@@ -71,6 +110,8 @@ export interface SearchBoxProps {
     arg: FetchQuerySuggestionsActionCreatorPayload
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ) => AsyncThunkAction<any, FetchQuerySuggestionsActionCreatorPayload, any>;
+  //Indicate if the executeSearchActionCreator can use the new analytics logic.
+  isNextAnalyticsReady: boolean;
 }
 
 /**
@@ -111,6 +152,7 @@ export interface Suggestion {
 }
 
 /**
+ * @internal
  * The `SearchBox` headless controller offers a high-level interface for designing a common search box UI controller
  * with [highlighting for query suggestions](https://docs.coveo.com/en/headless/latest/usage/highlighting/).
  */
@@ -142,9 +184,13 @@ export interface SearchBox extends Controller {
   /**
    * Deselects all facets and triggers a search query.
    *
-   * @param analytics -  The analytics action to log after submitting a query.
+   * @param legacyAnalytics -  The legacy analytics action to log after submitting a query.
+   * @param nextAnalytics - The next analytics action to log after submitting a query.
    */
-  submit(analytics?: SearchAction): void;
+  submit(
+    legacyAnalytics?: LegacySearchAction,
+    nextAnalytics?: SearchAction
+  ): void;
 
   /**
    * The state of the `SearchBox` controller.
@@ -153,6 +199,7 @@ export interface SearchBox extends Controller {
 }
 
 /**
+ * @internal
  * Creates a `SearchBox` controller instance.
  *
  * @param engine - The headless engine instance.
@@ -191,7 +238,7 @@ export function buildCoreSearchBox(
 
   const getValue = () => engine.state.querySet[options.id];
 
-  const performSearch = async (analytics: SearchAction) => {
+  const performSearch = async (analytics: TransitiveSearchAction) => {
     const {enableQuerySyntax, clearFilters} = options;
 
     dispatch(
@@ -201,8 +248,11 @@ export function buildCoreSearchBox(
         clearFilters,
       })
     );
-
-    await dispatch(props.executeSearchActionCreator(analytics));
+    if (props.isNextAnalyticsReady) {
+      dispatch(props.executeSearchActionCreator(analytics));
+    } else {
+      dispatch(props.executeSearchActionCreator(analytics.legacy));
+    }
   };
 
   return {
@@ -226,15 +276,21 @@ export function buildCoreSearchBox(
 
     selectSuggestion(value: string) {
       dispatch(selectQuerySuggestion({id, expression: value}));
-      performSearch(logQuerySuggestionClick({id, suggestion: value})).then(
-        () => {
-          dispatch(clearQuerySuggest({id}));
-        }
-      );
+      performSearch({
+        legacy: logQuerySuggestionClick({id, suggestion: value}),
+        next: omniboxAnalytics(id, value),
+      }).then(() => {
+        dispatch(clearQuerySuggest({id}));
+      });
     },
 
-    submit(analytics: SearchAction | InsightAction = logSearchboxSubmit()) {
-      performSearch(analytics);
+    submit(
+      legacyAnalytics:
+        | LegacySearchAction
+        | InsightAction = logSearchboxSubmit(),
+      nextAnalytics: SearchAction
+    ) {
+      performSearch({legacy: legacyAnalytics, next: nextAnalytics});
       dispatch(clearQuerySuggest({id}));
     },
 
@@ -259,7 +315,7 @@ export function buildCoreSearchBox(
   };
 }
 
-function getSuggestions(
+export function getSuggestions(
   state: QuerySuggestState | undefined,
   highlightOptions: SuggestionHighlightingOptions
 ) {

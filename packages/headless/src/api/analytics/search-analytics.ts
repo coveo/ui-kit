@@ -10,8 +10,15 @@ import {
   buildFacetStateMetadata,
   getStateNeededForFacetMetadata,
 } from '../../features/facets/facet-set/facet-set-analytics-actions-utils';
+import {FacetSortCriterion} from '../../features/facets/facet-set/interfaces/request';
+import {DateFacetValue} from '../../features/facets/range-facets/date-facet-set/interfaces/response';
+import {RangeFacetSortCriterion} from '../../features/facets/range-facets/generic/interfaces/request';
+import {NumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/interfaces/response';
+import {OmniboxSuggestionMetadata} from '../../features/query-suggest/query-suggest-analytics-actions';
 import {getQueryInitialState} from '../../features/query/query-state';
 import {getSearchInitialState} from '../../features/search/search-state';
+import {getSortCriteriaInitialState} from '../../features/sort-criteria/sort-criteria-state';
+import {StaticFilterValueMetadata} from '../../features/static-filter-set/static-filter-set-actions';
 import {SearchAppState} from '../../state/search-app-state';
 import {ConfigurationSection} from '../../state/state-sections';
 import {PreprocessRequest} from '../preprocess-request';
@@ -93,6 +100,154 @@ export class SearchAnalyticsProvider
     }
 
     return baseObject;
+  }
+
+  public getFacetMetadata(facetId: string, facetValue: string) {
+    const facetRequest = this.getFacetRequest(facetId);
+    const facetField = facetRequest?.field ?? '';
+    return {
+      ...this.getBaseMetadata(),
+      facetId,
+      facetField,
+      facetValue,
+      facetTitle: `${facetField}_${facetId}`,
+    };
+  }
+
+  public getFacetClearAllMetadata(facetId: string) {
+    const facetRequest = this.getFacetRequest(facetId);
+    const facetField = facetRequest?.field ?? '';
+    return {
+      ...this.getBaseMetadata(),
+      facetId,
+      facetField,
+      facetTitle: `${facetField}_${facetId}`,
+    };
+  }
+
+  public getFacetUpdateSortMetadata(
+    facetId: string,
+    criteria: FacetSortCriterion | RangeFacetSortCriterion
+  ) {
+    const facetRequest = this.getFacetRequest(facetId);
+    const facetField = facetRequest?.field ?? '';
+    return {
+      ...this.getBaseMetadata(),
+      facetId,
+      facetField,
+      criteria,
+      facetTitle: `${facetField}_${facetId}`,
+    };
+  }
+
+  public getRangeBreadcrumbFacetMetadata(
+    facetId: string,
+    facetValue: DateFacetValue | NumericFacetValue
+  ) {
+    const facetRequest = this.getFacetRequest(facetId);
+    const facetField = facetRequest?.field ?? '';
+    return {
+      ...this.getBaseMetadata(),
+      facetId,
+      facetField,
+      facetRangeEnd: facetValue.end,
+      facetRangeEndInclusive: facetValue.endInclusive,
+      facetRangeStart: facetValue.start,
+      facetTitle: `${facetField}_${facetId}`,
+    };
+  }
+
+  private getFacetRequest = (id: string) => {
+    return (
+      this.state.facetSet?.[id]?.request ||
+      this.state.categoryFacetSet?.[id]?.request ||
+      this.state.dateFacetSet?.[id]?.request ||
+      this.state.numericFacetSet?.[id]?.request ||
+      this.state.automaticFacetSet?.set[id]?.response
+    );
+  };
+
+  public getResultSortMetadata() {
+    return {
+      ...this.getBaseMetadata(),
+      resultsSortBy: this.state.sortCriteria ?? getSortCriteriaInitialState(),
+    };
+  }
+
+  public getStaticFilterToggleMetadata(
+    staticFilterId: string,
+    staticFilterValue: StaticFilterValueMetadata
+  ) {
+    return {
+      ...this.getBaseMetadata(),
+      staticFilterId,
+      staticFilterValue,
+    };
+  }
+
+  public getStaticFilterClearAllMetadata(staticFilterId: string) {
+    return {
+      ...this.getBaseMetadata(),
+      staticFilterId,
+    };
+  }
+
+  public getUndoTriggerQueryMetadata(undoneQuery: string) {
+    return {
+      ...this.getBaseMetadata(),
+      undoneQuery,
+    };
+  }
+
+  public getCategoryBreadcrumbFacetMetadata(
+    categoryFacetId: string,
+    categoryFacetPath: string[]
+  ) {
+    const facetRequest = this.getFacetRequest(categoryFacetId);
+    const categoryFacetField = facetRequest?.field ?? '';
+    return {
+      ...this.getBaseMetadata(),
+      categoryFacetId,
+      categoryFacetField,
+      categoryFacetPath,
+      categoryFacetTitle: `${categoryFacetField}_${categoryFacetId}`,
+    };
+  }
+
+  public getOmniboxAnalyticsMetadata(id: string, suggestion: string) {
+    const querySuggest = this.state.querySuggest && this.state.querySuggest[id];
+    const suggestions = querySuggest!.completions.map(
+      (completion) => completion.expression
+    );
+
+    const lastIndex = querySuggest!.partialQueries.length - 1;
+    const partialQuery = querySuggest!.partialQueries[lastIndex] || '';
+    const querySuggestResponseId = querySuggest!.responseId;
+    return {
+      ...this.getBaseMetadata(),
+      suggestionRanking: suggestions.indexOf(suggestion),
+      partialQuery,
+      partialQueries:
+        querySuggest!.partialQueries.length > 0
+          ? querySuggest!.partialQueries
+          : '',
+      suggestions: suggestions.length > 0 ? suggestions : '',
+      querySuggestResponseId,
+    };
+  }
+
+  public getInterfaceChangeMetadata() {
+    return {
+      ...this.getBaseMetadata(),
+      interfaceChangeTo: this.state.configuration.analytics.originLevel2,
+    };
+  }
+
+  public getOmniboxFromLinkMetadata(metadata: OmniboxSuggestionMetadata) {
+    return {
+      ...this.getBaseMetadata(),
+      ...metadata,
+    };
   }
 
   public getGeneratedAnswerMetadata() {

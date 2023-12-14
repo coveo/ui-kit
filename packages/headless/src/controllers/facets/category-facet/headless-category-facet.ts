@@ -11,8 +11,13 @@ import {
   logFacetClearAll,
   logFacetDeselect,
   logFacetSelect,
+  facetUpdateSort,
+  facetClearAll,
+  facetDeselect,
+  facetSelect,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {
+  SearchAction,
   executeSearch,
   fetchFacetValues,
 } from '../../../features/search/search-actions';
@@ -90,33 +95,42 @@ export function buildCategoryFacet(
 
     toggleSelect(selection: CategoryFacetValue) {
       coreController.toggleSelect(selection);
-      const analyticsAction = getToggleSelectAnalyticsAction(
-        getFacetId(),
-        selection
+      dispatch(
+        executeSearch({
+          legacy: getLegacyToggleSelectAnalyticsAction(getFacetId(), selection),
+          next: getToggleSelectAnalyticsAction(getFacetId(), selection),
+        })
       );
-      dispatch(executeSearch(analyticsAction));
     },
 
     deselectAll() {
       coreController.deselectAll();
-      dispatch(executeSearch(logFacetClearAll(getFacetId())));
+      dispatch(
+        executeSearch({
+          legacy: logFacetClearAll(getFacetId()),
+          next: facetClearAll(getFacetId()),
+        })
+      );
     },
 
     sortBy(criterion: CategoryFacetSortCriterion) {
       coreController.sortBy(criterion);
       dispatch(
-        executeSearch(logFacetUpdateSort({facetId: getFacetId(), criterion}))
+        executeSearch({
+          legacy: logFacetUpdateSort({facetId: getFacetId(), criterion}),
+          next: facetUpdateSort(getFacetId(), criterion),
+        })
       );
     },
 
     showMoreValues() {
       coreController.showMoreValues();
-      dispatch(fetchFacetValues(logFacetShowMore(getFacetId())));
+      dispatch(fetchFacetValues({legacy: logFacetShowMore(getFacetId())}));
     },
 
     showLessValues() {
       coreController.showLessValues();
-      dispatch(fetchFacetValues(logFacetShowLess(getFacetId())));
+      dispatch(fetchFacetValues({legacy: logFacetShowLess(getFacetId())}));
     },
 
     get state() {
@@ -145,7 +159,7 @@ function loadCategoryFacetReducers(
   return true;
 }
 
-function getToggleSelectAnalyticsAction(
+function getLegacyToggleSelectAnalyticsAction(
   facetId: string,
   selection: CategoryFacetValue
 ) {
@@ -156,4 +170,14 @@ function getToggleSelectAnalyticsAction(
 
   const isSelected = selection.state === 'selected';
   return isSelected ? logFacetDeselect(payload) : logFacetSelect(payload);
+}
+
+function getToggleSelectAnalyticsAction(
+  facetId: string,
+  selection: CategoryFacetValue
+): SearchAction {
+  const isSelected = selection.state === 'selected';
+  return isSelected
+    ? facetDeselect(facetId, selection.value)
+    : facetSelect(facetId, selection.value);
 }

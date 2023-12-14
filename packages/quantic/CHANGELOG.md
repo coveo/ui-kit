@@ -1,3 +1,70 @@
+## 2.42.1 (2023-12-13)
+
+# 2.42.0 (2023-12-08)
+
+### Bug Fixes
+
+- **quantic:** color styling issue fixed with the citations inside salesforce ([#3466](https://github.com/coveo/ui-kit/issues/3466)) ([b653a47](https://github.com/coveo/ui-kit/commits/b653a4758a92c5e126bde0f8e36c38e3b7f1dff9))
+
+### Features
+
+- **quantic:** added feature to support opening citation sources inside Salesforce ([#3456](https://github.com/coveo/ui-kit/issues/3456)) ([a56b074](https://github.com/coveo/ui-kit/commits/a56b0748746de99d0c2e8f84410eeb0604077de3))
+- **quantic:** added relevant generative answering (rga) example in the quantic examples org ([#3452](https://github.com/coveo/ui-kit/issues/3452)) ([b16990e](https://github.com/coveo/ui-kit/commits/b16990e55ac07b1b1846bd133b76d5338874cb24))
+- **quantic:** new public property fieldsToIncludeInCitations added to the QuanticGeneratedAnswer component ([#3467](https://github.com/coveo/ui-kit/issues/3467)) ([f80d3b4](https://github.com/coveo/ui-kit/commits/f80d3b44126d557d48fe0a9640638e03c6239b43))
+
+# 2.41.0 (2023-12-06)
+
+### Bug Fixes
+
+- **quantic:** Fix few issues related to overflow in mobile view ([#3454](https://github.com/coveo/ui-kit/issues/3454)) ([268edb9](https://github.com/coveo/ui-kit/commits/268edb9ce08d1bfc63251a6c08a2e4ac43265843))
+- **quantic:** Fix issue where tooltip is displayed under elements above the generated answer component ([#3455](https://github.com/coveo/ui-kit/issues/3455)) ([8d747a0](https://github.com/coveo/ui-kit/commits/8d747a06ed3e05399d01d366b6289780b5e02898))
+- **quantic:** issue fixed with negative generated answer feedback modal ([#3433](https://github.com/coveo/ui-kit/issues/3433)) ([eb20591](https://github.com/coveo/ui-kit/commits/eb2059190308ff1ad4bb8e4e2447a406f322e21a))
+
+### Features
+
+- **quantic:** Better handling of Salesforce Result links ([#3427](https://github.com/coveo/ui-kit/issues/3427)) ([020f87e](https://github.com/coveo/ui-kit/commits/020f87ea1fead4cea6ad87dbf63441fbbe118774))
+
+# 2.40.0 (2023-11-29)
+
+### Bug Fixes
+
+- **genai:** dispatch like and dislike properly ([#3393](https://github.com/coveo/ui-kit/issues/3393)) ([43ca99a](https://github.com/coveo/ui-kit/commits/43ca99a3be81fd2948d6eb457419d978255cd72f))
+- **quantic:** added needed salesforce fields to default fields to include ([#3413](https://github.com/coveo/ui-kit/issues/3413)) ([047e780](https://github.com/coveo/ui-kit/commits/047e780c1d3a27f83308b587774afa92c4dd2243))
+- **quantic:** fix citation pop over glitch ([#3394](https://github.com/coveo/ui-kit/issues/3394)) ([521f4d4](https://github.com/coveo/ui-kit/commits/521f4d42679e772dcf97b821a013f33b318bd300))
+- **quantic:** fix clear button outline styling of expandable search box ([#3421](https://github.com/coveo/ui-kit/issues/3421)) ([0cf0481](https://github.com/coveo/ui-kit/commits/0cf048122759a2cf44fc3a43882be9a5eef16267))
+- **quantic:** fix issue with expandable searchbox hiding tabs ([#3404](https://github.com/coveo/ui-kit/issues/3404)) ([8ab8716](https://github.com/coveo/ui-kit/commits/8ab87167f2fd0328ad13f0321ccc0876747d7cd1))
+- **quantic:** make sure the rephrase buttons in rga are right aligned ([#3402](https://github.com/coveo/ui-kit/issues/3402)) ([5549745](https://github.com/coveo/ui-kit/commits/554974531a51a8ebb8ea614078ea20be04c94f2f))
+- **RGA:** no longer showing citation popover on small screens ([#3398](https://github.com/coveo/ui-kit/issues/3398)) ([4b170f6](https://github.com/coveo/ui-kit/commits/4b170f6949812a8218fef0deae115597728bc421))
+
+### Features
+
+- **doc:** generate documentation for generated answer in headless, atomic and quantic ([#3397](https://github.com/coveo/ui-kit/issues/3397)) ([c5df083](https://github.com/coveo/ui-kit/commits/c5df0835dde13ea54376a04ba4945427ac7155e9))
+- **quantic:** make quantic citations use the headless interactive citation controller ([#3412](https://github.com/coveo/ui-kit/issues/3412)) ([0438978](https://github.com/coveo/ui-kit/commits/0438978f3b8e85da793f5da51780a85bcec2d7d4))
+- **quantic:** quantic tooltip made responsive ([#3428](https://github.com/coveo/ui-kit/issues/3428)) ([633784d](https://github.com/coveo/ui-kit/commits/633784d19da510499c9f8fffe17ea9d4a65009a6))
+
+## 2.39.1 (2023-11-16)
+
+### Bug Fixes
+
+- **quantic:** fixed issue with pasting query in search box ([#3375](https://github.com/coveo/ui-kit/issues/3375)) ([1ef3674](https://github.com/coveo/ui-kit/commits/1ef36747a5804f4b31cbad95edacea2b6d9b526e))
+- **quantic:** minor issues fixed in the Quantic Generated answer component ([#3391](https://github.com/coveo/ui-kit/issues/3391)) ([902d3e8](https://github.com/coveo/ui-kit/commits/902d3e8e9d174134a86d78e4df0c69fb31d66ab7))
+
+### Features
+
+- **quantic:** improved accessibility of the Quantic Generated Answer component ([#3372](https://github.com/coveo/ui-kit/issues/3372)) ([c9e418d](https://github.com/coveo/ui-kit/commits/c9e418de84dafda467acc7ec8f71c0f54d54d0f4))
+
+# 2.38.0 (2023-11-08)
+
+### Bug Fixes
+
+- **deps:** update all dependencies j:kit-282 ([#3366](https://github.com/coveo/ui-kit/issues/3366)) ([da241a8](https://github.com/coveo/ui-kit/commits/da241a81d2747c57968caf6da55778fe8db9e6d5))
+
+### Features
+
+- **quantic:** added the ability to have text highlighting in a quantic search interface ([#3361](https://github.com/coveo/ui-kit/issues/3361)) ([24f7bd6](https://github.com/coveo/ui-kit/commits/24f7bd6437126cd14556dc499e19e6bca0b8e67e))
+- **quantic:** citations details feature added when hovering over a citation ([#3356](https://github.com/coveo/ui-kit/issues/3356)) ([f8b807f](https://github.com/coveo/ui-kit/commits/f8b807f8cf616bff07edd5530abdd80e38ef742f))
+- **quantic:** refactored QuanticResultAction to make it use the QuanticTooltip component ([#3359](https://github.com/coveo/ui-kit/issues/3359)) ([9221f84](https://github.com/coveo/ui-kit/commits/9221f84316b8dfd060e4285950241fc57ba2e7ac))
+
 ## 2.37.3 (2023-11-02)
 
 ### Bug Fixes

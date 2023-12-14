@@ -10,4 +10,4 @@ export default {
   ...defaultModuleExport,
   title: 'Atomic/ResultList/ResultPrintableUri',
 };
-export const DefaultResultPrintableUri = exportedStory;
+export const Default = exportedStory;

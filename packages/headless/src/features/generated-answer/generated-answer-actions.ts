@@ -21,7 +21,10 @@ import {
   GeneratedAnswerSection,
   SearchSection,
 } from '../../state/state-sections';
-import {validatePayload} from '../../utils/validate-payload';
+import {
+  nonEmptyStringArray,
+  validatePayload,
+} from '../../utils/validate-payload';
 import {logGeneratedAnswerStreamEnd} from './generated-answer-analytics-actions';
 import {buildStreamingRequest} from './generated-answer-request';
 import {
@@ -100,6 +103,10 @@ export const closeGeneratedAnswerFeedbackModal = createAction(
   'generatedAnswer/feedbackModal/close'
 );
 
+export const sendGeneratedAnswerFeedback = createAction(
+  'generatedAnswer/sendFeedback'
+);
+
 export const setIsLoading = createAction(
   'generatedAnswer/setIsLoading',
   (payload: boolean) => validatePayload(payload, booleanValue)
@@ -119,6 +126,11 @@ export const updateResponseFormat = createAction(
         constrainTo: generatedAnswerStyle,
       }),
     })
+);
+
+export const registerFieldsToIncludeInCitations = createAction(
+  'generatedAnswer/registerFieldsToIncludeInCitations',
+  (payload: string[]) => validatePayload<string[]>(payload, nonEmptyStringArray)
 );
 
 interface StreamAnswerArgs {

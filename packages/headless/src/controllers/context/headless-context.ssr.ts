@@ -1,5 +1,6 @@
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common';
+import {ControllerDefinitionWithProps} from '../../app/ssr-engine/types/common';
+import {ContextProps} from '../core/context/headless-core-context';
 import {Context, buildContext} from './headless-context';
 
 export * from './headless-context';
@@ -7,9 +8,11 @@ export * from './headless-context';
 /**
  * @alpha
  */
-export const defineContext = (): ControllerDefinitionWithoutProps<
+export const defineContext = (): ControllerDefinitionWithProps<
   SearchEngine,
-  Context
+  Context,
+  ContextProps
 > => ({
-  build: (engine) => buildContext(engine),
+  buildWithProps: (engine, props) =>
+    buildContext(engine, {initialState: props.initialState}),
 });

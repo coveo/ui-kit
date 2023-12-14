@@ -2,6 +2,7 @@ import {Schema, StringValue} from '@coveo/bueno';
 import {
   AnyFacetValuesCondition,
   AnyFacetValueRequest,
+  FacetValueState,
   FacetManager,
 } from '@coveo/headless';
 import {VNode, h} from '@stencil/core';
@@ -94,12 +95,12 @@ export type BaseFacetElement<FacetType extends AnyFacetType = AnyFacetType> =
 type StateProp<FacetType extends AnyFacetType> = FacetType extends Facet
   ? {facetState: FacetState}
   : FacetType extends NumericFacet
-  ? {facetState: NumericFacetState}
-  : FacetType extends CategoryFacet
-  ? {facetState: CategoryFacetState}
-  : FacetType extends DateFacet
-  ? {facetState: DateFacetState}
-  : {facetState: never};
+    ? {facetState: NumericFacetState}
+    : FacetType extends CategoryFacet
+      ? {facetState: CategoryFacetState}
+      : FacetType extends DateFacet
+        ? {facetState: DateFacetState}
+        : {facetState: never};
 
 type SearchProp<FacetType extends AnyFacetType> = FacetType extends
   | Facet
@@ -125,8 +126,8 @@ type SortCriterionProp<FacetType extends AnyFacetType> = FacetType extends
         : CategoryFacetSortCriterion;
     }
   : FacetType extends NumericFacet
-  ? {sortCriteria?: RangeFacetSortCriterion}
-  : {};
+    ? {sortCriteria?: RangeFacetSortCriterion}
+    : {};
 
 type DisplayValuesAsProp = {
   displayValueAs?: 'checkbox' | 'box' | 'link';
@@ -148,6 +149,11 @@ export interface FacetValueProps {
   additionalPart?: string;
   buttonRef?: (element?: HTMLButtonElement) => void;
 }
+
+export type TriStateFacetValueProps = Omit<FacetValueProps, 'isSelected'> & {
+  state: FacetValueState;
+  onExclude(): void;
+};
 
 function isCategoryFacetValueRequest(
   value: AnyFacetValueRequest
@@ -331,6 +337,7 @@ interface FacetCommonOptions {
   facetId: string;
   sortCriteria: FacetSortCriterion;
   withSearch: boolean;
+  enableExclusion: boolean;
 }
 
 interface FacetCommonRenderProps {
@@ -357,6 +364,7 @@ export class FacetCommon {
   private facetId: string;
   private sortCriteria: FacetSortCriterion;
   private withSearch: boolean;
+  private enableExclusion: boolean;
 
   private resultIndexToFocusOnShowMore = 0;
 
@@ -367,6 +375,7 @@ export class FacetCommon {
     this.field = opts.field;
     this.headingLevel = opts.headingLevel;
     this.displayValuesAs = opts.displayValuesAs;
+    this.enableExclusion = opts.enableExclusion;
     this.dependsOn = opts.dependsOn;
     this.dependenciesManager = opts.dependenciesManager;
     this.facet = opts.facet;
@@ -386,7 +395,7 @@ export class FacetCommon {
     initializePopover(this.host, {
       ...facetInfo,
       hasValues: () => !!this.facet.state.values.length,
-      numberOfSelectedValues: () => this.numberOfSelectedValues,
+      numberOfActiveValues: () => this.numberOfActiveValues,
     });
   }
 
@@ -437,7 +446,7 @@ export class FacetCommon {
           headerFocus.focusAfterSearch();
           this.facet.deselectAll();
         }}
-        numberOfSelectedValues={this.numberOfSelectedValues}
+        numberOfActiveValues={this.numberOfActiveValues}
         isCollapsed={isCollapsed}
         headingLevel={this.headingLevel}
         onToggleCollapse={onToggleCollapse}
@@ -446,13 +455,21 @@ export class FacetCommon {
     );
   }
 
-  private get numberOfSelectedValues() {
-    return this.facet.state.values.filter(({state}) => state === 'selected')
-      .length;
+  private get numberOfActiveValues() {
+    return this.facet.state.values.filter(({state}) => state !== 'idle').length;
   }
 
   private renderSearchInput() {
     if (!this.withSearch) {
+      return;
+    }
+
+    // Hide the input if there are no more values to load from the index and there are less than 8 values to display.
+    // 8 is an arbitrary number, discussed with UX as a good compromise: A list long enough where it's worth searching.
+    if (
+      !this.facet.state.canShowMoreValues &&
+      this.facet.state.values.length <= 8
+    ) {
       return;
     }
 
@@ -521,6 +538,11 @@ export class FacetCommon {
             this.displayValuesAs === 'link'
               ? this.facet.facetSearch.singleSelect(value)
               : this.facet.facetSearch.select(value),
+          () => {
+            if (this.displayValuesAs === 'checkbox') {
+              this.facet.facetSearch.exclude(value);
+            }
+          },
           false,
           false,
           showLessFocus,
@@ -543,6 +565,11 @@ export class FacetCommon {
             this.displayValuesAs === 'link'
               ? this.facet.toggleSingleSelect(value)
               : this.facet.toggleSelect(value),
+          () => {
+            if (this.displayValuesAs === 'checkbox') {
+              this.facet.toggleExclude(value);
+            }
+          },
           i === 0,
           i ===
             (this.sortCriteria === 'automatic'
@@ -557,7 +584,8 @@ export class FacetCommon {
 
   private renderValue(
     facetValue: FacetValue,
-    onClick: () => void,
+    onSelect: () => void,
+    onExclude: () => void,
     isShowLessFocusTarget: boolean,
     isShowMoreFocusTarget: boolean,
     showLessFocus: FocusTargetController,
@@ -569,15 +597,23 @@ export class FacetCommon {
       this.bindings.i18n
     );
     const isSelected = facetValue.state === 'selected';
+    const isExcluded = facetValue.state === 'excluded';
+    const triStateProps = this.enableExclusion
+      ? {
+          onExclude,
+          state: facetValue.state,
+        }
+      : {};
     switch (this.displayValuesAs) {
       case 'checkbox':
         return (
           <FacetValueCheckbox
+            {...triStateProps}
             displayValue={displayValue}
             numberOfResults={facetValue.numberOfResults}
             isSelected={isSelected}
             i18n={this.bindings.i18n}
-            onClick={onClick}
+            onClick={onSelect}
             searchQuery={this.facet.state.facetSearch.query}
             buttonRef={(element) => {
               isShowLessFocusTarget && showLessFocus.setTarget(element);
@@ -587,6 +623,7 @@ export class FacetCommon {
             <FacetValueLabelHighlight
               displayValue={displayValue}
               isSelected={isSelected}
+              isExcluded={isExcluded}
               searchQuery={this.facet.state.facetSearch.query}
             ></FacetValueLabelHighlight>
           </FacetValueCheckbox>
@@ -598,7 +635,7 @@ export class FacetCommon {
             numberOfResults={facetValue.numberOfResults}
             isSelected={isSelected}
             i18n={this.bindings.i18n}
-            onClick={onClick}
+            onClick={onSelect}
             searchQuery={this.facet.state.facetSearch.query}
             buttonRef={(element) => {
               isShowLessFocusTarget && showLessFocus.setTarget(element);
@@ -619,7 +656,7 @@ export class FacetCommon {
             numberOfResults={facetValue.numberOfResults}
             isSelected={isSelected}
             i18n={this.bindings.i18n}
-            onClick={onClick}
+            onClick={onSelect}
             searchQuery={this.facet.state.facetSearch.query}
             buttonRef={(element) => {
               isShowLessFocusTarget && showLessFocus.setTarget(element);

@@ -1,3 +1,4 @@
+import {Unsubscribe} from '@reduxjs/toolkit';
 import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
@@ -9,6 +10,8 @@ import {
   openGeneratedAnswerFeedbackModal,
   closeGeneratedAnswerFeedbackModal,
   setIsVisible,
+  sendGeneratedAnswerFeedback,
+  registerFieldsToIncludeInCitations,
 } from '../../features/generated-answer/generated-answer-actions';
 import {
   GeneratedAnswerFeedback,
@@ -32,11 +35,12 @@ import {GeneratedAnswerSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
 import {Controller, buildController} from '../controller/headless-controller';
 
-export type {GeneratedAnswerState, GeneratedAnswerCitation};
+export type {
+  GeneratedAnswerCitation,
+  GeneratedResponseFormat,
+  GeneratedAnswerState,
+};
 
-/**
- * @internal
- */
 export interface GeneratedAnswer extends Controller {
   /**
    * The state of the GeneratedAnswer controller.
@@ -47,15 +51,16 @@ export interface GeneratedAnswer extends Controller {
    */
   retry(): void;
   /**
-   * Determines if the generated answer was liked, or upvoted by the end user.
+   * Indicates that the generated answer met the user expectations.
    */
   like(): void;
   /**
-   * Determines if the generated answer was disliked, or downvoted by the end user.
+   * Marks the generated answer as not relevant to the end user.
    */
   dislike(): void;
   /**
    * Re-executes the query to generate the answer in the specified format.
+   * @param responseFormat - The formatting options to apply to generated answers.
    */
   rephrase(responseFormat: GeneratedResponseFormat): void;
   /**
@@ -78,7 +83,7 @@ export interface GeneratedAnswer extends Controller {
   sendDetailedFeedback(details: string): void;
   /**
    * Logs a custom event indicating a cited source link was clicked.
-   * @param id The ID of the clicked citation.
+   * @param id - The ID of the clicked citation.
    */
   logCitationClick(id: string): void;
   /**
@@ -95,8 +100,8 @@ export interface GeneratedAnswer extends Controller {
   logCopyToClipboard(): void;
   /**
    * Logs a custom event indicating a cited source link was hovered.
-   * @param citationId The ID of the clicked citation.
-   * @param citationHoverTimeMs The number of milliseconds spent hovering over the citation.
+   * @param citationId - The ID of the clicked citation.
+   * @param citationHoverTimeMs - The number of milliseconds spent hovering over the citation.
    */
   logCitationHover(citationId: string, citationHoverTimeMs: number): void;
 }
@@ -112,10 +117,80 @@ export interface GeneratedAnswerProps {
      */
     responseFormat?: GeneratedResponseFormat;
   };
+  /**
+   * A list of indexed fields to include in the citations returned with the generated answer.
+   */
+  fieldsToIncludeInCitations?: string[];
 }
 
+interface SubscribeStateManager {
+  abortController: AbortController | undefined;
+  lastRequestId: string;
+  lastStreamId: string;
+  getIsStreamInProgress: () => boolean;
+  setAbortControllerRef: (ref: AbortController) => void;
+  subscribeToSearchRequests: (
+    engine: SearchEngine<GeneratedAnswerSection>
+  ) => Unsubscribe;
+}
+
+const subscribeStateManager: SubscribeStateManager = {
+  abortController: undefined,
+  lastRequestId: '',
+  lastStreamId: '',
+
+  setAbortControllerRef: (ref: AbortController) => {
+    subscribeStateManager.abortController = ref;
+  },
+
+  getIsStreamInProgress: () => {
+    if (
+      !subscribeStateManager.abortController ||
+      subscribeStateManager.abortController?.signal.aborted
+    ) {
+      subscribeStateManager.abortController = undefined;
+      return false;
+    }
+    return true;
+  },
+
+  subscribeToSearchRequests: (engine) => {
+    const strictListener = () => {
+      const state = engine.state;
+      const requestId = state.search.requestId;
+      const streamId =
+        state.search.extendedResults.generativeQuestionAnsweringId;
+
+      if (subscribeStateManager.lastRequestId !== requestId) {
+        subscribeStateManager.lastRequestId = requestId;
+        subscribeStateManager.abortController?.abort();
+        engine.dispatch(resetAnswer());
+      }
+
+      const isStreamInProgress = subscribeStateManager.getIsStreamInProgress();
+      if (
+        !isStreamInProgress &&
+        streamId &&
+        streamId !== subscribeStateManager.lastStreamId
+      ) {
+        subscribeStateManager.lastStreamId = streamId;
+        engine.dispatch(
+          streamAnswer({
+            setAbortControllerRef: subscribeStateManager.setAbortControllerRef,
+          })
+        );
+      }
+    };
+    return engine.subscribe(strictListener);
+  },
+};
+
 /**
- * @internal
+ * Creates a `GeneratedAnswer` controller instance.
+ *
+ * @param engine - The headless engine.
+ * @param props - The configurable `GeneratedAnswer` properties.
+ * @returns A `GeneratedAnswer` controller instance.
  */
 export function buildGeneratedAnswer(
   engine: SearchEngine,
@@ -129,48 +204,6 @@ export function buildGeneratedAnswer(
   const controller = buildController(engine);
   const getState = () => engine.state;
 
-  let abortController: AbortController | undefined;
-  let lastRequestId: string;
-  let lastStreamId: string;
-
-  const setAbortControllerRef = (ref: AbortController) => {
-    abortController = ref;
-  };
-
-  const getIsStreamInProgress = () => {
-    if (!abortController || abortController?.signal.aborted) {
-      abortController = undefined;
-      return false;
-    }
-    return true;
-  };
-
-  const subscribeToSearchRequests = () => {
-    const strictListener = () => {
-      const state = getState();
-      const requestId = state.search.requestId;
-      const streamId =
-        state.search.extendedResults.generativeQuestionAnsweringId;
-
-      if (lastRequestId !== requestId) {
-        lastRequestId = requestId;
-        abortController?.abort();
-        dispatch(resetAnswer());
-      }
-
-      const isStreamInProgress = getIsStreamInProgress();
-      if (!isStreamInProgress && streamId && streamId !== lastStreamId) {
-        lastStreamId = streamId;
-        dispatch(
-          streamAnswer({
-            setAbortControllerRef,
-          })
-        );
-      }
-    };
-    return engine.subscribe(strictListener);
-  };
-
   const isVisible = props.initialState?.isVisible;
   if (isVisible !== undefined) {
     dispatch(setIsVisible(isVisible));
@@ -180,7 +213,12 @@ export function buildGeneratedAnswer(
     dispatch(updateResponseFormat(initialResponseFormat));
   }
 
-  subscribeToSearchRequests();
+  const fieldsToIncludeInCitations = props.fieldsToIncludeInCitations;
+  if (fieldsToIncludeInCitations) {
+    dispatch(registerFieldsToIncludeInCitations(fieldsToIncludeInCitations));
+  }
+
+  subscribeStateManager.subscribeToSearchRequests(engine);
 
   return {
     ...controller,
@@ -190,17 +228,21 @@ export function buildGeneratedAnswer(
     },
 
     retry() {
-      dispatch(executeSearch(logRetryGeneratedAnswer()));
+      dispatch(executeSearch({legacy: logRetryGeneratedAnswer()}));
     },
 
     like() {
-      dispatch(likeGeneratedAnswer());
-      dispatch(logLikeGeneratedAnswer());
+      if (!this.state.liked) {
+        dispatch(likeGeneratedAnswer());
+        dispatch(logLikeGeneratedAnswer());
+      }
     },
 
     dislike() {
-      dispatch(dislikeGeneratedAnswer());
-      dispatch(logDislikeGeneratedAnswer());
+      if (!this.state.disliked) {
+        dispatch(dislikeGeneratedAnswer());
+        dispatch(logDislikeGeneratedAnswer());
+      }
     },
 
     openFeedbackModal() {
@@ -213,12 +255,12 @@ export function buildGeneratedAnswer(
 
     sendFeedback(feedback) {
       dispatch(logGeneratedAnswerFeedback(feedback));
-      dispatch(closeGeneratedAnswerFeedbackModal());
+      dispatch(sendGeneratedAnswerFeedback());
     },
 
     sendDetailedFeedback(details) {
       dispatch(logGeneratedAnswerDetailedFeedback(details));
-      dispatch(closeGeneratedAnswerFeedbackModal());
+      dispatch(sendGeneratedAnswerFeedback());
     },
 
     logCitationClick(citationId: string) {
@@ -231,7 +273,9 @@ export function buildGeneratedAnswer(
 
     rephrase(responseFormat: GeneratedResponseFormat) {
       dispatch(updateResponseFormat(responseFormat));
-      dispatch(executeSearch(logRephraseGeneratedAnswer(responseFormat)));
+      dispatch(
+        executeSearch({legacy: logRephraseGeneratedAnswer(responseFormat)})
+      );
     },
 
     show() {

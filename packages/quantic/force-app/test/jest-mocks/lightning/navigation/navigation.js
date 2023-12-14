@@ -23,7 +23,9 @@ export const NavigationMixin = (Base) => {
     }
     [GenerateUrl](pageReference) {
       mockGenerate({pageReference});
-      return new Promise((resolve) => resolve('https://www.example.com'));
+      return new Promise((resolve) =>
+        resolve('https://www.example-salesforce.com')
+      );
     }
   };
 };

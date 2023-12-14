@@ -1,3 +1,15 @@
+# 2.19.0 (2023-12-08)
+
+### Features
+
+- **atomic:** support core facet value exclusion ([#3103](https://github.com/coveo/ui-kit/issues/3103)) ([7b678c3](https://github.com/coveo/ui-kit/commits/7b678c3ba9ff8733fe6d0c6897679c4f2d67a213))
+
+# 2.18.0 (2023-11-29)
+
+### Features
+
+- **doc:** generate documentation for generated answer in headless, atomic and quantic ([#3397](https://github.com/coveo/ui-kit/issues/3397)) ([c5df083](https://github.com/coveo/ui-kit/commits/c5df0835dde13ea54376a04ba4945427ac7155e9))
+
 ## 2.17.2 (2023-11-02)
 
 ### Features

@@ -3,7 +3,7 @@
  */
 import {AnyAction} from '@reduxjs/toolkit';
 import {Controller} from '../../controllers';
-import {SearchAction} from '../../features/analytics/analytics-utils';
+import {LegacySearchAction} from '../../features/analytics/analytics-utils';
 import {createWaitForActionMiddleware} from '../../utils/utils';
 import {
   buildControllerDefinitions,
@@ -46,7 +46,7 @@ export type SearchEngineDefinitionOptions<
 > = EngineDefinitionOptions<SearchEngineOptions, TControllers>;
 
 export type SearchCompletedAction = ReturnType<
-  SearchAction['fulfilled' | 'rejected']
+  LegacySearchAction['fulfilled' | 'rejected']
 >;
 
 function isSearchCompletedAction(

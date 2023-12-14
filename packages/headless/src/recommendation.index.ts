@@ -6,6 +6,7 @@ import {
   fieldMustMatch as fieldMustMatchAlias,
   fieldMustNotMatch as fieldMustNotMatchAlias,
 } from './features/result-templates/result-templates-helpers';
+import * as HighlightUtils from './utils/highlight';
 
 polyfillCryptoNode();
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
@@ -70,11 +71,13 @@ export {buildInteractiveResult} from './controllers/recommendation/result-list/h
 
 export type {
   Context,
+  ContextInitialState,
+  ContextProps,
   ContextState,
   ContextValue,
   ContextPayload,
 } from './controllers/context/headless-context';
-export {buildContext} from './controllers/recommendation/context/headless-recommendation-context';
+export {buildContext} from './controllers/context/headless-context';
 
 export type {
   DictionaryFieldContext,
@@ -112,3 +115,6 @@ export {
 
 export {getOrganizationEndpoints} from './api/platform-client';
 export type {PlatformEnvironment} from './utils/url-utils';
+
+// Helpers
+export {HighlightUtils};

@@ -8,7 +8,7 @@ import {SearchEngine} from '../../app/search-engine/search-engine';
 import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {searchReducer as search} from '../../features/search/search-slice';
 import {InstantResultSection} from '../../state/state-sections';
-import {SearchAction} from '../analytics/analytics-utils';
+import {LegacySearchAction} from '../analytics/analytics-utils';
 import {
   FetchInstantResultsActionCreatorPayload,
   FetchInstantResultsThunkReturn,
@@ -21,7 +21,7 @@ import {
   fetchFacetValues,
   fetchPage,
   fetchInstantResults,
-} from './search-actions';
+} from './legacy/search-actions';
 
 /**
  * The search action creators.
@@ -36,17 +36,17 @@ export interface SearchActionCreators {
    * const {logInterfaceLoad} = loadSearchAnalyticsActions(engine);
    * const {executeSearch} = loadSearchActions(engine);
    *
-   * engine.dispatch(executeSearch(interfaceLoad()));
+   * engine.dispatch(executeSearch({legacy: interfaceLoad()}))
    * ```
    *
    * @param analyticsSearchAction - The analytics action to log after a successful query. See `loadSearchAnalyticsActions` for possible values.
    * @returns A dispatchable action.
    */
   executeSearch(
-    analyticsSearchAction: SearchAction
+    analyticsSearchAction: LegacySearchAction
   ): AsyncThunkAction<
     ExecuteSearchThunkReturn,
-    SearchAction,
+    LegacySearchAction,
     AsyncThunkOptions<
       StateNeededByExecuteSearch,
       ClientThunkExtraArguments<SearchAPIClient>
@@ -74,10 +74,10 @@ export interface SearchActionCreators {
    * @returns A dispatchable action.
    */
   fetchFacetValues(
-    analyticsSearchAction: SearchAction
+    analyticsSearchAction: LegacySearchAction
   ): AsyncThunkAction<
     ExecuteSearchThunkReturn,
-    SearchAction,
+    LegacySearchAction,
     AsyncThunkOptions<
       StateNeededByExecuteSearch,
       ClientThunkExtraArguments<SearchAPIClient>
@@ -100,10 +100,10 @@ export interface SearchActionCreators {
    * @returns A dispatchable action.
    */
   fetchPage(
-    analyticsSearchAction: SearchAction
+    analyticsSearchAction: LegacySearchAction
   ): AsyncThunkAction<
     ExecuteSearchThunkReturn,
-    SearchAction,
+    LegacySearchAction,
     AsyncThunkOptions<
       StateNeededByExecuteSearch,
       ClientThunkExtraArguments<SearchAPIClient>

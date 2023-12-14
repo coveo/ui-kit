@@ -867,7 +867,10 @@ export class AtomicSearchBox {
               <Submit
                 bindings={this.bindings}
                 disabled={this.isSearchDisabled}
-                onClick={() => this.searchBox.submit()}
+                onClick={() => {
+                  this.searchBox.submit();
+                  this.clearSuggestions();
+                }}
                 title={searchLabel}
               />
               {this.renderSuggestions()}

@@ -5,9 +5,11 @@ import {
   likeGeneratedAnswer,
   openGeneratedAnswerFeedbackModal,
   resetAnswer,
+  sendGeneratedAnswerFeedback,
   setIsVisible,
   streamAnswer,
   updateResponseFormat,
+  registerFieldsToIncludeInCitations,
 } from '../../features/generated-answer/generated-answer-actions';
 import {
   logCopyGeneratedAnswer,
@@ -101,6 +103,17 @@ describe('generated answer', () => {
     expect(action).toBeTruthy();
     expect(analyticsAction).toBeTruthy();
   });
+  it('#like dispatches no analytics action when #liked is set to true', () => {
+    engine.state.generatedAnswer.liked = true;
+    generatedAnswer.like();
+    const action = findAction(likeGeneratedAnswer.type);
+    const analyticsAction = engine.findAsyncAction(
+      logLikeGeneratedAnswer().pending
+    );
+
+    expect(action).not.toBeTruthy();
+    expect(analyticsAction).not.toBeTruthy();
+  });
 
   it('#dislike dispatches analytics action', () => {
     generatedAnswer.dislike();
@@ -111,6 +124,18 @@ describe('generated answer', () => {
 
     expect(action).toBeTruthy();
     expect(analyticsAction).toBeTruthy();
+  });
+
+  it('#dislike dispatches no analytics action when #disliked is set to true', () => {
+    engine.state.generatedAnswer.disliked = true;
+    generatedAnswer.dislike();
+    const action = findAction(dislikeGeneratedAnswer.type);
+    const analyticsAction = engine.findAsyncAction(
+      logDislikeGeneratedAnswer().pending
+    );
+
+    expect(action).not.toBeTruthy();
+    expect(analyticsAction).not.toBeTruthy();
   });
 
   it('#openFeedbackModal dispatches the right actions', () => {
@@ -130,7 +155,7 @@ describe('generated answer', () => {
   it('#sendFeedback dispatches the right actions', () => {
     const exampleFeedback = 'notAccurate';
     generatedAnswer.sendFeedback(exampleFeedback);
-    const action = findAction(closeGeneratedAnswerFeedbackModal.type);
+    const action = findAction(sendGeneratedAnswerFeedback.type);
     const analyticsAction = engine.findAsyncAction(
       logGeneratedAnswerFeedback(exampleFeedback).pending
     );
@@ -142,7 +167,7 @@ describe('generated answer', () => {
   it('#sendDetailedFeedback dispatches the right actions', () => {
     const exampleDetails = 'Example details';
     generatedAnswer.sendDetailedFeedback(exampleDetails);
-    const action = findAction(closeGeneratedAnswerFeedbackModal.type);
+    const action = findAction(sendGeneratedAnswerFeedback.type);
     const analyticsAction = engine.findAsyncAction(
       logGeneratedAnswerDetailedFeedback(exampleDetails).pending
     );
@@ -239,11 +264,30 @@ describe('generated answer', () => {
     });
   });
 
+  describe('when passing fields to include in citations', () => {
+    it('should dispatch registerFieldsToIncludeInCitations to register the fields to include in citations', () => {
+      const exampleFieldsToIncludeInCitations = ['foo', 'bar'];
+
+      initGeneratedAnswer({
+        fieldsToIncludeInCitations: exampleFieldsToIncludeInCitations,
+      });
+
+      const action = findAction(registerFieldsToIncludeInCitations.type);
+      expect(action).toBeDefined();
+      expect(action).toHaveProperty(
+        'payload',
+        exampleFieldsToIncludeInCitations
+      );
+    });
+  });
+
   describe('subscription to changes', () => {
     function callListener() {
-      return (engine.subscribe as jest.Mock).mock.calls.map(
-        (args) => args[0]
-      )[0]();
+      return (engine.subscribe as jest.Mock).mock.calls
+        .map((args) => args[0])
+        .forEach((listener) => {
+          listener();
+        });
     }
 
     it('should not dispatch the stream action when there is no stream ID', () => {
@@ -274,6 +318,28 @@ describe('generated answer', () => {
       const action = findAction(streamAnswer.pending.type);
 
       expect(action).toBeTruthy();
+    });
+
+    describe('when we have multiple controllers', () => {
+      let secondEngine: MockSearchEngine;
+
+      beforeEach(() => {
+        secondEngine = buildMockSearchAppEngine();
+        buildGeneratedAnswer(secondEngine);
+      });
+
+      it('should dispatch the stream action only once', () => {
+        engine.state.search.extendedResults = {
+          generativeQuestionAnsweringId: 'another-fake-test-id',
+        };
+
+        callListener();
+
+        const count = engine.actions.filter(
+          (a) => a.type === streamAnswer.pending.type
+        ).length;
+        expect(count).toEqual(1);
+      });
     });
   });
 

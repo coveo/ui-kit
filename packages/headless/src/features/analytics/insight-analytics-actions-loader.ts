@@ -4,6 +4,8 @@ import {logCategoryFacetBreadcrumb} from '../facets/category-facet-set/category-
 import {
   LogFacetBreadcrumbActionCreatorPayload,
   LogFacetDeselectActionCreatorPayload,
+  LogFacetExcludeActionCreatorPayload,
+  LogFacetUnexcludeActionCreatorPayload,
   LogFacetSelectActionCreatorPayload,
 } from '../facets/facet-set/facet-set-analytics-actions';
 import {
@@ -42,6 +44,8 @@ import {InsightAction} from './analytics-utils';
 import {
   logInsightInterfaceChange,
   logInsightInterfaceLoad,
+  logInsightCreateArticle,
+  CreateArticleMetadata,
 } from './insight-analytics-actions';
 
 export type {
@@ -52,9 +56,12 @@ export type {
   LogFacetBreadcrumbActionCreatorPayload,
   LogFacetUpdateSortActionCreatorPayload,
   LogFacetDeselectActionCreatorPayload,
+  LogFacetUnexcludeActionCreatorPayload,
+  LogFacetExcludeActionCreatorPayload,
   LogFacetSelectActionCreatorPayload,
   SmartSnippetFeedback,
   StaticFilterValueMetadata,
+  CreateArticleMetadata,
 };
 
 /**
@@ -81,6 +88,14 @@ export interface InsightAnalyticsActionCreators {
    * @returns A dispatchable action.
    */
   logInterfaceChange(): InsightAction;
+
+  /**
+   * The event to log when the create article button is clicked.
+   *
+   * @param payload - The metadata tied to the create article event.
+   * @returns A dispatchable action.
+   */
+  logCreateArticle(payload: CreateArticleMetadata): InsightAction;
 
   /**
    * The event to log when a category facet breadcrumb is deselected.
@@ -252,6 +267,7 @@ export function loadInsightAnalyticsActions(
     logClearBreadcrumbs,
     logInterfaceLoad: logInsightInterfaceLoad,
     logInterfaceChange: logInsightInterfaceChange,
+    logCreateArticle: logInsightCreateArticle,
     logCategoryFacetBreadcrumb,
     logFacetBreadcrumb,
     logFacetClearAll,

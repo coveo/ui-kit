@@ -1,3 +1,61 @@
+## 2.52.1 (2023-12-13)
+
+### Bug Fixes
+
+- **exclude:** use unexclude actionCause when unexcluding ([#3478](https://github.com/coveo/ui-kit/issues/3478)) ([8f7071e](https://github.com/coveo/ui-kit/commits/8f7071e0b0e15fee425b60db81cc7bd5ffddebec))
+- **exclusion:** add missing locales for accessibility ([#3480](https://github.com/coveo/ui-kit/issues/3480)) ([8277b29](https://github.com/coveo/ui-kit/commits/8277b297fb95a7e0137a85ab1ae8d855db42e2ec))
+
+# 2.52.0 (2023-12-08)
+
+### Bug Fixes
+
+- **atomic:** icons in textarea search box are not centered ([#3468](https://github.com/coveo/ui-kit/issues/3468)) ([bffe657](https://github.com/coveo/ui-kit/commits/bffe65760b2c52db79787a552dfe07434c2d292e))
+- **breadcrumbs:** include/exclude aria labels ([#3469](https://github.com/coveo/ui-kit/issues/3469)) ([ce4f5a3](https://github.com/coveo/ui-kit/commits/ce4f5a3586e8070855ae5be27bfd66f0c3176d13))
+
+### Features
+
+- **atomic:** support core facet value exclusion ([#3103](https://github.com/coveo/ui-kit/issues/3103)) ([7b678c3](https://github.com/coveo/ui-kit/commits/7b678c3ba9ff8733fe6d0c6897679c4f2d67a213))
+
+## 2.51.1 (2023-12-06)
+
+### Bug Fixes
+
+- **atomic-search-box:** close suggestions when clicking search button ([#3448](https://github.com/coveo/ui-kit/issues/3448)) ([7cb5aa5](https://github.com/coveo/ui-kit/commits/7cb5aa5b7ff3fd622c411eb2ffa324011c5d9621))
+- **atomic:** improve accessibility for generated answer ([#3435](https://github.com/coveo/ui-kit/issues/3435)) ([59296d5](https://github.com/coveo/ui-kit/commits/59296d5d874e8bf2b097eef23297b26516361edb))
+- **deps:** update dependency @stencil/core to v4.8.1 j:kit-282 ([#3451](https://github.com/coveo/ui-kit/issues/3451)) ([b5874d6](https://github.com/coveo/ui-kit/commits/b5874d6784ff2b7cfc71b4dc8f477592e6b0ad32))
+
+# 2.51.0 (2023-11-29)
+
+### Bug Fixes
+
+- **deps:** update dependency @stencil/core to v4.7.2 j:kit-282 ([#3418](https://github.com/coveo/ui-kit/issues/3418)) ([d142351](https://github.com/coveo/ui-kit/commits/d142351f38b1c8dd8cba935991e0fd70a80122d8))
+- **genai:** dispatch like and dislike properly ([#3393](https://github.com/coveo/ui-kit/issues/3393)) ([43ca99a](https://github.com/coveo/ui-kit/commits/43ca99a3be81fd2948d6eb457419d978255cd72f))
+- **genai:** feedback modal fixes ([#3414](https://github.com/coveo/ui-kit/issues/3414)) ([6c2ed62](https://github.com/coveo/ui-kit/commits/6c2ed629a75796b040dfa8ab5aba44deed91ae48))
+- **RGA:** no longer showing citation popover on small screens ([#3398](https://github.com/coveo/ui-kit/issues/3398)) ([4b170f6](https://github.com/coveo/ui-kit/commits/4b170f6949812a8218fef0deae115597728bc421))
+
+### Features
+
+- **doc:** generate documentation for generated answer in headless, atomic and quantic ([#3397](https://github.com/coveo/ui-kit/issues/3397)) ([c5df083](https://github.com/coveo/ui-kit/commits/c5df0835dde13ea54376a04ba4945427ac7155e9))
+- **IPX:** make button load recs on click ([#3406](https://github.com/coveo/ui-kit/issues/3406)) ([c7c72f5](https://github.com/coveo/ui-kit/commits/c7c72f546f252284d5efc53901bac0421ac4da37))
+
+## 2.50.2 (2023-11-16)
+
+### Features
+
+- **atomic:** added negative feedback modal for rga ([#3339](https://github.com/coveo/ui-kit/issues/3339)) ([194db3c](https://github.com/coveo/ui-kit/commits/194db3c0819aaa70e0e4089e5eb620c17fa21b88))
+- **atomic:** improve generated answer accessibility ([#3373](https://github.com/coveo/ui-kit/issues/3373)) ([2e3cb57](https://github.com/coveo/ui-kit/commits/2e3cb57372c3ba43f0400ec6014caa7fed26e482))
+- **atomic:** swapped summary answer icon ([#3379](https://github.com/coveo/ui-kit/issues/3379)) ([2c736c5](https://github.com/coveo/ui-kit/commits/2c736c5d10938e8f74c17f1ca1a9f0a7031f9dcf))
+
+# 2.49.0 (2023-11-08)
+
+### Bug Fixes
+
+- **deps:** update all dependencies j:kit-282 ([#3366](https://github.com/coveo/ui-kit/issues/3366)) ([da241a8](https://github.com/coveo/ui-kit/commits/da241a81d2747c57968caf6da55778fe8db9e6d5))
+
+### Features
+
+- **atomic:** dynamically display search input depending on the length of values displayed ([#3351](https://github.com/coveo/ui-kit/issues/3351)) ([9d77cfe](https://github.com/coveo/ui-kit/commits/9d77cfe1818aee1f92bb2884b3f6e3582e8d70a8))
+
 ## 2.48.3 (2023-11-02)
 
 ### Bug Fixes
