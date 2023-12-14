@@ -1,6 +1,7 @@
 import {
   RegularFacetValue,
   NumericFacetValue,
+  DateFacetValue,
 } from '../features/commerce/facets/facet-set/interfaces/response';
 
 export function buildMockCommerceRegularFacetValue(
@@ -28,6 +29,22 @@ export function buildMockCommerceNumericFacetValue(
     moreValuesAvailable: false,
     numberOfResults: 0,
     start: 0,
+    state: 'idle',
+    ...config,
+  };
+}
+
+export function buildMockCommerceDateFacetValue(
+  config: Partial<DateFacetValue> = {}
+): DateFacetValue {
+  return {
+    end: '',
+    endInclusive: false,
+    isAutoSelected: false,
+    isSuggested: false,
+    moreValuesAvailable: false,
+    numberOfResults: 0,
+    start: '',
     state: 'idle',
     ...config,
   };

@@ -134,24 +134,15 @@ describe('CoreCommerceFacet', () => {
     describe('when toggled facet value state is "idle"', () => {
       const facetValue = () =>
         buildMockCommerceRegularFacetValue({value: 'TED', state: 'idle'});
-      it('dispatches #toggleSelectActionCreator with the passed facet value', () => {
+
+      it('calls #toggleSelect', () => {
+        jest.spyOn(facet, 'toggleSelect');
         facet.toggleSingleSelect(facetValue());
 
-        expect(engine.actions).toContainEqual(
-          toggleSelectActionCreator({facetId, selection: facetValue()})
-        );
+        expect(facet.toggleSelect).toHaveBeenCalled();
       });
 
-      it('dispatches #fetchResultsActionCreator', () => {
-        facet.toggleSingleSelect(facetValue());
-
-        const action = engine.findAsyncAction(
-          fetchResultsActionCreator.pending
-        );
-        expect(action).toBeTruthy();
-      });
-
-      it('dispatches the #deselectAllFacetValues action with the facetId', () => {
+      it('dispatches #deselectAllFacetValues with the facetId', () => {
         facet.toggleSingleSelect(facetValue());
 
         expect(engine.actions).toContainEqual(deselectAllFacetValues(facetId));
@@ -168,21 +159,12 @@ describe('CoreCommerceFacet', () => {
     ])('when toggled facet value state is $state', ({state}) => {
       const facetValue = () =>
         buildMockCommerceRegularFacetValue({value: 'TED', state});
-      it('dispatches #toggleSelectActionCreator with the passed facet value', () => {
+
+      it('calls #toggleSelect', () => {
+        jest.spyOn(facet, 'toggleSelect');
         facet.toggleSingleSelect(facetValue());
 
-        expect(engine.actions).toContainEqual(
-          toggleSelectActionCreator({facetId, selection: facetValue()})
-        );
-      });
-
-      it('dispatches #fetchResultsActionCreator', () => {
-        facet.toggleSingleSelect(facetValue());
-
-        const action = engine.findAsyncAction(
-          fetchResultsActionCreator.pending
-        );
-        expect(action).toBeTruthy();
+        expect(facet.toggleSelect).toHaveBeenCalled();
       });
 
       it('does not dispatch the #deselectAllFacetValues action', () => {
@@ -199,21 +181,12 @@ describe('CoreCommerceFacet', () => {
     describe('when toggled facet value state is "idle"', () => {
       const facetValue = () =>
         buildMockCommerceRegularFacetValue({value: 'TED', state: 'idle'});
-      it('dispatches #toggleExcludeActionCreator with the passed facet value', () => {
+
+      it('calls #toggleExclude', () => {
+        jest.spyOn(facet, 'toggleExclude');
         facet.toggleSingleExclude(facetValue());
 
-        expect(engine.actions).toContainEqual(
-          toggleExcludeActionCreator({facetId, selection: facetValue()})
-        );
-      });
-
-      it('dispatches #fetchResultsActionCreator', () => {
-        facet.toggleSingleExclude(facetValue());
-
-        const action = engine.findAsyncAction(
-          fetchResultsActionCreator.pending
-        );
-        expect(action).toBeTruthy();
+        expect(facet.toggleExclude).toHaveBeenCalled();
       });
 
       it('dispatches the #deselectAllFacetValues action with the facetId', () => {
@@ -233,21 +206,12 @@ describe('CoreCommerceFacet', () => {
     ])('when toggled facet value state is "$state"', ({state}) => {
       const facetValue = () =>
         buildMockCommerceRegularFacetValue({value: 'TED', state});
-      it('dispatches #toggleExcludeActionCreator with the passed facet value', () => {
+
+      it('calls #toggleExclude', () => {
+        jest.spyOn(facet, 'toggleExclude');
         facet.toggleSingleExclude(facetValue());
 
-        expect(engine.actions).toContainEqual(
-          toggleExcludeActionCreator({facetId, selection: facetValue()})
-        );
-      });
-
-      it('dispatches #fetchResultsActionCreator', () => {
-        facet.toggleSingleExclude(facetValue());
-
-        const action = engine.findAsyncAction(
-          fetchResultsActionCreator.pending
-        );
-        expect(action).toBeTruthy();
+        expect(facet.toggleExclude).toHaveBeenCalled();
       });
 
       it('does not dispatch the #deselectAllFacetValues action', () => {

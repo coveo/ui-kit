@@ -168,6 +168,19 @@ function findRange(values: RangeValueRequest[], value: RangeValueRequest) {
   return values.find((range) => range.start === start && range.end === end);
 }
 
+export function findExactRangeValue(
+  values: RangeValueRequest[],
+  value: RangeValueRequest
+) {
+  const {start, end, endInclusive} = value;
+  return values.find(
+    (range) =>
+      range.start === start &&
+      range.end === end &&
+      range.endInclusive === endInclusive
+  );
+}
+
 function calculateNumberOfValues(request: RangeFacetRequest) {
   const {generateAutomaticRanges, currentValues, numberOfValues} = request;
   return generateAutomaticRanges
