@@ -1,14 +1,21 @@
-import {FacetValueRequest, NumericRangeRequest} from '../../../../ssr.index';
+import {
+  DateRangeRequest,
+  FacetValueRequest,
+  NumericRangeRequest,
+} from '../../../../controllers/commerce/facets/core/headless-core-commerce-facet';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
 import {
+  buildMockCommerceDateFacetResponse,
   buildMockCommerceNumericFacetResponse,
   buildMockCommerceRegularFacetResponse,
 } from '../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
 import {
+  buildMockCommerceDateFacetValue,
   buildMockCommerceNumericFacetValue,
   buildMockCommerceRegularFacetValue,
 } from '../../../../test/mock-commerce-facet-value';
+import {buildSearchResponse} from '../../../../test/mock-commerce-search';
 import {buildFetchProductListingV2Response} from '../../../../test/mock-product-listing-v2';
 import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
 import {
@@ -23,11 +30,18 @@ import {
 import {convertFacetValueToRequest} from '../../../facets/facet-set/facet-set-slice';
 import {updateFacetAutoSelection} from '../../../facets/generic/facet-actions';
 import {
+  toggleExcludeDateFacetValue,
+  toggleSelectDateFacetValue,
+} from '../../../facets/range-facets/date-facet-set/date-facet-actions';
+import {convertToDateRangeRequests} from '../../../facets/range-facets/date-facet-set/date-facet-set-slice';
+import {findExactRangeValue} from '../../../facets/range-facets/generic/range-facet-reducers';
+import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
 } from '../../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {convertToRangeRequests} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
+import {convertToNumericRangeRequests} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
+import {executeSearch} from '../../search/search-actions';
 import {commerceFacetSetReducer} from './facet-set-slice';
 import {
   CommerceFacetSetState,
@@ -35,7 +49,7 @@ import {
 } from './facet-set-state';
 import {AnyFacetResponse, FacetType} from './interfaces/response';
 
-describe('facet-set slice', () => {
+describe('commerceFacetSetReducer', () => {
   let state: CommerceFacetSetState;
 
   beforeEach(() => {
@@ -47,15 +61,27 @@ describe('facet-set slice', () => {
     expect(finalState).toEqual({});
   });
 
-  describe('#fetchProductListing.fulfilled', () => {
-    function buildFetchProductListingAction(facets: AnyFacetResponse[]) {
-      const productListing = buildFetchProductListingV2Response();
-      productListing.response.facets = facets;
+  describe.each([
+    {
+      actionName: '#fetchProductListing.fulfilled',
+      action: fetchProductListing.fulfilled,
+      responseBuilder: buildFetchProductListingV2Response,
+    },
+    {
+      actionName: '#executeSearch.fulfilled',
+      action: executeSearch.fulfilled,
+      responseBuilder: buildSearchResponse,
+    },
+  ])('$actionName ', ({action, responseBuilder}) => {
+    const facetId = '1';
+    function buildQueryAction(facets: AnyFacetResponse[]) {
+      const response = responseBuilder();
+      response.response.facets = facets;
 
-      return fetchProductListing.fulfilled(productListing, '');
+      return action(response, '');
     }
+
     it('updates the values of regular facet requests to the corresponding values in the response', () => {
-      const facetId = '1';
       const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
       const facet = buildMockCommerceRegularFacetResponse({
         facetId,
@@ -66,7 +92,7 @@ describe('facet-set slice', () => {
         request: buildMockCommerceFacetRequest({type: 'regular', facetId}),
       });
 
-      const action = buildFetchProductListingAction([facet]);
+      const action = buildQueryAction([facet]);
       const finalState = commerceFacetSetReducer(state, action);
 
       const expectedFacetValueRequest = convertFacetValueToRequest(facetValue);
@@ -76,7 +102,6 @@ describe('facet-set slice', () => {
     });
 
     it('updates the values of numeric facet requests to the corresponding values in the response', () => {
-      const facetId = '1';
       const facetValue = buildMockCommerceNumericFacetValue();
       const facet = buildMockCommerceNumericFacetResponse({
         facetId,
@@ -90,16 +115,45 @@ describe('facet-set slice', () => {
         }),
       });
 
-      const action = buildFetchProductListingAction([facet]);
+      const action = buildQueryAction([facet]);
       const finalState = commerceFacetSetReducer(state, action);
 
-      const expectedFacetValueRequests = convertToRangeRequests([facetValue]);
+      const expectedFacetValueRequests = convertToNumericRangeRequests([
+        facetValue,
+      ]);
       expect(finalState[facetId]?.request.values).toEqual(
         expectedFacetValueRequests
       );
     });
 
-    // TODO: it('updates the values of date facet requests to the corresponding values in the response', () => {}
+    it('updates the values of date facet requests to the corresponding values in the response', () => {
+      const facetValue = buildMockCommerceDateFacetValue({
+        start: '2023-01-01',
+        end: '2024-01-01',
+      });
+      const facet = buildMockCommerceDateFacetResponse({
+        facetId,
+        values: [facetValue],
+      });
+
+      state[facetId] = buildMockCommerceFacetSlice({
+        request: buildMockCommerceFacetRequest({
+          type: 'dateRange',
+          facetId,
+        }),
+      });
+
+      const action = buildQueryAction([facet]);
+      const finalState = commerceFacetSetReducer(state, action);
+
+      const expectedFacetValueRequests = convertToDateRangeRequests([
+        facetValue,
+      ]);
+      expect(finalState[facetId]?.request.values).toEqual(
+        expectedFacetValueRequests
+      );
+    });
+
     // TODO: it('updates the values of category facet requests to the corresponding values in the response', () => {
 
     describe.each([
@@ -111,11 +165,13 @@ describe('facet-set slice', () => {
         type: 'numericalRange' as FacetType,
         facetResponseBuilder: buildMockCommerceNumericFacetResponse,
       },
-      // TODO: { type: 'dateRange' as FacetType, facetResponseBuilder: buildMockCommerceDateFacetResponse, },
+      {
+        type: 'dateRange' as FacetType,
+        facetResponseBuilder: buildMockCommerceDateFacetResponse,
+      },
       // TODO: { type: 'hierarchical' as FacetType, facetResponseBuilder: buildMockCommerceCategoryFacetResponse, },
     ])('for $type facets', ({type, facetResponseBuilder}) => {
       it('sets #preventAutoSelect to false', () => {
-        const facetId = '1';
         state[facetId] = buildMockCommerceFacetSlice({
           request: buildMockCommerceFacetRequest({
             type,
@@ -126,18 +182,17 @@ describe('facet-set slice', () => {
         const facet = facetResponseBuilder({
           facetId,
         });
-        const action = buildFetchProductListingAction([facet]);
+        const action = buildQueryAction([facet]);
 
         const finalState = commerceFacetSetReducer(state, action);
         expect(finalState[facetId]?.request.preventAutoSelect).toBe(false);
       });
 
       it('response containing unregistered facet ids does not throw', () => {
-        const facetId = '1';
         const facet = facetResponseBuilder({
           facetId,
         });
-        const action = buildFetchProductListingAction([facet]);
+        const action = buildQueryAction([facet]);
 
         expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
       });
@@ -152,7 +207,7 @@ describe('facet-set slice', () => {
         const newFacet = facetResponseBuilder({
           facetId: newFacetId,
         });
-        const action = buildFetchProductListingAction([newFacet]);
+        const action = buildQueryAction([newFacet]);
 
         const finalState = commerceFacetSetReducer(state, action);
         expect(facetIdToRemove in finalState).toBe(false);
@@ -412,7 +467,9 @@ describe('facet-set slice', () => {
             end: 5,
             endInclusive: true,
           });
-          const facetValueRequests = convertToRangeRequests([facetValue]);
+          const facetValueRequests = convertToNumericRangeRequests([
+            facetValue,
+          ]);
 
           state[facetId] = buildMockCommerceFacetSlice({
             request: buildMockCommerceFacetRequest({
@@ -427,13 +484,9 @@ describe('facet-set slice', () => {
           });
           const finalState = commerceFacetSetReducer(state, action);
 
-          const targetValue = (
-            finalState[facetId]?.request.values as NumericRangeRequest[]
-          ).find(
-            (req) =>
-              req.start === facetValue.start &&
-              req.end === facetValue.end &&
-              req.endInclusive === facetValue.endInclusive
+          const targetValue = findExactRangeValue(
+            finalState[facetId]?.request.values as NumericRangeRequest[],
+            facetValue
           );
           expect(targetValue?.state).toBe(facetValueState);
         });
@@ -445,7 +498,9 @@ describe('facet-set slice', () => {
             endInclusive: true,
             state: oppositeFacetValueState,
           });
-          const facetValueRequests = convertToRangeRequests([facetValue]);
+          const facetValueRequests = convertToNumericRangeRequests([
+            facetValue,
+          ]);
 
           state[facetId] = buildMockCommerceFacetSlice({
             request: buildMockCommerceFacetRequest({
@@ -460,13 +515,9 @@ describe('facet-set slice', () => {
           });
           const finalState = commerceFacetSetReducer(state, action);
 
-          const targetValue = (
-            finalState[facetId]?.request.values as NumericRangeRequest[]
-          ).find(
-            (req) =>
-              req.start === facetValue.start &&
-              req.end === facetValue.end &&
-              req.endInclusive === facetValue.endInclusive
+          const targetValue = findExactRangeValue(
+            finalState[facetId]?.request.values as NumericRangeRequest[],
+            facetValue
           );
           expect(targetValue?.state).toBe(facetValueState);
         });
@@ -478,7 +529,9 @@ describe('facet-set slice', () => {
             endInclusive: true,
             state: facetValueState,
           });
-          const facetValueRequests = convertToRangeRequests([facetValue]);
+          const facetValueRequests = convertToNumericRangeRequests([
+            facetValue,
+          ]);
 
           state[facetId] = buildMockCommerceFacetSlice({
             request: buildMockCommerceFacetRequest({
@@ -493,13 +546,9 @@ describe('facet-set slice', () => {
           });
           const finalState = commerceFacetSetReducer(state, action);
 
-          const targetValue = (
-            finalState[facetId]?.request.values as NumericRangeRequest[]
-          ).find(
-            (req) =>
-              req.start === facetValue.start &&
-              req.end === facetValue.end &&
-              req.endInclusive === facetValue.endInclusive
+          const targetValue = findExactRangeValue(
+            finalState[facetId]?.request.values as NumericRangeRequest[],
+            facetValue
           );
           expect(targetValue?.state).toBe('idle');
         });
@@ -510,7 +559,9 @@ describe('facet-set slice', () => {
             end: 5,
             endInclusive: true,
           });
-          const facetValueRequests = convertToRangeRequests([facetValue]);
+          const facetValueRequests = convertToNumericRangeRequests([
+            facetValue,
+          ]);
 
           state[facetId] = buildMockCommerceFacetSlice({
             request: buildMockCommerceFacetRequest({
@@ -639,6 +690,250 @@ describe('facet-set slice', () => {
     });
   });
 
+  describe('for dateRange facets', () => {
+    describe.each([
+      {
+        title:
+          'dispatching #toggleSelectDateFacetValue with a registered facet id',
+        facetValueState: 'selected' as FacetValueState,
+        toggleAction: toggleSelectDateFacetValue,
+      },
+      {
+        title:
+          'dispatching #toggleExcludeDateFacetValue with a registered facet id',
+        facetValueState: 'excluded' as FacetValueState,
+        toggleAction: toggleExcludeDateFacetValue,
+      },
+    ])('$title', ({facetValueState, toggleAction}) => {
+      const facetId = '1';
+      const oppositeFacetValueState = facetValueStates.find(
+        (valueState) => ![facetValueState, 'idle'].includes(valueState)
+      );
+      describe('when the facet value exists', () => {
+        it(`sets the state of an idle value to ${facetValueState}`, () => {
+          const facetValue = buildMockCommerceDateFacetValue({
+            start: '2023-01-01',
+            end: '2024-01-01',
+            endInclusive: true,
+          });
+          const facetValueRequests = convertToDateRangeRequests([facetValue]);
+
+          state[facetId] = buildMockCommerceFacetSlice({
+            request: buildMockCommerceFacetRequest({
+              type: 'dateRange',
+              values: facetValueRequests,
+            }),
+          });
+
+          const action = toggleAction({
+            facetId,
+            selection: facetValue,
+          });
+          const finalState = commerceFacetSetReducer(state, action);
+
+          const targetValue = findExactRangeValue(
+            finalState[facetId]?.request.values as DateRangeRequest[],
+            facetValue
+          );
+          expect(targetValue?.state).toBe(facetValueState);
+        });
+
+        it(`sets the state of an ${oppositeFacetValueState} value to ${facetValueState}`, () => {
+          const facetValue = buildMockCommerceDateFacetValue({
+            start: '2023-01-01',
+            end: '2024-01-01',
+            endInclusive: true,
+            state: oppositeFacetValueState,
+          });
+          const facetValueRequests = convertToDateRangeRequests([facetValue]);
+
+          state[facetId] = buildMockCommerceFacetSlice({
+            request: buildMockCommerceFacetRequest({
+              type: 'dateRange',
+              values: facetValueRequests,
+            }),
+          });
+
+          const action = toggleAction({
+            facetId,
+            selection: facetValue,
+          });
+          const finalState = commerceFacetSetReducer(state, action);
+
+          const targetValue = findExactRangeValue(
+            finalState[facetId]?.request.values as DateRangeRequest[],
+            facetValue
+          );
+          expect(targetValue?.state).toBe(facetValueState);
+        });
+
+        it(`sets the state of a ${facetValueState} value to idle`, () => {
+          const facetValue = buildMockCommerceDateFacetValue({
+            start: '2023-01-01',
+            end: '2024-01-01',
+            endInclusive: true,
+            state: facetValueState,
+          });
+          const facetValueRequests = convertToDateRangeRequests([facetValue]);
+
+          state[facetId] = buildMockCommerceFacetSlice({
+            request: buildMockCommerceFacetRequest({
+              type: 'dateRange',
+              values: facetValueRequests,
+            }),
+          });
+
+          const action = toggleAction({
+            facetId,
+            selection: facetValue,
+          });
+          const finalState = commerceFacetSetReducer(state, action);
+
+          const targetValue = findExactRangeValue(
+            finalState[facetId]?.request.values as DateRangeRequest[],
+            facetValue
+          );
+          expect(targetValue?.state).toBe('idle');
+        });
+
+        it('sets #preventAutoSelect to true', () => {
+          const facetValue = buildMockCommerceDateFacetValue({
+            start: '2023-01-01',
+            end: '2024-01-01',
+            endInclusive: true,
+          });
+          const facetValueRequests = convertToDateRangeRequests([facetValue]);
+
+          state[facetId] = buildMockCommerceFacetSlice({
+            request: buildMockCommerceFacetRequest({
+              type: 'dateRange',
+              values: facetValueRequests,
+            }),
+          });
+
+          const action = toggleAction({
+            facetId,
+            selection: facetValue,
+          });
+          const finalState = commerceFacetSetReducer(state, action);
+
+          expect(finalState[facetId]?.request.preventAutoSelect).toBe(true);
+        });
+      });
+
+      describe.each([
+        {
+          facetValueState: 'selected' as FacetValueState,
+          toggleAction: toggleSelectDateFacetValue,
+        },
+        {
+          facetValueState: 'excluded' as FacetValueState,
+          toggleAction: toggleExcludeDateFacetValue,
+        },
+      ])(
+        'when the facet value does not exist',
+        ({facetValueState, toggleAction}) => {
+          it('replaces the first idle value with the new value', () => {
+            const newFacetValue = buildMockCommerceDateFacetValue({
+              start: '2023-01-01',
+              end: '2024-01-01',
+              endInclusive: false,
+              state: facetValueState,
+            });
+
+            state[facetId] = buildMockCommerceFacetSlice({
+              request: buildMockCommerceFacetRequest({
+                type: 'dateRange',
+                values: [
+                  buildMockCommerceDateFacetValue({
+                    start: '2024-01-01',
+                    end: '2025-01-01',
+                    endInclusive: false,
+                    state: facetValueState,
+                  }),
+                  buildMockCommerceDateFacetValue({
+                    start: '2025-01-01',
+                    end: '2026-01-01',
+                    endInclusive: false,
+                    state: facetValueState,
+                  }),
+                  buildMockCommerceDateFacetValue({
+                    start: '2026-01-01',
+                    end: '2027-01-01',
+                    endInclusive: false,
+                    state: 'idle',
+                  }),
+                  buildMockCommerceDateFacetValue({
+                    start: '2027-01-01',
+                    end: '2028-01-01',
+                    endInclusive: true,
+                    state: 'idle',
+                  }),
+                ],
+              }),
+            });
+
+            const action = toggleAction({
+              facetId,
+              selection: newFacetValue,
+            });
+
+            const finalState = commerceFacetSetReducer(state, action);
+            expect(
+              (
+                finalState[facetId]?.request.values as DateRangeRequest[]
+              ).indexOf(newFacetValue)
+            ).toBe(2);
+            expect(finalState[facetId]?.request.values.length).toBe(4);
+          });
+
+          it('sets #preventAutoSelect to true', () => {
+            state[facetId] = buildMockCommerceFacetSlice({
+              request: buildMockCommerceFacetRequest({
+                type: 'dateRange',
+                values: [],
+              }),
+            });
+
+            const action = toggleAction({
+              facetId,
+              selection: buildMockCommerceDateFacetValue({
+                start: '2023-01-01',
+                end: '2024-01-01',
+                endInclusive: false,
+              }),
+            });
+            const finalState = commerceFacetSetReducer(state, action);
+
+            expect(finalState[facetId]?.request.preventAutoSelect).toBe(true);
+          });
+        }
+      );
+    });
+
+    it('dispatching #toggleSelectDateFacetValue with an invalid id does not throw', () => {
+      const facetValue = buildMockCommerceDateFacetValue();
+      const action = toggleSelectDateFacetValue({
+        facetId: '1',
+        selection: facetValue,
+      });
+
+      expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
+    });
+
+    it('dispatching #toggleExcludeDateFacetValue with an invalid id does not throw', () => {
+      const facetValue = buildMockCommerceDateFacetValue();
+      const action = toggleExcludeDateFacetValue({
+        facetId: '1',
+        selection: facetValue,
+      });
+
+      expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
+    });
+  });
+
+  // TODO describe('for hierarchical facets', () => { /* ... */ });
+
   describe('#updateFacetIsFieldExpanded', () => {
     describe.each([
       {
@@ -647,7 +942,9 @@ describe('facet-set slice', () => {
       {
         type: 'numericalRange' as FacetType,
       },
-      // TODO: { type: 'dateRange' as FacetType, },
+      {
+        type: 'dateRange' as FacetType,
+      },
       // TODO: { type: 'hierarchical' as FacetType },
     ])('for $type facets', ({type}) => {
       it('dispatching with a registered facet id updates the value', () => {

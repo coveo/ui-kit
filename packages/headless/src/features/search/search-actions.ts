@@ -20,6 +20,7 @@ import {
   deselectAllNonBreadcrumbs,
 } from '../breadcrumb/breadcrumb-actions';
 import {updateFacetAutoSelection} from '../facets/generic/facet-actions';
+import {searchboxAsYouType} from '../instant-results/instant-result-analytics-actions';
 import {
   FetchInstantResultsActionCreatorPayload,
   FetchInstantResultsThunkReturn,
@@ -274,10 +275,16 @@ export const fetchInstantResults = createAsyncThunk<
       cacheTimeout: new NumberValue(),
     });
     const {q, maxResultsPerQuery} = payload;
-    const analyticsAction = makeBasicNewSearchAnalyticsAction(
-      SearchPageEvents.searchboxAsYouType,
-      config.getState
+
+    const analyticsAction = buildSearchReduxAction(searchboxAsYouType(), state);
+
+    const request = await buildInstantResultSearchRequest(
+      state,
+      q,
+      maxResultsPerQuery,
+      analyticsAction
     );
+
     const processor = new AsyncSearchThunkProcessor<
       ReturnType<typeof config.rejectWithValue>
     >({...config, analyticsAction}, (modification) => {
@@ -285,17 +292,11 @@ export const fetchInstantResults = createAsyncThunk<
         updateInstantResultsQuery({q: modification, id: payload.id})
       );
     });
-
-    const request = await buildInstantResultSearchRequest(
-      state,
-      q,
-      maxResultsPerQuery
-    );
-
     const fetched = await processor.fetchFromAPI(request, {
       origin: 'instantResults',
       disableAbortWarning: true,
     });
+
     const processed = await processor.process(fetched);
     if ('response' in processed) {
       return {
@@ -326,10 +327,11 @@ const buildFetchMoreRequest = async (
 export const buildInstantResultSearchRequest = async (
   state: StateNeededByExecuteSearch,
   q: string,
-  numberOfResults: number
+  numberOfResults: number,
+  eventDescription: EventDescription
 ) => {
   const sharedWithFoldingRequest =
-    await buildSearchAndFoldingLoadCollectionRequest(state);
+    await buildSearchAndFoldingLoadCollectionRequest(state, eventDescription);
 
   return mapSearchRequest({
     ...sharedWithFoldingRequest,

@@ -1,24 +1,23 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {executeSearch} from '../../../../features/commerce/search/search-actions';
 import {loadReducerError} from '../../../../utils/errors';
+import {CommerceFacetOptions} from '../../facets/core/headless-core-commerce-facet';
 import {
-  buildCorePagination,
-  Pagination,
-} from '../../pagination/core/headless-core-commerce-pagination';
+  CommerceRegularFacet,
+  buildCommerceRegularFacet,
+} from '../../facets/core/regular/headless-commerce-regular-facet';
 import {loadSearchReducer} from '../utils/load-search-reducers';
 
-/**
- * Creates a `Pagination` controller instance.
- *
- * @param engine - The headless commerce engine.
- * @returns A `Pagination` controller instance.
- * */
-export function buildSearchPagination(engine: CommerceEngine): Pagination {
+export function buildSearchRegularFacet(
+  engine: CommerceEngine,
+  options: CommerceFacetOptions
+): CommerceRegularFacet {
   if (!loadSearchReducer(engine)) {
     throw loadReducerError;
   }
 
-  return buildCorePagination(engine, {
+  return buildCommerceRegularFacet(engine, {
+    ...options,
     fetchResultsActionCreator: executeSearch,
   });
 }
