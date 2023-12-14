@@ -1,11 +1,14 @@
 import {
   RegularFacetResponse,
   NumericFacetResponse,
+  DateRangeFacetResponse,
+  AnyFacetResponse,
 } from '../features/commerce/facets/facet-set/interfaces/response';
 
-export function buildMockCommerceRegularFacetResponse(
-  config: Partial<RegularFacetResponse> = {}
-): RegularFacetResponse {
+function getMockBaseCommerceFacetResponse(): Omit<
+  AnyFacetResponse,
+  'type' | 'values'
+> {
   return {
     displayName: '',
     facetId: '',
@@ -13,6 +16,14 @@ export function buildMockCommerceRegularFacetResponse(
     fromAutoSelect: false,
     isFieldExpanded: false,
     moreValuesAvailable: false,
+  };
+}
+
+export function buildMockCommerceRegularFacetResponse(
+  config: Partial<RegularFacetResponse> = {}
+): RegularFacetResponse {
+  return {
+    ...getMockBaseCommerceFacetResponse(),
     type: 'regular',
     values: [],
     ...config,
@@ -23,13 +34,19 @@ export function buildMockCommerceNumericFacetResponse(
   config: Partial<NumericFacetResponse> = {}
 ): NumericFacetResponse {
   return {
-    displayName: '',
-    facetId: '',
-    field: '',
-    fromAutoSelect: false,
-    isFieldExpanded: false,
-    moreValuesAvailable: false,
+    ...getMockBaseCommerceFacetResponse(),
     type: 'numericalRange',
+    values: [],
+    ...config,
+  };
+}
+
+export function buildMockCommerceDateFacetResponse(
+  config: Partial<DateRangeFacetResponse> = {}
+): DateRangeFacetResponse {
+  return {
+    ...getMockBaseCommerceFacetResponse(),
+    type: 'dateRange',
     values: [],
     ...config,
   };

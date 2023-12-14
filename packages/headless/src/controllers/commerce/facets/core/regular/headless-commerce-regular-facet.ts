@@ -34,7 +34,7 @@ export type CommerceRegularFacet = CoreCommerceFacet<
  * controller.
  *
  * @param engine - The headless commerce engine.
- * @param props - The `CommerceRegularFacet` options used internally.
+ * @param options - The `CommerceRegularFacet` options used internally.
  * @returns A `CommerceRegularFacet` controller instance.
  * */
 export function buildCommerceRegularFacet(

@@ -1,40 +1,44 @@
 import {CommerceFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
+import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
 import {fetchProductListing} from '../../../../../features/commerce/product-listing/product-listing-actions';
 import {
-  toggleExcludeFacetValue,
-  toggleSelectFacetValue,
-} from '../../../../../features/facets/facet-set/facet-set-actions';
+  toggleExcludeDateFacetValue,
+  toggleSelectDateFacetValue,
+} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {CommerceAppState} from '../../../../../state/commerce-app-state';
 import {MockCommerceEngine, buildMockCommerceEngine} from '../../../../../test';
 import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request';
-import {buildMockCommerceRegularFacetResponse} from '../../../../../test/mock-commerce-facet-response';
+import {buildMockCommerceDateFacetResponse} from '../../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceFacetSlice} from '../../../../../test/mock-commerce-facet-slice';
-import {buildMockCommerceRegularFacetValue} from '../../../../../test/mock-commerce-facet-value';
+import {buildMockCommerceDateFacetValue} from '../../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
 import {
-  CommerceRegularFacet,
-  CommerceRegularFacetOptions,
-  buildCommerceRegularFacet,
-} from './headless-commerce-regular-facet';
+  CommerceDateFacet,
+  CommerceDateFacetOptions,
+  buildCommerceDateFacet,
+} from './headless-commerce-date-facet';
 
-describe('CommerceRegularFacet', () => {
-  const facetId: string = 'regular_facet_id';
-  let options: CommerceRegularFacetOptions;
+describe('CommerceDateFacet', () => {
+  const facetId: string = 'date_facet_id';
+  const type: FacetType = 'dateRange';
+  const start = '2023-01-01';
+  const end = '2024-01-01';
+  let options: CommerceDateFacetOptions;
   let state: CommerceAppState;
   let engine: MockCommerceEngine;
-  let facet: CommerceRegularFacet;
+  let facet: CommerceDateFacet;
 
   function initFacet() {
     engine = buildMockCommerceEngine({state});
-    facet = buildCommerceRegularFacet(engine, options);
+    facet = buildCommerceDateFacet(engine, options);
   }
 
   function setFacetRequest(config: Partial<CommerceFacetRequest> = {}) {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
-      request: buildMockCommerceFacetRequest({facetId, ...config}),
+      request: buildMockCommerceFacetRequest({facetId, type, ...config}),
     });
     state.productListing.facets = [
-      buildMockCommerceRegularFacetResponse({facetId}),
+      buildMockCommerceDateFacetResponse({facetId}),
     ];
   }
 
@@ -59,23 +63,23 @@ describe('CommerceRegularFacet', () => {
   });
 
   describe('#toggleSelect', () => {
-    it('dispatches a #toggleSelectFacetValue', () => {
-      const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
+    it('dispatches #toggleSelectDateFacetValue', () => {
+      const facetValue = buildMockCommerceDateFacetValue({start, end});
       facet.toggleSelect(facetValue);
 
       expect(engine.actions).toContainEqual(
-        toggleSelectFacetValue({facetId, selection: facetValue})
+        toggleSelectDateFacetValue({facetId, selection: facetValue})
       );
     });
   });
 
   describe('#toggleExclude', () => {
-    it('dispatches a #toggleExcludeFacetValue', () => {
-      const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
+    it('dispatches #toggleExcludeDateFacetValue', () => {
+      const facetValue = buildMockCommerceDateFacetValue({start, end});
       facet.toggleExclude(facetValue);
 
       expect(engine.actions).toContainEqual(
-        toggleExcludeFacetValue({facetId, selection: facetValue})
+        toggleExcludeDateFacetValue({facetId, selection: facetValue})
       );
     });
   });
