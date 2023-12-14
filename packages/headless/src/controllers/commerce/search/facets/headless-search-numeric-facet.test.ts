@@ -1,7 +1,7 @@
 import {Action} from '@reduxjs/toolkit';
 import {CommerceFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
-import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
-import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice';
+import {executeSearch} from '../../../../features/commerce/search/search-actions';
+import {commerceSearchReducer as commerceSearch} from '../../../../features/commerce/search/search-slice';
 import {CommerceAppState} from '../../../../state/commerce-app-state';
 import {MockCommerceEngine, buildMockCommerceEngine} from '../../../../test';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
@@ -11,9 +11,9 @@ import {buildMockCommerceNumericFacetValue} from '../../../../test/mock-commerce
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {CommerceFacetOptions} from '../../facets/core/headless-core-commerce-facet';
 import {CommerceNumericFacet} from '../../facets/core/numeric/headless-commerce-numeric-facet';
-import {buildProductListingNumericFacet} from './headless-product-listing-numeric-facet';
+import {buildSearchNumericFacet} from './headless-search-numeric-facet';
 
-describe('ProductListingNumericFacet', () => {
+describe('SearchNumericFacet', () => {
   const facetId: string = 'numeric_facet_id';
   const start = 0;
   const end = 100;
@@ -24,14 +24,14 @@ describe('ProductListingNumericFacet', () => {
 
   function initFacet() {
     engine = buildMockCommerceEngine({state});
-    facet = buildProductListingNumericFacet(engine, options);
+    facet = buildSearchNumericFacet(engine, options);
   }
 
   function setFacetRequest(config: Partial<CommerceFacetRequest> = {}) {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, ...config}),
     });
-    state.productListing.facets = [
+    state.commerceSearch.facets = [
       buildMockCommerceNumericFacetResponse({facetId}),
     ];
   }
@@ -59,49 +59,49 @@ describe('ProductListingNumericFacet', () => {
     expect(facet).toBeTruthy();
   });
 
-  it('adds #productListing reducer to engine', () => {
-    expect(engine.addReducers).toHaveBeenCalledWith({productListing});
+  it('adds #commerceSearch reducer to engine', () => {
+    expect(engine.addReducers).toHaveBeenCalledWith({commerceSearch});
   });
 
   describe('#toggleSelect', () => {
-    it('dispatches #fetchProductListing', () => {
+    it('dispatches #executeSearch', () => {
       const facetValue = buildMockCommerceNumericFacetValue({start, end});
       facet.toggleSelect(facetValue);
 
-      expectContainAction(fetchProductListing.pending);
+      expectContainAction(executeSearch.pending);
     });
   });
 
   describe('#toggleExclude', () => {
-    it('dispatches #fetchproductlisting', () => {
+    it('dispatches #executeSearch', () => {
       const facetValue = buildMockCommerceNumericFacetValue({start, end});
       facet.toggleExclude(facetValue);
 
-      expectContainAction(fetchProductListing.pending);
+      expectContainAction(executeSearch.pending);
     });
   });
 
   describe('#deselectAll', () => {
-    it('dispatches #fetchProductListing', () => {
+    it('dispatches #executeSearch', () => {
       facet.deselectAll();
 
-      expectContainAction(fetchProductListing.pending);
+      expectContainAction(executeSearch.pending);
     });
   });
 
   describe('#showMoreValues', () => {
-    it('dispatches #fetchProductListing', () => {
+    it('dispatches #executeSearch', () => {
       facet.showMoreValues();
 
-      expectContainAction(fetchProductListing.pending);
+      expectContainAction(executeSearch.pending);
     });
   });
 
   describe('#showLessValues', () => {
-    it('dispatches #fetchProductListing', () => {
+    it('dispatches #executeSearch', () => {
       facet.showLessValues();
 
-      expectContainAction(fetchProductListing.pending);
+      expectContainAction(executeSearch.pending);
     });
   });
 });
