@@ -76,7 +76,6 @@ const useCases: UseCase[] = [
     entryFile: 'temp/insight.api.json',
     config: insightUseCase,
   },
-
   // eslint-disable-next-line @cspell/spellchecker
   // TODO CAPI-89: Uncomment when we're ready to make the Commerce sub-package public.
   //{
@@ -85,12 +84,6 @@ const useCases: UseCase[] = [
   //  config: commerceUseCase,
   //},
 ];
-
-interface SSRUseCase {
-  name: string;
-  entryFile: string;
-  config: SSRUseCaseConfiguration;
-}
 
 function resolveUseCase(useCase: UseCase): ResolvedUseCase {
   const {name, entryFile, config} = useCase;
@@ -115,6 +108,12 @@ function resolveUseCase(useCase: UseCase): ResolvedUseCase {
 const resolved = useCases.map(resolveUseCase);
 
 writeFileSync('dist/parsed_doc.json', JSON.stringify(resolved, null, 2));
+
+interface SSRUseCase {
+  name: string;
+  entryFile: string;
+  config: SSRUseCaseConfiguration;
+}
 
 interface ResolvedSSRUseCase {
   name: string;
