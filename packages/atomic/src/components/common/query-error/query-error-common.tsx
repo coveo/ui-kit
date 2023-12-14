@@ -139,7 +139,7 @@ export const QueryErrorCommon: FunctionalComponent<QueryErrorCommonProps> = (
   props.setAriaLive(`${details.title} ${details.description}`);
 
   return (
-    <div class="text-center">
+    <div class="text-center mb-8">
       <atomic-icon
         part="icon"
         icon={details.icon}
