@@ -10,10 +10,12 @@ import {
 } from './src/headless-export-resolvers/controller-resolver';
 import {
   Engine,
+  EngineConfiguration,
   resolveEngine,
 } from './src/headless-export-resolvers/engine-resolver';
 import {
   SSRController,
+  SSRControllerConfiguration,
   resolveSSRController,
 } from './src/headless-export-resolvers/ssr-controller-resolver';
 import {caseAssistUseCase} from './use-cases/case-assist';
@@ -26,10 +28,7 @@ import {productRecommendationUseCase} from './use-cases/product-recommendation';
 import {recommendationUseCase} from './use-cases/recommendation';
 import {searchUseCase} from './use-cases/search';
 import {ssrSearchUseCase} from './use-cases/ssr.search';
-import {
-  SSRUseCaseConfiguration,
-  UseCaseConfiguration,
-} from './use-cases/use-case-configuration';
+import {UseCaseConfiguration} from './use-cases/use-case-configuration';
 
 interface UseCase {
   name: string;
@@ -107,6 +106,11 @@ function resolveUseCase(useCase: UseCase): ResolvedUseCase {
 const resolved = useCases.map(resolveUseCase);
 
 writeFileSync('dist/parsed_doc.json', JSON.stringify(resolved, null, 2));
+
+interface SSRUseCaseConfiguration {
+  controllers: SSRControllerConfiguration[];
+  engine: EngineConfiguration;
+}
 
 interface SSRUseCase {
   name: string;

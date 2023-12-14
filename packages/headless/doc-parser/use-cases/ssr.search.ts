@@ -1,6 +1,5 @@
 import {EngineConfiguration} from '../src/headless-export-resolvers/engine-resolver';
 import {SSRControllerConfiguration} from '../src/headless-export-resolvers/ssr-controller-resolver';
-import {SSRUseCaseConfiguration} from './use-case-configuration';
 
 const controllers: SSRControllerConfiguration[] = [
   {
@@ -126,4 +125,4 @@ const engine: EngineConfiguration = {
   initializer: 'defineSearchEngine',
 };
 
-export const ssrSearchUseCase: SSRUseCaseConfiguration = {controllers, engine};
+export const ssrSearchUseCase = {controllers, engine};
