@@ -1,3 +1,9 @@
+## 0.6.11 (2023-12-14)
+
+### Bug Fixes
+
+- **relay:** use null environment when running relay on node (#63) ([9522cfb](/commits/9522cfbb6a73af9f4fcf3d824169c3cfeb4f7c6e)), closes [#63](/issues/63)
+
 ## 0.6.10 (2023-12-11)
 
 ## 0.6.9 (2023-12-08)
