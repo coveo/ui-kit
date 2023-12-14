@@ -5,26 +5,26 @@ import {productListingV2Reducer as productListing} from '../../../../features/co
 import {CommerceAppState} from '../../../../state/commerce-app-state';
 import {MockCommerceEngine, buildMockCommerceEngine} from '../../../../test';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
-import {buildMockCommerceNumericFacetResponse} from '../../../../test/mock-commerce-facet-response';
+import {buildMockCommerceDateFacetResponse} from '../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
-import {buildMockCommerceNumericFacetValue} from '../../../../test/mock-commerce-facet-value';
+import {buildMockCommerceDateFacetValue} from '../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
+import {CommerceDateFacet} from '../../facets/core/date/headless-commerce-date-facet';
 import {CommerceFacetOptions} from '../../facets/core/headless-core-commerce-facet';
-import {CommerceNumericFacet} from '../../facets/core/numeric/headless-commerce-numeric-facet';
-import {buildProductListingNumericFacet} from './headless-product-listing-numeric-facet';
+import {buildProductListingDateFacet} from './headless-product-listing-date-facet';
 
-describe('ProductListingNumericFacet', () => {
-  const facetId: string = 'numeric_facet_id';
-  const start = 0;
-  const end = 100;
+describe('ProductListingDateFacet', () => {
+  const facetId: string = 'date_facet_id';
+  const start = '2023-01-01';
+  const end = '2024-01-01';
   let options: CommerceFacetOptions;
   let state: CommerceAppState;
   let engine: MockCommerceEngine;
-  let facet: CommerceNumericFacet;
+  let facet: CommerceDateFacet;
 
   function initFacet() {
     engine = buildMockCommerceEngine({state});
-    facet = buildProductListingNumericFacet(engine, options);
+    facet = buildProductListingDateFacet(engine, options);
   }
 
   function setFacetRequest(config: Partial<CommerceFacetRequest> = {}) {
@@ -32,7 +32,7 @@ describe('ProductListingNumericFacet', () => {
       request: buildMockCommerceFacetRequest({facetId, ...config}),
     });
     state.productListing.facets = [
-      buildMockCommerceNumericFacetResponse({facetId}),
+      buildMockCommerceDateFacetResponse({facetId}),
     ];
   }
 
@@ -65,7 +65,7 @@ describe('ProductListingNumericFacet', () => {
 
   describe('#toggleSelect', () => {
     it('dispatches #fetchProductListing', () => {
-      const facetValue = buildMockCommerceNumericFacetValue({start, end});
+      const facetValue = buildMockCommerceDateFacetValue({start, end});
       facet.toggleSelect(facetValue);
 
       expectContainAction(fetchProductListing.pending);
@@ -74,7 +74,7 @@ describe('ProductListingNumericFacet', () => {
 
   describe('#toggleExclude', () => {
     it('dispatches #fetchproductlisting', () => {
-      const facetValue = buildMockCommerceNumericFacetValue({start, end});
+      const facetValue = buildMockCommerceDateFacetValue({start, end});
       facet.toggleExclude(facetValue);
 
       expectContainAction(fetchProductListing.pending);

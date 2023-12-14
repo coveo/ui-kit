@@ -79,6 +79,10 @@ import {
   logRecentQueryClick,
   recentQueryClick,
 } from '../features/recent-queries/recent-queries-analytics-actions';
+import {
+  logRecommendationUpdate,
+  recommendationInterfaceLoad,
+} from '../features/recommendation/recommendation-analytics-actions';
 import {executeSearch} from '../features/search/search-actions';
 import {
   logResultsSort,
@@ -925,6 +929,18 @@ describe('Analytics Search Migration', () => {
     const action = executeSearch({
       legacy: logSearchboxSubmit(),
       next: searchboxSubmit(),
+    });
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/recommendation/update', async () => {
+    const action = executeSearch({
+      legacy: logRecommendationUpdate(),
+      next: recommendationInterfaceLoad(),
     });
 
     legacySearchEngine.dispatch(action);

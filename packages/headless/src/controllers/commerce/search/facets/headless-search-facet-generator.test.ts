@@ -1,5 +1,5 @@
 import {FacetType} from '../../../../features/commerce/facets/facet-set/interfaces/response';
-import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
+import {executeSearch} from '../../../../features/commerce/search/search-actions';
 import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
 import {
@@ -9,13 +9,13 @@ import {
 } from '../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {
-  buildProductListingFacetGenerator,
-  ProductListingFacetGenerator,
-} from './headless-product-listing-facet-generator';
+  buildSearchFacetGenerator,
+  SearchFacetGenerator,
+} from './headless-search-facet-generator';
 
-describe('ProductListingFacetGenerator', () => {
+describe('SearchFacetGenerator', () => {
   let engine: MockCommerceEngine;
-  let facetGenerator: ProductListingFacetGenerator;
+  let facetGenerator: SearchFacetGenerator;
 
   function initFacetGenerator(facetType: FacetType = 'regular') {
     const facet = {
@@ -56,8 +56,8 @@ describe('ProductListingFacetGenerator', () => {
     engine = buildMockCommerceEngine({
       state: {
         ...mockState,
-        productListing: {
-          ...mockState.productListing,
+        commerceSearch: {
+          ...mockState.commerceSearch,
           facets: [
             buildMockCommerceRegularFacetResponse({
               facetId: facet.facetId,
@@ -71,7 +71,7 @@ describe('ProductListingFacetGenerator', () => {
         },
       },
     });
-    facetGenerator = buildProductListingFacetGenerator(engine);
+    facetGenerator = buildSearchFacetGenerator(engine);
   }
 
   it('exposes #subscribe method', () => {
@@ -79,26 +79,26 @@ describe('ProductListingFacetGenerator', () => {
     expect(facetGenerator.subscribe).toBeTruthy();
   });
 
-  it('generated regular facet controllers should dispatch #fetchProductListing', () => {
+  it('generated regular facet controllers should dispatch #executeSearch', () => {
     initFacetGenerator('regular');
 
     facetGenerator.state.facets[0].deselectAll();
 
-    expect(engine.findAsyncAction(fetchProductListing.pending)).toBeTruthy();
+    expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
   });
-  it('generated regular numeric facet controllers should dispatch #fetchProductListing', () => {
+  it('generated regular numeric facet controllers should dispatch #executeSearch', () => {
     initFacetGenerator('numericalRange');
 
     facetGenerator.state.facets[0].deselectAll();
 
-    expect(engine.findAsyncAction(fetchProductListing.pending)).toBeTruthy();
+    expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
   });
 
-  it('generated date facet controllers dispatches #fetchProductListing', () => {
+  it('generated date facet controllers dispatches #executeSearch', () => {
     initFacetGenerator('dateRange');
 
     facetGenerator.state.facets[0].deselectAll();
 
-    expect(engine.findAsyncAction(fetchProductListing.pending)).toBeTruthy();
+    expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
   });
 });

@@ -22,7 +22,7 @@ describe('commerce search sort', () => {
     });
   });
 
-  it('#sortBy dispatches #fetchProductListing', () => {
+  it('#sortBy dispatches #executeSearch', () => {
     sort.sortBy(buildRelevanceSortCriterion());
     const action = engine.findAsyncAction(executeSearch.pending);
     expect(action).toBeTruthy();
