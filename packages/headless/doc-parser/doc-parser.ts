@@ -92,20 +92,6 @@ interface SSRUseCase {
   config: SSRUseCaseConfiguration;
 }
 
-interface ResolvedSSRUseCase {
-  name: string;
-  controllers: SSRController[];
-  engine: SSREngine;
-}
-
-const ssrUseCases: SSRUseCase[] = [
-  {
-    name: 'ssr.search',
-    entryFile: 'temp/ssr.search.api.json',
-    config: ssrSearchUseCase,
-  },
-];
-
 function resolveUseCase(useCase: UseCase): ResolvedUseCase {
   const {name, entryFile, config} = useCase;
   process.env['currentUseCaseName'] = name;
@@ -126,6 +112,23 @@ function resolveUseCase(useCase: UseCase): ResolvedUseCase {
   return {name, controllers, actions, engine};
 }
 
+const resolved = useCases.map(resolveUseCase);
+
+writeFileSync('dist/parsed_doc.json', JSON.stringify(resolved, null, 2));
+
+interface ResolvedSSRUseCase {
+  name: string;
+  controllers: SSRController[];
+  engine: SSREngine;
+}
+
+const ssrUseCases: SSRUseCase[] = [
+  {
+    name: 'ssr.search',
+    entryFile: 'temp/ssr.search.api.json',
+    config: ssrSearchUseCase,
+  },
+];
 function resolveSSRUseCase(ssrUseCase: SSRUseCase): ResolvedSSRUseCase {
   const {name, entryFile, config} = ssrUseCase;
   process.env['currentUseCaseName'] = name;
@@ -142,9 +145,7 @@ function resolveSSRUseCase(ssrUseCase: SSRUseCase): ResolvedSSRUseCase {
   return {name, controllers, engine};
 }
 
-const resolved = useCases.map(resolveUseCase);
 const ssrResolved = ssrUseCases.map(resolveSSRUseCase);
 
-writeFileSync('dist/parsed_doc.json', JSON.stringify(resolved, null, 2));
-// BAD BAD BAD
+//maybe instead of writing on a whole new file, just modify the parsed_doc.json file
 writeFileSync('dist/ssr_parsed_doc.json', JSON.stringify(ssrResolved, null, 2));
