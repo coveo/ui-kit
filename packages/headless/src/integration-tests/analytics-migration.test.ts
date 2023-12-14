@@ -18,6 +18,7 @@ import {
   omniboxFromLink,
   searchFromLink,
 } from '../features/analytics/analytics-actions';
+import {LegacySearchAction} from '../features/analytics/analytics-utils';
 import {
   didYouMeanClick,
   logDidYouMeanClick,
@@ -69,6 +70,10 @@ import {
   historyForward,
   noResultsBack,
 } from '../features/history/history-analytics-actions';
+import {
+  logInstantResultsSearch,
+  searchboxAsYouType,
+} from '../features/instant-results/instant-result-analytics-actions';
 import {fetchQuerySuggestions} from '../features/query-suggest/query-suggest-actions';
 import {OmniboxSuggestionMetadata} from '../features/query-suggest/query-suggest-analytics-actions';
 import {
@@ -79,6 +84,10 @@ import {
   logRecentQueryClick,
   recentQueryClick,
 } from '../features/recent-queries/recent-queries-analytics-actions';
+import {
+  logRecommendationUpdate,
+  recommendationInterfaceLoad,
+} from '../features/recommendation/recommendation-analytics-actions';
 import {executeSearch} from '../features/search/search-actions';
 import {
   logResultsSort,
@@ -921,10 +930,33 @@ describe('Analytics Search Migration', () => {
     assertNextEqualsLegacy(callSpy);
   });
 
+  it('analytics/instantResult/searchboxAsYouType', async () => {
+    const action = executeSearch({
+      legacy: logInstantResultsSearch() as LegacySearchAction,
+      next: searchboxAsYouType(),
+    });
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
   it('analytics/searchbox/submit', async () => {
     const action = executeSearch({
       legacy: logSearchboxSubmit(),
       next: searchboxSubmit(),
+    });
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/recommendation/update', async () => {
+    const action = executeSearch({
+      legacy: logRecommendationUpdate(),
+      next: recommendationInterfaceLoad(),
     });
 
     legacySearchEngine.dispatch(action);

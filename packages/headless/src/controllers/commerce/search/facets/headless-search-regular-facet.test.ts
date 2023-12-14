@@ -1,8 +1,8 @@
 import {Action} from '@reduxjs/toolkit';
 import {CommerceRegularFacet} from '../../../../commerce.index';
 import {CommerceFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
-import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
-import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice';
+import {executeSearch} from '../../../../features/commerce/search/search-actions';
+import {commerceSearchReducer as commerceSearch} from '../../../../features/commerce/search/search-slice';
 import {CommerceAppState} from '../../../../state/commerce-app-state';
 import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
@@ -11,9 +11,9 @@ import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-
 import {buildMockCommerceRegularFacetValue} from '../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {CommerceFacetOptions} from '../../facets/core/headless-core-commerce-facet';
-import {buildProductListingRegularFacet} from './headless-product-listing-regular-facet';
+import {buildSearchRegularFacet} from './headless-search-regular-facet';
 
-describe('ProductListingRegularFacet', () => {
+describe('SearchRegularFacet', () => {
   const facetId: string = 'regular_facet_id';
   let options: CommerceFacetOptions;
   let state: CommerceAppState;
@@ -22,14 +22,14 @@ describe('ProductListingRegularFacet', () => {
 
   function initFacet() {
     engine = buildMockCommerceEngine({state});
-    facet = buildProductListingRegularFacet(engine, options);
+    facet = buildSearchRegularFacet(engine, options);
   }
 
   function setFacetRequest(config: Partial<CommerceFacetRequest> = {}) {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, ...config}),
     });
-    state.productListing.facets = [
+    state.commerceSearch.facets = [
       buildMockCommerceRegularFacetResponse({facetId}),
     ];
   }
@@ -57,49 +57,49 @@ describe('ProductListingRegularFacet', () => {
     expect(facet).toBeTruthy();
   });
 
-  it('adds #productListing reducer to engine', () => {
-    expect(engine.addReducers).toHaveBeenCalledWith({productListing});
+  it('adds #commerceSearch reducer to engine', () => {
+    expect(engine.addReducers).toHaveBeenCalledWith({commerceSearch});
   });
 
   describe('#toggleSelect', () => {
-    it('dispatches #fetchProductListing', () => {
+    it('dispatches #executeSearch', () => {
       const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
       facet.toggleSelect(facetValue);
 
-      expectContainAction(fetchProductListing.pending);
+      expectContainAction(executeSearch.pending);
     });
   });
 
   describe('#toggleExclude', () => {
-    it('dispatches #fetchproductlisting', () => {
+    it('dispatches #executeSearch', () => {
       const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
       facet.toggleExclude(facetValue);
 
-      expectContainAction(fetchProductListing.pending);
+      expectContainAction(executeSearch.pending);
     });
   });
 
   describe('#deselectAll', () => {
-    it('dispatches #fetchProductListing', () => {
+    it('dispatches #executeSearch', () => {
       facet.deselectAll();
 
-      expectContainAction(fetchProductListing.pending);
+      expectContainAction(executeSearch.pending);
     });
   });
 
   describe('#showMoreValues', () => {
-    it('dispatches #fetchProductListing', () => {
+    it('dispatches #executeSearch', () => {
       facet.showMoreValues();
 
-      expectContainAction(fetchProductListing.pending);
+      expectContainAction(executeSearch.pending);
     });
   });
 
   describe('#showLessValues', () => {
-    it('dispatches #fetchProductListing', () => {
+    it('dispatches #executeSearch', () => {
       facet.showLessValues();
 
-      expectContainAction(fetchProductListing.pending);
+      expectContainAction(executeSearch.pending);
     });
   });
 });
