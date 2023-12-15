@@ -7,7 +7,7 @@ function toOneDecimal(num) {
 
 async function prepareData() {
   console.log('building files');
-  await execute('npx', ['nx', 'run', 'headless:build:doc']);
+  await execute('npx', ['nx', 'run', 'headless:build']);
 
   const rawdata = fs.readFileSync(
     'packages/headless/dist/parsed_doc.json',
