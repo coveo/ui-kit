@@ -41,19 +41,17 @@ async function prepareData(parsed_doc, ssr_parsed_doc) {
           counter += 1;
         } else {
           logs.push([useCase.name, controller.initializer.name]);
-          //   logs.push(`<b>${useCase.name}</b> : ${controller.initializer.name}`);
         }
       });
       rows.push([
         useCase.name,
         counter,
         useCase.controllers.length,
-        Math.round(counter / useCase.controllers.length),
+        Math.round((counter / useCase.controllers.length) * 100),
       ]);
     } else {
       rows.push([useCase.name, '0', useCase.controllers.length, '0']);
       logs.push([useCase.name, 'missing SSR support']);
-      //   logs.push(`<b>${useCase.name}</b> : missing SSR support`);
     }
   });
 
@@ -63,15 +61,13 @@ async function prepareData(parsed_doc, ssr_parsed_doc) {
 function buildVisualReport(rows, logs) {
   const rowsWithColumnsConcatenated = rows.map((row) => '|' + row.join('|'));
   const presentableRows = rowsWithColumnsConcatenated.join('\n');
-  // first element of logs wrap with <b> </b>
-  // add :
-  // add last element
 
   const logsFormatted = logs.map((log) => {
     const [useCase, controller] = log;
     return `<b>${useCase}</b> : ${controller}<br>`;
   });
-  //   const presentableLogs = logsFormatted.join('\n');
+  const presentableLogs = logsFormatted.join(' ');
+
   return `
   **SSR Progress**
   
@@ -80,7 +76,7 @@ function buildVisualReport(rows, logs) {
   ${presentableRows}
   <details>
   <summary>Detailed logs</summary>
-  ${logsFormatted}
+  ${presentableLogs}
 </details>
   `;
 }
@@ -89,6 +85,7 @@ export async function buildSSRProgressReport() {
   await buildHeadless();
   const {parsed_doc, ssr_parsed_doc} = getParsedDoc();
   const {rows, logs} = await prepareData(parsed_doc, ssr_parsed_doc);
+  console.log(logs);
   const ssrProgress = buildVisualReport(rows, logs);
   return ssrProgress;
 }
