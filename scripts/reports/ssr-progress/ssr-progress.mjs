@@ -14,7 +14,6 @@ function getParsedDoc() {
     'packages/headless/dist/ssr_parsed_doc.json',
     'utf8'
   );
-
   const parsed_doc = JSON.parse(rawdata);
   const ssr_parsed_doc = JSON.parse(rawSSRdata);
 
@@ -28,7 +27,8 @@ function removeControllersWithNoSSRSupport(useCase) {
     });
   }
 }
-async function prepareData(parsed_doc, ssr_parsed_doc) {
+
+function prepareData(parsed_doc, ssr_parsed_doc) {
   let rows = [];
   let logs = [];
   parsed_doc.forEach((useCase) => {
@@ -69,7 +69,6 @@ async function prepareData(parsed_doc, ssr_parsed_doc) {
 function buildVisualReport(rows, logs) {
   const rowsWithColumnsConcatenated = rows.map((row) => '|' + row.join('|'));
   const presentableRows = rowsWithColumnsConcatenated.join('\n');
-
   const logsFormatted = logs.map((log) => {
     const [useCase, controller] = log;
     return `<b>${useCase}</b> : ${controller}<br>`;
@@ -83,19 +82,16 @@ function buildVisualReport(rows, logs) {
   | ---- |:--------:|:--------:|:------:
   ${presentableRows}
   <details>
-  <summary>Detailed logs</summary>
-  ${presentableLogs}
-</details>
+    <summary>Detailed logs</summary>
+    ${presentableLogs}
+  </details>
   `;
 }
 
 export async function buildSSRProgressReport() {
   await buildHeadless();
   const {parsed_doc, ssr_parsed_doc} = getParsedDoc();
-  const {rows, logs} = await prepareData(parsed_doc, ssr_parsed_doc);
-  console.log(logs);
+  const {rows, logs} = prepareData(parsed_doc, ssr_parsed_doc);
   const ssrProgress = buildVisualReport(rows, logs);
   return ssrProgress;
 }
-
-console.log(await buildSSRProgressReport());
