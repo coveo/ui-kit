@@ -1,5 +1,6 @@
 import {
   CommerceFacetSetSection,
+  CommerceSearchSection,
   ProductListingV2Section,
 } from '../../../../state/state-sections';
 import {AnyFacetResponse} from './interfaces/response';
@@ -12,7 +13,7 @@ function isFacetResponse(
 }
 
 function baseCommerceFacetResponseSelector(
-  state: ProductListingV2Section,
+  state: ProductListingV2Section | CommerceSearchSection,
   facetId: string
 ) {
   const findById = (response: {facetId: string}) =>
@@ -22,11 +23,16 @@ function baseCommerceFacetResponseSelector(
     return state.productListing.facets.find(findById);
   }
 
+  if ('commerceSearch' in state) {
+    return state.commerceSearch.facets.find(findById);
+  }
+
   return undefined;
 }
 
 export const commerceFacetResponseSelector = (
-  state: ProductListingV2Section & CommerceFacetSetSection,
+  state: (ProductListingV2Section | CommerceSearchSection) &
+    CommerceFacetSetSection,
   facetId: string
 ) => {
   const response = baseCommerceFacetResponseSelector(state, facetId);
@@ -38,10 +44,14 @@ export const commerceFacetResponseSelector = (
 };
 
 export const isCommerceFacetLoadingResponseSelector = (
-  state: ProductListingV2Section
+  state: ProductListingV2Section | CommerceSearchSection
 ) => {
   if ('productListing' in state) {
     return state.productListing.isLoading;
+  }
+
+  if ('commerceSearch' in state) {
+    return state.commerceSearch.isLoading;
   }
 
   return undefined;

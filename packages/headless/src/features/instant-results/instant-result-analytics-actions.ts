@@ -3,6 +3,7 @@ import {
   InstantResultsAnalyticsProvider,
   StateNeededByInstantResultsAnalyticsProvider,
 } from '../../api/analytics/instant-result-analytics';
+import {SearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {Result} from '../../api/search/search/result';
 import {
   partialDocumentInformation,
@@ -12,6 +13,8 @@ import {
   InstantResultsSearchAction,
   InstantResultsClickAction,
 } from '../analytics/analytics-utils';
+import {SearchPageEvents} from '../analytics/search-action-cause';
+import {SearchAction} from '../search/search-actions';
 
 export const logInstantResultOpen = (
   result: Result
@@ -47,9 +50,18 @@ export const logInstantResultOpen = (
     },
   });
 
+//TODO: KIT-2859
 export const logInstantResultsSearch = (): InstantResultsSearchAction =>
   makeAnalyticsAction(
     'analytics/instantResult/searchboxAsYouType',
     (client) => client.makeSearchboxAsYouType(),
     (getState) => new InstantResultsAnalyticsProvider(getState)
   );
+
+export const searchboxAsYouType = (): SearchAction => {
+  return {
+    actionCause: SearchPageEvents.searchboxAsYouType,
+    getEventExtraPayload: (state) =>
+      new SearchAnalyticsProvider(() => state).getBaseMetadata(),
+  };
+};

@@ -5,6 +5,7 @@ export function buildMockCommerceFacetRequest(
 ): CommerceFacetRequest {
   return {
     facetId: '',
+    displayName: '',
     field: '',
     type: 'regular',
     numberOfValues: 8,
