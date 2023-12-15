@@ -16,7 +16,7 @@ function toOneDecimal(num) {
   return Math.round(num * 10) / 10;
 }
 
-function getRows() {
+function prepareData() {
   const args = process.argv.slice(2);
   let rows = [];
 
@@ -64,8 +64,9 @@ function getRows() {
 
   return rows;
 }
-function buildVisualReport() {
-  const presentableRows = getRows();
+function buildVisualReport(rows) {
+  const rowsWithColumnsConcatenated = rows.map((row) => '|' + row.join('|'));
+  const presentableRows = rowsWithColumnsConcatenated.join('\n');
   return `
   **SSR Progress**
   
@@ -76,7 +77,8 @@ function buildVisualReport() {
 }
 
 export async function buildSSRProgressReport() {
-  const ssrProgress = buildVisualReport();
+  const rows = prepareData();
+  const ssrProgress = buildVisualReport(rows);
   return ssrProgress;
 }
 
