@@ -1,3 +1,5 @@
+import fs from 'fs';
+
 const rawdata = fs.readFileSync('dist/parsed_doc.json', 'utf8');
 const rawSSRdata = fs.readFileSync('dist/ssr_parsed_doc.json', 'utf8');
 
