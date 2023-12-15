@@ -32,9 +32,8 @@ import {
   SortSection,
   TriggerSection,
 } from '../../state/state-sections';
-import {makeBasicNewSearchAnalyticsAction} from '../analytics/analytics-utils';
-import {SearchPageEvents} from '../analytics/search-action-cause';
 import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
+import {didYouMeanAutomatic} from '../did-you-mean/did-you-mean-analytics-actions';
 import {snapshot} from '../history/history-actions';
 import {extractHistory} from '../history/history-state';
 import {updateQuery} from '../query/query-actions';
@@ -202,10 +201,6 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       },
       automaticallyCorrected: true,
       originalQuery,
-      analyticsAction: makeBasicNewSearchAnalyticsAction(
-        SearchPageEvents.didyoumeanAutomatic,
-        this.getState
-      ),
     };
   }
 
@@ -248,10 +243,6 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       },
       automaticallyCorrected: false,
       originalQuery,
-      analyticsAction: makeBasicNewSearchAnalyticsAction(
-        SearchPageEvents.triggerQuery,
-        this.getState
-      ),
     };
   }
 
@@ -264,7 +255,6 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       response: this.getSuccessResponse(fetched)!,
       automaticallyCorrected: false,
       originalQuery: this.getCurrentQuery(),
-      analyticsAction: this.analyticsAction!,
     };
   }
 
@@ -277,8 +267,14 @@ export class AsyncSearchThunkProcessor<RejectionType> {
 
   private async automaticallyRetryQueryWithCorrection(correction: string) {
     this.onUpdateQueryForCorrection(correction);
+    const state = this.getState();
+    const {actionCause, getEventExtraPayload} = didYouMeanAutomatic();
+
     const fetched = await this.fetchFromAPI(
-      await buildSearchRequest(this.getState()),
+      await buildSearchRequest(state, {
+        actionCause,
+        customData: getEventExtraPayload(state),
+      }),
       {origin: 'mainSearch'}
     );
     this.dispatch(applyDidYouMeanCorrection(correction));
@@ -318,10 +314,6 @@ export class AsyncSearchThunkProcessor<RejectionType> {
 
   private get dispatch() {
     return this.config.dispatch;
-  }
-
-  private get analyticsAction() {
-    return this.config.analyticsAction;
   }
 
   private get rejectWithValue() {

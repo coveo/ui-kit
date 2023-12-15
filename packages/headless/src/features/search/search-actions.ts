@@ -39,7 +39,6 @@ import {
   legacyFetchPage,
 } from './legacy/search-actions';
 import {
-  AnalyticsAction,
   AsyncSearchThunkProcessor,
   StateNeededByExecuteSearch,
 } from './search-actions-thunk-processor';
@@ -100,8 +99,6 @@ export interface ExecuteSearchThunkReturn {
   automaticallyCorrected: boolean;
   /** The original query that was performed when an automatic correction is executed.*/
   originalQuery: string;
-  /** The analytics action to log after the query. */
-  analyticsAction: AnalyticsAction;
 }
 
 interface PrepareForSearchWithQueryOptions {
@@ -305,7 +302,6 @@ export const fetchInstantResults = createAsyncThunk<
       return {
         results: processed.response.results,
         searchUid: processed.response.searchUid,
-        analyticsAction: processed.analyticsAction,
         totalCountFiltered: processed.response.totalCountFiltered,
         duration: processed.duration,
       };
