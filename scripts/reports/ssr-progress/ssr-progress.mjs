@@ -1,22 +1,22 @@
 import fs from 'fs';
 
-const rawdata = fs.readFileSync(
-  'packages/headless/dist/parsed_doc.json',
-  'utf8'
-);
-const rawSSRdata = fs.readFileSync(
-  'packages/headless/dist/ssr_parsed_doc.json',
-  'utf8'
-);
-
-const parsed_doc = JSON.parse(rawdata);
-const ssr_parsed_doc = JSON.parse(rawSSRdata);
-
 function toOneDecimal(num) {
   return Math.round(num * 10) / 10;
 }
 
 function prepareData() {
+  const rawdata = fs.readFileSync(
+    'packages/headless/dist/parsed_doc.json',
+    'utf8'
+  );
+  const rawSSRdata = fs.readFileSync(
+    'packages/headless/dist/ssr_parsed_doc.json',
+    'utf8'
+  );
+
+  const parsed_doc = JSON.parse(rawdata);
+  const ssr_parsed_doc = JSON.parse(rawSSRdata);
+
   const args = process.argv.slice(2);
   let rows = [];
 
