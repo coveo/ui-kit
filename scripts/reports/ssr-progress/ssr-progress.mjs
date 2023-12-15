@@ -32,15 +32,12 @@ async function prepareData(parsed_doc, ssr_parsed_doc) {
   let rows = [];
   let logs = [];
   parsed_doc.forEach((useCase) => {
-    //find the ssr use case
     const ssrUseCase = ssr_parsed_doc.find(
       (ssrUseCase) => ssrUseCase.name === 'ssr.' + useCase.name
     );
-
     if (ssrUseCase) {
       let counter = 0;
       const useCaseControllers = removeControllersWithNoSSRSupport(useCase);
-      // find the controllers that have SSR support
       useCaseControllers.forEach((controller) => {
         if (
           ssrUseCase.controllers.find(
