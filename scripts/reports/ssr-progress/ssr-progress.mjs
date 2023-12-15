@@ -1,11 +1,20 @@
 import fs from 'fs';
 import {execute} from '../../exec.mjs';
+import {getBaseBranchName} from '../github-client.mjs';
 
 function toOneDecimal(num) {
   return Math.round(num * 10) / 10;
 }
 
+async function checkoutTargetBranch() {
+  const targetBranch = await getBaseBranchName();
+  console.log(`checking out branch: ${targetBranch}`);
+  await execute('git', ['checkout', targetBranch]);
+}
+
 async function prepareData() {
+  checkoutTargetBranch();
+  //always checkout to current branch
   console.log('building files');
   await execute('npx', ['nx', 'run', 'headless:build']);
 
