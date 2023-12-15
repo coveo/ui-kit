@@ -21,16 +21,27 @@ function getParsedDoc() {
   return {parsed_doc, ssr_parsed_doc};
 }
 
+function removeControllersWithNoSSRSupport(useCase) {
+  if (useCase.name === 'search') {
+    return useCase.controllers.filter((controller) => {
+      return controller.initializer.name !== 'buildUrlManager';
+    });
+  }
+}
 async function prepareData(parsed_doc, ssr_parsed_doc) {
   let rows = [];
   let logs = [];
   parsed_doc.forEach((useCase) => {
+    //find the ssr use case
     const ssrUseCase = ssr_parsed_doc.find(
       (ssrUseCase) => ssrUseCase.name === 'ssr.' + useCase.name
     );
+
     if (ssrUseCase) {
       let counter = 0;
-      useCase.controllers.forEach((controller) => {
+      const useCaseControllers = removeControllersWithNoSSRSupport(useCase);
+      // find the controllers that have SSR support
+      useCaseControllers.forEach((controller) => {
         if (
           ssrUseCase.controllers.find(
             (ssrController) =>
@@ -46,8 +57,8 @@ async function prepareData(parsed_doc, ssr_parsed_doc) {
       rows.push([
         useCase.name,
         counter,
-        useCase.controllers.length,
-        Math.round((counter / useCase.controllers.length) * 100),
+        useCaseControllers.length,
+        Math.round((counter / useCaseControllers.length) * 100),
       ]);
     } else {
       rows.push([useCase.name, '0', useCase.controllers.length, '0']);

@@ -42,6 +42,5 @@ function isVariable(item: ApiItem): item is ApiVariable {
 }
 
 function extractNameOfSSR(initializerName: string): string {
-  const NUMBER_OF_CHARACTERS_IN_DEFINE = 6;
-  return 'build' + initializerName.substring(NUMBER_OF_CHARACTERS_IN_DEFINE);
+  return 'build' + initializerName.substring('define'.length);
 }
