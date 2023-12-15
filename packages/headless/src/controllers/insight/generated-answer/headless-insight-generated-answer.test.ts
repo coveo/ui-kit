@@ -1,19 +1,19 @@
-import {updateResponseFormat} from '../../features/generated-answer/generated-answer-actions';
-import {GeneratedResponseFormat} from '../../features/generated-answer/generated-response-format';
-import {executeSearch} from '../../features/search/search-actions';
+import {updateResponseFormat} from '../../../features/generated-answer/generated-answer-actions';
+import {GeneratedResponseFormat} from '../../../features/generated-answer/generated-response-format';
+import {executeSearch} from '../../../features/insight-search/insight-search-actions';
 import {
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../test/mock-engine';
+  buildMockInsightEngine,
+  MockInsightEngine,
+} from '../../../test/mock-engine';
 import {
   buildGeneratedAnswer,
   GeneratedAnswer,
   GeneratedAnswerProps,
-} from './headless-generated-answer';
+} from './headless-insight-generated-answer';
 
 describe('generated answer', () => {
   let generatedAnswer: GeneratedAnswer;
-  let engine: MockSearchEngine;
+  let engine: MockInsightEngine;
 
   function initGeneratedAnswer(props: GeneratedAnswerProps = {}) {
     generatedAnswer = buildGeneratedAnswer(engine, props);
@@ -24,7 +24,7 @@ describe('generated answer', () => {
   }
 
   beforeEach(() => {
-    engine = buildMockSearchAppEngine();
+    engine = buildMockInsightEngine();
     initGeneratedAnswer();
   });
 
