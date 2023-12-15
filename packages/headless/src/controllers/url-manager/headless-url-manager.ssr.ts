@@ -9,14 +9,14 @@ import {
 export * from './headless-url-manager';
 
 /**
- * @alpha
+ * @internal
  */
 export interface UrlManagerBuildProps {
   initialState: UrlManagerInitialState;
 }
 
 /**
- * @alpha
+ * @internal
  */
 export const defineUrlManager = (): ControllerDefinitionWithProps<
   SearchEngine,
