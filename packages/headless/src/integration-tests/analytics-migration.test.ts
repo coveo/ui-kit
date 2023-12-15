@@ -20,7 +20,9 @@ import {
 } from '../features/analytics/analytics-actions';
 import {LegacySearchAction} from '../features/analytics/analytics-utils';
 import {
+  didYouMeanAutomatic,
   didYouMeanClick,
+  logDidYouMeanAutomatic,
   logDidYouMeanClick,
 } from '../features/did-you-mean/did-you-mean-analytics-actions';
 import {registerCategoryFacet} from '../features/facets/category-facet-set/category-facet-set-actions';
@@ -923,6 +925,18 @@ describe('Analytics Search Migration', () => {
       next: omniboxFromLink(metadata),
     });
 
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/didyoumean/automatic', async () => {
+    const action = executeSearch({
+      legacy: logDidYouMeanAutomatic(),
+      next: didYouMeanAutomatic(),
+    });
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
     await wait();
