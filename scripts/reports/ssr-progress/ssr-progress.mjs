@@ -1,10 +1,20 @@
 import fs from 'fs';
 
-const rawdata = fs.readFileSync('dist/parsed_doc.json', 'utf8');
-const rawSSRdata = fs.readFileSync('dist/ssr_parsed_doc.json', 'utf8');
+const rawdata = fs.readFileSync(
+  'packages/headless/dist/parsed_doc.json',
+  'utf8'
+);
+const rawSSRdata = fs.readFileSync(
+  'packages/headless/dist/ssr_parsed_doc.json',
+  'utf8'
+);
 
 const parsed_doc = JSON.parse(rawdata);
 const ssr_parsed_doc = JSON.parse(rawSSRdata);
+
+function toOneDecimal(num) {
+  return Math.round(num * 10) / 10;
+}
 
 function getRows() {
   const args = process.argv.slice(2);
@@ -35,7 +45,7 @@ function getRows() {
         useCase.name,
         counter,
         useCase.controllers.length,
-        counter / useCase.controllers.length,
+        toOneDecimal(counter / useCase.controllers.length),
       ]);
 
       console.log(
@@ -45,9 +55,9 @@ function getRows() {
       console.log('There is no SSR use case for ' + useCase.name);
       rows.push([
         useCase.name,
-        '∅',
+        '0',
         useCase.controllers.length,
-        counter / useCase.controllers.length,
+        'SSR is not supported',
       ]);
     }
   });
@@ -59,7 +69,7 @@ function buildVisualReport() {
   return `
   **SSR Progress**
   
-  | Use case | SSR | CSR | Progress (%)
+  | Use case | SSR (#) | CSR (#) | Progress (%)
   | ---- |:--------:|:--------:|:------:
   ${presentableRows}
   `;
@@ -69,3 +79,5 @@ export async function buildSSRProgressReport() {
   const ssrProgress = buildVisualReport();
   return ssrProgress;
 }
+
+console.log(buildSSRProgressReport());
