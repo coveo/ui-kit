@@ -10,6 +10,7 @@ export type CommerceFacetRequest = Pick<
   | 'isFieldExpanded'
   | 'preventAutoSelect'
 > & {
+  displayName: string;
   type: FacetType;
   values: AnyFacetValueRequest[];
   initialNumberOfValues: number;
