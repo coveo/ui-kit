@@ -16,7 +16,7 @@ async function main() {
 async function buildReport() {
   const titleFormatReport = await buildTitleReport();
   const bundleSizeReport = await buildBundleSizeReport();
-  const ssrProgress = 'SSR Progress: 0%';
+  const ssrProgress = buildSSRProgressReport();
 
   return `
   **${reportTitle}**

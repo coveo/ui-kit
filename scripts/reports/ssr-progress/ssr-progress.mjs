@@ -1,8 +1,3 @@
-export async function buildSSRProgressReport() {
-  const ssrProgress = 'SSR Progress: 0%';
-  return ssrProgress;
-}
-
 const rawdata = fs.readFileSync('dist/parsed_doc.json', 'utf8');
 const rawSSRdata = fs.readFileSync('dist/ssr_parsed_doc.json', 'utf8');
 
@@ -60,10 +55,15 @@ function getRows() {
 function buildVisualReport() {
   const presentableRows = getRows();
   return `
-  **Bundle Size**
+  **SSR Progress**
   
-  | Use case | SSR (kb) | CSR (kb) | Progress (%)
+  | Use case | SSR | CSR | Progress (%)
   | ---- |:--------:|:--------:|:------:
   ${presentableRows}
   `;
+}
+
+export async function buildSSRProgressReport() {
+  const ssrProgress = buildVisualReport();
+  return ssrProgress;
 }
