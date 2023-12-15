@@ -93,7 +93,6 @@ function resolveUseCase(useCase: UseCase): ResolvedUseCase {
   const controllers = config.controllers.map((controller) =>
     resolveController(entryPoint, controller)
   );
-
   const actions = config.actionLoaders.map((loader) =>
     resolveActionLoader(entryPoint, loader)
   );
