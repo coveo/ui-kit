@@ -81,6 +81,7 @@ async function prepareData() {
 function buildVisualReport(rows) {
   const rowsWithColumnsConcatenated = rows.map((row) => '|' + row.join('|'));
   const presentableRows = rowsWithColumnsConcatenated.join('\n');
+  const details = 'these are the details logs';
   return `
   **SSR Progress**
   
@@ -95,7 +96,7 @@ function buildVisualReport(rows) {
   2. Bar
      * Baz
      * Qux
-
+  ${details}
 </details>
   `;
 }
