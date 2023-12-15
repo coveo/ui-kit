@@ -119,6 +119,9 @@ const controllers: SSRControllerConfiguration[] = [
   {
     initializer: 'defineRecentResultsList',
   },
+  {
+    initializer: 'defineUrlManager',
+  },
 ];
 
 const engine: EngineConfiguration = {

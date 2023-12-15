@@ -6,7 +6,7 @@ const rawSSRdata = fs.readFileSync('dist/ssr_parsed_doc.json', 'utf8');
 const parsed_doc = JSON.parse(rawdata);
 const ssr_parsed_doc = JSON.parse(rawSSRdata);
 
-function algorithm() {
+function logSSRProgress() {
   const args = process.argv.slice(2);
 
   parsed_doc.forEach((useCase) => {
@@ -34,9 +34,9 @@ function algorithm() {
         useCase.name + ' ' + counter + '/' + useCase.controllers.length
       );
     } else {
-      console.log(useCase.name + ' 0/' + useCase.controllers.length);
+      console.log('There is no SSR use case for ' + useCase.name);
     }
   });
 }
 
-algorithm();
+logSSRProgress();
