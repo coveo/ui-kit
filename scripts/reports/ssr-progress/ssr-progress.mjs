@@ -1,10 +1,14 @@
 import fs from 'fs';
+import {execute} from '../../exec.mjs';
 
 function toOneDecimal(num) {
   return Math.round(num * 10) / 10;
 }
 
-function prepareData() {
+async function prepareData() {
+  console.log('building files');
+  await execute('npx', ['nx', 'run', 'headless:build:doc']);
+
   const rawdata = fs.readFileSync(
     'packages/headless/dist/parsed_doc.json',
     'utf8'
@@ -77,9 +81,9 @@ function buildVisualReport(rows) {
 }
 
 export async function buildSSRProgressReport() {
-  const rows = prepareData();
+  const rows = await prepareData();
   const ssrProgress = buildVisualReport(rows);
   return ssrProgress;
 }
 
-console.log(buildSSRProgressReport());
+console.log(await buildSSRProgressReport());
