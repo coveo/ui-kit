@@ -273,7 +273,7 @@ describe('headless search box', () => {
     });
 
     it('updates the page to the first one', () => {
-      expect(engine.actions).toContainEqual(selectPage(1));
+      expect(engine.actions).toContainEqual(selectPage(0));
     });
 
     it('dispatches #executeSearch', () => {
