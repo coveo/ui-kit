@@ -10,8 +10,7 @@ node('linux && docker') {
 
   withDockerContainer(image: 'node:20', args: '-u=root -e HOME=/tmp -e NPM_CONFIG_PREFIX=/tmp/.npm') {
     stage('Npm login') {
-      withCredentials([
-      string(credentialsId: 'npmjs_com_token', variable: 'NPM_TOKEN')]) {
+      withCredentials([string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
         sh 'npm run npm:login:ci'
       }
     }
