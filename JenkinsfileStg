@@ -8,12 +8,17 @@ node('linux && docker') {
     userRemoteConfigs: [[credentialsId: 'github-app-dev', url: 'https://github.com/coveo/relay']]
   ])
 
-  withDockerContainer(image: 'node:18', args: '-u=root -e HOME=/tmp -e NPM_CONFIG_PREFIX=/tmp/.npm') {
+  withDockerContainer(image: 'node:20', args: '-u=root -e HOME=/tmp -e NPM_CONFIG_PREFIX=/tmp/.npm') {
     stage('Npm login') {
       withCredentials([
       string(credentialsId: 'npmjs_com_token', variable: 'NPM_TOKEN')]) {
         sh 'npm run npm:login:ci'
       }
+    }
+
+    stage('Setup pnpm') {
+      sh 'corepack enable'
+      sh 'corepack prepare --activate'
     }
 
     stage('Npm tag') {

@@ -7,9 +7,9 @@
     "format": "prettier --write \"**/*.{js,mjs,ts,tsx,json,md,yml}\"",
     "test": "turbo run test",
     "version-bump": "node ./scripts/version-bump.mjs",
-    "npm:publish:alpha": "pnpm publish --recursive --tag alpha",
-    "npm:tag:beta": "turbo run npm:tag -- beta",
-    "npm:tag:latest": "turbo run npm:tag -- latest",
+    "npm:publish:alpha": "pnpm -r publish --tag alpha",
+    "npm:tag:beta": "pnpm -r run npm:tag beta",
+    "npm:tag:latest": "pnmp -r run npm:tag latest",
     "npm:login:ci": "node ./scripts/npm-login.mjs",
     "docs:notify": "node ./packages/relay/scripts/notify-docs.mjs"
   },
@@ -22,6 +22,7 @@
     "conventional-changelog-angular": "^6.0.0",
     "eslint": "^7.32.0",
     "eslint-config-custom": "workspace:*",
+    "pnpm": "8.8.0",
     "prettier": "^2.5.1",
     "ts-dedent": "^2.2.0",
     "turbo": "latest"

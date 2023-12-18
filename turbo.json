@@ -13,7 +13,6 @@
     },
     "test": {
       "dependsOn": ["^build"]
-    },
-    "npm:tag": {}
+    }
   }
 }

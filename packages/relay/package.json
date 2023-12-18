@@ -67,8 +67,5 @@
   "dependencies": {
     "@coveo/explorer-messenger": "^0.1.1",
     "uuid": "^9.0.1"
-  },
-  "engines": {
-    "node": "^18.12.0 || ^20.0.0"
   }
 }

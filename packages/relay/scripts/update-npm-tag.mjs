@@ -3,6 +3,8 @@ import { readFileSync } from "fs";
 import { promisify } from "util";
 import { versionCompare } from "./helpers/versions.mjs";
 
+const exec = promisify(syncExec);
+
 const updateNpmTag = async () => {
   const { name, version } = JSON.parse(
     readFileSync("./package.json", { encoding: "utf-8" })
@@ -18,11 +20,10 @@ const updateNpmTag = async () => {
   }
 
   console.info(`updating ${name}@${version} to ${tag}`);
-  await exec(`npm dist-tag add ${packageName}@${version} ${tag}`);
+  await exec(`npm dist-tag add ${name}@${version} ${tag}`);
 };
 
 const getLatestVersion = async (packageName) => {
-  const exec = promisify(syncExec);
   const { stdout } = await exec(`npm view ${packageName} version`);
   return stdout.trim();
 };

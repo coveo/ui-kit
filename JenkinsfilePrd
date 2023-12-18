@@ -8,7 +8,7 @@ node('linux && docker') {
     userRemoteConfigs: [[credentialsId: 'github-app-dev', url: 'https://github.com/coveo/relay']]
   ])
 
-  withDockerContainer(image: 'node:18', args: '-u=root -e HOME=/tmp -e NPM_CONFIG_PREFIX=/tmp/.npm') {
+  withDockerContainer(image: 'node:20', args: '-u=root -e HOME=/tmp -e NPM_CONFIG_PREFIX=/tmp/.npm') {
     stage('Npm login') {
       withCredentials([
       string(credentialsId: 'npmjs_com_token', variable: 'NPM_TOKEN')]) {
@@ -16,20 +16,20 @@ node('linux && docker') {
       }
     }
 
-    stage('Npm tag') {
-      sh 'npm run npm:tag:latest'
+    stage('Setup pnpm') { 
+      sh 'corepack enable'
+      sh 'corepack prepare --activate'
     }
 
-    stage('Build using pnpm') { 
-        sh 'corepack enable'
-        sh 'corepack prepare pnpm@latest-7 --activate'
-        sh 'pnpm install'
+    stage('Npm tag') {
+      sh 'npm run npm:tag:latest'
     }
 
     stage('Notify docs') {
       withCredentials([
         usernamePassword(credentialsId: 'github-commit-token', usernameVariable: 'GITHUB_USERNAME', passwordVariable: 'GITHUB_TOKEN')
       ]) {
+        sh 'pnpm i @octokit/rest --filter @coveo/relay'
         sh 'npm run docs:notify'
       }
     }
