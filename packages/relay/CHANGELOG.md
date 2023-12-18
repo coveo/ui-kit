@@ -1,3 +1,9 @@
+## 0.6.12 (2023-12-18)
+
+### Bug Fixes
+
+- **ci:** resolve errors blocking pipeline in staging (#64) ([60df7f4](/commits/60df7f4b2c0dfcb7ce89ac9f7c386172011d952d)), closes [#64](/issues/64)
+
 ## 0.6.11 (2023-12-14)
 
 ### Bug Fixes
