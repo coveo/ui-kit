@@ -28,7 +28,6 @@ export default class QuanticResultText extends LightningElement {
   @api label;
   /**
    * The field whose values you want to display.
-   *
    * @api
    * @type {string}
    */
