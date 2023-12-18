@@ -1,14 +1,17 @@
 'use client';
 
-import {useAuthorFacet} from '../../lib/react/engine';
+import {Facet, FacetState} from '@coveo/headless';
+import {useAuthorFacet, useSourceFacet} from '../../lib/react/engine';
 import FacetCommon from '../common/facet';
 
-export const AuthorFacet = () => {
-  const {state, methods} = useAuthorFacet();
-
+const facet = (
+  title: string,
+  state: FacetState,
+  methods?: Omit<Facet, 'state' | 'subscribe'>
+) => {
   return (
     <FacetCommon
-      title="Author"
+      title={title}
       values={state.values}
       facetSearchQuery={state.facetSearch.query}
       facetSearchResults={state.facetSearch.values}
@@ -23,4 +26,14 @@ export const AuthorFacet = () => {
       }
     />
   );
+};
+
+export const AuthorFacet = () => {
+  const {state, methods} = useAuthorFacet();
+  return facet('Author', state, methods);
+};
+
+export const SourceFacet = () => {
+  const {state, methods} = useSourceFacet();
+  return facet('Source', state, methods);
 };

@@ -21,6 +21,7 @@ export const config = {
     searchBox: defineSearchBox(),
     resultList: defineResultList(),
     authorFacet: defineFacet({options: {facetId: 'author-1', field: 'author'}}),
+    sourceFacet: defineFacet({options: {facetId: 'source-1', field: 'source'}}),
     searchParameterManager: defineSearchParameterManager(),
   },
 } satisfies SearchEngineDefinitionOptions<

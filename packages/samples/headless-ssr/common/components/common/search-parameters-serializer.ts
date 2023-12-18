@@ -94,9 +94,7 @@ export class CoveoNextJsSearchParametersSerializer {
   public static parseSearchParameters(
     clientSideUrlSearchParams: URLSearchParams | ReadonlyURLSearchParams
   ): SearchParameters {
-    console.log(clientSideUrlSearchParams);
     const res: SearchParameters = {}; // TODO: not sure about the type
-
     clientSideUrlSearchParams.forEach((value, key) => {
       const objectKey = /^(f|fExcluded|cf|nf|df|sf|af)-(.+)$/;
       const result = objectKey.exec(key);
@@ -177,6 +175,7 @@ export class CoveoNextJsSearchParametersSerializer {
       return false;
     }
 
+    // TODO: reset array
     const isRangeValue = (v: unknown) =>
       isObject(v) && 'start' in v && 'end' in v;
     return allEntriesAreValid(obj, isRangeValue);
@@ -204,12 +203,16 @@ export class CoveoNextJsSearchParametersSerializer {
   ) {
     Object.entries(value).forEach(([facetId, facetValues]) => {
       const id = `${key}-${facetId}`;
-      // TODO: reset array
-      // urlSearchParams.delete(id);
+      urlSearchParams.delete(id);
+
       facetValues.forEach((v) => {
         const alreadyInSearchParams = urlSearchParams.getAll(id).includes(v);
         !alreadyInSearchParams && urlSearchParams.append(id, v);
       });
+
+      // TODO: handle cases where search params change order
+      // http://localhost:3000/react?f-author-1=Jean-Fran%C3%A7ois+L%27Heureux&f-author-1=gminero
+      // http://localhost:3000/react?f-author-1=gminero&f-author-1=Jean-Fran%C3%A7ois+L%27Heureux
     });
   }
 

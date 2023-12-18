@@ -32,13 +32,29 @@ export default function SearchParameterManager() {
 
   // Update the browser's URL
   const correctedUrl = useMemo(() => {
+    // console.log(historyRouter.url?.href);
+    // TODO: understand why state.parameters is empty initially
+    console.log(state.parameters);
     if (!historyRouter.url) {
       return null;
     }
     const newURL = new URL(historyRouter.url);
+    // console.log('*********************');
+    // console.log(newURL.search);
+    // console.log((state.parameters.f as any || {})['author-1']);
+
     CoveoNextJsSearchParametersSerializer.fromCoveoSearchParameters(
       state.parameters
     ).applyToUrlSearchParams(newURL.searchParams);
+    // console.log(newURL.searchParams.toString());
+    // console.log('*********************');
+    // console.log('*********************');
+    // console.log(historyRouter.url.href.split('?')[1]);
+    // console.log(newURL.search);
+    // console.log('*********************');
+
+    // TODO: ignore is newUrl only has changed order of search params
+
     return newURL.href;
   }, [historyRouter.url, state.parameters]);
 

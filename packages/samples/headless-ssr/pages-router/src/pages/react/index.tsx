@@ -1,5 +1,5 @@
 import {CoveoNextJsSearchParametersSerializer} from '@/common/components/common/search-parameters-serializer';
-import {AuthorFacet} from '@/common/components/react/facets';
+import {AuthorFacet, SourceFacet} from '@/common/components/react/facets';
 import ResultList from '@/common/components/react/result-list';
 import SearchBox from '@/common/components/react/search-box';
 import {SearchPageProvider} from '@/common/components/react/search-page';
@@ -35,6 +35,7 @@ export default function Search({staticState}: StaticStateProps) {
       <SearchBox />
       <ResultList />
       <AuthorFacet />
+      <SourceFacet />
     </SearchPageProvider>
   );
 }
