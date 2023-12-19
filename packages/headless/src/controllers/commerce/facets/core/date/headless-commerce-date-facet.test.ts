@@ -1,6 +1,5 @@
 import {CommerceFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
 import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
-import {fetchProductListing} from '../../../../../features/commerce/product-listing/product-listing-actions';
 import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
@@ -12,6 +11,7 @@ import {buildMockCommerceDateFacetResponse} from '../../../../../test/mock-comme
 import {buildMockCommerceFacetSlice} from '../../../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceDateFacetValue} from '../../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
+import {commonOptions} from '../../../product-listing/facets/headless-product-listing-facet-options';
 import {
   CommerceDateFacet,
   CommerceDateFacetOptions,
@@ -45,7 +45,7 @@ describe('CommerceDateFacet', () => {
   beforeEach(() => {
     options = {
       facetId,
-      fetchResultsActionCreator: fetchProductListing,
+      ...commonOptions,
     };
 
     state = buildMockCommerceState();

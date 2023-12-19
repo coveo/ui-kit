@@ -1,5 +1,4 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {executeSearch} from '../../../../features/commerce/search/search-actions';
 import {loadReducerError} from '../../../../utils/errors';
 import {CommerceFacetOptions} from '../../facets/core/headless-core-commerce-facet';
 import {
@@ -7,6 +6,7 @@ import {
   buildCommerceNumericFacet,
 } from '../../facets/core/numeric/headless-commerce-numeric-facet';
 import {loadSearchReducer} from '../utils/load-search-reducers';
+import {commonOptions} from './headless-search-facet-options';
 
 export function buildSearchNumericFacet(
   engine: CommerceEngine,
@@ -18,6 +18,6 @@ export function buildSearchNumericFacet(
 
   return buildCommerceNumericFacet(engine, {
     ...options,
-    fetchResultsActionCreator: executeSearch,
+    ...commonOptions,
   });
 }

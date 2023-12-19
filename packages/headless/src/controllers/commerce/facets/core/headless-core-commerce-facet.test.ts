@@ -21,6 +21,7 @@ import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-
 import {buildMockCommerceRegularFacetValue} from '../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {FacetValueState} from '../../../core/facets/facet/headless-core-facet';
+import {commonOptions} from '../../product-listing/facets/headless-product-listing-facet-options';
 import {
   buildCoreCommerceFacet,
   CoreCommerceFacet,
@@ -66,9 +67,9 @@ describe('CoreCommerceFacet', () => {
   beforeEach(() => {
     options = {
       facetId,
-      fetchResultsActionCreator,
       toggleExcludeActionCreator,
       toggleSelectActionCreator,
+      ...commonOptions,
     };
 
     state = buildMockCommerceState();
