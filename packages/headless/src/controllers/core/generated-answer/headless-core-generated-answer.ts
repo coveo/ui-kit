@@ -24,7 +24,6 @@ import {GeneratedAnswerState} from '../../../features/generated-answer/generated
 import {GeneratedResponseFormat} from '../../../features/generated-answer/generated-response-format';
 import {CoreEngine} from '../../../product-listing.index';
 import {
-  ConfigurationSection,
   DebugSection,
   GeneratedAnswerSection,
   SearchSection,
@@ -131,10 +130,7 @@ interface SubscribeStateManager {
   setAbortControllerRef: (ref: AbortController) => void;
   subscribeToSearchRequests: (
     engine: CoreEngine<
-      GeneratedAnswerSection &
-        SearchSection &
-        ConfigurationSection &
-        DebugSection,
+      GeneratedAnswerSection & SearchSection & DebugSection,
       ClientThunkExtraArguments<GeneratedAnswerAPIClient>
     >
   ) => Unsubscribe;
@@ -325,9 +321,7 @@ export function buildCoreGeneratedAnswer(
 
 function loadGeneratedAnswerReducer(
   engine: CoreEngine
-): engine is CoreEngine<
-  GeneratedAnswerSection & SearchSection & ConfigurationSection & DebugSection
-> {
+): engine is CoreEngine<GeneratedAnswerSection & SearchSection & DebugSection> {
   engine.addReducers({generatedAnswer});
   return true;
 }

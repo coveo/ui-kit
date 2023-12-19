@@ -2,12 +2,9 @@ import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answ
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {updateResponseFormat} from '../../features/generated-answer/generated-answer-actions';
 import {generatedAnswerAnalyticsClient} from '../../features/generated-answer/generated-answer-analytics-actions';
-import {generatedAnswerReducer as generatedAnswer} from '../../features/generated-answer/generated-answer-slice';
 import {GeneratedAnswerState} from '../../features/generated-answer/generated-answer-state';
 import {GeneratedResponseFormat} from '../../features/generated-answer/generated-response-format';
 import {executeSearch} from '../../features/search/search-actions';
-import {GeneratedAnswerSection} from '../../state/state-sections';
-import {loadReducerError} from '../../utils/errors';
 import {
   GeneratedAnswer,
   GeneratedAnswerProps,
@@ -33,23 +30,18 @@ export function buildGeneratedAnswer(
   engine: SearchEngine,
   props: GeneratedAnswerProps = {}
 ): GeneratedAnswer {
-  if (!loadGeneratedAnswerReducer(engine)) {
-    throw loadReducerError;
-  }
-
   const {dispatch} = engine;
   const controller = buildCoreGeneratedAnswer(
     engine,
     generatedAnswerAnalyticsClient,
     props
   );
-  const getState = () => engine.state;
 
   return {
     ...controller,
 
     get state() {
-      return getState().generatedAnswer;
+      return controller.state;
     },
 
     retry() {
@@ -72,11 +64,4 @@ export function buildGeneratedAnswer(
       );
     },
   };
-}
-
-function loadGeneratedAnswerReducer(
-  engine: SearchEngine
-): engine is SearchEngine<GeneratedAnswerSection> {
-  engine.addReducers({generatedAnswer});
-  return true;
 }
