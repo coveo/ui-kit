@@ -21,6 +21,7 @@ import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-
 import {buildMockCommerceRegularFacetValue} from '../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {FacetValueState} from '../../../core/facets/facet/headless-core-facet';
+import {commonOptions} from '../../product-listing/facets/headless-product-listing-facet-options';
 import {
   buildCoreCommerceFacet,
   CoreCommerceFacet,
@@ -52,23 +53,22 @@ describe('CoreCommerceFacet', () => {
   }
 
   function setFacetResponse(config: Partial<RegularFacetResponse> = {}) {
-    state.productListing.facets = [
+    options.facetResponseSelector = () =>
       buildMockCommerceRegularFacetResponse({
         facetId,
         field,
         type,
         displayName,
         ...config,
-      }),
-    ];
+      });
   }
 
   beforeEach(() => {
     options = {
       facetId,
-      fetchResultsActionCreator,
       toggleExcludeActionCreator,
       toggleSelectActionCreator,
+      ...commonOptions,
     };
 
     state = buildMockCommerceState();
@@ -381,34 +381,47 @@ describe('CoreCommerceFacet', () => {
       expect(facet.state.displayName).toBe(displayName);
     });
 
-    it('#state.values contains the same values as from the response', () => {
+    it('#state.values uses #facetResponseSelector', () => {
       const values = [buildMockCommerceRegularFacetValue()];
-      const facetResponse = buildMockCommerceRegularFacetResponse({
-        facetId,
-        values,
-      });
+      options = {
+        ...options,
+        facetResponseSelector: () =>
+          buildMockCommerceRegularFacetResponse({
+            facetId,
+            values,
+          }),
+      };
+      initFacet();
 
-      state.productListing.facets = [facetResponse];
       expect(facet.state.values).toBe(values);
+    });
+
+    it('#state.isLoading uses #isFacetLoadingResponseSelector', () => {
+      options = {
+        ...options,
+        isFacetLoadingResponseSelector: () => true,
+      };
+      initFacet();
+      expect(facet.state.isLoading).toBe(true);
     });
 
     describe('#state.hasActiveValues', () => {
       it('when #state.values has a value with a non-idle state, returns "true"', () => {
-        const facetResponse = buildMockCommerceRegularFacetResponse({facetId});
-        facetResponse.values = [
-          buildMockCommerceRegularFacetValue({state: 'selected'}),
-        ];
-        state.productListing.facets = [facetResponse];
+        setFacetResponse({
+          ...buildMockCommerceRegularFacetResponse({facetId}),
+          values: [buildMockCommerceRegularFacetValue({state: 'selected'})],
+        });
+        initFacet();
 
         expect(facet.state.hasActiveValues).toBe(true);
       });
 
       it('when #state.values only has idle values, returns "false"', () => {
-        const facetResponse = buildMockCommerceRegularFacetResponse({facetId});
-        facetResponse.values = [
-          buildMockCommerceRegularFacetValue({state: 'idle'}),
-        ];
-        state.productListing.facets = [facetResponse];
+        setFacetResponse({
+          ...buildMockCommerceRegularFacetResponse({facetId}),
+          values: [buildMockCommerceRegularFacetValue({state: 'idle'})],
+        });
+        initFacet();
 
         expect(facet.state.hasActiveValues).toBe(false);
       });
@@ -420,22 +433,26 @@ describe('CoreCommerceFacet', () => {
       });
 
       it('when #moreValuesAvailable in the response is "true", returns "true"', () => {
-        const facetResponse = buildMockCommerceRegularFacetResponse({
-          facetId,
-          moreValuesAvailable: true,
-        });
+        setFacetResponse(
+          buildMockCommerceRegularFacetResponse({
+            facetId,
+            moreValuesAvailable: true,
+          })
+        );
+        initFacet();
 
-        state.productListing.facets = [facetResponse];
         expect(facet.state.canShowMoreValues).toBe(true);
       });
 
       it('when #moreValuesAvailable in the response is "false", returns "false"', () => {
-        const facetResponse = buildMockCommerceRegularFacetResponse({
-          facetId,
-          moreValuesAvailable: false,
-        });
+        setFacetResponse(
+          buildMockCommerceRegularFacetResponse({
+            facetId,
+            moreValuesAvailable: false,
+          })
+        );
+        initFacet();
 
-        state.productListing.facets = [facetResponse];
         expect(facet.state.canShowMoreValues).toBe(false);
       });
     });
