@@ -1,5 +1,14 @@
-import {type Draft as WritableDraft} from '@reduxjs/toolkit';
-import {createReducer, FacetValueRequest} from '../../../../ssr.index';
+import {
+  AnyAction,
+  createReducer,
+  type Draft as WritableDraft,
+} from '@reduxjs/toolkit';
+import {
+  DateRangeRequest,
+  FacetValueRequest,
+  NumericRangeRequest,
+} from '../../../../controllers/commerce/facets/core/headless-core-commerce-facet';
+import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
@@ -7,71 +16,158 @@ import {
   updateFacetNumberOfValues,
 } from '../../../facets/facet-set/facet-set-actions';
 import {convertFacetValueToRequest} from '../../../facets/facet-set/facet-set-slice';
+import {updateFacetAutoSelection} from '../../../facets/generic/facet-actions';
+import {
+  toggleExcludeDateFacetValue,
+  toggleSelectDateFacetValue,
+} from '../../../facets/range-facets/date-facet-set/date-facet-actions';
+import {convertToDateRangeRequests} from '../../../facets/range-facets/date-facet-set/date-facet-set-slice';
+import {findExactRangeValue} from '../../../facets/range-facets/generic/range-facet-reducers';
+import {
+  toggleExcludeNumericFacetValue,
+  toggleSelectNumericFacetValue,
+} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {convertToNumericRangeRequests} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
+import {executeSearch} from '../../search/search-actions';
 import {
   CommerceFacetSetState,
   getCommerceFacetSetInitialState,
 } from './facet-set-state';
 import {CommerceFacetRequest} from './interfaces/request';
-import {AnyFacetResponse, FacetResponse} from './interfaces/response';
+import {AnyFacetResponse, RegularFacetValue} from './interfaces/response';
 
 export const commerceFacetSetReducer = createReducer(
   getCommerceFacetSetInitialState(),
 
   (builder) => {
     builder
-      .addCase(fetchProductListing.fulfilled, (state, action) => {
-        const existingFacets = new Set(Object.keys(state));
-        const facets = action.payload.response.facets;
-        for (const facetResponse of facets) {
-          updateStateFromFacetResponse(state, facetResponse, existingFacets);
-        }
-
-        for (const facetId of existingFacets) {
-          delete state[facetId];
-        }
-      })
+      .addCase(fetchProductListing.fulfilled, handleQueryFulfilled)
+      .addCase(executeSearch.fulfilled, handleQueryFulfilled)
       .addCase(toggleSelectFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
         const facetRequest = state[facetId]?.request;
 
-        if (!facetRequest) {
+        if (!facetRequest || facetRequest.type !== 'regular') {
           return;
         }
 
         facetRequest.preventAutoSelect = true;
 
-        const existingValue = facetRequest.values.find(
-          (req) => req.value === selection.value
+        const existingValue = (
+          facetRequest.values as WritableDraft<FacetValueRequest>[]
+        ).find((req) => req.value === selection.value);
+        if (!existingValue) {
+          insertNewValue(facetRequest, selection);
+          return;
+        }
+
+        updateExistingFacetValueState(existingValue, 'select');
+      })
+      .addCase(toggleSelectNumericFacetValue, (state, action) => {
+        const {facetId, selection} = action.payload;
+        const facetRequest = state[facetId]?.request;
+
+        if (!facetRequest || facetRequest.type !== 'numericalRange') {
+          return;
+        }
+
+        facetRequest.preventAutoSelect = true;
+
+        const existingValue = findExactRangeValue(
+          facetRequest.values as NumericRangeRequest[],
+          selection
         );
         if (!existingValue) {
           insertNewValue(facetRequest, selection);
           return;
         }
-        const isSelected = existingValue.state === 'selected';
-        existingValue.state = isSelected ? 'idle' : 'selected';
+        updateExistingFacetValueState(existingValue, 'select');
       })
+      .addCase(toggleSelectDateFacetValue, (state, action) => {
+        const {facetId, selection} = action.payload;
+        const facetRequest = state[facetId]?.request;
+
+        if (!facetRequest || facetRequest.type !== 'dateRange') {
+          return;
+        }
+
+        facetRequest.preventAutoSelect = true;
+
+        const existingValue = findExactRangeValue(
+          facetRequest.values as DateRangeRequest[],
+          selection
+        );
+        if (!existingValue) {
+          insertNewValue(facetRequest, selection);
+          return;
+        }
+        updateExistingFacetValueState(existingValue, 'select');
+      })
+      // TODO: toggleSelectCategoryFacetValue
       .addCase(toggleExcludeFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
         const facetRequest = state[facetId]?.request;
 
-        if (!facetRequest) {
+        if (!facetRequest || facetRequest.type !== 'regular') {
           return;
         }
 
         facetRequest.preventAutoSelect = true;
 
-        const existingValue = facetRequest.values.find(
-          (req) => req.value === selection.value
+        const existingValue = (
+          facetRequest.values as WritableDraft<FacetValueRequest>[]
+        ).find((req) => req.value === selection.value);
+        if (!existingValue) {
+          insertNewValue(facetRequest, selection);
+          return;
+        }
+
+        updateExistingFacetValueState(existingValue, 'exclude');
+      })
+      .addCase(toggleExcludeNumericFacetValue, (state, action) => {
+        const {facetId, selection} = action.payload;
+        const facetRequest = state[facetId]?.request;
+
+        if (!facetRequest || facetRequest.type !== 'numericalRange') {
+          return;
+        }
+
+        facetRequest.preventAutoSelect = true;
+
+        const existingValue = findExactRangeValue(
+          facetRequest.values as NumericRangeRequest[],
+          selection
         );
         if (!existingValue) {
           insertNewValue(facetRequest, selection);
           return;
         }
 
-        const isExcluded = existingValue.state === 'excluded';
-        existingValue.state = isExcluded ? 'idle' : 'excluded';
+        updateExistingFacetValueState(existingValue, 'exclude');
       })
+      .addCase(toggleExcludeDateFacetValue, (state, action) => {
+        const {facetId, selection} = action.payload;
+        const facetRequest = state[facetId]?.request;
+
+        if (!facetRequest || facetRequest.type !== 'dateRange') {
+          return;
+        }
+
+        facetRequest.preventAutoSelect = true;
+
+        const existingValue = findExactRangeValue(
+          facetRequest.values as DateRangeRequest[],
+          selection
+        );
+        if (!existingValue) {
+          insertNewValue(facetRequest, selection);
+          return;
+        }
+
+        updateExistingFacetValueState(existingValue, 'exclude');
+      })
+      // TODO: toggleExcludeCategoryFacetValue
       .addCase(updateFacetNumberOfValues, (state, action) => {
         const {facetId, numberOfValues} = action.payload;
 
@@ -90,9 +186,58 @@ export const commerceFacetSetReducer = createReducer(
         }
 
         facetRequest.isFieldExpanded = isFieldExpanded;
+      })
+      .addCase(updateFacetAutoSelection, (state, action) =>
+        Object.values(state).forEach((slice) => {
+          slice.request.preventAutoSelect = !action.payload.allow;
+        })
+      )
+      .addCase(deselectAllBreadcrumbs, (state) => {
+        Object.values(state).forEach((facet) => {
+          facet.request.values.forEach((value) => (value.state = 'idle'));
+        });
       });
   }
 );
+
+function handleQueryFulfilled(
+  state: WritableDraft<CommerceFacetSetState>,
+  action: AnyAction
+) {
+  const existingFacets = new Set(Object.keys(state));
+  const facets = action.payload.response.facets;
+  for (const facetResponse of facets) {
+    updateStateFromFacetResponse(state, facetResponse, existingFacets);
+  }
+
+  for (const facetId of existingFacets) {
+    delete state[facetId];
+  }
+}
+
+function updateExistingFacetValueState(
+  existingFacetValue: WritableDraft<
+    FacetValueRequest | NumericRangeRequest | DateRangeRequest
+  >,
+  toggleAction: 'select' | 'exclude'
+) {
+  switch (existingFacetValue.state) {
+    case 'idle':
+      existingFacetValue.state =
+        toggleAction === 'exclude' ? 'excluded' : 'selected';
+      break;
+    case 'excluded':
+      existingFacetValue.state =
+        toggleAction === 'exclude' ? 'idle' : 'selected';
+      break;
+    case 'selected':
+      existingFacetValue.state =
+        toggleAction === 'exclude' ? 'excluded' : 'idle';
+      break;
+    default:
+      break;
+  }
+}
 
 function updateStateFromFacetResponse(
   state: WritableDraft<CommerceFacetSetState>,
@@ -110,20 +255,36 @@ function updateStateFromFacetResponse(
   }
 
   facetRequest.facetId = facetId;
+  facetRequest.displayName = facetResponse.displayName;
   facetRequest.numberOfValues = facetResponse.values.length;
   facetRequest.field = facetResponse.field;
   facetRequest.type = facetResponse.type;
-  facetRequest.values = (facetResponse as FacetResponse).values.map(
-    convertFacetValueToRequest
-  );
+  facetRequest.values =
+    getFacetRequestValuesFromFacetResponse(facetResponse) ?? [];
   facetRequest.preventAutoSelect = false;
+}
+
+function getFacetRequestValuesFromFacetResponse(
+  facetResponse: AnyFacetResponse
+) {
+  switch (facetResponse.type) {
+    case 'numericalRange':
+      return convertToNumericRangeRequests(facetResponse.values);
+    case 'dateRange':
+      return convertToDateRangeRequests(facetResponse.values);
+    case 'regular':
+      return facetResponse.values.map(convertFacetValueToRequest);
+    case 'hierarchical': // TODO
+    default:
+      return;
+  }
 }
 
 function insertNewValue(
   facetRequest: CommerceFacetRequest,
-  facetValue: FacetValueRequest
+  facetValue: FacetValueRequest | NumericRangeRequest | DateRangeRequest
 ) {
-  const {values} = facetRequest;
+  const {type, values} = facetRequest;
   const firstIdleIndex = values.findIndex((v) => v.state === 'idle');
   const indexToInsertAt =
     firstIdleIndex === -1 ? values.length : firstIdleIndex;
@@ -131,6 +292,32 @@ function insertNewValue(
   const valuesBefore = values.slice(0, indexToInsertAt);
   const valuesAfter = values.slice(indexToInsertAt + 1);
 
-  facetRequest.values = [...valuesBefore, facetValue, ...valuesAfter];
+  switch (type) {
+    case 'regular':
+      facetRequest.values = [
+        ...(valuesBefore as FacetValueRequest[]),
+        facetValue as FacetValueRequest,
+        ...(valuesAfter as RegularFacetValue[]),
+      ];
+      break;
+    case 'numericalRange':
+      facetRequest.values = [
+        ...(valuesBefore as NumericRangeRequest[]),
+        facetValue as NumericRangeRequest,
+        ...(valuesAfter as NumericRangeRequest[]),
+      ];
+      break;
+    case 'dateRange':
+      facetRequest.values = [
+        ...(valuesBefore as DateRangeRequest[]),
+        facetValue as DateRangeRequest,
+        ...(valuesAfter as DateRangeRequest[]),
+      ];
+      break;
+    case 'hierarchical': // TODO
+    default:
+      break;
+  }
+
   facetRequest.numberOfValues = facetRequest.values.length;
 }

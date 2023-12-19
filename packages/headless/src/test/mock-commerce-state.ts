@@ -8,6 +8,8 @@ import {getCommerceSearchInitialState} from '../features/commerce/search/search-
 import {getCommerceSortInitialState} from '../features/commerce/sort/sort-state';
 import {getConfigurationInitialState} from '../features/configuration/configuration-state';
 import {getFacetOrderInitialState} from '../features/facets/facet-order/facet-order-state';
+import {getQuerySetInitialState} from '../features/query-set/query-set-state';
+import {getQuerySuggestSetInitialState} from '../features/query-suggest/query-suggest-state';
 import {CommerceAppState} from '../state/commerce-app-state';
 
 export function buildMockCommerceState(
@@ -23,6 +25,8 @@ export function buildMockCommerceState(
     commercePagination: getCommercePaginationInitialState(),
     commerceSort: getCommerceSortInitialState(),
     commerceContext: getContextInitialState(),
+    querySuggest: getQuerySuggestSetInitialState(),
+    querySet: getQuerySetInitialState(),
     cart: getCartInitialState(),
     version: 'unit-testing-version',
     ...config,

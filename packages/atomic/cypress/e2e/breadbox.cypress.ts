@@ -312,15 +312,7 @@ describe('Breadbox Test Suites', () => {
     }
 
     describe('when path-limit is lower than min', () => {
-      const pathLimit = 1;
-      beforeEach(() => {
-        setupBreadboxWithPathLimit({'path-limit': pathLimit});
-      });
-      CommonAssertions.assertConsoleError();
-    });
-
-    describe('when path-limit is higher than max', () => {
-      const pathLimit = 11;
+      const pathLimit = 0;
       beforeEach(() => {
         setupBreadboxWithPathLimit({'path-limit': pathLimit});
       });
