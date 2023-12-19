@@ -204,7 +204,7 @@ export function buildCoreCommerceFacet<
     toggleExclude: (selection: ValueRequest) => {
       if (!props.options.toggleExcludeActionCreator) {
         console.warn(
-          'Not toggle exclude action creator provided; calling #toggleExclude had no effect.'
+          'No toggle exclude action creator provided; calling #toggleExclude had no effect.'
         );
         return;
       }
@@ -227,7 +227,7 @@ export function buildCoreCommerceFacet<
     toggleSingleExclude: function (selection: ValueRequest) {
       if (!props.options.toggleExcludeActionCreator) {
         console.warn(
-          'Not toggle exclude action creator provided; calling #toggleSingleExclude had no effect.'
+          'No toggle exclude action creator provided; calling #toggleSingleExclude had no effect.'
         );
         return;
       }

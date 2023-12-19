@@ -9,9 +9,9 @@ import {FacetType} from '../headless-core-commerce-facet';
 import {findIfHasActiveValues} from './headless-core-commerce-facet-utils';
 
 describe('#findIfHasActiveValues', () => {
-  describe('when facet type is "category', () => {
+  describe('when the facet type is "category', () => {
     const type = 'hierarchical' as FacetType;
-    describe('when current value has ancestors', () => {
+    it('when current value has ancestors, returns "true"', () => {
       const values = [
         buildMockCommerceCategoryFacetValue({
           value: 'A',
@@ -39,15 +39,11 @@ describe('#findIfHasActiveValues', () => {
           ],
         }),
       ];
-      it('returns "true"', () => {
-        expect(findIfHasActiveValues(values, type)).toBe(true);
-      });
+      expect(findIfHasActiveValues(values, type)).toBe(true);
     });
-    describe('when current value has no ancestors', () => {
+    describe('when current value has no ancestors, returns "false"', () => {
       const values = [buildMockCommerceCategoryFacetValue()];
-      it('returns "false"', () => {
-        expect(findIfHasActiveValues(values, type)).toBe(false);
-      });
+      expect(findIfHasActiveValues(values, type)).toBe(false);
     });
   });
 
@@ -64,7 +60,7 @@ describe('#findIfHasActiveValues', () => {
       facetType: 'date' as FacetType,
       mockFacetValueBuilder: buildMockCommerceDateFacetValue,
     },
-  ])('when facet type is "$type"', ({facetType, mockFacetValueBuilder}) => {
+  ])('when the facet type is "$type"', ({facetType, mockFacetValueBuilder}) => {
     describe.each([
       {state: 'idle' as FacetValueState, expected: false},
       {state: 'excluded' as FacetValueState, expected: true},
