@@ -14,7 +14,9 @@ import {
   FacetType,
   NumericFacetValue,
   RegularFacetValue,
+  CategoryFacetValue,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response';
+import {CategoryFacetValueRequest} from '../../../../features/facets/category-facet-set/interfaces/request';
 import {
   deselectAllFacetValues,
   updateFacetIsFieldExpanded,
@@ -31,6 +33,7 @@ import {
 } from '../../../core/facets/facet/headless-core-facet';
 import {DateRangeRequest} from '../../../core/facets/range-facet/date-facet/headless-core-date-facet';
 import {NumericRangeRequest} from '../../../core/facets/range-facet/numeric-facet/headless-core-numeric-facet';
+import {findIfHasActiveValues} from './utils/headless-core-commerce-facet-utils';
 
 export type {
   FacetType,
@@ -40,12 +43,9 @@ export type {
   NumericFacetValue,
   DateRangeRequest,
   DateFacetValue,
+  CategoryFacetValueRequest,
+  CategoryFacetValue,
 };
-
-interface AnyToggleFacetValueActionCreatorPayload {
-  selection: any; // eslint-disable-line @typescript-eslint/no-explicit-any
-  facetId: string;
-}
 
 /**
  * @internal
@@ -59,14 +59,14 @@ export interface CoreCommerceFacetProps {
 export interface CoreCommerceFacetOptions {
   facetId: string;
   toggleSelectActionCreator: ActionCreatorWithPreparedPayload<
-    [payload: AnyToggleFacetValueActionCreatorPayload],
+    [payload: any], // eslint-disable-line @typescript-eslint/no-explicit-any
     any, // eslint-disable-line @typescript-eslint/no-explicit-any
     string,
     never,
     never
   >;
-  toggleExcludeActionCreator: ActionCreatorWithPreparedPayload<
-    [payload: AnyToggleFacetValueActionCreatorPayload],
+  toggleExcludeActionCreator?: ActionCreatorWithPreparedPayload<
+    [payload: any], // eslint-disable-line @typescript-eslint/no-explicit-any
     any, // eslint-disable-line @typescript-eslint/no-explicit-any
     string,
     never,
@@ -202,6 +202,13 @@ export function buildCoreCommerceFacet<
     },
 
     toggleExclude: (selection: ValueRequest) => {
+      if (!props.options.toggleExcludeActionCreator) {
+        console.warn(
+          'Not toggle exclude action creator provided; calling #toggleExclude had no effect.'
+        );
+        return;
+      }
+
       dispatch(props.options.toggleExcludeActionCreator({selection, facetId}));
       dispatch(props.options.fetchResultsActionCreator());
       // TODO: analytics
@@ -218,6 +225,13 @@ export function buildCoreCommerceFacet<
 
     // Must use a function here to properly support inheritance with `this`.
     toggleSingleExclude: function (selection: ValueRequest) {
+      if (!props.options.toggleExcludeActionCreator) {
+        console.warn(
+          'Not toggle exclude action creator provided; calling #toggleSingleExclude had no effect.'
+        );
+        return;
+      }
+
       if (selection.state === 'idle') {
         dispatch(deselectAllFacetValues(facetId));
       }
@@ -268,9 +282,7 @@ export function buildCoreCommerceFacet<
       const response = getResponse();
 
       const values = response.values as ValueResponse[];
-      const hasActiveValues = values.some(
-        (facetValue) => facetValue.state !== 'idle'
-      );
+      const hasActiveValues = findIfHasActiveValues(values, response.type);
       const canShowMoreValues = response ? response.moreValuesAvailable : false;
 
       return {

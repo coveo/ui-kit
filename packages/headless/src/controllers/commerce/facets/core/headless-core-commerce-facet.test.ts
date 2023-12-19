@@ -26,6 +26,7 @@ import {
   CoreCommerceFacet,
   CoreCommerceFacetOptions,
 } from './headless-core-commerce-facet';
+import * as HasActiveValuesDeterminor from './utils/headless-core-commerce-facet-utils';
 
 describe('CoreCommerceFacet', () => {
   const facetId = 'facet_id';
@@ -78,6 +79,10 @@ describe('CoreCommerceFacet', () => {
     initFacet();
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('initializes', () => {
     expect(facet).toBeTruthy();
   });
@@ -113,20 +118,45 @@ describe('CoreCommerceFacet', () => {
 
   describe('#toggleExclude', () => {
     const facetValue = () => buildMockCommerceRegularFacetValue({value: 'TED'});
+    describe('when #toggleExcludeActionCreator is undefined', () => {
+      beforeEach(() => {
+        facet = buildCoreCommerceFacet(engine, {
+          options: {
+            facetId,
+            toggleSelectActionCreator,
+            fetchResultsActionCreator,
+          },
+        });
+      });
+      it('logs a warning', () => {
+        jest.spyOn(console, 'warn');
+        facet.toggleExclude(facetValue());
 
-    it('dispatches #toggleExcludeActionCreator with the passed facet value', () => {
-      facet.toggleExclude(facetValue());
+        expect(console.warn).toHaveBeenCalledTimes(1);
+      });
+      it('does not dispatch any action', () => {
+        facet.toggleExclude(facetValue());
 
-      expect(engine.actions).toContainEqual(
-        toggleExcludeActionCreator({facetId, selection: facetValue()})
-      );
+        expect(engine.actions.length).toBe(0);
+      });
     });
+    describe('when #toggleExcludeActionCreator is defined', () => {
+      it('dispatches #toggleExcludeActionCreator with the passed facet value', () => {
+        facet.toggleExclude(facetValue());
 
-    it('dispatches #fetchResultsActionCreator', () => {
-      facet.toggleExclude(facetValue());
+        expect(engine.actions).toContainEqual(
+          toggleExcludeActionCreator({facetId, selection: facetValue()})
+        );
+      });
 
-      const action = engine.findAsyncAction(fetchResultsActionCreator.pending);
-      expect(action).toBeTruthy();
+      it('dispatches #fetchResultsActionCreator', () => {
+        facet.toggleExclude(facetValue());
+
+        const action = engine.findAsyncAction(
+          fetchResultsActionCreator.pending
+        );
+        expect(action).toBeTruthy();
+      });
     });
   });
 
@@ -178,48 +208,80 @@ describe('CoreCommerceFacet', () => {
   });
 
   describe('#toggleSingleExclude', () => {
-    describe('when toggled facet value state is "idle"', () => {
-      const facetValue = () =>
-        buildMockCommerceRegularFacetValue({value: 'TED', state: 'idle'});
+    const facetValue = () =>
+      buildMockCommerceRegularFacetValue({value: 'TED', state: 'idle'});
+    describe('when #toggleExcludeActionCreator is undefined', () => {
+      beforeEach(() => {
+        facet = buildCoreCommerceFacet(engine, {
+          options: {
+            facetId,
+            toggleSelectActionCreator,
+            fetchResultsActionCreator,
+          },
+        });
+      });
 
-      it('calls #toggleExclude', () => {
+      it('logs a warning', () => {
+        jest.spyOn(console, 'warn');
+        facet.toggleSingleExclude(facetValue());
+
+        expect(console.warn).toHaveBeenCalledTimes(1);
+      });
+      it('does not call #toggleExclude', () => {
         jest.spyOn(facet, 'toggleExclude');
         facet.toggleSingleExclude(facetValue());
 
-        expect(facet.toggleExclude).toHaveBeenCalled();
+        expect(facet.toggleExclude).toHaveBeenCalledTimes(0);
       });
-
-      it('dispatches the #deselectAllFacetValues action with the facetId', () => {
+      it('does not dispatch any action', () => {
         facet.toggleSingleExclude(facetValue());
 
-        expect(engine.actions).toContainEqual(deselectAllFacetValues(facetId));
+        expect(engine.actions.length).toBe(0);
       });
     });
+    describe('when #toggleExcludeActionCreator is defined', () => {
+      describe('when toggled facet value state is "idle"', () => {
+        it('calls #toggleExclude', () => {
+          jest.spyOn(facet, 'toggleExclude');
+          facet.toggleSingleExclude(facetValue());
 
-    describe.each([
-      {
-        state: 'excluded' as FacetValueState,
-      },
-      {
-        state: 'selected' as FacetValueState,
-      },
-    ])('when toggled facet value state is "$state"', ({state}) => {
-      const facetValue = () =>
-        buildMockCommerceRegularFacetValue({value: 'TED', state});
+          expect(facet.toggleExclude).toHaveBeenCalled();
+        });
 
-      it('calls #toggleExclude', () => {
-        jest.spyOn(facet, 'toggleExclude');
-        facet.toggleSingleExclude(facetValue());
+        it('dispatches the #deselectAllFacetValues action with the facetId', () => {
+          facet.toggleSingleExclude(facetValue());
 
-        expect(facet.toggleExclude).toHaveBeenCalled();
+          expect(engine.actions).toContainEqual(
+            deselectAllFacetValues(facetId)
+          );
+        });
       });
 
-      it('does not dispatch the #deselectAllFacetValues action', () => {
-        facet.toggleSingleExclude(facetValue());
+      describe.each([
+        {
+          state: 'excluded' as FacetValueState,
+        },
+        {
+          state: 'selected' as FacetValueState,
+        },
+      ])('when toggled facet value state is "$state"', ({state}) => {
+        const facetValue = () =>
+          buildMockCommerceRegularFacetValue({value: 'TED', state});
 
-        expect(engine.actions).not.toContainEqual(
-          deselectAllFacetValues(facetId)
-        );
+        it('calls #toggleExclude', () => {
+          jest.spyOn(facet, 'toggleExclude');
+          facet.toggleSingleExclude(facetValue());
+
+          expect(facet.toggleExclude).toHaveBeenCalled();
+        });
+
+        it('does not dispatch the #deselectAllFacetValues action', () => {
+          facet.toggleSingleExclude(facetValue());
+
+          expect(engine.actions).not.toContainEqual(
+            deselectAllFacetValues(facetId)
+          );
+        });
       });
     });
   });
@@ -381,7 +443,7 @@ describe('CoreCommerceFacet', () => {
       expect(facet.state.displayName).toBe(displayName);
     });
 
-    it('#state.values contains the same values as from the response', () => {
+    it('#state.values has the same values as the response', () => {
       const values = [buildMockCommerceRegularFacetValue()];
       const facetResponse = buildMockCommerceRegularFacetResponse({
         facetId,
@@ -393,24 +455,23 @@ describe('CoreCommerceFacet', () => {
     });
 
     describe('#state.hasActiveValues', () => {
-      it('when #state.values has a value with a non-idle state, returns "true"', () => {
-        const facetResponse = buildMockCommerceRegularFacetResponse({facetId});
-        facetResponse.values = [
-          buildMockCommerceRegularFacetValue({state: 'selected'}),
+      it('calls #findIfHasActiveValues with correct values and facet type', () => {
+        const spy = jest.spyOn(
+          HasActiveValuesDeterminor,
+          'findIfHasActiveValues'
+        );
+
+        const values = [buildMockCommerceRegularFacetValue()];
+        state.productListing.facets = [
+          buildMockCommerceRegularFacetResponse({
+            facetId,
+            values,
+          }),
         ];
-        state.productListing.facets = [facetResponse];
 
-        expect(facet.state.hasActiveValues).toBe(true);
-      });
+        facet.state.hasActiveValues;
 
-      it('when #state.values only has idle values, returns "false"', () => {
-        const facetResponse = buildMockCommerceRegularFacetResponse({facetId});
-        facetResponse.values = [
-          buildMockCommerceRegularFacetValue({state: 'idle'}),
-        ];
-        state.productListing.facets = [facetResponse];
-
-        expect(facet.state.hasActiveValues).toBe(false);
+        expect(spy).toHaveBeenCalledWith(values, type);
       });
     });
 

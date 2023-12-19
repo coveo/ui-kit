@@ -9,6 +9,7 @@ import {
   buildMockCommerceDateFacetResponse,
 } from '../../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
+import {buildProductListingCategoryFacet} from '../../../product-listing/facets/headless-product-listing-category-facet';
 import {buildProductListingDateFacet} from '../../../product-listing/facets/headless-product-listing-date-facet';
 import {buildProductListingNumericFacet} from '../../../product-listing/facets/headless-product-listing-numeric-facet';
 import {buildProductListingRegularFacet} from '../../../product-listing/facets/headless-product-listing-regular-facet';
@@ -80,6 +81,7 @@ describe('CommerceFacetGenerator', () => {
       buildNumericFacet: buildProductListingNumericFacet,
       buildRegularFacet: buildProductListingRegularFacet,
       buildDateFacet: buildProductListingDateFacet,
+      buildCategoryFacet: buildProductListingCategoryFacet,
     };
     facetGenerator = buildCommerceFacetGenerator(engine, options);
   }

@@ -12,6 +12,8 @@ import {
   buildController,
   Controller,
 } from '../../../../controller/headless-controller';
+import {ProductListingCategoryFacetBuilder} from '../../../product-listing/facets/headless-product-listing-category-facet';
+import {CommerceCategoryFacet} from '../category/headless-commerce-category-facet';
 import {CommerceDateFacet} from '../date/headless-commerce-date-facet';
 import {
   CommerceFacetOptions,
@@ -42,7 +44,10 @@ export interface CommerceFacetGeneratorState {
   /**
    * The generated commerce facet controllers.
    */
-  facets: CoreCommerceFacet<AnyFacetValueRequest, AnyFacetValueResponse>[];
+  facets: (
+    | CoreCommerceFacet<AnyFacetValueRequest, AnyFacetValueResponse>
+    | CommerceCategoryFacet
+  )[];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -50,6 +55,7 @@ type CommerceFacetBuilder<Facet extends CoreCommerceFacet<any, any>> = (
   engine: CommerceEngine,
   options: CommerceFacetOptions
 ) => Facet;
+type CommerceCategoryFacetBuilder = ProductListingCategoryFacetBuilder; // TODO: | CommerceSearchCategoryFacetBuilder;
 
 /**
  * @internal
@@ -60,7 +66,7 @@ export interface CommerceFacetGeneratorOptions {
   buildRegularFacet: CommerceFacetBuilder<CommerceRegularFacet>;
   buildNumericFacet: CommerceFacetBuilder<CommerceNumericFacet>;
   buildDateFacet: CommerceFacetBuilder<CommerceDateFacet>;
-  // TODO: buildCategoryFacet: CommerceFacetBuilder<CommerceCategoryFacet>;
+  buildCategoryFacet: CommerceCategoryFacetBuilder;
 }
 
 /**
@@ -90,7 +96,8 @@ export function buildCommerceFacetGenerator(
         return options.buildNumericFacet(engine, {facetId});
       case 'dateRange':
         return options.buildDateFacet(engine, {facetId});
-      case 'hierarchical': // TODO return options.buildCategoryFacet(engine, {facetId});
+      case 'hierarchical':
+        return options.buildCategoryFacet(engine, {facetId});
       case 'regular':
       default:
         return options.buildRegularFacet(engine, {facetId});

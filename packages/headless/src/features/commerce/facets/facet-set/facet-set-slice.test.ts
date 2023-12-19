@@ -5,12 +5,14 @@ import {
 } from '../../../../controllers/commerce/facets/core/headless-core-commerce-facet';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
 import {
+  buildMockCommerceCategoryFacetResponse,
   buildMockCommerceDateFacetResponse,
   buildMockCommerceNumericFacetResponse,
   buildMockCommerceRegularFacetResponse,
 } from '../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
 import {
+  buildMockCommerceCategoryFacetValue,
   buildMockCommerceDateFacetValue,
   buildMockCommerceNumericFacetValue,
   buildMockCommerceRegularFacetValue,
@@ -42,12 +44,21 @@ import {
 import {convertToNumericRangeRequests} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
 import {executeSearch} from '../../search/search-actions';
-import {commerceFacetSetReducer} from './facet-set-slice';
+import {toggleSelectCommerceCategoryFacetValue} from './facet-set-actions';
+import {
+  commerceFacetSetReducer,
+  convertCategoryFacetValueToRequest,
+} from './facet-set-slice';
 import {
   CommerceFacetSetState,
   getCommerceFacetSetInitialState,
 } from './facet-set-state';
-import {AnyFacetResponse, FacetType} from './interfaces/response';
+import {CommerceCategoryFacetValueRequest} from './interfaces/request';
+import {
+  AnyFacetResponse,
+  CategoryFacetValue,
+  FacetType,
+} from './interfaces/response';
 
 describe('commerceFacetSetReducer', () => {
   let state: CommerceFacetSetState;
@@ -154,7 +165,52 @@ describe('commerceFacetSetReducer', () => {
       );
     });
 
-    // TODO: it('updates the values of category facet requests to the corresponding values in the response', () => {
+    it('updates the values of category facet requests to the corresponding values in the response', () => {
+      const facetValue = buildMockCommerceCategoryFacetValue({
+        isAutoSelected: false,
+        isLeafValue: false,
+        isSuggested: false,
+        moreValuesAvailable: false,
+        numberOfResults: 10,
+        path: ['Food'],
+        state: 'idle',
+        value: 'Food',
+        children: [
+          {
+            isLeafValue: true,
+            value: 'Burgers',
+            children: [],
+            isAutoSelected: false,
+            isSuggested: false,
+            moreValuesAvailable: false,
+            numberOfResults: 10,
+            path: ['Food', 'Burgers'],
+            state: 'idle',
+          },
+        ],
+      });
+      const facet = buildMockCommerceCategoryFacetResponse({
+        facetId,
+        values: [facetValue],
+      });
+
+      state[facetId] = buildMockCommerceFacetSlice({
+        request: buildMockCommerceFacetRequest({
+          type: 'hierarchical',
+          facetId,
+        }),
+      });
+
+      const action = buildQueryAction([facet]);
+      const finalState = commerceFacetSetReducer(state, action);
+
+      const expectedFacetValueRequests = [
+        convertCategoryFacetValueToRequest(facetValue),
+      ];
+      expect(finalState[facetId]?.request.values).toEqual(
+        expectedFacetValueRequests
+      );
+    });
 
     describe.each([
       {
@@ -169,7 +225,10 @@ describe('commerceFacetSetReducer', () => {
         type: 'dateRange' as FacetType,
         facetResponseBuilder: buildMockCommerceDateFacetResponse,
       },
-      // TODO: { type: 'hierarchical' as FacetType, facetResponseBuilder: buildMockCommerceCategoryFacetResponse, },
+      {
+        type: 'hierarchical' as FacetType,
+        facetResponseBuilder: buildMockCommerceCategoryFacetResponse,
+      },
     ])('for $type facets', ({type, facetResponseBuilder}) => {
       it('sets #preventAutoSelect to false', () => {
         state[facetId] = buildMockCommerceFacetSlice({
@@ -932,20 +991,294 @@ describe('commerceFacetSetReducer', () => {
     });
   });
 
-  // TODO describe('for hierarchical facets', () => { /* ... */ });
+  describe('for category facets', () => {
+    let facetId: string;
+
+    beforeEach(() => {
+      facetId = 'category_facet_id';
+    });
+
+    describe('#toggleSelectCategoryFacetValue', () => {
+      describe('when called on an unregistered #facetId', () => {
+        it('does not throw', () => {
+          const selection = buildMockCommerceCategoryFacetValue({value: 'A'});
+          const action = toggleSelectCommerceCategoryFacetValue({
+            facetId,
+            selection,
+          });
+
+          expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
+        });
+      });
+
+      describe('when #values is empty', () => {
+        beforeEach(() => {
+          const request = buildMockCommerceFacetRequest({
+            type: 'hierarchical',
+            values: [],
+            numberOfValues: 5,
+          });
+          state[facetId] = buildMockCommerceFacetSlice({request});
+        });
+
+        it('builds request from selection and adds it to #values', () => {
+          const selection = buildMockCommerceCategoryFacetValue({
+            value: 'A',
+            path: ['A'],
+          });
+          const action = toggleSelectCommerceCategoryFacetValue({
+            facetId,
+            selection,
+          });
+          const finalState = commerceFacetSetReducer(state, action);
+          const currentValues = finalState[facetId]?.request.values;
+
+          expect(currentValues).toEqual([
+            {
+              value: selection.value,
+              state: 'selected',
+              children: [],
+            },
+          ]);
+        });
+
+        it('sets #numberOfValues of request to 1', () => {
+          const selection = buildMockCommerceCategoryFacetValue({
+            value: 'A',
+            path: ['A'],
+          });
+          const action = toggleSelectCommerceCategoryFacetValue({
+            facetId,
+            selection,
+          });
+
+          const finalState = commerceFacetSetReducer(state, action);
+
+          expect(finalState[facetId].request.numberOfValues).toBe(1);
+        });
+
+        describe('when #path contains multiple segments', () => {
+          it('selects last segment', () => {
+            const selection = buildMockCommerceCategoryFacetValue({
+              value: 'B',
+              path: ['A', 'B'],
+            });
+            const action = toggleSelectCommerceCategoryFacetValue({
+              facetId,
+              selection,
+            });
+            const finalState = commerceFacetSetReducer(state, action);
+            const currentValues = finalState[facetId].request.values;
+
+            const parent = convertCategoryFacetValueToRequest(
+              buildMockCommerceCategoryFacetValue({
+                value: 'A',
+                state: 'idle',
+                children: [
+                  buildMockCommerceCategoryFacetValue({
+                    value: 'B',
+                    state: 'selected',
+                  }),
+                ],
+              })
+            );
+
+            expect(currentValues).toEqual([parent]);
+          });
+        });
+      });
+
+      describe('when #values contains one parent', () => {
+        beforeEach(() => {
+          const parent = convertCategoryFacetValueToRequest(
+            buildMockCommerceCategoryFacetValue({
+              value: 'A',
+              state: 'selected',
+            })
+          );
+          const request = buildMockCommerceFacetRequest({
+            type: 'hierarchical',
+            values: [parent],
+          });
+
+          state[facetId] = buildMockCommerceFacetSlice({request});
+        });
+
+        describe('when #path contains the parent', () => {
+          let selection: CategoryFacetValue;
+          let finalState: CommerceFacetSetState;
+          beforeEach(() => {
+            selection = buildMockCommerceCategoryFacetValue({
+              value: 'B',
+              path: ['A', 'B'],
+            });
+            const action = toggleSelectCommerceCategoryFacetValue({
+              facetId,
+              selection,
+            });
+            finalState = commerceFacetSetReducer(state, action);
+          });
+          it("adds selection to parent's #children", () => {
+            const expected = convertCategoryFacetValueToRequest(
+              buildMockCommerceCategoryFacetValue({
+                value: selection.value,
+                state: 'selected',
+              })
+            );
+
+            const children = (
+              finalState[facetId].request
+                .values[0] as CommerceCategoryFacetValueRequest
+            ).children;
+            expect(children).toEqual([expected]);
+          });
+
+          it('sets parent #state to "idle"', () => {
+            expect(finalState[facetId].request.values[0].state).toBe('idle');
+          });
+        });
+
+        describe('when #path does not contain the parent', () => {
+          it("overwrites parent, adding selection to new parent's #children", () => {
+            const selection = buildMockCommerceCategoryFacetValue({
+              value: 'B',
+              path: ['C', 'B'],
+            });
+            const action = toggleSelectCommerceCategoryFacetValue({
+              facetId,
+              selection,
+            });
+            const finalState = commerceFacetSetReducer(state, action);
+
+            const currentValues = finalState[facetId].request.values;
+
+            const parent = convertCategoryFacetValueToRequest(
+              buildMockCommerceCategoryFacetValue({
+                value: 'C',
+                state: 'idle',
+                children: [
+                  buildMockCommerceCategoryFacetValue({
+                    value: 'B',
+                    state: 'selected',
+                  }),
+                ],
+              })
+            );
+
+            expect(currentValues).toEqual([parent]);
+          });
+        });
+      });
+
+      describe('when #values contains two parents', () => {
+        beforeEach(() => {
+          const parentB = buildMockCommerceCategoryFacetValue({value: 'B'});
+          const parentA = convertCategoryFacetValueToRequest(
+            buildMockCommerceCategoryFacetValue({
+              value: 'A',
+              children: [parentB],
+            })
+          );
+
+          const request = buildMockCommerceFacetRequest({
+            type: 'hierarchical',
+            values: [parentA],
+          });
+          state[facetId] = buildMockCommerceFacetSlice({request});
+        });
+
+        describe('when #path contains both parents', () => {
+          it("adds selection to second parent's #children", () => {
+            const selection = buildMockCommerceCategoryFacetValue({
+              value: 'C',
+              path: ['A', 'B', 'C'],
+            });
+            const action = toggleSelectCommerceCategoryFacetValue({
+              facetId,
+              selection,
+            });
+            const finalState = commerceFacetSetReducer(state, action);
+
+            const expected = convertCategoryFacetValueToRequest(
+              buildMockCommerceCategoryFacetValue({
+                value: selection.value,
+                state: 'selected',
+              })
+            );
+
+            expect(
+              (
+                finalState[facetId].request
+                  .values[0] as CommerceCategoryFacetValueRequest
+              ).children[0].children
+            ).toEqual([expected]);
+          });
+        });
+
+        describe('when selecting a parent value', () => {
+          let finalState: CommerceFacetSetState;
+          beforeEach(() => {
+            const selection = buildMockCommerceCategoryFacetValue({
+              value: 'A',
+              path: ['A'],
+            });
+            const action = toggleSelectCommerceCategoryFacetValue({
+              facetId,
+              selection,
+            });
+            finalState = commerceFacetSetReducer(state, action);
+          });
+
+          it("clears that parent's #children", () => {
+            const parent = finalState[facetId]?.request.values[0];
+
+            expect(
+              (parent as CommerceCategoryFacetValueRequest).children
+            ).toEqual([]);
+          });
+
+          it('sets that parent #state to "selected"', () => {
+            const parent = finalState[facetId]?.request.values[0];
+
+            expect(parent.state).toBe('selected');
+          });
+        });
+      });
+
+      describe('when selection is invalid', () => {
+        it('dispatches an action containing an error', () => {
+          const selection = buildMockCommerceCategoryFacetValue({
+            value: 'A',
+            children: [
+              buildMockCommerceCategoryFacetValue({value: 'B'}),
+              buildMockCommerceCategoryFacetValue({
+                value: 'C',
+                children: [
+                  buildMockCommerceCategoryFacetValue({
+                    value: 'D',
+                    numberOfResults: -1,
+                  }),
+                ],
+              }),
+            ],
+          });
+
+          const action = toggleSelectCommerceCategoryFacetValue({
+            facetId,
+            selection,
+          });
+          expect(action.error).toBeDefined();
+        });
+      });
+    });
+  });
 
   describe('#updateFacetIsFieldExpanded', () => {
     describe.each([
-      {
-        type: 'regular' as FacetType,
-      },
-      {
-        type: 'numericalRange' as FacetType,
-      },
-      {
-        type: 'dateRange' as FacetType,
-      },
-      // TODO: { type: 'hierarchical' as FacetType },
+      {type: 'regular' as FacetType},
+      {type: 'numericalRange' as FacetType},
+      {type: 'dateRange' as FacetType},
+      {type: 'hierarchical' as FacetType},
     ])('for $type facets', ({type}) => {
       it('dispatching with a registered facet id updates the value', () => {
         const facetId = '1';

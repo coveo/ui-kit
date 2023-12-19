@@ -6,6 +6,7 @@ import {
   buildMockCommerceRegularFacetResponse,
   buildMockCommerceNumericFacetResponse,
   buildMockCommerceDateFacetResponse,
+  buildMockCommerceCategoryFacetResponse,
 } from '../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {
@@ -49,7 +50,14 @@ describe('SearchFacetGenerator', () => {
           })
         );
         break;
-      case 'hierarchical': // TODO
+      case 'hierarchical':
+        facets.push(
+          buildMockCommerceCategoryFacetResponse({
+            facetId: facet.facetId,
+            field: 'some_category_field',
+          })
+        );
+        break;
       default:
         break;
     }
@@ -79,14 +87,14 @@ describe('SearchFacetGenerator', () => {
     expect(facetGenerator.subscribe).toBeTruthy();
   });
 
-  it('generated regular facet controllers should dispatch #executeSearch', () => {
+  it('generated regular facet controllers dispatch #executeSearch', () => {
     initFacetGenerator('regular');
 
     facetGenerator.state.facets[0].deselectAll();
 
     expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
   });
-  it('generated regular numeric facet controllers should dispatch #executeSearch', () => {
+  it('generated regular numeric facet controllers dispatch #executeSearch', () => {
     initFacetGenerator('numericalRange');
 
     facetGenerator.state.facets[0].deselectAll();
@@ -94,8 +102,16 @@ describe('SearchFacetGenerator', () => {
     expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
   });
 
-  it('generated date facet controllers dispatches #executeSearch', () => {
+  it('generated date facet controllers dispatch #executeSearch', () => {
     initFacetGenerator('dateRange');
+
+    facetGenerator.state.facets[0].deselectAll();
+
+    expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
+  });
+
+  it('generated category facet controllers dispatch #executeSearch', () => {
+    initFacetGenerator('hierarchical');
 
     facetGenerator.state.facets[0].deselectAll();
 

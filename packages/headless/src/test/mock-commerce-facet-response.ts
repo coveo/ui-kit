@@ -3,6 +3,7 @@ import {
   NumericFacetResponse,
   DateRangeFacetResponse,
   AnyFacetResponse,
+  CategoryFacetResponse,
 } from '../features/commerce/facets/facet-set/interfaces/response';
 
 function getMockBaseCommerceFacetResponse(): Omit<
@@ -47,6 +48,17 @@ export function buildMockCommerceDateFacetResponse(
   return {
     ...getMockBaseCommerceFacetResponse(),
     type: 'dateRange',
+    values: [],
+    ...config,
+  };
+}
+
+export function buildMockCommerceCategoryFacetResponse(
+  config: Partial<CategoryFacetResponse> = {}
+): CategoryFacetResponse {
+  return {
+    ...getMockBaseCommerceFacetResponse(),
+    type: 'hierarchical',
     values: [],
     ...config,
   };
