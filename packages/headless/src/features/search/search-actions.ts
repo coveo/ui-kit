@@ -20,6 +20,7 @@ import {
   deselectAllNonBreadcrumbs,
 } from '../breadcrumb/breadcrumb-actions';
 import {updateFacetAutoSelection} from '../facets/generic/facet-actions';
+import {searchboxAsYouType} from '../instant-results/instant-result-analytics-actions';
 import {
   FetchInstantResultsActionCreatorPayload,
   FetchInstantResultsThunkReturn,
@@ -38,7 +39,6 @@ import {
   legacyFetchPage,
 } from './legacy/search-actions';
 import {
-  AnalyticsAction,
   AsyncSearchThunkProcessor,
   StateNeededByExecuteSearch,
 } from './search-actions-thunk-processor';
@@ -99,8 +99,6 @@ export interface ExecuteSearchThunkReturn {
   automaticallyCorrected: boolean;
   /** The original query that was performed when an automatic correction is executed.*/
   originalQuery: string;
-  /** The analytics action to log after the query. */
-  analyticsAction: AnalyticsAction;
 }
 
 interface PrepareForSearchWithQueryOptions {
@@ -277,10 +275,16 @@ export const fetchInstantResults = createAsyncThunk<
       cacheTimeout: new NumberValue(),
     });
     const {q, maxResultsPerQuery} = payload;
-    const analyticsAction = makeBasicNewSearchAnalyticsAction(
-      SearchPageEvents.searchboxAsYouType,
-      config.getState
+
+    const analyticsAction = buildSearchReduxAction(searchboxAsYouType(), state);
+
+    const request = await buildInstantResultSearchRequest(
+      state,
+      q,
+      maxResultsPerQuery,
+      analyticsAction
     );
+
     const processor = new AsyncSearchThunkProcessor<
       ReturnType<typeof config.rejectWithValue>
     >({...config, analyticsAction}, (modification) => {
@@ -288,23 +292,16 @@ export const fetchInstantResults = createAsyncThunk<
         updateInstantResultsQuery({q: modification, id: payload.id})
       );
     });
-
-    const request = await buildInstantResultSearchRequest(
-      state,
-      q,
-      maxResultsPerQuery
-    );
-
     const fetched = await processor.fetchFromAPI(request, {
       origin: 'instantResults',
       disableAbortWarning: true,
     });
+
     const processed = await processor.process(fetched);
     if ('response' in processed) {
       return {
         results: processed.response.results,
         searchUid: processed.response.searchUid,
-        analyticsAction: processed.analyticsAction,
         totalCountFiltered: processed.response.totalCountFiltered,
         duration: processed.duration,
       };
@@ -330,10 +327,11 @@ const buildFetchMoreRequest = async (
 export const buildInstantResultSearchRequest = async (
   state: StateNeededByExecuteSearch,
   q: string,
-  numberOfResults: number
+  numberOfResults: number,
+  eventDescription: EventDescription
 ) => {
   const sharedWithFoldingRequest =
-    await buildSearchAndFoldingLoadCollectionRequest(state);
+    await buildSearchAndFoldingLoadCollectionRequest(state, eventDescription);
 
   return mapSearchRequest({
     ...sharedWithFoldingRequest,

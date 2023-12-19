@@ -5,11 +5,12 @@ import {
   buildProductListing,
   buildRelevanceSortCriterion,
   buildSearch,
-  buildSort,
+  buildProductListingSort,
   CommerceEngine,
   ProductListing,
   buildProductListingFacetGenerator,
 } from '../commerce.index';
+import {buildSearchBox} from '../controllers/commerce/search-box/headless-search-box';
 import {updateQuery} from '../features/commerce/query/query-actions';
 import {getOrganizationEndpoints} from '../insight.index';
 import {waitForNextStateChange} from '../test/functional-test-utils';
@@ -90,7 +91,7 @@ describe.skip('commerce', () => {
   });
 
   it('applies sort to product listing', async () => {
-    const sort = buildSort(engine);
+    const sort = buildProductListingSort(engine);
     const relevance = buildRelevanceSortCriterion();
     sort.sortBy(relevance);
 
@@ -136,5 +137,17 @@ describe.skip('commerce', () => {
     });
 
     expect(search.state.products).not.toEqual([]);
+  });
+
+  it('provides suggestions', async () => {
+    const box = buildSearchBox(engine);
+    await waitForNextStateChange(engine, {
+      action: () => {
+        box.updateText('l');
+      },
+      expectedSubscriberCalls: 3,
+    });
+
+    expect(box.state.suggestions).not.toEqual([]);
   });
 });

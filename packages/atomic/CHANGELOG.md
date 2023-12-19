@@ -1,3 +1,10 @@
+## 2.52.1 (2023-12-13)
+
+### Bug Fixes
+
+- **exclude:** use unexclude actionCause when unexcluding ([#3478](https://github.com/coveo/ui-kit/issues/3478)) ([8f7071e](https://github.com/coveo/ui-kit/commits/8f7071e0b0e15fee425b60db81cc7bd5ffddebec))
+- **exclusion:** add missing locales for accessibility ([#3480](https://github.com/coveo/ui-kit/issues/3480)) ([8277b29](https://github.com/coveo/ui-kit/commits/8277b297fb95a7e0137a85ab1ae8d855db42e2ec))
+
 # 2.52.0 (2023-12-08)
 
 ### Bug Fixes

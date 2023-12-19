@@ -71,10 +71,10 @@ export interface Sort extends Controller {
   sortBy(criterion: SortCriterion | SortCriterion[]): void;
 
   /**
-   * Checks whether the specified sort criterion matches the value in state.
+   * Verifies whether the specified sort criterion is the currently active one.
    *
-   * @param criterion - The criterion to compare.
-   * @returns `true` if the passed sort criterion matches the value in state, and `false` otherwise.
+   * @param criterion - The sort criterion to evaluate.
+   * @returns `true` if the specified sort criterion is the currently active one; `false` otherwise.
    */
   isSortedBy(criterion: SortCriterion | SortCriterion[]): boolean;
 
