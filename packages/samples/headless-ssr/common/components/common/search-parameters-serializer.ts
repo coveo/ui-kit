@@ -4,9 +4,10 @@ import {ReadonlyURLSearchParams} from 'next/navigation';
 
 type SearchParameterKey = keyof SearchParameters;
 
+type NextJSServerSideSearchParamsValues = string | string[] | undefined;
 export type NextJSServerSideSearchParams = Record<
   string,
-  string | string[] | undefined
+  NextJSServerSideSearchParamsValues
 >;
 
 // Duplicate code START
@@ -60,9 +61,9 @@ function isSpecificFacetKey(
 }
 function processObjectValue(
   key: string,
-  value: string
+  value: string | string[] // TODO: check why string [] is needed
   // ): string | NumericRangeRequest | DateRangeRequest {
-): string {
+): string | string[] {
   if (key === 'nf') {
     throw 'TODO: To implement';
     // return buildNumericRanges(values);
@@ -76,13 +77,20 @@ function processObjectValue(
   return value;
 }
 
+// TODO: have a function CoveoSearchParamsToUrlSearchParams and vice versa
 export class CoveoNextJsSearchParametersSerializer {
   public static fromServerSideUrlSearchParams(
     serverSideUrlSearchParams: NextJSServerSideSearchParams
   ): CoveoNextJsSearchParametersSerializer {
-    return new CoveoNextJsSearchParametersSerializer({
-      ...serverSideUrlSearchParams,
+    // TODO: revisit design, not useful. need to call 2 methods here
+
+    const parsedSearchParameters: SearchParameters = {};
+    Object.entries(serverSideUrlSearchParams).forEach(([key, value]) => {
+      console.log(value);
+      this.parseSearchParametersHelper(parsedSearchParameters, key, value);
     });
+
+    return new CoveoNextJsSearchParametersSerializer(parsedSearchParameters);
   }
 
   public static fromCoveoSearchParameters(
@@ -91,31 +99,46 @@ export class CoveoNextJsSearchParametersSerializer {
     return new CoveoNextJsSearchParametersSerializer(coveoSearchParameters);
   }
 
-  public static parseSearchParameters(
+  private static parseSearchParametersHelper(
+    res: SearchParameters,
+    key: string,
+    value: NextJSServerSideSearchParamsValues
+  ): void {
+    if (value === undefined) {
+      return;
+    }
+    const objectKey = /^(f|fExcluded|cf|nf|df|sf|af)-(.+)$/;
+    const result = objectKey.exec(key);
+    if (result) {
+      const paramKey = result[1];
+      const facetId = result[2];
+      if (!isSpecificFacetKey(paramKey)) {
+        // TODO: merge with regex above
+        // THIS does not handle range facets
+        return;
+      }
+      const processedValue = processObjectValue(paramKey, value);
+      const valueArray = Array.isArray(processedValue)
+        ? processedValue
+        : [processedValue];
+
+      if (paramKey in res) {
+        const record = {...res[paramKey]};
+        record[facetId] = [...(record[facetId] || []), ...valueArray];
+        res[paramKey] = record;
+      } else {
+        res[paramKey] = {[facetId]: valueArray};
+      }
+    }
+  }
+
+  // TODO: find a way to merge both parseSearchParameters2 methods
+  public static parseSearchParameters2(
     clientSideUrlSearchParams: URLSearchParams | ReadonlyURLSearchParams
   ): SearchParameters {
     const res: SearchParameters = {}; // TODO: not sure about the type
     clientSideUrlSearchParams.forEach((value, key) => {
-      const objectKey = /^(f|fExcluded|cf|nf|df|sf|af)-(.+)$/;
-      const result = objectKey.exec(key);
-      if (result) {
-        const paramKey = result[1];
-        const facetId = result[2];
-        if (!isSpecificFacetKey(paramKey)) {
-          // TODO: merge with regex above
-          // THIS does not handle range facets
-          return res;
-        }
-        const processedValue = processObjectValue(paramKey, value);
-
-        if (paramKey in res) {
-          const record = {...res[paramKey]};
-          record[facetId] = [...(record[facetId] || []), processedValue];
-          res[paramKey] = record;
-        } else {
-          res[paramKey] = {[facetId]: [processedValue]};
-        }
-      }
+      this.parseSearchParametersHelper(res, key, value);
     });
 
     return res;

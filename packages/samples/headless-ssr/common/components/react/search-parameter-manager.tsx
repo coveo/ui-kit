@@ -22,7 +22,7 @@ export default function SearchParameterManager() {
       methods &&
       historyRouter.url?.searchParams &&
       methods.synchronize(
-        CoveoNextJsSearchParametersSerializer.parseSearchParameters(
+        CoveoNextJsSearchParametersSerializer.parseSearchParameters2(
           historyRouter.url.searchParams
         )
         // ).coveoSearchParameters
@@ -34,7 +34,6 @@ export default function SearchParameterManager() {
   const correctedUrl = useMemo(() => {
     // console.log(historyRouter.url?.href);
     // TODO: understand why state.parameters is empty initially
-    console.log(state.parameters);
     if (!historyRouter.url) {
       return null;
     }
