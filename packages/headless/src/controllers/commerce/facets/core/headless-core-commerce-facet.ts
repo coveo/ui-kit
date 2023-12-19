@@ -283,7 +283,7 @@ export function buildCoreCommerceFacet<
         field: response.field,
         displayName: response.displayName,
         values,
-        isLoading: getIsLoading() ?? false,
+        isLoading: getIsLoading(),
         hasActiveValues,
         canShowMoreValues,
         canShowLessValues: computeCanShowLessValues(),
