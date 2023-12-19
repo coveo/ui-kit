@@ -162,15 +162,12 @@ const subscribeStateManager: SubscribeStateManager = {
 
   subscribeToSearchRequests: (engine) => {
     const strictListener = () => {
-      console.log('subscribeToSearchRequests');
       const state = engine.state;
       const requestId = state.search.requestId;
       const streamId =
         state.search.extendedResults.generativeQuestionAnsweringId;
 
       if (subscribeStateManager.lastRequestId !== requestId) {
-        console.log('resetAnswer');
-
         subscribeStateManager.lastRequestId = requestId;
         subscribeStateManager.abortController?.abort();
         engine.dispatch(resetAnswer());
@@ -182,7 +179,6 @@ const subscribeStateManager: SubscribeStateManager = {
         streamId &&
         streamId !== subscribeStateManager.lastStreamId
       ) {
-        console.log('streamAnswer');
         subscribeStateManager.lastStreamId = streamId;
         engine.dispatch(
           streamAnswer({
