@@ -1,6 +1,5 @@
 import {CommerceFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
 import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
-import {fetchProductListing} from '../../../../../features/commerce/product-listing/product-listing-actions';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
@@ -12,6 +11,7 @@ import {buildMockCommerceNumericFacetResponse} from '../../../../../test/mock-co
 import {buildMockCommerceFacetSlice} from '../../../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceNumericFacetValue} from '../../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
+import {commonOptions} from '../../../product-listing/facets/headless-product-listing-facet-options';
 import {
   CommerceNumericFacet,
   CommerceNumericFacetOptions,
@@ -45,7 +45,7 @@ describe('CommerceNumericFacet', () => {
   beforeEach(() => {
     options = {
       facetId,
-      fetchResultsActionCreator: fetchProductListing,
+      ...commonOptions,
     };
 
     state = buildMockCommerceState();
