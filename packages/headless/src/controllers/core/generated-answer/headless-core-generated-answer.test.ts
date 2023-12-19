@@ -29,6 +29,7 @@ import {
   getGeneratedAnswerInitialState,
 } from '../../../features/generated-answer/generated-answer-state';
 import {GeneratedResponseFormat} from '../../../features/generated-answer/generated-response-format';
+import {executeSearch} from '../../../features/search/search-actions';
 import {buildMockCitation} from '../../../test/mock-citation';
 import {
   buildMockInsightEngine,
@@ -48,6 +49,7 @@ describe('generated answer', () => {
   function initGeneratedAnswer(props: GeneratedAnswerProps = {}) {
     generatedAnswer = buildCoreGeneratedAnswer(
       engine,
+      executeSearch,
       generatedAnswerAnalyticsClient,
       props
     );
@@ -208,6 +210,13 @@ describe('generated answer', () => {
     expect(analyticsAction).toBeDefined();
   });
 
+  it('#retry dispatches #executeSearch', () => {
+    generatedAnswer.retry();
+    const action = engine.findAsyncAction(executeSearch.pending);
+
+    expect(action).toBeTruthy();
+  });
+
   describe('#show', () => {
     describe('when already visible', () => {
       it('should not make any changes', () => {
@@ -283,6 +292,28 @@ describe('generated answer', () => {
         );
         expect(analyticsAction).toBeDefined();
       });
+    });
+  });
+
+  describe('#rephrase', () => {
+    const responseFormat: GeneratedResponseFormat = {
+      answerStyle: 'concise',
+    };
+
+    it('dispatches the update action', () => {
+      generatedAnswer.rephrase(responseFormat);
+
+      const action = findAction(updateResponseFormat.type);
+      expect(action).toBeDefined();
+      expect(action).toHaveProperty('payload', responseFormat);
+    });
+
+    it('dispatches #executeSearch', () => {
+      generatedAnswer.rephrase(responseFormat);
+
+      const action = engine.findAsyncAction(executeSearch.pending);
+
+      expect(action).toBeTruthy();
     });
   });
 
@@ -380,7 +411,11 @@ describe('generated answer', () => {
 
       beforeEach(() => {
         secondEngine = buildMockInsightEngine();
-        buildCoreGeneratedAnswer(secondEngine, generatedAnswerAnalyticsClient);
+        buildCoreGeneratedAnswer(
+          secondEngine,
+          executeSearch,
+          generatedAnswerAnalyticsClient
+        );
       });
 
       it('should dispatch the stream action only once', () => {

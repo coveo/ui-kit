@@ -1,6 +1,5 @@
 import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload';
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {updateResponseFormat} from '../../features/generated-answer/generated-answer-actions';
 import {generatedAnswerAnalyticsClient} from '../../features/generated-answer/generated-answer-analytics-actions';
 import {GeneratedAnswerState} from '../../features/generated-answer/generated-answer-state';
 import {GeneratedResponseFormat} from '../../features/generated-answer/generated-response-format';
@@ -30,9 +29,9 @@ export function buildGeneratedAnswer(
   engine: SearchEngine,
   props: GeneratedAnswerProps = {}
 ): GeneratedAnswer {
-  const {dispatch} = engine;
   const controller = buildCoreGeneratedAnswer(
     engine,
+    executeSearch,
     generatedAnswerAnalyticsClient,
     props
   );
@@ -42,26 +41,6 @@ export function buildGeneratedAnswer(
 
     get state() {
       return controller.state;
-    },
-
-    retry() {
-      dispatch(
-        executeSearch({
-          legacy: generatedAnswerAnalyticsClient.logRetryGeneratedAnswer(),
-        })
-      );
-    },
-
-    rephrase(responseFormat: GeneratedResponseFormat) {
-      dispatch(updateResponseFormat(responseFormat));
-      dispatch(
-        executeSearch({
-          legacy:
-            generatedAnswerAnalyticsClient.logRephraseGeneratedAnswer(
-              responseFormat
-            ),
-        })
-      );
     },
   };
 }

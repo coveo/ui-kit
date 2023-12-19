@@ -217,6 +217,7 @@ export interface GeneratedAnswerAnalyticsClient {
  */
 export function buildCoreGeneratedAnswer(
   engine: CoreEngine,
+  executeSearchActionCreator: Function,
   analyticsClient: GeneratedAnswerAnalyticsClient,
   props: GeneratedAnswerProps = {}
 ): GeneratedAnswer {
@@ -295,6 +296,11 @@ export function buildCoreGeneratedAnswer(
 
     rephrase(responseFormat: GeneratedResponseFormat) {
       dispatch(updateResponseFormat(responseFormat));
+      dispatch(
+        executeSearchActionCreator(
+          analyticsClient.logRephraseGeneratedAnswer(responseFormat)
+        )
+      );
     },
 
     show() {
@@ -315,7 +321,11 @@ export function buildCoreGeneratedAnswer(
       dispatch(analyticsClient.logCopyGeneratedAnswer());
     },
 
-    retry() {},
+    retry() {
+      dispatch(
+        executeSearchActionCreator(analyticsClient.logRetryGeneratedAnswer())
+      );
+    },
   };
 }
 
