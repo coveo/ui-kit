@@ -8,6 +8,11 @@ import {buildMockSearch} from '../../../test/mock-search';
 import {buildMockSearchResponse} from '../../../test/mock-search-response';
 import {fetchProductListing} from '../../commerce/product-listing/product-listing-actions';
 import {executeSearch as executeCommerceSearch} from '../../commerce/search/search-actions';
+import {
+  setContext,
+  setUser,
+  setView,
+} from '../../commerce/context/context-actions';
 import {change} from '../../history/history-actions';
 import {getHistoryInitialState} from '../../history/history-state';
 import {executeSearch} from '../../search/search-actions';
@@ -97,6 +102,28 @@ describe('facet-order slice', () => {
       const facetIds = ['facetA', 'facetB'];
       dispatchMock(buildQueryAction(facetIds));
       expect(state).toEqual(facetIds);
+    });
+  });
+
+  describe.each([
+    {
+      actionName: '#setContext',
+      action: setContext,
+    },
+    {
+      actionName: '#setView',
+      action: setView,
+    },
+    {
+      actionName: '#setUser',
+      action: setUser,
+    },
+  ])('$actionName', ({action}) => {
+    it('resets facets', () => {
+      state.push('facetA');
+      const finalState = facetOrderReducer(state, action);
+
+      expect(finalState).toStrictEqual(getFacetOrderInitialState());
     });
   });
 });

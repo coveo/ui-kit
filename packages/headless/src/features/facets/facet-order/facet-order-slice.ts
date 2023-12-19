@@ -1,4 +1,9 @@
 import {AnyAction, createReducer} from '@reduxjs/toolkit';
+import {
+  setContext,
+  setUser,
+  setView,
+} from '../../commerce/context/context-actions';
 import {fetchProductListing} from '../../commerce/product-listing/product-listing-actions';
 import {executeSearch as executeCommerceSearch} from '../../commerce/search/search-actions';
 import {change} from '../../history/history-actions';
@@ -14,7 +19,10 @@ export const facetOrderReducer = createReducer(
       .addCase(executeCommerceSearch.fulfilled, handleQueryFulfilled)
       .addCase(change.fulfilled, (state, action) => {
         return action.payload?.facetOrder ?? state;
-      });
+      })
+      .addCase(setContext, getFacetOrderInitialState)
+      .addCase(setView, getFacetOrderInitialState)
+      .addCase(setUser, getFacetOrderInitialState);
   }
 );
 
