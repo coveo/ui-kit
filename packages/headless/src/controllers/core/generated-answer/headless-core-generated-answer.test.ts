@@ -91,13 +91,6 @@ describe('generated answer', () => {
     expect(generatedAnswer.state).toEqual(getGeneratedAnswerInitialState());
   });
 
-  // it('#retry dispatches #executeSearch', () => {
-  //   generatedAnswer.retry();
-  //   const action = engine.findAsyncAction(executeSearch.pending);
-
-  //   expect(action).toBeTruthy();
-  // });
-
   it('#like dispatches analytics action', () => {
     generatedAnswer.like();
     const action = findAction(likeGeneratedAnswer.type);
@@ -292,28 +285,6 @@ describe('generated answer', () => {
       });
     });
   });
-
-  // describe('#rephrase', () => {
-  //   const responseFormat: GeneratedResponseFormat = {
-  //     answerStyle: 'concise',
-  //   };
-
-  //   it('dispatches the update action', () => {
-  //     generatedAnswer.rephrase(responseFormat);
-
-  //     const action = findAction(updateResponseFormat.type);
-  //     expect(action).toBeDefined();
-  //     expect(action).toHaveProperty('payload', responseFormat);
-  //   });
-
-  //   it('dispatches #executeSearch', () => {
-  //     generatedAnswer.rephrase(responseFormat);
-
-  //     const action = engine.findAsyncAction(executeSearch.pending);
-
-  //     expect(action).toBeTruthy();
-  //   });
-  // });
 
   describe('when passing initial state', () => {
     describe('when #isVisible is set', () => {

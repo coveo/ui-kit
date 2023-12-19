@@ -255,8 +255,6 @@ export function buildCoreGeneratedAnswer(
       return getState().generatedAnswer;
     },
 
-    retry() {},
-
     like() {
       if (!this.state.liked) {
         dispatch(likeGeneratedAnswer());
@@ -301,7 +299,6 @@ export function buildCoreGeneratedAnswer(
 
     rephrase(responseFormat: GeneratedResponseFormat) {
       dispatch(updateResponseFormat(responseFormat));
-      // dispatch(executeSearch(logRephraseGeneratedAnswer(responseFormat)));
     },
 
     show() {
@@ -317,9 +314,12 @@ export function buildCoreGeneratedAnswer(
         dispatch(analyticsClient.logGeneratedAnswerHideAnswers());
       }
     },
+
     logCopyToClipboard() {
       dispatch(analyticsClient.logCopyGeneratedAnswer());
     },
+
+    retry() {},
   };
 }
 
