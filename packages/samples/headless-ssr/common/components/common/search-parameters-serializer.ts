@@ -1,97 +1,22 @@
 import {RangeValueRequest} from '@coveo/headless/dist/definitions/features/facets/range-facets/generic/interfaces/range-facet';
 import {type SearchParameters} from '@coveo/headless/ssr';
 import {ReadonlyURLSearchParams} from 'next/navigation';
+import {
+  NextJSServerSideSearchParams,
+  SearchParameterKey,
+  isSpecificFacetKey,
+  allEntriesAreValid,
+  isObject,
+  isValidKey,
+  processObjectValue,
+  NextJSServerSideSearchParamsValues,
+} from './search-parameters-utils';
 
-type SearchParameterKey = keyof SearchParameters;
-
-type NextJSServerSideSearchParamsValues = string | string[] | undefined;
-export type NextJSServerSideSearchParams = Record<
-  string,
-  NextJSServerSideSearchParamsValues
->;
-
-// Duplicate code START
-function isObject(obj: unknown): obj is object {
-  return obj && typeof obj === 'object' ? true : false;
-}
-
-function allEntriesAreValid(
-  obj: object,
-  isValidValue: (v: unknown) => boolean
-) {
-  const invalidEntries = Object.entries(obj).filter((entry) => {
-    const values = entry[1];
-    return !Array.isArray(values) || !values.every(isValidValue);
-  });
-
-  return invalidEntries.length === 0;
-}
-
-function isValidKey(key: string): key is SearchParameterKey {
-  const supportedParameters: Record<keyof Required<SearchParameters>, boolean> =
-    {
-      q: true,
-      aq: true,
-      cq: true,
-      enableQuerySyntax: true,
-      firstResult: true,
-      numberOfResults: true,
-      sortCriteria: true,
-      f: true,
-      fExcluded: true,
-      cf: true,
-      nf: true,
-      df: true,
-      debug: true,
-      sf: true,
-      tab: true,
-      af: true,
-    };
-  return key in supportedParameters;
-}
-
-// Duplicate code END
-
-// duplicated with slight changes
-function isSpecificFacetKey(
-  key: string // This was a slight type change
-): key is 'f' | 'af' | 'cf' | 'sf' | 'fExcluded' {
-  const keys = ['f', 'af', 'cf', 'sf', 'fExcluded'];
-  return keys.includes(key);
-}
-function processObjectValue(
-  key: string,
-  value: string | string[] // TODO: check why string [] is needed
-  // ): string | NumericRangeRequest | DateRangeRequest {
-): string | string[] {
-  if (key === 'nf') {
-    throw 'TODO: To implement';
-    // return buildNumericRanges(values);
-  }
-
-  if (key === 'df') {
-    throw 'TODO: To implement';
-    // return buildDateRanges(values);
-  }
-
-  return value;
-}
-
-// TODO: have a function CoveoSearchParamsToUrlSearchParams and vice versa
 export class CoveoNextJsSearchParametersSerializer {
-  public static fromServerSideUrlSearchParams(
-    serverSideUrlSearchParams: NextJSServerSideSearchParams
-  ): CoveoNextJsSearchParametersSerializer {
-    // TODO: revisit design, not useful. need to call 2 methods here
-
-    const parsedSearchParameters: SearchParameters = {};
-    Object.entries(serverSideUrlSearchParams).forEach(([key, value]) => {
-      console.log(value);
-      this.parseSearchParametersHelper(parsedSearchParameters, key, value);
-    });
-
-    return new CoveoNextJsSearchParametersSerializer(parsedSearchParameters);
-  }
+  private constructor(
+    // TODO: should no longer take SearchParams. but instead a record object. If user wants Coveo Search params, create a getter that parses the object
+    public readonly coveoSearchParameters: SearchParameters
+  ) {}
 
   public static fromCoveoSearchParameters(
     coveoSearchParameters: SearchParameters
@@ -99,16 +24,54 @@ export class CoveoNextJsSearchParametersSerializer {
     return new CoveoNextJsSearchParametersSerializer(coveoSearchParameters);
   }
 
+  // TODO: rename
+  public static fromUrlSearchParameters(
+    clientSideUrlSearchParams:
+      | URLSearchParams
+      | ReadonlyURLSearchParams
+      | NextJSServerSideSearchParams
+  ) {
+    const {isUrl, parseSearchParametersHelper} =
+      CoveoNextJsSearchParametersSerializer;
+    const coveoSearchParameters: SearchParameters = {}; // TODO: not sure about the type
+    const parse = (key: string, value: NextJSServerSideSearchParamsValues) =>
+      parseSearchParametersHelper(coveoSearchParameters, key, value);
+
+    if (isUrl(clientSideUrlSearchParams)) {
+      clientSideUrlSearchParams.forEach((value, key) => parse(key, value));
+    } else {
+      Object.entries(clientSideUrlSearchParams).forEach(([key, value]) =>
+        parse(key, value)
+      );
+    }
+
+    return new CoveoNextJsSearchParametersSerializer(coveoSearchParameters);
+  }
+
+  /**
+   * Applies the search parameters to the given URL search params.
+   * This mutate the url search params!!!
+   *
+   * @param {URLSearchParams} urlSearchParams
+   */
+  public applyToUrlSearchParams(urlSearchParams: URLSearchParams) {
+    Object.entries(this.coveoSearchParameters).forEach(
+      ([key, value]) =>
+        isValidKey(key) &&
+        this.applyToUrlSearchParam(urlSearchParams, key, value)
+    );
+  }
+
   private static parseSearchParametersHelper(
     res: SearchParameters,
     key: string,
     value: NextJSServerSideSearchParamsValues
-  ): void {
+  ): string | undefined {
     if (value === undefined) {
       return;
     }
-    const objectKey = /^(f|fExcluded|cf|nf|df|sf|af)-(.+)$/;
-    const result = objectKey.exec(key);
+    const facetPrefix = /^(f|fExcluded|cf|nf|df|sf|af)-(.+)$/;
+    const result = facetPrefix.exec(key);
     if (result) {
       const paramKey = result[1];
       const facetId = result[2];
@@ -129,37 +92,20 @@ export class CoveoNextJsSearchParametersSerializer {
       } else {
         res[paramKey] = {[facetId]: valueArray};
       }
+      return key;
+    } else {
+      if (isValidKey(key)) {
+        // FIXME: fix type error
+        res[key] = value;
+        return key;
+      }
     }
   }
 
-  // TODO: find a way to merge both parseSearchParameters2 methods
-  public static parseSearchParameters2(
-    clientSideUrlSearchParams: URLSearchParams | ReadonlyURLSearchParams
-  ): SearchParameters {
-    const res: SearchParameters = {}; // TODO: not sure about the type
-    clientSideUrlSearchParams.forEach((value, key) => {
-      this.parseSearchParametersHelper(res, key, value);
-    });
-
-    return res;
-  }
-
-  private constructor(
-    public readonly coveoSearchParameters: SearchParameters
-  ) {}
-
-  public applyToUrlSearchParams(urlSearchParams: URLSearchParams) {
-    // TODO: WHY
-    // if (!Object.keys(this.coveoSearchParameters).length) {
-    //   urlSearchParams.delete(key);
-    //   return;
-    // }
-    Object.entries(this.coveoSearchParameters).forEach(([key, value]) => {
-      if (!isValidKey(key)) {
-        return;
-      }
-      this.applyToUrlSearchParam(urlSearchParams, key, value);
-    });
+  private static isUrl(
+    a: unknown
+  ): a is URLSearchParams | ReadonlyURLSearchParams {
+    return a instanceof URLSearchParams || a instanceof ReadonlyURLSearchParams;
   }
 
   private applyToUrlSearchParam(

@@ -20,4 +20,5 @@ export const {
   useAuthorFacet,
   useSourceFacet,
   useSearchParameterManager,
+  useCostNumericFacet,
 } = engineDefinition.controllers;

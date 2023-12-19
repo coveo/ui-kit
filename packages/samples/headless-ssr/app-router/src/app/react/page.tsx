@@ -22,11 +22,12 @@ export default async function Search(url: {
   searchParams: {[key: string]: string | string[] | undefined};
 }) {
   // TODO: revisit this static class. It's not super user friendly
-  // FIXME: facet are not properly converted into coveo search parameters. THis causes the first request to not have the appropriate payload
-  const parameters =
-    CoveoNextJsSearchParametersSerializer.fromServerSideUrlSearchParams(
+  // FIXME: query is not added to the search box
+  const {coveoSearchParameters} =
+    CoveoNextJsSearchParametersSerializer.fromUrlSearchParameters(
       url.searchParams
-    ).coveoSearchParameters;
+    );
+
   const contextValues = {
     ageGroup: '30-45',
     mainInterest: 'sports',
@@ -39,7 +40,7 @@ export default async function Search(url: {
         },
       },
       searchParameterManager: {
-        initialState: {parameters},
+        initialState: {parameters: coveoSearchParameters},
       },
     },
   });
