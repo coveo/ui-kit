@@ -1,8 +1,10 @@
+import {StringValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {
   validatePayload,
   requiredNonEmptyString,
 } from '../../utils/validate-payload';
+import {CorrectionMode} from './did-you-mean-state';
 
 export const enableDidYouMean = createAction('didYouMean/enable');
 
@@ -21,10 +23,15 @@ export const applyDidYouMeanCorrection = createAction(
   (payload: string) => validatePayload(payload, requiredNonEmptyString)
 );
 
-export const enableFallbackSearchOnEmptyQueryResults = createAction(
-  'didYouMean/fallbackSearchOnEmptyResults/enable'
-);
-
-export const disableFallbackSearchOnEmptyQueryResults = createAction(
-  'didYouMean/fallbackSearchOnEmptyResults/disable'
+export const setCorrectionMode = createAction(
+  'didYouMean/automaticCorrections/mode',
+  (payload: CorrectionMode) =>
+    validatePayload(
+      payload,
+      new StringValue({
+        constrainTo: ['next', 'legacy'],
+        emptyAllowed: false,
+        required: true,
+      })
+    )
 );

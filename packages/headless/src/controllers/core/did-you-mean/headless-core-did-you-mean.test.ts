@@ -3,7 +3,7 @@ import {
   applyDidYouMeanCorrection,
   disableAutomaticQueryCorrection,
   enableDidYouMean,
-  enableFallbackSearchOnEmptyQueryResults,
+  enableQueryCorrection,
 } from '../../../features/did-you-mean/did-you-mean-actions';
 import {didYouMeanReducer as didYouMean} from '../../../features/did-you-mean/did-you-mean-slice';
 import {
@@ -68,9 +68,7 @@ describe('did you mean', () => {
   it('should dispatch enableFallbackSearchOnEmptyQueryResults at initialization when specified', () => {
     initDidYouMean({options: {enableFallbackSearchOnEmptyQueryResults: true}});
 
-    expect(engine.actions).toContainEqual(
-      enableFallbackSearchOnEmptyQueryResults()
-    );
+    expect(engine.actions).toContainEqual(enableQueryCorrection());
   });
 
   it('should warn when enableFallbackSearchOnEmptyQueryResults is true and automaticallyCorrectQuery is false', () => {

@@ -8,7 +8,7 @@ import {
   applyDidYouMeanCorrection,
   disableAutomaticQueryCorrection,
   enableDidYouMean,
-  enableFallbackSearchOnEmptyQueryResults,
+  setCorrectionMode,
 } from '../../../features/did-you-mean/did-you-mean-actions';
 import {didYouMeanReducer as didYouMean} from '../../../features/did-you-mean/did-you-mean-slice';
 import {
@@ -20,7 +20,6 @@ import {
   buildController,
   Controller,
 } from '../../controller/headless-controller';
-import {Logger} from 'pino';
 
 export type {QueryCorrection, WordCorrection};
 
@@ -37,19 +36,17 @@ export interface DidYouMeanOptions {
    * The default value is `true`.
    */
   automaticallyCorrectQuery?: boolean;
-  // TODO: V3: Change the default to true
+
+  // TODO: V3: Change the default value to `next`.
   /**
-   * Whether to use machine learning powered query suggestions model as a fallback to provide query corrections.
-   * This system requires a working and properly configured query suggestions model in the Coveo platform.
+   * Define which query correction system to use
    *
-   * This option is off by default. As such, the Coveo platform will use an older query correction system, powered solely by the index.
-   * By opting in this new system, the Coveo Search API will stop returning the `queryCorrections` field in the response.
-   * Instead, it will start returning a `changedQuery` field.
-   * This implies that the usage of this option introduce a breaking change in the way query corrections are handled, both at the Search API and Headless level.
+   * `legacy`: Query correction is powered by the legacy index system. This system relies on an algorithm using solely the index content to compute the suggested terms.
+   * `next`: Query correction is powered by a machine learning system, requiring a valid query suggestion model configured in your Coveo environment to function properly. This system relies on machine learning algorithms to compute the suggested terms.
    *
-   * The default value is `false`.
+   * Default value is `legacy`. In the next major version of Headless, the default value will be `next`.
    */
-  enableFallbackSearchOnEmptyQueryResults?: boolean;
+  queryCorrectionMode: 'legacy' | 'next';
 }
 export interface DidYouMean extends Controller {
   /**
@@ -78,7 +75,6 @@ export interface DidYouMeanState {
    * This happens when there is no result returned by the API for a particular misspelling.
    */
   wasAutomaticallyCorrected: boolean;
-
   /**
    * The query correction that is currently applied by the "did you mean" module.
    */
@@ -108,20 +104,15 @@ export function buildCoreDidYouMean(
   }
 
   const controller = buildController(engine);
-  const {dispatch, logger} = engine;
+  const {dispatch} = engine;
 
   dispatch(enableDidYouMean());
-  warnAboutMismatchBetweenQuerySuggestionFallbackAndAutomaticQueryCorrection(
-    logger,
-    props
-  );
 
   if (props.options?.automaticallyCorrectQuery === false) {
     dispatch(disableAutomaticQueryCorrection());
   }
-  if (props.options?.enableFallbackSearchOnEmptyQueryResults === true) {
-    dispatch(enableFallbackSearchOnEmptyQueryResults());
-  }
+
+  dispatch(setCorrectionMode(props.options?.queryCorrectionMode || 'legacy'));
 
   const getState = () => engine.state;
 
@@ -155,18 +146,4 @@ function loadDidYouMeanReducers(
 ): engine is CoreEngine<ConfigurationSection & DidYouMeanSection> {
   engine.addReducers({configuration, didYouMean});
   return true;
-}
-
-function warnAboutMismatchBetweenQuerySuggestionFallbackAndAutomaticQueryCorrection(
-  logger: Logger,
-  props: DidYouMeanProps
-) {
-  if (
-    props.options?.automaticallyCorrectQuery === false &&
-    props.options.enableFallbackSearchOnEmptyQueryResults === true
-  ) {
-    logger.warn(
-      '#automaticallyCorrectQuery is set to false, but #useQuerySuggestionsForQueryCorrections is set to true. This is a mismatch. Please disable the query suggestions fallback if you want to disable the automatic query correction. #useQuerySuggestionsForQueryCorrections will be ignored.'
-    );
-  }
 }

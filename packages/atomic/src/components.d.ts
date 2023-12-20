@@ -271,9 +271,9 @@ export namespace Components {
          */
         "automaticallyCorrectQuery": boolean;
         /**
-          * Whether to use machine learning powered query suggestions model as a fallback to provide query corrections. This system requires a working and properly configured query suggestions model in the Coveo platform.  This option is off by default. As such, the Coveo platform will use an older query correction system, powered solely by the index. By opting in this new system, the Coveo Search API will stop returning the `queryCorrections` field in the response. Instead, it will start returning a `changedQuery` field. This implies that the usage of this option introduce a breaking change in the way query corrections are handled, both at Search API and Coveo Headless level.  Note that in the next major version of Headless, this system will be enabled by default.  * The default value is `false`.
+          * Define which query correction system to use  `legacy`: Query correction is powered by the legacy index system. This system relies on an algorithm using solely the index content to compute the suggested terms. `next`: Query correction is powered by a machine learning system, requiring a valid query suggestion model configured in your Coveo environment to function properly. This system relies on machine learning algorithms to compute the suggested terms.  Default value is `legacy`. In the next major version of Atomic, the default value will be `next`.
          */
-        "enableFallbackSearchOnEmptyQueryResults": boolean;
+        "queryCorrectionMode": 'legacy' | 'next';
     }
     /**
      * The `atomic-external` component allows components defined outside of the `atomic-search-interface` to initialize.
@@ -4459,9 +4459,9 @@ declare namespace LocalJSX {
          */
         "automaticallyCorrectQuery"?: boolean;
         /**
-          * Whether to use machine learning powered query suggestions model as a fallback to provide query corrections. This system requires a working and properly configured query suggestions model in the Coveo platform.  This option is off by default. As such, the Coveo platform will use an older query correction system, powered solely by the index. By opting in this new system, the Coveo Search API will stop returning the `queryCorrections` field in the response. Instead, it will start returning a `changedQuery` field. This implies that the usage of this option introduce a breaking change in the way query corrections are handled, both at Search API and Coveo Headless level.  Note that in the next major version of Headless, this system will be enabled by default.  * The default value is `false`.
+          * Define which query correction system to use  `legacy`: Query correction is powered by the legacy index system. This system relies on an algorithm using solely the index content to compute the suggested terms. `next`: Query correction is powered by a machine learning system, requiring a valid query suggestion model configured in your Coveo environment to function properly. This system relies on machine learning algorithms to compute the suggested terms.  Default value is `legacy`. In the next major version of Atomic, the default value will be `next`.
          */
-        "enableFallbackSearchOnEmptyQueryResults"?: boolean;
+        "queryCorrectionMode"?: 'legacy' | 'next';
     }
     /**
      * The `atomic-external` component allows components defined outside of the `atomic-search-interface` to initialize.

@@ -31,7 +31,7 @@ import {
   SortCriteriaParam,
   TabParam,
   TimezoneParam,
-  EnableFallbackSearchOnEmptyQueryResultsParam,
+  QueryCorrectionParam,
   PipelineRuleParams,
 } from '../search-api-params';
 
@@ -48,7 +48,7 @@ export type SearchRequest = BaseParam &
   ContextParam &
   DictionaryFieldContextParam &
   EnableDidYouMeanParam &
-  EnableFallbackSearchOnEmptyQueryResultsParam &
+  QueryCorrectionParam &
   EnableQuerySyntaxParam &
   FieldsToIncludeParam &
   PipelineParam &

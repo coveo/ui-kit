@@ -9,7 +9,7 @@ export interface QueryCorrection {
   /**
    * Array of correction for each word in the query
    */
-  wordCorrections: WordCorrection[];
+  wordCorrections?: WordCorrection[];
 }
 
 export interface WordCorrection {
@@ -34,7 +34,7 @@ export interface WordCorrection {
 /**
  * Describe correction for a query, using the advanced machine learning based system.
  */
-export interface ChangedQuery {
+export interface Correction {
   /**
    * The original query that was performed, without any automatic correction applied.
    */
@@ -43,4 +43,8 @@ export interface ChangedQuery {
    * The correction that was applied to the query.
    */
   correctedQuery: string;
+  /**
+   * Array of correction for each word in the query
+   */
+  corrections: QueryCorrection[];
 }

@@ -1,4 +1,17 @@
-import {QueryCorrection} from '../../api/search/search/query-corrections';
+import {
+  Correction,
+  QueryCorrection,
+} from '../../api/search/search/query-corrections';
+
+/**
+ * Define which query correction system to use
+ *
+ * `legacy`: Query correction is powered by the legacy index system. This system relies on an algorithm using solely the index content to compute the suggested terms.
+ * `next`: Query correction is powered by a machine learning system, requiring a valid query suggestion model configured in your Coveo environment to function properly. This system relies on machine learning algorithms to compute the suggested terms.
+ *
+ * Default value is `legacy`. In the next major version of Headless, the default value will be `next`.
+ */
+export type CorrectionMode = 'next' | 'legacy';
 
 export interface DidYouMeanState {
   /**
@@ -25,27 +38,29 @@ export interface DidYouMeanState {
   originalQuery: string;
   /**
    * Whether to automatically correct queries that will return no results.
+   *
    */
   automaticallyCorrectQuery: boolean;
-  // TODO: V3: Change the default to true
   /**
-   * Whether to use machine learning powered query suggestions model as a fallback to provide query corrections.
-   * This system requires a working and properly configured query suggestions model in the Coveo platform.
+   * Define which query correction system to use
    *
-   * This option is off by default. As such, the Coveo platform will use an older query correction system, powered solely by the index.
-   * By opting in this new system, the Coveo Search API will stop returning the `queryCorrections` field in the response.
-   * Instead, it will start returning a `changedQuery` field.
-   * This implies that the usage of this option introduce a breaking change in the way query corrections are handled, both at the Search API and Headless level.
+   * `legacy`: Query correction is powered by the legacy index system. This system relies on an algorithm using solely the index content to compute the suggested terms.
+   * `next`: Query correction is powered by a machine learning system, requiring a valid query suggestion model configured in your Coveo environment to function properly. This system relies on machine learning algorithms to compute the suggested terms.
    *
-   * When this option is enabled, the Coveo platform will automatically correct the query, without any further interaction from either the end user, or the Headless library.
-   * As such, when this option is enabled, #automaticallyCorrectQuery cannot be set to false.
+   * Default value is `legacy`. In the next major version of Headless, the default value will be `next`.
    */
-  enableFallbackSearchOnEmptyQueryResults: boolean;
+  queryCorrectionMode: CorrectionMode;
 }
 
-export const emptyCorrection = () => ({
+export const emptyLegacyCorrection: () => QueryCorrection = () => ({
   correctedQuery: '',
   wordCorrections: [],
+  originalQuery: '',
+});
+
+export const emptyNextCorrection: () => Correction = () => ({
+  correctedQuery: '',
+  corrections: [],
   originalQuery: '',
 });
 
@@ -54,9 +69,9 @@ export function getDidYouMeanInitialState(): DidYouMeanState {
     enableDidYouMean: false,
     wasCorrectedTo: '',
     wasAutomaticallyCorrected: false,
-    queryCorrection: emptyCorrection(),
+    queryCorrection: emptyLegacyCorrection(),
     originalQuery: '',
     automaticallyCorrectQuery: true,
-    enableFallbackSearchOnEmptyQueryResults: false,
+    queryCorrectionMode: 'legacy',
   };
 }

@@ -37,6 +37,7 @@ import {
 import {makeBasicNewSearchAnalyticsAction} from '../analytics/analytics-utils';
 import {SearchPageEvents} from '../analytics/search-action-cause';
 import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
+import {emptyLegacyCorrection} from '../did-you-mean/did-you-mean-state';
 import {snapshot} from '../history/history-actions';
 import {extractHistory} from '../history/history-state';
 import {updateQuery} from '../query/query-actions';
@@ -171,16 +172,17 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     }
 
     const {enableDidYouMean, automaticallyCorrectQuery} = state.didYouMean;
-    const {results, queryCorrections, changedQuery} = successResponse;
+    const {results, queryCorrections, queryCorrection} = successResponse;
 
     const shouldExecuteClassicDidYouMeanAutoCorrection =
       enableDidYouMean === true &&
       automaticallyCorrectQuery === true &&
       results.length === 0 &&
+      queryCorrections &&
       queryCorrections.length !== 0;
 
     const shouldExecuteFallbackQueryResultsDidYouMeanAutoCorrection =
-      !isNullOrUndefined(changedQuery);
+      !isNullOrUndefined(queryCorrection);
 
     const shouldExitWithNoCorrection =
       !shouldExecuteClassicDidYouMeanAutoCorrection &&
@@ -250,7 +252,9 @@ export class AsyncSearchThunkProcessor<RejectionType> {
   ): Promise<ExecuteSearchThunkReturn | RejectionType> {
     const originalQuery = this.getCurrentQuery();
 
-    const {correctedQuery} = originalSearchSuccessResponse.queryCorrections[0];
+    const {correctedQuery} = originalSearchSuccessResponse.queryCorrections
+      ? originalSearchSuccessResponse.queryCorrections[0]
+      : emptyLegacyCorrection();
 
     const retried =
       await this.automaticallyRetryQueryWithCorrection(correctedQuery);
@@ -279,7 +283,9 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     originalFetchedResponse: FetchedResponse
   ): ExecuteSearchThunkReturn {
     const successResponse = this.getSuccessResponse(originalFetchedResponse)!;
-    const {correctedQuery, originalQuery} = successResponse.changedQuery!;
+    const {correctedQuery} = successResponse.queryCorrection!;
+    const originalQuery =
+      successResponse.queryCorrection!.originalQuery || this.getCurrentQuery();
 
     this.onUpdateQueryForCorrection(correctedQuery);
     this.dispatch(applyDidYouMeanCorrection(correctedQuery));

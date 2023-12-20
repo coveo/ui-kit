@@ -7,8 +7,8 @@ import {
   disableDidYouMean,
   disableAutomaticQueryCorrection,
   enableAutomaticQueryCorrection,
-  enableFallbackSearchOnEmptyQueryResults,
-  disableFallbackSearchOnEmptyQueryResults,
+  enableQueryCorrection,
+  disableQueryCorrection,
 } from './did-you-mean-actions';
 import {didYouMeanReducer} from './did-you-mean-slice';
 import {getDidYouMeanInitialState, DidYouMeanState} from './did-you-mean-state';
@@ -118,7 +118,7 @@ describe('did you mean slice', () => {
   it('should handle #enableFallbackSearchOnEmptyQueryResults', () => {
     state.enableFallbackSearchOnEmptyQueryResults = false;
     expect(
-      didYouMeanReducer(state, enableFallbackSearchOnEmptyQueryResults())
+      didYouMeanReducer(state, enableQueryCorrection())
         .enableFallbackSearchOnEmptyQueryResults
     ).toBe(true);
   });
@@ -126,7 +126,7 @@ describe('did you mean slice', () => {
   it('should handle #disableFallbackSearchOnEmptyQueryResults', () => {
     state.enableFallbackSearchOnEmptyQueryResults = true;
     expect(
-      didYouMeanReducer(state, disableFallbackSearchOnEmptyQueryResults())
+      didYouMeanReducer(state, disableQueryCorrection())
         .enableFallbackSearchOnEmptyQueryResults
     ).toBe(false);
   });
