@@ -43,10 +43,7 @@ export interface CommerceFacetGeneratorState {
   /**
    * The generated commerce facet controllers.
    */
-  facets: (
-    | CoreCommerceFacet<AnyFacetValueRequest, AnyFacetValueResponse>
-    | CommerceCategoryFacet
-  )[];
+  facets: CoreCommerceFacet<AnyFacetValueRequest, AnyFacetValueResponse>[];
 }
 
 type CommerceFacetBuilder<
@@ -95,15 +92,17 @@ export function buildCommerceFacetGenerator(
     const {type} = engine.state.commerceFacetSet[facetId].request;
 
     switch (type) {
-      case 'numericalRange':
-        return options.buildNumericFacet(engine, {facetId});
       case 'dateRange':
         return options.buildDateFacet(engine, {facetId});
       case 'hierarchical':
         return options.buildCategoryFacet(engine, {facetId});
+      case 'numericalRange':
+        return options.buildNumericFacet(engine, {facetId});
       case 'regular':
-      default:
         return options.buildRegularFacet(engine, {facetId});
+      default:
+        engine.logger.warn(`Unknown facet type: ${type}`);
+        return;
     }
   };
 
@@ -112,7 +111,13 @@ export function buildCommerceFacetGenerator(
 
     get state() {
       return {
-        facets: engine.state.facetOrder.map(createFacet) ?? [],
+        facets:
+          (engine.state.facetOrder
+            .map(createFacet)
+            .filter((e) => e !== undefined) as CoreCommerceFacet<
+            AnyFacetValueRequest,
+            AnyFacetValueResponse
+          >[]) ?? [],
       };
     },
   };
