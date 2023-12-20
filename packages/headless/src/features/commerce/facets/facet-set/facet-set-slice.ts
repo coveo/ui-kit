@@ -255,6 +255,7 @@ function updateStateFromFacetResponse(
   }
 
   facetRequest.facetId = facetId;
+  facetRequest.displayName = facetResponse.displayName;
   facetRequest.numberOfValues = facetResponse.values.length;
   facetRequest.field = facetResponse.field;
   facetRequest.type = facetResponse.type;

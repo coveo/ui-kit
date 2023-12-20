@@ -3,12 +3,9 @@ import {
   AsyncThunkAction,
 } from '@reduxjs/toolkit';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {
-  commerceFacetResponseSelector,
-  isCommerceFacetLoadingResponseSelector,
-} from '../../../../features/commerce/facets/facet-set/facet-set-selector';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {
+  AnyFacetResponse,
   AnyFacetValueResponse,
   DateFacetValue,
   FacetType,
@@ -74,6 +71,11 @@ export interface CoreCommerceFacetOptions {
   >;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   fetchResultsActionCreator: () => AsyncThunkAction<unknown, void, any>;
+  facetResponseSelector: (
+    state: CommerceEngine['state'],
+    facetId: string
+  ) => AnyFacetResponse | undefined;
+  isFacetLoadingResponseSelector: (state: CommerceEngine['state']) => boolean;
 }
 
 export type CommerceFacetOptions = Omit<
@@ -81,6 +83,8 @@ export type CommerceFacetOptions = Omit<
   | 'fetchResultsActionCreator'
   | 'toggleSelectActionCreator'
   | 'toggleExcludeActionCreator'
+  | 'facetResponseSelector'
+  | 'isFacetLoadingResponseSelector'
 >;
 
 export type CoreCommerceFacet<
@@ -176,9 +180,9 @@ export function buildCoreCommerceFacet<
 
   const getRequest = () => engine.state.commerceFacetSet[facetId].request;
   const getResponse = () =>
-    commerceFacetResponseSelector(engine.state, facetId)!;
+    props.options.facetResponseSelector(engine.state, facetId)!;
   const getIsLoading = () =>
-    isCommerceFacetLoadingResponseSelector(engine.state);
+    props.options.isFacetLoadingResponseSelector(engine.state);
 
   const getNumberOfActiveValues = () => {
     return getRequest().values.filter((v) => v.state !== 'idle').length;
@@ -279,7 +283,7 @@ export function buildCoreCommerceFacet<
         field: response.field,
         displayName: response.displayName,
         values,
-        isLoading: getIsLoading() ?? false,
+        isLoading: getIsLoading(),
         hasActiveValues,
         canShowMoreValues,
         canShowLessValues: computeCanShowLessValues(),
