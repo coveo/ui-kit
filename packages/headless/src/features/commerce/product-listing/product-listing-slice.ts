@@ -1,5 +1,4 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {setContext, setUser, setView} from '../context/context-actions';
 import {fetchProductListing} from './product-listing-actions';
 import {getProductListingV2InitialState} from './product-listing-state';
 
@@ -21,15 +20,6 @@ export const productListingV2Reducer = createReducer(
       })
       .addCase(fetchProductListing.pending, (state) => {
         state.isLoading = true;
-      })
-      .addCase(setContext, (state) => {
-        state.facets = [];
-      })
-      .addCase(setView, (state) => {
-        state.facets = [];
-      })
-      .addCase(setUser, (state) => {
-        state.facets = [];
       });
   }
 );

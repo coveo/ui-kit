@@ -193,14 +193,10 @@ export const commerceFacetSetReducer = createReducer(
           slice.request.preventAutoSelect = !action.payload.allow;
         })
       )
-      .addCase(deselectAllBreadcrumbs, (state) => {
-        Object.values(state).forEach((facet) => {
-          facet.request.values.forEach((value) => (value.state = 'idle'));
-        });
-      })
-      .addCase(setContext, getCommerceFacetSetInitialState)
-      .addCase(setView, getCommerceFacetSetInitialState)
-      .addCase(setUser, getCommerceFacetSetInitialState);
+      .addCase(deselectAllBreadcrumbs, resetAllFacetValues)
+      .addCase(setContext, resetAllFacetValues)
+      .addCase(setView, resetAllFacetValues)
+      .addCase(setUser, resetAllFacetValues);
   }
 );
 
@@ -324,4 +320,10 @@ function insertNewValue(
   }
 
   facetRequest.numberOfValues = facetRequest.values.length;
+}
+
+function resetAllFacetValues(state: CommerceFacetSetState) {
+  Object.values(state).forEach((facet) => {
+    facet.request.values.forEach((value) => (value.state = 'idle'));
+  });
 }

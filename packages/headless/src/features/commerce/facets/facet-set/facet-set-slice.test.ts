@@ -994,21 +994,11 @@ describe('commerceFacetSetReducer', () => {
     expect(finalState[anotherFacetId]!.request.preventAutoSelect).toBe(false);
   });
 
-  it('#deselectAllBreadcrumbs sets all responses #values to "idle"', () => {
-    const facetId = '1';
-    state[facetId] = buildMockCommerceFacetSlice({
-      request: buildMockCommerceFacetRequest({
-        values: [{value: 'facet value', state: 'selected'}],
-      }),
-    });
-    const action = deselectAllBreadcrumbs();
-
-    const finalState = commerceFacetSetReducer(state, action);
-
-    expect(finalState[facetId].request.values[0].state).toEqual('idle');
-  });
-
   describe.each([
+    {
+      actionName: '#deselectAllBreadcrumbs',
+      action: deselectAllBreadcrumbs,
+    },
     {
       actionName: '#setContext',
       action: setContext,
@@ -1022,14 +1012,15 @@ describe('commerceFacetSetReducer', () => {
       action: setUser,
     },
   ])('$actionName', ({action}) => {
+    const facetId = '1';
+
     it('resets facets', () => {
-      const facetId = '1';
       state[facetId] = buildMockCommerceFacetSlice({
         request: buildMockCommerceFacetRequest({type: 'regular', facetId}),
       });
       const finalState = commerceFacetSetReducer(state, action);
 
-      expect(finalState).toStrictEqual(getCommerceFacetSetInitialState());
+      expect(finalState[facetId].request.values[0].state).toEqual('idle');
     });
   });
 });
