@@ -214,7 +214,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     private async determineVisitorId() {
         try {
             return (
-                this.extractClientIdFromLink(window.location.href) ||
+                (hasWindow() && this.extractClientIdFromLink(window.location.href)) ||
                 (await this.storage.getItem('visitorId')) ||
                 uuidv4()
             );
