@@ -38,11 +38,12 @@ export default function SearchParameterManager() {
     }
     const newURL = new URL(historyRouter.url);
     // FIXME: fix when last facet value is deselected
+
     const serializer = fromCoveoSearchParameters(state.parameters);
-    serializer.applyToUrlSearchParams(newURL.searchParams); // TODO: THIS IS NOT CLEAR AT ALL
+    serializer.applyToUrlSearchParams(newURL.searchParams);
 
     return newURL.href;
-  }, [historyRouter.url, state.parameters]);
+  }, [state.parameters]);
 
   useEffect(() => {
     if (!correctedUrl || correctedUrl === historyRouter.url?.href) {
@@ -50,6 +51,7 @@ export default function SearchParameterManager() {
     }
 
     const isStaticState = methods === undefined;
+    // TODO: fix cases where facet order changes
 
     historyRouter[isStaticState ? 'replace' : 'push'](correctedUrl);
   }, [correctedUrl]);

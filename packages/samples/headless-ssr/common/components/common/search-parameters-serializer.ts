@@ -48,20 +48,15 @@ export class CoveoNextJsSearchParametersSerializer {
     return new CoveoNextJsSearchParametersSerializer(coveoSearchParameters);
   }
 
+  // TODO: do not return key to delete anymore.
   /**
-   * Applies the search parameters to the given URL search params.
-   * This mutate the url search params!!!
+   * TODO: mension that this also mutate the initial object
    *
-   * @param {URLSearchParams} urlSearchParams
+   * @param {SearchParameters} res
+   * @param {string} key
+   * @param {NextJSServerSideSearchParamsValues} value
+   * @return {*}  {(string | undefined)}
    */
-  public applyToUrlSearchParams(urlSearchParams: URLSearchParams) {
-    Object.entries(this.coveoSearchParameters).forEach(
-      ([key, value]) =>
-        isValidKey(key) &&
-        this.applyToUrlSearchParam(urlSearchParams, key, value)
-    );
-  }
-
   private static parseSearchParametersHelper(
     res: SearchParameters,
     key: string,
@@ -87,7 +82,7 @@ export class CoveoNextJsSearchParametersSerializer {
 
       if (paramKey in res) {
         const record = {...res[paramKey]};
-        record[facetId] = [...(record[facetId] || []), ...valueArray];
+        record[facetId] = [...record[facetId], ...valueArray];
         res[paramKey] = record;
       } else {
         res[paramKey] = {[facetId]: valueArray};
@@ -102,10 +97,33 @@ export class CoveoNextJsSearchParametersSerializer {
     }
   }
 
+  /**
+   * Applies the search parameters to the given URL search params.
+   * This mutate the url search params!!!
+   *
+   * @param {URLSearchParams} urlSearchParams
+   */
+  public applyToUrlSearchParams(urlSearchParams: URLSearchParams) {
+    Object.entries(this.coveoSearchParameters).forEach(
+      ([key, value]) =>
+        isValidKey(key) &&
+        this.applyToUrlSearchParam(urlSearchParams, key, value)
+    );
+  }
+
   private static isUrl(
     a: unknown
   ): a is URLSearchParams | ReadonlyURLSearchParams {
     return a instanceof URLSearchParams || a instanceof ReadonlyURLSearchParams;
+  }
+
+  /**
+   * function that checks if two arrays contains the same values regardless of their order
+   */
+  private doHaveSameValues<T>(arr1: T[], arr2: T[]): boolean {
+    return (
+      arr1.length === arr2.length && arr1.every((value) => arr2.includes(value))
+    );
   }
 
   private applyToUrlSearchParam(
@@ -113,7 +131,6 @@ export class CoveoNextJsSearchParametersSerializer {
     key: SearchParameterKey,
     value: SearchParameters[typeof key]
   ) {
-    // TODO: handle facet deselection => clear all facet values and start again to support deselection
     if (!value) {
       return;
     }
@@ -131,23 +148,6 @@ export class CoveoNextJsSearchParametersSerializer {
     }
 
     urlSearchParams.set(key, value.toString());
-  }
-
-  private isRangeFacetPair(
-    key: SearchParameterKey,
-    obj: unknown
-  ): obj is Record<string, RangeValueRequest[]> {
-    if (!isObject(obj)) {
-      return false;
-    }
-    if (key !== 'nf' && key !== 'df') {
-      return false;
-    }
-
-    // TODO: reset array
-    const isRangeValue = (v: unknown) =>
-      isObject(v) && 'start' in v && 'end' in v;
-    return allEntriesAreValid(obj, isRangeValue);
   }
 
   private isFacetPair(
@@ -172,17 +172,35 @@ export class CoveoNextJsSearchParametersSerializer {
   ) {
     Object.entries(value).forEach(([facetId, facetValues]) => {
       const id = `${key}-${facetId}`;
+      const searchParamValues = urlSearchParams.getAll(id);
+
+      if (this.doHaveSameValues(searchParamValues, value[facetId])) {
+        return;
+      }
+
       urlSearchParams.delete(id);
 
-      facetValues.forEach((v) => {
-        const alreadyInSearchParams = urlSearchParams.getAll(id).includes(v);
-        !alreadyInSearchParams && urlSearchParams.append(id, v);
-      });
-
-      // TODO: handle cases where search params change order
-      // http://localhost:3000/react?f-author-1=Jean-Fran%C3%A7ois+L%27Heureux&f-author-1=gminero
-      // http://localhost:3000/react?f-author-1=gminero&f-author-1=Jean-Fran%C3%A7ois+L%27Heureux
+      facetValues.forEach(
+        (v) => !searchParamValues.includes(v) && urlSearchParams.append(id, v)
+      );
     });
+  }
+
+  private isRangeFacetPair(
+    key: SearchParameterKey,
+    obj: unknown
+  ): obj is Record<string, RangeValueRequest[]> {
+    if (!isObject(obj)) {
+      return false;
+    }
+    if (key !== 'nf' && key !== 'df') {
+      return false;
+    }
+
+    // TODO: reset array
+    const isRangeValue = (v: unknown) =>
+      isObject(v) && 'start' in v && 'end' in v;
+    return allEntriesAreValid(obj, isRangeValue);
   }
 
   private applyRangeFacetValuesToSearchParams(
@@ -190,6 +208,9 @@ export class CoveoNextJsSearchParametersSerializer {
     _key: string,
     _urlSearchParams: URLSearchParams
   ) {
+    // if (this.containsSameValues(urlSearchParams.getAll(id), value[facetId])) {
+    //   return;
+    // }
     throw 'TODO: To implement';
   }
 }
