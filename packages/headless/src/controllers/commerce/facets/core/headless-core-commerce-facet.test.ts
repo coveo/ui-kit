@@ -129,10 +129,10 @@ describe('CoreCommerceFacet', () => {
         initFacet();
       });
       it('logs a warning', () => {
-        jest.spyOn(console, 'warn');
+        jest.spyOn(engine.logger, 'warn');
         facet.toggleExclude(facetValue());
 
-        expect(console.warn).toHaveBeenCalledTimes(1);
+        expect(engine.logger.warn).toHaveBeenCalledTimes(1);
       });
       it('does not dispatch any action', () => {
         facet.toggleExclude(facetValue());
@@ -223,10 +223,10 @@ describe('CoreCommerceFacet', () => {
       });
 
       it('logs a warning', () => {
-        jest.spyOn(console, 'warn');
+        jest.spyOn(engine.logger, 'warn');
         facet.toggleSingleExclude(facetValue());
 
-        expect(console.warn).toHaveBeenCalledTimes(1);
+        expect(engine.logger.warn).toHaveBeenCalledTimes(1);
       });
       it('does not call #toggleExclude', () => {
         jest.spyOn(facet, 'toggleExclude');

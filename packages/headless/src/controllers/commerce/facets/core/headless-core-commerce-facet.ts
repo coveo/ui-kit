@@ -207,7 +207,7 @@ export function buildCoreCommerceFacet<
 
     toggleExclude: (selection: ValueRequest) => {
       if (!props.options.toggleExcludeActionCreator) {
-        console.warn(
+        engine.logger.warn(
           'No toggle exclude action creator provided; calling #toggleExclude had no effect.'
         );
         return;
@@ -230,7 +230,7 @@ export function buildCoreCommerceFacet<
     // Must use a function here to properly support inheritance with `this`.
     toggleSingleExclude: function (selection: ValueRequest) {
       if (!props.options.toggleExcludeActionCreator) {
-        console.warn(
+        engine.logger.warn(
           'No toggle exclude action creator provided; calling #toggleSingleExclude had no effect.'
         );
         return;
