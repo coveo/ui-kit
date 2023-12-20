@@ -354,6 +354,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     );
   }
 
+  get showCopyToClipboard() {
+    return !!navigator?.clipboard?.writeText;
+  }
+
   get generatedAnswerClass() {
     return `generated-answer__answer ${
       this.isStreaming ? 'generated-answer__answer--streaming' : ''

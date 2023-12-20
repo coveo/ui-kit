@@ -22,11 +22,13 @@
               hide-labels
               data-cy="generated-answer__feedback"
             ></c-quantic-feedback>
-            <c-quantic-generated-answer-copy-to-clipboard
-              data-cy="generated-answer__copy-to-clipboard"
-              answer={answer}
-              class="slds-var-m-horizontal_xx-small"
-            ></c-quantic-generated-answer-copy-to-clipboard>
+            <template lwc:if={showCopyToClipboard}>
+              <c-quantic-generated-answer-copy-to-clipboard
+                data-cy="generated-answer__copy-to-clipboard"
+                answer={answer}
+                class="slds-var-m-horizontal_xx-small"
+              ></c-quantic-generated-answer-copy-to-clipboard>
+            </template>
           </template>
           <c-quantic-generated-answer-toggle
             is-generated-answer-visible={isVisible}
