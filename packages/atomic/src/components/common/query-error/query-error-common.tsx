@@ -139,11 +139,11 @@ export const QueryErrorCommon: FunctionalComponent<QueryErrorCommonProps> = (
   props.setAriaLive(`${details.title} ${details.description}`);
 
   return (
-    <div class="text-center mb-8">
+    <div class="text-center p-8">
       <atomic-icon
         part="icon"
         icon={details.icon}
-        class="w-1/2 mt-8 max-w-lg"
+        class="w-1/2 max-w-lg"
       ></atomic-icon>
       <p part="title" class="text-2xl text-on-background mt-8">
         {details.title}
