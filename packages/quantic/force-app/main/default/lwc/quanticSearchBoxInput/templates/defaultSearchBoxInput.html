@@ -1,4 +1,3 @@
-<!-- sldsValidatorIgnore -->
 <template>
   <div class="slds-form-element">
     <div class="slds-form-element__control">
@@ -7,15 +6,18 @@
           class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click"
           aria-expanded="false"
           aria-haspopup="listbox"
-          role="combobox">
+          role="combobox"
+        >
           <div class="searchbox__container">
             <div class={searchBoxContainerClass} role="none">
               <template if:true={withoutSubmitButton}>
                 <lightning-icon
-                  class="slds-icon slds-input__icon slds-input__icon_left"
+                  class="slds-icon slds-input__icon slds-input__icon_left searchbox__search-icon"
                   icon-name="utility:search"
-                  size="x-small"></lightning-icon>
+                  size="x-small"
+                ></lightning-icon>
               </template>
+
               <input
                 id="combobox-with-button-id"
                 class={searchBoxInputClass}
@@ -27,41 +29,47 @@
                 oninput={handleValueChange}
                 aria-autocomplete="list"
                 autocomplete="off"
-                role="textbox" />
+                role="textbox"
+                value={value}
+              />
+
               <template if:false={isQueryEmpty}>
                 <lightning-button-icon
                   onclick={clearInput}
                   icon-name="utility:close"
                   variant="bare"
-                  class="slds-input__icon slds-input__icon_right input__icon_cursor slds-grid"
+                  class="slds-input__icon slds-input__icon_right input__icon_cursor slds-grid searchbox__clear-button"
                   size="medium"
                   name={labels.clear}
                   title={labels.clear}
                   aria-label={labels.clear}
-                  alternative-text={labels.clear}></lightning-button-icon>
+                  alternative-text={labels.clear}
+                ></lightning-button-icon>
               </template>
             </div>
+
             <template if:false={withoutSubmitButton}>
               <button
                 class="searchbox__submit-button slds-button slds-button_icon-inverse slds-button_icon-brand"
                 title={labels.search}
-                onclick={onSubmit}>
+                onclick={onSubmit}
+              >
                 <lightning-icon
                   class="slds-current-color"
                   size="x-small"
                   icon-name="utility:search"
                   alternative-text={labels.search}
-                  title={labels.search}></lightning-icon>
+                  title={labels.search}
+                ></lightning-icon>
                 <span class="slds-assistive-text">{labels.search}</span>
               </button>
             </template>
           </div>
-
           <c-quantic-search-box-suggestions-list
             suggestions={suggestions}
             onhighlightchange={handleHighlightChange}
-            onsuggestionselected={handleSuggestionSelection}>
-          </c-quantic-search-box-suggestions-list>
+            onsuggestionselected={handleSuggestionSelection}
+          ></c-quantic-search-box-suggestions-list>
         </div>
       </div>
     </div>
