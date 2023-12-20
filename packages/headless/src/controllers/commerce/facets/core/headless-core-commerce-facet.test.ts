@@ -120,13 +120,13 @@ describe('CoreCommerceFacet', () => {
     const facetValue = () => buildMockCommerceRegularFacetValue({value: 'TED'});
     describe('when #toggleExcludeActionCreator is undefined', () => {
       beforeEach(() => {
-        facet = buildCoreCommerceFacet(engine, {
-          options: {
-            facetId,
-            toggleSelectActionCreator,
-            fetchResultsActionCreator,
-          },
-        });
+        options = {
+          facetId,
+          toggleSelectActionCreator,
+          ...commonOptions,
+        };
+
+        initFacet();
       });
       it('logs a warning', () => {
         jest.spyOn(console, 'warn');
@@ -140,6 +140,7 @@ describe('CoreCommerceFacet', () => {
         expect(engine.actions.length).toBe(0);
       });
     });
+
     describe('when #toggleExcludeActionCreator is defined', () => {
       it('dispatches #toggleExcludeActionCreator with the passed facet value', () => {
         facet.toggleExclude(facetValue());
@@ -212,13 +213,13 @@ describe('CoreCommerceFacet', () => {
       buildMockCommerceRegularFacetValue({value: 'TED', state: 'idle'});
     describe('when #toggleExcludeActionCreator is undefined', () => {
       beforeEach(() => {
-        facet = buildCoreCommerceFacet(engine, {
-          options: {
-            facetId,
-            toggleSelectActionCreator,
-            fetchResultsActionCreator,
-          },
-        });
+        options = {
+          facetId,
+          toggleSelectActionCreator,
+          ...commonOptions,
+        };
+
+        initFacet();
       });
 
       it('logs a warning', () => {
@@ -475,12 +476,15 @@ describe('CoreCommerceFacet', () => {
         );
 
         const values = [buildMockCommerceRegularFacetValue()];
-        state.productListing.facets = [
-          buildMockCommerceRegularFacetResponse({
-            facetId,
-            values,
-          }),
-        ];
+        options = {
+          ...options,
+          facetResponseSelector: () =>
+            buildMockCommerceRegularFacetResponse({
+              facetId,
+              values,
+            }),
+        };
+        initFacet();
 
         facet.state.hasActiveValues;
 
