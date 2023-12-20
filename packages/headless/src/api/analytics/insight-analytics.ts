@@ -72,6 +72,15 @@ export class InsightAnalyticsProvider
     return buildFacetStateMetadata(getStateNeededForFacetMetadata(this.state));
   }
 
+  public getGeneratedAnswerMetadata() {
+    const state = this.getState();
+    const formattedObject: Record<string, string | boolean> = {};
+    if (state.generatedAnswer?.isVisible !== undefined) {
+      formattedObject['showGeneratedAnswer'] = state.generatedAnswer.isVisible;
+    }
+    return formattedObject;
+  }
+
   private get queryText() {
     return this.state.query?.q || getQueryInitialState().q;
   }
