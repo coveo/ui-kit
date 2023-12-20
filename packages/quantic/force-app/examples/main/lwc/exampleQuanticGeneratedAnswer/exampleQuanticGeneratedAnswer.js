@@ -29,6 +29,13 @@ export default class ExampleQuanticGeneratedAnswer extends LightningElement {
         'Indicates whether footer sections should be displayed on multiple lines.',
       defaultValue: false,
     },
+    {
+      attribute: 'useCase',
+      label: 'Use Case',
+      description:
+        'Define which use case to test. Possible values are: search, insight',
+      defaultValue: 'search',
+    },
   ];
 
   handleTryItNow(evt) {
