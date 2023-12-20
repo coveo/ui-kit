@@ -9,14 +9,12 @@ import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-
 import {buildMockCommerceCategoryFacetValue} from '../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {CommerceCategoryFacet} from '../../facets/core/category/headless-commerce-category-facet';
-import {
-  ProductListingCategoryFacetOptions,
-  buildProductListingCategoryFacet,
-} from './headless-product-listing-category-facet';
+import {CommerceFacetOptions} from '../../facets/core/headless-core-commerce-facet';
+import {buildProductListingCategoryFacet} from './headless-product-listing-category-facet';
 
 describe('ProductListingCategoryFacet', () => {
   const facetId: string = 'category_facet_id';
-  let options: ProductListingCategoryFacetOptions;
+  let options: CommerceFacetOptions;
   let state: CommerceAppState;
   let engine: MockCommerceEngine;
   let facet: CommerceCategoryFacet;

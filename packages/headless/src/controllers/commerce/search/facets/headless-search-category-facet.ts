@@ -1,25 +1,18 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {executeSearch} from '../../../../features/commerce/search/search-actions';
 import {loadReducerError} from '../../../../utils/errors';
 import {
   CommerceCategoryFacet,
   buildCommerceCategoryFacet,
 } from '../../facets/core/category/headless-commerce-category-facet';
-import {CoreCommerceFacetOptions} from '../../facets/core/headless-core-commerce-facet';
+import {CommerceFacetOptions} from '../../facets/core/headless-core-commerce-facet';
 import {loadSearchReducer} from '../utils/load-search-reducers';
-
-export type SearchCategoryFacetOptions = Omit<
-  CoreCommerceFacetOptions,
-  | 'fetchResultsActionCreator'
-  | 'toggleSelectActionCreator'
-  | 'toggleExcludeActionCreator'
->;
+import {commonOptions} from './headless-search-facet-options';
 
 export type SearchCategoryFacetBuilder = typeof buildSearchCategoryFacet;
 
 export function buildSearchCategoryFacet(
   engine: CommerceEngine,
-  options: SearchCategoryFacetOptions
+  options: CommerceFacetOptions
 ): CommerceCategoryFacet {
   if (!loadSearchReducer(engine)) {
     throw loadReducerError;
@@ -27,6 +20,6 @@ export function buildSearchCategoryFacet(
 
   return buildCommerceCategoryFacet(engine, {
     ...options,
-    fetchResultsActionCreator: executeSearch,
+    ...commonOptions,
   });
 }
