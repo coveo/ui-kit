@@ -99,7 +99,6 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
 
   private storage: SafeStorage = new SafeStorage();
   private data?: GeneratedAnswerData;
-  private showCopyToClipboard: boolean = false;
 
   public initialize() {
     this.data = this.readStoredData();
@@ -118,8 +117,6 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     this.modalRef = modalRef;
     modalRef.generatedAnswer = this.generatedAnswer;
     this.host.insertAdjacentElement('beforebegin', modalRef);
-
-    this.showCopyToClipboard = !!navigator?.clipboard?.writeText;
   }
 
   // @ts-expect-error: This function is used by BindStateToController.
@@ -207,6 +204,10 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     return 'mt-0 mb-4 border border-neutral shadow-lg p-6 bg-background rounded-lg p-6 text-on-background';
   }
 
+  private get hasClipboard() {
+    return !!navigator?.clipboard?.writeText;
+  }
+
   private get copyToClipboardTooltip() {
     if (this.copyError) {
       return this.bindings.i18n.t('failed-to-copy-generated-answer');
@@ -224,7 +225,9 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       this.generatedAnswer.logCopyToClipboard();
     } catch (error) {
       this.copyError = true;
-      console.error(`Failed to copy to clipboard: ${error}`);
+      this.bindings.engine.logger.error(
+        `Failed to copy to clipboard: ${error}`
+      );
     }
 
     setTimeout(() => {
@@ -299,7 +302,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
                     active={this.generatedAnswerState.disliked}
                     onClick={this.clickDislike}
                   />
-                  {this.showCopyToClipboard && (
+                  {this.hasClipboard && (
                     <CopyButton
                       title={this.copyToClipboardTooltip}
                       isCopied={this.copied}
