@@ -14,11 +14,32 @@ export type NextJSServerSideSearchParams = Record<
   NextJSServerSideSearchParamsValues
 >;
 
-// TODO: reuse this type
-type FacetKey = keyof Pick<
-  Record<keyof Required<SearchParameters>, boolean>,
-  'f' | 'af' | 'cf' | 'sf' | 'fExcluded' // TODO: understand why df and nf are not included
->;
+const supportedFacetParameters = {
+  f: true,
+  fExcluded: true,
+  cf: true,
+  nf: true,
+  df: true,
+  sf: true,
+  af: true,
+};
+
+const otherSupportedParameters: Omit<
+  Record<keyof SearchParameters, boolean>,
+  keyof typeof supportedFacetParameters
+> = {
+  q: true,
+  aq: true,
+  cq: true,
+  enableQuerySyntax: true,
+  firstResult: true,
+  numberOfResults: true,
+  sortCriteria: true,
+  debug: true,
+  tab: true,
+};
+
+type FacetKey = keyof typeof supportedFacetParameters;
 
 export function isObject(obj: unknown): obj is object {
   return obj && typeof obj === 'object' ? true : false;
@@ -37,31 +58,12 @@ export function allEntriesAreValid(
 }
 
 export function isValidKey(key: string): key is SearchParameterKey {
-  const supportedParameters: Record<keyof Required<SearchParameters>, boolean> =
-    {
-      q: true,
-      aq: true,
-      cq: true,
-      enableQuerySyntax: true,
-      firstResult: true,
-      numberOfResults: true,
-      sortCriteria: true,
-      f: true,
-      fExcluded: true,
-      cf: true,
-      nf: true,
-      df: true,
-      debug: true,
-      sf: true,
-      tab: true,
-      af: true,
-    };
-  return key in supportedParameters;
+  return key in {...supportedFacetParameters, ...otherSupportedParameters};
 }
 
 export function isValidSearchParam(key: string) {
   // TODO: instead do key.split('-') and use isSpecificFacetKey() method. But before understand why some keys are missing from it
-  const facetPrefix = /^(f|fExcluded|cf|nf|df|sf|af)-(.+)$/; // TODO: store these regex in a variable to prevent repetition
+  const facetPrefix = /^(f|fExcluded|cf|nf|df|sf|af)-(.+)$/; // TODO: store these regex in a variable to prevent repetition or build it from supportedFacetParameters
   const result = facetPrefix.exec(key) || isSpecificNonFacetKey(key);
   return result !== null;
 }
@@ -100,27 +102,13 @@ export function isRangeFacetPair(
 }
 
 export function isSpecificFacetKey(key: any): key is FacetKey {
-  const keys: FacetKey[] = ['f', 'af', 'cf', 'sf', 'fExcluded'];
-  return keys.includes(key);
+  return Object.keys(supportedFacetParameters).includes(key);
 }
 
 export function isSpecificNonFacetKey(
   key: any
 ): key is Exclude<SearchParameterKey, FacetKey> {
-  const keys: Exclude<keyof SearchParameters, FacetKey>[] = [
-    'q',
-    'aq',
-    'cq',
-    'enableQuerySyntax',
-    'firstResult',
-    'numberOfResults',
-    'sortCriteria',
-    'debug',
-    'tab',
-    'nf', // TODO: validate that this one should be there
-    'df', // TODO: validate that this one should be there
-  ];
-  return keys.includes(key);
+  return Object.keys(otherSupportedParameters).includes(key);
 }
 
 export function processRangesValue(
