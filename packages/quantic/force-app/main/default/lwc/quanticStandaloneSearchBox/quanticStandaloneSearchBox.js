@@ -9,14 +9,15 @@ import {STANDALONE_SEARCH_BOX_STORAGE_KEY} from 'c/quanticUtils';
 import {CurrentPageReference, NavigationMixin} from 'lightning/navigation';
 import {LightningElement, api, track, wire} from 'lwc';
 // @ts-ignore
-import standaloneSearchBox from './templates/standaloneSearchBox.html';
-// @ts-ignore
 import errorTemplate from './templates/errorTemplate.html';
+// @ts-ignore
+import standaloneSearchBox from './templates/standaloneSearchBox.html';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").StandaloneSearchBoxState} StandaloneSearchBoxState */
 /** @typedef {import("coveo").StandaloneSearchBox} StandaloneSearchBox */
 /** @typedef {import("c/quanticSearchBoxSuggestionsList").default} quanticSearchBoxSuggestionsList */
+/** @typedef {import("c/quanticSearchBoxInput").default} quanticSearchBoxInput */
 /** @typedef {{key: number, value: string}} Suggestion */
 
 /**
@@ -115,7 +116,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   /** @type {Function} */
   unsubscribe;
   /** @type {boolean} */
-  isInitialized;
+  isInitialized = false;
   /** @type {Suggestion[]} */
   suggestions = [];
   /** @type {boolean} */
@@ -137,8 +138,12 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
 
   renderedCallback() {
     initializeWithHeadless(this, this.standaloneEngineId, this.initialize);
-    if (!this.isInitialized && !!this.standaloneSearchBox && !!this.input) {
-      this.input.setAttribute('is-initialized', 'true');
+    if (
+      !this.isInitialized &&
+      !!this.standaloneSearchBox &&
+      !!this.quanticSearchBoxInput
+    ) {
+      this.quanticSearchBoxInput.setAttribute('is-initialized', 'true');
       this.isInitialized = true;
     }
   }
@@ -186,10 +191,12 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   }
 
   updateStandaloneState() {
-    if (this.state.value !== this.standaloneSearchBox.state.value) {
-      this.input.value = this.standaloneSearchBox.state.value;
+    if (this.state?.value !== this.standaloneSearchBox.state.value) {
+      // @ts-ignore
+      this.quanticSearchBoxInput.inputValue =
+        this.standaloneSearchBox.state.value;
     }
-    this.state = this.standaloneSearchBox.state;
+    this.state = this.standaloneSearchBox?.state;
     this.suggestions =
       this.state?.suggestions?.map((s, index) => ({
         key: index,
@@ -213,13 +220,44 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
     this.navigateToSearchPage();
   }
 
+  resetStandaloneSearchboxState() {
+    const engine = getHeadlessBindings(this.standaloneEngineId)?.engine;
+    if (!engine) {
+      return;
+    }
+    const {updateQuery} = CoveoHeadless.loadQueryActions(engine);
+
+    engine.dispatch(updateQuery({q: ''}));
+  }
+
+  navigateToSearchPage() {
+    // const value = this.standaloneSearchBox.state.value;
+    const value = this.quanticSearchBoxInput.inputValue;
+
+    this.resetStandaloneSearchboxState();
+    this[NavigationMixin.Navigate](
+      {
+        type: 'standard__webPage',
+        attributes: {
+          url: `${this.redirectUrl}#q=${encodeURIComponent(value)}`,
+        },
+      },
+      false
+    );
+  }
+
   // CustomEvent handlers
   /**
    * Updates the input value.
    */
   handleInputValueChange = (event) => {
+    console.log('inputValueChange event received!');
     const updatedValue = event.detail.newInputValue;
-    if (this.standaloneSearchBox?.state?.value !== this.input.value) {
+    const isSelectionReset = event.detail.resetSelection;
+    if (this.standaloneSearchBox?.state?.value !== updatedValue) {
+      if (isSelectionReset) {
+        this.quanticSearchBoxInput.resetSelection();
+      }
       this.standaloneSearchBox.updateText(updatedValue);
     }
   };
@@ -248,43 +286,13 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
     this.standaloneSearchBox?.selectSuggestion(selectedSuggestion);
   };
 
-  resetStandaloneSearchboxState() {
-    const engine = getHeadlessBindings(this.standaloneEngineId)?.engine;
-    if (!engine) {
-      return;
-    }
-    const {updateQuery} = CoveoHeadless.loadQueryActions(engine);
-
-    engine.dispatch(updateQuery({q: ''}));
+  /**
+   * @return {quanticSearchBoxInput}
+   */
+  get quanticSearchBoxInput() {
+    // @ts-ignore
+    return this.template.querySelector('c-quantic-search-box-input');
   }
-
-  navigateToSearchPage() {
-    const value = this.standaloneSearchBox.state.value;
-
-    this.resetStandaloneSearchboxState();
-    this[NavigationMixin.Navigate](
-      {
-        type: 'standard__webPage',
-        attributes: {
-          url: `${this.redirectUrl}#q=${encodeURIComponent(value)}`,
-        },
-      },
-      false
-    );
-  }
-
-  // /**
-  //  * @returns {HTMLInputElement|HTMLTextAreaElement}
-  //  */
-  // get input() {
-  //   return this.textarea
-  //     ? this.template.querySelector('textarea')
-  //     : this.template.querySelector('input');
-  // }
-
-  // get quanticSearchBoxInput() {
-  //   return this.template.querySelector('c-quantic-search-box-input');
-  // }
 
   /**
    * Sets the component in the initialization error state.

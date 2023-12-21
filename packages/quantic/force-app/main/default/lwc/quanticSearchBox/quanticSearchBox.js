@@ -166,18 +166,9 @@ export default class QuanticSearchBox extends LightningElement {
     this.searchBox?.selectSuggestion(selectedSuggestion);
   };
 
-  // /**
-  //  * @returns {HTMLInputElement|HTMLTextAreaElement}
-  //  */
-  // get input() {
-  //   return this.textarea
-  //     ? this.template.querySelector('textarea')
-  //     : this.template.querySelector('input');
-  // }
-
-  // get quanticSearchBoxInput() {
-  //   return this.template.querySelector('c-quantic-search-box-input');
-  // }
+  get quanticSearchBoxInput() {
+    return this.template.querySelector('c-quantic-search-box-input');
+  }
 
   /**
    * @returns {HTMLElement}

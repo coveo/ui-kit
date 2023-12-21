@@ -1,7 +1,7 @@
 import clear from '@salesforce/label/c.quantic_Clear';
 import search from '@salesforce/label/c.quantic_Search';
-import {LightningElement, api} from 'lwc';
 import {keys} from 'c/quanticUtils';
+import {LightningElement, api} from 'lwc';
 // @ts-ignore
 import defaultSearchBoxInput from './templates/defaultSearchBoxInput.html';
 // @ts-ignore
@@ -27,10 +27,8 @@ const CLASS_WITHOUT_SUBMIT =
  * @example
  * <c-quantic-search-box-input
  *  textarea={textarea}
-    input={input}
     without-submit-button
     placeholder="Placeholder"
-    value={value}
     suggestions={suggestions}>
  * </c-quantic-search-box-input>
  */
@@ -67,12 +65,12 @@ export default class QuanticSearchBoxInput extends LightningElement {
    * @type {Suggestion[]}
    */
   @api suggestions = [];
-    /**
+  /**
    * Returns and set the input value.
    * @api
    * @type {string}
    */
-  @api // not sure if still needed here
+  @api
   get inputValue() {
     return this.input.value;
   }
@@ -86,6 +84,14 @@ export default class QuanticSearchBoxInput extends LightningElement {
    */
   @api blur() {
     this.input.blur();
+  }
+  /**
+   * The reset selection function.
+   * @api
+   * @type {VoidFunction}
+   */
+  @api resetSelection() {
+    this.suggestionList?.resetSelection();
   }
 
   connectedCallback() {
@@ -118,17 +124,21 @@ export default class QuanticSearchBoxInput extends LightningElement {
       : this.template.querySelector('input');
   }
 
+  // Custom events sent.
   /**
    * Sends the "inputValueChange" event.
    * @param {string} newInputValue
+   * @param {boolean} resetSelection
    */
-  sendInputValueChangeEvent(newInputValue) {
+  sendInputValueChangeEvent(newInputValue, resetSelection) {
     const inputValueChangeEvent = new CustomEvent('inputValueChange', {
       detail: {
         newInputValue,
+        resetSelection,
       },
     });
     this.dispatchEvent(inputValueChangeEvent);
+    console.log('inputValueChange sent!');
   }
 
   /**
@@ -161,34 +171,26 @@ export default class QuanticSearchBoxInput extends LightningElement {
   handleEnter() {
     const selectedSuggestion = this.suggestionList?.getCurrentSelectedValue();
     if (this.suggestionsOpen && selectedSuggestion) {
-      // emit custom event about selecting a suggestion
       this.sendSelectSuggestionEvent(selectedSuggestion);
       this.input.blur();
     } else {
-      // emit custom event to submit
       this.sendSubmitSearchEvent();
       this.input.blur();
     }
   }
 
   handleValueChange() {
-    // emit custom event inputValueChange with the new value
-    this.sendInputValueChangeEvent(this.input.value);
+    this.sendInputValueChangeEvent(this.input.value, false);
   }
 
   handleKeyValues() {
-    // if (this.standaloneSearchBox?.state?.value !== this.input.value) {
-    //   this.suggestionList?.resetSelection();
-    //   this.standaloneSearchBox?.updateText(this.input.value);
-    // }
-    this.sendInputValueChangeEvent(this.input.value);
+    // Reset selection set to true for key pressed other than arrows and Enter.
+    this.sendInputValueChangeEvent(this.input.value, true);
   }
 
   onSubmit(event) {
     event.stopPropagation();
-    // emit custom event inputValueChange with the new value
-    this.sendInputValueChangeEvent(this.input.value);
-    // emit custom event submit
+    this.sendInputValueChangeEvent(this.input.value, false);
     this.sendSubmitSearchEvent();
     this.input.blur();
   }
@@ -218,8 +220,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
         this.suggestionList?.selectionDown();
         break;
       default:
-        // this.handleKeyValues(); // see note on handleValueChange
-        this.handleValueChange(); // for now
+        this.handleKeyValues();
     }
   }
 
@@ -258,8 +259,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
 
   clearInput() {
     this.input.value = '';
-    // emit custom event inputValueChange
-    this.sendInputValueChangeEvent(this.input.value);
+    this.sendInputValueChangeEvent(this.input.value, false);
     this.input.focus();
     if (this.textarea) {
       this.adjustTextAreaHeight();
@@ -267,7 +267,6 @@ export default class QuanticSearchBoxInput extends LightningElement {
   }
 
   showSuggestions() {
-    // emit custom event to showSuggestions
     this.sendShowSuggestionsEvent();
     this.combobox?.classList.add('slds-is-open');
     this.combobox?.setAttribute('aria-expanded', 'true');
@@ -285,8 +284,6 @@ export default class QuanticSearchBoxInput extends LightningElement {
 
   handleSuggestionSelection(event) {
     const textValue = event.detail;
-    // this.searchBoxEngine.selectSuggestion(textValue);
-    // emit custom event about selecting a suggestion
     this.sendSelectSuggestionEvent(textValue);
     this.blur();
   }
