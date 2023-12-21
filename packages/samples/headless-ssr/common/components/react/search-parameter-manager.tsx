@@ -36,7 +36,6 @@ export default function SearchParameterManager() {
 
     const newURL = new URL(historyRouter.url);
     // FIXME: fix when last facet value is deselected
-    console.log(newURL.search);
     const serializer =
       CoveoNextJsSearchParametersSerializer.fromCoveoSearchParameters(
         state.parameters

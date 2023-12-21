@@ -1,10 +1,10 @@
-import {RangeValueRequest} from '@coveo/headless/dist/definitions/features/facets/range-facets/generic/interfaces/range-facet';
 import {SearchParameters} from '@coveo/headless/ssr';
 import type {ReadonlyURLSearchParams} from 'next/navigation';
 import {
   doHaveSameValues,
+  FacetPair,
+  isCoveoSearchParam,
   isFacetPair,
-  isRangeFacetPair,
   isSpecificFacetKey,
   isUrlInstance,
   isValidKey,
@@ -14,28 +14,8 @@ import {
   SearchParameterKey,
 } from './search-parameters-utils';
 
+type PreviousCoveoSearchParamsState = Partial<Record<string, string[]>>;
 export class CoveoNextJsSearchParametersSerializer {
-  private static emptySearchParameters: Record<SearchParameterKey, undefined> =
-    // TODO: delete if not used
-    {
-      q: undefined,
-      aq: undefined,
-      cq: undefined,
-      enableQuerySyntax: undefined,
-      firstResult: undefined,
-      numberOfResults: undefined,
-      sortCriteria: undefined,
-      f: undefined,
-      fExcluded: undefined,
-      cf: undefined,
-      nf: undefined,
-      df: undefined,
-      debug: undefined,
-      sf: undefined,
-      tab: undefined,
-      af: undefined,
-    };
-
   private constructor(
     // TODO: should no longer take SearchParams. but instead a record object. If user wants Coveo Search params, create a getter that parses the object
     public readonly coveoSearchParameters: SearchParameters
@@ -127,111 +107,95 @@ export class CoveoNextJsSearchParametersSerializer {
    * @param {URLSearchParams} urlSearchParams
    */
   public applyToUrlSearchParams(urlSearchParams: URLSearchParams) {
-    this.resetCoveoSearchParams(urlSearchParams); // TODO: reseting here prevents from doing an array comparaison later on
+    const previousState = this.resetCoveoSearchParams(urlSearchParams);
+    const newState = this.coveoSearchParameters;
     // store the old state (deleted search params) in a variable. This will be used later to compare the sort
-    Object.entries(this.coveoSearchParameters).forEach(
+    Object.entries(newState).forEach(
       ([key, value]) =>
         isValidKey(key) &&
-        this.applyToUrlSearchParam(urlSearchParams, key, value)
+        this.applyToUrlSearchParam(urlSearchParams, previousState, [key, value])
     );
   }
 
-  // TODO: rename
-  private static FOOOO(
-    urlSearchParams: Record<string, unknown>, // TODO: find a stricter type
-    key: string,
-    value: NextJSServerSideSearchParamsValues
-  ) {
-    if (value === undefined) {
-      return;
-    }
-    const facetPrefix = /^(f|fExcluded|cf|nf|df|sf|af)-(.+)$/; // TODO: store these regex in a variable to prevent repetition
-    const stringSearchParam = /^(q)$/; // TODO: add other search params
-    const result = stringSearchParam.exec(key) || facetPrefix.exec(key);
-    return result !== null;
-  }
-
-  private resetCoveoSearchParams(urlSearchParams: URLSearchParams) {
-    const nonCoveoSearchParam = {};
+  // TODO: clean that method
+  private resetCoveoSearchParams(
+    urlSearchParams: URLSearchParams
+  ): PreviousCoveoSearchParamsState {
+    const previousCoveoSearchParams: Record<string, string[]> = {};
     // Build previous Coveo search parameter state
+    const keysToDelete: string[] = [];
     urlSearchParams.forEach((value, key) => {
-      const isCoveoSearchParam = CoveoNextJsSearchParametersSerializer.FOOOO(
-        nonCoveoSearchParam,
-        key,
-        value
-      );
-
-      isCoveoSearchParam && urlSearchParams.delete(key); // TODO: not sure if mutation here is safe
+      if (isCoveoSearchParam(key, value)) {
+        previousCoveoSearchParams[key] = [
+          ...(previousCoveoSearchParams[key] || []),
+          value,
+        ];
+        keysToDelete.push(key);
+      } // TODO: not sure if mutation here is safe}
     });
-    // clear all search params from urlSearchParam object
 
-    // get all non Cveo search params
-    // wipe all the search params
-    // put back non-coveo search params
+    // Need another loop to delete keys since Next.js store can have multiple values for the same key
+    for (const key in keysToDelete) {
+      urlSearchParams.delete(key);
+    }
 
-    // Remove from Url all Coveo search parameters that are not in new state
-    // Go trough all previous state and remove all keys
-
-    // Object.entries(previousState).forEach(([key, value]) => {
-    //   // if [key, value] not in newState
-    //   // then urlSearchParams.delete(key)
-    // });
+    return previousCoveoSearchParams;
   }
 
   private applyToUrlSearchParam(
     urlSearchParams: URLSearchParams,
-    key: SearchParameterKey,
-    value: SearchParameters[typeof key]
+    previousState: PreviousCoveoSearchParamsState,
+    pair: [SearchParameterKey, unknown]
   ) {
-    if (!value) {
+    if (!pair[1]) {
       return;
     }
 
-    if (isFacetPair(key, value)) {
-      return this.applyFacetValuesToSearchParams(urlSearchParams, key, value);
-    }
-
-    if (isRangeFacetPair(key, value)) {
-      return this.applyRangeFacetValuesToSearchParams(
+    if (isFacetPair(pair)) {
+      return this.applyFacetValuesToSearchParams(
         urlSearchParams,
-        value,
-        key
+        previousState,
+        pair
       );
     }
 
-    urlSearchParams.set(key, value.toString());
+    // TODO: uncomment and fix type error
+    // if (isRangeFacetPair(pair)) {
+    //   return this.applyRangeFacetValuesToSearchParams(urlSearchParams, pair);
+    // }
+
+    urlSearchParams.set(pair[0], pair[1].toString());
   }
 
   private applyFacetValuesToSearchParams(
     urlSearchParams: URLSearchParams,
-    key: string,
-    value: Record<string, string[]>
+    previousState: PreviousCoveoSearchParamsState,
+    [key, value]: FacetPair
   ) {
     Object.entries(value).forEach(([facetId, facetValues]) => {
       const id = `${key}-${facetId}`;
-      const searchParamValues = urlSearchParams.getAll(id);
+      const previousFacetValues = previousState[id];
 
-      console.log('*********************');
-      console.log(id);
-      console.log(urlSearchParams.toString());
-
-      if (doHaveSameValues(searchParamValues, value[facetId])) {
+      if (
+        previousFacetValues &&
+        doHaveSameValues(previousFacetValues, value[facetId])
+      ) {
         return;
       }
-      console.log('*********************');
 
       urlSearchParams.delete(id);
 
       facetValues.forEach(
-        (v) => !searchParamValues.includes(v) && urlSearchParams.append(id, v)
+        (v) =>
+          !urlSearchParams.getAll(id).includes(v) &&
+          urlSearchParams.append(id, v)
       );
     });
   }
 
   private applyRangeFacetValuesToSearchParams(
     _urlSearchParams: URLSearchParams,
-    _value: Record<string, RangeValueRequest[]>,
-    _key: string
+    [_key, _value]: FacetPair
   ) {
     // if (this.containsSameValues(urlSearchParams.getAll(id), value[facetId])) {
     //   return;

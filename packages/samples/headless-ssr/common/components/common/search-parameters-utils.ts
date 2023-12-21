@@ -2,6 +2,11 @@ import {RangeValueRequest} from '@coveo/headless/dist/definitions/features/facet
 import {type SearchParameters} from '@coveo/headless/ssr';
 import {ReadonlyURLSearchParams} from 'next/navigation';
 
+export type RangeFacetPair = [
+  SearchParameterKey,
+  Record<string, RangeValueRequest[]>,
+];
+export type FacetPair = [SearchParameterKey, Record<string, string[]>];
 export type SearchParameterKey = keyof SearchParameters;
 export type NextJSServerSideSearchParamsValues = string | string[] | undefined;
 export type NextJSServerSideSearchParams = Record<
@@ -50,11 +55,24 @@ export function isValidKey(key: string): key is SearchParameterKey {
 
 // Duplicate code END
 
+export function isCoveoSearchParam(
+  key: string,
+  value: NextJSServerSideSearchParamsValues
+) {
+  if (value === undefined) {
+    return;
+  }
+  const facetPrefix = /^(f|fExcluded|cf|nf|df|sf|af)-(.+)$/; // TODO: store these regex in a variable to prevent repetition
+  const stringSearchParam = /^(q)$/; // TODO: add other search params
+  const result = stringSearchParam.exec(key) || facetPrefix.exec(key);
+  return result !== null;
+}
+
 export function isFacetPair(
-  key: SearchParameterKey,
-  obj: unknown
-): obj is Record<string, string[]> {
-  if (!isObject(obj)) {
+  pair: [SearchParameterKey, unknown]
+): pair is FacetPair {
+  const [key, value] = pair;
+  if (!isObject(value)) {
     return false;
   }
   if (!isSpecificFacetKey(key)) {
@@ -62,7 +80,7 @@ export function isFacetPair(
   }
 
   const isValidValue = (v: unknown) => typeof v === 'string';
-  return allEntriesAreValid(obj, isValidValue);
+  return allEntriesAreValid(value, isValidValue);
 }
 
 export function isRangeFacetPair(
@@ -128,8 +146,6 @@ export function isUrlInstance(
  * @returns {boolean} - True if the arrays have the same values, false otherwise.
  */
 export function doHaveSameValues<T>(arr1: T[], arr2: T[]): boolean {
-  console.log(arr1);
-  console.log(arr2);
   return (
     arr1.length === arr2.length && arr1.every((value) => arr2.includes(value))
   );
