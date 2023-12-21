@@ -74,11 +74,11 @@ export class InsightAnalyticsProvider
 
   public getGeneratedAnswerMetadata() {
     const state = this.getState();
-    const formattedObject: Record<string, string | boolean> = {};
-    if (state.generatedAnswer?.isVisible !== undefined) {
-      formattedObject['showGeneratedAnswer'] = state.generatedAnswer.isVisible;
-    }
-    return formattedObject;
+    return {
+      ...(state.generatedAnswer?.isVisible !== undefined && {
+        showGeneratedAnswer: state.generatedAnswer.isVisible,
+      }),
+    };
   }
 
   private get queryText() {
