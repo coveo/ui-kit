@@ -231,9 +231,17 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   }
 
   navigateToSearchPage() {
+    console.log(
+      'navigate standaloneSearchBox.state.value: ' +
+        this.standaloneSearchBox.state.value
+    );
+    console.log(
+      'navigate quanticSearchBoxInput.inputvalue: ' +
+        this.standaloneSearchBox.state.value
+    );
     // const value = this.standaloneSearchBox.state.value;
     const value = this.quanticSearchBoxInput.inputValue;
-
+    console.log('encoded URI: ' + encodeURIComponent(value));
     this.resetStandaloneSearchboxState();
     this[NavigationMixin.Navigate](
       {
@@ -251,7 +259,6 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
    * Updates the input value.
    */
   handleInputValueChange = (event) => {
-    console.log('inputValueChange event received!');
     const updatedValue = event.detail.newInputValue;
     const isSelectionReset = event.detail.resetSelection;
     if (this.standaloneSearchBox?.state?.value !== updatedValue) {
@@ -267,6 +274,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
    * @returns {void}
    */
   handleSubmit = () => {
+    console.log('this is called');
     this.standaloneSearchBox.submit();
   };
 
@@ -282,7 +290,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
    * Handles the selection of a suggestion.
    */
   handleSelectSuggestion = (event) => {
-    const selectedSuggestion = event.detail.selectedSuggestion.rawValue;
+    const selectedSuggestion = event.detail.selectedSuggestion;
     this.standaloneSearchBox?.selectSuggestion(selectedSuggestion);
   };
 

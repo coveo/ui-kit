@@ -136,34 +136,48 @@ export default class QuanticSearchBoxInput extends LightningElement {
         newInputValue,
         resetSelection,
       },
+      bubbles: true,
+      composed: true,
     });
     this.dispatchEvent(inputValueChangeEvent);
-    console.log('inputValueChange sent!');
   }
 
   /**
    * Sends the "submitSearch" event.
    */
   sendSubmitSearchEvent() {
-    this.dispatchEvent(new CustomEvent('submitSearch'));
+    console.log('sent submit search event');
+    this.dispatchEvent(
+      new CustomEvent('submitSearch', {
+        bubbles: true,
+        composed: true,
+      })
+    );
   }
 
   /**
    * Sends the "showSuggestions" event.
    */
   sendShowSuggestionsEvent() {
-    this.dispatchEvent(new CustomEvent('showSuggestions'));
+    this.dispatchEvent(
+      new CustomEvent('showSuggestions', {
+        bubbles: true,
+        composed: true,
+      })
+    );
   }
 
   /**
    * Sends the "selectSuggestion" event.
-   * @param {Suggestion} selectedSuggestion
+   * @param {string} selectedSuggestion
    */
   sendSelectSuggestionEvent(selectedSuggestion) {
     const selectSuggestionEvent = new CustomEvent('selectSuggestion', {
       detail: {
         selectedSuggestion,
       },
+      bubbles: true,
+      composed: true,
     });
     this.dispatchEvent(selectSuggestionEvent);
   }
@@ -171,7 +185,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
   handleEnter() {
     const selectedSuggestion = this.suggestionList?.getCurrentSelectedValue();
     if (this.suggestionsOpen && selectedSuggestion) {
-      this.sendSelectSuggestionEvent(selectedSuggestion);
+      this.sendSelectSuggestionEvent(selectedSuggestion.rawValue);
       this.input.blur();
     } else {
       this.sendSubmitSearchEvent();
