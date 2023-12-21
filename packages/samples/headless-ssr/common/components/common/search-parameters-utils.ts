@@ -1,7 +1,8 @@
+import {RangeValueRequest} from '@coveo/headless/dist/definitions/features/facets/range-facets/generic/interfaces/range-facet';
 import {type SearchParameters} from '@coveo/headless/ssr';
+import {ReadonlyURLSearchParams} from 'next/navigation';
 
 export type SearchParameterKey = keyof SearchParameters;
-
 export type NextJSServerSideSearchParamsValues = string | string[] | undefined;
 export type NextJSServerSideSearchParams = Record<
   string,
@@ -49,6 +50,38 @@ export function isValidKey(key: string): key is SearchParameterKey {
 
 // Duplicate code END
 
+export function isFacetPair(
+  key: SearchParameterKey,
+  obj: unknown
+): obj is Record<string, string[]> {
+  if (!isObject(obj)) {
+    return false;
+  }
+  if (!isSpecificFacetKey(key)) {
+    return false;
+  }
+
+  const isValidValue = (v: unknown) => typeof v === 'string';
+  return allEntriesAreValid(obj, isValidValue);
+}
+
+export function isRangeFacetPair(
+  key: SearchParameterKey,
+  obj: unknown
+): obj is Record<string, RangeValueRequest[]> {
+  if (!isObject(obj)) {
+    return false;
+  }
+  if (key !== 'nf' && key !== 'df') {
+    return false;
+  }
+
+  // TODO: reset array
+  const isRangeValue = (v: unknown) =>
+    isObject(v) && 'start' in v && 'end' in v;
+  return allEntriesAreValid(obj, isRangeValue);
+}
+
 // duplicated with slight changes
 export function isSpecificFacetKey(
   key: string // This was a slight type change
@@ -72,4 +105,32 @@ export function processObjectValue(
   }
 
   return value;
+}
+
+/**
+ * Checks if the provided value is an instance of URLSearchParams or ReadonlyURLSearchParams.
+ * @param obj - The value to check.
+ * @returns True if the value is an instance of URLSearchParams or ReadonlyURLSearchParams, false otherwise.
+ */
+export function isUrlInstance(
+  obj: unknown
+): obj is URLSearchParams | ReadonlyURLSearchParams {
+  return (
+    obj instanceof URLSearchParams || obj instanceof ReadonlyURLSearchParams
+  );
+}
+
+/**
+ * Checks if two arrays have the same values regardless of their order.
+ *
+ * @param arr1 - The first array.
+ * @param arr2 - The second array.
+ * @returns {boolean} - True if the arrays have the same values, false otherwise.
+ */
+export function doHaveSameValues<T>(arr1: T[], arr2: T[]): boolean {
+  console.log(arr1);
+  console.log(arr2);
+  return (
+    arr1.length === arr2.length && arr1.every((value) => arr2.includes(value))
+  );
 }

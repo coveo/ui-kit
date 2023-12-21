@@ -20,11 +20,11 @@ export function useHistoryRouter() {
     return () => window.removeEventListener('popstate', updateUrl);
   }, []);
   const replace = useCallback(
-    (href: string) => history.replaceState(null, document.title, href),
+    (href: string) => window.history.replaceState(null, document.title, href),
     []
   );
   const push = useCallback(
-    (href: string) => history.pushState(null, document.title, href),
+    (href: string) => window.history.pushState(null, document.title, href),
     []
   );
   return useMemo(() => ({url, replace, push}), [url, replace, push]);

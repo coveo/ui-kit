@@ -41,6 +41,8 @@ export function SearchPageProvider({
 
   if (hydratedState) {
     return (
+      // This makes children render twice. Once with the static state and once with the hydrated state. which is not ideal performance wise
+      // TODO: make sure children are only rendered once if possible
       <HydratedStateProvider
         engine={hydratedState.engine}
         controllers={hydratedState.controllers}

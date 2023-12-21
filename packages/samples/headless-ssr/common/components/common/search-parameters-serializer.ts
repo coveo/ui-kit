@@ -1,18 +1,41 @@
 import {RangeValueRequest} from '@coveo/headless/dist/definitions/features/facets/range-facets/generic/interfaces/range-facet';
-import {type SearchParameters} from '@coveo/headless/ssr';
-import {ReadonlyURLSearchParams} from 'next/navigation';
+import {SearchParameters} from '@coveo/headless/ssr';
+import type {ReadonlyURLSearchParams} from 'next/navigation';
 import {
-  NextJSServerSideSearchParams,
-  SearchParameterKey,
+  doHaveSameValues,
+  isFacetPair,
+  isRangeFacetPair,
   isSpecificFacetKey,
-  allEntriesAreValid,
-  isObject,
+  isUrlInstance,
   isValidKey,
-  processObjectValue,
+  NextJSServerSideSearchParams,
   NextJSServerSideSearchParamsValues,
+  processObjectValue,
+  SearchParameterKey,
 } from './search-parameters-utils';
 
 export class CoveoNextJsSearchParametersSerializer {
+  private static emptySearchParameters: Record<SearchParameterKey, undefined> =
+    // TODO: delete if not used
+    {
+      q: undefined,
+      aq: undefined,
+      cq: undefined,
+      enableQuerySyntax: undefined,
+      firstResult: undefined,
+      numberOfResults: undefined,
+      sortCriteria: undefined,
+      f: undefined,
+      fExcluded: undefined,
+      cf: undefined,
+      nf: undefined,
+      df: undefined,
+      debug: undefined,
+      sf: undefined,
+      tab: undefined,
+      af: undefined,
+    };
+
   private constructor(
     // TODO: should no longer take SearchParams. but instead a record object. If user wants Coveo Search params, create a getter that parses the object
     public readonly coveoSearchParameters: SearchParameters
@@ -31,13 +54,15 @@ export class CoveoNextJsSearchParametersSerializer {
       | ReadonlyURLSearchParams
       | NextJSServerSideSearchParams
   ) {
-    const {isUrl, parseSearchParametersHelper} =
-      CoveoNextJsSearchParametersSerializer;
     const coveoSearchParameters: SearchParameters = {}; // TODO: not sure about the type
     const parse = (key: string, value: NextJSServerSideSearchParamsValues) =>
-      parseSearchParametersHelper(coveoSearchParameters, key, value);
+      CoveoNextJsSearchParametersSerializer.parseSearchParametersHelper(
+        coveoSearchParameters,
+        key,
+        value
+      );
 
-    if (isUrl(clientSideUrlSearchParams)) {
+    if (isUrlInstance(clientSideUrlSearchParams)) {
       clientSideUrlSearchParams.forEach((value, key) => parse(key, value));
     } else {
       Object.entries(clientSideUrlSearchParams).forEach(([key, value]) =>
@@ -48,20 +73,20 @@ export class CoveoNextJsSearchParametersSerializer {
     return new CoveoNextJsSearchParametersSerializer(coveoSearchParameters);
   }
 
-  // TODO: do not return key to delete anymore.
   /**
+   * Parses the search parameters and updates the searchParams object based on the provided key and value.
+   * TODO: do not return key to delete anymore.
    * TODO: mension that this also mutate the initial object
    *
-   * @param {SearchParameters} res
-   * @param {string} key
-   * @param {NextJSServerSideSearchParamsValues} value
-   * @return {*}  {(string | undefined)}
+   * @param searchParams - The search parameters object to be updated.
+   * @param key - The key representing the search parameter.
+   * @param value - The value of the search parameter.
    */
   private static parseSearchParametersHelper(
-    res: SearchParameters,
+    searchParams: SearchParameters,
     key: string,
     value: NextJSServerSideSearchParamsValues
-  ): string | undefined {
+  ): void {
     if (value === undefined) {
       return;
     }
@@ -80,19 +105,17 @@ export class CoveoNextJsSearchParametersSerializer {
         ? processedValue
         : [processedValue];
 
-      if (paramKey in res) {
-        const record = {...res[paramKey]};
+      if (paramKey in searchParams) {
+        const record = {...searchParams[paramKey]};
         record[facetId] = [...record[facetId], ...valueArray];
-        res[paramKey] = record;
+        searchParams[paramKey] = record;
       } else {
-        res[paramKey] = {[facetId]: valueArray};
+        searchParams[paramKey] = {[facetId]: valueArray};
       }
-      return key;
     } else {
       if (isValidKey(key)) {
         // FIXME: fix type error
-        res[key] = value;
-        return key;
+        searchParams[key] = value;
       }
     }
   }
@@ -104,6 +127,8 @@ export class CoveoNextJsSearchParametersSerializer {
    * @param {URLSearchParams} urlSearchParams
    */
   public applyToUrlSearchParams(urlSearchParams: URLSearchParams) {
+    this.resetCoveoSearchParams(urlSearchParams); // TODO: reseting here prevents from doing an array comparaison later on
+    // store the old state (deleted search params) in a variable. This will be used later to compare the sort
     Object.entries(this.coveoSearchParameters).forEach(
       ([key, value]) =>
         isValidKey(key) &&
@@ -111,19 +136,46 @@ export class CoveoNextJsSearchParametersSerializer {
     );
   }
 
-  private static isUrl(
-    a: unknown
-  ): a is URLSearchParams | ReadonlyURLSearchParams {
-    return a instanceof URLSearchParams || a instanceof ReadonlyURLSearchParams;
+  // TODO: rename
+  private static FOOOO(
+    urlSearchParams: Record<string, unknown>, // TODO: find a stricter type
+    key: string,
+    value: NextJSServerSideSearchParamsValues
+  ) {
+    if (value === undefined) {
+      return;
+    }
+    const facetPrefix = /^(f|fExcluded|cf|nf|df|sf|af)-(.+)$/; // TODO: store these regex in a variable to prevent repetition
+    const stringSearchParam = /^(q)$/; // TODO: add other search params
+    const result = stringSearchParam.exec(key) || facetPrefix.exec(key);
+    return result !== null;
   }
 
-  /**
-   * function that checks if two arrays contains the same values regardless of their order
-   */
-  private doHaveSameValues<T>(arr1: T[], arr2: T[]): boolean {
-    return (
-      arr1.length === arr2.length && arr1.every((value) => arr2.includes(value))
-    );
+  private resetCoveoSearchParams(urlSearchParams: URLSearchParams) {
+    const nonCoveoSearchParam = {};
+    // Build previous Coveo search parameter state
+    urlSearchParams.forEach((value, key) => {
+      const isCoveoSearchParam = CoveoNextJsSearchParametersSerializer.FOOOO(
+        nonCoveoSearchParam,
+        key,
+        value
+      );
+
+      isCoveoSearchParam && urlSearchParams.delete(key); // TODO: not sure if mutation here is safe
+    });
+    // clear all search params from urlSearchParam object
+
+    // get all non Cveo search params
+    // wipe all the search params
+    // put back non-coveo search params
+
+    // Remove from Url all Coveo search parameters that are not in new state
+    // Go trough all previous state and remove all keys
+
+    // Object.entries(previousState).forEach(([key, value]) => {
+    //   // if [key, value] not in newState
+    //   // then urlSearchParams.delete(key)
+    // });
   }
 
   private applyToUrlSearchParam(
@@ -135,48 +187,38 @@ export class CoveoNextJsSearchParametersSerializer {
       return;
     }
 
-    if (this.isFacetPair(key, value)) {
-      return this.applyFacetValuesToSearchParams(value, key, urlSearchParams);
+    if (isFacetPair(key, value)) {
+      return this.applyFacetValuesToSearchParams(urlSearchParams, key, value);
     }
 
-    if (this.isRangeFacetPair(key, value)) {
+    if (isRangeFacetPair(key, value)) {
       return this.applyRangeFacetValuesToSearchParams(
+        urlSearchParams,
         value,
-        key,
-        urlSearchParams
+        key
       );
     }
 
     urlSearchParams.set(key, value.toString());
   }
 
-  private isFacetPair(
-    key: SearchParameterKey,
-    obj: unknown
-  ): obj is Record<string, string[]> {
-    if (!isObject(obj)) {
-      return false;
-    }
-    if (!isSpecificFacetKey(key)) {
-      return false;
-    }
-
-    const isValidValue = (v: unknown) => typeof v === 'string';
-    return allEntriesAreValid(obj, isValidValue);
-  }
-
   private applyFacetValuesToSearchParams(
-    value: Record<string, string[]>,
+    urlSearchParams: URLSearchParams,
     key: string,
-    urlSearchParams: URLSearchParams
+    value: Record<string, string[]>
   ) {
     Object.entries(value).forEach(([facetId, facetValues]) => {
       const id = `${key}-${facetId}`;
       const searchParamValues = urlSearchParams.getAll(id);
 
-      if (this.doHaveSameValues(searchParamValues, value[facetId])) {
+      console.log('*********************');
+      console.log(id);
+      console.log(urlSearchParams.toString());
+
+      if (doHaveSameValues(searchParamValues, value[facetId])) {
         return;
       }
+      console.log('*********************');
 
       urlSearchParams.delete(id);
 
@@ -186,27 +228,10 @@ export class CoveoNextJsSearchParametersSerializer {
     });
   }
 
-  private isRangeFacetPair(
-    key: SearchParameterKey,
-    obj: unknown
-  ): obj is Record<string, RangeValueRequest[]> {
-    if (!isObject(obj)) {
-      return false;
-    }
-    if (key !== 'nf' && key !== 'df') {
-      return false;
-    }
-
-    // TODO: reset array
-    const isRangeValue = (v: unknown) =>
-      isObject(v) && 'start' in v && 'end' in v;
-    return allEntriesAreValid(obj, isRangeValue);
-  }
-
   private applyRangeFacetValuesToSearchParams(
+    _urlSearchParams: URLSearchParams,
     _value: Record<string, RangeValueRequest[]>,
-    _key: string,
-    _urlSearchParams: URLSearchParams
+    _key: string
   ) {
     // if (this.containsSameValues(urlSearchParams.getAll(id), value[facetId])) {
     //   return;

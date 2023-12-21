@@ -22,7 +22,6 @@ export default async function Search(url: {
   searchParams: {[key: string]: string | string[] | undefined};
 }) {
   // TODO: revisit this static class. It's not super user friendly
-  // FIXME: query is not added to the search box
   const {coveoSearchParameters} =
     CoveoNextJsSearchParametersSerializer.fromUrlSearchParameters(
       url.searchParams
