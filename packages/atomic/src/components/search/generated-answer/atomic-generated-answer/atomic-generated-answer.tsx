@@ -221,6 +221,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     try {
       await navigator.clipboard.writeText(answer);
       this.copied = true;
+      this.generatedAnswer.logCopyToClipboard();
     } catch (error) {
       this.copyError = true;
       console.error(`Failed to copy to clipboard: ${error}`);
@@ -303,18 +304,11 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
                       title={this.copyToClipboardTooltip}
                       isCopied={this.copied}
                       error={this.copyError}
-                      onClick={async () => {
-                        try {
-                          await this.copyToClipboard(
-                            this.generatedAnswerState.answer!
-                          );
-                          this.generatedAnswer.logCopyToClipboard();
-                        } catch (error) {
-                          console.error(
-                            `Failed to copy to clipboard: ${error}`
-                          );
-                        }
-                      }}
+                      onClick={async () =>
+                        await this.copyToClipboard(
+                          this.generatedAnswerState.answer!
+                        )
+                      }
                     />
                   )}
                 </div>
