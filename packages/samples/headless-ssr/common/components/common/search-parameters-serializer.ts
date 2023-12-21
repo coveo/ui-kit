@@ -3,31 +3,44 @@ import type {ReadonlyURLSearchParams} from 'next/navigation';
 import {
   doHaveSameValues,
   FacetPair,
-  isCoveoSearchParam,
+  isValidSearchParam,
   isFacetPair,
   isSpecificFacetKey,
   isUrlInstance,
   isValidKey,
   NextJSServerSideSearchParams,
   NextJSServerSideSearchParamsValues,
-  processObjectValue,
+  processRangesValue,
+  removeKeysFromUrlSearchParams,
   SearchParameterKey,
 } from './search-parameters-utils';
 
 type PreviousCoveoSearchParamsState = Partial<Record<string, string[]>>;
 export class CoveoNextJsSearchParametersSerializer {
   private constructor(
-    // TODO: should no longer take SearchParams. but instead a record object. If user wants Coveo Search params, create a getter that parses the object
     public readonly coveoSearchParameters: SearchParameters
   ) {}
 
+  /**
+   * Converts a {@link SearchParameters} object to a CoveoNextJsSearchParametersSerializer object.
+   * This class can help you serialize and deserialize Coveo search parameters to and from URL search parameters.
+   *
+   * @param coveoSearchParameters - The {@link SearchParameters} object to convert.
+   * @returns A new instance of CoveoNextJsSearchParametersSerializer.
+   */
   public static fromCoveoSearchParameters(
     coveoSearchParameters: SearchParameters
   ) {
     return new CoveoNextJsSearchParametersSerializer(coveoSearchParameters);
   }
 
-  // TODO: rename
+  /**
+   * Converts URL search parameters into a CoveoNextJsSearchParametersSerializer object.
+   * This class can help you serialize and deserialize Coveo search parameters to and from URL search parameters.
+   *
+   * @param clientSideUrlSearchParams - The URL search parameters to convert.
+   * @returns A CoveoNextJsSearchParametersSerializer instance with the converted search parameters.
+   */
   public static fromUrlSearchParameters(
     clientSideUrlSearchParams:
       | URLSearchParams
@@ -35,18 +48,18 @@ export class CoveoNextJsSearchParametersSerializer {
       | NextJSServerSideSearchParams
   ) {
     const coveoSearchParameters: SearchParameters = {}; // TODO: not sure about the type
-    const parse = (key: string, value: NextJSServerSideSearchParamsValues) =>
-      CoveoNextJsSearchParametersSerializer.parseSearchParametersHelper(
+    const add = (key: string, value: NextJSServerSideSearchParamsValues) =>
+      CoveoNextJsSearchParametersSerializer.extendSearchParameters(
         coveoSearchParameters,
         key,
         value
       );
 
     if (isUrlInstance(clientSideUrlSearchParams)) {
-      clientSideUrlSearchParams.forEach((value, key) => parse(key, value));
+      clientSideUrlSearchParams.forEach((value, key) => add(key, value));
     } else {
       Object.entries(clientSideUrlSearchParams).forEach(([key, value]) =>
-        parse(key, value)
+        add(key, value)
       );
     }
 
@@ -54,15 +67,29 @@ export class CoveoNextJsSearchParametersSerializer {
   }
 
   /**
-   * Parses the search parameters and updates the searchParams object based on the provided key and value.
-   * TODO: do not return key to delete anymore.
-   * TODO: mension that this also mutate the initial object
+   * Applies the Coveo search parameters to the given URLSearchParams object.
+   * Warning: This method mutates the given URLSearchParams object.
+   *
+   * @param urlSearchParams - The URLSearchParams object to apply the new search parameters to.
+   */
+  public applyToUrlSearchParams(urlSearchParams: URLSearchParams) {
+    const previousState = this.wipeCoveoSearchParamFromUrl(urlSearchParams);
+    const newState = this.coveoSearchParameters;
+    Object.entries(newState).forEach(
+      ([key, value]) =>
+        isValidKey(key) &&
+        this.applyToUrlSearchParam(urlSearchParams, previousState, [key, value])
+    );
+  }
+
+  /**
+   * Augment the coveo search parameters object based on the provided key and value.
    *
    * @param searchParams - The search parameters object to be updated.
-   * @param key - The key representing the search parameter.
+   * @param key - The key of the search parameter.
    * @param value - The value of the search parameter.
    */
-  private static parseSearchParametersHelper(
+  private static extendSearchParameters(
     searchParams: SearchParameters,
     key: string,
     value: NextJSServerSideSearchParamsValues
@@ -70,7 +97,7 @@ export class CoveoNextJsSearchParametersSerializer {
     if (value === undefined) {
       return;
     }
-    const facetPrefix = /^(f|fExcluded|cf|nf|df|sf|af)-(.+)$/;
+    const facetPrefix = /^(f|fExcluded|cf|nf|df|sf|af)-(.+)$/; // TODO: this regex is repeated twice
     const result = facetPrefix.exec(key);
     if (result) {
       const paramKey = result[1];
@@ -80,14 +107,15 @@ export class CoveoNextJsSearchParametersSerializer {
         // THIS does not handle range facets
         return;
       }
-      const processedValue = processObjectValue(paramKey, value);
+      const processedValue = processRangesValue(paramKey, value);
       const valueArray = Array.isArray(processedValue)
         ? processedValue
         : [processedValue];
 
       if (paramKey in searchParams) {
-        const record = {...searchParams[paramKey]};
-        record[facetId] = [...record[facetId], ...valueArray];
+        const record = searchParams[paramKey] ?? {};
+        // TODO: something broke here when selected 2 facets, went back and forward
+        record[facetId] = [...(record[facetId] || []), ...valueArray];
         searchParams[paramKey] = record;
       } else {
         searchParams[paramKey] = {[facetId]: valueArray};
@@ -101,43 +129,28 @@ export class CoveoNextJsSearchParametersSerializer {
   }
 
   /**
-   * Applies the search parameters to the given URL search params.
-   * This mutate the url search params!!!
-   *
-   * @param {URLSearchParams} urlSearchParams
+   * Removes Coveo search parameters from the given URL search parameters object and returns the parameters that were removed.
+   * @param urlSearchParams - The URL search parameters object to modify.
+   * @returns The previous state of Coveo search parameters that was removed from the URL search parameter object.
    */
-  public applyToUrlSearchParams(urlSearchParams: URLSearchParams) {
-    const previousState = this.resetCoveoSearchParams(urlSearchParams);
-    const newState = this.coveoSearchParameters;
-    // store the old state (deleted search params) in a variable. This will be used later to compare the sort
-    Object.entries(newState).forEach(
-      ([key, value]) =>
-        isValidKey(key) &&
-        this.applyToUrlSearchParam(urlSearchParams, previousState, [key, value])
-    );
-  }
-
-  // TODO: clean that method
-  private resetCoveoSearchParams(
+  private wipeCoveoSearchParamFromUrl(
     urlSearchParams: URLSearchParams
   ): PreviousCoveoSearchParamsState {
-    const previousCoveoSearchParams: Record<string, string[]> = {};
-    // Build previous Coveo search parameter state
+    const previousCoveoSearchParams: PreviousCoveoSearchParamsState = {};
     const keysToDelete: string[] = [];
+
     urlSearchParams.forEach((value, key) => {
-      if (isCoveoSearchParam(key, value)) {
+      if (value !== undefined && isValidSearchParam(key)) {
+        // TODO: value should never be undefiend here! make sure of it
         previousCoveoSearchParams[key] = [
           ...(previousCoveoSearchParams[key] || []),
           value,
         ];
         keysToDelete.push(key);
-      } // TODO: not sure if mutation here is safe}
+      }
     });
 
-    // Need another loop to delete keys since Next.js store can have multiple values for the same key
-    for (const key in keysToDelete) {
-      urlSearchParams.delete(key);
-    }
+    removeKeysFromUrlSearchParams(urlSearchParams, keysToDelete);
 
     return previousCoveoSearchParams;
   }

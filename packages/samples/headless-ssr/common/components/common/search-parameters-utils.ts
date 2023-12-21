@@ -2,16 +2,22 @@ import {RangeValueRequest} from '@coveo/headless/dist/definitions/features/facet
 import {type SearchParameters} from '@coveo/headless/ssr';
 import {ReadonlyURLSearchParams} from 'next/navigation';
 
+export type FacetPair = [SearchParameterKey, Record<string, string[]>];
 export type RangeFacetPair = [
   SearchParameterKey,
   Record<string, RangeValueRequest[]>,
 ];
-export type FacetPair = [SearchParameterKey, Record<string, string[]>];
 export type SearchParameterKey = keyof SearchParameters;
 export type NextJSServerSideSearchParamsValues = string | string[] | undefined;
 export type NextJSServerSideSearchParams = Record<
   string,
   NextJSServerSideSearchParamsValues
+>;
+
+// TODO: reuse this type
+type FacetKey = keyof Pick<
+  Record<keyof Required<SearchParameters>, boolean>,
+  'f' | 'af' | 'cf' | 'sf' | 'fExcluded' // TODO: understand why df and nf are not included
 >;
 
 export function isObject(obj: unknown): obj is object {
@@ -53,18 +59,10 @@ export function isValidKey(key: string): key is SearchParameterKey {
   return key in supportedParameters;
 }
 
-// Duplicate code END
-
-export function isCoveoSearchParam(
-  key: string,
-  value: NextJSServerSideSearchParamsValues
-) {
-  if (value === undefined) {
-    return;
-  }
+export function isValidSearchParam(key: string) {
+  // TODO: instead do key.split('-') and use isSpecificFacetKey() method. But before understand why some keys are missing from it
   const facetPrefix = /^(f|fExcluded|cf|nf|df|sf|af)-(.+)$/; // TODO: store these regex in a variable to prevent repetition
-  const stringSearchParam = /^(q)$/; // TODO: add other search params
-  const result = stringSearchParam.exec(key) || facetPrefix.exec(key);
+  const result = facetPrefix.exec(key) || isSpecificNonFacetKey(key);
   return result !== null;
 }
 
@@ -86,6 +84,7 @@ export function isFacetPair(
 export function isRangeFacetPair(
   key: SearchParameterKey,
   obj: unknown
+  // TODO: check if can use type from above
 ): obj is Record<string, RangeValueRequest[]> {
   if (!isObject(obj)) {
     return false;
@@ -100,14 +99,31 @@ export function isRangeFacetPair(
   return allEntriesAreValid(obj, isRangeValue);
 }
 
-// duplicated with slight changes
-export function isSpecificFacetKey(
-  key: string // This was a slight type change
-): key is 'f' | 'af' | 'cf' | 'sf' | 'fExcluded' {
-  const keys = ['f', 'af', 'cf', 'sf', 'fExcluded'];
+export function isSpecificFacetKey(key: any): key is FacetKey {
+  const keys: FacetKey[] = ['f', 'af', 'cf', 'sf', 'fExcluded'];
   return keys.includes(key);
 }
-export function processObjectValue(
+
+export function isSpecificNonFacetKey(
+  key: any
+): key is Exclude<SearchParameterKey, FacetKey> {
+  const keys: Exclude<keyof SearchParameters, FacetKey>[] = [
+    'q',
+    'aq',
+    'cq',
+    'enableQuerySyntax',
+    'firstResult',
+    'numberOfResults',
+    'sortCriteria',
+    'debug',
+    'tab',
+    'nf', // TODO: validate that this one should be there
+    'df', // TODO: validate that this one should be there
+  ];
+  return keys.includes(key);
+}
+
+export function processRangesValue(
   key: string,
   value: string | string[] // TODO: check why string [] is needed
   // ): string | NumericRangeRequest | DateRangeRequest {
@@ -136,6 +152,15 @@ export function isUrlInstance(
   return (
     obj instanceof URLSearchParams || obj instanceof ReadonlyURLSearchParams
   );
+}
+
+export function removeKeysFromUrlSearchParams(
+  urlSearchParams: URLSearchParams,
+  keys: string[]
+) {
+  for (const key in keys) {
+    urlSearchParams.delete(key);
+  }
 }
 
 /**
