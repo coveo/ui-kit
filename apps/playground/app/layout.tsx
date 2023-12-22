@@ -1,3 +1,7 @@
+import "@mantine/core/styles.css";
+import { ColorSchemeScript, MantineProvider } from "@mantine/core";
+import { Playground } from "./playground";
+
 export default function RootLayout({
   children,
 }: {
@@ -5,7 +9,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <head>
+        <ColorSchemeScript />
+      </head>
+      <body>
+        <MantineProvider>
+          <Playground>{children}</Playground>
+        </MantineProvider>
+      </body>
     </html>
   );
 }

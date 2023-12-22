@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "preview": "npx serve@latest out",
     "start": "next start",
     "lint": "next lint",
     "test": "npm run test:relay-node",
@@ -12,6 +13,8 @@
   },
   "dependencies": {
     "@coveo/relay": "workspace:*",
+    "@mantine/core": "^7.3.2",
+    "@mantine/hooks": "^7.3.2",
     "@monaco-editor/react": "^4.5.1",
     "next": "^13.4.1",
     "react": "^18.2.0",
