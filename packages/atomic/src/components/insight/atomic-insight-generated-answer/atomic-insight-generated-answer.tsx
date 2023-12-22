@@ -37,7 +37,7 @@ import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interf
  * @part citation-popover - The pop-up that shows an item preview when the user hovers over the citation.
  */
 @Component({
-  tag: 'atomic-insightgenerated-answer',
+  tag: 'atomic-insight-generated-answer',
   styleUrl: 'atomic-insight-generated-answer.pcss',
   shadow: true,
 })

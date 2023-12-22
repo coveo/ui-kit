@@ -449,13 +449,13 @@ export declare interface AtomicIcon extends Components.AtomicIcon {}
   inputs: ['answerStyle']
 })
 @Component({
-  selector: 'atomic-insightgenerated-answer',
+  selector: 'atomic-insight-generated-answer',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: ['answerStyle'],
 })
-export class AtomicInsightgeneratedAnswer {
+export class AtomicInsightGeneratedAnswer {
   protected el: HTMLElement;
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
@@ -464,7 +464,7 @@ export class AtomicInsightgeneratedAnswer {
 }
 
 
-export declare interface AtomicInsightgeneratedAnswer extends Components.AtomicInsightgeneratedAnswer {}
+export declare interface AtomicInsightGeneratedAnswer extends Components.AtomicInsightGeneratedAnswer {}
 
 
 @ProxyCmp({

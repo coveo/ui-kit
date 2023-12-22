@@ -635,6 +635,16 @@ export namespace Components {
     interface AtomicInsightFullSearchButton {
         "tooltip": string;
     }
+    /**
+     * The `atomic-insight-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
+     * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
+     */
+    interface AtomicInsightGeneratedAnswer {
+        /**
+          * The answer style to apply when the component first loads. Options:   - `default`: Generates the answer without additional formatting instructions.   - `bullet`: Requests that the answer is formatted as a bulleted list.   - `step`: Requests that the answer is formatted as a series of step-by-step instructions.   - `concise`: Requests that the generated answer is as concise as possible.
+         */
+        "answerStyle": InsightGeneratedAnswerStyle;
+    }
     interface AtomicInsightHistoryToggle {
         "clickCallback": () => void;
         "tooltip": string;
@@ -988,16 +998,6 @@ export namespace Components {
           * Whether this facet should contain an datepicker allowing users to set custom ranges.
          */
         "withDatePicker": boolean;
-    }
-    /**
-     * The `atomic-insight-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
-     * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
-     */
-    interface AtomicInsightgeneratedAnswer {
-        /**
-          * The answer style to apply when the component first loads. Options:   - `default`: Generates the answer without additional formatting instructions.   - `bullet`: Requests that the answer is formatted as a bulleted list.   - `step`: Requests that the answer is formatted as a series of step-by-step instructions.   - `concise`: Requests that the generated answer is as concise as possible.
-         */
-        "answerStyle": InsightGeneratedAnswerStyle;
     }
     interface AtomicIpxBody {
         "displayFooterSlot": boolean;
@@ -2925,6 +2925,16 @@ declare global {
         prototype: HTMLAtomicInsightFullSearchButtonElement;
         new (): HTMLAtomicInsightFullSearchButtonElement;
     };
+    /**
+     * The `atomic-insight-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
+     * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
+     */
+    interface HTMLAtomicInsightGeneratedAnswerElement extends Components.AtomicInsightGeneratedAnswer, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightGeneratedAnswerElement: {
+        prototype: HTMLAtomicInsightGeneratedAnswerElement;
+        new (): HTMLAtomicInsightGeneratedAnswerElement;
+    };
     interface HTMLAtomicInsightHistoryToggleElement extends Components.AtomicInsightHistoryToggle, HTMLStencilElement {
     }
     var HTMLAtomicInsightHistoryToggleElement: {
@@ -3090,16 +3100,6 @@ declare global {
     var HTMLAtomicInsightTimeframeFacetElement: {
         prototype: HTMLAtomicInsightTimeframeFacetElement;
         new (): HTMLAtomicInsightTimeframeFacetElement;
-    };
-    /**
-     * The `atomic-insight-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
-     * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
-     */
-    interface HTMLAtomicInsightgeneratedAnswerElement extends Components.AtomicInsightgeneratedAnswer, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightgeneratedAnswerElement: {
-        prototype: HTMLAtomicInsightgeneratedAnswerElement;
-        new (): HTMLAtomicInsightgeneratedAnswerElement;
     };
     interface HTMLAtomicIpxBodyElementEventMap {
         "animationEnded": never;
@@ -4148,6 +4148,7 @@ declare global {
         "atomic-insight-facet": HTMLAtomicInsightFacetElement;
         "atomic-insight-folded-result-list": HTMLAtomicInsightFoldedResultListElement;
         "atomic-insight-full-search-button": HTMLAtomicInsightFullSearchButtonElement;
+        "atomic-insight-generated-answer": HTMLAtomicInsightGeneratedAnswerElement;
         "atomic-insight-history-toggle": HTMLAtomicInsightHistoryToggleElement;
         "atomic-insight-interface": HTMLAtomicInsightInterfaceElement;
         "atomic-insight-layout": HTMLAtomicInsightLayoutElement;
@@ -4172,7 +4173,6 @@ declare global {
         "atomic-insight-tab": HTMLAtomicInsightTabElement;
         "atomic-insight-tabs": HTMLAtomicInsightTabsElement;
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
-        "atomic-insightgenerated-answer": HTMLAtomicInsightgeneratedAnswerElement;
         "atomic-ipx-body": HTMLAtomicIpxBodyElement;
         "atomic-ipx-button": HTMLAtomicIpxButtonElement;
         "atomic-ipx-embedded": HTMLAtomicIpxEmbeddedElement;
@@ -4835,6 +4835,16 @@ declare namespace LocalJSX {
     interface AtomicInsightFullSearchButton {
         "tooltip"?: string;
     }
+    /**
+     * The `atomic-insight-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
+     * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
+     */
+    interface AtomicInsightGeneratedAnswer {
+        /**
+          * The answer style to apply when the component first loads. Options:   - `default`: Generates the answer without additional formatting instructions.   - `bullet`: Requests that the answer is formatted as a bulleted list.   - `step`: Requests that the answer is formatted as a series of step-by-step instructions.   - `concise`: Requests that the generated answer is as concise as possible.
+         */
+        "answerStyle"?: InsightGeneratedAnswerStyle;
+    }
     interface AtomicInsightHistoryToggle {
         "clickCallback"?: () => void;
         "tooltip"?: string;
@@ -5155,16 +5165,6 @@ declare namespace LocalJSX {
           * Whether this facet should contain an datepicker allowing users to set custom ranges.
          */
         "withDatePicker"?: boolean;
-    }
-    /**
-     * The `atomic-insight-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
-     * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
-     */
-    interface AtomicInsightgeneratedAnswer {
-        /**
-          * The answer style to apply when the component first loads. Options:   - `default`: Generates the answer without additional formatting instructions.   - `bullet`: Requests that the answer is formatted as a bulleted list.   - `step`: Requests that the answer is formatted as a series of step-by-step instructions.   - `concise`: Requests that the generated answer is as concise as possible.
-         */
-        "answerStyle"?: InsightGeneratedAnswerStyle;
     }
     interface AtomicIpxBody {
         "displayFooterSlot"?: boolean;
@@ -6684,6 +6684,7 @@ declare namespace LocalJSX {
         "atomic-insight-facet": AtomicInsightFacet;
         "atomic-insight-folded-result-list": AtomicInsightFoldedResultList;
         "atomic-insight-full-search-button": AtomicInsightFullSearchButton;
+        "atomic-insight-generated-answer": AtomicInsightGeneratedAnswer;
         "atomic-insight-history-toggle": AtomicInsightHistoryToggle;
         "atomic-insight-interface": AtomicInsightInterface;
         "atomic-insight-layout": AtomicInsightLayout;
@@ -6708,7 +6709,6 @@ declare namespace LocalJSX {
         "atomic-insight-tab": AtomicInsightTab;
         "atomic-insight-tabs": AtomicInsightTabs;
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
-        "atomic-insightgenerated-answer": AtomicInsightgeneratedAnswer;
         "atomic-ipx-body": AtomicIpxBody;
         "atomic-ipx-button": AtomicIpxButton;
         "atomic-ipx-embedded": AtomicIpxEmbedded;
@@ -6920,6 +6920,11 @@ declare module "@stencil/core" {
             "atomic-insight-facet": LocalJSX.AtomicInsightFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightFacetElement>;
             "atomic-insight-folded-result-list": LocalJSX.AtomicInsightFoldedResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightFoldedResultListElement>;
             "atomic-insight-full-search-button": LocalJSX.AtomicInsightFullSearchButton & JSXBase.HTMLAttributes<HTMLAtomicInsightFullSearchButtonElement>;
+            /**
+             * The `atomic-insight-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
+             * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
+             */
+            "atomic-insight-generated-answer": LocalJSX.AtomicInsightGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicInsightGeneratedAnswerElement>;
             "atomic-insight-history-toggle": LocalJSX.AtomicInsightHistoryToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightHistoryToggleElement>;
             "atomic-insight-interface": LocalJSX.AtomicInsightInterface & JSXBase.HTMLAttributes<HTMLAtomicInsightInterfaceElement>;
             "atomic-insight-layout": LocalJSX.AtomicInsightLayout & JSXBase.HTMLAttributes<HTMLAtomicInsightLayoutElement>;
@@ -6944,11 +6949,6 @@ declare module "@stencil/core" {
             "atomic-insight-tab": LocalJSX.AtomicInsightTab & JSXBase.HTMLAttributes<HTMLAtomicInsightTabElement>;
             "atomic-insight-tabs": LocalJSX.AtomicInsightTabs & JSXBase.HTMLAttributes<HTMLAtomicInsightTabsElement>;
             "atomic-insight-timeframe-facet": LocalJSX.AtomicInsightTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightTimeframeFacetElement>;
-            /**
-             * The `atomic-insight-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
-             * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
-             */
-            "atomic-insightgenerated-answer": LocalJSX.AtomicInsightgeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicInsightgeneratedAnswerElement>;
             "atomic-ipx-body": LocalJSX.AtomicIpxBody & JSXBase.HTMLAttributes<HTMLAtomicIpxBodyElement>;
             "atomic-ipx-button": LocalJSX.AtomicIpxButton & JSXBase.HTMLAttributes<HTMLAtomicIpxButtonElement>;
             "atomic-ipx-embedded": LocalJSX.AtomicIpxEmbedded & JSXBase.HTMLAttributes<HTMLAtomicIpxEmbeddedElement>;
