@@ -13,6 +13,7 @@ import {
   processRangesValue,
   removeKeysFromUrlSearchParams,
   SearchParameterKey,
+  areSortedIdentically,
 } from './search-parameters-utils';
 
 type PreviousCoveoSearchParamsState = Partial<Record<string, string[]>>;
@@ -165,11 +166,8 @@ export class CoveoNextJsSearchParametersSerializer {
     }
 
     if (isFacetPair(pair)) {
-      return this.applyFacetValuesToSearchParams(
-        urlSearchParams,
-        previousState,
-        pair
-      );
+      this.applyFacetValuesToSearchParams(urlSearchParams, previousState, pair);
+      return;
     }
 
     // TODO: uncomment and fix type error
@@ -191,9 +189,13 @@ export class CoveoNextJsSearchParametersSerializer {
 
       if (
         previousFacetValues &&
-        doHaveSameValues(previousFacetValues, value[facetId])
+        doHaveSameValues(previousFacetValues, value[facetId]) // Check if sorted differently
       ) {
-        return;
+        if (!areSortedIdentically(previousFacetValues, value[facetId])) {
+          previousFacetValues.forEach((v) => urlSearchParams.append(id, v));
+          // revert back previous state
+          return;
+        }
       }
 
       urlSearchParams.delete(id);

@@ -28,7 +28,7 @@ export default function SearchParameterManager() {
   }, [historyRouter.url?.searchParams]);
 
   // Update the browser's URL
-  // FIXME: Understand why this gets trigger 3 time on the first page load
+  // FIXME: Understand why this gets trigger 2 time on the first page load
   const correctedUrl = useMemo(() => {
     if (!historyRouter.url) {
       return null;

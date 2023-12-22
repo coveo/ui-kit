@@ -146,7 +146,7 @@ export function removeKeysFromUrlSearchParams(
   urlSearchParams: URLSearchParams,
   keys: string[]
 ) {
-  for (const key in keys) {
+  for (const key of keys) {
     urlSearchParams.delete(key);
   }
 }
@@ -161,5 +161,12 @@ export function removeKeysFromUrlSearchParams(
 export function doHaveSameValues<T>(arr1: T[], arr2: T[]): boolean {
   return (
     arr1.length === arr2.length && arr1.every((value) => arr2.includes(value))
+  );
+}
+
+export function areSortedIdentically<T>(arr1: T[], arr2: T[]): boolean {
+  return (
+    arr1.length === arr2.length &&
+    arr1.every((value, idx) => arr2.indexOf(value) === idx)
   );
 }
