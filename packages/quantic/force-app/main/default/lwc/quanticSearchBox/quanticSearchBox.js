@@ -14,6 +14,7 @@ import searchBox from './templates/searchBox.html';
 /** @typedef {import("coveo").SearchBoxState} SearchBoxState */
 /** @typedef {import("coveo").SearchBox} SearchBox */
 /** @typedef {import('c/quanticSearchBoxSuggestionsList').default} quanticSearchBoxSuggestionsList */
+/** @typedef {import("c/quanticSearchBoxInput").default} quanticSearchBoxInput */
 
 /**
  * The `QuanticSearchBox` component creates a search box with built-in support for query suggestions.
@@ -120,9 +121,10 @@ export default class QuanticSearchBox extends LightningElement {
 
   updateState() {
     if (this.state?.value !== this.searchBox.state.value) {
-      this.input.value = this.searchBox.state.value;
+      // @ts-ignore
+      this.quanticSearchBoxInput.inputValue = this.searchBox.state.value;
     }
-    this.state = this.searchBox.state;
+    this.state = this.searchBox?.state;
     this.suggestions =
       this.state?.suggestions?.map((s, index) => ({
         key: index,
@@ -131,13 +133,16 @@ export default class QuanticSearchBox extends LightningElement {
       })) ?? [];
   }
 
-  // CustomEvent handlers
   /**
    * Updates the input value.
    */
   handleInputValueChange = (event) => {
     const updatedValue = event.detail.newInputValue;
-    if (this.searchBox?.state?.value !== this.input.value) {
+    const isSelectionReset = event.detail.resetSelection;
+    if (this.searchBox?.state?.value !== updatedValue) {
+      if (isSelectionReset) {
+        this.quanticSearchBoxInput.resetSelection();
+      }
       this.searchBox.updateText(updatedValue);
     }
   };
@@ -162,19 +167,16 @@ export default class QuanticSearchBox extends LightningElement {
    * Handles the selection of a suggestion.
    */
   handleSelectSuggestion = (event) => {
-    const selectedSuggestion = event.detail.selectedSuggestion.rawValue;
+    const selectedSuggestion = event.detail.selectedSuggestion;
     this.searchBox?.selectSuggestion(selectedSuggestion);
   };
 
-  get quanticSearchBoxInput() {
-    return this.template.querySelector('c-quantic-search-box-input');
-  }
-
   /**
-   * @returns {HTMLElement}
+   * @return {quanticSearchBoxInput}
    */
-  get combobox() {
-    return this.template.querySelector('.slds-combobox');
+  get quanticSearchBoxInput() {
+    // @ts-ignore
+    return this.template.querySelector('c-quantic-search-box-input');
   }
 
   /**

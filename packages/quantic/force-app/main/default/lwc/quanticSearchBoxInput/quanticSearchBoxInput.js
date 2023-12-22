@@ -146,7 +146,6 @@ export default class QuanticSearchBoxInput extends LightningElement {
    * Sends the "submitSearch" event.
    */
   sendSubmitSearchEvent() {
-    console.log('sent submit search event');
     this.dispatchEvent(
       new CustomEvent('submitSearch', {
         bubbles: true,
@@ -186,11 +185,10 @@ export default class QuanticSearchBoxInput extends LightningElement {
     const selectedSuggestion = this.suggestionList?.getCurrentSelectedValue();
     if (this.suggestionsOpen && selectedSuggestion) {
       this.sendSelectSuggestionEvent(selectedSuggestion.rawValue);
-      this.input.blur();
     } else {
       this.sendSubmitSearchEvent();
-      this.input.blur();
     }
+    this.input.blur();
   }
 
   handleValueChange() {
