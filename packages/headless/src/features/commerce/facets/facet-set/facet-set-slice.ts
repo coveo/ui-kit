@@ -10,6 +10,7 @@ import {
 } from '../../../../controllers/commerce/facets/core/headless-core-commerce-facet';
 import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
 import {
+  deselectAllFacetValues,
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
   updateFacetIsFieldExpanded,
@@ -229,6 +230,16 @@ export const commerceFacetSetReducer = createReducer(
           slice.request.preventAutoSelect = !action.payload.allow;
         })
       )
+      .addCase(deselectAllFacetValues, (state, action) => {
+        const facetId = action.payload;
+        const request = state[facetId]?.request;
+
+        if (!request) {
+          return;
+        }
+
+        handleDeselectAllFacetValues(request);
+      })
       .addCase(deselectAllBreadcrumbs, (state) => {
         Object.values(state).forEach((facet) => {
           facet.request.values.forEach((value) => (value.state = 'idle'));
@@ -249,6 +260,16 @@ function handleQueryFulfilled(
 
   for (const facetId of existingFacets) {
     delete state[facetId];
+  }
+}
+
+function handleDeselectAllFacetValues(request: CommerceFacetRequest) {
+  if (request.type === 'hierarchical') {
+    request.numberOfValues = request.initialNumberOfValues;
+    request.values = [];
+    request.preventAutoSelect = true;
+  } else {
+    request.values.forEach((value) => (value.state = 'idle'));
   }
 }
 

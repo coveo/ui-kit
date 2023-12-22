@@ -25,6 +25,7 @@ import {
   facetValueStates,
 } from '../../../facets/facet-api/value';
 import {
+  deselectAllFacetValues,
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
   updateFacetIsFieldExpanded,
@@ -1324,6 +1325,74 @@ describe('commerceFacetSetReducer', () => {
 
     expect(finalState[facetId]!.request.preventAutoSelect).toBe(false);
     expect(finalState[anotherFacetId]!.request.preventAutoSelect).toBe(false);
+  });
+
+  describe('#deselectAllFacetValues', () => {
+    it('when called on an unregistered facet id, does not throw', () => {
+      const action = deselectAllFacetValues('1');
+      expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
+    });
+
+    describe('when called on a hierarchical facet', () => {
+      const facetId = '1';
+      let finalState: CommerceFacetSetState;
+      beforeEach(() => {
+        state[facetId] = buildMockCommerceFacetSlice({
+          request: buildMockCommerceFacetRequest({
+            type: 'hierarchical',
+            values: [
+              buildMockCommerceCategoryFacetValue({
+                state: 'idle',
+                children: [
+                  buildMockCommerceCategoryFacetValue({state: 'selected'}),
+                ],
+              }),
+            ],
+            numberOfValues: 1,
+            preventAutoSelect: false,
+          }),
+        });
+
+        finalState = commerceFacetSetReducer(
+          state,
+          deselectAllFacetValues(facetId)
+        );
+      });
+      it('sets #request.numberOfValues to 0', () => {
+        expect(finalState[facetId]?.request.numberOfValues).toBe(0);
+      });
+      it('sets #request.values to an empty array', () => {
+        expect(finalState[facetId]?.request.values.length).toBe(0);
+      });
+
+      it('sets #request.preventAutoSelect to "true"', () => {
+        expect(finalState[facetId]?.request.preventAutoSelect).toBe(true);
+      });
+    });
+
+    it('when called on a non-hierarchical facet, sets all values to "idle"', () => {
+      const facetId = '1';
+      state[facetId] = buildMockCommerceFacetSlice({
+        request: buildMockCommerceFacetRequest({
+          type: 'regular',
+          values: [
+            buildMockCommerceRegularFacetValue({state: 'selected'}),
+            buildMockCommerceRegularFacetValue({state: 'excluded'}),
+          ],
+        }),
+      });
+
+      const finalState = commerceFacetSetReducer(
+        state,
+        deselectAllFacetValues(facetId)
+      );
+
+      expect(
+        finalState[facetId]?.request.values.every(
+          (value) => value.state === 'idle'
+        )
+      ).toBe(true);
+    });
   });
 
   it('#deselectAllBreadcrumbs sets all responses #values to "idle"', () => {
