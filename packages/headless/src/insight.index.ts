@@ -312,6 +312,7 @@ export type {
   GeneratedAnswerState,
   GeneratedAnswerProps,
 } from './controllers/insight/generated-answer/headless-insight-generated-answer';
+export type {GeneratedAnswerStyle} from './features/generated-answer/generated-response-format';
 export {buildGeneratedAnswer} from './controllers/insight/generated-answer/headless-insight-generated-answer';
 
 export type {
