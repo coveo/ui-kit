@@ -1,7 +1,6 @@
 import {SearchParameters} from '@coveo/headless/ssr';
 import type {ReadonlyURLSearchParams} from 'next/navigation';
 import {
-  doHaveSameValues,
   FacetPair,
   isValidSearchParam,
   isFacetPair,
@@ -13,7 +12,7 @@ import {
   processRangesValue,
   removeKeysFromUrlSearchParams,
   SearchParameterKey,
-  areSortedIdentically,
+  areTheSameArraysSortedDifferently,
 } from './search-parameters-utils';
 
 type PreviousCoveoSearchParamsState = Partial<Record<string, string[]>>;
@@ -189,13 +188,12 @@ export class CoveoNextJsSearchParametersSerializer {
 
       if (
         previousFacetValues &&
-        doHaveSameValues(previousFacetValues, value[facetId]) // Check if sorted differently
+        areTheSameArraysSortedDifferently(previousFacetValues, value[facetId])
       ) {
-        if (!areSortedIdentically(previousFacetValues, value[facetId])) {
-          previousFacetValues.forEach((v) => urlSearchParams.append(id, v));
-          // revert back previous state
-          return;
-        }
+        // The api returns the same values in a different order. We don't need to update the url. reverting back to previous state since we did wipe the url before.
+        previousFacetValues.forEach((v) => urlSearchParams.append(id, v));
+        // revert back previous state
+        return;
       }
 
       urlSearchParams.delete(id);

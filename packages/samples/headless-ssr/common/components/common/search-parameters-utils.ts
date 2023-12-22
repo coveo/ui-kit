@@ -152,21 +152,22 @@ export function removeKeysFromUrlSearchParams(
 }
 
 /**
- * Checks if two arrays have the same values regardless of their order.
+ * Checks if two arrays have the same elements, in different order.
  *
- * @param arr1 - The first array.
- * @param arr2 - The second array.
- * @returns {boolean} - True if the arrays have the same values, false otherwise.
+ * @param arr1 The first array to compare.
+ * @param arr2 The second array to compare.
+ * @returns `true` if the arrays have the same elements in different order, `false` otherwise.
+ * @template T The type of elements in the arrays.
  */
-export function doHaveSameValues<T>(arr1: T[], arr2: T[]): boolean {
-  return (
-    arr1.length === arr2.length && arr1.every((value) => arr2.includes(value))
-  );
-}
-
-export function areSortedIdentically<T>(arr1: T[], arr2: T[]): boolean {
-  return (
+export function areTheSameArraysSortedDifferently<T>(
+  arr1: T[],
+  arr2: T[]
+): boolean {
+  if (
     arr1.length === arr2.length &&
-    arr1.every((value, idx) => arr2.indexOf(value) === idx)
-  );
+    arr1.every((value) => arr2.includes(value))
+  ) {
+    return !arr1.every((value, idx) => arr2.indexOf(value) === idx);
+  }
+  return false;
 }
