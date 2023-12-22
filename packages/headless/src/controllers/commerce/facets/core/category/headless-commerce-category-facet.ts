@@ -1,8 +1,9 @@
 import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
 import {toggleSelectCommerceCategoryFacetValue} from '../../../../../features/commerce/facets/facet-set/facet-set-actions';
 import {CommerceCategoryFacetValueRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
+import {findActiveValueAncestry} from '../../../../../features/facets/category-facet-set/category-facet-utils';
 import {
-  CategoryFacetValue,
+  CommerceCategoryFacetValue,
   CoreCommerceFacet,
   CoreCommerceFacetOptions,
   buildCoreCommerceFacet,
@@ -13,17 +14,40 @@ export type CommerceCategoryFacetOptions = Omit<
   'toggleExcludeActionCreator' | 'toggleSelectActionCreator'
 >;
 
+export interface SelectedCategoryFacetValueWithAncestry {
+  /**
+   * The currently selected category facet value.
+   */
+  selected: CommerceCategoryFacetValue;
+  /**
+   * The ancestry tree of the currently selected category facet value.
+   *
+   * The first element is the root ancestor of the selected category facet value.
+   *
+   * The last element is the selected category facet value itself.
+   */
+  ancestry: CommerceCategoryFacetValue[];
+}
+
 /**
  * The `CommerceCategoryFacet` controller offers a high-level programming interface for implementing a category commerce
  * facet UI component.
  */
 export type CommerceCategoryFacet = Omit<
-  CoreCommerceFacet<CommerceCategoryFacetValueRequest, CategoryFacetValue>,
+  CoreCommerceFacet<
+    CommerceCategoryFacetValueRequest,
+    CommerceCategoryFacetValue
+  >,
   | 'isValueExcluded'
   | 'toggleExclude'
   | 'toggleSingleExclude'
   | 'toggleSingleSelect'
->;
+> & {
+  /**
+   * The currently selected category facet value along with its ancestry tree.
+   */
+  selectedValueWithAncestry: SelectedCategoryFacetValueWithAncestry | undefined;
+};
 
 /**
  * @internal
@@ -34,13 +58,22 @@ export type CommerceCategoryFacet = Omit<
  * controller.
  *
  * @param engine - The headless commerce engine.
- * @param props - The `CommerceCategoryFacet` options used internally.
+ * @param options - The `CommerceCategoryFacet` options used internally.
  * @returns A `CommerceCategoryFacet` controller instance.
  * */
 export function buildCommerceCategoryFacet(
   engine: CommerceEngine,
   options: CommerceCategoryFacetOptions
 ): CommerceCategoryFacet {
+  const coreController = buildCoreCommerceFacet<
+    CommerceCategoryFacetValueRequest,
+    CommerceCategoryFacetValue
+  >(engine, {
+    options: {
+      ...options,
+      toggleSelectActionCreator: toggleSelectCommerceCategoryFacetValue,
+    },
+  });
   const {
     deselectAll,
     isValueSelected,
@@ -49,15 +82,8 @@ export function buildCommerceCategoryFacet(
     state,
     subscribe,
     toggleSelect,
-  } = buildCoreCommerceFacet<
-    CommerceCategoryFacetValueRequest,
-    CategoryFacetValue
-  >(engine, {
-    options: {
-      ...options,
-      toggleSelectActionCreator: toggleSelectCommerceCategoryFacetValue,
-    },
-  });
+  } = coreController;
+
   return {
     deselectAll,
     isValueSelected,
@@ -66,5 +92,31 @@ export function buildCommerceCategoryFacet(
     state,
     subscribe,
     toggleSelect,
+    get canShowLessValues() {
+      const selected = this.selectedValueWithAncestry?.selected;
+      return selected
+        ? selected.children.length >
+            engine.state.commerceFacetSet[options.facetId].request
+              .initialNumberOfValues!
+        : coreController.canShowLessValues;
+    },
+    get canShowMoreValues() {
+      const selected = this.selectedValueWithAncestry?.selected;
+
+      return selected
+        ? selected.moreValuesAvailable
+        : coreController.canShowMoreValues;
+    },
+    get hasActiveValues() {
+      return !!this.selectedValueWithAncestry;
+    },
+    get selectedValueWithAncestry() {
+      const ancestry = this.state.values.length
+        ? findActiveValueAncestry(this.state.values)
+        : [];
+      return ancestry.length
+        ? {selected: ancestry[ancestry.length - 1], ancestry}
+        : undefined;
+    },
   };
 }
