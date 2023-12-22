@@ -24,7 +24,7 @@ export type NumericFacetResponse = BaseFacetResponse<
   'numericalRange'
 >;
 export type CategoryFacetResponse = BaseFacetResponse<
-  CategoryFacetValue,
+  CommerceCategoryFacetValue,
   'hierarchical'
 >;
 export type FacetType =
@@ -57,16 +57,16 @@ export type AnyFacetValueResponse =
   | RegularFacetValue
   | NumericFacetValue
   | DateFacetValue
-  | CategoryFacetValue;
+  | CommerceCategoryFacetValue;
 export type AnyFacetResponse =
   | RegularFacetResponse
   | DateRangeFacetResponse
   | NumericFacetResponse
   | CategoryFacetResponse;
 
-export interface CategoryFacetValue extends BaseFacetValue {
+export interface CommerceCategoryFacetValue extends BaseFacetValue {
   value: string;
   path: string[];
   isLeafValue: boolean;
-  children: CategoryFacetValue[];
+  children: CommerceCategoryFacetValue[];
 }

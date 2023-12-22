@@ -2,7 +2,7 @@ import {
   RegularFacetValue,
   NumericFacetValue,
   DateFacetValue,
-  CategoryFacetValue,
+  CommerceCategoryFacetValue,
 } from '../features/commerce/facets/facet-set/interfaces/response';
 
 export function buildMockCommerceRegularFacetValue(
@@ -52,8 +52,8 @@ export function buildMockCommerceDateFacetValue(
 }
 
 export function buildMockCommerceCategoryFacetValue(
-  config: Partial<CategoryFacetValue> = {}
-): CategoryFacetValue {
+  config: Partial<CommerceCategoryFacetValue> = {}
+): CommerceCategoryFacetValue {
   return {
     children: [],
     isAutoSelected: false,

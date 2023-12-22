@@ -41,7 +41,7 @@ import {
 } from './interfaces/request';
 import {
   AnyFacetResponse,
-  CategoryFacetValue,
+  CommerceCategoryFacetValue,
   RegularFacetValue,
 } from './interfaces/response';
 
@@ -352,7 +352,7 @@ function getFacetRequestValuesFromFacetResponse(
 }
 
 export function convertCategoryFacetValueToRequest(
-  responseValue: CategoryFacetValue
+  responseValue: CommerceCategoryFacetValue
 ): CommerceCategoryFacetValueRequest {
   const {children, state, value} = responseValue;
   return {

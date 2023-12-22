@@ -11,7 +11,7 @@ import {
   FacetType,
   NumericFacetValue,
   RegularFacetValue,
-  CategoryFacetValue,
+  CommerceCategoryFacetValue,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response';
 import {CategoryFacetValueRequest} from '../../../../features/facets/category-facet-set/interfaces/request';
 import {
@@ -30,7 +30,6 @@ import {
 } from '../../../core/facets/facet/headless-core-facet';
 import {DateRangeRequest} from '../../../core/facets/range-facet/date-facet/headless-core-date-facet';
 import {NumericRangeRequest} from '../../../core/facets/range-facet/numeric-facet/headless-core-numeric-facet';
-import {findIfHasActiveValues} from './utils/headless-core-commerce-facet-utils';
 
 export type {
   FacetType,
@@ -41,7 +40,7 @@ export type {
   DateRangeRequest,
   DateFacetValue,
   CategoryFacetValueRequest,
-  CategoryFacetValue,
+  CommerceCategoryFacetValue,
 };
 
 /**
@@ -131,6 +130,18 @@ export type CoreCommerceFacet<
    */
   isValueExcluded(value: ValueResponse): boolean;
   /**
+   * Whether the facet has active values.
+   */
+  hasActiveValues: boolean;
+  /**
+   * Whether the facet can show more values.
+   */
+  canShowMoreValues: boolean;
+  /**
+   * Whether the facet can show less values.
+   */
+  canShowLessValues: boolean;
+  /**
    * The state of this commerce facet controller instance.
    */
   state: CoreCommerceFacetState<ValueResponse>;
@@ -141,7 +152,15 @@ export type CoreCommerceFacet<
  */
 export type CoreCommerceFacetState<
   ValueResponse extends AnyFacetValueResponse,
-> = Omit<CoreFacetState, 'enabled' | 'sortCriterion' | 'values'> & {
+> = Omit<
+  CoreFacetState,
+  | 'enabled'
+  | 'sortCriterion'
+  | 'values'
+  | 'hasActiveValues'
+  | 'canShowMoreValues'
+  | 'canShowLessValues'
+> & {
   /**
    * The type of facet.
    */
@@ -186,14 +205,6 @@ export function buildCoreCommerceFacet<
 
   const getNumberOfActiveValues = () => {
     return getRequest().values.filter((v) => v.state !== 'idle').length;
-  };
-
-  const computeCanShowLessValues = () => {
-    const request = getRequest();
-    const initialNumberOfValues = request.initialNumberOfValues;
-    const hasIdleValues = !!request.values.find((v) => v.state === 'idle');
-
-    return initialNumberOfValues < request.numberOfValues && hasIdleValues;
   };
 
   return {
@@ -251,9 +262,19 @@ export function buildCoreCommerceFacet<
       return value.state === 'excluded';
     },
 
+    get hasActiveValues() {
+      return this.state.values.some((v) => v.state !== 'idle');
+    },
+
     deselectAll() {
       dispatch(deselectAllFacetValues(facetId));
       dispatch(props.options.fetchResultsActionCreator());
+    },
+
+    get canShowMoreValues() {
+      const response = getResponse();
+
+      return response.moreValuesAvailable;
     },
 
     showMoreValues() {
@@ -266,6 +287,14 @@ export function buildCoreCommerceFacet<
       dispatch(updateFacetNumberOfValues({facetId, numberOfValues}));
       dispatch(updateFacetIsFieldExpanded({facetId, isFieldExpanded: true}));
       dispatch(props.options.fetchResultsActionCreator());
+    },
+
+    get canShowLessValues() {
+      const request = getRequest();
+      const initialNumberOfValues = request.initialNumberOfValues;
+      const hasIdleValues = !!request.values.find((v) => v.state === 'idle');
+
+      return initialNumberOfValues < request.numberOfValues && hasIdleValues;
     },
 
     showLessValues() {
@@ -286,8 +315,6 @@ export function buildCoreCommerceFacet<
       const response = getResponse();
 
       const values = response.values as ValueResponse[];
-      const hasActiveValues = findIfHasActiveValues(values, response.type);
-      const canShowMoreValues = response ? response.moreValuesAvailable : false;
 
       return {
         facetId,
@@ -296,9 +323,6 @@ export function buildCoreCommerceFacet<
         displayName: response.displayName,
         values,
         isLoading: getIsLoading(),
-        hasActiveValues,
-        canShowMoreValues,
-        canShowLessValues: computeCanShowLessValues(),
       };
     },
   };

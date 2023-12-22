@@ -27,7 +27,6 @@ import {
   CoreCommerceFacet,
   CoreCommerceFacetOptions,
 } from './headless-core-commerce-facet';
-import * as HasActiveValuesDeterminor from './utils/headless-core-commerce-facet-utils';
 
 describe('CoreCommerceFacet', () => {
   const facetId = 'facet_id';
@@ -319,10 +318,85 @@ describe('CoreCommerceFacet', () => {
     );
   });
 
+  describe('#hasActiveValues', () => {
+    it('when there are no values, returns "false"', () => {
+      setFacetResponse({values: []});
+      initFacet();
+
+      expect(facet.hasActiveValues).toBe(false);
+    });
+
+    it('when there is at least one value with state "selected", returns "true"', () => {
+      setFacetResponse({
+        values: [
+          buildMockCommerceRegularFacetValue({state: 'selected'}),
+          buildMockCommerceRegularFacetValue({state: 'idle'}),
+        ],
+      });
+      initFacet();
+
+      expect(facet.hasActiveValues).toBe(true);
+    });
+
+    it('when there is at least one value with state "excluded", returns "true"', () => {
+      setFacetResponse({
+        values: [
+          buildMockCommerceRegularFacetValue({state: 'excluded'}),
+          buildMockCommerceRegularFacetValue({state: 'idle'}),
+        ],
+      });
+      initFacet();
+
+      expect(facet.hasActiveValues).toBe(true);
+    });
+
+    it('when all values have state "idle", returns "false"', () => {
+      setFacetResponse({
+        values: [
+          buildMockCommerceRegularFacetValue({state: 'idle'}),
+          buildMockCommerceRegularFacetValue({state: 'idle'}),
+        ],
+      });
+      initFacet();
+
+      expect(facet.hasActiveValues).toBe(false);
+    });
+  });
+
   describe('#deselectAll', () => {
     it('dispatches #deselectAllFacetValues with the facet id', () => {
       facet.deselectAll();
       expect(engine.actions).toContainEqual(deselectAllFacetValues(facetId));
+    });
+  });
+
+  describe('#canShowMoreValues', () => {
+    it('when there is no response, returns "false"', () => {
+      expect(facet.canShowMoreValues).toBe(false);
+    });
+
+    it('when #moreValuesAvailable in the response is "true", returns "true"', () => {
+      setFacetResponse(
+        buildMockCommerceRegularFacetResponse({
+          facetId,
+          moreValuesAvailable: true,
+        })
+      );
+      initFacet();
+
+      expect(facet.canShowMoreValues).toBe(true);
+    });
+
+    it('when #moreValuesAvailable in the response is "false", returns "false"', () => {
+      setFacetResponse(
+        buildMockCommerceRegularFacetResponse({
+          facetId,
+          moreValuesAvailable: false,
+        })
+      );
+      initFacet();
+
+      expect(facet.canShowMoreValues).toBe(false);
     });
   });
 
@@ -362,6 +436,46 @@ describe('CoreCommerceFacet', () => {
 
       const action = engine.findAsyncAction(fetchResultsActionCreator.pending);
       expect(action).toBeTruthy();
+    });
+  });
+
+  describe('#canShowLessValues', () => {
+    it('when the number of currentValues is equal to the configured number, returns "false"', () => {
+      const values = [buildMockCommerceRegularFacetValue()];
+      setFacetRequest({values, initialNumberOfValues: 1, numberOfValues: 1});
+      setFacetResponse({
+        values: [buildMockCommerceRegularFacetValue({value: 'Some Value'})],
+      });
+
+      initFacet();
+
+      expect(facet.canShowLessValues).toBe(false);
+    });
+
+    it('when the number of currentValues is greater than the configured number, returns "true"', () => {
+      const value = buildMockCommerceRegularFacetValue();
+
+      setFacetRequest({values: [value, value]});
+      setFacetResponse({
+        values: [buildMockCommerceRegularFacetValue({value: 'Some Value'})],
+      });
+      initFacet();
+
+      expect(facet.canShowLessValues).toBe(true);
+    });
+
+    it('when number of currentValues > configured number and there are no idle values, returns "false"', () => {
+      const selectedValue = buildMockCommerceRegularFacetValue({
+        state: 'selected',
+      });
+
+      setFacetRequest({values: [selectedValue, selectedValue]});
+      setFacetResponse({
+        values: [buildMockCommerceRegularFacetValue({value: 'Some Value'})],
+      });
+      initFacet();
+
+      expect(facet.canShowLessValues).toBe(false);
     });
   });
 
@@ -466,100 +580,6 @@ describe('CoreCommerceFacet', () => {
       };
       initFacet();
       expect(facet.state.isLoading).toBe(true);
-    });
-
-    describe('#state.hasActiveValues', () => {
-      it('calls #findIfHasActiveValues with correct values and facet type', () => {
-        const spy = jest.spyOn(
-          HasActiveValuesDeterminor,
-          'findIfHasActiveValues'
-        );
-
-        const values = [buildMockCommerceRegularFacetValue()];
-        options = {
-          ...options,
-          facetResponseSelector: () =>
-            buildMockCommerceRegularFacetResponse({
-              facetId,
-              values,
-            }),
-        };
-        initFacet();
-
-        facet.state.hasActiveValues;
-
-        expect(spy).toHaveBeenCalledWith(values, type);
-      });
-    });
-
-    describe('#state.canShowMoreValues', () => {
-      it('when there is no response, returns "false"', () => {
-        expect(facet.state.canShowMoreValues).toBe(false);
-      });
-
-      it('when #moreValuesAvailable in the response is "true", returns "true"', () => {
-        setFacetResponse(
-          buildMockCommerceRegularFacetResponse({
-            facetId,
-            moreValuesAvailable: true,
-          })
-        );
-        initFacet();
-
-        expect(facet.state.canShowMoreValues).toBe(true);
-      });
-
-      it('when #moreValuesAvailable in the response is "false", returns "false"', () => {
-        setFacetResponse(
-          buildMockCommerceRegularFacetResponse({
-            facetId,
-            moreValuesAvailable: false,
-          })
-        );
-        initFacet();
-
-        expect(facet.state.canShowMoreValues).toBe(false);
-      });
-    });
-
-    describe('#state.canShowLessValues', () => {
-      it('when the number of currentValues is equal to the configured number, it returns false', () => {
-        const values = [buildMockCommerceRegularFacetValue()];
-        setFacetRequest({values, initialNumberOfValues: 1, numberOfValues: 1});
-        setFacetResponse({
-          values: [buildMockCommerceRegularFacetValue({value: 'Some Value'})],
-        });
-
-        initFacet();
-
-        expect(facet.state.canShowLessValues).toBe(false);
-      });
-
-      it('when the number of currentValues is greater than the configured number, it returns true', () => {
-        const value = buildMockCommerceRegularFacetValue();
-
-        setFacetRequest({values: [value, value]});
-        setFacetResponse({
-          values: [buildMockCommerceRegularFacetValue({value: 'Some Value'})],
-        });
-        initFacet();
-
-        expect(facet.state.canShowLessValues).toBe(true);
-      });
-
-      it('when number of currentValues > configured number and there are no idle values, returns "false"', () => {
-        const selectedValue = buildMockCommerceRegularFacetValue({
-          state: 'selected',
-        });
-
-        setFacetRequest({values: [selectedValue, selectedValue]});
-        setFacetResponse({
-          values: [buildMockCommerceRegularFacetValue({value: 'Some Value'})],
-        });
-        initFacet();
-
-        expect(facet.state.canShowLessValues).toBe(false);
-      });
     });
   });
 });

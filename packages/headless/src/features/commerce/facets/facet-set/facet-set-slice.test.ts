@@ -56,7 +56,7 @@ import {
 import {CommerceCategoryFacetValueRequest} from './interfaces/request';
 import {
   AnyFacetResponse,
-  CategoryFacetValue,
+  CommerceCategoryFacetValue,
   FacetType,
 } from './interfaces/response';
 
@@ -1105,7 +1105,7 @@ describe('commerceFacetSetReducer', () => {
         });
 
         describe('when #path contains the parent', () => {
-          let selection: CategoryFacetValue;
+          let selection: CommerceCategoryFacetValue;
           let finalState: CommerceFacetSetState;
           beforeEach(() => {
             selection = buildMockCommerceCategoryFacetValue({
