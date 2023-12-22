@@ -124,7 +124,6 @@ export default class QuanticSearchBoxInput extends LightningElement {
       : this.template.querySelector('input');
   }
 
-  // Custom events sent.
   /**
    * Sends the "inputValueChange" event.
    * @param {string} newInputValue
@@ -196,7 +195,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
   }
 
   handleKeyValues() {
-    // Reset selection set to true for key pressed other than arrows and Enter.
+    // Reset selection set to true for key pressed other than ARROW keys and ENTER.
     this.sendInputValueChangeEvent(this.input.value, true);
   }
 

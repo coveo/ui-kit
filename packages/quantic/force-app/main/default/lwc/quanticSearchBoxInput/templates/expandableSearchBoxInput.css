@@ -22,7 +22,6 @@ textarea.searchbox__input {
   border: none;
   box-shadow: none;
   overflow-x: clip;
-  /* there for expandable, not default */
   margin-right: 0.8rem;
 }
 
