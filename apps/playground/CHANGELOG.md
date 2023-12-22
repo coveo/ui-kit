@@ -1,3 +1,9 @@
+# 1.7.0 (2023-12-22)
+
+### Features
+
+- **playground:** mantinize the playground; add CDN example (#66) ([fa3fe5a](/commits/fa3fe5a0dbaa78acf3132a1f72b867d768e20181)), closes [#66](/issues/66)
+
 ## 1.6.12 (2023-12-18)
 
 ### Bug Fixes
