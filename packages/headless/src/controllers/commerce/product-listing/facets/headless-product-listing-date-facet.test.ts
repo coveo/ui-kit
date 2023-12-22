@@ -104,4 +104,17 @@ describe('ProductListingDateFacet', () => {
       expectContainAction(fetchProductListing.pending);
     });
   });
+
+  describe('#state', () => {
+    it('#state.values uses #facetResponseSelector', () => {
+      expect(facet.state.facetId).toEqual(
+        state.productListing.facets[0].facetId
+      );
+    });
+
+    it('#state.isLoading uses #isFacetLoadingResponseSelector', () => {
+      state.productListing.isLoading = true;
+      expect(facet.state.isLoading).toBe(true);
+    });
+  });
 });
