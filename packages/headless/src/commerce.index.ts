@@ -108,7 +108,7 @@ export type {
   DateRangeRequest,
   DateFacetValue,
   CategoryFacetValueRequest,
-  CategoryFacetValue,
+  CommerceCategoryFacetValue,
 } from './controllers/commerce/facets/core/headless-core-commerce-facet';
 export type {ProductListingFacetGenerator} from './controllers/commerce/product-listing/facets/headless-product-listing-facet-generator';
 export {buildProductListingFacetGenerator} from './controllers/commerce/product-listing/facets/headless-product-listing-facet-generator';
