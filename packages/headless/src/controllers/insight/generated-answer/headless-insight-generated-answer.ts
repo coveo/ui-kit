@@ -1,5 +1,4 @@
 import {GeneratedAnswerCitation} from '../../../api/generated-answer/generated-answer-event-payload';
-import {updateResponseFormat} from '../../../features/generated-answer/generated-answer-actions';
 import {generatedAnswerInsightAnalyticsClient} from '../../../features/generated-answer/generated-answer-insight-analytics-actions';
 import {GeneratedAnswerState} from '../../../features/generated-answer/generated-answer-state';
 import {GeneratedResponseFormat} from '../../../features/generated-answer/generated-response-format';
@@ -53,7 +52,7 @@ export function buildGeneratedAnswer(
     },
 
     rephrase(responseFormat: GeneratedResponseFormat) {
-      dispatch(updateResponseFormat(responseFormat));
+      controller.rephrase(responseFormat);
       dispatch(
         executeSearch(
           generatedAnswerInsightAnalyticsClient.logRephraseGeneratedAnswer(
