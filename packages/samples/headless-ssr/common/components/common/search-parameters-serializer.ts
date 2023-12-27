@@ -186,11 +186,12 @@ export class CoveoNextJsSearchParametersSerializer {
       const id = `${key}-${facetId}`;
       const previousFacetValues = previousState[id];
 
+      // The api returns the same values in a different order. We don't need to update the url. reverting back to previous state since we did wipe the url before.
+      // This is needed because the api returns the same values in a different order. and this will prevenet having to store a new state to the history if only the sort have changed
       if (
         previousFacetValues &&
         areTheSameArraysSortedDifferently(previousFacetValues, value[facetId])
       ) {
-        // The api returns the same values in a different order. We don't need to update the url. reverting back to previous state since we did wipe the url before.
         previousFacetValues.forEach((v) => urlSearchParams.append(id, v));
         // revert back previous state
         return;
