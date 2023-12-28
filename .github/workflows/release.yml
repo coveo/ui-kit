@@ -28,7 +28,7 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
           node-version-file: '.nvmrc'
       - name: Install npm
-        run: npm i -g npm@9
+        run: npm i -g npm@10
         shell: bash
       - run: npm ci
         shell: bash
