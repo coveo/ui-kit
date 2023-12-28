@@ -61,7 +61,7 @@
     "exponential-backoff": "3.1.0",
     "fast-equals": "5.0.1",
     "node-abort-controller": "^3.0.0",
-    "pino": "8.17.1",
+    "pino": "8.17.2",
     "redux-mock-store": "1.5.4",
     "redux-thunk": "2.4.2",
     "ts-debounce": "3.0.0",
