@@ -34,6 +34,7 @@
     "dev": "storybook dev -p 6006"
   },
   "devDependencies": {
+    "@storybook/types": "^7.6.6",
     "@typescript-eslint/eslint-plugin": "6.16.0",
     "gts": "5.2.0"
   }
