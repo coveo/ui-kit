@@ -1,7 +1,11 @@
-import {SearchParameters} from '@coveo/headless/ssr';
+import {
+  DateRangeRequest,
+  NumericRangeRequest,
+  SearchParameters,
+} from '@coveo/headless/ssr';
 import type {ReadonlyURLSearchParams} from 'next/navigation';
 import {
-  FacetPair,
+  SearchParamPair,
   isValidSearchParam,
   isFacetPair,
   isSpecificFacetKey,
@@ -9,13 +13,18 @@ import {
   isValidKey,
   NextJSServerSideSearchParams,
   NextJSServerSideSearchParamsValues,
-  processRangesValue,
   removeKeysFromUrlSearchParams,
   SearchParameterKey,
   areTheSameArraysSortedDifferently,
+  isRangeFacetPair,
+  rangeDelimiterInclusive,
+  rangeDelimiterExclusive,
+  FacetValue,
+  RangeFacetValue,
+  buildNumericRanges,
+  buildDateRanges,
 } from './search-parameters-utils';
 
-type PreviousCoveoSearchParamsState = Partial<Record<string, string[]>>;
 export class CoveoNextJsSearchParametersSerializer {
   private constructor(
     public readonly coveoSearchParameters: SearchParameters
@@ -104,26 +113,59 @@ export class CoveoNextJsSearchParametersSerializer {
       const facetId = result[2];
       if (!isSpecificFacetKey(paramKey)) {
         // TODO: merge with regex above
-        // THIS does not handle range facets
         return;
       }
-      const processedValue = processRangesValue(paramKey, value);
-      const valueArray = Array.isArray(processedValue)
-        ? processedValue
-        : [processedValue];
 
-      if (paramKey in searchParams) {
-        const record = searchParams[paramKey] ?? {};
-        // TODO: something broke here when selected 2 facets, went back and forward
-        record[facetId] = [...(record[facetId] || []), ...valueArray];
-        searchParams[paramKey] = record;
-      } else {
-        searchParams[paramKey] = {[facetId]: valueArray};
+      const toArray = <T>(value: T | T[]): T[] =>
+        Array.isArray(value) ? value : [value];
+
+      switch (paramKey) {
+        case 'nf':
+          searchParams[paramKey] = aaaa<'nf', NumericRangeRequest>(
+            searchParams[paramKey],
+            paramKey,
+            facetId,
+            buildNumericRanges(toArray(value))
+          );
+          break;
+
+        case 'df':
+          searchParams[paramKey] = aaaa<'df', DateRangeRequest>(
+            searchParams[paramKey],
+            paramKey,
+            facetId,
+            buildDateRanges(toArray(value))
+          );
+          break;
+
+        default:
+          searchParams[paramKey] = aaaa<
+            Exclude<SearchParameterKey, 'df' | 'nf'>,
+            string
+          >(searchParams[paramKey], paramKey, facetId, toArray(value));
+          break;
       }
     } else {
       if (isValidKey(key)) {
         // FIXME: fix type error
         searchParams[key] = value;
+      }
+    }
+
+    function aaaa<P extends SearchParameterKey, V extends unknown>(
+      // searchParams: Record<string, Record<string, V[]>>,
+      record: Record<string, V[]> = {},
+      paramKey: P,
+      facetId: string,
+      valueArray: V[]
+    ) {
+      if (paramKey in searchParams) {
+        // const record = searchParams[paramKey] ?? {};
+        record[facetId] = [...(record[facetId] || []), ...valueArray];
+        return record;
+        // searchParams[paramKey] = record;
+      } else {
+        return {[facetId]: valueArray};
       }
     }
   }
@@ -133,10 +175,8 @@ export class CoveoNextJsSearchParametersSerializer {
    * @param urlSearchParams - The URL search parameters object to modify.
    * @returns The previous state of Coveo search parameters that was removed from the URL search parameter object.
    */
-  private wipeCoveoSearchParamFromUrl(
-    urlSearchParams: URLSearchParams
-  ): PreviousCoveoSearchParamsState {
-    const previousCoveoSearchParams: PreviousCoveoSearchParamsState = {};
+  private wipeCoveoSearchParamFromUrl(urlSearchParams: URLSearchParams) {
+    const previousCoveoSearchParams: FacetValue = {};
     const keysToDelete: string[] = [];
 
     urlSearchParams.forEach((value, key) => {
@@ -157,7 +197,7 @@ export class CoveoNextJsSearchParametersSerializer {
 
   private applyToUrlSearchParam(
     urlSearchParams: URLSearchParams,
-    previousState: PreviousCoveoSearchParamsState,
+    previousState: FacetValue,
     pair: [SearchParameterKey, unknown]
   ) {
     if (!pair[1]) {
@@ -169,18 +209,18 @@ export class CoveoNextJsSearchParametersSerializer {
       return;
     }
 
-    // TODO: uncomment and fix type error
-    // if (isRangeFacetPair(pair)) {
-    //   return this.applyRangeFacetValuesToSearchParams(urlSearchParams, pair);
-    // }
+    if (isRangeFacetPair(pair)) {
+      this.applyRangeFacetValuesToSearchParams(urlSearchParams, pair);
+      return;
+    }
 
     urlSearchParams.set(pair[0], pair[1].toString());
   }
 
   private applyFacetValuesToSearchParams(
     urlSearchParams: URLSearchParams,
-    previousState: PreviousCoveoSearchParamsState,
-    [key, value]: FacetPair
+    previousState: FacetValue,
+    [key, value]: SearchParamPair<FacetValue>
   ) {
     Object.entries(value).forEach(([facetId, facetValues]) => {
       const id = `${key}-${facetId}`;
@@ -199,21 +239,40 @@ export class CoveoNextJsSearchParametersSerializer {
 
       urlSearchParams.delete(id);
 
-      facetValues.forEach(
-        (v) =>
-          !urlSearchParams.getAll(id).includes(v) &&
-          urlSearchParams.append(id, v)
-      );
+      facetValues.forEach((v) => urlSearchParams.append(id, v));
     });
   }
 
   private applyRangeFacetValuesToSearchParams(
-    _urlSearchParams: URLSearchParams,
-    [_key, _value]: FacetPair
+    urlSearchParams: URLSearchParams,
+    [key, value]: SearchParamPair<RangeFacetValue>
   ) {
-    // if (this.containsSameValues(urlSearchParams.getAll(id), value[facetId])) {
-    //   return;
-    // }
-    throw 'TODO: To implement';
+    Object.entries(value).forEach(([facetId, facetValues]) => {
+      const id = `${key}-${facetId}`;
+      // const previousFacetValues = previousState[id];
+
+      // The api returns the same values in a different order. We don't need to update the url. reverting back to previous state since we did wipe the url before.
+      // This is needed because the api returns the same values in a different order. and this will prevenet having to store a new state to the history if only the sort have changed
+      // TODO: rework sorting functino to accept objects EVEN IF API DOES NOT REORDER NUMERIC RANGES
+      // if (
+      //   previousFacetValues &&
+      //   areTheSameArraysSortedDifferently(previousFacetValues, value[facetId])
+      // ) {
+      //   previousFacetValues.forEach((v) => urlSearchParams.append(id, v));
+      //   // revert back previous state
+      //   return;
+      // }
+
+      urlSearchParams.delete(id);
+
+      facetValues.forEach(({start, end, endInclusive}) =>
+        urlSearchParams.append(
+          id,
+          `${start}${
+            endInclusive ? rangeDelimiterInclusive : rangeDelimiterExclusive // TODO: check if this can be put in other function
+          }${end}`
+        )
+      );
+    });
   }
 }

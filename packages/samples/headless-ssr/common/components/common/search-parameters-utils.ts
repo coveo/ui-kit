@@ -1,18 +1,35 @@
-import {RangeValueRequest} from '@coveo/headless/dist/definitions/features/facets/range-facets/generic/interfaces/range-facet';
-import {type SearchParameters} from '@coveo/headless/ssr';
+import {
+  API_DATE_FORMAT,
+  buildDateRange,
+  buildNumericRange,
+  type DateRangeRequest,
+  type NumericRangeRequest,
+  type SearchParameters,
+  validateRelativeDate,
+} from '@coveo/headless';
+import {
+  isSearchApiDate,
+  validateAbsoluteDate,
+  isRelativeDateFormat,
+} from '@coveo/headless/ssr';
 import {ReadonlyURLSearchParams} from 'next/navigation';
 
-export type FacetPair = [SearchParameterKey, Record<string, string[]>];
-export type RangeFacetPair = [
-  SearchParameterKey,
-  Record<string, RangeValueRequest[]>,
-];
 export type SearchParameterKey = keyof SearchParameters;
+export type SearchParamPair<T> = [SearchParameterKey, T]; // TODO: not sure this is required
+export type FacetValue = Record<string, string[]>;
+export type RangeFacetValue = Record<
+  string,
+  DateRangeRequest[] | NumericRangeRequest[]
+>;
+
 export type NextJSServerSideSearchParamsValues = string | string[] | undefined;
 export type NextJSServerSideSearchParams = Record<
   string,
   NextJSServerSideSearchParamsValues
 >;
+
+export const rangeDelimiterExclusive = '..';
+export const rangeDelimiterInclusive = '...';
 
 const supportedFacetParameters = {
   f: true,
@@ -70,7 +87,7 @@ export function isValidSearchParam(key: string) {
 
 export function isFacetPair(
   pair: [SearchParameterKey, unknown]
-): pair is FacetPair {
+): pair is SearchParamPair<FacetValue> {
   const [key, value] = pair;
   if (!isObject(value)) {
     return false;
@@ -84,49 +101,101 @@ export function isFacetPair(
 }
 
 export function isRangeFacetPair(
-  key: SearchParameterKey,
-  obj: unknown
-  // TODO: check if can use type from above
-): obj is Record<string, RangeValueRequest[]> {
-  if (!isObject(obj)) {
+  pair: [SearchParameterKey, unknown]
+): pair is SearchParamPair<RangeFacetValue> {
+  const [key, value] = pair;
+  if (!isObject(value)) {
     return false;
   }
   if (key !== 'nf' && key !== 'df') {
     return false;
   }
 
-  // TODO: reset array
   const isRangeValue = (v: unknown) =>
     isObject(v) && 'start' in v && 'end' in v;
-  return allEntriesAreValid(obj, isRangeValue);
+  return allEntriesAreValid(value, isRangeValue);
 }
 
 export function isSpecificFacetKey(key: any): key is FacetKey {
   return Object.keys(supportedFacetParameters).includes(key);
 }
 
-export function isSpecificNonFacetKey(
+function isSpecificNonFacetKey(
   key: any
 ): key is Exclude<SearchParameterKey, FacetKey> {
   return Object.keys(otherSupportedParameters).includes(key);
 }
 
-export function processRangesValue(
-  key: string,
-  value: string | string[] // TODO: check why string [] is needed
-  // ): string | NumericRangeRequest | DateRangeRequest {
-): string | string[] {
-  if (key === 'nf') {
-    throw 'TODO: To implement';
-    // return buildNumericRanges(values);
-  }
+// TODO: CHECK IF THIS CAN BE EXPORTED FROM HEADLESS/SRR
+export function buildDateRanges(ranges: string[]) {
+  return ranges
+    .map((str) => {
+      const {isEndInclusive, startAsString, endAsString} =
+        splitRangeValueAsStringByDelimiter(str);
 
-  if (key === 'df') {
-    throw 'TODO: To implement';
-    // return buildDateRanges(values);
-  }
+      return {
+        start: startAsString,
+        end: endAsString,
+        endInclusive: isEndInclusive,
+      };
+    })
+    .filter(
+      ({start, end}) =>
+        isValidDateRangeValue(start) && isValidDateRangeValue(end)
+    )
+    .map(({start, end, endInclusive}) =>
+      buildDateRange({start, end, state: 'selected', endInclusive})
+    );
+}
 
-  return value;
+// TODO: CHECK IF THIS CAN BE EXPORTED FROM HEADLESS/SRR
+function isValidDateRangeValue(date: string) {
+  try {
+    if (isSearchApiDate(date)) {
+      validateAbsoluteDate(date, API_DATE_FORMAT);
+      return true;
+    }
+    if (isRelativeDateFormat(date)) {
+      validateRelativeDate(date);
+      return true;
+    }
+
+    return false;
+  } catch (error) {
+    return false;
+  }
+}
+
+export function buildNumericRanges(ranges: string[]) {
+  // TODO: remove export
+  return ranges
+    .map((str) => {
+      const {startAsString, endAsString, isEndInclusive} =
+        splitRangeValueAsStringByDelimiter(str);
+
+      return {
+        start: parseFloat(startAsString),
+        end: parseFloat(endAsString),
+        endInclusive: isEndInclusive,
+      };
+    })
+    .filter(({start, end}) => Number.isFinite(start) && Number.isFinite(end))
+    .map(({start, end, endInclusive}) =>
+      buildNumericRange({start, end, state: 'selected', endInclusive})
+    );
+}
+
+// TODO: CHECK IF THIS CAN BE EXPORTED FROM HEADLESS/SRR
+function splitRangeValueAsStringByDelimiter(str: string) {
+  const isEndInclusive = str.indexOf(rangeDelimiterInclusive) !== -1;
+  const [startAsString, endAsString] = str.split(
+    isEndInclusive ? rangeDelimiterInclusive : rangeDelimiterExclusive
+  );
+  return {
+    isEndInclusive,
+    startAsString,
+    endAsString,
+  };
 }
 
 /**
