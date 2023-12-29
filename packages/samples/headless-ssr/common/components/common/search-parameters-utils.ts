@@ -1,17 +1,8 @@
 import {
-  API_DATE_FORMAT,
-  buildDateRange,
-  buildNumericRange,
   type DateRangeRequest,
   type NumericRangeRequest,
   type SearchParameters,
-  validateRelativeDate,
 } from '@coveo/headless';
-import {
-  isSearchApiDate,
-  validateAbsoluteDate,
-  isRelativeDateFormat,
-} from '@coveo/headless/ssr';
 import {ReadonlyURLSearchParams} from 'next/navigation';
 
 export type SearchParameterKey = keyof SearchParameters;
@@ -120,82 +111,10 @@ export function isSpecificFacetKey(key: any): key is FacetKey {
   return Object.keys(supportedFacetParameters).includes(key);
 }
 
-function isSpecificNonFacetKey(
+export function isSpecificNonFacetKey(
   key: any
 ): key is Exclude<SearchParameterKey, FacetKey> {
   return Object.keys(otherSupportedParameters).includes(key);
-}
-
-// TODO: CHECK IF THIS CAN BE EXPORTED FROM HEADLESS/SRR
-export function buildDateRanges(ranges: string[]) {
-  return ranges
-    .map((str) => {
-      const {isEndInclusive, startAsString, endAsString} =
-        splitRangeValueAsStringByDelimiter(str);
-
-      return {
-        start: startAsString,
-        end: endAsString,
-        endInclusive: isEndInclusive,
-      };
-    })
-    .filter(
-      ({start, end}) =>
-        isValidDateRangeValue(start) && isValidDateRangeValue(end)
-    )
-    .map(({start, end, endInclusive}) =>
-      buildDateRange({start, end, state: 'selected', endInclusive})
-    );
-}
-
-// TODO: CHECK IF THIS CAN BE EXPORTED FROM HEADLESS/SRR
-function isValidDateRangeValue(date: string) {
-  try {
-    if (isSearchApiDate(date)) {
-      validateAbsoluteDate(date, API_DATE_FORMAT);
-      return true;
-    }
-    if (isRelativeDateFormat(date)) {
-      validateRelativeDate(date);
-      return true;
-    }
-
-    return false;
-  } catch (error) {
-    return false;
-  }
-}
-
-export function buildNumericRanges(ranges: string[]) {
-  // TODO: remove export
-  return ranges
-    .map((str) => {
-      const {startAsString, endAsString, isEndInclusive} =
-        splitRangeValueAsStringByDelimiter(str);
-
-      return {
-        start: parseFloat(startAsString),
-        end: parseFloat(endAsString),
-        endInclusive: isEndInclusive,
-      };
-    })
-    .filter(({start, end}) => Number.isFinite(start) && Number.isFinite(end))
-    .map(({start, end, endInclusive}) =>
-      buildNumericRange({start, end, state: 'selected', endInclusive})
-    );
-}
-
-// TODO: CHECK IF THIS CAN BE EXPORTED FROM HEADLESS/SRR
-function splitRangeValueAsStringByDelimiter(str: string) {
-  const isEndInclusive = str.indexOf(rangeDelimiterInclusive) !== -1;
-  const [startAsString, endAsString] = str.split(
-    isEndInclusive ? rangeDelimiterInclusive : rangeDelimiterExclusive
-  );
-  return {
-    isEndInclusive,
-    startAsString,
-    endAsString,
-  };
 }
 
 /**
@@ -209,15 +128,6 @@ export function isUrlInstance(
   return (
     obj instanceof URLSearchParams || obj instanceof ReadonlyURLSearchParams
   );
-}
-
-export function removeKeysFromUrlSearchParams(
-  urlSearchParams: URLSearchParams,
-  keys: string[]
-) {
-  for (const key of keys) {
-    urlSearchParams.delete(key);
-  }
 }
 
 /**

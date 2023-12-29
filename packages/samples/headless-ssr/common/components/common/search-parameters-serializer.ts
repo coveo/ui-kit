@@ -1,6 +1,5 @@
 import {
-  DateRangeRequest,
-  NumericRangeRequest,
+  buildSearchParameterRanges,
   SearchParameters,
 } from '@coveo/headless/ssr';
 import type {ReadonlyURLSearchParams} from 'next/navigation';
@@ -13,7 +12,6 @@ import {
   isValidKey,
   NextJSServerSideSearchParams,
   NextJSServerSideSearchParamsValues,
-  removeKeysFromUrlSearchParams,
   SearchParameterKey,
   areTheSameArraysSortedDifferently,
   isRangeFacetPair,
@@ -21,8 +19,6 @@ import {
   rangeDelimiterExclusive,
   FacetValue,
   RangeFacetValue,
-  buildNumericRanges,
-  buildDateRanges,
   isSpecificNonFacetKey,
 } from './search-parameters-utils';
 
@@ -120,22 +116,25 @@ export class CoveoNextJsSearchParametersSerializer {
       const toArray = <T>(value: T | T[]): T[] =>
         Array.isArray(value) ? value : [value];
 
+      const {buildDateRanges, buildNumericRanges} =
+        buildSearchParameterRanges();
+
       if (paramKey === 'nf') {
-        searchParams[paramKey] = extendWithArrayValue(
+        searchParams[paramKey] = extendWithArray(
           searchParams[paramKey],
           facetId,
           paramKey,
           buildNumericRanges(toArray(value))
         );
       } else if (paramKey === 'df') {
-        searchParams[paramKey] = extendWithArrayValue(
+        searchParams[paramKey] = extendWithArray(
           searchParams[paramKey],
           facetId,
           paramKey,
           buildDateRanges(toArray(value))
         );
       } else {
-        searchParams[paramKey] = extendWithArrayValue(
+        searchParams[paramKey] = extendWithArray(
           searchParams[paramKey],
           facetId,
           paramKey,
@@ -145,19 +144,19 @@ export class CoveoNextJsSearchParametersSerializer {
     } else {
       if (isSpecificNonFacetKey(key)) {
         // FIXME: fix type error
+        // TODO: try with other search param types (numbers)
         searchParams[key] = value;
       }
     }
 
     // TODO: rename this method
-    function extendWithArrayValue<V>(
+    function extendWithArray<V>(
       record: Record<string, V[]> = {},
       facetId: string,
       paramKey: SearchParameterKey,
-      valueArray: V[] // TODO: check if can remove the array from the type. make it generic so I dont have to do toArray before
+      valueArray: V[]
     ) {
       if (paramKey in searchParams) {
-        // const record = (searchParams[paramKey] ?? {}) ;
         record[facetId] = [...(record[facetId] || []), ...valueArray];
         return record;
       } else {
@@ -186,7 +185,9 @@ export class CoveoNextJsSearchParametersSerializer {
       }
     });
 
-    removeKeysFromUrlSearchParams(urlSearchParams, keysToDelete);
+    for (const key of keysToDelete) {
+      urlSearchParams.delete(key);
+    }
 
     return previousCoveoSearchParams;
   }
