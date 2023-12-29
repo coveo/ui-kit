@@ -23,6 +23,7 @@ import {
   RangeFacetValue,
   buildNumericRanges,
   buildDateRanges,
+  isSpecificNonFacetKey,
 } from './search-parameters-utils';
 
 export class CoveoNextJsSearchParametersSerializer {
@@ -56,7 +57,7 @@ export class CoveoNextJsSearchParametersSerializer {
       | ReadonlyURLSearchParams
       | NextJSServerSideSearchParams
   ) {
-    const coveoSearchParameters: SearchParameters = {}; // TODO: not sure about the type
+    const coveoSearchParameters: Record<string, unknown> = {};
     const add = (key: string, value: NextJSServerSideSearchParamsValues) =>
       CoveoNextJsSearchParametersSerializer.extendSearchParameters(
         coveoSearchParameters,
@@ -119,51 +120,46 @@ export class CoveoNextJsSearchParametersSerializer {
       const toArray = <T>(value: T | T[]): T[] =>
         Array.isArray(value) ? value : [value];
 
-      switch (paramKey) {
-        case 'nf':
-          searchParams[paramKey] = aaaa<'nf', NumericRangeRequest>(
-            searchParams[paramKey],
-            paramKey,
-            facetId,
-            buildNumericRanges(toArray(value))
-          );
-          break;
-
-        case 'df':
-          searchParams[paramKey] = aaaa<'df', DateRangeRequest>(
-            searchParams[paramKey],
-            paramKey,
-            facetId,
-            buildDateRanges(toArray(value))
-          );
-          break;
-
-        default:
-          searchParams[paramKey] = aaaa<
-            Exclude<SearchParameterKey, 'df' | 'nf'>,
-            string
-          >(searchParams[paramKey], paramKey, facetId, toArray(value));
-          break;
+      if (paramKey === 'nf') {
+        searchParams[paramKey] = extendWithArrayValue(
+          searchParams[paramKey],
+          facetId,
+          paramKey,
+          buildNumericRanges(toArray(value))
+        );
+      } else if (paramKey === 'df') {
+        searchParams[paramKey] = extendWithArrayValue(
+          searchParams[paramKey],
+          facetId,
+          paramKey,
+          buildDateRanges(toArray(value))
+        );
+      } else {
+        searchParams[paramKey] = extendWithArrayValue(
+          searchParams[paramKey],
+          facetId,
+          paramKey,
+          toArray(value)
+        );
       }
     } else {
-      if (isValidKey(key)) {
+      if (isSpecificNonFacetKey(key)) {
         // FIXME: fix type error
         searchParams[key] = value;
       }
     }
 
-    function aaaa<P extends SearchParameterKey, V extends unknown>(
-      // searchParams: Record<string, Record<string, V[]>>,
+    // TODO: rename this method
+    function extendWithArrayValue<V>(
       record: Record<string, V[]> = {},
-      paramKey: P,
       facetId: string,
-      valueArray: V[]
+      paramKey: SearchParameterKey,
+      valueArray: V[] // TODO: check if can remove the array from the type. make it generic so I dont have to do toArray before
     ) {
       if (paramKey in searchParams) {
-        // const record = searchParams[paramKey] ?? {};
+        // const record = (searchParams[paramKey] ?? {}) ;
         record[facetId] = [...(record[facetId] || []), ...valueArray];
         return record;
-        // searchParams[paramKey] = record;
       } else {
         return {[facetId]: valueArray};
       }
