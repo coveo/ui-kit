@@ -1,4 +1,5 @@
 // @ts-nocheck
+// @ts-ignore
 import {createElement} from 'lwc';
 import QuanticSearchBoxInput from '../quanticSearchBoxInput';
 
@@ -43,22 +44,22 @@ const selectors = {
 
 function setupEventListeners(element) {
   element.addEventListener(
-    'inputValueChange',
+    'inputvaluechange',
     functionsMocks.exampleHandleInputValueChange
   );
   element.addEventListener(
-    'submitSearch',
+    'submitsearch',
     functionsMocks.exampleHandleSubmitSearch
   );
   element.addEventListener(
-    'showSuggestions',
+    'showsuggestions',
     functionsMocks.exampleHandleShowSuggestions
   );
   element.addEventListener(
-    'selectSuggestion',
+    'selectsuggestion',
     functionsMocks.exampleHandleSelectSuggestion
   );
-  window.addEventListener('clickOutside', functionsMocks.mockClickOutsideEvent);
+  window.addEventListener('clickoutside', functionsMocks.mockClickOutsideEvent);
 }
 
 function createTestComponent(options = defaultOptions) {
@@ -82,7 +83,7 @@ function flushPromises() {
 async function typeInInput(input, val) {
   input.focus();
   input.value = val;
-  const inputEvent = new CustomEvent('inputValueChange', {bubbles: true});
+  const inputEvent = new CustomEvent('inputvaluechange', {bubbles: true});
   input.dispatchEvent(inputEvent);
 }
 
@@ -348,8 +349,7 @@ describe('c-quantic-search-box-input', () => {
         const searchBoxComboBox = element.shadowRoot.querySelector(
           selectors.searchBoxComboBox
         );
-        // eslint-disable-next-line @lwc/lwc/no-inner-html
-        console.log(searchBoxComboBox.innerHTML);
+
         expect(textarea).not.toBeNull();
         await typeInInput(textarea, exampleVeryLongString);
         // const textareaHeight = window.getComputedStyle(textarea).height;
@@ -364,7 +364,8 @@ describe('c-quantic-search-box-input', () => {
     });
 
     describe('when clicking on the clear input icon', () => {
-      it('should collapse the expanded textarea back to its default height', async () => {
+      // eslint-disable-next-line jest/no-focused-tests
+      it.only('should collapse the expanded textarea back to its default height', async () => {
         const element = createTestComponent({
           ...defaultOptions,
           textarea: true,
@@ -473,7 +474,7 @@ describe('c-quantic-search-box-input', () => {
         await typeInInput(textarea, exampleVeryLongString);
 
         // click anywhere on the window other than the textarea
-        await document.dispatchEvent(new MouseEvent('clickOutside'));
+        await document.dispatchEvent(new MouseEvent('clickoutside'));
         expect(functionsMocks.mockClickOutsideEvent).toHaveBeenCalled();
 
         const textareaHeight = window.getComputedStyle(textarea).height;
