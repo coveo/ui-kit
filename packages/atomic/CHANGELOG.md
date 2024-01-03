@@ -1,3 +1,14 @@
+# 2.53.0 (2024-01-03)
+
+### Bug Fixes
+
+- **atomic:** center various icons ([#3491](https://github.com/coveo/ui-kit/issues/3491)) ([518b37b](https://github.com/coveo/ui-kit/commits/518b37b428454b13fdc055b609246c94a1187d8d))
+- **deps:** update stencil j:kit-282 ([#3492](https://github.com/coveo/ui-kit/issues/3492)) ([83dfb8d](https://github.com/coveo/ui-kit/commits/83dfb8dbbd89524a694bcd39ce807143a073ac2c))
+
+### Features
+
+- **rga:** hide copy to clipboard button when Clipboard API is not defined ([#3499](https://github.com/coveo/ui-kit/issues/3499)) ([6672909](https://github.com/coveo/ui-kit/commits/66729095b6dcf54c3b3bcc82c6ab1e5142991712))
+
 ## 2.52.1 (2023-12-13)
 
 ### Bug Fixes

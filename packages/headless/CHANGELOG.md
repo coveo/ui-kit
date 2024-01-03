@@ -1,3 +1,17 @@
+# 2.45.0 (2024-01-03)
+
+### Bug Fixes
+
+- **commerce:** fix commerce search facet selectors and facet order ([#3496](https://github.com/coveo/ui-kit/issues/3496)) ([0166932](https://github.com/coveo/ui-kit/commits/0166932722b2d5a95f22c892092b7dce25259622))
+- **commerce:** forward required display name ([#3490](https://github.com/coveo/ui-kit/issues/3490)) ([fdc2c60](https://github.com/coveo/ui-kit/commits/fdc2c6080a789a45fa9c6ad098e8c6e6cbe26ac2))
+- **commerce:** use 0-based indexing for search box ([#3488](https://github.com/coveo/ui-kit/issues/3488)) ([1ec9ff8](https://github.com/coveo/ui-kit/commits/1ec9ff8814dedf91efad20ae8133e77d56025f85))
+
+### Features
+
+- **commerce:** add core + plp date range facets ([#3481](https://github.com/coveo/ui-kit/issues/3481)) ([19eb84a](https://github.com/coveo/ui-kit/commits/19eb84a20d1353a4241769c94d38490832a08e86))
+- **headless:** getGeneratedAnswerMetadata method added to the InsightAnalytics provider ([#3498](https://github.com/coveo/ui-kit/issues/3498)) ([5cdece8](https://github.com/coveo/ui-kit/commits/5cdece8de2900de3ee6b9ede9d2ee50632f0a224))
+- **headless:** removed the triggeredBy from the insight analytics actions for logCreateArticle ([#3484](https://github.com/coveo/ui-kit/issues/3484)) ([3074e55](https://github.com/coveo/ui-kit/commits/3074e5529dc150109353560b4a06edc8789647d3))
+
 # 2.44.0 (2023-12-13)
 
 ### Bug Fixes
