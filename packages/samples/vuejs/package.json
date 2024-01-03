@@ -13,8 +13,8 @@
   "dependencies": {
     "@coveo/atomic": "2.53.0",
     "@coveo/headless": "2.45.0",
-    "core-js": "3.34.0",
-    "vue": "3.3.13"
+    "core-js": "3.35.0",
+    "vue": "3.4.4"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "5.0.8",
