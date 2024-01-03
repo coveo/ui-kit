@@ -46,7 +46,7 @@ export interface DidYouMeanOptions {
    *
    * Default value is `legacy`. In the next major version of Headless, the default value will be `next`.
    */
-  queryCorrectionMode: 'legacy' | 'next';
+  queryCorrectionMode?: 'legacy' | 'next';
 }
 export interface DidYouMean extends Controller {
   /**
