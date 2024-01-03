@@ -100,10 +100,10 @@ export default class QuanticSearchBox extends LightningElement {
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
 
-    this.addEventListener('inputValueChange', this.handleInputValueChange);
-    this.addEventListener('submitSearch', this.handleSubmit);
-    this.addEventListener('showSuggestions', this.handleShowSuggestions);
-    this.addEventListener('selectSuggestion', this.handleSelectSuggestion);
+    this.addEventListener('inputvaluechange', this.handleInputValueChange);
+    this.addEventListener('submitsearch', this.handleSubmit);
+    this.addEventListener('showsuggestions', this.handleShowSuggestions);
+    this.addEventListener('selectsuggestion', this.handleSelectSuggestion);
   }
 
   renderedCallback() {
@@ -113,10 +113,10 @@ export default class QuanticSearchBox extends LightningElement {
   disconnectedCallback() {
     this.unsubscribe?.();
 
-    this.removeEventListener('inputValueChange', this.handleInputValueChange);
-    this.removeEventListener('submitSearch', this.handleSubmit);
-    this.removeEventListener('showSuggestions', this.handleShowSuggestions);
-    this.removeEventListener('selectSuggestion', this.handleSelectSuggestion);
+    this.removeEventListener('inputvaluechange', this.handleInputValueChange);
+    this.removeEventListener('submitsearch', this.handleSubmit);
+    this.removeEventListener('showsuggestions', this.handleShowSuggestions);
+    this.removeEventListener('selectsuggestion', this.handleSelectSuggestion);
   }
 
   updateState() {

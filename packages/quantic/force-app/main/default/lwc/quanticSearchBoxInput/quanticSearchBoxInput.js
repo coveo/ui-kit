@@ -130,7 +130,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
    * @param {boolean} resetSelection
    */
   sendInputValueChangeEvent(newInputValue, resetSelection) {
-    const inputValueChangeEvent = new CustomEvent('inputValueChange', {
+    const inputValueChangeEvent = new CustomEvent('inputvaluechange', {
       detail: {
         newInputValue,
         resetSelection,
@@ -146,7 +146,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
    */
   sendSubmitSearchEvent() {
     this.dispatchEvent(
-      new CustomEvent('submitSearch', {
+      new CustomEvent('submitsearch', {
         bubbles: true,
         composed: true,
       })
@@ -158,7 +158,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
    */
   sendShowSuggestionsEvent() {
     this.dispatchEvent(
-      new CustomEvent('showSuggestions', {
+      new CustomEvent('showsuggestions', {
         bubbles: true,
         composed: true,
       })
@@ -170,7 +170,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
    * @param {string} selectedSuggestion
    */
   sendSelectSuggestionEvent(selectedSuggestion) {
-    const selectSuggestionEvent = new CustomEvent('selectSuggestion', {
+    const selectSuggestionEvent = new CustomEvent('selectsuggestion', {
       detail: {
         selectedSuggestion,
       },
