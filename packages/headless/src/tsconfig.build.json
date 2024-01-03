@@ -1,8 +1,7 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "isolatedModules": true,
-    "types": ["node", "jest"]
+    "isolatedModules": true
   },
   "exclude": ["./**/*.test.ts"]
 }
