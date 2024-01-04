@@ -72,7 +72,7 @@ describe("buildBrowserEnvironment", () => {
     );
   });
 
-  it("calls the Beacon API when using send", async () => {
+  it("calls the Beacon API when using send", () => {
     const beaconSpy = jest.fn(() => true);
     Object.defineProperty(navigator, "sendBeacon", {
       value: beaconSpy,
@@ -87,9 +87,9 @@ describe("buildBrowserEnvironment", () => {
     );
   });
 
-  it("returns undefined when calling send", async () => {
+  it("returns undefined when calling send", () => {
     expect(
-      await buildBrowserEnvironment().send("", "", createMockEvent())
+      buildBrowserEnvironment().send("", "", createMockEvent())
     ).toBeUndefined();
   });
 
@@ -97,9 +97,9 @@ describe("buildBrowserEnvironment", () => {
     Object.defineProperty(navigator, "sendBeacon", {
       value: jest.fn(() => false),
     });
-    expect(
+    expect(() =>
       buildBrowserEnvironment().send("", "", createMockEvent())
-    ).rejects.toThrow(
+    ).toThrow(
       "Failed to send the event(s) because the payload size exceeded the maximum allowed size (32 KB). Please contact support if the problem persists."
     );
   });

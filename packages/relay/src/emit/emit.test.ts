@@ -20,9 +20,8 @@ describe("emit", () => {
     params = createEmitParams();
   });
 
-  it("returns undefined", async () => {
-    const response = await emit(params);
-    expect(response).toBe(undefined);
+  it("returns undefined", () => {
+    expect(emit(params)).toBe(undefined);
   });
 
   it("sets expected url, token and body for the send function", () => {

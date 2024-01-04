@@ -3,7 +3,7 @@ import { Storage } from "./storage";
 
 export interface Environment {
   runtime: "browser" | "null";
-  send: (url: string, token: string, event: RelayEvent) => Promise<void>;
+  send: (url: string, token: string, event: RelayEvent) => void;
   getReferrer: () => string | null;
   getLocation: () => string | null;
   getUserAgent: () => string | null;

@@ -10,7 +10,7 @@ export interface EmitParams {
   listenerManager: ListenerManager;
 }
 
-export async function emit({
+export function emit({
   config,
   environment,
   event,

@@ -22,9 +22,9 @@ describe("null environment", () => {
     expect(buildNullEnvironment().generateUUID()).toBe("");
   });
 
-  it("returns undefined send", async () => {
+  it("returns undefined send", () => {
     expect(
-      await buildNullEnvironment().send("bap", "", createMockEvent())
+      buildNullEnvironment().send("bap", "", createMockEvent())
     ).toBeUndefined();
   });
 });

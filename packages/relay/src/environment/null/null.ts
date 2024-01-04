@@ -4,7 +4,7 @@ import { createNullStorage } from "../storage";
 export function buildNullEnvironment(): Environment {
   return {
     runtime: "null",
-    send: async () => undefined,
+    send: () => undefined,
     getReferrer: () => null,
     getLocation: () => null,
     getUserAgent: () => null,

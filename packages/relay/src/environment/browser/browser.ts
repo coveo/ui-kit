@@ -12,7 +12,7 @@ function getReferrer() {
 export function buildBrowserEnvironment(): Environment {
   return {
     runtime: "browser",
-    send: async (url: string, token: string, event: RelayEvent) => {
+    send: (url: string, token: string, event: RelayEvent) => {
       const response = navigator.sendBeacon(
         `${url}?access_token=${token}`,
         new Blob([JSON.stringify([event])], {

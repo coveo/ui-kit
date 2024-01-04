@@ -18,9 +18,9 @@ interface Relay {
    * Sends an event to the Event API.
    * @param {string} type - event's type to be emitted.
    * @param {Record<string,any>} payload - payload to include within the event.
-   * @returns {Promise<void>}
+   * @returns {void}
    */
-  emit: (type: string, payload: Record<string, any>) => Promise<void>;
+  emit: (type: string, payload: Record<string, any>) => void;
 
   /**
    * Gets the client-side generated meta object.

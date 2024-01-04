@@ -48,7 +48,7 @@ describe("createListenerManager", () => {
   });
 
   describe("call", () => {
-    it("calls the all type listeners' callback for any events", async () => {
+    it("calls the all type listeners' callback for any events", () => {
       const spy = jest.fn();
       const clickEvent = createMockEvent({ meta: { type: "itemClick" } });
       const viewEvent = createMockEvent({ meta: { type: "itemView" } });
@@ -61,7 +61,7 @@ describe("createListenerManager", () => {
       expect(spy).toHaveBeenCalledTimes(2);
     });
 
-    it("calls the listeners that have the corresponding event type", async () => {
+    it("calls the listeners that have the corresponding event type", () => {
       const successSpy = jest.fn();
       const failSpy = jest.fn();
       const successEvent = createMockEvent({ meta: { type: "success" } });
