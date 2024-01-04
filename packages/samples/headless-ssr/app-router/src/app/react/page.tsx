@@ -21,7 +21,6 @@ import {fetchStaticState} from '@/common/lib/react/engine';
 export default async function Search(url: {
   searchParams: {[key: string]: string | string[] | undefined};
 }) {
-  // TODO: revisit this static class. It's not super user friendly
   const {coveoSearchParameters} =
     CoveoNextJsSearchParametersSerializer.fromUrlSearchParameters(
       url.searchParams

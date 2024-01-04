@@ -77,7 +77,7 @@ export class CoveoNextJsSearchParametersSerializer {
 
   /**
    * Applies the Coveo search parameters to the given URLSearchParams object.
-   * Warning: This method mutates the given URLSearchParams object.
+   * This method mutates the given URLSearchParams object.
    *
    * @param urlSearchParams - The URLSearchParams object to apply the new search parameters to.
    */
@@ -91,13 +91,6 @@ export class CoveoNextJsSearchParametersSerializer {
     );
   }
 
-  /**
-   * Augment the coveo search parameters object based on the provided key and value.
-   *
-   * @param searchParams - The search parameters object to be updated.
-   * @param key - The key of the search parameter.
-   * @param value - The value of the search parameter.
-   */
   private static extendSearchParameters(
     searchParams: Record<string, unknown>,
     key: string,
@@ -107,8 +100,6 @@ export class CoveoNextJsSearchParametersSerializer {
       return;
     }
     if (isValidBasicKey(key)) {
-      // FIXME: fix type error
-      // TODO: try with other search param types (numbers)
       searchParams[key] = value;
       return;
     }
@@ -136,11 +127,6 @@ export class CoveoNextJsSearchParametersSerializer {
     }
   }
 
-  /**
-   * Removes Coveo search parameters from the given URL search parameters object and returns the parameters that were removed.
-   * @param urlSearchParams - The URL search parameters object to modify.
-   * @returns The previous state of Coveo search parameters that was removed from the URL search parameter object.
-   */
   private wipeCoveoSearchParamFromUrl(urlSearchParams: URLSearchParams) {
     const previousCoveoSearchParams: FacetValue = {};
     const keysToDelete: string[] = [];

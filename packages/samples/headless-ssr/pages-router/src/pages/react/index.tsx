@@ -9,15 +9,17 @@ import {SearchStaticState, fetchStaticState} from '@/common/lib/react/engine';
 export async function getServerSideProps(context: {
   query: {[key: string]: string | string[] | undefined};
 }) {
-  const parameters =
-    CoveoNextJsSearchParametersSerializer.fromServerSideUrlSearchParams(
+  const {coveoSearchParameters} =
+    CoveoNextJsSearchParametersSerializer.fromUrlSearchParameters(
       context.query
-    ).coveoSearchParameters;
+    );
   const contextValues = {ageGroup: '30-45', mainInterest: 'sports'};
   const staticState = await fetchStaticState({
     controllers: {
       context: {initialState: {values: contextValues}},
-      searchParameterManager: {initialState: {parameters}},
+      searchParameterManager: {
+        initialState: {parameters: coveoSearchParameters},
+      },
     },
   });
   return {props: {staticState}};

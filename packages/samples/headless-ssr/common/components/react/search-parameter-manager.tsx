@@ -6,10 +6,10 @@ import {useHistoryRouter} from '../common/history-router';
 import {CoveoNextJsSearchParametersSerializer} from '../common/search-parameters-serializer';
 
 /**
- * The `UrlManager` hook is responsible for synchronizing the URL with the state of the search interface.
+ * The `SearchParameterManager` hook is responsible for synchronizing the URL with the state of the search interface.
  *
- * It uses two custom hooks: `useHistoryRouter` and `useUrlManager`. `useHistoryRouter` is used to manage the current URL and
- * provides functions to replace or push a new URL to the browser's history. `useUrlManager` is used to manage the state of
+ * It uses two custom hooks: `useHistoryRouter` and `useSearchParameterManager`. `useHistoryRouter` is used to manage the current URL and
+ * provides functions to replace or push a new URL to the browser's history. `useSearchParameterManager` is used to manage the state of
  * the search interface.
  */
 export default function SearchParameterManager() {
@@ -39,10 +39,9 @@ export default function SearchParameterManager() {
     ).applyToUrlSearchParams(newURL.searchParams);
 
     return newURL.href;
-  }, [state.parameters]); // TODO: not sure if should trigger effect on history url change. makes no sense since we are computing the corrected url based on the history url
+  }, [state.parameters]);
 
   useEffect(() => {
-    // FIXME: this effect gets triggered 2 times on the first page load. Means the component is rendered 2 times. That's because of the HydratedStateProvider component
     if (!correctedUrl || document.location.href === correctedUrl) {
       return;
     }
