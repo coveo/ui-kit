@@ -406,28 +406,35 @@ describe('quantic-generated-answer', () => {
       });
     });
 
-    describe('when clicking the copy to clipboard button', () => {
-      const streamId = crypto.randomUUID();
+    // access to the clipboard reliably works in Electron browser
+    // in other browsers, there are popups asking for permission
+    // thus we should only run these tests in Electron
+    describe(
+      'when clicking the copy to clipboard button',
+      {browser: 'electron'},
+      () => {
+        const streamId = crypto.randomUUID();
 
-      beforeEach(() => {
-        mockSearchWithGeneratedAnswer(streamId);
-        mockStreamResponse(streamId, genQaMessageTypePayload);
-        visitGeneratedAnswer({multilineFooter: true});
-      });
+        beforeEach(() => {
+          mockSearchWithGeneratedAnswer(streamId);
+          mockStreamResponse(streamId, genQaMessageTypePayload);
+          visitGeneratedAnswer({multilineFooter: true});
+        });
 
-      it('should properly copy the answer to clipboard', () => {
-        scope('when loading the page', () => {
-          Expect.displayCopyToClipboardButton(true);
-          Actions.clickCopyToClipboardButton();
-          Expect.logCopyGeneratedAnswer(streamId);
-          cy.window().then((win) => {
-            win.navigator.clipboard.readText().then((text) => {
-              expect(text).to.eq(testText);
+        it('should properly copy the answer to clipboard', () => {
+          scope('when loading the page', () => {
+            Expect.displayCopyToClipboardButton(true);
+            Actions.clickCopyToClipboardButton();
+            Expect.logCopyGeneratedAnswer(streamId);
+            cy.window().then((win) => {
+              win.navigator.clipboard.readText().then((text) => {
+                expect(text).to.eq(testText);
+              });
             });
           });
         });
-      });
-    });
+      }
+    );
 
     describe('when the generated answer is still streaming', () => {
       const streamId = crypto.randomUUID();
