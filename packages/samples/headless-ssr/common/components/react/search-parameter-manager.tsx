@@ -28,14 +28,12 @@ export default function SearchParameterManager() {
   }, [historyRouter.url?.searchParams]);
 
   // Update the browser's URL
-  // FIXME: Understand why this gets trigger 2 time on the first page load
   const correctedUrl = useMemo(() => {
     if (!historyRouter.url) {
       return null;
     }
 
     const newURL = new URL(historyRouter.url);
-    // FIXME: fix when last facet value is deselected
     CoveoNextJsSearchParametersSerializer.fromCoveoSearchParameters(
       state.parameters
     ).applyToUrlSearchParams(newURL.searchParams);
@@ -49,11 +47,9 @@ export default function SearchParameterManager() {
       return;
     }
 
-    // Adding this condition fixes the deselected facet value bug but brings back the sorting issue
     const isStaticState = methods === undefined;
-    const shouldReplaceUrl = isStaticState;
 
-    historyRouter[shouldReplaceUrl ? 'replace' : 'push'](correctedUrl);
+    historyRouter[isStaticState ? 'replace' : 'push'](correctedUrl);
   }, [correctedUrl]);
 
   return <></>;

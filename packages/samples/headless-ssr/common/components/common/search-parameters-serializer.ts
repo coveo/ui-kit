@@ -7,7 +7,7 @@ import {
   SearchParamPair,
   isValidSearchParam,
   isFacetPair,
-  isSpecificFacetKey,
+  isValidFacetKey,
   isUrlInstance,
   isValidKey,
   NextJSServerSideSearchParams,
@@ -19,7 +19,10 @@ import {
   rangeDelimiterExclusive,
   FacetValue,
   RangeFacetValue,
-  isSpecificNonFacetKey,
+  isValidBasicKey,
+  facetSearchParamRegex,
+  toArray,
+  addFacetValuesToSearchParams,
 } from './search-parameters-utils';
 
 export class CoveoNextJsSearchParametersSerializer {
@@ -96,72 +99,40 @@ export class CoveoNextJsSearchParametersSerializer {
    * @param value - The value of the search parameter.
    */
   private static extendSearchParameters(
-    searchParams: SearchParameters,
+    searchParams: Record<string, unknown>,
     key: string,
     value: NextJSServerSideSearchParamsValues
   ): void {
     if (value === undefined) {
       return;
     }
-    const facetPrefix = /^(f|fExcluded|cf|nf|df|sf|af)-(.+)$/; // TODO: this regex is repeated twice
-    const result = facetPrefix.exec(key);
+    if (isValidBasicKey(key)) {
+      // FIXME: fix type error
+      // TODO: try with other search param types (numbers)
+      searchParams[key] = value;
+      return;
+    }
+
+    const result = facetSearchParamRegex.exec(key);
     if (result) {
       const paramKey = result[1];
       const facetId = result[2];
-      if (!isSpecificFacetKey(paramKey)) {
-        // TODO: merge with regex above
+      if (!isValidFacetKey(paramKey)) {
         return;
       }
-
-      const toArray = <T>(value: T | T[]): T[] =>
-        Array.isArray(value) ? value : [value];
+      const add = addFacetValuesToSearchParams(facetId, paramKey);
 
       const {buildDateRanges, buildNumericRanges} =
         buildSearchParameterRanges();
 
-      if (paramKey === 'nf') {
-        searchParams[paramKey] = extendWithArray(
-          searchParams[paramKey],
-          facetId,
-          paramKey,
-          buildNumericRanges(toArray(value))
-        );
-      } else if (paramKey === 'df') {
-        searchParams[paramKey] = extendWithArray(
-          searchParams[paramKey],
-          facetId,
-          paramKey,
-          buildDateRanges(toArray(value))
-        );
-      } else {
-        searchParams[paramKey] = extendWithArray(
-          searchParams[paramKey],
-          facetId,
-          paramKey,
-          toArray(value)
-        );
-      }
-    } else {
-      if (isSpecificNonFacetKey(key)) {
-        // FIXME: fix type error
-        // TODO: try with other search param types (numbers)
-        searchParams[key] = value;
-      }
-    }
+      const range =
+        paramKey === 'nf'
+          ? buildNumericRanges(toArray(value))
+          : paramKey === 'df'
+            ? buildDateRanges(toArray(value))
+            : toArray(value);
 
-    // TODO: rename this method
-    function extendWithArray<V>(
-      record: Record<string, V[]> = {},
-      facetId: string,
-      paramKey: SearchParameterKey,
-      valueArray: V[]
-    ) {
-      if (paramKey in searchParams) {
-        record[facetId] = [...(record[facetId] || []), ...valueArray];
-        return record;
-      } else {
-        return {[facetId]: valueArray};
-      }
+      add(searchParams, range);
     }
   }
 
@@ -266,7 +237,7 @@ export class CoveoNextJsSearchParametersSerializer {
         urlSearchParams.append(
           id,
           `${start}${
-            endInclusive ? rangeDelimiterInclusive : rangeDelimiterExclusive // TODO: check if this can be put in other function
+            endInclusive ? rangeDelimiterInclusive : rangeDelimiterExclusive
           }${end}`
         )
       );

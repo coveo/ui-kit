@@ -21,6 +21,7 @@ export type NextJSServerSideSearchParams = Record<
 
 export const rangeDelimiterExclusive = '..';
 export const rangeDelimiterInclusive = '...';
+export const facetSearchParamRegex = /^(f|fExcluded|cf|nf|df|sf|af)-(.+)$/;
 
 const supportedFacetParameters = {
   f: true,
@@ -32,7 +33,7 @@ const supportedFacetParameters = {
   af: true,
 };
 
-const otherSupportedParameters: Omit<
+const supportedBasicParameters: Omit<
   Record<keyof SearchParameters, boolean>,
   keyof typeof supportedFacetParameters
 > = {
@@ -53,6 +54,28 @@ export function isObject(obj: unknown): obj is object {
   return obj && typeof obj === 'object' ? true : false;
 }
 
+export function toArray<T>(value: T | T[]): T[] {
+  return Array.isArray(value) ? value : [value];
+}
+
+export function addFacetValuesToSearchParams(
+  facetId: string,
+  paramKey: SearchParameterKey
+) {
+  return (searchParams: Record<string, unknown>, valueArray: unknown[]) => {
+    if (paramKey in searchParams) {
+      const record = (searchParams[paramKey] ?? {}) as Record<
+        string,
+        unknown[]
+      >;
+      record[facetId] = [...(record[facetId] ?? []), ...valueArray];
+      searchParams[paramKey] = record;
+      return record;
+    } else {
+      searchParams[paramKey] = {[facetId]: valueArray};
+    }
+  };
+}
 export function allEntriesAreValid(
   obj: object,
   isValidValue: (v: unknown) => boolean
@@ -66,13 +89,21 @@ export function allEntriesAreValid(
 }
 
 export function isValidKey(key: string): key is SearchParameterKey {
-  return key in {...supportedFacetParameters, ...otherSupportedParameters};
+  return isValidBasicKey(key) || isValidFacetKey(key);
+}
+
+export function isValidBasicKey(
+  key: any
+): key is Exclude<SearchParameterKey, FacetKey> {
+  return Object.keys(supportedBasicParameters).includes(key);
+}
+
+export function isValidFacetKey(key: any): key is FacetKey {
+  return Object.keys(supportedFacetParameters).includes(key);
 }
 
 export function isValidSearchParam(key: string) {
-  // TODO: instead do key.split('-') and use isSpecificFacetKey() method. But before understand why some keys are missing from it
-  const facetPrefix = /^(f|fExcluded|cf|nf|df|sf|af)-(.+)$/; // TODO: store these regex in a variable to prevent repetition or build it from supportedFacetParameters
-  const result = facetPrefix.exec(key) || isSpecificNonFacetKey(key);
+  const result = facetSearchParamRegex.exec(key) || isValidBasicKey(key);
   return result !== null;
 }
 
@@ -83,7 +114,7 @@ export function isFacetPair(
   if (!isObject(value)) {
     return false;
   }
-  if (!isSpecificFacetKey(key)) {
+  if (!isValidFacetKey(key)) {
     return false;
   }
 
@@ -105,16 +136,6 @@ export function isRangeFacetPair(
   const isRangeValue = (v: unknown) =>
     isObject(v) && 'start' in v && 'end' in v;
   return allEntriesAreValid(value, isRangeValue);
-}
-
-export function isSpecificFacetKey(key: any): key is FacetKey {
-  return Object.keys(supportedFacetParameters).includes(key);
-}
-
-export function isSpecificNonFacetKey(
-  key: any
-): key is Exclude<SearchParameterKey, FacetKey> {
-  return Object.keys(otherSupportedParameters).includes(key);
 }
 
 /**
