@@ -6,10 +6,32 @@
 @import './typing-indicator.pcss';
 @import './copy-button.pcss';
 
+@define-mixin mobile-footer-layout {
+  & {
+    @apply flex-col gap-4;
+  }
+
+  .source-citations {
+    @apply mr-0;
+  }
+
+  .rephrase-buttons {
+    @apply ml-0;
+  }
+
+  [part='rephrase-button'] {
+    @apply rephrase-with-text;
+  }
+}
+
 @keyframes cursor-blink {
   0% {
     opacity: 0;
   }
+}
+
+[part='container'] {
+  container-type: inline-size;
 }
 
 .footer {
@@ -22,11 +44,10 @@
     @apply ml-auto;
   }
 
+  @container (max-width: 600px) {
+    @mixin mobile-footer-layout;
+  }
   @screen mobile-only {
-    @apply flex-col gap-4;
-
-    .rephrase-buttons {
-      @apply ml-0;
-    }
+    @mixin mobile-footer-layout;
   }
 }
