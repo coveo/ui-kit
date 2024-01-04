@@ -50,13 +50,11 @@ const supportedBasicParameters: Omit<
 
 type FacetKey = keyof typeof supportedFacetParameters;
 
-export function isObject(obj: unknown): obj is object {
-  return obj && typeof obj === 'object' ? true : false;
-}
-
 export function toArray<T>(value: T | T[]): T[] {
   return Array.isArray(value) ? value : [value];
 }
+
+// TODO: add unit tests for the exported function once bundled in SSR package
 
 export function addFacetValuesToSearchParams(
   facetId: string,
@@ -75,17 +73,6 @@ export function addFacetValuesToSearchParams(
       searchParams[paramKey] = {[facetId]: valueArray};
     }
   };
-}
-export function allEntriesAreValid(
-  obj: object,
-  isValidValue: (v: unknown) => boolean
-) {
-  const invalidEntries = Object.entries(obj).filter((entry) => {
-    const values = entry[1];
-    return !Array.isArray(values) || !values.every(isValidValue);
-  });
-
-  return invalidEntries.length === 0;
 }
 
 export function isValidKey(key: string): key is SearchParameterKey {
@@ -170,4 +157,20 @@ export function areTheSameArraysSortedDifferently<T>(
     return !arr1.every((value, idx) => arr2.indexOf(value) === idx);
   }
   return false;
+}
+
+function isObject(obj: unknown): obj is object {
+  return obj && typeof obj === 'object' ? true : false;
+}
+
+function allEntriesAreValid(
+  obj: object,
+  isValidValue: (v: unknown) => boolean
+) {
+  const invalidEntries = Object.entries(obj).filter((entry) => {
+    const values = entry[1];
+    return !Array.isArray(values) || !values.every(isValidValue);
+  });
+
+  return invalidEntries.length === 0;
 }
