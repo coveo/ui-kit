@@ -23,9 +23,9 @@ import {
   facetSearchParamRegex,
   toArray,
   addFacetValuesToSearchParams,
-} from './search-parameters-utils';
+} from './search-parameter-utils';
 
-export class CoveoNextJsSearchParametersSerializer {
+export class CoveoNextJsSearchParameterSerializer {
   private constructor(
     public readonly coveoSearchParameters: SearchParameters
   ) {}
@@ -40,7 +40,7 @@ export class CoveoNextJsSearchParametersSerializer {
   public static fromCoveoSearchParameters(
     coveoSearchParameters: SearchParameters
   ) {
-    return new CoveoNextJsSearchParametersSerializer(coveoSearchParameters);
+    return new CoveoNextJsSearchParameterSerializer(coveoSearchParameters);
   }
 
   /**
@@ -58,7 +58,7 @@ export class CoveoNextJsSearchParametersSerializer {
   ) {
     const coveoSearchParameters: Record<string, unknown> = {};
     const add = (key: string, value: NextJSServerSideSearchParamsValues) =>
-      CoveoNextJsSearchParametersSerializer.extendSearchParameters(
+      CoveoNextJsSearchParameterSerializer.extendSearchParameters(
         coveoSearchParameters,
         key,
         value
@@ -72,7 +72,7 @@ export class CoveoNextJsSearchParametersSerializer {
       );
     }
 
-    return new CoveoNextJsSearchParametersSerializer(coveoSearchParameters);
+    return new CoveoNextJsSearchParameterSerializer(coveoSearchParameters);
   }
 
   /**
@@ -82,6 +82,7 @@ export class CoveoNextJsSearchParametersSerializer {
    * @param urlSearchParams - The URLSearchParams object to apply the new search parameters to.
    */
   public applyToUrlSearchParams(urlSearchParams: URLSearchParams) {
+    console.log('urlSearchParams ->', urlSearchParams.toString());
     const previousState = this.wipeCoveoSearchParamFromUrl(urlSearchParams);
     const newState = this.coveoSearchParameters;
     Object.entries(newState).forEach(
@@ -89,6 +90,7 @@ export class CoveoNextJsSearchParametersSerializer {
         isValidKey(key) &&
         this.applyToUrlSearchParam(urlSearchParams, previousState, [key, value])
     );
+    console.groupEnd();
   }
 
   private static extendSearchParameters(
@@ -158,6 +160,9 @@ export class CoveoNextJsSearchParametersSerializer {
       return;
     }
 
+    console.log('previousState   ->', JSON.stringify(previousState));
+    console.log(pair);
+
     if (isFacetPair(pair)) {
       this.applyFacetValuesToSearchParams(urlSearchParams, previousState, pair);
       return;
@@ -178,16 +183,13 @@ export class CoveoNextJsSearchParametersSerializer {
   ) {
     Object.entries(value).forEach(([facetId, facetValues]) => {
       const id = `${key}-${facetId}`;
-      const previousFacetValues = previousState[id];
+      const previousFacetValues = previousState[id] ?? [];
 
-      // The api returns the same values in a different order. We don't need to update the url. reverting back to previous state since we did wipe the url before.
-      // This is needed because the api returns the same values in a different order. and this will prevenet having to store a new state to the history if only the sort have changed
+      // The API returns the same values in a different order. If the previous facet values are the same but sorted differently, we don't want to update the URL. Instead, we revert back to the previous state since we wiped the URL before. This prevents pushing a new entry to the history if only the sort order has changed.
       if (
-        previousFacetValues &&
         areTheSameArraysSortedDifferently(previousFacetValues, value[facetId])
       ) {
         previousFacetValues.forEach((v) => urlSearchParams.append(id, v));
-        // revert back previous state
         return;
       }
 
@@ -203,19 +205,6 @@ export class CoveoNextJsSearchParametersSerializer {
   ) {
     Object.entries(value).forEach(([facetId, facetValues]) => {
       const id = `${key}-${facetId}`;
-      // const previousFacetValues = previousState[id];
-
-      // The api returns the same values in a different order. We don't need to update the url. reverting back to previous state since we did wipe the url before.
-      // This is needed because the api returns the same values in a different order. and this will prevenet having to store a new state to the history if only the sort have changed
-      // TODO: rework sorting functino to accept objects EVEN IF API DOES NOT REORDER NUMERIC RANGES
-      // if (
-      //   previousFacetValues &&
-      //   areTheSameArraysSortedDifferently(previousFacetValues, value[facetId])
-      // ) {
-      //   previousFacetValues.forEach((v) => urlSearchParams.append(id, v));
-      //   // revert back previous state
-      //   return;
-      // }
 
       urlSearchParams.delete(id);
 

@@ -150,11 +150,13 @@ export function areTheSameArraysSortedDifferently<T>(
   arr1: T[],
   arr2: T[]
 ): boolean {
-  if (
-    arr1.length === arr2.length &&
-    arr1.every((value) => arr2.includes(value))
-  ) {
-    return !arr1.every((value, idx) => arr2.indexOf(value) === idx);
+  if (arr1.length === arr2.length) {
+    if (arr1.length === 1) {
+      return arr1[0] === arr2[0];
+    }
+    if (arr1.every((value) => arr2.includes(value))) {
+      return !arr1.every((value, idx) => arr2.indexOf(value) === idx);
+    }
   }
   return false;
 }
