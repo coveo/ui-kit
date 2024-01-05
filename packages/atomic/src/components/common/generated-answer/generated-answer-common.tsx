@@ -41,10 +41,13 @@ interface GeneratedAnswerCommonOptions {
 export class GeneratedAnswerCommon {
   private storage: SafeStorage = new SafeStorage();
   private _data: GeneratedAnswerData;
-  private modalRef: HTMLAtomicGeneratedAnswerFeedbackModalElement;
+  private modalRef?: HTMLAtomicGeneratedAnswerFeedbackModalElement;
 
   constructor(private props: GeneratedAnswerCommonOptions) {
     this._data = this.readStoredData();
+  }
+
+  public insertFeedbackModal() {
     this.modalRef = document.createElement(
       'atomic-generated-answer-feedback-modal'
     );

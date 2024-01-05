@@ -92,7 +92,6 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       buildInteractiveCitation: (props) =>
         buildInteractiveCitation(this.bindings.engine, props),
     });
-
     this.generatedAnswer = buildGeneratedAnswer(this.bindings.engine, {
       initialState: {
         isVisible: this.generatedAnswerCommon.data.isVisible,
@@ -102,6 +101,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       },
     });
     this.searchStatus = buildSearchStatus(this.bindings.engine);
+    this.generatedAnswerCommon.insertFeedbackModal();
   }
 
   // @ts-expect-error: This function is used by BindStateToController.

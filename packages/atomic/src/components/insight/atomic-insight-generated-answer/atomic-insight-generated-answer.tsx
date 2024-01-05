@@ -19,6 +19,7 @@ import {GeneratedAnswerCommon} from '../../common/generated-answer/generated-ans
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
+ * @internal
  * The `atomic-insight-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
  * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
  *
@@ -94,7 +95,6 @@ export class AtomicInsightGeneratedAnswer
       buildInteractiveCitation: (props) =>
         buildInsightInteractiveCitation(this.bindings.engine, props),
     });
-
     this.generatedAnswer = buildInsightGeneratedAnswer(this.bindings.engine, {
       initialState: {
         isVisible: this.generatedAnswerCommon.data.isVisible,
@@ -104,6 +104,7 @@ export class AtomicInsightGeneratedAnswer
       },
     });
     this.searchStatus = buildInsightSearchStatus(this.bindings.engine);
+    this.generatedAnswerCommon.insertFeedbackModal();
   }
 
   // @ts-expect-error: This function is used by BindStateToController.
