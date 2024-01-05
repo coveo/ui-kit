@@ -35,6 +35,13 @@ export interface RelayConfig {
   source?: string[];
 }
 
+export interface User {
+  /**
+   * The application's user identifier.
+   */
+  id: string;
+}
+
 export interface ConfigManager {
   get: () => Readonly<RelayConfig>;
   update: (updatedConfig: Partial<RelayConfig>) => void;

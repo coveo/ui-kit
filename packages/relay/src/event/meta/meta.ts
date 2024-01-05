@@ -1,6 +1,6 @@
 import { ClientIdManager } from "../../client-id/client-id";
 import { Environment } from "../../environment/environment";
-import { RelayConfig } from "../../config/config";
+import { RelayConfig, User } from "../../config/config";
 import { version } from "../../version";
 
 /**
@@ -43,6 +43,11 @@ export interface Meta {
   clientId: string;
 
   /**
+   * Named user identity which logged this event.
+   */
+  user: User | null;
+
+  /**
    * Browser Navigator's [user agent](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/userAgent) property if set.
    */
   userAgent: string | null;
@@ -83,6 +88,7 @@ export function createMeta(
     ts: Date.now(),
     source: getSource(config),
     clientId,
+    user: null,
     userAgent: getUserAgent(),
     referrer: getReferrer(),
     location: getLocation(),

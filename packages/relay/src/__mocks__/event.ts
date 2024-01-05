@@ -10,6 +10,7 @@ const defaultMeta: Meta = {
   ts: 1692057600000,
   source: ["headless@1.2", "relay@0.0.5"],
   clientId: "2136b353-74be-42d7-904f-ea33a8f4a43c",
+  user: null,
   userAgent: null,
   referrer: null,
   location: null,
