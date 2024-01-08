@@ -20,7 +20,11 @@ import {
 } from '../../utils/validate-payload';
 import {AnalyticsAsyncThunk} from '../analytics/analytics-utils';
 import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-params';
-import {logRecommendationUpdate} from './recommendation-analytics-actions';
+import {SearchAction} from '../search/search-actions';
+import {
+  logRecommendationUpdate,
+  recommendationInterfaceLoad,
+} from './recommendation-analytics-actions';
 
 export type StateNeededByGetRecommendations = ConfigurationSection &
   RecommendationSection &
@@ -59,9 +63,8 @@ export const getRecommendations = createAsyncThunk<
   async (_, {getState, rejectWithValue, extra: {apiClient}}) => {
     const state = getState();
     const startedAt = new Date().getTime();
-    const fetched = await apiClient.recommendations(
-      await buildRecommendationRequest(state)
-    );
+    const request = await buildRecommendationRequest(state);
+    const fetched = await apiClient.recommendations(request);
     const duration = new Date().getTime() - startedAt;
     if (isErrorResponse(fetched)) {
       return rejectWithValue(fetched.error);
@@ -114,7 +117,7 @@ export const buildRecommendationRequest = async (
     visitorId: await getVisitorID(s.configuration.analytics),
   }),
   ...(s.configuration.analytics.enabled &&
-    (await fromAnalyticsStateToAnalyticsParams(s.configuration.analytics))),
+    (await buildAnalyticsSection(s, recommendationInterfaceLoad()))),
   ...(s.configuration.search.authenticationProviders.length && {
     authentication: s.configuration.search.authenticationProviders.join(','),
   }),
@@ -122,3 +125,22 @@ export const buildRecommendationRequest = async (
     numberOfResults: s.pagination.numberOfResults,
   }),
 });
+
+const buildAnalyticsSection = async (
+  state: StateNeededByGetRecommendations,
+  action: SearchAction
+) => {
+  const eventDescription =
+    state.configuration.analytics.analyticsMode === 'legacy'
+      ? undefined
+      : {
+          customData: action.getEventExtraPayload(state),
+          actionCause: action.actionCause,
+          type: action.actionCause,
+        };
+
+  return await fromAnalyticsStateToAnalyticsParams(
+    state.configuration.analytics,
+    eventDescription
+  );
+};
