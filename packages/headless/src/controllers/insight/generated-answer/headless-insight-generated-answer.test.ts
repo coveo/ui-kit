@@ -11,7 +11,7 @@ import {
   GeneratedAnswerProps,
 } from './headless-insight-generated-answer';
 
-describe('generated answer', () => {
+describe('insight generated answer', () => {
   let generatedAnswer: GeneratedAnswer;
   let engine: MockInsightEngine;
 
