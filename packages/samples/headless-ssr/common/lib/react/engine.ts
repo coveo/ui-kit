@@ -18,7 +18,5 @@ export const {
   useResultList,
   useSearchBox,
   useAuthorFacet,
-  useSourceFacet,
   useSearchParameterManager,
-  useCostNumericFacet,
 } = engineDefinition.controllers;
