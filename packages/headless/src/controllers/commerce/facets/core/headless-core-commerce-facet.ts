@@ -187,8 +187,7 @@ export function buildCoreCommerceFacet<
     props.options.isFacetLoadingResponseSelector(engine.state);
 
   const getNumberOfActiveValues = () => {
-    return (getRequest()?.values ?? []).filter((v) => v.state !== 'idle')
-      .length;
+    return getRequest()?.values?.filter((v) => v.state !== 'idle').length ?? 0;
   };
 
   const computeCanShowLessValues = () => {

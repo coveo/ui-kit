@@ -1016,7 +1016,11 @@ describe('commerceFacetSetReducer', () => {
 
     it('resets facets', () => {
       state[facetId] = buildMockCommerceFacetSlice({
-        request: buildMockCommerceFacetRequest({type: 'regular', facetId}),
+        request: buildMockCommerceFacetRequest({
+          type: 'regular',
+          facetId,
+          values: [{value: 'facet value', state: 'selected'}],
+        }),
       });
       const finalState = commerceFacetSetReducer(state, action);
 
