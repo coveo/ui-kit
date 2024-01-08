@@ -70,6 +70,6 @@ describe("createMeta", () => {
   });
 
   it("returns meta with the config set as parameter", () => {
-    expect(defaultMeta.config).toEqual({ trackingId: "website" });
+    expect(defaultMeta.config).toEqual({ trackingId: "website", user: null });
   });
 });

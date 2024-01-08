@@ -11,6 +11,11 @@ export interface EventConfig {
    * The unique identifier of a web property. See [Tracking ID](https://docs.coveo.com/en/n8tg0567/).
    */
   trackingId: string;
+
+  /**
+   * Named user identity which logged this event.
+   */
+  user: User | null;
 }
 
 /**
@@ -43,11 +48,6 @@ export interface Meta {
   clientId: string;
 
   /**
-   * Named user identity which logged this event.
-   */
-  user: User | null;
-
-  /**
    * Browser Navigator's [user agent](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/userAgent) property if set.
    */
   userAgent: string | null;
@@ -65,7 +65,7 @@ export interface Meta {
 
 function getEventConfig(config: RelayConfig): EventConfig {
   const { trackingId } = config;
-  return { trackingId };
+  return { trackingId, user: null };
 }
 
 function getSource(config: RelayConfig): string[] {
@@ -82,13 +82,12 @@ export function createMeta(
   const eventConfig = getEventConfig(config);
   const clientId = clientIdManager.getClientId();
 
-  return Object.freeze({
+  return Object.freeze<Meta>({
     type,
     config: eventConfig,
     ts: Date.now(),
     source: getSource(config),
     clientId,
-    user: null,
     userAgent: getUserAgent(),
     referrer: getReferrer(),
     location: getLocation(),
