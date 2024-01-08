@@ -179,7 +179,7 @@ export class CoveoNextJsSearchParameterSerializer {
       const id = `${key}-${facetId}`;
       const previousFacetValues = previousState[id] ?? [];
 
-      // The API returns the same values in a different order. If the previous facet values are the same but sorted differently, we don't want to update the URL. Instead, we revert back to the previous state since we wiped the URL before. This prevents pushing a new entry to the history if only the sort order has changed.
+      // Verify whether the API has provided an identical set of values but with a different sorting order. In such a scenario, refrain from updating the URL. Instead, revert to the previous state and disregard the altered state with the modified order. This ensures that a new entry is not added to the history unless there is a change beyond just the sorting order.
       if (
         areTheSameArraysSortedDifferently(previousFacetValues, value[facetId])
       ) {

@@ -12,7 +12,7 @@ function getUrl() {
 
 /**
  * Custom hook for managing browser history and URL updates.
- * * To be used with App router. Use the {@link usePagesHistoryRouter} instead if your application is using The Next.js Pages Router paradigm.
+ * To be used with App router. Use the {@link usePagesHistoryRouter} instead if your application is using The Next.js Pages Router paradigm.
  * @returns An object containing the current URL, replace function, and push function.
  */
 export function useAppHistoryRouter() {
