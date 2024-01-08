@@ -90,8 +90,7 @@ export function isValidFacetKey(key: any): key is FacetKey {
 }
 
 export function isValidSearchParam(key: string) {
-  const result = facetSearchParamRegex.exec(key) || isValidBasicKey(key);
-  return result !== null;
+  return facetSearchParamRegex.exec(key) !== null || isValidBasicKey(key);
 }
 
 export function isFacetPair(

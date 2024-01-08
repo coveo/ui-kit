@@ -25,7 +25,7 @@ export default function SearchParameterManager() {
         historyRouter.url.searchParams
       );
     return methods.synchronize(coveoSearchParameters);
-  }, [historyRouter.url?.searchParams]);
+  }, [historyRouter.url?.searchParams, methods]);
 
   // Update the browser's URL
   const correctedUrl = useMemo(() => {
@@ -39,6 +39,7 @@ export default function SearchParameterManager() {
     ).applyToUrlSearchParams(newURL.searchParams);
 
     return newURL.href;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.parameters]);
 
   useEffect(() => {
@@ -49,7 +50,8 @@ export default function SearchParameterManager() {
     const isStaticState = methods === undefined;
 
     historyRouter[isStaticState ? 'replace' : 'push'](correctedUrl);
-  }, [correctedUrl]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [correctedUrl, methods]);
 
   return <></>;
 }

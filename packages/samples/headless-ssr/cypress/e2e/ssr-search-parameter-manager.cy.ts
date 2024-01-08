@@ -82,7 +82,7 @@ routes.forEach((route) => {
     describe('when loading a page with search parameters', () => {
       const query = 'def';
       function getInitialUrl() {
-        return `${route}?q=${query}`;
+        return `${route}?q=${query}&foo=bar`;
       }
 
       it('renders page in SSR as expected', () => {
@@ -110,7 +110,10 @@ routes.forEach((route) => {
         it('should not update the parameters', () => {
           cy.wait(1000);
           cy.url().should((href) => {
-            expect(href.endsWith(getInitialUrl())).to.equal(true);
+            const url = new URL(href);
+            expect(url.searchParams.size).to.equal(2);
+            expect(url.searchParams.has('q', query));
+            expect(url.searchParams.has('foo', 'bar'));
           });
         });
 
@@ -148,13 +151,7 @@ routes.forEach((route) => {
           cy.get('.search-box input').should('have.value', '');
         });
 
-        it('should correct the parameters', () => {
-          cy.url().should((href) => {
-            expect(new URL(href).searchParams.size).to.equal(0);
-          });
-        });
-
-        it('has only one history state', () => {
+        it('has only two history states', () => {
           cy.go('back');
           cy.url().should('eq', 'about:blank');
         });

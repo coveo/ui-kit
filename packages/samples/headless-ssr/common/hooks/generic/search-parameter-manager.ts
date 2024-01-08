@@ -41,20 +41,18 @@ export function useSyncSearchParameterManager({
 }: UseSyncSearchParameterManagerProps) {
   const historyRouter = useAppHistoryRouter();
   const state = useSearchParameterManager({staticState, controller});
-  const router = useRouter();
 
   // Update the search interface.
   useEffect(() => {
-    console.log('');
-    console.log('---' + historyRouter.url?.searchParams.toString() + '---');
-    controller &&
-      historyRouter.url &&
-      controller.synchronize(
-        CoveoNextJsSearchParameterSerializer.fromUrlSearchParameters(
-          historyRouter.url.searchParams
-        ).coveoSearchParameters
+    if (!controller || !historyRouter.url?.searchParams) {
+      return;
+    }
+    const {coveoSearchParameters} =
+      CoveoNextJsSearchParameterSerializer.fromUrlSearchParameters(
+        historyRouter.url.searchParams
       );
-  }, [historyRouter.url?.searchParams]);
+    return controller.synchronize(coveoSearchParameters);
+  }, [historyRouter.url?.searchParams, controller]);
 
   // Update the URL.
   const correctedUrl = useMemo(() => {
@@ -63,17 +61,13 @@ export function useSyncSearchParameterManager({
     }
 
     const newURL = new URL(historyRouter.url);
-    console.log('');
-    console.group('*********************');
-    console.log('state           ->', JSON.stringify(state.parameters));
-
     CoveoNextJsSearchParameterSerializer.fromCoveoSearchParameters(
       state.parameters
     ).applyToUrlSearchParams(newURL.searchParams);
 
     return newURL.href;
-  }, [state.parameters]); // TODO: check if should put missing deps
-  // }, [historyRouter.url, state.parameters]); // TODO: check if should put missing deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.parameters]);
 
   useEffect(() => {
     if (!correctedUrl || document.location.href === correctedUrl) {
@@ -81,17 +75,7 @@ export function useSyncSearchParameterManager({
     }
 
     const isStaticState = controller === undefined;
-    if (isStaticState) {
-      window.history.pushState(null, document.title, correctedUrl);
-      console.log('== replaceState == ');
-    } else {
-      window.history.pushState(null, document.title, correctedUrl);
-      console.group('== pushState == ', correctedUrl.toString());
-      console.log('Current href: ', document.location.href);
-      console.log('corrected url:', correctedUrl);
-      console.groupEnd();
-    }
-
-    // historyRouter[isStaticState ? 'replace' : 'push'](correctedUrl);
+    historyRouter[isStaticState ? 'replace' : 'push'](correctedUrl);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [controller, correctedUrl]);
 }

@@ -82,7 +82,6 @@ export class CoveoNextJsSearchParameterSerializer {
    * @param urlSearchParams - The URLSearchParams object to apply the new search parameters to.
    */
   public applyToUrlSearchParams(urlSearchParams: URLSearchParams) {
-    console.log('urlSearchParams ->', urlSearchParams.toString());
     const previousState = this.wipeCoveoSearchParamFromUrl(urlSearchParams);
     const newState = this.coveoSearchParameters;
     Object.entries(newState).forEach(
@@ -90,7 +89,6 @@ export class CoveoNextJsSearchParameterSerializer {
         isValidKey(key) &&
         this.applyToUrlSearchParam(urlSearchParams, previousState, [key, value])
     );
-    console.groupEnd();
   }
 
   private static extendSearchParameters(
@@ -135,7 +133,6 @@ export class CoveoNextJsSearchParameterSerializer {
 
     urlSearchParams.forEach((value, key) => {
       if (value !== undefined && isValidSearchParam(key)) {
-        // TODO: value should never be undefiend here! make sure of it
         previousCoveoSearchParams[key] = [
           ...(previousCoveoSearchParams[key] || []),
           value,
@@ -159,9 +156,6 @@ export class CoveoNextJsSearchParameterSerializer {
     if (!pair[1]) {
       return;
     }
-
-    console.log('previousState   ->', JSON.stringify(previousState));
-    console.log(pair);
 
     if (isFacetPair(pair)) {
       this.applyFacetValuesToSearchParams(urlSearchParams, previousState, pair);
