@@ -7,7 +7,7 @@ import {LightningElement, api} from 'lwc';
  * The `QuanticGeneratedAnswerCopyToClipboard` component displays a button responsible for copying the generated answer to clipboard.
  * @category Internal
  * @example
- * <c-quantic-generated-answer-copy-to-clipboard answer={answer}></c-quantic-c-quantic-generated-answer-copy-to-clipboard>
+ * <c-quantic-generated-answer-copy-to-clipboard answer={answer}></c-quantic-generated-answer-copy-to-clipboard>
  */
 export default class QuanticGeneratedAnswerCopyToClipboard extends LightningElement {
   /**
@@ -21,6 +21,10 @@ export default class QuanticGeneratedAnswerCopyToClipboard extends LightningElem
   };
   isSelected = false;
   tooltip = this.labels.copy;
+
+  get showCopyToClipboard() {
+    return !!navigator?.clipboard?.writeText;
+  }
 
   dispatchCopyToClipboardEvent(option) {
     this.dispatchEvent(

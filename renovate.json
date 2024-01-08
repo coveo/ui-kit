@@ -104,6 +104,14 @@
       "rangeStrategy": "replace",
       "allowedVersions": "1.5.0",
       "description": "Lock until bahmutov/cypress-repeat#52 is fixed"
+    },
+    {
+      "matchFileNames": ["packages/atomic-angular/package.json"],
+      "matchPackagePatterns": ["^typescript$"],
+      "groupSlug": "angular-typescript",
+      "rangeStrategy": "replace",
+      "allowedVersions": "5.1.x",
+      "description": "@angular/compiler-cli choke with TS > 5.1"
     }
   ],
   "rangeStrategy": "auto",
