@@ -12,6 +12,7 @@ interface FeedbackButtonProps {
   onClick: () => void;
 }
 
+const grayRgbForThumbs = '#565B66';
 export const FeedbackButton: FunctionalComponent<FeedbackButtonProps> = (
   props
 ) => {
@@ -30,7 +31,11 @@ export const FeedbackButton: FunctionalComponent<FeedbackButtonProps> = (
       onClick={props.onClick}
       ariaPressed={`${props.active}`}
     >
-      <atomic-icon class="w-5" icon={getIcon()}></atomic-icon>
+      <atomic-icon
+        style={{stroke: grayRgbForThumbs}}
+        class="w-5"
+        icon={getIcon()}
+      ></atomic-icon>
     </Button>
   );
 };
