@@ -32,6 +32,8 @@ interface GeneratedAnswerCommonOptions {
   getBindings: () => AnyBindings;
   getCopied: () => boolean;
   setCopied: (isCopied: boolean) => void;
+  getCopyError: () => boolean;
+  setCopyError: (copyError: boolean) => void;
   setAriaMessage: (message: string) => void;
   buildInteractiveCitation: (
     props: InteractiveCitationProps
@@ -136,11 +138,35 @@ export class GeneratedAnswerCommon {
     return 'mt-0 mb-4 border border-neutral shadow-lg p-6 bg-background rounded-lg p-6 text-on-background';
   }
 
+  private get hasClipboard() {
+    return !!navigator?.clipboard?.writeText;
+  }
+
+  private get copyToClipboardTooltip() {
+    if (this.props.getCopyError()) {
+      return this.props.getBindings().i18n.t('failed-to-copy-generated-answer');
+    }
+
+    return !this.props.getCopied()
+      ? this.props.getBindings().i18n.t('copy-generated-answer')
+      : this.props.getBindings().i18n.t('generated-answer-copied');
+  }
+
   private async copyToClipboard(answer: string) {
-    await navigator.clipboard.writeText(answer);
-    this.props.setCopied(true);
+    try {
+      await navigator.clipboard.writeText(answer);
+      this.props.setCopied(true);
+      this.props.getGeneratedAnswer()?.logCopyToClipboard();
+    } catch (error) {
+      this.props.setCopyError(true);
+      this.props
+        .getBindings()
+        .engine.logger.error(`Failed to copy to clipboard: ${error}`);
+    }
+
     setTimeout(() => {
       this.props.setCopied(false);
+      this.props.setCopyError(false);
     }, 2000);
   }
 
@@ -213,24 +239,20 @@ export class GeneratedAnswerCommon {
                     active={!!this.props.getGeneratedAnswerState()?.disliked}
                     onClick={this.clickDislike}
                   />
-                  <CopyButton
-                    title={
-                      !this.props.getCopied()
-                        ? this.props
-                            .getBindings()
-                            .i18n.t('copy-generated-answer')
-                        : this.props
-                            .getBindings()
-                            .i18n.t('generated-answer-copied')
-                    }
-                    isCopied={this.props.getCopied()}
-                    onClick={() => {
-                      this.copyToClipboard(
-                        this.props.getGeneratedAnswerState()?.answer ?? ''
-                      );
-                      this.props.getGeneratedAnswer()?.logCopyToClipboard();
-                    }}
-                  />
+                  {this.hasClipboard ? (
+                    <CopyButton
+                      title={this.copyToClipboardTooltip}
+                      isCopied={this.props.getCopied()}
+                      error={this.props.getCopyError()}
+                      onClick={async () => {
+                        const answer =
+                          this.props.getGeneratedAnswerState()?.answer;
+                        if (answer) {
+                          await this.copyToClipboard(answer);
+                        }
+                      }}
+                    />
+                  ) : null}
                 </div>
               )}
 
