@@ -64,6 +64,9 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   @State()
   copied = false;
 
+  @State()
+  copyError = false;
+
   /**
    * The answer style to apply when the component first loads.
    * Options:
@@ -88,6 +91,8 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       getBindings: () => this.bindings,
       getCopied: () => this.copied,
       setCopied: this.setCopied,
+      getCopyError: () => this.copyError,
+      setCopyError: this.setCopyError,
       setAriaMessage: this.setAriaMessage,
       buildInteractiveCitation: (props) =>
         buildInteractiveCitation(this.bindings.engine, props),
@@ -124,6 +129,10 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
 
   private setCopied = (isCopied: boolean) => {
     this.copied = isCopied;
+  };
+
+  private setCopyError = (copyError: boolean) => {
+    this.copyError = copyError;
   };
 
   private setAriaMessage = (message: string) => {

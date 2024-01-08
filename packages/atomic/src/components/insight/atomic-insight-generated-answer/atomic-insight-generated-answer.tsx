@@ -67,6 +67,9 @@ export class AtomicInsightGeneratedAnswer
   @State()
   copied = false;
 
+  @State()
+  copyError = false;
+
   /**
    * The answer style to apply when the component first loads.
    * Options:
@@ -91,6 +94,8 @@ export class AtomicInsightGeneratedAnswer
       getBindings: () => this.bindings,
       getCopied: () => this.copied,
       setCopied: this.setCopied,
+      getCopyError: () => this.copyError,
+      setCopyError: this.setCopyError,
       setAriaMessage: this.setAriaMessage,
       buildInteractiveCitation: (props) =>
         buildInsightInteractiveCitation(this.bindings.engine, props),
@@ -127,6 +132,10 @@ export class AtomicInsightGeneratedAnswer
 
   private setCopied = (isCopied: boolean) => {
     this.copied = isCopied;
+  };
+
+  private setCopyError = (copyError: boolean) => {
+    this.copyError = copyError;
   };
 
   private setAriaMessage = (message: string) => {
