@@ -55,10 +55,10 @@
     "@stencil/core": "4.9.0",
     "@stencil/store": "2.0.12",
     "dayjs": "1.11.10",
-    "dompurify": "3.0.6",
+    "dompurify": "3.0.8",
     "escape-html": "1.0.3",
     "focus-visible": "5.2.0",
-    "i18next": "23.7.15",
+    "i18next": "23.7.16",
     "i18next-http-backend": "2.4.2",
     "stencil-inline-svg": "1.1.0",
     "ts-debounce": "^4.0.0"
@@ -97,9 +97,9 @@
     "postcss-import": "15.1.0",
     "postcss-mixins": "9.0.4",
     "postcss-nested": "6.0.1",
-    "puppeteer": "21.6.1",
+    "puppeteer": "21.7.0",
     "rollup-plugin-html": "0.2.1",
-    "tailwindcss": "3.4.0",
+    "tailwindcss": "3.4.1",
     "typescript": "5.3.3"
   },
   "peerDependencies": {
