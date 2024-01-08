@@ -8,7 +8,7 @@ import {
 const routes = ['generic', 'react'] as const;
 
 routes.forEach((route) => {
-  describe(`${route} Headless ssr with url manager example`, () => {
+  describe(`${route} Headless ssr with search parameter manager example`, () => {
     describe('when loading a page without search parameters, after hydration', () => {
       beforeEach(() => {
         spyOnConsole();

@@ -7,7 +7,7 @@ import {
 } from '@coveo/headless/ssr';
 import {useRouter} from 'next/navigation';
 import {useEffect, useMemo, useState} from 'react';
-import {useHistoryRouter} from '../../components/common/history-router';
+import {useAppHistoryRouter} from '../../components/common/history-router';
 
 interface UseSyncSearchParameterManagerProps {
   staticState: SearchParameterManagerState;
@@ -39,7 +39,7 @@ export function useSyncSearchParameterManager({
   staticState,
   controller,
 }: UseSyncSearchParameterManagerProps) {
-  const historyRouter = useHistoryRouter();
+  const historyRouter = useAppHistoryRouter();
   const state = useSearchParameterManager({staticState, controller});
   const router = useRouter();
 

@@ -2,7 +2,7 @@
 
 import {useEffect, useMemo} from 'react';
 import {useSearchParameterManager} from '../../lib/react/engine';
-import {useHistoryRouter} from '../common/history-router';
+import {useAppHistoryRouter} from '../common/history-router';
 import {CoveoNextJsSearchParameterSerializer} from '../common/search-parameter-serializer';
 
 /**
@@ -13,7 +13,7 @@ import {CoveoNextJsSearchParameterSerializer} from '../common/search-parameter-s
  * the search interface.
  */
 export default function SearchParameterManager() {
-  const historyRouter = useHistoryRouter();
+  const historyRouter = useAppHistoryRouter();
   const {state, methods} = useSearchParameterManager();
   // Synchronize the search interface with the current URL whenever the URL's search parameters change.
   useEffect(() => {
