@@ -1,6 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import ThumbsDownIcon from '../../../../images/thumbs-down.svg';
-import ThumbsUpIcon from '../../../../images/thumbs-up.svg';
+import Thumbs from '../../../../images/thumbs.svg';
 import {Button} from '../../../common/button';
 
 type FeedbackVariant = 'like' | 'dislike';
@@ -12,14 +11,9 @@ interface FeedbackButtonProps {
   onClick: () => void;
 }
 
-const grayRgbForThumbs = '#565B66';
 export const FeedbackButton: FunctionalComponent<FeedbackButtonProps> = (
   props
 ) => {
-  const getIcon = () => {
-    return props.variant === 'like' ? ThumbsUpIcon : ThumbsDownIcon;
-  };
-
   return (
     <Button
       title={props.title}
@@ -31,11 +25,7 @@ export const FeedbackButton: FunctionalComponent<FeedbackButtonProps> = (
       onClick={props.onClick}
       ariaPressed={`${props.active}`}
     >
-      <atomic-icon
-        style={{stroke: grayRgbForThumbs}}
-        class="w-5"
-        icon={getIcon()}
-      ></atomic-icon>
+      <atomic-icon class="w-5" icon={Thumbs}></atomic-icon>
     </Button>
   );
 };
