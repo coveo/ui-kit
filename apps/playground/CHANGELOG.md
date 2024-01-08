@@ -1,3 +1,9 @@
+## 1.7.3 (2024-01-08)
+
+### Bug Fixes
+
+- **relay:** move user key under meta.config (#77) ([f20e36b](/commits/f20e36b9238e61707b5be1386dfabf6fd54cbbb8)), closes [#77](/issues/77)
+
 ## 1.7.2 (2024-01-05)
 
 ## 1.7.1 (2024-01-04)
