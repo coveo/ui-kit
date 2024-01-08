@@ -5,6 +5,7 @@ import {Button} from '../button';
 interface CopyButtonProps {
   title: string;
   isCopied: boolean;
+  error: boolean;
   onClick: () => void;
 }
 
@@ -14,7 +15,9 @@ export const CopyButton: FunctionalComponent<CopyButtonProps> = (props) => {
       title={props.title}
       part="copy-button"
       style={'text-transparent'}
-      class={`p-2 rounded-md ${props.isCopied ? 'copied' : ''}`}
+      class={`p-2 rounded-md ${props.isCopied ? 'copied' : ''} ${
+        props.error ? 'error' : ''
+      }`}
       onClick={props.onClick}
     >
       <div class="icon-container text-neutral-dark">

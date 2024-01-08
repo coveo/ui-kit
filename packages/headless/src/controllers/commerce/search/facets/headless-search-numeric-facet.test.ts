@@ -104,4 +104,17 @@ describe('SearchNumericFacet', () => {
       expectContainAction(executeSearch.pending);
     });
   });
+
+  describe('#state', () => {
+    it('#state.values uses #facetResponseSelector', () => {
+      expect(facet.state.facetId).toEqual(
+        state.commerceSearch.facets[0].facetId
+      );
+    });
+
+    it('#state.isLoading uses #isFacetLoadingResponseSelector', () => {
+      state.commerceSearch.isLoading = true;
+      expect(facet.state.isLoading).toBe(true);
+    });
+  });
 });
