@@ -1,26 +1,16 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {loadReducerError} from '../../../../utils/errors';
-import {CoreCommerceFacetOptions} from '../../facets/core/headless-core-commerce-facet';
+import {CommerceFacetOptions} from '../../facets/core/headless-core-commerce-facet';
 import {
   CommerceNumericFacet,
   buildCommerceNumericFacet,
 } from '../../facets/core/numeric/headless-commerce-numeric-facet';
 import {loadProductListingReducer} from '../utils/load-product-listing-reducers';
-
-export type ProductListingNumericFacetOptions = Omit<
-  CoreCommerceFacetOptions,
-  | 'fetchResultsActionCreator'
-  | 'toggleSelectActionCreator'
-  | 'toggleExcludeActionCreator'
->;
-
-export type ProductListingNumericFacetBuilder =
-  typeof buildProductListingNumericFacet;
+import {commonOptions} from './headless-product-listing-facet-options';
 
 export function buildProductListingNumericFacet(
   engine: CommerceEngine,
-  options: ProductListingNumericFacetOptions
+  options: CommerceFacetOptions
 ): CommerceNumericFacet {
   if (!loadProductListingReducer(engine)) {
     throw loadReducerError;
@@ -28,6 +18,6 @@ export function buildProductListingNumericFacet(
 
   return buildCommerceNumericFacet(engine, {
     ...options,
-    fetchResultsActionCreator: fetchProductListing,
+    ...commonOptions,
   });
 }

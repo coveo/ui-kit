@@ -74,12 +74,20 @@ export const numericFacetSetReducer = createReducer(
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const facets = action.payload.response.facets as NumericFacetResponse[];
-        onRangeFacetRequestFulfilled(state, facets, convertToRangeRequests);
+        onRangeFacetRequestFulfilled(
+          state,
+          facets,
+          convertToNumericRangeRequests
+        );
       })
       .addCase(fetchProductListing.fulfilled, (state, action) => {
         const facets = (action.payload.response?.facets?.results ||
           []) as NumericFacetResponse[];
-        onRangeFacetRequestFulfilled(state, facets, convertToRangeRequests);
+        onRangeFacetRequestFulfilled(
+          state,
+          facets,
+          convertToNumericRangeRequests
+        );
       })
       .addCase(disableFacet, (state, action) => {
         handleRangeFacetDeselectAll(state, action.payload);
@@ -99,7 +107,7 @@ function buildNumericFacetRequest(
   };
 }
 
-export function convertToRangeRequests(
+export function convertToNumericRangeRequests(
   values: NumericFacetValue[]
 ): NumericRangeRequest[] {
   return values.map((value) => {

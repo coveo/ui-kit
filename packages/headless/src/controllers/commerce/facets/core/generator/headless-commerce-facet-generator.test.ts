@@ -6,8 +6,10 @@ import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-f
 import {
   buildMockCommerceRegularFacetResponse,
   buildMockCommerceNumericFacetResponse,
+  buildMockCommerceDateFacetResponse,
 } from '../../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
+import {buildProductListingDateFacet} from '../../../product-listing/facets/headless-product-listing-date-facet';
 import {buildProductListingNumericFacet} from '../../../product-listing/facets/headless-product-listing-numeric-facet';
 import {buildProductListingRegularFacet} from '../../../product-listing/facets/headless-product-listing-regular-facet';
 import {
@@ -28,6 +30,14 @@ describe('CommerceFacetGenerator', () => {
     const mockState = buildMockCommerceState();
     const facets = [];
     switch (type) {
+      case 'regular':
+        facets.push(
+          buildMockCommerceRegularFacetResponse({
+            facetId,
+            field: 'some_regular_field',
+          })
+        );
+        break;
       case 'numericalRange':
         facets.push(
           buildMockCommerceNumericFacetResponse({
@@ -36,16 +46,16 @@ describe('CommerceFacetGenerator', () => {
           })
         );
         break;
-      case 'regular':
-      case 'dateRange': // TODO
-      case 'hierarchical': // TODO
-      default:
+      case 'dateRange':
         facets.push(
-          buildMockCommerceRegularFacetResponse({
+          buildMockCommerceDateFacetResponse({
             facetId,
-            field: 'some_regular_field',
+            field: 'some_date_field',
           })
         );
+        break;
+      case 'hierarchical': // TODO
+      default:
         break;
     }
     engine = buildMockCommerceEngine({
@@ -69,6 +79,7 @@ describe('CommerceFacetGenerator', () => {
     options = {
       buildNumericFacet: buildProductListingNumericFacet,
       buildRegularFacet: buildProductListingRegularFacet,
+      buildDateFacet: buildProductListingDateFacet,
     };
     facetGenerator = buildCommerceFacetGenerator(engine, options);
   }
@@ -95,7 +106,7 @@ describe('CommerceFacetGenerator', () => {
       });
     });
     describe('when facet state contains regular facets', () => {
-      it('should generate regular facet controllers', () => {
+      it('generates regular facet controllers', () => {
         const facetId = 'regular_facet_id';
         initFacetGenerator(facetId, 'regular');
 
@@ -107,7 +118,7 @@ describe('CommerceFacetGenerator', () => {
     });
 
     describe('when facet state contains numeric facets', () => {
-      it('should generate numeric facet controllers', () => {
+      it('generates numeric facet controllers', () => {
         const facetId = 'numeric_facet_id';
         initFacetGenerator(facetId, 'numericalRange');
 
@@ -117,10 +128,18 @@ describe('CommerceFacetGenerator', () => {
         );
       });
     });
-  });
 
-  it('should generate date facet controllers', () => {
-    // TODO
+    describe('when facet state contains date facets', () => {
+      it('generates date facet controllers', () => {
+        const facetId = 'date_facet_id';
+        initFacetGenerator(facetId, 'dateRange');
+
+        expect(facetGenerator.state.facets.length).toEqual(1);
+        expect(facetGenerator.state.facets[0].state).toEqual(
+          buildProductListingDateFacet(engine, {facetId}).state
+        );
+      });
+    });
   });
 
   it('should generate category facet controllers', () => {

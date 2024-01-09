@@ -1,13 +1,16 @@
-import {createReducer} from '@reduxjs/toolkit';
+import {type Draft as WritableDraft} from '@reduxjs/toolkit';
+import {AnyAction, createReducer} from '@reduxjs/toolkit';
 import {SortOption} from '../../../api/commerce/common/sort';
 import {
   buildRelevanceSortCriterion,
   SortBy,
   SortCriterion,
 } from '../../sort/sort';
+import {setContext, setUser, setView} from '../context/context-actions';
 import {fetchProductListing} from '../product-listing/product-listing-actions';
+import {executeSearch} from '../search/search-actions';
 import {applySort} from './sort-actions';
-import {getCommerceSortInitialState} from './sort-state';
+import {CommerceSortState, getCommerceSortInitialState} from './sort-state';
 
 const mapResponseSortToStateSort = (sort: SortOption): SortCriterion => {
   if (sort.sortCriteria === SortBy.Relevance) {
@@ -32,14 +35,21 @@ export const sortReducer = createReducer(
       .addCase(applySort, (state, action) => {
         state.appliedSort = action.payload;
       })
-      .addCase(fetchProductListing.fulfilled, (state, action) => {
-        const response = action.payload.response;
-        state.appliedSort = mapResponseSortToStateSort(
-          response.sort.appliedSort
-        );
-        state.availableSorts = response.sort.availableSorts.map(
-          mapResponseSortToStateSort
-        );
-      });
+      .addCase(fetchProductListing.fulfilled, handleFetchFulfilled)
+      .addCase(executeSearch.fulfilled, handleFetchFulfilled)
+      .addCase(setContext, getCommerceSortInitialState)
+      .addCase(setView, getCommerceSortInitialState)
+      .addCase(setUser, getCommerceSortInitialState);
   }
 );
+
+function handleFetchFulfilled(
+  state: WritableDraft<CommerceSortState>,
+  action: AnyAction
+) {
+  const response = action.payload.response;
+  state.appliedSort = mapResponseSortToStateSort(response.sort.appliedSort);
+  state.availableSorts = response.sort.availableSorts.map(
+    mapResponseSortToStateSort
+  );
+}

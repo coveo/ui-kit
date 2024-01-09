@@ -6,6 +6,7 @@ import {LightningElement, api} from 'lwc';
 
 /**
  * The `QuanticResultDate` component displays a given result date field value.
+ * Make sure the field specified in this component is also included in the field array for the relevant template. See the this example: [Quantic usage](https://docs.coveo.com/en/quantic/latest/usage/#javascript).
  * @category Result Template
  * @example
  * <template if:true={result.raw.date}>

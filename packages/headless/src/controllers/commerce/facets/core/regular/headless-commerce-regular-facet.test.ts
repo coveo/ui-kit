@@ -1,5 +1,4 @@
 import {CommerceFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
-import {fetchProductListing} from '../../../../../features/commerce/product-listing/product-listing-actions';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
@@ -11,6 +10,7 @@ import {buildMockCommerceRegularFacetResponse} from '../../../../../test/mock-co
 import {buildMockCommerceFacetSlice} from '../../../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceRegularFacetValue} from '../../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
+import {commonOptions} from '../../../product-listing/facets/headless-product-listing-facet-options';
 import {
   CommerceRegularFacet,
   CommerceRegularFacetOptions,
@@ -41,7 +41,7 @@ describe('CommerceRegularFacet', () => {
   beforeEach(() => {
     options = {
       facetId,
-      fetchResultsActionCreator: fetchProductListing,
+      ...commonOptions,
     };
 
     state = buildMockCommerceState();
@@ -73,28 +73,6 @@ describe('CommerceRegularFacet', () => {
     it('dispatches a #toggleExcludeFacetValue', () => {
       const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
       facet.toggleExclude(facetValue);
-
-      expect(engine.actions).toContainEqual(
-        toggleExcludeFacetValue({facetId, selection: facetValue})
-      );
-    });
-  });
-
-  describe('#toggleSingleSelect', () => {
-    it('dispatches a #toggleSelectFacetValue', () => {
-      const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
-      facet.toggleSingleSelect(facetValue);
-
-      expect(engine.actions).toContainEqual(
-        toggleSelectFacetValue({facetId, selection: facetValue})
-      );
-    });
-  });
-
-  describe('#toggleSingleExclude', () => {
-    it('dispatches a #toggleExcludeFacetValue', () => {
-      const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
-      facet.toggleSingleExclude(facetValue);
 
       expect(engine.actions).toContainEqual(
         toggleExcludeFacetValue({facetId, selection: facetValue})

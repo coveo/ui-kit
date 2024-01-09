@@ -3,13 +3,12 @@ import {
   AsyncThunkAction,
 } from '@reduxjs/toolkit';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {
-  commerceFacetResponseSelector,
-  isCommerceFacetLoadingResponseSelector,
-} from '../../../../features/commerce/facets/facet-set/facet-set-selector';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
+import {CommerceFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
 import {
+  AnyFacetResponse,
   AnyFacetValueResponse,
+  DateFacetValue,
   FacetType,
   NumericFacetValue,
   RegularFacetValue,
@@ -28,6 +27,7 @@ import {
   CoreFacet as HeadlessCoreFacet,
   CoreFacetState,
 } from '../../../core/facets/facet/headless-core-facet';
+import {DateRangeRequest} from '../../../core/facets/range-facet/date-facet/headless-core-date-facet';
 import {NumericRangeRequest} from '../../../core/facets/range-facet/numeric-facet/headless-core-numeric-facet';
 
 export type {
@@ -36,6 +36,8 @@ export type {
   RegularFacetValue,
   NumericRangeRequest,
   NumericFacetValue,
+  DateRangeRequest,
+  DateFacetValue,
 };
 
 interface AnyToggleFacetValueActionCreatorPayload {
@@ -70,7 +72,21 @@ export interface CoreCommerceFacetOptions {
   >;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   fetchResultsActionCreator: () => AsyncThunkAction<unknown, void, any>;
+  facetResponseSelector: (
+    state: CommerceEngine['state'],
+    facetId: string
+  ) => AnyFacetResponse | undefined;
+  isFacetLoadingResponseSelector: (state: CommerceEngine['state']) => boolean;
 }
+
+export type CommerceFacetOptions = Omit<
+  CoreCommerceFacetOptions,
+  | 'fetchResultsActionCreator'
+  | 'toggleSelectActionCreator'
+  | 'toggleExcludeActionCreator'
+  | 'facetResponseSelector'
+  | 'isFacetLoadingResponseSelector'
+>;
 
 export type CoreCommerceFacet<
   ValueRequest extends AnyFacetValueRequest,
@@ -163,18 +179,23 @@ export function buildCoreCommerceFacet<
 
   const facetId = props.options.facetId;
 
-  const getRequest = () => engine.state.commerceFacetSet[facetId].request;
+  const getRequest = (): CommerceFacetRequest | undefined =>
+    engine.state.commerceFacetSet[facetId]?.request;
   const getResponse = () =>
-    commerceFacetResponseSelector(engine.state, facetId)!;
+    props.options.facetResponseSelector(engine.state, facetId);
   const getIsLoading = () =>
-    isCommerceFacetLoadingResponseSelector(engine.state);
+    props.options.isFacetLoadingResponseSelector(engine.state);
 
   const getNumberOfActiveValues = () => {
-    return getRequest().values.filter((v) => v.state !== 'idle').length;
+    return getRequest()?.values?.filter((v) => v.state !== 'idle').length ?? 0;
   };
 
   const computeCanShowLessValues = () => {
     const request = getRequest();
+    if (!request) {
+      return false;
+    }
+
     const initialNumberOfValues = request.initialNumberOfValues;
     const hasIdleValues = !!request.values.find((v) => v.state === 'idle');
 
@@ -228,8 +249,8 @@ export function buildCoreCommerceFacet<
     },
 
     showMoreValues() {
-      const numberInState = getRequest().numberOfValues;
-      const initialNumberOfValues = getRequest().initialNumberOfValues;
+      const numberInState = getRequest()?.numberOfValues ?? 0;
+      const initialNumberOfValues = getRequest()?.initialNumberOfValues ?? 0;
       const numberToNextMultipleOfConfigured =
         initialNumberOfValues - (numberInState % initialNumberOfValues);
       const numberOfValues = numberInState + numberToNextMultipleOfConfigured;
@@ -240,7 +261,7 @@ export function buildCoreCommerceFacet<
     },
 
     showLessValues() {
-      const initialNumberOfValues = getRequest().initialNumberOfValues;
+      const initialNumberOfValues = getRequest()?.initialNumberOfValues ?? 0;
       const newNumberOfValues = Math.max(
         initialNumberOfValues,
         getNumberOfActiveValues()
@@ -256,19 +277,19 @@ export function buildCoreCommerceFacet<
     get state() {
       const response = getResponse();
 
-      const values = response.values as ValueResponse[];
+      const values = (response?.values ?? []) as ValueResponse[];
       const hasActiveValues = values.some(
         (facetValue) => facetValue.state !== 'idle'
       );
-      const canShowMoreValues = response ? response.moreValuesAvailable : false;
+      const canShowMoreValues = response?.moreValuesAvailable ?? false;
 
       return {
         facetId,
-        type: response.type,
-        field: response.field,
-        displayName: response.displayName,
+        type: response?.type ?? 'regular',
+        field: response?.field ?? '',
+        displayName: response?.displayName ?? '',
         values,
-        isLoading: getIsLoading() ?? false,
+        isLoading: getIsLoading(),
         hasActiveValues,
         canShowMoreValues,
         canShowLessValues: computeCanShowLessValues(),
