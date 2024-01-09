@@ -1,6 +1,6 @@
 'use client';
 
-import {CoveoNextJsSearchParameterSerializer} from '@/common/components/common/search-parameter-serializer';
+import {NextJsSearchParameterSerializer} from '@/common/components/common/search-parameter-serializer';
 import {
   SearchParameterManager,
   SearchParameterManagerState,
@@ -46,8 +46,8 @@ export function useSyncSearchParameterManager({
     if (!controller || !historyRouter.url?.searchParams) {
       return;
     }
-    const {coveoSearchParameters} =
-      CoveoNextJsSearchParameterSerializer.fromUrlSearchParameters(
+    const {searchParameters: coveoSearchParameters} =
+      NextJsSearchParameterSerializer.fromUrlSearchParameters(
         historyRouter.url.searchParams
       );
     return controller.synchronize(coveoSearchParameters);
@@ -60,7 +60,7 @@ export function useSyncSearchParameterManager({
     }
 
     const newURL = new URL(historyRouter.url);
-    CoveoNextJsSearchParameterSerializer.fromCoveoSearchParameters(
+    NextJsSearchParameterSerializer.fromSearchParameters(
       state.parameters
     ).applyToUrlSearchParams(newURL.searchParams);
 

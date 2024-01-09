@@ -1,13 +1,9 @@
-import {
-  buildSearchParameterRanges,
-  SearchParameters,
-} from '@coveo/headless/ssr';
+import {SearchParameters} from '@coveo/headless/ssr';
 import type {ReadonlyURLSearchParams} from 'next/navigation';
 import {
   SearchParamPair,
   isValidSearchParam,
   isFacetPair,
-  isValidFacetKey,
   isUrlInstance,
   isValidKey,
   NextJSServerSideSearchParams,
@@ -19,36 +15,29 @@ import {
   rangeDelimiterExclusive,
   FacetValue,
   RangeFacetValue,
-  isValidBasicKey,
-  facetSearchParamRegex,
-  toArray,
-  addFacetValuesToSearchParams,
+  extendSearchParameters,
 } from './search-parameter-utils';
 
-export class CoveoNextJsSearchParameterSerializer {
-  private constructor(
-    public readonly coveoSearchParameters: SearchParameters
-  ) {}
+export class NextJsSearchParameterSerializer {
+  private constructor(public readonly searchParameters: SearchParameters) {}
 
   /**
-   * Converts a {@link SearchParameters} object to a CoveoNextJsSearchParametersSerializer object.
+   * Converts a {@link SearchParameters} object to a {@link NextJsSearchParameterSerializer} object.
    * This class can help you serialize and deserialize Coveo search parameters to and from URL search parameters.
    *
-   * @param coveoSearchParameters - The {@link SearchParameters} object to convert.
-   * @returns A new instance of CoveoNextJsSearchParametersSerializer.
+   * @param searchParameters - The {@link SearchParameters} object to convert.
+   * @returns A new instance of {@link NextJsSearchParameterSerializer}.
    */
-  public static fromCoveoSearchParameters(
-    coveoSearchParameters: SearchParameters
-  ) {
-    return new CoveoNextJsSearchParameterSerializer(coveoSearchParameters);
+  public static fromSearchParameters(searchParameters: SearchParameters) {
+    return new NextJsSearchParameterSerializer(searchParameters);
   }
 
   /**
-   * Converts URL search parameters into a CoveoNextJsSearchParametersSerializer object.
+   * Converts URL search parameters into a {@link NextJsSearchParameterSerializer} object.
    * This class can help you serialize and deserialize Coveo search parameters to and from URL search parameters.
    *
    * @param clientSideUrlSearchParams - The URL search parameters to convert.
-   * @returns A CoveoNextJsSearchParametersSerializer instance with the converted search parameters.
+   * @returns A {@link NextJsSearchParameterSerializer} instance with the converted search parameters.
    */
   public static fromUrlSearchParameters(
     clientSideUrlSearchParams:
@@ -56,13 +45,9 @@ export class CoveoNextJsSearchParameterSerializer {
       | ReadonlyURLSearchParams
       | NextJSServerSideSearchParams
   ) {
-    const coveoSearchParameters: Record<string, unknown> = {};
+    const searchParameters: Record<string, unknown> = {};
     const add = (key: string, value: NextJSServerSideSearchParamsValues) =>
-      CoveoNextJsSearchParameterSerializer.extendSearchParameters(
-        coveoSearchParameters,
-        key,
-        value
-      );
+      extendSearchParameters(searchParameters, key, value);
 
     if (isUrlInstance(clientSideUrlSearchParams)) {
       clientSideUrlSearchParams.forEach((value, key) => add(key, value));
@@ -72,7 +57,7 @@ export class CoveoNextJsSearchParameterSerializer {
       );
     }
 
-    return new CoveoNextJsSearchParameterSerializer(coveoSearchParameters);
+    return new NextJsSearchParameterSerializer(searchParameters);
   }
 
   /**
@@ -82,8 +67,8 @@ export class CoveoNextJsSearchParameterSerializer {
    * @param urlSearchParams - The URLSearchParams object to apply the new search parameters to.
    */
   public applyToUrlSearchParams(urlSearchParams: URLSearchParams) {
-    const previousState = this.wipeCoveoSearchParamFromUrl(urlSearchParams);
-    const newState = this.coveoSearchParameters;
+    const previousState = this.wipeSearchParamsFromUrl(urlSearchParams);
+    const newState = this.searchParameters;
     Object.entries(newState).forEach(
       ([key, value]) =>
         isValidKey(key) &&
@@ -91,50 +76,14 @@ export class CoveoNextJsSearchParameterSerializer {
     );
   }
 
-  private static extendSearchParameters(
-    searchParams: Record<string, unknown>,
-    key: string,
-    value: NextJSServerSideSearchParamsValues
-  ): void {
-    if (value === undefined) {
-      return;
-    }
-    if (isValidBasicKey(key)) {
-      searchParams[key] = value;
-      return;
-    }
-
-    const result = facetSearchParamRegex.exec(key);
-    if (result) {
-      const paramKey = result[1];
-      const facetId = result[2];
-      if (!isValidFacetKey(paramKey)) {
-        return;
-      }
-      const add = addFacetValuesToSearchParams(facetId, paramKey);
-
-      const {buildDateRanges, buildNumericRanges} =
-        buildSearchParameterRanges();
-
-      const range =
-        paramKey === 'nf'
-          ? buildNumericRanges(toArray(value))
-          : paramKey === 'df'
-            ? buildDateRanges(toArray(value))
-            : toArray(value);
-
-      add(searchParams, range);
-    }
-  }
-
-  private wipeCoveoSearchParamFromUrl(urlSearchParams: URLSearchParams) {
-    const previousCoveoSearchParams: FacetValue = {};
+  private wipeSearchParamsFromUrl(urlSearchParams: URLSearchParams) {
+    const previousSearchParams: FacetValue = {};
     const keysToDelete: string[] = [];
 
     urlSearchParams.forEach((value, key) => {
       if (value !== undefined && isValidSearchParam(key)) {
-        previousCoveoSearchParams[key] = [
-          ...(previousCoveoSearchParams[key] || []),
+        previousSearchParams[key] = [
+          ...(previousSearchParams[key] || []),
           value,
         ];
         keysToDelete.push(key);
@@ -145,7 +94,7 @@ export class CoveoNextJsSearchParameterSerializer {
       urlSearchParams.delete(key);
     }
 
-    return previousCoveoSearchParams;
+    return previousSearchParams;
   }
 
   private applyToUrlSearchParam(

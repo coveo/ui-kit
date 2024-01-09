@@ -1,12 +1,14 @@
+import {isNullOrUndefined, isRecord} from '@coveo/bueno';
 import {
   type DateRangeRequest,
   type NumericRangeRequest,
   type SearchParameters,
 } from '@coveo/headless';
+import {buildSearchParameterRanges} from '@coveo/headless-react/ssr';
 import {ReadonlyURLSearchParams} from 'next/navigation';
 
 export type SearchParameterKey = keyof SearchParameters;
-export type SearchParamPair<T> = [SearchParameterKey, T]; // TODO: not sure this is required
+export type SearchParamPair<T> = [SearchParameterKey, T];
 export type FacetValue = Record<string, string[]>;
 export type RangeFacetValue = Record<
   string,
@@ -19,11 +21,21 @@ export type NextJSServerSideSearchParams = Record<
   NextJSServerSideSearchParamsValues
 >;
 
+type FacetSearchParameters = keyof Pick<
+  SearchParameters,
+  'f' | 'fExcluded' | 'cf' | 'nf' | 'df' | 'sf' | 'af'
+>;
+
+type BasicSearchParameters = Exclude<
+  keyof SearchParameters,
+  FacetSearchParameters
+>;
+
 export const rangeDelimiterExclusive = '..';
 export const rangeDelimiterInclusive = '...';
 export const facetSearchParamRegex = /^(f|fExcluded|cf|nf|df|sf|af)-(.+)$/;
 
-const supportedFacetParameters = {
+const supportedFacetParameters: Record<FacetSearchParameters, boolean> = {
   f: true,
   fExcluded: true,
   cf: true,
@@ -33,10 +45,7 @@ const supportedFacetParameters = {
   af: true,
 };
 
-const supportedBasicParameters: Omit<
-  Record<keyof SearchParameters, boolean>,
-  keyof typeof supportedFacetParameters
-> = {
+const supportedBasicParameters: Record<BasicSearchParameters, boolean> = {
   q: true,
   aq: true,
   cq: true,
@@ -97,7 +106,7 @@ export function isFacetPair(
   pair: [SearchParameterKey, unknown]
 ): pair is SearchParamPair<FacetValue> {
   const [key, value] = pair;
-  if (!isObject(value)) {
+  if (!isRecord(value)) {
     return false;
   }
   if (!isValidFacetKey(key)) {
@@ -112,7 +121,7 @@ export function isRangeFacetPair(
   pair: [SearchParameterKey, unknown]
 ): pair is SearchParamPair<RangeFacetValue> {
   const [key, value] = pair;
-  if (!isObject(value)) {
+  if (!isRecord(value)) {
     return false;
   }
   if (key !== 'nf' && key !== 'df') {
@@ -120,7 +129,7 @@ export function isRangeFacetPair(
   }
 
   const isRangeValue = (v: unknown) =>
-    isObject(v) && 'start' in v && 'end' in v;
+    isRecord(v) && 'start' in v && 'end' in v;
   return allEntriesAreValid(value, isRangeValue);
 }
 
@@ -146,6 +155,7 @@ export function isUrlInstance(
  * @template T The type of elements in the arrays.
  */
 export function areTheSameArraysSortedDifferently<T>(
+  // TODO: KIT-2952 use compare-utils.ts -> arrayEqualAnyOrder
   arr1: T[],
   arr2: T[]
 ): boolean {
@@ -160,8 +170,45 @@ export function areTheSameArraysSortedDifferently<T>(
   return false;
 }
 
-function isObject(obj: unknown): obj is object {
-  return obj && typeof obj === 'object' ? true : false;
+/**
+ * Extends the search parameters with the given key-value pair. If the key-value pair is not valid or if the value is undefined, the search parameters are not modified.
+ * @param searchParams - The search parameters object to extend.
+ * @param key - The key of the search parameter.
+ * @param value - The value of the search parameter.
+ */
+export function extendSearchParameters(
+  searchParams: Record<string, unknown>,
+  key: string,
+  value: NextJSServerSideSearchParamsValues
+): void {
+  if (isNullOrUndefined(value)) {
+    return;
+  }
+  if (isValidBasicKey(key)) {
+    searchParams[key] = value;
+    return;
+  }
+
+  const result = facetSearchParamRegex.exec(key);
+  if (result) {
+    const paramKey = result[1];
+    const facetId = result[2];
+    if (!isValidFacetKey(paramKey)) {
+      return;
+    }
+    const add = addFacetValuesToSearchParams(facetId, paramKey);
+
+    const {buildDateRanges, buildNumericRanges} = buildSearchParameterRanges();
+
+    const range =
+      paramKey === 'nf'
+        ? buildNumericRanges(toArray(value))
+        : paramKey === 'df'
+          ? buildDateRanges(toArray(value))
+          : toArray(value);
+
+    add(searchParams, range);
+  }
 }
 
 function allEntriesAreValid(

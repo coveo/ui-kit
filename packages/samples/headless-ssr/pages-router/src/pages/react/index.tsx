@@ -1,4 +1,4 @@
-import {CoveoNextJsSearchParameterSerializer} from '@/common/components/common/search-parameter-serializer';
+import {NextJsSearchParameterSerializer} from '@/common/components/common/search-parameter-serializer';
 import {AuthorFacet} from '@/common/components/react/facets';
 import ResultList from '@/common/components/react/result-list';
 import SearchBox from '@/common/components/react/search-box';
@@ -9,8 +9,8 @@ import {SearchStaticState, fetchStaticState} from '@/common/lib/react/engine';
 export async function getServerSideProps(context: {
   query: {[key: string]: string | string[] | undefined};
 }) {
-  const {coveoSearchParameters} =
-    CoveoNextJsSearchParameterSerializer.fromUrlSearchParameters(context.query);
+  const {searchParameters: coveoSearchParameters} =
+    NextJsSearchParameterSerializer.fromUrlSearchParameters(context.query);
   const contextValues = {ageGroup: '30-45', mainInterest: 'sports'};
   const staticState = await fetchStaticState({
     controllers: {
