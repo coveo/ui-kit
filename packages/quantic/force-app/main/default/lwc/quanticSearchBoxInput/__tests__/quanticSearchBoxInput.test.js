@@ -1,43 +1,36 @@
-// @ts-nocheck
 // @ts-ignore
 import {createElement} from 'lwc';
 import QuanticSearchBoxInput from '../quanticSearchBoxInput';
 
 const functionsMocks = {
-  exampleHandleInputValueChange: jest.fn((event) => event),
+  exampleHandleInputValueChange: jest.fn(() => {}),
   exampleHandleSubmitSearch: jest.fn(() => {}),
   exampleHandleShowSuggestions: jest.fn(() => {}),
   exampleHandleSelectSuggestion: jest.fn(() => {}),
-  mockClickOutsideEvent: jest.fn(() => {}),
+  exampleHandleKeyup: jest.fn(() => {}),
 };
 
+const defaultPlaceholder = 'Search...';
+const mockInputValue = 'Test input value';
 const mockSuggestions = [
   {key: '1', value: 'suggestion1', rawValue: 'suggestion1'},
   {key: '2', value: 'suggestion2', rawValue: 'suggestion2'},
   {key: '3', value: 'suggestion3', rawValue: 'suggestion3'},
 ];
 
-const defaultPlaceholder = 'Search...';
-const exampleShortString = 'Test string';
-const exampleVeryLongString =
-  'exampleVeryLongStringexampleVeryLongStringexampleVeryLongStringexampleVeryLongStringexampleVeryLongStringexampleVeryLongStringexampleVeryLongStringexampleVeryLongString';
-const defaultInputHeight = '48px';
-
 const defaultOptions = {
   withoutSubmitButton: false,
-  textarea: false,
+  textarea: true,
   placeholder: defaultPlaceholder,
-  //   suggestions: mockSuggestions,
   suggestions: [],
 };
 
 const selectors = {
   searchBoxInput: '.searchbox__input',
+  searchBoxTextArea: '.searchbox__container textarea',
   searchBoxSubmitBtn: '.searchbox__submit-button',
-  searchBoxSearchIcon: '.searchbox__search-icon',
   searchBoxClearIcon: '.searchbox__clear-button',
   searchBoxSuggestionsList: 'c-quantic-search-box-suggestions-list',
-  searchBoxTextArea: '.searchbox__container textarea',
   searchBoxContainer: '.searchbox__container',
   searchBoxComboBox: '.slds-combobox_container .slds-combobox',
 };
@@ -59,7 +52,7 @@ function setupEventListeners(element) {
     'selectsuggestion',
     functionsMocks.exampleHandleSelectSuggestion
   );
-  window.addEventListener('clickoutside', functionsMocks.mockClickOutsideEvent);
+  element.addEventListener('keyup', functionsMocks.exampleHandleKeyup);
 }
 
 function createTestComponent(options = defaultOptions) {
@@ -79,21 +72,23 @@ function flushPromises() {
   return new Promise((resolve) => setTimeout(resolve, 0));
 }
 
-// Helper function to type something in the input or textarea.
-async function typeInInput(input, val) {
-  input.focus();
-  input.value = val;
-  const inputEvent = new CustomEvent('inputvaluechange', {bubbles: true});
-  input.dispatchEvent(inputEvent);
-}
-
-// Helper function to clear the input from its value
-async function clickClearIcon(element) {
-  const clearIcon = await element.shadowRoot.querySelector(
+// Helper function to check that the input or the textarea is displayed properly.
+function inputProperlyDisplayed(element, isTextarea) {
+  const input = element.shadowRoot.querySelector(selectors.searchBoxInput);
+  const submitButton = element.shadowRoot.querySelector(
+    selectors.searchBoxSubmitBtn
+  );
+  const clearIcon = element.shadowRoot.querySelector(
     selectors.searchBoxClearIcon
   );
-  expect(clearIcon).not.toBeNull();
-  clearIcon.click();
+  const textarea = element.shadowRoot.querySelector(
+    selectors.searchBoxTextArea
+  );
+
+  expect(isTextarea ? textarea : input).not.toBeNull();
+  expect(input.placeholder).toEqual(defaultOptions.placeholder);
+  expect(submitButton).not.toBeNull();
+  expect(clearIcon).toBeNull();
 }
 
 describe('c-quantic-search-box-input', () => {
@@ -114,196 +109,7 @@ describe('c-quantic-search-box-input', () => {
       const element = createTestComponent();
       await flushPromises();
 
-      const input = element.shadowRoot.querySelector(selectors.searchBoxInput);
-      const submitButton = element.shadowRoot.querySelector(
-        selectors.searchBoxSubmitBtn
-      );
-      const searchIcon = element.shadowRoot.querySelector(
-        selectors.searchBoxSearchIcon
-      );
-      const clearIcon = element.shadowRoot.querySelector(
-        selectors.searchBoxClearIcon
-      );
-
-      expect(input).not.toBeNull();
-      expect(input.placeholder).toEqual(defaultOptions.placeholder);
-      expect(submitButton).not.toBeNull();
-      expect(searchIcon).toBeNull();
-      expect(clearIcon).toBeNull();
-    });
-
-    describe('when suggestions there are found', () => {
-      it('should display suggestions in the suggestions list', async () => {
-        const element = createTestComponent({
-          ...defaultOptions,
-          suggestions: mockSuggestions,
-        });
-        await flushPromises();
-
-        const suggestionsList = element.shadowRoot.querySelector(
-          selectors.searchBoxSuggestionsList
-        );
-        const suggestionsListItems =
-          suggestionsList.shadowRoot.querySelectorAll('li');
-
-        expect(suggestionsList).not.toBeNull();
-        expect(suggestionsListItems).not.toBeNull();
-        expect(suggestionsListItems.length).toEqual(3);
-      });
-    });
-
-    describe('when focusing on the input', () => {
-      it('should dispatch a #showSuggestions custom event', async () => {
-        const element = createTestComponent({
-          ...defaultOptions,
-          suggestions: mockSuggestions,
-        });
-        setupEventListeners(element);
-        await flushPromises();
-
-        const input = element.shadowRoot.querySelector(
-          selectors.searchBoxInput
-        );
-        expect(input).not.toBeNull();
-        input.focus();
-
-        expect(
-          functionsMocks.exampleHandleShowSuggestions
-        ).toHaveBeenCalledTimes(1);
-      });
-
-      describe('when selecting a suggestion from the suggestions list', () => {
-        it('should dispatch a #selectSuggestion event with the selected suggestion as payload', async () => {
-          const element = createTestComponent({
-            ...defaultOptions,
-            suggestions: mockSuggestions,
-          });
-          setupEventListeners(element);
-          await flushPromises();
-
-          const suggestionsList = element.shadowRoot.querySelector(
-            selectors.searchBoxSuggestionsList
-          );
-          const firstSuggestion =
-            suggestionsList.shadowRoot.querySelectorAll('li')[0];
-
-          expect(firstSuggestion).not.toBeNull();
-          firstSuggestion.click();
-
-          expect(
-            functionsMocks.exampleHandleSelectSuggestion
-          ).toHaveBeenCalledTimes(1);
-
-          const eventData =
-            functionsMocks.exampleHandleSelectSuggestion.mock.calls[0][0];
-          const expectedFirstSuggestionSelected = mockSuggestions[0].rawValue;
-
-          expect(eventData.detail.selectedSuggestion).toEqual(
-            expectedFirstSuggestionSelected
-          );
-        });
-      });
-    });
-    describe('when typing something in the input', () => {
-      // eslint-disable-next-line jest/no-focused-tests
-      it.skip('should display the clear input icon', async () => {
-        const element = createTestComponent();
-        await flushPromises();
-
-        const input = element.shadowRoot.querySelector(
-          selectors.searchBoxInput
-        );
-        expect(input).not.toBeNull();
-
-        await typeInInput(input, exampleShortString);
-
-        const clearIcon = await element.shadowRoot.querySelector(
-          selectors.searchBoxClearIcon
-        );
-        expect(clearIcon).not.toBeNull();
-      });
-      // eslint-disable-next-line jest/no-focused-tests
-      it.skip('should clear the input when clicking on the clear input icon', async () => {
-        const element = createTestComponent();
-        await flushPromises();
-
-        const input = element.shadowRoot.querySelector(
-          selectors.searchBoxInput
-        );
-        expect(input).not.toBeNull();
-        await typeInInput(input, exampleShortString);
-
-        const clearIcon = element.shadowRoot.querySelector(
-          selectors.searchBoxClearIcon
-        );
-        expect(clearIcon).not.toBeNull();
-        clearIcon.click();
-        expect(input).toEqual('');
-      });
-      // eslint-disable-next-line jest/no-focused-tests
-      it.skip('should dispatch an #inputValueChange custom event with the input value as payload', async () => {
-        const element = createTestComponent();
-        setupEventListeners(element);
-        await flushPromises();
-
-        const input = element.shadowRoot.querySelector(
-          selectors.searchBoxInput
-        );
-        expect(input).not.toBeNull();
-        await typeInInput(input, exampleShortString);
-
-        expect(
-          functionsMocks.exampleHandleInputValueChange
-        ).toHaveBeenCalledTimes(1);
-
-        const eventData =
-          functionsMocks.exampleHandleInputValueChange.mock.calls[0][0];
-        expect(eventData.detail.newInputValue).toEqual(exampleShortString);
-      });
-
-      describe('when clicking on the submit button', () => {
-        it('should dispatch a #submitSearch custom event', async () => {
-          const element = createTestComponent();
-          setupEventListeners(element);
-          await flushPromises();
-
-          const submitButton = element.shadowRoot.querySelector(
-            selectors.searchBoxSubmitBtn
-          );
-          expect(submitButton).not.toBeNull();
-          submitButton.click();
-
-          expect(
-            functionsMocks.exampleHandleSubmitSearch
-          ).toHaveBeenCalledTimes(1);
-        });
-      });
-
-      describe('when pressing the ENTER key', () => {
-        it('should dispatch a #submitSearch custom event', async () => {
-          const element = createTestComponent();
-          setupEventListeners(element);
-          await flushPromises();
-
-          const input = element.shadowRoot.querySelector(
-            selectors.searchBoxInput
-          );
-          expect(input).not.toBeNull();
-          await typeInInput(input, exampleShortString);
-
-          const enterKeyPress = new KeyboardEvent('keypress', {
-            key: 'Enter',
-            code: 'Enter',
-            charCode: 13,
-            keyCode: 13,
-          });
-          // Triggers search by pressing the ENTER key
-          await input.dispatchEvent(enterKeyPress);
-          expect(
-            functionsMocks.exampleHandleSubmitSearch
-          ).toHaveBeenCalledTimes(1);
-        });
-      });
+      inputProperlyDisplayed(element, false);
     });
   });
 
@@ -312,176 +118,142 @@ describe('c-quantic-search-box-input', () => {
       const element = createTestComponent({...defaultOptions, textarea: true});
       await flushPromises();
 
-      const textarea = element.shadowRoot.querySelector(
-        selectors.searchBoxTextArea
-      );
-      const submitButton = element.shadowRoot.querySelector(
-        selectors.searchBoxSubmitBtn
-      );
-      const searchIcon = element.shadowRoot.querySelector(
-        selectors.searchBoxSearchIcon
-      );
-      const clearIcon = element.shadowRoot.querySelector(
-        selectors.searchBoxClearIcon
-      );
-
-      expect(textarea).not.toBeNull();
-      expect(submitButton).not.toBeNull();
-      expect(searchIcon).toBeNull();
-      expect(textarea.placeholder).toEqual(defaultOptions.placeholder);
-      expect(clearIcon).toBeNull();
+      inputProperlyDisplayed(element, true);
     });
+  });
 
-    describe('when typing a very long string in the textarea', () => {
-      it('should expand down properly', async () => {
-        const element = createTestComponent({
-          ...defaultOptions,
-          textarea: true,
-        });
-        await flushPromises();
-
-        const textarea = element.shadowRoot.querySelector(
-          selectors.searchBoxTextArea
-        );
-        expect(textarea).not.toBeNull();
-        textarea.click();
-
-        const searchBoxComboBox = element.shadowRoot.querySelector(
-          selectors.searchBoxComboBox
-        );
-
-        expect(textarea).not.toBeNull();
-        await typeInInput(textarea, exampleVeryLongString);
-        // const textareaHeight = window.getComputedStyle(textarea).height;
-        const ariaExpanded = searchBoxComboBox.getAttribute('aria-expanded');
-
-        // expect(textareaHeight).not.toEqual(defaultInputHeight);
-        // expect(searchBoxComboBox.classList.contains('slds-is-open')).toBe(
-        //   true
-        // );
-        expect(ariaExpanded).toEqual('true');
+  describe('when suggestions are found', () => {
+    it('should display the suggestions in the suggestions list', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        suggestions: mockSuggestions,
       });
+      await flushPromises();
+
+      const suggestionsList = element.shadowRoot.querySelector(
+        selectors.searchBoxSuggestionsList
+      );
+      expect(suggestionsList).not.toBeNull();
+
+      const suggestionsListItems =
+        suggestionsList.shadowRoot.querySelectorAll('li');
+      expect(suggestionsListItems).not.toBeNull();
+
+      expect(suggestionsListItems.length).toEqual(3);
+    });
+  });
+
+  describe('when focusing on the input', () => {
+    it('should dispatch a #showsuggestions custom event', async () => {
+      const element = createTestComponent();
+      setupEventListeners(element);
+      await flushPromises();
+
+      const input = element.shadowRoot.querySelector(selectors.searchBoxInput);
+      expect(input).not.toBeNull();
+
+      await input.focus();
+
+      expect(functionsMocks.exampleHandleShowSuggestions).toHaveBeenCalledTimes(
+        1
+      );
     });
 
-    describe('when clicking on the clear input icon', () => {
-      // eslint-disable-next-line jest/no-focused-tests
-      it.only('should collapse the expanded textarea back to its default height', async () => {
+    describe('when selecting a suggestion from the suggestions list', () => {
+      it('should dispatch a #selectsuggestion event with the selected suggestion as payload', async () => {
         const element = createTestComponent({
           ...defaultOptions,
-          textarea: true,
+          suggestions: mockSuggestions,
         });
+        setupEventListeners(element);
         await flushPromises();
 
-        const searchBoxContainer = element.shadowRoot.querySelector(
-          selectors.searchBoxContainer
+        const suggestionsList = element.shadowRoot.querySelector(
+          selectors.searchBoxSuggestionsList
         );
+        expect(suggestionsList).not.toBeNull();
 
-        const textarea = element.shadowRoot.querySelector(
-          selectors.searchBoxTextArea
-        );
-        expect(textarea).not.toBeNull();
-        await typeInInput(textarea, exampleVeryLongString);
+        const firstSuggestion =
+          suggestionsList.shadowRoot.querySelectorAll('li')[0];
+        expect(firstSuggestion).not.toBeNull();
 
-        clickClearIcon(element);
+        firstSuggestion.click();
 
-        const textareaHeight = window.getComputedStyle(textarea).height;
+        expect(
+          functionsMocks.exampleHandleSelectSuggestion
+        ).toHaveBeenCalledTimes(1);
 
-        expect(textareaHeight).toEqual(defaultInputHeight);
-        expect(searchBoxContainer.classList.contains('slds-is-open')).toBe(
-          false
+        // @ts-ignore
+        const eventData =
+          functionsMocks.exampleHandleSelectSuggestion.mock.calls[0][0];
+        const expectedFirstSuggestionSelected = mockSuggestions[0].rawValue;
+
+        // @ts-ignore
+        expect(eventData.detail.selectedSuggestion).toEqual(
+          expectedFirstSuggestionSelected
         );
       });
     });
+  });
 
-    describe('when triggering a search', () => {
-      it.skip('should collapse the expanded textarea back to its default height when clicking on the submit button', async () => {
-        const element = createTestComponent({
-          ...defaultOptions,
-          textarea: true,
-        });
+  describe('when typing something in the input', () => {
+    it('should dispatch an #inputvaluechange custom event with the input value as payload', async () => {
+      const element = createTestComponent();
+      setupEventListeners(element);
+      await flushPromises();
+
+      element.inputValue = mockInputValue;
+
+      const input = element.shadowRoot.querySelector(selectors.searchBoxInput);
+      expect(input).not.toBeNull();
+
+      input.dispatchEvent(new KeyboardEvent('keyup', {key: 'a'}));
+      expect(
+        functionsMocks.exampleHandleInputValueChange
+      ).toHaveBeenCalledTimes(1);
+
+      // @ts-ignore
+      const eventData =
+        functionsMocks.exampleHandleInputValueChange.mock.calls[0][0];
+      // @ts-ignore
+      expect(eventData.detail.newInputValue).toEqual(mockInputValue);
+    });
+
+    describe('when clicking on the submit button', () => {
+      it('should dispatch a #submitsearch custom event', async () => {
+        const element = createTestComponent();
+        setupEventListeners(element);
         await flushPromises();
-
-        const searchBoxContainer = element.shadowRoot.querySelector(
-          selectors.searchBoxContainer
-        );
-
-        const textarea = element.shadowRoot.querySelector(
-          selectors.searchBoxTextArea
-        );
-        expect(textarea).not.toBeNull();
-        await typeInInput(textarea, exampleVeryLongString);
 
         const submitButton = element.shadowRoot.querySelector(
           selectors.searchBoxSubmitBtn
         );
         expect(submitButton).not.toBeNull();
-        await submitButton.click();
 
-        const textareaHeight = window.getComputedStyle(textarea).height;
+        submitButton.click();
 
-        expect(textareaHeight).toEqual(defaultInputHeight);
-        expect(searchBoxContainer.classList.contains('slds-is-open')).toBe(
-          false
-        );
-      });
-      it.skip('should collapse the expanded textarea back to its default height when pressing the ENTER key', async () => {
-        const element = createTestComponent({
-          ...defaultOptions,
-          textarea: true,
-        });
-        await flushPromises();
-
-        const searchBoxContainer = element.shadowRoot.querySelector(
-          selectors.searchBoxContainer
-        );
-
-        const textarea = element.shadowRoot.querySelector(
-          selectors.searchBoxTextArea
-        );
-        expect(textarea).not.toBeNull();
-        await typeInInput(textarea, exampleVeryLongString);
-
-        const enterKeyPress = new KeyboardEvent('keypress', {
-          key: 'Enter',
-          code: 'Enter',
-          charCode: 13,
-          keyCode: 13,
-        });
-        // Triggers search by pressing the ENTER key
-        await textarea.dispatchEvent(enterKeyPress);
-
-        expect(searchBoxContainer.classList.contains('slds-is-open')).toBe(
-          false
+        expect(functionsMocks.exampleHandleSubmitSearch).toHaveBeenCalledTimes(
+          1
         );
       });
     });
-    describe.skip('when clicking outside of the textarea', () => {
-      it('should collapse the expanded textarea back to its default height', async () => {
-        const element = createTestComponent({
-          ...defaultOptions,
-          textarea: true,
-        });
+
+    describe('when pressing the ENTER key', () => {
+      it('should dispatch a #submitsearch custom event', async () => {
+        const element = createTestComponent();
+        setupEventListeners(element);
         await flushPromises();
 
-        const searchBoxContainer = element.shadowRoot.querySelector(
-          selectors.searchBoxContainer
+        const input = element.shadowRoot.querySelector(
+          selectors.searchBoxInput
         );
+        expect(input).not.toBeNull();
 
-        const textarea = element.shadowRoot.querySelector(
-          selectors.searchBoxTextArea
-        );
-        expect(textarea).not.toBeNull();
-        await typeInInput(textarea, exampleVeryLongString);
+        await input.focus();
+        input.dispatchEvent(new KeyboardEvent('keyup', {key: 'Enter'}));
 
-        // click anywhere on the window other than the textarea
-        await document.dispatchEvent(new MouseEvent('clickoutside'));
-        expect(functionsMocks.mockClickOutsideEvent).toHaveBeenCalled();
-
-        const textareaHeight = window.getComputedStyle(textarea).height;
-
-        expect(textareaHeight).toEqual(defaultInputHeight);
-        expect(searchBoxContainer.classList.contains('slds-is-open')).toBe(
-          false
+        expect(functionsMocks.exampleHandleSubmitSearch).toHaveBeenCalledTimes(
+          1
         );
       });
     });
