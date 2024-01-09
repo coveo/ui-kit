@@ -5,7 +5,6 @@ import {
   SearchParameterManager,
   SearchParameterManagerState,
 } from '@coveo/headless/ssr';
-import {useRouter} from 'next/navigation';
 import {useEffect, useMemo, useState} from 'react';
 import {useAppHistoryRouter} from '../../components/common/history-router';
 
