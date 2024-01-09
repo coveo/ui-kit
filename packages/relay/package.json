@@ -29,7 +29,8 @@
   "keywords": [
     "Coveo",
     "analytics",
-    "event"
+    "event",
+    "Event Protocol"
   ],
   "author": "Coveo",
   "license": "Apache-2.0",
