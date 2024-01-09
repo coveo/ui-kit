@@ -72,25 +72,6 @@ function flushPromises() {
   return new Promise((resolve) => setTimeout(resolve, 0));
 }
 
-// Helper function to check that the input or the textarea is displayed properly.
-function inputProperlyDisplayed(element, isTextarea) {
-  const input = element.shadowRoot.querySelector(selectors.searchBoxInput);
-  const submitButton = element.shadowRoot.querySelector(
-    selectors.searchBoxSubmitBtn
-  );
-  const clearIcon = element.shadowRoot.querySelector(
-    selectors.searchBoxClearIcon
-  );
-  const textarea = element.shadowRoot.querySelector(
-    selectors.searchBoxTextArea
-  );
-
-  expect(isTextarea ? textarea : input).not.toBeNull();
-  expect(input.placeholder).toEqual(defaultOptions.placeholder);
-  expect(submitButton).not.toBeNull();
-  expect(clearIcon).toBeNull();
-}
-
 describe('c-quantic-search-box-input', () => {
   function cleanup() {
     // The jsdom instance is shared across test cases in a single file so reset the DOM
@@ -109,7 +90,18 @@ describe('c-quantic-search-box-input', () => {
       const element = createTestComponent();
       await flushPromises();
 
-      inputProperlyDisplayed(element, false);
+      const input = element.shadowRoot.querySelector(selectors.searchBoxInput);
+      const submitButton = element.shadowRoot.querySelector(
+        selectors.searchBoxSubmitBtn
+      );
+      const clearIcon = element.shadowRoot.querySelector(
+        selectors.searchBoxClearIcon
+      );
+
+      expect(input).not.toBeNull();
+      expect(input.placeholder).toEqual(defaultOptions.placeholder);
+      expect(submitButton).not.toBeNull();
+      expect(clearIcon).toBeNull();
     });
   });
 
@@ -118,7 +110,20 @@ describe('c-quantic-search-box-input', () => {
       const element = createTestComponent({...defaultOptions, textarea: true});
       await flushPromises();
 
-      inputProperlyDisplayed(element, true);
+      const submitButton = element.shadowRoot.querySelector(
+        selectors.searchBoxSubmitBtn
+      );
+      const clearIcon = element.shadowRoot.querySelector(
+        selectors.searchBoxClearIcon
+      );
+      const textarea = element.shadowRoot.querySelector(
+        selectors.searchBoxTextArea
+      );
+
+      expect(textarea).not.toBeNull();
+      expect(textarea.placeholder).toEqual(defaultOptions.placeholder);
+      expect(submitButton).not.toBeNull();
+      expect(clearIcon).toBeNull();
     });
   });
 
