@@ -1,376 +1,376 @@
-import {isNullOrUndefined} from '@coveo/bueno';
-import {AnyAction} from '@reduxjs/toolkit';
-import {ThunkDispatch} from 'redux-thunk';
-import {
-  isErrorResponse,
-  isSuccessResponse,
-  SearchAPIClient,
-} from '../../api/search/search-api-client';
-import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
-import {SearchOrigin} from '../../api/search/search-metadata';
-import {SearchRequest} from '../../api/search/search/search-request';
+import {BooleanValue, NumberValue, StringValue} from '@coveo/bueno';
+import {createAsyncThunk} from '@reduxjs/toolkit';
+import {EventDescription} from 'coveo.analytics';
+import {historyStore} from '../../api/analytics/coveo-analytics-utils';
+import {AsyncThunkSearchOptions} from '../../api/search/search-api-client';
 import {SearchResponseSuccess} from '../../api/search/search/search-response';
-import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
+import {AsyncThunkOptions} from '../../app/async-thunk-options';
+import {InstantResultSection} from '../../state/state-sections';
 import {
-  AdvancedSearchQueriesSection,
-  CategoryFacetSection,
-  ConfigurationSection,
-  ContextSection,
-  DateFacetSection,
-  DebugSection,
-  DidYouMeanSection,
-  FacetOptionsSection,
-  FacetOrderSection,
-  FacetSection,
-  FieldsSection,
-  FoldingSection,
-  NumericFacetSection,
-  PaginationSection,
-  PipelineSection,
-  QuerySection,
-  QuerySetSection,
-  SearchHubSection,
-  SearchSection,
-  SortSection,
-  TriggerSection,
-} from '../../state/state-sections';
-import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
-import {didYouMeanAutomatic} from '../did-you-mean/did-you-mean-analytics-actions';
-import {emptyLegacyCorrection} from '../did-you-mean/did-you-mean-state';
-import {snapshot} from '../history/history-actions';
-import {extractHistory} from '../history/history-state';
-import {updateQuery} from '../query/query-actions';
+  requiredNonEmptyString,
+  validatePayload,
+} from '../../utils/validate-payload';
 import {
-  applyQueryTriggerModification,
-  updateIgnoreQueryTrigger,
-} from '../triggers/triggers-actions';
-import {ExecuteSearchThunkReturn} from './search-actions';
-import {logQueryError} from './search-analytics-actions';
+  LegacySearchAction,
+  makeBasicNewSearchAnalyticsAction,
+} from '../analytics/analytics-utils';
+import {SearchPageEvents} from '../analytics/search-action-cause';
 import {
-  ErrorResponse,
-  MappedSearchRequest,
-  mapSearchResponse,
-  SuccessResponse,
-} from './search-mappings';
+  deselectAllBreadcrumbs,
+  deselectAllNonBreadcrumbs,
+} from '../breadcrumb/breadcrumb-actions';
+import {updateFacetAutoSelection} from '../facets/generic/facet-actions';
+import {searchboxAsYouType} from '../instant-results/instant-result-analytics-actions';
+import {
+  FetchInstantResultsActionCreatorPayload,
+  FetchInstantResultsThunkReturn,
+  updateInstantResultsQuery,
+} from '../instant-results/instant-results-actions';
+import {updatePage} from '../pagination/pagination-actions';
+import {
+  updateQuery,
+  UpdateQueryActionCreatorPayload,
+} from '../query/query-actions';
+import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request';
+import {
+  legacyExecuteSearch,
+  legacyFetchInstantResults,
+  legacyFetchMoreResults,
+  legacyFetchPage,
+} from './legacy/search-actions';
+import {
+  AsyncSearchThunkProcessor,
+  StateNeededByExecuteSearch,
+} from './search-actions-thunk-processor';
+import {MappedSearchRequest, mapSearchRequest} from './search-mappings';
 import {buildSearchRequest} from './search-request';
 
-export interface AnalyticsAction {
+export interface SearchAction<
+  State extends StateNeededByExecuteSearch = StateNeededByExecuteSearch,
+  Payload extends Object = {},
+> {
   actionCause: string;
+  getEventExtraPayload: (state: State) => Payload;
 }
 
-export type StateNeededByExecuteSearch = ConfigurationSection &
-  Partial<
-    QuerySection &
-      AdvancedSearchQueriesSection &
-      PaginationSection &
-      SortSection &
-      FacetSection &
-      NumericFacetSection &
-      CategoryFacetSection &
-      DateFacetSection &
-      ContextSection &
-      DidYouMeanSection &
-      FieldsSection &
-      PipelineSection &
-      SearchHubSection &
-      QuerySetSection &
-      FacetOptionsSection &
-      FacetOrderSection &
-      DebugSection &
-      SearchSection &
-      FoldingSection &
-      TriggerSection
-  >;
+type SingleOrArray<T> = T | T[];
 
-interface FetchedResponse {
-  response: SuccessResponse | ErrorResponse;
+export const buildSearchAction = <
+  State extends StateNeededByExecuteSearch = StateNeededByExecuteSearch,
+  Payload extends Object = {},
+>(
+  actionCause: string,
+  getEventExtraPayload: SingleOrArray<
+    ({
+      state,
+      payload,
+    }: {
+      state: StateNeededByExecuteSearch;
+      payload: Partial<Payload>;
+    }) => void
+  >
+) => {
+  const getEventExtraPayloadFunctionArray = Array.isArray(getEventExtraPayload)
+    ? getEventExtraPayload
+    : [getEventExtraPayload];
+  const combinedGetEventExtraPayload = (state: State) => {
+    const payload = {};
+    for (const payloadTransformer of getEventExtraPayloadFunctionArray) {
+      payloadTransformer({state, payload});
+    }
+    return payload;
+  };
+  return {
+    actionCause,
+    getEventExtraPayload: combinedGetEventExtraPayload,
+  };
+};
+
+export type {StateNeededByExecuteSearch} from './search-actions-thunk-processor';
+
+export interface ExecuteSearchThunkReturn {
+  /** The successful search response. */
+  response: SearchResponseSuccess;
+  /** The number of milliseconds it took to receive the response. */
   duration: number;
+  /** The query that was executed. */
   queryExecuted: string;
-  requestExecuted: SearchRequest;
+  /** Whether the query was automatically corrected. */
+  automaticallyCorrected: boolean;
+  /** The original query that was performed when an automatic correction is executed.*/
+  originalQuery: string;
 }
 
-type ValidReturnTypeFromProcessingStep<RejectionType> =
-  | ExecuteSearchThunkReturn
-  | RejectionType;
-
-export interface AsyncThunkConfig {
-  getState: () => StateNeededByExecuteSearch;
-  dispatch: ThunkDispatch<
-    StateNeededByExecuteSearch,
-    ClientThunkExtraArguments<SearchAPIClient> & {
-      searchAPIClient?: SearchAPIClient | undefined;
-    },
-    AnyAction
-  >;
-
-  rejectWithValue: (err: SearchAPIErrorWithStatusCode) => unknown;
-  analyticsAction: AnalyticsAction;
-  extra: ClientThunkExtraArguments<SearchAPIClient>;
+interface PrepareForSearchWithQueryOptions {
+  /**
+   * Whether to clear all active query filters when the end user submits a new query from the search box.
+   * Setting this option to "false" is not recommended & can lead to an increasing number of queries returning no results.
+   */
+  clearFilters: boolean;
 }
 
-type QueryCorrectionCallback = (modification: string) => void;
+export const prepareForSearchWithQuery = createAsyncThunk<
+  void,
+  UpdateQueryActionCreatorPayload & PrepareForSearchWithQueryOptions,
+  AsyncThunkOptions<StateNeededByExecuteSearch>
+>('search/prepareForSearchWithQuery', (payload, thunk) => {
+  const {dispatch} = thunk;
+  validatePayload(payload, {
+    q: new StringValue(),
+    enableQuerySyntax: new BooleanValue(),
+    clearFilters: new BooleanValue(),
+  });
 
-export interface FetchFromAPIOptions {
-  origin: SearchOrigin;
-  disableAbortWarning?: boolean;
+  if (payload.clearFilters) {
+    dispatch(deselectAllBreadcrumbs());
+    dispatch(deselectAllNonBreadcrumbs());
+  }
+
+  dispatch(updateFacetAutoSelection({allow: true}));
+  dispatch(
+    updateQuery({q: payload.q, enableQuerySyntax: payload.enableQuerySyntax})
+  );
+  dispatch(updatePage(1));
+});
+
+export interface TransitiveSearchAction {
+  legacy: LegacySearchAction;
+  next?: SearchAction;
 }
 
-export class AsyncSearchThunkProcessor<RejectionType> {
-  constructor(
-    private config: AsyncThunkConfig,
-    private onUpdateQueryForCorrection: QueryCorrectionCallback = (
-      modification
-    ) => {
-      this.dispatch(updateQuery({q: modification}));
+export const executeSearch = createAsyncThunk<
+  ExecuteSearchThunkReturn,
+  TransitiveSearchAction,
+  AsyncThunkSearchOptions<StateNeededByExecuteSearch>
+>(
+  'search/executeSearch',
+  async (searchAction: TransitiveSearchAction, config) => {
+    const state = config.getState();
+    if (
+      state.configuration.analytics.analyticsMode === 'legacy' ||
+      !searchAction.next
+    ) {
+      return legacyExecuteSearch(state, config, searchAction.legacy);
     }
-  ) {}
+    addEntryInActionsHistory(state);
+    const analyticsAction = buildSearchReduxAction(searchAction.next, state);
 
-  public async fetchFromAPI(
-    {mappings, request}: MappedSearchRequest,
-    options: FetchFromAPIOptions
+    const request = await buildSearchRequest(state, analyticsAction);
+
+    const processor = new AsyncSearchThunkProcessor<
+      ReturnType<typeof config.rejectWithValue>
+    >({...config, analyticsAction});
+
+    const fetched = await processor.fetchFromAPI(request, {
+      origin: 'mainSearch',
+    });
+
+    return await processor.process(fetched);
+  }
+);
+
+export const fetchPage = createAsyncThunk<
+  ExecuteSearchThunkReturn,
+  TransitiveSearchAction,
+  AsyncThunkSearchOptions<StateNeededByExecuteSearch>
+>('search/fetchPage', async (searchAction: TransitiveSearchAction, config) => {
+  const state = config.getState();
+  addEntryInActionsHistory(state);
+
+  if (
+    state.configuration.analytics.analyticsMode === 'legacy' ||
+    !searchAction.next
   ) {
-    const startedAt = new Date().getTime();
-    const response = mapSearchResponse(
-      await this.extra.apiClient.search(request, options),
-      mappings
-    );
-    const duration = new Date().getTime() - startedAt;
-    const queryExecuted = this.getState().query?.q || '';
-    return {response, duration, queryExecuted, requestExecuted: request};
+    return legacyFetchPage(state, config, searchAction.legacy);
   }
 
-  public async process(
-    fetched: FetchedResponse
-  ): Promise<ValidReturnTypeFromProcessingStep<RejectionType>> {
-    return (
-      this.processQueryErrorOrContinue(fetched) ??
-      (await this.processQueryCorrectionsOrContinue(fetched)) ??
-      (await this.processQueryTriggersOrContinue(fetched)) ??
-      this.processSuccessResponse(fetched)
-    );
+  const processor = new AsyncSearchThunkProcessor<
+    ReturnType<typeof config.rejectWithValue>
+  >({
+    ...config,
+    analyticsAction: searchAction.next,
+  });
+
+  const request = await buildSearchRequest(state, searchAction.next);
+  const fetched = await processor.fetchFromAPI(request, {origin: 'mainSearch'});
+
+  return await processor.process(fetched);
+});
+
+export const fetchMoreResults = createAsyncThunk<
+  ExecuteSearchThunkReturn,
+  void,
+  AsyncThunkSearchOptions<StateNeededByExecuteSearch>
+>('search/fetchMoreResults', async (_, config) => {
+  const state = config.getState();
+  if (state.configuration.analytics.analyticsMode === 'legacy') {
+    return legacyFetchMoreResults(config, state);
   }
 
-  private processQueryErrorOrContinue(
-    fetched: FetchedResponse
-  ): ValidReturnTypeFromProcessingStep<RejectionType> | null {
-    if (isErrorResponse(fetched.response)) {
-      this.dispatch(logQueryError(fetched.response.error));
-      return this.rejectWithValue(fetched.response.error) as RejectionType;
-    }
+  const analyticsAction = makeBasicNewSearchAnalyticsAction(
+    SearchPageEvents.pagerScrolling,
+    config.getState
+  );
 
-    return null;
+  const processor = new AsyncSearchThunkProcessor<
+    ReturnType<typeof config.rejectWithValue>
+  >({
+    ...config,
+    analyticsAction,
+  });
+
+  const request = await buildFetchMoreRequest(state, analyticsAction);
+  const fetched = await processor.fetchFromAPI(request, {origin: 'mainSearch'});
+
+  return await processor.process(fetched);
+});
+
+export const fetchFacetValues = createAsyncThunk<
+  ExecuteSearchThunkReturn,
+  TransitiveSearchAction,
+  AsyncThunkSearchOptions<StateNeededByExecuteSearch>
+>(
+  'search/fetchFacetValues',
+  async (searchAction: TransitiveSearchAction, config) => {
+    const state = config.getState();
+    if (
+      state.configuration.analytics.analyticsMode === 'legacy' ||
+      !searchAction.next
+    ) {
+      return legacyExecuteSearch(state, config, searchAction.legacy);
+    }
+    const analyticsAction = buildSearchReduxAction(searchAction.next, state);
+
+    const processor = new AsyncSearchThunkProcessor<
+      ReturnType<typeof config.rejectWithValue>
+    >({...config, analyticsAction});
+
+    const request = await buildFetchFacetValuesRequest(state, analyticsAction);
+    const fetched = await processor.fetchFromAPI(request, {
+      origin: 'facetValues',
+    });
+
+    return await processor.process(fetched);
   }
+);
 
-  private async processQueryCorrectionsOrContinue(
-    fetched: FetchedResponse
-  ): Promise<ValidReturnTypeFromProcessingStep<RejectionType> | null> {
-    const state = this.getState();
-    const successResponse = this.getSuccessResponse(fetched);
-    if (!successResponse || !state.didYouMean) {
-      return null;
+export const fetchInstantResults = createAsyncThunk<
+  FetchInstantResultsThunkReturn,
+  FetchInstantResultsActionCreatorPayload,
+  AsyncThunkSearchOptions<StateNeededByExecuteSearch & InstantResultSection>
+>(
+  'search/fetchInstantResults',
+  async (payload: FetchInstantResultsActionCreatorPayload, config) => {
+    const state = config.getState();
+    if (state.configuration.analytics.analyticsMode === 'legacy') {
+      return legacyFetchInstantResults(payload, config);
     }
-
-    const {enableDidYouMean, automaticallyCorrectQuery} = state.didYouMean;
-    const {results, queryCorrections, queryCorrection} = successResponse;
-
-    const shouldExecuteClassicDidYouMeanAutoCorrection =
-      enableDidYouMean === true &&
-      automaticallyCorrectQuery === true &&
-      results.length === 0 &&
-      queryCorrections &&
-      queryCorrections.length !== 0;
-
-    const shouldExecuteFallbackQueryResultsDidYouMeanAutoCorrection =
-      !isNullOrUndefined(queryCorrection);
-
-    const shouldExitWithNoCorrection =
-      !shouldExecuteClassicDidYouMeanAutoCorrection &&
-      !shouldExecuteFallbackQueryResultsDidYouMeanAutoCorrection;
-
-    if (shouldExitWithNoCorrection) {
-      return null;
-    }
-
-    const ret = shouldExecuteClassicDidYouMeanAutoCorrection
-      ? await this.processClassicDidYouMeanAutoCorrection(successResponse)
-      : this.processFallbackQueryResultsDidYouMeanAutoCorrection(fetched);
-
-    this.dispatch(snapshot(extractHistory(this.getState())));
-
-    return ret;
-  }
-
-  private async processQueryTriggersOrContinue(
-    fetched: FetchedResponse
-  ): Promise<ValidReturnTypeFromProcessingStep<RejectionType> | null> {
-    const successResponse = this.getSuccessResponse(fetched);
-    if (!successResponse) {
-      return null;
-    }
-    const correctedQuery =
-      (successResponse.triggers.find((trigger) => trigger.type === 'query')
-        ?.content as string) || '';
-
-    if (!correctedQuery) {
-      return null;
-    }
-
-    const ignored = this.getState().triggers?.queryModification.queryToIgnore;
-
-    if (ignored === correctedQuery) {
-      this.dispatch(updateIgnoreQueryTrigger(''));
-      return null;
-    }
-
-    const originalQuery = this.getCurrentQuery();
-    const retried =
-      await this.automaticallyRetryQueryWithTriggerModification(correctedQuery);
-
-    if (isErrorResponse(retried.response)) {
-      this.dispatch(logQueryError(retried.response.error));
-      return this.rejectWithValue(retried.response.error) as RejectionType;
-    }
-
-    this.dispatch(snapshot(extractHistory(this.getState())));
-    return {
-      ...retried,
-      response: {
-        ...retried.response.success,
-      },
-      automaticallyCorrected: false,
-      originalQuery,
-    };
-  }
-
-  private async processClassicDidYouMeanAutoCorrection(
-    originalSearchSuccessResponse: SearchResponseSuccess
-  ): Promise<ExecuteSearchThunkReturn | RejectionType> {
-    const originalQuery = this.getCurrentQuery();
-
-    const {correctedQuery} = originalSearchSuccessResponse.queryCorrections
-      ? originalSearchSuccessResponse.queryCorrections[0]
-      : emptyLegacyCorrection();
-
-    const retried =
-      await this.automaticallyRetryQueryWithCorrection(correctedQuery);
-
-    if (isErrorResponse(retried.response)) {
-      this.dispatch(logQueryError(retried.response.error));
-      return this.rejectWithValue(retried.response.error) as RejectionType;
-    }
-
-    return {
-      ...retried,
-      response: {
-        ...retried.response.success,
-        queryCorrections: originalSearchSuccessResponse.queryCorrections,
-      },
-      automaticallyCorrected: true,
-      originalQuery,
-      analyticsAction: makeBasicNewSearchAnalyticsAction(
-        SearchPageEvents.didyoumeanAutomatic,
-        this.getState
-      ),
-    };
-  }
-
-  private processFallbackQueryResultsDidYouMeanAutoCorrection(
-    originalFetchedResponse: FetchedResponse
-  ): ExecuteSearchThunkReturn {
-    const successResponse = this.getSuccessResponse(originalFetchedResponse)!;
-    const {correctedQuery} = successResponse.queryCorrection!;
-    const originalQuery =
-      successResponse.queryCorrection!.originalQuery || this.getCurrentQuery();
-
-    this.onUpdateQueryForCorrection(correctedQuery);
-    this.dispatch(applyDidYouMeanCorrection(correctedQuery));
-
-    return {
-      ...originalFetchedResponse,
-      response: {
-        ...successResponse,
-      },
-      queryExecuted: correctedQuery,
-      automaticallyCorrected: true,
-      originalQuery,
-      analyticsAction: makeBasicNewSearchAnalyticsAction(
-        SearchPageEvents.didyoumeanAutomatic,
-        this.getState
-      ),
-    };
-  }
-
-  private processSuccessResponse(
-    fetched: FetchedResponse
-  ): ValidReturnTypeFromProcessingStep<RejectionType> {
-    this.dispatch(snapshot(extractHistory(this.getState())));
-    return {
-      ...fetched,
-      response: this.getSuccessResponse(fetched)!,
-      automaticallyCorrected: false,
-      originalQuery: this.getCurrentQuery(),
-    };
-  }
-
-  private getSuccessResponse(fetched: FetchedResponse) {
-    if (isSuccessResponse(fetched.response)) {
-      return fetched.response.success;
-    }
-    return null;
-  }
-
-  private async automaticallyRetryQueryWithCorrection(correction: string) {
-    this.onUpdateQueryForCorrection(correction);
-    const state = this.getState();
-    const {actionCause, getEventExtraPayload} = didYouMeanAutomatic();
-
-    const fetched = await this.fetchFromAPI(
-      await buildSearchRequest(state, {
-        actionCause,
-        customData: getEventExtraPayload(state),
+    validatePayload(payload, {
+      id: requiredNonEmptyString,
+      q: requiredNonEmptyString,
+      maxResultsPerQuery: new NumberValue({
+        required: true,
+        min: 1,
       }),
-      {origin: 'mainSearch'}
-    );
-    this.dispatch(applyDidYouMeanCorrection(correction));
-    return fetched;
-  }
+      cacheTimeout: new NumberValue(),
+    });
+    const {q, maxResultsPerQuery} = payload;
 
-  private async automaticallyRetryQueryWithTriggerModification(
-    modified: string
-  ) {
-    this.dispatch(
-      applyQueryTriggerModification({
-        newQuery: modified,
-        originalQuery: this.getCurrentQuery(),
-      })
-    );
-    this.onUpdateQueryForCorrection(modified);
-    const fetched = await this.fetchFromAPI(
-      await buildSearchRequest(this.getState()),
-      {origin: 'mainSearch'}
+    const analyticsAction = buildSearchReduxAction(searchboxAsYouType(), state);
+
+    const request = await buildInstantResultSearchRequest(
+      state,
+      q,
+      maxResultsPerQuery,
+      analyticsAction
     );
 
-    return fetched;
-  }
+    const processor = new AsyncSearchThunkProcessor<
+      ReturnType<typeof config.rejectWithValue>
+    >({...config, analyticsAction}, (modification) => {
+      config.dispatch(
+        updateInstantResultsQuery({q: modification, id: payload.id})
+      );
+    });
+    const fetched = await processor.fetchFromAPI(request, {
+      origin: 'instantResults',
+      disableAbortWarning: true,
+    });
 
-  private getCurrentQuery() {
-    const state = this.getState();
-    return state.query?.q !== undefined ? state.query.q : '';
+    const processed = await processor.process(fetched);
+    if ('response' in processed) {
+      return {
+        results: processed.response.results,
+        searchUid: processed.response.searchUid,
+        totalCountFiltered: processed.response.totalCountFiltered,
+        duration: processed.duration,
+      };
+    }
+    return processed as ReturnType<typeof config.rejectWithValue>;
   }
+);
 
-  private get extra() {
-    return this.config.extra;
-  }
+const buildFetchMoreRequest = async (
+  state: StateNeededByExecuteSearch,
+  eventDescription?: EventDescription
+): Promise<MappedSearchRequest> => {
+  const mappedRequest = await buildSearchRequest(state, eventDescription);
+  mappedRequest.request = {
+    ...mappedRequest.request,
+    firstResult:
+      (state.pagination?.firstResult ?? 0) +
+      (state.search?.results.length ?? 0),
+  };
+  return mappedRequest;
+};
 
-  private getState() {
-    return this.config.getState();
-  }
+export const buildInstantResultSearchRequest = async (
+  state: StateNeededByExecuteSearch,
+  q: string,
+  numberOfResults: number,
+  eventDescription: EventDescription
+) => {
+  const sharedWithFoldingRequest =
+    await buildSearchAndFoldingLoadCollectionRequest(state, eventDescription);
 
-  private get dispatch() {
-    return this.config.dispatch;
-  }
+  return mapSearchRequest({
+    ...sharedWithFoldingRequest,
+    ...(state.didYouMean && {
+      enableDidYouMean: state.didYouMean.enableDidYouMean,
+    }),
+    numberOfResults,
+    q,
+  });
+};
 
-  private get rejectWithValue() {
-    return this.config.rejectWithValue;
+const buildFetchFacetValuesRequest = async (
+  state: StateNeededByExecuteSearch,
+  eventDescription?: EventDescription
+): Promise<MappedSearchRequest> => {
+  const mappedRequest = await buildSearchRequest(state, eventDescription);
+  // Specifying a numberOfResults of 0 will not log the query as a full fledged query in the API
+  // it will also alleviate the load on the index
+  mappedRequest.request.numberOfResults = 0;
+  return mappedRequest;
+};
+
+const addEntryInActionsHistory = (state: StateNeededByExecuteSearch) => {
+  if (state.configuration.analytics.enabled) {
+    historyStore.addElement({
+      name: 'Query',
+      ...(state.query?.q && {
+        value: state.query.q,
+      }),
+      time: JSON.stringify(new Date()),
+    });
   }
-}
+};
+
+const buildSearchReduxAction = (
+  action: SearchAction,
+  state: StateNeededByExecuteSearch
+) => ({
+  customData: action.getEventExtraPayload(state),
+  actionCause: action.actionCause,
+  type: action.actionCause,
+});
