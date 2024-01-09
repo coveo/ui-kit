@@ -34,7 +34,7 @@ export function useAppHistoryRouter() {
 
 /**
  * Custom hook for managing browser history and URL updates.
- * To be used with Pages router. Use the {@link useAppHistoryRouter} instead if your application is using The Next.js App Router new paradigm.
+ * To be used with Pages router. Use the {@link useAppHistoryRouter} instead if your application is using The Next.js App Router paradigm.
  * @returns An object containing the current URL, replace function, and push function.
  */
 export function usePagesHistoryRouter() {
