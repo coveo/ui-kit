@@ -4,8 +4,8 @@ import {
   isValidSearchParam,
   isFacetPair,
   isValidKey,
-  NextJSServerSideSearchParams,
-  NextJSServerSideSearchParamsValues,
+  ServerSideSearchParams,
+  ServerSideSearchParamsValues,
   SearchParameterKey,
   areTheSameArraysSortedDifferently,
   isRangeFacetPair,
@@ -38,10 +38,10 @@ export class NextJsSearchParameterSerializer {
    * @returns A {@link NextJsSearchParameterSerializer} instance with the converted search parameters.
    */
   public static fromUrlSearchParameters(
-    urlSearchParams: URLSearchParams | NextJSServerSideSearchParams
+    urlSearchParams: URLSearchParams | ServerSideSearchParams
   ) {
     const searchParameters: Record<string, unknown> = {};
-    const add = (key: string, value: NextJSServerSideSearchParamsValues) =>
+    const add = (key: string, value: ServerSideSearchParamsValues) =>
       extendSearchParameters(searchParameters, key, value);
 
     if (urlSearchParams instanceof URLSearchParams) {

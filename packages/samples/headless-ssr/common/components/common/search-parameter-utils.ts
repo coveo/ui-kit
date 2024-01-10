@@ -14,10 +14,10 @@ export type RangeFacetValue = Record<
   DateRangeRequest[] | NumericRangeRequest[]
 >;
 
-export type NextJSServerSideSearchParamsValues = string | string[] | undefined;
-export type NextJSServerSideSearchParams = Record<
+export type ServerSideSearchParamsValues = string | string[] | undefined;
+export type ServerSideSearchParams = Record<
   string,
-  NextJSServerSideSearchParamsValues
+  ServerSideSearchParamsValues
 >;
 
 type FacetSearchParameters = keyof Pick<
@@ -165,7 +165,7 @@ export function areTheSameArraysSortedDifferently<T>(
 export function extendSearchParameters(
   searchParams: Record<string, unknown>,
   key: string,
-  value: NextJSServerSideSearchParamsValues
+  value: ServerSideSearchParamsValues
 ): void {
   if (isNullOrUndefined(value)) {
     return;
