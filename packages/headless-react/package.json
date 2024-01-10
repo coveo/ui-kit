@@ -1,12 +1,12 @@
 {
-  "name": "@coveo/headless-ssr-react",
+  "name": "@coveo/headless-react",
   "version": "0.2.11",
   "description": "React utilities for SSR (Server Side Rendering) with headless",
   "homepage": "https://docs.coveo.com/en/headless/latest/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/coveo/ui-kit.git",
-    "directory": "packages/headless-ssr-react"
+    "directory": "packages/headless-react"
   },
   "keywords": [
     "headless",
