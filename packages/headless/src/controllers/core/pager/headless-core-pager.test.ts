@@ -1,15 +1,10 @@
 import {configuration} from '../../../app/common-reducers';
 import {
-  updatePage,
-  registerPage,
-  nextPage,
-  previousPage,
-} from '../../../features/pagination/pagination-actions';
+  SearchEngine,
+  buildSearchEngine,
+} from '../../../app/search-engine/search-engine';
 import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice';
-import {
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../../test/mock-engine';
+import {createMockState} from '../../../test/mock-state';
 import {
   Pager,
   PagerOptions,
@@ -18,19 +13,26 @@ import {
 } from './headless-core-pager';
 
 describe('Pager', () => {
-  let engine: MockSearchEngine;
+  let engine: SearchEngine;
   let options: PagerOptions;
   let initialState: PagerInitialState;
   let pager: Pager;
+  let addReducersSpy: jest.SpyInstance;
+  let maxPageNumber: number = 10;
 
-  function setCurrentPage(page: number) {
-    const {numberOfResults} = engine.state.pagination;
-    engine.state.pagination.firstResult = (page - 1) * numberOfResults;
-  }
-
-  function setMaxPage(page: number) {
-    const {numberOfResults} = engine.state.pagination;
-    engine.state.pagination.totalCountFiltered = page * numberOfResults;
+  function initEngine() {
+    const preloadedState = createMockState();
+    preloadedState.pagination.totalCountFiltered =
+      preloadedState.pagination.numberOfResults * maxPageNumber;
+    engine = buildSearchEngine({
+      configuration: {
+        accessToken: 'token',
+        organizationId: 'organizationId',
+      },
+      loggerOptions: {level: 'silent'},
+      preloadedState,
+    });
+    addReducersSpy = jest.spyOn(engine, 'addReducers');
   }
 
   function initPager() {
@@ -40,7 +42,7 @@ describe('Pager', () => {
   beforeEach(() => {
     options = {};
     initialState = {};
-    engine = buildMockSearchAppEngine();
+    initEngine();
     initPager();
   });
 
@@ -49,7 +51,7 @@ describe('Pager', () => {
   });
 
   it('it adds the correct reducers to engine', () => {
-    expect(engine.addReducers).toHaveBeenCalledWith({
+    expect(addReducersSpy).toHaveBeenCalledWith({
       pagination,
       configuration,
     });
@@ -70,13 +72,11 @@ describe('Pager', () => {
   });
 
   it('#state.currentPages returns 5 pages by default', () => {
-    setMaxPage(10);
     expect(pager.state.currentPages.length).toBe(5);
   });
 
   it('when numberOfPages is 2, #state.currentPages returns two page numbers', () => {
     options.numberOfPages = 2;
-    setMaxPage(10);
     initPager();
 
     expect(pager.state.currentPages.length).toBe(2);
@@ -91,70 +91,70 @@ describe('Pager', () => {
     initialState.page = 2;
     initPager();
 
-    expect(engine.actions).toContainEqual(registerPage(2));
+    expect(engine.state.pagination?.firstResult).toEqual(10);
   });
 
   it('#selectPage dispatches #updatePage with the passed page', () => {
     pager.selectPage(2);
-    expect(engine.actions).toContainEqual(updatePage(2));
+    expect(engine.state.pagination?.firstResult).toEqual(10);
   });
 
   it('#nextPage dispatches a #nextPage action', () => {
     pager.nextPage();
-    expect(engine.actions).toContainEqual(nextPage());
+    expect(engine.state.pagination?.firstResult).toEqual(10);
   });
 
   it('#previousPage dispatches a #previousPage action', () => {
+    pager.selectPage(2);
+
     pager.previousPage();
-    expect(engine.actions).toContainEqual(previousPage());
+    expect(engine.state.pagination?.firstResult).toEqual(0);
   });
 
   it('calling #isCurrentPage with a page number not equal to the one in state returns false', () => {
-    setCurrentPage(2);
+    pager.selectPage(2);
     expect(pager.isCurrentPage(1)).toBe(false);
   });
 
   it('calling #isCurrentPage with a page number equal to the one in state returns true', () => {
-    setCurrentPage(2);
+    pager.selectPage(2);
     expect(pager.isCurrentPage(2)).toBe(true);
   });
 
   it('state exposes a maxPage property', () => {
-    setMaxPage(10);
     expect(pager.state.maxPage).toBe(10);
   });
 
-  it('when on page 1 and maxPage is 2, #state.hasNextPage is true', () => {
-    setCurrentPage(1);
-    setMaxPage(2);
+  it('when on page 1 and maxPage is 10, #state.hasNextPage is true', () => {
+    pager.selectPage(1);
 
     expect(pager.state.hasNextPage).toBe(true);
   });
 
-  it('when on page 2 and maxPage is 2, #state.hasNextPage returns false', () => {
-    setCurrentPage(2);
-    setMaxPage(2);
+  it('when on page 10 and maxPage is 10, #state.hasNextPage returns false', () => {
+    pager.selectPage(10);
 
     expect(pager.state.hasNextPage).toBe(false);
   });
 
-  it('when on page 2 and maxPage is 2, #state.hasPreviousPage returns true', () => {
-    setCurrentPage(2);
-    setMaxPage(2);
+  it('when on page 10 and maxPage is 10, #state.hasPreviousPage returns true', () => {
+    pager.selectPage(10);
 
     expect(pager.state.hasPreviousPage).toBe(true);
   });
 
-  it('when on page 1 and maxPage is 2, #state.hasPreviousPage returns false', () => {
-    setCurrentPage(1);
-    setMaxPage(2);
+  it('when on page 1 and maxPage is 10, #state.hasPreviousPage returns false', () => {
+    pager.selectPage(1);
 
     expect(pager.state.hasPreviousPage).toBe(false);
   });
 
-  it('when on page 2 and maxPage is 0, #state.hasPreviousPage returns false', () => {
-    setCurrentPage(2);
-    setMaxPage(0);
+  it('when maxPage is 0 and page 1 is selected, #state.hasPreviousPage should returns false', () => {
+    maxPageNumber = 0;
+    initEngine();
+    initPager();
+
+    pager.selectPage(1);
 
     expect(pager.state.hasPreviousPage).toBe(false);
   });
