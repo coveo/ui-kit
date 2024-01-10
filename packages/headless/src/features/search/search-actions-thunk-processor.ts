@@ -172,6 +172,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
 
     const shouldBeAutomaticallyRetried =
       results.length === 0 &&
+      queryCorrections &&
       queryCorrections.length !== 0 &&
       enableDidYouMean &&
       automaticallyCorrectQuery;
@@ -181,7 +182,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     }
 
     const originalQuery = this.getCurrentQuery();
-    const {correctedQuery} = successResponse.queryCorrections[0];
+    const {correctedQuery} = successResponse.queryCorrections![0];
 
     const retried =
       await this.automaticallyRetryQueryWithCorrection(correctedQuery);
