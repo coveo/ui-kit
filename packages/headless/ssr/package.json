@@ -1,4 +1,5 @@
 {
+  "TODO:": "move to headless-ssr package",
   "private": true,
   "name": "ssr",
   "description": "Server side rendering utilities",

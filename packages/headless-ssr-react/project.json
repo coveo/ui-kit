@@ -1,12 +1,12 @@
 {
-  "name": "headless-react",
+  "name": "headless-ssr-react",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "targets": {
     "cached:build": {
       "executor": "nx:run-commands",
       "options": {
         "command": "tsc --project ./tsconfig.json",
-        "cwd": "packages/headless-react"
+        "cwd": "packages/headless-ssr-react"
       }
     },
     "build": {

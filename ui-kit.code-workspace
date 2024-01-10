@@ -25,8 +25,12 @@
       "path": "./packages/auth"
     },
     {
+      "name": "📦 Headless SSR utils",
+      "path": "./packages/headless-ssr"
+    },
+    {
       "name": "📦 Headless React SSR utils",
-      "path": "./packages/headless-react"
+      "path": "./packages/headless-ssr-react"
     },
     {
       "name": "📦 Atomic for React",
