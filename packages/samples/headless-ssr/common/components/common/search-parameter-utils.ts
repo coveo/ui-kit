@@ -5,7 +5,6 @@ import {
   type SearchParameters,
 } from '@coveo/headless';
 import {buildSearchParameterRanges} from '@coveo/headless-react/ssr';
-import {ReadonlyURLSearchParams} from 'next/navigation';
 
 export type SearchParameterKey = keyof SearchParameters;
 export type SearchParamPair<T> = [SearchParameterKey, T];
@@ -131,19 +130,6 @@ export function isRangeFacetPair(
   const isRangeValue = (v: unknown) =>
     isRecord(v) && 'start' in v && 'end' in v;
   return allEntriesAreValid(value, isRangeValue);
-}
-
-/**
- * Checks if the provided value is an instance of URLSearchParams or ReadonlyURLSearchParams.
- * @param obj - The value to check.
- * @returns True if the value is an instance of URLSearchParams or ReadonlyURLSearchParams, false otherwise.
- */
-export function isUrlInstance(
-  obj: unknown
-): obj is URLSearchParams | ReadonlyURLSearchParams {
-  return (
-    obj instanceof URLSearchParams || obj instanceof ReadonlyURLSearchParams
-  );
 }
 
 /**

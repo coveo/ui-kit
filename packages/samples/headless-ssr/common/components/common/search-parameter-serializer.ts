@@ -1,10 +1,8 @@
 import {SearchParameters} from '@coveo/headless/ssr';
-import type {ReadonlyURLSearchParams} from 'next/navigation';
 import {
   SearchParamPair,
   isValidSearchParam,
   isFacetPair,
-  isUrlInstance,
   isValidKey,
   NextJSServerSideSearchParams,
   NextJSServerSideSearchParamsValues,
@@ -36,23 +34,20 @@ export class NextJsSearchParameterSerializer {
    * Converts URL search parameters into a {@link NextJsSearchParameterSerializer} object.
    * This class can help you serialize and deserialize Coveo search parameters to and from URL search parameters.
    *
-   * @param clientSideUrlSearchParams - The URL search parameters to convert.
+   * @param urlSearchParams - The URL search parameters to convert.
    * @returns A {@link NextJsSearchParameterSerializer} instance with the converted search parameters.
    */
   public static fromUrlSearchParameters(
-    clientSideUrlSearchParams:
-      | URLSearchParams
-      | ReadonlyURLSearchParams
-      | NextJSServerSideSearchParams
+    urlSearchParams: URLSearchParams | NextJSServerSideSearchParams
   ) {
     const searchParameters: Record<string, unknown> = {};
     const add = (key: string, value: NextJSServerSideSearchParamsValues) =>
       extendSearchParameters(searchParameters, key, value);
 
-    if (isUrlInstance(clientSideUrlSearchParams)) {
-      clientSideUrlSearchParams.forEach((value, key) => add(key, value));
+    if (urlSearchParams instanceof URLSearchParams) {
+      urlSearchParams.forEach((value, key) => add(key, value));
     } else {
-      Object.entries(clientSideUrlSearchParams).forEach(([key, value]) =>
+      Object.entries(urlSearchParams).forEach(([key, value]) =>
         add(key, value)
       );
     }
