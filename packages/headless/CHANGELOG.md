@@ -1,3 +1,9 @@
+## 2.45.1 (2024-01-10)
+
+### Bug Fixes
+
+- **commerce:** handle facet, sort and pagination reset on context change ([#3500](https://github.com/coveo/ui-kit/issues/3500)) ([fe14eab](https://github.com/coveo/ui-kit/commits/fe14eabc3b528fcedce252cf85d538ae985e9570))
+
 # 2.45.0 (2024-01-03)
 
 ### Bug Fixes

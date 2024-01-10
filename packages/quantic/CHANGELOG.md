@@ -1,3 +1,9 @@
+## 2.43.1 (2024-01-10)
+
+### Bug Fixes
+
+- **quantic:** fix genQA copy-to-clipboard e2e ([#3511](https://github.com/coveo/ui-kit/issues/3511)) ([bfbe402](https://github.com/coveo/ui-kit/commits/bfbe402aa3c646db7fd10def17ef5b3dd2269f73))
+
 # 2.43.0 (2024-01-03)
 
 ### Bug Fixes
