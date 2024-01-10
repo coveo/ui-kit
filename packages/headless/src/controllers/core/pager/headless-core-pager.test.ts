@@ -1,9 +1,20 @@
 import {configuration} from '../../../app/common-reducers';
 import {
-  SearchEngine,
-  buildSearchEngine,
-} from '../../../app/search-engine/search-engine';
+  nextPage,
+  previousPage,
+  registerPage,
+  updatePage,
+} from '../../../features/pagination/pagination-actions';
+import {
+  currentPageSelector,
+  currentPagesSelector,
+  maxPageSelector,
+} from '../../../features/pagination/pagination-selectors';
 import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice';
+import {
+  MockedSearchEngine,
+  buildMockSearchEngine,
+} from '../../../test/mock-engine-v2';
 import {createMockState} from '../../../test/mock-state';
 import {
   Pager,
@@ -12,36 +23,29 @@ import {
   buildCorePager,
 } from './headless-core-pager';
 
-describe('Pager', () => {
-  let engine: SearchEngine;
-  let options: PagerOptions;
-  let initialState: PagerInitialState;
-  let pager: Pager;
-  let addReducersSpy: jest.SpyInstance;
-  let maxPageNumber: number = 10;
+jest.mock('../../../features/pagination/pagination-actions');
+jest.mock('../../../features/pagination/pagination-selectors');
 
-  function initEngine() {
-    const preloadedState = createMockState();
-    preloadedState.pagination.totalCountFiltered =
-      preloadedState.pagination.numberOfResults * maxPageNumber;
-    engine = buildSearchEngine({
-      configuration: {
-        accessToken: 'token',
-        organizationId: 'organizationId',
-      },
-      loggerOptions: {level: 'silent'},
-      preloadedState,
-    });
-    addReducersSpy = jest.spyOn(engine, 'addReducers');
+describe('Pager', () => {
+  let engine: MockedSearchEngine;
+  let pager: Pager;
+
+  function initEngine(preloadedState = createMockState()) {
+    engine = buildMockSearchEngine(preloadedState);
   }
 
-  function initPager() {
-    pager = buildCorePager(engine, {options, initialState});
+  function initPager({
+    initialState,
+    options,
+  }: {initialState?: PagerInitialState; options?: PagerOptions} = {}) {
+    pager = buildCorePager(engine, {
+      options: options ?? {},
+      initialState: initialState ?? {},
+    });
   }
 
   beforeEach(() => {
-    options = {};
-    initialState = {};
+    jest.resetAllMocks();
     initEngine();
     initPager();
   });
@@ -51,7 +55,7 @@ describe('Pager', () => {
   });
 
   it('it adds the correct reducers to engine', () => {
-    expect(addReducersSpy).toHaveBeenCalledWith({
+    expect(engine.addReducers).toHaveBeenCalledWith({
       pagination,
       configuration,
     });
@@ -62,99 +66,124 @@ describe('Pager', () => {
   });
 
   it('when initialState #isActive is an invalid value, it throws an error', () => {
-    initialState.page = '1' as unknown as number;
-    expect(() => initPager()).toThrow('Check the initialState of buildPager');
+    expect(() =>
+      initPager({initialState: {page: '1' as unknown as number}})
+    ).toThrow('Check the initialState of buildPager');
   });
 
   it('when options #expression is an invalid value, it throws an error', () => {
-    options.numberOfPages = '1' as unknown as number;
-    expect(() => initPager()).toThrow('Check the options of buildPager');
+    expect(() =>
+      initPager({options: {numberOfPages: '1' as unknown as number}})
+    ).toThrow('Check the options of buildPager');
   });
 
-  it('#state.currentPages returns 5 pages by default', () => {
-    expect(pager.state.currentPages.length).toBe(5);
+  it('#state calls #currentPagesSelector with a number of page of 5 by default', () => {
+    pager.state;
+
+    expect(currentPagesSelector).toHaveBeenCalledWith(expect.anything(), 5);
   });
 
-  it('when numberOfPages is 2, #state.currentPages returns two page numbers', () => {
-    options.numberOfPages = 2;
-    initPager();
+  it('when numberOfPages is 2, #state calls #currentPagesSelector with a number of page of 2', () => {
+    initPager({options: {numberOfPages: 2}});
 
-    expect(pager.state.currentPages.length).toBe(2);
+    pager.state;
+
+    expect(currentPagesSelector).toHaveBeenCalledWith(expect.anything(), 2);
   });
 
   it('when numberOfPages is -1, the pager fails to initialize', () => {
-    options.numberOfPages = -1;
-    expect(() => initPager()).toThrow();
+    expect(() => initPager({options: {numberOfPages: -1}})).toThrow();
   });
 
   it('when #initialState.page is defined, it registers the page', () => {
-    initialState.page = 2;
-    initPager();
+    const mockedRegisterPageAction = jest.mocked(registerPage);
 
-    expect(engine.state.pagination?.firstResult).toEqual(10);
+    initPager({initialState: {page: 2}});
+
+    expect(registerPage).toHaveBeenCalledWith(2);
+    expect(engine.dispatch).toHaveBeenCalledWith(
+      mockedRegisterPageAction.mock.results[0].value
+    );
   });
 
   it('#selectPage dispatches #updatePage with the passed page', () => {
+    const mockedUpdatePageAction = jest.mocked(updatePage);
+
     pager.selectPage(2);
-    expect(engine.state.pagination?.firstResult).toEqual(10);
+
+    expect(mockedUpdatePageAction).toHaveBeenCalledWith(2);
   });
 
   it('#nextPage dispatches a #nextPage action', () => {
+    const mockedNextPage = jest.mocked(nextPage);
+
     pager.nextPage();
-    expect(engine.state.pagination?.firstResult).toEqual(10);
+
+    expect(mockedNextPage).toHaveBeenCalled();
   });
 
   it('#previousPage dispatches a #previousPage action', () => {
-    pager.selectPage(2);
+    const mockedPreviousPage = jest.mocked(previousPage);
 
     pager.previousPage();
-    expect(engine.state.pagination?.firstResult).toEqual(0);
+
+    expect(mockedPreviousPage).toHaveBeenCalled();
   });
 
   it('calling #isCurrentPage with a page number not equal to the one in state returns false', () => {
-    pager.selectPage(2);
+    jest.mocked(currentPageSelector).mockReturnValue(2);
+
+    initPager();
+
     expect(pager.isCurrentPage(1)).toBe(false);
   });
 
   it('calling #isCurrentPage with a page number equal to the one in state returns true', () => {
+    jest.mocked(currentPageSelector).mockReturnValue(2);
+
+    initPager();
+
     pager.selectPage(2);
     expect(pager.isCurrentPage(2)).toBe(true);
   });
 
   it('state exposes a maxPage property', () => {
+    jest.mocked(maxPageSelector).mockReturnValue(10);
+
     expect(pager.state.maxPage).toBe(10);
   });
 
   it('when on page 1 and maxPage is 10, #state.hasNextPage is true', () => {
-    pager.selectPage(1);
+    jest.mocked(maxPageSelector).mockReturnValue(10);
+    jest.mocked(currentPageSelector).mockReturnValue(1);
 
     expect(pager.state.hasNextPage).toBe(true);
   });
 
   it('when on page 10 and maxPage is 10, #state.hasNextPage returns false', () => {
-    pager.selectPage(10);
+    jest.mocked(maxPageSelector).mockReturnValue(10);
+    jest.mocked(currentPageSelector).mockReturnValue(10);
 
     expect(pager.state.hasNextPage).toBe(false);
   });
 
   it('when on page 10 and maxPage is 10, #state.hasPreviousPage returns true', () => {
-    pager.selectPage(10);
+    jest.mocked(maxPageSelector).mockReturnValue(10);
+    jest.mocked(currentPageSelector).mockReturnValue(10);
 
     expect(pager.state.hasPreviousPage).toBe(true);
   });
 
   it('when on page 1 and maxPage is 10, #state.hasPreviousPage returns false', () => {
-    pager.selectPage(1);
+    jest.mocked(maxPageSelector).mockReturnValue(10);
+    jest.mocked(currentPageSelector).mockReturnValue(1);
 
     expect(pager.state.hasPreviousPage).toBe(false);
   });
 
   it('when maxPage is 0 and page 1 is selected, #state.hasPreviousPage should returns false', () => {
-    maxPageNumber = 0;
-    initEngine();
-    initPager();
-
-    pager.selectPage(1);
+    jest.mocked(maxPageSelector).mockReturnValue(0);
+    jest.mocked(currentPageSelector).mockReturnValue(1);
 
     expect(pager.state.hasPreviousPage).toBe(false);
   });
