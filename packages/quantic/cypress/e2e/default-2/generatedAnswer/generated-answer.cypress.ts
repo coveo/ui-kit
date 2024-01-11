@@ -58,6 +58,16 @@ const genQaMessageTypePayload = {
 };
 
 describe('quantic-generated-answer', () => {
+  beforeEach(() => {
+    cy.clock(0, ['Date']);
+  });
+
+  afterEach(() => {
+    cy.clock().then((clock) => {
+      clock.restore();
+    });
+  });
+
   const pageUrl = 's/quantic-generated-answer';
 
   function visitGeneratedAnswer(options: Partial<GeneratedAnswerOptions> = {}) {
@@ -539,16 +549,6 @@ describe('quantic-generated-answer', () => {
 
         describe('hovering over a generated answer citation', () => {
           const hoveredCitationIndex = 0;
-
-          beforeEach(() => {
-            cy.clock(0, ['Date']);
-          });
-
-          after(() => {
-            cy.clock().then((clock) => {
-              clock.restore();
-            });
-          });
 
           it('should properly display the tooltip', () => {
             Expect.displayCitations(true);
