@@ -1,4 +1,5 @@
-import {createCustomEqual, deepEqual} from 'fast-equals';
+import {PrimitivesValues} from '@coveo/bueno';
+import {createCustomEqual} from 'fast-equals';
 
 export function arrayEqual<T>(
   firstArray: T[],
@@ -11,7 +12,21 @@ export function arrayEqual<T>(
     firstArray.findIndex((val, i) => !isEqual(secondArray[i], val)) === -1
   );
 }
+function checkUnionEquality<T extends PrimitivesValues>(
+  set1: Set<T>,
+  set2: Set<T>
+): boolean {
+  const unionSet = new Set([...set1, ...set2]);
+  return unionSet.size === set1.size && unionSet.size === set2.size;
+}
 
+/**
+ * Checks if two arrays are equal regardless of the order of their elements.
+ *
+ * @param firstArray - The first array to compare.
+ * @param secondArray - The second array to compare.
+ * @returns `true` if the arrays have the same elements regardless of their order, `false` otherwise.
+ */
 function arrayEqualAnyOrder<T>(firstArray: T[], secondArray: T[]) {
   if (firstArray.length !== secondArray.length) {
     return false;
@@ -25,6 +40,38 @@ function arrayEqualAnyOrder<T>(firstArray: T[], secondArray: T[]) {
   );
 }
 
+/**
+ * Checks if two arrays of primitive values have the same elements, in different order.
+ * This function is specifically designed for primitive values to ensure fast performance with O(n) complexity.
+ *
+ * @param firstArray The first array of primitive values to compare.
+ * @param secondArray The second array of primitive values to compare.
+ * @returns `true` if the arrays have the same elements in different order, `false` otherwise. This function will return false if the 2 arrays have the same elements in the same order.
+ */
+export const arrayEqualStrictlyDifferentOrder = <
+  T extends Exclude<PrimitivesValues, object>,
+>(
+  firstArray: T[],
+  secondArray: T[]
+): boolean => {
+  const set1 = new Set(firstArray);
+  const set2 = new Set(secondArray);
+
+  if (set1.size !== set2.size) {
+    return false;
+  }
+  if (set1.size === 1) {
+    return firstArray[0] === secondArray[0];
+  }
+  if (checkUnionEquality(set1, set2)) {
+    const arr1 = [...set1];
+    const arr2 = [...set2];
+    return !arr1.every((value, idx) => arr2[idx] === value);
+  }
+
+  return false;
+};
+
 export const deepEqualAnyOrder: <T>(a: T, b: T) => boolean = createCustomEqual({
   createCustomConfig: (config) => {
     return {
@@ -33,31 +80,3 @@ export const deepEqualAnyOrder: <T>(a: T, b: T) => boolean = createCustomEqual({
     };
   },
 });
-
-/**
- * Checks if two arrays have the same elements, in different order.
- *
- * @param a The first array to compare.
- * @param b The second array to compare.
- * @returns `true` if the arrays have the same elements in different order, `false` otherwise. This function will return false if the 2 arrays have the same elements in the same order.
- * @template T The type of elements in the arrays.
- */
-export const arrayEqualStrictlyDifferentOrder = <T>(
-  a: T[],
-  b: T[]
-): boolean => {
-  const set1 = [...new Set(a)];
-  const set2 = [...new Set(b)];
-
-  if (set1.length !== set2.length) {
-    return false;
-  }
-  if (set1.length === 1) {
-    return deepEqual(set1[0], set2[0]);
-  }
-  if (set1.every((value) => set2.includes(value))) {
-    return !set1.every((value, idx) => set2.indexOf(value) === idx);
-  }
-
-  return false;
-};

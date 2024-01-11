@@ -3,8 +3,8 @@ import {
   deepEqualAnyOrder,
 } from './compare-utils';
 
-describe('deepEqualAnyOrder', () => {
-  describe('with an object containing primitive values', () => {
+describe('compare-utils', () => {
+  describe('#deepEqualAnyOrder with an object containing primitive values', () => {
     const objectA = {
       a0: {
         a1: 'a',
@@ -64,7 +64,7 @@ describe('deepEqualAnyOrder', () => {
     });
   });
 
-  describe('with a deep object containing an array of primitive values', () => {
+  describe('#deepEqualAnyOrder with a deep object containing an array of primitive values', () => {
     const objectA = {
       a0: {
         a1: ['c', 'x', 'b'],
@@ -102,7 +102,7 @@ describe('deepEqualAnyOrder', () => {
     });
   });
 
-  describe('with a deep object containing an array of objects', () => {
+  describe('#deepEqualAnyOrder with a deep object containing an array of objects', () => {
     const objectA = {
       a0: {
         a1: [
@@ -152,119 +152,49 @@ describe('deepEqualAnyOrder', () => {
     });
   });
 
-  describe('arrayEqualStrictlyDifferentOrder', () => {
-    describe('with an array of primitive values', () => {
-      const objectA = ['c', 'x', 'b'];
+  describe('#arrayEqualStrictlyDifferentOrder with an array of primitive values', () => {
+    const objectA = ['c', 'x', 'b'];
 
-      it(`when arrays only have one similar value
+    it(`when arrays only have one similar value
       should return true`, () => {
-        expect(arrayEqualStrictlyDifferentOrder(['a'], ['a'])).toBe(true);
-      });
-
-      it(`when arrays only have one value but different
-      should return true`, () => {
-        expect(arrayEqualStrictlyDifferentOrder(['a'], ['b'])).toBe(false);
-      });
-
-      it(`when array values are the same & in the same order
-      should return false`, () => {
-        const objectB = ['c', 'x', 'b'];
-        expect(arrayEqualStrictlyDifferentOrder(objectA, objectB)).toBe(false);
-      });
-
-      it(`when array values are different
-      should return false`, () => {
-        const objectB = ['y', 'w', 'v'];
-        expect(arrayEqualStrictlyDifferentOrder(objectA, objectB)).toBe(false);
-      });
-
-      it(`when array values are the same & in a different order
-      should return true`, () => {
-        const objectB = ['b', 'c', 'x'];
-        expect(arrayEqualStrictlyDifferentOrder(objectA, objectB)).toBe(true);
-      });
-
-      it(`when first array contains duplicates and missing values regardless of the order
-      should return false`, () => {
-        const object1 = ['b', 'b', 'x'];
-        const object2 = ['b', 'c', 'x'];
-        expect(arrayEqualStrictlyDifferentOrder(object1, object2)).toBe(false);
-      });
-
-      it(`when second array contains duplicates and missing values regardless of the order
-      should return false`, () => {
-        const object1 = ['b', 'c', 'x'];
-        const object2 = ['b', 'c', 'c'];
-        expect(arrayEqualStrictlyDifferentOrder(object1, object2)).toBe(false);
-      });
+      expect(arrayEqualStrictlyDifferentOrder(['a'], ['a'])).toBe(true);
     });
 
-    describe('with an array of objects', () => {
-      const objectA = [
-        {a2: ['t', 'c'], b2: 3},
-        {a2: ['e', 'x'], b2: 40},
-        {a2: ['y', 'z'], b2: 100},
-      ];
-
-      it(`when arrays only have one similar value
+    it(`when arrays only have one value but different
       should return true`, () => {
-        expect(
-          arrayEqualStrictlyDifferentOrder(
-            [{a2: ['t', 'c'], b2: 3}],
-            [{a2: ['t', 'c'], b2: 3}]
-          )
-        ).toBe(true);
-      });
+      expect(arrayEqualStrictlyDifferentOrder(['a'], ['b'])).toBe(false);
+    });
 
-      it(`when array values are the same & in the same order
+    it(`when array values are the same & in the same order
       should return false`, () => {
-        const objectB = [
-          {a2: ['t', 'c'], b2: 3},
-          {a2: ['e', 'x'], b2: 40},
-          {a2: ['y', 'z'], b2: 100},
-        ];
-        expect(arrayEqualStrictlyDifferentOrder(objectA, objectB)).toBe(false);
-      });
+      const objectB = ['c', 'x', 'b'];
+      expect(arrayEqualStrictlyDifferentOrder(objectA, objectB)).toBe(false);
+    });
 
-      it(`when array values are different
+    it(`when array values are different
       should return false`, () => {
-        const objectB = [
-          {a2: ['e', 'x'], b2: 40},
-          {a2: ['y', 'z'], b2: 100},
-          {a2: ['t', 'c'], b2: 3},
-        ];
-        expect(arrayEqualStrictlyDifferentOrder(objectA, objectB)).toBe(false);
-      });
+      const objectB = ['y', 'w', 'v'];
+      expect(arrayEqualStrictlyDifferentOrder(objectA, objectB)).toBe(false);
+    });
 
-      it(`when first array contains duplicates and missing values regardless of the order
-      should return false`, () => {
-        const object1 = [
-          {a2: ['t', 'c'], b2: 3},
-          {a2: ['e', 'x'], b2: 40},
-          {a2: ['e', 'x'], b2: 40},
-        ];
-        const object2 = [
-          {a2: ['t', 'c'], b2: 3},
-          {a2: ['e', 'x'], b2: 40},
-          {a2: ['y', 'z'], b2: 100},
-        ];
-        expect(arrayEqualStrictlyDifferentOrder(object1, object2)).toBe(false);
-      });
+    it(`when array values are the same & in a different order
+      should return true`, () => {
+      const objectB = ['b', 'c', 'x'];
+      expect(arrayEqualStrictlyDifferentOrder(objectA, objectB)).toBe(true);
+    });
 
-      it(`when second array contains duplicates and missing values regardless of the order
+    it(`when first array contains duplicates and missing values regardless of the order
       should return false`, () => {
-        const object1 = [
-          {a2: ['e', 'x'], b2: 40},
-          {a2: ['y', 'z'], b2: 100},
-          {a2: ['t', 'c'], b2: 3},
-        ];
-        const object2 = [
-          {a2: ['e', 'x'], b2: 40},
-          {a2: ['y', 'z'], b2: 100},
-          {a2: ['y', 'z'], b2: 100},
-        ];
-        expect(arrayEqualStrictlyDifferentOrder(object1, object2)).toBe(false);
-      });
+      const object1 = ['b', 'b', 'x'];
+      const object2 = ['b', 'c', 'x'];
+      expect(arrayEqualStrictlyDifferentOrder(object1, object2)).toBe(false);
+    });
+
+    it(`when second array contains duplicates and missing values regardless of the order
+      should return false`, () => {
+      const object1 = ['b', 'c', 'x'];
+      const object2 = ['b', 'c', 'c'];
+      expect(arrayEqualStrictlyDifferentOrder(object1, object2)).toBe(false);
     });
   });
 });
