@@ -70,7 +70,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   /**
    * The answer style to apply when the component first loads.
    * Options:
-   *   - `default`: Generate the answer without a specific formatting instructions.
+   *   - `default`: Generate the answer without specific formatting instructions.
    *   - `bullet`: Generate the answer as a bulleted list.
    *   - `step`: Generate the answer as step-by-step instructions.
    *   - `concise`: Generate the answer as briefly as possible.
