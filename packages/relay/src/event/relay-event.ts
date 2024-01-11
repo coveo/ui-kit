@@ -1,10 +1,16 @@
 import { ClientIdManager } from "../client-id/client-id";
 import { Environment } from "../environment/environment";
-import { RelayPayload } from "../internal-types";
+import { RelayPayload } from "../relay-payload";
 import { RelayConfig } from "../relay";
 import { createMeta, Meta } from "./meta/meta";
 
+/**
+ * Defines the structure of a RelayEvent, extending the RelayPayload.
+ */
 export interface RelayEvent extends RelayPayload {
+  /**
+   * Read-only `meta` property of Meta type.
+   */
   meta: Readonly<Meta>;
 }
 

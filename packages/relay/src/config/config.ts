@@ -1,5 +1,3 @@
-export type RelayMode = "emit" | "disabled";
-
 /**
  * The `RelayConfig` object defines the configuration options for initializing a Relay instance.
  */
@@ -20,12 +18,12 @@ export interface RelayConfig {
   trackingId: string;
 
   /**
-   * Defines the library mode. The possible values are:
-   * "emit": Sends analytics events to Coveo to be stored.
-   * "disabled": Prevents the emission of events and does not trigger callbacks.
+   * Defines the library mode. The available modes are `emit` and `disabled`.
+   * `emit` sends analytics events to Coveo to be stored.
+   * `disabled` prevents the emission of events and does not trigger callbacks.
    * @default emit
    */
-  mode?: RelayMode;
+  mode?: "emit" | "disabled";
 
   /**
    * Optionally allows a Relay integration to specify the name(s) of software package(s) relay is
@@ -35,6 +33,9 @@ export interface RelayConfig {
   source?: string[];
 }
 
+/**
+ * User which logged the event.
+ */
 export interface User {
   /**
    * The application's user identifier.

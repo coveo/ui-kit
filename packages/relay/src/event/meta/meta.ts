@@ -20,6 +20,7 @@ export interface EventConfig {
 
 /**
  * The `Meta` object provides a structured representation of metadata associated with an emitted event.
+ * This object is auto-populated by Relay.
  */
 export interface Meta {
   /**

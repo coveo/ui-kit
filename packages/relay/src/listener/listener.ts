@@ -5,7 +5,7 @@ const ANY_EVENT_TYPE = "*";
 /**
  * Callback to perform an action when a specified event is emitted.
  * @typedef {function} EventCallback
- * @param {RelayEvent} event
+ * @param {RelayEvent} event - the Relay event payload that triggered the callback.
  * @returns {void}
  */
 export type EventCallback = (event: RelayEvent) => void;

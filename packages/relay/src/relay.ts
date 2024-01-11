@@ -1,13 +1,19 @@
 import { emit } from "./emit/emit";
 import { createClientIdManager } from "./client-id/client-id";
-import { createRelayEvent } from "./event/relay-event";
+import { createRelayEvent, RelayEvent } from "./event/relay-event";
 import { version } from "./version";
 import { createMeta, Meta, EventConfig } from "./event/meta/meta";
 import { createListenerManager, EventCallback } from "./listener/listener";
-import { createConfigManager, RelayConfig } from "./config/config";
+import { createConfigManager, RelayConfig, User } from "./config/config";
 import { createEnvironmentManager } from "./environment/manager/manager";
+import { RelayPayload } from "./relay-payload";
 
-type Off = () => void;
+/**
+ * Function that detaches an event callback.
+ * @typedef {function} Off
+ * @returns {void}
+ */
+export type Off = () => void;
 
 /**
  * Relay instance.
@@ -32,10 +38,11 @@ interface Relay {
   /**
    * Attaches an event callback to either all event types or a specific one.
    * The callback set will be called when an event with the specified type is emitted.
+   * It’s not possible to modify the payload of the event sent to Coveo using this listener.
    * Setting type as "*" will trigger the callback for all event types.
    * Returns the "off" function to detach the event callback.
    * @param {string} type - event's type.
-   * @param {EventCallback} callback
+   * @param {EventCallback} callback - callback that should be called when the event is emitted.
    * @returns {Off}
    */
   on: (type: string, callback: EventCallback) => Off;
@@ -119,4 +126,13 @@ export function createRelay(initialConfig: RelayConfig): Relay {
   };
 }
 
-export type { Relay, Meta, EventConfig, EventCallback, RelayConfig };
+export type {
+  Relay,
+  Meta,
+  EventConfig,
+  EventCallback,
+  RelayConfig,
+  User,
+  RelayPayload,
+  RelayEvent,
+};
