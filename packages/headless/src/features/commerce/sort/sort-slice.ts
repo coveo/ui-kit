@@ -6,6 +6,7 @@ import {
   SortBy,
   SortCriterion,
 } from '../../sort/sort';
+import {setContext, setUser, setView} from '../context/context-actions';
 import {fetchProductListing} from '../product-listing/product-listing-actions';
 import {executeSearch} from '../search/search-actions';
 import {applySort} from './sort-actions';
@@ -35,7 +36,10 @@ export const sortReducer = createReducer(
         state.appliedSort = action.payload;
       })
       .addCase(fetchProductListing.fulfilled, handleFetchFulfilled)
-      .addCase(executeSearch.fulfilled, handleFetchFulfilled);
+      .addCase(executeSearch.fulfilled, handleFetchFulfilled)
+      .addCase(setContext, getCommerceSortInitialState)
+      .addCase(setView, getCommerceSortInitialState)
+      .addCase(setUser, getCommerceSortInitialState);
   }
 );
 
