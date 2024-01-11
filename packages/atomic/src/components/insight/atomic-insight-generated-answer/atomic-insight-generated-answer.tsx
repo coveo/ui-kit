@@ -73,10 +73,10 @@ export class AtomicInsightGeneratedAnswer
   /**
    * The answer style to apply when the component first loads.
    * Options:
-   *   - `default`: Generates the answer without additional formatting instructions.
-   *   - `bullet`: Requests that the answer is formatted as a bulleted list.
-   *   - `step`: Requests that the answer is formatted as a series of step-by-step instructions.
-   *   - `concise`: Requests that the generated answer is as concise as possible.
+   *   - `default`: Generate the answer without a specific formatting instructions.
+   *   - `bullet`: Generate the answer as a bulleted list.
+   *   - `step`: Generate the answer as step-by-step instructions.
+   *   - `concise`: Generate the answer as briefly as possible.
    */
   @Prop() answerStyle: InsightGeneratedAnswerStyle = 'default';
 

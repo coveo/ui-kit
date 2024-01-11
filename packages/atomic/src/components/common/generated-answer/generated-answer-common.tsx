@@ -45,6 +45,10 @@ export class GeneratedAnswerCommon {
   private _data: GeneratedAnswerData;
   private modalRef?: HTMLAtomicGeneratedAnswerFeedbackModalElement;
 
+  private contentClasses =
+    'mt-0 mb-4 border border-neutral shadow-lg p-6 bg-background rounded-lg p-6 text-on-background';
+  private loadingClasses = 'my-3';
+
   constructor(private props: GeneratedAnswerCommonOptions) {
     this._data = this.readStoredData();
   }
@@ -128,14 +132,6 @@ export class GeneratedAnswerCommon {
       ? 'generated-answer-toggle-on'
       : 'generated-answer-toggle-off';
     return this.props.getBindings().i18n.t(key);
-  }
-
-  private get loadingClasses() {
-    return 'my-3';
-  }
-
-  private get contentClasses() {
-    return 'mt-0 mb-4 border border-neutral shadow-lg p-6 bg-background rounded-lg p-6 text-on-background';
   }
 
   private get hasClipboard() {
