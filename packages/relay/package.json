@@ -41,6 +41,8 @@
   "scripts": {
     "build": "npm run clean && rollup --config ./config/rollup.config.mjs && npm run typedoc",
     "clean": "rimraf -rf ./lib",
+    "lint": "eslint src/**",
+    "lint:fix": "npm run lint -- --fix",
     "test": "jest",
     "test:watch": "jest --watch",
     "npm:tag": "node ./scripts/update-npm-tag.mjs",
@@ -55,7 +57,6 @@
     "@types/jest": "^29.5.3",
     "@types/node": "^17.0.12",
     "@types/uuid": "^9.0.4",
-    "eslint-config-custom": "workspace:*",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "rimraf": "5.0.5",

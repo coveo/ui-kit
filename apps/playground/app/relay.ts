@@ -1,8 +1,8 @@
 import { createRelay } from "@coveo/relay";
 
-const url = process.env["NEXT_PUBLIC_URL"];
-const token = process.env["NEXT_PUBLIC_TOKEN"];
-const trackingId = process.env["NEXT_PUBLIC_TRACKING_ID"];
+const url = process.env["NEXT_PUBLIC_URL"]!;
+const token = process.env["NEXT_PUBLIC_TOKEN"]!;
+const trackingId = process.env["NEXT_PUBLIC_TRACKING_ID"]!;
 
 const relay = createRelay({ url, token, trackingId });
 

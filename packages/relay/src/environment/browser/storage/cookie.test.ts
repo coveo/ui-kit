@@ -52,9 +52,8 @@ describe("CookieManager", () => {
   });
 
   const navigateTo = (url: string): void => {
-    // @ts-ignore
-    delete window.location;
-    // @ts-ignore
-    window.location = new URL(url);
+    Object.defineProperty(window, "location", {
+      value: new URL(url),
+    });
   };
 });

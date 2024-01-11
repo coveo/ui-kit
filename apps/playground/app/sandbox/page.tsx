@@ -16,7 +16,7 @@ import {
 import { relay } from "../relay";
 
 export default function Page() {
-  function prettify(obj: Object) {
+  function prettify(obj: object) {
     return JSON.stringify(obj, null, 2);
   }
 
@@ -36,6 +36,11 @@ export default function Page() {
 
   function onSelectEvent(selected: string) {
     const selectedEvent = events.find((event) => event.type === selected);
+
+    if (!selectedEvent) {
+      return;
+    }
+
     setEvent(selectedEvent);
     setPayload(prettify(selectedEvent.payload));
   }
@@ -65,7 +70,7 @@ export default function Page() {
             theme="vs-dark"
             value={payload}
             options={{ minimap: { enabled: false }, contextmenu: false }}
-            onChange={setPayload}
+            onChange={(value) => value && setPayload(value)}
           />
         </Box>
       </Grid.Col>

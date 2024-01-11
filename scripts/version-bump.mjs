@@ -87,11 +87,7 @@ const bumpVersion = async ({ newVersion, name, lastTag }) => {
     .filter((pkg) => pkg.name != name)
     .map((pkg) => pkg.name);
 
-  const excludedPackages = [
-    "eslint-config-custom",
-    "tsconfig",
-    ...packagesExceptCurrent,
-  ];
+  const excludedPackages = ["tsconfig", ...packagesExceptCurrent];
 
   await pnpmBumpVersion(newVersion, lastTag, [name], excludedPackages);
 };

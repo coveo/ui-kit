@@ -7,7 +7,8 @@
     "build": "next build",
     "preview": "npx serve@latest out",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint app/**",
+    "lint:fix": "npm run lint -- --fix",
     "test": "npm run test:relay-node",
     "test:relay-node": "node ./tests/relay-node.js && node ./tests/relay-node.mjs"
   },
@@ -24,7 +25,6 @@
     "@types/node": "^17.0.12",
     "@types/react": "^18.2.16",
     "@types/react-dom": "^18.2.7",
-    "eslint-config-custom": "workspace:*",
     "tsconfig": "workspace:*",
     "typescript": "^5.1.6"
   }

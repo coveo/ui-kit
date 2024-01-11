@@ -28,6 +28,10 @@ export default function Page() {
 
     document.body.appendChild(iframe);
 
+    if (!iframe.contentWindow) {
+      return;
+    }
+
     iframe.contentWindow.document.open();
     iframe.contentWindow.document.write(snippet);
     iframe.contentWindow.document.close();

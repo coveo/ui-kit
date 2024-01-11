@@ -16,7 +16,7 @@ export function EventDropdown({
     <Select
       data={events.map((e) => e.type)}
       value={selectedEventType}
-      onChange={onSelectEvent}
+      onChange={(value) => value && onSelectEvent(value)}
     />
   );
 }
