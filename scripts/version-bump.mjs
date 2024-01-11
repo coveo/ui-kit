@@ -131,7 +131,7 @@ const runPackageBump = async (pkg) => {
 
 const format = async () => {
   const exec = promisify(cbExec);
-  await exec("pnpm format");
+  await exec("pnpm lint:fix");
 };
 
 const commitAndPush = async (tags) => {
