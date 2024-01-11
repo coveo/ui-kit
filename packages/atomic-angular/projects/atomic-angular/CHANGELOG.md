@@ -1,3 +1,9 @@
+# 2.20.0 (2024-01-10)
+
+### Features
+
+- **atomic:** add suggestion delay option for atomic search box ([#3510](https://github.com/coveo/ui-kit/issues/3510)) ([bc52812](https://github.com/coveo/ui-kit/commits/bc528120bcdeaf4f57f37713913b3fc6f34e0182))
+
 # 2.19.0 (2023-12-08)
 
 ### Features

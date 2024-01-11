@@ -1,11 +1,6 @@
 @define-mixin icon-coloring $color {
-  svg path {
-    &.line {
-      stroke: $color;
-    }
-    &.fill {
-      fill: $color;
-    }
+  atomic-icon {
+    color: $color;
   }
 }
 
@@ -16,21 +11,16 @@
 
     @mixin icon-coloring var(--atomic-neutral-dark);
 
+    &.dislike {
+      rotate: 180deg;
+    }
+
     &:hover,
     &.active {
       &.like {
         @mixin icon-coloring var(--atomic-success);
       }
 
-      &.dislike {
-        @mixin icon-coloring var(--atomic-error);
-      }
-    }
-
-    &:hover {
-      &.like {
-        @mixin icon-coloring var(--atomic-success);
-      }
       &.dislike {
         @mixin icon-coloring var(--atomic-error);
       }

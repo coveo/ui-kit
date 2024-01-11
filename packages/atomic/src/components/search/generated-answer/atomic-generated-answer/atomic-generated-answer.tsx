@@ -81,6 +81,9 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   @State()
   copied = false;
 
+  @State()
+  copyError = false;
+
   /**
    * The answer style to apply when the component first loads.
    * Options:
@@ -201,11 +204,35 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     return 'mt-0 mb-4 border border-neutral shadow-lg p-6 bg-background rounded-lg p-6 text-on-background';
   }
 
+  private get hasClipboard() {
+    return !!navigator?.clipboard?.writeText;
+  }
+
+  private get copyToClipboardTooltip() {
+    if (this.copyError) {
+      return this.bindings.i18n.t('failed-to-copy-generated-answer');
+    }
+
+    return !this.copied
+      ? this.bindings.i18n.t('copy-generated-answer')
+      : this.bindings.i18n.t('generated-answer-copied');
+  }
+
   private async copyToClipboard(answer: string) {
-    await navigator.clipboard.writeText(answer);
-    this.copied = true;
+    try {
+      await navigator.clipboard.writeText(answer);
+      this.copied = true;
+      this.generatedAnswer.logCopyToClipboard();
+    } catch (error) {
+      this.copyError = true;
+      this.bindings.engine.logger.error(
+        `Failed to copy to clipboard: ${error}`
+      );
+    }
+
     setTimeout(() => {
       this.copied = false;
+      this.copyError = false;
     }, 2000);
   }
 
@@ -275,18 +302,18 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
                     active={this.generatedAnswerState.disliked}
                     onClick={this.clickDislike}
                   />
-                  <CopyButton
-                    title={
-                      !this.copied
-                        ? this.bindings.i18n.t('copy-generated-answer')
-                        : this.bindings.i18n.t('generated-answer-copied')
-                    }
-                    isCopied={this.copied}
-                    onClick={() => {
-                      this.copyToClipboard(this.generatedAnswerState.answer!);
-                      this.generatedAnswer.logCopyToClipboard();
-                    }}
-                  />
+                  {this.hasClipboard && (
+                    <CopyButton
+                      title={this.copyToClipboardTooltip}
+                      isCopied={this.copied}
+                      error={this.copyError}
+                      onClick={async () =>
+                        await this.copyToClipboard(
+                          this.generatedAnswerState.answer!
+                        )
+                      }
+                    />
+                  )}
                 </div>
               )}
 

@@ -4,6 +4,7 @@ import {
 } from '@reduxjs/toolkit';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
+import {CommerceFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
 import {
   AnyFacetResponse,
   AnyFacetValueResponse,
@@ -178,18 +179,23 @@ export function buildCoreCommerceFacet<
 
   const facetId = props.options.facetId;
 
-  const getRequest = () => engine.state.commerceFacetSet[facetId].request;
+  const getRequest = (): CommerceFacetRequest | undefined =>
+    engine.state.commerceFacetSet[facetId]?.request;
   const getResponse = () =>
-    props.options.facetResponseSelector(engine.state, facetId)!;
+    props.options.facetResponseSelector(engine.state, facetId);
   const getIsLoading = () =>
     props.options.isFacetLoadingResponseSelector(engine.state);
 
   const getNumberOfActiveValues = () => {
-    return getRequest().values.filter((v) => v.state !== 'idle').length;
+    return getRequest()?.values?.filter((v) => v.state !== 'idle').length ?? 0;
   };
 
   const computeCanShowLessValues = () => {
     const request = getRequest();
+    if (!request) {
+      return false;
+    }
+
     const initialNumberOfValues = request.initialNumberOfValues;
     const hasIdleValues = !!request.values.find((v) => v.state === 'idle');
 
@@ -243,8 +249,8 @@ export function buildCoreCommerceFacet<
     },
 
     showMoreValues() {
-      const numberInState = getRequest().numberOfValues;
-      const initialNumberOfValues = getRequest().initialNumberOfValues;
+      const numberInState = getRequest()?.numberOfValues ?? 0;
+      const initialNumberOfValues = getRequest()?.initialNumberOfValues ?? 0;
       const numberToNextMultipleOfConfigured =
         initialNumberOfValues - (numberInState % initialNumberOfValues);
       const numberOfValues = numberInState + numberToNextMultipleOfConfigured;
@@ -255,7 +261,7 @@ export function buildCoreCommerceFacet<
     },
 
     showLessValues() {
-      const initialNumberOfValues = getRequest().initialNumberOfValues;
+      const initialNumberOfValues = getRequest()?.initialNumberOfValues ?? 0;
       const newNumberOfValues = Math.max(
         initialNumberOfValues,
         getNumberOfActiveValues()
@@ -271,17 +277,17 @@ export function buildCoreCommerceFacet<
     get state() {
       const response = getResponse();
 
-      const values = response.values as ValueResponse[];
+      const values = (response?.values ?? []) as ValueResponse[];
       const hasActiveValues = values.some(
         (facetValue) => facetValue.state !== 'idle'
       );
-      const canShowMoreValues = response ? response.moreValuesAvailable : false;
+      const canShowMoreValues = response?.moreValuesAvailable ?? false;
 
       return {
         facetId,
-        type: response.type,
-        field: response.field,
-        displayName: response.displayName,
+        type: response?.type ?? 'regular',
+        field: response?.field ?? '',
+        displayName: response?.displayName ?? '',
         values,
         isLoading: getIsLoading(),
         hasActiveValues,
