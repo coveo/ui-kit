@@ -67,8 +67,6 @@ export function toArray<T>(value: T | T[]): T[] {
   return Array.isArray(value) ? value : [value];
 }
 
-// TODO: add unit tests for the exported function once bundled in SSR package
-
 export function addFacetValuesToSearchParams(
   facetId: string,
   paramKey: SearchParameterKey
@@ -81,10 +79,8 @@ export function addFacetValuesToSearchParams(
       >;
       record[facetId] = [...(record[facetId] ?? []), ...valueArray];
       searchParams[paramKey] = record;
-      return record;
     } else {
       searchParams[paramKey] = {[facetId]: valueArray};
-      return searchParams[paramKey];
     }
   };
 }
