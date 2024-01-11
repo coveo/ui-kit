@@ -1,3 +1,15 @@
+# 2.54.0 (2024-01-10)
+
+### Bug Fixes
+
+- **atomic:** set end of range to end of day when applying facet date input ([#3517](https://github.com/coveo/ui-kit/issues/3517)) ([c67f3e1](https://github.com/coveo/ui-kit/commits/c67f3e1e539ba4c21d96186c30b1794c2789614c))
+- **error:** added margin at the buttom of the error component ([#3486](https://github.com/coveo/ui-kit/issues/3486)) ([5eb2c8c](https://github.com/coveo/ui-kit/commits/5eb2c8c473a90184bb5987304f8ac6a55d64ac1e))
+- **rga:** ensure svgs does not include static colors ([#3515](https://github.com/coveo/ui-kit/issues/3515)) ([d7c44e7](https://github.com/coveo/ui-kit/commits/d7c44e71d8f9d6e22125873c6c5fcf0ce85f8df2))
+
+### Features
+
+- **atomic:** add suggestion delay option for atomic search box ([#3510](https://github.com/coveo/ui-kit/issues/3510)) ([bc52812](https://github.com/coveo/ui-kit/commits/bc528120bcdeaf4f57f37713913b3fc6f34e0182))
+
 # 2.53.0 (2024-01-03)
 
 ### Bug Fixes
