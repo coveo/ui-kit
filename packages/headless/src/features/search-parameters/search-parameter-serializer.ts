@@ -13,12 +13,12 @@ import {buildNumericRange} from '../../controllers/facets/range-facet/numeric-fa
 import {RangeValueRequest} from '../facets/range-facets/generic/interfaces/range-facet';
 import {SearchParameters} from './search-parameter-actions';
 
+export const rangeDelimiterExclusive = '..';
+export const rangeDelimiterInclusive = '...';
+export type SearchParameterKey = keyof SearchParameters;
+
 const delimiter = '&';
 const equal = '=';
-const rangeDelimiterExclusive = '..';
-const rangeDelimiterInclusive = '...';
-
-type SearchParameterKey = keyof SearchParameters;
 type UnknownObject = {[field: string]: unknown[]};
 
 export function buildSearchParameterSerializer() {
@@ -59,7 +59,7 @@ function serializePair(pair: [string, unknown]) {
   )}`;
 }
 
-function isFacetObject(obj: unknown): obj is Record<string, string[]> {
+export function isFacetObject(obj: unknown): obj is Record<string, string[]> {
   if (!isObject(obj)) {
     return false;
   }
@@ -68,7 +68,7 @@ function isFacetObject(obj: unknown): obj is Record<string, string[]> {
   return allEntriesAreValid(obj, isValidValue);
 }
 
-function isRangeFacetObject(
+export function isRangeFacetObject(
   obj: unknown
 ): obj is Record<string, RangeValueRequest[]> {
   if (!isObject(obj)) {
@@ -183,7 +183,7 @@ function processObjectValues(key: string, values: string[]) {
   return values;
 }
 
-function buildNumericRanges(ranges: string[]) {
+export function buildNumericRanges(ranges: string[]) {
   return ranges
     .map((str) => {
       const {startAsString, endAsString, isEndInclusive} =
@@ -218,7 +218,7 @@ function isValidDateRangeValue(date: string) {
   }
 }
 
-function buildDateRanges(ranges: string[]) {
+export function buildDateRanges(ranges: string[]) {
   return ranges
     .map((str) => {
       const {isEndInclusive, startAsString, endAsString} =

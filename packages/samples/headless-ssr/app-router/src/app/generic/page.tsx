@@ -1,4 +1,4 @@
-import {NextJsSearchParameterSerializer} from '@/common/components/common/search-parameter-serializer';
+import {SearchParameterSerializer} from '@/common/components/common/search-parameter-serializer';
 import SearchPage from '@/common/components/generic/search-page';
 import {fetchStaticState} from '@/common/lib/generic/engine';
 
@@ -17,7 +17,7 @@ export default async function Search(url: {
   searchParams: {[key: string]: string | string[] | undefined};
 }) {
   const {searchParameters: coveoSearchParameters} =
-    NextJsSearchParameterSerializer.fromUrlSearchParameters(url.searchParams);
+    SearchParameterSerializer.fromUrlSearchParameters(url.searchParams);
   const contextValues = {
     ageGroup: '30-45',
     mainInterest: 'sports',

@@ -79,6 +79,7 @@ export function addFacetValuesToSearchParams(
       return record;
     } else {
       searchParams[paramKey] = {[facetId]: valueArray};
+      return searchParams[paramKey];
     }
   };
 }
@@ -141,7 +142,6 @@ export function isRangeFacetPair(
  * @template T The type of elements in the arrays.
  */
 export function areTheSameArraysSortedDifferently<T>(
-  // TODO: KIT-2952 use compare-utils.ts -> arrayEqualAnyOrder
   arr1: T[],
   arr2: T[]
 ): boolean {

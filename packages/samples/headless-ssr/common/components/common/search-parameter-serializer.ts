@@ -16,26 +16,26 @@ import {
   extendSearchParameters,
 } from './search-parameter-utils';
 
-export class NextJsSearchParameterSerializer {
+export class SearchParameterSerializer {
   private constructor(public readonly searchParameters: SearchParameters) {}
 
   /**
-   * Converts a {@link SearchParameters} object to a {@link NextJsSearchParameterSerializer} object.
+   * Converts a {@link SearchParameters} object to a {@link SearchParameterSerializer} object.
    * This class can help you serialize and deserialize Coveo search parameters to and from URL search parameters.
    *
    * @param searchParameters - The {@link SearchParameters} object to convert.
-   * @returns A new instance of {@link NextJsSearchParameterSerializer}.
+   * @returns A new instance of {@link SearchParameterSerializer}.
    */
   public static fromSearchParameters(searchParameters: SearchParameters) {
-    return new NextJsSearchParameterSerializer(searchParameters);
+    return new SearchParameterSerializer(searchParameters);
   }
 
   /**
-   * Converts URL search parameters into a {@link NextJsSearchParameterSerializer} object.
+   * Converts URL search parameters into a {@link SearchParameterSerializer} object.
    * This class can help you serialize and deserialize Coveo search parameters to and from URL search parameters.
    *
    * @param urlSearchParams - The URL search parameters to convert.
-   * @returns A {@link NextJsSearchParameterSerializer} instance with the converted search parameters.
+   * @returns A {@link SearchParameterSerializer} instance with the converted search parameters.
    */
   public static fromUrlSearchParameters(
     urlSearchParams: URLSearchParams | ServerSideSearchParams
@@ -52,7 +52,7 @@ export class NextJsSearchParameterSerializer {
       );
     }
 
-    return new NextJsSearchParameterSerializer(searchParameters);
+    return new SearchParameterSerializer(searchParameters);
   }
 
   /**

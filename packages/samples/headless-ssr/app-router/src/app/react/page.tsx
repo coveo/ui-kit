@@ -1,4 +1,4 @@
-import {NextJsSearchParameterSerializer} from '@/common/components/common/search-parameter-serializer';
+import {SearchParameterSerializer} from '@/common/components/common/search-parameter-serializer';
 import {AuthorFacet} from '@/common/components/react/facets';
 import ResultList from '@/common/components/react/result-list';
 import SearchBox from '@/common/components/react/search-box';
@@ -22,7 +22,7 @@ export default async function Search(url: {
   searchParams: {[key: string]: string | string[] | undefined};
 }) {
   const {searchParameters: coveoSearchParameters} =
-    NextJsSearchParameterSerializer.fromUrlSearchParameters(url.searchParams);
+    SearchParameterSerializer.fromUrlSearchParameters(url.searchParams);
 
   const contextValues = {
     ageGroup: '30-45',

@@ -3,7 +3,7 @@
 import {useEffect, useMemo} from 'react';
 import {useSearchParameterManager} from '../../lib/react/engine';
 import {useAppHistoryRouter} from '../common/history-router';
-import {NextJsSearchParameterSerializer} from '../common/search-parameter-serializer';
+import {SearchParameterSerializer} from '../common/search-parameter-serializer';
 
 /**
  * The `SearchParameterManager` hook is responsible for synchronizing the URL with the state of the search interface.
@@ -21,7 +21,7 @@ export default function SearchParameterManager() {
       return;
     }
     const {searchParameters: coveoSearchParameters} =
-      NextJsSearchParameterSerializer.fromUrlSearchParameters(
+      SearchParameterSerializer.fromUrlSearchParameters(
         historyRouter.url.searchParams
       );
     return methods.synchronize(coveoSearchParameters);
@@ -34,7 +34,7 @@ export default function SearchParameterManager() {
     }
 
     const newURL = new URL(historyRouter.url);
-    NextJsSearchParameterSerializer.fromSearchParameters(
+    SearchParameterSerializer.fromSearchParameters(
       state.parameters
     ).applyToUrlSearchParams(newURL.searchParams);
 
