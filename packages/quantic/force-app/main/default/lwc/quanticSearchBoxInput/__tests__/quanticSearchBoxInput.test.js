@@ -33,6 +33,7 @@ const selectors = {
   searchBoxSuggestionsList: 'c-quantic-search-box-suggestions-list',
   searchBoxContainer: '.searchbox__container',
   searchBoxComboBox: '.slds-combobox_container .slds-combobox',
+  searchBoxSearchIcon: '.searchbox__search-icon',
 };
 
 function setupEventListeners(element) {
@@ -124,6 +125,83 @@ describe('c-quantic-search-box-input', () => {
       expect(textarea.placeholder).toEqual(defaultOptions.placeholder);
       expect(submitButton).not.toBeNull();
       expect(clearIcon).toBeNull();
+    });
+  });
+
+  describe('when the withoutSubmitButton is set to false', () => {
+    it('should not display the searchIcon to the left of the searchbox', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        withoutSubmitButton: false,
+      });
+      await flushPromises();
+
+      const searchIcon = element.shadowRoot.querySelector(
+        selectors.searchBoxSearchIcon
+      );
+
+      expect(searchIcon).toBeNull();
+    });
+
+    it('should display the submit button to the right of the searchbox', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        withoutSubmitButton: false,
+      });
+      await flushPromises();
+
+      const submitButton = element.shadowRoot.querySelector(
+        selectors.searchBoxSubmitBtn
+      );
+
+      expect(submitButton).not.toBeNull();
+    });
+  });
+
+  describe('when the withoutSubmitButton is set to true', () => {
+    it('should display the searchIcon to the left of the searchbox', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        withoutSubmitButton: true,
+      });
+      await flushPromises();
+
+      const searchIcon = element.shadowRoot.querySelector(
+        selectors.searchBoxSearchIcon
+      );
+
+      expect(searchIcon).not.toBeNull();
+      expect(searchIcon.classList.contains('slds-input__icon_left')).toBe(true);
+    });
+
+    it('should not display the submit button to the right of the searchbox', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        withoutSubmitButton: true,
+      });
+      await flushPromises();
+
+      const submitButton = element.shadowRoot.querySelector(
+        selectors.searchBoxSubmitBtn
+      );
+
+      expect(submitButton).toBeNull();
+    });
+  });
+
+  describe('when the placeholder property receives a custom placeholder value', () => {
+    it('should display the custom value as the searchbox placeholder', async () => {
+      const customPlaceholder = 'Custom placeholder';
+      const element = createTestComponent({
+        ...defaultOptions,
+        placeholder: customPlaceholder,
+      });
+      await flushPromises();
+
+      const input = element.shadowRoot.querySelector(selectors.searchBoxInput);
+
+      expect(input.placeholder).not.toEqual(defaultOptions.placeholder);
+      expect(input.placeholder).toEqual(customPlaceholder);
     });
   });
 
