@@ -11,12 +11,16 @@
           <div class="searchbox__container">
             <div class={searchBoxContainerClass} role="none">
               <template if:true={withoutSubmitButton}>
-                <lightning-icon
-                  class="slds-icon slds-input__icon slds-input__icon_left searchbox__search-icon"
-                  icon-name="utility:search"
-                  size="x-small"
-                  data-cy="search-box-search-icon"
-                ></lightning-icon>
+                <div
+                  class="slds-grid slds-align_absolute-center searchbox__icon-container searchbox__icon-container-left"
+                >
+                  <lightning-icon
+                    class="slds-icon slds-input__icon slds-input__icon_left searchbox__search-icon"
+                    icon-name="utility:search"
+                    size="x-small"
+                    data-cy="search-box-search-icon"
+                  ></lightning-icon>
+                </div>
               </template>
               <textarea
                 id="combobox-with-button-id"
@@ -38,7 +42,7 @@
 
               <template if:false={isQueryEmpty}>
                 <div
-                  class="slds-grid slds-align_absolute-center slds-var-m-right_xxx-small searchbox__clear-button-container"
+                  class="slds-grid slds-align_absolute-center searchbox__icon-container searchbox__icon-container-right"
                 >
                   <lightning-button-icon
                     onclick={clearInput}

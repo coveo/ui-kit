@@ -1,7 +1,22 @@
 @import 'c/searchBoxStyle';
 
-.searchbox__clear-button-container {
+.searchbox__icon-container {
   margin: inherit;
+}
+
+.searchbox__icon-container-left {
+  margin-left: 0.5rem;
+}
+
+.searchbox__icon-container-right {
+  margin-right: 0.5rem;
+}
+
+/* This is to override some style from the slds-has-input and prevent */
+/* the search icon from sliding down as the searchbox expands */
+.searchbox__search-icon {
+  margin-top: 0;
+  top: auto;
 }
 
 .searchbox__container {

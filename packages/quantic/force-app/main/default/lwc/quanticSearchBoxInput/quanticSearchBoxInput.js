@@ -19,7 +19,7 @@ import expandableSearchBoxInput from './templates/expandableSearchBoxInput.html'
 const CLASS_WITH_SUBMIT =
   'slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right slds-input-has-fixed-addon slds-grid';
 const CLASS_WITHOUT_SUBMIT =
-  'slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right slds-grid slds-m-right_xx-small';
+  'slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right slds-grid';
 
 /**
  * The `QuanticSearchBoxInput` component renders the searchBox input.
