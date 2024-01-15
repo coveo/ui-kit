@@ -65,7 +65,7 @@ describe('InteractiveResult', () => {
     );
   });
 
-  it('does not call logDocumentSuggestionOpen when the action is triggered for the second time', () => {
+  it('does not dispatch logDocumentSuggestionOpen when the action is triggered for the second time', () => {
     const mockedLogDocumentSuggestionOpen = jest.mocked(
       logDocumentSuggestionOpen
     );
