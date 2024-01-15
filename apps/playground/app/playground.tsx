@@ -11,6 +11,12 @@ export function Playground(props: React.PropsWithChildren) {
   const pathName = usePathname();
   const [opened, { toggle }] = useDisclosure();
 
+  function isActiveNavLink(index: number, slug: string) {
+    const isDefault = index === 0 && pathName === "/";
+    const lastSegment = pathName.split("/").at(-1) || "";
+    return isDefault || lastSegment.startsWith(slug);
+  }
+
   return (
     <AppShell
       header={{ height: 60 }}
@@ -32,9 +38,9 @@ export function Playground(props: React.PropsWithChildren) {
 
       <AppShell.Navbar p="md">
         {navLinks.map((navLink, i) => {
-          const href = `/${navLink.toLowerCase()}`;
-          const isDefault = i === 0 && pathName === "/";
-          const matchesPath = href === pathName;
+          const isDev = process.env["NODE_ENV"] === "development";
+          const slug = navLink.toLowerCase();
+          const href = isDev ? `/${slug}` : `/relay/playground/${slug}.html`;
 
           return (
             <NavLink
@@ -43,7 +49,7 @@ export function Playground(props: React.PropsWithChildren) {
               href={href}
               label={navLink}
               variant="subtle"
-              active={isDefault || matchesPath}
+              active={isActiveNavLink(i, slug)}
             />
           );
         })}
