@@ -18,7 +18,7 @@ import {
 jest.mock('../../features/recommendation/recommendation-actions');
 jest.mock('../../features/pagination/pagination-actions');
 
-describe('headless recommendation', () => {
+describe('Recommendation, () => {
   let recommendation: RecommendationList;
   let engine: MockedRecommendationEngine;
 
@@ -85,7 +85,7 @@ describe('headless recommendation', () => {
     expect(fn).toThrow('Check the options of buildRecommendationList');
   });
 
-  it('getRecommendations dispatches #getRecommendations', () => {
+  it('#refresh dispatches #getRecommendations', () => {
     const mockedGetRecommendations = jest.mocked(getRecommendations);
 
     recommendation.refresh();

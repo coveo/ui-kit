@@ -45,7 +45,7 @@ describe('RecommendationInteractiveResult', () => {
     initializeInteractiveResult();
   });
 
-  it('initialize a interactive result core with the correct options', () => {
+  it('initialize an interactive result core with the correct options', () => {
     expect(mockedBuildInteractiveResultCore).toHaveBeenCalledWith(
       engine,
       interactiveResultProps,
@@ -60,7 +60,7 @@ describe('RecommendationInteractiveResult', () => {
     expect(mockedLogDocumentSuggestionOpen).toHaveBeenCalledTimes(1);
   });
 
-  it('does not call logRecommendationOpen when the action is triggered for the second time', () => {
+  it('does not call #logRecommendationOpen when the action is triggered for the second time', () => {
     const mockedLogDocumentSuggestionOpen = jest.mocked(logRecommendationOpen);
 
     mockedSelect();
