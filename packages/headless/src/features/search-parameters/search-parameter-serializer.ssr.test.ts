@@ -68,8 +68,8 @@ describe('buildSSRSearchParameterSerializer', () => {
   });
 });
 
-describe('serializeSearchParametersToUrl', () => {
-  const {serializeSearchParametersToUrl} = buildSSRSearchParameterSerializer();
+describe('serialize', () => {
+  const {serialize} = buildSSRSearchParameterSerializer();
 
   it('should serialize search parameters to URL', () => {
     const searchParameters: SearchParameters = {
@@ -78,10 +78,24 @@ describe('serializeSearchParametersToUrl', () => {
     };
     const initialUrl = new URL('https://example.com');
 
-    const result = serializeSearchParametersToUrl(searchParameters, initialUrl);
+    const result = serialize(searchParameters, initialUrl);
 
     expect(result).toBe(
       'https://example.com/?q=query&f-color=red&f-color=green&f-shape=square'
+    );
+  });
+
+  it('should not alter url host and route', () => {
+    const searchParameters: SearchParameters = {
+      q: 'query',
+      f: {color: ['red', 'green'], shape: ['square']},
+    };
+    const initialUrl = new URL('https://example.com/custom/route');
+
+    const result = serialize(searchParameters, initialUrl);
+
+    expect(result).toBe(
+      'https://example.com/custom/route?q=query&f-color=red&f-color=green&f-shape=square'
     );
   });
 
@@ -91,7 +105,7 @@ describe('serializeSearchParametersToUrl', () => {
     };
     const initialUrl = new URL('https://example.com?foo=bar');
 
-    const result = serializeSearchParametersToUrl(searchParameters, initialUrl);
+    const result = serialize(searchParameters, initialUrl);
 
     expect(result).toBe(
       'https://example.com/?foo=bar&f-color=red&f-color=green&f-shape=square'
@@ -106,7 +120,7 @@ describe('serializeSearchParametersToUrl', () => {
       'https://example.com/?f-color=blue&f-shape=oval'
     );
 
-    const result = serializeSearchParametersToUrl(searchParameters, initialUrl);
+    const result = serialize(searchParameters, initialUrl);
 
     expect(result).toBe(
       'https://example.com/?f-color=red&f-color=green&f-shape=square'
@@ -116,7 +130,7 @@ describe('serializeSearchParametersToUrl', () => {
   it('should handle empty search parameters', () => {
     const searchParameters = {};
     const initialUrl = new URL('https://example.com/?param1=value1');
-    const result = serializeSearchParametersToUrl(searchParameters, initialUrl);
+    const result = serialize(searchParameters, initialUrl);
 
     expect(result).toBe('https://example.com/?param1=value1');
   });

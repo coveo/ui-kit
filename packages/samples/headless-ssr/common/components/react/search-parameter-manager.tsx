@@ -1,9 +1,9 @@
 'use client';
 
+import {buildSSRSearchParameterSerializer} from '@coveo/headless/ssr';
 import {useEffect, useMemo} from 'react';
 import {useSearchParameterManager} from '../../lib/react/engine';
 import {useAppHistoryRouter} from '../common/history-router';
-import {SearchParameterSerializer} from '../common/search-parameter-serializer';
 
 /**
  * The `SearchParameterManager` hook is responsible for synchronizing the URL with the state of the search interface.
@@ -20,11 +20,9 @@ export default function SearchParameterManager() {
     if (!methods || !historyRouter.url?.searchParams) {
       return;
     }
-    const {searchParameters: coveoSearchParameters} =
-      SearchParameterSerializer.fromUrlSearchParameters(
-        historyRouter.url.searchParams
-      );
-    return methods.synchronize(coveoSearchParameters);
+    const {toSearchParameters} = buildSSRSearchParameterSerializer();
+    const searchParameters = toSearchParameters(historyRouter.url.searchParams);
+    return methods.synchronize(searchParameters);
   }, [historyRouter.url?.searchParams, methods]);
 
   // Update the browser's URL
@@ -34,16 +32,14 @@ export default function SearchParameterManager() {
     }
 
     const newURL = new URL(historyRouter.url);
-    SearchParameterSerializer.fromSearchParameters(
-      state.parameters
-    ).applyToUrlSearchParams(newURL.searchParams);
+    const {serialize} = buildSSRSearchParameterSerializer();
 
-    return newURL.href;
+    return serialize(state.parameters, newURL);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.parameters]);
 
   useEffect(() => {
-    if (!correctedUrl || document.location.href === correctedUrl) {
+    if (!correctedUrl || historyRouter.url?.href === correctedUrl) {
       return;
     }
 

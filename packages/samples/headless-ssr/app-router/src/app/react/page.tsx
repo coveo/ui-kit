@@ -1,10 +1,10 @@
-import {SearchParameterSerializer} from '@/common/components/common/search-parameter-serializer';
 import {AuthorFacet} from '@/common/components/react/facets';
 import ResultList from '@/common/components/react/result-list';
 import SearchBox from '@/common/components/react/search-box';
 import {SearchPageProvider} from '@/common/components/react/search-page';
 import SearchParameterManager from '@/common/components/react/search-parameter-manager';
 import {fetchStaticState} from '@/common/lib/react/engine';
+import {buildSSRSearchParameterSerializer} from '@coveo/headless-react/ssr';
 
 /**
  * This file defines a Search component that uses the Coveo Headless library to manage its state.
@@ -21,8 +21,8 @@ import {fetchStaticState} from '@/common/lib/react/engine';
 export default async function Search(url: {
   searchParams: {[key: string]: string | string[] | undefined};
 }) {
-  const {searchParameters: coveoSearchParameters} =
-    SearchParameterSerializer.fromUrlSearchParameters(url.searchParams);
+  const {toSearchParameters} = buildSSRSearchParameterSerializer();
+  const searchParameters = toSearchParameters(url.searchParams);
 
   const contextValues = {
     ageGroup: '30-45',
@@ -36,7 +36,7 @@ export default async function Search(url: {
         },
       },
       searchParameterManager: {
-        initialState: {parameters: coveoSearchParameters},
+        initialState: {parameters: searchParameters},
       },
     },
   });

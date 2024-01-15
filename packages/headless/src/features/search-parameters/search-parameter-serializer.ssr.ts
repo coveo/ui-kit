@@ -18,11 +18,12 @@ import {
 } from './search-parameter-utils';
 
 export function buildSSRSearchParameterSerializer() {
-  return {toSearchParameters, serializeSearchParametersToUrl};
+  return {toSearchParameters, serialize};
 }
 
 /**
  * Converts URLSearchParams or a record of search parameters into a {@link SearchParameters} object.
+ *
  * @param urlSearchParams - The URLSearchParams or record of search parameters.
  * @returns The converted SearchParameters object.
  */
@@ -49,10 +50,7 @@ function toSearchParameters(
  * @param initialUrl - The initial URL to which the search parameters will be added.
  * @returns The serialized URL.
  */
-function serializeSearchParametersToUrl(
-  searchParameters: SearchParameters,
-  initialUrl: URL
-) {
+function serialize(searchParameters: SearchParameters, initialUrl: URL) {
   const {searchParams} = initialUrl;
   const previousState = wipeSearchParamsFromUrl(searchParams);
   Object.entries(searchParameters).forEach(
