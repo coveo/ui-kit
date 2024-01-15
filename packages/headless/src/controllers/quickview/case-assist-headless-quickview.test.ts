@@ -72,7 +72,7 @@ describe('CaseAssistQuickview', () => {
     });
   });
 
-  it('dispatches a preparePreviewPagination action on initialization', () => {
+  it('dispatches a #preparePreviewPagination on initialization', () => {
     const mockedPreparePreviewPagination = jest.mocked(
       preparePreviewPagination
     );
@@ -92,7 +92,7 @@ describe('CaseAssistQuickview', () => {
       expect(quickview.state.content).toBe('🥔');
     });
 
-    it('exposes `currentDocument` in the state ', () => {
+    it('#state.currentDocument returns the 1-based position of the document suggestion being quick viewed', () => {
       engineState.documentSuggestion.documents = [
         buildMockDocumentSuggestion(),
         buildMockDocumentSuggestion(),
@@ -104,7 +104,7 @@ describe('CaseAssistQuickview', () => {
       expect(quickview.state.currentDocument).toBe(3);
     });
 
-    it('exposes `totalDocuments` in the state ', () => {
+    it('#state.totalDocuments returns the total number of document suggestions', () => {
       engineState.documentSuggestion.documents = [
         buildMockDocumentSuggestion(),
         buildMockDocumentSuggestion(),
@@ -116,7 +116,7 @@ describe('CaseAssistQuickview', () => {
     });
   });
 
-  it('when the core quickview calls fetchResultContentCallback, it dispatch a logQuickviewDocumentSuggestionClick with the proper uniqueId', () => {
+  it('#fetchResultContentCallback dispatches a #logQuickviewDocumentSuggestionClick with the proper uniqueId', () => {
     const mockedLogQuickviewDocumentSuggestionClick = jest.mocked(
       logQuickviewDocumentSuggestionClick
     );

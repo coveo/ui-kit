@@ -63,7 +63,7 @@ describe('Case Field', () => {
     });
   });
 
-  it('building a case field registers the case field in the state', () => {
+  it('dispatch #registerCaseField on init if the field was not already registered', () => {
     const mockedRegisterCaseField = jest.mocked(registerCaseField);
 
     initCaseField();
@@ -77,7 +77,7 @@ describe('Case Field', () => {
     );
   });
 
-  it('building a case field that was already registered does not register the case field again', () => {
+  it('does not dispatch #registerCaseField on init if the field is already registered', () => {
     jest.resetAllMocks();
     const mockedRegisterCaseField = jest.mocked(registerCaseField);
 
@@ -137,7 +137,7 @@ describe('Case Field', () => {
     });
 
     it('dispatches a #updateCaseField action with the passed field value', () => {
-      const mockedLogUpdateCaseField = jest.mocked(updateCaseField);
+      const mockedUpdateCaseField = jest.mocked(updateCaseField);
 
       field.update(testValue);
 

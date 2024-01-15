@@ -69,7 +69,7 @@ describe('Case Input', () => {
     );
   });
 
-  it('building a case input that was already registered does not register the input field again', () => {
+  it('do not dispatch #updateCaseInput on init if the field was already registered', () => {
     jest.resetAllMocks();
     const mockedUpdateCaseInput = jest.mocked(updateCaseInput);
     initEngine({

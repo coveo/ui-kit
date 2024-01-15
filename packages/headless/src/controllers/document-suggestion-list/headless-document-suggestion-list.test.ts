@@ -17,7 +17,7 @@ import {
 
 jest.mock('../../features/document-suggestion/document-suggestion-actions');
 
-describe('Document Suggestion List', () => {
+describe('DocumentSuggestionList', () => {
   let engine: MockedCaseAssistEngine;
   let docSuggestionList: DocumentSuggestionList;
 
