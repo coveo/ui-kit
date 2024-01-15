@@ -57,7 +57,7 @@ describe('Case Input', () => {
     });
   });
 
-  it('building a case input registers the input field in the state', () => {
+  it('dispatch #updateCaseInput on init if the field was not already registered', () => {
     const mockedUpdateCaseInput = jest.mocked(updateCaseInput);
 
     expect(mockedUpdateCaseInput).toHaveBeenCalledWith({
