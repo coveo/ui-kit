@@ -7,7 +7,6 @@ import {
   loadInsightQuerySetActions,
 } from '..';
 import SearchSlimIcon from '../../../images/search-slim.svg';
-import SearchIcon from '../../../images/search.svg';
 import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {isMacOS} from '../../../utils/device-utils';
 import {
@@ -303,7 +302,7 @@ export class AtomicInsightSearchBox {
         <div part="query-suggestion-content" class="flex items-center">
           <atomic-icon
             part="query-suggestion-icon"
-            icon={SearchIcon}
+            icon={SearchSlimIcon}
             class="w-4 h-4 mr-2 shrink-0"
           ></atomic-icon>
           {hasQuery ? (
