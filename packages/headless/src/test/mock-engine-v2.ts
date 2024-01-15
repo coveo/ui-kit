@@ -73,6 +73,7 @@ export type MockedSearchEngine = SearchEngine &
 
 export type MockedCaseAssistEngine = CaseAssistEngine;
 export type MockedRecommendationEngine = RecommendationEngine;
+export type MockedProductRecommendationEngine = ProductRecommendationEngine;
 
 type StateFromEngine<TEngine extends CoreEngine> = TEngine['state'];
 

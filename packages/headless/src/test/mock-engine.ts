@@ -141,6 +141,7 @@ export interface MockProductRecommendationEngine
  *
  * Returns a non-functional `ProductRecommendationEngine`.
  * To be used only for unit testing controllers, not for functional tests.
+ * @deprecated
  */
 export function buildMockProductRecommendationsAppEngine(
   config: Partial<

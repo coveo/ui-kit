@@ -1,34 +1,84 @@
 import {
-  buildMockProductRecommendationsAppEngine,
-  MockProductRecommendationEngine,
-} from '../../test/mock-engine';
+  buildMockProductRecommendationEngine,
+  MockedProductRecommendationEngine,
+} from '../../test/mock-engine-v2';
+import {buildMockProductRecommendationsState} from '../../test/mock-product-recommendations-state';
+import {
+  buildBaseProductRecommendationsList,
+  ProductRecommendationsListState,
+} from './headless-base-product-recommendations';
 import {
   buildUserInterestRecommendationsList,
   UserInterestRecommendationsList,
 } from './headless-user-interest-recommendations';
 
-describe('headless user-interest-recommendations', () => {
-  let userInterestRecommender: UserInterestRecommendationsList;
-  let engine: MockProductRecommendationEngine;
+jest.mock('./headless-base-product-recommendations');
+
+describe('headless popular-bought-recommendations', () => {
+  let mockedBaseProductRecommendationsList: jest.Mock;
+  let userInterestRecommendationsList: UserInterestRecommendationsList;
+  let engine: MockedProductRecommendationEngine;
+  let state: Partial<ProductRecommendationsListState>;
+
+  const baseOptions: Partial<ProductRecommendationsListState> = {
+    skus: ['some-sku'],
+  };
+
+  function initEngine(initialState = buildMockProductRecommendationsState()) {
+    engine = buildMockProductRecommendationEngine(initialState);
+  }
 
   beforeEach(() => {
-    engine = buildMockProductRecommendationsAppEngine();
-    userInterestRecommender = buildUserInterestRecommendationsList(engine, {
-      options: {},
+    jest.resetAllMocks();
+    state = {skus: []};
+    mockedBaseProductRecommendationsList = jest
+      .mocked(buildBaseProductRecommendationsList)
+      .mockImplementation(
+        () =>
+          ({
+            setSkus: jest.fn(),
+            refresh: jest.fn(),
+            state,
+          }) as unknown as ReturnType<
+            typeof buildBaseProductRecommendationsList
+          >
+      );
+    initEngine();
+    userInterestRecommendationsList = buildUserInterestRecommendationsList(
+      engine,
+      {
+        options: baseOptions,
+      }
+    );
+  });
+
+  it('builds a baseProductRecommendationsList with the good params', () => {
+    expect(mockedBaseProductRecommendationsList).toHaveBeenCalledWith(engine, {
+      options: {
+        ...baseOptions,
+        id: 'user',
+      },
     });
   });
 
-  it('properly propagates the engine state to the recommender', () => {
-    expect(userInterestRecommender.state.isLoading).toBe(false);
-    engine.state.productRecommendations.isLoading = true;
-    expect(userInterestRecommender.state.isLoading).toBe(true);
+  it('state is a spread of baseProductRecommendationsList state + sku being the first skus - skus', () => {
+    state = {
+      skus: ['sku1', 'sku2'],
+      isLoading: false,
+    };
+    userInterestRecommendationsList = buildUserInterestRecommendationsList(
+      engine,
+      {
+        options: baseOptions,
+      }
+    );
+
+    expect(userInterestRecommendationsList.state).toEqual({
+      isLoading: false,
+    });
   });
-  it('object shape matches original', () => {
-    expect(userInterestRecommender.refresh).toBeTruthy();
-    expect(userInterestRecommender.subscribe).toBeTruthy();
-    expect(userInterestRecommender.state.error).toBeFalsy();
-    expect(userInterestRecommender.state.isLoading).toBeFalsy();
-    expect(userInterestRecommender.state.maxNumberOfRecommendations).toBe(5);
-    expect(userInterestRecommender.state.recommendations).toBeTruthy();
+
+  it("it doesn't exposes the #setSkus function from the baseProductRecommendationsList", () => {
+    expect(userInterestRecommendationsList).not.toHaveProperty('setSkus');
   });
 });
