@@ -141,12 +141,12 @@ describe('Case Field', () => {
 
       field.update(testValue);
 
-      expect(mockedLogUpdateCaseField).toHaveBeenCalledWith({
+      expect(mockedUpdateCaseField).toHaveBeenCalledWith({
         fieldName: testFieldName,
         fieldValue: testValue,
       });
       expect(engine.dispatch).toHaveBeenCalledWith(
-        mockedLogUpdateCaseField.mock.results[0].value
+        mockedUpdateCaseField.mock.results[0].value
       );
     });
 
