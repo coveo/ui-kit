@@ -60,6 +60,9 @@ describe('InteractiveResult', () => {
 
     mockedSelect();
     expect(mockedLogDocumentSuggestionOpen).toHaveBeenCalledTimes(1);
+    expect(mockedLogDocumentSuggestionOpen).toHaveBeenCalledWith(
+      resultStringParams.uniqueId
+    );
   });
 
   it('does not call logDocumentSuggestionOpen when the action is triggered for the second time', () => {
