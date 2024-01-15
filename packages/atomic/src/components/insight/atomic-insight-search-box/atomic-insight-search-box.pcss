@@ -2,7 +2,7 @@
 @import '../../common/search-box/search-box.pcss';
 
 [part='wrapper'] {
-  height: auto;
+  @apply max-w-[303px] top-6 left-6 z-10;
 }
 
 [part='input'] {
@@ -21,4 +21,24 @@
 .loading::after {
   content: '';
   @apply absolute w-5/6 h-5/6 bg-background rounded-full;
+}
+
+[part='clear-button-wrapper'] {
+  @apply mr-2 py-0;
+}
+
+[part='clear-icon'] {
+  @apply w-3 h-3;
+}
+
+[part='textarea-expander'] {
+  &::after {
+    @apply px-4 p-2;
+  }
+}
+
+[part='textarea-expander'] {
+  [part='textarea'] {
+    @apply px-4 p-2;
+  }
 }
