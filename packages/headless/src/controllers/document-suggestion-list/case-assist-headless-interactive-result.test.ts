@@ -53,7 +53,7 @@ describe('InteractiveResult', () => {
     );
   });
 
-  it('calls logDocumentSuggestionOpen when the action is triggered for the first time', () => {
+  it('dispatches #logDocumentSuggestionOpen when the action is triggered for the first time', () => {
     const mockedLogDocumentSuggestionOpen = jest.mocked(
       logDocumentSuggestionOpen
     );
