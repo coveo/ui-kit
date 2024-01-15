@@ -1,13 +1,10 @@
 import type {SearchParameterKey} from './search-parameter-serializer';
 import {
-  ServerSideSearchParamsValues,
+  SearchParamValue,
   addFacetValuesToSearchParams,
   extendSearchParameters,
   isFacetPair,
   isRangeFacetPair,
-  isValidBasicKey,
-  isValidFacetKey,
-  isValidKey,
   isValidSearchParam,
   toArray,
 } from './search-parameter-utils';
@@ -66,70 +63,6 @@ describe('search-parameter-utils', () => {
           color: ['red', 'blue'],
         },
       });
-    });
-  });
-
-  describe('isValidBasicKey', () => {
-    it.each([
-      'q',
-      'aq',
-      'cq',
-      'enableQuerySyntax',
-      'firstResult',
-      'numberOfResults',
-      'sortCriteria',
-      'debug',
-      'tab',
-    ])('should return true for a valid basic key: %s', (key) => {
-      expect(isValidBasicKey(key)).toBe(true);
-    });
-
-    it.each(['f', 'fExcluded', 'cf', 'nf', 'df', 'sf', 'af', 'invalid'])(
-      'should return false for an invalid basic key: %s',
-      (key) => {
-        expect(isValidBasicKey(key)).toBe(false);
-      }
-    );
-  });
-
-  describe('isValidFacetKey', () => {
-    it.each([
-      'q',
-      'aq',
-      'cq',
-      'enableQuerySyntax',
-      'firstResult',
-      'numberOfResults',
-      'sortCriteria',
-      'debug',
-      'tab',
-      'invalid',
-    ])('should return false for a valid basic key: %s', (key) => {
-      expect(isValidFacetKey(key)).toBe(false);
-    });
-
-    it.each(['f', 'fExcluded', 'cf', 'nf', 'df', 'sf', 'af'])(
-      'should return true for an invalid basic key: %s',
-      (key) => {
-        expect(isValidFacetKey(key)).toBe(true);
-      }
-    );
-  });
-
-  describe('isValidKey', () => {
-    it('should return true for a valid basic key', () => {
-      const key = 'q';
-      expect(isValidKey(key)).toBe(true);
-    });
-
-    it('should return true for a valid facet key', () => {
-      const key = 'f';
-      expect(isValidKey(key)).toBe(true);
-    });
-
-    it('should return false for an invalid key', () => {
-      const key = 'invalidKey';
-      expect(isValidKey(key)).toBe(false);
     });
   });
 
@@ -213,11 +146,7 @@ describe('search-parameter-utils', () => {
         const searchParams: Record<string, unknown> = {foo: 'bar'};
         const key = 'q';
 
-        extendSearchParameters(
-          searchParams,
-          key,
-          value as ServerSideSearchParamsValues
-        );
+        extendSearchParameters(searchParams, key, value as SearchParamValue);
 
         expect(searchParams).toEqual({foo: 'bar'});
       }

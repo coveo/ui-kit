@@ -16,20 +16,72 @@ import {SearchParameters} from './search-parameter-actions';
 export const rangeDelimiterExclusive = '..';
 export const rangeDelimiterInclusive = '...';
 export type SearchParameterKey = keyof SearchParameters;
+type UnknownObject = {[field: string]: unknown[]};
+
+type FacetSearchParameters = keyof Pick<
+  SearchParameters,
+  'f' | 'fExcluded' | 'cf' | 'sf' | 'af' | 'nf' | 'df'
+>;
+
+type FacetKey = keyof typeof supportedFacetParameters;
+
+const supportedFacetParameters: Record<FacetSearchParameters, boolean> = {
+  f: true,
+  fExcluded: true,
+  cf: true,
+  sf: true,
+  af: true,
+  nf: true,
+  df: true,
+};
 
 const delimiter = '&';
 const equal = '=';
-type UnknownObject = {[field: string]: unknown[]};
 
 export function buildSearchParameterSerializer() {
   return {serialize, deserialize};
 }
 
-export function buildSearchParameterRanges() {
-  return {
-    buildNumericRanges,
-    buildDateRanges,
+export function keyHasObjectValue(key: string): key is FacetKey {
+  return key in supportedFacetParameters;
+}
+
+export function isValidBasicKey(
+  key: string
+): key is Exclude<SearchParameterKey, FacetKey> {
+  const supportedBasicParameters: Record<
+    Exclude<keyof SearchParameters, FacetSearchParameters>,
+    boolean
+  > = {
+    q: true,
+    aq: true,
+    cq: true,
+    enableQuerySyntax: true,
+    firstResult: true,
+    numberOfResults: true,
+    sortCriteria: true,
+    debug: true,
+    tab: true,
   };
+  return key in supportedBasicParameters;
+}
+
+export function isRangeFacetKey(
+  key: string
+): key is Extract<FacetKey, 'nf' | 'df'> {
+  const supportedRangeFacetParameters: Pick<
+    typeof supportedFacetParameters,
+    'df' | 'nf'
+  > = {
+    nf: true,
+    df: true,
+  };
+  const isRangeFacet = key in supportedRangeFacetParameters;
+  return keyHasObjectValue(key) && !isRangeFacet;
+}
+
+export function isValidKey(key: string): key is SearchParameterKey {
+  return isValidBasicKey(key) || keyHasObjectValue(key);
 }
 
 function serialize(obj: SearchParameters) {
@@ -46,7 +98,7 @@ function serializePair(pair: [string, unknown]) {
     return '';
   }
 
-  if (isSpecificFacetKey(key)) {
+  if (keyHasObjectValue(key) && !isRangeFacetKey(key)) {
     return isFacetObject(val) ? serializeFacets(key, val) : '';
   }
 
@@ -247,30 +299,6 @@ function isValidPair<K extends SearchParameterKey>(
   return validKey && lengthOfTwo;
 }
 
-function isValidKey(key: string): key is SearchParameterKey {
-  const supportedParameters: Record<keyof Required<SearchParameters>, boolean> =
-    {
-      q: true,
-      aq: true,
-      cq: true,
-      enableQuerySyntax: true,
-      firstResult: true,
-      numberOfResults: true,
-      sortCriteria: true,
-      f: true,
-      fExcluded: true,
-      cf: true,
-      nf: true,
-      df: true,
-      debug: true,
-      sf: true,
-      tab: true,
-      af: true,
-    };
-
-  return key in supportedParameters;
-}
-
 function cast<K extends SearchParameterKey>(pair: [K, string]): [K, unknown] {
   const [key, value] = pair;
 
@@ -306,20 +334,6 @@ function castUnknownObject(value: string) {
   });
 
   return ret;
-}
-
-function keyHasObjectValue(
-  key: SearchParameterKey
-): key is 'f' | 'af' | 'cf' | 'df' | 'nf' | 'sf' | 'fExcluded' {
-  const keys = ['f', 'fExcluded', 'cf', 'nf', 'df', 'sf', 'af'];
-  return keys.includes(key);
-}
-
-function isSpecificFacetKey(
-  key: SearchParameterKey
-): key is 'f' | 'af' | 'cf' | 'sf' | 'fExcluded' {
-  const keys = ['f', 'af', 'cf', 'sf', 'fExcluded'];
-  return keys.includes(key);
 }
 
 function splitRangeValueAsStringByDelimiter(str: string) {
