@@ -39,7 +39,12 @@ export default function SearchParameterManager() {
   }, [state.parameters]);
 
   useEffect(() => {
-    if (!correctedUrl || historyRouter.url?.href === correctedUrl) {
+    if (!correctedUrl || document.location.href === correctedUrl) {
+      return;
+    }
+
+    const {pathname} = new URL(correctedUrl);
+    if (pathname !== document.location.pathname) {
       return;
     }
 

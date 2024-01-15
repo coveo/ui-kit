@@ -64,10 +64,14 @@ export function useSyncSearchParameterManager({
   }, [state.parameters]);
 
   useEffect(() => {
-    if (!correctedUrl || historyRouter.url?.href === correctedUrl) {
+    if (!correctedUrl || document.location.href === correctedUrl) {
       return;
     }
 
+    const {pathname} = new URL(correctedUrl);
+    if (pathname !== document.location.pathname) {
+      return;
+    }
     const isStaticState = controller === undefined;
     historyRouter[isStaticState ? 'replace' : 'push'](correctedUrl);
     // eslint-disable-next-line react-hooks/exhaustive-deps
