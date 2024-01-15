@@ -18,7 +18,7 @@ import {
 jest.mock('../../features/recommendation/recommendation-actions');
 jest.mock('../../features/pagination/pagination-actions');
 
-describe('Recommendation, () => {
+describe('Recommendation', () => {
   let recommendation: RecommendationList;
   let engine: MockedRecommendationEngine;
 
