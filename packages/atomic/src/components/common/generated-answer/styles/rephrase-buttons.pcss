@@ -1,4 +1,4 @@
-@define-mixin rephrase-with-text {
+.rephrase-with-text {
   padding: 0 8px;
   width: unset;
 
@@ -42,12 +42,5 @@
     .rephrase-btn-label {
       @apply text-inherit;
     }
-  }
-
-  &.mobile {
-    @mixin rephrase-with-text;
-  }
-  @screen mobile-only {
-    @mixin rephrase-with-text;
   }
 }

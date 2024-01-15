@@ -1,6 +1,6 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import CopyIcon from '../../../../images/copy.svg';
-import {Button} from '../../../common/button';
+import CopyIcon from '../../../images/copy.svg';
+import {Button} from '../button';
 
 interface CopyButtonProps {
   title: string;

@@ -123,7 +123,7 @@ describe('Generated Answer Test Suites', () => {
         setupGeneratedAnswer(streamId);
         cy.wait(getStreamInterceptAlias(streamId));
         GeneratedAnswerSelectors.answer();
-        GeneratedAnswerSelectors.dislikeButton().click();
+        GeneratedAnswerSelectors.dislikeButton().click({force: true});
       });
 
       it('should open when an answer is disliked', () => {

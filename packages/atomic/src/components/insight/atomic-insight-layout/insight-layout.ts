@@ -15,6 +15,7 @@ const smartSnippetSelectors = [
   'atomic-insight-smart-snippet-suggestions',
   'atomic-insight-smart-snippet',
 ];
+const generatedAnswerSelector = 'atomic-insight-generated-answer';
 
 export function buildInsightLayout(element: HTMLElement, widget: boolean) {
   const id = element.id;
@@ -78,6 +79,11 @@ export function buildInsightLayout(element: HTMLElement, widget: boolean) {
 
     ${sectionSelector('results')} ${smartSnippetSelectors.join(',')} {
       padding: 1.5rem 1.5rem 0px;
+    }
+
+    ${sectionSelector('results')} ${generatedAnswerSelector} {
+      margin-left: 1.5rem;
+      margin-right: 1.5rem;
     }
     `;
 
