@@ -71,6 +71,8 @@ export type MockedSearchEngine = SearchEngine &
     >
   >;
 
+export type MockedCaseAssistEngine = CaseAssistEngine;
+
 type StateFromEngine<TEngine extends CoreEngine> = TEngine['state'];
 
 export function buildMockSearchEngine(
@@ -87,7 +89,7 @@ export function buildMockCaseAssistEngine<
   State extends StateFromEngine<CaseAssistEngine>,
 >(initialState: State): CaseAssistEngine {
   return {
-    ...buildMockCoreEngine(initialState),
+    ...buildMockCoreEngine<State>(initialState),
   };
 }
 
