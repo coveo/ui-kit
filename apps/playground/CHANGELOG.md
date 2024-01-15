@@ -1,3 +1,9 @@
+## 1.7.6 (2024-01-15)
+
+### Bug Fixes
+
+- **playground:** update href based on env (#70) ([f0af35f](/commits/f0af35fccf5ab4812b3de827804e8924730ad7ab)), closes [#70](/issues/70)
+
 ## 1.7.5 (2024-01-11)
 
 ## 1.7.4 (2024-01-09)
