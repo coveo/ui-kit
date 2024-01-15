@@ -403,7 +403,7 @@ export class AtomicInsightSearchBox {
           <SearchTextArea
             textAreaRef={this.textAreaRef}
             loading={this.searchBoxState.isLoading}
-            ref={(el) => (this.textAreaRef = el as HTMLTextAreaElement)}
+            ref={(el) => el && (this.textAreaRef = el)}
             bindings={this.bindings}
             value={this.searchBoxState.value}
             ariaLabel={this.searchBoxCommon.getSearchInputLabel()}
