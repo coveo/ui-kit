@@ -1,6 +1,6 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import Thumbs from '../../../../images/thumbs.svg';
-import {Button} from '../../../common/button';
+import Thumbs from '../../../images/thumbs.svg';
+import {Button} from '../button';
 
 type FeedbackVariant = 'like' | 'dislike';
 
