@@ -1,5 +1,8 @@
-import {NextRequest} from 'next/server';
-import {analyticsNextMiddleware} from '../../common/components/common/analytics-next-middleware';
+import {NextRequest, NextResponse} from 'next/server';
+import {
+  CookieStore,
+  analyticsTrackerMiddleware,
+} from '../../common/components/common/analytics-tracker-middleware';
 
 /**
  * This will assign users a new client ID when it is their first visit, unless they have opted out of tracking.
@@ -8,7 +11,13 @@ import {analyticsNextMiddleware} from '../../common/components/common/analytics-
  * For more info on middlewares, visit https://nextjs.org/docs/app/building-your-application/routing/middleware.
  */
 export default function middleware(request: NextRequest) {
-  const response = analyticsNextMiddleware(request);
+  const response = NextResponse.next();
+  const cookieStore: CookieStore = {
+    set: (name: string, value: string) => response.cookies.set(name, value),
+    delete: (name: string) => response.cookies.delete(name),
+  };
+
+  analyticsTrackerMiddleware(request.headers, cookieStore);
 
   // Your other middleware functions here
 

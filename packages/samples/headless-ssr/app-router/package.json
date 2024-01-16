@@ -14,11 +14,13 @@
   },
   "dependencies": {
     "@coveo/headless-ssr-samples-common": "0.0.0",
+    "cookie": "^0.6.0",
     "next": "14.0.4",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
+    "@types/cookie": "^0.6.0",
     "@types/node": "20.10.7",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
