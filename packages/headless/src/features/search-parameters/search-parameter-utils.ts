@@ -5,6 +5,7 @@ import {
   SearchParameterKey,
   buildDateRanges,
   buildNumericRanges,
+  facetSearchParamRegex,
   isFacetObject,
   isRangeFacetObject,
   isValidBasicKey,
@@ -18,8 +19,6 @@ export type RangeFacetValueSearchParam = Record<
   string,
   DateRangeRequest[] | NumericRangeRequest[]
 >;
-
-export const facetSearchParamRegex = /^(f|fExcluded|cf|nf|df|sf|af)-(.+)$/;
 
 export function toArray<T>(value: T | T[]): T[] {
   return Array.isArray(value) ? value : [value];

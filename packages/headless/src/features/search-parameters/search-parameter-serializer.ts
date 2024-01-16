@@ -15,6 +15,7 @@ import {SearchParameters} from './search-parameter-actions';
 
 export const rangeDelimiterExclusive = '..';
 export const rangeDelimiterInclusive = '...';
+export const facetSearchParamRegex = /^(f|fExcluded|cf|nf|df|sf|af)-(.+)$/;
 export type SearchParameterKey = keyof SearchParameters;
 type UnknownObject = {[field: string]: unknown[]};
 
@@ -207,8 +208,7 @@ function splitOnFirstEqual(str: string) {
 
 function preprocessObjectPairs(pair: string[]) {
   const [key, val] = pair;
-  const objectKey = /^(f|fExcluded|cf|nf|df|sf|af)-(.+)$/;
-  const result = objectKey.exec(key);
+  const result = facetSearchParamRegex.exec(key);
 
   if (!result) {
     return pair;
