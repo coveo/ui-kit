@@ -1,23 +1,25 @@
-import {createReducer} from '@reduxjs/toolkit';
+import {AnyAction, createReducer} from '@reduxjs/toolkit';
 import {fetchProductListing} from '../../commerce/product-listing/product-listing-actions';
+import {executeSearch as executeCommerceSearch} from '../../commerce/search/search-actions';
 import {change} from '../../history/history-actions';
 import {executeSearch} from '../../search/search-actions';
-import {getFacetOrderInitialState} from './facet-order-state';
+import {FacetOrderState, getFacetOrderInitialState} from './facet-order-state';
 
 export const facetOrderReducer = createReducer(
   getFacetOrderInitialState(),
   (builder) => {
     builder
-      .addCase(executeSearch.fulfilled, (_, action) => {
-        return action.payload.response.facets.map((facet) => facet.facetId);
-      })
-      .addCase(fetchProductListing.fulfilled, (_, action) => {
-        const generateFacetId = (facet: {facetId?: string; field: string}) =>
-          facet.facetId ?? facet.field;
-        return action.payload.response.facets.map(generateFacetId);
-      })
+      .addCase(executeSearch.fulfilled, handleQueryFulfilled)
+      .addCase(fetchProductListing.fulfilled, handleQueryFulfilled)
+      .addCase(executeCommerceSearch.fulfilled, handleQueryFulfilled)
       .addCase(change.fulfilled, (state, action) => {
         return action.payload?.facetOrder ?? state;
       });
   }
 );
+
+function handleQueryFulfilled(_: FacetOrderState, action: AnyAction) {
+  return action.payload.response.facets.map(
+    (facet: {facetId: string}) => facet.facetId
+  );
+}

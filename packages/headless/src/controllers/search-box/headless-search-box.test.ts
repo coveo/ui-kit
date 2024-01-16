@@ -17,6 +17,7 @@ import {
 
 jest.mock('../../features/query/query-analytics-actions', () => ({
   logSearchboxSubmit: jest.fn(() => () => {}),
+  searchboxSubmit: jest.fn(() => () => {}),
 }));
 
 describe('headless searchBox', () => {
@@ -119,7 +120,7 @@ describe('headless searchBox', () => {
         (a) => a.type === executeSearch.pending.type
       );
       expect(action).toBeTruthy();
-      expect(logSearchboxSubmit).toBeCalledTimes(1);
+      expect(logSearchboxSubmit).toHaveBeenCalledTimes(1);
     });
   });
 });

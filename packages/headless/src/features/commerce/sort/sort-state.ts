@@ -8,6 +8,6 @@ export interface CommerceSortState {
 export function getCommerceSortInitialState(): CommerceSortState {
   return {
     appliedSort: buildRelevanceSortCriterion(),
-    availableSorts: [],
+    availableSorts: [buildRelevanceSortCriterion()],
   };
 }

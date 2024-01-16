@@ -1,11 +1,13 @@
 <template>
-  <c-quantic-stateful-button
-    selected={isSelected}
-    tooltip={tooltip}
-    icon-name="utility:copy"
-    onselect={handleCopyToClipboard}
-    without-borders
-    selected-state-color="#2e844a"
-    icon-size="xx-small"
-  ></c-quantic-stateful-button>
+  <template lwc:if={showCopyToClipboard}>
+    <c-quantic-stateful-button
+      selected={isSelected}
+      tooltip={tooltip}
+      icon-name="utility:copy"
+      onselect={handleCopyToClipboard}
+      without-borders
+      selected-state-color="#2e844a"
+      icon-size="xx-small"
+    ></c-quantic-stateful-button>
+  </template>
 </template>

@@ -74,12 +74,12 @@ export const dateFacetSetReducer = createReducer(
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const facets = action.payload.response.facets as DateFacetResponse[];
-        onRangeFacetRequestFulfilled(state, facets, convertToRangeRequests);
+        onRangeFacetRequestFulfilled(state, facets, convertToDateRangeRequests);
       })
       .addCase(fetchProductListing.fulfilled, (state, action) => {
         const facets = (action.payload.response?.facets?.results ||
           []) as DateFacetResponse[];
-        onRangeFacetRequestFulfilled(state, facets, convertToRangeRequests);
+        onRangeFacetRequestFulfilled(state, facets, convertToDateRangeRequests);
       })
       .addCase(disableFacet, (state, action) => {
         handleRangeFacetDeselectAll(state, action.payload);
@@ -99,7 +99,9 @@ function buildDateFacetRequest(
   };
 }
 
-function convertToRangeRequests(values: DateFacetValue[]): DateRangeRequest[] {
+export function convertToDateRangeRequests(
+  values: DateFacetValue[]
+): DateRangeRequest[] {
   return values.map((value) => {
     const {numberOfResults, ...rest} = value;
     return rest;

@@ -1,3 +1,33 @@
+## 2.43.1 (2024-01-10)
+
+### Bug Fixes
+
+- **quantic:** fix genQA copy-to-clipboard e2e ([#3511](https://github.com/coveo/ui-kit/issues/3511)) ([bfbe402](https://github.com/coveo/ui-kit/commits/bfbe402aa3c646db7fd10def17ef5b3dd2269f73))
+
+# 2.43.0 (2024-01-03)
+
+### Bug Fixes
+
+- **deps:** update stencil j:kit-282 ([#3492](https://github.com/coveo/ui-kit/issues/3492)) ([83dfb8d](https://github.com/coveo/ui-kit/commits/83dfb8dbbd89524a694bcd39ce807143a073ac2c))
+
+### Features
+
+- **rga:** hide copy to clipboard button when Clipboard API is not defined ([#3499](https://github.com/coveo/ui-kit/issues/3499)) ([6672909](https://github.com/coveo/ui-kit/commits/66729095b6dcf54c3b3bcc82c6ab1e5142991712))
+
+## 2.42.1 (2023-12-13)
+
+# 2.42.0 (2023-12-08)
+
+### Bug Fixes
+
+- **quantic:** color styling issue fixed with the citations inside salesforce ([#3466](https://github.com/coveo/ui-kit/issues/3466)) ([b653a47](https://github.com/coveo/ui-kit/commits/b653a4758a92c5e126bde0f8e36c38e3b7f1dff9))
+
+### Features
+
+- **quantic:** added feature to support opening citation sources inside Salesforce ([#3456](https://github.com/coveo/ui-kit/issues/3456)) ([a56b074](https://github.com/coveo/ui-kit/commits/a56b0748746de99d0c2e8f84410eeb0604077de3))
+- **quantic:** added relevant generative answering (rga) example in the quantic examples org ([#3452](https://github.com/coveo/ui-kit/issues/3452)) ([b16990e](https://github.com/coveo/ui-kit/commits/b16990e55ac07b1b1846bd133b76d5338874cb24))
+- **quantic:** new public property fieldsToIncludeInCitations added to the QuanticGeneratedAnswer component ([#3467](https://github.com/coveo/ui-kit/issues/3467)) ([f80d3b4](https://github.com/coveo/ui-kit/commits/f80d3b44126d557d48fe0a9640638e03c6239b43))
+
 # 2.41.0 (2023-12-06)
 
 ### Bug Fixes

@@ -7,7 +7,6 @@ import {InsightAction, makeInsightAnalyticsAction} from './analytics-utils';
 
 export interface CreateArticleMetadata {
   articleType: string;
-  triggeredBy: string;
 }
 
 export const logInsightInterfaceLoad = (): InsightAction =>
@@ -33,7 +32,6 @@ export const logInsightCreateArticle = (
     (client, state) => {
       validatePayload(createArticleMetadata, {
         articleType: requiredNonEmptyString,
-        triggeredBy: requiredNonEmptyString,
       });
       return client.logCreateArticle(
         createArticleMetadata,

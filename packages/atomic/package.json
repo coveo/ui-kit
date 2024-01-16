@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "2.51.1",
+  "version": "2.54.0",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -52,21 +52,21 @@
     "@coveo/bueno": "0.45.5",
     "@popperjs/core": "^2.11.6",
     "@salesforce-ux/design-system": "^2.16.1",
-    "@stencil/core": "4.8.1",
-    "@stencil/store": "2.0.11",
+    "@stencil/core": "4.9.0",
+    "@stencil/store": "2.0.12",
     "dayjs": "1.11.10",
-    "dompurify": "3.0.6",
+    "dompurify": "3.0.8",
     "escape-html": "1.0.3",
     "focus-visible": "5.2.0",
-    "i18next": "23.7.7",
+    "i18next": "23.7.16",
     "i18next-http-backend": "2.4.2",
     "stencil-inline-svg": "1.1.0",
     "ts-debounce": "^4.0.0"
   },
   "devDependencies": {
-    "@babel/core": "7.23.5",
+    "@babel/core": "7.23.7",
     "@coveo/release": "1.0.0",
-    "@coveo/headless": "2.42.0",
+    "@coveo/headless": "2.45.1",
     "@fullhuman/postcss-purgecss": "5.0.0",
     "@rollup/plugin-alias": "5.1.0",
     "@rollup/plugin-replace": "5.0.5",
@@ -80,8 +80,8 @@
     "@types/postcss-import": "14.0.3",
     "@types/puppeteer": "5.4.7",
     "autoprefixer": "10.4.16",
-    "axe-core": "4.8.2",
-    "cypress": "13.6.0",
+    "axe-core": "4.8.3",
+    "cypress": "13.6.2",
     "cypress-axe": "1.5.0",
     "cypress-repeat": "2.3.4",
     "cypress-split": "1.5.0",
@@ -93,17 +93,17 @@
     "lit-html": "3.1.0",
     "lodash": "4.17.21",
     "ncp": "2.0.0",
-    "postcss-focus-visible": "9.0.0",
+    "postcss-focus-visible": "9.0.1",
     "postcss-import": "15.1.0",
     "postcss-mixins": "9.0.4",
     "postcss-nested": "6.0.1",
-    "puppeteer": "21.5.2",
+    "puppeteer": "21.7.0",
     "rollup-plugin-html": "0.2.1",
-    "tailwindcss": "3.3.6",
-    "typescript": "5.3.2"
+    "tailwindcss": "3.4.1",
+    "typescript": "5.3.3"
   },
   "peerDependencies": {
-    "@coveo/headless": "2.42.0"
+    "@coveo/headless": "2.45.1"
   },
   "license": "Apache-2.0",
   "engines": {

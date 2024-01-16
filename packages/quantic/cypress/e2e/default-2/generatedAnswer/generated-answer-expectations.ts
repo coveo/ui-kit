@@ -282,8 +282,27 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         );
     },
 
-    logStreamIdInAnalytics(streamId: string) {
-      cy.wait(InterceptAliases.UA.Load)
+    searchQueryContainsCorrectFieldsToIncludeInCitations: (
+      expectedFields: string[]
+    ) => {
+      cy.get<Interception>(InterceptAliases.Search)
+        .then((interception) => {
+          const fieldsToIncludeInCitations =
+            interception?.request?.body?.pipelineRuleParameters
+              ?.mlGenerativeQuestionAnswering?.citationsFieldToInclude;
+          expect(fieldsToIncludeInCitations).to.eql(expectedFields);
+        })
+        .log(
+          'the search query should contain the correct fields to include in citations parameter'
+        );
+    },
+
+    logStreamIdInAnalytics(streamId: string, useCase: string) {
+      cy.wait(
+        useCase === 'search'
+          ? InterceptAliases.UA.Load
+          : InterceptAliases.UA.SearchboxSubmit
+      )
         .then((interception) => {
           const analyticsBody = interception.request.body;
           const customData = analyticsBody?.customData;

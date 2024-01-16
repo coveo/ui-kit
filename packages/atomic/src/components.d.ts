@@ -11,7 +11,7 @@ import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, Relativ
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout, ResultTarget } from "./components/common/layout/display-options";
 import { ResultRenderingFunction } from "./components/common/result-list/result-list-common-interface";
-import { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
+import { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightGeneratedAnswerStyle, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 import { FacetDisplayValues } from "./components/common/facets/facet-common";
 import { i18n } from "i18next";
 import { i18nCompatibilityVersion } from "./components/common/interface/i18n";
@@ -36,7 +36,7 @@ export { DateFilter, DateFilterState, NumericFilter, NumericFilterState, Relativ
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 export { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout, ResultTarget } from "./components/common/layout/display-options";
 export { ResultRenderingFunction } from "./components/common/result-list/result-list-common-interface";
-export { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
+export { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightGeneratedAnswerStyle, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 export { FacetDisplayValues } from "./components/common/facets/facet-common";
 export { i18n } from "i18next";
 export { i18nCompatibilityVersion } from "./components/common/interface/i18n";
@@ -378,12 +378,13 @@ export namespace Components {
     }
     /**
      * The `atomic-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
+     * The condition properties can be based on any top-level result property of the `result` object, not restricted to fields (e.g., `isRecommendation`).
      * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
      * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
     interface AtomicFieldCondition {
         /**
-          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
+          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  Use only when the condition you need to define can't be expressed through `if-defined`, `if-not-defined`, `must-match`, etc. markup attributes of the component. For example, the following targets an `atomic-field-condition` component and sets a condition to make it apply only to results whose title contains singapore: `document.querySelector('atomic-result-template#templateId').conditions = [(result) => /singapore/i.test(result.title)];`
          */
         "conditions": ResultTemplateCondition[];
         /**
@@ -509,7 +510,7 @@ export namespace Components {
      */
     interface AtomicGeneratedAnswer {
         /**
-          * The answer style to apply when the component first loads. Options:   - `default`: Generates the answer without additional formatting instructions.   - `bullet`: Requests that the answer is formatted as a bulleted list.   - `step`: Requests that the answer is formatted as a series of step-by-step instructions.   - `concise`: Requests that the generated answer is as concise as possible.
+          * The answer style to apply when the component first loads. Options:   - `default`: Generate the answer without specific formatting instructions.   - `bullet`: Generate the answer as a bulleted list.   - `step`: Generate the answer as step-by-step instructions.   - `concise`: Generate the answer as briefly as possible.
          */
         "answerStyle": GeneratedAnswerStyle;
     }
@@ -633,6 +634,12 @@ export namespace Components {
     }
     interface AtomicInsightFullSearchButton {
         "tooltip": string;
+    }
+    interface AtomicInsightGeneratedAnswer {
+        /**
+          * The answer style to apply when the component first loads. Options:   - `default`: Generate the answer without specific formatting instructions.   - `bullet`: Generate the answer as a bulleted list.   - `step`: Generate the answer as step-by-step instructions.   - `concise`: Generate the answer as briefly as possible.
+         */
+        "answerStyle": InsightGeneratedAnswerStyle;
     }
     interface AtomicInsightHistoryToggle {
         "clickCallback": () => void;
@@ -2097,6 +2104,10 @@ export namespace Components {
          */
         "redirectionUrl"?: string;
         /**
+          * The delay for suggestion queries on input, in milliseconds.  The suggestion request will be delayed until the end user stops typing for at least the specified amount of time.  This delay is used to avoid sending too many requests to the Coveo Platform when the user is typing, as well as reducing potential input lag on low end devices. A higher delay will reduce input lag, at the cost of suggestions freshness.
+         */
+        "suggestionDelay": number;
+        /**
           * The timeout for suggestion queries, in milliseconds. If a suggestion query times out, the suggestions from that particular query won't be shown.
          */
         "suggestionTimeout": number;
@@ -2191,7 +2202,7 @@ export namespace Components {
          */
         "fieldsToInclude": string[] | string;
         /**
-          * Returns the unique, organization-specific endpoint(s)
+          * Returns the unique, organization-specific endpoint(s).
           * @param organizationId
           * @param env
          */
@@ -2209,7 +2220,7 @@ export namespace Components {
          */
         "initialize": (options: InitializationOptions) => Promise<void>;
         /**
-          * Initializes the connection with an already preconfigured headless search engine, as opposed to the `initialize` method which will internally create a new search engine instance. This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
+          * Initializes the connection with an already preconfigured [headless search engine](https://docs.coveo.com/en/headless/latest/reference/search/), as opposed to the `initialize` method, which will internally create a new search engine instance. This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
          */
         "initializeWithSearchEngine": (engine: SearchEngine) => Promise<void>;
         /**
@@ -2760,6 +2771,7 @@ declare global {
     };
     /**
      * The `atomic-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
+     * The condition properties can be based on any top-level result property of the `result` object, not restricted to fields (e.g., `isRecommendation`).
      * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
      * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
@@ -2912,6 +2924,12 @@ declare global {
     var HTMLAtomicInsightFullSearchButtonElement: {
         prototype: HTMLAtomicInsightFullSearchButtonElement;
         new (): HTMLAtomicInsightFullSearchButtonElement;
+    };
+    interface HTMLAtomicInsightGeneratedAnswerElement extends Components.AtomicInsightGeneratedAnswer, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightGeneratedAnswerElement: {
+        prototype: HTMLAtomicInsightGeneratedAnswerElement;
+        new (): HTMLAtomicInsightGeneratedAnswerElement;
     };
     interface HTMLAtomicInsightHistoryToggleElement extends Components.AtomicInsightHistoryToggle, HTMLStencilElement {
     }
@@ -4126,6 +4144,7 @@ declare global {
         "atomic-insight-facet": HTMLAtomicInsightFacetElement;
         "atomic-insight-folded-result-list": HTMLAtomicInsightFoldedResultListElement;
         "atomic-insight-full-search-button": HTMLAtomicInsightFullSearchButtonElement;
+        "atomic-insight-generated-answer": HTMLAtomicInsightGeneratedAnswerElement;
         "atomic-insight-history-toggle": HTMLAtomicInsightHistoryToggleElement;
         "atomic-insight-interface": HTMLAtomicInsightInterfaceElement;
         "atomic-insight-layout": HTMLAtomicInsightLayoutElement;
@@ -4560,12 +4579,13 @@ declare namespace LocalJSX {
     }
     /**
      * The `atomic-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
+     * The condition properties can be based on any top-level result property of the `result` object, not restricted to fields (e.g., `isRecommendation`).
      * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
      * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
     interface AtomicFieldCondition {
         /**
-          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
+          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  Use only when the condition you need to define can't be expressed through `if-defined`, `if-not-defined`, `must-match`, etc. markup attributes of the component. For example, the following targets an `atomic-field-condition` component and sets a condition to make it apply only to results whose title contains singapore: `document.querySelector('atomic-result-template#templateId').conditions = [(result) => /singapore/i.test(result.title)];`
          */
         "conditions"?: ResultTemplateCondition[];
         /**
@@ -4689,7 +4709,7 @@ declare namespace LocalJSX {
      */
     interface AtomicGeneratedAnswer {
         /**
-          * The answer style to apply when the component first loads. Options:   - `default`: Generates the answer without additional formatting instructions.   - `bullet`: Requests that the answer is formatted as a bulleted list.   - `step`: Requests that the answer is formatted as a series of step-by-step instructions.   - `concise`: Requests that the generated answer is as concise as possible.
+          * The answer style to apply when the component first loads. Options:   - `default`: Generate the answer without specific formatting instructions.   - `bullet`: Generate the answer as a bulleted list.   - `step`: Generate the answer as step-by-step instructions.   - `concise`: Generate the answer as briefly as possible.
          */
         "answerStyle"?: GeneratedAnswerStyle;
     }
@@ -4810,6 +4830,12 @@ declare namespace LocalJSX {
     }
     interface AtomicInsightFullSearchButton {
         "tooltip"?: string;
+    }
+    interface AtomicInsightGeneratedAnswer {
+        /**
+          * The answer style to apply when the component first loads. Options:   - `default`: Generate the answer without specific formatting instructions.   - `bullet`: Generate the answer as a bulleted list.   - `step`: Generate the answer as step-by-step instructions.   - `concise`: Generate the answer as briefly as possible.
+         */
+        "answerStyle"?: InsightGeneratedAnswerStyle;
     }
     interface AtomicInsightHistoryToggle {
         "clickCallback"?: () => void;
@@ -6206,6 +6232,10 @@ declare namespace LocalJSX {
          */
         "redirectionUrl"?: string;
         /**
+          * The delay for suggestion queries on input, in milliseconds.  The suggestion request will be delayed until the end user stops typing for at least the specified amount of time.  This delay is used to avoid sending too many requests to the Coveo Platform when the user is typing, as well as reducing potential input lag on low end devices. A higher delay will reduce input lag, at the cost of suggestions freshness.
+         */
+        "suggestionDelay"?: number;
+        /**
           * The timeout for suggestion queries, in milliseconds. If a suggestion query times out, the suggestions from that particular query won't be shown.
          */
         "suggestionTimeout"?: number;
@@ -6650,6 +6680,7 @@ declare namespace LocalJSX {
         "atomic-insight-facet": AtomicInsightFacet;
         "atomic-insight-folded-result-list": AtomicInsightFoldedResultList;
         "atomic-insight-full-search-button": AtomicInsightFullSearchButton;
+        "atomic-insight-generated-answer": AtomicInsightGeneratedAnswer;
         "atomic-insight-history-toggle": AtomicInsightHistoryToggle;
         "atomic-insight-interface": AtomicInsightInterface;
         "atomic-insight-layout": AtomicInsightLayout;
@@ -6834,6 +6865,7 @@ declare module "@stencil/core" {
             "atomic-facet-number-input": LocalJSX.AtomicFacetNumberInput & JSXBase.HTMLAttributes<HTMLAtomicFacetNumberInputElement>;
             /**
              * The `atomic-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
+             * The condition properties can be based on any top-level result property of the `result` object, not restricted to fields (e.g., `isRecommendation`).
              * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
              * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
              */
@@ -6884,6 +6916,7 @@ declare module "@stencil/core" {
             "atomic-insight-facet": LocalJSX.AtomicInsightFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightFacetElement>;
             "atomic-insight-folded-result-list": LocalJSX.AtomicInsightFoldedResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightFoldedResultListElement>;
             "atomic-insight-full-search-button": LocalJSX.AtomicInsightFullSearchButton & JSXBase.HTMLAttributes<HTMLAtomicInsightFullSearchButtonElement>;
+            "atomic-insight-generated-answer": LocalJSX.AtomicInsightGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicInsightGeneratedAnswerElement>;
             "atomic-insight-history-toggle": LocalJSX.AtomicInsightHistoryToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightHistoryToggleElement>;
             "atomic-insight-interface": LocalJSX.AtomicInsightInterface & JSXBase.HTMLAttributes<HTMLAtomicInsightInterfaceElement>;
             "atomic-insight-layout": LocalJSX.AtomicInsightLayout & JSXBase.HTMLAttributes<HTMLAtomicInsightLayoutElement>;

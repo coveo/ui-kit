@@ -16,11 +16,25 @@ export default class ExampleQuanticGeneratedAnswer extends LightningElement {
       defaultValue: 'default',
     },
     {
+      attribute: 'fieldsToIncludeInCitations',
+      label: 'Fields to include in citations',
+      description:
+        'A list of fields to fetch with the citations used to generate the answer, separated by commas.',
+      defaultValue: 'sfid,sfkbid,sfkavid',
+    },
+    {
       attribute: 'multilineFooter',
       label: 'Multiline footer',
       description:
         'Indicates whether footer sections should be displayed on multiple lines.',
       defaultValue: false,
+    },
+    {
+      attribute: 'useCase',
+      label: 'Use Case',
+      description:
+        'Define which use case to test. Possible values are: search, insight',
+      defaultValue: 'search',
     },
   ];
 
