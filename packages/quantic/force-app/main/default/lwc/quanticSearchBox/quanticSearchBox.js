@@ -1,4 +1,3 @@
-import search from '@salesforce/label/c.quantic_Search';
 import {
   registerComponentForInit,
   initializeWithHeadless,
@@ -24,10 +23,6 @@ import searchBox from './templates/searchBox.html';
  * <c-quantic-search-box engine-id={engineId} placeholder="Enter a query..." without-submit-button number-of-suggestions="8"></c-quantic-search-box>
  */
 export default class QuanticSearchBox extends LightningElement {
-  labels = {
-    search,
-  };
-
   /**
    * The ID of the engine instance the component registers to.
    * @api
@@ -38,9 +33,8 @@ export default class QuanticSearchBox extends LightningElement {
    * The placeholder text to display in the search box input area.
    * @api
    * @type {string}
-   * @defaultValue 'Search...'
    */
-  @api placeholder = `${this.labels.search}`;
+  @api placeholder = null;
   /**
    * Whether not to render a submit button.
    * @api
@@ -99,11 +93,13 @@ export default class QuanticSearchBox extends LightningElement {
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
-
-    this.addEventListener('inputvaluechange', this.handleInputValueChange);
-    this.addEventListener('submitsearch', this.handleSubmit);
-    this.addEventListener('showsuggestions', this.handleShowSuggestions);
-    this.addEventListener('selectsuggestion', this.handleSelectSuggestion);
+    this.addEventListener(
+      'quantic__inputvaluechange',
+      this.handleInputValueChange
+    );
+    this.addEventListener('quantic__submitsearch', this.handleSubmit);
+    this.addEventListener('quantic__showsuggestions', this.showSuggestion);
+    this.addEventListener('quantic__selectsuggestion', this.selectSuggestion);
   }
 
   renderedCallback() {
@@ -112,16 +108,20 @@ export default class QuanticSearchBox extends LightningElement {
 
   disconnectedCallback() {
     this.unsubscribe?.();
-
-    this.removeEventListener('inputvaluechange', this.handleInputValueChange);
-    this.removeEventListener('submitsearch', this.handleSubmit);
-    this.removeEventListener('showsuggestions', this.handleShowSuggestions);
-    this.removeEventListener('selectsuggestion', this.handleSelectSuggestion);
+    this.removeEventListener(
+      'quantic__inputvaluechange',
+      this.handleInputValueChange
+    );
+    this.removeEventListener('quantic__submitsearch', this.handleSubmit);
+    this.removeEventListener('quantic__showsuggestions', this.showSuggestion);
+    this.removeEventListener(
+      'quantic__selectsuggestion',
+      this.selectSuggestion
+    );
   }
 
   updateState() {
     if (this.state?.value !== this.searchBox.state.value) {
-      // @ts-ignore
       this.quanticSearchBoxInput.inputValue = this.searchBox.state.value;
     }
     this.state = this.searchBox?.state;
@@ -159,14 +159,14 @@ export default class QuanticSearchBox extends LightningElement {
    * Shows the suggestions.
    * @returns {void}
    */
-  handleShowSuggestions = () => {
+  showSuggestion = () => {
     this.searchBox?.showSuggestions();
   };
 
   /**
    * Handles the selection of a suggestion.
    */
-  handleSelectSuggestion = (event) => {
+  selectSuggestion = (event) => {
     const selectedSuggestion = event.detail.selectedSuggestion;
     this.searchBox?.selectSuggestion(selectedSuggestion);
   };
