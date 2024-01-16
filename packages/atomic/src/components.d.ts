@@ -2119,6 +2119,7 @@ export namespace Components {
     /**
      * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
      * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
+     * This component is not supported on mobile.
      */
     interface AtomicSearchBoxInstantResults {
         /**
@@ -3855,6 +3856,7 @@ declare global {
     /**
      * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
      * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
+     * This component is not supported on mobile.
      */
     interface HTMLAtomicSearchBoxInstantResultsElement extends Components.AtomicSearchBoxInstantResults, HTMLStencilElement {
     }
@@ -6247,6 +6249,7 @@ declare namespace LocalJSX {
     /**
      * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
      * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
+     * This component is not supported on mobile.
      */
     interface AtomicSearchBoxInstantResults {
         /**
@@ -7279,6 +7282,7 @@ declare module "@stencil/core" {
             /**
              * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
              * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
+             * This component is not supported on mobile.
              */
             "atomic-search-box-instant-results": LocalJSX.AtomicSearchBoxInstantResults & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxInstantResultsElement>;
             /**
