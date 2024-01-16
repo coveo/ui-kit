@@ -37,6 +37,8 @@
               <template if:false={isQueryEmpty}>
                 <lightning-button-icon
                   onclick={clearInput}
+                  onkeyup={onKeyup}
+                  onfocus={onClearButtonFocus}
                   icon-name="utility:close"
                   variant="bare"
                   class="slds-input__icon slds-input__icon_right input__icon_cursor slds-grid searchbox__clear-button"
