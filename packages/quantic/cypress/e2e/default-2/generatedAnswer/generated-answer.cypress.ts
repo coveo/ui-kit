@@ -57,6 +57,8 @@ const genQaMessageTypePayload = {
   finishReason: 'COMPLETED',
 };
 
+const retryableErrorCodes = [500, 429];
+
 describe('quantic-generated-answer', () => {
   beforeEach(() => {
     cy.clock(0, ['Date']);
@@ -75,9 +77,13 @@ describe('quantic-generated-answer', () => {
     cy.visit(pageUrl);
     configure(options);
     if (options.useCase === useCaseEnum.insight) {
-      InsightInterfaceExpect.isInitialized();
-      performSearch();
+      setupInsightUseCase();
     }
+  }
+
+  function setupInsightUseCase() {
+    InsightInterfaceExpect.isInitialized();
+    performSearch();
   }
 
   useCaseParamTest.forEach((param) => {
@@ -639,7 +645,7 @@ describe('quantic-generated-answer', () => {
         });
 
         describe('Retryable error', () => {
-          [500, 429].forEach((errorCode) => {
+          retryableErrorCodes.forEach((errorCode) => {
             describe(`${errorCode} error`, () => {
               beforeEach(() => {
                 mockSearchWithGeneratedAnswer(streamId, param.useCase);
