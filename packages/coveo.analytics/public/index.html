@@ -32,15 +32,51 @@
         }, 1000);
 
         function testBeacon() {
-            coveoua('ec:addProduct', {
-                name: 'wow',
-                id: 'something',
-                brand: 'brand',
-                custom: {verycustom: 'value'},
-                unknown: 'shouldberemoved',
+            const beaconClient = coveoanalytics.getCurrentClient().runtime.beaconClient;
+            beaconClient.sendEvent('click', {
+                anonymous: true,
+                clientId: '3c03d51b-9f73-4168-af5e-9853cdb9782a',
+                actionCause: 'documentOpen',
+                documentPosition: 2,
+                documentTitle: 'Coveo for Salesforce',
+                documentUrl: 'https://docs.coveo.com/en/1243/',
+                language: 'en',
+                originLevel1: 'ExternalSearch',
+                originLevel2: 'All',
+                searchQueryUid: 'df60b2fb-c276-49ae-b704-2ee45609f3a6',
+                sourceName: 'AnswersCloud',
+                userAgent:
+                    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36',
+                customData: {
+                    contentIDKey: 'permanentid',
+                    contentIDValue: '648a63d6a19545297692b4ae41a7d5e947c711be5f3c23dff69af3106960',
+                },
             });
-            coveoua('ec:setAction', 'addToCart');
-            coveoua('send', 'event');
+            beaconClient.sendEvent('view', {
+                userAgent:
+                    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
+                location: 'http://localhost:9001/',
+                contentIdKey: 'test',
+                contentIdValue: 'value',
+                contentType: 'product',
+                clientId: '3c03d51b-9f73-4168-af5e-9853cdb9782a',
+            });
+            beaconClient.sendEvent('collect', {
+                cid: '3c03d51b-9f73-4168-af5e-9853cdb9782a',
+                de: 'windows-1252',
+                dl: 'http://localhost/firstpage',
+                dr: 'http://localhost:9001/',
+                pid: 'eea3997b-5f2e-4d23-b55c-cb577589ab56',
+                pa: 'add',
+                sd: '24-bit',
+                sr: '2560x1440',
+                t: 'event',
+                tm: 1704298479413,
+                ua: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
+                uid: 'anonymous',
+                ul: 'en-GB',
+                z: 'b0d275e9-a664-4d5b-b78f-b326de661f61',
+            });
         }
 
         async function decorate(element) {
