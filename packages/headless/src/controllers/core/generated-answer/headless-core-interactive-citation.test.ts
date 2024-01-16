@@ -1,15 +1,18 @@
-import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload';
-import {configuration} from '../../app/common-reducers';
-import {logOpenGeneratedAnswerSource} from '../../features/generated-answer/generated-answer-analytics-actions';
-import {buildMockCitation} from '../../test/mock-citation';
+import {GeneratedAnswerCitation} from '../../../api/generated-answer/generated-answer-event-payload';
+import {configuration} from '../../../app/common-reducers';
+import {
+  generatedAnswerAnalyticsClient,
+  logOpenGeneratedAnswerSource,
+} from '../../../features/generated-answer/generated-answer-analytics-actions';
+import {buildMockCitation} from '../../../test/mock-citation';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
-} from '../../test/mock-engine';
+} from '../../../test/mock-engine';
 import {
-  buildInteractiveCitation,
+  buildInteractiveCitationCore,
   InteractiveCitation,
-} from './headless-interactive-citation';
+} from './headless-core-interactive-citation';
 
 describe('InteractiveCitation', () => {
   let engine: MockSearchEngine;
@@ -24,9 +27,13 @@ describe('InteractiveCitation', () => {
     logCitationOpenPendingActionType = logOpenGeneratedAnswerSource(
       mockCitation.id
     ).pending.type;
-    interactiveCitation = buildInteractiveCitation(engine, {
-      options: {citation: mockCitation, selectionDelay: delay},
-    });
+    interactiveCitation = buildInteractiveCitationCore(
+      engine,
+      generatedAnswerAnalyticsClient,
+      {
+        options: {citation: mockCitation, selectionDelay: delay},
+      }
+    );
   }
 
   function findLogDocumentAction() {

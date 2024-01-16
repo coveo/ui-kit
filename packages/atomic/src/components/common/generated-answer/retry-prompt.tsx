@@ -1,5 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import {Button} from '../../../common/button';
+import {Button} from '../button';
 
 interface RetryPromptProps {
   message: string;

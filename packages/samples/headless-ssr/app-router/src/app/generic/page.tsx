@@ -1,6 +1,6 @@
+import {NextJsSearchParameterSerializer} from '@/common/components/common/search-parameter-serializer';
 import SearchPage from '@/common/components/generic/search-page';
 import {fetchStaticState} from '@/common/lib/generic/engine';
-import {buildSearchParameterSerializer} from '@coveo/headless';
 
 /**
  * This file defines a Search component that uses the Coveo Headless library to manage its state.
@@ -16,7 +16,8 @@ import {buildSearchParameterSerializer} from '@coveo/headless';
 export default async function Search(url: {
   searchParams: {[key: string]: string | string[] | undefined};
 }) {
-  const fragment = buildSearchParameterSerializer().serialize(url.searchParams);
+  const {searchParameters: coveoSearchParameters} =
+    NextJsSearchParameterSerializer.fromUrlSearchParameters(url.searchParams);
   const contextValues = {
     ageGroup: '30-45',
     mainInterest: 'sports',
@@ -28,8 +29,8 @@ export default async function Search(url: {
           values: contextValues,
         },
       },
-      urlManager: {
-        initialState: {fragment},
+      searchParameterManager: {
+        initialState: {parameters: coveoSearchParameters},
       },
     },
   });

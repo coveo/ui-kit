@@ -110,6 +110,26 @@ describe('insight search request', () => {
       expect(params.firstResult).toBe(state.pagination.firstResult);
     });
 
+    it('#buildInsightSearchRequest returns the state #generatedAnswer.responseFormat', async () => {
+      state.generatedAnswer.responseFormat = {answerStyle: 'concise'};
+      const params = (await buildInsightSearchRequest(state)).request;
+
+      expect(
+        params.pipelineRuleParameters?.mlGenerativeQuestionAnswering
+          ?.responseFormat
+      ).toBe(state.generatedAnswer.responseFormat);
+    });
+
+    it('#buildInsightSearchRequest returns the state #generatedAnswer.citationsFieldToInclude', async () => {
+      state.generatedAnswer.fieldsToIncludeInCitations = ['foo', 'bar'];
+      const params = (await buildInsightSearchRequest(state)).request;
+
+      expect(
+        params.pipelineRuleParameters?.mlGenerativeQuestionAnswering
+          ?.citationsFieldToInclude
+      ).toBe(state.generatedAnswer.fieldsToIncludeInCitations);
+    });
+
     it('when there are no cq expressions in state, cq is undefined', async () => {
       expect(
         (await buildInsightSearchRequest(state)).request.cq
