@@ -4,18 +4,18 @@ import {
   InstantResults,
   Result,
 } from '@coveo/headless';
-import {Component, Element, State, h, Prop, Method} from '@stencil/core';
-import {InitializableComponent} from '../../../../utils/initialization-utils';
-import {encodeForDomAttribute} from '../../../../utils/string-utils';
-import {getClassNameForButtonStyle} from '../../../common/button-style';
+import { Component, Element, State, h, Prop, Method } from '@stencil/core';
+import { InitializableComponent } from '../../../../utils/initialization-utils';
+import { encodeForDomAttribute } from '../../../../utils/string-utils';
+import { getClassNameForButtonStyle } from '../../../common/button-style';
 import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
   ResultDisplayLayout,
 } from '../../../common/layout/display-options';
-import {ResultRenderingFunction} from '../../../common/result-list/result-list-common-interface';
-import {ResultTemplateProvider} from '../../../common/result-list/result-template-provider';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import { ResultRenderingFunction } from '../../../common/result-list/result-list-common-interface';
+import { ResultTemplateProvider } from '../../../common/result-list/result-template-provider';
+import { Bindings } from '../../atomic-search-interface/atomic-search-interface';
 import {
   dispatchSearchBoxSuggestionsEvent,
   SearchBoxSuggestionElement,
@@ -32,6 +32,8 @@ export type AriaLabelGenerator = (
  * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
  *
  * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
+ * 
+ * This component is not supported on mobile.
  */
 @Component({
   tag: 'atomic-search-box-instant-results',
@@ -66,15 +68,15 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
   /**
    * The maximum number of results to show.
    */
-  @Prop({reflect: true}) public maxResultsPerQuery = 4;
+  @Prop({ reflect: true }) public maxResultsPerQuery = 4;
   /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
    */
-  @Prop({reflect: true}) public density: ResultDisplayDensity = 'normal';
+  @Prop({ reflect: true }) public density: ResultDisplayDensity = 'normal';
   /**
    * The expected size of the image displayed in the results.
    */
-  @Prop({reflect: true}) public imageSize: ResultDisplayImageSize = 'icon';
+  @Prop({ reflect: true }) public imageSize: ResultDisplayImageSize = 'icon';
   /**
    * The callback to generate an [`aria-label`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label) for a given result so that accessibility tools can fully describe what's visually rendered by a result.
    *
@@ -132,7 +134,7 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
             interactiveResult={buildInteractiveInstantResult(
               this.bindings.engine,
               {
-                options: {result},
+                options: { result },
               }
             )}
             display={this.display}
@@ -146,7 +148,7 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
         ariaLabel: this.bindings.i18n.t('instant-results-suggestion-label', {
           title:
             this.ariaLabelGenerator?.(this.bindings, result) || result.title,
-          interpolation: {escapeValue: false},
+          interpolation: { escapeValue: false },
         }),
         onSelect: (e: MouseEvent) => {
           const link = this.getLink(e.target as HTMLElement);
@@ -198,7 +200,7 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
         this.host.querySelectorAll('atomic-result-template')
       ),
       getResultTemplateRegistered: () => true,
-      setResultTemplateRegistered: () => {},
+      setResultTemplateRegistered: () => { },
       getTemplateHasError: () => this.templateHasError,
       setTemplateHasError: (value: boolean) => {
         this.templateHasError = value;
