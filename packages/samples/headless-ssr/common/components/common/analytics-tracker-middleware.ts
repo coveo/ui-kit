@@ -1,5 +1,4 @@
 import type {CookieSerializeOptions} from 'cookie';
-import {parse} from 'cookie';
 
 export interface CookieStore {
   /**
@@ -7,7 +6,7 @@ export interface CookieStore {
    *
    * @param name the name of the cookie
    */
-  get?(name: string): string | undefined;
+  get(name: string): string | undefined;
 
   /**
    * Sets a cookie with the specified name, value, and options.
@@ -34,22 +33,11 @@ export interface CookieStore {
 
 class AnalyticsTrackerMiddleware {
   private static cookieName = 'coveo_visitorId';
-  private cookies: Required<CookieStore>;
 
   constructor(
     private headers: Headers,
-    cookies: CookieStore
-  ) {
-    this.cookies = {
-      get: (name: string) =>
-        cookies.get
-          ? cookies.get(name)
-          : parse(this.headers.get('cookie') || '')[name],
-      set: (name: string, value: string, opts) =>
-        cookies.set(name, value, opts),
-      delete: (name: string) => cookies.delete(name),
-    };
-  }
+    private cookies: CookieStore
+  ) {}
 
   init() {
     if (this.doNotTrack()) {

@@ -13,6 +13,7 @@ import {
 export default function middleware(request: NextRequest) {
   const response = NextResponse.next();
   const cookieStore: CookieStore = {
+    get: (name: string) => response.cookies.get(name)?.value,
     set: (name: string, value: string) => response.cookies.set(name, value),
     delete: (name: string) => response.cookies.delete(name),
   };
