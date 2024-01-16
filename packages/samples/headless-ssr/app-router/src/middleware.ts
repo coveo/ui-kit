@@ -1,8 +1,5 @@
+import {CookieStore, analyticsTrackerMiddleware} from '@coveo/headless/ssr';
 import {NextRequest, NextResponse} from 'next/server';
-import {
-  CookieStore,
-  analyticsTrackerMiddleware,
-} from '../../common/components/common/analytics-tracker-middleware';
 
 /**
  * This will assign users a new client ID when it is their first visit, unless they have opted out of tracking.
