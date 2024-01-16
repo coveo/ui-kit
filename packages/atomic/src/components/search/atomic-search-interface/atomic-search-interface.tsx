@@ -401,8 +401,9 @@ export class AtomicSearchInterface
   }
 
   private updateMobileBreakpoint() {
-    const breakpoint = this.host.querySelector('atomic-search-layout')
-      ?.mobileBreakpoint;
+    const breakpoint = this.host.querySelector(
+      'atomic-search-layout'
+    )?.mobileBreakpoint;
     if (breakpoint) {
       this.store.set('mobileBreakpoint', breakpoint);
     }
