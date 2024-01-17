@@ -15,6 +15,17 @@ import {
   DidYouMeanProps,
 } from './headless-core-did-you-mean';
 
+jest.mock('pino', () => ({
+  ...jest.requireActual('pino'),
+  __esModule: true,
+  default: () => ({
+    info: jest.fn(),
+    error: jest.fn(),
+    warn: jest.fn(),
+    debug: jest.fn(),
+  }),
+}));
+
 describe('did you mean', () => {
   let dym: DidYouMean;
   let engine: MockSearchEngine;
@@ -48,16 +59,14 @@ describe('did you mean', () => {
   });
 
   it('should dispatch disableAutomaticQueryCorrection at initialization when specified', () => {
-    initDidYouMean({automaticallyCorrectQuery: false});
+    initDidYouMean({options: {automaticallyCorrectQuery: false}});
 
-    dym.applyCorrection();
     expect(engine.actions).toContainEqual(disableAutomaticQueryCorrection());
   });
 
   it('should not dispatch disableAutomaticQueryCorrection at initialization when specified', () => {
-    initDidYouMean({automaticallyCorrectQuery: true});
+    initDidYouMean({options: {automaticallyCorrectQuery: true}});
 
-    dym.applyCorrection();
     expect(engine.actions).not.toContainEqual(
       disableAutomaticQueryCorrection()
     );
@@ -65,7 +74,7 @@ describe('did you mean', () => {
 
   it('should allow to update query correction when automatic correction is disabled', () => {
     engine.state.didYouMean.queryCorrection.correctedQuery = 'bar';
-    initDidYouMean({automaticallyCorrectQuery: false});
+    initDidYouMean({options: {automaticallyCorrectQuery: false}});
 
     dym.applyCorrection();
     expect(engine.actions).toContainEqual(applyDidYouMeanCorrection('bar'));

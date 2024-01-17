@@ -39,7 +39,7 @@ export class DidYouMean extends Component<{}, DidYouMeanState> {
         <div>
           <p>
             No results for{' '}
-            <b>{this.state.queryCorrection.wordCorrections[0].originalWord}</b>
+            <b>{this.state.queryCorrection.wordCorrections![0].originalWord}</b>
           </p>
           <p>
             Query was automatically corrected to{' '}
