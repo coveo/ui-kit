@@ -7,8 +7,7 @@ import {
   disableDidYouMean,
   disableAutomaticQueryCorrection,
   enableAutomaticQueryCorrection,
-  enableQueryCorrection,
-  disableQueryCorrection,
+  setCorrectionMode,
 } from './did-you-mean-actions';
 import {didYouMeanReducer} from './did-you-mean-slice';
 import {getDidYouMeanInitialState, DidYouMeanState} from './did-you-mean-state';
@@ -115,19 +114,31 @@ describe('did you mean slice', () => {
     ).toBe(false);
   });
 
-  it('should handle #enableFallbackSearchOnEmptyQueryResults', () => {
-    state.enableFallbackSearchOnEmptyQueryResults = false;
+  it('should handle #setCorrectionMode', () => {
+    state.queryCorrectionMode = 'legacy';
     expect(
-      didYouMeanReducer(state, enableQueryCorrection())
-        .enableFallbackSearchOnEmptyQueryResults
-    ).toBe(true);
+      didYouMeanReducer(state, setCorrectionMode('next')).queryCorrectionMode
+    ).toBe('next');
   });
 
-  it('should handle #disableFallbackSearchOnEmptyQueryResults', () => {
-    state.enableFallbackSearchOnEmptyQueryResults = true;
-    expect(
-      didYouMeanReducer(state, disableQueryCorrection())
-        .enableFallbackSearchOnEmptyQueryResults
-    ).toBe(false);
+  it('should set corrected query if mode is next', () => {
+    state.queryCorrectionMode = 'next';
+    const searchAction = executeSearch.fulfilled(
+      buildMockSearch({
+        response: buildMockSearchResponse({
+          queryCorrection: {
+            originalQuery: 'foo',
+            correctedQuery: 'bar',
+            corrections: [],
+          },
+        }),
+      }),
+      '',
+      {legacy: logSearchEvent({evt: 'foo'})}
+    );
+    const resultingState = didYouMeanReducer(state, searchAction);
+
+    expect(resultingState.queryCorrection.correctedQuery).toBe('bar');
+    expect(resultingState.wasCorrectedTo).toBe('bar');
   });
 });

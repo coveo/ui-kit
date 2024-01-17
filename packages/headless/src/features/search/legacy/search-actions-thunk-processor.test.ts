@@ -135,16 +135,16 @@ describe('AsyncSearchThunkProcessor', () => {
     expect(processed.automaticallyCorrected).toBe(true);
   });
 
-  it('process properly when #enableFallbackSearchOnEmptyQueryResults is activated on the query˝', async () => {
+  it('process properly when #queryCorrection is activated on the query˝', async () => {
     const processor = new AsyncSearchThunkProcessor<{}>(config);
 
     const originalResponseWithResultsAndChangedQuery = buildMockSearchResponse({
       results: [buildMockResult()],
-      changedQuery: {
+      queryCorrection: {
         correctedQuery: 'bar',
         originalQuery: 'foo',
+        corrections: [],
       },
-      queryCorrections: [],
     });
 
     const fetched = {
