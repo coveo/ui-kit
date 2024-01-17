@@ -5,8 +5,8 @@ import QuanticSearchBoxInput from '../quanticSearchBoxInput';
 const functionsMocks = {
   exampleHandleInputValueChange: jest.fn(() => {}),
   exampleHandleSubmitSearch: jest.fn(() => {}),
-  exampleShowSuggestions: jest.fn(() => {}),
-  exampleSelectSuggestion: jest.fn(() => {}),
+  exampleHandleShowSuggestions: jest.fn(() => {}),
+  exampleHandleSelectSuggestion: jest.fn(() => {}),
   exampleHandleKeyup: jest.fn(() => {}),
 };
 
@@ -38,20 +38,20 @@ const selectors = {
 
 function setupEventListeners(element) {
   element.addEventListener(
-    'quantic__inputvaluechange',
+    'inputvaluechange',
     functionsMocks.exampleHandleInputValueChange
   );
   element.addEventListener(
-    'quantic__submitsearch',
+    'submitsearch',
     functionsMocks.exampleHandleSubmitSearch
   );
   element.addEventListener(
-    'quantic__showsuggestions',
-    functionsMocks.exampleShowSuggestions
+    'showsuggestions',
+    functionsMocks.exampleHandleShowSuggestions
   );
   element.addEventListener(
-    'quantic__selectsuggestion',
-    functionsMocks.exampleSelectSuggestion
+    'selectsuggestion',
+    functionsMocks.exampleHandleSelectSuggestion
   );
   element.addEventListener('keyup', functionsMocks.exampleHandleKeyup);
 }
@@ -129,7 +129,21 @@ describe('c-quantic-search-box-input', () => {
   });
 
   describe('when the withoutSubmitButton is set to false', () => {
-    it('should display the submit button correctly to the right only', async () => {
+    it('should not display the searchIcon to the left of the searchbox', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        withoutSubmitButton: false,
+      });
+      await flushPromises();
+
+      const searchIcon = element.shadowRoot.querySelector(
+        selectors.searchBoxSearchIcon
+      );
+
+      expect(searchIcon).toBeNull();
+    });
+
+    it('should display the submit button to the right of the searchbox', async () => {
       const element = createTestComponent({
         ...defaultOptions,
         withoutSubmitButton: false,
@@ -140,17 +154,12 @@ describe('c-quantic-search-box-input', () => {
         selectors.searchBoxSubmitBtn
       );
 
-      const searchIcon = element.shadowRoot.querySelector(
-        selectors.searchBoxSearchIcon
-      );
-
       expect(submitButton).not.toBeNull();
-      expect(searchIcon).toBeNull();
     });
   });
 
   describe('when the withoutSubmitButton is set to true', () => {
-    it('should not display the submit button to the right of the searchbox', async () => {
+    it('should display the searchIcon to the left of the searchbox', async () => {
       const element = createTestComponent({
         ...defaultOptions,
         withoutSubmitButton: true,
@@ -160,13 +169,23 @@ describe('c-quantic-search-box-input', () => {
       const searchIcon = element.shadowRoot.querySelector(
         selectors.searchBoxSearchIcon
       );
+
+      expect(searchIcon).not.toBeNull();
+      expect(searchIcon.classList.contains('slds-input__icon_left')).toBe(true);
+    });
+
+    it('should not display the submit button to the right of the searchbox', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        withoutSubmitButton: true,
+      });
+      await flushPromises();
+
       const submitButton = element.shadowRoot.querySelector(
         selectors.searchBoxSubmitBtn
       );
 
       expect(submitButton).toBeNull();
-      expect(searchIcon).not.toBeNull();
-      expect(searchIcon.classList.contains('slds-input__icon_left')).toBe(true);
     });
   });
 
@@ -181,6 +200,7 @@ describe('c-quantic-search-box-input', () => {
 
       const input = element.shadowRoot.querySelector(selectors.searchBoxInput);
 
+      expect(input.placeholder).not.toEqual(defaultOptions.placeholder);
       expect(input.placeholder).toEqual(customPlaceholder);
     });
   });
@@ -202,12 +222,12 @@ describe('c-quantic-search-box-input', () => {
         suggestionsList.shadowRoot.querySelectorAll('li');
       expect(suggestionsListItems).not.toBeNull();
 
-      expect(suggestionsListItems.length).toEqual(mockSuggestions.length);
+      expect(suggestionsListItems.length).toEqual(3);
     });
   });
 
   describe('when focusing on the input', () => {
-    it('should dispatch a #quantic__showsuggestions custom event', async () => {
+    it('should dispatch a #showsuggestions custom event', async () => {
       const element = createTestComponent();
       setupEventListeners(element);
       await flushPromises();
@@ -217,11 +237,13 @@ describe('c-quantic-search-box-input', () => {
 
       await input.focus();
 
-      expect(functionsMocks.exampleShowSuggestions).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.exampleHandleShowSuggestions).toHaveBeenCalledTimes(
+        1
+      );
     });
 
     describe('when selecting a suggestion from the suggestions list', () => {
-      it('should dispatch a #quantic__selectsuggestion event with the selected suggestion as payload', async () => {
+      it('should dispatch a #selectsuggestion event with the selected suggestion as payload', async () => {
         const element = createTestComponent({
           ...defaultOptions,
           suggestions: mockSuggestions,
@@ -240,11 +262,13 @@ describe('c-quantic-search-box-input', () => {
 
         firstSuggestion.click();
 
-        expect(functionsMocks.exampleSelectSuggestion).toHaveBeenCalledTimes(1);
+        expect(
+          functionsMocks.exampleHandleSelectSuggestion
+        ).toHaveBeenCalledTimes(1);
 
+        // @ts-ignore
         const eventData =
-          functionsMocks.exampleSelectSuggestion.mock.calls[0][0] &&
-          functionsMocks.exampleSelectSuggestion.mock.calls[0][0];
+          functionsMocks.exampleHandleSelectSuggestion.mock.calls[0][0];
         const expectedFirstSuggestionSelected = mockSuggestions[0].rawValue;
 
         // @ts-ignore
@@ -256,7 +280,7 @@ describe('c-quantic-search-box-input', () => {
   });
 
   describe('when typing something in the input', () => {
-    it('should dispatch a #quantic__inputvaluechange custom event with the input value as payload', async () => {
+    it('should dispatch an #inputvaluechange custom event with the input value as payload', async () => {
       const element = createTestComponent();
       setupEventListeners(element);
       await flushPromises();
@@ -279,7 +303,7 @@ describe('c-quantic-search-box-input', () => {
     });
 
     describe('when clicking on the submit button', () => {
-      it('should dispatch a #quantic__submitsearch custom event', async () => {
+      it('should dispatch a #submitsearch custom event', async () => {
         const element = createTestComponent();
         setupEventListeners(element);
         await flushPromises();
@@ -298,7 +322,7 @@ describe('c-quantic-search-box-input', () => {
     });
 
     describe('when pressing the ENTER key', () => {
-      it('should dispatch a #quantic__submitsearch custom event', async () => {
+      it('should dispatch a #submitsearch custom event', async () => {
         const element = createTestComponent();
         setupEventListeners(element);
         await flushPromises();

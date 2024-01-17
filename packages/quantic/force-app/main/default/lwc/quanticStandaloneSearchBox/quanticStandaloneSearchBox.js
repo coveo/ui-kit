@@ -1,3 +1,4 @@
+import search from '@salesforce/label/c.quantic_Search';
 import {
   registerComponentForInit,
   initializeWithHeadless,
@@ -29,6 +30,10 @@ import standaloneSearchBox from './templates/standaloneSearchBox.html';
 export default class QuanticStandaloneSearchBox extends NavigationMixin(
   LightningElement
 ) {
+  labels = {
+    search,
+  };
+
   /**
    * The ID of the engine instance the component registers to.
    * @api
@@ -39,8 +44,9 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
    * The placeholder text to display in the search box input area.
    * @api
    * @type {string}
+   * @defaultValue 'Search...'
    */
-  @api placeholder = null;
+  @api placeholder = `${this.labels.search}`;
   /**
    * Whether not to render a submit button.
    * @api
@@ -124,13 +130,10 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   connectedCallback() {
     registerComponentForInit(this, this.standaloneEngineId);
 
-    this.addEventListener(
-      'quantic__inputvaluechange',
-      this.handleInputValueChange
-    );
-    this.addEventListener('quantic__submitsearch', this.handleSubmit);
-    this.addEventListener('quantic__showsuggestions', this.showSuggestions);
-    this.addEventListener('quantic__selectsuggestion', this.selectSuggestion);
+    this.addEventListener('inputvaluechange', this.handleInputValueChange);
+    this.addEventListener('submitsearch', this.handleSubmit);
+    this.addEventListener('showsuggestions', this.handleShowSuggestions);
+    this.addEventListener('selectsuggestion', this.handleSelectSuggestion);
   }
 
   renderedCallback() {
@@ -140,7 +143,6 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
       !!this.standaloneSearchBox &&
       !!this.quanticSearchBoxInput
     ) {
-      // The is-initialized attribute is set to true for E2E tests
       this.quanticSearchBoxInput.setAttribute('is-initialized', 'true');
       this.isInitialized = true;
     }
@@ -182,16 +184,10 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   disconnectedCallback() {
     this.unsubscribe?.();
 
-    this.removeEventListener(
-      'quantic__inputvaluechange',
-      this.handleInputValueChange
-    );
-    this.removeEventListener('quantic__submitsearch', this.handleSubmit);
-    this.removeEventListener('quantic__showsuggestions', this.showSuggestions);
-    this.removeEventListener(
-      'quantic__selectsuggestion',
-      this.selectSuggestion
-    );
+    this.removeEventListener('inputvaluechange', this.handleInputValueChange);
+    this.removeEventListener('submitsearch', this.handleSubmit);
+    this.removeEventListener('showsuggestions', this.handleShowSuggestions);
+    this.removeEventListener('selectsuggestion', this.handleSelectSuggestion);
   }
 
   updateStandaloneState() {
@@ -274,14 +270,14 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
    * Shows the suggestions.
    * @returns {void}
    */
-  showSuggestions = () => {
+  handleShowSuggestions = () => {
     this.standaloneSearchBox?.showSuggestions();
   };
 
   /**
    * Handles the selection of a suggestion.
    */
-  selectSuggestion = (event) => {
+  handleSelectSuggestion = (event) => {
     const selectedSuggestion = event.detail.selectedSuggestion;
     this.standaloneSearchBox?.selectSuggestion(selectedSuggestion);
   };
