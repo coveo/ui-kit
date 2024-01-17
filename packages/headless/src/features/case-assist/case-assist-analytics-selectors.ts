@@ -77,11 +77,10 @@ export const caseAssistCaseClassificationSelector = (
 ) => {
   const classificationFieldName = Object.keys(
     state?.caseField?.fields ?? {}
-  ).find(
-    (fieldName) =>
-      state?.caseField?.fields[fieldName].suggestions.some(
-        (suggestion) => suggestion.id === classificationId
-      )
+  ).find((fieldName) =>
+    state?.caseField?.fields[fieldName].suggestions.some(
+      (suggestion) => suggestion.id === classificationId
+    )
   );
 
   if (!classificationFieldName) {
