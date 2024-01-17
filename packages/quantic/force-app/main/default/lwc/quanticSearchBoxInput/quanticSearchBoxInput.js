@@ -306,17 +306,16 @@ export default class QuanticSearchBoxInput extends LightningElement {
   };
 
   get searchBoxContainerClass() {
-    if (this.withoutSubmitButton) {
-      this.input?.setAttribute('aria-labelledby', 'fixed-text-label');
-    }
-    this.input?.setAttribute(
-      'aria-labelledby',
-      'fixed-text-label fixed-text-addon-post'
-    );
     return `slds-combobox__form-element slds-input-has-icon slds-grid ${
       this.withoutSubmitButton
         ? 'slds-input-has-icon_left-right'
         : 'slds-input-has-icon_right slds-input-has-fixed-addon'
+    }`;
+  }
+
+  get ariaLabelledByValue() {
+    return `fixed-text-label ${
+      this.withoutSubmitButton ? '' : 'fixed-text-addon-post'
     }`;
   }
 
