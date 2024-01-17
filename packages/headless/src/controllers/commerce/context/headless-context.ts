@@ -38,6 +38,7 @@ export type User = (UserId | Email | (UserId & Email)) & {
 
 export interface View {
   url: string;
+  referrer?: string;
 }
 
 export interface ContextProps {
@@ -133,6 +134,14 @@ export function buildContext(
   const options = {
     ...props.options,
   };
+
+  if (
+    typeof window !== 'undefined' &&
+    typeof window.document !== 'undefined' &&
+    options.view.referrer === undefined
+  ) {
+    options.view.referrer = window.document.referrer;
+  }
 
   validateOptions(engine, contextSchema, options, 'buildContext');
 

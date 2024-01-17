@@ -6,6 +6,7 @@ import {
 
 export const viewDefinition = {
   url: requiredNonEmptyString,
+  referrer: nonEmptyString,
 };
 
 export const userDefinition = {

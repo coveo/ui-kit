@@ -58,6 +58,21 @@ describe('headless commerce context', () => {
     });
   });
 
+  it('sets the referrer if is not defined and is running in browser', () => {
+    const referrer = 'https://example.org/referrer';
+    global.window.document = {referrer} as Document;
+    engine = buildMockCommerceEngine({
+      state: {
+        ...buildMockCommerceState(),
+        commerceContext: {
+          ...options,
+        },
+      },
+    });
+    context = buildContext(engine, {options});
+    expect(context.state.view.referrer).toEqual(referrer);
+  });
+
   it('dispatches #setContext on load', () => {
     expectContainAction(setContext);
   });
@@ -97,6 +112,7 @@ describe('headless commerce context', () => {
   it('setView dispatches #setView', () => {
     context.setView({
       url: 'https://example.org',
+      referrer: 'https://example.org/referrer',
     });
     expectContainAction(setView);
   });
