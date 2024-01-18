@@ -16,11 +16,12 @@ export type ExtractRequiredOptions<TOptions> = {
     : never]: TOptions[TKey];
 };
 
-export type OptionsTuple<TOptions> = HasKeys<TOptions> extends false
-  ? []
-  : HasKeys<ExtractRequiredOptions<TOptions>> extends false
-    ? [options?: TOptions]
-    : [options: TOptions];
+export type OptionsTuple<TOptions> =
+  HasKeys<TOptions> extends false
+    ? []
+    : HasKeys<ExtractRequiredOptions<TOptions>> extends false
+      ? [options?: TOptions]
+      : [options: TOptions];
 
 export interface OptionsExtender<TOptions> {
   (options: TOptions): TOptions | Promise<TOptions>;
@@ -105,15 +106,19 @@ export interface HydratedState<
 
 export type InferControllerPropsFromDefinition<
   TController extends ControllerDefinition<CoreEngine, Controller>,
-> = TController extends ControllerDefinitionWithProps<
-  CoreEngine,
-  Controller,
-  infer Props
->
-  ? Props
-  : TController extends ControllerDefinitionWithoutProps<CoreEngine, Controller>
-    ? {}
-    : unknown;
+> =
+  TController extends ControllerDefinitionWithProps<
+    CoreEngine,
+    Controller,
+    infer Props
+  >
+    ? Props
+    : TController extends ControllerDefinitionWithoutProps<
+          CoreEngine,
+          Controller
+        >
+      ? {}
+      : unknown;
 
 export type InferControllerPropsMapFromDefinitions<
   TControllers extends ControllerDefinitionsMap<CoreEngine, Controller>,
@@ -130,9 +135,10 @@ export type InferControllerPropsMapFromDefinitions<
  */
 export type InferControllerFromDefinition<
   TDefinition extends ControllerDefinition<CoreEngine, Controller>,
-> = TDefinition extends ControllerDefinition<infer _, infer TController>
-  ? TController
-  : never;
+> =
+  TDefinition extends ControllerDefinition<infer _, infer TController>
+    ? TController
+    : never;
 
 /**
  * @internal
@@ -163,8 +169,9 @@ export type InferControllerStaticStateMapFromControllers<
 
 export type EngineDefinitionControllersPropsOption<
   TControllersPropsMap extends ControllersPropsMap,
-> = HasKeys<TControllersPropsMap> extends false
-  ? {}
-  : {
-      controllers: TControllersPropsMap;
-    };
+> =
+  HasKeys<TControllersPropsMap> extends false
+    ? {}
+    : {
+        controllers: TControllersPropsMap;
+      };
