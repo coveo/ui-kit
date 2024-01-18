@@ -7,10 +7,10 @@
       </c-configurator>
     </div>
 
-    <c-quantic-search-interface slot="preview" engine-id={engineId}>
+    <c-example-use-case slot="preview" use-case={config.useCase} engine-id={engineId}>
       <c-quantic-generated-answer engine-id={engineId} answer-style={config.answerStyle}
         fields-to-include-in-citations={config.fieldsToIncludeInCitations} multiline-footer={config.multilineFooter}>
       </c-quantic-generated-answer>
-    </c-quantic-search-interface>
+    </c-example-use-case>
   </c-example-layout>
 </template>
