@@ -1,0 +1,53 @@
+@import '../../../../global/global.pcss';
+@import '../../../../global/mixins.pcss';
+@import './generated-text.pcss';
+@import './feedback-buttons.pcss';
+@import './rephrase-buttons.pcss';
+@import './typing-indicator.pcss';
+@import './copy-button.pcss';
+
+@define-mixin mobile-footer-layout {
+  & {
+    @apply flex-col gap-4;
+  }
+
+  .source-citations {
+    @apply mr-0;
+  }
+
+  .rephrase-buttons {
+    @apply ml-0;
+  }
+
+  [part='rephrase-button'] {
+    @apply rephrase-with-text;
+  }
+}
+
+@keyframes cursor-blink {
+  0% {
+    opacity: 0;
+  }
+}
+
+[part='container'] {
+  container-type: inline-size;
+}
+
+.footer {
+  @apply flex;
+
+  .source-citations {
+    @apply mr-2;
+  }
+  .rephrase-buttons {
+    @apply ml-auto;
+  }
+
+  @container (max-width: 600px) {
+    @mixin mobile-footer-layout;
+  }
+  @screen mobile-only {
+    @mixin mobile-footer-layout;
+  }
+}

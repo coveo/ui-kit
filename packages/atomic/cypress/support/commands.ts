@@ -67,8 +67,8 @@ Cypress.Commands.add('map', {prevSubject: 'element'}, ($element, predicate) => {
 
 Cypress.Commands.add('getTextOfAllElements', (selector: string) => {
   cy.get(selector).then((elements) => {
-    const originalValues = [...elements].map(
-      (el: HTMLElement) => el.textContent?.trim()
+    const originalValues = [...elements].map((el: HTMLElement) =>
+      el.textContent?.trim()
     );
     cy.wrap(originalValues);
   });

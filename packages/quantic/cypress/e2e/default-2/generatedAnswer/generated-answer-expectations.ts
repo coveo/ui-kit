@@ -297,8 +297,12 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         );
     },
 
-    logStreamIdInAnalytics(streamId: string) {
-      cy.wait(InterceptAliases.UA.Load)
+    logStreamIdInAnalytics(streamId: string, useCase: string) {
+      cy.wait(
+        useCase === 'search'
+          ? InterceptAliases.UA.Load
+          : InterceptAliases.UA.SearchboxSubmit
+      )
         .then((interception) => {
           const analyticsBody = interception.request.body;
           const customData = analyticsBody?.customData;

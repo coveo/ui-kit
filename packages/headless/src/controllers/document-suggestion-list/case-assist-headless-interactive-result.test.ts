@@ -1,64 +1,77 @@
-import {Result} from '../../api/search/search/result';
-import {configuration} from '../../app/common-reducers';
 import {logDocumentSuggestionOpen} from '../../features/case-assist/case-assist-analytics-actions';
 import {buildMockResult} from '../../test';
+import {buildMockCaseAssistState} from '../../test/mock-case-assist-state';
 import {
   buildMockCaseAssistEngine,
-  MockCaseAssistEngine,
-} from '../../test/mock-engine';
+  MockedCaseAssistEngine,
+} from '../../test/mock-engine-v2';
+import {buildInteractiveResultCore} from '../core/interactive-result/headless-core-interactive-result';
 import {
   buildCaseAssistInteractiveResult,
-  CaseAssistInteractiveResult,
+  CaseAssistInteractiveResultProps,
 } from './case-assist-headless-interactive-result';
 
-describe('InteractiveResult', () => {
-  let engine: MockCaseAssistEngine;
-  let mockResult: Result;
-  let interactiveResult: CaseAssistInteractiveResult;
-  let logDocumentOpenPendingActionType: string;
+jest.mock('../core/interactive-result/headless-core-interactive-result');
+jest.mock('../../features/case-assist/case-assist-analytics-actions');
 
+describe('InteractiveResult', () => {
+  let engine: MockedCaseAssistEngine;
+  let interactiveResultProps: CaseAssistInteractiveResultProps;
+  let mockedBuildInteractiveResultCore: jest.Mock;
   const resultStringParams = {
     uniqueId: 'unique-id',
   };
 
   function initializeInteractiveResult(delay?: number) {
-    const result = (mockResult = buildMockResult(resultStringParams));
-    logDocumentOpenPendingActionType = logDocumentSuggestionOpen(
-      mockResult.uniqueId
-    ).pending.type;
-    interactiveResult = buildCaseAssistInteractiveResult(engine, {
+    const result = buildMockResult(resultStringParams);
+    interactiveResultProps = {
       options: {result, selectionDelay: delay},
-    });
+    };
+    buildCaseAssistInteractiveResult(engine, interactiveResultProps);
   }
 
-  function findLogDocumentAction() {
-    return (
-      engine.actions.find(
-        (action) => action.type === logDocumentOpenPendingActionType
-      ) ?? null
-    );
+  function initEngine(preloadedState = buildMockCaseAssistState()) {
+    engine = buildMockCaseAssistEngine(preloadedState);
   }
 
-  function expectLogDocumentActionPending() {
-    const action = findLogDocumentAction();
-    expect(action).toEqual(
-      logDocumentSuggestionOpen(mockResult.uniqueId).pending(
-        action!.meta.requestId
-      )
-    );
+  function mockedSelect() {
+    mockedBuildInteractiveResultCore.mock.calls[0][2]();
   }
 
   beforeEach(() => {
-    engine = buildMockCaseAssistEngine();
+    jest.resetAllMocks();
+    mockedBuildInteractiveResultCore = jest.mocked(buildInteractiveResultCore);
+    initEngine();
     initializeInteractiveResult();
   });
 
-  it('it adds the correct reducers to engine', () => {
-    expect(engine.addReducers).toHaveBeenCalledWith({configuration});
+  it('initialize a interactive result core with the correct options', () => {
+    expect(mockedBuildInteractiveResultCore).toHaveBeenCalledWith(
+      engine,
+      interactiveResultProps,
+      expect.any(Function)
+    );
   });
 
-  it('when calling select(), logs documentOpen', () => {
-    interactiveResult.select();
-    expectLogDocumentActionPending();
+  it('dispatches #logDocumentSuggestionOpen when the action is triggered for the first time', () => {
+    const mockedLogDocumentSuggestionOpen = jest.mocked(
+      logDocumentSuggestionOpen
+    );
+
+    mockedSelect();
+    expect(mockedLogDocumentSuggestionOpen).toHaveBeenCalledTimes(1);
+    expect(mockedLogDocumentSuggestionOpen).toHaveBeenCalledWith(
+      resultStringParams.uniqueId
+    );
+  });
+
+  it('does not dispatch logDocumentSuggestionOpen when the action is triggered for the second time', () => {
+    const mockedLogDocumentSuggestionOpen = jest.mocked(
+      logDocumentSuggestionOpen
+    );
+
+    mockedSelect();
+    mockedSelect();
+    expect(mockedLogDocumentSuggestionOpen).toHaveBeenCalledTimes(1);
   });
 });

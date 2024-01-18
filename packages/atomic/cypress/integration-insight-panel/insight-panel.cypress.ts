@@ -103,7 +103,7 @@ describe('Insight Panel test suites', () => {
       InsightPanelsSelectors.searchbox()
         .should('exist')
         .shadow()
-        .find('input')
+        .find('textarea')
         .should('exist')
         .should('have.attr', 'placeholder', 'Search...');
 
