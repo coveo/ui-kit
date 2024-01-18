@@ -135,14 +135,6 @@ export function buildContext(
     ...props.options,
   };
 
-  if (
-    typeof window !== 'undefined' &&
-    typeof window.document !== 'undefined' &&
-    options.view.referrer === undefined
-  ) {
-    options.view.referrer = window.document.referrer;
-  }
-
   validateOptions(engine, contextSchema, options, 'buildContext');
 
   dispatch(
