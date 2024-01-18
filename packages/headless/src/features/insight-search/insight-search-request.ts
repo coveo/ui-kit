@@ -45,6 +45,7 @@ export const buildInsightBaseRequest = (
       parentField: state.folding.fields.child,
       filterFieldRange: state.folding.filterFieldRange,
     }),
+    ...(state.context && {context: state.context.contextValues}),
   });
 };
 

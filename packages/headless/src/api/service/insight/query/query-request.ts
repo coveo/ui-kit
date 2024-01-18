@@ -1,4 +1,5 @@
 import {
+  ContextParam,
   FoldingParam,
   NumberOfResultsParam,
 } from '../../../platform-service-params';
@@ -30,7 +31,8 @@ export type InsightQueryRequest = InsightParam &
   EnableDidYouMeanParam &
   ConstantQueryParam &
   TabParam &
-  FoldingParam;
+  FoldingParam &
+  ContextParam;
 
 interface CaseContextParam {
   caseContext?: Record<string, string>;
