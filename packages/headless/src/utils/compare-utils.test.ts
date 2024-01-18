@@ -155,13 +155,13 @@ describe('compare-utils', () => {
   describe('#arrayEqualStrictlyDifferentOrder with an array of primitive values', () => {
     const objectA = ['c', 'x', 'b'];
 
-    it(`when arrays only have one similar value
+    it(`when arrays only have one identical value
       should return true`, () => {
       expect(arrayEqualStrictlyDifferentOrder(['a'], ['a'])).toBe(true);
     });
 
     it(`when arrays only have one value but different
-      should return true`, () => {
+      should return false`, () => {
       expect(arrayEqualStrictlyDifferentOrder(['a'], ['b'])).toBe(false);
     });
 
