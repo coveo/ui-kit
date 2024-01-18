@@ -41,6 +41,8 @@ export type {
   DidYouMeanState,
   QueryCorrection,
   WordCorrection,
+  DidYouMeanProps,
+  DidYouMeanOptions,
 } from './did-you-mean/headless-did-you-mean';
 export {buildDidYouMean} from './did-you-mean/headless-did-you-mean';
 

@@ -25,6 +25,13 @@ export function buildSearchParameterSerializer() {
   return {serialize, deserialize};
 }
 
+export function buildSearchParameterRanges() {
+  return {
+    buildNumericRanges,
+    buildDateRanges,
+  };
+}
+
 function serialize(obj: SearchParameters) {
   return Object.entries(obj)
     .map(serializePair)

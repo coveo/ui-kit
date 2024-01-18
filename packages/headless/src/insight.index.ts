@@ -308,6 +308,20 @@ export type {
 } from './controllers/insight/smart-snippet-questions-list/headless-insight-smart-snippet-questions-list';
 export {buildSmartSnippetQuestionsList} from './controllers/insight/smart-snippet-questions-list/headless-insight-smart-snippet-questions-list';
 
+export type {
+  GeneratedAnswer,
+  GeneratedAnswerState,
+  GeneratedAnswerProps,
+} from './controllers/insight/generated-answer/headless-insight-generated-answer';
+export {buildGeneratedAnswer} from './controllers/insight/generated-answer/headless-insight-generated-answer';
+
+export type {
+  InteractiveCitation,
+  InteractiveCitationProps,
+  InteractiveCitationOptions,
+} from './controllers/insight/generated-answer/headless-insight-interactive-citation';
+export {buildInteractiveCitation} from './controllers/insight/generated-answer/headless-insight-interactive-citation';
+export type {GeneratedAnswerStyle} from './features/generated-answer/generated-response-format';
 // Features
 export type {
   ResultTemplate,

@@ -9,6 +9,7 @@ import {
   FacetsParam,
   FieldsToIncludeParam,
   FirstResultParam,
+  PipelineRuleParams,
   QueryParam,
   SortCriteriaParam,
   TabParam,
@@ -32,7 +33,8 @@ export type InsightQueryRequest = InsightParam &
   ConstantQueryParam &
   TabParam &
   FoldingParam &
-  ContextParam;
+  ContextParam &
+  PipelineRuleParams;
 
 interface CaseContextParam {
   caseContext?: Record<string, string>;

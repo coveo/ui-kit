@@ -1,6 +1,10 @@
 import {configuration} from '../../app/common-reducers';
 import {caseAssistConfigurationReducer as caseAssistConfiguration} from '../../features/case-assist-configuration/case-assist-configuration-slice';
 import {
+  logClassificationClick,
+  logUpdateCaseField,
+} from '../../features/case-assist/case-assist-analytics-actions';
+import {
   fetchCaseClassifications,
   registerCaseField,
   updateCaseField,
@@ -13,16 +17,20 @@ import {documentSuggestionReducer as documentSuggestion} from '../../features/do
 import {buildMockCaseAssistState} from '../../test/mock-case-assist-state';
 import {
   buildMockCaseAssistEngine,
-  MockCaseAssistEngine,
-} from '../../test/mock-engine';
+  MockedCaseAssistEngine,
+} from '../../test/mock-engine-v2';
 import {
   buildCaseField,
   CaseField,
   CaseFieldOptions,
 } from './headless-case-field';
 
+jest.mock('../../features/document-suggestion/document-suggestion-actions');
+jest.mock('../../features/case-field/case-field-actions');
+jest.mock('../../features/case-assist/case-assist-analytics-actions');
+
 describe('Case Field', () => {
-  let engine: MockCaseAssistEngine;
+  let engine: MockedCaseAssistEngine;
   let options: CaseFieldOptions;
   let field: CaseField;
 
@@ -32,16 +40,21 @@ describe('Case Field', () => {
     field = buildCaseField(engine, {options});
   }
 
+  function initEngine(preloadedState = buildMockCaseAssistState()) {
+    engine = buildMockCaseAssistEngine(preloadedState);
+  }
+
   beforeEach(() => {
+    jest.resetAllMocks();
     options = {
       field: testFieldName,
     };
-    engine = buildMockCaseAssistEngine();
+    initEngine();
     initCaseField();
   });
 
   it('adds the correct reducers to the engine', () => {
-    expect(engine.addReducers).toBeCalledWith({
+    expect(engine.addReducers).toHaveBeenCalledWith({
       configuration,
       caseAssistConfiguration,
       caseInput,
@@ -50,28 +63,32 @@ describe('Case Field', () => {
     });
   });
 
-  it('building a case field registers the case field in the state', () => {
-    expect(engine.actions).toContainEqual(
-      registerCaseField({fieldName: testFieldName, fieldValue: ''})
+  it('dispatch #registerCaseField on init if the field was not already registered', () => {
+    const mockedRegisterCaseField = jest.mocked(registerCaseField);
+
+    initCaseField();
+
+    expect(mockedRegisterCaseField).toHaveBeenCalledWith({
+      fieldName: testFieldName,
+      fieldValue: '',
+    });
+    expect(engine.dispatch).toHaveBeenCalledWith(
+      mockedRegisterCaseField.mock.results[0].value
     );
   });
 
-  it('building a case field that was already registered does not register the case field again', () => {
-    engine = buildMockCaseAssistEngine({
-      state: {
-        ...buildMockCaseAssistState(),
-        caseField: {
-          ...getCaseFieldInitialState(),
-          fields: {
-            [testFieldName]: {value: '', suggestions: []},
-          },
-        },
-      },
-    });
+  it('does not dispatch #registerCaseField on init if the field is already registered', () => {
+    jest.resetAllMocks();
+    const mockedRegisterCaseField = jest.mocked(registerCaseField);
+
+    const initialState = buildMockCaseAssistState();
+    initialState.caseField.fields[testFieldName] = {suggestions: [], value: ''};
+    initEngine(initialState);
+
     initCaseField();
-    expect(engine.actions).not.toContainEqual(
-      registerCaseField({fieldName: testFieldName, fieldValue: ''})
-    );
+
+    expect(mockedRegisterCaseField).not.toHaveBeenCalled();
+    expect(engine.dispatch).not.toHaveBeenCalled();
   });
 
   describe('#update', () => {
@@ -99,108 +116,124 @@ describe('Case Field', () => {
     });
 
     it('dispatches a #logClassificationClick action when value is a suggestion', () => {
+      const mockedLogClassificationClick = jest.mocked(logClassificationClick);
+
       field.update('suggested value');
 
-      expect(engine.actions).toContainEqual(
-        expect.objectContaining({
-          type: 'analytics/caseAssist/classification/click/pending',
-        })
+      expect(mockedLogClassificationClick).toHaveBeenCalledWith(
+        'some-suggestion-id'
+      );
+      expect(engine.dispatch).toHaveBeenCalledWith(
+        mockedLogClassificationClick.mock.results[0].value
       );
     });
 
     it('does not dispatch a #logClassificationClick action when value is not a suggestion', () => {
+      const mockedLogClassificationClick = jest.mocked(logClassificationClick);
+
       field.update(testValue);
 
-      expect(engine.actions).not.toContainEqual(
-        expect.objectContaining({
-          type: 'analytics/caseAssist/classification/click/pending',
-        })
-      );
+      expect(mockedLogClassificationClick).not.toHaveBeenCalled();
     });
 
     it('dispatches a #updateCaseField action with the passed field value', () => {
+      const mockedUpdateCaseField = jest.mocked(updateCaseField);
+
       field.update(testValue);
 
-      expect(engine.actions).toContainEqual(
-        updateCaseField({fieldName: testFieldName, fieldValue: testValue})
+      expect(mockedUpdateCaseField).toHaveBeenCalledWith({
+        fieldName: testFieldName,
+        fieldValue: testValue,
+      });
+      expect(engine.dispatch).toHaveBeenCalledWith(
+        mockedUpdateCaseField.mock.results[0].value
       );
     });
 
-    it('dispatches a #logCaseFieldUpdate analytics action', () => {
+    it('dispatches a #logUpdateCaseField analytics action', () => {
+      const mockedLogUpdateCaseField = jest.mocked(logUpdateCaseField);
+
       field.update(testValue);
 
-      expect(engine.actions).toContainEqual(
-        expect.objectContaining({
-          type: 'analytics/caseAssist/case/field/update/pending',
-        })
+      expect(mockedLogUpdateCaseField).toHaveBeenCalledWith(testFieldName);
+      expect(engine.dispatch).toHaveBeenCalledWith(
+        mockedLogUpdateCaseField.mock.results[0].value
       );
     });
 
     it('does not dispatch a #logCaseFieldUpdate analytics action when the autoSelection parameter is set to true', () => {
+      const mockedLogUpdateCaseField = jest.mocked(logUpdateCaseField);
+
       field.update(testValue, undefined, true);
 
-      expect(engine.actions).not.toContainEqual(
-        expect.objectContaining({
-          type: 'analytics/caseAssist/case/field/update/pending',
-        })
-      );
+      expect(mockedLogUpdateCaseField).not.toHaveBeenCalled();
     });
 
     it('dispatches a #fetchCaseClassifications action when required', () => {
+      const mockedFetchCaseClassifications = jest.mocked(
+        fetchCaseClassifications
+      );
+
       field.update(testValue, {
         caseClassifications: true,
       });
 
-      expect(engine.actions).toContainEqual(
-        expect.objectContaining({
-          type: fetchCaseClassifications.pending.type,
-        })
+      expect(mockedFetchCaseClassifications).toHaveBeenCalled();
+      expect(engine.dispatch).toHaveBeenCalledWith(
+        mockedFetchCaseClassifications.mock.results[0].value
       );
     });
 
     it('dispatches a #fetchDocumentSuggestions action when required', () => {
+      const mockedFetchDocumentSuggestions = jest.mocked(
+        fetchDocumentSuggestions
+      );
+
       field.update(testValue, {
         documentSuggestions: true,
       });
 
-      expect(engine.actions).toContainEqual(
-        expect.objectContaining({
-          type: fetchDocumentSuggestions.pending.type,
-        })
+      expect(mockedFetchDocumentSuggestions).toHaveBeenCalled();
+      expect(engine.dispatch).toHaveBeenCalledWith(
+        mockedFetchDocumentSuggestions.mock.results[0].value
       );
     });
 
     it('dispatches both #fetchCaseClassifications and #fetchDocumentSuggestions when required', () => {
+      const mockedFetchCaseClassifications = jest.mocked(
+        fetchCaseClassifications
+      );
+      const mockedFetchDocumentSuggestions = jest.mocked(
+        fetchDocumentSuggestions
+      );
+
       field.update(testValue, {
         caseClassifications: true,
         documentSuggestions: true,
       });
 
-      expect(engine.actions).toContainEqual(
-        expect.objectContaining({
-          type: fetchCaseClassifications.pending.type,
-        })
+      expect(mockedFetchDocumentSuggestions).toHaveBeenCalled();
+      expect(engine.dispatch).toHaveBeenCalledWith(
+        mockedFetchDocumentSuggestions.mock.results[0].value
       );
-      expect(engine.actions).toContainEqual(
-        expect.objectContaining({
-          type: fetchDocumentSuggestions.pending.type,
-        })
+      expect(mockedFetchCaseClassifications).toHaveBeenCalled();
+      expect(engine.dispatch).toHaveBeenCalledWith(
+        mockedFetchCaseClassifications.mock.results[0].value
       );
     });
 
     it('does not dispatch #fetchCaseClassifications nor #fetchDocumentSuggestions when not required', () => {
+      const mockedFetchCaseClassifications = jest.mocked(
+        fetchCaseClassifications
+      );
+      const mockedFetchDocumentSuggestions = jest.mocked(
+        fetchDocumentSuggestions
+      );
+
       field.update(testValue);
 
-      expect(engine.actions).not.toContainEqual(
-        expect.objectContaining({
-          type: fetchCaseClassifications.pending.type,
-        })
-      );
-      expect(engine.actions).not.toContainEqual(
-        expect.objectContaining({
-          type: fetchDocumentSuggestions.pending.type,
-        })
-      );
+      expect(mockedFetchDocumentSuggestions).not.toHaveBeenCalled();
+      expect(mockedFetchCaseClassifications).not.toHaveBeenCalled();
     });
   });
 });

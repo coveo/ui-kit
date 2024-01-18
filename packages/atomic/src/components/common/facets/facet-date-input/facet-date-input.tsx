@@ -49,7 +49,7 @@ export class FacetDateInput {
     this.filter.setRange(
       buildDateRange({
         start: this.start!,
-        end: this.end!,
+        end: this.end!.setHours(23, 59, 59, 999),
       })
     );
   }
