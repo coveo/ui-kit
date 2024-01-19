@@ -57,7 +57,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
    * @type {string}
    * @defaultValue 'Search...'
    */
-  @api placeholder = `${this.labels.search}`;
+  @api placeholder = this.labels.search;
   /**
    * The query suggestions to display.
    * @api
@@ -124,7 +124,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
   }
 
   /**
-   * Sends the "inputValueChange" event.
+   * Sends the "quantic__inputValueChange" event.
    * @param {string} newInputValue
    * @param {boolean} resetSelection
    */
@@ -141,7 +141,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
   }
 
   /**
-   * Sends the "submitSearch" event.
+   * Sends the "quantic__submitSearch" event.
    */
   sendSubmitSearchEvent() {
     this.dispatchEvent(
@@ -153,7 +153,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
   }
 
   /**
-   * Sends the "showSuggestions" event.
+   * Sends the "quantic__showSuggestions" event.
    */
   sendShowSuggestionsEvent() {
     this.dispatchEvent(
@@ -165,7 +165,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
   }
 
   /**
-   * Sends the "selectSuggestion" event.
+   * Sends the "quantic__selectSuggestion" event.
    * @param {string} selectedSuggestion
    */
   sendSelectSuggestionEvent(selectedSuggestion) {
