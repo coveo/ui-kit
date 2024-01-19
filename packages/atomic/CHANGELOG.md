@@ -1,3 +1,26 @@
+# 2.54.0 (2024-01-10)
+
+### Bug Fixes
+
+- **atomic:** set end of range to end of day when applying facet date input ([#3517](https://github.com/coveo/ui-kit/issues/3517)) ([c67f3e1](https://github.com/coveo/ui-kit/commits/c67f3e1e539ba4c21d96186c30b1794c2789614c))
+- **error:** added margin at the buttom of the error component ([#3486](https://github.com/coveo/ui-kit/issues/3486)) ([5eb2c8c](https://github.com/coveo/ui-kit/commits/5eb2c8c473a90184bb5987304f8ac6a55d64ac1e))
+- **rga:** ensure svgs does not include static colors ([#3515](https://github.com/coveo/ui-kit/issues/3515)) ([d7c44e7](https://github.com/coveo/ui-kit/commits/d7c44e71d8f9d6e22125873c6c5fcf0ce85f8df2))
+
+### Features
+
+- **atomic:** add suggestion delay option for atomic search box ([#3510](https://github.com/coveo/ui-kit/issues/3510)) ([bc52812](https://github.com/coveo/ui-kit/commits/bc528120bcdeaf4f57f37713913b3fc6f34e0182))
+
+# 2.53.0 (2024-01-03)
+
+### Bug Fixes
+
+- **atomic:** center various icons ([#3491](https://github.com/coveo/ui-kit/issues/3491)) ([518b37b](https://github.com/coveo/ui-kit/commits/518b37b428454b13fdc055b609246c94a1187d8d))
+- **deps:** update stencil j:kit-282 ([#3492](https://github.com/coveo/ui-kit/issues/3492)) ([83dfb8d](https://github.com/coveo/ui-kit/commits/83dfb8dbbd89524a694bcd39ce807143a073ac2c))
+
+### Features
+
+- **rga:** hide copy to clipboard button when Clipboard API is not defined ([#3499](https://github.com/coveo/ui-kit/issues/3499)) ([6672909](https://github.com/coveo/ui-kit/commits/66729095b6dcf54c3b3bcc82c6ab1e5142991712))
+
 ## 2.52.1 (2023-12-13)
 
 ### Bug Fixes

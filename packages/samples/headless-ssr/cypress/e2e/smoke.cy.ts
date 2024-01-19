@@ -1,4 +1,3 @@
-// eslint-disable-next-line node/no-unpublished-import
 import 'cypress-web-vitals';
 import {
   ConsoleAliases,
@@ -79,6 +78,7 @@ routes.forEach((route) => {
         const ssrTimestamp = Date.parse(
           dom.querySelector(timestampSelector)!.innerHTML
         );
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         expect(ssrTimestamp).to.not.be.undefined;
         cy.get(timestampSelector).should((timeStampElement) => {
           const hydratedTimestamp = Date.parse(timeStampElement.text());
