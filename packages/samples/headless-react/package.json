@@ -5,7 +5,7 @@
   "private": true,
   "dependencies": {
     "@coveo/auth": "1.11.6",
-    "@coveo/headless": "2.45.1",
+    "@coveo/headless": "2.46.0",
     "@testing-library/jest-dom": "6.2.0",
     "@testing-library/react": "13.3.0",
     "@testing-library/user-event": "14.5.2",
