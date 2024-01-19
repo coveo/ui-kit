@@ -313,12 +313,6 @@ export default class QuanticSearchBoxInput extends LightningElement {
     }`;
   }
 
-  get ariaLabelledByValue() {
-    return `fixed-text-label ${
-      this.withoutSubmitButton ? '' : 'fixed-text-addon-post'
-    }`;
-  }
-
   get searchBoxInputClass() {
     return `slds-input searchbox__input ${
       this.withoutSubmitButton ? '' : 'searchbox__input-with-button'
