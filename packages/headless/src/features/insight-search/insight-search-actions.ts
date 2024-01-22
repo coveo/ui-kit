@@ -15,6 +15,7 @@ import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {
   CategoryFacetSection,
   ConfigurationSection,
+  ContextSection,
   DateFacetSection,
   DidYouMeanSection,
   FacetSection,
@@ -77,7 +78,8 @@ export type StateNeededByExecuteSearch = ConfigurationSection &
       FieldsSection &
       DidYouMeanSection &
       SortSection &
-      FoldingSection
+      FoldingSection &
+      ContextSection
   >;
 
 export const fetchFromAPI = async (

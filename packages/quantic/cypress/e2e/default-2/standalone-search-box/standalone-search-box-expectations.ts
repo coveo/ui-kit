@@ -17,9 +17,9 @@ function standaloneSearchBoxExpectations(
         .should(display ? 'exist' : 'not.exist')
         .logDetail(`${should(display)} display the input search box`);
     },
-    inputInitialized: (textarea = false) => {
+    inputInitialized: () => {
       selector
-        .input(textarea)
+        .quanticSearchBoxInput()
         .invoke('attr', 'is-initialized')
         .should('eq', 'true');
     },
