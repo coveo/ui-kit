@@ -57,6 +57,9 @@
         "quanticResultsPerPage/quanticResultsPerPage.js"
       ],
       "c/quanticSearchBox": ["quanticSearchBox/quanticSearchBox.js"],
+      "c/quanticSearchBoxInput": [
+        "quanticSearchBoxInput/quanticSearchBoxInput.js"
+      ],
       "c/quanticSearchBoxSuggestionsList": [
         "quanticSearchBoxSuggestionsList/quanticSearchBoxSuggestionsList.js"
       ],
