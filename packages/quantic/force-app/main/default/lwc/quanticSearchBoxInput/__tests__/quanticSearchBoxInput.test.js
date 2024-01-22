@@ -73,6 +73,14 @@ function flushPromises() {
   return new Promise((resolve) => setTimeout(resolve, 0));
 }
 
+async function typeInInput(inputElement, text) {
+  inputElement.value = text;
+  inputElement.dispatchEvent(
+    new KeyboardEvent('keyup', {key: 'a', bubbles: true})
+  );
+  await flushPromises();
+}
+
 describe('c-quantic-search-box-input', () => {
   function cleanup() {
     // The jsdom instance is shared across test cases in a single file so reset the DOM
@@ -261,12 +269,11 @@ describe('c-quantic-search-box-input', () => {
       setupEventListeners(element);
       await flushPromises();
 
-      element.inputValue = mockInputValue;
-
       const input = element.shadowRoot.querySelector(selectors.searchBoxInput);
       expect(input).not.toBeNull();
 
-      input.dispatchEvent(new KeyboardEvent('keyup', {key: 'a'}));
+      await typeInInput(input, mockInputValue);
+
       expect(
         functionsMocks.exampleHandleInputValueChange
       ).toHaveBeenCalledTimes(1);
@@ -284,11 +291,16 @@ describe('c-quantic-search-box-input', () => {
         setupEventListeners(element);
         await flushPromises();
 
+        const input = element.shadowRoot.querySelector(
+          selectors.searchBoxInput
+        );
+
         const submitButton = element.shadowRoot.querySelector(
           selectors.searchBoxSubmitBtn
         );
         expect(submitButton).not.toBeNull();
 
+        await typeInInput(input, mockInputValue);
         submitButton.click();
 
         expect(functionsMocks.exampleHandleSubmitSearch).toHaveBeenCalledTimes(
@@ -308,7 +320,8 @@ describe('c-quantic-search-box-input', () => {
         );
         expect(input).not.toBeNull();
 
-        await input.focus();
+        await typeInInput(input, mockInputValue);
+
         input.dispatchEvent(new KeyboardEvent('keyup', {key: 'Enter'}));
 
         expect(functionsMocks.exampleHandleSubmitSearch).toHaveBeenCalledTimes(

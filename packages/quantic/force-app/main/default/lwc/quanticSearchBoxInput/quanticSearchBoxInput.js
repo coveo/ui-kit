@@ -184,6 +184,8 @@ export default class QuanticSearchBoxInput extends LightningElement {
       this.suggestionListElement?.getCurrentSelectedValue();
     if (this.areSuggestionsOpen && selectedSuggestion) {
       this.sendSelectSuggestionEvent(selectedSuggestion.rawValue);
+    } else if (this.inputClearButton?.getAttribute('is-focused') === 'true') {
+      this.clearInput();
     } else {
       this.sendSubmitSearchEvent();
     }
@@ -240,6 +242,10 @@ export default class QuanticSearchBoxInput extends LightningElement {
     this.adjustTextAreaHeight();
   }
 
+  onClearButtonFocus() {
+    this.inputClearButton.setAttribute('is-focused', 'true');
+  }
+
   onBlur() {
     this.hideSuggestions();
     this.collapseTextArea();
@@ -275,6 +281,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
     if (this.textarea) {
       this.adjustTextAreaHeight();
     }
+    this.inputClearButton.setAttribute('is-focused', 'false');
   }
 
   showSuggestions() {
@@ -332,6 +339,10 @@ export default class QuanticSearchBoxInput extends LightningElement {
    */
   get combobox() {
     return this.template.querySelector('.slds-combobox');
+  }
+
+  get inputClearButton() {
+    return this.template.querySelector('.searchbox__clear-button');
   }
 
   render() {
