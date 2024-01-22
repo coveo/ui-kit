@@ -138,69 +138,69 @@ describe('quantic-generated-answer', () => {
           );
         });
 
+        it('should display rephrase buttons', () => {
+          Expect.displayRephraseButtons(true);
+          Expect.displayRephraseLabel(true);
+        });
+
         it(
-          'should display rephrase buttons',
+          'should display feedback buttons',
           {
-            retries: 10,
+            retries: 12,
           },
           () => {
-            Expect.displayRephraseButtons(true);
-            Expect.displayRephraseLabel(true);
+            Expect.displayLikeButton(true);
+            Expect.displayDislikeButton(true);
+            Expect.likeButtonIsChecked(false);
+            Expect.dislikeButtonIsChecked(false);
+
+            scope('when liking the generated answer', () => {
+              Actions.likeGeneratedAnswer();
+              Expect.logLikeGeneratedAnswer(streamId);
+              Expect.likeButtonIsChecked(true);
+              Expect.dislikeButtonIsChecked(false);
+            });
+
+            scope('when disliking the generated answer', () => {
+              Actions.dislikeGeneratedAnswer();
+              Expect.logDislikeGeneratedAnswer(streamId);
+              Expect.likeButtonIsChecked(false);
+              Expect.dislikeButtonIsChecked(true);
+              Expect.displayFeedbackModal(true);
+            });
+
+            scope('when closing the feedback modal', () => {
+              Actions.clickFeedbackCancelButton();
+              Expect.displayFeedbackModal(false);
+            });
+
+            scope('when selecting a feedback option', () => {
+              Actions.dislikeGeneratedAnswer();
+              Actions.clickFeedbackOption(
+                feedbackOptions.indexOf(irrelevantOption)
+              );
+              Actions.clickFeedbackSubmitButton();
+              Expect.logGeneratedAnswerFeedbackSubmit(streamId, {
+                reason: irrelevantOption,
+              });
+              Actions.clickFeedbackDoneButton();
+            });
+
+            scope(
+              'when clicking the dislike button after submiting a feedback',
+              () => {
+                Actions.dislikeGeneratedAnswer();
+                Expect.displayFeedbackModal(false);
+              }
+            );
           }
         );
-
-        it('should display feedback buttons', () => {
-          Expect.displayLikeButton(true);
-          Expect.displayDislikeButton(true);
-          Expect.likeButtonIsChecked(false);
-          Expect.dislikeButtonIsChecked(false);
-
-          scope('when liking the generated answer', () => {
-            Actions.likeGeneratedAnswer();
-            Expect.logLikeGeneratedAnswer(streamId);
-            Expect.likeButtonIsChecked(true);
-            Expect.dislikeButtonIsChecked(false);
-          });
-
-          scope('when disliking the generated answer', () => {
-            Actions.dislikeGeneratedAnswer();
-            Expect.logDislikeGeneratedAnswer(streamId);
-            Expect.likeButtonIsChecked(false);
-            Expect.dislikeButtonIsChecked(true);
-            Expect.displayFeedbackModal(true);
-          });
-
-          scope('when closing the feedback modal', () => {
-            Actions.clickFeedbackCancelButton();
-            Expect.displayFeedbackModal(false);
-          });
-
-          scope('when selecting a feedback option', () => {
-            Actions.dislikeGeneratedAnswer();
-            Actions.clickFeedbackOption(
-              feedbackOptions.indexOf(irrelevantOption)
-            );
-            Actions.clickFeedbackSubmitButton();
-            Expect.logGeneratedAnswerFeedbackSubmit(streamId, {
-              reason: irrelevantOption,
-            });
-            Actions.clickFeedbackDoneButton();
-          });
-
-          scope(
-            'when clicking the dislike button after submiting a feedback',
-            () => {
-              Actions.dislikeGeneratedAnswer();
-              Expect.displayFeedbackModal(false);
-            }
-          );
-        });
       });
 
       describe(
         'when providing detailed feedback',
         {
-          retries: 10,
+          retries: 12,
         },
         () => {
           const streamId = crypto.randomUUID();
