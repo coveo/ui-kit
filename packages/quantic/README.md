@@ -109,6 +109,20 @@ To get the [detailed report](./docs/detailed-reporting.md), run:
 npm run e2e:detailed
 ```
 
+### Run LWC unit tests for Quantic Components
+
+To run LWC unit tests directly in your console, run:
+
+```bash
+npm run test:unit
+```
+
+To run specific file/components LWC unit tests directly in your console, run:
+
+```bash
+npm run test:unit -p force-app/main/default/lwc/nameOfComponent/
+```
+
 ## Use Quantic From Source
 
 After you have cloned the repository and have run `npm install`, run the following commands:
