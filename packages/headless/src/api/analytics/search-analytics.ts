@@ -21,6 +21,7 @@ import {getSortCriteriaInitialState} from '../../features/sort-criteria/sort-cri
 import {StaticFilterValueMetadata} from '../../features/static-filter-set/static-filter-set-actions';
 import {SearchAppState} from '../../state/search-app-state';
 import {ConfigurationSection} from '../../state/state-sections';
+import {VERSION} from '../../utils/version';
 import {PreprocessRequest} from '../preprocess-request';
 import {BaseAnalyticsProvider} from './base-analytics';
 import {
@@ -299,14 +300,19 @@ export const configureAnalytics = (
 ) => {
   const token = state.configuration.accessToken;
   const trackingId = state.configuration.analytics.trackingId;
+  const atomicVersion = state.configuration.analytics.atomicVersion;
   const {emit} = createRelay({
     url: state.configuration.analytics.nextApiBaseUrl,
     token,
     trackingId,
+    source: [`@coveo/headless@${VERSION}`].concat(
+      atomicVersion ? [`@coveo/atomic@${atomicVersion}`] : []
+    ),
   });
   return emit;
 };
 
+//TODO: KIT-2859
 export const configureLegacyAnalytics = ({
   logger,
   getState,
