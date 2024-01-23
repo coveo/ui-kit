@@ -2,7 +2,7 @@ import {
   DateRangeRequest,
   FacetValueRequest,
   NumericRangeRequest,
-} from '../../../../controllers/commerce/facets/core/headless-core-commerce-facet';
+} from '../../../../controllers/commerce/core/facets/headless-core-commerce-facet';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
 import {
   buildMockCommerceDateFacetResponse,

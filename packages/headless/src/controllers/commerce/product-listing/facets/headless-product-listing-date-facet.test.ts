@@ -9,8 +9,8 @@ import {buildMockCommerceDateFacetResponse} from '../../../../test/mock-commerce
 import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceDateFacetValue} from '../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
-import {CommerceDateFacet} from '../../facets/core/date/headless-commerce-date-facet';
-import {CommerceFacetOptions} from '../../facets/core/headless-core-commerce-facet';
+import {CommerceDateFacet} from '../../core/facets/date/headless-commerce-date-facet';
+import {CommerceFacetOptions} from '../../core/facets/headless-core-commerce-facet';
 import {buildProductListingDateFacet} from './headless-product-listing-date-facet';
 
 describe('ProductListingDateFacet', () => {
