@@ -1,3 +1,16 @@
+# 2.46.0 (2024-01-19)
+
+### Bug Fixes
+
+- **deps:** update all dependencies j:kit-282 ([#3522](https://github.com/coveo/ui-kit/issues/3522)) ([59c3ac7](https://github.com/coveo/ui-kit/commits/59c3ac76c8a5c4d61cb2fa7cfc90fd2b901b0535))
+- **samples/headless-ssr:** revisit url management with Search Parameter Manager ([#3516](https://github.com/coveo/ui-kit/issues/3516)) ([ceb58f4](https://github.com/coveo/ui-kit/commits/ceb58f499d18fe8255d0e79c81507f8dae3ef51f))
+
+### Features
+
+- **headless,atomic:** support new query correction system ([#3530](https://github.com/coveo/ui-kit/issues/3530)) ([1d81780](https://github.com/coveo/ui-kit/commits/1d81780b25f2e4159fcc3810461b6f2173776089))
+- **headless:** refactored generated answer controllers to support working in multiple use cases ([#3489](https://github.com/coveo/ui-kit/issues/3489)) ([e636415](https://github.com/coveo/ui-kit/commits/e6364155c6c16be100212614ce44d4033b8eaba2))
+- **headless:** Support the context search param with the insight engine ([#3531](https://github.com/coveo/ui-kit/issues/3531)) ([f29b1ae](https://github.com/coveo/ui-kit/commits/f29b1aef644781ebd4aca79c09cd0cca2b08a9ab))
+
 ## 2.45.1 (2024-01-10)
 
 ### Bug Fixes

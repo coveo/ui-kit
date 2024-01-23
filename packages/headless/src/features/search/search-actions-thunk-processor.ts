@@ -1,3 +1,4 @@
+import {isNullOrUndefined} from '@coveo/bueno';
 import {AnyAction} from '@reduxjs/toolkit';
 import {ThunkDispatch} from 'redux-thunk';
 import {
@@ -163,25 +164,54 @@ export class AsyncSearchThunkProcessor<RejectionType> {
   ): Promise<ValidReturnTypeFromProcessingStep<RejectionType> | null> {
     const state = this.getState();
     const successResponse = this.getSuccessResponse(fetched);
+
     if (!successResponse || !state.didYouMean) {
       return null;
     }
 
     const {enableDidYouMean, automaticallyCorrectQuery} = state.didYouMean;
-    const {results, queryCorrections} = successResponse;
+    const {results, queryCorrections, queryCorrection} = successResponse;
 
-    const shouldBeAutomaticallyRetried =
-      results.length === 0 &&
-      queryCorrections.length !== 0 &&
-      enableDidYouMean &&
-      automaticallyCorrectQuery;
-
-    if (!shouldBeAutomaticallyRetried) {
+    if (!enableDidYouMean || !automaticallyCorrectQuery) {
       return null;
     }
 
+    const shouldExecuteClassicDidYouMeanAutoCorrection =
+      results.length === 0 && queryCorrections && queryCorrections.length !== 0;
+
+    const shouldExecuteModernDidYouMeanAutoCorrection =
+      !isNullOrUndefined(queryCorrection) &&
+      !isNullOrUndefined(queryCorrection.correctedQuery);
+
+    const shouldExitWithNoAutoCorrection =
+      !shouldExecuteClassicDidYouMeanAutoCorrection &&
+      !shouldExecuteModernDidYouMeanAutoCorrection;
+
+    if (shouldExitWithNoAutoCorrection) {
+      return null;
+    }
+
+    const ret = shouldExecuteClassicDidYouMeanAutoCorrection
+      ? await this.processLegacyDidYouMeanAutoCorrection(fetched)
+      : this.processModernDidYouMeanAutoCorrection(fetched);
+
+    this.dispatch(snapshot(extractHistory(this.getState())));
+
+    return ret;
+  }
+
+  private async processLegacyDidYouMeanAutoCorrection(
+    originalFetchedResponse: FetchedResponse
+  ): Promise<ExecuteSearchThunkReturn | RejectionType | null> {
     const originalQuery = this.getCurrentQuery();
-    const {correctedQuery} = successResponse.queryCorrections[0];
+    const originalSearchSuccessResponse = this.getSuccessResponse(
+      originalFetchedResponse
+    )!;
+    if (!originalSearchSuccessResponse.queryCorrections) {
+      return null;
+    }
+
+    const {correctedQuery} = originalSearchSuccessResponse.queryCorrections[0];
 
     const retried =
       await this.automaticallyRetryQueryWithCorrection(correctedQuery);
@@ -197,8 +227,27 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       ...retried,
       response: {
         ...retried.response.success,
-        queryCorrections: successResponse.queryCorrections,
+        queryCorrections: originalSearchSuccessResponse.queryCorrections,
       },
+      automaticallyCorrected: true,
+      originalQuery,
+    };
+  }
+
+  private processModernDidYouMeanAutoCorrection(
+    originalFetchedResponse: FetchedResponse
+  ): ExecuteSearchThunkReturn {
+    const successResponse = this.getSuccessResponse(originalFetchedResponse)!;
+    const {correctedQuery, originalQuery} = successResponse.queryCorrection!;
+
+    this.onUpdateQueryForCorrection(correctedQuery);
+
+    return {
+      ...originalFetchedResponse,
+      response: {
+        ...successResponse,
+      },
+      queryExecuted: correctedQuery,
       automaticallyCorrected: true,
       originalQuery,
     };
