@@ -510,8 +510,7 @@ describe('quantic-generated-answer', () => {
       });
 
       describe('when a citation event is received', () => {
-        const exampleLinkUrl =
-          'https://saas-inspiration-5437-dev-ed.scratch.my.site.com/examples/s/';
+        const exampleLinkUrl = '#';
         const streamId = crypto.randomUUID();
         const firstTestCitation = {
           id: 'some-id-1',
@@ -581,6 +580,7 @@ describe('quantic-generated-answer', () => {
         });
 
         it('should log the correct analytics event when a citation is clicked', () => {
+          Expect.displayCitations(true);
           Actions.clickCitation(0);
           Expect.logOpenGeneratedAnswerSource(streamId, testCitations[0]);
         });
