@@ -1,4 +1,17 @@
-import {QueryCorrection} from '../../api/search/search/query-corrections';
+import {
+  Correction,
+  QueryCorrection,
+} from '../../api/search/search/query-corrections';
+
+/**
+ * Define which query correction system to use
+ *
+ * `legacy`: Query correction is powered by the legacy index system. This system relies on an algorithm using solely the index content to compute the suggested terms.
+ * `next`: Query correction is powered by a machine learning system, requiring a valid query suggestion model configured in your Coveo environment to function properly. This system relies on machine learning algorithms to compute the suggested terms.
+ *
+ * Default value is `legacy`. In the next major version of Headless, the default value will be `next`.
+ */
+export type CorrectionMode = 'next' | 'legacy';
 
 export interface DidYouMeanState {
   /**
@@ -25,13 +38,29 @@ export interface DidYouMeanState {
   originalQuery: string;
   /**
    * Whether to automatically correct queries that will return no results.
+   *
    */
   automaticallyCorrectQuery: boolean;
+  /**
+   * Define which query correction system to use
+   *
+   * `legacy`: Query correction is powered by the legacy index system. This system relies on an algorithm using solely the index content to compute the suggested terms.
+   * `next`: Query correction is powered by a machine learning system, requiring a valid query suggestion model configured in your Coveo environment to function properly. This system relies on machine learning algorithms to compute the suggested terms.
+   *
+   * Default value is `legacy`. In the next major version of Headless, the default value will be `next`.
+   */
+  queryCorrectionMode: CorrectionMode;
 }
 
-export const emptyCorrection = () => ({
+export const emptyLegacyCorrection: () => QueryCorrection = () => ({
   correctedQuery: '',
   wordCorrections: [],
+  originalQuery: '',
+});
+
+export const emptyNextCorrection: () => Correction = () => ({
+  correctedQuery: '',
+  corrections: [],
   originalQuery: '',
 });
 
@@ -40,8 +69,9 @@ export function getDidYouMeanInitialState(): DidYouMeanState {
     enableDidYouMean: false,
     wasCorrectedTo: '',
     wasAutomaticallyCorrected: false,
-    queryCorrection: emptyCorrection(),
+    queryCorrection: emptyLegacyCorrection(),
     originalQuery: '',
     automaticallyCorrectQuery: true,
+    queryCorrectionMode: 'legacy',
   };
 }

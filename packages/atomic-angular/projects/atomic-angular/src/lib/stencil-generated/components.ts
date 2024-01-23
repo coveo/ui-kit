@@ -161,13 +161,14 @@ export declare interface AtomicComponentError extends Components.AtomicComponent
 
 
 @ProxyCmp({
+  inputs: ['automaticallyCorrectQuery', 'queryCorrectionMode']
 })
 @Component({
   selector: 'atomic-did-you-mean',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
+  inputs: ['automaticallyCorrectQuery', 'queryCorrectionMode'],
 })
 export class AtomicDidYouMean {
   protected el: HTMLElement;

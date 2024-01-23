@@ -266,6 +266,14 @@ export namespace Components {
      * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
      */
     interface AtomicDidYouMean {
+        /**
+          * Whether to automatically apply corrections for queries that would otherwise return no results. When `automaticallyCorrectQuery` is `true`, the component automatically triggers a new query using the suggested term. When `automaticallyCorrectQuery` is `false`, the component returns the suggested term without triggering a new query.  The default value is `true`.
+         */
+        "automaticallyCorrectQuery": boolean;
+        /**
+          * Define which query correction system to use  `legacy`: Query correction is powered by the legacy index system. This system relies on an algorithm using solely the index content to compute the suggested terms. `next`: Query correction is powered by a machine learning system, requiring a valid query suggestion model configured in your Coveo environment to function properly. This system relies on machine learning algorithms to compute the suggested terms.  Default value is `legacy`. In the next major version of Atomic, the default value will be `next`.
+         */
+        "queryCorrectionMode": 'legacy' | 'next';
     }
     /**
      * The `atomic-external` component allows components defined outside of the `atomic-search-interface` to initialize.
@@ -4467,6 +4475,14 @@ declare namespace LocalJSX {
      * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
      */
     interface AtomicDidYouMean {
+        /**
+          * Whether to automatically apply corrections for queries that would otherwise return no results. When `automaticallyCorrectQuery` is `true`, the component automatically triggers a new query using the suggested term. When `automaticallyCorrectQuery` is `false`, the component returns the suggested term without triggering a new query.  The default value is `true`.
+         */
+        "automaticallyCorrectQuery"?: boolean;
+        /**
+          * Define which query correction system to use  `legacy`: Query correction is powered by the legacy index system. This system relies on an algorithm using solely the index content to compute the suggested terms. `next`: Query correction is powered by a machine learning system, requiring a valid query suggestion model configured in your Coveo environment to function properly. This system relies on machine learning algorithms to compute the suggested terms.  Default value is `legacy`. In the next major version of Atomic, the default value will be `next`.
+         */
+        "queryCorrectionMode"?: 'legacy' | 'next';
     }
     /**
      * The `atomic-external` component allows components defined outside of the `atomic-search-interface` to initialize.
