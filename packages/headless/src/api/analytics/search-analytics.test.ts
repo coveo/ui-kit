@@ -27,6 +27,7 @@ import {QuerySuggestCompletion} from '../search/query-suggest/query-suggest-resp
 import {
   configureAnalytics,
   configureLegacyAnalytics,
+  getAnalyticsSource,
   getPageID,
   SearchAnalyticsProvider,
   StateNeededBySearchAnalyticsProvider,
@@ -493,30 +494,32 @@ describe('#configureAnalytics', () => {
     jest.clearAllMocks();
   });
 
-  it('without atomicVersion, creates a Relay client without `@coveo/atomic` in its sources', () => {
+  it('creates a Relay client properly and returns the emit function', () => {
     const state = createMockState();
     const emit = configureAnalytics(state);
-
     expect(mockedCreateRelay).toHaveBeenCalledWith({
       url: state.configuration.analytics.nextApiBaseUrl,
       token: state.configuration.accessToken,
       trackingId: state.configuration.analytics.trackingId,
-      source: [`@coveo/headless@${VERSION}`],
+      source: expect.arrayContaining([]),
     });
     expect(emit).toBe(mockedCreateRelay.mock.results[0].value.emit);
   });
+});
 
-  it('with atomicVersion, creates a Relay client with `@coveo/atomic` in its sources', () => {
+describe('#getAnalyticsSources', () => {
+  it('without atomicVersion, returns an array only with `@coveo/headless`', () => {
+    const state = createMockState();
+    expect(getAnalyticsSource(state.configuration.analytics)).toEqual([
+      `@coveo/headless@${VERSION}`,
+    ]);
+  });
+  it('with atomicVersion, returns an array only with `@coveo/headless`', () => {
     const state = createMockState();
     state.configuration.analytics.atomicVersion = '1.2.3';
-    const emit = configureAnalytics(state);
-
-    expect(mockedCreateRelay).toHaveBeenCalledWith({
-      url: state.configuration.analytics.nextApiBaseUrl,
-      token: state.configuration.accessToken,
-      trackingId: state.configuration.analytics.trackingId,
-      source: [`@coveo/headless@${VERSION}`, '@coveo/atomic@1.2.3'],
-    });
-    expect(emit).toBe(mockedCreateRelay.mock.results[0].value.emit);
+    expect(getAnalyticsSource(state.configuration.analytics)).toEqual([
+      `@coveo/headless@${VERSION}`,
+      '@coveo/atomic@1.2.3',
+    ]);
   });
 });

@@ -6,6 +6,7 @@ import {
 } from 'coveo.analytics';
 import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events';
 import {Logger} from 'pino';
+import {AnalyticsState} from '../../features/configuration/configuration-state';
 import {
   buildFacetStateMetadata,
   getStateNeededForFacetMetadata,
@@ -300,14 +301,11 @@ export const configureAnalytics = (
 ) => {
   const token = state.configuration.accessToken;
   const trackingId = state.configuration.analytics.trackingId;
-  const atomicVersion = state.configuration.analytics.atomicVersion;
   const {emit} = createRelay({
     url: state.configuration.analytics.nextApiBaseUrl,
     token,
     trackingId,
-    source: [`@coveo/headless@${VERSION}`].concat(
-      atomicVersion ? [`@coveo/atomic@${atomicVersion}`] : []
-    ),
+    source: getAnalyticsSource(state.configuration.analytics),
   });
   return emit;
 };
@@ -367,4 +365,11 @@ export const getPageID = () => {
   }
 
   return lastPageView.value!;
+};
+
+export const getAnalyticsSource = (state: AnalyticsState) => {
+  const atomicVersion = state.atomicVersion;
+  return [`@coveo/headless@${VERSION}`].concat(
+    atomicVersion ? [`@coveo/atomic@${atomicVersion}`] : []
+  );
 };

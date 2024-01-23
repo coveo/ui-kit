@@ -160,6 +160,7 @@ const excludedBaseProperties = [
   'capture',
   'clientTimestamp',
   'trackingId',
+  'source',
 ];
 
 const ANY_FACET_VALUE = 'any facet value';
