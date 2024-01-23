@@ -3,8 +3,11 @@ import {
   getSampleSearchEngineConfiguration,
   SearchEngineConfiguration,
 } from '@coveo/headless';
+import {getAtomicEnvironment} from '../../../global/environment';
 import {getAnalyticsConfig} from './analytics-config';
 import {createAtomicStore} from './store';
+
+jest.mock('../../../global/environment');
 
 describe('analyticsConfig', () => {
   let config: SearchEngineConfiguration;
@@ -63,6 +66,7 @@ describe('analyticsConfig', () => {
         enabled: true,
         originContext: 'something',
         originLevel3: 'bar',
+        atomicVersion: '3.4.5',
       };
       const resultingConfig = getAnalyticsConfig(config, false, store);
       expect(resultingConfig.enabled).toBe(true);

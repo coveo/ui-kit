@@ -36,3 +36,9 @@ export function augmentAnalyticsConfigWithDocument(): AnalyticsConfiguration {
     ...(document.referrer && {originLevel3: document.referrer}),
   };
 }
+
+export function augmentAnalyticsConfigWithAtomicVersion(): Required<
+  Pick<AnalyticsConfiguration, 'atomicVersion'>
+> {
+  return {atomicVersion: getAtomicEnvironment().version};
+}
