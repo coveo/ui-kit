@@ -246,6 +246,10 @@ export default class QuanticSearchBoxInput extends LightningElement {
     this.inputClearButton.setAttribute('is-focused', 'true');
   }
 
+  onClearButtonBlur() {
+    this.inputClearButton.setAttribute('is-focused', 'false');
+  }
+
   onBlur() {
     this.hideSuggestions();
     this.collapseTextArea();
@@ -277,7 +281,6 @@ export default class QuanticSearchBoxInput extends LightningElement {
   clearInput() {
     this.input.value = '';
     this.sendInputValueChangeEvent(this.input.value, false);
-    this.input.focus();
     if (this.textarea) {
       this.adjustTextAreaHeight();
     }
