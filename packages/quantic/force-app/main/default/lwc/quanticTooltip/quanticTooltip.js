@@ -1,6 +1,8 @@
 import {getAbsoluteWidth, getAbsoluteHeight} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 
+const targetWidthToTooltipWidthRatio = 1.2;
+
 /**
  * The `QuanticTooltip` displays a tooltip containing a small amount of text that can be displayed when hovering over certain elements.
  * This component should be used inside a container with a CSS position attribute set to the value `relative`
@@ -55,8 +57,15 @@ export default class QuanticTooltip extends LightningElement {
 
   updateTooltipMaxWidth() {
     const windowWidth = window.innerWidth;
+    const targetWidth = getAbsoluteWidth(this.target);
+
+    const adaptedWidth =
+      targetWidth > 0
+        ? Math.min(windowWidth, targetWidth * targetWidthToTooltipWidthRatio)
+        : windowWidth;
+
     const styles = this.template.host?.style;
-    styles.setProperty('--adapted-max-width', `${windowWidth}px`);
+    styles.setProperty('--adapted-max-width', `${adaptedWidth}px`);
   }
 
   updateTooltipVerticalPosition = () => {
