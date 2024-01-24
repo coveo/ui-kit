@@ -155,7 +155,17 @@ export interface AnalyticsConfiguration {
    * @internal
    */
   trackingId?: string;
+  /**
+   * Specifies the analytics mode to use.
+   * By default, `legacy`.
+   * @internal
+   */
   analyticsMode?: 'legacy' | 'next';
+  /**
+   * The version of `@coveo/atomic` used.
+   * @internal
+   */
+  atomicVersion?: string;
 }
 
 export type AnalyticsRuntimeEnvironment = IRuntimeEnvironment;

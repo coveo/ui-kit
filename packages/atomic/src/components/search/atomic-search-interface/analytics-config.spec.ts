@@ -10,6 +10,7 @@ describe('analyticsConfig', () => {
   let config: SearchEngineConfiguration;
   let store: ReturnType<typeof createAtomicStore>;
   const originalReferrer = document.referrer;
+  const {version: atomicVersion} = getAtomicEnvironment();
   const setReferrer = (value: string) => {
     Object.defineProperty(document, 'referrer', {value, configurable: true});
   };
@@ -25,6 +26,7 @@ describe('analyticsConfig', () => {
     };
     return config;
   };
+
 
   describe.each([
     {
@@ -52,6 +54,7 @@ describe('analyticsConfig', () => {
       const resultingConfig = getAnalyticsConfig(config, true, store);
       expect(resultingConfig.analyticsClientMiddleware).toBeDefined();
       expect(resultingConfig.originLevel3).toBe('foo');
+      expect(resultingConfig.atomicVersion).toBe(atomicVersion);
     });
 
     it('merges provided engine analytics config', () => {
@@ -65,6 +68,7 @@ describe('analyticsConfig', () => {
       expect(resultingConfig.enabled).toBe(true);
       expect(resultingConfig.originContext).toBe('something');
       expect(resultingConfig.originLevel3).toBe('bar');
+      expect(resultingConfig.atomicVersion).toBe(atomicVersion);
     });
 
     it('use the existing analytic middleware if available', () => {

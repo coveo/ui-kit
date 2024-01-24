@@ -127,8 +127,17 @@ export interface AnalyticsState {
    * @internal
    */
   trackingId: string;
-
+  /**
+   * Specifies the analytics mode to use.
+   * By default, `legacy`.
+   * @internal
+   */
   analyticsMode: 'legacy' | 'next';
+  /**
+   * The version of `@coveo/atomic` used.
+   * @internal
+   */
+  atomicVersion?: string;
 }
 
 export const searchAPIEndpoint = '/rest/search/v2';

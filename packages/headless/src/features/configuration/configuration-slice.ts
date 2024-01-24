@@ -116,6 +116,9 @@ export const configurationReducer = createReducer(
         if (!isNullOrUndefined(action.payload.analyticsMode)) {
           state.analytics.analyticsMode = action.payload.analyticsMode;
         }
+        if (!isNullOrUndefined(action.payload.atomicVersion)) {
+          state.analytics.atomicVersion = action.payload.atomicVersion;
+        }
         const magicCookie = getMagicCookie();
         if (magicCookie) {
           state.analytics.analyticsMode = 'next';

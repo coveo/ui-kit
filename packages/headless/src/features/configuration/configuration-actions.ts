@@ -148,8 +148,17 @@ export interface UpdateAnalyticsConfigurationActionCreatorPayload {
    * TBD
    */
   trackingId?: string;
-
+  /**
+   * Specifies the analytics mode to use.
+   * By default, `legacy`.
+   * @internal
+   */
   analyticsMode?: 'legacy' | 'next';
+  /**
+   * The version of `@coveo/atomic` used.
+   * @internal
+   */
+  atomicVersion?: string;
 }
 
 export type AnalyticsRuntimeEnvironment = IRuntimeEnvironment;
@@ -177,6 +186,10 @@ export const updateAnalyticsConfiguration = createAction(
         constrainTo: ['legacy', 'next'],
         required: false,
         default: 'legacy',
+      }),
+      atomicVersion: new StringValue({
+        regex: /^\d+\.\d+\.\d+$/,
+        required: false,
       }),
     });
   }
