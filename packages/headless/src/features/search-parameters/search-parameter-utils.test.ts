@@ -190,27 +190,36 @@ describe('search-parameter-utils', () => {
     it('should add numeric ranges to searchParams if key is "nf"', () => {
       const searchParams: Record<string, unknown> = {};
       const key = 'nf-color';
-      const value = ['1', '100'];
+      const value = '1..100';
 
       extendSearchParameters(searchParams, key, value);
 
       expect(searchParams).toEqual({
         nf: {
-          color: [{start: 1, end: 100}],
+          color: [{start: 1, end: 100, endInclusive: false, state: 'selected'}],
         },
       });
     });
 
     it('should add date ranges to searchParams if key is "df"', () => {
+      const date1 = '2010/01/01@05:00:00';
+      const date2 = '2011/01/01@05:00:00';
       const searchParams: Record<string, unknown> = {};
       const key = 'df-date';
-      const value = ['2022-01-01', '2022-12-31'];
+      const value = `${date1}..${date2}`;
 
       extendSearchParameters(searchParams, key, value);
 
       expect(searchParams).toEqual({
         df: {
-          date: [{start: '2022-01-01', end: '2022-12-31'}],
+          date: [
+            {
+              end: '2011/01/01@05:00:00',
+              endInclusive: false,
+              start: '2010/01/01@05:00:00',
+              state: 'selected',
+            },
+          ],
         },
       });
     });
