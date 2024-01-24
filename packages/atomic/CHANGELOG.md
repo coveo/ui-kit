@@ -1,3 +1,9 @@
+## 2.55.1 (2024-01-24)
+
+### Bug Fixes
+
+- **atomic:** quick fix for failing color-facet cypress test ([#3541](https://github.com/coveo/ui-kit/issues/3541)) ([e368df8](https://github.com/coveo/ui-kit/commits/e368df80a47de8f0d9d3d72b24cb8d32085f7d16))
+
 # 2.55.0 (2024-01-19)
 
 ### Bug Fixes
