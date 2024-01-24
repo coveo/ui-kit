@@ -11,6 +11,7 @@ import {
 import {getOrganizationEndpoints} from '../api/platform-client';
 import {PreprocessRequest} from '../api/preprocess-request';
 import {requiredNonEmptyString} from '../utils/validate-payload';
+import {CoveoFramework} from '../utils/version';
 
 /**
  * The endpoints to use.
@@ -165,7 +166,7 @@ export interface AnalyticsConfiguration {
    * The version of `@coveo/atomic` used.
    * @internal
    */
-  atomicVersion?: string;
+  frameworkVersions?: Partial<Record<CoveoFramework, string>>;
 }
 
 export type AnalyticsRuntimeEnvironment = IRuntimeEnvironment;

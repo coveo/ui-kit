@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import {analyticsUrl, platformUrl} from '../../api/platform-client';
+import {CoveoFramework} from '../../utils/version';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -137,7 +138,7 @@ export interface AnalyticsState {
    * The version of `@coveo/atomic` used.
    * @internal
    */
-  atomicVersion?: string;
+  frameworkVersions: Partial<Record<CoveoFramework, string>>;
 }
 
 export const searchAPIEndpoint = '/rest/search/v2';
@@ -166,5 +167,6 @@ export const getConfigurationInitialState: () => ConfigurationState = () => ({
     documentLocation: '',
     trackingId: '',
     analyticsMode: 'legacy',
+    frameworkVersions: {},
   },
 });

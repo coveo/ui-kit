@@ -368,8 +368,10 @@ export const getPageID = () => {
 };
 
 export const getAnalyticsSource = (state: AnalyticsState) => {
-  const atomicVersion = state.atomicVersion;
   return [`@coveo/headless@${VERSION}`].concat(
-    atomicVersion ? [`@coveo/atomic@${atomicVersion}`] : []
+    Object.entries(state.frameworkVersions).map(
+      ([frameworkName, frameworkVersion]) =>
+        `${frameworkName}@${frameworkVersion}`
+    )
   );
 };

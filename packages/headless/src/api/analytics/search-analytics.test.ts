@@ -508,15 +508,17 @@ describe('#configureAnalytics', () => {
 });
 
 describe('#getAnalyticsSources', () => {
-  it('without atomicVersion, returns an array only with `@coveo/headless`', () => {
+  it('without a frameworkVersions, returns an array only with `@coveo/headless`', () => {
     const state = createMockState();
     expect(getAnalyticsSource(state.configuration.analytics)).toEqual([
       `@coveo/headless@${VERSION}`,
     ]);
   });
-  it('with atomicVersion, returns an array only with `@coveo/headless`', () => {
+  it('with a frameworkVersions, returns an array only with `@coveo/headless`', () => {
     const state = createMockState();
-    state.configuration.analytics.atomicVersion = '1.2.3';
+    state.configuration.analytics.frameworkVersions = {
+      '@coveo/atomic': '1.2.3',
+    };
     expect(getAnalyticsSource(state.configuration.analytics)).toEqual([
       `@coveo/headless@${VERSION}`,
       '@coveo/atomic@1.2.3',

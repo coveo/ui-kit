@@ -30,7 +30,6 @@ describe('analyticsConfig', () => {
     return config;
   };
 
-
   describe.each([
     {
       describeName:
@@ -57,7 +56,9 @@ describe('analyticsConfig', () => {
       const resultingConfig = getAnalyticsConfig(config, true, store);
       expect(resultingConfig.analyticsClientMiddleware).toBeDefined();
       expect(resultingConfig.originLevel3).toBe('foo');
-      expect(resultingConfig.atomicVersion).toBe(atomicVersion);
+      expect(resultingConfig.frameworkVersions?.['@coveo/atomic']).toBe(
+        atomicVersion
+      );
     });
 
     it('merges provided engine analytics config', () => {
@@ -66,13 +67,17 @@ describe('analyticsConfig', () => {
         enabled: true,
         originContext: 'something',
         originLevel3: 'bar',
-        atomicVersion: '3.4.5',
+        frameworkVersions: {
+          '@coveo/atomic': '3.4.5',
+        },
       };
       const resultingConfig = getAnalyticsConfig(config, false, store);
       expect(resultingConfig.enabled).toBe(true);
       expect(resultingConfig.originContext).toBe('something');
       expect(resultingConfig.originLevel3).toBe('bar');
-      expect(resultingConfig.atomicVersion).toBe(atomicVersion);
+      expect(resultingConfig.frameworkVersions?.['@coveo/atomic']).toBe(
+        atomicVersion
+      );
     });
 
     it('use the existing analytic middleware if available', () => {

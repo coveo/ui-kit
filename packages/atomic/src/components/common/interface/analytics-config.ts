@@ -38,7 +38,7 @@ export function augmentAnalyticsConfigWithDocument(): AnalyticsConfiguration {
 }
 
 export function augmentAnalyticsConfigWithAtomicVersion(): Required<
-  Pick<AnalyticsConfiguration, 'atomicVersion'>
+  Pick<AnalyticsConfiguration, 'frameworkVersions'>
 > {
-  return {atomicVersion: getAtomicEnvironment().version};
+  return {frameworkVersions: {'@coveo/atomic': getAtomicEnvironment().version}};
 }
