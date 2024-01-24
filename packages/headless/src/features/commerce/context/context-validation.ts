@@ -1,11 +1,13 @@
 import {RecordValue, Schema} from '@coveo/bueno';
 import {
   nonEmptyString,
+  nonRequiredEmptyAllowedString,
   requiredNonEmptyString,
 } from '../../../utils/validate-payload';
 
 export const viewDefinition = {
   url: requiredNonEmptyString,
+  referrer: nonRequiredEmptyAllowedString,
 };
 
 export const userDefinition = {
