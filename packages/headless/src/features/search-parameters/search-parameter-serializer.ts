@@ -78,7 +78,7 @@ export function isRangeFacetKey(
     df: true,
   };
   const isRangeFacet = key in supportedRangeFacetParameters;
-  return keyHasObjectValue(key) && !isRangeFacet;
+  return keyHasObjectValue(key) && isRangeFacet;
 }
 
 export function isValidKey(key: string): key is SearchParameterKey {
