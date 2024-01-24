@@ -140,6 +140,14 @@ describe('insight search request', () => {
       state.tabSet.a = buildMockTabSlice({expression: 'a', isActive: true});
       expect((await buildInsightSearchRequest(state)).request.cq).toBe('a');
     });
+
+    it('when there is a context set, it returns the context', async () => {
+      const expectedState = {foo: 'bar'};
+      state.context.contextValues = expectedState;
+      expect((await buildInsightSearchRequest(state)).request.context).toEqual(
+        expectedState
+      );
+    });
   });
 
   describe('when using buildInsightLoadCollectionRequest', () => {
@@ -234,6 +242,16 @@ describe('insight search request', () => {
         (await buildInsightLoadCollectionRequest(state, collectionId)).request
           .cq
       ).toBe(`@foldingcollection="${collectionId}"`);
+    });
+
+    it('when there is a context sets the context param', async () => {
+      const expectedContext = {foo: 'bar'};
+      state.context.contextValues = expectedContext;
+      const params = (
+        await buildInsightLoadCollectionRequest(state, collectionId)
+      ).request;
+
+      expect(params.context).toBe(expectedContext);
     });
   });
 });

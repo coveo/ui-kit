@@ -1,10 +1,12 @@
 import {isNullOrUndefined} from '@coveo/bueno';
+import {isEmptyString} from '../../utils/utils';
 import type {DateRangeRequest} from '../facets/range-facets/date-facet-set/interfaces/request';
 import type {NumericRangeRequest} from '../facets/range-facets/numeric-facet-set/interfaces/request';
 import {
   SearchParameterKey,
   buildDateRanges,
   buildNumericRanges,
+  cast,
   facetSearchParamRegex,
   isFacetObject,
   isRangeFacetObject,
@@ -77,8 +79,13 @@ export function extendSearchParameters(
   if (isNullOrUndefined(value)) {
     return;
   }
-  if (isValidBasicKey(key)) {
-    searchParams[key] = value;
+  if (
+    isValidBasicKey(key) &&
+    typeof value === 'string' &&
+    !isEmptyString(value)
+  ) {
+    const [k, v] = cast([key, value], false);
+    searchParams[k] = v;
     return;
   }
 

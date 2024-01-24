@@ -78,7 +78,7 @@ export function isRangeFacetKey(
     df: true,
   };
   const isRangeFacet = key in supportedRangeFacetParameters;
-  return keyHasObjectValue(key) && !isRangeFacet;
+  return keyHasObjectValue(key) && isRangeFacet;
 }
 
 export function isValidKey(key: string): key is SearchParameterKey {
@@ -185,7 +185,7 @@ function deserialize(fragment: string): SearchParameters {
     .map((part) => splitOnFirstEqual(part))
     .map(preprocessObjectPairs)
     .filter(isValidPair)
-    .map(cast);
+    .map((pair) => cast(pair));
 
   return keyValuePairs.reduce((acc: SearchParameters, pair) => {
     const [key, val] = pair;
@@ -299,7 +299,10 @@ function isValidPair<K extends SearchParameterKey>(
   return validKey && lengthOfTwo;
 }
 
-function cast<K extends SearchParameterKey>(pair: [K, string]): [K, unknown] {
+export function cast<K extends SearchParameterKey>(
+  pair: [K, string],
+  decode = true
+): [K, unknown] {
   const [key, value] = pair;
 
   if (key === 'enableQuerySyntax') {
@@ -322,7 +325,7 @@ function cast<K extends SearchParameterKey>(pair: [K, string]): [K, unknown] {
     return [key, castUnknownObject(value)];
   }
 
-  return [key, decodeURIComponent(value)];
+  return [key, decode ? decodeURIComponent(value) : value];
 }
 
 function castUnknownObject(value: string) {

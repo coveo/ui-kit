@@ -441,27 +441,6 @@ describe('search-parameter-serializer', () => {
         });
       });
 
-      it('deserializes multiple date facets with selected values with an optional endInclusive', () => {
-        const date1 = '2010/01/01@05:00:00';
-        const date2 = '2011/01/01@05:00:00';
-        const range = `${date1}...${date2}`;
-
-        const result = deserialize(`df-date=${range}&df-created=${range}`);
-        const expected = buildDateRange({
-          start: date1,
-          end: date2,
-          state: 'selected',
-          endInclusive: true,
-        });
-
-        expect(result).toEqual({
-          df: {
-            date: [expected],
-            created: [expected],
-          },
-        });
-      });
-
       it(`when a date facet range contains a invalid format,
     the deserializer sets the values for the facetId to an empty array`, () => {
         const result = deserialize('df-date=2010/01/01@05:00:00..a');

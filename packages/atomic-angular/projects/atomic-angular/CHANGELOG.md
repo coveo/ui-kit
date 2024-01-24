@@ -1,3 +1,9 @@
+# 2.21.0 (2024-01-19)
+
+### Features
+
+- **headless,atomic:** support new query correction system ([#3530](https://github.com/coveo/ui-kit/issues/3530)) ([1d81780](https://github.com/coveo/ui-kit/commits/1d81780b25f2e4159fcc3810461b6f2173776089))
+
 # 2.20.0 (2024-01-10)
 
 ### Features

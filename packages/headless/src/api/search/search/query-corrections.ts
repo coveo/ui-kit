@@ -1,5 +1,5 @@
 /**
- * Describe correction for a query
+ * Describe correction for a query, using the older index based system.
  */
 export interface QueryCorrection {
   /**
@@ -9,7 +9,7 @@ export interface QueryCorrection {
   /**
    * Array of correction for each word in the query
    */
-  wordCorrections: WordCorrection[];
+  wordCorrections?: WordCorrection[];
 }
 
 export interface WordCorrection {
@@ -29,4 +29,22 @@ export interface WordCorrection {
    * The new corrected word
    */
   correctedWord: string;
+}
+
+/**
+ * Describe correction for a query, using the advanced machine learning based system.
+ */
+export interface Correction {
+  /**
+   * The original query that was performed, without any automatic correction applied.
+   */
+  originalQuery: string;
+  /**
+   * The correction that was applied to the query.
+   */
+  correctedQuery: string;
+  /**
+   * Array of correction for each word in the query
+   */
+  corrections: QueryCorrection[];
 }

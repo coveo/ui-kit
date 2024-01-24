@@ -97,6 +97,7 @@ describe('headless commerce context', () => {
   it('setView dispatches #setView', () => {
     context.setView({
       url: 'https://example.org',
+      referrer: 'https://example.org/referrer',
     });
     expectContainAction(setView);
   });

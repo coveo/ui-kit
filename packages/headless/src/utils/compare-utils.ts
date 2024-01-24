@@ -46,7 +46,7 @@ function arrayEqualAnyOrder<T>(firstArray: T[], secondArray: T[]) {
  *
  * @param firstArray The first array of primitive values to compare.
  * @param secondArray The second array of primitive values to compare.
- * @returns `true` if the arrays have the same elements in different order, `false` otherwise. This function will return false if the 2 arrays have the same elements in the same order.
+ * @returns `true` if the arrays have the same elements in different orders, `false` otherwise. Unless the two arrays have only one identical element each, this function will return `false` if the two arrays have the same elements in the same order.
  */
 export const arrayEqualStrictlyDifferentOrder = <
   T extends Exclude<PrimitivesValues, object>,
