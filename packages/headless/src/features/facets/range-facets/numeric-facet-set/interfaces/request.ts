@@ -1,4 +1,4 @@
-import {CurrentValues, Type} from '../../../facet-api/request';
+import {CurrentValues} from '../../../facet-api/request';
 import {FacetValueState} from '../../../facet-api/value';
 import {BaseRangeFacetRequest} from '../../generic/interfaces/request';
 
@@ -28,6 +28,5 @@ export interface NumericRangeRequest {
 }
 
 export interface NumericFacetRequest
-  extends BaseRangeFacetRequest,
-    CurrentValues<NumericRangeRequest>,
-    Type<'numericalRange'> {}
+  extends BaseRangeFacetRequest<'numericalRange'>,
+    CurrentValues<NumericRangeRequest> {}

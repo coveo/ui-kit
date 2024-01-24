@@ -1,4 +1,4 @@
-import {CurrentValues, Type} from '../../../facet-api/request';
+import {CurrentValues} from '../../../facet-api/request';
 import {FacetValueState} from '../../../facet-api/value';
 import {AnyFacetRequest} from '../../../generic/interfaces/generic-facet-request';
 import {BaseRangeFacetRequest} from '../../generic/interfaces/request';
@@ -35,6 +35,5 @@ export function isDateFacetRequest(
 }
 
 export interface DateFacetRequest
-  extends BaseRangeFacetRequest,
-    CurrentValues<DateRangeRequest>,
-    Type<'dateRange'> {}
+  extends BaseRangeFacetRequest<'dateRange'>,
+    CurrentValues<DateRangeRequest> {}

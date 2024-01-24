@@ -3,6 +3,7 @@ import {
   SortCriteria,
   BaseFacetValueRequest,
   RangeAlgorithm,
+  RangeFacetType,
 } from '../../../facet-api/request';
 
 export const rangeFacetSortCriteria: RangeFacetSortCriterion[] = [
@@ -40,8 +41,8 @@ export interface RangeRequest<T extends string | number>
   endInclusive: boolean;
 }
 
-export interface BaseRangeFacetRequest
-  extends BaseFacetRequest,
+export interface BaseRangeFacetRequest<TFacetType extends RangeFacetType>
+  extends BaseFacetRequest<TFacetType>,
     AutomaticRanges<boolean>,
     SortCriteria<RangeFacetSortCriterion>,
     RangeAlgorithm<RangeFacetRangeAlgorithm> {

@@ -2,7 +2,6 @@ import {
   BaseFacetRequest,
   CurrentValues,
   Delimitable,
-  Type,
   SortCriteria,
   BaseFacetValueRequest,
 } from '../../facet-api/request';
@@ -23,10 +22,9 @@ export interface CategoryFacetValueRequest
 }
 
 export interface CategoryFacetRequest
-  extends BaseFacetRequest,
+  extends BaseFacetRequest<'hierarchical'>,
     CurrentValues<CategoryFacetValueRequest>,
     Delimitable,
-    Type<'hierarchical'>,
     SortCriteria<CategoryFacetSortCriterion> {
   /** @defaultValue `5` */
   numberOfValues: number;

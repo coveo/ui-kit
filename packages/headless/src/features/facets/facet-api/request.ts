@@ -1,7 +1,7 @@
 import {FacetSortOrder} from '../facet-set/interfaces/request';
 import {FacetValueState} from './value';
 
-export interface BaseFacetRequest {
+export interface BaseFacetRequest<TFacetType extends FacetType> {
   /**
    * A unique identifier for the controller.
    * By default, a unique random identifier is generated.
@@ -40,6 +40,12 @@ export interface BaseFacetRequest {
    * @defaultValue `atLeastOneValue`
    */
   resultsMustMatch: FacetResultsMustMatch;
+  /**
+   * The kind of values to request for the facet.
+   *
+   * @default `specific`
+   */
+  type: TFacetType;
 }
 
 export interface BaseFacetValueRequest {
@@ -77,15 +83,9 @@ export interface Expandable {
   isFieldExpanded: boolean;
 }
 
-export interface Type<T extends FacetType> {
-  type: T;
-}
+export type FacetType = 'specific' | 'hierarchical' | RangeFacetType;
 
-export type FacetType =
-  | 'specific'
-  | 'dateRange'
-  | 'numericalRange'
-  | 'hierarchical';
+export type RangeFacetType = 'dateRange' | 'numericalRange';
 
 export interface SortCriteria<
   T extends

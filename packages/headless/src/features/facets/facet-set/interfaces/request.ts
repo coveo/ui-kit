@@ -2,7 +2,6 @@ import {
   BaseFacetRequest,
   CurrentValues,
   Freezable,
-  Type,
   SortCriteria,
   BaseFacetValueRequest,
   Expandable,
@@ -33,11 +32,10 @@ export interface FacetValueRequest extends BaseFacetValueRequest {
 }
 
 export interface FacetRequest
-  extends BaseFacetRequest,
+  extends BaseFacetRequest<'specific'>,
     CurrentValues<FacetValueRequest>,
     Expandable,
     Freezable,
-    Type<'specific'>,
     AllowedValues,
     CustomSort,
     SortCriteria<
