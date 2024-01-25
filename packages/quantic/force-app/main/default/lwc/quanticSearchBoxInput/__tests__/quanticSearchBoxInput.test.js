@@ -26,8 +26,8 @@ const defaultOptions = {
 };
 
 const selectors = {
-  searchBoxInput: '.searchbox__input',
-  searchBoxTextArea: '.searchbox__container textarea',
+  searchBoxInput: '[data-cy="search-box-input"]',
+  searchBoxTextArea: '[data-cy="search-box-textarea"]',
   searchBoxSubmitBtn: '.searchbox__submit-button',
   searchBoxClearIcon: '.searchbox__clear-button',
   searchBoxSuggestionsList: 'c-quantic-search-box-suggestions-list',
@@ -93,7 +93,7 @@ describe('c-quantic-search-box-input', () => {
       } search box properly`, async () => {
         const element = createTestComponent({
           ...defaultOptions,
-          textarea: true,
+          textarea: textareaValue,
         });
         await flushPromises();
 
@@ -170,7 +170,9 @@ describe('c-quantic-search-box-input', () => {
           await flushPromises();
 
           const input = element.shadowRoot.querySelector(
-            selectors.searchBoxInput
+            textareaValue
+              ? selectors.searchBoxTextArea
+              : selectors.searchBoxInput
           );
 
           expect(input.placeholder).toEqual(customPlaceholder);
@@ -225,7 +227,9 @@ describe('c-quantic-search-box-input', () => {
           await flushPromises();
 
           const input = element.shadowRoot.querySelector(
-            selectors.searchBoxInput
+            textareaValue
+              ? selectors.searchBoxTextArea
+              : selectors.searchBoxInput
           );
           expect(input).not.toBeNull();
 
@@ -286,7 +290,9 @@ describe('c-quantic-search-box-input', () => {
           element.inputValue = mockInputValue;
 
           const input = element.shadowRoot.querySelector(
-            selectors.searchBoxInput
+            textareaValue
+              ? selectors.searchBoxTextArea
+              : selectors.searchBoxInput
           );
           expect(input).not.toBeNull();
 
@@ -334,7 +340,9 @@ describe('c-quantic-search-box-input', () => {
             await flushPromises();
 
             const input = element.shadowRoot.querySelector(
-              selectors.searchBoxInput
+              textareaValue
+                ? selectors.searchBoxTextArea
+                : selectors.searchBoxInput
             );
             expect(input).not.toBeNull();
 
