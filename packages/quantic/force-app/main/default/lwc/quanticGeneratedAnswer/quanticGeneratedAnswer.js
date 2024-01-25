@@ -417,7 +417,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   get rephraseButtonsCssClass() {
     return `slds-var-m-top_small slds-grid flex-one ${
-      this.multilineFooter ? '' : 'generated-answer__rephrase--buttons'
+      this.multilineFooter ? '' : 'slds-grid_align-end'
     }`;
   }
 

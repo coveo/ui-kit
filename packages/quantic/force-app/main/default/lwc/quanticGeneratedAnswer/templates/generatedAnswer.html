@@ -8,7 +8,7 @@
         >
         <div class="generated-answer__header-actions slds-grid">
           <template lwc:if={shouldDisplayActions}>
-            <div class="slds-grid flex-one generated-answer__actions">
+            <div class="slds-grid flex-one slds-grid_align-end">
               <c-quantic-feedback
                 state={feedbackState}
                 onlike={handleLike}
@@ -30,7 +30,7 @@
               ></c-quantic-generated-answer-copy-to-clipboard>
             </div>
           </template>
-          <div class="slds-grid flex-one generated-answer__toggle--button">
+          <div class="slds-grid flex-one slds-grid_align-end">
             <c-quantic-generated-answer-toggle
             is-generated-answer-visible={isVisible}
           ></c-quantic-generated-answer-toggle>

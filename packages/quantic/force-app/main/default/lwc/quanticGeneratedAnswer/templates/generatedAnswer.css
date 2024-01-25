@@ -30,13 +30,7 @@
   vertical-align: baseline;
 }
 
-.generated-answer__rephrase--buttons,
-.generated-answer__toggle--button,
-.generated-answer__actions {
-  justify-content: flex-end;
-}
-
-.flex-one{
+.flex-one {
   flex: 1;
 }
 
