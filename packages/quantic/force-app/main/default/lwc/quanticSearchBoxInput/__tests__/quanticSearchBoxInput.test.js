@@ -88,53 +88,30 @@ describe('c-quantic-search-box-input', () => {
 
   [true, false].forEach((textareaValue) => {
     describe(`when the textarea property is set to ${textareaValue}`, () => {
-      if (textareaValue) {
-        it('should display the expandable search box properly', async () => {
-          const element = createTestComponent({
-            ...defaultOptions,
-            textarea: true,
-          });
-          await flushPromises();
-
-          const submitButton = element.shadowRoot.querySelector(
-            selectors.searchBoxSubmitBtn
-          );
-          const clearIcon = element.shadowRoot.querySelector(
-            selectors.searchBoxClearIcon
-          );
-          const textarea = element.shadowRoot.querySelector(
-            selectors.searchBoxTextArea
-          );
-
-          expect(textarea).not.toBeNull();
-          expect(textarea.placeholder).toEqual(defaultOptions.placeholder);
-          expect(submitButton).not.toBeNull();
-          expect(clearIcon).toBeNull();
+      it(`should display the ${
+        textareaValue ? 'expandable' : 'default'
+      } search box properly`, async () => {
+        const element = createTestComponent({
+          ...defaultOptions,
+          textarea: true,
         });
-      } else {
-        it('should display the default search box properly', async () => {
-          const element = createTestComponent({
-            ...defaultOptions,
-            textarea: textareaValue,
-          });
-          await flushPromises();
+        await flushPromises();
 
-          const input = element.shadowRoot.querySelector(
-            selectors.searchBoxInput
-          );
-          const submitButton = element.shadowRoot.querySelector(
-            selectors.searchBoxSubmitBtn
-          );
-          const clearIcon = element.shadowRoot.querySelector(
-            selectors.searchBoxClearIcon
-          );
+        const submitButton = element.shadowRoot.querySelector(
+          selectors.searchBoxSubmitBtn
+        );
+        const clearIcon = element.shadowRoot.querySelector(
+          selectors.searchBoxClearIcon
+        );
+        const input = element.shadowRoot.querySelector(
+          textareaValue ? selectors.searchBoxTextArea : selectors.searchBoxInput
+        );
 
-          expect(input).not.toBeNull();
-          expect(input.placeholder).toEqual(defaultOptions.placeholder);
-          expect(submitButton).not.toBeNull();
-          expect(clearIcon).toBeNull();
-        });
-      }
+        expect(input).not.toBeNull();
+        expect(input.placeholder).toEqual(defaultOptions.placeholder);
+        expect(submitButton).not.toBeNull();
+        expect(clearIcon).toBeNull();
+      });
 
       describe('when the withoutSubmitButton is set to false', () => {
         it('should display the submit button correctly to the right only', async () => {
