@@ -185,7 +185,7 @@ describe('c-quantic-search-box-input', () => {
     });
   });
 
-  describe('when suggestions are found', () => {
+  describe('when the suggestions list is not empty', () => {
     it('should display the suggestions in the suggestions list', async () => {
       const element = createTestComponent({
         ...defaultOptions,
@@ -203,6 +203,21 @@ describe('c-quantic-search-box-input', () => {
       expect(suggestionsListItems).not.toBeNull();
 
       expect(suggestionsListItems.length).toEqual(mockSuggestions.length);
+    });
+  });
+
+  describe('when the suggestions list is empty', () => {
+    it('should not display the quanticSearchBoxSuggestionsList component', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        suggestions: [],
+      });
+      await flushPromises();
+
+      const suggestionsList = element.shadowRoot.querySelector(
+        selectors.searchBoxSuggestionsList
+      );
+      expect(suggestionsList).toBeNull();
     });
   });
 

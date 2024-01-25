@@ -334,6 +334,10 @@ export default class QuanticSearchBoxInput extends LightningElement {
     return this.template.querySelector('.slds-combobox');
   }
 
+  get hasSuggestions() {
+    return this.suggestions?.length;
+  }
+
   render() {
     return this?.textarea ? expandableSearchBoxInput : defaultSearchBoxInput;
   }
