@@ -37,8 +37,15 @@ export function augmentAnalyticsConfigWithDocument(): AnalyticsConfiguration {
   };
 }
 
+const versionMatcher = /^(\d+\.\d+\.\d+)/;
+
 export function augmentAnalyticsConfigWithAtomicVersion(): Required<
-  Pick<AnalyticsConfiguration, 'frameworkVersions'>
+  Pick<AnalyticsConfiguration, 'source'>
 > {
-  return {frameworkVersions: {'@coveo/atomic': getAtomicEnvironment().version}};
+  return {
+    source: {
+      '@coveo/atomic':
+        versionMatcher.exec(getAtomicEnvironment().version)?.[0] || '0.0.0',
+    },
+  };
 }

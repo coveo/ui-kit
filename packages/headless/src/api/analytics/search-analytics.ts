@@ -369,7 +369,7 @@ export const getPageID = () => {
 
 export const getAnalyticsSource = (state: AnalyticsState) => {
   return [`@coveo/headless@${VERSION}`].concat(
-    Object.entries(state.frameworkVersions).map(
+    Object.entries(state.source).map(
       ([frameworkName, frameworkVersion]) =>
         `${frameworkName}@${frameworkVersion}`
     )

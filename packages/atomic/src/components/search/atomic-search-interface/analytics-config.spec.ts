@@ -3,7 +3,6 @@ import {
   getSampleSearchEngineConfiguration,
   SearchEngineConfiguration,
 } from '@coveo/headless';
-import {getAtomicEnvironment} from '../../../global/environment';
 import {getAnalyticsConfig} from './analytics-config';
 import {createAtomicStore} from './store';
 
@@ -13,7 +12,6 @@ describe('analyticsConfig', () => {
   let config: SearchEngineConfiguration;
   let store: ReturnType<typeof createAtomicStore>;
   const originalReferrer = document.referrer;
-  const {version: atomicVersion} = getAtomicEnvironment();
   const setReferrer = (value: string) => {
     Object.defineProperty(document, 'referrer', {value, configurable: true});
   };
@@ -56,9 +54,7 @@ describe('analyticsConfig', () => {
       const resultingConfig = getAnalyticsConfig(config, true, store);
       expect(resultingConfig.analyticsClientMiddleware).toBeDefined();
       expect(resultingConfig.originLevel3).toBe('foo');
-      expect(resultingConfig.frameworkVersions?.['@coveo/atomic']).toBe(
-        atomicVersion
-      );
+      expect(resultingConfig.source?.['@coveo/atomic']).toBe('0.0.0');
     });
 
     it('merges provided engine analytics config', () => {
@@ -67,7 +63,7 @@ describe('analyticsConfig', () => {
         enabled: true,
         originContext: 'something',
         originLevel3: 'bar',
-        frameworkVersions: {
+        source: {
           '@coveo/atomic': '3.4.5',
         },
       };
@@ -75,9 +71,7 @@ describe('analyticsConfig', () => {
       expect(resultingConfig.enabled).toBe(true);
       expect(resultingConfig.originContext).toBe('something');
       expect(resultingConfig.originLevel3).toBe('bar');
-      expect(resultingConfig.frameworkVersions?.['@coveo/atomic']).toBe(
-        atomicVersion
-      );
+      expect(resultingConfig.source?.['@coveo/atomic']).toBe('0.0.0');
     });
 
     it('use the existing analytic middleware if available', () => {

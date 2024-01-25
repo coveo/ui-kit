@@ -16,7 +16,7 @@ export function buildMockAnalyticsState(
     documentLocation: '',
     trackingId: '',
     analyticsMode: 'legacy',
-    frameworkVersions: {},
+    source: {},
     ...config,
   };
 }

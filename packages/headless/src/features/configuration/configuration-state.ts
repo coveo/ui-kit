@@ -135,10 +135,10 @@ export interface AnalyticsState {
    */
   analyticsMode: 'legacy' | 'next';
   /**
-   * The version of `@coveo/atomic` used.
+   * Specifies the frameworks and version used around Headless (e.g. @coveo/atomic)
    * @internal
    */
-  frameworkVersions: Partial<Record<CoveoFramework, string>>;
+  source: Partial<Record<CoveoFramework, string>>;
 }
 
 export const searchAPIEndpoint = '/rest/search/v2';
@@ -167,6 +167,6 @@ export const getConfigurationInitialState: () => ConfigurationState = () => ({
     documentLocation: '',
     trackingId: '',
     analyticsMode: 'legacy',
-    frameworkVersions: {},
+    source: {},
   },
 });

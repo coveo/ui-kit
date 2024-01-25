@@ -163,10 +163,10 @@ export interface AnalyticsConfiguration {
    */
   analyticsMode?: 'legacy' | 'next';
   /**
-   * The version of `@coveo/atomic` used.
+   * Specifies the frameworks and version used around Headless (e.g. @coveo/atomic).
    * @internal
    */
-  frameworkVersions?: Partial<Record<CoveoFramework, string>>;
+  source?: Partial<Record<CoveoFramework, string>>;
 }
 
 export type AnalyticsRuntimeEnvironment = IRuntimeEnvironment;
