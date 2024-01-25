@@ -13,21 +13,21 @@
       "c/exampleSearch": ["exampleSearch/exampleSearch"],
       "c/quanticDateFacet": ["quanticDateFacet/quanticDateFacet.js"],
       "c/quanticHeadlessLoader": [
-        "quanticHeadlessLoader/quanticHeadlessLoader.js"
+        "quanticHeadlessLoader/quanticHeadlessLoader.js",
       ],
       "c/quanticNoResults": ["quanticNoResults/quanticNoResults.js"],
       "c/quanticDateFacetValue": [
-        "quanticDateFacetValue/quanticDateFacetValue.js"
+        "quanticDateFacetValue/quanticDateFacetValue.js",
       ],
       "c/quanticDidYouMean": ["quanticDidYouMean/quanticDidYouMean.js"],
       "c/quanticCategoryFacet": [
-        "quanticCategoryFacet/quanticCategoryFacet.js"
+        "quanticCategoryFacet/quanticCategoryFacet.js",
       ],
       "c/quanticCategoryFacetParent": [
-        "quanticCategoryFacetParent/quanticCategoryFacetParent.js"
+        "quanticCategoryFacetParent/quanticCategoryFacetParent.js",
       ],
       "c/quanticCategoryFacetValue": [
-        "quanticCategoryFacetValue/quanticCategoryFacetValue.js"
+        "quanticCategoryFacetValue/quanticCategoryFacetValue.js",
       ],
       "c/quanticFacet": ["quanticFacet/quanticFacet.js"],
       "c/quanticPager": ["quanticPager/quanticPager.js"],
@@ -37,7 +37,7 @@
       "c/quanticResultBadge": ["quanticResultBadge/quanticResultBadge.js"],
       "c/quanticResultLabel": ["quanticResultLabel/quanticResultLabel.js"],
       "c/quanticResultPrintableUri": [
-        "quanticResultPrintableUri/quanticResultPrintableUri.js"
+        "quanticResultPrintableUri/quanticResultPrintableUri.js",
       ],
       "c/quanticResultList": ["quanticResultList/quanticResultList.js"],
       "c/quanticResultLink": ["quanticResultLink/quanticResultLink.js"],
@@ -46,29 +46,29 @@
       "c/quanticFacetValue": ["quanticFacetValue/quanticFacetValue.js"],
       "c/quanticNumericFacet": ["quanticNumericFacet/quanticNumericFacet.js"],
       "c/quanticNumericFacetValue": [
-        "quanticNumericFacetValue/quanticNumericFacetValue.js"
+        "quanticNumericFacetValue/quanticNumericFacetValue.js",
       ],
       "c/quanticResultQuickview": [
-        "quanticResultQuickview/quanticResultQuickview.js"
+        "quanticResultQuickview/quanticResultQuickview.js",
       ],
       "c/quanticRecentQueriesList": [
-        "quanticRecentQueriesList/quanticRecentQueriesList.js"
+        "quanticRecentQueriesList/quanticRecentQueriesList.js",
       ],
       "c/quanticRecentResultsList": [
-        "quanticRecentResultsList/quanticRecentResultsList.js"
+        "quanticRecentResultsList/quanticRecentResultsList.js",
       ],
       "c/quanticResultsPerPage": [
-        "quanticResultsPerPage/quanticResultsPerPage.js"
+        "quanticResultsPerPage/quanticResultsPerPage.js",
       ],
       "c/quanticSearchBox": ["quanticSearchBox/quanticSearchBox.js"],
       "c/quanticSearchBoxSuggestionsList": [
-        "quanticSearchBoxSuggestionsList/quanticSearchBoxSuggestionsList.js"
+        "quanticSearchBoxSuggestionsList/quanticSearchBoxSuggestionsList.js",
       ],
       "c/quanticSearchBoxInput": [
-        "quanticSearchBoxInput/quanticSearchBoxInput.js"
+        "quanticSearchBoxInput/quanticSearchBoxInput.js",
       ],
       "c/quanticSearchInterface": [
-        "quanticSearchInterface/quanticSearchInterface.js"
+        "quanticSearchInterface/quanticSearchInterface.js",
       ],
       "c/quanticNumberButton": ["quanticNumberButton/quanticNumberButton.js"],
       "c/quanticPill": ["quanticPill/quanticPill.js"],
@@ -76,22 +76,24 @@
       "c/quanticUtils": ["quanticUtils/quanticUtils.js"],
       "c/testUtils": ["testUtils/testUtils.js"],
       "c/quanticTimeframeFacet": [
-        "quanticTimeframeFacet/quanticTimeframeFacet.js"
+        "quanticTimeframeFacet/quanticTimeframeFacet.js",
       ],
-      "c/quanticFeedbackModal": ["quanticFeedbackModal/quanticFeedbackModal.js"]
-    }
+      "c/quanticFeedbackModal": [
+        "quanticFeedbackModal/quanticFeedbackModal.js",
+      ],
+    },
   },
   "include": [
     "force-app/main/default/lwc",
     "force-app/examples/main/lwc",
     "typings/lwc/**/*.d.ts",
-    "coveo.d.ts"
+    "coveo.d.ts",
   ],
   "exclude": ["**/__tests__/**"],
   "typeAcquisition": {
-    "include": ["jest"]
+    "include": ["jest"],
   },
   "paths": {
-    "c/*": ["*"]
-  }
+    "c/*": ["*"],
+  },
 }
