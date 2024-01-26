@@ -7,6 +7,7 @@ import {
   augmentAnalyticsWithAtomicVersion,
   augmentWithExternalMiddleware,
   augmentAnalyticsConfigWithDocument,
+  augmentAnalyticsConfigWithAtomicVersion,
 } from '../../common/interface/analytics-config';
 
 export function getAnalyticsConfig(
@@ -22,6 +23,7 @@ export function getAnalyticsConfig(
     analyticsClientMiddleware,
     enabled,
     ...augmentAnalyticsConfigWithDocument(),
+    ...augmentAnalyticsConfigWithAtomicVersion(),
   };
 
   if (recsConfig.analytics) {

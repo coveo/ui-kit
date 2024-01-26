@@ -7,6 +7,7 @@ import {
   augmentAnalyticsWithAtomicVersion,
   augmentWithExternalMiddleware,
   augmentAnalyticsConfigWithDocument,
+  augmentAnalyticsConfigWithAtomicVersion,
 } from '../../common/interface/analytics-config';
 import {createAtomicStore} from './store';
 
@@ -26,14 +27,23 @@ export function getAnalyticsConfig(
     ...augmentAnalyticsConfigWithDocument(),
   };
 
+  const immutableConfiguration: AnalyticsConfiguration = {
+    ...augmentAnalyticsConfigWithAtomicVersion(),
+  };
+
   if (searchEngineConfig.analytics) {
     return {
       ...defaultConfiguration,
       ...searchEngineConfig.analytics,
       analyticsClientMiddleware,
+      ...immutableConfiguration,
     };
   }
-  return defaultConfiguration;
+
+  return {
+    ...defaultConfiguration,
+    ...immutableConfiguration,
+  };
 }
 
 function augmentAnalytics(

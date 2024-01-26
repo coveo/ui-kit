@@ -36,3 +36,16 @@ export function augmentAnalyticsConfigWithDocument(): AnalyticsConfiguration {
     ...(document.referrer && {originLevel3: document.referrer}),
   };
 }
+
+const versionMatcher = /^(\d+\.\d+\.\d+)/;
+
+export function augmentAnalyticsConfigWithAtomicVersion(): Required<
+  Pick<AnalyticsConfiguration, 'source'>
+> {
+  return {
+    source: {
+      '@coveo/atomic':
+        versionMatcher.exec(getAtomicEnvironment().version)?.[0] || '0.0.0',
+    },
+  };
+}
