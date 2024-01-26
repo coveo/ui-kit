@@ -1,6 +1,7 @@
 import {DateRangeRequest, NumericRangeRequest} from '../../controllers';
 import {InsightAction} from '../analytics/analytics-utils';
 import {logInsightInterfaceChange} from '../analytics/insight-analytics-actions';
+import {logFacetUnexclude} from '../facets/facet-set/facet-set-analytics-actions';
 import {
   logFacetClearAll,
   logFacetDeselect,
@@ -44,6 +45,15 @@ export function logParametersChange(
     );
   }
 
+  if (
+    !areFacetParamsEqual(previousParameters.fExcluded, newParameters.fExcluded)
+  ) {
+    return logFacetExcludeAnalyticsAction(
+      previousParameters.fExcluded,
+      newParameters.fExcluded
+    );
+  }
+
   return logInsightInterfaceChange();
 }
 
@@ -76,7 +86,8 @@ function parseRangeFacetParams(facetsParams: RangeFacetParameters) {
 
 function logFacetAnalyticsAction(
   previousFacets: FacetParameters = {},
-  newFacets: FacetParameters = {}
+  newFacets: FacetParameters = {},
+  isExclude: boolean = false
 ): InsightAction {
   const previousIds = Object.keys(previousFacets);
   const newIds = Object.keys(newFacets);
@@ -84,9 +95,13 @@ function logFacetAnalyticsAction(
   const removedIds = previousIds.filter((id) => !newIds.includes(id));
   if (removedIds.length) {
     const facetId = removedIds[0];
+
     return previousFacets[facetId].length > 1
       ? logFacetClearAll(facetId)
-      : logFacetDeselect({facetId, facetValue: previousFacets[facetId][0]});
+      : (isExclude ? logFacetUnexclude : logFacetDeselect)({
+          facetId,
+          facetValue: previousFacets[facetId][0],
+        });
   }
 
   const addedIds = newIds.filter((id) => !previousIds.includes(id));
@@ -126,7 +141,7 @@ function logFacetAnalyticsAction(
   );
 
   if (removedValues.length) {
-    return logFacetDeselect({
+    return (isExclude ? logFacetUnexclude : logFacetDeselect)({
       facetId: facetIdWithDifferentValues,
       facetValue: removedValues[0],
     });
@@ -143,4 +158,11 @@ function logRangeFacetAnalyticsAction(
     parseRangeFacetParams(previousFacets),
     parseRangeFacetParams(newFacets)
   );
+}
+
+function logFacetExcludeAnalyticsAction(
+  previousFacets: FacetParameters = {},
+  newFacets: FacetParameters = {}
+) {
+  return logFacetAnalyticsAction(previousFacets, newFacets, true);
 }

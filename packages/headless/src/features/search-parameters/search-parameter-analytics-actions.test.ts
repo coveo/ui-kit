@@ -120,8 +120,7 @@ function legacyTestFacetExcludeLogging(
     action2: LegacySearchAction
   ) => void
 ) {
-  legacyTestFacetLogging('fExcluded', expectIdenticalActionType);
-  it('should log #logFacetDeselect when an fExcluded parameter with a single value is removed', () => {
+  it('should log #logFacetUnexclude when an fExcluded parameter with a single value is removed', () => {
     expectIdenticalActionType(
       logParametersChange({fExcluded: {author: ['Cervantes']}}, {}),
       logFacetUnexclude({facetId: 'author', facetValue: 'Cervantes'})
@@ -135,7 +134,7 @@ function legacyTestFacetExcludeLogging(
     );
   });
 
-  it('should log #logFacetDeselect when an fExcluded parameter is modified & a value removed', () => {
+  it('should log #logFacetUnexclude when an fExcluded parameter is modified & a value removed', () => {
     expectIdenticalActionType(
       logParametersChange(
         {fExcluded: {author: ['Cervantes', 'Orwell']}},
