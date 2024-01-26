@@ -5,7 +5,7 @@ import {
   Sort,
   buildCoreSort,
   SortProps,
-} from '../../sort/core/headless-core-commerce-sort';
+} from '../../core/sort/headless-core-commerce-sort';
 import {loadProductListingReducer} from '../utils/load-product-listing-reducers';
 
 /**

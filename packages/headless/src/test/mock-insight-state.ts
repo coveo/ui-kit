@@ -1,6 +1,7 @@
 import {getAttachedResultsInitialState} from '../features/attached-results/attached-results-state';
 import {getCaseContextInitialState} from '../features/case-context/case-context-state';
 import {getConfigurationInitialState} from '../features/configuration/configuration-state';
+import {getContextInitialState} from '../features/context/context-state';
 import {getDidYouMeanInitialState} from '../features/did-you-mean/did-you-mean-state';
 import {getFacetOptionsInitialState} from '../features/facet-options/facet-options-state';
 import {getCategoryFacetSetInitialState} from '../features/facets/category-facet-set/category-facet-set-state';
@@ -57,6 +58,7 @@ export function buildMockInsightState(
     questionAnswering: getQuestionAnsweringInitialState(),
     folding: getFoldingInitialState(),
     generatedAnswer: getGeneratedAnswerInitialState(),
+    context: getContextInitialState(),
     ...config,
   };
 }

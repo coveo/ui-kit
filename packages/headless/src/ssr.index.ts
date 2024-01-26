@@ -79,8 +79,7 @@ export * from './features/index';
 export * from './features/analytics/index';
 
 // Types & Helpers
-export {buildSearchParameterRanges} from './features/search-parameters/search-parameter-serializer';
-export {parseDate} from './api/search/date/date-format';
+export {buildSSRSearchParameterSerializer} from './features/search-parameters/search-parameter-serializer.ssr';
 export type {Result} from './api/search/search/result';
 export type {FieldDescription} from './api/search/fields/fields-response';
 export type {Raw} from './api/search/search/raw';
