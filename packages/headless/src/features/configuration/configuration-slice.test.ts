@@ -48,6 +48,7 @@ describe('configuration slice', () => {
       documentLocation: 'http://hello.world.com',
       trackingId: 'someTrackingId',
       analyticsMode: 'legacy',
+      source: {},
     },
   };
 
@@ -157,6 +158,7 @@ describe('configuration slice', () => {
           documentLocation: 'http://somewhere.com',
           trackingId: 'someTrackingId',
           analyticsMode: 'legacy',
+          source: {},
         },
       };
       expect(
@@ -195,6 +197,7 @@ describe('configuration slice', () => {
           documentLocation: 'http://somewhere.com',
           trackingId: 'someTrackingId',
           analyticsMode: 'legacy',
+          source: {},
         },
       };
 

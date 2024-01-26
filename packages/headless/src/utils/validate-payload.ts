@@ -35,6 +35,12 @@ export const nonEmptyStringArray = new ArrayValue({
   required: true,
 });
 
+export const optionalNonEmptyVersionString = new StringValue({
+  required: false,
+  emptyAllowed: false,
+  regex: /^\d+\.\d+\.\d+$/,
+});
+
 export const serializeSchemaValidationError = ({
   message,
   name,
