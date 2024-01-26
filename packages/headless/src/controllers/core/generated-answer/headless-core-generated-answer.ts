@@ -122,7 +122,7 @@ export interface GeneratedAnswerProps {
   fieldsToIncludeInCitations?: string[];
 }
 
-interface SubscribeStateManager {
+interface ISubscribeStateManager {
   abortController: AbortController | undefined;
   lastRequestId: string;
   lastStreamId: string;
@@ -136,7 +136,7 @@ interface SubscribeStateManager {
   ) => Unsubscribe;
 }
 
-class sb implements SubscribeStateManager {
+class SubscribeStateManager implements ISubscribeStateManager {
   abortController: AbortController | undefined;
   lastRequestId: string;
   lastStreamId: string;
@@ -172,9 +172,6 @@ class sb implements SubscribeStateManager {
         state.search.extendedResults.generativeQuestionAnsweringId;
 
       if (this.lastRequestId !== requestId) {
-        console.log('reset stream----------------------+');
-        console.log(this.lastRequestId);
-        console.log(requestId);
         this.lastRequestId = requestId;
         this.abortController?.abort();
         engine.dispatch(resetAnswer());
@@ -182,9 +179,6 @@ class sb implements SubscribeStateManager {
 
       const isStreamInProgress = this.getIsStreamInProgress();
       if (!isStreamInProgress && streamId && streamId !== this.lastStreamId) {
-        console.log('lunching new stream----------------------+');
-        console.log(this.lastStreamId);
-        console.log(streamId);
         this.lastStreamId = streamId;
         engine.dispatch(
           streamAnswer({
@@ -196,63 +190,6 @@ class sb implements SubscribeStateManager {
     return engine.subscribe(strictListener);
   }
 }
-
-const subscribeStateManager: SubscribeStateManager = {
-  abortController: undefined,
-  lastRequestId: '',
-  lastStreamId: '',
-
-  setAbortControllerRef: (ref: AbortController) => {
-    subscribeStateManager.abortController = ref;
-  },
-
-  getIsStreamInProgress: () => {
-    if (
-      !subscribeStateManager.abortController ||
-      subscribeStateManager.abortController?.signal.aborted
-    ) {
-      subscribeStateManager.abortController = undefined;
-      return false;
-    }
-    return true;
-  },
-
-  subscribeToSearchRequests: (engine) => {
-    const strictListener = () => {
-      const state = engine.state;
-      const requestId = state.search.requestId;
-      const streamId =
-        state.search.extendedResults.generativeQuestionAnsweringId;
-
-      if (subscribeStateManager.lastRequestId !== requestId) {
-        console.log('reset stream----------------------');
-        console.log(subscribeStateManager.lastRequestId);
-        console.log(requestId);
-        subscribeStateManager.lastRequestId = requestId;
-        subscribeStateManager.abortController?.abort();
-        engine.dispatch(resetAnswer());
-      }
-
-      const isStreamInProgress = subscribeStateManager.getIsStreamInProgress();
-      if (
-        !isStreamInProgress &&
-        streamId &&
-        streamId !== subscribeStateManager.lastStreamId
-      ) {
-        console.log('lunching new stream----------------------');
-        console.log(subscribeStateManager.lastStreamId);
-        console.log(streamId);
-        subscribeStateManager.lastStreamId = streamId;
-        engine.dispatch(
-          streamAnswer({
-            setAbortControllerRef: subscribeStateManager.setAbortControllerRef,
-          })
-        );
-      }
-    };
-    return engine.subscribe(strictListener);
-  },
-};
 
 export interface GeneratedAnswerAnalyticsClient {
   logLikeGeneratedAnswer: () => CustomAction;
@@ -308,9 +245,8 @@ export function buildCoreGeneratedAnswer(
   if (fieldsToIncludeInCitations) {
     dispatch(registerFieldsToIncludeInCitations(fieldsToIncludeInCitations));
   }
-  const manager = new sb();
-  manager.subscribeToSearchRequests(engine);
-  // subscribeStateManager.subscribeToSearchRequests(engine);
+  const subscribeStateManager = new SubscribeStateManager();
+  subscribeStateManager.subscribeToSearchRequests(engine);
 
   return {
     ...controller,
