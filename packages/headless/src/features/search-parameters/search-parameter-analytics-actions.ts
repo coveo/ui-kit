@@ -4,19 +4,34 @@ import {
   logFacetDeselect,
   logFacetSelect,
   logFacetExclude,
+  facetClearAll,
+  facetDeselect,
+  facetExclude,
+  facetSelect,
   logFacetUnexclude,
 } from '../../features/facets/facet-set/facet-set-analytics-actions';
-import {logSearchboxSubmit} from '../../features/query/query-analytics-actions';
+import {
+  logSearchboxSubmit,
+  searchboxSubmit,
+} from '../../features/query/query-analytics-actions';
 import {SearchParameters} from '../../features/search-parameters/search-parameter-actions';
-import {logResultsSort} from '../../features/sort-criteria/sort-criteria-analytics-actions';
-import {logInterfaceChange} from '../analytics/analytics-actions';
+import {
+  logResultsSort,
+  resultsSort,
+} from '../../features/sort-criteria/sort-criteria-analytics-actions';
+import {
+  interfaceChange,
+  logInterfaceChange,
+} from '../analytics/analytics-actions';
 import {LegacySearchAction} from '../analytics/analytics-utils';
 import {
   logPageNumber,
   logPagerResize,
 } from '../pagination/pagination-analytics-actions';
+import {SearchAction} from '../search/search-actions';
 
-export function logParametersChange(
+//TODO: KIT-2859
+export function legacyLogParametersChange(
   previousParameters: SearchParameters,
   newParameters: SearchParameters
 ): LegacySearchAction {
@@ -36,37 +51,46 @@ export function logParametersChange(
     return logPagerResize();
   }
 
-  if (areFacetParamsEqual(previousParameters.f, newParameters.f)) {
-    return logFacetAnalyticsAction(previousParameters.f, newParameters.f);
+  if (areFacetParamsNotEqual(previousParameters.f, newParameters.f)) {
+    return legacyLogFacetAnalyticsAction(previousParameters.f, newParameters.f);
   }
 
   if (
-    areFacetParamsEqual(previousParameters.fExcluded, newParameters.fExcluded)
+    areFacetParamsNotEqual(
+      previousParameters.fExcluded,
+      newParameters.fExcluded
+    )
   ) {
-    return logFacetAnalyticsAction(
+    return legacyLogFacetAnalyticsAction(
       previousParameters.fExcluded,
       newParameters.fExcluded,
       true
     );
   }
 
-  if (areFacetParamsEqual(previousParameters.cf, newParameters.cf)) {
-    return logFacetAnalyticsAction(previousParameters.cf, newParameters.cf);
+  if (areFacetParamsNotEqual(previousParameters.cf, newParameters.cf)) {
+    return legacyLogFacetAnalyticsAction(
+      previousParameters.cf,
+      newParameters.cf
+    );
   }
 
-  if (areFacetParamsEqual(previousParameters.af, newParameters.af)) {
-    return logFacetAnalyticsAction(previousParameters.af, newParameters.af);
+  if (areFacetParamsNotEqual(previousParameters.af, newParameters.af)) {
+    return legacyLogFacetAnalyticsAction(
+      previousParameters.af,
+      newParameters.af
+    );
   }
 
-  if (areFacetParamsEqual(previousParameters.nf, newParameters.nf)) {
-    return logRangeFacetAnalyticsAction(
+  if (areFacetParamsNotEqual(previousParameters.nf, newParameters.nf)) {
+    return legacyLogRangeFacetAnalyticsAction(
       previousParameters.nf,
       newParameters.nf
     );
   }
 
-  if (areFacetParamsEqual(previousParameters.df, newParameters.df)) {
-    return logRangeFacetAnalyticsAction(
+  if (areFacetParamsNotEqual(previousParameters.df, newParameters.df)) {
+    return legacyLogRangeFacetAnalyticsAction(
       previousParameters.df,
       newParameters.df
     );
@@ -75,34 +99,8 @@ export function logParametersChange(
   return logInterfaceChange();
 }
 
-type AnyFacetParameters = FacetParameters | RangeFacetParameters;
-
-type RangeFacetParameters = Record<
-  string,
-  (NumericRangeRequest | DateRangeRequest)[]
->;
-
-type FacetParameters = Record<string, string[]>;
-
-function areFacetParamsEqual(
-  previousFacetParams: AnyFacetParameters = {},
-  newFacetParams: AnyFacetParameters = {}
-) {
-  return JSON.stringify(previousFacetParams) !== JSON.stringify(newFacetParams);
-}
-
-function parseRangeFacetParams(facetsParams: RangeFacetParameters) {
-  const formattedParams: FacetParameters = {};
-  Object.keys(facetsParams).forEach(
-    (key) =>
-      (formattedParams[key] = facetsParams[key].map(
-        (facetValue) => `${facetValue.start}..${facetValue.end}`
-      ))
-  );
-  return formattedParams;
-}
-
-function logFacetAnalyticsAction(
+//TODO: KIT-2859
+function legacyLogFacetAnalyticsAction(
   previousFacets: FacetParameters = {},
   newFacets: FacetParameters = {},
   excluded = false
@@ -190,12 +188,152 @@ function logFacetAnalyticsAction(
   return logInterfaceChange();
 }
 
-function logRangeFacetAnalyticsAction(
+//TODO: KIT-2859
+function legacyLogRangeFacetAnalyticsAction(
   previousFacets: RangeFacetParameters = {},
   newFacets: RangeFacetParameters = {}
 ): LegacySearchAction {
-  return logFacetAnalyticsAction(
+  return legacyLogFacetAnalyticsAction(
     parseRangeFacetParams(previousFacets),
     parseRangeFacetParams(newFacets)
   );
+}
+
+// --------------------- KIT-2859 : Everything above this will get deleted ! :) ---------------------
+export function parametersChange(
+  previousParameters: SearchParameters,
+  newParameters: SearchParameters
+): SearchAction {
+  if (previousParameters.q !== newParameters.q) {
+    return searchboxSubmit();
+  }
+
+  if (previousParameters.sortCriteria !== newParameters.sortCriteria) {
+    return resultsSort();
+  }
+
+  if (areFacetParamsNotEqual(previousParameters.f, newParameters.f)) {
+    return facetAction(previousParameters.f, newParameters.f);
+  }
+
+  if (
+    areFacetParamsNotEqual(
+      previousParameters.fExcluded,
+      newParameters.fExcluded
+    )
+  ) {
+    return facetAction(
+      previousParameters.fExcluded,
+      newParameters.fExcluded,
+      true
+    );
+  }
+
+  if (areFacetParamsNotEqual(previousParameters.cf, newParameters.cf)) {
+    return facetAction(previousParameters.cf, newParameters.cf);
+  }
+
+  if (areFacetParamsNotEqual(previousParameters.af, newParameters.af)) {
+    return facetAction(previousParameters.af, newParameters.af);
+  }
+
+  if (areFacetParamsNotEqual(previousParameters.nf, newParameters.nf)) {
+    return facetAction(
+      parseRangeFacetParams(previousParameters.nf),
+      parseRangeFacetParams(newParameters.nf)
+    );
+  }
+
+  if (areFacetParamsNotEqual(previousParameters.df, newParameters.df)) {
+    return facetAction(
+      parseRangeFacetParams(previousParameters.df),
+      parseRangeFacetParams(newParameters.df)
+    );
+  }
+
+  return interfaceChange();
+}
+
+function areFacetParamsNotEqual(
+  previousFacetParams: AnyFacetParameters = {},
+  newFacetParams: AnyFacetParameters = {}
+) {
+  return JSON.stringify(previousFacetParams) !== JSON.stringify(newFacetParams);
+}
+
+type AnyFacetParameters = FacetParameters | RangeFacetParameters;
+
+type RangeFacetParameters = Record<
+  string,
+  (NumericRangeRequest | DateRangeRequest)[]
+>;
+
+type FacetParameters = Record<string, string[]>;
+
+function facetAction(
+  previousFacets: FacetParameters = {},
+  newFacets: FacetParameters = {},
+  excluded = false
+): SearchAction {
+  const previousIds = Object.keys(previousFacets);
+  const newIds = Object.keys(newFacets);
+
+  const removedIds = previousIds.filter((id) => !newIds.includes(id));
+  if (removedIds.length) {
+    const facetId = removedIds[0];
+    return previousFacets[facetId].length > 1
+      ? facetClearAll(facetId)
+      : facetDeselect(facetId, previousFacets[facetId][0]);
+  }
+
+  const addedIds = newIds.filter((id) => !previousIds.includes(id));
+  if (addedIds.length) {
+    const facetId = addedIds[0];
+    return excluded
+      ? facetExclude(facetId, newFacets[facetId][0])
+      : facetSelect(facetId, newFacets[facetId][0]);
+  }
+
+  const facetIdWithDifferentValues = newIds.find((key) =>
+    newFacets[key].filter((facetValue) =>
+      previousFacets[key].includes(facetValue)
+    )
+  );
+  if (!facetIdWithDifferentValues) {
+    return interfaceChange();
+  }
+
+  const previousValues = previousFacets[facetIdWithDifferentValues];
+  const newValues = newFacets[facetIdWithDifferentValues];
+
+  const addedValues = newValues.filter(
+    (value) => !previousValues.includes(value)
+  );
+
+  if (addedValues.length) {
+    return excluded
+      ? facetExclude(facetIdWithDifferentValues, addedValues[0])
+      : facetSelect(facetIdWithDifferentValues, addedValues[0]);
+  }
+
+  const removedValues = previousValues.filter(
+    (value) => !newValues.includes(value)
+  );
+
+  if (removedValues.length) {
+    return facetDeselect(facetIdWithDifferentValues, removedValues[0]);
+  }
+
+  return interfaceChange();
+}
+
+function parseRangeFacetParams(facetsParams: RangeFacetParameters = {}) {
+  const formattedParams: FacetParameters = {};
+  Object.keys(facetsParams).forEach(
+    (key) =>
+      (formattedParams[key] = facetsParams[key].map(
+        (facetValue) => `${facetValue.start}..${facetValue.end}`
+      ))
+  );
+  return formattedParams;
 }
