@@ -28,7 +28,7 @@ export const setCorrectionMode = createAction(
   (payload: CorrectionMode) =>
     validatePayload(
       payload,
-      new StringValue({
+      new StringValue<CorrectionMode>({
         constrainTo: ['next', 'legacy'],
         emptyAllowed: false,
         required: true,
