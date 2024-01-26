@@ -1,3 +1,10 @@
+# 2.47.0 (2024-01-24)
+
+### Features
+
+- **commerce:** allow setting referrer ([#3529](https://github.com/coveo/ui-kit/issues/3529)) ([a3db3e2](https://github.com/coveo/ui-kit/commits/a3db3e25c55d18cd2461b87e733ea1926ab2b9d0))
+- **commerce:** isolate core commerce controllers ([#3540](https://github.com/coveo/ui-kit/issues/3540)) ([cc98717](https://github.com/coveo/ui-kit/commits/cc98717a1b4041c861e3c173b77800d691a4f0d9))
+
 # 2.46.0 (2024-01-19)
 
 ### Bug Fixes

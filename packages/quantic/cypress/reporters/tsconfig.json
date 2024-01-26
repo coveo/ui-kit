@@ -3,9 +3,9 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
-    "types": ["node", "cypress", "chalk"]
+    "types": ["node", "cypress", "chalk"],
   },
   "typeAcquisition": {
-    "include": ["chalk"]
-  }
+    "include": ["chalk"],
+  },
 }
