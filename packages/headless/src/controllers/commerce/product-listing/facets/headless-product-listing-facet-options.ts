@@ -4,7 +4,7 @@ import {
   CommerceFacetSetSection,
   ProductListingV2Section,
 } from '../../../../state/state-sections';
-import {CoreCommerceFacetOptions} from '../../facets/core/headless-core-commerce-facet';
+import {CoreCommerceFacetOptions} from '../../core/facets/headless-core-commerce-facet';
 
 const facetResponseSelector = (
   state: ProductListingV2Section & CommerceFacetSetSection,

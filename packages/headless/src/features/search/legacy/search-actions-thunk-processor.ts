@@ -243,7 +243,6 @@ export class AsyncSearchThunkProcessor<RejectionType> {
   ): ExecuteSearchThunkReturn {
     const successResponse = this.getSuccessResponse(originalFetchedResponse)!;
     const {correctedQuery, originalQuery} = successResponse.queryCorrection!;
-    this.logOriginalAnalyticsQueryBeforeAutoCorrection(originalFetchedResponse);
 
     this.onUpdateQueryForCorrection(correctedQuery);
 
