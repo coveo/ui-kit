@@ -33,7 +33,21 @@ describe('base analytics provider', () => {
     configuration: getConfigurationInitialState(),
   };
 
-  it('when context is not provided, #getBaseMetadata returns an object with version', () => {
+  it('when analyticMode=next, #getBaseMetadata returns an object without coveoHeadlessVersion', () => {
+    const state: StateNeededByBaseAnalyticsProvider = {
+      ...baseState,
+      configuration: {
+        ...baseState.configuration,
+        analytics: buildMockAnalyticsState({analyticsMode: 'next'}),
+      },
+    };
+    const provider = new TestProvider(() => state);
+    expect(provider.getBaseMetadata()).not.toHaveProperty(
+      'coveoHeadlessVersion'
+    );
+  });
+
+  it('when analyticMode=legacy, #getBaseMetadata returns an object with coveoHeadlessVersion', () => {
     const provider = new TestProvider(() => baseState);
     expect(provider.getBaseMetadata()).toEqual({
       coveoHeadlessVersion: expect.any(String),

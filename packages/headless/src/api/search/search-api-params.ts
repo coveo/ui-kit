@@ -125,6 +125,7 @@ export interface AnalyticsParam {
     documentLocation?: string;
     trackingId?: string;
     capture?: boolean;
+    source?: string[];
   };
 }
 
