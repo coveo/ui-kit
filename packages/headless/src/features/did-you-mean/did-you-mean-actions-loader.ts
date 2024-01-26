@@ -53,9 +53,9 @@ export interface DidYouMeanActionCreators {
   enableDidYouMean(): PayloadAction;
 
   /**
-   * Set the query correction mode, either legacy (index based) or next (query suggestions based).
+   * Sets the query correction mode.
    *
-   * @param mode The target correction mode.
+   * @param mode @param mode - The query correction mode to use. Must be either `"legacy"` (index based) or `"next"` (query suggestions based).
    * @returns A dispatchable action.
    *
    */
