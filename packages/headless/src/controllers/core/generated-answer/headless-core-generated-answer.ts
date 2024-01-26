@@ -136,6 +136,67 @@ interface SubscribeStateManager {
   ) => Unsubscribe;
 }
 
+class sb implements SubscribeStateManager {
+  abortController: AbortController | undefined;
+  lastRequestId: string;
+  lastStreamId: string;
+
+  constructor() {
+    this.abortController = undefined;
+    this.lastRequestId = '';
+    this.lastStreamId = '';
+  }
+
+  setAbortControllerRef(ref: AbortController) {
+    this.abortController = ref;
+  }
+
+  getIsStreamInProgress() {
+    if (!this.abortController || this.abortController?.signal.aborted) {
+      this.abortController = undefined;
+      return false;
+    }
+    return true;
+  }
+
+  subscribeToSearchRequests(
+    engine: CoreEngine<
+      GeneratedAnswerSection & SearchSection & DebugSection,
+      ClientThunkExtraArguments<GeneratedAnswerAPIClient>
+    >
+  ) {
+    const strictListener = () => {
+      const state = engine.state;
+      const requestId = state.search.requestId;
+      const streamId =
+        state.search.extendedResults.generativeQuestionAnsweringId;
+
+      if (this.lastRequestId !== requestId) {
+        console.log('reset stream----------------------+');
+        console.log(this.lastRequestId);
+        console.log(requestId);
+        this.lastRequestId = requestId;
+        this.abortController?.abort();
+        engine.dispatch(resetAnswer());
+      }
+
+      const isStreamInProgress = this.getIsStreamInProgress();
+      if (!isStreamInProgress && streamId && streamId !== this.lastStreamId) {
+        console.log('lunching new stream----------------------+');
+        console.log(this.lastStreamId);
+        console.log(streamId);
+        this.lastStreamId = streamId;
+        engine.dispatch(
+          streamAnswer({
+            setAbortControllerRef: this.setAbortControllerRef,
+          })
+        );
+      }
+    };
+    return engine.subscribe(strictListener);
+  }
+}
+
 const subscribeStateManager: SubscribeStateManager = {
   abortController: undefined,
   lastRequestId: '',
@@ -164,6 +225,9 @@ const subscribeStateManager: SubscribeStateManager = {
         state.search.extendedResults.generativeQuestionAnsweringId;
 
       if (subscribeStateManager.lastRequestId !== requestId) {
+        console.log('reset stream----------------------');
+        console.log(subscribeStateManager.lastRequestId);
+        console.log(requestId);
         subscribeStateManager.lastRequestId = requestId;
         subscribeStateManager.abortController?.abort();
         engine.dispatch(resetAnswer());
@@ -175,6 +239,9 @@ const subscribeStateManager: SubscribeStateManager = {
         streamId &&
         streamId !== subscribeStateManager.lastStreamId
       ) {
+        console.log('lunching new stream----------------------');
+        console.log(subscribeStateManager.lastStreamId);
+        console.log(streamId);
         subscribeStateManager.lastStreamId = streamId;
         engine.dispatch(
           streamAnswer({
@@ -241,8 +308,9 @@ export function buildCoreGeneratedAnswer(
   if (fieldsToIncludeInCitations) {
     dispatch(registerFieldsToIncludeInCitations(fieldsToIncludeInCitations));
   }
-
-  subscribeStateManager.subscribeToSearchRequests(engine);
+  const manager = new sb();
+  manager.subscribeToSearchRequests(engine);
+  // subscribeStateManager.subscribeToSearchRequests(engine);
 
   return {
     ...controller,
