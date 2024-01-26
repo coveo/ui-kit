@@ -25,6 +25,11 @@ export const requiredEmptyAllowedString = new StringValue({
   emptyAllowed: true,
 });
 
+export const nonRequiredEmptyAllowedString = new StringValue({
+  required: false,
+  emptyAllowed: true,
+});
+
 export const nonEmptyStringArray = new ArrayValue({
   each: requiredNonEmptyString,
   required: true,
