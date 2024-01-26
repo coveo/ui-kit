@@ -93,6 +93,9 @@ export default class QuanticSearchBoxInput extends LightningElement {
     this.suggestionListElement?.resetSelection();
   }
 
+  /** @type {boolean} */
+  isClearButtonFocused = false;
+
   connectedCallback() {
     this.addEventListener(
       'suggestionlistrender',
@@ -184,12 +187,13 @@ export default class QuanticSearchBoxInput extends LightningElement {
       this.suggestionListElement?.getCurrentSelectedValue();
     if (this.areSuggestionsOpen && selectedSuggestion) {
       this.sendSelectSuggestionEvent(selectedSuggestion.rawValue);
-    } else if (this.inputClearButton?.getAttribute('is-focused') === 'true') {
+      this.input.blur();
+    } else if (this.isClearButtonFocused === true) {
       this.clearInput();
     } else {
       this.sendSubmitSearchEvent();
+      this.input.blur();
     }
-    this.input.blur();
   }
 
   handleValueChange() {
@@ -243,11 +247,11 @@ export default class QuanticSearchBoxInput extends LightningElement {
   }
 
   onClearButtonFocus() {
-    this.inputClearButton.setAttribute('is-focused', 'true');
+    this.isClearButtonFocused = true;
   }
 
   onClearButtonBlur() {
-    this.inputClearButton.setAttribute('is-focused', 'false');
+    this.isClearButtonFocused = false;
   }
 
   onBlur() {
@@ -281,10 +285,10 @@ export default class QuanticSearchBoxInput extends LightningElement {
   clearInput() {
     this.input.value = '';
     this.sendInputValueChangeEvent(this.input.value, false);
+    this.input.focus();
     if (this.textarea) {
       this.adjustTextAreaHeight();
     }
-    this.inputClearButton.setAttribute('is-focused', 'false');
   }
 
   showSuggestions() {

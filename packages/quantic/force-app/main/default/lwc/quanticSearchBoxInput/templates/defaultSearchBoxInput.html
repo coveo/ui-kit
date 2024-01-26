@@ -37,6 +37,7 @@
               <template if:false={isQueryEmpty}>
                 <lightning-button-icon
                   onclick={clearInput}
+                  onkeydown={onKeydown}
                   onfocus={onClearButtonFocus}
                   onblur={onClearButtonBlur}
                   icon-name="utility:close"
