@@ -413,8 +413,11 @@ export function mockSearchWithoutSmartSnippetSuggestions(useCase?: string) {
   }).as(InterceptAliases.Search.substring(1));
 }
 
-export function mockSearchWithGeneratedAnswer(streamId: string) {
-  cy.intercept(getRoute(), (req) => {
+export function mockSearchWithGeneratedAnswer(
+  streamId: string,
+  useCase?: string
+) {
+  cy.intercept(getRoute(useCase), (req) => {
     req.continue((res) => {
       res.body.extendedResults = {
         generativeQuestionAnsweringId: streamId,
@@ -424,8 +427,8 @@ export function mockSearchWithGeneratedAnswer(streamId: string) {
   }).as(InterceptAliases.Search.substring(1));
 }
 
-export function mockSearchWithoutGeneratedAnswer() {
-  cy.intercept(getRoute(), (req) => {
+export function mockSearchWithoutGeneratedAnswer(useCase?: string) {
+  cy.intercept(getRoute(useCase), (req) => {
     req.continue((res) => {
       res.body.extendedResults = {};
       res.send();

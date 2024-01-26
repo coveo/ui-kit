@@ -1,3 +1,11 @@
+## 1.11.7 (2024-01-24)
+
+### Bug Fixes
+
+- **deps-dev:** bump vite from 5.0.4 to 5.0.12 ([#3539](https://github.com/coveo/ui-kit/issues/3539)) ([be18b0e](https://github.com/coveo/ui-kit/commits/be18b0e8b892af0ac056283c5fd3b5670b39acb8))
+
+## 1.11.6 (2024-01-10)
+
 ## 1.11.5 (2023-12-06)
 
 ## 1.11.4 (2023-11-16)

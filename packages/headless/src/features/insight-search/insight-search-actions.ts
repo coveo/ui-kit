@@ -15,6 +15,7 @@ import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {
   CategoryFacetSection,
   ConfigurationSection,
+  ContextSection,
   DateFacetSection,
   DidYouMeanSection,
   FacetSection,
@@ -35,6 +36,7 @@ import {requiredNonEmptyString} from '../../utils/validate-payload';
 import {InsightAction} from '../analytics/analytics-utils';
 import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
 import {logDidYouMeanAutomatic} from '../did-you-mean/did-you-mean-insight-analytics-actions';
+import {emptyLegacyCorrection} from '../did-you-mean/did-you-mean-state';
 import {snapshot} from '../history/history-actions';
 import {extractHistory} from '../history/history-state';
 import {
@@ -76,7 +78,8 @@ export type StateNeededByExecuteSearch = ConfigurationSection &
       FieldsSection &
       DidYouMeanSection &
       SortSection &
-      FoldingSection
+      FoldingSection &
+      ContextSection
   >;
 
 export const fetchFromAPI = async (
@@ -133,7 +136,9 @@ export const executeSearch = createAsyncThunk<
         analyticsAction,
       };
     }
-    const {correctedQuery} = fetched.response.success.queryCorrections[0];
+    const {correctedQuery} = fetched.response.success.queryCorrections
+      ? fetched.response.success.queryCorrections[0]
+      : emptyLegacyCorrection();
     const retried = await automaticallyRetryQueryWithCorrection(
       extra.apiClient,
       correctedQuery,
@@ -345,6 +350,7 @@ const shouldReExecuteTheQueryWithCorrections = (
   if (
     state.didYouMean?.enableDidYouMean === true &&
     res.results.length === 0 &&
+    res.queryCorrections &&
     res.queryCorrections.length !== 0
   ) {
     return true;
