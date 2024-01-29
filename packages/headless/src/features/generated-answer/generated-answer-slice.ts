@@ -15,6 +15,7 @@ import {
   updateResponseFormat,
   sendGeneratedAnswerFeedback,
   registerFieldsToIncludeInCitations,
+  setId,
 } from './generated-answer-actions';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
 
@@ -24,6 +25,9 @@ export const generatedAnswerReducer = createReducer(
     builder
       .addCase(setIsVisible, (state, {payload}) => {
         state.isVisible = payload;
+      })
+      .addCase(setId, (state, {payload}) => {
+        state.id = payload.id;
       })
       .addCase(updateMessage, (state, {payload}) => {
         state.isLoading = false;
@@ -73,6 +77,7 @@ export const generatedAnswerReducer = createReducer(
           responseFormat: state.responseFormat,
           fieldsToIncludeInCitations: state.fieldsToIncludeInCitations,
           isVisible: state.isVisible,
+          id: state.id,
         };
       })
       .addCase(setIsLoading, (state, {payload}) => {

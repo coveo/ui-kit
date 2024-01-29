@@ -17,6 +17,7 @@ import {
   setIsVisible,
   sendGeneratedAnswerFeedback,
   registerFieldsToIncludeInCitations,
+  setId,
 } from '../../../features/generated-answer/generated-answer-actions';
 import {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions';
 import {generatedAnswerReducer as generatedAnswer} from '../../../features/generated-answer/generated-answer-slice';
@@ -29,6 +30,7 @@ import {
   SearchSection,
 } from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
+import {randomID} from '../../../utils/utils';
 import {
   Controller,
   buildController,
@@ -122,12 +124,17 @@ export interface GeneratedAnswerProps {
   fieldsToIncludeInCitations?: string[];
 }
 
-interface ISubscribeStateManager {
-  abortController: AbortController | undefined;
-  lastRequestId: string;
-  lastStreamId: string;
-  getIsStreamInProgress: () => boolean;
-  setAbortControllerRef: (ref: AbortController) => void;
+interface SubscribeStateManager {
+  engines: Record<
+    string,
+    {
+      abortController: AbortController | undefined;
+      lastRequestId: string;
+      lastStreamId: string;
+    }
+  >;
+  getIsStreamInProgress: (engineId: string) => boolean;
+  setAbortControllerRef: (ref: AbortController, engineId: string) => void;
   subscribeToSearchRequests: (
     engine: CoreEngine<
       GeneratedAnswerSection & SearchSection & DebugSection,
@@ -136,60 +143,57 @@ interface ISubscribeStateManager {
   ) => Unsubscribe;
 }
 
-class SubscribeStateManager implements ISubscribeStateManager {
-  abortController: AbortController | undefined;
-  lastRequestId: string;
-  lastStreamId: string;
+const subscribeStateManager: SubscribeStateManager = {
+  engines: {},
 
-  constructor() {
-    this.abortController = undefined;
-    this.lastRequestId = '';
-    this.lastStreamId = '';
-  }
+  setAbortControllerRef: (ref: AbortController, engineId: string) => {
+    subscribeStateManager.engines[engineId].abortController = ref;
+  },
 
-  setAbortControllerRef(ref: AbortController) {
-    this.abortController = ref;
-  }
-
-  getIsStreamInProgress() {
-    if (!this.abortController || this.abortController?.signal.aborted) {
-      this.abortController = undefined;
+  getIsStreamInProgress: (engineId: string) => {
+    if (
+      !subscribeStateManager.engines[engineId].abortController ||
+      subscribeStateManager.engines[engineId].abortController?.signal.aborted
+    ) {
+      subscribeStateManager.engines[engineId].abortController = undefined;
       return false;
     }
     return true;
-  }
+  },
 
-  subscribeToSearchRequests(
-    engine: CoreEngine<
-      GeneratedAnswerSection & SearchSection & DebugSection,
-      ClientThunkExtraArguments<GeneratedAnswerAPIClient>
-    >
-  ) {
+  subscribeToSearchRequests: (engine) => {
     const strictListener = () => {
       const state = engine.state;
       const requestId = state.search.requestId;
       const streamId =
         state.search.extendedResults.generativeQuestionAnsweringId;
+      const engineId = state.generatedAnswer.id;
 
-      if (this.lastRequestId !== requestId) {
-        this.lastRequestId = requestId;
-        this.abortController?.abort();
+      if (subscribeStateManager.engines[engineId].lastRequestId !== requestId) {
+        subscribeStateManager.engines[engineId].lastRequestId = requestId;
+        subscribeStateManager.engines[engineId].abortController?.abort();
         engine.dispatch(resetAnswer());
       }
 
-      const isStreamInProgress = this.getIsStreamInProgress();
-      if (!isStreamInProgress && streamId && streamId !== this.lastStreamId) {
-        this.lastStreamId = streamId;
+      const isStreamInProgress =
+        subscribeStateManager.getIsStreamInProgress(engineId);
+      if (
+        !isStreamInProgress &&
+        streamId &&
+        streamId !== subscribeStateManager.engines[engineId].lastStreamId
+      ) {
+        subscribeStateManager.engines[engineId].lastStreamId = streamId;
         engine.dispatch(
           streamAnswer({
-            setAbortControllerRef: this.setAbortControllerRef,
+            setAbortControllerRef: (ref: AbortController) =>
+              subscribeStateManager.setAbortControllerRef(ref, engineId),
           })
         );
       }
     };
     return engine.subscribe(strictListener);
-  }
-}
+  },
+};
 
 export interface GeneratedAnswerAnalyticsClient {
   logLikeGeneratedAnswer: () => CustomAction;
@@ -232,6 +236,16 @@ export function buildCoreGeneratedAnswer(
   const controller = buildController(engine);
   const getState = () => engine.state;
 
+  if (!engine.state.generatedAnswer.id) {
+    const engineId = randomID('genQA-', 12);
+    dispatch(setId({id: engineId}));
+    subscribeStateManager.engines[engineId] = {
+      abortController: undefined,
+      lastRequestId: '',
+      lastStreamId: '',
+    };
+  }
+
   const isVisible = props.initialState?.isVisible;
   if (isVisible !== undefined) {
     dispatch(setIsVisible(isVisible));
@@ -245,7 +259,7 @@ export function buildCoreGeneratedAnswer(
   if (fieldsToIncludeInCitations) {
     dispatch(registerFieldsToIncludeInCitations(fieldsToIncludeInCitations));
   }
-  const subscribeStateManager = new SubscribeStateManager();
+
   subscribeStateManager.subscribeToSearchRequests(engine);
 
   return {
