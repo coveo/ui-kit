@@ -191,3 +191,18 @@ export const logCopyGeneratedAnswer = (): CustomAction =>
       generativeQuestionAnsweringId,
     });
   });
+
+export const generatedAnswerAnalyticsClient = {
+  logCopyGeneratedAnswer,
+  logGeneratedAnswerHideAnswers,
+  logGeneratedAnswerShowAnswers,
+  logGeneratedAnswerStreamEnd,
+  logGeneratedAnswerDetailedFeedback,
+  logGeneratedAnswerFeedback,
+  logDislikeGeneratedAnswer,
+  logLikeGeneratedAnswer,
+  logHoverCitation,
+  logOpenGeneratedAnswerSource,
+  logRetryGeneratedAnswer,
+  logRephraseGeneratedAnswer,
+};

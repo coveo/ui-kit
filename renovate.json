@@ -35,6 +35,12 @@
       "rangeStrategy": "replace"
     },
     {
+      "matchPackagePatterns": ["^redux-*", "^@redux/*"],
+      "groupName": "Redux",
+      "groupSlug": "Redux",
+      "rangeStrategy": "replace"
+    },
+    {
       "matchPackagePatterns": ["^@storybook/*"],
       "groupName": "Storybook",
       "groupSlug": "storybook",
@@ -104,6 +110,25 @@
       "rangeStrategy": "replace",
       "allowedVersions": "1.5.0",
       "description": "Lock until bahmutov/cypress-repeat#52 is fixed"
+    },
+    {
+      "matchFileNames": ["packages/atomic-angular/package.json"],
+      "matchPackagePatterns": ["^typescript$"],
+      "groupSlug": "angular-typescript",
+      "rangeStrategy": "replace",
+      "allowedVersions": "5.1.x",
+      "description": "@angular/compiler-cli choke with TS > 5.1"
+    },
+    {
+      "matchFileNames": [
+        "packages/headless/package.json",
+        "packages/headless-react/package.json"
+      ],
+      "matchPackagePatterns": ["^undici$"],
+      "groupSlug": "undici",
+      "rangeStrategy": "replace",
+      "allowedVersions": "6.x",
+      "description": "undici 6.x drops support for Node 16"
     }
   ],
   "rangeStrategy": "auto",

@@ -20,7 +20,7 @@ export const DidYouMean: FunctionComponent<DidYouMeanProps> = (props) => {
       <div>
         <p>
           No results for{' '}
-          <b>{state.queryCorrection.wordCorrections[0].originalWord}</b>
+          <b>{state.queryCorrection.wordCorrections![0].originalWord}</b>
         </p>
         <p>
           Query was automatically corrected to <b>{state.wasCorrectedTo}</b>

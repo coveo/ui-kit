@@ -20,7 +20,9 @@ import {
 } from '../features/analytics/analytics-actions';
 import {LegacySearchAction} from '../features/analytics/analytics-utils';
 import {
+  didYouMeanAutomatic,
   didYouMeanClick,
+  logDidYouMeanAutomatic,
   logDidYouMeanClick,
 } from '../features/did-you-mean/did-you-mean-analytics-actions';
 import {registerCategoryFacet} from '../features/facets/category-facet-set/category-facet-set-actions';
@@ -138,18 +140,25 @@ function extractAndExcludeProperties(
   } = call.mock.calls[callIndex][0] as {
     requestParams: {analytics?: Record<string, unknown>};
   };
-
-  return excludeProperties(analytics);
+  let result = analytics;
+  result = excludeProperties(result, excludedBaseProperties);
+  result.customData = excludeProperties(
+    result?.customData ?? {},
+    excludedCustomDataProperties
+  );
+  return result;
 }
 
 async function wait() {
   return new Promise((resolve) => setTimeout(resolve, 0));
 }
 
-function excludeProperties(obj: Record<string, unknown>) {
+function excludeProperties(
+  obj: Record<string, unknown> | object,
+  excludedKeys: string[]
+) {
   const result = {...obj};
-  excludedBaseProperties.forEach((prop: string) => delete result[prop]);
-
+  excludedKeys.forEach((prop: string) => delete result[prop]);
   return result;
 }
 
@@ -158,7 +167,10 @@ const excludedBaseProperties = [
   'capture',
   'clientTimestamp',
   'trackingId',
+  'source',
 ];
+
+const excludedCustomDataProperties = ['coveoHeadlessVersion'];
 
 const ANY_FACET_VALUE = 'any facet value';
 const ANY_FACET_ID = 'any facet id';
@@ -923,6 +935,18 @@ describe('Analytics Search Migration', () => {
       next: omniboxFromLink(metadata),
     });
 
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await wait();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/didyoumean/automatic', async () => {
+    const action = executeSearch({
+      legacy: logDidYouMeanAutomatic(),
+      next: didYouMeanAutomatic(),
+    });
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
     await wait();

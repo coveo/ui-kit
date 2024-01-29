@@ -23,15 +23,15 @@ export function SearchPageProvider({
   >(undefined);
 
   useEffect(() => {
-    const {urlManager, context} = staticState.controllers;
+    const {searchParameterManager, context} = staticState.controllers;
     hydrateStaticState({
       searchAction: staticState.searchAction,
       controllers: {
         context: {
           initialState: context.state,
         },
-        urlManager: {
-          initialState: urlManager.state,
+        searchParameterManager: {
+          initialState: searchParameterManager.state,
         },
       },
     }).then(({engine, controllers}) => {

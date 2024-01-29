@@ -33,6 +33,7 @@ export * from './features/facets/range-facets/numeric-facet-set/numeric-facet-ac
 export * from './features/recent-results/recent-results-actions-loader';
 export * from './features/facets/range-facets/date-facet-set/date-facet-actions-loader';
 export * from './features/case-context/case-context-actions-loader';
+export * from './features/context/context-actions-loader';
 export * from './features/insight-search/insight-search-analytics-actions-loader';
 export * from './features/fields/fields-actions-loader';
 export * from './features/attached-results/attached-results-actions-loader';
@@ -307,6 +308,20 @@ export type {
 } from './controllers/insight/smart-snippet-questions-list/headless-insight-smart-snippet-questions-list';
 export {buildSmartSnippetQuestionsList} from './controllers/insight/smart-snippet-questions-list/headless-insight-smart-snippet-questions-list';
 
+export type {
+  GeneratedAnswer,
+  GeneratedAnswerState,
+  GeneratedAnswerProps,
+} from './controllers/insight/generated-answer/headless-insight-generated-answer';
+export {buildGeneratedAnswer} from './controllers/insight/generated-answer/headless-insight-generated-answer';
+
+export type {
+  InteractiveCitation,
+  InteractiveCitationProps,
+  InteractiveCitationOptions,
+} from './controllers/insight/generated-answer/headless-insight-interactive-citation';
+export {buildInteractiveCitation} from './controllers/insight/generated-answer/headless-insight-interactive-citation';
+export type {GeneratedAnswerStyle} from './features/generated-answer/generated-response-format';
 // Features
 export type {
   ResultTemplate,
