@@ -6,7 +6,7 @@ import {loadReducerError} from '../../utils/errors';
 import {buildController, Controller} from '../controller/headless-controller';
 
 /**
- * The `Redirection` triggers redirects the web browser to a specific URL. The `RedirectionTrigger` controller handles redirection actions.
+ * The `Redirection` triggers redirects the web browser to a specific URL. The `RedirectionTrigger` controller handles redirection triggers.
  *
  * See [Trigger - Query pipeline feature](https://docs.coveo.com/en/1458/) and [Redirection trigger reference](https://docs.coveo.com/en/3413/tune-relevance/manage-trigger-rules#redirect).
  */
