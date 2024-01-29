@@ -415,6 +415,12 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       .filter((field) => field.length > 0);
   }
 
+  get rephraseButtonsCssClass() {
+    return `slds-var-m-top_small slds-grid flex-one ${
+      this.multilineFooter ? '' : 'slds-grid_align-end'
+    }`;
+  }
+
   /**
    * Sets the component in the initialization error state.
    */
