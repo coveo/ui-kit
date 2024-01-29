@@ -82,11 +82,13 @@
               </template>
             </div>
           </div>
-          <c-quantic-search-box-suggestions-list
-            suggestions={suggestions}
-            onhighlightchange={handleHighlightChange}
-            onsuggestionselected={handleSuggestionSelection}
-          ></c-quantic-search-box-suggestions-list>
+          <template if:true={hasSuggestions}>
+            <c-quantic-search-box-suggestions-list
+              suggestions={suggestions}
+              onhighlightchange={handleHighlightChange}
+              onsuggestionselected={handleSuggestionSelection}
+            ></c-quantic-search-box-suggestions-list>
+          </template>
         </div>
       </div>
     </div>

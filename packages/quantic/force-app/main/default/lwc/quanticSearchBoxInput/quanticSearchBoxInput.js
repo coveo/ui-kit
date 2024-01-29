@@ -188,7 +188,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
     if (this.areSuggestionsOpen && selectedSuggestion) {
       this.sendSelectSuggestionEvent(selectedSuggestion.rawValue);
       this.input.blur();
-    } else if (this.isClearButtonFocused === true) {
+    } else if (this.isClearButtonFocused) {
       this.clearInput();
     } else {
       this.sendSubmitSearchEvent();
@@ -350,6 +350,10 @@ export default class QuanticSearchBoxInput extends LightningElement {
 
   get inputClearButton() {
     return this.template.querySelector('.searchbox__clear-button');
+  }
+
+  get hasSuggestions() {
+    return this.suggestions?.length;
   }
 
   render() {
