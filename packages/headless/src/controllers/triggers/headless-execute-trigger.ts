@@ -7,8 +7,10 @@ import {arrayEqual} from '../../utils/compare-utils';
 import {loadReducerError} from '../../utils/errors';
 import {buildController, Controller} from '../controller/headless-controller';
 
-/**
- * The `ExecuteTrigger` controller handles execute trigger actions.
+/** 
+ * The `Execute` triggers executes a custom JavaScript function call. The `ExecuteTrigger` controller handles execute trigger actions.
+ * 
+ * See [Trigger - Query pipeline feature](https://docs.coveo.com/en/1458/) and [Execute trigger reference](https://docs.coveo.com/en/3413/tune-relevance/manage-trigger-rules#execute).
  */
 export interface ExecuteTrigger extends Controller {
   /**
