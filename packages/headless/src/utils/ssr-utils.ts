@@ -54,6 +54,12 @@ function deleteCookie(cookies: CookieStore) {
   cookies.delete(cookieName);
 }
 
+/**
+ * Middleware function for tracking analytics in SSR.
+ *
+ * @param headers - The headers object containing request headers.
+ * @param cookies - The cookie store object for managing cookies.
+ */
 export function analyticsTrackerMiddleware(
   headers: Headers,
   cookies: CookieStore
