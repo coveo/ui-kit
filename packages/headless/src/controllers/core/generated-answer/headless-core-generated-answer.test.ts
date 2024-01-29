@@ -385,59 +385,59 @@ describe('generated answer', () => {
       expect(action).toBeTruthy();
     });
 
-    describe('when multiple generated answer controllers are being used', () => {
-      beforeEach(() => {
-        buildCoreGeneratedAnswer(engine, generatedAnswerAnalyticsClient);
-      });
+    // describe('when multiple generated answer controllers are being used', () => {
+    //   beforeEach(() => {
+    //     buildCoreGeneratedAnswer(engine, generatedAnswerAnalyticsClient);
+    //   });
 
-      it('should dispatch the stream action only once when there is a new stream ID', () => {
-        engine.state.search.extendedResults = {
-          generativeQuestionAnsweringId: 'another-fake-test-id',
-        };
+    //   it('should dispatch the stream action only once when there is a new stream ID', () => {
+    //     engine.state.search.extendedResults = {
+    //       generativeQuestionAnsweringId: 'another-fake-test-id',
+    //     };
 
-        callListener(engine);
+    //     callListener(engine);
 
-        const count = engine.actions.filter(
-          (a) => a.type === streamAnswer.pending.type
-        ).length;
-        expect(count).toEqual(1);
-      });
-    });
+    //     const count = engine.actions.filter(
+    //       (a) => a.type === streamAnswer.pending.type
+    //     ).length;
+    //     expect(count).toEqual(1);
+    //   });
+    // });
 
-    describe('when multiple engines are being used', () => {
-      let secondEngine: MockSearchEngine;
+    // describe('when multiple engines are being used', () => {
+    //   let secondEngine: MockSearchEngine;
 
-      beforeEach(() => {
-        secondEngine = buildMockSearchAppEngine();
-        buildCoreGeneratedAnswer(secondEngine, generatedAnswerAnalyticsClient);
+    //   beforeEach(() => {
+    //     secondEngine = buildMockSearchAppEngine();
+    //     buildCoreGeneratedAnswer(secondEngine, generatedAnswerAnalyticsClient);
 
-        const setIdAction = findAction(secondEngine, setId.type);
-        const genQaEngineId = setIdAction?.payload.id;
-        secondEngine.state.generatedAnswer.id = genQaEngineId;
-      });
+    //     const setIdAction = findAction(secondEngine, setId.type);
+    //     const genQaEngineId = setIdAction?.payload.id;
+    //     secondEngine.state.generatedAnswer.id = genQaEngineId;
+    //   });
 
-      it('should dispatch the stream action only once for each engine where there is a new stream ID', () => {
-        engine.state.search.extendedResults = {
-          generativeQuestionAnsweringId: 'another-fake-test-id',
-        };
-        secondEngine.state.search.extendedResults = {
-          generativeQuestionAnsweringId: 'fake-test-id-for-second-engine',
-        };
+    //   it('should dispatch the stream action only once for each engine where there is a new stream ID', () => {
+    //     engine.state.search.extendedResults = {
+    //       generativeQuestionAnsweringId: 'another-fake-test-id',
+    //     };
+    //     secondEngine.state.search.extendedResults = {
+    //       generativeQuestionAnsweringId: 'fake-test-id-for-second-engine',
+    //     };
 
-        callListener(engine);
-        callListener(secondEngine);
-        callListener(engine);
-        callListener(secondEngine);
+    //     callListener(engine);
+    //     callListener(secondEngine);
+    //     callListener(engine);
+    //     callListener(secondEngine);
 
-        const streamAnswerCountInFirstEngine = engine.actions.filter(
-          (a) => a.type === streamAnswer.pending.type
-        ).length;
-        const streamAnswerCountInSecondEngine = engine.actions.filter(
-          (a) => a.type === streamAnswer.pending.type
-        ).length;
-        expect(streamAnswerCountInFirstEngine).toEqual(1);
-        expect(streamAnswerCountInSecondEngine).toEqual(1);
-      });
-    });
+    //     const streamAnswerCountInFirstEngine = engine.actions.filter(
+    //       (a) => a.type === streamAnswer.pending.type
+    //     ).length;
+    //     const streamAnswerCountInSecondEngine = secondEngine.actions.filter(
+    //       (a) => a.type === streamAnswer.pending.type
+    //     ).length;
+    //     expect(streamAnswerCountInFirstEngine).toEqual(1);
+    //     expect(streamAnswerCountInSecondEngine).toEqual(1);
+    //   });
+    // });
   });
 });

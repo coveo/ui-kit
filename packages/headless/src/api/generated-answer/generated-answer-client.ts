@@ -64,9 +64,11 @@ class TimeoutStateManager {
 
 export class GeneratedAnswerAPIClient {
   private logger: Logger;
+  private lastStreamId: string;
 
   constructor(options: GeneratedAnswerAPIClientOptions) {
     this.logger = options.logger;
+    this.lastStreamId = '';
   }
 
   streamGeneratedAnswer(
@@ -77,10 +79,15 @@ export class GeneratedAnswerAPIClient {
     const {write, abort, close, resetAnswer} = callbacks;
     const timeoutStateManager = new TimeoutStateManager();
 
+    if (streamId === this.lastStreamId) {
+      return;
+    }
+
     if (!streamId) {
       this.logger.error('No stream ID found');
       return;
     }
+    this.lastStreamId = streamId;
 
     let retryCount = 0;
     let timeout: ReturnType<typeof setTimeout> | undefined;
