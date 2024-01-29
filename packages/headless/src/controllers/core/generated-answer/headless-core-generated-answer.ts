@@ -125,6 +125,8 @@ export interface GeneratedAnswerProps {
 interface ISubscribeStateManager {
   abortController: AbortController | undefined;
   lastRequestId: string;
+  lastStreamId: string;
+
   getIsStreamInProgress: () => boolean;
   setAbortControllerRef: (ref: AbortController) => void;
   subscribeToSearchRequests: (
@@ -138,10 +140,12 @@ interface ISubscribeStateManager {
 class SubscribeStateManager implements ISubscribeStateManager {
   abortController: AbortController | undefined;
   lastRequestId: string;
+  lastStreamId: string;
 
   constructor() {
     this.abortController = undefined;
     this.lastRequestId = '';
+    this.lastStreamId = '';
   }
 
   setAbortControllerRef(ref: AbortController) {
@@ -175,7 +179,8 @@ class SubscribeStateManager implements ISubscribeStateManager {
       }
 
       const isStreamInProgress = this.getIsStreamInProgress();
-      if (!isStreamInProgress && streamId) {
+      if (!isStreamInProgress && streamId && streamId !== this.lastStreamId) {
+        this.lastStreamId = streamId;
         engine.dispatch(
           streamAnswer({
             setAbortControllerRef: this.setAbortControllerRef,
