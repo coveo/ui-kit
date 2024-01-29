@@ -7,9 +7,7 @@ import {loadReducerError} from '../../utils/errors';
 import {buildController, Controller} from '../controller/headless-controller';
 
 /**
- * The `Notify` triggers allows you to display a message to the end user. The `NotifyTrigger` controller handles notify triggers.
- *
- * See [Trigger - Query pipeline feature](https://docs.coveo.com/en/1458/) and [Notify trigger reference](https://docs.coveo.com/en/3413/tune-relevance/manage-trigger-rules#notify).
+ * The `NotifyTrigger` controller handles notify triggers. A [Notify trigger] (https://docs.coveo.com/en/3413/tune-relevance/manage-trigger-rules#notify) query pipeline rule lets you display a message to the end user when a certain condition is met.
  */
 export interface NotifyTrigger extends Controller {
   /**
