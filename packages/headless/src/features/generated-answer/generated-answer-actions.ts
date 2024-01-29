@@ -226,3 +226,10 @@ export const streamAnswer = createAsyncThunk<
     dispatch(setIsLoading(false));
   }
 });
+
+export const registerAnswerStreamManager = createAction(
+  'answerStreamManager/register'
+);
+export const notifyStreamAborted = createAction(
+  'answerStreamManager/streamAborted'
+);

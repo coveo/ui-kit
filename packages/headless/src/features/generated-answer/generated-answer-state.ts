@@ -3,6 +3,10 @@ import {GeneratedResponseFormat} from './generated-response-format';
 
 export interface GeneratedAnswerState {
   /**
+   * Determines if the engine has an answer stream manager.
+   */
+  hasAnswerStreamManager: boolean;
+  /**
    * Determines if the generated answer is visible.
    */
   isVisible: boolean;
@@ -54,10 +58,23 @@ export interface GeneratedAnswerState {
    * A list of indexed fields to include in the citations returned with the generated answer.
    */
   fieldsToIncludeInCitations: string[];
+  /**
+   * Whether the current answer stream should be aborted.
+   */
+  shouldAbortStream: boolean;
+  /**
+   * Whether an answer stream should be started.
+   */
+  shouldStartStream: boolean;
+  /**
+   * The current answer stream id.
+   */
+  currentStreamId?: string;
 }
 
 export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
   return {
+    hasAnswerStreamManager: false,
     isVisible: true,
     isLoading: false,
     isStreaming: false,
@@ -70,5 +87,8 @@ export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
     feedbackModalOpen: false,
     feedbackSubmitted: false,
     fieldsToIncludeInCitations: [],
+    shouldAbortStream: false,
+    shouldStartStream: false,
+    currentStreamId: undefined,
   };
 }

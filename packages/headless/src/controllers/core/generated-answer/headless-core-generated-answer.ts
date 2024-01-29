@@ -1,14 +1,9 @@
-import {Unsubscribe} from '@reduxjs/toolkit';
-import {GeneratedAnswerAPIClient} from '../../../api/generated-answer/generated-answer-client';
 import {GeneratedAnswerCitation} from '../../../api/generated-answer/generated-answer-event-payload';
-import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
 import {
   CustomAction,
   LegacySearchAction,
 } from '../../../features/analytics/analytics-utils';
 import {
-  streamAnswer,
-  resetAnswer,
   likeGeneratedAnswer,
   dislikeGeneratedAnswer,
   updateResponseFormat,
@@ -33,6 +28,7 @@ import {
   Controller,
   buildController,
 } from '../../controller/headless-controller';
+import {buildAnswerStreamManager} from './headless-answer-stream-manager';
 
 export type {
   GeneratedAnswerCitation,
@@ -122,71 +118,6 @@ export interface GeneratedAnswerProps {
   fieldsToIncludeInCitations?: string[];
 }
 
-interface SubscribeStateManager {
-  abortController: AbortController | undefined;
-  lastRequestId: string;
-  lastStreamId: string;
-  getIsStreamInProgress: () => boolean;
-  setAbortControllerRef: (ref: AbortController) => void;
-  subscribeToSearchRequests: (
-    engine: CoreEngine<
-      GeneratedAnswerSection & SearchSection & DebugSection,
-      ClientThunkExtraArguments<GeneratedAnswerAPIClient>
-    >
-  ) => Unsubscribe;
-}
-
-const subscribeStateManager: SubscribeStateManager = {
-  abortController: undefined,
-  lastRequestId: '',
-  lastStreamId: '',
-
-  setAbortControllerRef: (ref: AbortController) => {
-    subscribeStateManager.abortController = ref;
-  },
-
-  getIsStreamInProgress: () => {
-    if (
-      !subscribeStateManager.abortController ||
-      subscribeStateManager.abortController?.signal.aborted
-    ) {
-      subscribeStateManager.abortController = undefined;
-      return false;
-    }
-    return true;
-  },
-
-  subscribeToSearchRequests: (engine) => {
-    const strictListener = () => {
-      const state = engine.state;
-      const requestId = state.search.requestId;
-      const streamId =
-        state.search.extendedResults.generativeQuestionAnsweringId;
-
-      if (subscribeStateManager.lastRequestId !== requestId) {
-        subscribeStateManager.lastRequestId = requestId;
-        subscribeStateManager.abortController?.abort();
-        engine.dispatch(resetAnswer());
-      }
-
-      const isStreamInProgress = subscribeStateManager.getIsStreamInProgress();
-      if (
-        !isStreamInProgress &&
-        streamId &&
-        streamId !== subscribeStateManager.lastStreamId
-      ) {
-        subscribeStateManager.lastStreamId = streamId;
-        engine.dispatch(
-          streamAnswer({
-            setAbortControllerRef: subscribeStateManager.setAbortControllerRef,
-          })
-        );
-      }
-    };
-    return engine.subscribe(strictListener);
-  },
-};
-
 export interface GeneratedAnswerAnalyticsClient {
   logLikeGeneratedAnswer: () => CustomAction;
   logDislikeGeneratedAnswer: () => CustomAction;
@@ -242,7 +173,7 @@ export function buildCoreGeneratedAnswer(
     dispatch(registerFieldsToIncludeInCitations(fieldsToIncludeInCitations));
   }
 
-  subscribeStateManager.subscribeToSearchRequests(engine);
+  buildAnswerStreamManager(engine);
 
   return {
     ...controller,
