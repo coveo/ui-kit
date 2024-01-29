@@ -432,7 +432,7 @@ describe('generated answer', () => {
         const streamAnswerCountInFirstEngine = engine.actions.filter(
           (a) => a.type === streamAnswer.pending.type
         ).length;
-        const streamAnswerCountInSecondEngine = engine.actions.filter(
+        const streamAnswerCountInSecondEngine = secondEngine.actions.filter(
           (a) => a.type === streamAnswer.pending.type
         ).length;
         expect(streamAnswerCountInFirstEngine).toEqual(1);
