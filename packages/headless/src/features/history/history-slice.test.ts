@@ -106,7 +106,6 @@ describe('history slice', () => {
         defaultFilters: {aq: '', cq: '', lq: '', dq: ''},
       },
       querySet: {foo: 'bar', hello: 'world'},
-      instantResults: {},
       sortCriteria: 'date descending',
       pipeline: 'my-pipeline',
       searchHub: 'my-search-hub',
