@@ -7,7 +7,7 @@ import {
   DateRangeRequest,
   FacetValueRequest,
   NumericRangeRequest,
-} from '../../../../controllers/commerce/facets/core/headless-core-commerce-facet';
+} from '../../../../controllers/commerce/core/facets/headless-core-commerce-facet';
 import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
 import {
   toggleExcludeFacetValue,

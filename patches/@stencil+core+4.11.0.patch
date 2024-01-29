@@ -1,8 +1,8 @@
 diff --git a/node_modules/@stencil/core/compiler/stencil.js b/node_modules/@stencil/core/compiler/stencil.js
-index ab7fa89..2163349 100644
+index a28f920..4b09e39 100644
 --- a/node_modules/@stencil/core/compiler/stencil.js
 +++ b/node_modules/@stencil/core/compiler/stencil.js
-@@ -254046,7 +254046,7 @@ const visitClassDeclaration = (config, diagnostics, typeChecker, program, classN
+@@ -268843,7 +268843,7 @@ const visitClassDeclaration = (config, diagnostics, typeChecker, program, classN
      // We call the `handleClassFields` method which handles transforming any
      // class fields, removing them from the class and adding statements to the
      // class' constructor which instantiate them there instead.
@@ -10,11 +10,11 @@ index ab7fa89..2163349 100644
 +    const updatedClassFields = handleClassFields(classNode, decoratedMembers, typeChecker, importAliasMap, filteredMethodsAndFields);
      validateMethods(diagnostics, classMembers);
      const currentDecorators = retrieveTsDecorators(classNode);
-     return ts.factory.updateClassDeclaration(classNode, [
-@@ -254081,19 +254081,8 @@ const removeStencilMethodDecorators = (classMembers, diagnostics, importAliasMap
-                 return ts.factory.updateMethodDeclaration(member, [...(newDecorators !== null && newDecorators !== void 0 ? newDecorators : []), ...((_a = retrieveTsModifiers(member)) !== null && _a !== void 0 ? _a : [])], member.asteriskToken, member.name, member.questionToken, member.typeParameters, member.parameters, member.type, member.body);
+     return ts$1.factory.updateClassDeclaration(classNode, [
+@@ -268878,19 +268878,8 @@ const removeStencilMethodDecorators = (classMembers, diagnostics, importAliasMap
+                 return ts$1.factory.updateMethodDeclaration(member, [...(newDecorators !== null && newDecorators !== void 0 ? newDecorators : []), ...((_a = retrieveTsModifiers(member)) !== null && _a !== void 0 ? _a : [])], member.asteriskToken, member.name, member.questionToken, member.typeParameters, member.parameters, member.type, member.body);
              }
-             else if (ts.isPropertyDeclaration(member)) {
+             else if (ts$1.isPropertyDeclaration(member)) {
 -                if (shouldInitializeInConstructor(member, importAliasMap)) {
 -                    // if the current class member is decorated with either 'State' or
 -                    // 'Prop' we need to modify the property declaration to transform it
@@ -26,14 +26,14 @@ index ab7fa89..2163349 100644
 -                else {
 -                    // update the property to remove decorators
 -                    const modifiers = retrieveTsModifiers(member);
--                    return ts.factory.updatePropertyDeclaration(member, [...(newDecorators !== null && newDecorators !== void 0 ? newDecorators : []), ...(modifiers !== null && modifiers !== void 0 ? modifiers : [])], member.name, member.questionToken, member.type, member.initializer);
+-                    return ts$1.factory.updatePropertyDeclaration(member, [...(newDecorators !== null && newDecorators !== void 0 ? newDecorators : []), ...(modifiers !== null && modifiers !== void 0 ? modifiers : [])], member.name, member.questionToken, member.type, member.initializer);
 -                }
 +                const modifiers = retrieveTsModifiers(member);
-+                return ts.factory.updatePropertyDeclaration(member, [...(newDecorators !== null && newDecorators !== void 0 ? newDecorators : []), ...(modifiers !== null && modifiers !== void 0 ? modifiers : [])], member.name, member.questionToken, member.type, member.initializer);
++                return ts$1.factory.updatePropertyDeclaration(member, [...(newDecorators !== null && newDecorators !== void 0 ? newDecorators : []), ...(modifiers !== null && modifiers !== void 0 ? modifiers : [])], member.name, member.questionToken, member.type, member.initializer);
              }
              else {
                  const err = buildError(diagnostics);
-@@ -254233,10 +254222,9 @@ const filterDecorators = (decorators, excludeList) => {
+@@ -269030,10 +269019,9 @@ const filterDecorators = (decorators, excludeList) => {
   * @param importAliasMap a map of Stencil decorator names to their import names
   * @returns a list of updated class elements which can be inserted into the class
   */
@@ -43,11 +43,11 @@ index ab7fa89..2163349 100644
      const statements = [];
 -    const updatedClassMembers = [];
      for (const member of classMembers) {
-         if (shouldInitializeInConstructor(member, importAliasMap) && ts.isPropertyDeclaration(member)) {
+         if (shouldInitializeInConstructor(member, importAliasMap) && ts$1.isPropertyDeclaration(member)) {
              const memberName = tsPropDeclNameAsString(member, typeChecker);
-@@ -254247,11 +254235,6 @@ function handleClassFields(classNode, classMembers, typeChecker, importAliasMap)
+@@ -269044,11 +269032,6 @@ function handleClassFields(classNode, classMembers, typeChecker, importAliasMap)
              // just 'undefined'
-             (_a = member.initializer) !== null && _a !== void 0 ? _a : ts.factory.createIdentifier('undefined'))));
+             (_a = member.initializer) !== null && _a !== void 0 ? _a : ts$1.factory.createIdentifier('undefined'))));
          }
 -        else {
 -            // if it's not a class field that is decorated with a Stencil decorator then

@@ -1,7 +1,7 @@
 import {executeSearch} from '../../../../features/commerce/search/search-actions';
 import {commerceSearchReducer as commerceSearch} from '../../../../features/commerce/search/search-slice';
 import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
-import {Pagination} from '../../pagination/core/headless-core-commerce-pagination';
+import {Pagination} from '../../core/pagination/headless-core-commerce-pagination';
 import {buildSearchPagination} from './headless-search-pagination';
 
 describe('search pagination', () => {

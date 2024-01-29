@@ -1,9 +1,9 @@
 'use client';
 
-import {NextJsSearchParameterSerializer} from '@/common/components/common/search-parameter-serializer';
 import {
   SearchParameterManager,
   SearchParameterManagerState,
+  buildSSRSearchParameterSerializer,
 } from '@coveo/headless/ssr';
 import {useEffect, useMemo, useState} from 'react';
 import {useAppHistoryRouter} from '../../components/common/history-router';
@@ -46,11 +46,9 @@ export function useSyncSearchParameterManager({
     if (!controller || !historyRouter.url?.searchParams) {
       return;
     }
-    const {searchParameters: coveoSearchParameters} =
-      NextJsSearchParameterSerializer.fromUrlSearchParameters(
-        historyRouter.url.searchParams
-      );
-    return controller.synchronize(coveoSearchParameters);
+    const {toSearchParameters} = buildSSRSearchParameterSerializer();
+    const searchParameters = toSearchParameters(historyRouter.url.searchParams);
+    return controller.synchronize(searchParameters);
   }, [historyRouter.url?.searchParams, controller]);
 
   // Update the URL.
@@ -58,13 +56,10 @@ export function useSyncSearchParameterManager({
     if (!historyRouter.url) {
       return null;
     }
-
+    const {serialize} = buildSSRSearchParameterSerializer();
     const newURL = new URL(historyRouter.url);
-    NextJsSearchParameterSerializer.fromSearchParameters(
-      state.parameters
-    ).applyToUrlSearchParams(newURL.searchParams);
+    return serialize(state.parameters, newURL);
 
-    return newURL.href;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.parameters]);
 
@@ -73,6 +68,10 @@ export function useSyncSearchParameterManager({
       return;
     }
 
+    const {pathname} = new URL(correctedUrl);
+    if (pathname !== document.location.pathname) {
+      return;
+    }
     const isStaticState = controller === undefined;
     historyRouter[isStaticState ? 'replace' : 'push'](correctedUrl);
     // eslint-disable-next-line react-hooks/exhaustive-deps

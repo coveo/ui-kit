@@ -1,3 +1,10 @@
+## 2.43.3 (2024-01-24)
+
+### Bug Fixes
+
+- **quantic:** adjust citation tooltip width in specific situations inside Salesforce ([#3538](https://github.com/coveo/ui-kit/issues/3538)) ([5f6ffa0](https://github.com/coveo/ui-kit/commits/5f6ffa089ba0537a4484c927269aebfed93354db))
+- **quantic:** fixed issue of copy to clipboard button not being displayed ([#3542](https://github.com/coveo/ui-kit/issues/3542)) ([27bed45](https://github.com/coveo/ui-kit/commits/27bed45a003273f67630b460e941935f951c0fc8))
+
 ## 2.43.2 (2024-01-19)
 
 ### Bug Fixes
