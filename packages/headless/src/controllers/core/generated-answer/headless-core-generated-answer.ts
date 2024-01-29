@@ -183,7 +183,7 @@ class SubscribeStateManager implements ISubscribeStateManager {
         this.lastStreamId = streamId;
         engine.dispatch(
           streamAnswer({
-            setAbortControllerRef: this.setAbortControllerRef,
+            setAbortControllerRef: this.setAbortControllerRef.bind(this),
           })
         );
       }

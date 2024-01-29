@@ -371,8 +371,11 @@ describe('generated answer', () => {
       callListener();
 
       const action = findAction(streamAnswer.pending.type);
-
+      const count = engine.actions.filter(
+        (a) => a.type === streamAnswer.pending.type
+      ).length;
       expect(action).toBeTruthy();
+      expect(count).toEqual(1);
     });
   });
 });
