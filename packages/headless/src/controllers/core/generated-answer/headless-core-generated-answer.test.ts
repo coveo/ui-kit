@@ -427,6 +427,7 @@ describe('generated answer', () => {
         callListener(engine);
         callListener(secondEngine);
         callListener(engine);
+        callListener(secondEngine);
 
         const streamAnswerCountInFirstEngine = engine.actions.filter(
           (a) => a.type === streamAnswer.pending.type
