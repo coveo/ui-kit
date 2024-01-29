@@ -14,7 +14,7 @@ import {buildController, Controller} from '../controller/headless-controller';
 
 /**
  * The `Query` triggers allows the user to perform a new query. The `QueryTrigger` controller handles query triggers.
- * 
+ *
  * See link:[Trigger - Query pipeline feature](https://docs.coveo.com/en/1458/) and [Query trigger reference](https://docs.coveo.com/en/3413/tune-relevance/manage-trigger-rules#query).
  */
 export interface QueryTrigger extends Controller {
