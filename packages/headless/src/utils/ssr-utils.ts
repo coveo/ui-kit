@@ -2,7 +2,7 @@ export interface CookieStore {
   /**
    * Gets a cookie that was previously set with `cookies.set`, or from the request headers.
    *
-   * @param name the name of the cookie
+   * @param name - The name of the cookie.
    */
   get(name: string): string | undefined;
 
