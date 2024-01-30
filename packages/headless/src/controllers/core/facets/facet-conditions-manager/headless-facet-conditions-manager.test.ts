@@ -4,11 +4,7 @@ import {
   enableFacet,
 } from '../../../../features/facet-options/facet-options-actions';
 import {SearchAppState} from '../../../../state/search-app-state';
-import {
-  createMockState,
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../../../test';
+import {buildMockSearchAppEngine, MockSearchEngine} from '../../../../test';
 import {buildMockCategoryFacetSlice} from '../../../../test/mock-category-facet-slice';
 import {buildMockCategoryFacetValueRequest} from '../../../../test/mock-category-facet-value-request';
 import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice';
@@ -19,6 +15,7 @@ import {buildMockFacetSlice} from '../../../../test/mock-facet-slice';
 import {buildMockFacetValueRequest} from '../../../../test/mock-facet-value-request';
 import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
+import {createMockState} from '../../../../test/mock-state';
 import {FacetValueState} from '../facet/headless-core-facet';
 import {
   buildCoreFacetConditionsManager,

@@ -4,8 +4,9 @@ import {registerFieldsToInclude} from '../../../features/fields/fields-actions';
 import {fieldsReducer as fields} from '../../../features/fields/fields-slice';
 import {fetchMoreResults} from '../../../features/search/search-actions';
 import {searchReducer as search} from '../../../features/search/search-slice';
-import {buildMockResult, MockSearchEngine} from '../../../test';
+import {MockSearchEngine} from '../../../test';
 import {buildMockSearchAppEngine} from '../../../test/mock-engine';
+import {buildMockResult} from '../../../test/mock-result';
 import {buildCoreResultList, ResultList} from './headless-core-result-list';
 
 describe('CoreResultList', () => {

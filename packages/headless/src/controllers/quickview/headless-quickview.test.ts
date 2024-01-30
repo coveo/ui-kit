@@ -6,11 +6,8 @@ import {
 import {logDocumentQuickview} from '../../features/result-preview/result-preview-analytics-actions';
 import {resultPreviewReducer as resultPreview} from '../../features/result-preview/result-preview-slice';
 import {searchReducer as search} from '../../features/search/search-slice';
-import {
-  buildMockResult,
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../test';
+import {buildMockSearchAppEngine, MockSearchEngine} from '../../test';
+import {buildMockResult} from '../../test/mock-result';
 import {buildMockResultPreviewState} from '../../test/mock-result-preview-state';
 import {
   buildQuickview,

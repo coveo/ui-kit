@@ -15,13 +15,10 @@ import {questionAnsweringReducer as questionAnswering} from '../../../features/q
 import {searchReducer as search} from '../../../features/search/search-slice';
 import {emptyQuestionAnswer} from '../../../features/search/search-state';
 import {SearchAppState} from '../../../state/search-app-state';
-import {
-  MockSearchEngine,
-  buildMockSearchAppEngine,
-  createMockState,
-} from '../../../test';
+import {MockSearchEngine, buildMockSearchAppEngine} from '../../../test';
 import {buildMockSearchResponse} from '../../../test/mock-search-response';
 import {buildMockSearchState} from '../../../test/mock-search-state';
+import {createMockState} from '../../../test/mock-state';
 import {
   SmartSnippetCore,
   SmartSnippetState,

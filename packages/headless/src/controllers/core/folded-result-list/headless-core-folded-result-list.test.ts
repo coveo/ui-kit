@@ -11,11 +11,8 @@ import {
 import {queryReducer as query} from '../../../features/query/query-slice';
 import {fetchMoreResults} from '../../../features/search/search-actions';
 import {searchReducer as search} from '../../../features/search/search-slice';
-import {
-  buildMockResult,
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../../test';
+import {buildMockSearchAppEngine, MockSearchEngine} from '../../../test';
+import {buildMockResult} from '../../../test/mock-result';
 import {
   buildCoreFoldedResultList,
   FoldedResultList,

@@ -1,4 +1,8 @@
-import {CommerceEngine} from '../app/commerce-engine/commerce-engine';
+import {getOrganizationEndpoints} from '../api/platform-client';
+import {
+  CommerceEngine,
+  buildCommerceEngine,
+} from '../app/commerce-engine/commerce-engine';
 import {buildCart} from '../controllers/commerce/context/cart/headless-cart';
 import {buildContext} from '../controllers/commerce/context/headless-context';
 import {buildRelevanceSortCriterion} from '../controllers/commerce/core/sort/headless-core-commerce-sort';

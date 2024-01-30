@@ -1,12 +1,9 @@
 import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice';
 import {searchReducer as search} from '../../../features/search/search-slice';
 import {SearchAppState} from '../../../state/search-app-state';
-import {
-  buildMockResult,
-  buildMockSearchAppEngine,
-  createMockState,
-  MockSearchEngine,
-} from '../../../test';
+import {buildMockSearchAppEngine, MockSearchEngine} from '../../../test';
+import {buildMockResult} from '../../../test/mock-result';
+import {createMockState} from '../../../test/mock-state';
 import {
   buildCoreQuerySummary,
   QuerySummary,

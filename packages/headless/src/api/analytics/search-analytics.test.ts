@@ -10,7 +10,6 @@ import {getGeneratedAnswerInitialState} from '../../features/generated-answer/ge
 import {OmniboxSuggestionMetadata} from '../../features/query-suggest/query-suggest-analytics-actions';
 import {getQuerySuggestSetInitialState} from '../../features/query-suggest/query-suggest-state';
 import {StaticFilterValueMetadata} from '../../product-listing.index';
-import {buildMockResult, createMockState} from '../../test';
 import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
 import {buildMockFacetRequest} from '../../test/mock-facet-request';
 import {buildMockFacetResponse} from '../../test/mock-facet-response';
@@ -19,7 +18,9 @@ import {buildMockFacetValue} from '../../test/mock-facet-value';
 import {buildMockFacetValueRequest} from '../../test/mock-facet-value-request';
 import {buildMockQueryState} from '../../test/mock-query-state';
 import {buildMockQuerySuggestSet} from '../../test/mock-query-suggest-slice';
+import {buildMockResult} from '../../test/mock-result';
 import {buildMockSearchState} from '../../test/mock-search-state';
+import {createMockState} from '../../test/mock-state';
 import {VERSION} from '../../utils/version';
 import {QuerySuggestCompletion} from '../search/query-suggest/query-suggest-response';
 import {

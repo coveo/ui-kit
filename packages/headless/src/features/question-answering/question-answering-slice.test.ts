@@ -1,9 +1,10 @@
 import {SearchResponseSuccess} from '../../api/search/search/search-response';
-import {buildMockRaw, buildMockResult} from '../../test';
 import {
   buildMockQuestionAnswer,
   buildMockQuestionsAnswers,
 } from '../../test/mock-question-answer';
+import {buildMockRaw} from '../../test/mock-raw';
+import {buildMockResult} from '../../test/mock-result';
 import {buildMockSearch} from '../../test/mock-search';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {executeSearch} from '../search/search-actions';

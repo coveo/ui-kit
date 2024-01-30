@@ -8,14 +8,11 @@ import {
 import {numericFacetSetReducer as numericFacetSet} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {searchReducer as search} from '../../../../../features/search/search-slice';
 import {SearchAppState} from '../../../../../state/search-app-state';
-import {
-  buildMockSearchAppEngine,
-  createMockState,
-  MockSearchEngine,
-} from '../../../../../test';
+import {buildMockSearchAppEngine, MockSearchEngine} from '../../../../../test';
 import {buildMockNumericFacetResponse} from '../../../../../test/mock-numeric-facet-response';
 import {buildMockNumericFacetSlice} from '../../../../../test/mock-numeric-facet-slice';
 import {buildMockNumericFacetValue} from '../../../../../test/mock-numeric-facet-value';
+import {createMockState} from '../../../../../test/mock-state';
 import * as FacetIdDeterminor from '../../_common/facet-id-determinor';
 import {
   buildCoreNumericFilter,

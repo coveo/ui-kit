@@ -1,9 +1,6 @@
-import {
-  MockSearchEngine,
-  buildMockSearchAppEngine,
-  createMockState,
-} from '../../test';
+import {MockSearchEngine, buildMockSearchAppEngine} from '../../test';
 import {buildMockCitation} from '../../test/mock-citation';
+import {createMockState} from '../../test/mock-state';
 import {
   setIsVisible,
   setIsLoading,

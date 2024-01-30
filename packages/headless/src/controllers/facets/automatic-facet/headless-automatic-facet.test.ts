@@ -5,13 +5,10 @@ import {
 } from '../../../features/facets/automatic-facet-set/automatic-facet-set-actions';
 import {executeSearch} from '../../../features/search/search-actions';
 import {SearchAppState} from '../../../state/search-app-state';
-import {
-  MockSearchEngine,
-  buildMockSearchAppEngine,
-  createMockState,
-} from '../../../test';
+import {MockSearchEngine, buildMockSearchAppEngine} from '../../../test';
 import {buildMockAutomaticFacetSlice} from '../../../test/mock-automatic-facet-slice';
 import {buildMockFacetValue} from '../../../test/mock-facet-value';
+import {createMockState} from '../../../test/mock-state';
 import {AutomaticFacet} from '../automatic-facet-generator/headless-automatic-facet-generator';
 
 describe('automatic facet', () => {

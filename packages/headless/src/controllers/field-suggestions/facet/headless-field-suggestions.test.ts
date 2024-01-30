@@ -4,14 +4,11 @@ import {registerFacet} from '../../../features/facets/facet-set/facet-set-action
 import {defaultFacetOptions} from '../../../features/facets/facet-set/facet-set-slice';
 import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request';
 import {SearchAppState} from '../../../state/search-app-state';
-import {
-  buildMockSearchAppEngine,
-  createMockState,
-  MockSearchEngine,
-} from '../../../test';
+import {buildMockSearchAppEngine, MockSearchEngine} from '../../../test';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 import {buildMockFacetSearch} from '../../../test/mock-facet-search';
 import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
+import {createMockState} from '../../../test/mock-state';
 import {
   buildFieldSuggestions,
   FieldSuggestions,

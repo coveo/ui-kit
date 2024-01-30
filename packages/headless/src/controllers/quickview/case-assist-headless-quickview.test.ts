@@ -3,13 +3,13 @@ import {documentSuggestionReducer as documentSuggestion} from '../../features/do
 import {preparePreviewPagination} from '../../features/result-preview/result-preview-actions';
 import {buildResultPreviewRequest} from '../../features/result-preview/result-preview-request-builder';
 import {CaseAssistAppState} from '../../state/case-assist-app-state';
-import {buildMockResult} from '../../test';
 import {buildMockDocumentSuggestion} from '../../test/mock-case-assist-document-suggestion';
 import {buildMockCaseAssistState} from '../../test/mock-case-assist-state';
 import {
   buildMockCaseAssistEngine,
   MockedCaseAssistEngine,
 } from '../../test/mock-engine-v2';
+import {buildMockResult} from '../../test/mock-result';
 import {buildCoreQuickview} from '../core/quickview/headless-core-quickview';
 import {
   buildCaseAssistQuickview,

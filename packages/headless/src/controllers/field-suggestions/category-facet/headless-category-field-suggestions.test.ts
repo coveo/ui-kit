@@ -2,14 +2,11 @@ import {CategoryFacetRequest} from '../../../features/facets/category-facet-set/
 import {executeFacetSearch} from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
 import {updateFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
 import {SearchAppState} from '../../../state/search-app-state';
-import {
-  buildMockSearchAppEngine,
-  createMockState,
-  MockSearchEngine,
-} from '../../../test';
+import {buildMockSearchAppEngine, MockSearchEngine} from '../../../test';
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
 import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search';
 import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
+import {createMockState} from '../../../test/mock-state';
 import {
   buildCategoryFieldSuggestions,
   CategoryFieldSuggestions,
