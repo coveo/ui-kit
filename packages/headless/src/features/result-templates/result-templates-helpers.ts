@@ -102,6 +102,7 @@ const getFieldValuesFromResult = (fieldName: string, result: Result) => {
 export const ResultTemplatesHelpers = {
   getResultProperty,
   fieldsMustBeDefined,
+  fieldsMustNotBeDefined,
   fieldMustMatch,
   fieldMustNotMatch,
 };
