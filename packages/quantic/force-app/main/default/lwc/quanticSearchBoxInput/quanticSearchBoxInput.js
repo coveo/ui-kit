@@ -94,7 +94,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
   }
 
   /** @type {boolean} */
-  isClearButtonFocused = false;
+  targetClearIcon = false;
 
   connectedCallback() {
     this.addEventListener(
@@ -187,13 +187,10 @@ export default class QuanticSearchBoxInput extends LightningElement {
       this.suggestionListElement?.getCurrentSelectedValue();
     if (this.areSuggestionsOpen && selectedSuggestion) {
       this.sendSelectSuggestionEvent(selectedSuggestion.rawValue);
-      this.input.blur();
-    } else if (this.isClearButtonFocused) {
-      this.clearInput();
     } else {
       this.sendSubmitSearchEvent();
-      this.input.blur();
     }
+    this.input.blur();
   }
 
   handleValueChange() {
@@ -212,6 +209,12 @@ export default class QuanticSearchBoxInput extends LightningElement {
     this.input.blur();
   }
 
+  handleKeyDownOnClearButton(event) {
+    if (event.key === keys.ENTER) {
+      this.targetClearIcon = true;
+    }
+  }
+
   /**
    * Prevent default behavior of enter key, on textArea, to prevent skipping a line.
    * @param {KeyboardEvent} event
@@ -228,7 +231,9 @@ export default class QuanticSearchBoxInput extends LightningElement {
   onKeyup(event) {
     switch (event.key) {
       case keys.ENTER:
-        this.handleEnter();
+        if (!this.targetClearIcon) {
+          this.handleEnter();
+        }
         break;
       case keys.ARROWUP:
         this.suggestionListElement?.selectionUp();
@@ -239,19 +244,12 @@ export default class QuanticSearchBoxInput extends LightningElement {
       default:
         this.handleKeyValues();
     }
+    this.targetClearIcon = false;
   }
 
   onFocus() {
     this.showSuggestions();
     this.adjustTextAreaHeight();
-  }
-
-  onClearButtonFocus() {
-    this.isClearButtonFocused = true;
-  }
-
-  onClearButtonBlur() {
-    this.isClearButtonFocused = false;
   }
 
   onBlur() {
@@ -346,10 +344,6 @@ export default class QuanticSearchBoxInput extends LightningElement {
    */
   get combobox() {
     return this.template.querySelector('.slds-combobox');
-  }
-
-  get inputClearButton() {
-    return this.template.querySelector('.searchbox__clear-button');
   }
 
   get hasSuggestions() {
