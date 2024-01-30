@@ -53,6 +53,12 @@
       "rangeStrategy": "replace"
     },
     {
+      "matchPackagePatterns": ["^@lwc/compiler$"],
+      "groupName": "LWC Compiler",
+      "groupSlug": "lwc-compiler",
+      "rangeStrategy": "replace"
+    },
+    {
       "matchFileNames": ["packages/atomic/package.json"],
       "matchPackagePatterns": [
         "^jest$",
