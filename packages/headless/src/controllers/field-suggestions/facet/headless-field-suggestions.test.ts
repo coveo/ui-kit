@@ -4,7 +4,8 @@ import {registerFacet} from '../../../features/facets/facet-set/facet-set-action
 import {defaultFacetOptions} from '../../../features/facets/facet-set/facet-set-slice';
 import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request';
 import {SearchAppState} from '../../../state/search-app-state';
-import {buildMockSearchAppEngine, MockSearchEngine} from '../../../test';
+import {MockSearchEngine} from '../../../test/mock-engine';
+import {buildMockSearchAppEngine} from '../../../test/mock-engine';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 import {buildMockFacetSearch} from '../../../test/mock-facet-search';
 import {buildMockFacetSlice} from '../../../test/mock-facet-slice';

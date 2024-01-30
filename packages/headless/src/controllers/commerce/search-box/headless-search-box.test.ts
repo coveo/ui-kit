@@ -19,8 +19,9 @@ import {
 } from '../../../features/query-suggest/query-suggest-actions';
 import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice';
 import {CommerceAppState} from '../../../state/commerce-app-state';
-import {buildMockCommerceEngine, MockCommerceEngine} from '../../../test';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state';
+import {MockCommerceEngine} from '../../../test/mock-engine';
+import {buildMockCommerceEngine} from '../../../test/mock-engine';
 import {buildMockQuerySuggest} from '../../../test/mock-query-suggest';
 import {
   SearchBox,

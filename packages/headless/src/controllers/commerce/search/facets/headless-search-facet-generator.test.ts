@@ -1,6 +1,5 @@
 import {FacetType} from '../../../../features/commerce/facets/facet-set/interfaces/response';
 import {executeSearch} from '../../../../features/commerce/search/search-actions';
-import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
 import {
   buildMockCommerceRegularFacetResponse,
@@ -8,6 +7,8 @@ import {
   buildMockCommerceDateFacetResponse,
 } from '../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
+import {MockCommerceEngine} from '../../../../test/mock-engine';
+import {buildMockCommerceEngine} from '../../../../test/mock-engine';
 import {
   buildSearchFacetGenerator,
   SearchFacetGenerator,

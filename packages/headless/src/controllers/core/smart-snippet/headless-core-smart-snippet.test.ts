@@ -15,7 +15,8 @@ import {questionAnsweringReducer as questionAnswering} from '../../../features/q
 import {searchReducer as search} from '../../../features/search/search-slice';
 import {emptyQuestionAnswer} from '../../../features/search/search-state';
 import {SearchAppState} from '../../../state/search-app-state';
-import {MockSearchEngine, buildMockSearchAppEngine} from '../../../test';
+import {buildMockSearchAppEngine} from '../../../test/mock-engine';
+import {MockSearchEngine} from '../../../test/mock-engine';
 import {buildMockSearchResponse} from '../../../test/mock-search-response';
 import {buildMockSearchState} from '../../../test/mock-search-state';
 import {createMockState} from '../../../test/mock-state';

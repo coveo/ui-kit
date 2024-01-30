@@ -21,12 +21,13 @@ import {
 import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
 import {searchReducer as search} from '../../../../features/search/search-slice';
 import {SearchAppState} from '../../../../state/search-app-state';
-import {buildMockSearchAppEngine, MockSearchEngine} from '../../../../test';
 import {buildMockCategoryFacetRequest} from '../../../../test/mock-category-facet-request';
 import {buildMockCategoryFacetResponse} from '../../../../test/mock-category-facet-response';
 import {buildMockCategoryFacetSearch} from '../../../../test/mock-category-facet-search';
 import {buildMockCategoryFacetSlice} from '../../../../test/mock-category-facet-slice';
 import {buildMockCategoryFacetValue} from '../../../../test/mock-category-facet-value';
+import {MockSearchEngine} from '../../../../test/mock-engine';
+import {buildMockSearchAppEngine} from '../../../../test/mock-engine';
 import {createMockState} from '../../../../test/mock-state';
 import * as FacetIdDeterminor from '../_common/facet-id-determinor';
 import {

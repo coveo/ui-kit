@@ -1,5 +1,5 @@
 import {searchReducer as search} from '../../features/search/search-slice';
-import {buildMockSearchAppEngine} from '../../test';
+import {buildMockSearchAppEngine} from '../../test/mock-engine';
 import {buildQueryError} from './headless-query-error';
 
 describe('query error', () => {

@@ -5,7 +5,8 @@ import {
 } from '../../features/recent-results/recent-results-actions';
 import {logClearRecentResults} from '../../features/recent-results/recent-results-analytics-actions';
 import {recentResultsReducer as recentResults} from '../../features/recent-results/recent-results-slice';
-import {buildMockSearchAppEngine, MockSearchEngine} from '../../test';
+import {MockSearchEngine} from '../../test/mock-engine';
+import {buildMockSearchAppEngine} from '../../test/mock-engine';
 import {buildMockResult} from '../../test/mock-result';
 import {
   buildRecentResultsList,

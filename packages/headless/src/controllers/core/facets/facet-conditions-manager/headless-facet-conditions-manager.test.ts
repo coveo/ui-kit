@@ -4,11 +4,12 @@ import {
   enableFacet,
 } from '../../../../features/facet-options/facet-options-actions';
 import {SearchAppState} from '../../../../state/search-app-state';
-import {buildMockSearchAppEngine, MockSearchEngine} from '../../../../test';
 import {buildMockCategoryFacetSlice} from '../../../../test/mock-category-facet-slice';
 import {buildMockCategoryFacetValueRequest} from '../../../../test/mock-category-facet-value-request';
 import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
+import {MockSearchEngine} from '../../../../test/mock-engine';
+import {buildMockSearchAppEngine} from '../../../../test/mock-engine';
 import {buildFacetOptionsSlice} from '../../../../test/mock-facet-options-slice';
 import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
 import {buildMockFacetSlice} from '../../../../test/mock-facet-slice';

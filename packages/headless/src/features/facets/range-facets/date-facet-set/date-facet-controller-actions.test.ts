@@ -1,5 +1,8 @@
-import {buildMockSearchAppEngine, MockSearchEngine} from '../../../../test';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
+import {
+  MockSearchEngine,
+  buildMockSearchAppEngine,
+} from '../../../../test/mock-engine';
 import {
   executeToggleDateFacetExclude,
   executeToggleDateFacetSelect,

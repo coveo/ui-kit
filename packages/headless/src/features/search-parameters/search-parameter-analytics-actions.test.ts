@@ -1,4 +1,4 @@
-import {buildMockSearchAppEngine} from '../../test';
+import {buildMockSearchAppEngine} from '../../test/mock-engine';
 import {
   interfaceChange,
   logInterfaceChange,

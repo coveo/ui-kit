@@ -6,7 +6,8 @@ import {
   updateContentURL,
 } from '../../../features/result-preview/result-preview-actions';
 import {resultPreviewReducer as resultPreview} from '../../../features/result-preview/result-preview-slice';
-import {buildMockSearchAppEngine, MockSearchEngine} from '../../../test';
+import {MockSearchEngine} from '../../../test/mock-engine';
+import {buildMockSearchAppEngine} from '../../../test/mock-engine';
 import {buildMockResult} from '../../../test/mock-result';
 import {buildMockResultPreviewRequest} from '../../../test/mock-result-preview-request-builder';
 import {buildMockResultPreviewState} from '../../../test/mock-result-preview-state';

@@ -8,7 +8,8 @@ import {
 import {numericFacetSetReducer as numericFacetSet} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {searchReducer as search} from '../../../../../features/search/search-slice';
 import {SearchAppState} from '../../../../../state/search-app-state';
-import {buildMockSearchAppEngine, MockSearchEngine} from '../../../../../test';
+import {MockSearchEngine} from '../../../../../test/mock-engine';
+import {buildMockSearchAppEngine} from '../../../../../test/mock-engine';
 import {buildMockNumericFacetResponse} from '../../../../../test/mock-numeric-facet-response';
 import {buildMockNumericFacetSlice} from '../../../../../test/mock-numeric-facet-slice';
 import {buildMockNumericFacetValue} from '../../../../../test/mock-numeric-facet-value';
