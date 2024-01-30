@@ -1,4 +1,5 @@
-import {DateRangeRequest, NumericRangeRequest} from '../../controllers';
+import {DateRangeRequest} from '../../controllers/core/facets/range-facet/date-facet/headless-core-date-facet';
+import {NumericRangeRequest} from '../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet';
 import {
   logFacetClearAll,
   logFacetDeselect,

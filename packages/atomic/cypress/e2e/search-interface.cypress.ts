@@ -90,6 +90,7 @@ describe('Search Interface Component', () => {
               searchHub: options.engine?.searchHub,
             },
           },
+          middlewares,
         });
         await searchInterface.initializeWithSearchEngine(engine);
       });
