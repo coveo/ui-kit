@@ -1,4 +1,3 @@
-import {configuration} from '../../../../app/common-reducers';
 import {
   CommerceSearchParameters,
   restoreSearchParameters,
@@ -48,10 +47,6 @@ describe('core url manager', () => {
   }
 
   describe('initialization', () => {
-    it('adds the correct reducers to the engine', () => {
-      expect(engine.addReducers).toHaveBeenCalledWith({configuration});
-    });
-
     it('dispatches #restoreSearchParameters', () => {
       expect(getLatestRestoreSearchParametersAction()).toBeTruthy();
     });

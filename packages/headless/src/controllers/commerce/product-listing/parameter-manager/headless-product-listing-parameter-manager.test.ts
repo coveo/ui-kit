@@ -39,12 +39,6 @@ describe('product listing parameter manager', () => {
     expectContainAction(restoreProductListingParameters({}));
   });
 
-  it('#synchronize dispatches #restoreProductListingParameters', () => {
-    const parameters = {};
-    productListingParameterManager.synchronize(parameters);
-    expectContainAction(restoreProductListingParameters({}));
-  });
-
   it('#state contains #parameters', () => {
     expect(productListingParameterManager.state.parameters).toEqual({});
   });

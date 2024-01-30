@@ -1,22 +1,15 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {configuration} from '../../../../app/common-reducers';
 import {Parameters} from '../../../../features/commerce/search-parameters/search-parameter-actions';
 import {Serializer} from '../../../../features/commerce/search-parameters/search-parameter-serializer';
-import {
-  CommerceProductListingParametersState,
-  CommerceSearchParametersState,
-} from '../../../../state/commerce-app-state';
-import {ConfigurationSection} from '../../../../state/state-sections';
 import {deepEqualAnyOrder} from '../../../../utils/compare-utils';
-import {loadReducerError} from '../../../../utils/errors';
 import {validateInitialState} from '../../../../utils/validate-payload';
 import {buildController} from '../../../controller/headless-controller';
 import {
   initialStateSchema,
   UrlManager,
   UrlManagerInitialState,
-  UrlManagerState,
   type UrlManagerProps,
+  UrlManagerState,
 } from '../../../url-manager/headless-url-manager';
 import {
   ParameterManager,
@@ -59,10 +52,6 @@ export function buildCoreUrlManager<T extends Parameters>(
 
   function hasRequestIdChanged() {
     return lastRequestId !== props.requestIdSelector(engine.state);
-  }
-
-  if (!loadUrlManagerReducers(engine)) {
-    throw loadReducerError;
   }
 
   validateInitialState(
@@ -132,16 +121,4 @@ function areFragmentsEquivalent<T>(
   const params1 = deserialize(fragment1);
   const params2 = deserialize(fragment2);
   return deepEqualAnyOrder(params1, params2);
-}
-
-function loadUrlManagerReducers(
-  engine: CommerceEngine
-): engine is CommerceEngine<
-  Partial<
-    CommerceSearchParametersState | CommerceProductListingParametersState
-  > &
-    ConfigurationSection
-> {
-  engine.addReducers({configuration});
-  return true;
 }

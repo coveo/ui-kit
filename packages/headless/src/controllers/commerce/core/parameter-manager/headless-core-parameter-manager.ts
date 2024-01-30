@@ -68,11 +68,11 @@ const initialStateSchema = <T extends Parameters>(
   });
 
 /**
- * The `ParameterManager` controller allows restoring parameters that affect the results from e.g. a url.
- * */
+ * The `ParameterManager` controller allows restoring parameters that affect the results (e.g., from the a URL).
+ */
 export interface ParameterManager<T extends Parameters> extends Controller {
   /**
-   * Updates the search parameters in state with the passed parameters and executes a search. Unspecified keys are reset to their initial values.
+   * Updates the search parameters in the state with the specified parameters and fetches results. Unspecified keys are reset to their initial values.
    *
    * @param parameters - The search parameters to synchronize.
    */
@@ -80,7 +80,7 @@ export interface ParameterManager<T extends Parameters> extends Controller {
 
   /**
    * The state relevant to the `SearchParameterManager` controller.
-   * */
+   */
   state: ParameterManagerState<T>;
 }
 

@@ -35,5 +35,7 @@ export function buildProductListingParameterManager(
 function activeParametersSelector(
   _state: CommerceEngine['state']
 ): ProductListingParameters {
+  // eslint-disable-next-line @cspell/spellchecker
+  // TODO CAPI-546: Handle facets, sort, and pagination
   return {};
 }
