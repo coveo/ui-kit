@@ -2,9 +2,9 @@ import {
   QueryCorrection,
   WordCorrection,
 } from '../../../api/search/search/query-corrections';
+import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 import {logDidYouMeanClick} from '../../../features/did-you-mean/did-you-mean-insight-analytics-actions';
 import {executeSearch} from '../../../features/insight-search/insight-search-actions';
-import {InsightEngine} from '../../../insight.index';
 import {
   buildCoreDidYouMean,
   DidYouMean,

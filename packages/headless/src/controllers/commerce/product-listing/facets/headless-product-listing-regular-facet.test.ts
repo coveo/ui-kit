@@ -1,5 +1,4 @@
 import {Action} from '@reduxjs/toolkit';
-import {CommerceRegularFacet} from '../../../../commerce.index';
 import {CommerceFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice';
@@ -11,6 +10,7 @@ import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-
 import {buildMockCommerceRegularFacetValue} from '../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {CommerceFacetOptions} from '../../core/facets/headless-core-commerce-facet';
+import {CommerceRegularFacet} from '../../core/facets/regular/headless-commerce-regular-facet';
 import {buildProductListingRegularFacet} from './headless-product-listing-regular-facet';
 
 describe('ProductListingRegularFacet', () => {

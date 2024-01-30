@@ -1,8 +1,8 @@
 import {configuration} from '../../../app/common-reducers';
-import {updateQuery} from '../../../commerce.index';
 import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions';
 import {selectPage} from '../../../features/commerce/pagination/pagination-actions';
 import {fetchQuerySuggestions} from '../../../features/commerce/query-suggest/query-suggest-actions';
+import {updateQuery} from '../../../features/commerce/query/query-actions';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
 import {executeSearch} from '../../../features/commerce/search/search-actions';
 import {commerceSearchReducer as commerceSearch} from '../../../features/commerce/search/search-slice';

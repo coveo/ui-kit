@@ -1,4 +1,4 @@
-import {SearchAppState} from '../..';
+import {SearchAppState} from '../../state/search-app-state';
 import {createMockState} from '../../test';
 import {buildMockTabSlice} from '../../test/mock-tab-state';
 import {buildSearchAndFoldingLoadCollectionRequest} from './search-and-folding-request';

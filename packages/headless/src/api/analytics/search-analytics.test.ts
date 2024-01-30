@@ -1,6 +1,7 @@
 import {createRelay} from '@coveo/relay';
 import {CoveoAnalyticsClient} from 'coveo.analytics';
 import pino from 'pino';
+import {DateFacetValue} from '../../controllers/product-listing/range-facet/date-facet/headless-product-listing-date-facet';
 import {getConfigurationInitialState} from '../../features/configuration/configuration-state';
 import {getCategoryFacetSetInitialState} from '../../features/facets/category-facet-set/category-facet-set-state';
 import {getFacetSetInitialState} from '../../features/facets/facet-set/facet-set-state';
@@ -8,10 +9,7 @@ import {FacetSortCriterion} from '../../features/facets/facet-set/interfaces/req
 import {getGeneratedAnswerInitialState} from '../../features/generated-answer/generated-answer-state';
 import {OmniboxSuggestionMetadata} from '../../features/query-suggest/query-suggest-analytics-actions';
 import {getQuerySuggestSetInitialState} from '../../features/query-suggest/query-suggest-state';
-import {
-  DateFacetValue,
-  StaticFilterValueMetadata,
-} from '../../product-listing.index';
+import {StaticFilterValueMetadata} from '../../product-listing.index';
 import {buildMockResult, createMockState} from '../../test';
 import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
 import {buildMockFacetRequest} from '../../test/mock-facet-request';

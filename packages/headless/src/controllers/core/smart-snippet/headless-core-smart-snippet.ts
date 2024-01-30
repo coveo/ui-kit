@@ -1,5 +1,6 @@
 import {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering';
 import {Result} from '../../../api/search/search/result';
+import {CoreEngine} from '../../../app/engine';
 import {
   ClickAction,
   CustomAction,
@@ -19,7 +20,6 @@ import {questionAnsweringReducer as questionAnswering} from '../../../features/q
 import {pushRecentResult} from '../../../features/recent-results/recent-results-actions';
 import {searchReducer as search} from '../../../features/search/search-slice';
 import {QuestionAnsweringInlineLinkActionCreatorPayload} from '../../../product-listing.index';
-import {CoreEngine} from '../../../recommendation.index';
 import {
   QuestionAnsweringSection,
   SearchSection,

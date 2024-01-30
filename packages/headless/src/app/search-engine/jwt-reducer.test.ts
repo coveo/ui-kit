@@ -1,5 +1,4 @@
 import pino from 'pino';
-import {SearchAppState} from '../..';
 import {
   updateBasicConfiguration,
   updateAnalyticsConfiguration,
@@ -10,6 +9,7 @@ import {setPipeline} from '../../features/pipeline/pipeline-actions';
 import {getPipelineInitialState} from '../../features/pipeline/pipeline-state';
 import {setSearchHub} from '../../features/search-hub/search-hub-actions';
 import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state';
+import {SearchAppState} from '../../state/search-app-state';
 import {createMockState} from '../../test';
 import {jwtReducer} from './jwt-reducer';
 

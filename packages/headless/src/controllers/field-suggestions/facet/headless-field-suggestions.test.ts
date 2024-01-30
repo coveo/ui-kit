@@ -1,9 +1,9 @@
-import {SearchAppState} from '../../..';
 import {executeFacetSearch} from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
 import {updateFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
 import {registerFacet} from '../../../features/facets/facet-set/facet-set-actions';
 import {defaultFacetOptions} from '../../../features/facets/facet-set/facet-set-slice';
 import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request';
+import {SearchAppState} from '../../../state/search-app-state';
 import {
   buildMockSearchAppEngine,
   createMockState,

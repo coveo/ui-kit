@@ -1,4 +1,3 @@
-import {SearchAppState} from '../../..';
 import {
   closeGeneratedAnswerFeedbackModal,
   dislikeGeneratedAnswer,
@@ -30,6 +29,7 @@ import {
   getGeneratedAnswerInitialState,
 } from '../../../features/generated-answer/generated-answer-state';
 import {GeneratedResponseFormat} from '../../../features/generated-answer/generated-response-format';
+import {SearchAppState} from '../../../state/search-app-state';
 import {createMockState} from '../../../test';
 import {buildMockCitation} from '../../../test/mock-citation';
 import {

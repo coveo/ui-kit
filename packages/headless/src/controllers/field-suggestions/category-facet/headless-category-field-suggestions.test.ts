@@ -1,7 +1,7 @@
-import {SearchAppState} from '../../..';
 import {CategoryFacetRequest} from '../../../features/facets/category-facet-set/interfaces/request';
 import {executeFacetSearch} from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
 import {updateFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
+import {SearchAppState} from '../../../state/search-app-state';
 import {
   buildMockSearchAppEngine,
   createMockState,

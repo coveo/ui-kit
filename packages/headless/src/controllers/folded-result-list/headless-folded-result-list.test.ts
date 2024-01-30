@@ -1,6 +1,6 @@
-import {SearchAppState} from '../..';
 import {loadCollection} from '../../features/folding/folding-actions';
 import {fetchMoreResults} from '../../features/search/search-actions';
+import {SearchAppState} from '../../state/search-app-state';
 import {
   MockSearchEngine,
   buildMockResult,

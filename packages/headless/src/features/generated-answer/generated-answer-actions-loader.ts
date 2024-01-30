@@ -1,5 +1,5 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {CoreEngine} from '../..';
+import {CoreEngine} from '../../app/engine';
 import {resetAnswer} from './generated-answer-actions';
 import {generatedAnswerReducer as generatedAnswer} from './generated-answer-slice';
 
