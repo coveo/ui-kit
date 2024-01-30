@@ -9,7 +9,7 @@ import {FacetSortCriterion} from '../../features/facets/facet-set/interfaces/req
 import {getGeneratedAnswerInitialState} from '../../features/generated-answer/generated-answer-state';
 import {OmniboxSuggestionMetadata} from '../../features/query-suggest/query-suggest-analytics-actions';
 import {getQuerySuggestSetInitialState} from '../../features/query-suggest/query-suggest-state';
-import {StaticFilterValueMetadata} from '../../product-listing.index';
+import {StaticFilterValueMetadata} from '../../features/static-filter-set/static-filter-set-actions';
 import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
 import {buildMockFacetRequest} from '../../test/mock-facet-request';
 import {buildMockFacetResponse} from '../../test/mock-facet-response';

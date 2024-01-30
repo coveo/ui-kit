@@ -14,12 +14,14 @@ import {
   openFeedbackModal,
 } from '../../../features/question-answering/question-answering-actions';
 import {SmartSnippetFeedback} from '../../../features/question-answering/question-answering-analytics-actions';
-import {QuestionAnsweringUniqueIdentifierActionCreatorPayload} from '../../../features/question-answering/question-answering-document-id';
+import {
+  QuestionAnsweringInlineLinkActionCreatorPayload,
+  QuestionAnsweringUniqueIdentifierActionCreatorPayload,
+} from '../../../features/question-answering/question-answering-document-id';
 import {answerSourceSelector} from '../../../features/question-answering/question-answering-selectors';
 import {questionAnsweringReducer as questionAnswering} from '../../../features/question-answering/question-answering-slice';
 import {pushRecentResult} from '../../../features/recent-results/recent-results-actions';
 import {searchReducer as search} from '../../../features/search/search-slice';
-import {QuestionAnsweringInlineLinkActionCreatorPayload} from '../../../product-listing.index';
 import {
   QuestionAnsweringSection,
   SearchSection,

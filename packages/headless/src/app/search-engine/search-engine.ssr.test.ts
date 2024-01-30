@@ -1,11 +1,11 @@
-import {AnyAction} from '@reduxjs/toolkit';
+import {AnyAction, Middleware} from '@reduxjs/toolkit';
 import {
   buildController,
   Controller,
 } from '../../controllers/controller/headless-controller';
 import {defineResultList} from '../../controllers/result-list/headless-result-list.ssr';
+import {loadPaginationActions} from '../../features/pagination/pagination-actions-loader';
 import {executeSearch} from '../../features/search/search-actions';
-import {loadPaginationActions, Middleware} from '../../ssr.index';
 import {buildMockResult} from '../../test/mock-result';
 import {ControllerDefinitionWithoutProps} from '../ssr-engine/types/common';
 import {InferHydratedState} from '../ssr-engine/types/core-engine';
