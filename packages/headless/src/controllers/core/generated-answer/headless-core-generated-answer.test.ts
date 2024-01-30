@@ -4,10 +4,8 @@ import {
   dislikeGeneratedAnswer,
   likeGeneratedAnswer,
   openGeneratedAnswerFeedbackModal,
-  resetAnswer,
   sendGeneratedAnswerFeedback,
   setIsVisible,
-  streamAnswer,
   updateResponseFormat,
   registerFieldsToIncludeInCitations,
 } from '../../../features/generated-answer/generated-answer-actions';
@@ -333,68 +331,6 @@ describe('generated answer', () => {
         'payload',
         exampleFieldsToIncludeInCitations
       );
-    });
-  });
-
-  describe('subscription to changes', () => {
-    function callListener() {
-      return (engine.subscribe as jest.Mock).mock.calls
-        .map((args) => args[0])
-        .forEach((listener) => {
-          listener();
-        });
-    }
-
-    it('should not dispatch the stream action when there is no stream ID', () => {
-      callListener();
-
-      const action = findAction(streamAnswer.pending.type);
-
-      expect(action).toBeFalsy();
-    });
-
-    it('should dispatch the resetAnswer action when the requestId has changed', () => {
-      engine.state.search.requestId = 'some-fake-test-id';
-
-      callListener();
-
-      const action = findAction(resetAnswer.type);
-
-      expect(action).toBeTruthy();
-    });
-
-    it('should dispatch the stream action when there is a new stream ID', () => {
-      engine.state.search.extendedResults = {
-        generativeQuestionAnsweringId: 'some-fake-test-id',
-      };
-
-      callListener();
-
-      const action = findAction(streamAnswer.pending.type);
-
-      expect(action).toBeTruthy();
-    });
-
-    describe('when we have multiple controllers', () => {
-      let secondEngine: MockInsightEngine;
-
-      beforeEach(() => {
-        secondEngine = buildMockInsightEngine();
-        buildCoreGeneratedAnswer(secondEngine, generatedAnswerAnalyticsClient);
-      });
-
-      it('should dispatch the stream action only once', () => {
-        engine.state.search.extendedResults = {
-          generativeQuestionAnsweringId: 'another-fake-test-id',
-        };
-
-        callListener();
-
-        const count = engine.actions.filter(
-          (a) => a.type === streamAnswer.pending.type
-        ).length;
-        expect(count).toEqual(1);
-      });
     });
   });
 });

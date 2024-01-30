@@ -213,6 +213,7 @@ describe('generated answer slice', () => {
       expect(finalState).toEqual({
         ...getGeneratedAnswerInitialState(),
         ...persistentGeneratedAnswerState,
+        shouldAbortStream: true,
       });
     });
 

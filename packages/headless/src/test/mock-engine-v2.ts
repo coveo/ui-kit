@@ -7,14 +7,7 @@ import type {InsightEngine} from '../insight.index';
 import type {ProductListingEngine} from '../product-listing.index';
 import type {ProductRecommendationEngine} from '../product-recommendation.index';
 import type {RecommendationEngine} from '../recommendation.index';
-
-type SpyEverything<T> = {
-  [K in keyof T]: T[K] extends (...args: infer A) => infer R
-    ? jest.Mock<R, A>
-    : T[K] extends object
-      ? SpyEverything<T[K]>
-      : T[K];
-};
+import {SpyEverything} from './spy-everything';
 
 type SpiedLoggerProps = SpyEverything<
   Pick<Logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
@@ -32,7 +25,7 @@ function mockLogger(logger: Logger): MockedLogger {
   });
 }
 
-type MockedCoreEngine<
+export type MockedCoreEngine<
   State extends StateFromEngine<CoreEngine> = StateFromEngine<CoreEngine>,
 > = CoreEngine & {
   state: State;
@@ -75,7 +68,7 @@ export type MockedCaseAssistEngine = CaseAssistEngine;
 export type MockedRecommendationEngine = RecommendationEngine;
 export type MockedProductRecommendationEngine = ProductRecommendationEngine;
 
-type StateFromEngine<TEngine extends CoreEngine> = TEngine['state'];
+export type StateFromEngine<TEngine extends CoreEngine> = TEngine['state'];
 
 export function buildMockSearchEngine(
   initialState: StateFromEngine<SearchEngine>

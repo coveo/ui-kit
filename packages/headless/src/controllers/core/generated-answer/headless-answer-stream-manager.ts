@@ -12,7 +12,7 @@ import {
   DebugSection,
 } from '../../../state/state-sections';
 
-type AnswerStreamManagerEngine = CoreEngine<
+export type AnswerStreamManagerEngine = CoreEngine<
   GeneratedAnswerSection & SearchSection & DebugSection,
   ClientThunkExtraArguments<GeneratedAnswerAPIClient>
 >;
@@ -43,7 +43,7 @@ export function buildAnswerStreamManager(engine: AnswerStreamManagerEngine) {
       );
     } else if (engine.state.generatedAnswer.shouldAbortStream) {
       abortStream();
-      engine.dispatch(notifyStreamAborted);
+      engine.dispatch(notifyStreamAborted());
     }
   });
 }
