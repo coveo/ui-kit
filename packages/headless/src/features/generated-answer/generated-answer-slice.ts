@@ -19,6 +19,7 @@ import {
   registerFieldsToIncludeInCitations,
   registerAnswerStreamManager,
   notifyStreamAborted,
+  streamAnswer,
 } from './generated-answer-actions';
 import {
   GeneratedAnswerState,
@@ -88,6 +89,9 @@ export const generatedAnswerReducer = createReducer(
               shouldStartStream: !!streamId,
               currentStreamId: streamId,
             };
+      })
+      .addCase(streamAnswer.pending, (state) => {
+        state.shouldStartStream = false;
       })
       .addCase(setIsLoading, (state, {payload}) => {
         state.isLoading = payload;
