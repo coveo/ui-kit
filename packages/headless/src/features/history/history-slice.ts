@@ -20,6 +20,9 @@ import {TabSetState} from '../tab-set/tab-set-state';
 import {snapshot, redo, undo} from './history-actions';
 import {getHistoryInitialState, HistoryState} from './history-state';
 
+// TODO: https://coveord.atlassian.net/browse/KIT-2969:
+// Should be able to remove most of the code in this file following changes history management change
+
 export const historyReducer = createReducer(
   getHistoryInitialState(),
   (builder) => {
