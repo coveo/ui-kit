@@ -2,7 +2,11 @@
 @import '../../common/search-box/search-box.pcss';
 
 [part='wrapper'] {
-  @apply max-w-[303px] top-6 left-6 z-10;
+  @apply z-10;
+}
+
+:host {
+  position: relative;
 }
 
 [part='input'] {

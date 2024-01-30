@@ -1,5 +1,7 @@
 import {Reducer, AnyAction} from '@reduxjs/toolkit';
 
+const MAX_PAST_HISTORY_ENTRY_COUNT = 10;
+
 export const makeHistory = <State>(state?: State): StateWithHistory<State> => ({
   past: [],
   present: state,
@@ -71,7 +73,7 @@ const updateHistory = <State>(options: {
   }
 
   return {
-    past: [...past, present],
+    past: [...past, present].slice(-MAX_PAST_HISTORY_ENTRY_COUNT),
     present: newPresent,
     future: [],
   };
