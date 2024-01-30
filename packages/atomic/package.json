@@ -94,7 +94,7 @@
     "lodash": "4.17.21",
     "ncp": "2.0.0",
     "postcss-focus-visible": "9.0.1",
-    "postcss-import": "15.1.0",
+    "postcss-import": "16.0.0",
     "postcss-mixins": "9.0.4",
     "postcss-nested": "6.0.1",
     "puppeteer": "21.10.0",

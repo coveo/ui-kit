@@ -22,7 +22,7 @@
     "@vue/cli-service": "5.0.8",
     "cypress": "13.6.3",
     "cypress-repeat": "2.3.4",
-    "html-loader": "4.2.0",
+    "html-loader": "5.0.0",
     "ncp": "2.0.0",
     "typescript": "5.3.3"
   }
