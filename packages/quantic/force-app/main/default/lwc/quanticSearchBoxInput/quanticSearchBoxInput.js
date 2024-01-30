@@ -94,7 +94,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
   }
 
   /** @type {boolean} */
-  targetClearIcon = false;
+  targetClearButton = false;
 
   connectedCallback() {
     this.addEventListener(
@@ -211,7 +211,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
 
   handleKeyDownOnClearButton(event) {
     if (event.key === keys.ENTER) {
-      this.targetClearIcon = true;
+      this.targetClearButton = true;
     }
   }
 
@@ -231,7 +231,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
   onKeyup(event) {
     switch (event.key) {
       case keys.ENTER:
-        if (!this.targetClearIcon) {
+        if (!this.targetClearButton) {
           this.handleEnter();
         }
         break;
@@ -244,7 +244,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
       default:
         this.handleKeyValues();
     }
-    this.targetClearIcon = false;
+    this.targetClearButton = false;
   }
 
   onFocus() {
