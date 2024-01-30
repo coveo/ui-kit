@@ -5,6 +5,7 @@ import {buildMockSearchRequest} from '../../../test/mock-search-request';
 import {buildMockSearchResponse} from '../../../test/mock-search-response';
 import {buildMockSearchState} from '../../../test/mock-search-state';
 import {getConfigurationInitialState} from '../../configuration/configuration-state';
+import {streamAnswer} from '../../generated-answer/generated-answer-actions';
 import {updateQuery} from '../../query/query-actions';
 import {logSearchboxSubmit} from '../../query/query-analytics-actions';
 import {ExecuteSearchThunkReturn} from './search-actions';
@@ -12,6 +13,8 @@ import {
   AsyncSearchThunkProcessor,
   AsyncThunkConfig,
 } from './search-actions-thunk-processor';
+
+jest.mock('../../generated-answer/generated-answer-actions');
 
 describe('AsyncSearchThunkProcessor', () => {
   let config: AsyncThunkConfig;
@@ -247,5 +250,46 @@ describe('AsyncSearchThunkProcessor', () => {
     expect(config.dispatch).toHaveBeenCalledWith(config.analyticsAction);
     expect(config.extra.apiClient.search).toHaveBeenCalled();
     expect(processed.response).toMatchObject(responseAfterModification);
+  });
+
+  it('does not call streaming API if there is no generative answering id', async () => {
+    const processor = new AsyncSearchThunkProcessor<{}>(config);
+
+    const searchResponse = buildMockSearchResponse({
+      results: [buildMockResult()],
+    });
+
+    const fetched = {
+      response: {
+        success: searchResponse,
+      },
+      duration: 123,
+      queryExecuted: 'foo',
+      requestExecuted: buildMockSearchRequest(),
+    };
+
+    await processor.process(fetched);
+    expect(streamAnswer).not.toHaveBeenCalled();
+  });
+
+  it('does call streaming API if there is a generative answering id', async () => {
+    const processor = new AsyncSearchThunkProcessor<{}>(config);
+
+    const searchResponse = buildMockSearchResponse({
+      extendedResults: {generativeQuestionAnsweringId: '123'},
+      results: [buildMockResult()],
+    });
+
+    const fetched = {
+      response: {
+        success: searchResponse,
+      },
+      duration: 123,
+      queryExecuted: 'foo',
+      requestExecuted: buildMockSearchRequest(),
+    };
+
+    await processor.process(fetched);
+    expect(streamAnswer).toHaveBeenCalledWith({streamId: '123'});
   });
 });

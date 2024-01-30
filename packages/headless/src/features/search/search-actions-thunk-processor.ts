@@ -35,6 +35,7 @@ import {
 } from '../../state/state-sections';
 import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
 import {didYouMeanAutomatic} from '../did-you-mean/did-you-mean-analytics-actions';
+import {streamAnswer} from '../generated-answer/generated-answer-actions';
 import {snapshot} from '../history/history-actions';
 import {extractHistory} from '../history/history-state';
 import {updateQuery} from '../query/query-actions';
@@ -144,6 +145,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       this.processQueryErrorOrContinue(fetched) ??
       (await this.processQueryCorrectionsOrContinue(fetched)) ??
       (await this.processQueryTriggersOrContinue(fetched)) ??
+      this.processGenerativeAnswer(fetched) ??
       this.processSuccessResponse(fetched)
     );
   }
@@ -293,6 +295,22 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       automaticallyCorrected: false,
       originalQuery,
     };
+  }
+
+  private processGenerativeAnswer(
+    fetched: FetchedResponse
+  ): ValidReturnTypeFromProcessingStep<RejectionType> | null {
+    const response = this.getSuccessResponse(fetched);
+    if (!response) {
+      return null;
+    }
+
+    const streamId = response.extendedResults?.generativeQuestionAnsweringId;
+    if (streamId) {
+      this.dispatch(streamAnswer({streamId}));
+    }
+
+    return null;
   }
 
   private processSuccessResponse(

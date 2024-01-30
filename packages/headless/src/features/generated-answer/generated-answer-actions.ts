@@ -16,27 +16,20 @@ import {
 } from '../../api/generated-answer/generated-answer-event-payload';
 import {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request';
 import {
-  ConfigurationSection,
-  DebugSection,
-  GeneratedAnswerSection,
-  SearchSection,
-} from '../../state/state-sections';
-import {
+  nonEmptyString,
   nonEmptyStringArray,
   validatePayload,
 } from '../../utils/validate-payload';
 import {logGeneratedAnswerStreamEnd} from './generated-answer-analytics-actions';
-import {buildStreamingRequest} from './generated-answer-request';
+import {
+  StateNeededByGeneratedAnswerStream,
+  buildStreamingRequest,
+} from './generated-answer-request';
 import {
   GeneratedAnswerStyle,
   GeneratedResponseFormat,
   generatedAnswerStyle,
 } from './generated-response-format';
-
-type StateNeededByGeneratedAnswerStream = ConfigurationSection &
-  SearchSection &
-  GeneratedAnswerSection &
-  DebugSection;
 
 const stringValue = new StringValue({required: true});
 const optionalStringValue = new StringValue();
@@ -99,16 +92,6 @@ export const openGeneratedAnswerFeedbackModal = createAction(
   'generatedAnswer/feedbackModal/open'
 );
 
-export const setId = createAction(
-  'generatedAnswer/setId',
-  (payload: {id: string}) =>
-    validatePayload(payload, {
-      id: new StringValue({
-        required: true,
-      }),
-    })
-);
-
 export const closeGeneratedAnswerFeedbackModal = createAction(
   'generatedAnswer/feedbackModal/close'
 );
@@ -143,21 +126,25 @@ export const registerFieldsToIncludeInCitations = createAction(
   (payload: string[]) => validatePayload<string[]>(payload, nonEmptyStringArray)
 );
 
-interface StreamAnswerArgs {
-  setAbortControllerRef: (ref: AbortController) => void;
-}
+export const abortStream = createAsyncThunk<
+  void,
+  void,
+  AsyncThunkGeneratedAnswerOptions<StateNeededByGeneratedAnswerStream>
+>('generatedAnswer/abortStream', async (_, config) => {
+  const {extra} = config;
+  extra.streamingClient?.abortAnyOngoingStream();
+});
 
 export const streamAnswer = createAsyncThunk<
   void,
-  StreamAnswerArgs,
+  {streamId: string},
   AsyncThunkGeneratedAnswerOptions<StateNeededByGeneratedAnswerStream>
->('generatedAnswer/streamAnswer', async (params, config) => {
+>('generatedAnswer/streamAnswer', async (payload, config) => {
+  validatePayload(payload, {streamId: nonEmptyString});
   const state = config.getState();
   const {dispatch, extra} = config;
 
-  const {setAbortControllerRef} = params;
-
-  const request = await buildStreamingRequest(state);
+  const request = await buildStreamingRequest(state, payload.streamId);
 
   const handleStreamPayload = (
     payloadType: GeneratedAnswerPayloadType,
@@ -192,47 +179,36 @@ export const streamAnswer = createAsyncThunk<
     }
   };
 
-  dispatch(setIsLoading(true));
-
   const currentStreamRequestMatchesOriginalStreamRequest = (
     request: GeneratedAnswerStreamRequest
   ) => {
     return (
       request.streamId ===
-      config.getState().search.extendedResults.generativeQuestionAnsweringId
+      config.getState().search?.extendedResults.generativeQuestionAnsweringId
     );
   };
-  const abortController = extra.streamingClient?.streamGeneratedAnswer(
-    request,
-    {
-      write: (data: GeneratedAnswerStreamEventData) => {
-        if (currentStreamRequestMatchesOriginalStreamRequest(request)) {
-          dispatch(setIsLoading(false));
-          if (data.payload && data.payloadType) {
-            handleStreamPayload(data.payloadType, data.payload);
-          }
+  extra.streamingClient?.streamGeneratedAnswer(request, {
+    write: (data: GeneratedAnswerStreamEventData) => {
+      if (currentStreamRequestMatchesOriginalStreamRequest(request)) {
+        if (data.payload && data.payloadType) {
+          handleStreamPayload(data.payloadType, data.payload);
         }
-      },
-      abort: (error: GeneratedAnswerErrorPayload) => {
-        if (currentStreamRequestMatchesOriginalStreamRequest(request)) {
-          dispatch(updateError(error));
-        }
-      },
-      close: () => {
-        if (currentStreamRequestMatchesOriginalStreamRequest(request)) {
-          dispatch(setIsStreaming(false));
-        }
-      },
-      resetAnswer: () => {
-        if (currentStreamRequestMatchesOriginalStreamRequest(request)) {
-          dispatch(resetAnswer());
-        }
-      },
-    }
-  );
-  if (abortController) {
-    setAbortControllerRef(abortController);
-  } else {
-    dispatch(setIsLoading(false));
-  }
+      }
+    },
+    abort: (error: GeneratedAnswerErrorPayload) => {
+      if (currentStreamRequestMatchesOriginalStreamRequest(request)) {
+        dispatch(updateError(error));
+      }
+    },
+    close: () => {
+      if (currentStreamRequestMatchesOriginalStreamRequest(request)) {
+        dispatch(setIsStreaming(false));
+      }
+    },
+    resetAnswer: () => {
+      if (currentStreamRequestMatchesOriginalStreamRequest(request)) {
+        dispatch(resetAnswer());
+      }
+    },
+  });
 });

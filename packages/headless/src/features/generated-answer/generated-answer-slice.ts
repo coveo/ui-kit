@@ -1,5 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client';
+import {executeSearch} from '../search/search-actions';
 import {
   closeGeneratedAnswerFeedbackModal,
   dislikeGeneratedAnswer,
@@ -15,9 +16,21 @@ import {
   updateResponseFormat,
   sendGeneratedAnswerFeedback,
   registerFieldsToIncludeInCitations,
-  setId,
+  streamAnswer,
 } from './generated-answer-actions';
-import {getGeneratedAnswerInitialState} from './generated-answer-state';
+import {
+  GeneratedAnswerState,
+  getGeneratedAnswerInitialState,
+} from './generated-answer-state';
+
+const handleResetAnswer = (state: GeneratedAnswerState) => {
+  return {
+    ...getGeneratedAnswerInitialState(),
+    responseFormat: state.responseFormat,
+    fieldsToIncludeInCitations: state.fieldsToIncludeInCitations,
+    isVisible: state.isVisible,
+  };
+};
 
 export const generatedAnswerReducer = createReducer(
   getGeneratedAnswerInitialState(),
@@ -25,9 +38,6 @@ export const generatedAnswerReducer = createReducer(
     builder
       .addCase(setIsVisible, (state, {payload}) => {
         state.isVisible = payload;
-      })
-      .addCase(setId, (state, {payload}) => {
-        state.id = payload.id;
       })
       .addCase(updateMessage, (state, {payload}) => {
         state.isLoading = false;
@@ -71,15 +81,7 @@ export const generatedAnswerReducer = createReducer(
       .addCase(sendGeneratedAnswerFeedback, (state) => {
         state.feedbackSubmitted = true;
       })
-      .addCase(resetAnswer, (state) => {
-        return {
-          ...getGeneratedAnswerInitialState(),
-          responseFormat: state.responseFormat,
-          fieldsToIncludeInCitations: state.fieldsToIncludeInCitations,
-          isVisible: state.isVisible,
-          id: state.id,
-        };
-      })
+      .addCase(resetAnswer, (state) => handleResetAnswer(state))
       .addCase(setIsLoading, (state, {payload}) => {
         state.isLoading = payload;
       })
@@ -93,5 +95,10 @@ export const generatedAnswerReducer = createReducer(
         state.fieldsToIncludeInCitations = [
           ...new Set(state.fieldsToIncludeInCitations.concat(action.payload)),
         ];
+      })
+      .addCase(executeSearch.pending, (state) => handleResetAnswer(state))
+      .addCase(streamAnswer.pending, (state) => {
+        state.isLoading = true;
+        state.isStreaming = false;
       })
 );

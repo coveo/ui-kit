@@ -4,13 +4,10 @@ import {
   dislikeGeneratedAnswer,
   likeGeneratedAnswer,
   openGeneratedAnswerFeedbackModal,
-  resetAnswer,
   sendGeneratedAnswerFeedback,
   setIsVisible,
-  streamAnswer,
   updateResponseFormat,
   registerFieldsToIncludeInCitations,
-  setId,
 } from '../../../features/generated-answer/generated-answer-actions';
 import {
   generatedAnswerAnalyticsClient,
@@ -80,10 +77,6 @@ describe('generated answer', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       generatedAnswer: generatedAnswerReducer,
     });
-  });
-
-  it('should subscribe to state updates', () => {
-    expect(engine.subscribe).toHaveBeenCalledTimes(1);
   });
 
   it('should return the state', () => {
@@ -337,107 +330,6 @@ describe('generated answer', () => {
         'payload',
         exampleFieldsToIncludeInCitations
       );
-    });
-  });
-
-  describe('subscription to changes', () => {
-    beforeEach(() => {
-      const setIdAction = findAction(engine, setId.type);
-      const genQaEngineId = setIdAction?.payload.id;
-      engine.state.generatedAnswer.id = genQaEngineId;
-    });
-
-    function callListener(engine: MockSearchEngine) {
-      return (engine.subscribe as jest.Mock).mock.calls
-        .map((args) => args[0])
-        .forEach((listener) => {
-          listener();
-        });
-    }
-
-    it('should not dispatch the stream action when there is no stream ID', () => {
-      callListener(engine);
-
-      const action = findAction(engine, streamAnswer.pending.type);
-
-      expect(action).toBeFalsy();
-    });
-
-    it('should dispatch the resetAnswer action when the requestId has changed', () => {
-      engine.state.search.requestId = 'some-fake-test-id';
-
-      callListener(engine);
-
-      const action = findAction(engine, resetAnswer.type);
-
-      expect(action).toBeTruthy();
-    });
-
-    it('should dispatch the stream action when there is a new stream ID', () => {
-      engine.state.search.extendedResults = {
-        generativeQuestionAnsweringId: 'some-fake-test-id',
-      };
-
-      callListener(engine);
-
-      const action = findAction(engine, streamAnswer.pending.type);
-
-      expect(action).toBeTruthy();
-    });
-
-    describe('when multiple generated answer controllers are being used', () => {
-      beforeEach(() => {
-        buildCoreGeneratedAnswer(engine, generatedAnswerAnalyticsClient);
-      });
-
-      it('should dispatch the stream action only once when there is a new stream ID', () => {
-        engine.state.search.extendedResults = {
-          generativeQuestionAnsweringId: 'another-fake-test-id',
-        };
-
-        callListener(engine);
-
-        const count = engine.actions.filter(
-          (a) => a.type === streamAnswer.pending.type
-        ).length;
-        expect(count).toEqual(1);
-      });
-    });
-
-    describe('when multiple engines are being used', () => {
-      let secondEngine: MockSearchEngine;
-
-      beforeEach(() => {
-        secondEngine = buildMockSearchAppEngine();
-        buildCoreGeneratedAnswer(secondEngine, generatedAnswerAnalyticsClient);
-
-        const setIdAction = findAction(secondEngine, setId.type);
-        const genQaEngineId = setIdAction?.payload.id;
-        secondEngine.state.generatedAnswer.id = genQaEngineId;
-      });
-
-      it('should dispatch the stream action only once for each engine where there is a new stream ID', () => {
-        engine.state.search.extendedResults = {
-          generativeQuestionAnsweringId: 'another-fake-test-id',
-        };
-        secondEngine.state.search.extendedResults = {
-          generativeQuestionAnsweringId: 'fake-test-id-for-second-engine',
-        };
-
-        callListener(engine);
-        callListener(secondEngine);
-        callListener(engine);
-        callListener(secondEngine);
-
-        const streamAnswerCountInFirstEngine = engine.actions.filter(
-          (a) => a.type === streamAnswer.pending.type
-        ).length;
-        const streamAnswerCountInSecondEngine = secondEngine.actions.filter(
-          (a) => a.type === streamAnswer.pending.type
-        ).length;
-        expect(streamAnswerCountInFirstEngine).toEqual(1);
-        expect(streamAnswerCountInSecondEngine).toEqual(1);
-      });
     });
   });
 });

@@ -1,14 +1,12 @@
-import {Unsubscribe} from '@reduxjs/toolkit';
 import {GeneratedAnswerAPIClient} from '../../../api/generated-answer/generated-answer-client';
 import {GeneratedAnswerCitation} from '../../../api/generated-answer/generated-answer-event-payload';
+import {SearchAPIClient} from '../../../api/search/search-api-client';
 import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
 import {
   CustomAction,
   LegacySearchAction,
 } from '../../../features/analytics/analytics-utils';
 import {
-  streamAnswer,
-  resetAnswer,
   likeGeneratedAnswer,
   dislikeGeneratedAnswer,
   updateResponseFormat,
@@ -17,7 +15,6 @@ import {
   setIsVisible,
   sendGeneratedAnswerFeedback,
   registerFieldsToIncludeInCitations,
-  setId,
 } from '../../../features/generated-answer/generated-answer-actions';
 import {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions';
 import {generatedAnswerReducer as generatedAnswer} from '../../../features/generated-answer/generated-answer-slice';
@@ -30,7 +27,6 @@ import {
   SearchSection,
 } from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
-import {randomID} from '../../../utils/utils';
 import {
   Controller,
   buildController,
@@ -124,80 +120,6 @@ export interface GeneratedAnswerProps {
   fieldsToIncludeInCitations?: string[];
 }
 
-interface SubscribeStateManager {
-  engines: Record<
-    string,
-    {
-      abortController: AbortController | undefined;
-      lastRequestId: string;
-      lastStreamId: string;
-    }
-  >;
-  getIsStreamInProgress: (genQaEngineId: string) => boolean;
-  setAbortControllerRef: (ref: AbortController, genQaEngineId: string) => void;
-  subscribeToSearchRequests: (
-    engine: CoreEngine<
-      GeneratedAnswerSection & SearchSection & DebugSection,
-      ClientThunkExtraArguments<GeneratedAnswerAPIClient>
-    >
-  ) => Unsubscribe;
-}
-
-const subscribeStateManager: SubscribeStateManager = {
-  engines: {},
-
-  setAbortControllerRef: (ref: AbortController, genQaEngineId: string) => {
-    subscribeStateManager.engines[genQaEngineId].abortController = ref;
-  },
-
-  getIsStreamInProgress: (genQaEngineId: string) => {
-    if (
-      !subscribeStateManager.engines[genQaEngineId].abortController ||
-      subscribeStateManager.engines[genQaEngineId].abortController?.signal
-        .aborted
-    ) {
-      subscribeStateManager.engines[genQaEngineId].abortController = undefined;
-      return false;
-    }
-    return true;
-  },
-
-  subscribeToSearchRequests: (engine) => {
-    const strictListener = () => {
-      const state = engine.state;
-      const requestId = state.search.requestId;
-      const streamId =
-        state.search.extendedResults.generativeQuestionAnsweringId;
-      const genQaEngineId = state.generatedAnswer.id;
-
-      if (
-        subscribeStateManager.engines[genQaEngineId].lastRequestId !== requestId
-      ) {
-        subscribeStateManager.engines[genQaEngineId].lastRequestId = requestId;
-        subscribeStateManager.engines[genQaEngineId].abortController?.abort();
-        engine.dispatch(resetAnswer());
-      }
-
-      const isStreamInProgress =
-        subscribeStateManager.getIsStreamInProgress(genQaEngineId);
-      if (
-        !isStreamInProgress &&
-        streamId &&
-        streamId !== subscribeStateManager.engines[genQaEngineId].lastStreamId
-      ) {
-        subscribeStateManager.engines[genQaEngineId].lastStreamId = streamId;
-        engine.dispatch(
-          streamAnswer({
-            setAbortControllerRef: (ref: AbortController) =>
-              subscribeStateManager.setAbortControllerRef(ref, genQaEngineId),
-          })
-        );
-      }
-    };
-    return engine.subscribe(strictListener);
-  },
-};
-
 export interface GeneratedAnswerAnalyticsClient {
   logLikeGeneratedAnswer: () => CustomAction;
   logDislikeGeneratedAnswer: () => CustomAction;
@@ -239,16 +161,6 @@ export function buildCoreGeneratedAnswer(
   const controller = buildController(engine);
   const getState = () => engine.state;
 
-  if (!engine.state.generatedAnswer.id) {
-    const genQaEngineId = randomID('genQA-', 12);
-    dispatch(setId({id: genQaEngineId}));
-    subscribeStateManager.engines[genQaEngineId] = {
-      abortController: undefined,
-      lastRequestId: '',
-      lastStreamId: '',
-    };
-  }
-
   const isVisible = props.initialState?.isVisible;
   if (isVisible !== undefined) {
     dispatch(setIsVisible(isVisible));
@@ -262,8 +174,6 @@ export function buildCoreGeneratedAnswer(
   if (fieldsToIncludeInCitations) {
     dispatch(registerFieldsToIncludeInCitations(fieldsToIncludeInCitations));
   }
-
-  subscribeStateManager.subscribeToSearchRequests(engine);
 
   return {
     ...controller,
@@ -342,7 +252,10 @@ export function buildCoreGeneratedAnswer(
 
 function loadGeneratedAnswerReducer(
   engine: CoreEngine
-): engine is CoreEngine<GeneratedAnswerSection & SearchSection & DebugSection> {
+): engine is CoreEngine<
+  GeneratedAnswerSection & SearchSection & DebugSection,
+  ClientThunkExtraArguments<SearchAPIClient, GeneratedAnswerAPIClient>
+> {
   engine.addReducers({generatedAnswer});
   return true;
 }

@@ -7,6 +7,7 @@ import {GeneratedAnswerErrorPayload} from '../../features/generated-answer/gener
 import {createAbortController} from '../../utils/abort-controller-polyfill';
 import {URLPath} from '../../utils/url-utils';
 import {resetTimeout} from '../../utils/utils';
+import {SearchAPIClient} from '../search/search-api-client';
 import {GeneratedAnswerStreamEventData} from './generated-answer-event-payload';
 import {GeneratedAnswerStreamRequest} from './generated-answer-request';
 
@@ -18,7 +19,7 @@ export interface AsyncThunkGeneratedAnswerOptions<
   T extends Partial<SearchAppState>,
 > extends AsyncThunkOptions<
     T,
-    ClientThunkExtraArguments<GeneratedAnswerAPIClient>
+    ClientThunkExtraArguments<SearchAPIClient, GeneratedAnswerAPIClient>
   > {}
 
 const buildStreamingUrl = (url: string, orgId: string, streamId: string) =>
@@ -65,14 +66,22 @@ class TimeoutStateManager {
 export class GeneratedAnswerAPIClient {
   private logger: Logger;
 
+  private abortController: AbortController | null = null;
+
   constructor(options: GeneratedAnswerAPIClientOptions) {
     this.logger = options.logger;
+  }
+
+  abortAnyOngoingStream() {
+    this.abortController?.abort();
+    this.abortController = null;
   }
 
   streamGeneratedAnswer(
     params: GeneratedAnswerStreamRequest,
     callbacks: StreamCallbacks
   ) {
+    this.abortAnyOngoingStream();
     const {url, organizationId, streamId, accessToken} = params;
     const {write, abort, close, resetAnswer} = callbacks;
     const timeoutStateManager = new TimeoutStateManager();
@@ -87,7 +96,7 @@ export class GeneratedAnswerAPIClient {
 
     const retryStream = () => {
       if (timeout && !timeoutStateManager.isActive(timeout)) {
-        abortController?.abort();
+        this.abortAnyOngoingStream();
         resetAnswer();
         stream();
       }
@@ -99,16 +108,17 @@ export class GeneratedAnswerAPIClient {
       timeoutStateManager.add(timeout);
     };
 
-    const abortController = createAbortController();
+    const stream = () => {
+      this.abortAnyOngoingStream();
+      this.abortController = createAbortController();
 
-    const stream = () =>
       fetchEventSource(buildStreamingUrl(url, organizationId, streamId), {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${accessToken}`,
           accept: '*/*',
         },
-        signal: abortController?.signal,
+        signal: this.abortController?.signal,
         async onopen(response) {
           if (
             response.ok &&
@@ -133,7 +143,7 @@ export class GeneratedAnswerAPIClient {
           const data: GeneratedAnswerStreamEventData = JSON.parse(event.data);
           if (data.finishReason === 'ERROR') {
             timeoutStateManager.remove(timeout!);
-            abortController?.abort();
+            this.abortAnyOngoingStream();
             abort({
               message: data.errorMessage,
               code: data.statusCode,
@@ -152,7 +162,7 @@ export class GeneratedAnswerAPIClient {
         onerror: (err) => {
           timeoutStateManager.remove(timeout!);
           if (err instanceof FatalError) {
-            abortController?.abort();
+            this.abortAnyOngoingStream();
             abort(err);
             throw err;
           }
@@ -162,7 +172,7 @@ export class GeneratedAnswerAPIClient {
               message: 'Failed to complete stream.',
               code: RETRYABLE_STREAM_ERROR_CODE,
             };
-            abortController?.abort();
+            this.abortAnyOngoingStream();
             abort(error);
             throw new FatalError(error);
           }
@@ -170,9 +180,8 @@ export class GeneratedAnswerAPIClient {
           resetAnswer();
         },
       });
+    };
 
     stream();
-
-    return abortController;
   }
 }

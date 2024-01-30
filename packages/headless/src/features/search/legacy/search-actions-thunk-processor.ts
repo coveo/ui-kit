@@ -2,6 +2,7 @@ import {isNullOrUndefined} from '@coveo/bueno';
 import {AnyAction} from '@reduxjs/toolkit';
 import {ThunkDispatch} from 'redux-thunk';
 import {StateNeededBySearchAnalyticsProvider} from '../../../api/analytics/search-analytics';
+import {GeneratedAnswerAPIClient} from '../../../api/generated-answer/generated-answer-client';
 import {
   isErrorResponse,
   isSuccessResponse,
@@ -25,6 +26,7 @@ import {
   FacetSection,
   FieldsSection,
   FoldingSection,
+  GeneratedAnswerSection,
   NumericFacetSection,
   PaginationSection,
   PipelineSection,
@@ -38,6 +40,7 @@ import {
 import {AnalyticsAsyncThunk} from '../../analytics/analytics-utils';
 import {applyDidYouMeanCorrection} from '../../did-you-mean/did-you-mean-actions';
 import {logDidYouMeanAutomatic} from '../../did-you-mean/did-you-mean-analytics-actions';
+import {streamAnswer} from '../../generated-answer/generated-answer-actions';
 import {snapshot} from '../../history/history-actions';
 import {extractHistory} from '../../history/history-state';
 import {updateQuery} from '../../query/query-actions';
@@ -79,7 +82,8 @@ export type StateNeededByExecuteSearch = ConfigurationSection &
       DebugSection &
       SearchSection &
       FoldingSection &
-      TriggerSection
+      TriggerSection &
+      GeneratedAnswerSection
   >;
 
 interface FetchedResponse {
@@ -97,15 +101,13 @@ export interface AsyncThunkConfig {
   getState: () => StateNeededByExecuteSearch;
   dispatch: ThunkDispatch<
     StateNeededByExecuteSearch,
-    ClientThunkExtraArguments<SearchAPIClient> & {
-      searchAPIClient?: SearchAPIClient | undefined;
-    },
+    ClientThunkExtraArguments<SearchAPIClient, GeneratedAnswerAPIClient>,
     AnyAction
   >;
 
   rejectWithValue: (err: SearchAPIErrorWithStatusCode) => unknown;
   analyticsAction: AnalyticsAsyncThunk | null;
-  extra: ClientThunkExtraArguments<SearchAPIClient>;
+  extra: ClientThunkExtraArguments<SearchAPIClient, GeneratedAnswerAPIClient>;
 }
 
 type QueryCorrectionCallback = (modification: string) => void;
@@ -146,6 +148,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       this.processQueryErrorOrContinue(fetched) ??
       (await this.processQueryCorrectionsOrContinue(fetched)) ??
       (await this.processQueryTriggersOrContinue(fetched)) ??
+      this.processGenerativeAnswer(fetched) ??
       this.processSuccessResponse(fetched)
     );
   }
@@ -345,6 +348,22 @@ export class AsyncSearchThunkProcessor<RejectionType> {
         results: response.results,
       },
     };
+  }
+
+  private processGenerativeAnswer(
+    fetched: FetchedResponse
+  ): ValidReturnTypeFromProcessingStep<RejectionType> | null {
+    const response = this.getSuccessResponse(fetched);
+    if (!response) {
+      return null;
+    }
+
+    const streamId = response.extendedResults?.generativeQuestionAnsweringId;
+    if (streamId) {
+      this.dispatch(streamAnswer({streamId}));
+    }
+
+    return null;
   }
 
   private processSuccessResponse(
