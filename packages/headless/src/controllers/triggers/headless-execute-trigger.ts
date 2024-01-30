@@ -8,7 +8,7 @@ import {loadReducerError} from '../../utils/errors';
 import {buildController, Controller} from '../controller/headless-controller';
 
 /**
- * The `ExecuteTrigger` controller handles Execute triggers from the query response. An [Execute trigger](https://docs.coveo.com/en/3413/tune-relevance/manage-trigger-rules#execute) query pipeline rule lets you define a custom JavaScript function to be executed in the frontend when a certain condition is met.
+ * The `ExecuteTrigger` controller handles Execute triggers from the query response. An [Execute trigger](https://docs.coveo.com/en/3413#execute) query pipeline rule lets you define a custom JavaScript function to be executed in the frontend when a certain condition is met.
  */
 export interface ExecuteTrigger extends Controller {
   /**
