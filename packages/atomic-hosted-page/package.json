@@ -35,7 +35,7 @@
   "dependencies": {
     "@coveo/bueno": "0.45.5",
     "@coveo/headless": "2.47.0",
-    "@stencil/core": "4.9.0"
+    "@stencil/core": "4.11.0"
   },
   "devDependencies": {
     "@coveo/release": "1.0.0",

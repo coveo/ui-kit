@@ -73,6 +73,21 @@ export function buildHistoryManager(engine: SearchEngine): HistoryManager {
 
   return {
     ...controller,
+    // TODO: https://coveord.atlassian.net/browse/KIT-2969:
+    // Should be able to get rid of this local optimization following history management change
+    subscribe(listener: () => void) {
+      listener();
+      let previous = JSON.stringify(getState().history.present);
+      const strictListener = () => {
+        const current = JSON.stringify(getState().history.present);
+        const hasChanged = previous !== current;
+        if (hasChanged) {
+          previous = current;
+          listener();
+        }
+      };
+      return engine.subscribe(() => strictListener());
+    },
     get state() {
       return getState().history;
     },
