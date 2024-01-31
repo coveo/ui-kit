@@ -568,6 +568,17 @@ describe('Search Box Test Suites', () => {
       typeSearchInput('{backspace}'.repeat(minimumQueryLength), '');
       SearchBoxSelectors.submitButton().should('be.disabled');
     });
+
+    it('clear button should be appear and dissapears depending on the content of the input', () => {
+      typeSearchInput(testQuery);
+      SearchBoxSelectors.clearButton().should('exist');
+      typeSearchInput(
+        Array.from({length: testQuery.length})
+          .map(() => '{backspace}')
+          .join('')
+      );
+      SearchBoxSelectors.clearButton().should('not.exist');
+    });
   });
 
   describe('with a facet & clear-filters set to false', () => {
