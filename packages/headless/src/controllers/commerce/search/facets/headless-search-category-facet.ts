@@ -3,8 +3,8 @@ import {loadReducerError} from '../../../../utils/errors';
 import {
   CommerceCategoryFacet,
   buildCommerceCategoryFacet,
-} from '../../facets/core/category/headless-commerce-category-facet';
-import {CommerceFacetOptions} from '../../facets/core/headless-core-commerce-facet';
+} from '../../core/facets/category/headless-commerce-category-facet';
+import {CommerceFacetOptions} from '../../core/facets/headless-core-commerce-facet';
 import {loadSearchReducer} from '../utils/load-search-reducers';
 import {commonOptions} from './headless-search-facet-options';
 

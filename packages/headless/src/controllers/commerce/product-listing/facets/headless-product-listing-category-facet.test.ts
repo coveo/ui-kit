@@ -2,14 +2,17 @@ import {CommerceFacetRequest} from '../../../../features/commerce/facets/facet-s
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice';
 import {CommerceAppState} from '../../../../state/commerce-app-state';
-import {MockCommerceEngine, buildMockCommerceEngine} from '../../../../test';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
 import {buildMockCommerceCategoryFacetResponse} from '../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceCategoryFacetValue} from '../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
-import {CommerceCategoryFacet} from '../../facets/core/category/headless-commerce-category-facet';
-import {CommerceFacetOptions} from '../../facets/core/headless-core-commerce-facet';
+import {
+  MockCommerceEngine,
+  buildMockCommerceEngine,
+} from '../../../../test/mock-engine';
+import {CommerceCategoryFacet} from '../../core/facets/category/headless-commerce-category-facet';
+import {CommerceFacetOptions} from '../../core/facets/headless-core-commerce-facet';
 import {buildProductListingCategoryFacet} from './headless-product-listing-category-facet';
 
 describe('ProductListingCategoryFacet', () => {
