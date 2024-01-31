@@ -1,10 +1,11 @@
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {productListingV2Reducer} from '../../../../features/commerce/product-listing/product-listing-slice';
-import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
+import {MockCommerceEngine} from '../../../../test/mock-engine';
+import {buildMockCommerceEngine} from '../../../../test/mock-engine';
 import {
   buildRelevanceSortCriterion,
   Sort,
-} from '../../sort/core/headless-core-commerce-sort';
+} from '../../core/sort/headless-core-commerce-sort';
 import {buildProductListingSort} from './headless-product-listing-sort';
 
 describe('headless product listing sort', () => {

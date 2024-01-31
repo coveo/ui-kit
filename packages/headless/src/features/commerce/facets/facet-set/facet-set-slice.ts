@@ -7,7 +7,7 @@ import {
   DateRangeRequest,
   FacetValueRequest,
   NumericRangeRequest,
-} from '../../../../controllers/commerce/facets/core/headless-core-commerce-facet';
+} from '../../../../controllers/commerce/core/facets/headless-core-commerce-facet';
 import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
 import {
   deselectAllFacetValues,
@@ -29,6 +29,7 @@ import {
   toggleSelectNumericFacetValue,
 } from '../../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {convertToNumericRangeRequests} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
+import {setContext, setUser, setView} from '../../context/context-actions';
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
 import {executeSearch} from '../../search/search-actions';
 import {toggleSelectCommerceCategoryFacetValue} from './facet-set-actions';
@@ -240,11 +241,10 @@ export const commerceFacetSetReducer = createReducer(
 
         handleDeselectAllFacetValues(request);
       })
-      .addCase(deselectAllBreadcrumbs, (state) => {
-        Object.values(state).forEach((facet) => {
-          facet.request.values.forEach((value) => (value.state = 'idle'));
-        });
-      });
+      .addCase(deselectAllBreadcrumbs, resetAllFacetValues)
+      .addCase(setContext, resetAllFacetValues)
+      .addCase(setView, resetAllFacetValues)
+      .addCase(setUser, resetAllFacetValues);
   }
 );
 
@@ -435,4 +435,10 @@ function insertNewValue(
   }
 
   facetRequest.numberOfValues = facetRequest.values.length;
+}
+
+function resetAllFacetValues(state: CommerceFacetSetState) {
+  Object.values(state).forEach((facet) => {
+    facet.request.values.forEach((value) => (value.state = 'idle'));
+  });
 }

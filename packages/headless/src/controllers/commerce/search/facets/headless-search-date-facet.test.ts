@@ -3,14 +3,15 @@ import {CommerceFacetRequest} from '../../../../features/commerce/facets/facet-s
 import {executeSearch} from '../../../../features/commerce/search/search-actions';
 import {commerceSearchReducer as commerceSearch} from '../../../../features/commerce/search/search-slice';
 import {CommerceAppState} from '../../../../state/commerce-app-state';
-import {MockCommerceEngine, buildMockCommerceEngine} from '../../../../test';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
 import {buildMockCommerceDateFacetResponse} from '../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceDateFacetValue} from '../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
-import {CommerceDateFacet} from '../../facets/core/date/headless-commerce-date-facet';
-import {CommerceFacetOptions} from '../../facets/core/headless-core-commerce-facet';
+import {buildMockCommerceEngine} from '../../../../test/mock-engine';
+import {MockCommerceEngine} from '../../../../test/mock-engine';
+import {CommerceDateFacet} from '../../core/facets/date/headless-commerce-date-facet';
+import {CommerceFacetOptions} from '../../core/facets/headless-core-commerce-facet';
 import {buildSearchDateFacet} from './headless-search-date-facet';
 
 describe('SearchDateFacet', () => {

@@ -1,4 +1,4 @@
-import {buildDateRange} from '../../../../controllers';
+import {buildDateRange} from '../../../../controllers/facets/range-facet/date-facet/headless-date-facet';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
 import {validateManualDateRanges} from './date-facet-actions';
 

@@ -8,6 +8,7 @@ import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
 } from '../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {setContext, setUser, setView} from '../context/context-actions';
 import {fetchProductListing} from '../product-listing/product-listing-actions';
 import {executeSearch} from '../search/search-actions';
 import {nextPage, previousPage, selectPage} from './pagination-actions';
@@ -47,7 +48,10 @@ export const paginationReducer = createReducer(
       .addCase(toggleSelectFacetValue, handlePaginationReset)
       .addCase(toggleExcludeFacetValue, handlePaginationReset)
       .addCase(toggleSelectNumericFacetValue, handlePaginationReset)
-      .addCase(toggleExcludeNumericFacetValue, handlePaginationReset);
+      .addCase(toggleExcludeNumericFacetValue, handlePaginationReset)
+      .addCase(setContext, handlePaginationReset)
+      .addCase(setView, handlePaginationReset)
+      .addCase(setUser, handlePaginationReset);
   }
 );
 

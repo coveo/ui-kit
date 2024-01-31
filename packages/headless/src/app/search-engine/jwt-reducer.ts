@@ -2,7 +2,6 @@ import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer, Reducer} from '@reduxjs/toolkit';
 import {atob as atobShim} from 'abab';
 import P, {Logger} from 'pino';
-import {SearchAppState} from '../..';
 import {
   updateAnalyticsConfiguration,
   updateBasicConfiguration,
@@ -13,6 +12,7 @@ import {setPipeline} from '../../features/pipeline/pipeline-actions';
 import {getPipelineInitialState} from '../../features/pipeline/pipeline-state';
 import {setSearchHub} from '../../features/search-hub/search-hub-actions';
 import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state';
+import {SearchAppState} from '../../state/search-app-state';
 
 export interface CoveoJSONWebToken {
   searchHub?: string;

@@ -1,3 +1,57 @@
+# 2.48.0 (2024-01-31)
+
+### Bug Fixes
+
+- **deps:** update all dependencies j:kit-282 ([#3535](https://github.com/coveo/ui-kit/issues/3535)) ([8cbc113](https://github.com/coveo/ui-kit/commits/8cbc113c323134c73ec9643260ee4580289e891b))
+- **headless:** Improving how to handle the subscribeStateManager in the rga controller ([#3552](https://github.com/coveo/ui-kit/issues/3552)) ([74f61fe](https://github.com/coveo/ui-kit/commits/74f61fee73ec92b10704f24abd3747e17da87b20))
+- **headless:** limit memory usage and property comparison for history manager ([#3558](https://github.com/coveo/ui-kit/issues/3558)) ([5b16462](https://github.com/coveo/ui-kit/commits/5b16462091d975c1d4070d306aa7e8da3a4cb486))
+- **headless:** remove un-necessary client side events for new query correction ([#3551](https://github.com/coveo/ui-kit/issues/3551)) ([49fcf78](https://github.com/coveo/ui-kit/commits/49fcf7846db2057a30fd460aaf1974734e570054))
+
+### Features
+
+- **headless,atomic:** migrate framework versions from customData to source w/ next analytics ([#3544](https://github.com/coveo/ui-kit/issues/3544)) ([b4c9262](https://github.com/coveo/ui-kit/commits/b4c9262e89cf0e02d9f7392a3f1f198a5e61c64e))
+- **headless:** export missing action to set query corrrection mode ([#3532](https://github.com/coveo/ui-kit/issues/3532)) ([fa96dc2](https://github.com/coveo/ui-kit/commits/fa96dc2cb8d395804e53392fe5954f7faf2b6c1e))
+
+# 2.47.0 (2024-01-24)
+
+### Features
+
+- **commerce:** allow setting referrer ([#3529](https://github.com/coveo/ui-kit/issues/3529)) ([a3db3e2](https://github.com/coveo/ui-kit/commits/a3db3e25c55d18cd2461b87e733ea1926ab2b9d0))
+- **commerce:** isolate core commerce controllers ([#3540](https://github.com/coveo/ui-kit/issues/3540)) ([cc98717](https://github.com/coveo/ui-kit/commits/cc98717a1b4041c861e3c173b77800d691a4f0d9))
+
+# 2.46.0 (2024-01-19)
+
+### Bug Fixes
+
+- **deps:** update all dependencies j:kit-282 ([#3522](https://github.com/coveo/ui-kit/issues/3522)) ([59c3ac7](https://github.com/coveo/ui-kit/commits/59c3ac76c8a5c4d61cb2fa7cfc90fd2b901b0535))
+- **samples/headless-ssr:** revisit url management with Search Parameter Manager ([#3516](https://github.com/coveo/ui-kit/issues/3516)) ([ceb58f4](https://github.com/coveo/ui-kit/commits/ceb58f499d18fe8255d0e79c81507f8dae3ef51f))
+
+### Features
+
+- **headless,atomic:** support new query correction system ([#3530](https://github.com/coveo/ui-kit/issues/3530)) ([1d81780](https://github.com/coveo/ui-kit/commits/1d81780b25f2e4159fcc3810461b6f2173776089))
+- **headless:** refactored generated answer controllers to support working in multiple use cases ([#3489](https://github.com/coveo/ui-kit/issues/3489)) ([e636415](https://github.com/coveo/ui-kit/commits/e6364155c6c16be100212614ce44d4033b8eaba2))
+- **headless:** Support the context search param with the insight engine ([#3531](https://github.com/coveo/ui-kit/issues/3531)) ([f29b1ae](https://github.com/coveo/ui-kit/commits/f29b1aef644781ebd4aca79c09cd0cca2b08a9ab))
+
+## 2.45.1 (2024-01-10)
+
+### Bug Fixes
+
+- **commerce:** handle facet, sort and pagination reset on context change ([#3500](https://github.com/coveo/ui-kit/issues/3500)) ([fe14eab](https://github.com/coveo/ui-kit/commits/fe14eabc3b528fcedce252cf85d538ae985e9570))
+
+# 2.45.0 (2024-01-03)
+
+### Bug Fixes
+
+- **commerce:** fix commerce search facet selectors and facet order ([#3496](https://github.com/coveo/ui-kit/issues/3496)) ([0166932](https://github.com/coveo/ui-kit/commits/0166932722b2d5a95f22c892092b7dce25259622))
+- **commerce:** forward required display name ([#3490](https://github.com/coveo/ui-kit/issues/3490)) ([fdc2c60](https://github.com/coveo/ui-kit/commits/fdc2c6080a789a45fa9c6ad098e8c6e6cbe26ac2))
+- **commerce:** use 0-based indexing for search box ([#3488](https://github.com/coveo/ui-kit/issues/3488)) ([1ec9ff8](https://github.com/coveo/ui-kit/commits/1ec9ff8814dedf91efad20ae8133e77d56025f85))
+
+### Features
+
+- **commerce:** add core + plp date range facets ([#3481](https://github.com/coveo/ui-kit/issues/3481)) ([19eb84a](https://github.com/coveo/ui-kit/commits/19eb84a20d1353a4241769c94d38490832a08e86))
+- **headless:** getGeneratedAnswerMetadata method added to the InsightAnalytics provider ([#3498](https://github.com/coveo/ui-kit/issues/3498)) ([5cdece8](https://github.com/coveo/ui-kit/commits/5cdece8de2900de3ee6b9ede9d2ee50632f0a224))
+- **headless:** removed the triggeredBy from the insight analytics actions for logCreateArticle ([#3484](https://github.com/coveo/ui-kit/issues/3484)) ([3074e55](https://github.com/coveo/ui-kit/commits/3074e5529dc150109353560b4a06edc8789647d3))
+
 # 2.44.0 (2023-12-13)
 
 ### Bug Fixes

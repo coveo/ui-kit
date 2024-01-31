@@ -6,7 +6,7 @@ import {
   InsightSearchBoxState,
   loadInsightQuerySetActions,
 } from '..';
-import SearchIcon from '../../../images/search.svg';
+import SearchSlimIcon from '../../../images/search-slim.svg';
 import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {isMacOS} from '../../../utils/device-utils';
 import {
@@ -17,7 +17,7 @@ import {encodeForDomAttribute} from '../../../utils/string-utils';
 import {randomID} from '../../../utils/utils';
 import {SearchBoxCommon} from '../../common/search-box/search-box-common';
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
-import {SearchInput} from '../../common/search-box/search-input';
+import {SearchTextArea} from '../../common/search-box/search-text-area';
 import {
   ButtonSearchSuggestion,
   queryDataAttribute,
@@ -42,7 +42,7 @@ export class AtomicInsightSearchBox {
 
   private searchBox!: InsightSearchBox;
   private id!: string;
-  private inputRef!: HTMLInputElement;
+  private textAreaRef!: HTMLTextAreaElement;
   private panelRef: HTMLElement | undefined;
   private querySetActions!: QuerySetActionCreators;
   private searchBoxCommon!: SearchBoxCommon;
@@ -253,6 +253,11 @@ export class AtomicInsightSearchBox {
     this.suggestedQuery = suggestedQuery;
   }
 
+  private triggerTextAreaChange(value: string) {
+    this.textAreaRef.value = value;
+    this.textAreaRef.dispatchEvent(new window.Event('change'));
+  }
+
   private renderSuggestion(
     item: SearchBoxSuggestionElement,
     index: number,
@@ -297,7 +302,7 @@ export class AtomicInsightSearchBox {
         <div part="query-suggestion-content" class="flex items-center">
           <atomic-icon
             part="query-suggestion-icon"
-            icon={SearchIcon}
+            icon={SearchSlimIcon}
             class="w-4 h-4 mr-2 shrink-0"
           ></atomic-icon>
           {hasQuery ? (
@@ -385,27 +390,30 @@ export class AtomicInsightSearchBox {
 
   public render() {
     return (
-      <SearchBoxWrapper disabled={this.disableSearch}>
+      <SearchBoxWrapper disabled={this.disableSearch} textArea>
         <atomic-focus-detector
           style={{display: 'contents'}}
           onFocusExit={() => this.clearSuggestions()}
         >
           <atomic-icon
             part="submit-icon"
-            icon={SearchIcon}
-            class="w-4 h-full my-auto mr-0 ml-4"
+            icon={SearchSlimIcon}
+            class="w-4 h-4 my-auto mr-0 ml-4"
           />
-          <SearchInput
-            inputRef={this.inputRef}
+          <SearchTextArea
+            textAreaRef={this.textAreaRef}
             loading={this.searchBoxState.isLoading}
-            ref={(el) => (this.inputRef = el as HTMLInputElement)}
+            ref={(el) => el && (this.textAreaRef = el)}
             bindings={this.bindings}
             value={this.searchBoxState.value}
             ariaLabel={this.searchBoxCommon.getSearchInputLabel()}
             placeholder={this.bindings.i18n.t('search-ellipsis')}
             onFocus={() => this.onFocus()}
             onKeyDown={(e) => this.onKeyDown(e)}
-            onClear={() => this.searchBox.clear()}
+            onClear={() => {
+              this.searchBox.clear();
+              this.triggerTextAreaChange('');
+            }}
             onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
           />
           {this.renderSuggestions()}

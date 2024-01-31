@@ -1,5 +1,5 @@
 import {EventDescription} from 'coveo.analytics';
-import {SearchAppState} from '../..';
+import {SearchAppState} from '../../state/search-app-state';
 import {ConfigurationSection} from '../../state/state-sections';
 import {sortFacets} from '../../utils/facet-utils';
 import {AutomaticFacetRequest} from '../facets/automatic-facet-set/interfaces/request';
@@ -46,7 +46,19 @@ export const buildSearchRequest = async (
   return mapSearchRequest({
     ...sharedWithFoldingRequest,
     ...(state.didYouMean && {
-      enableDidYouMean: state.didYouMean.enableDidYouMean,
+      queryCorrection: {
+        enabled:
+          state.didYouMean.enableDidYouMean &&
+          state.didYouMean.queryCorrectionMode === 'next',
+        options: {
+          automaticallyCorrect: state.didYouMean.automaticallyCorrectQuery
+            ? ('whenNoResults' as const)
+            : ('never' as const),
+        },
+      },
+      enableDidYouMean:
+        state.didYouMean.enableDidYouMean &&
+        state.didYouMean.queryCorrectionMode === 'legacy',
     }),
     ...(cq && {cq}),
     ...(facets.length && {facets}),

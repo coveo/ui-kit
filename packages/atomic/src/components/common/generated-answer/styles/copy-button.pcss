@@ -1,0 +1,23 @@
+[part='copy-button'] {
+  .icon-container {
+    atomic-icon {
+      &:hover {
+        color: var(--atomic-primary);
+      }
+    }
+  }
+  &.copied {
+    .icon-container {
+      atomic-icon {
+        color: var(--atomic-success);
+      }
+    }
+  }
+  &.error {
+    .icon-container {
+      atomic-icon {
+        color: var(--atomic-error);
+      }
+    }
+  }
+}

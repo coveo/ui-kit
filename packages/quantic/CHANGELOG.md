@@ -1,3 +1,40 @@
+## 2.43.4 (2024-01-31)
+
+### Bug Fixes
+
+- **deps:** update all dependencies j:kit-282 ([#3535](https://github.com/coveo/ui-kit/issues/3535)) ([8cbc113](https://github.com/coveo/ui-kit/commits/8cbc113c323134c73ec9643260ee4580289e891b))
+- **quantic:** fixed couple issues with generated answer and the expandable search box components ([#3549](https://github.com/coveo/ui-kit/issues/3549)) ([445bb5c](https://github.com/coveo/ui-kit/commits/445bb5c0409e9bac009c68ee052d950c3bfa12ab))
+- **quantic:** fixed issue with the Quantic Search Box Input ([#3548](https://github.com/coveo/ui-kit/issues/3548)) ([327a31f](https://github.com/coveo/ui-kit/commits/327a31f9bccfe6e9bcd4702138a49a1cb05c9110))
+
+## 2.43.3 (2024-01-24)
+
+### Bug Fixes
+
+- **quantic:** adjust citation tooltip width in specific situations inside Salesforce ([#3538](https://github.com/coveo/ui-kit/issues/3538)) ([5f6ffa0](https://github.com/coveo/ui-kit/commits/5f6ffa089ba0537a4484c927269aebfed93354db))
+- **quantic:** fixed issue of copy to clipboard button not being displayed ([#3542](https://github.com/coveo/ui-kit/issues/3542)) ([27bed45](https://github.com/coveo/ui-kit/commits/27bed45a003273f67630b460e941935f951c0fc8))
+
+## 2.43.2 (2024-01-19)
+
+### Bug Fixes
+
+- **deps:** update all dependencies j:kit-282 ([#3522](https://github.com/coveo/ui-kit/issues/3522)) ([59c3ac7](https://github.com/coveo/ui-kit/commits/59c3ac76c8a5c4d61cb2fa7cfc90fd2b901b0535))
+
+## 2.43.1 (2024-01-10)
+
+### Bug Fixes
+
+- **quantic:** fix genQA copy-to-clipboard e2e ([#3511](https://github.com/coveo/ui-kit/issues/3511)) ([bfbe402](https://github.com/coveo/ui-kit/commits/bfbe402aa3c646db7fd10def17ef5b3dd2269f73))
+
+# 2.43.0 (2024-01-03)
+
+### Bug Fixes
+
+- **deps:** update stencil j:kit-282 ([#3492](https://github.com/coveo/ui-kit/issues/3492)) ([83dfb8d](https://github.com/coveo/ui-kit/commits/83dfb8dbbd89524a694bcd39ce807143a073ac2c))
+
+### Features
+
+- **rga:** hide copy to clipboard button when Clipboard API is not defined ([#3499](https://github.com/coveo/ui-kit/issues/3499)) ([6672909](https://github.com/coveo/ui-kit/commits/66729095b6dcf54c3b3bcc82c6ab1e5142991712))
+
 ## 2.42.1 (2023-12-13)
 
 # 2.42.0 (2023-12-08)

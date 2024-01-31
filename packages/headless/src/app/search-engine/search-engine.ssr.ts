@@ -2,7 +2,7 @@
  * Utility functions to be used for Server Side Rendering.
  */
 import {AnyAction} from '@reduxjs/toolkit';
-import {Controller} from '../../controllers';
+import type {Controller} from '../../controllers/controller/headless-controller';
 import {LegacySearchAction} from '../../features/analytics/analytics-utils';
 import {createWaitForActionMiddleware} from '../../utils/utils';
 import {

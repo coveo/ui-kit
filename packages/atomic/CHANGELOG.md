@@ -1,3 +1,55 @@
+# 2.56.0 (2024-01-31)
+
+### Bug Fixes
+
+- **atomic:** fix insight search box width ([#3550](https://github.com/coveo/ui-kit/issues/3550)) ([797d50c](https://github.com/coveo/ui-kit/commits/797d50cd98d4f8e3ecff764fde6be01836cc849a))
+- **deps:** update all dependencies j:kit-282 ([#3535](https://github.com/coveo/ui-kit/issues/3535)) ([8cbc113](https://github.com/coveo/ui-kit/commits/8cbc113c323134c73ec9643260ee4580289e891b))
+
+### Features
+
+- **headless,atomic:** migrate framework versions from customData to source w/ next analytics ([#3544](https://github.com/coveo/ui-kit/issues/3544)) ([b4c9262](https://github.com/coveo/ui-kit/commits/b4c9262e89cf0e02d9f7392a3f1f198a5e61c64e))
+
+## 2.55.1 (2024-01-24)
+
+### Bug Fixes
+
+- **atomic:** quick fix for failing color-facet cypress test ([#3541](https://github.com/coveo/ui-kit/issues/3541)) ([e368df8](https://github.com/coveo/ui-kit/commits/e368df80a47de8f0d9d3d72b24cb8d32085f7d16))
+
+# 2.55.0 (2024-01-19)
+
+### Bug Fixes
+
+- **deps:** update all dependencies j:kit-282 ([#3522](https://github.com/coveo/ui-kit/issues/3522)) ([59c3ac7](https://github.com/coveo/ui-kit/commits/59c3ac76c8a5c4d61cb2fa7cfc90fd2b901b0535))
+
+### Features
+
+- **atomic:** change insight searchbox to be expandable by default ([#3524](https://github.com/coveo/ui-kit/issues/3524)) ([7372a2b](https://github.com/coveo/ui-kit/commits/7372a2bb1ce745c7442c3a50e161cf8a1b28ace8))
+- **atomic:** cRGA refactor + atomic-insight-generated-answer component ([#3514](https://github.com/coveo/ui-kit/issues/3514)) ([043a2c8](https://github.com/coveo/ui-kit/commits/043a2c8c60e97b9aad4311f01cb0c96cc4ad2940))
+- **headless,atomic:** support new query correction system ([#3530](https://github.com/coveo/ui-kit/issues/3530)) ([1d81780](https://github.com/coveo/ui-kit/commits/1d81780b25f2e4159fcc3810461b6f2173776089))
+
+# 2.54.0 (2024-01-10)
+
+### Bug Fixes
+
+- **atomic:** set end of range to end of day when applying facet date input ([#3517](https://github.com/coveo/ui-kit/issues/3517)) ([c67f3e1](https://github.com/coveo/ui-kit/commits/c67f3e1e539ba4c21d96186c30b1794c2789614c))
+- **error:** added margin at the buttom of the error component ([#3486](https://github.com/coveo/ui-kit/issues/3486)) ([5eb2c8c](https://github.com/coveo/ui-kit/commits/5eb2c8c473a90184bb5987304f8ac6a55d64ac1e))
+- **rga:** ensure svgs does not include static colors ([#3515](https://github.com/coveo/ui-kit/issues/3515)) ([d7c44e7](https://github.com/coveo/ui-kit/commits/d7c44e71d8f9d6e22125873c6c5fcf0ce85f8df2))
+
+### Features
+
+- **atomic:** add suggestion delay option for atomic search box ([#3510](https://github.com/coveo/ui-kit/issues/3510)) ([bc52812](https://github.com/coveo/ui-kit/commits/bc528120bcdeaf4f57f37713913b3fc6f34e0182))
+
+# 2.53.0 (2024-01-03)
+
+### Bug Fixes
+
+- **atomic:** center various icons ([#3491](https://github.com/coveo/ui-kit/issues/3491)) ([518b37b](https://github.com/coveo/ui-kit/commits/518b37b428454b13fdc055b609246c94a1187d8d))
+- **deps:** update stencil j:kit-282 ([#3492](https://github.com/coveo/ui-kit/issues/3492)) ([83dfb8d](https://github.com/coveo/ui-kit/commits/83dfb8dbbd89524a694bcd39ce807143a073ac2c))
+
+### Features
+
+- **rga:** hide copy to clipboard button when Clipboard API is not defined ([#3499](https://github.com/coveo/ui-kit/issues/3499)) ([6672909](https://github.com/coveo/ui-kit/commits/66729095b6dcf54c3b3bcc82c6ab1e5142991712))
+
 ## 2.52.1 (2023-12-13)
 
 ### Bug Fixes

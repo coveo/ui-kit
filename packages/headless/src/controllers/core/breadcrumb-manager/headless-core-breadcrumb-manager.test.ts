@@ -1,10 +1,8 @@
 import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions';
 import {SearchAppState} from '../../../state/search-app-state';
-import {
-  buildMockSearchAppEngine,
-  createMockState,
-  MockSearchEngine,
-} from '../../../test';
+import {MockSearchEngine} from '../../../test/mock-engine';
+import {buildMockSearchAppEngine} from '../../../test/mock-engine';
+import {createMockState} from '../../../test/mock-state';
 import {
   BreadcrumbManager,
   buildCoreBreadcrumbManager,

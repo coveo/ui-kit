@@ -54,7 +54,7 @@ export type {
   Pagination,
   PaginationState,
   PaginationControllerState,
-} from './controllers/commerce/pagination/core/headless-core-commerce-pagination';
+} from './controllers/commerce/core/pagination/headless-core-commerce-pagination';
 export {buildProductListingPagination} from './controllers/commerce/product-listing/pagination/headless-product-listing-pagination';
 export {buildSearchPagination} from './controllers/commerce/search/pagination/headless-search-pagination';
 
@@ -84,21 +84,21 @@ export type {
   SortInitialState,
   Sort,
   SortState,
-} from './controllers/commerce/sort/core/headless-core-commerce-sort';
+} from './controllers/commerce/core/sort/headless-core-commerce-sort';
 export {
   buildRelevanceSortCriterion,
   buildFieldsSortCriterion,
   SortBy,
   SortDirection,
-} from './controllers/commerce/sort/core/headless-core-commerce-sort';
+} from './controllers/commerce/core/sort/headless-core-commerce-sort';
 
 export {buildProductListingSort} from './controllers/commerce/product-listing/sort/headless-product-listing-sort';
 export {buildSearchSort} from './controllers/commerce/search/sort/headless-search-sort';
 
-export type {CommerceRegularFacet} from './controllers/commerce/facets/core/regular/headless-commerce-regular-facet';
-export type {CommerceNumericFacet} from './controllers/commerce/facets/core/numeric/headless-commerce-numeric-facet';
-export type {CommerceDateFacet} from './controllers/commerce/facets/core/date/headless-commerce-date-facet';
 export type {CommerceCategoryFacet} from './controllers/commerce/facets/core/category/headless-commerce-category-facet';
+export type {CommerceRegularFacet} from './controllers/commerce/core/facets/regular/headless-commerce-regular-facet';
+export type {CommerceNumericFacet} from './controllers/commerce/core/facets/numeric/headless-commerce-numeric-facet';
+export type {CommerceDateFacet} from './controllers/commerce/core/facets/date/headless-commerce-date-facet';
 export type {
   FacetType,
   FacetValueRequest,
@@ -109,7 +109,7 @@ export type {
   DateFacetValue,
   CategoryFacetValueRequest,
   CommerceCategoryFacetValue,
-} from './controllers/commerce/facets/core/headless-core-commerce-facet';
+} from './controllers/commerce/core/facets/headless-core-commerce-facet';
 export type {ProductListingFacetGenerator} from './controllers/commerce/product-listing/facets/headless-product-listing-facet-generator';
 export {buildProductListingFacetGenerator} from './controllers/commerce/product-listing/facets/headless-product-listing-facet-generator';
 export type {SearchFacetGenerator} from './controllers/commerce/search/facets/headless-search-facet-generator';

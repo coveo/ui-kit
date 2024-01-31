@@ -5,8 +5,9 @@ import {
   setView,
 } from '../../../features/commerce/context/context-actions';
 import {contextReducer} from '../../../features/commerce/context/context-slice';
-import {buildMockCommerceEngine, MockCommerceEngine} from '../../../test';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state';
+import {MockCommerceEngine} from '../../../test/mock-engine';
+import {buildMockCommerceEngine} from '../../../test/mock-engine';
 import {buildContext, Context} from './headless-context';
 
 describe('headless commerce context', () => {
@@ -97,6 +98,7 @@ describe('headless commerce context', () => {
   it('setView dispatches #setView', () => {
     context.setView({
       url: 'https://example.org',
+      referrer: 'https://example.org/referrer',
     });
     expectContainAction(setView);
   });

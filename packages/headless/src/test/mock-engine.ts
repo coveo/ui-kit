@@ -10,6 +10,7 @@ import thunk from 'redux-thunk';
 import {SearchAPIClient} from '../api/search/search-api-client';
 import {InsightAPIClient} from '../api/service/insight/insight-api-client';
 import {analyticsMiddleware} from '../app/analytics-middleware';
+import {CaseAssistEngine} from '../app/case-assist-engine/case-assist-engine';
 import {CommerceEngine} from '../app/commerce-engine/commerce-engine';
 import {CoreEngine} from '../app/engine';
 import {InsightEngine} from '../app/insight-engine/insight-engine';
@@ -25,7 +26,6 @@ import {RecommendationEngine} from '../app/recommendation-engine/recommendation-
 import {SearchEngine} from '../app/search-engine/search-engine';
 import {SearchCompletedAction} from '../app/search-engine/search-engine.ssr';
 import {SearchThunkExtraArguments} from '../app/search-thunk-extra-arguments';
-import {CaseAssistEngine} from '../case-assist.index';
 import {CaseAssistAppState} from '../state/case-assist-app-state';
 import {CommerceAppState} from '../state/commerce-app-state';
 import {InsightAppState} from '../state/insight-app-state';
@@ -124,6 +124,7 @@ export interface MockRecommendationEngine
  *
  * Returns a non-functional `RecommendationEngine`.
  * To be used only for unit testing controllers, not for functional tests.
+ * @deprecated
  */
 export function buildMockRecommendationAppEngine(
   config: Partial<RecommendationEngine<RecommendationAppState>> = {}
@@ -140,6 +141,7 @@ export interface MockProductRecommendationEngine
  *
  * Returns a non-functional `ProductRecommendationEngine`.
  * To be used only for unit testing controllers, not for functional tests.
+ * @deprecated
  */
 export function buildMockProductRecommendationsAppEngine(
   config: Partial<
@@ -184,6 +186,7 @@ export interface MockCaseAssistEngine
  *
  * Returns a non-functional `CaseAssistEngine`.
  * To be used only for unit testing controllers, not for functional tests.
+ * @deprecated
  */
 export function buildMockCaseAssistEngine(
   config: Partial<CaseAssistEngine<CaseAssistAppState>> = {}

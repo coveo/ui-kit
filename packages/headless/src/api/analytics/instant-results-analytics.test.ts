@@ -3,7 +3,7 @@ import {
   getInstantResultsInitialState,
   InstantResultCache,
 } from '../../features/instant-results/instant-results-state';
-import {buildMockResult} from '../../test';
+import {buildMockResult} from '../../test/mock-result';
 import {getObjectHash} from '../../utils/utils';
 import {
   InstantResultsAnalyticsProvider,

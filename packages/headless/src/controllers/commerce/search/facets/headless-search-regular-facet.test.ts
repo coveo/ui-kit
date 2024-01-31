@@ -1,16 +1,17 @@
 import {Action} from '@reduxjs/toolkit';
-import {CommerceRegularFacet} from '../../../../commerce.index';
 import {CommerceFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
 import {executeSearch} from '../../../../features/commerce/search/search-actions';
 import {commerceSearchReducer as commerceSearch} from '../../../../features/commerce/search/search-slice';
 import {CommerceAppState} from '../../../../state/commerce-app-state';
-import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
 import {buildMockCommerceRegularFacetResponse} from '../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceRegularFacetValue} from '../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
-import {CommerceFacetOptions} from '../../facets/core/headless-core-commerce-facet';
+import {MockCommerceEngine} from '../../../../test/mock-engine';
+import {buildMockCommerceEngine} from '../../../../test/mock-engine';
+import {CommerceFacetOptions} from '../../core/facets/headless-core-commerce-facet';
+import {CommerceRegularFacet} from '../../core/facets/regular/headless-commerce-regular-facet';
 import {buildSearchRegularFacet} from './headless-search-regular-facet';
 
 describe('SearchRegularFacet', () => {

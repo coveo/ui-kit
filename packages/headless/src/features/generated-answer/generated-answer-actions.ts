@@ -99,6 +99,16 @@ export const openGeneratedAnswerFeedbackModal = createAction(
   'generatedAnswer/feedbackModal/open'
 );
 
+export const setId = createAction(
+  'generatedAnswer/setId',
+  (payload: {id: string}) =>
+    validatePayload(payload, {
+      id: new StringValue({
+        required: true,
+      }),
+    })
+);
+
 export const closeGeneratedAnswerFeedbackModal = createAction(
   'generatedAnswer/feedbackModal/close'
 );

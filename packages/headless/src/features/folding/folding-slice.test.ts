@@ -2,14 +2,14 @@ import {AnyAction} from '@reduxjs/toolkit';
 import {PlatformClient} from '../../api/platform-client';
 import {Result} from '../../api/search/search/result';
 import {
-  buildMockResult,
-  buildMockSearchAppEngine,
-  createMockState,
   MockSearchEngine,
-} from '../../test';
+  buildMockSearchAppEngine,
+} from '../../test/mock-engine';
+import {buildMockResult} from '../../test/mock-result';
 import {buildMockResultWithFolding} from '../../test/mock-result-with-folding';
 import {buildMockSearch} from '../../test/mock-search';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
+import {createMockState} from '../../test/mock-state';
 import {executeSearch, fetchMoreResults} from '../search/search-actions';
 import {loadCollection} from './folding-actions';
 import {foldingReducer, ResultWithFolding} from './folding-slice';

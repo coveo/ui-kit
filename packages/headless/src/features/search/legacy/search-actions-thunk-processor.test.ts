@@ -1,6 +1,6 @@
 import {Logger} from 'pino';
 import {SearchAPIClient} from '../../../api/search/search-api-client';
-import {buildMockResult} from '../../../test';
+import {buildMockResult} from '../../../test/mock-result';
 import {buildMockSearchRequest} from '../../../test/mock-search-request';
 import {buildMockSearchResponse} from '../../../test/mock-search-response';
 import {buildMockSearchState} from '../../../test/mock-search-state';
@@ -132,6 +132,42 @@ describe('AsyncSearchThunkProcessor', () => {
       queryCorrections:
         originalResponseWithNoResultsAndCorrection.queryCorrections,
     });
+    expect(processed.automaticallyCorrected).toBe(true);
+  });
+
+  it('process properly when #queryCorrection is activated on the query˝', async () => {
+    const processor = new AsyncSearchThunkProcessor<{}>(config);
+
+    const originalResponseWithResultsAndChangedQuery = buildMockSearchResponse({
+      results: [buildMockResult()],
+      queryCorrection: {
+        correctedQuery: 'bar',
+        originalQuery: 'foo',
+        corrections: [],
+      },
+    });
+
+    const fetched = {
+      response: {
+        success: originalResponseWithResultsAndChangedQuery,
+      },
+      duration: 123,
+      queryExecuted: 'foo',
+      requestExecuted: buildMockSearchRequest(),
+    };
+
+    const processed = (await processor.process(
+      fetched
+    )) as ExecuteSearchThunkReturn;
+
+    expect(config.dispatch).toHaveBeenCalledWith(updateQuery({q: 'bar'}));
+    expect(config.extra.apiClient.search).not.toHaveBeenCalled();
+    expect(processed.response).toMatchObject(
+      originalResponseWithResultsAndChangedQuery
+    );
+    expect(processed.automaticallyCorrected).toBe(true);
+    expect(processed.originalQuery).toBe('foo');
+    expect(processed.queryExecuted).toBe('bar');
   });
 
   it('process properly when there are no results returned, there is a did you mean correction, and automatic correction is disabled', async () => {

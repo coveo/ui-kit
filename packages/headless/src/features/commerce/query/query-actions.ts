@@ -1,5 +1,5 @@
 import {StringValue} from '@coveo/bueno';
-import {createAction} from '../../../ssr.index';
+import {createAction} from '@reduxjs/toolkit';
 import {validatePayload} from '../../../utils/validate-payload';
 
 export interface UpdateQueryActionCreatorPayload {

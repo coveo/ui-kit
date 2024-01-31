@@ -45,6 +45,16 @@ export const buildInsightBaseRequest = (
       parentField: state.folding.fields.child,
       filterFieldRange: state.folding.filterFieldRange,
     }),
+    ...(state.context && {context: state.context.contextValues}),
+    ...(state.generatedAnswer && {
+      pipelineRuleParameters: {
+        mlGenerativeQuestionAnswering: {
+          responseFormat: state.generatedAnswer.responseFormat,
+          citationsFieldToInclude:
+            state.generatedAnswer.fieldsToIncludeInCitations,
+        },
+      },
+    }),
   });
 };
 

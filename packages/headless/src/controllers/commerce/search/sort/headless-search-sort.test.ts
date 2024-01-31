@@ -1,10 +1,11 @@
 import {executeSearch} from '../../../../features/commerce/search/search-actions';
 import {commerceSearchReducer as commerceSearch} from '../../../../features/commerce/search/search-slice';
-import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
+import {MockCommerceEngine} from '../../../../test/mock-engine';
+import {buildMockCommerceEngine} from '../../../../test/mock-engine';
 import {
   buildRelevanceSortCriterion,
   Sort,
-} from '../../sort/core/headless-core-commerce-sort';
+} from '../../core/sort/headless-core-commerce-sort';
 import {buildSearchSort} from './headless-search-sort';
 
 describe('commerce search sort', () => {

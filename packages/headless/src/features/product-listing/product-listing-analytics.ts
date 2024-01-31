@@ -1,7 +1,8 @@
 import {Schema} from '@coveo/bueno';
 import {DocumentIdentifier, PartialDocumentInformation} from 'coveo.analytics';
 import {ProductListingAnalyticsProvider} from '../../api/analytics/product-listing-analytics';
-import {ProductRecommendation, Result} from '../../product-listing.index';
+import {ProductRecommendation} from '../../api/search/search/product-recommendation';
+import {Result} from '../../api/search/search/result';
 import {ProductListingAppState} from '../../state/product-listing-app-state';
 import {
   makeAnalyticsAction,

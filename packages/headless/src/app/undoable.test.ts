@@ -87,5 +87,36 @@ describe('undoable', () => {
         future: [],
       });
     });
+
+    it('supports a maximum of 10 past history entries', () => {
+      const mockUndoableReducer = undoable({
+        reducer,
+        actionTypes: {
+          redo: redo().type,
+          undo: undo().type,
+          snapshot: snapshot().type,
+        },
+      });
+      const initialOverflow = 50;
+
+      const initialState = {
+        past: Array.from(
+          {length: initialOverflow},
+          (_, i) => `entry-overflow-${i}`
+        ),
+        present: 'present-before-snapshot',
+        future: [],
+      };
+      const newState = mockUndoableReducer(
+        initialState,
+        snapshot('present-after-snapshot')
+      );
+      expect(newState.past.length).toBe(10);
+      expect(newState.past[newState.past.length - 1]).toBe(
+        'present-before-snapshot'
+      );
+      expect(newState.past[0]).toBe(`entry-overflow-${initialOverflow - 9}`);
+      expect(newState.present).toBe('present-after-snapshot');
+    });
   });
 });

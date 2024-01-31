@@ -1,12 +1,12 @@
 import {loadCollection} from '../../../features/folding/insight-folding-actions';
 import {fetchMoreResults} from '../../../features/insight-search/insight-search-actions';
 import {InsightAppState} from '../../../state/insight-app-state';
-import {buildMockResult} from '../../../test';
 import {
   MockInsightEngine,
   buildMockInsightEngine,
 } from '../../../test/mock-engine';
 import {buildMockInsightState} from '../../../test/mock-insight-state';
+import {buildMockResult} from '../../../test/mock-result';
 import {
   FoldedResultList,
   buildFoldedResultList,

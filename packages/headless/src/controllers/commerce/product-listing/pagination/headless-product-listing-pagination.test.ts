@@ -1,7 +1,8 @@
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice';
-import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
-import {Pagination} from '../../pagination/core/headless-core-commerce-pagination';
+import {MockCommerceEngine} from '../../../../test/mock-engine';
+import {buildMockCommerceEngine} from '../../../../test/mock-engine';
+import {Pagination} from '../../core/pagination/headless-core-commerce-pagination';
 import {buildProductListingPagination} from './headless-product-listing-pagination';
 
 describe('product listing pagination', () => {
