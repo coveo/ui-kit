@@ -86,6 +86,7 @@ describe('the analytics related to the generated answer feature in the insight u
         permanentid: exampleCitationPermanentid,
         title: 'example title',
         uri: 'example: uri',
+        clickUri: 'example click uri',
       },
     ];
     state.insightCaseContext = {
