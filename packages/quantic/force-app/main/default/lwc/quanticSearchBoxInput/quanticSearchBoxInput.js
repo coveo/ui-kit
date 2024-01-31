@@ -94,7 +94,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
   }
 
   /** @type {boolean} */
-  targetClearButton = false;
+  isClearButtonTargeted = false;
 
   connectedCallback() {
     this.addEventListener(
@@ -188,8 +188,11 @@ export default class QuanticSearchBoxInput extends LightningElement {
     if (this.areSuggestionsOpen && selectedSuggestion) {
       this.sendSelectSuggestionEvent(selectedSuggestion.rawValue);
     } else {
-      this.sendSubmitSearchEvent();
+      if (!this.isClearButtonTargeted) {
+        this.sendSubmitSearchEvent();
+      }
     }
+    this.isClearButtonTargeted = false;
     this.input.blur();
   }
 
@@ -211,7 +214,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
 
   handleKeyDownOnClearButton(event) {
     if (event.key === keys.ENTER) {
-      this.targetClearButton = true;
+      this.isClearButtonTargeted = true;
     }
   }
 
@@ -231,9 +234,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
   onKeyup(event) {
     switch (event.key) {
       case keys.ENTER:
-        if (!this.targetClearButton) {
-          this.handleEnter();
-        }
+        this.handleEnter();
         break;
       case keys.ARROWUP:
         this.suggestionListElement?.selectionUp();
@@ -244,7 +245,6 @@ export default class QuanticSearchBoxInput extends LightningElement {
       default:
         this.handleKeyValues();
     }
-    this.targetClearButton = false;
   }
 
   onFocus() {
