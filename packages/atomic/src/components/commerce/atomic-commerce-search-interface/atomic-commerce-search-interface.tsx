@@ -1,0 +1,478 @@
+import {
+  LogLevel,
+  Unsubscribe,
+  UrlManager,
+  buildSearchEngine,
+  SearchEngine,
+  SearchEngineConfiguration,
+  SearchStatus,
+  loadSearchConfigurationActions,
+  loadQueryActions,
+  getOrganizationEndpoints as getOrganizationEndpointsHeadless,
+  PlatformEnvironment,
+} from '@coveo/headless';
+import { CommerceEngine } from '@coveo/headless/commerce'
+import {
+  Component,
+  Prop,
+  h,
+  Listen,
+  Method,
+  Watch,
+  Element,
+  State,
+} from '@stencil/core';
+import i18next, {i18n} from 'i18next';
+import {InitializeEvent} from '../../../utils/initialization-utils';
+import {
+  SafeStorage,
+  StandaloneSearchBoxData,
+  StorageItems,
+} from '../../../utils/local-storage-utils';
+import {ArrayProp} from '../../../utils/props-utils';
+import {CommonBindings} from '../../common/interface/bindings';
+import {
+  BaseAtomicInterface,
+  CommonAtomicInterfaceHelper,
+  mismatchedInterfaceAndEnginePropError,
+} from '../../common/interface/interface-common';
+import {getAnalyticsConfig} from './analytics-config';
+import {AtomicStore, createAtomicStore} from './store';
+
+const FirstSearchExecutedFlag = 'firstSearchExecuted';
+export type InitializationOptions = SearchEngineConfiguration;
+export type Bindings = CommonBindings<
+  SearchEngine,
+  AtomicStore,
+  HTMLAtomicSearchInterfaceElement
+>;
+
+/**
+ * The `atomic-commerce-search-interface` component is the parent to all other atomic components in a search page. It handles the headless search engine and localization configurations.
+ */
+@Component({
+  tag: 'atomic-commerce-search-interface',
+  styleUrl: 'atomic-commerce-search-interface.pcss',
+  shadow: true,
+  assetsDirs: ['../../search/atomic-search-interface/lang'],
+})
+export class AtomicCommerceSearchInterface
+  implements BaseAtomicInterface<CommerceEngine>
+{
+  private initialized = false;
+  private store = createAtomicStore();
+  private commonInterfaceHelper: CommonAtomicInterfaceHelper<CommerceEngine>;
+
+  @Element() public host!: HTMLAtomicSearchInterfaceElement;
+
+  @State() public error?: Error;
+  @State() relevanceInspectorIsOpen = false;
+
+  /**
+   * A list of non-default fields to include in the query results.
+   *
+   * Specify the property as an array using a JSON string representation:
+   * ```html
+   * <atomic-search-interface fields-to-include='["fieldA", "fieldB"]'></atomic-search-interface>
+   * ```
+   */
+  @ArrayProp()
+  @Prop({mutable: true})
+  public fieldsToInclude: string[] | string = '[]';
+
+  /**
+   * The search interface [query pipeline](https://docs.coveo.com/en/180/).
+   *
+   * If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine), the query pipeline should instead be configured in the target engine.
+   */
+  @Prop({reflect: true, mutable: true}) public pipeline?: string;
+
+  /**
+   * The search interface [search hub](https://docs.coveo.com/en/1342/).
+   *
+   * If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine, the search hub should instead be configured in the target engine.
+   */
+  @Prop({reflect: true, mutable: true}) public searchHub?: string;
+
+  /**
+   * Whether analytics should be enabled.
+   */
+  @Prop({reflect: true}) public analytics = true;
+
+  /**
+   * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items.
+   * By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).
+   *
+   * Example: "America/Montreal"
+   */
+  @Prop({reflect: true}) public timezone?: string;
+
+  /**
+   * The severity level of the messages to log in the console.
+   */
+  @Prop({reflect: true}) public logLevel?: LogLevel;
+
+  /**
+   * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
+   */
+  @Prop() public localizationCompatibilityVersion: i18nCompatibilityVersion =
+    'v3';
+
+  /**
+   * The search interface i18next instance.
+   */
+  @Prop() public i18n: i18n = i18next.createInstance();
+
+  /**
+   * The search interface language.
+   */
+  @Prop({reflect: true}) public language = 'en';
+
+  /**
+   * The search interface headless engine.
+   */
+  @Prop({mutable: true}) public engine?: SearchEngine;
+
+  /**
+   * Whether the state should be reflected in the URL parameters.
+   */
+  @Prop({reflect: true}) public reflectStateInUrl = true;
+
+  /**
+   * The CSS selector for the container where the interface will scroll back to.
+   */
+  @Prop({reflect: true}) public scrollContainer = 'atomic-search-interface';
+
+  /**
+   * The language assets path. By default, this will be a relative URL pointing to `./lang`.
+   *
+   * Example: "/mypublicpath/languages"
+   *
+   */
+  @Prop({reflect: true}) public languageAssetsPath = './lang';
+
+  /**
+   * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
+   *
+   * Example: "/mypublicpath/icons"
+   *
+   */
+  @Prop({reflect: true}) public iconAssetsPath = './assets';
+
+  /**
+   * Whether the relevance inspector shortcut should be enabled for this interface.
+   *
+   * The relevance inspector can be opened by holding the Alt key (Option on Mac) while over the interface, and performing a double click.
+   *
+   * The relevance inspector allows to troubleshoot and debug queries.
+   */
+  @Prop({reflect: true}) public enableRelevanceInspector = true;
+
+  /**
+   * A reference clone of the search interface i18next instance.
+   */
+  private i18nClone!: i18n;
+
+  public constructor() {
+    this.commonInterfaceHelper = new CommonAtomicInterfaceHelper(
+      this,
+      'CoveoAtomic'
+    );
+  }
+
+  public connectedCallback() {
+    this.store.setLoadingFlag(FirstSearchExecutedFlag);
+    this.updateMobileBreakpoint();
+    this.i18nClone = this.i18n.cloneInstance();
+    this.i18n.addResourceBundle = (
+      lng: string,
+      ns: string,
+      resources: object,
+      deep?: boolean,
+      overwrite?: boolean
+    ) => this.addResourceBundleWithWarning(lng, ns, resources, deep, overwrite);
+  }
+
+  componentWillLoad() {
+    this.initAriaLive();
+  }
+
+  public updateSearchConfiguration(
+    updatedProp: 'searchHub' | 'pipeline',
+    newValue: string | undefined
+  ) {
+    if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
+      return;
+    }
+
+    if (this.engine.state[updatedProp] === newValue) {
+      return;
+    }
+
+    const {updateSearchConfiguration} = loadSearchConfigurationActions(
+      this.engine
+    );
+    this.engine.dispatch(
+      updateSearchConfiguration({
+        [updatedProp]: newValue,
+      })
+    );
+  }
+
+  @Watch('searchHub')
+  public updateSearchHub() {
+    this.updateSearchConfiguration('searchHub', this.searchHub ?? 'default');
+  }
+
+  @Watch('pipeline')
+  public updatePipeline() {
+    this.updateSearchConfiguration('pipeline', this.pipeline);
+  }
+
+  @Watch('analytics')
+  public toggleAnalytics() {
+    if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
+      return;
+    }
+
+    this.commonInterfaceHelper.onAnalyticsChange();
+  }
+
+  @Watch('language')
+  public updateLanguage() {
+    if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
+      return;
+    }
+
+    const {updateSearchConfiguration} = loadSearchConfigurationActions(
+      this.engine
+    );
+    this.engine.dispatch(
+      updateSearchConfiguration({
+        locale: this.language,
+      })
+    );
+    this.commonInterfaceHelper.onLanguageChange();
+  }
+
+  @Watch('iconAssetsPath')
+  public updateIconAssetsPath() {
+    this.store.set('iconAssetsPath', this.iconAssetsPath);
+  }
+
+  public disconnectedCallback() {
+    this.unsubscribeUrlManager();
+    this.unsubscribeSearchStatus();
+    window.removeEventListener('hashchange', this.onHashChange);
+  }
+
+  @Listen('atomic/initializeComponent')
+  public handleInitialization(event: InitializeEvent) {
+    this.commonInterfaceHelper.onComponentInitializing(event);
+  }
+
+  @Listen('atomic/scrollToTop')
+  public scrollToTop() {
+    const scrollContainerElement = document.querySelector(this.scrollContainer);
+    if (!scrollContainerElement) {
+      this.bindings.engine.logger.warn(
+        `Could not find the scroll container with the selector "${this.scrollContainer}". This will prevent UX interactions that require a scroll from working correctly. Please check the CSS selector in the scrollContainer option`
+      );
+      return;
+    }
+
+    scrollContainerElement.scrollIntoView({behavior: 'smooth'});
+  }
+
+  @Listen('atomic/relevanceInspector/close')
+  public closeRelevanceInspector() {
+    this.relevanceInspectorIsOpen = false;
+  }
+
+  /**
+   * Initializes the connection with the headless search engine using options for accessToken (required), organizationId (required), renewAccessToken, organizationEndpoints (recommended), and platformUrl (deprecated).
+   */
+  @Method() public initialize(options: InitializationOptions) {
+    return this.internalInitialization(() => this.initEngine(options));
+  }
+
+  /**
+   * Initializes the connection with an already preconfigured [headless search engine](https://docs.coveo.com/en/headless/latest/reference/search/), as opposed to the `initialize` method, which will internally create a new search engine instance.
+   * This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
+   */
+  @Method() public initializeWithSearchEngine(engine: SearchEngine) {
+    if (this.pipeline && this.pipeline !== engine.state.pipeline) {
+      console.warn(
+        mismatchedInterfaceAndEnginePropError('search', 'query pipeline')
+      );
+    }
+    if (this.searchHub && this.searchHub !== engine.state.searchHub) {
+      console.warn(
+        mismatchedInterfaceAndEnginePropError('search', 'search hub')
+      );
+    }
+    return this.internalInitialization(() => (this.engine = engine));
+  }
+
+  /**
+   *
+   * Executes the first search and logs the interface load event to analytics, after initializing connection to the headless search engine.
+   */
+  @Method() public async executeFirstSearch() {
+    if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
+      return;
+    }
+
+    if (!this.initialized) {
+      console.error(
+        'You have to wait until the "initialize" promise is fulfilled before executing a search.',
+        this.host
+      );
+      return;
+    }
+
+    if (this.localizationCompatibilityVersion !== 'v4') {
+      this.engine.logger.warn(
+        `As of Atomic version 3.0.0, support for JSON compatibility ${this.localizationCompatibilityVersion} will be deprecated. Please update the JSON compatibility to v4: <atomic-search-interface localization-compatibility-version="v4" ...></atomic-search-interface> For more information, see i18next Migration Guide: https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0.`
+      );
+    }
+
+    const safeStorage = new SafeStorage();
+    const standaloneSearchBoxData =
+      safeStorage.getParsedJSON<StandaloneSearchBoxData | null>(
+        StorageItems.STANDALONE_SEARCH_BOX_DATA,
+        null
+      );
+
+    if (!standaloneSearchBoxData) {
+      this.engine.executeFirstSearch();
+      return;
+    }
+
+    safeStorage.removeItem(StorageItems.STANDALONE_SEARCH_BOX_DATA);
+    const {updateQuery} = loadQueryActions(this.engine!);
+    const {value, enableQuerySyntax, analytics} = standaloneSearchBoxData;
+    this.engine!.dispatch(updateQuery({q: value, enableQuerySyntax}));
+    this.engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
+  }
+
+  /**
+   * Returns the unique, organization-specific endpoint(s).
+   * @param {string} organizationId
+   * @param {'prod'|'hipaa'|'staging'|'dev'} [env=Prod]
+   */
+  @Method() public async getOrganizationEndpoints(
+    organizationId: string,
+    env: PlatformEnvironment = 'prod'
+  ) {
+    return getOrganizationEndpointsHeadless(organizationId, env);
+  }
+
+  public get bindings(): Bindings {
+    return {
+      engine: this.engine!,
+      i18n: this.i18n,
+      store: this.store,
+      interfaceElement: this.host,
+    };
+  }
+
+  private updateMobileBreakpoint() {
+    const breakpoint = this.host.querySelector(
+      'atomic-search-layout'
+    )?.mobileBreakpoint;
+    if (breakpoint) {
+      this.store.set('mobileBreakpoint', breakpoint);
+    }
+  }
+
+  private initEngine(options: InitializationOptions) {
+    const searchConfig = this.getSearchConfiguration(options);
+    const analyticsConfig = getAnalyticsConfig(
+      options,
+      this.analytics,
+      this.store
+    );
+    try {
+      this.engine = buildSearchEngine({
+        configuration: {
+          ...options,
+          search: searchConfig,
+        },
+        loggerOptions: {
+          level: this.logLevel,
+        },
+      });
+    } catch (error) {
+      this.error = error as Error;
+      throw error;
+    }
+  }
+
+  // TODO(nico): I think that we should find the config
+  private getSearchConfiguration(options: InitializationOptions) {
+    const searchConfigFromProps = {
+      searchHub: this.searchHub ?? 'default',
+      pipeline: this.pipeline,
+      locale: this.language,
+      timezone: this.timezone,
+    };
+
+    if (options.search) {
+      return {
+        ...searchConfigFromProps,
+        ...options.search,
+      };
+    }
+
+    return searchConfigFromProps;
+  }
+
+  private initAriaLive() {
+    if (
+      Array.from(this.host.children).some(
+        (element) => element.tagName === 'ATOMIC-ARIA-LIVE'
+      )
+    ) {
+      return;
+    }
+    this.host.prepend(document.createElement('atomic-aria-live'));
+  }
+
+  private async internalInitialization(initEngine: () => void) {
+    await this.commonInterfaceHelper.onInitialization(initEngine);
+    this.initialized = true;
+  }
+
+  private addResourceBundleWithWarning(
+    lng: string,
+    ns: string,
+    resources: object,
+    deep?: boolean,
+    overwrite?: boolean
+  ) {
+    const hasV3Keys = Object.keys(resources).some((k) => k.includes('_plural'));
+    if (hasV3Keys && ns === 'translation') {
+      this.engine &&
+        this.engine.logger.warn(
+          `Translation keys using the v3 JSON compatibility format have been detected. As of Atomic version 3.0.0, support for JSON compatibility ${this.localizationCompatibilityVersion} will be deprecated. Please update your translation JSON keys to v4 format: { my-key_other: 'My translations!' } For more information, see i18next Migration Guide: https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0.`
+        );
+    }
+    return this.i18nClone.addResourceBundle(
+      lng,
+      ns,
+      resources,
+      deep,
+      overwrite
+    );
+  }
+
+  public render() {
+    return [
+      <slot></slot>,
+    ];
+  }
+
+  registerFieldsToInclude(): void {
+  }
+}
