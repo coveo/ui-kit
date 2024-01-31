@@ -170,7 +170,7 @@ export default class QuanticFoldedResultList extends LightningElement {
   }
 
   get collections() {
-    // We need to add a unique key to each result list to make sure to re-render the LWC when the results change.
+    // We need to add a unique key to each result to make sure to re-render the LWC when the results change.
     // If the unique key is only the result uniqueId, the LWC will not re-render when the results change AND the same result is still in the results.
     const searchResponseId = this?.state?.searchResponseId || Math.random();
     return (
