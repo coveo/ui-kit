@@ -80,7 +80,7 @@ export function buildAutomaticFacet(
       return response
         ? {
             field: response.field,
-            label: response.label || response.field,
+            label: response.label,
             values: response.values,
           }
         : defaultState;

@@ -116,7 +116,7 @@ function responseToAutomaticFacetRequest(
   const selectedValues = values.filter((value) => value.state === 'selected');
   return {
     field,
-    label: label || field,
+    label,
     currentValues: selectedValues,
   };
 }
