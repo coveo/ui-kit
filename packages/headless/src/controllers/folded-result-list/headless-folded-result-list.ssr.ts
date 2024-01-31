@@ -8,6 +8,9 @@ import {
 
 export * from './headless-folded-result-list';
 
+export interface FoldedResultListDefinition
+  extends ControllerDefinitionWithoutProps<SearchEngine, FoldedResultList> {}
+
 /**
  * Defines a `FoldedResultList` controller instance.
  *
@@ -16,7 +19,7 @@ export * from './headless-folded-result-list';
  * */
 export function defineFoldedResultList(
   props?: FoldedResultListProps
-): ControllerDefinitionWithoutProps<SearchEngine, FoldedResultList> {
+): FoldedResultListDefinition {
   return {
     build: (engine) => buildFoldedResultList(engine, props),
   };

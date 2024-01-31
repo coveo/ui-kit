@@ -10,6 +10,9 @@ export * from './headless-static-filter';
 
 export {buildStaticFilterValue} from './headless-static-filter';
 
+export interface StaticFilterDefinition
+  extends ControllerDefinitionWithoutProps<SearchEngine, StaticFilter> {}
+
 /**
  * Defines a `StaticFilter` controller instance.
  *
@@ -18,7 +21,7 @@ export {buildStaticFilterValue} from './headless-static-filter';
  * */
 export function defineStaticFilter(
   props: StaticFilterProps
-): ControllerDefinitionWithoutProps<SearchEngine, StaticFilter> {
+): StaticFilterDefinition {
   return {
     build: (engine) => buildStaticFilter(engine, props),
   };

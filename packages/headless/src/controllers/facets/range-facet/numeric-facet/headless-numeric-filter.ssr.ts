@@ -8,6 +8,9 @@ import {
 
 export * from './headless-numeric-filter';
 
+export interface NumericFilterDefinition
+  extends ControllerDefinitionWithoutProps<SearchEngine, NumericFilter> {}
+
 /**
  * Defines a `NumericFilter` controller instance.
  *
@@ -16,7 +19,7 @@ export * from './headless-numeric-filter';
  * */
 export function defineNumericFilter(
   props: NumericFilterProps
-): ControllerDefinitionWithoutProps<SearchEngine, NumericFilter> {
+): NumericFilterDefinition {
   return {
     build: (engine) => buildNumericFilter(engine, props),
   };

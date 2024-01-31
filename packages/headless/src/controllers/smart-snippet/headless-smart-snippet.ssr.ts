@@ -8,6 +8,9 @@ import {
 
 export * from './headless-smart-snippet';
 
+export interface SmartSnippetDefinition
+  extends ControllerDefinitionWithoutProps<SearchEngine, SmartSnippet> {}
+
 /**
  * Defines a `SmartSnippet` controller instance.
  *
@@ -16,7 +19,7 @@ export * from './headless-smart-snippet';
  * */
 export function defineSmartSnippet(
   props?: SmartSnippetProps
-): ControllerDefinitionWithoutProps<SearchEngine, SmartSnippet> {
+): SmartSnippetDefinition {
   return {
     build: (engine) => buildSmartSnippet(engine, props),
   };

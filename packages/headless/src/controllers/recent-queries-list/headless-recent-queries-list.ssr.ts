@@ -8,6 +8,9 @@ import {
 
 export * from './headless-recent-queries-list';
 
+export interface RecentQueriesListDefinition
+  extends ControllerDefinitionWithoutProps<SearchEngine, RecentQueriesList> {}
+
 /**
  * Defines a `RecentQueriesList` controller instance.
  *
@@ -16,7 +19,7 @@ export * from './headless-recent-queries-list';
  * */
 export function defineRecentQueriesList(
   props?: RecentQueriesListProps
-): ControllerDefinitionWithoutProps<SearchEngine, RecentQueriesList> {
+): RecentQueriesListDefinition {
   return {
     build: (engine) => buildRecentQueriesList(engine, props),
   };

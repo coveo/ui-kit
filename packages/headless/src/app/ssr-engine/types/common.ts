@@ -50,8 +50,8 @@ export interface ControllerDefinitionWithoutProps<
   /**
    * TODO: document this: build
    *
-   * @param {TEngine} engine
-   * @return {*}  {TController}
+   * @param engine - The search engine.
+   * @returns the controller.
    */
   build(engine: TEngine): TController;
 }
@@ -64,8 +64,8 @@ export interface ControllerDefinitionWithProps<
   /**
    * TODO: document this: buildWithProps
    *
-   * @param {TEngine} engine
-   * @return {*}  {TController}
+   * @param engine - The search engine.
+   * @returns the controller.
    */
   buildWithProps(engine: TEngine, props: TProps): TController;
 }

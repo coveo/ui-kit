@@ -8,6 +8,9 @@ import {
 
 export * from './headless-category-facet';
 
+export interface CategoryFacetDefinition
+  extends ControllerDefinitionWithoutProps<SearchEngine, CategoryFacet> {}
+
 /**
  * Defines a `CategoryFacet` controller instance.
  *
@@ -16,7 +19,7 @@ export * from './headless-category-facet';
  * */
 export function defineCategoryFacet(
   props: CategoryFacetProps
-): ControllerDefinitionWithoutProps<SearchEngine, CategoryFacet> {
+): CategoryFacetDefinition {
   return {
     build: (engine) => buildCategoryFacet(engine, props),
   };

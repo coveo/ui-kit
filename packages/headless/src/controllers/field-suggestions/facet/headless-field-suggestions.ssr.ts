@@ -8,6 +8,9 @@ import {
 
 export * from './headless-field-suggestions';
 
+export interface FieldSuggestionsDefinition
+  extends ControllerDefinitionWithoutProps<SearchEngine, FieldSuggestions> {}
+
 /**
  * Defines a `FieldSuggestions` controller instance.
  *
@@ -16,7 +19,7 @@ export * from './headless-field-suggestions';
  * */
 export function defineFieldSuggestions(
   props: FieldSuggestionsProps
-): ControllerDefinitionWithoutProps<SearchEngine, FieldSuggestions> {
+): FieldSuggestionsDefinition {
   return {
     build: (engine) => buildFieldSuggestions(engine, props),
   };

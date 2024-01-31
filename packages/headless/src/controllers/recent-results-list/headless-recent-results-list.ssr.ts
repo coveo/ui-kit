@@ -8,6 +8,9 @@ import {
 
 export * from './headless-recent-results-list';
 
+export interface RecentResultsListDefinition
+  extends ControllerDefinitionWithoutProps<SearchEngine, RecentResultsList> {}
+
 /**
  * Defines a `RecentResultsList` controller instance.
  *
@@ -16,7 +19,7 @@ export * from './headless-recent-results-list';
  * */
 export function defineRecentResultsList(
   props?: RecentResultsListProps
-): ControllerDefinitionWithoutProps<SearchEngine, RecentResultsList> {
+): RecentResultsListDefinition {
   return {
     build: (engine) => buildRecentResultsList(engine, props),
   };

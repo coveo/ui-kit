@@ -8,6 +8,9 @@ import {
 
 export * from './headless-results-per-page';
 
+export interface ResultsPerPageDefinition
+  extends ControllerDefinitionWithoutProps<SearchEngine, ResultsPerPage> {}
+
 /**
  * Defines a `ResultsPerPage` controller instance.
  *
@@ -16,7 +19,7 @@ export * from './headless-results-per-page';
  * */
 export function defineResultsPerPage(
   props?: ResultsPerPageProps
-): ControllerDefinitionWithoutProps<SearchEngine, ResultsPerPage> {
+): ResultsPerPageDefinition {
   return {
     build: (engine) => buildResultsPerPage(engine, props),
   };

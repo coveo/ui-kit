@@ -8,6 +8,12 @@ import {
 
 export * from './headless-category-field-suggestions';
 
+export interface CategoryFieldSuggestionsDefinition
+  extends ControllerDefinitionWithoutProps<
+    SearchEngine,
+    CategoryFieldSuggestions
+  > {}
+
 /**
  * Defines a `CategoryFieldSuggestions` controller instance.
  *
@@ -16,7 +22,7 @@ export * from './headless-category-field-suggestions';
  * */
 export function defineCategoryFieldSuggestions(
   props: CategoryFieldSuggestionsProps
-): ControllerDefinitionWithoutProps<SearchEngine, CategoryFieldSuggestions> {
+): CategoryFieldSuggestionsDefinition {
   return {
     build: (engine) => buildCategoryFieldSuggestions(engine, props),
   };

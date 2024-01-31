@@ -8,6 +8,9 @@ import {
 
 export * from './instant-results';
 
+export interface InstantResultsDefinition
+  extends ControllerDefinitionWithoutProps<SearchEngine, InstantResults> {}
+
 /**
  * Defines a `InstantResults` controller instance.
  *
@@ -16,7 +19,7 @@ export * from './instant-results';
  * */
 export function defineInstantResults(
   props: InstantResultProps
-): ControllerDefinitionWithoutProps<SearchEngine, InstantResults> {
+): InstantResultsDefinition {
   return {
     build: (engine) => buildInstantResults(engine, props),
   };

@@ -8,6 +8,12 @@ import {
 
 export * from './headless-smart-snippet-questions-list';
 
+export interface SmartSnippetQuestionsListDefinition
+  extends ControllerDefinitionWithoutProps<
+    SearchEngine,
+    SmartSnippetQuestionsList
+  > {}
+
 /**
  * Defines a `SmartSnippetQuestionsList` controller instance.
  *
@@ -16,7 +22,7 @@ export * from './headless-smart-snippet-questions-list';
  * */
 export function defineSmartSnippetQuestionsList(
   props?: SmartSnippetQuestionsListProps
-): ControllerDefinitionWithoutProps<SearchEngine, SmartSnippetQuestionsList> {
+): SmartSnippetQuestionsListDefinition {
   return {
     build: (engine) => buildSmartSnippetQuestionsList(engine, props),
   };

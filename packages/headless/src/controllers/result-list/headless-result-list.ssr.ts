@@ -8,6 +8,10 @@ import {
 
 export * from './headless-result-list';
 
+// TODO: figure why exported type does not work and make the doc-parser crash
+export interface ResultListDefinition
+  extends ControllerDefinitionWithoutProps<SearchEngine, ResultList> {}
+
 /**
  * Defines a `ResultList` controller instance.
  *
@@ -16,7 +20,7 @@ export * from './headless-result-list';
  * */
 export function defineResultList(
   props?: ResultListProps
-): ControllerDefinitionWithoutProps<SearchEngine, ResultList> {
+): ResultListDefinition {
   return {
     build: (engine) => buildResultList(engine, props),
   };

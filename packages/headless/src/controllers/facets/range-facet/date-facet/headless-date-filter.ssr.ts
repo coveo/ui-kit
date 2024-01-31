@@ -8,15 +8,16 @@ import {
 
 export * from './headless-date-filter';
 
+export interface DateFilterDefinition
+  extends ControllerDefinitionWithoutProps<SearchEngine, DateFilter> {}
+
 /**
  * Defines a `DateFilter` controller instance.
  *
  * @param props - The configurable `DateFilter` properties.
  * @returns The `DateFilter` controller definition.
  * */
-export function defineDateFilter(
-  props: DateFilterProps
-): ControllerDefinitionWithoutProps<SearchEngine, DateFilter> {
+export function defineDateFilter(props: DateFilterProps): DateFilterDefinition {
   return {
     build: (engine) => buildDateFilter(engine, props),
   };

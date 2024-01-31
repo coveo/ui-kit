@@ -7,15 +7,18 @@ import {
 
 export * from './headless-dictionary-field-context';
 
+export interface DictionaryFieldContextDefinition
+  extends ControllerDefinitionWithoutProps<
+    CoreEngine,
+    DictionaryFieldContext
+  > {}
+
 /**
  * Defines a `DictionaryFieldContext` controller instance.
  *
  * @returns The `DictionaryFieldContext` controller definition.
  * */
-export function defineDictionaryFieldContext(): ControllerDefinitionWithoutProps<
-  CoreEngine,
-  DictionaryFieldContext
-> {
+export function defineDictionaryFieldContext(): DictionaryFieldContextDefinition {
   return {
     build: (engine) => buildDictionaryFieldContext(engine),
   };
