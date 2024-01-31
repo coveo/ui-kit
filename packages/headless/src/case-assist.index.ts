@@ -99,4 +99,4 @@ export type {
 export {buildCaseAssistInteractiveResult} from './controllers/document-suggestion-list/case-assist-headless-interactive-result';
 
 // Features
-export {ResultTemplatesHelpers} from './features';
+export {ResultTemplatesHelpers} from './features/result-templates/result-templates-helpers';

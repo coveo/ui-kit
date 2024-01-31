@@ -1,12 +1,7 @@
 import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
-import {
-  getResultProperty as getResultPropertyAlias,
-  fieldsMustBeDefined as fieldsMustBeDefinedAlias,
-  fieldsMustNotBeDefined as fieldsMustNotBeDefinedAlias,
-  fieldMustMatch as fieldMustMatchAlias,
-  fieldMustNotMatch as fieldMustNotMatchAlias,
-} from './features/result-templates/result-templates-helpers';
 import * as HighlightUtils from './utils/highlight';
+
+export {HighlightUtils};
 
 polyfillCryptoNode();
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
@@ -99,13 +94,7 @@ export type {
 export type {ResultTemplatesManager} from './features/result-templates/result-templates-manager';
 export {buildResultTemplatesManager} from './features/result-templates/result-templates-manager';
 
-export namespace ResultTemplatesHelpers {
-  export const getResultProperty = getResultPropertyAlias;
-  export const fieldsMustBeDefined = fieldsMustBeDefinedAlias;
-  export const fieldsMustNotBeDefined = fieldsMustNotBeDefinedAlias;
-  export const fieldMustMatch = fieldMustMatchAlias;
-  export const fieldMustNotMatch = fieldMustNotMatchAlias;
-}
+export {ResultTemplatesHelpers} from './features/result-templates/result-templates-helpers';
 
 export {
   MinimumFieldsToInclude,
@@ -115,6 +104,3 @@ export {
 
 export {getOrganizationEndpoints} from './api/platform-client';
 export type {PlatformEnvironment} from './utils/url-utils';
-
-// Helpers
-export {HighlightUtils};

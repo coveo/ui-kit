@@ -1,10 +1,10 @@
 import {logDocumentSuggestionOpen} from '../../features/case-assist/case-assist-analytics-actions';
-import {buildMockResult} from '../../test';
 import {buildMockCaseAssistState} from '../../test/mock-case-assist-state';
 import {
   buildMockCaseAssistEngine,
   MockedCaseAssistEngine,
 } from '../../test/mock-engine-v2';
+import {buildMockResult} from '../../test/mock-result';
 import {buildInteractiveResultCore} from '../core/interactive-result/headless-core-interactive-result';
 import {
   buildCaseAssistInteractiveResult,

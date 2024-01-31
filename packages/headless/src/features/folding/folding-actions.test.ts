@@ -1,4 +1,5 @@
-import {buildMockSearchAppEngine, MockSearchEngine} from '../../test';
+import {MockSearchEngine} from '../../test/mock-engine';
+import {buildMockSearchAppEngine} from '../../test/mock-engine';
 import {createMockState} from '../../test/mock-state';
 import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request';
 import {loadCollection} from './folding-actions';

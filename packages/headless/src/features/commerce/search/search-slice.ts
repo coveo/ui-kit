@@ -1,4 +1,4 @@
-import {createReducer} from '../../../ssr.index';
+import {createReducer} from '@reduxjs/toolkit';
 import {executeSearch} from './search-actions';
 import {getCommerceSearchInitialState} from './search-state';
 

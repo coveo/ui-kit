@@ -3,11 +3,11 @@ import {insightInterfaceReducer as insightInterface} from '../../../features/ins
 import {updateContentURL} from '../../../features/result-preview/result-preview-actions';
 import {logDocumentQuickview} from '../../../features/result-preview/result-preview-analytics-actions';
 import {resultPreviewReducer as resultPreview} from '../../../features/result-preview/result-preview-slice';
-import {buildMockResult} from '../../../test';
 import {
   buildMockInsightEngine,
   MockInsightEngine,
 } from '../../../test/mock-engine';
+import {buildMockResult} from '../../../test/mock-result';
 import {buildMockResultPreviewState} from '../../../test/mock-result-preview-state';
 import {
   buildQuickview,

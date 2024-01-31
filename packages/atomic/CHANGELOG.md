@@ -1,3 +1,14 @@
+# 2.56.0 (2024-01-31)
+
+### Bug Fixes
+
+- **atomic:** fix insight search box width ([#3550](https://github.com/coveo/ui-kit/issues/3550)) ([797d50c](https://github.com/coveo/ui-kit/commits/797d50cd98d4f8e3ecff764fde6be01836cc849a))
+- **deps:** update all dependencies j:kit-282 ([#3535](https://github.com/coveo/ui-kit/issues/3535)) ([8cbc113](https://github.com/coveo/ui-kit/commits/8cbc113c323134c73ec9643260ee4580289e891b))
+
+### Features
+
+- **headless,atomic:** migrate framework versions from customData to source w/ next analytics ([#3544](https://github.com/coveo/ui-kit/issues/3544)) ([b4c9262](https://github.com/coveo/ui-kit/commits/b4c9262e89cf0e02d9f7392a3f1f198a5e61c64e))
+
 ## 2.55.1 (2024-01-24)
 
 ### Bug Fixes

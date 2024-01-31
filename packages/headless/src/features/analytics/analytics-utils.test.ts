@@ -1,13 +1,11 @@
 import {createRelay} from '@coveo/relay';
-import {
-  MockSearchEngine,
-  buildMockSearchAppEngine,
-  createMockState,
-} from '../../test';
-import {buildMockResult} from '../../test';
 import {buildMockAnalyticsState} from '../../test/mock-analytics-state';
+import {buildMockSearchAppEngine} from '../../test/mock-engine';
+import {MockSearchEngine} from '../../test/mock-engine';
 import {createMockRecommendationState} from '../../test/mock-recommendation-state';
+import {buildMockResult} from '../../test/mock-result';
 import {buildMockResultWithFolding} from '../../test/mock-result-with-folding';
+import {createMockState} from '../../test/mock-state';
 import {getConfigurationInitialState} from '../configuration/configuration-state';
 import {
   documentIdentifier,

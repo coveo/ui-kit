@@ -1,6 +1,6 @@
 import {NumberValue, Schema, SchemaValidationError} from '@coveo/bueno';
 import {CoreEngine} from '../app/engine';
-import {buildMockSearchAppEngine} from '../test';
+import {buildMockSearchAppEngine} from '../test/mock-engine';
 import {
   validatePayload,
   validatePayloadAndThrow,

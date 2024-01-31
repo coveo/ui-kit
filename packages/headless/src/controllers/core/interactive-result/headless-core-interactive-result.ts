@@ -1,6 +1,6 @@
 import {debounce} from 'ts-debounce';
-import {CoreEngine} from '../../..';
 import {configuration} from '../../../app/common-reducers';
+import {CoreEngine} from '../../../app/engine';
 import {ConfigurationSection} from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
 

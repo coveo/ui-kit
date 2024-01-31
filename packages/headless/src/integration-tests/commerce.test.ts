@@ -1,18 +1,18 @@
+import {getOrganizationEndpoints} from '../api/platform-client';
 import {
-  buildCart,
-  buildContext,
-  buildCommerceEngine,
-  buildProductListing,
-  buildRelevanceSortCriterion,
-  buildSearch,
-  buildProductListingSort,
   CommerceEngine,
-  ProductListing,
-  buildProductListingFacetGenerator,
-} from '../commerce.index';
+  buildCommerceEngine,
+} from '../app/commerce-engine/commerce-engine';
+import {buildCart} from '../controllers/commerce/context/cart/headless-cart';
+import {buildContext} from '../controllers/commerce/context/headless-context';
+import {buildRelevanceSortCriterion} from '../controllers/commerce/core/sort/headless-core-commerce-sort';
+import {buildProductListingFacetGenerator} from '../controllers/commerce/product-listing/facets/headless-product-listing-facet-generator';
+import {ProductListing} from '../controllers/commerce/product-listing/headless-product-listing';
+import {buildProductListing} from '../controllers/commerce/product-listing/headless-product-listing';
+import {buildProductListingSort} from '../controllers/commerce/product-listing/sort/headless-product-listing-sort';
 import {buildSearchBox} from '../controllers/commerce/search-box/headless-search-box';
+import {buildSearch} from '../controllers/commerce/search/headless-search';
 import {updateQuery} from '../features/commerce/query/query-actions';
-import {getOrganizationEndpoints} from '../insight.index';
 import {waitForNextStateChange} from '../test/functional-test-utils';
 
 const accessToken = 'no';

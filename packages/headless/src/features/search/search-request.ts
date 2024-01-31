@@ -1,5 +1,5 @@
 import {EventDescription} from 'coveo.analytics';
-import {SearchAppState} from '../..';
+import {SearchAppState} from '../../state/search-app-state';
 import {ConfigurationSection} from '../../state/state-sections';
 import {sortFacets} from '../../utils/facet-utils';
 import {AutomaticFacetRequest} from '../facets/automatic-facet-set/interfaces/request';

@@ -329,7 +329,7 @@ export type {
 } from './features/result-templates/result-templates';
 export type {ResultTemplatesManager} from './features/result-templates/result-templates-manager';
 export {buildResultTemplatesManager} from './features/result-templates/result-templates-manager';
-export {ResultTemplatesHelpers} from './features';
+export {ResultTemplatesHelpers} from './features/result-templates/result-templates-helpers';
 
 export type {NumericFacetValue} from './features/facets/range-facets/numeric-facet-set/interfaces/response';
 

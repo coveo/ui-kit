@@ -2,6 +2,7 @@ import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answ
 import {GeneratedResponseFormat} from './generated-response-format';
 
 export interface GeneratedAnswerState {
+  id: string;
   /**
    * Determines if the generated answer is visible.
    */
@@ -58,6 +59,7 @@ export interface GeneratedAnswerState {
 
 export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
   return {
+    id: '',
     isVisible: true,
     isLoading: false,
     isStreaming: false,
