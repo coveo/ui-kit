@@ -43,6 +43,7 @@ export interface ControllerStaticStateMap {
   [customName: string]: ControllerStaticState<unknown>;
 }
 
+// TODO: not sure if should export
 export interface ControllerDefinitionWithoutProps<
   TEngine extends CoreEngine,
   TController extends Controller,
@@ -56,6 +57,7 @@ export interface ControllerDefinitionWithoutProps<
   build(engine: TEngine): TController;
 }
 
+// TODO: not sure if should export
 export interface ControllerDefinitionWithProps<
   TEngine extends CoreEngine,
   TController extends Controller,
@@ -65,6 +67,7 @@ export interface ControllerDefinitionWithProps<
    * TODO: document this: buildWithProps
    *
    * @param engine - The search engine.
+   * @param props - The controller properties.
    * @returns the controller.
    */
   buildWithProps(engine: TEngine, props: TProps): TController;
