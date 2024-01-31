@@ -6,7 +6,8 @@ import {
   toggleSelectStaticFilterValue,
 } from '../../features/static-filter-set/static-filter-set-actions';
 import {staticFilterSetReducer as staticFilterSet} from '../../features/static-filter-set/static-filter-set-slice';
-import {buildMockSearchAppEngine, MockSearchEngine} from '../../test';
+import {MockSearchEngine} from '../../test/mock-engine';
+import {buildMockSearchAppEngine} from '../../test/mock-engine';
 import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice';
 import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value';
 import {

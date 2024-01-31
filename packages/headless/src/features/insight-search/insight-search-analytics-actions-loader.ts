@@ -1,4 +1,4 @@
-import {InsightEngine} from '../../insight.index';
+import {InsightEngine} from '../../app/insight-engine/insight-engine';
 import {InsightAction} from '../analytics/analytics-utils';
 import {
   logContextChanged,

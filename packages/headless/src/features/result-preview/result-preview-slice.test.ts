@@ -1,4 +1,4 @@
-import {buildMockResult} from '../../test';
+import {buildMockResult} from '../../test/mock-result';
 import {buildMockResultPreviewRequest} from '../../test/mock-result-preview-request-builder';
 import {buildMockLegacySearch, buildMockSearch} from '../../test/mock-search';
 import {buildMockSearchResponse} from '../../test/mock-search-response';

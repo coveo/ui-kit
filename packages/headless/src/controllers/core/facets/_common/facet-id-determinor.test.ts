@@ -1,4 +1,5 @@
-import {buildMockSearchAppEngine, MockSearchEngine} from '../../../../test';
+import {MockSearchEngine} from '../../../../test/mock-engine';
+import {buildMockSearchAppEngine} from '../../../../test/mock-engine';
 import {buildMockFacetIdConfig} from '../../../../test/mock-facet-id-config';
 import {determineFacetId} from './facet-id-determinor';
 import * as FacetIdGenerator from './facet-id-generator';

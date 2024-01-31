@@ -1,4 +1,4 @@
-import {GeneratedAnswerCitation} from '../controllers';
+import {GeneratedAnswerCitation} from '../api/generated-answer/generated-answer-event-payload';
 
 /**
  * For internal use only.

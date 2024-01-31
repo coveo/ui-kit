@@ -3,12 +3,13 @@ import {CommerceFacetRequest} from '../../../../features/commerce/facets/facet-s
 import {executeSearch} from '../../../../features/commerce/search/search-actions';
 import {commerceSearchReducer as commerceSearch} from '../../../../features/commerce/search/search-slice';
 import {CommerceAppState} from '../../../../state/commerce-app-state';
-import {MockCommerceEngine, buildMockCommerceEngine} from '../../../../test';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
 import {buildMockCommerceNumericFacetResponse} from '../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceNumericFacetValue} from '../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
+import {buildMockCommerceEngine} from '../../../../test/mock-engine';
+import {MockCommerceEngine} from '../../../../test/mock-engine';
 import {CommerceFacetOptions} from '../../core/facets/headless-core-commerce-facet';
 import {CommerceNumericFacet} from '../../core/facets/numeric/headless-commerce-numeric-facet';
 import {buildSearchNumericFacet} from './headless-search-numeric-facet';

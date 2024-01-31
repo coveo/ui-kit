@@ -1,9 +1,10 @@
-import {buildMockRaw, buildMockResult} from '../../test';
 import {
   MockInsightEngine,
   buildMockInsightEngine,
 } from '../../test/mock-engine';
 import {buildMockInsightState} from '../../test/mock-insight-state';
+import {buildMockRaw} from '../../test/mock-raw';
+import {buildMockResult} from '../../test/mock-result';
 import {buildMockSearchState} from '../../test/mock-search-state';
 import {
   logShowMoreFoldedResults,

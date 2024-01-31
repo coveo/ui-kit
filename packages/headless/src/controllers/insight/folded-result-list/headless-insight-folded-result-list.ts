@@ -1,7 +1,7 @@
+import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 import {insightFoldedResultAnalyticsClient} from '../../../features/folding/folding-insight-analytics-actions';
 import {loadCollection} from '../../../features/folding/insight-folding-actions';
 import {fetchMoreResults} from '../../../features/insight-search/insight-search-actions';
-import {InsightEngine} from '../../../insight.index';
 import {
   buildCoreFoldedResultList,
   FoldingOptions,

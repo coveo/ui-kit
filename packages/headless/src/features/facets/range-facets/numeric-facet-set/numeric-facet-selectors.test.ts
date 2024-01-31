@@ -1,5 +1,4 @@
 import {SearchAppState} from '../../../../state/search-app-state';
-import {createMockState} from '../../../../test';
 import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
 import {buildMockFacetResponse} from '../../../../test/mock-facet-response';
 import {buildMockFacetSlice} from '../../../../test/mock-facet-slice';
@@ -7,6 +6,7 @@ import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-
 import {buildMockNumericFacetResponse} from '../../../../test/mock-numeric-facet-response';
 import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
+import {createMockState} from '../../../../test/mock-state';
 import {
   numericFacetExcludedValuesSelector,
   numericFacetResponseSelector,

@@ -17,11 +17,11 @@ import {
   executeSearch,
   ExecuteSearchThunkReturn,
   fetchMoreResults,
-  StateNeededByExecuteSearch,
   fetchFacetValues,
   fetchPage,
   fetchInstantResults,
 } from './legacy/search-actions';
+import {StateNeededByExecuteSearch} from './legacy/search-actions-thunk-processor';
 
 /**
  * The search action creators.

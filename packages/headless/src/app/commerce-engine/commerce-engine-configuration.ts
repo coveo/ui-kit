@@ -1,5 +1,5 @@
 import {Schema} from '@coveo/bueno';
-import {getOrganizationEndpoints} from '../..';
+import {getOrganizationEndpoints} from '../../api/platform-client';
 import {
   EngineConfiguration,
   engineConfigurationDefinitions,

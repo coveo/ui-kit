@@ -1,5 +1,5 @@
-import {CoreEngine} from '../..';
 import {HtmlApiClient} from '../../api/search/html/html-api-client';
+import {CoreEngine} from '../../app/engine';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {preparePreviewPagination} from '../../features/result-preview/result-preview-actions';
