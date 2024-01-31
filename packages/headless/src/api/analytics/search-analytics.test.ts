@@ -1,6 +1,7 @@
 import {createRelay} from '@coveo/relay';
 import {CoveoAnalyticsClient} from 'coveo.analytics';
 import pino from 'pino';
+import {DateFacetValue} from '../../controllers/product-listing/range-facet/date-facet/headless-product-listing-date-facet';
 import {getConfigurationInitialState} from '../../features/configuration/configuration-state';
 import {getCategoryFacetSetInitialState} from '../../features/facets/category-facet-set/category-facet-set-state';
 import {getFacetSetInitialState} from '../../features/facets/facet-set/facet-set-state';
@@ -8,11 +9,7 @@ import {FacetSortCriterion} from '../../features/facets/facet-set/interfaces/req
 import {getGeneratedAnswerInitialState} from '../../features/generated-answer/generated-answer-state';
 import {OmniboxSuggestionMetadata} from '../../features/query-suggest/query-suggest-analytics-actions';
 import {getQuerySuggestSetInitialState} from '../../features/query-suggest/query-suggest-state';
-import {
-  DateFacetValue,
-  StaticFilterValueMetadata,
-} from '../../product-listing.index';
-import {buildMockResult, createMockState} from '../../test';
+import {StaticFilterValueMetadata} from '../../features/static-filter-set/static-filter-set-actions';
 import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
 import {buildMockFacetRequest} from '../../test/mock-facet-request';
 import {buildMockFacetResponse} from '../../test/mock-facet-response';
@@ -21,7 +18,9 @@ import {buildMockFacetValue} from '../../test/mock-facet-value';
 import {buildMockFacetValueRequest} from '../../test/mock-facet-value-request';
 import {buildMockQueryState} from '../../test/mock-query-state';
 import {buildMockQuerySuggestSet} from '../../test/mock-query-suggest-slice';
+import {buildMockResult} from '../../test/mock-result';
 import {buildMockSearchState} from '../../test/mock-search-state';
+import {createMockState} from '../../test/mock-state';
 import {VERSION} from '../../utils/version';
 import {QuerySuggestCompletion} from '../search/query-suggest/query-suggest-response';
 import {

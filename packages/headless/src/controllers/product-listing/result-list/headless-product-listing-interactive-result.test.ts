@@ -1,10 +1,8 @@
 import {configuration} from '../../../app/common-reducers';
 import {logProductRecommendationOpen} from '../../../features/product-listing/product-listing-analytics';
 import {pushRecentResult} from '../../../features/product-listing/product-listing-recent-results';
-import {
-  buildMockProductListingEngine,
-  MockProductListingEngine,
-} from '../../../test';
+import {MockProductListingEngine} from '../../../test/mock-engine';
+import {buildMockProductListingEngine} from '../../../test/mock-engine';
 import {buildMockProductRecommendation} from '../../../test/mock-product-recommendation';
 import {ProductRecommendation} from './../../../api/search/search/product-recommendation';
 import {

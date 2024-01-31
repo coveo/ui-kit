@@ -1,5 +1,5 @@
 import {AnyAction} from '@reduxjs/toolkit';
-import {Controller} from '../../../controllers';
+import type {Controller} from '../../../controllers/controller/headless-controller';
 import {CoreEngine} from '../../engine';
 import {EngineConfiguration} from '../../engine-configuration';
 import {Build} from './build';

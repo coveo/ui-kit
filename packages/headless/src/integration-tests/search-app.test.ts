@@ -1,3 +1,4 @@
+import {Result} from '../api/search/search/result';
 import {
   SearchEngine,
   buildSearchEngine,
@@ -8,25 +9,24 @@ import {
 } from '../app/search-engine/search-engine-configuration';
 import {
   CategoryFacet,
-  Facet,
+  buildCategoryFacet,
+} from '../controllers/facets/category-facet/headless-category-facet';
+import {Facet, FacetValue} from '../controllers/facets/facet/headless-facet';
+import {buildFacet} from '../controllers/facets/facet/headless-facet';
+import {
   ResultList,
+  buildResultList,
+} from '../controllers/result-list/headless-result-list';
+import {
   SearchBox,
-  Sort,
-} from '../controllers';
+  buildSearchBox,
+} from '../controllers/search-box/headless-search-box';
+import {Sort, buildSort} from '../controllers/sort/headless-sort';
 import {
   buildDateSortCriterion,
   buildRelevanceSortCriterion,
   SortOrder,
 } from '../features/sort-criteria/criteria';
-import {
-  buildSearchBox,
-  buildResultList,
-  buildFacet,
-  buildSort,
-  buildCategoryFacet,
-  Result,
-  FacetValue,
-} from '../index';
 
 const sleep = (seconds: number) =>
   new Promise((resolve) => setTimeout(resolve, seconds * 1000));

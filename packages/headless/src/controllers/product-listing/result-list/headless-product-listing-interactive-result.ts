@@ -1,9 +1,7 @@
+import {ProductRecommendation} from '../../../api/search/search/product-recommendation';
+import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
 import {logProductRecommendationOpen} from '../../../features/product-listing/product-listing-analytics';
 import {pushRecentResult} from '../../../features/product-listing/product-listing-recent-results';
-import {
-  ProductListingEngine,
-  ProductRecommendation,
-} from '../../../product-listing.index';
 import {
   buildInteractiveResultCore,
   InteractiveResultCore,

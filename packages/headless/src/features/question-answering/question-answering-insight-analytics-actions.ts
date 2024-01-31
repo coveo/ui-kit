@@ -1,5 +1,4 @@
 import {validatePayload} from '../../utils/validate-payload';
-import {SmartSnippetFeedback} from '../analytics';
 import {
   InsightAction,
   documentIdentifier,
@@ -7,6 +6,7 @@ import {
   partialDocumentInformation,
 } from '../analytics/analytics-utils';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
+import {SmartSnippetFeedback} from './question-answering-analytics-actions';
 import {
   inlineLinkPayloadDefinition,
   QuestionAnsweringInlineLinkActionCreatorPayload,

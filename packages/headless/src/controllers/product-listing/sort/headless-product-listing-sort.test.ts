@@ -6,10 +6,8 @@ import {
   updateSortCriterion,
 } from '../../../features/sort/sort-actions';
 import {sortReducer as sort} from '../../../features/sort/sort-slice';
-import {
-  buildMockProductListingEngine,
-  MockProductListingEngine,
-} from '../../../test';
+import {MockProductListingEngine} from '../../../test/mock-engine';
+import {buildMockProductListingEngine} from '../../../test/mock-engine';
 import {buildMockProductListingState} from '../../../test/mock-product-listing-state';
 import {
   buildFieldsSortCriterion,

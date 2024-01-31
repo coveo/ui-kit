@@ -1,5 +1,6 @@
 import {ArrayValue, Schema, StringValue} from '@coveo/bueno';
 import {ProductListingAPIErrorStatusResponse} from '../../api/commerce/product-listings/product-listing-api-client';
+import {ProductRecommendation} from '../../api/search/search/product-recommendation';
 import {configuration} from '../../app/common-reducers';
 import {ProductListingEngine} from '../../app/product-listing-engine/product-listing-engine';
 import {
@@ -8,7 +9,6 @@ import {
   setProductListingUrl,
 } from '../../features/product-listing/product-listing-actions';
 import {productListingReducer as productListing} from '../../features/product-listing/product-listing-slice';
-import {ProductRecommendation} from '../../product-listing.index';
 import {loadReducerError} from '../../utils/errors';
 import {validateOptions} from '../../utils/validate-payload';
 import {buildController, Controller} from '../controller/headless-controller';

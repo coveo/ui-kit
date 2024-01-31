@@ -8,7 +8,8 @@ import {
 } from '../../../features/facets/automatic-facet-set/automatic-facet-set-constants';
 import {automaticFacetSetReducer as automaticFacetSet} from '../../../features/facets/automatic-facet-set/automatic-facet-set-slice';
 import {searchReducer as search} from '../../../features/search/search-slice';
-import {MockSearchEngine, buildMockSearchAppEngine} from '../../../test';
+import {buildMockSearchAppEngine} from '../../../test/mock-engine';
+import {MockSearchEngine} from '../../../test/mock-engine';
 import {
   AutomaticFacetGeneratorProps,
   AutomaticFacetGenerator,

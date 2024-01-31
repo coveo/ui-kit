@@ -1,5 +1,5 @@
-import {CoreEngine} from '../../..';
 import {configuration} from '../../../app/common-reducers';
+import {CoreEngine} from '../../../app/engine';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';

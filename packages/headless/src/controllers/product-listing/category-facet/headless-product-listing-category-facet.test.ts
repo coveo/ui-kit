@@ -1,15 +1,13 @@
 import {CategoryFacetRequest} from '../../../features/facets/category-facet-set/interfaces/request';
 import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
 import {ProductListingAppState} from '../../../state/product-listing-app-state';
-import {
-  buildMockProductListingEngine,
-  MockProductListingEngine,
-} from '../../../test';
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
 import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response';
 import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search';
 import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
 import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value';
+import {MockProductListingEngine} from '../../../test/mock-engine';
+import {buildMockProductListingEngine} from '../../../test/mock-engine';
 import {buildMockProductListingState} from '../../../test/mock-product-listing-state';
 import * as CategoryFacetSearch from '../../core/facets/facet-search/category/headless-category-facet-search';
 import {

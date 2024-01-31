@@ -1,3 +1,11 @@
+## 2.43.4 (2024-01-31)
+
+### Bug Fixes
+
+- **deps:** update all dependencies j:kit-282 ([#3535](https://github.com/coveo/ui-kit/issues/3535)) ([8cbc113](https://github.com/coveo/ui-kit/commits/8cbc113c323134c73ec9643260ee4580289e891b))
+- **quantic:** fixed couple issues with generated answer and the expandable search box components ([#3549](https://github.com/coveo/ui-kit/issues/3549)) ([445bb5c](https://github.com/coveo/ui-kit/commits/445bb5c0409e9bac009c68ee052d950c3bfa12ab))
+- **quantic:** fixed issue with the Quantic Search Box Input ([#3548](https://github.com/coveo/ui-kit/issues/3548)) ([327a31f](https://github.com/coveo/ui-kit/commits/327a31f9bccfe6e9bcd4702138a49a1cb05c9110))
+
 ## 2.43.3 (2024-01-24)
 
 ### Bug Fixes
