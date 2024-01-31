@@ -211,6 +211,7 @@ export interface CoreFacetState {
   enabled: boolean;
   /**
    * The name to display if this field is used by the Facet Generator in your interface.
+   * See [Change Facet Generator options](https://docs.coveo.com/en/n9sd0159#change-facet-generator-options).
    */
   label?: string;
 }
