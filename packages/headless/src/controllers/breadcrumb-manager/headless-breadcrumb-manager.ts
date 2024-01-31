@@ -334,7 +334,7 @@ export function buildBreadcrumbManager(
     return {
       facetId: field,
       field,
-      label,
+      label: label || field,
       values,
     };
   };

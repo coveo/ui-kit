@@ -209,6 +209,10 @@ export interface CoreFacetState {
 
   /** Whether the facet is enabled and its values are used to filter search results. */
   enabled: boolean;
+  /**
+   * The name to display if this field is used by the Facet Generator in your interface.
+   */
+  label?: string;
 }
 
 export interface FacetSearch {
@@ -484,6 +488,7 @@ export function buildCoreFacet(
       const resultsMustMatch = request.resultsMustMatch;
 
       return {
+        label: response?.label,
         facetId,
         values,
         sortCriterion,

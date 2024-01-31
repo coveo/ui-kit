@@ -6,6 +6,7 @@ export interface BaseFacetResponse<T> {
   moreValuesAvailable: boolean;
   values: T[];
   indexScore: number;
+  label?: string;
 }
 
 export interface BaseFacetValue {
