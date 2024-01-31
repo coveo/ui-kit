@@ -72,6 +72,8 @@ export type {
   AnalyticsRuntimeEnvironment,
 } from './app/engine-configuration';
 export type {
+  ControllerDefinitionWithoutProps,
+  ControllerDefinitionWithProps,
   ControllerDefinitionsMap,
   InferControllerFromDefinition,
   InferControllersMapFromDefinition,
