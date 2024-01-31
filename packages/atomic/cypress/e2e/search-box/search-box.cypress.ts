@@ -569,7 +569,7 @@ describe('Search Box Test Suites', () => {
       SearchBoxSelectors.submitButton().should('be.disabled');
     });
 
-    it('clear button should be appear and dissapears depending on the content of the input', () => {
+    it('clear button should appear or disappear depending on the content of the input', () => {
       typeSearchInput(testQuery);
       SearchBoxSelectors.clearButton().should('exist');
       typeSearchInput(

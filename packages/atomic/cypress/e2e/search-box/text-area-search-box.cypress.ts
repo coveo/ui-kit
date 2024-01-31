@@ -135,7 +135,7 @@ describe('TextArea Search Box Test Suites', () => {
       CommonAssertions.assertConsoleError(false);
     });
 
-    it('clear button should be appear and dissapears depending on the content of the input', () => {
+    it('clear button should appear or disappear depending on the content of the input', () => {
       typeSearchTextArea(testQuery);
       SearchBoxSelectors.clearButton().should('exist');
       typeSearchTextArea(
