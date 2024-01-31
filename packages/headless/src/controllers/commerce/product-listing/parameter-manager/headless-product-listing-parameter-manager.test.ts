@@ -1,19 +1,28 @@
-import {Action} from '@reduxjs/toolkit';
 import {
   ProductListingParameters,
   restoreProductListingParameters,
 } from '../../../../features/commerce/search-parameters/search-parameter-actions';
-import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
+import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
+import {
+  buildMockCommerceEngine,
+  MockedCommerceEngine,
+} from '../../../../test/mock-engine-v2';
 import {ParameterManager} from '../../core/parameter-manager/headless-core-parameter-manager';
 import {buildProductListingParameterManager} from './headless-product-listing-parameter-manager';
 
+jest.mock(
+  '../../../../features/commerce/search-parameters/search-parameter-actions'
+);
+
 describe('product listing parameter manager', () => {
-  let engine: MockCommerceEngine;
+  let engine: MockedCommerceEngine;
   let productListingParameterManager: ParameterManager<ProductListingParameters>;
 
-  function initProductListingParameterManager() {
-    engine = buildMockCommerceEngine();
+  function initEngine(preloadedState = buildMockCommerceState()) {
+    engine = buildMockCommerceEngine(preloadedState);
+  }
 
+  function initProductListingParameterManager() {
     productListingParameterManager = buildProductListingParameterManager(
       engine,
       {
@@ -22,12 +31,8 @@ describe('product listing parameter manager', () => {
     );
   }
 
-  const expectContainAction = (action: Action) => {
-    const found = engine.actions.find((a) => a.type === action.type);
-    expect(engine.actions).toContainEqual(found);
-  };
-
   beforeEach(() => {
+    initEngine();
     initProductListingParameterManager();
   });
 
@@ -36,7 +41,12 @@ describe('product listing parameter manager', () => {
   });
 
   it('dispatches #restoreProductListingParameters on init', () => {
-    expectContainAction(restoreProductListingParameters({}));
+    const mockedRestoreProductListingParametersAction = jest.mocked(
+      restoreProductListingParameters
+    );
+    expect(mockedRestoreProductListingParametersAction).toHaveBeenCalledWith(
+      {}
+    );
   });
 
   it('#state contains #parameters', () => {

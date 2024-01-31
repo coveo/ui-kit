@@ -4,13 +4,30 @@ import {
 } from '../../../../features/commerce/search-parameters/search-parameter-actions';
 import {searchSerializer} from '../../../../features/commerce/search-parameters/search-parameter-serializer';
 import {executeSearch} from '../../../../features/commerce/search/search-actions';
-import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
+import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
+import {
+  buildMockCommerceEngine,
+  MockedCommerceEngine,
+} from '../../../../test/mock-engine-v2';
 import {buildSearchParameterManager} from '../../search/parameter-manager/headless-search-parameter-manager';
 import {buildCoreUrlManager, UrlManager} from './headless-core-url-manager';
 
+jest.mock(
+  '../../../../features/commerce/search-parameters/search-parameter-actions'
+);
+jest.mock('../../../../features/commerce/search/search-actions');
+
 describe('core url manager', () => {
-  let engine: MockCommerceEngine;
+  let engine: MockedCommerceEngine;
   let manager: UrlManager;
+  let mockedExecuteSearchAction: jest.MockedFunctionDeep<typeof executeSearch>;
+  let mockedRestoreSearchParametersAction: jest.MockedFunctionDeep<
+    typeof restoreSearchParameters
+  >;
+
+  function initEngine(preloadedState = buildMockCommerceState()) {
+    engine = buildMockCommerceEngine(preloadedState);
+  }
 
   function initUrlManager(fragment = '') {
     manager = buildCoreUrlManager(engine, {
@@ -24,35 +41,30 @@ describe('core url manager', () => {
   }
 
   beforeEach(() => {
-    engine = buildMockCommerceEngine();
+    jest.clearAllMocks();
+    mockedExecuteSearchAction = jest.mocked(executeSearch);
+    mockedRestoreSearchParametersAction = jest.mocked(restoreSearchParameters);
+    initEngine();
     initUrlManager();
   });
 
-  function getLatestRestoreSearchParametersAction() {
-    const restoreSearchParametersActions = engine.actions.filter(
-      (action) => action.type === restoreSearchParameters.type
-    );
-    return restoreSearchParametersActions[
-      restoreSearchParametersActions.length - 1
-    ];
-  }
-
   function testLatestRestoreSearchParameters(params: CommerceSearchParameters) {
-    const action = restoreSearchParameters(params);
-    expect(getLatestRestoreSearchParametersAction()).toEqual(action);
+    expect(mockedRestoreSearchParametersAction).toHaveBeenLastCalledWith(
+      params
+    );
   }
 
   function testExecuteSearch() {
-    expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
+    expect(mockedExecuteSearchAction).toHaveBeenCalled();
   }
 
   describe('initialization', () => {
     it('dispatches #restoreSearchParameters', () => {
-      expect(getLatestRestoreSearchParametersAction()).toBeTruthy();
+      expect(mockedRestoreSearchParametersAction).toHaveBeenCalled();
     });
 
     it('does not execute a search', () => {
-      expect(engine.findAsyncAction(executeSearch.pending)).toBeFalsy();
+      expect(mockedExecuteSearchAction).not.toHaveBeenCalled();
     });
 
     it('initial #restoreActionCreator should parse the "active" fragment', () => {
@@ -94,7 +106,7 @@ describe('core url manager', () => {
       engine.state.commerceQuery.query = 'test';
       manager.synchronize('q=test');
 
-      expect(engine.findAsyncAction(executeSearch.pending)).toBeFalsy();
+      expect(mockedExecuteSearchAction).not.toHaveBeenCalled();
     });
 
     it(`when a parameter's value changes

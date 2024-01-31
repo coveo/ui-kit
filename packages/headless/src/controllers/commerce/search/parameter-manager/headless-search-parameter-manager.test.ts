@@ -1,32 +1,38 @@
-import {Action} from '@reduxjs/toolkit';
 import {queryReducer as commerceQuery} from '../../../../features/commerce/query/query-slice';
 import {
   CommerceSearchParameters,
   restoreSearchParameters,
 } from '../../../../features/commerce/search-parameters/search-parameter-actions';
 import {executeSearch} from '../../../../features/commerce/search/search-actions';
-import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
+import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
+import {
+  buildMockCommerceEngine,
+  MockedCommerceEngine,
+} from '../../../../test/mock-engine-v2';
 import {ParameterManager} from '../../core/parameter-manager/headless-core-parameter-manager';
 import {buildSearchParameterManager} from './headless-search-parameter-manager';
 
+jest.mock(
+  '../../../../features/commerce/search-parameters/search-parameter-actions'
+);
+jest.mock('../../../../features/commerce/search/search-actions');
+
 describe('search parameter manager', () => {
-  let engine: MockCommerceEngine;
+  let engine: MockedCommerceEngine;
   let searchParameterManager: ParameterManager<CommerceSearchParameters>;
 
-  function initSearchParameterManager() {
-    engine = buildMockCommerceEngine();
+  function initEngine(preloadedState = buildMockCommerceState()) {
+    engine = buildMockCommerceEngine(preloadedState);
+  }
 
+  function initSearchParameterManager() {
     searchParameterManager = buildSearchParameterManager(engine, {
       initialState: {parameters: {}},
     });
   }
 
-  const expectContainAction = (action: Action) => {
-    const found = engine.actions.find((a) => a.type === action.type);
-    expect(engine.actions).toContainEqual(found);
-  };
-
   beforeEach(() => {
+    initEngine();
     initSearchParameterManager();
   });
 
@@ -39,29 +45,33 @@ describe('search parameter manager', () => {
   });
 
   it('dispatches #restoreSearchParameters on init', () => {
-    expectContainAction(restoreSearchParameters({}));
+    const mockedRestoreSearchParametersAction = jest.mocked(
+      restoreSearchParameters
+    );
+    expect(mockedRestoreSearchParametersAction).toHaveBeenLastCalledWith({});
   });
 
   describe('#synchronize', () => {
     it('dispatches #restoreSearchParameters', () => {
+      const mockedRestoreSearchParametersAction = jest.mocked(
+        restoreSearchParameters
+      );
       const parameters = {
         q: 'some query',
       };
       searchParameterManager.synchronize(parameters);
-      expectContainAction(
-        restoreSearchParameters({
-          q: 'some query',
-        })
-      );
+      expect(mockedRestoreSearchParametersAction).toHaveBeenLastCalledWith({
+        q: 'some query',
+      });
     });
 
     it('dispatches #executeSearch', () => {
+      const mockedExecuteSearchAction = jest.mocked(executeSearch);
       const parameters = {
         q: 'some query',
       };
       searchParameterManager.synchronize(parameters);
-      const action = engine.findAsyncAction(executeSearch.pending);
-      expect(action).toBeTruthy();
+      expect(mockedExecuteSearchAction).toHaveBeenCalled();
     });
   });
 

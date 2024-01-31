@@ -1,14 +1,26 @@
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice';
+import {restoreProductListingParameters} from '../../../../features/commerce/search-parameters/search-parameter-actions';
+import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {
-  ProductListingParameters,
-  restoreProductListingParameters,
-} from '../../../../features/commerce/search-parameters/search-parameter-actions';
-import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
+  buildMockCommerceEngine,
+  MockedCommerceEngine,
+} from '../../../../test/mock-engine-v2';
 import {buildProductListingUrlManager} from './headless-product-listing-url-manager';
 
+jest.mock(
+  '../../../../features/commerce/search-parameters/search-parameter-actions'
+);
+jest.mock(
+  '../../../../features/commerce/product-listing/product-listing-actions'
+);
+
 describe('product listing url manager', () => {
-  let engine: MockCommerceEngine;
+  let engine: MockedCommerceEngine;
+
+  function initEngine(preloadedState = buildMockCommerceState()) {
+    engine = buildMockCommerceEngine(preloadedState);
+  }
 
   function initUrlManager(fragment = '') {
     buildProductListingUrlManager(engine, {
@@ -19,40 +31,36 @@ describe('product listing url manager', () => {
   }
 
   beforeEach(() => {
-    engine = buildMockCommerceEngine();
+    jest.resetAllMocks();
+    initEngine();
     initUrlManager();
   });
-
-  function getLatestRestoreSearchParametersAction() {
-    const restoreSearchParametersActions = engine.actions.filter(
-      (action) => action.type === restoreProductListingParameters.type
-    );
-    return restoreSearchParametersActions[
-      restoreSearchParametersActions.length - 1
-    ];
-  }
-
-  function testLatestRestoreSearchParameters(params: ProductListingParameters) {
-    const action = restoreProductListingParameters(params);
-    expect(getLatestRestoreSearchParametersAction()).toEqual(action);
-  }
 
   describe('initialization', () => {
     it('adds the correct reducers to the engine', () => {
       expect(engine.addReducers).toHaveBeenCalledWith({productListing});
     });
 
-    it('dispatches #restoreSearchParameters', () => {
-      expect(getLatestRestoreSearchParametersAction()).toBeTruthy();
+    it('dispatches #restoreProductListingParameters', () => {
+      const mockedRestoreProductListingParametersAction = jest.mocked(
+        restoreProductListingParameters
+      );
+      expect(mockedRestoreProductListingParametersAction).toHaveBeenCalled();
     });
 
     it('does not fetch a product listing', () => {
-      expect(engine.findAsyncAction(fetchProductListing.pending)).toBeFalsy();
+      const mockedFetchProductListingAction = jest.mocked(fetchProductListing);
+      expect(mockedFetchProductListingAction).not.toHaveBeenCalled();
     });
 
     it('initial #restoreActionCreator should parse the "active" fragment', () => {
       initUrlManager('');
-      testLatestRestoreSearchParameters({});
+      const mockedRestoreProductListingParametersAction = jest.mocked(
+        restoreProductListingParameters
+      );
+      expect(
+        mockedRestoreProductListingParametersAction
+      ).toHaveBeenLastCalledWith({});
     });
   });
 });

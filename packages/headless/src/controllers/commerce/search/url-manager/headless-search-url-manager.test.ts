@@ -1,12 +1,27 @@
 import {queryReducer as commerceQuery} from '../../../../features/commerce/query/query-slice';
+import {restoreSearchParameters} from '../../../../features/commerce/search-parameters/search-parameter-actions';
+import {executeSearch} from '../../../../features/commerce/search/search-actions';
 import {commerceSearchReducer as commerceSearch} from '../../../../features/commerce/search/search-slice';
-import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
+import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
+import {
+  buildMockCommerceEngine,
+  MockedCommerceEngine,
+} from '../../../../test/mock-engine-v2';
 import {UrlManager} from '../../../url-manager/headless-url-manager';
 import {buildSearchUrlManager} from './headless-search-url-manager';
 
+jest.mock(
+  '../../../../features/commerce/search-parameters/search-parameter-actions'
+);
+jest.mock('../../../../features/commerce/search/search-actions');
+
 describe('search url manager', () => {
-  let engine: MockCommerceEngine;
+  let engine: MockedCommerceEngine;
   let manager: UrlManager;
+
+  function initEngine(preloadedState = buildMockCommerceState()) {
+    engine = buildMockCommerceEngine(preloadedState);
+  }
 
   function initUrlManager(fragment = '') {
     manager = buildSearchUrlManager(engine, {
@@ -17,7 +32,8 @@ describe('search url manager', () => {
   }
 
   beforeEach(() => {
-    engine = buildMockCommerceEngine();
+    jest.clearAllMocks();
+    initEngine();
     initUrlManager();
   });
 
@@ -26,6 +42,30 @@ describe('search url manager', () => {
       expect(engine.addReducers).toHaveBeenCalledWith({
         commerceSearch,
         commerceQuery,
+      });
+    });
+
+    it('dispatches #restoreProductListingParameters', () => {
+      const mockedRestoreSearchParametersAction = jest.mocked(
+        restoreSearchParameters
+      );
+      expect(mockedRestoreSearchParametersAction).toHaveBeenCalled();
+    });
+
+    it('does not execute a search', () => {
+      const mockedExecuteSearchAction = jest.mocked(executeSearch);
+      expect(mockedExecuteSearchAction).not.toHaveBeenCalled();
+    });
+
+    it('initial #restoreActionCreator should parse the "active" fragment', () => {
+      initUrlManager('q=some%20query');
+      const mockedRestoreProductListingParametersAction = jest.mocked(
+        restoreSearchParameters
+      );
+      expect(
+        mockedRestoreProductListingParametersAction
+      ).toHaveBeenLastCalledWith({
+        q: 'some query',
       });
     });
   });
