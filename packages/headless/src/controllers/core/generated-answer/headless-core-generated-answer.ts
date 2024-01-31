@@ -15,7 +15,6 @@ import {
   setIsVisible,
   sendGeneratedAnswerFeedback,
   registerFieldsToIncludeInCitations,
-  setId,
 } from '../../../features/generated-answer/generated-answer-actions';
 import {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions';
 import {generatedAnswerReducer as generatedAnswer} from '../../../features/generated-answer/generated-answer-slice';
@@ -28,7 +27,6 @@ import {
   SearchSection,
 } from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
-import {randomID} from '../../../utils/utils';
 import {
   Controller,
   buildController,
@@ -162,16 +160,6 @@ export function buildCoreGeneratedAnswer(
   const {dispatch} = engine;
   const controller = buildController(engine);
   const getState = () => engine.state;
-
-  if (!engine.state.generatedAnswer.id) {
-    const genQaEngineId = randomID('genQA-', 12);
-    dispatch(setId({id: genQaEngineId}));
-    subscribeStateManager.engines[genQaEngineId] = {
-      abortController: undefined,
-      lastRequestId: '',
-      lastStreamId: '',
-    };
-  }
 
   const isVisible = props.initialState?.isVisible;
   if (isVisible !== undefined) {
