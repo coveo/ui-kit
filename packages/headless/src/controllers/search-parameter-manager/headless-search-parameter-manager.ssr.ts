@@ -32,22 +32,26 @@ export interface SearchParameterManagerBuildProps {
 }
 
 /**
- * @alpha
- */
-export const defineSearchParameterManager = (): ControllerDefinitionWithProps<
+ * Defines a `SearchParameterManager` controller instance.
+ *
+ * @returns The `SearchParameterManager` controller definition.
+ * */
+export function defineSearchParameterManager(): ControllerDefinitionWithProps<
   SearchEngine,
   SearchParameterManager,
   SearchParameterManagerBuildProps
-> => ({
-  buildWithProps: (engine, props) => {
-    if (!loadSearchParameterManagerReducers(engine)) {
-      throw loadReducerError;
-    }
-    return buildSearchParameterManager(engine, {
-      initialState: props.initialState,
-    });
-  },
-});
+> {
+  return {
+    buildWithProps: (engine, props) => {
+      if (!loadSearchParameterManagerReducers(engine)) {
+        throw loadReducerError;
+      }
+      return buildSearchParameterManager(engine, {
+        initialState: props.initialState,
+      });
+    },
+  };
+}
 
 function loadSearchParameterManagerReducers(
   engine: CoreEngine

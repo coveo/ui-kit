@@ -5,10 +5,15 @@ import {Sort, SortProps, buildSort} from './headless-sort';
 export * from './headless-sort';
 
 /**
- * @alpha
- */
-export const defineSort = (
+ * Defines a `Sort` controller instance.
+ *
+ * @param props - The configurable `Sort` properties.
+ * @returns The `Sort` controller definition.
+ * */
+export function defineSort(
   props?: SortProps
-): ControllerDefinitionWithoutProps<SearchEngine, Sort> => ({
-  build: (engine) => buildSort(engine, props),
-});
+): ControllerDefinitionWithoutProps<SearchEngine, Sort> {
+  return {
+    build: (engine) => buildSort(engine, props),
+  };
+}

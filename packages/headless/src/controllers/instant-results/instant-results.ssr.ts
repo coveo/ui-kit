@@ -9,10 +9,15 @@ import {
 export * from './instant-results';
 
 /**
- * @alpha
- */
-export const defineInstantResults = (
+ * Defines a `InstantResults` controller instance.
+ *
+ * @param props - The configurable `InstantResults` properties.
+ * @returns The `InstantResults` controller definition.
+ * */
+export function defineInstantResults(
   props: InstantResultProps
-): ControllerDefinitionWithoutProps<SearchEngine, InstantResults> => ({
-  build: (engine) => buildInstantResults(engine, props),
-});
+): ControllerDefinitionWithoutProps<SearchEngine, InstantResults> {
+  return {
+    build: (engine) => buildInstantResults(engine, props),
+  };
+}

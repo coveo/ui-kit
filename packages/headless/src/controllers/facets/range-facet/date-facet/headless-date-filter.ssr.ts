@@ -9,10 +9,15 @@ import {
 export * from './headless-date-filter';
 
 /**
- * @alpha
- */
-export const defineDateFilter = (
+ * Defines a `DateFilter` controller instance.
+ *
+ * @param props - The configurable `DateFilter` properties.
+ * @returns The `DateFilter` controller definition.
+ * */
+export function defineDateFilter(
   props: DateFilterProps
-): ControllerDefinitionWithoutProps<SearchEngine, DateFilter> => ({
-  build: (engine) => buildDateFilter(engine, props),
-});
+): ControllerDefinitionWithoutProps<SearchEngine, DateFilter> {
+  return {
+    build: (engine) => buildDateFilter(engine, props),
+  };
+}

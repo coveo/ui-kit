@@ -23,6 +23,8 @@ export type {
 export {defineSearchEngine} from './app/search-engine/search-engine.ssr';
 export {getSampleSearchEngineConfiguration} from './app/search-engine/search-engine';
 
+export type {FacetDefinition} from './controllers/facets/facet/headless-facet.ssr';
+// export type
 export type {CoreEngine, ExternalEngineOptions} from './app/engine';
 export type {
   EngineConfiguration,
@@ -30,8 +32,8 @@ export type {
   AnalyticsRuntimeEnvironment,
 } from './app/engine-configuration';
 export type {
-  ControllerDefinitionWithoutProps,
-  ControllerDefinitionWithProps,
+  ControllerDefinitionWithoutProps, // TODO: remove if each controller has its own definition type
+  ControllerDefinitionWithProps, // TODO: remove if each controller has
   ControllerDefinitionsMap,
   InferControllerFromDefinition,
   InferControllersMapFromDefinition,
@@ -39,6 +41,7 @@ export type {
   InferControllerStaticStateMapFromControllers,
   InferControllerStaticStateMapFromDefinitions,
 } from './app/ssr-engine/types/common';
+export type {Build} from './app/ssr-engine/types/build';
 export type {
   EngineDefinition,
   InferStaticState,

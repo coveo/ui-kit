@@ -9,10 +9,15 @@ import {
 export * from './headless-category-facet';
 
 /**
- * @alpha
- */
-export const defineCategoryFacet = (
+ * Defines a `CategoryFacet` controller instance.
+ *
+ * @param props - The configurable `CategoryFacet` properties.
+ * @returns The `CategoryFacet` controller definition.
+ * */
+export function defineCategoryFacet(
   props: CategoryFacetProps
-): ControllerDefinitionWithoutProps<SearchEngine, CategoryFacet> => ({
-  build: (engine) => buildCategoryFacet(engine, props),
-});
+): ControllerDefinitionWithoutProps<SearchEngine, CategoryFacet> {
+  return {
+    build: (engine) => buildCategoryFacet(engine, props),
+  };
+}

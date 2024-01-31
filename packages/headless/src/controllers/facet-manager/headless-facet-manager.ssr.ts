@@ -5,11 +5,15 @@ import {FacetManager, buildFacetManager} from './headless-facet-manager';
 export * from './headless-facet-manager';
 
 /**
- * @alpha
- */
-export const defineFacetManager = (): ControllerDefinitionWithoutProps<
+ * Defines a `FacetManager` controller instance.
+ *
+ * @returns The `FacetManager` controller definition.
+ * */
+export function defineFacetManager(): ControllerDefinitionWithoutProps<
   SearchEngine,
   FacetManager
-> => ({
-  build: (engine) => buildFacetManager(engine),
-});
+> {
+  return {
+    build: (engine) => buildFacetManager(engine),
+  };
+}

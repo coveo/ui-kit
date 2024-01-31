@@ -9,13 +9,15 @@ import {
 export * from './headless-category-field-suggestions';
 
 /**
- * @alpha
- */
-export const defineCategoryFieldSuggestions = (
+ * Defines a `CategoryFieldSuggestions` controller instance.
+ *
+ * @param props - The configurable `CategoryFieldSuggestions` properties.
+ * @returns The `CategoryFieldSuggestions` controller definition.
+ * */
+export function defineCategoryFieldSuggestions(
   props: CategoryFieldSuggestionsProps
-): ControllerDefinitionWithoutProps<
-  SearchEngine,
-  CategoryFieldSuggestions
-> => ({
-  build: (engine) => buildCategoryFieldSuggestions(engine, props),
-});
+): ControllerDefinitionWithoutProps<SearchEngine, CategoryFieldSuggestions> {
+  return {
+    build: (engine) => buildCategoryFieldSuggestions(engine, props),
+  };
+}

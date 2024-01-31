@@ -5,11 +5,15 @@ import {QuerySummary, buildQuerySummary} from './headless-query-summary';
 export * from './headless-query-summary';
 
 /**
- * @alpha
- */
-export const defineQuerySummary = (): ControllerDefinitionWithoutProps<
+ * Defines a `QuerySummary` controller instance.
+ *
+ * @returns The `QuerySummary` controller definition.
+ * */
+export function defineQuerySummary(): ControllerDefinitionWithoutProps<
   SearchEngine,
   QuerySummary
-> => ({
-  build: (engine) => buildQuerySummary(engine),
-});
+> {
+  return {
+    build: (engine) => buildQuerySummary(engine),
+  };
+}

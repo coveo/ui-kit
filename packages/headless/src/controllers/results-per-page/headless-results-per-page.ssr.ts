@@ -9,10 +9,15 @@ import {
 export * from './headless-results-per-page';
 
 /**
- * @alpha
- */
-export const defineResultsPerPage = (
+ * Defines a `ResultsPerPage` controller instance.
+ *
+ * @param props - The configurable `ResultsPerPage` properties.
+ * @returns The `ResultsPerPage` controller definition.
+ * */
+export function defineResultsPerPage(
   props?: ResultsPerPageProps
-): ControllerDefinitionWithoutProps<SearchEngine, ResultsPerPage> => ({
-  build: (engine) => buildResultsPerPage(engine, props),
-});
+): ControllerDefinitionWithoutProps<SearchEngine, ResultsPerPage> {
+  return {
+    build: (engine) => buildResultsPerPage(engine, props),
+  };
+}

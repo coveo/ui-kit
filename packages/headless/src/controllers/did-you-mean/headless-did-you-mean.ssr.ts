@@ -5,11 +5,15 @@ import {DidYouMean, buildDidYouMean} from './headless-did-you-mean';
 export * from './headless-did-you-mean';
 
 /**
- * @alpha
- */
-export const defineDidYouMean = (): ControllerDefinitionWithoutProps<
+ * Defines a `DidYouMean` controller instance.
+ *
+ * @returns The `DidYouMean` controller definition.
+ * */
+export function defineDidYouMean(): ControllerDefinitionWithoutProps<
   SearchEngine,
   DidYouMean
-> => ({
-  build: (engine) => buildDidYouMean(engine),
-});
+> {
+  return {
+    build: (engine) => buildDidYouMean(engine),
+  };
+}

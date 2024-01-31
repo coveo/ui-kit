@@ -5,11 +5,15 @@ import {QueryError, buildQueryError} from './headless-query-error';
 export * from './headless-query-error';
 
 /**
- * @alpha
- */
-export const defineQueryError = (): ControllerDefinitionWithoutProps<
+ * Defines a `QueryError` controller instance.
+ *
+ * @returns The `QueryError` controller definition.
+ * */
+export function defineQueryError(): ControllerDefinitionWithoutProps<
   SearchEngine,
   QueryError
-> => ({
-  build: (engine) => buildQueryError(engine),
-});
+> {
+  return {
+    build: (engine) => buildQueryError(engine),
+  };
+}

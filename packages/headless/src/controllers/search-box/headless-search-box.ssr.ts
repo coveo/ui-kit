@@ -5,10 +5,15 @@ import {SearchBox, SearchBoxProps, buildSearchBox} from './headless-search-box';
 export * from './headless-search-box';
 
 /**
- * @alpha
- */
-export const defineSearchBox = (
+ * Defines a `SearchBox` controller instance.
+ *
+ * @param props - The configurable `SearchBox` properties.
+ * @returns The `SearchBox` controller definition.
+ * */
+export function defineSearchBox(
   props?: SearchBoxProps
-): ControllerDefinitionWithoutProps<SearchEngine, SearchBox> => ({
-  build: (engine) => buildSearchBox(engine, props),
-});
+): ControllerDefinitionWithoutProps<SearchEngine, SearchBox> {
+  return {
+    build: (engine) => buildSearchBox(engine, props),
+  };
+}

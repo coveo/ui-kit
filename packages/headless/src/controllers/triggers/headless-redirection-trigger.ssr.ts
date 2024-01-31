@@ -8,11 +8,15 @@ import {
 export * from './headless-redirection-trigger';
 
 /**
- * @alpha
- */
-export const defineRedirectionTrigger = (): ControllerDefinitionWithoutProps<
+ * Defines a `RedirectionTrigger` controller instance.
+ *
+ * @returns The `RedirectionTrigger` controller definition.
+ * */
+export function defineRedirectionTrigger(): ControllerDefinitionWithoutProps<
   SearchEngine,
   RedirectionTrigger
-> => ({
-  build: (engine) => buildRedirectionTrigger(engine),
-});
+> {
+  return {
+    build: (engine) => buildRedirectionTrigger(engine),
+  };
+}

@@ -5,11 +5,15 @@ import {NotifyTrigger, buildNotifyTrigger} from './headless-notify-trigger';
 export * from './headless-notify-trigger';
 
 /**
- * @alpha
- */
-export const defineNotifyTrigger = (): ControllerDefinitionWithoutProps<
+ * Defines a `NotifyTrigger` controller instance.
+ *
+ * @returns The `NotifyTrigger` controller definition.
+ * */
+export function defineNotifyTrigger(): ControllerDefinitionWithoutProps<
   SearchEngine,
   NotifyTrigger
-> => ({
-  build: (engine) => buildNotifyTrigger(engine),
-});
+> {
+  return {
+    build: (engine) => buildNotifyTrigger(engine),
+  };
+}

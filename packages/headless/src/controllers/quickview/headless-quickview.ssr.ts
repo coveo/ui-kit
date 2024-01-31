@@ -5,10 +5,15 @@ import {Quickview, QuickviewProps, buildQuickview} from './headless-quickview';
 export * from './headless-quickview';
 
 /**
- * @alpha
- */
-export const defineQuickview = (
+ * Defines a `Quickview` controller instance.
+ *
+ * @param props - The configurable `Quickview` properties.
+ * @returns The `Quickview` controller definition.
+ * */
+export function defineQuickview(
   props: QuickviewProps
-): ControllerDefinitionWithoutProps<SearchEngine, Quickview> => ({
-  build: (engine) => buildQuickview(engine, props),
-});
+): ControllerDefinitionWithoutProps<SearchEngine, Quickview> {
+  return {
+    build: (engine) => buildQuickview(engine, props),
+  };
+}

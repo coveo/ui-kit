@@ -5,10 +5,15 @@ import {Pager, PagerProps, buildPager} from './headless-pager';
 export * from './headless-pager';
 
 /**
- * @alpha
- */
-export const definePager = (
+ * Defines a `Pager` controller instance.
+ *
+ * @param props - The configurable `Pager` properties.
+ * @returns The `Pager` controller definition.
+ * */
+export function definePager(
   props?: PagerProps
-): ControllerDefinitionWithoutProps<SearchEngine, Pager> => ({
-  build: (engine) => buildPager(engine, props),
-});
+): ControllerDefinitionWithoutProps<SearchEngine, Pager> {
+  return {
+    build: (engine) => buildPager(engine, props),
+  };
+}

@@ -5,11 +5,15 @@ import {ExecuteTrigger, buildExecuteTrigger} from './headless-execute-trigger';
 export * from './headless-execute-trigger';
 
 /**
- * @alpha
- */
-export const defineExecuteTrigger = (): ControllerDefinitionWithoutProps<
+ * Defines a `ExecuteTrigger` controller instance.
+ *
+ * @returns The `ExecuteTrigger` controller definition.
+ * */
+export function defineExecuteTrigger(): ControllerDefinitionWithoutProps<
   SearchEngine,
   ExecuteTrigger
-> => ({
-  build: (engine) => buildExecuteTrigger(engine),
-});
+> {
+  return {
+    build: (engine) => buildExecuteTrigger(engine),
+  };
+}

@@ -9,13 +9,15 @@ import {
 export * from './headless-smart-snippet-questions-list';
 
 /**
- * @alpha
- */
-export const defineSmartSnippetQuestionsList = (
+ * Defines a `SmartSnippetQuestionsList` controller instance.
+ *
+ * @param props - The configurable `SmartSnippetQuestionsList` properties.
+ * @returns The `SmartSnippetQuestionsList` controller definition.
+ * */
+export function defineSmartSnippetQuestionsList(
   props?: SmartSnippetQuestionsListProps
-): ControllerDefinitionWithoutProps<
-  SearchEngine,
-  SmartSnippetQuestionsList
-> => ({
-  build: (engine) => buildSmartSnippetQuestionsList(engine, props),
-});
+): ControllerDefinitionWithoutProps<SearchEngine, SmartSnippetQuestionsList> {
+  return {
+    build: (engine) => buildSmartSnippetQuestionsList(engine, props),
+  };
+}

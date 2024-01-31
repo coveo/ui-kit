@@ -42,30 +42,34 @@ export interface ControllerStaticState<TState> {
 export interface ControllerStaticStateMap {
   [customName: string]: ControllerStaticState<unknown>;
 }
-/**
- * @internal
- */
+
 export interface ControllerDefinitionWithoutProps<
   TEngine extends CoreEngine,
   TController extends Controller,
 > {
+  /**
+   * TODO: document this: build
+   *
+   * @param {TEngine} engine
+   * @return {*}  {TController}
+   */
   build(engine: TEngine): TController;
 }
 
-/**
- * @internal
- */
 export interface ControllerDefinitionWithProps<
   TEngine extends CoreEngine,
   TController extends Controller,
   TProps,
 > {
+  /**
+   * TODO: document this: buildWithProps
+   *
+   * @param {TEngine} engine
+   * @return {*}  {TController}
+   */
   buildWithProps(engine: TEngine, props: TProps): TController;
 }
 
-/**
- * @internal
- */
 export type ControllerDefinition<
   TEngine extends CoreEngine,
   TController extends Controller,
@@ -73,9 +77,6 @@ export type ControllerDefinition<
   | ControllerDefinitionWithoutProps<TEngine, TController>
   | ControllerDefinitionWithProps<TEngine, TController, unknown>;
 
-/**
- * @internal
- */
 export interface ControllerDefinitionsMap<
   TEngine extends CoreEngine,
   TController extends Controller,
@@ -87,7 +88,13 @@ export interface EngineDefinitionBuildResult<
   TEngine extends CoreEngine,
   TControllers extends ControllersMap,
 > {
+  /**
+   * TODO: document this EngineDefinitionBuildResult.engine
+   */
   engine: TEngine;
+  /**
+   * TODO: document this EngineDefinitionBuildResult.controllers
+   */
   controllers: TControllers;
 }
 
@@ -95,7 +102,13 @@ export interface EngineStaticState<
   TSearchAction extends AnyAction,
   TControllers extends ControllerStaticStateMap,
 > {
+  /**
+   * TODO: document this EngineStaticState.searchAction
+   */
   searchAction: TSearchAction;
+  /**
+   * TODO: document this EngineStaticState.controllers
+   */
   controllers: TControllers;
 }
 
@@ -130,9 +143,6 @@ export type InferControllerPropsMapFromDefinitions<
     : K]: InferControllerPropsFromDefinition<TControllers[K]>;
 };
 
-/**
- * @internal
- */
 export type InferControllerFromDefinition<
   TDefinition extends ControllerDefinition<CoreEngine, Controller>,
 > =
@@ -140,9 +150,6 @@ export type InferControllerFromDefinition<
     ? TController
     : never;
 
-/**
- * @internal
- */
 export type InferControllersMapFromDefinition<
   TControllers extends ControllerDefinitionsMap<CoreEngine, Controller>,
 > = {[K in keyof TControllers]: InferControllerFromDefinition<TControllers[K]>};

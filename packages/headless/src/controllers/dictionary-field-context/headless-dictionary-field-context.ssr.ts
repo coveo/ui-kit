@@ -8,9 +8,15 @@ import {
 export * from './headless-dictionary-field-context';
 
 /**
- * @alpha
- */
-export const defineDictionaryFieldContext =
-  (): ControllerDefinitionWithoutProps<CoreEngine, DictionaryFieldContext> => ({
+ * Defines a `DictionaryFieldContext` controller instance.
+ *
+ * @returns The `DictionaryFieldContext` controller definition.
+ * */
+export function defineDictionaryFieldContext(): ControllerDefinitionWithoutProps<
+  CoreEngine,
+  DictionaryFieldContext
+> {
+  return {
     build: (engine) => buildDictionaryFieldContext(engine),
-  });
+  };
+}

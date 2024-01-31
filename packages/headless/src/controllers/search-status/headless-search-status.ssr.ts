@@ -5,11 +5,15 @@ import {SearchStatus, buildSearchStatus} from './headless-search-status';
 export * from './headless-search-status';
 
 /**
- * @alpha
- */
-export const defineSearchStatus = (): ControllerDefinitionWithoutProps<
+ * Defines a `SearchStatus` controller instance.
+ *
+ * @returns The `SearchStatus` controller definition.
+ * */
+export function defineSearchStatus(): ControllerDefinitionWithoutProps<
   SearchEngine,
   SearchStatus
-> => ({
-  build: (engine) => buildSearchStatus(engine),
-});
+> {
+  return {
+    build: (engine) => buildSearchStatus(engine),
+  };
+}

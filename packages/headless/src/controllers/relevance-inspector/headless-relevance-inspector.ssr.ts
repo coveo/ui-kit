@@ -9,10 +9,15 @@ import {
 export * from './headless-relevance-inspector';
 
 /**
- * @alpha
- */
-export const defineRelevanceInspector = (
+ * Defines a `RelevanceInspector` controller instance.
+ *
+ * @param props - The configurable `RelevanceInspector` properties.
+ * @returns The `RelevanceInspector` controller definition.
+ * */
+export function defineRelevanceInspector(
   props?: RelevanceInspectorProps
-): ControllerDefinitionWithoutProps<SearchEngine, RelevanceInspector> => ({
-  build: (engine) => buildRelevanceInspector(engine, props),
-});
+): ControllerDefinitionWithoutProps<SearchEngine, RelevanceInspector> {
+  return {
+    build: (engine) => buildRelevanceInspector(engine, props),
+  };
+}
