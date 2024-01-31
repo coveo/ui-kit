@@ -183,17 +183,16 @@ export default class QuanticSearchBoxInput extends LightningElement {
   }
 
   handleEnter() {
-    const selectedSuggestion =
-      this.suggestionListElement?.getCurrentSelectedValue();
-    if (this.areSuggestionsOpen && selectedSuggestion) {
-      this.sendSelectSuggestionEvent(selectedSuggestion.rawValue);
-    } else {
-      if (!this.isClearButtonTargeted) {
+    if (!this.isClearButtonTargeted) {
+      const selectedSuggestion =
+        this.suggestionListElement?.getCurrentSelectedValue();
+      if (this.areSuggestionsOpen && selectedSuggestion) {
+        this.sendSelectSuggestionEvent(selectedSuggestion.rawValue);
+      } else {
         this.sendSubmitSearchEvent();
       }
+      this.input.blur();
     }
-    this.isClearButtonTargeted = false;
-    this.input.blur();
   }
 
   handleValueChange() {
@@ -245,6 +244,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
       default:
         this.handleKeyValues();
     }
+    this.isClearButtonTargeted = false;
   }
 
   onFocus() {
