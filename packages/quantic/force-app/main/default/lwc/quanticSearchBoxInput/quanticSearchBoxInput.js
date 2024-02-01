@@ -256,7 +256,6 @@ export default class QuanticSearchBoxInput extends LightningElement {
     if (!this.textarea) {
       return;
     }
-    // this.input.value = this.input.value.replace(/\n/g, '');
     this.input.style.height = '';
     this.input.style.whiteSpace = 'pre-wrap';
     this.input.style.height = this.input.scrollHeight + 'px';
