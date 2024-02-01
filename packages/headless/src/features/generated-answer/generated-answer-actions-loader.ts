@@ -1,9 +1,10 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {CoreEngine, GeneratedResponseFormat} from '../..';
 import {
   GeneratedAnswerCitationsPayload,
   GeneratedAnswerMessagePayload,
 } from '../../api/generated-answer/generated-answer-event-payload';
+import {CoreEngine} from '../../app/engine';
+import {GeneratedResponseFormat} from '../../controllers/generated-answer/headless-generated-answer';
 import {
   resetAnswer,
   abortStream,
