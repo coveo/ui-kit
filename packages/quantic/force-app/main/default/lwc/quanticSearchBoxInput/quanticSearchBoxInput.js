@@ -94,7 +94,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
   }
 
   /** @type {boolean} */
-  isClearButtonTargeted = false;
+  ignoreNextEnterKeyPress = false;
 
   connectedCallback() {
     this.addEventListener(
@@ -183,7 +183,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
   }
 
   handleEnter() {
-    if (!this.isClearButtonTargeted) {
+    if (!this.ignoreNextEnterKeyPress) {
       const selectedSuggestion =
         this.suggestionListElement?.getCurrentSelectedValue();
       if (this.areSuggestionsOpen && selectedSuggestion) {
@@ -213,7 +213,8 @@ export default class QuanticSearchBoxInput extends LightningElement {
 
   handleKeyDownOnClearButton(event) {
     if (event.key === keys.ENTER) {
-      this.isClearButtonTargeted = true;
+      // Ignore the next enter key press in the searchbox input to prevent submitting a search when we press enter on the clear button.
+      this.ignoreNextEnterKeyPress = true;
     }
   }
 
@@ -244,7 +245,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
       default:
         this.handleKeyValues();
     }
-    this.isClearButtonTargeted = false;
+    this.ignoreNextEnterKeyPress = false;
   }
 
   onFocus() {
