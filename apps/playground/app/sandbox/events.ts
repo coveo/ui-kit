@@ -30,7 +30,7 @@ const products = [
 ];
 
 const ecCartAction: SampleEvent = {
-  type: "ecCartAction",
+  type: "ec.cartAction",
   payload: {
     action: "add",
     currency: "EUR",
@@ -40,7 +40,7 @@ const ecCartAction: SampleEvent = {
 };
 
 const ecProductClick: SampleEvent = {
-  type: "ecProductClick",
+  type: "ec.productClick",
   payload: {
     position: 1,
     responseId: "c708f376-3eba-47a6-a7b7-7934fdd2f6cd",
@@ -50,7 +50,7 @@ const ecProductClick: SampleEvent = {
 };
 
 const ecProductView: SampleEvent = {
-  type: "ecProductView",
+  type: "ec.productView",
   payload: {
     currency: "GBP",
     product,
@@ -58,7 +58,7 @@ const ecProductView: SampleEvent = {
 };
 
 const ecPurchase: SampleEvent = {
-  type: "ecPurchase",
+  type: "ec.purchase",
   payload: {
     currency: "USD",
     products,
