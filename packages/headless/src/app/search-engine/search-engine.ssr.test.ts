@@ -1,16 +1,15 @@
-import {AnyAction} from '@reduxjs/toolkit';
-import {buildController} from '../../controllers';
-import {executeSearch} from '../../features/search/search-actions';
+import {AnyAction, Middleware} from '@reduxjs/toolkit';
 import {
-  defineResultList,
-  loadPaginationActions,
-  InferStaticState,
-  InferHydratedState,
-  ControllerDefinitionWithoutProps,
+  buildController,
   Controller,
-  Middleware,
-} from '../../ssr.index';
-import {buildMockResult} from '../../test';
+} from '../../controllers/controller/headless-controller';
+import {defineResultList} from '../../controllers/result-list/headless-result-list.ssr';
+import {loadPaginationActions} from '../../features/pagination/pagination-actions-loader';
+import {executeSearch} from '../../features/search/search-actions';
+import {buildMockResult} from '../../test/mock-result';
+import {ControllerDefinitionWithoutProps} from '../ssr-engine/types/common';
+import {InferHydratedState} from '../ssr-engine/types/core-engine';
+import {InferStaticState} from '../ssr-engine/types/core-engine';
 import {InferBuildResult} from '../ssr-engine/types/core-engine';
 import {getSampleSearchEngineConfiguration} from './search-engine';
 import {

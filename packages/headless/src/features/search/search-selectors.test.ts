@@ -1,4 +1,4 @@
-import {createMockState} from '../../test';
+import {createMockState} from '../../test/mock-state';
 import {firstSearchExecutedSelector} from './search-selectors';
 
 describe('search selectors', () => {

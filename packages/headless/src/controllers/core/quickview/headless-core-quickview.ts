@@ -1,4 +1,3 @@
-import {CoreEngine} from '../../..';
 import {HtmlApiClient} from '../../../api/search/html/html-api-client';
 import {
   HtmlRequest,
@@ -6,6 +5,7 @@ import {
 } from '../../../api/search/html/html-request';
 import {Result} from '../../../api/search/search/result';
 import {configuration} from '../../../app/common-reducers';
+import {CoreEngine} from '../../../app/engine';
 import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
 import {
   fetchResultContent,

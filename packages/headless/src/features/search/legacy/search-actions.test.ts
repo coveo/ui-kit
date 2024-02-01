@@ -1,4 +1,5 @@
-import {buildMockSearchAppEngine, MockSearchEngine} from '../../../test';
+import {MockSearchEngine} from '../../../test/mock-engine';
+import {buildMockSearchAppEngine} from '../../../test/mock-engine';
 import {createMockState} from '../../../test/mock-state';
 import {logSearchboxSubmit} from '../../query/query-analytics-actions';
 import {buildSearchRequest} from '../search-request';

@@ -1,11 +1,11 @@
 import {Result} from '../../api/search/search/result';
 import {configuration} from '../../app/common-reducers';
 import {logRecentResultClick} from '../../features/recent-results/recent-results-analytics-actions';
-import {buildMockResult} from '../../test';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
 } from '../../test/mock-engine';
+import {buildMockResult} from '../../test/mock-result';
 import {
   buildInteractiveRecentResult,
   InteractiveRecentResult,

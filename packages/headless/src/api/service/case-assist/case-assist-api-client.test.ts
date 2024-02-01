@@ -1,6 +1,6 @@
 import {buildResultPreviewRequest} from '../../../features/result-preview/result-preview-request-builder';
-import {createMockState} from '../../../test';
 import {buildMockCaseAssistAPIClient} from '../../../test/mock-case-assist-api-client';
+import {createMockState} from '../../../test/mock-state';
 import {PlatformClient} from '../../platform-client';
 import {CaseAssistAPIClient} from './case-assist-api-client';
 import {GetCaseClassificationsRequest} from './get-case-classifications/get-case-classifications-request';

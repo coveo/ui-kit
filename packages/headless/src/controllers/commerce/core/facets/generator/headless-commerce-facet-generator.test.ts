@@ -1,7 +1,6 @@
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
 import {facetOrderReducer as facetOrder} from '../../../../../features/facets/facet-order/facet-order-slice';
-import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../../test';
 import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request';
 import {
   buildMockCommerceRegularFacetResponse,
@@ -9,6 +8,8 @@ import {
   buildMockCommerceDateFacetResponse,
 } from '../../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
+import {MockCommerceEngine} from '../../../../../test/mock-engine';
+import {buildMockCommerceEngine} from '../../../../../test/mock-engine';
 import {buildProductListingDateFacet} from '../../../product-listing/facets/headless-product-listing-date-facet';
 import {buildProductListingNumericFacet} from '../../../product-listing/facets/headless-product-listing-numeric-facet';
 import {buildProductListingRegularFacet} from '../../../product-listing/facets/headless-product-listing-regular-facet';

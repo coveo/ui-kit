@@ -1,4 +1,4 @@
-import {Result} from '../../insight.index';
+import {Result} from '../../api/search/search/result';
 import {
   documentIdentifier,
   InsightAction,

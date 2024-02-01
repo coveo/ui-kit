@@ -3,8 +3,9 @@ import {fetchProductListing} from '../../../../features/commerce/product-listing
 import {applySort} from '../../../../features/commerce/sort/sort-actions';
 import {sortReducer} from '../../../../features/commerce/sort/sort-slice';
 import {updatePage} from '../../../../features/pagination/pagination-actions';
-import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
+import {MockCommerceEngine} from '../../../../test/mock-engine';
+import {buildMockCommerceEngine} from '../../../../test/mock-engine';
 import {
   buildRelevanceSortCriterion,
   buildCoreSort,

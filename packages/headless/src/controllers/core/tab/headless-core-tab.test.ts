@@ -5,7 +5,8 @@ import {
   updateActiveTab,
 } from '../../../features/tab-set/tab-set-actions';
 import {tabSetReducer as tabSet} from '../../../features/tab-set/tab-set-slice';
-import {buildMockSearchAppEngine, MockSearchEngine} from '../../../test';
+import {MockSearchEngine} from '../../../test/mock-engine';
+import {buildMockSearchAppEngine} from '../../../test/mock-engine';
 import {buildMockTabSlice} from '../../../test/mock-tab-state';
 import {buildCoreTab, Tab, TabProps} from './headless-core-tab';
 

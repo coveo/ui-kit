@@ -1,7 +1,7 @@
 import {SearchAppState} from '../../state/search-app-state';
-import {createMockState} from '../../test';
 import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
 import {buildMockQuerySuggestCompletion} from '../../test/mock-query-suggest-completion';
+import {createMockState} from '../../test/mock-state';
 import {buildOmniboxSuggestionMetadata} from './query-suggest-analytics-actions';
 
 describe('#buildOmniboxSuggestionMetadata', () => {

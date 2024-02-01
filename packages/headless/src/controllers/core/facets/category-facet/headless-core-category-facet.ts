@@ -22,11 +22,9 @@ import {
   findActiveValueAncestry,
   partitionIntoParentsAndValues,
 } from '../../../../features/facets/category-facet-set/category-facet-utils';
+import {CategoryFacetValueCommon} from '../../../../features/facets/category-facet-set/interfaces/commons';
 import {CategoryFacetSortCriterion} from '../../../../features/facets/category-facet-set/interfaces/request';
-import {
-  CategoryFacetValue,
-  CategoryFacetValueCommon,
-} from '../../../../features/facets/category-facet-set/interfaces/response';
+import {CategoryFacetValue} from '../../../../features/facets/category-facet-set/interfaces/response';
 import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
 import {defaultFacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-reducer-helpers';
 import {isFacetLoadingResponseSelector} from '../../../../features/facets/facet-set/facet-set-selectors';

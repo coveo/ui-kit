@@ -1,4 +1,5 @@
-import {buildMockSearchAppEngine, MockSearchEngine} from '../../../../test';
+import {MockSearchEngine} from '../../../../test/mock-engine';
+import {buildMockSearchAppEngine} from '../../../../test/mock-engine';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
 import {
   executeToggleNumericFacetSelect,
