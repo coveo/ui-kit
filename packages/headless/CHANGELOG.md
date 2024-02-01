@@ -1,3 +1,17 @@
+# 2.48.0 (2024-01-31)
+
+### Bug Fixes
+
+- **deps:** update all dependencies j:kit-282 ([#3535](https://github.com/coveo/ui-kit/issues/3535)) ([8cbc113](https://github.com/coveo/ui-kit/commits/8cbc113c323134c73ec9643260ee4580289e891b))
+- **headless:** Improving how to handle the subscribeStateManager in the rga controller ([#3552](https://github.com/coveo/ui-kit/issues/3552)) ([74f61fe](https://github.com/coveo/ui-kit/commits/74f61fee73ec92b10704f24abd3747e17da87b20))
+- **headless:** limit memory usage and property comparison for history manager ([#3558](https://github.com/coveo/ui-kit/issues/3558)) ([5b16462](https://github.com/coveo/ui-kit/commits/5b16462091d975c1d4070d306aa7e8da3a4cb486))
+- **headless:** remove un-necessary client side events for new query correction ([#3551](https://github.com/coveo/ui-kit/issues/3551)) ([49fcf78](https://github.com/coveo/ui-kit/commits/49fcf7846db2057a30fd460aaf1974734e570054))
+
+### Features
+
+- **headless,atomic:** migrate framework versions from customData to source w/ next analytics ([#3544](https://github.com/coveo/ui-kit/issues/3544)) ([b4c9262](https://github.com/coveo/ui-kit/commits/b4c9262e89cf0e02d9f7392a3f1f198a5e61c64e))
+- **headless:** export missing action to set query corrrection mode ([#3532](https://github.com/coveo/ui-kit/issues/3532)) ([fa96dc2](https://github.com/coveo/ui-kit/commits/fa96dc2cb8d395804e53392fe5954f7faf2b6c1e))
+
 # 2.47.0 (2024-01-24)
 
 ### Features

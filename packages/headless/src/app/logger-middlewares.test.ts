@@ -1,5 +1,5 @@
 import {SchemaValidationError} from '@coveo/bueno';
-import {buildMockSearchAppEngine} from '../test';
+import {buildMockSearchAppEngine} from '../test/mock-engine';
 import {serializeSchemaValidationError} from '../utils/validate-payload';
 
 describe('logActionErrorMiddleware', () => {

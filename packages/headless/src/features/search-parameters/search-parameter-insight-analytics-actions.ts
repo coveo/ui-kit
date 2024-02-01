@@ -1,4 +1,5 @@
-import {DateRangeRequest, NumericRangeRequest} from '../../controllers';
+import {DateRangeRequest} from '../../controllers/insight/facets/range-facet/date-facet/headless-insight-date-facet';
+import {NumericRangeRequest} from '../../controllers/insight/facets/range-facet/numeric-facet/headless-insight-numeric-facet';
 import {InsightAction} from '../analytics/analytics-utils';
 import {logInsightInterfaceChange} from '../analytics/insight-analytics-actions';
 import {logFacetUnexclude} from '../facets/facet-set/facet-set-analytics-actions';

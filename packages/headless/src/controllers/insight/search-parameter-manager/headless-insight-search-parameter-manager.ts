@@ -1,7 +1,7 @@
+import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 import {executeSearch} from '../../../features/insight-search/insight-search-actions';
 import {SearchParameters} from '../../../features/search-parameters/search-parameter-actions';
 import {logParametersChange} from '../../../features/search-parameters/search-parameter-insight-analytics-actions';
-import {InsightEngine} from '../../../insight.index';
 import {deepEqualAnyOrder} from '../../../utils/compare-utils';
 import {
   buildCoreSearchParameterManager,

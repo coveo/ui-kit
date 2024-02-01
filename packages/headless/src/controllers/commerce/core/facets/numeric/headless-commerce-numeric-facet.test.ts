@@ -5,12 +5,13 @@ import {
   toggleSelectNumericFacetValue,
 } from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {CommerceAppState} from '../../../../../state/commerce-app-state';
-import {MockCommerceEngine, buildMockCommerceEngine} from '../../../../../test';
 import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request';
 import {buildMockCommerceNumericFacetResponse} from '../../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceFacetSlice} from '../../../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceNumericFacetValue} from '../../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
+import {buildMockCommerceEngine} from '../../../../../test/mock-engine';
+import {MockCommerceEngine} from '../../../../../test/mock-engine';
 import {commonOptions} from '../../../product-listing/facets/headless-product-listing-facet-options';
 import {
   CommerceNumericFacet,

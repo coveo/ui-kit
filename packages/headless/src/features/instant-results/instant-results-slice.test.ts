@@ -1,4 +1,4 @@
-import {buildMockResult} from '../../test';
+import {buildMockResult} from '../../test/mock-result';
 import {fetchInstantResults} from '../search/search-actions';
 import {
   registerInstantResults,

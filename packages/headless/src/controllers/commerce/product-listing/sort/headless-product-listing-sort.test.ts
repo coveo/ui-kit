@@ -1,6 +1,7 @@
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {productListingV2Reducer} from '../../../../features/commerce/product-listing/product-listing-slice';
-import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
+import {MockCommerceEngine} from '../../../../test/mock-engine';
+import {buildMockCommerceEngine} from '../../../../test/mock-engine';
 import {
   buildRelevanceSortCriterion,
   Sort,

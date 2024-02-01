@@ -1,5 +1,7 @@
 import {Schema} from '@coveo/bueno';
 import {AsyncThunkAction} from '@reduxjs/toolkit';
+import {Result} from '../../../api/search/search/result';
+import {CoreEngine} from '../../../app/engine';
 import {
   ClickAction,
   CustomAction,
@@ -17,7 +19,6 @@ import {
 } from '../../../features/folding/folding-state';
 import {queryReducer as query} from '../../../features/query/query-slice';
 import {searchReducer as search} from '../../../features/search/search-slice';
-import {CoreEngine, Result} from '../../../recommendation.index';
 import {
   ConfigurationSection,
   FoldingSection,

@@ -1,4 +1,5 @@
-import {InsightEngine, Result} from '../../insight.index';
+import {Result} from '../../api/search/search/result';
+import {InsightEngine} from '../../app/insight-engine/insight-engine';
 import {LogCategoryFacetBreadcrumbActionCreatorPayload} from '../facets/category-facet-set/category-facet-set-analytics-actions';
 import {logCategoryFacetBreadcrumb} from '../facets/category-facet-set/category-facet-set-insight-analytics-actions';
 import {

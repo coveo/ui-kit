@@ -1,6 +1,6 @@
 import {GeneratedAnswerCitation} from '../../../api/generated-answer/generated-answer-event-payload';
+import {CoreEngine} from '../../../app/engine';
 import {CustomAction} from '../../../features/analytics/analytics-utils';
-import {CoreEngine} from '../../../product-listing.index';
 import {
   buildInteractiveResultCore,
   InteractiveResultCore,
