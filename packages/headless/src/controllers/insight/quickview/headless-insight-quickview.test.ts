@@ -1,41 +1,52 @@
+import {HtmlRequestOptions} from '../../../api/search/html/html-request';
 import {configuration} from '../../../app/common-reducers';
 import {insightInterfaceReducer as insightInterface} from '../../../features/insight-interface/insight-interface-slice';
-import {updateContentURL} from '../../../features/result-preview/result-preview-actions';
+import {buildInsightResultPreviewRequest} from '../../../features/insight-search/insight-result-preview-request-builder';
 import {logDocumentQuickview} from '../../../features/result-preview/result-preview-analytics-actions';
 import {resultPreviewReducer as resultPreview} from '../../../features/result-preview/result-preview-slice';
+import {InsightAppState} from '../../../state/insight-app-state';
 import {
   buildMockInsightEngine,
-  MockInsightEngine,
-} from '../../../test/mock-engine';
+  MockedInsightEngine,
+} from '../../../test/mock-engine-v2';
+import {buildMockInsightState} from '../../../test/mock-insight-state';
 import {buildMockResult} from '../../../test/mock-result';
-import {buildMockResultPreviewState} from '../../../test/mock-result-preview-state';
+import {buildCoreQuickview} from '../../core/quickview/headless-core-quickview';
 import {
   buildQuickview,
   QuickviewOptions,
   Quickview,
 } from './headless-insight-quickview';
 
+jest.mock('../../core/quickview/headless-core-quickview');
+jest.mock('../../../features/result-preview/result-preview-analytics-actions');
+jest.mock(
+  '../../../features/insight-search/insight-result-preview-request-builder'
+);
+
 describe('Insight Quickview', () => {
-  let engine: MockInsightEngine;
+  let engine: MockedInsightEngine;
+  let state: InsightAppState;
   let options: QuickviewOptions;
   let quickview: Quickview;
+  const mockedBuildCoreQuickview = jest.mocked(buildCoreQuickview);
+  function initEngine(preloadedState = buildMockInsightState()) {
+    state = preloadedState;
+    engine = buildMockInsightEngine(preloadedState);
+  }
 
   function initQuickview() {
     quickview = buildQuickview(engine, {options});
   }
 
   beforeEach(() => {
-    engine = buildMockInsightEngine();
+    jest.resetAllMocks();
     options = {
       result: buildMockResult(),
       maximumPreviewSize: 0,
     };
-
+    initEngine();
     initQuickview();
-  });
-
-  it('initializes', () => {
-    expect(quickview).toBeTruthy();
   });
 
   it('adds the correct reducers to engine', () => {
@@ -46,90 +57,44 @@ describe('Insight Quickview', () => {
     });
   });
 
-  it('exposes a subscribe method', () => {
-    expect(quickview.subscribe).toBeTruthy();
+  it('calls #buildCoreQuickview and returns its results', () => {
+    expect(mockedBuildCoreQuickview).toHaveBeenCalledWith(
+      engine,
+      {options: {...options, onlyContentURL: true}},
+      expect.any(Function),
+      '/quickview',
+      expect.any(Function)
+    );
+    expect(mockedBuildCoreQuickview).toHaveLastReturnedWith(quickview);
   });
 
-  describe('#fetchResultContent', () => {
-    const uniqueId = '1';
-    const requestedOutputSize = 0;
+  it('#buildResultPreviewRequest calls #buildInsightResultPreviewRequest and returns its results', () => {
+    const mockedBuildInsightResultPreviewRequest = jest.mocked(
+      buildInsightResultPreviewRequest
+    );
 
-    beforeEach(() => {
-      options.result = buildMockResult({uniqueId});
-      initQuickview();
+    const someHtmlRequestOptions: HtmlRequestOptions = {
+      uniqueId: 'some-id',
+      requestedOutputSize: 0,
+    };
 
-      quickview.fetchResultContent();
-    });
+    mockedBuildCoreQuickview.mock.calls[0][2](state, someHtmlRequestOptions);
 
-    it('dispatches a #updateContentURL action with the result uniqueId', () => {
-      const action = engine.findAsyncAction(updateContentURL.pending);
-
-      expect(action?.meta.arg.uniqueId).toBe(uniqueId);
-      expect(action?.meta.arg.requestedOutputSize).toBe(requestedOutputSize);
-      expect(action?.meta.arg.path).toBe('/quickview');
-    });
-
-    it('dispatches a document quickview click event', () => {
-      const result = buildMockResult();
-      const thunk = logDocumentQuickview(result);
-      const action = engine.findAsyncAction(thunk.pending);
-
-      expect(action).toBeTruthy();
-    });
+    expect(mockedBuildInsightResultPreviewRequest).toHaveBeenCalledTimes(1);
+    expect(mockedBuildInsightResultPreviewRequest).toHaveBeenCalledWith(
+      state,
+      someHtmlRequestOptions
+    );
   });
 
-  it(`when configured result uniqueId matches the uniqueId in state,
-  #state.content returns the content in state`, () => {
-    const uniqueId = '1';
-    const content = '<div></div>';
+  it('#fetchResultContentCallback logs a document quickview', () => {
+    const mockedLogDocumentQuickview = jest.mocked(logDocumentQuickview);
 
-    engine.state.resultPreview = buildMockResultPreviewState({
-      uniqueId,
-      content,
-    });
-    options.result = buildMockResult({uniqueId});
-    initQuickview();
+    mockedBuildCoreQuickview.mock.calls[0][4]?.();
 
-    expect(quickview.state.content).toEqual(content);
-  });
-
-  it(`when configured result uniqueId matches the uniqueId in state,
-  #state.content returns an empty string`, () => {
-    engine.state.resultPreview = buildMockResultPreviewState({
-      uniqueId: '1',
-      content: '<div></div>',
-    });
-    options.result = buildMockResult({uniqueId: '2'});
-    initQuickview();
-
-    expect(quickview.state.content).toEqual('');
-  });
-
-  [true, false].forEach((testValue) => {
-    it(`when the result #hasHtmlVersion is ${testValue} #state.resultHasPreview should be ${testValue}`, () => {
-      options.result = buildMockResult({hasHtmlVersion: testValue});
-      initQuickview();
-
-      expect(quickview.state.resultHasPreview).toBe(testValue);
-    });
-  });
-
-  [true, false].forEach((testValue) => {
-    it(`when the resultPreview state #isLoading is ${testValue} #state.isLoading should be ${testValue}`, () => {
-      engine.state.resultPreview = buildMockResultPreviewState({
-        isLoading: testValue,
-      });
-      initQuickview();
-
-      expect(quickview.state.isLoading).toBe(testValue);
-    });
-  });
-
-  it(`when the resultPreview is initialized,
-  #options.maximumPreviewSize is 0`, () => {
-    engine.state.resultPreview = buildMockResultPreviewState();
-    initQuickview();
-
-    expect(options.maximumPreviewSize).toBe(0);
+    expect(mockedLogDocumentQuickview).toHaveBeenCalledTimes(1);
+    expect(engine.dispatch).toHaveBeenCalledWith(
+      mockedLogDocumentQuickview.mock.results[0].value
+    );
   });
 });
