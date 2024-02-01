@@ -83,11 +83,15 @@ export interface AnalyticsState {
   originContext: string;
 
   /**
-   * Origin level 2 is a usage analytics event metadata whose value should typically be the name/identifier of the tab from which the usage analytics event originates.
+   * Sets the value of the Origin Level 2 dimension on the analytic events.
    *
-   * When logging a Search usage analytics event, originLevel2 should always be set to the same value as the corresponding tab (parameter) Search API query parameter so Coveo Machine Learning models function properly, and usage analytics reports and dashboards are coherent.
+   * Origin level 2 is a usage analytics event metadata whose value should typically be the name/identifier of the tab from which the usage analytics event originates. 
    *
-   * This value is optional, and will automatically try to resolve itself from the tab search parameter.
+   * In the context of product listing, the value should match the breadcrumb of the product listing page from which the usage analytics event originates (for example, `canoes-kayaks/kayaks/sea-kayaks`).
+   *
+   * When logging a usage analytics event, originLevel2 should always be set to the same value as the corresponding `tab` (parameter) Search API query parameter so Coveo Machine Learning models function properly, and usage analytics reports and dashboards are coherent.
+   *
+   * This value is optional, and will automatically try to resolve itself from the `tab` Search API query parameter.
    */
   originLevel2: string;
 
