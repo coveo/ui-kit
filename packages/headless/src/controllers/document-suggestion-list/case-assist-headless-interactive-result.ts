@@ -1,4 +1,5 @@
-import {CaseAssistEngine, Result} from '../../case-assist.index';
+import {Result} from '../../api/search/search/result';
+import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine';
 import {logDocumentSuggestionOpen} from '../../features/case-assist/case-assist-analytics-actions';
 import {
   buildInteractiveResultCore,

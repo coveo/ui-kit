@@ -1,5 +1,5 @@
-import {buildMockResult} from '../../test';
 import {createMockRecommendationState} from '../../test/mock-recommendation-state';
+import {buildMockResult} from '../../test/mock-result';
 import {
   RecommendationAnalyticsProvider,
   StateNeededByRecommendationAnalyticsProvider,

@@ -4,7 +4,8 @@ import {contextReducer as commerceContext} from '../../../features/commerce/cont
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
 import {executeSearch} from '../../../features/commerce/search/search-actions';
 import {commerceSearchReducer as commerceSearch} from '../../../features/commerce/search/search-slice';
-import {buildMockCommerceEngine, MockCommerceEngine} from '../../../test';
+import {MockCommerceEngine} from '../../../test/mock-engine';
+import {buildMockCommerceEngine} from '../../../test/mock-engine';
 import {buildSearch, Search} from './headless-search';
 
 describe('headless search', () => {

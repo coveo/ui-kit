@@ -5,7 +5,8 @@ import {
 } from '../../features/search-parameters/search-parameter-actions';
 import {initialSearchParameterSelector} from '../../features/search-parameters/search-parameter-selectors';
 import {executeSearch} from '../../features/search/search-actions';
-import {buildMockSearchAppEngine, MockSearchEngine} from '../../test';
+import {MockSearchEngine} from '../../test/mock-engine';
+import {buildMockSearchAppEngine} from '../../test/mock-engine';
 import {UrlManager, buildUrlManager} from './headless-url-manager';
 
 describe('url manager', () => {

@@ -98,3 +98,11 @@ const getFieldValuesFromResult = (fieldName: string, result: Result) => {
   const rawValue = getResultProperty(result, fieldName);
   return isArray(rawValue) ? rawValue : [rawValue];
 };
+
+export const ResultTemplatesHelpers = {
+  getResultProperty,
+  fieldsMustBeDefined,
+  fieldsMustNotBeDefined,
+  fieldMustMatch,
+  fieldMustNotMatch,
+};

@@ -1,8 +1,8 @@
+import {CoreEngine} from '../../app/engine';
 import {
   ContextPayload,
   ContextValue,
 } from '../../features/context/context-state';
-import {CoreEngine} from '../../product-listing.index';
 import {
   buildCoreContext,
   Context,

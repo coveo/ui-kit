@@ -1,7 +1,7 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-client';
+import {InsightEngine} from '../../app/insight-engine/insight-engine';
 import {searchReducer as search} from '../../features/search/search-slice';
-import {InsightEngine} from '../../insight.index';
 import {InsightAction} from '../analytics/analytics-utils';
 import {
   FetchQuerySuggestionsActionCreatorPayload,

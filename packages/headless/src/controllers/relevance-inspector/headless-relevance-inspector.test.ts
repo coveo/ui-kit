@@ -9,13 +9,13 @@ import {
 } from '../../features/fields/fields-actions';
 import {fieldsReducer as fields} from '../../features/fields/fields-slice';
 import {searchReducer as search} from '../../features/search/search-slice';
-import {createMockState} from '../../test';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
 } from '../../test/mock-engine';
 import {buildMockFieldDescription} from '../../test/mock-field-description';
 import {buildMockSearchResponseWithDebugInfo} from '../../test/mock-search-response';
+import {createMockState} from '../../test/mock-state';
 import {
   buildRelevanceInspector,
   RelevanceInspector,

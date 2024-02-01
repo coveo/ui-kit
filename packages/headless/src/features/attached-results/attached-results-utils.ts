@@ -1,5 +1,5 @@
 import {isString} from '@coveo/bueno';
-import {Result} from '../../insight.index';
+import {Result} from '../../api/search/search/result';
 import {AttachedResult} from './attached-results-state';
 
 const ensureStringOrUndefined = (

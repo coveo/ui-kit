@@ -1,5 +1,5 @@
+import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 import {fetchMoreResults} from '../../../features/insight-search/insight-search-actions';
-import {InsightEngine} from '../../../insight.index';
 import {
   buildCoreResultList,
   ResultList,

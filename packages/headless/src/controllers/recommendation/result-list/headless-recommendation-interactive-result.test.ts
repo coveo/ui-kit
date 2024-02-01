@@ -1,10 +1,10 @@
 import {logRecommendationOpen} from '../../../features/recommendation/recommendation-analytics-actions';
-import {buildMockResult} from '../../../test';
 import {
   buildMockRecommendationEngine,
   MockedRecommendationEngine,
 } from '../../../test/mock-engine-v2';
 import {createMockRecommendationState} from '../../../test/mock-recommendation-state';
+import {buildMockResult} from '../../../test/mock-result';
 import {buildInteractiveResultCore} from '../../core/interactive-result/headless-core-interactive-result';
 import {
   buildInteractiveResult,

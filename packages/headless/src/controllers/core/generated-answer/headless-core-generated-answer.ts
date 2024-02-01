@@ -1,6 +1,7 @@
 import {GeneratedAnswerAPIClient} from '../../../api/generated-answer/generated-answer-client';
 import {GeneratedAnswerCitation} from '../../../api/generated-answer/generated-answer-event-payload';
 import {SearchAPIClient} from '../../../api/search/search-api-client';
+import {CoreEngine} from '../../../app/engine';
 import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
 import {
   CustomAction,
@@ -20,7 +21,6 @@ import {GeneratedAnswerFeedback} from '../../../features/generated-answer/genera
 import {generatedAnswerReducer as generatedAnswer} from '../../../features/generated-answer/generated-answer-slice';
 import {GeneratedAnswerState} from '../../../features/generated-answer/generated-answer-state';
 import {GeneratedResponseFormat} from '../../../features/generated-answer/generated-response-format';
-import {CoreEngine} from '../../../product-listing.index';
 import {
   DebugSection,
   GeneratedAnswerSection,

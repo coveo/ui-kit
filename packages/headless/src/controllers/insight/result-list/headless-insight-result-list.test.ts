@@ -1,9 +1,9 @@
 import {fetchMoreResults} from '../../../features/insight-search/insight-search-actions';
-import {buildMockResult} from '../../../test';
 import {
   buildMockInsightEngine,
   MockInsightEngine,
 } from '../../../test/mock-engine';
+import {buildMockResult} from '../../../test/mock-result';
 import {buildResultList} from './headless-insight-result-list';
 
 describe('InsightResultList', () => {
