@@ -1,3 +1,9 @@
+## 1.7.7 (2024-02-01)
+
+### Bug Fixes
+
+- adjust playground event names (#80) ([1b452a2](/commits/1b452a2daacdabd1952818691f76856564c97163)), closes [#80](/issues/80)
+
 ## 1.7.6 (2024-01-15)
 
 ### Bug Fixes
