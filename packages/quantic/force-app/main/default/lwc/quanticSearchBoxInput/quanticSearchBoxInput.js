@@ -211,7 +211,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
    * @param {KeyboardEvent} event
    */
   onKeydown(event) {
-    if (event.key === keys.ENTER) {
+    if (event.key === keys.ENTER && !event.shiftKey) {
       event.preventDefault();
     }
   }
@@ -222,7 +222,9 @@ export default class QuanticSearchBoxInput extends LightningElement {
   onKeyup(event) {
     switch (event.key) {
       case keys.ENTER:
-        this.handleEnter();
+        if (!event.shiftKey) {
+          this.handleEnter();
+        }
         break;
       case keys.ARROWUP:
         this.suggestionListElement?.selectionUp();
@@ -254,10 +256,11 @@ export default class QuanticSearchBoxInput extends LightningElement {
     if (!this.textarea) {
       return;
     }
-    this.input.value = this.input.value.replace(/\n/g, '');
+    // this.input.value = this.input.value.replace(/\n/g, '');
     this.input.style.height = '';
     this.input.style.whiteSpace = 'pre-wrap';
     this.input.style.height = this.input.scrollHeight + 'px';
+    this.input.style.overflow = 'auto';
   }
 
   collapseTextArea() {
@@ -265,7 +268,9 @@ export default class QuanticSearchBoxInput extends LightningElement {
       return;
     }
     this.input.style.height = '';
+    this.input.scrollTop = 0;
     this.input.style.whiteSpace = 'nowrap';
+    this.input.style.overflow = 'hidden';
   }
 
   clearInput() {
@@ -291,6 +296,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
 
   handleHighlightChange(event) {
     this.input.value = event.detail?.rawValue;
+    this.adjustTextAreaHeight();
   }
 
   handleSuggestionSelection(event) {
