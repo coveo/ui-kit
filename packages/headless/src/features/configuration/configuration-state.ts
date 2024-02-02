@@ -91,7 +91,7 @@ export interface AnalyticsState {
    *
    * When logging a usage analytics event, originLevel2 should always be set to the same value as the corresponding `tab` (parameter) Search API query parameter so Coveo Machine Learning models function properly, and usage analytics reports and dashboards are coherent.
    *
-   * This value is optional, and will automatically try to resolve itself from the `tab` Search API query parameter.
+   * If left unspecified, this value will automatically try to resolve itself from the `tab` Search API query parameter.
    */
   originLevel2: string;
 
