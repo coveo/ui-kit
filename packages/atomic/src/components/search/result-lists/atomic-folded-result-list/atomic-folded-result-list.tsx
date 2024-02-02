@@ -99,6 +99,16 @@ export class AtomicFoldedResultList implements InitializableComponent {
   @Prop({reflect: true}) public childField?: string;
 
   /**
+   * The number of child results to fold under the root collection element, before expansion.
+   *
+   * @defaultValue `2`
+   *
+   * @example For an email thread with a total of 20 messages, using the default value of `2` will display the first two messages.
+   * The user can then click to expand the collection and see the remaining 18 messages, see the `atomic-load-more-children-results` component.
+   */
+  @Prop({reflect: true}) public numberOfFoldedResults = 2;
+
+  /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
    * You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.
    *
@@ -185,6 +195,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
           collectionField: this.collectionField,
           parentField: this.parentField,
           childField: this.childField,
+          numberOfFoldedResults: this.numberOfFoldedResults,
         },
       },
     });
