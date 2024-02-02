@@ -1,5 +1,5 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {SearchEngine} from '../..';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 import {staticFilterSetReducer as staticFilterSet} from '../../features/static-filter-set/static-filter-set-slice';
 import {
   registerStaticFilter,

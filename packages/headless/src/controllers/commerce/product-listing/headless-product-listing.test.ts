@@ -3,7 +3,8 @@ import {configuration} from '../../../app/common-reducers';
 import {contextReducer} from '../../../features/commerce/context/context-slice';
 import {fetchProductListing} from '../../../features/commerce/product-listing/product-listing-actions';
 import {productListingV2Reducer} from '../../../features/commerce/product-listing/product-listing-slice';
-import {buildMockCommerceEngine, MockCommerceEngine} from '../../../test';
+import {MockCommerceEngine} from '../../../test/mock-engine';
+import {buildMockCommerceEngine} from '../../../test/mock-engine';
 import {buildProductListing, ProductListing} from './headless-product-listing';
 
 describe('headless product-listing', () => {

@@ -1,5 +1,5 @@
-import {buildMockResult} from '../../test';
 import {buildMockRecommendation} from '../../test/mock-recommendation';
+import {buildMockResult} from '../../test/mock-result';
 import {
   getRecommendations,
   setRecommendationId,

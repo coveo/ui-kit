@@ -55,10 +55,10 @@ import {
   StateNeededBySearchAnalyticsProvider,
 } from '../../api/analytics/search-analytics';
 import {PreprocessRequest} from '../../api/preprocess-request';
+import {ProductRecommendation} from '../../api/search/search/product-recommendation';
 import {Raw} from '../../api/search/search/raw';
 import {Result} from '../../api/search/search/result';
 import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
-import {ProductRecommendation} from '../../product-listing.index';
 import {RecommendationAppState} from '../../state/recommendation-app-state';
 import {SearchAppState} from '../../state/search-app-state';
 import {

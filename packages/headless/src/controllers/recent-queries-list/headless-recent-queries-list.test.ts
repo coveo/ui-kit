@@ -11,7 +11,8 @@ import {logClearRecentQueries} from '../../features/recent-queries/recent-querie
 import {recentQueriesReducer as recentQueries} from '../../features/recent-queries/recent-queries-slice';
 import {executeSearch} from '../../features/search/search-actions';
 import {searchReducer as search} from '../../features/search/search-slice';
-import {buildMockSearchAppEngine, MockSearchEngine} from '../../test';
+import {MockSearchEngine} from '../../test/mock-engine';
+import {buildMockSearchAppEngine} from '../../test/mock-engine';
 import {
   buildRecentQueriesList,
   RecentQueriesList,

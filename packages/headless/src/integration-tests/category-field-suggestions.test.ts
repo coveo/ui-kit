@@ -1,14 +1,12 @@
-import {
-  buildSearchEngine,
-  getSampleSearchEngineConfiguration,
-  SearchEngine,
-  buildCategoryFieldSuggestions,
-  CategoryFieldSuggestions,
-  buildCategoryFacet,
-  CategoryFacet,
-  Facet,
-  buildFacet,
-} from '..';
+import {SearchEngine} from '../app/search-engine/search-engine';
+import {getSampleSearchEngineConfiguration} from '../app/search-engine/search-engine';
+import {buildSearchEngine} from '../app/search-engine/search-engine';
+import {CategoryFacet} from '../controllers/facets/category-facet/headless-category-facet';
+import {buildCategoryFacet} from '../controllers/facets/category-facet/headless-category-facet';
+import {buildFacet} from '../controllers/facets/facet/headless-facet';
+import {Facet} from '../controllers/facets/facet/headless-facet';
+import {CategoryFieldSuggestions} from '../controllers/field-suggestions/category-facet/headless-category-field-suggestions';
+import {buildCategoryFieldSuggestions} from '../controllers/field-suggestions/category-facet/headless-category-field-suggestions';
 import {waitForNextStateChange} from '../test/functional-test-utils';
 
 describe('category field suggestions', () => {

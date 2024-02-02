@@ -1,10 +1,8 @@
 import {PlatformClient} from '../../api/platform-client';
-import {
-  buildMockSearchAppEngine,
-  createMockState,
-  MockSearchEngine,
-} from '../../test';
+import {MockSearchEngine} from '../../test/mock-engine';
+import {buildMockSearchAppEngine} from '../../test/mock-engine';
 import {buildMockFieldDescription} from '../../test/mock-field-description';
+import {createMockState} from '../../test/mock-state';
 import {
   disableFetchAllFields,
   enableFetchAllFields,

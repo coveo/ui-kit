@@ -1,12 +1,12 @@
 import pino, {Logger} from 'pino';
+import {CaseAssistEngine} from '../app/case-assist-engine/case-assist-engine';
+import {CommerceEngine} from '../app/commerce-engine/commerce-engine';
 import type {CoreEngine} from '../app/engine';
-import type {CaseAssistEngine} from '../case-assist.index';
-import type {CommerceEngine} from '../commerce.index';
-import type {SearchEngine} from '../index';
-import type {InsightEngine} from '../insight.index';
-import type {ProductListingEngine} from '../product-listing.index';
-import type {ProductRecommendationEngine} from '../product-recommendation.index';
-import type {RecommendationEngine} from '../recommendation.index';
+import {InsightEngine} from '../app/insight-engine/insight-engine';
+import {ProductListingEngine} from '../app/product-listing-engine/product-listing-engine';
+import {ProductRecommendationEngine} from '../app/product-recommendation-engine/product-recommendation-engine';
+import {RecommendationEngine} from '../app/recommendation-engine/recommendation-engine';
+import {SearchEngine} from '../app/search-engine/search-engine';
 
 type SpyEverything<T> = {
   [K in keyof T]: T[K] extends (...args: infer A) => infer R

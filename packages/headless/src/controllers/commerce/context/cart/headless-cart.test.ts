@@ -6,7 +6,8 @@ import {
   updateItemQuantity,
 } from '../../../../features/commerce/context/cart/cart-actions';
 import {cartReducer} from '../../../../features/commerce/context/cart/cart-slice';
-import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
+import {MockCommerceEngine} from '../../../../test/mock-engine';
+import {buildMockCommerceEngine} from '../../../../test/mock-engine';
 import {buildCart, Cart} from './headless-cart';
 
 describe('headless commerce cart', () => {

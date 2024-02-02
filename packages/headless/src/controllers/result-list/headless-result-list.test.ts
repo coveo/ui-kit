@@ -1,9 +1,9 @@
 import {fetchMoreResults} from '../../features/search/search-actions';
-import {buildMockResult} from '../../test';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
 } from '../../test/mock-engine';
+import {buildMockResult} from '../../test/mock-result';
 import {buildResultList} from './headless-result-list';
 
 describe('ResultList', () => {

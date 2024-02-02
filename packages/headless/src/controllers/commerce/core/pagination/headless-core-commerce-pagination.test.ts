@@ -5,7 +5,8 @@ import {
 } from '../../../../features/commerce/pagination/pagination-actions';
 import {paginationReducer as commercePagination} from '../../../../features/commerce/pagination/pagination-slice';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
-import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
+import {MockCommerceEngine} from '../../../../test/mock-engine';
+import {buildMockCommerceEngine} from '../../../../test/mock-engine';
 import {
   buildCorePagination,
   Pagination,

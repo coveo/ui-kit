@@ -1,5 +1,5 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {CoreEngine} from '../..';
+import {CoreEngine} from '../../app/engine';
 import {paginationReducer as pagination} from '../../features/pagination/pagination-slice';
 import {
   nextPage,

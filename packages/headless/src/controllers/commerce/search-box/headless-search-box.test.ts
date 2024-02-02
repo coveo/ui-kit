@@ -1,8 +1,8 @@
 import {configuration} from '../../../app/common-reducers';
-import {updateQuery} from '../../../commerce.index';
 import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions';
 import {selectPage} from '../../../features/commerce/pagination/pagination-actions';
 import {fetchQuerySuggestions} from '../../../features/commerce/query-suggest/query-suggest-actions';
+import {updateQuery} from '../../../features/commerce/query/query-actions';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
 import {executeSearch} from '../../../features/commerce/search/search-actions';
 import {commerceSearchReducer as commerceSearch} from '../../../features/commerce/search/search-slice';
@@ -19,8 +19,9 @@ import {
 } from '../../../features/query-suggest/query-suggest-actions';
 import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice';
 import {CommerceAppState} from '../../../state/commerce-app-state';
-import {buildMockCommerceEngine, MockCommerceEngine} from '../../../test';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state';
+import {MockCommerceEngine} from '../../../test/mock-engine';
+import {buildMockCommerceEngine} from '../../../test/mock-engine';
 import {buildMockQuerySuggest} from '../../../test/mock-query-suggest';
 import {
   SearchBox,

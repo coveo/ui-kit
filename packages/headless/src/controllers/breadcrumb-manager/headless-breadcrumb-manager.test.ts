@@ -31,11 +31,6 @@ import {
   toggleSelectStaticFilterValue,
 } from '../../features/static-filter-set/static-filter-set-actions';
 import {SearchAppState} from '../../state/search-app-state';
-import {
-  buildMockSearchAppEngine,
-  createMockState,
-  MockSearchEngine,
-} from '../../test';
 import {buildMockAutomaticFacetResponse} from '../../test/mock-automatic-facet-response';
 import {buildMockAutomaticFacetSlice} from '../../test/mock-automatic-facet-slice';
 import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
@@ -45,6 +40,10 @@ import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request';
 import {buildMockDateFacetResponse} from '../../test/mock-date-facet-response';
 import {buildMockDateFacetSlice} from '../../test/mock-date-facet-slice';
 import {buildMockDateFacetValue} from '../../test/mock-date-facet-value';
+import {
+  MockSearchEngine,
+  buildMockSearchAppEngine,
+} from '../../test/mock-engine';
 import {buildMockFacetRequest} from '../../test/mock-facet-request';
 import {buildMockFacetResponse} from '../../test/mock-facet-response';
 import {buildMockFacetSlice} from '../../test/mock-facet-slice';
@@ -53,6 +52,7 @@ import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-reques
 import {buildMockNumericFacetResponse} from '../../test/mock-numeric-facet-response';
 import {buildMockNumericFacetSlice} from '../../test/mock-numeric-facet-slice';
 import {buildMockNumericFacetValue} from '../../test/mock-numeric-facet-value';
+import {createMockState} from '../../test/mock-state';
 import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice';
 import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value';
 import {

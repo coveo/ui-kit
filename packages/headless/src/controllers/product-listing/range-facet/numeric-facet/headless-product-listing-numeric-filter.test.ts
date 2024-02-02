@@ -1,9 +1,7 @@
 import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions';
 import {ProductListingAppState} from '../../../../state/product-listing-app-state';
-import {
-  buildMockProductListingEngine,
-  MockProductListingEngine,
-} from '../../../../test';
+import {MockProductListingEngine} from '../../../../test/mock-engine';
+import {buildMockProductListingEngine} from '../../../../test/mock-engine';
 import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
 import {buildMockProductListingState} from '../../../../test/mock-product-listing-state';
