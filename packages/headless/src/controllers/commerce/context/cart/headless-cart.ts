@@ -1,8 +1,7 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {
   setItems,
-  updateItemMetadata,
-  updateItemQuantity,
+  updateItem,
 } from '../../../../features/commerce/context/cart/cart-actions';
 import {cartReducer as cart} from '../../../../features/commerce/context/cart/cart-slice';
 import {cartSchema} from '../../../../features/commerce/context/cart/cart-validation';
@@ -13,38 +12,47 @@ import {
   buildController,
   Controller,
 } from '../../../controller/headless-controller';
+import {
+  itemSelector,
+  itemsSelector,
+  totalPriceSelector,
+  totalQuantitySelector,
+} from './headless-cart-selectors';
 
 export interface CartOptions {
   items?: CartItem[];
 }
 
+/**
+ * The shape of a cart item.
+ */
 export interface CartItem {
+  /**
+   * The unique identifier of the product.
+   */
   productId: string;
+
+  /**
+   * The human-readable name of the product.
+   */
   name: string;
+
+  /**
+   * The price per unit of the product.
+   */
   price: number;
+
+  /**
+   * The number of units of the product in the cart.
+   */
   quantity: number;
 }
 
 export interface CartProps {
   /**
-   * The initial options that should be applied to this `Cart` controller.
+   * The initial options to apply to this `Cart` controller.
    */
   options?: CartOptions;
-}
-
-/**
- * The metadata of a cart item.
- */
-interface CartItemMetadata {
-  /**
-   * The name of the item.
-   */
-  name?: string;
-
-  /**
-   * The price of the item.
-   */
-  price?: number;
 }
 
 /**
@@ -52,35 +60,29 @@ interface CartItemMetadata {
  */
 export interface Cart extends Controller {
   /**
-   * Updates the quantity of an item in the cart, and emits an `ec.cartAction` analytics event if needed.
+   * Creates, updates, or deletes an item in the cart, and emits an `ec.cartAction` analytics event if the `quantity` of
+   * the item in the cart changes.
    *
-   * If the specified `itemId` is already in the cart:
-   * - Setting `quantity` to `0` will remove the item from the cart.
-   * - Setting `quantity` to a positive number will update the item's quantity in the cart to the specified quantity.
+   * If an item with the specified `productId` already exists in the cart:
+   * - Setting `quantity` to `0` deletes the item from the cart; `name` and `price` have no effect.
+   * - Setting `quantity` to a positive number updates the item's `name`, `price`, and `quantity` to the
+   * specified values.
    *
    * Otherwise:
-   * - Setting `quantity` to a positive number will add the item to the cart with the specified quantity.
+   * - Setting `quantity` to a positive number creates the item in the cart with the specified `productName`,
+   * `pricePerUnit`, and `quantity`.
    *
-   * In any case, if the specified quantity is equivalent to the current quantity of the item in the cart, no action is
-   * taken.
+   * If the specified `quantity` is equivalent to the current quantity of the item in the cart, no analytics event is
+   * emitted. Otherwise, the method emits an `ec.cartAction` event with the appropriate action (`add` or `remove`).
    *
-   * @param itemId - The ID of the cart item to update.
-   * @param quantity - The new quantity of the cart item.
+   * @param item - The cart item to create, update, or delete.
    */
-  updateItemQuantity(itemId: string, quantity: number): void;
-
-  /**
-   * Updates the metadata of an item in the cart.
-   *
-   * @param itemId - The ID of the cart item to update.
-   * @param metadata - The new metadata of the cart item.
-   */
-  updateItemMetadata(itemId: string, metadata: CartItemMetadata): void;
+  updateItem(item: CartItem): void;
 
   /**
    * Sets the quantity of each item in the cart to 0, effectively emptying the cart.
    *
-   * Emits an `ec.cartAction` analytics event for each item removed from the cart.
+   * Emits an `ec.cartAction` analytics event with the `remove` action for each item removed from the cart.
    */
   empty(): void;
 
@@ -95,30 +97,28 @@ export interface Cart extends Controller {
   /**
    * A scoped and simplified part of the headless state that is relevant to the `Cart` controller.
    */
-  state: CartState;
+  state: CartControllerState;
 }
 
 /**
  * The state of the `Cart` controller.
  */
-export interface CartState {
+export interface CartControllerState {
   /**
    * The items in the cart.
    */
-  cart: CartItem[];
+  items: CartItem[];
 
   /**
-   * The total number of items in the cart.
+   * The sum total of the `quantity` of each item in the cart.
    */
-  totalItems: number;
+  totalQuantity: number;
 
   /**
-   * The total price of the items in the cart.
+   * The sum total of the `price` multiplied by the `quantity` of each item in the cart.
    */
   totalPrice: number;
 }
-
-export type CartControllerState = Cart['state'];
 
 /**
  * Creates a `Cart` controller instance.
@@ -134,7 +134,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
 
   const {dispatch} = engine;
   const controller = buildController(engine);
-  const getState = () => engine.state;
+  const getState = () => engine.state.cart;
 
   const options = {
     ...props.options,
@@ -147,7 +147,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
   }
 
   function isNewQuantityDifferent(productId: string, quantity: number) {
-    const item = getState().cart.cart[productId];
+    const item = itemSelector(getState(), productId);
     if (!item) {
       return quantity > 0;
     }
@@ -159,8 +159,8 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     ...controller,
 
     empty: function () {
-      for (const item of this.state.cart) {
-        this.updateItemQuantity(item.productId, 0);
+      for (const item of itemsSelector(getState())) {
+        this.updateItem({...item, quantity: 0});
       }
     },
 
@@ -169,34 +169,21 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
       dispatch(setItems([]));
     },
 
-    updateItemMetadata(productId: string, metadata: CartItemMetadata) {
-      dispatch(updateItemMetadata({productId, ...metadata}));
-    },
-
-    updateItemQuantity: (productId: string, quantity: number) => {
-      if (isNewQuantityDifferent(productId, quantity)) {
-        dispatch(
-          updateItemQuantity({
-            productId,
-            quantity,
-          })
-          // TODO: log ec.cartAction; if new quantity > previous, 'add', otherwise, 'remove'.
-        );
+    updateItem(item: CartItem) {
+      if (isNewQuantityDifferent(item.productId, item.quantity)) {
+        // TODO: log ec.cartAction; if new quantity > previous, 'add', otherwise, 'remove'.
       }
+
+      dispatch(updateItem(item));
     },
 
     get state() {
-      const {cart, cartItems} = getState().cart;
-      const inCart = cartItems.map((id: string) => cart[id]) as CartItem[];
-      const totalItems = inCart.reduce((prev, cur) => prev + cur.quantity, 0);
-      const totalPrice = inCart.reduce(
-        (prev, cur) => prev + cur.price * cur.quantity,
-        0
-      );
+      const cartState = getState();
+
       return {
-        cart: inCart,
-        totalItems,
-        totalPrice,
+        items: itemsSelector(cartState),
+        totalQuantity: totalQuantitySelector(cartState),
+        totalPrice: totalPriceSelector(cartState),
       };
     },
   };

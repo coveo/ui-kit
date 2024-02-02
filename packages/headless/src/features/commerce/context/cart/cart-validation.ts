@@ -1,42 +1,32 @@
-import {ArrayValue, NumberValue, RecordValue, Schema} from '@coveo/bueno';
+import {
+  ArrayValue,
+  NumberValue,
+  RecordValue,
+  Schema,
+  StringValue,
+} from '@coveo/bueno';
 import {requiredNonEmptyString} from '../../../../utils/validate-payload';
 
-export const productIdDefinition = {
+export const updateItemPayloadDefinition = {
   productId: requiredNonEmptyString,
-};
-
-export const basicCartItemDefinition = {
-  ...productIdDefinition,
   quantity: new NumberValue({
-    required: true,
-    min: 1,
-  }),
-};
-
-const cartItemMetadataDefinition = {
-  name: requiredNonEmptyString,
-  price: new NumberValue({
     required: true,
     min: 0,
   }),
+  name: new StringValue({required: false}),
+  price: new NumberValue({required: false, min: 0}),
 };
 
-export const cartItemMetadataWithProductIdDefinition = {
-  ...productIdDefinition,
-  ...cartItemMetadataDefinition,
-};
-
-export const cartItemsDefinition = new ArrayValue({
+export const setItemsPayloadDefinition = new ArrayValue({
   each: new RecordValue({
     values: {
-      ...basicCartItemDefinition,
-      ...cartItemMetadataDefinition,
+      ...updateItemPayloadDefinition,
     },
   }),
 });
 
 export const cartDefinition = {
-  items: cartItemsDefinition,
+  items: setItemsPayloadDefinition,
 };
 
 export const cartSchema = new Schema(cartDefinition);

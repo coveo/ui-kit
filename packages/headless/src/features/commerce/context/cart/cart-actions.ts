@@ -1,34 +1,20 @@
 import {createAction} from '@reduxjs/toolkit';
 import {CartItemParam} from '../../../../api/commerce/commerce-api-params';
 import {validatePayload} from '../../../../utils/validate-payload';
+import {CartItemMetadata} from './cart-state';
 import {
-  basicCartItemDefinition,
-  cartItemsDefinition,
-  cartItemMetadataWithProductIdDefinition,
+  setItemsPayloadDefinition,
+  updateItemPayloadDefinition,
 } from './cart-validation';
-
-export interface CartItemMetadata extends Pick<CartItemParam, 'productId'> {
-  name?: string;
-  price?: number;
-}
-
-export interface AugmentedCartItemParam
-  extends CartItemParam,
-    CartItemMetadata {}
 
 export const setItems = createAction(
   'commerce/cart/setItems',
-  (payload: Required<AugmentedCartItemParam>[]) =>
-    validatePayload<CartItemParam[]>(payload, cartItemsDefinition)
+  (payload: (CartItemParam & CartItemMetadata)[]) =>
+    validatePayload<CartItemParam[]>(payload, setItemsPayloadDefinition)
 );
 
-export const updateItemQuantity = createAction(
-  'commerce/cart/updateItemQuantity',
-  (payload: CartItemParam) => validatePayload(payload, basicCartItemDefinition)
-);
-
-export const updateItemMetadata = createAction(
-  'commerce/cart/updateItemMetadata',
-  (payload: CartItemMetadata) =>
-    validatePayload(payload, cartItemMetadataWithProductIdDefinition)
+export const updateItem = createAction(
+  'commerce/cart/updateItem',
+  (payload: CartItemParam & CartItemMetadata) =>
+    validatePayload(payload, updateItemPayloadDefinition)
 );
