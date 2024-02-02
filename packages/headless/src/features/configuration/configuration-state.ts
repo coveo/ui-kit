@@ -73,7 +73,7 @@ export interface AnalyticsState {
   nextApiBaseUrl: string;
 
   /**
-   * Sets the Origin Context dimension on the analytic events.
+   * Sets the Origin Context dimension on the analytics events.
    *
    * You can use this dimension to specify the context of your application.
    * Suggested values are "Search", "InternalSearch" and "CommunitySearch"
@@ -83,9 +83,9 @@ export interface AnalyticsState {
   originContext: string;
 
   /**
-   * Sets the value of the Origin Level 2 dimension on the analytic events.
+   * Sets the value of the Origin Level 2 dimension on the analytics events.
    *
-   * Origin level 2 is a usage analytics event metadata whose value should typically be the name/identifier of the tab from which the usage analytics event originates. 
+   * Origin level 2 is a usage analytics event metadata whose value should typically be the name/identifier of the tab from which the usage analytics event originates.
    *
    * In the context of product listing, the value should match the breadcrumb of the product listing page from which the usage analytics event originates (for example, `canoes-kayaks/kayaks/sea-kayaks`).
    *
