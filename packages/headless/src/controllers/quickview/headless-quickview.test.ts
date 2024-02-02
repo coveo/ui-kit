@@ -79,8 +79,9 @@ describe('Quickview', () => {
 
   it('#fetchResultContentCallback logs a document quickview', () => {
     const mockedLogDocumentQuickview = jest.mocked(logDocumentQuickview);
+    const coreQuickviewParamsFetchResultContentCallback = mockedBuildCoreQuickview.mock.calls[0][4];
 
-    mockedBuildCoreQuickview.mock.calls[0][4]?.();
+    coreQuickviewParamsFetchResultContentCallback?.();
 
     expect(mockedLogDocumentQuickview).toHaveBeenCalledTimes(1);
     expect(engine.dispatch).toHaveBeenCalledWith(

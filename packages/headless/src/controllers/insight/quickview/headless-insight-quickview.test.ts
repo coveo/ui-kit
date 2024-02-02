@@ -78,7 +78,8 @@ describe('Insight Quickview', () => {
       requestedOutputSize: 0,
     };
 
-    mockedBuildCoreQuickview.mock.calls[0][2](state, someHtmlRequestOptions);
+    const coreQuickviewParamsBuildResultPreviewRequest = mockedBuildCoreQuickview.mock.calls[0][2];
+    coreQuickviewParamsBuildResultPreviewRequest(state, someHtmlRequestOptions);
 
     expect(mockedBuildInsightResultPreviewRequest).toHaveBeenCalledTimes(1);
     expect(mockedBuildInsightResultPreviewRequest).toHaveBeenCalledWith(
@@ -89,8 +90,9 @@ describe('Insight Quickview', () => {
 
   it('#fetchResultContentCallback logs a document quickview', () => {
     const mockedLogDocumentQuickview = jest.mocked(logDocumentQuickview);
+    const coreQuickviewParamsFetchResultContentCallback = mockedBuildCoreQuickview.mock.calls[0][4];
 
-    mockedBuildCoreQuickview.mock.calls[0][4]?.();
+    coreQuickviewParamsFetchResultContentCallback?.();
 
     expect(mockedLogDocumentQuickview).toHaveBeenCalledTimes(1);
     expect(engine.dispatch).toHaveBeenCalledWith(
