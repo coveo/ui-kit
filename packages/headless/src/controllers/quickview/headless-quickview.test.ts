@@ -37,6 +37,7 @@ describe('Quickview', () => {
   }
 
   beforeEach(() => {
+    jest.resetAllMocks();
     initEngine();
     options = {
       result: buildMockResult(),
