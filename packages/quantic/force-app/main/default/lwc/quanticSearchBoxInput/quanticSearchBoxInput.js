@@ -179,15 +179,18 @@ export default class QuanticSearchBoxInput extends LightningElement {
     this.dispatchEvent(selectSuggestionEvent);
   }
 
-  handleEnter() {
-    const selectedSuggestion =
-      this.suggestionListElement?.getCurrentSelectedValue();
-    if (this.areSuggestionsOpen && selectedSuggestion) {
-      this.sendSelectSuggestionEvent(selectedSuggestion.rawValue);
-    } else {
-      this.sendSubmitSearchEvent();
+  handleEnter(event) {
+    const isLineBreak = this.textarea && event.shiftKey;
+    if (!isLineBreak) {
+      const selectedSuggestion =
+        this.suggestionListElement?.getCurrentSelectedValue();
+      if (this.areSuggestionsOpen && selectedSuggestion) {
+        this.sendSelectSuggestionEvent(selectedSuggestion.rawValue);
+      } else {
+        this.sendSubmitSearchEvent();
+      }
+      this.input.blur();
     }
-    this.input.blur();
   }
 
   handleValueChange() {
@@ -222,9 +225,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
   onKeyup(event) {
     switch (event.key) {
       case keys.ENTER:
-        if (!event.shiftKey) {
-          this.handleEnter();
-        }
+        this.handleEnter(event);
         break;
       case keys.ARROWUP:
         this.suggestionListElement?.selectionUp();

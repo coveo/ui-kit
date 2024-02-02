@@ -354,7 +354,9 @@ describe('c-quantic-search-box-input', () => {
             ).toHaveBeenCalledTimes(1);
           });
 
-          it('should not dispatch a #quantic__submitsearch custom event when the shift key is pressed', async () => {
+          it(`should ${
+            textareaValue ? 'not ' : ''
+          }dispatch a #quantic__submitsearch custom event when the shift key is pressed`, async () => {
             const element = createTestComponent({
               ...defaultOptions,
               textarea: textareaValue,
@@ -376,7 +378,7 @@ describe('c-quantic-search-box-input', () => {
 
             expect(
               functionsMocks.exampleHandleSubmitSearch
-            ).toHaveBeenCalledTimes(0);
+            ).toHaveBeenCalledTimes(textareaValue ? 0 : 1);
           });
         });
       });
