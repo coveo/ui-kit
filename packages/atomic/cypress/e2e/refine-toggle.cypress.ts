@@ -21,6 +21,7 @@ import {
   addRefineToggleRangeVariations,
   addRefineToggleWithAutomaticFacets,
   addRefineToggleWithStaticFacets,
+  addRefineToggleWithStaticFacetsAndNoManager,
   addRefineToggleWithoutFacets,
 } from './refine-toggle-actions';
 import {
@@ -68,6 +69,36 @@ describe('Refine Toggle Test Suites', () => {
 
     it('should not display the filter section', () => {
       RefineModalSelectors.filterSection().should('not.exist');
+    });
+  });
+
+  describe('when the modal is opened with static facets and no facet manager', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(addRefineToggleWithStaticFacetsAndNoManager())
+        .withMobileViewport()
+        .init();
+      cy.wait(1000);
+      RefineToggleSelectors.buttonOpen().click();
+    });
+
+    it('should display the facets in the correct order', () => {
+      const expectedFacetOrder = [
+        facetField,
+        numericFacetField,
+        hierarchicalField,
+        ratingFacetField,
+        ratingRangeFacetField,
+        colorFacetField,
+        timeframeFacetField,
+      ];
+
+      RefineModalSelectors.facets()
+        .children()
+        .each(($facet, index) => {
+          const expectedFacet = expectedFacetOrder[index];
+          cy.wrap($facet).should('have.attr', 'field', expectedFacet);
+        });
     });
   });
 
