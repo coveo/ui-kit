@@ -184,7 +184,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
 
   handleEnter(event) {
     const isLineBreak = this.textarea && event.shiftKey;
-    if (!this.ignoreNextEnterKeyPress || !isLineBreak) {
+    if (!(this.ignoreNextEnterKeyPress || isLineBreak)) {
       const selectedSuggestion =
         this.suggestionListElement?.getCurrentSelectedValue();
       if (this.areSuggestionsOpen && selectedSuggestion) {
