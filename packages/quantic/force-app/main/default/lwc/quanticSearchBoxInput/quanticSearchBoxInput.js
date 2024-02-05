@@ -197,11 +197,6 @@ export default class QuanticSearchBoxInput extends LightningElement {
     this.sendInputValueChangeEvent(this.input.value, false);
   }
 
-  handleKeyValues() {
-    // Reset selection set to true for key pressed other than ARROW keys and ENTER.
-    this.sendInputValueChangeEvent(this.input.value, true);
-  }
-
   onSubmit(event) {
     event.stopPropagation();
     this.sendInputValueChangeEvent(this.input.value, false);
@@ -234,7 +229,8 @@ export default class QuanticSearchBoxInput extends LightningElement {
         this.suggestionListElement?.selectionDown();
         break;
       default:
-        this.handleKeyValues();
+        // Reset selection set to true for key pressed other than ARROW keys and ENTER.
+        this.sendInputValueChangeEvent(this.input.value, true);
     }
   }
 
