@@ -1235,4 +1235,15 @@ describe('Facet v1 Test Suites', () => {
       FacetSelectors.valueLabel().eq(1).should('contain.text', 'rssitem');
     });
   });
+
+  it('should use the Coveo platform defined label when none is provided', () => {
+    new TestFixture().with(addFacet({field: 'objecttype'})).init();
+    // The label Object type is defined in the Coveo administration tool for the organization searchuisamples
+    FacetSelectors.labelButton().should('contain.text', 'Object type');
+  });
+
+  it('should use No label when none is provided and there is no fallback configured in the Coveo platform', () => {
+    new TestFixture().with(addFacet({field: 'filetype'})).init();
+    FacetSelectors.labelButton().should('contain.text', 'No label');
+  });
 });

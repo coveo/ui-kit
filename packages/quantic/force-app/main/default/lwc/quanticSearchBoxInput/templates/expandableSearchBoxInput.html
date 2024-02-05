@@ -46,9 +46,10 @@
                 >
                   <lightning-button-icon
                     onclick={clearInput}
+                    onkeydown={handleKeyDownOnClearButton}
                     icon-name="utility:close"
-                    class="slds-grid searchbox__clear-button"
                     variant="bare"
+                    class="slds-grid searchbox__clear-button"
                     size="medium"
                     name={labels.clear}
                     title={labels.clear}
