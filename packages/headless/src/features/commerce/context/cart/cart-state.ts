@@ -1,9 +1,6 @@
 import {CartItemParam} from '../../../../api/commerce/commerce-api-params';
 
-/**
- * Additional cart item metadata required for logging analytics events.
- */
-export interface CartItemMetadata {
+export interface CartItemWithMetadata extends CartItemParam {
   /**
    * The name of the cart item.
    */
@@ -16,7 +13,7 @@ export interface CartItemMetadata {
 
 export interface CartState {
   cartItems: string[];
-  cart: Record<string, CartItemParam & CartItemMetadata>;
+  cart: Record<string, CartItemWithMetadata>;
 }
 
 export const getCartInitialState = (): CartState => ({

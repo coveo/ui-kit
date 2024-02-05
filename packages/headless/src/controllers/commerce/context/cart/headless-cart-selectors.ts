@@ -1,6 +1,5 @@
-import {CartItemParam} from '../../../../api/commerce/commerce-api-params';
 import {
-  CartItemMetadata,
+  CartItemWithMetadata,
   CartState,
 } from '../../../../features/commerce/context/cart/cart-state';
 
@@ -8,9 +7,7 @@ export function itemSelector(cartState: CartState, productId: string) {
   return cartState.cart[productId];
 }
 
-export function itemsSelector(
-  cartState: CartState
-): (CartItemParam & CartItemMetadata)[] {
+export function itemsSelector(cartState: CartState): CartItemWithMetadata[] {
   const {cart, cartItems} = cartState;
 
   return cartItems.map((id: string) => cart[id]);

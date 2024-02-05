@@ -1,7 +1,10 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {CartItemParam} from '../../../../api/commerce/commerce-api-params';
 import {setItems, updateItem} from './cart-actions';
-import {CartItemMetadata, CartState, getCartInitialState} from './cart-state';
+import {
+  CartItemWithMetadata,
+  CartState,
+  getCartInitialState,
+} from './cart-state';
 
 export const cartReducer = createReducer(
   getCartInitialState(),
@@ -39,10 +42,7 @@ export const cartReducer = createReducer(
   }
 );
 
-function createItemInCart(
-  item: CartItemParam & CartItemMetadata,
-  state: CartState
-) {
+function createItemInCart(item: CartItemWithMetadata, state: CartState) {
   if (item.quantity <= 0) {
     return;
   }
