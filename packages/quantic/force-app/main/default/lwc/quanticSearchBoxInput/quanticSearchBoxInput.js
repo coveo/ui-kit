@@ -249,7 +249,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
   }
 
   onTextAreaInput() {
-    this.handleValueChange();
+    this.sendInputValueChangeEvent(this.input.value, true);
     this.adjustTextAreaHeight();
   }
 
