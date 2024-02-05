@@ -142,6 +142,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
 
   validateOptions(engine, cartSchema, options, 'buildCart');
 
+  // TODO: expose some helpers to facilitate storing / restoring the cart state for MPAs
   if (options.items) {
     dispatch(setItems(options.items));
   }
