@@ -43,7 +43,7 @@ describe('cart-slice', () => {
   });
 
   describe('#updateItem', () => {
-    it('should add new item to cart if item is not already in cart and specified quantity is positive', () => {
+    it('adds new item to cart if item is not already in cart and specified quantity is positive', () => {
       const updatedState = cartReducer(state, updateItem(someItem));
       expect(updatedState.cartItems).toEqual([someItem.productId]);
       expect(updatedState.cart).toEqual({
@@ -51,7 +51,7 @@ describe('cart-slice', () => {
       });
     });
 
-    it('should not add new item to cart if item is not already in cart and specified quantity is 0', () => {
+    it('does not add new item to cart if item is not already in cart and specified quantity is 0', () => {
       const updatedState = cartReducer(
         state,
         updateItem({...someItem, quantity: 0})
@@ -60,7 +60,7 @@ describe('cart-slice', () => {
       expect(updatedState.cart).toEqual({});
     });
 
-    it('should remove existing item from cart if specified quantity is 0', () => {
+    it('removes existing item from cart if specified quantity is 0', () => {
       const updatedState = cartReducer(
         {
           cartItems: [someItem.productId],
@@ -74,7 +74,7 @@ describe('cart-slice', () => {
       expect(updatedState.cart).toEqual({});
     });
 
-    it('should update existing item in cart if specified quantity is greater than 0', () => {
+    it('updates existing item in cart if specified quantity is greater than 0', () => {
       const updatedState = cartReducer(
         {
           cartItems: [someItem.productId],
