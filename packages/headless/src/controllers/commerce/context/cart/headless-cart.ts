@@ -97,13 +97,13 @@ export interface Cart extends Controller {
   /**
    * A scoped and simplified part of the headless state that is relevant to the `Cart` controller.
    */
-  state: CartControllerState;
+  state: CartState;
 }
 
 /**
  * The state of the `Cart` controller.
  */
-export interface CartControllerState {
+export interface CartState {
   /**
    * The items in the cart.
    */

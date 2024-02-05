@@ -70,7 +70,7 @@ export type {
   CartItem,
   CartProps,
   Cart,
-  CartControllerState,
+  CartState,
 } from './controllers/commerce/context/cart/headless-cart';
 export {buildCart} from './controllers/commerce/context/cart/headless-cart';
 
