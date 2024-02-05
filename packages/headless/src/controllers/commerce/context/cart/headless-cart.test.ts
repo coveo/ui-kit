@@ -51,37 +51,39 @@ describe('headless commerce cart', () => {
     initCart();
   });
 
-  it('initializes', () => {
-    expect(cart).toBeTruthy();
-  });
-
-  it('exposes a #subscribe method', () => {
-    expect(cart.subscribe).toBeTruthy();
-  });
-
-  it('adds the correct reducers to engine', () => {
-    expect(engine.addReducers).toHaveBeenCalledWith({
-      cart: cartReducer,
-      context: contextReducer,
+  describe('initialization', () => {
+    it('initializes', () => {
+      expect(cart).toBeTruthy();
     });
-  });
 
-  it('dispatches #setItems with correct payload if options include items', () => {
-    const mockedSetItems = jest.mocked(setItems);
+    it('exposes a #subscribe method', () => {
+      expect(cart.subscribe).toBeTruthy();
+    });
 
-    expect(mockedSetItems).toHaveBeenCalledWith(options.items);
-    expect(engine.dispatch).toHaveBeenCalledWith(
-      mockedSetItems.mock.results[0].value
-    );
-  });
+    it('adds the correct reducers to engine', () => {
+      expect(engine.addReducers).toHaveBeenCalledWith({
+        cart: cartReducer,
+        context: contextReducer,
+      });
+    });
 
-  it('does not dispatch #setItems if options do not include items', () => {
-    jest.resetAllMocks();
-    const mockedSetItems = jest.mocked(setItems);
+    it('dispatches #setItems with correct payload if options include items', () => {
+      const mockedSetItems = jest.mocked(setItems);
 
-    options = {};
-    initCart();
-    expect(mockedSetItems).not.toHaveBeenCalled();
+      expect(mockedSetItems).toHaveBeenCalledWith(options.items);
+      expect(engine.dispatch).toHaveBeenCalledWith(
+        mockedSetItems.mock.results[0].value
+      );
+    });
+
+    it('does not dispatch #setItems if options do not include items', () => {
+      jest.resetAllMocks();
+      const mockedSetItems = jest.mocked(setItems);
+
+      options = {};
+      initCart();
+      expect(mockedSetItems).not.toHaveBeenCalled();
+    });
   });
 
   it('#empty calls #updateItem with quantity of 0 for each item in the cart', () => {
@@ -99,7 +101,7 @@ describe('headless commerce cart', () => {
   });
 
   describe('#purchase', () => {
-    // TODO: it('logs #ec.purchase with correct payload', () => { /* ... */ });
+    // TODO LENS-1498: it('logs #ec.purchase with correct payload', () => { /* ... */ });
 
     it('dispatches #setItems with empty array', () => {
       const mockedSetItems = jest.mocked(setItems);
@@ -111,11 +113,11 @@ describe('headless commerce cart', () => {
   });
 
   describe('#updateItem', () => {
-    // TODO: it('logs #ec.cartAction with "add" action and correct payload if quantity > 0 and item does not exist in cart', () => { /* ... */ });
-    // TODO: it('logs #ec.cartAction with "add" action and correct payload if item exists in cart and new quantity > current', () => { /* ... */ });
-    // TODO: it('logs #ec.cartAction with "remove" action and correct payload if item exists in cart and new quantity < current', () => { /* ... */ });
-    // TODO: it('does not log #ec.cartAction if item exists in cart and new quantity = current', () => { /* ... */ });
-    // TODO: it('does not log #ec.cartAction if item does not exist in cart and new quantity = 0', () => { /* ... */ });
+    // TODO LENS-1497: it('logs #ec.cartAction with "add" action and correct payload if quantity > 0 and item does not exist in cart', () => { /* ... */ });
+    // TODO LENS-1497: it('logs #ec.cartAction with "add" action and correct payload if item exists in cart and new quantity > current', () => { /* ... */ });
+    // TODO LENS-1497: it('logs #ec.cartAction with "remove" action and correct payload if item exists in cart and new quantity < current', () => { /* ... */ });
+    // TODO LENS-1497: it('does not log #ec.cartAction if item exists in cart and new quantity = current', () => { /* ... */ });
+    // TODO LENS-1497: it('does not log #ec.cartAction if item does not exist in cart and new quantity = 0', () => { /* ... */ });
   });
 
   describe('#state', () => {
