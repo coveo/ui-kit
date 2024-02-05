@@ -354,7 +354,7 @@ interface FacetCommonRenderProps {
 export class FacetCommon {
   private host: HTMLElement;
   private bindings: AnyBindings;
-  private label: string;
+  public label: string;
   private field: string;
   private headingLevel: number;
   private displayValuesAs: FacetDisplayValues;

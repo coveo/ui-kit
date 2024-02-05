@@ -509,13 +509,15 @@ export class AtomicSearchBox {
   }
 
   private onInput(value: string) {
+    this.searchBox.updateText(value);
+
     this.isSearchDisabled =
       this.disableSearch || this.minimumQueryLength > value.trim().length;
     if (this.isSearchDisabled) {
       return;
     }
     this.isExpanded = true;
-    this.searchBox.updateText(value);
+
     this.updateActiveDescendant();
     this.debouncedQuerySuggestionOnKeypress();
   }
