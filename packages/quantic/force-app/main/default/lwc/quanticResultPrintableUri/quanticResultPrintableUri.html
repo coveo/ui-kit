@@ -15,7 +15,7 @@
           <lightning-icon class="slds-m-horizontal_xx-small result-parenturi__separator slds-current-color" icon-name="utility:chevronright" size="xx-small"></lightning-icon>
         </div>
       </template>
-      <template lwc:if={shouldDisplayLink}>
+      <template lwc:if={shouldDisplayPrintableUriLink}>
         <a class="slds-truncate" href={hrefValue} aria-label={ariaLabelValue} target={target} onclick={handleClick} tabindex="0" role="link" data-test="link">
           <c-quantic-result-text result={result} field="printableUri"></c-quantic-result-text>
         </a>

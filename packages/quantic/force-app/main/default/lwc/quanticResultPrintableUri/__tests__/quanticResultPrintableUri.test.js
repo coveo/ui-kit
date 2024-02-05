@@ -98,10 +98,10 @@ describe('c-quantic-result-printable-uri', () => {
           });
           await flushPromises();
 
-          const LinkKnowledgeArticle = element.shadowRoot.querySelector(
+          const linkKnowledgeArticle = element.shadowRoot.querySelector(
             selectors.link
           );
-          LinkKnowledgeArticle.click();
+          linkKnowledgeArticle.click();
 
           const {pageReference} = getNavigateCalledWith();
 

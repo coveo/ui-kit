@@ -49,6 +49,8 @@ export default class QuanticResultPrintableUri extends NavigationMixin(
   error;
   /** @type {string} */
   salesforceRecordUrl;
+  /** @type {object} */
+  targetPageRef;
 
   labels = {
     navigateToRecord,
@@ -57,13 +59,14 @@ export default class QuanticResultPrintableUri extends NavigationMixin(
 
   connectedCallback() {
     if (this.isSalesforceLink) {
-      this[NavigationMixin.GenerateUrl]({
+      this.targetPageRef = {
         type: 'standard__recordPage',
         attributes: {
           recordId: this.recordIdAttribute,
           actionName: 'view',
         },
-      }).then((url) => {
+      };
+      this[NavigationMixin.GenerateUrl](this.targetPageRef).then((url) => {
         this.salesforceRecordUrl = url;
       });
     }
@@ -80,14 +83,7 @@ export default class QuanticResultPrintableUri extends NavigationMixin(
 
   navigateToSalesforceRecord(event) {
     event.stopPropagation();
-    const targetPageRef = {
-      type: 'standard__recordPage',
-      attributes: {
-        recordId: this.recordIdAttribute,
-        actionName: 'view',
-      },
-    };
-    this[NavigationMixin.Navigate](targetPageRef);
+    this[NavigationMixin.Navigate](this.targetPageRef);
   }
 
   handleClick(event) {
@@ -124,7 +120,7 @@ export default class QuanticResultPrintableUri extends NavigationMixin(
     ];
   }
 
-  get shouldDisplayLink() {
+  get shouldDisplayPrintableUriLink() {
     return this.allParents.length === 0;
   }
 
