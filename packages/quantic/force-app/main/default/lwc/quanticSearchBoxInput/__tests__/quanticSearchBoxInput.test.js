@@ -354,9 +354,9 @@ describe('c-quantic-search-box-input', () => {
             ).toHaveBeenCalledTimes(1);
           });
 
-          it(`should ${
-            textareaValue ? 'not ' : ''
-          }dispatch a #quantic__submitsearch custom event when the shift key is pressed along with the enter key`, async () => {
+          it(`${
+            textareaValue ? 'should not' : 'should'
+          } dispatch a #quantic__submitsearch custom event when the shift key is pressed along with the enter key`, async () => {
             const element = createTestComponent({
               ...defaultOptions,
               textarea: textareaValue,
