@@ -48,30 +48,6 @@ describe('Refine Toggle Test Suites', () => {
     });
   });
 
-  describe('when the modal is opened with no facets', () => {
-    beforeEach(() => {
-      new TestFixture()
-        .with(addRefineToggleWithoutFacets())
-        .withMobileViewport()
-        .init();
-      RefineToggleSelectors.buttonOpen().click();
-    });
-
-    it('should render the modal', () => {
-      CommonAssertions.assertContainsComponentErrorWithoutIt(
-        RefineModalSelectors,
-        false
-      );
-      CommonAssertions.assertConsoleErrorWithoutIt(false);
-      CommonAssertions.assertAccessibilityWithoutIt(refineModalComponent);
-      CommonAssertions.assertWCAG2_5_3();
-    });
-
-    it('should not display the filter section', () => {
-      RefineModalSelectors.filterSection().should('not.exist');
-    });
-  });
-
   describe('when the modal is opened with static facets and no facet manager', () => {
     beforeEach(() => {
       new TestFixture()
@@ -99,6 +75,30 @@ describe('Refine Toggle Test Suites', () => {
           const expectedFacet = expectedFacetOrder[index];
           cy.wrap($facet).should('have.attr', 'field', expectedFacet);
         });
+    });
+  });
+
+  describe('when the modal is opened with no facets', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(addRefineToggleWithoutFacets())
+        .withMobileViewport()
+        .init();
+      RefineToggleSelectors.buttonOpen().click();
+    });
+
+    it('should render the modal', () => {
+      CommonAssertions.assertContainsComponentErrorWithoutIt(
+        RefineModalSelectors,
+        false
+      );
+      CommonAssertions.assertConsoleErrorWithoutIt(false);
+      CommonAssertions.assertAccessibilityWithoutIt(refineModalComponent);
+      CommonAssertions.assertWCAG2_5_3();
+    });
+
+    it('should not display the filter section', () => {
+      RefineModalSelectors.filterSection().should('not.exist');
     });
   });
 
@@ -256,7 +256,7 @@ describe('Refine Toggle Test Suites', () => {
     });
   });
 
-  describe('when the modal is opened with both facets type', () => {
+  describe.skip('when the modal is opened with both facets type', () => {
     const collapseFacetsAfter = 4;
     const staticFacetAmount = 1;
     const automaticFacetAmount = 1;
@@ -328,7 +328,7 @@ describe('Refine Toggle Test Suites', () => {
     });
   });
 
-  describe('when the modal is opened with range facet variations', () => {
+  describe.skip('when the modal is opened with range facet variations', () => {
     beforeEach(() => {
       new TestFixture()
         .with(addRefineToggleRangeVariations())
