@@ -164,7 +164,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
       }
     },
 
-    purchase: (_transactionId: string, _transactionRevenue: number) => {
+    purchase(_transactionId: string, _transactionRevenue: number) {
       // TODO: log ec.purchase with all products in cart.
       dispatch(setItems([]));
     },
