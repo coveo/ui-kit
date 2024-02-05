@@ -5,6 +5,7 @@ import {
   Schema,
   StringValue,
 } from '@coveo/bueno';
+import {CartInitialState} from '../../../../controllers/commerce/context/cart/headless-cart';
 import {requiredNonEmptyString} from '../../../../utils/validate-payload';
 
 export const updateItemPayloadDefinition = {
@@ -29,4 +30,4 @@ export const cartDefinition = {
   items: setItemsPayloadDefinition,
 };
 
-export const cartSchema = new Schema(cartDefinition);
+export const cartSchema = new Schema<CartInitialState>(cartDefinition);

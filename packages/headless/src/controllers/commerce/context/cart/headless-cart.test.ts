@@ -5,7 +5,7 @@ import {
   MockedCommerceEngine,
   buildMockCommerceEngine,
 } from '../../../../test/mock-engine-v2';
-import {buildCart, Cart, CartOptions} from './headless-cart';
+import {buildCart, Cart, CartInitialState} from './headless-cart';
 import {
   itemsSelector,
   totalPriceSelector,
@@ -17,7 +17,7 @@ jest.mock('./headless-cart-selectors');
 
 describe('headless commerce cart', () => {
   let engine: MockedCommerceEngine;
-  let options: CartOptions;
+  let initialState: CartInitialState;
   let cart: Cart;
 
   function initEngine(preloadedState = buildMockCommerceState()) {
@@ -25,13 +25,13 @@ describe('headless commerce cart', () => {
   }
 
   function initCart() {
-    cart = buildCart(engine, {options});
+    cart = buildCart(engine, {initialState});
   }
 
   beforeEach(() => {
     initEngine();
     jest.resetAllMocks();
-    options = {
+    initialState = {
       items: [
         {
           productId: 'product-id-1',
@@ -68,7 +68,7 @@ describe('headless commerce cart', () => {
     it('dispatches #setItems with correct payload if options include items', () => {
       const mockedSetItems = jest.mocked(setItems);
 
-      expect(mockedSetItems).toHaveBeenCalledWith(options.items);
+      expect(mockedSetItems).toHaveBeenCalledWith(initialState.items);
       expect(engine.dispatch).toHaveBeenCalledWith(
         mockedSetItems.mock.results[0].value
       );
@@ -78,7 +78,7 @@ describe('headless commerce cart', () => {
       jest.resetAllMocks();
       const mockedSetItems = jest.mocked(setItems);
 
-      options = {};
+      initialState = {};
       initCart();
       expect(mockedSetItems).not.toHaveBeenCalled();
     });
@@ -86,11 +86,11 @@ describe('headless commerce cart', () => {
 
   it('#empty calls #updateItem with quantity of 0 for each item in the cart', () => {
     const updateItemSpy = jest.spyOn(cart, 'updateItem');
-    jest.mocked(itemsSelector).mockReturnValue(options.items!);
+    jest.mocked(itemsSelector).mockReturnValue(initialState.items!);
 
     cart.empty();
 
-    const item = options.items![0];
+    const item = initialState.items![0];
 
     expect(updateItemSpy).toHaveBeenCalledWith({
       ...item,
@@ -120,9 +120,9 @@ describe('headless commerce cart', () => {
 
   describe('#state', () => {
     it('#items calls #itemsSelector', () => {
-      jest.mocked(itemsSelector).mockReturnValue(options.items!);
+      jest.mocked(itemsSelector).mockReturnValue(initialState.items!);
 
-      expect(cart.state.items).toEqual(options.items!);
+      expect(cart.state.items).toEqual(initialState.items!);
     });
 
     it('#totalQuantity calls #totalPriceSelector', () => {

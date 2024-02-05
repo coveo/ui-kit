@@ -4,9 +4,10 @@ import {
   updateItem,
 } from '../../../../features/commerce/context/cart/cart-actions';
 import {cartReducer as cart} from '../../../../features/commerce/context/cart/cart-slice';
+import {CartItemWithMetadata} from '../../../../features/commerce/context/cart/cart-state';
 import {cartSchema} from '../../../../features/commerce/context/cart/cart-validation';
 import {loadReducerError} from '../../../../utils/errors';
-import {validateOptions} from '../../../../utils/validate-payload';
+import {validateInitialState} from '../../../../utils/validate-payload';
 import {
   buildController,
   Controller,
@@ -18,8 +19,8 @@ import {
   totalQuantitySelector,
 } from './headless-cart-selectors';
 
-export interface CartOptions {
-  items?: CartItem[];
+export interface CartInitialState {
+  items?: CartItemWithMetadata[];
 }
 
 /**
@@ -49,9 +50,9 @@ export interface CartItem {
 
 export interface CartProps {
   /**
-   * The initial options to apply to this `Cart` controller.
+   * The initial state to apply to this `Cart` controller.
    */
-  options?: CartOptions;
+  initialState?: CartInitialState;
 }
 
 /**
@@ -135,15 +136,15 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
   const controller = buildController(engine);
   const getState = () => engine.state.cart;
 
-  const options = {
-    ...props.options,
+  const initialState = {
+    ...props.initialState,
   };
 
-  validateOptions(engine, cartSchema, options, 'buildCart');
+  validateInitialState(engine, cartSchema, initialState, 'buildCart');
 
   // TODO: expose some helpers to facilitate storing / restoring the cart state for MPAs
-  if (options.items) {
-    dispatch(setItems(options.items));
+  if (initialState.items !== undefined) {
+    dispatch(setItems(initialState.items));
   }
 
   function isNewQuantityDifferent(productId: string, quantity: number) {
