@@ -165,13 +165,13 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     },
 
     purchase(_transactionId: string, _transactionRevenue: number) {
-      // TODO: log ec.purchase with all products in cart.
+      // TODO LENS-1498: log ec.purchase with all products in cart.
       dispatch(setItems([]));
     },
 
     updateItem(item: CartItem) {
       if (isNewQuantityDifferent(item.productId, item.quantity)) {
-        // TODO: log ec.cartAction; if new quantity > previous, 'add', otherwise, 'remove'.
+        // TODO LENS-1497: log ec.cartAction; if new quantity > previous, 'add', otherwise, 'remove'.
       }
 
       dispatch(updateItem(item));
