@@ -5,7 +5,6 @@ import {
 } from '../../../../features/commerce/context/cart/cart-actions';
 import {cartReducer as cart} from '../../../../features/commerce/context/cart/cart-slice';
 import {cartSchema} from '../../../../features/commerce/context/cart/cart-validation';
-import {contextReducer as context} from '../../../../features/commerce/context/context-slice';
 import {loadReducerError} from '../../../../utils/errors';
 import {validateOptions} from '../../../../utils/validate-payload';
 import {
@@ -193,6 +192,6 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
 function loadBaseCartReducers(
   engine: CommerceEngine
 ): engine is CommerceEngine {
-  engine.addReducers({cart, context});
+  engine.addReducers({cart});
   return true;
 }

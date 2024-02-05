@@ -1,6 +1,5 @@
 import {setItems} from '../../../../features/commerce/context/cart/cart-actions';
 import {cartReducer} from '../../../../features/commerce/context/cart/cart-slice';
-import {contextReducer} from '../../../../features/commerce/context/context-slice';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {
   MockedCommerceEngine,
@@ -60,10 +59,9 @@ describe('headless commerce cart', () => {
       expect(cart.subscribe).toBeTruthy();
     });
 
-    it('adds the correct reducers to engine', () => {
+    it('adds the correct reducer to engine', () => {
       expect(engine.addReducers).toHaveBeenCalledWith({
         cart: cartReducer,
-        context: contextReducer,
       });
     });
 
