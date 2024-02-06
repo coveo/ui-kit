@@ -350,9 +350,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     };
   }
 
-  private processGenerativeAnswer(
-    fetched: FetchedResponse
-  ): ValidReturnTypeFromProcessingStep<RejectionType> | null {
+  private processGenerativeAnswer(fetched: FetchedResponse): null {
     const response = this.getSuccessResponse(fetched);
     if (!response) {
       return null;

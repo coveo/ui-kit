@@ -199,10 +199,12 @@ export const streamAnswer = createAsyncThunk<
   };
   extra.streamingClient?.streamGeneratedAnswer(request, {
     write: (data: GeneratedAnswerStreamEventData) => {
-      if (currentStreamRequestMatchesOriginalStreamRequest(request)) {
-        if (data.payload && data.payloadType) {
-          handleStreamPayload(data.payloadType, data.payload);
-        }
+      if (
+        currentStreamRequestMatchesOriginalStreamRequest(request) &&
+        data.payload &&
+        data.payloadType
+      ) {
+        handleStreamPayload(data.payloadType, data.payload);
       }
     },
     abort: (error: GeneratedAnswerErrorPayload) => {

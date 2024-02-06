@@ -1,5 +1,8 @@
 import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client';
 import {buildMockCitation} from '../../test/mock-citation';
+import {executeSearch as insightExecuteSearch} from '../insight-search/insight-search-actions';
+import {logSearchboxSubmit} from '../query/query-analytics-actions';
+import {executeSearch} from '../search/search-actions';
 import {
   dislikeGeneratedAnswer,
   likeGeneratedAnswer,
@@ -15,6 +18,7 @@ import {
   closeGeneratedAnswerFeedbackModal,
   sendGeneratedAnswerFeedback,
   registerFieldsToIncludeInCitations,
+  streamAnswer,
 } from './generated-answer-actions';
 import {generatedAnswerReducer} from './generated-answer-slice';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
@@ -384,5 +388,53 @@ describe('generated answer slice', () => {
 
       expect(finalState.isVisible).toEqual(false);
     });
+  });
+
+  it('should set is loading to true when streaming starts', () => {
+    const action = streamAnswer.pending('', {streamId: 'some-id'});
+
+    const finalState = generatedAnswerReducer(
+      {...baseState, isLoading: false},
+      action
+    );
+
+    expect(finalState.isLoading).toBe(true);
+  });
+
+  it('should set is loading to false when streaming end', () => {
+    const action = streamAnswer.fulfilled(undefined, '', {streamId: 'some-id'});
+
+    const finalState = generatedAnswerReducer(
+      {...baseState, isLoading: true},
+      action
+    );
+
+    expect(finalState.isLoading).toBe(false);
+  });
+
+  it('should reset the answer when search start', () => {
+    const action = executeSearch.pending('', {
+      legacy: logSearchboxSubmit(),
+    });
+
+    const finalState = generatedAnswerReducer(
+      {...baseState, answer: 'Some answer'},
+      action
+    );
+
+    expect(finalState.answer).toBeFalsy();
+  });
+
+  it('should reset the answer when insight search start', () => {
+    const action = insightExecuteSearch.pending('', {
+      legacy: logSearchboxSubmit(),
+    });
+
+    const finalState = generatedAnswerReducer(
+      {...baseState, answer: 'Some answer'},
+      action
+    );
+
+    expect(finalState.answer).toBeFalsy();
   });
 });

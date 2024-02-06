@@ -109,7 +109,7 @@ export const executeSearch = createAsyncThunk<
   InsightAction,
   AsyncThunkInsightOptions<StateNeededByExecuteSearch>
 >(
-  'search/executeSearch',
+  'insight/search/executeSearch',
   async (
     analyticsAction: InsightAction,
     {getState, dispatch, rejectWithValue, extra}
@@ -199,7 +199,7 @@ export const fetchPage = createAsyncThunk<
   InsightAction,
   AsyncThunkInsightOptions<StateNeededByExecuteSearch>
 >(
-  'search/fetchPage',
+  'insight/search/fetchPage',
   async (
     analyticsAction: InsightAction,
     {getState, dispatch, rejectWithValue, extra}
@@ -234,7 +234,7 @@ export const fetchMoreResults = createAsyncThunk<
   void,
   AsyncThunkInsightOptions<StateNeededByExecuteSearch>
 >(
-  'search/fetchMoreResults',
+  'insight/search/fetchMoreResults',
   async (_, {getState, dispatch, rejectWithValue, extra: {apiClient}}) => {
     const state = getState();
     const fetched = await fetchFromAPI(
@@ -265,7 +265,7 @@ export const fetchFacetValues = createAsyncThunk<
   InsightAction,
   AsyncThunkInsightOptions<StateNeededByExecuteSearch>
 >(
-  'search/fetchFacetValues',
+  'insight/search/fetchFacetValues',
   async (
     analyticsAction: InsightAction,
     {getState, dispatch, rejectWithValue, extra: {apiClient}}
@@ -308,7 +308,7 @@ export const fetchQuerySuggestions = createAsyncThunk<
   FetchQuerySuggestionsActionCreatorPayload,
   AsyncThunkInsightOptions<StateNeededByQuerySuggest>
 >(
-  'querySuggest/fetch',
+  'insight/querySuggest/fetch',
   async (
     payload: {id: string},
     {getState, rejectWithValue, extra: {apiClient, validatePayload}}

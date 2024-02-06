@@ -20,6 +20,7 @@ describe('AsyncSearchThunkProcessor', () => {
   let config: AsyncThunkConfig;
   const results = [buildMockResult()];
   beforeEach(() => {
+    jest.clearAllMocks();
     config = {
       analyticsAction: logSearchboxSubmit(),
       dispatch: jest.fn(),
@@ -272,7 +273,7 @@ describe('AsyncSearchThunkProcessor', () => {
     expect(streamAnswer).not.toHaveBeenCalled();
   });
 
-  it('does call streaming API if there is a generative answering id', async () => {
+  it('calls streaming API if there is a generative answering id', async () => {
     const processor = new AsyncSearchThunkProcessor<{}>(config);
 
     const searchResponse = buildMockSearchResponse({

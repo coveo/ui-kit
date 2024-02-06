@@ -1,5 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client';
+import {executeSearch as insightExecuteSearch} from '../insight-search/insight-search-actions';
 import {executeSearch} from '../search/search-actions';
 import {
   closeGeneratedAnswerFeedbackModal,
@@ -97,6 +98,9 @@ export const generatedAnswerReducer = createReducer(
         ];
       })
       .addCase(executeSearch.pending, (state) => handleResetAnswer(state))
+      .addCase(insightExecuteSearch.pending, (state) =>
+        handleResetAnswer(state)
+      )
       .addCase(streamAnswer.pending, (state) => {
         state.isLoading = true;
         state.isStreaming = false;
