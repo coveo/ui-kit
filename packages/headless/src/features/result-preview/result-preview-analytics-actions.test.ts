@@ -6,8 +6,8 @@ import {
   getSampleSearchEngineConfiguration,
 } from '../../app/search-engine/search-engine';
 import {buildMockNonEmptyResult} from '../../test/mock-result';
+import {clearMicrotaskQueue} from '../../test/unit-test-utils';
 import {logDocumentQuickview} from './result-preview-analytics-actions';
-import { clearMicrotaskQueue } from '../../test/unit-test-utils';
 
 jest.mock('@coveo/relay');
 jest.mock('coveo.analytics');

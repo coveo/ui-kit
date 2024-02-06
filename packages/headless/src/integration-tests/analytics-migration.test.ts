@@ -108,7 +108,7 @@ import {
   logUndoTriggerQuery,
   undoTriggerQuery,
 } from '../features/triggers/trigger-analytics-actions';
-import { clearMicrotaskQueue } from '../test/unit-test-utils';
+import {clearMicrotaskQueue} from '../test/unit-test-utils';
 
 const nextSearchEngine = buildSearchEngine({
   configuration: {

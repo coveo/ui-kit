@@ -79,7 +79,8 @@ describe('Quickview', () => {
 
   it('#fetchResultContentCallback logs a document quickview', () => {
     const mockedLogDocumentQuickview = jest.mocked(logDocumentQuickview);
-    const coreQuickviewParamsFetchResultContentCallback = mockedBuildCoreQuickview.mock.calls[0][4];
+    const coreQuickviewParamsFetchResultContentCallback =
+      mockedBuildCoreQuickview.mock.calls[0][4];
 
     coreQuickviewParamsFetchResultContentCallback?.();
 
