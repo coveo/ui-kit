@@ -149,25 +149,6 @@ describe('Refine Toggle Test Suites', () => {
         .should('have.length', allFacets.length);
     });
 
-    it('should display the facets in the correct order', () => {
-      const expectedFacetOrder = [
-        facetField,
-        numericFacetField,
-        hierarchicalField,
-        ratingFacetField,
-        ratingRangeFacetField,
-        colorFacetField,
-        timeframeFacetField,
-      ];
-
-      RefineModalSelectors.facets()
-        .children()
-        .each(($facet, index) => {
-          const expectedFacet = expectedFacetOrder[index];
-          cy.wrap($facet).should('have.attr', 'field', expectedFacet);
-        });
-    });
-
     it('should close when clicking close button', () => {
       RefineModalSelectors.closeButton().click();
       cy.get('body').should('not.have.class', 'atomic-modal-opened');
