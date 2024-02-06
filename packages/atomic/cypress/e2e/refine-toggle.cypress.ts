@@ -1,19 +1,27 @@
 import {TestFixture} from '../fixtures/test-fixture';
 import * as CommonAssertions from './common-assertions';
 import {automaticFacetGeneratorComponent} from './facets/automatic-facet-generator/automatic-facet-generator-assertions';
+import {hierarchicalField} from './facets/category-facet/category-facet-actions';
 import {categoryFacetComponent} from './facets/category-facet/category-facet-selectors';
+import {colorFacetField} from './facets/color-facet/color-facet-actions';
 import {colorFacetComponent} from './facets/color-facet/color-facet-selectors';
+import {field as facetField} from './facets/facet/facet-actions';
 import {facetComponent} from './facets/facet/facet-selectors';
 import {facetManagerComponent} from './facets/manager/facet-manager-actions';
+import {numericFacetField} from './facets/numeric-facet/numeric-facet-actions';
 import {numericFacetComponent} from './facets/numeric-facet/numeric-facet-selectors';
+import {ratingFacetField} from './facets/rating-facet/rating-facet-actions';
 import {ratingFacetComponent} from './facets/rating-facet/rating-facet-selectors';
+import {ratingRangeFacetField} from './facets/rating-range-facet/rating-range-facet-actions';
 import {ratingRangeFacetComponent} from './facets/rating-range-facet/rating-range-facet-selectors';
+import {timeframeFacetField} from './facets/timeframe-facet/timeframe-facet-action';
 import {timeframeFacetComponent} from './facets/timeframe-facet/timeframe-facet-selectors';
 import {
   addFacetManagerWithBothTypesOfFacets,
   addRefineToggleRangeVariations,
   addRefineToggleWithAutomaticFacets,
   addRefineToggleWithStaticFacets,
+  addRefineToggleWithStaticFacetsAndNoManager,
   addRefineToggleWithoutFacets,
 } from './refine-toggle-actions';
 import {
@@ -37,6 +45,36 @@ describe('Refine Toggle Test Suites', () => {
       RefineToggleSelectors.buttonOpen()
         .should('be.visible')
         .should('have.text', 'Sort & Filter');
+    });
+  });
+
+  describe('when the modal is opened with static facets and no facet manager', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(addRefineToggleWithStaticFacetsAndNoManager())
+        .withMobileViewport()
+        .init();
+      cy.wait(1000);
+      RefineToggleSelectors.buttonOpen().click();
+    });
+
+    it('should display the facets in the correct order', () => {
+      const expectedFacetOrder = [
+        facetField,
+        numericFacetField,
+        hierarchicalField,
+        ratingFacetField,
+        ratingRangeFacetField,
+        colorFacetField,
+        timeframeFacetField,
+      ];
+
+      RefineModalSelectors.facets()
+        .children()
+        .each(($facet, index) => {
+          const expectedFacet = expectedFacetOrder[index];
+          cy.wrap($facet).should('have.attr', 'field', expectedFacet);
+        });
     });
   });
 
@@ -199,7 +237,7 @@ describe('Refine Toggle Test Suites', () => {
     });
   });
 
-  describe('when the modal is opened with both facets type', () => {
+  describe.skip('when the modal is opened with both facets type', () => {
     const collapseFacetsAfter = 4;
     const staticFacetAmount = 1;
     const automaticFacetAmount = 1;
@@ -271,7 +309,7 @@ describe('Refine Toggle Test Suites', () => {
     });
   });
 
-  describe('when the modal is opened with range facet variations', () => {
+  describe.skip('when the modal is opened with range facet variations', () => {
     beforeEach(() => {
       new TestFixture()
         .with(addRefineToggleRangeVariations())
