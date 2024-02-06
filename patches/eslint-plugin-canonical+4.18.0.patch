@@ -1,0 +1,178 @@
+diff --git a/node_modules/eslint-plugin-canonical/dist/src/bin/checkDocumentation.js b/node_modules/eslint-plugin-canonical/dist/src/bin/checkDocumentation.js
+index 68eb1e3..c71f2ea 100644
+--- a/node_modules/eslint-plugin-canonical/dist/src/bin/checkDocumentation.js
++++ b/node_modules/eslint-plugin-canonical/dist/src/bin/checkDocumentation.js
+@@ -15,20 +15,11 @@ const windows = (array, size) => {
+     return output;
+ };
+ const getDocumentIndexRules = () => {
++    var _a;
+     // eslint-disable-next-line node/no-sync
+     const content = node_fs_1.default.readFileSync(node_path_1.default.resolve(__dirname, '../../.README/README.md'), 'utf8');
+-    const rules = content
+-        .split('\n')
+-        .map((line) => {
+-        const match = /^\{"gitdown": "include", "file": "([^"]+)"\}$/u.exec(line);
+-        if (match === null) {
+-            return null;
+-        }
+-        return match[1].replace('./rules/', '').replace('.md', '');
+-    })
+-        .filter((rule) => {
+-        return rule !== null;
+-    });
++    const ruleMatcher = /(?<=^\{"gitdown": "include", "file": "\.\/rules\/)[^"]+(?=\.md"\}$)/gmu;
++    const rules = (_a = content.match(ruleMatcher)) !== null && _a !== void 0 ? _a : [];
+     if (rules.length === 0) {
+         throw new Error('Docs checker is broken - it could not extract rules from docs index file.');
+     }
+diff --git a/node_modules/eslint-plugin-canonical/dist/src/rules/noBarrelImport.js b/node_modules/eslint-plugin-canonical/dist/src/rules/noBarrelImport.js
+index 33bbec6..b8f2e40 100644
+--- a/node_modules/eslint-plugin-canonical/dist/src/rules/noBarrelImport.js
++++ b/node_modules/eslint-plugin-canonical/dist/src/rules/noBarrelImport.js
+@@ -74,7 +74,7 @@ exports.default = (0, utilities_1.createRule)({
+         // can't cycle-check a non-file
+         if (myPath === '<text>')
+             return {};
+-        const myModuleRoot = (0, findDirectory_1.findDirectory)((0, node_path_1.dirname)(myPath), 'package.json', '/');
++        const myModuleRoot = (0, findDirectory_1.findDirectory)((0, node_path_1.dirname)(myPath), 'package.json', (0, utilities_1.findRootPath)(myPath));
+         if (!myModuleRoot) {
+             throw new Error('cannot find package.json');
+         }
+diff --git a/node_modules/eslint-plugin-canonical/dist/src/rules/preferImportAlias.js b/node_modules/eslint-plugin-canonical/dist/src/rules/preferImportAlias.js
+index a76bc11..cabb49a 100644
+--- a/node_modules/eslint-plugin-canonical/dist/src/rules/preferImportAlias.js
++++ b/node_modules/eslint-plugin-canonical/dist/src/rules/preferImportAlias.js
+@@ -9,6 +9,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
+  * @see https://github.com/steelsojka/eslint-import-alias
+  */
+ const node_path_1 = __importDefault(require("node:path"));
++const posix_1 = require("node:path/posix");
++const win32_1 = require("node:path/win32");
+ const utilities_1 = require("../utilities");
+ const RELATIVE_MATCHER = /^(?:(\.\/)|(\.\.\/))+/u;
+ const CWD = process.cwd();
+@@ -30,7 +32,9 @@ exports.default = (0, utilities_1.createRule)({
+                 // e.g. grandparentAccessor => '../../' => 2
+                 const depth = accessor === './' ? 0 : accessor.length / 3;
+                 const parentPath = node_path_1.default.resolve(baseDirectory, node_path_1.default.resolve(parsedPath.dir, '../'.repeat(depth)));
+-                const importPath = node_path_1.default.relative(baseDirectory, node_path_1.default.resolve(parsedPath.dir, importValue));
++                const importPath = node_path_1.default
++                    .relative(baseDirectory, node_path_1.default.resolve(parsedPath.dir, importValue))
++                    .replaceAll(win32_1.sep, posix_1.sep);
+                 for (const item of aliases) {
+                     const { alias, matchPath, matchParent, maxRelativeDepth = -1 } = item;
+                     if (maxRelativeDepth < -1) {
+diff --git a/node_modules/eslint-plugin-canonical/dist/src/rules/requireExtension.js b/node_modules/eslint-plugin-canonical/dist/src/rules/requireExtension.js
+index b5c5b61..f46b062 100644
+--- a/node_modules/eslint-plugin-canonical/dist/src/rules/requireExtension.js
++++ b/node_modules/eslint-plugin-canonical/dist/src/rules/requireExtension.js
+@@ -50,7 +50,7 @@ const fixPathImport = (fixer, node, fileName, resolvedImportPath, overrideExtens
+         }
+     }
+     for (const extension of extensions) {
+-        if (resolvedImportPath.endsWith(lastSegment + '/index' + extension)) {
++        if (resolvedImportPath.endsWith(lastSegment + `${node_path_1.sep}index` + extension)) {
+             return fixer.replaceTextRange(node.source.range, `'${node.source.value + '/index' + (overrideExtension ? '.js' : extension)}'`);
+         }
+     }
+@@ -136,10 +136,10 @@ const handleAliasPath = (context, node, importPath, ignorePackages) => {
+     if (!endsWith(resolvedImportPath, extensions)) {
+         return true;
+     }
+-    const targetPackageJsonPath = (0, findDirectory_1.findDirectory)(resolvedImportPath, 'package.json', '/');
++    const targetPackageJsonPath = (0, findDirectory_1.findDirectory)(resolvedImportPath, 'package.json', (0, utilities_1.findRootPath)(resolvedImportPath));
+     if (targetPackageJsonPath) {
+         if (ignorePackages) {
+-            const currentPackageJsonPath = (0, findDirectory_1.findDirectory)(context.getFilename(), 'package.json', '/');
++            const currentPackageJsonPath = (0, findDirectory_1.findDirectory)(context.getFilename(), 'package.json', (0, utilities_1.findRootPath)(context.getFilename()));
+             if (currentPackageJsonPath &&
+                 currentPackageJsonPath !== targetPackageJsonPath) {
+                 return false;
+diff --git a/node_modules/eslint-plugin-canonical/dist/src/rules/virtualModule.js b/node_modules/eslint-plugin-canonical/dist/src/rules/virtualModule.js
+index e643732..067aaf0 100644
+--- a/node_modules/eslint-plugin-canonical/dist/src/rules/virtualModule.js
++++ b/node_modules/eslint-plugin-canonical/dist/src/rules/virtualModule.js
+@@ -5,6 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const node_fs_1 = require("node:fs");
+ const node_path_1 = __importDefault(require("node:path"));
++const posix_1 = require("node:path/posix");
++const win32_1 = require("node:path/win32");
+ const parse_1 = __importDefault(require("eslint-module-utils/parse"));
+ const resolve_1 = __importDefault(require("eslint-module-utils/resolve"));
+ const visit_1 = __importDefault(require("eslint-module-utils/visit"));
+@@ -15,7 +17,7 @@ const log = Logger_1.Logger.child({
+     rule: 'virtual-module',
+ });
+ const findProjectRoot = (startPath) => {
+-    const projectRoot = (0, findDirectory_1.findDirectory)(startPath, 'package.json', '/');
++    const projectRoot = (0, findDirectory_1.findDirectory)(startPath, 'package.json', (0, utilities_1.findRootPath)(startPath));
+     if (!projectRoot) {
+         throw new Error('Project root could not be found.');
+     }
+@@ -123,9 +125,14 @@ exports.default = (0, utilities_1.createRule)({
+             if (currentDirectory.startsWith(targetModuleDirectory + node_path_1.default.sep)) {
+                 context.report({
+                     data: {
+-                        currentModule: node_path_1.default.sep + node_path_1.default.relative(projectRootDirectory, currentDirectory),
+-                        parentModule: node_path_1.default.sep +
+-                            node_path_1.default.relative(projectRootDirectory, targetModuleDirectory),
++                        currentModule: posix_1.sep +
++                            node_path_1.default
++                                .relative(projectRootDirectory, currentDirectory)
++                                .replaceAll(win32_1.sep, posix_1.sep),
++                        parentModule: posix_1.sep +
++                            node_path_1.default
++                                .relative(projectRootDirectory, targetModuleDirectory)
++                                .replaceAll(win32_1.sep, posix_1.sep),
+                     },
+                     messageId: 'parentModuleImport',
+                     node,
+@@ -140,8 +147,14 @@ exports.default = (0, utilities_1.createRule)({
+             }
+             context.report({
+                 data: {
+-                    privatePath: node_path_1.default.sep + node_path_1.default.relative(targetModuleDirectory, resolvedImportPath),
+-                    targetModule: node_path_1.default.sep + node_path_1.default.relative(projectRootDirectory, reportModule),
++                    privatePath: posix_1.sep +
++                        node_path_1.default
++                            .relative(targetModuleDirectory, resolvedImportPath)
++                            .replaceAll(win32_1.sep, posix_1.sep),
++                    targetModule: posix_1.sep +
++                        node_path_1.default
++                            .relative(projectRootDirectory, reportModule)
++                            .replaceAll(win32_1.sep, posix_1.sep),
+                 },
+                 fix: (fixer) => {
+                     if (node.type === 'ImportDeclaration') {
+diff --git a/node_modules/eslint-plugin-canonical/dist/src/utilities/findRootPath.js b/node_modules/eslint-plugin-canonical/dist/src/utilities/findRootPath.js
+new file mode 100644
+index 0000000..92abf2f
+--- /dev/null
++++ b/node_modules/eslint-plugin-canonical/dist/src/utilities/findRootPath.js
+@@ -0,0 +1,6 @@
++"use strict";
++Object.defineProperty(exports, "__esModule", { value: true });
++exports.findRootPath = void 0;
++const node_path_1 = require("node:path");
++const findRootPath = (startPath) => process.platform === 'win32' ? `${startPath.split(node_path_1.sep)[0]}${node_path_1.sep}` : node_path_1.sep;
++exports.findRootPath = findRootPath;
+diff --git a/node_modules/eslint-plugin-canonical/dist/src/utilities/index.js b/node_modules/eslint-plugin-canonical/dist/src/utilities/index.js
+index 267f696..edfd3ed 100644
+--- a/node_modules/eslint-plugin-canonical/dist/src/utilities/index.js
++++ b/node_modules/eslint-plugin-canonical/dist/src/utilities/index.js
+@@ -1,6 +1,6 @@
+ "use strict";
+ Object.defineProperty(exports, "__esModule", { value: true });
+-exports.parseFilename = exports.isIndexFile = exports.isIgnoredFilename = exports.getExportedName = exports.createRule = void 0;
++exports.findRootPath = exports.parseFilename = exports.isIndexFile = exports.isIgnoredFilename = exports.getExportedName = exports.createRule = void 0;
+ var createRule_1 = require("./createRule");
+ Object.defineProperty(exports, "createRule", { enumerable: true, get: function () { return createRule_1.createRule; } });
+ var getExportedName_1 = require("./getExportedName");
+@@ -11,3 +11,5 @@ var isIndexFile_1 = require("./isIndexFile");
+ Object.defineProperty(exports, "isIndexFile", { enumerable: true, get: function () { return isIndexFile_1.isIndexFile; } });
+ var parseFilename_1 = require("./parseFilename");
+ Object.defineProperty(exports, "parseFilename", { enumerable: true, get: function () { return parseFilename_1.parseFilename; } });
++var findRootPath_1 = require("./findRootPath");
++Object.defineProperty(exports, "findRootPath", { enumerable: true, get: function () { return findRootPath_1.findRootPath; } });
