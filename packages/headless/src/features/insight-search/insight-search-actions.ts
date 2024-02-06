@@ -37,6 +37,7 @@ import {InsightAction} from '../analytics/analytics-utils';
 import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
 import {logDidYouMeanAutomatic} from '../did-you-mean/did-you-mean-insight-analytics-actions';
 import {emptyLegacyCorrection} from '../did-you-mean/did-you-mean-state';
+import {streamAnswer} from '../generated-answer/generated-answer-actions';
 import {snapshot} from '../history/history-actions';
 import {extractHistory} from '../history/history-state';
 import {
@@ -117,6 +118,13 @@ export const executeSearch = createAsyncThunk<
     addEntryInActionsHistory(state);
     const mappedRequest = buildInsightSearchRequest(state);
 
+    const streamGenerativeAnswering = (res: SearchResponseSuccess) => {
+      const streamId = res.extendedResults.generativeQuestionAnsweringId;
+      if (streamId) {
+        dispatch(streamAnswer({streamId}));
+      }
+    };
+
     const fetched = await fetchFromAPI(extra.apiClient, state, mappedRequest);
 
     if (isErrorResponse(fetched.response)) {
@@ -128,6 +136,7 @@ export const executeSearch = createAsyncThunk<
       !shouldReExecuteTheQueryWithCorrections(state, fetched.response.success)
     ) {
       dispatch(snapshot(extractHistory(state)));
+      streamGenerativeAnswering(fetched.response.success);
       return {
         ...fetched,
         response: fetched.response.success,
@@ -136,6 +145,7 @@ export const executeSearch = createAsyncThunk<
         analyticsAction,
       };
     }
+
     const {correctedQuery} = fetched.response.success.queryCorrections
       ? fetched.response.success.queryCorrections[0]
       : emptyLegacyCorrection();
@@ -169,6 +179,7 @@ export const executeSearch = createAsyncThunk<
       extra
     );
     dispatch(snapshot(extractHistory(getState())));
+    streamGenerativeAnswering(retried.response.success);
 
     return {
       ...retried,

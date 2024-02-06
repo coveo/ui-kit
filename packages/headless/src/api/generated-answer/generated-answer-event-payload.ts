@@ -1,4 +1,4 @@
-import {Raw} from '../../recommendation.index';
+import {Raw} from '../search/search/raw';
 import {Result} from '../search/search/result';
 
 export type GeneratedAnswerStreamFinishReason = 'COMPLETED' | 'ERROR';
