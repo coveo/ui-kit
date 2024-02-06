@@ -5,21 +5,23 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+import { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel, PlatformEnvironment, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+import { i18nCompatibilityVersion } from "./components/common/interface/i18n";
+import { i18n } from "i18next";
+import { CommerceEngine } from "@coveo/headless/commerce";
+import { InitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface.component";
+import { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout, ResultTarget } from "./components/common/layout/display-options";
+import { ResultRenderingFunction } from "./components/common/result-list/result-list-common-interface";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
-import { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout, ResultTarget } from "./components/common/layout/display-options";
-import { ResultRenderingFunction } from "./components/common/result-list/result-list-common-interface";
 import { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightGeneratedAnswerStyle, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 import { FacetDisplayValues } from "./components/common/facets/facet-common";
-import { i18n } from "i18next";
-import { i18nCompatibilityVersion } from "./components/common/interface/i18n";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 import { NumericFacetDisplayValues } from "./components/common/facets/numeric-facet-common";
 import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Section } from "./components/common/atomic-layout-section/sections";
-import { PlatformEnvironment, RecommendationEngine } from "@coveo/headless/recommendation";
+import { PlatformEnvironment as PlatformEnvironment1, RecommendationEngine } from "@coveo/headless/recommendation";
 import { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
 import { i18nCompatibilityVersion as i18nCompatibilityVersion1 } from "./components";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
@@ -28,23 +30,25 @@ import { Bindings } from "./components/search/atomic-search-interface/atomic-sea
 import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 import { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 import { AriaLabelGenerator } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
-import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
+import { InitializationOptions as InitializationOptions1 } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
-export { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+export { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel, PlatformEnvironment, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+export { i18nCompatibilityVersion } from "./components/common/interface/i18n";
+export { i18n } from "i18next";
+export { CommerceEngine } from "@coveo/headless/commerce";
+export { InitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface.component";
+export { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout, ResultTarget } from "./components/common/layout/display-options";
+export { ResultRenderingFunction } from "./components/common/result-list/result-list-common-interface";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
-export { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout, ResultTarget } from "./components/common/layout/display-options";
-export { ResultRenderingFunction } from "./components/common/result-list/result-list-common-interface";
 export { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightGeneratedAnswerStyle, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 export { FacetDisplayValues } from "./components/common/facets/facet-common";
-export { i18n } from "i18next";
-export { i18nCompatibilityVersion } from "./components/common/interface/i18n";
 export { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 export { NumericFacetDisplayValues } from "./components/common/facets/numeric-facet-common";
 export { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 export { Section } from "./components/common/atomic-layout-section/sections";
-export { PlatformEnvironment, RecommendationEngine } from "@coveo/headless/recommendation";
+export { PlatformEnvironment as PlatformEnvironment1, RecommendationEngine } from "@coveo/headless/recommendation";
 export { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
 export { i18nCompatibilityVersion as i18nCompatibilityVersion1 } from "./components";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
@@ -53,7 +57,7 @@ export { Bindings } from "./components/search/atomic-search-interface/atomic-sea
 export { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 export { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 export { AriaLabelGenerator } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
-export { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
+export { InitializationOptions as InitializationOptions1 } from "./components/search/atomic-search-interface/atomic-search-interface";
 export { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 export namespace Components {
     /**
@@ -254,6 +258,101 @@ export namespace Components {
           * Whether this facet should contain a search box.
          */
         "withSearch": boolean;
+    }
+    /**
+     * The `atomic-commerce-interface` component is the parent to all other atomic components in a search page. It handles the headless search engine and localization configurations.
+     */
+    interface AtomicCommerceInterface {
+        /**
+          * Whether analytics should be enabled.
+         */
+        "analytics": boolean;
+        /**
+          * Whether the relevance inspector shortcut should be enabled for this interface.  The relevance inspector can be opened by holding the Alt key (Option on Mac) while over the interface, and performing a double click.  The relevance inspector allows to troubleshoot and debug queries.
+         */
+        "enableRelevanceInspector": boolean;
+        /**
+          * The search interface headless engine.
+         */
+        "engine"?: CommerceEngine;
+        /**
+          * Returns the unique, organization-specific endpoint(s).
+          * @param organizationId
+          * @param env
+         */
+        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
+        /**
+          * The search interface i18next instance.
+         */
+        "i18n": i18n;
+        /**
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
+         */
+        "iconAssetsPath": string;
+        /**
+          * Initializes the connection with the headless search engine using options for accessToken (required), organizationId (required), renewAccessToken, organizationEndpoints (recommended), and platformUrl (deprecated).
+         */
+        "initialize": (options: InitializationOptions) => Promise<void>;
+        /**
+          * Initializes the connection with an already preconfigured [headless search engine](https://docs.coveo.com/en/headless/latest/reference/search/), as opposed to the `initialize` method, which will internally create a new search engine instance. This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
+         */
+        "initializeWithCommerceEngine": (engine: CommerceEngine) => Promise<void>;
+        /**
+          * The search interface language.
+         */
+        "language": string;
+        /**
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
+         */
+        "languageAssetsPath": string;
+        /**
+          * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
+         */
+        "localizationCompatibilityVersion": i18nCompatibilityVersion;
+        /**
+          * The severity level of the messages to log in the console.
+         */
+        "logLevel"?: LogLevel;
+        /**
+          * The CSS selector for the container where the interface will scroll back to.
+         */
+        "scrollContainer": string;
+    }
+    /**
+     * The `atomic-commerce-layout` helps organize elements in the page.
+     */
+    interface AtomicCommerceLayout {
+        /**
+          * CSS value that defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
+         */
+        "mobileBreakpoint": string;
+    }
+    /**
+     * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
+     */
+    interface AtomicCommerceResultList {
+        /**
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+         */
+        "density": ResultDisplayDensity;
+        /**
+          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
+         */
+        "display": ResultDisplayLayout;
+        /**
+          * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
+          * @defaultValue `_self`
+         */
+        "gridCellLinkTarget": ResultTarget;
+        /**
+          * The expected size of the image displayed in the results.
+         */
+        "imageSize": ResultDisplayImageSize;
+        /**
+          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
+          * @param resultRenderingFunction
+         */
+        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
     }
     /**
      * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
@@ -1411,7 +1510,7 @@ export namespace Components {
           * A list of non-default fields to include in the query results.  Specify the property as an array using a JSON string representation: ```html <atomic-recs-interface fields-to-include='["fieldA", "fieldB"]'></atomic-recs-interface> ```
          */
         "fieldsToInclude": string[] | string;
-        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
+        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment1) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
         /**
           * Fetches new recommendations.
          */
@@ -2215,7 +2314,7 @@ export namespace Components {
           * @param organizationId
           * @param env
          */
-        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment1) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
+        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
         /**
           * The search interface i18next instance.
          */
@@ -2227,7 +2326,7 @@ export namespace Components {
         /**
           * Initializes the connection with the headless search engine using options for accessToken (required), organizationId (required), renewAccessToken, organizationEndpoints (recommended), and platformUrl (deprecated).
          */
-        "initialize": (options: InitializationOptions) => Promise<void>;
+        "initialize": (options: InitializationOptions1) => Promise<void>;
         /**
           * Initializes the connection with an already preconfigured [headless search engine](https://docs.coveo.com/en/headless/latest/reference/search/), as opposed to the `initialize` method, which will internally create a new search engine instance. This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
          */
@@ -2691,6 +2790,33 @@ declare global {
     var HTMLAtomicColorFacetElement: {
         prototype: HTMLAtomicColorFacetElement;
         new (): HTMLAtomicColorFacetElement;
+    };
+    /**
+     * The `atomic-commerce-interface` component is the parent to all other atomic components in a search page. It handles the headless search engine and localization configurations.
+     */
+    interface HTMLAtomicCommerceInterfaceElement extends Components.AtomicCommerceInterface, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceInterfaceElement: {
+        prototype: HTMLAtomicCommerceInterfaceElement;
+        new (): HTMLAtomicCommerceInterfaceElement;
+    };
+    /**
+     * The `atomic-commerce-layout` helps organize elements in the page.
+     */
+    interface HTMLAtomicCommerceLayoutElement extends Components.AtomicCommerceLayout, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceLayoutElement: {
+        prototype: HTMLAtomicCommerceLayoutElement;
+        new (): HTMLAtomicCommerceLayoutElement;
+    };
+    /**
+     * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
+     */
+    interface HTMLAtomicCommerceResultListElement extends Components.AtomicCommerceResultList, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceResultListElement: {
+        prototype: HTMLAtomicCommerceResultListElement;
+        new (): HTMLAtomicCommerceResultListElement;
     };
     /**
      * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
@@ -4131,6 +4257,9 @@ declare global {
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
         "atomic-citation": HTMLAtomicCitationElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
+        "atomic-commerce-interface": HTMLAtomicCommerceInterfaceElement;
+        "atomic-commerce-layout": HTMLAtomicCommerceLayoutElement;
+        "atomic-commerce-result-list": HTMLAtomicCommerceResultListElement;
         "atomic-component-error": HTMLAtomicComponentErrorElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-external": HTMLAtomicExternalElement;
@@ -4463,6 +4592,82 @@ declare namespace LocalJSX {
           * Whether this facet should contain a search box.
          */
         "withSearch"?: boolean;
+    }
+    /**
+     * The `atomic-commerce-interface` component is the parent to all other atomic components in a search page. It handles the headless search engine and localization configurations.
+     */
+    interface AtomicCommerceInterface {
+        /**
+          * Whether analytics should be enabled.
+         */
+        "analytics"?: boolean;
+        /**
+          * Whether the relevance inspector shortcut should be enabled for this interface.  The relevance inspector can be opened by holding the Alt key (Option on Mac) while over the interface, and performing a double click.  The relevance inspector allows to troubleshoot and debug queries.
+         */
+        "enableRelevanceInspector"?: boolean;
+        /**
+          * The search interface headless engine.
+         */
+        "engine"?: CommerceEngine;
+        /**
+          * The search interface i18next instance.
+         */
+        "i18n"?: i18n;
+        /**
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
+         */
+        "iconAssetsPath"?: string;
+        /**
+          * The search interface language.
+         */
+        "language"?: string;
+        /**
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
+         */
+        "languageAssetsPath"?: string;
+        /**
+          * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
+         */
+        "localizationCompatibilityVersion"?: i18nCompatibilityVersion;
+        /**
+          * The severity level of the messages to log in the console.
+         */
+        "logLevel"?: LogLevel;
+        /**
+          * The CSS selector for the container where the interface will scroll back to.
+         */
+        "scrollContainer"?: string;
+    }
+    /**
+     * The `atomic-commerce-layout` helps organize elements in the page.
+     */
+    interface AtomicCommerceLayout {
+        /**
+          * CSS value that defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
+         */
+        "mobileBreakpoint"?: string;
+    }
+    /**
+     * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
+     */
+    interface AtomicCommerceResultList {
+        /**
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+         */
+        "density"?: ResultDisplayDensity;
+        /**
+          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
+         */
+        "display"?: ResultDisplayLayout;
+        /**
+          * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
+          * @defaultValue `_self`
+         */
+        "gridCellLinkTarget"?: ResultTarget;
+        /**
+          * The expected size of the image displayed in the results.
+         */
+        "imageSize"?: ResultDisplayImageSize;
     }
     /**
      * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
@@ -6676,6 +6881,9 @@ declare namespace LocalJSX {
         "atomic-category-facet": AtomicCategoryFacet;
         "atomic-citation": AtomicCitation;
         "atomic-color-facet": AtomicColorFacet;
+        "atomic-commerce-interface": AtomicCommerceInterface;
+        "atomic-commerce-layout": AtomicCommerceLayout;
+        "atomic-commerce-result-list": AtomicCommerceResultList;
         "atomic-component-error": AtomicComponentError;
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-external": AtomicExternal;
@@ -6853,6 +7061,18 @@ declare module "@stencil/core" {
              * An `atomic-color-facet` displays a facet of the results for the current query as colors.
              */
             "atomic-color-facet": LocalJSX.AtomicColorFacet & JSXBase.HTMLAttributes<HTMLAtomicColorFacetElement>;
+            /**
+             * The `atomic-commerce-interface` component is the parent to all other atomic components in a search page. It handles the headless search engine and localization configurations.
+             */
+            "atomic-commerce-interface": LocalJSX.AtomicCommerceInterface & JSXBase.HTMLAttributes<HTMLAtomicCommerceInterfaceElement>;
+            /**
+             * The `atomic-commerce-layout` helps organize elements in the page.
+             */
+            "atomic-commerce-layout": LocalJSX.AtomicCommerceLayout & JSXBase.HTMLAttributes<HTMLAtomicCommerceLayoutElement>;
+            /**
+             * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
+             */
+            "atomic-commerce-result-list": LocalJSX.AtomicCommerceResultList & JSXBase.HTMLAttributes<HTMLAtomicCommerceResultListElement>;
             /**
              * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
              */

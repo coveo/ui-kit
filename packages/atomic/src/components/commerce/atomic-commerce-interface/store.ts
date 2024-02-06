@@ -46,6 +46,7 @@ export interface FacetInfoMap {
     | (FacetInfo & FacetValueFormat<DateFacetValue>);
 }
 
+// TODO(nico): Do we need a different store for atomic commerce?
 export function createAtomicStore(): AtomicStore {
   const commonStore = createAtomicCommonStore<AtomicStoreData>({
     loadingFlags: [],

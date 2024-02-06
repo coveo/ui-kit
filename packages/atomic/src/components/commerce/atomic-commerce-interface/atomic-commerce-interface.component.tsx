@@ -1,21 +1,17 @@
 import {
   LogLevel,
-  Unsubscribe,
-  UrlManager,
-  buildSearchEngine,
-  SearchEngine,
-  SearchEngineConfiguration,
-  SearchStatus,
-  loadSearchConfigurationActions,
-  loadQueryActions,
   getOrganizationEndpoints as getOrganizationEndpointsHeadless,
   PlatformEnvironment,
 } from '@coveo/headless';
-import { CommerceEngine } from '@coveo/headless/commerce'
+import {
+  CommerceEngine,
+  buildCommerceEngine,
+  CommerceEngineConfiguration,
+} from '@coveo/headless/commerce';
 import {
   Component,
-  Prop,
   h,
+  Prop,
   Listen,
   Method,
   Watch,
@@ -24,88 +20,47 @@ import {
 } from '@stencil/core';
 import i18next, {i18n} from 'i18next';
 import {InitializeEvent} from '../../../utils/initialization-utils';
-import {
-  SafeStorage,
-  StandaloneSearchBoxData,
-  StorageItems,
-} from '../../../utils/local-storage-utils';
-import {ArrayProp} from '../../../utils/props-utils';
 import {CommonBindings} from '../../common/interface/bindings';
+import {i18nCompatibilityVersion} from '../../common/interface/i18n';
 import {
   BaseAtomicInterface,
   CommonAtomicInterfaceHelper,
-  mismatchedInterfaceAndEnginePropError,
 } from '../../common/interface/interface-common';
 import {getAnalyticsConfig} from './analytics-config';
 import {AtomicStore, createAtomicStore} from './store';
 
 const FirstSearchExecutedFlag = 'firstSearchExecuted';
-export type InitializationOptions = SearchEngineConfiguration;
-export type Bindings = CommonBindings<
-  SearchEngine,
+export type InitializationOptions = CommerceEngineConfiguration;
+export type CommerceBindings = CommonBindings<
+  CommerceEngine,
   AtomicStore,
-  HTMLAtomicSearchInterfaceElement
+  HTMLAtomicCommerceInterfaceElement
 >;
 
+// TODO: This should be the basis for commerce PLP, Search and recs interfaces
 /**
- * The `atomic-commerce-search-interface` component is the parent to all other atomic components in a search page. It handles the headless search engine and localization configurations.
+ * The `atomic-commerce-interface` component is the parent to all other atomic components in a search page. It handles the headless search engine and localization configurations.
  */
 @Component({
-  tag: 'atomic-commerce-search-interface',
-  styleUrl: 'atomic-commerce-search-interface.pcss',
+  tag: 'atomic-commerce-interface',
+  styleUrl: 'atomic-commerce-interface.pcss',
   shadow: true,
   assetsDirs: ['../../search/atomic-search-interface/lang'],
 })
-export class AtomicCommerceSearchInterface
+export class AtomicCommerceInterface
   implements BaseAtomicInterface<CommerceEngine>
 {
-  private initialized = false;
   private store = createAtomicStore();
   private commonInterfaceHelper: CommonAtomicInterfaceHelper<CommerceEngine>;
 
-  @Element() public host!: HTMLAtomicSearchInterfaceElement;
+  @Element() public host!: HTMLAtomicCommerceInterfaceElement;
 
   @State() public error?: Error;
-  @State() relevanceInspectorIsOpen = false;
-
-  /**
-   * A list of non-default fields to include in the query results.
-   *
-   * Specify the property as an array using a JSON string representation:
-   * ```html
-   * <atomic-search-interface fields-to-include='["fieldA", "fieldB"]'></atomic-search-interface>
-   * ```
-   */
-  @ArrayProp()
-  @Prop({mutable: true})
-  public fieldsToInclude: string[] | string = '[]';
-
-  /**
-   * The search interface [query pipeline](https://docs.coveo.com/en/180/).
-   *
-   * If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine), the query pipeline should instead be configured in the target engine.
-   */
-  @Prop({reflect: true, mutable: true}) public pipeline?: string;
-
-  /**
-   * The search interface [search hub](https://docs.coveo.com/en/1342/).
-   *
-   * If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine, the search hub should instead be configured in the target engine.
-   */
-  @Prop({reflect: true, mutable: true}) public searchHub?: string;
 
   /**
    * Whether analytics should be enabled.
    */
   @Prop({reflect: true}) public analytics = true;
-
-  /**
-   * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items.
-   * By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).
-   *
-   * Example: "America/Montreal"
-   */
-  @Prop({reflect: true}) public timezone?: string;
 
   /**
    * The severity level of the messages to log in the console.
@@ -131,17 +86,12 @@ export class AtomicCommerceSearchInterface
   /**
    * The search interface headless engine.
    */
-  @Prop({mutable: true}) public engine?: SearchEngine;
-
-  /**
-   * Whether the state should be reflected in the URL parameters.
-   */
-  @Prop({reflect: true}) public reflectStateInUrl = true;
+  @Prop({mutable: true}) public engine?: CommerceEngine;
 
   /**
    * The CSS selector for the container where the interface will scroll back to.
    */
-  @Prop({reflect: true}) public scrollContainer = 'atomic-search-interface';
+  @Prop({reflect: true}) public scrollContainer = 'atomic-commerce-interface';
 
   /**
    * The language assets path. By default, this will be a relative URL pointing to `./lang`.
@@ -197,38 +147,6 @@ export class AtomicCommerceSearchInterface
     this.initAriaLive();
   }
 
-  public updateSearchConfiguration(
-    updatedProp: 'searchHub' | 'pipeline',
-    newValue: string | undefined
-  ) {
-    if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
-      return;
-    }
-
-    if (this.engine.state[updatedProp] === newValue) {
-      return;
-    }
-
-    const {updateSearchConfiguration} = loadSearchConfigurationActions(
-      this.engine
-    );
-    this.engine.dispatch(
-      updateSearchConfiguration({
-        [updatedProp]: newValue,
-      })
-    );
-  }
-
-  @Watch('searchHub')
-  public updateSearchHub() {
-    this.updateSearchConfiguration('searchHub', this.searchHub ?? 'default');
-  }
-
-  @Watch('pipeline')
-  public updatePipeline() {
-    this.updateSearchConfiguration('pipeline', this.pipeline);
-  }
-
   @Watch('analytics')
   public toggleAnalytics() {
     if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
@@ -238,32 +156,9 @@ export class AtomicCommerceSearchInterface
     this.commonInterfaceHelper.onAnalyticsChange();
   }
 
-  @Watch('language')
-  public updateLanguage() {
-    if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
-      return;
-    }
-
-    const {updateSearchConfiguration} = loadSearchConfigurationActions(
-      this.engine
-    );
-    this.engine.dispatch(
-      updateSearchConfiguration({
-        locale: this.language,
-      })
-    );
-    this.commonInterfaceHelper.onLanguageChange();
-  }
-
   @Watch('iconAssetsPath')
   public updateIconAssetsPath() {
     this.store.set('iconAssetsPath', this.iconAssetsPath);
-  }
-
-  public disconnectedCallback() {
-    this.unsubscribeUrlManager();
-    this.unsubscribeSearchStatus();
-    window.removeEventListener('hashchange', this.onHashChange);
   }
 
   @Listen('atomic/initializeComponent')
@@ -284,15 +179,11 @@ export class AtomicCommerceSearchInterface
     scrollContainerElement.scrollIntoView({behavior: 'smooth'});
   }
 
-  @Listen('atomic/relevanceInspector/close')
-  public closeRelevanceInspector() {
-    this.relevanceInspectorIsOpen = false;
-  }
-
   /**
    * Initializes the connection with the headless search engine using options for accessToken (required), organizationId (required), renewAccessToken, organizationEndpoints (recommended), and platformUrl (deprecated).
    */
-  @Method() public initialize(options: InitializationOptions) {
+  @Method()
+  public initialize(options: InitializationOptions) {
     return this.internalInitialization(() => this.initEngine(options));
   }
 
@@ -300,75 +191,25 @@ export class AtomicCommerceSearchInterface
    * Initializes the connection with an already preconfigured [headless search engine](https://docs.coveo.com/en/headless/latest/reference/search/), as opposed to the `initialize` method, which will internally create a new search engine instance.
    * This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
    */
-  @Method() public initializeWithSearchEngine(engine: SearchEngine) {
-    if (this.pipeline && this.pipeline !== engine.state.pipeline) {
-      console.warn(
-        mismatchedInterfaceAndEnginePropError('search', 'query pipeline')
-      );
-    }
-    if (this.searchHub && this.searchHub !== engine.state.searchHub) {
-      console.warn(
-        mismatchedInterfaceAndEnginePropError('search', 'search hub')
-      );
-    }
+  @Method()
+  public initializeWithCommerceEngine(engine: CommerceEngine) {
     return this.internalInitialization(() => (this.engine = engine));
-  }
-
-  /**
-   *
-   * Executes the first search and logs the interface load event to analytics, after initializing connection to the headless search engine.
-   */
-  @Method() public async executeFirstSearch() {
-    if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
-      return;
-    }
-
-    if (!this.initialized) {
-      console.error(
-        'You have to wait until the "initialize" promise is fulfilled before executing a search.',
-        this.host
-      );
-      return;
-    }
-
-    if (this.localizationCompatibilityVersion !== 'v4') {
-      this.engine.logger.warn(
-        `As of Atomic version 3.0.0, support for JSON compatibility ${this.localizationCompatibilityVersion} will be deprecated. Please update the JSON compatibility to v4: <atomic-search-interface localization-compatibility-version="v4" ...></atomic-search-interface> For more information, see i18next Migration Guide: https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0.`
-      );
-    }
-
-    const safeStorage = new SafeStorage();
-    const standaloneSearchBoxData =
-      safeStorage.getParsedJSON<StandaloneSearchBoxData | null>(
-        StorageItems.STANDALONE_SEARCH_BOX_DATA,
-        null
-      );
-
-    if (!standaloneSearchBoxData) {
-      this.engine.executeFirstSearch();
-      return;
-    }
-
-    safeStorage.removeItem(StorageItems.STANDALONE_SEARCH_BOX_DATA);
-    const {updateQuery} = loadQueryActions(this.engine!);
-    const {value, enableQuerySyntax, analytics} = standaloneSearchBoxData;
-    this.engine!.dispatch(updateQuery({q: value, enableQuerySyntax}));
-    this.engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
   }
 
   /**
    * Returns the unique, organization-specific endpoint(s).
    * @param {string} organizationId
-   * @param {'prod'|'hipaa'|'staging'|'dev'} [env=Prod]
+   * @param {"prod"|"hipaa"|"staging"|"dev"} [env=Prod]
    */
-  @Method() public async getOrganizationEndpoints(
+  @Method()
+  public async getOrganizationEndpoints(
     organizationId: string,
     env: PlatformEnvironment = 'prod'
   ) {
     return getOrganizationEndpointsHeadless(organizationId, env);
   }
 
-  public get bindings(): Bindings {
+  public get bindings(): CommerceBindings {
     return {
       engine: this.engine!,
       i18n: this.i18n,
@@ -387,17 +228,16 @@ export class AtomicCommerceSearchInterface
   }
 
   private initEngine(options: InitializationOptions) {
-    const searchConfig = this.getSearchConfiguration(options);
     const analyticsConfig = getAnalyticsConfig(
       options,
       this.analytics,
       this.store
     );
     try {
-      this.engine = buildSearchEngine({
+      this.engine = buildCommerceEngine({
         configuration: {
           ...options,
-          search: searchConfig,
+          analytics: analyticsConfig,
         },
         loggerOptions: {
           level: this.logLevel,
@@ -407,25 +247,6 @@ export class AtomicCommerceSearchInterface
       this.error = error as Error;
       throw error;
     }
-  }
-
-  // TODO(nico): I think that we should find the config
-  private getSearchConfiguration(options: InitializationOptions) {
-    const searchConfigFromProps = {
-      searchHub: this.searchHub ?? 'default',
-      pipeline: this.pipeline,
-      locale: this.language,
-      timezone: this.timezone,
-    };
-
-    if (options.search) {
-      return {
-        ...searchConfigFromProps,
-        ...options.search,
-      };
-    }
-
-    return searchConfigFromProps;
   }
 
   private initAriaLive() {
@@ -441,7 +262,6 @@ export class AtomicCommerceSearchInterface
 
   private async internalInitialization(initEngine: () => void) {
     await this.commonInterfaceHelper.onInitialization(initEngine);
-    this.initialized = true;
   }
 
   private addResourceBundleWithWarning(
@@ -468,11 +288,8 @@ export class AtomicCommerceSearchInterface
   }
 
   public render() {
-    return [
-      <slot></slot>,
-    ];
+    return ['Hi from commerce interface!', <slot></slot>];
   }
 
-  registerFieldsToInclude(): void {
-  }
+  registerFieldsToInclude(): void {}
 }
