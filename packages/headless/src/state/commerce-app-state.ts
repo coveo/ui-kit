@@ -12,6 +12,7 @@ import {
   FacetOrderSection,
   QuerySuggestionSection,
   QuerySetSection,
+  FacetSearchSection,
 } from './state-sections';
 
 export type CommerceAppState = ConfigurationSection &
@@ -19,6 +20,7 @@ export type CommerceAppState = ConfigurationSection &
   CommerceSearchSection &
   CommerceQuerySection &
   FacetOrderSection &
+  FacetSearchSection &
   CommerceFacetSetSection &
   CommercePaginationSection &
   CommerceSortSection &
