@@ -7,13 +7,22 @@ import {
   InsightSearchStatus,
   InsightSearchStatusState,
 } from '../';
+import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
+import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {PagerCommon} from '../../common/pager/pager-common';
+import {randomID} from '../../../utils/utils';
+import {
+  PagerNextButton,
+  PagerPageButton,
+  PagerPages,
+  PagerPreviousButton,
+} from '../../common/pager/pager-button';
+import {PagerNavigation} from '../../common/pager/pager-nav';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
@@ -50,6 +59,7 @@ export class AtomicInsightPager
   @Prop({reflect: true}) numberOfPages = 5;
 
   private activePage?: FocusTargetController;
+  private radioGroupName = randomID('atomic-insight-pager-');
 
   public initialize() {
     this.searchStatus = buildInsightSearchStatus(this.bindings.engine);
@@ -66,16 +76,56 @@ export class AtomicInsightPager
     return this.activePage;
   }
 
+  private async focusOnFirstResultAndScrollToTop() {
+    await this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
+    this.scrollToTopEvent.emit();
+  }
+
   public render() {
     return (
-      <PagerCommon
-        bindings={this.bindings}
-        eventEmitter={this.scrollToTopEvent}
-        activePage={this.focusTarget}
-        pager={this.pager}
-        pagerState={this.pagerState}
-        searchStatusState={this.searchStatusState}
-      />
+      <PagerNavigation label={this.bindings.i18n.t('pagination')}>
+        <PagerPreviousButton
+          icon={ArrowLeftIcon}
+          disabled={!this.pagerState.hasPreviousPage}
+          ariaLabel={this.bindings.i18n.t('previous')}
+          onClick={() => {
+            this.pager.previousPage();
+            this.focusOnFirstResultAndScrollToTop();
+          }}
+        />
+        <PagerPages>
+          {this.pagerState.currentPages.map((pageNumber) => {
+            return (
+              <PagerPageButton
+                isSelected={this.pager.isCurrentPage(pageNumber)}
+                ariaLabel={this.bindings.i18n.t('page-number', {pageNumber})}
+                onChecked={() => {
+                  this.pager.selectPage(pageNumber);
+                  this.focusOnFirstResultAndScrollToTop();
+                }}
+                page={pageNumber}
+                groupName={this.radioGroupName}
+                ref={(el) => {
+                  const isSelected = this.pager.isCurrentPage(pageNumber);
+                  if (isSelected && el) {
+                    this.focusTarget.setTarget(el);
+                  }
+                }}
+                text={pageNumber.toLocaleString(this.bindings.i18n.language)}
+              />
+            );
+          })}
+        </PagerPages>
+        <PagerNextButton
+          icon={ArrowRightIcon}
+          disabled={!this.pagerState.hasNextPage}
+          ariaLabel={this.bindings.i18n.t('next')}
+          onClick={() => {
+            this.pager.nextPage();
+            this.focusOnFirstResultAndScrollToTop();
+          }}
+        />
+      </PagerNavigation>
     );
   }
 }
