@@ -59,6 +59,10 @@ describe('core url manager', () => {
   }
 
   describe('initialization', () => {
+    it('initializes', () => {
+      expect(manager).toBeTruthy();
+    });
+
     it('dispatches #restoreSearchParameters', () => {
       expect(mockedRestoreSearchParametersAction).toHaveBeenCalled();
     });
@@ -75,7 +79,7 @@ describe('core url manager', () => {
     });
   });
 
-  describe('state', () => {
+  describe('#state', () => {
     it('contains the serialized fragment of the search parameters state', () => {
       engine.state.commerceQuery.query = 'books';
       expect(manager.state.fragment).toBe('q=books');

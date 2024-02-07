@@ -16,7 +16,7 @@ export interface ParameterManagerProps<T extends Parameters> {
   initialState: ParameterManagerInitialState<T>;
 }
 
-interface CoreParameterManagerProps<T extends Parameters>
+export interface CoreParameterManagerProps<T extends Parameters>
   extends ParameterManagerProps<T> {
   /**
    * The definition of the parameters.
@@ -29,7 +29,7 @@ interface CoreParameterManagerProps<T extends Parameters>
   activeParametersSelector: (state: CommerceEngine['state']) => T;
 
   /**
-   * The action to dispatch to update the parameters in state.
+   * The action to dispatch to update the parameters in the state.
    */
   restoreActionCreator: (parameters: T) => AnyAction;
 
@@ -68,25 +68,25 @@ const initialStateSchema = <T extends Parameters>(
   });
 
 /**
- * The `ParameterManager` controller allows restoring parameters that affect the results (e.g., from the a URL).
+ * The `ParameterManager` controller allows restoring parameters that affect the results (e.g., from the URL).
  */
 export interface ParameterManager<T extends Parameters> extends Controller {
   /**
-   * Updates the search parameters in the state with the specified parameters and fetches results. Unspecified keys are reset to their initial values.
+   * Updates the parameters in the state with the specified parameters and fetches results. Unspecified keys are reset to their initial values.
    *
-   * @param parameters - The search parameters to synchronize.
+   * @param parameters - The parameters to synchronize.
    */
   synchronize(parameters: T): void;
 
   /**
-   * The state relevant to the `SearchParameterManager` controller.
+   * The state relevant to the `ParameterManager` controller.
    */
   state: ParameterManagerState<T>;
 }
 
 export interface ParameterManagerState<T extends Parameters> {
   /**
-   * The parameters affecting the search response.
+   * The parameters affecting the response.
    */
   parameters: T;
 }
@@ -95,7 +95,7 @@ export interface ParameterManagerState<T extends Parameters> {
  * @internal
  * Creates a `ParameterManager` controller instance.
  *
- * @param engine - The headless engine.
+ * @param engine - The headless commerce engine.
  * @param props - The configurable `ParameterManager` properties.
  * @returns A `ParameterManager` controller instance.
  */

@@ -69,7 +69,7 @@ describe('searchSerializer', () => {
       });
     });
 
-    it('deserializes a string where the value contains an equals sign (e.g. q)', () => {
+    it('deserializes a string where the value contains an equals sign (e.g., q)', () => {
       const result = deserialize('q=@author==alice');
       expect(result).toEqual({q: '@author==alice'});
     });

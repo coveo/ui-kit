@@ -6,6 +6,7 @@ import {
   buildMockCommerceEngine,
   MockedCommerceEngine,
 } from '../../../../test/mock-engine-v2';
+import {UrlManager} from '../../../url-manager/headless-url-manager';
 import {buildProductListingUrlManager} from './headless-product-listing-url-manager';
 
 jest.mock(
@@ -17,13 +18,14 @@ jest.mock(
 
 describe('product listing url manager', () => {
   let engine: MockedCommerceEngine;
+  let manager: UrlManager;
 
   function initEngine(preloadedState = buildMockCommerceState()) {
     engine = buildMockCommerceEngine(preloadedState);
   }
 
   function initUrlManager(fragment = '') {
-    buildProductListingUrlManager(engine, {
+    manager = buildProductListingUrlManager(engine, {
       initialState: {
         fragment,
       },
@@ -37,6 +39,10 @@ describe('product listing url manager', () => {
   });
 
   describe('initialization', () => {
+    it('initializes', () => {
+      expect(manager).toBeTruthy();
+    });
+
     it('adds the correct reducers to the engine', () => {
       expect(engine.addReducers).toHaveBeenCalledWith({productListing});
     });

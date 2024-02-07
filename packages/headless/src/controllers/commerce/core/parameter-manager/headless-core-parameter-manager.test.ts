@@ -1,3 +1,4 @@
+import {SchemaValidationError, StringValue} from '@coveo/bueno';
 import {
   CommerceSearchParameters,
   restoreSearchParameters,
@@ -11,6 +12,7 @@ import {
 } from '../../../../test/mock-engine-v2';
 import {
   buildCoreParameterManager,
+  CoreParameterManagerProps,
   ParameterManager,
 } from './headless-core-parameter-manager';
 
@@ -27,7 +29,9 @@ describe('product listing parameter manager', () => {
     engine = buildMockCommerceEngine(preloadedState);
   }
 
-  function initParameterManager(props: Partial<CommerceSearchParameters> = {}) {
+  function initParameterManager(
+    props: Partial<CoreParameterManagerProps<CommerceSearchParameters>> = {}
+  ) {
     parameterManager = buildCoreParameterManager(engine, {
       initialState: {parameters: {}},
       parametersDefinition: searchParametersDefinition,
@@ -52,13 +56,30 @@ describe('product listing parameter manager', () => {
   });
 
   describe('initialization', () => {
-    it('validates initial state against schema', () => {});
+    it('initializes', () => {
+      expect(parameterManager).toBeTruthy();
+    });
 
-    it('dispatches #restoreActionCreator', () => {
+    it('validates initial state against schema', () => {
+      expect(() =>
+        initParameterManager({
+          parametersDefinition: {
+            q: new StringValue({required: true}),
+          },
+        })
+      ).toThrowError(SchemaValidationError);
+    });
+
+    it('dispatches #restoreActionCreator with initial parameters', () => {
       const mockedRestoreSearchParameters = jest.mocked(
         restoreSearchParameters
       );
-      expect(mockedRestoreSearchParameters).toHaveBeenCalledWith({});
+
+      initParameterManager({initialState: {parameters: {q: 'initial query'}}});
+
+      expect(mockedRestoreSearchParameters).toHaveBeenCalledWith({
+        q: 'initial query',
+      });
     });
   });
 
@@ -102,8 +123,12 @@ describe('product listing parameter manager', () => {
 
   describe('#state', () => {
     it('contains #parameters', () => {
+      initParameterManager({
+        activeParametersSelector: () => ({q: 'active parameter!'}),
+      });
+
       expect(parameterManager.state.parameters).toEqual({
-        q: '',
+        q: 'active parameter!',
       });
     });
   });
