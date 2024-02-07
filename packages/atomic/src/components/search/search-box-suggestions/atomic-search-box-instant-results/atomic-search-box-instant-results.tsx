@@ -4,7 +4,7 @@ import {
   InstantResults,
   Result,
 } from '@coveo/headless';
-import {Component, Element, State, h, Prop, Method} from '@stencil/core';
+import {Component, Element, State, h, Prop, Method, VNode} from '@stencil/core';
 import {InitializableComponent} from '../../../../utils/initialization-utils';
 import {encodeForDomAttribute} from '../../../../utils/string-utils';
 import {getClassNameForButtonStyle} from '../../../common/button-style';
@@ -93,12 +93,8 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
     }
   }
 
-  private getLink(el: HTMLElement): HTMLElement | null {
-    return (
-      el
-        ?.querySelector('atomic-result')
-        ?.shadowRoot?.querySelector('atomic-result-link a') || null
-    );
+  private getLink(el: HTMLAtomicResultElement): HTMLElement | null {
+    return el.shadowRoot?.querySelector('atomic-result-link a') || null;
   }
 
   private handleLinkClick(el: HTMLElement, hasModifier: boolean) {
@@ -121,10 +117,8 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
       : this.results;
 
     const elements: SearchBoxSuggestionElement[] = results.map(
-      (result: Result) => ({
-        key: `instant-result-${encodeForDomAttribute(result.uniqueId)}`,
-        part: 'instant-results-item',
-        content: (
+      (result: Result) => {
+        const content: VNode = (
           <atomic-result
             key={`instant-result-${encodeForDomAttribute(result.uniqueId)}`}
             part="outline"
@@ -142,21 +136,26 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
             stopPropagation={false}
             renderingFunction={this.resultRenderingFunction}
           ></atomic-result>
-        ),
-        ariaLabel: this.bindings.i18n.t('instant-results-suggestion-label', {
-          title:
-            this.ariaLabelGenerator?.(this.bindings, result) || result.title,
-          interpolation: {escapeValue: false},
-        }),
-        onSelect: (e: MouseEvent) => {
-          const link = this.getLink(e.target as HTMLElement);
+        );
+        return {
+          key: `instant-result-${encodeForDomAttribute(result.uniqueId)}`,
+          part: 'instant-results-item',
+          content,
+          ariaLabel: this.bindings.i18n.t('instant-results-suggestion-label', {
+            title:
+              this.ariaLabelGenerator?.(this.bindings, result) || result.title,
+            interpolation: {escapeValue: false},
+          }),
+          onSelect: (e: MouseEvent) => {
+            const link = this.getLink(content.$elm$);
 
-          if (!link) {
-            return;
-          }
-          this.handleLinkClick(link, e.ctrlKey || e.metaKey);
-        },
-      })
+            if (!link) {
+              return;
+            }
+            this.handleLinkClick(link, e.ctrlKey || e.metaKey);
+          },
+        };
+      }
     );
     if (elements.length) {
       const showAllText = this.bindings.i18n.t('show-all-results');
