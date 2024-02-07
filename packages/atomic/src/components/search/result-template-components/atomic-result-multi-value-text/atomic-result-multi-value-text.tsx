@@ -13,6 +13,7 @@ import {ResultContext} from '../result-template-decorators';
 
 /**
  * The `atomic-result-multi-value-text` component renders the values of a multi-value string field.
+ * @part result-multi-value-text-list - The list of field values.
  * @part result-multi-value-text-separator - The separator to display between each of the field values.
  * @part result-multi-value-text-value - A field value.
  * @part result-multi-value-text-value-more - A label indicating some values were omitted.
@@ -188,6 +189,10 @@ export class AtomicResultMultiText {
       this.host.remove();
       return;
     }
-    return <ul>{...this.renderListItems(this.sortedValues)}</ul>;
+    return (
+      <ul part="result-multi-value-text-list">
+        {...this.renderListItems(this.sortedValues)}
+      </ul>
+    );
   }
 }

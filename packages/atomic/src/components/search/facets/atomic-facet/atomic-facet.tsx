@@ -233,6 +233,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
 
   public initialize() {
     this.facet = buildFacet(this.bindings.engine, {options: this.facetOptions});
+
     announceFacetSearchResultsWithAriaLive(
       this.facet,
       this.label,
@@ -244,7 +245,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
     this.facetCommon = new FacetCommon({
       host: this.host,
       bindings: this.bindings,
-      label: this.label,
+      label: this.definedLabel,
       field: this.field,
       headingLevel: this.headingLevel,
       displayValuesAs: this.displayValuesAs,
@@ -261,6 +262,12 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
     });
 
     this.searchStatus = buildSearchStatus(this.bindings.engine);
+  }
+
+  private get definedLabel() {
+    return this.label === 'no-label' && this.facetState?.label
+      ? this.facetState.label
+      : this.label;
   }
 
   private get focusTargets(): {
@@ -313,6 +320,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
         ></FacetPlaceholder>
       );
     }
+    this.facetCommon.label = this.definedLabel;
     return this.facetCommon.render({
       hasError: this.searchStatusState.hasError,
       firstSearchExecuted: this.searchStatusState.firstSearchExecuted,
