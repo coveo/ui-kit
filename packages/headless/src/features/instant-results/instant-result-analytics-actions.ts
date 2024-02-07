@@ -39,6 +39,7 @@ export const logInstantResultOpen = (
       return {
         searchUid: state.search?.response.searchUid ?? '',
         position: docInfo.documentPosition,
+        actionCause: 'open',
         itemMetadata: {
           uniqueFieldName: docId.contentIDKey,
           uniqueFieldValue: docId.contentIDValue,

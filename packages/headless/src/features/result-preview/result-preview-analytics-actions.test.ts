@@ -7,20 +7,20 @@ import {
 } from '../../app/search-engine/search-engine';
 import {buildMockNonEmptyResult} from '../../test/mock-result';
 import {clearMicrotaskQueue} from '../../test/unit-test-utils';
-import {logDocumentOpen} from './result-analytics-actions';
+import {logDocumentQuickview} from './result-preview-analytics-actions';
 
 jest.mock('@coveo/relay');
 jest.mock('coveo.analytics');
 
-describe('#logDocumentOpen', () => {
+describe('#logRecommendationOpen', () => {
   const testResult = buildMockNonEmptyResult();
   let engine: SearchEngine;
-  const makeDocumentOpen = jest.fn();
+  const makeDocumentQuickview = jest.fn();
   const emit = jest.fn();
 
   beforeEach(() => {
     jest.mocked(CoveoSearchPageClient).mockReturnValue({
-      makeDocumentOpen,
+      makeDocumentQuickview,
     } as unknown as CoveoSearchPageClient);
     jest.mocked(createRelay).mockReturnValue({
       emit,
@@ -42,12 +42,12 @@ describe('#logDocumentOpen', () => {
       });
     });
 
-    it('should call coveo.analytics.makeDocumentOpen properly', async () => {
-      engine.dispatch(logDocumentOpen(testResult));
+    it('should call coveo.analytics.makeRecommendationOpen properly', async () => {
+      engine.dispatch(logDocumentQuickview(testResult));
       await clearMicrotaskQueue();
 
-      expect(makeDocumentOpen).toHaveBeenCalledTimes(1);
-      expect(makeDocumentOpen.mock.calls[0]).toMatchSnapshot();
+      expect(makeDocumentQuickview).toHaveBeenCalledTimes(1);
+      expect(makeDocumentQuickview.mock.calls[0]).toMatchSnapshot();
     });
   });
 
@@ -65,7 +65,7 @@ describe('#logDocumentOpen', () => {
     });
 
     it('should call relay.emit properly', async () => {
-      engine.dispatch(logDocumentOpen(testResult));
+      engine.dispatch(logDocumentQuickview(testResult));
       await clearMicrotaskQueue();
 
       expect(emit).toHaveBeenCalledTimes(1);
