@@ -56,7 +56,7 @@ const prepareRequestParams = (req: CommerceAPIRequest) => {
 };
 
 export const baseRequest = (
-  req: BaseParam & TrackingIdParam,
+  req: BaseParam,
   path: string
 ): Pick<
   PlatformClientCallOptions,
