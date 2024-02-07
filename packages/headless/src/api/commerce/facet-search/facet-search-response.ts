@@ -1,10 +1,3 @@
-export interface FacetSearchSuccessResponse {
-  values: FacetSearchValue[];
-  moreValuesAvailable: boolean;
-}
+import {SpecificFacetSearchResponse} from '../../search/facet-search/specific-facet-search/specific-facet-search-response';
 
-export interface FacetSearchValue {
-  displayValue: string;
-  rawValue: string;
-  count: number;
-}
+export type FacetSearchSuccessResponse = SpecificFacetSearchResponse;
