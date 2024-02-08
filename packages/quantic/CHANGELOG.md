@@ -1,3 +1,15 @@
+# 2.44.0 (2024-02-08)
+
+### Bug Fixes
+
+- **quantic:** Fix an issue with the results not re-rendering between queries ([#3562](https://github.com/coveo/ui-kit/issues/3562)) ([4a70334](https://github.com/coveo/ui-kit/commits/4a70334c03b7e58dc33a36d128ca64c47736befa))
+- **quantic:** improved the Quantic Printable URI to support opening links inside salesforce ([#3579](https://github.com/coveo/ui-kit/issues/3579)) ([37e6b96](https://github.com/coveo/ui-kit/commits/37e6b962ba709dc3e7be216ea9370679683d4f95))
+- **quantic:** Pressing ENTER key while targeting the clear icon submits search request in standalone searchbox ([#3537](https://github.com/coveo/ui-kit/issues/3537)) ([a8fd585](https://github.com/coveo/ui-kit/commits/a8fd5855cc745711fe5e4d0d4611e08948a4f7be))
+
+### Features
+
+- **quantic:** added support to entering line breaks in expandable search box ([#3569](https://github.com/coveo/ui-kit/issues/3569)) ([60ccf6e](https://github.com/coveo/ui-kit/commits/60ccf6e12fe0540bc8c3fd1a00ecdb9e1e7b4f49))
+
 ## 2.43.4 (2024-01-31)
 
 ### Bug Fixes

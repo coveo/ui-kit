@@ -353,6 +353,33 @@ describe('c-quantic-search-box-input', () => {
               functionsMocks.exampleHandleSubmitSearch
             ).toHaveBeenCalledTimes(1);
           });
+
+          it(`${
+            textareaValue ? 'should not' : 'should'
+          } dispatch a #quantic__submitsearch custom event when the shift key is pressed along with the enter key`, async () => {
+            const element = createTestComponent({
+              ...defaultOptions,
+              textarea: textareaValue,
+            });
+            setupEventListeners(element);
+            await flushPromises();
+
+            const input = element.shadowRoot.querySelector(
+              textareaValue
+                ? selectors.searchBoxTextArea
+                : selectors.searchBoxInput
+            );
+            expect(input).not.toBeNull();
+
+            await input.focus();
+            input.dispatchEvent(
+              new KeyboardEvent('keyup', {key: 'Enter', shiftKey: true})
+            );
+
+            expect(
+              functionsMocks.exampleHandleSubmitSearch
+            ).toHaveBeenCalledTimes(textareaValue ? 0 : 1);
+          });
         });
       });
     });

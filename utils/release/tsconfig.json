@@ -8,8 +8,8 @@
     "skipLibCheck": true,
     "noEmit": true,
     "noUnusedLocals": true,
-    "lib": ["ESNext"],
+    "lib": ["ESNext"]
   },
   "exclude": ["node_modules"],
-  "include": ["*.mjs"],
+  "include": ["*.mjs"]
 }

@@ -166,16 +166,27 @@ export class AtomicRefineModal implements InitializableComponent {
   }
 
   private cloneFacets(facets: BaseFacetElement[]): BaseFacetElement[] {
-    return facets.map((facet, i) => {
-      facet.classList.remove(popoverClass);
-      facet.setAttribute(isRefineModalFacet, '');
-      const clone = facet.cloneNode(true) as BaseFacetElement;
+    const allFacetTags = Array.from(
+      new Set(facets.map((el) => el.tagName.toLowerCase()))
+    );
+
+    const allFacetsInOrderInDOM = allFacetTags.length
+      ? this.bindings.interfaceElement.querySelectorAll(allFacetTags.join(','))
+      : [];
+
+    const clones: BaseFacetElement[] = [];
+    allFacetsInOrderInDOM.forEach((facetElement, index) => {
+      const clone = facetElement.cloneNode(true) as BaseFacetElement;
+      clone.classList.remove(popoverClass);
+      clone.setAttribute(isRefineModalFacet, '');
       clone.isCollapsed =
         this.collapseFacetsAfter === -1
           ? false
-          : i + 1 > this.collapseFacetsAfter;
-      return clone;
+          : index + 1 > this.collapseFacetsAfter;
+      clones.push(clone);
     });
+
+    return clones;
   }
 
   private makeAutomaticFacetGenerator() {

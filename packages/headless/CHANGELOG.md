@@ -1,3 +1,11 @@
+# 2.49.0 (2024-02-08)
+
+### Features
+
+- **analytics:** migrate quickview to EP ([#3570](https://github.com/coveo/ui-kit/issues/3570)) ([56fc66a](https://github.com/coveo/ui-kit/commits/56fc66ad028bb13d3cd7a7968518183d8d33eb3a))
+- **commerce:** create commerce url and parameter managers ([#3543](https://github.com/coveo/ui-kit/issues/3543)) ([30dd6e5](https://github.com/coveo/ui-kit/commits/30dd6e5317b70c1e6b4cfb16022d4b4b878a07fe))
+- **headless,atomic:** expose and leverage user defined label in administration tool for facets ([#3566](https://github.com/coveo/ui-kit/issues/3566)) ([5848396](https://github.com/coveo/ui-kit/commits/58483961a702887b54a5a51625a267753d727d6f))
+
 # 2.48.0 (2024-01-31)
 
 ### Bug Fixes

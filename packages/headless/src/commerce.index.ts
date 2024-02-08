@@ -122,3 +122,14 @@ export type {
   SearchBox,
   SearchBoxState,
 } from './controllers/commerce/search-box/headless-search-box';
+
+export type {
+  UrlManagerProps,
+  UrlManagerInitialState,
+  UrlManagerState,
+  UrlManager,
+} from './controllers/commerce/core/url-manager/headless-core-url-manager';
+export {buildCoreUrlManager} from './controllers/commerce/core/url-manager/headless-core-url-manager';
+
+export {buildSearchUrlManager} from './controllers/commerce/search/url-manager/headless-search-url-manager';
+export {buildProductListingUrlManager} from './controllers/commerce/product-listing/url-manager/headless-product-listing-url-manager';
