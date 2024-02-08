@@ -7,8 +7,8 @@
     "checkJs": true,
     "skipLibCheck": true,
     "noEmit": true,
-    "lib": ["ESNext"],
+    "lib": ["ESNext"]
   },
   "exclude": ["node_modules"],
-  "include": ["*.js", "*.cjs"],
+  "include": ["*.js", "*.cjs"]
 }

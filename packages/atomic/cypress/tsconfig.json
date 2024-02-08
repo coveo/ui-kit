@@ -9,7 +9,7 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     //https://github.com/cypress-io/cypress/issues/26203#issuecomment-1571861397
-    "sourceMap": false,
+    "sourceMap": false
   },
-  "include": ["**/*.ts", "**/*.js"],
+  "include": ["**/*.ts", "**/*.js"]
 }
