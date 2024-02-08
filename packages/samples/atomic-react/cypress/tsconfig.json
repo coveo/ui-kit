@@ -9,7 +9,7 @@
     "sourceMap": false,
     "outDir": "./public/dist",
     "types": ["cypress"],
-    "jsx": "react",
+    "jsx": "react"
   },
-  "include": ["**/*.ts"],
+  "include": ["**/*.ts"]
 }
