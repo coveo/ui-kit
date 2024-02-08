@@ -1,3 +1,15 @@
+# 2.57.0 (2024-02-08)
+
+### Bug Fixes
+
+- **atomic:** fix facet order in modal refine ([#3572](https://github.com/coveo/ui-kit/issues/3572)) ([9dc777e](https://github.com/coveo/ui-kit/commits/9dc777ea622d8d763ca4f628f87f733bf0d50d49))
+- **atomic:** fix input minimum length behaving incorrectly with clear button ([#3564](https://github.com/coveo/ui-kit/issues/3564)) ([eda7dfa](https://github.com/coveo/ui-kit/commits/eda7dfa3cfd320edaa6a5d48e03655b5adf1796b))
+
+### Features
+
+- **atomic:** add shadow part of result-multi-value-text list element ([#3567](https://github.com/coveo/ui-kit/issues/3567)) ([9c94377](https://github.com/coveo/ui-kit/commits/9c9437722223f707a6dead944e45d721ff8a1bc4))
+- **headless,atomic:** expose and leverage user defined label in administration tool for facets ([#3566](https://github.com/coveo/ui-kit/issues/3566)) ([5848396](https://github.com/coveo/ui-kit/commits/58483961a702887b54a5a51625a267753d727d6f))
+
 # 2.56.0 (2024-01-31)
 
 ### Bug Fixes
