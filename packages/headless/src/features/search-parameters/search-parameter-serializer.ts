@@ -36,11 +36,11 @@ const supportedFacetParameters: Record<FacetSearchParameters, boolean> = {
   df: true,
 };
 
-const delimiter = '&';
-const equal = '=';
+export const delimiter = '&';
+export const equal = '=';
 
 export function buildSearchParameterSerializer() {
-  return {serialize, deserialize};
+  return {serialize: serialize(serializePair), deserialize: deserialize};
 }
 
 export function keyHasObjectValue(key: string): key is FacetKey {
@@ -85,12 +85,14 @@ export function isValidKey(key: string): key is SearchParameterKey {
   return isValidBasicKey(key) || keyHasObjectValue(key);
 }
 
-function serialize(obj: SearchParameters) {
-  return Object.entries(obj)
-    .map(serializePair)
-    .filter((str) => str)
-    .join(delimiter);
-}
+export const serialize =
+  <T extends {}>(pairSerializer: (pair: [string, unknown]) => string) =>
+  (obj: T) => {
+    return Object.entries(obj)
+      .map(pairSerializer)
+      .filter((str) => str)
+      .join(delimiter);
+  };
 
 function serializePair(pair: [string, unknown]) {
   const [key, val] = pair;
@@ -107,6 +109,10 @@ function serializePair(pair: [string, unknown]) {
     return isRangeFacetObject(val) ? serializeRangeFacets(key, val) : '';
   }
 
+  return serializeSpecialCharacters(key, val);
+}
+
+export function serializeSpecialCharacters(key: string, val: unknown) {
   return `${key}${equal}${encodeURIComponent(
     val as string | number | boolean
   )}`;
@@ -199,7 +205,7 @@ function deserialize(fragment: string): SearchParameters {
   }, {});
 }
 
-function splitOnFirstEqual(str: string) {
+export function splitOnFirstEqual(str: string) {
   const [first, ...rest] = str.split(equal);
   const second = rest.join(equal);
 

@@ -5,6 +5,7 @@ import {AnyFacetResponse} from '../facets/facet-set/interfaces/response';
 export interface CommerceSearchState {
   error: CommerceAPIErrorStatusResponse | null;
   isLoading: boolean;
+  requestId: string;
   responseId: string;
   products: ProductRecommendation[];
   facets: AnyFacetResponse[];
@@ -13,6 +14,7 @@ export interface CommerceSearchState {
 export const getCommerceSearchInitialState = (): CommerceSearchState => ({
   error: null,
   isLoading: false,
+  requestId: '',
   responseId: '',
   products: [],
   facets: [],

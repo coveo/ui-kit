@@ -36,6 +36,13 @@ const testMessagePayload = {
   }),
   finishReason: 'COMPLETED',
 };
+const testStreamEndPayload = {
+  payloadType: 'genqa.endOfStreamType',
+  payload: JSON.stringify({
+    answerGenerated: true,
+    finishReason: 'COMPLETED',
+  }),
+};
 const testCitationsPayload = {
   payloadType: 'genqa.citationsType',
   payload: JSON.stringify({
@@ -188,9 +195,11 @@ describe('Generated Answer Test Suites', () => {
         GeneratedAnswerAssertions.assertToggleValue(false);
         GeneratedAnswerAssertions.assertCopyButtonVisibility(false);
         GeneratedAnswerAssertions.assertLocalStorageData({isVisible: false});
+        GeneratedAnswerAssertions.assertLogHideGeneratedAnswer();
 
         describe('when component is re-activated', () => {
           beforeEach(() => {
+            AnalyticsTracker.reset();
             GeneratedAnswerSelectors.toggle().click();
           });
 
@@ -199,6 +208,7 @@ describe('Generated Answer Test Suites', () => {
           GeneratedAnswerAssertions.assertToggleValue(true);
           GeneratedAnswerAssertions.assertCopyButtonVisibility(true);
           GeneratedAnswerAssertions.assertLocalStorageData({isVisible: true});
+          GeneratedAnswerAssertions.assertLogShowGeneratedAnswer();
         });
       });
 
@@ -241,6 +251,45 @@ describe('Generated Answer Test Suites', () => {
           );
         });
 
+        describe('when like button is clicked', () => {
+          beforeEach(() => {
+            AnalyticsTracker.reset();
+            GeneratedAnswerSelectors.likeButton().click();
+          });
+
+          it('should log likeGeneratedAnswer event', () => {
+            GeneratedAnswerAssertions.assertLogLikeGeneratedAnswer();
+          });
+        });
+
+        describe('when dislike button is clicked', () => {
+          beforeEach(() => {
+            AnalyticsTracker.reset();
+            GeneratedAnswerSelectors.dislikeButton().click();
+          });
+
+          it('should log dislikeGeneratedAnswer event', () => {
+            GeneratedAnswerAssertions.assertLogDislikeGeneratedAnswer();
+          });
+        });
+
+        describe('when copy button is clicked', () => {
+          it('should copy the generated answer to the clipboard', async () => {
+            GeneratedAnswerSelectors.copyButton().focus().click();
+
+            GeneratedAnswerAssertions.assertAnswerCopiedToClipboard(
+              testTextDelta
+            );
+          });
+
+          it('should log copyGeneratedAnswer event', async () => {
+            AnalyticsTracker.reset();
+            GeneratedAnswerSelectors.copyButton().focus().click();
+
+            GeneratedAnswerAssertions.assertLogCopyGeneratedAnswer();
+          });
+        });
+
         describe('when a rephrase option is selected', () => {
           rephraseOptions.forEach((option) => {
             it(`should rephrase in "${option.value}" format`, () => {
@@ -248,15 +297,14 @@ describe('Generated Answer Test Suites', () => {
 
               GeneratedAnswerAssertions.assertAnswerStyle(option.value);
             });
-          });
-        });
 
-        describe('when we click on copy button', () => {
-          it('should copy the generated answer to the clipboard', async () => {
-            GeneratedAnswerSelectors.copyButton().focus().click();
-            GeneratedAnswerAssertions.assertAnswerCopiedToClipboard(
-              testTextDelta
-            );
+            it(`should log rephraseGeneratedAnswer event with "${option.label}"`, () => {
+              GeneratedAnswerSelectors.rephraseButton(option.label).click();
+
+              GeneratedAnswerAssertions.assertLogRephraseGeneratedAnswer(
+                option.value
+              );
+            });
           });
         });
       });
@@ -363,6 +411,23 @@ describe('Generated Answer Test Suites', () => {
         });
       });
 
+      describe('when streamEnd event is received', () => {
+        const streamId = crypto.randomUUID();
+
+        beforeEach(() => {
+          mockStreamResponse(streamId, [
+            {...testMessagePayload, finishReason: null},
+            testStreamEndPayload,
+          ]);
+          setupGeneratedAnswer(streamId);
+          cy.wait(getStreamInterceptAlias(streamId));
+        });
+
+        it('should log the streamEnd event', () => {
+          GeneratedAnswerAssertions.assertLogGeneratedAnswerStreamEnd();
+        });
+      });
+
       describe('when the stream connection fails', () => {
         const streamId = crypto.randomUUID();
 
@@ -383,7 +448,7 @@ describe('Generated Answer Test Suites', () => {
             describe(`${errorCode} error`, () => {
               beforeEach(() => {
                 Cypress.on('uncaught:exception', () => false);
-                mockStreamError(streamId, 500);
+                mockStreamError(streamId, errorCode);
                 setupGeneratedAnswer(streamId);
                 cy.wait(getStreamInterceptAlias(streamId));
               });

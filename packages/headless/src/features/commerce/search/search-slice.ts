@@ -18,8 +18,9 @@ export const commerceSearchReducer = createReducer(
         state.responseId = action.payload.response.responseId;
         state.isLoading = false;
       })
-      .addCase(executeSearch.pending, (state) => {
+      .addCase(executeSearch.pending, (state, action) => {
         state.isLoading = true;
+        state.requestId = action.meta.requestId;
       });
   }
 );
