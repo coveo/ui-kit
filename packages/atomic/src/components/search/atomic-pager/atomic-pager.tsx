@@ -19,12 +19,11 @@ import {randomID} from '../../../utils/utils';
 import {
   PagerNextButton,
   PagerPageButton,
-  PagerPages,
+  PagerPageButtons,
   PagerPreviousButton,
-} from '../../common/pager/pager-button';
+} from '../../common/pager/pager-buttons';
 import {PagerGuard} from '../../common/pager/pager-guard';
-import {PagerNavigation} from '../../common/pager/pager-nav';
-//import {PagerCommon} from '../../common/pager/pager-common';
+import {PagerNavigation} from '../../common/pager/pager-navigation';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -111,7 +110,7 @@ export class AtomicPager implements InitializableComponent {
               this.focusOnFirstResultAndScrollToTop();
             }}
           />
-          <PagerPages>
+          <PagerPageButtons>
             {this.pagerState.currentPages.map((pageNumber) => {
               return (
                 <PagerPageButton
@@ -133,7 +132,7 @@ export class AtomicPager implements InitializableComponent {
                 />
               );
             })}
-          </PagerPages>
+          </PagerPageButtons>
           <PagerNextButton
             icon={this.nextButtonIcon}
             disabled={!this.pagerState.hasNextPage}

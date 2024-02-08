@@ -7,7 +7,11 @@ export interface PagerNavigationButtonProps
   icon: string;
 }
 
-export interface PagerPageButtonProps extends RadioButtonProps {
+export interface PagerPageButtonProps
+  extends Omit<
+    RadioButtonProps,
+    'part' | 'style' | 'checked' | 'ariaCurrent' | 'key' | 'class'
+  > {
   page: number;
   isSelected: boolean;
   text: string;
@@ -40,7 +44,6 @@ export const PagerNextButton: FunctionalComponent<
       {...props}
       style="outline-primary"
       part="next-button"
-      disabled={props.disabled}
       class="p-1 min-w-[2.5rem] min-h-[2.5rem] flex justify-center items-center"
     >
       <atomic-icon
@@ -68,7 +71,7 @@ export const PagerPageButton: FunctionalComponent<PagerPageButtonProps> = (
   );
 };
 
-export const PagerPages: FunctionalComponent = (_, children) => {
+export const PagerPageButtons: FunctionalComponent = (_, children) => {
   return (
     <div part="page-buttons" role="radiogroup" class="contents">
       {...children}

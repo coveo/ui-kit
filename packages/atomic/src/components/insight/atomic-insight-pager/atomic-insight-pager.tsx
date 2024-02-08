@@ -19,10 +19,10 @@ import {randomID} from '../../../utils/utils';
 import {
   PagerNextButton,
   PagerPageButton,
-  PagerPages,
+  PagerPageButtons,
   PagerPreviousButton,
-} from '../../common/pager/pager-button';
-import {PagerNavigation} from '../../common/pager/pager-nav';
+} from '../../common/pager/pager-buttons';
+import {PagerNavigation} from '../../common/pager/pager-navigation';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
@@ -93,7 +93,7 @@ export class AtomicInsightPager
             this.focusOnFirstResultAndScrollToTop();
           }}
         />
-        <PagerPages>
+        <PagerPageButtons>
           {this.pagerState.currentPages.map((pageNumber) => {
             return (
               <PagerPageButton
@@ -115,7 +115,7 @@ export class AtomicInsightPager
               />
             );
           })}
-        </PagerPages>
+        </PagerPageButtons>
         <PagerNextButton
           icon={ArrowRightIcon}
           disabled={!this.pagerState.hasNextPage}
