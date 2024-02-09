@@ -8,13 +8,13 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: cypress-io/github-action@v5
+    - uses: cypress-io/github-action@v6
       name: Run Cypress
       with:
         browser: chrome
         command-prefix: 'npx -w @coveo/atomic-vuejs-samples cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
         start: npx nx run atomic-vuejs-samples:dev
-        wait-on: 'http://localhost:5173'
+        wait-on: 'http://[::1]:5173'
         wait-on-timeout: 600000
         install: false
         record: false
