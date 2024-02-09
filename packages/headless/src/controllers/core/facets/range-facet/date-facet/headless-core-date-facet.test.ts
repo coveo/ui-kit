@@ -64,7 +64,7 @@ describe('date facet', () => {
     initDateFacet();
   });
 
-  it('#initDateFacet validate manual range in the options', () => {
+  it('#initDateFacet validates manual range in the options', () => {
     options.currentValues = [
       buildDateRange({start: 1616679091000, end: 1616592691000}),
     ];
@@ -119,7 +119,7 @@ describe('date facet', () => {
   });
 
   describe('#toggleSelect', () => {
-    it('dispatches a toggleSelectDateFacetValue with the passed value', () => {
+    it('dispatches an #executeToggleDateFacetSelect with the passed value', () => {
       const value = buildMockDateFacetValue();
       dateFacet.toggleSelect(value);
       expect(executeToggleDateFacetSelect).toHaveBeenCalledWith({
@@ -130,7 +130,7 @@ describe('date facet', () => {
   });
 
   describe('#toggleExclude', () => {
-    it('dispatches a toggleExcludeDateFacetValue with the passed value', () => {
+    it('dispatches an #executeToggleDateFacetExclude with the passed value', () => {
       const value = buildMockDateFacetValue();
       dateFacet.toggleExclude(value);
       expect(executeToggleDateFacetExclude).toHaveBeenCalledWith({
@@ -141,7 +141,7 @@ describe('date facet', () => {
   });
 
   function testCommonToggleSingleSelect(facetValue: () => DateFacetValue) {
-    it('dispatches a #executeToggleDateFacetSelect action with the passed facet value', () => {
+    it('dispatches an #executeToggleDateFacetSelect action with the passed facet value', () => {
       dateFacet.toggleSingleSelect(facetValue());
       expect(executeToggleDateFacetSelect).toHaveBeenCalledWith({
         facetId,
@@ -155,7 +155,7 @@ describe('date facet', () => {
 
     testCommonToggleSingleSelect(facetValue);
 
-    it('dispatches a #executeToggleDateFacetSelect action', () => {
+    it('dispatches an #executeToggleDateFacetSelect action', () => {
       dateFacet.toggleSingleSelect(facetValue());
       expect(executeToggleDateFacetSelect).toHaveBeenCalledWith(
         expect.objectContaining({facetId})
