@@ -14,7 +14,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "2.49.0",
+  "version": "2.49.1",
   "files": [
     "dist/",
     "recommendation/",
@@ -50,7 +50,7 @@
     "pino-pretty": "^6.0.0 || ^10.0.0"
   },
   "dependencies": {
-    "@coveo/bueno": "0.45.6",
+    "@coveo/bueno": "0.45.7",
     "@coveo/relay": "0.7.4",
     "@microsoft/fetch-event-source": "2.0.1",
     "@reduxjs/toolkit": "1.9.7",
