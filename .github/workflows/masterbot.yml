@@ -177,6 +177,7 @@ jobs:
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
       - uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup-sfdx
       - uses: ./.github/actions/e2e-quantic-setup
         with:
           clientid: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
@@ -198,6 +199,7 @@ jobs:
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
       - uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup-sfdx
       - uses: ./.github/actions/e2e-quantic
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -209,6 +211,7 @@ jobs:
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
       - uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup-sfdx
       - run: npx --no-install ts-node packages/quantic/scripts/build/delete-org.ts
         shell: bash
   prerelease:
