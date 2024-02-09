@@ -1,3 +1,10 @@
+## 2.44.1 (2024-02-09)
+
+### Bug Fixes
+
+- **deps:** update all dependencies j:kit-282 ([#3576](https://github.com/coveo/ui-kit/issues/3576)) ([4887772](https://github.com/coveo/ui-kit/commits/48877723d6f8c5e5446a48296326519f009ae850))
+- **quantic:** minor styling issue fixed with rephrase buttons of the generated answer component ([#3587](https://github.com/coveo/ui-kit/issues/3587)) ([0ea8fbd](https://github.com/coveo/ui-kit/commits/0ea8fbd16741cec54aca2c2f0a45cbe1bd9021f2))
+
 # 2.44.0 (2024-02-08)
 
 ### Bug Fixes
