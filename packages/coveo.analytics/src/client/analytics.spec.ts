@@ -667,14 +667,14 @@ describe('doNotTrack', () => {
         expect(client.runtime.storage).toBeInstanceOf(NullStorage);
     });
 
-    it('should clear existing cookies', async () => {
+    it('should not clear existing cookies', async () => {
         jest.spyOn(doNotTrack, 'doNotTrack').mockImplementation(() => true);
         Cookie.set('coveo_visitorId', aVisitorId);
         expect(Cookie.get('coveo_visitorId')).toBe(aVisitorId);
 
         new CoveoAnalyticsClient({});
 
-        expect(Cookie.get('coveo_visitorId')).not.toBe(aVisitorId);
+        expect(Cookie.get('coveo_visitorId')).toBe(aVisitorId);
     });
 });
 

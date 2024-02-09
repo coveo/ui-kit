@@ -84,10 +84,6 @@ export class CoveoSearchPageClient {
     }
 
     public disable() {
-        if (this.coveoAnalyticsClient instanceof CoveoAnalyticsClient) {
-            this.coveoAnalyticsClient.clear();
-        }
-
         this.coveoAnalyticsClient = new NoopAnalytics();
     }
 

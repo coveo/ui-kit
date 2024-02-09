@@ -12,6 +12,7 @@ import {
 import {CoveoInsightClient, InsightClientProvider} from './insightClient';
 import doNotTrack from '../donottrack';
 import {InsightEvents, InsightStaticFilterToggleValueMetadata} from './insightEvents';
+import {Cookie} from '../cookieutils';
 
 const baseCaseMetadata = {
     caseId: '1234',
@@ -1418,6 +1419,16 @@ describe('InsightClient', () => {
         expect(c.coveoAnalyticsClient instanceof CoveoAnalyticsClient).toBe(true);
         c.disable();
         expect(c.coveoAnalyticsClient instanceof NoopAnalytics).toBe(true);
+    });
+
+    it('disabling analytics does not delete the visitorId', () => {
+        const visitorId = 'uuid';
+        Cookie.set('coveo_visitorId', visitorId);
+        const c = new CoveoInsightClient({enableAnalytics: true}, provider);
+
+        expect(Cookie.get('coveo_visitorId')).toBe(visitorId);
+        c.disable();
+        expect(Cookie.get('coveo_visitorId')).toBe(visitorId);
     });
 
     it('should disable analytics when doNotTrack is enabled', async () => {

@@ -37,9 +37,6 @@ export class CaseAssistClient {
     }
 
     public disable() {
-        if (this.coveoAnalyticsClient instanceof CoveoAnalyticsClient) {
-            this.coveoAnalyticsClient.clear();
-        }
         this.coveoAnalyticsClient = new NoopAnalytics();
         this.svc = new SVCPlugin({client: this.coveoAnalyticsClient});
     }

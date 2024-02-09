@@ -93,9 +93,6 @@ export class CoveoInsightClient {
     }
 
     public disable() {
-        if (this.coveoAnalyticsClient instanceof CoveoAnalyticsClient) {
-            this.coveoAnalyticsClient.clear();
-        }
         this.coveoAnalyticsClient = new NoopAnalytics();
     }
 

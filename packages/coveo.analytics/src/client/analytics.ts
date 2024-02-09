@@ -184,7 +184,6 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
 
         this.runtime = this.options.runtimeEnvironment || this.initRuntime(clientsOptions);
         if (doNotTrack()) {
-            this.clear();
             this.runtime.storage = new NullStorage();
         }
 

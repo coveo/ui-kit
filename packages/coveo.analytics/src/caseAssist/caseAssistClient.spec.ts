@@ -10,6 +10,7 @@ import {mockFetch, lastCallBody} from '../../tests/fetchMock';
 import {TicketProperties} from '../plugins/svc';
 const {fetchMock, fetchMockBeforeEach} = mockFetch();
 import doNotTrack from '../donottrack';
+import {Cookie} from '../cookieutils';
 jest.mock('../donottrack', () => {
     return {
         default: jest.fn(),
@@ -176,6 +177,15 @@ describe('CaseAssistClient', () => {
         });
 
         expect(fetchMock.called()).toBe(false);
+    });
+
+    it('disabling does not delete the visitorId', () => {
+        const visitorId = 'uuid';
+        Cookie.set('coveo_visitorId', visitorId);
+
+        expect(Cookie.get('coveo_visitorId')).toBe(visitorId);
+        client.disable();
+        expect(Cookie.get('coveo_visitorId')).toBe(visitorId);
     });
 
     it('should send events after #enable function is called', async () => {

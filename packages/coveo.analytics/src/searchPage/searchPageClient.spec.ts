@@ -12,6 +12,8 @@ import CoveoAnalyticsClient from '../client/analytics';
 import {NoopAnalytics} from '../client/noopAnalytics';
 import {mockFetch, lastCallBody} from '../../tests/fetchMock';
 import doNotTrack from '../donottrack';
+import {Cookie} from '../cookieutils';
+
 jest.mock('../donottrack', () => {
     return {
         default: jest.fn(),
@@ -1422,6 +1424,16 @@ describe('SearchPageClient', () => {
         expect(c.coveoAnalyticsClient instanceof CoveoAnalyticsClient).toBe(true);
         c.disable();
         expect(c.coveoAnalyticsClient instanceof NoopAnalytics).toBe(true);
+    });
+
+    it('disabling analytics does not delete the visitorId', () => {
+        const visitorId = 'uuid';
+        Cookie.set('coveo_visitorId', visitorId);
+        const c = new CoveoSearchPageClient({enableAnalytics: true}, provider);
+
+        expect(Cookie.get('coveo_visitorId')).toBe(visitorId);
+        c.disable();
+        expect(Cookie.get('coveo_visitorId')).toBe(visitorId);
     });
 
     it('should allow enabling analytics after initialization', () => {
