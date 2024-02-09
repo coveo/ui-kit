@@ -5,6 +5,7 @@ import {AnyFacetResponse} from '../facets/facet-set/interfaces/response';
 export interface ProductListingV2State {
   error: CommerceAPIErrorStatusResponse | null;
   isLoading: boolean;
+  requestId: string;
   responseId: string;
   facets: AnyFacetResponse[];
   products: ProductRecommendation[];
@@ -13,6 +14,7 @@ export interface ProductListingV2State {
 export const getProductListingV2InitialState = (): ProductListingV2State => ({
   error: null,
   isLoading: false,
+  requestId: '',
   responseId: '',
   facets: [],
   products: [],

@@ -1,32 +1,44 @@
-import {configuration} from '../../app/common-reducers';
-import {
-  fetchResultContent,
-  preparePreviewPagination,
-} from '../../features/result-preview/result-preview-actions';
+import {preparePreviewPagination} from '../../features/result-preview/result-preview-actions';
 import {logDocumentQuickview} from '../../features/result-preview/result-preview-analytics-actions';
-import {resultPreviewReducer as resultPreview} from '../../features/result-preview/result-preview-slice';
-import {searchReducer as search} from '../../features/search/search-slice';
-import {MockSearchEngine} from '../../test/mock-engine';
-import {buildMockSearchAppEngine} from '../../test/mock-engine';
+import {buildResultPreviewRequest} from '../../features/result-preview/result-preview-request-builder';
+import {searchReducer} from '../../features/search/search-slice';
+import {SearchAppState} from '../../state/search-app-state';
+import {
+  buildMockSearchEngine,
+  MockedSearchEngine,
+} from '../../test/mock-engine-v2';
 import {buildMockResult} from '../../test/mock-result';
-import {buildMockResultPreviewState} from '../../test/mock-result-preview-state';
+import {createMockState} from '../../test/mock-state';
+import {buildCoreQuickview} from '../core/quickview/headless-core-quickview';
 import {
   buildQuickview,
   QuickviewOptions,
   Quickview,
 } from './headless-quickview';
 
+jest.mock('../core/quickview/headless-core-quickview');
+jest.mock('../../features/result-preview/result-preview-actions');
+jest.mock('../../features/result-preview/result-preview-analytics-actions');
+
 describe('Quickview', () => {
-  let engine: MockSearchEngine;
+  const mockedBuildCoreQuickview = jest.mocked(buildCoreQuickview);
+  let engine: MockedSearchEngine;
+  let state: SearchAppState;
   let options: QuickviewOptions;
   let quickview: Quickview;
+
+  function initEngine(preloadedState = createMockState()) {
+    state = preloadedState;
+    engine = buildMockSearchEngine(preloadedState);
+  }
 
   function initQuickview() {
     quickview = buildQuickview(engine, {options});
   }
 
   beforeEach(() => {
-    engine = buildMockSearchAppEngine();
+    jest.resetAllMocks();
+    initEngine();
     options = {
       result: buildMockResult(),
       maximumPreviewSize: 0,
@@ -35,131 +47,77 @@ describe('Quickview', () => {
     initQuickview();
   });
 
-  it('initializes', () => {
-    expect(quickview).toBeTruthy();
-  });
-
-  it('it adds the correct reducers to engine', () => {
-    expect(engine.addReducers).toHaveBeenNthCalledWith(1, {
-      search,
-    });
-    expect(engine.addReducers).toHaveBeenNthCalledWith(2, {
-      configuration,
-      resultPreview,
+  it('adds the correct reducers to engine', () => {
+    expect(engine.addReducers).toHaveBeenCalledWith({
+      search: searchReducer,
     });
   });
 
-  it('exposes a subscribe method', () => {
-    expect(quickview.subscribe).toBeTruthy();
-  });
-
-  describe('#fetchResultContent', () => {
-    const uniqueId = '1';
-    const requestedOutputSize = 0;
-
-    beforeEach(() => {
-      options.result = buildMockResult({uniqueId});
-      initQuickview();
-
-      quickview.fetchResultContent();
-    });
-
-    it('dispatches a #fetchResultContent action with the result uniqueId', () => {
-      const action = engine.findAsyncAction(fetchResultContent.pending);
-      expect(action?.meta.arg).toEqual({uniqueId, requestedOutputSize});
-    });
-
-    it('dispatches a document quickview click event', () => {
-      const result = buildMockResult();
-      const thunk = logDocumentQuickview(result);
-      const action = engine.findAsyncAction(thunk.pending);
-
-      expect(action).toBeTruthy();
-    });
-  });
-
-  it(`when configured result uniqueId matches the uniqueId in state,
-  #state.content returns the content in state`, () => {
-    const uniqueId = '1';
-    const content = '<div></div>';
-
-    engine.state.resultPreview = buildMockResultPreviewState({
-      uniqueId,
-      content,
-    });
-    options.result = buildMockResult({uniqueId});
-    initQuickview();
-
-    expect(quickview.state.content).toEqual(content);
-  });
-
-  it(`when configured result uniqueId matches the uniqueId in state,
-  #state.content returns an empty string`, () => {
-    engine.state.resultPreview = buildMockResultPreviewState({
-      uniqueId: '1',
-      content: '<div></div>',
-    });
-    options.result = buildMockResult({uniqueId: '2'});
-    initQuickview();
-
-    expect(quickview.state.content).toEqual('');
-  });
-
-  [true, false].forEach((testValue) => {
-    it(`when the result #hasHtmlVersion is ${testValue} #state.resultHasPreview should be ${testValue}`, () => {
-      options.result = buildMockResult({hasHtmlVersion: testValue});
-      initQuickview();
-
-      expect(quickview.state.resultHasPreview).toBe(testValue);
-    });
-  });
-
-  [true, false].forEach((testValue) => {
-    it(`when the resultPreview state #isLoading is ${testValue} #state.isLoading should be ${testValue}`, () => {
-      engine.state.resultPreview = buildMockResultPreviewState({
-        isLoading: testValue,
-      });
-      initQuickview();
-
-      expect(quickview.state.isLoading).toBe(testValue);
-    });
-  });
-
-  it(`when the resultPreview is initialized,
-  #options.maximumPreviewSize is 0`, () => {
-    engine.state.resultPreview = buildMockResultPreviewState();
-    initQuickview();
-
-    expect(options.maximumPreviewSize).toBe(0);
-  });
-
-  it('#preparePreviewPagination on initialization', () => {
-    initQuickview();
-    expect(engine.actions).toContainEqual(
-      preparePreviewPagination({results: engine.state.search.response.results})
+  it('calls #buildCoreQuickview', () => {
+    expect(mockedBuildCoreQuickview).toHaveBeenCalledWith(
+      engine,
+      {options},
+      buildResultPreviewRequest,
+      '/html',
+      expect.any(Function)
     );
   });
 
-  describe('pagination', () => {
-    beforeEach(() => {
-      engine = buildMockSearchAppEngine();
-      engine.state.search.results = [
-        buildMockResult({uniqueId: 'first', hasHtmlVersion: true}),
-        buildMockResult({uniqueId: 'second', hasHtmlVersion: true}),
-        buildMockResult({uniqueId: 'third', hasHtmlVersion: true}),
-      ];
-      engine.state.resultPreview.resultsWithPreview = [
-        'first',
-        'second',
-        'third',
-      ];
-      engine.state.resultPreview.position = 0;
-      initQuickview();
+  it('dispatches #preparePreviewPagination', () => {
+    const mockedPreparePreviewPagination = jest.mocked(
+      preparePreviewPagination
+    );
+
+    expect(preparePreviewPagination).toHaveBeenCalledWith({
+      results: state.search.results,
     });
 
-    it('returns the proper current and total results for pagination purpose', () => {
-      expect(quickview.state.currentResult).toBe(1);
-      expect(quickview.state.totalResults).toBe(3);
-    });
+    expect(engine.dispatch).toHaveBeenCalledWith(
+      mockedPreparePreviewPagination.mock.results[0].value
+    );
+  });
+
+  it('#fetchResultContentCallback logs a document quickview', () => {
+    const mockedLogDocumentQuickview = jest.mocked(logDocumentQuickview);
+    const coreQuickviewParamsFetchResultContentCallback =
+      mockedBuildCoreQuickview.mock.calls[0][4];
+
+    coreQuickviewParamsFetchResultContentCallback?.();
+
+    expect(mockedLogDocumentQuickview).toHaveBeenCalledTimes(1);
+    expect(engine.dispatch).toHaveBeenCalledWith(
+      mockedLogDocumentQuickview.mock.results[0].value
+    );
+  });
+
+  it('#state.currentResult returns the correct value', () => {
+    state.search.results = [
+      buildMockResult(),
+      buildMockResult({uniqueId: 'theCurrentResult'}),
+    ];
+    engine = buildMockSearchEngine(state);
+    mockedBuildCoreQuickview.mockReturnValueOnce({
+      state: {
+        currentResultUniqueId: 'theCurrentResult',
+      },
+    } as unknown as Quickview);
+
+    initQuickview();
+
+    expect(quickview.state.currentResult).toBe(2);
+  });
+
+  it('#state.totalResults returns the correct value', () => {
+    state.search.results = [buildMockResult(), buildMockResult()];
+    engine = buildMockSearchEngine(state);
+    mockedBuildCoreQuickview.mockReturnValueOnce({
+      state: {
+        currentResultUniqueId: 'theCurrentResult',
+      },
+    } as unknown as Quickview);
+
+    initQuickview();
+
+    expect(quickview.state.totalResults).toBe(2);
   });
 });

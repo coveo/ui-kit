@@ -13,8 +13,6 @@ import {
   gitUpdateRef,
   gitPublishBranch,
   gitPull,
-  gitPush,
-  gitReset,
 } from '@coveo/semantic-monorepo-tools';
 import {createAppAuth} from '@octokit/auth-app';
 import {spawnSync} from 'child_process';
@@ -73,10 +71,13 @@ process.chdir(process.env.INIT_CWD);
   // Current release branch
   // TODO v3: Bump to release/v3
   const currentReleaseBranch = 'release/v2';
-  await gitCheckoutBranch(currentReleaseBranch);
-  await gitReset({resetMode: 'hard', ref: commit});
-  await gitPush({refs: [currentReleaseBranch], force: true});
-
+  await octokit.rest.git.updateRef({
+    owner: REPO_OWNER,
+    repo: REPO_NAME,
+    ref: `heads/${currentReleaseBranch}`,
+    sha: commit,
+    force: false,
+  });
   // Unlock the main branch
   await removeWriteAccessRestrictions();
 })();

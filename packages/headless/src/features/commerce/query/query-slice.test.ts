@@ -1,3 +1,4 @@
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 import {updateQuery} from './query-actions';
 import {queryReducer} from './query-slice';
 import {CommerceQueryState, getCommerceQueryInitialState} from './query-state';
@@ -15,7 +16,7 @@ describe('query slice', () => {
     });
   });
 
-  describe('updateQuery', () => {
+  describe('#updateQuery', () => {
     const expectedState: CommerceQueryState = {
       query: 'some query',
     };
@@ -32,6 +33,16 @@ describe('query slice', () => {
       expect(queryReducer(state, updateQuery({query: 'some query'}))).toEqual(
         expectedState
       );
+    });
+  });
+
+  describe('#restoreSearchParameters', () => {
+    it('sets the query to the payload', () => {
+      expect(
+        queryReducer(state, restoreSearchParameters({q: 'new query'}))
+      ).toEqual({
+        query: 'new query',
+      });
     });
   });
 });

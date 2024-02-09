@@ -50,13 +50,17 @@ describe.skip('commerce', () => {
     });
 
     const cart = buildCart(engine);
-    cart.addItem({
-      productId: 'nice shoes',
+    cart.updateItem({
+      productId: 'p1',
       quantity: 2,
+      price: 100,
+      name: 'Nice Shoes',
     });
-    cart.addItem({
-      productId: 'nicer shoes',
+    cart.updateItem({
+      productId: 'p2',
       quantity: 3,
+      price: 200,
+      name: 'Nicer Shoes',
     });
   });
 

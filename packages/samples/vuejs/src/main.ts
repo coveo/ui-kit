@@ -5,9 +5,8 @@ import App from './App.vue';
 import ResultTextField from './components/ResultTextField.vue';
 import ResultTextFieldMultivalue from './components/ResultTextFieldMultivalue.vue';
 
-applyPolyfills().then(() => {
-  defineCustomElements(window);
-});
+await applyPolyfills();
+defineCustomElements(window);
 
 const app = createApp(App);
 const resultTextField = defineCustomElement(ResultTextField);
