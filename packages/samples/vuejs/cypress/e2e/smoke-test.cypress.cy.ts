@@ -15,7 +15,7 @@ describe('smoke test', {viewportHeight: 2000, viewportWidth: 2000}, () => {
       path: '**/rest/v15/analytics/*',
     }).as('analytics');
 
-    cy.visit('http://localhost:8080/').wait('@analytics');
+    cy.visit('http://localhost:5173/').wait('@analytics');
     cy.get('atomic-search-box')
       .should('exist')
       .shadow()

@@ -66,12 +66,11 @@ export type {
 export {buildInteractiveResult} from './controllers/commerce/product-listing/result-list/headless-product-listing-interactive-result';
 
 export type {
-  CartOptions,
+  CartInitialState,
   CartItem,
   CartProps,
   Cart,
   CartState,
-  CartControllerState,
 } from './controllers/commerce/context/cart/headless-cart';
 export {buildCart} from './controllers/commerce/context/cart/headless-cart';
 
