@@ -1,16 +1,17 @@
-import {
-  addItem,
-  removeItem,
-  setItems,
-  updateItemQuantity,
-} from './cart-actions';
+import {setItems, updateItem} from './cart-actions';
 import {cartReducer} from './cart-slice';
-import {CartState, getCartInitialState} from './cart-state';
+import {
+  CartItemWithMetadata,
+  CartState,
+  getCartInitialState,
+} from './cart-state';
 
 describe('cart-slice', () => {
-  const someItem = {
+  const someItem: CartItemWithMetadata = {
     productId: 'product-id-1',
-    quantity: 100,
+    quantity: 10,
+    name: 'product 2',
+    price: 50,
   };
   let state: CartState;
   beforeEach(() => {
@@ -23,10 +24,12 @@ describe('cart-slice', () => {
     );
   });
 
-  it('should allow to set cart items', () => {
-    const secondItem = {
-      productId: 'a-second-product',
-      quantity: 200,
+  it('#setItems replaces current cart state with specified state', () => {
+    const secondItem: CartItemWithMetadata = {
+      productId: 'product-id-2',
+      quantity: 20,
+      name: 'product 2',
+      price: 100,
     };
     const updatedState = cartReducer(state, setItems([someItem, secondItem]));
     expect(updatedState.cartItems).toEqual([
@@ -39,81 +42,62 @@ describe('cart-slice', () => {
     });
   });
 
-  it('should allow to add an item', () => {
-    const updatedState = cartReducer(state, addItem(someItem));
-    expect(updatedState.cartItems).toEqual([someItem.productId]);
-    expect(updatedState.cart).toEqual({
-      [someItem.productId]: someItem,
+  describe('#updateItem', () => {
+    it('adds new item to cart if item is not already in cart and specified quantity is positive', () => {
+      const updatedState = cartReducer(state, updateItem(someItem));
+      expect(updatedState.cartItems).toEqual([someItem.productId]);
+      expect(updatedState.cart).toEqual({
+        [someItem.productId]: someItem,
+      });
     });
-  });
 
-  it('should sum duplicate items', () => {
-    const oldQuantity = someItem.quantity;
-    const newQuantity = 4;
-    const updatedState = cartReducer(
-      {
-        cartItems: [someItem.productId],
-        cart: {
-          [someItem.productId]: someItem,
-        },
-      },
-      addItem({
-        ...someItem,
-        quantity: newQuantity,
-      })
-    );
-    expect(updatedState.cartItems).toEqual([someItem.productId]);
-    expect(updatedState.cart[someItem.productId].quantity).toEqual(
-      oldQuantity + newQuantity
-    );
-  });
-
-  it('should allow to remove an item', () => {
-    const updatedState = cartReducer(
-      {
-        cartItems: [someItem.productId],
-        cart: {
-          [someItem.productId]: someItem,
-        },
-      },
-      removeItem(someItem.productId)
-    );
-    expect(updatedState.cartItems).toEqual([]);
-    expect(updatedState.cart).toEqual({});
-  });
-
-  it('should handle removing an absent item', () => {
-    const updatedState = cartReducer(state, removeItem(someItem.productId));
-    expect(updatedState.cartItems).toEqual([]);
-    expect(updatedState.cart).toEqual({});
-  });
-
-  it('should allow to update an item', () => {
-    const updatedItem = {
-      productId: someItem.productId,
-      quantity: 200,
-    };
-    const updatedState = cartReducer(
-      {
-        cartItems: [someItem.productId],
-        cart: {
-          [someItem.productId]: someItem,
-        },
-      },
-      updateItemQuantity({
-        productId: someItem.productId,
-        quantity: 200,
-      })
-    );
-    expect(updatedState.cartItems).toEqual([someItem.productId]);
-    expect(updatedState.cart).toEqual({
-      [someItem.productId]: updatedItem,
+    it('does not add new item to cart if item is not already in cart and specified quantity is 0', () => {
+      const updatedState = cartReducer(
+        state,
+        updateItem({...someItem, quantity: 0})
+      );
+      expect(updatedState.cartItems).toEqual([]);
+      expect(updatedState.cart).toEqual({});
     });
-  });
 
-  it('should handle updating an absent item', () => {
-    const updatedState = cartReducer(state, updateItemQuantity(someItem));
-    expect(updatedState.cartItems).toEqual([]);
-    expect(updatedState.cart).toEqual({});
+    it('removes existing item from cart if specified quantity is 0', () => {
+      const updatedState = cartReducer(
+        {
+          cartItems: [someItem.productId],
+          cart: {
+            [someItem.productId]: someItem,
+          },
+        },
+        updateItem({...someItem, quantity: 0})
+      );
+      expect(updatedState.cartItems).toEqual([]);
+      expect(updatedState.cart).toEqual({});
+    });
+
+    it('updates existing item in cart if specified quantity is greater than 0', () => {
+      const updatedState = cartReducer(
+        {
+          cartItems: [someItem.productId],
+          cart: {
+            [someItem.productId]: someItem,
+          },
+        },
+        updateItem({
+          ...someItem,
+          name: 'renamed product',
+          quantity: 5,
+          price: 25,
+        })
+      );
+      expect(updatedState.cartItems).toEqual([someItem.productId]);
+      expect(updatedState.cart).toEqual({
+        [someItem.productId]: {
+          productId: someItem.productId,
+          name: 'renamed product',
+          quantity: 5,
+          price: 25,
+        },
+      });
+    });
   });
 });
