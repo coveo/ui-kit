@@ -13,7 +13,7 @@ export type FacetSearchRequest = BaseParam &
 
 export const buildFacetSearchRequest = (req: FacetSearchRequest) => {
   return {
-    ...baseRequest(req, 'search/facet'),
+    ...baseRequest(req, 'facets'),
     requestParams: prepareRequestParams(req),
   };
 };
