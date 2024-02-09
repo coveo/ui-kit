@@ -198,11 +198,14 @@ describe('Instant Results Test Suites', () => {
     SearchBoxAssertions.assertHasTextWithoutIt('Recent query ');
 
     cy.wait(1000);
+    cy.intercept('https://example.com/*', {
+      body: '<html><body><h1>Hi</h1></body</html>',
+    }).as('exampleClick');
     SearchBoxSelectors.inputBox().type(
       `${downKeys(2)}{rightArrow}{enter}`,
       delay()
     );
-
+    cy.wait('@exampleClick');
     cy.window().then((win) => {
       expect(win.location.href).to.equal('https://example.com/2');
     });
@@ -235,9 +238,11 @@ describe('Instant Results Test Suites', () => {
 
     cy.log('when clicking a result');
     cy.wait(1000);
-
+    cy.intercept('https://example.com/*', {
+      body: '<html><body><h1>Hi</h1></body</html>',
+    }).as('exampleClick');
     InstantResultsSelectors.results().eq(1).trigger('mouseover').click();
-
+    cy.wait('@exampleClick');
     cy.window().then((win) => {
       expect(win.location.href).to.equal('https://example.com/1');
     });
