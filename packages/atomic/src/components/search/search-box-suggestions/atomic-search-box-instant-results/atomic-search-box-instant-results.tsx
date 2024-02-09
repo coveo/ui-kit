@@ -96,7 +96,7 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
   }
 
   private getLink(el: HTMLElement): HTMLElement | null {
-    return el.shadowRoot?.querySelector('atomic-result-link a') || null;
+    return el?.shadowRoot?.querySelector('atomic-result-link a') || null;
   }
 
   private handleLinkClick(el: HTMLElement, hasModifier: boolean) {
