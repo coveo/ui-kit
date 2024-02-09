@@ -1,6 +1,7 @@
 import {
   clearFacetSearch,
   executeFacetSearch,
+  executeFieldSuggest,
 } from '../../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
 import {updateFacetSearch} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
 import {SpecificFacetSearchState} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-state';
@@ -43,6 +44,8 @@ describe('FacetSearch', () => {
       options: {facetId},
       getFacetSearch,
       isForFieldSuggestions: false,
+      executeFacetSearchActionCreator: executeFacetSearch,
+      executeFieldSuggestActionCreator: executeFieldSuggest,
     };
 
     engine = buildMockSearchAppEngine();

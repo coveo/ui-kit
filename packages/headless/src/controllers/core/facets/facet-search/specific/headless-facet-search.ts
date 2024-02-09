@@ -1,3 +1,4 @@
+import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {SpecificFacetSearchResult} from '../../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
 import {CoreEngine} from '../../../../../app/engine';
 import {FacetSearchOptions} from '../../../../../features/facets/facet-search-set/facet-search-request-options';
@@ -18,6 +19,14 @@ export interface FacetSearchProps {
   select: (value: SpecificFacetSearchResult) => void;
   exclude: (value: SpecificFacetSearchResult) => void;
   isForFieldSuggestions: boolean;
+  executeFacetSearchActionCreator: (
+    facetId: string
+  ) => AsyncThunkAction<unknown, string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
+  executeFieldSuggestActionCreator: (facetId: string) => AsyncThunkAction<
+    unknown,
+    string,
+    any // eslint-disable-line @typescript-eslint/no-explicit-any
+  >;
 }
 
 export type FacetSearch = ReturnType<typeof buildFacetSearch>;
@@ -32,6 +41,8 @@ export function buildFacetSearch(
     select: propsSelect,
     exclude: propsExclude,
     isForFieldSuggestions,
+    executeFacetSearchActionCreator,
+    executeFieldSuggestActionCreator,
   } = props;
   const {facetId} = options;
   const getFacetSearch = () => engine.state.facetSearchSet[facetId];
@@ -42,6 +53,8 @@ export function buildFacetSearch(
     options,
     getFacetSearch,
     isForFieldSuggestions,
+    executeFacetSearchActionCreator: executeFacetSearchActionCreator,
+    executeFieldSuggestActionCreator: executeFieldSuggestActionCreator,
   });
 
   return {
