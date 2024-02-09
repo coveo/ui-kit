@@ -3,6 +3,7 @@ import {CommerceThunkExtraArguments} from '../../app/commerce-thunk-extra-argume
 import {CommerceAppState} from '../../state/commerce-app-state';
 import {PlatformClient, PlatformClientCallOptions} from '../platform-client';
 import {PreprocessRequest} from '../preprocess-request';
+import {SpecificFacetSearchResponse} from '../search/facet-search/specific-facet-search/specific-facet-search-response';
 import {buildAPIResponseFromErrorOrThrow} from '../search/search-api-error-response';
 import {
   CommerceAPIErrorResponse,
@@ -21,6 +22,12 @@ import {
 } from './search/query-suggest/query-suggest-request';
 import {QuerySuggestSuccessResponse} from './search/query-suggest/query-suggest-response';
 import {CommerceSearchRequest} from './search/request';
+
+export interface CommerceFacetSearchAPIClient {
+  facetSearch(
+    req: FacetSearchRequest
+  ): Promise<CommerceAPIResponse<SpecificFacetSearchResponse>>;
+}
 
 export interface AsyncThunkCommerceOptions<
   T extends Partial<CommerceAppState>,
@@ -43,7 +50,7 @@ export interface CommerceAPISuccessResponse<T> {
   success: T;
 }
 
-export class CommerceAPIClient {
+export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
   constructor(private options: CommerceAPIClientOptions) {}
 
   async getProductListing(
