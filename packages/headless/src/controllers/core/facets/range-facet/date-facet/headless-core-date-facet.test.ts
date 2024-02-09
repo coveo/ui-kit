@@ -179,7 +179,7 @@ describe('date facet', () => {
   });
 
   function testCommonToggleExcludeSelect(facetValue: () => DateFacetValue) {
-    it('dispatches a #toggleExclude action with the passed facet value', () => {
+    it('dispatches an #executeToggleDateFacetExclude with the passed facet value', () => {
       dateFacet.toggleSingleExclude(facetValue());
       expect(executeToggleDateFacetExclude).toHaveBeenCalledWith({
         facetId,
