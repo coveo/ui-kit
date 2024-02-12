@@ -59,7 +59,7 @@ describe('numeric filter', () => {
     initNumericFilter();
   });
 
-  it('#initNumericFacet validate manual range', () => {
+  it('#initNumericFacet validates manual range', () => {
     initialState = {
       range: buildNumericRange({
         start: 10,

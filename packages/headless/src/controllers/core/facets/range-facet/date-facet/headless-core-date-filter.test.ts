@@ -62,7 +62,7 @@ describe('date filter', () => {
     initDateFilter();
   });
 
-  it('#initDateFacet validate manual range', () => {
+  it('#initDateFacet validates manual range', () => {
     initialState = {
       range: buildDateRange({start: 1616679091000, end: 1616592691000}),
     };

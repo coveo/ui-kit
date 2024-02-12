@@ -64,7 +64,7 @@ describe('numeric facet', () => {
     initNumericFacet();
   });
 
-  it('#initNumericFacet validate manual range', () => {
+  it('#initNumericFacet validates manual range', () => {
     options.currentValues = [
       buildNumericRange({
         start: 10,
@@ -122,7 +122,7 @@ describe('numeric facet', () => {
   });
 
   describe('#toggleSelect', () => {
-    it('dispatches a toggleSelectNumericFacetValue with the passed value', () => {
+    it('dispatches an #executeToggleNumericFacetSelect action with the passed facet value', () => {
       const value = buildMockNumericFacetValue();
       numericFacet.toggleSelect(value);
       expect(executeToggleNumericFacetSelect).toHaveBeenCalledWith({
@@ -133,7 +133,7 @@ describe('numeric facet', () => {
   });
 
   function testCommonToggleSingleSelect(facetValue: () => NumericFacetValue) {
-    it('dispatches a #executeToggleNumericFacetSelect action with the passed facet value', () => {
+    it('dispatches an #executeToggleNumericFacetSelect action with the passed facet value', () => {
       numericFacet.toggleSingleSelect(facetValue());
 
       expect(executeToggleNumericFacetSelect).toHaveBeenCalledWith({
@@ -159,7 +159,7 @@ describe('numeric facet', () => {
 
     testCommonToggleSingleSelect(facetValue);
 
-    it('does not dispatch a #deselectAllFacetValues action', () => {
+    it('does not dispatch a #deselectAllNumericFacetValues action', () => {
       numericFacet.toggleSingleSelect(facetValue());
       expect(deselectAllNumericFacetValues).not.toHaveBeenCalledWith(facetId);
     });

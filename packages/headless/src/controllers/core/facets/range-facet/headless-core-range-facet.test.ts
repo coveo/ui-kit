@@ -123,7 +123,7 @@ describe('range facet', () => {
       });
     });
 
-    it('dispatches a #updateFacetOptions action with #freezeFacetOrder true', () => {
+    it('dispatches #updateFacetOptions', () => {
       rangeFacet.sortBy('descending');
       expect(updateFacetOptions).toHaveBeenCalled();
     });
