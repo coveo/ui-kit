@@ -40,7 +40,7 @@ import {
   getSampleSearchEngineConfiguration,
   loadAdvancedSearchQueryActions,
 } from '@coveo/atomic-react';
-import React, {FunctionComponent, useMemo} from 'react';
+import {FunctionComponent, useMemo} from 'react';
 
 type Sample = 'service' | 'electronics';
 

@@ -1,5 +1,5 @@
 {
-  "name": "atomic-react-samples",
+  "name": "@coveo/atomic-react-sample",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "namedInputs": {
     "negativeBuildOutputs": ["!{projectRoot}/public/dist"]
@@ -9,9 +9,9 @@
       "outputs": ["{projectRoot}/public/dist"],
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["tsc --noEmit", "tsc --module commonjs --noEmit"],
+        "commands": ["npm run build:vite"],
         "parallel": true,
-        "cwd": "packages/samples/atomic-react"
+        "cwd": "packages/samples/@coveo/atomic-react-sample"
       }
     },
     "build": {

@@ -17,7 +17,7 @@ import {
   AtomicFoldedResultList,
   AtomicResultImage,
 } from '@coveo/atomic-react';
-import React, {FunctionComponent} from 'react';
+import {FunctionComponent} from 'react';
 import {AtomicPageWrapper} from '../components/AtomicPageWrapper';
 
 export const FoldedResultListPage: FunctionComponent = () => {

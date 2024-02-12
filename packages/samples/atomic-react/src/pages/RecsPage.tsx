@@ -1,3 +1,4 @@
+// TODO KIT-2541: Use `@coveo/atomic-react/recommendation` when the subpath exports are 'fixed'
 import {
   AtomicFormatCurrency,
   AtomicRecsInterface,
@@ -22,8 +23,8 @@ import {
   AtomicResultText,
   Result,
   AtomicRecsList,
-} from '@coveo/atomic-react/recommendation';
-import React, {FunctionComponent, useMemo} from 'react';
+} from '@coveo/atomic-react/dist/recommendation.index';
+import {FunctionComponent, useMemo} from 'react';
 
 export const RecsPage: FunctionComponent = () => {
   const engine = useMemo(
