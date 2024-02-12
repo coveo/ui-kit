@@ -136,8 +136,8 @@ export function createWaitForActionMiddleware<TAction extends Action>(
 
   const middleware: Middleware = () => (next) => (action) => {
     next(action);
-    if (isDesiredAction(action as Action)) {
-      resolve(action as TAction);
+    if (isDesiredAction(action)) {
+      resolve(action);
     }
   };
 
