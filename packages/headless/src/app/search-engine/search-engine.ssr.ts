@@ -1,7 +1,7 @@
 /**
  * Utility functions to be used for Server Side Rendering.
  */
-import {AnyAction} from '@reduxjs/toolkit';
+import {Action} from '@reduxjs/toolkit';
 import type {Controller} from '../../controllers/controller/headless-controller';
 import {LegacySearchAction} from '../../features/analytics/analytics-utils';
 import {createWaitForActionMiddleware} from '../../utils/utils';
@@ -50,7 +50,7 @@ export type SearchCompletedAction = ReturnType<
 >;
 
 function isSearchCompletedAction(
-  action: AnyAction
+  action: Action
 ): action is SearchCompletedAction {
   return /^search\/executeSearch\/(fulfilled|rejected)$/.test(action.type);
 }

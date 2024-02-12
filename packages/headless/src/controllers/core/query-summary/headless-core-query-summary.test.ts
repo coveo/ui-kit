@@ -1,8 +1,10 @@
 import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice';
 import {searchReducer as search} from '../../../features/search/search-slice';
 import {SearchAppState} from '../../../state/search-app-state';
-import {MockSearchEngine} from '../../../test/mock-engine';
-import {buildMockSearchAppEngine} from '../../../test/mock-engine';
+import {
+  buildMockSearchEngine,
+  MockedSearchEngine,
+} from '../../../test/mock-engine-v2';
 import {buildMockResult} from '../../../test/mock-result';
 import {createMockState} from '../../../test/mock-state';
 import {
@@ -11,13 +13,13 @@ import {
 } from './headless-core-query-summary';
 
 describe('CoreQuerySummary', () => {
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
   let state: SearchAppState;
   let coreQuerySummary: QuerySummary;
 
   beforeEach(() => {
     state = createMockState();
-    engine = buildMockSearchAppEngine({state});
+    engine = buildMockSearchEngine(state);
     coreQuerySummary = buildCoreQuerySummary(engine);
   });
 
