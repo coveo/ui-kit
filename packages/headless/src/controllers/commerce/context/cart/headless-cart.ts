@@ -1,33 +1,58 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {
-  addItem,
-  removeItem,
   setItems,
-  updateItemQuantity,
+  updateItem,
 } from '../../../../features/commerce/context/cart/cart-actions';
 import {cartReducer as cart} from '../../../../features/commerce/context/cart/cart-slice';
+import {CartItemWithMetadata} from '../../../../features/commerce/context/cart/cart-state';
 import {cartSchema} from '../../../../features/commerce/context/cart/cart-validation';
 import {loadReducerError} from '../../../../utils/errors';
-import {validateOptions} from '../../../../utils/validate-payload';
+import {validateInitialState} from '../../../../utils/validate-payload';
 import {
   buildController,
   Controller,
 } from '../../../controller/headless-controller';
+import {
+  itemSelector,
+  itemsSelector,
+  totalPriceSelector,
+  totalQuantitySelector,
+} from './headless-cart-selectors';
 
-export interface CartOptions {
-  items?: CartItem[];
+export interface CartInitialState {
+  items?: CartItemWithMetadata[];
 }
 
+/**
+ * The shape of a cart item.
+ */
 export interface CartItem {
+  /**
+   * The unique identifier of the product.
+   */
   productId: string;
+
+  /**
+   * The human-readable name of the product.
+   */
+  name: string;
+
+  /**
+   * The price per unit of the product.
+   */
+  price: number;
+
+  /**
+   * The number of units of the product in the cart.
+   */
   quantity: number;
 }
 
 export interface CartProps {
   /**
-   * The initial options that should be applied to this `Cart` controller.
+   * The initial state to apply to this `Cart` controller.
    */
-  options?: CartOptions;
+  initialState?: CartInitialState;
 }
 
 /**
@@ -35,29 +60,39 @@ export interface CartProps {
  */
 export interface Cart extends Controller {
   /**
-   * Replaces the cart items.
-   * @param items - The new cart items.
+   * Creates, updates, or deletes an item in the cart, and emits an `ec.cartAction` analytics event if the `quantity` of
+   * the item in the cart changes.
+   *
+   * If an item with the specified `productId` already exists in the cart:
+   * - Setting `quantity` to `0` deletes the item from the cart; `name` and `price` have no effect.
+   * - Setting `quantity` to a positive number updates the item's `name`, `price`, and `quantity` to the
+   * specified values.
+   *
+   * Otherwise:
+   * - Setting `quantity` to a positive number creates the item in the cart with the specified `productName`,
+   * `pricePerUnit`, and `quantity`.
+   *
+   * If the specified `quantity` is equivalent to the current quantity of the item in the cart, no analytics event is
+   * emitted. Otherwise, the method emits an `ec.cartAction` event with the appropriate action (`add` or `remove`).
+   *
+   * @param item - The cart item to create, update, or delete.
    */
-  setItems(items: CartItem[]): void;
+  updateItem(item: CartItem): void;
 
   /**
-   * Adds a cart item.
-   * @param item - The new cart item.
+   * Sets the quantity of each item in the cart to 0, effectively emptying the cart.
+   *
+   * Emits an `ec.cartAction` analytics event with the `remove` action for each item removed from the cart.
    */
-  addItem(item: CartItem): void;
+  empty(): void;
 
   /**
-   * Removes a cart item.
-   * @param productId - The cart item's product id to remove
+   * Emits an `ec.purchase` analytics event and then empties the cart without emitting any additional events.
+   *
+   * @param transactionId - The transaction ID.
+   * @param transactionRevenue - The total revenue from the transaction, including taxes, shipping, and discounts.
    */
-  removeItem(productId: string): void;
-
-  /**
-   * Updates the quantity of a cart item.
-   * @param productId - The cart item's product id to update.
-   * @param quantity - The cart item's new quantity.
-   */
-  updateItemQuantity(productId: string, quantity: number): void;
+  purchase(transactionId: string, transactionRevenue: number): void;
 
   /**
    * A scoped and simplified part of the headless state that is relevant to the `Cart` controller.
@@ -65,11 +100,25 @@ export interface Cart extends Controller {
   state: CartState;
 }
 
+/**
+ * The state of the `Cart` controller.
+ */
 export interface CartState {
-  cart: CartItem[];
-}
+  /**
+   * The items in the cart.
+   */
+  items: CartItem[];
 
-export type CartControllerState = Cart['state'];
+  /**
+   * The sum total of the `quantity` of each item in the cart.
+   */
+  totalQuantity: number;
+
+  /**
+   * The sum total of the `price` multiplied by the `quantity` of each item in the cart.
+   */
+  totalPrice: number;
+}
 
 /**
  * Creates a `Cart` controller instance.
@@ -83,43 +132,61 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     throw loadReducerError;
   }
 
-  const controller = buildController(engine);
   const {dispatch} = engine;
-  const getState = () => engine.state;
+  const controller = buildController(engine);
+  const getState = () => engine.state.cart;
 
-  const options = {
-    ...props.options,
+  const initialState = {
+    ...props.initialState,
   };
 
-  validateOptions(engine, cartSchema, options, 'buildCart');
+  validateInitialState(engine, cartSchema, initialState, 'buildCart');
 
-  if (options.items) {
-    dispatch(setItems(options.items));
+  // TODO: expose some helpers to facilitate storing / restoring the cart state for MPAs
+  if (initialState.items !== undefined) {
+    dispatch(setItems(initialState.items));
+  }
+
+  function isNewQuantityDifferent(productId: string, quantity: number) {
+    const item = itemSelector(getState(), productId);
+    if (!item) {
+      return quantity > 0;
+    }
+
+    return item.quantity !== quantity;
   }
 
   return {
     ...controller,
 
-    get state() {
-      const {cart, cartItems} = getState().cart;
-      return {
-        cart: cartItems.map((id: string) => cart[id]) as CartItem[],
-      };
+    empty: function () {
+      for (const item of itemsSelector(getState())) {
+        this.updateItem({...item, quantity: 0});
+      }
     },
 
-    setItems: (items: CartItem[]) => dispatch(setItems(items)),
+    purchase(_transactionId: string, _transactionRevenue: number) {
+      // TODO LENS-1498: log ec.purchase with all products in cart.
+      dispatch(setItems([]));
+    },
 
-    addItem: (item: CartItem) => dispatch(addItem(item)),
+    updateItem(item: CartItem) {
+      if (isNewQuantityDifferent(item.productId, item.quantity)) {
+        // TODO LENS-1497: log ec.cartAction; if new quantity > previous, 'add', otherwise, 'remove'.
+      }
 
-    removeItem: (productId: string) => dispatch(removeItem(productId)),
+      dispatch(updateItem(item));
+    },
 
-    updateItemQuantity: (productId: string, quantity: number) =>
-      dispatch(
-        updateItemQuantity({
-          productId,
-          quantity,
-        })
-      ),
+    get state() {
+      const cartState = getState();
+
+      return {
+        items: itemsSelector(cartState),
+        totalQuantity: totalQuantitySelector(cartState),
+        totalPrice: totalPriceSelector(cartState),
+      };
+    },
   };
 }
 

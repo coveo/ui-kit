@@ -17,9 +17,9 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "jsx": "react",
-    "jsxFactory": "h",
+    "jsxFactory": "h"
   },
   "references": [{"path": "tsconfig.stories.json"}],
   "include": ["src", "types/jsx.d.ts"],
-  "exclude": ["node_modules", "src/external-builds", "**/*.stories.tsx"],
+  "exclude": ["node_modules", "src/external-builds", "**/*.stories.tsx"]
 }

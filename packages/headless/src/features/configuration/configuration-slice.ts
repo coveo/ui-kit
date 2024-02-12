@@ -2,7 +2,6 @@ import {isNullOrUndefined} from '@coveo/bueno';
 //@ts-expect-error package is just an alias resolved in esbuild
 import getMagicCookie from '@coveo/pendragon';
 import {createReducer} from '@reduxjs/toolkit';
-import {clearAnalyticsClient} from '../../api/analytics/coveo-analytics-utils';
 import {getOrganizationEndpoints} from '../../api/platform-client';
 import {
   matchCoveoOrganizationEndpointUrl,
@@ -89,10 +88,6 @@ export const configurationReducer = createReducer(
       })
       .addCase(updateAnalyticsConfiguration, (state, action) => {
         if (!isNullOrUndefined(action.payload.enabled)) {
-          if (!action.payload.enabled && state.analytics.enabled) {
-            clearAnalyticsClient(state.analytics);
-          }
-
           state.analytics.enabled = action.payload.enabled;
         }
         if (!isNullOrUndefined(action.payload.originContext)) {
@@ -143,7 +138,6 @@ export const configurationReducer = createReducer(
       })
       .addCase(disableAnalytics, (state) => {
         state.analytics.enabled = false;
-        clearAnalyticsClient(state.analytics);
       })
       .addCase(enableAnalytics, (state) => {
         state.analytics.enabled = true;

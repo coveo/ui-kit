@@ -68,7 +68,7 @@ describe('Standalone Search Box Test Suites', () => {
   });
 
   describe('when being redirected to an Atomic Search Interface after selecting a suggestion', () => {
-    const query = 'awards';
+    const query = 'how';
     beforeEach(() => {
       setupStandaloneSearchBox();
       SearchBoxSelectors.inputBox().type(query);
