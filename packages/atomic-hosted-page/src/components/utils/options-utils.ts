@@ -49,4 +49,4 @@ export const validateOptions = (
 export const extractPlatformUrl = (options: InitializationOptions) =>
   options.platformUrl ||
   options.organizationEndpoints?.admin ||
-  `https://${options.organizationId}.org.coveo.com`;
+  `https://${options.organizationId}.admin.org.coveo.com`;
