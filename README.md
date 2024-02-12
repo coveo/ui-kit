@@ -7,6 +7,22 @@ The Relay repository contains a client-side library and set of related tools for
 
 Relay can be used standalone, or be embedded in Coveo front end packages as the main client-side logging component.
 
+## Setup
+
+### Prerequisites
+
+- Node.js >= v20
+- pnpm >= 8.8.0
+
+### Initialization
+
+All steps are performed at the root of this project.
+
+1. Install dependencies: `pnpm i`.
+2. Build project: `pnpm build`.
+
+To run the development server and use the playground locally, run `pnpm dev` and `ctrl + left click` the localhost link provided.
+
 ## Relay design principles and scope
 
 The core relay library should adhere to a few core design principles:
