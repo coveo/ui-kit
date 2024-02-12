@@ -1,8 +1,14 @@
 import {Raw} from '../../../api/search/search/raw';
 import {Result} from '../../../api/search/search/result';
 import {configurationReducer as configuration} from '../../../features/configuration/configuration-slice';
-import {loadCollection} from '../../../features/folding/folding-actions';
-import {foldedResultAnalyticsClient} from '../../../features/folding/folding-analytics-actions';
+import {
+  loadCollection,
+  registerFolding,
+} from '../../../features/folding/folding-actions';
+import {
+  foldedResultAnalyticsClient,
+  logShowMoreFoldedResults,
+} from '../../../features/folding/folding-analytics-actions';
 import {foldingReducer as folding} from '../../../features/folding/folding-slice';
 import {
   FoldedCollection,
@@ -11,9 +17,12 @@ import {
 import {queryReducer as query} from '../../../features/query/query-slice';
 import {fetchMoreResults} from '../../../features/search/search-actions';
 import {searchReducer as search} from '../../../features/search/search-slice';
-import {MockSearchEngine} from '../../../test/mock-engine';
-import {buildMockSearchAppEngine} from '../../../test/mock-engine';
+import {
+  buildMockSearchEngine,
+  MockedSearchEngine,
+} from '../../../test/mock-engine-v2';
 import {buildMockResult} from '../../../test/mock-result';
+import {createMockState} from '../../../test/mock-state';
 import {
   buildCoreFoldedResultList,
   FoldedResultList,
@@ -21,8 +30,11 @@ import {
   FoldedResultListOptions,
 } from './headless-core-folded-result-list';
 
+jest.mock('../../../features/folding/folding-actions');
+jest.mock('../../../features/folding/folding-analytics-actions');
+
 describe('FoldedResultList', () => {
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
   let foldedResultList: FoldedResultList;
   let props: CoreFoldedResultListProps;
 
@@ -50,7 +62,7 @@ describe('FoldedResultList', () => {
       fetchMoreResultsActionCreator: fetchMoreResults,
     };
 
-    engine = buildMockSearchAppEngine();
+    engine = buildMockSearchEngine(createMockState());
     initFoldedResultList();
   });
 
@@ -92,10 +104,7 @@ describe('FoldedResultList', () => {
   });
 
   it('should dispatch a #registerFolding action at initialization', () => {
-    expect(engine.actions.length).toEqual(1);
-    expect(engine.actions.map((action) => action.type)).toContainEqual(
-      'folding/register'
-    );
+    expect(registerFolding).toHaveBeenCalled();
   });
 
   describe('with a result and two collections', () => {
@@ -153,13 +162,10 @@ describe('FoldedResultList', () => {
     });
 
     it('#loadCollection dispatches folding/loadCollection and #logShowMoreFoldedResults analytics', () => {
-      const expectedLogShowMoreAction = 'analytics/folding/showMore/pending';
-      const expectedLoadCollectionAction = 'folding/loadCollection/pending';
-
       foldedResultList.loadCollection(foldedResultList?.state?.results[0]);
 
-      expect(engine.actions.pop()?.type).toEqual(expectedLogShowMoreAction);
-      expect(engine.actions.pop()?.type).toEqual(expectedLoadCollectionAction);
+      expect(loadCollection).toHaveBeenCalled();
+      expect(logShowMoreFoldedResults).toHaveBeenCalled();
     });
 
     it('finds a result by id', () => {

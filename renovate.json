@@ -21,7 +21,7 @@
       "groupName": "Angular",
       "groupSlug": "angular",
       "rangeStrategy": "replace",
-      "allowedVersions": "16.x"
+      "allowedVersions": "17.x"
     },
     {
       "matchPackagePatterns": [

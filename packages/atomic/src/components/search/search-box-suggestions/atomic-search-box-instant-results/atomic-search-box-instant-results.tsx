@@ -96,10 +96,11 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
   }
 
   private getLink(el: HTMLElement): HTMLElement | null {
+    const atomicResult =
+      el.tagName === 'ATOMIC-RESULT' ? el : el?.querySelector('atomic-result');
+
     return (
-      el
-        ?.querySelector('atomic-result')
-        ?.shadowRoot?.querySelector('atomic-result-link a') || null
+      atomicResult?.shadowRoot?.querySelector('atomic-result-link a') || null
     );
   }
 

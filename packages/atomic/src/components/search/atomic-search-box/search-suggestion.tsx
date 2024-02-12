@@ -42,7 +42,7 @@ function getPartsForSuggestion(
 }
 
 function getClassesForSuggestion(isSelected: boolean) {
-  return `flex px-4 min-h-[40px] items-center text-left text-neutral-dark hover:bg-neutral-light cursor-pointer ${
+  return `flex px-4 min-h-[40px] items-center text-left text-neutral-dark cursor-pointer ${
     isSelected ? 'bg-neutral-light' : ''
   }`;
 }

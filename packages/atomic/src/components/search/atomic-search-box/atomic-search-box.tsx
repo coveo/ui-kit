@@ -534,7 +534,10 @@ export class AtomicSearchBox {
   }
 
   private onSubmit() {
-    if (this.activeDescendantElement) {
+    if (
+      this.activeDescendantElement &&
+      this.rightPanelRef?.querySelector(`#${this.activeDescendant}`)
+    ) {
       this.activeDescendantElement.click();
       this.updateActiveDescendant();
       return;
