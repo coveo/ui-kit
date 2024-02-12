@@ -18,6 +18,22 @@ export const ExpectedHierarchy = {
     {name: 'Opercs', children: [{}, {}, {}, {name: 'Elfin Saddles'}]},
   ] as const,
 };
+export const ExpectedHierarchyWith10foldedResultsRequested = {
+  rootName: 'Pyrenomycetes',
+  children: [
+    {name: 'lobster mushroom'},
+    {name: 'Purple Jellydisc'},
+    {name: 'common lichens', children: [{name: 'bushy lichens'}]},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {name: 'Opercs', children: [{}, {}, {}, {name: 'Elfin Saddles'}]},
+  ] as const,
+};
 
 export function assertRendersGrandchildren() {
   it('should render grandchildren', () => {
