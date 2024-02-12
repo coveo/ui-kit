@@ -149,7 +149,7 @@ describe('Instant Results Test Suites', () => {
     );
     InstantResultsAssertions.assertResultIsSelected(0);
 
-    SearchBoxAssertions.assertSuggestionIsHighlighted(1);
+    SearchBoxSelectors.activeQuerySuggestion().should('have.length', 0);
 
     cy.log('when navigating back from result to query');
     SearchBoxSelectors.inputBox().type(
@@ -224,7 +224,7 @@ describe('Instant Results Test Suites', () => {
 
     InstantResultsAssertions.assertHasResultCount(4);
 
-    SearchBoxAssertions.assertSuggestionIsHighlighted(1);
+    SearchBoxSelectors.activeQuerySuggestion().should('have.length', 0);
 
     SearchBoxSelectors.inputBox().click();
     InstantResultsSelectors.results().eq(1).trigger('mouseover');

@@ -368,9 +368,35 @@ describe('Search Box Test Suites', () => {
           SearchBoxAssertions.assertHasText('Recent query 1');
         });
 
+        it('should always have one active suggestion at a time', () => {
+          SearchBoxSelectors.querySuggestion('Recent query 2').trigger(
+            'mouseover'
+          );
+
+          SearchBoxSelectors.activeQuerySuggestion().then(($el) => {
+            expect($el.length).to.equal(1);
+          });
+        });
+
         it('still has recent query after pressing the search button', () => {
           SearchBoxSelectors.submitButton().click();
           SearchBoxAssertions.assertHasText('Recent query 1');
+        });
+      });
+
+      describe('after focusing on suggestion with the mouse but with no click', () => {
+        beforeEach(() => {
+          setupWithSuggestionsAndRecentQueries();
+          SearchBoxSelectors.inputBox().focus();
+          SearchBoxSelectors.inputBox().type('Rec');
+        });
+
+        it('should submit what is in the search box regardless of the mouse position', () => {
+          SearchBoxSelectors.querySuggestion('Recent query 1').trigger(
+            'mouseover'
+          );
+          SearchBoxSelectors.submitButton().click();
+          SearchBoxAssertions.assertHasText('Rec');
         });
       });
 
