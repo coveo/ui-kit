@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import resultTemplate from '../templates/result-template.html';
+import resultTemplate from '../templates/result-template.html?raw';
 </script>
 
 <template>
