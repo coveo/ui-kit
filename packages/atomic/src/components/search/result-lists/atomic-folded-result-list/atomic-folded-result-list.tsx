@@ -99,12 +99,12 @@ export class AtomicFoldedResultList implements InitializableComponent {
   @Prop({reflect: true}) public childField?: string;
 
   /**
-   * The number of child results to fold under the root collection element, before expansion.
+   * The initial number of child results to request for each folded collection, before expansion.
    *
    * @defaultValue `2`
    *
-   * @example For an email thread with a total of 20 messages, using the default value of `2` will display the first two messages.
-   * The user can then click to expand the collection and see the remaining 18 messages, see the `atomic-load-more-children-results` component.
+   * @example For an email thread with a total of 20 messages, using the default value of `2` will request the top two child messages, based on the current sort criteria and query, to be returned as children of the parent message.
+   * The user can then click to expand the collection and see the remaining messages that match the current query (i.e., not necessarily all remaining 18 messages). Those messages will be sorted based on the current sort criteria (i.e., not necessarily by date). See the `atomic-load-more-children-results` component.
    */
   @Prop({reflect: true}) public numberOfFoldedResults = 2;
 
