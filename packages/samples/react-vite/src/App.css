@@ -1,42 +1,44 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+atomic-color-facet[field='cat_color']::part(value-Black) {
+  background-color: #222222;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+atomic-color-facet[field='cat_color']::part(value-White) {
+  background-color: white;
+  border: 1px solid var(--atomic-neutral);
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+atomic-color-facet[field='cat_color']::part(value-Stainless) {
+  background-image: linear-gradient(315deg, #d3d3d3 0%, #57606f 74%);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+atomic-color-facet[field='cat_color']::part(value-Silver) {
+  background-color: silver;
+  border: 1px solid var(--atomic-neutral);
 }
 
-.card {
-  padding: 2em;
+atomic-color-facet[field='cat_color']::part(value-Gray) {
+  background-color: gray;
+  border: 1px solid var(--atomic-neutral);
 }
 
-.read-the-docs {
-  color: #888;
+atomic-color-facet[field='cat_color']::part(value-Blue) {
+  background-color: rgb(73, 73, 255);
+}
+
+atomic-color-facet[field='cat_color']::part(value-Multi) {
+  background-image: linear-gradient(
+    315deg,
+    #b43a3a 0%,
+    #fffb71 16%,
+    rgba(137, 255, 126) 33%,
+    #2de9e1 50%,
+    #5f6cdb 66%,
+    #d79fdb 83%,
+    #ff6464 100%
+  );
+  border: 1px solid var(--atomic-neutral);
+}
+
+atomic-search-layout {
+  row-gap: var(--atomic-layout-spacing-y);
 }
