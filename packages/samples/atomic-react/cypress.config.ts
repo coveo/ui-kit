@@ -5,5 +5,6 @@ export default defineConfig({
     // We've imported your old cypress plugins here.
     // You may want to clean this up later by importing these.
     setupNodeEvents(_on, _config) {},
+    supportFile: false,
   },
 });
