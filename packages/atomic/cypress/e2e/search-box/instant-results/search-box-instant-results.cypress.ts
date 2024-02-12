@@ -242,4 +242,43 @@ describe('Instant Results Test Suites', () => {
       expect(win.location.href).to.equal('https://example.com/1');
     });
   });
+
+  it('should be clickable anywhere on the atomic-result component', () => {
+    setupWithSuggestionsAndRecentQueries();
+
+    cy.log('when hovering over a query');
+    SearchBoxSelectors.inputBox().click();
+    SearchBoxSelectors.querySuggestions().eq(0).trigger('mouseover');
+
+    SearchBoxAssertions.assertSuggestionIsSelectedWithoutIt(0);
+    SearchBoxAssertions.assertHasTextWithoutIt('');
+
+    cy.log('when hovering over an instant result');
+    SearchBoxSelectors.inputBox().click();
+    InstantResultsSelectors.results().eq(1).trigger('mouseover');
+
+    InstantResultsAssertions.assertHasResultCount(4);
+
+    SearchBoxAssertions.assertSuggestionIsHighlighted(1);
+
+    SearchBoxSelectors.inputBox().click();
+    InstantResultsSelectors.results().eq(1).trigger('mouseover');
+    SearchBoxSelectors.querySuggestions().eq(1).trigger('mouseover');
+
+    InstantResultsAssertions.assertHasResultCount(4);
+    SearchBoxAssertions.assertSuggestionIsSelectedWithoutIt(1);
+
+    cy.log('when clicking a result');
+    cy.wait(1000);
+
+    InstantResultsSelectors.results()
+      .eq(1)
+      .find('atomic-result')
+      .trigger('mouseover')
+      .click();
+
+    cy.window().then((win) => {
+      expect(win.location.href).to.equal('https://example.com/1');
+    });
+  });
 });
