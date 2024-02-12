@@ -1,12 +1,18 @@
+import {CoreEngine} from '../../../../app/engine';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
 import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
 import {updateRangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/range-facet-actions';
 import {NumericFacetRequest} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/request';
 import {SearchAppState} from '../../../../state/search-app-state';
 import {
-  MockSearchEngine,
-  buildMockSearchAppEngine,
-} from '../../../../test/mock-engine';
+  ConfigurationSection,
+  FacetOptionsSection,
+  SearchSection,
+} from '../../../../state/state-sections';
+import {
+  MockedSearchEngine,
+  buildMockSearchEngine,
+} from '../../../../test/mock-engine-v2';
 import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
 import {buildMockNumericFacetResponse} from '../../../../test/mock-numeric-facet-response';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
@@ -17,16 +23,27 @@ import {
   RangeFacetProps,
 } from './headless-core-range-facet';
 
+jest.mock('../../../../features/facet-options/facet-options-actions');
+jest.mock('../../../../features/facets/facet-set/facet-set-actions');
+jest.mock(
+  '../../../../features/facets/range-facets/generic/range-facet-actions'
+);
+
 describe('range facet', () => {
   const facetId = '1';
   let state: SearchAppState;
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
   let props: RangeFacetProps<NumericFacetRequest>;
   let rangeFacet: RangeFacet;
 
   function initRangeFacet() {
-    engine = buildMockSearchAppEngine({state});
-    rangeFacet = buildCoreRangeFacet(engine, props);
+    engine = buildMockSearchEngine(state);
+    rangeFacet = buildCoreRangeFacet(
+      engine as CoreEngine<
+        ConfigurationSection & SearchSection & FacetOptionsSection
+      >,
+      props
+    );
   }
 
   beforeEach(() => {
@@ -70,11 +87,11 @@ describe('range facet', () => {
     beforeEach(() => rangeFacet.deselectAll());
 
     it('dispatches #deselectAllFacetValues with the facet id', () => {
-      expect(engine.actions).toContainEqual(deselectAllFacetValues(facetId));
+      expect(deselectAllFacetValues).toHaveBeenCalledWith(facetId);
     });
 
     it('dispatches a #updateFacetOptions action with #freezeFacetOrder true', () => {
-      expect(engine.actions).toContainEqual(updateFacetOptions());
+      expect(updateFacetOptions).toHaveBeenCalled();
     });
   });
 
@@ -100,15 +117,15 @@ describe('range facet', () => {
     it('dispatches #updateRangeFacetSortCriterion', () => {
       const criterion = 'descending';
       rangeFacet.sortBy(criterion);
-      const action = updateRangeFacetSortCriterion({facetId, criterion});
-
-      expect(engine.actions).toContainEqual(action);
+      expect(updateRangeFacetSortCriterion).toHaveBeenCalledWith({
+        facetId,
+        criterion,
+      });
     });
 
     it('dispatches a #updateFacetOptions action with #freezeFacetOrder true', () => {
       rangeFacet.sortBy('descending');
-
-      expect(engine.actions).toContainEqual(updateFacetOptions());
+      expect(updateFacetOptions).toHaveBeenCalled();
     });
   });
 
