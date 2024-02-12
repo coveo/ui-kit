@@ -8,16 +8,22 @@ import {getQuestionAnsweringInitialState} from '../../../features/question-answe
 import {searchReducer as search} from '../../../features/search/search-slice';
 import {emptyQuestionAnswer} from '../../../features/search/search-state';
 import {
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../../test/mock-engine';
+  buildMockSearchEngine,
+  MockedSearchEngine,
+} from '../../../test/mock-engine-v2';
 import {buildMockRaw} from '../../../test/mock-raw';
 import {buildMockResult} from '../../../test/mock-result';
 import {buildMockSearchState} from '../../../test/mock-search-state';
+import {createMockState} from '../../../test/mock-state';
 import {
   CoreSmartSnippetQuestionsList,
   buildCoreSmartSnippetQuestionsList,
 } from './headless-core-smart-snippet-questions-list';
+
+jest.mock('../../../features/question-answering/question-answering-actions');
+jest.mock(
+  '../../../features/question-answering/question-answering-analytics-actions'
+);
 
 const examplePermanentIdOne = 'example permanentid one';
 const examplePermanentIdTwo = 'example permanentid two';
@@ -68,7 +74,7 @@ const exampleRelatedQuestionStateTwo = {
 };
 
 describe('SmartSnippetQuestionsList', () => {
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
   let smartSnippetQuestionsList: CoreSmartSnippetQuestionsList;
 
   function initSmartSnippetQuestionsList() {
@@ -79,7 +85,7 @@ describe('SmartSnippetQuestionsList', () => {
   }
 
   beforeEach(() => {
-    engine = buildMockSearchAppEngine();
+    engine = buildMockSearchEngine(createMockState());
     initSmartSnippetQuestionsList();
   });
 
@@ -101,17 +107,17 @@ describe('SmartSnippetQuestionsList', () => {
   it('#expand dispatches #expandSmartSnippetRelatedQuestion with the correct payload', () => {
     const exampleId = 'example id';
     smartSnippetQuestionsList.expand(exampleId);
-    expect(engine.actions).toContainEqual(
-      expandSmartSnippetRelatedQuestion({questionAnswerId: exampleId})
-    );
+    expect(expandSmartSnippetRelatedQuestion).toHaveBeenCalledWith({
+      questionAnswerId: exampleId,
+    });
   });
 
   it('#collapse dispatches #collapseSmartSnippetRelatedQuestion with the correct payload', () => {
     const exampleId = 'example id';
     smartSnippetQuestionsList.collapse(exampleId);
-    expect(engine.actions).toContainEqual(
-      collapseSmartSnippetRelatedQuestion({questionAnswerId: exampleId})
-    );
+    expect(collapseSmartSnippetRelatedQuestion).toHaveBeenCalledWith({
+      questionAnswerId: exampleId,
+    });
   });
 
   it('should properly build the state', () => {
@@ -157,6 +163,6 @@ describe('SmartSnippetQuestionsList', () => {
   });
 
   it('should not dispatch any action at initialization', () => {
-    expect(engine.actions.length).toEqual(0);
+    expect(engine.dispatch).not.toHaveBeenCalled();
   });
 });
