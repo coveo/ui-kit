@@ -58,7 +58,7 @@ describe('commerce api client', () => {
 
     await client.getProductListing(request);
 
-    expect(platformCallMock).toBeCalled();
+    expect(platformCallMock).toHaveBeenCalled();
     const mockRequest = platformCallMock.mock.calls[0][0];
     expect(mockRequest).toMatchObject({
       method: 'POST',
@@ -89,7 +89,7 @@ describe('commerce api client', () => {
 
     await client.search(request);
 
-    expect(platformCallMock).toBeCalled();
+    expect(platformCallMock).toHaveBeenCalled();
     const mockRequest = platformCallMock.mock.calls[0][0];
     expect(mockRequest).toMatchObject({
       method: 'POST',
@@ -104,6 +104,71 @@ describe('commerce api client', () => {
         context: request.context,
         language: request.language,
         currency: request.currency,
+      },
+    });
+  });
+
+  it('#querySuggest should call the platform endpoint with the correct arguments', async () => {
+    const request = {
+      ...buildCommerceAPIRequest(),
+      query: 'some query',
+    };
+
+    mockPlatformCall({
+      ok: true,
+      json: () => Promise.resolve('some content'),
+    });
+
+    await client.querySuggest(request);
+
+    expect(platformCallMock).toHaveBeenCalled();
+    const mockRequest = platformCallMock.mock.calls[0][0];
+    expect(mockRequest).toMatchObject({
+      method: 'POST',
+      contentType: 'application/json',
+      url: `${platformUrl}/rest/organizations/${organizationId}/commerce/v2/search/querySuggest`,
+      accessToken: request.accessToken,
+      origin: 'commerceApiFetch',
+      requestParams: {
+        query: 'some query',
+        trackingId: request.trackingId,
+        clientId: request.clientId,
+        context: request.context,
+        language: request.language,
+        currency: request.currency,
+      },
+    });
+  });
+
+  it('#facetSearch should call the platform endpoint with the correct arguments', async () => {
+    const {accessToken, organizationId, url, ...searchContext} =
+      buildCommerceAPIRequest();
+    const request = {
+      ...buildCommerceAPIRequest(),
+      facetId: 'some-facet-id',
+      facetQuery: 'some query',
+      searchContext,
+    };
+
+    mockPlatformCall({
+      ok: true,
+      json: () => Promise.resolve('some content'),
+    });
+
+    await client.facetSearch(request);
+
+    expect(platformCallMock).toHaveBeenCalled();
+    const mockRequest = platformCallMock.mock.calls[0][0];
+    expect(mockRequest).toMatchObject({
+      method: 'POST',
+      contentType: 'application/json',
+      url: `${platformUrl}/rest/organizations/${organizationId}/commerce/v2/facets`,
+      accessToken: request.accessToken,
+      origin: 'commerceApiFetch',
+      requestParams: {
+        facetId: 'some-facet-id',
+        facetQuery: 'some query',
+        searchContext,
       },
     });
   });
