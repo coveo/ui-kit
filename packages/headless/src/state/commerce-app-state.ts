@@ -15,6 +15,11 @@ import {
   FacetSearchSection,
 } from './state-sections';
 
+// eslint-disable-next-line @cspell/spellchecker
+// TODO CAPI-546: Handle only the query param for now. Add facets, sort, pagination later.
+export type CommerceSearchParametersState = CommerceQuerySection;
+export type CommerceProductListingParametersState = {};
+
 export type CommerceAppState = ConfigurationSection &
   ProductListingV2Section &
   CommerceSearchSection &

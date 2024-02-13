@@ -6,7 +6,7 @@
     "sourceMap": false,
     "target": "es6",
     "lib": ["esnext", "dom"],
-    "types": ["cypress"],
+    "types": ["cypress"]
   },
-  "include": ["**/*.ts", "**/*.js"],
+  "include": ["**/*.ts", "**/*.js"]
 }

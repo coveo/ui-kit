@@ -18,8 +18,9 @@ export const productListingV2Reducer = createReducer(
         state.responseId = action.payload.response.responseId;
         state.isLoading = false;
       })
-      .addCase(fetchProductListing.pending, (state) => {
+      .addCase(fetchProductListing.pending, (state, action) => {
         state.isLoading = true;
+        state.requestId = action.meta.requestId;
       });
   }
 );
