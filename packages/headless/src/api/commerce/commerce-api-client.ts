@@ -15,7 +15,6 @@ import {
   CommerceFacetSearchRequest,
   buildFacetSearchRequest,
 } from './facet-search/facet-search-request';
-import {FacetSearchSuccessResponse} from './facet-search/facet-search-response';
 import {
   buildQuerySuggestRequest,
   QuerySuggestRequest,
@@ -92,9 +91,9 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
 
   async facetSearch(
     req: CommerceFacetSearchRequest
-  ): Promise<CommerceAPIResponse<FacetSearchSuccessResponse>> {
+  ): Promise<CommerceAPIResponse<SpecificFacetSearchResponse>> {
     const requestOptions = buildFacetSearchRequest(req);
-    return this.query<FacetSearchSuccessResponse>({
+    return this.query<SpecificFacetSearchResponse>({
       ...requestOptions,
       requestParams: {
         ...requestOptions.requestParams,
