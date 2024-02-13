@@ -20,7 +20,7 @@ export interface FacetIdParam {
 }
 
 export interface SearchContextParam {
-  searchContext: SearchContextParams;
+  searchContext?: SearchContextParams;
 }
 
 type SearchContextParams = TrackingIdParam &
