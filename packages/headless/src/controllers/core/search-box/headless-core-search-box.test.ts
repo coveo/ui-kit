@@ -229,7 +229,7 @@ describe('headless CoreSearchBox', () => {
   });
 
   describe('when calling submit', () => {
-    it('it clears filters with #prepareForSearchWithQuery', () => {
+    it('clears filters with #prepareForSearchWithQuery if #clearFilters options is set to true', () => {
       searchBox.submit();
       expect(prepareForSearchWithQuery).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -238,7 +238,7 @@ describe('headless CoreSearchBox', () => {
       );
     });
 
-    it('it does not clears filters with #prepareForSearchWithQuery', () => {
+    it('does not clear filters with #prepareForSearchWithQuery if #clearFilters option is set to false', () => {
       searchBox = buildCoreSearchBox(engine, {
         ...props,
         options: {clearFilters: false},
