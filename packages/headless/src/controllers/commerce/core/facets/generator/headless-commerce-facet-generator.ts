@@ -19,6 +19,7 @@ import {
 } from '../headless-core-commerce-facet';
 import {CommerceNumericFacet} from '../numeric/headless-commerce-numeric-facet';
 import {CommerceRegularFacet} from '../regular/headless-commerce-regular-facet';
+import {CommerceSearchableFacetOptions} from '../searchable/headless-commerce-searchable-facet';
 
 /**
  * The `CommerceFacetGenerator` headless controller creates commerce facet controllers from the Commerce API search or
@@ -51,13 +52,19 @@ type CommerceFacetBuilder<Facet extends CoreCommerceFacet<any, any>> = (
   options: CommerceFacetOptions
 ) => Facet;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type CommerceSearchableFacetBuilder<Facet extends CoreCommerceFacet<any, any>> =
+  (
+    engine: CommerceEngine,
+    options: CommerceFacetOptions & CommerceSearchableFacetOptions
+  ) => Facet;
 /**
  * @internal
  *
  * The `CommerceFacetGenerator` options used internally.
  */
 export interface CommerceFacetGeneratorOptions {
-  buildRegularFacet: CommerceFacetBuilder<CommerceRegularFacet>;
+  buildRegularFacet: CommerceSearchableFacetBuilder<CommerceRegularFacet>;
   buildNumericFacet: CommerceFacetBuilder<CommerceNumericFacet>;
   buildDateFacet: CommerceFacetBuilder<CommerceDateFacet>;
   // TODO: buildCategoryFacet: CommerceFacetBuilder<CommerceCategoryFacet>;
