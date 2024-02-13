@@ -5,20 +5,25 @@ import {
 } from '../../features/dictionary-field-context/dictionary-field-context-actions';
 import {dictionaryFieldContextReducer as dictionaryFieldContext} from '../../features/dictionary-field-context/dictionary-field-context-slice';
 import {
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../test/mock-engine';
+  buildMockSearchEngine,
+  MockedSearchEngine,
+} from '../../test/mock-engine-v2';
+import {createMockState} from '../../test/mock-state';
 import {
   buildDictionaryFieldContext,
   DictionaryFieldContext,
 } from './headless-dictionary-field-context';
 
+jest.mock(
+  '../../features/dictionary-field-context/dictionary-field-context-actions'
+);
+
 describe('Context', () => {
   let context: DictionaryFieldContext;
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
 
   beforeEach(() => {
-    engine = buildMockSearchAppEngine();
+    engine = buildMockSearchEngine(createMockState());
     context = buildDictionaryFieldContext(engine);
   });
 
@@ -33,22 +38,16 @@ describe('Context', () => {
 
   it('setContext dispatches #setContext', () => {
     context.set({price: 'cad'});
-    const found = engine.actions.find((a) => a.type === setContext.type);
-
-    expect(engine.actions).toContainEqual(found);
+    expect(setContext).toHaveBeenCalledWith({price: 'cad'});
   });
 
   it('addContext dispatches #addContext', () => {
     context.add('price', 'cad');
-    const found = engine.actions.find((a) => a.type === addContext.type);
-
-    expect(engine.actions).toContainEqual(found);
+    expect(addContext).toHaveBeenCalledWith({key: 'cad', field: 'price'});
   });
 
   it('removeContext dispatches #removeContext', () => {
     context.remove('price');
-    const found = engine.actions.find((a) => a.type === removeContext.type);
-
-    expect(engine.actions).toContainEqual(found);
+    expect(removeContext).toHaveBeenCalledWith('price');
   });
 });
