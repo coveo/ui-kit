@@ -12,7 +12,7 @@ import {
 import {buildRequest, CommerceAPIRequest} from './common/request';
 import {CommerceSuccessResponse} from './common/response';
 import {
-  FacetSearchRequest,
+  CommerceFacetSearchRequest,
   buildFacetSearchRequest,
 } from './facet-search/facet-search-request';
 import {FacetSearchSuccessResponse} from './facet-search/facet-search-response';
@@ -25,7 +25,7 @@ import {CommerceSearchRequest} from './search/request';
 
 export interface CommerceFacetSearchAPIClient {
   facetSearch(
-    req: FacetSearchRequest
+    req: CommerceFacetSearchRequest
   ): Promise<CommerceAPIResponse<SpecificFacetSearchResponse>>;
 }
 
@@ -91,7 +91,7 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
   }
 
   async facetSearch(
-    req: FacetSearchRequest
+    req: CommerceFacetSearchRequest
   ): Promise<CommerceAPIResponse<FacetSearchSuccessResponse>> {
     const requestOptions = buildFacetSearchRequest(req);
     return this.query<FacetSearchSuccessResponse>({

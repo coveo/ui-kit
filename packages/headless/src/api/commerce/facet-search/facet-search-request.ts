@@ -6,19 +6,19 @@ import {
   SearchContextParam,
 } from './facet-search-params';
 
-export type FacetSearchRequest = BaseParam &
+export type CommerceFacetSearchRequest = BaseParam &
   FacetQueryParam &
   FacetIdParam &
   SearchContextParam;
 
-export const buildFacetSearchRequest = (req: FacetSearchRequest) => {
+export const buildFacetSearchRequest = (req: CommerceFacetSearchRequest) => {
   return {
     ...baseRequest(req, 'facets'),
     requestParams: prepareRequestParams(req),
   };
 };
 
-const prepareRequestParams = (req: FacetSearchRequest) => {
+const prepareRequestParams = (req: CommerceFacetSearchRequest) => {
   const {facetQuery, facetId, searchContext} = req;
   return {
     facetQuery,
