@@ -1,9 +1,9 @@
 /**
- * Simple Apex Controller to fetch data for Headless initialization specific to the Insight use case.
+ * Simple Apex Controller to fetch data for Headless initialization specific to the Recommendations use case.
  */
-global with sharing class InsightController {
+global with sharing class RecommendationsController {
   /**
-   * Get the configuration object (serialized) for the initialization of Coveo Headless through a class implementing `ITokenProvider`.
+   * Get the configuration object (serialized) for the initialization of Coveo Headless.
    * @return {String} A serialized object containing the following keys:
    *                      - `platformUrl`: the endpoint to contact Coveo.
    *                      - `accessToken`: an access token (see https://docs.coveo.com/en/123/apis/get-your-coveo-access-token).
