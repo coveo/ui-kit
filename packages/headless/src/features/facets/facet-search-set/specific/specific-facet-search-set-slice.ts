@@ -1,5 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {SpecificFacetSearchResponse} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
+import {executeCommerceFacetSearch} from '../../../commerce/facets/facet-search-set/commerce-facet-search-actions';
 import {executeSearch} from '../../../search/search-actions';
 import {
   handleFacetSearchRegistration,
@@ -9,6 +10,7 @@ import {
   handleFacetSearchFulfilled,
   handleFacetSearchClear,
   handleFacetSearchSetClear,
+  handleCommerceFacetSearchFulfilled,
 } from '../facet-search-reducer-helpers';
 import {
   clearFacetSearch,
@@ -29,13 +31,28 @@ export const specificFacetSearchSetReducer = createReducer(
       .addCase(updateFacetSearch, (state, action) => {
         handleFacetSearchUpdate(state, action.payload);
       })
+      .addCase(executeCommerceFacetSearch.pending, (state, action) => {
+        const facetId = action.meta.arg;
+        handleFacetSearchPending(state, facetId, action.meta.requestId);
+      })
       .addCase(executeFacetSearch.pending, (state, action) => {
         const facetId = action.meta.arg;
         handleFacetSearchPending(state, facetId, action.meta.requestId);
       })
+      .addCase(executeCommerceFacetSearch.rejected, (state, action) => {
+        const facetId = action.meta.arg;
+        handleFacetSearchRejected(state, facetId);
+      })
       .addCase(executeFacetSearch.rejected, (state, action) => {
         const facetId = action.meta.arg;
         handleFacetSearchRejected(state, facetId);
+      })
+      .addCase(executeCommerceFacetSearch.fulfilled, (state, action) => {
+        handleCommerceFacetSearchFulfilled(
+          state,
+          action.payload,
+          action.meta.requestId
+        );
       })
       .addCase(executeFacetSearch.fulfilled, (state, action) => {
         handleFacetSearchFulfilled(
