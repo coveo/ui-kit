@@ -5,9 +5,9 @@ import {
 } from '../../../features/pagination/pagination-actions';
 import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice';
 import {
-  MockSearchEngine,
-  buildMockSearchAppEngine,
-} from '../../../test/mock-engine';
+  MockedSearchEngine,
+  buildMockSearchEngine,
+} from '../../../test/mock-engine-v2';
 import {buildMockPagination} from '../../../test/mock-pagination';
 import {createMockState} from '../../../test/mock-state';
 import {
@@ -16,8 +16,10 @@ import {
   buildCoreResultsPerPage,
 } from './headless-core-results-per-page';
 
+jest.mock('../../../features/pagination/pagination-actions');
+
 describe('ResultsPerPage', () => {
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
   let props: ResultsPerPageProps;
   let resultsPerPage: ResultsPerPage;
 
@@ -26,7 +28,9 @@ describe('ResultsPerPage', () => {
   }
 
   beforeEach(() => {
-    engine = buildMockSearchAppEngine({});
+    jest.resetAllMocks();
+    const state = createMockState();
+    engine = buildMockSearchEngine(state);
     props = {
       initialState: {},
     };
@@ -45,8 +49,7 @@ describe('ResultsPerPage', () => {
     const num = 10;
     props.initialState!.numberOfResults = num;
     initResultsPerPage();
-
-    expect(engine.actions).toContainEqual(registerNumberOfResults(num));
+    expect(registerNumberOfResults).toHaveBeenCalledWith(num);
   });
 
   it('when the #numberOfResults option is specified to 0, it dispatches a register action', () => {
@@ -54,15 +57,11 @@ describe('ResultsPerPage', () => {
     props.initialState!.numberOfResults = num;
     initResultsPerPage();
 
-    expect(engine.actions).toContainEqual(registerNumberOfResults(num));
+    expect(registerNumberOfResults).toHaveBeenCalledWith(num);
   });
 
   it('when the #numberOfResults option is not specified, it does not dispatch a register action', () => {
-    const action = engine.actions.find(
-      (a) => a.type === registerNumberOfResults.type
-    );
-
-    expect(action).toBe(undefined);
+    expect(registerNumberOfResults).not.toHaveBeenCalled();
   });
 
   it('when #numberOfResults is set to a string, it throws an error with a context message', () => {
@@ -77,7 +76,7 @@ describe('ResultsPerPage', () => {
     const num = 10;
     resultsPerPage.set(num);
 
-    expect(engine.actions).toContainEqual(updateNumberOfResults(num));
+    expect(updateNumberOfResults).toHaveBeenCalledWith(num);
   });
 
   describe('when the state #numberOfResults is set to a value', () => {
@@ -88,7 +87,7 @@ describe('ResultsPerPage', () => {
         numberOfResults: numOfResultsInState,
       });
       const state = createMockState({pagination});
-      engine = buildMockSearchAppEngine({state});
+      engine = buildMockSearchEngine(state);
       initResultsPerPage();
     });
 
