@@ -4,23 +4,27 @@ import {
   toggleSelectFacetValue,
 } from '../../../../../features/facets/facet-set/facet-set-actions';
 import {
-  CoreCommerceFacet,
   CoreCommerceFacetOptions,
   FacetValueRequest,
   RegularFacetValue,
-  buildCoreCommerceFacet,
 } from '../headless-core-commerce-facet';
+import {
+  CommerceSearchableFacet,
+  CommerceSearchableFacetOptions,
+  buildCommerceSearchableFacet,
+} from '../searchable/headless-commerce-searchable-facet';
 
 export type CommerceRegularFacetOptions = Omit<
   CoreCommerceFacetOptions,
   'toggleSelectActionCreator' | 'toggleExcludeActionCreator'
->;
+> &
+  CommerceSearchableFacetOptions;
 
 /**
  * The `CommerceRegularFacet` controller offers a high-level programming interface for implementing a regular commerce
  * facet UI component.
  */
-export type CommerceRegularFacet = CoreCommerceFacet<
+export type CommerceRegularFacet = CommerceSearchableFacet<
   FacetValueRequest,
   RegularFacetValue
 >;
@@ -41,11 +45,12 @@ export function buildCommerceRegularFacet(
   engine: CommerceEngine,
   options: CommerceRegularFacetOptions
 ): CommerceRegularFacet {
-  return buildCoreCommerceFacet<FacetValueRequest, RegularFacetValue>(engine, {
-    options: {
+  return buildCommerceSearchableFacet<FacetValueRequest, RegularFacetValue>(
+    engine,
+    {
       ...options,
       toggleSelectActionCreator: toggleSelectFacetValue,
       toggleExcludeActionCreator: toggleExcludeFacetValue,
-    },
-  });
+    }
+  );
 }
