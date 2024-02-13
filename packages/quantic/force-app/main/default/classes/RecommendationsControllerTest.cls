@@ -6,7 +6,7 @@ private class RecommendationsControllerTest {
     Test.startTest();
     System.assertEquals(
       sampleHeadlessConfiguration,
-      InsightController.getHeadlessConfiguration()
+      RecommendationsController.getHeadlessConfiguration()
     );
     Test.stopTest();
   }
