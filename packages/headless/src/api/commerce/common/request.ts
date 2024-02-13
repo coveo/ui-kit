@@ -1,15 +1,15 @@
 import {PlatformClientCallOptions} from '../../platform-client';
 import {BaseParam} from '../../platform-service-params';
 import {
+  TrackingIdParam,
+  LanguageParam,
+  CountryParam,
+  CurrencyParam,
   ClientIdParam,
   ContextParam,
-  CurrencyParam,
-  LanguageParam,
   FacetsParam,
   PageParam,
   SortParam,
-  TrackingIdParam,
-  CountryParam,
 } from '../commerce-api-params';
 
 export type CommerceAPIRequest = BaseParam &
