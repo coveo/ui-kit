@@ -5,12 +5,13 @@ import {
   CommerceRegularFacet,
   buildCommerceRegularFacet,
 } from '../../core/facets/regular/headless-commerce-regular-facet';
+import {CommerceSearchableFacetOptions} from '../../core/facets/searchable/headless-commerce-searchable-facet';
 import {loadProductListingReducer} from '../utils/load-product-listing-reducers';
 import {commonOptions} from './headless-product-listing-facet-options';
 
 export function buildProductListingRegularFacet(
   engine: CommerceEngine,
-  options: CommerceFacetOptions
+  options: CommerceFacetOptions & CommerceSearchableFacetOptions
 ): CommerceRegularFacet {
   if (!loadProductListingReducer(engine)) {
     throw loadReducerError;
