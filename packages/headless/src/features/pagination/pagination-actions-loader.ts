@@ -29,7 +29,7 @@ export interface PaginationActionCreators {
   previousPage(): PayloadAction;
 
   /**
-   * Initializes the `numberOfResults` query parameter. For more information, refer to [the documentation on query parameters](https://docs.coveo.com/en/1461/cloud-v2-developers/query-parameters#RestQueryParameters-numberOfResults).
+   * Initializes the `numberOfResults` query parameter. For more information, refer to [the documentation on query parameters](https://docs.coveo.com/en/13#operation/searchUsingPost-numberOfResults).
    *
    * @param numberOfResults - The initial number of results.
    * @returns A dispatchable action.
@@ -37,7 +37,7 @@ export interface PaginationActionCreators {
   registerNumberOfResults(numberOfResults: number): PayloadAction<number>;
 
   /**
-   * Sets the initial page by initializing the `firstResult` query parameter. For more information, refer to [the documentation on query parameters](https://docs.coveo.com/en/1461/cloud-v2-developers/query-parameters#RestQueryParameters-firstResult).
+   * Sets the initial page by initializing the `firstResult` query parameter. For more information, refer to [the documentation on query parameters](https://docs.coveo.com/en/13#operation/searchUsingPost-firstResult).
    *
    * @param page - The initial page number.
    * @returns A dispatchable action.
@@ -45,7 +45,7 @@ export interface PaginationActionCreators {
   registerPage(page: number): PayloadAction<number>;
 
   /**
-   * Updates the `numberOfResults` query parameter. For more information, refer to [the documentation on query parameters](https://docs.coveo.com/en/1461/cloud-v2-developers/query-parameters#RestQueryParameters-numberOfResults).
+   * Updates the `numberOfResults` query parameter. For more information, refer to [the documentation on query parameters](https://docs.coveo.com/en/13#operation/searchUsingPost-numberOfResults).
    *
    * @param numberOfResults - The new number of results.
    * @returns A dispatchable action.
@@ -53,7 +53,7 @@ export interface PaginationActionCreators {
   updateNumberOfResults(numberOfResults: number): PayloadAction<number>;
 
   /**
-   * Updates the page by updating the `firstResult` query parameter. For more information, refer to [the documentation on query parameters](https://docs.coveo.com/en/1461/cloud-v2-developers/query-parameters#RestQueryParameters-firstResult).
+   * Updates the page by updating the `firstResult` query parameter. For more information, refer to [the documentation on query parameters](https://docs.coveo.com/en/13#operation/searchUsingPost-firstResult).
    *
    * @param page - The new page number.
    * @returns A dispatchable action.
