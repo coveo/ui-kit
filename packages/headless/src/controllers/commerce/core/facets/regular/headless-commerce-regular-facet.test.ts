@@ -52,6 +52,7 @@ describe('CommerceRegularFacet', () => {
 
   beforeEach(() => {
     jest.resetAllMocks();
+
     options = {
       facetId,
       ...commonOptions,
