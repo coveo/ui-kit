@@ -21,8 +21,14 @@ export type CommerceSearchableFacet<
   ValueRequest extends AnyFacetValueRequest,
   ValueResponse extends AnyFacetValueResponse,
 > = CoreCommerceFacet<ValueRequest, ValueResponse> & {
+  /**
+   * The facet search controller.
+   */
   facetSearch: Omit<CommerceFacetSearch, 'state'>;
   state: CoreCommerceFacetState<ValueResponse> & {
+    /**
+     * The facet search state.
+     */
     facetSearch: FacetSearchState;
   };
 };
