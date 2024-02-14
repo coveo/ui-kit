@@ -8,7 +8,6 @@ import {
 
 export * from './headless-result-list';
 
-// TODO: figure why exported type does not work and make the doc-parser crash
 export interface ResultListDefinition
   extends ControllerDefinitionWithoutProps<SearchEngine, ResultList> {}
 
