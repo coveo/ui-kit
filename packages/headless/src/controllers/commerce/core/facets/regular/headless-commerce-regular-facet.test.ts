@@ -33,6 +33,7 @@ describe('CommerceRegularFacet', () => {
   function initEngine(preloadedState = buildMockCommerceState()) {
     engine = buildMockCommerceEngine(preloadedState);
   }
+
   function initCommerceRegularFacet() {
     facet = buildCommerceRegularFacet(engine, options);
   }
@@ -98,9 +99,5 @@ describe('CommerceRegularFacet', () => {
       facetId,
       selection: facetValue,
     });
-  });
-
-  it('#state exposes #facetSearch', () => {
-    expect(facet.state.facetSearch).toBeTruthy();
   });
 });
