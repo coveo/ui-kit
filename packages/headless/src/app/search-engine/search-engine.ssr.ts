@@ -67,15 +67,11 @@ function buildSSRSearchEngine(options: SearchEngineOptions): SSRSearchEngine {
   };
 }
 
-type TControllerDefinitions = ControllerDefinitionsMap<
-  SearchEngine,
-  Controller
->;
-
-export interface SearchEngineDefinition
-  extends EngineDefinition<
+export interface SearchEngineDefinition<
+  TControllers extends ControllerDefinitionsMap<SSRSearchEngine, Controller>,
+> extends EngineDefinition<
     SSRSearchEngine,
-    TControllerDefinitions,
+    TControllers,
     SearchEngineOptions
   > {}
 
@@ -85,14 +81,19 @@ export interface SearchEngineDefinition
  * @returns Three utility functions to fetch initial state of engine in SSR, hydrate the state in CSR
  *  and a build function that can be used for edge cases requiring more control.
  */
-export function defineSearchEngine(
+export function defineSearchEngine<
+  TControllerDefinitions extends ControllerDefinitionsMap<
+    SearchEngine,
+    Controller
+  >,
+>(
   options: SearchEngineDefinitionOptions<TControllerDefinitions>
-): SearchEngineDefinition {
+): SearchEngineDefinition<TControllerDefinitions> {
   const {controllers: controllerDefinitions, ...engineOptions} = options;
-  type BuildFunction = SearchEngineDefinition['build'];
-  type FetchStaticStateFunction = SearchEngineDefinition['fetchStaticState'];
-  type HydrateStaticStateFunction =
-    SearchEngineDefinition['hydrateStaticState'];
+  type Definition = SearchEngineDefinition<TControllerDefinitions>;
+  type BuildFunction = Definition['build'];
+  type FetchStaticStateFunction = Definition['fetchStaticState'];
+  type HydrateStaticStateFunction = Definition['hydrateStaticState'];
   type FetchStaticStateFromBuildResultFunction =
     FetchStaticStateFunction['fromBuildResult'];
   type HydrateStaticStateFromBuildResultFunction =
