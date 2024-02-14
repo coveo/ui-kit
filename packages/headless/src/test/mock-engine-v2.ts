@@ -136,3 +136,13 @@ export function buildMockRecommendationEngine<
     ...buildMockCoreEngine(initialState),
   };
 }
+
+export function buildMockSSRSearchEngine(
+  initialState: StateFromEngine<SearchEngine>
+) {
+  const engine = buildMockSearchEngine(initialState);
+  return {
+    ...engine,
+    waitForSearchCompletedAction: jest.fn(),
+  };
+}

@@ -4,7 +4,6 @@ import {
   updateQuerySetQuery,
 } from '../../features/query-set/query-set-actions';
 import {selectQuerySuggestion} from '../../features/query-suggest/query-suggest-actions';
-import {OmniboxSuggestionMetadata} from '../../features/query-suggest/query-suggest-analytics-actions';
 import {querySuggestReducer as querySuggest} from '../../features/query-suggest/query-suggest-slice';
 import {updateQuery} from '../../features/query/query-actions';
 import {queryReducer as query} from '../../features/query/query-slice';
@@ -19,9 +18,9 @@ import {standaloneSearchBoxSetReducer as standaloneSearchBoxSet} from '../../fea
 import {StandaloneSearchBoxAnalytics} from '../../features/standalone-search-box-set/standalone-search-box-set-state';
 import {SearchAppState} from '../../state/search-app-state';
 import {
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../test/mock-engine';
+  buildMockSearchEngine,
+  MockedSearchEngine,
+} from '../../test/mock-engine-v2';
 import {buildMockOmniboxSuggestionMetadata} from '../../test/mock-omnibox-suggestion-metadata';
 import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
 import {buildMockStandaloneSearchBoxEntry} from '../../test/mock-standalone-search-box-entry';
@@ -32,11 +31,18 @@ import {
   StandaloneSearchBoxOptions,
 } from './headless-standalone-search-box';
 
+jest.mock('../../features/query-set/query-set-actions');
+jest.mock('../../features/query-suggest/query-suggest-actions');
+jest.mock('../../features/query/query-actions');
+jest.mock(
+  '../../features/standalone-search-box-set/standalone-search-box-set-actions'
+);
+
 describe('headless standalone searchBox', () => {
   const id = 'search-box-123';
   let state: SearchAppState;
 
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
   let searchBox: StandaloneSearchBox;
   let options: StandaloneSearchBoxOptions;
 
@@ -58,7 +64,7 @@ describe('headless standalone searchBox', () => {
   }
 
   function initController() {
-    engine = buildMockSearchAppEngine({state});
+    engine = buildMockSearchEngine(state);
     searchBox = buildStandaloneSearchBox(engine, {options});
   }
 
@@ -72,26 +78,21 @@ describe('headless standalone searchBox', () => {
   });
 
   it('dispatches #registerStandaloneSearchBox with the correct options', () => {
-    const action = registerStandaloneSearchBox({
+    expect(registerStandaloneSearchBox).toHaveBeenCalledWith({
       id,
       redirectionUrl: options.redirectionUrl,
     });
-    expect(engine.actions).toContainEqual(action);
   });
 
   it('when no id is passed, it creates an id prefixed with standalone_search_box', () => {
     options = {redirectionUrl: 'https://www.coveo.com/en/search'};
     initController();
 
-    const action = engine.actions.find(
-      (a) => a.type === registerQuerySetQuery.type
+    expect(registerQuerySetQuery).toHaveBeenCalledWith(
+      expect.objectContaining({
+        id: expect.stringContaining('standalone_search_box'),
+      })
     );
-
-    const payload = expect.objectContaining({
-      id: expect.stringContaining('standalone_search_box'),
-    });
-
-    expect(action).toEqual(expect.objectContaining({payload}));
   });
 
   it('when configuring an invalid option, it throws an error', () => {
@@ -123,17 +124,15 @@ describe('headless standalone searchBox', () => {
   });
 
   it('#state.isLoading uses the value in the standalone search-box reducer', () => {
-    engine.state.standaloneSearchBoxSet[id] = buildMockStandaloneSearchBoxEntry(
-      {isLoading: true}
-    );
+    engine.state.standaloneSearchBoxSet![id] =
+      buildMockStandaloneSearchBoxEntry({isLoading: true});
     expect(searchBox.state.isLoading).toBe(true);
   });
 
   it('#state.redirectTo uses the value in the standalone search-box reducer', () => {
     const redirectTo = '/search-page';
-    engine.state.standaloneSearchBoxSet[id] = buildMockStandaloneSearchBoxEntry(
-      {redirectTo}
-    );
+    engine.state.standaloneSearchBoxSet![id] =
+      buildMockStandaloneSearchBoxEntry({redirectTo});
     expect(searchBox.state.redirectTo).toBe(redirectTo);
   });
 
@@ -143,9 +142,8 @@ describe('headless standalone searchBox', () => {
       cause: 'omniboxFromLink',
       metadata,
     };
-    engine.state.standaloneSearchBoxSet[id] = buildMockStandaloneSearchBoxEntry(
-      {analytics}
-    );
+    engine.state.standaloneSearchBoxSet![id] =
+      buildMockStandaloneSearchBoxEntry({analytics});
 
     expect(searchBox.state.analytics).toEqual(analytics);
   });
@@ -158,13 +156,11 @@ describe('headless standalone searchBox', () => {
     });
 
     it('dispatches an action to update analytics to searchFromLink', () => {
-      const action = updateAnalyticsToSearchFromLink({id});
-      expect(engine.actions).toContainEqual(action);
+      expect(updateAnalyticsToSearchFromLink).toHaveBeenCalledWith({id});
     });
 
     it('dispatches #updateQuerySetQuery', () => {
-      const action = updateQuerySetQuery({id, query});
-      expect(engine.actions).toContainEqual(action);
+      expect(updateQuerySetQuery).toHaveBeenCalledWith({id, query});
     });
   });
 
@@ -173,24 +169,16 @@ describe('headless standalone searchBox', () => {
       const expression = 'a';
       searchBox.selectSuggestion(expression);
 
-      expect(engine.actions).toContainEqual(
-        selectQuerySuggestion({id, expression})
-      );
+      expect(selectQuerySuggestion).toHaveBeenCalledWith({id, expression});
     });
 
     it('dispatchs an action to update analytics to omniboxFromLink', () => {
-      const metadata: OmniboxSuggestionMetadata = {
-        partialQueries: [],
-        partialQuery: '',
-        suggestionRanking: -1,
-        suggestions: [],
-        querySuggestResponseId: '',
-      };
-
-      const action = updateAnalyticsToOmniboxFromLink({id, metadata});
-
       searchBox.selectSuggestion('a');
-      expect(engine.actions).toContainEqual(action);
+      expect(updateAnalyticsToOmniboxFromLink).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id,
+        })
+      );
     });
 
     it('calls #submit', () => {
@@ -206,23 +194,21 @@ describe('headless standalone searchBox', () => {
       const expectedQuery = state.querySet[id];
       searchBox.submit();
 
-      expect(engine.actions).toContainEqual(
-        updateQuery({q: expectedQuery, enableQuerySyntax: false})
-      );
+      expect(updateQuery).toHaveBeenCalledWith({
+        q: expectedQuery,
+        enableQuerySyntax: false,
+      });
     });
 
     it('should dispatch a fetchRedirectUrl action', () => {
       searchBox.submit();
 
-      const action = engine.actions.find(
-        (a) => a.type === fetchRedirectUrl.pending.type
-      );
-      expect(action).toBeTruthy();
+      expect(fetchRedirectUrl).toHaveBeenCalled();
     });
   });
 
   it('should dispatch a resetStandaloneSearchBox action when calling afterRedirection', () => {
     searchBox.afterRedirection();
-    expect(engine.actions).toContainEqual(resetStandaloneSearchBox({id}));
+    expect(resetStandaloneSearchBox).toHaveBeenCalledWith({id});
   });
 });

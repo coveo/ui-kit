@@ -10,9 +10,9 @@ import {
 import {fieldsReducer as fields} from '../../features/fields/fields-slice';
 import {searchReducer as search} from '../../features/search/search-slice';
 import {
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../test/mock-engine';
+  buildMockSearchEngine,
+  MockedSearchEngine,
+} from '../../test/mock-engine-v2';
 import {buildMockFieldDescription} from '../../test/mock-field-description';
 import {buildMockSearchResponseWithDebugInfo} from '../../test/mock-search-response';
 import {createMockState} from '../../test/mock-state';
@@ -22,8 +22,11 @@ import {
   RelevanceInspectorProps,
 } from './headless-relevance-inspector';
 
+jest.mock('../../features/debug/debug-actions');
+jest.mock('../../features/fields/fields-actions');
+
 describe('RelevanceInspector', () => {
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
   let relevanceInspector: RelevanceInspector;
 
   beforeEach(() => {
@@ -31,7 +34,7 @@ describe('RelevanceInspector', () => {
   });
 
   function initRelevanceInspector(props?: RelevanceInspectorProps) {
-    engine = buildMockSearchAppEngine();
+    engine = buildMockSearchEngine(createMockState());
     relevanceInspector = buildRelevanceInspector(engine, props);
   }
 
@@ -83,43 +86,43 @@ describe('RelevanceInspector', () => {
   it(`when initialized with enabled="true"
   it should dispatch an "enableDebug" action`, () => {
     initRelevanceInspector({initialState: {enabled: true}});
-    expect(engine.actions).toContainEqual(enableDebug());
+    expect(enableDebug).toHaveBeenCalled();
   });
 
   it(`when calling enable()
   it should dispatch an "enableDebug" action`, () => {
     relevanceInspector.enable();
-    expect(engine.actions).toContainEqual(enableDebug());
+    expect(enableDebug).toHaveBeenCalled();
   });
 
   it(`when calling disable()
   it should dispatch an "disableDebug" action`, () => {
     relevanceInspector.disable();
-    expect(engine.actions).toContainEqual(disableDebug());
+    expect(disableDebug).toHaveBeenCalled();
   });
 
   it(`when calling enableFieldsDebug()
   it should dispatch an "enableFieldsDebug" action`, () => {
     relevanceInspector.enableFetchAllFields();
-    expect(engine.actions).toContainEqual(enableFetchAllFields());
+    expect(enableFetchAllFields).toHaveBeenCalled();
   });
 
   it(`when calling disableFieldsDebug()
   it should dispatch an "disableFieldsDebug" action`, () => {
     relevanceInspector.disableFetchAllFields();
-    expect(engine.actions).toContainEqual(disableFetchAllFields());
+    expect(disableFetchAllFields).toHaveBeenCalled();
   });
 
   it(`when calling fetchFieldsDescription() with debug disabled
   it should dispatch an "enableDebug" action`, () => {
     relevanceInspector.fetchFieldsDescription();
-    expect(engine.actions).toContainEqual(enableDebug());
+    expect(enableDebug).toHaveBeenCalled();
   });
 
   it(`when calling fetchFieldsDescription() 
   it should dispatch an "fetchFieldsDescription" action`, () => {
     relevanceInspector.fetchFieldsDescription();
-    expect(engine.findAsyncAction(fetchFieldsDescription.pending)).toBeTruthy();
+    expect(fetchFieldsDescription).toHaveBeenCalled();
   });
 
   it('should return the right state when its disabled', () => {
@@ -131,7 +134,7 @@ describe('RelevanceInspector', () => {
     const state = createMockState();
     state.debug = true;
     state.search.response = responseWithDebug;
-    engine = buildMockSearchAppEngine({state});
+    engine = buildMockSearchEngine(state);
     relevanceInspector = buildRelevanceInspector(engine);
 
     expect(relevanceInspector.state).toEqual({
@@ -154,7 +157,7 @@ describe('RelevanceInspector', () => {
     const state = createMockState();
     state.debug = true;
     state.fields.fieldsDescription = [buildMockFieldDescription()];
-    engine = buildMockSearchAppEngine({state});
+    engine = buildMockSearchEngine(state);
     relevanceInspector = buildRelevanceInspector(engine);
 
     expect(relevanceInspector.state).toMatchObject({

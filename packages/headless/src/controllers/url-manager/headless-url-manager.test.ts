@@ -1,16 +1,19 @@
 import {configuration} from '../../app/common-reducers';
-import {
-  restoreSearchParameters,
-  SearchParameters,
-} from '../../features/search-parameters/search-parameter-actions';
+import {restoreSearchParameters} from '../../features/search-parameters/search-parameter-actions';
 import {initialSearchParameterSelector} from '../../features/search-parameters/search-parameter-selectors';
 import {executeSearch} from '../../features/search/search-actions';
-import {MockSearchEngine} from '../../test/mock-engine';
-import {buildMockSearchAppEngine} from '../../test/mock-engine';
+import {
+  buildMockSearchEngine,
+  MockedSearchEngine,
+} from '../../test/mock-engine-v2';
+import {createMockState} from '../../test/mock-state';
 import {UrlManager, buildUrlManager} from './headless-url-manager';
 
+jest.mock('../../features/search-parameters/search-parameter-actions');
+jest.mock('../../features/search/search-actions');
+
 describe('url manager', () => {
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
   let manager: UrlManager;
 
   function initUrlManager(fragment = '') {
@@ -22,50 +25,33 @@ describe('url manager', () => {
   }
 
   beforeEach(() => {
-    engine = buildMockSearchAppEngine();
+    jest.resetAllMocks();
+    engine = buildMockSearchEngine(createMockState());
     initUrlManager();
   });
-
-  function getLastestRestoreSearchParametersAction() {
-    const restoreSearchParametersActions = engine.actions.filter(
-      (action) => action.type === restoreSearchParameters.type
-    );
-    return restoreSearchParametersActions[
-      restoreSearchParametersActions.length - 1
-    ];
-  }
-
-  function testLatestRestoreSearchParameters(params: SearchParameters) {
-    const action = restoreSearchParameters(params);
-    expect(getLastestRestoreSearchParametersAction()).toEqual(action);
-  }
-
-  function testExecuteSearch() {
-    expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
-  }
 
   it('it adds the correct reducers to engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({configuration});
   });
 
   it('dispatches #restoreSearchParameters on registration', () => {
-    expect(getLastestRestoreSearchParametersAction()).toBeTruthy();
+    expect(restoreSearchParameters).toHaveBeenCalled();
   });
 
   it('does not execute a search on registration', () => {
-    expect(engine.findAsyncAction(executeSearch.pending)).toBeFalsy();
+    expect(executeSearch).not.toHaveBeenCalled();
   });
 
   it('initial #restoreSearchParameters should parse the "active" fragment', () => {
     initUrlManager('q=windmill&f-author=Cervantes');
-    testLatestRestoreSearchParameters({
+    expect(restoreSearchParameters).toHaveBeenCalledWith({
       q: 'windmill',
       f: {author: ['Cervantes']},
     });
   });
 
   it('returns the serialized fragment of the search parameters state', () => {
-    engine.state.query.q = 'books';
+    engine.state.query!.q = 'books';
     engine.state.sortCriteria = 'author ascending';
     expect(manager.state.fragment).toBe(
       `q=books&sortCriteria=author${encodeURIComponent(' ')}ascending`
@@ -76,43 +62,42 @@ describe('url manager', () => {
     it(`when adding a parameter
     should restore the right parameters and execute a search`, () => {
       manager.synchronize('q=test');
-
-      testLatestRestoreSearchParameters({
+      expect(restoreSearchParameters).toHaveBeenCalledWith({
         ...initialSearchParameterSelector(engine.state),
         q: 'test',
       });
-      testExecuteSearch();
+      expect(executeSearch).toHaveBeenCalled();
     });
 
     it(`when removing a parameter
     should restore the right parameters and execute a search`, () => {
-      engine.state.query.q = 'test';
+      engine.state.query!.q = 'test';
       manager.synchronize('');
-
-      testLatestRestoreSearchParameters(
-        initialSearchParameterSelector(engine.state)
+      expect(restoreSearchParameters).toHaveBeenCalledWith(
+        expect.objectContaining(initialSearchParameterSelector(engine.state))
       );
-      testExecuteSearch();
+      expect(executeSearch).toHaveBeenCalled();
     });
 
     it(`when the fragment is unchanged
     should not execute a search`, () => {
-      engine.state.query.q = 'test';
+      engine.state.query!.q = 'test';
       manager.synchronize('q=test');
 
-      expect(engine.findAsyncAction(executeSearch.pending)).toBeFalsy();
+      expect(executeSearch).not.toHaveBeenCalled();
     });
 
     it(`when a parameter's value changes
     should restore the right parameters and execute a search`, () => {
-      engine.state.query.q = 'books';
+      engine.state.query!.q = 'books';
       manager.synchronize('q=movies');
 
-      testLatestRestoreSearchParameters({
+      expect(restoreSearchParameters).toHaveBeenCalledWith({
         ...initialSearchParameterSelector(engine.state),
         q: 'movies',
       });
-      testExecuteSearch();
+
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 
@@ -144,7 +129,7 @@ describe('url manager', () => {
       const listener = jest.fn();
       manager.subscribe(listener);
 
-      engine.state.query.q = 'albums';
+      engine.state.query!.q = 'albums';
       callListener();
 
       expect(listener).not.toHaveBeenCalled();
@@ -155,7 +140,7 @@ describe('url manager', () => {
       manager.subscribe(listener);
 
       engine.state.search.requestId = 'abcde';
-      engine.state.query.q = 'books';
+      engine.state.query!.q = 'books';
       callListener();
 
       expect(listener).toHaveBeenCalledTimes(1);
@@ -168,7 +153,7 @@ describe('url manager', () => {
       manager.subscribe(listener);
 
       engine.state.search.requestId = 'abcde';
-      engine.state.query.q = '';
+      engine.state.query!.q = '';
       callListener();
 
       expect(listener).toHaveBeenCalledTimes(1);
