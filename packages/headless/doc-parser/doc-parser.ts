@@ -21,7 +21,7 @@ import {productListingUseCase} from './use-cases/product-listing';
 import {productRecommendationUseCase} from './use-cases/product-recommendation';
 import {recommendationUseCase} from './use-cases/recommendation';
 import {searchUseCase} from './use-cases/search';
-import {ssrSearchUseCase} from './use-cases/ssr.search';
+import {ssrSearchUseCase} from './use-cases/ssr-search';
 import {UseCaseConfiguration} from './use-cases/use-case-configuration';
 
 interface UseCase {
@@ -37,11 +37,10 @@ interface ResolvedUseCase {
   engine: Engine;
 }
 
-// TODO: check if can merge
 export const ssrUseCases: UseCase[] = [
   {
-    name: 'ssr.search',
-    entryFile: 'temp/ssr.search.api.json',
+    name: 'ssr-search',
+    entryFile: 'temp/ssr-search.api.json',
     config: ssrSearchUseCase,
   },
 ];
@@ -78,15 +77,15 @@ export const useCases: UseCase[] = [
     config: insightUseCase,
   },
   // eslint-disable-next-line @cspell/spellchecker
-  // TODO CAPI - 89: Uncomment when we're ready to make the Commerce sub-package public.
-  // {
-  //   name: 'commerce',
-  //   entryFile: 'temp/commerce.api.json',
-  //   config: commerceUseCase,
-  // },
+  // TODO CAPI-89: Uncomment when we're ready to make the Commerce sub-package public.
+  //{
+  //  name: 'commerce',
+  //  entryFile: 'temp/commerce.api.json',
+  //  config: commerceUseCase,
+  //},
 ];
 
-export function resolveUseCase(useCase: UseCase): ResolvedUseCase {
+function resolveUseCase(useCase: UseCase): ResolvedUseCase {
   const {name, entryFile, config} = useCase;
   process.env['currentUseCaseName'] = name;
   const apiModel = new ApiModel();
@@ -102,11 +101,9 @@ export function resolveUseCase(useCase: UseCase): ResolvedUseCase {
 
   const engine = resolveEngine(entryPoint, config.engine);
 
-  return {name, controllers, engine, actions};
+  return {name, controllers, actions, engine};
 }
 
-const resolved = useCases.map(resolveUseCase);
-writeFileSync('dist/parsed_doc.json', JSON.stringify(resolved, null, 2));
+const resolved = [...useCases, ...ssrUseCases].map(resolveUseCase);
 
-const ssrResolved = ssrUseCases.map(resolveUseCase);
-writeFileSync('dist/ssr_parsed_doc.json', JSON.stringify(ssrResolved, null, 2));
+writeFileSync('dist/parsed_doc.json', JSON.stringify(resolved, null, 2));
