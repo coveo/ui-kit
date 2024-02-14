@@ -9,8 +9,10 @@ import {buildMockCommerceRegularFacetResponse} from '../../../../../test/mock-co
 import {buildMockCommerceFacetSlice} from '../../../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceRegularFacetValue} from '../../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
-import {buildMockCommerceEngine} from '../../../../../test/mock-engine';
-import {MockCommerceEngine} from '../../../../../test/mock-engine';
+import {
+  buildMockCommerceEngine,
+  MockedCommerceEngine,
+} from '../../../../../test/mock-engine-v2';
 import {commonOptions} from '../../../product-listing/facets/headless-product-listing-facet-options';
 import {
   CommerceRegularFacet,
@@ -18,15 +20,17 @@ import {
   buildCommerceRegularFacet,
 } from './headless-commerce-regular-facet';
 
+jest.mock('../../../../../features/facets/facet-set/facet-set-actions');
+
 describe('CommerceRegularFacet', () => {
   const facetId: string = 'regular_facet_id';
   let options: CommerceRegularFacetOptions;
   let state: CommerceAppState;
-  let engine: MockCommerceEngine;
+  let engine: MockedCommerceEngine;
   let facet: CommerceRegularFacet;
 
   function initFacet() {
-    engine = buildMockCommerceEngine({state});
+    engine = buildMockCommerceEngine(state);
     facet = buildCommerceRegularFacet(engine, options);
   }
 
@@ -64,9 +68,10 @@ describe('CommerceRegularFacet', () => {
       const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
       facet.toggleSelect(facetValue);
 
-      expect(engine.actions).toContainEqual(
-        toggleSelectFacetValue({facetId, selection: facetValue})
-      );
+      expect(toggleSelectFacetValue).toHaveBeenCalledWith({
+        facetId,
+        selection: facetValue,
+      });
     });
   });
 
@@ -75,9 +80,10 @@ describe('CommerceRegularFacet', () => {
       const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
       facet.toggleExclude(facetValue);
 
-      expect(engine.actions).toContainEqual(
-        toggleExcludeFacetValue({facetId, selection: facetValue})
-      );
+      expect(toggleExcludeFacetValue).toHaveBeenCalledWith({
+        facetId,
+        selection: facetValue,
+      });
     });
   });
 });

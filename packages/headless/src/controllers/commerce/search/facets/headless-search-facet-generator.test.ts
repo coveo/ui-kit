@@ -7,15 +7,19 @@ import {
   buildMockCommerceDateFacetResponse,
 } from '../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
-import {MockCommerceEngine} from '../../../../test/mock-engine';
-import {buildMockCommerceEngine} from '../../../../test/mock-engine';
+import {
+  MockedCommerceEngine,
+  buildMockCommerceEngine,
+} from '../../../../test/mock-engine-v2';
 import {
   buildSearchFacetGenerator,
   SearchFacetGenerator,
 } from './headless-search-facet-generator';
 
+jest.mock('../../../../features/commerce/search/search-actions');
+
 describe('SearchFacetGenerator', () => {
-  let engine: MockCommerceEngine;
+  let engine: MockedCommerceEngine;
   let facetGenerator: SearchFacetGenerator;
 
   function initFacetGenerator(facetType: FacetType = 'regular') {
@@ -55,21 +59,19 @@ describe('SearchFacetGenerator', () => {
         break;
     }
     engine = buildMockCommerceEngine({
-      state: {
-        ...mockState,
-        commerceSearch: {
-          ...mockState.commerceSearch,
-          facets: [
-            buildMockCommerceRegularFacetResponse({
-              facetId: facet.facetId,
-              field: 'some_regular_field',
-            }),
-          ],
-        },
-        facetOrder: [facet.facetId],
-        commerceFacetSet: {
-          [facet.facetId]: {request: buildMockCommerceFacetRequest(facet)},
-        },
+      ...mockState,
+      commerceSearch: {
+        ...mockState.commerceSearch,
+        facets: [
+          buildMockCommerceRegularFacetResponse({
+            facetId: facet.facetId,
+            field: 'some_regular_field',
+          }),
+        ],
+      },
+      facetOrder: [facet.facetId],
+      commerceFacetSet: {
+        [facet.facetId]: {request: buildMockCommerceFacetRequest(facet)},
       },
     });
     facetGenerator = buildSearchFacetGenerator(engine);
@@ -84,22 +86,19 @@ describe('SearchFacetGenerator', () => {
     initFacetGenerator('regular');
 
     facetGenerator.state.facets[0].deselectAll();
-
-    expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
+    expect(executeSearch).toHaveBeenCalled();
   });
   it('generated regular numeric facet controllers should dispatch #executeSearch', () => {
     initFacetGenerator('numericalRange');
 
     facetGenerator.state.facets[0].deselectAll();
-
-    expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
+    expect(executeSearch).toHaveBeenCalled();
   });
 
   it('generated date facet controllers dispatches #executeSearch', () => {
     initFacetGenerator('dateRange');
 
     facetGenerator.state.facets[0].deselectAll();
-
-    expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
+    expect(executeSearch).toHaveBeenCalled();
   });
 });

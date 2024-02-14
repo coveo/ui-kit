@@ -8,8 +8,10 @@ import {
   buildMockCommerceDateFacetResponse,
 } from '../../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
-import {MockCommerceEngine} from '../../../../../test/mock-engine';
-import {buildMockCommerceEngine} from '../../../../../test/mock-engine';
+import {
+  MockedCommerceEngine,
+  buildMockCommerceEngine,
+} from '../../../../../test/mock-engine-v2';
 import {buildProductListingDateFacet} from '../../../product-listing/facets/headless-product-listing-date-facet';
 import {buildProductListingNumericFacet} from '../../../product-listing/facets/headless-product-listing-numeric-facet';
 import {buildProductListingRegularFacet} from '../../../product-listing/facets/headless-product-listing-regular-facet';
@@ -20,7 +22,7 @@ import {
 } from './headless-commerce-facet-generator';
 
 describe('CommerceFacetGenerator', () => {
-  let engine: MockCommerceEngine;
+  let engine: MockedCommerceEngine;
   let options: CommerceFacetGeneratorOptions;
   let facetGenerator: CommerceFacetGenerator;
 
@@ -59,24 +61,24 @@ describe('CommerceFacetGenerator', () => {
       default:
         break;
     }
-    engine = buildMockCommerceEngine({
-      state: {
-        ...mockState,
-        productListing: {
-          ...mockState.productListing,
-          facets: [
-            buildMockCommerceRegularFacetResponse({
-              facetId,
-              field: 'some_regular_field',
-            }),
-          ],
-        },
-        facetOrder: [facetId],
-        commerceFacetSet: {
-          [facetId]: {request: buildMockCommerceFacetRequest({facetId, type})},
-        },
+
+    const state = {
+      ...mockState,
+      productListing: {
+        ...mockState.productListing,
+        facets: [
+          buildMockCommerceRegularFacetResponse({
+            facetId,
+            field: 'some_regular_field',
+          }),
+        ],
       },
-    });
+      facetOrder: [facetId],
+      commerceFacetSet: {
+        [facetId]: {request: buildMockCommerceFacetRequest({facetId, type})},
+      },
+    };
+    engine = buildMockCommerceEngine(state);
     options = {
       buildNumericFacet: buildProductListingNumericFacet,
       buildRegularFacet: buildProductListingRegularFacet,
