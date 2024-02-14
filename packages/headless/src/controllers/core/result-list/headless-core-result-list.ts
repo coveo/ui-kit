@@ -132,7 +132,7 @@ export function buildCoreResultList(
   const minDelayBetweenFetches = 200;
   let errorLogged = false;
 
-  const triggerFetchMoreResult = () => {
+  const triggerFetchMoreResult = async () => {
     if (engine.state.search.isLoading) {
       return;
     }
@@ -162,9 +162,8 @@ export function buildCoreResultList(
 
     errorLogged = false;
     if (props?.fetchMoreResultsActionCreator) {
-      dispatch(props?.fetchMoreResultsActionCreator()).then(
-        () => (lastFetchCompleted = Date.now())
-      );
+      await dispatch(props?.fetchMoreResultsActionCreator());
+      lastFetchCompleted = Date.now();
     }
   };
 
