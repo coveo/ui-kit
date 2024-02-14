@@ -15,7 +15,7 @@ import {
 jest.mock('../../../../features/commerce/context/cart/cart-actions');
 jest.mock('./headless-cart-selectors');
 
-describe('headless commerce cart', () => {
+describe('Cart', () => {
   let engine: MockedCommerceEngine;
   let initialState: CartInitialState;
   let cart: Cart;
@@ -55,7 +55,7 @@ describe('headless commerce cart', () => {
       expect(cart).toBeTruthy();
     });
 
-    it('exposes a #subscribe method', () => {
+    it('exposes #subscribe method', () => {
       expect(cart.subscribe).toBeTruthy();
     });
 
