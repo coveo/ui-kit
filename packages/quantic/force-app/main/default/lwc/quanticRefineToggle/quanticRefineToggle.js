@@ -169,7 +169,7 @@ export default class QuanticRefineToggle extends LightningElement {
   }
 
   get isContentEmpty() {
-    return this.hideSort && !this.someFacetsRendered;
+    return !!this.hideSort && !this.someFacetsRendered;
   }
 
   /**

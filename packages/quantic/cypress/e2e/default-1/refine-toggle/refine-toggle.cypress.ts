@@ -1,3 +1,4 @@
+import {CyHttpMessages} from 'cypress/types/net-stubbing';
 import {
   addFacets,
   addFacetsWithoutInputs,
@@ -8,6 +9,7 @@ import {
   InterceptAliases,
   interceptSearch,
   mockSearchNoResults,
+  mockSearchWithCustomFunction,
   mockSearchWithoutAnyFacetValues,
   mockSearchWithResults,
 } from '../../../page-objects/search';
@@ -24,6 +26,31 @@ interface RefineToggleOptions {
 
 const viewResultsLabel = (value: number) => {
   return `View results (${new Intl.NumberFormat().format(value)})`;
+};
+
+const setTimeframeRangeAndNoResultsMock = (
+  response: CyHttpMessages.IncomingHttpResponse
+) => {
+  response.body.results = [];
+  response.body.totalCount = 0;
+  response.body.totalCountFiltered = 0;
+  response.body.facets = [
+    {
+      facetId: 'date_input',
+      field: 'date',
+      moreValuesAvailable: false,
+      values: [
+        {
+          start: '2024/02/09@00:00:00',
+          end: '2024/02/10@23:59:59',
+          endInclusive: true,
+          state: 'selected',
+          numberOfResults: 0,
+        },
+      ],
+      indexScore: 0,
+    },
+  ];
 };
 
 const customRefineModalTitle = 'Custom Title';
@@ -201,7 +228,7 @@ describe('quantic-refine-toggle', () => {
     });
 
     describe('when the hideSort property is set to true', () => {
-      it('should enable the refine toggle button not display the sort component in the refine modal content', () => {
+      it('should enable the refine toggle button and not display the sort component in the refine modal content', () => {
         visitPage({hideSort: true});
         addFacets();
 
@@ -289,6 +316,42 @@ describe('quantic-refine-toggle', () => {
             Expect.displayModal(false);
             Expect.refineToggleDisabled(true);
             Expect.refineToggleTitleContains(disabledRefineToggleTitle);
+          });
+        });
+      });
+
+      describe('when a timeframe range is selected and the search query does not return any results', () => {
+        it('should enable the refine toggle to allow opening the refine modal properly', () => {
+          visitPage({hideSort: true});
+          mockSearchWithCustomFunction(setTimeframeRangeAndNoResultsMock);
+          addFacets();
+
+          cy.wait(InterceptAliases.Search).then((interception) => {
+            scope('when loading the page', () => {
+              Expect.displayRefineToggle(true);
+              Expect.displayRefineToggleIcon(true);
+              Expect.displayModal(false);
+              Expect.refineToggleContains(defaultRefineToggleTitle);
+              Expect.displayFiltersCountBadge(true);
+              Expect.filtersCountBadgeContains(1);
+              Expect.refineToggleDisabled(false);
+            });
+
+            scope('when opening the refine modal', () => {
+              Actions.clickRefineButton();
+              Expect.displayModal(true);
+              Expect.displayModalFullScreen(false);
+              Expect.displayRefineModalTitle(true);
+              Expect.refineModalTitleContains(customRefineModalTitle);
+              Expect.displayModalContent(true);
+              Expect.displayFacetManager(true);
+              Expect.displaySort(false);
+              Expect.displayModalFooter(true);
+              Expect.displayViewResultsButton(true);
+              Expect.viewResultsButtonContains(
+                viewResultsLabel(interception.response?.body.totalCount)
+              );
+            });
           });
         });
       });
