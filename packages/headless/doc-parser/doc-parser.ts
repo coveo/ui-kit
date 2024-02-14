@@ -37,14 +37,6 @@ interface ResolvedUseCase {
   engine: Engine;
 }
 
-export const ssrUseCases: UseCase[] = [
-  {
-    name: 'ssr-search',
-    entryFile: 'temp/ssr-search.api.json',
-    config: ssrSearchUseCase,
-  },
-];
-
 export const useCases: UseCase[] = [
   {
     name: 'search',
@@ -76,6 +68,11 @@ export const useCases: UseCase[] = [
     entryFile: 'temp/insight.api.json',
     config: insightUseCase,
   },
+  {
+    name: 'ssr-search',
+    entryFile: 'temp/ssr-search.api.json',
+    config: ssrSearchUseCase,
+  },
   // eslint-disable-next-line @cspell/spellchecker
   // TODO CAPI-89: Uncomment when we're ready to make the Commerce sub-package public.
   //{
@@ -104,6 +101,6 @@ function resolveUseCase(useCase: UseCase): ResolvedUseCase {
   return {name, controllers, actions, engine};
 }
 
-const resolved = [...useCases, ...ssrUseCases].map(resolveUseCase);
+const resolved = useCases.map(resolveUseCase);
 
 writeFileSync('dist/parsed_doc.json', JSON.stringify(resolved, null, 2));
