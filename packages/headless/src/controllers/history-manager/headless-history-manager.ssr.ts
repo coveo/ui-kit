@@ -4,12 +4,16 @@ import {HistoryManager, buildHistoryManager} from './headless-history-manager';
 
 export * from './headless-history-manager';
 
+export interface HistoryManagerDefinition
+  extends ControllerDefinitionWithoutProps<SearchEngine, HistoryManager> {}
+
 /**
- * @internal
- */
-export const defineHistoryManager = (): ControllerDefinitionWithoutProps<
-  SearchEngine,
-  HistoryManager
-> => ({
-  build: (engine) => buildHistoryManager(engine),
-});
+ * Defines a `HistoryManager` controller instance.
+ *
+ * @returns The `HistoryManager` controller definition.
+ * */
+export function defineHistoryManager(): HistoryManagerDefinition {
+  return {
+    build: (engine) => buildHistoryManager(engine),
+  };
+}

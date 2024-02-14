@@ -8,11 +8,19 @@ import {
 
 export * from './headless-standalone-search-box';
 
+export interface StandaloneSearchBoxDefinition
+  extends ControllerDefinitionWithoutProps<SearchEngine, StandaloneSearchBox> {}
+
 /**
- * @internal
- */
-export const defineStandaloneSearchBox = (
+ * Defines a `StandaloneSearchBox` controller instance.
+ *
+ * @param props - The configurable `StandaloneSearchBox` properties.
+ * @returns The `StandaloneSearchBox` controller definition.
+ * */
+export function defineStandaloneSearchBox(
   props: StandaloneSearchBoxProps
-): ControllerDefinitionWithoutProps<SearchEngine, StandaloneSearchBox> => ({
-  build: (engine) => buildStandaloneSearchBox(engine, props),
-});
+): StandaloneSearchBoxDefinition {
+  return {
+    build: (engine) => buildStandaloneSearchBox(engine, props),
+  };
+}

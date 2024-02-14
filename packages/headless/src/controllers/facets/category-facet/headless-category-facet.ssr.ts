@@ -8,11 +8,19 @@ import {
 
 export * from './headless-category-facet';
 
+export interface CategoryFacetDefinition
+  extends ControllerDefinitionWithoutProps<SearchEngine, CategoryFacet> {}
+
 /**
- * @internal
- */
-export const defineCategoryFacet = (
+ * Defines a `CategoryFacet` controller instance.
+ *
+ * @param props - The configurable `CategoryFacet` properties.
+ * @returns The `CategoryFacet` controller definition.
+ * */
+export function defineCategoryFacet(
   props: CategoryFacetProps
-): ControllerDefinitionWithoutProps<SearchEngine, CategoryFacet> => ({
-  build: (engine) => buildCategoryFacet(engine, props),
-});
+): CategoryFacetDefinition {
+  return {
+    build: (engine) => buildCategoryFacet(engine, props),
+  };
+}
