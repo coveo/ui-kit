@@ -146,8 +146,9 @@ describe('commerce api client', () => {
     const request = {
       ...buildCommerceAPIRequest(),
       facetId: 'some-facet-id',
-      facetQuery: 'some query',
-      searchContext,
+      facetQuery: 'some facet query',
+      query: 'some query',
+      ...searchContext,
     };
 
     mockPlatformCall({
@@ -162,13 +163,14 @@ describe('commerce api client', () => {
     expect(mockRequest).toMatchObject({
       method: 'POST',
       contentType: 'application/json',
-      url: `${platformUrl}/rest/organizations/${organizationId}/commerce/v2/facets`,
+      url: `${platformUrl}/rest/organizations/${organizationId}/commerce/v2/facet`,
       accessToken: request.accessToken,
       origin: 'commerceApiFetch',
       requestParams: {
         facetId: 'some-facet-id',
-        facetQuery: 'some query',
-        searchContext,
+        facetQuery: 'some facet query',
+        query: 'some query',
+        ...searchContext,
       },
     });
   });

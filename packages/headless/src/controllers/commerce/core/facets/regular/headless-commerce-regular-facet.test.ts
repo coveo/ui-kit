@@ -78,24 +78,20 @@ describe('CommerceRegularFacet', () => {
   });
 
   it('#toggleSelect dispatches #toggleSelectFacetValue with correct payload', () => {
-    const mockedToggleSelectFacetValue = jest.mocked(toggleSelectFacetValue);
-
     const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
     facet.toggleSelect(facetValue);
 
-    expect(mockedToggleSelectFacetValue).toHaveBeenCalledWith({
+    expect(toggleSelectFacetValue).toHaveBeenCalledWith({
       facetId,
       selection: facetValue,
     });
   });
 
   it('#toggleExclude dispatches #toggleExcludeFacetValue with correct payload', () => {
-    const mockedToggleExcludeFacetValue = jest.mocked(toggleExcludeFacetValue);
-
     const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
     facet.toggleExclude(facetValue);
 
-    expect(mockedToggleExcludeFacetValue).toHaveBeenCalledWith({
+    expect(toggleExcludeFacetValue).toHaveBeenCalledWith({
       facetId,
       selection: facetValue,
     });

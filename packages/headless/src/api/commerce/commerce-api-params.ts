@@ -76,3 +76,11 @@ export interface SortParam {
 export interface QueryParam {
   query?: string;
 }
+
+export interface FacetQueryParam {
+  facetQuery: string;
+}
+
+export interface FacetIdParam {
+  facetId: string;
+}

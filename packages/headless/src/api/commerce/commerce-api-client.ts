@@ -11,10 +11,7 @@ import {
 } from './commerce-api-error-response';
 import {buildRequest, CommerceAPIRequest} from './common/request';
 import {CommerceSuccessResponse} from './common/response';
-import {
-  CommerceFacetSearchRequest,
-  buildFacetSearchRequest,
-} from './facet-search/facet-search-request';
+import {CommerceFacetSearchRequest} from './facet-search/facet-search-request';
 import {
   buildQuerySuggestRequest,
   QuerySuggestRequest,
@@ -92,11 +89,14 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
   async facetSearch(
     req: CommerceFacetSearchRequest
   ): Promise<CommerceAPIResponse<SpecificFacetSearchResponse>> {
-    const requestOptions = buildFacetSearchRequest(req);
+    const requestOptions = buildRequest(req, 'facet');
     return this.query<SpecificFacetSearchResponse>({
       ...requestOptions,
       requestParams: {
         ...requestOptions.requestParams,
+        facetId: req?.facetId,
+        facetQuery: req?.facetQuery,
+        query: req?.query,
       },
       ...this.options,
     });

@@ -86,13 +86,10 @@ describe('CommerceSearchableFacet', () => {
   });
 
   it('#facetSearch exposes the facet search controller', () => {
-    const mockedExecuteCommerceFacetSearch = jest.mocked(
-      executeCommerceFacetSearch
-    );
     expect(facet.facetSearch).toBeTruthy();
 
     facet.facetSearch.search();
-    expect(mockedExecuteCommerceFacetSearch).toHaveBeenCalled();
+    expect(executeCommerceFacetSearch).toHaveBeenCalled();
   });
 
   it('#state exposes #facetSearch', () => {

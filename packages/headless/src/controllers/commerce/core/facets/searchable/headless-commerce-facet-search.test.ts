@@ -1,3 +1,7 @@
+import {
+  executeCommerceFacetSearch,
+  executeCommerceFieldSuggest,
+} from '../../../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions';
 import {specificFacetSearchSetReducer as facetSearchSet} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
 import {
@@ -10,6 +14,10 @@ import {
   CommerceFacetSearch,
   buildCommerceFacetSearch,
 } from './headless-commerce-facet-search';
+
+jest.mock(
+  '../../../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions'
+);
 
 describe('CommerceFacetSearch', () => {
   const facetId: string = 'searchable_facet_id';
@@ -56,6 +64,18 @@ describe('CommerceFacetSearch', () => {
 
     it('loads the correct reducers', () => {
       expect(engine.addReducers).toHaveBeenCalledWith({facetSearchSet});
+    });
+
+    it('#search dispatches #executeCommerceFacetSearch when #isForFieldSuggestions is false', () => {
+      facetSearch.search();
+      expect(executeCommerceFacetSearch).toHaveBeenCalled();
+    });
+
+    it('#search dispatches #executeCommerceFieldSuggest when #isForFieldSuggestions is true', () => {
+      props.isForFieldSuggestions = true;
+      initCommerceFacetSearch();
+      facetSearch.search();
+      expect(executeCommerceFieldSuggest).toHaveBeenCalled();
     });
   });
 });
