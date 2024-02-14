@@ -43,13 +43,12 @@ export interface ControllerStaticStateMap {
   [customName: string]: ControllerStaticState<unknown>;
 }
 
-// TODO: not sure if should export
 export interface ControllerDefinitionWithoutProps<
   TEngine extends CoreEngine,
   TController extends Controller,
 > {
   /**
-   * TODO: document this: build
+   * Creates an instance the given controller
    *
    * @param engine - The search engine.
    * @returns the controller.
@@ -57,14 +56,13 @@ export interface ControllerDefinitionWithoutProps<
   build(engine: TEngine): TController;
 }
 
-// TODO: not sure if should export
 export interface ControllerDefinitionWithProps<
   TEngine extends CoreEngine,
   TController extends Controller,
   TProps,
 > {
   /**
-   * TODO: document this: buildWithProps
+   * Creates an instance the given controller
    *
    * @param engine - The search engine.
    * @param props - The controller properties.
@@ -91,13 +89,7 @@ export interface EngineDefinitionBuildResult<
   TEngine extends CoreEngine,
   TControllers extends ControllersMap,
 > {
-  /**
-   * TODO: document this EngineDefinitionBuildResult.engine
-   */
   engine: TEngine;
-  /**
-   * TODO: document this EngineDefinitionBuildResult.controllers
-   */
   controllers: TControllers;
 }
 
@@ -105,13 +97,7 @@ export interface EngineStaticState<
   TSearchAction extends AnyAction,
   TControllers extends ControllerStaticStateMap,
 > {
-  /**
-   * TODO: document this EngineStaticState.searchAction
-   */
   searchAction: TSearchAction;
-  /**
-   * TODO: document this EngineStaticState.controllers
-   */
   controllers: TControllers;
 }
 
