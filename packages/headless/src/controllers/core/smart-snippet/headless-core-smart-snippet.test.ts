@@ -15,8 +15,10 @@ import {questionAnsweringReducer as questionAnswering} from '../../../features/q
 import {searchReducer as search} from '../../../features/search/search-slice';
 import {emptyQuestionAnswer} from '../../../features/search/search-state';
 import {SearchAppState} from '../../../state/search-app-state';
-import {buildMockSearchAppEngine} from '../../../test/mock-engine';
-import {MockSearchEngine} from '../../../test/mock-engine';
+import {
+  MockedSearchEngine,
+  buildMockSearchEngine,
+} from '../../../test/mock-engine-v2';
 import {buildMockSearchResponse} from '../../../test/mock-search-response';
 import {buildMockSearchState} from '../../../test/mock-search-state';
 import {createMockState} from '../../../test/mock-state';
@@ -26,12 +28,18 @@ import {
   buildCoreSmartSnippet,
 } from './headless-core-smart-snippet';
 
+jest.mock('../../../features/question-answering/question-answering-actions');
+jest.mock(
+  '../../../features/question-answering/question-answering-analytics-actions'
+);
+
 describe('SmartSnippet', () => {
   let state: SearchAppState;
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
   let smartSnippet: SmartSnippetCore;
 
   beforeEach(() => {
+    jest.resetAllMocks();
     initState();
     initController();
   });
@@ -47,7 +55,7 @@ describe('SmartSnippet', () => {
   }
 
   function initController() {
-    engine = buildMockSearchAppEngine({state});
+    engine = buildMockSearchEngine(state);
     smartSnippet = buildCoreSmartSnippet(engine, smartSnippetAnalyticsClient);
   }
 
@@ -80,54 +88,54 @@ describe('SmartSnippet', () => {
   });
 
   it('should not dispatch any action at initialization', () => {
-    expect(engine.actions.length).toEqual(0);
+    expect(engine.dispatch).not.toHaveBeenCalled();
   });
 
   it('#expand dispatches #expandSmartSnippet', () => {
     smartSnippet.expand();
-    expect(engine.actions).toContainEqual(expandSmartSnippet());
+    expect(expandSmartSnippet).toHaveBeenCalled();
   });
 
   it('#collapse dispatches #collapseSmartSnippet', () => {
     smartSnippet.collapse();
-    expect(engine.actions).toContainEqual(collapseSmartSnippet());
+    expect(collapseSmartSnippet).toHaveBeenCalled();
   });
 
   it('#like dispatches #likeSmartSnippet', () => {
     smartSnippet.like();
-    expect(engine.actions).toContainEqual(likeSmartSnippet());
+    expect(likeSmartSnippet).toHaveBeenCalled();
   });
 
   it('#dislike dispatches #dislikeSmartSnippet', () => {
     smartSnippet.dislike();
-    expect(engine.actions).toContainEqual(dislikeSmartSnippet());
+    expect(dislikeSmartSnippet).toHaveBeenCalled();
   });
 
   it('#openFeedbackModal dispatches #openFeedbackModal', () => {
     smartSnippet.openFeedbackModal();
-    expect(engine.actions).toContainEqual(openFeedbackModal());
+    expect(openFeedbackModal).toHaveBeenCalled();
   });
 
   it('#closeFeedbackModal dispatches #closeFeedbackModal', () => {
     smartSnippet.closeFeedbackModal();
-    expect(engine.actions).toContainEqual(closeFeedbackModal());
+    expect(closeFeedbackModal).toHaveBeenCalled();
   });
 
   it('#sendFeedback dispatches #closeFeedbackModal', () => {
     const mockFeedback: SmartSnippetFeedback = 'does_not_answer';
     smartSnippet.sendFeedback(mockFeedback);
-    expect(engine.actions).toContainEqual(closeFeedbackModal());
+    expect(closeFeedbackModal).toHaveBeenCalled();
   });
 
   it('#sendDetailedFeedback dispatches #closeFeedbackModal', () => {
     const mockFeedbackDetails = 'foo';
     smartSnippet.sendDetailedFeedback(mockFeedbackDetails);
-    expect(engine.actions).toContainEqual(closeFeedbackModal());
+    expect(closeFeedbackModal).toHaveBeenCalled();
   });
 
   it('#sendDetailedFeedback dispatches #closeFeedbackModal', () => {
     const mockFeedbackDetails = 'foo';
     smartSnippet.sendDetailedFeedback(mockFeedbackDetails);
-    expect(engine.actions).toContainEqual(closeFeedbackModal());
+    expect(closeFeedbackModal).toHaveBeenCalled();
   });
 });

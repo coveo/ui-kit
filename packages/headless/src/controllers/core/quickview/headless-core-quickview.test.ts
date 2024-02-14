@@ -6,19 +6,24 @@ import {
   updateContentURL,
 } from '../../../features/result-preview/result-preview-actions';
 import {resultPreviewReducer as resultPreview} from '../../../features/result-preview/result-preview-slice';
-import {MockSearchEngine} from '../../../test/mock-engine';
-import {buildMockSearchAppEngine} from '../../../test/mock-engine';
+import {
+  buildMockSearchEngine,
+  MockedSearchEngine,
+} from '../../../test/mock-engine-v2';
 import {buildMockResult} from '../../../test/mock-result';
 import {buildMockResultPreviewRequest} from '../../../test/mock-result-preview-request-builder';
 import {buildMockResultPreviewState} from '../../../test/mock-result-preview-state';
+import {createMockState} from '../../../test/mock-state';
 import {
   buildCoreQuickview,
   QuickviewOptions,
   Quickview,
 } from './headless-core-quickview';
 
+jest.mock('../../../features/result-preview/result-preview-actions');
+
 describe('QuickviewCore', () => {
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
   let defaultOptions: QuickviewOptions;
   let quickview: Quickview;
 
@@ -34,7 +39,7 @@ describe('QuickviewCore', () => {
   }
 
   beforeEach(() => {
-    engine = buildMockSearchAppEngine();
+    engine = buildMockSearchEngine(createMockState());
     defaultOptions = {
       result: buildMockResult(),
       maximumPreviewSize: 0,
@@ -71,8 +76,7 @@ describe('QuickviewCore', () => {
       });
 
       it('dispatches a #updateContentURL action with the result uniqueId', () => {
-        const action = engine.findAsyncAction(updateContentURL.pending);
-        expect(action?.meta.arg).toEqual({
+        expect(updateContentURL).toHaveBeenCalledWith({
           uniqueId,
           requestedOutputSize,
           buildResultPreviewRequest: buildMockResultPreviewRequest,
@@ -90,8 +94,10 @@ describe('QuickviewCore', () => {
       });
 
       it('dispatches a #fetchResultContent action with the result uniqueId', () => {
-        const action = engine.findAsyncAction(fetchResultContent.pending);
-        expect(action?.meta.arg).toEqual({uniqueId, requestedOutputSize});
+        expect(fetchResultContent).toHaveBeenCalledWith({
+          uniqueId,
+          requestedOutputSize,
+        });
       });
     });
   });
@@ -154,14 +160,14 @@ describe('QuickviewCore', () => {
   it('when going to #next preview, it dispatches the proper actions', () => {
     initQuickview();
     quickview.next();
-    expect(engine.actions).toContainEqual(nextPreview());
-    expect(engine.findAsyncAction(fetchResultContent.pending)).toBeDefined();
+    expect(nextPreview).toHaveBeenCalled();
+    expect(fetchResultContent).toHaveBeenCalled();
   });
 
   it('when going to #previous preview, it dispatches the proper actions', () => {
     initQuickview();
     quickview.previous();
-    expect(engine.actions).toContainEqual(previousPreview());
-    expect(engine.findAsyncAction(fetchResultContent.pending)).toBeDefined();
+    expect(previousPreview).toHaveBeenCalled();
+    expect(fetchResultContent).toHaveBeenCalled();
   });
 });

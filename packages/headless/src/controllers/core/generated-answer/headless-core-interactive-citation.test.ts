@@ -6,27 +6,28 @@ import {
 } from '../../../features/generated-answer/generated-answer-analytics-actions';
 import {buildMockCitation} from '../../../test/mock-citation';
 import {
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../../test/mock-engine';
+  buildMockSearchEngine,
+  MockedSearchEngine,
+} from '../../../test/mock-engine-v2';
+import {createMockState} from '../../../test/mock-state';
 import {
   buildInteractiveCitationCore,
   InteractiveCitation,
 } from './headless-core-interactive-citation';
 
+jest.mock(
+  '../../../features/generated-answer/generated-answer-analytics-actions'
+);
+
 describe('InteractiveCitation', () => {
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
   let mockCitation: GeneratedAnswerCitation;
   let interactiveCitation: InteractiveCitation;
-  let logCitationOpenPendingActionType: string;
 
   function initializeInteractiveCitation(delay?: number) {
     mockCitation = buildMockCitation({
       id: 'some-test-id',
     });
-    logCitationOpenPendingActionType = logOpenGeneratedAnswerSource(
-      mockCitation.id
-    ).pending.type;
     interactiveCitation = buildInteractiveCitationCore(
       engine,
       generatedAnswerAnalyticsClient,
@@ -36,25 +37,8 @@ describe('InteractiveCitation', () => {
     );
   }
 
-  function findLogDocumentAction() {
-    return (
-      engine.actions.find(
-        (action) => action.type === logCitationOpenPendingActionType
-      ) ?? null
-    );
-  }
-
-  function expectLogActionPending() {
-    const action = findLogDocumentAction();
-    expect(action).toEqual(
-      logOpenGeneratedAnswerSource(mockCitation.id).pending(
-        action!.meta.requestId
-      )
-    );
-  }
-
   beforeEach(() => {
-    engine = buildMockSearchAppEngine();
+    engine = buildMockSearchEngine(createMockState());
     initializeInteractiveCitation();
   });
 
@@ -64,6 +48,6 @@ describe('InteractiveCitation', () => {
 
   it('when calling select(), logs openGeneratedAnswerSource', () => {
     interactiveCitation.select();
-    expectLogActionPending();
+    expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(mockCitation.id);
   });
 });
