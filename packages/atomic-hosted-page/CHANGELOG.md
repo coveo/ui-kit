@@ -1,3 +1,9 @@
+## 0.5.18 (2024-02-14)
+
+### Bug Fixes
+
+- **hsp:** use admin url ([#3600](https://github.com/coveo/ui-kit/issues/3600)) ([4f6ef02](https://github.com/coveo/ui-kit/commits/4f6ef02fe185ab66ac4bfc037e4d091e4fe11808))
+
 ## 0.5.17 (2024-02-09)
 
 ### Bug Fixes
