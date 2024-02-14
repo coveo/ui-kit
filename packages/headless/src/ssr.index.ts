@@ -8,7 +8,6 @@ export {createAction, createAsyncThunk, createReducer} from '@reduxjs/toolkit';
 export type {AnalyticsClientSendEventHook} from 'coveo.analytics';
 
 // Main App
-// ⚠️ NOTE: All exported SSR types, APIs should be marked as `@internal` until MVP is complete
 export type {
   SearchEngineOptions,
   SearchEngineConfiguration,
@@ -23,7 +22,6 @@ export type {
 export {defineSearchEngine} from './app/search-engine/search-engine.ssr';
 export {getSampleSearchEngineConfiguration} from './app/search-engine/search-engine';
 
-// TODO: put in correct order
 export type {InstantResultsDefinition} from './controllers/instant-results/instant-results.ssr';
 export type {AutomaticFacetGeneratorDefinition} from './controllers/facets/automatic-facet-generator/headless-automatic-facet-generator.ssr';
 export type {BreadcrumbManagerDefinition} from './controllers/breadcrumb-manager/headless-breadcrumb-manager.ssr';

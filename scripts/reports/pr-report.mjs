@@ -4,7 +4,6 @@ import {
   updatePullRequestComment,
   createPullRequestComment,
 } from './github-client.mjs';
-import {buildSSRProgressReport} from './ssr-progress/ssr-progress.mjs';
 import {buildTitleReport} from './title/verify-title.mjs';
 
 const reportTitle = 'Pull Request Report';
@@ -16,7 +15,6 @@ async function main() {
 
 async function buildReport() {
   const titleFormatReport = await buildTitleReport();
-  const ssrProgress = await buildSSRProgressReport();
   const bundleSizeReport = await buildBundleSizeReport();
 
   return `
@@ -25,8 +23,6 @@ async function buildReport() {
   ${titleFormatReport}
 
   ${bundleSizeReport}
-
-  ${ssrProgress}
   `;
 }
 
