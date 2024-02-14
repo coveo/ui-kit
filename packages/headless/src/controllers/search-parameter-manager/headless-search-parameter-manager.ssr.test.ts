@@ -13,7 +13,8 @@ import {queryReducer} from '../../features/query/query-slice';
 import {sortCriteriaReducer} from '../../features/sort-criteria/sort-criteria-slice';
 import {staticFilterSetReducer} from '../../features/static-filter-set/static-filter-set-slice';
 import {tabSetReducer} from '../../features/tab-set/tab-set-slice';
-import {buildMockSSRSearchEngine} from '../../test/mock-engine';
+import {buildMockSSRSearchEngine} from '../../test/mock-engine-v2';
+import {createMockState} from '../../test/mock-state';
 import {advancedSearchQueriesReducer} from './../../features/advanced-search-queries/advanced-search-queries-slice';
 import {
   SearchParameterManager,
@@ -44,7 +45,7 @@ describe('define search parameter manager', () => {
   });
 
   it('it adds the correct reducers to engine', () => {
-    const engine: SSRSearchEngine = buildMockSSRSearchEngine();
+    const engine: SSRSearchEngine = buildMockSSRSearchEngine(createMockState());
     const props: SearchParameterManagerBuildProps =
       {} as unknown as SearchParameterManagerBuildProps;
 
@@ -79,7 +80,7 @@ describe('define search parameter manager', () => {
   });
 
   it("buildWithProps should pass it's parameters to the buildSearchParameterManager", () => {
-    const engine: SSRSearchEngine = buildMockSSRSearchEngine();
+    const engine: SSRSearchEngine = buildMockSSRSearchEngine(createMockState());
     const props: SearchParameterManagerBuildProps =
       {} as unknown as SearchParameterManagerBuildProps;
 
