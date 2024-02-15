@@ -61,7 +61,7 @@ describe('CommerceFacetGenerator', () => {
     initCommerceFacetGenerator();
   });
 
-  describe('upon initialization', () => {
+  describe('initialization', () => {
     describe('regardless of the current facet state', () => {
       beforeEach(() => {
         initCommerceFacetGenerator();
@@ -82,6 +82,7 @@ describe('CommerceFacetGenerator', () => {
         expect(facetGenerator.subscribe).toBeTruthy();
       });
     });
+
     describe('when facet state contains a regular facet', () => {
       it('generates a regular facet controller', () => {
         const facetId = 'regular_facet_id';
