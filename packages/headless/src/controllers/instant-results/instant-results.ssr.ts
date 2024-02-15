@@ -12,7 +12,7 @@ export interface InstantResultsDefinition
   extends ControllerDefinitionWithoutProps<SearchEngine, InstantResults> {}
 
 /**
- * Defines a `InstantResults` controller instance.
+ * Defines an `InstantResults` controller instance.
  *
  * @param props - The configurable `InstantResults` properties.
  * @returns The `InstantResults` controller definition.

@@ -8,7 +8,7 @@ export interface ExecuteTriggerDefinition
   extends ControllerDefinitionWithoutProps<SearchEngine, ExecuteTrigger> {}
 
 /**
- * Defines a `ExecuteTrigger` controller instance.
+ * Defines an `ExecuteTrigger` controller instance.
  *
  * @returns The `ExecuteTrigger` controller definition.
  * */

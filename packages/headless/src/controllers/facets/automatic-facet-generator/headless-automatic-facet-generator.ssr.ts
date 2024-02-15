@@ -15,7 +15,7 @@ export interface AutomaticFacetGeneratorDefinition
   > {}
 
 /**
- * Defines a `AutomaticFacetGenerator` controller instance.
+ * Defines an `AutomaticFacetGenerator` controller instance.
  *
  * @param props - The configurable `AutomaticFacetGenerator` properties.
  * @returns The `AutomaticFacetGenerator` controller definition.

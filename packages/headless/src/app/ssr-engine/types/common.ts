@@ -48,10 +48,10 @@ export interface ControllerDefinitionWithoutProps<
   TController extends Controller,
 > {
   /**
-   * Creates an instance the given controller
+   * Creates an instance of the given controller.
    *
    * @param engine - The search engine.
-   * @returns the controller.
+   * @returns The controller.
    */
   build(engine: TEngine): TController;
 }
@@ -62,11 +62,11 @@ export interface ControllerDefinitionWithProps<
   TProps,
 > {
   /**
-   * Creates an instance the given controller
+   * Creates an instance of the given controller.
    *
    * @param engine - The search engine.
    * @param props - The controller properties.
-   * @returns the controller.
+   * @returns The controller.
    */
   buildWithProps(engine: TEngine, props: TProps): TController;
 }
