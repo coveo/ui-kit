@@ -145,7 +145,7 @@ export interface DictionaryFieldContextSection {
 
 export interface SortSection {
   /**
-   * The sort criteria to use with the search query. For more information, refer to {@link https://docs.coveo.com/en/1461/cloud-v2-developers/query-parameters#RestQueryParameters-sortCriteria}
+   * The sort criteria to use with the search query. For more information, refer to {@link https://docs.coveo.com/en/13#operation/searchUsingPost-sortCriteria}
    */
   sortCriteria: SortCriteriaState;
 }

@@ -1,3 +1,14 @@
+# 2.50.0 (2024-02-14)
+
+### Bug Fixes
+
+- bump coveo.analytics ([#3592](https://github.com/coveo/ui-kit/issues/3592)) ([b9fdb92](https://github.com/coveo/ui-kit/commits/b9fdb9255e05a467e6af49e610adf046e6400e23))
+- remove clearAnalyticsClient behavior ([#3598](https://github.com/coveo/ui-kit/issues/3598)) ([04f7654](https://github.com/coveo/ui-kit/commits/04f765422c8a3222cd9517282da8ebdda694819a))
+
+### Features
+
+- **headless/commerce:** rework cart controller ([#3580](https://github.com/coveo/ui-kit/issues/3580)) ([3c0fa3e](https://github.com/coveo/ui-kit/commits/3c0fa3e5ebb2662b4645b2c88750fa4d2f3c6539))
+
 ## 2.49.1 (2024-02-09)
 
 ### Bug Fixes
