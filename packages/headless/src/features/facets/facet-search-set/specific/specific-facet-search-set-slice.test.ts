@@ -26,6 +26,7 @@ describe('FacetSearch slice', () => {
   let state: SpecificFacetSearchSetState;
 
   beforeEach(() => {
+    jest.resetAllMocks();
     state = getFacetSearchSetInitialState();
   });
 
@@ -99,7 +100,7 @@ describe('FacetSearch slice', () => {
   });
 
   it('on #executeCommerceFacetSearch.fulfilled with an unregistered id, it does nothing', () => {
-    jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchFulfilled');
+    jest.spyOn(FacetSearchReducerHelpers, 'handleCommerceFacetSearchFulfilled');
     const response = buildMockFacetSearchResponse();
 
     const action = executeCommerceFacetSearch.fulfilled(
