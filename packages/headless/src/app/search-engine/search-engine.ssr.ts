@@ -25,22 +25,15 @@ import {
 } from './search-engine';
 
 /**
- * @internal
+ * The SSR search engine.
  */
 export interface SSRSearchEngine extends SearchEngine {
+  /**
+   * Waits for the search to be completed and returns a promise that resolves to a `SearchCompletedAction`.
+   */
   waitForSearchCompletedAction(): Promise<SearchCompletedAction>;
 }
 
-/**
- * @internal
- */
-export type SearchEngineDefinition<
-  TControllers extends ControllerDefinitionsMap<SSRSearchEngine, Controller>,
-> = EngineDefinition<SSRSearchEngine, TControllers, SearchEngineOptions>;
-
-/**
- * @internal
- */
 export type SearchEngineDefinitionOptions<
   TControllers extends ControllerDefinitionsMap<SSRSearchEngine, Controller>,
 > = EngineDefinitionOptions<SearchEngineOptions, TControllers>;
@@ -74,11 +67,18 @@ function buildSSRSearchEngine(options: SearchEngineOptions): SSRSearchEngine {
   };
 }
 
+export interface SearchEngineDefinition<
+  TControllers extends ControllerDefinitionsMap<SSRSearchEngine, Controller>,
+> extends EngineDefinition<
+    SSRSearchEngine,
+    TControllers,
+    SearchEngineOptions
+  > {}
+
 /**
- * @internal
- *
  * Initializes a Search engine definition in SSR with given controllers definitions and search engine config.
- * @returns Three utility functions to fetch initial state of engine in SSR, hydrate the state in CSR
+ * @param options - The search engine definition
+ * @returns Three utility functions to fetch the initial state of the engine in SSR, hydrate the state in CSR,
  *  and a build function that can be used for edge cases requiring more control.
  */
 export function defineSearchEngine<
@@ -86,10 +86,10 @@ export function defineSearchEngine<
     SearchEngine,
     Controller
   >,
->({
-  controllers: controllerDefinitions,
-  ...engineOptions
-}: SearchEngineDefinitionOptions<TControllerDefinitions>): SearchEngineDefinition<TControllerDefinitions> {
+>(
+  options: SearchEngineDefinitionOptions<TControllerDefinitions>
+): SearchEngineDefinition<TControllerDefinitions> {
+  const {controllers: controllerDefinitions, ...engineOptions} = options;
   type Definition = SearchEngineDefinition<TControllerDefinitions>;
   type BuildFunction = Definition['build'];
   type FetchStaticStateFunction = Definition['fetchStaticState'];
