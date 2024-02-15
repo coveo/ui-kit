@@ -28,7 +28,7 @@ export interface EngineDefinition<
   TEngineOptions,
 > {
   /**
-   * Fetch the static state on the server side using your engine definition.
+   * Fetches the static state on the server side using your engine definition.
    */
   fetchStaticState: FetchStaticState<
     TEngine,
@@ -38,7 +38,7 @@ export interface EngineDefinition<
     InferControllerPropsMapFromDefinitions<TControllers>
   >;
   /**
-   * Fetch the hydrated state on the client side using your engine definition and the static state.
+   * Fetches the hydrated state on the client side using your engine definition and the static state.
    */
   hydrateStaticState: HydrateStaticState<
     TEngine,
@@ -47,7 +47,7 @@ export interface EngineDefinition<
     InferControllerPropsMapFromDefinitions<TControllers>
   >;
   /**
-   * Build an engine and its controllers from an engine definition.
+   * Builds an engine and its controllers from an engine definition.
    */
   build: Build<
     TEngine,
