@@ -4,12 +4,16 @@ import {QuerySummary, buildQuerySummary} from './headless-query-summary';
 
 export * from './headless-query-summary';
 
+export interface QuerySummaryDefinition
+  extends ControllerDefinitionWithoutProps<SearchEngine, QuerySummary> {}
+
 /**
- * @internal
- */
-export const defineQuerySummary = (): ControllerDefinitionWithoutProps<
-  SearchEngine,
-  QuerySummary
-> => ({
-  build: (engine) => buildQuerySummary(engine),
-});
+ * Defines a `QuerySummary` controller instance.
+ *
+ * @returns The `QuerySummary` controller definition.
+ * */
+export function defineQuerySummary(): QuerySummaryDefinition {
+  return {
+    build: (engine) => buildQuerySummary(engine),
+  };
+}

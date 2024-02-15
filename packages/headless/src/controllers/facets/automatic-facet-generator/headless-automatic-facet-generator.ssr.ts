@@ -8,11 +8,22 @@ import {
 
 export * from './headless-automatic-facet-generator';
 
+export interface AutomaticFacetGeneratorDefinition
+  extends ControllerDefinitionWithoutProps<
+    SearchEngine,
+    AutomaticFacetGenerator
+  > {}
+
 /**
- * @internal
- */
-export const defineAutomaticFacetGenerator = (
+ * Defines an `AutomaticFacetGenerator` controller instance.
+ *
+ * @param props - The configurable `AutomaticFacetGenerator` properties.
+ * @returns The `AutomaticFacetGenerator` controller definition.
+ * */
+export function defineAutomaticFacetGenerator(
   props: AutomaticFacetGeneratorProps
-): ControllerDefinitionWithoutProps<SearchEngine, AutomaticFacetGenerator> => ({
-  build: (engine) => buildAutomaticFacetGenerator(engine, props),
-});
+): AutomaticFacetGeneratorDefinition {
+  return {
+    build: (engine) => buildAutomaticFacetGenerator(engine, props),
+  };
+}
