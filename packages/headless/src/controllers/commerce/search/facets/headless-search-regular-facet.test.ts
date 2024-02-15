@@ -1,4 +1,3 @@
-import {Action} from '@reduxjs/toolkit';
 import {CommerceFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
 import {executeSearch} from '../../../../features/commerce/search/search-actions';
 import {commerceSearchReducer as commerceSearch} from '../../../../features/commerce/search/search-slice';
@@ -8,21 +7,29 @@ import {buildMockCommerceRegularFacetResponse} from '../../../../test/mock-comme
 import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceRegularFacetValue} from '../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
-import {MockCommerceEngine} from '../../../../test/mock-engine';
-import {buildMockCommerceEngine} from '../../../../test/mock-engine';
+import {
+  MockedCommerceEngine,
+  buildMockCommerceEngine,
+} from '../../../../test/mock-engine-v2';
+import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
 import {CommerceFacetOptions} from '../../core/facets/headless-core-commerce-facet';
 import {CommerceRegularFacet} from '../../core/facets/regular/headless-commerce-regular-facet';
 import {buildSearchRegularFacet} from './headless-search-regular-facet';
 
+jest.mock('../../../../features/commerce/search/search-actions');
+
 describe('SearchRegularFacet', () => {
   const facetId: string = 'regular_facet_id';
-  let options: CommerceFacetOptions;
+  let engine: MockedCommerceEngine;
   let state: CommerceAppState;
-  let engine: MockCommerceEngine;
+  let options: CommerceFacetOptions;
   let facet: CommerceRegularFacet;
 
-  function initFacet() {
-    engine = buildMockCommerceEngine({state});
+  function initEngine(preloadedState = buildMockCommerceState()) {
+    engine = buildMockCommerceEngine(preloadedState);
+  }
+
+  function initSearchRegularFacet() {
     facet = buildSearchRegularFacet(engine, options);
   }
 
@@ -35,23 +42,23 @@ describe('SearchRegularFacet', () => {
     ];
   }
 
-  const expectContainAction = (action: Action) => {
-    expect(engine.actions).toContainEqual(
-      expect.objectContaining({
-        type: action.type,
-      })
-    );
-  };
+  function setFacetSearch() {
+    state.facetSearchSet[facetId] = buildMockFacetSearch();
+  }
 
   beforeEach(() => {
+    jest.resetAllMocks();
+
     options = {
       facetId,
     };
 
     state = buildMockCommerceState();
     setFacetRequest();
+    setFacetSearch();
 
-    initFacet();
+    initEngine(state);
+    initSearchRegularFacet();
   });
 
   it('initializes', () => {
@@ -67,7 +74,7 @@ describe('SearchRegularFacet', () => {
       const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
       facet.toggleSelect(facetValue);
 
-      expectContainAction(executeSearch.pending);
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 
@@ -76,7 +83,7 @@ describe('SearchRegularFacet', () => {
       const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
       facet.toggleExclude(facetValue);
 
-      expectContainAction(executeSearch.pending);
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 
@@ -84,7 +91,7 @@ describe('SearchRegularFacet', () => {
     it('dispatches #executeSearch', () => {
       facet.deselectAll();
 
-      expectContainAction(executeSearch.pending);
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 
@@ -92,7 +99,7 @@ describe('SearchRegularFacet', () => {
     it('dispatches #executeSearch', () => {
       facet.showMoreValues();
 
-      expectContainAction(executeSearch.pending);
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 
@@ -100,7 +107,31 @@ describe('SearchRegularFacet', () => {
     it('dispatches #executeSearch', () => {
       facet.showLessValues();
 
-      expectContainAction(executeSearch.pending);
+      expect(executeSearch).toHaveBeenCalled();
+    });
+  });
+
+  describe('#facetSearch', () => {
+    it('#facetSearch.select dispatches #executeSearch', () => {
+      const value = 'ted';
+      facet.facetSearch.select({
+        count: 0,
+        displayValue: value,
+        rawValue: value,
+      });
+
+      expect(executeSearch).toHaveBeenCalled();
+    });
+
+    it('#facetSearch.exclude dispatches #executeSearch', () => {
+      const value = 'ted';
+      facet.facetSearch.exclude({
+        count: 0,
+        displayValue: value,
+        rawValue: value,
+      });
+
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 
@@ -114,6 +145,15 @@ describe('SearchRegularFacet', () => {
     it('#state.isLoading uses #isFacetLoadingResponseSelector', () => {
       state.commerceSearch.isLoading = true;
       expect(facet.state.isLoading).toBe(true);
+    });
+
+    it('#state.facetSearch exposes the facet search state', () => {
+      expect(facet.state.facetSearch).toBeTruthy();
+      expect(facet.state.facetSearch.isLoading).toBe(false);
+
+      state.facetSearchSet[facetId].isLoading = true;
+      initSearchRegularFacet();
+      expect(facet.state.facetSearch.isLoading).toBe(true);
     });
   });
 });
