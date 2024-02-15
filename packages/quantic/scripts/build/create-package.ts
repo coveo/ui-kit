@@ -24,7 +24,7 @@ interface Options {
 function ensureEnvVariables() {
   [
     'SFDX_AUTH_CLIENT_ID',
-    'SFDX_AUTH_JWT_KEY',
+    'SFDX_AUTH_JWT_KEY_FILE',
     'SFDX_AUTH_JWT_USERNAME',
   ].forEach((v) => {
     if (!process.env[v]) {

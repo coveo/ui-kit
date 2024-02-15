@@ -5,7 +5,7 @@ import * as path from 'path';
 import waitOn from 'wait-on';
 import {StepLogger, StepsRunner} from './util/log';
 import * as sfdx from './util/sfdx-commands';
-import {SfdxJWTAuth} from './util/sfdx-commands';
+import {SfdxJWTAuth, authorizeOrg} from './util/sfdx-commands';
 
 interface Options {
   configFile: string;
@@ -271,6 +271,17 @@ async function updateCommunityConfigFile(
   log('Configuration file updated.');
 }
 
+async function authorizeDevOrg(log: StepLogger, options: Options) {
+  log(`Authorizing user: ${options.jwt.username}`);
+  await authorizeOrg({
+    username: options.jwt.username,
+    isScratchOrg: false,
+    jwtClientId: options.jwt.clientId,
+    jwtKeyFile: options.jwt.keyFile,
+  });
+  log('Authorization successful');
+}
+
 async function waitForCommunity(
   log: StepLogger,
   communityUrl: string
@@ -307,7 +318,7 @@ async function deleteScratchOrg(
         await deleteOldOrgs(log, options);
       });
     }
-
+    runner.add(async (log) => await authorizeDevOrg(log, options));
     runner
       .add(async (log) => {
         await ensureScratchOrgExists(log, options);
