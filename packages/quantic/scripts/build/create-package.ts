@@ -78,7 +78,7 @@ async function buildOptions(): Promise<Options> {
     removeTranslations: removeTranslations,
     jwt: {
       clientId: process.env.SFDX_AUTH_CLIENT_ID,
-      keyFile: process.env.SFDX_AUTH_JWT_KEY,
+      keyFile: process.env.SFDX_AUTH_JWT_KEY_FILE,
       username: process.env.SFDX_AUTH_JWT_USERNAME,
     },
   };

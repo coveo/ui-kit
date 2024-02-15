@@ -13,21 +13,22 @@ runs:
     - run: npx nx run quantic:build
       shell: bash
     - run: |
-        echo "${{ env.SFDX_AUTH_JWT_KEY }}" > server.key
+        echo "${{ env.SFDX_AUTH_JWT_KEY }}" > ${{ env.SFDX_AUTH_JWT_KEY_FILE }}
         sf org login jwt \
           --client-id ${{ env.SFDX_AUTH_CLIENT_ID }} \
-          --jwt-key-file server.key \
+          --jwt-key-file ${{ env.SFDX_AUTH_JWT_KEY_FILE }} \
           --username ${{ env.SFDX_AUTH_JWT_USERNAME }} \
           --instance-url ${{ env.SFDX_AUTH_JWT_INSTANCE_URL }} \
           --set-default-dev-hub
         npx --no-install ts-node scripts/build/deploy-community.ts --ci
-        rm server.key
+        rm ${{ env.SFDX_AUTH_JWT_KEY_FILE }}
       shell: bash
       working-directory: ./packages/quantic
       env:
         BRANCH_NAME: ${{ github.ref }}
         SFDX_AUTH_CLIENT_ID: ${{ inputs.clientid }}
         SFDX_AUTH_JWT_KEY: ${{inputs.jwtkey}}
+        SFDX_AUTH_JWT_KEY_FILE: server.key
         SFDX_AUTH_JWT_USERNAME: rdaccess@coveo.com
         SFDX_AUTH_JWT_INSTANCE_URL: https://login.salesforce.com
     - uses: actions/cache@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4

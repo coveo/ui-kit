@@ -28,7 +28,7 @@ function ensureEnvVariables() {
   [
     'BRANCH_NAME',
     'SFDX_AUTH_CLIENT_ID',
-    'SFDX_AUTH_JWT_KEY',
+    'SFDX_AUTH_JWT_KEY_FILE',
     'SFDX_AUTH_JWT_USERNAME',
   ].forEach((v) => {
     if (!process.env[v]) {
@@ -121,7 +121,7 @@ async function buildOptions(): Promise<Options> {
     },
     jwt: {
       clientId: process.env.SFDX_AUTH_CLIENT_ID,
-      keyFile: process.env.SFDX_AUTH_JWT_KEY,
+      keyFile: process.env.SFDX_AUTH_JWT_KEY_FILE,
       username: process.env.SFDX_AUTH_JWT_USERNAME,
     },
     deleteOldOrgs: ci,
