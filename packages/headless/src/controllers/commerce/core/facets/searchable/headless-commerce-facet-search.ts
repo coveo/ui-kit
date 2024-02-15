@@ -11,6 +11,7 @@ import {
   buildFacetSearch,
 } from '../../../../core/facets/facet-search/specific/headless-facet-search';
 
+// TODO: Add JSDoc; it's not getting resolved from the annotations in the generic facet search controller.
 export type CommerceFacetSearch = ReturnType<typeof buildCommerceFacetSearch>;
 
 export function buildCommerceFacetSearch(
