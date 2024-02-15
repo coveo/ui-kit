@@ -17,7 +17,7 @@ jest.mock(
   '../../../../features/commerce/product-listing/product-listing-actions'
 );
 
-describe('SearchFacetGenerator', () => {
+describe('ProductListingFacetGenerator', () => {
   let engine: MockedCommerceEngine;
   let state: CommerceAppState;
   let facetGenerator: ProductListingFacetGenerator;
