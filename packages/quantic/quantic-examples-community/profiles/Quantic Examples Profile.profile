@@ -60,7 +60,7 @@
         <apexClass>ITokenProvider</apexClass>
         <enabled>false</enabled>
     </classAccesses>
-        <classAccesses>
+    <classAccesses>
         <apexClass>RecommendationsController</apexClass>
         <enabled>true</enabled>
     </classAccesses>
