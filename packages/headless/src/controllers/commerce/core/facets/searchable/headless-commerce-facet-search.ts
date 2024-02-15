@@ -25,30 +25,15 @@ export function buildCommerceFacetSearch(
     throw loadReducerError;
   }
 
-  const {
-    clear,
-    exclude,
-    search,
-    select,
-    singleExclude,
-    singleSelect,
-    state,
-    updateText,
-  } = buildFacetSearch(engine, {
-    ...props,
-    executeFacetSearchActionCreator: executeCommerceFacetSearch,
-    executeFieldSuggestActionCreator: executeCommerceFieldSuggest,
-  });
+  const {showMoreResults, updateCaptions, ...restOfFacetSearch} =
+    buildFacetSearch(engine, {
+      ...props,
+      executeFacetSearchActionCreator: executeCommerceFacetSearch,
+      executeFieldSuggestActionCreator: executeCommerceFieldSuggest,
+    });
 
   return {
-    clear,
-    exclude,
-    search,
-    select,
-    singleExclude,
-    singleSelect,
-    state,
-    updateText,
+    ...restOfFacetSearch,
   };
 }
 
