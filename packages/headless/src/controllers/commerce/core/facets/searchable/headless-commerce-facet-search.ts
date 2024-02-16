@@ -1,15 +1,15 @@
+import {SpecificFacetSearchResult} from '../../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
 import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
 import {
   executeCommerceFacetSearch,
   executeCommerceFieldSuggest,
 } from '../../../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions';
-import {specificFacetSearchSetReducer as facetSearchSet} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
-import {FacetSearchSection} from '../../../../../state/state-sections';
-import {loadReducerError} from '../../../../../utils/errors';
 import {
   FacetSearchProps,
   buildFacetSearch,
 } from '../../../../core/facets/facet-search/specific/headless-facet-search';
+
+export type CommerceFacetSearchResult = SpecificFacetSearchResult;
 
 // TODO: Add JSDoc; it's not getting resolved from the annotations in the generic facet search controller.
 export type CommerceFacetSearch = ReturnType<typeof buildCommerceFacetSearch>;
@@ -21,10 +21,6 @@ export function buildCommerceFacetSearch(
     'executeFacetSearchActionCreator' | 'executeFieldSuggestActionCreator'
   >
 ) {
-  if (!loadCommerceFacetSearchReducers(engine)) {
-    throw loadReducerError;
-  }
-
   const {showMoreResults, updateCaptions, ...restOfFacetSearch} =
     buildFacetSearch(engine, {
       ...props,
@@ -35,11 +31,4 @@ export function buildCommerceFacetSearch(
   return {
     ...restOfFacetSearch,
   };
-}
-
-function loadCommerceFacetSearchReducers(
-  engine: CommerceEngine
-): engine is CommerceEngine<FacetSearchSection> {
-  engine.addReducers({facetSearchSet});
-  return true;
 }

@@ -2,7 +2,6 @@ import {
   executeCommerceFacetSearch,
   executeCommerceFieldSuggest,
 } from '../../../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions';
-import {specificFacetSearchSetReducer as facetSearchSet} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
 import {
   MockedCommerceEngine,
@@ -60,10 +59,6 @@ describe('CommerceFacetSearch', () => {
   describe('initialization', () => {
     it('initializes', () => {
       expect(facetSearch).toBeTruthy();
-    });
-
-    it('loads the correct reducers', () => {
-      expect(engine.addReducers).toHaveBeenCalledWith({facetSearchSet});
     });
 
     it('#search dispatches #executeCommerceFacetSearch when #isForFieldSuggestions is false', () => {

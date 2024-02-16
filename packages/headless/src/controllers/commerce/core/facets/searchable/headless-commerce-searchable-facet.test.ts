@@ -3,6 +3,7 @@ import {
   AnyFacetValueResponse,
   RegularFacetResponse,
 } from '../../../../../features/commerce/facets/facet-set/interfaces/response';
+import {specificFacetSearchSetReducer as facetSearchSet} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
@@ -82,6 +83,10 @@ describe('CommerceSearchableFacet', () => {
   describe('initialization', () => {
     it('initializes', () => {
       expect(facet).toBeTruthy();
+    });
+
+    it('loads the correct reducers', () => {
+      expect(engine.addReducers).toHaveBeenCalledWith({facetSearchSet});
     });
   });
 
