@@ -237,7 +237,7 @@ describe('Refine Toggle Test Suites', () => {
     });
   });
 
-  describe.skip('when the modal is opened with both facets type', () => {
+  describe('when the modal is opened with both facets type', () => {
     const collapseFacetsAfter = 4;
     const staticFacetAmount = 1;
     const automaticFacetAmount = 1;
@@ -309,7 +309,7 @@ describe('Refine Toggle Test Suites', () => {
     });
   });
 
-  describe.skip('when the modal is opened with range facet variations', () => {
+  describe('when the modal is opened with range facet variations', () => {
     beforeEach(() => {
       new TestFixture()
         .with(addRefineToggleRangeVariations())
