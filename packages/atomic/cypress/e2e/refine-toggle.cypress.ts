@@ -20,6 +20,7 @@ import {
   addFacetManagerWithBothTypesOfFacets,
   addRefineToggleRangeVariations,
   addRefineToggleWithAutomaticFacets,
+  addRefineToggleWithDependsOnFacetAndNumerical,
   addRefineToggleWithStaticFacets,
   addRefineToggleWithStaticFacetsAndNoManager,
   addRefineToggleWithoutFacets,
@@ -337,6 +338,21 @@ describe('Refine Toggle Test Suites', () => {
       RefineModalSelectors.facets()
         .find(numericFacetComponent)
         .should('have.length', 3);
+    });
+  });
+
+  describe('when the modal is opened with a `depends-on` facet', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(addRefineToggleWithDependsOnFacetAndNumerical())
+        .withMobileViewport()
+        .init();
+      cy.wait(1000);
+      RefineToggleSelectors.buttonOpen().should('be.visible').click();
+    });
+
+    it('should render each facets only once', () => {
+      RefineModalSelectors.facets().children().should('have.length', 3);
     });
   });
 });
