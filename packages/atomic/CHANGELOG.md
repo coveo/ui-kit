@@ -1,3 +1,10 @@
+## 2.57.2 (2024-02-14)
+
+### Bug Fixes
+
+- **atomic:** ensure redirection on instant result click ([#3585](https://github.com/coveo/ui-kit/issues/3585)) ([b47e3cb](https://github.com/coveo/ui-kit/commits/b47e3cb7b2a4febd98132d0e22ed22e45ae478af))
+- **atomic:** improve query suggestions selection ([#3582](https://github.com/coveo/ui-kit/issues/3582)) ([f8b06e9](https://github.com/coveo/ui-kit/commits/f8b06e926fcba970c334696080bac543686e2a61))
+
 ## 2.57.1 (2024-02-09)
 
 ### Bug Fixes

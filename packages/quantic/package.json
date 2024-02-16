@@ -1,6 +1,6 @@
 {
   "name": "@coveo/quantic",
-  "version": "2.44.1",
+  "version": "2.44.3",
   "description": "A Salesforce Lightning Web Component (LWC) library for building modern UIs interfacing with the Coveo platform",
   "author": "coveo.com",
   "homepage": "https://coveo.com",
@@ -19,7 +19,7 @@
     "build:staticresources": "node copy-static-resources.js",
     "build": "nx build",
     "dev": "npx rimraf .localdevserver && npm run build:staticresources && npm run dev:sfdx",
-    "dev:sfdx": "./isolated-sfdx/node_modules/.bin/sf project deploy start --source-dir force-app/main && sfdx force:lightning:lwc:start --port 3334",
+    "dev:sfdx": "sf project deploy start --source-dir force-app/main && sfdx force:lightning:lwc:start --port 3334",
     "test:unit": "lwc-jest",
     "test:unit:debug": "lwc-jest --debug",
     "test:unit:watch": "lwc-jest --watch",
@@ -29,8 +29,8 @@
     "e2e": "cypress run --browser chrome",
     "e2e:detailed": "cypress run --browser chrome --headless --reporter cypress/reporters/detailed-reporter.js",
     "setup:examples": "../../node_modules/.bin/ts-node scripts/build/deploy-community.ts",
-    "deploy:main": "./isolated-sfdx/node_modules/.bin/sf project deploy start --target-org LWC --source-dir force-app/main",
-    "deploy:examples": "./isolated-sfdx/node_modules/.bin/sf project deploy start --target-org LWC --source-dir force-app/examples",
+    "deploy:main": "sf project deploy start --target-org LWC --source-dir force-app/main",
+    "deploy:examples": "sf project deploy start --target-org LWC --source-dir force-app/examples",
     "prebuild:doc": "mkdirp docs/out",
     "build:doc": "jsdoc -c jsdoc-config.json",
     "publish:sfdx": "../../node_modules/.bin/ts-node scripts/build/create-package.ts --remove-translations",
@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "@coveo/bueno": "0.45.7",
-    "@coveo/headless": "2.49.1"
+    "@coveo/headless": "2.50.1"
   },
   "engines": {
     "node": ">=14.0.0"

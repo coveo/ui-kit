@@ -31,9 +31,8 @@ export function createSingletonContext<
 }
 
 /**
- * @internal
- * Returns controller hooks and SSR, CSR context providers that can be used to interact with a search engine
- *  in the server and client side respectively.
+ * Returns controller hooks as well as SSR and CSR context providers that can be used to interact with a search engine
+ *  on the server and client side respectively.
  */
 export function defineSearchEngine<
   TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>,

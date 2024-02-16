@@ -1,3 +1,11 @@
+## 2.44.3 (2024-02-15)
+
+### Bug Fixes
+
+- **quantic:** fixed issue with timeframe facet not communicating properly with the refine toggle ([#3588](https://github.com/coveo/ui-kit/issues/3588)) ([4856465](https://github.com/coveo/ui-kit/commits/4856465e87371d871696890c96827570b163fdbb))
+
+## 2.44.2 (2024-02-14)
+
 ## 2.44.1 (2024-02-09)
 
 ### Bug Fixes
