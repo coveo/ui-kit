@@ -10,8 +10,6 @@ export const buildCommerceFacetSearchRequest = async (
   const baseFacetQuery = state.facetSearchSet[facetId].options.query;
   const facetQuery = `*${baseFacetQuery}*`;
   const query = state.query?.q;
-  const {configuration} = state;
-  const {apiBaseUrl, authenticationProviders} = configuration.search;
 
   let searchContext;
   const {
@@ -33,12 +31,9 @@ export const buildCommerceFacetSearchRequest = async (
   }
 
   return {
-    url: apiBaseUrl,
+    url,
     accessToken,
     organizationId,
-    ...(authenticationProviders && {
-      authentication: authenticationProviders.join(','),
-    }),
     facetId,
     facetQuery,
     trackingId,
