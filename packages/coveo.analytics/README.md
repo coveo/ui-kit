@@ -6,7 +6,7 @@
 
 # Coveo Analytics JavaScript client
 
-The Coveo analytics javascript client, also called coveo.analytics.js or coveoua for short, is responsible for logging analytics events to the Coveo platform. Analytics events may include basic Coveo web events such as pageviews, clicks or searches. For specific usecases, such as commerce and service, dedicated events may be defined and logged.
+The Coveo analytics javascript client, also called coveo.analytics.js or coveoua for short, is responsible for logging analytics events to the Coveo platform. Analytics events may include basic Coveo web events such as clicks or searches. For specific usecases, such as commerce and service, dedicated events may be defined and logged.
 
 The analytics library is bundled with all Coveo provided UI components. Integrations which exclusively rely on these components, generally don't have to interact with coveoua directly. For Coveo integrations which integrate with an already existing UI and do not use headless, coveoua will be required to ensure events are logged correctly.
 
@@ -101,10 +101,9 @@ You should be able to observe the click event being transmitted to the Coveo bac
 
 ## Sending commerce specific events
 
-Commerce specific events such as product selections, shopping cart modifications and transactions are sent to Coveo in the compact [collect protocol](https://docs.coveo.com/en/l41i0031/build-a-search-ui/log-collect-events). Rather than explicitly assembling these payloads by hand, the eCommerce plugin provides APIs to assemble and transmit the payloads. There are two event names that are specific to the eCommerce plugin:
+Commerce specific events such as product selections, shopping cart modifications and transactions are sent to Coveo in the compact [collect protocol](https://docs.coveo.com/en/l41i0031/build-a-search-ui/log-collect-events). Rather than explicitly assembling these payloads by hand, the eCommerce plugin provides APIs to assemble and transmit the payloads. The `event` is specific to the eCommerce plugin:
 
 -   `event`: An event, which has been assembled through different plugin actions.
--   `pageview`: An ecommerce specific pageview event which is automatically populated with the current page context.
 
 The eCommerce plugin supports adding product data (`ec:addProduct`) as well as setting the [appropriate event action](https://docs.coveo.com/en/l29e0540/coveo-for-commerce/commerce-events-reference#product-action-type-reference) through `ec:setAction`. These calls can be used in series to assemble different types of payloads:
 
