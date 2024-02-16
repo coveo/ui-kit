@@ -324,25 +324,30 @@ export function triageFacetByParents(
   facets: BaseFacetElement[],
   ...parents: (HTMLElement | null)[]
 ) {
+  const orphans = new Set(facets);
   const sortedFacets: BaseFacetElement[][] = new Array(parents.length + 1)
     .fill(null)
     .map(() => []);
-  facets: for (const facet of facets) {
-    parents: for (
-      let parentIndex = 0;
-      parentIndex < parents.length;
-      parentIndex++
-    ) {
-      const parent = parents[parentIndex];
+
+  const facetGenerator = function* (parent: HTMLElement | null) {
+    for (const facet of facets) {
       if (parent === null) {
-        continue parents;
-      } else if (parent.contains(facet)) {
+        break;
+      }
+      yield facet;
+    }
+  };
+
+  for (let parentIndex = 0; parentIndex < parents.length; parentIndex++) {
+    const parent = parents[parentIndex] as HTMLElement;
+    for (const facet of facetGenerator(parent)) {
+      if (parent.contains(facet)) {
         sortedFacets[parentIndex].push(facet);
-        continue facets;
+        orphans.delete(facet);
       }
     }
-    sortedFacets[parents.length].push(facet);
   }
+  sortedFacets[parents.length].push(...orphans.values());
   return sortedFacets;
 }
 
