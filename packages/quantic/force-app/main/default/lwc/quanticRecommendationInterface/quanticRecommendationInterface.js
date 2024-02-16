@@ -1,5 +1,5 @@
 // @ts-ignore
-import getHeadlessConfiguration from '@salesforce/apex/HeadlessController.getHeadlessConfiguration';
+import getHeadlessConfiguration from '@salesforce/apex/RecommendationsController.getHeadlessConfiguration';
 import LOCALE from '@salesforce/i18n/locale';
 import TIMEZONE from '@salesforce/i18n/timeZone';
 import {
