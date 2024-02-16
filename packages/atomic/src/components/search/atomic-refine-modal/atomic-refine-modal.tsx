@@ -35,7 +35,7 @@ import {Button} from '../../common/button';
 import {
   BaseFacetElement,
   sortFacetVisibility,
-  triageFacetByParents,
+  triageFacetsByParents,
   collapseFacetsAfter,
 } from '../../common/facets/facet-common';
 import {isRefineModalFacet} from '../../common/interface/store';
@@ -145,7 +145,7 @@ export class AtomicRefineModal implements InitializableComponent {
       atomicSearchInterface,
       'horizontal-facets'
     );
-    const triagedFacets = triageFacetByParents(
+    const triagedFacets = triageFacetsByParents(
       facets,
       horizontalFacetsSection,
       facetsSection
