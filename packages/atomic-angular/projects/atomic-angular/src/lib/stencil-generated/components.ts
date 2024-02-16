@@ -271,7 +271,7 @@ export declare interface AtomicFieldCondition extends Components.AtomicFieldCond
 
 
 @ProxyCmp({
-  inputs: ['childField', 'collectionField', 'density', 'imageSize', 'parentField'],
+  inputs: ['childField', 'collectionField', 'density', 'imageSize', 'numberOfFoldedResults', 'parentField'],
   methods: ['setRenderFunction']
 })
 @Component({
@@ -279,7 +279,7 @@ export declare interface AtomicFieldCondition extends Components.AtomicFieldCond
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['childField', 'collectionField', 'density', 'imageSize', 'parentField'],
+  inputs: ['childField', 'collectionField', 'density', 'imageSize', 'numberOfFoldedResults', 'parentField'],
 })
 export class AtomicFoldedResultList {
   protected el: HTMLElement;
