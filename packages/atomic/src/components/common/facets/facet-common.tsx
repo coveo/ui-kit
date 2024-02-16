@@ -313,6 +313,39 @@ export function getAutomaticFacetGenerator(
   );
 }
 
+/**
+ * Triage elements by their parents.
+ * @param facets Facet Elements
+ * @param parents Elements that may contains the facets
+ * @returns an array in the same order as the parents, containing the facets that are contained by the corresponding parent.
+ * The last element of the array contains the facets that are not contained by any of the parents.
+ */
+export function triageFacetByParents(
+  facets: BaseFacetElement[],
+  ...parents: (HTMLElement | null)[]
+) {
+  const sortedFacets: BaseFacetElement[][] = new Array(parents.length + 1)
+    .fill(null)
+    .map(() => []);
+  facets: for (const facet of facets) {
+    parents: for (
+      let parentIndex = 0;
+      parentIndex < parents.length;
+      parentIndex++
+    ) {
+      const parent = parents[parentIndex];
+      if (parent === null) {
+        continue parents;
+      } else if (parent.contains(facet)) {
+        sortedFacets[parentIndex].push(facet);
+        continue facets;
+      }
+    }
+    sortedFacets[parents.length].push(facet);
+  }
+  return sortedFacets;
+}
+
 export function sortFacetsUsingManager(
   facets: BaseFacetElement[],
   facetManager: FacetManager

@@ -29,11 +29,12 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {findSection} from '../../common/atomic-layout-section/sections';
 import {Button} from '../../common/button';
 import {
   BaseFacetElement,
   sortFacetVisibility,
-  sortFacetsUsingManager,
+  triageFacetByParents,
   collapseFacetsAfter,
 } from '../../common/facets/facet-common';
 import {isRefineModalFacet} from '../../common/interface/store';
@@ -137,8 +138,30 @@ export class AtomicRefineModal implements InitializableComponent {
     this.addFacetColumnStyling(divSlot);
 
     const facets = this.bindings.store.getFacetElements() as BaseFacetElement[];
-
-    const sortedFacets = sortFacetsUsingManager(facets, this.facetManager);
+    const atomicSearchInterface = this.host.closest('atomic-search-interface')!;
+    const facetsSection = findSection(atomicSearchInterface, 'facets');
+    const horizontalFacetsSection = findSection(
+      atomicSearchInterface,
+      'horizontal-facets'
+    );
+    const triagedFacets = triageFacetByParents(
+      facets,
+      horizontalFacetsSection,
+      facetsSection
+    );
+    const [horizontalFacetsSectionFacets, facetsSectionFacets, orphanedFacets] =
+      triagedFacets.map((facetsArray) =>
+        facetsArray.sort((a, b) =>
+          a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING
+            ? -1
+            : 1
+        )
+      );
+    const sortedFacets = [
+      ...facetsSectionFacets,
+      ...horizontalFacetsSectionFacets,
+      ...orphanedFacets,
+    ];
 
     const {visibleFacets, invisibleFacets} = sortFacetVisibility(
       sortedFacets,
@@ -166,27 +189,16 @@ export class AtomicRefineModal implements InitializableComponent {
   }
 
   private cloneFacets(facets: BaseFacetElement[]): BaseFacetElement[] {
-    const allFacetTags = Array.from(
-      new Set(facets.map((el) => el.tagName.toLowerCase()))
-    );
-
-    const allFacetsInOrderInDOM = allFacetTags.length
-      ? this.bindings.interfaceElement.querySelectorAll(allFacetTags.join(','))
-      : [];
-
-    const clones: BaseFacetElement[] = [];
-    allFacetsInOrderInDOM.forEach((facetElement, index) => {
-      const clone = facetElement.cloneNode(true) as BaseFacetElement;
-      clone.classList.remove(popoverClass);
-      clone.setAttribute(isRefineModalFacet, '');
+    return facets.map((facet, i) => {
+      facet.classList.remove(popoverClass);
+      facet.setAttribute(isRefineModalFacet, '');
+      const clone = facet.cloneNode(true) as BaseFacetElement;
       clone.isCollapsed =
         this.collapseFacetsAfter === -1
           ? false
-          : index + 1 > this.collapseFacetsAfter;
-      clones.push(clone);
+          : i + 1 > this.collapseFacetsAfter;
+      return clone;
     });
-
-    return clones;
   }
 
   private makeAutomaticFacetGenerator() {
