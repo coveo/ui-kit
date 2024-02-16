@@ -29,6 +29,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {sortByDocumentPosition} from '../../../utils/utils';
 import {findSection} from '../../common/atomic-layout-section/sections';
 import {Button} from '../../common/button';
 import {
@@ -151,11 +152,7 @@ export class AtomicRefineModal implements InitializableComponent {
     );
     const [horizontalFacetsSectionFacets, facetsSectionFacets, orphanedFacets] =
       triagedFacets.map((facetsArray) =>
-        facetsArray.sort((a, b) =>
-          a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING
-            ? -1
-            : 1
-        )
+        facetsArray.sort(sortByDocumentPosition)
       );
     const sortedFacets = [
       ...facetsSectionFacets,
