@@ -9,6 +9,11 @@ import {
   NumericRangeRequest,
 } from '../../../../controllers/commerce/core/facets/headless-core-commerce-facet';
 import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
+import {CategoryFacetValueRequest} from '../../../facets/category-facet-set/interfaces/request';
+import {
+  excludeFacetSearchResult,
+  selectFacetSearchResult,
+} from '../../../facets/facet-search-set/specific/specific-facet-search-actions';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
@@ -169,6 +174,64 @@ export const commerceFacetSetReducer = createReducer(
         updateExistingFacetValueState(existingValue, 'exclude');
       })
       // TODO: toggleExcludeCategoryFacetValue
+      .addCase(selectFacetSearchResult, (state, action) => {
+        const {facetId, value} = action.payload;
+        const facetRequest = state[facetId]?.request;
+
+        if (
+          !facetRequest ||
+          (facetRequest.type !== 'regular' &&
+            facetRequest.type !== 'hierarchical')
+        ) {
+          return;
+        }
+
+        const {rawValue} = value;
+
+        facetRequest.preventAutoSelect = true;
+
+        const existingValue = facetRequest.values.find(
+          (v) =>
+            (v as FacetValueRequest | CategoryFacetValueRequest).value ===
+            rawValue
+        );
+
+        if (!existingValue) {
+          insertNewValue(facetRequest, {state: 'selected', value: rawValue});
+          return;
+        }
+
+        updateExistingFacetValueState(existingValue, 'select');
+      })
+      .addCase(excludeFacetSearchResult, (state, action) => {
+        const {facetId, value} = action.payload;
+        const facetRequest = state[facetId]?.request;
+
+        if (
+          !facetRequest ||
+          (facetRequest.type !== 'regular' &&
+            facetRequest.type !== 'hierarchical')
+        ) {
+          return;
+        }
+
+        const {rawValue} = value;
+
+        facetRequest.preventAutoSelect = true;
+
+        const existingValue = facetRequest.values.find(
+          (v) =>
+            (v as FacetValueRequest | CategoryFacetValueRequest).value ===
+            rawValue
+        );
+
+        if (!existingValue) {
+          insertNewValue(facetRequest, {state: 'excluded', value: rawValue});
+          return;
+        }
+
+        updateExistingFacetValueState(existingValue, 'exclude');
+      })
       .addCase(updateFacetNumberOfValues, (state, action) => {
         const {facetId, numberOfValues} = action.payload;
 
