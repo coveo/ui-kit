@@ -1,6 +1,9 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {SpecificFacetSearchResponse} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
+import {setView} from '../../../commerce/context/context-actions';
 import {executeCommerceFacetSearch} from '../../../commerce/facets/facet-search-set/commerce-facet-search-actions';
+import {fetchProductListing} from '../../../commerce/product-listing/product-listing-actions';
+import {executeSearch as executeCommerceSearch} from '../../../commerce/search/search-actions';
 import {executeSearch} from '../../../search/search-actions';
 import {
   handleFacetSearchRegistration,
@@ -66,7 +69,16 @@ export const specificFacetSearchSetReducer = createReducer(
       })
       .addCase(executeSearch.fulfilled, (state) => {
         handleFacetSearchSetClear(state, buildEmptyResponse);
-      });
+      })
+      .addCase(fetchProductListing.fulfilled, (state) =>
+        handleFacetSearchSetClear(state, buildEmptyResponse)
+      )
+      .addCase(executeCommerceSearch.fulfilled, (state) =>
+        handleFacetSearchSetClear(state, buildEmptyResponse)
+      )
+      .addCase(setView, (state) =>
+        handleFacetSearchSetClear(state, buildEmptyResponse)
+      );
   }
 );
 

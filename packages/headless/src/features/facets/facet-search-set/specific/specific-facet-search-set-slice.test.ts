@@ -1,5 +1,10 @@
+import {buildSearchResponse} from '../../../../test/mock-commerce-search';
 import {buildMockFacetSearchResponse} from '../../../../test/mock-facet-search-response';
+import {buildFetchProductListingV2Response} from '../../../../test/mock-product-listing-v2';
+import {setView} from '../../../commerce/context/context-actions';
 import {executeCommerceFacetSearch} from '../../../commerce/facets/facet-search-set/commerce-facet-search-actions';
+import {fetchProductListing} from '../../../commerce/product-listing/product-listing-actions';
+import {executeSearch as executeCommerceSearch} from '../../../commerce/search/search-actions';
 import {
   executeSearch,
   ExecuteSearchThunkReturn,
@@ -35,7 +40,7 @@ describe('FacetSearch slice', () => {
     expect(finalState).toEqual({});
   });
 
-  it('#registerFacetSearch calls #handleFacetSearchRegistration', () => {
+  it('on #registerFacetSearch, calls #handleFacetSearchRegistration', () => {
     jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchRegistration');
     facetSearchSetReducer(state, registerFacetSearch({facetId}));
     expect(
@@ -43,7 +48,7 @@ describe('FacetSearch slice', () => {
     ).toHaveBeenCalledTimes(1);
   });
 
-  it('#updateFacetSearch calls #handleFacetSearchUpdate', () => {
+  it('on #updateFacetSearch, calls #handleFacetSearchUpdate', () => {
     jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchUpdate');
     facetSearchSetReducer(state, updateFacetSearch({facetId}));
     expect(
@@ -51,7 +56,7 @@ describe('FacetSearch slice', () => {
     ).toHaveBeenCalledTimes(1);
   });
 
-  it('#executeCommerceFacetSearch.pending calls #handleFacetSearchPending', () => {
+  it('on #executeCommerceFacetSearch.pending, calls #handleFacetSearchPending', () => {
     jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchPending');
     const pendingAction = executeCommerceFacetSearch.pending(facetId, '');
     facetSearchSetReducer(state, pendingAction);
@@ -61,7 +66,7 @@ describe('FacetSearch slice', () => {
     ).toHaveBeenCalledTimes(1);
   });
 
-  it('#executeFacetSearch.pending calls #handleFacetSearchPending', () => {
+  it('on #executeFacetSearch.pending, calls #handleFacetSearchPending', () => {
     jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchPending');
     const pendingAction = executeFacetSearch.pending(facetId, '');
     facetSearchSetReducer(state, pendingAction);
@@ -71,7 +76,7 @@ describe('FacetSearch slice', () => {
     ).toHaveBeenCalledTimes(1);
   });
 
-  it('#executeCommerceFacetSearch.rejected calls #handleFacetSearchRejected', () => {
+  it('on #executeCommerceFacetSearch.rejected, calls #handleFacetSearchRejected', () => {
     jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchRejected');
     const rejectedAction = executeCommerceFacetSearch.rejected(
       {name: 'test', message: 'test'},
@@ -85,7 +90,7 @@ describe('FacetSearch slice', () => {
     ).toHaveBeenCalledTimes(1);
   });
 
-  it('#executeFacetSearch.rejected calls #handleFacetSearchRejected', () => {
+  it('on #executeFacetSearch.rejected, calls #handleFacetSearchRejected', () => {
     jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchRejected');
     const rejectedAction = executeFacetSearch.rejected(
       {name: 'test', message: 'test'},
@@ -99,7 +104,7 @@ describe('FacetSearch slice', () => {
     ).toHaveBeenCalledTimes(1);
   });
 
-  it('on #executeCommerceFacetSearch.fulfilled with an unregistered id, it does nothing', () => {
+  it('on #executeCommerceFacetSearch.fulfilled, calls #handleCommerceFacetSearchFulfilled', () => {
     jest.spyOn(FacetSearchReducerHelpers, 'handleCommerceFacetSearchFulfilled');
     const response = buildMockFacetSearchResponse();
 
@@ -120,7 +125,7 @@ describe('FacetSearch slice', () => {
     ).toHaveBeenCalledTimes(1);
   });
 
-  it('on #executeFacetSearch.fulfilled with an unregistered id, it does nothing', () => {
+  it('on #executeFacetSearch.fulfilled, calls #handleFacetSearchFulfilled', () => {
     jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchFulfilled');
     const response = buildMockFacetSearchResponse();
     const action = executeFacetSearch.fulfilled({facetId, response}, '', '');
@@ -131,7 +136,7 @@ describe('FacetSearch slice', () => {
     ).toHaveBeenCalledTimes(1);
   });
 
-  it('#handleFacetSearchClear calls #handleFacetSearchFulfilled', () => {
+  it('on #clearFacetSearch, calls #handleFacetSearchClear', () => {
     jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchClear');
     facetSearchSetReducer(state, clearFacetSearch({facetId}));
 
@@ -140,12 +145,41 @@ describe('FacetSearch slice', () => {
     ).toHaveBeenCalledTimes(1);
   });
 
-  it('#executeFacetSearch.fulfilled calls #handleFacetSearchSetClear', () => {
+  it('on #executeSearch.fulfilled, calls #handleFacetSearchSetClear', () => {
     jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchSetClear');
     const action = executeSearch.fulfilled({} as ExecuteSearchThunkReturn, '', {
       legacy: null as never,
     });
     facetSearchSetReducer(state, action);
+
+    expect(
+      FacetSearchReducerHelpers.handleFacetSearchSetClear
+    ).toHaveBeenCalledTimes(1);
+  });
+
+  it('on #fetchProductListing.fulfilled, calls #handleFacetSearchSetClear', () => {
+    jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchSetClear');
+    const response = buildFetchProductListingV2Response();
+    facetSearchSetReducer(state, fetchProductListing.fulfilled(response, ''));
+
+    expect(
+      FacetSearchReducerHelpers.handleFacetSearchSetClear
+    ).toHaveBeenCalledTimes(1);
+  });
+
+  it('on #executeCommerceSearch.fulfilled, calls #handleFacetSearchSetClear', () => {
+    jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchSetClear');
+    const response = buildSearchResponse();
+    facetSearchSetReducer(state, executeCommerceSearch.fulfilled(response, ''));
+
+    expect(
+      FacetSearchReducerHelpers.handleFacetSearchSetClear
+    ).toHaveBeenCalledTimes(1);
+  });
+
+  it('on #setView, calls #handleFacetSearchSetClear', () => {
+    jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchSetClear');
+    facetSearchSetReducer(state, setView({url: ''}));
 
     expect(
       FacetSearchReducerHelpers.handleFacetSearchSetClear
