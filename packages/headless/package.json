@@ -65,7 +65,7 @@
     "redux-mock-store": "1.5.4",
     "redux-thunk": "2.4.2",
     "ts-debounce": "3.0.0",
-    "undici": "5.28.2"
+    "undici": "5.28.3"
   },
   "devDependencies": {
     "@coveo/relay-event-types": "7.6.0",

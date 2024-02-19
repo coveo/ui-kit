@@ -133,7 +133,7 @@
       "matchPackagePatterns": ["^undici$"],
       "groupSlug": "undici",
       "rangeStrategy": "replace",
-      "allowedVersions": "6.x",
+      "allowedVersions": "5.x",
       "description": "undici 6.x drops support for Node 16"
     }
   ],
