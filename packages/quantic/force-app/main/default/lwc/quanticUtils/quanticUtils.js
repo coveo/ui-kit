@@ -785,7 +785,7 @@ export function buildTemplateTextFromResult(template, result) {
   return template.replace(/\$\{(.*?)\}/g, (value) => {
     const key = value.substring(2, value.length - 1);
     const newValue = readFromObject(result, key);
-    return newValue || value;
+    return newValue || '';
   });
 }
 

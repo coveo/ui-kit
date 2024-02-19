@@ -156,3 +156,23 @@ export const addRefineToggleRangeVariations =
 
     env.withElement(manager).withElement(refineToggle);
   };
+
+export const addRefineToggleWithDependsOnFacetAndNumerical =
+  (props: TagProps = {}) =>
+  (env: TestFixture) => {
+    const manager = generateComponentHTML(facetManagerComponent);
+    const refineToggle = generateComponentHTML(refineToggleComponent, props);
+
+    manager.append(generateComponentHTML(facetComponent, {field: facetField}));
+    manager.append(
+      generateComponentHTML(numericFacetComponent, {
+        field: colorFacetField,
+        'depends-on': facetField,
+      })
+    );
+    manager.append(
+      generateComponentHTML(numericFacetComponent, {field: numericFacetField})
+    );
+
+    env.withElement(manager).withElement(refineToggle);
+  };
