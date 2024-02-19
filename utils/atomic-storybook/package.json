@@ -26,7 +26,7 @@
     "lodash": "4.17.21",
     "monaco-editor-webpack-plugin": "7.1.0",
     "prop-types": "15.8.1",
-    "storybook": "7.6.15",
+    "storybook": "7.6.16",
     "typescript": "5.3.3"
   },
   "scripts": {
