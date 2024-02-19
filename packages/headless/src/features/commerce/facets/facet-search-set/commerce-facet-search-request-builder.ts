@@ -11,7 +11,6 @@ export const buildCommerceFacetSearchRequest = async (
   const facetQuery = `*${baseFacetQuery}*`;
   const query = state.query?.q;
 
-  let searchContext;
   const {
     url,
     accessToken,
@@ -24,11 +23,6 @@ export const buildCommerceFacetSearchRequest = async (
     context,
     ...restOfCommerceAPIRequest
   } = buildCommerceAPIRequest(state);
-  if (!isFieldSuggestionsRequest) {
-    searchContext = {...restOfCommerceAPIRequest, query};
-  } else {
-    searchContext = {};
-  }
 
   return {
     url,
@@ -42,6 +36,6 @@ export const buildCommerceFacetSearchRequest = async (
     currency,
     clientId,
     context,
-    ...searchContext,
+    ...(!isFieldSuggestionsRequest && {...restOfCommerceAPIRequest, query}),
   };
 };
