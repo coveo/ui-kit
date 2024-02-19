@@ -46,18 +46,16 @@ export interface CommerceFacetGeneratorState {
   facets: CoreCommerceFacet<AnyFacetValueRequest, AnyFacetValueResponse>[];
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type CommerceFacetBuilder<Facet extends CoreCommerceFacet<any, any>> = (
-  engine: CommerceEngine,
-  options: CommerceFacetOptions
-) => Facet;
+type CommerceFacetBuilder<
+  Facet extends CoreCommerceFacet<AnyFacetValueRequest, AnyFacetValueResponse>,
+> = (engine: CommerceEngine, options: CommerceFacetOptions) => Facet;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type CommerceSearchableFacetBuilder<Facet extends CoreCommerceFacet<any, any>> =
-  (
-    engine: CommerceEngine,
-    options: CommerceFacetOptions & CommerceSearchableFacetOptions
-  ) => Facet;
+type CommerceSearchableFacetBuilder<
+  Facet extends CoreCommerceFacet<AnyFacetValueRequest, AnyFacetValueResponse>,
+> = (
+  engine: CommerceEngine,
+  options: CommerceFacetOptions & CommerceSearchableFacetOptions
+) => Facet;
 /**
  * @internal
  *
