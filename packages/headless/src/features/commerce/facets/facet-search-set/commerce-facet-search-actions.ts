@@ -64,6 +64,6 @@ export const executeCommerceFieldSuggest = createAsyncThunk<
     ClientThunkExtraArguments<CommerceFacetSearchAPIClient>
   >
 >(
-  'commerce/facetSearch/executeSearch',
+  'commerce/facetSearch/executeSearch', // We use the same action type because this action is meant to be handled by reducers the same way.
   getExecuteFacetSearchThunkPayloadCreator(true)
 );
