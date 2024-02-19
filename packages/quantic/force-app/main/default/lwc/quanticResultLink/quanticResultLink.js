@@ -8,6 +8,8 @@ import {ResultUtils} from 'c/quanticUtils';
 import {NavigationMixin} from 'lightning/navigation';
 import {LightningElement, api} from 'lwc';
 
+const documentTypesRequiringParentRecord = ['CaseComment'];
+
 /** @typedef {import("coveo").Result} Result */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 
@@ -139,7 +141,18 @@ export default class QuanticResultLink extends NavigationMixin(
     if (this.result?.raw?.sfkbid && this.result?.raw?.sfkavid) {
       return this.result.raw.sfkavid;
     }
+    if (this.shouldOpenParentRecord) {
+      return this.result?.raw?.sfparentid;
+    }
     return this.result.raw.sfid;
+  }
+
+  get shouldOpenParentRecord() {
+    return (
+      documentTypesRequiringParentRecord.includes(
+        this.result?.raw?.documenttype
+      ) && this.result?.raw?.sfparentid
+    );
   }
 
   /**
