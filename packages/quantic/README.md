@@ -17,7 +17,7 @@
 
 [Salesforce cli](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli.htm#sfdx_setup_install_cli_npm)
 
-- Run `npm install --global @salesforce/cli`
+- Run `npm install --global @salesforce/cli@2.x`
 - Optional: [Setup CLI autocomplete](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_dev_cli_autocomplete.htm)
 
 ### Update SFDX CLI Plugins

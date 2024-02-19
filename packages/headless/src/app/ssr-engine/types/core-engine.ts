@@ -27,6 +27,9 @@ export interface EngineDefinition<
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
   TEngineOptions,
 > {
+  /**
+   * Fetches the static state on the server side using your engine definition.
+   */
   fetchStaticState: FetchStaticState<
     TEngine,
     InferControllersMapFromDefinition<TControllers>,
@@ -34,12 +37,18 @@ export interface EngineDefinition<
     InferControllerStaticStateMapFromDefinitions<TControllers>,
     InferControllerPropsMapFromDefinitions<TControllers>
   >;
+  /**
+   * Fetches the hydrated state on the client side using your engine definition and the static state.
+   */
   hydrateStaticState: HydrateStaticState<
     TEngine,
     InferControllersMapFromDefinition<TControllers>,
     AnyAction,
     InferControllerPropsMapFromDefinitions<TControllers>
   >;
+  /**
+   * Builds an engine and its controllers from an engine definition.
+   */
   build: Build<
     TEngine,
     TEngineOptions,
@@ -48,27 +57,18 @@ export interface EngineDefinition<
   >;
 }
 
-/**
- * @internal
- */
 export type InferStaticState<
   T extends {
     fetchStaticState(...args: unknown[]): Promise<unknown>;
   },
 > = Awaited<ReturnType<T['fetchStaticState']>>;
 
-/**
- * @internal
- */
 export type InferHydratedState<
   T extends {
     hydrateStaticState(...args: unknown[]): Promise<unknown>;
   },
 > = Awaited<ReturnType<T['hydrateStaticState']>>;
 
-/**
- * @internal
- */
 export type InferBuildResult<
   T extends {
     build(...args: unknown[]): Promise<unknown>;

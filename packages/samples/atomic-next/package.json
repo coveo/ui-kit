@@ -3,15 +3,15 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "@coveo/atomic": "2.57.2",
-    "@coveo/atomic-react": "2.8.11",
-    "@coveo/headless": "2.50.0",
+    "@coveo/atomic": "2.57.3",
+    "@coveo/atomic-react": "2.8.12",
+    "@coveo/headless": "2.50.1",
     "next": "14.1.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@types/node": "20.11.17",
+    "@types/node": "20.11.19",
     "@types/react": "18.0.17",
     "@types/react-dom": "18.0.6",
     "cypress": "13.6.4",
