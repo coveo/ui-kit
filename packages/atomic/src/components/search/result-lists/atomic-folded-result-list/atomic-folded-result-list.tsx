@@ -99,6 +99,17 @@ export class AtomicFoldedResultList implements InitializableComponent {
   @Prop({reflect: true}) public childField?: string;
 
   /**
+   * The initial number of child results to request for each folded collection, before expansion.
+   *
+   * @defaultValue `2`
+   *
+   * @example For an email thread with a total of 20 messages, using the default value of `2` will request the top two child messages, based on the current sort criteria and query, to be returned as children of the parent message.
+   * The user can then click to expand the collection and see the remaining messages that match the current query (i.e., not necessarily all remaining 18 messages). Those messages will be sorted based on the current sort criteria (i.e., not necessarily by date). See the `atomic-load-more-children-results` component.
+   * For more info on Result Folding, see [Result Folding](https://docs.coveo.com/en/1884).
+   **/
+  @Prop({reflect: true}) public numberOfFoldedResults = 2;
+
+  /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
    * You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.
    *
@@ -185,6 +196,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
           collectionField: this.collectionField,
           parentField: this.parentField,
           childField: this.childField,
+          numberOfFoldedResults: this.numberOfFoldedResults,
         },
       },
     });

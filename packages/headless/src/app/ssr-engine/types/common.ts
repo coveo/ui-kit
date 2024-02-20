@@ -42,30 +42,35 @@ export interface ControllerStaticState<TState> {
 export interface ControllerStaticStateMap {
   [customName: string]: ControllerStaticState<unknown>;
 }
-/**
- * @internal
- */
+
 export interface ControllerDefinitionWithoutProps<
   TEngine extends CoreEngine,
   TController extends Controller,
 > {
+  /**
+   * Creates an instance of the given controller.
+   *
+   * @param engine - The search engine.
+   * @returns The controller.
+   */
   build(engine: TEngine): TController;
 }
 
-/**
- * @internal
- */
 export interface ControllerDefinitionWithProps<
   TEngine extends CoreEngine,
   TController extends Controller,
   TProps,
 > {
+  /**
+   * Creates an instance of the given controller.
+   *
+   * @param engine - The search engine.
+   * @param props - The controller properties.
+   * @returns The controller.
+   */
   buildWithProps(engine: TEngine, props: TProps): TController;
 }
 
-/**
- * @internal
- */
 export type ControllerDefinition<
   TEngine extends CoreEngine,
   TController extends Controller,
@@ -73,9 +78,6 @@ export type ControllerDefinition<
   | ControllerDefinitionWithoutProps<TEngine, TController>
   | ControllerDefinitionWithProps<TEngine, TController, unknown>;
 
-/**
- * @internal
- */
 export interface ControllerDefinitionsMap<
   TEngine extends CoreEngine,
   TController extends Controller,
@@ -130,9 +132,6 @@ export type InferControllerPropsMapFromDefinitions<
     : K]: InferControllerPropsFromDefinition<TControllers[K]>;
 };
 
-/**
- * @internal
- */
 export type InferControllerFromDefinition<
   TDefinition extends ControllerDefinition<CoreEngine, Controller>,
 > =
@@ -140,9 +139,6 @@ export type InferControllerFromDefinition<
     ? TController
     : never;
 
-/**
- * @internal
- */
 export type InferControllersMapFromDefinition<
   TControllers extends ControllerDefinitionsMap<CoreEngine, Controller>,
 > = {[K in keyof TControllers]: InferControllerFromDefinition<TControllers[K]>};

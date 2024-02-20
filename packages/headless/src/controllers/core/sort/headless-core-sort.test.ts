@@ -14,14 +14,17 @@ import {
 } from '../../../features/sort-criteria/sort-criteria-actions';
 import {sortCriteriaReducer as sortCriteria} from '../../../features/sort-criteria/sort-criteria-slice';
 import {
-  MockSearchEngine,
-  buildMockSearchAppEngine,
-} from '../../../test/mock-engine';
+  MockedSearchEngine,
+  buildMockSearchEngine,
+} from '../../../test/mock-engine-v2';
 import {createMockState} from '../../../test/mock-state';
 import {Sort, SortProps, buildCoreSort} from './headless-core-sort';
 
+jest.mock('../../../features/sort-criteria/sort-criteria-actions');
+jest.mock('../../../features/pagination/pagination-actions');
+
 describe('Sort', () => {
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
   let props: SortProps;
   let sort: Sort;
 
@@ -30,7 +33,7 @@ describe('Sort', () => {
   }
 
   beforeEach(() => {
-    engine = buildMockSearchAppEngine();
+    engine = buildMockSearchEngine(createMockState());
     props = {
       initialState: {},
     };
@@ -46,10 +49,7 @@ describe('Sort', () => {
   });
 
   it('when the #criterion option is not specified, it does not dispatch a registration action', () => {
-    const action = engine.actions.find(
-      (a) => a.type === registerSortCriterion.type
-    );
-    expect(action).toBe(undefined);
+    expect(registerSortCriterion).not.toHaveBeenCalled();
   });
 
   it('when #criterion is an invalid value, it throws an error', () => {
@@ -60,9 +60,8 @@ describe('Sort', () => {
   it('when the #criterion option is specified, it dispatches a registration action', () => {
     props.initialState!.criterion = buildRelevanceSortCriterion();
     initSort();
-
-    expect(engine.actions).toContainEqual(
-      registerSortCriterion(props.initialState!.criterion)
+    expect(registerSortCriterion).toHaveBeenCalledWith(
+      props.initialState!.criterion
     );
   });
 
@@ -73,8 +72,8 @@ describe('Sort', () => {
     ];
     initSort();
 
-    expect(engine.actions).toContainEqual(
-      registerSortCriterion(props.initialState!.criterion)
+    expect(registerSortCriterion).toHaveBeenCalledWith(
+      props.initialState!.criterion
     );
   });
 
@@ -86,12 +85,11 @@ describe('Sort', () => {
     });
 
     it('dispatches an updateSortCriterion action with the passed criterion', () => {
-      const action = updateSortCriterion(criterion);
-      expect(engine.actions).toContainEqual(action);
+      expect(updateSortCriterion).toHaveBeenCalledWith(criterion);
     });
 
     it('updates the page to the first one', () => {
-      expect(engine.actions).toContainEqual(updatePage(1));
+      expect(updatePage).toHaveBeenCalledWith(1);
     });
   });
 
@@ -104,7 +102,8 @@ describe('Sort', () => {
       const state = createMockState({
         sortCriteria: criterionInStateExpression,
       });
-      engine = buildMockSearchAppEngine({state});
+
+      engine = buildMockSearchEngine(state);
       initSort();
     });
 

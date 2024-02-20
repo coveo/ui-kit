@@ -1,18 +1,16 @@
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
-// @ts-ignore
 import {
-  getNavigateCalledWith,
+  // @ts-ignore
+  getNavigateCalledWith, // @ts-ignore
   getGenerateUrlCalledWith,
 } from 'lightning/navigation';
 // @ts-ignore
 import {createElement} from 'lwc';
 import QuanticResultLink from '../quanticResultLink';
-// @ts-ignore
-import mockDefaultResult from './data/defaultResult.json';
-// @ts-ignore
-import mockKnowledgeArticleResult from './data/knowledgeArticleResult.json';
-// @ts-ignore
-import mockSalesforceResult from './data/salesforceResult.json';
+
+const exampleResult = {
+  clickUri: 'https://coveo.com/',
+};
 
 jest.mock('c/quanticHeadlessLoader');
 
@@ -83,19 +81,25 @@ describe('c-quantic-result-link', () => {
   });
 
   describe('when the result is of type Salesforce', () => {
+    const exampleSalesforceResult = {
+      ...exampleResult,
+      raw: {
+        sfid: '123',
+      },
+    };
     it('should call the navigation mixin to get the Salesforce record URL', async () => {
-      createTestComponent({...mockSalesforceResult});
+      createTestComponent({result: exampleSalesforceResult});
       await flushPromises();
 
       const {pageReference} = getGenerateUrlCalledWith();
 
       expect(pageReference.attributes.recordId).toBe(
-        mockSalesforceResult.result.raw.sfid
+        exampleSalesforceResult.raw.sfid
       );
     });
 
     it('should open the result link in a Salesforce console subtab', async () => {
-      const element = createTestComponent({...mockSalesforceResult});
+      const element = createTestComponent({result: exampleSalesforceResult});
       await flushPromises();
 
       const linkSalesforce = element.shadowRoot.querySelector('a');
@@ -104,13 +108,22 @@ describe('c-quantic-result-link', () => {
       const {pageReference} = getNavigateCalledWith();
 
       expect(pageReference.attributes.recordId).toBe(
-        mockSalesforceResult.result.raw.sfid
+        exampleSalesforceResult.raw.sfid
       );
     });
 
     describe('when the result is a knowledge article', () => {
+      const exampleKnowledgeArticleResult = {
+        ...exampleResult,
+        raw: {
+          sfid: '1234',
+          sfkavid: '1234',
+        },
+      };
       it('should open the result link in a Salesforce console subtab', async () => {
-        const element = createTestComponent({...mockKnowledgeArticleResult});
+        const element = createTestComponent({
+          result: exampleKnowledgeArticleResult,
+        });
         await flushPromises();
 
         const LinkKnowledgeArticle = element.shadowRoot.querySelector('a');
@@ -119,7 +132,31 @@ describe('c-quantic-result-link', () => {
         const {pageReference} = getNavigateCalledWith();
 
         expect(pageReference.attributes.recordId).toBe(
-          mockKnowledgeArticleResult.result.raw.sfkavid
+          exampleKnowledgeArticleResult.raw.sfkavid
+        );
+      });
+    });
+
+    describe('when the result is a case comment', () => {
+      const exampleCaseCommentResult = {
+        ...exampleResult,
+        raw: {
+          sfid: '1234',
+          sfparentid: '5678',
+          documenttype: 'CaseComment',
+        },
+      };
+      it('should open the parent of the result in a Salesforce console subtab', async () => {
+        const element = createTestComponent({result: exampleCaseCommentResult});
+        await flushPromises();
+
+        const link = element.shadowRoot.querySelector('a');
+        link.click();
+
+        const {pageReference} = getNavigateCalledWith();
+
+        expect(pageReference.attributes.recordId).toBe(
+          exampleCaseCommentResult.raw.sfparentid
         );
       });
     });
@@ -127,14 +164,12 @@ describe('c-quantic-result-link', () => {
 
   describe('when the result is NOT of type salesforce', () => {
     it('should open the result link in the current browser tab', async () => {
-      const element = createTestComponent({...mockDefaultResult});
+      const element = createTestComponent({result: exampleResult});
       await flushPromises();
 
       const link = element.shadowRoot.querySelector('a');
 
-      expect(link.getAttribute('href')).toEqual(
-        mockDefaultResult.result.clickUri
-      );
+      expect(link.getAttribute('href')).toEqual(exampleResult.clickUri);
       expect(link.getAttribute('target')).toEqual('_self');
     });
 
@@ -142,16 +177,14 @@ describe('c-quantic-result-link', () => {
       it('should open the result link based on the value of the target property', async () => {
         const customTarget = '_blank';
         const element = createTestComponent({
-          ...mockDefaultResult,
+          result: exampleResult,
           target: customTarget,
         });
         await flushPromises();
 
         const link = element.shadowRoot.querySelector('a');
 
-        expect(link.getAttribute('href')).toEqual(
-          mockDefaultResult.result.clickUri
-        );
+        expect(link.getAttribute('href')).toEqual(exampleResult.clickUri);
         expect(link.getAttribute('target')).toEqual(customTarget);
       });
     });

@@ -145,6 +145,9 @@ export function closest(
   return closest(element.parentElement, selector);
 }
 
+export const sortByDocumentPosition = (a: Node, b: Node): 1 | -1 =>
+  a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
+
 export function sanitizeStyle(style: string) {
   const purifiedOuterHTML = sanitize(`<style>${style}</style>`, {
     ALLOWED_TAGS: ['style'],

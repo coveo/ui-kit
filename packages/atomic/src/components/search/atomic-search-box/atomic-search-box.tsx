@@ -509,13 +509,15 @@ export class AtomicSearchBox {
   }
 
   private onInput(value: string) {
+    this.searchBox.updateText(value);
+
     this.isSearchDisabled =
       this.disableSearch || this.minimumQueryLength > value.trim().length;
     if (this.isSearchDisabled) {
       return;
     }
     this.isExpanded = true;
-    this.searchBox.updateText(value);
+
     this.updateActiveDescendant();
     this.debouncedQuerySuggestionOnKeypress();
   }
@@ -532,7 +534,10 @@ export class AtomicSearchBox {
   }
 
   private onSubmit() {
-    if (this.activeDescendantElement) {
+    if (
+      this.activeDescendantElement &&
+      this.rightPanelRef?.querySelector(`#${this.activeDescendant}`)
+    ) {
       this.activeDescendantElement.click();
       this.updateActiveDescendant();
       return;

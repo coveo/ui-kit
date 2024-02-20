@@ -17,7 +17,7 @@
 
 .quickview__button-base:not([disabled]){
   border-radius: 0.25rem;
-  color: var(--color-text-link-active, #0f2d5d);
+  color: var(--lwc-colorTextLinkActive, #0f2d5d);
 }
 
 .quickview__button-base:not([disabled]):hover {

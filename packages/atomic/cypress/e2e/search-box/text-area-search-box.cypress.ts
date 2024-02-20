@@ -107,6 +107,7 @@ describe('TextArea Search Box Test Suites', () => {
   });
 
   describe('with disableSearch set to true', () => {
+    const testQuery = 'test';
     beforeEach(() => {
       new TestFixture()
         .with(
@@ -127,11 +128,22 @@ describe('TextArea Search Box Test Suites', () => {
     });
 
     it('there are no search suggestions or errors on query input', () => {
-      typeSearchTextArea('test');
+      typeSearchTextArea(testQuery);
       SearchBoxSelectors.submitButton().should('be.disabled');
       SearchBoxAssertions.assertNoSuggestionGenerated();
       QuerySummaryAssertions.assertHasPlaceholder();
       CommonAssertions.assertConsoleError(false);
+    });
+
+    it('clear button should appear or disappear depending on the content of the input', () => {
+      typeSearchTextArea(testQuery);
+      SearchBoxSelectors.clearButton().should('exist');
+      typeSearchTextArea(
+        Array.from({length: testQuery.length})
+          .map(() => '{backspace}')
+          .join('')
+      );
+      SearchBoxSelectors.clearButton().should('not.exist');
     });
   });
 

@@ -6,14 +6,11 @@ import {
   getSampleSearchEngineConfiguration,
 } from '../../app/search-engine/search-engine';
 import {buildMockNonEmptyResult} from '../../test/mock-result';
+import {clearMicrotaskQueue} from '../../test/unit-test-utils';
 import {logInstantResultOpen} from './instant-result-analytics-actions';
 
 jest.mock('@coveo/relay');
 jest.mock('coveo.analytics');
-
-async function wait() {
-  return new Promise((resolve) => setTimeout(resolve, 0));
-}
 
 describe('#logRecommendationOpen', () => {
   const testResult = buildMockNonEmptyResult();
@@ -47,7 +44,7 @@ describe('#logRecommendationOpen', () => {
 
     it('should call coveo.analytics.makeRecommendationOpen properly', async () => {
       engine.dispatch(logInstantResultOpen(testResult));
-      await wait();
+      await clearMicrotaskQueue();
 
       expect(makeDocumentOpen).toHaveBeenCalledTimes(1);
       expect(makeDocumentOpen.mock.calls[0]).toMatchSnapshot();
@@ -69,7 +66,7 @@ describe('#logRecommendationOpen', () => {
 
     it('should call relay.emit properly', async () => {
       engine.dispatch(logInstantResultOpen(testResult));
-      await wait();
+      await clearMicrotaskQueue();
 
       expect(emit).toHaveBeenCalledTimes(1);
       expect(emit.mock.calls[0]).toMatchSnapshot();

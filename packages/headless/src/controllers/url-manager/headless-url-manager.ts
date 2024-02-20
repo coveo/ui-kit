@@ -25,7 +25,7 @@ export interface UrlManagerInitialState {
   fragment: string;
 }
 
-const initialStateSchema = new Schema<Required<UrlManagerInitialState>>({
+export const initialStateSchema = new Schema<Required<UrlManagerInitialState>>({
   fragment: new StringValue(),
 });
 

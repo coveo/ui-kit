@@ -448,6 +448,12 @@ export namespace Components {
          */
         "imageSize": ResultDisplayImageSize;
         /**
+          * The initial number of child results to request for each folded collection, before expansion.
+          * @defaultValue `2`
+          * @example For an email thread with a total of 20 messages, using the default value of `2` will request the top two child messages, based on the current sort criteria and query, to be returned as children of the parent message. The user can then click to expand the collection and see the remaining messages that match the current query (i.e., not necessarily all remaining 18 messages). Those messages will be sorted based on the current sort criteria (i.e., not necessarily by date). See the `atomic-load-more-children-results` component. For more info on Result Folding, see [Result Folding](https://docs.coveo.com/en/1884).
+         */
+        "numberOfFoldedResults": number;
+        /**
           * The name of the field that determines whether a certain result is a top result containing other child results within a collection.
           * @defaultValue `foldingparent`
          */
@@ -4660,6 +4666,12 @@ declare namespace LocalJSX {
           * The expected size of the image displayed in the results.
          */
         "imageSize"?: ResultDisplayImageSize;
+        /**
+          * The initial number of child results to request for each folded collection, before expansion.
+          * @defaultValue `2`
+          * @example For an email thread with a total of 20 messages, using the default value of `2` will request the top two child messages, based on the current sort criteria and query, to be returned as children of the parent message. The user can then click to expand the collection and see the remaining messages that match the current query (i.e., not necessarily all remaining 18 messages). Those messages will be sorted based on the current sort criteria (i.e., not necessarily by date). See the `atomic-load-more-children-results` component. For more info on Result Folding, see [Result Folding](https://docs.coveo.com/en/1884).
+         */
+        "numberOfFoldedResults"?: number;
         /**
           * The name of the field that determines whether a certain result is a top result containing other child results within a collection.
           * @defaultValue `foldingparent`

@@ -9,7 +9,7 @@
     "esModuleInterop": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "types": ["node", "jest"],
+    "types": ["node", "jest"]
   },
-  "exclude": ["./temp/**", "./dist/**", "./docs/**", "./ponyfills/**"],
+  "exclude": ["./temp/**", "./dist/**", "./docs/**", "./ponyfills/**"]
 }
