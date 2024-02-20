@@ -4,7 +4,7 @@
 }
 
 .generated-answer__badge {
-  background-color: var(--lwc-brand-background-primary, #eef4ff);
-  color: var(--lwc-brand-primary, #1b96ff);
+  background-color: var(--lwc-colorBackgroundButtonDefaultHover, #eef4ff);
+  color: var(--lwc-brandPrimary, #1b96ff);
   border-radius: var(--lwc-border-radius-medium, 0.25rem);
 }
