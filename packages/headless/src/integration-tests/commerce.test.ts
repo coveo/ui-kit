@@ -154,4 +154,39 @@ describe.skip('commerce', () => {
 
     expect(box.state.suggestions).not.toEqual([]);
   });
+
+  it('provides all sub-controllers', async () => {
+    const productListing = buildProductListing(engine);
+    const pagination = productListing.pagination;
+    const sort = productListing.sort;
+    const facetGenerator = productListing.facetGenerator;
+
+    // paginating
+    pagination.nextPage();
+
+    // sorting
+    const relevance = buildRelevanceSortCriterion();
+    sort.sortBy(relevance);
+
+    // facets
+    {
+      const facetController = facetGenerator.state.facets[0];
+
+      await waitForNextStateChange(engine, {
+        action: () => {
+          facetController.toggleSelect({
+            ...facetController.state.values[0],
+            state: 'selected',
+          });
+        },
+        expectedSubscriberCalls: 8,
+      });
+    }
+
+    await fetchProductListing();
+
+    expect(pagination).toBeDefined();
+    expect(sort).toBeDefined();
+    expect(facetGenerator).toBeDefined();
+  });
 });
