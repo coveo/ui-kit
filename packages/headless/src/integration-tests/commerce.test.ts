@@ -154,4 +154,50 @@ describe.skip('commerce', () => {
 
     expect(box.state.suggestions).not.toEqual([]);
   });
+
+  it('provides all sub-controllers', async () => {
+    const productListing = buildProductListing(engine);
+    const pagination = productListing.buildPagination();
+    const sort = productListing.buildSort();
+    const facetGenerator = productListing.buildFacetGenerator();
+    // With the builder approach, we can build controllers as we please. There's no need to build all of them when
+    // building the product listing controller. This also means the product listing controller doesn't need to expose
+    // all of its sub-controllers's props.
+    const urlManager = productListing.buildUrlManager({
+      initialState: {
+        fragment: '',
+      },
+    });
+
+    // paginating
+    pagination.nextPage();
+
+    // sorting
+    const relevance = buildRelevanceSortCriterion();
+    sort.sortBy(relevance);
+
+    // facets
+    {
+      const facetController = facetGenerator.state.facets[0];
+
+      await waitForNextStateChange(engine, {
+        action: () => {
+          facetController.toggleSelect({
+            ...facetController.state.values[0],
+            state: 'selected',
+          });
+        },
+        expectedSubscriberCalls: 8,
+      });
+    }
+
+    // url manager
+    urlManager.synchronize('q=yellow');
+
+    await fetchProductListing();
+
+    expect(pagination).toBeDefined();
+    expect(sort).toBeDefined();
+    expect(facetGenerator).toBeDefined();
+  });
 });
