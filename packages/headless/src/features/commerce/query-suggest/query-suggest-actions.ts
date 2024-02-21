@@ -1,6 +1,5 @@
-import {createRelay} from '@coveo/relay';
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {getAnalyticsSource} from '../../../api/analytics/search-analytics';
+import {getClientId} from '../../../api/analytics/event-protocol-utils';
 import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
 import {QuerySuggestRequest} from '../../../api/commerce/search/query-suggest/query-suggest-request';
 import {QuerySuggestSuccessResponse} from '../../../api/commerce/search/query-suggest/query-suggest-response';
@@ -65,23 +64,14 @@ export const buildQuerySuggestRequest = (
   id: string,
   state: StateNeededByQuerySuggest
 ): QuerySuggestRequest => {
-  const {view, user, trackingId, ...restOfContext} = state.commerceContext;
-  const relayOptions = {
-    url: state.configuration.analytics.nextApiBaseUrl,
-    token: state.configuration.accessToken,
-    trackingId,
-    source: getAnalyticsSource(state.configuration.analytics),
-  };
-  const relay = createRelay(relayOptions);
-  const {getMeta} = relay;
+  const {view, user, ...restOfContext} = state.commerceContext;
   return {
     accessToken: state.configuration.accessToken,
     url: state.configuration.platformUrl,
     organizationId: state.configuration.organizationId,
     query: state.querySet[id],
-    trackingId,
     ...restOfContext,
-    clientId: getMeta('ec.productView').clientId,
+    clientId: getClientId(state.configuration),
     context: {
       user,
       view,

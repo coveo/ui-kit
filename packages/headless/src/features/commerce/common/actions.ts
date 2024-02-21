@@ -1,5 +1,4 @@
-import {createRelay} from '@coveo/relay';
-import {getAnalyticsSource} from '../../../api/analytics/search-analytics';
+import {getClientId} from '../../../api/analytics/event-protocol-utils';
 import {SortParam} from '../../../api/commerce/commerce-api-params';
 import {CommerceAPIRequest} from '../../../api/commerce/common/request';
 import {CommerceSuccessResponse} from '../../../api/commerce/common/response';
@@ -46,22 +45,13 @@ export const buildCommerceAPIRequest = (
   state: StateNeededByQueryCommerceAPI
 ): CommerceAPIRequest => {
   const facets = getFacets(state);
-  const {view, user, trackingId, ...restOfContext} = state.commerceContext;
-  const relayOptions = {
-    url: state.configuration.analytics.nextApiBaseUrl,
-    token: state.configuration.accessToken,
-    trackingId,
-    source: getAnalyticsSource(state.configuration.analytics),
-  };
-  const relay = createRelay(relayOptions);
-  const {getMeta} = relay;
+  const {view, user, ...restOfContext} = state.commerceContext;
   return {
     accessToken: state.configuration.accessToken,
     url: state.configuration.platformUrl,
     organizationId: state.configuration.organizationId,
-    trackingId,
     ...restOfContext,
-    clientId: getMeta('ec.productView').clientId,
+    clientId: getClientId(state.configuration),
     context: {
       user,
       view,
