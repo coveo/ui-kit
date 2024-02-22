@@ -39,7 +39,7 @@ export function buildController<T extends object>(
 
   return {
     subscribe(listener: () => void) {
-      listener();
+      // listener();
       const symbol = Symbol();
       let unsubscribe: () => void;
 
