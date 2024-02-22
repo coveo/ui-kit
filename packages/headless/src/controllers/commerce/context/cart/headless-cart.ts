@@ -157,6 +157,17 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     return item.quantity !== quantity;
   }
 
+  function isCurrentItemQuantityGreater(
+    currentItem: CartItem,
+    prevItem: CartItemWithMetadata | undefined
+  ) {
+    if (!prevItem) {
+      return true;
+    }
+
+    return currentItem.quantity > prevItem.quantity;
+  }
+
   return {
     ...controller,
 
@@ -173,15 +184,16 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
 
     updateItem(item: CartItem) {
       if (isNewQuantityDifferent(item.productId, item.quantity)) {
-        const previousItem = itemSelector(getState(), item.productId);
-        const isQuantityGreater = item.quantity > previousItem.quantity;
-        const action = isQuantityGreater ? 'add' : 'remove';
-        const {productId, name, price} = item;
+        const prevItem = itemSelector(getState(), item.productId);
+        const action = isCurrentItemQuantityGreater(item, prevItem)
+          ? 'add'
+          : 'remove';
+        const {quantity, ...product} = item;
         const emit = getEmit(engine.state.configuration);
         emit('ec.cartAction', {
           action,
           quantity: 1,
-          product: {productId, name, price},
+          product,
         });
       }
 
