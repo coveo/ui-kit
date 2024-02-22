@@ -1,4 +1,4 @@
-import {getClientId} from '../../../api/analytics/event-protocol-utils';
+import {getVisitorID} from '../../../api/analytics/coveo-analytics-utils';
 import {SortParam} from '../../../api/commerce/commerce-api-params';
 import {CommerceAPIRequest} from '../../../api/commerce/common/request';
 import {CommerceSuccessResponse} from '../../../api/commerce/common/response';
@@ -41,9 +41,9 @@ export interface QueryCommerceAPIThunkReturn {
   analyticsAction: PreparableAnalyticsAction<StateNeededByQueryCommerceAPI>;
 }
 
-export const buildCommerceAPIRequest = (
+export const buildCommerceAPIRequest = async (
   state: StateNeededByQueryCommerceAPI
-): CommerceAPIRequest => {
+): Promise<CommerceAPIRequest> => {
   const facets = getFacets(state);
   const {view, user, ...restOfContext} = state.commerceContext;
   return {
@@ -51,7 +51,7 @@ export const buildCommerceAPIRequest = (
     url: state.configuration.platformUrl,
     organizationId: state.configuration.organizationId,
     ...restOfContext,
-    clientId: getClientId(state.configuration),
+    clientId: await getVisitorID(state.configuration.analytics),
     context: {
       user,
       view,
