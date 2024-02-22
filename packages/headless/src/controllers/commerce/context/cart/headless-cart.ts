@@ -1,3 +1,4 @@
+import {getEmit} from '../../../../api/analytics/event-protocol-utils';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {
   setItems,
@@ -172,7 +173,16 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
 
     updateItem(item: CartItem) {
       if (isNewQuantityDifferent(item.productId, item.quantity)) {
-        // TODO LENS-1497: log ec.cartAction; if new quantity > previous, 'add', otherwise, 'remove'.
+        const previousItem = itemSelector(getState(), item.productId);
+        const isQuantityGreater = item.quantity > previousItem.quantity;
+        const action = isQuantityGreater ? 'add' : 'remove';
+        const {productId, name, price} = item;
+        const emit = getEmit(engine.state.configuration);
+        emit('ec.cartAction', {
+          action,
+          quantity: 1,
+          product: {productId, name, price},
+        });
       }
 
       dispatch(updateItem(item));
