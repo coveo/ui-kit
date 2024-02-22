@@ -2,11 +2,8 @@ import {createRelay} from '@coveo/relay';
 import {ConfigurationState} from '../../features/configuration/configuration-state';
 import {getAnalyticsSource} from './search-analytics';
 
-export const getEmit = (state: ConfigurationState) => {
-  const relayOptions = getRelayOptions(state);
-  const relay = createRelay(relayOptions);
-  return relay.emit;
-};
+export const getEmit = (state: ConfigurationState) =>
+  createRelay(getRelayOptions(state)).emit;
 
 const getRelayOptions = (state: ConfigurationState) => ({
   url: state.analytics.nextApiBaseUrl,
