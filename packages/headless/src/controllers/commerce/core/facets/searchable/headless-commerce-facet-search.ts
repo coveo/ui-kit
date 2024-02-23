@@ -11,8 +11,31 @@ import {
 
 export type CommerceFacetSearchResult = SpecificFacetSearchResult;
 
-// TODO: Add JSDoc; it's not getting resolved from the annotations in the generic facet search controller.
-export type CommerceFacetSearch = ReturnType<typeof buildCommerceFacetSearch>;
+export type CommerceFacetSearchState = {
+  /**
+   * Whether the facet search request is in a pending state.
+   */
+  isLoading: boolean;
+  /**
+   * The facet search query.
+   */
+  query: string;
+  /**
+   * Whether additional values matching the facet search query are available.
+   */
+  moreValuesAvailable: boolean;
+  /**
+   * The returned values matching the facet search query.
+   */
+  values: CommerceFacetSearchResult[];
+};
+
+export type CommerceFacetSearch = Omit<
+  ReturnType<typeof buildCommerceFacetSearch>,
+  'state'
+> & {
+  state: CommerceFacetSearchState;
+};
 
 export function buildCommerceFacetSearch(
   engine: CommerceEngine,
