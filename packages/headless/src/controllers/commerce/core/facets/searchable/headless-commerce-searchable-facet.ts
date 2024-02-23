@@ -1,4 +1,8 @@
-import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
+import {createSelector} from '@reduxjs/toolkit';
+import {
+  CommerceEngine,
+  CommerceEngineState,
+} from '../../../../../app/commerce-engine/commerce-engine';
 import {AnyFacetValueResponse} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
 import {specificFacetSearchSetReducer as facetSearchSet} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {AnyFacetValueRequest} from '../../../../../features/facets/generic/interfaces/generic-facet-request';
@@ -80,22 +84,26 @@ export function buildCommerceSearchableFacet<
 
   const facetSearch = createFacetSearch();
   const {state, ...restOfFacetSearch} = facetSearch;
-  const getFacetSearchState = () => engine.state.facetSearchSet[getFacetId()];
+  const facetSearchStateSelector = createSelector(
+    (state: CommerceEngineState) => state.facetSearchSet[getFacetId()],
+    (facetSearch) => ({
+      facetSearch: {
+        isLoading: facetSearch.isLoading,
+        moreValuesAvailable: facetSearch.response.moreValuesAvailable,
+        query: facetSearch.options.query,
+        values: facetSearch.response.values,
+      },
+    })
+  );
 
   return {
     ...coreController,
     facetSearch: restOfFacetSearch,
 
     get state() {
-      const facetSearchState = getFacetSearchState();
       return {
         ...coreController.state,
-        facetSearch: {
-          isLoading: facetSearchState.isLoading,
-          moreValuesAvailable: facetSearchState.response.moreValuesAvailable,
-          query: facetSearchState.options.query,
-          values: facetSearchState.response.values,
-        },
+        ...facetSearchStateSelector(engine.state),
       };
     },
   };
