@@ -1,7 +1,11 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {FacetSearchAPIClient} from '../../../../api/search/search-api-client';
+import {AsyncThunkOptions} from '../../../../app/async-thunk-options';
 import {CoreEngine} from '../../../../app/engine';
-import {ClientThunkExtraArguments} from '../../../../app/thunk-extra-arguments';
+import {
+  ClientThunkExtraArguments,
+  ThunkExtraArguments,
+} from '../../../../app/thunk-extra-arguments';
 import {CategoryFacetSearchState} from '../../../../features/facets/facet-search-set/category/category-facet-search-set-state';
 import {FacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-request-options';
 import {clearFacetSearch} from '../../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
@@ -22,11 +26,17 @@ export interface GenericFacetSearchProps<T extends FacetSearchState> {
 
   executeFacetSearchActionCreator: (
     facetId: string
-  ) => AsyncThunkAction<unknown, string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
-  executeFieldSuggestActionCreator: (facetId: string) => AsyncThunkAction<
+  ) => AsyncThunkAction<
     unknown,
     string,
-    any // eslint-disable-line @typescript-eslint/no-explicit-any
+    AsyncThunkOptions<unknown, ThunkExtraArguments>
+  >;
+  executeFieldSuggestActionCreator: (
+    facetId: string
+  ) => AsyncThunkAction<
+    unknown,
+    string,
+    AsyncThunkOptions<unknown, ThunkExtraArguments>
   >;
 }
 
