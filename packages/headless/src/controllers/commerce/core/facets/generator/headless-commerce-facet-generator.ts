@@ -1,4 +1,8 @@
-import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
+import {createSelector} from '@reduxjs/toolkit';
+import {
+  CommerceEngine,
+  CommerceEngineState,
+} from '../../../../../app/commerce-engine/commerce-engine';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {AnyFacetValueResponse} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
 import {facetOrderReducer as facetOrder} from '../../../../../features/facets/facet-order/facet-order-slice';
@@ -87,6 +91,11 @@ export function buildCommerceFacetGenerator(
 
   const controller = buildController(engine);
 
+  const commerceFacetSelector = createSelector(
+    (state: CommerceEngineState) => state.facetOrder,
+    (facetOrder) => ({facets: facetOrder.map(createFacet) ?? []})
+  );
+
   const createFacet = (facetId: string) => {
     const {type} = engine.state.commerceFacetSet[facetId].request;
 
@@ -106,9 +115,7 @@ export function buildCommerceFacetGenerator(
     ...controller,
 
     get state() {
-      return {
-        facets: engine.state.facetOrder.map(createFacet) ?? [],
-      };
+      return commerceFacetSelector(engine.state);
     },
   };
 }
