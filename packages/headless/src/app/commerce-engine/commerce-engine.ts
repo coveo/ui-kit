@@ -1,4 +1,4 @@
-import {StateFromReducersMapObject} from '@reduxjs/toolkit';
+import {StateFromReducersMapObject, combineReducers} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
 import {CommerceAPIClient} from '../../api/commerce/commerce-api-client';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
@@ -11,7 +11,7 @@ import {queryReducer} from '../../features/commerce/query/query-slice';
 import {commerceSearchReducer} from '../../features/commerce/search/search-slice';
 import {sortReducer} from '../../features/commerce/sort/sort-slice';
 import {facetOrderReducer} from '../../features/facets/facet-order/facet-order-slice';
-import {CommerceAppState} from '../../state/commerce-app-state';
+import {CommerceAppState, CommerceRoutableState} from '../../state/commerce-app-state';
 import {CommerceThunkExtraArguments} from '../commerce-thunk-extra-arguments';
 import {
   buildEngine,
@@ -28,21 +28,30 @@ import {
 
 export type {CommerceEngineConfiguration};
 
-const commerceEngineReducers = {
+const commerceRoutableReducers = {
   productListing: productListingV2Reducer,
   commerceSearch: commerceSearchReducer,
   commercePagination: paginationReducer,
   commerceSort: sortReducer,
   facetOrder: facetOrderReducer,
   commerceFacetSet: commerceFacetSetReducer,
-  commerceContext: contextReducer,
   commerceQuery: queryReducer,
   cart: cartReducer,
+}
+
+type CommerceEngineRoutableReducers = typeof commerceRoutableReducers;
+
+const commerceEngineReducers = {
+  commerceContext: contextReducer,
 };
 type CommerceEngineReducers = typeof commerceEngineReducers;
 
+export type Routed<T> = Record<string, T>;
+
+type RoutedCommerceEngineState = Routed<StateFromReducersMapObject<CommerceEngineRoutableReducers> & Partial<CommerceRoutableState>>;
+
 type CommerceEngineState = StateFromReducersMapObject<CommerceEngineReducers> &
-  Partial<CommerceAppState>;
+  Partial<CommerceAppState> & RoutedCommerceEngineState;
 
 /**
  * The engine for powering commerce experiences.
@@ -53,7 +62,9 @@ export interface CommerceEngine<State extends object = {}>
   extends CoreEngine<
     State & CommerceEngineState,
     CommerceThunkExtraArguments
-  > {}
+  > {
+  registerRoute(id: string): () => void;
+}
 
 /**
  * The commerce engine options.
@@ -97,6 +108,16 @@ export function buildCommerceEngine(
 
   return {
     ...engine,
+
+    // As routes are registered/deregistered, their reducers are added/removed from the engine.
+    registerRoute(id: string) {
+      const reducers = {
+        [id]: combineReducers(commerceRoutableReducers)
+      }
+      engine.addReducers(reducers)
+
+      return () => engine.removeReducers(reducers)
+    },
 
     get state() {
       return engine.state;

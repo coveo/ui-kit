@@ -82,6 +82,12 @@ export interface CoreEngine<
    */
   addReducers(reducers: ReducersMapObject): void;
   /**
+   * Removes the specified reducers from the store.
+   *
+   * @param reducers - An object containing the reducers to remove from the engine.
+   */
+  removeReducers(reducers: ReducersMapObject): void;
+  /**
    * Enable analytics tracking
    */
   enableAnalytics(): void;
@@ -247,6 +253,10 @@ function buildCoreEngine<
 
       reducerManager.add(reducers);
       store.replaceReducer(reducerManager.combinedReducer);
+    },
+
+    removeReducers(reducers: ReducersMapObject) {
+      // TODO(nico): Implement
     },
 
     dispatch: store.dispatch,
