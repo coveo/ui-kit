@@ -19,16 +19,17 @@ import {
 export type CommerceSearchParametersState = CommerceQuerySection;
 export type CommerceProductListingParametersState = {};
 
-export type CommerceAppState = ConfigurationSection &
-  ProductListingV2Section &
+export type CommerceRoutableState = ProductListingV2Section &
   CommerceSearchSection &
   CommerceQuerySection &
   FacetOrderSection &
   CommerceFacetSetSection &
   CommercePaginationSection &
   CommerceSortSection &
-  CommerceContextSection &
   CartSection &
   QuerySuggestionSection &
-  QuerySetSection &
+  QuerySetSection;
+
+export type CommerceAppState = ConfigurationSection &
+  CommerceContextSection &
   VersionSection;

@@ -10,6 +10,7 @@ import {fromEntries} from '../utils/utils';
 export interface ReducerManager {
   combinedReducer: Reducer;
   add(newReducers: ReducersMapObject): void;
+  remove(oldReducers: ReducersMapObject): void;
   containsAll(newReducers: ReducersMapObject): boolean;
   addCrossReducer(reducer: Reducer): void;
 }
@@ -54,6 +55,12 @@ export function createReducerManager(
       Object.keys(newReducers)
         .filter((key) => !(key in reducers))
         .forEach((key) => (reducers[key] = newReducers[key]));
+    },
+
+    remove(oldReducers: ReducersMapObject) {
+      Object.keys(oldReducers)
+        .filter((key) => key in reducers)
+        .forEach((key) => (reducers[key] = <Reducer>(() => {})));
     },
 
     addCrossReducer(reducer: Reducer) {
