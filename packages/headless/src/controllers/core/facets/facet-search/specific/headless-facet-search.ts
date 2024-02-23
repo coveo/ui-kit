@@ -1,6 +1,8 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {SpecificFacetSearchResult} from '../../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
+import {AsyncThunkOptions} from '../../../../../app/async-thunk-options';
 import {CoreEngine} from '../../../../../app/engine';
+import {ThunkExtraArguments} from '../../../../../app/thunk-extra-arguments';
 import {FacetSearchOptions} from '../../../../../features/facets/facet-search-set/facet-search-request-options';
 import {
   excludeFacetSearchResult,
@@ -21,11 +23,17 @@ export interface FacetSearchProps {
   isForFieldSuggestions: boolean;
   executeFacetSearchActionCreator: (
     facetId: string
-  ) => AsyncThunkAction<unknown, string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
-  executeFieldSuggestActionCreator: (facetId: string) => AsyncThunkAction<
+  ) => AsyncThunkAction<
     unknown,
     string,
-    any // eslint-disable-line @typescript-eslint/no-explicit-any
+    AsyncThunkOptions<unknown, ThunkExtraArguments>
+  >;
+  executeFieldSuggestActionCreator: (
+    facetId: string
+  ) => AsyncThunkAction<
+    unknown,
+    string,
+    AsyncThunkOptions<unknown, ThunkExtraArguments>
   >;
 }
 

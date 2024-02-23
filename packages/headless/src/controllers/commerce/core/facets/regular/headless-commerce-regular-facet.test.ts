@@ -15,6 +15,7 @@ import {
 } from '../../../../../test/mock-engine-v2';
 import {buildMockFacetSearch} from '../../../../../test/mock-facet-search';
 import {commonOptions} from '../../../product-listing/facets/headless-product-listing-facet-options';
+import {FacetValueRequest} from '../headless-core-commerce-facet';
 import {
   CommerceRegularFacet,
   CommerceRegularFacetOptions,
@@ -38,7 +39,9 @@ describe('CommerceRegularFacet', () => {
     facet = buildCommerceRegularFacet(engine, options);
   }
 
-  function setFacetRequest(config: Partial<CommerceFacetRequest> = {}) {
+  function setFacetRequest(
+    config: Partial<CommerceFacetRequest<FacetValueRequest>> = {}
+  ) {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, ...config}),
     });

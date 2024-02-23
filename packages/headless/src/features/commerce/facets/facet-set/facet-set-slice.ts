@@ -40,7 +40,10 @@ import {
   CommerceFacetSetState,
   getCommerceFacetSetInitialState,
 } from './facet-set-state';
-import {CommerceFacetRequest} from './interfaces/request';
+import {
+  AnyCommerceFacetRequest,
+  CommerceFacetRequest,
+} from './interfaces/request';
 import {AnyFacetResponse, RegularFacetValue} from './interfaces/response';
 
 export const commerceFacetSetReducer = createReducer(
@@ -54,15 +57,15 @@ export const commerceFacetSetReducer = createReducer(
         const {facetId, selection} = action.payload;
         const facetRequest = state[facetId]?.request;
 
-        if (!facetRequest || facetRequest.type !== 'regular') {
+        if (!ensureRegularFacetRequest(facetRequest)) {
           return;
         }
 
         facetRequest.preventAutoSelect = true;
 
-        const existingValue = (
-          facetRequest.values as WritableDraft<FacetValueRequest>[]
-        ).find((req) => req.value === selection.value);
+        const existingValue = facetRequest.values.find(
+          (req) => req.value === selection.value
+        );
         if (!existingValue) {
           insertNewValue(facetRequest, selection);
           return;
@@ -74,14 +77,14 @@ export const commerceFacetSetReducer = createReducer(
         const {facetId, selection} = action.payload;
         const facetRequest = state[facetId]?.request;
 
-        if (!facetRequest || facetRequest.type !== 'numericalRange') {
+        if (!ensureNumericFacetRequest(facetRequest)) {
           return;
         }
 
         facetRequest.preventAutoSelect = true;
 
         const existingValue = findExactRangeValue(
-          facetRequest.values as NumericRangeRequest[],
+          facetRequest.values,
           selection
         );
         if (!existingValue) {
@@ -94,14 +97,14 @@ export const commerceFacetSetReducer = createReducer(
         const {facetId, selection} = action.payload;
         const facetRequest = state[facetId]?.request;
 
-        if (!facetRequest || facetRequest.type !== 'dateRange') {
+        if (!ensureDateFacetRequest(facetRequest)) {
           return;
         }
 
         facetRequest.preventAutoSelect = true;
 
         const existingValue = findExactRangeValue(
-          facetRequest.values as DateRangeRequest[],
+          facetRequest.values,
           selection
         );
         if (!existingValue) {
@@ -115,15 +118,15 @@ export const commerceFacetSetReducer = createReducer(
         const {facetId, selection} = action.payload;
         const facetRequest = state[facetId]?.request;
 
-        if (!facetRequest || facetRequest.type !== 'regular') {
+        if (!ensureRegularFacetRequest(facetRequest)) {
           return;
         }
 
         facetRequest.preventAutoSelect = true;
 
-        const existingValue = (
-          facetRequest.values as WritableDraft<FacetValueRequest>[]
-        ).find((req) => req.value === selection.value);
+        const existingValue = facetRequest.values.find(
+          (req) => req.value === selection.value
+        );
         if (!existingValue) {
           insertNewValue(facetRequest, selection);
           return;
@@ -135,14 +138,14 @@ export const commerceFacetSetReducer = createReducer(
         const {facetId, selection} = action.payload;
         const facetRequest = state[facetId]?.request;
 
-        if (!facetRequest || facetRequest.type !== 'numericalRange') {
+        if (!ensureNumericFacetRequest(facetRequest)) {
           return;
         }
 
         facetRequest.preventAutoSelect = true;
 
         const existingValue = findExactRangeValue(
-          facetRequest.values as NumericRangeRequest[],
+          facetRequest.values,
           selection
         );
         if (!existingValue) {
@@ -156,14 +159,14 @@ export const commerceFacetSetReducer = createReducer(
         const {facetId, selection} = action.payload;
         const facetRequest = state[facetId]?.request;
 
-        if (!facetRequest || facetRequest.type !== 'dateRange') {
+        if (!ensureDateFacetRequest(facetRequest)) {
           return;
         }
 
         facetRequest.preventAutoSelect = true;
 
         const existingValue = findExactRangeValue(
-          facetRequest.values as DateRangeRequest[],
+          facetRequest.values,
           selection
         );
         if (!existingValue) {
@@ -234,12 +237,13 @@ export const commerceFacetSetReducer = createReducer(
       })
       .addCase(updateFacetNumberOfValues, (state, action) => {
         const {facetId, numberOfValues} = action.payload;
+        const facetRequest = state[facetId]?.request;
 
-        if (!state[facetId]?.request) {
+        if (!facetRequest) {
           return;
         }
 
-        state[facetId].request.numberOfValues = numberOfValues;
+        facetRequest.numberOfValues = numberOfValues;
       })
       .addCase(updateFacetIsFieldExpanded, (state, action) => {
         const {facetId, isFieldExpanded} = action.payload;
@@ -262,6 +266,24 @@ export const commerceFacetSetReducer = createReducer(
       .addCase(setUser, resetAllFacetValues);
   }
 );
+
+function ensureRegularFacetRequest(
+  facetRequest: AnyCommerceFacetRequest
+): facetRequest is CommerceFacetRequest<FacetValueRequest> {
+  return facetRequest.type === 'regular';
+}
+
+function ensureNumericFacetRequest(
+  facetRequest: AnyCommerceFacetRequest
+): facetRequest is CommerceFacetRequest<NumericRangeRequest> {
+  return facetRequest.type === 'numericalRange';
+}
+
+function ensureDateFacetRequest(
+  facetRequest: AnyCommerceFacetRequest
+): facetRequest is CommerceFacetRequest<DateRangeRequest> {
+  return facetRequest.type === 'dateRange';
+}
 
 function handleQueryFulfilled(
   state: WritableDraft<CommerceFacetSetState>,
@@ -310,7 +332,7 @@ function updateStateFromFacetResponse(
   const facetId = facetResponse.facetId ?? facetResponse.field;
   let facetRequest = state[facetId]?.request;
   if (!facetRequest) {
-    state[facetId] = {request: {} as CommerceFacetRequest};
+    state[facetId] = {request: {} as AnyCommerceFacetRequest};
     facetRequest = state[facetId].request;
     facetRequest.initialNumberOfValues = facetResponse.values.length;
   } else {
@@ -344,7 +366,7 @@ function getFacetRequestValuesFromFacetResponse(
 }
 
 function insertNewValue(
-  facetRequest: CommerceFacetRequest,
+  facetRequest: AnyCommerceFacetRequest,
   facetValue: FacetValueRequest | NumericRangeRequest | DateRangeRequest
 ) {
   const {type, values} = facetRequest;
