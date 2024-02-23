@@ -1,3 +1,10 @@
+## 0.7.5 (2024-02-23)
+
+### Bug Fixes
+
+- adjust playground event names (#80) ([1b452a2](/commits/1b452a2daacdabd1952818691f76856564c97163)), closes [#80](/issues/80)
+- **playground:** update href based on env (#70) ([f0af35f](/commits/f0af35fccf5ab4812b3de827804e8924730ad7ab)), closes [#70](/issues/70)
+
 ## 0.7.4 (2024-01-11)
 
 ## 0.7.3 (2024-01-09)
