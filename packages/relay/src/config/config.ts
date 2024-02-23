@@ -18,6 +18,12 @@ export interface RelayConfig {
   trackingId: string;
 
   /**
+   * The application's user identity. If not set in the config, Relay will assume the identity matches
+   * the identity in the authentication or anonymous otherwise.
+   */
+  user?: User;
+
+  /**
    * Defines the library mode. The available modes are `emit` and `disabled`.
    * `emit` sends analytics events to Coveo to be stored.
    * `disabled` prevents the emission of events and does not trigger callbacks.
@@ -38,9 +44,10 @@ export interface RelayConfig {
  */
 export interface User {
   /**
-   * The application's user identifier.
+   * The application's user identifier. An id of 'anonymous' assumes the user is explicitly anonymous. An id of null indicates
+   * the identity is equal to the identity in the authentication or anonymous.
    */
-  id: string;
+  id: string | null;
 }
 
 export interface ConfigManager {
@@ -58,6 +65,7 @@ function pick({
     url,
     token,
     trackingId,
+    ...(!!rest.user && { user: rest.user }),
     ...(!!rest.mode && { mode: rest.mode }),
     ...(!!rest.source && { source: rest.source }),
   });

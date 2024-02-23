@@ -15,7 +15,7 @@ export interface EventConfig {
   /**
    * Named user identity which logged this event.
    */
-  user: User | null;
+  user: User;
 }
 
 /**
@@ -65,8 +65,8 @@ export interface Meta {
 }
 
 function getEventConfig(config: RelayConfig): EventConfig {
-  const { trackingId } = config;
-  return { trackingId, user: null };
+  const { trackingId, user } = config;
+  return { trackingId, user: user || { id: null } };
 }
 
 function getSource(config: RelayConfig): string[] {

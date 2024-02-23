@@ -2,7 +2,7 @@ import { createMockConfig } from "../__mocks__/config";
 import { createConfigManager, RelayConfig } from "./config";
 
 describe("createConfigManager", () => {
-  const initialConfig = createMockConfig({
+  const initialConfig: RelayConfig = createMockConfig({
     trackingId: "initial",
     url: "url",
     token: "nope",
