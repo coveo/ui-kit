@@ -43,8 +43,9 @@ const commerceEngineReducers = {
 };
 type CommerceEngineReducers = typeof commerceEngineReducers;
 
-type CommerceEngineState = StateFromReducersMapObject<CommerceEngineReducers> &
-  Partial<CommerceAppState>;
+export type CommerceEngineState =
+  StateFromReducersMapObject<CommerceEngineReducers> &
+    Partial<CommerceAppState>;
 
 /**
  * The engine for powering commerce experiences.
