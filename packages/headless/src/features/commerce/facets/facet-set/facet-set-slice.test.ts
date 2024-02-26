@@ -1007,6 +1007,7 @@ describe('commerceFacetSetReducer', () => {
           const action = toggleSelectCategoryFacetValue({
             facetId,
             selection,
+            retrieveCount: 6,
           });
 
           expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
@@ -1031,6 +1032,7 @@ describe('commerceFacetSetReducer', () => {
           const action = toggleSelectCategoryFacetValue({
             facetId,
             selection,
+            retrieveCount: 6,
           });
           const finalState = commerceFacetSetReducer(state, action);
           const currentValues = finalState[facetId]?.request.values;
@@ -1040,6 +1042,7 @@ describe('commerceFacetSetReducer', () => {
               value: selection.value,
               state: 'selected',
               children: [],
+              retrieveCount: 6,
             },
           ]);
         });
@@ -1049,9 +1052,10 @@ describe('commerceFacetSetReducer', () => {
             value: 'A',
             path: ['A'],
           });
-          const action = toggleSelectCommerceCategoryFacetValue({
+          const action = toggleSelectCategoryFacetValue({
             facetId,
             selection,
+            retrieveCount: 6,
           });
 
           const finalState = commerceFacetSetReducer(state, action);
@@ -1068,6 +1072,7 @@ describe('commerceFacetSetReducer', () => {
             const action = toggleSelectCategoryFacetValue({
               facetId,
               selection,
+              retrieveCount: 6,
             });
             const finalState = commerceFacetSetReducer(state, action);
             const currentValues = finalState[facetId].request.values;
@@ -1117,6 +1122,7 @@ describe('commerceFacetSetReducer', () => {
             const action = toggleSelectCategoryFacetValue({
               facetId,
               selection,
+              retrieveCount: 6,
             });
             finalState = commerceFacetSetReducer(state, action);
           });
@@ -1149,6 +1155,7 @@ describe('commerceFacetSetReducer', () => {
             const action = toggleSelectCategoryFacetValue({
               facetId,
               selection,
+              retrieveCount: 6,
             });
             const finalState = commerceFacetSetReducer(state, action);
 
@@ -1198,6 +1205,7 @@ describe('commerceFacetSetReducer', () => {
             const action = toggleSelectCategoryFacetValue({
               facetId,
               selection,
+              retrieveCount: 6,
             });
             const finalState = commerceFacetSetReducer(state, action);
 
@@ -1227,6 +1235,7 @@ describe('commerceFacetSetReducer', () => {
             const action = toggleSelectCategoryFacetValue({
               facetId,
               selection,
+              retrieveCount: 6,
             });
             finalState = commerceFacetSetReducer(state, action);
           });
@@ -1268,6 +1277,7 @@ describe('commerceFacetSetReducer', () => {
           const action = toggleSelectCategoryFacetValue({
             facetId,
             selection,
+            retrieveCount: 6,
           });
           expect(action.error).toBeDefined();
         });
@@ -1362,8 +1372,14 @@ describe('commerceFacetSetReducer', () => {
       it('sets #request.numberOfValues to 0', () => {
         expect(finalState[facetId]?.request.numberOfValues).toBe(0);
       });
-      it('sets #request.values to an empty array', () => {
-        expect(finalState[facetId]?.request.values.length).toBe(0);
+      it('sets #request.values[*].state to "idle" and #request.values[*].children to an empty array', () => {
+        expect(finalState[facetId]?.request.values[0].state).toEqual('idle');
+        expect(
+          (
+            finalState[facetId]?.request
+              .values[0] as CommerceCategoryFacetValueRequest
+          ).children
+        ).toEqual([]);
       });
 
       it('sets #request.preventAutoSelect to "true"', () => {
