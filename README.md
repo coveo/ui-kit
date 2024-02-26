@@ -58,7 +58,7 @@ The basic event structure for a generic client side event is as follows:
 }
 ```
 
-This means an event payload can be freely defined, with the exception of the reserved keyword 'meta', which is exclusively intended to contain event metadata populated by Relay. Prior to logging events with the Coveo platform, ensure that you create appropriate event schemas in the [schema repository](https://github.com/coveo/analytics_schema).
+This means an event payload can be freely defined, with the exception of the reserved keyword 'meta', which is exclusively intended to contain event metadata populated by Relay. Prior to logging events with the Coveo platform, ensure that you create appropriate event schemas in the [schema repository](https://github.com/coveo-platform/analytics_schema).
 
 If you want to log information from a Coveo owned backend service, do not use Relay. Instead, log them on the appropriate server side endpoint, see [this guide](https://coveord.atlassian.net/wiki/spaces/DATA/pages/3175383082/Server+side+event+logging)
 

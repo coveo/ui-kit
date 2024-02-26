@@ -6,7 +6,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: coveo/deployment-pipeline-actions/setup-cli@main
+    - uses: coveo-platform/deployment-pipeline-actions/setup-cli@main
     - name: Create and Deploy Packages
       env:
         COMMIT_HASH: ${{ inputs.COMMIT_HASH }}
