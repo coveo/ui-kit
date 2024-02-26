@@ -131,18 +131,6 @@ export type CoreCommerceFacet<
    */
   isValueExcluded(value: ValueResponse): boolean;
   /**
-   * Whether the facet has active values.
-   */
-  hasActiveValues: boolean;
-  /**
-   * Whether the facet can show more values.
-   */
-  canShowMoreValues: boolean;
-  /**
-   * Whether the facet can show less values.
-   */
-  canShowLessValues: boolean;
-  /**
    * The state of this commerce facet controller instance.
    */
   state: CoreCommerceFacetState<ValueResponse>;
@@ -153,15 +141,7 @@ export type CoreCommerceFacet<
  */
 export type CoreCommerceFacetState<
   ValueResponse extends AnyFacetValueResponse,
-> = Omit<
-  CoreFacetState,
-  | 'enabled'
-  | 'sortCriterion'
-  | 'values'
-  | 'hasActiveValues'
-  | 'canShowMoreValues'
-  | 'canShowLessValues'
-> & {
+> = Omit<CoreFacetState, 'enabled' | 'sortCriterion' | 'values'> & {
   /**
    * The type of facet.
    */
@@ -264,19 +244,9 @@ export function buildCoreCommerceFacet<
       return value.state === 'excluded';
     },
 
-    get hasActiveValues() {
-      return this.state.values.some((v) => v.state !== 'idle');
-    },
-
     deselectAll() {
       dispatch(deselectAllFacetValues(facetId));
       dispatch(props.options.fetchResultsActionCreator());
-    },
-
-    get canShowMoreValues() {
-      const response = getResponse();
-
-      return response?.moreValuesAvailable ?? false;
     },
 
     showMoreValues() {
@@ -289,17 +259,6 @@ export function buildCoreCommerceFacet<
       dispatch(updateFacetNumberOfValues({facetId, numberOfValues}));
       dispatch(updateFacetIsFieldExpanded({facetId, isFieldExpanded: true}));
       dispatch(props.options.fetchResultsActionCreator());
-    },
-
-    get canShowLessValues() {
-      const request = getRequest();
-      const initialNumberOfValues = request?.initialNumberOfValues;
-      const hasIdleValues = !!request?.values.find((v) => v.state === 'idle');
-
-      return (
-        (initialNumberOfValues ?? 0) < (request?.numberOfValues ?? 0) &&
-        hasIdleValues
-      );
     },
 
     showLessValues() {
@@ -318,8 +277,20 @@ export function buildCoreCommerceFacet<
 
     get state() {
       const response = getResponse();
+      const canShowMoreValues = response?.moreValuesAvailable ?? false;
+
+      const canShowLessValues = (() => {
+        const request = getRequest();
+        const initialNumberOfValues = request?.initialNumberOfValues;
+        const hasIdleValues = !!request?.values.find((v) => v.state === 'idle');
+        return (
+          (initialNumberOfValues ?? 0) < (request?.numberOfValues ?? 0) &&
+          hasIdleValues
+        );
+      })();
 
       const values = (response?.values ?? []) as ValueResponse[];
+      const hasActiveValues = values.some((v) => v.state !== 'idle');
 
       return {
         facetId,
@@ -328,6 +299,9 @@ export function buildCoreCommerceFacet<
         displayName: response?.displayName ?? '',
         values,
         isLoading: getIsLoading(),
+        canShowMoreValues,
+        canShowLessValues,
+        hasActiveValues,
       };
     },
   };
