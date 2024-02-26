@@ -2,9 +2,9 @@ import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/f
 import {executeSearch} from '../../../../../features/insight-search/insight-search-actions';
 import {InsightAppState} from '../../../../../state/insight-app-state';
 import {
-  MockInsightEngine,
+  MockedInsightEngine,
   buildMockInsightEngine,
-} from '../../../../../test/mock-engine';
+} from '../../../../../test/mock-engine-v2';
 import {buildMockInsightState} from '../../../../../test/mock-insight-state';
 import {buildMockNumericFacetSlice} from '../../../../../test/mock-numeric-facet-slice';
 import {buildMockNumericFacetValue} from '../../../../../test/mock-numeric-facet-value';
@@ -14,15 +14,18 @@ import {
   NumericFacetOptions,
 } from './headless-insight-numeric-facet';
 
+jest.mock('../../../../../features/insight-search/insight-search-actions');
+jest.mock('../../../../../features/facets/facet-set/facet-set-actions');
+
 describe('insight numeric facet', () => {
   const facetId = '1';
   let options: NumericFacetOptions;
   let state: InsightAppState;
-  let engine: MockInsightEngine;
+  let engine: MockedInsightEngine;
   let numericFacet: NumericFacet;
 
   function initNumericFacet() {
-    engine = buildMockInsightEngine({state});
+    engine = buildMockInsightEngine(state);
     numericFacet = buildNumericFacet(engine, {options});
   }
 
@@ -44,10 +47,7 @@ describe('insight numeric facet', () => {
       const value = buildMockNumericFacetValue();
       numericFacet.toggleSelect(value);
 
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-      expect(action).toBeTruthy();
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 
@@ -55,15 +55,11 @@ describe('insight numeric facet', () => {
     beforeEach(() => numericFacet.deselectAll());
 
     it('dispatches #deselectAllFacetValues with the facet id', () => {
-      expect(engine.actions).toContainEqual(deselectAllFacetValues(facetId));
+      expect(deselectAllFacetValues).toHaveBeenCalledWith(facetId);
     });
 
     it('dispatches a search', () => {
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-
-      expect(engine.actions).toContainEqual(action);
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 
@@ -71,10 +67,7 @@ describe('insight numeric facet', () => {
     it('dispatches a search', () => {
       numericFacet.sortBy('descending');
 
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-      expect(action).toBeTruthy();
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 });

@@ -3,36 +3,34 @@ import {GeneratedResponseFormat} from '../../../features/generated-answer/genera
 import {executeSearch} from '../../../features/insight-search/insight-search-actions';
 import {
   buildMockInsightEngine,
-  MockInsightEngine,
-} from '../../../test/mock-engine';
+  MockedInsightEngine,
+} from '../../../test/mock-engine-v2';
+import {buildMockInsightState} from '../../../test/mock-insight-state';
 import {
   buildGeneratedAnswer,
   GeneratedAnswer,
   GeneratedAnswerProps,
 } from './headless-insight-generated-answer';
 
+jest.mock('../../../features/generated-answer/generated-answer-actions');
+jest.mock('../../../features/insight-search/insight-search-actions');
+
 describe('insight generated answer', () => {
   let generatedAnswer: GeneratedAnswer;
-  let engine: MockInsightEngine;
+  let engine: MockedInsightEngine;
 
   function initGeneratedAnswer(props: GeneratedAnswerProps = {}) {
     generatedAnswer = buildGeneratedAnswer(engine, props);
   }
 
-  function findAction(actionType: string) {
-    return engine.actions.find((a) => a.type === actionType);
-  }
-
   beforeEach(() => {
-    engine = buildMockInsightEngine();
+    engine = buildMockInsightEngine(buildMockInsightState());
     initGeneratedAnswer();
   });
 
   it('#retry dispatches #executeSearch', () => {
     generatedAnswer.retry();
-    const action = engine.findAsyncAction(executeSearch.pending);
-
-    expect(action).toBeTruthy();
+    expect(executeSearch).toHaveBeenCalled();
   });
 
   describe('#rephrase', () => {
@@ -43,17 +41,12 @@ describe('insight generated answer', () => {
     it('dispatches the update action', () => {
       generatedAnswer.rephrase(responseFormat);
 
-      const action = findAction(updateResponseFormat.type);
-      expect(action).toBeDefined();
-      expect(action).toHaveProperty('payload', responseFormat);
+      expect(updateResponseFormat).toHaveBeenCalledWith(responseFormat);
     });
 
     it('dispatches #executeSearch', () => {
       generatedAnswer.rephrase(responseFormat);
-
-      const action = engine.findAsyncAction(executeSearch.pending);
-
-      expect(action).toBeTruthy();
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 });

@@ -60,7 +60,6 @@ describe('SearchFacetGenerator', () => {
     initSearchFacetGenerator();
 
     facetGenerator.state.facets[0].deselectAll();
-
     expect(executeSearch).toHaveBeenCalled();
   });
 
@@ -69,7 +68,6 @@ describe('SearchFacetGenerator', () => {
     initSearchFacetGenerator();
 
     facetGenerator.state.facets[0].deselectAll();
-
     expect(executeSearch).toHaveBeenCalled();
   });
 
@@ -77,7 +75,6 @@ describe('SearchFacetGenerator', () => {
     setFacetState([{facetId: 'date_facet_id', type: 'dateRange'}]);
 
     facetGenerator.state.facets[0].deselectAll();
-
     expect(executeSearch).toHaveBeenCalled();
   });
 });
