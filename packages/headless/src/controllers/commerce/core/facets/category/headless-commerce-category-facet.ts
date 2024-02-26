@@ -46,7 +46,7 @@ export type CommerceCategoryFacet = Omit<
   /**
    * The currently selected category facet value along with its ancestry tree.
    */
-  selectedValueWithAncestry: SelectedCategoryFacetValueWithAncestry | undefined;
+  selectedValueWithAncestry?: SelectedCategoryFacetValueWithAncestry;
 };
 
 /**
