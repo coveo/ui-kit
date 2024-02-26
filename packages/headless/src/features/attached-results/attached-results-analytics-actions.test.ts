@@ -137,21 +137,6 @@ describe('attached results analytics actions', () => {
 
     describe('logCaseAttach', () => {
       it('should call coveo.analytics.logCaseAttach properly', async () => {
-        const engine = buildMockInsightEngine({
-          state: buildMockInsightState({
-            search: buildMockSearchState({
-              results: [testResult],
-            }),
-            insightCaseContext: {
-              caseContext: {
-                Case_Subject: exampleSubject,
-                Case_Description: exampleDescription,
-              },
-              caseId: exampleCaseId,
-              caseNumber: exampleCaseNumber,
-            },
-          }),
-        });
         await engine.dispatch(logCaseAttach(testResult));
 
         expect(mockLogCaseAttach).toHaveBeenCalledTimes(1);
@@ -169,18 +154,6 @@ describe('attached results analytics actions', () => {
 
     describe('logCaseDetach', () => {
       it('should call coveo.analytics.logCaseDetach properly', async () => {
-        const engine = buildMockInsightEngine({
-          state: buildMockInsightState({
-            insightCaseContext: {
-              caseContext: {
-                Case_Subject: exampleSubject,
-                Case_Description: exampleDescription,
-              },
-              caseId: exampleCaseId,
-              caseNumber: exampleCaseNumber,
-            },
-          }),
-        });
         await engine.dispatch(logCaseDetach(testResult));
 
         expect(mockLogCaseDetach).toHaveBeenCalledTimes(1);

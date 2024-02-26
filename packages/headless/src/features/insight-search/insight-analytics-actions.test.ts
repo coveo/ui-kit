@@ -5,7 +5,6 @@ import {
 } from '../../test/mock-engine';
 import {buildMockInsightState} from '../../test/mock-insight-state';
 import {clearMicrotaskQueue} from '../../test/unit-test-utils';
-import {getCaseContextInitialState} from '../case-context/case-context-state';
 import {getConfigurationInitialState} from '../configuration/configuration-state';
 import {
   logExpandToFullUI,
@@ -107,17 +106,6 @@ describe('result actions insight analytics actions', () => {
 
     describe('logExpandToFullUI', () => {
       it('should call coveo.analytics.logExpandToFullUI properly', async () => {
-        const engine = buildMockInsightEngine({
-          state: buildMockInsightState({
-            insightCaseContext: {
-              ...getCaseContextInitialState(),
-              caseContext: {
-                Case_Subject: exampleSubject,
-                Case_Description: exampleDescription,
-              },
-            },
-          }),
-        });
         await engine.dispatch(
           logExpandToFullUI(
             exampleCaseId,

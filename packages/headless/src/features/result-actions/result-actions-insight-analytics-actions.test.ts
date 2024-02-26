@@ -140,21 +140,6 @@ describe('result actions insight analytics actions', () => {
 
     describe('logCopyToClipboard', () => {
       it('should call coveo.analytics.logCopyToClipboard properly', async () => {
-        const engine = buildMockInsightEngine({
-          state: buildMockInsightState({
-            search: buildMockSearchState({
-              results: [testResult],
-            }),
-            insightCaseContext: {
-              caseContext: {
-                Case_Subject: exampleSubject,
-                Case_Description: exampleDescription,
-              },
-              caseId: exampleCaseId,
-              caseNumber: exampleCaseNumber,
-            },
-          }),
-        });
         await engine.dispatch(logCopyToClipboard(testResult));
 
         expect(mockLogCopyToClipboard).toHaveBeenCalledTimes(1);
@@ -172,21 +157,6 @@ describe('result actions insight analytics actions', () => {
 
     describe('logCaseSendEmail', () => {
       it('should call coveo.analytics.logCaseSendEmail properly', async () => {
-        const engine = buildMockInsightEngine({
-          state: buildMockInsightState({
-            search: buildMockSearchState({
-              results: [testResult],
-            }),
-            insightCaseContext: {
-              caseContext: {
-                Case_Subject: exampleSubject,
-                Case_Description: exampleDescription,
-              },
-              caseId: exampleCaseId,
-              caseNumber: exampleCaseNumber,
-            },
-          }),
-        });
         await engine.dispatch(logCaseSendEmail(testResult));
 
         expect(mockLogCaseSendEmail).toHaveBeenCalledTimes(1);
@@ -204,21 +174,6 @@ describe('result actions insight analytics actions', () => {
 
     describe('logFeedItemTextPost', () => {
       it('should call coveo.analytics.logFeedItemTextPost properly', async () => {
-        const engine = buildMockInsightEngine({
-          state: buildMockInsightState({
-            search: buildMockSearchState({
-              results: [testResult],
-            }),
-            insightCaseContext: {
-              caseContext: {
-                Case_Subject: exampleSubject,
-                Case_Description: exampleDescription,
-              },
-              caseId: exampleCaseId,
-              caseNumber: exampleCaseNumber,
-            },
-          }),
-        });
         await engine.dispatch(logFeedItemTextPost(testResult));
 
         expect(mockLogFeedItemTextPost).toHaveBeenCalledTimes(1);

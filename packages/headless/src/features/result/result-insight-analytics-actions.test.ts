@@ -132,22 +132,6 @@ describe('result actions insight analytics actions', () => {
 
     describe('logDocumentOpen', () => {
       it('should call coveo.analytics.logDocumentOpen properly', async () => {
-        const engine = buildMockInsightEngine({
-          state: buildMockInsightState({
-            search: buildMockSearchState({
-              results: [testResult],
-            }),
-            insightCaseContext: {
-              caseContext: {
-                Case_Subject: exampleSubject,
-                Case_Description: exampleDescription,
-              },
-              caseId: exampleCaseId,
-              caseNumber: exampleCaseNumber,
-            },
-          }),
-        });
-
         await engine.dispatch(logDocumentOpen(testResult));
 
         expect(mockLogDocumentOpen).toHaveBeenCalledTimes(1);
