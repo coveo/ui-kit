@@ -20,7 +20,10 @@ import {
 import {buildSearchResponse} from '../../../../test/mock-commerce-search';
 import {buildFetchProductListingV2Response} from '../../../../test/mock-product-listing-v2';
 import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
-import {toggleSelectCategoryFacetValue} from '../../../facets/category-facet-set/category-facet-set-actions';
+import {
+  toggleSelectCategoryFacetValue,
+  updateCategoryFacetNumberOfValues,
+} from '../../../facets/category-facet-set/category-facet-set-actions';
 import {
   FacetValueState,
   facetValueStates,
@@ -47,6 +50,7 @@ import {convertToNumericRangeRequests} from '../../../facets/range-facets/numeri
 import {setContext, setUser, setView} from '../../context/context-actions';
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
 import {executeSearch} from '../../search/search-actions';
+import * as CommerceFacetReducers from './facet-set-reducer-helpers';
 import {
   commerceFacetSetReducer,
   convertCategoryFacetValueToRequest,
@@ -1281,6 +1285,69 @@ describe('commerceFacetSetReducer', () => {
           });
           expect(action.error).toBeDefined();
         });
+      });
+    });
+    describe('#updateCategoryFacetNumberOfValues', () => {
+      it('calls #handleFacetUpdateNumberOfValues if there are no nested children', () => {
+        const spy = jest.spyOn(
+          CommerceFacetReducers,
+          'handleFacetUpdateNumberOfValues'
+        );
+        const request = buildMockCommerceFacetRequest({
+          facetId,
+          type: 'hierarchical',
+        });
+        state[facetId] = buildMockCommerceFacetSlice({request});
+
+        commerceFacetSetReducer(
+          state,
+          updateCategoryFacetNumberOfValues({
+            facetId: facetId,
+            numberOfValues: 20,
+          })
+        );
+
+        expect(spy).toHaveBeenCalledTimes(1);
+      });
+
+      // TODO: it('calls #handleFacetUpdateNestedNumberOfValues if there are nested children', () => {});
+
+      it('sets correct retrieve count to the appropriate number', () => {
+        const request = buildMockCommerceFacetRequest({
+          type: 'hierarchical',
+          values: [
+            convertCategoryFacetValueToRequest(
+              buildMockCommerceCategoryFacetValue({
+                value: 'test',
+                state: 'selected',
+              })
+            ),
+          ],
+        });
+
+        state[facetId] = buildMockCommerceFacetSlice({request});
+        const finalState = commerceFacetSetReducer(
+          state,
+          updateCategoryFacetNumberOfValues({facetId, numberOfValues: 10})
+        );
+        expect(
+          (
+            finalState[facetId]?.request
+              .values[0] as CommerceCategoryFacetValueRequest
+          ).retrieveCount
+        ).toBe(10);
+      });
+
+      it('should not throw when facetId does not exist', () => {
+        expect(() =>
+          commerceFacetSetReducer(
+            state,
+            updateCategoryFacetNumberOfValues({
+              facetId: 'notRegistred',
+              numberOfValues: 20,
+            })
+          )
+        ).not.toThrow();
       });
     });
   });

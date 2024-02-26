@@ -37,6 +37,10 @@ import {setContext, setUser, setView} from '../../context/context-actions';
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
 import {executeSearch} from '../../search/search-actions';
 import {
+  handleCategoryFacetNestedNumberOfValuesUpdate,
+  handleFacetUpdateNumberOfValues,
+} from './facet-set-reducer-helpers';
+import {
   CommerceFacetSetState,
   getCommerceFacetSetInitialState,
 } from './facet-set-state';
@@ -475,34 +479,4 @@ function resetAllFacetValues(state: CommerceFacetSetState) {
   Object.values(state).forEach((facet) => {
     facet.request.values.forEach((value) => (value.state = 'idle'));
   });
-}
-
-export function handleFacetUpdateNumberOfValues<T extends CommerceFacetRequest>(
-  facetRequest: T | undefined,
-  numberOfValues: number
-) {
-  if (!facetRequest) {
-    return;
-  }
-
-  facetRequest.numberOfValues = numberOfValues;
-}
-
-function handleCategoryFacetNestedNumberOfValuesUpdate(
-  state: CommerceFacetSetState,
-  payload: {facetId: string; numberOfValues: number}
-) {
-  const {facetId, numberOfValues} = payload;
-  let selectedValue = state[facetId]?.request
-    .values[0] as CommerceCategoryFacetValueRequest;
-  if (!selectedValue) {
-    return;
-  }
-
-  console.log(selectedValue.value);
-  while (selectedValue.children.length && selectedValue?.state !== 'selected') {
-    selectedValue = selectedValue.children[0];
-    console.log(selectedValue.value);
-  }
-  selectedValue.retrieveCount = numberOfValues;
 }
