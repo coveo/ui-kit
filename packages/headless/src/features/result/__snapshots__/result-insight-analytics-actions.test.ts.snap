@@ -2,7 +2,7 @@
 
 exports[`result actions insight analytics actions when analyticsMode is \`next\` logDocumentOpen should call relay.emit properly 1`] = `
 [
-  "ItemAction",
+  "InsightPanel.ItemAction",
   {
     "action": "open",
     "context": {

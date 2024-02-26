@@ -22,7 +22,7 @@ export const logDocumentOpen = (result: Result) =>
         metadata
       );
     },
-    analyticsType: 'ItemAction',
+    analyticsType: 'InsightPanel.ItemAction',
     analyticsPayloadBuilder: (state): InsightPanel.ItemAction => {
       const metadata = getCaseContextAnalyticsMetadata(
         state.insightCaseContext
