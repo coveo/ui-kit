@@ -35,7 +35,7 @@ export type CommerceCategoryFacet = Omit<
     canShowLessValues: boolean;
     canShowMoreValues: boolean;
     hasActiveValues: boolean;
-    selectedValueAncestry: CommerceCategoryFacetValue[];
+    selectedValueAncestry?: CommerceCategoryFacetValue[];
   };
 };
 
