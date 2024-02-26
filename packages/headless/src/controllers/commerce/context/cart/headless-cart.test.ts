@@ -18,7 +18,9 @@ import {
   totalQuantitySelector,
 } from './headless-cart-selectors';
 
+jest.mock('@coveo/relay');
 jest.mock('../../../../features/commerce/context/cart/cart-actions');
+jest.mock('../../../../features/commerce/context/cart/cart-analytics-actions');
 jest.mock('./headless-cart-selectors');
 
 describe('headless commerce cart', () => {
