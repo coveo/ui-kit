@@ -92,7 +92,7 @@ const resultParams = {
 
 const testResult = buildMockResult(resultParams);
 
-describe('result actions insight analytics actions', () => {
+describe('result insight analytics actions', () => {
   let engine: MockInsightEngine;
   const searchState = buildMockSearchState({
     results: [testResult],
