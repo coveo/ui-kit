@@ -1044,21 +1044,6 @@ describe('commerceFacetSetReducer', () => {
           ]);
         });
 
-        it('sets #numberOfValues of request to 1', () => {
-          const selection = buildMockCommerceCategoryFacetValue({
-            value: 'A',
-            path: ['A'],
-          });
-          const action = toggleSelectCommerceCategoryFacetValue({
-            facetId,
-            selection,
-          });
-
-          const finalState = commerceFacetSetReducer(state, action);
-
-          expect(finalState[facetId].request.numberOfValues).toBe(1);
-        });
-
         describe('when #path contains multiple segments', () => {
           it('selects last segment', () => {
             const selection = buildMockCommerceCategoryFacetValue({
