@@ -1,7 +1,7 @@
 import {
   DateRangeRequest,
   NumericRangeRequest,
-} from '../../../../../product-listing.index';
+} from '../../../../../controllers/commerce/core/facets/headless-core-commerce-facet';
 import {BaseFacetValueRequest} from '../../../../facets/facet-api/request';
 import {
   FacetRequest,
