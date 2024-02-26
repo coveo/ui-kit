@@ -16,9 +16,7 @@
         </div>
       </template>
       <template lwc:if={shouldDisplayPrintableUriLink}>
-        <a class="slds-truncate" href={hrefValue} aria-label={ariaLabelValue} target={target} onclick={handleClick} tabindex="0" role="link" data-test="link">
-          <c-quantic-result-text result={result} field="printableUri"></c-quantic-result-text>
-        </a>
+        <c-quantic-result-link engine-id={engineId} result={result} target={target} displayed-field="printableUri"></c-quantic-result-link>
       </template>
     </template>
   </div>
