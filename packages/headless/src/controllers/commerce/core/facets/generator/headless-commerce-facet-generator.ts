@@ -1,4 +1,8 @@
-import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
+import {createSelector} from '@reduxjs/toolkit';
+import {
+  CommerceEngine,
+  CommerceEngineState,
+} from '../../../../../app/commerce-engine/commerce-engine';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {AnyFacetValueResponse} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
 import {facetOrderReducer as facetOrder} from '../../../../../features/facets/facet-order/facet-order-slice';
@@ -19,6 +23,7 @@ import {
 } from '../headless-core-commerce-facet';
 import {CommerceNumericFacet} from '../numeric/headless-commerce-numeric-facet';
 import {CommerceRegularFacet} from '../regular/headless-commerce-regular-facet';
+import {CommerceSearchableFacetOptions} from '../searchable/headless-commerce-searchable-facet';
 
 /**
  * The `CommerceFacetGenerator` headless controller creates commerce facet controllers from the Commerce API search or
@@ -45,19 +50,23 @@ export interface CommerceFacetGeneratorState {
   facets: CoreCommerceFacet<AnyFacetValueRequest, AnyFacetValueResponse>[];
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type CommerceFacetBuilder<Facet extends CoreCommerceFacet<any, any>> = (
-  engine: CommerceEngine,
-  options: CommerceFacetOptions
-) => Facet;
+type CommerceFacetBuilder<
+  Facet extends CoreCommerceFacet<AnyFacetValueRequest, AnyFacetValueResponse>,
+> = (engine: CommerceEngine, options: CommerceFacetOptions) => Facet;
 
+type CommerceSearchableFacetBuilder<
+  Facet extends CoreCommerceFacet<AnyFacetValueRequest, AnyFacetValueResponse>,
+> = (
+  engine: CommerceEngine,
+  options: CommerceFacetOptions & CommerceSearchableFacetOptions
+) => Facet;
 /**
  * @internal
  *
  * The `CommerceFacetGenerator` options used internally.
  */
 export interface CommerceFacetGeneratorOptions {
-  buildRegularFacet: CommerceFacetBuilder<CommerceRegularFacet>;
+  buildRegularFacet: CommerceSearchableFacetBuilder<CommerceRegularFacet>;
   buildNumericFacet: CommerceFacetBuilder<CommerceNumericFacet>;
   buildDateFacet: CommerceFacetBuilder<CommerceDateFacet>;
   // TODO: buildCategoryFacet: CommerceFacetBuilder<CommerceCategoryFacet>;
@@ -82,6 +91,11 @@ export function buildCommerceFacetGenerator(
 
   const controller = buildController(engine);
 
+  const commerceFacetSelector = createSelector(
+    (state: CommerceEngineState) => state.facetOrder,
+    (facetOrder) => ({facets: facetOrder.map(createFacet) ?? []})
+  );
+
   const createFacet = (facetId: string) => {
     const {type} = engine.state.commerceFacetSet[facetId].request;
 
@@ -101,9 +115,7 @@ export function buildCommerceFacetGenerator(
     ...controller,
 
     get state() {
-      return {
-        facets: engine.state.facetOrder.map(createFacet) ?? [],
-      };
+      return commerceFacetSelector(engine.state);
     },
   };
 }

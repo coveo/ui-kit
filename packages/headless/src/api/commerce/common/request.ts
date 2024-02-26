@@ -1,15 +1,15 @@
 import {PlatformClientCallOptions} from '../../platform-client';
 import {BaseParam} from '../../platform-service-params';
 import {
+  TrackingIdParam,
+  LanguageParam,
+  CountryParam,
+  CurrencyParam,
   ClientIdParam,
   ContextParam,
-  CurrencyParam,
-  LanguageParam,
   FacetsParam,
   PageParam,
   SortParam,
-  TrackingIdParam,
-  CountryParam,
 } from '../commerce-api-params';
 
 export type CommerceAPIRequest = BaseParam &
@@ -56,7 +56,7 @@ const prepareRequestParams = (req: CommerceAPIRequest) => {
 };
 
 export const baseRequest = (
-  req: BaseParam & TrackingIdParam,
+  req: BaseParam,
   path: string
 ): Pick<
   PlatformClientCallOptions,

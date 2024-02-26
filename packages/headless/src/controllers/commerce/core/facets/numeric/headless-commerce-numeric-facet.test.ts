@@ -10,14 +10,21 @@ import {buildMockCommerceNumericFacetResponse} from '../../../../../test/mock-co
 import {buildMockCommerceFacetSlice} from '../../../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceNumericFacetValue} from '../../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
-import {buildMockCommerceEngine} from '../../../../../test/mock-engine';
-import {MockCommerceEngine} from '../../../../../test/mock-engine';
+import {
+  buildMockCommerceEngine,
+  MockedCommerceEngine,
+} from '../../../../../test/mock-engine-v2';
 import {commonOptions} from '../../../product-listing/facets/headless-product-listing-facet-options';
+import {NumericRangeRequest} from '../headless-core-commerce-facet';
 import {
   CommerceNumericFacet,
   CommerceNumericFacetOptions,
   buildCommerceNumericFacet,
 } from './headless-commerce-numeric-facet';
+
+jest.mock(
+  '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions'
+);
 
 describe('CommerceNumericFacet', () => {
   const facetId: string = 'numeric_facet_id';
@@ -26,15 +33,17 @@ describe('CommerceNumericFacet', () => {
   const end = 100;
   let options: CommerceNumericFacetOptions;
   let state: CommerceAppState;
-  let engine: MockCommerceEngine;
+  let engine: MockedCommerceEngine;
   let facet: CommerceNumericFacet;
 
   function initFacet() {
-    engine = buildMockCommerceEngine({state});
+    engine = buildMockCommerceEngine(state);
     facet = buildCommerceNumericFacet(engine, options);
   }
 
-  function setFacetRequest(config: Partial<CommerceFacetRequest> = {}) {
+  function setFacetRequest(
+    config: Partial<CommerceFacetRequest<NumericRangeRequest>> = {}
+  ) {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, type, ...config}),
     });
@@ -67,10 +76,10 @@ describe('CommerceNumericFacet', () => {
     it('dispatches #toggleSelectNumericFacetValue', () => {
       const facetValue = buildMockCommerceNumericFacetValue({start, end});
       facet.toggleSelect(facetValue);
-
-      expect(engine.actions).toContainEqual(
-        toggleSelectNumericFacetValue({facetId, selection: facetValue})
-      );
+      expect(toggleSelectNumericFacetValue).toHaveBeenCalledWith({
+        facetId,
+        selection: facetValue,
+      });
     });
   });
 
@@ -78,10 +87,10 @@ describe('CommerceNumericFacet', () => {
     it('dispatches #toggleExcludeNumericFacetValue', () => {
       const facetValue = buildMockCommerceNumericFacetValue({start, end});
       facet.toggleExclude(facetValue);
-
-      expect(engine.actions).toContainEqual(
-        toggleExcludeNumericFacetValue({facetId, selection: facetValue})
-      );
+      expect(toggleExcludeNumericFacetValue).toHaveBeenCalledWith({
+        facetId,
+        selection: facetValue,
+      });
     });
   });
 });
