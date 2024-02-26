@@ -242,7 +242,7 @@ export type AnalyticsActionOptions<
   LegacyProvider,
   Client,
   PayloadType,
-> = Exclude<
+> = Omit<
   LegacyAnalyticsOptions<LegacyStateNeeded, Client, LegacyProvider>,
   '__legacy__getBuilder'
 > &

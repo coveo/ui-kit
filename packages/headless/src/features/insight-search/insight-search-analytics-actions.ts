@@ -41,19 +41,17 @@ export const logContextChanged = (
     client.logContextChanged(meta);
   });
 
-export const logExpandToFullUI = (
-  caseId: string,
-  caseNumber: string,
-  fullSearchComponentName: string,
-  triggeredBy: string
-): InsightAction =>
-  makeInsightAnalyticsAction('analytics/expandToFullUI', (client, state) => {
-    const meta = {
-      caseId,
-      caseNumber,
-      fullSearchComponentName,
-      triggeredBy,
-      caseContext: state.insightCaseContext?.caseContext || {},
-    };
-    client.logExpandToFullUI(meta);
+export const logInsightInterfaceLoad = (): InsightAction =>
+  makeInsightAnalyticsAction('analytics/interface/load', (client, state) =>
+    client.logInterfaceLoad(
+      getCaseContextAnalyticsMetadata(state.insightCaseContext)
+    )
+  );
+
+export const logInsightInterfaceChange = (): InsightAction =>
+  makeInsightAnalyticsAction('analytics/interface/change', (client, state) => {
+    client.logInterfaceChange({
+      ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
+      interfaceChangeTo: state.configuration.analytics.originLevel2,
+    });
   });

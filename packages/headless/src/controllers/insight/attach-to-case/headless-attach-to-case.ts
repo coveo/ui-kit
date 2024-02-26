@@ -131,7 +131,7 @@ export function buildAttachToCase(
           result: buildAttachedResultFromSearchResult(result, caseId),
         })
       );
-      dispatch(logCaseDetach(result.raw.urihash));
+      dispatch(logCaseDetach(result));
     },
   };
 }

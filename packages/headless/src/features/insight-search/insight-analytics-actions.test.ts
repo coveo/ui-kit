@@ -4,23 +4,25 @@ import {
   buildMockInsightEngine,
 } from '../../test/mock-engine';
 import {buildMockInsightState} from '../../test/mock-insight-state';
-import {buildMockRaw} from '../../test/mock-raw';
-import {buildMockResult} from '../../test/mock-result';
-import {buildMockSearchResponse} from '../../test/mock-search-response';
-import {buildMockSearchState} from '../../test/mock-search-state';
 import {clearMicrotaskQueue} from '../../test/unit-test-utils';
+import {getCaseContextInitialState} from '../case-context/case-context-state';
 import {getConfigurationInitialState} from '../configuration/configuration-state';
-import {logDocumentOpen} from './result-insight-analytics-actions';
+import {
+  logExpandToFullUI,
+  logInsightCreateArticle,
+} from './insight-analytics-actions';
 
-const mockLogDocumentOpen = jest.fn();
+const mockLogCreateArticle = jest.fn();
+const mockLogExpandtoFullUI = jest.fn();
 const emit = jest.fn();
 
 jest.mock('@coveo/relay');
 
 jest.mock('coveo.analytics', () => {
   const mockCoveoInsightClient = jest.fn(() => ({
-    disable: () => {},
-    logDocumentOpen: mockLogDocumentOpen,
+    disable: jest.fn(),
+    logExpandToFullUI: mockLogExpandtoFullUI,
+    logCreateArticle: mockLogCreateArticle,
   }));
 
   return {
@@ -43,63 +45,12 @@ const exampleSubject = 'example subject';
 const exampleDescription = 'example description';
 const exampleCaseId = '1234';
 const exampleCaseNumber = '5678';
-
-const expectedMetadata = {
-  caseContext: {
-    Case_Subject: exampleSubject,
-    Case_Description: exampleDescription,
-  },
-  caseId: exampleCaseId,
-  caseNumber: exampleCaseNumber,
+const exampleCreateArticleMetadata = {
+  articleType: 'Knowledge__kav',
 };
-
-const expectedDocumentInfo = {
-  queryPipeline: '',
-  documentUri: 'example documentUri',
-  documentUriHash: 'example documentUriHash',
-  collectionName: 'example collectionName',
-  sourceName: 'example sourceName',
-  documentPosition: 1,
-  documentTitle: 'example documentTitle',
-  documentUrl: 'example documentUrl',
-  rankingModifier: 'example rankingModifier',
-  documentAuthor: 'example author',
-};
-
-const expectedDocumentIdentifier = {
-  contentIDKey: 'permanentid',
-  contentIDValue: 'example contentIDValue',
-};
-
-const resultParams = {
-  title: 'example documentTitle',
-  uri: 'example documentUri',
-  printableUri: 'printable-uri',
-  clickUri: 'example documentUrl',
-  uniqueId: 'unique-id',
-  excerpt: 'excerpt',
-  firstSentences: 'first-sentences',
-  flags: 'flags',
-  rankingModifier: 'example rankingModifier',
-  raw: buildMockRaw({
-    author: 'example author',
-    urihash: 'example documentUriHash',
-    source: 'example sourceName',
-    collection: 'example collectionName',
-    permanentid: 'example contentIDValue',
-  }),
-};
-
-const testResult = buildMockResult(resultParams);
 
 describe('result actions insight analytics actions', () => {
   let engine: MockInsightEngine;
-  const searchState = buildMockSearchState({
-    results: [testResult],
-    response: buildMockSearchResponse({
-      searchUid: 'example searchUid',
-    }),
-  });
   const caseContextState = {
     caseContext: {
       Case_Subject: exampleSubject,
@@ -117,7 +68,6 @@ describe('result actions insight analytics actions', () => {
     beforeEach(() => {
       engine = buildMockInsightEngine({
         state: buildMockInsightState({
-          search: searchState,
           configuration: {
             ...getConfigurationInitialState(),
             analytics: {
@@ -130,35 +80,67 @@ describe('result actions insight analytics actions', () => {
       });
     });
 
-    describe('logDocumentOpen', () => {
-      it('should call coveo.analytics.logDocumentOpen properly', async () => {
+    describe('logCreateArticle', () => {
+      it('should call coveo.analytics.logCreateArticle properly', async () => {
+        await engine.dispatch(
+          logInsightCreateArticle(exampleCreateArticleMetadata)
+        );
+
+        const expectedPayload = {
+          caseContext: {
+            Case_Subject: exampleSubject,
+            Case_Description: exampleDescription,
+          },
+          caseId: exampleCaseId,
+          caseNumber: exampleCaseNumber,
+        };
+
+        expect(mockLogCreateArticle).toHaveBeenCalledTimes(1);
+        expect(mockLogCreateArticle.mock.calls[0][0]).toStrictEqual(
+          exampleCreateArticleMetadata
+        );
+        expect(mockLogCreateArticle.mock.calls[0][1]).toStrictEqual(
+          expectedPayload
+        );
+      });
+    });
+
+    describe('logExpandToFullUI', () => {
+      it('should call coveo.analytics.logExpandToFullUI properly', async () => {
         const engine = buildMockInsightEngine({
           state: buildMockInsightState({
-            search: buildMockSearchState({
-              results: [testResult],
-            }),
             insightCaseContext: {
+              ...getCaseContextInitialState(),
               caseContext: {
                 Case_Subject: exampleSubject,
                 Case_Description: exampleDescription,
               },
-              caseId: exampleCaseId,
-              caseNumber: exampleCaseNumber,
             },
           }),
         });
-
-        await engine.dispatch(logDocumentOpen(testResult));
-
-        expect(mockLogDocumentOpen).toHaveBeenCalledTimes(1);
-        expect(mockLogDocumentOpen.mock.calls[0][0]).toStrictEqual(
-          expectedDocumentInfo
+        await engine.dispatch(
+          logExpandToFullUI(
+            exampleCaseId,
+            exampleCaseNumber,
+            'c__FullSearch',
+            'openFullSearchButton'
+          )
         );
-        expect(mockLogDocumentOpen.mock.calls[0][1]).toStrictEqual(
-          expectedDocumentIdentifier
-        );
-        expect(mockLogDocumentOpen.mock.calls[0][2]).toStrictEqual(
-          expectedMetadata
+
+        const expectedPayload = {
+          caseContext: {
+            Case_Subject: exampleSubject,
+            Case_Description: exampleDescription,
+          },
+          caseId: exampleCaseId,
+          caseNumber: exampleCaseNumber,
+          fullSearchComponentName: 'c__FullSearch',
+          triggeredBy: 'openFullSearchButton',
+        };
+
+        expect(mockLogExpandtoFullUI).toHaveBeenCalledTimes(1);
+        expect(mockLogExpandtoFullUI.mock.calls[0][0]).toStrictEqual(
+          expectedPayload
         );
       });
     });
@@ -168,7 +150,6 @@ describe('result actions insight analytics actions', () => {
     beforeEach(() => {
       engine = buildMockInsightEngine({
         state: buildMockInsightState({
-          search: searchState,
           configuration: {
             ...getConfigurationInitialState(),
             analytics: {
@@ -181,9 +162,21 @@ describe('result actions insight analytics actions', () => {
       });
     });
 
-    describe('logDocumentOpen', () => {
+    describe('logCreateArticle', () => {
       it('should call relay.emit properly', async () => {
-        engine.dispatch(logDocumentOpen(testResult));
+        engine.dispatch(logInsightCreateArticle(exampleCreateArticleMetadata));
+        await clearMicrotaskQueue();
+
+        expect(emit).toHaveBeenCalledTimes(1);
+        expect(emit.mock.calls[0]).toMatchSnapshot();
+      });
+    });
+
+    describe('logExpandToFullUI', () => {
+      it('should call relay.emit properly', async () => {
+        engine.dispatch(
+          logExpandToFullUI(exampleCaseId, exampleCaseNumber, '', '')
+        );
         await clearMicrotaskQueue();
 
         expect(emit).toHaveBeenCalledTimes(1);

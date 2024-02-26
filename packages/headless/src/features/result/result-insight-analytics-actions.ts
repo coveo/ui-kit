@@ -1,3 +1,4 @@
+import {InsightPanel} from '@coveo/relay-event-types';
 import {Result} from '../../api/search/search/result';
 import {
   partialDocumentInformation,
@@ -8,9 +9,9 @@ import {
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
 
 export const logDocumentOpen = (result: Result) =>
-  makeInsightAnalyticsAction(
-    'analytics/insight/result/open',
-    (client, state) => {
+  makeInsightAnalyticsAction({
+    prefix: 'analytics/insight/result/open',
+    __legacy__getBuilder: (client, state) => {
       validateResultPayload(result);
       const metadata = getCaseContextAnalyticsMetadata(
         state.insightCaseContext
@@ -20,5 +21,29 @@ export const logDocumentOpen = (result: Result) =>
         documentIdentifier(result),
         metadata
       );
-    }
-  );
+    },
+    analyticsType: 'ItemAction',
+    analyticsPayloadBuilder: (state): InsightPanel.ItemAction => {
+      const metadata = getCaseContextAnalyticsMetadata(
+        state.insightCaseContext
+      );
+      const identifier = documentIdentifier(result);
+      const information = partialDocumentInformation(result, state);
+      return {
+        itemMetadata: {
+          uniqueFieldName: identifier.contentIDKey,
+          uniqueFieldValue: identifier.contentIDValue,
+          title: information.documentTitle,
+          author: information.documentAuthor,
+          url: information.documentUri,
+        },
+        position: information.documentPosition,
+        searchUid: state.search?.response.searchUid || '',
+        action: 'open',
+        context: {
+          targetId: metadata.caseId || '',
+          targetType: 'Case',
+        },
+      };
+    },
+  });

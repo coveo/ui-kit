@@ -1,8 +1,15 @@
-import {buildMockInsightEngine} from '../../test/mock-engine';
+import {createRelay} from '@coveo/relay';
+import {
+  MockInsightEngine,
+  buildMockInsightEngine,
+} from '../../test/mock-engine';
 import {buildMockInsightState} from '../../test/mock-insight-state';
 import {buildMockRaw} from '../../test/mock-raw';
 import {buildMockResult} from '../../test/mock-result';
+import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {buildMockSearchState} from '../../test/mock-search-state';
+import {clearMicrotaskQueue} from '../../test/unit-test-utils';
+import {getConfigurationInitialState} from '../configuration/configuration-state';
 import {
   logCaseSendEmail,
   logCopyToClipboard,
@@ -12,6 +19,9 @@ import {
 const mockLogCopyToClipboard = jest.fn();
 const mockLogCaseSendEmail = jest.fn();
 const mockLogFeedItemTextPost = jest.fn();
+const emit = jest.fn();
+
+jest.mock('@coveo/relay');
 
 jest.mock('coveo.analytics', () => {
   const mockCoveoInsightClient = jest.fn(() => ({
@@ -25,6 +35,16 @@ jest.mock('coveo.analytics', () => {
     CoveoInsightClient: mockCoveoInsightClient,
     history: {HistoryStore: jest.fn()},
   };
+});
+
+jest.mocked(createRelay).mockReturnValue({
+  emit,
+  getMeta: jest.fn(),
+  on: jest.fn(),
+  off: jest.fn(),
+  updateConfig: jest.fn(),
+  clearStorage: jest.fn(),
+  version: 'foo',
 });
 
 const exampleSubject = 'example subject';
@@ -51,7 +71,7 @@ const expectedDocumentInfo = {
   documentTitle: 'example documentTitle',
   documentUrl: 'example documentUrl',
   rankingModifier: 'example rankingModifier',
-  documentAuthor: 'unknown',
+  documentAuthor: 'example author',
 };
 
 const expectedDocumentIdentifier = {
@@ -70,6 +90,7 @@ const resultParams = {
   flags: 'flags',
   rankingModifier: 'example rankingModifier',
   raw: buildMockRaw({
+    author: 'example author',
     urihash: 'example documentUriHash',
     source: 'example sourceName',
     collection: 'example collectionName',
@@ -79,98 +100,186 @@ const resultParams = {
 
 const testResult = buildMockResult(resultParams);
 
-describe('logCopyToClipboard', () => {
-  it('should log #logCopyToClipboard with the right payload', async () => {
-    const engine = buildMockInsightEngine({
-      state: buildMockInsightState({
-        search: buildMockSearchState({
-          results: [testResult],
-        }),
-        insightCaseContext: {
-          caseContext: {
-            Case_Subject: exampleSubject,
-            Case_Description: exampleDescription,
-          },
-          caseId: exampleCaseId,
-          caseNumber: exampleCaseNumber,
-        },
-      }),
-    });
-    await engine.dispatch(logCopyToClipboard(testResult));
-
-    expect(mockLogCopyToClipboard).toBeCalledTimes(1);
-    expect(mockLogCopyToClipboard.mock.calls[0][0]).toStrictEqual(
-      expectedDocumentInfo
-    );
-    expect(mockLogCopyToClipboard.mock.calls[0][1]).toStrictEqual(
-      expectedDocumentIdentifier
-    );
-    expect(mockLogCopyToClipboard.mock.calls[0][2]).toStrictEqual(
-      expectedMetadata
-    );
+describe('result actions insight analytics actions', () => {
+  let engine: MockInsightEngine;
+  const searchState = buildMockSearchState({
+    results: [testResult],
+    response: buildMockSearchResponse({
+      searchUid: 'example searchUid',
+    }),
   });
-});
+  const caseContextState = {
+    caseContext: {
+      Case_Subject: exampleSubject,
+      Case_Description: exampleDescription,
+    },
+    caseId: exampleCaseId,
+    caseNumber: exampleCaseNumber,
+  };
 
-describe('logCaseSendEmail', () => {
-  it('should log #logCaseSendEmail with the right payload', async () => {
-    const engine = buildMockInsightEngine({
-      state: buildMockInsightState({
-        search: buildMockSearchState({
-          results: [testResult],
-        }),
-        insightCaseContext: {
-          caseContext: {
-            Case_Subject: exampleSubject,
-            Case_Description: exampleDescription,
-          },
-          caseId: exampleCaseId,
-          caseNumber: exampleCaseNumber,
-        },
-      }),
-    });
-    await engine.dispatch(logCaseSendEmail(testResult));
-
-    expect(mockLogCaseSendEmail).toBeCalledTimes(1);
-    expect(mockLogCaseSendEmail.mock.calls[0][0]).toStrictEqual(
-      expectedDocumentInfo
-    );
-    expect(mockLogCaseSendEmail.mock.calls[0][1]).toStrictEqual(
-      expectedDocumentIdentifier
-    );
-    expect(mockLogCaseSendEmail.mock.calls[0][2]).toStrictEqual(
-      expectedMetadata
-    );
+  afterEach(() => {
+    jest.clearAllMocks();
   });
-});
 
-describe('logFeedItemTextPost', () => {
-  it('should log #logFeedItemTextPost with the right payload', async () => {
-    const engine = buildMockInsightEngine({
-      state: buildMockInsightState({
-        search: buildMockSearchState({
-          results: [testResult],
-        }),
-        insightCaseContext: {
-          caseContext: {
-            Case_Subject: exampleSubject,
-            Case_Description: exampleDescription,
+  describe('when analyticsMode is `legacy`', () => {
+    beforeEach(() => {
+      engine = buildMockInsightEngine({
+        state: buildMockInsightState({
+          search: searchState,
+          configuration: {
+            ...getConfigurationInitialState(),
+            analytics: {
+              ...getConfigurationInitialState().analytics,
+              analyticsMode: 'legacy',
+            },
           },
-          caseId: exampleCaseId,
-          caseNumber: exampleCaseNumber,
-        },
-      }),
+          insightCaseContext: caseContextState,
+        }),
+      });
     });
-    await engine.dispatch(logFeedItemTextPost(testResult));
 
-    expect(mockLogFeedItemTextPost).toBeCalledTimes(1);
-    expect(mockLogFeedItemTextPost.mock.calls[0][0]).toStrictEqual(
-      expectedDocumentInfo
-    );
-    expect(mockLogFeedItemTextPost.mock.calls[0][1]).toStrictEqual(
-      expectedDocumentIdentifier
-    );
-    expect(mockLogFeedItemTextPost.mock.calls[0][2]).toStrictEqual(
-      expectedMetadata
-    );
+    describe('logCopyToClipboard', () => {
+      it('should call coveo.analytics.logCopyToClipboard properly', async () => {
+        const engine = buildMockInsightEngine({
+          state: buildMockInsightState({
+            search: buildMockSearchState({
+              results: [testResult],
+            }),
+            insightCaseContext: {
+              caseContext: {
+                Case_Subject: exampleSubject,
+                Case_Description: exampleDescription,
+              },
+              caseId: exampleCaseId,
+              caseNumber: exampleCaseNumber,
+            },
+          }),
+        });
+        await engine.dispatch(logCopyToClipboard(testResult));
+
+        expect(mockLogCopyToClipboard).toHaveBeenCalledTimes(1);
+        expect(mockLogCopyToClipboard.mock.calls[0][0]).toStrictEqual(
+          expectedDocumentInfo
+        );
+        expect(mockLogCopyToClipboard.mock.calls[0][1]).toStrictEqual(
+          expectedDocumentIdentifier
+        );
+        expect(mockLogCopyToClipboard.mock.calls[0][2]).toStrictEqual(
+          expectedMetadata
+        );
+      });
+    });
+
+    describe('logCaseSendEmail', () => {
+      it('should call coveo.analytics.logCaseSendEmail properly', async () => {
+        const engine = buildMockInsightEngine({
+          state: buildMockInsightState({
+            search: buildMockSearchState({
+              results: [testResult],
+            }),
+            insightCaseContext: {
+              caseContext: {
+                Case_Subject: exampleSubject,
+                Case_Description: exampleDescription,
+              },
+              caseId: exampleCaseId,
+              caseNumber: exampleCaseNumber,
+            },
+          }),
+        });
+        await engine.dispatch(logCaseSendEmail(testResult));
+
+        expect(mockLogCaseSendEmail).toHaveBeenCalledTimes(1);
+        expect(mockLogCaseSendEmail.mock.calls[0][0]).toStrictEqual(
+          expectedDocumentInfo
+        );
+        expect(mockLogCaseSendEmail.mock.calls[0][1]).toStrictEqual(
+          expectedDocumentIdentifier
+        );
+        expect(mockLogCaseSendEmail.mock.calls[0][2]).toStrictEqual(
+          expectedMetadata
+        );
+      });
+    });
+
+    describe('logFeedItemTextPost', () => {
+      it('should call coveo.analytics.logFeedItemTextPost properly', async () => {
+        const engine = buildMockInsightEngine({
+          state: buildMockInsightState({
+            search: buildMockSearchState({
+              results: [testResult],
+            }),
+            insightCaseContext: {
+              caseContext: {
+                Case_Subject: exampleSubject,
+                Case_Description: exampleDescription,
+              },
+              caseId: exampleCaseId,
+              caseNumber: exampleCaseNumber,
+            },
+          }),
+        });
+        await engine.dispatch(logFeedItemTextPost(testResult));
+
+        expect(mockLogFeedItemTextPost).toHaveBeenCalledTimes(1);
+        expect(mockLogFeedItemTextPost.mock.calls[0][0]).toStrictEqual(
+          expectedDocumentInfo
+        );
+        expect(mockLogFeedItemTextPost.mock.calls[0][1]).toStrictEqual(
+          expectedDocumentIdentifier
+        );
+        expect(mockLogFeedItemTextPost.mock.calls[0][2]).toStrictEqual(
+          expectedMetadata
+        );
+      });
+    });
+  });
+
+  describe('when analyticsMode is `next`', () => {
+    beforeEach(() => {
+      engine = buildMockInsightEngine({
+        state: buildMockInsightState({
+          search: searchState,
+          configuration: {
+            ...getConfigurationInitialState(),
+            analytics: {
+              ...getConfigurationInitialState().analytics,
+              analyticsMode: 'next',
+            },
+          },
+          insightCaseContext: caseContextState,
+        }),
+      });
+    });
+
+    describe('logCopyToClipboard', () => {
+      it('should call relay.emit properly', async () => {
+        engine.dispatch(logCopyToClipboard(testResult));
+        await clearMicrotaskQueue();
+
+        expect(emit).toHaveBeenCalledTimes(1);
+        expect(emit.mock.calls[0]).toMatchSnapshot();
+      });
+    });
+
+    describe('logCaseSendEmail', () => {
+      it('should call relay.emit properly', async () => {
+        engine.dispatch(logCaseSendEmail(testResult));
+        await clearMicrotaskQueue();
+
+        expect(emit).toHaveBeenCalledTimes(1);
+        expect(emit.mock.calls[0]).toMatchSnapshot();
+      });
+    });
+
+    describe('logFeedItemTextPost', () => {
+      it('should call relay.emit properly', async () => {
+        engine.dispatch(logFeedItemTextPost(testResult));
+        await clearMicrotaskQueue();
+
+        expect(emit).toHaveBeenCalledTimes(1);
+        expect(emit.mock.calls[0]).toMatchSnapshot();
+      });
+    });
   });
 });
