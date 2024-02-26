@@ -1,5 +1,7 @@
 name: PR Robot
-on: [pull_request]
+on:
+  pull_request:
+  merge_group:
 jobs:
   report-size:
     name: 'Report bundle size'
