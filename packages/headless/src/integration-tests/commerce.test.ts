@@ -42,7 +42,6 @@ describe.skip('commerce', () => {
         language: 'en-gb',
         country: 'gb',
         currency: 'gbp',
-        clientId: '41915baa-621c-4408-b9c0-6e59b3cde129',
         view: {
           url: 'https://sports-dev.barca.group/browse/promotions/surf-with-us-this-year',
         },
