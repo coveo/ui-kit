@@ -72,8 +72,10 @@ export default class QuanticResultLink extends NavigationMixin(
     }
   }
   /**
+   * Indicates the result field to display as the link text.
    * @api
    * @type {string}
+   * @defaultValue `'title'`
    */
   @api displayedField = 'title';
 
