@@ -19,6 +19,7 @@ export interface SetContextPayload {
   language: string;
   country: string;
   currency: string;
+  clientId: string;
   user?: UserParams;
   view: ViewParams;
 }

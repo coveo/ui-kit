@@ -23,6 +23,7 @@ describe('context-slice', () => {
           language: 'fr',
           country: 'ca',
           currency: 'CAD',
+          clientId: 'some-client-id',
           view: {
             url: 'https://example.org',
           },
@@ -33,6 +34,7 @@ describe('context-slice', () => {
       language: 'fr',
       country: 'ca',
       currency: 'CAD',
+      clientId: 'some-client-id',
       view: {
         url: 'https://example.org',
       },

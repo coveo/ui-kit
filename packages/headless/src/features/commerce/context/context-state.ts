@@ -8,6 +8,7 @@ export interface CommerceContextState {
   language: string;
   country: string;
   currency: string;
+  clientId: string;
   user?: UserParams;
   view: ViewParams;
 }
@@ -17,6 +18,7 @@ export const getContextInitialState = (): CommerceContextState => ({
   language: '',
   country: '',
   currency: '',
+  clientId: '',
   view: {
     url: '',
   },

@@ -1,5 +1,4 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {getVisitorID} from '../../../api/analytics/coveo-analytics-utils';
 import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
 import {QuerySuggestRequest} from '../../../api/commerce/search/query-suggest/query-suggest-request';
 import {QuerySuggestSuccessResponse} from '../../../api/commerce/search/query-suggest/query-suggest-response';
@@ -45,7 +44,7 @@ export const fetchQuerySuggestions = createAsyncThunk<
   ) => {
     validatePayload(payload, idDefinition);
     const state = getState();
-    const request = await buildQuerySuggestRequest(payload.id, state);
+    const request = buildQuerySuggestRequest(payload.id, state);
     const response = await apiClient.querySuggest(request);
 
     if (isErrorResponse(response)) {
@@ -60,10 +59,10 @@ export const fetchQuerySuggestions = createAsyncThunk<
   }
 );
 
-export const buildQuerySuggestRequest = async (
+export const buildQuerySuggestRequest = (
   id: string,
   state: StateNeededByQuerySuggest
-): Promise<QuerySuggestRequest> => {
+): QuerySuggestRequest => {
   const {view, user, ...restOfContext} = state.commerceContext;
   return {
     accessToken: state.configuration.accessToken,
@@ -71,7 +70,6 @@ export const buildQuerySuggestRequest = async (
     organizationId: state.configuration.organizationId,
     query: state.querySet[id],
     ...restOfContext,
-    clientId: await getVisitorID(state.configuration.analytics),
     context: {
       user,
       view,

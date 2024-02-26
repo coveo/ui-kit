@@ -16,6 +16,7 @@ describe('headless commerce context', () => {
     language: 'en',
     country: 'us',
     currency: 'USD',
+    clientId: 'some-client-id',
     view: {
       url: 'https://example.org',
     },
@@ -80,6 +81,11 @@ describe('headless commerce context', () => {
   it('setCurrency dispatches #setContext', () => {
     context.setCurrency('new-currency');
     expectContainActionWithPayload(setContext, {currency: 'new-currency'});
+  });
+
+  it('setClientId dispatches #setContext', () => {
+    context.setClientId('new-client-id');
+    expectContainActionWithPayload(setContext, {clientId: 'new-client-id'});
   });
 
   it('setUser dispatches #setUser', () => {
