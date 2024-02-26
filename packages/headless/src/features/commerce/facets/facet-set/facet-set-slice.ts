@@ -126,24 +126,31 @@ export const commerceFacetSetReducer = createReducer(
 
         const {path} = selection;
         const pathToSelection = path.slice(0, path.length - 1);
-        const children = ensurePathAndReturnChildren(
+        const parentValueRequest = ensurePathAndReturnParentValueRequest(
           facetRequest,
           pathToSelection
         );
 
-        if (children.length) {
-          const lastSelectedParent =
-            children[0] as CommerceCategoryFacetValueRequest;
+        if (!parentValueRequest) {
+          const rootValueRequests =
+            facetRequest.values as CommerceCategoryFacetValueRequest[];
+          if (rootValueRequests.length) {
+            toggleSelectCategoryFacetRootValue(rootValueRequests, selection);
+            return;
+          } else {
+            const newParent = buildCategoryFacetValueRequest(selection.value);
+            newParent.state = 'selected';
+            facetRequest.values.push(newParent);
+            return;
+          }
+        }
 
-          lastSelectedParent.state = 'selected';
-          lastSelectedParent.children = [];
+        if (selection.state === 'selected') {
+          deselectChildCategoryFacetValue(parentValueRequest);
           return;
         }
 
-        const newParent = buildCategoryFacetValueRequest(selection.value);
-        newParent.state = 'selected';
-        children.push(newParent);
-        facetRequest.numberOfValues = 1;
+        selectChildCategoryFacetValue(parentValueRequest, selection);
       })
       .addCase(toggleExcludeFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
@@ -266,18 +273,22 @@ function handleQueryFulfilled(
 function handleDeselectAllFacetValues(request: CommerceFacetRequest) {
   if (request.type === 'hierarchical') {
     request.numberOfValues = request.initialNumberOfValues;
-    request.values = [];
+    (request.values as CommerceCategoryFacetValueRequest[]).forEach((value) => {
+      value.state = 'idle';
+      value.children = [];
+    });
     request.preventAutoSelect = true;
   } else {
     request.values.forEach((value) => (value.state = 'idle'));
   }
 }
 
-function ensurePathAndReturnChildren(
+function ensurePathAndReturnParentValueRequest(
   request: CommerceFacetRequest,
   path: string[]
 ) {
   let children = request.values as CommerceCategoryFacetValueRequest[];
+  let lastSelectedParent;
 
   for (const segment of path) {
     let parent = children[0] as CommerceCategoryFacetValueRequest;
@@ -291,9 +302,48 @@ function ensurePathAndReturnChildren(
 
     parent.state = 'idle';
     children = parent.children;
+    lastSelectedParent = parent;
   }
 
-  return children;
+  return lastSelectedParent;
+}
+
+function toggleSelectCategoryFacetRootValue(
+  rootValueRequests: CommerceCategoryFacetValueRequest[],
+  selection: CommerceCategoryFacetValueRequest
+): void {
+  if (rootValueRequests.length === 0) {
+    const newRootValueRequest = buildCategoryFacetValueRequest(selection.value);
+    newRootValueRequest.state = selection.state;
+    rootValueRequests.push(newRootValueRequest);
+    return;
+  }
+
+  for (const rootValueRequest of rootValueRequests) {
+    rootValueRequest.children = [];
+    rootValueRequest.state =
+      rootValueRequest.value === selection.value && selection.state === 'idle'
+        ? 'selected'
+        : 'idle';
+  }
+}
+
+function deselectChildCategoryFacetValue(
+  parentValueRequest: CommerceCategoryFacetValueRequest
+): void {
+  parentValueRequest.state = 'selected';
+  parentValueRequest.children = [];
+}
+
+function selectChildCategoryFacetValue(
+  parentValueRequest: CommerceCategoryFacetValueRequest,
+  selection: CommerceCategoryFacetValueRequest
+): void {
+  parentValueRequest.state = 'idle';
+  const newParent = buildCategoryFacetValueRequest(selection.value);
+  newParent.state = 'selected';
+  parentValueRequest.children.length = 0;
+  parentValueRequest.children.push(newParent);
 }
 
 function buildCategoryFacetValueRequest(
@@ -336,6 +386,8 @@ function updateStateFromFacetResponse(
   facetsToRemove: Set<string>
 ) {
   const facetId = facetResponse.facetId ?? facetResponse.field;
+  console.log(`update ${facetId} from response...`);
+
   let facetRequest = state[facetId]?.request;
   if (!facetRequest) {
     state[facetId] = {request: {} as CommerceFacetRequest};
@@ -353,6 +405,8 @@ function updateStateFromFacetResponse(
   facetRequest.values =
     getFacetRequestValuesFromFacetResponse(facetResponse) ?? [];
   facetRequest.preventAutoSelect = false;
+
+  console.log(facetRequest.values);
 }
 
 function getFacetRequestValuesFromFacetResponse(
@@ -377,9 +431,7 @@ export function convertCategoryFacetValueToRequest(
 ): CommerceCategoryFacetValueRequest {
   const {children, state, value} = responseValue;
   return {
-    children: children.map((child) =>
-      convertCategoryFacetValueToRequest(child)
-    ),
+    children,
     state,
     value,
   };
