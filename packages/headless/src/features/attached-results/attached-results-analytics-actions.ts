@@ -22,7 +22,7 @@ export const logCaseAttach = (result: Result) =>
         metadata
       );
     },
-    analyticsType: 'ItemAction',
+    analyticsType: 'InsightPanel.ItemAction',
     analyticsPayloadBuilder: (state): InsightPanel.ItemAction => {
       const metadata = getCaseContextAnalyticsMetadata(
         state.insightCaseContext
@@ -58,7 +58,7 @@ export const logCaseDetach = (result: Result) =>
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
-    analyticsType: 'DetachItem',
+    analyticsType: 'InsightPanel.DetachItem',
     analyticsPayloadBuilder: (state): InsightPanel.DetachItem => {
       const metadata = getCaseContextAnalyticsMetadata(
         state.insightCaseContext

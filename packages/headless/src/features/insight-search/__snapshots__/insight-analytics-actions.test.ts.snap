@@ -2,7 +2,7 @@
 
 exports[`result actions insight analytics actions when analyticsMode is \`next\` logCreateArticle should call relay.emit properly 1`] = `
 [
-  "CreateArticle",
+  "InsightPanel.CreateArticle",
   {
     "articleType": "Knowledge__kav",
     "context": {
@@ -16,7 +16,7 @@ exports[`result actions insight analytics actions when analyticsMode is \`next\`
 
 exports[`result actions insight analytics actions when analyticsMode is \`next\` logExpandToFullUI should call relay.emit properly 1`] = `
 [
-  "ExpandToFullUI",
+  "InsightPanel.ExpandToFullUI",
   {
     "context": {
       "caseNumber": "5678",

@@ -2,7 +2,7 @@
 
 exports[`attached results analytics actions when analyticsMode is \`next\` logCaseAttach should call relay.emit properly 1`] = `
 [
-  "ItemAction",
+  "InsightPanel.ItemAction",
   {
     "action": "attach",
     "context": {
@@ -25,7 +25,7 @@ exports[`attached results analytics actions when analyticsMode is \`next\` logCa
 
 exports[`attached results analytics actions when analyticsMode is \`next\` logCaseDetach should call relay.emit properly 1`] = `
 [
-  "DetachItem",
+  "InsightPanel.DetachItem",
   {
     "context": {
       "caseNumber": "5678",

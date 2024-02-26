@@ -31,7 +31,7 @@ export const logExpandToFullUI = (
       };
       return client.logExpandToFullUI(meta);
     },
-    analyticsType: 'ExpandToFullUI',
+    analyticsType: 'InsightPanel.ExpandToFullUI',
     analyticsPayloadBuilder: (_state): InsightPanel.ExpandToFullUI => {
       return {
         context: {
@@ -57,7 +57,7 @@ export const logInsightCreateArticle = (
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
-    analyticsType: 'CreateArticle',
+    analyticsType: 'InsightPanel.CreateArticle',
     analyticsPayloadBuilder: (state): InsightPanel.CreateArticle => {
       const metadata = getCaseContextAnalyticsMetadata(
         state.insightCaseContext

@@ -2,7 +2,7 @@
 
 exports[`result actions insight analytics actions when analyticsMode is \`next\` logCaseSendEmail should call relay.emit properly 1`] = `
 [
-  "ItemAction",
+  "InsightPanel.ItemAction",
   {
     "action": "sendEmail",
     "context": {
@@ -25,7 +25,7 @@ exports[`result actions insight analytics actions when analyticsMode is \`next\`
 
 exports[`result actions insight analytics actions when analyticsMode is \`next\` logCopyToClipboard should call relay.emit properly 1`] = `
 [
-  "ItemAction",
+  "InsightPanel.ItemAction",
   {
     "action": "copyToClipboard",
     "context": {
@@ -48,7 +48,7 @@ exports[`result actions insight analytics actions when analyticsMode is \`next\`
 
 exports[`result actions insight analytics actions when analyticsMode is \`next\` logFeedItemTextPost should call relay.emit properly 1`] = `
 [
-  "ItemAction",
+  "InsightPanel.ItemAction",
   {
     "action": "postToFeed",
     "context": {

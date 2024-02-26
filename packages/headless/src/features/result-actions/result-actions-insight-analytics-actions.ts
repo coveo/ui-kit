@@ -23,7 +23,7 @@ export const logCopyToClipboard = (result: Result): InsightAction =>
         metadata
       );
     },
-    analyticsType: 'ItemAction',
+    analyticsType: 'InsightPanel.ItemAction',
     analyticsPayloadBuilder: (state): InsightPanel.ItemAction => {
       const metadata = getCaseContextAnalyticsMetadata(
         state.insightCaseContext
@@ -64,7 +64,7 @@ export const logCaseSendEmail = (result: Result): InsightAction =>
         metadata
       );
     },
-    analyticsType: 'ItemAction',
+    analyticsType: 'InsightPanel.ItemAction',
     analyticsPayloadBuilder: (state): InsightPanel.ItemAction => {
       const metadata = getCaseContextAnalyticsMetadata(
         state.insightCaseContext
@@ -105,7 +105,7 @@ export const logFeedItemTextPost = (result: Result): InsightAction =>
         metadata
       );
     },
-    analyticsType: 'ItemAction',
+    analyticsType: 'InsightPanel.ItemAction',
     analyticsPayloadBuilder: (state): InsightPanel.ItemAction => {
       const metadata = getCaseContextAnalyticsMetadata(
         state.insightCaseContext
