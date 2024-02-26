@@ -1,13 +1,14 @@
+import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {FacetSearchAPIClient} from '../../../../api/search/search-api-client';
+import {AsyncThunkOptions} from '../../../../app/async-thunk-options';
 import {CoreEngine} from '../../../../app/engine';
-import {ClientThunkExtraArguments} from '../../../../app/thunk-extra-arguments';
+import {
+  ClientThunkExtraArguments,
+  ThunkExtraArguments,
+} from '../../../../app/thunk-extra-arguments';
 import {CategoryFacetSearchState} from '../../../../features/facets/facet-search-set/category/category-facet-search-set-state';
 import {FacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-request-options';
-import {
-  clearFacetSearch,
-  executeFacetSearch,
-  executeFieldSuggest,
-} from '../../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
+import {clearFacetSearch} from '../../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
 import {updateFacetSearch} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
 import {SpecificFacetSearchState} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-state';
 import {
@@ -22,6 +23,21 @@ export interface GenericFacetSearchProps<T extends FacetSearchState> {
   options: FacetSearchOptions;
   getFacetSearch: () => T;
   isForFieldSuggestions: boolean;
+
+  executeFacetSearchActionCreator: (
+    facetId: string
+  ) => AsyncThunkAction<
+    unknown,
+    string,
+    AsyncThunkOptions<unknown, ThunkExtraArguments>
+  >;
+  executeFieldSuggestActionCreator: (
+    facetId: string
+  ) => AsyncThunkAction<
+    unknown,
+    string,
+    AsyncThunkOptions<unknown, ThunkExtraArguments>
+  >;
 }
 
 export type GenericFacetSearch = ReturnType<typeof buildGenericFacetSearch>;
@@ -34,7 +50,12 @@ export function buildGenericFacetSearch<T extends FacetSearchState>(
   props: GenericFacetSearchProps<T>
 ) {
   const dispatch = engine.dispatch;
-  const {options, getFacetSearch} = props;
+  const {
+    options,
+    getFacetSearch,
+    executeFacetSearchActionCreator,
+    executeFieldSuggestActionCreator,
+  } = props;
   const {facetId} = options;
 
   return {
@@ -62,8 +83,8 @@ export function buildGenericFacetSearch<T extends FacetSearchState>(
       );
       dispatch(
         props.isForFieldSuggestions
-          ? executeFieldSuggest(facetId)
-          : executeFacetSearch(facetId)
+          ? executeFieldSuggestActionCreator(facetId)
+          : executeFacetSearchActionCreator(facetId)
       );
     },
 
@@ -71,8 +92,8 @@ export function buildGenericFacetSearch<T extends FacetSearchState>(
     search() {
       dispatch(
         props.isForFieldSuggestions
-          ? executeFieldSuggest(facetId)
-          : executeFacetSearch(facetId)
+          ? executeFieldSuggestActionCreator(facetId)
+          : executeFacetSearchActionCreator(facetId)
       );
     },
 

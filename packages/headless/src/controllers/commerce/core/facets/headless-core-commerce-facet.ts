@@ -2,9 +2,11 @@ import {
   ActionCreatorWithPreparedPayload,
   AsyncThunkAction,
 } from '@reduxjs/toolkit';
+import {AsyncThunkOptions} from '../../../../app/async-thunk-options';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
+import {ThunkExtraArguments} from '../../../../app/thunk-extra-arguments';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
-import {CommerceFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
+import {AnyCommerceFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
 import {
   AnyFacetResponse,
   AnyFacetValueResponse,
@@ -58,20 +60,23 @@ export interface CoreCommerceFacetOptions {
   facetId: string;
   toggleSelectActionCreator: ActionCreatorWithPreparedPayload<
     [payload: AnyToggleFacetValueActionCreatorPayload],
-    any, // eslint-disable-line @typescript-eslint/no-explicit-any
+    unknown,
     string,
     never,
     never
   >;
   toggleExcludeActionCreator: ActionCreatorWithPreparedPayload<
     [payload: AnyToggleFacetValueActionCreatorPayload],
-    any, // eslint-disable-line @typescript-eslint/no-explicit-any
+    unknown,
     string,
     never,
     never
   >;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  fetchResultsActionCreator: () => AsyncThunkAction<unknown, void, any>;
+  fetchResultsActionCreator: () => AsyncThunkAction<
+    unknown,
+    void,
+    AsyncThunkOptions<unknown, ThunkExtraArguments>
+  >;
   facetResponseSelector: (
     state: CommerceEngine['state'],
     facetId: string
@@ -179,7 +184,7 @@ export function buildCoreCommerceFacet<
 
   const facetId = props.options.facetId;
 
-  const getRequest = (): CommerceFacetRequest | undefined =>
+  const getRequest = (): AnyCommerceFacetRequest | undefined =>
     engine.state.commerceFacetSet[facetId]?.request;
   const getResponse = () =>
     props.options.facetResponseSelector(engine.state, facetId);
