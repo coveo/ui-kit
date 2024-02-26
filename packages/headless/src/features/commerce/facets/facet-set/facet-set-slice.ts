@@ -57,7 +57,7 @@ export const commerceFacetSetReducer = createReducer(
         const {facetId, selection} = action.payload;
         const facetRequest = state[facetId]?.request;
 
-        if (!ensureRegularFacetRequest(facetRequest)) {
+        if (!facetRequest || !ensureRegularFacetRequest(facetRequest)) {
           return;
         }
 
@@ -77,7 +77,7 @@ export const commerceFacetSetReducer = createReducer(
         const {facetId, selection} = action.payload;
         const facetRequest = state[facetId]?.request;
 
-        if (!ensureNumericFacetRequest(facetRequest)) {
+        if (!facetRequest || !ensureNumericFacetRequest(facetRequest)) {
           return;
         }
 
@@ -97,7 +97,7 @@ export const commerceFacetSetReducer = createReducer(
         const {facetId, selection} = action.payload;
         const facetRequest = state[facetId]?.request;
 
-        if (!ensureDateFacetRequest(facetRequest)) {
+        if (!facetRequest || !ensureDateFacetRequest(facetRequest)) {
           return;
         }
 
@@ -118,7 +118,7 @@ export const commerceFacetSetReducer = createReducer(
         const {facetId, selection} = action.payload;
         const facetRequest = state[facetId]?.request;
 
-        if (!ensureRegularFacetRequest(facetRequest)) {
+        if (!facetRequest || !ensureRegularFacetRequest(facetRequest)) {
           return;
         }
 
@@ -138,7 +138,7 @@ export const commerceFacetSetReducer = createReducer(
         const {facetId, selection} = action.payload;
         const facetRequest = state[facetId]?.request;
 
-        if (!ensureNumericFacetRequest(facetRequest)) {
+        if (!facetRequest || !ensureNumericFacetRequest(facetRequest)) {
           return;
         }
 
@@ -159,7 +159,7 @@ export const commerceFacetSetReducer = createReducer(
         const {facetId, selection} = action.payload;
         const facetRequest = state[facetId]?.request;
 
-        if (!ensureDateFacetRequest(facetRequest)) {
+        if (!facetRequest || !ensureDateFacetRequest(facetRequest)) {
           return;
         }
 
