@@ -1,4 +1,5 @@
-import {buildMockInsightEngine} from '../../test/mock-engine';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
+import {buildMockInsightEngine} from '../../test/mock-engine-v2';
 import {buildMockInsightState} from '../../test/mock-insight-state';
 import {getCaseContextInitialState} from '../case-context/case-context-state';
 import {getQueryInitialState} from '../query/query-state';
@@ -36,8 +37,8 @@ const exampleCaseNumber = '5678';
 
 describe('logContextChanged', () => {
   it('should log #logContextChanged with the right payload', async () => {
-    const engine = buildMockInsightEngine({
-      state: buildMockInsightState({
+    const engine = buildMockInsightEngine(
+      buildMockInsightState({
         insightCaseContext: {
           ...getCaseContextInitialState(),
           caseContext: {
@@ -45,9 +46,13 @@ describe('logContextChanged', () => {
             Case_Description: exampleDescription,
           },
         },
-      }),
-    });
-    await engine.dispatch(logContextChanged('1234', '5678'));
+      })
+    );
+    await logContextChanged('1234', '5678')()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const expectedPayload = {
       caseContext: {
@@ -67,8 +72,8 @@ describe('logContextChanged', () => {
 
 describe('logExpandToFullUI', () => {
   it('should log #logExpandToFullUI with the right payload', async () => {
-    const engine = buildMockInsightEngine({
-      state: buildMockInsightState({
+    const engine = buildMockInsightEngine(
+      buildMockInsightState({
         insightCaseContext: {
           ...getCaseContextInitialState(),
           caseContext: {
@@ -76,11 +81,14 @@ describe('logExpandToFullUI', () => {
             Case_Description: exampleDescription,
           },
         },
-      }),
-    });
-    await engine.dispatch(
-      logExpandToFullUI('1234', '5678', 'c__FullSearch', 'openFullSearchButton')
+      })
     );
+    await logExpandToFullUI(
+      '1234',
+      '5678',
+      'c__FullSearch',
+      'openFullSearchButton'
+    )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
     const expectedPayload = {
       caseContext: {
@@ -102,8 +110,8 @@ describe('logExpandToFullUI', () => {
 
 describe('logFetchMoreResults', () => {
   it('should log #logFetchMoreResults with the right payload', async () => {
-    const engine = buildMockInsightEngine({
-      state: buildMockInsightState({
+    const engine = buildMockInsightEngine(
+      buildMockInsightState({
         insightCaseContext: {
           caseContext: {
             Case_Subject: exampleSubject,
@@ -112,9 +120,13 @@ describe('logFetchMoreResults', () => {
           caseId: exampleCaseId,
           caseNumber: exampleCaseNumber,
         },
-      }),
-    });
-    await engine.dispatch(logFetchMoreResults());
+      })
+    );
+    await logFetchMoreResults()()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const expectedPayload = {
       caseContext: {
@@ -138,8 +150,8 @@ describe('logQueryError', () => {
     const exampleErrorMessage = 'example error message';
     const exampleQuery = 'test query';
 
-    const engine = buildMockInsightEngine({
-      state: buildMockInsightState({
+    const engine = buildMockInsightEngine(
+      buildMockInsightState({
         insightCaseContext: {
           caseContext: {
             Case_Subject: exampleSubject,
@@ -152,15 +164,19 @@ describe('logQueryError', () => {
           ...getQueryInitialState(),
           q: exampleQuery,
         },
-      }),
-    });
+      })
+    );
 
     const exampleError = {
       type: exampleErrorType,
       message: exampleErrorMessage,
       statusCode: 400,
     };
-    await engine.dispatch(logQueryError(exampleError));
+    await logQueryError(exampleError)()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const expectedPayload = {
       caseContext: {

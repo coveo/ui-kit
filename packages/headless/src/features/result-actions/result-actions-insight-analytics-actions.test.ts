@@ -1,4 +1,5 @@
-import {buildMockInsightEngine} from '../../test/mock-engine';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
+import {buildMockInsightEngine} from '../../test/mock-engine-v2';
 import {buildMockInsightState} from '../../test/mock-insight-state';
 import {buildMockRaw} from '../../test/mock-raw';
 import {buildMockResult} from '../../test/mock-result';
@@ -81,8 +82,8 @@ const testResult = buildMockResult(resultParams);
 
 describe('logCopyToClipboard', () => {
   it('should log #logCopyToClipboard with the right payload', async () => {
-    const engine = buildMockInsightEngine({
-      state: buildMockInsightState({
+    const engine = buildMockInsightEngine(
+      buildMockInsightState({
         search: buildMockSearchState({
           results: [testResult],
         }),
@@ -94,11 +95,15 @@ describe('logCopyToClipboard', () => {
           caseId: exampleCaseId,
           caseNumber: exampleCaseNumber,
         },
-      }),
-    });
-    await engine.dispatch(logCopyToClipboard(testResult));
+      })
+    );
+    await logCopyToClipboard(testResult)()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
-    expect(mockLogCopyToClipboard).toBeCalledTimes(1);
+    expect(mockLogCopyToClipboard).toHaveBeenCalledTimes(1);
     expect(mockLogCopyToClipboard.mock.calls[0][0]).toStrictEqual(
       expectedDocumentInfo
     );
@@ -113,8 +118,8 @@ describe('logCopyToClipboard', () => {
 
 describe('logCaseSendEmail', () => {
   it('should log #logCaseSendEmail with the right payload', async () => {
-    const engine = buildMockInsightEngine({
-      state: buildMockInsightState({
+    const engine = buildMockInsightEngine(
+      buildMockInsightState({
         search: buildMockSearchState({
           results: [testResult],
         }),
@@ -126,11 +131,15 @@ describe('logCaseSendEmail', () => {
           caseId: exampleCaseId,
           caseNumber: exampleCaseNumber,
         },
-      }),
-    });
-    await engine.dispatch(logCaseSendEmail(testResult));
+      })
+    );
+    await logCaseSendEmail(testResult)()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
-    expect(mockLogCaseSendEmail).toBeCalledTimes(1);
+    expect(mockLogCaseSendEmail).toHaveBeenCalledTimes(1);
     expect(mockLogCaseSendEmail.mock.calls[0][0]).toStrictEqual(
       expectedDocumentInfo
     );
@@ -145,8 +154,8 @@ describe('logCaseSendEmail', () => {
 
 describe('logFeedItemTextPost', () => {
   it('should log #logFeedItemTextPost with the right payload', async () => {
-    const engine = buildMockInsightEngine({
-      state: buildMockInsightState({
+    const engine = buildMockInsightEngine(
+      buildMockInsightState({
         search: buildMockSearchState({
           results: [testResult],
         }),
@@ -158,11 +167,15 @@ describe('logFeedItemTextPost', () => {
           caseId: exampleCaseId,
           caseNumber: exampleCaseNumber,
         },
-      }),
-    });
-    await engine.dispatch(logFeedItemTextPost(testResult));
+      })
+    );
+    await logFeedItemTextPost(testResult)()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
-    expect(mockLogFeedItemTextPost).toBeCalledTimes(1);
+    expect(mockLogFeedItemTextPost).toHaveBeenCalledTimes(1);
     expect(mockLogFeedItemTextPost.mock.calls[0][0]).toStrictEqual(
       expectedDocumentInfo
     );
