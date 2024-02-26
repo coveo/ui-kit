@@ -546,6 +546,7 @@ export * from './features/analytics/click-analytics-actions-loader';
 export * from './features/analytics/generic-analytics-actions-loader';
 
 // Types & Helpers
+export * from './utils/ssr-utils';
 export {buildSSRSearchParameterSerializer} from './features/search-parameters/search-parameter-serializer.ssr';
 export type {Result} from './api/search/search/result';
 export type {FieldDescription} from './api/search/fields/fields-response';
