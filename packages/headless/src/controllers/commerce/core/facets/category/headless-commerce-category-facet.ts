@@ -1,6 +1,9 @@
 import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
-import {toggleSelectCommerceCategoryFacetValue} from '../../../../../features/commerce/facets/facet-set/facet-set-actions';
 import {CommerceCategoryFacetValueRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
+import {
+  toggleSelectCategoryFacetValue,
+  updateCategoryFacetNumberOfValues,
+} from '../../../../../features/facets/category-facet-set/category-facet-set-actions';
 import {findActiveValueAncestry} from '../../../../../features/facets/category-facet-set/category-facet-utils';
 import {
   CommerceCategoryFacetValue,
@@ -14,6 +17,15 @@ export type CommerceCategoryFacetOptions = Omit<
   CoreCommerceFacetOptions,
   'toggleExcludeActionCreator' | 'toggleSelectActionCreator'
 >;
+
+export type CommerceCategoryFacetState =
+  CoreCommerceFacetState<CommerceCategoryFacetValue> & {
+    activeValue?: CommerceCategoryFacetValue;
+    canShowLessValues: boolean;
+    canShowMoreValues: boolean;
+    hasActiveValues: boolean;
+    selectedValueAncestry?: CommerceCategoryFacetValue[];
+  };
 
 /**
  * The `CommerceCategoryFacet` controller offers a high-level programming interface for implementing a category commerce
@@ -30,13 +42,7 @@ export type CommerceCategoryFacet = Omit<
   | 'toggleSingleSelect'
   | 'state'
 > & {
-  state: CoreCommerceFacetState<CommerceCategoryFacetValue> & {
-    activeValue?: CommerceCategoryFacetValue;
-    canShowLessValues: boolean;
-    canShowMoreValues: boolean;
-    hasActiveValues: boolean;
-    selectedValueAncestry?: CommerceCategoryFacetValue[];
-  };
+  state: CommerceCategoryFacetState;
 };
 
 /**
@@ -61,25 +67,36 @@ export function buildCommerceCategoryFacet(
   >(engine, {
     options: {
       ...options,
-      toggleSelectActionCreator: toggleSelectCommerceCategoryFacetValue,
+      toggleSelectActionCreator: toggleSelectCategoryFacetValue,
     },
   });
-  const {
-    deselectAll,
-    isValueSelected,
-    showLessValues,
-    showMoreValues,
-    subscribe,
-    toggleSelect,
-  } = coreController;
+  const {deselectAll, isValueSelected, subscribe, toggleSelect} =
+    coreController;
 
   return {
     deselectAll,
     isValueSelected,
-    showLessValues,
-    showMoreValues,
     subscribe,
     toggleSelect,
+    showLessValues() {
+      const {facetId} = options;
+
+      engine.dispatch(
+        updateCategoryFacetNumberOfValues({facetId, numberOfValues: 1})
+      );
+      engine.dispatch(options.fetchResultsActionCreator());
+    },
+    showMoreValues() {
+      const {facetId} = options;
+      const {activeValue, values} = this.state;
+      const numberOfValues =
+        (activeValue?.children.length ?? values.length) + 5;
+
+      engine.dispatch(
+        updateCategoryFacetNumberOfValues({facetId, numberOfValues})
+      );
+      engine.dispatch(options.fetchResultsActionCreator());
+    },
     get state() {
       const selectedValueAncestry = findActiveValueAncestry(
         coreController.state.values

@@ -1,6 +1,6 @@
-import {toggleSelectCommerceCategoryFacetValue} from '../../../../../features/commerce/facets/facet-set/facet-set-actions';
 import {CommerceFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
 import {CommerceCategoryFacetValue} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
+import {toggleSelectCategoryFacetValue} from '../../../../../features/facets/category-facet-set/category-facet-set-actions';
 import {CommerceAppState} from '../../../../../state/commerce-app-state';
 import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request';
 import {buildMockCommerceCategoryFacetResponse} from '../../../../../test/mock-commerce-facet-response';
@@ -75,9 +75,10 @@ describe('CommerceCategoryFacet', () => {
       facet.toggleSelect(facetValue);
 
       expect(engine.actions).toContainEqual(
-        toggleSelectCommerceCategoryFacetValue({
+        toggleSelectCategoryFacetValue({
           facetId,
           selection: facetValue,
+          retrieveCount: 1,
         })
       );
     });
@@ -97,7 +98,7 @@ describe('CommerceCategoryFacet', () => {
 
         initFacet();
 
-        expect(facet.canShowLessValues).toBe(true);
+        expect(facet.state.canShowLessValues).toBe(true);
       });
       it('returns "false" if #values is empty', () => {
         setFacetRequestAndResponse({
@@ -107,7 +108,7 @@ describe('CommerceCategoryFacet', () => {
 
         initFacet();
 
-        expect(facet.canShowLessValues).toBe(false);
+        expect(facet.state.canShowLessValues).toBe(false);
       });
       it('returns "false" if #numberOfValues and #initialNumberOfValues are equal', () => {
         const value = buildMockCommerceCategoryFacetValue();
@@ -119,7 +120,7 @@ describe('CommerceCategoryFacet', () => {
 
         initFacet();
 
-        expect(facet.canShowLessValues).toBe(false);
+        expect(facet.state.canShowLessValues).toBe(false);
       });
 
       it('returns "false" if #numberOfValues is lesser than #initialNumberOfValues', () => {
@@ -132,7 +133,7 @@ describe('CommerceCategoryFacet', () => {
 
         initFacet();
 
-        expect(facet.canShowLessValues).toBe(false);
+        expect(facet.state.canShowLessValues).toBe(false);
       });
     });
 
@@ -153,7 +154,7 @@ describe('CommerceCategoryFacet', () => {
 
         initFacet();
 
-        expect(facet.canShowLessValues).toBe(true);
+        expect(facet.state.canShowLessValues).toBe(true);
       });
       it('returns "false" if selected value has less children than initial number of values', () => {
         const value = buildMockCommerceCategoryFacetValue({
@@ -167,7 +168,7 @@ describe('CommerceCategoryFacet', () => {
 
         initFacet();
 
-        expect(facet.canShowLessValues).toBe(false);
+        expect(facet.state.canShowLessValues).toBe(false);
       });
       it('returns "false" if selected value has the same number of children as initial number of values', () => {
         const value = buildMockCommerceCategoryFacetValue({
@@ -182,7 +183,7 @@ describe('CommerceCategoryFacet', () => {
 
         initFacet();
 
-        expect(facet.canShowLessValues).toBe(false);
+        expect(facet.state.canShowLessValues).toBe(false);
       });
     });
   });
@@ -200,7 +201,7 @@ describe('CommerceCategoryFacet', () => {
 
         initFacet();
 
-        expect(facet.canShowMoreValues).toBe(true);
+        expect(facet.state.canShowMoreValues).toBe(true);
       });
 
       it('returns "false" if response has #moreValuesAvailable "false"', () => {
@@ -214,7 +215,7 @@ describe('CommerceCategoryFacet', () => {
 
         initFacet();
 
-        expect(facet.canShowMoreValues).toBe(false);
+        expect(facet.state.canShowMoreValues).toBe(false);
       });
     });
 
@@ -231,7 +232,7 @@ describe('CommerceCategoryFacet', () => {
 
         initFacet();
 
-        expect(facet.canShowMoreValues).toBe(true);
+        expect(facet.state.canShowMoreValues).toBe(true);
       });
       it('returns "false" if selected value has #moreValuesAvailable "false"', () => {
         const value = buildMockCommerceCategoryFacetValue({
@@ -245,14 +246,14 @@ describe('CommerceCategoryFacet', () => {
 
         initFacet();
 
-        expect(facet.canShowMoreValues).toBe(false);
+        expect(facet.state.canShowMoreValues).toBe(false);
       });
     });
   });
 
   describe('#selectedValueWithAncestry', () => {
     it('when no value is present, returns "undefined"', () => {
-      expect(facet.selectedValueWithAncestry).toBeUndefined();
+      expect(facet.state.selectedValueAncestry).toBeUndefined();
     });
 
     it('when values are present but no value is selected, returns "undefined"', () => {
@@ -266,7 +267,7 @@ describe('CommerceCategoryFacet', () => {
 
       initFacet();
 
-      expect(facet.selectedValueWithAncestry).toBeUndefined();
+      expect(facet.state.selectedValueAncestry).toBeUndefined();
     });
 
     it('when a value is selected, returns the selected value and its ancestry', () => {
@@ -302,7 +303,7 @@ describe('CommerceCategoryFacet', () => {
 
       initFacet();
 
-      expect(facet.selectedValueWithAncestry).toEqual({
+      expect(facet.state.selectedValueAncestry).toEqual({
         selected,
         ancestry: [root, parent, selected],
       });

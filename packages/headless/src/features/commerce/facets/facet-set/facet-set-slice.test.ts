@@ -20,6 +20,7 @@ import {
 import {buildSearchResponse} from '../../../../test/mock-commerce-search';
 import {buildFetchProductListingV2Response} from '../../../../test/mock-product-listing-v2';
 import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
+import {toggleSelectCategoryFacetValue} from '../../../facets/category-facet-set/category-facet-set-actions';
 import {
   FacetValueState,
   facetValueStates,
@@ -46,7 +47,6 @@ import {convertToNumericRangeRequests} from '../../../facets/range-facets/numeri
 import {setContext, setUser, setView} from '../../context/context-actions';
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
 import {executeSearch} from '../../search/search-actions';
-import {toggleSelectCommerceCategoryFacetValue} from './facet-set-actions';
 import {
   commerceFacetSetReducer,
   convertCategoryFacetValueToRequest,
@@ -1004,7 +1004,7 @@ describe('commerceFacetSetReducer', () => {
       describe('when called on an unregistered #facetId', () => {
         it('does not throw', () => {
           const selection = buildMockCommerceCategoryFacetValue({value: 'A'});
-          const action = toggleSelectCommerceCategoryFacetValue({
+          const action = toggleSelectCategoryFacetValue({
             facetId,
             selection,
           });
@@ -1028,7 +1028,7 @@ describe('commerceFacetSetReducer', () => {
             value: 'A',
             path: ['A'],
           });
-          const action = toggleSelectCommerceCategoryFacetValue({
+          const action = toggleSelectCategoryFacetValue({
             facetId,
             selection,
           });
@@ -1050,7 +1050,7 @@ describe('commerceFacetSetReducer', () => {
               value: 'B',
               path: ['A', 'B'],
             });
-            const action = toggleSelectCommerceCategoryFacetValue({
+            const action = toggleSelectCategoryFacetValue({
               facetId,
               selection,
             });
@@ -1099,7 +1099,7 @@ describe('commerceFacetSetReducer', () => {
               value: 'B',
               path: ['A', 'B'],
             });
-            const action = toggleSelectCommerceCategoryFacetValue({
+            const action = toggleSelectCategoryFacetValue({
               facetId,
               selection,
             });
@@ -1131,7 +1131,7 @@ describe('commerceFacetSetReducer', () => {
               value: 'B',
               path: ['C', 'B'],
             });
-            const action = toggleSelectCommerceCategoryFacetValue({
+            const action = toggleSelectCategoryFacetValue({
               facetId,
               selection,
             });
@@ -1180,7 +1180,7 @@ describe('commerceFacetSetReducer', () => {
               value: 'C',
               path: ['A', 'B', 'C'],
             });
-            const action = toggleSelectCommerceCategoryFacetValue({
+            const action = toggleSelectCategoryFacetValue({
               facetId,
               selection,
             });
@@ -1209,7 +1209,7 @@ describe('commerceFacetSetReducer', () => {
               value: 'A',
               path: ['A'],
             });
-            const action = toggleSelectCommerceCategoryFacetValue({
+            const action = toggleSelectCategoryFacetValue({
               facetId,
               selection,
             });
@@ -1250,7 +1250,7 @@ describe('commerceFacetSetReducer', () => {
             ],
           });
 
-          const action = toggleSelectCommerceCategoryFacetValue({
+          const action = toggleSelectCategoryFacetValue({
             facetId,
             selection,
           });

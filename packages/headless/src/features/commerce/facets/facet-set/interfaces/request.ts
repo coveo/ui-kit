@@ -27,10 +27,12 @@ export type CommerceFacetRequest = Pick<
   type: FacetType;
   values: AnyCommerceFacetValueRequest[];
   initialNumberOfValues: number;
+  numberOfValues?: number;
 };
 
 export interface CommerceCategoryFacetValueRequest
   extends BaseFacetValueRequest {
   children: CommerceCategoryFacetValueRequest[];
   value: string;
+  retrieveCount?: number;
 }

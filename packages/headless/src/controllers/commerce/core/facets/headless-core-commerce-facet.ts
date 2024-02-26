@@ -193,7 +193,12 @@ export function buildCoreCommerceFacet<
     ...controller,
 
     toggleSelect: (selection: ValueRequest) => {
-      dispatch(props.options.toggleSelectActionCreator({selection, facetId}));
+      dispatch(
+        props.options.toggleSelectActionCreator({
+          selection,
+          facetId,
+        })
+      );
       dispatch(props.options.fetchResultsActionCreator());
       // TODO: analytics
     },
