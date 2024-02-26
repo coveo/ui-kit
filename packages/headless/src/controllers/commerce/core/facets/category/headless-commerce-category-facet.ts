@@ -6,6 +6,7 @@ import {
   CommerceCategoryFacetValue,
   CoreCommerceFacet,
   CoreCommerceFacetOptions,
+  CoreCommerceFacetState,
   buildCoreCommerceFacet,
 } from '../headless-core-commerce-facet';
 
@@ -13,21 +14,6 @@ export type CommerceCategoryFacetOptions = Omit<
   CoreCommerceFacetOptions,
   'toggleExcludeActionCreator' | 'toggleSelectActionCreator'
 >;
-
-export interface SelectedCategoryFacetValueWithAncestry {
-  /**
-   * The currently selected category facet value.
-   */
-  selected: CommerceCategoryFacetValue;
-  /**
-   * The ancestry tree of the currently selected category facet value.
-   *
-   * The first element is the root ancestor of the selected category facet value.
-   *
-   * The last element is the selected category facet value itself.
-   */
-  ancestry: CommerceCategoryFacetValue[];
-}
 
 /**
  * The `CommerceCategoryFacet` controller offers a high-level programming interface for implementing a category commerce
@@ -42,11 +28,15 @@ export type CommerceCategoryFacet = Omit<
   | 'toggleExclude'
   | 'toggleSingleExclude'
   | 'toggleSingleSelect'
+  | 'state'
 > & {
-  /**
-   * The currently selected category facet value along with its ancestry tree.
-   */
-  selectedValueWithAncestry: SelectedCategoryFacetValueWithAncestry | undefined;
+  state: CoreCommerceFacetState<CommerceCategoryFacetValue> & {
+    activeValue?: CommerceCategoryFacetValue;
+    canShowLessValues: boolean;
+    canShowMoreValues: boolean;
+    hasActiveValues: boolean;
+    selectedValueAncestry: CommerceCategoryFacetValue[];
+  };
 };
 
 /**
@@ -79,7 +69,6 @@ export function buildCommerceCategoryFacet(
     isValueSelected,
     showLessValues,
     showMoreValues,
-    state,
     subscribe,
     toggleSelect,
   } = coreController;
@@ -89,34 +78,32 @@ export function buildCommerceCategoryFacet(
     isValueSelected,
     showLessValues,
     showMoreValues,
-    state,
     subscribe,
     toggleSelect,
-    get canShowLessValues() {
-      const selected = this.selectedValueWithAncestry?.selected;
-      return selected
-        ? selected.children.length >
-            engine.state.commerceFacetSet[options.facetId].request
-              .initialNumberOfValues!
-        : coreController.canShowLessValues;
-    },
-    get canShowMoreValues() {
-      const selected = this.selectedValueWithAncestry?.selected;
-
-      return selected
-        ? selected.moreValuesAvailable
-        : coreController.canShowMoreValues;
-    },
-    get hasActiveValues() {
-      return !!this.selectedValueWithAncestry;
-    },
-    get selectedValueWithAncestry() {
-      const ancestry = this.state.values.length
-        ? findActiveValueAncestry(this.state.values)
-        : [];
-      return ancestry.length
-        ? {selected: ancestry[ancestry.length - 1], ancestry}
+    get state() {
+      const selectedValueAncestry = findActiveValueAncestry(
+        coreController.state.values
+      );
+      const activeValue = selectedValueAncestry.length
+        ? selectedValueAncestry[selectedValueAncestry.length - 1]
         : undefined;
+      const canShowLessValues = activeValue
+        ? activeValue.children.length > 1
+        : coreController.state.canShowLessValues;
+      const canShowMoreValues =
+        activeValue?.moreValuesAvailable ??
+        coreController.state.canShowMoreValues ??
+        false;
+      const hasActiveValues = !!activeValue;
+
+      return {
+        ...coreController.state,
+        activeValue,
+        canShowLessValues,
+        canShowMoreValues,
+        hasActiveValues,
+        selectedValueAncestry,
+      };
     },
   };
 }
