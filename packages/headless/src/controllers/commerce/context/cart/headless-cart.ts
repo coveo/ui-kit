@@ -1,9 +1,9 @@
-import {getEmit} from '../../../../api/analytics/event-protocol-utils';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {
   setItems,
   updateItem,
 } from '../../../../features/commerce/context/cart/cart-actions';
+import {logCartAction} from '../../../../features/commerce/context/cart/cart-analytics-actions';
 import {cartReducer as cart} from '../../../../features/commerce/context/cart/cart-slice';
 import {CartItemWithMetadata} from '../../../../features/commerce/context/cart/cart-state';
 import {cartSchema} from '../../../../features/commerce/context/cart/cart-validation';
@@ -157,17 +157,6 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     return item.quantity !== quantity;
   }
 
-  function isCurrentItemQuantityGreater(
-    currentItem: CartItem,
-    prevItem: CartItemWithMetadata | undefined
-  ) {
-    if (!prevItem) {
-      return true;
-    }
-
-    return currentItem.quantity > prevItem.quantity;
-  }
-
   return {
     ...controller,
 
@@ -182,19 +171,9 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
       dispatch(setItems([]));
     },
 
-    updateItem(item: CartItem) {
+    async updateItem(item: CartItem) {
       if (isNewQuantityDifferent(item.productId, item.quantity)) {
-        const prevItem = itemSelector(getState(), item.productId);
-        const action = isCurrentItemQuantityGreater(item, prevItem)
-          ? 'add'
-          : 'remove';
-        const {quantity, ...product} = item;
-        const emit = getEmit(engine.state.configuration);
-        emit('ec.cartAction', {
-          action,
-          quantity: 1,
-          product,
-        });
+        await dispatch(logCartAction(item));
       }
 
       dispatch(updateItem(item));

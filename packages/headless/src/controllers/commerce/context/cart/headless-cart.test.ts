@@ -1,5 +1,5 @@
-import * as eventProtocolUtils from '../../../../api/analytics/event-protocol-utils';
 import {setItems} from '../../../../features/commerce/context/cart/cart-actions';
+import {logCartAction} from '../../../../features/commerce/context/cart/cart-analytics-actions';
 import {cartReducer} from '../../../../features/commerce/context/cart/cart-slice';
 import {CartItemWithMetadata} from '../../../../features/commerce/context/cart/cart-state';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
@@ -15,7 +15,9 @@ import {
   totalQuantitySelector,
 } from './headless-cart-selectors';
 
+jest.mock('@coveo/relay');
 jest.mock('../../../../features/commerce/context/cart/cart-actions');
+jest.mock('../../../../features/commerce/context/cart/cart-analytics-actions');
 jest.mock('./headless-cart-selectors');
 
 describe('headless commerce cart', () => {
@@ -120,92 +122,42 @@ describe('headless commerce cart', () => {
       price: 100,
     };
 
-    const getExpectedCartActionPayload = (action: 'add' | 'remove') => ({
-      action,
-      product: productWithoutQuantity,
-      quantity: 1,
+    afterEach(() => {
+      jest.resetAllMocks();
     });
 
-    it('logs #ec.cartAction with "add" action and correct payload if quantity > 0 and item does not exist in cart', () => {
-      const mockedEmit = jest.fn();
-      jest
-        .spyOn(eventProtocolUtils, 'getEmit')
-        .mockImplementation(() => mockedEmit);
-      jest
-        .mocked(itemSelector)
-        .mockImplementation(() => undefined as unknown as CartItemWithMetadata);
-
-      cart.updateItem({...productWithoutQuantity, quantity: 1});
-
-      expect(mockedEmit).toHaveBeenCalledTimes(1);
-      expect(mockedEmit).toHaveBeenCalledWith(
-        'ec.cartAction',
-        getExpectedCartActionPayload('add')
-      );
-    });
-
-    it('logs #ec.cartAction with "add" action and correct payload if item exists in cart and new quantity > current', () => {
-      const mockedEmit = jest.fn();
-      jest
-        .spyOn(eventProtocolUtils, 'getEmit')
-        .mockImplementation(() => mockedEmit);
+    it('will dispatch #logCartAction with the updated item if the new quantity != current', () => {
+      const mockedLogCartAction = jest.mocked(logCartAction);
+      const item = {...productWithoutQuantity, quantity: 2};
       jest
         .mocked(itemSelector)
         .mockImplementation(() => ({...productWithoutQuantity, quantity: 1}));
 
-      cart.updateItem({...productWithoutQuantity, quantity: 2});
+      cart.updateItem(item);
 
-      expect(mockedEmit).toHaveBeenCalledTimes(1);
-      expect(mockedEmit).toHaveBeenCalledWith(
-        'ec.cartAction',
-        getExpectedCartActionPayload('add')
-      );
+      expect(mockedLogCartAction).toHaveBeenCalledTimes(1);
+      expect(mockedLogCartAction).toHaveBeenCalledWith(item);
     });
 
-    it('logs #ec.cartAction with "remove" action and correct payload if item exists in cart and new quantity < current', () => {
-      const mockedEmit = jest.fn();
-      jest
-        .spyOn(eventProtocolUtils, 'getEmit')
-        .mockImplementation(() => mockedEmit);
-      jest
-        .mocked(itemSelector)
-        .mockImplementation(() => ({...productWithoutQuantity, quantity: 2}));
+    it('will not dispatch #logCartAction if item exists in cart and new quantity = current', () => {
+      const mockedLogCartAction = jest.mocked(logCartAction);
+      const sameItem = {...productWithoutQuantity, quantity: 1};
+      jest.mocked(itemSelector).mockImplementation(() => sameItem);
 
-      cart.updateItem({...productWithoutQuantity, quantity: 1});
+      cart.updateItem(sameItem);
 
-      expect(mockedEmit).toHaveBeenCalledTimes(1);
-      expect(mockedEmit).toHaveBeenCalledWith(
-        'ec.cartAction',
-        getExpectedCartActionPayload('remove')
-      );
+      expect(mockedLogCartAction).toHaveBeenCalledTimes(0);
     });
 
-    it('does not log #ec.cartAction if item exists in cart and new quantity = current', () => {
-      const mockedEmit = jest.fn();
-      jest
-        .spyOn(eventProtocolUtils, 'getEmit')
-        .mockImplementation(() => mockedEmit);
-      jest
-        .mocked(itemSelector)
-        .mockImplementation(() => ({...productWithoutQuantity, quantity: 2}));
-
-      cart.updateItem({...productWithoutQuantity, quantity: 2});
-
-      expect(mockedEmit).toHaveBeenCalledTimes(0);
-    });
-
-    it('does not log #ec.cartAction if item does not exist in cart and new quantity = 0', () => {
-      const mockedEmit = jest.fn();
-      jest
-        .spyOn(eventProtocolUtils, 'getEmit')
-        .mockImplementation(() => mockedEmit);
+    it('does not log #logCartAction if item does not exist in cart and new quantity = 0', () => {
+      const mockedLogCartAction = jest.mocked(logCartAction);
       jest
         .mocked(itemSelector)
         .mockImplementation(() => undefined as unknown as CartItemWithMetadata);
 
       cart.updateItem({...productWithoutQuantity, quantity: 0});
 
-      expect(mockedEmit).toHaveBeenCalledTimes(0);
+      expect(mockedLogCartAction).toHaveBeenCalledTimes(0);
     });
   });
 

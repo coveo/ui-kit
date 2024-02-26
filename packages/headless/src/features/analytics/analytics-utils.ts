@@ -20,14 +20,15 @@ import type {
   EventDescription,
   AnalyticsClientSendEventHook,
 } from 'coveo.analytics';
-import {AnalyticsClient} from 'coveo.analytics/dist/definitions/client/analytics';
-import {SearchEventResponse} from 'coveo.analytics/dist/definitions/events';
+import { AnalyticsClient } from 'coveo.analytics/dist/definitions/client/analytics';
+import { SearchEventResponse } from 'coveo.analytics/dist/definitions/events';
 import {
   PartialDocumentInformation,
   DocumentIdentifier,
 } from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
-import {Logger} from 'pino';
-import {getRelayInstanceFromState} from '../../api/analytics/analytics-relay-client';
+import { Logger } from 'pino';
+import { getRelayInstanceFromState } from '../../api/analytics/analytics-relay-client';
+import { StateNeededByCartAnalyticsProvider } from '../../api/analytics/cart-analytics';
 import {
   CaseAssistAnalyticsProvider,
   configureCaseAssistAnalytics,
@@ -43,33 +44,33 @@ import {
   InsightAnalyticsProvider,
   StateNeededByInsightAnalyticsProvider,
 } from '../../api/analytics/insight-analytics';
-import {StateNeededByInstantResultsAnalyticsProvider} from '../../api/analytics/instant-result-analytics';
+import { StateNeededByInstantResultsAnalyticsProvider } from '../../api/analytics/instant-result-analytics';
 import {
   configureProductListingAnalytics,
   ProductListingAnalyticsProvider,
   StateNeededByProductListingAnalyticsProvider,
 } from '../../api/analytics/product-listing-analytics';
-import {StateNeededByProductRecommendationsAnalyticsProvider} from '../../api/analytics/product-recommendations-analytics';
+import { StateNeededByProductRecommendationsAnalyticsProvider } from '../../api/analytics/product-recommendations-analytics';
 import {
   configureLegacyAnalytics,
   SearchAnalyticsProvider,
   StateNeededBySearchAnalyticsProvider,
 } from '../../api/analytics/search-analytics';
-import {PreprocessRequest} from '../../api/preprocess-request';
-import {ProductRecommendation} from '../../api/search/search/product-recommendation';
-import {Raw} from '../../api/search/search/raw';
-import {Result} from '../../api/search/search/result';
-import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
-import {RecommendationAppState} from '../../state/recommendation-app-state';
-import {SearchAppState} from '../../state/search-app-state';
+import { PreprocessRequest } from '../../api/preprocess-request';
+import { ProductRecommendation } from '../../api/search/search/product-recommendation';
+import { Raw } from '../../api/search/search/raw';
+import { Result } from '../../api/search/search/result';
+import { ThunkExtraArguments } from '../../app/thunk-extra-arguments';
+import { RecommendationAppState } from '../../state/recommendation-app-state';
+import { SearchAppState } from '../../state/search-app-state';
 import {
   ConfigurationSection,
   PipelineSection,
 } from '../../state/state-sections';
-import {requiredNonEmptyString} from '../../utils/validate-payload';
-import {ResultWithFolding} from '../folding/folding-slice';
-import {getAllIncludedResultsFrom} from '../folding/folding-utils';
-import {getPipelineInitialState} from '../pipeline/pipeline-state';
+import { requiredNonEmptyString } from '../../utils/validate-payload';
+import { ResultWithFolding } from '../folding/folding-slice';
+import { getAllIncludedResultsFrom } from '../folding/folding-utils';
+import { getPipelineInitialState } from '../pipeline/pipeline-state';
 
 export interface PreparableAnalyticsActionOptions<
   StateNeeded extends ConfigurationSection,
@@ -82,7 +83,7 @@ export interface PreparableAnalyticsActionOptions<
 
 export type AnalyticsAsyncThunk<
   StateNeeded extends
-    ConfigurationSection = StateNeededBySearchAnalyticsProvider,
+  ConfigurationSection = StateNeededBySearchAnalyticsProvider,
 > = AsyncThunk<void, void, AsyncThunkAnalyticsOptions<StateNeeded>>;
 
 export function makeBasicNewSearchAnalyticsAction(
@@ -98,7 +99,7 @@ export function makeBasicNewSearchAnalyticsAction(
 
 export interface PreparedAnalyticsAction<
   StateNeeded extends
-    ConfigurationSection = StateNeededBySearchAnalyticsProvider,
+  ConfigurationSection = StateNeededBySearchAnalyticsProvider,
 > {
   description?: EventDescription;
   action: AnalyticsAsyncThunk<StateNeeded>;
@@ -106,14 +107,14 @@ export interface PreparedAnalyticsAction<
 
 type PrepareAnalyticsFunction<
   StateNeeded extends
-    ConfigurationSection = StateNeededBySearchAnalyticsProvider,
+  ConfigurationSection = StateNeededBySearchAnalyticsProvider,
 > = (
   options: PreparableAnalyticsActionOptions<StateNeeded>
 ) => Promise<PreparedAnalyticsAction<StateNeeded>>;
 
 export interface PreparableAnalyticsAction<
   StateNeeded extends
-    ConfigurationSection = StateNeededBySearchAnalyticsProvider,
+  ConfigurationSection = StateNeededBySearchAnalyticsProvider,
 > extends AnalyticsAsyncThunk<StateNeeded> {
   prepare: PrepareAnalyticsFunction<StateNeeded>;
 }
@@ -148,6 +149,9 @@ export type ProductListingAction =
 export type ProductListingV2Action =
   PreparableAnalyticsAction<StateNeededByCommerceAnalyticsProvider>;
 
+export type CartAction =
+  PreparableAnalyticsAction<StateNeededByCartAnalyticsProvider>;
+
 export interface AsyncThunkAnalyticsOptions<
   T extends StateNeededBySearchAnalyticsProvider,
 > {
@@ -163,7 +167,7 @@ export interface AsyncThunkInsightAnalyticsOptions<
 }
 
 function makeInstantlyCallable<T extends object>(action: T) {
-  return Object.assign(action, {instantlyCallable: true}) as T;
+  return Object.assign(action, { instantlyCallable: true }) as T;
 }
 
 function makePreparableAnalyticsAction<
@@ -195,8 +199,8 @@ function makePreparableAnalyticsAction<
       >(prefix, body) as unknown as AnalyticsAsyncThunk<StateNeeded>
     );
 
-  const rootAction = createAnalyticsAction(async (_, {getState, extra}) => {
-    const {analyticsClientMiddleware, preprocessRequest, logger} = extra;
+  const rootAction = createAnalyticsAction(async (_, { getState, extra }) => {
+    const { analyticsClientMiddleware, preprocessRequest, logger } = extra;
     return await (
       await buildEvent({
         getState,
@@ -204,7 +208,7 @@ function makePreparableAnalyticsAction<
         preprocessRequest,
         logger,
       })
-    ).log({state: getState(), extra});
+    ).log({ state: getState(), extra });
   });
 
   const prepare: PrepareAnalyticsFunction<StateNeeded> = async ({
@@ -213,7 +217,7 @@ function makePreparableAnalyticsAction<
     preprocessRequest,
     logger,
   }) => {
-    const {description, log} = await buildEvent({
+    const { description, log } = await buildEvent({
       getState,
       analyticsClientMiddleware,
       preprocessRequest,
@@ -222,8 +226,8 @@ function makePreparableAnalyticsAction<
     return {
       description,
       action: createAnalyticsAction(
-        async (_, {getState: getNewState, extra: newExtra}) => {
-          return await log({state: getNewState(), extra: newExtra});
+        async (_, { getState: getNewState, extra: newExtra }) => {
+          return await log({ state: getNewState(), extra: newExtra });
         }
       ),
     };
@@ -272,7 +276,7 @@ export interface LegacyAnalyticsOptions<
 }
 
 interface ProviderClass<StateNeeded, LegacyProvider> {
-  new (param: () => StateNeeded): LegacyProvider;
+  new(param: () => StateNeeded): LegacyProvider;
 }
 
 const makeAnalyticsActionFactory = <
@@ -307,7 +311,7 @@ const makeAnalyticsActionFactory = <
 ) => {
   function makeAnalyticsAction<
     LegacyStateNeeded extends
-      LegacyStateNeededByProvider = LegacyStateNeededByProvider,
+    LegacyStateNeededByProvider = LegacyStateNeededByProvider,
     ComputedLegacyAnalyticsOptions extends LegacyAnalyticsOptions<
       LegacyStateNeeded,
       Client,
@@ -320,7 +324,7 @@ const makeAnalyticsActionFactory = <
   ): PreparableAnalyticsAction<LegacyStateNeeded>;
   function makeAnalyticsAction<
     LegacyStateNeeded extends
-      LegacyStateNeededByProvider = LegacyStateNeededByProvider,
+    LegacyStateNeededByProvider = LegacyStateNeededByProvider,
     StateNeeded extends StateNeededByProvider = StateNeededByProvider,
     PayloadType = {},
   >({
@@ -339,7 +343,7 @@ const makeAnalyticsActionFactory = <
   >): PreparableAnalyticsAction<StateNeeded>;
   function makeAnalyticsAction<
     LegacyStateNeeded extends
-      LegacyStateNeededByProvider = LegacyStateNeededByProvider,
+    LegacyStateNeededByProvider = LegacyStateNeededByProvider,
     ComputedLegacyAnalyticsOptions extends LegacyAnalyticsOptions<
       LegacyStateNeeded,
       Client,
@@ -350,38 +354,38 @@ const makeAnalyticsActionFactory = <
   >(
     ...params:
       | [
-          ComputedLegacyAnalyticsOptions['prefix'],
-          LegacyGetBuilderType,
-          ComputedLegacyAnalyticsOptions['__legacy__provider']?,
-        ]
+        ComputedLegacyAnalyticsOptions['prefix'],
+        LegacyGetBuilderType,
+        ComputedLegacyAnalyticsOptions['__legacy__provider']?,
+      ]
       | [
-          AnalyticsActionOptions<
-            LegacyStateNeeded,
-            StateNeeded,
-            LegacyGetBuilderType,
-            LegacyProvider,
-            Client,
-            PayloadType
-          >,
-        ]
+        AnalyticsActionOptions<
+          LegacyStateNeeded,
+          StateNeeded,
+          LegacyGetBuilderType,
+          LegacyProvider,
+          Client,
+          PayloadType
+        >,
+      ]
   ): PreparableAnalyticsAction<LegacyStateNeeded & StateNeeded> {
     const options =
       params.length === 1
         ? {
-            ...params[0],
-            __legacy__getBuilder: legacyGetBuilderConverter(
-              params[0].__legacy__getBuilder
-            ),
-            analyticsConfigurator: configurator,
-            providerClass: providerClass,
-          }
+          ...params[0],
+          __legacy__getBuilder: legacyGetBuilderConverter(
+            params[0].__legacy__getBuilder
+          ),
+          analyticsConfigurator: configurator,
+          providerClass: providerClass,
+        }
         : {
-            prefix: params[0],
-            __legacy__getBuilder: legacyGetBuilderConverter(params[1]),
-            __legacy__provider: params[2],
-            analyticsConfigurator: configurator,
-            providerClass: providerClass,
-          };
+          prefix: params[0],
+          __legacy__getBuilder: legacyGetBuilderConverter(params[1]),
+          __legacy__provider: params[2],
+          analyticsConfigurator: configurator,
+          providerClass: providerClass,
+        };
     return internalMakeAnalyticsAction(options);
   }
   return makeAnalyticsAction;
@@ -392,7 +396,7 @@ const shouldSendLegacyEvent = (state: ConfigurationSection) =>
 const shouldSendNextEvent = (state: ConfigurationSection) =>
   state.configuration.analytics.analyticsMode === 'next';
 
-type CommonClient = {coveoAnalyticsClient: AnalyticsClient};
+type CommonClient = { coveoAnalyticsClient: AnalyticsClient };
 
 type AnalyticsConfiguratorFromStateNeeded<
   StateNeeded extends InternalLegacyStateNeeded,
@@ -483,7 +487,7 @@ const internalMakeAnalyticsAction = <
         ) => Promise<void>;
         description?: EventDescription;
       } = {
-        log: async ({state}) => {
+        log: async ({ state }) => {
           for (const log of loggers) {
             await log(state);
           }
@@ -510,7 +514,7 @@ const internalMakeAnalyticsAction = <
           );
         }
       });
-      const {emit} = getRelayInstanceFromState(state);
+      const { emit } = getRelayInstanceFromState(state);
       loggers.push(async (state: LegacyStateNeeded & StateNeeded) => {
         if (
           shouldSendNextEvent(state) &&
@@ -540,7 +544,7 @@ async function logLegacyEvent<
   const response = await builder?.log({
     searchUID: __legacy__provider!(() => state).getSearchUID(),
   });
-  logger.info({client, response}, 'Analytics response');
+  logger.info({ client, response }, 'Analytics response');
 }
 
 type LogFunction<Client, StateNeeded> = (
@@ -555,13 +559,13 @@ const fromLogToLegacyBuilder =
       state: StateNeeded
     ) => Promise<void | SearchEventResponse> | void | null
   ): ((client: Client, state: StateNeeded) => Promise<EventBuilder>) =>
-  (client, state) =>
-    Promise.resolve({
-      description: {actionCause: 'caseAssist'},
-      log: async (_metadata: {searchUID: string}) => {
-        log(client, state);
-      },
-    });
+    (client, state) =>
+      Promise.resolve({
+        description: { actionCause: 'caseAssist' },
+        log: async (_metadata: { searchUID: string }) => {
+          log(client, state);
+        },
+      });
 
 export const makeAnalyticsAction = makeAnalyticsActionFactory<
   StateNeededBySearchAnalyticsProvider,
@@ -652,7 +656,7 @@ export const partialRecommendationInformation = (
 ): PartialDocumentInformation => {
   const resultIndex =
     state.recommendation?.recommendations.findIndex(
-      ({uniqueId}) => result.uniqueId === uniqueId
+      ({ uniqueId }) => result.uniqueId === uniqueId
     ) || 0;
 
   return buildPartialDocumentInformation(result, resultIndex, state);
@@ -701,11 +705,11 @@ const rawPartialDefinition = {
 
 export const resultPartialDefinition = {
   uniqueId: requiredNonEmptyString,
-  raw: new RecordValue({values: rawPartialDefinition}),
+  raw: new RecordValue({ values: rawPartialDefinition }),
   title: requiredNonEmptyString,
   uri: requiredNonEmptyString,
   clickUri: requiredNonEmptyString,
-  rankingModifier: new StringValue({required: false, emptyAllowed: true}),
+  rankingModifier: new StringValue({ required: false, emptyAllowed: true }),
 };
 
 export const productRecommendationPartialDefinition = {
@@ -716,7 +720,7 @@ export const productRecommendationPartialDefinition = {
 function partialRawPayload(raw: Raw): Partial<Raw> {
   return Object.assign(
     {},
-    ...Object.keys(rawPartialDefinition).map((key) => ({[key]: raw[key]}))
+    ...Object.keys(rawPartialDefinition).map((key) => ({ [key]: raw[key] }))
   );
 }
 
@@ -726,7 +730,7 @@ function partialResultPayload(result: Result): Partial<Result> {
     ...Object.keys(resultPartialDefinition).map((key) => ({
       [key]: result[key as keyof typeof resultPartialDefinition],
     })),
-    {raw: partialRawPayload(result.raw)}
+    { raw: partialRawPayload(result.raw) }
   );
 }
 
@@ -769,7 +773,7 @@ function findPositionWithUniqueId(
   targetResult: Result,
   results: ResultWithFolding[] | Result[] = []
 ) {
-  return results.findIndex(({uniqueId}) => uniqueId === targetResult.uniqueId);
+  return results.findIndex(({ uniqueId }) => uniqueId === targetResult.uniqueId);
 }
 
 export const validateProductRecommendationPayload = (
