@@ -133,8 +133,16 @@
       "matchPackagePatterns": ["^undici$"],
       "groupSlug": "undici",
       "rangeStrategy": "replace",
-      "allowedVersions": "6.x",
+      "allowedVersions": "5.x",
       "description": "undici 6.x drops support for Node 16"
+    },
+    {
+      "matchFileNames": ["packages/quantic/package.json"],
+      "matchPackagePatterns": ["^@​salesforce/sfdx-lwc-jest$"],
+      "groupSlug": "sfdx-lwc-jest",
+      "rangeStrategy": "replace",
+      "allowedVersions": "3.x",
+      "description": "sfdx-lwc-jest uses a not GA version of Salesforce API (60)"
     }
   ],
   "rangeStrategy": "auto",

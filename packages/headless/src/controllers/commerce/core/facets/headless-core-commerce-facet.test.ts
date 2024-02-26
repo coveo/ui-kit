@@ -1,5 +1,5 @@
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
-import {CommerceFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
+import {AnyCommerceFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
 import {
   AnyFacetValueResponse,
   RegularFacetResponse,
@@ -54,7 +54,7 @@ describe('CoreCommerceFacet', () => {
     facet = buildCoreCommerceFacet(engine, {options});
   }
 
-  function setFacetRequest(config: Partial<CommerceFacetRequest> = {}) {
+  function setFacetRequest(config: Partial<AnyCommerceFacetRequest> = {}) {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, field, type, ...config}),
     });

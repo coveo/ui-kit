@@ -111,6 +111,12 @@ export {buildProductListingFacetGenerator} from './controllers/commerce/product-
 export type {SearchFacetGenerator} from './controllers/commerce/search/facets/headless-search-facet-generator';
 export {buildSearchFacetGenerator} from './controllers/commerce/search/facets/headless-search-facet-generator';
 
+export type {
+  CommerceFacetSearch,
+  CommerceFacetSearchResult,
+} from './controllers/commerce/core/facets/searchable/headless-commerce-facet-search';
+export type {CommerceFacetSearchState} from './controllers/commerce/core/facets/searchable/headless-commerce-searchable-facet';
+
 export type {Search} from './controllers/commerce/search/headless-search';
 export {buildSearch} from './controllers/commerce/search/headless-search';
 

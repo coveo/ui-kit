@@ -1,7 +1,7 @@
 import {ApiEntryPoint} from '@microsoft/api-extractor-model';
 
 export function findApi(entry: ApiEntryPoint, apiName: string) {
-  const canonicalName = extractCanonicalName(apiName);
+  const canonicalName = extractCanonicalName(removeTypeTemplate(apiName));
   const [result] = entry.findMembersByName(canonicalName);
 
   if (!result) {
@@ -20,3 +20,11 @@ function extractCanonicalName(apiName: string) {
 
   return apiName.slice(0, endIndex).trim();
 }
+
+const removeTypeTemplate = (input: string): string => {
+  // Regular expression to match the templatable type
+  const regex = /^(.+)<.*>$/;
+  const match = input.match(regex);
+
+  return match ? match[1] : input;
+};

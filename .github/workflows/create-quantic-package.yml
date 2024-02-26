@@ -50,7 +50,7 @@ jobs:
           rm server.key
         env:
           SFDX_AUTH_JWT_USERNAME: sfdc.integration.devv2.hub@coveo.com
-          SFDX_AUTH_JWT_KEY: server.key
+          SFDX_AUTH_JWT_KEY_FILE: server.key
           SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_PACKAGE_CLIENT_ID }}
 
   report-status:

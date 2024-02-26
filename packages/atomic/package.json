@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "2.57.2",
+  "version": "2.58.0",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -52,13 +52,13 @@
     "@coveo/bueno": "0.45.7",
     "@popperjs/core": "^2.11.6",
     "@salesforce-ux/design-system": "^2.16.1",
-    "@stencil/core": "4.11.0",
-    "@stencil/store": "2.0.12",
+    "@stencil/core": "4.12.2",
+    "@stencil/store": "2.0.13",
     "dayjs": "1.11.10",
     "dompurify": "3.0.8",
     "escape-html": "1.0.3",
     "focus-visible": "5.2.0",
-    "i18next": "23.8.2",
+    "i18next": "23.9.0",
     "i18next-http-backend": "2.4.3",
     "stencil-inline-svg": "1.1.0",
     "ts-debounce": "^4.0.0"
@@ -66,7 +66,7 @@
   "devDependencies": {
     "@babel/core": "7.23.9",
     "@coveo/release": "1.0.0",
-    "@coveo/headless": "2.50.0",
+    "@coveo/headless": "2.50.2",
     "@fullhuman/postcss-purgecss": "5.0.0",
     "@rollup/plugin-alias": "5.1.0",
     "@rollup/plugin-replace": "5.0.5",
@@ -94,7 +94,7 @@
     "lodash": "4.17.21",
     "ncp": "2.0.0",
     "postcss-focus-visible": "9.0.1",
-    "postcss-import": "16.0.0",
+    "postcss-import": "16.0.1",
     "postcss-mixins": "9.0.4",
     "postcss-nested": "6.0.1",
     "puppeteer": "21.11.0",
@@ -103,7 +103,7 @@
     "typescript": "5.3.3"
   },
   "peerDependencies": {
-    "@coveo/headless": "2.50.0"
+    "@coveo/headless": "2.50.2"
   },
   "license": "Apache-2.0",
   "engines": {

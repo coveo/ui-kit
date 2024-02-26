@@ -12,7 +12,10 @@ import {
   MockedCommerceEngine,
 } from '../../../../test/mock-engine-v2';
 import {CommerceDateFacet} from '../../core/facets/date/headless-commerce-date-facet';
-import {CommerceFacetOptions} from '../../core/facets/headless-core-commerce-facet';
+import {
+  CommerceFacetOptions,
+  DateRangeRequest,
+} from '../../core/facets/headless-core-commerce-facet';
 import {buildSearchDateFacet} from './headless-search-date-facet';
 
 jest.mock('../../../../features/commerce/search/search-actions');
@@ -31,7 +34,9 @@ describe('SearchDateFacet', () => {
     facet = buildSearchDateFacet(engine, options);
   }
 
-  function setFacetRequest(config: Partial<CommerceFacetRequest> = {}) {
+  function setFacetRequest(
+    config: Partial<CommerceFacetRequest<DateRangeRequest>> = {}
+  ) {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, ...config}),
     });

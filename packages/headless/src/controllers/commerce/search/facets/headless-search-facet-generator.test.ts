@@ -1,16 +1,13 @@
 import {FacetType} from '../../../../features/commerce/facets/facet-set/interfaces/response';
 import {executeSearch} from '../../../../features/commerce/search/search-actions';
+import {CommerceAppState} from '../../../../state/commerce-app-state';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
-import {
-  buildMockCommerceRegularFacetResponse,
-  buildMockCommerceNumericFacetResponse,
-  buildMockCommerceDateFacetResponse,
-} from '../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {
   MockedCommerceEngine,
   buildMockCommerceEngine,
 } from '../../../../test/mock-engine-v2';
+import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
 import {
   buildSearchFacetGenerator,
   SearchFacetGenerator,
@@ -20,83 +17,62 @@ jest.mock('../../../../features/commerce/search/search-actions');
 
 describe('SearchFacetGenerator', () => {
   let engine: MockedCommerceEngine;
+  let state: CommerceAppState;
   let facetGenerator: SearchFacetGenerator;
 
-  function initFacetGenerator(facetType: FacetType = 'regular') {
-    const facet = {
-      facetId: 'regular_facet_id',
-      type: facetType,
-    };
-    const mockState = buildMockCommerceState();
-    const facets = [];
-    switch (facetType) {
-      case 'regular':
-        facets.push(
-          buildMockCommerceRegularFacetResponse({
-            facetId: facet.facetId,
-            field: 'some_regular_field',
-          })
-        );
-        break;
-      case 'numericalRange':
-        facets.push(
-          buildMockCommerceNumericFacetResponse({
-            facetId: facet.facetId,
-            field: 'some_numeric_field',
-          })
-        );
-        break;
-      case 'dateRange':
-        facets.push(
-          buildMockCommerceDateFacetResponse({
-            facetId: facet.facetId,
-            field: 'some_date_field',
-          })
-        );
-        break;
-      case 'hierarchical': // TODO
-      default:
-        break;
-    }
-    engine = buildMockCommerceEngine({
-      ...mockState,
-      commerceSearch: {
-        ...mockState.commerceSearch,
-        facets: [
-          buildMockCommerceRegularFacetResponse({
-            facetId: facet.facetId,
-            field: 'some_regular_field',
-          }),
-        ],
-      },
-      facetOrder: [facet.facetId],
-      commerceFacetSet: {
-        [facet.facetId]: {request: buildMockCommerceFacetRequest(facet)},
-      },
-    });
+  function initEngine(preloadedState = buildMockCommerceState()) {
+    engine = buildMockCommerceEngine(preloadedState);
+  }
+
+  function initSearchFacetGenerator() {
     facetGenerator = buildSearchFacetGenerator(engine);
   }
 
+  function setFacetState(config: {facetId: string; type: FacetType}[] = []) {
+    for (const facet of config) {
+      state.facetOrder.push(facet.facetId);
+      state.commerceFacetSet[facet.facetId] = {
+        request: buildMockCommerceFacetRequest({
+          facetId: facet.facetId,
+          type: facet.type,
+        }),
+      };
+      state.facetSearchSet[facet.facetId] = buildMockFacetSearch();
+    }
+  }
+
+  beforeEach(() => {
+    jest.resetAllMocks();
+
+    state = buildMockCommerceState();
+    setFacetState();
+
+    initEngine(state);
+    initSearchFacetGenerator();
+  });
+
   it('exposes #subscribe method', () => {
-    initFacetGenerator();
     expect(facetGenerator.subscribe).toBeTruthy();
   });
 
-  it('generated regular facet controllers should dispatch #executeSearch', () => {
-    initFacetGenerator('regular');
-
-    facetGenerator.state.facets[0].deselectAll();
-    expect(executeSearch).toHaveBeenCalled();
-  });
-  it('generated regular numeric facet controllers should dispatch #executeSearch', () => {
-    initFacetGenerator('numericalRange');
+  it('generated regular facet controller dispatches #executeSearch', () => {
+    setFacetState([{facetId: 'regular_facet_id', type: 'regular'}]);
+    initSearchFacetGenerator();
 
     facetGenerator.state.facets[0].deselectAll();
     expect(executeSearch).toHaveBeenCalled();
   });
 
-  it('generated date facet controllers dispatches #executeSearch', () => {
-    initFacetGenerator('dateRange');
+  it('generated regular numeric facet controller dispatches #executeSearch', () => {
+    setFacetState([{facetId: 'numeric_facet_id', type: 'numericalRange'}]);
+    initSearchFacetGenerator();
+
+    facetGenerator.state.facets[0].deselectAll();
+    expect(executeSearch).toHaveBeenCalled();
+  });
+
+  it('generated date facet controller dispatches #executeSearch', () => {
+    setFacetState([{facetId: 'date_facet_id', type: 'dateRange'}]);
 
     facetGenerator.state.facets[0].deselectAll();
     expect(executeSearch).toHaveBeenCalled();

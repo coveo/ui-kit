@@ -6,14 +6,12 @@ on:
     paths:
       - '**/package-lock.json'
       - '!utils/atomic-storybook/package-lock.json'
-      - '!packages/quantic/isolated-sfdx/package-lock.json'
       - '!package-lock.json'
   pull_request:
     branches: [master]
     paths:
       - '**/package-lock.json'
       - '!utils/atomic-storybook/package-lock.json'
-      - '!packages/quantic/isolated-sfdx/package-lock.json'
       - '!package-lock.json'
 
 jobs:

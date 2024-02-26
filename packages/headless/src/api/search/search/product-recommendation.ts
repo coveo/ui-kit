@@ -4,7 +4,9 @@ export interface ProductRecommendation {
    */
   documentUri: string;
   /**
-   * Document UriHash in the index. Useful for analytics.
+   * Document UriHash in the index.
+   *
+   * **Note:** This parameter is deprecated. Use the `permanentid` to identify items in the index.
    */
   documentUriHash: string;
   /**

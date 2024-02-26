@@ -12,7 +12,7 @@ fieldset {
 .facet__show-less {
   font-size: 12px;
   background-color: white;
-  color: var(--lwc-colorTextIconDefault, #747474);
+  color: var(--lwc-colorTextPlaceholder, var(--lwc-colorTextIconDefault, #747474));
   border: none;
   margin-bottom: 5px;
 }
@@ -24,7 +24,8 @@ fieldset {
   border: none;
 }
 
-.facet__show-more_text, .facet__show-less_text{
+.facet__show-more_text,
+.facet__show-less_text {
   display: flex;
   align-items: left;
 }
@@ -51,5 +52,5 @@ fieldset {
 }
 
 .facet__number-of-results {
-  color: var(--lwc-colorTextIconDefault, #747474);
+  color: var(--lwc-colorTextPlaceholder, var(--lwc-colorTextIconDefault, #747474));
 }
