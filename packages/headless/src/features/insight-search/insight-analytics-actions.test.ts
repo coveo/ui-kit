@@ -48,7 +48,7 @@ const exampleCreateArticleMetadata = {
   articleType: 'Knowledge__kav',
 };
 
-describe('result actions insight analytics actions', () => {
+describe('insight analytics actions', () => {
   let engine: MockInsightEngine;
   const caseContextState = {
     caseContext: {
