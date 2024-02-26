@@ -243,6 +243,18 @@ export function mockSearchWithResults(
   }).as(InterceptAliases.Search.substring(1));
 }
 
+export function mockSearchWithCustomFunction(
+  mockResponseFunction: Function,
+  useCase?: string
+) {
+  cy.intercept(getRoute(useCase), (req) => {
+    req.continue((res) => {
+      mockResponseFunction(res);
+      res.send();
+    });
+  }).as(getQueryAlias(useCase).substring(1));
+}
+
 export function interceptResultHtmlContent() {
   cy.intercept('GET', routeMatchers.html).as(
     InterceptAliases.ResultHtml.substring(1)
@@ -290,7 +302,7 @@ export function getRoute(useCase?: string) {
     : routeMatchers.search;
 }
 
-export function mockSearchWithoutAnyFacetValues(useCase: string) {
+export function mockSearchWithoutAnyFacetValues(useCase?: string) {
   cy.intercept(getRoute(useCase), (req) => {
     req.continue((res) => {
       res.body.facets.forEach((facet: {values: string[]}) => {

@@ -1,3 +1,11 @@
+# 2.22.0 (2024-02-21)
+
+### Features
+
+- **atomic:** exposes numberOfFoldedResults ([#3597](https://github.com/coveo/ui-kit/issues/3597)) ([3da9ac6](https://github.com/coveo/ui-kit/commits/3da9ac63984eef223e5a766ff1371435b9c1dc9c))
+
+## 2.21.5 (2024-02-14)
+
 # 2.21.0 (2024-01-19)
 
 ### Features

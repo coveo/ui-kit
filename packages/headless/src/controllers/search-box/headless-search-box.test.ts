@@ -3,9 +3,9 @@ import {logSearchboxSubmit} from '../../features/query/query-analytics-actions';
 import {executeSearch} from '../../features/search/search-actions';
 import {SearchAppState} from '../../state/search-app-state';
 import {
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../test/mock-engine';
+  buildMockSearchEngine,
+  MockedSearchEngine,
+} from '../../test/mock-engine-v2';
 import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
 import {createMockState} from '../../test/mock-state';
 import {
@@ -20,11 +20,14 @@ jest.mock('../../features/query/query-analytics-actions', () => ({
   searchboxSubmit: jest.fn(() => () => {}),
 }));
 
+jest.mock('../../features/search/search-actions');
+jest.mock('../../features/query-suggest/query-suggest-actions');
+
 describe('headless searchBox', () => {
   const id = 'search-box-123';
   let state: SearchAppState;
 
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
   let searchBox: SearchBox;
   let props: SearchBoxProps;
 
@@ -71,7 +74,7 @@ describe('headless searchBox', () => {
   }
 
   function initController() {
-    engine = buildMockSearchAppEngine({state});
+    engine = buildMockSearchEngine(state);
     searchBox = buildSearchBox(engine, props);
   }
 
@@ -79,13 +82,7 @@ describe('headless searchBox', () => {
     it(`when numberOfQuerySuggestions is greater than 0,
     it dispatches fetchQuerySuggestions`, async () => {
       searchBox.showSuggestions();
-
-      const action = engine.actions.find(
-        (a) => a.type === fetchQuerySuggestions.pending.type
-      );
-      expect(action).toEqual(
-        fetchQuerySuggestions.pending(action!.meta.requestId, {id})
-      );
+      expect(fetchQuerySuggestions).toHaveBeenCalledWith({id});
     });
 
     it(`when numberOfQuerySuggestions is 0,
@@ -94,12 +91,7 @@ describe('headless searchBox', () => {
       initController();
 
       searchBox.showSuggestions();
-
-      const action = engine.actions.find(
-        (a) => a.type === fetchQuerySuggestions.pending.type
-      );
-
-      expect(action).toBe(undefined);
+      expect(fetchQuerySuggestions).not.toHaveBeenCalled();
     });
   });
 
@@ -107,20 +99,15 @@ describe('headless searchBox', () => {
     it('dispatches executeSearch', () => {
       const suggestion = 'a';
       searchBox.selectSuggestion(suggestion);
-
-      expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 
   describe('when calling submit', () => {
     it('it dispatches an executeSearch action', () => {
       searchBox.submit();
-
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-      expect(action).toBeTruthy();
-      expect(logSearchboxSubmit).toHaveBeenCalledTimes(1);
+      expect(executeSearch).toHaveBeenCalled();
+      expect(logSearchboxSubmit).toHaveBeenCalled();
     });
   });
 });

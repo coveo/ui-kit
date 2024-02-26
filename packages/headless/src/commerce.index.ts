@@ -66,12 +66,11 @@ export type {
 export {buildInteractiveResult} from './controllers/commerce/product-listing/result-list/headless-product-listing-interactive-result';
 
 export type {
-  CartOptions,
+  CartInitialState,
   CartItem,
   CartProps,
   Cart,
   CartState,
-  CartControllerState,
 } from './controllers/commerce/context/cart/headless-cart';
 export {buildCart} from './controllers/commerce/context/cart/headless-cart';
 
@@ -112,6 +111,12 @@ export {buildProductListingFacetGenerator} from './controllers/commerce/product-
 export type {SearchFacetGenerator} from './controllers/commerce/search/facets/headless-search-facet-generator';
 export {buildSearchFacetGenerator} from './controllers/commerce/search/facets/headless-search-facet-generator';
 
+export type {
+  CommerceFacetSearch,
+  CommerceFacetSearchResult,
+} from './controllers/commerce/core/facets/searchable/headless-commerce-facet-search';
+export type {CommerceFacetSearchState} from './controllers/commerce/core/facets/searchable/headless-commerce-searchable-facet';
+
 export type {Search} from './controllers/commerce/search/headless-search';
 export {buildSearch} from './controllers/commerce/search/headless-search';
 
@@ -122,3 +127,14 @@ export type {
   SearchBox,
   SearchBoxState,
 } from './controllers/commerce/search-box/headless-search-box';
+
+export type {
+  UrlManagerProps,
+  UrlManagerInitialState,
+  UrlManagerState,
+  UrlManager,
+} from './controllers/commerce/core/url-manager/headless-core-url-manager';
+export {buildCoreUrlManager} from './controllers/commerce/core/url-manager/headless-core-url-manager';
+
+export {buildSearchUrlManager} from './controllers/commerce/search/url-manager/headless-search-url-manager';
+export {buildProductListingUrlManager} from './controllers/commerce/product-listing/url-manager/headless-product-listing-url-manager';

@@ -29,28 +29,31 @@ export const addRefineToggleWithoutFacets =
     env.withElement(refineToggle);
   };
 
-export const addRefineToggleWithStaticFacets =
+const addRefineToggleWithStaticFacetsWithSpecificParent =
+  (parent: string) =>
   (props: TagProps = {}) =>
   (env: TestFixture) => {
-    const manager = generateComponentHTML(facetManagerComponent);
+    const container = generateComponentHTML(parent);
     const refineToggle = generateComponentHTML(refineToggleComponent, props);
 
-    manager.append(generateComponentHTML(facetComponent, {field: facetField}));
-    manager.append(
+    container.append(
+      generateComponentHTML(facetComponent, {field: facetField})
+    );
+    container.append(
       generateComponentHTML(numericFacetComponent, {field: numericFacetField})
     );
-    manager.append(
+    container.append(
       generateComponentHTML(categoryFacetComponent, {field: hierarchicalField})
     );
-    manager.append(
+    container.append(
       generateComponentHTML(ratingFacetComponent, {field: ratingFacetField})
     );
-    manager.append(
+    container.append(
       generateComponentHTML(ratingRangeFacetComponent, {
         field: ratingRangeFacetField,
       })
     );
-    manager.append(
+    container.append(
       generateComponentHTML(colorFacetComponent, {
         field: colorFacetField,
       })
@@ -58,10 +61,16 @@ export const addRefineToggleWithStaticFacets =
 
     const timeframeFacet = generateComponentHTML(timeframeFacetComponent);
     timeframeFacet.append(...createTimeframeElements());
-    manager.append(timeframeFacet);
+    container.append(timeframeFacet);
 
-    env.withElement(manager).withElement(refineToggle);
+    env.withElement(container).withElement(refineToggle);
   };
+
+export const addRefineToggleWithStaticFacets =
+  addRefineToggleWithStaticFacetsWithSpecificParent(facetManagerComponent);
+
+export const addRefineToggleWithStaticFacetsAndNoManager =
+  addRefineToggleWithStaticFacetsWithSpecificParent('div');
 
 export const addRefineToggleWithAutomaticFacets =
   (props: TagProps = {}) =>
@@ -144,6 +153,26 @@ export const addRefineToggleRangeVariations =
     manager.append(numericFacetRangesOnly);
     manager.append(numericFacetRangesWithInput);
     manager.append(numericFacetInputOnly);
+
+    env.withElement(manager).withElement(refineToggle);
+  };
+
+export const addRefineToggleWithDependsOnFacetAndNumerical =
+  (props: TagProps = {}) =>
+  (env: TestFixture) => {
+    const manager = generateComponentHTML(facetManagerComponent);
+    const refineToggle = generateComponentHTML(refineToggleComponent, props);
+
+    manager.append(generateComponentHTML(facetComponent, {field: facetField}));
+    manager.append(
+      generateComponentHTML(numericFacetComponent, {
+        field: colorFacetField,
+        'depends-on': facetField,
+      })
+    );
+    manager.append(
+      generateComponentHTML(numericFacetComponent, {field: numericFacetField})
+    );
 
     env.withElement(manager).withElement(refineToggle);
   };

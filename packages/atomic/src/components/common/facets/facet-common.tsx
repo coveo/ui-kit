@@ -313,6 +313,40 @@ export function getAutomaticFacetGenerator(
   );
 }
 
+const get2DMatrix = (xSize: number, ySize: number = 0) =>
+  new Array(xSize).fill(null).map(() => new Array(ySize));
+
+function findIndiceOfParent(
+  facet: BaseFacetElement,
+  parents: (HTMLElement | null)[]
+) {
+  for (let i = 0; i < parents.length; i++) {
+    if (parents[i]?.contains(facet)) {
+      return i;
+    }
+  }
+  return parents.length;
+}
+
+/**
+ * Triage elements by their parents.
+ * @param facets Facet Elements
+ * @param parents Elements that may contains the facets
+ * @returns an array in the same order as the parents, containing the facets that are contained by the corresponding parent.
+ * The last element of the array contains the facets that are not contained by any of the parents.
+ */
+export function triageFacetsByParents(
+  facets: BaseFacetElement[],
+  ...parents: (HTMLElement | null)[]
+) {
+  const sortedFacets: BaseFacetElement[][] = get2DMatrix(parents.length + 1);
+  for (const facet of facets) {
+    const indice = findIndiceOfParent(facet, parents);
+    sortedFacets[indice].push(facet);
+  }
+  return sortedFacets;
+}
+
 export function sortFacetsUsingManager(
   facets: BaseFacetElement[],
   facetManager: FacetManager

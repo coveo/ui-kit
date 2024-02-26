@@ -1,3 +1,42 @@
+# 2.45.0 (2024-02-21)
+
+### Bug Fixes
+
+- **quantic:** adding support to opening case comments in Salesforce sub tabs ([#3626](https://github.com/coveo/ui-kit/issues/3626)) ([ec0c2dc](https://github.com/coveo/ui-kit/commits/ec0c2dc261017fecb1bfd7c219bf122448ab061f))
+- **Quantic:** Should not return placeholder instead of field value ([#3615](https://github.com/coveo/ui-kit/issues/3615)) ([ec47b16](https://github.com/coveo/ui-kit/commits/ec47b16dc7b2c74fbc2cc38be99f5d1e3f302384))
+
+### Features
+
+- **quantic:** recommendations controller APEX class created ([#3611](https://github.com/coveo/ui-kit/issues/3611)) ([cd03248](https://github.com/coveo/ui-kit/commits/cd03248ba6dec9869be5d9cf440833dcde49a202))
+- **quantic:** styling rules updated to support salesforce community builder customization ([#3603](https://github.com/coveo/ui-kit/issues/3603)) ([25002cd](https://github.com/coveo/ui-kit/commits/25002cda865b3492a6a531a43997bc1426540e8a))
+
+## 2.44.3 (2024-02-15)
+
+### Bug Fixes
+
+- **quantic:** fixed issue with timeframe facet not communicating properly with the refine toggle ([#3588](https://github.com/coveo/ui-kit/issues/3588)) ([4856465](https://github.com/coveo/ui-kit/commits/4856465e87371d871696890c96827570b163fdbb))
+
+## 2.44.2 (2024-02-14)
+
+## 2.44.1 (2024-02-09)
+
+### Bug Fixes
+
+- **deps:** update all dependencies j:kit-282 ([#3576](https://github.com/coveo/ui-kit/issues/3576)) ([4887772](https://github.com/coveo/ui-kit/commits/48877723d6f8c5e5446a48296326519f009ae850))
+- **quantic:** minor styling issue fixed with rephrase buttons of the generated answer component ([#3587](https://github.com/coveo/ui-kit/issues/3587)) ([0ea8fbd](https://github.com/coveo/ui-kit/commits/0ea8fbd16741cec54aca2c2f0a45cbe1bd9021f2))
+
+# 2.44.0 (2024-02-08)
+
+### Bug Fixes
+
+- **quantic:** Fix an issue with the results not re-rendering between queries ([#3562](https://github.com/coveo/ui-kit/issues/3562)) ([4a70334](https://github.com/coveo/ui-kit/commits/4a70334c03b7e58dc33a36d128ca64c47736befa))
+- **quantic:** improved the Quantic Printable URI to support opening links inside salesforce ([#3579](https://github.com/coveo/ui-kit/issues/3579)) ([37e6b96](https://github.com/coveo/ui-kit/commits/37e6b962ba709dc3e7be216ea9370679683d4f95))
+- **quantic:** Pressing ENTER key while targeting the clear icon submits search request in standalone searchbox ([#3537](https://github.com/coveo/ui-kit/issues/3537)) ([a8fd585](https://github.com/coveo/ui-kit/commits/a8fd5855cc745711fe5e4d0d4611e08948a4f7be))
+
+### Features
+
+- **quantic:** added support to entering line breaks in expandable search box ([#3569](https://github.com/coveo/ui-kit/issues/3569)) ([60ccf6e](https://github.com/coveo/ui-kit/commits/60ccf6e12fe0540bc8c3fd1a00ecdb9e1e7b4f49))
+
 ## 2.43.4 (2024-01-31)
 
 ### Bug Fixes

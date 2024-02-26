@@ -1,5 +1,4 @@
 import {exec} from 'child_process';
-import * as path from 'path';
 import strip from 'strip-color';
 
 /**
@@ -19,9 +18,7 @@ export interface SfdxResponse {
 export function sfdx<T = SfdxResponse>(command: string): Promise<T> {
   return new Promise<T>((resolve, reject) => {
     exec(
-      `"${path.resolve(
-        './isolated-sfdx/node_modules/.bin/sf'
-      )}" ${command} --json`,
+      `sf ${command} --json`,
       {
         cwd: process.cwd(),
         env: process.env,

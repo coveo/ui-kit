@@ -8,7 +8,7 @@
       <c-quantic-placeholder variant="resultList" number-of-rows={numberOfResults}></c-quantic-placeholder>
     </template>
     <template for:each={collections} for:item="collection">
-      <c-quantic-result key={collection.result.uniqueId} result={collection.result} collection={collection}
+      <c-quantic-result key={collection.keyResultList} result={collection.result} collection={collection}
         result-templates-manager={resultTemplatesManager} folded-result-list-controller={foldedResultList}
         engine-id={engineId}></c-quantic-result>
     </template>

@@ -2,7 +2,7 @@ import {FacetRequest} from '../../../../facets/facet-set/interfaces/request';
 import {AnyFacetValueRequest} from '../../../../facets/generic/interfaces/generic-facet-request';
 import {FacetType} from './response';
 
-export type CommerceFacetRequest = Pick<
+export type AnyCommerceFacetRequest = Pick<
   FacetRequest,
   | 'facetId'
   | 'field'
@@ -14,4 +14,11 @@ export type CommerceFacetRequest = Pick<
   type: FacetType;
   values: AnyFacetValueRequest[];
   initialNumberOfValues: number;
+};
+
+export type CommerceFacetRequest<T extends AnyFacetValueRequest> = Omit<
+  AnyCommerceFacetRequest,
+  'values'
+> & {
+  values: T[];
 };

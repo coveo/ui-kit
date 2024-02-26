@@ -1,13 +1,16 @@
 import {executeSearch} from '../../features/search/search-actions';
 import {
-  MockSearchEngine,
-  buildMockSearchAppEngine,
-} from '../../test/mock-engine';
+  MockedSearchEngine,
+  buildMockSearchEngine,
+} from '../../test/mock-engine-v2';
+import {createMockState} from '../../test/mock-state';
 import {buildTab, Tab, TabProps} from './headless-tab';
+
+jest.mock('../../features/search/search-actions');
 
 describe('Tab', () => {
   const expression = 'abc123';
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
   let props: TabProps;
   let tab: Tab;
 
@@ -16,7 +19,7 @@ describe('Tab', () => {
   }
 
   beforeEach(() => {
-    engine = buildMockSearchAppEngine();
+    engine = buildMockSearchEngine(createMockState());
     props = {
       options: {
         expression,
@@ -37,8 +40,7 @@ describe('Tab', () => {
   describe('#select', () => {
     it('dispatches #executeSearch', () => {
       tab.select();
-      const action = engine.findAsyncAction(executeSearch.pending);
-      expect(action).toBeTruthy();
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 });

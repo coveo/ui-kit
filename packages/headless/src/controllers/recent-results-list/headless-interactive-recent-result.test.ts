@@ -2,20 +2,22 @@ import {Result} from '../../api/search/search/result';
 import {configuration} from '../../app/common-reducers';
 import {logRecentResultClick} from '../../features/recent-results/recent-results-analytics-actions';
 import {
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../test/mock-engine';
+  buildMockSearchEngine,
+  MockedSearchEngine,
+} from '../../test/mock-engine-v2';
 import {buildMockResult} from '../../test/mock-result';
+import {createMockState} from '../../test/mock-state';
 import {
   buildInteractiveRecentResult,
   InteractiveRecentResult,
 } from './headless-interactive-recent-result';
 
+jest.mock('../../features/recent-results/recent-results-analytics-actions');
+
 describe('InteractiveRecentResult', () => {
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
   let mockResult: Result;
   let interactiveRecentResult: InteractiveRecentResult;
-  let logRecentResultClickPendingActionType: string;
 
   const resultStringParams = {
     title: 'title',
@@ -30,30 +32,13 @@ describe('InteractiveRecentResult', () => {
 
   function initializeInteractiveRecentResult(delay?: number) {
     const result = (mockResult = buildMockResult(resultStringParams));
-    logRecentResultClickPendingActionType =
-      logRecentResultClick(mockResult).pending.type;
     interactiveRecentResult = buildInteractiveRecentResult(engine, {
       options: {result, selectionDelay: delay},
     });
   }
 
-  function findLogRecentResultClickAction() {
-    return (
-      engine.actions.find(
-        (action) => action.type === logRecentResultClickPendingActionType
-      ) ?? null
-    );
-  }
-
-  function expectLogRecentResultActionPending() {
-    const action = findLogRecentResultClickAction();
-    expect(action).toEqual(
-      logRecentResultClick(mockResult).pending(action!.meta.requestId)
-    );
-  }
-
   beforeEach(() => {
-    engine = buildMockSearchAppEngine();
+    engine = buildMockSearchEngine(createMockState());
     initializeInteractiveRecentResult();
     jest.useFakeTimers();
   });
@@ -70,6 +55,6 @@ describe('InteractiveRecentResult', () => {
     interactiveRecentResult.select();
     jest.runAllTimers();
 
-    expectLogRecentResultActionPending();
+    expect(logRecentResultClick).toHaveBeenCalledWith(mockResult);
   });
 });

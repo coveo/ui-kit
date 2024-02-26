@@ -1,3 +1,32 @@
+## 2.50.2 (2024-02-21)
+
+## 2.50.1 (2024-02-15)
+
+# 2.50.0 (2024-02-14)
+
+### Bug Fixes
+
+- bump coveo.analytics ([#3592](https://github.com/coveo/ui-kit/issues/3592)) ([b9fdb92](https://github.com/coveo/ui-kit/commits/b9fdb9255e05a467e6af49e610adf046e6400e23))
+- remove clearAnalyticsClient behavior ([#3598](https://github.com/coveo/ui-kit/issues/3598)) ([04f7654](https://github.com/coveo/ui-kit/commits/04f765422c8a3222cd9517282da8ebdda694819a))
+
+### Features
+
+- **headless/commerce:** rework cart controller ([#3580](https://github.com/coveo/ui-kit/issues/3580)) ([3c0fa3e](https://github.com/coveo/ui-kit/commits/3c0fa3e5ebb2662b4645b2c88750fa4d2f3c6539))
+
+## 2.49.1 (2024-02-09)
+
+### Bug Fixes
+
+- **deps:** update all dependencies j:kit-282 ([#3576](https://github.com/coveo/ui-kit/issues/3576)) ([4887772](https://github.com/coveo/ui-kit/commits/48877723d6f8c5e5446a48296326519f009ae850))
+
+# 2.49.0 (2024-02-08)
+
+### Features
+
+- **analytics:** migrate quickview to EP ([#3570](https://github.com/coveo/ui-kit/issues/3570)) ([56fc66a](https://github.com/coveo/ui-kit/commits/56fc66ad028bb13d3cd7a7968518183d8d33eb3a))
+- **commerce:** create commerce url and parameter managers ([#3543](https://github.com/coveo/ui-kit/issues/3543)) ([30dd6e5](https://github.com/coveo/ui-kit/commits/30dd6e5317b70c1e6b4cfb16022d4b4b878a07fe))
+- **headless,atomic:** expose and leverage user defined label in administration tool for facets ([#3566](https://github.com/coveo/ui-kit/issues/3566)) ([5848396](https://github.com/coveo/ui-kit/commits/58483961a702887b54a5a51625a267753d727d6f))
+
 # 2.48.0 (2024-01-31)
 
 ### Bug Fixes

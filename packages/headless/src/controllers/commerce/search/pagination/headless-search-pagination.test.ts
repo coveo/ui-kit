@@ -1,17 +1,21 @@
 import {executeSearch} from '../../../../features/commerce/search/search-actions';
 import {commerceSearchReducer as commerceSearch} from '../../../../features/commerce/search/search-slice';
-import {MockCommerceEngine} from '../../../../test/mock-engine';
-import {buildMockCommerceEngine} from '../../../../test/mock-engine';
+import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
+import {
+  MockedCommerceEngine,
+  buildMockCommerceEngine,
+} from '../../../../test/mock-engine-v2';
 import {Pagination} from '../../core/pagination/headless-core-commerce-pagination';
 import {buildSearchPagination} from './headless-search-pagination';
 
+jest.mock('../../../../features/commerce/search/search-actions');
+
 describe('search pagination', () => {
-  let engine: MockCommerceEngine;
+  let engine: MockedCommerceEngine;
   let searchPagination: Pagination;
 
   function initSearchPagination() {
-    engine = buildMockCommerceEngine();
-
+    engine = buildMockCommerceEngine(buildMockCommerceState());
     searchPagination = buildSearchPagination(engine);
   }
 
@@ -31,19 +35,16 @@ describe('search pagination', () => {
 
   it('#selectPage dispatches #executeSearch', () => {
     searchPagination.selectPage(0);
-    const action = engine.findAsyncAction(executeSearch.pending);
-    expect(action).toBeTruthy();
+    expect(executeSearch).toHaveBeenCalled();
   });
 
   it('#nextPage dispatches #executeSearch', () => {
     searchPagination.nextPage();
-    const action = engine.findAsyncAction(executeSearch.pending);
-    expect(action).toBeTruthy();
+    expect(executeSearch).toHaveBeenCalled();
   });
 
   it('#previousPage dispatches #executeSearch', () => {
     searchPagination.previousPage();
-    const action = engine.findAsyncAction(executeSearch.pending);
-    expect(action).toBeTruthy();
+    expect(executeSearch).toHaveBeenCalled();
   });
 });

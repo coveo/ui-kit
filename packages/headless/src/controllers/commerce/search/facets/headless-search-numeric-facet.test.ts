@@ -1,4 +1,3 @@
-import {Action} from '@reduxjs/toolkit';
 import {CommerceFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
 import {executeSearch} from '../../../../features/commerce/search/search-actions';
 import {commerceSearchReducer as commerceSearch} from '../../../../features/commerce/search/search-slice';
@@ -8,11 +7,18 @@ import {buildMockCommerceNumericFacetResponse} from '../../../../test/mock-comme
 import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceNumericFacetValue} from '../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
-import {buildMockCommerceEngine} from '../../../../test/mock-engine';
-import {MockCommerceEngine} from '../../../../test/mock-engine';
-import {CommerceFacetOptions} from '../../core/facets/headless-core-commerce-facet';
+import {
+  buildMockCommerceEngine,
+  MockedCommerceEngine,
+} from '../../../../test/mock-engine-v2';
+import {
+  CommerceFacetOptions,
+  NumericRangeRequest,
+} from '../../core/facets/headless-core-commerce-facet';
 import {CommerceNumericFacet} from '../../core/facets/numeric/headless-commerce-numeric-facet';
 import {buildSearchNumericFacet} from './headless-search-numeric-facet';
+
+jest.mock('../../../../features/commerce/search/search-actions');
 
 describe('SearchNumericFacet', () => {
   const facetId: string = 'numeric_facet_id';
@@ -20,15 +26,17 @@ describe('SearchNumericFacet', () => {
   const end = 100;
   let options: CommerceFacetOptions;
   let state: CommerceAppState;
-  let engine: MockCommerceEngine;
+  let engine: MockedCommerceEngine;
   let facet: CommerceNumericFacet;
 
   function initFacet() {
-    engine = buildMockCommerceEngine({state});
+    engine = buildMockCommerceEngine(state);
     facet = buildSearchNumericFacet(engine, options);
   }
 
-  function setFacetRequest(config: Partial<CommerceFacetRequest> = {}) {
+  function setFacetRequest(
+    config: Partial<CommerceFacetRequest<NumericRangeRequest>> = {}
+  ) {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, ...config}),
     });
@@ -36,14 +44,6 @@ describe('SearchNumericFacet', () => {
       buildMockCommerceNumericFacetResponse({facetId}),
     ];
   }
-
-  const expectContainAction = (action: Action) => {
-    expect(engine.actions).toContainEqual(
-      expect.objectContaining({
-        type: action.type,
-      })
-    );
-  };
 
   beforeEach(() => {
     options = {
@@ -68,8 +68,7 @@ describe('SearchNumericFacet', () => {
     it('dispatches #executeSearch', () => {
       const facetValue = buildMockCommerceNumericFacetValue({start, end});
       facet.toggleSelect(facetValue);
-
-      expectContainAction(executeSearch.pending);
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 
@@ -77,32 +76,28 @@ describe('SearchNumericFacet', () => {
     it('dispatches #executeSearch', () => {
       const facetValue = buildMockCommerceNumericFacetValue({start, end});
       facet.toggleExclude(facetValue);
-
-      expectContainAction(executeSearch.pending);
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 
   describe('#deselectAll', () => {
     it('dispatches #executeSearch', () => {
       facet.deselectAll();
-
-      expectContainAction(executeSearch.pending);
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 
   describe('#showMoreValues', () => {
     it('dispatches #executeSearch', () => {
       facet.showMoreValues();
-
-      expectContainAction(executeSearch.pending);
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 
   describe('#showLessValues', () => {
     it('dispatches #executeSearch', () => {
       facet.showLessValues();
-
-      expectContainAction(executeSearch.pending);
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 

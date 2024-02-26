@@ -322,7 +322,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
   get hasActiveValues() {
     return (
       this.formattedValues.some((v) => v.selected) ||
-      this.dateFilterState?.range
+      !!this.dateFilterState?.range
     );
   }
 
@@ -435,20 +435,12 @@ export default class QuanticTimeframeFacet extends LightningElement {
       !this.searchStatus?.state?.firstSearchExecuted;
 
     this.hasResults = this.searchStatus.state.hasResults;
-
-    const renderFacetEvent = new CustomEvent('renderfacet', {
-      detail: {
-        id: this.facetId ?? this.field,
-        shouldRenderFacet: this.showFacet,
-      },
-      bubbles: true,
-      composed: true,
-    });
-    this.dispatchEvent(renderFacetEvent);
+    this.sendFacetRenderEvent();
   }
 
   updateFacetState() {
     this.facetState = this.facet?.state;
+    this.sendFacetRenderEvent();
   }
 
   updateDateFilterState() {
@@ -467,6 +459,22 @@ export default class QuanticTimeframeFacet extends LightningElement {
       this.disableRangeValidation();
       this._showValues = true;
     }
+    this.sendFacetRenderEvent();
+  }
+
+  /**
+   * Fires the 'renderfacet' custom event.
+   */
+  sendFacetRenderEvent() {
+    const renderFacetEvent = new CustomEvent('renderfacet', {
+      detail: {
+        id: this.facetId ?? this.field,
+        shouldRenderFacet: this.showFacet,
+      },
+      bubbles: true,
+      composed: true,
+    });
+    this.dispatchEvent(renderFacetEvent);
   }
 
   /**

@@ -29,11 +29,13 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {sortByDocumentPosition} from '../../../utils/utils';
+import {findSection} from '../../common/atomic-layout-section/sections';
 import {Button} from '../../common/button';
 import {
   BaseFacetElement,
   sortFacetVisibility,
-  sortFacetsUsingManager,
+  triageFacetsByParents,
   collapseFacetsAfter,
 } from '../../common/facets/facet-common';
 import {isRefineModalFacet} from '../../common/interface/store';
@@ -137,8 +139,26 @@ export class AtomicRefineModal implements InitializableComponent {
     this.addFacetColumnStyling(divSlot);
 
     const facets = this.bindings.store.getFacetElements() as BaseFacetElement[];
-
-    const sortedFacets = sortFacetsUsingManager(facets, this.facetManager);
+    const atomicSearchInterface = this.host.closest('atomic-search-interface')!;
+    const facetsSection = findSection(atomicSearchInterface, 'facets');
+    const horizontalFacetsSection = findSection(
+      atomicSearchInterface,
+      'horizontal-facets'
+    );
+    const triagedFacets = triageFacetsByParents(
+      facets,
+      horizontalFacetsSection,
+      facetsSection
+    );
+    const [horizontalFacetsSectionFacets, facetsSectionFacets, orphanedFacets] =
+      triagedFacets.map((facetsArray) =>
+        facetsArray.sort(sortByDocumentPosition)
+      );
+    const sortedFacets = [
+      ...facetsSectionFacets,
+      ...horizontalFacetsSectionFacets,
+      ...orphanedFacets,
+    ];
 
     const {visibleFacets, invisibleFacets} = sortFacetVisibility(
       sortedFacets,

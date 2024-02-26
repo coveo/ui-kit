@@ -1,3 +1,39 @@
+# 2.58.0 (2024-02-21)
+
+### Bug Fixes
+
+- **deps:** update stencil j:kit-282 ([#3578](https://github.com/coveo/ui-kit/issues/3578)) ([a5b645d](https://github.com/coveo/ui-kit/commits/a5b645d4f5395c9942af38feb5cfc2c08585405d))
+- **refine-modal:** Sort facets values based on their DOM position ([#3619](https://github.com/coveo/ui-kit/issues/3619)) ([3cf03af](https://github.com/coveo/ui-kit/commits/3cf03afc9f28065d94fa723a4b2c417585d67d30))
+
+### Features
+
+- **atomic:** exposes numberOfFoldedResults ([#3597](https://github.com/coveo/ui-kit/issues/3597)) ([3da9ac6](https://github.com/coveo/ui-kit/commits/3da9ac63984eef223e5a766ff1371435b9c1dc9c))
+
+## 2.57.2 (2024-02-14)
+
+### Bug Fixes
+
+- **atomic:** ensure redirection on instant result click ([#3585](https://github.com/coveo/ui-kit/issues/3585)) ([b47e3cb](https://github.com/coveo/ui-kit/commits/b47e3cb7b2a4febd98132d0e22ed22e45ae478af))
+- **atomic:** improve query suggestions selection ([#3582](https://github.com/coveo/ui-kit/issues/3582)) ([f8b06e9](https://github.com/coveo/ui-kit/commits/f8b06e926fcba970c334696080bac543686e2a61))
+
+## 2.57.1 (2024-02-09)
+
+### Bug Fixes
+
+- **deps:** update all dependencies j:kit-282 ([#3576](https://github.com/coveo/ui-kit/issues/3576)) ([4887772](https://github.com/coveo/ui-kit/commits/48877723d6f8c5e5446a48296326519f009ae850))
+
+# 2.57.0 (2024-02-08)
+
+### Bug Fixes
+
+- **atomic:** fix facet order in modal refine ([#3572](https://github.com/coveo/ui-kit/issues/3572)) ([9dc777e](https://github.com/coveo/ui-kit/commits/9dc777ea622d8d763ca4f628f87f733bf0d50d49))
+- **atomic:** fix input minimum length behaving incorrectly with clear button ([#3564](https://github.com/coveo/ui-kit/issues/3564)) ([eda7dfa](https://github.com/coveo/ui-kit/commits/eda7dfa3cfd320edaa6a5d48e03655b5adf1796b))
+
+### Features
+
+- **atomic:** add shadow part of result-multi-value-text list element ([#3567](https://github.com/coveo/ui-kit/issues/3567)) ([9c94377](https://github.com/coveo/ui-kit/commits/9c9437722223f707a6dead944e45d721ff8a1bc4))
+- **headless,atomic:** expose and leverage user defined label in administration tool for facets ([#3566](https://github.com/coveo/ui-kit/issues/3566)) ([5848396](https://github.com/coveo/ui-kit/commits/58483961a702887b54a5a51625a267753d727d6f))
+
 # 2.56.0 (2024-01-31)
 
 ### Bug Fixes

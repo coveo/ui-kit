@@ -32,10 +32,10 @@ export default class QuanticFoldedResultList extends LightningElement {
    * A list of fields to include in the query results, separated by commas.
    * @api
    * @type {string}
-   * @defaultValue `'date,author,source,language,filetype,parents,sfknowledgearticleid,sfid,sfkbid,sfkavid'`
+   * @defaultValue `'date,author,source,language,filetype,documenttype,parents,sfknowledgearticleid,sfid,sfkbid,sfkavid,sfparentid'`
    */
   @api fieldsToInclude =
-    'date,author,source,language,filetype,parents,sfknowledgearticleid,sfid,sfkbid,sfkavid';
+    'date,author,source,language,filetype,documenttype,parents,sfknowledgearticleid,sfid,sfkbid,sfkavid,sfparentid';
   /**
    * The name of the field on which to do the folding.
    * @api
@@ -170,7 +170,15 @@ export default class QuanticFoldedResultList extends LightningElement {
   }
 
   get collections() {
-    return this?.state?.results || [];
+    // We need to add a unique key to each result to make sure to re-render the LWC when the results change.
+    // If the unique key is only the result uniqueId, the LWC will not re-render when the results change AND the same result is still in the results.
+    const searchResponseId = this?.state?.searchResponseId || Math.random();
+    return (
+      this?.state?.results?.map((collection) => ({
+        ...collection,
+        keyResultList: `${searchResponseId}_${collection.result.uniqueId}`,
+      })) || []
+    );
   }
 
   /**

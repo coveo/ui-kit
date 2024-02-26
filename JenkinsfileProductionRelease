@@ -31,7 +31,7 @@ node('heavy && linux && docker') {
       withCredentials([
         usernamePassword(credentialsId: 'github-commit-token', usernameVariable: 'GITHUB_USERNAME', passwordVariable: 'GITHUB_TOKEN'),
         string(credentialsId: 'sfdx-auth-pkg-client-id', variable: 'SFDX_AUTH_CLIENT_ID'),
-        file(credentialsId: 'sfdx-auth-pkg-jwt-key', variable: 'SFDX_AUTH_JWT_KEY'),
+        file(credentialsId: 'sfdx-auth-pkg-jwt-key', variable: 'SFDX_AUTH_JWT_KEY_FILE'),
       ]) {
         withEnv([
           'SFDX_AUTH_JWT_USERNAME=sfdc.integration.devv2.hub@coveo.com'

@@ -1,15 +1,16 @@
 import {configuration} from '../../../app/common-reducers';
 import {
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../../test/mock-engine';
+  buildMockSearchEngine,
+  MockedSearchEngine,
+} from '../../../test/mock-engine-v2';
+import {createMockState} from '../../../test/mock-state';
 import {
   buildInteractiveResultCore,
   InteractiveResultCore,
 } from './headless-core-interactive-result';
 
 describe('InteractiveResultCore', () => {
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
   let interactiveResultCore: InteractiveResultCore;
   let actionSpy: jest.Mock;
 
@@ -25,7 +26,7 @@ describe('InteractiveResultCore', () => {
 
   beforeEach(() => {
     actionSpy = jest.fn();
-    engine = buildMockSearchAppEngine();
+    engine = buildMockSearchEngine(createMockState());
     initializeInteractiveResultCore();
     jest.useFakeTimers();
   });

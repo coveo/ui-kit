@@ -74,6 +74,8 @@ export type MockedSearchEngine = SearchEngine &
 export type MockedCaseAssistEngine = CaseAssistEngine;
 export type MockedRecommendationEngine = RecommendationEngine;
 export type MockedProductRecommendationEngine = ProductRecommendationEngine;
+export type MockedCommerceEngine = CommerceEngine;
+export type MockedInsightEngine = InsightEngine;
 
 type StateFromEngine<TEngine extends CoreEngine> = TEngine['state'];
 
@@ -132,5 +134,15 @@ export function buildMockRecommendationEngine<
 >(initialState: State): RecommendationEngine {
   return {
     ...buildMockCoreEngine(initialState),
+  };
+}
+
+export function buildMockSSRSearchEngine(
+  initialState: StateFromEngine<SearchEngine>
+) {
+  const engine = buildMockSearchEngine(initialState);
+  return {
+    ...engine,
+    waitForSearchCompletedAction: jest.fn(),
   };
 }

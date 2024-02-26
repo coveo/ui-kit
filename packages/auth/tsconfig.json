@@ -9,6 +9,6 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "isolatedModules": true,
-    "types": ["node", "jest"],
-  },
+    "types": ["node", "jest"]
+  }
 }
