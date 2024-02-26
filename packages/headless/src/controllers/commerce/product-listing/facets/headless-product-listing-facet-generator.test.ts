@@ -1,105 +1,85 @@
 import {FacetType} from '../../../../features/commerce/facets/facet-set/interfaces/response';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
+import {CommerceAppState} from '../../../../state/commerce-app-state';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
-import {
-  buildMockCommerceRegularFacetResponse,
-  buildMockCommerceNumericFacetResponse,
-  buildMockCommerceDateFacetResponse,
-} from '../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
-import {MockCommerceEngine} from '../../../../test/mock-engine';
-import {buildMockCommerceEngine} from '../../../../test/mock-engine';
+import {
+  MockedCommerceEngine,
+  buildMockCommerceEngine,
+} from '../../../../test/mock-engine-v2';
+import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
 import {
   buildProductListingFacetGenerator,
   ProductListingFacetGenerator,
 } from './headless-product-listing-facet-generator';
 
+jest.mock(
+  '../../../../features/commerce/product-listing/product-listing-actions'
+);
+
 describe('ProductListingFacetGenerator', () => {
-  let engine: MockCommerceEngine;
+  let engine: MockedCommerceEngine;
+  let state: CommerceAppState;
   let facetGenerator: ProductListingFacetGenerator;
 
-  function initFacetGenerator(facetType: FacetType = 'regular') {
-    const facet = {
-      facetId: 'regular_facet_id',
-      type: facetType,
-    };
-    const mockState = buildMockCommerceState();
-    const facets = [];
-    switch (facetType) {
-      case 'regular':
-        facets.push(
-          buildMockCommerceRegularFacetResponse({
-            facetId: facet.facetId,
-            field: 'some_regular_field',
-          })
-        );
-        break;
-      case 'numericalRange':
-        facets.push(
-          buildMockCommerceNumericFacetResponse({
-            facetId: facet.facetId,
-            field: 'some_numeric_field',
-          })
-        );
-        break;
-      case 'dateRange':
-        facets.push(
-          buildMockCommerceDateFacetResponse({
-            facetId: facet.facetId,
-            field: 'some_date_field',
-          })
-        );
-        break;
-      case 'hierarchical': // TODO
-      default:
-        break;
-    }
-    engine = buildMockCommerceEngine({
-      state: {
-        ...mockState,
-        productListing: {
-          ...mockState.productListing,
-          facets: [
-            buildMockCommerceRegularFacetResponse({
-              facetId: facet.facetId,
-              field: 'some_regular_field',
-            }),
-          ],
-        },
-        facetOrder: [facet.facetId],
-        commerceFacetSet: {
-          [facet.facetId]: {request: buildMockCommerceFacetRequest(facet)},
-        },
-      },
-    });
+  function initEngine(preloadedState = buildMockCommerceState()) {
+    engine = buildMockCommerceEngine(preloadedState);
+  }
+
+  function initProductListingFacetGenerator() {
     facetGenerator = buildProductListingFacetGenerator(engine);
   }
 
+  function setFacetState(config: {facetId: string; type: FacetType}[] = []) {
+    for (const facet of config) {
+      state.facetOrder.push(facet.facetId);
+      state.commerceFacetSet[facet.facetId] = {
+        request: buildMockCommerceFacetRequest({
+          facetId: facet.facetId,
+          type: facet.type,
+        }),
+      };
+      state.facetSearchSet[facet.facetId] = buildMockFacetSearch();
+    }
+  }
+
+  beforeEach(() => {
+    jest.resetAllMocks();
+
+    state = buildMockCommerceState();
+    setFacetState();
+
+    initEngine(state);
+    initProductListingFacetGenerator();
+  });
+
   it('exposes #subscribe method', () => {
-    initFacetGenerator();
     expect(facetGenerator.subscribe).toBeTruthy();
   });
 
-  it('generated regular facet controllers should dispatch #fetchProductListing', () => {
-    initFacetGenerator('regular');
+  it('generated regular facet controller dispatches #fetchProductListing', () => {
+    setFacetState([{facetId: 'regular_facet_id', type: 'regular'}]);
+    initProductListingFacetGenerator();
 
     facetGenerator.state.facets[0].deselectAll();
 
-    expect(engine.findAsyncAction(fetchProductListing.pending)).toBeTruthy();
-  });
-  it('generated regular numeric facet controllers should dispatch #fetchProductListing', () => {
-    initFacetGenerator('numericalRange');
-
-    facetGenerator.state.facets[0].deselectAll();
-
-    expect(engine.findAsyncAction(fetchProductListing.pending)).toBeTruthy();
+    expect(fetchProductListing).toHaveBeenCalled();
   });
 
-  it('generated date facet controllers dispatches #fetchProductListing', () => {
-    initFacetGenerator('dateRange');
+  it('generated regular numeric facet controller dispatches #fetchProductListing', () => {
+    setFacetState([{facetId: 'numeric_facet_id', type: 'numericalRange'}]);
+    initProductListingFacetGenerator();
 
     facetGenerator.state.facets[0].deselectAll();
 
-    expect(engine.findAsyncAction(fetchProductListing.pending)).toBeTruthy();
+    expect(fetchProductListing).toHaveBeenCalled();
+  });
+
+  it('generated date facet controller dispatches #fetchProductListing', () => {
+    setFacetState([{facetId: 'date_facet_id', type: 'dateRange'}]);
+
+    facetGenerator.state.facets[0].deselectAll();
+
+    expect(fetchProductListing).toHaveBeenCalled();
   });
 });

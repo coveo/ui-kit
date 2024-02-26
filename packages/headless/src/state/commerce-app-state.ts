@@ -12,6 +12,7 @@ import {
   FacetOrderSection,
   QuerySuggestionSection,
   QuerySetSection,
+  FacetSearchSection,
 } from './state-sections';
 
 // eslint-disable-next-line @cspell/spellchecker
@@ -24,6 +25,7 @@ export type CommerceAppState = ConfigurationSection &
   CommerceSearchSection &
   CommerceQuerySection &
   FacetOrderSection &
+  FacetSearchSection &
   CommerceFacetSetSection &
   CommercePaginationSection &
   CommerceSortSection &

@@ -10,7 +10,10 @@ import {buildMockCommerceNumericFacetValue} from '../../../../test/mock-commerce
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {buildMockCommerceEngine} from '../../../../test/mock-engine';
 import {MockCommerceEngine} from '../../../../test/mock-engine';
-import {CommerceFacetOptions} from '../../core/facets/headless-core-commerce-facet';
+import {
+  CommerceFacetOptions,
+  NumericRangeRequest,
+} from '../../core/facets/headless-core-commerce-facet';
 import {CommerceNumericFacet} from '../../core/facets/numeric/headless-commerce-numeric-facet';
 import {buildSearchNumericFacet} from './headless-search-numeric-facet';
 
@@ -28,7 +31,9 @@ describe('SearchNumericFacet', () => {
     facet = buildSearchNumericFacet(engine, options);
   }
 
-  function setFacetRequest(config: Partial<CommerceFacetRequest> = {}) {
+  function setFacetRequest(
+    config: Partial<CommerceFacetRequest<NumericRangeRequest>> = {}
+  ) {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, ...config}),
     });

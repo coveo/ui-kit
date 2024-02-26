@@ -4,6 +4,10 @@ import {updateFacetOptions} from '../../../features/facet-options/facet-options-
 import {registerCategoryFacetSearch} from '../../../features/facets/facet-search-set/category/category-facet-search-actions';
 import {defaultFacetSearchOptions} from '../../../features/facets/facet-search-set/facet-search-reducer-helpers';
 import {
+  executeFacetSearch,
+  executeFieldSuggest,
+} from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
+import {
   facetSelect,
   logFacetSelect,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
@@ -44,6 +48,8 @@ export function buildCategoryFacetSearch(
     options,
     getFacetSearch,
     isForFieldSuggestions: props.isForFieldSuggestions,
+    executeFacetSearchActionCreator: executeFacetSearch,
+    executeFieldSuggestActionCreator: executeFieldSuggest,
   });
 
   return {
