@@ -415,8 +415,14 @@ describe('commerceFacetSetReducer', () => {
     });
 
     it('dispatching #toggleSelectFacetValue with an invalid facet type does not throw', () => {
-      const facet = buildMockCommerceFacetRequest({type: 'numericalRange'});
       const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
+      const facet = buildMockCommerceFacetRequest({
+        type: 'numericalRange',
+        values: [facetValue],
+      });
+      state[facet.facetId] = buildMockCommerceFacetSlice({
+        request: facet,
+      });
       const action = toggleSelectFacetValue({
         facetId: facet.facetId,
         selection: facetValue,
@@ -436,8 +442,14 @@ describe('commerceFacetSetReducer', () => {
     });
 
     it('dispatching #toggleExcludeFacetValue with an invalid facet type does not throw', () => {
-      const facet = buildMockCommerceFacetRequest({type: 'numericalRange'});
       const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
+      const facet = buildMockCommerceFacetRequest({
+        type: 'numericalRange',
+        values: [facetValue],
+      });
+      state[facet.facetId] = buildMockCommerceFacetSlice({
+        request: facet,
+      });
       const action = toggleExcludeFacetValue({
         facetId: facet.facetId,
         selection: facetValue,
@@ -685,10 +697,44 @@ describe('commerceFacetSetReducer', () => {
       expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
     });
 
+    it('dispatching #toggleSelectNumericFacetValue with an invalid facet type does not throw', () => {
+      const facetValue = buildMockCommerceNumericFacetValue();
+      const facet = buildMockCommerceFacetRequest({
+        type: 'regular',
+        values: [facetValue],
+      });
+      state[facet.facetId] = buildMockCommerceFacetSlice({
+        request: facet,
+      });
+      const action = toggleSelectNumericFacetValue({
+        facetId: facet.facetId,
+        selection: facetValue,
+      });
+
+      expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
+    });
+
     it('dispatching #toggleExcludeNumericFacetValue with an invalid id does not throw', () => {
       const facetValue = buildMockCommerceNumericFacetValue();
       const action = toggleExcludeNumericFacetValue({
         facetId: '1',
+        selection: facetValue,
+      });
+
+      expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
+    });
+
+    it('dispatching #toggleExcludeNumericFacetValue with an invalid facet type does not throw', () => {
+      const facetValue = buildMockCommerceNumericFacetValue();
+      const facet = buildMockCommerceFacetRequest({
+        type: 'regular',
+        values: [facetValue],
+      });
+      state[facet.facetId] = buildMockCommerceFacetSlice({
+        request: facet,
+      });
+      const action = toggleExcludeNumericFacetValue({
+        facetId: facet.facetId,
         selection: facetValue,
       });
 
@@ -927,10 +973,44 @@ describe('commerceFacetSetReducer', () => {
       expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
     });
 
+    it('dispatching #toggleSelectDateFacetValue with an invalid facet type does not throw', () => {
+      const facetValue = buildMockCommerceDateFacetValue();
+      const facet = buildMockCommerceFacetRequest({
+        type: 'regular',
+        values: [facetValue],
+      });
+      state[facet.facetId] = buildMockCommerceFacetSlice({
+        request: facet,
+      });
+      const action = toggleSelectDateFacetValue({
+        facetId: facet.facetId,
+        selection: facetValue,
+      });
+
+      expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
+    });
+
     it('dispatching #toggleExcludeDateFacetValue with an invalid id does not throw', () => {
       const facetValue = buildMockCommerceDateFacetValue();
       const action = toggleExcludeDateFacetValue({
         facetId: '1',
+        selection: facetValue,
+      });
+
+      expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
+    });
+
+    it('dispatching #toggleExcludeDateFacetValue with an invalid facet type does not throw', () => {
+      const facetValue = buildMockCommerceDateFacetValue();
+      const facet = buildMockCommerceFacetRequest({
+        type: 'regular',
+        values: [facetValue],
+      });
+      state[facet.facetId] = buildMockCommerceFacetSlice({
+        request: facet,
+      });
+      const action = toggleExcludeDateFacetValue({
+        facetId: facet.facetId,
         selection: facetValue,
       });
 
