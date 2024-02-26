@@ -23,20 +23,31 @@ export const logCartAction = (item: CartItem): CartAction => {
       return {
         action,
         currency,
-        quantity: 1,
+        quantity: getQuantity(item, prevItem),
         product,
       };
     },
   });
 };
 
-function isCurrentItemQuantityGreater(
+const isCurrentItemQuantityGreater = (
   currentItem: CartItem,
   prevItem: CartItemWithMetadata | undefined
-) {
+): boolean => {
   if (!prevItem) {
     return true;
   }
 
   return currentItem.quantity > prevItem.quantity;
-}
+};
+
+const getQuantity = (
+  currentItem: CartItem,
+  prevItem: CartItemWithMetadata | undefined
+): number => {
+  if (!prevItem) {
+    return currentItem.quantity;
+  }
+
+  return Math.abs(currentItem.quantity - prevItem.quantity);
+};

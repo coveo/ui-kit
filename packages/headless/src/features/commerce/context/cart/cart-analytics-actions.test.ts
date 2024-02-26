@@ -14,7 +14,7 @@ jest.mock(
   '../../../../controllers/commerce/context/cart/headless-cart-selectors'
 );
 
-describe('#logCartAction', () => {
+describe('Cart Analytics Actions', () => {
   const emit = jest.fn();
   let engine: CommerceEngine;
 
@@ -49,7 +49,7 @@ describe('#logCartAction', () => {
     });
   });
 
-  describe('logCartAction', () => {
+  describe('#logCartAction', () => {
     beforeEach(() => {
       initEngine();
     });
@@ -64,10 +64,13 @@ describe('#logCartAction', () => {
       price: 100,
     };
 
-    const getExpectedCartActionPayload = (action: 'add' | 'remove') => ({
+    const getExpectedCartActionPayload = (
+      action: 'add' | 'remove',
+      quantity: number = 1
+    ) => ({
       action,
       product: productWithoutQuantity,
-      quantity: 1,
+      quantity,
       currency: 'USD',
     });
 
@@ -86,6 +89,21 @@ describe('#logCartAction', () => {
       );
     });
 
+    it('logs #ec.cartAction with "add" action and correct payload if quantity > 0 and item does not exist in cart and the quantity > 1', async () => {
+      jest
+        .mocked(itemSelector)
+        .mockImplementation(() => undefined as unknown as CartItemWithMetadata);
+
+      engine.dispatch(logCartAction({...productWithoutQuantity, quantity: 3}));
+      await clearMicrotaskQueue();
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit).toHaveBeenCalledWith(
+        'ec.cartAction',
+        getExpectedCartActionPayload('add', 3)
+      );
+    });
+
     it('logs #ec.cartAction with "add" action and correct payload if item exists in cart and new quantity > current', async () => {
       jest
         .mocked(itemSelector)
@@ -101,6 +119,21 @@ describe('#logCartAction', () => {
       );
     });
 
+    it('logs #ec.cartAction with "add" action and correct payload if item exists in cart and new quantity > current and the quantity difference is > 1', async () => {
+      jest
+        .mocked(itemSelector)
+        .mockImplementation(() => ({...productWithoutQuantity, quantity: 1}));
+
+      engine.dispatch(logCartAction({...productWithoutQuantity, quantity: 5}));
+      await clearMicrotaskQueue();
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit).toHaveBeenCalledWith(
+        'ec.cartAction',
+        getExpectedCartActionPayload('add', 4)
+      );
+    });
+
     it('logs #ec.cartAction with "remove" action and correct payload if item exists in cart and new quantity < current', async () => {
       jest
         .mocked(itemSelector)
@@ -113,6 +146,21 @@ describe('#logCartAction', () => {
       expect(emit).toHaveBeenCalledWith(
         'ec.cartAction',
         getExpectedCartActionPayload('remove')
+      );
+    });
+
+    it('logs #ec.cartAction with "remove" action and correct payload if item exists in cart and new quantity < current and the quantity difference is > 1', async () => {
+      jest
+        .mocked(itemSelector)
+        .mockImplementation(() => ({...productWithoutQuantity, quantity: 3}));
+
+      engine.dispatch(logCartAction({...productWithoutQuantity, quantity: 1}));
+      await clearMicrotaskQueue();
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit).toHaveBeenCalledWith(
+        'ec.cartAction',
+        getExpectedCartActionPayload('remove', 2)
       );
     });
   });
