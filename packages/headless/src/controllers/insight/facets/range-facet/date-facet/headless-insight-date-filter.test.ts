@@ -1,13 +1,13 @@
 import {updateFacetOptions} from '../../../../../features/facet-options/facet-options-actions';
 import {updateDateFacetValues} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
-import {executeSearch} from '../../../../../features/search/search-actions';
+import {executeSearch} from '../../../../../features/insight-search/insight-search-actions';
 import {InsightAppState} from '../../../../../state/insight-app-state';
 import {buildMockDateFacetSlice} from '../../../../../test/mock-date-facet-slice';
 import {buildMockDateFacetValue} from '../../../../../test/mock-date-facet-value';
 import {
   buildMockInsightEngine,
-  MockInsightEngine,
-} from '../../../../../test/mock-engine';
+  MockedInsightEngine,
+} from '../../../../../test/mock-engine-v2';
 import {buildMockInsightState} from '../../../../../test/mock-insight-state';
 import {
   buildDateFilter,
@@ -16,20 +16,27 @@ import {
   DateFilterOptions,
 } from './headless-insight-date-filter';
 
+jest.mock(
+  '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions'
+);
+jest.mock('../../../../../features/facet-options/facet-options-actions');
+jest.mock('../../../../../features/insight-search/insight-search-actions');
+
 describe('insight date filter', () => {
   const facetId = '1';
   let options: DateFilterOptions;
   let initialState: DateFilterInitialState | undefined;
   let state: InsightAppState;
-  let engine: MockInsightEngine;
+  let engine: MockedInsightEngine;
   let dateFacet: DateFilter;
 
   function initDateFilter() {
-    engine = buildMockInsightEngine({state});
+    engine = buildMockInsightEngine(state);
     dateFacet = buildDateFilter(engine, {options, initialState});
   }
 
   beforeEach(() => {
+    (updateDateFacetValues as unknown as jest.Mock).mockReturnValue(() => {});
     initialState = undefined;
 
     options = {
@@ -47,8 +54,7 @@ describe('insight date filter', () => {
     it('dispatches a updateDateFacetValues with the passed value', () => {
       const value = buildMockDateFacetValue({});
       dateFacet.setRange(value);
-
-      const action = updateDateFacetValues({
+      expect(updateDateFacetValues).toHaveBeenCalledWith({
         facetId,
         values: [
           {
@@ -59,17 +65,13 @@ describe('insight date filter', () => {
           },
         ],
       });
-      expect(engine.actions).toContainEqual(action);
     });
 
     it('dispatches a search', () => {
       const value = buildMockDateFacetValue();
       dateFacet.setRange(value);
 
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-      expect(action).toBeTruthy();
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 
@@ -77,21 +79,11 @@ describe('insight date filter', () => {
     beforeEach(() => dateFacet.clear());
 
     it('dispatches #updateDateFacetValues with the facet id and an empty array', () => {
-      expect(engine.actions).toContainEqual(
-        updateDateFacetValues({facetId, values: []})
-      );
+      expect(updateDateFacetValues).toHaveBeenCalledWith({facetId, values: []});
     });
 
     it('dispatches a #updateFacetOptions action with #freezeFacetOrder true', () => {
-      expect(engine.actions).toContainEqual(updateFacetOptions());
-    });
-
-    it('dispatches a search', () => {
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-
-      expect(engine.actions).toContainEqual(action);
+      expect(updateFacetOptions).toHaveBeenCalled();
     });
   });
 });

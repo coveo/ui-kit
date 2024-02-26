@@ -11,7 +11,10 @@ import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {buildMockCommerceEngine} from '../../../../test/mock-engine';
 import {MockCommerceEngine} from '../../../../test/mock-engine';
 import {CommerceDateFacet} from '../../core/facets/date/headless-commerce-date-facet';
-import {CommerceFacetOptions} from '../../core/facets/headless-core-commerce-facet';
+import {
+  CommerceFacetOptions,
+  DateRangeRequest,
+} from '../../core/facets/headless-core-commerce-facet';
 import {buildProductListingDateFacet} from './headless-product-listing-date-facet';
 
 describe('ProductListingDateFacet', () => {
@@ -28,7 +31,9 @@ describe('ProductListingDateFacet', () => {
     facet = buildProductListingDateFacet(engine, options);
   }
 
-  function setFacetRequest(config: Partial<CommerceFacetRequest> = {}) {
+  function setFacetRequest(
+    config: Partial<CommerceFacetRequest<DateRangeRequest>> = {}
+  ) {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, ...config}),
     });

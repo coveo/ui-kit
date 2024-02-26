@@ -1,11 +1,12 @@
-import {Action} from '@reduxjs/toolkit';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {applySort} from '../../../../features/commerce/sort/sort-actions';
 import {sortReducer} from '../../../../features/commerce/sort/sort-slice';
 import {updatePage} from '../../../../features/pagination/pagination-actions';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
-import {MockCommerceEngine} from '../../../../test/mock-engine';
-import {buildMockCommerceEngine} from '../../../../test/mock-engine';
+import {
+  buildMockCommerceEngine,
+  MockedCommerceEngine,
+} from '../../../../test/mock-engine-v2';
 import {
   buildRelevanceSortCriterion,
   buildCoreSort,
@@ -13,22 +14,23 @@ import {
   SortBy,
 } from './headless-core-commerce-sort';
 
+jest.mock('../../../../features/commerce/sort/sort-actions');
+jest.mock('../../../../features/pagination/pagination-actions');
+jest.mock(
+  '../../../../features/commerce/product-listing/product-listing-actions'
+);
+
 describe('commerce core sort', () => {
   let sort: Sort;
-  let engine: MockCommerceEngine;
+  let engine: MockedCommerceEngine;
   const fetchResultsActionCreator = fetchProductListing;
 
   beforeEach(() => {
-    engine = buildMockCommerceEngine();
+    engine = buildMockCommerceEngine(buildMockCommerceState());
     sort = buildCoreSort(engine, {
       fetchResultsActionCreator,
     });
   });
-
-  const expectContainAction = (action: Action) => {
-    const found = engine.actions.find((a) => a.type === action.type);
-    expect(engine.actions).toContainEqual(found);
-  };
 
   it('adds the correct reducers to engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
@@ -43,7 +45,7 @@ describe('commerce core sort', () => {
       },
       fetchResultsActionCreator,
     });
-    expectContainAction(applySort);
+    expect(applySort).toHaveBeenCalled();
   });
 
   describe('#sortBy', () => {
@@ -52,16 +54,15 @@ describe('commerce core sort', () => {
     });
 
     it('dispatches #applySort', () => {
-      expectContainAction(applySort);
+      expect(applySort).toHaveBeenCalled();
     });
 
     it('dispatches #updatePage', () => {
-      expectContainAction(updatePage);
+      expect(updatePage).toHaveBeenCalled();
     });
 
     it('dispatches #fetchResultsActionCreator', () => {
-      const action = engine.findAsyncAction(fetchResultsActionCreator.pending);
-      expect(action).toBeTruthy();
+      expect(fetchResultsActionCreator).toHaveBeenCalled();
     });
   });
 
@@ -73,12 +74,10 @@ describe('commerce core sort', () => {
 
     beforeEach(() => {
       engine = buildMockCommerceEngine({
-        state: {
-          ...buildMockCommerceState(),
-          commerceSort: {
-            appliedSort: appliedSort,
-            availableSorts: [appliedSort],
-          },
+        ...buildMockCommerceState(),
+        commerceSort: {
+          appliedSort: appliedSort,
+          availableSorts: [appliedSort],
         },
       });
       sort = buildCoreSort(engine, {fetchResultsActionCreator});

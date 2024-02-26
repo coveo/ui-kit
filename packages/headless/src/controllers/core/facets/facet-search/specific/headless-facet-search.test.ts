@@ -1,5 +1,9 @@
 import {CoreEngine} from '../../../../../app/engine';
 import {
+  executeFacetSearch,
+  executeFieldSuggest,
+} from '../../../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
+import {
   excludeFacetSearchResult,
   registerFacetSearch,
   selectFacetSearchResult,
@@ -53,6 +57,8 @@ describe('FacetSearch', () => {
       select: jest.fn(),
       exclude: jest.fn(),
       isForFieldSuggestions: false,
+      executeFacetSearchActionCreator: executeFacetSearch,
+      executeFieldSuggestActionCreator: executeFieldSuggest,
     };
 
     initEngine();
