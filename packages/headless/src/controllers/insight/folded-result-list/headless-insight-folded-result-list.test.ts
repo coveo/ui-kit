@@ -2,9 +2,9 @@ import {loadCollection} from '../../../features/folding/insight-folding-actions'
 import {fetchMoreResults} from '../../../features/insight-search/insight-search-actions';
 import {InsightAppState} from '../../../state/insight-app-state';
 import {
-  MockInsightEngine,
+  MockedInsightEngine,
   buildMockInsightEngine,
-} from '../../../test/mock-engine';
+} from '../../../test/mock-engine-v2';
 import {buildMockInsightState} from '../../../test/mock-insight-state';
 import {buildMockResult} from '../../../test/mock-result';
 import {
@@ -12,13 +12,16 @@ import {
   buildFoldedResultList,
 } from './headless-insight-folded-result-list';
 
+jest.mock('../../../features/folding/insight-folding-actions');
+jest.mock('../../../features/insight-search/insight-search-actions');
+
 describe('insight folded result list', () => {
   let state: InsightAppState;
-  let engine: MockInsightEngine;
+  let engine: MockedInsightEngine;
   let foldedResultList: FoldedResultList;
 
   function initFoldedResultList() {
-    engine = buildMockInsightEngine({state});
+    engine = buildMockInsightEngine(state);
     foldedResultList = buildFoldedResultList(engine);
   }
 
@@ -36,12 +39,11 @@ describe('insight folded result list', () => {
       result: buildMockResult(),
     });
 
-    expect(engine.findAsyncAction(loadCollection.pending)).toBeTruthy();
+    expect(loadCollection).toHaveBeenCalled();
   });
 
   it('#fetchMoreResults dispatches the insight search #fetchMoreResults action', () => {
     foldedResultList.fetchMoreResults();
-
-    expect(engine.findAsyncAction(fetchMoreResults.pending)).toBeTruthy();
+    expect(fetchMoreResults).toHaveBeenCalled();
   });
 });
