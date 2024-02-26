@@ -19,7 +19,7 @@ runs:
       shell: bash
       working-directory: ./packages/quantic
       env:
-        BRANCH_NAME: ${{ github.ref_name }}
+        COMMIT_SHA: ${{ github.sha }}
         SFDX_AUTH_CLIENT_ID: ${{ inputs.clientid }}
         SFDX_AUTH_JWT_KEY_FILE: server.key
         SFDX_AUTH_JWT_USERNAME: rdaccess@coveo.com
