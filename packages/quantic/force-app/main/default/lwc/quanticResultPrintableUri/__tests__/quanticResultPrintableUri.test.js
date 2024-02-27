@@ -116,78 +116,148 @@ describe('c-quantic-result-printable-uri', () => {
     });
 
     describe('when the number of parents is greater than the maxNumberOfParts property', () => {
-      const numberOfParents = 4;
+      const numberOfParents = 8;
       const exampleResultWithParents = {
         raw: {
           parents: generateResultParents(numberOfParents),
         },
       };
 
-      it('should properly display the result collapsed path', async () => {
-        const exampleMaxNumberOfParts = 3;
-        const element = createTestComponent({
-          result: exampleResultWithParents,
-          engineId: exampleEngineId,
-          maxNumberOfParts: exampleMaxNumberOfParts,
-        });
-        await flushPromises();
-
-        const pathItems = Array.from(
-          element.shadowRoot.querySelectorAll(selectors.pathItem)
-        );
-        const expandButton = element.shadowRoot.querySelector(
-          selectors.pathExpandButton
-        );
-        expect(pathItems).not.toBeNull();
-        expect(pathItems.length).toBe(exampleMaxNumberOfParts);
-        pathItems
-          .slice(0, exampleMaxNumberOfParts - 1)
-          .forEach((item, index) => {
-            expect(item.textContent).toBe(`parent${index + 1}`);
-            expect(item.href).toBe(`${generateExampleUri(index + 1)}`);
-          });
-
-        expect(expandButton).not.toBeNull();
-
-        expect(pathItems[exampleMaxNumberOfParts - 1].textContent).toBe(
-          `parent${numberOfParents}`
-        );
-        expect(pathItems[exampleMaxNumberOfParts - 1].href).toBe(
-          `${generateExampleUri(numberOfParents)}`
-        );
-      });
-
-      describe('when expanding the result collapsed path', () => {
-        it('should properly display the result expanded path', async () => {
-          const exampleMaxNumberOfParts = 3;
+      describe('when the default value of the maxNumberOfParts property is used', () => {
+        it('should properly display the result collapsed path', async () => {
+          const defaultMaxNumberOfParts = 5;
           const element = createTestComponent({
             result: exampleResultWithParents,
             engineId: exampleEngineId,
-            maxNumberOfParts: exampleMaxNumberOfParts,
           });
           await flushPromises();
 
-          let expandButton = element.shadowRoot.querySelector(
+          const pathItems = Array.from(
+            element.shadowRoot.querySelectorAll(selectors.pathItem)
+          );
+          const expandButton = element.shadowRoot.querySelector(
             selectors.pathExpandButton
           );
+          expect(pathItems).not.toBeNull();
+          expect(pathItems.length).toBe(defaultMaxNumberOfParts);
+          pathItems
+            .slice(0, defaultMaxNumberOfParts - 1)
+            .forEach((item, index) => {
+              expect(item.textContent).toBe(`parent${index + 1}`);
+              expect(item.href).toBe(`${generateExampleUri(index + 1)}`);
+            });
 
           expect(expandButton).not.toBeNull();
 
-          await expandButton.click();
-
-          const pathItems = element.shadowRoot.querySelectorAll(
-            selectors.pathItem
+          expect(pathItems[defaultMaxNumberOfParts - 1].textContent).toBe(
+            `parent${numberOfParents}`
           );
-          expandButton = element.shadowRoot.querySelector(
+          expect(pathItems[defaultMaxNumberOfParts - 1].href).toBe(
+            `${generateExampleUri(numberOfParents)}`
+          );
+        });
+
+        describe('when expanding the result collapsed path', () => {
+          it('should properly display the result expanded path', async () => {
+            const element = createTestComponent({
+              result: exampleResultWithParents,
+              engineId: exampleEngineId,
+            });
+            await flushPromises();
+
+            let expandButton = element.shadowRoot.querySelector(
+              selectors.pathExpandButton
+            );
+
+            expect(expandButton).not.toBeNull();
+
+            await expandButton.click();
+
+            const pathItems = element.shadowRoot.querySelectorAll(
+              selectors.pathItem
+            );
+            expandButton = element.shadowRoot.querySelector(
+              selectors.pathExpandButton
+            );
+
+            expect(expandButton).toBeNull();
+            expect(pathItems).not.toBeNull();
+            expect(pathItems.length).toBe(numberOfParents);
+            pathItems.forEach((item, index) => {
+              expect(item.textContent).toBe(`parent${index + 1}`);
+              expect(item.href).toBe(`${generateExampleUri(index + 1)}`);
+            });
+          });
+        });
+      });
+
+      describe('when a custom value of the maxNumberOfParts property is used', () => {
+        const customMaxNumberOfParts = 5;
+
+        it('should properly display the result collapsed path', async () => {
+          const element = createTestComponent({
+            result: exampleResultWithParents,
+            engineId: exampleEngineId,
+            maxNumberOfParts: customMaxNumberOfParts,
+          });
+          await flushPromises();
+
+          const pathItems = Array.from(
+            element.shadowRoot.querySelectorAll(selectors.pathItem)
+          );
+          const expandButton = element.shadowRoot.querySelector(
             selectors.pathExpandButton
           );
-
-          expect(expandButton).toBeNull();
           expect(pathItems).not.toBeNull();
-          expect(pathItems.length).toBe(numberOfParents);
-          pathItems.forEach((item, index) => {
-            expect(item.textContent).toBe(`parent${index + 1}`);
-            expect(item.href).toBe(`${generateExampleUri(index + 1)}`);
+          expect(pathItems.length).toBe(customMaxNumberOfParts);
+          pathItems
+            .slice(0, customMaxNumberOfParts - 1)
+            .forEach((item, index) => {
+              expect(item.textContent).toBe(`parent${index + 1}`);
+              expect(item.href).toBe(`${generateExampleUri(index + 1)}`);
+            });
+
+          expect(expandButton).not.toBeNull();
+
+          expect(pathItems[customMaxNumberOfParts - 1].textContent).toBe(
+            `parent${numberOfParents}`
+          );
+          expect(pathItems[customMaxNumberOfParts - 1].href).toBe(
+            `${generateExampleUri(numberOfParents)}`
+          );
+        });
+
+        describe('when expanding the result collapsed path', () => {
+          it('should properly display the result expanded path', async () => {
+            const element = createTestComponent({
+              result: exampleResultWithParents,
+              engineId: exampleEngineId,
+              maxNumberOfParts: customMaxNumberOfParts,
+            });
+            await flushPromises();
+
+            let expandButton = element.shadowRoot.querySelector(
+              selectors.pathExpandButton
+            );
+
+            expect(expandButton).not.toBeNull();
+
+            await expandButton.click();
+
+            const pathItems = element.shadowRoot.querySelectorAll(
+              selectors.pathItem
+            );
+            expandButton = element.shadowRoot.querySelector(
+              selectors.pathExpandButton
+            );
+
+            expect(expandButton).toBeNull();
+            expect(pathItems).not.toBeNull();
+            expect(pathItems.length).toBe(numberOfParents);
+            pathItems.forEach((item, index) => {
+              expect(item.textContent).toBe(`parent${index + 1}`);
+              expect(item.href).toBe(`${generateExampleUri(index + 1)}`);
+            });
           });
         });
       });
