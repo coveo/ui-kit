@@ -7,8 +7,12 @@ import {itemSelector} from '../../../../controllers/commerce/context/cart/headle
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {clearMicrotaskQueue} from '../../../../test/unit-test-utils';
 import {getContextInitialState} from '../context-state';
-import {logCartAction, logCartPurchase} from './cart-analytics-actions';
-import { CartItemWithMetadata } from './cart-state';
+import {
+  Transaction,
+  logCartAction,
+  logCartPurchase,
+} from './cart-analytics-actions';
+import {CartItemWithMetadata} from './cart-state';
 
 jest.mock('@coveo/relay');
 jest.mock(
@@ -135,6 +139,18 @@ describe('#logCartAction', () => {
         return {quantity, product};
       });
 
+    const expectCartPurchase = (
+      products: ProductQuantity[],
+      transaction: Transaction
+    ) => {
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit).toHaveBeenCalledWith('ec.purchase', {
+        currency: 'USD',
+        products,
+        transaction,
+      });
+    };
+
     it('logs #ec.purchase with one item in the cart', async () => {
       const cartItems = [
         {name: 'blue shoes', productId: 'shoe-1', price: 10.36, quantity: 1},
@@ -157,12 +173,7 @@ describe('#logCartAction', () => {
       engine.dispatch(logCartPurchase(transaction));
       await clearMicrotaskQueue();
 
-      expect(emit).toHaveBeenCalledTimes(1);
-      expect(emit).toHaveBeenCalledWith('ec.purchase', {
-        currency: 'USD',
-        products,
-        transaction,
-      });
+      expectCartPurchase(products, transaction);
     });
 
     it('logs #ec.purchase with multiple items in the cart', async () => {
@@ -181,8 +192,8 @@ describe('#logCartAction', () => {
               ...cartItems[0],
             },
             [cartItems[1].productId]: {
-              ...cartItems[1]
-            }
+              ...cartItems[1],
+            },
           },
         },
       };
@@ -191,12 +202,7 @@ describe('#logCartAction', () => {
       engine.dispatch(logCartPurchase(transaction));
       await clearMicrotaskQueue();
 
-      expect(emit).toHaveBeenCalledTimes(1);
-      expect(emit).toHaveBeenCalledWith('ec.purchase', {
-        currency: 'USD',
-        products,
-        transaction,
-      });
+      expectCartPurchase(products, transaction);
     });
   });
 });

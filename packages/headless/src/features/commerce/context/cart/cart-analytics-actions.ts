@@ -14,7 +14,7 @@ import {
 } from '../../../analytics/analytics-utils';
 import {CartItemWithMetadata} from './cart-state';
 
-interface Transaction {
+export interface Transaction {
   id: string;
   revenue: number;
 }
