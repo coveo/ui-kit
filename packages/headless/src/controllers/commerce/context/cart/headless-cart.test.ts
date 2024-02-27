@@ -107,12 +107,22 @@ describe('headless commerce cart', () => {
   });
 
   describe('#purchase', () => {
-    // TODO LENS-1498: it('logs #ec.purchase with correct payload', () => { /* ... */ });
+    it('dispatch #logCartPurchase with the transaction attributes', () => {
+      const mockedLogCartPurchase = jest.mocked(logCartPurchase);
 
-    it('dispatches #setItems with empty array', () => {
+      cart.purchase('transaction-id', 0);
+
+      expect(mockedLogCartPurchase).toHaveBeenCalledTimes(1);
+      expect(mockedLogCartPurchase).toHaveBeenCalledWith({
+        id: 'transaction-id',
+        revenue: 0,
+      });
+    });
+
+    it('dispatches #setItems with empty array', async () => {
       const mockedSetItems = jest.mocked(setItems);
 
-      cart.purchase('', 0);
+      await cart.purchase('', 0);
 
       expect(mockedSetItems).toHaveBeenCalledWith([]);
     });

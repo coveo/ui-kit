@@ -207,8 +207,10 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
       }
     },
 
-    purchase(_transactionId: string, _transactionRevenue: number) {
-      // TODO LENS-1498: log ec.purchase with all products in cart.
+    async purchase(transactionId: string, transactionRevenue: number) {
+      await dispatch(
+        logCartPurchase({id: transactionId, revenue: transactionRevenue})
+      );
       dispatch(setItems([]));
     },
 
