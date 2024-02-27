@@ -25,6 +25,8 @@ interface AtomicHostedUIInitializationOptions extends InitializationOptions {
 }
 
 /**
+ * A Web Component used to inject a Coveo Hosted Search Page in the DOM.
+ * Pulls from the [Search Interfaces API](https://platform.cloud.coveo.com/docs?urls.primaryName=Search%20Interface%20Service#/)
  * @internal
  */
 @Component({

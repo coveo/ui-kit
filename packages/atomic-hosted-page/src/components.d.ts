@@ -23,6 +23,10 @@ export namespace Components {
         "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
         "initialize": (options: AtomicHostedPageInitializationOptions) => Promise<void>;
     }
+    /**
+     * A Web Component used to inject a Coveo Hosted Search Page in the DOM.
+     * Pulls from the [Search Interfaces API](https://platform.cloud.coveo.com/docs?urls.primaryName=Search%20Interface%20Service#/)
+     */
     interface AtomicHostedUi {
         /**
           * Returns the unique, organization-specific endpoint(s)
@@ -61,6 +65,10 @@ declare global {
         prototype: HTMLAtomicHostedPageElement;
         new (): HTMLAtomicHostedPageElement;
     };
+    /**
+     * A Web Component used to inject a Coveo Hosted Search Page in the DOM.
+     * Pulls from the [Search Interfaces API](https://platform.cloud.coveo.com/docs?urls.primaryName=Search%20Interface%20Service#/)
+     */
     interface HTMLAtomicHostedUiElement extends Components.AtomicHostedUi, HTMLStencilElement {
     }
     var HTMLAtomicHostedUiElement: {
@@ -90,6 +98,10 @@ declare namespace LocalJSX {
      */
     interface AtomicHostedPage {
     }
+    /**
+     * A Web Component used to inject a Coveo Hosted Search Page in the DOM.
+     * Pulls from the [Search Interfaces API](https://platform.cloud.coveo.com/docs?urls.primaryName=Search%20Interface%20Service#/)
+     */
     interface AtomicHostedUi {
         /**
           * The type of hosted search page to load E.g., 'page', 'custom', 'legacy'
@@ -117,6 +129,10 @@ declare module "@stencil/core" {
              * Pulls from the [Hosted Pages API](https://platform.cloud.coveo.com/docs?urls.primaryName=Search%20Interface%20Service#/Hosted%20Page)
              */
             "atomic-hosted-page": LocalJSX.AtomicHostedPage & JSXBase.HTMLAttributes<HTMLAtomicHostedPageElement>;
+            /**
+             * A Web Component used to inject a Coveo Hosted Search Page in the DOM.
+             * Pulls from the [Search Interfaces API](https://platform.cloud.coveo.com/docs?urls.primaryName=Search%20Interface%20Service#/)
+             */
             "atomic-hosted-ui": LocalJSX.AtomicHostedUi & JSXBase.HTMLAttributes<HTMLAtomicHostedUiElement>;
             /**
              * A Web Component used to inject a [Coveo Search Interface made with the simple builder](https://docs.coveo.com/en/m7e92019/adobe/build-the-search-solution-using-a-coveo-ui-library-directly#search-interface-builder) in the DOM.
