@@ -1439,14 +1439,8 @@ describe('commerceFacetSetReducer', () => {
       it('sets #request.numberOfValues to 0', () => {
         expect(finalState[facetId]?.request.numberOfValues).toBe(0);
       });
-      it('sets #request.values[*].state to "idle" and #request.values[*].children to an empty array', () => {
-        expect(finalState[facetId]?.request.values[0].state).toEqual('idle');
-        expect(
-          (
-            finalState[facetId]?.request
-              .values[0] as CommerceCategoryFacetValueRequest
-          ).children
-        ).toEqual([]);
+      it('sets #request.values to an empty array', () => {
+        expect(finalState[facetId]?.request.values).toEqual([]);
       });
 
       it('sets #request.preventAutoSelect to "true"', () => {

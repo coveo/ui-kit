@@ -289,10 +289,7 @@ function handleQueryFulfilled(
 function handleDeselectAllFacetValues(request: CommerceFacetRequest) {
   if (request.type === 'hierarchical') {
     request.numberOfValues = request.initialNumberOfValues;
-    (request.values as CommerceCategoryFacetValueRequest[]).forEach((value) => {
-      value.state = 'idle';
-      value.children = [];
-    });
+    request.values = [];
     request.preventAutoSelect = true;
   } else {
     request.values.forEach((value) => (value.state = 'idle'));
