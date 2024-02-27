@@ -1,8 +1,7 @@
 import {createRelay} from '@coveo/relay';
-import {
-  MockInsightEngine,
-  buildMockInsightEngine,
-} from '../../test/mock-engine';
+import {InsightEngine} from '../../app/insight-engine/insight-engine';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
+import {buildMockInsightEngine} from '../../test/mock-engine-v2';
 import {buildMockInsightState} from '../../test/mock-insight-state';
 import {buildMockRaw} from '../../test/mock-raw';
 import {buildMockResult} from '../../test/mock-result';
@@ -93,7 +92,7 @@ const resultParams = {
 const testResult = buildMockResult(resultParams);
 
 describe('result insight analytics actions', () => {
-  let engine: MockInsightEngine;
+  let engine: InsightEngine;
   const searchState = buildMockSearchState({
     results: [testResult],
     response: buildMockSearchResponse({
@@ -115,8 +114,8 @@ describe('result insight analytics actions', () => {
 
   describe('when analyticsMode is `legacy`', () => {
     beforeEach(() => {
-      engine = buildMockInsightEngine({
-        state: buildMockInsightState({
+      engine = buildMockInsightEngine(
+        buildMockInsightState({
           search: searchState,
           configuration: {
             ...getConfigurationInitialState(),
@@ -126,13 +125,17 @@ describe('result insight analytics actions', () => {
             },
           },
           insightCaseContext: caseContextState,
-        }),
-      });
+        })
+      );
     });
 
     describe('logDocumentOpen', () => {
       it('should call coveo.analytics.logDocumentOpen properly', async () => {
-        await engine.dispatch(logDocumentOpen(testResult));
+        await logDocumentOpen(testResult)()(
+          engine.dispatch,
+          () => engine.state,
+          {} as ThunkExtraArguments
+        );
 
         expect(mockLogDocumentOpen).toHaveBeenCalledTimes(1);
         expect(mockLogDocumentOpen.mock.calls[0][0]).toStrictEqual(
@@ -150,8 +153,8 @@ describe('result insight analytics actions', () => {
 
   describe('when analyticsMode is `next`', () => {
     beforeEach(() => {
-      engine = buildMockInsightEngine({
-        state: buildMockInsightState({
+      engine = buildMockInsightEngine(
+        buildMockInsightState({
           search: searchState,
           configuration: {
             ...getConfigurationInitialState(),
@@ -161,13 +164,17 @@ describe('result insight analytics actions', () => {
             },
           },
           insightCaseContext: caseContextState,
-        }),
-      });
+        })
+      );
     });
 
     describe('logDocumentOpen', () => {
       it('should call relay.emit properly', async () => {
-        engine.dispatch(logDocumentOpen(testResult));
+        await logDocumentOpen(testResult)()(
+          engine.dispatch,
+          () => engine.state,
+          {} as ThunkExtraArguments
+        );
         await clearMicrotaskQueue();
 
         expect(emit).toHaveBeenCalledTimes(1);

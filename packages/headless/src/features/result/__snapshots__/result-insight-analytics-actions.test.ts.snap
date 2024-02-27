@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`result actions insight analytics actions when analyticsMode is \`next\` logDocumentOpen should call relay.emit properly 1`] = `
+exports[`result insight analytics actions when analyticsMode is \`next\` logDocumentOpen should call relay.emit properly 1`] = `
 [
   "InsightPanel.ItemAction",
   {

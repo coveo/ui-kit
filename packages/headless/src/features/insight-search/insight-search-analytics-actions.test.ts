@@ -1,8 +1,7 @@
+import {InsightEngine} from '../../app/insight-engine/insight-engine';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {buildMockAnalyticsState} from '../../test/mock-analytics-state';
-import {
-  MockInsightEngine,
-  buildMockInsightEngine,
-} from '../../test/mock-engine';
+import {buildMockInsightEngine} from '../../test/mock-engine-v2';
 import {buildMockInsightState} from '../../test/mock-insight-state';
 import {getCaseContextInitialState} from '../case-context/case-context-state';
 import {getConfigurationInitialState} from '../configuration/configuration-state';
@@ -47,11 +46,11 @@ const exampleErrorMessage = 'example error message';
 const exampleQuery = 'test query';
 
 describe('insight search analytics events', () => {
-  let engine: MockInsightEngine;
+  let engine: InsightEngine;
 
   beforeEach(() => {
-    engine = buildMockInsightEngine({
-      state: buildMockInsightState({
+    engine = buildMockInsightEngine(
+      buildMockInsightState({
         insightCaseContext: {
           ...getCaseContextInitialState(),
           caseContext: {
@@ -61,14 +60,16 @@ describe('insight search analytics events', () => {
           caseId: exampleCaseId,
           caseNumber: exampleCaseNumber,
         },
-      }),
-    });
+      })
+    );
   });
 
   describe('logContextChanged', () => {
     it('should log #logContextChanged with the right payload', async () => {
-      await engine.dispatch(
-        logContextChanged(exampleCaseId, exampleCaseNumber)
+      await logContextChanged(exampleCaseId, exampleCaseNumber)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
       );
 
       const expectedPayload = {
@@ -89,7 +90,11 @@ describe('insight search analytics events', () => {
 
   describe('logFetchMoreResults', () => {
     it('should log #logFetchMoreResults with the right payload', async () => {
-      await engine.dispatch(logFetchMoreResults());
+      await logFetchMoreResults()()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
 
       const expectedPayload = {
         caseContext: {
@@ -109,8 +114,8 @@ describe('insight search analytics events', () => {
 
   describe('logQueryError', () => {
     it('should log #logQueryError with the right payload', async () => {
-      engine = buildMockInsightEngine({
-        state: buildMockInsightState({
+      engine = buildMockInsightEngine(
+        buildMockInsightState({
           insightCaseContext: {
             caseContext: {
               Case_Subject: exampleSubject,
@@ -123,15 +128,19 @@ describe('insight search analytics events', () => {
             ...getQueryInitialState(),
             q: exampleQuery,
           },
-        }),
-      });
+        })
+      );
 
       const exampleError = {
         type: exampleErrorType,
         message: exampleErrorMessage,
         statusCode: 400,
       };
-      await engine.dispatch(logQueryError(exampleError));
+      await logQueryError(exampleError)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
 
       const expectedPayload = {
         caseContext: {
@@ -155,7 +164,11 @@ describe('insight search analytics events', () => {
 
   describe('logInterfaceLoad', () => {
     it('should log #logInterfaceLoad with the right payload', async () => {
-      await engine.dispatch(logInsightInterfaceLoad());
+      await logInsightInterfaceLoad()()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
 
       const expectedPayload = {
         caseContext: {
@@ -175,8 +188,8 @@ describe('insight search analytics events', () => {
 
   describe('logInterfaceChange', () => {
     it('should log #logInterfaceChange with the right payload', async () => {
-      engine = buildMockInsightEngine({
-        state: buildMockInsightState({
+      engine = buildMockInsightEngine(
+        buildMockInsightState({
           configuration: {
             ...getConfigurationInitialState(),
             analytics: buildMockAnalyticsState({
@@ -191,10 +204,14 @@ describe('insight search analytics events', () => {
             caseId: exampleCaseId,
             caseNumber: exampleCaseNumber,
           },
-        }),
-      });
+        })
+      );
 
-      await engine.dispatch(logInsightInterfaceChange());
+      await logInsightInterfaceChange()()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
 
       const expectedPayload = {
         caseContext: {

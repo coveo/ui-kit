@@ -1,8 +1,7 @@
 import {createRelay} from '@coveo/relay';
-import {
-  MockInsightEngine,
-  buildMockInsightEngine,
-} from '../../test/mock-engine';
+import {InsightEngine} from '../../app/insight-engine/insight-engine';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
+import {buildMockInsightEngine} from '../../test/mock-engine-v2';
 import {buildMockInsightState} from '../../test/mock-insight-state';
 import {buildMockRaw} from '../../test/mock-raw';
 import {buildMockResult} from '../../test/mock-result';
@@ -98,7 +97,7 @@ const resultParams = {
 const testResult = buildMockResult(resultParams);
 
 describe('attached results analytics actions', () => {
-  let engine: MockInsightEngine;
+  let engine: InsightEngine;
   const searchState = buildMockSearchState({
     results: [testResult],
     response: buildMockSearchResponse({
@@ -120,8 +119,8 @@ describe('attached results analytics actions', () => {
 
   describe('when analyticsMode is `legacy`', () => {
     beforeEach(() => {
-      engine = buildMockInsightEngine({
-        state: buildMockInsightState({
+      engine = buildMockInsightEngine(
+        buildMockInsightState({
           search: searchState,
           configuration: {
             ...getConfigurationInitialState(),
@@ -131,13 +130,17 @@ describe('attached results analytics actions', () => {
             },
           },
           insightCaseContext: caseContextState,
-        }),
-      });
+        })
+      );
     });
 
     describe('logCaseAttach', () => {
       it('should call coveo.analytics.logCaseAttach properly', async () => {
-        await engine.dispatch(logCaseAttach(testResult));
+        await logCaseAttach(testResult)()(
+          engine.dispatch,
+          () => engine.state,
+          {} as ThunkExtraArguments
+        );
 
         expect(mockLogCaseAttach).toHaveBeenCalledTimes(1);
         expect(mockLogCaseAttach.mock.calls[0][0]).toStrictEqual(
@@ -154,7 +157,11 @@ describe('attached results analytics actions', () => {
 
     describe('logCaseDetach', () => {
       it('should call coveo.analytics.logCaseDetach properly', async () => {
-        await engine.dispatch(logCaseDetach(testResult));
+        await logCaseDetach(testResult)()(
+          engine.dispatch,
+          () => engine.state,
+          {} as ThunkExtraArguments
+        );
 
         expect(mockLogCaseDetach).toHaveBeenCalledTimes(1);
         expect(mockLogCaseDetach.mock.calls[0][0]).toStrictEqual(
@@ -169,8 +176,8 @@ describe('attached results analytics actions', () => {
 
   describe('when analyticsMode is `next`', () => {
     beforeEach(() => {
-      engine = buildMockInsightEngine({
-        state: buildMockInsightState({
+      engine = buildMockInsightEngine(
+        buildMockInsightState({
           search: searchState,
           configuration: {
             ...getConfigurationInitialState(),
@@ -180,13 +187,17 @@ describe('attached results analytics actions', () => {
             },
           },
           insightCaseContext: caseContextState,
-        }),
-      });
+        })
+      );
     });
 
     describe('logCaseAttach', () => {
       it('should call relay.emit properly', async () => {
-        engine.dispatch(logCaseAttach(testResult));
+        await logCaseAttach(testResult)()(
+          engine.dispatch,
+          () => engine.state,
+          {} as ThunkExtraArguments
+        );
         await clearMicrotaskQueue();
 
         expect(emit).toHaveBeenCalledTimes(1);
@@ -196,7 +207,12 @@ describe('attached results analytics actions', () => {
 
     describe('logCaseDetach', () => {
       it('should call relay.emit properly', async () => {
-        engine.dispatch(logCaseDetach(testResult));
+        await logCaseDetach(testResult)()(
+          engine.dispatch,
+          () => engine.state,
+          {} as ThunkExtraArguments
+        );
+
         await clearMicrotaskQueue();
 
         expect(emit).toHaveBeenCalledTimes(1);

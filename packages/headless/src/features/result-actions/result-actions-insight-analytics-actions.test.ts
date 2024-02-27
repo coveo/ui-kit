@@ -1,8 +1,7 @@
 import {createRelay} from '@coveo/relay';
-import {
-  MockInsightEngine,
-  buildMockInsightEngine,
-} from '../../test/mock-engine';
+import {InsightEngine} from '../../app/insight-engine/insight-engine';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
+import {buildMockInsightEngine} from '../../test/mock-engine-v2';
 import {buildMockInsightState} from '../../test/mock-insight-state';
 import {buildMockRaw} from '../../test/mock-raw';
 import {buildMockResult} from '../../test/mock-result';
@@ -101,7 +100,7 @@ const resultParams = {
 const testResult = buildMockResult(resultParams);
 
 describe('result actions insight analytics actions', () => {
-  let engine: MockInsightEngine;
+  let engine: InsightEngine;
   const searchState = buildMockSearchState({
     results: [testResult],
     response: buildMockSearchResponse({
@@ -123,8 +122,8 @@ describe('result actions insight analytics actions', () => {
 
   describe('when analyticsMode is `legacy`', () => {
     beforeEach(() => {
-      engine = buildMockInsightEngine({
-        state: buildMockInsightState({
+      engine = buildMockInsightEngine(
+        buildMockInsightState({
           search: searchState,
           configuration: {
             ...getConfigurationInitialState(),
@@ -134,13 +133,17 @@ describe('result actions insight analytics actions', () => {
             },
           },
           insightCaseContext: caseContextState,
-        }),
-      });
+        })
+      );
     });
 
     describe('logCopyToClipboard', () => {
       it('should call coveo.analytics.logCopyToClipboard properly', async () => {
-        await engine.dispatch(logCopyToClipboard(testResult));
+        await logCopyToClipboard(testResult)()(
+          engine.dispatch,
+          () => engine.state,
+          {} as ThunkExtraArguments
+        );
 
         expect(mockLogCopyToClipboard).toHaveBeenCalledTimes(1);
         expect(mockLogCopyToClipboard.mock.calls[0][0]).toStrictEqual(
@@ -157,7 +160,11 @@ describe('result actions insight analytics actions', () => {
 
     describe('logCaseSendEmail', () => {
       it('should call coveo.analytics.logCaseSendEmail properly', async () => {
-        await engine.dispatch(logCaseSendEmail(testResult));
+        await logCaseSendEmail(testResult)()(
+          engine.dispatch,
+          () => engine.state,
+          {} as ThunkExtraArguments
+        );
 
         expect(mockLogCaseSendEmail).toHaveBeenCalledTimes(1);
         expect(mockLogCaseSendEmail.mock.calls[0][0]).toStrictEqual(
@@ -174,7 +181,11 @@ describe('result actions insight analytics actions', () => {
 
     describe('logFeedItemTextPost', () => {
       it('should call coveo.analytics.logFeedItemTextPost properly', async () => {
-        await engine.dispatch(logFeedItemTextPost(testResult));
+        await logFeedItemTextPost(testResult)()(
+          engine.dispatch,
+          () => engine.state,
+          {} as ThunkExtraArguments
+        );
 
         expect(mockLogFeedItemTextPost).toHaveBeenCalledTimes(1);
         expect(mockLogFeedItemTextPost.mock.calls[0][0]).toStrictEqual(
@@ -192,8 +203,8 @@ describe('result actions insight analytics actions', () => {
 
   describe('when analyticsMode is `next`', () => {
     beforeEach(() => {
-      engine = buildMockInsightEngine({
-        state: buildMockInsightState({
+      engine = buildMockInsightEngine(
+        buildMockInsightState({
           search: searchState,
           configuration: {
             ...getConfigurationInitialState(),
@@ -203,13 +214,17 @@ describe('result actions insight analytics actions', () => {
             },
           },
           insightCaseContext: caseContextState,
-        }),
-      });
+        })
+      );
     });
 
     describe('logCopyToClipboard', () => {
       it('should call relay.emit properly', async () => {
-        engine.dispatch(logCopyToClipboard(testResult));
+        await logCopyToClipboard(testResult)()(
+          engine.dispatch,
+          () => engine.state,
+          {} as ThunkExtraArguments
+        );
         await clearMicrotaskQueue();
 
         expect(emit).toHaveBeenCalledTimes(1);
@@ -219,7 +234,11 @@ describe('result actions insight analytics actions', () => {
 
     describe('logCaseSendEmail', () => {
       it('should call relay.emit properly', async () => {
-        engine.dispatch(logCaseSendEmail(testResult));
+        await logCaseSendEmail(testResult)()(
+          engine.dispatch,
+          () => engine.state,
+          {} as ThunkExtraArguments
+        );
         await clearMicrotaskQueue();
 
         expect(emit).toHaveBeenCalledTimes(1);
@@ -229,7 +248,11 @@ describe('result actions insight analytics actions', () => {
 
     describe('logFeedItemTextPost', () => {
       it('should call relay.emit properly', async () => {
-        engine.dispatch(logFeedItemTextPost(testResult));
+        await logFeedItemTextPost(testResult)()(
+          engine.dispatch,
+          () => engine.state,
+          {} as ThunkExtraArguments
+        );
         await clearMicrotaskQueue();
 
         expect(emit).toHaveBeenCalledTimes(1);

@@ -1,8 +1,7 @@
 import {createRelay} from '@coveo/relay';
-import {
-  MockInsightEngine,
-  buildMockInsightEngine,
-} from '../../test/mock-engine';
+import {InsightEngine} from '../../app/insight-engine/insight-engine';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
+import {buildMockInsightEngine} from '../../test/mock-engine-v2';
 import {buildMockInsightState} from '../../test/mock-insight-state';
 import {clearMicrotaskQueue} from '../../test/unit-test-utils';
 import {getConfigurationInitialState} from '../configuration/configuration-state';
@@ -49,7 +48,7 @@ const exampleCreateArticleMetadata = {
 };
 
 describe('insight analytics actions', () => {
-  let engine: MockInsightEngine;
+  let engine: InsightEngine;
   const caseContextState = {
     caseContext: {
       Case_Subject: exampleSubject,
@@ -65,8 +64,8 @@ describe('insight analytics actions', () => {
 
   describe('when analyticsMode is `legacy`', () => {
     beforeEach(() => {
-      engine = buildMockInsightEngine({
-        state: buildMockInsightState({
+      engine = buildMockInsightEngine(
+        buildMockInsightState({
           configuration: {
             ...getConfigurationInitialState(),
             analytics: {
@@ -75,14 +74,16 @@ describe('insight analytics actions', () => {
             },
           },
           insightCaseContext: caseContextState,
-        }),
-      });
+        })
+      );
     });
 
     describe('logCreateArticle', () => {
       it('should call coveo.analytics.logCreateArticle properly', async () => {
-        await engine.dispatch(
-          logInsightCreateArticle(exampleCreateArticleMetadata)
+        await logInsightCreateArticle(exampleCreateArticleMetadata)()(
+          engine.dispatch,
+          () => engine.state,
+          {} as ThunkExtraArguments
         );
 
         const expectedPayload = {
@@ -106,14 +107,12 @@ describe('insight analytics actions', () => {
 
     describe('logExpandToFullUI', () => {
       it('should call coveo.analytics.logExpandToFullUI properly', async () => {
-        await engine.dispatch(
-          logExpandToFullUI(
-            exampleCaseId,
-            exampleCaseNumber,
-            'c__FullSearch',
-            'openFullSearchButton'
-          )
-        );
+        await logExpandToFullUI(
+          exampleCaseId,
+          exampleCaseNumber,
+          'c__FullSearch',
+          'openFullSearchButton'
+        )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
         const expectedPayload = {
           caseContext: {
@@ -136,8 +135,8 @@ describe('insight analytics actions', () => {
 
   describe('when analyticsMode is `next`', () => {
     beforeEach(() => {
-      engine = buildMockInsightEngine({
-        state: buildMockInsightState({
+      engine = buildMockInsightEngine(
+        buildMockInsightState({
           configuration: {
             ...getConfigurationInitialState(),
             analytics: {
@@ -146,13 +145,17 @@ describe('insight analytics actions', () => {
             },
           },
           insightCaseContext: caseContextState,
-        }),
-      });
+        })
+      );
     });
 
     describe('logCreateArticle', () => {
       it('should call relay.emit properly', async () => {
-        engine.dispatch(logInsightCreateArticle(exampleCreateArticleMetadata));
+        await logInsightCreateArticle(exampleCreateArticleMetadata)()(
+          engine.dispatch,
+          () => engine.state,
+          {} as ThunkExtraArguments
+        );
         await clearMicrotaskQueue();
 
         expect(emit).toHaveBeenCalledTimes(1);
@@ -162,8 +165,10 @@ describe('insight analytics actions', () => {
 
     describe('logExpandToFullUI', () => {
       it('should call relay.emit properly', async () => {
-        engine.dispatch(
-          logExpandToFullUI(exampleCaseId, exampleCaseNumber, '', '')
+        await logExpandToFullUI(exampleCaseId, exampleCaseNumber, '', '')()(
+          engine.dispatch,
+          () => engine.state,
+          {} as ThunkExtraArguments
         );
         await clearMicrotaskQueue();
 
