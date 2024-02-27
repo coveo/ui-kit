@@ -241,7 +241,6 @@ jobs:
     secrets:
       SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
       SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   required-jobs:
     if: success()
     needs:

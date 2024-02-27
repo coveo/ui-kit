@@ -5,8 +5,6 @@ on:
         required: true
       SFDX_AUTH_JWT_KEY:
         required: true
-      GITHUB_TOKEN:
-        required: true
 jobs:
   e2e-quantic-setup:
     name: 'Setup e2e tests on Quantic'
