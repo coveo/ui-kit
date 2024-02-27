@@ -2,31 +2,27 @@ import {createRelay} from '@coveo/relay';
 import {buildCommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {getSampleCommerceEngineConfiguration} from '../../../../app/commerce-engine/commerce-engine-configuration';
-import {itemSelector} from '../../../../controllers/commerce/context/cart/headless-cart-selectors';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {clearMicrotaskQueue} from '../../../../test/unit-test-utils';
 import {getContextInitialState} from '../context-state';
 import {logCartAction} from './cart-analytics-actions';
-import {CartItemWithMetadata} from './cart-state';
 
 jest.mock('@coveo/relay');
-jest.mock(
-  '../../../../controllers/commerce/context/cart/headless-cart-selectors'
-);
 
 describe('Cart Analytics Actions', () => {
   const emit = jest.fn();
   let engine: CommerceEngine;
+  const defaultPreloadedState = {
+    ...buildMockCommerceState(),
+    commerceContext: {
+      ...getContextInitialState(),
+      currency: 'USD',
+    },
+  };
 
-  function initEngine(preloadedState = buildMockCommerceState()) {
+  function initEngine(preloadedState = defaultPreloadedState) {
     engine = buildCommerceEngine({
-      preloadedState: {
-        ...preloadedState,
-        commerceContext: {
-          ...getContextInitialState(),
-          currency: 'USD',
-        },
-      },
+      preloadedState,
       configuration: {
         ...getSampleCommerceEngineConfiguration(),
         analytics: {
@@ -75,9 +71,11 @@ describe('Cart Analytics Actions', () => {
     });
 
     it('logs #ec.cartAction with "add" action and correct payload if quantity > 0 and item does not exist in cart', async () => {
-      jest
-        .mocked(itemSelector)
-        .mockImplementation(() => undefined as unknown as CartItemWithMetadata);
+      const preloadedStateWithCartWithoutItems = {
+        ...defaultPreloadedState,
+        cart: {cartItems: [], cart: {}},
+      };
+      initEngine(preloadedStateWithCartWithoutItems);
 
       engine.dispatch(logCartAction({...productWithoutQuantity, quantity: 1}));
       await clearMicrotaskQueue();
@@ -90,9 +88,11 @@ describe('Cart Analytics Actions', () => {
     });
 
     it('logs #ec.cartAction with "add" action and correct payload if quantity > 0 and item does not exist in cart and the quantity > 1', async () => {
-      jest
-        .mocked(itemSelector)
-        .mockImplementation(() => undefined as unknown as CartItemWithMetadata);
+      const preloadedStateWithCartWithoutItems = {
+        ...defaultPreloadedState,
+        cart: {cartItems: [], cart: {}},
+      };
+      initEngine(preloadedStateWithCartWithoutItems);
 
       engine.dispatch(logCartAction({...productWithoutQuantity, quantity: 3}));
       await clearMicrotaskQueue();
@@ -105,9 +105,19 @@ describe('Cart Analytics Actions', () => {
     });
 
     it('logs #ec.cartAction with "add" action and correct payload if item exists in cart and new quantity > current', async () => {
-      jest
-        .mocked(itemSelector)
-        .mockImplementation(() => ({...productWithoutQuantity, quantity: 1}));
+      const preloadedStateWithCart = {
+        ...defaultPreloadedState,
+        cart: {
+          cartItems: [],
+          cart: {
+            [productWithoutQuantity.productId]: {
+              ...productWithoutQuantity,
+              quantity: 1,
+            },
+          },
+        },
+      };
+      initEngine(preloadedStateWithCart);
 
       engine.dispatch(logCartAction({...productWithoutQuantity, quantity: 2}));
       await clearMicrotaskQueue();
@@ -120,9 +130,19 @@ describe('Cart Analytics Actions', () => {
     });
 
     it('logs #ec.cartAction with "add" action and correct payload if item exists in cart and new quantity > current and the quantity difference is > 1', async () => {
-      jest
-        .mocked(itemSelector)
-        .mockImplementation(() => ({...productWithoutQuantity, quantity: 1}));
+      const preloadedStateWithCart = {
+        ...defaultPreloadedState,
+        cart: {
+          cartItems: [],
+          cart: {
+            [productWithoutQuantity.productId]: {
+              ...productWithoutQuantity,
+              quantity: 1,
+            },
+          },
+        },
+      };
+      initEngine(preloadedStateWithCart);
 
       engine.dispatch(logCartAction({...productWithoutQuantity, quantity: 5}));
       await clearMicrotaskQueue();
@@ -135,9 +155,19 @@ describe('Cart Analytics Actions', () => {
     });
 
     it('logs #ec.cartAction with "remove" action and correct payload if item exists in cart and new quantity < current', async () => {
-      jest
-        .mocked(itemSelector)
-        .mockImplementation(() => ({...productWithoutQuantity, quantity: 2}));
+      const preloadedStateWithCart = {
+        ...defaultPreloadedState,
+        cart: {
+          cartItems: [],
+          cart: {
+            [productWithoutQuantity.productId]: {
+              ...productWithoutQuantity,
+              quantity: 2,
+            },
+          },
+        },
+      };
+      initEngine(preloadedStateWithCart);
 
       engine.dispatch(logCartAction({...productWithoutQuantity, quantity: 1}));
       await clearMicrotaskQueue();
@@ -150,9 +180,19 @@ describe('Cart Analytics Actions', () => {
     });
 
     it('logs #ec.cartAction with "remove" action and correct payload if item exists in cart and new quantity < current and the quantity difference is > 1', async () => {
-      jest
-        .mocked(itemSelector)
-        .mockImplementation(() => ({...productWithoutQuantity, quantity: 3}));
+      const preloadedStateWithCart = {
+        ...defaultPreloadedState,
+        cart: {
+          cartItems: [],
+          cart: {
+            [productWithoutQuantity.productId]: {
+              ...productWithoutQuantity,
+              quantity: 3,
+            },
+          },
+        },
+      };
+      initEngine(preloadedStateWithCart);
 
       engine.dispatch(logCartAction({...productWithoutQuantity, quantity: 1}));
       await clearMicrotaskQueue();

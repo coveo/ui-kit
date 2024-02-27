@@ -7,8 +7,8 @@ import {
 } from '../../../analytics/analytics-utils';
 import {CartItemWithMetadata} from './cart-state';
 
-export const logCartAction = (item: CartItem): CartAction => {
-  return makeAnalyticsAction({
+export const logCartAction = (item: CartItem): CartAction =>
+  makeAnalyticsAction({
     prefix: 'analytics/cart/cartAction',
     __legacy__getBuilder: (_client, _state) => null,
     analyticsType: 'ec.cartAction',
@@ -28,7 +28,6 @@ export const logCartAction = (item: CartItem): CartAction => {
       };
     },
   });
-};
 
 const isCurrentItemQuantityGreater = (
   currentItem: CartItem,
