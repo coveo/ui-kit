@@ -48,8 +48,8 @@ export const logCartPurchase = (transaction: Transaction): CartAction =>
     __legacy__getBuilder: (_client, _state) => null,
     analyticsType: 'ec.purchase',
     analyticsPayloadBuilder: (state): Ec.Purchase => {
-      const currency =
-        state.commerceContext.currency.toUpperCase() as CurrencyCodeISO4217;
+      // @todo LENS-1589: currently, the currency attribute should be a string. However, the type should be CurrencyCodeISO4217
+      const currency = state.commerceContext.currency as CurrencyCodeISO4217;
       const products = itemsSelector(state.cart).map((item) =>
         convertCartItemToProductQuantity(item)
       );
