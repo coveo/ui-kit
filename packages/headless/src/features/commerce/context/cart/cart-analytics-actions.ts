@@ -18,8 +18,9 @@ export const logCartAction = (item: CartItem): CartAction =>
         ? 'add'
         : 'remove';
       const {quantity, ...product} = item;
-      const currency =
-        state.commerceContext.currency.toUpperCase() as CurrencyCodeISO4217;
+
+      // @todo LENS-1589: currently, the currency attribute should be a string. However, the type should be CurrencyCodeISO4217
+      const currency = state.commerceContext.currency as CurrencyCodeISO4217;
       return {
         action,
         currency,
