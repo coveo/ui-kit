@@ -70,6 +70,17 @@ describe('Cart Analytics Actions', () => {
       currency: 'USD',
     });
 
+    const expectCartAction = (
+      action: 'add' | 'remove',
+      quantity: number | undefined = undefined
+    ) => {
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit).toHaveBeenCalledWith(
+        'ec.cartAction',
+        getExpectedCartActionPayload(action, quantity)
+      );
+    };
+
     it('logs #ec.cartAction with "add" action and correct payload if quantity > 0 and item does not exist in cart', async () => {
       const preloadedStateWithCartWithoutItems = {
         ...defaultPreloadedState,
@@ -80,11 +91,7 @@ describe('Cart Analytics Actions', () => {
       engine.dispatch(logCartAction({...productWithoutQuantity, quantity: 1}));
       await clearMicrotaskQueue();
 
-      expect(emit).toHaveBeenCalledTimes(1);
-      expect(emit).toHaveBeenCalledWith(
-        'ec.cartAction',
-        getExpectedCartActionPayload('add')
-      );
+      expectCartAction('add');
     });
 
     it('logs #ec.cartAction with "add" action and correct payload if quantity > 0 and item does not exist in cart and the quantity > 1', async () => {
@@ -97,11 +104,7 @@ describe('Cart Analytics Actions', () => {
       engine.dispatch(logCartAction({...productWithoutQuantity, quantity: 3}));
       await clearMicrotaskQueue();
 
-      expect(emit).toHaveBeenCalledTimes(1);
-      expect(emit).toHaveBeenCalledWith(
-        'ec.cartAction',
-        getExpectedCartActionPayload('add', 3)
-      );
+      expectCartAction('add', 3);
     });
 
     it('logs #ec.cartAction with "add" action and correct payload if item exists in cart and new quantity > current', async () => {
@@ -122,11 +125,7 @@ describe('Cart Analytics Actions', () => {
       engine.dispatch(logCartAction({...productWithoutQuantity, quantity: 2}));
       await clearMicrotaskQueue();
 
-      expect(emit).toHaveBeenCalledTimes(1);
-      expect(emit).toHaveBeenCalledWith(
-        'ec.cartAction',
-        getExpectedCartActionPayload('add')
-      );
+      expectCartAction('add');
     });
 
     it('logs #ec.cartAction with "add" action and correct payload if item exists in cart and new quantity > current and the quantity difference is > 1', async () => {
@@ -147,11 +146,7 @@ describe('Cart Analytics Actions', () => {
       engine.dispatch(logCartAction({...productWithoutQuantity, quantity: 5}));
       await clearMicrotaskQueue();
 
-      expect(emit).toHaveBeenCalledTimes(1);
-      expect(emit).toHaveBeenCalledWith(
-        'ec.cartAction',
-        getExpectedCartActionPayload('add', 4)
-      );
+      expectCartAction('add', 4);
     });
 
     it('logs #ec.cartAction with "remove" action and correct payload if item exists in cart and new quantity < current', async () => {
@@ -172,11 +167,7 @@ describe('Cart Analytics Actions', () => {
       engine.dispatch(logCartAction({...productWithoutQuantity, quantity: 1}));
       await clearMicrotaskQueue();
 
-      expect(emit).toHaveBeenCalledTimes(1);
-      expect(emit).toHaveBeenCalledWith(
-        'ec.cartAction',
-        getExpectedCartActionPayload('remove')
-      );
+      expectCartAction('remove');
     });
 
     it('logs #ec.cartAction with "remove" action and correct payload if item exists in cart and new quantity < current and the quantity difference is > 1', async () => {
@@ -197,11 +188,7 @@ describe('Cart Analytics Actions', () => {
       engine.dispatch(logCartAction({...productWithoutQuantity, quantity: 1}));
       await clearMicrotaskQueue();
 
-      expect(emit).toHaveBeenCalledTimes(1);
-      expect(emit).toHaveBeenCalledWith(
-        'ec.cartAction',
-        getExpectedCartActionPayload('remove', 2)
-      );
+      expectCartAction('remove', 2);
     });
   });
 });

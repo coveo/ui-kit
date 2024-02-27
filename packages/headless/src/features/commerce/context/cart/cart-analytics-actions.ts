@@ -32,21 +32,12 @@ export const logCartAction = (item: CartItem): CartAction =>
 const isCurrentItemQuantityGreater = (
   currentItem: CartItem,
   prevItem: CartItemWithMetadata | undefined
-): boolean => {
-  if (!prevItem) {
-    return true;
-  }
-
-  return currentItem.quantity > prevItem.quantity;
-};
+): boolean => !prevItem || currentItem.quantity > prevItem.quantity;
 
 const getQuantity = (
   currentItem: CartItem,
   prevItem: CartItemWithMetadata | undefined
-): number => {
-  if (!prevItem) {
-    return currentItem.quantity;
-  }
-
-  return Math.abs(currentItem.quantity - prevItem.quantity);
-};
+): number =>
+  !prevItem
+    ? currentItem.quantity
+    : Math.abs(currentItem.quantity - prevItem.quantity);
