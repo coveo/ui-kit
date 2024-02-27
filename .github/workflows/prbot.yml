@@ -270,7 +270,10 @@ jobs:
     steps:
       - run: echo 'All required jobs have passed'
   is-valid:
-    if: cancelled() || failure() || success()
+    if: |
+      always() &&
+      !contains(needs.*.result, 'failure') &&
+      !contains(needs.*.result, 'cancelled')
     name: 'Confirm build is valid'
     needs:
       - 'required-jobs'
