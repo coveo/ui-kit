@@ -273,9 +273,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo 'All required jobs have passed'
-      # - run: echo "${{ toJSON(needs) }}"
   is-valid:
-    if: cancelled() || failure() || success()
+    if: |
+      ${{
+        !cancelled () &&
+        !contains(needs.*.result, 'failure')
+      }}
     name: 'Confirm build is valid'
     needs:
       - 'required-jobs'
