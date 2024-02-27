@@ -26,7 +26,7 @@ interface Options {
 
 function ensureEnvVariables() {
   [
-    'BRANCH_NAME',
+    'COMMIT_SHA',
     'SFDX_AUTH_CLIENT_ID',
     'SFDX_AUTH_JWT_KEY_FILE',
     'SFDX_AUTH_JWT_USERNAME',
@@ -42,7 +42,7 @@ function isCi() {
 }
 
 function getBranchName() {
-  return process.env.BRANCH_NAME.replace(/[^a-zA-Z0-9-]/g, '-');
+  return process.env.COMMIT_SHA.substring(0, 6);
 }
 
 function getCiOrgName() {
