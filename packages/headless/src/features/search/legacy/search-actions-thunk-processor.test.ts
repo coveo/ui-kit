@@ -7,11 +7,14 @@ import {buildMockSearchState} from '../../../test/mock-search-state';
 import {getConfigurationInitialState} from '../../configuration/configuration-state';
 import {updateQuery} from '../../query/query-actions';
 import {logSearchboxSubmit} from '../../query/query-analytics-actions';
+import {logQueryError} from '../search-analytics-actions';
 import {ExecuteSearchThunkReturn} from './search-actions';
 import {
   AsyncSearchThunkProcessor,
   AsyncThunkConfig,
 } from './search-actions-thunk-processor';
+
+jest.mock('../search-analytics-actions');
 
 describe('AsyncSearchThunkProcessor', () => {
   let config: AsyncThunkConfig;
@@ -87,6 +90,7 @@ describe('AsyncSearchThunkProcessor', () => {
 
     expect(config.rejectWithValue).toHaveBeenCalledWith(theError);
     expect(config.extra.apiClient.search).not.toHaveBeenCalled();
+    expect(logQueryError).toHaveBeenCalledWith(theError);
   });
 
   it('process properly when there are no results returned and there is a did you mean correction', async () => {

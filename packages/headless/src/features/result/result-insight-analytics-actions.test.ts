@@ -1,4 +1,5 @@
-import {buildMockInsightEngine} from '../../test/mock-engine';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
+import {buildMockInsightEngine} from '../../test/mock-engine-v2';
 import {buildMockInsightState} from '../../test/mock-insight-state';
 import {buildMockNonEmptyResult} from '../../test/mock-result';
 import {buildMockSearchState} from '../../test/mock-search-state';
@@ -54,8 +55,8 @@ const testResult = buildMockNonEmptyResult();
 
 describe('logDocumentOpen', () => {
   it('should log #logDocumentOpen with the right payload', async () => {
-    const engine = buildMockInsightEngine({
-      state: buildMockInsightState({
+    const engine = buildMockInsightEngine(
+      buildMockInsightState({
         search: buildMockSearchState({
           results: [testResult],
         }),
@@ -67,12 +68,15 @@ describe('logDocumentOpen', () => {
           caseId: exampleCaseId,
           caseNumber: exampleCaseNumber,
         },
-      }),
-    });
+      })
+    );
+    await logDocumentOpen(testResult)()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
-    await engine.dispatch(logDocumentOpen(testResult));
-
-    expect(mockLogDocumentOpen).toBeCalledTimes(1);
+    expect(mockLogDocumentOpen).toHaveBeenCalledTimes(1);
     expect(mockLogDocumentOpen.mock.calls[0][0]).toStrictEqual(
       expectedDocumentInfo
     );
