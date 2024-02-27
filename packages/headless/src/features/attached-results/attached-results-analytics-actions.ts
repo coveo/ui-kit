@@ -1,11 +1,13 @@
 import {InsightPanel} from '@coveo/relay-event-types';
 import {Result} from '../../api/search/search/result';
 import {
+  analyticsEventItemMetadata,
   documentIdentifier,
   makeInsightAnalyticsAction,
   partialDocumentInformation,
   validateResultPayload,
 } from '../analytics/analytics-utils';
+import {analyticsEventCaseContext} from '../analytics/insight-analytics-utils';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
 
 export const logCaseAttach = (result: Result) =>
@@ -24,27 +26,13 @@ export const logCaseAttach = (result: Result) =>
     },
     analyticsType: 'InsightPanel.ItemAction',
     analyticsPayloadBuilder: (state): InsightPanel.ItemAction => {
-      const metadata = getCaseContextAnalyticsMetadata(
-        state.insightCaseContext
-      );
-      const identifier = documentIdentifier(result);
       const information = partialDocumentInformation(result, state);
       return {
-        itemMetadata: {
-          uniqueFieldName: identifier.contentIDKey,
-          uniqueFieldValue: identifier.contentIDValue,
-          title: information.documentTitle,
-          author: information.documentAuthor,
-          url: information.documentUri,
-        },
+        itemMetadata: analyticsEventItemMetadata(result, state),
         position: information.documentPosition,
         searchUid: state.search?.response.searchUid || '',
         action: 'attach',
-        context: {
-          targetId: metadata.caseId || '',
-          targetType: 'Case',
-          caseNumber: metadata.caseNumber,
-        } as InsightPanel.Context,
+        context: analyticsEventCaseContext(state),
       };
     },
   });
@@ -60,24 +48,9 @@ export const logCaseDetach = (result: Result) =>
     },
     analyticsType: 'InsightPanel.DetachItem',
     analyticsPayloadBuilder: (state): InsightPanel.DetachItem => {
-      const metadata = getCaseContextAnalyticsMetadata(
-        state.insightCaseContext
-      );
-      const identifier = documentIdentifier(result);
-      const information = partialDocumentInformation(result, state);
       return {
-        itemMetadata: {
-          uniqueFieldName: identifier.contentIDKey,
-          uniqueFieldValue: identifier.contentIDValue,
-          title: information.documentTitle,
-          author: information.documentAuthor,
-          url: information.documentUri,
-        },
-        context: {
-          targetId: metadata.caseId || '',
-          targetType: 'Case',
-          caseNumber: metadata.caseNumber,
-        } as InsightPanel.Context,
+        itemMetadata: analyticsEventItemMetadata(result, state),
+        context: analyticsEventCaseContext(state),
       };
     },
   });

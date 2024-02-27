@@ -5,6 +5,7 @@ import {
   StringValue,
 } from '@coveo/bueno';
 import {type createRelay} from '@coveo/relay';
+import {ItemMetaData} from '@coveo/relay-event-types';
 import {
   AsyncThunk,
   AsyncThunkPayloadCreator,
@@ -784,3 +785,18 @@ async function logNextEvent<PayloadType>(
   await emitEvent(type, payload);
   return;
 }
+
+export const analyticsEventItemMetadata = (
+  result: Result,
+  state: Partial<SearchAppState>
+): ItemMetaData => {
+  const identifier = documentIdentifier(result);
+  const information = partialDocumentInformation(result, state);
+  return {
+    uniqueFieldName: identifier.contentIDKey,
+    uniqueFieldValue: identifier.contentIDValue,
+    title: information.documentTitle,
+    author: information.documentAuthor,
+    url: information.documentUri,
+  };
+};

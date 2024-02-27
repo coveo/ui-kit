@@ -5,7 +5,9 @@ import {
   documentIdentifier,
   validateResultPayload,
   makeInsightAnalyticsAction,
+  analyticsEventItemMetadata,
 } from '../analytics/analytics-utils';
+import {analyticsEventCaseContext} from '../analytics/insight-analytics-utils';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
 
 export const logDocumentOpen = (result: Result) =>
@@ -24,26 +26,13 @@ export const logDocumentOpen = (result: Result) =>
     },
     analyticsType: 'InsightPanel.ItemAction',
     analyticsPayloadBuilder: (state): InsightPanel.ItemAction => {
-      const metadata = getCaseContextAnalyticsMetadata(
-        state.insightCaseContext
-      );
-      const identifier = documentIdentifier(result);
       const information = partialDocumentInformation(result, state);
       return {
-        itemMetadata: {
-          uniqueFieldName: identifier.contentIDKey,
-          uniqueFieldValue: identifier.contentIDValue,
-          title: information.documentTitle,
-          author: information.documentAuthor,
-          url: information.documentUri,
-        },
+        itemMetadata: analyticsEventItemMetadata(result, state),
         position: information.documentPosition,
         searchUid: state.search?.response.searchUid || '',
         action: 'open',
-        context: {
-          targetId: metadata.caseId || '',
-          targetType: 'Case',
-        },
+        context: analyticsEventCaseContext(state),
       };
     },
   });

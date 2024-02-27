@@ -14,30 +14,36 @@ export interface CreateArticleMetadata {
 }
 
 export const logExpandToFullUI = (
-  caseId: string,
-  caseNumber: string,
+  _caseId: string,
+  _caseNumber: string,
   fullSearchComponentName: string,
   triggeredBy: string
 ): InsightAction =>
   makeInsightAnalyticsAction({
     prefix: 'analytics/expandToFullUI',
     __legacy__getBuilder: (client, state) => {
+      const metadata = getCaseContextAnalyticsMetadata(
+        state.insightCaseContext
+      );
       const meta = {
-        caseId,
-        caseNumber,
+        caseId: metadata.caseId,
+        caseNumber: metadata.caseNumber,
         fullSearchComponentName,
         triggeredBy,
-        caseContext: state.insightCaseContext?.caseContext || {},
+        caseContext: metadata.caseContext,
       };
       return client.logExpandToFullUI(meta);
     },
     analyticsType: 'InsightPanel.ExpandToFullUI',
-    analyticsPayloadBuilder: (_state): InsightPanel.ExpandToFullUI => {
+    analyticsPayloadBuilder: (state): InsightPanel.ExpandToFullUI => {
+      const metadata = getCaseContextAnalyticsMetadata(
+        state.insightCaseContext
+      );
       return {
         context: {
-          targetId: caseId,
+          targetId: metadata.caseId,
           targetType: 'Case',
-          caseNumber: caseNumber,
+          caseNumber: metadata.caseNumber,
         } as InsightPanel.Context,
       };
     },
