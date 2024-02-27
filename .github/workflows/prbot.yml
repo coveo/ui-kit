@@ -231,6 +231,7 @@ jobs:
     outputs:
       shouldRunQuantic: ${{ steps.shouldRunQuantic.outputs.shouldRunQuantic }}
     steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
       - run: node ./scripts/ci/hasFileChanged.mjs shouldRunQuantic packages/quantic/**/* packages/headless/**/* package.json package-lock.json
         id: shouldRunQuantic
   e2e-quantic:
