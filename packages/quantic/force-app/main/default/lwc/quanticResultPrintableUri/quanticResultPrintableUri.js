@@ -81,7 +81,7 @@ export default class QuanticResultPrintableUri extends LightningElement {
       return this.allParents;
     }
     return [
-      ...this.allParents.slice(0, 2),
+      ...this.allParents.slice(0, this.maxNumberOfParts - 1),
       {id: 'separator', name: '...', isFolded: true},
       this.allParents.slice(-1)[0],
     ];
