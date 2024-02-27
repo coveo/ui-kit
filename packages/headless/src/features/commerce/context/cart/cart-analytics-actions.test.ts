@@ -1,4 +1,5 @@
 import {createRelay} from '@coveo/relay';
+import {ProductQuantity} from '@coveo/relay-event-types';
 import {buildCommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {getSampleCommerceEngineConfiguration} from '../../../../app/commerce-engine/commerce-engine-configuration';
@@ -6,8 +7,8 @@ import {itemSelector} from '../../../../controllers/commerce/context/cart/headle
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {clearMicrotaskQueue} from '../../../../test/unit-test-utils';
 import {getContextInitialState} from '../context-state';
-import {logCartAction} from './cart-analytics-actions';
-import {CartItemWithMetadata} from './cart-state';
+import {logCartAction, logCartPurchase} from './cart-analytics-actions';
+import { CartItemWithMetadata } from './cart-state';
 
 jest.mock('@coveo/relay');
 jest.mock(
@@ -114,6 +115,88 @@ describe('#logCartAction', () => {
         'ec.cartAction',
         getExpectedCartActionPayload('remove')
       );
+    });
+  });
+
+  describe('#logCartPurchase', () => {
+    beforeEach(() => {
+      initEngine();
+    });
+
+    afterEach(() => {
+      jest.resetAllMocks();
+    });
+
+    const convertItemToProduct = (
+      items: CartItemWithMetadata[]
+    ): ProductQuantity[] =>
+      items.map((item) => {
+        const {quantity, ...product} = item;
+        return {quantity, product};
+      });
+
+    it('logs #ec.purchase with one item in the cart', async () => {
+      const cartItems = [
+        {name: 'blue shoes', productId: 'shoe-1', price: 10.36, quantity: 1},
+      ];
+      const products = convertItemToProduct(cartItems);
+      const transaction = {id: 'transaction-1', revenue: 10.36};
+      const preloadedStateWithCart = {
+        ...defaultPreloadedState,
+        cart: {
+          cartItems: [cartItems[0].productId],
+          cart: {
+            [cartItems[0].productId]: {
+              ...cartItems[0],
+            },
+          },
+        },
+      };
+      initEngine(preloadedStateWithCart);
+
+      engine.dispatch(logCartPurchase(transaction));
+      await clearMicrotaskQueue();
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit).toHaveBeenCalledWith('ec.purchase', {
+        currency: 'USD',
+        products,
+        transaction,
+      });
+    });
+
+    it('logs #ec.purchase with multiple items in the cart', async () => {
+      const cartItems = [
+        {name: 'blue shoes', productId: 'shoe-1', price: 10.36, quantity: 1},
+        {name: 'red shoes', productId: 'shoe-2', price: 52.19, quantity: 3},
+      ];
+      const products = convertItemToProduct(cartItems);
+      const transaction = {id: 'transaction-2', revenue: 166.93};
+      const preloadedStateWithCart = {
+        ...defaultPreloadedState,
+        cart: {
+          cartItems: [cartItems[0].productId, cartItems[1].productId],
+          cart: {
+            [cartItems[0].productId]: {
+              ...cartItems[0],
+            },
+            [cartItems[1].productId]: {
+              ...cartItems[1]
+            }
+          },
+        },
+      };
+      initEngine(preloadedStateWithCart);
+
+      engine.dispatch(logCartPurchase(transaction));
+      await clearMicrotaskQueue();
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit).toHaveBeenCalledWith('ec.purchase', {
+        currency: 'USD',
+        products,
+        transaction,
+      });
     });
   });
 });

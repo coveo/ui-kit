@@ -1,14 +1,26 @@
-import {CurrencyCodeISO4217, Ec} from '@coveo/relay-event-types';
+import {
+  CurrencyCodeISO4217,
+  Ec,
+  ProductQuantity,
+} from '@coveo/relay-event-types';
 import {CartItem} from '../../../../controllers/commerce/context/cart/headless-cart';
-import {itemSelector} from '../../../../controllers/commerce/context/cart/headless-cart-selectors';
+import {
+  itemSelector,
+  itemsSelector,
+} from '../../../../controllers/commerce/context/cart/headless-cart-selectors';
 import {
   CartAction,
   makeAnalyticsAction,
 } from '../../../analytics/analytics-utils';
 import {CartItemWithMetadata} from './cart-state';
 
-export const logCartAction = (item: CartItem): CartAction => {
-  return makeAnalyticsAction({
+interface Transaction {
+  id: string;
+  revenue: number;
+}
+
+export const logCartAction = (item: CartItem): CartAction =>
+  makeAnalyticsAction({
     prefix: 'analytics/cart/cartAction',
     __legacy__getBuilder: (_client, _state) => null,
     analyticsType: 'ec.cartAction',
@@ -30,7 +42,33 @@ export const logCartAction = (item: CartItem): CartAction => {
   });
 };
 
-function isCurrentItemQuantityGreater(
+export const logCartPurchase = (transaction: Transaction): CartAction =>
+  makeAnalyticsAction({
+    prefix: 'analytics/cart/purchase',
+    __legacy__getBuilder: (_client, _state) => null,
+    analyticsType: 'ec.purchase',
+    analyticsPayloadBuilder: (state): Ec.Purchase => {
+      const currency =
+        state.commerceContext.currency.toUpperCase() as CurrencyCodeISO4217;
+      const products = itemsSelector(state.cart).map((item) =>
+        convertCartItemToProductQuantity(item)
+      );
+      return {
+        currency,
+        products,
+        transaction,
+      };
+    },
+  });
+
+const convertCartItemToProductQuantity = (
+  item: CartItemWithMetadata
+): ProductQuantity => {
+  const {quantity, ...product} = item;
+  return {product, quantity};
+};
+
+const isCurrentItemQuantityGreater = (
   currentItem: CartItem,
   prevItem: CartItemWithMetadata | undefined
 ) {
