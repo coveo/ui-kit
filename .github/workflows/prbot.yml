@@ -246,7 +246,11 @@ jobs:
       SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
       SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
   required-jobs:
-    if: success()
+    if: always()
+    # if: |
+    #   always() &&
+    #   !contains(needs.*.result, 'failure') &&
+    #   !contains(needs.*.result, 'cancelled')
     needs:
       - 'build'
       - 'lint-check'
@@ -269,11 +273,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo 'All required jobs have passed'
+      - run: echo "${{ toJSON(needs) }}"
   is-valid:
-    if: |
-      always() &&
-      !contains(needs.*.result, 'failure') &&
-      !contains(needs.*.result, 'cancelled')
+    if: cancelled() || failure() || success()
     name: 'Confirm build is valid'
     needs:
       - 'required-jobs'
