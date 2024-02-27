@@ -6,7 +6,9 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { PlatformEnvironment } from "@coveo/headless";
+import { HostedPageType } from "./components/atomic-hosted-ui/hosted-ui";
 export { PlatformEnvironment } from "@coveo/headless";
+export { HostedPageType } from "./components/atomic-hosted-ui/hosted-ui";
 export namespace Components {
     /**
      * A Web Component used to inject a Coveo Hosted Search Page in the DOM.
@@ -20,6 +22,19 @@ export namespace Components {
          */
         "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
         "initialize": (options: AtomicHostedPageInitializationOptions) => Promise<void>;
+    }
+    interface AtomicHostedUi {
+        /**
+          * Returns the unique, organization-specific endpoint(s)
+          * @param organizationId
+          * @param env
+         */
+        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
+        /**
+          * The type of hosted search page to load E.g., 'page', 'custom', 'legacy'
+         */
+        "hostedType": HostedPageType;
+        "initialize": (options: AtomicHostedUIInitializationOptions) => Promise<void>;
     }
     /**
      * A Web Component used to inject a [Coveo Search Interface made with the simple builder](https://docs.coveo.com/en/m7e92019/adobe/build-the-search-solution-using-a-coveo-ui-library-directly#search-interface-builder) in the DOM.
@@ -46,6 +61,12 @@ declare global {
         prototype: HTMLAtomicHostedPageElement;
         new (): HTMLAtomicHostedPageElement;
     };
+    interface HTMLAtomicHostedUiElement extends Components.AtomicHostedUi, HTMLStencilElement {
+    }
+    var HTMLAtomicHostedUiElement: {
+        prototype: HTMLAtomicHostedUiElement;
+        new (): HTMLAtomicHostedUiElement;
+    };
     /**
      * A Web Component used to inject a [Coveo Search Interface made with the simple builder](https://docs.coveo.com/en/m7e92019/adobe/build-the-search-solution-using-a-coveo-ui-library-directly#search-interface-builder) in the DOM.
      * Pulls from the [Search Interfaces API](https://platform.cloud.coveo.com/docs?urls.primaryName=Search%20Interface%20Service#/)
@@ -58,6 +79,7 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "atomic-hosted-page": HTMLAtomicHostedPageElement;
+        "atomic-hosted-ui": HTMLAtomicHostedUiElement;
         "atomic-simple-builder": HTMLAtomicSimpleBuilderElement;
     }
 }
@@ -68,6 +90,12 @@ declare namespace LocalJSX {
      */
     interface AtomicHostedPage {
     }
+    interface AtomicHostedUi {
+        /**
+          * The type of hosted search page to load E.g., 'page', 'custom', 'legacy'
+         */
+        "hostedType"?: HostedPageType;
+    }
     /**
      * A Web Component used to inject a [Coveo Search Interface made with the simple builder](https://docs.coveo.com/en/m7e92019/adobe/build-the-search-solution-using-a-coveo-ui-library-directly#search-interface-builder) in the DOM.
      * Pulls from the [Search Interfaces API](https://platform.cloud.coveo.com/docs?urls.primaryName=Search%20Interface%20Service#/)
@@ -76,6 +104,7 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "atomic-hosted-page": AtomicHostedPage;
+        "atomic-hosted-ui": AtomicHostedUi;
         "atomic-simple-builder": AtomicSimpleBuilder;
     }
 }
@@ -88,6 +117,7 @@ declare module "@stencil/core" {
              * Pulls from the [Hosted Pages API](https://platform.cloud.coveo.com/docs?urls.primaryName=Search%20Interface%20Service#/Hosted%20Page)
              */
             "atomic-hosted-page": LocalJSX.AtomicHostedPage & JSXBase.HTMLAttributes<HTMLAtomicHostedPageElement>;
+            "atomic-hosted-ui": LocalJSX.AtomicHostedUi & JSXBase.HTMLAttributes<HTMLAtomicHostedUiElement>;
             /**
              * A Web Component used to inject a [Coveo Search Interface made with the simple builder](https://docs.coveo.com/en/m7e92019/adobe/build-the-search-solution-using-a-coveo-ui-library-directly#search-interface-builder) in the DOM.
              * Pulls from the [Search Interfaces API](https://platform.cloud.coveo.com/docs?urls.primaryName=Search%20Interface%20Service#/)
