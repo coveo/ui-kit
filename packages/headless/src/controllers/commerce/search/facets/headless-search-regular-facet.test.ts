@@ -78,7 +78,6 @@ describe('SearchRegularFacet', () => {
     it('dispatches #executeSearch', () => {
       const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
       facet.toggleSelect(facetValue);
-
       expect(executeSearch).toHaveBeenCalled();
     });
   });
@@ -87,7 +86,6 @@ describe('SearchRegularFacet', () => {
     it('dispatches #executeSearch', () => {
       const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
       facet.toggleExclude(facetValue);
-
       expect(executeSearch).toHaveBeenCalled();
     });
   });
@@ -95,7 +93,6 @@ describe('SearchRegularFacet', () => {
   describe('#deselectAll', () => {
     it('dispatches #executeSearch', () => {
       facet.deselectAll();
-
       expect(executeSearch).toHaveBeenCalled();
     });
   });
@@ -103,7 +100,6 @@ describe('SearchRegularFacet', () => {
   describe('#showMoreValues', () => {
     it('dispatches #executeSearch', () => {
       facet.showMoreValues();
-
       expect(executeSearch).toHaveBeenCalled();
     });
   });

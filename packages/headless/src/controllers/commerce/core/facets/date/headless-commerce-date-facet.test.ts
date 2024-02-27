@@ -10,8 +10,10 @@ import {buildMockCommerceDateFacetResponse} from '../../../../../test/mock-comme
 import {buildMockCommerceFacetSlice} from '../../../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceDateFacetValue} from '../../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
-import {buildMockCommerceEngine} from '../../../../../test/mock-engine';
-import {MockCommerceEngine} from '../../../../../test/mock-engine';
+import {
+  buildMockCommerceEngine,
+  MockedCommerceEngine,
+} from '../../../../../test/mock-engine-v2';
 import {commonOptions} from '../../../product-listing/facets/headless-product-listing-facet-options';
 import {DateRangeRequest} from '../headless-core-commerce-facet';
 import {
@@ -20,6 +22,10 @@ import {
   buildCommerceDateFacet,
 } from './headless-commerce-date-facet';
 
+jest.mock(
+  '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions'
+);
+
 describe('CommerceDateFacet', () => {
   const facetId: string = 'date_facet_id';
   const type: FacetType = 'dateRange';
@@ -27,11 +33,11 @@ describe('CommerceDateFacet', () => {
   const end = '2024-01-01';
   let options: CommerceDateFacetOptions;
   let state: CommerceAppState;
-  let engine: MockCommerceEngine;
+  let engine: MockedCommerceEngine;
   let facet: CommerceDateFacet;
 
   function initFacet() {
-    engine = buildMockCommerceEngine({state});
+    engine = buildMockCommerceEngine(state);
     facet = buildCommerceDateFacet(engine, options);
   }
 
@@ -70,10 +76,10 @@ describe('CommerceDateFacet', () => {
     it('dispatches #toggleSelectDateFacetValue', () => {
       const facetValue = buildMockCommerceDateFacetValue({start, end});
       facet.toggleSelect(facetValue);
-
-      expect(engine.actions).toContainEqual(
-        toggleSelectDateFacetValue({facetId, selection: facetValue})
-      );
+      expect(toggleSelectDateFacetValue).toHaveBeenCalledWith({
+        facetId,
+        selection: facetValue,
+      });
     });
   });
 
@@ -81,10 +87,10 @@ describe('CommerceDateFacet', () => {
     it('dispatches #toggleExcludeDateFacetValue', () => {
       const facetValue = buildMockCommerceDateFacetValue({start, end});
       facet.toggleExclude(facetValue);
-
-      expect(engine.actions).toContainEqual(
-        toggleExcludeDateFacetValue({facetId, selection: facetValue})
-      );
+      expect(toggleExcludeDateFacetValue).toHaveBeenCalledWith({
+        facetId,
+        selection: facetValue,
+      });
     });
   });
 });

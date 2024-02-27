@@ -19,8 +19,10 @@ import {buildMockCommerceRegularFacetResponse} from '../../../../test/mock-comme
 import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceRegularFacetValue} from '../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
-import {MockCommerceEngine} from '../../../../test/mock-engine';
-import {buildMockCommerceEngine} from '../../../../test/mock-engine';
+import {
+  MockedCommerceEngine,
+  buildMockCommerceEngine,
+} from '../../../../test/mock-engine-v2';
 import {FacetValueState} from '../../../core/facets/facet/headless-core-facet';
 import {commonOptions} from '../../product-listing/facets/headless-product-listing-facet-options';
 import {
@@ -28,6 +30,11 @@ import {
   CoreCommerceFacet,
   CoreCommerceFacetOptions,
 } from './headless-core-commerce-facet';
+
+jest.mock('../../../../features/facets/facet-set/facet-set-actions');
+jest.mock(
+  '../../../../features/commerce/product-listing/product-listing-actions'
+);
 
 describe('CoreCommerceFacet', () => {
   const facetId = 'facet_id';
@@ -39,11 +46,11 @@ describe('CoreCommerceFacet', () => {
   const displayName = 'Some Facet';
   let options: CoreCommerceFacetOptions;
   let state: CommerceAppState;
-  let engine: MockCommerceEngine;
+  let engine: MockedCommerceEngine;
   let facet: CoreCommerceFacet<AnyFacetValueRequest, AnyFacetValueResponse>;
 
   function initFacet() {
-    engine = buildMockCommerceEngine({state});
+    engine = buildMockCommerceEngine(state);
     facet = buildCoreCommerceFacet(engine, {options});
   }
 
@@ -65,6 +72,7 @@ describe('CoreCommerceFacet', () => {
   }
 
   beforeEach(() => {
+    jest.resetAllMocks();
     options = {
       facetId,
       toggleExcludeActionCreator,
@@ -98,17 +106,15 @@ describe('CoreCommerceFacet', () => {
 
     it('dispatches #toggleSelectActionCreatorwith the passed facet value', () => {
       facet.toggleSelect(facetValue());
-
-      expect(engine.actions).toContainEqual(
-        toggleSelectActionCreator({facetId, selection: facetValue()})
-      );
+      expect(toggleSelectActionCreator).toHaveBeenCalledWith({
+        facetId,
+        selection: facetValue(),
+      });
     });
 
     it('dispatches #fetchResultsActionCreator', () => {
       facet.toggleSelect(facetValue());
-
-      const action = engine.findAsyncAction(fetchResultsActionCreator.pending);
-      expect(action).toBeTruthy();
+      expect(fetchResultsActionCreator).toHaveBeenCalled();
     });
   });
 
@@ -117,17 +123,15 @@ describe('CoreCommerceFacet', () => {
 
     it('dispatches #toggleExcludeActionCreator with the passed facet value', () => {
       facet.toggleExclude(facetValue());
-
-      expect(engine.actions).toContainEqual(
-        toggleExcludeActionCreator({facetId, selection: facetValue()})
-      );
+      expect(toggleExcludeActionCreator).toHaveBeenCalledWith({
+        facetId,
+        selection: facetValue(),
+      });
     });
 
     it('dispatches #fetchResultsActionCreator', () => {
       facet.toggleExclude(facetValue());
-
-      const action = engine.findAsyncAction(fetchResultsActionCreator.pending);
-      expect(action).toBeTruthy();
+      expect(fetchResultsActionCreator).toHaveBeenCalled();
     });
   });
 
@@ -145,8 +149,7 @@ describe('CoreCommerceFacet', () => {
 
       it('dispatches #deselectAllFacetValues with the facetId', () => {
         facet.toggleSingleSelect(facetValue());
-
-        expect(engine.actions).toContainEqual(deselectAllFacetValues(facetId));
+        expect(deselectAllFacetValues).toHaveBeenCalledWith(facetId);
       });
     });
 
@@ -170,10 +173,7 @@ describe('CoreCommerceFacet', () => {
 
       it('does not dispatch the #deselectAllFacetValues action', () => {
         facet.toggleSingleSelect(facetValue());
-
-        expect(engine.actions).not.toContainEqual(
-          deselectAllFacetValues(facetId)
-        );
+        expect(deselectAllFacetValues).not.toHaveBeenCalled();
       });
     });
   });
@@ -192,8 +192,7 @@ describe('CoreCommerceFacet', () => {
 
       it('dispatches the #deselectAllFacetValues action with the facetId', () => {
         facet.toggleSingleExclude(facetValue());
-
-        expect(engine.actions).toContainEqual(deselectAllFacetValues(facetId));
+        expect(deselectAllFacetValues).toHaveBeenCalledWith(facetId);
       });
     });
 
@@ -217,10 +216,7 @@ describe('CoreCommerceFacet', () => {
 
       it('does not dispatch the #deselectAllFacetValues action', () => {
         facet.toggleSingleExclude(facetValue());
-
-        expect(engine.actions).not.toContainEqual(
-          deselectAllFacetValues(facetId)
-        );
+        expect(deselectAllFacetValues).not.toHaveBeenCalled();
       });
     });
   });
@@ -260,7 +256,7 @@ describe('CoreCommerceFacet', () => {
   describe('#deselectAll', () => {
     it('dispatches #deselectAllFacetValues with the facet id', () => {
       facet.deselectAll();
-      expect(engine.actions).toContainEqual(deselectAllFacetValues(facetId));
+      expect(deselectAllFacetValues).toHaveBeenCalledWith(facetId);
     });
   });
 
@@ -276,30 +272,24 @@ describe('CoreCommerceFacet', () => {
 
       facet.showMoreValues();
 
-      const action = updateFacetNumberOfValues({
+      expect(updateFacetNumberOfValues).toHaveBeenCalledWith({
         facetId,
         numberOfValues: 20,
       });
-
-      expect(engine.actions).toContainEqual(action);
     });
 
     it('updates isFieldExpanded to true', () => {
       facet.showMoreValues();
 
-      const action = updateFacetIsFieldExpanded({
+      expect(updateFacetIsFieldExpanded).toHaveBeenCalledWith({
         facetId,
         isFieldExpanded: true,
       });
-
-      expect(engine.actions).toContainEqual(action);
     });
 
     it('dispatches #fetchResultsActionCreator', () => {
       facet.showMoreValues();
-
-      const action = engine.findAsyncAction(fetchResultsActionCreator.pending);
-      expect(action).toBeTruthy();
+      expect(fetchResultsActionCreator).toHaveBeenCalled();
     });
   });
 
@@ -316,12 +306,10 @@ describe('CoreCommerceFacet', () => {
 
       facet.showLessValues();
 
-      const action = updateFacetNumberOfValues({
+      expect(updateFacetNumberOfValues).toHaveBeenCalledWith({
         facetId,
         numberOfValues: initialNumberOfValues,
       });
-
-      expect(engine.actions).toContainEqual(action);
     });
 
     it('when number of non-idle values > original number, sets number of values to non-idle number', () => {
@@ -338,30 +326,24 @@ describe('CoreCommerceFacet', () => {
 
       facet.showLessValues();
 
-      const action = updateFacetNumberOfValues({
+      expect(updateFacetNumberOfValues).toHaveBeenCalledWith({
         facetId,
         numberOfValues: 2,
       });
-
-      expect(engine.actions).toContainEqual(action);
     });
 
     it('updates isFieldExpanded to "false"', () => {
       facet.showLessValues();
 
-      const action = updateFacetIsFieldExpanded({
+      expect(updateFacetIsFieldExpanded).toHaveBeenCalledWith({
         facetId,
         isFieldExpanded: false,
       });
-
-      expect(engine.actions).toContainEqual(action);
     });
 
     it('dispatches #fetchResultsActionCreator', () => {
       facet.showLessValues();
-
-      const action = engine.findAsyncAction(fetchResultsActionCreator.pending);
-      expect(action).toBeTruthy();
+      expect(fetchResultsActionCreator).toHaveBeenCalled();
     });
   });
 

@@ -4,8 +4,8 @@ import {executeSearch} from '../../../../../features/insight-search/insight-sear
 import {InsightAppState} from '../../../../../state/insight-app-state';
 import {
   buildMockInsightEngine,
-  MockInsightEngine,
-} from '../../../../../test/mock-engine';
+  MockedInsightEngine,
+} from '../../../../../test/mock-engine-v2';
 import {buildMockInsightState} from '../../../../../test/mock-insight-state';
 import {buildMockNumericFacetSlice} from '../../../../../test/mock-numeric-facet-slice';
 import {buildMockNumericFacetValue} from '../../../../../test/mock-numeric-facet-value';
@@ -16,20 +16,27 @@ import {
   NumericFilterOptions,
 } from './headless-insight-numeric-filter';
 
+jest.mock(
+  '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions'
+);
+jest.mock('../../../../../features/facet-options/facet-options-actions');
+jest.mock('../../../../../features/insight-search/insight-search-actions');
+
 describe('insight numeric filter', () => {
   const facetId = '1';
   let options: NumericFilterOptions;
   let initialState: NumericFilterInitialState | undefined;
   let state: InsightAppState;
-  let engine: MockInsightEngine;
+  let engine: MockedInsightEngine;
   let numericFacet: NumericFilter;
 
   function initNumericFilter() {
-    engine = buildMockInsightEngine({state});
+    engine = buildMockInsightEngine(state);
     numericFacet = buildNumericFilter(engine, {options, initialState});
   }
 
   beforeEach(() => {
+    (updateNumericFacetValues as unknown as jest.Mock).mockReturnValue({});
     initialState = undefined;
 
     options = {
@@ -47,29 +54,19 @@ describe('insight numeric filter', () => {
     it('dispatches a updateNumericFacetValues with the passed value', () => {
       const value = buildMockNumericFacetValue({});
       numericFacet.setRange(value);
-
-      const action = updateNumericFacetValues({
+      expect(updateNumericFacetValues).toHaveBeenCalledWith({
         facetId,
         values: [
-          {
-            ...value,
-            state: 'selected',
-            numberOfResults: 0,
-            endInclusive: true,
-          },
+          {...value, state: 'selected', numberOfResults: 0, endInclusive: true},
         ],
       });
-      expect(engine.actions).toContainEqual(action);
     });
 
     it('dispatches a search', () => {
       const value = buildMockNumericFacetValue();
       numericFacet.setRange(value);
 
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-      expect(action).toBeTruthy();
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 
@@ -77,21 +74,18 @@ describe('insight numeric filter', () => {
     beforeEach(() => numericFacet.clear());
 
     it('dispatches #updateNumericFacetValues with the facet id and an empty array', () => {
-      expect(engine.actions).toContainEqual(
-        updateNumericFacetValues({facetId, values: []})
-      );
+      expect(updateNumericFacetValues).toHaveBeenCalledWith({
+        facetId,
+        values: [],
+      });
     });
 
     it('dispatches a #updateFacetOptions action with #freezeFacetOrder true', () => {
-      expect(engine.actions).toContainEqual(updateFacetOptions());
+      expect(updateFacetOptions).toHaveBeenCalled();
     });
 
     it('dispatches a search', () => {
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-
-      expect(engine.actions).toContainEqual(action);
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 });
