@@ -29,9 +29,9 @@ describe('commerce api client', () => {
     PlatformClient.call = platformCallMock;
   };
 
-  const buildCommerceAPIRequest = (
+  const buildCommerceAPIRequest = async (
     req: Partial<CommerceAPIRequest> = {}
-  ): CommerceAPIRequest => ({
+  ): Promise<CommerceAPIRequest> => ({
     accessToken: accessToken,
     organizationId: organizationId,
     url: platformUrl,
@@ -49,7 +49,7 @@ describe('commerce api client', () => {
   });
 
   it('#getProductListing should call the platform endpoint with the correct arguments', async () => {
-    const request = buildCommerceAPIRequest();
+    const request = await buildCommerceAPIRequest();
 
     mockPlatformCall({
       ok: true,
@@ -78,7 +78,7 @@ describe('commerce api client', () => {
 
   it('#search should call the platform endpoint with the correct arguments', async () => {
     const request = {
-      ...buildCommerceAPIRequest(),
+      ...(await buildCommerceAPIRequest()),
       query: 'some query',
     };
 
@@ -110,7 +110,7 @@ describe('commerce api client', () => {
 
   it('#querySuggest should call the platform endpoint with the correct arguments', async () => {
     const request = {
-      ...buildCommerceAPIRequest(),
+      ...(await buildCommerceAPIRequest()),
       query: 'some query',
     };
 
@@ -142,9 +142,9 @@ describe('commerce api client', () => {
 
   it('#facetSearch should call the platform endpoint with the correct arguments', async () => {
     const {accessToken, organizationId, url, ...searchContext} =
-      buildCommerceAPIRequest();
+      await buildCommerceAPIRequest();
     const request = {
-      ...buildCommerceAPIRequest(),
+      ...(await buildCommerceAPIRequest()),
       facetId: 'some-facet-id',
       facetQuery: 'some facet query',
       query: 'some query',
@@ -176,7 +176,7 @@ describe('commerce api client', () => {
   });
 
   it('should return error response on failure', async () => {
-    const request = buildCommerceAPIRequest();
+    const request = await buildCommerceAPIRequest();
 
     const expectedError = {
       statusCode: 401,
@@ -197,7 +197,7 @@ describe('commerce api client', () => {
   });
 
   it('should return success response on success', async () => {
-    const request = buildCommerceAPIRequest();
+    const request = await buildCommerceAPIRequest();
 
     const expectedBody: CommerceResponse = {
       products: [],
