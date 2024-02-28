@@ -1,13 +1,12 @@
 import {CommerceFacetSetState} from './facet-set-state';
 import {
   CommerceCategoryFacetValueRequest,
-  CommerceFacetRequest,
+  AnyCommerceFacetRequest,
 } from './interfaces/request';
 
-export function handleFacetUpdateNumberOfValues<T extends CommerceFacetRequest>(
-  facetRequest: T | undefined,
-  numberOfValues: number
-) {
+export function handleFacetUpdateNumberOfValues<
+  T extends AnyCommerceFacetRequest,
+>(facetRequest: T | undefined, numberOfValues: number) {
   if (!facetRequest) {
     return;
   }
