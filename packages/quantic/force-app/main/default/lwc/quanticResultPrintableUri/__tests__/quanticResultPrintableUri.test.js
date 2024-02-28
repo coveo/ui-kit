@@ -94,7 +94,7 @@ describe('c-quantic-result-printable-uri', () => {
           parents: generateResultParents(numberOfParents),
         },
       };
-      it('should properly display the result path', async () => {
+      it('should properly display all the result path', async () => {
         const element = createTestComponent({
           result: exampleResultWithParents,
           engineId: exampleEngineId,
