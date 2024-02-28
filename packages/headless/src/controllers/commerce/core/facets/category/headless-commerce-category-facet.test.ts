@@ -1,4 +1,7 @@
-import {CommerceFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
+import {
+  CommerceCategoryFacetValueRequest,
+  CommerceFacetRequest,
+} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
 import {CommerceCategoryFacetValue} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
 import {toggleSelectCategoryFacetValue} from '../../../../../features/facets/category-facet-set/category-facet-set-actions';
 import {CommerceAppState} from '../../../../../state/commerce-app-state';
@@ -31,7 +34,12 @@ describe('CommerceCategoryFacet', () => {
   }
 
   function setFacetRequestAndResponse(
-    config: Partial<Omit<CommerceFacetRequest, 'facetId' | 'type'>> = {}
+    config: Partial<
+      Omit<
+        CommerceFacetRequest<CommerceCategoryFacetValueRequest>,
+        'facetId' | 'type'
+      >
+    > = {}
   ) {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({

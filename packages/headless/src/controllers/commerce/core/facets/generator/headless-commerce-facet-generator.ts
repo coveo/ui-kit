@@ -48,7 +48,13 @@ export interface CommerceFacetGeneratorState {
   /**
    * The generated commerce facet controllers.
    */
-  facets: AnyCommerceFacetController[];
+  facets: Omit<
+    CoreCommerceFacet<AnyFacetValueRequest, AnyFacetValueResponse>,
+    | 'isValueExcluded'
+    | 'toggleExclude'
+    | 'toggleSingleExclude'
+    | 'toggleSingleSelect'
+  >[];
 }
 
 type CommerceFacetBuilder<
