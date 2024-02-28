@@ -56,7 +56,7 @@ describe('automatic facets', () => {
     });
 
     it(`should not dispatch #setOptions if desiredCount is higher than ${DESIRED_COUNT_MAXIMUM}`, () => {
-      setup({desiredCount: 11});
+      setup({desiredCount: 21});
       expect(engine.actions).toEqual([]);
     });
 

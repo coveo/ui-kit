@@ -13,7 +13,7 @@ export type AutomaticFacetSetState = {
    * The desired count of facets.
    *
    * Minimum: `1`
-   * Maximum: `10`
+   * Maximum: `20`
    * @defaultValue `5`
    */
   desiredCount: number;
