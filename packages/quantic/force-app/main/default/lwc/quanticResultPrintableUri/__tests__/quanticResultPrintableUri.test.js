@@ -8,7 +8,7 @@ const MIN_MAX_NUMBER_OF_PARTS = 3;
 
 jest.mock('c/quanticHeadlessLoader');
 
-// Helper function to mock Headless and Bueno  for this suite of tests.
+// Helper function to mock Headless and Bueno for this suite of tests.
 function mockHeadlessAndBueno() {
   jest.spyOn(mockHeadlessLoader, 'getHeadlessEnginePromise').mockReturnValue(
     new Promise((resolve) => {
