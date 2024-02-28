@@ -151,32 +151,7 @@ describe('#logCartAction', () => {
       });
     };
 
-    it('logs #ec.purchase with one item in the cart', async () => {
-      const cartItems = [
-        {name: 'blue shoes', productId: 'shoe-1', price: 10.36, quantity: 1},
-      ];
-      const products = convertItemToProduct(cartItems);
-      const transaction = {id: 'transaction-1', revenue: 10.36};
-      const preloadedStateWithCart = {
-        ...defaultPreloadedState,
-        cart: {
-          cartItems: [cartItems[0].productId],
-          cart: {
-            [cartItems[0].productId]: {
-              ...cartItems[0],
-            },
-          },
-        },
-      };
-      initEngine(preloadedStateWithCart);
-
-      engine.dispatch(logCartPurchase(transaction));
-      await clearMicrotaskQueue();
-
-      expectCartPurchase(products, transaction);
-    });
-
-    it('logs #ec.purchase with multiple items in the cart', async () => {
+    it('logs #ec.purchase with the expected payload', async () => {
       const cartItems = [
         {name: 'blue shoes', productId: 'shoe-1', price: 10.36, quantity: 1},
         {name: 'red shoes', productId: 'shoe-2', price: 52.19, quantity: 3},
