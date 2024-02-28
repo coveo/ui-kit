@@ -1,7 +1,4 @@
-import navigateToRecord from '@salesforce/label/c.quantic_NavigateToRecord';
-import opensInBrowserTab from '@salesforce/label/c.quantic_OpensInBrowserTab';
 import {parseXML} from 'c/quanticUtils';
-import {NavigationMixin} from 'lightning/navigation';
 import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").Result} Result */
@@ -10,11 +7,15 @@ import {LightningElement, api} from 'lwc';
  * The `QuanticResultPrintableUri` component displays the URI, or path, to access a result.
  * @category Result Template
  * @example
- * <c-quantic-result-printable-uri result={result} max-number-of-parts="3"></c-quantic-result-printable-uri>
+ * <c-quantic-result-printable-uri engine-id={engineId} result={result} max-number-of-parts="3"></c-quantic-result-printable-uri>
  */
-export default class QuanticResultPrintableUri extends NavigationMixin(
-  LightningElement
-) {
+export default class QuanticResultPrintableUri extends LightningElement {
+  /**
+   * The ID of the engine instance the component registers to.
+   * @api
+   * @type {string}
+   */
+  @api engineId;
   /**
    * The [result item](https://docs.coveo.com/en/headless/latest/reference/search/controllers/result-list/#result).
    * @api
@@ -47,30 +48,6 @@ export default class QuanticResultPrintableUri extends NavigationMixin(
   isExpanded = false;
   /** @type {string} */
   error;
-  /** @type {string} */
-  salesforceRecordUrl;
-  /** @type {object} */
-  targetPageRef;
-
-  labels = {
-    navigateToRecord,
-    opensInBrowserTab,
-  };
-
-  connectedCallback() {
-    if (this.isSalesforceLink) {
-      this.targetPageRef = {
-        type: 'standard__recordPage',
-        attributes: {
-          recordId: this.recordIdAttribute,
-          actionName: 'view',
-        },
-      };
-      this[NavigationMixin.GenerateUrl](this.targetPageRef).then((url) => {
-        this.salesforceRecordUrl = url;
-      });
-    }
-  }
 
   renderedCallback() {
     if (this.maxNumberOfParts < this.MIN_MAX_NUMBER_OF_PARTS) {
@@ -78,18 +55,6 @@ export default class QuanticResultPrintableUri extends NavigationMixin(
         `The provided value of ${this.maxNumberOfParts} for the maxNumberOfParts option is inadequate. The provided value must be at least ${this.MIN_MAX_NUMBER_OF_PARTS}.`
       );
       this.error = `${this.template.host.localName} Error`;
-    }
-  }
-
-  navigateToSalesforceRecord(event) {
-    event.stopPropagation();
-    this[NavigationMixin.Navigate](this.targetPageRef);
-  }
-
-  handleClick(event) {
-    if (this.isSalesforceLink) {
-      event.preventDefault();
-      this.navigateToSalesforceRecord(event);
     }
   }
 
@@ -122,37 +87,5 @@ export default class QuanticResultPrintableUri extends NavigationMixin(
 
   get shouldDisplayPrintableUriLink() {
     return this.allParents.length === 0;
-  }
-
-  get hrefValue() {
-    if (this.isSalesforceLink) {
-      return this.salesforceRecordUrl;
-    }
-    return this.result.printableUri;
-  }
-
-  /**
-   * Returns the aria label value for the link.
-   */
-  get ariaLabelValue() {
-    if (this.isSalesforceLink) {
-      return this.labels.navigateToRecord;
-    }
-    return this.labels.opensInBrowserTab;
-  }
-
-  get recordIdAttribute() {
-    // Knowledge article uses the knowledge article version id to navigate.
-    if (this.result?.raw?.sfkbid && this.result?.raw?.sfkavid) {
-      return this.result.raw.sfkavid;
-    }
-    return this.result.raw.sfid;
-  }
-
-  /**
-   * Checks if the Result type is Salesforce.
-   */
-  get isSalesforceLink() {
-    return !!this.result?.raw?.sfid;
   }
 }
