@@ -143,13 +143,6 @@
       "rangeStrategy": "replace",
       "allowedVersions": "3.x",
       "description": "sfdx-lwc-jest uses a not GA version of Salesforce API (60)"
-    },
-    {
-      "matchPackagePatterns": ["^actions/upload-artifact$"],
-      "groupSlug": "actions-upload-artifact",
-      "rangeStrategy": "replace",
-      "allowedVersions": "3.x",
-      "description": "lock until ready to handle v4"
     }
   ],
   "rangeStrategy": "auto",
