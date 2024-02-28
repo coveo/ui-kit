@@ -22,7 +22,6 @@ export const contextDefinition = {
   language: requiredNonEmptyString,
   country: requiredNonEmptyString,
   currency: requiredNonEmptyString,
-  clientId: requiredNonEmptyString,
   user: new RecordValue({
     values: {
       ...userDefinition,

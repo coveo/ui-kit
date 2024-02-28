@@ -1,3 +1,10 @@
+# 2.51.0 (2024-02-28)
+
+### Features
+
+- **headless-commerce:** set clientId with storage value ([#3641](https://github.com/coveo/ui-kit/issues/3641)) ([58bd8d0](https://github.com/coveo/ui-kit/commits/58bd8d0f18f128d6603a5914928d6d26bdb37690)), closes [#3628](https://github.com/coveo/ui-kit/issues/3628)
+- **headless/commerce:** facet search ([#3616](https://github.com/coveo/ui-kit/issues/3616)) ([2f88117](https://github.com/coveo/ui-kit/commits/2f88117c593eab09c92fc07fa2331c5e49f9a192))
+
 ## 2.50.2 (2024-02-21)
 
 ## 2.50.1 (2024-02-15)
