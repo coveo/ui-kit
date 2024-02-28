@@ -1,35 +1,46 @@
-import {MockSearchEngine} from '../../../test/mock-engine';
-import {buildMockSearchAppEngine} from '../../../test/mock-engine';
+import {SearchAPIClient} from '../../../api/search/search-api-client';
+import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
+import {
+  MockedSearchEngine,
+  buildMockSearchEngine,
+} from '../../../test/mock-engine-v2';
 import {createMockState} from '../../../test/mock-state';
 import {logSearchboxSubmit} from '../../query/query-analytics-actions';
-import {buildSearchRequest} from '../search-request';
 import {
   executeSearch,
   fetchInstantResults,
-  buildInstantResultSearchRequest,
   fetchFacetValues,
   fetchPage,
   fetchMoreResults,
 } from './search-actions';
 
 describe('search actions', () => {
-  let e: MockSearchEngine;
+  let e: MockedSearchEngine;
+  let apiClient: SearchAPIClient;
+
+  const mockExtraArguments = () =>
+    ({
+      apiClient,
+      logger: e.logger,
+    }) as unknown as ClientThunkExtraArguments<SearchAPIClient>;
 
   beforeEach(() => {
-    e = buildMockSearchAppEngine({state: createMockState()});
-    jest.spyOn(e.apiClient, 'search');
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
+    jest.resetAllMocks();
+    apiClient = {
+      search: jest.fn(),
+    } as unknown as SearchAPIClient;
+    e = buildMockSearchEngine(createMockState());
   });
 
   describe('the search request "origin"', () => {
     it('with #executeSearch', async () => {
-      await e.dispatch(executeSearch(logSearchboxSubmit()));
-      const req = (await buildSearchRequest(e.state)).request;
-      expect(e.apiClient.search).toHaveBeenCalledWith(
-        req,
+      await executeSearch(logSearchboxSubmit())(
+        e.dispatch,
+        () => e.state,
+        mockExtraArguments()
+      );
+      expect(apiClient.search).toHaveBeenCalledWith(
+        expect.anything(),
         expect.objectContaining({
           origin: 'mainSearch',
         })
@@ -37,10 +48,13 @@ describe('search actions', () => {
     });
 
     it('with #fetchPage', async () => {
-      await e.dispatch(fetchPage(logSearchboxSubmit()));
-      const req = (await buildSearchRequest(e.state)).request;
-      expect(e.apiClient.search).toHaveBeenCalledWith(
-        req,
+      await fetchPage(logSearchboxSubmit())(
+        e.dispatch,
+        () => e.state,
+        mockExtraArguments()
+      );
+      expect(apiClient.search).toHaveBeenCalledWith(
+        expect.anything(),
         expect.objectContaining({
           origin: 'mainSearch',
         })
@@ -48,10 +62,9 @@ describe('search actions', () => {
     });
 
     it('with #fetchMoreResults', async () => {
-      await e.dispatch(fetchMoreResults());
-      const req = (await buildSearchRequest(e.state)).request;
-      expect(e.apiClient.search).toHaveBeenCalledWith(
-        req,
+      await fetchMoreResults()(e.dispatch, () => e.state, mockExtraArguments());
+      expect(apiClient.search).toHaveBeenCalledWith(
+        expect.anything(),
         expect.objectContaining({
           origin: 'mainSearch',
         })
@@ -61,18 +74,18 @@ describe('search actions', () => {
     it('with #fetchInstantResults', async () => {
       const q = 'test';
       const numberOfResults = 10;
-      await e.dispatch(
-        fetchInstantResults({
-          q,
-          maxResultsPerQuery: numberOfResults,
-          id: 'some-id',
-        })
+      await fetchInstantResults({
+        q,
+        maxResultsPerQuery: numberOfResults,
+        id: 'some-id',
+      })(
+        e.dispatch,
+        () => e.state as Required<typeof e.state>,
+        mockExtraArguments()
       );
-      const req = (
-        await buildInstantResultSearchRequest(e.state, q, numberOfResults)
-      ).request;
-      expect(e.apiClient.search).toHaveBeenCalledWith(
-        req,
+
+      expect(apiClient.search).toHaveBeenCalledWith(
+        expect.anything(),
         expect.objectContaining({
           origin: 'instantResults',
           disableAbortWarning: true,
@@ -81,11 +94,14 @@ describe('search actions', () => {
     });
 
     it('with #fetchFacetValues', async () => {
-      await e.dispatch(fetchFacetValues(logSearchboxSubmit()));
-      const req = (await buildSearchRequest(e.state)).request;
-      req.numberOfResults = 0;
-      expect(e.apiClient.search).toHaveBeenCalledWith(
-        req,
+      await fetchFacetValues(logSearchboxSubmit())(
+        e.dispatch,
+        () => e.state,
+        mockExtraArguments()
+      );
+
+      expect(apiClient.search).toHaveBeenCalledWith(
+        expect.anything(),
         expect.objectContaining({
           origin: 'facetValues',
         })

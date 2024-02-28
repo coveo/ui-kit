@@ -3,6 +3,10 @@ import {ProductListingThunkExtraArguments} from '../../../app/product-listing-th
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {registerCategoryFacetSearch} from '../../../features/facets/facet-search-set/category/category-facet-search-actions';
 import {defaultFacetSearchOptions} from '../../../features/facets/facet-search-set/facet-search-reducer-helpers';
+import {
+  executeFacetSearch,
+  executeFieldSuggest,
+} from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
 import {logFacetSelect} from '../../../features/facets/facet-set/facet-set-product-listing-analytics-actions';
 import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
 import {
@@ -42,6 +46,8 @@ export function buildCategoryFacetSearch(
     options,
     getFacetSearch,
     isForFieldSuggestions: false,
+    executeFacetSearchActionCreator: executeFacetSearch,
+    executeFieldSuggestActionCreator: executeFieldSuggest,
   });
 
   return {

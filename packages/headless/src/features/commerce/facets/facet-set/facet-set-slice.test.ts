@@ -18,6 +18,7 @@ import {
   buildMockCommerceRegularFacetValue,
 } from '../../../../test/mock-commerce-facet-value';
 import {buildSearchResponse} from '../../../../test/mock-commerce-search';
+import {buildMockFacetSearchResult} from '../../../../test/mock-facet-search-result';
 import {buildFetchProductListingV2Response} from '../../../../test/mock-product-listing-v2';
 import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
 import {
@@ -28,6 +29,10 @@ import {
   FacetValueState,
   facetValueStates,
 } from '../../../facets/facet-api/value';
+import {
+  excludeFacetSearchResult,
+  selectFacetSearchResult,
+} from '../../../facets/facet-search-set/specific/specific-facet-search-actions';
 import {
   deselectAllFacetValues,
   toggleExcludeFacetValue,
@@ -474,8 +479,14 @@ describe('commerceFacetSetReducer', () => {
     });
 
     it('dispatching #toggleSelectFacetValue with an invalid facet type does not throw', () => {
-      const facet = buildMockCommerceFacetRequest({type: 'numericalRange'});
       const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
+      const facet = buildMockCommerceFacetRequest({
+        type: 'numericalRange',
+        values: [facetValue],
+      });
+      state[facet.facetId] = buildMockCommerceFacetSlice({
+        request: facet,
+      });
       const action = toggleSelectFacetValue({
         facetId: facet.facetId,
         selection: facetValue,
@@ -495,8 +506,14 @@ describe('commerceFacetSetReducer', () => {
     });
 
     it('dispatching #toggleExcludeFacetValue with an invalid facet type does not throw', () => {
-      const facet = buildMockCommerceFacetRequest({type: 'numericalRange'});
       const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
+      const facet = buildMockCommerceFacetRequest({
+        type: 'numericalRange',
+        values: [facetValue],
+      });
+      state[facet.facetId] = buildMockCommerceFacetSlice({
+        request: facet,
+      });
       const action = toggleExcludeFacetValue({
         facetId: facet.facetId,
         selection: facetValue,
@@ -744,10 +761,44 @@ describe('commerceFacetSetReducer', () => {
       expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
     });
 
+    it('dispatching #toggleSelectNumericFacetValue with an invalid facet type does not throw', () => {
+      const facetValue = buildMockCommerceNumericFacetValue();
+      const facet = buildMockCommerceFacetRequest({
+        type: 'regular',
+        values: [facetValue],
+      });
+      state[facet.facetId] = buildMockCommerceFacetSlice({
+        request: facet,
+      });
+      const action = toggleSelectNumericFacetValue({
+        facetId: facet.facetId,
+        selection: facetValue,
+      });
+
+      expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
+    });
+
     it('dispatching #toggleExcludeNumericFacetValue with an invalid id does not throw', () => {
       const facetValue = buildMockCommerceNumericFacetValue();
       const action = toggleExcludeNumericFacetValue({
         facetId: '1',
+        selection: facetValue,
+      });
+
+      expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
+    });
+
+    it('dispatching #toggleExcludeNumericFacetValue with an invalid facet type does not throw', () => {
+      const facetValue = buildMockCommerceNumericFacetValue();
+      const facet = buildMockCommerceFacetRequest({
+        type: 'regular',
+        values: [facetValue],
+      });
+      state[facet.facetId] = buildMockCommerceFacetSlice({
+        request: facet,
+      });
+      const action = toggleExcludeNumericFacetValue({
+        facetId: facet.facetId,
         selection: facetValue,
       });
 
@@ -986,10 +1037,44 @@ describe('commerceFacetSetReducer', () => {
       expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
     });
 
+    it('dispatching #toggleSelectDateFacetValue with an invalid facet type does not throw', () => {
+      const facetValue = buildMockCommerceDateFacetValue();
+      const facet = buildMockCommerceFacetRequest({
+        type: 'regular',
+        values: [facetValue],
+      });
+      state[facet.facetId] = buildMockCommerceFacetSlice({
+        request: facet,
+      });
+      const action = toggleSelectDateFacetValue({
+        facetId: facet.facetId,
+        selection: facetValue,
+      });
+
+      expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
+    });
+
     it('dispatching #toggleExcludeDateFacetValue with an invalid id does not throw', () => {
       const facetValue = buildMockCommerceDateFacetValue();
       const action = toggleExcludeDateFacetValue({
         facetId: '1',
+        selection: facetValue,
+      });
+
+      expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
+    });
+
+    it('dispatching #toggleExcludeDateFacetValue with an invalid facet type does not throw', () => {
+      const facetValue = buildMockCommerceDateFacetValue();
+      const facet = buildMockCommerceFacetRequest({
+        type: 'regular',
+        values: [facetValue],
+      });
+      state[facet.facetId] = buildMockCommerceFacetSlice({
+        request: facet,
+      });
+      const action = toggleExcludeDateFacetValue({
+        facetId: facet.facetId,
         selection: facetValue,
       });
 
@@ -1349,6 +1434,98 @@ describe('commerceFacetSetReducer', () => {
           )
         ).not.toThrow();
       });
+    });
+  });
+
+  describe.each([
+    {
+      actionToDispatch: selectFacetSearchResult,
+      expectedState: 'selected' as FacetValueState,
+    },
+    {
+      actionToDispatch: excludeFacetSearchResult,
+      expectedState: 'excluded' as FacetValueState,
+    },
+  ])('on $actionToDispatch', ({actionToDispatch, expectedState}) => {
+    it('when facet request is not found in state, does not throw', () => {
+      const action = actionToDispatch({
+        facetId: 'invalid!',
+        value: buildMockFacetSearchResult(),
+      });
+
+      expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
+    });
+
+    it('when facet request type is invalid (i.e., is not "regular" or "hierarchical"), does not throw', () => {
+      const facetId = 'date_range_facet_id';
+      state[facetId] = buildMockCommerceFacetSlice({
+        request: buildMockCommerceFacetRequest({
+          type: 'dateRange',
+          values: [],
+        }),
+      });
+      const action = actionToDispatch({
+        facetId,
+        value: buildMockFacetSearchResult(),
+      });
+
+      expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
+    });
+
+    it('when facet search result exists in request, updates its state to "$expectedState"', () => {
+      const facetId = 'regular_facet_id';
+      const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
+      const facetValueRequest = convertFacetValueToRequest(facetValue);
+
+      state[facetId] = buildMockCommerceFacetSlice({
+        request: buildMockCommerceFacetRequest({
+          type: 'regular',
+          values: [facetValueRequest],
+        }),
+      });
+
+      const facetSearchResult = buildMockFacetSearchResult({
+        rawValue: facetValue.value,
+      });
+
+      const action = actionToDispatch({
+        facetId,
+        value: facetSearchResult,
+      });
+      const finalState = commerceFacetSetReducer(state, action);
+
+      const targetValue = (
+        finalState[facetId]?.request.values as FacetValueRequest[]
+      ).find((req) => req.value === facetValue.value);
+      expect(targetValue?.state).toBe(expectedState);
+    });
+
+    it('when facet search result does not exist in facet request, creates it and sets its state to "$expectedState"', () => {
+      const facetId = 'regular_facet_id';
+
+      state[facetId] = buildMockCommerceFacetSlice({
+        request: buildMockCommerceFacetRequest({
+          type: 'regular',
+          values: [],
+        }),
+      });
+
+      const rawValue = 'TED';
+
+      const facetSearchResult = buildMockFacetSearchResult({
+        rawValue,
+      });
+
+      const action = actionToDispatch({
+        facetId,
+        value: facetSearchResult,
+      });
+      const finalState = commerceFacetSetReducer(state, action);
+
+      const targetValue = (
+        finalState[facetId]?.request.values as FacetValueRequest[]
+      ).find((req) => req.value === rawValue);
+      expect(targetValue?.state).toBe(expectedState);
     });
   });
 

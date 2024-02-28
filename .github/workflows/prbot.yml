@@ -1,7 +1,10 @@
 name: PR Robot
-on: [pull_request]
+on:
+  pull_request:
+  merge_group:
 jobs:
   report-size:
+    if: github.event_name == 'pull_request'
     name: 'Report bundle size'
     runs-on: ubuntu-latest
     env:

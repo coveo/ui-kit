@@ -15,7 +15,7 @@ export type AnyCommerceFacetValueRequest =
   | NumericRangeRequest
   | DateRangeRequest;
 
-export type CommerceFacetRequest = Pick<
+export type AnyCommerceFacetRequest = Pick<
   FacetRequest,
   | 'facetId'
   | 'field'
@@ -36,3 +36,9 @@ export interface CommerceCategoryFacetValueRequest
   value: string;
   retrieveCount?: number;
 }
+export type CommerceFacetRequest<T extends AnyCommerceFacetValueRequest> = Omit<
+  AnyCommerceFacetRequest,
+  'values'
+> & {
+  values: T[];
+};

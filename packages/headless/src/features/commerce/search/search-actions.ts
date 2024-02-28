@@ -23,7 +23,7 @@ export const executeSearch = createAsyncThunk<
     const state = getState();
     const {apiClient} = extra;
     const fetched = await apiClient.search({
-      ...buildCommerceAPIRequest(state),
+      ...(await buildCommerceAPIRequest(state)),
       query: state.commerceQuery?.query,
     });
 

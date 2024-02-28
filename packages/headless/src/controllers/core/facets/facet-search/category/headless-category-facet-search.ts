@@ -7,6 +7,10 @@ import {
 import {defaultFacetSearchOptions} from '../../../../../features/facets/facet-search-set/facet-search-reducer-helpers';
 import {FacetSearchOptions} from '../../../../../features/facets/facet-search-set/facet-search-request-options';
 import {
+  executeFacetSearch,
+  executeFieldSuggest,
+} from '../../../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
+import {
   CategoryFacetSearchSection,
   ConfigurationSection,
 } from '../../../../../state/state-sections';
@@ -36,6 +40,8 @@ export function buildCoreCategoryFacetSearch(
     options,
     getFacetSearch,
     isForFieldSuggestions: props.isForFieldSuggestions,
+    executeFacetSearchActionCreator: executeFacetSearch,
+    executeFieldSuggestActionCreator: executeFieldSuggest,
   });
 
   return {

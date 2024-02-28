@@ -1,3 +1,14 @@
+# 2.58.0 (2024-02-21)
+
+### Bug Fixes
+
+- **deps:** update stencil j:kit-282 ([#3578](https://github.com/coveo/ui-kit/issues/3578)) ([a5b645d](https://github.com/coveo/ui-kit/commits/a5b645d4f5395c9942af38feb5cfc2c08585405d))
+- **refine-modal:** Sort facets values based on their DOM position ([#3619](https://github.com/coveo/ui-kit/issues/3619)) ([3cf03af](https://github.com/coveo/ui-kit/commits/3cf03afc9f28065d94fa723a4b2c417585d67d30))
+
+### Features
+
+- **atomic:** exposes numberOfFoldedResults ([#3597](https://github.com/coveo/ui-kit/issues/3597)) ([3da9ac6](https://github.com/coveo/ui-kit/commits/3da9ac63984eef223e5a766ff1371435b9c1dc9c))
+
 ## 2.57.2 (2024-02-14)
 
 ### Bug Fixes
