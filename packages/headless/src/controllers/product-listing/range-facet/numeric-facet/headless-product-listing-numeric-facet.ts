@@ -60,28 +60,25 @@ export function buildNumericFacet(
   return {
     ...coreController,
 
-    deselectAll() {
+    async deselectAll() {
       coreController.deselectAll();
-      dispatch(fetchProductListing()).then(() =>
-        dispatch(logFacetClearAll(getFacetId()))
-      );
+      await dispatch(fetchProductListing());
+      dispatch(logFacetClearAll(getFacetId()));
     },
 
-    sortBy(criterion: RangeFacetSortCriterion) {
+    async sortBy(criterion: RangeFacetSortCriterion) {
       coreController.sortBy(criterion);
-      dispatch(fetchProductListing()).then(() =>
-        dispatch(logFacetUpdateSort({facetId: getFacetId(), criterion}))
-      );
+      await dispatch(fetchProductListing());
+      dispatch(logFacetUpdateSort({facetId: getFacetId(), criterion}));
     },
 
-    toggleSelect: (selection: NumericFacetValue) => {
+    toggleSelect: async (selection: NumericFacetValue) => {
       coreController.toggleSelect(selection);
-      dispatch(fetchProductListing()).then(() =>
-        dispatch(
-          getLegacyAnalyticsActionForToggleRangeFacetSelect(
-            getFacetId(),
-            selection
-          )
+      await dispatch(fetchProductListing());
+      dispatch(
+        getLegacyAnalyticsActionForToggleRangeFacetSelect(
+          getFacetId(),
+          selection
         )
       );
     },

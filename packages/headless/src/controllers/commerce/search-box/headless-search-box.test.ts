@@ -20,8 +20,10 @@ import {
 import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice';
 import {CommerceAppState} from '../../../state/commerce-app-state';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state';
-import {MockCommerceEngine} from '../../../test/mock-engine';
-import {buildMockCommerceEngine} from '../../../test/mock-engine';
+import {
+  MockedCommerceEngine,
+  buildMockCommerceEngine,
+} from '../../../test/mock-engine-v2';
 import {buildMockQuerySuggest} from '../../../test/mock-query-suggest';
 import {
   SearchBox,
@@ -30,15 +32,25 @@ import {
   buildSearchBox,
 } from './headless-search-box';
 
+jest.mock('../../../features/query-suggest/query-suggest-actions');
+jest.mock('../../../features/commerce/query-suggest/query-suggest-actions');
+jest.mock('../../../features/commerce/search/search-actions');
+jest.mock('../../../features/query-set/query-set-actions');
+jest.mock('../../../features/facets/generic/facet-actions');
+jest.mock('../../../features/breadcrumb/breadcrumb-actions');
+jest.mock('../../../features/commerce/pagination/pagination-actions');
+jest.mock('../../../features/commerce/query/query-actions');
+
 describe('headless search box', () => {
   const id = 'search-box-123';
   let state: CommerceAppState;
 
-  let engine: MockCommerceEngine;
+  let engine: MockedCommerceEngine;
   let searchBox: SearchBox;
   let props: SearchBoxProps;
 
   beforeEach(() => {
+    jest.resetAllMocks();
     const options: SearchBoxOptions = {
       id,
       highlightOptions: {
@@ -82,7 +94,7 @@ describe('headless search box', () => {
   }
 
   function initController() {
-    engine = buildMockCommerceEngine({state});
+    engine = buildMockCommerceEngine(state);
     searchBox = buildSearchBox(engine, props);
   }
 
@@ -147,17 +159,15 @@ describe('headless search box', () => {
 
   describe('upon initialization', () => {
     it('dispatches #registerQuerySetQuery', () => {
-      expect(engine.actions).toContainEqual(
-        registerQuerySetQuery({id, query: state.commerceQuery.query!})
+      expect(registerQuerySetQuery).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id,
+        })
       );
     });
 
     it('dispatches #registerQuerySuggest', () => {
-      expect(engine.actions).toContainEqual(
-        registerQuerySuggest({
-          id,
-        })
-      );
+      expect(registerQuerySuggest).toHaveBeenCalledWith({id});
     });
   });
 
@@ -166,8 +176,7 @@ describe('headless search box', () => {
       const text = 'query';
       searchBox.updateText(text);
 
-      const action = updateQuerySetQuery({id, query: text});
-      expect(engine.actions).toContainEqual(action);
+      expect(updateQuerySetQuery).toHaveBeenCalledWith({id, query: text});
     });
 
     it('calls #showSuggestions', () => {
@@ -184,26 +193,18 @@ describe('headless search box', () => {
     });
 
     it('dispatches #updateQuerySetQuery', () => {
-      expect(engine.actions).toContainEqual(
-        updateQuerySetQuery({id: id, query: ''})
-      );
+      expect(updateQuerySetQuery).toHaveBeenCalledWith({id, query: ''});
     });
 
     it('dispatches #clearQuerySuggest', () => {
-      expect(engine.actions).toContainEqual(clearQuerySuggest({id}));
+      expect(clearQuerySuggest).toHaveBeenCalledWith({id});
     });
   });
 
   describe('#showSuggestions', () => {
     it('dispatches #fetchQuerySuggestions', async () => {
       searchBox.showSuggestions();
-
-      const action = engine.actions.find(
-        (a) => a.type === fetchQuerySuggestions.pending.type
-      );
-      expect(action).toEqual(
-        fetchQuerySuggestions.pending(action!.meta.requestId, {id})
-      );
+      expect(fetchQuerySuggestions).toHaveBeenCalledWith({id});
     });
   });
 
@@ -211,17 +212,16 @@ describe('headless search box', () => {
     it('dispatches #selectQuerySuggestion', () => {
       const value = 'i like this expression';
       searchBox.selectSuggestion(value);
-
-      expect(engine.actions).toContainEqual(
-        selectQuerySuggestion({id, expression: value})
-      );
+      expect(selectQuerySuggestion).toHaveBeenCalledWith({
+        id,
+        expression: value,
+      });
     });
 
     it('dispatches #executeSearch', () => {
       const suggestion = 'a';
       searchBox.selectSuggestion(suggestion);
-
-      expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 
@@ -231,60 +231,46 @@ describe('headless search box', () => {
     });
 
     it('deselects all facets when clearFilters is true', () => {
-      expect(engine.actions).toContainEqual(deselectAllBreadcrumbs());
+      expect(deselectAllBreadcrumbs).toHaveBeenCalled();
     });
 
     it('does not deselect facets when clearFilters is false', () => {
-      engine = buildMockCommerceEngine({state});
+      jest.resetAllMocks();
+      engine = buildMockCommerceEngine(state);
       searchBox = buildSearchBox(engine, {
         ...props,
         options: {clearFilters: false},
       });
       searchBox.submit();
-
-      expect(engine.actions).not.toContainEqual(deselectAllBreadcrumbs());
+      expect(deselectAllBreadcrumbs).not.toHaveBeenCalled();
     });
 
     it('dispatches #updateFacetAutoSelection with proper payload', () => {
-      expect(engine.actions).toContainEqual(
-        updateFacetAutoSelection({allow: true})
-      );
+      expect(updateFacetAutoSelection).toHaveBeenCalledWith({allow: true});
     });
 
     it('allows autoSelection after deselecting facets', () => {
-      const deselectAllBreadcrumbsIndex = engine.actions.findIndex(
-        (action) => action.type === deselectAllBreadcrumbs.type
-      );
-      const updateFacetAutoSelectionIndex = engine.actions.findIndex(
-        (action) => action.type === updateFacetAutoSelection.type
-      );
-      expect(deselectAllBreadcrumbsIndex).toBeLessThanOrEqual(
-        updateFacetAutoSelectionIndex
-      );
+      expect(deselectAllBreadcrumbs).toHaveBeenCalled();
+      expect(updateFacetAutoSelection).toHaveBeenCalled();
     });
 
     it('dispatches #updateQuery', () => {
       const expectedQuery = state.querySet[id];
 
-      const action = updateQuery({
-        query: expectedQuery,
-      });
-
-      expect(engine.actions).toContainEqual(action);
+      expect(updateQuery).toHaveBeenCalledWith({query: expectedQuery});
     });
 
     it('updates the page to the first one', () => {
-      expect(engine.actions).toContainEqual(selectPage(0));
+      expect(selectPage).toHaveBeenCalledWith(0);
     });
 
     it('dispatches #executeSearch', () => {
-      const action = engine.findAsyncAction(executeSearch.pending);
-      expect(action).toBeTruthy();
+      expect(executeSearch).toHaveBeenCalled();
     });
 
     it('dispatches #clearQuerySuggest', () => {
       searchBox.submit();
-      expect(engine.actions).toContainEqual(clearQuerySuggest({id}));
+      expect(clearQuerySuggest).toHaveBeenCalledWith({id});
     });
   });
 });

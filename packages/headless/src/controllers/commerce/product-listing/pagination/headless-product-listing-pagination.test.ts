@@ -1,16 +1,23 @@
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice';
-import {MockCommerceEngine} from '../../../../test/mock-engine';
-import {buildMockCommerceEngine} from '../../../../test/mock-engine';
+import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
+import {
+  MockedCommerceEngine,
+  buildMockCommerceEngine,
+} from '../../../../test/mock-engine-v2';
 import {Pagination} from '../../core/pagination/headless-core-commerce-pagination';
 import {buildProductListingPagination} from './headless-product-listing-pagination';
 
+jest.mock(
+  '../../../../features/commerce/product-listing/product-listing-actions'
+);
+
 describe('product listing pagination', () => {
-  let engine: MockCommerceEngine;
+  let engine: MockedCommerceEngine;
   let productListingPagination: Pagination;
 
   function initProductListingPagination() {
-    engine = buildMockCommerceEngine();
+    engine = buildMockCommerceEngine(buildMockCommerceState());
 
     productListingPagination = buildProductListingPagination(engine);
   }
@@ -31,19 +38,16 @@ describe('product listing pagination', () => {
 
   it('#selectPage dispatches #fetchProductListing', () => {
     productListingPagination.selectPage(0);
-    const action = engine.findAsyncAction(fetchProductListing.pending);
-    expect(action).toBeTruthy();
+    expect(fetchProductListing).toHaveBeenCalled();
   });
 
   it('#nextPage dispatches #fetchProductListing', () => {
     productListingPagination.nextPage();
-    const action = engine.findAsyncAction(fetchProductListing.pending);
-    expect(action).toBeTruthy();
+    expect(fetchProductListing).toHaveBeenCalled();
   });
 
   it('#previousPage dispatches #fetchProductListing', () => {
     productListingPagination.previousPage();
-    const action = engine.findAsyncAction(fetchProductListing.pending);
-    expect(action).toBeTruthy();
+    expect(fetchProductListing).toHaveBeenCalled();
   });
 });
