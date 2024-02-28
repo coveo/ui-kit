@@ -1,4 +1,5 @@
-import {buildMockInsightEngine} from '../../../test/mock-engine';
+import {ThunkExtraArguments} from '../../../app/thunk-extra-arguments';
+import {buildMockInsightEngine} from '../../../test/mock-engine-v2';
 import {buildMockInsightState} from '../../../test/mock-insight-state';
 import {logClearBreadcrumbs} from './facet-generic-insight-analytics-actions';
 
@@ -23,8 +24,8 @@ const exampleCaseNumber = '5678';
 
 describe('logBreadcrumbResetAll', () => {
   it('should log #logBreadcrumbResetAll with the right payload', async () => {
-    const engine = buildMockInsightEngine({
-      state: buildMockInsightState({
+    const engine = buildMockInsightEngine(
+      buildMockInsightState({
         insightCaseContext: {
           caseContext: {
             Case_Subject: exampleSubject,
@@ -33,10 +34,14 @@ describe('logBreadcrumbResetAll', () => {
           caseId: exampleCaseId,
           caseNumber: exampleCaseNumber,
         },
-      }),
-    });
+      })
+    );
 
-    await engine.dispatch(logClearBreadcrumbs());
+    await logClearBreadcrumbs()()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const expectedPayload = {
       caseContext: {
@@ -47,7 +52,7 @@ describe('logBreadcrumbResetAll', () => {
       caseNumber: exampleCaseNumber,
     };
 
-    expect(mockLogBreadcrumbResetAll).toBeCalledTimes(1);
+    expect(mockLogBreadcrumbResetAll).toHaveBeenCalledTimes(1);
     expect(mockLogBreadcrumbResetAll.mock.calls[0][0]).toStrictEqual(
       expectedPayload
     );
