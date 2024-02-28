@@ -192,7 +192,7 @@ describe('c-quantic-result-printable-uri', () => {
       });
 
       describe('when a custom value of the maxNumberOfParts property is used', () => {
-        const customMaxNumberOfParts = 5;
+        const customMaxNumberOfParts = 3;
 
         it('should properly display the result collapsed path', async () => {
           const element = createTestComponent({
