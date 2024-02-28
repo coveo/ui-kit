@@ -99,7 +99,7 @@ function getMetadata(element) {
   const filePath = `${element.meta.path}/${element.meta.filename}-meta.xml`;
 
   const xmlData = fs.readFileSync(filePath, 'utf8');
-  parseString(xmlData, {explicitArray: false}, function (err, result) {
+  return parseString(xmlData, {explicitArray: false}, function (err, result) {
     if (err) {
       throw err;
     }
