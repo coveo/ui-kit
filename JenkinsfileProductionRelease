@@ -17,6 +17,7 @@ node('heavy && linux && docker') {
   dockerUtils.withDocker(image: 'node:18', args: '-e HOME=/tmp -e NPM_CONFIG_PREFIX=/tmp/.npm -v /etc/passwd:/etc/passwd:ro') {
     stage('Setup') {
       sh 'npm ci'
+      sh 'npm i -g @salesforce/cli@2.27.6'
     }
     
     stage('Npm publish') {

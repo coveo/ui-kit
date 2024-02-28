@@ -88,7 +88,7 @@ export namespace Components {
      */
     interface AtomicAutomaticFacetGenerator {
         /**
-          * The desired count of automatic facets.  Minimum: `1` Maximum: `10`
+          * The desired count of automatic facets.  Minimum: `1` Maximum: `20`
           * @defaultValue `5`
          */
         "desiredCount": number;
@@ -4308,7 +4308,7 @@ declare namespace LocalJSX {
      */
     interface AtomicAutomaticFacetGenerator {
         /**
-          * The desired count of automatic facets.  Minimum: `1` Maximum: `10`
+          * The desired count of automatic facets.  Minimum: `1` Maximum: `20`
           * @defaultValue `5`
          */
         "desiredCount"?: number;
