@@ -14,13 +14,13 @@
       <lightning-formatted-date-time value={result.raw.date}></lightning-formatted-date-time>
     </p>
     <div slot="title" class="slds-truncate">
-      <c-quantic-result-link result={result} engine-id={engineId}></c-quantic-result-link>
+      <c-quantic-result-link result={result} engine-id={engineId} data-cy="result-link"></c-quantic-result-link>
     </div>
     <div slot="excerpt">
       <c-quantic-result-highlighted-text-field engine-id={engineId} result={result} field="excerpt"></c-quantic-result-highlighted-text-field>
     </div>
     <div slot="bottom-metadata" class="slds-m-top_x-small">
-      <c-quantic-result-printable-uri result={result} max-number-of-parts="3"></c-quantic-result-printable-uri>
+      <c-quantic-result-printable-uri engine-id={engineId} result={result} max-number-of-parts="3"></c-quantic-result-printable-uri>
     </div>
   </c-quantic-result-template>
 </template>
