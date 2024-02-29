@@ -63,8 +63,8 @@ function generateExampleUri(id) {
 
 function generateResultParents(numberOfParents) {
   let parents = '';
-  for (let i = 0; i < numberOfParents; i++) {
-    parents += `<parent name="parent${i + 1}" uri="${generateExampleUri(i + 1)}" />`;
+  for (let i = 1; i <= numberOfParents; i++) {
+    parents += `<parent name="parent${i}" uri="${generateExampleUri(i)}" />`;
   }
   return `<parents>${parents}</parents>`;
 }
