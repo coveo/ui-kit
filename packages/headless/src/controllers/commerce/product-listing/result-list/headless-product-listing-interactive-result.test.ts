@@ -53,7 +53,7 @@ describe('InteractiveResult', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({configuration});
   });
 
-  it('when calling select() should add the result to recent results list', async () => {
+  it('#select dispatches #pushRecentResult', async () => {
     interactiveResult.select();
     jest.runAllTimers();
     expect(pushRecentResult).toHaveBeenCalled();

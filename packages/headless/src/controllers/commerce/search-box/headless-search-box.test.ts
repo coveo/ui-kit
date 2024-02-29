@@ -230,7 +230,7 @@ describe('headless search box', () => {
       searchBox.submit();
     });
 
-    it('deselects all facets when clearFilters is true', () => {
+    it('when clearFilters option is true, dispatches #deselectAllBreadcrumbs', () => {
       expect(deselectAllBreadcrumbs).toHaveBeenCalled();
     });
 

@@ -178,7 +178,7 @@ describe('headless breadcrumb manager', () => {
       expect(executeSearch).toHaveBeenCalled();
     });
 
-    it('dispatches an toggleExcludeFacetValue action on exclusion', () => {
+    it('dispatches a toggleExcludeFacetValue action on exclusion', () => {
       facetBreadcrumbs[0].values[0].deselect();
       expect(toggleSelectFacetValue).toHaveBeenCalledWith({
         facetId,
