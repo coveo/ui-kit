@@ -85,6 +85,48 @@ const itemView: SampleEvent = {
   },
 };
 
+const insightPanelContext = {
+  targetId: "123",
+  targetType: "Case",
+  caseNumber: "456",
+  caseSubject: "Case Subject",
+};
+
+const insightCreateArticle: SampleEvent = {
+  type: "InsightPanel.CreateArticle",
+  payload: {
+    articleType: "FAQ",
+    context: insightPanelContext,
+  },
+};
+
+const insightAttachItem: SampleEvent = {
+  type: "InsightPanel.ItemAction",
+  payload: {
+    searchUid: "search-1",
+    position: 1,
+    action: "attach",
+    context: insightPanelContext,
+    itemMetadata,
+    sourceEntityId: "Salesforce",
+  },
+};
+
+const insightDetachItem: SampleEvent = {
+  type: "InsightPanel.DetachItem",
+  payload: {
+    context: insightPanelContext,
+    itemMetadata,
+  },
+};
+
+const insightExpandToFullUI: SampleEvent = {
+  type: "InsightPanel.ExpandToFullUI",
+  payload: {
+    context: insightPanelContext,
+  },
+};
+
 export const events: SampleEvent[] = [
   ecCartAction,
   ecProductClick,
@@ -92,4 +134,8 @@ export const events: SampleEvent[] = [
   ecPurchase,
   itemClick,
   itemView,
+  insightCreateArticle,
+  insightAttachItem,
+  insightDetachItem,
+  insightExpandToFullUI,
 ];
