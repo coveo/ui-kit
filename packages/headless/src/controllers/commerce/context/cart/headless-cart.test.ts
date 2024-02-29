@@ -1,7 +1,7 @@
 import {setItems} from '../../../../features/commerce/context/cart/cart-actions';
-import {logCartAction} from '../../../../features/commerce/context/cart/cart-analytics-actions';
 import {cartReducer} from '../../../../features/commerce/context/cart/cart-slice';
 import {CartItemWithMetadata} from '../../../../features/commerce/context/cart/cart-state';
+import {getContextInitialState} from '../../../../features/commerce/context/context-state';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {
   MockedCommerceEngine,
@@ -15,9 +15,7 @@ import {
   totalQuantitySelector,
 } from './headless-cart-selectors';
 
-jest.mock('@coveo/relay');
 jest.mock('../../../../features/commerce/context/cart/cart-actions');
-jest.mock('../../../../features/commerce/context/cart/cart-analytics-actions');
 jest.mock('./headless-cart-selectors');
 
 describe('headless commerce cart', () => {
@@ -122,42 +120,86 @@ describe('headless commerce cart', () => {
       price: 100,
     };
 
+    const productWithQuantity = (quantity: number) => ({
+      ...productWithoutQuantity,
+      quantity,
+    });
+
+    beforeEach(() => {
+      initEngine({
+        ...buildMockCommerceState(),
+        commerceContext: {...getContextInitialState(), currency: 'USD'},
+      });
+      initCart();
+    });
+
     afterEach(() => {
       jest.resetAllMocks();
     });
 
-    it('will dispatch #logCartAction with the updated item if the new quantity != current', () => {
-      const mockedLogCartAction = jest.mocked(logCartAction);
-      const item = {...productWithoutQuantity, quantity: 2};
-      jest
-        .mocked(itemSelector)
-        .mockImplementation(() => ({...productWithoutQuantity, quantity: 1}));
-
-      cart.updateItem(item);
-
-      expect(mockedLogCartAction).toHaveBeenCalledTimes(1);
-      expect(mockedLogCartAction).toHaveBeenCalledWith(item);
+    const getExpectedCartActionPayload = (
+      action: 'add' | 'remove',
+      quantity: number = 1
+    ) => ({
+      action,
+      product: productWithoutQuantity,
+      quantity,
+      currency: 'USD',
     });
 
-    it('will not dispatch #logCartAction if item exists in cart and new quantity = current', () => {
-      const mockedLogCartAction = jest.mocked(logCartAction);
-      const sameItem = {...productWithoutQuantity, quantity: 1};
-      jest.mocked(itemSelector).mockImplementation(() => sameItem);
+    const expectCartAction = (
+      action: 'add' | 'remove',
+      quantity: number | undefined = undefined
+    ) => {
+      expect(engine.relay.emit).toHaveBeenCalledTimes(1);
+      expect(engine.relay.emit).toHaveBeenCalledWith(
+        'ec.cartAction',
+        getExpectedCartActionPayload(action, quantity)
+      );
+    };
 
-      cart.updateItem(sameItem);
-
-      expect(mockedLogCartAction).toHaveBeenCalledTimes(0);
-    });
-
-    it('does not log #logCartAction if item does not exist in cart and new quantity = 0', () => {
-      const mockedLogCartAction = jest.mocked(logCartAction);
+    it('emits #ec.cartAction with "add" action and correct payload if quantity > 0 and item does not exist in cart', async () => {
       jest
         .mocked(itemSelector)
-        .mockImplementation(() => undefined as unknown as CartItemWithMetadata);
+        .mockReturnValue(undefined as unknown as CartItemWithMetadata);
+
+      cart.updateItem(productWithQuantity(3));
+
+      expectCartAction('add', 3);
+    });
+
+    it('emits #ec.cartAction with "add" action and correct payload if item exists in cart and new quantity > current', async () => {
+      jest.mocked(itemSelector).mockReturnValue(productWithQuantity(1));
+
+      cart.updateItem(productWithQuantity(5));
+
+      expectCartAction('add', 4);
+    });
+
+    it('emits #ec.cartAction with "remove" action and correct payload if item exists in cart and new quantity < current', async () => {
+      jest.mocked(itemSelector).mockReturnValue(productWithQuantity(3));
+
+      cart.updateItem(productWithQuantity(1));
+
+      expectCartAction('remove', 2);
+    });
+
+    it('will not emit #ec.cartAction if item exists in cart and new quantity = current', () => {
+      jest.mocked(itemSelector).mockReturnValue(productWithQuantity(3));
+
+      cart.updateItem(productWithQuantity(3));
+
+      expect(engine.relay.emit).toHaveBeenCalledTimes(0);
+    });
+
+    it('will not emits #ec.cartAction if item does not exist in cart and new quantity = 0', () => {
+      jest
+        .mocked(itemSelector)
+        .mockReturnValue(undefined as unknown as CartItemWithMetadata);
 
       cart.updateItem({...productWithoutQuantity, quantity: 0});
 
-      expect(mockedLogCartAction).toHaveBeenCalledTimes(0);
+      expect(engine.relay.emit).toHaveBeenCalledTimes(0);
     });
   });
 

@@ -1,9 +1,9 @@
+import {CurrencyCodeISO4217, Ec} from '@coveo/relay-event-types';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {
   setItems,
   updateItem,
 } from '../../../../features/commerce/context/cart/cart-actions';
-import {logCartAction} from '../../../../features/commerce/context/cart/cart-analytics-actions';
 import {cartReducer as cart} from '../../../../features/commerce/context/cart/cart-slice';
 import {CartItemWithMetadata} from '../../../../features/commerce/context/cart/cart-state';
 import {cartSchema} from '../../../../features/commerce/context/cart/cart-validation';
@@ -157,6 +157,13 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     return item.quantity !== quantity;
   }
 
+  function isCurrentItemQuantityGreater(
+    currentItem: CartItem,
+    prevItem: CartItemWithMetadata | undefined
+  ): boolean {
+    return !prevItem || currentItem.quantity > prevItem.quantity;
+  }
+
   return {
     ...controller,
 
@@ -171,9 +178,27 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
       dispatch(setItems([]));
     },
 
-    async updateItem(item: CartItem) {
+    updateItem(item: CartItem) {
       if (isNewQuantityDifferent(item.productId, item.quantity)) {
-        await dispatch(logCartAction(item));
+        const prevItem = itemSelector(getState(), item.productId);
+
+        const {quantity: currentQuantity, ...product} = item;
+        const action = isCurrentItemQuantityGreater(item, prevItem)
+          ? 'add'
+          : 'remove';
+        const quantity = !prevItem
+          ? currentQuantity
+          : Math.abs(currentQuantity - prevItem.quantity);
+        const currency = engine.state.commerceContext
+          .currency as CurrencyCodeISO4217;
+
+        const payload: Ec.CartAction = {
+          action,
+          currency,
+          quantity,
+          product,
+        };
+        engine.relay.emit('ec.cartAction', payload);
       }
 
       dispatch(updateItem(item));
