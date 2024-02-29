@@ -20,6 +20,7 @@ function getBaseHeadSHAs() {
 }
 
 function getChangedFiles(from, to) {
+  console.log(`Getting changed files between ${from} and ${to}`);
   return execSync(`git diff --name-only ${from}..${to}`, {
     stdio: 'pipe',
     encoding: 'utf-8',
