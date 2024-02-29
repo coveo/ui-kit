@@ -249,7 +249,7 @@ function buildMockCoreEngine<T extends AppState>(
       return isAsyncAction<ThunkArg>(action) ? action : undefined;
     },
     get relay(): Relay {
-      throw 'Use mock-engine-v2 instead.';
+      return null as unknown as Relay;
     },
     logger,
     addReducers: jest.fn(),
