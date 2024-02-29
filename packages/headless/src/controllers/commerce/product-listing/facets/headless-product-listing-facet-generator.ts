@@ -1,7 +1,7 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {
-  buildCommerceFacetGenerator,
-  CommerceFacetGenerator,
+  buildFacetGenerator,
+  FacetGenerator,
 } from '../../core/facets/generator/headless-commerce-facet-generator';
 import {buildProductListingDateFacet} from './headless-product-listing-date-facet';
 import {buildProductListingNumericFacet} from './headless-product-listing-numeric-facet';
@@ -15,7 +15,7 @@ import {buildProductListingRegularFacet} from './headless-product-listing-regula
  * (CMH). The implementer is only responsible for leveraging the facet controllers created by this controller to
  * properly render facets in their application.
  */
-export interface ProductListingFacetGenerator extends CommerceFacetGenerator {}
+export interface ProductListingFacetGenerator extends FacetGenerator {}
 
 /**
  * Creates `ProductListingFacetGenerator` controller instance.
@@ -26,7 +26,7 @@ export interface ProductListingFacetGenerator extends CommerceFacetGenerator {}
 export function buildProductListingFacetGenerator(
   engine: CommerceEngine
 ): ProductListingFacetGenerator {
-  return buildCommerceFacetGenerator(engine, {
+  return buildFacetGenerator(engine, {
     buildRegularFacet: buildProductListingRegularFacet,
     buildNumericFacet: buildProductListingNumericFacet,
     buildDateFacet: buildProductListingDateFacet,

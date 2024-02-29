@@ -10,7 +10,7 @@ import {buildMockCommerceDateFacetValue} from '../../../../test/mock-commerce-fa
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {buildMockCommerceEngine} from '../../../../test/mock-engine';
 import {MockCommerceEngine} from '../../../../test/mock-engine';
-import {CommerceDateFacet} from '../../core/facets/date/headless-commerce-date-facet';
+import {DateFacet} from '../../core/facets/date/headless-commerce-date-facet';
 import {
   CommerceFacetOptions,
   DateRangeRequest,
@@ -24,7 +24,7 @@ describe('ProductListingDateFacet', () => {
   let options: CommerceFacetOptions;
   let state: CommerceAppState;
   let engine: MockCommerceEngine;
-  let facet: CommerceDateFacet;
+  let facet: DateFacet;
 
   function initFacet() {
     engine = buildMockCommerceEngine({state});

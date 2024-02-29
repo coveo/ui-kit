@@ -13,23 +13,23 @@ import {buildProductListingDateFacet} from '../../../product-listing/facets/head
 import {buildProductListingNumericFacet} from '../../../product-listing/facets/headless-product-listing-numeric-facet';
 import {buildProductListingRegularFacet} from '../../../product-listing/facets/headless-product-listing-regular-facet';
 import {
-  buildCommerceFacetGenerator,
-  CommerceFacetGenerator,
-  CommerceFacetGeneratorOptions,
+  buildFacetGenerator,
+  FacetGenerator,
+  FacetGeneratorOptions,
 } from './headless-commerce-facet-generator';
 
 describe('CommerceFacetGenerator', () => {
   let engine: MockedCommerceEngine;
   let state: CommerceAppState;
-  let options: CommerceFacetGeneratorOptions;
-  let facetGenerator: CommerceFacetGenerator;
+  let options: FacetGeneratorOptions;
+  let facetGenerator: FacetGenerator;
 
   function initEngine(preloadedState = buildMockCommerceState()) {
     engine = buildMockCommerceEngine(preloadedState);
   }
 
   function initCommerceFacetGenerator() {
-    facetGenerator = buildCommerceFacetGenerator(engine, options);
+    facetGenerator = buildFacetGenerator(engine, options);
   }
 
   function setFacetState(config: {facetId: string; type: FacetType}[] = []) {

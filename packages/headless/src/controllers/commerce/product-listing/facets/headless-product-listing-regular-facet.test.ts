@@ -16,7 +16,7 @@ import {
   CommerceFacetOptions,
   FacetValueRequest,
 } from '../../core/facets/headless-core-commerce-facet';
-import {CommerceRegularFacet} from '../../core/facets/regular/headless-commerce-regular-facet';
+import {RegularFacet} from '../../core/facets/regular/headless-commerce-regular-facet';
 import {buildProductListingRegularFacet} from './headless-product-listing-regular-facet';
 
 jest.mock(
@@ -28,7 +28,7 @@ describe('ProductListingRegularFacet', () => {
   let engine: MockedCommerceEngine;
   let state: CommerceAppState;
   let options: CommerceFacetOptions;
-  let facet: CommerceRegularFacet;
+  let facet: RegularFacet;
 
   function initEngine(preloadedState = buildMockCommerceState()) {
     engine = buildMockCommerceEngine(preloadedState);

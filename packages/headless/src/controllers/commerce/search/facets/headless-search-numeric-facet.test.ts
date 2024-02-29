@@ -15,7 +15,7 @@ import {
   CommerceFacetOptions,
   NumericRangeRequest,
 } from '../../core/facets/headless-core-commerce-facet';
-import {CommerceNumericFacet} from '../../core/facets/numeric/headless-commerce-numeric-facet';
+import {NumericFacet} from '../../core/facets/numeric/headless-commerce-numeric-facet';
 import {buildSearchNumericFacet} from './headless-search-numeric-facet';
 
 jest.mock('../../../../features/commerce/search/search-actions');
@@ -27,7 +27,7 @@ describe('SearchNumericFacet', () => {
   let options: CommerceFacetOptions;
   let state: CommerceAppState;
   let engine: MockedCommerceEngine;
-  let facet: CommerceNumericFacet;
+  let facet: NumericFacet;
 
   function initFacet() {
     engine = buildMockCommerceEngine(state);

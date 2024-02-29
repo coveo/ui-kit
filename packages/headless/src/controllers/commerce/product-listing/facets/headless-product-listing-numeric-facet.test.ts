@@ -14,7 +14,7 @@ import {
   CommerceFacetOptions,
   NumericRangeRequest,
 } from '../../core/facets/headless-core-commerce-facet';
-import {CommerceNumericFacet} from '../../core/facets/numeric/headless-commerce-numeric-facet';
+import {NumericFacet} from '../../core/facets/numeric/headless-commerce-numeric-facet';
 import {buildProductListingNumericFacet} from './headless-product-listing-numeric-facet';
 
 describe('ProductListingNumericFacet', () => {
@@ -24,7 +24,7 @@ describe('ProductListingNumericFacet', () => {
   let options: CommerceFacetOptions;
   let state: CommerceAppState;
   let engine: MockCommerceEngine;
-  let facet: CommerceNumericFacet;
+  let facet: NumericFacet;
 
   function initFacet() {
     engine = buildMockCommerceEngine({state});

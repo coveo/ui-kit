@@ -17,8 +17,8 @@ import {
 import {commonOptions} from '../../../product-listing/facets/headless-product-listing-facet-options';
 import {DateRangeRequest} from '../headless-core-commerce-facet';
 import {
-  CommerceDateFacet,
-  CommerceDateFacetOptions,
+  DateFacet,
+  DateFacetOptions,
   buildCommerceDateFacet,
 } from './headless-commerce-date-facet';
 
@@ -26,15 +26,15 @@ jest.mock(
   '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions'
 );
 
-describe('CommerceDateFacet', () => {
+describe('DateFacet', () => {
   const facetId: string = 'date_facet_id';
   const type: FacetType = 'dateRange';
   const start = '2023-01-01';
   const end = '2024-01-01';
-  let options: CommerceDateFacetOptions;
+  let options: DateFacetOptions;
   let state: CommerceAppState;
   let engine: MockedCommerceEngine;
-  let facet: CommerceDateFacet;
+  let facet: DateFacet;
 
   function initFacet() {
     engine = buildMockCommerceEngine(state);
