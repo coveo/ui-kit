@@ -1,6 +1,6 @@
 import {createMockState} from '../../test/mock-state';
 import {VERSION} from '../../utils/version';
-import {getAnalyticsSource} from './search-analytics';
+import {getAnalyticsSource} from './analytics-selectors';
 
 describe('#getAnalyticsSources', () => {
   it('without a source, returns an array only with `@coveo/headless`', () => {

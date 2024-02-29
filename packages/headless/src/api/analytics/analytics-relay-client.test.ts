@@ -2,6 +2,8 @@ import {createRelay} from '@coveo/relay';
 import {createMockState} from '../../test/mock-state';
 import {getRelayInstanceFromState} from './analytics-relay-client';
 
+jest.mock('@coveo/relay');
+
 describe('#getRelayInstanceFromState', () => {
   const mockedCreateRelay = jest.mocked(createRelay).mockImplementation(() => ({
     emit: jest.fn(),
