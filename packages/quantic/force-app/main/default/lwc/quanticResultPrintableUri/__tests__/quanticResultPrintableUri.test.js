@@ -69,6 +69,15 @@ function generateResultParents(numberOfParents) {
   return `<parents>${parents}</parents>`;
 }
 
+function shouldProperlyDisplayAllPathItems(pathItems, numberOfItems) {
+  expect(pathItems).not.toBeNull();
+  expect(pathItems.length).toBe(numberOfItems);
+  pathItems.forEach((item, index) => {
+    expect(item.textContent).toBe(`parent${index + 1}`);
+    expect(item.href).toBe(`${generateExampleUri(index + 1)}`);
+  });
+}
+
 describe('c-quantic-result-printable-uri', () => {
   function cleanup() {
     // The jsdom instance is shared across test cases in a single file so reset the DOM
@@ -106,13 +115,7 @@ describe('c-quantic-result-printable-uri', () => {
         const pathItems = element.shadowRoot.querySelectorAll(
           selectors.pathItem
         );
-
-        expect(pathItems).not.toBeNull();
-        expect(pathItems.length).toBe(numberOfParents);
-        pathItems.forEach((item, index) => {
-          expect(item.textContent).toBe(`parent${index + 1}`);
-          expect(item.href).toBe(`${generateExampleUri(index + 1)}`);
-        });
+        shouldProperlyDisplayAllPathItems(pathItems, numberOfParents);
       });
     });
 
@@ -182,12 +185,7 @@ describe('c-quantic-result-printable-uri', () => {
             );
 
             expect(expandButton).toBeNull();
-            expect(pathItems).not.toBeNull();
-            expect(pathItems.length).toBe(numberOfParents);
-            pathItems.forEach((item, index) => {
-              expect(item.textContent).toBe(`parent${index + 1}`);
-              expect(item.href).toBe(`${generateExampleUri(index + 1)}`);
-            });
+            shouldProperlyDisplayAllPathItems(pathItems, numberOfParents);
           });
         });
       });
@@ -253,12 +251,7 @@ describe('c-quantic-result-printable-uri', () => {
             );
 
             expect(expandButton).toBeNull();
-            expect(pathItems).not.toBeNull();
-            expect(pathItems.length).toBe(numberOfParents);
-            pathItems.forEach((item, index) => {
-              expect(item.textContent).toBe(`parent${index + 1}`);
-              expect(item.href).toBe(`${generateExampleUri(index + 1)}`);
-            });
+            shouldProperlyDisplayAllPathItems(pathItems, numberOfParents);
           });
         });
       });
