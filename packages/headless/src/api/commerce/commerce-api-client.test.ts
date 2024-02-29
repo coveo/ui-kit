@@ -110,7 +110,7 @@ describe('commerce api client', () => {
 
   it('#querySuggest should call the platform endpoint with the correct arguments', async () => {
     const request = {
-      ...buildCommerceAPIRequest(),
+      ...(await buildCommerceAPIRequest()),
       query: 'some query',
     };
 
@@ -142,9 +142,9 @@ describe('commerce api client', () => {
 
   it('#facetSearch should call the platform endpoint with the correct arguments', async () => {
     const {accessToken, organizationId, url, ...searchContext} =
-      buildCommerceAPIRequest();
+      await buildCommerceAPIRequest();
     const request = {
-      ...buildCommerceAPIRequest(),
+      ...(await buildCommerceAPIRequest()),
       facetId: 'some-facet-id',
       facetQuery: 'some facet query',
       query: 'some query',

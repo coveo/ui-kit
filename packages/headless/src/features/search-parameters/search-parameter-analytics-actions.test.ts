@@ -1,4 +1,3 @@
-import {buildMockSearchAppEngine} from '../../test/mock-engine';
 import {
   interfaceChange,
   logInterfaceChange,
@@ -37,10 +36,7 @@ describe('legacyLogParametersChange', () => {
     action1: LegacySearchAction,
     action2: LegacySearchAction
   ) {
-    const engine = buildMockSearchAppEngine();
-    engine.dispatch(action1);
-    engine.dispatch(action2);
-    expect(engine.actions[0].type).toEqual(engine.actions[1].type);
+    expect(action1.typePrefix).toEqual(action2.typePrefix);
   }
 
   it('should log #logSearchboxSubmit when #q parameter changes', () => {

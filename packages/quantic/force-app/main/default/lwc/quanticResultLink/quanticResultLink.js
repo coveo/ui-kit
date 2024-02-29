@@ -71,6 +71,13 @@ export default class QuanticResultLink extends NavigationMixin(
       focusTarget.focus();
     }
   }
+  /**
+   * Indicates the result field to display as the link text.
+   * @api
+   * @type {string}
+   * @defaultValue `'title'`
+   */
+  @api displayedField = 'title';
 
   /** @type {SearchEngine} */
   engine;
@@ -166,10 +173,13 @@ export default class QuanticResultLink extends NavigationMixin(
   }
 
   /**
-   * Returns the title of the link to display.
+   * Returns the result field to display as the link title.
    */
-  get displayedField() {
-    return this.result.title ? 'title' : 'clickUri';
+  get fieldToDisplay() {
+    return this.result[this.displayedField] ||
+      this.result.raw?.[this.displayedField]
+      ? this.displayedField
+      : 'clickUri';
   }
 
   /**
