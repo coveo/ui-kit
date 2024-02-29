@@ -1,3 +1,4 @@
+import {Relay} from '@coveo/relay';
 import {
   AnyAction,
   ThunkDispatch,
@@ -246,6 +247,9 @@ function buildMockCoreEngine<T extends AppState>(
     findAsyncAction<ThunkArg>(actionCreator: AsyncActionCreator<ThunkArg>) {
       const action = this.actions.find((a) => a.type === actionCreator.type);
       return isAsyncAction<ThunkArg>(action) ? action : undefined;
+    },
+    get relay(): Relay {
+      throw 'Use mock-engine-v2 instead.';
     },
     logger,
     addReducers: jest.fn(),
