@@ -44,7 +44,6 @@ export default class QuanticResultPrintableUri extends LightningElement {
    */
   @api target = '_self';
 
-  /** @type {number} */
 
   /** @type {boolean} */
   isExpanded = false;
