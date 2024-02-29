@@ -34,8 +34,7 @@ function getPatterns() {
 function checkPatterns(files, patterns) {
   for (const pattern of patterns) {
     for (const file of files.split(/$/gm)) {
-      if (minimatch(file, pattern)) {
-        console.log(file);
+      if (minimatch(file.trim(), pattern)) {
         return 'true';
       }
     }
