@@ -26,6 +26,7 @@ import {
   DocumentIdentifier,
 } from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
 import {Logger} from 'pino';
+import {getRelayInstanceFromState} from '../../api/analytics/analytics-relay-client';
 import {
   CaseAssistAnalyticsProvider,
   configureCaseAssistAnalytics,
@@ -49,7 +50,6 @@ import {
 } from '../../api/analytics/product-listing-analytics';
 import {StateNeededByProductRecommendationsAnalyticsProvider} from '../../api/analytics/product-recommendations-analytics';
 import {
-  configureAnalytics,
   configureLegacyAnalytics,
   SearchAnalyticsProvider,
   StateNeededBySearchAnalyticsProvider,
@@ -509,7 +509,7 @@ const internalMakeAnalyticsAction = <
           );
         }
       });
-      const emitEvent = configureAnalytics(state);
+      const {emit} = getRelayInstanceFromState(state);
       loggers.push(async (state: LegacyStateNeeded & StateNeeded) => {
         if (
           shouldSendNextEvent(state) &&
@@ -517,7 +517,7 @@ const internalMakeAnalyticsAction = <
           analyticsPayloadBuilder
         ) {
           const payload = analyticsPayloadBuilder(state);
-          await logNextEvent(emitEvent, analyticsType, payload);
+          await logNextEvent(emit, analyticsType, payload);
         }
       });
       return analyticsAction;
