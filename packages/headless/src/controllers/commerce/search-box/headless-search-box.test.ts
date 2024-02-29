@@ -234,7 +234,7 @@ describe('headless search box', () => {
       expect(deselectAllBreadcrumbs).toHaveBeenCalled();
     });
 
-    it('does not deselect facets when clearFilters is false', () => {
+    it('when clearFilters option is false, does not dispatch #deselectAllBreadcrumbs', () => {
       jest.resetAllMocks();
       engine = buildMockCommerceEngine(state);
       searchBox = buildSearchBox(engine, {
