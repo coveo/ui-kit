@@ -2,6 +2,7 @@ import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
 
 polyfillCryptoNode();
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
+export type {Relay} from '@coveo/relay';
 
 export type {
   CommerceEngine,
