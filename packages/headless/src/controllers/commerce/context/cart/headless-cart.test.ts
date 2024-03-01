@@ -18,9 +18,7 @@ import {
   totalQuantitySelector,
 } from './headless-cart-selectors';
 
-jest.mock('@coveo/relay');
 jest.mock('../../../../features/commerce/context/cart/cart-actions');
-jest.mock('../../../../features/commerce/context/cart/cart-analytics-actions');
 jest.mock('./headless-cart-selectors');
 
 describe('headless commerce cart', () => {
@@ -107,22 +105,45 @@ describe('headless commerce cart', () => {
   });
 
   describe('#purchase', () => {
-    it('dispatch #logCartPurchase with the transaction attributes', () => {
-      const mockedLogCartPurchase = jest.mocked(logCartPurchase);
+    beforeEach(() => {
+      initEngine({
+        ...buildMockCommerceState(),
+        commerceContext: {...getContextInitialState(), currency: 'USD'},
+      });
+      initCart();
+    });
 
-      cart.purchase('transaction-id', 0);
+    afterEach(() => {
+      jest.resetAllMocks();
+    });
 
-      expect(mockedLogCartPurchase).toHaveBeenCalledTimes(1);
-      expect(mockedLogCartPurchase).toHaveBeenCalledWith({
-        id: 'transaction-id',
-        revenue: 0,
+    it('emits the #ec.purchase event with the expected payload', () => {
+      const items = [
+        {name: 'blue shoes', productId: 'shoe-1', price: 10.36, quantity: 1},
+        {name: 'red shoes', productId: 'shoe-2', price: 52.19, quantity: 3},
+      ];
+      const transaction = {id: 'transaction-id', revenue: 166.93};
+      jest.mocked(itemsSelector).mockReturnValue(items);
+
+      cart.purchase(transaction.id, transaction.revenue);
+
+      const products = items.map(({quantity, ...product}) => ({
+        quantity,
+        product,
+      }));
+      expect(engine.relay.emit).toHaveBeenCalledTimes(1);
+      expect(engine.relay.emit).toHaveBeenCalledWith('ec.purchase', {
+        currency: 'USD',
+        products,
+        transaction,
       });
     });
 
-    it('dispatches #setItems with empty array', async () => {
+    it('dispatches #setItems with empty array', () => {
+      jest.mocked(itemsSelector).mockReturnValue([]);
       const mockedSetItems = jest.mocked(setItems);
 
-      await cart.purchase('', 0);
+      cart.purchase('', 0);
 
       expect(mockedSetItems).toHaveBeenCalledWith([]);
     });

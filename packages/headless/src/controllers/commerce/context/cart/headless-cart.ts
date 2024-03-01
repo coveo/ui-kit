@@ -207,10 +207,20 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
       }
     },
 
-    async purchase(transactionId: string, transactionRevenue: number) {
-      await dispatch(
-        logCartPurchase({id: transactionId, revenue: transactionRevenue})
+    purchase(transactionId: string, transactionRevenue: number) {
+      const currency = getCurrency();
+      const products = itemsSelector(getState()).map(
+        ({quantity, ...product}) => ({quantity, product})
       );
+      const transaction = {id: transactionId, revenue: transactionRevenue};
+
+      const payload: Ec.Purchase = {
+        currency,
+        products,
+        transaction,
+      };
+      engine.relay.emit('ec.purchase', payload);
+
       dispatch(setItems([]));
     },
 
