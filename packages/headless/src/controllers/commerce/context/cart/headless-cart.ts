@@ -162,7 +162,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     return !prevItem || currentItem.quantity > prevItem.quantity;
   }
 
-  // @todo LENS-1589: currently, the currency attribute should be a string. However, the type should be CurrencyCodeISO4217
+  // @todo LENS-1589: currently, the currency attribute is a string. However, the type should be CurrencyCodeISO4217
   function getCurrency(): CurrencyCodeISO4217 {
     return engine.state.commerceContext.currency as CurrencyCodeISO4217;
   }
@@ -171,15 +171,32 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     currentItem: CartItem,
     prevItem: CartItemWithMetadata | undefined
   ): boolean {
-    if (!prevItem) {
-      return false;
-    }
+    return prevItem
+      ? currentItem.name === prevItem.name &&
+          currentItem.price === prevItem.price &&
+          currentItem.quantity === prevItem.quantity
+      : false;
+  }
 
-    return (
-      currentItem.name === prevItem.name &&
-      currentItem.price === prevItem.price &&
-      currentItem.quantity === prevItem.quantity
-    );
+  function createEcCartActionPayload(
+    currentItem: CartItem,
+    prevItem: CartItemWithMetadata | undefined
+  ): Ec.CartAction {
+    const {quantity: currentQuantity, ...product} = currentItem;
+    const action = isCurrentItemQuantityGreater(currentItem, prevItem)
+      ? 'add'
+      : 'remove';
+    const quantity = !prevItem
+      ? currentQuantity
+      : Math.abs(currentQuantity - prevItem.quantity);
+    const currency = getCurrency();
+
+    return {
+      action,
+      currency,
+      quantity,
+      product,
+    };
   }
 
   return {
@@ -205,22 +222,10 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
       }
 
       if (isNewQuantityDifferent(item, prevItem)) {
-        const {quantity: currentQuantity, ...product} = item;
-        const action = isCurrentItemQuantityGreater(item, prevItem)
-          ? 'add'
-          : 'remove';
-        const quantity = !prevItem
-          ? currentQuantity
-          : Math.abs(currentQuantity - prevItem.quantity);
-        const currency = getCurrency();
-
-        const payload: Ec.CartAction = {
-          action,
-          currency,
-          quantity,
-          product,
-        };
-        engine.relay.emit('ec.cartAction', payload);
+        engine.relay.emit(
+          'ec.cartAction',
+          createEcCartActionPayload(item, prevItem)
+        );
       }
 
       dispatch(updateItem(item));
