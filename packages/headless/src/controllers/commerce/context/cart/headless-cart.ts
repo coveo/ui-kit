@@ -90,10 +90,9 @@ export interface Cart extends Controller {
   /**
    * Emits an `ec.purchase` analytics event and then empties the cart without emitting any additional events.
    *
-   * @param transactionId - The transaction ID.
-   * @param transactionRevenue - The total revenue from the transaction, including taxes, shipping, and discounts.
+   * @param transaction - The object with the id and the total revenue from the transaction, including taxes, shipping, and discounts.
    */
-  purchase(transactionId: string, transactionRevenue: number): void;
+  purchase(transaction: {id: string; revenue: number}): void;
 
   /**
    * A scoped and simplified part of the headless state that is relevant to the `Cart` controller.
@@ -223,14 +222,8 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
       }
     },
 
-    purchase(transactionId: string, transactionRevenue: number) {
-      engine.relay.emit(
-        'ec.purchase',
-        createEcPurchasePayload({
-          id: transactionId,
-          revenue: transactionRevenue,
-        })
-      );
+    purchase(transaction: {id: string; revenue: number}) {
+      engine.relay.emit('ec.purchase', createEcPurchasePayload(transaction));
 
       dispatch(setItems([]));
     },

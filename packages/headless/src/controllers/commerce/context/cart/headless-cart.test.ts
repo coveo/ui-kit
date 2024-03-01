@@ -125,7 +125,7 @@ describe('headless commerce cart', () => {
       const transaction = {id: 'transaction-id', revenue: 166.93};
       jest.mocked(itemsSelector).mockReturnValue(items);
 
-      cart.purchase(transaction.id, transaction.revenue);
+      cart.purchase(transaction);
 
       const products = items.map(({quantity, ...product}) => ({
         quantity,
@@ -143,7 +143,7 @@ describe('headless commerce cart', () => {
       jest.mocked(itemsSelector).mockReturnValue([]);
       const mockedSetItems = jest.mocked(setItems);
 
-      cart.purchase('', 0);
+      cart.purchase({id: '', revenue: 0});
 
       expect(mockedSetItems).toHaveBeenCalledWith([]);
     });
