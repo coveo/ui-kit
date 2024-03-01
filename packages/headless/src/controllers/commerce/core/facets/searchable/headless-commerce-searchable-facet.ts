@@ -16,29 +16,29 @@ import {
   buildCoreCommerceFacet,
 } from '../headless-core-commerce-facet';
 import {
-  CommerceFacetSearch,
+  FacetSearch,
   buildCommerceFacetSearch,
 } from './headless-commerce-facet-search';
 
-export type CommerceFacetSearchState = FacetSearchState;
+export type {FacetSearchState};
 
-export type CommerceSearchableFacet<
+export type SearchableFacet<
   ValueRequest extends AnyFacetValueRequest,
   ValueResponse extends AnyFacetValueResponse,
 > = CoreCommerceFacet<ValueRequest, ValueResponse> & {
   /**
    * The facet search controller.
    */
-  facetSearch: Omit<CommerceFacetSearch, 'state'>;
+  facetSearch: Omit<FacetSearch, 'state'>;
   state: CoreCommerceFacetState<ValueResponse> & {
     /**
      * The facet search state.
      */
-    facetSearch: CommerceFacetSearchState;
+    facetSearch: FacetSearchState;
   };
 };
 
-export type CommerceSearchableFacetOptions = {
+export type SearchableFacetOptions = {
   facetSearch?: {facetQuery: string};
 };
 
@@ -47,8 +47,8 @@ export function buildCommerceSearchableFacet<
   ValueResponse extends AnyFacetValueResponse,
 >(
   engine: CommerceEngine,
-  options: CoreCommerceFacetOptions & CommerceSearchableFacetOptions
-): CommerceSearchableFacet<ValueRequest, ValueResponse> {
+  options: CoreCommerceFacetOptions & SearchableFacetOptions
+): SearchableFacet<ValueRequest, ValueResponse> {
   if (!loadSearchableFacetReducers(engine)) {
     throw loadReducerError;
   }
