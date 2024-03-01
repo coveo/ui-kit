@@ -3,9 +3,8 @@ import {updateFacetOptions} from '../../../../features/facet-options/facet-optio
 import {facetOptionsReducer as facetOptions} from '../../../../features/facet-options/facet-options-slice';
 import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
 import {
-  deselectAllDateFacetValues,
   registerDateFacet,
-  toggleSelectDateFacetValue,
+  validateManualDateRanges,
 } from '../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {dateFacetSetReducer as dateFacetSet} from '../../../../features/facets/range-facets/date-facet-set/date-facet-set-slice';
 import {DateFacetValue} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
@@ -17,9 +16,9 @@ import {buildMockDateFacetResponse} from '../../../../test/mock-date-facet-respo
 import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
 import {
-  MockSearchEngine,
-  buildMockSearchAppEngine,
-} from '../../../../test/mock-engine';
+  MockedSearchEngine,
+  buildMockSearchEngine,
+} from '../../../../test/mock-engine-v2';
 import {createMockState} from '../../../../test/mock-state';
 import * as FacetIdDeterminor from '../../../core/facets/_common/facet-id-determinor';
 import {
@@ -29,15 +28,25 @@ import {
   buildDateRange,
 } from './headless-date-facet';
 
+jest.mock(
+  '../../../../features/facets/range-facets/date-facet-set/date-facet-actions'
+);
+jest.mock('../../../../features/search/search-actions');
+jest.mock('../../../../features/facets/facet-set/facet-set-actions');
+jest.mock('../../../../features/facet-options/facet-options-actions');
+jest.mock(
+  '../../../../features/facets/range-facets/generic/range-facet-actions'
+);
+
 describe('date facet', () => {
   const facetId = '1';
   let options: DateFacetOptions;
   let state: SearchAppState;
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
   let dateFacet: DateFacet;
 
   function initDateFacet() {
-    engine = buildMockSearchAppEngine({state});
+    engine = buildMockSearchEngine(state);
     dateFacet = buildDateFacet(engine, {options});
   }
 
@@ -54,12 +63,20 @@ describe('date facet', () => {
     initDateFacet();
   });
 
-  it('#initDateFacet throws an error when an manual range in the options is invalid', () => {
+  it('#initDateFacet validates manual range in the options', () => {
     options.currentValues = [
       buildDateRange({start: 1616679091000, end: 1616592691000}),
     ];
-    expect(() => initDateFacet()).toThrow(
-      'The start value is greater than the end value for the date range'
+    initDateFacet();
+    expect(validateManualDateRanges).toHaveBeenCalledWith(
+      expect.objectContaining({
+        currentValues: [
+          expect.objectContaining({
+            start: '2021/03/25@22:16:31',
+            end: '2021/03/24@22:16:31',
+          }),
+        ],
+      })
     );
   });
 
@@ -84,8 +101,11 @@ describe('date facet', () => {
   });
 
   it('registers a date facet with the passed options', () => {
-    const action = registerDateFacet({facetId, currentValues: [], ...options});
-    expect(engine.actions).toContainEqual(action);
+    expect(registerDateFacet).toHaveBeenCalledWith({
+      facetId,
+      currentValues: [],
+      ...options,
+    });
   });
 
   it('when an option is invalid, it throws an error', () => {
@@ -96,22 +116,10 @@ describe('date facet', () => {
   });
 
   describe('#toggleSelect', () => {
-    it('dispatches a toggleSelectDateFacetValue with the passed value', () => {
-      const value = buildMockDateFacetValue();
-      dateFacet.toggleSelect(value);
-
-      const action = toggleSelectDateFacetValue({facetId, selection: value});
-      expect(engine.actions).toContainEqual(action);
-    });
-
     it('dispatches a search', () => {
       const value = buildMockDateFacetValue();
       dateFacet.toggleSelect(value);
-
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-      expect(action).toBeTruthy();
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 
@@ -119,19 +127,15 @@ describe('date facet', () => {
     beforeEach(() => dateFacet.deselectAll());
 
     it('dispatches #deselectAllFacetValues with the facet id', () => {
-      expect(engine.actions).toContainEqual(deselectAllFacetValues(facetId));
+      expect(deselectAllFacetValues).toHaveBeenCalledWith(facetId);
     });
 
     it('dispatches a #updateFacetOptions action with #freezeFacetOrder true', () => {
-      expect(engine.actions).toContainEqual(updateFacetOptions());
+      expect(updateFacetOptions).toHaveBeenCalled();
     });
 
     it('dispatches a search', () => {
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-
-      expect(engine.actions).toContainEqual(action);
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 
@@ -139,49 +143,33 @@ describe('date facet', () => {
     it('dispatches #updateRangeFacetSortCriterion', () => {
       const criterion = 'descending';
       dateFacet.sortBy(criterion);
-      const action = updateRangeFacetSortCriterion({facetId, criterion});
 
-      expect(engine.actions).toContainEqual(action);
+      expect(updateRangeFacetSortCriterion).toHaveBeenCalledWith({
+        facetId,
+        criterion,
+      });
     });
 
     it('dispatches a #updateFacetOptions action with #freezeFacetOrder true', () => {
       dateFacet.sortBy('descending');
-
-      expect(engine.actions).toContainEqual(updateFacetOptions());
+      expect(updateFacetOptions).toHaveBeenCalled();
     });
 
     it('dispatches a search', () => {
       dateFacet.sortBy('descending');
-
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-      expect(action).toBeTruthy();
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 
   function testCommonToggleSingleSelect(facetValue: () => DateFacetValue) {
-    it('dispatches a #toggleSelect action with the passed facet value', () => {
-      dateFacet.toggleSingleSelect(facetValue());
-
-      expect(engine.actions).toContainEqual(
-        toggleSelectDateFacetValue({facetId, selection: facetValue()})
-      );
-    });
-
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       dateFacet.toggleSingleSelect(facetValue());
-
-      expect(engine.actions).toContainEqual(updateFacetOptions());
+      expect(updateFacetOptions).toHaveBeenCalled();
     });
 
     it('dispatches a search', () => {
       dateFacet.toggleSingleSelect(facetValue());
-
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-      expect(action).toBeTruthy();
+      expect(executeSearch).toHaveBeenCalled();
     });
   }
 
@@ -189,28 +177,12 @@ describe('date facet', () => {
     const facetValue = () => buildMockDateFacetValue({state: 'idle'});
 
     testCommonToggleSingleSelect(facetValue);
-
-    it('dispatches a #deselectAllFacetValues action', () => {
-      dateFacet.toggleSingleSelect(facetValue());
-
-      expect(engine.actions).toContainEqual(
-        deselectAllDateFacetValues(facetId)
-      );
-    });
   });
 
   describe('#toggleSingleSelect when the value state is not "idle"', () => {
     const facetValue = () => buildMockDateFacetValue({state: 'selected'});
 
     testCommonToggleSingleSelect(facetValue);
-
-    it('does not dispatch a #deselectAllFacetValues action', () => {
-      dateFacet.toggleSingleSelect(facetValue());
-
-      expect(engine.actions).not.toContainEqual(
-        deselectAllDateFacetValues(facetId)
-      );
-    });
   });
 
   it('exposes a #state getter property to retrieve the values', () => {

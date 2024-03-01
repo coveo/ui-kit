@@ -1,6 +1,7 @@
 import {SSRSearchEngine} from '../../app/search-engine/search-engine.ssr';
 import {ControllerDefinitionWithProps} from '../../app/ssr-engine/types/common';
-import {buildMockSSRSearchEngine} from '../../test/mock-engine';
+import {buildMockSSRSearchEngine} from '../../test/mock-engine-v2';
+import {createMockState} from '../../test/mock-state';
 import {Context, buildContext} from './headless-context';
 import {ContextProps, defineContext} from './headless-context.ssr';
 
@@ -28,7 +29,7 @@ describe('define context', () => {
   });
 
   it("buildWithProps should pass it's parameters to the buildContext", () => {
-    const engine: SSRSearchEngine = buildMockSSRSearchEngine();
+    const engine: SSRSearchEngine = buildMockSSRSearchEngine(createMockState());
     const props: ContextProps = {} as unknown as ContextProps;
 
     contextDefinition.buildWithProps(engine, {

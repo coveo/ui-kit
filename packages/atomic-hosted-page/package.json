@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "@coveo/release": "1.0.0",
-    "cypress": "13.6.4",
+    "cypress": "13.6.6",
     "cypress-repeat": "2.3.4"
   }
 }
