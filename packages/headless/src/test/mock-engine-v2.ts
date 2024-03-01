@@ -76,6 +76,7 @@ export type MockedRecommendationEngine = RecommendationEngine;
 export type MockedProductRecommendationEngine = ProductRecommendationEngine;
 export type MockedCommerceEngine = CommerceEngine;
 export type MockedInsightEngine = InsightEngine;
+export type MockedProductListingEngine = ProductListingEngine;
 
 type StateFromEngine<TEngine extends CoreEngine> = TEngine['state'];
 

@@ -30,6 +30,7 @@
     "@actions/github": "6.0.0",
     "@commitlint/config-conventional": "18.6.2",
     "@commitlint/lint": "18.6.1",
+    "@commitlint/load": "18.6.1",
     "@coveo/release": "1.0.0",
     "@cspell/dict-fr-fr": "2.2.2",
     "@cspell/eslint-plugin": "8.4.1",
