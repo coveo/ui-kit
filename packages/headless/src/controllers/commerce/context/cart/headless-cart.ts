@@ -198,6 +198,22 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     };
   }
 
+  function createEcPurchasePayload(transaction: {
+    id: string;
+    revenue: number;
+  }): Ec.Purchase {
+    const currency = getCurrency();
+    const products = itemsSelector(getState()).map(
+      ({quantity, ...product}) => ({quantity, product})
+    );
+
+    return {
+      currency,
+      products,
+      transaction,
+    };
+  }
+
   return {
     ...controller,
 
@@ -208,18 +224,13 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     },
 
     purchase(transactionId: string, transactionRevenue: number) {
-      const currency = getCurrency();
-      const products = itemsSelector(getState()).map(
-        ({quantity, ...product}) => ({quantity, product})
+      engine.relay.emit(
+        'ec.purchase',
+        createEcPurchasePayload({
+          id: transactionId,
+          revenue: transactionRevenue,
+        })
       );
-      const transaction = {id: transactionId, revenue: transactionRevenue};
-
-      const payload: Ec.Purchase = {
-        currency,
-        products,
-        transaction,
-      };
-      engine.relay.emit('ec.purchase', payload);
 
       dispatch(setItems([]));
     },
