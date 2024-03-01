@@ -1,8 +1,9 @@
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {buildMockAnalyticsState} from '../../test/mock-analytics-state';
 import {
-  MockInsightEngine,
+  MockedInsightEngine,
   buildMockInsightEngine,
-} from '../../test/mock-engine';
+} from '../../test/mock-engine-v2';
 import {buildMockInsightState} from '../../test/mock-insight-state';
 import {getConfigurationInitialState} from '../configuration/configuration-state';
 import {
@@ -39,10 +40,10 @@ jest.mock('coveo.analytics', () => {
 });
 
 describe('insight analytics actions', () => {
-  let engine: MockInsightEngine;
+  let engine: MockedInsightEngine;
   beforeEach(() => {
-    engine = buildMockInsightEngine({
-      state: buildMockInsightState({
+    engine = buildMockInsightEngine(
+      buildMockInsightState({
         insightCaseContext: {
           caseContext: {
             Case_Subject: exampleSubject,
@@ -51,13 +52,11 @@ describe('insight analytics actions', () => {
           caseId: exampleCaseId,
           caseNumber: exampleCaseNumber,
         },
-      }),
-    });
+      })
+    );
   });
 
   it('should log #logInterfaceLoad with the right payload', async () => {
-    await engine.dispatch(logInsightInterfaceLoad());
-
     const expectedPayload = {
       caseContext: {
         Case_Subject: exampleSubject,
@@ -67,6 +66,12 @@ describe('insight analytics actions', () => {
       caseNumber: exampleCaseNumber,
     };
 
+    await logInsightInterfaceLoad()()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
+
     expect(mockLogInterfaceLoad).toHaveBeenCalledTimes(1);
     expect(mockLogInterfaceLoad.mock.calls[0][0]).toStrictEqual(
       expectedPayload
@@ -74,8 +79,8 @@ describe('insight analytics actions', () => {
   });
 
   it('should log #logInterfaceChange with the right payload', async () => {
-    const engine = buildMockInsightEngine({
-      state: buildMockInsightState({
+    const engine = buildMockInsightEngine(
+      buildMockInsightState({
         configuration: {
           ...getConfigurationInitialState(),
           analytics: buildMockAnalyticsState({
@@ -90,10 +95,13 @@ describe('insight analytics actions', () => {
           caseId: exampleCaseId,
           caseNumber: exampleCaseNumber,
         },
-      }),
-    });
-
-    await engine.dispatch(logInsightInterfaceChange());
+      })
+    );
+    await logInsightInterfaceChange()()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const expectedPayload = {
       caseContext: {
@@ -112,8 +120,10 @@ describe('insight analytics actions', () => {
   });
 
   it('should log #logCreateArticle with the right payload', async () => {
-    await engine.dispatch(
-      logInsightCreateArticle(exampleCreateArticleMetadata)
+    await logInsightCreateArticle(exampleCreateArticleMetadata)()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
     );
 
     const expectedPayload = {
