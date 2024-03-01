@@ -1,6 +1,8 @@
 import {parseXML} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 
+const MIN_MAX_NUMBER_OF_PARTS = 3;
+
 /** @typedef {import("coveo").Result} Result */
 
 /**
@@ -42,17 +44,15 @@ export default class QuanticResultPrintableUri extends LightningElement {
    */
   @api target = '_self';
 
-  /** @type {number} */
-  MIN_MAX_NUMBER_OF_PARTS = 3;
   /** @type {boolean} */
   isExpanded = false;
   /** @type {string} */
   error;
 
   renderedCallback() {
-    if (this.maxNumberOfParts < this.MIN_MAX_NUMBER_OF_PARTS) {
+    if (this.maxNumberOfParts < MIN_MAX_NUMBER_OF_PARTS) {
       console.error(
-        `The provided value of ${this.maxNumberOfParts} for the maxNumberOfParts option is inadequate. The provided value must be at least ${this.MIN_MAX_NUMBER_OF_PARTS}.`
+        `The provided value of ${this.maxNumberOfParts} for the maxNumberOfParts option is inadequate. The provided value must be at least ${MIN_MAX_NUMBER_OF_PARTS}.`
       );
       this.error = `${this.template.host.localName} Error`;
     }
@@ -79,7 +79,7 @@ export default class QuanticResultPrintableUri extends LightningElement {
       return this.allParents;
     }
     return [
-      ...this.allParents.slice(0, 2),
+      ...this.allParents.slice(0, this.maxNumberOfParts - 1),
       {id: 'separator', name: '...', isFolded: true},
       this.allParents.slice(-1)[0],
     ];
