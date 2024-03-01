@@ -224,57 +224,39 @@ jobs:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-headless-ssr-pages-prod
-  e2e-quantic-setup:
-    name: 'Setup e2e tests on Quantic'
+  should-e2e-quantic:
+    name: 'Should test Quantic?'
     needs: build
     runs-on: ubuntu-latest
+    outputs:
+      shouldRunQuantic: ${{ steps.shouldRunQuantic.outputs.shouldRunQuantic }}
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
-      - uses: ./.github/actions/setup
-      - uses: ./.github/actions/setup-sfdx
-      - uses: ./.github/actions/e2e-quantic-setup
         with:
-          clientid: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
-          jwtkey: ${{ secrets.SFDX_AUTH_JWT_KEY }}
-  e2e-quantic-test:
-    name: 'Run e2e tests on Quantic'
-    needs: e2e-quantic-setup
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        spec:
-          [
-            'cypress/e2e/default-1/**/*',
-            'cypress/e2e/default-2/**/*',
-            'cypress/e2e/facets-1/**/*',
-            'cypress/e2e/facets-2/**/*',
-          ]
-    steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+          fetch-depth: 0
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/e2e-quantic
-      - uses: ./.github/actions/setup-sfdx
-        with:
-          spec: ${{ matrix.spec }}
-  e2e-quantic-cleanup:
-    if: cancelled() || failure() || success()
-    needs: e2e-quantic-test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
-      - uses: ./.github/actions/setup
-      - uses: ./.github/actions/setup-sfdx
-      - run: npx --no-install ts-node packages/quantic/scripts/build/delete-org.ts
-        shell: bash
+      - run: node ./scripts/ci/hasFileChanged.mjs shouldRunQuantic 'packages/quantic/**/*' 'packages/headless/**/*' package.json package-lock.json
+        id: shouldRunQuantic
+  e2e-quantic:
+    name: 'Run Quantic E2E tests'
+    needs: should-e2e-quantic
+    if: ${{ needs.should-e2e-quantic.outputs.shouldRunQuantic == 'true' }}
+    uses: ./.github/workflows/e2e-quantic.yml
+    secrets:
+      SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
+      SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
   required-jobs:
-    if: success()
+    if: |
+      ${{
+        !cancelled () &&
+        !contains(needs.*.result, 'failure')
+      }}
     needs:
       - 'build'
       - 'lint-check'
       - 'unit-test'
       - 'e2e-atomic-test'
-      - 'e2e-quantic-test'
+      - 'e2e-quantic'
       - 'e2e-atomic-screenshots'
       - 'e2e-atomic-react-test'
       - 'e2e-atomic-react-nextjs-test'
@@ -292,7 +274,11 @@ jobs:
     steps:
       - run: echo 'All required jobs have passed'
   is-valid:
-    if: cancelled() || failure() || success()
+    if: |
+      ${{
+        !cancelled () &&
+        !contains(needs.*.result, 'failure')
+      }}
     name: 'Confirm build is valid'
     needs:
       - 'required-jobs'
