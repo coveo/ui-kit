@@ -69,9 +69,7 @@ function generateResultParents(numberOfParents) {
   return `<parents>${parents}</parents>`;
 }
 
-function shouldProperlyDisplayAllPathItems(pathItems, numberOfItems) {
-  expect(pathItems).not.toBeNull();
-  expect(pathItems.length).toBe(numberOfItems);
+function shouldProperlyDisplayAllPathItems(pathItems) {
   pathItems.forEach((item, index) => {
     expect(item.textContent).toBe(`parent${index + 1}`);
     expect(item.href).toBe(`${generateExampleUri(index + 1)}`);
@@ -115,7 +113,9 @@ describe('c-quantic-result-printable-uri', () => {
         const pathItems = element.shadowRoot.querySelectorAll(
           selectors.pathItem
         );
-        shouldProperlyDisplayAllPathItems(pathItems, numberOfParents);
+        expect(pathItems).not.toBeNull();
+        expect(pathItems.length).toBe(numberOfParents);
+        shouldProperlyDisplayAllPathItems(pathItems);
       });
     });
 
@@ -185,7 +185,9 @@ describe('c-quantic-result-printable-uri', () => {
             );
 
             expect(expandButton).toBeNull();
-            shouldProperlyDisplayAllPathItems(pathItems, numberOfParents);
+            expect(pathItems).not.toBeNull();
+            expect(pathItems.length).toBe(numberOfParents);
+            shouldProperlyDisplayAllPathItems(pathItems);
           });
         });
       });
@@ -251,7 +253,9 @@ describe('c-quantic-result-printable-uri', () => {
             );
 
             expect(expandButton).toBeNull();
-            shouldProperlyDisplayAllPathItems(pathItems, numberOfParents);
+            expect(pathItems).not.toBeNull();
+            expect(pathItems.length).toBe(numberOfParents);
+            shouldProperlyDisplayAllPathItems(pathItems);
           });
         });
       });
