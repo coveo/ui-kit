@@ -148,13 +148,11 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     dispatch(setItems(initialState.items));
   }
 
-  function isNewQuantityDifferent(productId: string, quantity: number) {
-    const item = itemSelector(getState(), productId);
-    if (!item) {
-      return quantity > 0;
-    }
-
-    return item.quantity !== quantity;
+  function isNewQuantityDifferent(
+    currentItem: CartItem,
+    prevItem: CartItemWithMetadata
+  ) {
+    return prevItem ? prevItem.quantity !== currentItem.quantity : true;
   }
 
   function isCurrentItemQuantityGreater(
@@ -162,6 +160,26 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     prevItem: CartItemWithMetadata | undefined
   ): boolean {
     return !prevItem || currentItem.quantity > prevItem.quantity;
+  }
+
+  // @todo LENS-1589: currently, the currency attribute should be a string. However, the type should be CurrencyCodeISO4217
+  function getCurrency(): CurrencyCodeISO4217 {
+    return engine.state.commerceContext.currency as CurrencyCodeISO4217;
+  }
+
+  function isEqual(
+    currentItem: CartItem,
+    prevItem: CartItemWithMetadata | undefined
+  ): boolean {
+    if (!prevItem) {
+      return false;
+    }
+
+    return (
+      currentItem.name === prevItem.name &&
+      currentItem.price === prevItem.price &&
+      currentItem.quantity === prevItem.quantity
+    );
   }
 
   return {
@@ -179,9 +197,14 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     },
 
     updateItem(item: CartItem) {
-      if (isNewQuantityDifferent(item.productId, item.quantity)) {
-        const prevItem = itemSelector(getState(), item.productId);
+      const prevItem = itemSelector(getState(), item.productId);
+      const doesNotNeedUpdate = !prevItem && item.quantity <= 0;
 
+      if (isEqual(item, prevItem) || doesNotNeedUpdate) {
+        return;
+      }
+
+      if (isNewQuantityDifferent(item, prevItem)) {
         const {quantity: currentQuantity, ...product} = item;
         const action = isCurrentItemQuantityGreater(item, prevItem)
           ? 'add'
@@ -189,8 +212,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
         const quantity = !prevItem
           ? currentQuantity
           : Math.abs(currentQuantity - prevItem.quantity);
-        const currency = engine.state.commerceContext
-          .currency as CurrencyCodeISO4217;
+        const currency = getCurrency();
 
         const payload: Ec.CartAction = {
           action,
