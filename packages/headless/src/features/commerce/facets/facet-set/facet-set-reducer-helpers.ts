@@ -1,12 +1,10 @@
 import {CommerceFacetSetState} from './facet-set-state';
-import {
-  CommerceCategoryFacetValueRequest,
-  AnyCommerceFacetRequest,
-} from './interfaces/request';
+import {CategoryFacetValueRequest, AnyFacetRequest} from './interfaces/request';
 
-export function handleFacetUpdateNumberOfValues<
-  T extends AnyCommerceFacetRequest,
->(facetRequest: T | undefined, numberOfValues: number) {
+export function handleFacetUpdateNumberOfValues<T extends AnyFacetRequest>(
+  facetRequest: T | undefined,
+  numberOfValues: number
+) {
   if (!facetRequest) {
     return;
   }
@@ -20,7 +18,7 @@ export function handleCategoryFacetNestedNumberOfValuesUpdate(
 ) {
   const {facetId, numberOfValues} = payload;
   let selectedValue = state[facetId]?.request
-    .values[0] as CommerceCategoryFacetValueRequest;
+    .values[0] as CategoryFacetValueRequest;
   if (!selectedValue) {
     return;
   }

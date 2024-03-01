@@ -94,7 +94,7 @@ export {
 export {buildProductListingSort} from './controllers/commerce/product-listing/sort/headless-product-listing-sort';
 export {buildSearchSort} from './controllers/commerce/search/sort/headless-search-sort';
 
-export type {CommerceCategoryFacet} from './controllers/commerce/core/facets/category/headless-commerce-category-facet';
+export type {CategoryFacet} from './controllers/commerce/core/facets/category/headless-commerce-category-facet';
 export type {CommerceRegularFacet} from './controllers/commerce/core/facets/regular/headless-commerce-regular-facet';
 export type {CommerceNumericFacet} from './controllers/commerce/core/facets/numeric/headless-commerce-numeric-facet';
 export type {CommerceDateFacet} from './controllers/commerce/core/facets/date/headless-commerce-date-facet';
@@ -107,7 +107,7 @@ export type {
   DateRangeRequest,
   DateFacetValue,
   CategoryFacetValueRequest,
-  CommerceCategoryFacetValue,
+  CategoryFacetValue,
 } from './controllers/commerce/core/facets/headless-core-commerce-facet';
 export type {ProductListingFacetGenerator} from './controllers/commerce/product-listing/facets/headless-product-listing-facet-generator';
 export {buildProductListingFacetGenerator} from './controllers/commerce/product-listing/facets/headless-product-listing-facet-generator';

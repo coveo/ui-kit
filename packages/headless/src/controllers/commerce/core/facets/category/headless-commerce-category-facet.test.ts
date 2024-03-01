@@ -1,17 +1,17 @@
 import {
-  CommerceCategoryFacetValueRequest,
+  CategoryFacetValueRequest,
   CommerceFacetRequest,
 } from '../../../../../features/commerce/facets/facet-set/interfaces/request';
-import {CommerceCategoryFacetValue} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
+import {CategoryFacetValue} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
 import {
   toggleSelectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
 } from '../../../../../features/facets/category-facet-set/category-facet-set-actions';
 import {CommerceAppState} from '../../../../../state/commerce-app-state';
 import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request';
-import {buildMockCommerceCategoryFacetResponse} from '../../../../../test/mock-commerce-facet-response';
+import {buildMockCategoryFacetResponse} from '../../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceFacetSlice} from '../../../../../test/mock-commerce-facet-slice';
-import {buildMockCommerceCategoryFacetValue} from '../../../../../test/mock-commerce-facet-value';
+import {buildMockCategoryFacetValue} from '../../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
 import {
   MockedCommerceEngine,
@@ -19,34 +19,32 @@ import {
 } from '../../../../../test/mock-engine-v2';
 import {commonOptions} from '../../../product-listing/facets/headless-product-listing-facet-options';
 import {
-  CommerceCategoryFacet,
-  CommerceCategoryFacetOptions,
-  buildCommerceCategoryFacet,
+  CategoryFacet,
+  CategoryFacetOptions,
+  buildCategoryFacet,
 } from './headless-commerce-category-facet';
 
 jest.mock(
   '../../../../../features/facets/category-facet-set/category-facet-set-actions'
 );
 
-describe('CommerceCategoryFacet', () => {
+describe('CategoryFacet', () => {
   const facetId: string = 'category_facet_id';
   let engine: MockedCommerceEngine;
   let state: CommerceAppState;
-  let options: CommerceCategoryFacetOptions;
-  let facet: CommerceCategoryFacet;
+  let options: CategoryFacetOptions;
+  let facet: CategoryFacet;
 
   function initEngine(preloadedState = buildMockCommerceState()) {
     engine = buildMockCommerceEngine(preloadedState);
   }
 
   function initCategoryFacet() {
-    facet = buildCommerceCategoryFacet(engine, options);
+    facet = buildCategoryFacet(engine, options);
   }
 
   function setFacetRequestAndResponse(
-    config: Partial<
-      CommerceFacetRequest<CommerceCategoryFacetValueRequest>
-    > = {},
+    config: Partial<CommerceFacetRequest<CategoryFacetValueRequest>> = {},
     moreValuesAvailable = false
   ) {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
@@ -57,11 +55,11 @@ describe('CommerceCategoryFacet', () => {
       }),
     });
     state.productListing.facets = [
-      buildMockCommerceCategoryFacetResponse({
+      buildMockCategoryFacetResponse({
         moreValuesAvailable,
         facetId,
         type: 'hierarchical',
-        values: (config.values as CommerceCategoryFacetValue[]) ?? [],
+        values: (config.values as CategoryFacetValue[]) ?? [],
       }),
     ];
   }
@@ -95,7 +93,7 @@ describe('CommerceCategoryFacet', () => {
   });
 
   it('#toggleSelect dispatches #toggleSelectCategoryFacetValue with correct payload', () => {
-    const facetValue = buildMockCommerceCategoryFacetValue();
+    const facetValue = buildMockCategoryFacetValue();
     facet.toggleSelect(facetValue);
 
     expect(toggleSelectCategoryFacetValue).toHaveBeenCalledWith({
@@ -128,11 +126,11 @@ describe('CommerceCategoryFacet', () => {
         expect(facet.state.activeValue).toBeUndefined();
       });
       it('when a value is selected, returns the selected value', () => {
-        const activeValue = buildMockCommerceCategoryFacetValue({
+        const activeValue = buildMockCategoryFacetValue({
           state: 'selected',
         });
         setFacetRequestAndResponse({
-          values: [activeValue, buildMockCommerceCategoryFacetValue()],
+          values: [activeValue, buildMockCategoryFacetValue()],
         });
 
         expect(facet.state.activeValue).toBe(activeValue);
@@ -146,7 +144,7 @@ describe('CommerceCategoryFacet', () => {
         });
         it('when there is one value, returns false', () => {
           setFacetRequestAndResponse({
-            values: [buildMockCommerceCategoryFacetValue()],
+            values: [buildMockCategoryFacetValue()],
           });
 
           expect(facet.state.canShowLessValues).toBe(false);
@@ -154,8 +152,8 @@ describe('CommerceCategoryFacet', () => {
         it('when there are multiple values, returns false', () => {
           setFacetRequestAndResponse({
             values: [
-              buildMockCommerceCategoryFacetValue(),
-              buildMockCommerceCategoryFacetValue(),
+              buildMockCategoryFacetValue(),
+              buildMockCategoryFacetValue(),
             ],
           });
 
@@ -167,7 +165,7 @@ describe('CommerceCategoryFacet', () => {
         it('when selected value has no children, returns false', () => {
           setFacetRequestAndResponse({
             values: [
-              buildMockCommerceCategoryFacetValue({
+              buildMockCategoryFacetValue({
                 state: 'selected',
               }),
             ],
@@ -178,9 +176,9 @@ describe('CommerceCategoryFacet', () => {
         it('when selected value has one child, returns false', () => {
           setFacetRequestAndResponse({
             values: [
-              buildMockCommerceCategoryFacetValue({
+              buildMockCategoryFacetValue({
                 state: 'selected',
-                children: [buildMockCommerceCategoryFacetValue()],
+                children: [buildMockCategoryFacetValue()],
               }),
             ],
           });
@@ -190,11 +188,11 @@ describe('CommerceCategoryFacet', () => {
         it('when selected value has multiple children, return true', () => {
           setFacetRequestAndResponse({
             values: [
-              buildMockCommerceCategoryFacetValue({
+              buildMockCategoryFacetValue({
                 state: 'selected',
                 children: [
-                  buildMockCommerceCategoryFacetValue(),
-                  buildMockCommerceCategoryFacetValue(),
+                  buildMockCategoryFacetValue(),
+                  buildMockCategoryFacetValue(),
                 ],
               }),
             ],
@@ -221,7 +219,7 @@ describe('CommerceCategoryFacet', () => {
       describe('when a value is selected', () => {
         it('when selected values has no more values available, returns false', () => {
           setFacetRequestAndResponse({
-            values: [buildMockCommerceCategoryFacetValue({state: 'selected'})],
+            values: [buildMockCategoryFacetValue({state: 'selected'})],
           });
 
           expect(facet.state.canShowMoreValues).toBe(false);
@@ -229,7 +227,7 @@ describe('CommerceCategoryFacet', () => {
         it('when selected value has more values available, returns true', () => {
           setFacetRequestAndResponse({
             values: [
-              buildMockCommerceCategoryFacetValue({
+              buildMockCategoryFacetValue({
                 state: 'selected',
                 moreValuesAvailable: true,
               }),
@@ -248,7 +246,7 @@ describe('CommerceCategoryFacet', () => {
 
       it('when a value is selected, returns true', () => {
         setFacetRequestAndResponse({
-          values: [buildMockCommerceCategoryFacetValue({state: 'selected'})],
+          values: [buildMockCategoryFacetValue({state: 'selected'})],
         });
 
         expect(facet.state.hasActiveValues).toBe(true);
@@ -261,28 +259,28 @@ describe('CommerceCategoryFacet', () => {
       });
 
       it('when a value is selected, returns the selected value ancestry', () => {
-        const activeValue = buildMockCommerceCategoryFacetValue({
+        const activeValue = buildMockCategoryFacetValue({
           value: 'c',
           path: ['a', 'b', 'c'],
           state: 'selected',
           children: [
-            buildMockCommerceCategoryFacetValue({
+            buildMockCategoryFacetValue({
               value: 'd',
               path: ['a', 'b', 'c', 'd'],
             }),
-            buildMockCommerceCategoryFacetValue({
+            buildMockCategoryFacetValue({
               value: 'e',
               path: ['a', 'b', 'c', 'e'],
             }),
           ],
         });
-        const parentValue = buildMockCommerceCategoryFacetValue({
+        const parentValue = buildMockCategoryFacetValue({
           value: 'b',
           path: ['a', 'b'],
           children: [activeValue],
         });
 
-        const rootValue = buildMockCommerceCategoryFacetValue({
+        const rootValue = buildMockCategoryFacetValue({
           value: 'a',
           path: ['a'],
           children: [parentValue],

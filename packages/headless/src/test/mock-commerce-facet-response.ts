@@ -53,7 +53,7 @@ export function buildMockCommerceDateFacetResponse(
   };
 }
 
-export function buildMockCommerceCategoryFacetResponse(
+export function buildMockCategoryFacetResponse(
   config: Partial<CategoryFacetResponse> = {}
 ): CategoryFacetResponse {
   return {

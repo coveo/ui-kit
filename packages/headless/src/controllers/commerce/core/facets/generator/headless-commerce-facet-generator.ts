@@ -16,7 +16,7 @@ import {
   buildController,
   Controller,
 } from '../../../../controller/headless-controller';
-import {CommerceCategoryFacet} from '../category/headless-commerce-category-facet';
+import {CategoryFacet} from '../category/headless-commerce-category-facet';
 import {CommerceDateFacet} from '../date/headless-commerce-date-facet';
 import {
   CommerceFacetOptions,
@@ -82,14 +82,14 @@ export interface CommerceFacetGeneratorOptions {
   buildRegularFacet: CommerceSearchableFacetBuilder<CommerceRegularFacet>;
   buildNumericFacet: CommerceFacetBuilder<CommerceNumericFacet>;
   buildDateFacet: CommerceFacetBuilder<CommerceDateFacet>;
-  buildCategoryFacet: CommerceFacetBuilder<CommerceCategoryFacet>;
+  buildCategoryFacet: CommerceFacetBuilder<CategoryFacet>;
 }
 
 export type AnyCommerceFacetController =
   | CommerceRegularFacet
   | CommerceNumericFacet
   | CommerceDateFacet
-  | CommerceCategoryFacet;
+  | CategoryFacet;
 
 /**
  * @internal

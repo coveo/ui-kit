@@ -1,20 +1,20 @@
 import {
-  CommerceCategoryFacetValueRequest,
+  CategoryFacetValueRequest,
   CommerceFacetRequest,
 } from '../../../../features/commerce/facets/facet-set/interfaces/request';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice';
 import {CommerceAppState} from '../../../../state/commerce-app-state';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
-import {buildMockCommerceCategoryFacetResponse} from '../../../../test/mock-commerce-facet-response';
+import {buildMockCategoryFacetResponse} from '../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
-import {buildMockCommerceCategoryFacetValue} from '../../../../test/mock-commerce-facet-value';
+import {buildMockCategoryFacetValue} from '../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {
   MockCommerceEngine,
   buildMockCommerceEngine,
 } from '../../../../test/mock-engine';
-import {CommerceCategoryFacet} from '../../core/facets/category/headless-commerce-category-facet';
+import {CategoryFacet} from '../../core/facets/category/headless-commerce-category-facet';
 import {CommerceFacetOptions} from '../../core/facets/headless-core-commerce-facet';
 import {buildProductListingCategoryFacet} from './headless-product-listing-category-facet';
 
@@ -23,7 +23,7 @@ describe('ProductListingCategoryFacet', () => {
   let options: CommerceFacetOptions;
   let state: CommerceAppState;
   let engine: MockCommerceEngine;
-  let facet: CommerceCategoryFacet;
+  let facet: CategoryFacet;
 
   function initFacet() {
     engine = buildMockCommerceEngine({state});
@@ -31,16 +31,12 @@ describe('ProductListingCategoryFacet', () => {
   }
 
   function setFacetRequest(
-    config: Partial<
-      CommerceFacetRequest<CommerceCategoryFacetValueRequest>
-    > = {}
+    config: Partial<CommerceFacetRequest<CategoryFacetValueRequest>> = {}
   ) {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, ...config}),
     });
-    state.productListing.facets = [
-      buildMockCommerceCategoryFacetResponse({facetId}),
-    ];
+    state.productListing.facets = [buildMockCategoryFacetResponse({facetId})];
   }
 
   beforeEach(() => {
@@ -64,7 +60,7 @@ describe('ProductListingCategoryFacet', () => {
 
   describe('#toggleSelect', () => {
     it('dispatches #fetchProductListing', () => {
-      const facetValue = buildMockCommerceCategoryFacetValue();
+      const facetValue = buildMockCategoryFacetValue();
       facet.toggleSelect(facetValue);
 
       expect(engine.findAsyncAction(fetchProductListing.pending)).toBeTruthy();

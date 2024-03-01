@@ -6,7 +6,10 @@ import {AsyncThunkOptions} from '../../../../app/async-thunk-options';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {ThunkExtraArguments} from '../../../../app/thunk-extra-arguments';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
-import {AnyCommerceFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
+import {
+  AnyFacetRequest,
+  CategoryFacetValueRequest,
+} from '../../../../features/commerce/facets/facet-set/interfaces/request';
 import {
   AnyFacetResponse,
   AnyFacetValueResponse,
@@ -14,9 +17,8 @@ import {
   FacetType,
   NumericFacetValue,
   RegularFacetValue,
-  CommerceCategoryFacetValue,
+  CategoryFacetValue,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response';
-import {CategoryFacetValueRequest} from '../../../../features/facets/category-facet-set/interfaces/request';
 import {
   deselectAllFacetValues,
   updateFacetIsFieldExpanded,
@@ -43,7 +45,7 @@ export type {
   DateRangeRequest,
   DateFacetValue,
   CategoryFacetValueRequest,
-  CommerceCategoryFacetValue,
+  CategoryFacetValue,
 };
 
 /**
@@ -185,7 +187,7 @@ export function buildCoreCommerceFacet<
 
   const facetId = props.options.facetId;
 
-  const getRequest = (): AnyCommerceFacetRequest | undefined =>
+  const getRequest = (): AnyFacetRequest | undefined =>
     engine.state.commerceFacetSet[facetId]?.request;
   const getResponse = () =>
     props.options.facetResponseSelector(engine.state, facetId);

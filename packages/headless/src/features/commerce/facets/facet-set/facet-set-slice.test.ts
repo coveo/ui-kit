@@ -6,14 +6,14 @@ import {
 } from '../../../../controllers/commerce/core/facets/headless-core-commerce-facet';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
 import {
-  buildMockCommerceCategoryFacetResponse,
+  buildMockCategoryFacetResponse,
   buildMockCommerceDateFacetResponse,
   buildMockCommerceNumericFacetResponse,
   buildMockCommerceRegularFacetResponse,
 } from '../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
 import {
-  buildMockCommerceCategoryFacetValue,
+  buildMockCategoryFacetValue,
   buildMockCommerceDateFacetValue,
   buildMockCommerceNumericFacetValue,
   buildMockCommerceRegularFacetValue,
@@ -65,10 +65,10 @@ import {
   CommerceFacetSetState,
   getCommerceFacetSetInitialState,
 } from './facet-set-state';
-import {CommerceCategoryFacetValueRequest} from './interfaces/request';
+import {CategoryFacetValueRequest} from './interfaces/request';
 import {
   AnyFacetResponse,
-  CommerceCategoryFacetValue,
+  CategoryFacetValue,
   FacetType,
 } from './interfaces/response';
 
@@ -190,7 +190,7 @@ describe('commerceFacetSetReducer', () => {
       });
 
       it('updates the values of category facet requests to the corresponding values in the response', () => {
-        const facetValue = buildMockCommerceCategoryFacetValue({
+        const facetValue = buildMockCategoryFacetValue({
           isAutoSelected: false,
           isLeafValue: false,
           isSuggested: false,
@@ -213,7 +213,7 @@ describe('commerceFacetSetReducer', () => {
             },
           ],
         });
-        const facet = buildMockCommerceCategoryFacetResponse({
+        const facet = buildMockCategoryFacetResponse({
           facetId,
           values: [facetValue],
         });
@@ -251,7 +251,7 @@ describe('commerceFacetSetReducer', () => {
         },
         {
           type: 'hierarchical' as FacetType,
-          facetResponseBuilder: buildMockCommerceCategoryFacetResponse,
+          facetResponseBuilder: buildMockCategoryFacetResponse,
         },
       ])(
         'for $type facets',
@@ -1164,7 +1164,7 @@ describe('commerceFacetSetReducer', () => {
     describe('#toggleSelectCategoryFacetValue', () => {
       describe('when called on an unregistered #facetId', () => {
         it('does not throw', () => {
-          const selection = buildMockCommerceCategoryFacetValue({value: 'A'});
+          const selection = buildMockCategoryFacetValue({value: 'A'});
           const action = toggleSelectCategoryFacetValue({
             facetId,
             selection,
@@ -1186,7 +1186,7 @@ describe('commerceFacetSetReducer', () => {
         });
 
         it('builds request from selection and adds it to #values', () => {
-          const selection = buildMockCommerceCategoryFacetValue({
+          const selection = buildMockCategoryFacetValue({
             value: 'A',
             path: ['A'],
           });
@@ -1209,7 +1209,7 @@ describe('commerceFacetSetReducer', () => {
         });
 
         it('sets #numberOfValues of request to 1', () => {
-          const selection = buildMockCommerceCategoryFacetValue({
+          const selection = buildMockCategoryFacetValue({
             value: 'A',
             path: ['A'],
           });
@@ -1226,7 +1226,7 @@ describe('commerceFacetSetReducer', () => {
 
         describe('when #path contains multiple segments', () => {
           it('selects last segment', () => {
-            const selection = buildMockCommerceCategoryFacetValue({
+            const selection = buildMockCategoryFacetValue({
               value: 'B',
               path: ['A', 'B'],
             });
@@ -1239,11 +1239,11 @@ describe('commerceFacetSetReducer', () => {
             const currentValues = finalState[facetId].request.values;
 
             const parent = convertCategoryFacetValueToRequest(
-              buildMockCommerceCategoryFacetValue({
+              buildMockCategoryFacetValue({
                 value: 'A',
                 state: 'idle',
                 children: [
-                  buildMockCommerceCategoryFacetValue({
+                  buildMockCategoryFacetValue({
                     value: 'B',
                     state: 'selected',
                   }),
@@ -1259,7 +1259,7 @@ describe('commerceFacetSetReducer', () => {
       describe('when #values contains one parent', () => {
         beforeEach(() => {
           const parent = convertCategoryFacetValueToRequest(
-            buildMockCommerceCategoryFacetValue({
+            buildMockCategoryFacetValue({
               value: 'A',
               state: 'selected',
             })
@@ -1273,10 +1273,10 @@ describe('commerceFacetSetReducer', () => {
         });
 
         describe('when #path contains the parent', () => {
-          let selection: CommerceCategoryFacetValue;
+          let selection: CategoryFacetValue;
           let finalState: CommerceFacetSetState;
           beforeEach(() => {
-            selection = buildMockCommerceCategoryFacetValue({
+            selection = buildMockCategoryFacetValue({
               value: 'B',
               path: ['A', 'B'],
             });
@@ -1289,15 +1289,14 @@ describe('commerceFacetSetReducer', () => {
           });
           it("adds selection to parent's #children", () => {
             const expected = convertCategoryFacetValueToRequest(
-              buildMockCommerceCategoryFacetValue({
+              buildMockCategoryFacetValue({
                 value: selection.value,
                 state: 'selected',
               })
             );
 
             const children = (
-              finalState[facetId].request
-                .values[0] as CommerceCategoryFacetValueRequest
+              finalState[facetId].request.values[0] as CategoryFacetValueRequest
             ).children;
             expect(children).toEqual([expected]);
           });
@@ -1309,7 +1308,7 @@ describe('commerceFacetSetReducer', () => {
 
         describe('when #path does not contain the parent', () => {
           it("overwrites parent, adding selection to new parent's #children", () => {
-            const selection = buildMockCommerceCategoryFacetValue({
+            const selection = buildMockCategoryFacetValue({
               value: 'B',
               path: ['C', 'B'],
             });
@@ -1323,11 +1322,11 @@ describe('commerceFacetSetReducer', () => {
             const currentValues = finalState[facetId].request.values;
 
             const parent = convertCategoryFacetValueToRequest(
-              buildMockCommerceCategoryFacetValue({
+              buildMockCategoryFacetValue({
                 value: 'C',
                 state: 'idle',
                 children: [
-                  buildMockCommerceCategoryFacetValue({
+                  buildMockCategoryFacetValue({
                     value: 'B',
                     state: 'selected',
                   }),
@@ -1342,9 +1341,9 @@ describe('commerceFacetSetReducer', () => {
 
       describe('when #values contains two parents', () => {
         beforeEach(() => {
-          const parentB = buildMockCommerceCategoryFacetValue({value: 'B'});
+          const parentB = buildMockCategoryFacetValue({value: 'B'});
           const parentA = convertCategoryFacetValueToRequest(
-            buildMockCommerceCategoryFacetValue({
+            buildMockCategoryFacetValue({
               value: 'A',
               children: [parentB],
             })
@@ -1359,7 +1358,7 @@ describe('commerceFacetSetReducer', () => {
 
         describe('when #path contains both parents', () => {
           it("adds selection to second parent's #children", () => {
-            const selection = buildMockCommerceCategoryFacetValue({
+            const selection = buildMockCategoryFacetValue({
               value: 'C',
               path: ['A', 'B', 'C'],
             });
@@ -1371,7 +1370,7 @@ describe('commerceFacetSetReducer', () => {
             const finalState = commerceFacetSetReducer(state, action);
 
             const expected = convertCategoryFacetValueToRequest(
-              buildMockCommerceCategoryFacetValue({
+              buildMockCategoryFacetValue({
                 value: selection.value,
                 state: 'selected',
               })
@@ -1380,7 +1379,7 @@ describe('commerceFacetSetReducer', () => {
             expect(
               (
                 finalState[facetId].request
-                  .values[0] as CommerceCategoryFacetValueRequest
+                  .values[0] as CategoryFacetValueRequest
               ).children[0].children
             ).toEqual([expected]);
           });
@@ -1389,7 +1388,7 @@ describe('commerceFacetSetReducer', () => {
         describe('when selecting a parent value', () => {
           let finalState: CommerceFacetSetState;
           beforeEach(() => {
-            const selection = buildMockCommerceCategoryFacetValue({
+            const selection = buildMockCategoryFacetValue({
               value: 'A',
               path: ['A'],
             });
@@ -1404,9 +1403,7 @@ describe('commerceFacetSetReducer', () => {
           it("clears that parent's #children", () => {
             const parent = finalState[facetId]?.request.values[0];
 
-            expect(
-              (parent as CommerceCategoryFacetValueRequest).children
-            ).toEqual([]);
+            expect((parent as CategoryFacetValueRequest).children).toEqual([]);
           });
 
           it('sets that parent #state to "selected"', () => {
@@ -1419,14 +1416,14 @@ describe('commerceFacetSetReducer', () => {
 
       describe('when selection is invalid', () => {
         it('dispatches an action containing an error', () => {
-          const selection = buildMockCommerceCategoryFacetValue({
+          const selection = buildMockCategoryFacetValue({
             value: 'A',
             children: [
-              buildMockCommerceCategoryFacetValue({value: 'B'}),
-              buildMockCommerceCategoryFacetValue({
+              buildMockCategoryFacetValue({value: 'B'}),
+              buildMockCategoryFacetValue({
                 value: 'C',
                 children: [
-                  buildMockCommerceCategoryFacetValue({
+                  buildMockCategoryFacetValue({
                     value: 'D',
                     numberOfResults: -1,
                   }),
@@ -1474,7 +1471,7 @@ describe('commerceFacetSetReducer', () => {
           type: 'hierarchical',
           values: [
             convertCategoryFacetValueToRequest(
-              buildMockCommerceCategoryFacetValue({
+              buildMockCategoryFacetValue({
                 value: 'test',
                 state: 'selected',
               })
@@ -1488,10 +1485,8 @@ describe('commerceFacetSetReducer', () => {
           updateCategoryFacetNumberOfValues({facetId, numberOfValues: 10})
         );
         expect(
-          (
-            finalState[facetId]?.request
-              .values[0] as CommerceCategoryFacetValueRequest
-          ).retrieveCount
+          (finalState[facetId]?.request.values[0] as CategoryFacetValueRequest)
+            .retrieveCount
         ).toBe(10);
       });
 
@@ -1677,11 +1672,9 @@ describe('commerceFacetSetReducer', () => {
           request: buildMockCommerceFacetRequest({
             type: 'hierarchical',
             values: [
-              buildMockCommerceCategoryFacetValue({
+              buildMockCategoryFacetValue({
                 state: 'idle',
-                children: [
-                  buildMockCommerceCategoryFacetValue({state: 'selected'}),
-                ],
+                children: [buildMockCategoryFacetValue({state: 'selected'})],
               }),
             ],
             numberOfValues: 1,

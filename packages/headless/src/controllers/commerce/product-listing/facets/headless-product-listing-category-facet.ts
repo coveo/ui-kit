@@ -1,8 +1,8 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {loadReducerError} from '../../../../utils/errors';
 import {
-  CommerceCategoryFacet,
-  buildCommerceCategoryFacet,
+  CategoryFacet,
+  buildCategoryFacet,
 } from '../../core/facets/category/headless-commerce-category-facet';
 import {CommerceFacetOptions} from '../../core/facets/headless-core-commerce-facet';
 import {loadProductListingReducer} from '../utils/load-product-listing-reducers';
@@ -14,12 +14,12 @@ export type ProductListingCategoryFacetBuilder =
 export function buildProductListingCategoryFacet(
   engine: CommerceEngine,
   options: CommerceFacetOptions
-): CommerceCategoryFacet {
+): CategoryFacet {
   if (!loadProductListingReducer(engine)) {
     throw loadReducerError;
   }
 
-  return buildCommerceCategoryFacet(engine, {
+  return buildCategoryFacet(engine, {
     ...options,
     ...commonOptions,
   });

@@ -1,48 +1,44 @@
 import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
-import {CommerceCategoryFacetValueRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
+import {CategoryFacetValueRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
 import {
   toggleSelectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
 } from '../../../../../features/facets/category-facet-set/category-facet-set-actions';
 import {findActiveValueAncestry} from '../../../../../features/facets/category-facet-set/category-facet-utils';
 import {
-  CommerceCategoryFacetValue,
+  CategoryFacetValue,
   CoreCommerceFacet,
   CoreCommerceFacetOptions,
   CoreCommerceFacetState,
   buildCoreCommerceFacet,
 } from '../headless-core-commerce-facet';
 
-export type CommerceCategoryFacetOptions = Omit<
+export type CategoryFacetOptions = Omit<
   CoreCommerceFacetOptions,
   'toggleExcludeActionCreator' | 'toggleSelectActionCreator'
 >;
 
-export type CommerceCategoryFacetState =
-  CoreCommerceFacetState<CommerceCategoryFacetValue> & {
-    activeValue?: CommerceCategoryFacetValue;
-    canShowLessValues: boolean;
-    canShowMoreValues: boolean;
-    hasActiveValues: boolean;
-    selectedValueAncestry?: CommerceCategoryFacetValue[];
-  };
+export type CategoryFacetState = CoreCommerceFacetState<CategoryFacetValue> & {
+  activeValue?: CategoryFacetValue;
+  canShowLessValues: boolean;
+  canShowMoreValues: boolean;
+  hasActiveValues: boolean;
+  selectedValueAncestry?: CategoryFacetValue[];
+};
 
 /**
- * The `CommerceCategoryFacet` controller offers a high-level programming interface for implementing a category commerce
+ * The `CategoryFacet` controller offers a high-level programming interface for implementing a commerce category
  * facet UI component.
  */
-export type CommerceCategoryFacet = Omit<
-  CoreCommerceFacet<
-    CommerceCategoryFacetValueRequest,
-    CommerceCategoryFacetValue
-  >,
+export type CategoryFacet = Omit<
+  CoreCommerceFacet<CategoryFacetValueRequest, CategoryFacetValue>,
   | 'isValueExcluded'
   | 'toggleExclude'
   | 'toggleSingleExclude'
   | 'toggleSingleSelect'
   | 'state'
 > & {
-  state: CommerceCategoryFacetState;
+  state: CategoryFacetState;
 };
 
 /**
@@ -50,20 +46,20 @@ export type CommerceCategoryFacet = Omit<
  *
  * **Important:** This initializer is meant for internal use by headless only.
  * As an implementer, you must not import or use this initializer directly in your code.
- * You will instead interact with `CommerceCategoryFacet` controller instances through the state of a `FacetGenerator`
+ * You will instead interact with `CategoryFacet` controller instances through the state of a `FacetGenerator`
  * controller.
  *
  * @param engine - The headless commerce engine.
- * @param options - The `CommerceCategoryFacet` options used internally.
- * @returns A `CommerceCategoryFacet` controller instance.
+ * @param options - The `CategoryFacet` options used internally.
+ * @returns A `CategoryFacet` controller instance.
  * */
-export function buildCommerceCategoryFacet(
+export function buildCategoryFacet(
   engine: CommerceEngine,
-  options: CommerceCategoryFacetOptions
-): CommerceCategoryFacet {
+  options: CategoryFacetOptions
+): CategoryFacet {
   const coreController = buildCoreCommerceFacet<
-    CommerceCategoryFacetValueRequest,
-    CommerceCategoryFacetValue
+    CategoryFacetValueRequest,
+    CategoryFacetValue
   >(engine, {
     options: {
       ...options,

@@ -1,4 +1,4 @@
-import {AnyCommerceFacetRequest} from '../../features/commerce/facets/facet-set/interfaces/request';
+import {AnyFacetRequest} from '../../features/commerce/facets/facet-set/interfaces/request';
 import {SortOption} from './common/sort';
 
 export interface TrackingIdParam {
@@ -62,7 +62,7 @@ export interface CartItemParam {
 }
 
 export interface FacetsParam {
-  facets?: AnyCommerceFacetRequest[];
+  facets?: AnyFacetRequest[];
 }
 
 export interface PageParam {

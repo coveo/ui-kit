@@ -1,4 +1,4 @@
-import {CommerceCategoryFacetValue} from '../../commerce/facets/facet-set/interfaces/response';
+import {CategoryFacetValue as CommerceCategoryFacetValue} from '../../commerce/facets/facet-set/interfaces/response';
 import {CategoryFacetValueCommon} from './interfaces/commons';
 import {CategoryFacetValueRequest} from './interfaces/request';
 import {CategoryFacetValue} from './interfaces/response';

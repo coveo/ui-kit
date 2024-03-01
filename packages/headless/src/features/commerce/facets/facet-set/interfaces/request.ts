@@ -9,13 +9,13 @@ import {
 } from '../../../../facets/facet-set/interfaces/request';
 import {FacetType} from './response';
 
-export type AnyCommerceFacetValueRequest =
+export type AnyFacetValueRequest =
   | FacetValueRequest
-  | CommerceCategoryFacetValueRequest
+  | CategoryFacetValueRequest
   | NumericRangeRequest
   | DateRangeRequest;
 
-export type AnyCommerceFacetRequest = Pick<
+export type AnyFacetRequest = Pick<
   FacetRequest,
   | 'facetId'
   | 'field'
@@ -25,19 +25,18 @@ export type AnyCommerceFacetRequest = Pick<
 > & {
   displayName: string;
   type: FacetType;
-  values: AnyCommerceFacetValueRequest[];
+  values: AnyFacetValueRequest[];
   initialNumberOfValues: number;
   numberOfValues?: number;
 };
 
-export interface CommerceCategoryFacetValueRequest
-  extends BaseFacetValueRequest {
-  children: CommerceCategoryFacetValueRequest[];
+export interface CategoryFacetValueRequest extends BaseFacetValueRequest {
+  children: CategoryFacetValueRequest[];
   value: string;
   retrieveCount?: number;
 }
-export type CommerceFacetRequest<T extends AnyCommerceFacetValueRequest> = Omit<
-  AnyCommerceFacetRequest,
+export type CommerceFacetRequest<T extends AnyFacetValueRequest> = Omit<
+  AnyFacetRequest,
   'values'
 > & {
   values: T[];

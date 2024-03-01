@@ -4,6 +4,7 @@ import {
   type Draft as WritableDraft,
 } from '@reduxjs/toolkit';
 import {
+  CategoryFacetValueRequest,
   DateRangeRequest,
   FacetValueRequest,
   NumericRangeRequest,
@@ -13,7 +14,6 @@ import {
   toggleSelectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
 } from '../../../facets/category-facet-set/category-facet-set-actions';
-import {CategoryFacetValueRequest} from '../../../facets/category-facet-set/interfaces/request';
 import {
   excludeFacetSearchResult,
   selectFacetSearchResult,
@@ -50,12 +50,11 @@ import {
   getCommerceFacetSetInitialState,
 } from './facet-set-state';
 import {
-  AnyCommerceFacetRequest,
+  AnyFacetRequest,
   CommerceFacetRequest,
-  CommerceCategoryFacetValueRequest,
-  AnyCommerceFacetValueRequest,
+  AnyFacetValueRequest,
 } from './interfaces/request';
-import {CommerceCategoryFacetValue} from './interfaces/response';
+import {CategoryFacetValue} from './interfaces/response';
 import {AnyFacetResponse} from './interfaces/response';
 
 export const commerceFacetSetReducer = createReducer(
@@ -226,7 +225,7 @@ export const commerceFacetSetReducer = createReducer(
           return;
         }
         if (!request.values.length) {
-          return handleFacetUpdateNumberOfValues<AnyCommerceFacetRequest>(
+          return handleFacetUpdateNumberOfValues<AnyFacetRequest>(
             request,
             numberOfValues
           );
@@ -334,26 +333,26 @@ export const commerceFacetSetReducer = createReducer(
 );
 
 function ensureRegularFacetRequest(
-  facetRequest: AnyCommerceFacetRequest
+  facetRequest: AnyFacetRequest
 ): facetRequest is CommerceFacetRequest<FacetValueRequest> {
   return facetRequest.type === 'regular';
 }
 
 function ensureNumericFacetRequest(
-  facetRequest: AnyCommerceFacetRequest
+  facetRequest: AnyFacetRequest
 ): facetRequest is CommerceFacetRequest<NumericRangeRequest> {
   return facetRequest.type === 'numericalRange';
 }
 
 function ensureDateFacetRequest(
-  facetRequest: AnyCommerceFacetRequest
+  facetRequest: AnyFacetRequest
 ): facetRequest is CommerceFacetRequest<DateRangeRequest> {
   return facetRequest.type === 'dateRange';
 }
 
 function ensureCategoryFacetRequest(
-  facetRequest: AnyCommerceFacetRequest
-): facetRequest is CommerceFacetRequest<CommerceCategoryFacetValueRequest> {
+  facetRequest: AnyFacetRequest
+): facetRequest is CommerceFacetRequest<CategoryFacetValueRequest> {
   return facetRequest.type === 'hierarchical';
 }
 
@@ -372,7 +371,7 @@ function handleQueryFulfilled(
   }
 }
 
-function handleDeselectAllFacetValues(request: AnyCommerceFacetRequest) {
+function handleDeselectAllFacetValues(request: AnyFacetRequest) {
   if (request.type === 'hierarchical') {
     request.numberOfValues = request.initialNumberOfValues;
     request.values = [];
@@ -383,7 +382,7 @@ function handleDeselectAllFacetValues(request: AnyCommerceFacetRequest) {
 }
 
 function ensurePathAndReturnChildren(
-  request: CommerceFacetRequest<CommerceCategoryFacetValueRequest>,
+  request: CommerceFacetRequest<CategoryFacetValueRequest>,
   path: string[],
   retrieveCount: number
 ) {
@@ -409,7 +408,7 @@ function ensurePathAndReturnChildren(
 function buildCategoryFacetValueRequest(
   value: string,
   retrieveCount: number
-): CommerceCategoryFacetValueRequest {
+): CategoryFacetValueRequest {
   return {
     children: [],
     state: 'idle',
@@ -451,7 +450,7 @@ function updateStateFromFacetResponse(
 
   let facetRequest = state[facetId]?.request;
   if (!facetRequest) {
-    state[facetId] = {request: {} as AnyCommerceFacetRequest};
+    state[facetId] = {request: {} as AnyFacetRequest};
     facetRequest = state[facetId].request;
     facetRequest.initialNumberOfValues = facetResponse.values.length;
   } else {
@@ -490,8 +489,8 @@ function getFacetRequestValuesFromFacetResponse(
 }
 
 export function convertCategoryFacetValueToRequest(
-  responseValue: CommerceCategoryFacetValue
-): CommerceCategoryFacetValueRequest {
+  responseValue: CategoryFacetValue
+): CategoryFacetValueRequest {
   const children = responseValue.children.every(
     (c) => c.state === 'idle' && c.children.length === 0
   )
@@ -507,8 +506,8 @@ export function convertCategoryFacetValueToRequest(
 }
 
 function insertNewValue(
-  facetRequest: AnyCommerceFacetRequest,
-  facetValue: AnyCommerceFacetValueRequest
+  facetRequest: AnyFacetRequest,
+  facetValue: AnyFacetValueRequest
 ) {
   const {values} = facetRequest;
   const firstIdleIndex = values.findIndex((v) => v.state === 'idle');
