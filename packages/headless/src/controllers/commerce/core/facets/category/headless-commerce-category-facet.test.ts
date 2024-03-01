@@ -3,7 +3,10 @@ import {
   CommerceFacetRequest,
 } from '../../../../../features/commerce/facets/facet-set/interfaces/request';
 import {CommerceCategoryFacetValue} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
-import {toggleSelectCategoryFacetValue} from '../../../../../features/facets/category-facet-set/category-facet-set-actions';
+import {
+  toggleSelectCategoryFacetValue,
+  updateCategoryFacetNumberOfValues,
+} from '../../../../../features/facets/category-facet-set/category-facet-set-actions';
 import {CommerceAppState} from '../../../../../state/commerce-app-state';
 import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request';
 import {buildMockCommerceCategoryFacetResponse} from '../../../../../test/mock-commerce-facet-response';
@@ -11,9 +14,9 @@ import {buildMockCommerceFacetSlice} from '../../../../../test/mock-commerce-fac
 import {buildMockCommerceCategoryFacetValue} from '../../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
 import {
-  MockCommerceEngine,
+  MockedCommerceEngine,
   buildMockCommerceEngine,
-} from '../../../../../test/mock-engine';
+} from '../../../../../test/mock-engine-v2';
 import {commonOptions} from '../../../product-listing/facets/headless-product-listing-facet-options';
 import {
   CommerceCategoryFacet,
@@ -21,25 +24,30 @@ import {
   buildCommerceCategoryFacet,
 } from './headless-commerce-category-facet';
 
+jest.mock(
+  '../../../../../features/facets/category-facet-set/category-facet-set-actions'
+);
+
 describe('CommerceCategoryFacet', () => {
   const facetId: string = 'category_facet_id';
-  let options: CommerceCategoryFacetOptions;
+  let engine: MockedCommerceEngine;
   let state: CommerceAppState;
-  let engine: MockCommerceEngine;
+  let options: CommerceCategoryFacetOptions;
   let facet: CommerceCategoryFacet;
 
-  function initFacet() {
-    engine = buildMockCommerceEngine({state});
+  function initEngine(preloadedState = buildMockCommerceState()) {
+    engine = buildMockCommerceEngine(preloadedState);
+  }
+
+  function initCategoryFacet() {
     facet = buildCommerceCategoryFacet(engine, options);
   }
 
   function setFacetRequestAndResponse(
     config: Partial<
-      Omit<
-        CommerceFacetRequest<CommerceCategoryFacetValueRequest>,
-        'facetId' | 'type'
-      >
-    > = {}
+      CommerceFacetRequest<CommerceCategoryFacetValueRequest>
+    > = {},
+    moreValuesAvailable = false
   ) {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({
@@ -50,6 +58,7 @@ describe('CommerceCategoryFacet', () => {
     });
     state.productListing.facets = [
       buildMockCommerceCategoryFacetResponse({
+        moreValuesAvailable,
         facetId,
         type: 'hierarchical',
         values: (config.values as CommerceCategoryFacetValue[]) ?? [],
@@ -57,7 +66,11 @@ describe('CommerceCategoryFacet', () => {
     ];
   }
 
+  // TODO: function setFacetSearch() { state.facetSearchSet[facetId] = buildMockFacetSearch(); }
+
   beforeEach(() => {
+    jest.resetAllMocks();
+
     options = {
       facetId,
       ...commonOptions,
@@ -65,255 +78,225 @@ describe('CommerceCategoryFacet', () => {
 
     state = buildMockCommerceState();
     setFacetRequestAndResponse();
+    // TODO: setFacetSearch();
 
-    initFacet();
+    initEngine(state);
+    initCategoryFacet();
   });
 
-  it('initializes', () => {
-    expect(facet).toBeTruthy();
-  });
+  describe('initialization', () => {
+    it('initializes', () => {
+      expect(facet).toBeTruthy();
+    });
 
-  it('exposes #subscribe method', () => {
-    expect(facet.subscribe).toBeTruthy();
-  });
-
-  describe('#toggleSelect', () => {
-    it('dispatches a #toggleSelectFacetValue', () => {
-      const facetValue = buildMockCommerceCategoryFacetValue();
-      facet.toggleSelect(facetValue);
-
-      expect(engine.actions).toContainEqual(
-        toggleSelectCategoryFacetValue({
-          facetId,
-          selection: facetValue,
-          retrieveCount: 1,
-        })
-      );
+    it('exposes #subscribe method', () => {
+      expect(facet.subscribe).toBeTruthy();
     });
   });
 
-  describe('#canShowLessValues', () => {
-    describe('when there is no selected value', () => {
-      it('calls #canShowLessValues from core controller', () => {});
+  it('#toggleSelect dispatches #toggleSelectCategoryFacetValue with correct payload', () => {
+    const facetValue = buildMockCommerceCategoryFacetValue();
+    facet.toggleSelect(facetValue);
 
-      it('returns "true" if #numberOfValues is greater than #initialNumberOfValues', () => {
-        const value = buildMockCommerceCategoryFacetValue();
-        setFacetRequestAndResponse({
-          initialNumberOfValues: 1,
-          numberOfValues: 2,
-          values: [value],
-        });
+    expect(toggleSelectCategoryFacetValue).toHaveBeenCalledWith({
+      facetId,
+      selection: facetValue,
+    });
+  });
 
-        initFacet();
+  it('#showLessValues dispatches #updateCategoryFacetNumberOfValues with correct payload', () => {
+    facet.showLessValues();
 
-        expect(facet.state.canShowLessValues).toBe(true);
+    expect(updateCategoryFacetNumberOfValues).toHaveBeenCalledWith({
+      facetId,
+      numberOfValues: 1,
+    });
+  });
+
+  it('#showMoreValues dispatches #updateCategoryFacetNumberOfValues with correct payload', () => {
+    facet.showMoreValues();
+
+    expect(updateCategoryFacetNumberOfValues).toHaveBeenCalledWith({
+      facetId,
+      numberOfValues: 5,
+    });
+  });
+
+  describe('#state', () => {
+    describe('#activeValue', () => {
+      it('when no value is selected, returns undefined', () => {
+        expect(facet.state.activeValue).toBeUndefined();
       });
-      it('returns "false" if #values is empty', () => {
+      it('when a value is selected, returns the selected value', () => {
+        const activeValue = buildMockCommerceCategoryFacetValue({
+          state: 'selected',
+        });
         setFacetRequestAndResponse({
-          initialNumberOfValues: 1,
-          numberOfValues: 2,
+          values: [activeValue, buildMockCommerceCategoryFacetValue()],
         });
 
-        initFacet();
-
-        expect(facet.state.canShowLessValues).toBe(false);
-      });
-      it('returns "false" if #numberOfValues and #initialNumberOfValues are equal', () => {
-        const value = buildMockCommerceCategoryFacetValue();
-        setFacetRequestAndResponse({
-          initialNumberOfValues: 1,
-          numberOfValues: 1,
-          values: [value],
-        });
-
-        initFacet();
-
-        expect(facet.state.canShowLessValues).toBe(false);
-      });
-
-      it('returns "false" if #numberOfValues is lesser than #initialNumberOfValues', () => {
-        const value = buildMockCommerceCategoryFacetValue();
-        setFacetRequestAndResponse({
-          initialNumberOfValues: 1,
-          numberOfValues: 0,
-          values: [value],
-        });
-
-        initFacet();
-
-        expect(facet.state.canShowLessValues).toBe(false);
+        expect(facet.state.activeValue).toBe(activeValue);
       });
     });
 
-    describe('when there is a selected value', () => {
-      it('returns "true" if selected value has more children than initial number of values', () => {
-        const value = buildMockCommerceCategoryFacetValue({
+    describe('#canShowLessValues', () => {
+      describe('when no value is selected', () => {
+        it('when there are no values, returns false', () => {
+          expect(facet.state.canShowLessValues).toBe(false);
+        });
+        it('when there is one value, returns false', () => {
+          setFacetRequestAndResponse({
+            values: [buildMockCommerceCategoryFacetValue()],
+          });
+
+          expect(facet.state.canShowLessValues).toBe(false);
+        });
+        it('when there are multiple values, returns true', () => {
+          setFacetRequestAndResponse({
+            values: [
+              buildMockCommerceCategoryFacetValue(),
+              buildMockCommerceCategoryFacetValue(),
+            ],
+          });
+
+          expect(facet.state.canShowLessValues).toBe(true);
+        });
+      });
+
+      describe('when a value is selected', () => {
+        it('when selected value has no children, returns false', () => {
+          setFacetRequestAndResponse({
+            values: [
+              buildMockCommerceCategoryFacetValue({
+                state: 'selected',
+              }),
+            ],
+          });
+
+          expect(facet.state.canShowLessValues).toBe(false);
+        });
+        it('when selected value has one child, returns false', () => {
+          setFacetRequestAndResponse({
+            values: [
+              buildMockCommerceCategoryFacetValue({
+                state: 'selected',
+                children: [buildMockCommerceCategoryFacetValue()],
+              }),
+            ],
+          });
+
+          expect(facet.state.canShowLessValues).toBe(false);
+        });
+        it('when selected value has multiple children, return true', () => {
+          setFacetRequestAndResponse({
+            values: [
+              buildMockCommerceCategoryFacetValue({
+                state: 'selected',
+                children: [
+                  buildMockCommerceCategoryFacetValue(),
+                  buildMockCommerceCategoryFacetValue(),
+                ],
+              }),
+            ],
+          });
+
+          expect(facet.state.canShowLessValues).toBe(true);
+        });
+      });
+    });
+
+    describe('#canShowMoreValues', () => {
+      describe('when no value is selected', () => {
+        it('when there are no more values available, returns false', () => {
+          expect(facet.state.canShowMoreValues).toBe(false);
+        });
+
+        it('when there are more values available, returns true', () => {
+          setFacetRequestAndResponse({}, true);
+
+          expect(facet.state.canShowMoreValues).toBe(true);
+        });
+      });
+
+      describe('when a value is selected', () => {
+        it('when selected values has no more values available, returns false', () => {
+          setFacetRequestAndResponse({
+            values: [buildMockCommerceCategoryFacetValue({state: 'selected'})],
+          });
+
+          expect(facet.state.canShowMoreValues).toBe(false);
+        });
+        it('when selected value has more values available, returns true', () => {
+          setFacetRequestAndResponse({
+            values: [
+              buildMockCommerceCategoryFacetValue({
+                state: 'selected',
+                moreValuesAvailable: true,
+              }),
+            ],
+          });
+
+          expect(facet.state.canShowMoreValues).toBe(true);
+        });
+      });
+    });
+
+    describe('#hasActiveValues', () => {
+      it('when no value is selected, returns false', () => {
+        expect(facet.state.hasActiveValues).toBe(false);
+      });
+
+      it('when a value is selected, returns true', () => {
+        setFacetRequestAndResponse({
+          values: [buildMockCommerceCategoryFacetValue({state: 'selected'})],
+        });
+
+        expect(facet.state.hasActiveValues).toBe(true);
+      });
+    });
+
+    describe('#selectedValueAncestry', () => {
+      it('when no value is selected, returns empty array', () => {
+        expect(facet.state.selectedValueAncestry).toEqual([]);
+      });
+
+      it('when a value is selected, returns the selected value ancestry', () => {
+        const activeValue = buildMockCommerceCategoryFacetValue({
+          value: 'c',
+          path: ['a', 'b', 'c'],
           state: 'selected',
           children: [
-            buildMockCommerceCategoryFacetValue(),
-            buildMockCommerceCategoryFacetValue(),
+            buildMockCommerceCategoryFacetValue({
+              value: 'd',
+              path: ['a', 'b', 'c', 'd'],
+            }),
+            buildMockCommerceCategoryFacetValue({
+              value: 'e',
+              path: ['a', 'b', 'c', 'e'],
+            }),
           ],
         });
-
-        setFacetRequestAndResponse({
-          values: [value],
-          initialNumberOfValues: 1,
+        const parentValue = buildMockCommerceCategoryFacetValue({
+          value: 'b',
+          path: ['a', 'b'],
+          children: [activeValue],
         });
 
-        initFacet();
-
-        expect(facet.state.canShowLessValues).toBe(true);
-      });
-      it('returns "false" if selected value has less children than initial number of values', () => {
-        const value = buildMockCommerceCategoryFacetValue({
-          state: 'selected',
-          children: [],
+        const rootValue = buildMockCommerceCategoryFacetValue({
+          value: 'a',
+          path: ['a'],
+          children: [parentValue],
         });
 
         setFacetRequestAndResponse({
-          values: [value],
+          values: [rootValue],
         });
 
-        initFacet();
-
-        expect(facet.state.canShowLessValues).toBe(false);
-      });
-      it('returns "false" if selected value has the same number of children as initial number of values', () => {
-        const value = buildMockCommerceCategoryFacetValue({
-          state: 'selected',
-          children: [buildMockCommerceCategoryFacetValue()],
-        });
-
-        setFacetRequestAndResponse({
-          values: [value],
-          initialNumberOfValues: 1,
-        });
-
-        initFacet();
-
-        expect(facet.state.canShowLessValues).toBe(false);
-      });
-    });
-  });
-
-  describe('#canShowMoreValues', () => {
-    describe('when there is not selected value', () => {
-      it('returns "true" if response has #moreValuesAvailable "true"', () => {
-        state.productListing.facets = [
-          buildMockCommerceCategoryFacetResponse({
-            facetId,
-            type: 'hierarchical',
-            moreValuesAvailable: true,
-          }),
-        ];
-
-        initFacet();
-
-        expect(facet.state.canShowMoreValues).toBe(true);
-      });
-
-      it('returns "false" if response has #moreValuesAvailable "false"', () => {
-        state.productListing.facets = [
-          buildMockCommerceCategoryFacetResponse({
-            facetId,
-            type: 'hierarchical',
-            moreValuesAvailable: false,
-          }),
-        ];
-
-        initFacet();
-
-        expect(facet.state.canShowMoreValues).toBe(false);
-      });
-    });
-
-    describe('when there is a selected value', () => {
-      it('returns "true" if selected value has #moreValuesAvailable "true"', () => {
-        const value = buildMockCommerceCategoryFacetValue({
-          state: 'selected',
-          moreValuesAvailable: true,
-        });
-
-        setFacetRequestAndResponse({
-          values: [value],
-        });
-
-        initFacet();
-
-        expect(facet.state.canShowMoreValues).toBe(true);
-      });
-      it('returns "false" if selected value has #moreValuesAvailable "false"', () => {
-        const value = buildMockCommerceCategoryFacetValue({
-          state: 'selected',
-          moreValuesAvailable: false,
-        });
-
-        setFacetRequestAndResponse({
-          values: [value],
-        });
-
-        initFacet();
-
-        expect(facet.state.canShowMoreValues).toBe(false);
-      });
-    });
-  });
-
-  describe('#selectedValueWithAncestry', () => {
-    it('when no value is present, returns "undefined"', () => {
-      expect(facet.state.selectedValueAncestry).toBeUndefined();
-    });
-
-    it('when values are present but no value is selected, returns "undefined"', () => {
-      setFacetRequestAndResponse({
-        values: [
-          buildMockCommerceCategoryFacetValue(),
-          buildMockCommerceCategoryFacetValue(),
-          buildMockCommerceCategoryFacetValue(),
-        ],
-      });
-
-      initFacet();
-
-      expect(facet.state.selectedValueAncestry).toBeUndefined();
-    });
-
-    it('when a value is selected, returns the selected value and its ancestry', () => {
-      const selected = buildMockCommerceCategoryFacetValue({
-        value: 'child',
-        state: 'selected',
-        path: ['root', 'parent', 'child'],
-      });
-
-      const sibling = buildMockCommerceCategoryFacetValue({
-        value: 'sibling',
-        state: 'idle',
-        path: ['root', 'parent', 'child'],
-      });
-
-      const parent = buildMockCommerceCategoryFacetValue({
-        value: 'parent',
-        state: 'idle',
-        children: [selected, sibling],
-        path: ['root', 'parent'],
-      });
-
-      const root = buildMockCommerceCategoryFacetValue({
-        value: 'root',
-        state: 'idle',
-        children: [parent],
-        path: ['root'],
-      });
-
-      setFacetRequestAndResponse({
-        values: [root],
-      });
-
-      initFacet();
-
-      expect(facet.state.selectedValueAncestry).toEqual({
-        selected,
-        ancestry: [root, parent, selected],
+        expect(facet.state.selectedValueAncestry).toEqual([
+          rootValue,
+          parentValue,
+          activeValue,
+        ]);
       });
     });
   });
