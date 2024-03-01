@@ -106,7 +106,7 @@ export function buildCommerceCategoryFacet(
         : undefined;
       const canShowLessValues = activeValue
         ? activeValue.children.length > 1
-        : coreController.state.values.length > 1;
+        : false;
       const canShowMoreValues =
         activeValue?.moreValuesAvailable ??
         coreController.state.canShowMoreValues;

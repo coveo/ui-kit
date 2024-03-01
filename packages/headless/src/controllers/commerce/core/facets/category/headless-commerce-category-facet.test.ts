@@ -151,7 +151,7 @@ describe('CommerceCategoryFacet', () => {
 
           expect(facet.state.canShowLessValues).toBe(false);
         });
-        it('when there are multiple values, returns true', () => {
+        it('when there are multiple values, returns false', () => {
           setFacetRequestAndResponse({
             values: [
               buildMockCommerceCategoryFacetValue(),
@@ -159,7 +159,7 @@ describe('CommerceCategoryFacet', () => {
             ],
           });
 
-          expect(facet.state.canShowLessValues).toBe(true);
+          expect(facet.state.canShowLessValues).toBe(false);
         });
       });
 
