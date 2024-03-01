@@ -15,13 +15,13 @@
     "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@types/node": "20.11.19",
+    "@types/node": "20.11.21",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
-    "eslint": "8.56.0",
+    "eslint": "8.57.0",
     "eslint-config-react-app": "7.0.1",
     "typescript": "5.3.3",
-    "cypress": "13.6.4",
+    "cypress": "13.6.6",
     "cypress-repeat": "2.3.4",
     "cypress-web-vitals": "4.1.2"
   },
