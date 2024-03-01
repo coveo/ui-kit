@@ -18,7 +18,7 @@ import {
   FacetGeneratorOptions,
 } from './headless-commerce-facet-generator';
 
-describe('CommerceFacetGenerator', () => {
+describe('FacetGenerator', () => {
   let engine: MockedCommerceEngine;
   let state: CommerceAppState;
   let options: FacetGeneratorOptions;

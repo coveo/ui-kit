@@ -26,7 +26,7 @@ import {RegularFacet} from '../regular/headless-commerce-regular-facet';
 import {SearchableFacetOptions} from '../searchable/headless-commerce-searchable-facet';
 
 /**
- * The `CommerceFacetGenerator` headless controller creates commerce facet controllers from the Commerce API search or
+ * The `FacetGenerator` headless controller creates commerce facet controllers from the Commerce API search or
  * product listing response.
  *
  * Commerce facets are not requested by the implementer, but rather pre-configured through the Coveo Merchandising Hub
@@ -63,7 +63,7 @@ type CommerceSearchableFacetBuilder<
 /**
  * @internal
  *
- * The `CommerceFacetGenerator` options used internally.
+ * The `FacetGenerator` options used internally.
  */
 export interface FacetGeneratorOptions {
   buildRegularFacet: CommerceSearchableFacetBuilder<RegularFacet>;
