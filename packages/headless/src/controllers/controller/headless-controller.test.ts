@@ -1,11 +1,12 @@
 import {
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../test/mock-engine';
+  buildMockSearchEngine,
+  MockedSearchEngine,
+} from '../../test/mock-engine-v2';
+import {createMockState} from '../../test/mock-state';
 import {buildController, Controller} from './headless-controller';
 
 describe('Controller', () => {
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
   let cmp: Controller;
 
   function registeredListeners() {
@@ -17,7 +18,7 @@ describe('Controller', () => {
   }
 
   beforeEach(() => {
-    engine = buildMockSearchAppEngine();
+    engine = buildMockSearchEngine(createMockState());
     cmp = buildController(engine);
     updateControllerState({property: 'initial value'});
   });
