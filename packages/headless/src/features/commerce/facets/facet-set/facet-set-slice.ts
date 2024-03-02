@@ -27,6 +27,7 @@ import {
 } from '../../../facets/facet-set/facet-set-actions';
 import {convertFacetValueToRequest} from '../../../facets/facet-set/facet-set-slice';
 import {updateFacetAutoSelection} from '../../../facets/generic/facet-actions';
+import {handleFacetUpdateNumberOfValues} from '../../../facets/generic/facet-reducer-helpers';
 import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
@@ -41,10 +42,7 @@ import {convertToNumericRangeRequests} from '../../../facets/range-facets/numeri
 import {setContext, setUser, setView} from '../../context/context-actions';
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
 import {executeSearch} from '../../search/search-actions';
-import {
-  handleCategoryFacetNestedNumberOfValuesUpdate,
-  handleFacetUpdateNumberOfValues,
-} from './facet-set-reducer-helpers';
+import {handleCategoryFacetNestedNumberOfValuesUpdate} from './facet-set-reducer-helpers';
 import {
   CommerceFacetSetState,
   getCommerceFacetSetInitialState,

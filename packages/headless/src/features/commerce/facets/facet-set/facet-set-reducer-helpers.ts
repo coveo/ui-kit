@@ -1,16 +1,5 @@
 import {CommerceFacetSetState} from './facet-set-state';
-import {CategoryFacetValueRequest, AnyFacetRequest} from './interfaces/request';
-
-export function handleFacetUpdateNumberOfValues<T extends AnyFacetRequest>(
-  facetRequest: T | undefined,
-  numberOfValues: number
-) {
-  if (!facetRequest) {
-    return;
-  }
-
-  facetRequest.numberOfValues = numberOfValues;
-}
+import {CategoryFacetValueRequest} from './interfaces/request';
 
 export function handleCategoryFacetNestedNumberOfValuesUpdate(
   state: CommerceFacetSetState,
@@ -23,10 +12,8 @@ export function handleCategoryFacetNestedNumberOfValuesUpdate(
     return;
   }
 
-  console.log(selectedValue.value);
   while (selectedValue.children.length && selectedValue?.state !== 'selected') {
     selectedValue = selectedValue.children[0];
-    console.log(selectedValue.value);
   }
   selectedValue.retrieveCount = numberOfValues;
 }
