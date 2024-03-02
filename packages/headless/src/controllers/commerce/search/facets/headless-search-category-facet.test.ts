@@ -11,26 +11,31 @@ import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-
 import {buildMockCategoryFacetValue} from '../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {
-  MockCommerceEngine,
+  MockedCommerceEngine,
   buildMockCommerceEngine,
-} from '../../../../test/mock-engine';
+} from '../../../../test/mock-engine-v2';
 import {CategoryFacet} from '../../core/facets/category/headless-commerce-category-facet';
 import {CommerceFacetOptions} from '../../core/facets/headless-core-commerce-facet';
 import {buildSearchCategoryFacet} from './headless-search-category-facet';
 
+jest.mock('../../../../features/commerce/search/search-actions');
+
 describe('SearchCategoryFacet', () => {
   const facetId: string = 'category_facet_id';
-  let options: CommerceFacetOptions;
+  let engine: MockedCommerceEngine;
   let state: CommerceAppState;
-  let engine: MockCommerceEngine;
+  let options: CommerceFacetOptions;
   let facet: CategoryFacet;
 
+  function initEngine(preloadedState = buildMockCommerceState()) {
+    engine = buildMockCommerceEngine(preloadedState);
+  }
+
   function initFacet() {
-    engine = buildMockCommerceEngine({state});
     facet = buildSearchCategoryFacet(engine, options);
   }
 
-  function setFacetRequest(
+  function setFacetState(
     config: Partial<CommerceFacetRequest<CategoryFacetValueRequest>> = {}
   ) {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
@@ -40,54 +45,51 @@ describe('SearchCategoryFacet', () => {
   }
 
   beforeEach(() => {
+    jest.resetAllMocks();
+
     options = {
       facetId,
     };
 
     state = buildMockCommerceState();
-    setFacetRequest();
+    setFacetState();
 
+    initEngine();
     initFacet();
   });
 
-  it('initializes', () => {
-    expect(facet).toBeTruthy();
-  });
+  describe('initialization', () => {
+    it('initializes', () => {
+      expect(facet).toBeTruthy();
+    });
 
-  it('adds #commerceSearch reducer to engine', () => {
-    expect(engine.addReducers).toHaveBeenCalledWith({commerceSearch});
-  });
-
-  describe('#toggleSelect', () => {
-    it('dispatches #executeSearch', () => {
-      const facetValue = buildMockCategoryFacetValue();
-      facet.toggleSelect(facetValue);
-
-      expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
+    it('adds #commerceSearch reducer to engine', () => {
+      expect(engine.addReducers).toHaveBeenCalledWith({commerceSearch});
     });
   });
 
-  describe('#deselectAll', () => {
-    it('dispatches #executeSearch', () => {
-      facet.deselectAll();
+  it('#toggleSelect dispatches #executeSearch', () => {
+    const facetValue = buildMockCategoryFacetValue();
+    facet.toggleSelect(facetValue);
 
-      expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
-    });
+    expect(executeSearch).toHaveBeenCalled();
   });
 
-  describe('#showMoreValues', () => {
-    it('dispatches #executeSearch', () => {
-      facet.showMoreValues();
+  it('#deselectAll dispatches #executeSearch', () => {
+    facet.deselectAll();
 
-      expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
-    });
+    expect(executeSearch).toHaveBeenCalled();
   });
 
-  describe('#showLessValues', () => {
-    it('dispatches #executeSearch', () => {
-      facet.showLessValues();
+  it('#showMoreValues dispatches #executeSearch', () => {
+    facet.showMoreValues();
 
-      expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
-    });
+    expect(executeSearch).toHaveBeenCalled();
+  });
+
+  it('#showLessValues dispatches #executeSearch', () => {
+    facet.showLessValues();
+
+    expect(executeSearch).toHaveBeenCalled();
   });
 });
