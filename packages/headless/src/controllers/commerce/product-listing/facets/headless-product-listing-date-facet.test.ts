@@ -11,7 +11,7 @@ import {
   MockedCommerceEngine,
   buildMockCommerceEngine,
 } from '../../../../test/mock-engine-v2';
-import {CommerceDateFacet} from '../../core/facets/date/headless-commerce-date-facet';
+import {DateFacet} from '../../core/facets/date/headless-commerce-date-facet';
 import {
   CommerceFacetOptions,
   DateRangeRequest,
@@ -29,7 +29,7 @@ describe('ProductListingDateFacet', () => {
   let options: CommerceFacetOptions;
   let state: CommerceAppState;
   let engine: MockedCommerceEngine;
-  let facet: CommerceDateFacet;
+  let facet: DateFacet;
 
   function initFacet() {
     engine = buildMockCommerceEngine(state);

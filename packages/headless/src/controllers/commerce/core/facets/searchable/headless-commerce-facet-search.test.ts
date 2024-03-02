@@ -10,7 +10,7 @@ import {
 import {buildMockFacetSearch} from '../../../../../test/mock-facet-search';
 import {FacetSearchProps} from '../../../../core/facets/facet-search/specific/headless-facet-search';
 import {
-  CommerceFacetSearch,
+  FacetSearch,
   buildCommerceFacetSearch,
 } from './headless-commerce-facet-search';
 
@@ -22,7 +22,7 @@ describe('CommerceFacetSearch', () => {
   const facetId: string = 'searchable_facet_id';
   let engine: MockedCommerceEngine;
   let props: FacetSearchProps;
-  let facetSearch: CommerceFacetSearch;
+  let facetSearch: FacetSearch;
 
   function initEngine(preloadedState = buildMockCommerceState()) {
     engine = buildMockCommerceEngine(preloadedState);

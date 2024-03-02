@@ -17,34 +17,34 @@ import {
   Controller,
 } from '../../../../controller/headless-controller';
 import {CategoryFacet} from '../category/headless-commerce-category-facet';
-import {CommerceDateFacet} from '../date/headless-commerce-date-facet';
+import {DateFacet} from '../date/headless-commerce-date-facet';
 import {
   CommerceFacetOptions,
   CoreCommerceFacet,
 } from '../headless-core-commerce-facet';
-import {CommerceNumericFacet} from '../numeric/headless-commerce-numeric-facet';
-import {CommerceRegularFacet} from '../regular/headless-commerce-regular-facet';
-import {CommerceSearchableFacetOptions} from '../searchable/headless-commerce-searchable-facet';
+import {NumericFacet} from '../numeric/headless-commerce-numeric-facet';
+import {RegularFacet} from '../regular/headless-commerce-regular-facet';
+import {SearchableFacetOptions} from '../searchable/headless-commerce-searchable-facet';
 
 /**
- * The `CommerceFacetGenerator` headless controller creates commerce facet controllers from the Commerce API search or
+ * The `FacetGenerator` headless controller creates commerce facet controllers from the Commerce API search or
  * product listing response.
  *
  * Commerce facets are not requested by the implementer, but rather pre-configured through the Coveo Merchandising Hub
  * (CMH). The implementer is only responsible for leveraging the facet controllers created by this controller to
  * properly render facets in their application.
  */
-export interface CommerceFacetGenerator extends Controller {
+export interface FacetGenerator extends Controller {
   /**
    * The state of the facet generator controller.
    */
-  state: CommerceFacetGeneratorState;
+  state: FacetGeneratorState;
 }
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the facet generator controller.
  */
-export interface CommerceFacetGeneratorState {
+export interface FacetGeneratorState {
   /**
    * The generated commerce facet controllers.
    */
@@ -71,39 +71,39 @@ type CommerceSearchableFacetBuilder<
   Facet extends CoreCommerceFacet<AnyFacetValueRequest, AnyFacetValueResponse>,
 > = (
   engine: CommerceEngine,
-  options: CommerceFacetOptions & CommerceSearchableFacetOptions
+  options: CommerceFacetOptions & SearchableFacetOptions
 ) => Facet;
 /**
  * @internal
  *
- * The `CommerceFacetGenerator` options used internally.
+ * The `FacetGenerator` options used internally.
  */
-export interface CommerceFacetGeneratorOptions {
-  buildRegularFacet: CommerceSearchableFacetBuilder<CommerceRegularFacet>;
-  buildNumericFacet: CommerceFacetBuilder<CommerceNumericFacet>;
-  buildDateFacet: CommerceFacetBuilder<CommerceDateFacet>;
+export interface FacetGeneratorOptions {
+  buildRegularFacet: CommerceSearchableFacetBuilder<RegularFacet>;
+  buildNumericFacet: CommerceFacetBuilder<NumericFacet>;
+  buildDateFacet: CommerceFacetBuilder<DateFacet>;
   buildCategoryFacet: CommerceFacetBuilder<CategoryFacet>;
 }
 
 export type AnyCommerceFacetController =
-  | CommerceRegularFacet
-  | CommerceNumericFacet
-  | CommerceDateFacet
+  | RegularFacet
+  | NumericFacet
+  | DateFacet
   | CategoryFacet;
 
 /**
  * @internal
  *
- * Creates a `CommerceFacetGenerator` instance.
+ * Creates a `FacetGenerator` instance.
  *
  * @param engine - The headless commerce engine.
  * @param options - The facet generator options used internally.
- * @returns A `CommerceFacetGenerator` controller instance.
+ * @returns A `FacetGenerator` controller instance.
  */
-export function buildCommerceFacetGenerator(
+export function buildFacetGenerator(
   engine: CommerceEngine,
-  options: CommerceFacetGeneratorOptions
-): CommerceFacetGenerator {
+  options: FacetGeneratorOptions
+): FacetGenerator {
   if (!loadCommerceFacetGeneratorReducers(engine)) {
     throw loadReducerError;
   }
