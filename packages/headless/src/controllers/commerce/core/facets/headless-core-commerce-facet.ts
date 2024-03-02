@@ -1,6 +1,7 @@
 import {
-  ActionCreatorWithPreparedPayload,
   AsyncThunkAction,
+  PayloadActionCreator,
+  PrepareAction,
 } from '@reduxjs/toolkit';
 import {AsyncThunkOptions} from '../../../../app/async-thunk-options';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
@@ -13,11 +14,11 @@ import {
 import {
   AnyFacetResponse,
   AnyFacetValueResponse,
+  CategoryFacetValue,
   DateFacetValue,
   FacetType,
   NumericFacetValue,
   RegularFacetValue,
-  CategoryFacetValue,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response';
 import {
   deselectAllFacetValues,
@@ -59,21 +60,15 @@ export interface CoreCommerceFacetProps {
 
 export interface CoreCommerceFacetOptions {
   facetId: string;
-  toggleSelectActionCreator: ActionCreatorWithPreparedPayload<
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    any,
+  toggleSelectActionCreator: PayloadActionCreator<
     unknown,
     string,
-    unknown,
-    never
+    PrepareAction<unknown>
   >;
-  toggleExcludeActionCreator?: ActionCreatorWithPreparedPayload<
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    any,
+  toggleExcludeActionCreator?: PayloadActionCreator<
     unknown,
     string,
-    unknown,
-    never
+    PrepareAction<unknown>
   >;
   fetchResultsActionCreator: () => AsyncThunkAction<
     unknown,
