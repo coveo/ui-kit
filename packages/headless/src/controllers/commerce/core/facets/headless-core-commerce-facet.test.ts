@@ -147,7 +147,7 @@ describe('CoreCommerceFacet', () => {
     });
 
     describe('when #toggleExcludeActionCreator is defined', () => {
-      it('dispatches #toggleExcludeActionCreator with the passed facet value', () => {
+      it('dispatches #toggleExcludeActionCreator with correct payload', () => {
         facet.toggleExclude(facetValue());
         expect(toggleExcludeActionCreator).toHaveBeenCalledWith({
           facetId,
@@ -197,7 +197,7 @@ describe('CoreCommerceFacet', () => {
         expect(facet.toggleSelect).toHaveBeenCalled();
       });
 
-      it('does not dispatch the #deselectAllFacetValues action', () => {
+      it('does not dispatch #deselectAllFacetValues', () => {
         facet.toggleSingleSelect(facetValue());
         expect(deselectAllFacetValues).not.toHaveBeenCalled();
       });
@@ -240,7 +240,7 @@ describe('CoreCommerceFacet', () => {
 
     describe('when #toggleExcludeActionCreator is defined', () => {
       describe('when toggled facet value state is "idle"', () => {
-        it('dispatches the #deselectAllFacetValues action with the facetId', () => {
+        it('dispatches #deselectAllFacetValues with correct payload', () => {
           facet.toggleSingleExclude(facetValue());
 
           expect(deselectAllFacetValues).toHaveBeenCalled();
