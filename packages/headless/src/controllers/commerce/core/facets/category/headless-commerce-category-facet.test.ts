@@ -43,7 +43,7 @@ describe('CategoryFacet', () => {
     facet = buildCategoryFacet(engine, options);
   }
 
-  function setFacetRequestAndResponse(
+  function setFacetState(
     config: Partial<CommerceFacetRequest<CategoryFacetValueRequest>> = {},
     moreValuesAvailable = false
   ) {
@@ -75,7 +75,7 @@ describe('CategoryFacet', () => {
     };
 
     state = buildMockCommerceState();
-    setFacetRequestAndResponse();
+    setFacetState();
     // TODO: setFacetSearch();
 
     initEngine(state);
@@ -129,7 +129,7 @@ describe('CategoryFacet', () => {
         const activeValue = buildMockCategoryFacetValue({
           state: 'selected',
         });
-        setFacetRequestAndResponse({
+        setFacetState({
           values: [activeValue, buildMockCategoryFacetValue()],
         });
 
@@ -143,14 +143,14 @@ describe('CategoryFacet', () => {
           expect(facet.state.canShowLessValues).toBe(false);
         });
         it('when there is one value, returns false', () => {
-          setFacetRequestAndResponse({
+          setFacetState({
             values: [buildMockCategoryFacetValue()],
           });
 
           expect(facet.state.canShowLessValues).toBe(false);
         });
         it('when there are multiple values, returns false', () => {
-          setFacetRequestAndResponse({
+          setFacetState({
             values: [
               buildMockCategoryFacetValue(),
               buildMockCategoryFacetValue(),
@@ -163,7 +163,7 @@ describe('CategoryFacet', () => {
 
       describe('when a value is selected', () => {
         it('when selected value has no children, returns false', () => {
-          setFacetRequestAndResponse({
+          setFacetState({
             values: [
               buildMockCategoryFacetValue({
                 state: 'selected',
@@ -174,7 +174,7 @@ describe('CategoryFacet', () => {
           expect(facet.state.canShowLessValues).toBe(false);
         });
         it('when selected value has one child, returns false', () => {
-          setFacetRequestAndResponse({
+          setFacetState({
             values: [
               buildMockCategoryFacetValue({
                 state: 'selected',
@@ -186,7 +186,7 @@ describe('CategoryFacet', () => {
           expect(facet.state.canShowLessValues).toBe(false);
         });
         it('when selected value has multiple children, return true', () => {
-          setFacetRequestAndResponse({
+          setFacetState({
             values: [
               buildMockCategoryFacetValue({
                 state: 'selected',
@@ -210,7 +210,7 @@ describe('CategoryFacet', () => {
         });
 
         it('when there are more values available, returns true', () => {
-          setFacetRequestAndResponse({}, true);
+          setFacetState({}, true);
 
           expect(facet.state.canShowMoreValues).toBe(true);
         });
@@ -218,14 +218,14 @@ describe('CategoryFacet', () => {
 
       describe('when a value is selected', () => {
         it('when selected values has no more values available, returns false', () => {
-          setFacetRequestAndResponse({
+          setFacetState({
             values: [buildMockCategoryFacetValue({state: 'selected'})],
           });
 
           expect(facet.state.canShowMoreValues).toBe(false);
         });
         it('when selected value has more values available, returns true', () => {
-          setFacetRequestAndResponse({
+          setFacetState({
             values: [
               buildMockCategoryFacetValue({
                 state: 'selected',
@@ -245,7 +245,7 @@ describe('CategoryFacet', () => {
       });
 
       it('when a value is selected, returns true', () => {
-        setFacetRequestAndResponse({
+        setFacetState({
           values: [buildMockCategoryFacetValue({state: 'selected'})],
         });
 
@@ -286,7 +286,7 @@ describe('CategoryFacet', () => {
           children: [parentValue],
         });
 
-        setFacetRequestAndResponse({
+        setFacetState({
           values: [rootValue],
         });
 
