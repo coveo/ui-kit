@@ -11,26 +11,33 @@ import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-
 import {buildMockCategoryFacetValue} from '../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {
-  MockCommerceEngine,
+  MockedCommerceEngine,
   buildMockCommerceEngine,
-} from '../../../../test/mock-engine';
+} from '../../../../test/mock-engine-v2';
 import {CategoryFacet} from '../../core/facets/category/headless-commerce-category-facet';
 import {CommerceFacetOptions} from '../../core/facets/headless-core-commerce-facet';
 import {buildProductListingCategoryFacet} from './headless-product-listing-category-facet';
 
+jest.mock(
+  '../../../../features/commerce/product-listing/product-listing-actions'
+);
+
 describe('ProductListingCategoryFacet', () => {
   const facetId: string = 'category_facet_id';
-  let options: CommerceFacetOptions;
+  let engine: MockedCommerceEngine;
   let state: CommerceAppState;
-  let engine: MockCommerceEngine;
+  let options: CommerceFacetOptions;
   let facet: CategoryFacet;
 
+  function initEngine(preloadedState = buildMockCommerceState()) {
+    engine = buildMockCommerceEngine(preloadedState);
+  }
+
   function initFacet() {
-    engine = buildMockCommerceEngine({state});
     facet = buildProductListingCategoryFacet(engine, options);
   }
 
-  function setFacetRequest(
+  function setFacetState(
     config: Partial<CommerceFacetRequest<CategoryFacetValueRequest>> = {}
   ) {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
@@ -40,54 +47,51 @@ describe('ProductListingCategoryFacet', () => {
   }
 
   beforeEach(() => {
+    jest.resetAllMocks();
+
     options = {
       facetId,
     };
 
     state = buildMockCommerceState();
-    setFacetRequest();
+    setFacetState();
 
+    initEngine();
     initFacet();
   });
 
-  it('initializes', () => {
-    expect(facet).toBeTruthy();
-  });
+  describe('initialization', () => {
+    it('initializes', () => {
+      expect(facet).toBeTruthy();
+    });
 
-  it('adds #productListing reducer to engine', () => {
-    expect(engine.addReducers).toHaveBeenCalledWith({productListing});
-  });
-
-  describe('#toggleSelect', () => {
-    it('dispatches #fetchProductListing', () => {
-      const facetValue = buildMockCategoryFacetValue();
-      facet.toggleSelect(facetValue);
-
-      expect(engine.findAsyncAction(fetchProductListing.pending)).toBeTruthy();
+    it('adds #productListing reducer to engine', () => {
+      expect(engine.addReducers).toHaveBeenCalledWith({productListing});
     });
   });
 
-  describe('#deselectAll', () => {
-    it('dispatches #fetchProductListing', () => {
-      facet.deselectAll();
+  it('#toggleSelect dispatches #fetchProductListing', () => {
+    const facetValue = buildMockCategoryFacetValue();
+    facet.toggleSelect(facetValue);
 
-      expect(engine.findAsyncAction(fetchProductListing.pending)).toBeTruthy();
-    });
+    expect(fetchProductListing).toHaveBeenCalled();
   });
 
-  describe('#showMoreValues', () => {
-    it('dispatches #fetchProductListing', () => {
-      facet.showMoreValues();
+  it('#deselectAll dispatches #fetchProductListing', () => {
+    facet.deselectAll();
 
-      expect(engine.findAsyncAction(fetchProductListing.pending)).toBeTruthy();
-    });
+    expect(fetchProductListing).toHaveBeenCalled();
   });
 
-  describe('#showLessValues', () => {
-    it('dispatches #fetchProductListing', () => {
-      facet.showLessValues();
+  it('#showMoreValues dispatches #fetchProductListing', () => {
+    facet.showMoreValues();
 
-      expect(engine.findAsyncAction(fetchProductListing.pending)).toBeTruthy();
-    });
+    expect(fetchProductListing).toHaveBeenCalled();
+  });
+
+  it('#showLessValues dispatches #fetchProductListing', () => {
+    facet.showLessValues();
+
+    expect(fetchProductListing).toHaveBeenCalled();
   });
 });
