@@ -70,7 +70,7 @@
   "devDependencies": {
     "@coveo/relay-event-types": "7.6.9",
     "@coveo/release": "1.0.0",
-    "@microsoft/api-extractor": "7.41.1",
+    "@microsoft/api-extractor": "7.42.3",
     "@microsoft/api-extractor-model": "7.28.13",
     "@microsoft/tsdoc": "0.14.2",
     "eslint-plugin-canonical": "4.18.0",

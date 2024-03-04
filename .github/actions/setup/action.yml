@@ -17,19 +17,19 @@ runs:
     - name: Install npm
       run: npm i -g npm@10
       shell: bash
-    - uses: actions/cache@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4
+    - uses: actions/cache@ab5e6d0c87105b4c9c2047343972218f562e4319 # v4
       id: npm-cache
       with:
         path: |
           **/node_modules/
           !node_modules/.cache/nx/
         key: npm-${{ hashFiles('package-lock.json') }}-${{ hashFiles('utils/atomic-storybook/package-lock.json') }}
-    - uses: actions/cache@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4
+    - uses: actions/cache@ab5e6d0c87105b4c9c2047343972218f562e4319 # v4
       with:
         path: ~/.cache/Cypress
         key: cy-${{ hashFiles('package-lock.json') }}-${{ hashFiles('utils/atomic-storybook/package-lock.json') }}
     - if: inputs.load-cache == 'true'
-      uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4
+      uses: actions/cache/restore@ab5e6d0c87105b4c9c2047343972218f562e4319 # v4
       id: nx-cache
       with:
         path: node_modules/.cache/nx
