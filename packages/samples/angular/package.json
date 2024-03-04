@@ -29,7 +29,7 @@
     "@angular/cli": "17.2.1",
     "@angular/compiler-cli": "17.2.2",
     "@types/jasmine": "5.1.4",
-    "@types/node": "20.11.21",
+    "@types/node": "20.11.24",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "cypress": "13.6.6",
     "cypress-repeat": "2.3.4",
