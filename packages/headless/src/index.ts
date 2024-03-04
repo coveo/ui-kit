@@ -550,6 +550,7 @@ export {buildResultTemplatesManager} from './features/result-templates/result-te
 export * from './features/analytics/search-analytics-actions-loader';
 export * from './features/analytics/click-analytics-actions-loader';
 export * from './features/analytics/generic-analytics-actions-loader';
+export * from './features/actions-history/ipx-actions-history-actions-loader';
 
 // Types & Helpers
 export {API_DATE_FORMAT} from './api/search/date/date-format';
