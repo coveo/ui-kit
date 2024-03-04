@@ -1,8 +1,10 @@
 import {createRelay} from '@coveo/relay';
 import {createMockState} from '../../test/mock-state';
 import {getRelayInstanceFromState} from './analytics-relay-client';
+import {getAnalyticsSource} from './analytics-selectors';
 
 jest.mock('@coveo/relay');
+jest.mock('./analytics-selectors');
 
 describe('#getRelayInstanceFromState', () => {
   const mockedCreateRelay = jest.mocked(createRelay).mockImplementation(() => ({
@@ -14,6 +16,10 @@ describe('#getRelayInstanceFromState', () => {
     updateConfig: jest.fn(),
     version: 'test',
   }));
+
+  beforeEach(() => {
+    jest.mocked(getAnalyticsSource).mockReturnValue(['baguette']);
+  });
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -28,7 +34,7 @@ describe('#getRelayInstanceFromState', () => {
       url: state.configuration.analytics.nextApiBaseUrl,
       token: state.configuration.accessToken,
       trackingId: state.configuration.analytics.trackingId,
-      source: expect.arrayContaining([]),
+      source: expect.arrayContaining(['baguette']),
     });
     expect(mockedCreateRelay).toHaveReturnedWith(relay);
   });
