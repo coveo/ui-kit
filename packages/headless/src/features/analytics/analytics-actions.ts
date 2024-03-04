@@ -1,9 +1,6 @@
-import {createAsyncThunk} from '@reduxjs/toolkit';
 import {SearchPageEvents as LegacySearchPageEvents} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
-import {historyStore} from '../../api/analytics/coveo-analytics-utils';
 import {SearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {Result} from '../../api/search/search/result';
-import {SearchAppState} from '../../state/search-app-state';
 import {
   validatePayload,
   requiredNonEmptyString,
@@ -202,17 +199,3 @@ export const omniboxFromLink = (
       ),
   };
 };
-
-export const addPageViewEntryInActionsHistory = createAsyncThunk(
-  'analytics/actionsHistory/addPageView',
-  async (itemPermanentId: string, {getState}) => {
-    const state = getState() as SearchAppState;
-    if (state.configuration.analytics.enabled) {
-      historyStore.addElement({
-        name: 'PageView',
-        value: itemPermanentId,
-        time: JSON.stringify(new Date()),
-      });
-    }
-  }
-);

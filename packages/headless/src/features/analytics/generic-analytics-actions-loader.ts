@@ -1,4 +1,3 @@
-import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   logSearchEvent,
@@ -7,7 +6,6 @@ import {
   LogClickEventActionCreatorPayload,
   logCustomEvent,
   LogCustomEventActionCreatorPayload,
-  addPageViewEntryInActionsHistory,
 } from './analytics-actions';
 import {ClickAction, CustomAction, LegacySearchAction} from './analytics-utils';
 
@@ -46,15 +44,6 @@ export interface GenericAnalyticsActionCreators {
    * @returns A dispatchable action.
    */
   logCustomEvent(payload: LogCustomEventActionCreatorPayload): CustomAction;
-
-  /**
-   * Adds a PageView entry in the action history.
-   * @param itemPermanentId - The permanent id of the item to add as PageView in actions history.
-   * @returns A dispatchable action.
-   */
-  addPageViewEntryInActionsHistory(
-    itemPermanentId: string
-  ): AsyncThunkAction<void, string, {}>;
 }
 
 /**
@@ -72,6 +61,5 @@ export function loadGenericAnalyticsActions(
     logSearchEvent,
     logClickEvent,
     logCustomEvent,
-    addPageViewEntryInActionsHistory,
   };
 }

@@ -1,7 +1,7 @@
 import {isUndefined} from '@coveo/bueno';
 import {
-  GenericAnalyticsActionCreators,
-  loadGenericAnalyticsActions,
+  IPXActionsHistoryActionCreators,
+  loadIPXActionsHistoryActions,
 } from '@coveo/headless';
 import {Component, h, Prop, Element} from '@stencil/core';
 import {Bindings} from '../../../components';
@@ -59,7 +59,7 @@ export class AtomicIPXResultLink implements InitializableComponent {
   private hasDefaultSlot!: boolean;
   private linkAttributes?: Attr[];
   private stopPropagation?: boolean;
-  private actionsHistoryActions?: GenericAnalyticsActionCreators;
+  private actionsHistoryActions?: IPXActionsHistoryActionCreators;
 
   public initialize() {
     this.host.dispatchEvent(
@@ -70,7 +70,7 @@ export class AtomicIPXResultLink implements InitializableComponent {
         }
       )
     );
-    this.actionsHistoryActions = loadGenericAnalyticsActions(
+    this.actionsHistoryActions = loadIPXActionsHistoryActions(
       this.bindings.engine
     );
   }
