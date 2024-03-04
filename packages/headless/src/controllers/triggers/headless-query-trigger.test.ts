@@ -1,29 +1,23 @@
-import {AnyAction} from '@reduxjs/toolkit';
 import {updateQuery} from '../../features/query/query-actions';
 import {queryReducer as query} from '../../features/query/query-slice';
 import {executeSearch} from '../../features/search/search-actions';
 import {triggerReducer as triggers} from '../../features/triggers/triggers-slice';
 import {
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../test/mock-engine';
+  buildMockSearchEngine,
+  MockedSearchEngine,
+} from '../../test/mock-engine-v2';
+import {createMockState} from '../../test/mock-state';
 import {QueryTrigger, buildQueryTrigger} from './headless-query-trigger';
 
+jest.mock('../../features/query/query-actions');
+jest.mock('../../features/search/search-actions');
+
 describe('QueryTrigger', () => {
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
   let queryTrigger: QueryTrigger;
 
   function initQueryTrigger() {
     queryTrigger = buildQueryTrigger(engine);
-  }
-
-  function getUpdateQueryAction() {
-    function isUpdateQueryAction(
-      action: AnyAction
-    ): action is ReturnType<typeof updateQuery> {
-      return action.type === updateQuery.type;
-    }
-    return engine.actions.find(isUpdateQueryAction);
   }
 
   function registeredListeners() {
@@ -31,7 +25,7 @@ describe('QueryTrigger', () => {
   }
 
   beforeEach(() => {
-    engine = buildMockSearchAppEngine();
+    engine = buildMockSearchEngine(createMockState());
     initQueryTrigger();
   });
 
@@ -53,22 +47,22 @@ describe('QueryTrigger', () => {
   describe('when a search without a trigger is performed', () => {
     const listener = jest.fn();
     beforeEach(() => {
-      engine = buildMockSearchAppEngine();
+      engine = buildMockSearchEngine(createMockState());
       initQueryTrigger();
       queryTrigger.subscribe(listener);
-      engine.state.query.q = 'Oranges';
-      engine.state.triggers.query = '';
+      engine.state.query!.q = 'Oranges';
+      engine.state.triggers!.query = '';
 
       const [firstListener] = registeredListeners();
       firstListener();
     });
 
     it('it does not dispatch #updateQuery', () => {
-      expect(getUpdateQueryAction()).toBeFalsy();
+      expect(updateQuery).not.toHaveBeenCalled();
     });
 
-    it('it does not dispatch #executeSearch and #logTriggerQuery', () => {
-      expect(engine.findAsyncAction(executeSearch.pending)).toBeFalsy();
+    it('it does not dispatch #executeSearch', () => {
+      expect(executeSearch).not.toHaveBeenCalled();
     });
 
     it('#state.wasQueryModified should be false', () => {
