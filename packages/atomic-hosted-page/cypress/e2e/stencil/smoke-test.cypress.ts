@@ -39,6 +39,20 @@ describe('smoke test', () => {
       .shadow()
       .find('input')
       .type('test{enter}');
+
+    cy.get('atomic-facet').should('exist');
+    cy.get('atomic-query-summary')
+      .should('exist')
+      .shadow()
+      .find('div[part="container"]')
+      .contains(/^Results 1-[1-9]/)
+      .contains('for test');
+
+    cy.get('atomic-result-list')
+      .should('exist')
+      .shadow()
+      .find('atomic-result')
+      .should('exist');
   });
 
   it('should load atomic-hosted-ui component with a legacy page', () => {
@@ -53,6 +67,19 @@ describe('smoke test', () => {
       .shadow()
       .find('input')
       .type('test{enter}');
+
+    cy.get('atomic-query-summary')
+      .should('exist')
+      .shadow()
+      .find('div[part="container"]')
+      .contains(/^Results 1-[1-9]/)
+      .contains('for test');
+
+    cy.get('atomic-result-list')
+      .should('exist')
+      .shadow()
+      .find('atomic-result')
+      .should('exist');
   });
 
   it('should load atomic-hosted-ui component with a custom page', () => {
@@ -67,5 +94,19 @@ describe('smoke test', () => {
       .shadow()
       .find('input')
       .type('test{enter}');
+
+    cy.get('atomic-facet').should('exist');
+    cy.get('atomic-query-summary')
+      .should('exist')
+      .shadow()
+      .find('div[part="container"]')
+      .contains(/^Results 1-[1-9]/)
+      .contains('for test');
+
+    cy.get('atomic-result-list')
+      .should('exist')
+      .shadow()
+      .find('atomic-result')
+      .should('exist');
   });
 });
