@@ -22,5 +22,5 @@ runs:
     - uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3
       if: failure()
       with:
-        name: cypress-screenshots
+        name: angular-screenshots
         path: packages/samples/angular/cypress/screenshots
