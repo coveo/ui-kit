@@ -267,7 +267,7 @@ describe('engine', () => {
     expect(engine.relay).toBeDefined();
   });
 
-  it('should return the same instance of Relay if the state has not changed', () => {
+  it('should return the exact same instance of Relay if the state has not changed between two calls to engine.relay', () => {
     const engine = initEngine();
     expect(engine.relay).toBe(engine.relay);
   });
