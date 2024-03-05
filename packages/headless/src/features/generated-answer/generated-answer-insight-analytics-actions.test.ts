@@ -1,8 +1,9 @@
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {InsightAppState} from '../../state/insight-app-state';
 import {
   buildMockInsightEngine,
-  MockInsightEngine,
-} from '../../test/mock-engine';
+  MockedInsightEngine,
+} from '../../test/mock-engine-v2';
 import {buildMockInsightState} from '../../test/mock-insight-state';
 import {
   logGeneratedAnswerDetailedFeedback,
@@ -73,7 +74,7 @@ const expectedCaseContext = {
 };
 
 describe('the analytics related to the generated answer feature in the insight use case', () => {
-  let engine: MockInsightEngine;
+  let engine: MockedInsightEngine;
   let state: InsightAppState;
 
   beforeEach(() => {
@@ -96,7 +97,7 @@ describe('the analytics related to the generated answer feature in the insight u
       caseId: exampleCaseId,
       caseNumber: exampleCaseNumber,
     };
-    engine = buildMockInsightEngine({state});
+    engine = buildMockInsightEngine(state);
   });
 
   afterEach(() => {
@@ -104,7 +105,11 @@ describe('the analytics related to the generated answer feature in the insight u
   });
 
   it('should log #logRetryGeneratedAnswer with the right payload', async () => {
-    await engine.dispatch(logRetryGeneratedAnswer());
+    await logRetryGeneratedAnswer()()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const mockToUse = mockLogRetryGeneratedAnswer;
 
@@ -114,10 +119,10 @@ describe('the analytics related to the generated answer feature in the insight u
 
   it('should log #logRephraseGeneratedAnswer with the right payload', async () => {
     const exampleRephraseFormat = 'step';
-    await engine.dispatch(
-      logRephraseGeneratedAnswer({
-        answerStyle: exampleRephraseFormat,
-      })
+    await logRephraseGeneratedAnswer({answerStyle: exampleRephraseFormat})()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
     );
 
     const mockToUse = mockLogRephraseGeneratedAnswer;
@@ -134,7 +139,11 @@ describe('the analytics related to the generated answer feature in the insight u
   });
 
   it('should log #logOpenGeneratedAnswerSource with the right payload', async () => {
-    await engine.dispatch(logOpenGeneratedAnswerSource(exampleCitationId));
+    await logOpenGeneratedAnswerSource(exampleCitationId)()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const mockToUse = mockLogOpenGeneratedAnswerSource;
     const expectedMetadata = {
@@ -152,8 +161,10 @@ describe('the analytics related to the generated answer feature in the insight u
 
   it('should log #logHoverCitation with the right payload', async () => {
     const exampleHoverTime = 100;
-    await engine.dispatch(
-      logHoverCitation(exampleCitationId, exampleHoverTime)
+    await logHoverCitation(exampleCitationId, exampleHoverTime)()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
     );
 
     const mockToUse = mockLogHoverCitation;
@@ -172,7 +183,11 @@ describe('the analytics related to the generated answer feature in the insight u
   });
 
   it('should log #logLikeGeneratedAnswer with the right payload', async () => {
-    await engine.dispatch(logLikeGeneratedAnswer());
+    await logLikeGeneratedAnswer()()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const mockToUse = mockLogLikeGeneratedAnswer;
     const expectedMetadata = {
@@ -187,7 +202,11 @@ describe('the analytics related to the generated answer feature in the insight u
   });
 
   it('should log #logDislikeGeneratedAnswer with the right payload', async () => {
-    await engine.dispatch(logDislikeGeneratedAnswer());
+    await logDislikeGeneratedAnswer()()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const mockToUse = mockLogDislikeGeneratedAnswer;
     const expectedMetadata = {
@@ -202,7 +221,11 @@ describe('the analytics related to the generated answer feature in the insight u
   });
 
   it('should log #logGeneratedAnswerFeedback with the right payload', async () => {
-    await engine.dispatch(logGeneratedAnswerFeedback(exampleFeedback));
+    await logGeneratedAnswerFeedback(exampleFeedback)()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const mockToUse = mockLogGeneratedAnswerFeedbackSubmit;
     const expectedMetadata = {
@@ -218,7 +241,11 @@ describe('the analytics related to the generated answer feature in the insight u
   });
 
   it('should log #logGeneratedAnswerDetailedFeedback with the right payload', async () => {
-    await engine.dispatch(logGeneratedAnswerDetailedFeedback(exampleDetails));
+    await logGeneratedAnswerDetailedFeedback(exampleDetails)()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const mockToUse = mockLogGeneratedAnswerFeedbackSubmit;
     const expectedMetadata = {
@@ -235,7 +262,11 @@ describe('the analytics related to the generated answer feature in the insight u
   });
 
   it('should log #logGeneratedAnswerStreamEnd with the right payload', async () => {
-    await engine.dispatch(logGeneratedAnswerStreamEnd(true));
+    await logGeneratedAnswerStreamEnd(true)()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const mockToUse = mockLogGeneratedAnswerStreamEnd;
     const expectedMetadata = {
@@ -251,7 +282,11 @@ describe('the analytics related to the generated answer feature in the insight u
   });
 
   it('should log #logGeneratedAnswerShowAnswers with the right payload', async () => {
-    await engine.dispatch(logGeneratedAnswerShowAnswers());
+    await logGeneratedAnswerShowAnswers()()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const mockToUse = mockLogGeneratedAnswerShowAnswers;
     const expectedMetadata = {
@@ -266,7 +301,11 @@ describe('the analytics related to the generated answer feature in the insight u
   });
 
   it('should log #logGeneratedAnswerHideAnswers with the right payload', async () => {
-    await engine.dispatch(logGeneratedAnswerHideAnswers());
+    await logGeneratedAnswerHideAnswers()()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const mockToUse = mockLogGeneratedAnswerHideAnswers;
     const expectedMetadata = {
@@ -281,7 +320,11 @@ describe('the analytics related to the generated answer feature in the insight u
   });
 
   it('should log #logCopyGeneratedAnswer with the right payload', async () => {
-    await engine.dispatch(logCopyGeneratedAnswer());
+    await logCopyGeneratedAnswer()()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const mockToUse = mockLogCopyGeneratedAnswer;
     const expectedMetadata = {

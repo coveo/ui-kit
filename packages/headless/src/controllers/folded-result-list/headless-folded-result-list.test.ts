@@ -1,8 +1,10 @@
 import {loadCollection} from '../../features/folding/folding-actions';
 import {fetchMoreResults} from '../../features/search/search-actions';
 import {SearchAppState} from '../../state/search-app-state';
-import {buildMockSearchAppEngine} from '../../test/mock-engine';
-import {MockSearchEngine} from '../../test/mock-engine';
+import {
+  MockedSearchEngine,
+  buildMockSearchEngine,
+} from '../../test/mock-engine-v2';
 import {buildMockResult} from '../../test/mock-result';
 import {createMockState} from '../../test/mock-state';
 import {
@@ -10,13 +12,16 @@ import {
   buildFoldedResultList,
 } from './headless-folded-result-list';
 
+jest.mock('../../features/folding/folding-actions');
+jest.mock('../../features/search/search-actions');
+
 describe('folded result list', () => {
   let state: SearchAppState;
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
   let foldedResultList: FoldedResultList;
 
   function initFoldedResultList() {
-    engine = buildMockSearchAppEngine({state});
+    engine = buildMockSearchEngine(state);
     foldedResultList = buildFoldedResultList(engine);
   }
 
@@ -34,11 +39,10 @@ describe('folded result list', () => {
       result: buildMockResult(),
     });
 
-    expect(engine.findAsyncAction(loadCollection.pending)).toBeTruthy();
+    expect(loadCollection).toHaveBeenCalled();
   });
   it('#fetchMoreResults dispatches the search #fetchMoreResults action', () => {
     foldedResultList.fetchMoreResults();
-
-    expect(engine.findAsyncAction(fetchMoreResults.pending)).toBeTruthy();
+    expect(fetchMoreResults).toHaveBeenCalled();
   });
 });

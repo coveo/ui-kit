@@ -1,15 +1,19 @@
 import {configuration} from '../../app/common-reducers';
 import {insightConfigurationReducer as insightConfiguration} from '../../features/insight-configuration/insight-configuration-slice';
+import {fetchInterface} from '../../features/insight-interface/insight-interface-actions';
 import {insightInterfaceReducer as insightInterface} from '../../features/insight-interface/insight-interface-slice';
 import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice';
 import {
   buildMockInsightEngine,
-  MockInsightEngine,
-} from '../../test/mock-engine';
+  MockedInsightEngine,
+} from '../../test/mock-engine-v2';
+import {buildMockInsightState} from '../../test/mock-insight-state';
 import {buildInsightInterface, InsightInterface} from './insight-interface';
 
+jest.mock('../../features/insight-interface/insight-interface-actions');
+
 describe('Insight Interface', () => {
-  let engine: MockInsightEngine;
+  let engine: MockedInsightEngine;
   let controller: InsightInterface;
 
   function initInsightInterface() {
@@ -17,7 +21,7 @@ describe('Insight Interface', () => {
   }
 
   beforeEach(() => {
-    engine = buildMockInsightEngine();
+    engine = buildMockInsightEngine(buildMockInsightState());
     initInsightInterface();
   });
 
@@ -33,12 +37,7 @@ describe('Insight Interface', () => {
   describe('#fetch', () => {
     it('should dispatch a #fetchInterface action', () => {
       controller.fetch();
-
-      expect(engine.actions).toContainEqual(
-        expect.objectContaining({
-          type: 'insight/interface/fetch/pending',
-        })
-      );
+      expect(fetchInterface).toHaveBeenCalled();
     });
   });
 });
