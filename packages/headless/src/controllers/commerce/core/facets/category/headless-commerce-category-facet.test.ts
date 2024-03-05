@@ -65,7 +65,7 @@ describe('CategoryFacet', () => {
   }
 
   // eslint-disable-next-line @cspell/spellchecker
-  // TODO CAPI-94: Test facet search
+  // TODO CAPI-90: Test facet search
   /*function setFacetSearch() {
     state.facetSearchSet[facetId] = buildMockFacetSearch();
   }*/
@@ -81,7 +81,7 @@ describe('CategoryFacet', () => {
     state = buildMockCommerceState();
     setFacetState();
     // eslint-disable-next-line @cspell/spellchecker
-    // TODO CAPI-94: Test facet search
+    // TODO CAPI-90: Test facet search
     //  setFacetSearch();
 
     initEngine(state);
