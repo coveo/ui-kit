@@ -64,7 +64,11 @@ describe('CategoryFacet', () => {
     ];
   }
 
-  // TODO: function setFacetSearch() { state.facetSearchSet[facetId] = buildMockFacetSearch(); }
+  // eslint-disable-next-line @cspell/spellchecker
+  // TODO CAPI-94: Test facet search
+  /*function setFacetSearch() {
+    state.facetSearchSet[facetId] = buildMockFacetSearch();
+  }*/
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -76,7 +80,9 @@ describe('CategoryFacet', () => {
 
     state = buildMockCommerceState();
     setFacetState();
-    // TODO: setFacetSearch();
+    // eslint-disable-next-line @cspell/spellchecker
+    // TODO CAPI-94: Test facet search
+    //  setFacetSearch();
 
     initEngine(state);
     initCategoryFacet();
