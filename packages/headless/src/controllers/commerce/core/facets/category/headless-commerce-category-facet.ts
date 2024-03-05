@@ -74,6 +74,7 @@ export function buildCategoryFacet(
     isValueSelected,
     subscribe,
     toggleSelect,
+
     showLessValues() {
       const {facetId} = options;
 
@@ -82,6 +83,7 @@ export function buildCategoryFacet(
       );
       engine.dispatch(options.fetchResultsActionCreator());
     },
+
     showMoreValues() {
       const {facetId} = options;
       const {activeValue, values} = this.state;
@@ -93,6 +95,7 @@ export function buildCategoryFacet(
       );
       engine.dispatch(options.fetchResultsActionCreator());
     },
+
     get state() {
       const selectedValueAncestry = findActiveValueAncestry(
         coreController.state.values
@@ -105,8 +108,8 @@ export function buildCategoryFacet(
         : false;
       const canShowMoreValues =
         activeValue?.moreValuesAvailable ??
-        coreController.state.canShowMoreValues;
-      false;
+        coreController.state.canShowMoreValues ??
+        false;
       const hasActiveValues = !!activeValue;
 
       return {
