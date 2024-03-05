@@ -24,11 +24,7 @@ import {querySuggestReducer as querySuggest} from '../../../features/query-sugge
 import {QuerySuggestState} from '../../../features/query-suggest/query-suggest-state';
 import {logSearchboxSubmit} from '../../../features/query/query-analytics-actions';
 import {queryReducer as query} from '../../../features/query/query-slice';
-import {
-  SearchAction,
-  TransitiveSearchAction,
-  prepareForSearchWithQuery,
-} from '../../../features/search/search-actions';
+import {prepareForSearchWithQuery} from '../../../features/search/search-actions';
 import {searchReducer as search} from '../../../features/search/search-slice';
 import {
   ConfigurationSection,
@@ -59,6 +55,17 @@ export type {SearchBoxOptions, SuggestionHighlightingOptions, Delimiters};
 
 export type SearchBoxProps = SearchBoxPropsBase &
   (NextSearchBoxProps | LegacySearchBoxProps);
+
+interface SearchAction<Payload extends Object = {}> {
+  actionCause: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  getEventExtraPayload: (state: any) => Payload;
+}
+
+interface TransitiveSearchAction {
+  legacy: LegacySearchAction;
+  next?: SearchAction;
+}
 
 interface NextSearchBoxProps {
   /**

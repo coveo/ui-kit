@@ -33,7 +33,7 @@ import {
   TabSection,
 } from '../../state/state-sections';
 import {requiredNonEmptyString} from '../../utils/validate-payload';
-import {InsightAction} from '../analytics/analytics-utils';
+import {InsightAction as LegacyInsightAction} from '../analytics/analytics-utils';
 import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
 import {logDidYouMeanAutomatic} from '../did-you-mean/did-you-mean-insight-analytics-actions';
 import {emptyLegacyCorrection} from '../did-you-mean/did-you-mean-state';
@@ -45,23 +45,25 @@ import {
 } from '../query-suggest/query-suggest-actions';
 import {updateQuery} from '../query/query-actions';
 import {getQueryInitialState} from '../query/query-state';
-import {ExecuteSearchThunkReturn} from '../search/legacy/search-actions';
+import {ExecuteSearchThunkReturn} from '../search/search-actions';
 import {
   MappedSearchRequest,
   mapSearchResponse,
-  SuccessResponse,
 } from '../search/search-mappings';
 import {getSearchInitialState} from '../search/search-state';
 import {buildInsightQuerySuggestRequest} from './insight-query-suggest-request';
-import {
-  logFetchMoreResults,
-  logQueryError,
-} from './insight-search-analytics-actions';
+import {logQueryError} from './insight-search-analytics-actions';
 import {
   buildInsightFetchFacetValuesRequest,
   buildInsightFetchMoreResultsRequest,
   buildInsightSearchRequest,
 } from './insight-search-request';
+import {
+  legacyExecuteSearch,
+  legacyFetchPage,
+  legacyFetchFacetValues,
+  legacyFetchMoreResults,
+} from './legacy/insight-search-actions';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   InsightConfigurationSection &
@@ -103,17 +105,39 @@ export const fetchFromAPI = async (
   };
 };
 
+export interface InsightSearchAction<
+  State extends StateNeededByExecuteSearch = StateNeededByExecuteSearch,
+  Payload extends Object = {},
+> {
+  actionCause: string;
+  getEventExtraPayload: (state: State) => Payload;
+}
+
+interface TransitiveInsightSearchAction {
+  legacy: LegacyInsightAction;
+  next?: InsightSearchAction;
+}
+
 export const executeSearch = createAsyncThunk<
   ExecuteSearchThunkReturn,
-  InsightAction,
+  TransitiveInsightSearchAction,
   AsyncThunkInsightOptions<StateNeededByExecuteSearch>
 >(
   'search/executeSearch',
-  async (
-    analyticsAction: InsightAction,
-    {getState, dispatch, rejectWithValue, extra}
-  ) => {
+  async (analyticsAction: TransitiveInsightSearchAction, config) => {
+    const {extra, dispatch, getState, rejectWithValue} = config;
     const state = getState();
+    if (
+      state.configuration.analytics.analyticsMode === 'legacy' ||
+      !analyticsAction.next
+    ) {
+      return legacyExecuteSearch(
+        state,
+        {extra, dispatch, getState, rejectWithValue},
+        analyticsAction.legacy
+      );
+    }
+
     addEntryInActionsHistory(state);
     const mappedRequest = buildInsightSearchRequest(state);
 
@@ -133,7 +157,7 @@ export const executeSearch = createAsyncThunk<
         response: fetched.response.success,
         automaticallyCorrected: false,
         originalQuery: getOriginalQuery(state),
-        analyticsAction,
+        analyticsAction: analyticsAction.legacy,
       };
     }
     const {correctedQuery} = fetched.response.success.queryCorrections
@@ -151,23 +175,6 @@ export const executeSearch = createAsyncThunk<
       return rejectWithValue(retried.response.error);
     }
 
-    const fetchedResponse = (
-      mapSearchResponse(
-        fetched.response,
-        mappedRequest.mappings
-      ) as SuccessResponse
-    ).success;
-    analyticsAction()(
-      dispatch,
-      () =>
-        getStateAfterResponse(
-          fetched.queryExecuted,
-          fetched.duration,
-          state,
-          fetchedResponse
-        ),
-      extra
-    );
     dispatch(snapshot(extractHistory(getState())));
 
     return {
@@ -185,15 +192,27 @@ export const executeSearch = createAsyncThunk<
 
 export const fetchPage = createAsyncThunk<
   ExecuteSearchThunkReturn,
-  InsightAction,
+  TransitiveInsightSearchAction,
   AsyncThunkInsightOptions<StateNeededByExecuteSearch>
 >(
   'search/fetchPage',
   async (
-    analyticsAction: InsightAction,
+    analyticsAction: TransitiveInsightSearchAction,
     {getState, dispatch, rejectWithValue, extra}
   ) => {
     const state = getState();
+
+    if (
+      state.configuration.analytics.analyticsMode === 'legacy' ||
+      !analyticsAction.next
+    ) {
+      return legacyFetchPage(
+        state,
+        {extra, dispatch, getState, rejectWithValue},
+        analyticsAction.legacy
+      );
+    }
+
     addEntryInActionsHistory(state);
 
     const fetched = await fetchFromAPI(
@@ -213,7 +232,6 @@ export const fetchPage = createAsyncThunk<
       response: fetched.response.success,
       automaticallyCorrected: false,
       originalQuery: getOriginalQuery(state),
-      analyticsAction,
     };
   }
 );
@@ -224,10 +242,20 @@ export const fetchMoreResults = createAsyncThunk<
   AsyncThunkInsightOptions<StateNeededByExecuteSearch>
 >(
   'search/fetchMoreResults',
-  async (_, {getState, dispatch, rejectWithValue, extra: {apiClient}}) => {
+  async (_, {extra, dispatch, getState, rejectWithValue}) => {
     const state = getState();
+
+    if (state.configuration.analytics.analyticsMode === 'legacy') {
+      return legacyFetchMoreResults(state, {
+        extra,
+        dispatch,
+        getState,
+        rejectWithValue,
+      });
+    }
+
     const fetched = await fetchFromAPI(
-      apiClient,
+      extra.apiClient,
       state,
       await buildInsightFetchMoreResultsRequest(state)
     );
@@ -244,24 +272,35 @@ export const fetchMoreResults = createAsyncThunk<
       response: fetched.response.success,
       automaticallyCorrected: false,
       originalQuery: getOriginalQuery(state),
-      analyticsAction: logFetchMoreResults(),
     };
   }
 );
 
 export const fetchFacetValues = createAsyncThunk<
   ExecuteSearchThunkReturn,
-  InsightAction,
+  TransitiveInsightSearchAction,
   AsyncThunkInsightOptions<StateNeededByExecuteSearch>
 >(
   'search/fetchFacetValues',
   async (
-    analyticsAction: InsightAction,
-    {getState, dispatch, rejectWithValue, extra: {apiClient}}
+    analyticsAction: TransitiveInsightSearchAction,
+    {extra, dispatch, getState, rejectWithValue}
   ) => {
     const state = getState();
+
+    if (
+      state.configuration.analytics.analyticsMode === 'legacy' ||
+      !analyticsAction.next
+    ) {
+      return legacyFetchFacetValues(
+        state,
+        {extra, dispatch, getState, rejectWithValue},
+        analyticsAction.legacy
+      );
+    }
+
     const fetched = await fetchFromAPI(
-      apiClient,
+      extra.apiClient,
       state,
       await buildInsightFetchFacetValuesRequest(state)
     );
@@ -278,19 +317,9 @@ export const fetchFacetValues = createAsyncThunk<
       response: fetched.response.success,
       automaticallyCorrected: false,
       originalQuery: getOriginalQuery(state),
-      analyticsAction,
     };
   }
 );
-
-export type StateNeededByQuerySuggest = ConfigurationSection &
-  InsightConfigurationSection &
-  Partial<
-    ConfigurationSection &
-      QuerySuggestionSection &
-      QuerySetSection &
-      InsightCaseContextSection
-  >;
 
 export const fetchQuerySuggestions = createAsyncThunk<
   FetchQuerySuggestionsThunkReturn,
@@ -321,7 +350,16 @@ export const fetchQuerySuggestions = createAsyncThunk<
   }
 );
 
-const automaticallyRetryQueryWithCorrection = async (
+export type StateNeededByQuerySuggest = ConfigurationSection &
+  InsightConfigurationSection &
+  Partial<
+    ConfigurationSection &
+      QuerySuggestionSection &
+      QuerySetSection &
+      InsightCaseContextSection
+  >;
+
+export const automaticallyRetryQueryWithCorrection = async (
   client: InsightAPIClient,
   correction: string,
   getState: () => StateNeededByExecuteSearch,
@@ -343,7 +381,7 @@ const automaticallyRetryQueryWithCorrection = async (
   return fetched;
 };
 
-const shouldReExecuteTheQueryWithCorrections = (
+export const shouldReExecuteTheQueryWithCorrections = (
   state: StateNeededByExecuteSearch,
   res: SearchResponseSuccess
 ) => {
@@ -358,10 +396,10 @@ const shouldReExecuteTheQueryWithCorrections = (
   return false;
 };
 
-const getOriginalQuery = (state: StateNeededByExecuteSearch) =>
+export const getOriginalQuery = (state: StateNeededByExecuteSearch) =>
   state.query?.q !== undefined ? state.query.q : '';
 
-const getStateAfterResponse: (
+export const getStateAfterResponse: (
   query: string,
   duration: number,
   previousState: StateNeededByExecuteSearch,
@@ -387,7 +425,7 @@ const getStateAfterResponse: (
   },
 });
 
-const addEntryInActionsHistory = (state: StateNeededByExecuteSearch) => {
+export const addEntryInActionsHistory = (state: StateNeededByExecuteSearch) => {
   if (state.configuration.analytics.enabled) {
     historyStore.addElement({
       name: 'Query',
