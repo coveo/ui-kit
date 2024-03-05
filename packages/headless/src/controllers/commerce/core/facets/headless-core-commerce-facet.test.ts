@@ -234,7 +234,7 @@ describe('CoreCommerceFacet', () => {
         jest.spyOn(facet, 'toggleExclude');
         facet.toggleSingleExclude(facetValue());
 
-        expect(facet.toggleExclude).toHaveBeenCalledTimes(0);
+        expect(facet.toggleExclude).not.toHaveBeenCalled();
       });
     });
 
