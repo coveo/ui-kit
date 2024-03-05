@@ -22,6 +22,10 @@ export const fromAnalyticsStateToAnalyticsParams = async (
         actionCause: eventDescription.actionCause,
         customData: eventDescription.customData,
       }),
+      ...(eventDescription &&
+        !isNextAnalytics && {
+          customData: eventDescription.customData,
+        }),
       ...(s.userDisplayName && {userDisplayName: s.userDisplayName}),
       ...(s.documentLocation && {documentLocation: s.documentLocation}),
       ...(s.deviceId && {deviceId: s.deviceId}),

@@ -98,7 +98,7 @@ export function buildCategoryFacet(
       dispatch(
         executeSearch({
           legacy: getLegacyToggleSelectAnalyticsAction(getFacetId(), selection),
-          next: getToggleSelectAnalyticsAction(getFacetId(), selection),
+          next: getToggleSelectAnalyticsAction(selection),
         })
       );
     },
@@ -108,7 +108,7 @@ export function buildCategoryFacet(
       dispatch(
         executeSearch({
           legacy: logFacetClearAll(getFacetId()),
-          next: facetClearAll(getFacetId()),
+          next: facetClearAll(),
         })
       );
     },
@@ -118,7 +118,7 @@ export function buildCategoryFacet(
       dispatch(
         executeSearch({
           legacy: logFacetUpdateSort({facetId: getFacetId(), criterion}),
-          next: facetUpdateSort(getFacetId(), criterion),
+          next: facetUpdateSort(),
         })
       );
     },
@@ -173,11 +173,8 @@ function getLegacyToggleSelectAnalyticsAction(
 }
 
 function getToggleSelectAnalyticsAction(
-  facetId: string,
   selection: CategoryFacetValue
 ): SearchAction {
   const isSelected = selection.state === 'selected';
-  return isSelected
-    ? facetDeselect(facetId, selection.value)
-    : facetSelect(facetId, selection.value);
+  return isSelected ? facetDeselect() : facetSelect();
 }

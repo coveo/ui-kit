@@ -1,6 +1,5 @@
 import {ItemClick} from '@coveo/relay-event-types';
 import {RecommendationAnalyticsProvider} from '../../api/analytics/recommendations-analytics';
-import {SearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {Result} from '../../api/search/search/result';
 import {
   ClickAction,
@@ -22,13 +21,9 @@ export const logRecommendationUpdate = (): LegacySearchAction =>
     (getState) => new RecommendationAnalyticsProvider(getState)
   );
 
-export const recommendationInterfaceLoad = (): SearchAction => {
-  return {
-    actionCause: SearchPageEvents.recommendationInterfaceLoad,
-    getEventExtraPayload: (state) =>
-      new SearchAnalyticsProvider(() => state).getBaseMetadata(),
-  };
-};
+export const recommendationInterfaceLoad = (): SearchAction => ({
+  actionCause: SearchPageEvents.recommendationInterfaceLoad,
+});
 
 export const logRecommendationOpen = (result: Result): ClickAction =>
   makeAnalyticsAction({
