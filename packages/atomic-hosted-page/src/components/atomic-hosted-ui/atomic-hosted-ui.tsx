@@ -52,44 +52,36 @@ export class AtomicHostedUI implements ComponentInterface {
     options: AtomicHostedUIInitializationOptions
   ) {
     this.validateOptions(options);
-    const platformUrl = extractPlatformUrl(options);
 
     try {
-      processHostedPage(
-        this.element,
-        await this.getPageManifest(platformUrl, options)
-      );
+      processHostedPage(this.element, await this.getHostedPage(options));
     } catch (e) {
       console.error(e);
     }
   }
 
-  private async getPageManifest(
-    platformUrl: string,
-    options: AtomicHostedUIInitializationOptions
-  ) {
+  private async getHostedPage(options: AtomicHostedUIInitializationOptions) {
+    const platformUrl = extractPlatformUrl(options);
+
     const paths = {
       page: {
         pagePathPrefix: 'searchpage/v1/interfaces',
-        loaderPath: '/loader',
-        manifestPath: '/manifest',
+        pagePath: '/loader',
       },
       legacy: {
         pagePathPrefix: 'searchinterfaces',
-        loaderPath: '/hostedpage/v1',
-        manifestPath: '/manifest/v1',
+        pagePath: '/hostedpage/v1',
       },
       custom: {
         pagePathPrefix: 'hostedpages',
-        loaderPath: '',
-        manifestPath: '',
+        pagePath: '',
       },
     };
 
-    const {pagePathPrefix, loaderPath, manifestPath} = paths[this.hostedType];
+    const {pagePathPrefix, pagePath} = paths[this.hostedType];
 
     const pageResponse = await fetch(
-      `${platformUrl}/rest/organizations/${options.organizationId}/${pagePathPrefix}/${options.pageId}${loaderPath}`,
+      `${platformUrl}/rest/organizations/${options.organizationId}/${pagePathPrefix}/${options.pageId}${pagePath}`,
       {
         headers: {
           Authorization: `Bearer ${options.accessToken}`,
@@ -97,46 +89,7 @@ export class AtomicHostedUI implements ComponentInterface {
       }
     );
 
-    const pageManifestResponse =
-      this.hostedType !== 'custom'
-        ? await fetch(
-            `${platformUrl}/rest/organizations/${options.organizationId}/${pagePathPrefix}/${options.pageId}${manifestPath}`,
-            {
-              method: 'POST',
-              headers: {
-                Authorization: `Bearer ${options.accessToken}`,
-              },
-              body: JSON.stringify({
-                pagePlaceholders: {
-                  results: '--results--',
-                },
-              }),
-            }
-          ).then((response) => response.json())
-        : null;
-
-    return this.hostedType !== 'page'
-      ? await pageResponse.json()
-      : {
-          id: options.pageId,
-          html: '',
-          javascript: [
-            {isModule: false, inlineContent: await pageResponse.text()},
-          ],
-          css: [
-            {
-              inlineContent: pageManifestResponse.style.layout,
-            },
-            {
-              inlineContent: pageManifestResponse.style.theme,
-            },
-          ],
-          name: pageManifestResponse.config.name,
-          created: pageManifestResponse.config.created,
-          createdBy: pageManifestResponse.config.createdBy,
-          updated: pageManifestResponse.config.updated,
-          updatedBy: pageManifestResponse.config.updatedBy,
-        };
+    return await pageResponse.json();
   }
 
   /**
