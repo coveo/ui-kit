@@ -125,7 +125,6 @@ export class AtomicSearchBox {
   @State() public error!: Error;
   @State() private suggestedQuery = '';
   @State() private isExpanded = false;
-  @State() private isSearchDisabled = false;
   @State() private activeDescendant = '';
   @State() private previousActiveDescendantElement: HTMLElement | null = null;
   @State() private leftSuggestions: SearchBoxSuggestions[] = [];
@@ -254,7 +253,6 @@ export class AtomicSearchBox {
   public initialize() {
     this.id = randomID('atomic-search-box-');
     this.querySetActions = loadQuerySetActions(this.bindings.engine);
-    this.isSearchDisabled = this.disableSearch || this.minimumQueryLength > 0;
     if (!this.textarea) {
       this.bindings.engine.logger.warn(
         'As of Atomic version 3.0.0, the searchbox will be enabled as a text area by default. To remove this warning, set textarea="true" on the search box.',
@@ -297,7 +295,8 @@ export class AtomicSearchBox {
       querySetActions: this.querySetActions,
       focusValue: this.focusValue.bind(this),
       clearSuggestions: this.clearSuggestions.bind(this),
-      getIsSearchDisabled: () => this.isSearchDisabled,
+      getIsSearchDisabled: () =>
+        this.isSearchDisabledForEndUser(this.searchBoxState.value),
       getIsExpanded: () => this.isExpanded,
       getPanelInFocus: () => this.panelInFocus,
       getActiveDescendant: () => this.activeDescendant,
@@ -457,7 +456,7 @@ export class AtomicSearchBox {
   }
 
   private async triggerSuggestions() {
-    if (this.disableSearch) {
+    if (this.isSearchDisabledForEndUser(this.searchBoxState.value)) {
       return;
     }
     const settled = await Promise.allSettled(
@@ -511,9 +510,7 @@ export class AtomicSearchBox {
   private onInput(value: string) {
     this.searchBox.updateText(value);
 
-    this.isSearchDisabled =
-      this.disableSearch || this.minimumQueryLength > value.trim().length;
-    if (this.isSearchDisabled) {
+    if (this.isSearchDisabledForEndUser(value)) {
       return;
     }
     this.isExpanded = true;
@@ -609,7 +606,7 @@ export class AtomicSearchBox {
   }
 
   private onKeyDown(e: KeyboardEvent) {
-    if (this.isSearchDisabled) {
+    if (this.isSearchDisabledForEndUser(this.searchBoxState.value)) {
       return;
     }
 
@@ -866,6 +863,14 @@ export class AtomicSearchBox {
     );
   }
 
+  private isSearchDisabledForEndUser(queryValue: string) {
+    if (queryValue.trim().length < this.minimumQueryLength) {
+      return true;
+    }
+
+    return this.disableSearch;
+  }
+
   public render() {
     this.updateBreakpoints();
 
@@ -873,15 +878,15 @@ export class AtomicSearchBox {
       this.minimumQueryLength
     );
     const Submit = this.textarea ? TextAreaSubmitButton : SubmitButton;
+    const isDisabled = this.isSearchDisabledForEndUser(
+      this.searchBoxState.value
+    );
 
     return (
       <Host>
         {this.textarea ? this.renderAbsolutePositionSpacer() : null}
         {[
-          <SearchBoxWrapper
-            disabled={this.isSearchDisabled}
-            textArea={this.textarea}
-          >
+          <SearchBoxWrapper disabled={isDisabled} textArea={this.textarea}>
             <atomic-focus-detector
               style={{display: 'contents'}}
               onFocusExit={() => this.clearSuggestions()}
@@ -889,7 +894,7 @@ export class AtomicSearchBox {
               {this.renderTextBox(searchLabel)}
               <Submit
                 bindings={this.bindings}
-                disabled={this.isSearchDisabled}
+                disabled={isDisabled}
                 onClick={() => {
                   this.searchBox.submit();
                   this.clearSuggestions();
