@@ -42,6 +42,7 @@ import {
 } from '../../../facets/facet-set/facet-set-actions';
 import {convertFacetValueToRequest} from '../../../facets/facet-set/facet-set-slice';
 import {updateFacetAutoSelection} from '../../../facets/generic/facet-actions';
+import * as FacetReducers from '../../../facets/generic/facet-reducer-helpers';
 import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
@@ -108,6 +109,7 @@ describe('commerceFacetSetReducer', () => {
       responseBuilder: () => ReturnType<typeof buildSearchResponse>;
     }) => {
       const facetId = '1';
+
       function buildQueryAction(facets: AnyFacetResponse[]) {
         const response = responseBuilder();
         response.response.facets = facets;
@@ -1444,7 +1446,7 @@ describe('commerceFacetSetReducer', () => {
     describe('#updateCategoryFacetNumberOfValues', () => {
       it('calls #handleFacetUpdateNumberOfValues if there are no nested children', () => {
         const spy = jest.spyOn(
-          CommerceFacetReducers,
+          FacetReducers,
           'handleFacetUpdateNumberOfValues'
         );
         const request = buildMockCommerceFacetRequest({
@@ -1456,7 +1458,7 @@ describe('commerceFacetSetReducer', () => {
         commerceFacetSetReducer(
           state,
           updateCategoryFacetNumberOfValues({
-            facetId: facetId,
+            facetId,
             numberOfValues: 20,
           })
         );
@@ -1464,7 +1466,32 @@ describe('commerceFacetSetReducer', () => {
         expect(spy).toHaveBeenCalledTimes(1);
       });
 
-      // TODO: it('calls #handleFacetUpdateNestedNumberOfValues if there are nested children', () => {});
+      it('calls #handleCategoryFacetNestedNumberOfValuesUpdate if there are nested children', () => {
+        const spy = jest.spyOn(
+          CommerceFacetReducers,
+          'handleCategoryFacetNestedNumberOfValuesUpdate'
+        );
+        const request = buildMockCommerceFacetRequest({
+          facetId,
+          type: 'hierarchical',
+          values: [
+            convertCategoryFacetValueToRequest(
+              buildMockCategoryFacetValue({value: 'test'})
+            ),
+          ],
+        });
+        state[facetId] = buildMockCommerceFacetSlice({request});
+
+        commerceFacetSetReducer(
+          state,
+          updateCategoryFacetNumberOfValues({
+            facetId,
+            numberOfValues: 20,
+          })
+        );
+
+        expect(spy).toHaveBeenCalledTimes(1);
+      });
 
       it('sets correct retrieve count to the appropriate number', () => {
         const request = buildMockCommerceFacetRequest({
