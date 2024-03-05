@@ -17,19 +17,19 @@ import {buildMockFacetSearch} from '../../../../../test/mock-facet-search';
 import {commonOptions} from '../../../product-listing/facets/headless-product-listing-facet-options';
 import {FacetValueRequest} from '../headless-core-commerce-facet';
 import {
-  CommerceRegularFacet,
-  CommerceRegularFacetOptions,
+  RegularFacet,
+  RegularFacetOptions,
   buildCommerceRegularFacet,
 } from './headless-commerce-regular-facet';
 
 jest.mock('../../../../../features/facets/facet-set/facet-set-actions');
 
-describe('CommerceRegularFacet', () => {
+describe('RegularFacet', () => {
   const facetId: string = 'regular_facet_id';
   let engine: MockedCommerceEngine;
   let state: CommerceAppState;
-  let options: CommerceRegularFacetOptions;
-  let facet: CommerceRegularFacet;
+  let options: RegularFacetOptions;
+  let facet: RegularFacet;
 
   function initEngine(preloadedState = buildMockCommerceState()) {
     engine = buildMockCommerceEngine(preloadedState);

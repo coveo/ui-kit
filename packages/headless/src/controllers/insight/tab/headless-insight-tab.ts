@@ -1,6 +1,6 @@
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
-import {logInsightInterfaceChange} from '../../../features/analytics/insight-analytics-actions';
 import {executeSearch} from '../../../features/insight-search/insight-search-actions';
+import {logInsightInterfaceChange} from '../../../features/insight-search/insight-search-analytics-actions';
 import {
   buildCoreTab,
   Tab,

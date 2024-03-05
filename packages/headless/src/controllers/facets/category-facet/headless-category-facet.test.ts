@@ -25,8 +25,10 @@ import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-
 import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search';
 import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
 import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value';
-import {MockSearchEngine} from '../../../test/mock-engine';
-import {buildMockSearchAppEngine} from '../../../test/mock-engine';
+import {
+  MockedSearchEngine,
+  buildMockSearchEngine,
+} from '../../../test/mock-engine-v2';
 import {createMockState} from '../../../test/mock-state';
 import * as FacetIdDeterminor from '../../core/facets/_common/facet-id-determinor';
 import * as CategoryFacetSearch from '../../core/facets/facet-search/category/headless-category-facet-search';
@@ -36,15 +38,21 @@ import {
   CategoryFacetOptions,
 } from './headless-category-facet';
 
+jest.mock(
+  '../../../features/facets/category-facet-set/category-facet-set-actions'
+);
+jest.mock('../../../features/search/search-actions');
+jest.mock('../../../features/facet-options/facet-options-actions');
+
 describe('category facet', () => {
   const facetId = '1';
   let options: CategoryFacetOptions;
   let state: SearchAppState;
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
   let categoryFacet: CategoryFacet;
 
   function initCategoryFacet() {
-    engine = buildMockSearchAppEngine({state});
+    engine = buildMockSearchEngine(state);
     categoryFacet = buildCategoryFacet(engine, {options});
   }
 
@@ -90,12 +98,11 @@ describe('category facet', () => {
   });
 
   it('registers a category facet with the passed options and default optional parameters', () => {
-    const action = registerCategoryFacet({
+    expect(registerCategoryFacet).toHaveBeenCalledWith({
       ...defaultCategoryFacetOptions,
       ...options,
       facetId,
     });
-    expect(engine.actions).toContainEqual(action);
   });
 
   it('when an option is invalid, it throws', () => {
@@ -193,12 +200,11 @@ describe('category facet', () => {
       const selection = buildMockCategoryFacetValue({value: 'A'});
       categoryFacet.toggleSelect(selection);
 
-      const action = toggleSelectCategoryFacetValue({
+      expect(toggleSelectCategoryFacetValue).toHaveBeenCalledWith({
         facetId,
         selection,
         retrieveCount: defaultCategoryFacetOptions.numberOfValues,
       });
-      expect(engine.actions).toContainEqual(action);
     });
 
     it('if the numberOfValues is set it dispatches #toggleCategoryFacetValue with the correct retrieveCount', () => {
@@ -207,29 +213,24 @@ describe('category facet', () => {
       const selection = buildMockCategoryFacetValue({value: 'A'});
       categoryFacet.toggleSelect(selection);
 
-      const action = toggleSelectCategoryFacetValue({
+      expect(toggleSelectCategoryFacetValue).toHaveBeenCalledWith({
         facetId,
         selection,
         retrieveCount: 10,
       });
-      expect(engine.actions).toContainEqual(action);
     });
 
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       const selection = buildMockCategoryFacetValue({value: 'A'});
       categoryFacet.toggleSelect(selection);
 
-      expect(engine.actions).toContainEqual(updateFacetOptions());
+      expect(updateFacetOptions).toHaveBeenCalled();
     });
 
     it('executes a search', () => {
       const selection = buildMockCategoryFacetValue({value: 'A'});
       categoryFacet.toggleSelect(selection);
-
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-      expect(action).toBeTruthy();
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 
@@ -237,20 +238,15 @@ describe('category facet', () => {
     beforeEach(() => categoryFacet.deselectAll());
 
     it('dispatches #deselectAllCategoryFacetValues', () => {
-      expect(engine.actions).toContainEqual(
-        deselectAllCategoryFacetValues(facetId)
-      );
+      expect(deselectAllCategoryFacetValues).toHaveBeenCalledWith(facetId);
     });
 
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
-      expect(engine.actions).toContainEqual(updateFacetOptions());
+      expect(updateFacetOptions).toHaveBeenCalled();
     });
 
     it('executes a search', () => {
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-      expect(action).toBeTruthy();
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 
@@ -376,11 +372,10 @@ describe('category facet', () => {
     it('with no values, it dispatches #updateCategoryFacetNumberOfResults with the correct number of values', () => {
       categoryFacet.showMoreValues();
 
-      const action = updateCategoryFacetNumberOfValues({
+      expect(updateCategoryFacetNumberOfValues).toHaveBeenCalledWith({
         facetId,
         numberOfValues: defaultCategoryFacetOptions.numberOfValues,
       });
-      expect(engine.actions).toContainEqual(action);
     });
 
     it('with a value, it dispatches #updateCategoryFacetNumberOfResults with the correct number of values', () => {
@@ -389,26 +384,21 @@ describe('category facet', () => {
       state.search.response.facets = [response];
 
       initCategoryFacet();
-
-      const action = updateCategoryFacetNumberOfValues({
+      categoryFacet.showMoreValues();
+      expect(updateCategoryFacetNumberOfValues).toHaveBeenCalledWith({
         facetId,
         numberOfValues: 6,
       });
-      categoryFacet.showMoreValues();
-      expect(engine.actions).toContainEqual(action);
     });
 
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       categoryFacet.showMoreValues();
-
-      expect(engine.actions).toContainEqual(updateFacetOptions());
+      expect(updateFacetOptions).toHaveBeenCalled();
     });
 
     it('dispatches #fetchFacetValues', () => {
       categoryFacet.showMoreValues();
-
-      const action = engine.findAsyncAction(fetchFacetValues.pending);
-      expect(action).toBeTruthy();
+      expect(fetchFacetValues).toHaveBeenCalled();
     });
   });
 
@@ -416,22 +406,18 @@ describe('category facet', () => {
     beforeEach(() => categoryFacet.showLessValues());
 
     it('dispatches #updateCategoryFacetNumberOfResults with the correct numberOfValues', () => {
-      const action = updateCategoryFacetNumberOfValues({
+      expect(updateCategoryFacetNumberOfValues).toHaveBeenCalledWith({
         facetId,
         numberOfValues: 5,
       });
-      expect(engine.actions).toContainEqual(action);
     });
 
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
-      expect(engine.actions).toContainEqual(updateFacetOptions());
+      expect(updateFacetOptions).toHaveBeenCalled();
     });
 
     it('dispatches #fetchFacetValues', () => {
-      const action = engine.actions.find(
-        (a) => a.type === fetchFacetValues.pending.type
-      );
-      expect(action).toBeTruthy();
+      expect(fetchFacetValues).toHaveBeenCalled();
     });
   });
 
@@ -439,25 +425,22 @@ describe('category facet', () => {
     it('dispatches #toggleCategoryFacetValue with the passed selection', () => {
       const sortCriterion: CategoryFacetSortCriterion = 'alphanumeric';
       categoryFacet.sortBy(sortCriterion);
-      const action = updateCategoryFacetSortCriterion({
+
+      expect(updateCategoryFacetSortCriterion).toHaveBeenCalledWith({
         facetId,
         criterion: sortCriterion,
       });
-      expect(engine.actions).toContainEqual(action);
     });
 
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       categoryFacet.sortBy('alphanumeric');
 
-      expect(engine.actions).toContainEqual(updateFacetOptions());
+      expect(updateFacetOptions).toHaveBeenCalled();
     });
 
     it('dispatches #executeSearch', () => {
       categoryFacet.sortBy('alphanumeric');
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-      expect(action).toBeTruthy();
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 
@@ -487,7 +470,7 @@ describe('category facet', () => {
       path: ['bar', 'bazz'],
     };
 
-    engine.state.categoryFacetSearchSet[facetId].response.values = [
+    engine.state.categoryFacetSearchSet![facetId].response.values = [
       fakeResponseValue,
     ];
 

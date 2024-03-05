@@ -3,7 +3,7 @@ export interface AutomaticFacetGeneratorOptions {
    * The desired count of automatic facets.
    *
    * Minimum: `1`
-   * Maximum: `10`
+   * Maximum: `20`
    * @defaultValue `5`
    */
   desiredCount?: number;

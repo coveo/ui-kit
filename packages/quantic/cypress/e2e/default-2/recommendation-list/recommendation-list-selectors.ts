@@ -30,7 +30,7 @@ export const RecommendationListSelectors: RecommendationListSelector &
     ),
   recommendationLinks: () =>
     RecommendationListSelectors.get().find(
-      '[data-cy="recommendations__item"] c-quantic-result-link a'
+      '[data-cy="recommendations__item"] [data-cy="result-link"] a'
     ),
   carousel: () =>
     RecommendationListSelectors.get().find(

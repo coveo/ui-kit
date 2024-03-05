@@ -22,8 +22,8 @@ import {buildMockFacetSearch} from '../../../../../test/mock-facet-search';
 import {commonOptions} from '../../../product-listing/facets/headless-product-listing-facet-options';
 import {CoreCommerceFacetOptions} from '../headless-core-commerce-facet';
 import {
-  CommerceSearchableFacet,
-  CommerceSearchableFacetOptions,
+  SearchableFacet,
+  SearchableFacetOptions,
   buildCommerceSearchableFacet,
 } from './headless-commerce-searchable-facet';
 
@@ -31,14 +31,11 @@ jest.mock(
   '../../../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions'
 );
 
-describe('CommerceSearchableFacet', () => {
+describe('SearchableFacet', () => {
   const facetId: string = 'searchable_facet_id';
   let engine: MockedCommerceEngine;
-  let options: CoreCommerceFacetOptions & CommerceSearchableFacetOptions;
-  let facet: CommerceSearchableFacet<
-    AnyFacetValueRequest,
-    AnyFacetValueResponse
-  >;
+  let options: CoreCommerceFacetOptions & SearchableFacetOptions;
+  let facet: SearchableFacet<AnyFacetValueRequest, AnyFacetValueResponse>;
 
   function initEngine(preloadedState = buildMockCommerceState()) {
     engine = buildMockCommerceEngine(preloadedState);

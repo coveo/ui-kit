@@ -1,17 +1,20 @@
+import {InsightPanel} from '@coveo/relay-event-types';
 import {Result} from '../../api/search/search/result';
 import {
+  analyticsEventItemMetadata,
   documentIdentifier,
   InsightAction,
   makeInsightAnalyticsAction,
   partialDocumentInformation,
   validateResultPayload,
 } from '../analytics/analytics-utils';
+import {analyticsEventCaseContext} from '../analytics/insight-analytics-utils';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
 
 export const logCopyToClipboard = (result: Result): InsightAction =>
-  makeInsightAnalyticsAction(
-    'analytics/resultAction/insight/copyToClipboard',
-    (client, state) => {
+  makeInsightAnalyticsAction({
+    prefix: 'analytics/resultAction/insight/copyToClipboard',
+    __legacy__getBuilder: (client, state) => {
       validateResultPayload(result);
       const metadata = getCaseContextAnalyticsMetadata(
         state.insightCaseContext
@@ -21,13 +24,24 @@ export const logCopyToClipboard = (result: Result): InsightAction =>
         documentIdentifier(result),
         metadata
       );
-    }
-  );
+    },
+    analyticsType: 'InsightPanel.ItemAction',
+    analyticsPayloadBuilder: (state): InsightPanel.ItemAction => {
+      const information = partialDocumentInformation(result, state);
+      return {
+        itemMetadata: analyticsEventItemMetadata(result, state),
+        position: information.documentPosition,
+        searchUid: state.search?.response.searchUid || '',
+        action: 'copyToClipboard',
+        context: analyticsEventCaseContext(state),
+      };
+    },
+  });
 
 export const logCaseSendEmail = (result: Result): InsightAction =>
-  makeInsightAnalyticsAction(
-    'analytics/resultAction/insight/caseSendEmail',
-    (client, state) => {
+  makeInsightAnalyticsAction({
+    prefix: 'analytics/resultAction/insight/caseSendEmail',
+    __legacy__getBuilder: (client, state) => {
       validateResultPayload(result);
       const metadata = getCaseContextAnalyticsMetadata(
         state.insightCaseContext
@@ -37,13 +51,24 @@ export const logCaseSendEmail = (result: Result): InsightAction =>
         documentIdentifier(result),
         metadata
       );
-    }
-  );
+    },
+    analyticsType: 'InsightPanel.ItemAction',
+    analyticsPayloadBuilder: (state): InsightPanel.ItemAction => {
+      const information = partialDocumentInformation(result, state);
+      return {
+        itemMetadata: analyticsEventItemMetadata(result, state),
+        position: information.documentPosition,
+        searchUid: state.search?.response.searchUid || '',
+        action: 'sendEmail',
+        context: analyticsEventCaseContext(state),
+      };
+    },
+  });
 
 export const logFeedItemTextPost = (result: Result): InsightAction =>
-  makeInsightAnalyticsAction(
-    'analytics/resultAction/insight/feedItemTextPost',
-    (client, state) => {
+  makeInsightAnalyticsAction({
+    prefix: 'analytics/resultAction/insight/feedItemTextPost',
+    __legacy__getBuilder: (client, state) => {
       validateResultPayload(result);
       const metadata = getCaseContextAnalyticsMetadata(
         state.insightCaseContext
@@ -53,5 +78,16 @@ export const logFeedItemTextPost = (result: Result): InsightAction =>
         documentIdentifier(result),
         metadata
       );
-    }
-  );
+    },
+    analyticsType: 'InsightPanel.ItemAction',
+    analyticsPayloadBuilder: (state): InsightPanel.ItemAction => {
+      const information = partialDocumentInformation(result, state);
+      return {
+        itemMetadata: analyticsEventItemMetadata(result, state),
+        position: information.documentPosition,
+        searchUid: state.search?.response.searchUid || '',
+        action: 'postToFeed',
+        context: analyticsEventCaseContext(state),
+      };
+    },
+  });

@@ -22,7 +22,7 @@ export const buildCommerceFacetSearchRequest = async (
     clientId,
     context,
     ...restOfCommerceAPIRequest
-  } = buildCommerceAPIRequest(state);
+  } = await buildCommerceAPIRequest(state);
 
   return {
     url,

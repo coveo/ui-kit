@@ -49,7 +49,7 @@ export class AtomicAutomaticFacetGenerator implements InitializableComponent {
    * The desired count of automatic facets.
    *
    * Minimum: `1`
-   * Maximum: `10`
+   * Maximum: `20`
    * @defaultValue `5`
    */
   @Prop({reflect: true}) public desiredCount = 5;

@@ -1,7 +1,7 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {
-  buildCommerceFacetGenerator,
-  CommerceFacetGenerator,
+  buildFacetGenerator,
+  FacetGenerator,
 } from '../../core/facets/generator/headless-commerce-facet-generator';
 import {buildSearchDateFacet} from './headless-search-date-facet';
 import {buildSearchNumericFacet} from './headless-search-numeric-facet';
@@ -15,7 +15,7 @@ import {buildSearchRegularFacet} from './headless-search-regular-facet';
  * (CMH). The implementer is only responsible for leveraging the facet controllers created by this controller to
  * properly render facets in their application.
  */
-export interface SearchFacetGenerator extends CommerceFacetGenerator {}
+export interface SearchFacetGenerator extends FacetGenerator {}
 
 /**
  * Creates `SearchFacetGenerator` controller instance.
@@ -26,7 +26,7 @@ export interface SearchFacetGenerator extends CommerceFacetGenerator {}
 export function buildSearchFacetGenerator(
   engine: CommerceEngine
 ): SearchFacetGenerator {
-  return buildCommerceFacetGenerator(engine, {
+  return buildFacetGenerator(engine, {
     buildRegularFacet: buildSearchRegularFacet,
     buildNumericFacet: buildSearchNumericFacet,
     buildDateFacet: buildSearchDateFacet,

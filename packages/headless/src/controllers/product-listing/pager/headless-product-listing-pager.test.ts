@@ -1,8 +1,9 @@
 import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
 import {
   buildMockProductListingEngine,
-  MockProductListingEngine,
-} from '../../../test/mock-engine';
+  MockedProductListingEngine,
+} from '../../../test/mock-engine-v2';
+import {buildMockProductListingState} from '../../../test/mock-product-listing-state';
 import {
   Pager,
   PagerOptions,
@@ -10,8 +11,10 @@ import {
   buildPager,
 } from './headless-product-listing-pager';
 
+jest.mock('../../../features/product-listing/product-listing-actions');
+
 describe('Pager', () => {
-  let engine: MockProductListingEngine;
+  let engine: MockedProductListingEngine;
   let options: PagerOptions;
   let initialState: PagerInitialState;
   let pager: Pager;
@@ -23,7 +26,7 @@ describe('Pager', () => {
   beforeEach(() => {
     options = {};
     initialState = {};
-    engine = buildMockProductListingEngine();
+    engine = buildMockProductListingEngine(buildMockProductListingState());
     initPager();
   });
 
@@ -33,19 +36,16 @@ describe('Pager', () => {
 
   it('#selectPage dispatches #fetchProductListing', () => {
     pager.selectPage(2);
-    const action = engine.findAsyncAction(fetchProductListing.pending);
-    expect(action).toBeTruthy();
+    expect(fetchProductListing).toHaveBeenCalled();
   });
 
   it('#nextPage dispatches #fetchProductListing', () => {
     pager.nextPage();
-    const action = engine.findAsyncAction(fetchProductListing.pending);
-    expect(action).toBeTruthy();
+    expect(fetchProductListing).toHaveBeenCalled();
   });
 
   it('#previousPage dispatches #fetchProductListing', () => {
     pager.previousPage();
-    const action = engine.findAsyncAction(fetchProductListing.pending);
-    expect(engine.actions).toContainEqual(action);
+    expect(fetchProductListing).toHaveBeenCalled();
   });
 });

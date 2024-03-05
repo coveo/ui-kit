@@ -44,6 +44,7 @@
       <div slot="excerpt">{result.Excerpt}</div>
       <div slot="bottom-metadata" class="slds-m-top_x-small">
         <c-quantic-result-printable-uri
+          engine-id={engineId}
           result={result}
           max-number-of-parts="3"
         ></c-quantic-result-printable-uri>

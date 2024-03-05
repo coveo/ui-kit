@@ -7,7 +7,7 @@
 const fs = require('fs');
 const {resolve} = require('path');
 const paramCase = require('change-case').paramCase;
-const xmlToJson = require('xml2json').toJson;
+const parseString = require('xml2js').parseString;
 const dump = require('jsdoc/util/dumper').dump;
 
 function formatType(type) {
@@ -99,7 +99,12 @@ function getMetadata(element) {
   const filePath = `${element.meta.path}/${element.meta.filename}-meta.xml`;
 
   const xmlData = fs.readFileSync(filePath, 'utf8');
-  return JSON.parse(xmlToJson(xmlData));
+  return parseString(xmlData, {explicitArray: false}, function (err, result) {
+    if (err) {
+      throw err;
+    }
+    return result;
+  });
 }
 
 function getComponentCategories(element) {

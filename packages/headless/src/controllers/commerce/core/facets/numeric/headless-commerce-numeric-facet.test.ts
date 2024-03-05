@@ -17,8 +17,8 @@ import {
 import {commonOptions} from '../../../product-listing/facets/headless-product-listing-facet-options';
 import {NumericRangeRequest} from '../headless-core-commerce-facet';
 import {
-  CommerceNumericFacet,
-  CommerceNumericFacetOptions,
+  NumericFacet,
+  NumericFacetOptions,
   buildCommerceNumericFacet,
 } from './headless-commerce-numeric-facet';
 
@@ -26,15 +26,15 @@ jest.mock(
   '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions'
 );
 
-describe('CommerceNumericFacet', () => {
+describe('NumericFacet', () => {
   const facetId: string = 'numeric_facet_id';
   const type: FacetType = 'numericalRange';
   const start = 0;
   const end = 100;
-  let options: CommerceNumericFacetOptions;
+  let options: NumericFacetOptions;
   let state: CommerceAppState;
   let engine: MockedCommerceEngine;
-  let facet: CommerceNumericFacet;
+  let facet: NumericFacet;
 
   function initFacet() {
     engine = buildMockCommerceEngine(state);

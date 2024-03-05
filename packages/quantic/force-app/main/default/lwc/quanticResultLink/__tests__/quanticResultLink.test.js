@@ -12,6 +12,10 @@ const exampleResult = {
   clickUri: 'https://coveo.com/',
 };
 
+const selectors = {
+  quanticTextField: 'c-quantic-result-highlighted-text-field',
+};
+
 jest.mock('c/quanticHeadlessLoader');
 
 function createTestComponent(options) {
@@ -186,6 +190,72 @@ describe('c-quantic-result-link', () => {
 
         expect(link.getAttribute('href')).toEqual(exampleResult.clickUri);
         expect(link.getAttribute('target')).toEqual(customTarget);
+      });
+    });
+  });
+
+  describe('with a custom value for the displayed field property', () => {
+    it('should display the correct field as the link text', async () => {
+      const customFieldToDisplay = 'exampleField';
+
+      const element = createTestComponent({
+        result: {
+          ...exampleResult,
+          raw: {[customFieldToDisplay]: 'exampleValue'},
+        },
+        displayedField: customFieldToDisplay,
+      });
+      await flushPromises();
+
+      const quanticTextFieldComponent = element.shadowRoot.querySelector(
+        selectors.quanticTextField
+      );
+
+      expect(quanticTextFieldComponent).not.toBeNull();
+      expect(quanticTextFieldComponent.field).toBe(customFieldToDisplay);
+    });
+  });
+
+  describe('with the default value for the displayed field property', () => {
+    describe('when the title field exists on the result', () => {
+      it('should display the title field as the link text', async () => {
+        const defaultFieldToDisplay = 'title';
+
+        const element = createTestComponent({
+          result: {
+            ...exampleResult,
+            [defaultFieldToDisplay]: 'example title',
+          },
+        });
+        await flushPromises();
+
+        const quanticTextFieldComponent = element.shadowRoot.querySelector(
+          selectors.quanticTextField
+        );
+
+        expect(quanticTextFieldComponent).not.toBeNull();
+        expect(quanticTextFieldComponent.field).toBe(defaultFieldToDisplay);
+      });
+    });
+
+    describe('when the title field does not exist on the result', () => {
+      it('should fall back to display the click uri field as the link text', async () => {
+        const fallbackFieldToDisplay = 'clickUri';
+
+        const element = createTestComponent({
+          result: {
+            ...exampleResult,
+            [fallbackFieldToDisplay]: 'example clickUri',
+          },
+        });
+        await flushPromises();
+
+        const quanticTextFieldComponent = element.shadowRoot.querySelector(
+          selectors.quanticTextField
+        );
+
+        expect(quanticTextFieldComponent).not.toBeNull();
+        expect(quanticTextFieldComponent.field).toBe(fallbackFieldToDisplay);
       });
     });
   });

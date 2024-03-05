@@ -5,9 +5,9 @@ import {fetchProductListing} from '../../../../features/product-listing/product-
 import {searchReducer as search} from '../../../../features/search/search-slice';
 import {ProductListingAppState} from '../../../../state/product-listing-app-state';
 import {
-  MockProductListingEngine,
+  MockedProductListingEngine,
   buildMockProductListingEngine,
-} from '../../../../test/mock-engine';
+} from '../../../../test/mock-engine-v2';
 import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
 import {buildMockProductListingState} from '../../../../test/mock-product-listing-state';
@@ -17,14 +17,17 @@ import {
   NumericFacetOptions,
 } from './headless-product-listing-numeric-facet';
 
+jest.mock('../../../../features/product-listing/product-listing-actions');
+
 describe('numeric facet', () => {
   const facetId = '1';
   let options: NumericFacetOptions;
   let state: ProductListingAppState;
-  let engine: MockProductListingEngine;
+  let engine: MockedProductListingEngine;
   let numericFacet: NumericFacet;
 
   beforeEach(() => {
+    jest.resetAllMocks();
     options = {
       facetId,
       field: 'created',
@@ -34,7 +37,7 @@ describe('numeric facet', () => {
     state = buildMockProductListingState();
     state.numericFacetSet[facetId] = buildMockNumericFacetSlice();
 
-    engine = buildMockProductListingEngine({state});
+    engine = buildMockProductListingEngine(state);
     numericFacet = buildNumericFacet(engine, {options});
   });
 
@@ -50,48 +53,28 @@ describe('numeric facet', () => {
     it('dispatches #fetchProductListing', () => {
       const value = buildMockNumericFacetValue();
       numericFacet.toggleSelect(value);
-
-      expect(engine.actions).toContainEqual(
-        expect.objectContaining({
-          type: fetchProductListing.pending.type,
-        })
-      );
+      expect(fetchProductListing).toHaveBeenCalled();
     });
   });
 
   describe('#deselectAll', () => {
     it('dispatches #fetchProductListing', () => {
       numericFacet.deselectAll();
-
-      expect(engine.actions).toContainEqual(
-        expect.objectContaining({
-          type: fetchProductListing.pending.type,
-        })
-      );
+      expect(fetchProductListing).toHaveBeenCalled();
     });
   });
 
   describe('#sortBy', () => {
     it('dispatches #fetchProductListing', () => {
       numericFacet.sortBy('descending');
-
-      expect(engine.actions).toContainEqual(
-        expect.objectContaining({
-          type: fetchProductListing.pending.type,
-        })
-      );
+      expect(fetchProductListing).toHaveBeenCalled();
     });
   });
 
   function testCommonToggleSingleSelect(facetValue: () => NumericFacetValue) {
     it('dispatches #fetchProductListing', () => {
       numericFacet.toggleSingleSelect(facetValue());
-
-      expect(engine.actions).toContainEqual(
-        expect.objectContaining({
-          type: fetchProductListing.pending.type,
-        })
-      );
+      expect(fetchProductListing).toHaveBeenCalled();
     });
   }
 

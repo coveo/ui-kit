@@ -18,7 +18,6 @@ export interface ContextOptions {
   language: string;
   country: string;
   currency: string;
-  clientId: string;
   user?: User;
   view: View;
 }
@@ -77,12 +76,6 @@ export interface Context extends Controller {
   setCurrency(currency: string): void;
 
   /**
-   * Sets the client ID.
-   * @param clientId - The new client ID.
-   */
-  setClientId(clientId: string): void;
-
-  /**
    * Sets the user.
    * @param user - The new user.
    */
@@ -105,7 +98,6 @@ export interface ContextState {
   language: string;
   country: string;
   currency: string;
-  clientId: string;
   user?: User;
   view: View;
 }
@@ -179,14 +171,6 @@ export function buildContext(
         setContext({
           ...getState().commerceContext,
           currency,
-        })
-      ),
-
-    setClientId: (clientId: string) =>
-      dispatch(
-        setContext({
-          ...getState().commerceContext,
-          clientId,
         })
       ),
 

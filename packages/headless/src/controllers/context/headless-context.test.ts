@@ -1,17 +1,20 @@
 import {setContext} from '../../features/context/context-actions';
 import {
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../test/mock-engine';
+  buildMockSearchEngine,
+  MockedSearchEngine,
+} from '../../test/mock-engine-v2';
+import {createMockState} from '../../test/mock-state';
 import {buildContext, Context, ContextInitialState} from './headless-context';
+
+jest.mock('../../features/context/context-actions');
 
 describe('Context', () => {
   let context: Context;
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
   let initialState: ContextInitialState | undefined;
 
   function initContext() {
-    engine = buildMockSearchAppEngine();
+    engine = buildMockSearchEngine(createMockState());
     context = buildContext(engine, {initialState});
   }
 
@@ -29,6 +32,6 @@ describe('Context', () => {
       values: {foo: 'bar'},
     };
     initContext();
-    expect(engine.actions).toContainEqual(setContext({foo: 'bar'}));
+    expect(setContext).toHaveBeenCalledWith({foo: 'bar'});
   });
 });

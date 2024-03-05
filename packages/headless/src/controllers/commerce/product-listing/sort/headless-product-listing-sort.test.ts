@@ -1,19 +1,26 @@
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {productListingV2Reducer} from '../../../../features/commerce/product-listing/product-listing-slice';
-import {MockCommerceEngine} from '../../../../test/mock-engine';
-import {buildMockCommerceEngine} from '../../../../test/mock-engine';
+import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
+import {
+  MockedCommerceEngine,
+  buildMockCommerceEngine,
+} from '../../../../test/mock-engine-v2';
 import {
   buildRelevanceSortCriterion,
   Sort,
 } from '../../core/sort/headless-core-commerce-sort';
 import {buildProductListingSort} from './headless-product-listing-sort';
 
+jest.mock(
+  '../../../../features/commerce/product-listing/product-listing-actions'
+);
+
 describe('headless product listing sort', () => {
   let sort: Sort;
-  let engine: MockCommerceEngine;
+  let engine: MockedCommerceEngine;
 
   beforeEach(() => {
-    engine = buildMockCommerceEngine();
+    engine = buildMockCommerceEngine(buildMockCommerceState());
     sort = buildProductListingSort(engine);
   });
 
@@ -25,7 +32,6 @@ describe('headless product listing sort', () => {
 
   it('#sortBy dispatches #fetchProductListing', () => {
     sort.sortBy(buildRelevanceSortCriterion());
-    const action = engine.findAsyncAction(fetchProductListing.pending);
-    expect(action).toBeTruthy();
+    expect(fetchProductListing).toHaveBeenCalled();
   });
 });

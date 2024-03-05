@@ -1,4 +1,5 @@
-import {buildMockInsightEngine} from '../../../test/mock-engine';
+import {ThunkExtraArguments} from '../../../app/thunk-extra-arguments';
+import {buildMockInsightEngine} from '../../../test/mock-engine-v2';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
 import {buildMockInsightState} from '../../../test/mock-insight-state';
@@ -70,8 +71,8 @@ const baseExpectedPayload = {
 
 describe('logBreadcrumbFacet', () => {
   it('should log #logBreadcrumbFacet with the right payload', async () => {
-    const engine = buildMockInsightEngine({
-      state: buildMockInsightState({
+    const engine = buildMockInsightEngine(
+      buildMockInsightState({
         facetSet: {
           [exampleFacetId]: buildMockFacetSlice({
             request: buildMockFacetRequest({
@@ -81,22 +82,19 @@ describe('logBreadcrumbFacet', () => {
           }),
         },
         insightCaseContext: insightCaseContextState,
-      }),
-    });
-
-    await engine.dispatch(
-      logFacetBreadcrumb({
-        facetId: exampleFacetId,
-        facetValue: exampleValue,
       })
     );
+    await logFacetBreadcrumb({
+      facetId: exampleFacetId,
+      facetValue: exampleValue,
+    })()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
     const expectedPayload = {
       ...baseExpectedPayload,
       facetValue: exampleValue,
     };
 
-    expect(mockLogBreadcrumbFacet).toBeCalledTimes(1);
+    expect(mockLogBreadcrumbFacet).toHaveBeenCalledTimes(1);
     expect(mockLogBreadcrumbFacet.mock.calls[0][0]).toStrictEqual(
       expectedPayload
     );
@@ -105,8 +103,8 @@ describe('logBreadcrumbFacet', () => {
 
 describe('logFacetSelect', () => {
   it('should log #logFacetSelect with the right payload', async () => {
-    const engine = buildMockInsightEngine({
-      state: buildMockInsightState({
+    const engine = buildMockInsightEngine(
+      buildMockInsightState({
         facetSet: {
           [exampleFacetId]: buildMockFacetSlice({
             request: buildMockFacetRequest({
@@ -116,14 +114,13 @@ describe('logFacetSelect', () => {
           }),
         },
         insightCaseContext: insightCaseContextState,
-      }),
-    });
-
-    await engine.dispatch(
-      logFacetSelect({
-        facetId: exampleFacetId,
-        facetValue: exampleValue,
       })
+    );
+
+    await logFacetSelect({facetId: exampleFacetId, facetValue: exampleValue})()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
     );
 
     const expectedPayload = {
@@ -131,15 +128,15 @@ describe('logFacetSelect', () => {
       facetValue: exampleValue,
     };
 
-    expect(mockLogFacetSelect).toBeCalledTimes(1);
+    expect(mockLogFacetSelect).toHaveBeenCalledTimes(1);
     expect(mockLogFacetSelect.mock.calls[0][0]).toStrictEqual(expectedPayload);
   });
 });
 
 describe('logFacetDeselect', () => {
   it('should log #logFacetDeselect with the right payload', async () => {
-    const engine = buildMockInsightEngine({
-      state: buildMockInsightState({
+    const engine = buildMockInsightEngine(
+      buildMockInsightState({
         facetSet: {
           [exampleFacetId]: buildMockFacetSlice({
             request: buildMockFacetRequest({
@@ -149,22 +146,20 @@ describe('logFacetDeselect', () => {
           }),
         },
         insightCaseContext: insightCaseContextState,
-      }),
-    });
-
-    await engine.dispatch(
-      logFacetDeselect({
-        facetId: exampleFacetId,
-        facetValue: exampleValue,
       })
     );
+
+    await logFacetDeselect({
+      facetId: exampleFacetId,
+      facetValue: exampleValue,
+    })()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
     const expectedPayload = {
       ...baseExpectedPayload,
       facetValue: exampleValue,
     };
 
-    expect(mockLogFacetDeselect).toBeCalledTimes(1);
+    expect(mockLogFacetDeselect).toHaveBeenCalledTimes(1);
     expect(mockLogFacetDeselect.mock.calls[0][0]).toStrictEqual(
       expectedPayload
     );
@@ -173,8 +168,8 @@ describe('logFacetDeselect', () => {
 
 describe('logFacetUpdateSort', () => {
   it('should log #logFacetUpdateSort with the right payload', async () => {
-    const engine = buildMockInsightEngine({
-      state: buildMockInsightState({
+    const engine = buildMockInsightEngine(
+      buildMockInsightState({
         facetSet: {
           [exampleFacetId]: buildMockFacetSlice({
             request: buildMockFacetRequest({
@@ -184,22 +179,20 @@ describe('logFacetUpdateSort', () => {
           }),
         },
         insightCaseContext: insightCaseContextState,
-      }),
-    });
-
-    await engine.dispatch(
-      logFacetUpdateSort({
-        facetId: exampleFacetId,
-        sortCriterion: exampleSortCriterion,
       })
     );
+
+    await logFacetUpdateSort({
+      facetId: exampleFacetId,
+      sortCriterion: exampleSortCriterion,
+    })()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
     const expectedPayload = {
       ...baseExpectedPayload,
       criteria: exampleSortCriterion,
     };
 
-    expect(mockLogFacetUpdateSort).toBeCalledTimes(1);
+    expect(mockLogFacetUpdateSort).toHaveBeenCalledTimes(1);
     expect(mockLogFacetUpdateSort.mock.calls[0][0]).toStrictEqual(
       expectedPayload
     );
@@ -208,8 +201,8 @@ describe('logFacetUpdateSort', () => {
 
 describe('logFacetClearAll', () => {
   it('should log #logFacetClearAll with the right payload', async () => {
-    const engine = buildMockInsightEngine({
-      state: buildMockInsightState({
+    const engine = buildMockInsightEngine(
+      buildMockInsightState({
         facetSet: {
           [exampleFacetId]: buildMockFacetSlice({
             request: buildMockFacetRequest({
@@ -219,14 +212,18 @@ describe('logFacetClearAll', () => {
           }),
         },
         insightCaseContext: insightCaseContextState,
-      }),
-    });
+      })
+    );
 
-    await engine.dispatch(logFacetClearAll(exampleFacetId));
+    await logFacetClearAll(exampleFacetId)()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const expectedPayload = baseExpectedPayload;
 
-    expect(mockLogFacetClearAll).toBeCalledTimes(1);
+    expect(mockLogFacetClearAll).toHaveBeenCalledTimes(1);
     expect(mockLogFacetClearAll.mock.calls[0][0]).toStrictEqual(
       expectedPayload
     );
@@ -235,8 +232,8 @@ describe('logFacetClearAll', () => {
 
 describe('logFacetShowMore', () => {
   it('should log #logFacetShowMore with the right payload', async () => {
-    const engine = buildMockInsightEngine({
-      state: buildMockInsightState({
+    const engine = buildMockInsightEngine(
+      buildMockInsightState({
         facetSet: {
           [exampleFacetId]: buildMockFacetSlice({
             request: buildMockFacetRequest({
@@ -246,14 +243,18 @@ describe('logFacetShowMore', () => {
           }),
         },
         insightCaseContext: insightCaseContextState,
-      }),
-    });
+      })
+    );
 
-    await engine.dispatch(logFacetShowMore(exampleFacetId));
+    await logFacetShowMore(exampleFacetId)()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const expectedPayload = baseExpectedPayload;
 
-    expect(mockLogFacetShowMore).toBeCalledTimes(1);
+    expect(mockLogFacetShowMore).toHaveBeenCalledTimes(1);
     expect(mockLogFacetShowMore.mock.calls[0][0]).toStrictEqual(
       expectedPayload
     );
@@ -262,8 +263,8 @@ describe('logFacetShowMore', () => {
 
 describe('logFacetShowLess', () => {
   it('should log #logFacetShowLess with the right payload', async () => {
-    const engine = buildMockInsightEngine({
-      state: buildMockInsightState({
+    const engine = buildMockInsightEngine(
+      buildMockInsightState({
         facetSet: {
           [exampleFacetId]: buildMockFacetSlice({
             request: buildMockFacetRequest({
@@ -273,14 +274,18 @@ describe('logFacetShowLess', () => {
           }),
         },
         insightCaseContext: insightCaseContextState,
-      }),
-    });
+      })
+    );
 
-    await engine.dispatch(logFacetShowLess(exampleFacetId));
+    await logFacetShowLess(exampleFacetId)()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const expectedPayload = baseExpectedPayload;
 
-    expect(mockLogFacetShowLess).toBeCalledTimes(1);
+    expect(mockLogFacetShowLess).toHaveBeenCalledTimes(1);
     expect(mockLogFacetShowLess.mock.calls[0][0]).toStrictEqual(
       expectedPayload
     );

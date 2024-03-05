@@ -1,7 +1,8 @@
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {
   buildMockInsightEngine,
-  MockInsightEngine,
-} from '../../test/mock-engine';
+  MockedInsightEngine,
+} from '../../test/mock-engine-v2';
 import {buildMockInsightState} from '../../test/mock-insight-state';
 import {buildMockRaw} from '../../test/mock-raw';
 import {buildMockResult} from '../../test/mock-result';
@@ -157,11 +158,11 @@ const exampleInlineLink = {
 };
 
 describe('the analytics related to the question answering feature in the insight use case', () => {
-  let engine: MockInsightEngine;
+  let engine: MockedInsightEngine;
 
   beforeEach(() => {
-    engine = buildMockInsightEngine({
-      state: buildMockInsightState({
+    engine = buildMockInsightEngine(
+      buildMockInsightState({
         insightCaseContext: {
           caseContext: {
             Case_Subject: exampleSubject,
@@ -183,8 +184,8 @@ describe('the analytics related to the question answering feature in the insight
             relatedQuestions: [exampleRelatedQuestion],
           },
         }),
-      }),
-    });
+      })
+    );
   });
 
   afterEach(() => {
@@ -192,42 +193,62 @@ describe('the analytics related to the question answering feature in the insight
   });
 
   it('should log #logExpandSmartSnippet with the case payload', async () => {
-    await engine.dispatch(logExpandSmartSnippet());
+    await logExpandSmartSnippet()()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const mockToUse = mockLogExpandSmartSnippet;
-    expect(mockToUse).toBeCalledTimes(1);
+    expect(mockToUse).toHaveBeenCalledTimes(1);
     expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedCaseContext);
   });
 
   it('should log #logCollapseSmartSnippet with the case payload', async () => {
-    await engine.dispatch(logCollapseSmartSnippet());
+    await logCollapseSmartSnippet()()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const mockToUse = mockLogCollapseSmartSnippet;
-    expect(mockToUse).toBeCalledTimes(1);
+    expect(mockToUse).toHaveBeenCalledTimes(1);
     expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedCaseContext);
   });
 
   it('should log #logLikeSmartSnippet with the case payload', async () => {
-    await engine.dispatch(logLikeSmartSnippet());
+    await logLikeSmartSnippet()()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const mockToUse = mockLogLikeSmartSnippet;
-    expect(mockToUse).toBeCalledTimes(1);
+    expect(mockToUse).toHaveBeenCalledTimes(1);
     expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedCaseContext);
   });
 
   it('should log #logDislikeSmartSnippet with the case payload', async () => {
-    await engine.dispatch(logDislikeSmartSnippet());
+    await logDislikeSmartSnippet()()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const mockToUse = mockLogDislikeSmartSnippet;
-    expect(mockToUse).toBeCalledTimes(1);
+    expect(mockToUse).toHaveBeenCalledTimes(1);
     expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedCaseContext);
   });
 
   it('should log #logOpenSmartSnippetSource with the right payload', async () => {
-    await engine.dispatch(logOpenSmartSnippetSource());
+    await logOpenSmartSnippetSource()()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const mockToUse = mockLogOpenSmartSnippetSource;
-    expect(mockToUse).toBeCalledTimes(1);
+    expect(mockToUse).toHaveBeenCalledTimes(1);
     expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedDocumentInfo);
     expect(mockToUse.mock.calls[0][1]).toStrictEqual({
       contentIDKey: exampleQuestionAnswer.documentId.contentIdKey,
@@ -237,10 +258,14 @@ describe('the analytics related to the question answering feature in the insight
   });
 
   it('should log #logOpenSmartSnippetInlineLink with the right payload', async () => {
-    await engine.dispatch(logOpenSmartSnippetInlineLink(exampleInlineLink));
+    await logOpenSmartSnippetInlineLink(exampleInlineLink)()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const mockToUse = mockLogOpenSmartSnippetInlineLink;
-    expect(mockToUse).toBeCalledTimes(1);
+    expect(mockToUse).toHaveBeenCalledTimes(1);
     expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedDocumentInfo);
     expect(mockToUse.mock.calls[0][1]).toStrictEqual({
       contentIDKey: exampleQuestionAnswer.documentId.contentIdKey,
@@ -251,51 +276,64 @@ describe('the analytics related to the question answering feature in the insight
   });
 
   it('should log #logOpenSmartSnippetFeedbackModal with the case payload', async () => {
-    await engine.dispatch(logOpenSmartSnippetFeedbackModal());
+    await logOpenSmartSnippetFeedbackModal()()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const mockToUse = mockLogOpenSmartSnippetFeedbackModal;
-    expect(mockToUse).toBeCalledTimes(1);
+    expect(mockToUse).toHaveBeenCalledTimes(1);
     expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedCaseContext);
   });
 
   it('should log #logCloseSmartSnippetFeedbackModal with the case payload', async () => {
-    await engine.dispatch(logCloseSmartSnippetFeedbackModal());
+    await logCloseSmartSnippetFeedbackModal()()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const mockToUse = mockLogCloseSmartSnippetFeedbackModal;
-    expect(mockToUse).toBeCalledTimes(1);
+    expect(mockToUse).toHaveBeenCalledTimes(1);
     expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedCaseContext);
   });
 
   it('should log #logSmartSnippetFeedback with the right payload', async () => {
-    await engine.dispatch(logSmartSnippetFeedback(exampleFeedback));
+    await logSmartSnippetFeedback(exampleFeedback)()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const mockToUse = mockLogSmartSnippetFeedback;
-    expect(mockToUse).toBeCalledTimes(1);
+    expect(mockToUse).toHaveBeenCalledTimes(1);
     expect(mockToUse.mock.calls[0][0]).toStrictEqual(exampleFeedback);
     expect(mockToUse.mock.calls[0][1]).toStrictEqual(undefined);
     expect(mockToUse.mock.calls[0][2]).toStrictEqual(expectedCaseContext);
   });
 
   it('should log #logSmartSnippetDetailedFeedback with the right payload', async () => {
-    await engine.dispatch(
-      logSmartSnippetDetailedFeedback(exampleFeedbackDetails)
+    await logSmartSnippetDetailedFeedback(exampleFeedbackDetails)()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
     );
 
     const expectedFeedbackReason = 'other';
 
     const mockToUse = mockLogSmartSnippetFeedback;
-    expect(mockToUse).toBeCalledTimes(1);
+    expect(mockToUse).toHaveBeenCalledTimes(1);
     expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedFeedbackReason);
     expect(mockToUse.mock.calls[0][1]).toStrictEqual(exampleFeedbackDetails);
     expect(mockToUse.mock.calls[0][2]).toStrictEqual(expectedCaseContext);
   });
 
   it('should log #logExpandSmartSnippetSuggestion with the right payload', async () => {
-    await engine.dispatch(
-      logExpandSmartSnippetSuggestion({
-        questionAnswerId: exampleQuestionAnswerId,
-      })
-    );
+    await logExpandSmartSnippetSuggestion({
+      questionAnswerId: exampleQuestionAnswerId,
+    })()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+
     const expectedRelatedQuestionPayload = {
       question: exampleRelatedQuestion.question,
       answerSnippet: exampleRelatedQuestion.answerSnippet,
@@ -303,7 +341,7 @@ describe('the analytics related to the question answering feature in the insight
     };
 
     const mockToUse = mockLogExpandSmartSnippetSuggestion;
-    expect(mockToUse).toBeCalledTimes(1);
+    expect(mockToUse).toHaveBeenCalledTimes(1);
     expect(mockToUse.mock.calls[0][0]).toStrictEqual(
       expectedRelatedQuestionPayload
     );
@@ -311,11 +349,9 @@ describe('the analytics related to the question answering feature in the insight
   });
 
   it('should log #logCollapseSmartSnippetSuggestion with the right payload', async () => {
-    await engine.dispatch(
-      logCollapseSmartSnippetSuggestion({
-        questionAnswerId: exampleQuestionAnswerId,
-      })
-    );
+    await logCollapseSmartSnippetSuggestion({
+      questionAnswerId: exampleQuestionAnswerId,
+    })()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
     const expectedRelatedQuestionPayload = {
       question: exampleRelatedQuestion.question,
@@ -324,7 +360,7 @@ describe('the analytics related to the question answering feature in the insight
     };
 
     const mockToUse = mockLogCollapseSmartSnippetSuggestion;
-    expect(mockToUse).toBeCalledTimes(1);
+    expect(mockToUse).toHaveBeenCalledTimes(1);
     expect(mockToUse.mock.calls[0][0]).toStrictEqual(
       expectedRelatedQuestionPayload
     );
@@ -332,11 +368,9 @@ describe('the analytics related to the question answering feature in the insight
   });
 
   it('should log #logOpenSmartSnippetSuggestionSource with the right payload', async () => {
-    await engine.dispatch(
-      logOpenSmartSnippetSuggestionSource({
-        questionAnswerId: exampleQuestionAnswerId,
-      })
-    );
+    await logOpenSmartSnippetSuggestionSource({
+      questionAnswerId: exampleQuestionAnswerId,
+    })()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
     const expectedRelatedQuestionPayload = {
       question: exampleRelatedQuestion.question,
@@ -345,7 +379,7 @@ describe('the analytics related to the question answering feature in the insight
     };
 
     const mockToUse = mockLogOpenSmartSnippetSuggestionSource;
-    expect(mockToUse).toBeCalledTimes(1);
+    expect(mockToUse).toHaveBeenCalledTimes(1);
     expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedDocumentInfo);
     expect(mockToUse.mock.calls[0][1]).toStrictEqual(
       expectedRelatedQuestionPayload
@@ -354,12 +388,10 @@ describe('the analytics related to the question answering feature in the insight
   });
 
   it('should log #logOpenSmartSnippetSuggestionInlineLink with the right payload', async () => {
-    await engine.dispatch(
-      logOpenSmartSnippetSuggestionInlineLink(
-        {questionAnswerId: exampleQuestionAnswerId},
-        exampleInlineLink
-      )
-    );
+    await logOpenSmartSnippetSuggestionInlineLink(
+      {questionAnswerId: exampleQuestionAnswerId},
+      exampleInlineLink
+    )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
     const expectedRelatedQuestionPayload = {
       question: exampleRelatedQuestion.question,
@@ -368,7 +400,7 @@ describe('the analytics related to the question answering feature in the insight
     };
 
     const mockToUse = mockLogOpenSmartSnippetSuggestionInlineLink;
-    expect(mockToUse).toBeCalledTimes(1);
+    expect(mockToUse).toHaveBeenCalledTimes(1);
     expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedDocumentInfo);
     expect(mockToUse.mock.calls[0][1]).toStrictEqual({
       ...expectedRelatedQuestionPayload,

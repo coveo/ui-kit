@@ -101,7 +101,7 @@ export interface AnalyticsConfiguration {
    */
   enabled?: boolean;
   /**
-   * Sets the Origin Context dimension on the analytic events.
+   * Sets the Origin Context dimension on the analytics events.
    *
    * You can use this dimension to specify the context of your application.
    * The possible values are "Search", "InternalSearch", and "CommunitySearch".
@@ -110,11 +110,15 @@ export interface AnalyticsConfiguration {
    */
   originContext?: string;
   /**
+   * Sets the value of the Origin Level 2 dimension on the analytics events.
+   *
    * Origin level 2 is a usage analytics event metadata whose value should typically be the name/identifier of the tab from which the usage analytics event originates.
    *
-   * When logging a Search usage analytics event, originLevel2 should always be set to the same value as the corresponding tab (parameter) Search API query parameter so Coveo Machine Learning models function properly, and usage analytics reports and dashboards are coherent.
+   * In the context of product listing, the value should match the breadcrumb of the product listing page from which the usage analytics event originates (for example, `canoes-kayaks/kayaks/sea-kayaks`).
    *
-   * This value is optional, and will automatically try to resolve itself from the tab search parameter.
+   * When logging a usage analytics event, originLevel2 should always be set to the same value as the corresponding `tab` (parameter) Search API query parameter so Coveo Machine Learning models function properly, and usage analytics reports and dashboards are coherent.
+   *
+   * If left unspecified, this value will automatically try to resolve itself from the `tab` Search API query parameter.
    */
   originLevel2?: string;
   /**

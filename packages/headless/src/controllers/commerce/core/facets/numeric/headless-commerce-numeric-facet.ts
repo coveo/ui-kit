@@ -11,16 +11,16 @@ import {
   buildCoreCommerceFacet,
 } from '../headless-core-commerce-facet';
 
-export type CommerceNumericFacetOptions = Omit<
+export type NumericFacetOptions = Omit<
   CoreCommerceFacetOptions,
   'toggleSelectActionCreator' | 'toggleExcludeActionCreator'
 >;
 
 /**
- * The `CommerceNumericFacet` controller offers a high-level programming interface for implementing numeric commerce
+ * The `NumericFacet` controller offers a high-level programming interface for implementing numeric commerce
  * facet UI component.
  */
-export type CommerceNumericFacet = CoreCommerceFacet<
+export type NumericFacet = CoreCommerceFacet<
   NumericRangeRequest,
   NumericFacetValue
 >;
@@ -30,17 +30,17 @@ export type CommerceNumericFacet = CoreCommerceFacet<
  *
  * **Important:** This initializer is meant for internal use by headless only.
  * As an implementer, you must not import or use this initializer directly in your code.
- * You will instead interact with `CommerceNumericFacet` controller instances through the state of a `FacetGenerator`
+ * You will instead interact with `NumericFacet` controller instances through the state of a `FacetGenerator`
  * controller.
  *
  * @param engine - The headless commerce engine.
- * @param options - The `CommerceNumericFacet` options used internally.
- * @returns A `CommerceNumericFacet` controller instance.
+ * @param options - The `NumericFacet` options used internally.
+ * @returns A `NumericFacet` controller instance.
  */
 export function buildCommerceNumericFacet(
   engine: CommerceEngine,
-  options: CommerceNumericFacetOptions
-): CommerceNumericFacet {
+  options: NumericFacetOptions
+): NumericFacet {
   return buildCoreCommerceFacet<NumericRangeRequest, NumericFacetValue>(
     engine,
     {

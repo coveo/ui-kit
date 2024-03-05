@@ -9,7 +9,7 @@ import {
   buildFacetSearch,
 } from '../../../../core/facets/facet-search/specific/headless-facet-search';
 
-export type CommerceFacetSearchResult = SpecificFacetSearchResult;
+export type FacetSearchResult = SpecificFacetSearchResult;
 
 export type CommerceFacetSearchState = {
   /**
@@ -27,10 +27,10 @@ export type CommerceFacetSearchState = {
   /**
    * The returned values matching the facet search query.
    */
-  values: CommerceFacetSearchResult[];
+  values: FacetSearchResult[];
 };
 
-export type CommerceFacetSearch = Omit<
+export type FacetSearch = Omit<
   ReturnType<typeof buildCommerceFacetSearch>,
   'state'
 > & {

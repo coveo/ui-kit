@@ -1,4 +1,3 @@
-import {Action} from '@reduxjs/toolkit';
 import {configuration} from '../../app/common-reducers';
 import {
   fetchProductListing,
@@ -8,33 +7,32 @@ import {
 import {productListingReducer} from '../../features/product-listing/product-listing-slice';
 import {
   buildMockProductListingEngine,
-  MockProductListingEngine,
-} from '../../test/mock-engine';
+  MockedProductListingEngine,
+} from '../../test/mock-engine-v2';
+import {buildMockProductListingState} from '../../test/mock-product-listing-state';
 import {
   buildProductListing,
   ProductListing,
   ProductListingOptions,
 } from './headless-product-listing';
 
+jest.mock('../../features/product-listing/product-listing-actions');
+
 describe('headless product-listing', () => {
   let productListing: ProductListing;
-  let engine: MockProductListingEngine;
+  let engine: MockedProductListingEngine;
 
   const baseOptions: ProductListingOptions = {
     url: 'https://someurl.com',
   };
 
   beforeEach(() => {
-    engine = buildMockProductListingEngine();
+    jest.resetAllMocks();
+    engine = buildMockProductListingEngine(buildMockProductListingState());
     productListing = buildProductListing(engine, {
       options: baseOptions,
     });
   });
-
-  const expectContainAction = (action: Action) => {
-    const found = engine.actions.find((a) => a.type === action.type);
-    expect(engine.actions).toContainEqual(found);
-  };
 
   it('adds the correct reducers to the engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
@@ -44,7 +42,9 @@ describe('headless product-listing', () => {
   });
 
   it('dispatches #setProductListingUrl on load', () => {
-    expectContainAction(setProductListingUrl);
+    expect(setProductListingUrl).toHaveBeenCalledWith({
+      url: 'https://someurl.com',
+    });
   });
 
   it('dispatches #setAdditionalFields on load if additionalFields is defined', () => {
@@ -54,21 +54,27 @@ describe('headless product-listing', () => {
         additionalFields: ['afield'],
       },
     });
-    expectContainAction(setAdditionalFields);
+    expect(setAdditionalFields).toHaveBeenCalledWith({
+      additionalFields: ['afield'],
+    });
   });
 
   it('setUrl dispatches #setProductListingUrl', () => {
     productListing.setUrl('http://bloup.🐟️');
-    expectContainAction(setProductListingUrl);
+    expect(setProductListingUrl).toHaveBeenCalledWith({
+      url: 'http://bloup.🐟️',
+    });
   });
 
   it('refresh dispatches #fetchProductListing', () => {
     productListing.refresh();
-    expectContainAction(fetchProductListing.pending);
+    expect(fetchProductListing).toHaveBeenCalled();
   });
 
   it('dispatches #setAdditionalFields on load if additionalFields is defined', () => {
     productListing.setAdditionalFields(['afield']);
-    expectContainAction(setAdditionalFields);
+    expect(setAdditionalFields).toHaveBeenCalledWith({
+      additionalFields: ['afield'],
+    });
   });
 });

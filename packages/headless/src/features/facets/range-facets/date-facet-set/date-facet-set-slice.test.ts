@@ -136,7 +136,7 @@ describe('date-facet-set slice', () => {
 
     state['1'] = buildMockDateFacetSlice();
     state['2'] = buildMockDateFacetSlice();
-    dateFacetSetReducer(state, deselectAllBreadcrumbs);
+    dateFacetSetReducer(state, deselectAllBreadcrumbs());
 
     expect(
       RangeFacetReducers.handleRangeFacetDeselectAll

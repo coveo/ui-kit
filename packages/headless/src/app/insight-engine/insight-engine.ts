@@ -4,11 +4,11 @@ import {GeneratedAnswerAPIClient} from '../../api/generated-answer/generated-ans
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {InsightAPIClient} from '../../api/service/insight/insight-api-client';
 import {LegacySearchAction} from '../../features/analytics/analytics-utils';
-import {logInsightInterfaceLoad} from '../../features/analytics/insight-analytics-actions';
 import {setInsightConfiguration} from '../../features/insight-configuration/insight-configuration-actions';
 import {insightConfigurationReducer as insightConfiguration} from '../../features/insight-configuration/insight-configuration-slice';
 import {insightInterfaceReducer as insightInterface} from '../../features/insight-interface/insight-interface-slice';
 import {executeSearch} from '../../features/insight-search/insight-search-actions';
+import {logInsightInterfaceLoad} from '../../features/insight-search/insight-search-analytics-actions';
 import {resultPreviewReducer as resultPreview} from '../../features/result-preview/result-preview-slice';
 import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice';
 import {firstSearchExecutedSelector} from '../../features/search/search-selectors';

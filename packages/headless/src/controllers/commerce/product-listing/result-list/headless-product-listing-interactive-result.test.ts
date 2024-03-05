@@ -1,22 +1,27 @@
 import {ProductRecommendation} from '../../../../api/search/search/product-recommendation';
 import {configuration} from '../../../../app/common-reducers';
 import {logProductRecommendationOpen} from '../../../../features/product-listing/product-listing-analytics';
-import {pushRecentResult} from '../../../../features/recent-results/recent-results-actions';
+import {pushRecentResult} from '../../../../features/product-listing/product-listing-recent-results';
+import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {
   buildMockCommerceEngine,
-  MockCommerceEngine,
-} from '../../../../test/mock-engine';
+  MockedCommerceEngine,
+} from '../../../../test/mock-engine-v2';
 import {buildMockProductRecommendation} from '../../../../test/mock-product-recommendation';
 import {
   buildInteractiveResult,
   InteractiveResult,
 } from './headless-product-listing-interactive-result';
 
+jest.mock(
+  '../../../../features/product-listing/product-listing-recent-results'
+);
+jest.mock('../../../../features/product-listing/product-listing-analytics');
+
 describe('InteractiveResult', () => {
-  let engine: MockCommerceEngine;
+  let engine: MockedCommerceEngine;
   let mockProductRec: ProductRecommendation;
   let interactiveResult: InteractiveResult;
-  let logDocumentOpenPendingActionType: string;
 
   const productRecStringParams = {
     permanentid: 'permanentid',
@@ -28,32 +33,14 @@ describe('InteractiveResult', () => {
     const productRec = (mockProductRec = buildMockProductRecommendation(
       productRecStringParams
     ));
-    logDocumentOpenPendingActionType =
-      logProductRecommendationOpen(mockProductRec).pending.type;
+
     interactiveResult = buildInteractiveResult(engine, {
       options: {result: productRec, selectionDelay: delay},
     });
   }
 
-  function findLogDocumentAction() {
-    return (
-      engine.actions.find(
-        (action) => action.type === logDocumentOpenPendingActionType
-      ) ?? null
-    );
-  }
-
-  function expectLogDocumentActionPending() {
-    const action = findLogDocumentAction();
-    expect(action).toEqual(
-      logProductRecommendationOpen(mockProductRec).pending(
-        action!.meta.requestId
-      )
-    );
-  }
-
   beforeEach(() => {
-    engine = buildMockCommerceEngine();
+    engine = buildMockCommerceEngine(buildMockCommerceState());
     initializeInteractiveResult();
     jest.useFakeTimers();
   });
@@ -66,17 +53,14 @@ describe('InteractiveResult', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({configuration});
   });
 
-  it('when calling select() should add the result to recent results list', () => {
+  it('#select dispatches #pushRecentResult', async () => {
     interactiveResult.select();
     jest.runAllTimers();
-
-    expect(
-      engine.actions.find((a) => a.type === pushRecentResult.type)
-    ).toBeDefined();
+    expect(pushRecentResult).toHaveBeenCalled();
   });
 
   it('when calling select(), logs documentOpen', () => {
     interactiveResult.select();
-    expectLogDocumentActionPending();
+    expect(logProductRecommendationOpen).toHaveBeenCalledWith(mockProductRec);
   });
 });

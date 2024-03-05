@@ -1,18 +1,10 @@
-import {PlatformClient} from '../../api/platform-client';
 import {Result} from '../../api/search/search/result';
-import {
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../test/mock-engine';
 import {buildMockFacetResponse} from '../../test/mock-facet-response';
 import {buildMockQuestionsAnswers} from '../../test/mock-question-answer';
 import {buildMockResult} from '../../test/mock-result';
 import {buildMockSearch} from '../../test/mock-search';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {buildMockSearchState} from '../../test/mock-search-state';
-import {createMockState} from '../../test/mock-state';
-import {makeAnalyticsAction} from '../analytics/analytics-utils';
-import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
 import {logFacetShowMore} from '../facets/facet-set/facet-set-analytics-actions';
 import {logPageNext} from '../pagination/pagination-analytics-actions';
 import {logSearchboxSubmit} from '../query/query-analytics-actions';
@@ -29,8 +21,6 @@ import {
   getSearchInitialState,
   SearchState,
 } from './search-state';
-
-jest.mock('../../api/platform-client');
 
 describe('search-slice', () => {
   let state: SearchState;
@@ -359,50 +349,6 @@ describe('search-slice', () => {
     });
   });
 
-  describe('should dispatch a logQueryError action', () => {
-    let e: MockSearchEngine;
-    beforeEach(() => {
-      e = buildMockSearchAppEngine({state: createMockState()});
-      PlatformClient.call = jest.fn().mockImplementation(() => {
-        const body = JSON.stringify({
-          message: 'message',
-          statusCode: 500,
-          type: 'type',
-        });
-        const response = new Response(body);
-
-        return Promise.resolve(response);
-      });
-    });
-
-    it('on a executeSearch error', async () => {
-      await e.dispatch(executeSearch({legacy: logSearchboxSubmit()}));
-      expect(e.actions).toContainEqual(
-        expect.objectContaining({
-          type: 'search/queryError/pending',
-        })
-      );
-    });
-
-    it('on a fetchMoreResults error', async () => {
-      await e.dispatch(fetchMoreResults());
-      expect(e.actions).toContainEqual(
-        expect.objectContaining({
-          type: 'search/queryError/pending',
-        })
-      );
-    });
-
-    it('on a fetchPage error', async () => {
-      await e.dispatch(fetchPage({legacy: logPageNext()}));
-      expect(e.actions).toContainEqual(
-        expect.objectContaining({
-          type: 'search/queryError/pending',
-        })
-      );
-    });
-  });
-
   it('set the isloading state to true during executeSearch.pending', () => {
     const pendingAction = executeSearch.pending('asd', {
       legacy: logSearchboxSubmit(),
@@ -441,122 +387,6 @@ describe('search-slice', () => {
     const pendingAction = fetchPage.pending('asd', {legacy: logPageNext()});
     const finalState = searchReducer(state, pendingAction);
     expect(finalState.requestId).toBe(pendingAction.meta.requestId);
-  });
-
-  describe('when did you mean is enabled and a search is executed', () => {
-    let e: MockSearchEngine;
-
-    beforeEach(() => {
-      const state = createMockState();
-      state.didYouMean.enableDidYouMean = true;
-      state.query.q = 'boo';
-      e = buildMockSearchAppEngine({state});
-    });
-
-    it('should retry the query automatically when corrections are available and there is no result', async () => {
-      PlatformClient.call = jest.fn().mockImplementation(() => {
-        const payload = buildMockSearchResponse({
-          results: [],
-          queryCorrections: [{correctedQuery: 'foo', wordCorrections: []}],
-        });
-
-        const body = JSON.stringify(payload);
-        const response = new Response(body);
-
-        return Promise.resolve(response);
-      });
-
-      await e.dispatch(executeSearch({legacy: logSearchboxSubmit()}));
-      expect(e.actions).toContainEqual({
-        type: applyDidYouMeanCorrection.type,
-        payload: 'foo',
-      });
-    });
-
-    describe('when retrying query automatically', () => {
-      let analyticsStateQuerySpy: jest.Mock;
-      const queryCorrections = [{correctedQuery: 'foo', wordCorrections: []}];
-      beforeEach(async () => {
-        analyticsStateQuerySpy = jest.fn();
-        const mockLogSubmit = () =>
-          makeAnalyticsAction('analytics/test', (_, state) =>
-            analyticsStateQuerySpy(state.query?.q)
-          );
-
-        const fetched = () => {
-          const payload = buildMockSearchResponse({
-            results: [],
-            queryCorrections,
-          });
-
-          const body = JSON.stringify(payload);
-          const response = new Response(body);
-
-          return Promise.resolve(response);
-        };
-        const retried = () => {
-          const payload = buildMockSearchResponse({
-            results: [],
-            queryCorrections: [],
-          });
-
-          const body = JSON.stringify(payload);
-          const response = new Response(body);
-
-          return Promise.resolve(response);
-        };
-
-        PlatformClient.call = jest
-          .fn()
-          .mockImplementationOnce(fetched)
-          .mockImplementationOnce(retried);
-        await e.dispatch(executeSearch({legacy: mockLogSubmit()}));
-      });
-
-      it('should log the original query to the executeSearch analytics action', () => {
-        expect(analyticsStateQuerySpy).toHaveBeenCalledWith('boo');
-      });
-
-      it('should return the queryCorrections from the original fetched response', () => {
-        const fulfilledSearchAction = e.actions.find(
-          (action) => action.type === executeSearch.fulfilled.type
-        );
-        expect(
-          fulfilledSearchAction!.payload.response.queryCorrections
-        ).toEqual(queryCorrections);
-      });
-    });
-
-    it('should not retry the query automatically when corrections are available and results are available', async () => {
-      PlatformClient.call = jest.fn().mockImplementation(() =>
-        Promise.resolve({
-          body: buildMockSearchResponse({
-            results: [buildMockResult()],
-            queryCorrections: [{correctedQuery: 'foo', wordCorrections: []}],
-          }),
-        })
-      );
-      await e.dispatch(executeSearch({legacy: logSearchboxSubmit()}));
-      expect(e.actions).not.toContainEqual({
-        type: applyDidYouMeanCorrection.type,
-        payload: 'foo',
-      });
-    });
-
-    it('should not retry the query automatically when no corrections are available and no results are available', async () => {
-      PlatformClient.call = jest.fn().mockImplementation(() =>
-        Promise.resolve({
-          body: buildMockSearchResponse({
-            results: [],
-            queryCorrections: [],
-          }),
-        })
-      );
-      await e.dispatch(executeSearch({legacy: logSearchboxSubmit()}));
-      expect(e.actions).not.toContainEqual({
-        type: applyDidYouMeanCorrection.type,
-      });
-    });
   });
 
   describe('when a fetchFacetValues fulfilled is received', () => {

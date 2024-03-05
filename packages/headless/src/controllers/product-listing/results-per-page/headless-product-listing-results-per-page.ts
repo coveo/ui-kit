@@ -50,9 +50,10 @@ export function buildResultsPerPage(
       };
     },
 
-    set(num: number) {
+    async set(num: number) {
       coreController.set(num);
-      dispatch(fetchProductListing()).then(() => dispatch(logPagerResize()));
+      await dispatch(fetchProductListing());
+      dispatch(logPagerResize());
     },
   };
 }

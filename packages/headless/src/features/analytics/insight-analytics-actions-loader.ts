@@ -25,6 +25,14 @@ import {logDateFacetBreadcrumb} from '../facets/range-facets/date-facet-set/date
 import {LogNumericFacetBreadcrumbActionCreatorPayload} from '../facets/range-facets/numeric-facet-set/numeric-facet-analytics-actions';
 import {logNumericFacetBreadcrumb} from '../facets/range-facets/numeric-facet-set/numeric-facet-insight-analytics-actions';
 import {
+  logInsightCreateArticle,
+  CreateArticleMetadata,
+} from '../insight-search/insight-analytics-actions';
+import {
+  logInsightInterfaceChange,
+  logInsightInterfaceLoad,
+} from '../insight-search/insight-search-analytics-actions';
+import {
   logPageNext,
   logPageNumber,
   logPagePrevious,
@@ -42,12 +50,6 @@ import {
 } from '../static-filter-set/static-filter-set-actions';
 import {logInsightStaticFilterDeselect} from '../static-filter-set/static-filter-set-insight-analytics-actions';
 import {InsightAction} from './analytics-utils';
-import {
-  logInsightInterfaceChange,
-  logInsightInterfaceLoad,
-  logInsightCreateArticle,
-  CreateArticleMetadata,
-} from './insight-analytics-actions';
 
 export type {
   LogStaticFilterToggleValueActionCreatorPayload,

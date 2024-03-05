@@ -42,7 +42,7 @@ export const fetchProductListing = createAsyncThunk<
     const state = getState();
     const {apiClient} = extra;
     const fetched = await apiClient.getProductListing(
-      buildCommerceAPIRequest(state)
+      await buildCommerceAPIRequest(state)
     );
 
     if (isErrorResponse(fetched)) {

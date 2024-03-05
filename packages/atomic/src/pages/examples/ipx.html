@@ -310,7 +310,9 @@
                       <atomic-result-badge label="Top Result"></atomic-result-badge>
                     </atomic-field-condition>
                   </atomic-result-section-badges>
-                  <atomic-result-section-title><atomic-result-link></atomic-result-link></atomic-result-section-title>
+                  <atomic-result-section-title
+                    ><atomic-ipx-result-link></atomic-ipx-result-link
+                  ></atomic-result-section-title>
                   <atomic-result-section-title-metadata>
                     <atomic-field-condition class="field" if-defined="snrating">
                       <atomic-result-rating field="snrating"></atomic-result-rating>
@@ -378,20 +380,20 @@
                       text-overflow: ellipsis;
                       font-size: var(--atomic-text-base);
                     }
-                    atomic-result-link atomic-result-text {
+                    atomic-ipx-result-link atomic-result-text {
                       color: var(--atomic-primary);
                     }
 
-                    atomic-result-link a:visited atomic-result-text {
+                    atomic-ipx-result-link a:visited atomic-result-text {
                       color: var(--atomic-visited);
                     }
 
-                    atomic-result-link {
+                    atomic-ipx-result-link {
                       font-size: var(--atomic-text-base);
                     }
                   </style>
                   <atomic-result-section-title>
-                    <atomic-result-link></atomic-result-link>
+                    <atomic-ipx-result-link></atomic-ipx-result-link>
                   </atomic-result-section-title>
                 </template>
               </atomic-recs-result-template>
