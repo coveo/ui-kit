@@ -66,6 +66,15 @@ export type {
 } from './controllers/commerce/product-listing/result-list/headless-product-listing-interactive-result';
 export {buildInteractiveResult} from './controllers/commerce/product-listing/result-list/headless-product-listing-interactive-result';
 
+// eslint-disable-next-line @cspell/spellchecker
+// TODO LENS-1500: Export this controller when it actually does something
+/*
+export type {
+  ViewedProduct
+} from './controllers/commerce/product-view/headless-product-view'
+export {buildProductView} from './controllers/commerce/product-view/headless-product-view';
+*/
+
 export type {
   CartInitialState,
   CartItem,
