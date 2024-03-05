@@ -1,9 +1,7 @@
 import {EventDescription} from 'coveo.analytics';
+import {getAnalyticsSource} from '../../api/analytics/analytics-selectors';
 import {getVisitorID} from '../../api/analytics/coveo-analytics-utils';
-import {
-  getAnalyticsSource,
-  getPageID,
-} from '../../api/analytics/search-analytics';
+import {getPageID} from '../../api/analytics/search-analytics';
 import {AnalyticsParam} from '../../api/search/search-api-params';
 import {AnalyticsState} from './configuration-state';
 
