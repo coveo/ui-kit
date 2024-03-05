@@ -155,11 +155,13 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     return prevItem ? prevItem.quantity !== currentItem.quantity : true;
   }
 
-  function isCurrentItemQuantityGreater(
+  function getCartAction(
     currentItem: CartItem,
     prevItem: CartItemWithMetadata | undefined
-  ): boolean {
-    return !prevItem || currentItem.quantity > prevItem.quantity;
+  ): 'add' | 'remove' {
+    const isCurrentQuantityGreater =
+      !prevItem || currentItem.quantity > prevItem.quantity;
+    return isCurrentQuantityGreater ? 'add' : 'remove';
   }
 
   // @todo LENS-1589: currently, the currency attribute is a string. However, the type should be CurrencyCodeISO4217
@@ -183,9 +185,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     prevItem: CartItemWithMetadata | undefined
   ): Ec.CartAction {
     const {quantity: currentQuantity, ...product} = currentItem;
-    const action = isCurrentItemQuantityGreater(currentItem, prevItem)
-      ? 'add'
-      : 'remove';
+    const action = getCartAction(currentItem, prevItem);
     const quantity = !prevItem
       ? currentQuantity
       : Math.abs(currentQuantity - prevItem.quantity);
@@ -217,7 +217,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
       const prevItem = itemSelector(getState(), item.productId);
       const doesNotNeedUpdate = !prevItem && item.quantity <= 0;
 
-      if (isEqual(item, prevItem) || doesNotNeedUpdate) {
+      if (doesNotNeedUpdate || isEqual(item, prevItem)) {
         return;
       }
 
