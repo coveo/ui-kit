@@ -6,18 +6,17 @@ import {
 } from '../../../test/mock-engine-v2';
 import {buildProductView, ProductView} from './headless-product-view';
 
-
 describe('ProductView', () => {
   let engine: MockedCommerceEngine;
   // TODO: What goes here?
-  let product: ProductRecommendation;
-  let productView: ProductView;
+  let _product: ProductRecommendation;
+  let _productView: ProductView;
 
   function initializeProductView() {
     // TODO: What goes here?
-    product = {};
+    _product = {};
 
-    productView = buildProductView(engine);
+    _productView = buildProductView(engine);
   }
 
   beforeEach(() => {

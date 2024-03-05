@@ -28,13 +28,12 @@ export function buildProductView(
   // TODO LENS-1500: Make use of the engine
   _engine: CommerceEngine
 ): ProductView {
-
   return {
     // eslint-disable-next-line @cspell/spellchecker
     // TODO LENS-1500: Make use of the product
     view: (_product) => {
       // eslint-disable-next-line @cspell/spellchecker
       // TODO LENS-1500: Trigger product view
-    }
-  }
+    },
+  };
 }
