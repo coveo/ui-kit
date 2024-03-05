@@ -8,9 +8,23 @@ import {
   augmentWithExternalMiddleware,
   augmentAnalyticsConfigWithDocument,
   augmentAnalyticsConfigWithAtomicVersion,
+  getNextAnalyticsConfig,
 } from '../../common/interface/analytics-config';
 
 export function getAnalyticsConfig(
+  recsConfig: RecommendationEngineConfiguration,
+  enabled: boolean
+): AnalyticsConfiguration {
+  switch (recsConfig.analytics?.analyticsMode) {
+    case 'next':
+      return getNextAnalyticsConfig(recsConfig, enabled);
+    case 'legacy':
+    default:
+      return getLegacyAnalyticsConfig(recsConfig, enabled);
+  }
+}
+
+function getLegacyAnalyticsConfig(
   recsConfig: RecommendationEngineConfiguration,
   enabled: boolean
 ): AnalyticsConfiguration {
