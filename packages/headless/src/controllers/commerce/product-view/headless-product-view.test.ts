@@ -7,7 +7,7 @@ import {
 import {buildProductView, ProductView} from './headless-product-view';
 
 
-describe('Productview', () => {
+describe('ProductView', () => {
   let engine: MockedCommerceEngine;
   // TODO: What goes here?
   let product: ProductRecommendation;
