@@ -22,22 +22,22 @@ export interface HostedPage {
   /**
    * The creation timestamp. (ISO 8601)
    */
-  created: string;
+  created?: string;
 
   /**
    * The [principal](https://en.wikipedia.org/wiki/Principal_(computer_security)) that created the hosted search page.
    */
-  createdBy: string;
+  createdBy?: string;
 
   /**
    * The last update timestamp. (ISO 8601)
    */
-  updated: string;
+  updated?: string;
 
   /**
    * The principal that last updated the hosted search page.
    */
-  updatedBy: string;
+  updatedBy?: string;
 }
 
 export type HostedPageType = 'legacy' | 'page' | 'custom';
