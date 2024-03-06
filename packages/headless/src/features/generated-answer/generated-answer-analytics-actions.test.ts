@@ -1,8 +1,9 @@
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {GeneratedAnswerCitation} from '../../controllers/generated-answer/headless-generated-answer';
 import {
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../test/mock-engine';
+  buildMockSearchEngine,
+  MockedSearchEngine,
+} from '../../test/mock-engine-v2';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {buildMockSearchState} from '../../test/mock-search-state';
 import {createMockState} from '../../test/mock-state';
@@ -68,11 +69,11 @@ const exampleCitation: GeneratedAnswerCitation = {
 };
 
 describe('the analytics related to the generated answer feature', () => {
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
 
   beforeEach(() => {
-    engine = buildMockSearchAppEngine({
-      state: createMockState({
+    engine = buildMockSearchEngine(
+      createMockState({
         search: buildMockSearchState({
           response: buildMockSearchResponse({
             extendedResults: {
@@ -94,8 +95,8 @@ describe('the analytics related to the generated answer feature', () => {
           feedbackSubmitted: false,
           fieldsToIncludeInCitations: [],
         },
-      }),
-    });
+      })
+    );
   });
 
   afterEach(() => {
@@ -103,7 +104,11 @@ describe('the analytics related to the generated answer feature', () => {
   });
 
   it('should log #logRetryGeneratedAnswer', async () => {
-    await engine.dispatch(logRetryGeneratedAnswer());
+    await logRetryGeneratedAnswer()()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const mockToUse = mockMakeRetryGeneratedAnswer;
 
@@ -114,7 +119,11 @@ describe('the analytics related to the generated answer feature', () => {
     it(`should log #logRephraseGeneratedAnswer with "${answerStyle}" answer style`, async () => {
       const expectedFormat = {answerStyle};
 
-      await engine.dispatch(logRephraseGeneratedAnswer(expectedFormat));
+      await logRephraseGeneratedAnswer(expectedFormat)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
 
       const mockToUse = mockMakeRephraseGeneratedAnswer;
 
@@ -127,7 +136,11 @@ describe('the analytics related to the generated answer feature', () => {
   });
 
   it('should log #logOpenGeneratedAnswerSource with the right payload', async () => {
-    await engine.dispatch(logOpenGeneratedAnswerSource(exampleCitation.id));
+    await logOpenGeneratedAnswerSource(exampleCitation.id)()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const mockToUse = mockMakeOpenGeneratedAnswerSource;
 
@@ -142,7 +155,11 @@ describe('the analytics related to the generated answer feature', () => {
   it('should log #logHoverCitation with the right payload', async () => {
     const hoverDuration = 1234;
 
-    await engine.dispatch(logHoverCitation(exampleCitation.id, hoverDuration));
+    await logHoverCitation(exampleCitation.id, hoverDuration)()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const mockToUse = mockMakeGeneratedAnswerSourceHover;
 
@@ -156,7 +173,11 @@ describe('the analytics related to the generated answer feature', () => {
   });
 
   it('should log #logLikeGeneratedAnswer with the right payload', async () => {
-    await engine.dispatch(logLikeGeneratedAnswer());
+    await logLikeGeneratedAnswer()()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const mockToUse = mockMakeLikeGeneratedAnswer;
 
@@ -167,7 +188,11 @@ describe('the analytics related to the generated answer feature', () => {
   });
 
   it('should log #logDislikeGeneratedAnswer with the right payload', async () => {
-    await engine.dispatch(logDislikeGeneratedAnswer());
+    await logDislikeGeneratedAnswer()()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const mockToUse = mockMakeDislikeGeneratedAnswer;
 
@@ -178,7 +203,11 @@ describe('the analytics related to the generated answer feature', () => {
   });
 
   it('should log #logGeneratedAnswerFeedback with the right payload', async () => {
-    await engine.dispatch(logGeneratedAnswerFeedback(exampleFeedback));
+    await logGeneratedAnswerFeedback(exampleFeedback)()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const mockToUse = mockMakeGeneratedAnswerFeedbackSubmit;
     const expectedMetadata = {
@@ -191,7 +220,11 @@ describe('the analytics related to the generated answer feature', () => {
   });
 
   it('should log #logGeneratedAnswerDetailedFeedback with the right payload', async () => {
-    await engine.dispatch(logGeneratedAnswerDetailedFeedback(exampleDetails));
+    await logGeneratedAnswerDetailedFeedback(exampleDetails)()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const mockToUse = mockMakeGeneratedAnswerFeedbackSubmit;
     const expectedMetadata = {
@@ -206,7 +239,11 @@ describe('the analytics related to the generated answer feature', () => {
 
   [false, true].map((answerGenerated) => {
     it(`should log #logGeneratedAnswerStreamEnd with ${answerGenerated ? 'generated' : 'not generated'} answer`, async () => {
-      await engine.dispatch(logGeneratedAnswerStreamEnd(answerGenerated));
+      await logGeneratedAnswerStreamEnd(answerGenerated)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
 
       const mockToUse = mockMakeGeneratedAnswerStreamEnd;
 
@@ -219,7 +256,11 @@ describe('the analytics related to the generated answer feature', () => {
   });
 
   it('should log #logGeneratedAnswerShowAnswers with the right payload', async () => {
-    await engine.dispatch(logGeneratedAnswerShowAnswers());
+    await logGeneratedAnswerShowAnswers()()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const mockToUse = mockMakeGeneratedAnswerShowAnswers;
 
@@ -230,7 +271,11 @@ describe('the analytics related to the generated answer feature', () => {
   });
 
   it('should log #logGeneratedAnswerHideAnswers with the right payload', async () => {
-    await engine.dispatch(logGeneratedAnswerHideAnswers());
+    await logGeneratedAnswerHideAnswers()()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const mockToUse = mockMakeGeneratedAnswerHideAnswers;
 
@@ -241,7 +286,11 @@ describe('the analytics related to the generated answer feature', () => {
   });
 
   it('should log #logCopyGeneratedAnswer with the right payload', async () => {
-    await engine.dispatch(logCopyGeneratedAnswer());
+    await logCopyGeneratedAnswer()()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const mockToUse = mockMakeGeneratedAnswerCopyToClipboard;
 
