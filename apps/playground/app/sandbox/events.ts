@@ -52,7 +52,7 @@ const ecProductClick: SampleEvent = {
 const ecProductView: SampleEvent = {
   type: "ec.productView",
   payload: {
-    currency: "GBP",
+    currency: "EUR",
     product,
   },
 };
@@ -139,3 +139,5 @@ export const events: SampleEvent[] = [
   insightDetachItem,
   insightExpandToFullUI,
 ];
+
+export { ecCartAction, ecProductView };

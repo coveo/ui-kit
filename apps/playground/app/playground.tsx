@@ -7,7 +7,7 @@ import Link from "next/link";
 
 export function Playground(props: React.PropsWithChildren) {
   const { children } = props;
-  const navLinks = ["Sandbox", "CDN"] as const;
+  const navLinks = ["Sandbox", "CDN", "GTM"] as const;
   const pathName = usePathname();
   const [opened, { toggle }] = useDisclosure();
 
