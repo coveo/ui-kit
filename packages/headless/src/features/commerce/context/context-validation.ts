@@ -6,9 +6,12 @@ import {
   requiredNonEmptyString,
 } from '../../../utils/validate-payload';
 
+const currencies = Intl.supportedValuesOf('currency') as CurrencyCodeISO4217[];
+
 const currencyDefinition = new StringValue<CurrencyCodeISO4217>({
   required: true,
   emptyAllowed: false,
+  constrainTo: currencies,
 });
 
 export const viewDefinition = {
