@@ -6,7 +6,7 @@ import {
   requiredNonEmptyString,
 } from '../../../utils/validate-payload';
 
-export const currencyDefinition = new StringValue<CurrencyCodeISO4217>({
+const currencyDefinition = new StringValue<CurrencyCodeISO4217>({
   required: true,
   emptyAllowed: false,
 });
