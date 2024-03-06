@@ -1,7 +1,8 @@
+import {ThunkExtraArguments} from '../../../../app/thunk-extra-arguments';
 import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
 import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
-import {buildMockInsightEngine} from '../../../../test/mock-engine';
+import {buildMockInsightEngine} from '../../../../test/mock-engine-v2';
 import {buildMockInsightState} from '../../../../test/mock-insight-state';
 import {logDateFacetBreadcrumb} from './date-facet-insight-analytics-actions';
 
@@ -31,8 +32,8 @@ const exampleEndValue = 'end';
 
 describe('logBreadcrumbFacet', () => {
   it('should log #logBreadcrumbFacet with the right payload', async () => {
-    const engine = buildMockInsightEngine({
-      state: buildMockInsightState({
+    const engine = buildMockInsightEngine(
+      buildMockInsightState({
         dateFacetSet: {
           [exampleFacetId]: buildMockDateFacetSlice({
             request: buildMockDateFacetRequest({
@@ -49,19 +50,17 @@ describe('logBreadcrumbFacet', () => {
           caseId: exampleCaseId,
           caseNumber: exampleCaseNumber,
         },
-      }),
-    });
-
-    await engine.dispatch(
-      logDateFacetBreadcrumb({
-        facetId: exampleFacetId,
-        selection: buildMockDateFacetValue({
-          endInclusive: exampleEndInclusiveValue,
-          end: exampleEndValue,
-          start: exampleStartValue,
-        }),
       })
     );
+
+    await logDateFacetBreadcrumb({
+      facetId: exampleFacetId,
+      selection: buildMockDateFacetValue({
+        endInclusive: exampleEndInclusiveValue,
+        end: exampleEndValue,
+        start: exampleStartValue,
+      }),
+    })()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
     const expectedPayload = {
       caseContext: {

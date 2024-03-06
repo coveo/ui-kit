@@ -5,13 +5,17 @@ import {
 } from '../../../features/sort-criteria/criteria';
 import {updateSortCriterion} from '../../../features/sort-criteria/sort-criteria-actions';
 import {
-  MockInsightEngine,
+  MockedInsightEngine,
   buildMockInsightEngine,
-} from '../../../test/mock-engine';
+} from '../../../test/mock-engine-v2';
+import {buildMockInsightState} from '../../../test/mock-insight-state';
 import {Sort, SortProps, buildSort} from './headless-insight-sort';
 
+jest.mock('../../../features/sort-criteria/sort-criteria-actions');
+jest.mock('../../../features/insight-search/insight-search-actions');
+
 describe('InsightSort', () => {
-  let engine: MockInsightEngine;
+  let engine: MockedInsightEngine;
   let props: SortProps;
   let sort: Sort;
 
@@ -20,7 +24,7 @@ describe('InsightSort', () => {
   }
 
   beforeEach(() => {
-    engine = buildMockInsightEngine();
+    engine = buildMockInsightEngine(buildMockInsightState());
     props = {
       initialState: {},
     };
@@ -36,15 +40,11 @@ describe('InsightSort', () => {
     });
 
     it('dispatches an updateSortCriterion action with the passed criterion', () => {
-      const action = updateSortCriterion(criterion);
-      expect(engine.actions).toContainEqual(action);
+      expect(updateSortCriterion).toHaveBeenCalledWith(criterion);
     });
 
     it('dispatches an executeSearch', () => {
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-      expect(action).toBeTruthy();
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 });

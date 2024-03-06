@@ -5,6 +5,7 @@ export {HighlightUtils};
 
 polyfillCryptoNode();
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
+export type {Relay} from '@coveo/relay';
 
 export type {
   RecommendationEngine,

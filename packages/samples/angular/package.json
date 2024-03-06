@@ -19,7 +19,7 @@
     "@angular/platform-browser": "17.2.2",
     "@angular/platform-browser-dynamic": "17.2.2",
     "@angular/router": "17.2.2",
-    "@coveo/atomic-angular": "2.22.1",
+    "@coveo/atomic-angular": "2.22.2",
     "rxjs": "7.8.1",
     "tslib": "2.6.2",
     "zone.js": "0.14.4"
@@ -29,7 +29,7 @@
     "@angular/cli": "17.2.1",
     "@angular/compiler-cli": "17.2.2",
     "@types/jasmine": "5.1.4",
-    "@types/node": "20.11.21",
+    "@types/node": "20.11.24",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "cypress": "13.6.6",
     "cypress-repeat": "2.3.4",

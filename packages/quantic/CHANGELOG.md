@@ -1,3 +1,9 @@
+# 2.46.0 (2024-03-06)
+
+### Features
+
+- **quantic:** logic to open links in salesforce refactored ([#3636](https://github.com/coveo/ui-kit/issues/3636)) ([d968b19](https://github.com/coveo/ui-kit/commits/d968b19dfb3d1869e43e08ebcff3d24b7df1d146))
+
 ## 2.45.1 (2024-02-28)
 
 # 2.45.0 (2024-02-21)
