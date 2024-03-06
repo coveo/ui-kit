@@ -4,8 +4,8 @@ import {fetchProductListing} from '../../../features/product-listing/product-lis
 import {ProductListingAppState} from '../../../state/product-listing-app-state';
 import {
   buildMockProductListingEngine,
-  MockProductListingEngine,
-} from '../../../test/mock-engine';
+  MockedProductListingEngine,
+} from '../../../test/mock-engine-v2';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 import {buildMockFacetResponse} from '../../../test/mock-facet-response';
 import {buildMockFacetSearch} from '../../../test/mock-facet-search';
@@ -19,15 +19,18 @@ import {
   FacetOptions,
 } from './headless-product-listing-facet';
 
+jest.mock('../../../features/facets/facet-set/facet-set-actions');
+jest.mock('../../../features/product-listing/product-listing-actions');
+
 describe('facet', () => {
   const facetId = '1';
   let options: FacetOptions;
   let state: ProductListingAppState;
-  let engine: MockProductListingEngine;
+  let engine: MockedProductListingEngine;
   let facet: Facet;
 
   function initFacet() {
-    engine = buildMockProductListingEngine({state});
+    engine = buildMockProductListingEngine(state);
     facet = buildFacet(engine, {options});
   }
 
@@ -62,17 +65,15 @@ describe('facet', () => {
   });
 
   it('registers a facet with the passed options and the default values of unspecified options', () => {
-    const action = registerFacet({
+    expect(registerFacet).toHaveBeenCalledWith({
+      facetId,
       field: 'author',
       sortCriteria: 'score',
       resultsMustMatch: 'atLeastOneValue',
-      facetId,
       filterFacetCount: true,
       injectionDepth: 1000,
       numberOfValues: 8,
     });
-
-    expect(engine.actions).toContainEqual(action);
   });
 
   it('when the product listing response is empty, the facet #state.values is an empty array', () => {
@@ -96,11 +97,7 @@ describe('facet', () => {
       const facetValue = buildMockFacetValue({value: 'TED'});
       facet.toggleSelect(facetValue);
 
-      expect(engine.actions).toContainEqual(
-        expect.objectContaining({
-          type: fetchProductListing.pending.type,
-        })
-      );
+      expect(fetchProductListing).toHaveBeenCalled();
     });
   });
 
@@ -109,11 +106,7 @@ describe('facet', () => {
       const facetValue = buildMockFacetValue({value: 'TED'});
       facet.toggleExclude(facetValue);
 
-      expect(engine.actions).toContainEqual(
-        expect.objectContaining({
-          type: fetchProductListing.pending.type,
-        })
-      );
+      expect(fetchProductListing).toHaveBeenCalled();
     });
   });
 
@@ -121,62 +114,38 @@ describe('facet', () => {
     const facetValue = buildMockFacetValue({value: 'TED'});
     facet.toggleSingleSelect(facetValue);
 
-    expect(engine.actions).toContainEqual(
-      expect.objectContaining({
-        type: fetchProductListing.pending.type,
-      })
-    );
+    expect(fetchProductListing).toHaveBeenCalled();
   });
 
   it('#toggleSingleExclude dispatches a fetchProductListing', () => {
     const facetValue = buildMockFacetValue({value: 'TED'});
     facet.toggleSingleExclude(facetValue);
 
-    expect(engine.actions).toContainEqual(
-      expect.objectContaining({
-        type: fetchProductListing.pending.type,
-      })
-    );
+    expect(fetchProductListing).toHaveBeenCalled();
   });
 
   it('#deselectAll dispatches a fetchProductListing', () => {
     facet.deselectAll();
 
-    expect(engine.actions).toContainEqual(
-      expect.objectContaining({
-        type: fetchProductListing.pending.type,
-      })
-    );
+    expect(fetchProductListing).toHaveBeenCalled();
   });
 
   it('#sortBy dispatches a fetchProductListing', () => {
     facet.sortBy('score');
 
-    expect(engine.actions).toContainEqual(
-      expect.objectContaining({
-        type: fetchProductListing.pending.type,
-      })
-    );
+    expect(fetchProductListing).toHaveBeenCalled();
   });
 
   it('#showMoreValues dispatches a fetchProductListing', () => {
     facet.showMoreValues();
 
-    expect(engine.actions).toContainEqual(
-      expect.objectContaining({
-        type: fetchProductListing.pending.type,
-      })
-    );
+    expect(fetchProductListing).toHaveBeenCalled();
   });
 
   it('#showLessValues  dispatches a fetchProductListing', () => {
     facet.showLessValues();
 
-    expect(engine.actions).toContainEqual(
-      expect.objectContaining({
-        type: fetchProductListing.pending.type,
-      })
-    );
+    expect(fetchProductListing).toHaveBeenCalled();
   });
 
   it('exposes a #facetSearch property', () => {
@@ -195,7 +164,7 @@ describe('facet', () => {
       displayValue: 'foo',
       rawValue: 'foo',
     };
-    engine.state.facetSearchSet[facetId].response.values = [fakeResponseValue];
+    engine.state.facetSearchSet![facetId].response.values = [fakeResponseValue];
 
     expect(facet.state.facetSearch.values[0]).toMatchObject(fakeResponseValue);
   });
