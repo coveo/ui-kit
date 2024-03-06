@@ -62,13 +62,16 @@ export default function Page() {
         <p>
           The page represents a basic PDP and is integrated with GTM. The GTM
           container used is:{" "}
-          <a href="https://tagmanager.google.com/#/container/accounts/6216759964/containers/177262508">
+          <a
+            href="https://tagmanager.google.com/#/container/accounts/6216759964/containers/177262508"
+            target="_blank"
+          >
             {gtmId}
           </a>
         </p>
         <List type="unordered">
           <List.Item>
-            When this page is loaded, the GTM initializes Relay and sends an
+            When this page is loaded, the GTM initializes Relay and sends an{" "}
             <b>ec.productView</b> event. You can resend it by reloading the
             page.
           </List.Item>
@@ -81,11 +84,19 @@ export default function Page() {
       <Box>
         <Space h="md" />
         <Title order={5}>A generic ski</Title>
-        <Image
-          src="/assets/ski.png"
-          alt="A drawing of a shoe"
-          style={{ width: "300px" }}
-        />
+        {(() => {
+          const isDev = process.env["NODE_ENV"] === "development";
+          const img = "ski.png";
+          const src = isDev ? `/${img}` : `/relay/playground/${img}`;
+          return (
+            <Image
+              src={src}
+              alt="A drawing of skis"
+              style={{ width: "300px" }}
+            />
+          );
+        })()}
+
         <Button onClick={() => send(ecCartAction)}>Add to basket</Button>
       </Box>
       <Box style={{ marginTop: "1rem" }}>
