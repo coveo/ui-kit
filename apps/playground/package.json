@@ -1,6 +1,6 @@
 {
   "name": "playground",
-  "version": "1.7.9",
+  "version": "1.7.10",
   "private": true,
   "scripts": {
     "dev": "next dev",
