@@ -1,5 +1,5 @@
 import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
-import {buildMockSearchAppEngine} from './test/mock-engine';
+import {buildMockSearchEngine} from './test/mock-engine-v2';
 import {buildMockRaw} from './test/mock-raw';
 import {buildMockResult} from './test/mock-result';
 import {createMockState} from './test/mock-state';
@@ -7,7 +7,7 @@ import * as HighlightUtils from './utils/highlight';
 
 const TestUtils = {
   buildMockRaw,
-  buildMockSearchAppEngine,
+  buildMockSearchEngine,
   buildMockResult,
   createMockState,
 };

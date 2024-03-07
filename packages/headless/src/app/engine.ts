@@ -1,7 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {isNullOrUndefined, isUndefined} from '@coveo/bueno';
 import {type Relay} from '@coveo/relay';
 import {
-  AnyAction,
   Dispatch,
   ThunkDispatch,
   Unsubscribe,
@@ -9,6 +9,7 @@ import {
   StateFromReducersMapObject,
   Middleware,
   Reducer,
+  UnknownAction,
 } from '@reduxjs/toolkit';
 import {Logger} from 'pino';
 import {getRelayInstanceFromState} from '../api/analytics/analytics-relay-client';
@@ -41,7 +42,8 @@ type CoreState = StateFromReducersMapObject<typeof coreReducers> &
 type EngineDispatch<
   State,
   ExtraArguments extends ThunkExtraArguments,
-> = ThunkDispatch<State, ExtraArguments, AnyAction> & Dispatch<AnyAction>;
+> = ThunkDispatch<State, ExtraArguments, UnknownAction> &
+  Dispatch<UnknownAction>;
 
 export interface CoreEngine<
   State extends object = {},
@@ -149,7 +151,7 @@ export interface ExternalEngineOptions<State extends object> {
 }
 
 function getUpdateAnalyticsConfigurationPayload(
-  options: EngineOptions<ReducersMapObject>,
+  options: any,
   logger: Logger
 ): UpdateAnalyticsConfigurationActionCreatorPayload | null {
   const apiBaseUrl =
@@ -320,13 +322,11 @@ function createMiddleware<Reducers extends ReducersMapObject>(
   ].concat(options.middlewares || []);
 }
 
-function shouldWarnAboutOrganizationEndpoints(
-  options: EngineOptions<ReducersMapObject>
-) {
+function shouldWarnAboutOrganizationEndpoints(options: any) {
   return isUndefined(options.configuration.organizationEndpoints);
 }
 
-function shouldWarnAboutPlatformURL(options: EngineOptions<ReducersMapObject>) {
+function shouldWarnAboutPlatformURL(options: any) {
   return (
     !isNullOrUndefined(options.configuration.platformUrl) ||
     isNullOrUndefined(options.configuration.organizationEndpoints?.platform)
@@ -334,7 +334,7 @@ function shouldWarnAboutPlatformURL(options: EngineOptions<ReducersMapObject>) {
 }
 
 function shouldWarnAboutMismatchBetweenOrganizationIDAndOrganizationEndpoints(
-  options: EngineOptions<ReducersMapObject>
+  options: any
 ) {
   const {platform} = options.configuration.organizationEndpoints!;
 

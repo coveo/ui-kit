@@ -153,7 +153,7 @@ describe('numeric-facet-set slice', () => {
 
     state['1'] = buildMockNumericFacetSlice();
     state['2'] = buildMockNumericFacetSlice();
-    numericFacetSetReducer(state, deselectAllBreadcrumbs);
+    numericFacetSetReducer(state, deselectAllBreadcrumbs());
 
     expect(
       RangeFacetReducers.handleRangeFacetDeselectAll
