@@ -863,7 +863,11 @@ export class AtomicSearchBox {
     );
   }
 
-  private isSearchDisabledForEndUser(queryValue: string) {
+  private isSearchDisabledForEndUser(queryValue?: string) {
+    if (isNullOrUndefined(queryValue)) {
+      return this.disableSearch;
+    }
+
     if (queryValue.trim().length < this.minimumQueryLength) {
       return true;
     }
