@@ -189,7 +189,7 @@ describe('BindStateToController decorator', () => {
     });
 
     it('should subscribe to the controller', () => {
-      spyOn(controller, 'subscribe');
+      jest.spyOn(controller, 'subscribe');
       BindStateToController('controller')(component, 'controllerState');
       component.initialize!();
 

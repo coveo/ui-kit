@@ -1,8 +1,16 @@
-import {Schema} from '@coveo/bueno';
-import {nonEmptyString} from '../../utils/validate-payload';
+import {
+  BooleanValue,
+  RecordValue,
+  Schema,
+  SchemaDefinition,
+  StringValue,
+} from '@coveo/bueno';
+import {
+  nonEmptyString,
+  requiredNonEmptyString,
+} from '../../utils/validate-payload';
 import {
   EngineConfiguration,
-  engineConfigurationDefinitions,
   getSampleEngineConfiguration,
 } from '../engine-configuration';
 
@@ -37,13 +45,50 @@ export interface ProductRecommendationEngineConfiguration
   timezone?: string;
 }
 
-export const productRecommendationEngineConfigurationSchema =
-  new Schema<ProductRecommendationEngineConfiguration>({
-    ...engineConfigurationDefinitions,
+const engineConfigurationDefinitions: SchemaDefinition<ProductRecommendationEngineConfiguration> =
+  {
+    organizationId: requiredNonEmptyString,
+    accessToken: requiredNonEmptyString,
+    platformUrl: new StringValue({
+      required: false,
+      emptyAllowed: false,
+    }),
+    name: new StringValue({
+      required: false,
+      emptyAllowed: false,
+    }),
+    analytics: new RecordValue({
+      options: {
+        required: false,
+      },
+      values: {
+        enabled: new BooleanValue({
+          required: false,
+        }),
+        originContext: new StringValue({
+          required: false,
+        }),
+        originLevel2: new StringValue({
+          required: false,
+        }),
+        originLevel3: new StringValue({
+          required: false,
+        }),
+        analyticsMode: new StringValue<'legacy'>({
+          constrainTo: ['legacy'],
+          required: false,
+        }),
+      },
+    }),
     searchHub: nonEmptyString,
     locale: nonEmptyString,
     timezone: nonEmptyString,
-  });
+  };
+
+export const productRecommendationEngineConfigurationSchema =
+  new Schema<ProductRecommendationEngineConfiguration>(
+    engineConfigurationDefinitions
+  );
 
 /**
  * Creates a sample product recommendation engine configuration.
