@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "@storybook/types": "^7.6.6",
-    "@typescript-eslint/eslint-plugin": "6.21.0",
+    "@typescript-eslint/eslint-plugin": "7.1.1",
     "gts": "5.2.0"
   }
 }
