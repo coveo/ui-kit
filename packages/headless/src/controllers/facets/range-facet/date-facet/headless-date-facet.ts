@@ -59,7 +59,7 @@ export function buildDateFacet(
       dispatch(
         executeSearch({
           legacy: logFacetClearAll(getFacetId()),
-          next: facetClearAll(getFacetId()),
+          next: facetClearAll(),
         })
       );
     },
@@ -69,7 +69,7 @@ export function buildDateFacet(
       dispatch(
         executeSearch({
           legacy: logFacetUpdateSort({facetId: getFacetId(), criterion}),
-          next: facetUpdateSort(getFacetId(), criterion),
+          next: facetUpdateSort(),
         })
       );
     },
@@ -82,7 +82,7 @@ export function buildDateFacet(
             getFacetId(),
             selection
           ),
-          next: getAnalyticsActionForToggleFacetSelect(getFacetId(), selection),
+          next: getAnalyticsActionForToggleFacetSelect(selection),
         })
       );
     },

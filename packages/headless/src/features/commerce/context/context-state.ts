@@ -1,3 +1,4 @@
+import {CurrencyCodeISO4217} from '@coveo/relay-event-types';
 import {
   UserParams,
   ViewParams,
@@ -7,7 +8,7 @@ export interface CommerceContextState {
   trackingId: string;
   language: string;
   country: string;
-  currency: string;
+  currency: CurrencyCodeISO4217;
   user?: UserParams;
   view: ViewParams;
 }
@@ -16,7 +17,7 @@ export const getContextInitialState = (): CommerceContextState => ({
   trackingId: '',
   language: '',
   country: '',
-  currency: '',
+  currency: '' as CurrencyCodeISO4217,
   view: {
     url: '',
   },

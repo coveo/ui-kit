@@ -164,9 +164,8 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     return isCurrentQuantityGreater ? 'add' : 'remove';
   }
 
-  // @todo LENS-1589: currently, the currency attribute is a string. However, the type should be CurrencyCodeISO4217
   function getCurrency(): CurrencyCodeISO4217 {
-    return engine.state.commerceContext.currency as CurrencyCodeISO4217;
+    return engine.state.commerceContext.currency;
   }
 
   function isEqual(

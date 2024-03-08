@@ -2,7 +2,11 @@ import {getAttributesFromLinkSlot} from './attributes-slot';
 
 describe('getAttributesFromLinkSlot', () => {
   beforeEach(() => {
-    spyOn(console, 'warn');
+    jest.spyOn(console, 'warn');
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
   });
 
   it('retrieves attributes from child slot correctly without warnings', () => {
@@ -23,7 +27,7 @@ describe('getAttributesFromLinkSlot', () => {
       _name: 'target',
       _value: '_self',
     });
-    expect(console.warn).not.toBeCalled();
+    expect(console.warn).not.toHaveBeenCalled();
   });
 
   it('returns undefined when there is no slot of that name', () => {
@@ -45,7 +49,7 @@ describe('getAttributesFromLinkSlot', () => {
     host.appendChild(link);
     const attributes = getAttributesFromLinkSlot(host, slotName);
     expect(attributes).toBeUndefined();
-    expect(console.warn).toBeCalledTimes(1);
+    expect(console.warn).toHaveBeenCalledTimes(1);
   });
 
   it('logs a warning when the "href" is defined & filters it out', () => {
@@ -58,6 +62,6 @@ describe('getAttributesFromLinkSlot', () => {
     host.appendChild(link);
     const attributes = getAttributesFromLinkSlot(host, slotName);
     expect(attributes).toEqual([]);
-    expect(console.warn).toBeCalledTimes(1);
+    expect(console.warn).toHaveBeenCalledTimes(1);
   });
 });

@@ -1,6 +1,5 @@
 import {ArrayValue} from '@coveo/bueno';
 import type {CategoryFacetMetadata} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
-import {SearchAnalyticsProvider} from '../../../api/analytics/search-analytics';
 import {SearchAppState} from '../../../state/search-app-state';
 import {
   requiredNonEmptyString,
@@ -62,15 +61,6 @@ export const logCategoryFacetBreadcrumb = (
     return client.makeBreadcrumbFacet(getCategoryFacetMetadata(state, payload));
   });
 
-export const categoryBreadcrumbFacet = (
-  id: string,
-  path: string[]
-): SearchAction => {
-  return {
-    actionCause: SearchPageEvents.breadcrumbFacet,
-    getEventExtraPayload: (state) =>
-      new SearchAnalyticsProvider(
-        () => state
-      ).getCategoryBreadcrumbFacetMetadata(id, path),
-  };
-};
+export const categoryBreadcrumbFacet = (): SearchAction => ({
+  actionCause: SearchPageEvents.breadcrumbFacet,
+});
