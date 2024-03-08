@@ -57,7 +57,7 @@ export function buildAutomaticFacet(
             field,
             selection
           ),
-          next: getAnalyticsActionForToggleFacetSelect(field, selection),
+          next: getAnalyticsActionForToggleFacetSelect(selection),
         })
       );
     },
@@ -67,7 +67,7 @@ export function buildAutomaticFacet(
       dispatch(
         executeSearch({
           legacy: logFacetClearAll(field),
-          next: facetClearAll(field),
+          next: facetClearAll(),
         })
       );
     },

@@ -59,7 +59,7 @@ export function buildDateFilter(
       dispatch(
         executeSearch({
           legacy: logFacetClearAll(getFacetId()),
-          next: facetClearAll(getFacetId()),
+          next: facetClearAll(),
         })
       );
     },
@@ -72,7 +72,7 @@ export function buildDateFilter(
               facetId: getFacetId(),
               facetValue: `${range.start}..${range.end}`,
             }),
-            next: facetSelect(getFacetId(), `${range.start}..${range.end}`),
+            next: facetSelect(),
           })
         );
       }
