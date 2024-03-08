@@ -1,5 +1,4 @@
 import {SearchPageEvents as LegacySearchPageEvents} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
-import {SearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {Result} from '../../api/search/search/result';
 import {
   validatePayload,
@@ -164,38 +163,18 @@ export const logOmniboxFromLink = (
   );
 
 // --------------------- KIT-2859 : Everything above this will get deleted ! :) ---------------------
-export const interfaceLoad = (): SearchAction => {
-  return {
-    actionCause: SearchPageEvents.interfaceLoad,
-    getEventExtraPayload: (state) =>
-      new SearchAnalyticsProvider(() => state).getBaseMetadata(),
-  };
-};
+export const interfaceLoad = (): SearchAction => ({
+  actionCause: SearchPageEvents.interfaceLoad,
+});
 
-export const interfaceChange = (): SearchAction => {
-  return {
-    actionCause: SearchPageEvents.interfaceChange,
-    getEventExtraPayload: (state) =>
-      new SearchAnalyticsProvider(() => state).getInterfaceChangeMetadata(),
-  };
-};
+export const interfaceChange = (): SearchAction => ({
+  actionCause: SearchPageEvents.interfaceChange,
+});
 
-export const searchFromLink = (): SearchAction => {
-  return {
-    actionCause: SearchPageEvents.searchFromLink,
-    getEventExtraPayload: (state) =>
-      new SearchAnalyticsProvider(() => state).getBaseMetadata(),
-  };
-};
+export const searchFromLink = (): SearchAction => ({
+  actionCause: SearchPageEvents.searchFromLink,
+});
 
-export const omniboxFromLink = (
-  metadata: OmniboxSuggestionMetadata
-): SearchAction => {
-  return {
-    actionCause: SearchPageEvents.omniboxFromLink,
-    getEventExtraPayload: (state) =>
-      new SearchAnalyticsProvider(() => state).getOmniboxFromLinkMetadata(
-        metadata
-      ),
-  };
-};
+export const omniboxFromLink = (): SearchAction => ({
+  actionCause: SearchPageEvents.omniboxFromLink,
+});

@@ -85,7 +85,7 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
           legacy: logUndoTriggerQuery({
             undoneQuery: modification(),
           }),
-          next: undoTriggerQuery(modification()),
+          next: undoTriggerQuery(),
         })
       );
     },

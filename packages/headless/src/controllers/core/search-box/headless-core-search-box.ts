@@ -285,7 +285,7 @@ export function buildCoreSearchBox(
       dispatch(selectQuerySuggestion({id, expression: value}));
       performSearch({
         legacy: logQuerySuggestionClick({id, suggestion: value}),
-        next: omniboxAnalytics(id, value),
+        next: omniboxAnalytics(),
       }).then(() => {
         dispatch(clearQuerySuggest({id}));
       });
