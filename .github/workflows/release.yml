@@ -52,8 +52,6 @@ jobs:
         with:
           ref: 'release/v2'
       - uses: ./.github/actions/setup
-      - name: Build
-        run: npm run build
       - name: Start deployment pipeline
         run: node ./scripts/deploy/execute-deployment-pipeline.mjs
   promote-prod:
