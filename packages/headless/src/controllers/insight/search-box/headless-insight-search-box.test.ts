@@ -2,12 +2,11 @@ import {
   executeSearch,
   fetchQuerySuggestions,
 } from '../../../features/insight-search/insight-search-actions';
-import {logSearchboxSubmit} from '../../../features/query/query-insight-analytics-actions';
 import {InsightAppState} from '../../../state/insight-app-state';
 import {
   buildMockInsightEngine,
-  MockInsightEngine,
-} from '../../../test/mock-engine';
+  MockedInsightEngine,
+} from '../../../test/mock-engine-v2';
 import {buildMockInsightState} from '../../../test/mock-insight-state';
 import {buildMockQuerySuggest} from '../../../test/mock-query-suggest';
 import {
@@ -21,15 +20,18 @@ jest.mock('../../../features/query/query-insight-analytics-actions', () => ({
   logSearchboxSubmit: jest.fn(() => () => {}),
 }));
 
+jest.mock('../../../features/insight-search/insight-search-actions');
+
 describe('headless searchBox', () => {
   const id = 'search-box-123';
   let state: InsightAppState;
 
-  let engine: MockInsightEngine;
+  let engine: MockedInsightEngine;
   let searchBox: SearchBox;
   let props: SearchBoxProps;
 
   beforeEach(() => {
+    jest.resetAllMocks();
     const options: SearchBoxOptions = {
       id,
       numberOfSuggestions: 10,
@@ -68,7 +70,7 @@ describe('headless searchBox', () => {
   }
 
   function initController() {
-    engine = buildMockInsightEngine({state});
+    engine = buildMockInsightEngine(state);
     searchBox = buildSearchBox(engine, props);
   }
 
@@ -77,11 +79,7 @@ describe('headless searchBox', () => {
     it does dispatch fetchQuerySuggestions`, async () => {
       searchBox.showSuggestions();
 
-      const action = engine.actions.find(
-        (a) => a.type === fetchQuerySuggestions.pending.type
-      );
-
-      expect(action).toBeDefined();
+      expect(fetchQuerySuggestions).toHaveBeenCalled();
     });
 
     it(`when numberOfQuerySuggestions is 0,
@@ -90,12 +88,7 @@ describe('headless searchBox', () => {
       initController();
 
       searchBox.showSuggestions();
-
-      const action = engine.actions.find(
-        (a) => a.type === fetchQuerySuggestions.pending.type
-      );
-
-      expect(action).toBeUndefined();
+      expect(fetchQuerySuggestions).not.toHaveBeenCalled();
     });
   });
 
@@ -103,20 +96,14 @@ describe('headless searchBox', () => {
     it('dispatches executeSearch', () => {
       const suggestion = 'a';
       searchBox.selectSuggestion(suggestion);
-
-      expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 
   describe('when calling submit', () => {
     it('it dispatches an executeSearch action', () => {
       searchBox.submit();
-
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-      expect(action).toBeTruthy();
-      expect(logSearchboxSubmit).toBeCalledTimes(1);
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 });

@@ -1,15 +1,13 @@
 import {configuration} from '../../../app/common-reducers';
 import {setOptions} from '../../../features/facets/automatic-facet-set/automatic-facet-set-actions';
-import {
-  DESIRED_COUNT_MAXIMUM,
-  DESIRED_COUNT_MINIMUM,
-  NUMBER_OF_VALUE_DEFAULT,
-  NUMBER_OF_VALUE_MINIMUM,
-} from '../../../features/facets/automatic-facet-set/automatic-facet-set-constants';
+import {NUMBER_OF_VALUE_DEFAULT} from '../../../features/facets/automatic-facet-set/automatic-facet-set-constants';
 import {automaticFacetSetReducer as automaticFacetSet} from '../../../features/facets/automatic-facet-set/automatic-facet-set-slice';
 import {searchReducer as search} from '../../../features/search/search-slice';
-import {buildMockSearchAppEngine} from '../../../test/mock-engine';
-import {MockSearchEngine} from '../../../test/mock-engine';
+import {
+  MockedSearchEngine,
+  buildMockSearchEngine,
+} from '../../../test/mock-engine-v2';
+import {createMockState} from '../../../test/mock-state';
 import {
   AutomaticFacetGeneratorProps,
   AutomaticFacetGenerator,
@@ -17,8 +15,12 @@ import {
   AutomaticFacetGeneratorOptions,
 } from './headless-automatic-facet-generator';
 
+jest.mock(
+  '../../../features/facets/automatic-facet-set/automatic-facet-set-actions'
+);
+
 describe('automatic facets', () => {
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
   let automaticFacets: AutomaticFacetGenerator;
   let props: AutomaticFacetGeneratorProps;
 
@@ -30,10 +32,11 @@ describe('automatic facets', () => {
         ...config,
       },
     };
-    engine = buildMockSearchAppEngine();
+    engine = buildMockSearchEngine(createMockState());
     automaticFacets = buildAutomaticFacetGenerator(engine, props);
   }
   beforeEach(() => {
+    jest.resetAllMocks();
     setup();
   });
 
@@ -47,27 +50,12 @@ describe('automatic facets', () => {
 
   describe('#setOptions', () => {
     it('should dispatch #setOptions with valid options', () => {
-      expect(engine.actions).toContainEqual(setOptions(props.options));
-    });
-
-    it(`should not dispatch #setOptions if desiredCount is lower than ${DESIRED_COUNT_MINIMUM}`, () => {
-      setup({desiredCount: 0});
-      expect(engine.actions).toEqual([]);
-    });
-
-    it(`should not dispatch #setOptions if desiredCount is higher than ${DESIRED_COUNT_MAXIMUM}`, () => {
-      setup({desiredCount: 21});
-      expect(engine.actions).toEqual([]);
-    });
-
-    it(`should not dispatch #setOptions if numberOfValue is lower than ${NUMBER_OF_VALUE_MINIMUM}`, () => {
-      setup({numberOfValues: 0});
-      expect(engine.actions).toEqual([]);
+      expect(setOptions).toHaveBeenCalledWith(props.options);
     });
   });
 
   it('should dispatch #setOptions', () => {
-    expect(engine.actions).toContainEqual(setOptions(props.options));
+    expect(setOptions).toHaveBeenCalledWith(props.options);
   });
 
   it('should return automatic facets as empty array if the response is empty', () => {

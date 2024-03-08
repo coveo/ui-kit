@@ -1,3 +1,13 @@
+# 2.52.0 (2024-03-06)
+
+### Features
+
+- **auto-facet:** bump max count to 20 ([#3642](https://github.com/coveo/ui-kit/issues/3642)) ([069a4be](https://github.com/coveo/ui-kit/commits/069a4be48522b65ae4c582162757fe1e441b1db7))
+- **commerce:** simplify commerce facet types ([#3657](https://github.com/coveo/ui-kit/issues/3657)) ([8732da4](https://github.com/coveo/ui-kit/commits/8732da479858810a963bbbbbe3ef1cf47c4dac59)), closes [/github.com/coveo/barca-sports/pull/165#pullrequestreview-1870465243](https://github.com//github.com/coveo/barca-sports/pull/165/issues/pullrequestreview-1870465243)
+- **headless:** expose relay on the engine ([#3658](https://github.com/coveo/ui-kit/issues/3658)) ([a5c846b](https://github.com/coveo/ui-kit/commits/a5c846bec4ee07a271c934aee4ac5832118b5e0c))
+- **headless:** insight analytics actions migrated to new event protocol ([#3637](https://github.com/coveo/ui-kit/issues/3637)) ([f7bbe47](https://github.com/coveo/ui-kit/commits/f7bbe470c858a1bf7f98865773bf9b992e9f7913))
+- **IPX:** add PageView in IPX actions history ([#3607](https://github.com/coveo/ui-kit/issues/3607)) ([155f04c](https://github.com/coveo/ui-kit/commits/155f04c66c2961c55ea337c0e37f2c1cee1bb1d2)), closes [/github.com/coveo/coveo.analytics.js/blob/master/src/coveoua/browser.ts#L29](https://github.com//github.com/coveo/coveo.analytics.js/blob/master/src/coveoua/browser.ts/issues/L29)
+
 # 2.51.0 (2024-02-28)
 
 ### Features
