@@ -27,7 +27,7 @@ node('heavy && linux && docker') {
         string(credentialsId: 'ui-kit-releaser-client-secret', variable: 'RELEASER_CLIENT_SECRET'),
         string(credentialsId: 'ui-kit-releaser-installation-id', variable: 'RELEASER_INSTALLATION_ID'),
       ]) {
-        sh "node ./scripts/deploy/approve-production-release.mjs ${params.githubRunId}"
+        sh "node ./scripts/deploy/approve-production-release.mjs ${params.GITHUB_RUN_ID}"
       }
     }
 
