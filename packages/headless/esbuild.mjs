@@ -87,15 +87,23 @@ const browserEsm = Object.entries(useCaseEntries).map((entry) => {
   const [useCase, entryPoint] = entry;
   const outDir = getUseCaseDir('dist/browser', useCase);
   const outfile = `${outDir}/headless.esm.js`;
+  const config = {
+    entryPoints: [entryPoint],
+    outfile,
+    format: 'esm',
+  };
 
-  return buildBrowserConfig(
-    {
-      entryPoints: [entryPoint],
-      outfile,
-      format: 'esm',
-    },
-    outDir
-  );
+  return devMode
+    ? buildBrowserConfig(
+        {
+          ...config,
+          watch: devMode,
+          minify: false,
+          sourcemap: true,
+        },
+        outDir
+      )
+    : buildBrowserConfig(config, outDir);
 });
 
 const browserUmd = Object.entries(useCaseEntries).map((entry) => {
