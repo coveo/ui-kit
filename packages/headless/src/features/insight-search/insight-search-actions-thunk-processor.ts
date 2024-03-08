@@ -26,9 +26,6 @@ import {StateNeededByExecuteSearch} from './insight-search-actions';
 import {logQueryError} from './insight-search-analytics-actions';
 import {buildInsightSearchRequest} from './insight-search-request';
 
-export const getOriginalQuery = (state: StateNeededByExecuteSearch) =>
-  state.query?.q !== undefined ? state.query.q : '';
-
 export interface AsyncThunkConfig {
   getState: () => StateNeededByExecuteSearch;
   dispatch: ThunkDispatch<
@@ -107,6 +104,8 @@ export class AsyncInsightSearchThunkProcessor<RejectionType> {
     const {correctedQuery} = fetched.response.success.queryCorrections
       ? fetched.response.success.queryCorrections[0]
       : emptyLegacyCorrection();
+    const originalQuery = this.getCurrentQuery();
+
     const retried =
       await this.automaticallyRetryQueryWithCorrection(correctedQuery);
 
@@ -124,7 +123,7 @@ export class AsyncInsightSearchThunkProcessor<RejectionType> {
         queryCorrections: fetched.response.success.queryCorrections,
       },
       automaticallyCorrected: true,
-      originalQuery: getOriginalQuery(this.getState()),
+      originalQuery,
     };
   }
 
