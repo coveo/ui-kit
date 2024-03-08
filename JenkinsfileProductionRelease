@@ -17,36 +17,17 @@ node('heavy && linux && docker') {
   dockerUtils.withDocker(image: 'node:18', args: '-e HOME=/tmp -e NPM_CONFIG_PREFIX=/tmp/.npm -v /etc/passwd:/etc/passwd:ro') {
     stage('Setup') {
       sh 'npm ci'
-      sh 'npm i -g @salesforce/cli@2.27.6'
-    }
-    
-    stage('Npm publish') {
-      withCredentials([
-      string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
-        sh 'echo //registry.npmjs.org/:_authToken=$NPM_TOKEN > ~/.npmrc'
-        sh 'npm run promote:npm:latest'
-      }
     }
 
-    stage('Quantic publish') {
+    stage('Approve production release') {
       withCredentials([
-        usernamePassword(credentialsId: 'github-commit-token', usernameVariable: 'GITHUB_USERNAME', passwordVariable: 'GITHUB_TOKEN'),
-        string(credentialsId: 'sfdx-auth-pkg-client-id', variable: 'SFDX_AUTH_CLIENT_ID'),
-        file(credentialsId: 'sfdx-auth-pkg-jwt-key', variable: 'SFDX_AUTH_JWT_KEY_FILE'),
+        string(credentialsId: 'ui-kit-releaser-app-id', variable: 'RELEASER_APP_ID'),
+        string(credentialsId: 'ui-kit-releaser-private-key', variable: 'RELEASER_PRIVATE_KEY'),
+        string(credentialsId: 'ui-kit-releaser-client-id', variable: 'RELEASER_CLIENT_ID'),
+        string(credentialsId: 'ui-kit-releaser-client-secret', variable: 'RELEASER_CLIENT_SECRET'),
+        string(credentialsId: 'ui-kit-releaser-installation-id', variable: 'RELEASER_INSTALLATION_ID'),
       ]) {
-        withEnv([
-          'SFDX_AUTH_JWT_USERNAME=sfdc.integration.devv2.hub@coveo.com'
-        ]) {
-          sh 'npx --no-install nx run quantic:"promote:sfdx:ci"'
-        }
-      }
-    }
-
-    stage('Notify Docs') {
-      withCredentials([
-        usernamePassword(credentialsId: 'github-commit-token', usernameVariable: 'GITHUB_USERNAME', passwordVariable: 'GITHUB_TOKEN')
-      ]) {
-        sh 'npm run notify:docs'
+        sh "node ./scripts/deploy/approve-production-release.mjs ${params.GITHUB_RUN_ID}"
       }
     }
 
