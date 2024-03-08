@@ -45,46 +45,9 @@ import {
 import {MappedSearchRequest, mapSearchRequest} from './search-mappings';
 import {buildSearchRequest} from './search-request';
 
-export interface SearchAction<
-  State extends StateNeededByExecuteSearch = StateNeededByExecuteSearch,
-  Payload extends Object = {},
-> {
+export interface SearchAction {
   actionCause: string;
-  getEventExtraPayload: (state: State) => Payload;
 }
-
-type SingleOrArray<T> = T | T[];
-
-export const buildSearchAction = <
-  State extends StateNeededByExecuteSearch = StateNeededByExecuteSearch,
-  Payload extends Object = {},
->(
-  actionCause: string,
-  getEventExtraPayload: SingleOrArray<
-    ({
-      state,
-      payload,
-    }: {
-      state: StateNeededByExecuteSearch;
-      payload: Partial<Payload>;
-    }) => void
-  >
-) => {
-  const getEventExtraPayloadFunctionArray = Array.isArray(getEventExtraPayload)
-    ? getEventExtraPayload
-    : [getEventExtraPayload];
-  const combinedGetEventExtraPayload = (state: State) => {
-    const payload = {};
-    for (const payloadTransformer of getEventExtraPayloadFunctionArray) {
-      payloadTransformer({state, payload});
-    }
-    return payload;
-  };
-  return {
-    actionCause,
-    getEventExtraPayload: combinedGetEventExtraPayload,
-  };
-};
 
 export type {StateNeededByExecuteSearch} from './search-actions-thunk-processor';
 
@@ -153,7 +116,7 @@ export const executeSearch = createAsyncThunk<
       return legacyExecuteSearch(state, config, searchAction.legacy);
     }
     addEntryInActionsHistory(state);
-    const analyticsAction = buildSearchReduxAction(searchAction.next, state);
+    const analyticsAction = buildSearchReduxAction(searchAction.next);
 
     const request = await buildSearchRequest(state, analyticsAction);
 
@@ -239,7 +202,7 @@ export const fetchFacetValues = createAsyncThunk<
     ) {
       return legacyExecuteSearch(state, config, searchAction.legacy);
     }
-    const analyticsAction = buildSearchReduxAction(searchAction.next, state);
+    const analyticsAction = buildSearchReduxAction(searchAction.next);
 
     const processor = new AsyncSearchThunkProcessor<
       ReturnType<typeof config.rejectWithValue>
@@ -276,7 +239,7 @@ export const fetchInstantResults = createAsyncThunk<
     });
     const {q, maxResultsPerQuery} = payload;
 
-    const analyticsAction = buildSearchReduxAction(searchboxAsYouType(), state);
+    const analyticsAction = buildSearchReduxAction(searchboxAsYouType());
 
     const request = await buildInstantResultSearchRequest(
       state,
@@ -366,11 +329,7 @@ const addEntryInActionsHistory = (state: StateNeededByExecuteSearch) => {
   }
 };
 
-const buildSearchReduxAction = (
-  action: SearchAction,
-  state: StateNeededByExecuteSearch
-) => ({
-  customData: action.getEventExtraPayload(state),
+const buildSearchReduxAction = (action: SearchAction) => ({
   actionCause: action.actionCause,
   type: action.actionCause,
 });

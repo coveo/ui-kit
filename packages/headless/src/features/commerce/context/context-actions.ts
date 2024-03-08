@@ -1,4 +1,5 @@
 import {SchemaValidationError, isNullOrUndefined} from '@coveo/bueno';
+import {CurrencyCodeISO4217} from '@coveo/relay-event-types';
 import {createAction} from '@reduxjs/toolkit';
 import {
   UserParams,
@@ -18,7 +19,7 @@ export interface SetContextPayload {
   trackingId: string;
   language: string;
   country: string;
-  currency: string;
+  currency: CurrencyCodeISO4217;
   user?: UserParams;
   view: ViewParams;
 }

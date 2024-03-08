@@ -53,20 +53,20 @@ export function buildDateFilter(
     ...coreController,
     clear: () => {
       coreController.clear();
-      dispatch(fetchProductListing()).then(() =>
-        dispatch(logFacetClearAll(getFacetId()))
-      );
+      dispatch(fetchProductListing());
+
+      dispatch(logFacetClearAll(getFacetId()));
     },
     setRange: (range) => {
       const success = coreController.setRange(range);
       if (success) {
-        dispatch(fetchProductListing()).then(() =>
-          dispatch(
-            logFacetSelect({
-              facetId: getFacetId(),
-              facetValue: `${range.start}..${range.end}`,
-            })
-          )
+        dispatch(fetchProductListing());
+
+        dispatch(
+          logFacetSelect({
+            facetId: getFacetId(),
+            facetValue: `${range.start}..${range.end}`,
+          })
         );
       }
       return success;
