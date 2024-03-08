@@ -33,9 +33,7 @@ export interface AsyncThunkConfig {
   getState: () => StateNeededByExecuteSearch;
   dispatch: ThunkDispatch<
     StateNeededByExecuteSearch,
-    ClientThunkExtraArguments<InsightAPIClient> & {
-      searchAPIClient?: InsightAPIClient | undefined;
-    },
+    ClientThunkExtraArguments<InsightAPIClient>,
     AnyAction
   >;
   rejectWithValue: (err: InsightAPIErrorStatusResponse) => unknown;

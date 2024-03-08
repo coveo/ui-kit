@@ -1,17 +1,14 @@
-import {createAsyncThunk, ThunkDispatch, AnyAction} from '@reduxjs/toolkit';
+import {createAsyncThunk} from '@reduxjs/toolkit';
 import {historyStore} from '../../api/analytics/coveo-analytics-utils';
-import {StateNeededByInsightAnalyticsProvider} from '../../api/analytics/insight-analytics';
 import {
   SearchOptions,
   isErrorResponse,
 } from '../../api/search/search-api-client';
-import {SearchResponseSuccess} from '../../api/search/search/search-response';
 import {
   AsyncThunkInsightOptions,
   InsightAPIClient,
 } from '../../api/service/insight/insight-api-client';
 import {InsightQueryRequest} from '../../api/service/insight/query/query-request';
-import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {
   CategoryFacetSection,
   ConfigurationSection,
@@ -34,21 +31,20 @@ import {
 } from '../../state/state-sections';
 import {requiredNonEmptyString} from '../../utils/validate-payload';
 import {InsightAction as LegacyInsightAction} from '../analytics/analytics-utils';
-import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
 import {
   FetchQuerySuggestionsActionCreatorPayload,
   FetchQuerySuggestionsThunkReturn,
 } from '../query-suggest/query-suggest-actions';
-import {updateQuery} from '../query/query-actions';
-import {getQueryInitialState} from '../query/query-state';
 import {ExecuteSearchThunkReturn} from '../search/search-actions';
 import {
   MappedSearchRequest,
   mapSearchResponse,
 } from '../search/search-mappings';
-import {getSearchInitialState} from '../search/search-state';
 import {buildInsightQuerySuggestRequest} from './insight-query-suggest-request';
-import {AsyncInsightSearchThunkProcessor} from './insight-search-actions-thunk-processor';
+import {
+  AsyncInsightSearchThunkProcessor,
+  AsyncThunkConfig,
+} from './insight-search-actions-thunk-processor';
 import {
   buildInsightFetchFacetValuesRequest,
   buildInsightFetchMoreResultsRequest,
@@ -120,7 +116,10 @@ export const executeSearch = createAsyncThunk<
   AsyncThunkInsightOptions<StateNeededByExecuteSearch>
 >(
   'search/executeSearch',
-  async (analyticsAction: TransitiveInsightSearchAction, config) => {
+  async (
+    analyticsAction: TransitiveInsightSearchAction,
+    config: AsyncThunkConfig
+  ) => {
     const state = config.getState();
     if (
       state.configuration.analytics.analyticsMode === 'legacy' ||
@@ -148,7 +147,10 @@ export const fetchPage = createAsyncThunk<
   AsyncThunkInsightOptions<StateNeededByExecuteSearch>
 >(
   'search/fetchPage',
-  async (analyticsAction: TransitiveInsightSearchAction, config) => {
+  async (
+    analyticsAction: TransitiveInsightSearchAction,
+    config: AsyncThunkConfig
+  ) => {
     const state = config.getState();
 
     if (
@@ -175,7 +177,7 @@ export const fetchMoreResults = createAsyncThunk<
   ExecuteSearchThunkReturn,
   void,
   AsyncThunkInsightOptions<StateNeededByExecuteSearch>
->('search/fetchMoreResults', async (_, config) => {
+>('search/fetchMoreResults', async (_, config: AsyncThunkConfig) => {
   const state = config.getState();
 
   if (state.configuration.analytics.analyticsMode === 'legacy') {
@@ -198,7 +200,10 @@ export const fetchFacetValues = createAsyncThunk<
   AsyncThunkInsightOptions<StateNeededByExecuteSearch>
 >(
   'search/fetchFacetValues',
-  async (analyticsAction: TransitiveInsightSearchAction, config) => {
+  async (
+    analyticsAction: TransitiveInsightSearchAction,
+    config: AsyncThunkConfig
+  ) => {
     const state = config.getState();
 
     if (
@@ -218,6 +223,15 @@ export const fetchFacetValues = createAsyncThunk<
     return await processor.process(fetched);
   }
 );
+
+export type StateNeededByQuerySuggest = ConfigurationSection &
+  InsightConfigurationSection &
+  Partial<
+    ConfigurationSection &
+      QuerySuggestionSection &
+      QuerySetSection &
+      InsightCaseContextSection
+  >;
 
 export const fetchQuerySuggestions = createAsyncThunk<
   FetchQuerySuggestionsThunkReturn,
@@ -247,78 +261,6 @@ export const fetchQuerySuggestions = createAsyncThunk<
     };
   }
 );
-
-export type StateNeededByQuerySuggest = ConfigurationSection &
-  InsightConfigurationSection &
-  Partial<
-    ConfigurationSection &
-      QuerySuggestionSection &
-      QuerySetSection &
-      InsightCaseContextSection
-  >;
-
-export const automaticallyRetryQueryWithCorrection = async (
-  client: InsightAPIClient,
-  correction: string,
-  getState: () => StateNeededByExecuteSearch,
-  dispatch: ThunkDispatch<
-    StateNeededByExecuteSearch,
-    ClientThunkExtraArguments<InsightAPIClient> & {
-      searchAPIClient?: InsightAPIClient | undefined;
-    },
-    AnyAction
-  >
-) => {
-  dispatch(updateQuery({q: correction}));
-  const fetched = await fetchFromAPI(
-    client,
-    getState(),
-    await buildInsightSearchRequest(getState())
-  );
-  dispatch(applyDidYouMeanCorrection(correction));
-  return fetched;
-};
-
-export const shouldReExecuteTheQueryWithCorrections = (
-  state: StateNeededByExecuteSearch,
-  res: SearchResponseSuccess
-) => {
-  if (
-    state.didYouMean?.enableDidYouMean === true &&
-    res.results.length === 0 &&
-    res.queryCorrections &&
-    res.queryCorrections.length !== 0
-  ) {
-    return true;
-  }
-  return false;
-};
-
-export const getStateAfterResponse: (
-  query: string,
-  duration: number,
-  previousState: StateNeededByExecuteSearch,
-  response: SearchResponseSuccess
-) => StateNeededByInsightAnalyticsProvider = (
-  query,
-  duration,
-  previousState,
-  response
-) => ({
-  ...previousState,
-  query: {
-    q: query,
-    enableQuerySyntax:
-      previousState.query?.enableQuerySyntax ??
-      getQueryInitialState().enableQuerySyntax,
-  },
-  search: {
-    ...getSearchInitialState(),
-    duration,
-    response,
-    results: response.results,
-  },
-});
 
 export const addEntryInActionsHistory = (state: StateNeededByExecuteSearch) => {
   if (state.configuration.analytics.enabled) {
