@@ -52,7 +52,7 @@ export const analyticsMiddleware: Middleware = (api) => (next) => (action) => {
   }
 
   if (analytics !== undefined) {
-    api.dispatch(actionWithPossibleAnalytics);
+    api.dispatch(analytics as UnknownAction);
   }
 
   return ret;
