@@ -35,10 +35,6 @@ import {
 import {requiredNonEmptyString} from '../../utils/validate-payload';
 import {InsightAction as LegacyInsightAction} from '../analytics/analytics-utils';
 import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
-import {logDidYouMeanAutomatic} from '../did-you-mean/did-you-mean-insight-analytics-actions';
-import {emptyLegacyCorrection} from '../did-you-mean/did-you-mean-state';
-import {snapshot} from '../history/history-actions';
-import {extractHistory} from '../history/history-state';
 import {
   FetchQuerySuggestionsActionCreatorPayload,
   FetchQuerySuggestionsThunkReturn,
@@ -52,7 +48,7 @@ import {
 } from '../search/search-mappings';
 import {getSearchInitialState} from '../search/search-state';
 import {buildInsightQuerySuggestRequest} from './insight-query-suggest-request';
-import {logQueryError} from './insight-search-analytics-actions';
+import {AsyncInsightSearchThunkProcessor} from './insight-search-actions-thunk-processor';
 import {
   buildInsightFetchFacetValuesRequest,
   buildInsightFetchMoreResultsRequest,
@@ -125,68 +121,24 @@ export const executeSearch = createAsyncThunk<
 >(
   'search/executeSearch',
   async (analyticsAction: TransitiveInsightSearchAction, config) => {
-    const {extra, dispatch, getState, rejectWithValue} = config;
-    const state = getState();
+    const state = config.getState();
     if (
       state.configuration.analytics.analyticsMode === 'legacy' ||
       !analyticsAction.next
     ) {
-      return legacyExecuteSearch(
-        state,
-        {extra, dispatch, getState, rejectWithValue},
-        analyticsAction.legacy
-      );
+      return legacyExecuteSearch(state, config, analyticsAction.legacy);
     }
 
     addEntryInActionsHistory(state);
-    const mappedRequest = buildInsightSearchRequest(state);
 
-    const fetched = await fetchFromAPI(extra.apiClient, state, mappedRequest);
+    const processor = new AsyncInsightSearchThunkProcessor({
+      ...config,
+    });
 
-    if (isErrorResponse(fetched.response)) {
-      dispatch(logQueryError(fetched.response.error));
-      return rejectWithValue(fetched.response.error);
-    }
+    const request = buildInsightSearchRequest(state);
+    const fetched = await processor.fetchFromAPI(request);
 
-    if (
-      !shouldReExecuteTheQueryWithCorrections(state, fetched.response.success)
-    ) {
-      dispatch(snapshot(extractHistory(state)));
-      return {
-        ...fetched,
-        response: fetched.response.success,
-        automaticallyCorrected: false,
-        originalQuery: getOriginalQuery(state),
-        analyticsAction: analyticsAction.legacy,
-      };
-    }
-    const {correctedQuery} = fetched.response.success.queryCorrections
-      ? fetched.response.success.queryCorrections[0]
-      : emptyLegacyCorrection();
-    const retried = await automaticallyRetryQueryWithCorrection(
-      extra.apiClient,
-      correctedQuery,
-      getState,
-      dispatch
-    );
-
-    if (isErrorResponse(retried.response)) {
-      dispatch(logQueryError(retried.response.error));
-      return rejectWithValue(retried.response.error);
-    }
-
-    dispatch(snapshot(extractHistory(getState())));
-
-    return {
-      ...retried,
-      response: {
-        ...retried.response.success,
-        queryCorrections: fetched.response.success.queryCorrections,
-      },
-      automaticallyCorrected: true,
-      originalQuery: getOriginalQuery(state),
-      analyticsAction: logDidYouMeanAutomatic(),
-    };
+    return await processor.process(fetched);
   }
 );
 
@@ -196,43 +148,26 @@ export const fetchPage = createAsyncThunk<
   AsyncThunkInsightOptions<StateNeededByExecuteSearch>
 >(
   'search/fetchPage',
-  async (
-    analyticsAction: TransitiveInsightSearchAction,
-    {getState, dispatch, rejectWithValue, extra}
-  ) => {
-    const state = getState();
+  async (analyticsAction: TransitiveInsightSearchAction, config) => {
+    const state = config.getState();
 
     if (
       state.configuration.analytics.analyticsMode === 'legacy' ||
       !analyticsAction.next
     ) {
-      return legacyFetchPage(
-        state,
-        {extra, dispatch, getState, rejectWithValue},
-        analyticsAction.legacy
-      );
+      return legacyFetchPage(state, config, analyticsAction.legacy);
     }
 
     addEntryInActionsHistory(state);
 
-    const fetched = await fetchFromAPI(
-      extra.apiClient,
-      state,
-      buildInsightSearchRequest(state)
-    );
+    const processor = new AsyncInsightSearchThunkProcessor({
+      ...config,
+    });
 
-    if (isErrorResponse(fetched.response)) {
-      dispatch(logQueryError(fetched.response.error));
-      return rejectWithValue(fetched.response.error);
-    }
+    const request = buildInsightSearchRequest(state);
+    const fetched = await processor.fetchFromAPI(request);
 
-    dispatch(snapshot(extractHistory(state)));
-    return {
-      ...fetched,
-      response: fetched.response.success,
-      automaticallyCorrected: false,
-      originalQuery: getOriginalQuery(state),
-    };
+    return await processor.process(fetched);
   }
 );
 
@@ -240,41 +175,22 @@ export const fetchMoreResults = createAsyncThunk<
   ExecuteSearchThunkReturn,
   void,
   AsyncThunkInsightOptions<StateNeededByExecuteSearch>
->(
-  'search/fetchMoreResults',
-  async (_, {extra, dispatch, getState, rejectWithValue}) => {
-    const state = getState();
+>('search/fetchMoreResults', async (_, config) => {
+  const state = config.getState();
 
-    if (state.configuration.analytics.analyticsMode === 'legacy') {
-      return legacyFetchMoreResults(state, {
-        extra,
-        dispatch,
-        getState,
-        rejectWithValue,
-      });
-    }
-
-    const fetched = await fetchFromAPI(
-      extra.apiClient,
-      state,
-      await buildInsightFetchMoreResultsRequest(state)
-    );
-
-    if (isErrorResponse(fetched.response)) {
-      dispatch(logQueryError(fetched.response.error));
-      return rejectWithValue(fetched.response.error);
-    }
-
-    dispatch(snapshot(extractHistory(state)));
-
-    return {
-      ...fetched,
-      response: fetched.response.success,
-      automaticallyCorrected: false,
-      originalQuery: getOriginalQuery(state),
-    };
+  if (state.configuration.analytics.analyticsMode === 'legacy') {
+    return legacyFetchMoreResults(state, config);
   }
-);
+
+  const processor = new AsyncInsightSearchThunkProcessor({
+    ...config,
+  });
+
+  const request = await buildInsightFetchMoreResultsRequest(state);
+  const fetched = await processor.fetchFromAPI(request);
+
+  return await processor.process(fetched);
+});
 
 export const fetchFacetValues = createAsyncThunk<
   ExecuteSearchThunkReturn,
@@ -282,42 +198,24 @@ export const fetchFacetValues = createAsyncThunk<
   AsyncThunkInsightOptions<StateNeededByExecuteSearch>
 >(
   'search/fetchFacetValues',
-  async (
-    analyticsAction: TransitiveInsightSearchAction,
-    {extra, dispatch, getState, rejectWithValue}
-  ) => {
-    const state = getState();
+  async (analyticsAction: TransitiveInsightSearchAction, config) => {
+    const state = config.getState();
 
     if (
       state.configuration.analytics.analyticsMode === 'legacy' ||
       !analyticsAction.next
     ) {
-      return legacyFetchFacetValues(
-        state,
-        {extra, dispatch, getState, rejectWithValue},
-        analyticsAction.legacy
-      );
+      return legacyFetchFacetValues(state, config, analyticsAction.legacy);
     }
 
-    const fetched = await fetchFromAPI(
-      extra.apiClient,
-      state,
-      await buildInsightFetchFacetValuesRequest(state)
-    );
+    const processor = new AsyncInsightSearchThunkProcessor({
+      ...config,
+    });
 
-    if (isErrorResponse(fetched.response)) {
-      dispatch(logQueryError(fetched.response.error));
-      return rejectWithValue(fetched.response.error);
-    }
+    const request = await buildInsightFetchFacetValuesRequest(state);
+    const fetched = await processor.fetchFromAPI(request);
 
-    dispatch(snapshot(extractHistory(state)));
-
-    return {
-      ...fetched,
-      response: fetched.response.success,
-      automaticallyCorrected: false,
-      originalQuery: getOriginalQuery(state),
-    };
+    return await processor.process(fetched);
   }
 );
 
@@ -395,9 +293,6 @@ export const shouldReExecuteTheQueryWithCorrections = (
   }
   return false;
 };
-
-export const getOriginalQuery = (state: StateNeededByExecuteSearch) =>
-  state.query?.q !== undefined ? state.query.q : '';
 
 export const getStateAfterResponse: (
   query: string,
