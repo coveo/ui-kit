@@ -26,6 +26,7 @@ import {logSearchboxSubmit} from '../../../features/query/query-analytics-action
 import {queryReducer as query} from '../../../features/query/query-slice';
 import {
   SearchAction,
+  TransitiveSearchAction,
   prepareForSearchWithQuery,
 } from '../../../features/search/search-actions';
 import {searchReducer as search} from '../../../features/search/search-slice';
@@ -58,11 +59,6 @@ export type {SearchBoxOptions, SuggestionHighlightingOptions, Delimiters};
 
 export type SearchBoxProps = SearchBoxPropsBase &
   (NextSearchBoxProps | LegacySearchBoxProps);
-
-interface TransitiveSearchAction {
-  legacy: LegacySearchAction;
-  next?: SearchAction;
-}
 
 interface NextSearchBoxProps {
   /**
