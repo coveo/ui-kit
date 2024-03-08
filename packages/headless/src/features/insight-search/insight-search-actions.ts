@@ -35,7 +35,7 @@ import {
   FetchQuerySuggestionsActionCreatorPayload,
   FetchQuerySuggestionsThunkReturn,
 } from '../query-suggest/query-suggest-actions';
-import {ExecuteSearchThunkReturn} from '../search/search-actions';
+import {ExecuteSearchThunkReturn, SearchAction} from '../search/search-actions';
 import {
   MappedSearchRequest,
   mapSearchResponse,
@@ -97,17 +97,9 @@ export const fetchFromAPI = async (
   };
 };
 
-export interface InsightSearchAction<
-  State extends StateNeededByExecuteSearch = StateNeededByExecuteSearch,
-  Payload extends Object = {},
-> {
-  actionCause: string;
-  getEventExtraPayload: (state: State) => Payload;
-}
-
 interface TransitiveInsightSearchAction {
   legacy: LegacyInsightAction;
-  next?: InsightSearchAction;
+  next?: SearchAction;
 }
 
 export const executeSearch = createAsyncThunk<
