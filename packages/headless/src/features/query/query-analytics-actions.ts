@@ -1,4 +1,3 @@
-import {SearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {
   makeAnalyticsAction,
   LegacySearchAction,
@@ -12,10 +11,6 @@ export const logSearchboxSubmit = (): LegacySearchAction =>
     client.makeSearchboxSubmit()
   );
 
-export const searchboxSubmit = (): SearchAction => {
-  return {
-    actionCause: SearchPageEvents.searchboxSubmit,
-    getEventExtraPayload: (state) =>
-      new SearchAnalyticsProvider(() => state).getBaseMetadata(),
-  };
-};
+export const searchboxSubmit = (): SearchAction => ({
+  actionCause: SearchPageEvents.searchboxSubmit,
+});
