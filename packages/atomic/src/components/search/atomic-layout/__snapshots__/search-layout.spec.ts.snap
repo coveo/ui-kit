@@ -5,7 +5,7 @@ exports[`Search Layout #buildSearchLayout when the atomic-search-layout componen
 "atomic-search-layout#abc { display: grid }
 
 @media only screen and (min-width: 1024px) {
-    atomic-search-layout#abc atomic-layout-section[section=\\"search\\"] {
+    atomic-search-layout#abc atomic-layout-section[section="search"] {
       justify-self: start;
       width: 80%;
     }
@@ -28,13 +28,13 @@ exports[`Search Layout #buildSearchLayout when the atomic-search-layout componen
           '. atomic-section-facets .                     .';
       }
 
-      atomic-search-interface:not(.atomic-search-interface-no-results, .atomic-search-interface-error) atomic-search-layout#abc atomic-layout-section[section=\\"facets\\"] {
+      atomic-search-interface:not(.atomic-search-interface-no-results, .atomic-search-interface-error) atomic-search-layout#abc atomic-layout-section[section="facets"] {
         display: block;
       }
     }
 
 @media only screen and (min-width: 1024px) {
-      atomic-search-layout#abc atomic-layout-section[section=\\"horizontal-facets\\"] > atomic-popover:not(.atomic-hidden) {
+      atomic-search-layout#abc atomic-layout-section[section="horizontal-facets"] > atomic-popover:not(.atomic-hidden) {
         display: block;
       }
     }"
@@ -45,28 +45,28 @@ exports[`Search Layout #buildSearchLayout when the atomic-search-layout componen
 "atomic-search-layout#abc { display: grid }
 
 @media only screen and (min-width: 1024px) {
-    atomic-search-layout#abc atomic-layout-section[section=\\"search\\"] {
+    atomic-search-layout#abc atomic-layout-section[section="search"] {
       justify-self: start;
       width: 80%;
     }
   }
 
-atomic-search-layout#abc atomic-layout-section[section=\\"status\\"] atomic-sort-dropdown {
+atomic-search-layout#abc atomic-layout-section[section="status"] atomic-sort-dropdown {
       display: none;
     }
 
     @media only screen and (min-width: 1024px) {
-     atomic-search-layout#abc atomic-layout-section[section=\\"status\\"] atomic-sort-dropdown {
+     atomic-search-layout#abc atomic-layout-section[section="status"] atomic-sort-dropdown {
        display: block;
       }
 
-      atomic-search-layout#abc atomic-layout-section[section=\\"status\\"] atomic-refine-toggle {
+      atomic-search-layout#abc atomic-layout-section[section="status"] atomic-refine-toggle {
         display: none;
        }
     }
 
 @media only screen and (min-width: 1024px) {
-      atomic-search-layout#abc atomic-layout-section[section=\\"horizontal-facets\\"] > atomic-popover:not(.atomic-hidden) {
+      atomic-search-layout#abc atomic-layout-section[section="horizontal-facets"] > atomic-popover:not(.atomic-hidden) {
         display: block;
       }
     }"
@@ -77,14 +77,14 @@ exports[`Search Layout #buildSearchLayout when the atomic-search-layout componen
 "atomic-search-layout#abc { display: grid }
 
 @media only screen and (min-width: 1024px) {
-    atomic-search-layout#abc atomic-layout-section[section=\\"search\\"] {
+    atomic-search-layout#abc atomic-layout-section[section="search"] {
       justify-self: start;
       width: 80%;
     }
   }
 
 @media only screen and (min-width: 1024px) {
-      atomic-search-layout#abc atomic-layout-section[section=\\"horizontal-facets\\"] > atomic-popover:not(.atomic-hidden) {
+      atomic-search-layout#abc atomic-layout-section[section="horizontal-facets"] > atomic-popover:not(.atomic-hidden) {
         display: block;
       }
     }"
@@ -95,7 +95,7 @@ exports[`Search Layout #buildSearchLayout when the atomic-search-layout has cust
 "atomic-search-layout#abc { display: grid }
 
 @media only screen and (min-width: 1024px) {
-    atomic-search-layout#abc atomic-layout-section[section=\\"search\\"] {
+    atomic-search-layout#abc atomic-layout-section[section="search"] {
       justify-self: start;
       width: 80%;
     }
@@ -118,13 +118,13 @@ exports[`Search Layout #buildSearchLayout when the atomic-search-layout has cust
           '. atomic-section-facets .                     .';
       }
 
-      atomic-search-interface:not(.atomic-search-interface-no-results, .atomic-search-interface-error) atomic-search-layout#abc atomic-layout-section[section=\\"facets\\"] {
+      atomic-search-interface:not(.atomic-search-interface-no-results, .atomic-search-interface-error) atomic-search-layout#abc atomic-layout-section[section="facets"] {
         display: block;
       }
     }
 
 @media only screen and (min-width: 1024px) {
-      atomic-search-layout#abc atomic-layout-section[section=\\"horizontal-facets\\"] > atomic-popover:not(.atomic-hidden) {
+      atomic-search-layout#abc atomic-layout-section[section="horizontal-facets"] > atomic-popover:not(.atomic-hidden) {
         display: block;
       }
     }"

@@ -37,7 +37,7 @@ describe('buildStringTemplateFromResult', () => {
   });
 
   it('should snip out objects that cannot be evaluated properly and log a warning', () => {
-    spyOn(engine.logger, 'warn');
+    jest.spyOn(engine.logger, 'warn');
     expect(
       buildStringTemplateFromResult(
         '${title}/${raw.notafield}',
