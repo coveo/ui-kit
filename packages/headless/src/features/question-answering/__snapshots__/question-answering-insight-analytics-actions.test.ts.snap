@@ -1,0 +1,150 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`question answering insight analytics actions when analyticsMode is \`next\` should log #logCollapseSmartSnippet with the case payload 1`] = `
+[
+  "Qna.AnswerAction",
+  {
+    "action": "collapse",
+    "answer": {
+      "id": "bar",
+      "type": "SmartSnippet",
+    },
+  },
+]
+`;
+
+exports[`question answering insight analytics actions when analyticsMode is \`next\` should log #logCollapseSmartSnippetSuggestion with the right payload 1`] = `
+[
+  "Qna.AnswerAction",
+  {
+    "action": "collapse",
+    "answer": {
+      "id": "foo",
+      "type": "SmartSnippetSuggestion",
+    },
+  },
+]
+`;
+
+exports[`question answering insight analytics actions when analyticsMode is \`next\` should log #logDislikeSmartSnippet with the case payload 1`] = `
+[
+  "Qna.Feedback",
+  {
+    "answer": {
+      "id": "bar",
+      "type": "SmartSnippet",
+    },
+    "feedback": {
+      "liked": false,
+    },
+  },
+]
+`;
+
+exports[`question answering insight analytics actions when analyticsMode is \`next\` should log #logExpandSmartSnippet with the case payload 1`] = `
+[
+  "Qna.AnswerAction",
+  {
+    "action": "expand",
+    "answer": {
+      "id": "bar",
+      "type": "SmartSnippet",
+    },
+  },
+]
+`;
+
+exports[`question answering insight analytics actions when analyticsMode is \`next\` should log #logExpandSmartSnippetSuggestion with the right payload 1`] = `
+[
+  "Qna.AnswerAction",
+  {
+    "action": "expand",
+    "answer": {
+      "id": "foo",
+      "type": "SmartSnippetSuggestion",
+    },
+  },
+]
+`;
+
+exports[`question answering insight analytics actions when analyticsMode is \`next\` should log #logLikeSmartSnippet with the case payload 1`] = `
+[
+  "Qna.Feedback",
+  {
+    "answer": {
+      "id": "bar",
+      "type": "SmartSnippet",
+    },
+    "feedback": {
+      "liked": true,
+    },
+  },
+]
+`;
+
+exports[`question answering insight analytics actions when analyticsMode is \`next\` should log #logOpenSmartSnippetSource with the right payload 1`] = `
+[
+  "ItemClick",
+  {
+    "itemMetadata": {
+      "author": "unknown",
+      "title": "example documentTitle",
+      "uniqueFieldName": "permanentid",
+      "uniqueFieldValue": "example permanent id",
+      "url": "example documentUri",
+    },
+    "position": 1,
+    "searchUid": "",
+  },
+]
+`;
+
+exports[`question answering insight analytics actions when analyticsMode is \`next\` should log #logOpenSmartSnippetSuggestionSource with the right payload 1`] = `
+[
+  "ItemClick",
+  {
+    "itemMetadata": {
+      "author": "unknown",
+      "title": "example documentTitle",
+      "uniqueFieldName": "permanentid",
+      "uniqueFieldValue": "example permanent id",
+      "url": "example documentUri",
+    },
+    "position": 1,
+    "searchUid": "",
+  },
+]
+`;
+
+exports[`question answering insight analytics actions when analyticsMode is \`next\` should log #logSmartSnippetDetailedFeedback with the right payload 1`] = `
+[
+  "Qna.Feedback",
+  {
+    "answer": {
+      "id": "bar",
+      "type": "SmartSnippet",
+    },
+    "feedback": {
+      "details": "example feedback details",
+      "liked": true,
+      "reason": "other",
+    },
+  },
+]
+`;
+
+exports[`question answering insight analytics actions when analyticsMode is \`next\` should log #logSmartSnippetFeedback with the right payload 1`] = `
+[
+  "Qna.Feedback",
+  {
+    "answer": {
+      "id": "bar",
+      "type": "SmartSnippet",
+    },
+    "feedback": {
+      "liked": true,
+      "reason": "does_not_answer",
+    },
+  },
+]
+`;

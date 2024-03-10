@@ -1,3 +1,4 @@
+import {Qna} from '@coveo/relay-event-types';
 import {
   CustomAction,
   LegacySearchAction,
@@ -15,11 +16,13 @@ export type GeneratedAnswerFeedback =
   | 'outOfDate'
   | 'harmful';
 
+//TODO: To be removed
 export const logRetryGeneratedAnswer = (): LegacySearchAction =>
   makeAnalyticsAction('analytics/generatedAnswer/retry', (client) =>
     client.makeRetryGeneratedAnswer()
   );
 
+//TODO: To be removed
 export const logRephraseGeneratedAnswer = (
   responseFormat: GeneratedResponseFormat
 ): LegacySearchAction =>
@@ -38,9 +41,9 @@ export const logRephraseGeneratedAnswer = (
 export const logOpenGeneratedAnswerSource = (
   citationId: string
 ): CustomAction =>
-  makeAnalyticsAction(
-    'analytics/generatedAnswer/openAnswerSource',
-    (client, state) => {
+  makeAnalyticsAction({
+    prefix: 'analytics/generatedAnswer/openAnswerSource',
+    __legacy__getBuilder: (client, state) => {
       const generativeQuestionAnsweringId =
         generativeQuestionAnsweringIdSelector(state);
       const citation = citationSourceSelector(state, citationId);
@@ -52,19 +55,34 @@ export const logOpenGeneratedAnswerSource = (
         permanentId: citation.permanentid,
         citationId: citation.id,
       });
-    }
-  );
+    },
+    analyticsType: 'Qna.CitationItemClick',
+    analyticsPayloadBuilder: (state): Qna.CitationItemClick => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      return {
+        answer: {
+          id: generativeQuestionAnsweringId!,
+          type: 'CRGA',
+        },
+        citation: {
+          id: citationId,
+        },
+      };
+    },
+  });
 
 export const logHoverCitation = (
   citationId: string,
-  citationHoverTimeMs: number
+  citationHoverTimeInMs: number
 ): CustomAction =>
-  makeAnalyticsAction(
-    'analytics/generatedAnswer/hoverCitation',
-    (client, state) => {
+  makeAnalyticsAction({
+    prefix: 'analytics/generatedAnswer/hoverCitation',
+    __legacy__getBuilder: (client, state) => {
       const generativeQuestionAnsweringId =
         generativeQuestionAnsweringIdSelector(state);
       const citation = citationSourceSelector(state, citationId);
+
       if (!generativeQuestionAnsweringId || !citation) {
         return null;
       }
@@ -72,41 +90,90 @@ export const logHoverCitation = (
         generativeQuestionAnsweringId,
         permanentId: citation.permanentid,
         citationId: citation.id,
-        citationHoverTimeMs,
+        citationHoverTimeMs: citationHoverTimeInMs,
       });
-    }
-  );
+    },
+    analyticsType: 'Qna.CitationHover',
+    analyticsPayloadBuilder: (state): Qna.CitationHover => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      return {
+        answer: {
+          id: generativeQuestionAnsweringId!,
+          type: 'CRGA',
+        },
+        citation: {
+          id: citationId,
+        },
+        citationHoverTimeInMs,
+      };
+    },
+  });
 
 export const logLikeGeneratedAnswer = (): CustomAction =>
-  makeAnalyticsAction('analytics/generatedAnswer/like', (client, state) => {
-    const generativeQuestionAnsweringId =
-      generativeQuestionAnsweringIdSelector(state);
-    if (!generativeQuestionAnsweringId) {
-      return null;
-    }
-    return client.makeLikeGeneratedAnswer({
-      generativeQuestionAnsweringId,
-    });
+  makeAnalyticsAction({
+    prefix: 'analytics/generatedAnswer/like',
+    __legacy__getBuilder: (client, state) => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      if (!generativeQuestionAnsweringId) {
+        return null;
+      }
+      return client.makeLikeGeneratedAnswer({
+        generativeQuestionAnsweringId,
+      });
+    },
+    analyticsType: 'Qna.Feedback',
+    analyticsPayloadBuilder: (state): Qna.FeedbackSubmit => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      return {
+        answer: {
+          id: generativeQuestionAnsweringId!,
+          type: 'CRGA',
+        },
+        feedback: {
+          liked: true,
+        },
+      };
+    },
   });
 
 export const logDislikeGeneratedAnswer = (): CustomAction =>
-  makeAnalyticsAction('analytics/generatedAnswer/dislike', (client, state) => {
-    const generativeQuestionAnsweringId =
-      generativeQuestionAnsweringIdSelector(state);
-    if (!generativeQuestionAnsweringId) {
-      return null;
-    }
-    return client.makeDislikeGeneratedAnswer({
-      generativeQuestionAnsweringId,
-    });
+  makeAnalyticsAction({
+    prefix: 'analytics/generatedAnswer/dislike',
+    __legacy__getBuilder: (client, state) => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      if (!generativeQuestionAnsweringId) {
+        return null;
+      }
+      return client.makeDislikeGeneratedAnswer({
+        generativeQuestionAnsweringId,
+      });
+    },
+    analyticsType: 'Qna.Feedback',
+    analyticsPayloadBuilder: (state): Qna.FeedbackSubmit => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      return {
+        answer: {
+          id: generativeQuestionAnsweringId!,
+          type: 'CRGA',
+        },
+        feedback: {
+          liked: false,
+        },
+      };
+    },
   });
 
 export const logGeneratedAnswerFeedback = (
   feedback: GeneratedAnswerFeedback
 ): CustomAction =>
-  makeAnalyticsAction(
-    'analytics/generatedAnswer/sendFeedback',
-    (client, state) => {
+  makeAnalyticsAction({
+    prefix: 'analytics/generatedAnswer/sendFeedback',
+    __legacy__getBuilder: (client, state) => {
       const generativeQuestionAnsweringId =
         generativeQuestionAnsweringIdSelector(state);
       if (!generativeQuestionAnsweringId) {
@@ -116,15 +183,30 @@ export const logGeneratedAnswerFeedback = (
         generativeQuestionAnsweringId,
         reason: feedback,
       });
-    }
-  );
+    },
+    analyticsType: 'Qna.Feedback',
+    analyticsPayloadBuilder: (state): Qna.FeedbackSubmit => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      return {
+        answer: {
+          id: generativeQuestionAnsweringId!,
+          type: 'CRGA',
+        },
+        feedback: {
+          liked: false,
+          reason: feedback,
+        },
+      };
+    },
+  });
 
 export const logGeneratedAnswerDetailedFeedback = (
   details: string
 ): CustomAction =>
-  makeAnalyticsAction(
-    'analytics/generatedAnswer/sendFeedback',
-    (client, state) => {
+  makeAnalyticsAction({
+    prefix: 'analytics/generatedAnswer/sendFeedback',
+    __legacy__getBuilder: (client, state) => {
       const generativeQuestionAnsweringId =
         generativeQuestionAnsweringIdSelector(state);
       if (!generativeQuestionAnsweringId) {
@@ -135,9 +217,26 @@ export const logGeneratedAnswerDetailedFeedback = (
         reason: 'other',
         details,
       });
-    }
-  );
+    },
+    analyticsType: 'Qna.Feedback',
+    analyticsPayloadBuilder: (state): Qna.FeedbackSubmit => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      return {
+        answer: {
+          id: generativeQuestionAnsweringId!,
+          type: 'CRGA',
+        },
+        feedback: {
+          liked: false,
+          reason: 'other',
+          details,
+        },
+      };
+    },
+  });
 
+//TODO: To be removed
 export const logGeneratedAnswerStreamEnd = (
   answerGenerated: boolean
 ): CustomAction =>
@@ -157,39 +256,84 @@ export const logGeneratedAnswerStreamEnd = (
   );
 
 export const logGeneratedAnswerShowAnswers = (): CustomAction =>
-  makeAnalyticsAction('analytics/generatedAnswer/show', (client, state) => {
-    const generativeQuestionAnsweringId =
-      generativeQuestionAnsweringIdSelector(state);
-    if (!generativeQuestionAnsweringId) {
-      return null;
-    }
-    return client.makeGeneratedAnswerShowAnswers({
-      generativeQuestionAnsweringId,
-    });
+  makeAnalyticsAction({
+    prefix: 'analytics/generatedAnswer/show',
+    __legacy__getBuilder: (client, state) => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      if (!generativeQuestionAnsweringId) {
+        return null;
+      }
+      return client.makeGeneratedAnswerShowAnswers({
+        generativeQuestionAnsweringId,
+      });
+    },
+    analyticsType: 'Qna.AnswerAction',
+    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      return {
+        action: 'show',
+        answer: {
+          id: generativeQuestionAnsweringId!,
+          type: 'CRGA',
+        },
+      };
+    },
   });
 
 export const logGeneratedAnswerHideAnswers = (): CustomAction =>
-  makeAnalyticsAction('analytics/generatedAnswer/hide', (client, state) => {
-    const generativeQuestionAnsweringId =
-      generativeQuestionAnsweringIdSelector(state);
-    if (!generativeQuestionAnsweringId) {
-      return null;
-    }
-    return client.makeGeneratedAnswerHideAnswers({
-      generativeQuestionAnsweringId,
-    });
+  makeAnalyticsAction({
+    prefix: 'analytics/generatedAnswer/hide',
+    __legacy__getBuilder: (client, state) => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      if (!generativeQuestionAnsweringId) {
+        return null;
+      }
+      return client.makeGeneratedAnswerHideAnswers({
+        generativeQuestionAnsweringId,
+      });
+    },
+    analyticsType: 'Qna.AnswerAction',
+    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      return {
+        action: 'hide',
+        answer: {
+          id: generativeQuestionAnsweringId!,
+          type: 'CRGA',
+        },
+      };
+    },
   });
 
 export const logCopyGeneratedAnswer = (): CustomAction =>
-  makeAnalyticsAction('analytics/generatedAnswer/copy', (client, state) => {
-    const generativeQuestionAnsweringId =
-      generativeQuestionAnsweringIdSelector(state);
-    if (!generativeQuestionAnsweringId) {
-      return null;
-    }
-    return client.makeGeneratedAnswerCopyToClipboard({
-      generativeQuestionAnsweringId,
-    });
+  makeAnalyticsAction({
+    prefix: 'analytics/generatedAnswer/copy',
+    __legacy__getBuilder: (client, state) => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      if (!generativeQuestionAnsweringId) {
+        return null;
+      }
+      return client.makeGeneratedAnswerCopyToClipboard({
+        generativeQuestionAnsweringId,
+      });
+    },
+    analyticsType: 'Qna.AnswerAction',
+    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      return {
+        action: 'copyToClipboard',
+        answer: {
+          id: generativeQuestionAnsweringId!,
+          type: 'CRGA',
+        },
+      };
+    },
   });
 
 export const generatedAnswerAnalyticsClient = {

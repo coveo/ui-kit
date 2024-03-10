@@ -1,7 +1,9 @@
+import {Qna, ItemClick, Feedback} from '@coveo/relay-event-types';
 import {validatePayload} from '../../utils/validate-payload';
 import {
   ClickAction,
   CustomAction,
+  analyticsEventItemMetadata,
   documentIdentifier,
   makeAnalyticsAction,
   partialDocumentInformation,
@@ -24,41 +26,107 @@ export type SmartSnippetFeedback =
   | 'was_not_a_question';
 
 export const logExpandSmartSnippet = (): CustomAction =>
-  makeAnalyticsAction('analytics/smartSnippet/expand', (client) =>
-    client.makeExpandSmartSnippet()
-  );
+  makeAnalyticsAction({
+    prefix: 'analytics/smartSnippet/expand',
+    __legacy__getBuilder: (client) => {
+      return client.makeExpandSmartSnippet();
+    },
+    analyticsType: 'Qna.AnswerAction',
+    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
+      return {
+        action: 'expand',
+        answer: {
+          id: state.questionAnswering?.questionAnswerId || '',
+          type: 'SmartSnippet',
+        },
+      };
+    },
+  });
 
 export const logCollapseSmartSnippet = (): CustomAction =>
-  makeAnalyticsAction('analytics/smartSnippet/collapse', (client) =>
-    client.makeCollapseSmartSnippet()
-  );
+  makeAnalyticsAction({
+    prefix: 'analytics/smartSnippet/collapse',
+    __legacy__getBuilder: (client) => {
+      return client.makeCollapseSmartSnippet();
+    },
+    analyticsType: 'Qna.AnswerAction',
+    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
+      return {
+        action: 'collapse',
+        answer: {
+          id: state.questionAnswering?.questionAnswerId || '',
+          type: 'SmartSnippet',
+        },
+      };
+    },
+  });
 
 export const logLikeSmartSnippet = (): CustomAction =>
-  makeAnalyticsAction('analytics/smartSnippet/like', (client) =>
-    client.makeLikeSmartSnippet()
-  );
+  makeAnalyticsAction({
+    prefix: 'analytics/smartSnippet/like',
+    __legacy__getBuilder: (client) => {
+      return client.makeLikeSmartSnippet();
+    },
+    analyticsType: 'Qna.Feedback',
+    analyticsPayloadBuilder: (state): Qna.FeedbackSubmit => {
+      return {
+        answer: {
+          id: state.questionAnswering?.questionAnswerId || '',
+          type: 'SmartSnippet',
+        },
+        feedback: {
+          liked: true,
+        },
+      };
+    },
+  });
 
 export const logDislikeSmartSnippet = (): CustomAction =>
-  makeAnalyticsAction('analytics/smartSnippet/dislike', (client) =>
-    client.makeDislikeSmartSnippet()
-  );
+  makeAnalyticsAction({
+    prefix: 'analytics/smartSnippet/dislike',
+    __legacy__getBuilder: (client) => {
+      return client.makeDislikeSmartSnippet();
+    },
+    analyticsType: 'Qna.Feedback',
+    analyticsPayloadBuilder: (state): Qna.FeedbackSubmit => {
+      return {
+        answer: {
+          id: state.questionAnswering?.questionAnswerId || '',
+          type: 'SmartSnippet',
+        },
+        feedback: {
+          liked: false,
+        },
+      };
+    },
+  });
 
 /**
  * @returns A dispatchable action.
  */
-export function logOpenSmartSnippetSource(): ClickAction {
-  return makeAnalyticsAction(
-    'analytics/smartSnippet/source/open',
-    (client, state) => {
+export const logOpenSmartSnippetSource = (): ClickAction =>
+  makeAnalyticsAction({
+    prefix: 'analytics/smartSnippet/source/open',
+    __legacy__getBuilder: (client, state) => {
       const result = answerSourceSelector(state)!;
       return client.makeOpenSmartSnippetSource(
         partialDocumentInformation(result, state),
         documentIdentifier(result)
       );
-    }
-  );
-}
+    },
+    analyticsType: 'ItemClick',
+    analyticsPayloadBuilder: (state): ItemClick => {
+      const result = answerSourceSelector(state)!;
+      const information = partialDocumentInformation(result, state);
+      return {
+        searchUid: state.search?.response.searchUid ?? '',
+        position: information.documentPosition,
+        itemMetadata: analyticsEventItemMetadata(result, state),
+      };
+    },
+  });
 
+//TODO: To be removed
 export const logOpenSmartSnippetInlineLink = (
   payload: QuestionAnsweringInlineLinkActionCreatorPayload
 ): ClickAction =>
@@ -74,36 +142,72 @@ export const logOpenSmartSnippetInlineLink = (
     );
   });
 
+//TODO: To be removed
 export const logOpenSmartSnippetFeedbackModal = (): CustomAction =>
   makeAnalyticsAction('analytics/smartSnippet/feedbackModal/open', (client) =>
     client.makeOpenSmartSnippetFeedbackModal()
   );
 
+//TODO: To be removed
 export const logCloseSmartSnippetFeedbackModal = (): CustomAction =>
   makeAnalyticsAction('analytics/smartSnippet/feedbackModal/close', (client) =>
     client.makeCloseSmartSnippetFeedbackModal()
   );
 
+//TODO: To be reviewed
 export const logSmartSnippetFeedback = (
   feedback: SmartSnippetFeedback
 ): CustomAction =>
-  makeAnalyticsAction('analytics/smartSnippet/sendFeedback', (client) =>
-    client.makeSmartSnippetFeedbackReason(feedback)
-  );
+  makeAnalyticsAction({
+    prefix: 'analytics/smartSnippet/sendFeedback',
+    __legacy__getBuilder: (client) => {
+      return client.makeSmartSnippetFeedbackReason(feedback);
+    },
+    analyticsType: 'Qna.Feedback',
+    analyticsPayloadBuilder: (state): Qna.FeedbackSubmit => {
+      return {
+        answer: {
+          id: state.questionAnswering?.questionAnswerId || '',
+          type: 'SmartSnippet',
+        },
+        feedback: {
+          liked: true,
+          reason: feedback as Feedback['reason'],
+        },
+      };
+    },
+  });
 
 export const logSmartSnippetDetailedFeedback = (
   details: string
 ): CustomAction =>
-  makeAnalyticsAction('analytics/smartSnippet/sendFeedback', (client) =>
-    client.makeSmartSnippetFeedbackReason('other', details)
-  );
+  makeAnalyticsAction({
+    prefix: 'analytics/smartSnippet/sendFeedback',
+    __legacy__getBuilder: (client) => {
+      return client.makeSmartSnippetFeedbackReason('other', details);
+    },
+    analyticsType: 'Qna.Feedback',
+    analyticsPayloadBuilder: (state): Qna.FeedbackSubmit => {
+      return {
+        answer: {
+          id: state.questionAnswering?.questionAnswerId || '',
+          type: 'SmartSnippet',
+        },
+        feedback: {
+          liked: true,
+          reason: 'other',
+          details: details,
+        },
+      };
+    },
+  });
 
 export const logExpandSmartSnippetSuggestion = (
   payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload
 ): CustomAction =>
-  makeAnalyticsAction(
-    'analytics/smartSnippetSuggestion/expand',
-    (client, state) => {
+  makeAnalyticsAction({
+    prefix: 'analytics/smartSnippetSuggestion/expand',
+    __legacy__getBuilder: (client, state) => {
       validateQuestionAnsweringActionCreatorPayload(payload);
 
       const relatedQuestion = relatedQuestionSelector(
@@ -119,15 +223,25 @@ export const logExpandSmartSnippetSuggestion = (
         answerSnippet: relatedQuestion.answerSnippet,
         documentId: relatedQuestion.documentId,
       });
-    }
-  );
+    },
+    analyticsType: 'Qna.AnswerAction',
+    analyticsPayloadBuilder: (): Qna.AnswerAction => {
+      return {
+        action: 'expand',
+        answer: {
+          id: payload.questionAnswerId,
+          type: 'SmartSnippetSuggestion',
+        },
+      };
+    },
+  });
 
 export const logCollapseSmartSnippetSuggestion = (
   payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload
 ): CustomAction =>
-  makeAnalyticsAction(
-    'analytics/smartSnippetSuggestion/expand',
-    (client, state) => {
+  makeAnalyticsAction({
+    prefix: 'analytics/smartSnippetSuggestion/collapse',
+    __legacy__getBuilder: (client, state) => {
       validateQuestionAnsweringActionCreatorPayload(payload);
 
       const relatedQuestion = relatedQuestionSelector(
@@ -143,37 +257,65 @@ export const logCollapseSmartSnippetSuggestion = (
         answerSnippet: relatedQuestion.answerSnippet,
         documentId: relatedQuestion.documentId,
       });
-    }
-  );
+    },
+    analyticsType: 'Qna.AnswerAction',
+    analyticsPayloadBuilder: (): Qna.AnswerAction => {
+      return {
+        action: 'collapse',
+        answer: {
+          id: payload.questionAnswerId,
+          type: 'SmartSnippetSuggestion',
+        },
+      };
+    },
+  });
 
 export const logOpenSmartSnippetSuggestionSource = (
   payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload
 ): ClickAction =>
-  makeAnalyticsAction('analytics/smartSnippet/source/open', (client, state) => {
-    validatePayload(payload, uniqueIdentifierPayloadDefinition());
+  makeAnalyticsAction({
+    prefix: 'analytics/smartSnippetSuggestion/source/open',
+    __legacy__getBuilder: (client, state) => {
+      validatePayload(payload, uniqueIdentifierPayloadDefinition());
 
-    const relatedQuestion = relatedQuestionSelector(
-      state,
-      payload.questionAnswerId
-    );
-    if (!relatedQuestion) {
-      return null;
-    }
-    const source = answerSourceSelector(state, relatedQuestion.documentId);
-    if (!source) {
-      return null;
-    }
-
-    return client.makeOpenSmartSnippetSuggestionSource(
-      partialDocumentInformation(source, state),
-      {
-        question: relatedQuestion.question,
-        answerSnippet: relatedQuestion.answerSnippet,
-        documentId: relatedQuestion.documentId,
+      const relatedQuestion = relatedQuestionSelector(
+        state,
+        payload.questionAnswerId
+      );
+      if (!relatedQuestion) {
+        return null;
       }
-    );
+      const source = answerSourceSelector(state, relatedQuestion.documentId);
+      if (!source) {
+        return null;
+      }
+
+      return client.makeOpenSmartSnippetSuggestionSource(
+        partialDocumentInformation(source, state),
+        {
+          question: relatedQuestion.question,
+          answerSnippet: relatedQuestion.answerSnippet,
+          documentId: relatedQuestion.documentId,
+        }
+      );
+    },
+    analyticsType: 'ItemClick',
+    analyticsPayloadBuilder: (state): ItemClick => {
+      const relatedQuestion = relatedQuestionSelector(
+        state,
+        payload.questionAnswerId
+      );
+      const result = answerSourceSelector(state, relatedQuestion?.documentId)!;
+      const information = partialDocumentInformation(result, state);
+      return {
+        searchUid: state.search?.response.searchUid ?? '',
+        position: information.documentPosition,
+        itemMetadata: analyticsEventItemMetadata(result, state),
+      };
+    },
   });
 
+//TODO: To be removed
 export const logOpenSmartSnippetSuggestionInlineLink = (
   identifier: QuestionAnsweringUniqueIdentifierActionCreatorPayload,
   link: QuestionAnsweringInlineLinkActionCreatorPayload
