@@ -15,7 +15,7 @@ exports[`generated answer analytics actions when analyticsMode is \`next\` shoul
 
 exports[`generated answer analytics actions when analyticsMode is \`next\` should log #logDislikeGeneratedAnswer with the right payload 1`] = `
 [
-  "Qna.Feedback",
+  "Qna.SubmitFeedback",
   {
     "answer": {
       "id": "123",
@@ -30,7 +30,7 @@ exports[`generated answer analytics actions when analyticsMode is \`next\` shoul
 
 exports[`generated answer analytics actions when analyticsMode is \`next\` should log #logGeneratedAnswerDetailedFeedback with the right payload 1`] = `
 [
-  "Qna.Feedback",
+  "Qna.SubmitFeedback",
   {
     "answer": {
       "id": "123",
@@ -89,7 +89,7 @@ exports[`generated answer analytics actions when analyticsMode is \`next\` shoul
 
 exports[`generated answer analytics actions when analyticsMode is \`next\` should log #logLikeGeneratedAnswer with the right payload 1`] = `
 [
-  "Qna.Feedback",
+  "Qna.SubmitFeedback",
   {
     "answer": {
       "id": "123",

@@ -69,8 +69,8 @@ export const logLikeSmartSnippet = (): InsightAction =>
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
-    analyticsType: 'Qna.Feedback',
-    analyticsPayloadBuilder: (state): Qna.FeedbackSubmit => {
+    analyticsType: 'Qna.SubmitFeedback',
+    analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
       return {
         answer: {
           id: state.questionAnswering?.questionAnswerId || '',
@@ -91,8 +91,8 @@ export const logDislikeSmartSnippet = (): InsightAction =>
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
-    analyticsType: 'Qna.Feedback',
-    analyticsPayloadBuilder: (state): Qna.FeedbackSubmit => {
+    analyticsType: 'Qna.SubmitFeedback',
+    analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
       return {
         answer: {
           id: state.questionAnswering?.questionAnswerId || '',
@@ -180,8 +180,8 @@ export const logSmartSnippetFeedback = (
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
-    analyticsType: 'Qna.Feedback',
-    analyticsPayloadBuilder: (state): Qna.FeedbackSubmit => {
+    analyticsType: 'Qna.SubmitFeedback',
+    analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
       return {
         answer: {
           id: state.questionAnswering?.questionAnswerId || '',
@@ -207,8 +207,8 @@ export const logSmartSnippetDetailedFeedback = (
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
-    analyticsType: 'Qna.Feedback',
-    analyticsPayloadBuilder: (state): Qna.FeedbackSubmit => {
+    analyticsType: 'Qna.SubmitFeedback',
+    analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
       return {
         answer: {
           id: state.questionAnswering?.questionAnswerId || '',

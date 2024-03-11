@@ -67,8 +67,8 @@ export const logLikeSmartSnippet = (): CustomAction =>
     __legacy__getBuilder: (client) => {
       return client.makeLikeSmartSnippet();
     },
-    analyticsType: 'Qna.Feedback',
-    analyticsPayloadBuilder: (state): Qna.FeedbackSubmit => {
+    analyticsType: 'Qna.SubmitFeedback',
+    analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
       return {
         answer: {
           id: state.questionAnswering?.questionAnswerId || '',
@@ -87,8 +87,8 @@ export const logDislikeSmartSnippet = (): CustomAction =>
     __legacy__getBuilder: (client) => {
       return client.makeDislikeSmartSnippet();
     },
-    analyticsType: 'Qna.Feedback',
-    analyticsPayloadBuilder: (state): Qna.FeedbackSubmit => {
+    analyticsType: 'Qna.SubmitFeedback',
+    analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
       return {
         answer: {
           id: state.questionAnswering?.questionAnswerId || '',
@@ -162,8 +162,8 @@ export const logSmartSnippetFeedback = (
     __legacy__getBuilder: (client) => {
       return client.makeSmartSnippetFeedbackReason(feedback);
     },
-    analyticsType: 'Qna.Feedback',
-    analyticsPayloadBuilder: (state): Qna.FeedbackSubmit => {
+    analyticsType: 'Qna.SubmitFeedback',
+    analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
       return {
         answer: {
           id: state.questionAnswering?.questionAnswerId || '',
@@ -185,8 +185,8 @@ export const logSmartSnippetDetailedFeedback = (
     __legacy__getBuilder: (client) => {
       return client.makeSmartSnippetFeedbackReason('other', details);
     },
-    analyticsType: 'Qna.Feedback',
-    analyticsPayloadBuilder: (state): Qna.FeedbackSubmit => {
+    analyticsType: 'Qna.SubmitFeedback',
+    analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
       return {
         answer: {
           id: state.questionAnswering?.questionAnswerId || '',

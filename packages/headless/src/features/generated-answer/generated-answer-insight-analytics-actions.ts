@@ -143,8 +143,8 @@ export const logLikeGeneratedAnswer = (): InsightAction =>
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
-    analyticsType: 'Qna.Feedback',
-    analyticsPayloadBuilder: (state): Qna.FeedbackSubmit => {
+    analyticsType: 'Qna.SubmitFeedback',
+    analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
       const generativeQuestionAnsweringId =
         generativeQuestionAnsweringIdSelector(state);
       return {
@@ -175,8 +175,8 @@ export const logDislikeGeneratedAnswer = (): InsightAction =>
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
-    analyticsType: 'Qna.Feedback',
-    analyticsPayloadBuilder: (state): Qna.FeedbackSubmit => {
+    analyticsType: 'Qna.SubmitFeedback',
+    analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
       const generativeQuestionAnsweringId =
         generativeQuestionAnsweringIdSelector(state);
       return {
@@ -210,8 +210,8 @@ export const logGeneratedAnswerFeedback = (
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
-    analyticsType: 'Qna.Feedback',
-    analyticsPayloadBuilder: (state): Qna.FeedbackSubmit => {
+    analyticsType: 'Qna.SubmitFeedback',
+    analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
       const generativeQuestionAnsweringId =
         generativeQuestionAnsweringIdSelector(state);
       return {
@@ -247,8 +247,8 @@ export const logGeneratedAnswerDetailedFeedback = (
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
-    analyticsType: 'Qna.Feedback',
-    analyticsPayloadBuilder: (state): Qna.FeedbackSubmit => {
+    analyticsType: 'Qna.SubmitFeedback',
+    analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
       const generativeQuestionAnsweringId =
         generativeQuestionAnsweringIdSelector(state);
       return {
