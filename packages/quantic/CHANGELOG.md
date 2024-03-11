@@ -1,3 +1,9 @@
+## 2.46.4 (2024-03-11)
+
+### Features
+
+- **quantic|atomic:** update genQA answer section title ([#3674](https://github.com/coveo/ui-kit/issues/3674)) ([1aaeb08](https://github.com/coveo/ui-kit/commits/1aaeb08802fd71ad9bdc98c213c830f676088adb))
+
 ## 2.46.1 (2024-03-08)
 
 # 2.46.0 (2024-03-06)

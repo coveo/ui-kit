@@ -1,3 +1,13 @@
+## 2.60.3 (2024-03-11)
+
+### Bug Fixes
+
+- **atomic:** add missing end label ([#3689](https://github.com/coveo/ui-kit/issues/3689)) ([4b404ab](https://github.com/coveo/ui-kit/commits/4b404abe5398f0b06047365b400bc981a273ce90))
+
+### Features
+
+- **quantic|atomic:** update genQA answer section title ([#3674](https://github.com/coveo/ui-kit/issues/3674)) ([1aaeb08](https://github.com/coveo/ui-kit/commits/1aaeb08802fd71ad9bdc98c213c830f676088adb))
+
 # 2.60.0 (2024-03-08)
 
 ### Bug Fixes
