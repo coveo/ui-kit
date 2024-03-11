@@ -33,20 +33,20 @@
     "@commitlint/load": "19.0.3",
     "@coveo/release": "1.0.0",
     "@cspell/dict-fr-fr": "2.2.2",
-    "@cspell/eslint-plugin": "8.5.0",
+    "@cspell/eslint-plugin": "8.6.0",
     "@octokit/rest": "20.0.2",
     "@rollup/plugin-typescript": "11.1.6",
     "@trivago/prettier-plugin-sort-imports": "4.3.0",
     "@types/execa": "^2.0.0",
     "@types/jest": "29.5.12",
-    "@types/node": "20.11.24",
+    "@types/node": "20.11.25",
     "@typescript-eslint/eslint-plugin": "7.1.1",
     "@typescript-eslint/parser": "7.1.1",
-    "aws-sdk": "2.1569.0",
+    "aws-sdk": "2.1574.0",
     "commitizen": "4.3.0",
     "concurrently": "8.2.2",
     "cross-fetch": "4.0.0",
-    "cspell": "8.5.0",
+    "cspell": "8.6.0",
     "cz-conventional-changelog": "3.3.0",
     "detect-indent": "7.0.1",
     "esbuild": "0.14.2",
@@ -68,7 +68,7 @@
     "react-dom": "18.2.0",
     "rimraf": "5.0.5",
     "semver": "7.6.0",
-    "typescript": "5.3.3"
+    "typescript": "5.4.2"
   },
   "overrides": {
     "@coveo/release": {
