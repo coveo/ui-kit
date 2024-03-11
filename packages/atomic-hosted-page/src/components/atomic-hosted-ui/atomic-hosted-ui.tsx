@@ -15,7 +15,7 @@ import {
   extractPlatformUrl,
   validateOptions,
 } from '../utils/options-utils';
-import {HostedPageType, processHostedPage} from './hosted-ui';
+import {processHostedPage} from './hosted-ui';
 
 interface AtomicHostedUIInitializationOptions extends InitializationOptions {
   /**
@@ -46,7 +46,8 @@ export class AtomicHostedUI implements ComponentInterface {
    * The type of hosted search page to load
    * E.g., 'page', 'custom', 'legacy'
    */
-  @Prop({reflect: true}) public hostedType: HostedPageType = 'page';
+  @Prop({reflect: true}) public hostedType: 'legacy' | 'page' | 'custom' =
+    'page';
 
   @Method() public async initialize(
     options: AtomicHostedUIInitializationOptions
