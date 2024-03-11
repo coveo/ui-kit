@@ -1,5 +1,4 @@
 import {createAction} from '@reduxjs/toolkit';
-import {SearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {validatePayload} from '../../utils/validate-payload';
 import {
   makeAnalyticsAction,
@@ -137,40 +136,14 @@ export const logStaticFilterClearAll = (
   );
 
 // --------------------- KIT-2859 : Everything above this will get deleted ! :) ---------------------
-export const staticFilterSelect = (
-  id: string,
-  value: StaticFilterValueMetadata
-): SearchAction => {
-  return {
-    actionCause: SearchPageEvents.staticFilterSelect,
-    getEventExtraPayload: (state) =>
-      new SearchAnalyticsProvider(() => state).getStaticFilterToggleMetadata(
-        id,
-        value
-      ),
-  };
-};
+export const staticFilterSelect = (): SearchAction => ({
+  actionCause: SearchPageEvents.staticFilterSelect,
+});
 
-export const staticFilterDeselect = (
-  id: string,
-  value: StaticFilterValueMetadata
-): SearchAction => {
-  return {
-    actionCause: SearchPageEvents.staticFilterDeselect,
-    getEventExtraPayload: (state) =>
-      new SearchAnalyticsProvider(() => state).getStaticFilterToggleMetadata(
-        id,
-        value
-      ),
-  };
-};
+export const staticFilterDeselect = (): SearchAction => ({
+  actionCause: SearchPageEvents.staticFilterDeselect,
+});
 
-export const staticFilterClearAll = (id: string): SearchAction => {
-  return {
-    actionCause: SearchPageEvents.staticFilterClearAll,
-    getEventExtraPayload: (state) =>
-      new SearchAnalyticsProvider(() => state).getStaticFilterClearAllMetadata(
-        id
-      ),
-  };
-};
+export const staticFilterClearAll = (): SearchAction => ({
+  actionCause: SearchPageEvents.staticFilterClearAll,
+});
