@@ -43,11 +43,9 @@ describe('ResultPreview', () => {
       state.contentURL = 'url';
       state.isLoading = true;
       state.uniqueId = 'uniqueId';
-      const action = executeSearch.fulfilled(
-        buildMockLegacySearch(),
-        '',
-        logInterfaceLoad()
-      );
+      const action = executeSearch.fulfilled(buildMockLegacySearch(), '', {
+        legacy: logInterfaceLoad(),
+      });
 
       const finalState = resultPreviewReducer(state, action);
 
@@ -67,7 +65,9 @@ describe('ResultPreview', () => {
           ],
         }),
       });
-      const action = executeSearch.fulfilled(search, '', logInterfaceLoad());
+      const action = executeSearch.fulfilled(search, '', {
+        legacy: logInterfaceLoad(),
+      });
       const finalState = resultPreviewReducer(state, action);
       expect(finalState.resultsWithPreview).toEqual(['first', 'fourth']);
     });

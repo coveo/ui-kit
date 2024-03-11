@@ -1,3 +1,12 @@
+# 2.53.0 (2024-03-08)
+
+### Features
+
+- **atomic,headless:** remove customData & middleware iff analyticsMode=next ([#3670](https://github.com/coveo/ui-kit/issues/3670)) ([ac15f5c](https://github.com/coveo/ui-kit/commits/ac15f5c11c89fd6af30a92d6abf7c6a5b984b8e5))
+- **cart:** trigger relay cart action when updateItem ([#3630](https://github.com/coveo/ui-kit/issues/3630)) ([a483ab5](https://github.com/coveo/ui-kit/commits/a483ab570fc83a921e26154c123e5fc6157963f3))
+- **headless/commerce:** set currency type as currency code iso4217 instead of string ([#3667](https://github.com/coveo/ui-kit/issues/3667)) ([723cfb2](https://github.com/coveo/ui-kit/commits/723cfb24a5e145c5dc0f01a8a0b2e16d28d198d6))
+- **headless:** forbid next analytics on defunct engines ([#3668](https://github.com/coveo/ui-kit/issues/3668)) ([1b33acc](https://github.com/coveo/ui-kit/commits/1b33acc689e9a7023687ac6af1edee581bc9ebc7))
+
 # 2.52.0 (2024-03-06)
 
 ### Features
