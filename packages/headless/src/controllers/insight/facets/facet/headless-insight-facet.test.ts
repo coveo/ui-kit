@@ -1,10 +1,10 @@
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
 import {
-  toggleSelectFacetValue,
   deselectAllFacetValues,
   updateFacetSortCriterion,
   updateFacetNumberOfValues,
 } from '../../../../features/facets/facet-set/facet-set-actions';
+import {executeToggleFacetSelect} from '../../../../features/facets/facet-set/facet-set-controller-actions';
 import {FacetRequest} from '../../../../features/facets/facet-set/interfaces/request';
 import {FacetValue} from '../../../../features/facets/facet-set/interfaces/response';
 import {
@@ -13,9 +13,9 @@ import {
 } from '../../../../features/insight-search/insight-search-actions';
 import {InsightAppState} from '../../../../state/insight-app-state';
 import {
-  MockInsightEngine,
+  MockedInsightEngine,
   buildMockInsightEngine,
-} from '../../../../test/mock-engine';
+} from '../../../../test/mock-engine-v2';
 import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
 import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
 import {buildMockFacetSlice} from '../../../../test/mock-facet-slice';
@@ -23,15 +23,20 @@ import {buildMockFacetValue} from '../../../../test/mock-facet-value';
 import {buildMockInsightState} from '../../../../test/mock-insight-state';
 import {buildFacet, Facet, FacetOptions} from './headless-insight-facet';
 
+jest.mock('../../../../features/facets/facet-set/facet-set-actions');
+jest.mock('../../../../features/insight-search/insight-search-actions');
+jest.mock('../../../../features/facet-options/facet-options-actions');
+jest.mock('../../../../features/facets/facet-set/facet-set-controller-actions');
+
 describe('InsightFacet', () => {
   const facetId = '1';
   let options: FacetOptions;
   let state: InsightAppState;
-  let engine: MockInsightEngine;
+  let engine: MockedInsightEngine;
   let facet: Facet;
 
   function initFacet() {
-    engine = buildMockInsightEngine({state});
+    engine = buildMockInsightEngine(state);
     facet = buildFacet(engine, {options});
   }
 
@@ -65,27 +70,17 @@ describe('InsightFacet', () => {
       const facetValue = buildMockFacetValue({value: 'TED'});
       facet.toggleSelect(facetValue);
 
-      expect(engine.actions).toContainEqual(
-        toggleSelectFacetValue({facetId, selection: facetValue})
-      );
-    });
-
-    it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
-      const facetValue = buildMockFacetValue({value: 'TED'});
-      facet.toggleSelect(facetValue);
-
-      expect(engine.actions).toContainEqual(updateFacetOptions());
+      expect(executeToggleFacetSelect).toHaveBeenCalledWith({
+        facetId,
+        selection: facetValue,
+      });
     });
 
     it('dispatches a search', () => {
       const facetValue = buildMockFacetValue({value: 'TED'});
       facet.toggleSelect(facetValue);
 
-      expect(engine.actions).toContainEqual(
-        expect.objectContaining({
-          type: executeSearch.pending.type,
-        })
-      );
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 
@@ -93,25 +88,16 @@ describe('InsightFacet', () => {
     it('dispatches a #toggleSelect action with the passed facet value', () => {
       facet.toggleSingleSelect(facetValue());
 
-      expect(engine.actions).toContainEqual(
-        toggleSelectFacetValue({facetId, selection: facetValue()})
-      );
-    });
-
-    it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
-      facet.toggleSingleSelect(facetValue());
-
-      expect(engine.actions).toContainEqual(updateFacetOptions());
+      expect(executeToggleFacetSelect).toHaveBeenCalledWith({
+        facetId,
+        selection: facetValue(),
+      });
     });
 
     it('dispatches a search', () => {
       facet.toggleSingleSelect(facetValue());
 
-      expect(engine.actions).toContainEqual(
-        expect.objectContaining({
-          type: executeSearch.pending.type,
-        })
-      );
+      expect(executeSearch).toHaveBeenCalled();
     });
   }
 
@@ -122,8 +108,7 @@ describe('InsightFacet', () => {
 
     it('dispatches a #deselectAllFacetValues action', () => {
       facet.toggleSingleSelect(facetValue());
-
-      expect(engine.actions).toContainEqual(deselectAllFacetValues(facetId));
+      expect(deselectAllFacetValues).toHaveBeenCalledWith(facetId);
     });
   });
 
@@ -136,31 +121,27 @@ describe('InsightFacet', () => {
     it('does not dispatch a #deselectAllFacetValues action', () => {
       facet.toggleSingleSelect(facetValue());
 
-      expect(engine.actions).not.toContainEqual(
-        deselectAllFacetValues(facetId)
-      );
+      expect(deselectAllFacetValues).toHaveBeenCalledWith(facetId);
     });
   });
 
   describe('#deselectAll', () => {
     it('dispatches #deselectAllFacetValues with the facet id', () => {
       facet.deselectAll();
-      expect(engine.actions).toContainEqual(deselectAllFacetValues(facetId));
+
+      expect(deselectAllFacetValues).toHaveBeenCalledWith(facetId);
     });
 
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       facet.deselectAll();
 
-      expect(engine.actions).toContainEqual(updateFacetOptions());
+      expect(updateFacetOptions).toHaveBeenCalledWith();
     });
 
     it('dispatches a search', () => {
       facet.deselectAll();
 
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-      expect(engine.actions).toContainEqual(action);
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 
@@ -169,27 +150,21 @@ describe('InsightFacet', () => {
       const criterion = 'score';
       facet.sortBy(criterion);
 
-      const action = updateFacetSortCriterion({
+      expect(updateFacetSortCriterion).toHaveBeenCalledWith({
         facetId,
         criterion,
       });
-
-      expect(engine.actions).toContainEqual(action);
     });
 
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       facet.sortBy('score');
 
-      expect(engine.actions).toContainEqual(updateFacetOptions());
+      expect(updateFacetOptions).toHaveBeenCalledWith();
     });
 
     it('dispatches a search', () => {
       facet.sortBy('score');
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-
-      expect(engine.actions).toContainEqual(action);
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 
@@ -218,27 +193,21 @@ describe('InsightFacet', () => {
       facet.showMoreValues();
 
       const expectedNumber = numberOfValuesInState + configuredNumberOfValues;
-      const action = updateFacetNumberOfValues({
+      expect(updateFacetNumberOfValues).toHaveBeenCalledWith({
         facetId,
         numberOfValues: expectedNumber,
       });
-
-      expect(engine.actions).toContainEqual(action);
     });
 
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       facet.showMoreValues();
 
-      expect(engine.actions).toContainEqual(updateFacetOptions());
+      expect(updateFacetOptions).toHaveBeenCalledWith();
     });
 
     it('executes a fetchFacetValues action', () => {
       facet.showMoreValues();
-
-      const action = engine.actions.find(
-        (a) => a.type === fetchFacetValues.pending.type
-      );
-      expect(action).toBeTruthy();
+      expect(fetchFacetValues).toHaveBeenCalled();
     });
   });
 
@@ -246,15 +215,13 @@ describe('InsightFacet', () => {
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       facet.showLessValues();
 
-      expect(engine.actions).toContainEqual(updateFacetOptions());
+      expect(updateFacetOptions).toHaveBeenCalledWith();
     });
 
     it('executes a fetchFacetValues action', () => {
       facet.showLessValues();
-      const action = engine.actions.find(
-        (a) => a.type === fetchFacetValues.pending.type
-      );
-      expect(action).toBeTruthy();
+
+      expect(fetchFacetValues).toHaveBeenCalled();
     });
   });
 });

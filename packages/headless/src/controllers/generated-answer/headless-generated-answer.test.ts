@@ -2,37 +2,35 @@ import {updateResponseFormat} from '../../features/generated-answer/generated-an
 import {GeneratedResponseFormat} from '../../features/generated-answer/generated-response-format';
 import {executeSearch} from '../../features/search/search-actions';
 import {
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../test/mock-engine';
+  buildMockSearchEngine,
+  MockedSearchEngine,
+} from '../../test/mock-engine-v2';
+import {createMockState} from '../../test/mock-state';
 import {
   buildGeneratedAnswer,
   GeneratedAnswer,
   GeneratedAnswerProps,
 } from './headless-generated-answer';
 
+jest.mock('../../features/generated-answer/generated-answer-actions');
+jest.mock('../../features/search/search-actions');
+
 describe('generated answer', () => {
   let generatedAnswer: GeneratedAnswer;
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
 
   function initGeneratedAnswer(props: GeneratedAnswerProps = {}) {
     generatedAnswer = buildGeneratedAnswer(engine, props);
   }
 
-  function findAction(actionType: string) {
-    return engine.actions.find((a) => a.type === actionType);
-  }
-
   beforeEach(() => {
-    engine = buildMockSearchAppEngine();
+    engine = buildMockSearchEngine(createMockState());
     initGeneratedAnswer();
   });
 
   it('#retry dispatches #executeSearch', () => {
     generatedAnswer.retry();
-    const action = engine.findAsyncAction(executeSearch.pending);
-
-    expect(action).toBeTruthy();
+    expect(executeSearch).toHaveBeenCalled();
   });
 
   describe('#rephrase', () => {
@@ -42,18 +40,12 @@ describe('generated answer', () => {
 
     it('dispatches the update action', () => {
       generatedAnswer.rephrase(responseFormat);
-
-      const action = findAction(updateResponseFormat.type);
-      expect(action).toBeDefined();
-      expect(action).toHaveProperty('payload', responseFormat);
+      expect(updateResponseFormat).toHaveBeenCalledWith(responseFormat);
     });
 
     it('dispatches #executeSearch', () => {
       generatedAnswer.rephrase(responseFormat);
-
-      const action = engine.findAsyncAction(executeSearch.pending);
-
-      expect(action).toBeTruthy();
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 });

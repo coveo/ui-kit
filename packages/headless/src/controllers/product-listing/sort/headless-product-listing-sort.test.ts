@@ -6,8 +6,10 @@ import {
   updateSortCriterion,
 } from '../../../features/sort/sort-actions';
 import {sortReducer as sort} from '../../../features/sort/sort-slice';
-import {MockProductListingEngine} from '../../../test/mock-engine';
-import {buildMockProductListingEngine} from '../../../test/mock-engine';
+import {
+  buildMockProductListingEngine,
+  MockedProductListingEngine,
+} from '../../../test/mock-engine-v2';
 import {buildMockProductListingState} from '../../../test/mock-product-listing-state';
 import {
   buildFieldsSortCriterion,
@@ -20,8 +22,12 @@ import {
   SortDirection,
 } from './headless-product-listing-sort';
 
+jest.mock('../../../features/sort/sort-actions');
+jest.mock('../../../features/product-listing/product-listing-actions');
+jest.mock('../../../features/pagination/pagination-actions');
+
 describe('Sort', () => {
-  let engine: MockProductListingEngine;
+  let engine: MockedProductListingEngine;
   let initialState: ProductListingSortInitialState;
   let plSort: ProductListingSort;
 
@@ -31,7 +37,7 @@ describe('Sort', () => {
 
   beforeEach(() => {
     initialState = {};
-    engine = buildMockProductListingEngine();
+    engine = buildMockProductListingEngine(buildMockProductListingState());
     initSort();
   });
 
@@ -41,8 +47,7 @@ describe('Sort', () => {
 
   it('#sortBy dispatches #fetchProductListing', () => {
     plSort.sortBy({by: SortBy.Relevance});
-    const action = engine.findAsyncAction(fetchProductListing.pending);
-    expect(action).toBeTruthy();
+    expect(fetchProductListing).toHaveBeenCalled();
   });
 
   it('it adds the correct reducers to engine', () => {
@@ -53,10 +58,7 @@ describe('Sort', () => {
   });
 
   it('when the #criterion option is not specified, it does not dispatch a registration action', () => {
-    const action = engine.actions.find(
-      (a) => a.type === registerSortCriterion.type
-    );
-    expect(action).toBe(undefined);
+    expect(registerSortCriterion).not.toHaveBeenCalled();
   });
 
   it('when #criterion is an invalid value, it throws an error', () => {
@@ -68,9 +70,7 @@ describe('Sort', () => {
     initialState.criterion = buildRelevanceSortCriterion();
     initSort();
 
-    expect(engine.actions).toContainEqual(
-      registerSortCriterion(initialState.criterion)
-    );
+    expect(registerSortCriterion).toHaveBeenCalledWith(initialState.criterion);
   });
 
   it('when the #criterion is an array, it dispatches a registration action', () => {
@@ -82,9 +82,7 @@ describe('Sort', () => {
     ]);
     initSort();
 
-    expect(engine.actions).toContainEqual(
-      registerSortCriterion(initialState.criterion)
-    );
+    expect(registerSortCriterion).toHaveBeenCalledWith(initialState.criterion);
   });
 
   describe('when calling #sortBy with a criterion', () => {
@@ -100,12 +98,11 @@ describe('Sort', () => {
     });
 
     it('dispatches an updateProductListingSortCriterion action with the passed criterion', () => {
-      const action = updateSortCriterion(criterion);
-      expect(engine.actions).toContainEqual(action);
+      expect(updateSortCriterion).toHaveBeenCalled();
     });
 
     it('updates the page to the first one', () => {
-      expect(engine.actions).toContainEqual(updatePage(1));
+      expect(updatePage).toHaveBeenCalled();
     });
   });
 
@@ -121,7 +118,7 @@ describe('Sort', () => {
       const state = buildMockProductListingState({
         sort: criterionInState,
       });
-      engine = buildMockProductListingEngine({state});
+      engine = buildMockProductListingEngine(state);
       initSort();
     });
 

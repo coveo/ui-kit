@@ -1,4 +1,5 @@
 import {isNullOrUndefined, isUndefined} from '@coveo/bueno';
+import {type Relay} from '@coveo/relay';
 import {
   AnyAction,
   Dispatch,
@@ -10,6 +11,7 @@ import {
   Reducer,
 } from '@reduxjs/toolkit';
 import {Logger} from 'pino';
+import {getRelayInstanceFromState} from '../api/analytics/analytics-relay-client';
 import {
   disableAnalytics,
   enableAnalytics,
@@ -67,6 +69,10 @@ export interface CoreEngine<
    * The complete headless state tree.
    */
   state: State & CoreState;
+  /**
+   * The Relay instance used by Headless.
+   */
+  relay: Relay;
   /**
    * The redux store.
    */
@@ -263,6 +269,10 @@ function buildCoreEngine<
 
     get state() {
       return store.getState();
+    },
+
+    get relay() {
+      return getRelayInstanceFromState(this.state);
     },
 
     logger,

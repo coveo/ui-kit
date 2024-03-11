@@ -13,6 +13,12 @@ import {
   setOptions,
   toggleSelectAutomaticFacetValue,
 } from './automatic-facet-set-actions';
+import {
+  DESIRED_COUNT_MAXIMUM,
+  DESIRED_COUNT_MINIMUM,
+  NUMBER_OF_VALUE_MINIMUM,
+} from './automatic-facet-set-constants';
+//import {DESIRED_COUNT_MINIMUM} from './automatic-facet-set-constants';
 import {automaticFacetSetReducer} from './automatic-facet-set-slice';
 import {
   AutomaticFacetSetState,
@@ -59,6 +65,20 @@ describe('automatic-facet-set slice', () => {
       const finalState = automaticFacetSetReducer(state, action);
 
       expect(finalState.set).toEqual(facetsRecord);
+    });
+  });
+
+  describe('#setOptions does validation', () => {
+    it(`should return an error if desiredCount is lower than ${DESIRED_COUNT_MINIMUM}`, () => {
+      expect(setOptions({desiredCount: 0})).toHaveProperty('error');
+    });
+
+    it(`should not dispatch #setOptions if desiredCount is higher than ${DESIRED_COUNT_MAXIMUM}`, () => {
+      expect(setOptions({desiredCount: 21})).toHaveProperty('error');
+    });
+
+    it(`should not dispatch #setOptions if numberOfValue is lower than ${NUMBER_OF_VALUE_MINIMUM}`, () => {
+      expect(setOptions({numberOfValues: 0})).toHaveProperty('error');
     });
   });
 

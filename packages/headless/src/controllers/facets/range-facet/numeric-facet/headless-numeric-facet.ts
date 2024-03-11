@@ -70,7 +70,7 @@ export function buildNumericFacet(
       dispatch(
         executeSearch({
           legacy: logFacetClearAll(getFacetId()),
-          next: facetClearAll(getFacetId()),
+          next: facetClearAll(),
         })
       );
     },
@@ -80,7 +80,7 @@ export function buildNumericFacet(
       dispatch(
         executeSearch({
           legacy: logFacetUpdateSort({facetId: getFacetId(), criterion}),
-          next: facetUpdateSort(getFacetId(), criterion),
+          next: facetUpdateSort(),
         })
       );
     },
@@ -93,7 +93,7 @@ export function buildNumericFacet(
             getFacetId(),
             selection
           ),
-          next: getAnalyticsActionForToggleFacetSelect(getFacetId(), selection),
+          next: getAnalyticsActionForToggleFacetSelect(selection),
         })
       );
     },

@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {fetchPage} from '../../features/search/search-actions';
 import {
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../test/mock-engine';
+  buildMockSearchEngine,
+  MockedSearchEngine,
+} from '../../test/mock-engine-v2';
+import {createMockState} from '../../test/mock-state';
 import {
   Pager,
   PagerOptions,
@@ -11,15 +12,17 @@ import {
   buildPager,
 } from './headless-pager';
 
+jest.mock('../../features/search/search-actions');
+
 describe('Pager', () => {
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
   let options: PagerOptions;
   let initialState: PagerInitialState;
   let pager: Pager;
 
   function setMaxPage(page: number) {
-    const {numberOfResults} = engine.state.pagination;
-    engine.state.pagination.totalCountFiltered = page * numberOfResults;
+    const {numberOfResults} = engine.state.pagination!;
+    engine.state.pagination!.totalCountFiltered = page * numberOfResults;
   }
 
   function initPager() {
@@ -29,7 +32,7 @@ describe('Pager', () => {
   beforeEach(() => {
     options = {};
     initialState = {};
-    engine = buildMockSearchAppEngine();
+    engine = buildMockSearchEngine(createMockState());
     initPager();
   });
 
@@ -44,19 +47,16 @@ describe('Pager', () => {
 
   it('#selectPage dispatches #fetchPage', () => {
     pager.selectPage(2);
-    const action = engine.findAsyncAction(fetchPage.pending);
-    expect(action).toBeTruthy();
+    expect(fetchPage).toHaveBeenCalled();
   });
 
   it('#nextPage dispatches #fetchPage', () => {
     pager.nextPage();
-    const action = engine.findAsyncAction(fetchPage.pending);
-    expect(action).toBeTruthy();
+    expect(fetchPage).toHaveBeenCalled();
   });
 
   it('#previousPage dispatches #fetchPage', () => {
     pager.previousPage();
-    const action = engine.findAsyncAction(fetchPage.pending);
-    expect(engine.actions).toContainEqual(action);
+    expect(fetchPage).toHaveBeenCalled();
   });
 });

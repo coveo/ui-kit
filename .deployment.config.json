@@ -198,6 +198,9 @@
         "job_name": "ui-kit-production-release",
         "prd": {
           "disabled": false
+        },
+        "extra_parameters": {
+          "GITHUB_RUN_ID": "$[GITHUB_RUN_ID]"
         }
       }
     }

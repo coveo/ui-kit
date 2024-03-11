@@ -13,8 +13,8 @@ import {InsightAppState} from '../../../state/insight-app-state';
 import {createMockAttachedResult} from '../../../test/mock-attached-results';
 import {
   buildMockInsightEngine,
-  MockInsightEngine,
-} from '../../../test/mock-engine';
+  MockedInsightEngine,
+} from '../../../test/mock-engine-v2';
 import {buildMockInsightState} from '../../../test/mock-insight-state';
 import {buildMockResult} from '../../../test/mock-result';
 import {
@@ -31,14 +31,16 @@ jest.mock(
   })
 );
 
+jest.mock('../../../features/attached-results/attached-results-actions');
+
 describe('insight attach to case', () => {
-  let engine: MockInsightEngine;
+  let engine: MockedInsightEngine;
   let defaultOptions: AttachToCaseOptions;
   let state: InsightAppState;
   let attachToCase: AttachToCase;
 
   function initAttachToCase(options = defaultOptions) {
-    engine = buildMockInsightEngine();
+    engine = buildMockInsightEngine(buildMockInsightState());
     engine.state = state;
     attachToCase = buildAttachToCase(engine, {options});
   }
@@ -101,7 +103,7 @@ describe('insight attach to case', () => {
           permanentId: testPermanentId,
           uriHash: undefined,
         });
-        engine.state.attachedResults.results.push(mockAttachedResult);
+        engine.state.attachedResults!.results.push(mockAttachedResult);
 
         expect(attachToCase.isAttached()).toBe(true);
       });
@@ -112,7 +114,7 @@ describe('insight attach to case', () => {
             permanentId: permId,
             uriHash: undefined,
           });
-          engine.state.attachedResults.results.push(mockAttachedResult);
+          engine.state.attachedResults!.results.push(mockAttachedResult);
         });
 
         expect(attachToCase.isAttached()).toBe(true);
@@ -143,7 +145,7 @@ describe('insight attach to case', () => {
             permanentId: permId,
             uriHash: undefined,
           });
-          engine.state.attachedResults.results.push(mockAttachedResult);
+          engine.state.attachedResults!.results.push(mockAttachedResult);
         });
 
         expect(attachToCase.isAttached()).toBe(false);
@@ -179,9 +181,7 @@ describe('insight attach to case', () => {
         testCaseId
       );
 
-      expect(engine.actions).toContainEqual(
-        attachResult({result: attachedResult})
-      );
+      expect(attachResult).toHaveBeenCalledWith({result: attachedResult});
     });
 
     it('calling #attach should trigger the #logCaseAttach usage analytics action', () => {
@@ -219,9 +219,7 @@ describe('insight attach to case', () => {
         testCaseId
       );
 
-      expect(engine.actions).toContainEqual(
-        detachResult({result: resultToDetach})
-      );
+      expect(detachResult).toHaveBeenCalledWith({result: resultToDetach});
     });
 
     it('calling #detach should trigger the #logCaseDetach usage analytics action', () => {

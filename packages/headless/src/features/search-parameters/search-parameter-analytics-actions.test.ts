@@ -194,18 +194,13 @@ function legacyTestFacetLogging(
 }
 
 // --------------------- KIT-2859 : Everything above this will get deleted ! :) ---------------------
-const ANY_FACET_ID = 'author';
-const ANY_FACET_VALUE = 'Cervantes';
-
 function testFacetExcludeLogging() {
   testFacetSelectLogging('fExcluded');
 
   it('should log #facetSelect when an fExcluded parameter is added', () => {
     const action = parametersChange({}, {fExcluded: {author: ['Cervantes']}});
 
-    expect(action.actionCause).toEqual(
-      facetExclude(ANY_FACET_ID, ANY_FACET_VALUE).actionCause
-    );
+    expect(action.actionCause).toEqual(facetExclude().actionCause);
   });
 
   it('should log #facetSelect when an fExcluded parameter is modified & a value added', () => {
@@ -214,9 +209,7 @@ function testFacetExcludeLogging() {
       {fExcluded: {author: ['Cervantes', 'Orwell']}}
     );
 
-    expect(action.actionCause).toEqual(
-      facetExclude(ANY_FACET_ID, ANY_FACET_VALUE).actionCause
-    );
+    expect(action.actionCause).toEqual(facetExclude().actionCause);
   });
 }
 
@@ -252,9 +245,7 @@ function testFacetSelectLogging(parameter: string) {
   it(`should log #facetDeselect when an ${parameter} parameter with a single value is removed`, () => {
     const action = parametersChange({[parameter]: {author: ['Cervantes']}}, {});
 
-    expect(action.actionCause).toEqual(
-      facetDeselect(ANY_FACET_ID, ANY_FACET_VALUE).actionCause
-    );
+    expect(action.actionCause).toEqual(facetDeselect().actionCause);
   });
 
   it(`should log #facetClearAll when an ${parameter} parameter with multiple values is removed`, () => {
@@ -263,7 +254,7 @@ function testFacetSelectLogging(parameter: string) {
       {}
     );
 
-    expect(action.actionCause).toEqual(facetClearAll(ANY_FACET_ID).actionCause);
+    expect(action.actionCause).toEqual(facetClearAll().actionCause);
   });
 
   it(`should log #facetDeselect when an ${parameter} parameter is modified & a value removed`, () => {
@@ -272,8 +263,6 @@ function testFacetSelectLogging(parameter: string) {
       {[parameter]: {author: ['Cervantes']}}
     );
 
-    expect(action.actionCause).toEqual(
-      facetDeselect(ANY_FACET_ID, ANY_FACET_VALUE).actionCause
-    );
+    expect(action.actionCause).toEqual(facetDeselect().actionCause);
   });
 }

@@ -1,4 +1,3 @@
-import {SearchAnalyticsProvider} from '../../../api/analytics/search-analytics';
 import {
   makeAnalyticsAction,
   LegacySearchAction,
@@ -12,10 +11,6 @@ export const logClearBreadcrumbs = (): LegacySearchAction =>
     return client.makeBreadcrumbResetAll();
   });
 
-export const breadcrumbResetAll = (): SearchAction => {
-  return {
-    actionCause: SearchPageEvents.breadcrumbResetAll,
-    getEventExtraPayload: (state) =>
-      new SearchAnalyticsProvider(() => state).getBaseMetadata(),
-  };
-};
+export const breadcrumbResetAll = (): SearchAction => ({
+  actionCause: SearchPageEvents.breadcrumbResetAll,
+});

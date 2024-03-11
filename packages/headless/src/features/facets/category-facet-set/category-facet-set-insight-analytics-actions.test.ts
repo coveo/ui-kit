@@ -1,5 +1,6 @@
+import {ThunkExtraArguments} from '../../../app/thunk-extra-arguments';
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
-import {buildMockInsightEngine} from '../../../test/mock-engine';
+import {buildMockInsightEngine} from '../../../test/mock-engine-v2';
 import {buildMockInsightState} from '../../../test/mock-insight-state';
 import {logCategoryFacetBreadcrumb} from './category-facet-set-insight-analytics-actions';
 
@@ -27,8 +28,8 @@ const examplePath = ['one', 'two'];
 
 describe('logBreadcrumbFacet', () => {
   it('should log #logBreadcrumbFacet with the right payload', async () => {
-    const engine = buildMockInsightEngine({
-      state: buildMockInsightState({
+    const engine = buildMockInsightEngine(
+      buildMockInsightState({
         categoryFacetSet: {
           [exampleFacetId]: {
             initialNumberOfValues: 10,
@@ -46,15 +47,13 @@ describe('logBreadcrumbFacet', () => {
           caseId: exampleCaseId,
           caseNumber: exampleCaseNumber,
         },
-      }),
-    });
-
-    await engine.dispatch(
-      logCategoryFacetBreadcrumb({
-        categoryFacetId: exampleFacetId,
-        categoryFacetPath: examplePath,
       })
     );
+
+    await logCategoryFacetBreadcrumb({
+      categoryFacetId: exampleFacetId,
+      categoryFacetPath: examplePath,
+    })()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
     const expectedPayload = {
       caseContext: {

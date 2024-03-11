@@ -104,14 +104,35 @@ This task will do the same thing as `release:phase2`, but is intended to publish
 
 # Deploying
 
-Whenever a new version bump is pushed to the main branch by the scheduled release process, the Jenkins CI will run the `Jenkinsfile` on it.
+After the release is completed on Git, GitHub and NPM, the release workflow will start a job on a Coveo-Hosted-runners to trigger the deployment pipeline.
+From there on, the process then follows this diagram (starting with 'Continue GitHub workflow on Coveo Hosted Runner):
 
-The purpose of this step is to:
-
-1. Publish some packages to the dev and staging CDN.
-2. After QA approval:
-   1. Publish Quantic to Salesforce.
-   2. Publish packages to the production CDN.
-   3. Update the `latest` NPM tag of each package.
-
-Specifically, the Jenkins CI will create a deployment package and push it to the deployment pipeline, which will run the instructions from `.deployment.config.json`.
+```mermaid
+sequenceDiagram
+   box blue Public network
+   participant SFDC
+   participant NPM
+   participant GitHub-public
+   end
+   box purple VPC network
+   participant GitHub-coveo
+   participant DepPipeline
+   participant AWS
+   participant TeamJenkins
+   end
+   GitHub-public->>+NPM: Publish package on beta tag
+   GitHub-public->>+SFDC: Publish package
+   GitHub-public->>+GitHub-coveo: Continue GitHub workflow on Coveo Hosted Runner
+   GitHub-coveo-)DepPipeline: Trigger Deployment Pipeline
+   GitHub-coveo->>+GitHub-public: Continue GitHub workflow on GitHub Hosted runner
+   activate GitHub-public
+   DepPipeline->>DepPipeline: Do the usual checks
+   DepPipeline->>+AWS: Deploy files to S3
+   DepPipeline->>+TeamJenkins: Dispatch Jenkins Job
+   DepPipeline->>+AWS: Invalidate CloudFront Cache
+   Note right of GitHub-public: Wait for ✅
+   deactivate GitHub-public
+   TeamJenkins->>+GitHub-public: Approve Production GitHub Environment usage
+   GitHub-public->>+NPM: Promote package to latest
+   GitHub-public->>+SFDC: Promote package to latest
+```

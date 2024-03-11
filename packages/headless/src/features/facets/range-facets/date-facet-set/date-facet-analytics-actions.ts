@@ -3,7 +3,6 @@ import {
   makeAnalyticsAction,
   LegacySearchAction,
 } from '../../../analytics/analytics-utils';
-import {SearchAction} from '../../../search/search-actions';
 import {
   getRangeFacetMetadata,
   rangeBreadcrumbFacet,
@@ -37,9 +36,4 @@ export const logDateFacetBreadcrumb = (
     return client.makeBreadcrumbFacet(metadata);
   });
 
-export const dateBreadcrumbFacet = (
-  id: string,
-  value: DateFacetValue
-): SearchAction => {
-  return rangeBreadcrumbFacet(id, value);
-};
+export const dateBreadcrumbFacet = rangeBreadcrumbFacet;

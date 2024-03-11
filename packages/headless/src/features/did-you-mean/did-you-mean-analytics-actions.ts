@@ -1,4 +1,3 @@
-import {SearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {
   makeAnalyticsAction,
   LegacySearchAction,
@@ -18,18 +17,10 @@ export const logDidYouMeanAutomatic = (): LegacySearchAction =>
     client.makeDidYouMeanAutomatic()
   );
 
-export const didYouMeanClick = (): SearchAction => {
-  return {
-    actionCause: SearchPageEvents.didyoumeanClick,
-    getEventExtraPayload: (state) =>
-      new SearchAnalyticsProvider(() => state).getBaseMetadata(),
-  };
-};
+export const didYouMeanClick = (): SearchAction => ({
+  actionCause: SearchPageEvents.didyoumeanClick,
+});
 
-export const didYouMeanAutomatic = (): SearchAction => {
-  return {
-    actionCause: SearchPageEvents.didyoumeanAutomatic,
-    getEventExtraPayload: (state) =>
-      new SearchAnalyticsProvider(() => state).getBaseMetadata(),
-  };
-};
+export const didYouMeanAutomatic = (): SearchAction => ({
+  actionCause: SearchPageEvents.didyoumeanAutomatic,
+});

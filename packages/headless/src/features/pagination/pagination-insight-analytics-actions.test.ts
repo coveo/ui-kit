@@ -1,4 +1,5 @@
-import {buildMockInsightEngine} from '../../test/mock-engine';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
+import {buildMockInsightEngine} from '../../test/mock-engine-v2';
 import {buildMockInsightState} from '../../test/mock-insight-state';
 import {buildMockPagination} from '../../test/mock-pagination';
 import {
@@ -60,11 +61,13 @@ const expectedPayload = {
 
 describe('logPagerNumber', () => {
   it('should log #logPagerNumber with the right payload', async () => {
-    const engine = buildMockInsightEngine({
-      state: buildMockInsightState(insightState),
-    });
+    const engine = buildMockInsightEngine(buildMockInsightState(insightState));
 
-    await engine.dispatch(logPageNumber());
+    await logPageNumber()()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     expect(mockLogPagerNumber).toBeCalledTimes(1);
     expect(mockLogPagerNumber.mock.calls[0][0]).toStrictEqual(expectedPayload);
@@ -73,11 +76,13 @@ describe('logPagerNumber', () => {
 
 describe('logPagerNext', () => {
   it('should log #logPagerNext with the right payload', async () => {
-    const engine = buildMockInsightEngine({
-      state: buildMockInsightState(insightState),
-    });
+    const engine = buildMockInsightEngine(buildMockInsightState(insightState));
 
-    await engine.dispatch(logPageNext());
+    await logPageNext()()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     expect(mockLogPagerNext).toBeCalledTimes(1);
     expect(mockLogPagerNext.mock.calls[0][0]).toStrictEqual(expectedPayload);
@@ -86,11 +91,13 @@ describe('logPagerNext', () => {
 
 describe('logPagerPrevious', () => {
   it('should log #logPagerPrevious with the right payload', async () => {
-    const engine = buildMockInsightEngine({
-      state: buildMockInsightState(insightState),
-    });
+    const engine = buildMockInsightEngine(buildMockInsightState(insightState));
 
-    await engine.dispatch(logPagePrevious());
+    await logPagePrevious()()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     expect(mockLogPagerPrevious).toBeCalledTimes(1);
     expect(mockLogPagerPrevious.mock.calls[0][0]).toStrictEqual(

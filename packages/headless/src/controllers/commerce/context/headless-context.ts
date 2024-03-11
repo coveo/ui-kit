@@ -1,3 +1,4 @@
+import {CurrencyCodeISO4217} from '@coveo/relay-event-types';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {
   setContext,
@@ -17,7 +18,7 @@ export interface ContextOptions {
   trackingId: string;
   language: string;
   country: string;
-  currency: string;
+  currency: CurrencyCodeISO4217;
   user?: User;
   view: View;
 }
@@ -73,7 +74,7 @@ export interface Context extends Controller {
    * Sets the currency.
    * @param currency - The new currency.
    */
-  setCurrency(currency: string): void;
+  setCurrency(currency: CurrencyCodeISO4217): void;
 
   /**
    * Sets the user.
@@ -97,7 +98,7 @@ export interface ContextState {
   trackingId: string;
   language: string;
   country: string;
-  currency: string;
+  currency: CurrencyCodeISO4217;
   user?: User;
   view: View;
 }
@@ -166,7 +167,7 @@ export function buildContext(
         })
       ),
 
-    setCurrency: (currency: string) =>
+    setCurrency: (currency: CurrencyCodeISO4217) =>
       dispatch(
         setContext({
           ...getState().commerceContext,

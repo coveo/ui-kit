@@ -5,6 +5,7 @@ import {
 } from '@reduxjs/toolkit';
 import {getOrganizationEndpoints} from '../api/platform-client';
 import * as Store from '../app/store';
+import {updateAnalyticsConfiguration} from '../features/configuration/configuration-actions';
 import {buildMockThunkExtraArguments} from '../test/mock-thunk-extra-arguments';
 import {configuration} from './common-reducers';
 import {buildEngine, CoreEngine, EngineOptions} from './engine';
@@ -28,6 +29,7 @@ describe('engine', () => {
   function initEngine() {
     const thunkArguments = buildMockThunkExtraArguments();
     engine = buildEngine(options, thunkArguments);
+    return engine;
   }
 
   beforeEach(() => {
@@ -258,5 +260,24 @@ describe('engine', () => {
         });
       });
     });
+  });
+
+  it('should exposes a Relay instance', () => {
+    const engine = initEngine();
+    expect(engine.relay).toBeDefined();
+  });
+
+  it('should return the exact same instance of Relay if the state has not changed between two calls to engine.relay', () => {
+    const engine = initEngine();
+    expect(engine.relay).toBe(engine.relay);
+  });
+
+  it('should return a new instance of Relay if the state has changed', () => {
+    const engine = initEngine();
+    const oldRelay = engine.relay;
+    engine.dispatch(
+      updateAnalyticsConfiguration({trackingId: 'newTrackingId'})
+    );
+    expect(engine.relay).not.toBe(oldRelay);
   });
 });

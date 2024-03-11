@@ -1,10 +1,7 @@
 import type {FacetRangeMetadata} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
-import {SearchAnalyticsProvider} from '../../../../api/analytics/search-analytics';
 import {SearchAppState} from '../../../../state/search-app-state';
 import {SearchPageEvents} from '../../../analytics/search-action-cause';
 import {SearchAction} from '../../../search/search-actions';
-import {DateFacetValue} from '../date-facet-set/interfaces/response';
-import {NumericFacetValue} from '../numeric-facet-set/interfaces/response';
 import {RangeFacetSelectionPayload} from './range-facet-validate-payload';
 
 export const getRangeFacetMetadata = (
@@ -24,16 +21,6 @@ export const getRangeFacetMetadata = (
   };
 };
 
-export const rangeBreadcrumbFacet = (
-  id: string,
-  value: DateFacetValue | NumericFacetValue
-): SearchAction => {
-  return {
-    actionCause: SearchPageEvents.breadcrumbFacet,
-    getEventExtraPayload: (state) =>
-      new SearchAnalyticsProvider(() => state).getRangeBreadcrumbFacetMetadata(
-        id,
-        value
-      ),
-  };
-};
+export const rangeBreadcrumbFacet = (): SearchAction => ({
+  actionCause: SearchPageEvents.breadcrumbFacet,
+});

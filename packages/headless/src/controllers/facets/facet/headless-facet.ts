@@ -124,7 +124,7 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
               facetId: getFacetId(),
               facetValue: value.rawValue,
             }),
-            next: facetSelect(getFacetId(), value.rawValue),
+            next: facetSelect(),
           })
         );
       },
@@ -136,7 +136,7 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
               facetId: getFacetId(),
               facetValue: value.rawValue,
             }),
-            next: facetExclude(getFacetId(), value.rawValue),
+            next: facetExclude(),
           })
         );
       },
@@ -162,7 +162,7 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
             getFacetId(),
             selection
           ),
-          next: getAnalyticsActionForToggleFacetSelect(getFacetId(), selection),
+          next: getAnalyticsActionForToggleFacetSelect(selection),
         })
       );
     },
@@ -175,10 +175,7 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
             getFacetId(),
             selection
           ),
-          next: getAnalyticsActionForToggleFacetExclude(
-            getFacetId(),
-            selection
-          ),
+          next: getAnalyticsActionForToggleFacetExclude(selection),
         })
       );
     },
@@ -188,7 +185,7 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
       dispatch(
         executeSearch({
           legacy: logFacetClearAll(getFacetId()),
-          next: facetClearAll(getFacetId()),
+          next: facetClearAll(),
         })
       );
     },
@@ -198,7 +195,7 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
       dispatch(
         executeSearch({
           legacy: logFacetUpdateSort({facetId: getFacetId(), criterion}),
-          next: facetUpdateSort(getFacetId(), criterion),
+          next: facetUpdateSort(),
         })
       );
     },

@@ -4,6 +4,7 @@ import * as HighlightUtils from './utils/highlight';
 polyfillCryptoNode();
 // 3rd Party Libraries
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
+export type {Relay} from '@coveo/relay';
 
 // Main App
 export type {

@@ -1,6 +1,7 @@
 import {
   SearchEngineConfiguration,
   AnalyticsConfiguration,
+  EngineConfiguration,
 } from '@coveo/headless';
 import {AnalyticsClientSendEventHook} from '@coveo/headless';
 import {getAtomicEnvironment} from '../../../global/environment';
@@ -48,4 +49,23 @@ export function augmentAnalyticsConfigWithAtomicVersion(): Required<
         versionMatcher.exec(getAtomicEnvironment().version)?.[0] || '0.0.0',
     },
   };
+}
+
+export function getNextAnalyticsConfig(
+  searchEngineConfig: EngineConfiguration,
+  enabled: boolean
+): AnalyticsConfiguration {
+  const defaultConfiguration: AnalyticsConfiguration = {
+    enabled,
+    documentLocation: document.location.href,
+    ...(document.referrer && {originLevel3: document.referrer}),
+  };
+
+  if (searchEngineConfig.analytics) {
+    return {
+      ...defaultConfiguration,
+      ...searchEngineConfig.analytics,
+    };
+  }
+  return defaultConfiguration;
 }

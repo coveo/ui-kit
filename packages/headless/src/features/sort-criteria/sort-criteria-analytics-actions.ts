@@ -1,4 +1,3 @@
-import {SearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {
   makeAnalyticsAction,
   LegacySearchAction,
@@ -15,10 +14,6 @@ export const logResultsSort = (): LegacySearchAction =>
     })
   );
 
-export const resultsSort = (): SearchAction => {
-  return {
-    actionCause: SearchPageEvents.resultsSort,
-    getEventExtraPayload: (state) =>
-      new SearchAnalyticsProvider(() => state).getResultSortMetadata(),
-  };
-};
+export const resultsSort = (): SearchAction => ({
+  actionCause: SearchPageEvents.resultsSort,
+});

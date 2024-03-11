@@ -1,3 +1,11 @@
+## 0.5.23 (2024-03-08)
+
+### Bug Fixes
+
+- **deps:** update stencil j:kit-282 ([#3635](https://github.com/coveo/ui-kit/issues/3635)) ([63b333e](https://github.com/coveo/ui-kit/commits/63b333eb5ef5b5017288883102503fd47863357b))
+
+## 0.5.22 (2024-03-06)
+
 ## 0.5.20 (2024-02-21)
 
 ### Bug Fixes

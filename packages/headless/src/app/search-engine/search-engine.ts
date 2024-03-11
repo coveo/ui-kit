@@ -169,7 +169,7 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
         legacy: isOmniboxFromLink
           ? logOmniboxFromLink(metadata)
           : logSearchFromLink(),
-        next: isOmniboxFromLink ? omniboxFromLink(metadata) : searchFromLink(),
+        next: isOmniboxFromLink ? omniboxFromLink() : searchFromLink(),
       });
       engine.dispatch(action);
     },

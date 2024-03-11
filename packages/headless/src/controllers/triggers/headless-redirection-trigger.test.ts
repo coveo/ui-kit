@@ -1,27 +1,23 @@
 import {logTriggerRedirect} from '../../features/triggers/trigger-analytics-actions';
 import {triggerReducer as triggers} from '../../features/triggers/triggers-slice';
 import {
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../test/mock-engine';
+  buildMockSearchEngine,
+  MockedSearchEngine,
+} from '../../test/mock-engine-v2';
 import {createMockState} from '../../test/mock-state';
 import {
   RedirectionTrigger,
   buildRedirectionTrigger,
 } from './headless-redirection-trigger';
 
+jest.mock('../../features/triggers/trigger-analytics-actions');
+
 describe('RedirectionTrigger', () => {
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
   let redirectionTrigger: RedirectionTrigger;
 
   function initRedirectTrigger() {
     redirectionTrigger = buildRedirectionTrigger(engine);
-  }
-
-  function getLogTriggerRedirectAction() {
-    return engine.actions.find(
-      (a) => a.type === logTriggerRedirect().pending.type
-    );
   }
 
   function registeredListeners() {
@@ -29,7 +25,7 @@ describe('RedirectionTrigger', () => {
   }
 
   beforeEach(() => {
-    engine = buildMockSearchAppEngine();
+    engine = buildMockSearchEngine(createMockState());
     initRedirectTrigger();
   });
 
@@ -52,7 +48,7 @@ describe('RedirectionTrigger', () => {
     beforeEach(() => {
       const state = createMockState();
       state.triggers.redirectTo = 'https://www.google.com';
-      engine = buildMockSearchAppEngine({state});
+      engine = buildMockSearchEngine(state);
       initRedirectTrigger();
       redirectionTrigger.subscribe(listener);
     });
@@ -62,7 +58,7 @@ describe('RedirectionTrigger', () => {
     });
 
     it('it does not dispatch #logTriggerRedirect', () => {
-      expect(getLogTriggerRedirectAction()).toBeFalsy();
+      expect(logTriggerRedirect).not.toHaveBeenCalled();
     });
   });
 
@@ -79,7 +75,7 @@ describe('RedirectionTrigger', () => {
     });
 
     it('it does not dispatch #logTriggerRedirect', () => {
-      expect(getLogTriggerRedirectAction()).toBeFalsy();
+      expect(logTriggerRedirect).not.toHaveBeenCalled();
     });
   });
 
@@ -87,7 +83,7 @@ describe('RedirectionTrigger', () => {
     const listener = jest.fn();
     beforeEach(() => {
       redirectionTrigger.subscribe(listener);
-      engine.state.triggers.redirectTo = '';
+      engine.state.triggers!.redirectTo = '';
       const [firstListener] = registeredListeners();
       firstListener();
     });
@@ -97,7 +93,7 @@ describe('RedirectionTrigger', () => {
     });
 
     it('it does not dispatch #logTriggerRedirect', () => {
-      expect(getLogTriggerRedirectAction()).toBeFalsy();
+      expect(logTriggerRedirect).not.toHaveBeenCalled();
     });
   });
 
@@ -105,7 +101,7 @@ describe('RedirectionTrigger', () => {
     const listener = jest.fn();
     beforeEach(() => {
       redirectionTrigger.subscribe(listener);
-      engine.state.triggers.redirectTo = 'https://www.coveo.com';
+      engine.state.triggers!.redirectTo = 'https://www.coveo.com';
       const [firstListener] = registeredListeners();
       firstListener();
     });
@@ -115,7 +111,7 @@ describe('RedirectionTrigger', () => {
     });
 
     it('it dispatches #logTriggerRedirect', () => {
-      expect(getLogTriggerRedirectAction()).toBeTruthy();
+      expect(logTriggerRedirect).toHaveBeenCalled();
     });
   });
 });

@@ -37,7 +37,7 @@ if (!name || !version) {
 }
 if (!(await isPublished(name, version))) {
   const tagToPublish = isPrerelease ? 'alpha' : 'beta';
-  await npmPublish('.', {tag: tagToPublish});
+  await npmPublish('.', {tag: tagToPublish, provenance: !isPrerelease});
   await retry(
     async () => {
       if (!(await isPublished(name, version, tagToPublish))) {

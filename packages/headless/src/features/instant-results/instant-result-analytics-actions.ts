@@ -3,7 +3,6 @@ import {
   InstantResultsAnalyticsProvider,
   StateNeededByInstantResultsAnalyticsProvider,
 } from '../../api/analytics/instant-result-analytics';
-import {SearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {Result} from '../../api/search/search/result';
 import {
   partialDocumentInformation,
@@ -59,10 +58,6 @@ export const logInstantResultsSearch = (): InstantResultsSearchAction =>
     (getState) => new InstantResultsAnalyticsProvider(getState)
   );
 
-export const searchboxAsYouType = (): SearchAction => {
-  return {
-    actionCause: SearchPageEvents.searchboxAsYouType,
-    getEventExtraPayload: (state) =>
-      new SearchAnalyticsProvider(() => state).getBaseMetadata(),
-  };
-};
+export const searchboxAsYouType = (): SearchAction => ({
+  actionCause: SearchPageEvents.searchboxAsYouType,
+});

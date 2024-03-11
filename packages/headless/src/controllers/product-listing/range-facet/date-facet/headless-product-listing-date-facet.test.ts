@@ -8,9 +8,9 @@ import {ProductListingAppState} from '../../../../state/product-listing-app-stat
 import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
 import {
-  MockProductListingEngine,
+  MockedProductListingEngine,
   buildMockProductListingEngine,
-} from '../../../../test/mock-engine';
+} from '../../../../test/mock-engine-v2';
 import {buildMockProductListingState} from '../../../../test/mock-product-listing-state';
 import {
   DateFacet,
@@ -18,11 +18,13 @@ import {
   DateFacetOptions,
 } from './headless-product-listing-date-facet';
 
+jest.mock('../../../../features/product-listing/product-listing-actions');
+
 describe('date facet', () => {
   const facetId = '1';
   let options: DateFacetOptions;
   let state: ProductListingAppState;
-  let engine: MockProductListingEngine;
+  let engine: MockedProductListingEngine;
   let dateFacet: DateFacet;
 
   beforeEach(() => {
@@ -35,7 +37,7 @@ describe('date facet', () => {
     state = buildMockProductListingState();
     state.dateFacetSet[facetId] = buildMockDateFacetSlice();
 
-    engine = buildMockProductListingEngine({state});
+    engine = buildMockProductListingEngine(state);
     dateFacet = buildDateFacet(engine, {options});
   });
 
@@ -52,12 +54,7 @@ describe('date facet', () => {
     it('dispatches #fetchProductListing', () => {
       const value = buildMockDateFacetValue();
       dateFacet.toggleSelect(value);
-
-      expect(engine.actions).toContainEqual(
-        expect.objectContaining({
-          type: fetchProductListing.pending.type,
-        })
-      );
+      expect(fetchProductListing).toHaveBeenCalled();
     });
   });
 
@@ -65,11 +62,7 @@ describe('date facet', () => {
     it('dispatches #fetchProductListing', () => {
       dateFacet.deselectAll();
 
-      expect(engine.actions).toContainEqual(
-        expect.objectContaining({
-          type: fetchProductListing.pending.type,
-        })
-      );
+      expect(fetchProductListing).toHaveBeenCalled();
     });
   });
 
@@ -77,11 +70,7 @@ describe('date facet', () => {
     it('dispatches #fetchProductListing', () => {
       dateFacet.sortBy('descending');
 
-      expect(engine.actions).toContainEqual(
-        expect.objectContaining({
-          type: fetchProductListing.pending.type,
-        })
-      );
+      expect(fetchProductListing).toHaveBeenCalled();
     });
   });
 
@@ -89,11 +78,7 @@ describe('date facet', () => {
     it('dispatches #fetchProductListing', () => {
       dateFacet.toggleSingleSelect(facetValue());
 
-      expect(engine.actions).toContainEqual(
-        expect.objectContaining({
-          type: fetchProductListing.pending.type,
-        })
-      );
+      expect(fetchProductListing).toHaveBeenCalled();
     });
   }
 

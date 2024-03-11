@@ -134,7 +134,6 @@ const buildAnalyticsSection = async (
     state.configuration.analytics.analyticsMode === 'legacy'
       ? undefined
       : {
-          customData: action.getEventExtraPayload(state),
           actionCause: action.actionCause,
           type: action.actionCause,
         };

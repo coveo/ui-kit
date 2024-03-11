@@ -33,13 +33,9 @@ export const getLegacyAnalyticsActionForToggleRangeFacetSelect = (
 };
 
 export const getAnalyticsActionForToggleFacetSelect = (
-  facetId: string,
   selection: RangeFacetValue
 ): SearchAction => {
-  const facetValue = `${selection.start}..${selection.end}`;
-  return isRangeFacetValueSelected(selection)
-    ? facetDeselect(facetId, facetValue)
-    : facetSelect(facetId, facetValue);
+  return isRangeFacetValueSelected(selection) ? facetDeselect() : facetSelect();
 };
 
 export const getLegacyAnalyticsActionForToggleRangeFacetExclude = (
@@ -55,11 +51,9 @@ export const getLegacyAnalyticsActionForToggleRangeFacetExclude = (
 };
 
 export const getAnalyticsActionForToggleRangeFacetExclude = (
-  facetId: string,
   selection: RangeFacetValue
 ): SearchAction => {
-  const facetValue = `${selection.start}..${selection.end}`;
   return isRangeFacetValueExcluded(selection)
-    ? facetUnexclude(facetId, facetValue)
-    : facetExclude(facetId, facetValue);
+    ? facetUnexclude()
+    : facetExclude();
 };

@@ -3,9 +3,23 @@ import {
   AnalyticsPayload,
   augmentAnalyticsWithAtomicVersion,
   augmentWithExternalMiddleware,
+  getNextAnalyticsConfig,
 } from '../../common/interface/analytics-config';
 
 export function getAnalyticsConfig(
+  searchEngineConfig: InsightEngineConfiguration,
+  enabled: boolean
+): InsightAnalyticsConfiguration {
+  switch (searchEngineConfig.analytics?.analyticsMode) {
+    case 'next':
+      return getNextAnalyticsConfig(searchEngineConfig, enabled);
+    case 'legacy':
+    default:
+      return getLegacyAnalyticsConfig(searchEngineConfig, enabled);
+  }
+}
+
+function getLegacyAnalyticsConfig(
   searchEngineConfig: InsightEngineConfiguration,
   enabled: boolean
 ): InsightAnalyticsConfiguration {

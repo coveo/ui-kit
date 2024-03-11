@@ -3,19 +3,23 @@ import {restoreSearchParameters} from '../../../features/search-parameters/searc
 import {initialSearchParameterSelector} from '../../../features/search-parameters/search-parameter-selectors';
 import {
   buildMockInsightEngine,
-  MockInsightEngine,
-} from '../../../test/mock-engine';
+  MockedInsightEngine,
+} from '../../../test/mock-engine-v2';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
 import {buildMockFacetValueRequest} from '../../../test/mock-facet-value-request';
+import {buildMockInsightState} from '../../../test/mock-insight-state';
 import {
   buildSearchParameterManager,
   SearchParameterManager,
   SearchParameterManagerProps,
 } from './headless-insight-search-parameter-manager';
 
+jest.mock('../../../features/search-parameters/search-parameter-actions');
+jest.mock('../../../features/insight-search/insight-search-actions');
+
 describe('insight search parameter manager', () => {
-  let engine: MockInsightEngine;
+  let engine: MockedInsightEngine;
   let props: SearchParameterManagerProps;
   let manager: SearchParameterManager;
 
@@ -24,7 +28,8 @@ describe('insight search parameter manager', () => {
   }
 
   beforeEach(() => {
-    engine = buildMockInsightEngine();
+    jest.resetAllMocks();
+    engine = buildMockInsightEngine(buildMockInsightState());
     props = {
       initialState: {
         parameters: {},
@@ -40,17 +45,16 @@ describe('insight search parameter manager', () => {
       manager.synchronize(params);
 
       const initialParameters = initialSearchParameterSelector(engine.state);
-      const action = restoreSearchParameters({
+
+      expect(restoreSearchParameters).toHaveBeenCalledWith({
         ...initialParameters,
         ...params,
       });
-
-      expect(engine.actions).toContainEqual(action);
     });
 
     it('executes a search', () => {
       manager.synchronize({q: 'a'});
-      expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
+      expect(executeSearch).toHaveBeenCalled();
     });
 
     it(`when only the order of facet values changes,
@@ -76,8 +80,7 @@ describe('insight search parameter manager', () => {
       };
 
       manager.synchronize({f: {author: [value2, value1]}});
-
-      expect(engine.findAsyncAction(executeSearch.pending)).toBeFalsy();
+      expect(executeSearch).not.toHaveBeenCalled();
     });
   });
 });

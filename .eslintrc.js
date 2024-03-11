@@ -9,6 +9,7 @@ module.exports = {
     'dist',
     'www',
     '!.storybook',
+    'scripts/deploy/execute-deployment-pipeline.mjs',
   ],
   env: {
     jest: true,

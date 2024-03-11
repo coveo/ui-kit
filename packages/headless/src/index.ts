@@ -18,6 +18,7 @@ polyfillCryptoNode();
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
 export {createAction, createAsyncThunk, createReducer} from '@reduxjs/toolkit';
 export type {AnalyticsClientSendEventHook} from 'coveo.analytics';
+export type {Relay} from '@coveo/relay';
 
 // Main App
 export type {

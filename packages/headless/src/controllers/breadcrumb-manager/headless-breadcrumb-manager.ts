@@ -156,7 +156,7 @@ export function buildBreadcrumbManager(
               facetId: facetId,
               facetValue: selection.value,
             }),
-            next: breadcrumbFacet(facetId, selection.value),
+            next: breadcrumbFacet(),
           })
         );
       },
@@ -171,7 +171,7 @@ export function buildBreadcrumbManager(
               facetId: facetId,
               facetValue: selection.value,
             }),
-            next: breadcrumbFacet(facetId, selection.value),
+            next: breadcrumbFacet(),
           })
         );
       },
@@ -192,7 +192,7 @@ export function buildBreadcrumbManager(
         dispatch(
           executeSearch({
             legacy: logNumericFacetBreadcrumb(payload),
-            next: numericBreadcrumbFacet(payload.facetId, payload.selection),
+            next: numericBreadcrumbFacet(),
           })
         );
       },
@@ -201,7 +201,7 @@ export function buildBreadcrumbManager(
         dispatch(
           executeSearch({
             legacy: logNumericFacetBreadcrumb(payload),
-            next: numericBreadcrumbFacet(payload.facetId, payload.selection),
+            next: numericBreadcrumbFacet(),
           })
         );
       },
@@ -220,7 +220,7 @@ export function buildBreadcrumbManager(
           dispatch(
             executeSearch({
               legacy: logDateFacetBreadcrumb(payload),
-              next: dateBreadcrumbFacet(payload.facetId, payload.selection),
+              next: dateBreadcrumbFacet(),
             })
           );
         },
@@ -229,7 +229,7 @@ export function buildBreadcrumbManager(
           dispatch(
             executeSearch({
               legacy: logDateFacetBreadcrumb(payload),
-              next: dateBreadcrumbFacet(payload.facetId, payload.selection),
+              next: dateBreadcrumbFacet(),
             })
           );
         },
@@ -264,10 +264,7 @@ export function buildBreadcrumbManager(
               ),
               categoryFacetId: facetId,
             }),
-            next: categoryBreadcrumbFacet(
-              facetId,
-              path.map((v) => v.value)
-            ),
+            next: categoryBreadcrumbFacet(),
           })
         );
       },
@@ -310,7 +307,7 @@ export function buildBreadcrumbManager(
               staticFilterId: id,
               staticFilterValue: {caption, expression},
             }),
-            next: staticFilterDeselect(id, {caption, expression}),
+            next: staticFilterDeselect(),
           })
         );
       },
@@ -358,7 +355,7 @@ export function buildBreadcrumbManager(
               facetId: field,
               facetValue: selection.value,
             }),
-            next: breadcrumbFacet(field, selection.value),
+            next: breadcrumbFacet(),
           })
         );
       },
