@@ -127,23 +127,26 @@ export function buildFacet(engine: InsightEngine, props: FacetProps): Facet {
     toggleSelect(selection) {
       coreController.toggleSelect(selection);
       dispatch(
-        executeSearch(
-          getInsightAnalyticsActionForToggleFacetSelect(getFacetId(), selection)
-        )
+        executeSearch({
+          legacy: getInsightAnalyticsActionForToggleFacetSelect(
+            getFacetId(),
+            selection
+          ),
+        })
       );
     },
 
     deselectAll() {
       coreController.deselectAll();
-      dispatch(executeSearch(logFacetClearAll(getFacetId())));
+      dispatch(executeSearch({legacy: logFacetClearAll(getFacetId())}));
     },
 
     sortBy(sortCriterion: FacetSortCriterion) {
       coreController.sortBy(sortCriterion);
       dispatch(
-        executeSearch(
-          logFacetUpdateSort({facetId: getFacetId(), sortCriterion})
-        )
+        executeSearch({
+          legacy: logFacetUpdateSort({facetId: getFacetId(), sortCriterion}),
+        })
       );
     },
 
@@ -153,12 +156,12 @@ export function buildFacet(engine: InsightEngine, props: FacetProps): Facet {
 
     showMoreValues() {
       coreController.showMoreValues();
-      dispatch(fetchFacetValues(logFacetShowMore(getFacetId())));
+      dispatch(fetchFacetValues({legacy: logFacetShowMore(getFacetId())}));
     },
 
     showLessValues() {
       coreController.showLessValues();
-      dispatch(fetchFacetValues(logFacetShowLess(getFacetId())));
+      dispatch(fetchFacetValues({legacy: logFacetShowLess(getFacetId())}));
     },
 
     get state() {

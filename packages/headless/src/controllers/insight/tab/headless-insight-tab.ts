@@ -22,7 +22,8 @@ export type {Tab, TabProps, TabState, TabInitialState, TabOptions};
 export function buildTab(engine: InsightEngine, props: TabProps): Tab {
   const {dispatch} = engine;
   const tab = buildCoreTab(engine, props);
-  const search = () => dispatch(executeSearch(logInsightInterfaceChange()));
+  const search = () =>
+    dispatch(executeSearch({legacy: logInsightInterfaceChange()}));
 
   return {
     ...tab,
