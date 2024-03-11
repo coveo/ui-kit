@@ -116,7 +116,7 @@ export function buildInsightEngine(
         return;
       }
 
-      engine.dispatch(executeSearch(analyticsEvent));
+      engine.dispatch(executeSearch({legacy: analyticsEvent}));
     },
   };
 }
