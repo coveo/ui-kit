@@ -26,7 +26,7 @@ function formatEndFacetValue(value: string) {
   return `end${value}`;
 }
 
-interface SearchMappings {
+export interface SearchMappings {
   dateFacetValueMap: Record<string, Record<string, string>>;
 }
 
