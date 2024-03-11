@@ -126,7 +126,7 @@ export const logOpenSmartSnippetSource = (): ClickAction =>
     },
   });
 
-//TODO: To be removed
+//TODO: SFINT-5435
 export const logOpenSmartSnippetInlineLink = (
   payload: QuestionAnsweringInlineLinkActionCreatorPayload
 ): ClickAction =>
@@ -142,19 +142,18 @@ export const logOpenSmartSnippetInlineLink = (
     );
   });
 
-//TODO: To be removed
+//TODO: SFINT-5435
 export const logOpenSmartSnippetFeedbackModal = (): CustomAction =>
   makeAnalyticsAction('analytics/smartSnippet/feedbackModal/open', (client) =>
     client.makeOpenSmartSnippetFeedbackModal()
   );
 
-//TODO: To be removed
+//TODO: SFINT-5435
 export const logCloseSmartSnippetFeedbackModal = (): CustomAction =>
   makeAnalyticsAction('analytics/smartSnippet/feedbackModal/close', (client) =>
     client.makeCloseSmartSnippetFeedbackModal()
   );
 
-//TODO: To be reviewed
 export const logSmartSnippetFeedback = (
   feedback: SmartSnippetFeedback
 ): CustomAction =>
@@ -315,7 +314,7 @@ export const logOpenSmartSnippetSuggestionSource = (
     },
   });
 
-//TODO: To be removed
+//TODO: SFINT-5435
 export const logOpenSmartSnippetSuggestionInlineLink = (
   identifier: QuestionAnsweringUniqueIdentifierActionCreatorPayload,
   link: QuestionAnsweringInlineLinkActionCreatorPayload

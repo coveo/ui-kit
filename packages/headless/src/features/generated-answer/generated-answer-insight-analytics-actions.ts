@@ -16,7 +16,7 @@ export type GeneratedAnswerFeedback =
   | 'outOfDate'
   | 'harmful';
 
-//TODO: To be removed
+//TODO: SFINT-5435
 export const logRetryGeneratedAnswer = (): InsightAction =>
   makeInsightAnalyticsAction(
     'analytics/generatedAnswer/retry',
@@ -26,7 +26,7 @@ export const logRetryGeneratedAnswer = (): InsightAction =>
       )
   );
 
-//TODO: To be removed
+//TODO: SFINT-5435
 export const logRephraseGeneratedAnswer = (
   responseFormat: GeneratedResponseFormat
 ): InsightAction =>
@@ -265,7 +265,7 @@ export const logGeneratedAnswerDetailedFeedback = (
     },
   });
 
-//TODO: To be removed
+//TODO: SFINT-5435
 export const logGeneratedAnswerStreamEnd = (
   answerGenerated: boolean
 ): InsightAction =>

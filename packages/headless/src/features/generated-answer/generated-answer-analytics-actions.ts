@@ -16,13 +16,13 @@ export type GeneratedAnswerFeedback =
   | 'outOfDate'
   | 'harmful';
 
-//TODO: To be removed
+//TODO: KIT-2859
 export const logRetryGeneratedAnswer = (): LegacySearchAction =>
   makeAnalyticsAction('analytics/generatedAnswer/retry', (client) =>
     client.makeRetryGeneratedAnswer()
   );
 
-//TODO: To be removed
+//TODO: KIT-2859
 export const logRephraseGeneratedAnswer = (
   responseFormat: GeneratedResponseFormat
 ): LegacySearchAction =>
@@ -236,7 +236,7 @@ export const logGeneratedAnswerDetailedFeedback = (
     },
   });
 
-//TODO: To be removed
+//TODO: SFINT-5435
 export const logGeneratedAnswerStreamEnd = (
   answerGenerated: boolean
 ): CustomAction =>
