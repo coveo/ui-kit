@@ -130,7 +130,7 @@ function createDeferredPromise<T>(): {
 }
 
 export function createWaitForActionMiddleware<TAction extends Action>(
-  isDesiredAction: (action: Action) => action is TAction
+  isDesiredAction: (action: unknown) => action is TAction
 ): {promise: Promise<TAction>; middleware: Middleware} {
   const {promise, resolve} = createDeferredPromise<TAction>();
 

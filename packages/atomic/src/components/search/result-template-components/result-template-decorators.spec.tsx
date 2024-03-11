@@ -62,7 +62,9 @@ describe('resultContext method', () => {
   });
 
   it("revolves the bindings when it's a child of an atomic-result element", async () => {
-    const mockEngine = TestUtils.buildMockSearchAppEngine();
+    const mockEngine = TestUtils.buildMockSearchEngine(
+      TestUtils.createMockState()
+    );
     const mockResult = TestUtils.buildMockResult();
 
     const page = await newSpecPage({

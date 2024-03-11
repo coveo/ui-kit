@@ -95,7 +95,9 @@ describe('product-listing-sort-slice', () => {
     it('resets sort', () => {
       state.appliedSort = sort;
       state.availableSorts = [sort];
-      const finalState = sortReducer(state, action);
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const finalState = sortReducer(state, action({} as any));
 
       expect(finalState).toStrictEqual(getCommerceSortInitialState());
     });

@@ -1,4 +1,5 @@
-import {AnyAction, Middleware} from '@reduxjs/toolkit';
+import {Middleware, UnknownAction} from '@reduxjs/toolkit';
+import {SearchResponseSuccess} from '../../api/search/search/search-response';
 import {
   buildController,
   Controller,
@@ -22,6 +23,13 @@ interface CustomEngineStateReader<TState extends {}> extends Controller {
   state: TState;
 }
 
+type UnknownActionWithPossibleSearchResponsePayload = UnknownAction & {
+  payload: {
+    response: SearchResponseSuccess;
+  };
+  meta: {requestId: string};
+};
+
 function defineCustomEngineStateReader(): ControllerDefinitionWithoutProps<
   SSRSearchEngine,
   CustomEngineStateReader<SSRSearchEngine['state']>
@@ -39,13 +47,13 @@ function defineCustomEngineStateReader(): ControllerDefinitionWithoutProps<
 }
 
 function isSearchPendingAction(
-  action: AnyAction
+  action: UnknownAction
 ): action is ReturnType<(typeof executeSearch)['pending']> {
   return action.type === 'search/executeSearch/pending';
 }
 
 function isSearchFulfilledAction(
-  action: AnyAction
+  action: UnknownAction
 ): action is ReturnType<(typeof executeSearch)['fulfilled']> {
   return action.type === 'search/executeSearch/fulfilled';
 }
@@ -56,17 +64,25 @@ function createMockResultsMiddleware(options: {
   const numberOfResultsPerRequestId: {[requestId: string]: number | undefined} =
     {};
   return (api) => (next) => (action) => {
-    if (isSearchPendingAction(action)) {
+    const possibleSearchActionWithPayload =
+      action as UnknownActionWithPossibleSearchResponsePayload;
+    if (isSearchPendingAction(possibleSearchActionWithPayload)) {
       const state = api.getState() as SSRSearchEngine['state'];
-      numberOfResultsPerRequestId[action.meta.requestId] =
-        state.pagination?.numberOfResults ?? options.defaultNumberOfResults;
+      numberOfResultsPerRequestId[
+        possibleSearchActionWithPayload['meta']['requestId']
+      ] = state.pagination?.numberOfResults ?? options.defaultNumberOfResults;
       return next(action);
     }
-    if (isSearchFulfilledAction(action)) {
-      const newAction = JSON.parse(JSON.stringify(action)) as typeof action;
+    if (isSearchFulfilledAction(action as UnknownAction)) {
+      const newAction = JSON.parse(
+        JSON.stringify(possibleSearchActionWithPayload)
+      ) as UnknownActionWithPossibleSearchResponsePayload;
       newAction.payload.response.results = Array.from(
         {
-          length: numberOfResultsPerRequestId[action.meta.requestId]!,
+          length:
+            numberOfResultsPerRequestId[
+              possibleSearchActionWithPayload.meta.requestId
+            ]!,
         },
         (_, index) => buildMockResult({title: `Result #${index}`})
       );

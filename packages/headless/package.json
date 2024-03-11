@@ -53,7 +53,7 @@
     "@coveo/bueno": "0.45.7",
     "@coveo/relay": "0.7.4",
     "@microsoft/fetch-event-source": "2.0.1",
-    "@reduxjs/toolkit": "1.9.7",
+    "@reduxjs/toolkit": "2.2.1",
     "@types/redux-mock-store": "1.0.6",
     "abab": "2.0.6",
     "coveo.analytics": "2.29.3",
