@@ -72,7 +72,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
 
     describe('verify rendering', () => {
       beforeEach(setupTimeframeWithCustomSortCriteria);
-      TimeframeFacetAssertions.assertValueSortedByAscending([
+      TimeframeFacetAssertions.assertValuesMatchExpectedOrder([
         'Past 10 years',
         'Past quarter',
         'Past month',

@@ -123,7 +123,7 @@ export function assertFacetValueContainsText(index: number, value: string) {
   });
 }
 
-export function assertValueSortedByAscending(expectedValues: string[]) {
+export function assertValuesMatchExpectedOrder(expectedValues: string[]) {
   it('values should be ordered ascending', () => {
     TimeframeFacetSelectors.valueLabel().as('facetAllValuesLabel');
     cy.getTextOfAllElements('@facetAllValuesLabel').then((originalValues) => {
