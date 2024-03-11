@@ -1,3 +1,14 @@
+# 2.60.0 (2024-03-08)
+
+### Bug Fixes
+
+- **atomic:** fix search disabled check for query suggestion ([#3669](https://github.com/coveo/ui-kit/issues/3669)) ([8b4bb3d](https://github.com/coveo/ui-kit/commits/8b4bb3d14c876bb4b39be51f8ccb8e2add41f7ca))
+- **deps:** update stencil j:kit-282 ([#3635](https://github.com/coveo/ui-kit/issues/3635)) ([63b333e](https://github.com/coveo/ui-kit/commits/63b333eb5ef5b5017288883102503fd47863357b))
+
+### Features
+
+- **atomic,headless:** remove customData & middleware iff analyticsMode=next ([#3670](https://github.com/coveo/ui-kit/issues/3670)) ([ac15f5c](https://github.com/coveo/ui-kit/commits/ac15f5c11c89fd6af30a92d6abf7c6a5b984b8e5))
+
 # 2.59.0 (2024-03-06)
 
 ### Features
