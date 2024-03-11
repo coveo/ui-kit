@@ -124,7 +124,7 @@ export class AtomicInsightTimeframeFacet
 
   /**
    * The sort criterion to apply to the returned facet values.
-   * Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', and 'automatic'.
+   * Possible values are 'ascending' and 'descending'.
    */
   @Prop({reflect: true}) public sortCriteria: InsightRangeFacetSortCriterion =
     'descending';
