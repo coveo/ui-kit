@@ -6,8 +6,7 @@
     <title>Coveo Atomic Hosted UI</title>
 
     <script type="module" src="/build/atomic-hosted-page.esm.js"></script>
-    <script>
-      (async () => {
+    <script type="module">
         await customElements.whenDefined('atomic-hosted-ui');
 
         const atomicHostedUIPage = document.querySelector('atomic-hosted-ui');
@@ -17,7 +16,6 @@
           organizationId: 'searchuisamples',
           organizationEndpoints: await atomicHostedUIPage.getOrganizationEndpoints('searchuisamples', 'prod'),
         });
-      })();
     </script>
   </head>
   <body>
