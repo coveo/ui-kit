@@ -189,20 +189,20 @@ export function buildEngine<
   const platformUrl =
     organizationEndpoints?.platform || options.configuration.platformUrl;
 
-  if (shouldWarnAboutPlatformURL(options)) {
+  if (shouldWarnAboutPlatformURL(options.configuration)) {
     engine.logger.warn(
       `The \`platformUrl\` (${options.configuration.platformUrl}) option will be deprecated in the next major version. Consider using the \`organizationEndpoints\` option instead. See [Organization endpoints](https://docs.coveo.com/en/mcc80216).`
     );
   }
 
-  if (shouldWarnAboutOrganizationEndpoints(options)) {
+  if (shouldWarnAboutOrganizationEndpoints(options.configuration)) {
     // @v3 make organizationEndpoints the default.
     engine.logger.warn(
       'The `organizationEndpoints` options was not explicitly set in the Headless engine configuration. Coveo recommends setting this option, as it has resiliency benefits and simplifies the overall configuration for multi-region deployments. See [Organization endpoints](https://docs.coveo.com/en/mcc80216).'
     );
   } else if (
     shouldWarnAboutMismatchBetweenOrganizationIDAndOrganizationEndpoints(
-      options
+      options.configuration
     )
   ) {
     engine.logger.warn(
@@ -322,26 +322,28 @@ function createMiddleware<Reducers extends ReducersMapObject>(
   ].concat(options.middlewares || []);
 }
 
-function shouldWarnAboutOrganizationEndpoints(options: any) {
-  return isUndefined(options.configuration.organizationEndpoints);
+function shouldWarnAboutOrganizationEndpoints(
+  configuration: EngineConfiguration
+) {
+  return isUndefined(configuration.organizationEndpoints);
 }
 
-function shouldWarnAboutPlatformURL(options: any) {
+function shouldWarnAboutPlatformURL(configuration: EngineConfiguration) {
   return (
-    !isNullOrUndefined(options.configuration.platformUrl) ||
-    isNullOrUndefined(options.configuration.organizationEndpoints?.platform)
+    !isNullOrUndefined(configuration.platformUrl) ||
+    isNullOrUndefined(configuration.organizationEndpoints?.platform)
   );
 }
 
 function shouldWarnAboutMismatchBetweenOrganizationIDAndOrganizationEndpoints(
-  options: any
+  configuration: EngineConfiguration
 ) {
-  const {platform} = options.configuration.organizationEndpoints!;
+  const {platform} = configuration.organizationEndpoints!;
 
   if (isUndefined(platform)) {
     return false;
   }
 
   const match = matchCoveoOrganizationEndpointUrlAnyOrganization(platform);
-  return match && match.organizationId !== options.configuration.organizationId;
+  return match && match.organizationId !== configuration.organizationId;
 }
