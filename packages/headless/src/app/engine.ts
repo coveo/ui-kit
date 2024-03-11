@@ -151,17 +151,17 @@ export interface ExternalEngineOptions<State extends object> {
 }
 
 function getUpdateAnalyticsConfigurationPayload(
-  options: any,
+  configuration: EngineConfiguration,
   logger: Logger
 ): UpdateAnalyticsConfigurationActionCreatorPayload | null {
   const apiBaseUrl =
-    options.configuration.organizationEndpoints?.analytics || undefined;
+    configuration.organizationEndpoints?.analytics || undefined;
   const {analyticsClientMiddleware: _, ...payload} =
-    options.configuration.analytics ?? {};
+    configuration.analytics ?? {};
 
   const payloadWithURL = {
     ...payload,
-    nextApiBaseUrl: `${apiBaseUrl}/rest/organizations/${options.configuration.organizationId}/events/v1`,
+    nextApiBaseUrl: `${apiBaseUrl}/rest/organizations/${configuration.organizationId}/events/v1`,
     apiBaseUrl,
   };
 
@@ -219,7 +219,7 @@ export function buildEngine<
   );
 
   const analyticsPayload = getUpdateAnalyticsConfigurationPayload(
-    options,
+    options.configuration,
     engine.logger
   );
   if (analyticsPayload) {
