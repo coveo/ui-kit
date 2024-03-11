@@ -122,3 +122,12 @@ export function assertFacetValueContainsText(index: number, value: string) {
       });
   });
 }
+
+export function assertValueSortedByAscending(expectedValues: string[]) {
+  it('values should be ordered ascending', () => {
+    TimeframeFacetSelectors.valueLabel().as('facetAllValuesLabel');
+    cy.getTextOfAllElements('@facetAllValuesLabel').then((originalValues) => {
+      expect(originalValues).to.eql(expectedValues);
+    });
+  });
+}
