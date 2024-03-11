@@ -340,7 +340,6 @@ export const logOpenSmartSnippetSuggestionSource = (
     },
   });
 
-//TODO: To be reviewed
 export const logOpenSmartSnippetSuggestionInlineLink = (
   identifier: QuestionAnsweringUniqueIdentifierActionCreatorPayload,
   link: QuestionAnsweringInlineLinkActionCreatorPayload
