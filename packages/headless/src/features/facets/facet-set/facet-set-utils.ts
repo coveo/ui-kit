@@ -35,13 +35,9 @@ export const getLegacyAnalyticsActionForToggleFacetSelect = (
 };
 
 export const getAnalyticsActionForToggleFacetSelect = (
-  facetId: string,
   selection: FacetValue
-): SearchAction => {
-  return isFacetValueSelected(selection)
-    ? facetDeselect(facetId, selection.value)
-    : facetSelect(facetId, selection.value);
-};
+): SearchAction =>
+  isFacetValueSelected(selection) ? facetDeselect() : facetSelect();
 
 export const getLegacyAnalyticsActionForToggleFacetExclude = (
   facetId: string,
@@ -58,10 +54,6 @@ export const getLegacyAnalyticsActionForToggleFacetExclude = (
 };
 
 export const getAnalyticsActionForToggleFacetExclude = (
-  facetId: string,
   selection: FacetValue
-): SearchAction => {
-  return isFacetValueExcluded(selection)
-    ? facetUnexclude(facetId, selection.value)
-    : facetExclude(facetId, selection.value);
-};
+): SearchAction =>
+  isFacetValueExcluded(selection) ? facetUnexclude() : facetExclude();

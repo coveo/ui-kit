@@ -33,7 +33,7 @@ export function buildDidYouMean(engine: InsightEngine): DidYouMean {
 
     applyCorrection() {
       controller.applyCorrection();
-      dispatch(executeSearch(logDidYouMeanClick()));
+      dispatch(executeSearch({legacy: logDidYouMeanClick()}));
     },
   };
 }
