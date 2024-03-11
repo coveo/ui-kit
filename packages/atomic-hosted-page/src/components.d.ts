@@ -6,9 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { PlatformEnvironment } from "@coveo/headless";
-import { HostedPageType } from "./components/atomic-hosted-ui/hosted-ui";
 export { PlatformEnvironment } from "@coveo/headless";
-export { HostedPageType } from "./components/atomic-hosted-ui/hosted-ui";
 export namespace Components {
     /**
      * A Web Component used to inject a Coveo Hosted Search Page in the DOM.
@@ -37,7 +35,7 @@ export namespace Components {
         /**
           * The type of hosted search page to load E.g., 'page', 'custom', 'legacy'
          */
-        "hostedType": HostedPageType;
+        "hostedType": 'legacy' | 'page' | 'custom';
         "initialize": (options: AtomicHostedUIInitializationOptions) => Promise<void>;
     }
     /**
@@ -106,7 +104,7 @@ declare namespace LocalJSX {
         /**
           * The type of hosted search page to load E.g., 'page', 'custom', 'legacy'
          */
-        "hostedType"?: HostedPageType;
+        "hostedType"?: 'legacy' | 'page' | 'custom';
     }
     /**
      * A Web Component used to inject a [Coveo Search Interface made with the simple builder](https://docs.coveo.com/en/m7e92019/adobe/build-the-search-solution-using-a-coveo-ui-library-directly#search-interface-builder) in the DOM.
