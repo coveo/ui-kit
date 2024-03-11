@@ -1,9 +1,11 @@
 import {CurrencyCodeISO4217, Ec} from '@coveo/relay-event-types';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {
+  purchase,
   setItems,
   updateItem,
 } from '../../../../features/commerce/context/cart/cart-actions';
+import {itemsSelector} from '../../../../features/commerce/context/cart/cart-selector';
 import {cartReducer as cart} from '../../../../features/commerce/context/cart/cart-slice';
 import {CartItemWithMetadata} from '../../../../features/commerce/context/cart/cart-state';
 import {cartSchema} from '../../../../features/commerce/context/cart/cart-validation';
@@ -15,7 +17,6 @@ import {
 } from '../../../controller/headless-controller';
 import {
   itemSelector,
-  itemsSelector,
   totalPriceSelector,
   totalQuantitySelector,
 } from './headless-cart-selectors';
@@ -234,10 +235,8 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
       }
     },
 
-    purchase(transaction: Transaction) {
-      engine.relay.emit('ec.purchase', createEcPurchasePayload(transaction));
-
-      dispatch(setItems([]));
+    purchase(transactionId: string, transactionRevenue: number) {
+      dispatch(purchase({id: transactionId, revenue: transactionRevenue}));
     },
 
     updateItem(item: CartItem) {

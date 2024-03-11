@@ -73,7 +73,7 @@ export function buildProductListingEngine(
     createSearchAPIClient(options.configuration, logger)
   );
 
-  const thunkArguments: ProductListingThunkExtraArguments = {
+  const thunkArguments: Omit<ProductListingThunkExtraArguments, 'relay'> = {
     ...buildThunkExtraArguments(options.configuration, logger),
     apiClient: productListingClient,
   };

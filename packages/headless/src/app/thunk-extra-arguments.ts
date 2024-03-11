@@ -1,3 +1,4 @@
+import {Relay} from '@coveo/relay';
 import {AnalyticsClientSendEventHook} from 'coveo.analytics';
 import {Logger} from 'pino';
 import {GeneratedAnswerAPIClient} from '../api/generated-answer/generated-answer-client';
@@ -10,6 +11,7 @@ export interface ClientThunkExtraArguments<T, K = GeneratedAnswerAPIClient>
   extends ThunkExtraArguments {
   apiClient: T;
   streamingClient?: K;
+  relay: Relay;
 }
 
 export interface ThunkExtraArguments {

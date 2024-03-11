@@ -71,7 +71,7 @@ export function buildProductRecommendationEngine(
 
   const searchAPIClient = createSearchAPIClient(options.configuration, logger);
 
-  const thunkArguments: SearchThunkExtraArguments = {
+  const thunkArguments: Omit<SearchThunkExtraArguments, 'relay'> = {
     ...buildThunkExtraArguments(options.configuration, logger),
     apiClient: searchAPIClient,
   };

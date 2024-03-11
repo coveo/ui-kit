@@ -115,7 +115,7 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
   const searchAPIClient = createSearchAPIClient(options.configuration, logger);
   const generatedAnswerClient = createGeneratedAnswerAPIClient(logger);
 
-  const thunkArguments: SearchThunkExtraArguments = {
+  const thunkArguments: Omit<SearchThunkExtraArguments, 'relay'> = {
     ...buildThunkExtraArguments(options.configuration, logger),
     apiClient: searchAPIClient,
     streamingClient: generatedAnswerClient,
