@@ -1,3 +1,4 @@
+import {Relay} from '@coveo/relay';
 import {Logger} from 'pino';
 import {InsightAPIClient} from '../../../api/service/insight/insight-api-client';
 import {InsightQueryRequest} from '../../../api/service/insight/query/query-request';
@@ -41,6 +42,7 @@ describe('AsyncInsightSearchThunkProcessor', () => {
         logger: jest.fn() as unknown as Logger,
         validatePayload: jest.fn(),
         preprocessRequest: jest.fn(),
+        relay: jest.fn() as unknown as Relay,
       },
       getState: jest.fn().mockReturnValue({
         insightConfiguration: getInsightConfigurationInitialState(),
