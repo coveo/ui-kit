@@ -68,7 +68,7 @@
     "undici": "5.28.3"
   },
   "devDependencies": {
-    "@coveo/relay-event-types": "7.6.9",
+    "@coveo/relay-event-types": "7.7.0",
     "@coveo/release": "1.0.0",
     "@microsoft/api-extractor": "7.42.3",
     "@microsoft/api-extractor-model": "7.28.13",

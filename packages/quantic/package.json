@@ -57,7 +57,7 @@
     "@lwc/compiler": "5.3.0",
     "@lwc/eslint-plugin-lwc": "1.7.2",
     "@octokit/graphql": "8.0.1",
-    "@octokit/graphql-schema": "15.1.0",
+    "@octokit/graphql-schema": "15.2.0",
     "@salesforce/eslint-config-lwc": "3.5.3",
     "@salesforce/eslint-plugin-lightning": "1.0.0",
     "@salesforce/sfdx-lwc-jest": "4.0.1",
