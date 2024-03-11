@@ -6,8 +6,7 @@
     <title>Coveo Atomic Hosted UI</title>
 
     <script type="module" src="/build/atomic-hosted-page.esm.js"></script>
-    <script>
-      (async () => {
+    <script type="module">
         await customElements.whenDefined('atomic-hosted-ui');
 
         const atomicHostedUIPage = document.querySelector('atomic-hosted-ui');
@@ -17,11 +16,8 @@
             accessToken: 'xx71d82ce9-f6fe-4be0-9209-c0e43f6fae81',
             organizationId: 'searchuisamples',
             organizationEndpoints: await atomicHostedUIPage.getOrganizationEndpoints('searchuisamples', 'prod'),
-          })
-          .then(() => {
-            CoveoSearchPage.initialize('xx564559b1-0045-48e1-953c-3addd1ee4457');
           });
-      })();
+        await CoveoSearchPage.initialize('xx564559b1-0045-48e1-953c-3addd1ee4457');
     </script>
   </head>
   <body style="width: 100%">
