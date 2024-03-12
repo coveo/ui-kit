@@ -34,11 +34,10 @@ export function configureStore<Reducers extends ReducersMapObject>({
       name,
       shouldHotReload: false, // KIT-961 -> Redux dev tool + hot reloading interacts badly with replaceReducers mechanism.
     },
-    middleware: (getDefaultMiddleware) => [
-      ...middlewares,
-      ...getDefaultMiddleware({thunk: {extraArgument: thunkExtraArguments}}),
-      logActionMiddleware(thunkExtraArguments.logger),
-    ],
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({thunk: {extraArgument: thunkExtraArguments}})
+        .prepend(...middlewares)
+        .concat(logActionMiddleware(thunkExtraArguments.logger)),
   });
 }
 

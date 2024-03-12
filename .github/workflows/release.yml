@@ -20,8 +20,9 @@ jobs:
     environment: 'Release'
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
+      id-token: write
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
         with:
@@ -47,6 +48,7 @@ jobs:
         run: npm run release:phase5
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEBUG: ${{ inputs.debug && '*' || '' }}
   start-deployment:
     needs: release
     runs-on: [coveo, linux, x64, ec2]

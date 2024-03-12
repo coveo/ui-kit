@@ -22,6 +22,9 @@
     "extractorMessageReporting": {
       "default": {
         "logLevel": "warning"
+      },
+      "ae-wrong-input-file-type": {
+        "logLevel": "none"
       }
     },
     "tsdocMessageReporting": {
