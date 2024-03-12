@@ -3,7 +3,7 @@ import {InterceptAliases} from '../page-objects/search';
 function nextAnalyticsExpectations() {
   return {
     emitQnaAnswerActionEvent: (action: string) => {
-      cy.wait(InterceptAliases.NextAnalytics.QNA.AnswerAction)
+      cy.wait(InterceptAliases.NextAnalytics.Qna.AnswerAction)
         .then((interception): void => {
           const eventBody: Record<string, unknown> =
             interception?.request?.body?.[0];
