@@ -55,6 +55,7 @@ function getUseCaseDir(prefix, useCase) {
  * @type {import('esbuild').BuildOptions}
  */
 const base = {
+  target: ['es2020'],
   bundle: true,
   tsconfig: './src/tsconfig.build.json',
   define: {
@@ -75,7 +76,6 @@ const browserEsmForAtomicDevelopment = Object.entries(useCaseEntries).map(
         entryPoints: [entryPoint],
         outfile,
         format: 'esm',
-        watch: devMode,
         minify: false,
       },
       outDir
