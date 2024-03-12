@@ -1,3 +1,9 @@
+## 2.54.3 (2024-03-12)
+
+### Bug Fixes
+
+- **deps:** update dependency redux-thunk to v3 j:kit-282 ([#3665](https://github.com/coveo/ui-kit/issues/3665)) ([4f4c978](https://github.com/coveo/ui-kit/commits/4f4c978e113e611613878c4ca11605e98a88b0c2))
+
 ## 2.54.2 (2024-03-11)
 
 ### Features
