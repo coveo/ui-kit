@@ -14,7 +14,7 @@ function uaAlias(eventName: string) {
   return `@UA-${eventName}`;
 }
 
-function nextAnalayticsAlias(eventName: string) {
+function nextAnalyticsAlias(eventName: string) {
   return `@EP-${eventName}`;
 }
 
@@ -96,7 +96,7 @@ export const InterceptAliases = {
   },
   NextAnalytics: {
     Qna: {
-      AnswerAction: nextAnalayticsAlias('Qna.AnswerAction'),
+      AnswerAction: nextAnalyticsAlias('Qna.AnswerAction'),
     },
   },
   QuerySuggestions: '@coveoQuerySuggest',
@@ -131,7 +131,7 @@ export function interceptSearch() {
 
     .intercept('POST', routeMatchers.nextAnalytics, (req) => {
       const eventType = req.body?.[0]?.meta.type;
-      req.alias = nextAnalayticsAlias(eventType).substring(1);
+      req.alias = nextAnalyticsAlias(eventType).substring(1);
     })
 
     .intercept('POST', routeMatchers.querySuggest)
