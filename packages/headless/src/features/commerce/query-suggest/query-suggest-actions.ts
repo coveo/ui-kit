@@ -68,8 +68,8 @@ export const buildQuerySuggestRequest = async (
   return {
     accessToken: state.configuration.accessToken,
     url: state.configuration.platformUrl,
-    trackingId: state.configuration.analytics.trackingId,
     organizationId: state.configuration.organizationId,
+    trackingId: state.configuration.analytics.trackingId,
     query: state.querySet[id],
     ...restOfContext,
     clientId: await getVisitorID(state.configuration.analytics),
