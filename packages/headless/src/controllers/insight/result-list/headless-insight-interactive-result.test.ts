@@ -4,19 +4,22 @@ import {pushRecentResult} from '../../../features/recent-results/recent-results-
 import {logDocumentOpen} from '../../../features/result/result-insight-analytics-actions';
 import {
   buildMockInsightEngine,
-  MockInsightEngine,
-} from '../../../test/mock-engine';
+  MockedInsightEngine,
+} from '../../../test/mock-engine-v2';
+import {buildMockInsightState} from '../../../test/mock-insight-state';
 import {buildMockResult} from '../../../test/mock-result';
 import {
   buildInteractiveResult,
   InteractiveResult,
 } from './headless-insight-interactive-result';
 
+jest.mock('../../../features/result/result-insight-analytics-actions');
+jest.mock('../../../features/recent-results/recent-results-actions');
+
 describe('InsightInteractiveResult', () => {
-  let engine: MockInsightEngine;
+  let engine: MockedInsightEngine;
   let mockResult: Result;
   let interactiveResult: InteractiveResult;
-  let logDocumentOpenPendingActionType: string;
 
   const resultStringParams = {
     title: 'title',
@@ -31,29 +34,17 @@ describe('InsightInteractiveResult', () => {
 
   function initializeInteractiveResult(delay?: number) {
     const result = (mockResult = buildMockResult(resultStringParams));
-    logDocumentOpenPendingActionType = logDocumentOpen(mockResult).pending.type;
     interactiveResult = buildInteractiveResult(engine, {
       options: {result, selectionDelay: delay},
     });
   }
 
-  function findLogDocumentAction() {
-    return (
-      engine.actions.find(
-        (action) => action.type === logDocumentOpenPendingActionType
-      ) ?? null
-    );
-  }
-
   function expectLogDocumentActionPending() {
-    const action = findLogDocumentAction();
-    expect(action).toEqual(
-      logDocumentOpen(mockResult).pending(action!.meta.requestId)
-    );
+    expect(logDocumentOpen).toHaveBeenCalledWith(mockResult);
   }
 
   beforeEach(() => {
-    engine = buildMockInsightEngine();
+    engine = buildMockInsightEngine(buildMockInsightState());
     initializeInteractiveResult();
     jest.useFakeTimers();
   });
@@ -70,9 +61,7 @@ describe('InsightInteractiveResult', () => {
     interactiveResult.select();
     jest.runAllTimers();
 
-    expect(
-      engine.actions.find((a) => a.type === pushRecentResult.type)
-    ).toBeDefined();
+    expect(pushRecentResult).toHaveBeenCalled();
   });
 
   it('when calling select(), logs documentOpen', () => {

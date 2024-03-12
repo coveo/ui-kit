@@ -1,4 +1,5 @@
-import {buildMockInsightEngine} from '../../../../test/mock-engine';
+import {ThunkExtraArguments} from '../../../../app/thunk-extra-arguments';
+import {buildMockInsightEngine} from '../../../../test/mock-engine-v2';
 import {buildMockInsightState} from '../../../../test/mock-insight-state';
 import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
 import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice';
@@ -31,8 +32,8 @@ const exampleEndValue = 10;
 
 describe('logBreadcrumbFacet', () => {
   it('should log #logBreadcrumbFacet with the right payload', async () => {
-    const engine = buildMockInsightEngine({
-      state: buildMockInsightState({
+    const engine = buildMockInsightEngine(
+      buildMockInsightState({
         numericFacetSet: {
           [exampleFacetId]: buildMockNumericFacetSlice({
             request: buildMockNumericFacetRequest({
@@ -49,19 +50,17 @@ describe('logBreadcrumbFacet', () => {
           caseId: exampleCaseId,
           caseNumber: exampleCaseNumber,
         },
-      }),
-    });
-
-    await engine.dispatch(
-      logNumericFacetBreadcrumb({
-        facetId: exampleFacetId,
-        selection: buildMockNumericFacetValue({
-          endInclusive: exampleEndInclusiveValue,
-          end: exampleEndValue,
-          start: exampleStartValue,
-        }),
       })
     );
+
+    await logNumericFacetBreadcrumb({
+      facetId: exampleFacetId,
+      selection: buildMockNumericFacetValue({
+        endInclusive: exampleEndInclusiveValue,
+        end: exampleEndValue,
+        start: exampleStartValue,
+      }),
+    })()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
     const expectedPayload = {
       caseContext: {

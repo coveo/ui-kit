@@ -1,6 +1,7 @@
 import {NumberValue, Schema, SchemaValidationError} from '@coveo/bueno';
 import {CoreEngine} from '../app/engine';
-import {buildMockSearchAppEngine} from '../test/mock-engine';
+import {buildMockSearchEngine} from '../test/mock-engine-v2';
+import {createMockState} from '../test/mock-state';
 import {
   validatePayload,
   validatePayloadAndThrow,
@@ -73,7 +74,7 @@ describe('validateOptions', () => {
   });
 
   beforeEach(() => {
-    engine = buildMockSearchAppEngine();
+    engine = buildMockSearchEngine(createMockState());
   });
 
   it(`when options are valid
@@ -102,7 +103,7 @@ describe('validateInitialState', () => {
   });
 
   beforeEach(() => {
-    engine = buildMockSearchAppEngine();
+    engine = buildMockSearchEngine(createMockState());
   });
 
   it(`when initial state is valid

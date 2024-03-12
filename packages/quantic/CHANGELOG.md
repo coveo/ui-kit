@@ -1,3 +1,17 @@
+## 2.46.4 (2024-03-11)
+
+### Features
+
+- **quantic|atomic:** update genQA answer section title ([#3674](https://github.com/coveo/ui-kit/issues/3674)) ([1aaeb08](https://github.com/coveo/ui-kit/commits/1aaeb08802fd71ad9bdc98c213c830f676088adb))
+
+## 2.46.1 (2024-03-08)
+
+# 2.46.0 (2024-03-06)
+
+### Features
+
+- **quantic:** logic to open links in salesforce refactored ([#3636](https://github.com/coveo/ui-kit/issues/3636)) ([d968b19](https://github.com/coveo/ui-kit/commits/d968b19dfb3d1869e43e08ebcff3d24b7df1d146))
+
 ## 2.45.1 (2024-02-28)
 
 # 2.45.0 (2024-02-21)

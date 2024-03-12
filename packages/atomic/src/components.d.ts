@@ -1059,6 +1059,15 @@ export namespace Components {
          */
         "collapseFacetsAfter": number;
     }
+    /**
+     * The `atomic-ipx-result-link` component automatically transforms a search result title into a clickable link that points to the original item. It is an experimental internal component not intended for general use.
+     */
+    interface AtomicIpxResultLink {
+        /**
+          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the result's `clickUri` and `itemtitle` fields. ```html <atomic-ipx-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-ipx-result-link> ```
+         */
+        "hrefTemplate"?: string;
+    }
     interface AtomicIpxTab {
         /**
           * Whether this tab is active upon rendering. If multiple tabs are set to active on render, the last one to be rendered will override the others.
@@ -3183,6 +3192,15 @@ declare global {
         prototype: HTMLAtomicIpxRefineToggleElement;
         new (): HTMLAtomicIpxRefineToggleElement;
     };
+    /**
+     * The `atomic-ipx-result-link` component automatically transforms a search result title into a clickable link that points to the original item. It is an experimental internal component not intended for general use.
+     */
+    interface HTMLAtomicIpxResultLinkElement extends Components.AtomicIpxResultLink, HTMLStencilElement {
+    }
+    var HTMLAtomicIpxResultLinkElement: {
+        prototype: HTMLAtomicIpxResultLinkElement;
+        new (): HTMLAtomicIpxResultLinkElement;
+    };
     interface HTMLAtomicIpxTabElement extends Components.AtomicIpxTab, HTMLStencilElement {
     }
     var HTMLAtomicIpxTabElement: {
@@ -4195,6 +4213,7 @@ declare global {
         "atomic-ipx-modal": HTMLAtomicIpxModalElement;
         "atomic-ipx-refine-modal": HTMLAtomicIpxRefineModalElement;
         "atomic-ipx-refine-toggle": HTMLAtomicIpxRefineToggleElement;
+        "atomic-ipx-result-link": HTMLAtomicIpxResultLinkElement;
         "atomic-ipx-tab": HTMLAtomicIpxTabElement;
         "atomic-ipx-tabs": HTMLAtomicIpxTabsElement;
         "atomic-layout-section": HTMLAtomicLayoutSectionElement;
@@ -5244,6 +5263,15 @@ declare namespace LocalJSX {
           * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
          */
         "collapseFacetsAfter"?: number;
+    }
+    /**
+     * The `atomic-ipx-result-link` component automatically transforms a search result title into a clickable link that points to the original item. It is an experimental internal component not intended for general use.
+     */
+    interface AtomicIpxResultLink {
+        /**
+          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the result's `clickUri` and `itemtitle` fields. ```html <atomic-ipx-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-ipx-result-link> ```
+         */
+        "hrefTemplate"?: string;
     }
     interface AtomicIpxTab {
         /**
@@ -6748,6 +6776,7 @@ declare namespace LocalJSX {
         "atomic-ipx-modal": AtomicIpxModal;
         "atomic-ipx-refine-modal": AtomicIpxRefineModal;
         "atomic-ipx-refine-toggle": AtomicIpxRefineToggle;
+        "atomic-ipx-result-link": AtomicIpxResultLink;
         "atomic-ipx-tab": AtomicIpxTab;
         "atomic-ipx-tabs": AtomicIpxTabs;
         "atomic-layout-section": AtomicLayoutSection;
@@ -6984,6 +7013,10 @@ declare module "@stencil/core" {
             "atomic-ipx-modal": LocalJSX.AtomicIpxModal & JSXBase.HTMLAttributes<HTMLAtomicIpxModalElement>;
             "atomic-ipx-refine-modal": LocalJSX.AtomicIpxRefineModal & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineModalElement>;
             "atomic-ipx-refine-toggle": LocalJSX.AtomicIpxRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineToggleElement>;
+            /**
+             * The `atomic-ipx-result-link` component automatically transforms a search result title into a clickable link that points to the original item. It is an experimental internal component not intended for general use.
+             */
+            "atomic-ipx-result-link": LocalJSX.AtomicIpxResultLink & JSXBase.HTMLAttributes<HTMLAtomicIpxResultLinkElement>;
             "atomic-ipx-tab": LocalJSX.AtomicIpxTab & JSXBase.HTMLAttributes<HTMLAtomicIpxTabElement>;
             "atomic-ipx-tabs": LocalJSX.AtomicIpxTabs & JSXBase.HTMLAttributes<HTMLAtomicIpxTabsElement>;
             /**

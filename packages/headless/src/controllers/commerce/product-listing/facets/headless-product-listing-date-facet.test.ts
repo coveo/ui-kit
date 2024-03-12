@@ -1,4 +1,3 @@
-import {Action} from '@reduxjs/toolkit';
 import {CommerceFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice';
@@ -8,14 +7,20 @@ import {buildMockCommerceDateFacetResponse} from '../../../../test/mock-commerce
 import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceDateFacetValue} from '../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
-import {buildMockCommerceEngine} from '../../../../test/mock-engine';
-import {MockCommerceEngine} from '../../../../test/mock-engine';
-import {CommerceDateFacet} from '../../core/facets/date/headless-commerce-date-facet';
+import {
+  MockedCommerceEngine,
+  buildMockCommerceEngine,
+} from '../../../../test/mock-engine-v2';
+import {DateFacet} from '../../core/facets/date/headless-commerce-date-facet';
 import {
   CommerceFacetOptions,
   DateRangeRequest,
 } from '../../core/facets/headless-core-commerce-facet';
 import {buildProductListingDateFacet} from './headless-product-listing-date-facet';
+
+jest.mock(
+  '../../../../features/commerce/product-listing/product-listing-actions'
+);
 
 describe('ProductListingDateFacet', () => {
   const facetId: string = 'date_facet_id';
@@ -23,11 +28,11 @@ describe('ProductListingDateFacet', () => {
   const end = '2024-01-01';
   let options: CommerceFacetOptions;
   let state: CommerceAppState;
-  let engine: MockCommerceEngine;
-  let facet: CommerceDateFacet;
+  let engine: MockedCommerceEngine;
+  let facet: DateFacet;
 
   function initFacet() {
-    engine = buildMockCommerceEngine({state});
+    engine = buildMockCommerceEngine(state);
     facet = buildProductListingDateFacet(engine, options);
   }
 
@@ -41,14 +46,6 @@ describe('ProductListingDateFacet', () => {
       buildMockCommerceDateFacetResponse({facetId}),
     ];
   }
-
-  const expectContainAction = (action: Action) => {
-    expect(engine.actions).toContainEqual(
-      expect.objectContaining({
-        type: action.type,
-      })
-    );
-  };
 
   beforeEach(() => {
     options = {
@@ -73,8 +70,7 @@ describe('ProductListingDateFacet', () => {
     it('dispatches #fetchProductListing', () => {
       const facetValue = buildMockCommerceDateFacetValue({start, end});
       facet.toggleSelect(facetValue);
-
-      expectContainAction(fetchProductListing.pending);
+      expect(fetchProductListing).toHaveBeenCalled();
     });
   });
 
@@ -82,32 +78,28 @@ describe('ProductListingDateFacet', () => {
     it('dispatches #fetchproductlisting', () => {
       const facetValue = buildMockCommerceDateFacetValue({start, end});
       facet.toggleExclude(facetValue);
-
-      expectContainAction(fetchProductListing.pending);
+      expect(fetchProductListing).toHaveBeenCalled();
     });
   });
 
   describe('#deselectAll', () => {
     it('dispatches #fetchProductListing', () => {
       facet.deselectAll();
-
-      expectContainAction(fetchProductListing.pending);
+      expect(fetchProductListing).toHaveBeenCalled();
     });
   });
 
   describe('#showMoreValues', () => {
     it('dispatches #fetchProductListing', () => {
       facet.showMoreValues();
-
-      expectContainAction(fetchProductListing.pending);
+      expect(fetchProductListing).toHaveBeenCalled();
     });
   });
 
   describe('#showLessValues', () => {
     it('dispatches #fetchProductListing', () => {
       facet.showLessValues();
-
-      expectContainAction(fetchProductListing.pending);
+      expect(fetchProductListing).toHaveBeenCalled();
     });
   });
 

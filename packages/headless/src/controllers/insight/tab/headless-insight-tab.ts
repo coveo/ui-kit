@@ -1,6 +1,6 @@
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
-import {logInsightInterfaceChange} from '../../../features/analytics/insight-analytics-actions';
 import {executeSearch} from '../../../features/insight-search/insight-search-actions';
+import {logInsightInterfaceChange} from '../../../features/insight-search/insight-search-analytics-actions';
 import {
   buildCoreTab,
   Tab,
@@ -22,7 +22,8 @@ export type {Tab, TabProps, TabState, TabInitialState, TabOptions};
 export function buildTab(engine: InsightEngine, props: TabProps): Tab {
   const {dispatch} = engine;
   const tab = buildCoreTab(engine, props);
-  const search = () => dispatch(executeSearch(logInsightInterfaceChange()));
+  const search = () =>
+    dispatch(executeSearch({legacy: logInsightInterfaceChange()}));
 
   return {
     ...tab,

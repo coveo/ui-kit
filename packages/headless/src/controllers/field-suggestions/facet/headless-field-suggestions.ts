@@ -188,7 +188,7 @@ export function buildFieldSuggestions(
       engine.dispatch(
         executeSearch({
           legacy: logFacetSelect({facetId, facetValue: value.rawValue}),
-          next: facetSelect(facetId, value.rawValue),
+          next: facetSelect(),
         })
       );
     },
@@ -197,7 +197,7 @@ export function buildFieldSuggestions(
       engine.dispatch(
         executeSearch({
           legacy: logFacetExclude({facetId, facetValue: value.rawValue}),
-          next: facetExclude(facetId, value.rawValue),
+          next: facetExclude(),
         })
       );
     },

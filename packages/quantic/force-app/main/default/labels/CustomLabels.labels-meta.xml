@@ -1227,10 +1227,10 @@
     </labels>
     <labels>
       <fullName>quantic_GeneratedAnswerForYou</fullName>
-      <value>Generated answer for you</value>
+      <value>Generated answer</value>
       <language>en_US</language>
       <protected>false</protected>
-      <shortDescription>Generated answer for you</shortDescription>
+      <shortDescription>Generated answer</shortDescription>
     </labels>
     <labels>
       <fullName>quantic_ThisAnswerWasNotHelpful</fullName>

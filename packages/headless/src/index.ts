@@ -1,5 +1,5 @@
 import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
-import {buildMockSearchAppEngine} from './test/mock-engine';
+import {buildMockSearchEngine} from './test/mock-engine-v2';
 import {buildMockRaw} from './test/mock-raw';
 import {buildMockResult} from './test/mock-result';
 import {createMockState} from './test/mock-state';
@@ -7,7 +7,7 @@ import * as HighlightUtils from './utils/highlight';
 
 const TestUtils = {
   buildMockRaw,
-  buildMockSearchAppEngine,
+  buildMockSearchEngine,
   buildMockResult,
   createMockState,
 };
@@ -18,6 +18,7 @@ polyfillCryptoNode();
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
 export {createAction, createAsyncThunk, createReducer} from '@reduxjs/toolkit';
 export type {AnalyticsClientSendEventHook} from 'coveo.analytics';
+export type {Relay} from '@coveo/relay';
 
 // Main App
 export type {
@@ -550,6 +551,7 @@ export {buildResultTemplatesManager} from './features/result-templates/result-te
 export * from './features/analytics/search-analytics-actions-loader';
 export * from './features/analytics/click-analytics-actions-loader';
 export * from './features/analytics/generic-analytics-actions-loader';
+export * from './features/actions-history/ipx-actions-history-actions-loader';
 
 // Types & Helpers
 export {API_DATE_FORMAT} from './api/search/date/date-format';

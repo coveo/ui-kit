@@ -1,16 +1,19 @@
 import {fetchMoreResults} from '../../features/search/search-actions';
 import {
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../test/mock-engine';
+  buildMockSearchEngine,
+  MockedSearchEngine,
+} from '../../test/mock-engine-v2';
 import {buildMockResult} from '../../test/mock-result';
+import {createMockState} from '../../test/mock-state';
 import {buildResultList} from './headless-result-list';
 
+jest.mock('../../features/search/search-actions');
+
 describe('ResultList', () => {
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
 
   beforeEach(() => {
-    engine = buildMockSearchAppEngine();
+    engine = buildMockSearchEngine(createMockState());
     const results = new Array(10).fill(buildMockResult());
     engine.state.search.results = results;
     engine.state.search.response.totalCountFiltered = 1000;
@@ -23,10 +26,6 @@ describe('ResultList', () => {
 
   it('fetchMoreResults should dispatch a fetchMoreResults action', () => {
     buildResultList(engine).fetchMoreResults();
-    expect(
-      engine.actions.find(
-        (action) => action.type === fetchMoreResults.pending.type
-      )
-    ).toBeTruthy();
+    expect(fetchMoreResults).toHaveBeenCalled();
   });
 });

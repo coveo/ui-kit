@@ -2,20 +2,22 @@ import {registerInstantResults} from '../../features/instant-results/instant-res
 import {instantResultsReducer as instantResults} from '../../features/instant-results/instant-results-slice';
 import {SearchAppState} from '../../state/search-app-state';
 import {
-  MockSearchEngine,
-  buildMockSearchAppEngine,
-} from '../../test/mock-engine';
+  MockedSearchEngine,
+  buildMockSearchEngine,
+} from '../../test/mock-engine-v2';
 import {createMockState} from '../../test/mock-state';
 import {buildInstantResults} from './instant-results';
 
+jest.mock('../../features/instant-results/instant-results-actions');
+
 describe('instant results', () => {
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
   let state: SearchAppState;
 
   beforeEach(() => {
     jest.useFakeTimers();
     state = createMockState();
-    engine = buildMockSearchAppEngine({state});
+    engine = buildMockSearchEngine(state);
   });
 
   it('it adds the correct reducers to engine', () => {
@@ -32,9 +34,6 @@ describe('instant results', () => {
     buildInstantResults(engine, {
       options: {searchBoxId, maxResultsPerQuery: 2},
     });
-
-    expect(engine.actions.pop()).toEqual(
-      registerInstantResults({id: searchBoxId})
-    );
+    expect(registerInstantResults).toHaveBeenCalledWith({id: searchBoxId});
   });
 });

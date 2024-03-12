@@ -1,7 +1,7 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {loadReducerError} from '../../../../utils/errors';
 import {
-  CommerceDateFacet,
+  DateFacet,
   buildCommerceDateFacet,
 } from '../../core/facets/date/headless-commerce-date-facet';
 import {CommerceFacetOptions} from '../../core/facets/headless-core-commerce-facet';
@@ -11,7 +11,7 @@ import {commonOptions} from './headless-search-facet-options';
 export function buildSearchDateFacet(
   engine: CommerceEngine,
   options: CommerceFacetOptions
-): CommerceDateFacet {
+): DateFacet {
   if (!loadSearchReducer(engine)) {
     throw loadReducerError;
   }

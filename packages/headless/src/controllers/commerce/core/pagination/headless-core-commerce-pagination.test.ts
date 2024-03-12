@@ -5,22 +5,32 @@ import {
 } from '../../../../features/commerce/pagination/pagination-actions';
 import {paginationReducer as commercePagination} from '../../../../features/commerce/pagination/pagination-slice';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
-import {MockCommerceEngine} from '../../../../test/mock-engine';
-import {buildMockCommerceEngine} from '../../../../test/mock-engine';
+import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
+import {
+  MockedCommerceEngine,
+  buildMockCommerceEngine,
+} from '../../../../test/mock-engine-v2';
 import {
   buildCorePagination,
   Pagination,
 } from './headless-core-commerce-pagination';
 
+jest.mock('../../../../features/commerce/pagination/pagination-actions');
+
+jest.mock(
+  '../../../../features/commerce/product-listing/product-listing-actions'
+);
+
 describe('core pagination', () => {
-  let engine: MockCommerceEngine;
+  let engine: MockedCommerceEngine;
   let pagination: Pagination;
-  const fetchResultsActionCreator = fetchProductListing;
 
   function initPagination() {
-    engine = buildMockCommerceEngine();
+    engine = buildMockCommerceEngine(buildMockCommerceState());
 
-    pagination = buildCorePagination(engine, {fetchResultsActionCreator});
+    pagination = buildCorePagination(engine, {
+      fetchResultsActionCreator: fetchProductListing,
+    });
   }
 
   beforeEach(() => {
@@ -43,12 +53,11 @@ describe('core pagination', () => {
     });
 
     it('dispatches #selectPage', () => {
-      expect(engine.actions).toContainEqual(selectPage(0));
+      expect(selectPage).toHaveBeenCalledWith(0);
     });
 
-    it('dispatches #fetchResultsActionCreator', () => {
-      const action = engine.findAsyncAction(fetchResultsActionCreator.pending);
-      expect(action).toBeTruthy();
+    it('dispatches #fetchProductListing', () => {
+      expect(fetchProductListing).toHaveBeenCalled();
     });
   });
 
@@ -58,12 +67,11 @@ describe('core pagination', () => {
     });
 
     it('dispatches #nextPage', () => {
-      expect(engine.actions).toContainEqual(nextPage());
+      expect(nextPage).toHaveBeenCalled();
     });
 
-    it('dispatches #fetchResultsActionCreator', () => {
-      const action = engine.findAsyncAction(fetchResultsActionCreator.pending);
-      expect(action).toBeTruthy();
+    it('dispatches #fetchProductListing', () => {
+      expect(fetchProductListing).toHaveBeenCalled();
     });
   });
 
@@ -73,12 +81,11 @@ describe('core pagination', () => {
     });
 
     it('dispatches #previousPage', () => {
-      expect(engine.actions).toContainEqual(previousPage());
+      expect(previousPage).toHaveBeenCalled();
     });
 
-    it('dispatches #fetchResultsActionCreator', () => {
-      const action = engine.findAsyncAction(fetchResultsActionCreator.pending);
-      expect(action).toBeTruthy();
+    it('dispatches #fetchProductListing', () => {
+      expect(fetchProductListing).toHaveBeenCalled();
     });
   });
 });

@@ -45,20 +45,22 @@ export function buildGeneratedAnswer(
 
     retry() {
       dispatch(
-        executeSearch(
-          generatedAnswerInsightAnalyticsClient.logRetryGeneratedAnswer()
-        )
+        executeSearch({
+          legacy:
+            generatedAnswerInsightAnalyticsClient.logRetryGeneratedAnswer(),
+        })
       );
     },
 
     rephrase(responseFormat: GeneratedResponseFormat) {
       controller.rephrase(responseFormat);
       dispatch(
-        executeSearch(
-          generatedAnswerInsightAnalyticsClient.logRephraseGeneratedAnswer(
-            responseFormat
-          )
-        )
+        executeSearch({
+          legacy:
+            generatedAnswerInsightAnalyticsClient.logRephraseGeneratedAnswer(
+              responseFormat
+            ),
+        })
       );
     },
   };

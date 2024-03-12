@@ -1,8 +1,9 @@
 import {executeSearch} from '../../../features/insight-search/insight-search-actions';
 import {
   buildMockInsightEngine,
-  MockInsightEngine,
-} from '../../../test/mock-engine';
+  MockedInsightEngine,
+} from '../../../test/mock-engine-v2';
+import {buildMockInsightState} from '../../../test/mock-insight-state';
 import {
   buildTab,
   Tab,
@@ -10,8 +11,10 @@ import {
   TabOptions,
 } from './headless-insight-tab';
 
+jest.mock('../../../features/insight-search/insight-search-actions');
+
 describe('insight Tab', () => {
-  let engine: MockInsightEngine;
+  let engine: MockedInsightEngine;
   let options: TabOptions;
   let initialState: TabInitialState;
   let tab: Tab;
@@ -20,7 +23,7 @@ describe('insight Tab', () => {
     tab = buildTab(engine, {options, initialState});
   }
   beforeEach(() => {
-    engine = buildMockInsightEngine();
+    engine = buildMockInsightEngine(buildMockInsightState());
     options = {
       expression: '123',
       id: 'All',
@@ -39,8 +42,7 @@ describe('insight Tab', () => {
   describe('#select', () => {
     it('dispatches #executeSearch', () => {
       tab.select();
-      const action = engine.findAsyncAction(executeSearch.pending);
-      expect(action).toBeTruthy();
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 });

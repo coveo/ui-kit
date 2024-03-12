@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {isNullOrUndefined, isUndefined} from '@coveo/bueno';
+import {type Relay} from '@coveo/relay';
 import {
-  AnyAction,
   Dispatch,
   ThunkDispatch,
   Unsubscribe,
@@ -8,8 +9,10 @@ import {
   StateFromReducersMapObject,
   Middleware,
   Reducer,
+  UnknownAction,
 } from '@reduxjs/toolkit';
 import {Logger} from 'pino';
+import {getRelayInstanceFromState} from '../api/analytics/analytics-relay-client';
 import {
   disableAnalytics,
   enableAnalytics,
@@ -39,7 +42,8 @@ type CoreState = StateFromReducersMapObject<typeof coreReducers> &
 type EngineDispatch<
   State,
   ExtraArguments extends ThunkExtraArguments,
-> = ThunkDispatch<State, ExtraArguments, AnyAction> & Dispatch<AnyAction>;
+> = ThunkDispatch<State, ExtraArguments, UnknownAction> &
+  Dispatch<UnknownAction>;
 
 export interface CoreEngine<
   State extends object = {},
@@ -67,6 +71,10 @@ export interface CoreEngine<
    * The complete headless state tree.
    */
   state: State & CoreState;
+  /**
+   * The Relay instance used by Headless.
+   */
+  relay: Relay;
   /**
    * The redux store.
    */
@@ -143,17 +151,17 @@ export interface ExternalEngineOptions<State extends object> {
 }
 
 function getUpdateAnalyticsConfigurationPayload(
-  options: EngineOptions<ReducersMapObject>,
+  configuration: EngineConfiguration,
   logger: Logger
 ): UpdateAnalyticsConfigurationActionCreatorPayload | null {
   const apiBaseUrl =
-    options.configuration.organizationEndpoints?.analytics || undefined;
+    configuration.organizationEndpoints?.analytics || undefined;
   const {analyticsClientMiddleware: _, ...payload} =
-    options.configuration.analytics ?? {};
+    configuration.analytics ?? {};
 
   const payloadWithURL = {
     ...payload,
-    nextApiBaseUrl: `${apiBaseUrl}/rest/organizations/${options.configuration.organizationId}/events/v1`,
+    nextApiBaseUrl: `${apiBaseUrl}/rest/organizations/${configuration.organizationId}/events/v1`,
     apiBaseUrl,
   };
 
@@ -181,20 +189,20 @@ export function buildEngine<
   const platformUrl =
     organizationEndpoints?.platform || options.configuration.platformUrl;
 
-  if (shouldWarnAboutPlatformURL(options)) {
+  if (shouldWarnAboutPlatformURL(options.configuration)) {
     engine.logger.warn(
       `The \`platformUrl\` (${options.configuration.platformUrl}) option will be deprecated in the next major version. Consider using the \`organizationEndpoints\` option instead. See [Organization endpoints](https://docs.coveo.com/en/mcc80216).`
     );
   }
 
-  if (shouldWarnAboutOrganizationEndpoints(options)) {
+  if (shouldWarnAboutOrganizationEndpoints(options.configuration)) {
     // @v3 make organizationEndpoints the default.
     engine.logger.warn(
       'The `organizationEndpoints` options was not explicitly set in the Headless engine configuration. Coveo recommends setting this option, as it has resiliency benefits and simplifies the overall configuration for multi-region deployments. See [Organization endpoints](https://docs.coveo.com/en/mcc80216).'
     );
   } else if (
     shouldWarnAboutMismatchBetweenOrganizationIDAndOrganizationEndpoints(
-      options
+      options.configuration
     )
   ) {
     engine.logger.warn(
@@ -211,7 +219,7 @@ export function buildEngine<
   );
 
   const analyticsPayload = getUpdateAnalyticsConfigurationPayload(
-    options,
+    options.configuration,
     engine.logger
   );
   if (analyticsPayload) {
@@ -265,6 +273,10 @@ function buildCoreEngine<
       return store.getState();
     },
 
+    get relay() {
+      return getRelayInstanceFromState(this.state);
+    },
+
     logger,
 
     store,
@@ -311,27 +323,27 @@ function createMiddleware<Reducers extends ReducersMapObject>(
 }
 
 function shouldWarnAboutOrganizationEndpoints(
-  options: EngineOptions<ReducersMapObject>
+  configuration: EngineConfiguration
 ) {
-  return isUndefined(options.configuration.organizationEndpoints);
+  return isUndefined(configuration.organizationEndpoints);
 }
 
-function shouldWarnAboutPlatformURL(options: EngineOptions<ReducersMapObject>) {
+function shouldWarnAboutPlatformURL(configuration: EngineConfiguration) {
   return (
-    !isNullOrUndefined(options.configuration.platformUrl) ||
-    isNullOrUndefined(options.configuration.organizationEndpoints?.platform)
+    !isNullOrUndefined(configuration.platformUrl) ||
+    isNullOrUndefined(configuration.organizationEndpoints?.platform)
   );
 }
 
 function shouldWarnAboutMismatchBetweenOrganizationIDAndOrganizationEndpoints(
-  options: EngineOptions<ReducersMapObject>
+  configuration: EngineConfiguration
 ) {
-  const {platform} = options.configuration.organizationEndpoints!;
+  const {platform} = configuration.organizationEndpoints!;
 
   if (isUndefined(platform)) {
     return false;
   }
 
   const match = matchCoveoOrganizationEndpointUrlAnyOrganization(platform);
-  return match && match.organizationId !== options.configuration.organizationId;
+  return match && match.organizationId !== configuration.organizationId;
 }

@@ -19,19 +19,15 @@ jobs:
   release:
     environment: 'Release'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4
-        with:
-          registry-url: 'https://registry.npmjs.org'
-          node-version-file: '.nvmrc'
-      - name: Install npm
-        run: npm i -g npm@10
-        shell: bash
-      - run: npm ci
-        shell: bash
+      - uses: ./.github/actions/setup
       - name: Release
         run: npm run release
         env:
@@ -52,3 +48,36 @@ jobs:
         run: npm run release:phase5
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEBUG: ${{ inputs.debug && '*' || '' }}
+  start-deployment:
+    needs: release
+    runs-on: [coveo, linux, x64, ec2]
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+        with:
+          ref: 'release/v2'
+      - uses: ./.github/actions/setup
+      - name: Start deployment pipeline
+        run: node ./scripts/deploy/execute-deployment-pipeline.mjs
+  promote-prod:
+    needs: start-deployment
+    environment: 'Production'
+    runs-on: 'ubuntu-latest'
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+        with:
+          ref: 'release/v2'
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup-sfdx
+      - name: Promote NPM package to production
+        run: npm run promote:npm:latest
+      - name: Promote SFDX package to production
+        run: npx --no-install nx run quantic:"promote:sfdx:ci"
+        env:
+          SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
+          SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
+          SFDX_AUTH_JWT_USERNAME: ${{ secrets.SFDX_AUTH_JWT_USERNAME }}
+      - name: Notify Docs
+        run: npm run notify:docs

@@ -5,6 +5,7 @@ import {
   StringValue,
 } from '@coveo/bueno';
 import {type createRelay} from '@coveo/relay';
+import {ItemMetaData} from '@coveo/relay-event-types';
 import {
   AsyncThunk,
   AsyncThunkPayloadCreator,
@@ -26,6 +27,7 @@ import {
   DocumentIdentifier,
 } from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
 import {Logger} from 'pino';
+import {getRelayInstanceFromState} from '../../api/analytics/analytics-relay-client';
 import {
   CaseAssistAnalyticsProvider,
   configureCaseAssistAnalytics,
@@ -49,7 +51,6 @@ import {
 } from '../../api/analytics/product-listing-analytics';
 import {StateNeededByProductRecommendationsAnalyticsProvider} from '../../api/analytics/product-recommendations-analytics';
 import {
-  configureAnalytics,
   configureLegacyAnalytics,
   SearchAnalyticsProvider,
   StateNeededBySearchAnalyticsProvider,
@@ -242,7 +243,7 @@ export type AnalyticsActionOptions<
   LegacyProvider,
   Client,
   PayloadType,
-> = Exclude<
+> = Omit<
   LegacyAnalyticsOptions<LegacyStateNeeded, Client, LegacyProvider>,
   '__legacy__getBuilder'
 > &
@@ -509,7 +510,7 @@ const internalMakeAnalyticsAction = <
           );
         }
       });
-      const emitEvent = configureAnalytics(state);
+      const {emit} = getRelayInstanceFromState(state);
       loggers.push(async (state: LegacyStateNeeded & StateNeeded) => {
         if (
           shouldSendNextEvent(state) &&
@@ -517,7 +518,7 @@ const internalMakeAnalyticsAction = <
           analyticsPayloadBuilder
         ) {
           const payload = analyticsPayloadBuilder(state);
-          await logNextEvent(emitEvent, analyticsType, payload);
+          await logNextEvent(emit, analyticsType, payload);
         }
       });
       return analyticsAction;
@@ -784,3 +785,18 @@ async function logNextEvent<PayloadType>(
   await emitEvent(type, payload);
   return;
 }
+
+export const analyticsEventItemMetadata = (
+  result: Result,
+  state: Partial<SearchAppState>
+): ItemMetaData => {
+  const identifier = documentIdentifier(result);
+  const information = partialDocumentInformation(result, state);
+  return {
+    uniqueFieldName: identifier.contentIDKey,
+    uniqueFieldValue: identifier.contentIDValue,
+    title: information.documentTitle,
+    author: information.documentAuthor,
+    url: information.documentUri,
+  };
+};

@@ -1,3 +1,31 @@
+## 2.60.3 (2024-03-11)
+
+### Bug Fixes
+
+- **atomic:** add missing end label ([#3689](https://github.com/coveo/ui-kit/issues/3689)) ([4b404ab](https://github.com/coveo/ui-kit/commits/4b404abe5398f0b06047365b400bc981a273ce90))
+
+### Features
+
+- **quantic|atomic:** update genQA answer section title ([#3674](https://github.com/coveo/ui-kit/issues/3674)) ([1aaeb08](https://github.com/coveo/ui-kit/commits/1aaeb08802fd71ad9bdc98c213c830f676088adb))
+
+# 2.60.0 (2024-03-08)
+
+### Bug Fixes
+
+- **atomic:** fix search disabled check for query suggestion ([#3669](https://github.com/coveo/ui-kit/issues/3669)) ([8b4bb3d](https://github.com/coveo/ui-kit/commits/8b4bb3d14c876bb4b39be51f8ccb8e2add41f7ca))
+- **deps:** update stencil j:kit-282 ([#3635](https://github.com/coveo/ui-kit/issues/3635)) ([63b333e](https://github.com/coveo/ui-kit/commits/63b333eb5ef5b5017288883102503fd47863357b))
+
+### Features
+
+- **atomic,headless:** remove customData & middleware iff analyticsMode=next ([#3670](https://github.com/coveo/ui-kit/issues/3670)) ([ac15f5c](https://github.com/coveo/ui-kit/commits/ac15f5c11c89fd6af30a92d6abf7c6a5b984b8e5))
+
+# 2.59.0 (2024-03-06)
+
+### Features
+
+- **auto-facet:** bump max count to 20 ([#3642](https://github.com/coveo/ui-kit/issues/3642)) ([069a4be](https://github.com/coveo/ui-kit/commits/069a4be48522b65ae4c582162757fe1e441b1db7))
+- **IPX:** add PageView in IPX actions history ([#3607](https://github.com/coveo/ui-kit/issues/3607)) ([155f04c](https://github.com/coveo/ui-kit/commits/155f04c66c2961c55ea337c0e37f2c1cee1bb1d2)), closes [/github.com/coveo/coveo.analytics.js/blob/master/src/coveoua/browser.ts#L29](https://github.com//github.com/coveo/coveo.analytics.js/blob/master/src/coveoua/browser.ts/issues/L29)
+
 ## 2.58.1 (2024-02-28)
 
 # 2.58.0 (2024-02-21)
