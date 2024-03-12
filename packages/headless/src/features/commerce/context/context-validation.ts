@@ -27,7 +27,6 @@ export const userDefinition = {
 };
 
 export const contextDefinition = {
-  trackingId: requiredNonEmptyString,
   language: requiredNonEmptyString,
   country: requiredNonEmptyString,
   currency: currencyDefinition,

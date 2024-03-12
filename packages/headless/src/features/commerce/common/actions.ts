@@ -49,6 +49,7 @@ export const buildCommerceAPIRequest = async (
   return {
     accessToken: state.configuration.accessToken,
     url: state.configuration.platformUrl,
+    trackingId: state.configuration.analytics.trackingId,
     organizationId: state.configuration.organizationId,
     ...restOfContext,
     clientId: await getVisitorID(state.configuration.analytics),
