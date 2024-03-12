@@ -203,6 +203,16 @@ export class GeneratedAnswerCommon {
     this.props.getGeneratedAnswer()?.dislike();
   };
 
+  private onChangeAnswerStyle = (answerStyle: GeneratedAnswerStyle) => {
+    if (
+      this.props.getGeneratedAnswerState()?.responseFormat.answerStyle ===
+      answerStyle
+    ) {
+      return;
+    }
+    this.props.getGeneratedAnswer()?.rephrase({answerStyle});
+  };
+
   private renderContent() {
     return (
       <div part="generated-content">
@@ -296,9 +306,7 @@ export class GeneratedAnswerCommon {
                     .answerStyle ?? 'default'
                 }
                 i18n={this.props.getBindings().i18n}
-                onChange={(answerStyle: GeneratedAnswerStyle) =>
-                  this.props.getGeneratedAnswer()?.rephrase({answerStyle})
-                }
+                onChange={this.onChangeAnswerStyle}
               />
             )}
           </GeneratedContentContainer>

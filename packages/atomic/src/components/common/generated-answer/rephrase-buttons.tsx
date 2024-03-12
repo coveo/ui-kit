@@ -4,6 +4,7 @@ import {i18n} from 'i18next';
 import BulletsIcon from '../../../images/bullets.svg';
 import IdeaIcon from '../../../images/idea.svg';
 import StepsIcon from '../../../images/steps.svg';
+import TextIcon from '../../../images/text.svg';
 import {Button} from '../button';
 
 interface RephraseOption {
@@ -14,6 +15,12 @@ interface RephraseOption {
 }
 
 const options: RephraseOption[] = [
+  {
+    value: 'default',
+    icon: TextIcon,
+    titleKey: 'auto',
+    tooltipKey: 'auto-tooltip',
+  },
   {
     value: 'step',
     icon: StepsIcon,
@@ -56,10 +63,10 @@ export const RephraseButtons: FunctionalComponent<RephraseButtonProps> = (
             <Button
               title={i18n.t(option.tooltipKey)}
               part="rephrase-button"
-              style="outline-primary"
-              class={`flex items-center rounded-md ${isActive ? 'active' : ''}`}
+              style="text-transparent"
+              class={`flex items-center rounded ${isActive ? 'active' : ''}`}
               onClick={() => {
-                props.onChange(isActive ? 'default' : option.value);
+                props.onChange(option.value);
               }}
               ariaPressed={String(isActive)}
             >

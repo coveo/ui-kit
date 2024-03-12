@@ -9,6 +9,10 @@
   &:hover .rephrase-btn-label {
     @apply text-primary;
   }
+
+  &.active .rephrase-btn-label {
+    @apply text-white;
+  }
 }
 
 [part='rephrase-button'] {
@@ -36,11 +40,23 @@
 
   &:hover,
   &.active {
-    @apply border-primary text-primary;
-
     .icon-container,
     .rephrase-btn-label {
       @apply text-inherit;
     }
   }
+
+  &:hover {
+    @apply text-primary;
+  }
+
+  &.active {
+    @apply text-white;
+    background-color: var(--atomic-primary);
+  }
+}
+
+.rephrase-buttons > div {
+  @apply border border-solid rounded-md p-1;
+  border-color: var(--atomic-neutral);
 }
