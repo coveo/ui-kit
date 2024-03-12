@@ -22,17 +22,17 @@
     "@angular/platform-browser": "17.2.3",
     "@angular/platform-browser-dynamic": "17.2.3",
     "@angular/router": "17.2.3",
-    "@coveo/atomic": "2.60.0",
+    "@coveo/atomic": "2.60.3",
     "rxjs": "7.8.1"
   },
   "peerDependencies": {
-    "@coveo/headless": "2.53.0"
+    "@coveo/headless": "2.54.2"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "17.2.3",
     "@angular/cli": "17.2.3",
     "@angular/compiler-cli": "17.2.3",
-    "@coveo/headless": "2.53.0",
+    "@coveo/headless": "2.54.2",
     "@types/jasmine": "5.1.4",
     "@types/node": "20.11.25",
     "jasmine-core": "5.1.2",

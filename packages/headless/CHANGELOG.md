@@ -1,3 +1,9 @@
+## 2.54.2 (2024-03-11)
+
+### Features
+
+- **headless:** executeSearch action for insight refactored to be compatible with the new event protocol ([#3678](https://github.com/coveo/ui-kit/issues/3678)) ([b18d0ce](https://github.com/coveo/ui-kit/commits/b18d0ce59e40c4cdf4d5a60a233e3eeebf7c092f))
+
 # 2.53.0 (2024-03-08)
 
 ### Features
