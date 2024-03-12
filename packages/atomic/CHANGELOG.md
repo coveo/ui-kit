@@ -1,3 +1,9 @@
+## 2.60.5 (2024-03-12)
+
+### Bug Fixes
+
+- **atomic:** fix query suggestions mismatch on searchbox disabled + manual input clear ([#3699](https://github.com/coveo/ui-kit/issues/3699)) ([7e23c3a](https://github.com/coveo/ui-kit/commits/7e23c3a8b4f9711d927799e5d7463c4e16c97214))
+
 ## 2.60.3 (2024-03-11)
 
 ### Bug Fixes
