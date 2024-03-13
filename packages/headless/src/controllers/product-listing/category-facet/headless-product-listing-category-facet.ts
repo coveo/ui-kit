@@ -95,30 +95,26 @@ export function buildCategoryFacet(
 
     deselectAll: () => {
       coreController.deselectAll();
-      dispatch(fetchProductListing()).then(() =>
-        dispatch(logFacetClearAll(getFacetId()))
-      );
+      dispatch(fetchProductListing());
+      dispatch(logFacetClearAll(getFacetId()));
     },
 
     sortBy(criterion: CategoryFacetSortCriterion) {
       coreController.sortBy(criterion);
-      dispatch(fetchProductListing()).then(() =>
-        dispatch(logFacetUpdateSort({facetId: getFacetId(), criterion}))
-      );
+      dispatch(fetchProductListing());
+      dispatch(logFacetUpdateSort({facetId: getFacetId(), criterion}));
     },
 
     showMoreValues() {
       coreController.showMoreValues();
-      dispatch(fetchProductListing()).then(() =>
-        dispatch(logFacetShowMore(getFacetId()))
-      );
+      dispatch(fetchProductListing());
+      dispatch(logFacetShowMore(getFacetId()));
     },
 
     showLessValues() {
       coreController.showLessValues();
-      dispatch(fetchProductListing()).then(() =>
-        dispatch(logFacetShowLess(getFacetId()))
-      );
+      dispatch(fetchProductListing());
+      dispatch(logFacetShowLess(getFacetId()));
     },
 
     get state() {

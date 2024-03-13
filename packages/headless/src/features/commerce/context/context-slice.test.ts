@@ -19,7 +19,6 @@ describe('context-slice', () => {
       contextReducer(
         state,
         setContext({
-          trackingId: 'some-tracking-id',
           language: 'fr',
           country: 'ca',
           currency: 'CAD',
@@ -29,7 +28,6 @@ describe('context-slice', () => {
         })
       )
     ).toEqual({
-      trackingId: 'some-tracking-id',
       language: 'fr',
       country: 'ca',
       currency: 'CAD',

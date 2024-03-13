@@ -176,7 +176,7 @@ export function buildStaticFilter(
       dispatch(
         executeSearch({
           legacy: getLegacyAnalyticsActionForToggledValue(id, value),
-          next: getAnalyticsActionForToggledValue(id, value),
+          next: getAnalyticsActionForToggledValue(value),
         })
       );
     },
@@ -190,7 +190,7 @@ export function buildStaticFilter(
       dispatch(
         executeSearch({
           legacy: getLegacyAnalyticsActionForToggledValue(id, value),
-          next: getAnalyticsActionForToggledValue(id, value),
+          next: getAnalyticsActionForToggledValue(value),
         })
       );
     },
@@ -200,7 +200,7 @@ export function buildStaticFilter(
       dispatch(
         executeSearch({
           legacy: getLegacyAnalyticsActionForToggledValue(id, value),
-          next: getAnalyticsActionForToggledValue(id, value),
+          next: getAnalyticsActionForToggledValue(value),
         })
       );
     },
@@ -214,7 +214,7 @@ export function buildStaticFilter(
       dispatch(
         executeSearch({
           legacy: getLegacyAnalyticsActionForToggledValue(id, value),
-          next: getAnalyticsActionForToggledValue(id, value),
+          next: getAnalyticsActionForToggledValue(value),
         })
       );
     },
@@ -224,7 +224,7 @@ export function buildStaticFilter(
       dispatch(
         executeSearch({
           legacy: logStaticFilterClearAll({staticFilterId: id}),
-          next: staticFilterClearAll(id),
+          next: staticFilterClearAll(),
         })
       );
     },
@@ -272,12 +272,9 @@ function getLegacyAnalyticsActionForToggledValue(
 }
 
 function getAnalyticsActionForToggledValue(
-  id: string,
   value: StaticFilterValue
 ): SearchAction {
   const isSelected = value.state === 'selected';
 
-  return isSelected
-    ? staticFilterSelect(id, value)
-    : staticFilterDeselect(id, value);
+  return isSelected ? staticFilterSelect() : staticFilterDeselect();
 }

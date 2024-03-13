@@ -1,8 +1,14 @@
+import {CurrencyCodeISO4217, Ec} from '@coveo/relay-event-types';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {
+  purchase,
   setItems,
   updateItem,
 } from '../../../../features/commerce/context/cart/cart-actions';
+import {
+  Transaction,
+  itemsSelector,
+} from '../../../../features/commerce/context/cart/cart-selector';
 import {cartReducer as cart} from '../../../../features/commerce/context/cart/cart-slice';
 import {CartItemWithMetadata} from '../../../../features/commerce/context/cart/cart-state';
 import {cartSchema} from '../../../../features/commerce/context/cart/cart-validation';
@@ -14,7 +20,6 @@ import {
 } from '../../../controller/headless-controller';
 import {
   itemSelector,
-  itemsSelector,
   totalPriceSelector,
   totalQuantitySelector,
 } from './headless-cart-selectors';
@@ -89,10 +94,9 @@ export interface Cart extends Controller {
   /**
    * Emits an `ec.purchase` analytics event and then empties the cart without emitting any additional events.
    *
-   * @param transactionId - The transaction ID.
-   * @param transactionRevenue - The total revenue from the transaction, including taxes, shipping, and discounts.
+   * @param transaction - The object with the id and the total revenue from the transaction, including taxes, shipping, and discounts.
    */
-  purchase(transactionId: string, transactionRevenue: number): void;
+  purchase(transaction: Transaction): void;
 
   /**
    * A scoped and simplified part of the headless state that is relevant to the `Cart` controller.
@@ -147,13 +151,54 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     dispatch(setItems(initialState.items));
   }
 
-  function isNewQuantityDifferent(productId: string, quantity: number) {
-    const item = itemSelector(getState(), productId);
-    if (!item) {
-      return quantity > 0;
-    }
+  function isNewQuantityDifferent(
+    currentItem: CartItem,
+    prevItem: CartItemWithMetadata
+  ) {
+    return prevItem ? prevItem.quantity !== currentItem.quantity : true;
+  }
 
-    return item.quantity !== quantity;
+  function getCartAction(
+    currentItem: CartItem,
+    prevItem: CartItemWithMetadata | undefined
+  ): 'add' | 'remove' {
+    const isCurrentQuantityGreater =
+      !prevItem || currentItem.quantity > prevItem.quantity;
+    return isCurrentQuantityGreater ? 'add' : 'remove';
+  }
+
+  function getCurrency(): CurrencyCodeISO4217 {
+    return engine.state.commerceContext.currency;
+  }
+
+  function isEqual(
+    currentItem: CartItem,
+    prevItem: CartItemWithMetadata | undefined
+  ): boolean {
+    return prevItem
+      ? currentItem.name === prevItem.name &&
+          currentItem.price === prevItem.price &&
+          currentItem.quantity === prevItem.quantity
+      : false;
+  }
+
+  function createEcCartActionPayload(
+    currentItem: CartItem,
+    prevItem: CartItemWithMetadata | undefined
+  ): Ec.CartAction {
+    const {quantity: currentQuantity, ...product} = currentItem;
+    const action = getCartAction(currentItem, prevItem);
+    const quantity = !prevItem
+      ? currentQuantity
+      : Math.abs(currentQuantity - prevItem.quantity);
+    const currency = getCurrency();
+
+    return {
+      action,
+      currency,
+      quantity,
+      product,
+    };
   }
 
   return {
@@ -165,14 +210,23 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
       }
     },
 
-    purchase(_transactionId: string, _transactionRevenue: number) {
-      // TODO LENS-1498: log ec.purchase with all products in cart.
-      dispatch(setItems([]));
+    purchase(transaction: Transaction) {
+      dispatch(purchase(transaction));
     },
 
     updateItem(item: CartItem) {
-      if (isNewQuantityDifferent(item.productId, item.quantity)) {
-        // TODO LENS-1497: log ec.cartAction; if new quantity > previous, 'add', otherwise, 'remove'.
+      const prevItem = itemSelector(getState(), item.productId);
+      const doesNotNeedUpdate = !prevItem && item.quantity <= 0;
+
+      if (doesNotNeedUpdate || isEqual(item, prevItem)) {
+        return;
+      }
+
+      if (isNewQuantityDifferent(item, prevItem)) {
+        engine.relay.emit(
+          'ec.cartAction',
+          createEcCartActionPayload(item, prevItem)
+        );
       }
 
       dispatch(updateItem(item));

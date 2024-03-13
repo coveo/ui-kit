@@ -128,7 +128,7 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
     new Backend(i18n.services, i18nBackendOptions(this.atomicInterface)).read(
       language,
       i18nTranslationNamespace,
-      (_, data) => {
+      (_: unknown, data: unknown) => {
         i18n.addResourceBundle(
           language,
           i18nTranslationNamespace,

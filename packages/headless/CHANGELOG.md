@@ -1,3 +1,55 @@
+## 2.56.1 (2024-03-13)
+
+# 2.56.0 (2024-03-13)
+
+### Features
+
+- **headless/commerce:** allow purchasing from cart controller ([#3654](https://github.com/coveo/ui-kit/issues/3654)) ([2930cef](https://github.com/coveo/ui-kit/commits/2930cefb7355d99b31ecd4c8ba9f81c626294982))
+
+# 2.55.0 (2024-03-13)
+
+### Features
+
+- **headless:** in development, rebuild modules with source maps ([#3679](https://github.com/coveo/ui-kit/issues/3679)) ([fb6388b](https://github.com/coveo/ui-kit/commits/fb6388b636789708df14f95bb9cbb09c494f91ad)), closes [#192](https://github.com/coveo/ui-kit/issues/192)
+- **headless:** question answering analytics events migrated to the new event protocol ([#3686](https://github.com/coveo/ui-kit/issues/3686)) ([1a35e41](https://github.com/coveo/ui-kit/commits/1a35e41d287a818a1409b7269d5c81121fabf088))
+
+## 2.54.4 (2024-03-13)
+
+### Bug Fixes
+
+- remove trackingId from commerce context ([#3697](https://github.com/coveo/ui-kit/issues/3697)) ([fe2a772](https://github.com/coveo/ui-kit/commits/fe2a772d3b61aac90fb407fd494769e9b03f6683))
+
+## 2.54.3 (2024-03-12)
+
+### Bug Fixes
+
+- **deps:** update dependency redux-thunk to v3 j:kit-282 ([#3665](https://github.com/coveo/ui-kit/issues/3665)) ([4f4c978](https://github.com/coveo/ui-kit/commits/4f4c978e113e611613878c4ca11605e98a88b0c2))
+
+## 2.54.2 (2024-03-11)
+
+### Features
+
+- **headless:** executeSearch action for insight refactored to be compatible with the new event protocol ([#3678](https://github.com/coveo/ui-kit/issues/3678)) ([b18d0ce](https://github.com/coveo/ui-kit/commits/b18d0ce59e40c4cdf4d5a60a233e3eeebf7c092f))
+
+# 2.53.0 (2024-03-08)
+
+### Features
+
+- **atomic,headless:** remove customData & middleware iff analyticsMode=next ([#3670](https://github.com/coveo/ui-kit/issues/3670)) ([ac15f5c](https://github.com/coveo/ui-kit/commits/ac15f5c11c89fd6af30a92d6abf7c6a5b984b8e5))
+- **cart:** trigger relay cart action when updateItem ([#3630](https://github.com/coveo/ui-kit/issues/3630)) ([a483ab5](https://github.com/coveo/ui-kit/commits/a483ab570fc83a921e26154c123e5fc6157963f3))
+- **headless/commerce:** set currency type as currency code iso4217 instead of string ([#3667](https://github.com/coveo/ui-kit/issues/3667)) ([723cfb2](https://github.com/coveo/ui-kit/commits/723cfb24a5e145c5dc0f01a8a0b2e16d28d198d6))
+- **headless:** forbid next analytics on defunct engines ([#3668](https://github.com/coveo/ui-kit/issues/3668)) ([1b33acc](https://github.com/coveo/ui-kit/commits/1b33acc689e9a7023687ac6af1edee581bc9ebc7))
+
+# 2.52.0 (2024-03-06)
+
+### Features
+
+- **auto-facet:** bump max count to 20 ([#3642](https://github.com/coveo/ui-kit/issues/3642)) ([069a4be](https://github.com/coveo/ui-kit/commits/069a4be48522b65ae4c582162757fe1e441b1db7))
+- **commerce:** simplify commerce facet types ([#3657](https://github.com/coveo/ui-kit/issues/3657)) ([8732da4](https://github.com/coveo/ui-kit/commits/8732da479858810a963bbbbbe3ef1cf47c4dac59)), closes [/github.com/coveo/barca-sports/pull/165#pullrequestreview-1870465243](https://github.com//github.com/coveo/barca-sports/pull/165/issues/pullrequestreview-1870465243)
+- **headless:** expose relay on the engine ([#3658](https://github.com/coveo/ui-kit/issues/3658)) ([a5c846b](https://github.com/coveo/ui-kit/commits/a5c846bec4ee07a271c934aee4ac5832118b5e0c))
+- **headless:** insight analytics actions migrated to new event protocol ([#3637](https://github.com/coveo/ui-kit/issues/3637)) ([f7bbe47](https://github.com/coveo/ui-kit/commits/f7bbe470c858a1bf7f98865773bf9b992e9f7913))
+- **IPX:** add PageView in IPX actions history ([#3607](https://github.com/coveo/ui-kit/issues/3607)) ([155f04c](https://github.com/coveo/ui-kit/commits/155f04c66c2961c55ea337c0e37f2c1cee1bb1d2)), closes [/github.com/coveo/coveo.analytics.js/blob/master/src/coveoua/browser.ts#L29](https://github.com//github.com/coveo/coveo.analytics.js/blob/master/src/coveoua/browser.ts/issues/L29)
+
 # 2.51.0 (2024-02-28)
 
 ### Features

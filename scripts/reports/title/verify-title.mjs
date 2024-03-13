@@ -1,11 +1,6 @@
-import _lint from '@commitlint/lint';
-import _load from '@commitlint/load';
+import lint from '@commitlint/lint';
+import load from '@commitlint/load';
 import {getPullRequestTitle} from '../github-client.mjs';
-
-/** @type {import('@commitlint/lint').default} */
-const lint = _lint['default'];
-/** @type {import('@commitlint/load').default} */
-const load = _load['default'];
 
 const specUrl = 'https://www.conventionalcommits.org/en/v1.0.0/#summary';
 
