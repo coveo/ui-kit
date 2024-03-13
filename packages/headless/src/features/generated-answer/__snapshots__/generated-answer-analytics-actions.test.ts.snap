@@ -104,7 +104,7 @@ exports[`generated answer analytics actions when analyticsMode is \`next\` shoul
 
 exports[`generated answer analytics actions when analyticsMode is \`next\` should log #logOpenGeneratedAnswerSource with the right payload 1`] = `
 [
-  "Qna.CitationItemClick",
+  "Qna.CitationClick",
   {
     "answer": {
       "id": "123",

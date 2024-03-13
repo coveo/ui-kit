@@ -70,8 +70,8 @@ export const logOpenGeneratedAnswerSource = (
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
-    analyticsType: 'Qna.CitationItemClick',
-    analyticsPayloadBuilder: (state): Qna.CitationItemClick => {
+    analyticsType: 'Qna.CitationClick',
+    analyticsPayloadBuilder: (state): Qna.CitationClick => {
       const generativeQuestionAnsweringId =
         generativeQuestionAnsweringIdSelector(state);
       return {
