@@ -1,3 +1,9 @@
+## 2.54.4 (2024-03-13)
+
+### Bug Fixes
+
+- remove trackingId from commerce context ([#3697](https://github.com/coveo/ui-kit/issues/3697)) ([fe2a772](https://github.com/coveo/ui-kit/commits/fe2a772d3b61aac90fb407fd494769e9b03f6683))
+
 ## 2.54.3 (2024-03-12)
 
 ### Bug Fixes
