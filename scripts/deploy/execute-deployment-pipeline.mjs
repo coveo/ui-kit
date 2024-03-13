@@ -22,7 +22,7 @@ const atomic = getVersionComposants(atomicJson.version);
 const atomicReact = getVersionComposants(atomicReactJson.version);
 const atomicHostedPage = getVersionComposants(atomicHostedPageJson.version);
 execSync(`
-docker run -a stderr -a stdout 458176070654.dkr.ecr.us-east-2.amazonaws.com/jenkins/deployment_package:stable
+docker run -v ${resolve('.')}:/home/jenkins -a stderr -a stdout 458176070654.dkr.ecr.us-east-2.amazonaws.com/jenkins/deployment_package:stable
   deployment-package package create --with-deploy \
     --resolve HEADLESS_MAJOR_VERSION=${headless.major} \
     --resolve HEADLESS_MINOR_VERSION=${headless.minor} \
