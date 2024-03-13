@@ -49,6 +49,21 @@ export interface CartItem {
   quantity: number;
 }
 
+/**
+ * The purchase transaction.
+ */
+export interface Transaction {
+  /**
+   * The transaction's id
+   */
+  id: string;
+
+  /**
+   * The total revenue from the transaction, including taxes, shipping, and discounts.
+   */
+  revenue: number;
+}
+
 export interface CartProps {
   /**
    * The initial state to apply to this `Cart` controller.
@@ -90,10 +105,9 @@ export interface Cart extends Controller {
   /**
    * Emits an `ec.purchase` analytics event and then empties the cart without emitting any additional events.
    *
-   * @param transactionId - The transaction ID.
-   * @param transactionRevenue - The total revenue from the transaction, including taxes, shipping, and discounts.
+   * @param transaction - The object with the id and the total revenue from the transaction, including taxes, shipping, and discounts.
    */
-  purchase(transactionId: string, transactionRevenue: number): void;
+  purchase(transaction: Transaction): void;
 
   /**
    * A scoped and simplified part of the headless state that is relevant to the `Cart` controller.
@@ -198,6 +212,19 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     };
   }
 
+  function createEcPurchasePayload(transaction: Transaction): Ec.Purchase {
+    const currency = getCurrency();
+    const products = itemsSelector(getState()).map(
+      ({quantity, ...product}) => ({quantity, product})
+    );
+
+    return {
+      currency,
+      products,
+      transaction,
+    };
+  }
+
   return {
     ...controller,
 
@@ -207,8 +234,9 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
       }
     },
 
-    purchase(_transactionId: string, _transactionRevenue: number) {
-      // TODO LENS-1498: log ec.purchase with all products in cart.
+    purchase(transaction: Transaction) {
+      engine.relay.emit('ec.purchase', createEcPurchasePayload(transaction));
+
       dispatch(setItems([]));
     },
 

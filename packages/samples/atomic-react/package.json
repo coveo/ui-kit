@@ -4,9 +4,9 @@
   "description": "Samples with atomic-react",
   "private": true,
   "dependencies": {
-    "@coveo/atomic": "2.60.6",
-    "@coveo/atomic-react": "2.8.22",
-    "@coveo/headless": "2.54.4",
+    "@coveo/atomic": "2.61.1",
+    "@coveo/atomic-react": "2.8.25",
+    "@coveo/headless": "2.56.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },

@@ -1,3 +1,16 @@
+# 2.56.0 (2024-03-13)
+
+### Features
+
+- **headless/commerce:** allow purchasing from cart controller ([#3654](https://github.com/coveo/ui-kit/issues/3654)) ([2930cef](https://github.com/coveo/ui-kit/commits/2930cefb7355d99b31ecd4c8ba9f81c626294982))
+
+# 2.55.0 (2024-03-13)
+
+### Features
+
+- **headless:** in development, rebuild modules with source maps ([#3679](https://github.com/coveo/ui-kit/issues/3679)) ([fb6388b](https://github.com/coveo/ui-kit/commits/fb6388b636789708df14f95bb9cbb09c494f91ad)), closes [#192](https://github.com/coveo/ui-kit/issues/192)
+- **headless:** question answering analytics events migrated to the new event protocol ([#3686](https://github.com/coveo/ui-kit/issues/3686)) ([1a35e41](https://github.com/coveo/ui-kit/commits/1a35e41d287a818a1409b7269d5c81121fabf088))
+
 ## 2.54.4 (2024-03-13)
 
 ### Bug Fixes
