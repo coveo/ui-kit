@@ -56,6 +56,7 @@ jobs:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
         with:
           ref: 'release/v2'
+          fetch-depth: 0
       - uses: ./.github/actions/setup-ztsd
       - uses: ./.github/actions/setup
       - name: Start deployment pipeline
