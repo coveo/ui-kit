@@ -56,7 +56,7 @@ export const RephraseButtons: FunctionalComponent<RephraseButtonProps> = (
       <p part="rephrase-label" class="mb-2 text-neutral-dark shrink-0">
         {i18n.t('rephrase')}
       </p>
-      <div class="flex flex-wrap gap-2 ml-auto">
+      <div class="flex flex-wrap gap-2 ml-auto border border-solid rounded-md p-1">
         {options.map((option) => {
           const isActive = props.answerStyle === option.value;
           return (
