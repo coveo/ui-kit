@@ -11,4 +11,4 @@ LICENSE.md
 **/.angular/**
 **/.next/**
 **/www/**
-scripts/deploy/execute-deployment-pipeline.mjs
+scripts/deploy/prepare-deployment-pipeline-inputs.mjs

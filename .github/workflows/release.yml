@@ -58,8 +58,32 @@ jobs:
           ref: 'release/v2'
       - uses: ./.github/actions/setup-ztsd
       - uses: ./.github/actions/setup
-      - name: Start deployment pipeline
-        run: node ./scripts/deploy/execute-deployment-pipeline.mjs
+      - name: Prepare deployment pipeline inputs
+        id: deployment-vars
+        run: node ./scripts/deploy/prepare-deployment-pipeline-inputs.mjs
+      - name: Check Deployment Pipeline
+        if: ${{ inputs.debug }}
+        run: >
+          docker run -a stderr -a stdout 458176070654.dkr.ecr.us-east-2.amazonaws.com/jenkins/deployment_package:stable
+          deployment-package package create --with-deploy
+      - name: Start Deployment Pipeline
+        run: >
+          docker run -a stderr -a stdout 458176070654.dkr.ecr.us-east-2.amazonaws.com/jenkins/deployment_package:stable
+          deployment-package package create --with-deploy
+          --resolve HEADLESS_MAJOR_VERSION=${{ steps.deployment-vars.outputs.HEADLESS_MAJOR_VERSION }}
+          --resolve HEADLESS_MINOR_VERSION=${{ steps.deployment-vars.outputs.HEADLESS_MINOR_VERSION }}
+          --resolve HEADLESS_PATCH_VERSION=${{ steps.deployment-vars.outputs.HEADLESS_PATCH_VERSION }}
+          --resolve ATOMIC_MAJOR_VERSION=${{ steps.deployment-vars.outputs.ATOMIC_MAJOR_VERSION }}
+          --resolve ATOMIC_MINOR_VERSION=${{ steps.deployment-vars.outputs.ATOMIC_MINOR_VERSION }}
+          --resolve ATOMIC_PATCH_VERSION=${{ steps.deployment-vars.outputs.ATOMIC_PATCH_VERSION }}
+          --resolve ATOMIC_REACT_MAJOR_VERSION=${{ steps.deployment-vars.outputs.ATOMIC_REACT_MAJOR_VERSION }}
+          --resolve ATOMIC_REACT_MINOR_VERSION=${{ steps.deployment-vars.outputs.ATOMIC_REACT_MINOR_VERSION }}
+          --resolve ATOMIC_REACT_PATCH_VERSION=${{ steps.deployment-vars.outputs.ATOMIC_REACT_PATCH_VERSION }}
+          --resolve ATOMIC_HOSTED_PAGE_MAJOR_VERSION==${{ steps.deployment-vars.outputs.ATOMIC_HOSTED_MAJOR_VERSION }}
+          --resolve ATOMIC_HOSTED_PAGE_MINOR_VERSION==${{ steps.deployment-vars.outputs.ATOMIC_HOSTED_MINOR_VERSION }}
+          --resolve ATOMIC_HOSTED_PAGE_PATCH_VERSION==${{ steps.deployment-vars.outputs.ATOMIC_HOSTED_PATCH_VERSION }}
+          --resolve GITHUB_RUN_ID=${{ steps.deployment-vars.outputs.GITHUB_RUN_ID }}
+          --changeset ${{ steps.deployment-vars.outputs.RELEASE_COMMIT }}
   promote-prod:
     needs: start-deployment
     environment: 'Production'
