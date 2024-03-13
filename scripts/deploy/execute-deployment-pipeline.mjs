@@ -23,4 +23,4 @@ import {execSync} from 'child_process';
 // const atomicHostedPage = getVersionComposants(atomicHostedPageJson.version);
 execSync(`
 docker run -a stderr -a stdout 458176070654.dkr.ecr.us-east-2.amazonaws.com/jenkins/deployment_package:stable
-  deployment-package --version`);
+  deployment-package --version`.replaceAll(/\s+/g, ' ').trim());
