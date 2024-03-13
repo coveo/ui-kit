@@ -1,5 +1,6 @@
 import {context} from '@actions/github';
-import {execSync} from 'child_process';
+import {resolve} from "node:fs";
+import {execSync} from 'node:child_process';
 import {parse} from 'semver';
 import atomicHostedPageJson from '../../packages/atomic-hosted-page/package.json' assert {type: 'json'};
 import atomicReactJson from '../../packages/atomic-react/package.json' assert {type: 'json'};
