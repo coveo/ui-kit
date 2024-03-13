@@ -1,3 +1,9 @@
+## 0.7.6 (2024-03-13)
+
+### Bug Fixes
+
+- **playground:** updates the alt text for the image (#87) ([128d6ae](/commits/128d6ae7dafb540fc0b470df812e0aaff6b20853)), closes [#87](/issues/87)
+
 ## 0.7.5 (2024-02-23)
 
 ### Bug Fixes
