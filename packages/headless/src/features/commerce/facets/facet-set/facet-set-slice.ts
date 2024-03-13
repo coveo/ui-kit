@@ -499,7 +499,7 @@ export function convertCategoryFacetValueToRequest(
     children,
     state,
     value,
-    retrieveCount: 6,
+    retrieveCount: 5,
   };
 }
 

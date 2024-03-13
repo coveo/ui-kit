@@ -1,6 +1,7 @@
 import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
 import {CategoryFacetValueRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
 import {
+  defaultNumberOfValuesIncrement,
   toggleSelectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
 } from '../../../../../features/facets/category-facet-set/category-facet-set-actions';
@@ -68,7 +69,6 @@ export function buildCategoryFacet(
   });
   const {deselectAll, isValueSelected, subscribe, toggleSelect} =
     coreController;
-  const numberOfValuesIncrement = 5;
 
   return {
     deselectAll,
@@ -76,27 +76,27 @@ export function buildCategoryFacet(
     subscribe,
     toggleSelect,
 
+    showMoreValues() {
+      const {facetId} = options;
+      const {activeValue, values} = this.state;
+      const numberOfValues =
+        (activeValue?.children.length ?? values.length) +
+        defaultNumberOfValuesIncrement;
+
+      engine.dispatch(
+        updateCategoryFacetNumberOfValues({facetId, numberOfValues})
+      );
+      engine.dispatch(options.fetchResultsActionCreator());
+    },
+
     showLessValues() {
       const {facetId} = options;
 
       engine.dispatch(
         updateCategoryFacetNumberOfValues({
           facetId,
-          numberOfValues: numberOfValuesIncrement,
+          numberOfValues: defaultNumberOfValuesIncrement,
         })
-      );
-      engine.dispatch(options.fetchResultsActionCreator());
-    },
-
-    showMoreValues() {
-      const {facetId} = options;
-      const {activeValue, values} = this.state;
-      const numberOfValues =
-        (activeValue?.children.length ?? values.length) +
-        numberOfValuesIncrement;
-
-      engine.dispatch(
-        updateCategoryFacetNumberOfValues({facetId, numberOfValues})
       );
       engine.dispatch(options.fetchResultsActionCreator());
     },

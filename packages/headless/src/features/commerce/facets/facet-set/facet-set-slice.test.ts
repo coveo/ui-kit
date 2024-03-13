@@ -23,6 +23,7 @@ import {buildMockFacetSearchResult} from '../../../../test/mock-facet-search-res
 import {buildFetchProductListingV2Response} from '../../../../test/mock-product-listing-v2';
 import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
 import {
+  defaultNumberOfValuesIncrement,
   toggleSelectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
 } from '../../../facets/category-facet-set/category-facet-set-actions';
@@ -1235,7 +1236,7 @@ describe('commerceFacetSetReducer', () => {
             const action = toggleSelectCategoryFacetValue({
               facetId,
               selection,
-              retrieveCount: 6,
+              retrieveCount: defaultNumberOfValuesIncrement,
             });
             const finalState = commerceFacetSetReducer(state, action);
             const currentValues = finalState[facetId].request.values;
@@ -1285,7 +1286,7 @@ describe('commerceFacetSetReducer', () => {
             const action = toggleSelectCategoryFacetValue({
               facetId,
               selection,
-              retrieveCount: 6,
+              retrieveCount: defaultNumberOfValuesIncrement,
             });
             finalState = commerceFacetSetReducer(state, action);
           });
@@ -1317,7 +1318,7 @@ describe('commerceFacetSetReducer', () => {
             const action = toggleSelectCategoryFacetValue({
               facetId,
               selection,
-              retrieveCount: 6,
+              retrieveCount: defaultNumberOfValuesIncrement,
             });
             const finalState = commerceFacetSetReducer(state, action);
 
@@ -1367,7 +1368,7 @@ describe('commerceFacetSetReducer', () => {
             const action = toggleSelectCategoryFacetValue({
               facetId,
               selection,
-              retrieveCount: 6,
+              retrieveCount: defaultNumberOfValuesIncrement,
             });
             const finalState = commerceFacetSetReducer(state, action);
 
