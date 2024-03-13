@@ -11,6 +11,7 @@ import {
 } from '../../../../controllers/commerce/core/facets/headless-core-commerce-facet';
 import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
 import {
+  defaultNumberOfValuesIncrement,
   toggleSelectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
 } from '../../../facets/category-facet-set/category-facet-set-actions';
@@ -499,7 +500,7 @@ export function convertCategoryFacetValueToRequest(
     children,
     state,
     value,
-    retrieveCount: 5,
+    retrieveCount: defaultNumberOfValuesIncrement,
   };
 }
 
