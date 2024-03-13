@@ -32,7 +32,7 @@ import {LoggerOptions} from './logger';
 import {logActionErrorMiddleware} from './logger-middlewares';
 import {createReducerManager, ReducerManager} from './reducer-manager';
 import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware';
-import {Store, configureStore} from './store';
+import {ExtraArgumentsWithRelay, Store, configureStore} from './store';
 import {ThunkExtraArguments} from './thunk-extra-arguments';
 
 const coreReducers = {configuration, version};
@@ -182,7 +182,10 @@ export function buildEngine<
 >(
   options: EngineOptions<Reducers>,
   thunkExtraArguments: ExtraArguments
-): CoreEngine<StateFromReducersMapObject<Reducers>, ExtraArguments> {
+): CoreEngine<
+  StateFromReducersMapObject<Reducers>,
+  ExtraArgumentsWithRelay & ExtraArguments
+> {
   const engine = buildCoreEngine(options, thunkExtraArguments);
   const {accessToken, organizationId} = options.configuration;
   const {organizationEndpoints} = options.configuration;
@@ -245,9 +248,20 @@ function buildCoreEngine<
     reducerManager.addCrossReducer(options.crossReducer);
   }
   const logger = thunkExtraArguments.logger;
-  const store = createStore(options, thunkExtraArguments, reducerManager);
+  const thunkExtraArgumentsWithRelay: ExtraArgumentsWithRelay & ExtraArguments =
+    {
+      ...thunkExtraArguments,
+      get relay() {
+        return getRelayInstanceFromState(engine.state);
+      },
+    };
+  const store = createStore(
+    options,
+    thunkExtraArgumentsWithRelay,
+    reducerManager
+  );
 
-  return {
+  const engine = {
     addReducers(reducers: ReducersMapObject) {
       if (reducerManager.containsAll(reducers)) {
         return;
@@ -281,11 +295,12 @@ function buildCoreEngine<
 
     store,
   };
+  return engine;
 }
 
 function createStore<
   Reducers extends ReducersMapObject,
-  ExtraArguments extends ThunkExtraArguments,
+  ExtraArguments extends ExtraArgumentsWithRelay,
 >(
   options: EngineOptions<Reducers>,
   thunkExtraArguments: ExtraArguments,

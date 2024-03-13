@@ -1,9 +1,14 @@
 import {CurrencyCodeISO4217, Ec} from '@coveo/relay-event-types';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {
+  purchase,
   setItems,
   updateItem,
 } from '../../../../features/commerce/context/cart/cart-actions';
+import {
+  Transaction,
+  itemsSelector,
+} from '../../../../features/commerce/context/cart/cart-selector';
 import {cartReducer as cart} from '../../../../features/commerce/context/cart/cart-slice';
 import {CartItemWithMetadata} from '../../../../features/commerce/context/cart/cart-state';
 import {cartSchema} from '../../../../features/commerce/context/cart/cart-validation';
@@ -15,7 +20,6 @@ import {
 } from '../../../controller/headless-controller';
 import {
   itemSelector,
-  itemsSelector,
   totalPriceSelector,
   totalQuantitySelector,
 } from './headless-cart-selectors';
@@ -47,21 +51,6 @@ export interface CartItem {
    * The number of units of the product in the cart.
    */
   quantity: number;
-}
-
-/**
- * The purchase transaction.
- */
-export interface Transaction {
-  /**
-   * The transaction's id
-   */
-  id: string;
-
-  /**
-   * The total revenue from the transaction, including taxes, shipping, and discounts.
-   */
-  revenue: number;
 }
 
 export interface CartProps {
@@ -212,19 +201,6 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     };
   }
 
-  function createEcPurchasePayload(transaction: Transaction): Ec.Purchase {
-    const currency = getCurrency();
-    const products = itemsSelector(getState()).map(
-      ({quantity, ...product}) => ({quantity, product})
-    );
-
-    return {
-      currency,
-      products,
-      transaction,
-    };
-  }
-
   return {
     ...controller,
 
@@ -235,9 +211,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     },
 
     purchase(transaction: Transaction) {
-      engine.relay.emit('ec.purchase', createEcPurchasePayload(transaction));
-
-      dispatch(setItems([]));
+      dispatch(purchase(transaction));
     },
 
     updateItem(item: CartItem) {
