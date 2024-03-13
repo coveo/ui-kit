@@ -1,3 +1,9 @@
+# 2.56.0 (2024-03-13)
+
+### Features
+
+- **headless/commerce:** allow purchasing from cart controller ([#3654](https://github.com/coveo/ui-kit/issues/3654)) ([2930cef](https://github.com/coveo/ui-kit/commits/2930cefb7355d99b31ecd4c8ba9f81c626294982))
+
 # 2.55.0 (2024-03-13)
 
 ### Features
