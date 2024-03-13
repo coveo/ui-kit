@@ -1,3 +1,9 @@
+# 2.61.0 (2024-03-13)
+
+### Features
+
+- **atomic:** add sort-criteria to timeframe facet ([#3692](https://github.com/coveo/ui-kit/issues/3692)) ([1a6f1ab](https://github.com/coveo/ui-kit/commits/1a6f1ab9c943a2b977bdece4c39cbfd1d3dda3de))
+
 ## 2.60.5 (2024-03-12)
 
 ### Bug Fixes
