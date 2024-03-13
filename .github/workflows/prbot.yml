@@ -7,6 +7,9 @@ jobs:
     runs-on: [coveo, linux, x64, ec2]
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
-      - uses: ./.github/actions/setup
+      - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4
+        with:
+          registry-url: 'https://registry.npmjs.org'
+          node-version-file: '.nvmrc'
       - name: Start deployment pipeline
         run: node ./scripts/deploy/execute-deployment-pipeline.mjs
