@@ -119,35 +119,13 @@ describe('headless commerce cart', () => {
       jest.resetAllMocks();
     });
 
-    it.skip('emits the #ec.purchase event with the expected payload', () => {
-      const items = [
-        {name: 'blue shoes', productId: 'shoe-1', price: 10.36, quantity: 1},
-        {name: 'red shoes', productId: 'shoe-2', price: 52.19, quantity: 3},
-      ];
-      const transaction = {id: 'transaction-id', revenue: 166.93};
-      jest.mocked(itemsSelector).mockReturnValue(items);
-
-      cart.purchase(transaction);
-
-      const products = items.map(({quantity, ...product}) => ({
-        quantity,
-        product,
-      }));
-      expect(engine.relay.emit).toHaveBeenCalledTimes(1);
-      expect(engine.relay.emit).toHaveBeenCalledWith('ec.purchase', {
-        currency: 'USD',
-        products,
-        transaction,
-      });
-    });
-
     it('dispatches #purchase with the transaction payload', () => {
       jest.mocked(itemsSelector).mockReturnValue([]);
       const mockedPurchase = jest.mocked(purchase);
+      const transaction = {id: 'transaction-id', revenue: 0};
+      cart.purchase(transaction);
 
-      cart.purchase({id: '', revenue: 0});
-
-      expect(mockedPurchase).toHaveBeenCalledWith({id: '', revenue: 0});
+      expect(mockedPurchase).toHaveBeenCalledWith(transaction);
     });
   });
 

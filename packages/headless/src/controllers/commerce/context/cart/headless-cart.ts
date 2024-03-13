@@ -5,7 +5,10 @@ import {
   setItems,
   updateItem,
 } from '../../../../features/commerce/context/cart/cart-actions';
-import {itemsSelector} from '../../../../features/commerce/context/cart/cart-selector';
+import {
+  Transaction,
+  itemsSelector,
+} from '../../../../features/commerce/context/cart/cart-selector';
 import {cartReducer as cart} from '../../../../features/commerce/context/cart/cart-slice';
 import {CartItemWithMetadata} from '../../../../features/commerce/context/cart/cart-state';
 import {cartSchema} from '../../../../features/commerce/context/cart/cart-validation';
@@ -235,8 +238,8 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
       }
     },
 
-    purchase(transactionId: string, transactionRevenue: number) {
-      dispatch(purchase({id: transactionId, revenue: transactionRevenue}));
+    purchase(transaction: Transaction) {
+      dispatch(purchase(transaction));
     },
 
     updateItem(item: CartItem) {

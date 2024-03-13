@@ -14,12 +14,15 @@ export const purchase = createAsyncThunk<
   void,
   Transaction,
   AsyncThunkCommerceOptions<CommerceEngineState>
->('commerce/cart/purchase', async (transaction, {extra, getState}) => {
-  const payload = getECPurchasePayload(transaction, getState());
-  const {relay} = extra;
+>(
+  'commerce/cart/purchase',
+  async (transaction: Transaction, {extra, getState}) => {
+    const payload = getECPurchasePayload(transaction, getState());
+    const {relay} = extra;
 
-  relay.emit('ec.purchase', payload);
-});
+    relay.emit('ec.purchase', payload);
+  }
+);
 
 export const setItems = createAction(
   'commerce/cart/setItems',
