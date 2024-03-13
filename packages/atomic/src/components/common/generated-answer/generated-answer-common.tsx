@@ -193,7 +193,7 @@ export class GeneratedAnswerCommon {
       });
   }
 
-  private clickDislike = () => {
+  private clickDislike() {
     if (
       this.modalRef &&
       !this.props.getGeneratedAnswerState()?.feedbackSubmitted
@@ -201,9 +201,9 @@ export class GeneratedAnswerCommon {
       this.modalRef.isOpen = true;
     }
     this.props.getGeneratedAnswer()?.dislike();
-  };
+  }
 
-  private onChangeAnswerStyle = (answerStyle: GeneratedAnswerStyle) => {
+  private onChangeAnswerStyle(answerStyle: GeneratedAnswerStyle) {
     if (
       this.props.getGeneratedAnswerState()?.responseFormat.answerStyle ===
       answerStyle
@@ -211,7 +211,7 @@ export class GeneratedAnswerCommon {
       return;
     }
     this.props.getGeneratedAnswer()?.rephrase({answerStyle});
-  };
+  }
 
   private renderContent() {
     return (
