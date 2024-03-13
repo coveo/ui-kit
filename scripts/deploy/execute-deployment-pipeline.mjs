@@ -37,4 +37,4 @@ docker run -a stderr -a stdout 458176070654.dkr.ecr.us-east-2.amazonaws.com/jenk
     --resolve ATOMIC_HOSTED_PAGE_MINOR_VERSION=${atomicHostedPage.minor} \
     --resolve ATOMIC_HOSTED_PAGE_PATCH_VERSION=${atomicHostedPage.patch} \
     --resolve GITHUB_RUN_ID=${context.runId} \
-    --changeset ${releaseCommit}`);
+    --changeset ${releaseCommit}`.replaceAll(/\s+/g, ' ').trim());
