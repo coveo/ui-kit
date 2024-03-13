@@ -72,7 +72,7 @@ export function buildCaseAssistEngine(
     logger
   );
 
-  const thunkArguments: Omit<CaseAssistThunkExtraArguments, 'relay'> = {
+  const thunkArguments = {
     ...buildThunkExtraArguments(options.configuration, logger),
     apiClient: caseAssistAPIClient,
   };

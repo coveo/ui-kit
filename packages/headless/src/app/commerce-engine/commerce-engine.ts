@@ -86,7 +86,7 @@ export function buildCommerceEngine(
 
   const commerceClient = createCommerceAPIClient(options.configuration, logger);
 
-  const thunkArguments: Omit<CommerceThunkExtraArguments, 'relay'> = {
+  const thunkArguments = {
     ...buildThunkExtraArguments(options.configuration, logger),
     apiClient: commerceClient,
   };
