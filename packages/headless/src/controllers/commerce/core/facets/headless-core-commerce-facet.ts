@@ -208,6 +208,8 @@ export function buildCoreCommerceFacet<
     },
 
     toggleExclude: (selection: ValueRequest) => {
+      // eslint-disable-next-line @cspell/spellchecker
+      // TODO CAPI-409: Rework facet type definitions
       if (!props.options.toggleExcludeActionCreator) {
         engine.logger.warn(
           'No toggle exclude action creator provided; calling #toggleExclude had no effect.'
@@ -231,6 +233,8 @@ export function buildCoreCommerceFacet<
 
     // Must use a function here to properly support inheritance with `this`.
     toggleSingleExclude: function (selection: ValueRequest) {
+      // eslint-disable-next-line @cspell/spellchecker
+      // TODO CAPI-409: Rework facet type definitions
       if (!props.options.toggleExcludeActionCreator) {
         engine.logger.warn(
           'No toggle exclude action creator provided; calling #toggleSingleExclude had no effect.'
@@ -288,16 +292,6 @@ export function buildCoreCommerceFacet<
       const response = getResponse();
       const canShowMoreValues = response?.moreValuesAvailable ?? false;
 
-      const canShowLessValues = (() => {
-        const request = getRequest();
-        const initialNumberOfValues = request?.initialNumberOfValues;
-        const hasIdleValues = !!request?.values.find((v) => v.state === 'idle');
-        return (
-          (initialNumberOfValues ?? 0) < (request?.numberOfValues ?? 0) &&
-          hasIdleValues
-        );
-      })();
-
       const values = (response?.values ?? []) as ValueResponse[];
       const hasActiveValues = values.some((v) => v.state !== 'idle');
 
@@ -309,7 +303,7 @@ export function buildCoreCommerceFacet<
         values,
         isLoading: getIsLoading(),
         canShowMoreValues,
-        canShowLessValues,
+        canShowLessValues: canShowLessValues(getRequest()),
         hasActiveValues,
       };
     },
@@ -322,3 +316,17 @@ function loadCommerceFacetReducers(
   engine.addReducers({commerceFacetSet});
   return true;
 }
+
+const canShowLessValues = (request: AnyFacetRequest | undefined) => {
+  if (!request) {
+    return false;
+  }
+
+  const initialNumberOfValues = request.initialNumberOfValues;
+  const hasIdleValues = !!request.values.find((v) => v.state === 'idle');
+
+  return (
+    (initialNumberOfValues ?? 0) < (request.numberOfValues ?? 0) &&
+    hasIdleValues
+  );
+};

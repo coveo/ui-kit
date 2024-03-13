@@ -68,6 +68,7 @@ export function buildCategoryFacet(
   });
   const {deselectAll, isValueSelected, subscribe, toggleSelect} =
     coreController;
+  const numberOfValuesIncrement = 5;
 
   return {
     deselectAll,
@@ -79,7 +80,10 @@ export function buildCategoryFacet(
       const {facetId} = options;
 
       engine.dispatch(
-        updateCategoryFacetNumberOfValues({facetId, numberOfValues: 1})
+        updateCategoryFacetNumberOfValues({
+          facetId,
+          numberOfValues: numberOfValuesIncrement,
+        })
       );
       engine.dispatch(options.fetchResultsActionCreator());
     },
@@ -88,7 +92,8 @@ export function buildCategoryFacet(
       const {facetId} = options;
       const {activeValue, values} = this.state;
       const numberOfValues =
-        (activeValue?.children.length ?? values.length) + 5;
+        (activeValue?.children.length ?? values.length) +
+        numberOfValuesIncrement;
 
       engine.dispatch(
         updateCategoryFacetNumberOfValues({facetId, numberOfValues})

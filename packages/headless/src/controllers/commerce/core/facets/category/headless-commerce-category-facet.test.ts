@@ -113,7 +113,7 @@ describe('CategoryFacet', () => {
 
     expect(updateCategoryFacetNumberOfValues).toHaveBeenCalledWith({
       facetId,
-      numberOfValues: 1,
+      numberOfValues: 5,
     });
   });
 
