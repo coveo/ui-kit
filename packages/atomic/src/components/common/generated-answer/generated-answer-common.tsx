@@ -193,7 +193,7 @@ export class GeneratedAnswerCommon {
       });
   }
 
-  private clickDislike = () => {
+  private clickDislike() {
     if (
       this.modalRef &&
       !this.props.getGeneratedAnswerState()?.feedbackSubmitted
@@ -201,16 +201,16 @@ export class GeneratedAnswerCommon {
       this.modalRef.isOpen = true;
     }
     this.props.getGeneratedAnswer()?.dislike();
-  };
+  }
 
-  private onChangeAnswerStyle = (answerStyle: GeneratedAnswerStyle) => {
+  private onChangeAnswerStyle(answerStyle: GeneratedAnswerStyle) {
     if (
       this.props.getGeneratedAnswerState()?.responseFormat.answerStyle !==
       answerStyle
     ) {
       this.props.getGeneratedAnswer()?.rephrase({answerStyle});
     }
-  };
+  }
 
   private renderContent() {
     return (
@@ -242,7 +242,7 @@ export class GeneratedAnswerCommon {
                       .i18n.t('this-answer-was-not-helpful')}
                     variant="dislike"
                     active={!!this.props.getGeneratedAnswerState()?.disliked}
-                    onClick={this.clickDislike}
+                    onClick={() => this.clickDislike()}
                   />
                   {this.hasClipboard ? (
                     <CopyButton
@@ -305,7 +305,9 @@ export class GeneratedAnswerCommon {
                     .answerStyle ?? 'default'
                 }
                 i18n={this.props.getBindings().i18n}
-                onChange={this.onChangeAnswerStyle}
+                onChange={(answerStyle) =>
+                  this.onChangeAnswerStyle(answerStyle)
+                }
               />
             )}
           </GeneratedContentContainer>
