@@ -58,7 +58,6 @@ jobs:
           ref: 'release/v2'
       - uses: ./.github/actions/setup-ztsd
       - uses: ./.github/actions/setup
-      - uses: coveo-platform/deployment-pipeline-actions/setup-cli@main
       - name: Start deployment pipeline
         run: node ./scripts/deploy/execute-deployment-pipeline.mjs
   promote-prod:
