@@ -559,6 +559,7 @@ describe('Search Box Test Suites', () => {
     const testQuery = 'test';
     const numOfSuggestions = 2;
     const minimumQueryLength = testQuery.length;
+
     beforeEach(() => {
       new TestFixture()
         .with(setSuggestions(numOfSuggestions))
@@ -571,38 +572,57 @@ describe('Search Box Test Suites', () => {
     });
 
     it('should be accessible', () => {
-      CommonAssertions.assertAccessibility(searchBoxComponent);
+      CommonAssertions.assertAccessibilityWithoutIt(searchBoxComponent);
     });
 
     it('search button is enabled when a query with minimum length is input', () => {
-      typeSearchInput(testQuery.slice(0, minimumQueryLength - 1)); // enter query less than min len
+      SearchBoxSelectors.inputBox()
+        .clear()
+        .type(testQuery.slice(0, minimumQueryLength - 1));
+
+      cy.wait(500);
+
       SearchBoxSelectors.submitButton().should('be.disabled');
       SearchBoxAssertions.assertNoSuggestionGenerated();
 
-      typeSearchInput(testQuery.slice(minimumQueryLength - 1)); // enter rest of the query
-      SearchBoxSelectors.submitButton().should('not.be.disabled');
+      SearchBoxSelectors.inputBox().type(
+        testQuery.slice(minimumQueryLength - 1)
+      );
 
-      typeSearchInput('{downarrow}'.repeat(numOfSuggestions));
-      SearchBoxAssertions.assertHasSuggestionsCount(numOfSuggestions);
-      SearchBoxAssertions.assertSuggestionIsSelected(numOfSuggestions);
+      cy.wait(500);
+
+      SearchBoxSelectors.submitButton().should('not.be.disabled');
+      SearchBoxAssertions.assertHasSuggestionsCountWithoutIt(numOfSuggestions);
+
+      SearchBoxSelectors.inputBox().type(
+        '{downarrow}'.repeat(numOfSuggestions)
+      );
+
+      SearchBoxAssertions.assertSuggestionIsSelectedWithoutIt(
+        numOfSuggestions - 1
+      );
     });
 
     it('search button is disabled when query is deleted', () => {
-      typeSearchInput(testQuery);
+      SearchBoxSelectors.inputBox().type(testQuery);
+
       SearchBoxSelectors.submitButton().should('not.be.disabled');
 
-      typeSearchInput('{backspace}'.repeat(minimumQueryLength), '');
+      SearchBoxSelectors.inputBox().type(
+        '{backspace}'.repeat(minimumQueryLength)
+      );
       SearchBoxSelectors.submitButton().should('be.disabled');
     });
 
     it('clear button should appear or disappear depending on the content of the input', () => {
-      typeSearchInput(testQuery);
+      SearchBoxSelectors.inputBox().type(testQuery);
+
       SearchBoxSelectors.clearButton().should('exist');
-      typeSearchInput(
-        Array.from({length: testQuery.length})
-          .map(() => '{backspace}')
-          .join('')
+
+      SearchBoxSelectors.inputBox().type(
+        '{backspace}'.repeat(testQuery.length)
       );
+
       SearchBoxSelectors.clearButton().should('not.exist');
     });
   });

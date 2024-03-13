@@ -1,3 +1,30 @@
+## 2.54.4 (2024-03-13)
+
+### Bug Fixes
+
+- remove trackingId from commerce context ([#3697](https://github.com/coveo/ui-kit/issues/3697)) ([fe2a772](https://github.com/coveo/ui-kit/commits/fe2a772d3b61aac90fb407fd494769e9b03f6683))
+
+## 2.54.3 (2024-03-12)
+
+### Bug Fixes
+
+- **deps:** update dependency redux-thunk to v3 j:kit-282 ([#3665](https://github.com/coveo/ui-kit/issues/3665)) ([4f4c978](https://github.com/coveo/ui-kit/commits/4f4c978e113e611613878c4ca11605e98a88b0c2))
+
+## 2.54.2 (2024-03-11)
+
+### Features
+
+- **headless:** executeSearch action for insight refactored to be compatible with the new event protocol ([#3678](https://github.com/coveo/ui-kit/issues/3678)) ([b18d0ce](https://github.com/coveo/ui-kit/commits/b18d0ce59e40c4cdf4d5a60a233e3eeebf7c092f))
+
+# 2.53.0 (2024-03-08)
+
+### Features
+
+- **atomic,headless:** remove customData & middleware iff analyticsMode=next ([#3670](https://github.com/coveo/ui-kit/issues/3670)) ([ac15f5c](https://github.com/coveo/ui-kit/commits/ac15f5c11c89fd6af30a92d6abf7c6a5b984b8e5))
+- **cart:** trigger relay cart action when updateItem ([#3630](https://github.com/coveo/ui-kit/issues/3630)) ([a483ab5](https://github.com/coveo/ui-kit/commits/a483ab570fc83a921e26154c123e5fc6157963f3))
+- **headless/commerce:** set currency type as currency code iso4217 instead of string ([#3667](https://github.com/coveo/ui-kit/issues/3667)) ([723cfb2](https://github.com/coveo/ui-kit/commits/723cfb24a5e145c5dc0f01a8a0b2e16d28d198d6))
+- **headless:** forbid next analytics on defunct engines ([#3668](https://github.com/coveo/ui-kit/issues/3668)) ([1b33acc](https://github.com/coveo/ui-kit/commits/1b33acc689e9a7023687ac6af1edee581bc9ebc7))
+
 # 2.52.0 (2024-03-06)
 
 ### Features

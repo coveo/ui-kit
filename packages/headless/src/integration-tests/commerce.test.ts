@@ -32,16 +32,18 @@ describe.skip('commerce', () => {
         organizationEndpoints: {
           ...getOrganizationEndpoints(organizationId, 'dev'),
         },
+        analytics: {
+          trackingId: 'barca',
+        },
       },
       loggerOptions: {level: 'silent'},
     });
 
     buildContext(engine, {
       options: {
-        trackingId: 'barca',
         language: 'en-gb',
         country: 'gb',
-        currency: 'gbp',
+        currency: 'GBP',
         view: {
           url: 'https://sports-dev.barca.group/browse/promotions/surf-with-us-this-year',
         },

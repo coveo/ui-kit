@@ -4,14 +4,14 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "@coveo/auth": "1.11.12",
-    "@coveo/headless": "2.52.0",
+    "@coveo/auth": "1.11.15",
+    "@coveo/headless": "2.54.4",
     "@testing-library/jest-dom": "6.4.2",
     "@testing-library/react": "13.3.0",
     "@testing-library/user-event": "14.5.2",
     "@types/escape-html": "1.0.4",
     "@types/express": "4.17.21",
-    "@types/node": "20.11.24",
+    "@types/node": "20.11.25",
     "@types/react": "18.0.17",
     "@types/react-dom": "18.0.6",
     "@types/react-router-dom": "5.3.3",
@@ -48,7 +48,7 @@
     ]
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
     "cypress": "13.6.6",
     "cypress-repeat": "2.3.4",
     "gts": "5.2.0",

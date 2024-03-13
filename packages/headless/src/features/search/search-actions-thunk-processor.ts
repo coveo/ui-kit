@@ -317,12 +317,11 @@ export class AsyncSearchThunkProcessor<RejectionType> {
   private async automaticallyRetryQueryWithCorrection(correction: string) {
     this.onUpdateQueryForCorrection(correction);
     const state = this.getState();
-    const {actionCause, getEventExtraPayload} = didYouMeanAutomatic();
+    const {actionCause} = didYouMeanAutomatic();
 
     const fetched = await this.fetchFromAPI(
       await buildSearchRequest(state, {
         actionCause,
-        customData: getEventExtraPayload(state),
       }),
       {origin: 'mainSearch'}
     );

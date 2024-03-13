@@ -1,3 +1,4 @@
+import {CurrencyCodeISO4217, Ec} from '@coveo/relay-event-types';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {
   setItems,
@@ -147,13 +148,54 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     dispatch(setItems(initialState.items));
   }
 
-  function isNewQuantityDifferent(productId: string, quantity: number) {
-    const item = itemSelector(getState(), productId);
-    if (!item) {
-      return quantity > 0;
-    }
+  function isNewQuantityDifferent(
+    currentItem: CartItem,
+    prevItem: CartItemWithMetadata
+  ) {
+    return prevItem ? prevItem.quantity !== currentItem.quantity : true;
+  }
 
-    return item.quantity !== quantity;
+  function getCartAction(
+    currentItem: CartItem,
+    prevItem: CartItemWithMetadata | undefined
+  ): 'add' | 'remove' {
+    const isCurrentQuantityGreater =
+      !prevItem || currentItem.quantity > prevItem.quantity;
+    return isCurrentQuantityGreater ? 'add' : 'remove';
+  }
+
+  function getCurrency(): CurrencyCodeISO4217 {
+    return engine.state.commerceContext.currency;
+  }
+
+  function isEqual(
+    currentItem: CartItem,
+    prevItem: CartItemWithMetadata | undefined
+  ): boolean {
+    return prevItem
+      ? currentItem.name === prevItem.name &&
+          currentItem.price === prevItem.price &&
+          currentItem.quantity === prevItem.quantity
+      : false;
+  }
+
+  function createEcCartActionPayload(
+    currentItem: CartItem,
+    prevItem: CartItemWithMetadata | undefined
+  ): Ec.CartAction {
+    const {quantity: currentQuantity, ...product} = currentItem;
+    const action = getCartAction(currentItem, prevItem);
+    const quantity = !prevItem
+      ? currentQuantity
+      : Math.abs(currentQuantity - prevItem.quantity);
+    const currency = getCurrency();
+
+    return {
+      action,
+      currency,
+      quantity,
+      product,
+    };
   }
 
   return {
@@ -171,8 +213,18 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     },
 
     updateItem(item: CartItem) {
-      if (isNewQuantityDifferent(item.productId, item.quantity)) {
-        // TODO LENS-1497: log ec.cartAction; if new quantity > previous, 'add', otherwise, 'remove'.
+      const prevItem = itemSelector(getState(), item.productId);
+      const doesNotNeedUpdate = !prevItem && item.quantity <= 0;
+
+      if (doesNotNeedUpdate || isEqual(item, prevItem)) {
+        return;
+      }
+
+      if (isNewQuantityDifferent(item, prevItem)) {
+        engine.relay.emit(
+          'ec.cartAction',
+          createEcCartActionPayload(item, prevItem)
+        );
       }
 
       dispatch(updateItem(item));

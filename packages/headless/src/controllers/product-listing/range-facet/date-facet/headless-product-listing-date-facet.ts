@@ -51,26 +51,23 @@ export function buildDateFacet(
 
     deselectAll() {
       coreController.deselectAll();
-      dispatch(fetchProductListing()).then(() =>
-        dispatch(logFacetClearAll(getFacetId()))
-      );
+      dispatch(fetchProductListing());
+      dispatch(logFacetClearAll(getFacetId()));
     },
 
     sortBy(criterion: RangeFacetSortCriterion) {
       coreController.sortBy(criterion);
-      dispatch(fetchProductListing()).then(() =>
-        dispatch(logFacetUpdateSort({facetId: getFacetId(), criterion}))
-      );
+      dispatch(fetchProductListing());
+      dispatch(logFacetUpdateSort({facetId: getFacetId(), criterion}));
     },
 
     toggleSelect: (selection: DateFacetValue) => {
       coreController.toggleSelect(selection);
-      dispatch(fetchProductListing()).then(() =>
-        dispatch(
-          getLegacyAnalyticsActionForToggleRangeFacetSelect(
-            getFacetId(),
-            selection
-          )
+      dispatch(fetchProductListing());
+      dispatch(
+        getLegacyAnalyticsActionForToggleRangeFacetSelect(
+          getFacetId(),
+          selection
         )
       );
     },

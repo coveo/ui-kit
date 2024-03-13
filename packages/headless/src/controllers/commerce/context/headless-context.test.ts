@@ -4,6 +4,7 @@ import {
   setView,
 } from '../../../features/commerce/context/context-actions';
 import {contextReducer} from '../../../features/commerce/context/context-slice';
+import {CommerceContextState} from '../../../features/commerce/context/context-state';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state';
 import {
   MockedCommerceEngine,
@@ -14,8 +15,7 @@ import {buildContext, Context} from './headless-context';
 jest.mock('../../../features/commerce/context/context-actions');
 
 describe('headless commerce context', () => {
-  const options = {
-    trackingId: 'some-tracking-id',
+  const options: CommerceContextState = {
     language: 'en',
     country: 'us',
     currency: 'USD',
@@ -48,13 +48,6 @@ describe('headless commerce context', () => {
     expect(setContext).toHaveBeenCalled();
   });
 
-  it('setTrackingId dispatches #setContext', () => {
-    context.setTrackingId('new-tracking-id');
-    expect(setContext).toHaveBeenCalledWith(
-      expect.objectContaining({trackingId: 'new-tracking-id'})
-    );
-  });
-
   it('setLanguage dispatches #setContext', () => {
     context.setLanguage('new-language');
     expect(setContext).toHaveBeenCalledWith(
@@ -70,9 +63,9 @@ describe('headless commerce context', () => {
   });
 
   it('setCurrency dispatches #setContext', () => {
-    context.setCurrency('new-currency');
+    context.setCurrency('CAD');
     expect(setContext).toHaveBeenCalledWith(
-      expect.objectContaining({currency: 'new-currency'})
+      expect.objectContaining({currency: 'CAD'})
     );
   });
 

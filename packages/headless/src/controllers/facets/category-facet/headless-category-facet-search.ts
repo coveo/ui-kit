@@ -62,7 +62,7 @@ export function buildCategoryFacetSearch(
       dispatch(
         executeSearch({
           legacy: logFacetSelect({facetId, facetValue: value.rawValue}),
-          next: facetSelect(facetId, value.rawValue),
+          next: facetSelect(),
         })
       );
     },
