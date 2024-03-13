@@ -24,7 +24,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/coveo/relay.git"
+    "url": "git+https://github.com/coveo-platform/relay.git"
   },
   "keywords": [
     "Coveo",
@@ -35,9 +35,9 @@
   "author": "Coveo",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/coveo/relay/issues"
+    "url": "https://github.com/coveo-platform/relay/issues"
   },
-  "homepage": "https://github.com/coveo/relay#readme",
+  "homepage": "https://github.com/coveo-platform/relay#readme",
   "scripts": {
     "build": "npm run clean && rollup --config ./config/rollup.config.mjs && npm run typedoc",
     "clean": "rimraf -rf ./lib",
