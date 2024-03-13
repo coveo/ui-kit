@@ -63,8 +63,10 @@ process.chdir(process.env.INIT_CWD);
   const commit = await commitChanges(commitMessage, octokit);
 
   // Add the tags locally...
-  for (const tag of packagesReleased.split('\n')) {
-    await gitTag(tag, commit);
+  if (packagesReleased) {
+    for (const tag of packagesReleased.split('\n')) {
+      await gitTag(tag, commit);
+    }
   }
 
   // And push them
