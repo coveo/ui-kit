@@ -1,5 +1,5 @@
 import {context} from '@actions/github';
-import {resolve} from "node:fs";
+import {resolve} from "node:path";
 import {execSync} from 'node:child_process';
 import {parse} from 'semver';
 import atomicHostedPageJson from '../../packages/atomic-hosted-page/package.json' assert {type: 'json'};
