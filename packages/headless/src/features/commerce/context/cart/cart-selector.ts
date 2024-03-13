@@ -4,11 +4,15 @@ import {CommerceEngineState} from '../../../../app/commerce-engine/commerce-engi
 import {getCurrency} from '../context-selector';
 import {CartState} from './cart-state';
 
+/**
+ * The purchase transaction.
+ */
 export interface Transaction {
   /**
    * The transaction's id
    */
   id: string;
+
   /**
    * The total revenue from the transaction, including taxes, shipping, and discounts.
    */

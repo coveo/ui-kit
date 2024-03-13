@@ -53,21 +53,6 @@ export interface CartItem {
   quantity: number;
 }
 
-/**
- * The purchase transaction.
- */
-export interface Transaction {
-  /**
-   * The transaction's id
-   */
-  id: string;
-
-  /**
-   * The total revenue from the transaction, including taxes, shipping, and discounts.
-   */
-  revenue: number;
-}
-
 export interface CartProps {
   /**
    * The initial state to apply to this `Cart` controller.
@@ -213,19 +198,6 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
       currency,
       quantity,
       product,
-    };
-  }
-
-  function createEcPurchasePayload(transaction: Transaction): Ec.Purchase {
-    const currency = getCurrency();
-    const products = itemsSelector(getState()).map(
-      ({quantity, ...product}) => ({quantity, product})
-    );
-
-    return {
-      currency,
-      products,
-      transaction,
     };
   }
 
