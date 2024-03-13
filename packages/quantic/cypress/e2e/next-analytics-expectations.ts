@@ -12,7 +12,7 @@ function nextAnalyticsExpectations() {
           expect(eventMeta).to.have.property('type', 'Qna.AnswerAction');
         })
         .logDetail(
-          `should emit the Qna.AnswerStyle event with action "${action}"`
+          `should emit the Qna.AnswerAction event with action "${action}"`
         );
     },
   };
