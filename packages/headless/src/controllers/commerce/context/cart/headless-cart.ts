@@ -49,6 +49,21 @@ export interface CartItem {
   quantity: number;
 }
 
+/**
+ * The purchase transaction.
+ */
+export interface Transaction {
+  /**
+   * The transaction's id
+   */
+  id: string;
+
+  /**
+   * The total revenue from the transaction, including taxes, shipping, and discounts.
+   */
+  revenue: number;
+}
+
 export interface CartProps {
   /**
    * The initial state to apply to this `Cart` controller.
@@ -92,7 +107,7 @@ export interface Cart extends Controller {
    *
    * @param transaction - The object with the id and the total revenue from the transaction, including taxes, shipping, and discounts.
    */
-  purchase(transaction: {id: string; revenue: number}): void;
+  purchase(transaction: Transaction): void;
 
   /**
    * A scoped and simplified part of the headless state that is relevant to the `Cart` controller.
@@ -197,10 +212,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     };
   }
 
-  function createEcPurchasePayload(transaction: {
-    id: string;
-    revenue: number;
-  }): Ec.Purchase {
+  function createEcPurchasePayload(transaction: Transaction): Ec.Purchase {
     const currency = getCurrency();
     const products = itemsSelector(getState()).map(
       ({quantity, ...product}) => ({quantity, product})
@@ -222,7 +234,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
       }
     },
 
-    purchase(transaction: {id: string; revenue: number}) {
+    purchase(transaction: Transaction) {
       engine.relay.emit('ec.purchase', createEcPurchasePayload(transaction));
 
       dispatch(setItems([]));
