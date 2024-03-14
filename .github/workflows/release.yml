@@ -57,6 +57,9 @@ jobs:
     needs: release
     environment: 'Production'
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: read
+      discussions: write
     env:
       NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
@@ -68,10 +71,15 @@ jobs:
       - name: Promote NPM package to production
         run: npm run promote:npm:latest
       - name: Promote SFDX package to production
-        run: npx --no-install nx run quantic:"promote:sfdx:ci"
+        run: |
+          echo "${{ secrets.SFDX_AUTH_PACKAGE_JWT_KEY }}" > server.key
+          npx --no-install nx run quantic:"promote:sfdx:ci"
+          rm server.key
         env:
           SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
           SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
           SFDX_AUTH_JWT_USERNAME: ${{ secrets.SFDX_AUTH_JWT_USERNAME }}
+          SFDX_AUTH_JWT_KEY_FILE: server.key
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Notify Docs
         run: npm run notify:docs
