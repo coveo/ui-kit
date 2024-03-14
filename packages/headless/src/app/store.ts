@@ -1,3 +1,4 @@
+import {Relay} from '@coveo/relay';
 import {
   configureStore as configureStoreToolkit,
   ReducersMapObject,
@@ -8,11 +9,15 @@ import {
 import {logActionMiddleware} from './logger-middlewares';
 import {ThunkExtraArguments} from './thunk-extra-arguments';
 
+export interface ExtraArgumentsWithRelay extends ThunkExtraArguments {
+  relay: Relay;
+}
+
 interface ConfigureStoreOptions<Reducers extends ReducersMapObject> {
   reducer: Reducer;
   preloadedState?: StateFromReducersMapObject<Reducers>;
   middlewares?: Middleware[];
-  thunkExtraArguments: ThunkExtraArguments;
+  thunkExtraArguments: ExtraArgumentsWithRelay;
   name: string;
 }
 

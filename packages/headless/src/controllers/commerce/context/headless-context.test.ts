@@ -16,7 +16,6 @@ jest.mock('../../../features/commerce/context/context-actions');
 
 describe('headless commerce context', () => {
   const options: CommerceContextState = {
-    trackingId: 'some-tracking-id',
     language: 'en',
     country: 'us',
     currency: 'USD',
@@ -47,13 +46,6 @@ describe('headless commerce context', () => {
 
   it('dispatches #setContext on load', () => {
     expect(setContext).toHaveBeenCalled();
-  });
-
-  it('setTrackingId dispatches #setContext', () => {
-    context.setTrackingId('new-tracking-id');
-    expect(setContext).toHaveBeenCalledWith(
-      expect.objectContaining({trackingId: 'new-tracking-id'})
-    );
   });
 
   it('setLanguage dispatches #setContext', () => {
