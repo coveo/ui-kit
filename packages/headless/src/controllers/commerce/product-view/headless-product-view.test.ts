@@ -1,5 +1,5 @@
 import {Product} from '@coveo/relay-event-types';
-import {productView} from '../../../features/commerce/context/cart/cart-actions';
+import {productView} from '../../../features/commerce/context/view/view-actions';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state';
 import {
   buildMockCommerceEngine,
@@ -7,7 +7,7 @@ import {
 } from '../../../test/mock-engine-v2';
 import {buildProductView, ProductView} from './headless-product-view';
 
-jest.mock('../../../features/commerce/context/cart/cart-actions');
+jest.mock('../../../features/commerce/context/view/view-actions');
 
 describe('ProductView', () => {
   let engine: MockedCommerceEngine;
