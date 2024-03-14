@@ -21,7 +21,7 @@ node('heavy && linux && docker') {
 
  stage('Approve production release') {
       withCredentials([
-        string(credentialsId: 'RELEASER_APP_ID	', variable: 'RELEASER_APP_ID'),
+        string(credentialsId: 'RELEASER_APP_ID', variable: 'RELEASER_APP_ID'),
         file(credentialsId: 'RELEASER_PRIVATE_KEY', variable: 'RELEASER_PRIVATE_KEY_PATH'),
         string(credentialsId: 'RELEASER_CLIENT_ID', variable: 'RELEASER_CLIENT_ID'),
         string(credentialsId: 'RELEASER_CLIENT_SECRET', variable: 'RELEASER_CLIENT_SECRET'),
