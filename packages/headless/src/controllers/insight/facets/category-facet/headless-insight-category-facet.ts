@@ -92,20 +92,23 @@ export function buildCategoryFacet(
         getFacetId(),
         selection
       );
-      dispatch(executeSearch(analyticsAction));
+      dispatch(executeSearch({legacy: analyticsAction}));
     },
 
     deselectAll() {
       coreController.deselectAll();
-      dispatch(executeSearch(logFacetClearAll(getFacetId())));
+      dispatch(executeSearch({legacy: logFacetClearAll(getFacetId())}));
     },
 
     sortBy(criterion: CategoryFacetSortCriterion) {
       coreController.sortBy(criterion);
       dispatch(
-        executeSearch(
-          logFacetUpdateSort({facetId: getFacetId(), sortCriterion: criterion})
-        )
+        executeSearch({
+          legacy: logFacetUpdateSort({
+            facetId: getFacetId(),
+            sortCriterion: criterion,
+          }),
+        })
       );
     },
 
@@ -115,12 +118,12 @@ export function buildCategoryFacet(
 
     showMoreValues() {
       coreController.showMoreValues();
-      dispatch(fetchFacetValues(logFacetShowMore(getFacetId())));
+      dispatch(fetchFacetValues({legacy: logFacetShowMore(getFacetId())}));
     },
 
     showLessValues() {
       coreController.showLessValues();
-      dispatch(fetchFacetValues(logFacetShowLess(getFacetId())));
+      dispatch(fetchFacetValues({legacy: logFacetShowLess(getFacetId())}));
     },
 
     get state() {

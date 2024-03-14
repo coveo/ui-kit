@@ -9,14 +9,16 @@ import {
 } from '../query-suggest/query-suggest-actions';
 import {ExecuteSearchThunkReturn} from '../search/legacy/search-actions';
 import {
+  StateNeededByExecuteSearch,
+  StateNeededByQuerySuggest,
+  fetchQuerySuggestions,
+} from './insight-search-actions';
+import {
   executeSearch,
   fetchFacetValues,
   fetchMoreResults,
   fetchPage,
-  fetchQuerySuggestions,
-  StateNeededByExecuteSearch,
-  StateNeededByQuerySuggest,
-} from './insight-search-actions';
+} from './legacy/insight-search-actions';
 
 export type {FetchQuerySuggestionsActionCreatorPayload};
 

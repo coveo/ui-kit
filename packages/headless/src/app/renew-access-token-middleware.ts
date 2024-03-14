@@ -1,4 +1,4 @@
-import {Middleware} from '@reduxjs/toolkit';
+import {Middleware, UnknownAction} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
 import {debounce} from 'ts-debounce';
 import {updateBasicConfiguration} from '../features/configuration/configuration-actions';
@@ -46,7 +46,8 @@ export function createRenewAccessTokenMiddleware(
 
     const accessToken = await attempt(renewToken);
     store.dispatch(updateBasicConfiguration({accessToken}));
-    store.dispatch(action);
+    store.dispatch(action as unknown as UnknownAction);
+    return;
   };
 }
 

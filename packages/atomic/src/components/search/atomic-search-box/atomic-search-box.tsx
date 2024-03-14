@@ -511,6 +511,7 @@ export class AtomicSearchBox {
     this.searchBox.updateText(value);
 
     if (this.isSearchDisabledForEndUser(value)) {
+      this.clearSuggestions();
       return;
     }
     this.isExpanded = true;

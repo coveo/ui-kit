@@ -8,6 +8,7 @@ import {ProductListingEngine} from '../app/product-listing-engine/product-listin
 import {ProductRecommendationEngine} from '../app/product-recommendation-engine/product-recommendation-engine';
 import {RecommendationEngine} from '../app/recommendation-engine/recommendation-engine';
 import {SearchEngine} from '../app/search-engine/search-engine';
+import {SSRSearchEngine} from '../app/search-engine/search-engine.ssr';
 
 type SpyEverything<T> = {
   [K in keyof T]: T[K] extends (...args: infer A) => infer R
@@ -157,7 +158,7 @@ export function buildMockRecommendationEngine<
 
 export function buildMockSSRSearchEngine(
   initialState: StateFromEngine<SearchEngine>
-) {
+): SSRSearchEngine {
   const engine = buildMockSearchEngine(initialState);
   return {
     ...engine,

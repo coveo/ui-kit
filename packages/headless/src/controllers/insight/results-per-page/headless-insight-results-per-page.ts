@@ -41,7 +41,7 @@ export function buildResultsPerPage(
 
     set(num: number) {
       coreController.set(num);
-      dispatch(executeSearch(logPagerResize()));
+      dispatch(executeSearch({legacy: logPagerResize()}));
     },
   };
 }
