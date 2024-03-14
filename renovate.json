@@ -150,7 +150,7 @@
       "groupSlug": "quantic-octokit-graphql",
       "rangeStrategy": "replace",
       "allowedVersions": "7.x",
-      "description": "8+ is ESM SFINT-5447"
+      "description": "8+ is ESM SFINT-5436"
     },
     {
       "matchFileNames": ["packages/quantic/package.json"],
@@ -158,7 +158,7 @@
       "groupSlug": "quantic-octokit-graphql-schema",
       "rangeStrategy": "replace",
       "allowedVersions": "14.x",
-      "description": "15+ is ESM SFINT-5447"
+      "description": "15+ is ESM SFINT-5436"
     },
     {
       "matchPackagePatterns": ["^actions/upload-artifact$"],
