@@ -1,13 +1,13 @@
 import {createRelay} from '@coveo/relay';
 import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {
-  buildMockInsightEngine,
-  MockedInsightEngine,
+  buildMockSearchEngine,
+  MockedSearchEngine,
 } from '../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../test/mock-insight-state';
 import {buildMockRaw} from '../../test/mock-raw';
 import {buildMockResult} from '../../test/mock-result';
 import {buildMockSearchState} from '../../test/mock-search-state';
+import {createMockState} from '../../test/mock-state';
 import {getConfigurationInitialState} from '../configuration/configuration-state';
 import {emptyQuestionAnswer} from '../search/search-state';
 import {
@@ -25,23 +25,52 @@ import {
   logCloseSmartSnippetFeedbackModal,
   logSmartSnippetFeedback,
   logSmartSnippetDetailedFeedback,
-} from './question-answering-insight-analytics-actions';
+} from './question-answering-analytics-actions';
 import {getQuestionAnsweringInitialState} from './question-answering-state';
 
-const mockLogExpandSmartSnippet = jest.fn();
-const mockLogCollapseSmartSnippet = jest.fn();
-const mockLogLikeSmartSnippet = jest.fn();
-const mockLogDislikeSmartSnippet = jest.fn();
-const mockLogOpenSmartSnippetSource = jest.fn();
-const mockLogOpenSmartSnippetInlineLink = jest.fn();
-const mockLogOpenSmartSnippetFeedbackModal = jest.fn();
-const mockLogCloseSmartSnippetFeedbackModal = jest.fn();
-const mockLogSmartSnippetFeedback = jest.fn();
-const mockLogSmartSnippetDetailedFeedback = jest.fn();
-const mockLogExpandSmartSnippetSuggestion = jest.fn();
-const mockLogCollapseSmartSnippetSuggestion = jest.fn();
-const mockLogOpenSmartSnippetSuggestionSource = jest.fn();
-const mockLogOpenSmartSnippetSuggestionInlineLink = jest.fn();
+const mockLogFunction = jest.fn();
+const mockMakeExpandSmartSnippet = jest.fn(() => ({
+  log: mockLogFunction,
+}));
+const mockMakeCollapseSmartSnippet = jest.fn(() => ({
+  log: mockLogFunction,
+}));
+const mockMakeLikeSmartSnippet = jest.fn(() => ({
+  log: mockLogFunction,
+}));
+const mockMakeDislikeSmartSnippet = jest.fn(() => ({
+  log: mockLogFunction,
+}));
+const mockMakeOpenSmartSnippetSource = jest.fn((..._args) => ({
+  log: mockLogFunction,
+}));
+const mockMakeOpenSmartSnippetInlineLink = jest.fn((..._args) => ({
+  log: mockLogFunction,
+}));
+const mockMakeOpenSmartSnippetFeedbackModal = jest.fn(() => ({
+  log: mockLogFunction,
+}));
+const mockMakeCloseSmartSnippetFeedbackModal = jest.fn(() => ({
+  log: mockLogFunction,
+}));
+const mockMakeSmartSnippetFeedback = jest.fn((..._args) => ({
+  log: mockLogFunction,
+}));
+const mockMakeSmartSnippetDetailedFeedback = jest.fn(() => ({
+  log: mockLogFunction,
+}));
+const mockMakeExpandSmartSnippetSuggestion = jest.fn((..._args) => ({
+  log: mockLogFunction,
+}));
+const mockMakeCollapseSmartSnippetSuggestion = jest.fn((..._args) => ({
+  log: mockLogFunction,
+}));
+const mockMakeOpenSmartSnippetSuggestionSource = jest.fn((..._args) => ({
+  log: mockLogFunction,
+}));
+const mockMakeOpenSmartSnippetSuggestionInlineLink = jest.fn((..._args) => ({
+  log: mockLogFunction,
+}));
 const emit = jest.fn();
 
 jest.mock('@coveo/relay');
@@ -57,28 +86,28 @@ jest.mocked(createRelay).mockReturnValue({
 });
 
 jest.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = jest.fn(() => ({
+  const mockCoveoSearchPageClient = jest.fn(() => ({
     disable: jest.fn(),
-    logExpandSmartSnippet: mockLogExpandSmartSnippet,
-    logCollapseSmartSnippet: mockLogCollapseSmartSnippet,
-    logLikeSmartSnippet: mockLogLikeSmartSnippet,
-    logDislikeSmartSnippet: mockLogDislikeSmartSnippet,
-    logOpenSmartSnippetSource: mockLogOpenSmartSnippetSource,
-    logOpenSmartSnippetInlineLink: mockLogOpenSmartSnippetInlineLink,
-    logOpenSmartSnippetFeedbackModal: mockLogOpenSmartSnippetFeedbackModal,
-    logCloseSmartSnippetFeedbackModal: mockLogCloseSmartSnippetFeedbackModal,
-    logSmartSnippetFeedbackReason: mockLogSmartSnippetFeedback,
-    logSmartSnippetDetailedFeedback: mockLogSmartSnippetDetailedFeedback,
-    logExpandSmartSnippetSuggestion: mockLogExpandSmartSnippetSuggestion,
-    logCollapseSmartSnippetSuggestion: mockLogCollapseSmartSnippetSuggestion,
-    logOpenSmartSnippetSuggestionSource:
-      mockLogOpenSmartSnippetSuggestionSource,
-    logOpenSmartSnippetSuggestionInlineLink:
-      mockLogOpenSmartSnippetSuggestionInlineLink,
+    makeExpandSmartSnippet: mockMakeExpandSmartSnippet,
+    makeCollapseSmartSnippet: mockMakeCollapseSmartSnippet,
+    makeLikeSmartSnippet: mockMakeLikeSmartSnippet,
+    makeDislikeSmartSnippet: mockMakeDislikeSmartSnippet,
+    makeOpenSmartSnippetSource: mockMakeOpenSmartSnippetSource,
+    makeOpenSmartSnippetInlineLink: mockMakeOpenSmartSnippetInlineLink,
+    makeOpenSmartSnippetFeedbackModal: mockMakeOpenSmartSnippetFeedbackModal,
+    makeCloseSmartSnippetFeedbackModal: mockMakeCloseSmartSnippetFeedbackModal,
+    makeSmartSnippetFeedbackReason: mockMakeSmartSnippetFeedback,
+    makeSmartSnippetDetailedFeedback: mockMakeSmartSnippetDetailedFeedback,
+    makeExpandSmartSnippetSuggestion: mockMakeExpandSmartSnippetSuggestion,
+    makeCollapseSmartSnippetSuggestion: mockMakeCollapseSmartSnippetSuggestion,
+    makeOpenSmartSnippetSuggestionSource:
+      mockMakeOpenSmartSnippetSuggestionSource,
+    makeOpenSmartSnippetSuggestionInlineLink:
+      mockMakeOpenSmartSnippetSuggestionInlineLink,
   }));
 
   return {
-    CoveoInsightClient: mockCoveoInsightClient,
+    CoveoSearchPageClient: mockCoveoSearchPageClient,
     history: {HistoryStore: jest.fn()},
   };
 });
@@ -86,10 +115,6 @@ jest.mock('coveo.analytics', () => {
 const exampleQuestion = 'Where am I?';
 const exampleAnswerSnippet = 'You are here.';
 const exampleScore = 9001;
-const exampleSubject = 'example subject';
-const exampleDescription = 'example description';
-const exampleCaseId = '1234';
-const exampleCaseNumber = '5678';
 const examplePermanentId = 'example permanent id';
 const exampleQuestionAnswerId = 'foo';
 const exampleFeedback = 'does_not_answer';
@@ -130,15 +155,6 @@ const exampleRelatedQuestionState = {
   contentIdValue: examplePermanentId,
 };
 
-const expectedCaseContext = {
-  caseContext: {
-    Case_Subject: exampleSubject,
-    Case_Description: exampleDescription,
-  },
-  caseId: exampleCaseId,
-  caseNumber: exampleCaseNumber,
-};
-
 const expectedDocumentInfo = {
   queryPipeline: '',
   documentUri: 'example documentUri',
@@ -172,8 +188,8 @@ const exampleInlineLink = {
   linkURL: 'example link url',
 };
 
-describe('question answering insight analytics actions', () => {
-  let engine: MockedInsightEngine;
+describe('question answering analytics actions', () => {
+  let engine: MockedSearchEngine;
   const searchState = buildMockSearchState({
     results: [exampleResult],
     questionAnswer: {
@@ -187,14 +203,6 @@ describe('question answering insight analytics actions', () => {
     ...exampleQuestionAnsweringState,
     relatedQuestions: [exampleRelatedQuestionState],
   };
-  const insightCaseContextState = {
-    caseContext: {
-      Case_Subject: exampleSubject,
-      Case_Description: exampleDescription,
-    },
-    caseId: exampleCaseId,
-    caseNumber: exampleCaseNumber,
-  };
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -202,8 +210,8 @@ describe('question answering insight analytics actions', () => {
 
   describe('when analyticsMode is `legacy`', () => {
     beforeEach(() => {
-      engine = buildMockInsightEngine(
-        buildMockInsightState({
+      engine = buildMockSearchEngine(
+        createMockState({
           configuration: {
             ...getConfigurationInitialState(),
             analytics: {
@@ -213,7 +221,6 @@ describe('question answering insight analytics actions', () => {
           },
           search: searchState,
           questionAnswering: questionAnsweringState,
-          insightCaseContext: insightCaseContextState,
         })
       );
     });
@@ -225,9 +232,9 @@ describe('question answering insight analytics actions', () => {
         {} as ThunkExtraArguments
       );
 
-      const mockToUse = mockLogExpandSmartSnippet;
+      const mockToUse = mockMakeExpandSmartSnippet;
       expect(mockToUse).toHaveBeenCalledTimes(1);
-      expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedCaseContext);
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
 
     it('should log #logCollapseSmartSnippet with the case payload', async () => {
@@ -237,9 +244,9 @@ describe('question answering insight analytics actions', () => {
         {} as ThunkExtraArguments
       );
 
-      const mockToUse = mockLogCollapseSmartSnippet;
+      const mockToUse = mockMakeCollapseSmartSnippet;
       expect(mockToUse).toHaveBeenCalledTimes(1);
-      expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedCaseContext);
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
 
     it('should log #logLikeSmartSnippet with the case payload', async () => {
@@ -249,9 +256,9 @@ describe('question answering insight analytics actions', () => {
         {} as ThunkExtraArguments
       );
 
-      const mockToUse = mockLogLikeSmartSnippet;
+      const mockToUse = mockMakeLikeSmartSnippet;
       expect(mockToUse).toHaveBeenCalledTimes(1);
-      expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedCaseContext);
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
 
     it('should log #logDislikeSmartSnippet with the case payload', async () => {
@@ -261,9 +268,9 @@ describe('question answering insight analytics actions', () => {
         {} as ThunkExtraArguments
       );
 
-      const mockToUse = mockLogDislikeSmartSnippet;
+      const mockToUse = mockMakeDislikeSmartSnippet;
       expect(mockToUse).toHaveBeenCalledTimes(1);
-      expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedCaseContext);
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
 
     it('should log #logOpenSmartSnippetSource with the right payload', async () => {
@@ -273,14 +280,14 @@ describe('question answering insight analytics actions', () => {
         {} as ThunkExtraArguments
       );
 
-      const mockToUse = mockLogOpenSmartSnippetSource;
+      const mockToUse = mockMakeOpenSmartSnippetSource;
       expect(mockToUse).toHaveBeenCalledTimes(1);
       expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedDocumentInfo);
       expect(mockToUse.mock.calls[0][1]).toStrictEqual({
         contentIDKey: exampleQuestionAnswer.documentId.contentIdKey,
         contentIDValue: exampleQuestionAnswer.documentId.contentIdValue,
       });
-      expect(mockToUse.mock.calls[0][2]).toStrictEqual(expectedCaseContext);
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
 
     it('should log #logOpenSmartSnippetInlineLink with the right payload', async () => {
@@ -290,7 +297,7 @@ describe('question answering insight analytics actions', () => {
         {} as ThunkExtraArguments
       );
 
-      const mockToUse = mockLogOpenSmartSnippetInlineLink;
+      const mockToUse = mockMakeOpenSmartSnippetInlineLink;
       expect(mockToUse).toHaveBeenCalledTimes(1);
       expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedDocumentInfo);
       expect(mockToUse.mock.calls[0][1]).toStrictEqual({
@@ -298,7 +305,7 @@ describe('question answering insight analytics actions', () => {
         contentIDValue: exampleQuestionAnswer.documentId.contentIdValue,
         ...exampleInlineLink,
       });
-      expect(mockToUse.mock.calls[0][2]).toStrictEqual(expectedCaseContext);
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
 
     it('should log #logOpenSmartSnippetFeedbackModal with the case payload', async () => {
@@ -308,9 +315,9 @@ describe('question answering insight analytics actions', () => {
         {} as ThunkExtraArguments
       );
 
-      const mockToUse = mockLogOpenSmartSnippetFeedbackModal;
+      const mockToUse = mockMakeOpenSmartSnippetFeedbackModal;
       expect(mockToUse).toHaveBeenCalledTimes(1);
-      expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedCaseContext);
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
 
     it('should log #logCloseSmartSnippetFeedbackModal with the case payload', async () => {
@@ -320,9 +327,9 @@ describe('question answering insight analytics actions', () => {
         {} as ThunkExtraArguments
       );
 
-      const mockToUse = mockLogCloseSmartSnippetFeedbackModal;
+      const mockToUse = mockMakeCloseSmartSnippetFeedbackModal;
       expect(mockToUse).toHaveBeenCalledTimes(1);
-      expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedCaseContext);
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
 
     it('should log #logSmartSnippetFeedback with the right payload', async () => {
@@ -332,11 +339,11 @@ describe('question answering insight analytics actions', () => {
         {} as ThunkExtraArguments
       );
 
-      const mockToUse = mockLogSmartSnippetFeedback;
+      const mockToUse = mockMakeSmartSnippetFeedback;
       expect(mockToUse).toHaveBeenCalledTimes(1);
       expect(mockToUse.mock.calls[0][0]).toStrictEqual(exampleFeedback);
       expect(mockToUse.mock.calls[0][1]).toStrictEqual(undefined);
-      expect(mockToUse.mock.calls[0][2]).toStrictEqual(expectedCaseContext);
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
 
     it('should log #logSmartSnippetDetailedFeedback with the right payload', async () => {
@@ -348,11 +355,11 @@ describe('question answering insight analytics actions', () => {
 
       const expectedFeedbackReason = 'other';
 
-      const mockToUse = mockLogSmartSnippetFeedback;
+      const mockToUse = mockMakeSmartSnippetFeedback;
       expect(mockToUse).toHaveBeenCalledTimes(1);
       expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedFeedbackReason);
       expect(mockToUse.mock.calls[0][1]).toStrictEqual(exampleFeedbackDetails);
-      expect(mockToUse.mock.calls[0][2]).toStrictEqual(expectedCaseContext);
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
 
     it('should log #logExpandSmartSnippetSuggestion with the right payload', async () => {
@@ -366,12 +373,12 @@ describe('question answering insight analytics actions', () => {
         documentId: exampleRelatedQuestion.documentId,
       };
 
-      const mockToUse = mockLogExpandSmartSnippetSuggestion;
+      const mockToUse = mockMakeExpandSmartSnippetSuggestion;
       expect(mockToUse).toHaveBeenCalledTimes(1);
       expect(mockToUse.mock.calls[0][0]).toStrictEqual(
         expectedRelatedQuestionPayload
       );
-      expect(mockToUse.mock.calls[0][1]).toStrictEqual(expectedCaseContext);
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
 
     it('should log #logCollapseSmartSnippetSuggestion with the right payload', async () => {
@@ -385,12 +392,12 @@ describe('question answering insight analytics actions', () => {
         documentId: exampleRelatedQuestion.documentId,
       };
 
-      const mockToUse = mockLogCollapseSmartSnippetSuggestion;
+      const mockToUse = mockMakeCollapseSmartSnippetSuggestion;
       expect(mockToUse).toHaveBeenCalledTimes(1);
       expect(mockToUse.mock.calls[0][0]).toStrictEqual(
         expectedRelatedQuestionPayload
       );
-      expect(mockToUse.mock.calls[0][1]).toStrictEqual(expectedCaseContext);
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
 
     it('should log #logOpenSmartSnippetSuggestionSource with the right payload', async () => {
@@ -404,13 +411,13 @@ describe('question answering insight analytics actions', () => {
         documentId: exampleRelatedQuestion.documentId,
       };
 
-      const mockToUse = mockLogOpenSmartSnippetSuggestionSource;
+      const mockToUse = mockMakeOpenSmartSnippetSuggestionSource;
       expect(mockToUse).toHaveBeenCalledTimes(1);
       expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedDocumentInfo);
       expect(mockToUse.mock.calls[0][1]).toStrictEqual(
         expectedRelatedQuestionPayload
       );
-      expect(mockToUse.mock.calls[0][2]).toStrictEqual(expectedCaseContext);
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
 
     it('should log #logOpenSmartSnippetSuggestionInlineLink with the right payload', async () => {
@@ -425,21 +432,21 @@ describe('question answering insight analytics actions', () => {
         documentId: exampleRelatedQuestion.documentId,
       };
 
-      const mockToUse = mockLogOpenSmartSnippetSuggestionInlineLink;
+      const mockToUse = mockMakeOpenSmartSnippetSuggestionInlineLink;
       expect(mockToUse).toHaveBeenCalledTimes(1);
       expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedDocumentInfo);
       expect(mockToUse.mock.calls[0][1]).toStrictEqual({
         ...expectedRelatedQuestionPayload,
         ...exampleInlineLink,
       });
-      expect(mockToUse.mock.calls[0][2]).toStrictEqual(expectedCaseContext);
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('when analyticsMode is `next`', () => {
     beforeEach(() => {
-      engine = buildMockInsightEngine(
-        buildMockInsightState({
+      engine = buildMockSearchEngine(
+        createMockState({
           configuration: {
             ...getConfigurationInitialState(),
             analytics: {
@@ -449,7 +456,6 @@ describe('question answering insight analytics actions', () => {
           },
           search: searchState,
           questionAnswering: questionAnsweringState,
-          insightCaseContext: insightCaseContextState,
         })
       );
     });

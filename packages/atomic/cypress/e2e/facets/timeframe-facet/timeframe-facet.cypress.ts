@@ -48,6 +48,47 @@ describe('Timeframe Facet V1 Test Suites', () => {
 
     CommonAssertions.assertConsoleError(false);
   });
+
+  describe('with custom #sortCriteria, ascending', () => {
+    const periodFrames: UnitRange[] = [
+      {period: 'past', unit: 'year', amount: 10},
+      {period: 'past', unit: 'month', amount: 1},
+      {period: 'past', unit: 'quarter', amount: 1},
+    ];
+    function setupTimeframeWithCustomSortCriteria() {
+      new TestFixture()
+        .with(
+          addTimeframeFacet(
+            {
+              label: timeframeFacetLabel,
+              field: timeframeFacetField,
+              'sort-criteria': 'ascending',
+            },
+            periodFrames
+          )
+        )
+        .init();
+    }
+
+    describe('verify rendering', () => {
+      beforeEach(setupTimeframeWithCustomSortCriteria);
+      TimeframeFacetAssertions.assertValuesMatchExpectedOrder([
+        'Past 10 years',
+        'Past quarter',
+        'Past month',
+      ]);
+      CommonFacetAssertions.assertDisplayFacet(TimeframeFacetSelectors, true);
+      CommonAssertions.assertAccessibility(timeframeFacetComponent);
+      CommonFacetAssertions.assertLabelContains(
+        TimeframeFacetSelectors,
+        timeframeFacetLabel
+      );
+      CommonAssertions.assertContainsComponentError(
+        TimeframeFacetSelectors,
+        false
+      );
+    });
+  });
   describe('with default "date" field timeframe-facet', () => {
     function setupTimeframeFacet() {
       new TestFixture()
@@ -284,7 +325,6 @@ describe('Timeframe Facet V1 Test Suites', () => {
         )
         .init();
     }
-
     describe('verify rendering', () => {
       beforeEach(() => {
         setupTimeframeWithInputOnly();

@@ -5,7 +5,6 @@ import {
 } from '../../../api/commerce/commerce-api-params';
 
 export interface CommerceContextState {
-  trackingId: string;
   language: string;
   country: string;
   currency: CurrencyCodeISO4217;
@@ -14,7 +13,6 @@ export interface CommerceContextState {
 }
 
 export const getContextInitialState = (): CommerceContextState => ({
-  trackingId: '',
   language: '',
   country: '',
   currency: '' as CurrencyCodeISO4217,
