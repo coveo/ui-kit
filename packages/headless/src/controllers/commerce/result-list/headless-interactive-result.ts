@@ -1,5 +1,6 @@
 import {ProductRecommendation} from '../../../api/search/search/product-recommendation';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
+import {productClick} from '../../../features/commerce/interactive-result/interactive-result-actions';
 import {pushRecentResult} from '../../../features/product-listing/product-listing-recent-results';
 import {
   buildInteractiveResultCore,
@@ -46,8 +47,7 @@ export function buildInteractiveResult(
       return;
     }
     wasOpened = true;
-    // eslint-disable-next-line @cspell/spellchecker
-    // TODO LENS-1500: Trigger ec.productClick event
+    engine.dispatch(productClick(props.options.result));
   };
 
   const action = () => {
