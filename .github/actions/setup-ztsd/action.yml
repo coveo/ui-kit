@@ -1,0 +1,9 @@
+name: 'Setup ZTSD'
+description: Setup ZTSD in Self-Hosted Runner for Cache Consistency with GitHub-Hosted Runner
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        sudo apt update
+        sudo apt install zstd
