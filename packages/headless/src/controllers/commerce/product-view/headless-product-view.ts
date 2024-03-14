@@ -1,5 +1,6 @@
-import {Ec, Product} from '@coveo/relay-event-types';
+import {Product} from '@coveo/relay-event-types';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
+import {productView} from '../../../features/commerce/context/cart/cart-actions';
 
 /**
  * The `ProductView` controller provides an interface for triggering an analytics event for a product view.
@@ -21,9 +22,7 @@ export interface ProductView {
 export function buildProductView(engine: CommerceEngine): ProductView {
   return {
     view: (product) => {
-      const {currency} = engine.state.commerceContext;
-      const payload: Ec.ProductView = {currency, product};
-      engine.relay.emit('ec.productView', payload);
+      engine.dispatch(productView(product));
     },
   };
 }

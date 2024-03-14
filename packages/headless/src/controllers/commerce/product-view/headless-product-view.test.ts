@@ -1,8 +1,5 @@
 import {Product} from '@coveo/relay-event-types';
-import {
-  CommerceContextState,
-  getContextInitialState,
-} from '../../../features/commerce/context/context-state';
+import {productView} from '../../../features/commerce/context/cart/cart-actions';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state';
 import {
   buildMockCommerceEngine,
@@ -10,36 +7,27 @@ import {
 } from '../../../test/mock-engine-v2';
 import {buildProductView, ProductView} from './headless-product-view';
 
+jest.mock('../../../features/commerce/context/cart/cart-actions');
+
 describe('ProductView', () => {
   let engine: MockedCommerceEngine;
-  let productView: ProductView;
-  let commerceContext: CommerceContextState;
-
-  function initializeProductView() {
-    productView = buildProductView(engine);
-  }
+  let controller: ProductView;
 
   beforeEach(() => {
-    commerceContext = getContextInitialState();
-    engine = buildMockCommerceEngine(buildMockCommerceState({commerceContext}));
-    initializeProductView();
+    engine = buildMockCommerceEngine(buildMockCommerceState());
+    controller = buildProductView(engine);
   });
 
   describe('#view', () => {
     it('dispatches ec.productClick', () => {
-      commerceContext.currency = 'USD';
-
       const product: Product = {
         name: 'ski',
         price: 1,
         productId: 'a',
       };
 
-      productView.view(product);
-      expect(engine.relay.emit).toHaveBeenCalledWith('ec.productView', {
-        currency: 'USD',
-        product,
-      });
+      controller.view(product);
+      expect(productView).toHaveBeenCalledWith(product);
     });
   });
 });

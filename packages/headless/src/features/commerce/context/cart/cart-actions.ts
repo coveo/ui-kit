@@ -1,3 +1,4 @@
+import {Product, Ec} from '@coveo/relay-event-types';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {AsyncThunkCommerceOptions} from '../../../../api/commerce/commerce-api-client';
 import {CartItemParam} from '../../../../api/commerce/commerce-api-params';
@@ -9,6 +10,18 @@ import {
   setItemsPayloadDefinition,
   updateItemPayloadDefinition,
 } from './cart-validation';
+
+export const productView = createAsyncThunk<
+  void,
+  Product,
+  AsyncThunkCommerceOptions<CommerceEngineState>
+>('commerce/product/view', async (product: Product, {extra, getState}) => {
+  const {relay} = extra;
+  const {currency} = getState().commerceContext;
+  const payload: Ec.ProductView = {currency, product};
+
+  relay.emit('ec.productView', payload);
+});
 
 export const purchase = createAsyncThunk<
   void,
