@@ -1,5 +1,6 @@
 import {ProductRecommendation} from '../../../api/search/search/product-recommendation';
 import {configuration} from '../../../app/common-reducers';
+import {productClick} from '../../../features/commerce/interactive-result/interactive-result-actions';
 import {pushRecentResult} from '../../../features/product-listing/product-listing-recent-results';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state';
 import {
@@ -13,6 +14,9 @@ import {
 } from './headless-interactive-result';
 
 jest.mock('../../../features/product-listing/product-listing-recent-results');
+jest.mock(
+  '../../../features/commerce/interactive-result/interactive-result-actions'
+);
 
 describe('InteractiveResult', () => {
   let engine: MockedCommerceEngine;
@@ -32,6 +36,7 @@ describe('InteractiveResult', () => {
   }
 
   beforeEach(() => {
+    jest.clearAllMocks();
     engine = buildMockCommerceEngine(buildMockCommerceState());
     initializeInteractiveResult();
     jest.useFakeTimers();
@@ -46,24 +51,30 @@ describe('InteractiveResult', () => {
   });
 
   describe('#select', () => {
-    it('dispatches #pushRecentResult', async () => {
+    it('dispatches #pushRecentResult', () => {
       interactiveResult.select();
       jest.runAllTimers();
       expect(pushRecentResult).toHaveBeenCalled();
     });
 
-    // eslint-disable-next-line @cspell/spellchecker
-    // TODO LENS-1500
-    /*it('dispatches ec.productClick', () => {
+    it('dispatches ec.productClick', () => {
+      const mockedProductClick = jest.mocked(productClick);
       interactiveResult.select();
-      ...
-    });*/
+      jest.runAllTimers();
+      expect(mockedProductClick).toHaveBeenCalledTimes(1);
+    });
 
-    // eslint-disable-next-line @cspell/spellchecker
-    // TODO LENS-1500
-    /*it('does not dispatch ec.productClick when product was opened', () => {
+    it('does not dispatch ec.productClick when product was opened', () => {
+      const mockedProductClick = jest.mocked(productClick);
+      // open the product
       interactiveResult.select();
-      ...
-    });*/
+      jest.runAllTimers();
+
+      // Second click
+      interactiveResult.select();
+      jest.runAllTimers();
+
+      expect(mockedProductClick).toHaveBeenCalledTimes(1);
+    });
   });
 });
