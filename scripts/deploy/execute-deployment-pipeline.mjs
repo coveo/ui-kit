@@ -22,7 +22,7 @@ const headless = getVersionComposants(headlessJson.version);
 const atomic = getVersionComposants(atomicJson.version);
 const atomicReact = getVersionComposants(atomicReactJson.version);
 const atomicHostedPage = getVersionComposants(atomicHostedPageJson.version);
-execSync(`
+console.log(execSync(`
 docker run -v ${resolve('.')}:/home/jenkins -a stderr -a stdout 458176070654.dkr.ecr.us-east-2.amazonaws.com/jenkins/deployment_package:stable
   deployment-package package create --with-deploy \
     --resolve HEADLESS_MAJOR_VERSION=${headless.major} \
@@ -38,4 +38,4 @@ docker run -v ${resolve('.')}:/home/jenkins -a stderr -a stdout 458176070654.dkr
     --resolve ATOMIC_HOSTED_PAGE_MINOR_VERSION=${atomicHostedPage.minor} \
     --resolve ATOMIC_HOSTED_PAGE_PATCH_VERSION=${atomicHostedPage.patch} \
     --resolve GITHUB_RUN_ID=${context.runId} \
-    --changeset ${releaseCommit}`.replaceAll(/\s+/g, ' ').trim());
+    --changeset ${releaseCommit}`.replaceAll(/\s+/g, ' ').trim()).toString());
