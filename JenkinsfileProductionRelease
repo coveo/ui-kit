@@ -19,15 +19,15 @@ node('heavy && linux && docker') {
       sh 'npm ci'
     }
 
-    stage('Approve production release') {
+ stage('Approve production release') {
       withCredentials([
-        string(credentialsId: 'ui-kit-releaser-app-id', variable: 'RELEASER_APP_ID'),
-        string(credentialsId: 'ui-kit-releaser-private-key', variable: 'RELEASER_PRIVATE_KEY'),
-        string(credentialsId: 'ui-kit-releaser-client-id', variable: 'RELEASER_CLIENT_ID'),
-        string(credentialsId: 'ui-kit-releaser-client-secret', variable: 'RELEASER_CLIENT_SECRET'),
-        string(credentialsId: 'ui-kit-releaser-installation-id', variable: 'RELEASER_INSTALLATION_ID'),
+        string(credentialsId: 'RELEASER_APP_ID', variable: 'RELEASER_APP_ID'),
+        file(credentialsId: 'RELEASER_PRIVATE_KEY', variable: 'RELEASER_PRIVATE_KEY_PATH'),
+        string(credentialsId: 'RELEASER_CLIENT_ID', variable: 'RELEASER_CLIENT_ID'),
+        string(credentialsId: 'RELEASER_CLIENT_SECRET', variable: 'RELEASER_CLIENT_SECRET'),
+        string(credentialsId: 'RELEASER_INSTALLATION_ID', variable: 'RELEASER_INSTALLATION_ID'),
       ]) {
-        sh "node ./scripts/deploy/approve-production-release.mjs ${params.GITHUB_RUN_ID}"
+          sh "node ./scripts/deploy/approve-production-release.mjs ${params.GITHUB_RUN_ID}"
       }
     }
 
