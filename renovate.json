@@ -145,6 +145,22 @@
       "description": "sfdx-lwc-jest uses a not GA version of Salesforce API (60)"
     },
     {
+      "matchFileNames": ["packages/quantic/package.json"],
+      "matchPackagePatterns": ["^@otokit/graphql$"],
+      "groupSlug": "quantic-octokit-graphql",
+      "rangeStrategy": "replace",
+      "allowedVersions": "7.x",
+      "description": "8+ is ESM SFINT-5447"
+    },
+    {
+      "matchFileNames": ["packages/quantic/package.json"],
+      "matchPackagePatterns": ["^@otokit/graphql-schema$"],
+      "groupSlug": "quantic-octokit-graphql-schema",
+      "rangeStrategy": "replace",
+      "allowedVersions": "14.x",
+      "description": "15+ is ESM SFINT-5447"
+    },
+    {
       "matchPackagePatterns": ["^actions/upload-artifact$"],
       "groupSlug": "actions-upload-artifact",
       "rangeStrategy": "replace",
