@@ -1494,13 +1494,13 @@ describe('SearchPageClient', () => {
     });
 
     it('should send proper payload for #logGeneratedAnswerStreamEnd', async () => {
-        const meta = {generativeQuestionAnsweringId: fakeStreamId, answerGenerated: true};
+        const meta = {generativeQuestionAnsweringId: fakeStreamId, answerGenerated: true, answerTextIsEmpty: false};
         await client.logGeneratedAnswerStreamEnd(meta);
         expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerStreamEnd, meta);
     });
 
     it('should send proper payload for #makeGeneratedAnswerStreamEnd', async () => {
-        const meta = {generativeQuestionAnsweringId: fakeStreamId, answerGenerated: true};
+        const meta = {generativeQuestionAnsweringId: fakeStreamId, answerGenerated: true, answerTextIsEmpty: false};
         const built = await client.makeGeneratedAnswerStreamEnd(meta);
         await built.log({searchUID: provider.getSearchUID()});
         expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerStreamEnd, meta);
