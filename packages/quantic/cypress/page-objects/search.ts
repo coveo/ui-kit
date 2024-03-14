@@ -14,6 +14,10 @@ function uaAlias(eventName: string) {
   return `@UA-${eventName}`;
 }
 
+function nextAnalyticsAlias(eventName: string) {
+  return `@EP-${eventName}`;
+}
+
 function paramsInclude(superset: RequestParams, subset: RequestParams) {
   return Object.keys(subset).reduce((isMatching, key) => {
     return isMatching && superset[key] === subset[key];
@@ -90,6 +94,11 @@ export const InterceptAliases = {
     UndoQuery: uaAlias('undoQuery'),
     SearchboxSubmit: uaAlias('searchboxSubmit'),
   },
+  NextAnalytics: {
+    Qna: {
+      AnswerAction: nextAnalyticsAlias('Qna.AnswerAction'),
+    },
+  },
   QuerySuggestions: '@coveoQuerySuggest',
   Search: '@coveoSearch',
   FacetSearch: '@coveoFacetSearch',
@@ -100,6 +109,7 @@ export const InterceptAliases = {
 
 export const routeMatchers = {
   analytics: '**/rest/ua/v15/analytics/*',
+  nextAnalytics: '**/events/v1?*',
   querySuggest: '**/rest/search/v2/querySuggest?*',
   search: '**/rest/search/v2?*',
   facetSearch: '**/rest/search/v2/facet?*',
@@ -117,6 +127,11 @@ export function interceptSearch() {
       } else if (req.body.eventType) {
         req.alias = uaAlias(analyticsBody.eventValue as string).substring(1);
       }
+    })
+
+    .intercept('POST', routeMatchers.nextAnalytics, (req) => {
+      const eventType = req.body?.[0]?.meta.type;
+      req.alias = nextAnalyticsAlias(eventType).substring(1);
     })
 
     .intercept('POST', routeMatchers.querySuggest)
@@ -162,7 +177,7 @@ export function mockNoMoreFacetValues(field: string, useCase?: string) {
   cy.intercept(getRoute(useCase), (req) => {
     req.continue((res) => {
       res.body.facets.find(
-        (facet) => facet.field === field
+        (facet: Record<string, unknown>) => facet.field === field
       ).moreValuesAvailable = false;
       res.send();
     });
