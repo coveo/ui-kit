@@ -30,6 +30,7 @@ interface GeneratedAnswerOptions {
 
 let analyticsMode: 'legacy' | 'next' = 'legacy';
 const exampleTrackingId = 'tracking_id_123';
+const answerType = 'CRGA';
 
 const GENERATED_ANSWER_DATA_KEY = 'coveo-generated-answer-data';
 const otherOption = 'other';
@@ -182,7 +183,7 @@ describe('quantic-generated-answer', () => {
                           },
                           answer: {
                             id: streamId,
-                            type: 'CRGA',
+                            type: answerType,
                           },
                         },
                         exampleTrackingId
@@ -204,7 +205,7 @@ describe('quantic-generated-answer', () => {
                           },
                           answer: {
                             id: streamId,
-                            type: 'CRGA',
+                            type: answerType,
                           },
                         },
                         exampleTrackingId
@@ -237,7 +238,7 @@ describe('quantic-generated-answer', () => {
                           },
                           answer: {
                             id: streamId,
-                            type: 'CRGA',
+                            type: answerType,
                           },
                         },
                         exampleTrackingId
@@ -293,7 +294,7 @@ describe('quantic-generated-answer', () => {
                           },
                           answer: {
                             id: streamId,
-                            type: 'CRGA',
+                            type: answerType,
                           },
                         },
                         exampleTrackingId
@@ -322,7 +323,7 @@ describe('quantic-generated-answer', () => {
                           },
                           answer: {
                             id: streamId,
-                            type: 'CRGA',
+                            type: answerType,
                           },
                         },
                         exampleTrackingId
@@ -372,7 +373,7 @@ describe('quantic-generated-answer', () => {
                             },
                             answer: {
                               id: secondStreamId,
-                              type: 'CRGA',
+                              type: answerType,
                             },
                           },
                           exampleTrackingId
@@ -422,7 +423,7 @@ describe('quantic-generated-answer', () => {
                             },
                             answer: {
                               id: thirdStreamId,
-                              type: 'CRGA',
+                              type: answerType,
                             },
                           },
                           exampleTrackingId
@@ -465,8 +466,7 @@ describe('quantic-generated-answer', () => {
                       {
                         answer: {
                           id: streamId,
-                          // eslint-disable-next-line @cspell/spellchecker
-                          type: 'CRGA',
+                          type: answerType,
                         },
                         action: 'hide',
                       },
@@ -491,8 +491,7 @@ describe('quantic-generated-answer', () => {
                       {
                         answer: {
                           id: streamId,
-                          // eslint-disable-next-line @cspell/spellchecker
-                          type: 'CRGA',
+                          type: answerType,
                         },
                         action: 'show',
                       },
@@ -679,7 +678,7 @@ describe('quantic-generated-answer', () => {
                         {
                           answer: {
                             id: streamId,
-                            type: 'CRGA',
+                            type: answerType,
                           },
                           action: 'copyToClipboard',
                         },
@@ -800,7 +799,7 @@ describe('quantic-generated-answer', () => {
                       {
                         answer: {
                           id: streamId,
-                          type: 'CRGA',
+                          type: answerType,
                         },
                         citation: {
                           id: testCitations[hoveredCitationIndex].id,
@@ -833,7 +832,7 @@ describe('quantic-generated-answer', () => {
                     {
                       answer: {
                         id: streamId,
-                        type: 'CRGA',
+                        type: answerType,
                       },
                       citation: {
                         id: testCitations[clickedCitationIndex].id,
