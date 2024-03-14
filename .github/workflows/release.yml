@@ -51,6 +51,8 @@ jobs:
       #     DEBUG: ${{ inputs.debug && '*' || '' }}
       - name: Call ui-kit-cd
         run: node ./scripts/deploy/trigger-ui-kit-cd.mjs
+        env:
+          GH_TOKEN: ${{ secrets.UI_KIT_CD_DISPATCHER }}
   promote-prod:
     needs: release
     environment: 'Production'
