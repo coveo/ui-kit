@@ -18,16 +18,14 @@ describe('ProductView', () => {
     controller = buildProductView(engine);
   });
 
-  describe('#view', () => {
-    it('dispatches ec.productClick', () => {
-      const product: Product = {
-        name: 'ski',
-        price: 1,
-        productId: 'a',
-      };
+  it('#view dispatches productView', () => {
+    const product: Product = {
+      name: 'ski',
+      price: 1,
+      productId: 'a',
+    };
 
-      controller.view(product);
-      expect(productView).toHaveBeenCalledWith(product);
-    });
+    controller.view(product);
+    expect(productView).toHaveBeenCalledWith(product);
   });
 });
