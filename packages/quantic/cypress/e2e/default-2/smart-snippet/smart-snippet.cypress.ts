@@ -25,9 +25,8 @@ const exampleSmartSnippetSourceUri = inactiveLink;
 const exampleSmartSnippetSourceTitle = 'Example result title';
 const examplePermanentId = '123';
 const exampleInlineLinkText = 'Example inline link';
-const exampleInlineLinkUrl =
-  'https://saas-inspiration-5437-dev-ed.scratch.my.site.com/examples/s/';
-const exampleSmartSnippetAnswer = `<div data-cy="smart-snippet__inline-link"><p>Example smart snippet answer</p><a href="${exampleInlineLinkUrl}">${exampleInlineLinkText}</a></div>`;
+const exampleInlineLinkUrl = 'https://www.coveo.com/en';
+const exampleSmartSnippetAnswer = `<div data-cy="smart-snippet__inline-link"><p>Example smart snippet answer</p><a href="${exampleInlineLinkUrl}" target="_blank">${exampleInlineLinkText}</a></div>`;
 const exampleUriHash = 'exampleUriHash';
 const otherOption = 'other';
 const feedbackOptions = [

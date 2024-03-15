@@ -16,10 +16,9 @@ import {SmartSnippetSuggestionsActions as Actions} from './smart-snippet-suggest
 import {SmartSnippetSuggestionsExpectations as Expect} from './smart-snippet-suggestions-expectations';
 
 const inactiveLink = 'javascript:void(0);';
-const exampleInlineLink =
-  'https://saas-inspiration-5437-dev-ed.scratch.my.site.com/examples/s/';
+const exampleInlineLink = 'https://www.coveo.com/en';
 const exampleInlineLinkText = 'Example inline link';
-const exampleSmartSnippetAnswer = `<div data-cy="smart-snippet__inline-link"><p>Example smart snippet answer</p><a href="${exampleInlineLink}">${exampleInlineLinkText}</a></div>`;
+const exampleSmartSnippetAnswer = `<div data-cy="smart-snippet__inline-link"><p>Example smart snippet answer</p><a href="${exampleInlineLink}" target="_blank">${exampleInlineLinkText}</a></div>`;
 const exampleUriHash = 'exampleUriHash';
 const exampleRelatedQuestions = [
   {
