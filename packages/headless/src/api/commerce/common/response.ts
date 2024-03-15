@@ -7,6 +7,12 @@ import {Pagination} from './pagination';
 import {Product} from './product';
 import {Sort} from './sort';
 
+export interface RecommendationCommerceSuccessResponse {
+  responseId: string;
+  products: Product[];
+  pagination: Pagination;
+}
+
 export interface CommerceSuccessResponse {
   responseId: string;
   products: Product[];
