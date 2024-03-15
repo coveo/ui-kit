@@ -103,6 +103,24 @@ describe('c-quantic-smart-snippet-source', () => {
     expect(sourceTitle.href).toBe(exampleUri);
   });
 
+  it('should not display the source uri when the uri option is undefined', async () => {
+    const element = createTestComponent({...defaultOptions, uri: undefined});
+    await flushPromises();
+
+    const sourceUri = element.shadowRoot.querySelector(selectors.sourceUri);
+
+    expect(sourceUri).toBeNull();
+  });
+
+  it('should not display the source title when the title option is undefined', async () => {
+    const element = createTestComponent({...defaultOptions, title: undefined});
+    await flushPromises();
+
+    const sourceTitle = element.shadowRoot.querySelector(selectors.sourceTitle);
+
+    expect(sourceTitle).toBeNull();
+  });
+
   ['sourceUri', 'sourceTitle'].forEach((key) => {
     describe(`the analytics bindings of the ${key}`, () => {
       for (const [eventName, action] of Object.entries(bindingsMap)) {
