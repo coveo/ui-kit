@@ -9,10 +9,14 @@
   &:hover .rephrase-btn-label {
     @apply text-primary;
   }
+
+  &.active .rephrase-btn-label {
+    @apply text-white;
+  }
 }
 
 [part='rephrase-button'] {
-  --height: 2.2em;
+  --height: 1.5em;
   --icon-height: 1.1em;
 
   height: var(--height);
@@ -36,11 +40,22 @@
 
   &:hover,
   &.active {
-    @apply border-primary text-primary;
-
     .icon-container,
     .rephrase-btn-label {
       @apply text-inherit;
     }
   }
+
+  &:hover {
+    @apply text-primary;
+  }
+
+  &.active {
+    @apply text-white;
+    background-color: var(--atomic-primary);
+  }
+}
+
+.rephrase-buttons > div {
+  border-color: var(--atomic-neutral);
 }
