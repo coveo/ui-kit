@@ -8,7 +8,6 @@ import {
   QueryRecommendationCommerceAPIThunkReturn,
   StateNeededByQueryCommerceAPI,
 } from '../common/actions';
-import {logRecommendationV2Load} from './recommendation-analytics';
 
 export const fetchRecommendation = createAsyncThunk<
   QueryRecommendationCommerceAPIThunkReturn,
@@ -33,7 +32,6 @@ export const fetchRecommendation = createAsyncThunk<
 
     return {
       response: fetched.success,
-      analyticsAction: logRecommendationV2Load(),
     };
   }
 );

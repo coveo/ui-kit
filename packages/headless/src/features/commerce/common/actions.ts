@@ -52,7 +52,6 @@ export interface QueryCommerceAPIThunkReturn {
 export interface QueryRecommendationCommerceAPIThunkReturn {
   /** The successful search response. */
   response: RecommendationCommerceSuccessResponse;
-  // analyticsAction: PreparableAnalyticsAction<StateNeededByQueryCommerceAPI>;
 }
 
 export const buildCommerceAPIRequest = async (
