@@ -120,7 +120,7 @@ function nextAnalyticsExpectations() {
         );
     },
 
-    emitQnaSubmitNegativeFeedbackEvent: (
+    emitQnaSubmitFeedbackReasonEvent: (
       expectedEvent: Qna.SubmitFeedback,
       expectedTrackingId: string
     ) => {

@@ -230,7 +230,7 @@ describe('quantic-generated-answer', () => {
                     );
                     Actions.clickFeedbackSubmitButton();
                     if (analyticsMode === 'next') {
-                      NextAnalyticsExpectations.emitQnaSubmitNegativeFeedbackEvent(
+                      NextAnalyticsExpectations.emitQnaSubmitFeedbackReasonEvent(
                         {
                           feedback: {
                             liked: false,
@@ -314,7 +314,7 @@ describe('quantic-generated-answer', () => {
                     Actions.typeInFeedbackDetailsInput(exampleDetails);
                     Actions.clickFeedbackSubmitButton();
                     if (analyticsMode === 'next') {
-                      NextAnalyticsExpectations.emitQnaSubmitNegativeFeedbackEvent(
+                      NextAnalyticsExpectations.emitQnaSubmitFeedbackReasonEvent(
                         {
                           feedback: {
                             liked: false,
@@ -364,7 +364,7 @@ describe('quantic-generated-answer', () => {
                       Actions.typeInFeedbackDetailsInput(exampleDetails);
                       Actions.clickFeedbackSubmitButton();
                       if (analyticsMode === 'next') {
-                        NextAnalyticsExpectations.emitQnaSubmitNegativeFeedbackEvent(
+                        NextAnalyticsExpectations.emitQnaSubmitFeedbackReasonEvent(
                           {
                             feedback: {
                               liked: false,
@@ -414,7 +414,7 @@ describe('quantic-generated-answer', () => {
                       Actions.typeInFeedbackDetailsInput(exampleDetails);
                       Actions.clickFeedbackSubmitButton();
                       if (analyticsMode === 'next') {
-                        NextAnalyticsExpectations.emitQnaSubmitNegativeFeedbackEvent(
+                        NextAnalyticsExpectations.emitQnaSubmitFeedbackReasonEvent(
                           {
                             feedback: {
                               liked: false,
