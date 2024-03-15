@@ -78,6 +78,20 @@ describe('c-quantic-smart-snippet-source', () => {
     expect(sourceUri.href).toBe(exampleUri);
   });
 
+  it('should target a new tab when clicked', async () => {
+    const element = createTestComponent();
+    await flushPromises();
+
+    const sourceUri = element.shadowRoot.querySelector(selectors.sourceUri);
+    const sourceTitle = element.shadowRoot.querySelector(selectors.sourceTitle);
+
+    expect(sourceUri).not.toBeNull();
+    expect(sourceUri.target).toBe("_blank");
+
+    expect(sourceTitle).not.toBeNull();
+    expect(sourceTitle.target).toBe("_blank");
+  });
+
   it('should properly display the source title', async () => {
     const element = createTestComponent();
     await flushPromises();
