@@ -17,3 +17,7 @@ export class DisconnectedError extends Error {
     this.statusCode = statusCode ?? 0;
   }
 }
+
+export const slotIdError = new Error(
+  'The slotId cannot be empty, set a valid id'
+);

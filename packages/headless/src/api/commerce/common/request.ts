@@ -10,6 +10,7 @@ import {
   FacetsParam,
   PageParam,
   SortParam,
+  SlotId,
 } from '../commerce-api-params';
 
 export type CommerceAPIRequest = BaseParam &
@@ -19,9 +20,19 @@ export type CommerceAPIRequest = BaseParam &
   CurrencyParam &
   ClientIdParam &
   ContextParam &
-  FacetsParam &
   PageParam &
+  FacetsParam &
   SortParam;
+
+export type RecommendationCommerceAPIRequest = BaseParam &
+  SlotId &
+  TrackingIdParam &
+  LanguageParam &
+  CountryParam &
+  CurrencyParam &
+  ClientIdParam &
+  ContextParam &
+  PageParam;
 
 export const buildRequest = (req: CommerceAPIRequest, path: string) => {
   return {
@@ -52,6 +63,33 @@ const prepareRequestParams = (req: CommerceAPIRequest) => {
     page,
     facets,
     sort,
+  };
+};
+
+export const buildRecommendationRequest = (
+  req: RecommendationCommerceAPIRequest,
+  path: string
+) => {
+  return {
+    ...baseRequest(req, path),
+    requestParams: prepareRecommendationRequestParams(req),
+  };
+};
+
+const prepareRecommendationRequestParams = (
+  req: RecommendationCommerceAPIRequest
+) => {
+  const {id, trackingId, clientId, context, language, country, currency, page} =
+    req;
+  return {
+    id,
+    trackingId,
+    clientId,
+    context,
+    language,
+    country,
+    currency,
+    page,
   };
 };
 

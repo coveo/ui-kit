@@ -8,6 +8,7 @@ import {commerceFacetSetReducer} from '../../features/commerce/facets/facet-set/
 import {paginationReducer} from '../../features/commerce/pagination/pagination-slice';
 import {productListingV2Reducer} from '../../features/commerce/product-listing/product-listing-slice';
 import {queryReducer} from '../../features/commerce/query/query-slice';
+import {recommendationV2Reducer} from '../../features/commerce/recommendation/recommendation-slice';
 import {commerceSearchReducer} from '../../features/commerce/search/search-slice';
 import {sortReducer} from '../../features/commerce/sort/sort-slice';
 import {facetOrderReducer} from '../../features/facets/facet-order/facet-order-slice';
@@ -31,6 +32,7 @@ export type {CommerceEngineConfiguration};
 
 const commerceEngineReducers = {
   productListing: productListingV2Reducer,
+  recommendation: recommendationV2Reducer,
   commerceSearch: commerceSearchReducer,
   commercePagination: paginationReducer,
   commerceSort: sortReducer,

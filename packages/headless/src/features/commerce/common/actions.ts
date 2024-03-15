@@ -1,7 +1,13 @@
 import {getVisitorID} from '../../../api/analytics/coveo-analytics-utils';
 import {SortParam} from '../../../api/commerce/commerce-api-params';
-import {CommerceAPIRequest} from '../../../api/commerce/common/request';
-import {CommerceSuccessResponse} from '../../../api/commerce/common/response';
+import {
+  CommerceAPIRequest,
+  RecommendationCommerceAPIRequest,
+} from '../../../api/commerce/common/request';
+import {
+  RecommendationCommerceSuccessResponse,
+  CommerceSuccessResponse,
+} from '../../../api/commerce/common/response';
 import {
   CartSection,
   CategoryFacetSection,
@@ -14,6 +20,7 @@ import {
   FacetSection,
   NumericFacetSection,
   ProductListingV2Section,
+  RecommendationV2Section,
   VersionSection,
 } from '../../../state/state-sections';
 import {PreparableAnalyticsAction} from '../../analytics/analytics-utils';
@@ -22,6 +29,7 @@ import {SortBy, SortCriterion} from '../sort/sort';
 
 export type StateNeededByQueryCommerceAPI = ConfigurationSection &
   ProductListingV2Section &
+  RecommendationV2Section &
   CommerceContextSection &
   CartSection &
   Partial<
@@ -39,6 +47,12 @@ export interface QueryCommerceAPIThunkReturn {
   /** The successful search response. */
   response: CommerceSuccessResponse;
   analyticsAction: PreparableAnalyticsAction<StateNeededByQueryCommerceAPI>;
+}
+
+export interface QueryRecommendationCommerceAPIThunkReturn {
+  /** The successful search response. */
+  response: RecommendationCommerceSuccessResponse;
+  // analyticsAction: PreparableAnalyticsAction<StateNeededByQueryCommerceAPI>;
 }
 
 export const buildCommerceAPIRequest = async (
@@ -63,6 +77,28 @@ export const buildCommerceAPIRequest = async (
     ...(state.commerceSort && {
       sort: getSort(state.commerceSort.appliedSort),
     }),
+  };
+};
+
+export const buildRecommendationCommerceAPIRequest = async (
+  slotId: string,
+  state: StateNeededByQueryCommerceAPI
+): Promise<RecommendationCommerceAPIRequest> => {
+  const {view, user, ...restOfContext} = state.commerceContext;
+  return {
+    accessToken: state.configuration.accessToken,
+    url: state.configuration.platformUrl,
+    organizationId: state.configuration.organizationId,
+    id: slotId,
+    trackingId: state.configuration.analytics.trackingId,
+    ...restOfContext,
+    clientId: await getVisitorID(state.configuration.analytics),
+    context: {
+      user,
+      view,
+      cart: state.cart.cartItems.map((id) => state.cart.cart[id]),
+    },
+    ...(state.commercePagination && {page: state.commercePagination.page}),
   };
 };
 

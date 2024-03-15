@@ -84,3 +84,7 @@ export interface FacetQueryParam {
 export interface FacetIdParam {
   facetId: string;
 }
+
+export interface SlotId {
+  id: string;
+}
