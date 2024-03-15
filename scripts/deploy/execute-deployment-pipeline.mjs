@@ -1,5 +1,4 @@
-import {context} from '@actions/github';
-import {execSync} from 'child_process';
+import {execSync} from 'node:child_process';
 import {parse} from 'semver';
 import atomicHostedPageJson from '../../packages/atomic-hosted-page/package.json' assert {type: 'json'};
 import atomicReactJson from '../../packages/atomic-react/package.json' assert {type: 'json'};
@@ -21,8 +20,7 @@ const headless = getVersionComposants(headlessJson.version);
 const atomic = getVersionComposants(atomicJson.version);
 const atomicReact = getVersionComposants(atomicReactJson.version);
 const atomicHostedPage = getVersionComposants(atomicHostedPageJson.version);
-execSync(`
-docker run -a stderr -a stdout 458176070654.dkr.ecr.us-east-2.amazonaws.com/jenkins/deployment_package:stable
+console.log(execSync(`
   deployment-package package create --with-deploy \
     --resolve HEADLESS_MAJOR_VERSION=${headless.major} \
     --resolve HEADLESS_MINOR_VERSION=${headless.minor} \
@@ -36,5 +34,5 @@ docker run -a stderr -a stdout 458176070654.dkr.ecr.us-east-2.amazonaws.com/jenk
     --resolve ATOMIC_HOSTED_PAGE_MAJOR_VERSION=${atomicHostedPage.major} \
     --resolve ATOMIC_HOSTED_PAGE_MINOR_VERSION=${atomicHostedPage.minor} \
     --resolve ATOMIC_HOSTED_PAGE_PATCH_VERSION=${atomicHostedPage.patch} \
-    --resolve GITHUB_RUN_ID=${context.runId} \
-    --changeset ${releaseCommit}`);
+    --resolve GITHUB_RUN_ID=${process.env.RUN_ID} \
+    --changeset ${releaseCommit}`.replaceAll(/\s+/g, ' ').trim()).toString());

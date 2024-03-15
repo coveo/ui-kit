@@ -66,6 +66,9 @@ export type {
 } from './controllers/commerce/product-listing/result-list/headless-product-listing-interactive-result';
 export {buildInteractiveResult} from './controllers/commerce/product-listing/result-list/headless-product-listing-interactive-result';
 
+export type {ProductView} from './controllers/commerce/product-view/headless-product-view';
+export {buildProductView} from './controllers/commerce/product-view/headless-product-view';
+
 export type {
   CartInitialState,
   CartItem,

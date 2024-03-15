@@ -49,20 +49,12 @@ jobs:
       #   env:
       #     NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       #     DEBUG: ${{ inputs.debug && '*' || '' }}
-  start-deployment:
-    needs: release
-    runs-on: [coveo, linux, x64, ec2]
-    steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
-        with:
-          ref: 'release/v2'
-      - uses: ./.github/actions/setup-ztsd
-      - uses: ./.github/actions/setup
-      - uses: coveo-platform/deployment-pipeline-actions/setup-cli@main
-      - name: Start deployment pipeline
-        run: node ./scripts/deploy/execute-deployment-pipeline.mjs
+      - name: Call ui-kit-cd
+        run: node ./scripts/deploy/trigger-ui-kit-cd.mjs
+        env:
+          GH_TOKEN: ${{ secrets.UI_KIT_CD_DISPATCHER }}
   promote-prod:
-    needs: start-deployment
+    needs: release
     environment: 'Production'
     runs-on: 'ubuntu-latest'
     env:

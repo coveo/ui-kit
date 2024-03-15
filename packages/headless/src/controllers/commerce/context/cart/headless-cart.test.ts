@@ -1,7 +1,9 @@
 import {
+  purchase,
   setItems,
   updateItem,
 } from '../../../../features/commerce/context/cart/cart-actions';
+import {itemsSelector} from '../../../../features/commerce/context/cart/cart-selector';
 import {cartReducer} from '../../../../features/commerce/context/cart/cart-slice';
 import {CartItemWithMetadata} from '../../../../features/commerce/context/cart/cart-state';
 import {getContextInitialState} from '../../../../features/commerce/context/context-state';
@@ -13,12 +15,12 @@ import {
 import {buildCart, Cart, CartInitialState} from './headless-cart';
 import {
   itemSelector,
-  itemsSelector,
   totalPriceSelector,
   totalQuantitySelector,
 } from './headless-cart-selectors';
 
 jest.mock('../../../../features/commerce/context/cart/cart-actions');
+jest.mock('../../../../features/commerce/context/cart/cart-selector');
 jest.mock('./headless-cart-selectors');
 
 describe('headless commerce cart', () => {
@@ -117,35 +119,13 @@ describe('headless commerce cart', () => {
       jest.resetAllMocks();
     });
 
-    it('emits the #ec.purchase event with the expected payload', () => {
-      const items = [
-        {name: 'blue shoes', productId: 'shoe-1', price: 10.36, quantity: 1},
-        {name: 'red shoes', productId: 'shoe-2', price: 52.19, quantity: 3},
-      ];
-      const transaction = {id: 'transaction-id', revenue: 166.93};
-      jest.mocked(itemsSelector).mockReturnValue(items);
-
+    it('dispatches #purchase with the transaction payload', () => {
+      jest.mocked(itemsSelector).mockReturnValue([]);
+      const mockedPurchase = jest.mocked(purchase);
+      const transaction = {id: 'transaction-id', revenue: 0};
       cart.purchase(transaction);
 
-      const products = items.map(({quantity, ...product}) => ({
-        quantity,
-        product,
-      }));
-      expect(engine.relay.emit).toHaveBeenCalledTimes(1);
-      expect(engine.relay.emit).toHaveBeenCalledWith('ec.purchase', {
-        currency: 'USD',
-        products,
-        transaction,
-      });
-    });
-
-    it('dispatches #setItems with empty array', () => {
-      jest.mocked(itemsSelector).mockReturnValue([]);
-      const mockedSetItems = jest.mocked(setItems);
-
-      cart.purchase({id: '', revenue: 0});
-
-      expect(mockedSetItems).toHaveBeenCalledWith([]);
+      expect(mockedPurchase).toHaveBeenCalledWith(transaction);
     });
   });
 
