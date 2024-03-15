@@ -548,20 +548,23 @@ type LogFunction<Client, StateNeeded> = (
   state: StateNeeded
 ) => Promise<void | SearchEventResponse> | void | null;
 
-const fromLogToLegacyBuilder =
-  <Client extends CommonClient, StateNeeded>(
+const fromLogToLegacyBuilderFactory = (actionCause: string) => {
+  const fromLogToLegacyBuilder = <Client extends CommonClient, StateNeeded>(
     log: (
       client: Client,
       state: StateNeeded
     ) => Promise<void | SearchEventResponse> | void | null
-  ): ((client: Client, state: StateNeeded) => Promise<EventBuilder>) =>
-  (client, state) =>
-    Promise.resolve({
-      description: {actionCause: 'caseAssist'},
-      log: async (_metadata: {searchUID: string}) => {
-        log(client, state);
-      },
-    });
+  ): ((client: Client, state: StateNeeded) => Promise<EventBuilder>) => {
+    return (client, state) =>
+      Promise.resolve({
+        description: {actionCause: actionCause},
+        log: async (_metadata: {searchUID: string}) => {
+          log(client, state);
+        },
+      });
+  };
+  return fromLogToLegacyBuilder;
+};
 
 export const makeAnalyticsAction = makeAnalyticsActionFactory<
   StateNeededBySearchAnalyticsProvider,
@@ -578,17 +581,24 @@ export const makeCaseAssistAnalyticsAction = makeAnalyticsActionFactory<
   LogFunction<CaseAssistClient, StateNeededByCaseAssistAnalytics>
 >(
   configureCaseAssistAnalytics,
-  fromLogToLegacyBuilder,
+  fromLogToLegacyBuilderFactory('caseAssist'),
   CaseAssistAnalyticsProvider
 );
 
-export const makeInsightAnalyticsAction = makeAnalyticsActionFactory<
-  StateNeededByInsightAnalyticsProvider,
-  StateNeededByInsightAnalyticsProvider,
-  CoveoInsightClient,
-  InsightAnalyticsProvider,
-  LogFunction<CoveoInsightClient, StateNeededByInsightAnalyticsProvider>
->(configureInsightAnalytics, fromLogToLegacyBuilder, InsightAnalyticsProvider);
+export const makeInsightAnalyticsActionFactory = (actionCause: string) => {
+  const makeInsightAnalyticsAction = makeAnalyticsActionFactory<
+    StateNeededByInsightAnalyticsProvider,
+    StateNeededByInsightAnalyticsProvider,
+    CoveoInsightClient,
+    InsightAnalyticsProvider,
+    LogFunction<CoveoInsightClient, StateNeededByInsightAnalyticsProvider>
+  >(
+    configureInsightAnalytics,
+    fromLogToLegacyBuilderFactory(actionCause),
+    InsightAnalyticsProvider
+  );
+  return makeInsightAnalyticsAction;
+};
 
 export const makeCommerceAnalyticsAction = makeAnalyticsActionFactory<
   StateNeededByCommerceAnalyticsProvider,

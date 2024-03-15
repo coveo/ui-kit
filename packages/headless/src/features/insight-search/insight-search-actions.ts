@@ -126,7 +126,8 @@ export const executeSearch = createAsyncThunk<
       ...config,
     });
 
-    const request = buildInsightSearchRequest(state);
+    const eventDescription = buildEventDescription(analyticsAction.next);
+    const request = await buildInsightSearchRequest(state, eventDescription);
     const fetched = await processor.fetchFromAPI(request);
 
     return await processor.process(fetched);
@@ -158,7 +159,8 @@ export const fetchPage = createAsyncThunk<
       ...config,
     });
 
-    const request = buildInsightSearchRequest(state);
+    const eventDescription = buildEventDescription(analyticsAction.next);
+    const request = await buildInsightSearchRequest(state, eventDescription);
     const fetched = await processor.fetchFromAPI(request);
 
     return await processor.process(fetched);
@@ -209,7 +211,11 @@ export const fetchFacetValues = createAsyncThunk<
       ...config,
     });
 
-    const request = await buildInsightFetchFacetValuesRequest(state);
+    const eventDescription = buildEventDescription(analyticsAction.next);
+    const request = await buildInsightFetchFacetValuesRequest(
+      state,
+      eventDescription
+    );
     const fetched = await processor.fetchFromAPI(request);
 
     return await processor.process(fetched);
@@ -265,3 +271,8 @@ export const addEntryInActionsHistory = (state: StateNeededByExecuteSearch) => {
     });
   }
 };
+
+const buildEventDescription = (action: SearchAction) => ({
+  actionCause: action.actionCause,
+  type: action.actionCause,
+});

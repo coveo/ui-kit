@@ -33,6 +33,23 @@ describe('insight search request', () => {
       expect(params.q).toBe(state.query.q);
     });
 
+    it('#searchRequest.tab holds the #originLevel2', async () => {
+      const originLevel2 = 'youtube';
+      state.configuration.analytics.originLevel2 = originLevel2;
+      expect((await buildInsightSearchRequest(state)).request.tab).toBe(
+        originLevel2
+      );
+    });
+
+    it('#searchRequest.referrer holds the #originLevel3', async () => {
+      const originLevel3 = 'www.coveo.com';
+      state.configuration.analytics.originLevel3 = originLevel3;
+      expect(
+        (await buildInsightSearchRequest(state)).request.analytics
+          ?.documentReferrer
+      ).toBe(originLevel3);
+    });
+
     it('#buildInsightSearchRequest returns the state #sortCriteria', async () => {
       state.sortCriteria = 'qre';
       const params = (await buildInsightSearchRequest(state)).request;

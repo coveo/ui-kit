@@ -316,4 +316,40 @@ export enum SearchPageEvents {
   historyForward = 'historyForward',
 
   historyBackward = 'historyBackward',
+  /**
+   * Identifies the search event that gets logged when the query context is updated as a result of updating one of the case context fields.
+   */
+  contextChanged = 'contextChanged',
+  /**
+   * Identifies the search event that gets logged when a user clicks the rephrase button in a generated answer.
+   */
+  rephraseGeneratedAnswer = 'rephraseGeneratedAnswer',
+  /**
+   * Identifies the custom event that gets logged when a user hovers over a generated answer citation.
+   */
+  generatedAnswerSourceHover = 'generatedAnswerSourceHover',
+  /**
+   * Identifies the custom event that gets logged when a user submits a feedback of a generated answer.
+   */
+  generatedAnswerFeedbackSubmit = 'generatedAnswerFeedbackSubmit',
+  /**
+   * Identifies the custom event that gets logged when a user deactivates the genQA feature.
+   */
+  generatedAnswerHideAnswers = 'generatedAnswerHideAnswers',
+  /**
+   * Identifies the custom event that gets logged when a user activates the genQA feature.
+   */
+  generatedAnswerShowAnswers = 'generatedAnswerShowAnswers',
+  /**
+   * Identifies the custom event that gets logged when a user clicks the copy to clip board button of a generated answer.
+   */
+  generatedAnswerCopyToClipboard = 'generatedAnswerCopyToClipboard',
+  /**
+   * Identifies the event that gets logged when the user opens the full search page from the insight panel.
+   */
+  expandToFullUI = 'expandToFullUI',
+  /**
+   * Identifies the event that gets logged when the user clicks the create article button.
+   */
+  createArticle = 'createArticle',
 }
