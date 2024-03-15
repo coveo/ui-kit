@@ -69,6 +69,8 @@ export default class QuanticSmartSnippetAnswer extends LightningElement {
     const disabledCSSClass = 'inline-link--disabled';
     this.inlineLinks.forEach((link) => {
       if (link?.href) {
+        link.target = '_blank';
+
         const linkInfo = {
           linkText: link?.innerText,
           linkURL: link.href,
