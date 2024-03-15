@@ -86,10 +86,10 @@ describe('c-quantic-smart-snippet-source', () => {
     const sourceTitle = element.shadowRoot.querySelector(selectors.sourceTitle);
 
     expect(sourceUri).not.toBeNull();
-    expect(sourceUri.target).toBe("_blank");
+    expect(sourceUri.target).toBe('_blank');
 
     expect(sourceTitle).not.toBeNull();
-    expect(sourceTitle.target).toBe("_blank");
+    expect(sourceTitle.target).toBe('_blank');
   });
 
   it('should properly display the source title', async () => {
