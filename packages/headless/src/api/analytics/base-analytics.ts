@@ -49,9 +49,9 @@ export abstract class BaseAnalyticsProvider<
       const formattedKey = `context_${key}`;
       formattedObject[formattedKey] = value;
     }
-    if (configuration.analytics.analyticsMode === 'legacy') {
-      formattedObject['coveoHeadlessVersion'] = VERSION;
-    }
+    // if (configuration.analytics.analyticsMode === 'legacy') {
+    //   formattedObject['coveoHeadlessVersion'] = VERSION;
+    // }
     return formattedObject;
   }
 

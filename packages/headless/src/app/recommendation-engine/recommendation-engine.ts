@@ -12,7 +12,7 @@ import {updateSearchConfiguration} from '../../features/configuration/configurat
 import {debugReducer as debug} from '../../features/debug/debug-slice';
 import {setPipeline} from '../../features/pipeline/pipeline-actions';
 import {pipelineReducer as pipeline} from '../../features/pipeline/pipeline-slice';
-import {recommendationReducer as recommendation} from '../../features/recommendation/recommendation-slice';
+// import {recommendationReducer as recommendation} from '../../features/recommendation/recommendation-slice';
 import {setSearchHub} from '../../features/search-hub/search-hub-actions';
 import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice';
 import {RecommendationAppState} from '../../state/recommendation-app-state';
@@ -38,7 +38,7 @@ const recommendationEngineReducers = {
   debug,
   pipeline,
   searchHub,
-  recommendation,
+  // recommendation,
 };
 type RecommendationEngineReducers = typeof recommendationEngineReducers;
 type RecommendationEngineState =

@@ -213,10 +213,10 @@ export interface GeneratedAnswerAnalyticsClient {
   logGeneratedAnswerShowAnswers: () => CustomAction;
   logGeneratedAnswerHideAnswers: () => CustomAction;
   logCopyGeneratedAnswer: () => CustomAction;
-  logRephraseGeneratedAnswer: (
-    responseFormat: GeneratedResponseFormat
-  ) => LegacySearchAction;
-  logRetryGeneratedAnswer: () => LegacySearchAction;
+  // logRephraseGeneratedAnswer: (
+  //   responseFormat: GeneratedResponseFormat
+  // ) => LegacySearchAction;
+  // logRetryGeneratedAnswer: () => LegacySearchAction;
 }
 
 /**

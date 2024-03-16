@@ -72,7 +72,11 @@ export const buildQuerySuggestRequest = async (
     trackingId: state.configuration.analytics.trackingId,
     query: state.querySet[id],
     ...restOfContext,
-    clientId: await getVisitorID(state.configuration.analytics),
+    clientId: getVisitorID({
+      token: state.configuration.accessToken,
+      trackingId: state.configuration.analytics.trackingId,
+      url: 'https://to.do',
+    }),
     context: {
       user,
       view,

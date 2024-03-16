@@ -1,8 +1,5 @@
 import {InsightAnalyticsConfiguration, InsightEngineConfiguration} from '..';
 import {
-  AnalyticsPayload,
-  augmentAnalyticsWithAtomicVersion,
-  augmentWithExternalMiddleware,
   getNextAnalyticsConfig,
 } from '../../common/interface/analytics-config';
 
@@ -10,47 +7,41 @@ export function getAnalyticsConfig(
   searchEngineConfig: InsightEngineConfiguration,
   enabled: boolean
 ): InsightAnalyticsConfiguration {
-  switch (searchEngineConfig.analytics?.analyticsMode) {
-    case 'next':
-      return getNextAnalyticsConfig(searchEngineConfig, enabled);
-    case 'legacy':
-    default:
-      return getLegacyAnalyticsConfig(searchEngineConfig, enabled);
-  }
+  return getNextAnalyticsConfig(searchEngineConfig, enabled);
 }
 
-function getLegacyAnalyticsConfig(
-  searchEngineConfig: InsightEngineConfiguration,
-  enabled: boolean
-): InsightAnalyticsConfiguration {
-  const analyticsClientMiddleware = (
-    event: string,
-    payload: AnalyticsPayload
-  ) => augmentAnalytics(event, payload, searchEngineConfig);
+// function getLegacyAnalyticsConfig(
+//   searchEngineConfig: InsightEngineConfiguration,
+//   enabled: boolean
+// ): InsightAnalyticsConfiguration {
+//   const analyticsClientMiddleware = (
+//     event: string,
+//     payload: AnalyticsPayload
+//   ) => augmentAnalytics(event, payload, searchEngineConfig);
 
-  const defaultConfiguration: InsightAnalyticsConfiguration = {
-    analyticsClientMiddleware,
-    enabled,
-    documentLocation: document.location.href,
-    ...(document.referrer && {originLevel3: document.referrer}),
-  };
+//   const defaultConfiguration: InsightAnalyticsConfiguration = {
+//     analyticsClientMiddleware,
+//     enabled,
+//     documentLocation: document.location.href,
+//     ...(document.referrer && {originLevel3: document.referrer}),
+//   };
 
-  if (searchEngineConfig.analytics) {
-    return {
-      ...defaultConfiguration,
-      ...searchEngineConfig.analytics,
-      analyticsClientMiddleware,
-    };
-  }
-  return defaultConfiguration;
-}
+//   if (searchEngineConfig.analytics) {
+//     return {
+//       ...defaultConfiguration,
+//       ...searchEngineConfig.analytics,
+//       analyticsClientMiddleware,
+//     };
+//   }
+//   return defaultConfiguration;
+// }
 
-function augmentAnalytics(
-  event: string,
-  payload: AnalyticsPayload,
-  config: InsightEngineConfiguration
-) {
-  let result = augmentWithExternalMiddleware(event, payload, config);
-  result = augmentAnalyticsWithAtomicVersion(result);
-  return result;
-}
+// function augmentAnalytics(
+//   event: string,
+//   payload: AnalyticsPayload,
+//   config: InsightEngineConfiguration
+// ) {
+//   let result = augmentWithExternalMiddleware(event, payload, config);
+//   result = augmentAnalyticsWithAtomicVersion(result);
+//   return result;
+// }

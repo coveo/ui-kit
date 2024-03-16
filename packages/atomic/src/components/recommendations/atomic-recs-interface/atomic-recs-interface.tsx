@@ -4,7 +4,6 @@ import {
   loadFieldActions,
   EcommerceDefaultFieldsToInclude,
   buildRecommendationEngine,
-  loadRecommendationActions,
   loadSearchConfigurationActions,
   getOrganizationEndpoints as getOrganizationEndpointsHeadless,
   PlatformEnvironment,
@@ -207,9 +206,9 @@ export class AtomicRecsInterface
       return;
     }
 
-    this.engine!.dispatch(
-      loadRecommendationActions(this.engine!).getRecommendations()
-    );
+    // this.engine!.dispatch(
+    //   loadRecommendationActions(this.engine!).getRecommendations()
+    // );
   }
 
   @Method() public async getOrganizationEndpoints(

@@ -23,7 +23,7 @@ export function createAtomicRecsStore(): AtomicRecsStore {
   return {
     ...commonStore,
     getUniqueIDFromEngine(engine: RecommendationEngine): string {
-      return engine.state.recommendation.searchUid;
+      return engine.state.recommendation?.searchUid ?? '';
     },
   };
 }

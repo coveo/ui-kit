@@ -1,10 +1,4 @@
-import {
-  CoveoSearchPageClient,
-  SearchPageClientProvider,
-  AnalyticsClientSendEventHook,
-} from 'coveo.analytics';
 import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events';
-import {Logger} from 'pino';
 import {
   buildFacetStateMetadata,
   getStateNeededForFacetMetadata,
@@ -20,22 +14,15 @@ import {getSortCriteriaInitialState} from '../../features/sort-criteria/sort-cri
 import {StaticFilterValueMetadata} from '../../features/static-filter-set/static-filter-set-actions';
 import {SearchAppState} from '../../state/search-app-state';
 import {ConfigurationSection} from '../../state/state-sections';
-import {PreprocessRequest} from '../preprocess-request';
 import {BaseAnalyticsProvider} from './base-analytics';
-import {
-  historyStore,
-  wrapAnalyticsClientSendEventHook,
-  wrapPreprocessRequest,
-} from './coveo-analytics-utils';
+const fallbackPipelineName = 'default';
 
 export type StateNeededBySearchAnalyticsProvider = ConfigurationSection &
   Partial<Omit<SearchAppState, 'configuration'>>;
 
 export class SearchAnalyticsProvider
   extends BaseAnalyticsProvider<StateNeededBySearchAnalyticsProvider>
-  implements SearchPageClientProvider
 {
-  private static fallbackPipelineName = 'default';
 
   public getFacetState() {
     return buildFacetStateMetadata(
@@ -47,7 +34,7 @@ export class SearchAnalyticsProvider
     return (
       this.state.pipeline ||
       this.state.search?.response.pipeline ||
-      SearchAnalyticsProvider.fallbackPipelineName
+      fallbackPipelineName
     );
   }
 
@@ -81,7 +68,7 @@ export class SearchAnalyticsProvider
     const effectivePipelineWithSplitTestRun =
       this.state.search?.response.pipeline ||
       this.state.pipeline ||
-      SearchAnalyticsProvider.fallbackPipelineName;
+      fallbackPipelineName;
 
     return hasSplitTestRun ? effectivePipelineWithSplitTestRun : undefined;
   }
@@ -285,67 +272,23 @@ export class SearchAnalyticsProvider
   }
 }
 
-interface LegacyConfigureAnalyticsOptions {
-  logger: Logger;
-  analyticsClientMiddleware?: AnalyticsClientSendEventHook;
-  preprocessRequest?: PreprocessRequest;
-  provider?: SearchPageClientProvider;
-  getState(): StateNeededBySearchAnalyticsProvider;
-}
+// interface LegacyConfigureAnalyticsOptions {
+//   logger: Logger;
+//   analyticsClientMiddleware?: AnalyticsClientSendEventHook;
+//   preprocessRequest?: PreprocessRequest;
+//   provider?: SearchPageClientProvider;
+//   getState(): StateNeededBySearchAnalyticsProvider;
+// }
 
-//TODO: KIT-2859
-export const configureLegacyAnalytics = ({
-  logger,
-  getState,
-  analyticsClientMiddleware = (_, p) => p,
-  preprocessRequest,
-  provider = new SearchAnalyticsProvider(getState),
-}: LegacyConfigureAnalyticsOptions) => {
-  const state = getState();
-  const token = state.configuration.accessToken;
-  const endpoint = state.configuration.analytics.apiBaseUrl;
-  const runtimeEnvironment = state.configuration.analytics.runtimeEnvironment;
-  const enableAnalytics = state.configuration.analytics.enabled;
-  const client = new CoveoSearchPageClient(
-    {
-      token,
-      endpoint,
-      runtimeEnvironment,
-      preprocessRequest: wrapPreprocessRequest(logger, preprocessRequest),
-      beforeSendHooks: [
-        wrapAnalyticsClientSendEventHook(logger, analyticsClientMiddleware),
-        (type, payload) => {
-          logger.info(
-            {
-              ...payload,
-              type,
-              endpoint,
-              token,
-            },
-            'Analytics request'
-          );
-          return payload;
-        },
-      ],
-    },
-    provider
-  );
+// export const getPageID = () => {
+//   const actions = historyStore.getHistory();
+//   const lastPageView = actions.reverse().find((action) => {
+//     return action.name === 'PageView' && action.value;
+//   });
 
-  if (!enableAnalytics) {
-    client.disable();
-  }
-  return client;
-};
+//   if (!lastPageView) {
+//     return '';
+//   }
 
-export const getPageID = () => {
-  const actions = historyStore.getHistory();
-  const lastPageView = actions.reverse().find((action) => {
-    return action.name === 'PageView' && action.value;
-  });
-
-  if (!lastPageView) {
-    return '';
-  }
-
-  return lastPageView.value!;
-};
+//   return lastPageView.value!;
+// };

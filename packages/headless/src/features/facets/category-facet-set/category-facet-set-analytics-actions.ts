@@ -51,16 +51,6 @@ const getCategoryFacetMetadata = (
   };
 };
 
-//TODO: KIT-2859
-export const logCategoryFacetBreadcrumb = (
-  payload: LogCategoryFacetBreadcrumbActionCreatorPayload
-): LegacySearchAction =>
-  makeAnalyticsAction('analytics/categoryFacet/breadcrumb', (client, state) => {
-    validatePayload(payload, categoryFacetBreadcrumbPayloadDefinition);
-
-    return client.makeBreadcrumbFacet(getCategoryFacetMetadata(state, payload));
-  });
-
 export const categoryBreadcrumbFacet = (): SearchAction => ({
   actionCause: SearchPageEvents.breadcrumbFacet,
 });

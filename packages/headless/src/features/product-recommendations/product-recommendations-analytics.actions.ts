@@ -13,12 +13,12 @@ import {
   resultPartialDefinition,
 } from '../analytics/analytics-utils';
 
-export const logProductRecommendations = (): ProductRecommendationAction =>
-  makeAnalyticsAction(
-    'analytics/productRecommendations/load',
-    (client) => client.makeRecommendationInterfaceLoad(),
-    (getState) => new ProductRecommendationAnalyticsProvider(getState)
-  );
+// export const logProductRecommendations = (): ProductRecommendationAction =>
+//   makeAnalyticsAction(
+//     'analytics/productRecommendations/load',
+//     (client) => client.makeRecommendationInterfaceLoad(),
+//     (getState) => new ProductRecommendationAnalyticsProvider(getState)
+//   );
 
 const partialRecommendationInformation = (
   result: ProductRecommendation,
@@ -92,17 +92,17 @@ const validateResultPayload = (productRecommendation: ProductRecommendation) =>
     partialResultPayload(productRecommendation)
   );
 
-export const logProductRecommendationOpen = (
-  productRecommendation: ProductRecommendation
-): ProductRecommendationAction =>
-  makeAnalyticsAction(
-    'analytics/productRecommendation/open',
-    (client, state) => {
-      validateResultPayload(productRecommendation);
-      return client.makeRecommendationOpen(
-        partialRecommendationInformation(productRecommendation, state),
-        documentIdentifier(productRecommendation)
-      );
-    },
-    (getState) => new ProductRecommendationAnalyticsProvider(getState)
-  );
+// export const logProductRecommendationOpen = (
+//   productRecommendation: ProductRecommendation
+// ): ProductRecommendationAction =>
+//   makeAnalyticsAction(
+//     'analytics/productRecommendation/open',
+//     (client, state) => {
+//       validateResultPayload(productRecommendation);
+//       return client.makeRecommendationOpen(
+//         partialRecommendationInformation(productRecommendation, state),
+//         documentIdentifier(productRecommendation)
+//       );
+//     },
+//     (getState) => new ProductRecommendationAnalyticsProvider(getState)
+//   );

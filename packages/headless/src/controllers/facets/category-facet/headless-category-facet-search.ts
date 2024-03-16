@@ -9,7 +9,6 @@ import {
 } from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
 import {
   facetSelect,
-  logFacetSelect,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {executeSearch} from '../../../features/search/search-actions';
 import {
@@ -61,7 +60,6 @@ export function buildCategoryFacetSearch(
       dispatch(updateFacetOptions());
       dispatch(
         executeSearch({
-          legacy: logFacetSelect({facetId, facetValue: value.rawValue}),
           next: facetSelect(),
         })
       );

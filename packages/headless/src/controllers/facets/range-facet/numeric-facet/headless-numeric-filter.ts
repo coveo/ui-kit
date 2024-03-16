@@ -3,8 +3,6 @@ import {SearchEngine} from '../../../../app/search-engine/search-engine';
 import {
   facetClearAll,
   facetSelect,
-  logFacetClearAll,
-  logFacetSelect,
 } from '../../../../features/facets/facet-set/facet-set-analytics-actions';
 import {numericFacetSetReducer as numericFacetSet} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {executeSearch} from '../../../../features/search/search-actions';
@@ -58,7 +56,6 @@ export function buildNumericFilter(
       coreController.clear();
       dispatch(
         executeSearch({
-          legacy: logFacetClearAll(getFacetId()),
           next: facetClearAll(),
         })
       );
@@ -68,10 +65,6 @@ export function buildNumericFilter(
       if (success) {
         dispatch(
           executeSearch({
-            legacy: logFacetSelect({
-              facetId: getFacetId(),
-              facetValue: `${range.start}..${range.end}`,
-            }),
             next: facetSelect(),
           })
         );

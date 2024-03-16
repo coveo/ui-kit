@@ -3,7 +3,6 @@ import {updateQuery} from '../../features/query/query-actions';
 import {queryReducer as query} from '../../features/query/query-slice';
 import {executeSearch} from '../../features/search/search-actions';
 import {
-  logUndoTriggerQuery,
   undoTriggerQuery,
 } from '../../features/triggers/trigger-analytics-actions';
 import {updateIgnoreQueryTrigger} from '../../features/triggers/triggers-actions';
@@ -82,9 +81,6 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
       dispatch(updateQuery({q: originalQuery()}));
       dispatch(
         executeSearch({
-          legacy: logUndoTriggerQuery({
-            undoneQuery: modification(),
-          }),
           next: undoTriggerQuery(),
         })
       );

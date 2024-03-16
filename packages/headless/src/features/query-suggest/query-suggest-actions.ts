@@ -2,7 +2,6 @@ import {NumberValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   getVisitorID,
-  historyStore,
 } from '../../api/analytics/coveo-analytics-utils';
 import {QuerySuggestRequest} from '../../api/search/query-suggest/query-suggest-request';
 import {QuerySuggestSuccessResponse} from '../../api/search/query-suggest/query-suggest-response';
@@ -156,14 +155,15 @@ export const buildQuerySuggestRequest = async (
     q: s.querySet[id],
     locale: s.configuration.search.locale,
     timezone: s.configuration.search.timezone,
-    actionsHistory: s.configuration.analytics.enabled
-      ? historyStore.getHistory()
-      : [],
     ...(s.context && {context: s.context.contextValues}),
     ...(s.pipeline && {pipeline: s.pipeline}),
     ...(s.searchHub && {searchHub: s.searchHub}),
     ...(s.configuration.analytics.enabled && {
-      visitorId: await getVisitorID(s.configuration.analytics),
+      visitorId: getVisitorID({
+        token: s.configuration.accessToken,
+        trackingId: s.configuration.analytics.trackingId,
+        url: 'https://to.do',
+      }),
       ...(s.configuration.analytics.enabled &&
         (await fromAnalyticsStateToAnalyticsParams(s.configuration.analytics))),
     }),

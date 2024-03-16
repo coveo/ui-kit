@@ -1,8 +1,5 @@
 import {isUndefined} from '@coveo/bueno';
-import {
-  IPXActionsHistoryActionCreators,
-  loadIPXActionsHistoryActions,
-} from '@coveo/headless';
+
 import {Component, h, Prop, Element} from '@stencil/core';
 import {Bindings} from '../../../components';
 import {buildCustomEvent} from '../../../utils/event-utils';
@@ -59,7 +56,6 @@ export class AtomicIPXResultLink implements InitializableComponent {
   private hasDefaultSlot!: boolean;
   private linkAttributes?: Attr[];
   private stopPropagation?: boolean;
-  private actionsHistoryActions?: IPXActionsHistoryActionCreators;
 
   public initialize() {
     this.host.dispatchEvent(
@@ -69,9 +65,6 @@ export class AtomicIPXResultLink implements InitializableComponent {
           this.stopPropagation = stopPropagation;
         }
       )
-    );
-    this.actionsHistoryActions = loadIPXActionsHistoryActions(
-      this.bindings.engine
     );
   }
 
@@ -83,12 +76,12 @@ export class AtomicIPXResultLink implements InitializableComponent {
 
   public async onSelect() {
     const resultPermanentId = this.result.raw.permanentid;
-    if (resultPermanentId && this.actionsHistoryActions) {
-      const action =
-        this.actionsHistoryActions.addPageViewEntryInActionsHistory(
-          resultPermanentId
-        );
-      this.bindings.engine.dispatch(action);
+    if (resultPermanentId) {
+      // const action =
+      //   this.actionsHistoryActions.addPageViewEntryInActionsHistory(
+      //     resultPermanentId
+      //   );
+      // this.bindings.engine.dispatch(action);
     }
     this.interactiveResult.select();
   }

@@ -1,8 +1,0 @@
-{
-  "extends": "./base.json",
-  "mainEntryPointFilePath": "<projectFolder>/dist/definitions/insight.index.d.ts",
-  "docModel": {
-    "enabled": true,
-    "apiJsonFilePath": "<projectFolder>/temp/insight.api.json"
-  }
-}

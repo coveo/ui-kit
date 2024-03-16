@@ -24,9 +24,9 @@ import {sortFacets} from '../../utils/facet-utils';
 import {validatePayload} from '../../utils/validate-payload';
 import {PreparableAnalyticsAction} from '../analytics/analytics-utils';
 import {getFacetRequests} from '../facets/generic/interfaces/generic-facet-request';
-import {logQueryError} from '../search/search-analytics-actions';
+// import {logQueryError} from '../search/search-analytics-actions';
 import {SortBy} from '../sort/sort';
-import {logProductListing} from './product-listing-analytics';
+// import {logProductListing} from './product-listing-analytics';
 import {ProductListingState} from './product-listing-state';
 
 export interface SetProductListingUrlPayload {
@@ -36,16 +36,16 @@ export interface SetProductListingUrlPayload {
   url: string;
 }
 
-export const setProductListingUrl = createAction(
-  'productlisting/setUrl',
-  (payload: SetProductListingUrlPayload) =>
-    validatePayload(payload, {
-      url: new StringValue({
-        required: true,
-        url: true,
-      }),
-    })
-);
+// export const setProductListingUrl = createAction(
+//   'productlisting/setUrl',
+//   (payload: SetProductListingUrlPayload) =>
+//     validatePayload(payload, {
+//       url: new StringValue({
+//         required: true,
+//         url: true,
+//       }),
+//     })
+// );
 
 export interface SetAdditionalFieldsPayload {
   /**
@@ -88,30 +88,30 @@ export interface FetchProductListingThunkReturn {
   analyticsAction: PreparableAnalyticsAction<StateNeededByFetchProductListing>;
 }
 
-export const fetchProductListing = createAsyncThunk<
-  FetchProductListingThunkReturn,
-  void,
-  AsyncThunkProductListingOptions<StateNeededByFetchProductListing>
->(
-  'productlisting/fetch',
-  async (_action, {getState, dispatch, rejectWithValue, extra}) => {
-    const state = getState();
-    const {apiClient} = extra;
-    const fetched = await apiClient.getProducts(
-      await buildProductListingRequest(state)
-    );
+// export const fetchProductListing = createAsyncThunk<
+//   FetchProductListingThunkReturn,
+//   void,
+//   AsyncThunkProductListingOptions<StateNeededByFetchProductListing>
+// >(
+//   'productlisting/fetch',
+//   async (_action, {getState, dispatch, rejectWithValue, extra}) => {
+//     const state = getState();
+//     const {apiClient} = extra;
+//     const fetched = await apiClient.getProducts(
+//       await buildProductListingRequest(state)
+//     );
 
-    if (isErrorResponse(fetched)) {
-      dispatch(logQueryError(fetched.error));
-      return rejectWithValue(fetched.error);
-    }
+//     if (isErrorResponse(fetched)) {
+//       dispatch(logQueryError(fetched.error));
+//       return rejectWithValue(fetched.error);
+//     }
 
-    return {
-      response: fetched.success,
-      analyticsAction: logProductListing(),
-    };
-  }
-);
+//     return {
+//       response: fetched.success,
+//       analyticsAction: logProductListing(),
+//     };
+//   }
+// );
 
 export const buildProductListingRequest = async (
   state: StateNeededByFetchProductListing

@@ -1,16 +1,17 @@
 import {SearchEngine} from '../../../../app/search-engine/search-engine';
+import { noopSearchAnalyticsAction } from '../../../../features/analytics/analytics-utils';
 import {
   facetClearAll,
   facetUpdateSort,
-  logFacetClearAll,
-  logFacetUpdateSort,
+  // logFacetClearAll,
+  // logFacetUpdateSort,
 } from '../../../../features/facets/facet-set/facet-set-analytics-actions';
 import {DateRangeRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
 import {DateFacetValue} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
 import {
-  getLegacyAnalyticsActionForToggleRangeFacetExclude,
-  getLegacyAnalyticsActionForToggleRangeFacetSelect,
+  // getLegacyAnalyticsActionForToggleRangeFacetExclude,
+  // getLegacyAnalyticsActionForToggleRangeFacetSelect,
   getAnalyticsActionForToggleFacetSelect,
 } from '../../../../features/facets/range-facets/generic/range-facet-utils';
 import {executeSearch} from '../../../../features/search/search-actions';
@@ -58,7 +59,6 @@ export function buildDateFacet(
       coreController.deselectAll();
       dispatch(
         executeSearch({
-          legacy: logFacetClearAll(getFacetId()),
           next: facetClearAll(),
         })
       );
@@ -68,7 +68,6 @@ export function buildDateFacet(
       coreController.sortBy(criterion);
       dispatch(
         executeSearch({
-          legacy: logFacetUpdateSort({facetId: getFacetId(), criterion}),
           next: facetUpdateSort(),
         })
       );
@@ -78,10 +77,7 @@ export function buildDateFacet(
       coreController.toggleSelect(selection);
       dispatch(
         executeSearch({
-          legacy: getLegacyAnalyticsActionForToggleRangeFacetSelect(
-            getFacetId(),
-            selection
-          ),
+
           next: getAnalyticsActionForToggleFacetSelect(selection),
         })
       );
@@ -91,10 +87,7 @@ export function buildDateFacet(
       coreController.toggleExclude(selection);
       dispatch(
         executeSearch({
-          legacy: getLegacyAnalyticsActionForToggleRangeFacetExclude(
-            getFacetId(),
-            selection
-          ),
+          next: {actionCause: "TODO_ANALYTICS"}
         })
       );
     },

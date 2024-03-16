@@ -23,7 +23,7 @@ import {
   mapSearchResponse,
 } from '../search/search-mappings';
 import {StateNeededByExecuteSearch} from './insight-search-actions';
-import {logQueryError} from './insight-search-analytics-actions';
+// import {logQueryError} from './insight-search-analytics-actions';
 import {buildInsightSearchRequest} from './insight-search-request';
 
 export interface AsyncThunkConfig {

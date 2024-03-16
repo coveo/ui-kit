@@ -26,7 +26,11 @@ export async function buildResultPreviewRequest(
     organizationId,
     enableNavigation: false,
     ...(analytics.enabled && {
-      visitorId: await getVisitorID(state.configuration.analytics),
+      visitorId: getVisitorID({
+        token: state.configuration.accessToken,
+        trackingId: state.configuration.analytics.trackingId,
+        url: 'https://to.do',
+      }),
     }),
     q,
     ...options,

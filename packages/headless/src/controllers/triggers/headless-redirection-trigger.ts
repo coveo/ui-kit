@@ -1,5 +1,5 @@
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {logTriggerRedirect} from '../../features/triggers/trigger-analytics-actions';
+// import {logTriggerRedirect} from '../../features/triggers/trigger-analytics-actions';
 import {triggerReducer as triggers} from '../../features/triggers/triggers-slice';
 import {TriggerSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
@@ -55,7 +55,7 @@ export function buildRedirectionTrigger(
 
         if (hasChanged && this.state.redirectTo) {
           listener();
-          dispatch(logTriggerRedirect());
+          // dispatch(logTriggerRedirect());
         }
       };
       strictListener();

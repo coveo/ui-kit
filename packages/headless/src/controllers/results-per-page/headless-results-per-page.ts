@@ -1,5 +1,6 @@
 import {configuration} from '../../app/common-reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import { noopSearchAnalyticsAction } from '../../features/analytics/analytics-utils';
 import {logPagerResize} from '../../features/pagination/pagination-analytics-actions';
 import {paginationReducer as pagination} from '../../features/pagination/pagination-slice';
 import {fetchPage} from '../../features/search/search-actions';
@@ -52,7 +53,7 @@ export function buildResultsPerPage(
 
     set(num: number) {
       coreController.set(num);
-      dispatch(fetchPage({legacy: logPagerResize()}));
+      dispatch(fetchPage({legacy: logPagerResize(), next: {actionCause:'pageResize'}}));
     },
   };
 }

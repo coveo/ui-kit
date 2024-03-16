@@ -126,33 +126,33 @@ export const logOpenSmartSnippetSource = (): ClickAction =>
     },
   });
 
-//TODO: SFINT-5435
-export const logOpenSmartSnippetInlineLink = (
-  payload: QuestionAnsweringInlineLinkActionCreatorPayload
-): ClickAction =>
-  makeAnalyticsAction('analytics/smartSnippet/source/open', (client, state) => {
-    validatePayload(payload, inlineLinkPayloadDefinition());
-    const result = answerSourceSelector(state)!;
-    return client.makeOpenSmartSnippetInlineLink(
-      partialDocumentInformation(result, state),
-      {
-        ...documentIdentifier(result),
-        ...payload,
-      }
-    );
-  });
+// //TODO: SFINT-5435
+// export const logOpenSmartSnippetInlineLink = (
+//   payload: QuestionAnsweringInlineLinkActionCreatorPayload
+// ): ClickAction =>
+//   makeAnalyticsAction('analytics/smartSnippet/source/open', (client, state) => {
+//     validatePayload(payload, inlineLinkPayloadDefinition());
+//     const result = answerSourceSelector(state)!;
+//     return client.makeOpenSmartSnippetInlineLink(
+//       partialDocumentInformation(result, state),
+//       {
+//         ...documentIdentifier(result),
+//         ...payload,
+//       }
+//     );
+//   });
 
-//TODO: SFINT-5435
-export const logOpenSmartSnippetFeedbackModal = (): CustomAction =>
-  makeAnalyticsAction('analytics/smartSnippet/feedbackModal/open', (client) =>
-    client.makeOpenSmartSnippetFeedbackModal()
-  );
+// //TODO: SFINT-5435
+// export const logOpenSmartSnippetFeedbackModal = (): CustomAction =>
+//   makeAnalyticsAction('analytics/smartSnippet/feedbackModal/open', (client) =>
+//     client.makeOpenSmartSnippetFeedbackModal()
+//   );
 
-//TODO: SFINT-5435
-export const logCloseSmartSnippetFeedbackModal = (): CustomAction =>
-  makeAnalyticsAction('analytics/smartSnippet/feedbackModal/close', (client) =>
-    client.makeCloseSmartSnippetFeedbackModal()
-  );
+// //TODO: SFINT-5435
+// export const logCloseSmartSnippetFeedbackModal = (): CustomAction =>
+//   makeAnalyticsAction('analytics/smartSnippet/feedbackModal/close', (client) =>
+//     client.makeCloseSmartSnippetFeedbackModal()
+//   );
 
 export const logSmartSnippetFeedback = (
   feedback: SmartSnippetFeedback
@@ -315,37 +315,37 @@ export const logOpenSmartSnippetSuggestionSource = (
   });
 
 //TODO: SFINT-5435
-export const logOpenSmartSnippetSuggestionInlineLink = (
-  identifier: QuestionAnsweringUniqueIdentifierActionCreatorPayload,
-  link: QuestionAnsweringInlineLinkActionCreatorPayload
-): ClickAction =>
-  makeAnalyticsAction('analytics/smartSnippet/source/open', (client, state) => {
-    validatePayload(identifier, uniqueIdentifierPayloadDefinition());
-    validatePayload(link, inlineLinkPayloadDefinition());
+// export const logOpenSmartSnippetSuggestionInlineLink = (
+//   identifier: QuestionAnsweringUniqueIdentifierActionCreatorPayload,
+//   link: QuestionAnsweringInlineLinkActionCreatorPayload
+// ): ClickAction =>
+//   makeAnalyticsAction('analytics/smartSnippet/source/open', (client, state) => {
+//     validatePayload(identifier, uniqueIdentifierPayloadDefinition());
+//     validatePayload(link, inlineLinkPayloadDefinition());
 
-    const relatedQuestion = relatedQuestionSelector(
-      state,
-      identifier.questionAnswerId
-    );
-    if (!relatedQuestion) {
-      return null;
-    }
-    const source = answerSourceSelector(state, relatedQuestion.documentId);
-    if (!source) {
-      return null;
-    }
+//     const relatedQuestion = relatedQuestionSelector(
+//       state,
+//       identifier.questionAnswerId
+//     );
+//     if (!relatedQuestion) {
+//       return null;
+//     }
+//     const source = answerSourceSelector(state, relatedQuestion.documentId);
+//     if (!source) {
+//       return null;
+//     }
 
-    return client.makeOpenSmartSnippetSuggestionInlineLink(
-      partialDocumentInformation(source, state),
-      {
-        question: relatedQuestion.question,
-        answerSnippet: relatedQuestion.answerSnippet,
-        documentId: relatedQuestion.documentId,
-        linkText: link.linkText,
-        linkURL: link.linkURL,
-      }
-    );
-  });
+//     return client.makeOpenSmartSnippetSuggestionInlineLink(
+//       partialDocumentInformation(source, state),
+//       {
+//         question: relatedQuestion.question,
+//         answerSnippet: relatedQuestion.answerSnippet,
+//         documentId: relatedQuestion.documentId,
+//         linkText: link.linkText,
+//         linkURL: link.linkURL,
+//       }
+//     );
+//   });
 
 export const smartSnippetAnalyticsClient = {
   logExpandSmartSnippet,
@@ -353,9 +353,9 @@ export const smartSnippetAnalyticsClient = {
   logLikeSmartSnippet,
   logDislikeSmartSnippet,
   logOpenSmartSnippetSource,
-  logOpenSmartSnippetInlineLink,
-  logOpenSmartSnippetFeedbackModal,
-  logCloseSmartSnippetFeedbackModal,
+  // logOpenSmartSnippetInlineLink,
+  // logOpenSmartSnippetFeedbackModal,
+  // logCloseSmartSnippetFeedbackModal,
   logSmartSnippetFeedback,
   logSmartSnippetDetailedFeedback,
   logExpandSmartSnippetSuggestion,

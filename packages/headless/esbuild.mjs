@@ -11,25 +11,25 @@ const devMode = process.argv[2] === 'dev';
 
 const useCaseEntries = {
   search: 'src/index.ts',
-  recommendation: 'src/recommendation.index.ts',
-  'product-recommendation': 'src/product-recommendation.index.ts',
-  'product-listing': 'src/product-listing.index.ts',
-  'case-assist': 'src/case-assist.index.ts',
-  insight: 'src/insight.index.ts',
-  ssr: 'src/ssr.index.ts',
-  commerce: 'src/commerce.index.ts',
+  // recommendation: 'src/recommendation.index.ts',
+  // 'product-recommendation': 'src/product-recommendation.index.ts',
+  // 'product-listing': 'src/product-listing.index.ts',
+  // 'case-assist': 'src/case-assist.index.ts',
+  // insight: 'src/insight.index.ts',
+  // ssr: 'src/ssr.index.ts',
+  // commerce: 'src/commerce.index.ts',
 };
 
 function getUmdGlobalName(useCase) {
   const map = {
     search: 'CoveoHeadless',
-    recommendation: 'CoveoHeadlessRecommendation',
-    'product-recommendation': 'CoveoHeadlessProductRecommendation',
-    'product-listing': 'CoveoHeadlessProductListing',
-    'case-assist': 'CoveoHeadlessCaseAssist',
-    insight: 'CoveoHeadlessInsight',
-    ssr: 'CoveoHeadlessSSR',
-    commerce: 'CoveoHeadlessCommerce',
+    // recommendation: 'CoveoHeadlessRecommendation',
+    // 'product-recommendation': 'CoveoHeadlessProductRecommendation',
+    // 'product-listing': 'CoveoHeadlessProductListing',
+    // 'case-assist': 'CoveoHeadlessCaseAssist',
+    // insight: 'CoveoHeadlessInsight',
+    // ssr: 'CoveoHeadlessSSR',
+    // commerce: 'CoveoHeadlessCommerce',
   };
 
   const globalName = map[useCase];
@@ -75,7 +75,7 @@ const browserEsmForAtomicDevelopment = Object.entries(useCaseEntries).map(
         entryPoints: [entryPoint],
         outfile,
         format: 'esm',
-        watch: devMode,
+        // watch: devMode,
         minify: false,
       },
       outDir
@@ -92,12 +92,13 @@ const browserEsm = Object.entries(useCaseEntries).map((entry) => {
     entryPoints: [entryPoint],
     outfile,
     format: 'esm',
+    minify: false,
   };
 
   if (devMode) {
     config = {
       ...config,
-      watch: true,
+      // watch: true,
       minify: false,
       sourcemap: true,
     };
@@ -194,6 +195,8 @@ const nodeEsm = Object.entries(useCaseEntries).map((entry) => {
       entryPoints: [entryPoint],
       outfile,
       format: 'esm',
+      treeShaking: true,
+      packages: 'external'
     },
     dir
   );

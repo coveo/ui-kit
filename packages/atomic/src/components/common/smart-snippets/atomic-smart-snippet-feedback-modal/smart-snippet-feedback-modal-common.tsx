@@ -1,22 +1,24 @@
-import {SmartSnippet, SmartSnippetFeedback} from '@coveo/headless';
+import {SmartSnippet, } from '@coveo/headless';
 import {EventEmitter, h} from '@stencil/core';
 import {updateBreakpoints} from '../../../../utils/replace-breakpoint';
 import {once} from '../../../../utils/utils';
 import {Button} from '../../button';
 import {AnyBindings} from '../../interface/bindings';
 
+type SmartSnippetFeedback = any;
+
 interface SmartSnippetFeedbackModalProps {
   formId: string;
   getHost: () => HTMLElement;
   getBindings: () => AnyBindings;
-  getCurrentAnswer: () => SmartSnippetFeedback | 'other' | undefined;
+  getCurrentAnswer: () =>  SmartSnippetFeedback | 'other' | undefined;
   getSmartSnippet: () => SmartSnippet;
   getDetailsInputRef: () => HTMLTextAreaElement | undefined;
   getFeedbackSent: () => EventEmitter;
   getSource: () => HTMLElement | undefined;
   getIsOpen: () => boolean;
   setIsOpen: (isOpen: boolean) => void;
-  setCurrentAnswer: (answer: SmartSnippetFeedback | 'other') => void;
+  setCurrentAnswer: (answer: SmartSnippetFeedback| 'other') => void;
   setDetailsInputRef: (ref?: HTMLTextAreaElement) => void;
 }
 

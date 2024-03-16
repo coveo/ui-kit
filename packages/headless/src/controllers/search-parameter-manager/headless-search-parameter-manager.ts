@@ -4,7 +4,6 @@ import {getPaginationInitialState} from '../../features/pagination/pagination-st
 import {getQueryInitialState} from '../../features/query/query-state';
 import {SearchParameters} from '../../features/search-parameters/search-parameter-actions';
 import {
-  legacyLogParametersChange,
   parametersChange,
 } from '../../features/search-parameters/search-parameter-analytics-actions';
 import {executeSearch} from '../../features/search/search-actions';
@@ -63,7 +62,6 @@ export function buildSearchParameterManager(
       controller.synchronize(parameters);
       dispatch(
         executeSearch({
-          legacy: legacyLogParametersChange(oldParams, newParams),
           next: parametersChange(oldParams, newParams),
         })
       );

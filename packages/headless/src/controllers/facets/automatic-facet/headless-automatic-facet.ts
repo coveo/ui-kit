@@ -5,10 +5,8 @@ import {
 } from '../../../features/facets/automatic-facet-set/automatic-facet-set-actions';
 import {
   facetClearAll,
-  logFacetClearAll,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {
-  getLegacyAnalyticsActionForToggleFacetSelect,
   getAnalyticsActionForToggleFacetSelect,
 } from '../../../features/facets/facet-set/facet-set-utils';
 import {FacetValue} from '../../../features/facets/facet-set/interfaces/response';
@@ -53,10 +51,6 @@ export function buildAutomaticFacet(
       dispatch(toggleSelectAutomaticFacetValue({field, selection}));
       dispatch(
         executeSearch({
-          legacy: getLegacyAnalyticsActionForToggleFacetSelect(
-            field,
-            selection
-          ),
           next: getAnalyticsActionForToggleFacetSelect(selection),
         })
       );
@@ -66,7 +60,6 @@ export function buildAutomaticFacet(
       dispatch(deselectAllAutomaticFacetValues(field));
       dispatch(
         executeSearch({
-          legacy: logFacetClearAll(field),
           next: facetClearAll(),
         })
       );

@@ -1,6 +1,6 @@
 import {Result} from '../../api/search/search/result';
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {logRecentResultClick} from '../../features/recent-results/recent-results-analytics-actions';
+import { noopSearchAnalyticsAction } from '../../features/analytics/analytics-utils';
 import {
   buildInteractiveResultCore,
   InteractiveResultCore,
@@ -41,7 +41,7 @@ export function buildInteractiveRecentResult(
   props: InteractiveRecentResultProps
 ): InteractiveRecentResult {
   const logAnalytics = () =>
-    engine.dispatch(logRecentResultClick(props.options.result));
+    engine.dispatch(noopSearchAnalyticsAction());
 
   return buildInteractiveResultCore(engine, props, logAnalytics);
 }

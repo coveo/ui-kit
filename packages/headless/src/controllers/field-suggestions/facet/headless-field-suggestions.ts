@@ -12,8 +12,6 @@ import {registerFacet} from '../../../features/facets/facet-set/facet-set-action
 import {
   facetExclude,
   facetSelect,
-  logFacetExclude,
-  logFacetSelect,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice';
 import {defaultFacetOptions} from '../../../features/facets/facet-set/facet-set-slice';
@@ -187,7 +185,6 @@ export function buildFieldSuggestions(
       engine.dispatch(updateFacetOptions());
       engine.dispatch(
         executeSearch({
-          legacy: logFacetSelect({facetId, facetValue: value.rawValue}),
           next: facetSelect(),
         })
       );
@@ -196,7 +193,6 @@ export function buildFieldSuggestions(
       engine.dispatch(updateFacetOptions());
       engine.dispatch(
         executeSearch({
-          legacy: logFacetExclude({facetId, facetValue: value.rawValue}),
           next: facetExclude(),
         })
       );

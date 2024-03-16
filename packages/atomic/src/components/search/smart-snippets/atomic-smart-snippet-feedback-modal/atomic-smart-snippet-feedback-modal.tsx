@@ -1,7 +1,7 @@
 import {
   buildSmartSnippet,
   SmartSnippet,
-  SmartSnippetFeedback,
+  // SmartSnippetFeedback,
 } from '@coveo/headless';
 import {
   Component,
@@ -19,6 +19,8 @@ import {
 import {randomID} from '../../../../utils/utils';
 import {SmartSnippetFeedbackModalCommon} from '../../../common/smart-snippets/atomic-smart-snippet-feedback-modal/smart-snippet-feedback-modal-common';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+
+type SmartSnippetFeedback = any;
 
 /**
  * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.

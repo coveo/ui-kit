@@ -1,6 +1,6 @@
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {loadCollection} from '../../features/folding/folding-actions';
-import {foldedResultAnalyticsClient} from '../../features/folding/folding-analytics-actions';
+// import {foldedResultAnalyticsClient} from '../../features/folding/folding-analytics-actions';
 import {fetchMoreResults} from '../../features/search/search-actions';
 import {
   buildCoreFoldedResultList,
@@ -46,7 +46,7 @@ export function buildFoldedResultList(
       loadCollectionActionCreator: loadCollection,
       fetchMoreResultsActionCreator: fetchMoreResults,
     },
-    foldedResultAnalyticsClient
+    // foldedResultAnalyticsClient
   );
   return {
     ...foldedResultList,

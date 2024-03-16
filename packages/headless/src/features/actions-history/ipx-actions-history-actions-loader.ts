@@ -1,6 +1,6 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {addPageViewEntryInActionsHistory} from './ipx-actions-history-actions';
+// import {addPageViewEntryInActionsHistory} from './ipx-actions-history-actions';
 
 /**
  * Internal and experimental actions loader for the IPX.
@@ -8,9 +8,9 @@ import {addPageViewEntryInActionsHistory} from './ipx-actions-history-actions';
  * @deprecated
  */
 export interface IPXActionsHistoryActionCreators {
-  addPageViewEntryInActionsHistory(
-    itemPermanentId: string
-  ): AsyncThunkAction<void, string, {}>;
+  // addPageViewEntryInActionsHistory(
+  //   itemPermanentId: string
+  // ): AsyncThunkAction<void, string, {}>;
 }
 
 export function loadIPXActionsHistoryActions(
@@ -19,6 +19,6 @@ export function loadIPXActionsHistoryActions(
   engine.addReducers({});
 
   return {
-    addPageViewEntryInActionsHistory,
+    // addPageViewEntryInActionsHistory,
   };
 }

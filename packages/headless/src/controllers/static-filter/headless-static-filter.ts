@@ -6,9 +6,6 @@ import {
 } from '../../features/search/search-actions';
 import {
   deselectAllStaticFilterValues,
-  logStaticFilterClearAll,
-  logStaticFilterDeselect,
-  logStaticFilterSelect,
   registerStaticFilter,
   staticFilterClearAll,
   staticFilterDeselect,
@@ -175,7 +172,6 @@ export function buildStaticFilter(
       dispatch(toggleSelectStaticFilterValue({id, value}));
       dispatch(
         executeSearch({
-          legacy: getLegacyAnalyticsActionForToggledValue(id, value),
           next: getAnalyticsActionForToggledValue(value),
         })
       );
@@ -189,7 +185,6 @@ export function buildStaticFilter(
       dispatch(toggleSelectStaticFilterValue({id, value}));
       dispatch(
         executeSearch({
-          legacy: getLegacyAnalyticsActionForToggledValue(id, value),
           next: getAnalyticsActionForToggledValue(value),
         })
       );
@@ -199,7 +194,6 @@ export function buildStaticFilter(
       dispatch(toggleExcludeStaticFilterValue({id, value}));
       dispatch(
         executeSearch({
-          legacy: getLegacyAnalyticsActionForToggledValue(id, value),
           next: getAnalyticsActionForToggledValue(value),
         })
       );
@@ -213,7 +207,6 @@ export function buildStaticFilter(
       dispatch(toggleExcludeStaticFilterValue({id, value}));
       dispatch(
         executeSearch({
-          legacy: getLegacyAnalyticsActionForToggledValue(id, value),
           next: getAnalyticsActionForToggledValue(value),
         })
       );
@@ -223,7 +216,6 @@ export function buildStaticFilter(
       dispatch(deselectAllStaticFilterValues(id));
       dispatch(
         executeSearch({
-          legacy: logStaticFilterClearAll({staticFilterId: id}),
           next: staticFilterClearAll(),
         })
       );
@@ -257,19 +249,19 @@ function loadReducers(
   return true;
 }
 
-function getLegacyAnalyticsActionForToggledValue(
-  id: string,
-  value: StaticFilterValue
-) {
-  const {caption, expression, state} = value;
-  const analytics =
-    state === 'idle' ? logStaticFilterSelect : logStaticFilterDeselect;
+// function getLegacyAnalyticsActionForToggledValue(
+//   id: string,
+//   value: StaticFilterValue
+// ) {
+//   const {caption, expression, state} = value;
+//   const analytics =
+//     state === 'idle' ? logStaticFilterSelect : logStaticFilterDeselect;
 
-  return analytics({
-    staticFilterId: id,
-    staticFilterValue: {caption, expression},
-  });
-}
+//   return analytics({
+//     staticFilterId: id,
+//     staticFilterValue: {caption, expression},
+//   });
+// }
 
 function getAnalyticsActionForToggledValue(
   value: StaticFilterValue

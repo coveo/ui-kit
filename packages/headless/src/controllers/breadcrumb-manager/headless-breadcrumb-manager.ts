@@ -5,7 +5,6 @@ import {AutomaticFacetResponse} from '../../features/facets/automatic-facet-set/
 import {deselectAllCategoryFacetValues} from '../../features/facets/category-facet-set/category-facet-set-actions';
 import {
   categoryBreadcrumbFacet,
-  logCategoryFacetBreadcrumb,
 } from '../../features/facets/category-facet-set/category-facet-set-analytics-actions';
 import {categoryFacetResponseSelectedValuesSelector} from '../../features/facets/category-facet-set/category-facet-set-selectors';
 import {categoryFacetSetReducer as categoryFacetSet} from '../../features/facets/category-facet-set/category-facet-set-slice';
@@ -16,7 +15,6 @@ import {
 } from '../../features/facets/facet-set/facet-set-actions';
 import {
   breadcrumbFacet,
-  logFacetBreadcrumb,
 } from '../../features/facets/facet-set/facet-set-analytics-actions';
 import {facetResponseActiveValuesSelector} from '../../features/facets/facet-set/facet-set-selectors';
 import {facetSetReducer as facetSet} from '../../features/facets/facet-set/facet-set-slice';
@@ -24,7 +22,6 @@ import {FacetSlice} from '../../features/facets/facet-set/facet-set-state';
 import {FacetValue} from '../../features/facets/facet-set/interfaces/response';
 import {
   breadcrumbResetAll,
-  logClearBreadcrumbs,
 } from '../../features/facets/generic/facet-generic-analytics-actions';
 import {
   toggleExcludeDateFacetValue,
@@ -32,7 +29,6 @@ import {
 } from '../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {
   dateBreadcrumbFacet,
-  logDateFacetBreadcrumb,
 } from '../../features/facets/range-facets/date-facet-set/date-facet-analytics-actions';
 import {dateFacetActiveValuesSelector} from '../../features/facets/range-facets/date-facet-set/date-facet-selectors';
 import {dateFacetSetReducer as dateFacetSet} from '../../features/facets/range-facets/date-facet-set/date-facet-set-slice';
@@ -42,7 +38,6 @@ import {
   toggleSelectNumericFacetValue,
 } from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {
-  logNumericFacetBreadcrumb,
   numericBreadcrumbFacet,
 } from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-analytics-actions';
 import {numericFacetActiveValuesSelector} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-selectors';
@@ -51,7 +46,6 @@ import {NumericFacetSlice} from '../../features/facets/range-facets/numeric-face
 import {executeSearch} from '../../features/search/search-actions';
 import {searchReducer as search} from '../../features/search/search-slice';
 import {
-  logStaticFilterDeselect,
   staticFilterDeselect,
   toggleExcludeStaticFilterValue,
   toggleSelectStaticFilterValue,
@@ -152,10 +146,6 @@ export function buildBreadcrumbManager(
         );
         dispatch(
           executeSearch({
-            legacy: logFacetBreadcrumb({
-              facetId: facetId,
-              facetValue: selection.value,
-            }),
             next: breadcrumbFacet(),
           })
         );
@@ -167,10 +157,7 @@ export function buildBreadcrumbManager(
         );
         dispatch(
           executeSearch({
-            legacy: logFacetBreadcrumb({
-              facetId: facetId,
-              facetValue: selection.value,
-            }),
+
             next: breadcrumbFacet(),
           })
         );
@@ -191,7 +178,7 @@ export function buildBreadcrumbManager(
         dispatch(toggleSelectNumericFacetValue(payload));
         dispatch(
           executeSearch({
-            legacy: logNumericFacetBreadcrumb(payload),
+
             next: numericBreadcrumbFacet(),
           })
         );
@@ -200,7 +187,7 @@ export function buildBreadcrumbManager(
         dispatch(toggleExcludeNumericFacetValue(payload));
         dispatch(
           executeSearch({
-            legacy: logNumericFacetBreadcrumb(payload),
+
             next: numericBreadcrumbFacet(),
           })
         );
@@ -219,7 +206,6 @@ export function buildBreadcrumbManager(
           dispatch(toggleSelectDateFacetValue(payload));
           dispatch(
             executeSearch({
-              legacy: logDateFacetBreadcrumb(payload),
               next: dateBreadcrumbFacet(),
             })
           );
@@ -228,7 +214,6 @@ export function buildBreadcrumbManager(
           dispatch(toggleExcludeDateFacetValue(payload));
           dispatch(
             executeSearch({
-              legacy: logDateFacetBreadcrumb(payload),
               next: dateBreadcrumbFacet(),
             })
           );
@@ -258,12 +243,6 @@ export function buildBreadcrumbManager(
         dispatch(deselectAllCategoryFacetValues(facetId));
         dispatch(
           executeSearch({
-            legacy: logCategoryFacetBreadcrumb({
-              categoryFacetPath: path.map(
-                (categoryFacetValue) => categoryFacetValue.value
-              ),
-              categoryFacetId: facetId,
-            }),
             next: categoryBreadcrumbFacet(),
           })
         );
@@ -294,7 +273,6 @@ export function buildBreadcrumbManager(
     return {
       value,
       deselect: () => {
-        const {caption, expression} = value;
 
         if (value.state === 'selected') {
           dispatch(toggleSelectStaticFilterValue({id, value}));
@@ -303,10 +281,6 @@ export function buildBreadcrumbManager(
         }
         dispatch(
           executeSearch({
-            legacy: logStaticFilterDeselect({
-              staticFilterId: id,
-              staticFilterValue: {caption, expression},
-            }),
             next: staticFilterDeselect(),
           })
         );
@@ -351,10 +325,6 @@ export function buildBreadcrumbManager(
         );
         dispatch(
           executeSearch({
-            legacy: logFacetBreadcrumb({
-              facetId: field,
-              facetValue: selection.value,
-            }),
             next: breadcrumbFacet(),
           })
         );
@@ -392,7 +362,6 @@ export function buildBreadcrumbManager(
       controller.deselectAll();
       dispatch(
         executeSearch({
-          legacy: logClearBreadcrumbs(),
           next: breadcrumbResetAll(),
         })
       );

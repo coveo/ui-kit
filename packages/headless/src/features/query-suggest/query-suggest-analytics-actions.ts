@@ -19,14 +19,6 @@ export interface LogQuerySuggestionClickActionCreatorPayload {
   suggestion: string;
 }
 
-//TODO: KIT-2859
-export const logQuerySuggestionClick = (
-  payload: LogQuerySuggestionClickActionCreatorPayload
-): LegacySearchAction =>
-  makeAnalyticsAction('analytics/querySuggest', (client, state) => {
-    const metadata = buildOmniboxSuggestionMetadata(state, payload);
-    return client.makeOmniboxAnalytics(metadata);
-  });
 
 export const omniboxAnalytics = (): SearchAction => ({
   actionCause: SearchPageEvents.omniboxAnalytics,

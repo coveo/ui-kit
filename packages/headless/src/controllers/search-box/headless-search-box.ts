@@ -1,7 +1,6 @@
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {fetchQuerySuggestions} from '../../features/query-suggest/query-suggest-actions';
 import {
-  logSearchboxSubmit,
   searchboxSubmit,
 } from '../../features/query/query-analytics-actions';
 import {executeSearch} from '../../features/search/search-actions';
@@ -90,7 +89,7 @@ export function buildSearchBox(
   return {
     ...searchBox,
     submit() {
-      searchBox.submit(logSearchboxSubmit(), searchboxSubmit());
+      searchBox.submit({nextAnalytics:searchboxSubmit()});
     },
     get state() {
       return searchBox.state;

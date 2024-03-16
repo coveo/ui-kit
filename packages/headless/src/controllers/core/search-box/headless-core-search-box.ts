@@ -17,12 +17,10 @@ import {
   selectQuerySuggestion,
 } from '../../../features/query-suggest/query-suggest-actions';
 import {
-  logQuerySuggestionClick,
   omniboxAnalytics,
 } from '../../../features/query-suggest/query-suggest-analytics-actions';
 import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice';
 import {QuerySuggestState} from '../../../features/query-suggest/query-suggest-state';
-import {logSearchboxSubmit} from '../../../features/query/query-analytics-actions';
 import {queryReducer as query} from '../../../features/query/query-slice';
 import {
   SearchAction,
@@ -187,10 +185,10 @@ export interface SearchBox extends Controller {
    * @param legacyAnalytics -  The legacy analytics action to log after submitting a query.
    * @param nextAnalytics - The next analytics action to log after submitting a query.
    */
-  submit(
-    legacyAnalytics?: LegacySearchAction,
-    nextAnalytics?: SearchAction
-  ): void;
+  submit(actions: {
+    legacyAnalytics?: LegacySearchAction;
+    nextAnalytics?: SearchAction;
+  }): void;
 
   /**
    * The state of the `SearchBox` controller.
@@ -251,7 +249,7 @@ export function buildCoreSearchBox(
     if (props.isNextAnalyticsReady) {
       dispatch(props.executeSearchActionCreator(analytics));
     } else {
-      dispatch(props.executeSearchActionCreator(analytics.legacy));
+      // dispatch(props.executeSearchActionCreator(analytics.legacy));
     }
   };
 
@@ -277,20 +275,19 @@ export function buildCoreSearchBox(
     selectSuggestion(value: string) {
       dispatch(selectQuerySuggestion({id, expression: value}));
       performSearch({
-        legacy: logQuerySuggestionClick({id, suggestion: value}),
         next: omniboxAnalytics(),
       }).then(() => {
         dispatch(clearQuerySuggest({id}));
       });
     },
 
-    submit(
-      legacyAnalytics:
-        | LegacySearchAction
-        | InsightAction = logSearchboxSubmit(),
-      nextAnalytics: SearchAction
-    ) {
-      performSearch({legacy: legacyAnalytics, next: nextAnalytics});
+    submit({
+      nextAnalytics,
+    }: {
+      legacyAnalytics: LegacySearchAction | InsightAction;
+      nextAnalytics: SearchAction;
+    }) {
+      performSearch({next: nextAnalytics});
       dispatch(clearQuerySuggest({id}));
     },
 

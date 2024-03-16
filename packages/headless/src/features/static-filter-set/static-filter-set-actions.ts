@@ -104,36 +104,12 @@ export interface StaticFilterValueMetadata {
   expression: string;
 }
 
-//TODO: KIT-2859
-export const logStaticFilterSelect = (
-  metadata: LogStaticFilterToggleValueActionCreatorPayload
-): LegacySearchAction =>
-  makeAnalyticsAction('analytics/staticFilter/select', (client) =>
-    client.makeStaticFilterSelect(metadata)
-  );
-
-//TODO: KIT-2859
-export const logStaticFilterDeselect = (
-  metadata: LogStaticFilterToggleValueActionCreatorPayload
-): LegacySearchAction =>
-  makeAnalyticsAction('analytics/staticFilter/deselect', (client) =>
-    client.makeStaticFilterDeselect(metadata)
-  );
-
 export interface LogStaticFilterClearAllActionCreatorPayload {
   /**
    * The static filter id.
    */
   staticFilterId: string;
 }
-
-//TODO: KIT-2859
-export const logStaticFilterClearAll = (
-  metadata: LogStaticFilterClearAllActionCreatorPayload
-): LegacySearchAction =>
-  makeAnalyticsAction('analytics/staticFilter/clearAll', (client) =>
-    client.makeStaticFilterClearAll(metadata)
-  );
 
 // --------------------- KIT-2859 : Everything above this will get deleted ! :) ---------------------
 export const staticFilterSelect = (): SearchAction => ({

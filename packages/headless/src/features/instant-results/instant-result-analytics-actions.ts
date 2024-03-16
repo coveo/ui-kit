@@ -50,14 +50,6 @@ export const logInstantResultOpen = (
     },
   });
 
-//TODO: KIT-2859
-export const logInstantResultsSearch = (): InstantResultsSearchAction =>
-  makeAnalyticsAction(
-    'analytics/instantResult/searchboxAsYouType',
-    (client) => client.makeSearchboxAsYouType(),
-    (getState) => new InstantResultsAnalyticsProvider(getState)
-  );
-
 export const searchboxAsYouType = (): SearchAction => ({
   actionCause: SearchPageEvents.searchboxAsYouType,
 });

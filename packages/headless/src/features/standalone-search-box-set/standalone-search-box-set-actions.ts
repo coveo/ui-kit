@@ -107,7 +107,7 @@ export const fetchRedirectUrl = createAsyncThunk<
   'standaloneSearchBox/fetchRedirect',
   async (
     payload,
-    {dispatch, getState, rejectWithValue, extra: {apiClient, validatePayload}}
+    {getState, rejectWithValue, extra: {apiClient, validatePayload}}
   ) => {
     validatePayload(payload, {id: new StringValue({emptyAllowed: false})});
     const request = await buildPlanRequest(getState());
@@ -118,18 +118,18 @@ export const fetchRedirectUrl = createAsyncThunk<
 
     const {redirectionUrl} = new ExecutionPlan(response.success);
 
-    if (redirectionUrl) {
-      dispatch(logRedirect(redirectionUrl));
-    }
+    // if (redirectionUrl) {
+    //   dispatch(logRedirect(redirectionUrl));
+    // }
 
     return redirectionUrl || '';
   }
 );
 
-const logRedirect = (url: string): CustomAction =>
-  makeAnalyticsAction('analytics/standaloneSearchBox/redirect', (client) =>
-    client.makeTriggerRedirect({redirectedTo: url})
-  );
+// const logRedirect = (url: string): CustomAction =>
+//   makeAnalyticsAction('analytics/standaloneSearchBox/redirect', (client) =>
+//     client.makeTriggerRedirect({redirectedTo: url})
+//   );
 
 export const buildPlanRequest = async (
   state: StateNeededForRedirect
@@ -145,7 +145,7 @@ export const buildPlanRequest = async (
     ...(state.pipeline && {pipeline: state.pipeline}),
     ...(state.searchHub && {searchHub: state.searchHub}),
     ...(state.configuration.analytics.enabled && {
-      visitorId: await getVisitorID(state.configuration.analytics),
+      visitorId: await getVisitorID({token: state.configuration.accessToken, trackingId: state.configuration.analytics.trackingId, url: 'https://to.do'}),
     }),
     ...(state.configuration.analytics.enabled &&
       (await fromAnalyticsStateToAnalyticsParams(

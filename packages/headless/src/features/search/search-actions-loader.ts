@@ -8,7 +8,6 @@ import {SearchEngine} from '../../app/search-engine/search-engine';
 import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {searchReducer as search} from '../../features/search/search-slice';
 import {InstantResultSection} from '../../state/state-sections';
-import {LegacySearchAction} from '../analytics/analytics-utils';
 import {
   FetchInstantResultsActionCreatorPayload,
   FetchInstantResultsThunkReturn,
@@ -20,8 +19,9 @@ import {
   fetchFacetValues,
   fetchPage,
   fetchInstantResults,
-} from './legacy/search-actions';
-import {StateNeededByExecuteSearch} from './legacy/search-actions-thunk-processor';
+  TransitiveSearchAction,
+} from './search-actions';
+import {StateNeededByExecuteSearch} from './search-actions-thunk-processor';
 
 /**
  * The search action creators.
@@ -43,10 +43,10 @@ export interface SearchActionCreators {
    * @returns A dispatchable action.
    */
   executeSearch(
-    analyticsSearchAction: LegacySearchAction
+    analyticsSearchAction: TransitiveSearchAction
   ): AsyncThunkAction<
     ExecuteSearchThunkReturn,
-    LegacySearchAction,
+    TransitiveSearchAction,
     AsyncThunkOptions<
       StateNeededByExecuteSearch,
       ClientThunkExtraArguments<SearchAPIClient>
@@ -74,10 +74,10 @@ export interface SearchActionCreators {
    * @returns A dispatchable action.
    */
   fetchFacetValues(
-    analyticsSearchAction: LegacySearchAction
+    analyticsSearchAction: TransitiveSearchAction
   ): AsyncThunkAction<
     ExecuteSearchThunkReturn,
-    LegacySearchAction,
+    TransitiveSearchAction,
     AsyncThunkOptions<
       StateNeededByExecuteSearch,
       ClientThunkExtraArguments<SearchAPIClient>
@@ -100,10 +100,10 @@ export interface SearchActionCreators {
    * @returns A dispatchable action.
    */
   fetchPage(
-    analyticsSearchAction: LegacySearchAction
+    analyticsSearchAction: TransitiveSearchAction
   ): AsyncThunkAction<
     ExecuteSearchThunkReturn,
-    LegacySearchAction,
+    TransitiveSearchAction,
     AsyncThunkOptions<
       StateNeededByExecuteSearch,
       ClientThunkExtraArguments<SearchAPIClient>
