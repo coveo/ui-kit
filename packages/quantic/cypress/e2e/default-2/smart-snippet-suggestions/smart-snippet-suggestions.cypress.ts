@@ -18,7 +18,8 @@ import {SmartSnippetSuggestionsExpectations as Expect} from './smart-snippet-sug
 const inactiveLink = 'javascript:void(0);';
 const exampleInlineLink = 'https://www.coveo.com/en';
 const exampleInlineLinkText = 'Example inline link';
-const exampleSmartSnippetAnswer = `<div data-cy="smart-snippet__inline-link"><p>Example smart snippet answer</p><a href="${exampleInlineLink}" target="_blank">${exampleInlineLinkText}</a></div>`;
+const exampleAnswerText = 'Example smart snippet answer';
+const exampleSmartSnippetAnswer = `<div data-cy="smart-snippet__inline-link"><p data-cy="answer-text">${exampleAnswerText}</p><a data-cy="answer-inline-link" href="${exampleInlineLink}">${exampleInlineLinkText}</a></div>`;
 const exampleUriHash = 'exampleUriHash';
 const exampleRelatedQuestions = [
   {
@@ -106,10 +107,13 @@ describe('quantic-smart-snippet-suggestions', () => {
                 index,
                 suggestion.question
               );
-              Expect.displaySmartSnippetSuggestionsAnswer(
-                index,
-                suggestion.answerSnippet
-              );
+              Expect.displaySmartSnippetSuggestionsAnswer(index, {
+                text: exampleAnswerText,
+                link: {
+                  href: exampleInlineLink,
+                  text: exampleInlineLinkText,
+                },
+              });
               Expect.displaySmartSnippetSuggestionsSourceUri(
                 index,
                 suggestion.uri
