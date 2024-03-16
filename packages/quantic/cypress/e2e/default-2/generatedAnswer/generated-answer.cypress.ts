@@ -34,7 +34,6 @@ const answerType = 'CRGA';
 
 const GENERATED_ANSWER_DATA_KEY = 'coveo-generated-answer-data';
 const otherOption = 'other';
-const irrelevantOption = 'irrelevant';
 const feedbackOptions = [
   'irrelevant',
   'notAccurate',
@@ -109,14 +108,257 @@ describe('quantic-generated-answer', () => {
         });
       });
 
-      analyticsModeTest.forEach((analytics) => {
-        describe(analytics.label, () => {
-          before(() => {
-            analyticsMode = analytics.mode;
+      describe('when stream ID is returned', () => {
+        describe('when a message event is received', () => {
+          const streamId = crypto.randomUUID();
+
+          beforeEach(() => {
+            mockSearchWithGeneratedAnswer(streamId, param.useCase);
+            mockStreamResponse(streamId, genQaMessageTypePayload);
+            visitGeneratedAnswer({useCase: param.useCase});
           });
 
-          describe('when a stream ID is returned', () => {
-            describe('when a message event is received', () => {
+          it('should log the stream ID in the search event custom data', () => {
+            if (analyticsMode === 'legacy') {
+              Expect.logStreamIdInAnalytics(streamId, param.useCase);
+            }
+          });
+
+          it('should display the generated answer content', () => {
+            Expect.displayGeneratedAnswerContent(true);
+            Expect.sessionStorageContains(GENERATED_ANSWER_DATA_KEY, {});
+            Expect.generatedAnswerFooterIsOnMultiline(false);
+          });
+
+          it('should display the correct message', () => {
+            Expect.displayGeneratedAnswerCard(true);
+            Expect.generatedAnswerContains(testText);
+            Expect.generatedAnswerIsStreaming(false);
+          });
+
+          it('should perform a search query with the default rephrase button', () => {
+            cy.wait(InterceptAliases.Search);
+            Expect.searchQueryContainsCorrectRephraseOption(
+              defaultRephraseOption
+            );
+          });
+
+          it('should perform a search query with the default fields to include in citations', () => {
+            cy.wait(InterceptAliases.Search);
+            Expect.searchQueryContainsCorrectFieldsToIncludeInCitations(
+              defaultFieldsToIncludeInCitations.split(',')
+            );
+          });
+
+          it('should display rephrase buttons', () => {
+            Expect.displayRephraseButtons(true);
+            Expect.displayRephraseLabel(true);
+          });
+
+          it('should display feedback buttons', () => {
+            Expect.displayLikeButton(true);
+            Expect.displayDislikeButton(true);
+            Expect.likeButtonIsChecked(false);
+            Expect.dislikeButtonIsChecked(false);
+          });
+        });
+
+        describe('when a value is provided to the answer style attribute', () => {
+          const streamId = crypto.randomUUID();
+
+          beforeEach(() => {
+            mockSearchWithGeneratedAnswer(streamId, param.useCase);
+            mockStreamResponse(streamId, genQaMessageTypePayload);
+            visitGeneratedAnswer({
+              answerStyle: bulletRephraseOption,
+              useCase: param.useCase,
+            });
+          });
+
+          it('should send a search query with the right rephrase option as a parameter', () => {
+            scope('when loading the page', () => {
+              Expect.displayRephraseButtons(true);
+              Expect.rephraseButtonIsSelected(stepRephraseOption, false);
+              Expect.rephraseButtonIsSelected(conciseRephraseOption, false);
+              Expect.rephraseButtonIsSelected(bulletRephraseOption, true);
+              Expect.searchQueryContainsCorrectRephraseOption(
+                bulletRephraseOption
+              );
+            });
+          });
+        });
+
+        describe('when a custom value is provided to the fields to include in citations attribute', () => {
+          const streamId = crypto.randomUUID();
+          const customFields = 'foo,bar';
+
+          beforeEach(() => {
+            mockSearchWithGeneratedAnswer(streamId, param.useCase);
+            mockStreamResponse(streamId, genQaMessageTypePayload);
+            visitGeneratedAnswer({
+              fieldsToIncludeInCitations: customFields,
+              useCase: param.useCase,
+            });
+          });
+
+          it('should send a search query with the right fields to include in citations option as a parameter', () => {
+            scope('when loading the page', () => {
+              Expect.displayGeneratedAnswerContent(true);
+              Expect.displayRephraseButtons(true);
+              Expect.searchQueryContainsCorrectFieldsToIncludeInCitations(
+                customFields.split(',')
+              );
+            });
+          });
+        });
+
+        describe('when the property multilineFooter is set to true', () => {
+          const streamId = crypto.randomUUID();
+
+          beforeEach(() => {
+            mockSearchWithGeneratedAnswer(streamId, param.useCase);
+            mockStreamResponse(streamId, genQaMessageTypePayload);
+            visitGeneratedAnswer({
+              multilineFooter: true,
+              useCase: param.useCase,
+            });
+          });
+
+          it('should properly display the generated answer footer on multiple lines', () => {
+            scope('when loading the page', () => {
+              Expect.displayGeneratedAnswerCard(true);
+              Expect.generatedAnswerFooterIsOnMultiline(true);
+            });
+          });
+        });
+
+        describe('when the generated answer is still streaming', () => {
+          const streamId = crypto.randomUUID();
+
+          const testMessagePayload = {
+            payloadType: 'genqa.messageType',
+            payload: JSON.stringify({
+              textDelta: testText,
+            }),
+          };
+
+          beforeEach(() => {
+            mockSearchWithGeneratedAnswer(streamId, param.useCase);
+            mockStreamResponse(streamId, testMessagePayload);
+            visitGeneratedAnswer({useCase: param.useCase});
+          });
+
+          it('should display the correct message and the streaming cursor', () => {
+            Expect.displayGeneratedAnswerCard(true);
+            Expect.generatedAnswerContains(testText);
+            Expect.generatedAnswerIsStreaming(true);
+            Expect.displayRephraseButtons(false);
+            Expect.displayLikeButton(false);
+            Expect.displayDislikeButton(false);
+            Expect.displayCopyToClipboardButton(false);
+            Expect.displayToggleGeneratedAnswerButton(true);
+            Expect.toggleGeneratedAnswerButtonIsChecked(true);
+          });
+        });
+
+        rephraseOptions.forEach((option) => {
+          const rephraseOption = option;
+
+          describe(`when clicking the ${rephraseOption} rephrase button`, () => {
+            const streamId = crypto.randomUUID();
+            const secondStreamId = crypto.randomUUID();
+            const thirdStreamId = crypto.randomUUID();
+
+            beforeEach(() => {
+              mockSearchWithGeneratedAnswer(streamId, param.useCase);
+              mockStreamResponse(streamId, genQaMessageTypePayload);
+              visitGeneratedAnswer({useCase: param.useCase});
+            });
+
+            it(`should send a new search query with the rephrase option ${option} as a parameter`, () => {
+              scope('when loading the page', () => {
+                Expect.displayRephraseButtonWithLabel(rephraseOption);
+                Expect.rephraseButtonIsSelected(rephraseOption, false);
+              });
+
+              scope('when selecting the rephrase button', () => {
+                mockSearchWithGeneratedAnswer(secondStreamId, param.useCase);
+                mockStreamResponse(secondStreamId, genQaMessageTypePayload);
+
+                Actions.clickRephraseButton(rephraseOption);
+                Expect.displayRephraseButtonWithLabel(rephraseOption);
+                Expect.rephraseButtonIsSelected(rephraseOption, true);
+                rephraseOptions
+                  .filter((item) => {
+                    return item !== rephraseOption;
+                  })
+                  .forEach((unselectedOption) => {
+                    Expect.displayRephraseButtonWithLabel(unselectedOption);
+                    Expect.rephraseButtonIsSelected(unselectedOption, false);
+                  });
+                Expect.searchQueryContainsCorrectRephraseOption(rephraseOption);
+                if (analyticsMode === 'legacy') {
+                  Expect.logRephraseGeneratedAnswer(
+                    rephraseOption,
+                    secondStreamId
+                  );
+                }
+              });
+
+              scope('when unselecting the rephrase button', () => {
+                mockSearchWithGeneratedAnswer(thirdStreamId, param.useCase);
+                mockStreamResponse(thirdStreamId, genQaMessageTypePayload);
+
+                Actions.clickRephraseButton(rephraseOption);
+                rephraseOptions.forEach((unselectedOption) => {
+                  Expect.displayRephraseButtonWithLabel(unselectedOption);
+                  Expect.rephraseButtonIsSelected(unselectedOption, false);
+                });
+                Expect.searchQueryContainsCorrectRephraseOption(
+                  defaultRephraseOption
+                );
+                if (analyticsMode === 'legacy') {
+                  Expect.logRephraseGeneratedAnswer(
+                    defaultRephraseOption,
+                    thirdStreamId
+                  );
+                }
+              });
+            });
+          });
+        });
+
+        describe('when an end of stream event is received', () => {
+          const streamId = crypto.randomUUID();
+
+          const testMessagePayload = {
+            payloadType: 'genqa.endOfStreamType',
+            payload: JSON.stringify({
+              textDelta: testText,
+            }),
+            finishReason: 'COMPLETED',
+          };
+
+          beforeEach(() => {
+            mockSearchWithGeneratedAnswer(streamId, param.useCase);
+            mockStreamResponse(streamId, testMessagePayload);
+            visitGeneratedAnswer({useCase: param.useCase});
+          });
+
+          it('should log the generated answer stream end event', () => {
+            if (analyticsMode === 'legacy') {
+              Expect.logGeneratedAnswerStreamEnd(streamId);
+            }
+          });
+        });
+
+        analyticsModeTest.forEach((analytics) => {
+          describe(analytics.label, () => {
+            before(() => {
+              analyticsMode = analytics.mode;
+            });
+
+            describe('when liking the generated answer', () => {
               const streamId = crypto.randomUUID();
 
               beforeEach(() => {
@@ -125,147 +367,40 @@ describe('quantic-generated-answer', () => {
                 visitGeneratedAnswer({useCase: param.useCase});
               });
 
-              it('should log the stream ID in the search event custom data', () => {
-                if (analyticsMode === 'legacy') {
-                  Expect.logStreamIdInAnalytics(streamId, param.useCase);
-                }
-              });
+              it('should properly display the like button', () => {
+                Expect.displayLikeButton(true);
+                Expect.displayDislikeButton(true);
+                Expect.likeButtonIsChecked(false);
+                Expect.dislikeButtonIsChecked(false);
 
-              it('should display the generated answer content', () => {
-                Expect.displayGeneratedAnswerContent(true);
-                Expect.sessionStorageContains(GENERATED_ANSWER_DATA_KEY, {});
-                Expect.generatedAnswerFooterIsOnMultiline(false);
-              });
-
-              it('should display the correct message', () => {
-                Expect.displayGeneratedAnswerCard(true);
-                Expect.generatedAnswerContains(testText);
-                Expect.generatedAnswerIsStreaming(false);
-              });
-
-              it('should perform a search query with the default rephrase button', () => {
-                cy.wait(InterceptAliases.Search);
-                Expect.searchQueryContainsCorrectRephraseOption(
-                  defaultRephraseOption
-                );
-              });
-
-              it('should perform a search query with the default fields to include in citations', () => {
-                cy.wait(InterceptAliases.Search);
-                Expect.searchQueryContainsCorrectFieldsToIncludeInCitations(
-                  defaultFieldsToIncludeInCitations.split(',')
-                );
-              });
-
-              it('should display rephrase buttons', () => {
-                Expect.displayRephraseButtons(true);
-                Expect.displayRephraseLabel(true);
-              });
-
-              it(
-                'should display feedback buttons',
-                {
-                  retries: 12,
-                },
-                () => {
-                  Expect.displayLikeButton(true);
-                  Expect.displayDislikeButton(true);
-                  Expect.likeButtonIsChecked(false);
-                  Expect.dislikeButtonIsChecked(false);
-
-                  scope('when liking the generated answer', () => {
-                    Actions.likeGeneratedAnswer();
-                    if (analyticsMode === 'next') {
-                      NextAnalyticsExpectations.emitQnaLikeEvent(
-                        {
-                          feedback: {
-                            liked: true,
-                          },
-                          answer: {
-                            id: streamId,
-                            type: answerType,
-                          },
+                scope('should properly log the analytics', () => {
+                  Actions.likeGeneratedAnswer();
+                  if (analyticsMode === 'next') {
+                    NextAnalyticsExpectations.emitQnaLikeEvent(
+                      {
+                        feedback: {
+                          liked: true,
                         },
-                        exampleTrackingId
-                      );
-                    } else {
-                      Expect.logLikeGeneratedAnswer(streamId);
-                    }
-                    Expect.likeButtonIsChecked(true);
-                    Expect.dislikeButtonIsChecked(false);
-                  });
-
-                  scope('when disliking the generated answer', () => {
-                    Actions.dislikeGeneratedAnswer();
-                    if (analyticsMode === 'next') {
-                      NextAnalyticsExpectations.emitQnaDislikeEvent(
-                        {
-                          feedback: {
-                            liked: false,
-                          },
-                          answer: {
-                            id: streamId,
-                            type: answerType,
-                          },
+                        answer: {
+                          id: streamId,
+                          type: answerType,
                         },
-                        exampleTrackingId
-                      );
-                    } else {
-                      Expect.logDislikeGeneratedAnswer(streamId);
-                    }
-                    Expect.likeButtonIsChecked(false);
-                    Expect.dislikeButtonIsChecked(true);
-                    Expect.displayFeedbackModal(true);
-                  });
-
-                  scope('when closing the feedback modal', () => {
-                    Actions.clickFeedbackCancelButton();
-                    Expect.displayFeedbackModal(false);
-                  });
-
-                  scope('when selecting a feedback option', () => {
-                    Actions.dislikeGeneratedAnswer();
-                    Actions.clickFeedbackOption(
-                      feedbackOptions.indexOf(irrelevantOption)
+                      },
+                      exampleTrackingId
                     );
-                    Actions.clickFeedbackSubmitButton();
-                    if (analyticsMode === 'next') {
-                      NextAnalyticsExpectations.emitQnaSubmitFeedbackReasonEvent(
-                        {
-                          feedback: {
-                            liked: false,
-                            reason: irrelevantOption,
-                          },
-                          answer: {
-                            id: streamId,
-                            type: answerType,
-                          },
-                        },
-                        exampleTrackingId
-                      );
-                    } else {
-                      Expect.logGeneratedAnswerFeedbackSubmit(streamId, {
-                        reason: irrelevantOption,
-                      });
-                    }
-                    Actions.clickFeedbackDoneButton();
-                  });
-
-                  scope(
-                    'when clicking the dislike button after submiting a feedback',
-                    () => {
-                      Actions.dislikeGeneratedAnswer();
-                      Expect.displayFeedbackModal(false);
-                    }
-                  );
-                }
-              );
+                  } else {
+                    Expect.logLikeGeneratedAnswer(streamId);
+                  }
+                  Expect.likeButtonIsChecked(true);
+                  Expect.dislikeButtonIsChecked(false);
+                });
+              });
             });
 
             describe(
               'when providing detailed feedback',
               {
-                retries: 12,
+                retries: 20,
               },
               () => {
                 const streamId = crypto.randomUUID();
@@ -507,150 +642,6 @@ describe('quantic-generated-answer', () => {
               });
             });
 
-            rephraseOptions.forEach((option) => {
-              const rephraseOption = option;
-
-              describe(`when clicking the ${rephraseOption} rephrase button`, () => {
-                const streamId = crypto.randomUUID();
-                const secondStreamId = crypto.randomUUID();
-                const thirdStreamId = crypto.randomUUID();
-
-                beforeEach(() => {
-                  mockSearchWithGeneratedAnswer(streamId, param.useCase);
-                  mockStreamResponse(streamId, genQaMessageTypePayload);
-                  visitGeneratedAnswer({useCase: param.useCase});
-                });
-
-                it(`should send a new search query with the rephrase option ${option} as a parameter`, () => {
-                  scope('when loading the page', () => {
-                    Expect.displayRephraseButtonWithLabel(rephraseOption);
-                    Expect.rephraseButtonIsSelected(rephraseOption, false);
-                  });
-
-                  scope('when selecting the rephrase button', () => {
-                    mockSearchWithGeneratedAnswer(
-                      secondStreamId,
-                      param.useCase
-                    );
-                    mockStreamResponse(secondStreamId, genQaMessageTypePayload);
-
-                    Actions.clickRephraseButton(rephraseOption);
-                    Expect.displayRephraseButtonWithLabel(rephraseOption);
-                    Expect.rephraseButtonIsSelected(rephraseOption, true);
-                    rephraseOptions
-                      .filter((item) => {
-                        return item !== rephraseOption;
-                      })
-                      .forEach((unselectedOption) => {
-                        Expect.displayRephraseButtonWithLabel(unselectedOption);
-                        Expect.rephraseButtonIsSelected(
-                          unselectedOption,
-                          false
-                        );
-                      });
-                    Expect.searchQueryContainsCorrectRephraseOption(
-                      rephraseOption
-                    );
-                    if (analyticsMode === 'legacy') {
-                      Expect.logRephraseGeneratedAnswer(
-                        rephraseOption,
-                        secondStreamId
-                      );
-                    }
-                  });
-
-                  scope('when unselecting the rephrase button', () => {
-                    mockSearchWithGeneratedAnswer(thirdStreamId, param.useCase);
-                    mockStreamResponse(thirdStreamId, genQaMessageTypePayload);
-
-                    Actions.clickRephraseButton(rephraseOption);
-                    rephraseOptions.forEach((unselectedOption) => {
-                      Expect.displayRephraseButtonWithLabel(unselectedOption);
-                      Expect.rephraseButtonIsSelected(unselectedOption, false);
-                    });
-                    Expect.searchQueryContainsCorrectRephraseOption(
-                      defaultRephraseOption
-                    );
-                    if (analyticsMode === 'legacy') {
-                      Expect.logRephraseGeneratedAnswer(
-                        defaultRephraseOption,
-                        thirdStreamId
-                      );
-                    }
-                  });
-                });
-              });
-            });
-
-            describe('when a value is provided to the answer style attribute', () => {
-              const streamId = crypto.randomUUID();
-
-              beforeEach(() => {
-                mockSearchWithGeneratedAnswer(streamId, param.useCase);
-                mockStreamResponse(streamId, genQaMessageTypePayload);
-                visitGeneratedAnswer({
-                  answerStyle: bulletRephraseOption,
-                  useCase: param.useCase,
-                });
-              });
-
-              it('should send a search query with the right rephrase option as a parameter', () => {
-                scope('when loading the page', () => {
-                  Expect.displayRephraseButtons(true);
-                  Expect.rephraseButtonIsSelected(stepRephraseOption, false);
-                  Expect.rephraseButtonIsSelected(conciseRephraseOption, false);
-                  Expect.rephraseButtonIsSelected(bulletRephraseOption, true);
-                  Expect.searchQueryContainsCorrectRephraseOption(
-                    bulletRephraseOption
-                  );
-                });
-              });
-            });
-
-            describe('when a custom value is provided to the fields to include in citations attribute', () => {
-              const streamId = crypto.randomUUID();
-              const customFields = 'foo,bar';
-
-              beforeEach(() => {
-                mockSearchWithGeneratedAnswer(streamId, param.useCase);
-                mockStreamResponse(streamId, genQaMessageTypePayload);
-                visitGeneratedAnswer({
-                  fieldsToIncludeInCitations: customFields,
-                  useCase: param.useCase,
-                });
-              });
-
-              it('should send a search query with the right fields to include in citations option as a parameter', () => {
-                scope('when loading the page', () => {
-                  Expect.displayGeneratedAnswerContent(true);
-                  Expect.displayRephraseButtons(true);
-                  Expect.searchQueryContainsCorrectFieldsToIncludeInCitations(
-                    customFields.split(',')
-                  );
-                });
-              });
-            });
-
-            describe('when the property multilineFooter is set to true', () => {
-              const streamId = crypto.randomUUID();
-
-              beforeEach(() => {
-                mockSearchWithGeneratedAnswer(streamId, param.useCase);
-                mockStreamResponse(streamId, genQaMessageTypePayload);
-                visitGeneratedAnswer({
-                  multilineFooter: true,
-                  useCase: param.useCase,
-                });
-              });
-
-              it('should properly display the generated answer footer on multiple lines', () => {
-                scope('when loading the page', () => {
-                  Expect.displayGeneratedAnswerCard(true);
-                  Expect.generatedAnswerFooterIsOnMultiline(true);
-                });
-              });
-            });
-
             // access to the clipboard reliably works in Electron browser
             // in other browsers, there are popups asking for permission
             // thus we should only run these tests in Electron
@@ -696,35 +687,6 @@ describe('quantic-generated-answer', () => {
                 });
               }
             );
-
-            describe('when the generated answer is still streaming', () => {
-              const streamId = crypto.randomUUID();
-
-              const testMessagePayload = {
-                payloadType: 'genqa.messageType',
-                payload: JSON.stringify({
-                  textDelta: testText,
-                }),
-              };
-
-              beforeEach(() => {
-                mockSearchWithGeneratedAnswer(streamId, param.useCase);
-                mockStreamResponse(streamId, testMessagePayload);
-                visitGeneratedAnswer({useCase: param.useCase});
-              });
-
-              it('should display the correct message and the streaming cursor', () => {
-                Expect.displayGeneratedAnswerCard(true);
-                Expect.generatedAnswerContains(testText);
-                Expect.generatedAnswerIsStreaming(true);
-                Expect.displayRephraseButtons(false);
-                Expect.displayLikeButton(false);
-                Expect.displayDislikeButton(false);
-                Expect.displayCopyToClipboardButton(false);
-                Expect.displayToggleGeneratedAnswerButton(true);
-                Expect.toggleGeneratedAnswerButtonIsChecked(true);
-              });
-            });
 
             describe('when a citation event is received', () => {
               const exampleLinkUrl = '#';
@@ -848,90 +810,66 @@ describe('quantic-generated-answer', () => {
                 }
               });
             });
+          });
+        });
 
-            describe('when an end of stream event is received', () => {
-              const streamId = crypto.randomUUID();
+        describe('when an error event is received', () => {
+          const streamId = crypto.randomUUID();
 
-              const testMessagePayload = {
-                payloadType: 'genqa.endOfStreamType',
-                payload: JSON.stringify({
-                  textDelta: testText,
-                }),
-                finishReason: 'COMPLETED',
-              };
+          const testErrorPayload = {
+            finishReason: 'ERROR',
+            errorMessage: 'An error message',
+            errorCode: 500,
+          };
 
-              beforeEach(() => {
-                mockSearchWithGeneratedAnswer(streamId, param.useCase);
-                mockStreamResponse(streamId, testMessagePayload);
-                visitGeneratedAnswer({useCase: param.useCase});
-              });
+          beforeEach(() => {
+            mockSearchWithGeneratedAnswer(streamId, param.useCase);
+            mockStreamResponse(streamId, testErrorPayload);
+            visitGeneratedAnswer({useCase: param.useCase});
+          });
 
-              it('should log the generated answer stream end event', () => {
-                if (analyticsMode === 'legacy') {
-                  Expect.logGeneratedAnswerStreamEnd(streamId);
-                }
-              });
+          it('should not display the component', () => {
+            Expect.displayGeneratedAnswerCard(false);
+          });
+        });
+
+        describe('when the stream connection fails', () => {
+          const streamId = crypto.randomUUID();
+
+          describe('Non-retryable error (4XX)', () => {
+            beforeEach(() => {
+              mockSearchWithGeneratedAnswer(streamId, param.useCase);
+              mockStreamError(streamId, 406);
+              visitGeneratedAnswer({useCase: param.useCase});
+              cy.wait(getStreamInterceptAlias(streamId));
             });
 
-            describe('when an error event is received', () => {
-              const streamId = crypto.randomUUID();
-
-              const testErrorPayload = {
-                finishReason: 'ERROR',
-                errorMessage: 'An error message',
-                errorCode: 500,
-              };
-
-              beforeEach(() => {
-                mockSearchWithGeneratedAnswer(streamId, param.useCase);
-                mockStreamResponse(streamId, testErrorPayload);
-                visitGeneratedAnswer({useCase: param.useCase});
-              });
-
-              it('should not display the component', () => {
-                Expect.displayGeneratedAnswerCard(false);
-              });
+            it('should not show the component', () => {
+              Expect.displayGeneratedAnswerCard(false);
             });
+          });
 
-            describe('when the stream connection fails', () => {
-              const streamId = crypto.randomUUID();
-
-              describe('Non-retryable error (4XX)', () => {
+          describe('Retryable error', () => {
+            retryableErrorCodes.forEach((errorCode) => {
+              describe(`${errorCode} error`, () => {
                 beforeEach(() => {
                   mockSearchWithGeneratedAnswer(streamId, param.useCase);
-                  mockStreamError(streamId, 406);
+                  mockStreamError(streamId, errorCode);
                   visitGeneratedAnswer({useCase: param.useCase});
-                  cy.wait(getStreamInterceptAlias(streamId));
                 });
 
-                it('should not show the component', () => {
-                  Expect.displayGeneratedAnswerCard(false);
-                });
-              });
+                it('should retry the stream 3 times then offer a retry button', () => {
+                  for (let times = 0; times < 3; times++) {
+                    Expect.displayGeneratedAnswerCard(false);
+                    cy.wait(getStreamInterceptAlias(streamId));
+                  }
+                  Expect.displayGeneratedAnswerCard(true);
 
-              describe('Retryable error', () => {
-                retryableErrorCodes.forEach((errorCode) => {
-                  describe(`${errorCode} error`, () => {
-                    beforeEach(() => {
-                      mockSearchWithGeneratedAnswer(streamId, param.useCase);
-                      mockStreamError(streamId, errorCode);
-                      visitGeneratedAnswer({useCase: param.useCase});
-                    });
-
-                    it('should retry the stream 3 times then offer a retry button', () => {
-                      for (let times = 0; times < 3; times++) {
-                        Expect.displayGeneratedAnswerCard(false);
-                        cy.wait(getStreamInterceptAlias(streamId));
-                      }
-                      Expect.displayGeneratedAnswerCard(true);
-
-                      Actions.clickRetry();
-                      cy.wait(InterceptAliases.Search);
-                      if (analyticsMode === 'legacy') {
-                        Expect.logRetryGeneratedAnswer(streamId);
-                      }
-                    });
-                  });
+                  Actions.clickRetry();
+                  cy.wait(InterceptAliases.Search);
+                  if (analyticsMode === 'legacy') {
+                    Expect.logRetryGeneratedAnswer(streamId);
+                  }
                 });
               });
             });
