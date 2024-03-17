@@ -9,7 +9,8 @@ import {buildMockInsightState} from '../../test/mock-insight-state';
 import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-request';
 import {buildMockNumericFacetSlice} from '../../test/mock-numeric-facet-slice';
 import {buildMockTabSlice} from '../../test/mock-tab-state';
-import {CollectionId} from '../folding/folding-state';
+import {getConfigurationInitialState} from '../configuration/configuration-state';
+import {CollectionId, getFoldingInitialState} from '../folding/folding-state';
 import {maximumNumberOfResultsFromIndex} from '../pagination/pagination-constants';
 import {
   buildInsightSearchRequest,
@@ -26,6 +27,53 @@ describe('insight search request', () => {
   });
 
   describe('when using buildInsightSearchRequest', () => {
+    it('#buildInsightSearchRequest returns the values extracted from the #configuration state', async () => {
+      state.configuration = {
+        ...getConfigurationInitialState(),
+        accessToken: '123',
+        organizationId: 'foo',
+        platformUrl: 'bar',
+      };
+      const params = (await buildInsightSearchRequest(state)).request;
+
+      expect(params.accessToken).toBe(state.configuration.accessToken);
+      expect(params.organizationId).toBe(state.configuration.organizationId);
+      expect(params.url).toBe(state.configuration.platformUrl);
+    });
+
+    it('#buildInsightSearchRequest returns the state #insightId', async () => {
+      state.insightConfiguration.insightId = '123';
+      const params = (await buildInsightSearchRequest(state)).request;
+
+      expect(params.insightId).toBe(state.insightConfiguration.insightId);
+    });
+
+    it('#buildInsightSearchRequest should add the correct analytics section', async () => {
+      state.configuration.analytics.originLevel3 = 'foo';
+      state.configuration.analytics.originContext = 'bar';
+      state.configuration.analytics.analyticsMode = 'next';
+      state.configuration.analytics.trackingId = '123';
+
+      const exampleEventDescription = {
+        actionCause: 'exampleActionCause',
+      };
+
+      const request = (
+        await buildInsightSearchRequest(state, exampleEventDescription)
+      ).request.analytics;
+
+      expect(request?.documentReferrer).toBe(
+        state.configuration.analytics.originLevel3
+      );
+      expect(request?.originContext).toBe(
+        state.configuration.analytics.originContext
+      );
+      expect(request?.actionCause).toBe(exampleEventDescription.actionCause);
+      expect(request?.trackingId).toBe(
+        state.configuration.analytics.trackingId
+      );
+    });
+
     it('#buildInsightSearchRequest returns the state #query', async () => {
       state.query.q = 'hello';
       const params = (await buildInsightSearchRequest(state)).request;
@@ -165,9 +213,87 @@ describe('insight search request', () => {
         expectedState
       );
     });
+
+    it('#buildInsightSearchRequest returns the state #caseContext', async () => {
+      state.insightCaseContext.caseContext = {value: 'foo'};
+
+      const params = (await buildInsightSearchRequest(state)).request;
+      expect(params.caseContext).toEqual(state.insightCaseContext.caseContext);
+    });
+
+    it('#buildInsightSearchRequest returns the state #didYouMean', async () => {
+      state.didYouMean.enableDidYouMean = true;
+      const params = (await buildInsightSearchRequest(state)).request;
+
+      expect(params.enableDidYouMean).toBe(state.didYouMean.enableDidYouMean);
+    });
+
+    it('#buildInsightSearchRequest returns the values extracted from the #folding state', async () => {
+      state.folding = {
+        ...getFoldingInitialState(),
+        fields: {
+          collection: 'foo',
+          child: 'bar',
+          parent: 'baz',
+        },
+        filterFieldRange: 3,
+      };
+      const params = (await buildInsightSearchRequest(state)).request;
+
+      expect(params.filterField).toBe(state.folding.fields.collection);
+      expect(params.childField).toBe(state.folding.fields.parent);
+      expect(params.parentField).toBe(state.folding.fields.child);
+      expect(params.filterFieldRange).toBe(state.folding.filterFieldRange);
+    });
   });
 
   describe('when using buildInsightLoadCollectionRequest', () => {
+    it('#buildInsightLoadCollectionRequest returns the values extracted from the #configuration state', async () => {
+      state.configuration = {
+        ...getConfigurationInitialState(),
+        accessToken: '123',
+        organizationId: 'foo',
+        platformUrl: 'bar',
+      };
+      const params = (
+        await buildInsightLoadCollectionRequest(state, collectionId)
+      ).request;
+
+      expect(params.accessToken).toBe(state.configuration.accessToken);
+      expect(params.organizationId).toBe(state.configuration.organizationId);
+      expect(params.url).toBe(state.configuration.platformUrl);
+    });
+
+    it('#buildInsightLoadCollectionRequest returns the state #insightId', async () => {
+      state.insightConfiguration.insightId = '123';
+      const params = (
+        await buildInsightLoadCollectionRequest(state, collectionId)
+      ).request;
+
+      expect(params.insightId).toBe(state.insightConfiguration.insightId);
+    });
+
+    it('#buildInsightLoadCollectionRequest should add the correct analytics section', async () => {
+      state.configuration.analytics.originLevel3 = 'foo';
+      state.configuration.analytics.originContext = 'bar';
+      state.configuration.analytics.analyticsMode = 'next';
+      state.configuration.analytics.trackingId = '123';
+
+      const request = (
+        await buildInsightLoadCollectionRequest(state, collectionId)
+      ).request.analytics;
+
+      expect(request?.documentReferrer).toBe(
+        state.configuration.analytics.originLevel3
+      );
+      expect(request?.originContext).toBe(
+        state.configuration.analytics.originContext
+      );
+      expect(request?.trackingId).toBe(
+        state.configuration.analytics.trackingId
+      );
+    });
+
     it('#buildInsightLoadCollectionRequest returns the state #query', async () => {
       state.query.q = 'hello';
       const params = (
