@@ -15,6 +15,7 @@ import {
 } from './generated-answer-selectors';
 
 const rephraseOptions: {label: string; value: GeneratedAnswerStyle}[] = [
+  {label: 'Auto', value: 'default'},
   {label: 'Bullet', value: 'bullet'},
   {label: 'Steps', value: 'step'},
   {label: 'Summary', value: 'concise'},
@@ -82,14 +83,17 @@ describe('Generated Answer Test Suites', () => {
         GeneratedAnswerAssertions.assertAnswerStyle(answerStyle.value);
       });
 
-      it('deselecting should return to "default" style', () => {
+      it('should keep the same button active when we click on the same answer style', () => {
         const initialButtonLabel = answerStyle.label;
 
         cy.wait(TestFixture.interceptAliases.Search);
 
         GeneratedAnswerSelectors.rephraseButton(initialButtonLabel).click();
 
-        GeneratedAnswerAssertions.assertAnswerStyle('default');
+        GeneratedAnswerSelectors.rephraseButton(initialButtonLabel).should(
+          'have.class',
+          'active'
+        );
       });
     });
 
@@ -291,21 +295,23 @@ describe('Generated Answer Test Suites', () => {
         });
 
         describe('when a rephrase option is selected', () => {
-          rephraseOptions.forEach((option) => {
-            it(`should rephrase in "${option.value}" format`, () => {
-              GeneratedAnswerSelectors.rephraseButton(option.label).click();
+          rephraseOptions
+            .filter((option) => option.value !== 'default')
+            .forEach((option) => {
+              it(`should rephrase in "${option.value}" format`, () => {
+                GeneratedAnswerSelectors.rephraseButton(option.label).click();
 
-              GeneratedAnswerAssertions.assertAnswerStyle(option.value);
+                GeneratedAnswerAssertions.assertAnswerStyle(option.value);
+              });
+
+              it(`should log rephraseGeneratedAnswer event with "${option.label}"`, () => {
+                GeneratedAnswerSelectors.rephraseButton(option.label).click();
+
+                GeneratedAnswerAssertions.assertLogRephraseGeneratedAnswer(
+                  option.value
+                );
+              });
             });
-
-            it(`should log rephraseGeneratedAnswer event with "${option.label}"`, () => {
-              GeneratedAnswerSelectors.rephraseButton(option.label).click();
-
-              GeneratedAnswerAssertions.assertLogRephraseGeneratedAnswer(
-                option.value
-              );
-            });
-          });
         });
       });
 
