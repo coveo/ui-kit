@@ -320,9 +320,6 @@ async function deleteScratchOrg(
         await deleteOldOrgs(log, options);
       });
     }
-    if (isCi()) {
-      runner.add(async (log) => await authorizeDevOrg(log, options));
-    }
     runner
       .add(async (log) => {
         await ensureScratchOrgExists(log, options);
