@@ -176,5 +176,5 @@
   "vulnerabilityAlerts": {
     "enabled": false
   },
-  "ignoreDeps": ["esbuild", "@monaco-editor/react"]
+  "ignoreDeps": ["@monaco-editor/react"]
 }
