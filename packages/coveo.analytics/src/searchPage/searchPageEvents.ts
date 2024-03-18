@@ -530,7 +530,7 @@ export interface GeneratedAnswerBaseMeta {
 
 export interface GeneratedAnswerStreamEndMeta extends GeneratedAnswerBaseMeta {
     answerGenerated: boolean;
-    answerTextIsEmpty: boolean;
+    answerTextIsEmpty?: boolean;
 }
 
 export interface GeneratedAnswerCitationMeta {
