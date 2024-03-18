@@ -6,6 +6,10 @@ import {
 } from 'cypress/types/net-stubbing';
 import {getAnalyticsBodyFromRequest} from '../e2e/common-expectations';
 import {buildMockRaw, buildMockResult} from '../fixtures/mock-result';
+import {
+  aliasSubmitFeedbackEventRequest,
+  nextAnalyticsAlias,
+} from '../utils/analytics-utils';
 import {useCaseEnum} from './use-case';
 
 type RequestParams = Record<string, string | number | boolean | undefined>;
@@ -90,6 +94,18 @@ export const InterceptAliases = {
     UndoQuery: uaAlias('undoQuery'),
     SearchboxSubmit: uaAlias('searchboxSubmit'),
   },
+  NextAnalytics: {
+    Qna: {
+      AnswerAction: nextAnalyticsAlias('Qna.AnswerAction'),
+      CitationHover: nextAnalyticsAlias('Qna.CitationHover'),
+      CitationClick: nextAnalyticsAlias('Qna.CitationClick'),
+      SubmitFeedback: {
+        Like: nextAnalyticsAlias('Qna.SubmitFeedback.Like'),
+        Dislike: nextAnalyticsAlias('Qna.SubmitFeedback.Dislike'),
+        ReasonSubmit: nextAnalyticsAlias('Qna.SubmitFeedback.ReasonSubmit'),
+      },
+    },
+  },
   QuerySuggestions: '@coveoQuerySuggest',
   Search: '@coveoSearch',
   FacetSearch: '@coveoFacetSearch',
@@ -100,6 +116,7 @@ export const InterceptAliases = {
 
 export const routeMatchers = {
   analytics: '**/rest/ua/v15/analytics/*',
+  nextAnalytics: '**/events/v1?*',
   querySuggest: '**/rest/search/v2/querySuggest?*',
   search: '**/rest/search/v2?*',
   facetSearch: '**/rest/search/v2/facet?*',
@@ -116,6 +133,15 @@ export function interceptSearch() {
         req.alias = uaAlias(analyticsBody.actionCause as string).substring(1);
       } else if (req.body.eventType) {
         req.alias = uaAlias(analyticsBody.eventValue as string).substring(1);
+      }
+    })
+
+    .intercept('POST', routeMatchers.nextAnalytics, (req) => {
+      const eventType = req.body?.[0]?.meta.type;
+      if (eventType === 'Qna.SubmitFeedback') {
+        aliasSubmitFeedbackEventRequest(req);
+      } else {
+        req.alias = nextAnalyticsAlias(eventType).substring(1);
       }
     })
 
@@ -162,7 +188,7 @@ export function mockNoMoreFacetValues(field: string, useCase?: string) {
   cy.intercept(getRoute(useCase), (req) => {
     req.continue((res) => {
       res.body.facets.find(
-        (facet) => facet.field === field
+        (facet: Record<string, unknown>) => facet.field === field
       ).moreValuesAvailable = false;
       res.send();
     });

@@ -1,5 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {setItems, updateItem} from './cart-actions';
+import {purchase, setItems, updateItem} from './cart-actions';
 import {
   CartItemWithMetadata,
   CartState,
@@ -22,8 +22,7 @@ export const cartReducer = createReducer(
           } as CartState;
         }, getCartInitialState());
 
-        state.cartItems = cartItems;
-        state.cart = cart;
+        setItemsInState(state, cartItems, cart);
       })
       .addCase(updateItem, (state, {payload}) => {
         if (!(payload.productId in state.cart)) {
@@ -38,9 +37,22 @@ export const cartReducer = createReducer(
 
         state.cart[payload.productId] = payload;
         return;
+      })
+      .addCase(purchase.fulfilled, (state) => {
+        const {cart, cartItems} = getCartInitialState();
+        setItemsInState(state, cartItems, cart);
       });
   }
 );
+
+function setItemsInState(
+  state: CartState,
+  cartItems: string[],
+  cart: Record<string, CartItemWithMetadata>
+) {
+  state.cartItems = cartItems;
+  state.cart = cart;
+}
 
 function createItemInCart(item: CartItemWithMetadata, state: CartState) {
   if (item.quantity <= 0) {
