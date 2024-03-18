@@ -31,6 +31,7 @@ import {
 } from '../../state/state-sections';
 import {requiredNonEmptyString} from '../../utils/validate-payload';
 import {InsightAction as LegacyInsightAction} from '../analytics/analytics-utils';
+import {SearchPageEvents} from '../analytics/search-action-cause';
 import {
   FetchQuerySuggestionsActionCreatorPayload,
   FetchQuerySuggestionsThunkReturn,
@@ -182,7 +183,14 @@ export const fetchMoreResults = createAsyncThunk<
     ...config,
   });
 
-  const request = await buildInsightFetchMoreResultsRequest(state);
+  const eventDescription = {
+    actionCause: SearchPageEvents.pagerScrolling,
+    type: SearchPageEvents.pagerScrolling,
+  };
+  const request = await buildInsightFetchMoreResultsRequest(
+    state,
+    eventDescription
+  );
   const fetched = await processor.fetchFromAPI(request);
 
   return await processor.process(fetched);
