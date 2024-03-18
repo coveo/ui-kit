@@ -6,16 +6,16 @@ import {
 } from 'cypress/types/net-stubbing';
 import {getAnalyticsBodyFromRequest} from '../e2e/common-expectations';
 import {buildMockRaw, buildMockResult} from '../fixtures/mock-result';
+import {
+  aliasSubmitFeedbackEventRequest,
+  nextAnalyticsAlias,
+} from '../utils/analytics-utils';
 import {useCaseEnum} from './use-case';
 
 type RequestParams = Record<string, string | number | boolean | undefined>;
 
 function uaAlias(eventName: string) {
   return `@UA-${eventName}`;
-}
-
-function nextAnalyticsAlias(eventName: string) {
-  return `@EP-${eventName}`;
 }
 
 function paramsInclude(superset: RequestParams, subset: RequestParams) {
@@ -97,6 +97,13 @@ export const InterceptAliases = {
   NextAnalytics: {
     Qna: {
       AnswerAction: nextAnalyticsAlias('Qna.AnswerAction'),
+      CitationHover: nextAnalyticsAlias('Qna.CitationHover'),
+      CitationClick: nextAnalyticsAlias('Qna.CitationClick'),
+      SubmitFeedback: {
+        Like: nextAnalyticsAlias('Qna.SubmitFeedback.Like'),
+        Dislike: nextAnalyticsAlias('Qna.SubmitFeedback.Dislike'),
+        ReasonSubmit: nextAnalyticsAlias('Qna.SubmitFeedback.ReasonSubmit'),
+      },
     },
   },
   QuerySuggestions: '@coveoQuerySuggest',
@@ -131,7 +138,11 @@ export function interceptSearch() {
 
     .intercept('POST', routeMatchers.nextAnalytics, (req) => {
       const eventType = req.body?.[0]?.meta.type;
-      req.alias = nextAnalyticsAlias(eventType).substring(1);
+      if (eventType === 'Qna.SubmitFeedback') {
+        aliasSubmitFeedbackEventRequest(req);
+      } else {
+        req.alias = nextAnalyticsAlias(eventType).substring(1);
+      }
     })
 
     .intercept('POST', routeMatchers.querySuggest)
