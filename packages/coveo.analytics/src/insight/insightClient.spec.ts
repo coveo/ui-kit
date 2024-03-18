@@ -618,6 +618,7 @@ describe('InsightClient', () => {
             const exampleGeneratedAnswerMetadata = {
                 generativeQuestionAnsweringId: '123',
                 answerGenerated: true,
+                answerTextIsEmpty: false,
             };
 
             await client.logGeneratedAnswerStreamEnd(exampleGeneratedAnswerMetadata);
@@ -1381,6 +1382,7 @@ describe('InsightClient', () => {
             const exampleGeneratedAnswerMetadata = {
                 generativeQuestionAnsweringId: '123',
                 answerGenerated: true,
+                answerTextIsEmpty: false,
             };
             const expectedMetadata = {
                 ...exampleGeneratedAnswerMetadata,
