@@ -312,7 +312,9 @@ async function deleteScratchOrg(
 
   try {
     let communityUrl = '';
-    runner.add(async (log) => await authorizeDevOrg(log, options));
+    if (process.env.CI) {
+      runner.add(async (log) => await authorizeDevOrg(log, options));
+    }
     if (options.deleteOldOrgs) {
       runner.add(async (log) => {
         await deleteOldOrgs(log, options);
