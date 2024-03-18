@@ -171,6 +171,8 @@ export default class QuanticSmartSnippetSuggestions extends LightningElement {
       const questionAnswerId = suggestion.questionAnswerId;
       return {
         ...suggestion,
+        title: suggestion.source?.title,
+        clickUri: suggestion.source?.clickUri,
         sourceActions: this.generateSourceActions(questionAnswerId),
         inlineLinksActions: this.generateInlineLinkActions(questionAnswerId),
       };
