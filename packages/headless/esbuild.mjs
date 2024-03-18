@@ -1,9 +1,9 @@
 import {build} from 'esbuild';
 import alias from 'esbuild-plugin-alias';
+import {umdWrapper} from 'esbuild-plugin-umd-wrapper';
 import {readFileSync, promises, writeFileSync} from 'node:fs';
 import {createRequire} from 'node:module';
 import {dirname, resolve} from 'node:path';
-import {umdWrapper} from '../../scripts/bundle/umd.mjs';
 import {apacheLicense} from '../../scripts/license/apache.mjs';
 
 const require = createRequire(import.meta.url);
@@ -112,7 +112,6 @@ const browserUmd = Object.entries(useCaseEntries).map((entry) => {
   const outfile = `${outDir}/headless.js`;
 
   const globalName = getUmdGlobalName(useCase);
-  const umd = umdWrapper(globalName);
 
   return buildBrowserConfig(
     {
@@ -120,11 +119,9 @@ const browserUmd = Object.entries(useCaseEntries).map((entry) => {
       outfile,
       format: 'cjs',
       banner: {
-        js: `${base.banner.js}\n${umd.header}`,
+        js: `${base.banner.js}`,
       },
-      footer: {
-        js: umd.footer,
-      },
+      plugins: [umdWrapper({libraryName: globalName})],
     },
     outDir
   );
@@ -154,6 +151,7 @@ async function buildBrowserConfig(options, outDir) {
     sourcemap: true,
     metafile: true,
     external: ['crypto'],
+    ...options,
     plugins: [
       alias({
         'coveo.analytics': resolveEsm('coveo.analytics'),
@@ -163,8 +161,8 @@ async function buildBrowserConfig(options, outDir) {
         ),
         '@coveo/pendragon': resolve('./ponyfills', 'magic-cookie-browser.js'),
       }),
+      ...(options.plugins || []),
     ],
-    ...options,
   });
   outputMetafile(`browser.${options.format}`, outDir, out.metafile);
   return out;
