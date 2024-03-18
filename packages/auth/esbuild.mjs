@@ -1,4 +1,4 @@
-import {build} from '../../scripts/esbuild/build';
+import {build} from '../../scripts/esbuild/build.mjs';
 import {apacheLicense} from '../../scripts/license/apache.mjs';
 
 /**

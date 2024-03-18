@@ -1,5 +1,5 @@
 import {umdWrapper} from 'esbuild-plugin-umd-wrapper';
-import {build} from '../../scripts/esbuild/build';
+import {build} from '../../scripts/esbuild/build.mjs';
 import {apacheLicense} from '../../scripts/license/apache.mjs';
 
 const devMode = process.argv[2] === 'dev';
@@ -45,19 +45,15 @@ function browserEsm() {
 }
 
 function browserUmd() {
-  const umd = umdWrapper({libraryName: 'Bueno'});
-
   return build({
     ...base,
     platform: 'browser',
     outfile: 'dist/browser/bueno.js',
     format: 'cjs',
     banner: {
-      js: `${base.banner.js}\n${umd.header}`,
+      js: `${base.banner.js}`,
     },
-    footer: {
-      js: umd.footer,
-    },
+    plugins: [umdWrapper({libraryName: 'Bueno'})],
   });
 }
 
