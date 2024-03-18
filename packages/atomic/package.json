@@ -52,7 +52,7 @@
     "@coveo/bueno": "0.45.7",
     "@popperjs/core": "^2.11.6",
     "@salesforce-ux/design-system": "^2.16.1",
-    "@stencil/core": "4.12.5",
+    "@stencil/core": "4.13.0",
     "@stencil/store": "2.0.14",
     "dayjs": "1.11.10",
     "dompurify": "3.0.9",
