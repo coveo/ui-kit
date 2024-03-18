@@ -1,9 +1,9 @@
-import {build} from 'esbuild';
 import alias from 'esbuild-plugin-alias';
 import {umdWrapper} from 'esbuild-plugin-umd-wrapper';
 import {readFileSync, promises, writeFileSync} from 'node:fs';
 import {createRequire} from 'node:module';
 import {dirname, resolve} from 'node:path';
+import {build} from '../../scripts/esbuild/build';
 import {apacheLicense} from '../../scripts/license/apache.mjs';
 
 const require = createRequire(import.meta.url);
@@ -76,6 +76,7 @@ const browserEsmForAtomicDevelopment = Object.entries(useCaseEntries).map(
         entryPoints: [entryPoint],
         outfile,
         format: 'esm',
+        watch: devMode,
         minify: false,
       },
       outDir

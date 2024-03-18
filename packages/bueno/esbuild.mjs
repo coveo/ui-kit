@@ -1,5 +1,5 @@
-import {build} from 'esbuild';
-import {umdWrapper} from '../../scripts/bundle/umd.mjs';
+import {umdWrapper} from 'esbuild-plugin-umd-wrapper';
+import {build} from '../../scripts/esbuild/build';
 import {apacheLicense} from '../../scripts/license/apache.mjs';
 
 const devMode = process.argv[2] === 'dev';
@@ -40,11 +40,12 @@ function browserEsm() {
     platform: 'browser',
     outfile: 'dist/browser/bueno.esm.js',
     format: 'esm',
+    watch: devMode,
   });
 }
 
 function browserUmd() {
-  const umd = umdWrapper('Bueno');
+  const umd = umdWrapper({libraryName: 'Bueno'});
 
   return build({
     ...base,
