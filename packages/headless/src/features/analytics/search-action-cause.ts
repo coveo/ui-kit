@@ -321,7 +321,7 @@ export enum SearchPageEvents {
    */
   contextChanged = 'contextChanged',
   /**
-   * Identifies the search event that gets logged when a user clicks the rephrase button in a generated answer.
+   * Identifies the search event that gets logged when a user clicks a rephrase button in a generated answer.
    */
   rephraseGeneratedAnswer = 'rephraseGeneratedAnswer',
   /**
