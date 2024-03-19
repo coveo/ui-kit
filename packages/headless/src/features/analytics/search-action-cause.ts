@@ -341,7 +341,7 @@ export enum SearchPageEvents {
    */
   generatedAnswerShowAnswers = 'generatedAnswerShowAnswers',
   /**
-   * Identifies the custom event that gets logged when a user clicks the copy to clip board button of a generated answer.
+   * Identifies the custom event that gets logged when a user clicks the copy to clipboard button of a generated answer.
    */
   generatedAnswerCopyToClipboard = 'generatedAnswerCopyToClipboard',
   /**
