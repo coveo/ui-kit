@@ -27,13 +27,13 @@ export namespace Components {
      */
     interface AtomicHostedUi {
         /**
-          * Returns the unique, organization-specific endpoint(s)
+          * Returns the unique, organization-specific endpoint(s).
           * @param organizationId
           * @param env
          */
         "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
         /**
-          * The type of hosted search page to load E.g., 'page', 'custom', 'legacy'
+          * The type of hosted search page to load. E.g., 'page', 'custom', 'legacy'
          */
         "hostedType": 'legacy' | 'page' | 'custom';
         "initialize": (options: AtomicHostedUIInitializationOptions) => Promise<void>;
@@ -102,7 +102,7 @@ declare namespace LocalJSX {
      */
     interface AtomicHostedUi {
         /**
-          * The type of hosted search page to load E.g., 'page', 'custom', 'legacy'
+          * The type of hosted search page to load. E.g., 'page', 'custom', 'legacy'
          */
         "hostedType"?: 'legacy' | 'page' | 'custom';
     }
