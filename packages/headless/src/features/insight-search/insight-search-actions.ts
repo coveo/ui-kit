@@ -183,10 +183,10 @@ export const fetchMoreResults = createAsyncThunk<
     ...config,
   });
 
-  const eventDescription = {
+  const eventDescription = buildEventDescription({
     actionCause: SearchPageEvents.pagerScrolling,
-    type: SearchPageEvents.pagerScrolling,
-  };
+  });
+
   const request = await buildInsightFetchMoreResultsRequest(
     state,
     eventDescription
