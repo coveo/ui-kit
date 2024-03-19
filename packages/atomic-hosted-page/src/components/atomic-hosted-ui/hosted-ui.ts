@@ -1,6 +1,6 @@
 interface HostedPage {
   /**
-   * The HTML markup of the hosted page.
+   * The HTML of the hosted page.
    */
   html: string;
   /**
@@ -8,7 +8,7 @@ interface HostedPage {
    */
   javascript?: HostedPageJavascriptFile[];
   /**
-   * The CSS resources appended in the header, pertaining to a specific hosted page in the target Coveo Cloud organization.
+   * The CSS resources appended to the header, pertaining to a specific hosted page in the target Coveo Cloud organization.
    */
   css?: HostedPageCSS[];
   w;

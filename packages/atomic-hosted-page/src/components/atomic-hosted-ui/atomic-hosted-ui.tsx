@@ -43,7 +43,7 @@ export class AtomicHostedUI implements ComponentInterface {
   }
 
   /**
-   * The type of hosted search page to load
+   * The type of hosted search page to load.
    * E.g., 'page', 'custom', 'legacy'
    */
   @Prop({reflect: true}) public hostedType: 'legacy' | 'page' | 'custom' =
@@ -94,7 +94,7 @@ export class AtomicHostedUI implements ComponentInterface {
   }
 
   /**
-   * Returns the unique, organization-specific endpoint(s)
+   * Returns the unique, organization-specific endpoint(s).
    * @param {string} organizationId
    * @param {'prod'|'hipaa'|'staging'|'dev'} [env=Prod]
    */
