@@ -337,7 +337,7 @@ export enum SearchPageEvents {
    */
   generatedAnswerHideAnswers = 'generatedAnswerHideAnswers',
   /**
-   * Identifies the custom event that gets logged when a user activates the genQA feature.
+   * Identifies the custom event that gets logged when a user activates the RGA feature.
    */
   generatedAnswerShowAnswers = 'generatedAnswerShowAnswers',
   /**
