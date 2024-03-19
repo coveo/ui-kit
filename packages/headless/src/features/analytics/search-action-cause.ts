@@ -345,7 +345,7 @@ export enum SearchPageEvents {
    */
   generatedAnswerCopyToClipboard = 'generatedAnswerCopyToClipboard',
   /**
-   * Identifies the event that gets logged when the user opens the full search page from the insight panel.
+   * Identifies the custom event that gets logged when the user opens the full search page from the insight panel.
    */
   expandToFullUI = 'expandToFullUI',
   /**
