@@ -349,7 +349,7 @@ export enum SearchPageEvents {
    */
   expandToFullUI = 'expandToFullUI',
   /**
-   * Identifies the event that gets logged when the user clicks the create article button.
+   * Identifies the custom event that gets logged when the user clicks the create article button.
    */
   createArticle = 'createArticle',
 }
