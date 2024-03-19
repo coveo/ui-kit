@@ -17,7 +17,7 @@ import {
 import {createAppAuth} from '@octokit/auth-app';
 import {spawnSync} from 'child_process';
 import {randomUUID} from 'crypto';
-import {accessSync, constants, existsSync, readFileSync} from 'fs';
+import {existsSync, readFileSync} from 'fs';
 import {Octokit} from 'octokit';
 import {dedent} from 'ts-dedent';
 import {
