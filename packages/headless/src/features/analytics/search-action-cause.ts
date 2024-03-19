@@ -333,7 +333,7 @@ export enum SearchPageEvents {
    */
   generatedAnswerFeedbackSubmit = 'generatedAnswerFeedbackSubmit',
   /**
-   * Identifies the custom event that gets logged when a user deactivates the genQA feature.
+   * Identifies the custom event that gets logged when a user deactivates the RGA feature.
    */
   generatedAnswerHideAnswers = 'generatedAnswerHideAnswers',
   /**
