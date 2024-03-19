@@ -329,7 +329,7 @@ export enum SearchPageEvents {
    */
   generatedAnswerSourceHover = 'generatedAnswerSourceHover',
   /**
-   * Identifies the custom event that gets logged when a user submits a feedback of a generated answer.
+   * Identifies the custom event that gets logged when a user submits feedback on a generated answer.
    */
   generatedAnswerFeedbackSubmit = 'generatedAnswerFeedbackSubmit',
   /**
