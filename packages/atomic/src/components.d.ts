@@ -163,7 +163,7 @@ export namespace Components {
          */
         "numberOfValues": number;
         /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'alphanumeric' and 'occurrences'.
+          * The sort criterion to apply to the returned facet values. Possible values are 'alphanumeric' and 'occurrences'. For this criterion to apply to the top-layer facet values, disable [facet value ordering](https://docs.coveo.com/en/l1qf4156/#facet-value-ordering) from your Dynamic Navigation Experience configuration.
          */
         "sortCriteria": CategoryFacetSortCriterion;
         /**
@@ -4409,7 +4409,7 @@ declare namespace LocalJSX {
          */
         "numberOfValues"?: number;
         /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'alphanumeric' and 'occurrences'.
+          * The sort criterion to apply to the returned facet values. Possible values are 'alphanumeric' and 'occurrences'. For this criterion to apply to the top-layer facet values, disable [facet value ordering](https://docs.coveo.com/en/l1qf4156/#facet-value-ordering) from your Dynamic Navigation Experience configuration.
          */
         "sortCriteria"?: CategoryFacetSortCriterion;
         /**
