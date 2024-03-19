@@ -329,27 +329,27 @@ export enum SearchPageEvents {
    */
   generatedAnswerSourceHover = 'generatedAnswerSourceHover',
   /**
-   * Identifies the custom event that gets logged when a user submits a feedback of a generated answer.
+   * Identifies the custom event that gets logged when a user submits feedback on a generated answer.
    */
   generatedAnswerFeedbackSubmit = 'generatedAnswerFeedbackSubmit',
   /**
-   * Identifies the custom event that gets logged when a user deactivates the genQA feature.
+   * Identifies the custom event that gets logged when a user deactivates the RGA feature.
    */
   generatedAnswerHideAnswers = 'generatedAnswerHideAnswers',
   /**
-   * Identifies the custom event that gets logged when a user activates the genQA feature.
+   * Identifies the custom event that gets logged when a user activates the RGA feature.
    */
   generatedAnswerShowAnswers = 'generatedAnswerShowAnswers',
   /**
-   * Identifies the custom event that gets logged when a user clicks the copy to clip board button of a generated answer.
+   * Identifies the custom event that gets logged when a user clicks the copy to clipboard button of a generated answer.
    */
   generatedAnswerCopyToClipboard = 'generatedAnswerCopyToClipboard',
   /**
-   * Identifies the event that gets logged when the user opens the full search page from the insight panel.
+   * Identifies the custom event that gets logged when the user opens the full search page from the insight panel.
    */
   expandToFullUI = 'expandToFullUI',
   /**
-   * Identifies the event that gets logged when the user clicks the create article button.
+   * Identifies the custom event that gets logged when the user clicks the create article button.
    */
   createArticle = 'createArticle',
 }
