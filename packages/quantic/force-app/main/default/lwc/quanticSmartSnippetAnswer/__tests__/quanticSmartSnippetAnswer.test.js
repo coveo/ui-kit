@@ -78,6 +78,7 @@ describe('c-quantic-smart-snippet-answer', () => {
 
     // eslint-disable-next-line @lwc/lwc/no-inner-html
     expect(answerLink.innerHTML).toEqual('Example inline link');
+    expect(answerLink.target).toEqual('_blank');
   });
 
   describe('the analytics bindings of the inline links within the smart snippet answer', () => {
