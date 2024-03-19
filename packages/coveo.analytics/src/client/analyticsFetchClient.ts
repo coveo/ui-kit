@@ -24,6 +24,9 @@ export class AnalyticsFetchClient implements AnalyticsRequestClient {
 
         try {
             const response = await fetch(url, fetchData);
+        } catch (error) {
+            console.error('An error has occured when sending the event.', error);
+        }
             if (response.ok) {
                 const visit = (await response.json()) as AnyEventResponse;
 
