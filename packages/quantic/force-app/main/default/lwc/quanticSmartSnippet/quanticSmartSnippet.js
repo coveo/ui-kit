@@ -324,7 +324,7 @@ export default class QuanticSmartSnippet extends LightningElement {
    * @returns {string}
    */
   get sourceUri() {
-    return this?.state?.source.clickUri;
+    return this?.state?.source?.clickUri;
   }
 
   /**
