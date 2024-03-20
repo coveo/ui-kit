@@ -6,6 +6,7 @@ export function buildFetchRecommendationV2Response(
 ): QueryRecommendationCommerceAPIThunkReturn {
   return {
     response: {
+      headline: response.headline ?? '',
       pagination: response.pagination ?? {
         page: 0,
         perPage: 0,

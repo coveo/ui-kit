@@ -19,6 +19,7 @@ export const recommendationV2Reducer = createReducer(
       })
       .addCase(fetchRecommendation.fulfilled, (state, action) => {
         state.error = null;
+        state.headline = action.payload.response.headline;
         state.products = action.payload.response.products;
         state.responseId = action.payload.response.responseId;
         state.isLoading = false;
