@@ -80,7 +80,7 @@ jobs:
           SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
           SFDX_AUTH_JWT_USERNAME: ${{ secrets.SFDX_AUTH_JWT_USERNAME }}
           SFDX_AUTH_JWT_KEY_FILE: server.key
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}\
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         working-directory: ./packages/quantic
       - name: Notify Docs
         run: npm run notify:docs
