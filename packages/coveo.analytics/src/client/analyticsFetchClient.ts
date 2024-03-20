@@ -5,7 +5,7 @@ import {fetch} from 'cross-fetch';
 export class AnalyticsFetchClient implements AnalyticsRequestClient {
     constructor(private opts: IAnalyticsClientOptions) {}
 
-    public async sendEvent(eventType: EventType, payload: IRequestPayload): Promise<AnyEventResponse | undefined> {
+    public async sendEvent(eventType: EventType, payload: IRequestPayload): Promise<AnyEventResponse | void> {
         const {baseUrl, visitorIdProvider, preprocessRequest} = this.opts;
 
         const visitorIdParam = this.shouldAppendVisitorId(eventType) ? await this.getVisitorIdParam() : '';
@@ -22,29 +22,33 @@ export class AnalyticsFetchClient implements AnalyticsRequestClient {
             ...(preprocessRequest ? await preprocessRequest(defaultOptions, 'analyticsFetch') : {}),
         };
 
+        let response: Response;
+
         try {
-            const response = await fetch(url, fetchData);
-            if (response.ok) {
-                const visit = (await response.json()) as AnyEventResponse;
-
-                if (visit.visitorId) {
-                    visitorIdProvider.setCurrentVisitorId(visit.visitorId);
-                }
-
-                return visit;
-            } else {
-                try {
-                    response.json();
-                } catch {
-                    /* If you don't parse the response, it won't appear in the network tab. */
-                }
-                console.error(`An error has occured when sending the "${eventType}" event.`, response, payload);
-                throw new Error(
-                    `An error has occurred when sending the "${eventType}" event. Check the console logs for more details.`
-                );
-            }
+            response = await fetch(url, fetchData);
         } catch (error) {
             console.error('An error has occured when sending the event.', error);
+            return;
+        }
+
+        if (response.ok) {
+            const visit = (await response.json()) as AnyEventResponse;
+
+            if (visit.visitorId) {
+                visitorIdProvider.setCurrentVisitorId(visit.visitorId);
+            }
+
+            return visit;
+        } else {
+            try {
+                response.json();
+            } catch {
+                /* If you don't parse the response, it won't appear in the network tab. */
+            }
+            console.error(`An error has occured when sending the "${eventType}" event.`, response, payload);
+            throw new Error(
+                `An error has occurred when sending the "${eventType}" event. Check the console logs for more details.`
+            );
         }
     }
 
