@@ -2,7 +2,10 @@ import {SortBy} from '../../features/sort/sort';
 import {buildMockCommerceAPIClient} from '../../test/mock-commerce-api-client';
 import {PlatformClient} from '../platform-client';
 import {CommerceAPIClient} from './commerce-api-client';
-import {CommerceAPIRequest} from './common/request';
+import {
+  CommerceAPIRequest,
+  RecommendationCommerceAPIRequest,
+} from './common/request';
 import {CommerceResponse} from './common/response';
 
 describe('commerce api client', () => {
@@ -47,6 +50,28 @@ describe('commerce api client', () => {
       },
     },
   });
+
+  const buildRecommendationCommerceAPIRequest = async (
+    req: Partial<RecommendationCommerceAPIRequest> = {}
+  ): Promise<RecommendationCommerceAPIRequest> => {
+    return {
+      id: 'slotId',
+      accessToken: accessToken,
+      organizationId: organizationId,
+      url: platformUrl,
+      trackingId: trackingId,
+      language: req.language ?? '',
+      country: req.country ?? '',
+      currency: req.currency ?? '',
+      clientId: req.clientId ?? '',
+      context: req.context ?? {
+        view: {
+          url: '',
+          referrer: 'https://example.org/referrer',
+        },
+      },
+    };
+  };
 
   it('#getProductListing should call the platform endpoint with the correct arguments', async () => {
     const request = await buildCommerceAPIRequest();
@@ -99,6 +124,34 @@ describe('commerce api client', () => {
       origin: 'commerceApiFetch',
       requestParams: {
         query: 'some query',
+        trackingId: request.trackingId,
+        clientId: request.clientId,
+        context: request.context,
+        language: request.language,
+        currency: request.currency,
+      },
+    });
+  });
+
+  it('#recommendations should call the platform endpoint with the correct arguments', async () => {
+    const request = await buildRecommendationCommerceAPIRequest();
+
+    mockPlatformCall({
+      ok: true,
+      json: () => Promise.resolve('some content'),
+    });
+
+    await client.getRecommendation(request);
+
+    expect(platformCallMock).toHaveBeenCalled();
+    const mockRequest = platformCallMock.mock.calls[0][0];
+    expect(mockRequest).toMatchObject({
+      method: 'POST',
+      contentType: 'application/json',
+      url: `${platformUrl}/rest/organizations/${organizationId}/commerce/v2/recommendations`,
+      accessToken: request.accessToken,
+      origin: 'commerceApiFetch',
+      requestParams: {
         trackingId: request.trackingId,
         clientId: request.clientId,
         context: request.context,
