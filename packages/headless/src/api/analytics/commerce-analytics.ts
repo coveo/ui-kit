@@ -15,7 +15,6 @@ import {PreprocessRequest} from '../preprocess-request';
 import {getProductListingInitialState} from './../../features/product-listing/product-listing-state';
 import {BaseAnalyticsProvider} from './base-analytics';
 import {
-  wrapAnalyticsClientSendEventHook,
   wrapPreprocessRequest,
 } from './coveo-analytics-utils';
 
@@ -90,7 +89,6 @@ export const configureCommerceAnalytics = ({
       runtimeEnvironment,
       preprocessRequest: wrapPreprocessRequest(logger, preprocessRequest),
       beforeSendHooks: [
-        wrapAnalyticsClientSendEventHook(logger, analyticsClientMiddleware),
         (type, payload) => {
           logger.info(
             {

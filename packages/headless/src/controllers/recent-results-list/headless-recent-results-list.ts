@@ -5,7 +5,6 @@ import {
   clearRecentResults,
   registerRecentResults,
 } from '../../features/recent-results/recent-results-actions';
-import {logClearRecentResults} from '../../features/recent-results/recent-results-analytics-actions';
 import {recentResultsReducer as recentResults} from '../../features/recent-results/recent-results-slice';
 import {RecentResultsSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
@@ -146,7 +145,6 @@ export function buildRecentResultsList(
     },
 
     clear() {
-      dispatch(logClearRecentResults());
       dispatch(clearRecentResults());
     },
   };

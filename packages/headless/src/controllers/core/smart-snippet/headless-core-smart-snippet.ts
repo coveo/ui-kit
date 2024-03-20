@@ -15,7 +15,6 @@ import {
 } from '../../../features/question-answering/question-answering-actions';
 import {SmartSnippetFeedback} from '../../../features/question-answering/question-answering-analytics-actions';
 import {
-  QuestionAnsweringInlineLinkActionCreatorPayload,
   QuestionAnsweringUniqueIdentifierActionCreatorPayload,
 } from '../../../features/question-answering/question-answering-document-id';
 import {answerSourceSelector} from '../../../features/question-answering/question-answering-selectors';
@@ -191,11 +190,11 @@ export interface SmartSnippetAnalyticsClient {
   logLikeSmartSnippet: () => CustomAction;
   logDislikeSmartSnippet: () => CustomAction;
   logOpenSmartSnippetSource: () => ClickAction;
-  logOpenSmartSnippetInlineLink: (
-    payload: QuestionAnsweringInlineLinkActionCreatorPayload
-  ) => ClickAction;
-  logOpenSmartSnippetFeedbackModal: () => CustomAction;
-  logCloseSmartSnippetFeedbackModal: () => CustomAction;
+  // logOpenSmartSnippetInlineLink: (
+  //   payload: QuestionAnsweringInlineLinkActionCreatorPayload
+  // ) => ClickAction;
+  // logOpenSmartSnippetFeedbackModal: () => CustomAction;
+  // logCloseSmartSnippetFeedbackModal: () => CustomAction;
   logSmartSnippetFeedback: (feedback: SmartSnippetFeedback) => CustomAction;
   logSmartSnippetDetailedFeedback: (details: string) => CustomAction;
   logExpandSmartSnippetSuggestion: (
@@ -287,11 +286,11 @@ export function buildCoreSmartSnippet(
       engine.dispatch(dislikeSmartSnippet());
     },
     openFeedbackModal() {
-      engine.dispatch(analyticsClient.logOpenSmartSnippetFeedbackModal());
+      // engine.dispatch(analyticsClient.logOpenSmartSnippetFeedbackModal());
       engine.dispatch(openFeedbackModal());
     },
     closeFeedbackModal() {
-      engine.dispatch(analyticsClient.logCloseSmartSnippetFeedbackModal());
+      // engine.dispatch(analyticsClient.logCloseSmartSnippetFeedbackModal());
       engine.dispatch(closeFeedbackModal());
     },
     sendFeedback(feedback) {

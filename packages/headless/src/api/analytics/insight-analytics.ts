@@ -24,7 +24,6 @@ import {
 import {PreprocessRequest} from '../preprocess-request';
 import {BaseAnalyticsProvider} from './base-analytics';
 import {
-  wrapAnalyticsClientSendEventHook,
   wrapPreprocessRequest,
 } from './coveo-analytics-utils';
 
@@ -148,7 +147,6 @@ export const configureInsightAnalytics = ({
       runtimeEnvironment,
       preprocessRequest: wrapPreprocessRequest(logger, preprocessRequest),
       beforeSendHooks: [
-        wrapAnalyticsClientSendEventHook(logger, analyticsClientMiddleware),
         (type, payload) => {
           logger.info(
             {

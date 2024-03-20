@@ -1,18 +1,9 @@
-import {
-  AnalyticsClientSendEventHook,
-  CoveoAnalyticsClient,
-  IRuntimeEnvironment,
-  history,
-} from 'coveo.analytics';
+import { RelayConfig, createRelay } from "@coveo/relay";
 import {Logger} from 'pino';
 import {clone} from '../../utils/utils';
 import {PreprocessRequest} from '../preprocess-request';
 
-export const getVisitorID = (options: {
-  runtimeEnvironment?: IRuntimeEnvironment;
-}) => new CoveoAnalyticsClient(options).getCurrentVisitorId();
-
-export const historyStore = new history.HistoryStore();
+export const getVisitorID = (options: RelayConfig) => createRelay(options).getMeta('').clientId;
 
 export const wrapPreprocessRequest = (
   logger: Logger,
@@ -32,22 +23,4 @@ export const wrapPreprocessRequest = (
         }
       }
     : undefined;
-};
-
-export const wrapAnalyticsClientSendEventHook = (
-  logger: Logger,
-  hook: AnalyticsClientSendEventHook
-) => {
-  return (...args: Parameters<AnalyticsClientSendEventHook>) => {
-    const untaintedOutput = clone(args[1]);
-    try {
-      return hook.apply(hook, args);
-    } catch (e) {
-      logger.error(
-        e as Error,
-        'Error in analytics hook. Returning original request.'
-      );
-      return untaintedOutput;
-    }
-  };
 };

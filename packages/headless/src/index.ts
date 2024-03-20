@@ -17,9 +17,8 @@ polyfillCryptoNode();
 // 3rd Party Libraries
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
 export {createAction, createAsyncThunk, createReducer} from '@reduxjs/toolkit';
-export type {AnalyticsClientSendEventHook} from 'coveo.analytics';
 export type {Relay} from '@coveo/relay';
-
+export type {TransitiveSearchAction, SearchAction} from './features/search/search-actions';
 // Main App
 export type {
   SearchEngine,
@@ -548,10 +547,10 @@ export * from './features/generated-answer/generated-answer-actions-loader';
 export {buildResultTemplatesManager} from './features/result-templates/result-templates-manager';
 //#endregion
 // Analytics Actions
-export * from './features/analytics/search-analytics-actions-loader';
+// export * from './features/analytics/search-analytics-actions-loader';
 export * from './features/analytics/click-analytics-actions-loader';
-export * from './features/analytics/generic-analytics-actions-loader';
-export * from './features/actions-history/ipx-actions-history-actions-loader';
+// export * from './features/analytics/generic-analytics-actions-loader';
+// export * from './features/actions-history/ipx-actions-history-actions-loader';
 
 // Types & Helpers
 export {API_DATE_FORMAT} from './api/search/date/date-format';

@@ -10,12 +10,6 @@ import {
 } from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
 import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {
-  logFacetClearAll,
-  logFacetUpdateSort,
-  logFacetShowMore,
-  logFacetShowLess,
-  logFacetSelect,
-  logFacetExclude,
   facetSelect,
   facetUpdateSort,
   facetClearAll,
@@ -23,8 +17,8 @@ import {
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice';
 import {
-  getLegacyAnalyticsActionForToggleFacetExclude,
-  getLegacyAnalyticsActionForToggleFacetSelect,
+  // getLegacyAnalyticsActionForToggleFacetExclude,
+  // getLegacyAnalyticsActionForToggleFacetSelect,
   getAnalyticsActionForToggleFacetExclude,
   getAnalyticsActionForToggleFacetSelect,
 } from '../../../features/facets/facet-set/facet-set-utils';
@@ -120,10 +114,6 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
         dispatch(updateFacetOptions());
         dispatch(
           executeSearch({
-            legacy: logFacetSelect({
-              facetId: getFacetId(),
-              facetValue: value.rawValue,
-            }),
             next: facetSelect(),
           })
         );
@@ -132,10 +122,6 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
         dispatch(updateFacetOptions());
         dispatch(
           executeSearch({
-            legacy: logFacetExclude({
-              facetId: getFacetId(),
-              facetValue: value.rawValue,
-            }),
             next: facetExclude(),
           })
         );
@@ -158,10 +144,6 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
       coreController.toggleSelect(selection);
       dispatch(
         executeSearch({
-          legacy: getLegacyAnalyticsActionForToggleFacetSelect(
-            getFacetId(),
-            selection
-          ),
           next: getAnalyticsActionForToggleFacetSelect(selection),
         })
       );
@@ -171,10 +153,6 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
       coreController.toggleExclude(selection);
       dispatch(
         executeSearch({
-          legacy: getLegacyAnalyticsActionForToggleFacetExclude(
-            getFacetId(),
-            selection
-          ),
           next: getAnalyticsActionForToggleFacetExclude(selection),
         })
       );
@@ -184,7 +162,6 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
       coreController.deselectAll();
       dispatch(
         executeSearch({
-          legacy: logFacetClearAll(getFacetId()),
           next: facetClearAll(),
         })
       );
@@ -194,7 +171,6 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
       coreController.sortBy(criterion);
       dispatch(
         executeSearch({
-          legacy: logFacetUpdateSort({facetId: getFacetId(), criterion}),
           next: facetUpdateSort(),
         })
       );
@@ -206,12 +182,10 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
 
     showMoreValues() {
       coreController.showMoreValues();
-      dispatch(fetchFacetValues({legacy: logFacetShowMore(getFacetId())}));
     },
 
     showLessValues() {
       coreController.showLessValues();
-      dispatch(fetchFacetValues({legacy: logFacetShowLess(getFacetId())}));
     },
 
     get state() {

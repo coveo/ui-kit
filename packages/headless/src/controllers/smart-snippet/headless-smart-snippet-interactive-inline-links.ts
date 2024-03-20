@@ -1,8 +1,4 @@
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {
-  logOpenSmartSnippetInlineLink,
-  logOpenSmartSnippetSuggestionInlineLink,
-} from '../../features/question-answering/question-answering-analytics-actions';
 import {questionAnsweringReducer as questionAnswering} from '../../features/question-answering/question-answering-slice';
 import {searchReducer as search} from '../../features/search/search-slice';
 import {QuestionAnsweringSection} from '../../state/state-sections';
@@ -95,14 +91,14 @@ export function buildSmartSnippetInteractiveInlineLinks(
       engine,
       {options: {selectionDelay: props?.options?.selectionDelay}},
       () => {
-        if (inlineLinkWasClicked(linkId)) {
-          return;
-        }
-        engine.dispatch(
-          questionAnswerId
-            ? logOpenSmartSnippetSuggestionInlineLink({questionAnswerId}, link)
-            : logOpenSmartSnippetInlineLink(link)
-        );
+        // if (inlineLinkWasClicked(linkId)) {
+        //   return;
+        // }
+        // engine.dispatch(
+        //   questionAnswerId
+        //     ? logOpenSmartSnippetSuggestionInlineLink({questionAnswerId}, link)
+        //     : logOpenSmartSnippetInlineLink(link)
+        // );
       }
     );
 

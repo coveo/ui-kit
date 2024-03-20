@@ -12,7 +12,7 @@ import {
   expandSmartSnippetRelatedQuestion,
 } from './question-answering-actions';
 import {QuestionAnsweringUniqueIdentifierActionCreatorPayload} from './question-answering-document-id';
-
+export type {QuestionAnsweringUniqueIdentifierActionCreatorPayload}
 /**
  * The question answering action creators.
  */

@@ -1,5 +1,5 @@
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {logTriggerExecute} from '../../features/triggers/trigger-analytics-actions';
+// import {logTriggerExecute} from '../../features/triggers/trigger-analytics-actions';
 import {triggerReducer as triggers} from '../../features/triggers/triggers-slice';
 import {FunctionExecutionTrigger} from '../../features/triggers/triggers-state';
 import {TriggerSection} from '../../state/state-sections';
@@ -64,7 +64,7 @@ export function buildExecuteTrigger(engine: SearchEngine): ExecuteTrigger {
 
         if (hasChanged && this.state.executions.length) {
           listener();
-          dispatch(logTriggerExecute());
+          // dispatch(logTriggerExecute());
         }
       };
       strictListener();

@@ -1,4 +1,3 @@
-import {loadRecommendationActions} from '@coveo/headless/recommendation';
 import {Component, Element, Fragment, h, Prop, State} from '@stencil/core';
 import CloseIcon from '../../../images/close.svg';
 import SearchIcon from '../../../images/search.svg';
@@ -54,9 +53,9 @@ export class AtomicIPXButton implements InitializableComponent {
     )?.engine;
     if (recsEngine) {
       this.recommendationsLoaded = true;
-      recsEngine.dispatch(
-        loadRecommendationActions(recsEngine).getRecommendations()
-      );
+      // recsEngine.dispatch(
+      //   loadRecommendationActions(recsEngine).getRecommendations()
+      // );
     }
   }
 

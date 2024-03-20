@@ -548,13 +548,7 @@ const actionLoaders: ActionLoaderConfiguration[] = [
     initializer: 'loadBreadcrumbActions',
   },
   {
-    initializer: 'loadSearchAnalyticsActions',
-  },
-  {
     initializer: 'loadClickAnalyticsActions',
-  },
-  {
-    initializer: 'loadGenericAnalyticsActions',
   },
   {
     initializer: 'loadStandaloneSearchBoxSetActions',

@@ -127,9 +127,10 @@ export function buildCoreContext(
     set(context: ContextPayload) {
       dispatch(setContext(context));
     },
-    ...(getState().configuration.analytics.analyticsMode === 'legacy'
-      ? legacyCoreContext(dispatch)
-      : nextCoreContext(dispatch)),
+    ...nextCoreContext(dispatch),
+    // ...(getState().configuration.analytics.analyticsMode === 'legacy'
+    //   ? legacyCoreContext(dispatch)
+    //   : nextCoreContext(dispatch)),
   };
 }
 

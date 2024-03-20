@@ -414,7 +414,6 @@ export class AtomicSearchInterface
     const analyticsConfig = getAnalyticsConfig(
       options,
       this.analytics,
-      this.store
     );
     try {
       this.engine = buildSearchEngine({

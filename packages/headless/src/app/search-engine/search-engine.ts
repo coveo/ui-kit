@@ -10,9 +10,6 @@ import {
 } from '../../api/search/search-api-client-middleware';
 import {
   interfaceLoad,
-  logInterfaceLoad,
-  logOmniboxFromLink,
-  logSearchFromLink,
   omniboxFromLink,
   searchFromLink,
 } from '../../features/analytics/analytics-actions';
@@ -142,13 +139,12 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
       return engine.state;
     },
 
-    executeFirstSearch(analyticsEvent = logInterfaceLoad()) {
+    executeFirstSearch() {
       if (firstSearchExecutedSelector(engine.state)) {
         return;
       }
 
       const action = executeSearch({
-        legacy: analyticsEvent,
         next: interfaceLoad(),
       });
       engine.dispatch(action);
@@ -166,9 +162,6 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
       const isOmniboxFromLink = metadata && cause === 'omniboxFromLink';
 
       const action = executeSearch({
-        legacy: isOmniboxFromLink
-          ? logOmniboxFromLink(metadata)
-          : logSearchFromLink(),
         next: isOmniboxFromLink ? omniboxFromLink() : searchFromLink(),
       });
       engine.dispatch(action);

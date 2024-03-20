@@ -5,12 +5,6 @@ import {CategoryFacetSortCriterion} from '../../../features/facets/category-face
 import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response';
 import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
 import {
-  logFacetUpdateSort,
-  logFacetShowMore,
-  logFacetShowLess,
-  logFacetClearAll,
-  logFacetDeselect,
-  logFacetSelect,
   facetUpdateSort,
   facetClearAll,
   facetDeselect,
@@ -97,7 +91,6 @@ export function buildCategoryFacet(
       coreController.toggleSelect(selection);
       dispatch(
         executeSearch({
-          legacy: getLegacyToggleSelectAnalyticsAction(getFacetId(), selection),
           next: getToggleSelectAnalyticsAction(selection),
         })
       );
@@ -107,7 +100,6 @@ export function buildCategoryFacet(
       coreController.deselectAll();
       dispatch(
         executeSearch({
-          legacy: logFacetClearAll(getFacetId()),
           next: facetClearAll(),
         })
       );
@@ -117,7 +109,6 @@ export function buildCategoryFacet(
       coreController.sortBy(criterion);
       dispatch(
         executeSearch({
-          legacy: logFacetUpdateSort({facetId: getFacetId(), criterion}),
           next: facetUpdateSort(),
         })
       );
@@ -125,12 +116,10 @@ export function buildCategoryFacet(
 
     showMoreValues() {
       coreController.showMoreValues();
-      dispatch(fetchFacetValues({legacy: logFacetShowMore(getFacetId())}));
     },
 
     showLessValues() {
       coreController.showLessValues();
-      dispatch(fetchFacetValues({legacy: logFacetShowLess(getFacetId())}));
     },
 
     get state() {
@@ -157,19 +146,6 @@ function loadCategoryFacetReducers(
     search,
   });
   return true;
-}
-
-function getLegacyToggleSelectAnalyticsAction(
-  facetId: string,
-  selection: CategoryFacetValue
-) {
-  const payload = {
-    facetId,
-    facetValue: selection.value,
-  };
-
-  const isSelected = selection.state === 'selected';
-  return isSelected ? logFacetDeselect(payload) : logFacetSelect(payload);
 }
 
 function getToggleSelectAnalyticsAction(

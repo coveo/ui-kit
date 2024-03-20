@@ -1,7 +1,6 @@
 import {BooleanValue, NumberValue, StringValue} from '@coveo/bueno';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {EventDescription} from 'coveo.analytics';
-import {historyStore} from '../../api/analytics/coveo-analytics-utils';
 import {AsyncThunkSearchOptions} from '../../api/search/search-api-client';
 import {SearchResponseSuccess} from '../../api/search/search/search-response';
 import {AsyncThunkOptions} from '../../app/async-thunk-options';
@@ -32,12 +31,6 @@ import {
   UpdateQueryActionCreatorPayload,
 } from '../query/query-actions';
 import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request';
-import {
-  legacyExecuteSearch,
-  legacyFetchInstantResults,
-  legacyFetchMoreResults,
-  legacyFetchPage,
-} from './legacy/search-actions';
 import {
   AsyncSearchThunkProcessor,
   StateNeededByExecuteSearch,
@@ -97,9 +90,17 @@ export const prepareForSearchWithQuery = createAsyncThunk<
 });
 
 export interface TransitiveSearchAction {
-  legacy: LegacySearchAction;
+  legacy?: LegacySearchAction;
   next?: SearchAction;
 }
+
+const getNoopTemp = () => {
+  console.log('Noop SearchAction Created. Sus');
+  console.trace();
+  return {
+    actionCause: 'Noop',
+  };
+};
 
 export const executeSearch = createAsyncThunk<
   ExecuteSearchThunkReturn,
@@ -109,14 +110,15 @@ export const executeSearch = createAsyncThunk<
   'search/executeSearch',
   async (searchAction: TransitiveSearchAction, config) => {
     const state = config.getState();
-    if (
-      state.configuration.analytics.analyticsMode === 'legacy' ||
-      !searchAction.next
-    ) {
-      return legacyExecuteSearch(state, config, searchAction.legacy);
-    }
-    addEntryInActionsHistory(state);
-    const analyticsAction = buildSearchReduxAction(searchAction.next);
+    // if (
+    //   state.configuration.analytics.analyticsMode === 'legacy' ||
+    //   !searchAction.next
+    // ) {
+    //   return legacyExecuteSearch(state, config, searchAction.legacy);
+    // }
+    const analyticsAction = searchAction.next
+      ? buildSearchReduxAction(searchAction.next)
+      : getNoopTemp();
 
     const request = await buildSearchRequest(state, analyticsAction);
 
@@ -138,20 +140,19 @@ export const fetchPage = createAsyncThunk<
   AsyncThunkSearchOptions<StateNeededByExecuteSearch>
 >('search/fetchPage', async (searchAction: TransitiveSearchAction, config) => {
   const state = config.getState();
-  addEntryInActionsHistory(state);
 
-  if (
-    state.configuration.analytics.analyticsMode === 'legacy' ||
-    !searchAction.next
-  ) {
-    return legacyFetchPage(state, config, searchAction.legacy);
-  }
+  // if (
+  //   state.configuration.analytics.analyticsMode === 'legacy' ||
+  //   !searchAction.next
+  // ) {
+  //   return legacyFetchPage(state, config, searchAction.legacy);
+  // }
 
   const processor = new AsyncSearchThunkProcessor<
     ReturnType<typeof config.rejectWithValue>
   >({
     ...config,
-    analyticsAction: searchAction.next,
+    analyticsAction: searchAction.next ?? getNoopTemp(),
   });
 
   const request = await buildSearchRequest(state, searchAction.next);
@@ -166,9 +167,9 @@ export const fetchMoreResults = createAsyncThunk<
   AsyncThunkSearchOptions<StateNeededByExecuteSearch>
 >('search/fetchMoreResults', async (_, config) => {
   const state = config.getState();
-  if (state.configuration.analytics.analyticsMode === 'legacy') {
-    return legacyFetchMoreResults(config, state);
-  }
+  // if (state.configuration.analytics.analyticsMode === 'legacy') {
+  //   return legacyFetchMoreResults(config, state);
+  // }
 
   const analyticsAction = makeBasicNewSearchAnalyticsAction(
     SearchPageEvents.pagerScrolling,
@@ -196,13 +197,13 @@ export const fetchFacetValues = createAsyncThunk<
   'search/fetchFacetValues',
   async (searchAction: TransitiveSearchAction, config) => {
     const state = config.getState();
-    if (
-      state.configuration.analytics.analyticsMode === 'legacy' ||
-      !searchAction.next
-    ) {
-      return legacyExecuteSearch(state, config, searchAction.legacy);
-    }
-    const analyticsAction = buildSearchReduxAction(searchAction.next);
+    // if (
+    //   state.configuration.analytics.analyticsMode === 'legacy' ||
+    //   !searchAction.next
+    // ) {
+    //   return legacyExecuteSearch(state, config, searchAction.legacy);
+    // }
+    const analyticsAction = buildSearchReduxAction(searchAction.next ?? getNoopTemp());
 
     const processor = new AsyncSearchThunkProcessor<
       ReturnType<typeof config.rejectWithValue>
@@ -225,9 +226,9 @@ export const fetchInstantResults = createAsyncThunk<
   'search/fetchInstantResults',
   async (payload: FetchInstantResultsActionCreatorPayload, config) => {
     const state = config.getState();
-    if (state.configuration.analytics.analyticsMode === 'legacy') {
-      return legacyFetchInstantResults(payload, config);
-    }
+    // if (state.configuration.analytics.analyticsMode === 'legacy') {
+    //   return legacyFetchInstantResults(payload, config);
+    // }
     validatePayload(payload, {
       id: requiredNonEmptyString,
       q: requiredNonEmptyString,
@@ -315,18 +316,6 @@ const buildFetchFacetValuesRequest = async (
   // it will also alleviate the load on the index
   mappedRequest.request.numberOfResults = 0;
   return mappedRequest;
-};
-
-const addEntryInActionsHistory = (state: StateNeededByExecuteSearch) => {
-  if (state.configuration.analytics.enabled) {
-    historyStore.addElement({
-      name: 'Query',
-      ...(state.query?.q && {
-        value: state.query.q,
-      }),
-      time: JSON.stringify(new Date()),
-    });
-  }
 };
 
 const buildSearchReduxAction = (action: SearchAction) => ({

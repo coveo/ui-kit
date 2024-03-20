@@ -9,7 +9,7 @@ import {
   NoopPostprocessSearchResponseMiddleware,
 } from '../../api/search/search-api-client-middleware';
 import {updateSearchConfiguration} from '../../features/configuration/configuration-actions';
-import {productRecommendationsReducer as productRecommendations} from '../../features/product-recommendations/product-recommendations-slice';
+// import {productRecommendationsReducer as productRecommendations} from '../../features/product-recommendations/product-recommendations-slice';
 import {setSearchHub} from '../../features/search-hub/search-hub-actions';
 import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice';
 import {ProductRecommendationsAppState} from '../../state/product-recommendations-app-state';
@@ -30,7 +30,7 @@ import {
 export type {ProductRecommendationEngineConfiguration} from './product-recommendation-engine-configuration';
 export {getSampleProductRecommendationEngineConfiguration} from './product-recommendation-engine-configuration';
 
-const productRecommendationEngineReducers = {searchHub, productRecommendations};
+const productRecommendationEngineReducers = {searchHub};
 type ProductRecommendationEngineReducers =
   typeof productRecommendationEngineReducers;
 type ProductRecommendationEngineState =

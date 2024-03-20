@@ -7,8 +7,8 @@ import {LegacySearchAction} from '../../features/analytics/analytics-utils';
 import {setInsightConfiguration} from '../../features/insight-configuration/insight-configuration-actions';
 import {insightConfigurationReducer as insightConfiguration} from '../../features/insight-configuration/insight-configuration-slice';
 import {insightInterfaceReducer as insightInterface} from '../../features/insight-interface/insight-interface-slice';
-import {executeSearch} from '../../features/insight-search/insight-search-actions';
-import {logInsightInterfaceLoad} from '../../features/insight-search/insight-search-analytics-actions';
+// import {executeSearch} from '../../features/insight-search/insight-search-actions';
+// import {logInsightInterfaceLoad} from '../../features/insight-search/insight-search-analytics-actions';
 import {resultPreviewReducer as resultPreview} from '../../features/result-preview/result-preview-slice';
 import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice';
 import {firstSearchExecutedSelector} from '../../features/search/search-selectors';
@@ -109,14 +109,14 @@ export function buildInsightEngine(
       return engine.state;
     },
 
-    executeFirstSearch(analyticsEvent = logInsightInterfaceLoad()) {
+    executeFirstSearch() {
       const firstSearchExecuted = firstSearchExecutedSelector(engine.state);
 
       if (firstSearchExecuted) {
         return;
       }
 
-      engine.dispatch(executeSearch({legacy: analyticsEvent}));
+      // engine.dispatch(executeSearch({legacy: analyticsEvent}));
     },
   };
 }

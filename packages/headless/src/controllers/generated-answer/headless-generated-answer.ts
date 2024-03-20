@@ -46,7 +46,7 @@ export function buildGeneratedAnswer(
     retry() {
       dispatch(
         executeSearch({
-          legacy: generatedAnswerAnalyticsClient.logRetryGeneratedAnswer(),
+          // legacy: generatedAnswerAnalyticsClient.logRetryGeneratedAnswer(),
         })
       );
     },
@@ -55,10 +55,10 @@ export function buildGeneratedAnswer(
       controller.rephrase(responseFormat);
       dispatch(
         executeSearch({
-          legacy:
-            generatedAnswerAnalyticsClient.logRephraseGeneratedAnswer(
-              responseFormat
-            ),
+          // legacy:
+          //   generatedAnswerAnalyticsClient.logRephraseGeneratedAnswer(
+          //     responseFormat
+          //   ),
         })
       );
     },

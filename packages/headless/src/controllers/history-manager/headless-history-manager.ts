@@ -5,9 +5,6 @@ import {StateWithHistory} from '../../app/undoable';
 import {facetOrderReducer as facetOrder} from '../../features/facets/facet-order/facet-order-slice';
 import {back, forward} from '../../features/history/history-actions';
 import {
-  logNavigateBackward,
-  logNavigateForward,
-  logNoResultsBack,
   historyBackward,
   historyForward,
   noResultsBack,
@@ -99,7 +96,6 @@ export function buildHistoryManager(engine: SearchEngine): HistoryManager {
       await dispatch(back());
       dispatch(
         executeSearch({
-          legacy: logNavigateBackward(),
           next: historyBackward(),
         })
       );
@@ -112,7 +108,6 @@ export function buildHistoryManager(engine: SearchEngine): HistoryManager {
       await dispatch(forward());
       dispatch(
         executeSearch({
-          legacy: logNavigateForward(),
           next: historyForward(),
         })
       );
@@ -125,7 +120,6 @@ export function buildHistoryManager(engine: SearchEngine): HistoryManager {
       await dispatch(back());
       dispatch(
         executeSearch({
-          legacy: logNoResultsBack(),
           next: noResultsBack(),
         })
       );

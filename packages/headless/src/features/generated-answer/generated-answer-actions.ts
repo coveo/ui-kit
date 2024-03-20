@@ -25,13 +25,14 @@ import {
   nonEmptyStringArray,
   validatePayload,
 } from '../../utils/validate-payload';
-import {logGeneratedAnswerStreamEnd} from './generated-answer-analytics-actions';
+// import {logGeneratedAnswerStreamEnd} from './generated-answer-analytics-actions';
 import {buildStreamingRequest} from './generated-answer-request';
 import {
   GeneratedAnswerStyle,
   GeneratedResponseFormat,
   generatedAnswerStyle,
 } from './generated-response-format';
+import { noopSearchAnalyticsAction } from '../analytics/analytics-utils';
 
 type StateNeededByGeneratedAnswerStream = ConfigurationSection &
   SearchSection &
@@ -179,10 +180,7 @@ export const streamAnswer = createAsyncThunk<
       case 'genqa.endOfStreamType':
         dispatch(setIsStreaming(false));
         dispatch(
-          logGeneratedAnswerStreamEnd(
-            (JSON.parse(payload) as GeneratedAnswerEndOfStreamPayload)
-              .answerGenerated
-          )
+          noopSearchAnalyticsAction()
         );
         break;
       default:

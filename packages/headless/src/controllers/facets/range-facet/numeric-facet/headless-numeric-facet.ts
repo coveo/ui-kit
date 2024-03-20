@@ -3,12 +3,9 @@ import {SearchEngine} from '../../../../app/search-engine/search-engine';
 import {
   facetClearAll,
   facetUpdateSort,
-  logFacetClearAll,
-  logFacetUpdateSort,
 } from '../../../../features/facets/facet-set/facet-set-analytics-actions';
 import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
 import {
-  getLegacyAnalyticsActionForToggleRangeFacetSelect,
   getAnalyticsActionForToggleFacetSelect,
 } from '../../../../features/facets/range-facets/generic/range-facet-utils';
 import {NumericRangeRequest} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/request';
@@ -69,7 +66,6 @@ export function buildNumericFacet(
       coreController.deselectAll();
       dispatch(
         executeSearch({
-          legacy: logFacetClearAll(getFacetId()),
           next: facetClearAll(),
         })
       );
@@ -79,7 +75,6 @@ export function buildNumericFacet(
       coreController.sortBy(criterion);
       dispatch(
         executeSearch({
-          legacy: logFacetUpdateSort({facetId: getFacetId(), criterion}),
           next: facetUpdateSort(),
         })
       );
@@ -89,10 +84,6 @@ export function buildNumericFacet(
       coreController.toggleSelect(selection);
       dispatch(
         executeSearch({
-          legacy: getLegacyAnalyticsActionForToggleRangeFacetSelect(
-            getFacetId(),
-            selection
-          ),
           next: getAnalyticsActionForToggleFacetSelect(selection),
         })
       );

@@ -2,7 +2,6 @@ import {SearchEngine} from '../../app/search-engine/search-engine';
 import {executeSearch} from '../../features/search/search-actions';
 import {SortCriterion} from '../../features/sort-criteria/criteria';
 import {
-  logResultsSort,
   resultsSort,
 } from '../../features/sort-criteria/sort-criteria-analytics-actions';
 import {
@@ -28,7 +27,6 @@ export function buildSort(engine: SearchEngine, props: SortProps = {}): Sort {
   const search = () =>
     dispatch(
       executeSearch({
-        legacy: logResultsSort(),
         next: resultsSort(),
       })
     );

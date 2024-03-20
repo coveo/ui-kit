@@ -173,7 +173,7 @@ export interface FoldedResultAnalyticsClient {
 export function buildCoreFoldedResultList(
   engine: CoreEngine,
   props: CoreFoldedResultListProps,
-  analyticsClient: FoldedResultAnalyticsClient
+  // analyticsClient: FoldedResultAnalyticsClient
 ): FoldedResultList {
   if (!loadFoldingReducer(engine)) {
     throw loadReducerError;
@@ -205,13 +205,13 @@ export function buildCoreFoldedResultList(
           ] as string
         )
       );
-      dispatch(analyticsClient.logShowMoreFoldedResults(collection.result));
+      // dispatch(analyticsClient.logShowMoreFoldedResults(collection.result));
     },
     logShowMoreFoldedResults: (result) => {
-      dispatch(analyticsClient.logShowMoreFoldedResults(result));
+      // dispatch(analyticsClient.logShowMoreFoldedResults(result));
     },
     logShowLessFoldedResults: () => {
-      dispatch(analyticsClient.logShowLessFoldedResults());
+      // dispatch(analyticsClient.logShowLessFoldedResults());
     },
 
     findResultById(collection) {

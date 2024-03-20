@@ -22,18 +22,4 @@ export interface LogNumericFacetBreadcrumbActionCreatorPayload {
   selection: NumericFacetValue;
 }
 
-//TODO: KIT-2859
-export const logNumericFacetBreadcrumb = (
-  payload: LogNumericFacetBreadcrumbActionCreatorPayload
-): LegacySearchAction =>
-  makeAnalyticsAction('analytics/numericFacet/breadcrumb', (client, state) => {
-    validatePayload(
-      payload,
-      rangeFacetSelectionPayloadDefinition(payload.selection)
-    );
-    const metadata = getRangeFacetMetadata(state, payload);
-
-    return client.makeBreadcrumbFacet(metadata);
-  });
-
 export const numericBreadcrumbFacet = rangeBreadcrumbFacet;

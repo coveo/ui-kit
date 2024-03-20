@@ -7,19 +7,10 @@ import {
   makeAnalyticsAction,
   partialDocumentInformation,
   partialRecommendationInformation,
-  LegacySearchAction,
   validateResultPayload,
 } from '../analytics/analytics-utils';
 import {SearchPageEvents} from '../analytics/search-action-cause';
 import {SearchAction} from '../search/search-actions';
-
-//TODO: KIT-2859
-export const logRecommendationUpdate = (): LegacySearchAction =>
-  makeAnalyticsAction(
-    'analytics/recommendation/update',
-    (client) => client.makeRecommendationInterfaceLoad(),
-    (getState) => new RecommendationAnalyticsProvider(getState)
-  );
 
 export const recommendationInterfaceLoad = (): SearchAction => ({
   actionCause: SearchPageEvents.recommendationInterfaceLoad,

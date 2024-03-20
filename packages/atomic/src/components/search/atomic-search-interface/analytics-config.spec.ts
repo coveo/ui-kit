@@ -42,7 +42,6 @@ describe('analyticsConfig', () => {
   ])('$describeName', ({getSearchEngineConfig}) => {
     beforeEach(() => {
       config = getSearchEngineConfig();
-      store = createAtomicStore();
     });
 
     afterEach(() => {
@@ -51,7 +50,7 @@ describe('analyticsConfig', () => {
 
     it('should provide out of the box values for analytics config', () => {
       setReferrer('foo');
-      const resultingConfig = getAnalyticsConfig(config, true, store);
+      const resultingConfig = getAnalyticsConfig(config, true);
       expect(resultingConfig.analyticsClientMiddleware).toBeDefined();
       expect(resultingConfig.originLevel3).toBe('foo');
       expect(resultingConfig.source?.['@coveo/atomic']).toBe('0.0.0');
@@ -67,7 +66,7 @@ describe('analyticsConfig', () => {
           '@coveo/atomic': '3.4.5',
         },
       };
-      const resultingConfig = getAnalyticsConfig(config, false, store);
+      const resultingConfig = getAnalyticsConfig(config, false);
       expect(resultingConfig.enabled).toBe(true);
       expect(resultingConfig.originContext).toBe('something');
       expect(resultingConfig.originLevel3).toBe('bar');
@@ -75,7 +74,7 @@ describe('analyticsConfig', () => {
     });
 
     it('use the existing analytic middleware if available', () => {
-      const resultingConfig = getAnalyticsConfig(config, true, store);
+      const resultingConfig = getAnalyticsConfig(config, true);
       const out = resultingConfig.analyticsClientMiddleware!('an_event', {
         buzz: 'bazz',
       }) as any;
@@ -86,7 +85,7 @@ describe('analyticsConfig', () => {
     });
 
     it('augments analytics payload with Atomic version', () => {
-      const resultingConfig = getAnalyticsConfig(config, true, store);
+      const resultingConfig = getAnalyticsConfig(config, true);
       const out = resultingConfig.analyticsClientMiddleware!('an_event', {
         customData: {},
       }) as any;
@@ -94,7 +93,7 @@ describe('analyticsConfig', () => {
     });
 
     it('augments analytics payload with facet title, with any type of facet registered to the store', () => {
-      const resultingConfig = getAnalyticsConfig(config, true, store);
+      const resultingConfig = getAnalyticsConfig(config, true);
       (
         ['facets', 'numericFacets', 'dateFacets', 'categoryFacets'] as const
       ).forEach((typeOfFacet) => {
@@ -118,7 +117,7 @@ describe('analyticsConfig', () => {
     });
 
     it('does not augment analytics payload with a facet title when a facet is unavailable from the store', () => {
-      const result = getAnalyticsConfig(config, true, store);
+      const result = getAnalyticsConfig(config, true);
       const out = result.analyticsClientMiddleware!('an_event', {
         customData: {
           facetId: 'some_id',
