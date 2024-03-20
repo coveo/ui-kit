@@ -30,6 +30,7 @@ export interface Recommendation extends Controller {
 }
 
 export interface RecommendationState {
+  headline: string;
   products: ProductRecommendation[];
   error: CommerceAPIErrorStatusResponse | null;
   isLoading: boolean;
@@ -66,10 +67,11 @@ export function buildRecommendations(
     ...controller,
 
     get state() {
-      const {products, error, isLoading, responseId} =
+      const {headline, products, error, isLoading, responseId} =
         getState().recommendation;
 
       return {
+        headline,
         products,
         error,
         isLoading,

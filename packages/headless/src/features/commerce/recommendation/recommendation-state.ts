@@ -3,6 +3,7 @@ import {ProductRecommendation} from '../../../api/search/search/product-recommen
 
 export interface RecommendationV2State {
   slotId: string;
+  headline: string;
   error: CommerceAPIErrorStatusResponse | null;
   isLoading: boolean;
   requestId: string;
@@ -12,6 +13,7 @@ export interface RecommendationV2State {
 
 export const getRecommendationV2InitialState = (): RecommendationV2State => ({
   slotId: '',
+  headline: '',
   error: null,
   isLoading: false,
   requestId: '',

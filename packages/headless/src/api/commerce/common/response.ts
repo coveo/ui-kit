@@ -9,6 +9,7 @@ import {Sort} from './sort';
 
 export interface RecommendationCommerceSuccessResponse {
   responseId: string;
+  headline: string;  
   products: Product[];
   pagination: Pagination;
 }
