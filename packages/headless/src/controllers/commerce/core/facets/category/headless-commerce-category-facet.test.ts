@@ -148,16 +148,20 @@ describe('CategoryFacet', () => {
         it('when there are no values, returns false', () => {
           expect(facet.state.canShowLessValues).toBe(false);
         });
-        it('when there is one value, returns false', () => {
+        it('when there are fewer values than default number of values, returns false', () => {
           setFacetState({
             values: [buildMockCategoryFacetValue()],
           });
 
           expect(facet.state.canShowLessValues).toBe(false);
         });
-        it('when there are multiple values, returns false', () => {
+        it('when there are more values than default number of values, returns true', () => {
           setFacetState({
             values: [
+              buildMockCategoryFacetValue(),
+              buildMockCategoryFacetValue(),
+              buildMockCategoryFacetValue(),
+              buildMockCategoryFacetValue(),
               buildMockCategoryFacetValue(),
               buildMockCategoryFacetValue(),
             ],
@@ -179,7 +183,7 @@ describe('CategoryFacet', () => {
 
           expect(facet.state.canShowLessValues).toBe(false);
         });
-        it('when selected value has one child, returns false', () => {
+        it('when selected value fewer children than default number of values, returns false', () => {
           setFacetState({
             values: [
               buildMockCategoryFacetValue({
@@ -191,12 +195,16 @@ describe('CategoryFacet', () => {
 
           expect(facet.state.canShowLessValues).toBe(false);
         });
-        it('when selected value has multiple children, return true', () => {
+        it('when selected value has more children than default number of values, return true', () => {
           setFacetState({
             values: [
               buildMockCategoryFacetValue({
                 state: 'selected',
                 children: [
+                  buildMockCategoryFacetValue(),
+                  buildMockCategoryFacetValue(),
+                  buildMockCategoryFacetValue(),
+                  buildMockCategoryFacetValue(),
                   buildMockCategoryFacetValue(),
                   buildMockCategoryFacetValue(),
                 ],
