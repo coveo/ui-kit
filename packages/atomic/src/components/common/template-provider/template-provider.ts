@@ -65,7 +65,7 @@ export class TemplateProvider<ItemType> {
   }
 
   public getTemplateContent(item: ItemType) {
-    return this.templateManager.selectTemplate(item);
+    return this.templateManager.selectTemplate(item)!;
   }
 
   public get templatesRegistered() {
