@@ -109,7 +109,7 @@ export function buildCategoryFacet(
         ? selectedValueAncestry[selectedValueAncestry.length - 1]
         : undefined;
       const canShowLessValues = activeValue
-        ? activeValue.children.length > 1
+        ? activeValue.children.length > defaultNumberOfValuesIncrement
         : false;
       const canShowMoreValues =
         activeValue?.moreValuesAvailable ??
