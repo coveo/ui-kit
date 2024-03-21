@@ -5,7 +5,7 @@ node('linux && docker') {
     $class: 'GitSCM',
     branches: [[name: commitHash]],
     extensions: [],
-    userRemoteConfigs: [[credentialsId: 'github-app-dev', url: 'https://github.com/coveo-platform/relay']]
+    userRemoteConfigs: [[credentialsId: 'github-app-coveo-platform', url: 'https://github.com/coveo-platform/relay']]
   ])
 
   withDockerContainer(image: 'node:20', args: '-u=root -e HOME=/tmp -e NPM_CONFIG_PREFIX=/tmp/.npm') {
