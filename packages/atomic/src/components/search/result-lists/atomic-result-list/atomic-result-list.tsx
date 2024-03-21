@@ -15,7 +15,8 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {randomID} from '../../../../utils/utils';
+import {updateBreakpoints} from '../../../../utils/replace-breakpoint';
+import {once, randomID} from '../../../../utils/utils';
 import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
@@ -24,6 +25,7 @@ import {
 } from '../../../common/layout/display-options';
 import {ResultListCommon} from '../../../common/result-list/result-list-common';
 import {ResultRenderingFunction} from '../../../common/result-list/result-list-common-interface';
+import {ResultListGuard} from '../../../common/result-list/result-list-guard';
 import {ResultTemplateProvider} from '../../../common/result-list/result-template-provider';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
@@ -56,6 +58,9 @@ export class AtomicResultList implements InitializableComponent {
   private resultListCommon!: ResultListCommon;
   private loadingFlag = randomID('firstResultLoaded-');
   private resultRenderingFunction: ResultRenderingFunction;
+  private updateBreakpointsOnce = once(() => {
+    updateBreakpoints(this.host);
+  });
 
   @Element() public host!: HTMLDivElement;
 
@@ -161,6 +166,15 @@ export class AtomicResultList implements InitializableComponent {
   }
 
   public render() {
-    return this.resultListCommon.render();
+    this.updateBreakpointsOnce();
+    return (
+      <ResultListGuard
+        {...this.resultListState}
+        hasResults={this.resultListState.hasResults}
+        hasTemplate={this.resultTemplateRegistered}
+      >
+        {this.resultListCommon.render()}
+      </ResultListGuard>
+    );
   }
 }

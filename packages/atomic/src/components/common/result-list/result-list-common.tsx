@@ -1,7 +1,6 @@
 import {h, FunctionalComponent, Fragment} from '@stencil/core';
 import {getFirstFocusableDescendant} from '../../../utils/accessibility-utils';
-import {updateBreakpoints} from '../../../utils/replace-breakpoint';
-import {defer, once} from '../../../utils/utils';
+import {defer} from '../../../utils/utils';
 import {
   ResultsPlaceholder,
   ResultPlaceholderProps,
@@ -27,20 +26,12 @@ export const resultComponentClass = 'result-component';
 export class ResultListCommon<SpecificResult extends AnyResult = AnyResult>
   implements ResultListRenderer, ResultListInfo
 {
-  private updateBreakpoints?: (host: HTMLElement) => void;
   private indexOfResultToFocus?: number;
   private firstResultEl?: HTMLElement;
 
   constructor(private props: ResultListCommonProps<SpecificResult>) {
     this.props.bindings.store.setLoadingFlag(this.props.loadingFlag);
     this.props.bindings.store.registerResultList(this);
-    this.addUpdateBreakpointOnce();
-  }
-
-  private addUpdateBreakpointOnce() {
-    this.updateBreakpoints = once((host: HTMLElement) => {
-      updateBreakpoints(host);
-    });
   }
 
   public getResultId(result: AnyResult) {
@@ -120,9 +111,7 @@ export class ResultListCommon<SpecificResult extends AnyResult = AnyResult>
   }
 
   public render() {
-    this.updateBreakpoints?.(this.props.host);
-
-    if (!this.props.resultTemplateProvider.templatesRegistered) {
+    /*if (!this.props.resultTemplateProvider.templatesRegistered) {
       return;
     }
 
@@ -135,7 +124,7 @@ export class ResultListCommon<SpecificResult extends AnyResult = AnyResult>
       !this.props.getResultListState().hasResults
     ) {
       return;
-    }
+    }*/
 
     return (
       <Fragment>
