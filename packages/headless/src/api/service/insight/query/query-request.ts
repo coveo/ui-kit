@@ -4,6 +4,7 @@ import {
   NumberOfResultsParam,
 } from '../../../platform-service-params';
 import {
+  AnalyticsParam,
   ConstantQueryParam,
   EnableDidYouMeanParam,
   FacetsParam,
@@ -22,6 +23,7 @@ import {
 import {InsightQuerySuggestRequest} from '../query-suggest/query-suggest-request';
 
 export type InsightQueryRequest = InsightParam &
+  AnalyticsParam &
   CaseContextParam &
   FacetsParam &
   QueryParam &
