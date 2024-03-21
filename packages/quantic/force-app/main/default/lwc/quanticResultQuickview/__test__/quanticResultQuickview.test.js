@@ -10,32 +10,28 @@ const selectors = {
 jest.mock('c/quanticHeadlessLoader');
 jest.mock(
   '@salesforce/label/c.quantic_OpenPreview',
-  () => ({default: 'invalidPositiveIntegerProperty'}),
+  () => ({default: 'Open preview'}),
   {
     virtual: true,
   }
 );
 jest.mock(
   '@salesforce/label/c.quantic_OpenFileForPreview',
-  () => ({default: 'invalidPositiveIntegerProperty'}),
+  () => ({default: 'Open file for preview'}),
   {
     virtual: true,
   }
 );
 jest.mock(
   '@salesforce/label/c.quantic_NoPreviewAvailable',
-  () => ({default: 'invalidPositiveIntegerProperty'}),
+  () => ({default: 'No preview available'}),
   {
     virtual: true,
   }
 );
-jest.mock(
-  '@salesforce/label/c.quantic_Close',
-  () => ({default: 'invalidPositiveIntegerProperty'}),
-  {
-    virtual: true,
-  }
-);
+jest.mock('@salesforce/label/c.quantic_Close', () => ({default: 'Close'}), {
+  virtual: true,
+});
 
 const exampleResult = {
   raw: {
@@ -117,15 +113,15 @@ function mockBueno() {
   );
 }
 
-describe('c-quantic-result-quick-view', () => {
-  function cleanup() {
-    // The jsdom instance is shared across test cases in a single file so reset the DOM.
-    while (document.body.firstChild) {
-      document.body.removeChild(document.body.firstChild);
-    }
-    jest.clearAllMocks();
+function cleanup() {
+  // The jsdom instance is shared across test cases in a single file so reset the DOM.
+  while (document.body.firstChild) {
+    document.body.removeChild(document.body.firstChild);
   }
+  jest.clearAllMocks();
+}
 
+describe('c-quantic-result-quick-view', () => {
   beforeEach(() => {
     mockHeadless();
     mockBueno();
