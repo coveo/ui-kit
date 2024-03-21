@@ -5,7 +5,7 @@ import {fetch} from 'cross-fetch';
 export class AnalyticsFetchClient implements AnalyticsRequestClient {
     constructor(private opts: IAnalyticsClientOptions) {}
 
-    public async sendEvent(eventType: EventType, payload: IRequestPayload): Promise<AnyEventResponse> {
+    public async sendEvent(eventType: EventType, payload: IRequestPayload): Promise<AnyEventResponse | void> {
         const {baseUrl, visitorIdProvider, preprocessRequest} = this.opts;
 
         const visitorIdParam = this.shouldAppendVisitorId(eventType) ? await this.getVisitorIdParam() : '';
@@ -22,7 +22,15 @@ export class AnalyticsFetchClient implements AnalyticsRequestClient {
             ...(preprocessRequest ? await preprocessRequest(defaultOptions, 'analyticsFetch') : {}),
         };
 
-        const response = await fetch(url, fetchData);
+        let response: Response;
+
+        try {
+            response = await fetch(url, fetchData);
+        } catch (error) {
+            console.error('An error has occured when sending the event.', error);
+            return;
+        }
+
         if (response.ok) {
             const visit = (await response.json()) as AnyEventResponse;
 
