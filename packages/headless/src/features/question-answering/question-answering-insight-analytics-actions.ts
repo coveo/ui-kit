@@ -4,9 +4,10 @@ import {
   InsightAction,
   analyticsEventItemMetadata,
   documentIdentifier,
-  makeInsightAnalyticsAction,
+  makeInsightAnalyticsActionFactory,
   partialDocumentInformation,
 } from '../analytics/analytics-utils';
+import {SearchPageEvents} from '../analytics/search-action-cause';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
 import {SmartSnippetFeedback} from './question-answering-analytics-actions';
 import {
@@ -22,7 +23,7 @@ import {
 } from './question-answering-selectors';
 
 export const logExpandSmartSnippet = (): InsightAction =>
-  makeInsightAnalyticsAction({
+  makeInsightAnalyticsActionFactory(SearchPageEvents.expandSmartSnippet)({
     prefix: 'analytics/smartSnippet/expand',
     __legacy__getBuilder: (client, state) => {
       return client.logExpandSmartSnippet(
@@ -42,7 +43,7 @@ export const logExpandSmartSnippet = (): InsightAction =>
   });
 
 export const logCollapseSmartSnippet = (): InsightAction =>
-  makeInsightAnalyticsAction({
+  makeInsightAnalyticsActionFactory(SearchPageEvents.collapseSmartSnippet)({
     prefix: 'analytics/smartSnippet/collapse',
     __legacy__getBuilder: (client, state) => {
       return client.logCollapseSmartSnippet(
@@ -62,7 +63,7 @@ export const logCollapseSmartSnippet = (): InsightAction =>
   });
 
 export const logLikeSmartSnippet = (): InsightAction =>
-  makeInsightAnalyticsAction({
+  makeInsightAnalyticsActionFactory(SearchPageEvents.likeSmartSnippet)({
     prefix: 'analytics/smartSnippet/like',
     __legacy__getBuilder: (client, state) => {
       return client.logLikeSmartSnippet(
@@ -84,7 +85,7 @@ export const logLikeSmartSnippet = (): InsightAction =>
   });
 
 export const logDislikeSmartSnippet = (): InsightAction =>
-  makeInsightAnalyticsAction({
+  makeInsightAnalyticsActionFactory(SearchPageEvents.dislikeSmartSnippet)({
     prefix: 'analytics/smartSnippet/dislike',
     __legacy__getBuilder: (client, state) => {
       return client.logDislikeSmartSnippet(
@@ -106,7 +107,7 @@ export const logDislikeSmartSnippet = (): InsightAction =>
   });
 
 export const logOpenSmartSnippetSource = (): InsightAction =>
-  makeInsightAnalyticsAction({
+  makeInsightAnalyticsActionFactory(SearchPageEvents.openSmartSnippetSource)({
     prefix: 'analytics/smartSnippet/source/open',
     __legacy__getBuilder: (client, state) => {
       const result = answerSourceSelector(state)!;
@@ -132,46 +133,45 @@ export const logOpenSmartSnippetSource = (): InsightAction =>
 export const logOpenSmartSnippetInlineLink = (
   payload: QuestionAnsweringInlineLinkActionCreatorPayload
 ): InsightAction =>
-  makeInsightAnalyticsAction(
-    'analytics/smartSnippet/source/open',
-    (client, state) => {
-      validatePayload(payload, inlineLinkPayloadDefinition());
-      const result = answerSourceSelector(state)!;
-      return client.logOpenSmartSnippetInlineLink(
-        partialDocumentInformation(result, state),
-        {
-          ...documentIdentifier(result),
-          ...payload,
-        },
-        getCaseContextAnalyticsMetadata(state.insightCaseContext)
-      );
-    }
-  );
+  makeInsightAnalyticsActionFactory(
+    SearchPageEvents.openSmartSnippetInlineLink
+  )('analytics/smartSnippet/source/open', (client, state) => {
+    validatePayload(payload, inlineLinkPayloadDefinition());
+    const result = answerSourceSelector(state)!;
+    return client.logOpenSmartSnippetInlineLink(
+      partialDocumentInformation(result, state),
+      {
+        ...documentIdentifier(result),
+        ...payload,
+      },
+      getCaseContextAnalyticsMetadata(state.insightCaseContext)
+    );
+  });
 
 //TODO: SFINT-5435
 export const logOpenSmartSnippetFeedbackModal = (): InsightAction =>
-  makeInsightAnalyticsAction(
-    'analytics/smartSnippet/feedbackModal/open',
-    (client, state) =>
-      client.logOpenSmartSnippetFeedbackModal(
-        getCaseContextAnalyticsMetadata(state.insightCaseContext)
-      )
+  makeInsightAnalyticsActionFactory(
+    SearchPageEvents.openSmartSnippetFeedbackModal
+  )('analytics/smartSnippet/feedbackModal/open', (client, state) =>
+    client.logOpenSmartSnippetFeedbackModal(
+      getCaseContextAnalyticsMetadata(state.insightCaseContext)
+    )
   );
 
 //TODO: SFINT-5435
 export const logCloseSmartSnippetFeedbackModal = (): InsightAction =>
-  makeInsightAnalyticsAction(
-    'analytics/smartSnippet/feedbackModal/close',
-    (client, state) =>
-      client.logCloseSmartSnippetFeedbackModal(
-        getCaseContextAnalyticsMetadata(state.insightCaseContext)
-      )
+  makeInsightAnalyticsActionFactory(
+    SearchPageEvents.closeSmartSnippetFeedbackModal
+  )('analytics/smartSnippet/feedbackModal/close', (client, state) =>
+    client.logCloseSmartSnippetFeedbackModal(
+      getCaseContextAnalyticsMetadata(state.insightCaseContext)
+    )
   );
 
 export const logSmartSnippetFeedback = (
   feedback: SmartSnippetFeedback
 ): InsightAction =>
-  makeInsightAnalyticsAction({
+  makeInsightAnalyticsActionFactory(SearchPageEvents.sendSmartSnippetReason)({
     prefix: 'analytics/smartSnippet/sendFeedback',
     __legacy__getBuilder: (client, state) => {
       return client.logSmartSnippetFeedbackReason(
@@ -198,7 +198,7 @@ export const logSmartSnippetFeedback = (
 export const logSmartSnippetDetailedFeedback = (
   details: string
 ): InsightAction =>
-  makeInsightAnalyticsAction({
+  makeInsightAnalyticsActionFactory(SearchPageEvents.sendSmartSnippetReason)({
     prefix: 'analytics/smartSnippet/sendFeedback',
     __legacy__getBuilder: (client, state) => {
       return client.logSmartSnippetFeedbackReason(
@@ -226,7 +226,9 @@ export const logSmartSnippetDetailedFeedback = (
 export const logExpandSmartSnippetSuggestion = (
   payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload
 ): InsightAction =>
-  makeInsightAnalyticsAction({
+  makeInsightAnalyticsActionFactory(
+    SearchPageEvents.expandSmartSnippetSuggestion
+  )({
     prefix: 'analytics/smartSnippetSuggestion/expand',
     __legacy__getBuilder: (client, state) => {
       validateQuestionAnsweringActionCreatorPayload(payload);
@@ -262,7 +264,9 @@ export const logExpandSmartSnippetSuggestion = (
 export const logCollapseSmartSnippetSuggestion = (
   payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload
 ): InsightAction =>
-  makeInsightAnalyticsAction({
+  makeInsightAnalyticsActionFactory(
+    SearchPageEvents.collapseSmartSnippetSuggestion
+  )({
     prefix: 'analytics/smartSnippetSuggestion/collapse',
     __legacy__getBuilder: (client, state) => {
       validateQuestionAnsweringActionCreatorPayload(payload);
@@ -297,7 +301,9 @@ export const logCollapseSmartSnippetSuggestion = (
 export const logOpenSmartSnippetSuggestionSource = (
   payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload
 ): InsightAction =>
-  makeInsightAnalyticsAction({
+  makeInsightAnalyticsActionFactory(
+    SearchPageEvents.openSmartSnippetSuggestionSource
+  )({
     prefix: 'analytics/smartSnippetSuggestion/source/open',
     __legacy__getBuilder: (client, state) => {
       validatePayload(payload, uniqueIdentifierPayloadDefinition());
@@ -344,37 +350,36 @@ export const logOpenSmartSnippetSuggestionInlineLink = (
   identifier: QuestionAnsweringUniqueIdentifierActionCreatorPayload,
   link: QuestionAnsweringInlineLinkActionCreatorPayload
 ): InsightAction =>
-  makeInsightAnalyticsAction(
-    'analytics/smartSnippetSuggestion/source/open',
-    (client, state) => {
-      validatePayload(identifier, uniqueIdentifierPayloadDefinition());
-      validatePayload(link, inlineLinkPayloadDefinition());
+  makeInsightAnalyticsActionFactory(
+    SearchPageEvents.openSmartSnippetSuggestionInlineLink
+  )('analytics/smartSnippetSuggestion/source/open', (client, state) => {
+    validatePayload(identifier, uniqueIdentifierPayloadDefinition());
+    validatePayload(link, inlineLinkPayloadDefinition());
 
-      const relatedQuestion = relatedQuestionSelector(
-        state,
-        identifier.questionAnswerId
-      );
-      if (!relatedQuestion) {
-        return null;
-      }
-      const source = answerSourceSelector(state, relatedQuestion.documentId);
-      if (!source) {
-        return null;
-      }
-
-      return client.logOpenSmartSnippetSuggestionInlineLink(
-        partialDocumentInformation(source, state),
-        {
-          question: relatedQuestion.question,
-          answerSnippet: relatedQuestion.answerSnippet,
-          documentId: relatedQuestion.documentId,
-          linkText: link.linkText,
-          linkURL: link.linkURL,
-        },
-        getCaseContextAnalyticsMetadata(state.insightCaseContext)
-      );
+    const relatedQuestion = relatedQuestionSelector(
+      state,
+      identifier.questionAnswerId
+    );
+    if (!relatedQuestion) {
+      return null;
     }
-  );
+    const source = answerSourceSelector(state, relatedQuestion.documentId);
+    if (!source) {
+      return null;
+    }
+
+    return client.logOpenSmartSnippetSuggestionInlineLink(
+      partialDocumentInformation(source, state),
+      {
+        question: relatedQuestion.question,
+        answerSnippet: relatedQuestion.answerSnippet,
+        documentId: relatedQuestion.documentId,
+        linkText: link.linkText,
+        linkURL: link.linkURL,
+      },
+      getCaseContextAnalyticsMetadata(state.insightCaseContext)
+    );
+  });
 
 export const insightSmartSnippetAnalyticsClient = {
   logExpandSmartSnippet,

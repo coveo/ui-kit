@@ -132,7 +132,10 @@ export const logOpenSmartSnippetInlineLink = (
 ): ClickAction =>
   makeAnalyticsAction('analytics/smartSnippet/source/open', (client, state) => {
     validatePayload(payload, inlineLinkPayloadDefinition());
-    const result = answerSourceSelector(state)!;
+    const result = answerSourceSelector(state);
+    if (!result) {
+      return null;
+    }
     return client.makeOpenSmartSnippetInlineLink(
       partialDocumentInformation(result, state),
       {
