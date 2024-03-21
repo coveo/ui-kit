@@ -28,6 +28,7 @@ export type AnyFacetRequest = Pick<
   values: AnyFacetValueRequest[];
   initialNumberOfValues: number;
   numberOfValues?: number;
+  delimitingCharacter?: string;
 };
 
 export interface CategoryFacetValueRequest extends BaseFacetValueRequest {

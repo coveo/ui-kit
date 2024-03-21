@@ -60,6 +60,7 @@ export function buildMockCategoryFacetResponse(
     ...getMockBaseCommerceFacetResponse(),
     type: 'hierarchical',
     values: [],
+    delimitingCharacter: '',
     ...config,
   };
 }

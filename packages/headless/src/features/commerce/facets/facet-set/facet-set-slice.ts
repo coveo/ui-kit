@@ -464,6 +464,12 @@ function updateStateFromFacetResponse(
   facetRequest.values =
     getFacetRequestValuesFromFacetResponse(facetResponse) ?? [];
   facetRequest.preventAutoSelect = false;
+  if (
+    facetResponse.type === 'hierarchical' &&
+    ensureCategoryFacetRequest(facetRequest)
+  ) {
+    facetRequest.delimitingCharacter = facetResponse.delimitingCharacter;
+  }
 }
 
 function getFacetRequestValuesFromFacetResponse(
