@@ -1,3 +1,4 @@
+/// <reference types="cypress" />
 import {performSearch} from '../../../page-objects/actions/action-perform-search';
 import {analyticsModeTest} from '../../../page-objects/analytics';
 import {configure} from '../../../page-objects/configurator';
@@ -64,6 +65,9 @@ const genQaMessageTypePayload = {
 };
 
 const retryableErrorCodes = [500, 429];
+
+const GENERATED_ANSWER_DISCLAIMER =
+  'Generated content may contain errors. Verify important information.';
 
 describe('quantic-generated-answer', () => {
   beforeEach(() => {
@@ -133,6 +137,12 @@ describe('quantic-generated-answer', () => {
           it('should display the correct message', () => {
             Expect.displayGeneratedAnswerCard(true);
             Expect.generatedAnswerContains(testText);
+            Expect.generatedAnswerIsStreaming(false);
+          });
+
+          it('should display the disclaimer', () => {
+            Expect.displayDisclaimer(true);
+            Expect.disclaimerContains(GENERATED_ANSWER_DISCLAIMER);
             Expect.generatedAnswerIsStreaming(false);
           });
 
@@ -258,6 +268,7 @@ describe('quantic-generated-answer', () => {
             Expect.displayCopyToClipboardButton(false);
             Expect.displayToggleGeneratedAnswerButton(true);
             Expect.toggleGeneratedAnswerButtonIsChecked(true);
+            Expect.displayDisclaimer(false);
           });
         });
 

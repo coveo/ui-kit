@@ -65,6 +65,13 @@
                 ></c-quantic-generated-answer-rephrase-buttons>
               </div>
             </template>
+            <template lwc:if={shouldShowDisclaimer}>
+              <slot name="disclaimer">
+                <div class={disclaimerCssClass} data-cy="generated-answer__disclaimer">
+                  {labels.rgaDisclaimer}
+                </div>
+              </slot>
+            </template>
           </div>
         </div>
       </template>

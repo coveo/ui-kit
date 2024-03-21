@@ -10,6 +10,7 @@ import irrelevant from '@salesforce/label/c.quantic_Irrelevant';
 import loading from '@salesforce/label/c.quantic_Loading';
 import other from '@salesforce/label/c.quantic_Other';
 import outOfDate from '@salesforce/label/c.quantic_OutOfDate';
+import rgaDisclaimer from '@salesforce/label/c.quantic_RGADisclaimer';
 import thisAnswerWasHelpful from '@salesforce/label/c.quantic_ThisAnswerWasHelpful';
 import thisAnswerWasNotHelpful from '@salesforce/label/c.quantic_ThisAnswerWasNotHelpful';
 import tryAgain from '@salesforce/label/c.quantic_TryAgain';
@@ -84,6 +85,13 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * @default {false}
    */
   @api multilineFooter;
+  /**
+   * Indicates whether the disclaimer should be hidden.
+   * @api
+   * @type {boolean}
+   * @default {false}
+   */
+  @api noDisclaimer;
 
   labels = {
     generatedAnswerForYou,
@@ -102,6 +110,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     generatingAnswer,
     generatedAnswerIsHidden,
     answerGenerated,
+    rgaDisclaimer,
   };
 
   /** @type {GeneratedAnswer} */
@@ -399,7 +408,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get generatedAnswerFooterCssClass() {
-    return `slds-grid slds-grid_align-spread generated-answer__footer--${
+    return `slds-grid slds-wrap slds-grid_align-spread generated-answer__footer--${
       this.multilineFooter ? 'multiline' : 'standard'
     }`;
   }
@@ -419,6 +428,14 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     return `slds-var-m-top_small slds-grid ${
       this.multilineFooter ? '' : 'slds-grid_align-end'
     }`;
+  }
+
+  get shouldShowDisclaimer() {
+    return !this.noDisclaimer && !this.isStreaming;
+  }
+
+  get disclaimerCssClass() {
+    return `slds-var-m-top_small slds-col slds-size_1-of-1 slds-text-color_weak slds-text-body_small ${this.multilineFooter ? '' : 'slds-text-align_right'}`;
   }
 
   /**
