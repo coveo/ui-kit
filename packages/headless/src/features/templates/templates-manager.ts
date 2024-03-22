@@ -52,28 +52,24 @@ export function buildTemplatesManager<
   TemplateContent = unknown,
 >(): TemplatesManager<ItemType, TemplateContent> {
   const templates: Required<Template<ItemType, TemplateContent>>[] = [];
-  const validateTemplates = (
-    templates: Template<ItemType, TemplateContent>[]
-  ) => {
-    templates.forEach((template) => {
-      templateSchema.validate(template);
-      const areConditionsValid = template.conditions.every(
-        (condition) => condition instanceof Function
-      );
+  const validateTemplate = (template: Template<ItemType, TemplateContent>) => {
+    const validated = templateSchema.validate(template);
+    const areConditionsValid = template.conditions.every(
+      (condition) => condition instanceof Function
+    );
 
-      if (!areConditionsValid) {
-        throw new SchemaValidationError(
-          'Each template condition should be a function that takes a Result or Product as an argument and returns a boolean'
-        );
-      }
-    });
+    if (!areConditionsValid) {
+      throw new SchemaValidationError(
+        'Each template condition should be a function that takes a Result or Product as an argument and returns a boolean'
+      );
+    }
+    return validated;
   };
 
   return {
     registerTemplates(...newTemplates: Template<ItemType, TemplateContent>[]) {
-      validateTemplates(newTemplates);
-
       newTemplates.forEach((template) => {
+        validateTemplate(template);
         const templatesWithDefault = {
           ...template,
           priority: template.priority || 0,
