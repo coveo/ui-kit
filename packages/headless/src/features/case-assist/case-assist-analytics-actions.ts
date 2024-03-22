@@ -75,7 +75,7 @@ export const logSolveCase = (): CaseAssistAction =>
 
 export const logAbandonCase = (): CaseAssistAction =>
   makeCaseAssistAnalyticsAction({
-    prefix: 'analytics/caseAssist/case/solve',
+    prefix: 'analytics/caseAssist/case/abandon',
     __legacy__getBuilder: (client, state) => {
       return client.logCaseCancelled({
         ticket: caseAssistCaseSelector(state),
