@@ -7,11 +7,6 @@ import {
 import {buildMockProduct} from '../../../../test/mock-product';
 import {buildInteractiveResult} from './headless-product-listing-interactive-result';
 
-jest.mock(
-  '../../../../features/product-listing/product-listing-recent-results'
-);
-jest.mock('../../../../features/product-listing/product-listing-analytics');
-
 describe('InteractiveResult', () => {
   let engine: MockedCommerceEngine;
 
