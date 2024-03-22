@@ -20,6 +20,8 @@ import {
   facetClearAll,
   facetDeselect,
   facetSelect,
+  facetShowLess,
+  facetShowMore,
   facetUpdateSort,
 } from '../features/facets/facet-set/facet-set-analytics-actions';
 import {
@@ -27,6 +29,8 @@ import {
   logFacetClearAll,
   logFacetDeselect,
   logFacetSelect,
+  logFacetShowLess,
+  logFacetShowMore,
   logFacetUpdateSort,
 } from '../features/facets/facet-set/facet-set-insight-analytics-actions';
 import {FacetSortCriterion} from '../features/facets/facet-set/interfaces/request';
@@ -51,6 +55,7 @@ import {
 } from '../features/generated-answer/generated-answer-insight-analytics-actions';
 import {
   executeSearch,
+  fetchFacetValues,
   fetchPage,
 } from '../features/insight-search/insight-search-actions';
 import {
@@ -464,6 +469,32 @@ describe('Analytics Search Migration', () => {
     const action = fetchPage({
       legacy: logPageNumber(),
       next: pagerNumber(),
+    });
+
+    legacyInsightEngine.dispatch(action);
+    nextInsightEngine.dispatch(action);
+    await clearMicrotaskQueue();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/facet/showMore', async () => {
+    const action = fetchFacetValues({
+      legacy: logFacetShowMore(ANY_FACET_ID),
+      next: facetShowMore(),
+    });
+
+    legacyInsightEngine.dispatch(action);
+    nextInsightEngine.dispatch(action);
+    await clearMicrotaskQueue();
+
+    assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/facet/showLess', async () => {
+    const action = fetchFacetValues({
+      legacy: logFacetShowLess(ANY_FACET_ID),
+      next: facetShowLess(),
     });
 
     legacyInsightEngine.dispatch(action);

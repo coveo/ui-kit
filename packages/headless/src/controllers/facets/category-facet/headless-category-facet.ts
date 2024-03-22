@@ -14,8 +14,6 @@ import {
   logFacetSelect,
   facetUpdateSort,
   facetClearAll,
-  facetShowMore,
-  facetShowLess,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {
   executeSearch,
@@ -125,22 +123,12 @@ export function buildCategoryFacet(
 
     showMoreValues() {
       coreController.showMoreValues();
-      dispatch(
-        fetchFacetValues({
-          legacy: logFacetShowMore(getFacetId()),
-          next: facetShowMore(),
-        })
-      );
+      dispatch(fetchFacetValues({legacy: logFacetShowMore(getFacetId())}));
     },
 
     showLessValues() {
       coreController.showLessValues();
-      dispatch(
-        fetchFacetValues({
-          legacy: logFacetShowLess(getFacetId()),
-          next: facetShowLess(),
-        })
-      );
+      dispatch(fetchFacetValues({legacy: logFacetShowLess(getFacetId())}));
     },
 
     get state() {

@@ -3,6 +3,8 @@ import {getToggleSelectAnalyticsAction} from '../../../../features/facets/catego
 import {CategoryFacetSortCriterion} from '../../../../features/facets/category-facet-set/interfaces/request';
 import {
   facetClearAll,
+  facetShowLess,
+  facetShowMore,
   facetUpdateSort,
 } from '../../../../features/facets/facet-set/facet-set-analytics-actions';
 import {
@@ -134,12 +136,22 @@ export function buildCategoryFacet(
 
     showMoreValues() {
       coreController.showMoreValues();
-      dispatch(fetchFacetValues({legacy: logFacetShowMore(getFacetId())}));
+      dispatch(
+        fetchFacetValues({
+          legacy: logFacetShowMore(getFacetId()),
+          next: facetShowMore(),
+        })
+      );
     },
 
     showLessValues() {
       coreController.showLessValues();
-      dispatch(fetchFacetValues({legacy: logFacetShowLess(getFacetId())}));
+      dispatch(
+        fetchFacetValues({
+          legacy: logFacetShowLess(getFacetId()),
+          next: facetShowLess(),
+        })
+      );
     },
 
     get state() {
