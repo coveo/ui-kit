@@ -1,4 +1,4 @@
-import {createAction} from '../..';
+import {createAction} from '@reduxjs/toolkit';
 import {validateProductRecommendationPayload} from '../analytics/analytics-utils';
 import {ProductRecommendation} from './../../api/search/search/product-recommendation';
 
