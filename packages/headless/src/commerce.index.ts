@@ -19,7 +19,7 @@ export type {
 } from './app/engine-configuration';
 export type {LogLevel, LoggerOptions} from './app/logger';
 
-export type {ProductRecommendation} from './api/search/search/product-recommendation';
+export type {Product} from './api/commerce/common/product';
 
 // Actions
 export * from './features/commerce/product-listing/product-listing-actions-loader';
