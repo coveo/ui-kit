@@ -181,21 +181,15 @@ export const streamAnswer = createAsyncThunk<
           )
         );
         break;
-      case 'genqa.endOfStreamType':
+      case 'genqa.endOfStreamType': {
+        const isAnswerGenerated = (
+          JSON.parse(payload) as GeneratedAnswerEndOfStreamPayload
+        ).answerGenerated;
         dispatch(setIsStreaming(false));
-        dispatch(
-          setIsAnswerGenerated(
-            (JSON.parse(payload) as GeneratedAnswerEndOfStreamPayload)
-              .answerGenerated
-          )
-        );
-        dispatch(
-          logGeneratedAnswerStreamEnd(
-            (JSON.parse(payload) as GeneratedAnswerEndOfStreamPayload)
-              .answerGenerated
-          )
-        );
+        dispatch(setIsAnswerGenerated(isAnswerGenerated));
+        dispatch(logGeneratedAnswerStreamEnd(isAnswerGenerated));
         break;
+      }
       default:
         if (state.debug) {
           extra.logger.warn(`Unknown payloadType: "${payloadType}"`);
