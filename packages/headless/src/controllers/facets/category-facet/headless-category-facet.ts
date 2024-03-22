@@ -1,7 +1,6 @@
 import {configuration} from '../../../app/common-reducers';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {categoryFacetSetReducer as categoryFacetSet} from '../../../features/facets/category-facet-set/category-facet-set-slice';
-import {getToggleSelectAnalyticsAction} from '../../../features/facets/category-facet-set/category-facet-utils';
 import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
 import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response';
 import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
@@ -14,8 +13,11 @@ import {
   logFacetSelect,
   facetUpdateSort,
   facetClearAll,
+  facetDeselect,
+  facetSelect,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {
+  SearchAction,
   executeSearch,
   fetchFacetValues,
 } from '../../../features/search/search-actions';
@@ -168,4 +170,11 @@ function getLegacyToggleSelectAnalyticsAction(
 
   const isSelected = selection.state === 'selected';
   return isSelected ? logFacetDeselect(payload) : logFacetSelect(payload);
+}
+
+export function getToggleSelectAnalyticsAction(
+  selection: CategoryFacetValue
+): SearchAction {
+  const isSelected = selection.state === 'selected';
+  return isSelected ? facetDeselect() : facetSelect();
 }

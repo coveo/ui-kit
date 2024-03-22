@@ -1,8 +1,9 @@
 import {InsightEngine} from '../../../../app/insight-engine/insight-engine';
-import {getToggleSelectAnalyticsAction} from '../../../../features/facets/category-facet-set/category-facet-utils';
 import {CategoryFacetSortCriterion} from '../../../../features/facets/category-facet-set/interfaces/request';
 import {
   facetClearAll,
+  facetDeselect,
+  facetSelect,
   facetShowLess,
   facetShowMore,
   facetUpdateSort,
@@ -19,6 +20,7 @@ import {
   executeSearch,
   fetchFacetValues,
 } from '../../../../features/insight-search/insight-search-actions';
+import {SearchAction} from '../../../../features/search/search-actions';
 import {
   buildCoreCategoryFacet,
   CategoryFacet,
@@ -174,4 +176,11 @@ function getToggleSelectInsightAnalyticsAction(
 
   const isSelected = selection.state === 'selected';
   return isSelected ? logFacetDeselect(payload) : logFacetSelect(payload);
+}
+
+export function getToggleSelectAnalyticsAction(
+  selection: CategoryFacetValue
+): SearchAction {
+  const isSelected = selection.state === 'selected';
+  return isSelected ? facetDeselect() : facetSelect();
 }

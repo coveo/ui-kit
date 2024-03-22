@@ -1,8 +1,3 @@
-import {SearchAction} from '../../search/search-actions';
-import {
-  facetDeselect,
-  facetSelect,
-} from '../facet-set/facet-set-analytics-actions';
 import {CategoryFacetValueCommon} from './interfaces/commons';
 import {CategoryFacetValueRequest} from './interfaces/request';
 import {CategoryFacetValue} from './interfaces/response';
@@ -13,13 +8,6 @@ type CategoryFacetValuePartition<T extends GenericCategoryFacetValue> = {
   parents: T[];
   values: T[];
 };
-
-export function getToggleSelectAnalyticsAction(
-  selection: CategoryFacetValue
-): SearchAction {
-  const isSelected = selection.state === 'selected';
-  return isSelected ? facetDeselect() : facetSelect();
-}
 
 export function partitionIntoParentsAndValues<
   T extends GenericCategoryFacetValue,
