@@ -3,15 +3,16 @@ import {Result} from '../../api/search/search/result';
 import {
   analyticsEventItemMetadata,
   documentIdentifier,
-  makeInsightAnalyticsAction,
+  makeInsightAnalyticsActionFactory,
   partialDocumentInformation,
   validateResultPayload,
 } from '../analytics/analytics-utils';
 import {analyticsEventCaseContext} from '../analytics/insight-analytics-utils';
+import {SearchPageEvents} from '../analytics/search-action-cause';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
 
 export const logCaseAttach = (result: Result) =>
-  makeInsightAnalyticsAction({
+  makeInsightAnalyticsActionFactory(SearchPageEvents.caseAttach)({
     prefix: 'insight/caseAttach',
     __legacy__getBuilder: (client, state) => {
       validateResultPayload(result);
@@ -38,7 +39,7 @@ export const logCaseAttach = (result: Result) =>
   });
 
 export const logCaseDetach = (result: Result) =>
-  makeInsightAnalyticsAction({
+  makeInsightAnalyticsActionFactory(SearchPageEvents.caseDetach)({
     prefix: 'insight/caseDetach',
     __legacy__getBuilder: (client, state) => {
       return client.logCaseDetach(

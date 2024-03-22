@@ -46,6 +46,12 @@ export interface CommerceAPISuccessResponse<T> {
   success: T;
 }
 
+export const isErrorResponse = <T>(
+  r: CommerceAPIResponse<T>
+): r is CommerceAPIErrorResponse => {
+  return (r as CommerceAPIErrorResponse).error !== undefined;
+};
+
 export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
   constructor(private options: CommerceAPIClientOptions) {}
 
