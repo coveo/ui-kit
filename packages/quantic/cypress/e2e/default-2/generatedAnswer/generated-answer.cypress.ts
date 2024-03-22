@@ -1,4 +1,3 @@
-/// <reference types="cypress" />
 import {performSearch} from '../../../page-objects/actions/action-perform-search';
 import {analyticsModeTest} from '../../../page-objects/analytics';
 import {configure} from '../../../page-objects/configurator';
@@ -238,6 +237,7 @@ describe('quantic-generated-answer', () => {
             scope('when loading the page', () => {
               Expect.displayGeneratedAnswerCard(true);
               Expect.generatedAnswerFooterIsOnMultiline(true);
+              Expect.displayDisclaimer(true);
             });
           });
         });
@@ -607,6 +607,7 @@ describe('quantic-generated-answer', () => {
                   Expect.displayGeneratedAnswerContent(false);
                   Expect.displayLikeButton(false);
                   Expect.displayDislikeButton(false);
+                  Expect.displayDisclaimer(false);
                   if (analyticsMode === 'next') {
                     NextAnalyticsExpectations.emitQnaAnswerActionEvent(
                       {
@@ -875,6 +876,7 @@ describe('quantic-generated-answer', () => {
                     cy.wait(getStreamInterceptAlias(streamId));
                   }
                   Expect.displayGeneratedAnswerCard(true);
+                  Expect.displayDisclaimer(false);
 
                   Actions.clickRetry();
                   cy.wait(InterceptAliases.Search);

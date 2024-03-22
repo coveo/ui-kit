@@ -66,11 +66,11 @@
               </div>
             </template>
             <template lwc:if={shouldShowDisclaimer}>
-              <slot name="disclaimer">
-                <div class={disclaimerCssClass} data-cy="generated-answer__disclaimer">
-                  {labels.rgaDisclaimer}
-                </div>
-              </slot>
+              <div class={disclaimerCssClass} data-cy="generated-answer__disclaimer">
+                <slot name="disclaimer">
+                    {labels.rgaDisclaimer}
+                </slot>
+              </div>
             </template>
           </div>
         </div>

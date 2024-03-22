@@ -85,13 +85,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * @default {false}
    */
   @api multilineFooter;
-  /**
-   * Indicates whether the disclaimer should be hidden.
-   * @api
-   * @type {boolean}
-   * @default {false}
-   */
-  @api noDisclaimer;
 
   labels = {
     generatedAnswerForYou,
@@ -431,7 +424,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get shouldShowDisclaimer() {
-    return !this.noDisclaimer && !this.isStreaming;
+    return this.isVisible && !this.isStreaming;
   }
 
   get disclaimerCssClass() {
