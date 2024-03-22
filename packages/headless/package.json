@@ -14,7 +14,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "2.56.1",
+  "version": "2.57.1",
   "files": [
     "dist/",
     "recommendation/",
@@ -50,8 +50,9 @@
     "pino-pretty": "^6.0.0 || ^10.0.0"
   },
   "dependencies": {
-    "@coveo/bueno": "0.45.7",
+    "@coveo/bueno": "0.45.8",
     "@coveo/relay": "0.7.4",
+    "@coveo/relay-event-types": "7.7.3",
     "@microsoft/fetch-event-source": "2.0.1",
     "@reduxjs/toolkit": "2.2.1",
     "abab": "2.0.6",
@@ -66,7 +67,6 @@
     "undici": "5.28.3"
   },
   "devDependencies": {
-    "@coveo/relay-event-types": "7.7.3",
     "@coveo/release": "1.0.0",
     "@microsoft/api-extractor": "7.42.3",
     "@microsoft/api-extractor-model": "7.28.13",
