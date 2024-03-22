@@ -170,7 +170,7 @@ describe('generated answer insight analytics actions', () => {
         documentUriHash: exampleUrihash,
         documentTitle: exampleTitle,
         documentUrl: exampleClickUri,
-        documentPosition: 0,
+        documentPosition: 1,
       },
     };
 

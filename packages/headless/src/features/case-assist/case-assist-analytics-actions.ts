@@ -199,7 +199,7 @@ export const logQuickviewDocumentSuggestionClick = (
         ticket: caseAssistCaseSelector(state),
       });
     },
-    analyticsType: 'CaseAssist.DocumentSuggestionClick',
+    analyticsType: 'ItemClick',
     analyticsPayloadBuilder: (state): ItemClick => {
       const {
         suggestion,
@@ -257,6 +257,7 @@ export const logDocumentSuggestionOpen = (
     },
   });
 
+//TODO: SFINT-5471
 export const logDocumentSuggestionRating = (
   suggestionId: string,
   rating: number

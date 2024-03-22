@@ -80,7 +80,7 @@ exports[`generated answer insight analytics actions when analyticsMode is \`next
       "uniqueFieldValue": "exampleUniqueId",
       "url": "exampleClickUri",
     },
-    "position": 0,
+    "position": 1,
     "searchUid": "qux",
   },
 ]
@@ -101,7 +101,7 @@ exports[`generated answer insight analytics actions when analyticsMode is \`next
 
 exports[`generated answer insight analytics actions when analyticsMode is \`next\` should log #logQuickviewDocumentSuggestionClick with the right payload 1`] = `
 [
-  "CaseAssist.DocumentSuggestionClick",
+  "ItemClick",
   {
     "actionCause": "preview",
     "itemMetadata": {
@@ -110,7 +110,7 @@ exports[`generated answer insight analytics actions when analyticsMode is \`next
       "uniqueFieldValue": "exampleUniqueId",
       "url": "exampleClickUri",
     },
-    "position": 0,
+    "position": 1,
     "searchUid": "qux",
   },
 ]
