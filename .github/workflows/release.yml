@@ -72,7 +72,7 @@ jobs:
       - name: Notify Docs
         run: npm run notify:docs
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
   # TODO: KIT-3072, uncomment
   # quantic-prod:
   #   needs: release
