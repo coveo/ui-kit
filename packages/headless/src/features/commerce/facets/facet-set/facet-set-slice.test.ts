@@ -118,125 +118,369 @@ describe('commerceFacetSetReducer', () => {
         return action(response, '');
       }
 
-      it('updates the values of regular facet requests to the corresponding values in the response', () => {
-        const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
-        const facet = buildMockCommerceRegularFacetResponse({
-          facetId,
-          values: [facetValue],
-        });
-
+      it('when a previously registered facet is not found in the response, removes that facet from the state', () => {
         state[facetId] = buildMockCommerceFacetSlice({
-          request: buildMockCommerceFacetRequest({type: 'regular', facetId}),
+          request: buildMockCommerceFacetRequest({facetId}),
         });
 
-        const action = buildQueryAction([facet]);
+        const action = buildQueryAction([]);
         const finalState = commerceFacetSetReducer(state, action);
 
-        const expectedFacetValueRequest =
-          convertFacetValueToRequest(facetValue);
-        expect(finalState[facetId]?.request.values).toEqual([
-          expectedFacetValueRequest,
-        ]);
+        expect(finalState[facetId]).toBeUndefined();
       });
 
-      it('updates the values of numeric facet requests to the corresponding values in the response', () => {
-        const facetValue = buildMockCommerceNumericFacetValue();
-        const facet = buildMockCommerceNumericFacetResponse({
-          facetId,
-          values: [facetValue],
+      describe('when a facet is found in the response', () => {
+        describe('when found facet is not already registered in the state', () => {
+          it('registers the facet in the state', () => {
+            const facet = buildMockCommerceRegularFacetResponse({
+              facetId,
+            });
+
+            const action = buildQueryAction([facet]);
+            const finalState = commerceFacetSetReducer(state, action);
+
+            expect(finalState[facetId]).toBeDefined();
+          });
+          it('sets the facet #initialNumberOfResults to #values length from facet response', () => {
+            const facet = buildMockCommerceRegularFacetResponse({
+              facetId,
+              values: [
+                buildMockCommerceRegularFacetValue(),
+                buildMockCommerceRegularFacetValue(),
+                buildMockCommerceRegularFacetValue(),
+              ],
+            });
+
+            const action = buildQueryAction([facet]);
+            const finalState = commerceFacetSetReducer(state, action);
+
+            expect(finalState[facetId]?.request.initialNumberOfValues).toEqual(
+              facet.values.length
+            );
+          });
         });
 
-        state[facetId] = buildMockCommerceFacetSlice({
-          request: buildMockCommerceFacetRequest({
-            type: 'numericalRange',
+        it('when found facet is already registered in the state, does not update the facet #initialNumberOfResults in the state', () => {
+          state[facetId] = buildMockCommerceFacetSlice({
+            request: buildMockCommerceFacetRequest({
+              type: 'regular',
+              facetId,
+              initialNumberOfValues: 1,
+              values: [buildMockCommerceRegularFacetValue()],
+            }),
+          });
+
+          const facet = buildMockCommerceRegularFacetResponse({
             facetId,
-          }),
+            values: [
+              buildMockCommerceRegularFacetValue(),
+              buildMockCommerceRegularFacetValue(),
+              buildMockCommerceRegularFacetValue(),
+            ],
+          });
+
+          const action = buildQueryAction([facet]);
+          const finalState = commerceFacetSetReducer(state, action);
+
+          expect(finalState[facetId]?.request.initialNumberOfValues).toEqual(1);
         });
 
-        const action = buildQueryAction([facet]);
-        const finalState = commerceFacetSetReducer(state, action);
-
-        const expectedFacetValueRequests = convertToNumericRangeRequests([
-          facetValue,
-        ]);
-        expect(finalState[facetId]?.request.values).toEqual(
-          expectedFacetValueRequests
-        );
-      });
-
-      it('updates the values of date facet requests to the corresponding values in the response', () => {
-        const facetValue = buildMockCommerceDateFacetValue({
-          start: '2023-01-01',
-          end: '2024-01-01',
-        });
-        const facet = buildMockCommerceDateFacetResponse({
-          facetId,
-          values: [facetValue],
-        });
-
-        state[facetId] = buildMockCommerceFacetSlice({
-          request: buildMockCommerceFacetRequest({
-            type: 'dateRange',
+        it('sets/updates facet request #displayName in state from response', () => {
+          const facetResponse1 = buildMockCommerceRegularFacetResponse({
             facetId,
-          }),
-        });
+            displayName: 'original display name',
+          });
 
-        const action = buildQueryAction([facet]);
-        const finalState = commerceFacetSetReducer(state, action);
+          const action1 = buildQueryAction([facetResponse1]);
+          const updatedState1 = commerceFacetSetReducer(state, action1);
 
-        const expectedFacetValueRequests = convertToDateRangeRequests([
-          facetValue,
-        ]);
-        expect(finalState[facetId]?.request.values).toEqual(
-          expectedFacetValueRequests
-        );
-      });
+          expect(updatedState1[facetId]?.request.displayName).toEqual(
+            facetResponse1.displayName
+          );
 
-      it('updates the values of category facet requests to the corresponding values in the response', () => {
-        const facetValue = buildMockCategoryFacetValue({
-          isAutoSelected: false,
-          isLeafValue: false,
-          isSuggested: false,
-          moreValuesAvailable: false,
-          numberOfResults: 10,
-          path: ['Food'],
-          state: 'idle',
-          value: 'Food',
-          children: [
-            {
-              isLeafValue: true,
-              value: 'Burgers',
-              children: [],
-              isAutoSelected: false,
-              isSuggested: false,
-              moreValuesAvailable: false,
-              numberOfResults: 10,
-              path: ['Food', 'Burgers'],
-              state: 'idle',
-            },
-          ],
-        });
-        const facet = buildMockCategoryFacetResponse({
-          facetId,
-          values: [facetValue],
-        });
-
-        state[facetId] = buildMockCommerceFacetSlice({
-          request: buildMockCommerceFacetRequest({
-            type: 'hierarchical',
+          const facetResponse2 = buildMockCommerceRegularFacetResponse({
             facetId,
-          }),
+            displayName: 'new display name',
+          });
+
+          const action2 = buildQueryAction([facetResponse2]);
+          const updatedState = commerceFacetSetReducer(state, action2);
+
+          expect(updatedState[facetId]?.request.displayName).toEqual(
+            facetResponse2.displayName
+          );
         });
 
-        const action = buildQueryAction([facet]);
-        const finalState = commerceFacetSetReducer(state, action);
+        it('sets/updates facet request #field in state from response', () => {
+          const field1 = 'original field';
+          const facetResponse1 = buildMockCommerceRegularFacetResponse({
+            facetId,
+            field: field1,
+          });
 
-        const expectedFacetValueRequests = [
-          convertCategoryFacetValueToRequest(facetValue),
-        ];
-        expect(finalState[facetId]?.request.values).toEqual(
-          expectedFacetValueRequests
-        );
+          const action1 = buildQueryAction([facetResponse1]);
+          const updatedState1 = commerceFacetSetReducer(state, action1);
+
+          expect(updatedState1[facetId]?.request.field).toEqual(field1);
+
+          const field2 = 'new field';
+
+          const facetResponse2 = buildMockCommerceRegularFacetResponse({
+            facetId,
+            field: field2,
+          });
+
+          const action2 = buildQueryAction([facetResponse2]);
+          const updatedState2 = commerceFacetSetReducer(state, action2);
+
+          expect(updatedState2[facetId]?.request.field).toEqual(field2);
+        });
+
+        it('sets/updates facet request #numberOfValues in state from #values length in response', () => {
+          const facetResponse1 = buildMockCommerceRegularFacetResponse({
+            facetId,
+            values: [buildMockCommerceRegularFacetValue()],
+          });
+
+          const action1 = buildQueryAction([facetResponse1]);
+          const updatedState1 = commerceFacetSetReducer(state, action1);
+
+          expect(updatedState1[facetId]?.request.numberOfValues).toEqual(1);
+
+          const facetResponse2 = buildMockCommerceRegularFacetResponse({
+            facetId,
+            values: [
+              buildMockCommerceRegularFacetValue(),
+              buildMockCommerceRegularFacetValue(),
+              buildMockCommerceRegularFacetValue(),
+            ],
+          });
+
+          const action2 = buildQueryAction([facetResponse2]);
+          const updatedState2 = commerceFacetSetReducer(state, action2);
+
+          expect(updatedState2[facetId]?.request.numberOfValues).toEqual(3);
+        });
+
+        it('sets/updates #type in state from response', () => {
+          const facetResponse1 = buildMockCommerceRegularFacetResponse({
+            facetId,
+          });
+
+          const action1 = buildQueryAction([facetResponse1]);
+          const updatedState1 = commerceFacetSetReducer(state, action1);
+
+          expect(updatedState1[facetId]?.request.type).toEqual('regular');
+
+          const facetResponse2 = buildMockCommerceDateFacetResponse({
+            facetId,
+          });
+
+          const action2 = buildQueryAction([facetResponse2]);
+          const updatedState2 = commerceFacetSetReducer(state, action2);
+
+          expect(updatedState2[facetId]?.request.type).toEqual('dateRange');
+        });
+
+        it('when found facet #type is "hierarchical", sets/updates #delimitingCharacter in state from response', () => {
+          const delimitingCharacter1 = '>';
+          const facetResponse1 = buildMockCategoryFacetResponse({
+            facetId,
+            delimitingCharacter: delimitingCharacter1,
+          });
+
+          const action1 = buildQueryAction([facetResponse1]);
+          const initialState = commerceFacetSetReducer(state, action1);
+
+          expect(initialState[facetId]?.request.delimitingCharacter).toEqual(
+            delimitingCharacter1
+          );
+
+          const delimitingCharacter2 = '|';
+          const facetResponse2 = buildMockCategoryFacetResponse({
+            facetId,
+            delimitingCharacter: delimitingCharacter2,
+          });
+
+          const action2 = buildQueryAction([facetResponse2]);
+          const updatedState = commerceFacetSetReducer(state, action2);
+
+          expect(updatedState[facetId]?.request.delimitingCharacter).toEqual(
+            delimitingCharacter2
+          );
+        });
+
+        it('when found facet #type is "regular", sets/updates #values in state from response', () => {
+          const facetValue1 = buildMockCommerceRegularFacetValue({
+            value: 'TED',
+          });
+          const facetResponse1 = buildMockCommerceRegularFacetResponse({
+            facetId,
+            values: [facetValue1],
+          });
+
+          const action1 = buildQueryAction([facetResponse1]);
+          const updatedState1 = commerceFacetSetReducer(state, action1);
+
+          const expectedFacetValueRequest1 =
+            convertFacetValueToRequest(facetValue1);
+          expect(updatedState1[facetId]?.request.values).toEqual([
+            expectedFacetValueRequest1,
+          ]);
+
+          const facetValue2 = buildMockCommerceRegularFacetValue({
+            value: 'BILL',
+          });
+          const facetResponse2 = buildMockCommerceRegularFacetResponse({
+            facetId,
+            values: [facetValue2],
+          });
+
+          state[facetId] = buildMockCommerceFacetSlice({
+            request: buildMockCommerceFacetRequest({type: 'regular', facetId}),
+          });
+
+          const action2 = buildQueryAction([facetResponse2]);
+          const updatedState2 = commerceFacetSetReducer(state, action2);
+
+          const expectedFacetValueRequest2 =
+            convertFacetValueToRequest(facetValue2);
+          expect(updatedState2[facetId]?.request.values).toEqual([
+            expectedFacetValueRequest2,
+          ]);
+        });
+
+        it('when found facet #type is "numericalRange", sets/updates #values in facet state from response', () => {
+          const facetValue1 = buildMockCommerceNumericFacetValue({
+            start: 0,
+            end: 5,
+          });
+          const facetResponse1 = buildMockCommerceNumericFacetResponse({
+            facetId,
+            values: [facetValue1],
+          });
+
+          const action1 = buildQueryAction([facetResponse1]);
+          const state1 = commerceFacetSetReducer(state, action1);
+
+          const expectedFacetValueRequests1 = convertToNumericRangeRequests([
+            facetValue1,
+          ]);
+          expect(state1[facetId]?.request.values).toEqual(
+            expectedFacetValueRequests1
+          );
+
+          const facetValue2 = buildMockCommerceNumericFacetValue({
+            start: 5,
+            end: 10,
+          });
+          const facetResponse2 = buildMockCommerceNumericFacetResponse({
+            facetId,
+            values: [facetValue2],
+          });
+
+          const action2 = buildQueryAction([facetResponse2]);
+          const state2 = commerceFacetSetReducer(state, action2);
+
+          const expectedFacetValueRequests2 = convertToNumericRangeRequests([
+            facetValue2,
+          ]);
+          expect(state2[facetId]?.request.values).toEqual(
+            expectedFacetValueRequests2
+          );
+        });
+
+        it('when found facet #type is "dateRange", sets/updates #values in request from response', () => {
+          const facetValue1 = buildMockCommerceDateFacetValue({
+            start: '2023-01-01',
+            end: '2024-01-01',
+          });
+          const facetResponse1 = buildMockCommerceDateFacetResponse({
+            facetId,
+            values: [facetValue1],
+          });
+
+          const action1 = buildQueryAction([facetResponse1]);
+          const updatedState1 = commerceFacetSetReducer(state, action1);
+
+          const expectedFacetValueRequests1 = convertToDateRangeRequests([
+            facetValue1,
+          ]);
+          expect(updatedState1[facetId]?.request.values).toEqual(
+            expectedFacetValueRequests1
+          );
+
+          const facetValue2 = buildMockCommerceDateFacetValue({
+            start: '2024-01-01',
+            end: '2025-01-01',
+          });
+          const facetResponse2 = buildMockCommerceDateFacetResponse({
+            facetId,
+            values: [facetValue2],
+          });
+
+          const action2 = buildQueryAction([facetResponse2]);
+          const updatedState2 = commerceFacetSetReducer(state, action2);
+
+          const expectedFacetValueRequests2 = convertToDateRangeRequests([
+            facetValue2,
+          ]);
+          expect(updatedState2[facetId]?.request.values).toEqual(
+            expectedFacetValueRequests2
+          );
+        });
+
+        it('when found facet #type is "hierarchical", sets/updates #values in state from response', () => {
+          const facetValue1 = buildMockCategoryFacetValue({
+            path: ['Food'],
+            value: 'Food',
+            children: [
+              buildMockCategoryFacetValue({
+                path: ['Food', 'Burgers'],
+                value: 'Burgers',
+              }),
+            ],
+          });
+          const facetResponse1 = buildMockCategoryFacetResponse({
+            facetId,
+            values: [facetValue1],
+          });
+
+          const action1 = buildQueryAction([facetResponse1]);
+          const updatedState1 = commerceFacetSetReducer(state, action1);
+
+          const expectedFacetValueRequests1 = [
+            convertCategoryFacetValueToRequest(facetValue1),
+          ];
+          expect(updatedState1[facetId]?.request.values).toEqual(
+            expectedFacetValueRequests1
+          );
+
+          const facetValue2 = buildMockCategoryFacetValue({
+            path: ['Beverages'],
+            value: 'Beverages',
+            children: [
+              buildMockCategoryFacetValue({
+                path: ['Beverages', 'Soft drinks'],
+                value: 'Soft drinks',
+              }),
+            ],
+          });
+          const facetResponse2 = buildMockCategoryFacetResponse({
+            facetId,
+            values: [facetValue2],
+          });
+
+          const action2 = buildQueryAction([facetResponse2]);
+          const updatedState2 = commerceFacetSetReducer(state, action2);
+
+          const expectedFacetValueRequests2 = [
+            convertCategoryFacetValueToRequest(facetValue2),
+          ];
+          expect(updatedState2[facetId]?.request.values).toEqual(
+            expectedFacetValueRequests2
+          );
+        });
       });
 
       describe.each([
