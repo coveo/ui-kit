@@ -4,7 +4,7 @@ export interface Product {
    */
   permanentid: string;
   /**
-   * A direct link to the product in URL format.
+   * The URL of the product.
    */
   clickUri: string;
   /**
@@ -20,25 +20,25 @@ export interface Product {
    */
   ec_brand?: string;
   /**
-   * The category of the product (e.g., `"Electronics"`, `"Electronics|Televisions"`, or `"Electronics|Televisions|4K Televisions"`).
+   * The category of the product (e.g., `"Electronics;Electronics|Televisions;Electronics|Televisions|4K Televisions"`).
    *
    * From the `ec_category` field.
    */
   ec_category?: string;
   /**
-   * The id used for Product Grouping.
+   * The ID used for the purpose of [product grouping](https://docs.coveo.com/en/l78i2152).
    *
    * From the `ec_item_group_id` field.
    */
   ec_item_group_id?: string;
   /**
-   * The base price of the product or variant.
+   * The base price of the product.
    *
    * From the `ec_price` field.
    */
   ec_price?: number;
   /**
-   * The promotional price of the product or variant.
+   * The promotional price of the product.
    *
    * From the `ec_promo_price` field.
    */
@@ -50,43 +50,43 @@ export interface Product {
    */
   ec_shortdesc?: string;
   /**
-   * Product images in URL format.
+   * The URLs of the product image thumbnails.
    *
    * From the `ec_thumbnails` field.
    */
   ec_thumbnails?: string[];
   /**
-   * Additional product images in URL format.
+   * The URLs of additional product images.
    *
    * From the `ec_images` field.
    */
   ec_images?: string[];
 
   /**
-   * The availability of the product (i.e., whether it's in stock).
+   * Whether the product is currently in stock.
    *
    * From the `ec_in_stock` field.
    */
   ec_in_stock?: boolean;
   /**
-   * A rating system. Ratings range from 0-10.
+   * The product rating, from 0 to 10.
    *
    * From the `ec_rating` field.
    */
   ec_rating?: number;
 
   /**
-   * An object containing the requested additional fields for the product.
+   * The requested additional fields for the product.
    */
   additionalFields: Record<string, unknown>;
 
   /**
-   * A list of child product recommendations in a product grouping context.
+   * The child results of the product, fetched through [product grouping](https://docs.coveo.com/en/l78i2152).
    */
   childResults: Product[];
 
   /**
-   * The total number of items in the group.
+   * The total number of child results fetched through [product grouping](https://docs.coveo.com/en/l78i2152).
    */
   totalNumberOfChildResults: number;
 }
