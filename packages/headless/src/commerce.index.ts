@@ -24,7 +24,6 @@ export type {ProductRecommendation} from './api/search/search/product-recommenda
 // Actions
 export * from './features/commerce/product-listing/product-listing-actions-loader';
 export * from './features/configuration/configuration-actions-loader';
-export * from './features/analytics/search-analytics-actions-loader';
 
 // Controllers
 export type {
