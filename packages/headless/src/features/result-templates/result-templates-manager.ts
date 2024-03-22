@@ -18,7 +18,7 @@ export interface ResultTemplatesManager<Content = unknown> {
    * Registers any number of result templates in the manager.
    * @param templates (...ResultTemplate<Content>) A list of templates to register.
    */
-  registerTemplates(...newTemplates: Template<Result, Content>[]): void;
+  registerTemplates(...newTemplates: ResultTemplate<Content>[]): void;
   /**
    * Selects the highest priority template for which the given result satisfies all conditions.
    * In the case where satisfied templates have equal priority, the template that was registered first is returned.
