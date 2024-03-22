@@ -31,6 +31,7 @@ import {
 } from '../../state/state-sections';
 import {requiredNonEmptyString} from '../../utils/validate-payload';
 import {InsightAction as LegacyInsightAction} from '../analytics/analytics-utils';
+import {SearchPageEvents} from '../analytics/search-action-cause';
 import {
   FetchQuerySuggestionsActionCreatorPayload,
   FetchQuerySuggestionsThunkReturn,
@@ -126,7 +127,8 @@ export const executeSearch = createAsyncThunk<
       ...config,
     });
 
-    const request = buildInsightSearchRequest(state);
+    const eventDescription = buildEventDescription(analyticsAction.next);
+    const request = await buildInsightSearchRequest(state, eventDescription);
     const fetched = await processor.fetchFromAPI(request);
 
     return await processor.process(fetched);
@@ -158,7 +160,8 @@ export const fetchPage = createAsyncThunk<
       ...config,
     });
 
-    const request = buildInsightSearchRequest(state);
+    const eventDescription = buildEventDescription(analyticsAction.next);
+    const request = await buildInsightSearchRequest(state, eventDescription);
     const fetched = await processor.fetchFromAPI(request);
 
     return await processor.process(fetched);
@@ -180,7 +183,14 @@ export const fetchMoreResults = createAsyncThunk<
     ...config,
   });
 
-  const request = await buildInsightFetchMoreResultsRequest(state);
+  const eventDescription = buildEventDescription({
+    actionCause: SearchPageEvents.pagerScrolling,
+  });
+
+  const request = await buildInsightFetchMoreResultsRequest(
+    state,
+    eventDescription
+  );
   const fetched = await processor.fetchFromAPI(request);
 
   return await processor.process(fetched);
@@ -209,7 +219,11 @@ export const fetchFacetValues = createAsyncThunk<
       ...config,
     });
 
-    const request = await buildInsightFetchFacetValuesRequest(state);
+    const eventDescription = buildEventDescription(analyticsAction.next);
+    const request = await buildInsightFetchFacetValuesRequest(
+      state,
+      eventDescription
+    );
     const fetched = await processor.fetchFromAPI(request);
 
     return await processor.process(fetched);
@@ -265,3 +279,8 @@ export const addEntryInActionsHistory = (state: StateNeededByExecuteSearch) => {
     });
   }
 };
+
+const buildEventDescription = (action: SearchAction) => ({
+  actionCause: action.actionCause,
+  type: action.actionCause,
+});

@@ -141,6 +141,9 @@ export class AtomicCategoryFacet
   /**
    * The sort criterion to apply to the returned facet values.
    * Possible values are 'alphanumeric' and 'occurrences'.
+   * For this criterion to apply to the top-layer facet values, disable
+   * [facet value ordering](https://docs.coveo.com/en/l1qf4156/#facet-value-ordering)
+   * in your Dynamic Navigation Experience configuration.
    */
   // TODO: add automatic (occurrences when not expanded, alphanumeric when expanded)
   @Prop({reflect: true}) public sortCriteria: CategoryFacetSortCriterion =

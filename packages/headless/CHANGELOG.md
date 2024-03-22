@@ -1,3 +1,9 @@
+## 2.57.1 (2024-03-20)
+
+### Bug Fixes
+
+- **headless:** move relay-event-types to prd dep ([#3732](https://github.com/coveo/ui-kit/issues/3732)) ([dd341bb](https://github.com/coveo/ui-kit/commits/dd341bbcb880cfae8663b9c81ed5026781d10425)), closes [#3730](https://github.com/coveo/ui-kit/issues/3730)
+
 # 2.57.0 (2024-03-20)
 
 ### Features

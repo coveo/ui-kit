@@ -1,6 +1,8 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
-import {isErrorResponse} from '../../../api/search/search-api-client';
+import {
+  AsyncThunkCommerceOptions,
+  isErrorResponse,
+} from '../../../api/commerce/commerce-api-client';
 import {
   CartSection,
   CommerceContextSection,
