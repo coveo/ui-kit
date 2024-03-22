@@ -69,10 +69,10 @@ export function buildTemplatesManager<
   return {
     registerTemplates(...newTemplates: Template<ItemType, TemplateContent>[]) {
       newTemplates.forEach((template) => {
-        validateTemplate(template);
         const templatesWithDefault = {
-          ...template,
-          priority: template.priority || 0,
+          ...(validateTemplate(template) as Required<
+            Template<ItemType, TemplateContent>
+          >),
           fields: template.fields || [],
         };
         templates.push(templatesWithDefault);
