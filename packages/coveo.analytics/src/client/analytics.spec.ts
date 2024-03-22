@@ -11,10 +11,11 @@ import {IAnalyticsRequestOptions} from './analyticsRequestClient';
 import {CookieAndLocalStorage, CookieStorage, NullStorage} from '../storage';
 import HistoryStore from '../history';
 import {mockFetch} from '../../tests/fetchMock';
-import {BrowserRuntime} from './runtimeEnvironment';
+import {BrowserRuntime, NoopRuntime} from './runtimeEnvironment';
 import * as doNotTrack from '../donottrack';
 import {Cookie} from '../cookieutils';
 import {CoveoLinkParam} from '../plugins/link';
+import {NoopAnalytics} from './noopAnalytics';
 
 const aVisitorId = '123';
 jest.mock('uuid', () => ({
@@ -663,7 +664,7 @@ describe('doNotTrack', () => {
 
         let client = new CoveoAnalyticsClient({});
 
-        expect(client.runtime).toBeInstanceOf(BrowserRuntime);
+        expect(client.runtime).toBeInstanceOf(NoopRuntime);
         expect(client.runtime.storage).toBeInstanceOf(NullStorage);
     });
 

@@ -182,9 +182,10 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
             preprocessRequest: this.options.preprocessRequest,
         };
 
-        this.runtime = this.options.runtimeEnvironment || this.initRuntime(clientsOptions);
         if (doNotTrack()) {
-            this.runtime.storage = new NullStorage();
+            this.runtime = new NoopRuntime();
+        } else {
+            this.runtime = this.options.runtimeEnvironment || this.initRuntime(clientsOptions);
         }
 
         this.addEventTypeMapping(EventType.view, {newEventType: EventType.view, addClientIdParameter: true});
