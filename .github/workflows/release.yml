@@ -97,6 +97,8 @@ jobs:
   #         SFDX_AUTH_JWT_KEY_FILE: server.key
   #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   #       working-directory: ./packages/quantic
+
+  # TODO KIT-3074 Fix the publication into the GitHub Packages, and uncomment
   # github-prod:
   #   needs: release
   #   runs-on: ubuntu-latest
