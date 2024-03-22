@@ -143,6 +143,11 @@ export const registerFieldsToIncludeInCitations = createAction(
   (payload: string[]) => validatePayload<string[]>(payload, nonEmptyStringArray)
 );
 
+export const setIsAnswerGenerated = createAction(
+  'generatedAnswer/setIsAnswerGenerated',
+  (payload: boolean) => validatePayload(payload, booleanValue)
+);
+
 interface StreamAnswerArgs {
   setAbortControllerRef: (ref: AbortController) => void;
 }
@@ -178,6 +183,12 @@ export const streamAnswer = createAsyncThunk<
         break;
       case 'genqa.endOfStreamType':
         dispatch(setIsStreaming(false));
+        dispatch(
+          setIsAnswerGenerated(
+            (JSON.parse(payload) as GeneratedAnswerEndOfStreamPayload)
+              .answerGenerated
+          )
+        );
         dispatch(
           logGeneratedAnswerStreamEnd(
             (JSON.parse(payload) as GeneratedAnswerEndOfStreamPayload)
