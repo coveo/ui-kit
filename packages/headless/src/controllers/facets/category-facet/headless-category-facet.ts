@@ -1,6 +1,7 @@
 import {configuration} from '../../../app/common-reducers';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {categoryFacetSetReducer as categoryFacetSet} from '../../../features/facets/category-facet-set/category-facet-set-slice';
+import {getToggleSelectAnalyticsAction} from '../../../features/facets/category-facet-set/category-facet-utils';
 import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
 import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response';
 import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
@@ -13,11 +14,10 @@ import {
   logFacetSelect,
   facetUpdateSort,
   facetClearAll,
-  facetDeselect,
-  facetSelect,
+  facetShowMore,
+  facetShowLess,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {
-  SearchAction,
   executeSearch,
   fetchFacetValues,
 } from '../../../features/search/search-actions';
@@ -125,12 +125,22 @@ export function buildCategoryFacet(
 
     showMoreValues() {
       coreController.showMoreValues();
-      dispatch(fetchFacetValues({legacy: logFacetShowMore(getFacetId())}));
+      dispatch(
+        fetchFacetValues({
+          legacy: logFacetShowMore(getFacetId()),
+          next: facetShowMore(),
+        })
+      );
     },
 
     showLessValues() {
       coreController.showLessValues();
-      dispatch(fetchFacetValues({legacy: logFacetShowLess(getFacetId())}));
+      dispatch(
+        fetchFacetValues({
+          legacy: logFacetShowLess(getFacetId()),
+          next: facetShowLess(),
+        })
+      );
     },
 
     get state() {
@@ -170,11 +180,4 @@ function getLegacyToggleSelectAnalyticsAction(
 
   const isSelected = selection.state === 'selected';
   return isSelected ? logFacetDeselect(payload) : logFacetSelect(payload);
-}
-
-function getToggleSelectAnalyticsAction(
-  selection: CategoryFacetValue
-): SearchAction {
-  const isSelected = selection.state === 'selected';
-  return isSelected ? facetDeselect() : facetSelect();
 }

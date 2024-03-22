@@ -1,5 +1,10 @@
 import {InsightEngine} from '../../../../app/insight-engine/insight-engine';
+import {getToggleSelectAnalyticsAction} from '../../../../features/facets/category-facet-set/category-facet-utils';
 import {CategoryFacetSortCriterion} from '../../../../features/facets/category-facet-set/interfaces/request';
+import {
+  facetClearAll,
+  facetUpdateSort,
+} from '../../../../features/facets/facet-set/facet-set-analytics-actions';
 import {
   logFacetClearAll,
   logFacetDeselect,
@@ -92,12 +97,22 @@ export function buildCategoryFacet(
         getFacetId(),
         selection
       );
-      dispatch(executeSearch({legacy: analyticsAction}));
+      dispatch(
+        executeSearch({
+          legacy: analyticsAction,
+          next: getToggleSelectAnalyticsAction(selection),
+        })
+      );
     },
 
     deselectAll() {
       coreController.deselectAll();
-      dispatch(executeSearch({legacy: logFacetClearAll(getFacetId())}));
+      dispatch(
+        executeSearch({
+          legacy: logFacetClearAll(getFacetId()),
+          next: facetClearAll(),
+        })
+      );
     },
 
     sortBy(criterion: CategoryFacetSortCriterion) {
@@ -108,6 +123,7 @@ export function buildCategoryFacet(
             facetId: getFacetId(),
             sortCriterion: criterion,
           }),
+          next: facetUpdateSort(),
         })
       );
     },
