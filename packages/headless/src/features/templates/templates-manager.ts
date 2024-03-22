@@ -19,8 +19,8 @@ export interface Template<ItemType, Content = unknown> {
    */
   conditions: TemplateCondition<ItemType>[];
   /**
-   * A value which the manager will fallback to when multiple templates' conditions are fulfilled.
-   * Templates with higher priority values will be selected over others. The minimum value is `0`.
+   * A value which the manager will use to determine which template to select when an item satisfies the conditions of more than one template.
+   * Templates with higher priority values will be selected over others. The minimum and default value is `0`.
    */
   priority?: number;
   /**
@@ -63,7 +63,7 @@ export function buildTemplatesManager<
 
       if (!areConditionsValid) {
         throw new SchemaValidationError(
-          'Each product template conditions should be a function that takes a result as an argument and returns a boolean'
+          'Each template condition should be a function that takes a Result or Product as an argument and returns a boolean'
         );
       }
     });
