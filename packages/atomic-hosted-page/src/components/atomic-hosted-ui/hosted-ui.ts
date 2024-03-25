@@ -11,7 +11,6 @@ interface HostedPage {
    * The CSS resources appended to the header, pertaining to a specific hosted page in the target Coveo Cloud organization.
    */
   css?: HostedPageCSS[];
-  w;
 }
 
 type HostedPageCSS = HostedPageCssInlineFile | HostedPageCssUrlFile;
@@ -59,6 +58,11 @@ function insertJS(file: HostedPageJavascriptFile) {
   const script = document.createElement('script');
   if (file.isModule) {
     script.type = 'module';
+  }
+
+  if (file.url && file.inlineContent) {
+    console.error('Both url and inlineContent are defined in the same file.');
+    return;
   }
 
   if (file.url) {
