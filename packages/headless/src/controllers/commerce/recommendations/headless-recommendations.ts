@@ -1,3 +1,4 @@
+import {Schema} from '@coveo/bueno';
 import {createSelector} from '@reduxjs/toolkit';
 import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
 import {ProductRecommendation} from '../../../api/search/search/product-recommendation';
@@ -7,12 +8,14 @@ import {
 } from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
+import {recommendationSlotDefinition} from '../../../features/commerce/recommendation/recommendation';
 import {
   fetchRecommendations,
   updateRecommendationSlotId,
 } from '../../../features/commerce/recommendation/recommendation-actions';
 import {recommendationV2Reducer as recommendation} from '../../../features/commerce/recommendation/recommendation-slice';
 import {loadReducerError} from '../../../utils/errors';
+import {validateInitialState} from '../../../utils/validate-payload';
 import {
   buildController,
   Controller,
@@ -51,6 +54,20 @@ interface RecommendationsProps {
   options: RecommendationsOptions;
 }
 
+function validateRecommendationInitialState(
+  engine: CommerceEngine,
+  state: RecommendationsOptions
+) {
+  if (!state) {
+    return;
+  }
+
+  const schema = new Schema<RecommendationsOptions>({
+    slotId: recommendationSlotDefinition,
+  });
+
+  validateInitialState(engine, schema, state, 'buildRecommendations');
+}
 /**
  * Creates a `Recommendation` controller instance.
  *
@@ -67,6 +84,8 @@ export function buildRecommendations(
 
   const controller = buildController(engine);
   const {dispatch} = engine;
+
+  validateRecommendationInitialState(engine, props.options);
   dispatch(updateRecommendationSlotId({slotId: props.options.slotId}));
 
   const recommendationStateSelector = createSelector(
