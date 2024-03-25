@@ -1,5 +1,5 @@
 import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
-import {ProductRecommendation} from '../../../api/search/search/product-recommendation';
+import {Product} from '../../../api/commerce/common/product';
 
 export interface RecommendationState {
   slotId: string;
@@ -8,7 +8,7 @@ export interface RecommendationState {
   isLoading: boolean;
   requestId: string;
   responseId: string;
-  products: ProductRecommendation[];
+  products: Product[];
 }
 
 export const getRecommendationV2InitialState = (): RecommendationState => ({
