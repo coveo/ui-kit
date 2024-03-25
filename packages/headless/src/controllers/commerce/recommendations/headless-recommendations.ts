@@ -1,7 +1,7 @@
 import {Schema} from '@coveo/bueno';
 import {createSelector} from '@reduxjs/toolkit';
 import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
-import {ProductRecommendation} from '../../../api/search/search/product-recommendation';
+import {Product} from '../../../api/commerce/common/product';
 import {
   CommerceEngine,
   CommerceEngineState,
@@ -38,7 +38,7 @@ export interface Recommendation extends Controller {
 
 export interface RecommendationState {
   headline: string;
-  products: ProductRecommendation[];
+  products: Product[];
   error: CommerceAPIErrorStatusResponse | null;
   isLoading: boolean;
   responseId: string;
