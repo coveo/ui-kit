@@ -1,7 +1,7 @@
 import {RecommendationCommerceSuccessResponse} from '../api/commerce/common/response';
 import {QueryRecommendationCommerceAPIThunkReturn} from '../features/commerce/common/actions';
 
-export function buildFetchRecommendationV2Response(
+export function buildMockRecommendationV2Response(
   response: Partial<RecommendationCommerceSuccessResponse> = {}
 ): QueryRecommendationCommerceAPIThunkReturn {
   return {

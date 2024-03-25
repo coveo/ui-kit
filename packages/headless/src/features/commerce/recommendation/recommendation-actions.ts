@@ -9,7 +9,7 @@ import {
   StateNeededByQueryCommerceAPI,
 } from '../common/actions';
 
-export const fetchRecommendation = createAsyncThunk<
+export const fetchRecommendations = createAsyncThunk<
   QueryRecommendationCommerceAPIThunkReturn,
   void,
   AsyncThunkCommerceOptions<StateNeededByQueryCommerceAPI>

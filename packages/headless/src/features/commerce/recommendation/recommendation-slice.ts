@@ -1,6 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {
-  fetchRecommendation,
+  fetchRecommendations,
   updateRecommendationSlotId,
 } from './recommendation-actions';
 import {getRecommendationV2InitialState} from './recommendation-state';
@@ -13,18 +13,18 @@ export const recommendationV2Reducer = createReducer(
       .addCase(updateRecommendationSlotId, (state, action) => {
         state.slotId = action.payload.slotId;
       })
-      .addCase(fetchRecommendation.rejected, (state, action) => {
+      .addCase(fetchRecommendations.rejected, (state, action) => {
         state.error = action.payload ? action.payload : null;
         state.isLoading = false;
       })
-      .addCase(fetchRecommendation.fulfilled, (state, action) => {
+      .addCase(fetchRecommendations.fulfilled, (state, action) => {
         state.error = null;
         state.headline = action.payload.response.headline;
         state.products = action.payload.response.products;
         state.responseId = action.payload.response.responseId;
         state.isLoading = false;
       })
-      .addCase(fetchRecommendation.pending, (state, action) => {
+      .addCase(fetchRecommendations.pending, (state, action) => {
         state.isLoading = true;
         state.requestId = action.meta.requestId;
       });

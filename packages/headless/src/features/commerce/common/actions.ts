@@ -1,13 +1,11 @@
 import {getVisitorID} from '../../../api/analytics/coveo-analytics-utils';
 import {SortParam} from '../../../api/commerce/commerce-api-params';
-import {
-  CommerceAPIRequest,
-  RecommendationCommerceAPIRequest,
-} from '../../../api/commerce/common/request';
+import {CommerceAPIRequest} from '../../../api/commerce/common/request';
 import {
   RecommendationCommerceSuccessResponse,
   CommerceSuccessResponse,
 } from '../../../api/commerce/common/response';
+import {CommerceRecommendationRequest} from '../../../api/commerce/recommendation/recommendation-request';
 import {
   CartSection,
   CategoryFacetSection,
@@ -82,7 +80,7 @@ export const buildCommerceAPIRequest = async (
 export const buildRecommendationCommerceAPIRequest = async (
   slotId: string,
   state: StateNeededByQueryCommerceAPI
-): Promise<RecommendationCommerceAPIRequest> => {
+): Promise<CommerceRecommendationRequest> => {
   const {view, user, ...restOfContext} = state.commerceContext;
   return {
     accessToken: state.configuration.accessToken,

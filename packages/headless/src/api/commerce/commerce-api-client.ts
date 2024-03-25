@@ -9,17 +9,16 @@ import {
   CommerceAPIErrorResponse,
   CommerceAPIErrorStatusResponse,
 } from './commerce-api-error-response';
-import {
-  buildRequest,
-  buildRecommendationRequest,
-  CommerceAPIRequest,
-  RecommendationCommerceAPIRequest,
-} from './common/request';
+import {buildRequest, CommerceAPIRequest} from './common/request';
 import {
   RecommendationCommerceSuccessResponse,
   CommerceSuccessResponse,
 } from './common/response';
 import {CommerceFacetSearchRequest} from './facet-search/facet-search-request';
+import {
+  CommerceRecommendationRequest,
+  buildRecommendationRequest,
+} from './recommendation/recommendation-request';
 import {
   buildQuerySuggestRequest,
   QuerySuggestRequest,
@@ -73,7 +72,7 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
   }
 
   async getRecommendation(
-    req: RecommendationCommerceAPIRequest
+    req: CommerceRecommendationRequest
   ): Promise<CommerceAPIResponse<RecommendationCommerceSuccessResponse>> {
     return this.query({
       ...buildRecommendationRequest(req, 'recommendations'),
