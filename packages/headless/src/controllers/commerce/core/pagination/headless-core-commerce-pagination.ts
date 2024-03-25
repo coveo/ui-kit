@@ -1,4 +1,3 @@
-import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {
   nextPage,
@@ -11,6 +10,7 @@ import {
   Controller,
   buildController,
 } from '../../../controller/headless-controller';
+import {FetchResultsActionCreator} from '../common';
 
 /**
  * The `Pagination` controller is responsible for navigating between pages of results in a commerce interface.
@@ -49,8 +49,7 @@ export interface PaginationState {
 export type PaginationControllerState = Pagination['state'];
 
 export interface CorePaginationProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  fetchResultsActionCreator: () => AsyncThunkAction<unknown, void, any>;
+  fetchResultsActionCreator: FetchResultsActionCreator;
 }
 
 /**
