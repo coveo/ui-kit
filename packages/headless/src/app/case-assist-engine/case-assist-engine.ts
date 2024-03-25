@@ -72,7 +72,7 @@ export function buildCaseAssistEngine(
     logger
   );
 
-  const thunkArguments: CaseAssistThunkExtraArguments = {
+  const thunkArguments = {
     ...buildThunkExtraArguments(options.configuration, logger),
     apiClient: caseAssistAPIClient,
   };

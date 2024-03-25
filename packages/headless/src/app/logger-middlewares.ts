@@ -1,24 +1,35 @@
-import {Middleware, SerializedError} from '@reduxjs/toolkit';
+import {
+  Action,
+  Middleware,
+  SerializedError,
+  UnknownAction,
+} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
+
+type UnknownActionWithPossibleErrorPayload = UnknownAction & {
+  payload?: {ignored?: boolean};
+  error?: SerializedError;
+};
 
 export const logActionErrorMiddleware: (logger: Logger) => Middleware =
   (logger) => () => (next) => (action) => {
-    if (!action.error) {
+    const unknownAction = action as UnknownActionWithPossibleErrorPayload;
+    if (!unknownAction.error) {
       return next(action);
     }
 
-    const error: SerializedError = action.error;
+    const error: SerializedError = unknownAction.error;
 
-    if (!action.payload?.ignored) {
+    if (!unknownAction.payload?.ignored) {
       logger.error(
         error.stack || error.message || error.name || 'Error',
-        `Action dispatch error ${action.type}`,
+        `Action dispatch error ${unknownAction.type}`,
         action
       );
     }
 
     // Validation errors should prevent further dispatching
-    if (action.error.name === 'SchemaValidationError') {
+    if (unknownAction.error.name === 'SchemaValidationError') {
       return;
     }
 
@@ -32,7 +43,7 @@ export const logActionMiddleware: (logger: Logger) => Middleware =
         action,
         nextState: api.getState(),
       },
-      `Action dispatched: ${action.type}`
+      `Action dispatched: ${(action as Action).type}`
     );
 
     return next(action);

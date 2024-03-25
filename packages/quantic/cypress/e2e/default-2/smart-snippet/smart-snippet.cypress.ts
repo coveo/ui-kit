@@ -25,9 +25,9 @@ const exampleSmartSnippetSourceUri = inactiveLink;
 const exampleSmartSnippetSourceTitle = 'Example result title';
 const examplePermanentId = '123';
 const exampleInlineLinkText = 'Example inline link';
-const exampleInlineLinkUrl =
-  'https://saas-inspiration-5437-dev-ed.scratch.my.site.com/examples/s/';
-const exampleSmartSnippetAnswer = `<div data-cy="smart-snippet__inline-link"><p>Example smart snippet answer</p><a href="${exampleInlineLinkUrl}">${exampleInlineLinkText}</a></div>`;
+const exampleInlineLinkUrl = 'https://www.coveo.com/en';
+const exampleAnswerText = 'Example smart snippet answer';
+const exampleSmartSnippetAnswer = `<div data-cy="smart-snippet__inline-link"><p data-cy="answer-text">${exampleAnswerText}</p><a data-cy="answer-inline-link" href="${exampleInlineLinkUrl}">${exampleInlineLinkText}</a></div>`;
 const exampleUriHash = 'exampleUriHash';
 const otherOption = 'other';
 const feedbackOptions = [
@@ -88,7 +88,13 @@ describe('quantic-smart-snippet', {browser: 'chrome'}, () => {
             scope('when loading the page', () => {
               Expect.displaySmartSnippetCard(true);
               Expect.displaySmartSnippetQuestion(exampleSmartSnippetQuestion);
-              Expect.displaySmartSnippetAnswer(exampleSmartSnippetAnswer);
+              Expect.displaySmartSnippetAnswer({
+                text: exampleAnswerText,
+                link: {
+                  text: exampleInlineLinkText,
+                  href: exampleInlineLinkUrl,
+                },
+              });
               Expect.displaySmartSnippetSourceUri(exampleSmartSnippetSourceUri);
               Expect.displaySmartSnippetSourceTitle(
                 exampleSmartSnippetSourceTitle

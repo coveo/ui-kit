@@ -1,26 +1,15 @@
-import {
-  CartItemWithMetadata,
-  CartState,
-} from '../../../../features/commerce/context/cart/cart-state';
+import {createSelector} from '@reduxjs/toolkit';
+import {itemsSelector} from '../../../../features/commerce/context/cart/cart-selector';
+import {CartState} from '../../../../features/commerce/context/cart/cart-state';
 
 export function itemSelector(cartState: CartState, productId: string) {
   return cartState.cart[productId];
 }
 
-export function itemsSelector(cartState: CartState): CartItemWithMetadata[] {
-  const {cart, cartItems} = cartState;
+export const totalQuantitySelector = createSelector(itemsSelector, (items) =>
+  items.reduce((prev, cur) => prev + cur.quantity, 0)
+);
 
-  return cartItems.map((id: string) => cart[id]);
-}
-
-export function totalQuantitySelector(cartState: CartState): number {
-  const items = itemsSelector(cartState);
-
-  return items.reduce((prev, cur) => prev + cur.quantity, 0);
-}
-
-export function totalPriceSelector(cartState: CartState): number {
-  const items = itemsSelector(cartState);
-
-  return items.reduce((prev, cur) => prev + cur.price * cur.quantity, 0);
-}
+export const totalPriceSelector = createSelector(itemsSelector, (items) =>
+  items.reduce((prev, cur) => prev + cur.price * cur.quantity, 0)
+);

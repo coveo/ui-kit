@@ -14,6 +14,7 @@ import {
   InsightSearchStatus,
   InsightSearchStatusState,
   loadInsightDateFacetSetActions,
+  InsightRangeFacetSortCriterion,
 } from '..';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {
@@ -121,6 +122,13 @@ export class AtomicInsightTimeframeFacet
    */
   @MapProp() @Prop() public dependsOn: Record<string, string> = {};
 
+  /**
+   * The sort criterion to apply to the returned facet values.
+   * Possible values are 'ascending' and 'descending'.
+   */
+  @Prop({reflect: true}) public sortCriteria: InsightRangeFacetSortCriterion =
+    'descending';
+
   private headerFocus?: FocusTargetController;
 
   public initialize() {
@@ -147,6 +155,7 @@ export class AtomicInsightTimeframeFacet
       initializeFacetForDateRange: (values: InsightDateRangeRequest[]) =>
         this.initializeFacetForDateRange(values),
       initializeFilter: () => this.initializeFilter(),
+      sortCriteria: this.sortCriteria,
     });
     this.searchStatus = buildInsightSearchStatus(this.bindings.engine);
   }

@@ -10,6 +10,7 @@ import {
   DateFilterState,
   DateRangeRequest,
   deserializeRelativeDate,
+  RangeFacetSortCriterion,
   loadDateFacetSetActions,
   SearchStatus,
   SearchStatusState,
@@ -161,6 +162,13 @@ export class AtomicTimeframeFacet
    */
   @Prop({reflect: true}) public max?: string;
 
+  /**
+   * The sort criterion to apply to the returned facet values.
+   * Possible values are 'ascending' and 'descending'.
+   */
+  @Prop({reflect: true}) public sortCriteria: RangeFacetSortCriterion =
+    'descending';
+
   private headerFocus?: FocusTargetController;
 
   private get focusTarget(): FocusTargetController {
@@ -196,6 +204,7 @@ export class AtomicTimeframeFacet
       initializeFilter: () => this.initializeFilter(),
       min: this.min,
       max: this.max,
+      sortCriteria: this.sortCriteria,
     });
     this.searchStatus = buildSearchStatus(this.bindings.engine);
   }
@@ -225,7 +234,7 @@ export class AtomicTimeframeFacet
         field: this.field,
         currentValues: values,
         generateAutomaticRanges: false,
-        sortCriteria: 'descending',
+        sortCriteria: this.sortCriteria,
         filterFacetCount: this.filterFacetCount,
         injectionDepth: this.injectionDepth,
       },

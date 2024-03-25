@@ -1,10 +1,10 @@
+import {itemsSelector} from '../../../../features/commerce/context/cart/cart-selector';
 import {
   CartState,
   getCartInitialState,
 } from '../../../../features/commerce/context/cart/cart-state';
 import {
   itemSelector,
-  itemsSelector,
   totalQuantitySelector,
   totalPriceSelector,
 } from './headless-cart-selectors';

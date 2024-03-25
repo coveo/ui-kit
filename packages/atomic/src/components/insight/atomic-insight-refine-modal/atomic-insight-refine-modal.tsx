@@ -108,9 +108,6 @@ export class AtomicInsightRefineModal
   private renderHeader() {
     return (
       <div class="w-full flex justify-between mb-3">
-        <h2 class="text-2xl font-bold truncate">
-          {this.bindings.i18n.t('filters')}
-        </h2>
         {this.breadcrumbManagerState.hasBreadcrumbs && (
           <Button
             onClick={() => this.breadcrumbManager.deselectAll()}

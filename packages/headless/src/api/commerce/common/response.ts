@@ -3,13 +3,13 @@ import {
   SearchAPIErrorWithExceptionInBody,
   SearchAPIErrorWithStatusCode,
 } from '../../search/search-api-error-response';
-import {ProductRecommendation} from '../../search/search/product-recommendation';
 import {Pagination} from './pagination';
+import {Product} from './product';
 import {Sort} from './sort';
 
 export interface CommerceSuccessResponse {
   responseId: string;
-  products: ProductRecommendation[];
+  products: Product[];
   facets: AnyFacetResponse[];
   pagination: Pagination;
   sort: Sort;

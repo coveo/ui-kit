@@ -31,16 +31,22 @@ function smartSnippetExpectations(selector: SmartSnippetSelector) {
         .logDetail('should display the correct smart snippet question');
     },
 
-    displaySmartSnippetAnswer: (value: string) => {
+    displaySmartSnippetAnswer: (answer: {
+      text: string;
+      link: {text: string; href: string};
+    }) => {
       selector
         .smartSnippetAnswer()
         .then((elem) => {
-          // we need to remove unnecessary attributes automatically added to LWCs.
-          const cleanHTML = elem[0].innerHTML.replaceAll(
-            ' c-quanticsmartsnippetanswer_quanticsmartsnippetanswer=""',
-            ''
+          const linkElement: HTMLAnchorElement | null = elem[0].querySelector(
+            '[data-cy="answer-inline-link"]'
           );
-          expect(cleanHTML).to.eq(value);
+          const textElement = elem[0].querySelector('[data-cy="answer-text"]');
+
+          expect(textElement?.textContent).to.equal(answer.text);
+          expect(linkElement?.target).to.equal('_blank');
+          expect(linkElement?.textContent).to.equal(answer.link.text);
+          expect(linkElement?.href).to.equal(answer.link.href);
         })
         .logDetail('should display the correct smart snippet answer');
     },

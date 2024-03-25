@@ -32,13 +32,15 @@ describe.skip('commerce', () => {
         organizationEndpoints: {
           ...getOrganizationEndpoints(organizationId, 'dev'),
         },
+        analytics: {
+          trackingId: 'barca',
+        },
       },
       loggerOptions: {level: 'silent'},
     });
 
     buildContext(engine, {
       options: {
-        trackingId: 'barca',
         language: 'en-gb',
         country: 'gb',
         currency: 'GBP',

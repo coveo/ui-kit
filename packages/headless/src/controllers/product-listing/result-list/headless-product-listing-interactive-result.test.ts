@@ -1,6 +1,5 @@
 import {configuration} from '../../../app/common-reducers';
 import {logProductRecommendationOpen} from '../../../features/product-listing/product-listing-analytics';
-import {pushRecentResult} from '../../../features/product-listing/product-listing-recent-results';
 import {
   MockedProductListingEngine,
   buildMockProductListingEngine,
@@ -14,7 +13,6 @@ import {
 } from './headless-product-listing-interactive-result';
 
 jest.mock('../../../features/product-listing/product-listing-analytics');
-jest.mock('../../../features/product-listing/product-listing-recent-results');
 
 describe('InteractiveResult', () => {
   let engine: MockedProductListingEngine;
@@ -53,12 +51,6 @@ describe('InteractiveResult', () => {
 
   it('it adds the correct reducers to engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({configuration});
-  });
-
-  it('when calling select() should add the result to recent results list', () => {
-    interactiveResult.select();
-    jest.runAllTimers();
-    expect(pushRecentResult).toHaveBeenCalled();
   });
 
   it('when calling select(), logs documentOpen', () => {

@@ -14,18 +14,21 @@ function smartSnippetActions(selector: SmartSnippetSelector) {
     clickSmartSnippetSourceTitle: () =>
       selector
         .smartSnippetSourceTitle()
+        .invoke('removeAttr', 'target') // Otherwise opens a new tab that messes with the tests
         .click()
         .logAction('When clicking on the smart snippet source title'),
 
     clickSmartSnippetSourceUri: () =>
       selector
         .smartSnippetSourceUri()
+        .invoke('removeAttr', 'target') // Otherwise opens a new tab that messes with the tests
         .click()
         .logAction('When clicking on the smart snippet source uri'),
 
     clickSmartSnippetInlineLink: () =>
       selector
         .smartSnippetInlineLink()
+        .invoke('removeAttr', 'target') // Otherwise opens a new tab that messes with the tests
         .click()
         .logAction(
           'When clicking on an inline link within the smart snippet answer'

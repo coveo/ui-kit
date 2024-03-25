@@ -1,4 +1,5 @@
-import {setItems, updateItem} from './cart-actions';
+import {createAction} from '@reduxjs/toolkit';
+import {purchase, setItems, updateItem} from './cart-actions';
 import {cartReducer} from './cart-slice';
 import {
   CartItemWithMetadata,
@@ -40,6 +41,24 @@ describe('cart-slice', () => {
       [someItem.productId]: someItem,
       [secondItem.productId]: secondItem,
     });
+  });
+
+  it('#purchase.fulfilled replaces current cart state with empty state', async () => {
+    const secondItem: CartItemWithMetadata = {
+      productId: 'product-id-2',
+      quantity: 20,
+      name: 'product 2',
+      price: 100,
+    };
+    state.cartItems = [someItem.productId, secondItem.productId];
+    state.cart = {
+      [someItem.productId]: someItem,
+      [secondItem.productId]: secondItem,
+    };
+    const fakePurchaseAction = createAction(purchase.fulfilled.type);
+    const updatedState = cartReducer(state, fakePurchaseAction());
+    expect(updatedState.cartItems).toEqual([]);
+    expect(updatedState.cart).toEqual({});
   });
 
   describe('#updateItem', () => {

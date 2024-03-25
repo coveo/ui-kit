@@ -1,12 +1,12 @@
 import {ArrayValue, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {getVisitorID} from '../../api/analytics/coveo-analytics-utils';
+import {isErrorResponse} from '../../api/commerce/commerce-api-client';
 import {AsyncThunkProductListingOptions} from '../../api/commerce/product-listings/product-listing-api-client';
 import {
   ProductListingRequest,
   ProductListingSuccessResponse,
 } from '../../api/commerce/product-listings/product-listing-request';
-import {isErrorResponse} from '../../api/search/search-api-client';
 import {
   CategoryFacetSection,
   ConfigurationSection,

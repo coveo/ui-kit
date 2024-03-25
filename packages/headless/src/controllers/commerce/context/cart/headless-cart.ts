@@ -1,9 +1,14 @@
 import {CurrencyCodeISO4217, Ec} from '@coveo/relay-event-types';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {
+  purchase,
   setItems,
   updateItem,
 } from '../../../../features/commerce/context/cart/cart-actions';
+import {
+  Transaction,
+  itemsSelector,
+} from '../../../../features/commerce/context/cart/cart-selector';
 import {cartReducer as cart} from '../../../../features/commerce/context/cart/cart-slice';
 import {CartItemWithMetadata} from '../../../../features/commerce/context/cart/cart-state';
 import {cartSchema} from '../../../../features/commerce/context/cart/cart-validation';
@@ -15,7 +20,6 @@ import {
 } from '../../../controller/headless-controller';
 import {
   itemSelector,
-  itemsSelector,
   totalPriceSelector,
   totalQuantitySelector,
 } from './headless-cart-selectors';
@@ -90,10 +94,9 @@ export interface Cart extends Controller {
   /**
    * Emits an `ec.purchase` analytics event and then empties the cart without emitting any additional events.
    *
-   * @param transactionId - The transaction ID.
-   * @param transactionRevenue - The total revenue from the transaction, including taxes, shipping, and discounts.
+   * @param transaction - The object with the id and the total revenue from the transaction, including taxes, shipping, and discounts.
    */
-  purchase(transactionId: string, transactionRevenue: number): void;
+  purchase(transaction: Transaction): void;
 
   /**
    * A scoped and simplified part of the headless state that is relevant to the `Cart` controller.
@@ -207,9 +210,8 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
       }
     },
 
-    purchase(_transactionId: string, _transactionRevenue: number) {
-      // TODO LENS-1498: log ec.purchase with all products in cart.
-      dispatch(setItems([]));
+    purchase(transaction: Transaction) {
+      dispatch(purchase(transaction));
     },
 
     updateItem(item: CartItem) {

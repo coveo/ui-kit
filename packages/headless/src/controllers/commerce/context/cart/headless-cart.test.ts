@@ -1,7 +1,9 @@
 import {
+  purchase,
   setItems,
   updateItem,
 } from '../../../../features/commerce/context/cart/cart-actions';
+import {itemsSelector} from '../../../../features/commerce/context/cart/cart-selector';
 import {cartReducer} from '../../../../features/commerce/context/cart/cart-slice';
 import {CartItemWithMetadata} from '../../../../features/commerce/context/cart/cart-state';
 import {getContextInitialState} from '../../../../features/commerce/context/context-state';
@@ -13,12 +15,12 @@ import {
 import {buildCart, Cart, CartInitialState} from './headless-cart';
 import {
   itemSelector,
-  itemsSelector,
   totalPriceSelector,
   totalQuantitySelector,
 } from './headless-cart-selectors';
 
 jest.mock('../../../../features/commerce/context/cart/cart-actions');
+jest.mock('../../../../features/commerce/context/cart/cart-selector');
 jest.mock('./headless-cart-selectors');
 
 describe('headless commerce cart', () => {
@@ -105,14 +107,25 @@ describe('headless commerce cart', () => {
   });
 
   describe('#purchase', () => {
-    // TODO LENS-1498: it('logs #ec.purchase with correct payload', () => { /* ... */ });
+    beforeEach(() => {
+      initEngine({
+        ...buildMockCommerceState(),
+        commerceContext: {...getContextInitialState(), currency: 'USD'},
+      });
+      initCart();
+    });
 
-    it('dispatches #setItems with empty array', () => {
-      const mockedSetItems = jest.mocked(setItems);
+    afterEach(() => {
+      jest.resetAllMocks();
+    });
 
-      cart.purchase('', 0);
+    it('dispatches #purchase with the transaction payload', () => {
+      jest.mocked(itemsSelector).mockReturnValue([]);
+      const mockedPurchase = jest.mocked(purchase);
+      const transaction = {id: 'transaction-id', revenue: 0};
+      cart.purchase(transaction);
 
-      expect(mockedSetItems).toHaveBeenCalledWith([]);
+      expect(mockedPurchase).toHaveBeenCalledWith(transaction);
     });
   });
 

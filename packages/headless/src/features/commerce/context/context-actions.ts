@@ -16,7 +16,6 @@ import {
 } from './context-validation';
 
 export interface SetContextPayload {
-  trackingId: string;
   language: string;
   country: string;
   currency: CurrencyCodeISO4217;

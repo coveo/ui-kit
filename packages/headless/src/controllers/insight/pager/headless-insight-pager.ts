@@ -39,17 +39,17 @@ export function buildPager(
 
     selectPage(page: number) {
       pager.selectPage(page);
-      dispatch(fetchPage(logPageNumber()));
+      dispatch(fetchPage({legacy: logPageNumber()}));
     },
 
     nextPage() {
       pager.nextPage();
-      dispatch(fetchPage(logPageNext()));
+      dispatch(fetchPage({legacy: logPageNext()}));
     },
 
     previousPage() {
       pager.previousPage();
-      dispatch(fetchPage(logPagePrevious()));
+      dispatch(fetchPage({legacy: logPagePrevious()}));
     },
   };
 }

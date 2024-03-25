@@ -45,7 +45,7 @@ export const loadCollection = createAsyncThunk<
     {getState, rejectWithValue, extra: {apiClient}}
   ) => {
     const state = getState();
-    const actualRequest = buildInsightLoadCollectionRequest(
+    const actualRequest = await buildInsightLoadCollectionRequest(
       state,
       collectionId
     );

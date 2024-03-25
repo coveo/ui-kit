@@ -14,12 +14,7 @@ module.exports = {
     },
   },
   rules: {
-    'node/no-unpublished-import': [
-      'error',
-      {
-        allowModules: ['redux-mock-store'],
-      },
-    ],
+    'node/no-unpublished-import': ['error'],
     '@typescript-eslint/no-namespace': 'off',
     curly: ['error'],
     'canonical/no-barrel-import': 'error',

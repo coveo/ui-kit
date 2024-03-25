@@ -105,9 +105,7 @@ describe('InitializeBindings decorator', () => {
     it(`when "engine" is defined
     should render the content `, () => {
       component['bindings'] = {
-        engine: TestUtils.buildMockSearchAppEngine({
-          state: TestUtils.createMockState(),
-        }),
+        engine: TestUtils.buildMockSearchEngine(TestUtils.createMockState()),
         i18n: i18next,
         store: createAtomicStore(),
         interfaceElement: document.createElement('atomic-search-interface'),
@@ -127,9 +125,7 @@ describe('BindStateToController decorator', () => {
     console.error = jest.fn();
     component = {
       bindings: {
-        engine: TestUtils.buildMockSearchAppEngine({
-          state: TestUtils.createMockState(),
-        }),
+        engine: TestUtils.buildMockSearchEngine(TestUtils.createMockState()),
         i18n: i18next,
         store: createAtomicStore(),
         interfaceElement: document.createElement('atomic-search-interface'),

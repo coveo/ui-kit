@@ -15,7 +15,6 @@ import {
 } from '../../controller/headless-controller';
 
 export interface ContextOptions {
-  trackingId: string;
   language: string;
   country: string;
   currency: CurrencyCodeISO4217;
@@ -53,12 +52,6 @@ export interface ContextProps {
  */
 export interface Context extends Controller {
   /**
-   * Sets the tracking ID.
-   * @param trackingId - The new tracking ID.
-   */
-  setTrackingId(trackingId: string): void;
-
-  /**
    * Sets the language.
    * @param language - The new language.
    */
@@ -95,7 +88,6 @@ export interface Context extends Controller {
 }
 
 export interface ContextState {
-  trackingId: string;
   language: string;
   country: string;
   currency: CurrencyCodeISO4217;
@@ -142,14 +134,6 @@ export function buildContext(
     get state() {
       return getState().commerceContext;
     },
-
-    setTrackingId: (trackingId: string) =>
-      dispatch(
-        setContext({
-          ...getState().commerceContext,
-          trackingId,
-        })
-      ),
 
     setLanguage: (language: string) =>
       dispatch(

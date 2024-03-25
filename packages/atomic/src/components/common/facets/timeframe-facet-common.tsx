@@ -13,6 +13,7 @@ import {
   DateRangeOptions,
   DateRangeRequest,
   FacetConditionsManager,
+  RangeFacetSortCriterion,
   RelativeDate,
   RelativeDatePeriod,
   RelativeDateUnit,
@@ -56,6 +57,7 @@ interface TimeframeFacetCommonOptions {
   initializeFilter(): DateFilter;
   min?: string;
   max?: string;
+  sortCriteria: RangeFacetSortCriterion;
 }
 
 interface TimeframeFacetCommonRenderProps {

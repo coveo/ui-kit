@@ -41,18 +41,18 @@ export function buildNumericFilter(
     ...coreController,
     clear: () => {
       coreController.clear();
-      dispatch(executeSearch(logFacetClearAll(getFacetId())));
+      dispatch(executeSearch({legacy: logFacetClearAll(getFacetId())}));
     },
     setRange: (range) => {
       const success = coreController.setRange(range);
       if (success) {
         dispatch(
-          executeSearch(
-            logFacetSelect({
+          executeSearch({
+            legacy: logFacetSelect({
               facetId: getFacetId(),
               facetValue: `${range.start}..${range.end}`,
-            })
-          )
+            }),
+          })
         );
       }
       return success;

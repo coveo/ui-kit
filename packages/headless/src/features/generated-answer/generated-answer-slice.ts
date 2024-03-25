@@ -16,6 +16,7 @@ import {
   sendGeneratedAnswerFeedback,
   registerFieldsToIncludeInCitations,
   setId,
+  setIsAnswerGenerated,
 } from './generated-answer-actions';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
 
@@ -93,5 +94,8 @@ export const generatedAnswerReducer = createReducer(
         state.fieldsToIncludeInCitations = [
           ...new Set(state.fieldsToIncludeInCitations.concat(action.payload)),
         ];
+      })
+      .addCase(setIsAnswerGenerated, (state, {payload}) => {
+        state.isAnswerGenerated = payload;
       })
 );

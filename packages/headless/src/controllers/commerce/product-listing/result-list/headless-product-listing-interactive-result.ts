@@ -1,7 +1,5 @@
-import {ProductRecommendation} from '../../../../api/search/search/product-recommendation';
+import {Product} from '../../../../api/commerce/common/product';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {logProductRecommendationOpen} from '../../../../features/product-listing/product-listing-analytics';
-import {pushRecentResult} from '../../../../features/product-listing/product-listing-recent-results';
 import {
   buildInteractiveResultCore,
   InteractiveResultCore,
@@ -13,7 +11,7 @@ export interface InteractiveResultOptions extends InteractiveResultCoreOptions {
   /**
    * The product.
    */
-  result: ProductRecommendation;
+  product: Product;
 }
 
 export interface InteractiveResultProps extends InteractiveResultCoreProps {
@@ -46,12 +44,11 @@ export function buildInteractiveResult(
       return;
     }
     wasOpened = true;
-    engine.dispatch(logProductRecommendationOpen(props.options.result));
+    // TODO: Log on click
   };
 
   const action = () => {
     logAnalyticsIfNeverOpened();
-    engine.dispatch(pushRecentResult(props.options.result));
   };
 
   return buildInteractiveResultCore(engine, props, action);

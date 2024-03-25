@@ -10,6 +10,7 @@ function smartSnippetSuggestionsActions(
     clickSmartSnippetSuggestionsSourceTitle: (index: number) =>
       selector
         .smartSnippetSuggestionsSourceTitle(index)
+        .invoke('removeAttr', 'target') // Otherwise opens a new tab that messes with the tests
         .click({force: true})
         .logAction(
           `When clicking the source title of the suggestion at the index ${index}`
@@ -18,6 +19,7 @@ function smartSnippetSuggestionsActions(
     clickSmartSnippetSuggestionsSourceUri: (index: number) =>
       selector
         .smartSnippetSuggestionsSourceUri(index)
+        .invoke('removeAttr', 'target') // Otherwise opens a new tab that messes with the tests
         .click()
         .logAction(
           `When clicking the source uri of the suggestion at the index ${index}`
@@ -26,6 +28,7 @@ function smartSnippetSuggestionsActions(
     clickSmartSnippetSuggestionsInlineLink: (index: number) =>
       selector
         .smartSnippetSuggestionsInlineLink(index)
+        .invoke('removeAttr', 'target') // Otherwise opens a new tab that messes with the tests
         .click()
         .logAction(
           `When clicking an inline link of the suggestion at the index ${index}`

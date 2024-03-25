@@ -4,14 +4,15 @@ import {
   partialDocumentInformation,
   documentIdentifier,
   validateResultPayload,
-  makeInsightAnalyticsAction,
+  makeInsightAnalyticsActionFactory,
   analyticsEventItemMetadata,
 } from '../analytics/analytics-utils';
 import {analyticsEventCaseContext} from '../analytics/insight-analytics-utils';
+import {SearchPageEvents} from '../analytics/search-action-cause';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
 
 export const logDocumentOpen = (result: Result) =>
-  makeInsightAnalyticsAction({
+  makeInsightAnalyticsActionFactory(SearchPageEvents.documentOpen)({
     prefix: 'analytics/insight/result/open',
     __legacy__getBuilder: (client, state) => {
       validateResultPayload(result);

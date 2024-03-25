@@ -19,12 +19,11 @@ export type {
 } from './app/engine-configuration';
 export type {LogLevel, LoggerOptions} from './app/logger';
 
-export type {ProductRecommendation} from './api/search/search/product-recommendation';
+export type {Product} from './api/commerce/common/product';
 
 // Actions
 export * from './features/commerce/product-listing/product-listing-actions-loader';
 export * from './features/configuration/configuration-actions-loader';
-export * from './features/analytics/search-analytics-actions-loader';
 
 // Controllers
 export type {
@@ -65,6 +64,9 @@ export type {
   InteractiveResultProps,
 } from './controllers/commerce/product-listing/result-list/headless-product-listing-interactive-result';
 export {buildInteractiveResult} from './controllers/commerce/product-listing/result-list/headless-product-listing-interactive-result';
+
+export type {ProductView} from './controllers/commerce/product-view/headless-product-view';
+export {buildProductView} from './controllers/commerce/product-view/headless-product-view';
 
 export type {
   CartInitialState,

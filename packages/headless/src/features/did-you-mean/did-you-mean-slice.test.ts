@@ -23,14 +23,14 @@ describe('did you mean slice', () => {
 
   it('should handle enable did you mean', () => {
     state.enableDidYouMean = false;
-    expect(didYouMeanReducer(state, enableDidYouMean).enableDidYouMean).toBe(
+    expect(didYouMeanReducer(state, enableDidYouMean()).enableDidYouMean).toBe(
       true
     );
   });
 
   it('should handle disable did you mean', () => {
     state.enableDidYouMean = true;
-    expect(didYouMeanReducer(state, disableDidYouMean).enableDidYouMean).toBe(
+    expect(didYouMeanReducer(state, disableDidYouMean()).enableDidYouMean).toBe(
       false
     );
   });
@@ -38,15 +38,17 @@ describe('did you mean slice', () => {
   it('should clear query corrections on new search', () => {
     state.queryCorrection = {correctedQuery: 'foo', wordCorrections: []};
     expect(
-      didYouMeanReducer(state, executeSearch.pending).queryCorrection
-        .correctedQuery
+      didYouMeanReducer(state, {type: executeSearch.pending.type})
+        .queryCorrection.correctedQuery
     ).toBe('');
   });
 
   it('should clear automatic corrections on new search', () => {
     state.wasAutomaticallyCorrected = true;
     state.wasCorrectedTo = 'foo';
-    const newState = didYouMeanReducer(state, executeSearch.pending);
+    const newState = didYouMeanReducer(state, {
+      type: executeSearch.pending.type,
+    });
     expect(newState.wasAutomaticallyCorrected).toBe(false);
     expect(newState.wasCorrectedTo).toBe('');
   });
@@ -101,7 +103,7 @@ describe('did you mean slice', () => {
   it('should handle enable autocorrection', () => {
     state.automaticallyCorrectQuery = false;
     expect(
-      didYouMeanReducer(state, enableAutomaticQueryCorrection)
+      didYouMeanReducer(state, enableAutomaticQueryCorrection())
         .automaticallyCorrectQuery
     ).toBe(true);
   });
@@ -109,7 +111,7 @@ describe('did you mean slice', () => {
   it('should handle disable autocorrection', () => {
     state.automaticallyCorrectQuery = true;
     expect(
-      didYouMeanReducer(state, disableAutomaticQueryCorrection)
+      didYouMeanReducer(state, disableAutomaticQueryCorrection())
         .automaticallyCorrectQuery
     ).toBe(false);
   });

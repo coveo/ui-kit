@@ -4,15 +4,16 @@ import {
   analyticsEventItemMetadata,
   documentIdentifier,
   InsightAction,
-  makeInsightAnalyticsAction,
+  makeInsightAnalyticsActionFactory,
   partialDocumentInformation,
   validateResultPayload,
 } from '../analytics/analytics-utils';
 import {analyticsEventCaseContext} from '../analytics/insight-analytics-utils';
+import {SearchPageEvents} from '../analytics/search-action-cause';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
 
 export const logCopyToClipboard = (result: Result): InsightAction =>
-  makeInsightAnalyticsAction({
+  makeInsightAnalyticsActionFactory(SearchPageEvents.copyToClipboard)({
     prefix: 'analytics/resultAction/insight/copyToClipboard',
     __legacy__getBuilder: (client, state) => {
       validateResultPayload(result);
@@ -39,7 +40,7 @@ export const logCopyToClipboard = (result: Result): InsightAction =>
   });
 
 export const logCaseSendEmail = (result: Result): InsightAction =>
-  makeInsightAnalyticsAction({
+  makeInsightAnalyticsActionFactory(SearchPageEvents.caseSendEmail)({
     prefix: 'analytics/resultAction/insight/caseSendEmail',
     __legacy__getBuilder: (client, state) => {
       validateResultPayload(result);
@@ -66,7 +67,7 @@ export const logCaseSendEmail = (result: Result): InsightAction =>
   });
 
 export const logFeedItemTextPost = (result: Result): InsightAction =>
-  makeInsightAnalyticsAction({
+  makeInsightAnalyticsActionFactory(SearchPageEvents.feedItemTextPost)({
     prefix: 'analytics/resultAction/insight/feedItemTextPost',
     __legacy__getBuilder: (client, state) => {
       validateResultPayload(result);

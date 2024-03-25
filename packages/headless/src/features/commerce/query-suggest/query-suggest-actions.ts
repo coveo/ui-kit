@@ -1,9 +1,11 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {getVisitorID} from '../../../api/analytics/coveo-analytics-utils';
-import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
+import {
+  AsyncThunkCommerceOptions,
+  isErrorResponse,
+} from '../../../api/commerce/commerce-api-client';
 import {QuerySuggestRequest} from '../../../api/commerce/search/query-suggest/query-suggest-request';
 import {QuerySuggestSuccessResponse} from '../../../api/commerce/search/query-suggest/query-suggest-response';
-import {isErrorResponse} from '../../../api/search/search-api-client';
 import {
   CartSection,
   CommerceContextSection,
@@ -69,6 +71,7 @@ export const buildQuerySuggestRequest = async (
     accessToken: state.configuration.accessToken,
     url: state.configuration.platformUrl,
     organizationId: state.configuration.organizationId,
+    trackingId: state.configuration.analytics.trackingId,
     query: state.querySet[id],
     ...restOfContext,
     clientId: await getVisitorID(state.configuration.analytics),

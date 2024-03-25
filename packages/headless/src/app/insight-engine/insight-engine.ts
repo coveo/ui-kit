@@ -81,7 +81,7 @@ export function buildInsightEngine(
   );
   const generatedAnswerClient = createGeneratedAnswerAPIClient(logger);
 
-  const thunkArguments: InsightThunkExtraArguments = {
+  const thunkArguments: Omit<InsightThunkExtraArguments, 'relay'> = {
     ...buildThunkExtraArguments(options.configuration, logger),
     apiClient: insightAPIClient,
     streamingClient: generatedAnswerClient,
@@ -116,7 +116,7 @@ export function buildInsightEngine(
         return;
       }
 
-      engine.dispatch(executeSearch(analyticsEvent));
+      engine.dispatch(executeSearch({legacy: analyticsEvent}));
     },
   };
 }

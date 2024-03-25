@@ -7,8 +7,9 @@ import {
 } from '../../../utils/validate-payload';
 import {
   InsightAction,
-  makeInsightAnalyticsAction,
+  makeInsightAnalyticsActionFactory,
 } from '../../analytics/analytics-utils';
+import {SearchPageEvents} from '../../analytics/search-action-cause';
 import {getCaseContextAnalyticsMetadata} from '../../case-context/case-context-state';
 import {facetIdDefinition} from '../generic/facet-actions-validation';
 import {LogCategoryFacetBreadcrumbActionCreatorPayload} from './category-facet-set-analytics-actions';
@@ -42,7 +43,7 @@ const getCategoryFacetMetadata = (
 export const logCategoryFacetBreadcrumb = (
   payload: LogCategoryFacetBreadcrumbActionCreatorPayload
 ): InsightAction =>
-  makeInsightAnalyticsAction(
+  makeInsightAnalyticsActionFactory(SearchPageEvents.breadcrumbFacet)(
     'analytics/categoryFacet/breadcrumb',
     (client, state) => {
       validatePayload(payload, categoryFacetBreadcrumbPayloadDefinition);

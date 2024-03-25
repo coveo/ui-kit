@@ -49,27 +49,27 @@ export function buildNumericFacet(
 
     deselectAll() {
       coreController.deselectAll();
-      dispatch(executeSearch(logFacetClearAll(getFacetId())));
+      dispatch(executeSearch({legacy: logFacetClearAll(getFacetId())}));
     },
 
     sortBy(sortCriterion: RangeFacetSortCriterion) {
       coreController.sortBy(sortCriterion);
       dispatch(
-        executeSearch(
-          logFacetUpdateSort({facetId: getFacetId(), sortCriterion})
-        )
+        executeSearch({
+          legacy: logFacetUpdateSort({facetId: getFacetId(), sortCriterion}),
+        })
       );
     },
 
     toggleSelect: (selection: NumericFacetValue) => {
       coreController.toggleSelect(selection);
       dispatch(
-        executeSearch(
-          getInsightAnalyticsActionForToggleRangeFacetSelect(
+        executeSearch({
+          legacy: getInsightAnalyticsActionForToggleRangeFacetSelect(
             getFacetId(),
             selection
-          )
-        )
+          ),
+        })
       );
     },
 

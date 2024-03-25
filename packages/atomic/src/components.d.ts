@@ -163,7 +163,7 @@ export namespace Components {
          */
         "numberOfValues": number;
         /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'alphanumeric' and 'occurrences'.
+          * The sort criterion to apply to the returned facet values. Possible values are 'alphanumeric' and 'occurrences'. For this criterion to apply to the top-layer facet values, disable [facet value ordering](https://docs.coveo.com/en/l1qf4156/#facet-value-ordering) in your Dynamic Navigation Experience configuration.
          */
         "sortCriteria": CategoryFacetSortCriterion;
         /**
@@ -1004,6 +1004,10 @@ export namespace Components {
           * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
          */
         "label": string;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
+         */
+        "sortCriteria": InsightRangeFacetSortCriterion;
         /**
           * Whether this facet should contain an datepicker allowing users to set custom ranges.
          */
@@ -2548,6 +2552,10 @@ export namespace Components {
           * The earliest date to accept from user input when the `withDatepicker` option is enabled.  This value must be a valid date string in the format `YYYY-MM-DD`.  If this format is not respected, the date picker ignores this property, behaving as if no `min` value had been set.  See also [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date#min).
          */
         "min"?: string;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
+         */
+        "sortCriteria": RangeFacetSortCriterion;
         /**
           * Whether this facet should contain an datepicker allowing users to set custom ranges.
          */
@@ -4401,7 +4409,7 @@ declare namespace LocalJSX {
          */
         "numberOfValues"?: number;
         /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'alphanumeric' and 'occurrences'.
+          * The sort criterion to apply to the returned facet values. Possible values are 'alphanumeric' and 'occurrences'. For this criterion to apply to the top-layer facet values, disable [facet value ordering](https://docs.coveo.com/en/l1qf4156/#facet-value-ordering) in your Dynamic Navigation Experience configuration.
          */
         "sortCriteria"?: CategoryFacetSortCriterion;
         /**
@@ -5206,6 +5214,10 @@ declare namespace LocalJSX {
           * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
          */
         "label"?: string;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
+         */
+        "sortCriteria"?: InsightRangeFacetSortCriterion;
         /**
           * Whether this facet should contain an datepicker allowing users to set custom ranges.
          */
@@ -6705,6 +6717,10 @@ declare namespace LocalJSX {
           * The earliest date to accept from user input when the `withDatepicker` option is enabled.  This value must be a valid date string in the format `YYYY-MM-DD`.  If this format is not respected, the date picker ignores this property, behaving as if no `min` value had been set.  See also [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date#min).
          */
         "min"?: string;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
+         */
+        "sortCriteria"?: RangeFacetSortCriterion;
         /**
           * Whether this facet should contain an datepicker allowing users to set custom ranges.
          */

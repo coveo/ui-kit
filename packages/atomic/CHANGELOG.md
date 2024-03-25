@@ -1,3 +1,37 @@
+## 2.62.1 (2024-03-20)
+
+# 2.62.0 (2024-03-20)
+
+### Bug Fixes
+
+- **deps:** update dependency @stencil/core to v4.13.0 j:kit-282 ([#3725](https://github.com/coveo/ui-kit/issues/3725)) ([aee2015](https://github.com/coveo/ui-kit/commits/aee20158c892bf1ec73ea3e66c2cdfa6823420c1))
+
+### Features
+
+- **atomic:** style rephrase buttons and add auto option ([#3702](https://github.com/coveo/ui-kit/issues/3702)) ([cdae484](https://github.com/coveo/ui-kit/commits/cdae48449176e4913f61b461fab689dbc604e25f))
+
+# 2.61.0 (2024-03-13)
+
+### Features
+
+- **atomic:** add sort-criteria to timeframe facet ([#3692](https://github.com/coveo/ui-kit/issues/3692)) ([1a6f1ab](https://github.com/coveo/ui-kit/commits/1a6f1ab9c943a2b977bdece4c39cbfd1d3dda3de))
+
+## 2.60.5 (2024-03-12)
+
+### Bug Fixes
+
+- **atomic:** fix query suggestions mismatch on searchbox disabled + manual input clear ([#3699](https://github.com/coveo/ui-kit/issues/3699)) ([7e23c3a](https://github.com/coveo/ui-kit/commits/7e23c3a8b4f9711d927799e5d7463c4e16c97214))
+
+## 2.60.3 (2024-03-11)
+
+### Bug Fixes
+
+- **atomic:** add missing end label ([#3689](https://github.com/coveo/ui-kit/issues/3689)) ([4b404ab](https://github.com/coveo/ui-kit/commits/4b404abe5398f0b06047365b400bc981a273ce90))
+
+### Features
+
+- **quantic|atomic:** update genQA answer section title ([#3674](https://github.com/coveo/ui-kit/issues/3674)) ([1aaeb08](https://github.com/coveo/ui-kit/commits/1aaeb08802fd71ad9bdc98c213c830f676088adb))
+
 # 2.60.0 (2024-03-08)
 
 ### Bug Fixes

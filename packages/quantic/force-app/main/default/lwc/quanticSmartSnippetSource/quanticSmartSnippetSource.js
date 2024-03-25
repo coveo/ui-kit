@@ -57,13 +57,17 @@ export default class QuanticSmartSnippetSource extends LightningElement {
       '.smart-snippet__source-title'
     );
 
-    this.removeUriBindings = LinkUtils.bindAnalyticsToLink(
-      snippetSourceUrlElement,
-      this.actions
-    );
-    this.removeTitleBindings = LinkUtils.bindAnalyticsToLink(
-      snippetSourceTitleElement,
-      this.actions
-    );
+    if (snippetSourceUrlElement) {
+      this.removeUriBindings = LinkUtils.bindAnalyticsToLink(
+        snippetSourceUrlElement,
+        this.actions
+      );
+    }
+    if (snippetSourceTitleElement) {
+      this.removeTitleBindings = LinkUtils.bindAnalyticsToLink(
+        snippetSourceTitleElement,
+        this.actions
+      );
+    }
   }
 }

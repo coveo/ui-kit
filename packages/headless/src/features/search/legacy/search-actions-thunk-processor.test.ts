@@ -1,3 +1,4 @@
+import {Relay} from '@coveo/relay';
 import {Logger} from 'pino';
 import {SearchAPIClient} from '../../../api/search/search-api-client';
 import {buildMockResult} from '../../../test/mock-result';
@@ -29,6 +30,7 @@ describe('AsyncSearchThunkProcessor', () => {
         logger: jest.fn() as unknown as Logger,
         validatePayload: jest.fn(),
         preprocessRequest: jest.fn(),
+        relay: jest.fn() as unknown as Relay,
       },
       getState: jest.fn().mockReturnValue({
         configuration: getConfigurationInitialState(),
