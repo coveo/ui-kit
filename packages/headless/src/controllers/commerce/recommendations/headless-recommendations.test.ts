@@ -1,6 +1,6 @@
 import {configuration} from '../../../app/common-reducers';
 import {contextReducer} from '../../../features/commerce/context/context-slice';
-import {fetchRecommendation} from '../../../features/commerce/recommendation/recommendation-actions';
+import {fetchRecommendations} from '../../../features/commerce/recommendation/recommendation-actions';
 import {recommendationV2Reducer} from '../../../features/commerce/recommendation/recommendation-slice';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state';
 import {
@@ -17,7 +17,9 @@ describe('headless recommendations', () => {
 
   beforeEach(() => {
     engine = buildMockCommerceEngine(buildMockCommerceState());
-    recommendations = buildRecommendations('slot-id', engine);
+    recommendations = buildRecommendations(engine, {
+      options: {slotId: 'slot-id'},
+    });
   });
 
   it('adds the correct reducers to engine', () => {
@@ -30,6 +32,6 @@ describe('headless recommendations', () => {
 
   it('refresh dispatches #fetchRecommendations', () => {
     recommendations.refresh();
-    expect(fetchRecommendation).toHaveBeenCalled();
+    expect(fetchRecommendations).toHaveBeenCalled();
   });
 });

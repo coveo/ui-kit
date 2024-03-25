@@ -2,11 +2,9 @@ import {SortBy} from '../../features/sort/sort';
 import {buildMockCommerceAPIClient} from '../../test/mock-commerce-api-client';
 import {PlatformClient} from '../platform-client';
 import {CommerceAPIClient} from './commerce-api-client';
-import {
-  CommerceAPIRequest,
-  RecommendationCommerceAPIRequest,
-} from './common/request';
+import {CommerceAPIRequest} from './common/request';
 import {CommerceResponse} from './common/response';
+import {CommerceRecommendationRequest} from './recommendation/recommendation-request';
 
 describe('commerce api client', () => {
   const platformUrl = 'https://platformdev.cloud.coveo.com';
@@ -52,8 +50,8 @@ describe('commerce api client', () => {
   });
 
   const buildRecommendationCommerceAPIRequest = async (
-    req: Partial<RecommendationCommerceAPIRequest> = {}
-  ): Promise<RecommendationCommerceAPIRequest> => {
+    req: Partial<CommerceRecommendationRequest> = {}
+  ): Promise<CommerceRecommendationRequest> => {
     return {
       id: 'slotId',
       accessToken: accessToken,
