@@ -1,7 +1,7 @@
-import {AnyCommerceFacetRequest} from './interfaces/request';
+import {AnyFacetRequest} from './interfaces/request';
 
 export type CommerceFacetSlice = {
-  request: AnyCommerceFacetRequest;
+  request: AnyFacetRequest;
 };
 
 /**
