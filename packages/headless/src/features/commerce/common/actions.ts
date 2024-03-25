@@ -5,7 +5,6 @@ import {
   RecommendationCommerceSuccessResponse,
   CommerceSuccessResponse,
 } from '../../../api/commerce/common/response';
-import {CommerceRecommendationRequest} from '../../../api/commerce/recommendation/recommendation-request';
 import {
   CartSection,
   CategoryFacetSection,
@@ -74,28 +73,6 @@ export const buildCommerceAPIRequest = async (
     ...(state.commerceSort && {
       sort: getSort(state.commerceSort.appliedSort),
     }),
-  };
-};
-
-export const buildRecommendationCommerceAPIRequest = async (
-  slotId: string,
-  state: StateNeededByQueryCommerceAPI
-): Promise<CommerceRecommendationRequest> => {
-  const {view, user, ...restOfContext} = state.commerceContext;
-  return {
-    accessToken: state.configuration.accessToken,
-    url: state.configuration.platformUrl,
-    organizationId: state.configuration.organizationId,
-    id: slotId,
-    trackingId: state.configuration.analytics.trackingId,
-    ...restOfContext,
-    clientId: await getVisitorID(state.configuration.analytics),
-    context: {
-      user,
-      view,
-      cart: state.cart.cartItems.map((id) => state.cart.cart[id]),
-    },
-    ...(state.commercePagination && {page: state.commercePagination.page}),
   };
 };
 
