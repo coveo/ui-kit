@@ -78,6 +78,20 @@ describe('c-quantic-smart-snippet-source', () => {
     expect(sourceUri.href).toBe(exampleUri);
   });
 
+  it('should target a new tab when clicked', async () => {
+    const element = createTestComponent();
+    await flushPromises();
+
+    const sourceUri = element.shadowRoot.querySelector(selectors.sourceUri);
+    const sourceTitle = element.shadowRoot.querySelector(selectors.sourceTitle);
+
+    expect(sourceUri).not.toBeNull();
+    expect(sourceUri.target).toBe('_blank');
+
+    expect(sourceTitle).not.toBeNull();
+    expect(sourceTitle.target).toBe('_blank');
+  });
+
   it('should properly display the source title', async () => {
     const element = createTestComponent();
     await flushPromises();
@@ -87,6 +101,24 @@ describe('c-quantic-smart-snippet-source', () => {
     expect(sourceTitle).not.toBeNull();
     expect(sourceTitle.textContent).toBe(exampleTitle);
     expect(sourceTitle.href).toBe(exampleUri);
+  });
+
+  it('should not display the source uri when the uri option is undefined', async () => {
+    const element = createTestComponent({...defaultOptions, uri: undefined});
+    await flushPromises();
+
+    const sourceUri = element.shadowRoot.querySelector(selectors.sourceUri);
+
+    expect(sourceUri).toBeNull();
+  });
+
+  it('should not display the source title when the title option is undefined', async () => {
+    const element = createTestComponent({...defaultOptions, title: undefined});
+    await flushPromises();
+
+    const sourceTitle = element.shadowRoot.querySelector(selectors.sourceTitle);
+
+    expect(sourceTitle).toBeNull();
   });
 
   ['sourceUri', 'sourceTitle'].forEach((key) => {

@@ -52,8 +52,8 @@ export class CommerceAnalyticsProvider
 
   private mapResultsToAnalyticsDocument() {
     return this.state.productListing?.products.map((p) => ({
-      documentUri: p.documentUri,
-      documentUriHash: p.documentUriHash,
+      documentUri: p.clickUri,
+      documentUriHash: p.permanentid,
       permanentid: p.permanentid,
     }));
   }

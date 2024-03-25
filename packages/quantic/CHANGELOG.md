@@ -1,3 +1,11 @@
+## 2.46.11 (2024-03-20)
+
+### Bug Fixes
+
+- **quantic:** SmartSnippet to open in a new tab ([#3721](https://github.com/coveo/ui-kit/issues/3721)) ([1d4958a](https://github.com/coveo/ui-kit/commits/1d4958a8850175f6e849137789d8c32ef38f4438))
+
+## 2.46.10 (2024-03-14)
+
 ## 2.46.4 (2024-03-11)
 
 ### Features

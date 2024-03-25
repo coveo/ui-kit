@@ -1,3 +1,4 @@
+import {AnyFacetRequest as AnyCommerceFacetRequest} from '../../commerce/facets/facet-set/interfaces/request';
 import {FacetRequest} from '../facet-set/interfaces/request';
 import {AnyFacetRequest} from './interfaces/generic-facet-request';
 import {AnyFacetSlice} from './interfaces/generic-facet-section';
@@ -32,10 +33,9 @@ export function handleFacetDeselectAll(facetRequest: FacetRequest) {
   facetRequest.preventAutoSelect = true;
 }
 
-export function handleFacetUpdateNumberOfValues<T extends AnyFacetRequest>(
-  facetRequest: T | undefined,
-  numberOfValues: number
-) {
+export function handleFacetUpdateNumberOfValues<
+  T extends AnyFacetRequest | AnyCommerceFacetRequest,
+>(facetRequest: T | undefined, numberOfValues: number) {
   if (!facetRequest) {
     return;
   }
