@@ -85,6 +85,6 @@ export interface FacetIdParam {
   facetId: string;
 }
 
-export interface SlotId {
+export interface SlotIdParam {
   id: string;
 }

@@ -1,14 +1,18 @@
+import {createSelector} from '@reduxjs/toolkit';
 import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
 import {ProductRecommendation} from '../../../api/search/search/product-recommendation';
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
+import {
+  CommerceEngine,
+  CommerceEngineState,
+} from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
 import {
-  fetchRecommendation,
+  fetchRecommendations,
   updateRecommendationSlotId,
 } from '../../../features/commerce/recommendation/recommendation-actions';
 import {recommendationV2Reducer as recommendation} from '../../../features/commerce/recommendation/recommendation-slice';
-import {loadReducerError, slotIdError} from '../../../utils/errors';
+import {loadReducerError} from '../../../utils/errors';
 import {
   buildController,
   Controller,
@@ -24,7 +28,7 @@ export interface Recommendation extends Controller {
   refresh(): void;
 
   /**
-   * A scoped and simplified part of the headless state that is relevant to the `ProductListing` controller.
+   * A scoped and simplified part of the headless state that is relevant to the `Recommendation` controller.
    */
   state: RecommendationState;
 }
@@ -39,47 +43,51 @@ export interface RecommendationState {
 
 export type RecommendationControllerState = Recommendation['state'];
 
+interface RecommendationsOptions {
+  slotId: string;
+}
+
+interface RecommendationsProps {
+  options: RecommendationsOptions;
+}
+
 /**
- * Creates a `ProductListing` controller instance.
+ * Creates a `Recommendation` controller instance.
  *
  * @param engine - The headless commerce engine.
- * @returns A `ProductListing` controller instance.
+ * @returns A `Recommendation` controller instance.
  */
 export function buildRecommendations(
-  slotId: string,
-  engine: CommerceEngine
+  engine: CommerceEngine,
+  props: RecommendationsProps
 ): Recommendation {
-  if (slotId === '') {
-    throw slotIdError;
-  }
-
   if (!loadBaseRecommendationReducers(engine)) {
     throw loadReducerError;
   }
 
   const controller = buildController(engine);
   const {dispatch} = engine;
-  dispatch(updateRecommendationSlotId({slotId}));
+  dispatch(updateRecommendationSlotId({slotId: props.options.slotId}));
 
-  const getState = () => engine.state;
+  const recommendationStateSelector = createSelector(
+    (state: CommerceEngineState) => state.recommendation,
+    (recommendation) => ({
+      headline: recommendation.headline,
+      products: recommendation.products,
+      error: recommendation.error,
+      isLoading: recommendation.isLoading,
+      responseId: recommendation.responseId,
+    })
+  );
 
   return {
     ...controller,
 
     get state() {
-      const {headline, products, error, isLoading, responseId} =
-        getState().recommendation;
-
-      return {
-        headline,
-        products,
-        error,
-        isLoading,
-        responseId,
-      };
+      return recommendationStateSelector(engine.state);
     },
 
-    refresh: () => dispatch(fetchRecommendation()),
+    refresh: () => dispatch(fetchRecommendations()),
   };
 }
 
