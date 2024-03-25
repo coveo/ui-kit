@@ -105,6 +105,19 @@ export const InterceptAliases = {
         ReasonSubmit: nextAnalyticsAlias('Qna.SubmitFeedback.ReasonSubmit'),
       },
     },
+    CaseAssist: {
+      DocumentSuggestionClick: nextAnalyticsAlias(
+        'CaseAssist.DocumentSuggestionClick'
+      ),
+      DocumentSuggestionFeedback: nextAnalyticsAlias(
+        'CaseAssist.DocumentSuggestionFeedback'
+      ),
+      SelectFieldClassification: nextAnalyticsAlias(
+        'CaseAssist.SelectFieldClassification'
+      ),
+      UpdateField: nextAnalyticsAlias('CaseAssist.UpdateField'),
+    },
+    ItemClick: nextAnalyticsAlias('ItemClick'),
   },
   QuerySuggestions: '@coveoQuerySuggest',
   Search: '@coveoSearch',
@@ -115,7 +128,7 @@ export const InterceptAliases = {
 };
 
 export const routeMatchers = {
-  analytics: '**/rest/ua/v15/analytics/*',
+  analytics: '**/rest/v15/analytics/*',
   nextAnalytics: '**/events/v1?*',
   querySuggest: '**/rest/search/v2/querySuggest?*',
   search: '**/rest/search/v2?*',
