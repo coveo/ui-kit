@@ -1,3 +1,5 @@
+import auto from '@salesforce/label/c.quantic_Auto';
+import automatic from '@salesforce/label/c.quantic_Automatic';
 import bulletPointSummary from '@salesforce/label/c.quantic_BulletPointSummary';
 import bullets from '@salesforce/label/c.quantic_Bullets';
 import rephrase from '@salesforce/label/c.quantic_Rephrase';
@@ -27,6 +29,8 @@ export default class QuanticGeneratedAnswerRephraseButtons extends LightningElem
   @api hideLabels;
 
   labels = {
+    auto,
+    automatic,
     steps,
     rephrase,
     stepByStepInstructions,
@@ -36,12 +40,19 @@ export default class QuanticGeneratedAnswerRephraseButtons extends LightningElem
   };
 
   rephraseButtonLabels = {
+    default: this.labels.auto,
     step: this.labels.steps,
     bullet: this.labels.bullets,
     concise: this.labels.summary,
   };
 
   options = [
+    {
+      tooltip: this.labels.automatic,
+      value: 'default',
+      iconName: 'utility:rows',
+      default: true,
+    },
     {
       tooltip: this.labels.stepByStepInstructions,
       value: 'step',
@@ -61,18 +72,37 @@ export default class QuanticGeneratedAnswerRephraseButtons extends LightningElem
 
   get rephraseOptions() {
     return this.options.map((option) => ({
-      ...option,
-      label: this.getRephraseButtonLabel(option.value),
-      isSelected: this.isSelected(option.value),
-      handleSelect: (event) => {
-        event.stopPropagation();
-        this.handleRephrase(option.value);
-      },
+      value: option.value,
+      label: this.rephraseButtonLabels[option.value],
+      iconName: option.iconName,
+      tooltip: option.tooltip,
+      defaultSelected: option.default,
     }));
   }
 
+  // get rephraseOptions() {
+  //   return this.options.map((option) => ({
+  //     ...option,
+  //     label: this.getRephraseButtonLabel(option.value),
+  //     isSelected: this.isSelected(option.value),
+  //     handleSelect: (event) => {
+  //       event.stopPropagation();
+  //       if(!this.isSelected(option.value)) {
+  //         this.handleRephrase(option.value);
+  //       }
+  //     },
+  //   }));
+  // }
+
   isSelected(option) {
     return this.value === option;
+  }
+
+  handleRephraseChange(event) {
+    event.stopPropagation();
+    if (!this.isSelected(event.detail.value)) {
+      this.handleRephrase(event.detail.value);
+    }
   }
 
   handleRephrase(optionValue) {
@@ -82,11 +112,6 @@ export default class QuanticGeneratedAnswerRephraseButtons extends LightningElem
         bubbles: true,
       })
     );
-  }
-
-  handleDeselect(event) {
-    event.stopPropagation();
-    this.handleRephrase('default');
   }
 
   getRephraseButtonLabel(option) {
