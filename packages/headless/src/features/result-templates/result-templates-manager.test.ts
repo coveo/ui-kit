@@ -5,10 +5,10 @@ import {
 } from '../../test/mock-engine-v2';
 import {buildMockResult} from '../../test/mock-result';
 import {createMockState} from '../../test/mock-state';
-import {ResultTemplate} from './result-templates';
 import {
   ResultTemplatesManager,
   buildResultTemplatesManager,
+  ResultTemplate,
 } from './result-templates-manager';
 
 describe('result template manager', () => {

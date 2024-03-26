@@ -1,5 +1,5 @@
 import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
-import {ProductRecommendation} from '../../../api/search/search/product-recommendation';
+import {Product} from '../../../api/commerce/common/product';
 import {AnyFacetResponse} from '../facets/facet-set/interfaces/response';
 
 export interface ProductListingV2State {
@@ -8,7 +8,7 @@ export interface ProductListingV2State {
   requestId: string;
   responseId: string;
   facets: AnyFacetResponse[];
-  products: ProductRecommendation[];
+  products: Product[];
 }
 
 export const getProductListingV2InitialState = (): ProductListingV2State => ({
