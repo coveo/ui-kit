@@ -8,6 +8,7 @@ import {
   updateCategoryFacetNumberOfValues,
 } from '../../../../../features/facets/category-facet-set/category-facet-set-actions';
 import {CommerceAppState} from '../../../../../state/commerce-app-state';
+import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search';
 import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request';
 import {buildMockCategoryFacetResponse} from '../../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceFacetSlice} from '../../../../../test/mock-commerce-facet-slice';
@@ -62,6 +63,7 @@ describe('CategoryFacet', () => {
         values: (config.values as CategoryFacetValue[]) ?? [],
       }),
     ];
+    state.categoryFacetSearchSet[facetId] = buildMockCategoryFacetSearch();
   }
 
   // eslint-disable-next-line @cspell/spellchecker
