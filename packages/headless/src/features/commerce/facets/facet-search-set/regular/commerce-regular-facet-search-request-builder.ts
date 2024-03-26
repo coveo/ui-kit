@@ -1,10 +1,10 @@
-import {CommerceFacetSearchRequest} from '../../../../api/commerce/facet-search/facet-search-request';
-import {buildCommerceAPIRequest} from '../../common/actions';
-import {StateNeededForCommerceFacetSearch} from './commerce-facet-search-state';
+import {CommerceFacetSearchRequest} from '../../../../../api/commerce/facet-search/facet-search-request';
+import {buildCommerceAPIRequest} from '../../../common/actions';
+import {StateNeededForRegularFacetSearch} from './commerce-regular-facet-search-state';
 
-export const buildCommerceFacetSearchRequest = async (
+export const buildFacetSearchRequest = async (
   facetId: string,
-  state: StateNeededForCommerceFacetSearch,
+  state: StateNeededForRegularFacetSearch,
   isFieldSuggestionsRequest: boolean
 ): Promise<CommerceFacetSearchRequest> => {
   const baseFacetQuery = state.facetSearchSet[facetId].options.query;
