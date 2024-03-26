@@ -1,4 +1,10 @@
 import {createReducer} from '@reduxjs/toolkit';
+import rehypeSanitize from 'rehype-sanitize';
+import rehypeStringify from 'rehype-stringify';
+import remarkGfm from 'remark-gfm';
+import remarkParse from 'remark-parse';
+import remarkRehype from 'remark-rehype';
+import {unified} from 'unified';
 import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client';
 import {
   closeGeneratedAnswerFeedbackModal,
@@ -16,8 +22,26 @@ import {
   sendGeneratedAnswerFeedback,
   registerFieldsToIncludeInCitations,
   setId,
+  setAnswerMediaType,
+  setRawAnswerMediaType,
 } from './generated-answer-actions';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
+
+const convertMarkdownToHtml = (text: string): string => {
+  const file = unified()
+    .use(remarkParse)
+    .use(remarkGfm)
+    .use(remarkRehype)
+    .use(rehypeSanitize)
+    .use(rehypeStringify)
+    .processSync(text);
+
+  return String(file);
+};
+
+export const Helpers = {
+  convertMarkdownToHtml,
+};
 
 export const generatedAnswerReducer = createReducer(
   getGeneratedAnswerInitialState(),
@@ -32,10 +56,18 @@ export const generatedAnswerReducer = createReducer(
       .addCase(updateMessage, (state, {payload}) => {
         state.isLoading = false;
         state.isStreaming = true;
-        if (!state.answer) {
+        if (!state.rawAnswer) {
+          state.rawAnswer = '';
           state.answer = '';
         }
-        state.answer += payload.textDelta;
+
+        state.rawAnswer += payload.textDelta;
+        state.answer =
+          state.rawAnswerMediaType === 'markdown'
+            ? Helpers.convertMarkdownToHtml(state?.rawAnswer)
+            : state.rawAnswer;
+        state.answerMediaType =
+          state.rawAnswerMediaType === 'markdown' ? 'html' : 'plain';
         delete state.error;
       })
       .addCase(updateCitations, (state, {payload}) => {
@@ -85,6 +117,12 @@ export const generatedAnswerReducer = createReducer(
       })
       .addCase(setIsStreaming, (state, {payload}) => {
         state.isStreaming = payload;
+      })
+      .addCase(setAnswerMediaType, (state, {payload}) => {
+        state.answerMediaType = payload;
+      })
+      .addCase(setRawAnswerMediaType, (state, {payload}) => {
+        state.rawAnswerMediaType = payload;
       })
       .addCase(updateResponseFormat, (state, {payload}) => {
         state.responseFormat = payload;

@@ -15,8 +15,10 @@ import {
   closeGeneratedAnswerFeedbackModal,
   sendGeneratedAnswerFeedback,
   registerFieldsToIncludeInCitations,
+  setAnswerMediaType,
+  setRawAnswerMediaType,
 } from './generated-answer-actions';
-import {generatedAnswerReducer} from './generated-answer-slice';
+import {generatedAnswerReducer, Helpers} from './generated-answer-slice';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
 import {
   GeneratedAnswerStyle,
@@ -39,7 +41,7 @@ describe('generated answer slice', () => {
       const finalState = generatedAnswerReducer(
         {
           ...getGeneratedAnswerInitialState(),
-          answer: existingAnswer,
+          rawAnswer: existingAnswer,
         },
         updateMessage({
           textDelta: newMessage,
@@ -50,6 +52,28 @@ describe('generated answer slice', () => {
       expect(finalState.error).toBeUndefined();
       expect(finalState.isLoading).toBe(false);
       expect(finalState.isStreaming).toBe(true);
+    });
+
+    describe('when rawAnswerMediaType is markdown', () => {
+      it('should convert the rawAnswer to HTML', () => {
+        const convertMarkdownToHtmlSpy = jest
+          .spyOn(Helpers, 'convertMarkdownToHtml')
+          .mockImplementation((input) => `<p>${input}</p>`);
+
+        const finalState = generatedAnswerReducer(
+          {
+            ...getGeneratedAnswerInitialState(),
+            rawAnswerMediaType: 'markdown',
+          },
+          updateMessage({
+            textDelta: 'some content',
+          })
+        );
+
+        expect(convertMarkdownToHtmlSpy).toHaveBeenCalledWith('some content');
+        expect(finalState.answer).toBe('<p>some content</p>');
+        expect(finalState.answerMediaType).toBe('html');
+      });
     });
   });
 
@@ -228,6 +252,30 @@ describe('generated answer slice', () => {
       const finalState = generatedAnswerReducer(state, resetAnswer());
 
       expect(finalState.responseFormat).toEqual(responseFormat);
+    });
+  });
+
+  it('#setAnswerMediaType should set the media type in the state', () => {
+    const finalState = generatedAnswerReducer(
+      baseState,
+      setAnswerMediaType('markdown')
+    );
+
+    expect(finalState).toEqual({
+      ...getGeneratedAnswerInitialState(),
+      answerMediaType: 'markdown',
+    });
+  });
+
+  it('#setRawAnswerMediaType should set the raw answer media type in the state', () => {
+    const finalState = generatedAnswerReducer(
+      baseState,
+      setRawAnswerMediaType('html')
+    );
+
+    expect(finalState).toEqual({
+      ...getGeneratedAnswerInitialState(),
+      rawAnswerMediaType: 'html',
     });
   });
 

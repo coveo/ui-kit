@@ -7,6 +7,8 @@ import {
   updateMessage,
   updateResponseFormat,
   registerFieldsToIncludeInCitations,
+  setAnswerMediaType,
+  setRawAnswerMediaType,
 } from './generated-answer-actions';
 import {
   GeneratedAnswerStyle,
@@ -84,6 +86,22 @@ describe('generated answer', () => {
   describe('#setIsVisible', () => {
     it('should accept a valid payload', () => {
       expect(() => setIsVisible(true)).not.toThrow();
+    });
+  });
+
+  describe('#setAnswerMediaType', () => {
+    ['plain', 'html'].map((payload) => {
+      it(`should accept a valid payload: ${payload}`, () => {
+        expect(() => setAnswerMediaType(payload)).not.toThrow();
+      });
+    });
+  });
+
+  describe('#setRawAnswerMediaType', () => {
+    ['plain', 'markdown'].map((payload) => {
+      it(`should accept a valid payload: ${payload}`, () => {
+        expect(() => setRawAnswerMediaType(payload)).not.toThrow();
+      });
     });
   });
 });

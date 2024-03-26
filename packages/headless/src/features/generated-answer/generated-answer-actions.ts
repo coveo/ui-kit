@@ -127,6 +127,30 @@ export const setIsStreaming = createAction(
   (payload: boolean) => validatePayload(payload, booleanValue)
 );
 
+export const setAnswerMediaType = createAction(
+  'generatedAnswer/setAnswerMediaType',
+  (payload: string) =>
+    validatePayload(
+      payload,
+      new StringValue({
+        required: true,
+        constrainTo: ['plain', 'html'],
+      })
+    )
+);
+
+export const setRawAnswerMediaType = createAction(
+  'generatedAnswer/setRawAnswerMediaType',
+  (payload: string) =>
+    validatePayload(
+      payload,
+      new StringValue({
+        required: true,
+        constrainTo: ['plain', 'markdown'],
+      })
+    )
+);
+
 export const updateResponseFormat = createAction(
   'generatedAnswer/updateResponseFormat',
   (payload: GeneratedResponseFormat) =>
@@ -193,6 +217,8 @@ export const streamAnswer = createAsyncThunk<
   };
 
   dispatch(setIsLoading(true));
+  dispatch(setRawAnswerMediaType('plain'));
+  dispatch(setAnswerMediaType('plain'));
 
   const currentStreamRequestMatchesOriginalStreamRequest = (
     request: GeneratedAnswerStreamRequest
@@ -208,6 +234,7 @@ export const streamAnswer = createAsyncThunk<
       write: (data: GeneratedAnswerStreamEventData) => {
         if (currentStreamRequestMatchesOriginalStreamRequest(request)) {
           dispatch(setIsLoading(false));
+
           if (data.payload && data.payloadType) {
             handleStreamPayload(data.payloadType, data.payload);
           }

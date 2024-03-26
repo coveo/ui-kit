@@ -16,9 +16,21 @@ export interface GeneratedAnswerState {
    */
   isStreaming: boolean;
   /**
-   * The generated answer.
+   * The generated answer (formatted).
    */
   answer?: string;
+  /**
+   * The generated answer formatted media type (e.g., plain or HTML).
+   */
+  answerMediaType?: string;
+  /**
+   * The generated answer.
+   */
+  rawAnswer?: string;
+  /**
+   * The generated answer media type (e.g., plain or markdown)
+   */
+  rawAnswerMediaType?: string;
   /**
    * The document snippets retrieved to generate the answer.
    */
