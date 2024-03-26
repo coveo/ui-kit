@@ -2215,6 +2215,7 @@ export namespace Components {
           * Whether analytics should be enabled.
          */
         "analytics": boolean;
+        "dataTab": string;
         /**
           * Whether the relevance inspector shortcut should be enabled for this interface.  The relevance inspector can be opened by holding the Alt key (Option on Mac) while over the interface, and performing a double click.  The relevance inspector allows to troubleshoot and debug queries.
          */
@@ -2463,6 +2464,14 @@ export namespace Components {
          */
         "label": string;
     }
+    interface AtomicTab {
+        "isActive": boolean;
+        "label": string;
+        "name": string;
+        "pipeline": string;
+    }
+    interface AtomicTabSection {
+    }
     /**
      * The `atomic-table-element` element defines a table column in a result list.
      */
@@ -2643,6 +2652,10 @@ export interface AtomicSmartSnippetFeedbackModalCustomEvent<T> extends CustomEve
 export interface AtomicSmartSnippetSourceCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicSmartSnippetSourceElement;
+}
+export interface AtomicTabCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicTabElement;
 }
 declare global {
     /**
@@ -4109,6 +4122,29 @@ declare global {
         prototype: HTMLAtomicSortExpressionElement;
         new (): HTMLAtomicSortExpressionElement;
     };
+    interface HTMLAtomicTabElementEventMap {
+        "tabClick": any;
+    }
+    interface HTMLAtomicTabElement extends Components.AtomicTab, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicTabElementEventMap>(type: K, listener: (this: HTMLAtomicTabElement, ev: AtomicTabCustomEvent<HTMLAtomicTabElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicTabElementEventMap>(type: K, listener: (this: HTMLAtomicTabElement, ev: AtomicTabCustomEvent<HTMLAtomicTabElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLAtomicTabElement: {
+        prototype: HTMLAtomicTabElement;
+        new (): HTMLAtomicTabElement;
+    };
+    interface HTMLAtomicTabSectionElement extends Components.AtomicTabSection, HTMLStencilElement {
+    }
+    var HTMLAtomicTabSectionElement: {
+        prototype: HTMLAtomicTabSectionElement;
+        new (): HTMLAtomicTabSectionElement;
+    };
     /**
      * The `atomic-table-element` element defines a table column in a result list.
      */
@@ -4296,6 +4332,8 @@ declare global {
         "atomic-smart-snippet-suggestions": HTMLAtomicSmartSnippetSuggestionsElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
+        "atomic-tab": HTMLAtomicTabElement;
+        "atomic-tab-section": HTMLAtomicTabSectionElement;
         "atomic-table-element": HTMLAtomicTableElementElement;
         "atomic-text": HTMLAtomicTextElement;
         "atomic-timeframe": HTMLAtomicTimeframeElement;
@@ -6385,6 +6423,7 @@ declare namespace LocalJSX {
           * Whether analytics should be enabled.
          */
         "analytics"?: boolean;
+        "dataTab"?: string;
         /**
           * Whether the relevance inspector shortcut should be enabled for this interface.  The relevance inspector can be opened by holding the Alt key (Option on Mac) while over the interface, and performing a double click.  The relevance inspector allows to troubleshoot and debug queries.
          */
@@ -6628,6 +6667,15 @@ declare namespace LocalJSX {
          */
         "label": string;
     }
+    interface AtomicTab {
+        "isActive"?: boolean;
+        "label": string;
+        "name": string;
+        "onTabClick"?: (event: AtomicTabCustomEvent<any>) => void;
+        "pipeline": string;
+    }
+    interface AtomicTabSection {
+    }
     /**
      * The `atomic-table-element` element defines a table column in a result list.
      */
@@ -6867,6 +6915,8 @@ declare namespace LocalJSX {
         "atomic-smart-snippet-suggestions": AtomicSmartSnippetSuggestions;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
+        "atomic-tab": AtomicTab;
+        "atomic-tab-section": AtomicTabSection;
         "atomic-table-element": AtomicTableElement;
         "atomic-text": AtomicText;
         "atomic-timeframe": AtomicTimeframe;
@@ -7443,6 +7493,8 @@ declare module "@stencil/core" {
              * The `atomic-sort-expression` component defines a sort expression. This component must be inside an `atomic-sort-dropdown` component.
              */
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
+            "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
+            "atomic-tab-section": LocalJSX.AtomicTabSection & JSXBase.HTMLAttributes<HTMLAtomicTabSectionElement>;
             /**
              * The `atomic-table-element` element defines a table column in a result list.
              */

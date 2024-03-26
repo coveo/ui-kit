@@ -136,6 +136,7 @@
     <atomic-search-interface fields-to-include='["snrating", "sncost"]'>
       <atomic-search-layout>
         <div class="header-bg"></div>
+
         <atomic-layout-section section="search">
           <atomic-search-box textarea></atomic-search-box>
         </atomic-layout-section>
@@ -144,9 +145,9 @@
             <atomic-automatic-facet-generator desired-count="3"></atomic-automatic-facet-generator>
             <atomic-category-facet field="geographicalhierarchy" label="World Atlas" with-search>
             </atomic-category-facet>
-            <atomic-facet field="author" label="Authors"></atomic-facet>
-            <atomic-facet field="source" label="Source" display-values-as="link"></atomic-facet>
-            <atomic-facet field="year" label="Year" display-values-as="box"></atomic-facet>
+            <atomic-facet data-tab="product" field="author" label="Authors"></atomic-facet>
+            <atomic-facet field="source" data-tab="all" label="Source" display-values-as="link"></atomic-facet>
+            <atomic-facet field="year" data-tab="all" label="Year" display-values-as="box"></atomic-facet>
             <atomic-numeric-facet
               field="ytviewcount"
               label="Youtube Views"
@@ -193,7 +194,11 @@
           </atomic-facet-manager>
         </atomic-layout-section>
         <atomic-layout-section section="main">
-          <atomic-layout-section section="horizontal-facets">
+          <atomic-tab-section>
+            <atomic-tab label="All" name="all"></atomic-tab>
+            <atomic-tab label="Product" name="product"></atomic-tab>
+          </atomic-tab-section>
+          <atomic-layout-section data-tab="all" section="horizontal-facets">
             <atomic-segmented-facet-scrollable>
               <atomic-segmented-facet field="inat_kingdom" label="Kingdom"></atomic-segmented-facet>
             </atomic-segmented-facet-scrollable>
