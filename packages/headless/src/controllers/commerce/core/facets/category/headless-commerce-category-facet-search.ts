@@ -32,7 +32,7 @@ export function buildCategoryFacetSearch(
     throw loadReducerError;
   }
 
-  const {showMoreResults, updateCaptions, select, ...restOfFacetSearch} =
+  const {showMoreResults, updateCaptions, ...restOfFacetSearch} =
     buildCoreCategoryFacetSearch(engine, {
       ...props,
       executeFacetSearchActionCreator: executeCommerceFacetSearch,
