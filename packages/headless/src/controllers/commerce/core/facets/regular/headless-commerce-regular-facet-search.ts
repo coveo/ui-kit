@@ -11,7 +11,7 @@ import {
   FacetSearchProps,
   buildFacetSearch,
 } from '../../../../core/facets/facet-search/specific/headless-facet-search';
-import {CoreFacetSearchState} from './headless-commerce-searchable-facet';
+import {CoreFacetSearchState} from '../searchable/headless-commerce-searchable-facet';
 
 export type RegularFacetSearchState =
   CoreFacetSearchState<SpecificFacetSearchResult>;

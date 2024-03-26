@@ -15,12 +15,12 @@ import {
   RegularFacetValue,
   buildCoreCommerceFacet,
 } from '../headless-core-commerce-facet';
+import {SearchableFacetOptions} from '../searchable/headless-commerce-searchable-facet';
 import {
   RegularFacetSearch,
   RegularFacetSearchState,
   buildRegularFacetSearch,
-} from '../searchable/headless-commerce-facet-search';
-import {SearchableFacetOptions} from '../searchable/headless-commerce-searchable-facet';
+} from './headless-commerce-regular-facet-search';
 
 export type RegularFacetOptions = Omit<
   CoreCommerceFacetOptions,

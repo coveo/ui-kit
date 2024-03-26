@@ -9,7 +9,7 @@ import {CategoryFacetSearchSection} from '../../../../../state/state-sections';
 import {loadReducerError} from '../../../../../utils/errors';
 import {CategoryFacetSearchProps} from '../../../../core/facets/facet-search/category/headless-category-facet-search';
 import {buildCategoryFacetSearch as buildCoreCategoryFacetSearch} from '../../../../facets/category-facet/headless-category-facet-search';
-import {CoreFacetSearchState} from './headless-commerce-searchable-facet';
+import {CoreFacetSearchState} from '../searchable/headless-commerce-searchable-facet';
 
 export type CategoryFacetSearchState =
   CoreFacetSearchState<CategoryFacetSearchResult>;

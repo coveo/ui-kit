@@ -17,12 +17,12 @@ import {
   CoreCommerceFacetState,
   buildCoreCommerceFacet,
 } from '../headless-core-commerce-facet';
+import {SearchableFacetOptions} from '../searchable/headless-commerce-searchable-facet';
 import {
   CategoryFacetSearch,
   CategoryFacetSearchState,
   buildCategoryFacetSearch,
-} from '../searchable/headless-commerce-category-facet-search';
-import {SearchableFacetOptions} from '../searchable/headless-commerce-searchable-facet';
+} from './headless-commerce-category-facet-search';
 
 export type CategoryFacetOptions = Omit<
   CoreCommerceFacetOptions,

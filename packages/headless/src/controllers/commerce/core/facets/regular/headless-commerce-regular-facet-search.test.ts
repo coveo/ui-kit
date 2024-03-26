@@ -12,7 +12,7 @@ import {FacetSearchProps} from '../../../../core/facets/facet-search/specific/he
 import {
   RegularFacetSearch,
   buildRegularFacetSearch,
-} from './headless-commerce-facet-search';
+} from './headless-commerce-regular-facet-search';
 
 jest.mock(
   '../../../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions'
