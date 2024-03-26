@@ -20,5 +20,8 @@ export type CoreFacetSearchState<
    * Whether additional values matching the facet search query are available.
    */
   moreValuesAvailable: boolean;
+  /**
+   * The facet values that match the facet search query.
+   */
   values: T[];
 };
