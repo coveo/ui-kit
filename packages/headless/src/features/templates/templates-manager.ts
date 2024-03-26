@@ -19,8 +19,8 @@ export interface Template<ItemType, Content = unknown> {
    */
   conditions: TemplateCondition<ItemType>[];
   /**
-   * A value which the manager will fallback to when multiple templates' conditions are fulfilled.
-   * Templates with higher priority values will be selected over others. The minimum value is `0`.
+   * A value which the manager will use to determine which template to select when an item satisfies the conditions of more than one template.
+   * Templates with higher priority values will be selected over others. The minimum and default value is `0`.
    */
   priority?: number;
   /**
@@ -52,31 +52,27 @@ export function buildTemplatesManager<
   TemplateContent = unknown,
 >(): TemplatesManager<ItemType, TemplateContent> {
   const templates: Required<Template<ItemType, TemplateContent>>[] = [];
-  const validateTemplates = (
-    templates: Template<ItemType, TemplateContent>[]
-  ) => {
-    templates.forEach((template) => {
-      templateSchema.validate(template);
-      const areConditionsValid = template.conditions.every(
-        (condition) => condition instanceof Function
-      );
+  const validateTemplate = (template: Template<ItemType, TemplateContent>) => {
+    const validated = templateSchema.validate(template);
+    const areConditionsValid = template.conditions.every(
+      (condition) => condition instanceof Function
+    );
 
-      if (!areConditionsValid) {
-        throw new SchemaValidationError(
-          'Each product template conditions should be a function that takes a result as an argument and returns a boolean'
-        );
-      }
-    });
+    if (!areConditionsValid) {
+      throw new SchemaValidationError(
+        'Each template condition should be a function that takes a Result or Product as an argument and returns a boolean'
+      );
+    }
+    return validated;
   };
 
   return {
     registerTemplates(...newTemplates: Template<ItemType, TemplateContent>[]) {
-      validateTemplates(newTemplates);
-
       newTemplates.forEach((template) => {
         const templatesWithDefault = {
-          ...template,
-          priority: template.priority || 0,
+          ...(validateTemplate(template) as Required<
+            Template<ItemType, TemplateContent>
+          >),
           fields: template.fields || [],
         };
         templates.push(templatesWithDefault);

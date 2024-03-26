@@ -208,6 +208,20 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         .log(`should display the rephrase button with the label ${label}`);
     },
 
+    displayDisclaimer: (display: boolean) => {
+      selector
+        .disclaimer()
+        .should(display ? 'exist' : 'not.exist')
+        .log(`${should(display)} display the disclaimer`);
+    },
+
+    disclaimerContains: (text: string) => {
+      selector
+        .disclaimer()
+        .contains(text)
+        .log(`the disclaimer should contain "${text}"`);
+    },
+
     rephraseButtonIsSelected: (name: string, selected: boolean) => {
       selector
         .rephraseButtonByLabel(name)

@@ -1,4 +1,7 @@
-import {Product, buildProductTemplatesManager} from '@coveo/headless/commerce';
+import {
+  ProductRecommendation,
+  buildProductTemplatesManager,
+} from '@coveo/headless/commerce';
 import {
   TemplateProvider,
   TemplateProviderProps,
@@ -16,8 +19,8 @@ function defaultTemplate() {
   };
 }
 
-export class ProductTemplateProvider extends TemplateProvider<Product> {
-  constructor(props: TemplateProviderProps<Product>) {
+export class ProductTemplateProvider extends TemplateProvider<ProductRecommendation> {
+  constructor(props: TemplateProviderProps<ProductRecommendation>) {
     super(
       props,
       () => buildProductTemplatesManager(),

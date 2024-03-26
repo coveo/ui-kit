@@ -1,3 +1,9 @@
+# 2.47.0 (2024-03-25)
+
+### Features
+
+- **quantic:** disclaimer message for rga ([#3739](https://github.com/coveo/ui-kit/issues/3739)) ([a085429](https://github.com/coveo/ui-kit/commits/a0854298b7e78dec6e4a301f3912e3d00c5a8e05))
+
 ## 2.46.11 (2024-03-20)
 
 ### Bug Fixes
