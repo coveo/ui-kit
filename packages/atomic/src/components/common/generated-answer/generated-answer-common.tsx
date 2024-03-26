@@ -287,6 +287,9 @@ export class GeneratedAnswerCommon {
         {!this.hasRetryableError && this.isAnswerVisible ? (
           <GeneratedContentContainer
             answer={this.props.getGeneratedAnswerState()?.answer}
+            answerMediaType={
+              this.props.getGeneratedAnswerState()?.answerMediaType
+            }
             isStreaming={!!this.props.getGeneratedAnswerState()?.isStreaming}
           >
             <SourceCitations
