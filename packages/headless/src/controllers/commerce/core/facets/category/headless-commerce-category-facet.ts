@@ -51,8 +51,8 @@ export type CategoryFacet = Omit<
   | 'toggleSingleSelect'
   | 'state'
 > & {
-  state: CategoryFacetState;
   facetSearch: Omit<CategoryFacetSearch, 'state'>;
+  state: CategoryFacetState;
 };
 
 /**
