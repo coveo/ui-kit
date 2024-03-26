@@ -4,46 +4,36 @@ import {
   executeCommerceFacetSearch,
   executeCommerceFieldSuggest,
 } from '../../../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions';
+import {specificFacetSearchSetReducer as facetSearchSet} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
+import {FacetSearchSection} from '../../../../../state/state-sections';
+import {loadReducerError} from '../../../../../utils/errors';
 import {
   FacetSearchProps,
   buildFacetSearch,
 } from '../../../../core/facets/facet-search/specific/headless-facet-search';
+import {CoreFacetSearchState} from './headless-commerce-searchable-facet';
 
-export type FacetSearchResult = SpecificFacetSearchResult;
+export type RegularFacetSearchState =
+  CoreFacetSearchState<SpecificFacetSearchResult>;
 
-export type CommerceFacetSearchState = {
-  /**
-   * Whether the facet search request is in a pending state.
-   */
-  isLoading: boolean;
-  /**
-   * The facet search query.
-   */
-  query: string;
-  /**
-   * Whether additional values matching the facet search query are available.
-   */
-  moreValuesAvailable: boolean;
-  /**
-   * The returned values matching the facet search query.
-   */
-  values: FacetSearchResult[];
-};
-
-export type FacetSearch = Omit<
-  ReturnType<typeof buildCommerceFacetSearch>,
+export type RegularFacetSearch = Omit<
+  ReturnType<typeof buildRegularFacetSearch>,
   'state'
 > & {
-  state: CommerceFacetSearchState;
+  state: RegularFacetSearchState;
 };
 
-export function buildCommerceFacetSearch(
+export function buildRegularFacetSearch(
   engine: CommerceEngine,
   props: Omit<
     FacetSearchProps,
     'executeFacetSearchActionCreator' | 'executeFieldSuggestActionCreator'
   >
 ) {
+  if (!loadRegularFacetSearchReducers(engine)) {
+    throw loadReducerError;
+  }
+
   const {showMoreResults, updateCaptions, ...restOfFacetSearch} =
     buildFacetSearch(engine, {
       ...props,
@@ -54,4 +44,11 @@ export function buildCommerceFacetSearch(
   return {
     ...restOfFacetSearch,
   };
+}
+
+function loadRegularFacetSearchReducers(
+  engine: CommerceEngine
+): engine is CommerceEngine<FacetSearchSection> {
+  engine.addReducers({facetSearchSet});
+  return true;
 }

@@ -1,18 +1,26 @@
-import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
+import {createSelector} from '@reduxjs/toolkit';
+import {
+  CommerceEngine,
+  CommerceEngineState,
+} from '../../../../../app/commerce-engine/commerce-engine';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
 } from '../../../../../features/facets/facet-set/facet-set-actions';
 import {
+  CoreCommerceFacet,
   CoreCommerceFacetOptions,
+  CoreCommerceFacetState,
   FacetValueRequest,
   RegularFacetValue,
+  buildCoreCommerceFacet,
 } from '../headless-core-commerce-facet';
 import {
-  SearchableFacet,
-  SearchableFacetOptions,
-  buildCommerceSearchableFacet,
-} from '../searchable/headless-commerce-searchable-facet';
+  RegularFacetSearch,
+  RegularFacetSearchState,
+  buildRegularFacetSearch,
+} from '../searchable/headless-commerce-facet-search';
+import {SearchableFacetOptions} from '../searchable/headless-commerce-searchable-facet';
 
 export type RegularFacetOptions = Omit<
   CoreCommerceFacetOptions,
@@ -24,10 +32,15 @@ export type RegularFacetOptions = Omit<
  * The `RegularFacet` controller offers a high-level programming interface for implementing a regular commerce
  * facet UI component.
  */
-export type RegularFacet = SearchableFacet<
+export type RegularFacet = CoreCommerceFacet<
   FacetValueRequest,
   RegularFacetValue
->;
+> & {
+  facetSearch: Omit<RegularFacetSearch, 'state'>;
+  state: CoreCommerceFacetState<RegularFacetValue> & {
+    facetSearch: RegularFacetSearchState;
+  };
+};
 
 /**
  * @internal
@@ -45,12 +58,54 @@ export function buildCommerceRegularFacet(
   engine: CommerceEngine,
   options: RegularFacetOptions
 ): RegularFacet {
-  return buildCommerceSearchableFacet<FacetValueRequest, RegularFacetValue>(
-    engine,
-    {
+  const coreController = buildCoreCommerceFacet<
+    FacetValueRequest,
+    RegularFacetValue
+  >(engine, {
+    options: {
       ...options,
       toggleSelectActionCreator: toggleSelectFacetValue,
       toggleExcludeActionCreator: toggleExcludeFacetValue,
-    }
+    },
+  });
+  const getFacetId = () => coreController.state.facetId;
+  const {dispatch} = engine;
+  const createFacetSearch = () => {
+    return buildRegularFacetSearch(engine, {
+      options: {facetId: getFacetId(), ...options.facetSearch},
+      select: () => {
+        dispatch(options.fetchResultsActionCreator());
+      },
+      exclude: () => {
+        dispatch(options.fetchResultsActionCreator());
+      },
+      isForFieldSuggestions: false,
+    });
+  };
+
+  const facetSearch = createFacetSearch();
+  const {state, ...restOfFacetSearch} = facetSearch;
+  const facetSearchStateSelector = createSelector(
+    (state: CommerceEngineState) => state.facetSearchSet[getFacetId()],
+    (facetSearch) => ({
+      facetSearch: {
+        isLoading: facetSearch.isLoading,
+        moreValuesAvailable: facetSearch.response.moreValuesAvailable,
+        query: facetSearch.options.query,
+        values: facetSearch.response.values,
+      },
+    })
   );
+
+  return {
+    ...coreController,
+    facetSearch: restOfFacetSearch,
+
+    get state() {
+      return {
+        ...coreController.state,
+        ...facetSearchStateSelector(engine.state),
+      };
+    },
+  };
 }
