@@ -89,10 +89,10 @@ export type {Raw} from './api/search/search/raw';
 
 // Features
 export type {
+  ResultTemplatesManager,
   ResultTemplate,
   ResultTemplateCondition,
-} from './features/result-templates/result-templates';
-export type {ResultTemplatesManager} from './features/result-templates/result-templates-manager';
+} from './features/result-templates/result-templates-manager';
 export {buildResultTemplatesManager} from './features/result-templates/result-templates-manager';
 
 export {ResultTemplatesHelpers} from './features/result-templates/result-templates-helpers';

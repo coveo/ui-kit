@@ -2,6 +2,7 @@ import {configuration} from '../../../../app/common-reducers';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
 import {facetOptionsReducer as facetOptions} from '../../../../features/facet-options/facet-options-slice';
 import {
+  defaultNumberOfValuesIncrement,
   deselectAllCategoryFacetValues,
   registerCategoryFacet,
   toggleSelectCategoryFacetValue,
@@ -507,7 +508,7 @@ describe('category facet', () => {
     it('dispatches #updateCategoryFacetNumberOfResults with the correct numberOfValues', () => {
       expect(updateCategoryFacetNumberOfValues).toHaveBeenCalledWith({
         facetId,
-        numberOfValues: 5,
+        numberOfValues: defaultNumberOfValuesIncrement,
       });
     });
 

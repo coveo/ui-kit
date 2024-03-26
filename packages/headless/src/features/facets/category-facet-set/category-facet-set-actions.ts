@@ -96,6 +96,8 @@ const categoryFacetPayloadDefinition = {
   filterByBasePath: new BooleanValue({required: false}),
 };
 
+export const defaultNumberOfValuesIncrement = 5;
+
 export const registerCategoryFacet = createAction(
   'categoryFacet/register',
   (payload: RegisterCategoryFacetActionCreatorPayload) =>

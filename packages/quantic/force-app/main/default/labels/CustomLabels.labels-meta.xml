@@ -1400,11 +1400,18 @@
     <protected>false</protected>
     <shortDescription>Generated answer ON</shortDescription>
   </labels>
-    <labels>
+  <labels>
     <fullName>quantic_GeneratedAnswerOff</fullName>
     <value>Generated answer OFF</value>
     <language>en_US</language>
     <protected>false</protected>
     <shortDescription>Generated answer OFF</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_RGADisclaimer</fullName>
+    <value>Generated content may contain errors. Verify important information.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Generated answer disclaimer</shortDescription>
   </labels>
 </CustomLabels>

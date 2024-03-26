@@ -21,7 +21,7 @@ export default class ExampleInsightPanel extends LightningElement {
   /** @type {string} */
   @api engineId = 'example-insight-panel';
   /** @type {string} */
-  @api insightId = '6a333202-b1e0-451e-8664-26a1f93c2faf';
+  @api insightId = '142be676-703c-445f-b2d3-fcc7c0a3ded8';
 
   connectedCallback() {
     this.template.addEventListener(

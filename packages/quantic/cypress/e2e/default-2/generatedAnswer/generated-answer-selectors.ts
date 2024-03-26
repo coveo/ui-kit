@@ -29,6 +29,7 @@ export interface GeneratedAnswerSelector extends ComponentSelector {
   citationTooltipUri: (index: number) => CypressSelector;
   citationTooltipTitle: (index: number) => CypressSelector;
   citationTooltipText: (index: number) => CypressSelector;
+  disclaimer: () => CypressSelector;
 }
 
 export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
@@ -126,4 +127,8 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
         '[data-cy="generated-answer__citations"] [data-cy="citation__tooltip-text"]'
       )
       .eq(index),
+  disclaimer: () =>
+    GeneratedAnswerSelectors.get().find(
+      '[data-cy="generated-answer__disclaimer"]'
+    ),
 };

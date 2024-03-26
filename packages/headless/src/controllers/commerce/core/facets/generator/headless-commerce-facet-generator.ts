@@ -16,6 +16,7 @@ import {
   buildController,
   Controller,
 } from '../../../../controller/headless-controller';
+import {CategoryFacet} from '../category/headless-commerce-category-facet';
 import {DateFacet} from '../date/headless-commerce-date-facet';
 import {
   CommerceFacetOptions,
@@ -47,11 +48,23 @@ export interface FacetGeneratorState {
   /**
    * The generated commerce facet controllers.
    */
-  facets: CoreCommerceFacet<AnyFacetValueRequest, AnyFacetValueResponse>[];
+  facets: Omit<
+    CoreCommerceFacet<AnyFacetValueRequest, AnyFacetValueResponse>,
+    | 'isValueExcluded'
+    | 'toggleExclude'
+    | 'toggleSingleExclude'
+    | 'toggleSingleSelect'
+  >[];
 }
 
 type CommerceFacetBuilder<
-  Facet extends CoreCommerceFacet<AnyFacetValueRequest, AnyFacetValueResponse>,
+  Facet extends Omit<
+    CoreCommerceFacet<AnyFacetValueRequest, AnyFacetValueResponse>,
+    | 'isValueExcluded'
+    | 'toggleExclude'
+    | 'toggleSingleExclude'
+    | 'toggleSingleSelect'
+  >,
 > = (engine: CommerceEngine, options: CommerceFacetOptions) => Facet;
 
 type CommerceSearchableFacetBuilder<
@@ -69,8 +82,14 @@ export interface FacetGeneratorOptions {
   buildRegularFacet: CommerceSearchableFacetBuilder<RegularFacet>;
   buildNumericFacet: CommerceFacetBuilder<NumericFacet>;
   buildDateFacet: CommerceFacetBuilder<DateFacet>;
-  // TODO: buildCategoryFacet: CommerceFacetBuilder<CategoryFacet>;
+  buildCategoryFacet: CommerceFacetBuilder<CategoryFacet>;
 }
+
+export type AnyCommerceFacetController =
+  | RegularFacet
+  | NumericFacet
+  | DateFacet
+  | CategoryFacet;
 
 /**
  * @internal
@@ -100,13 +119,13 @@ export function buildFacetGenerator(
     const {type} = engine.state.commerceFacetSet[facetId].request;
 
     switch (type) {
-      case 'numericalRange':
-        return options.buildNumericFacet(engine, {facetId});
       case 'dateRange':
         return options.buildDateFacet(engine, {facetId});
-      case 'hierarchical': // TODO return options.buildCategoryFacet(engine, {facetId});
+      case 'hierarchical':
+        return options.buildCategoryFacet(engine, {facetId});
+      case 'numericalRange':
+        return options.buildNumericFacet(engine, {facetId});
       case 'regular':
-      default:
         return options.buildRegularFacet(engine, {facetId});
     }
   };

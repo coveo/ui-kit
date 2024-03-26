@@ -77,4 +77,11 @@ describe('SearchFacetGenerator', () => {
     facetGenerator.state.facets[0].deselectAll();
     expect(executeSearch).toHaveBeenCalled();
   });
+
+  it('generated category facet controllers dispatch #executeSearch', () => {
+    setFacetState([{facetId: 'category_facet_id', type: 'hierarchical'}]);
+
+    facetGenerator.state.facets[0].deselectAll();
+    expect(executeSearch).toHaveBeenCalled();
+  });
 });

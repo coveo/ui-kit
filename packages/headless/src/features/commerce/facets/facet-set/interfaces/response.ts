@@ -26,7 +26,9 @@ export type NumericFacetResponse = BaseFacetResponse<
 export type CategoryFacetResponse = BaseFacetResponse<
   CategoryFacetValue,
   'hierarchical'
->;
+> & {
+  delimitingCharacter: string;
+};
 export type FacetType =
   | 'regular'
   | 'dateRange'

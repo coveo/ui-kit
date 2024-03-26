@@ -1,3 +1,4 @@
+import {CategoryFacetValue as CommerceCategoryFacetValue} from '../../commerce/facets/facet-set/interfaces/response';
 import {CategoryFacetValueCommon} from './interfaces/commons';
 import {CategoryFacetValueRequest} from './interfaces/request';
 import {CategoryFacetValue} from './interfaces/response';
@@ -37,6 +38,9 @@ export function partitionIntoParentsAndValues<
 export function findActiveValueAncestry(
   valuesAsTress: CategoryFacetValueRequest[]
 ): CategoryFacetValueRequest[];
+export function findActiveValueAncestry(
+  valuesAsTress: CommerceCategoryFacetValue[]
+): CommerceCategoryFacetValue[];
 export function findActiveValueAncestry(
   valuesAsTress: CategoryFacetValue[]
 ): CategoryFacetValue[];

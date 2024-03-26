@@ -12,7 +12,7 @@
     <targetConfigs>
         <targetConfig targets="lightningCommunity__Default, lightning__AppPage, lightning__RecordPage, lightning__HomePage">
             <property name="engineId" type="String" default="example-insight-panel" label="Enter Coveo Headless engine ID"/>
-            <property name="insightId" type="String" default="6a333202-b1e0-451e-8664-26a1f93c2faf" label="The insight panel config ID"/>
+            <property name="insightId" type="String" default="" label="The insight panel config ID"/>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>

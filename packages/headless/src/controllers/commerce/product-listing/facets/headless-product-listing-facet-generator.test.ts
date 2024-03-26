@@ -82,4 +82,12 @@ describe('ProductListingFacetGenerator', () => {
 
     expect(fetchProductListing).toHaveBeenCalled();
   });
+
+  it('generated category facet controller dispatches #fetchProductListing', () => {
+    setFacetState([{facetId: 'category_facet_id', type: 'hierarchical'}]);
+
+    facetGenerator.state.facets[0].deselectAll();
+
+    expect(fetchProductListing).toHaveBeenCalled();
+  });
 });

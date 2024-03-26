@@ -3,6 +3,7 @@ import {
   buildFacetGenerator,
   FacetGenerator,
 } from '../../core/facets/generator/headless-commerce-facet-generator';
+import {buildSearchCategoryFacet} from './headless-search-category-facet';
 import {buildSearchDateFacet} from './headless-search-date-facet';
 import {buildSearchNumericFacet} from './headless-search-numeric-facet';
 import {buildSearchRegularFacet} from './headless-search-regular-facet';
@@ -30,6 +31,6 @@ export function buildSearchFacetGenerator(
     buildRegularFacet: buildSearchRegularFacet,
     buildNumericFacet: buildSearchNumericFacet,
     buildDateFacet: buildSearchDateFacet,
-    // TODO: buildCategoryFacet: buildSearchCategoryFacet,
+    buildCategoryFacet: buildSearchCategoryFacet,
   }) as SearchFacetGenerator;
 }
