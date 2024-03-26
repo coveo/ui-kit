@@ -1,6 +1,8 @@
 import {CategoryFacetSearchResult} from '../../../../../api/search/facet-search/category-facet-search/category-facet-search-response';
 import {SpecificFacetSearchResult} from '../../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
 
+// TODO move those interfaces to more fitting file(s)
+
 export type SearchableFacetOptions = {
   facetSearch?: {facetQuery: string};
 };
