@@ -1,3 +1,9 @@
+## 1.7.13 (2024-03-27)
+
+### Bug Fixes
+
+- **ci:** update credential to pull coveo-platform repo (#89) ([16a83d5](/commits/16a83d519ab67a5675bf72ae49255478695fda5e)), closes [#89](/issues/89)
+
 ## 1.7.12 (2024-03-13)
 
 ## 1.7.11 (2024-03-06)
