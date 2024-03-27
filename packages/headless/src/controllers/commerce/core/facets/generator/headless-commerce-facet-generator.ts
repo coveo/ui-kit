@@ -24,7 +24,6 @@ import {
 import {NumericFacet} from '../numeric/headless-commerce-numeric-facet';
 import {RegularFacet} from '../regular/headless-commerce-regular-facet';
 import {SearchableFacetOptions} from '../searchable/headless-commerce-searchable-facet';
-import {createFacetFactory} from '../common';
 
 /**
  * The `FacetGenerator` headless controller creates commerce facet controllers from the Commerce API search or
@@ -51,7 +50,7 @@ export interface FacetGeneratorState {
   facets: CoreCommerceFacet<AnyFacetValueRequest, AnyFacetValueResponse>[];
 }
 
-type CommerceFacetBuilder<
+export type CommerceFacetBuilder<
   Facet extends CoreCommerceFacet<AnyFacetValueRequest, AnyFacetValueResponse>,
 > = (engine: CommerceEngine, options: CommerceFacetOptions) => Facet;
 
@@ -97,13 +96,20 @@ export function buildFacetGenerator(
     (facetOrder) => ({facets: facetOrder.map(createFacet) ?? []})
   );
 
-  const createFacet = createFacetFactory<CoreCommerceFacet<AnyFacetValueRequest, AnyFacetValueResponse>>((facetId) => engine.state.commerceFacetSet[facetId].request.type, {
-    numericalRange: (facetId: string) => options.buildNumericFacet(engine, {facetId}),
-    dateRange: (facetId: string) => options.buildDateFacet(engine, {facetId}),
-    // TODO return options.buildCategoryFacet(engine, {facetId});
-    hierarchical: (facetId: string) => options.buildRegularFacet(engine, {facetId}),
-    regular: (facetId: string) => options.buildRegularFacet(engine, {facetId})
-  });
+  const createFacet = (facetId: string) => {
+    const {type} = engine.state.commerceFacetSet[facetId].request;
+
+    switch (type) {
+      case 'numericalRange':
+        return options.buildNumericFacet(engine, {facetId});
+      case 'dateRange':
+        return options.buildDateFacet(engine, {facetId});
+      case 'hierarchical': // TODO return options.buildCategoryFacet(engine, {facetId});
+      case 'regular':
+      default:
+        return options.buildRegularFacet(engine, {facetId});
+    }
+  };
 
   return {
     ...controller,

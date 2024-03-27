@@ -1,4 +1,3 @@
-import {ActionCreatorWithPreparedPayload} from '@reduxjs/toolkit';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {AnyCommerceFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
@@ -26,7 +25,7 @@ import {
 } from '../../../core/facets/facet/headless-core-facet';
 import {DateRangeRequest} from '../../../core/facets/range-facet/date-facet/headless-core-date-facet';
 import {NumericRangeRequest} from '../../../core/facets/range-facet/numeric-facet/headless-core-numeric-facet';
-import {FetchResultsActionCreator} from '../common';
+import {FetchResultsActionCreator, ToggleActionCreator} from '../common';
 
 export type {
   FacetType,
@@ -37,11 +36,6 @@ export type {
   DateRangeRequest,
   DateFacetValue,
 };
-
-interface AnyToggleFacetValueActionCreatorPayload {
-  selection: any; // eslint-disable-line @typescript-eslint/no-explicit-any
-  facetId: string;
-}
 
 /**
  * @internal
@@ -54,20 +48,8 @@ export interface CoreCommerceFacetProps {
 
 export interface CoreCommerceFacetOptions {
   facetId: string;
-  toggleSelectActionCreator: ActionCreatorWithPreparedPayload<
-    [payload: AnyToggleFacetValueActionCreatorPayload],
-    unknown,
-    string,
-    never,
-    never
-  >;
-  toggleExcludeActionCreator: ActionCreatorWithPreparedPayload<
-    [payload: AnyToggleFacetValueActionCreatorPayload],
-    unknown,
-    string,
-    never,
-    never
-  >;
+  toggleSelectActionCreator: ToggleActionCreator;
+  toggleExcludeActionCreator: ToggleActionCreator;
   fetchResultsActionCreator: FetchResultsActionCreator;
   facetResponseSelector: (
     state: CommerceEngine['state'],

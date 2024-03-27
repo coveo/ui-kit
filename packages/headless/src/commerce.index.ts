@@ -141,3 +141,12 @@ export {buildCoreUrlManager} from './controllers/commerce/core/url-manager/headl
 
 export {buildSearchUrlManager} from './controllers/commerce/search/url-manager/headless-search-url-manager';
 export {buildProductListingUrlManager} from './controllers/commerce/product-listing/url-manager/headless-product-listing-url-manager';
+
+export type {
+  BreadcrumbManager,
+  Breadcrumb,
+  BreadcrumbValue,
+  DeselectableValue,
+} from './controllers/commerce/core/breadcrumb-manager/headless-core-breadcrumb-manager';
+export {buildProductListingBreadcrumbManager} from './controllers/commerce/product-listing/facets/headless-product-listing-breadcrumb-manager';
+export {buildSearchBreadcrumbManager} from './controllers/commerce/search/facets/headless-search-breadcrumb-manager';
