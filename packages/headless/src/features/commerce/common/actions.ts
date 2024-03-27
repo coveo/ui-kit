@@ -1,10 +1,7 @@
 import {getVisitorID} from '../../../api/analytics/coveo-analytics-utils';
 import {SortParam} from '../../../api/commerce/commerce-api-params';
 import {CommerceAPIRequest} from '../../../api/commerce/common/request';
-import {
-  RecommendationCommerceSuccessResponse,
-  CommerceSuccessResponse,
-} from '../../../api/commerce/common/response';
+import {CommerceSuccessResponse} from '../../../api/commerce/common/response';
 import {
   CartSection,
   CategoryFacetSection,
@@ -26,7 +23,7 @@ import {SortBy, SortCriterion} from '../sort/sort';
 
 export type StateNeededByQueryCommerceAPI = ConfigurationSection &
   ProductListingV2Section &
-  RecommendationV2Section &
+  Partial<RecommendationV2Section> &
   CommerceContextSection &
   CartSection &
   Partial<
@@ -44,11 +41,6 @@ export interface QueryCommerceAPIThunkReturn {
   /** The successful search response. */
   response: CommerceSuccessResponse;
   analyticsAction: PreparableAnalyticsAction<StateNeededByQueryCommerceAPI>;
-}
-
-export interface QueryRecommendationCommerceAPIThunkReturn {
-  /** The successful search response. */
-  response: RecommendationCommerceSuccessResponse;
 }
 
 export const buildCommerceAPIRequest = async (

@@ -1,14 +1,20 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
+import {RecommendationCommerceSuccessResponse} from '../../../api/commerce/common/response';
 import {CommerceRecommendationRequest} from '../../../api/commerce/recommendation/recommendation-request';
 import {isErrorResponse} from '../../../api/search/search-api-client';
-import {nonEmptyString, validatePayload} from '../../../utils/validate-payload';
+import {validatePayload} from '../../../utils/validate-payload';
 import {logQueryError} from '../../search/search-analytics-actions';
 import {
   buildCommerceAPIRequest,
-  QueryRecommendationCommerceAPIThunkReturn,
   StateNeededByQueryCommerceAPI,
 } from '../common/actions';
+import {recommendationsOptionsSchema} from './recommendation';
+
+interface QueryRecommendationCommerceAPIThunkReturn {
+  /** The successful recommendations response. */
+  response: RecommendationCommerceSuccessResponse;
+}
 
 const buildRecommendationCommerceAPIRequest = async (
   slotId: string,
@@ -55,5 +61,6 @@ export interface SlotIdPayload {
 
 export const updateRecommendationSlotId = createAction(
   'recommendation/updateSlotId',
-  (payload: SlotIdPayload) => validatePayload(payload, {slotId: nonEmptyString})
+  (payload: SlotIdPayload) =>
+    validatePayload(payload, recommendationsOptionsSchema)
 );

@@ -1,4 +1,3 @@
-import {Schema} from '@coveo/bueno';
 import {createSelector} from '@reduxjs/toolkit';
 import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
 import {Product} from '../../../api/commerce/common/product';
@@ -8,7 +7,7 @@ import {
 } from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
-import {recommendationSlotDefinition} from '../../../features/commerce/recommendation/recommendation';
+import {recommendationsOptionsSchema} from '../../../features/commerce/recommendation/recommendation';
 import {
   fetchRecommendations,
   updateRecommendationSlotId,
@@ -22,7 +21,7 @@ import {
 } from '../../controller/headless-controller';
 
 /**
- * The `Recommendations` controller exposes a method for retrieving recomendations content in a commerce interface.
+ * The `Recommendation` controller exposes a method for retrieving recomendations content in a commerce interface.
  */
 export interface Recommendation extends Controller {
   /**
@@ -44,9 +43,7 @@ export interface RecommendationState {
   responseId: string;
 }
 
-export type RecommendationControllerState = Recommendation['state'];
-
-interface RecommendationsOptions {
+export interface RecommendationsOptions {
   slotId: string;
 }
 
@@ -56,17 +53,18 @@ interface RecommendationsProps {
 
 function validateRecommendationInitialState(
   engine: CommerceEngine,
-  state: RecommendationsOptions
+  options: RecommendationsOptions
 ) {
-  if (!state) {
+  if (!options) {
     return;
   }
 
-  const schema = new Schema<RecommendationsOptions>({
-    slotId: recommendationSlotDefinition,
-  });
-
-  validateInitialState(engine, schema, state, 'buildRecommendations');
+  validateInitialState(
+    engine,
+    recommendationsOptionsSchema,
+    options,
+    'buildRecommendations'
+  );
 }
 /**
  * Creates a `Recommendation` controller instance.
