@@ -65,6 +65,9 @@ const genQaMessageTypePayload = {
 
 const retryableErrorCodes = [500, 429];
 
+const GENERATED_ANSWER_DISCLAIMER =
+  'Generated content may contain errors. Verify important information.';
+
 describe('quantic-generated-answer', () => {
   beforeEach(() => {
     cy.clock(0, ['Date']);
@@ -133,6 +136,12 @@ describe('quantic-generated-answer', () => {
           it('should display the correct message', () => {
             Expect.displayGeneratedAnswerCard(true);
             Expect.generatedAnswerContains(testText);
+            Expect.generatedAnswerIsStreaming(false);
+          });
+
+          it('should display the disclaimer', () => {
+            Expect.displayDisclaimer(true);
+            Expect.disclaimerContains(GENERATED_ANSWER_DISCLAIMER);
             Expect.generatedAnswerIsStreaming(false);
           });
 
@@ -228,6 +237,7 @@ describe('quantic-generated-answer', () => {
             scope('when loading the page', () => {
               Expect.displayGeneratedAnswerCard(true);
               Expect.generatedAnswerFooterIsOnMultiline(true);
+              Expect.displayDisclaimer(true);
             });
           });
         });
@@ -258,6 +268,7 @@ describe('quantic-generated-answer', () => {
             Expect.displayCopyToClipboardButton(false);
             Expect.displayToggleGeneratedAnswerButton(true);
             Expect.toggleGeneratedAnswerButtonIsChecked(true);
+            Expect.displayDisclaimer(false);
           });
         });
 
@@ -596,6 +607,7 @@ describe('quantic-generated-answer', () => {
                   Expect.displayGeneratedAnswerContent(false);
                   Expect.displayLikeButton(false);
                   Expect.displayDislikeButton(false);
+                  Expect.displayDisclaimer(false);
                   if (analyticsMode === 'next') {
                     NextAnalyticsExpectations.emitQnaAnswerActionEvent(
                       {
@@ -864,6 +876,7 @@ describe('quantic-generated-answer', () => {
                     cy.wait(getStreamInterceptAlias(streamId));
                   }
                   Expect.displayGeneratedAnswerCard(true);
+                  Expect.displayDisclaimer(false);
 
                   Actions.clickRetry();
                   cy.wait(InterceptAliases.Search);

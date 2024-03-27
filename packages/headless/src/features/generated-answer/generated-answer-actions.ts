@@ -143,6 +143,11 @@ export const registerFieldsToIncludeInCitations = createAction(
   (payload: string[]) => validatePayload<string[]>(payload, nonEmptyStringArray)
 );
 
+export const setIsAnswerGenerated = createAction(
+  'generatedAnswer/setIsAnswerGenerated',
+  (payload: boolean) => validatePayload(payload, booleanValue)
+);
+
 interface StreamAnswerArgs {
   setAbortControllerRef: (ref: AbortController) => void;
 }
@@ -176,15 +181,15 @@ export const streamAnswer = createAsyncThunk<
           )
         );
         break;
-      case 'genqa.endOfStreamType':
+      case 'genqa.endOfStreamType': {
+        const isAnswerGenerated = (
+          JSON.parse(payload) as GeneratedAnswerEndOfStreamPayload
+        ).answerGenerated;
         dispatch(setIsStreaming(false));
-        dispatch(
-          logGeneratedAnswerStreamEnd(
-            (JSON.parse(payload) as GeneratedAnswerEndOfStreamPayload)
-              .answerGenerated
-          )
-        );
+        dispatch(setIsAnswerGenerated(isAnswerGenerated));
+        dispatch(logGeneratedAnswerStreamEnd(isAnswerGenerated));
         break;
+      }
       default:
         if (state.debug) {
           extra.logger.warn(`Unknown payloadType: "${payloadType}"`);
