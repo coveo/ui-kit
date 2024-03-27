@@ -1338,6 +1338,20 @@
     <shortDescription>Rephrase</shortDescription>
   </labels>
   <labels>
+    <fullName>quantic_Auto</fullName>
+    <value>Auto</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Auto rephrase</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_Automatic</fullName>
+    <value>Automatic</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Automatic rephrase tooltip</shortDescription>
+  </labels>
+  <labels>
     <fullName>quantic_StepByStepInstructions</fullName>
     <value>Step-by-step instructions</value>
     <language>en_US</language>
