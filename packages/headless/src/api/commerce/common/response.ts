@@ -13,7 +13,7 @@ interface BaseCommerceSuccessResponse {
   pagination: Pagination;
 }
 
-export interface RecommendationCommerceSuccessResponse
+export interface RecommendationsCommerceSuccessResponse
   extends BaseCommerceSuccessResponse {
   headline: string;
 }

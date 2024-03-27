@@ -4,7 +4,7 @@ import {
   CommerceContextSection,
   ConfigurationSection,
   ProductListingV2Section,
-  RecommendationV2Section,
+  RecommendationsSection,
   VersionSection,
   CommerceSortSection,
   CommerceSearchSection,
@@ -23,7 +23,7 @@ export type CommerceProductListingParametersState = {};
 
 export type CommerceAppState = ConfigurationSection &
   ProductListingV2Section &
-  RecommendationV2Section &
+  RecommendationsSection &
   CommerceSearchSection &
   CommerceQuerySection &
   FacetOrderSection &

@@ -51,9 +51,8 @@ export type {
 export {buildProductListing} from './controllers/commerce/product-listing/headless-product-listing';
 
 export type {
-  Recommendation,
-  RecommendationState,
-  RecommendationControllerState,
+  Recommendations,
+  RecommendationsState,
 } from './controllers/commerce/recommendations/headless-recommendations';
 export {buildRecommendations} from './controllers/commerce/recommendations/headless-recommendations';
 

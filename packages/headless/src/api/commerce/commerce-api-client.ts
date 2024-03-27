@@ -11,14 +11,14 @@ import {
 } from './commerce-api-error-response';
 import {buildRequest, CommerceAPIRequest} from './common/request';
 import {
-  RecommendationCommerceSuccessResponse,
+  RecommendationsCommerceSuccessResponse,
   CommerceSuccessResponse,
 } from './common/response';
 import {CommerceFacetSearchRequest} from './facet-search/facet-search-request';
 import {
-  CommerceRecommendationRequest,
-  buildRecommendationRequest,
-} from './recommendation/recommendation-request';
+  CommerceRecommendationsRequest,
+  buildRecommendationsRequest,
+} from './recommendations/recommendations-request';
 import {
   buildQuerySuggestRequest,
   QuerySuggestRequest,
@@ -71,11 +71,11 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
     });
   }
 
-  async getRecommendation(
-    req: CommerceRecommendationRequest
-  ): Promise<CommerceAPIResponse<RecommendationCommerceSuccessResponse>> {
+  async getRecommendations(
+    req: CommerceRecommendationsRequest
+  ): Promise<CommerceAPIResponse<RecommendationsCommerceSuccessResponse>> {
     return this.query({
-      ...buildRecommendationRequest(req, 'recommendations'),
+      ...buildRecommendationsRequest(req, 'recommendations'),
       ...this.options,
     });
   }
