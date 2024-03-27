@@ -1,5 +1,5 @@
 import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
-import {ProductRecommendation} from '../../../api/search/search/product-recommendation';
+import {Product} from '../../../api/commerce/common/product';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
 import {LegacySearchAction} from '../../../features/analytics/analytics-utils';
@@ -26,7 +26,7 @@ export interface Search extends Controller {
 }
 
 export interface SearchState {
-  products: ProductRecommendation[];
+  products: Product[];
   error: CommerceAPIErrorStatusResponse | null;
   isLoading: boolean;
   responseId: string;
