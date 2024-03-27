@@ -155,7 +155,7 @@ describe('c-quantic-result-quick-view', () => {
       useCase = 'insight';
     });
 
-    it('should dispatch the pushRecentResult action', async () => {
+    it('should not dispatch the pushRecentResult action', async () => {
       const element = createTestComponent();
       await flushPromises();
 
