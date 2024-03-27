@@ -38,6 +38,7 @@ export const logPagePrevious = (): LegacySearchAction =>
     })
   );
 
+// TODO KIT-2983
 export const pagerResize = (): SearchAction => ({
   actionCause: SearchPageEvents.pagerResize,
 });
