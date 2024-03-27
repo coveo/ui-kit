@@ -19,7 +19,7 @@ describe('recommendation-v2-slice', () => {
     );
   });
 
-  it('when a fetchProductListing fulfilled is received, should set the state to the received payload', () => {
+  it('when a fetchRecommendations.fulfilled is received, should set the state to the received payload', () => {
     const result = buildMockProductRecommendation();
     const responseId = 'some-response-id';
     const response = buildMockRecommendationV2Response({
@@ -61,7 +61,7 @@ describe('recommendation-v2-slice', () => {
     expect(finalState.error).toBeNull();
   });
 
-  it('set the isLoading state to true during fetchProductListing.pending', () => {
+  it('set the isLoading state to true during fetchRecommendations.pending', () => {
     const pendingAction = fetchRecommendations.pending('');
     const finalState = recommendationV2Reducer(state, pendingAction);
 
