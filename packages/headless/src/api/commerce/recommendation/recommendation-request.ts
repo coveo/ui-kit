@@ -1,29 +1,8 @@
-import {BaseParam} from '../../platform-service-params';
-import {
-  ClientIdParam,
-  ContextParam,
-  CountryParam,
-  CurrencyParam,
-  LanguageParam,
-  PageParam,
-  QueryParam,
-  SlotIdParam,
-  TrackingIdParam,
-} from '../commerce-api-params';
-import {CommerceAPIRequest, baseRequest} from '../common/request';
+import {SlotIdParam} from '../commerce-api-params';
+import {BaseCommerceAPIRequest, baseRequest} from '../common/request';
 
-export type CommerceSearchRequest = CommerceAPIRequest & QueryParam;
-
-export type CommerceRecommendationRequest = BaseParam &
-  SlotIdParam &
-  TrackingIdParam &
-  LanguageParam &
-  CountryParam &
-  CurrencyParam &
-  ClientIdParam &
-  ContextParam &
-  PageParam;
-
+export type CommerceRecommendationRequest = BaseCommerceAPIRequest &
+  SlotIdParam;
 export const buildRecommendationRequest = (
   req: CommerceRecommendationRequest,
   path: string
