@@ -1,9 +1,13 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
-import {AnyCommerceFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
+import {
+  AnyFacetRequest,
+  CategoryFacetValueRequest,
+} from '../../../../features/commerce/facets/facet-set/interfaces/request';
 import {
   AnyFacetResponse,
   AnyFacetValueResponse,
+  CategoryFacetValue,
   DateFacetValue,
   FacetType,
   NumericFacetValue,
@@ -35,6 +39,8 @@ export type {
   NumericFacetValue,
   DateRangeRequest,
   DateFacetValue,
+  CategoryFacetValueRequest,
+  CategoryFacetValue,
 };
 
 /**
@@ -158,7 +164,7 @@ export function buildCoreCommerceFacet<
 
   const facetId = props.options.facetId;
 
-  const getRequest = (): AnyCommerceFacetRequest | undefined =>
+  const getRequest = (): AnyFacetRequest | undefined =>
     engine.state.commerceFacetSet[facetId]?.request;
   const getResponse = () =>
     props.options.facetResponseSelector(engine.state, facetId);
@@ -169,28 +175,30 @@ export function buildCoreCommerceFacet<
     return getRequest()?.values?.filter((v) => v.state !== 'idle').length ?? 0;
   };
 
-  const computeCanShowLessValues = () => {
-    const request = getRequest();
-    if (!request) {
-      return false;
-    }
-
-    const initialNumberOfValues = request.initialNumberOfValues;
-    const hasIdleValues = !!request.values.find((v) => v.state === 'idle');
-
-    return initialNumberOfValues < request.numberOfValues && hasIdleValues;
-  };
-
   return {
     ...controller,
 
     toggleSelect: (selection: ValueRequest) => {
-      dispatch(props.options.toggleSelectActionCreator({selection, facetId}));
+      dispatch(
+        props.options.toggleSelectActionCreator({
+          selection,
+          facetId,
+        })
+      );
       dispatch(props.options.fetchResultsActionCreator());
       // TODO: analytics
     },
 
     toggleExclude: (selection: ValueRequest) => {
+      // eslint-disable-next-line @cspell/spellchecker
+      // TODO CAPI-409: Rework facet type definitions
+      if (!props.options.toggleExcludeActionCreator) {
+        engine.logger.warn(
+          'No toggle exclude action creator provided; calling #toggleExclude had no effect.'
+        );
+        return;
+      }
+
       dispatch(props.options.toggleExcludeActionCreator({selection, facetId}));
       dispatch(props.options.fetchResultsActionCreator());
       // TODO: analytics
@@ -207,6 +215,15 @@ export function buildCoreCommerceFacet<
 
     // Must use a function here to properly support inheritance with `this`.
     toggleSingleExclude: function (selection: ValueRequest) {
+      // eslint-disable-next-line @cspell/spellchecker
+      // TODO CAPI-409: Rework facet type definitions
+      if (!props.options.toggleExcludeActionCreator) {
+        engine.logger.warn(
+          'No toggle exclude action creator provided; calling #toggleSingleExclude had no effect.'
+        );
+        return;
+      }
+
       if (selection.state === 'idle') {
         dispatch(deselectAllFacetValues(facetId));
       }
@@ -255,12 +272,10 @@ export function buildCoreCommerceFacet<
 
     get state() {
       const response = getResponse();
+      const canShowMoreValues = response?.moreValuesAvailable ?? false;
 
       const values = (response?.values ?? []) as ValueResponse[];
-      const hasActiveValues = values.some(
-        (facetValue) => facetValue.state !== 'idle'
-      );
-      const canShowMoreValues = response?.moreValuesAvailable ?? false;
+      const hasActiveValues = values.some((v) => v.state !== 'idle');
 
       return {
         facetId,
@@ -269,9 +284,9 @@ export function buildCoreCommerceFacet<
         displayName: response?.displayName ?? '',
         values,
         isLoading: getIsLoading(),
-        hasActiveValues,
         canShowMoreValues,
-        canShowLessValues: computeCanShowLessValues(),
+        canShowLessValues: canShowLessValues(getRequest()),
+        hasActiveValues,
       };
     },
   };
@@ -283,3 +298,17 @@ function loadCommerceFacetReducers(
   engine.addReducers({commerceFacetSet});
   return true;
 }
+
+const canShowLessValues = (request: AnyFacetRequest | undefined) => {
+  if (!request) {
+    return false;
+  }
+
+  const initialNumberOfValues = request.initialNumberOfValues;
+  const hasIdleValues = !!request.values.find((v) => v.state === 'idle');
+
+  return (
+    (initialNumberOfValues ?? 0) < (request.numberOfValues ?? 0) &&
+    hasIdleValues
+  );
+};

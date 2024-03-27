@@ -201,7 +201,7 @@ export {buildInteractiveResult} from './controllers/product-listing/result-list/
 export type {
   ResultTemplate,
   ResultTemplateCondition,
-} from './features/result-templates/result-templates';
+} from './features/result-templates/result-templates-manager';
 
 export type {Result} from './api/search/search/result';
 
