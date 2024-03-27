@@ -6,7 +6,6 @@ const defaultMeta: Meta = {
   type: "itemClick",
   config: {
     trackingId: "website",
-    user: { id: null },
   },
   ts: 1692057600000,
   source: ["headless@1.2", "relay@0.0.5"],

@@ -29,7 +29,7 @@ The core relay library should adhere to a few core design principles:
 
 - Relay is responsible for handling any concerns that are relevant to generic event logging, including but not limited to:
   - Enriching events with information that is only present in the browser (e.g. userAgent, local time).
-  - Tracking and persisting a unique identifier for a user (e.g. clientId)
+  - Tracking and persisting a unique identifier for a browser client (e.g. clientId)
   - Configuration of, and authentication with logging endpoints.
   - Privacy considerations (e.g. do not track, disable logging).
 - Relay is event-agnostic, meaning Relay has no knowledge on the contents of specific type of event payload that is being transmitted. It only handles event content, when that content is applicable to all logged events. In practice this means the following:

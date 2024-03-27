@@ -57,26 +57,6 @@ describe("createMeta", () => {
     ]);
   });
 
-  it("returns meta with a user.id field as null, if the user was not set", () => {
-    const noUserMeta = createMeta(
-      "itemView",
-      createMockConfig(),
-      mockEnv,
-      defaultClientIdManager
-    );
-    expect(noUserMeta.config.user).toEqual({ id: null });
-  });
-
-  it("returns meta with a user field, if the user was set", () => {
-    const withUserMeta = createMeta(
-      "itemView",
-      createMockConfig({ user: { id: "myuser@coveo.com" } }),
-      mockEnv,
-      defaultClientIdManager
-    );
-    expect(withUserMeta.config.user).toEqual({ id: "myuser@coveo.com" });
-  });
-
   it("returns meta with the source field with a version placeholder", () => {
     expect(defaultMeta.source).toEqual(["relay@process.env.VERSION"]);
   });
@@ -92,7 +72,6 @@ describe("createMeta", () => {
   it("returns meta with the config set as parameter", () => {
     expect(defaultMeta.config).toEqual({
       trackingId: "website",
-      user: { id: null },
     });
   });
 });

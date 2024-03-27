@@ -1,6 +1,6 @@
 import { ClientIdManager } from "../../client-id/client-id";
 import { Environment } from "../../environment/environment";
-import { RelayConfig, User } from "../../config/config";
+import { RelayConfig } from "../../config/config";
 import { version } from "../../version";
 
 /**
@@ -11,11 +11,6 @@ export interface EventConfig {
    * The unique identifier of a web property. See [Tracking ID](https://docs.coveo.com/en/n8tg0567/).
    */
   trackingId: string;
-
-  /**
-   * Named user identity which logged this event.
-   */
-  user: User;
 }
 
 /**
@@ -65,8 +60,8 @@ export interface Meta {
 }
 
 function getEventConfig(config: RelayConfig): EventConfig {
-  const { trackingId, user } = config;
-  return { trackingId, user: user || { id: null } };
+  const { trackingId } = config;
+  return { trackingId };
 }
 
 function getSource(config: RelayConfig): string[] {
