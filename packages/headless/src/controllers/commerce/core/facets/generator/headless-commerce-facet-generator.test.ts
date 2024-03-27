@@ -2,6 +2,7 @@ import {commerceFacetSetReducer as commerceFacetSet} from '../../../../../featur
 import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
 import {facetOrderReducer as facetOrder} from '../../../../../features/facets/facet-order/facet-order-slice';
 import {CommerceAppState} from '../../../../../state/commerce-app-state';
+import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search';
 import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
 import {
@@ -43,6 +44,8 @@ describe('FacetGenerator', () => {
         }),
       };
       state.facetSearchSet[facet.facetId] = buildMockFacetSearch();
+      state.categoryFacetSearchSet[facet.facetId] =
+        buildMockCategoryFacetSearch();
     }
   }
 

@@ -1,6 +1,5 @@
 import {CoreEngine} from '../../../app/engine';
 import {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments';
-import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {registerCategoryFacetSearch} from '../../../features/facets/facet-search-set/category/category-facet-search-actions';
 import {defaultFacetSearchOptions} from '../../../features/facets/facet-search-set/facet-search-reducer-helpers';
 import {
@@ -8,15 +7,9 @@ import {
   executeFieldSuggest,
 } from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
 import {
-  facetSelect,
-  logFacetSelect,
-} from '../../../features/facets/facet-set/facet-set-analytics-actions';
-import {executeSearch} from '../../../features/search/search-actions';
-import {
   CategoryFacetSearchSection,
   ConfigurationSection,
 } from '../../../state/state-sections';
-import {CategoryFacetSearchResult} from '../../core/facets/category-facet/headless-core-category-facet';
 import {
   buildCoreCategoryFacetSearch,
   CategoryFacetSearchProps,
@@ -30,6 +23,12 @@ export function buildCategoryFacetSearch(
   >,
   props: CategoryFacetSearchProps
 ) {
+  const {
+    executeFacetSearchActionCreator,
+    executeFieldSuggestActionCreator,
+    select: propsSelect,
+    isForFieldSuggestions,
+  } = props;
   const {dispatch} = engine;
   const options = {...defaultFacetSearchOptions, ...props.options};
   const {facetId} = options;
@@ -39,7 +38,10 @@ export function buildCategoryFacetSearch(
     options: {
       ...options,
     },
-    isForFieldSuggestions: props.isForFieldSuggestions,
+    executeFacetSearchActionCreator,
+    executeFieldSuggestActionCreator,
+    select: propsSelect,
+    isForFieldSuggestions,
   });
 
   dispatch(registerCategoryFacetSearch(options));
@@ -55,17 +57,6 @@ export function buildCategoryFacetSearch(
   return {
     ...genericFacetSearch,
     ...coreFacetSearch,
-
-    select: (value: CategoryFacetSearchResult) => {
-      coreFacetSearch.select(value);
-      dispatch(updateFacetOptions());
-      dispatch(
-        executeSearch({
-          legacy: logFacetSelect({facetId, facetValue: value.rawValue}),
-          next: facetSelect(),
-        })
-      );
-    },
 
     get state() {
       return {

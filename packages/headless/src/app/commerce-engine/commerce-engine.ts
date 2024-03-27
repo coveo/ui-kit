@@ -11,6 +11,7 @@ import {queryReducer} from '../../features/commerce/query/query-slice';
 import {commerceSearchReducer} from '../../features/commerce/search/search-slice';
 import {sortReducer} from '../../features/commerce/sort/sort-slice';
 import {facetOrderReducer} from '../../features/facets/facet-order/facet-order-slice';
+import {categoryFacetSearchSetReducer} from '../../features/facets/facet-search-set/category/category-facet-search-set-slice';
 import {specificFacetSearchSetReducer} from '../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {CommerceAppState} from '../../state/commerce-app-state';
 import {CommerceThunkExtraArguments} from '../commerce-thunk-extra-arguments';
@@ -36,6 +37,7 @@ const commerceEngineReducers = {
   commerceSort: sortReducer,
   facetOrder: facetOrderReducer,
   facetSearchSet: specificFacetSearchSetReducer,
+  categoryFacetSearchSet: categoryFacetSearchSetReducer,
   commerceFacetSet: commerceFacetSetReducer,
   commerceContext: contextReducer,
   commerceQuery: queryReducer,

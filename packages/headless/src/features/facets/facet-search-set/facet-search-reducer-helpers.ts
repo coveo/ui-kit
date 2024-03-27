@@ -1,9 +1,7 @@
 import {CommerceAPIResponse} from '../../../api/commerce/commerce-api-client';
 import {FacetSearchRequestOptions} from '../../../api/search/facet-search/base/base-facet-search-request';
 import {FacetSearchResponse} from '../../../api/search/facet-search/facet-search-response';
-import {SpecificFacetSearchResponse} from '../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
 import {FacetSearchOptions} from './facet-search-request-options';
-import {SpecificFacetSearchSetState} from './specific/specific-facet-search-set-state';
 
 export type FacetSearchState<T extends FacetSearchResponse> = {
   /**
@@ -118,11 +116,13 @@ export function handleFacetSearchFulfilled<T extends FacetSearchResponse>(
   search.response = response;
 }
 
-export function handleCommerceFacetSearchFulfilled(
-  state: SpecificFacetSearchSetState,
+export function handleCommerceFacetSearchFulfilled<
+  T extends FacetSearchResponse,
+>(
+  state: FacetSearchSetState<T>,
   payload: {
     facetId: string;
-    response: CommerceAPIResponse<SpecificFacetSearchResponse>;
+    response: CommerceAPIResponse<T>;
   },
   requestId: string
 ) {

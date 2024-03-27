@@ -5,6 +5,7 @@ import {
 import {executeSearch} from '../../../../features/commerce/search/search-actions';
 import {commerceSearchReducer as commerceSearch} from '../../../../features/commerce/search/search-slice';
 import {CommerceAppState} from '../../../../state/commerce-app-state';
+import {buildMockCategoryFacetSearch} from '../../../../test/mock-category-facet-search';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
 import {buildMockCategoryFacetResponse} from '../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
@@ -42,6 +43,7 @@ describe('SearchCategoryFacet', () => {
       request: buildMockCommerceFacetRequest({facetId, ...config}),
     });
     state.productListing.facets = [buildMockCategoryFacetResponse({facetId})];
+    state.categoryFacetSearchSet[facetId] = buildMockCategoryFacetSearch();
   }
 
   beforeEach(() => {
@@ -54,7 +56,7 @@ describe('SearchCategoryFacet', () => {
     state = buildMockCommerceState();
     setFacetState();
 
-    initEngine();
+    initEngine(state);
     initFacet();
   });
 

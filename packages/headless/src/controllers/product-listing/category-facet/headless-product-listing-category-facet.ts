@@ -1,10 +1,15 @@
 import {configuration} from '../../../app/common-reducers';
 import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
+import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {categoryFacetSetReducer as categoryFacetSet} from '../../../features/facets/category-facet-set/category-facet-set-slice';
 import {CategoryFacetValueCommon} from '../../../features/facets/category-facet-set/interfaces/commons';
 import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
 import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response';
 import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
+import {
+  executeFacetSearch,
+  executeFieldSuggest,
+} from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
 import {
   logFacetClearAll,
   logFacetDeselect,
@@ -37,7 +42,7 @@ import {
   CategoryFacetOptions,
   CategoryFacetSearchOptions,
 } from '../../core/facets/category-facet/headless-core-category-facet-options';
-import {buildCategoryFacetSearch} from './headless-product-listing-category-facet-search';
+import {buildCategoryFacetSearch} from '../../facets/category-facet/headless-category-facet-search';
 
 export type {
   CategoryFacetValue,
@@ -76,6 +81,14 @@ export function buildCategoryFacet(
     options: {
       facetId: getFacetId(),
       ...props.options.facetSearch,
+    },
+    executeFacetSearchActionCreator: executeFacetSearch,
+    executeFieldSuggestActionCreator: executeFieldSuggest,
+    select: (value: CategoryFacetSearchResult) => {
+      dispatch(updateFacetOptions());
+      dispatch(fetchProductListing()).then(() =>
+        logFacetSelect({facetId: getFacetId(), facetValue: value.rawValue})
+      );
     },
     isForFieldSuggestions: false,
   });

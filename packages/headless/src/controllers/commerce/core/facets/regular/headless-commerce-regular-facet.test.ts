@@ -35,7 +35,7 @@ describe('RegularFacet', () => {
     engine = buildMockCommerceEngine(preloadedState);
   }
 
-  function initCommerceRegularFacet() {
+  function initFacet() {
     facet = buildCommerceRegularFacet(engine, options);
   }
 
@@ -48,9 +48,6 @@ describe('RegularFacet', () => {
     state.productListing.facets = [
       buildMockCommerceRegularFacetResponse({facetId}),
     ];
-  }
-
-  function setFacetSearch() {
     state.facetSearchSet[facetId] = buildMockFacetSearch();
   }
 
@@ -64,10 +61,9 @@ describe('RegularFacet', () => {
 
     state = buildMockCommerceState();
     setFacetRequest();
-    setFacetSearch();
 
     initEngine(state);
-    initCommerceRegularFacet();
+    initFacet();
   });
 
   describe('initialization', () => {

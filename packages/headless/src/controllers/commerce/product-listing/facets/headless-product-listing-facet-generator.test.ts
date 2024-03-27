@@ -1,6 +1,7 @@
 import {FacetType} from '../../../../features/commerce/facets/facet-set/interfaces/response';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {CommerceAppState} from '../../../../state/commerce-app-state';
+import {buildMockCategoryFacetSearch} from '../../../../test/mock-category-facet-search';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {
@@ -40,6 +41,8 @@ describe('ProductListingFacetGenerator', () => {
         }),
       };
       state.facetSearchSet[facet.facetId] = buildMockFacetSearch();
+      state.categoryFacetSearchSet[facet.facetId] =
+        buildMockCategoryFacetSearch();
     }
   }
 
