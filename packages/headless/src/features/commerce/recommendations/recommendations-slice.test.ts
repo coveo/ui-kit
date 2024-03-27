@@ -1,34 +1,34 @@
-import {buildMockProductRecommendation} from '../../../test/mock-product-recommendation';
-import {buildMockRecommendationV2Response} from '../../../test/mock-recommendation-v2';
-import {fetchRecommendations} from './recommendation-actions';
-import {recommendationV2Reducer} from './recommendation-slice';
+import {buildMockProduct} from '../../../test/mock-product';
+import {buildMockRecommendationsResponse} from '../../../test/mock-recommendations';
+import {fetchRecommendations} from './recommendations-actions';
+import {recommendationsReducer} from './recommendations-slice';
 import {
-  getRecommendationV2InitialState,
-  RecommendationState,
-} from './recommendation-state';
+  RecommendationsState,
+  getRecommendationsInitialState,
+} from './recommendations-state';
 
-describe('recommendation-v2-slice', () => {
-  let state: RecommendationState;
+describe('recommendation-slice', () => {
+  let state: RecommendationsState;
   beforeEach(() => {
-    state = getRecommendationV2InitialState();
+    state = getRecommendationsInitialState();
   });
 
   it('should have an initial state', () => {
-    expect(recommendationV2Reducer(undefined, {type: 'foo'})).toEqual(
-      getRecommendationV2InitialState()
+    expect(recommendationsReducer(undefined, {type: 'foo'})).toEqual(
+      getRecommendationsInitialState()
     );
   });
 
   it('when a fetchRecommendations.fulfilled is received, should set the state to the received payload', () => {
-    const result = buildMockProductRecommendation();
+    const result = buildMockProduct();
     const responseId = 'some-response-id';
-    const response = buildMockRecommendationV2Response({
+    const response = buildMockRecommendationsResponse({
       products: [result],
       responseId,
     });
 
     const action = fetchRecommendations.fulfilled(response, '');
-    const finalState = recommendationV2Reducer(state, action);
+    const finalState = recommendationsReducer(state, action);
 
     expect(finalState.products[0]).toEqual(result);
     expect(finalState.responseId).toEqual(responseId);
@@ -45,7 +45,7 @@ describe('recommendation-v2-slice', () => {
       type: 'commerce/recommendation/fetch/rejected',
       payload: err,
     };
-    const finalState = recommendationV2Reducer(state, action);
+    const finalState = recommendationsReducer(state, action);
     expect(finalState.error).toEqual(err);
     expect(finalState.isLoading).toBe(false);
   });
@@ -54,16 +54,16 @@ describe('recommendation-v2-slice', () => {
     const err = {message: 'message', statusCode: 500, type: 'type'};
     state.error = err;
 
-    const response = buildMockRecommendationV2Response();
+    const response = buildMockRecommendationsResponse();
 
     const action = fetchRecommendations.fulfilled(response, '');
-    const finalState = recommendationV2Reducer(state, action);
+    const finalState = recommendationsReducer(state, action);
     expect(finalState.error).toBeNull();
   });
 
   it('set the isLoading state to true during fetchRecommendations.pending', () => {
     const pendingAction = fetchRecommendations.pending('');
-    const finalState = recommendationV2Reducer(state, pendingAction);
+    const finalState = recommendationsReducer(state, pendingAction);
 
     expect(finalState.isLoading).toBe(true);
   });

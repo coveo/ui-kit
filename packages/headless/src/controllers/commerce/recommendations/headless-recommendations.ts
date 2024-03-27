@@ -7,12 +7,12 @@ import {
 } from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
-import {recommendationsOptionsSchema} from '../../../features/commerce/recommendation/recommendation';
+import {recommendationsOptionsSchema} from '../../../features/commerce/recommendations/recommendations';
 import {
   fetchRecommendations,
-  updateRecommendationSlotId,
-} from '../../../features/commerce/recommendation/recommendation-actions';
-import {recommendationV2Reducer as recommendation} from '../../../features/commerce/recommendation/recommendation-slice';
+  updateRecommendationsSlotId,
+} from '../../../features/commerce/recommendations/recommendations-actions';
+import {recommendationsReducer as recommendations} from '../../../features/commerce/recommendations/recommendations-slice';
 import {loadReducerError} from '../../../utils/errors';
 import {validateInitialState} from '../../../utils/validate-payload';
 import {
@@ -23,7 +23,7 @@ import {
 /**
  * The `Recommendation` controller exposes a method for retrieving recomendations content in a commerce interface.
  */
-export interface Recommendation extends Controller {
+export interface Recommendations extends Controller {
   /**
    * Fetches the recommendations.
    */
@@ -32,10 +32,10 @@ export interface Recommendation extends Controller {
   /**
    * A scoped and simplified part of the headless state that is relevant to the `Recommendation` controller.
    */
-  state: RecommendationState;
+  state: RecommendationsState;
 }
 
-export interface RecommendationState {
+export interface RecommendationsState {
   headline: string;
   products: Product[];
   error: CommerceAPIErrorStatusResponse | null;
@@ -67,7 +67,7 @@ function validateRecommendationInitialState(
   );
 }
 /**
- * Creates a `Recommendation` controller instance.
+ * Creates a `Recommendations` controller instance.
  *
  * @param engine - The headless commerce engine.
  * @returns A `Recommendation` controller instance.
@@ -75,8 +75,8 @@ function validateRecommendationInitialState(
 export function buildRecommendations(
   engine: CommerceEngine,
   props: RecommendationsProps
-): Recommendation {
-  if (!loadBaseRecommendationReducers(engine)) {
+): Recommendations {
+  if (!loadBaseRecommendationsReducers(engine)) {
     throw loadReducerError;
   }
 
@@ -84,10 +84,10 @@ export function buildRecommendations(
   const {dispatch} = engine;
 
   validateRecommendationInitialState(engine, props.options);
-  dispatch(updateRecommendationSlotId({slotId: props.options.slotId}));
+  dispatch(updateRecommendationsSlotId({slotId: props.options.slotId}));
 
   const recommendationStateSelector = createSelector(
-    (state: CommerceEngineState) => state.recommendation,
+    (state: CommerceEngineState) => state.recommendations,
     (recommendation) => ({
       headline: recommendation.headline,
       products: recommendation.products,
@@ -108,9 +108,9 @@ export function buildRecommendations(
   };
 }
 
-function loadBaseRecommendationReducers(
+function loadBaseRecommendationsReducers(
   engine: CommerceEngine
 ): engine is CommerceEngine {
-  engine.addReducers({recommendation, commerceContext, configuration});
+  engine.addReducers({recommendations, commerceContext, configuration});
   return true;
 }

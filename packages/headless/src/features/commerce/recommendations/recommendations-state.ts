@@ -1,7 +1,7 @@
 import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
 import {Product} from '../../../api/commerce/common/product';
 
-export interface RecommendationState {
+export interface RecommendationsState {
   slotId: string;
   headline: string;
   error: CommerceAPIErrorStatusResponse | null;
@@ -11,7 +11,7 @@ export interface RecommendationState {
   products: Product[];
 }
 
-export const getRecommendationV2InitialState = (): RecommendationState => ({
+export const getRecommendationsInitialState = (): RecommendationsState => ({
   slotId: '',
   headline: '',
   error: null,

@@ -1,7 +1,7 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
-import {RecommendationCommerceSuccessResponse} from '../../../api/commerce/common/response';
-import {CommerceRecommendationRequest} from '../../../api/commerce/recommendation/recommendation-request';
+import {RecommendationsCommerceSuccessResponse} from '../../../api/commerce/common/response';
+import {CommerceRecommendationsRequest} from '../../../api/commerce/recommendations/recommendations-request';
 import {isErrorResponse} from '../../../api/search/search-api-client';
 import {validatePayload} from '../../../utils/validate-payload';
 import {logQueryError} from '../../search/search-analytics-actions';
@@ -9,17 +9,17 @@ import {
   buildCommerceAPIRequest,
   StateNeededByQueryCommerceAPI,
 } from '../common/actions';
-import {recommendationSlotDefinition} from './recommendation';
+import {recommendationsSlotDefinition} from './recommendations';
 
-interface QueryRecommendationCommerceAPIThunkReturn {
+export interface QueryRecommendationsCommerceAPIThunkReturn {
   /** The successful recommendations response. */
-  response: RecommendationCommerceSuccessResponse;
+  response: RecommendationsCommerceSuccessResponse;
 }
 
 const buildRecommendationCommerceAPIRequest = async (
   slotId: string,
   state: StateNeededByQueryCommerceAPI
-): Promise<CommerceRecommendationRequest> => {
+): Promise<CommerceRecommendationsRequest> => {
   const commerceAPIRequest = await buildCommerceAPIRequest(state);
   delete commerceAPIRequest.facets;
   return {
@@ -29,7 +29,7 @@ const buildRecommendationCommerceAPIRequest = async (
 };
 
 export const fetchRecommendations = createAsyncThunk<
-  QueryRecommendationCommerceAPIThunkReturn,
+  QueryRecommendationsCommerceAPIThunkReturn,
   void,
   AsyncThunkCommerceOptions<StateNeededByQueryCommerceAPI>
 >(
@@ -37,9 +37,9 @@ export const fetchRecommendations = createAsyncThunk<
   async (_action, {getState, dispatch, rejectWithValue, extra}) => {
     const state = getState(); // TODO: Add slot id to the state
     const {apiClient} = extra;
-    const fetched = await apiClient.getRecommendation(
+    const fetched = await apiClient.getRecommendations(
       await buildRecommendationCommerceAPIRequest(
-        state.recommendation?.slotId || '',
+        state.recommendations?.slotId || '',
         state
       )
     );
@@ -59,8 +59,8 @@ export interface SlotIdPayload {
   slotId: string;
 }
 
-export const updateRecommendationSlotId = createAction(
+export const updateRecommendationsSlotId = createAction(
   'recommendation/updateSlotId',
   (payload: SlotIdPayload) =>
-    validatePayload(payload, recommendationSlotDefinition)
+    validatePayload(payload, recommendationsSlotDefinition)
 );

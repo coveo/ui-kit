@@ -4,7 +4,7 @@ import {PlatformClient} from '../platform-client';
 import {CommerceAPIClient} from './commerce-api-client';
 import {CommerceAPIRequest} from './common/request';
 import {CommerceResponse} from './common/response';
-import {CommerceRecommendationRequest} from './recommendation/recommendation-request';
+import {CommerceRecommendationsRequest} from './recommendations/recommendations-request';
 
 describe('commerce api client', () => {
   const platformUrl = 'https://platformdev.cloud.coveo.com';
@@ -49,9 +49,9 @@ describe('commerce api client', () => {
     },
   });
 
-  const buildRecommendationCommerceAPIRequest = async (
-    req: Partial<CommerceRecommendationRequest> = {}
-  ): Promise<CommerceRecommendationRequest> => {
+  const buildRecommendationsCommerceAPIRequest = async (
+    req: Partial<CommerceRecommendationsRequest> = {}
+  ): Promise<CommerceRecommendationsRequest> => {
     return {
       id: 'slotId',
       accessToken: accessToken,
@@ -132,14 +132,14 @@ describe('commerce api client', () => {
   });
 
   it('#recommendations should call the platform endpoint with the correct arguments', async () => {
-    const request = await buildRecommendationCommerceAPIRequest();
+    const request = await buildRecommendationsCommerceAPIRequest();
 
     mockPlatformCall({
       ok: true,
       json: () => Promise.resolve('some content'),
     });
 
-    await client.getRecommendation(request);
+    await client.getRecommendations(request);
 
     expect(platformCallMock).toHaveBeenCalled();
     const mockRequest = platformCallMock.mock.calls[0][0];

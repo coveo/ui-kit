@@ -1,20 +1,20 @@
 import {SlotIdParam} from '../commerce-api-params';
 import {BaseCommerceAPIRequest, baseRequest} from '../common/request';
 
-export type CommerceRecommendationRequest = BaseCommerceAPIRequest &
+export type CommerceRecommendationsRequest = BaseCommerceAPIRequest &
   SlotIdParam;
-export const buildRecommendationRequest = (
-  req: CommerceRecommendationRequest,
+export const buildRecommendationsRequest = (
+  req: CommerceRecommendationsRequest,
   path: string
 ) => {
   return {
     ...baseRequest(req, path),
-    requestParams: prepareRecommendationRequestParams(req),
+    requestParams: prepareRecommendationsRequestParams(req),
   };
 };
 
-const prepareRecommendationRequestParams = (
-  req: CommerceRecommendationRequest
+const prepareRecommendationsRequestParams = (
+  req: CommerceRecommendationsRequest
 ) => {
   const {id, trackingId, clientId, context, language, country, currency, page} =
     req;

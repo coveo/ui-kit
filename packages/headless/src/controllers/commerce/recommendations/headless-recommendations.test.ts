@@ -1,18 +1,21 @@
 import {configuration} from '../../../app/common-reducers';
 import {contextReducer} from '../../../features/commerce/context/context-slice';
-import {fetchRecommendations} from '../../../features/commerce/recommendation/recommendation-actions';
-import {recommendationV2Reducer} from '../../../features/commerce/recommendation/recommendation-slice';
+import {fetchRecommendations} from '../../../features/commerce/recommendations/recommendations-actions';
+import {recommendationsReducer} from '../../../features/commerce/recommendations/recommendations-slice';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state';
 import {
   MockedCommerceEngine,
   buildMockCommerceEngine,
 } from '../../../test/mock-engine-v2';
-import {Recommendation, buildRecommendations} from './headless-recommendations';
+import {
+  Recommendations,
+  buildRecommendations,
+} from './headless-recommendations';
 
-jest.mock('../../../features/commerce/recommendation/recommendation-actions');
+jest.mock('../../../features/commerce/recommendations/recommendations-actions');
 
 describe('headless recommendations', () => {
-  let recommendations: Recommendation;
+  let recommendations: Recommendations;
   let engine: MockedCommerceEngine;
 
   beforeEach(() => {
@@ -24,7 +27,7 @@ describe('headless recommendations', () => {
 
   it('adds the correct reducers to engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
-      recommendation: recommendationV2Reducer,
+      recommendations: recommendationsReducer,
       commerceContext: contextReducer,
       configuration,
     });

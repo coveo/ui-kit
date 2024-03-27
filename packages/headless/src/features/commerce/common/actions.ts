@@ -14,7 +14,7 @@ import {
   FacetSection,
   NumericFacetSection,
   ProductListingV2Section,
-  RecommendationV2Section,
+  RecommendationsSection,
   VersionSection,
 } from '../../../state/state-sections';
 import {PreparableAnalyticsAction} from '../../analytics/analytics-utils';
@@ -23,7 +23,7 @@ import {SortBy, SortCriterion} from '../sort/sort';
 
 export type StateNeededByQueryCommerceAPI = ConfigurationSection &
   ProductListingV2Section &
-  Partial<RecommendationV2Section> &
+  Partial<RecommendationsSection> &
   CommerceContextSection &
   CartSection &
   Partial<

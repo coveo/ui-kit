@@ -1,16 +1,16 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {
   fetchRecommendations,
-  updateRecommendationSlotId,
-} from './recommendation-actions';
-import {getRecommendationV2InitialState} from './recommendation-state';
+  updateRecommendationsSlotId,
+} from './recommendations-actions';
+import {getRecommendationsInitialState} from './recommendations-state';
 
-export const recommendationV2Reducer = createReducer(
-  getRecommendationV2InitialState(),
+export const recommendationsReducer = createReducer(
+  getRecommendationsInitialState(),
 
   (builder) => {
     builder
-      .addCase(updateRecommendationSlotId, (state, action) => {
+      .addCase(updateRecommendationsSlotId, (state, action) => {
         state.slotId = action.payload.slotId;
       })
       .addCase(fetchRecommendations.rejected, (state, action) => {
