@@ -1,8 +1,8 @@
-import {AnyCommerceFacetRequest} from '../features/commerce/facets/facet-set/interfaces/request';
+import {AnyFacetRequest} from '../features/commerce/facets/facet-set/interfaces/request';
 
 export function buildMockCommerceFacetRequest(
-  config: Partial<AnyCommerceFacetRequest> = {}
-): AnyCommerceFacetRequest {
+  config: Partial<AnyFacetRequest> = {}
+): AnyFacetRequest {
   return {
     facetId: '',
     displayName: '',
