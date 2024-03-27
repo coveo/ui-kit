@@ -9,7 +9,7 @@ import {
   buildCommerceAPIRequest,
   StateNeededByQueryCommerceAPI,
 } from '../common/actions';
-import {recommendationsOptionsSchema} from './recommendation';
+import {recommendationSlotDefinition} from './recommendation';
 
 interface QueryRecommendationCommerceAPIThunkReturn {
   /** The successful recommendations response. */
@@ -39,7 +39,7 @@ export const fetchRecommendations = createAsyncThunk<
     const {apiClient} = extra;
     const fetched = await apiClient.getRecommendation(
       await buildRecommendationCommerceAPIRequest(
-        state.recommendation.slotId,
+        state.recommendation?.slotId || '',
         state
       )
     );
@@ -62,5 +62,5 @@ export interface SlotIdPayload {
 export const updateRecommendationSlotId = createAction(
   'recommendation/updateSlotId',
   (payload: SlotIdPayload) =>
-    validatePayload(payload, recommendationsOptionsSchema)
+    validatePayload(payload, recommendationSlotDefinition)
 );
