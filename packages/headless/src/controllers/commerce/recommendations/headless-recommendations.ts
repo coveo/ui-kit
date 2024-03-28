@@ -21,7 +21,7 @@ import {
 } from '../../controller/headless-controller';
 
 /**
- * The `Recommendation` controller exposes a method for retrieving recomendations content in a commerce interface.
+ * The `Recommendations` controller exposes a method for retrieving recommendations content in a commerce interface.
  */
 export interface Recommendations extends Controller {
   /**
@@ -30,7 +30,7 @@ export interface Recommendations extends Controller {
   refresh(): void;
 
   /**
-   * A scoped and simplified part of the headless state that is relevant to the `Recommendation` controller.
+   * A scoped and simplified part of the headless state that is relevant to the `Recommendations` controller.
    */
   state: RecommendationsState;
 }
@@ -51,14 +51,10 @@ interface RecommendationsProps {
   options: RecommendationsOptions;
 }
 
-function validateRecommendationInitialState(
+function validateRecommendationsInitialState(
   engine: CommerceEngine,
   options: RecommendationsOptions
 ) {
-  if (!options) {
-    return;
-  }
-
   validateInitialState(
     engine,
     recommendationsOptionsSchema,
@@ -70,7 +66,7 @@ function validateRecommendationInitialState(
  * Creates a `Recommendations` controller instance.
  *
  * @param engine - The headless commerce engine.
- * @returns A `Recommendation` controller instance.
+ * @returns A `Recommendations` controller instance.
  */
 export function buildRecommendations(
   engine: CommerceEngine,
@@ -83,7 +79,7 @@ export function buildRecommendations(
   const controller = buildController(engine);
   const {dispatch} = engine;
 
-  validateRecommendationInitialState(engine, props.options);
+  validateRecommendationsInitialState(engine, props.options);
   dispatch(updateRecommendationsSlotId({slotId: props.options.slotId}));
 
   const recommendationStateSelector = createSelector(
