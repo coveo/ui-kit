@@ -14,7 +14,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "2.57.1",
+  "version": "2.58.1",
   "files": [
     "dist/",
     "recommendation/",
@@ -54,7 +54,7 @@
     "@coveo/relay": "0.7.4",
     "@coveo/relay-event-types": "7.7.3",
     "@microsoft/fetch-event-source": "2.0.1",
-    "@reduxjs/toolkit": "2.2.1",
+    "@reduxjs/toolkit": "2.2.2",
     "abab": "2.0.6",
     "coveo.analytics": "2.29.3",
     "dayjs": "1.11.10",

@@ -5,6 +5,8 @@ import {
   LegacySearchAction,
   makeAnalyticsAction,
 } from '../analytics/analytics-utils';
+import {SearchPageEvents} from '../analytics/search-action-cause';
+import {SearchAction} from '../search/search-actions';
 import {
   citationSourceSelector,
   generativeQuestionAnsweringIdSelector,
@@ -339,6 +341,14 @@ export const logCopyGeneratedAnswer = (): CustomAction =>
       };
     },
   });
+
+export const retryGeneratedAnswer = (): SearchAction => ({
+  actionCause: SearchPageEvents.retryGeneratedAnswer,
+});
+
+export const rephraseGeneratedAnswer = (): SearchAction => ({
+  actionCause: SearchPageEvents.rephraseGeneratedAnswer,
+});
 
 export const generatedAnswerAnalyticsClient = {
   logCopyGeneratedAnswer,

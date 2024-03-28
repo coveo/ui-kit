@@ -3,6 +3,12 @@ import {InsightEngine} from '../../../../app/insight-engine/insight-engine';
 import {FacetValueState} from '../../../../features/facets/facet-api/value';
 import {specificFacetSearchSetReducer as facetSearchSet} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {
+  facetClearAll,
+  facetShowLess,
+  facetShowMore,
+  facetUpdateSort,
+} from '../../../../features/facets/facet-set/facet-set-analytics-actions';
+import {
   logFacetClearAll,
   logFacetShowLess,
   logFacetShowMore,
@@ -10,6 +16,7 @@ import {
 } from '../../../../features/facets/facet-set/facet-set-insight-analytics-actions';
 import {getInsightAnalyticsActionForToggleFacetSelect} from '../../../../features/facets/facet-set/facet-set-insight-utils';
 import {facetSetReducer as facetSet} from '../../../../features/facets/facet-set/facet-set-slice';
+import {getAnalyticsActionForToggleFacetSelect} from '../../../../features/facets/facet-set/facet-set-utils';
 import {FacetSortCriterion} from '../../../../features/facets/facet-set/interfaces/request';
 import {
   executeSearch,
@@ -132,13 +139,19 @@ export function buildFacet(engine: InsightEngine, props: FacetProps): Facet {
             getFacetId(),
             selection
           ),
+          next: getAnalyticsActionForToggleFacetSelect(selection),
         })
       );
     },
 
     deselectAll() {
       coreController.deselectAll();
-      dispatch(executeSearch({legacy: logFacetClearAll(getFacetId())}));
+      dispatch(
+        executeSearch({
+          legacy: logFacetClearAll(getFacetId()),
+          next: facetClearAll(),
+        })
+      );
     },
 
     sortBy(sortCriterion: FacetSortCriterion) {
@@ -146,6 +159,7 @@ export function buildFacet(engine: InsightEngine, props: FacetProps): Facet {
       dispatch(
         executeSearch({
           legacy: logFacetUpdateSort({facetId: getFacetId(), sortCriterion}),
+          next: facetUpdateSort(),
         })
       );
     },
@@ -156,12 +170,22 @@ export function buildFacet(engine: InsightEngine, props: FacetProps): Facet {
 
     showMoreValues() {
       coreController.showMoreValues();
-      dispatch(fetchFacetValues({legacy: logFacetShowMore(getFacetId())}));
+      dispatch(
+        fetchFacetValues({
+          legacy: logFacetShowMore(getFacetId()),
+          next: facetShowMore(),
+        })
+      );
     },
 
     showLessValues() {
       coreController.showLessValues();
-      dispatch(fetchFacetValues({legacy: logFacetShowLess(getFacetId())}));
+      dispatch(
+        fetchFacetValues({
+          legacy: logFacetShowLess(getFacetId()),
+          next: facetShowLess(),
+        })
+      );
     },
 
     get state() {

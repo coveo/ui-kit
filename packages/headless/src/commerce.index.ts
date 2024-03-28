@@ -144,3 +144,10 @@ export {buildCoreUrlManager} from './controllers/commerce/core/url-manager/headl
 
 export {buildSearchUrlManager} from './controllers/commerce/search/url-manager/headless-search-url-manager';
 export {buildProductListingUrlManager} from './controllers/commerce/product-listing/url-manager/headless-product-listing-url-manager';
+
+export type {
+  ProductTemplate,
+  ProductTemplateCondition,
+  ProductTemplatesManager,
+} from './features/commerce/product-templates/product-templates-manager';
+export {buildProductTemplatesManager} from './features/commerce/product-templates/product-templates-manager';
