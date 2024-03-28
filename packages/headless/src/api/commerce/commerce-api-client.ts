@@ -10,15 +10,13 @@ import {
   CommerceAPIErrorStatusResponse,
 } from './commerce-api-error-response';
 import {buildRequest, CommerceAPIRequest} from './common/request';
-import {
-  RecommendationsCommerceSuccessResponse,
-  CommerceSuccessResponse,
-} from './common/response';
+import {CommerceSuccessResponse} from './common/response';
 import {CommerceFacetSearchRequest} from './facet-search/facet-search-request';
 import {
   CommerceRecommendationsRequest,
   buildRecommendationsRequest,
 } from './recommendations/recommendations-request';
+import {RecommendationsCommerceSuccessResponse} from './recommendations/recommendations-response';
 import {
   buildQuerySuggestRequest,
   QuerySuggestRequest,

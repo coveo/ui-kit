@@ -1,7 +1,7 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
-import {RecommendationsCommerceSuccessResponse} from '../../../api/commerce/common/response';
 import {CommerceRecommendationsRequest} from '../../../api/commerce/recommendations/recommendations-request';
+import {RecommendationsCommerceSuccessResponse} from '../../../api/commerce/recommendations/recommendations-response';
 import {isErrorResponse} from '../../../api/search/search-api-client';
 import {validatePayload} from '../../../utils/validate-payload';
 import {logQueryError} from '../../search/search-analytics-actions';
