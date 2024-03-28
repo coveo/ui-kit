@@ -128,7 +128,7 @@ export const InterceptAliases = {
 };
 
 export const routeMatchers = {
-  analytics: '**/rest/v15/analytics/*',
+  analytics: '**/rest/ua/v15/analytics/*',
   nextAnalytics: '**/events/v1?*',
   querySuggest: '**/rest/search/v2/querySuggest?*',
   search: '**/rest/search/v2?*',
