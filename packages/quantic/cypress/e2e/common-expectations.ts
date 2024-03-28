@@ -1,19 +1,14 @@
 // eslint-disable-next-line node/no-unpublished-import
 import {CyHttpMessages, Interception} from 'cypress/types/net-stubbing';
-import {InterceptAliases} from '../page-objects/search';
 import {useCaseEnum} from '../page-objects/use-case';
 import {ComponentErrorSelector, should} from './common-selectors';
 
 export function sendNewSearchRequest(
   actionCause: string,
   useCase?: 'search' | 'insight',
-  checkSearchRequestBodyCallback?: (body: object) => void
+  checkSearchRequestBodyCallback?: (body: Record<string, unknown>) => void
 ) {
-  cy.wait(
-    useCase === useCaseEnum.insight
-      ? InterceptAliases.Insight
-      : InterceptAliases.Search
-  )
+  cy.wait(getQueryAlias(useCase))
     .then((interception) => {
       const body = interception.request.body;
       const analyticsSection = body.analytics;
