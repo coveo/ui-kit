@@ -6,7 +6,6 @@ export interface RecommendationsState {
   headline: string;
   error: CommerceAPIErrorStatusResponse | null;
   isLoading: boolean;
-  requestId: string;
   responseId: string;
   products: Product[];
 }
@@ -16,7 +15,6 @@ export const getRecommendationsInitialState = (): RecommendationsState => ({
   headline: '',
   error: null,
   isLoading: false,
-  requestId: '',
   responseId: '',
   products: [],
 });

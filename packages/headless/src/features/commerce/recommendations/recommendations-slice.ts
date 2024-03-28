@@ -24,9 +24,8 @@ export const recommendationsReducer = createReducer(
         state.responseId = action.payload.response.responseId;
         state.isLoading = false;
       })
-      .addCase(fetchRecommendations.pending, (state, action) => {
+      .addCase(fetchRecommendations.pending, (state) => {
         state.isLoading = true;
-        state.requestId = action.meta.requestId;
       });
   }
 );
