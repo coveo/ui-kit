@@ -105,6 +105,19 @@ export const InterceptAliases = {
         ReasonSubmit: nextAnalyticsAlias('Qna.SubmitFeedback.ReasonSubmit'),
       },
     },
+    CaseAssist: {
+      DocumentSuggestionClick: nextAnalyticsAlias(
+        'caseAssist.documentSuggestionClick'
+      ),
+      DocumentSuggestionFeedback: nextAnalyticsAlias(
+        'caseAssist.documentSuggestionFeedback'
+      ),
+      SelectFieldClassification: nextAnalyticsAlias(
+        'caseAssist.selectFieldClassification'
+      ),
+      UpdateField: nextAnalyticsAlias('caseAssist.updateField'),
+    },
+    ItemClick: nextAnalyticsAlias('itemClick'),
   },
   QuerySuggestions: '@coveoQuerySuggest',
   Search: '@coveoSearch',
