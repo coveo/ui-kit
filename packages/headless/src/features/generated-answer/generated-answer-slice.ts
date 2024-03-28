@@ -26,6 +26,8 @@ import {
   setRawAnswerMediaType,
 } from './generated-answer-actions';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
+import {rehypeCleanListItem} from './unified-plugins/rehype-clean-list-item';
+import {rehypeScrollableTable} from './unified-plugins/rehype-scrollable-table';
 
 const convertMarkdownToHtml = (text: string): string => {
   const file = unified()
@@ -33,6 +35,8 @@ const convertMarkdownToHtml = (text: string): string => {
     .use(remarkGfm)
     .use(remarkRehype)
     .use(rehypeSanitize)
+    .use(rehypeCleanListItem) // custom plugin
+    .use(rehypeScrollableTable) // custom plugin
     .use(rehypeStringify)
     .processSync(text);
 

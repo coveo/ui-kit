@@ -87,20 +87,35 @@
     margin-right: 3.75em;
   }
 
-  table {
-    font-size: var(--atomic-text-base);
+  .scrollable-table {
+    display: inline-block;
+    overflow: auto;
+    max-height: 22em;
+    margin-bottom: 1.5em;
 
     border: solid 1px var(--atomic-table-outer-border);
     border-radius: var(--atomic-border-radius-md);
+
+    th {
+      position: sticky;
+      top: 0;
+    }
+  }
+
+  table {
+    font-size: var(--atomic-text-base);
 
     thead {
       th {
         padding: 1em;
         text-align: left;
         background-color: var(--atomic-table-header-background);
-        border-top: solid 1px var(--atomic-table-outer-border);
         border-bottom: solid 2px var(--atomic-table-header-delimiter);
         border-left: solid 1px var(--atomic-table-inner-border);
+      }
+
+      th:first-of-type {
+        border-left: none;
       }
     }
 
@@ -114,6 +129,14 @@
           padding: 1em;
           border-left: solid 1px var(--atomic-table-inner-border);
           border-bottom: solid 1px var(--atomic-table-inner-border);
+        }
+
+        td:first-of-type {
+          border-left: none;
+        }
+
+        &:last-of-type td {
+          border-bottom: unset;
         }
       }
     }
