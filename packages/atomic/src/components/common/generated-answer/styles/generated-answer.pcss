@@ -15,7 +15,7 @@
     @apply mr-0;
   }
 
-  .rephrase-buttons {
+  [part='rephrase-buttons'] {
     @apply ml-0;
   }
 
@@ -29,10 +29,8 @@
 }
 
 @define-mixin mobile-footer-xs-layout {
-  [part='rephrase-button'] {
-    .rephrase-btn-label {
-      @apply hidden;
-    }
+  [part='rephrase-btn-label'] {
+    @apply hidden;
   }
 }
 
@@ -52,7 +50,8 @@
   .source-citations {
     @apply mr-2;
   }
-  .rephrase-buttons {
+
+  [part='rephrase-buttons'] {
     @apply ml-auto;
   }
 

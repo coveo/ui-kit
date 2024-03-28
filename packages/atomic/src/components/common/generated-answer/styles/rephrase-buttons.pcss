@@ -2,15 +2,15 @@
   padding: 0 8px;
   width: unset;
 
-  .rephrase-btn-label {
+  [part='rephrase-btn-label'] {
     @apply block ml-2;
   }
 
-  &:hover .rephrase-btn-label {
+  &:hover [part='rephrase-btn-label'] {
     @apply text-primary;
   }
 
-  &.active .rephrase-btn-label {
+  &.active [part='rephrase-btn-label'] {
     @apply text-white;
   }
 }
@@ -41,7 +41,7 @@
   &:hover,
   &.active {
     .icon-container,
-    .rephrase-btn-label {
+    [part='rephrase-btn-label'] {
       @apply text-inherit;
     }
   }
@@ -56,6 +56,6 @@
   }
 }
 
-.rephrase-buttons > div {
+[part='rephrase-buttons'] > div {
   border-color: var(--atomic-neutral);
 }
