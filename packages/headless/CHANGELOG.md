@@ -1,3 +1,33 @@
+## 2.58.1 (2024-03-27)
+
+### Bug Fixes
+
+- **deps:** update dependency @reduxjs/toolkit to v2.2.2 j:kit-282 ([#3744](https://github.com/coveo/ui-kit/issues/3744)) ([5385009](https://github.com/coveo/ui-kit/commits/5385009e24fb718e884d8f90eb2f50481f1d7ce5))
+
+# 2.58.0 (2024-03-25)
+
+### Bug Fixes
+
+- **commerce:** replace barrel import with proper import ([#3729](https://github.com/coveo/ui-kit/issues/3729)) ([8f4d68d](https://github.com/coveo/ui-kit/commits/8f4d68d7a54d6aa539ed85b7fd0516c123097eb7))
+
+### Features
+
+- **commerce:** add commerce category facets ([#3495](https://github.com/coveo/ui-kit/issues/3495)) ([138a8b1](https://github.com/coveo/ui-kit/commits/138a8b184d07073103c83607c7aa4d7e6f05e2cd))
+- **headless:** add isAnswerGenerated to the state ([#3740](https://github.com/coveo/ui-kit/issues/3740)) ([940e661](https://github.com/coveo/ui-kit/commits/940e6611a38bf1c640ac780276b485be3f17520a))
+- **headless:** added the analytics section in the search requests made in the insight use case ([#3726](https://github.com/coveo/ui-kit/issues/3726)) ([55fc157](https://github.com/coveo/ui-kit/commits/55fc157acf743e66aaa4490be888365668aa5ea7))
+
+## 2.57.1 (2024-03-20)
+
+### Bug Fixes
+
+- **headless:** move relay-event-types to prd dep ([#3732](https://github.com/coveo/ui-kit/issues/3732)) ([dd341bb](https://github.com/coveo/ui-kit/commits/dd341bbcb880cfae8663b9c81ed5026781d10425)), closes [#3730](https://github.com/coveo/ui-kit/issues/3730)
+
+# 2.57.0 (2024-03-20)
+
+### Features
+
+- **commerce:** create commerce product view controller shell for analytics ([#3672](https://github.com/coveo/ui-kit/issues/3672)) ([401e6dc](https://github.com/coveo/ui-kit/commits/401e6dcc4ef2c2b5c1a7d789b23e691c8f1890c9))
+
 ## 2.56.1 (2024-03-13)
 
 # 2.56.0 (2024-03-13)

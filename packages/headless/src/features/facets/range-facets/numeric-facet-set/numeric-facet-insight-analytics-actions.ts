@@ -1,8 +1,9 @@
 import {validatePayload} from '../../../../utils/validate-payload';
 import {
   InsightAction,
-  makeInsightAnalyticsAction,
+  makeInsightAnalyticsActionFactory,
 } from '../../../analytics/analytics-utils';
+import {SearchPageEvents} from '../../../analytics/search-action-cause';
 import {getCaseContextAnalyticsMetadata} from '../../../case-context/case-context-state';
 import {getRangeFacetMetadata} from '../generic/range-facet-insight-analytics-actions';
 import {rangeFacetSelectionPayloadDefinition} from '../generic/range-facet-validate-payload';
@@ -11,7 +12,7 @@ import {LogNumericFacetBreadcrumbActionCreatorPayload} from './numeric-facet-ana
 export const logNumericFacetBreadcrumb = (
   payload: LogNumericFacetBreadcrumbActionCreatorPayload
 ): InsightAction =>
-  makeInsightAnalyticsAction(
+  makeInsightAnalyticsActionFactory(SearchPageEvents.breadcrumbFacet)(
     'analytics/numericFacet/breadcrumb',
     (client, state) => {
       validatePayload(

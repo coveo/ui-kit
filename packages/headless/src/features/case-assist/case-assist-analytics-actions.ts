@@ -18,7 +18,7 @@ export const logCaseStart = (): CaseAssistAction =>
         ticket: caseAssistCaseSelector(state),
       });
     },
-    analyticsType: 'CaseAssist.Start',
+    analyticsType: 'caseAssist.start',
     analyticsPayloadBuilder: (): CaseAssist.Start => ({}),
   });
 
@@ -43,7 +43,7 @@ export const logCreateCase = (): CaseAssistAction =>
         ticket: caseAssistCaseSelector(state),
       });
     },
-    analyticsType: 'CaseAssist.CreateTicket',
+    analyticsType: 'caseAssist.createTicket',
     analyticsPayloadBuilder: (state): CaseAssist.CreateTicket => {
       const {id, category, subject, description, productId} =
         caseAssistCaseSelector(state);
@@ -67,7 +67,7 @@ export const logSolveCase = (): CaseAssistAction =>
         ticket: caseAssistCaseSelector(state),
       });
     },
-    analyticsType: 'CaseAssist.Cancel',
+    analyticsType: 'caseAssist.cancel',
     analyticsPayloadBuilder: (): CaseAssist.Cancel => ({
       reason: 'solved',
     }),
@@ -81,7 +81,7 @@ export const logAbandonCase = (): CaseAssistAction =>
         ticket: caseAssistCaseSelector(state),
       });
     },
-    analyticsType: 'CaseAssist.Cancel',
+    analyticsType: 'caseAssist.cancel',
     analyticsPayloadBuilder: (): CaseAssist.Cancel => ({
       reason: 'quit',
     }),
@@ -96,7 +96,7 @@ export const logUpdateCaseField = (fieldName: string): CaseAssistAction =>
         ticket: caseAssistCaseSelector(state),
       });
     },
-    analyticsType: 'CaseAssist.UpdateField',
+    analyticsType: 'caseAssist.updateField',
     analyticsPayloadBuilder: (state): CaseAssist.UpdateField => {
       const fieldValue =
         state.caseField?.fields?.[fieldName]?.value ||
@@ -124,7 +124,7 @@ export const logAutoSelectCaseField = (
         ticket: caseAssistCaseSelector(state),
       });
     },
-    analyticsType: 'CaseAssist.SelectFieldClassification',
+    analyticsType: 'caseAssist.selectFieldClassification',
     analyticsPayloadBuilder: (state): CaseAssist.SelectFieldClassification => {
       return {
         autoselected: true,
@@ -150,7 +150,7 @@ export const logClassificationClick = (
         ticket: caseAssistCaseSelector(state),
       });
     },
-    analyticsType: 'CaseAssist.SelectFieldClassification',
+    analyticsType: 'caseAssist.selectFieldClassification',
     analyticsPayloadBuilder: (state): CaseAssist.SelectFieldClassification => {
       return {
         autoselected: false,
@@ -173,7 +173,7 @@ export const logDocumentSuggestionClick = (
         ticket: caseAssistCaseSelector(state),
       });
     },
-    analyticsType: 'CaseAssist.DocumentSuggestionClick',
+    analyticsType: 'caseAssist.documentSuggestionClick',
     analyticsPayloadBuilder: (state): CaseAssist.DocumentSuggestionClick => {
       return {
         documentSuggestion: {
@@ -199,7 +199,7 @@ export const logQuickviewDocumentSuggestionClick = (
         ticket: caseAssistCaseSelector(state),
       });
     },
-    analyticsType: 'ItemClick',
+    analyticsType: 'itemClick',
     analyticsPayloadBuilder: (state): ItemClick => {
       const {
         suggestion,
@@ -236,7 +236,7 @@ export const logDocumentSuggestionOpen = (
         ticket: caseAssistCaseSelector(state),
       });
     },
-    analyticsType: 'ItemClick',
+    analyticsType: 'itemClick',
     analyticsPayloadBuilder: (state): ItemClick => {
       const {
         suggestion,
@@ -271,7 +271,7 @@ export const logDocumentSuggestionRating = (
         ticket: caseAssistCaseSelector(state),
       });
     },
-    analyticsType: 'CaseAssist.DocumentSuggestionFeedback',
+    analyticsType: 'caseAssist.documentSuggestionFeedback',
     analyticsPayloadBuilder: (state): CaseAssist.DocumentSuggestionFeedback => {
       return {
         documentSuggestion: {

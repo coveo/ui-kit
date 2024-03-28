@@ -28,7 +28,18 @@ export async function legacyExecuteSearch(
     analyticsAction,
   });
 
-  const mappedRequest = buildInsightSearchRequest(state);
+  const {analyticsClientMiddleware, preprocessRequest, logger} = config.extra;
+  const {description: eventDescription} = await analyticsAction.prepare({
+    getState: () => config.getState(),
+    analyticsClientMiddleware,
+    preprocessRequest,
+    logger,
+  });
+
+  const mappedRequest = await buildInsightSearchRequest(
+    state,
+    eventDescription
+  );
   const fetched = await processor.fetchFromAPI(mappedRequest);
 
   return await processor.process(fetched, mappedRequest);
@@ -48,7 +59,18 @@ export async function legacyFetchPage(
     analyticsAction,
   });
 
-  const mappedRequest = buildInsightSearchRequest(state);
+  const {analyticsClientMiddleware, preprocessRequest, logger} = config.extra;
+  const {description: eventDescription} = await analyticsAction.prepare({
+    getState: () => config.getState(),
+    analyticsClientMiddleware,
+    preprocessRequest,
+    logger,
+  });
+
+  const mappedRequest = await buildInsightSearchRequest(
+    state,
+    eventDescription
+  );
   const fetched = await processor.fetchFromAPI(mappedRequest);
 
   return await processor.process(fetched, mappedRequest);
@@ -65,7 +87,18 @@ export async function legacyFetchMoreResults(
     analyticsAction: logFetchMoreResults,
   });
 
-  const mappedRequest = await buildInsightFetchMoreResultsRequest(state);
+  const {analyticsClientMiddleware, preprocessRequest, logger} = config.extra;
+  const {description: eventDescription} = await logFetchMoreResults().prepare({
+    getState: () => config.getState(),
+    analyticsClientMiddleware,
+    preprocessRequest,
+    logger,
+  });
+
+  const mappedRequest = await buildInsightFetchMoreResultsRequest(
+    state,
+    eventDescription
+  );
   const fetched = await processor.fetchFromAPI(mappedRequest);
 
   return await processor.process(fetched, mappedRequest);
@@ -83,7 +116,18 @@ export async function legacyFetchFacetValues(
     analyticsAction,
   });
 
-  const mappedRequest = await buildInsightFetchFacetValuesRequest(state);
+  const {analyticsClientMiddleware, preprocessRequest, logger} = config.extra;
+  const {description: eventDescription} = await analyticsAction.prepare({
+    getState: () => config.getState(),
+    analyticsClientMiddleware,
+    preprocessRequest,
+    logger,
+  });
+
+  const mappedRequest = await buildInsightFetchFacetValuesRequest(
+    state,
+    eventDescription
+  );
   const fetched = await processor.fetchFromAPI(mappedRequest);
 
   return await processor.process(fetched, mappedRequest);

@@ -1,3 +1,17 @@
+## 2.62.3 (2024-03-27)
+
+## 2.62.1 (2024-03-20)
+
+# 2.62.0 (2024-03-20)
+
+### Bug Fixes
+
+- **deps:** update dependency @stencil/core to v4.13.0 j:kit-282 ([#3725](https://github.com/coveo/ui-kit/issues/3725)) ([aee2015](https://github.com/coveo/ui-kit/commits/aee20158c892bf1ec73ea3e66c2cdfa6823420c1))
+
+### Features
+
+- **atomic:** style rephrase buttons and add auto option ([#3702](https://github.com/coveo/ui-kit/issues/3702)) ([cdae484](https://github.com/coveo/ui-kit/commits/cdae48449176e4913f61b461fab689dbc604e25f))
+
 # 2.61.0 (2024-03-13)
 
 ### Features
