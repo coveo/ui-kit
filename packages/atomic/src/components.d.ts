@@ -392,10 +392,6 @@ export namespace Components {
      */
     interface AtomicFieldCondition {
         /**
-          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  Use only when the condition you need to define can't be expressed through `if-defined`, `if-not-defined`, `must-match`, etc. markup attributes of the component. For example, the following targets an `atomic-field-condition` component and sets a condition to make it apply only to results whose title contains singapore: `document.querySelector('atomic-result-template#templateId').conditions = [(result) => /singapore/i.test(result.title)];`
-         */
-        "conditions": ResultTemplateCondition[];
-        /**
           * Verifies whether the specified fields are defined.
          */
         "ifDefined"?: string;
@@ -4639,10 +4635,6 @@ declare namespace LocalJSX {
      * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
     interface AtomicFieldCondition {
-        /**
-          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  Use only when the condition you need to define can't be expressed through `if-defined`, `if-not-defined`, `must-match`, etc. markup attributes of the component. For example, the following targets an `atomic-field-condition` component and sets a condition to make it apply only to results whose title contains singapore: `document.querySelector('atomic-result-template#templateId').conditions = [(result) => /singapore/i.test(result.title)];`
-         */
-        "conditions"?: ResultTemplateCondition[];
         /**
           * Verifies whether the specified fields are defined.
          */

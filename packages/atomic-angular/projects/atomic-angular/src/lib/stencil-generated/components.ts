@@ -249,14 +249,14 @@ export declare interface AtomicFacetManager extends Components.AtomicFacetManage
 
 
 @ProxyCmp({
-  inputs: ['conditions', 'ifDefined', 'ifNotDefined']
+  inputs: ['ifDefined', 'ifNotDefined']
 })
 @Component({
   selector: 'atomic-field-condition',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['conditions', 'ifDefined', 'ifNotDefined'],
+  inputs: ['ifDefined', 'ifNotDefined'],
 })
 export class AtomicFieldCondition {
   protected el: HTMLElement;
