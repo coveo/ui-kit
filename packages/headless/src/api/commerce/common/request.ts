@@ -12,15 +12,17 @@ import {
   SortParam,
 } from '../commerce-api-params';
 
-export type CommerceAPIRequest = BaseParam &
+export type BaseCommerceAPIRequest = BaseParam &
   TrackingIdParam &
   LanguageParam &
   CountryParam &
   CurrencyParam &
   ClientIdParam &
   ContextParam &
+  PageParam;
+
+export type CommerceAPIRequest = BaseCommerceAPIRequest &
   FacetsParam &
-  PageParam &
   SortParam;
 
 export const buildRequest = (req: CommerceAPIRequest, path: string) => {

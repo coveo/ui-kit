@@ -14,11 +14,15 @@ import {
   FacetSection,
   NumericFacetSection,
   ProductListingV2Section,
+  RecommendationsSection,
   VersionSection,
 } from '../../../state/state-sections';
 import {PreparableAnalyticsAction} from '../../analytics/analytics-utils';
 import {StateNeededByFetchProductListingV2} from '../product-listing/product-listing-actions';
 import {SortBy, SortCriterion} from '../sort/sort';
+
+export type StateNeededByQueryRecommendationsCommerceAPI =
+  StateNeededByQueryCommerceAPI & RecommendationsSection;
 
 export type StateNeededByQueryCommerceAPI = ConfigurationSection &
   ProductListingV2Section &
