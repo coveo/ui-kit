@@ -207,22 +207,19 @@ export class AtomicFoldedResultList implements InitializableComponent {
 
     return (
       <ItemListGuard
-        {...this.foldedResultListState}
+        hasError={this.foldedResultListState.hasError}
         firstRequestExecuted={this.foldedResultListState.firstSearchExecuted}
         hasItems={this.foldedResultListState.hasResults}
         hasTemplate={this.resultTemplateRegistered}
         templateHasError={this.resultTemplateProvider.hasError}
       >
-        <DisplayWrapper
-          {...this}
-          listClasses={listClasses}
-          display={this.display}
-        >
+        <DisplayWrapper listClasses={listClasses} display={this.display}>
           <ResultsPlaceholdersGuard
-            {...this}
+            density={this.density}
+            imageSize={this.imageSize}
+            display={this.display}
             displayPlaceholders={!this.bindings.store.isAppLoaded()}
             numberOfPlaceholders={this.resultsPerPageState.numberOfResults}
-            display={this.display}
           ></ResultsPlaceholdersGuard>
           <ItemDisplayGuard
             firstRequestExecuted={
@@ -235,7 +232,6 @@ export class AtomicFoldedResultList implements InitializableComponent {
                 this.getPropsForAtomicResult(collection);
               return (
                 <atomic-result
-                  {...this}
                   {...propsForAtomicResult}
                   part="outline"
                   ref={(element) =>

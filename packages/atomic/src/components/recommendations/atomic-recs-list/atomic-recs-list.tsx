@@ -361,10 +361,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
           element && this.resultListCommon.setNewResultRef(element, i)
         }
       >
-        <atomic-recs-result
-          {...this}
-          {...propsForAtomicRecsResult}
-        ></atomic-recs-result>
+        <atomic-recs-result {...propsForAtomicRecsResult}></atomic-recs-result>
       </DisplayGrid>
     );
   }

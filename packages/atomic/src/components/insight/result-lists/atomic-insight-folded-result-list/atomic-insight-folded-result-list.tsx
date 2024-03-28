@@ -191,17 +191,13 @@ export class AtomicInsightFoldedResultList
 
     return (
       <ItemListGuard
-        {...this.foldedResultListState}
         firstRequestExecuted={this.foldedResultListState.firstSearchExecuted}
         hasItems={this.foldedResultListState.hasResults}
         hasTemplate={this.resultTemplateRegistered}
         templateHasError={this.resultTemplateProvider.hasError}
+        hasError={this.foldedResultListState.hasError}
       >
-        <DisplayWrapper
-          {...this}
-          listClasses={listClasses}
-          display={this.display}
-        >
+        <DisplayWrapper listClasses={listClasses} display={this.display}>
           <ResultsPlaceholdersGuard
             displayPlaceholders={!this.bindings.store.isAppLoaded()}
             numberOfPlaceholders={this.resultsPerPageState.numberOfResults}
@@ -220,7 +216,6 @@ export class AtomicInsightFoldedResultList
                 this.getPropsForAtomicInsightResult(collection);
               return (
                 <atomic-insight-result
-                  {...this}
                   {...atomicInsightResultProps}
                   part="outline"
                   ref={(element) =>
