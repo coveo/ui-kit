@@ -7,15 +7,10 @@ import {Pagination} from './pagination';
 import {Product} from './product';
 import {Sort} from './sort';
 
-interface BaseCommerceSuccessResponse {
+export interface BaseCommerceSuccessResponse {
   responseId: string;
   products: Product[];
   pagination: Pagination;
-}
-
-export interface RecommendationsCommerceSuccessResponse
-  extends BaseCommerceSuccessResponse {
-  headline: string;
 }
 
 export interface CommerceSuccessResponse extends BaseCommerceSuccessResponse {

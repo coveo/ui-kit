@@ -1,4 +1,4 @@
-import {RecommendationsCommerceSuccessResponse} from '../api/commerce/common/response';
+import {RecommendationsCommerceSuccessResponse} from '../api/commerce/recommendations/recommendations-response';
 import {QueryRecommendationsCommerceAPIThunkReturn} from '../features/commerce/recommendations/recommendations-actions';
 
 export function buildMockRecommendationsResponse(
