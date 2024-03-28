@@ -35,7 +35,7 @@ export const fetchRecommendations = createAsyncThunk<
 >(
   'commerce/recommendation/fetch',
   async (_action, {getState, dispatch, rejectWithValue, extra}) => {
-    const state = getState(); // TODO: Add slot id to the state
+    const state = getState();
     const {apiClient} = extra;
     const fetched = await apiClient.getRecommendations(
       await buildRecommendationCommerceAPIRequest(
