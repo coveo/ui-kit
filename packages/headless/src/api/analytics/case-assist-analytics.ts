@@ -7,7 +7,10 @@ import {Logger} from 'pino';
 import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state';
 import {
   CaseAssistConfigurationSection,
+  CaseFieldSection,
+  CaseInputSection,
   ConfigurationSection,
+  DocumentSuggestionSection,
   SearchHubSection,
 } from '../../state/state-sections';
 import {PreprocessRequest} from '../preprocess-request';
@@ -18,7 +21,10 @@ import {
 
 export type StateNeededByCaseAssistAnalytics = ConfigurationSection &
   Partial<CaseAssistConfigurationSection> &
-  Partial<SearchHubSection>;
+  Partial<SearchHubSection> &
+  Partial<CaseFieldSection> &
+  Partial<CaseInputSection> &
+  Partial<DocumentSuggestionSection>;
 
 export class CaseAssistAnalyticsProvider implements CaseAssistClientProvider {
   private state: StateNeededByCaseAssistAnalytics;

@@ -257,7 +257,7 @@ describe('case assist analytics selectors', () => {
         responseId: 'last-document-suggestion-response-id',
         suggestionId: 'document-id',
         suggestion: {
-          documentPosition: 0,
+          documentPosition: 1,
           documentTitle: 'My Document',
           documentUri: 'http://my.document.uri',
           documentUriHash: 'document-uri-hash',
@@ -278,7 +278,7 @@ describe('case assist analytics selectors', () => {
         suggestionId: 'document-id',
         fromQuickview: true,
         suggestion: {
-          documentPosition: 0,
+          documentPosition: 1,
           documentTitle: 'My Document',
           documentUri: 'http://my.document.uri',
           documentUriHash: 'document-uri-hash',
@@ -300,7 +300,7 @@ describe('case assist analytics selectors', () => {
         suggestionId: 'document-id',
         openDocument: true,
         suggestion: {
-          documentPosition: 0,
+          documentPosition: 1,
           documentTitle: 'My Document',
           documentUri: 'http://my.document.uri',
           documentUriHash: 'document-uri-hash',

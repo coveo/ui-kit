@@ -93,7 +93,7 @@ function documentSuggestionExpectations(selector: DocumentSuggestionSelector) {
           );
           expect(analyticsBody.svc_action_data.suggestion).to.have.property(
             'documentPosition',
-            index
+            index + 1
           );
           expect(analyticsBody.searchHub).to.eq(testOrigin);
           if (fromQuickview) {
@@ -127,7 +127,7 @@ function documentSuggestionExpectations(selector: DocumentSuggestionSelector) {
           );
           expect(analyticsBody.svc_action_data.suggestion).to.have.property(
             'documentPosition',
-            index
+            index + 1
           );
           expect(analyticsBody.searchHub).to.eq(testOrigin);
         })
