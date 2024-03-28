@@ -36,7 +36,6 @@ import {
 import {DisplayGrid} from '../../common/result-list/display-grid';
 import {DisplayWrapper} from '../../common/result-list/display-wrapper';
 import {ItemDisplayGuard} from '../../common/result-list/item-display-guard';
-import {ItemListGuard} from '../../common/result-list/item-list-guard';
 import {
   ResultListCommon,
   ResultRenderingFunction,
@@ -333,6 +332,9 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
       ),
       content: this.resultTemplateProvider.getTemplateContent(recommendation),
       store: this.bindings.store,
+      density: this.density,
+      display: this.display,
+      imageSize: this.imageSize,
     };
   }
 
@@ -340,7 +342,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
     const displayPlaceholders = !this.bindings.store.isAppLoaded();
 
     return getResultListDisplayClasses(
-      this.display,
+      'grid',
       this.density,
       this.imageSize,
       this.recommendationListState.isLoading,
@@ -367,58 +369,35 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
     );
   }
 
-  private renderAsList(recommendation: RecsResult, i: number) {
-    const propsForAtomicRecsResult =
-      this.getPropsForAtomicRecsResult(recommendation);
-    return (
-      <atomic-recs-result
-        {...this}
-        {...propsForAtomicRecsResult}
-        ref={(element) =>
-          element && this.resultListCommon.setNewResultRef(element, i)
-        }
-        part="outline"
-      ></atomic-recs-result>
-    );
-  }
-
   private renderListOfRecommendations() {
     this.resultListCommon.updateBreakpoints();
     const listClasses = this.computeListDisplayClasses();
 
+    if (
+      !this.resultTemplateRegistered ||
+      this.resultTemplateProvider.hasError ||
+      this.error
+    ) {
+      return;
+    }
+
     return (
-      <ItemListGuard
-        {...this.recommendationListStateWithAugment}
-        hasTemplate={this.resultTemplateRegistered}
-        templateHasError={this.resultTemplateProvider.hasError}
-      >
-        <DisplayWrapper {...this} listClasses={listClasses}>
-          <ResultsPlaceholdersGuard
-            {...this}
-            displayPlaceholders={!this.bindings.store.isAppLoaded()}
-            numberOfPlaceholders={
-              this.recommendationListStateWithAugment.recommendations.length
-            }
-          ></ResultsPlaceholdersGuard>
-          <ItemDisplayGuard
-            {...this.recommendationListStateWithAugment}
-            {...this}
-            listClasses={listClasses}
-          >
-            {this.recommendationListState.recommendations.map(
-              (recommendation, i) => {
-                switch (this.display) {
-                  case 'grid':
-                    return this.renderAsGrid(recommendation, i);
-                  case 'list':
-                  default:
-                    return this.renderAsList(recommendation, i);
-                }
-              }
-            )}
-          </ItemDisplayGuard>
-        </DisplayWrapper>
-      </ItemListGuard>
+      <DisplayWrapper listClasses={listClasses} display="grid">
+        <ResultsPlaceholdersGuard
+          density={this.density}
+          display={this.display}
+          imageSize={this.imageSize}
+          displayPlaceholders={!this.bindings.store.isAppLoaded()}
+          numberOfPlaceholders={
+            this.numberOfRecommendationsPerPage ?? this.numberOfRecommendations
+          }
+        ></ResultsPlaceholdersGuard>
+        <ItemDisplayGuard {...this.recommendationListStateWithAugment}>
+          {this.subsetRecommendations.map((recommendation, i) => {
+            return this.renderAsGrid(recommendation, i);
+          })}
+        </ItemDisplayGuard>
+      </DisplayWrapper>
     );
   }
 

@@ -7,8 +7,8 @@ import {
 
 export interface ResultPlaceholderProps {
   density: ResultDisplayDensity;
-  imageSize?: ResultDisplayImageSize;
-  display?: ResultDisplayLayout;
+  imageSize: ResultDisplayImageSize;
+  display: ResultDisplayLayout;
   numberOfPlaceholders: number;
 }
 

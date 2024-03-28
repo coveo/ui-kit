@@ -1,10 +1,12 @@
-import {FunctionalComponent, h} from '@stencil/core';
+import {FunctionalComponent, VNode, h} from '@stencil/core';
 import {tableElementTagName} from '../../search/atomic-table-result/table-element-utils';
+import {AnyResult} from '../interface/result';
+import {ResultRenderingFunction} from './result-list-common';
 
 interface TableColumnsProps {
   templateContentForFirstResult: DocumentFragment;
-  firstResult: unknown;
-  resultRenderingFunction?: (result: unknown, element: HTMLElement) => string;
+  firstResult: AnyResult;
+  resultRenderingFunction?: ResultRenderingFunction;
 }
 
 export interface DisplayTableProps extends TableColumnsProps {
@@ -100,17 +102,18 @@ export const DisplayTableRow: FunctionalComponent<DisplayTableRowProps> = (
   );
 };
 
-export const DisplayTableData: FunctionalComponent<TableDataProps> = (
-  props,
-  children
-) => {
+export const DisplayTableData: FunctionalComponent<
+  TableDataProps & {
+    renderResult: (content: HTMLAtomicTableElementElement) => VNode;
+  }
+> = (props) => {
   const fieldColumns = getFieldTableColumns(props);
 
   return fieldColumns.map((column) => {
     const key = column.getAttribute('label')! + props.key;
     return (
       <td key={key} part="result-table-cell">
-        {...children}
+        {props.renderResult(column)}
       </td>
     );
   });

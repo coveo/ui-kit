@@ -168,36 +168,29 @@ export class AtomicResultList implements InitializableComponent {
 
     return (
       <ItemListGuard
-        {...this.resultListState}
+        hasError={this.resultListState.hasError}
         hasTemplate={this.resultTemplateRegistered}
         templateHasError={this.resultTemplateProvider.hasError}
         firstRequestExecuted={this.resultListState.firstSearchExecuted}
         hasItems={this.resultListState.hasResults}
       >
-        <DisplayWrapper {...this} listClasses={listClasses}>
+        <DisplayWrapper display={this.display} listClasses={listClasses}>
           <ResultsPlaceholdersGuard
-            {...this}
+            density={this.density}
+            display={this.display}
+            imageSize={this.imageSize}
             displayPlaceholders={!this.bindings.store.isAppLoaded()}
             numberOfPlaceholders={this.resultsPerPageState.numberOfResults}
           ></ResultsPlaceholdersGuard>
           <ItemDisplayGuard
-            {...this.resultListState}
-            {...this}
-            listClasses={listClasses}
             firstRequestExecuted={this.resultListState.firstSearchExecuted}
             hasItems={this.resultListState.hasResults}
           >
-            {this.resultListState.results.map((result, i) => {
-              switch (this.display) {
-                case 'grid':
-                  return this.renderAsGrid(result, i);
-                case 'table':
-                  return this.renderAsTable(result, i);
-                case 'list':
-                default:
-                  return this.renderAsList(result, i);
-              }
-            })}
+            {this.display === 'table'
+              ? this.renderAsTable()
+              : this.display === 'grid'
+                ? this.renderAsGrid()
+                : this.renderAsList()}
           </ItemDisplayGuard>
         </DisplayWrapper>
       </ItemListGuard>
@@ -212,9 +205,17 @@ export class AtomicResultList implements InitializableComponent {
       result,
       renderingFunction: this.resultRenderingFunction,
       loadingFlag: this.loadingFlag,
-      key: `${result.uniqueId}${this.resultListState.searchResponseId}${this.density}${this.imageSize}`,
+      key: this.resultListCommon.getResultId(
+        result.uniqueId,
+        this.resultListState.searchResponseId,
+        this.density,
+        this.imageSize
+      ),
       content: this.resultTemplateProvider.getTemplateContent(result),
       store: this.bindings.store,
+      density: this.density,
+      imageSize: this.imageSize,
+      display: this.display,
     };
   }
 
@@ -231,22 +232,27 @@ export class AtomicResultList implements InitializableComponent {
     );
   }
 
-  private renderAsGrid(result: Result, i: number) {
-    const propsForAtomicResult = this.getPropsForAtomicResult(result);
-    return (
-      <DisplayGrid
-        item={result}
-        {...propsForAtomicResult.interactiveResult}
-        setRef={(element) =>
-          element && this.resultListCommon.setNewResultRef(element, i)
-        }
-      >
-        <atomic-result {...this} {...propsForAtomicResult}></atomic-result>
-      </DisplayGrid>
-    );
+  private renderAsGrid() {
+    return this.resultListState.results.map((result, i) => {
+      const propsForAtomicResult = this.getPropsForAtomicResult(result);
+      return (
+        <DisplayGrid
+          item={result}
+          {...propsForAtomicResult.interactiveResult}
+          setRef={(element) =>
+            element && this.resultListCommon.setNewResultRef(element, i)
+          }
+        >
+          <atomic-result {...this} {...propsForAtomicResult}></atomic-result>
+        </DisplayGrid>
+      );
+    });
   }
 
-  private renderAsTable(result: Result, i: number) {
+  private renderAsTable() {
+    if (!this.resultListState.hasResults) {
+      return;
+    }
     const listClasses = this.computeListDisplayClasses();
     const firstResult = this.resultListState.results[0];
 
@@ -255,42 +261,56 @@ export class AtomicResultList implements InitializableComponent {
       templateContentForFirstResult:
         this.resultTemplateProvider.getTemplateContent(firstResult),
     };
-    const propsForAtomicResult = this.getPropsForAtomicResult(result);
 
     return (
       <DisplayTable
-        listClasses={listClasses}
-        {...this}
         {...propsForTableColumns}
+        listClasses={listClasses}
         logger={this.bindings.engine.logger}
         resultRenderingFunction={this.resultRenderingFunction}
+        host={this.host}
       >
-        <DisplayTableRow
-          {...propsForAtomicResult}
-          rowIndex={i}
-          setRef={(element) =>
-            element && this.resultListCommon.setNewResultRef(element, i)
-          }
-        >
-          <DisplayTableData {...propsForTableColumns} {...propsForAtomicResult}>
-            <atomic-result {...this} {...propsForAtomicResult}></atomic-result>
-          </DisplayTableData>
-        </DisplayTableRow>
+        {this.resultListState.results.map((result, i) => {
+          const propsForAtomicResult = this.getPropsForAtomicResult(result);
+          return (
+            <DisplayTableRow
+              {...propsForAtomicResult}
+              rowIndex={i}
+              setRef={(element) =>
+                element && this.resultListCommon.setNewResultRef(element, i)
+              }
+            >
+              <DisplayTableData
+                {...propsForTableColumns}
+                {...propsForAtomicResult}
+                renderResult={(content) => {
+                  return (
+                    <atomic-result
+                      {...propsForAtomicResult}
+                      content={content}
+                    ></atomic-result>
+                  );
+                }}
+              ></DisplayTableData>
+            </DisplayTableRow>
+          );
+        })}
       </DisplayTable>
     );
   }
 
-  private renderAsList(result: Result, i: number) {
-    const propsForAtomicResult = this.getPropsForAtomicResult(result);
-    return (
-      <atomic-result
-        {...this}
-        {...propsForAtomicResult}
-        ref={(element) =>
-          element && this.resultListCommon.setNewResultRef(element, i)
-        }
-        part="outline"
-      ></atomic-result>
-    );
+  private renderAsList() {
+    return this.resultListState.results.map((result, i) => {
+      const propsForAtomicResult = this.getPropsForAtomicResult(result);
+      return (
+        <atomic-result
+          {...propsForAtomicResult}
+          ref={(element) =>
+            element && this.resultListCommon.setNewResultRef(element, i)
+          }
+          part="outline"
+        ></atomic-result>
+      );
+    });
   }
 }

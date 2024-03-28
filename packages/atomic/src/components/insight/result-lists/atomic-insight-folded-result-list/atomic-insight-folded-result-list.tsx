@@ -203,16 +203,17 @@ export class AtomicInsightFoldedResultList
           display={this.display}
         >
           <ResultsPlaceholdersGuard
-            {...this}
             displayPlaceholders={!this.bindings.store.isAppLoaded()}
             numberOfPlaceholders={this.resultsPerPageState.numberOfResults}
             display={this.display}
+            density={this.density}
+            imageSize={this.imageSize}
           ></ResultsPlaceholdersGuard>
           <ItemDisplayGuard
-            {...this.foldedResultListState}
-            {...this}
-            listClasses={listClasses}
-            display={this.display}
+            firstRequestExecuted={
+              this.foldedResultListState.firstSearchExecuted
+            }
+            hasItems={this.foldedResultListState.hasResults}
           >
             {this.foldedResultListState.results.map((collection, i) => {
               const atomicInsightResultProps =
@@ -265,6 +266,9 @@ export class AtomicInsightFoldedResultList
       ),
       content: this.resultTemplateProvider.getTemplateContent(result),
       store: this.bindings.store,
+      density: this.density,
+      display: this.display,
+      imageSize: this.imageSize,
     };
   }
 }

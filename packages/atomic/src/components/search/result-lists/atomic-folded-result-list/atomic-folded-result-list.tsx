@@ -33,12 +33,6 @@ import {
   ResultDisplayLayout,
   getResultListDisplayClasses,
 } from '../../../common/layout/display-options';
-import {DisplayGrid} from '../../../common/result-list/display-grid';
-import {
-  DisplayTableData,
-  DisplayTable,
-  DisplayTableRow,
-} from '../../../common/result-list/display-table';
 import {DisplayWrapper} from '../../../common/result-list/display-wrapper';
 import {ItemDisplayGuard} from '../../../common/result-list/item-display-guard';
 import {ItemListGuard} from '../../../common/result-list/item-list-guard';
@@ -231,25 +225,24 @@ export class AtomicFoldedResultList implements InitializableComponent {
             display={this.display}
           ></ResultsPlaceholdersGuard>
           <ItemDisplayGuard
-            {...this.foldedResultListState}
-            {...this}
-            listClasses={listClasses}
             firstRequestExecuted={
               this.foldedResultListState.firstSearchExecuted
             }
             hasItems={this.foldedResultListState.hasResults}
-            display={this.display}
           >
-            {this.foldedResultListState.results.map((result, i) => {
-              switch (this.display) {
-                case 'grid':
-                  return this.renderAsGrid(result, i);
-                case 'table':
-                  return this.renderAsTable(result, i);
-                case 'list':
-                default:
-                  return this.renderAsList(result, i);
-              }
+            {this.foldedResultListState.results.map((collection, i) => {
+              const propsForAtomicResult =
+                this.getPropsForAtomicResult(collection);
+              return (
+                <atomic-result
+                  {...this}
+                  {...propsForAtomicResult}
+                  part="outline"
+                  ref={(element) =>
+                    element && this.resultListCommon.setNewResultRef(element, i)
+                  }
+                ></atomic-result>
+              );
             })}
           </ItemDisplayGuard>
         </DisplayWrapper>
@@ -288,72 +281,9 @@ export class AtomicFoldedResultList implements InitializableComponent {
       ),
       content: this.resultTemplateProvider.getTemplateContent(result),
       store: this.bindings.store,
+      density: this.density,
+      imageSize: this.imageSize,
+      display: this.display,
     };
-  }
-
-  private renderAsGrid(collection: FoldedCollection, i: number) {
-    const propsForAtomicResult = this.getPropsForAtomicResult(collection);
-    const result = extractUnfoldedResult(collection);
-    return (
-      <DisplayGrid
-        item={result}
-        {...propsForAtomicResult.interactiveResult}
-        setRef={(element) =>
-          element && this.resultListCommon.setNewResultRef(element, i)
-        }
-      >
-        <atomic-result {...this} {...propsForAtomicResult}></atomic-result>
-      </DisplayGrid>
-    );
-  }
-
-  private renderAsTable(collection: FoldedCollection, i: number) {
-    const listClasses = this.computeListDisplayClasses();
-    const firstResult = extractUnfoldedResult(
-      this.foldedResultListState.results[0]
-    );
-
-    const propsForTableColumns = {
-      firstResult,
-      templateContentForFirstResult:
-        this.resultTemplateProvider.getTemplateContent(firstResult),
-    };
-    const propsForAtomicResult = this.getPropsForAtomicResult(collection);
-
-    return (
-      <DisplayTable
-        listClasses={listClasses}
-        {...this}
-        {...propsForTableColumns}
-        logger={this.bindings.engine.logger}
-        resultRenderingFunction={this.resultRenderingFunction}
-      >
-        <DisplayTableRow
-          {...propsForAtomicResult}
-          rowIndex={i}
-          setRef={(element) =>
-            element && this.resultListCommon.setNewResultRef(element, i)
-          }
-        >
-          <DisplayTableData {...propsForTableColumns} {...propsForAtomicResult}>
-            <atomic-result {...this} {...propsForAtomicResult}></atomic-result>
-          </DisplayTableData>
-        </DisplayTableRow>
-      </DisplayTable>
-    );
-  }
-
-  private renderAsList(collection: FoldedCollection, i: number) {
-    const propsForAtomicResult = this.getPropsForAtomicResult(collection);
-    return (
-      <atomic-result
-        {...this}
-        {...propsForAtomicResult}
-        part="outline"
-        ref={(element) =>
-          element && this.resultListCommon.setNewResultRef(element, i)
-        }
-      ></atomic-result>
-    );
   }
 }

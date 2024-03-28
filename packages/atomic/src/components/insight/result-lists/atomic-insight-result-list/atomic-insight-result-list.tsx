@@ -154,10 +154,8 @@ export class AtomicInsightResultList
             display={this.display}
           ></ResultsPlaceholdersGuard>
           <ItemDisplayGuard
-            {...this.resultListState}
-            {...this}
-            listClasses={listClasses}
-            display={this.display}
+            firstRequestExecuted={this.resultListState.firstSearchExecuted}
+            hasItems={this.resultListState.hasResults}
           >
             {this.resultListState.results.map((result, i) => {
               const atomicInsightResultProps =
@@ -208,6 +206,9 @@ export class AtomicInsightResultList
       ),
       content: this.resultTemplateProvider.getTemplateContent(result),
       store: this.bindings.store,
+      density: this.density,
+      imageSize: this.imageSize,
+      display: this.display,
     };
   }
 }
