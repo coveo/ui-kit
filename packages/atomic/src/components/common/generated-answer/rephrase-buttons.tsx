@@ -73,7 +73,10 @@ export const RephraseButtons: FunctionalComponent<RephraseButtonProps> = (
               <div class="icon-container text-neutral-dark h-full mx-auto shrink-0 relative">
                 <atomic-icon icon={option.icon}></atomic-icon>
               </div>
-              <div part="rephrase-btn-label" class="hidden text-neutral-dark">
+              <div
+                part="rephrase-button-label"
+                class="hidden text-neutral-dark"
+              >
                 {i18n.t(option.titleKey)}
               </div>
             </Button>
