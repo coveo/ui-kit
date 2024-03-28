@@ -11,13 +11,13 @@
     "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@types/react": "18.0.17",
-    "@types/react-dom": "18.0.6",
+    "@types/react": "18.2.73",
+    "@types/react-dom": "18.2.23",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "css-loader": "6.10.0",
     "cypress": "13.6.6",
     "cypress-repeat": "2.3.4",
-    "eslint-plugin-react": "7.30.1",
+    "eslint-plugin-react": "7.34.1",
     "gts": "5.2.0",
     "ncp": "2.0.0",
     "style-loader": "3.3.4",
