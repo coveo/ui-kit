@@ -55,7 +55,7 @@ export interface CoreCommerceFacetProps {
 export interface CoreCommerceFacetOptions {
   facetId: string;
   toggleSelectActionCreator: ToggleActionCreator;
-  toggleExcludeActionCreator: ToggleActionCreator;
+  toggleExcludeActionCreator?: ToggleActionCreator;
   fetchResultsActionCreator: FetchResultsActionCreator;
   facetResponseSelector: (
     state: CommerceEngine['state'],

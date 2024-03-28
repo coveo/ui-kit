@@ -1,6 +1,7 @@
 import {
-  ActionCreatorWithPreparedPayload,
   AsyncThunkAction,
+  PayloadActionCreator,
+  PrepareAction,
 } from '@reduxjs/toolkit';
 import {AsyncThunkOptions} from '../../../app/async-thunk-options';
 
@@ -10,13 +11,8 @@ export type FetchResultsActionCreator = () => AsyncThunkAction<
   AsyncThunkOptions<unknown>
 >;
 
-interface AnyToggleFacetValueActionCreatorPayload {
-  selection: any; // eslint-disable-line @typescript-eslint/no-explicit-any
-  facetId: string;
-}
-
-export type ToggleActionCreator = ActionCreatorWithPreparedPayload<
-  [payload: AnyToggleFacetValueActionCreatorPayload],
+export type ToggleActionCreator = PayloadActionCreator<
   unknown,
-  string
+  string,
+  PrepareAction<unknown>
 >;

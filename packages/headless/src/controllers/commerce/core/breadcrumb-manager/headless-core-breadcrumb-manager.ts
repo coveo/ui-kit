@@ -10,6 +10,7 @@ import {
   BaseFacetValue,
   FacetType,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response';
+import {toggleSelectCategoryFacetValue} from '../../../../features/facets/category-facet-set/category-facet-set-actions';
 import {facetOrderReducer as facetOrder} from '../../../../features/facets/facet-order/facet-order-slice';
 import {
   toggleExcludeFacetValue,
@@ -34,7 +35,6 @@ import {
   DeselectableValue,
 } from '../../../breadcrumb-manager/headless-breadcrumb-manager';
 import {buildController} from '../../../controller/headless-controller';
-import {facetResponseSelector} from '../../product-listing/facets/headless-product-listing-facet-options';
 import {ToggleActionCreator} from '../common';
 import {CoreCommerceFacetOptions} from '../facets/headless-core-commerce-facet';
 
@@ -88,8 +88,10 @@ export type BreadcrumbManager = Omit<CoreBreadcrumbManager, 'state'> & {
 
 interface ActionCreators {
   toggleSelectActionCreator: ToggleActionCreator;
-  toggleExcludeActionCreator: ToggleActionCreator;
+  toggleExcludeActionCreator?: ToggleActionCreator;
 }
+
+const facetTypeWithoutExcludeAction: FacetType = 'hierarchical';
 
 const actions: Record<FacetType, ActionCreators> = {
   regular: {
@@ -104,10 +106,8 @@ const actions: Record<FacetType, ActionCreators> = {
     toggleSelectActionCreator: toggleSelectDateFacetValue,
     toggleExcludeActionCreator: toggleExcludeDateFacetValue,
   },
-  hierarchical: {
-    // TODO: Support category facets
-    toggleSelectActionCreator: toggleSelectFacetValue,
-    toggleExcludeActionCreator: toggleExcludeFacetValue,
+  [facetTypeWithoutExcludeAction]: {
+    toggleSelectActionCreator: toggleSelectCategoryFacetValue,
   },
 };
 
@@ -123,7 +123,7 @@ export function buildCoreBreadcrumbManager(
   const {dispatch} = engine;
 
   const createBreadcrumb = (facetId: string) => {
-    const facet = facetResponseSelector(engine.state, facetId);
+    const facet = options.facetResponseSelector(engine.state, facetId);
 
     if (!facet) {
       return {
@@ -152,9 +152,12 @@ export function buildCoreBreadcrumbManager(
                 })
               );
               dispatch(options.fetchResultsActionCreator());
-            } else if (selection.state === 'excluded') {
+            } else if (
+              selection.state === 'excluded' &&
+              facet.type !== facetTypeWithoutExcludeAction
+            ) {
               dispatch(
-                actions[facet.type].toggleExcludeActionCreator({
+                actions[facet.type].toggleExcludeActionCreator!({
                   facetId,
                   selection,
                 })
