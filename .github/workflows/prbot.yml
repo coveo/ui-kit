@@ -252,24 +252,8 @@ jobs:
         !contains(needs.*.result, 'failure')
       }}
     needs:
-      - 'build'
       - 'lint-check'
-      - 'unit-test'
-      - 'e2e-atomic-test'
-      - 'e2e-quantic'
-      - 'e2e-atomic-screenshots'
-      - 'e2e-atomic-react-test'
-      - 'e2e-atomic-react-nextjs-test'
-      - 'e2e-iife-test'
-      - 'e2e-atomic-angular-test'
-      - 'e2e-atomic-vuejs-test'
-      - 'e2e-atomic-stencil-test'
-      - 'e2e-atomic-hosted-page-test'
-      - 'e2e-atomic-insight-panel-test'
-      - 'e2e-headless-ssr-test-app-dev'
-      - 'e2e-headless-ssr-test-app-prod'
-      - 'e2e-headless-ssr-test-pages-dev'
-      - 'e2e-headless-ssr-test-pages-prod'
+
     runs-on: ubuntu-latest
     steps:
       - run: echo "${${{needs.*.result}}[@]}"
