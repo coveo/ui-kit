@@ -121,7 +121,7 @@ export const caseAssistDocumentSuggestionSelector = (
   const suggestion = state.documentSuggestion?.documents.find((s, idx) => {
     const isFound = s.uniqueId === suggestionId;
     if (isFound) {
-      suggestionIdx = idx;
+      suggestionIdx = idx + 1;
     }
     return isFound;
   });
