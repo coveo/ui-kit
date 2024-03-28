@@ -272,6 +272,7 @@ jobs:
       - 'e2e-headless-ssr-test-pages-prod'
     runs-on: ubuntu-latest
     steps:
+      - run: echo ${{needs.*.result}}
       - run: echo 'All required jobs have passed'
   is-valid:
     if: |
@@ -284,6 +285,7 @@ jobs:
       - 'required-jobs'
     runs-on: ubuntu-latest
     steps:
+      - run: echo ${{needs.*.result}}
       - run: |
           success="${{ needs.required-jobs.result == 'success' }}"
           if [[ $success == "true" ]]; then
