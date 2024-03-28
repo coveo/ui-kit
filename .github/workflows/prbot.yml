@@ -27,24 +27,15 @@ jobs:
       - uses: ./.github/actions/setup
       - run: npm run lint:check
   required-jobs:
-    if: |
-      ${{
-        !cancelled () &&
-        !contains(needs.*.result, 'failure')
-      }}
+    if: ${{!cancelled() && !contains(needs.*.result, 'failure')}}
     needs:
       - 'lint-check'
-
     runs-on: ubuntu-latest
     steps:
       - run: echo ${{toJSON(needs.*.result)}}
       - run: echo 'All required jobs have passed'
   is-valid:
-    if: |
-      ${{
-        !cancelled () &&
-        !contains(needs.*.result, 'failure')
-      }}
+    if: ${{!cancelled() && !contains(needs.*.result, 'failure')}}
     name: 'Confirm build is valid'
     needs:
       - 'required-jobs'
