@@ -1,4 +1,5 @@
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
+import {interfaceChange} from '../../../features/analytics/analytics-actions';
 import {executeSearch} from '../../../features/insight-search/insight-search-actions';
 import {logInsightInterfaceChange} from '../../../features/insight-search/insight-search-analytics-actions';
 import {
@@ -23,7 +24,12 @@ export function buildTab(engine: InsightEngine, props: TabProps): Tab {
   const {dispatch} = engine;
   const tab = buildCoreTab(engine, props);
   const search = () =>
-    dispatch(executeSearch({legacy: logInsightInterfaceChange()}));
+    dispatch(
+      executeSearch({
+        legacy: logInsightInterfaceChange(),
+        next: interfaceChange(),
+      })
+    );
 
   return {
     ...tab,

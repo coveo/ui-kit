@@ -1,10 +1,15 @@
 import {InsightEngine} from '../../../../../app/insight-engine/insight-engine';
 import {
+  facetClearAll,
+  facetUpdateSort,
+} from '../../../../../features/facets/facet-set/facet-set-analytics-actions';
+import {
   logFacetClearAll,
   logFacetUpdateSort,
 } from '../../../../../features/facets/facet-set/facet-set-insight-analytics-actions';
 import {RangeFacetSortCriterion} from '../../../../../features/facets/range-facets/generic/interfaces/request';
 import {getInsightAnalyticsActionForToggleRangeFacetSelect} from '../../../../../features/facets/range-facets/generic/range-facet-insight-utils';
+import {getAnalyticsActionForToggleFacetSelect} from '../../../../../features/facets/range-facets/generic/range-facet-utils';
 import {NumericRangeRequest} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/request';
 import {NumericFacetValue} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
 import {executeSearch} from '../../../../../features/insight-search/insight-search-actions';
@@ -49,7 +54,12 @@ export function buildNumericFacet(
 
     deselectAll() {
       coreController.deselectAll();
-      dispatch(executeSearch({legacy: logFacetClearAll(getFacetId())}));
+      dispatch(
+        executeSearch({
+          legacy: logFacetClearAll(getFacetId()),
+          next: facetClearAll(),
+        })
+      );
     },
 
     sortBy(sortCriterion: RangeFacetSortCriterion) {
@@ -57,6 +67,7 @@ export function buildNumericFacet(
       dispatch(
         executeSearch({
           legacy: logFacetUpdateSort({facetId: getFacetId(), sortCriterion}),
+          next: facetUpdateSort(),
         })
       );
     },
@@ -69,6 +80,7 @@ export function buildNumericFacet(
             getFacetId(),
             selection
           ),
+          next: getAnalyticsActionForToggleFacetSelect(selection),
         })
       );
     },

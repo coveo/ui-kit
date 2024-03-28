@@ -264,3 +264,11 @@ export const facetUnexclude = (): SearchAction => ({
 export const breadcrumbFacet = (): SearchAction => ({
   actionCause: SearchPageEvents.breadcrumbFacet,
 });
+
+export const facetShowLess = (): SearchAction => ({
+  actionCause: SearchPageEvents.facetShowLess,
+});
+
+export const facetShowMore = (): SearchAction => ({
+  actionCause: SearchPageEvents.facetShowMore,
+});

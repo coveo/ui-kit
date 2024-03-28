@@ -1,5 +1,9 @@
 import {GeneratedAnswerCitation} from '../../../api/generated-answer/generated-answer-event-payload';
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
+import {
+  retryGeneratedAnswer,
+  rephraseGeneratedAnswer,
+} from '../../../features/generated-answer/generated-answer-analytics-actions';
 import {generatedAnswerInsightAnalyticsClient} from '../../../features/generated-answer/generated-answer-insight-analytics-actions';
 import {GeneratedAnswerState} from '../../../features/generated-answer/generated-answer-state';
 import {GeneratedResponseFormat} from '../../../features/generated-answer/generated-response-format';
@@ -48,6 +52,7 @@ export function buildGeneratedAnswer(
         executeSearch({
           legacy:
             generatedAnswerInsightAnalyticsClient.logRetryGeneratedAnswer(),
+          next: retryGeneratedAnswer(),
         })
       );
     },
@@ -60,6 +65,7 @@ export function buildGeneratedAnswer(
             generatedAnswerInsightAnalyticsClient.logRephraseGeneratedAnswer(
               responseFormat
             ),
+          next: rephraseGeneratedAnswer(),
         })
       );
     },

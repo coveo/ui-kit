@@ -3,6 +3,7 @@ import {Logger} from 'pino';
 import {GeneratedAnswerAPIClient} from '../../api/generated-answer/generated-answer-client';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {InsightAPIClient} from '../../api/service/insight/insight-api-client';
+import {interfaceLoad} from '../../features/analytics/analytics-actions';
 import {LegacySearchAction} from '../../features/analytics/analytics-utils';
 import {setInsightConfiguration} from '../../features/insight-configuration/insight-configuration-actions';
 import {insightConfigurationReducer as insightConfiguration} from '../../features/insight-configuration/insight-configuration-slice';
@@ -116,7 +117,9 @@ export function buildInsightEngine(
         return;
       }
 
-      engine.dispatch(executeSearch({legacy: analyticsEvent}));
+      engine.dispatch(
+        executeSearch({legacy: analyticsEvent, next: interfaceLoad()})
+      );
     },
   };
 }
