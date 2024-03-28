@@ -157,7 +157,7 @@ function nextAnalyticsExpectations() {
           );
           expect(eventMeta).to.have.property(
             'type',
-            'CaseAssist.SelectFieldClassification'
+            'caseAssist.selectFieldClassification'
           );
           expect(eventMeta.config).to.have.property(
             'trackingId',
@@ -184,7 +184,7 @@ function nextAnalyticsExpectations() {
             'fieldValue',
             expectedEvent.fieldValue
           );
-          expect(eventMeta).to.have.property('type', 'CaseAssist.UpdateField');
+          expect(eventMeta).to.have.property('type', 'caseAssist.updateField');
           expect(eventMeta.config).to.have.property(
             'trackingId',
             expectedTrackingId
@@ -207,7 +207,7 @@ function nextAnalyticsExpectations() {
           );
           expect(eventMeta).to.have.property(
             'type',
-            'CaseAssist.DocumentSuggestionClick'
+            'caseAssist.documentSuggestionClick'
           );
           expect(eventMeta.config).to.have.property(
             'trackingId',
@@ -234,7 +234,7 @@ function nextAnalyticsExpectations() {
           expect(eventBody).to.have.property('liked', expectedEvent.liked);
           expect(eventMeta).to.have.property(
             'type',
-            'CaseAssist.DocumentSuggestionFeedback'
+            'caseAssist.documentSuggestionFeedback'
           );
           expect(eventMeta.config).to.have.property(
             'trackingId',
@@ -267,7 +267,7 @@ function nextAnalyticsExpectations() {
             'searchUid',
             expectedEvent.searchUid
           );
-          expect(eventMeta).to.have.property('type', 'ItemClick');
+          expect(eventMeta).to.have.property('type', 'itemClick');
           expect(eventMeta.config).to.have.property(
             'trackingId',
             expectedTrackingId

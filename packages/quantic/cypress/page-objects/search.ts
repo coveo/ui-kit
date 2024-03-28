@@ -107,17 +107,17 @@ export const InterceptAliases = {
     },
     CaseAssist: {
       DocumentSuggestionClick: nextAnalyticsAlias(
-        'CaseAssist.DocumentSuggestionClick'
+        'caseAssist.documentSuggestionClick'
       ),
       DocumentSuggestionFeedback: nextAnalyticsAlias(
-        'CaseAssist.DocumentSuggestionFeedback'
+        'caseAssist.documentSuggestionFeedback'
       ),
       SelectFieldClassification: nextAnalyticsAlias(
-        'CaseAssist.SelectFieldClassification'
+        'caseAssist.selectFieldClassification'
       ),
-      UpdateField: nextAnalyticsAlias('CaseAssist.UpdateField'),
+      UpdateField: nextAnalyticsAlias('caseAssist.updateField'),
     },
-    ItemClick: nextAnalyticsAlias('ItemClick'),
+    ItemClick: nextAnalyticsAlias('itemClick'),
   },
   QuerySuggestions: '@coveoQuerySuggest',
   Search: '@coveoSearch',
