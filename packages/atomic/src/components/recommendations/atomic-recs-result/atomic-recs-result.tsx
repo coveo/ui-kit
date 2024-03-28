@@ -7,8 +7,10 @@ import {
   ResultDisplayImageSize,
   ResultDisplayLayout,
 } from '../../common/layout/display-options';
-import {resultComponentClass} from '../../common/result-list/result-list-common';
-import {ResultRenderingFunction} from '../../common/result-list/result-list-common-interface';
+import {
+  ResultRenderingFunction,
+  resultComponentClass,
+} from '../../common/result-list/result-list-common';
 import {
   DisplayConfig,
   InteractiveResultContextEvent,

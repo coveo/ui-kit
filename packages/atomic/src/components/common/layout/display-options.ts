@@ -44,6 +44,25 @@ function getImageClass(image: ResultDisplayImageSize) {
   }
 }
 
+export function getResultListDisplayClasses(
+  display: ResultDisplayLayout,
+  density: ResultDisplayDensity,
+  image: ResultDisplayImageSize,
+  isLoading: boolean,
+  isAppLoading: boolean
+) {
+  const classes = getResultDisplayClasses(display, density, image);
+
+  if (isLoading) {
+    classes.push('loading');
+  }
+
+  if (isAppLoading) {
+    classes.push('placeholder');
+  }
+  return classes.join(' ');
+}
+
 export function getResultDisplayClasses(
   display: ResultDisplayLayout,
   density: ResultDisplayDensity,

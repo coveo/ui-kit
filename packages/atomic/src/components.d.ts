@@ -10,7 +10,7 @@ import { AnyBindings } from "./components/common/interface/bindings";
 import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout, ResultTarget } from "./components/common/layout/display-options";
-import { ResultRenderingFunction } from "./components/common/result-list/result-list-common-interface";
+import { ResultRenderingFunction } from "./components/common/result-list/result-list-common";
 import { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightGeneratedAnswerStyle, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 import { FacetDisplayValues } from "./components/common/facets/facet-common";
 import { i18n } from "i18next";
@@ -21,7 +21,7 @@ import { AtomicInsightStore } from "./components/insight/atomic-insight-interfac
 import { Section } from "./components/common/atomic-layout-section/sections";
 import { PlatformEnvironment, RecommendationEngine } from "@coveo/headless/recommendation";
 import { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
-import { i18nCompatibilityVersion as i18nCompatibilityVersion1 } from "./components";
+import { i18nCompatibilityVersion as i18nCompatibilityVersion1, ResultRenderingFunction as ResultRenderingFunction1 } from "./components";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 import { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
@@ -35,7 +35,7 @@ export { AnyBindings } from "./components/common/interface/bindings";
 export { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 export { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout, ResultTarget } from "./components/common/layout/display-options";
-export { ResultRenderingFunction } from "./components/common/result-list/result-list-common-interface";
+export { ResultRenderingFunction } from "./components/common/result-list/result-list-common";
 export { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightGeneratedAnswerStyle, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 export { FacetDisplayValues } from "./components/common/facets/facet-common";
 export { i18n } from "i18next";
@@ -46,7 +46,7 @@ export { AtomicInsightStore } from "./components/insight/atomic-insight-interfac
 export { Section } from "./components/common/atomic-layout-section/sections";
 export { PlatformEnvironment, RecommendationEngine } from "@coveo/headless/recommendation";
 export { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
-export { i18nCompatibilityVersion as i18nCompatibilityVersion1 } from "./components";
+export { i18nCompatibilityVersion as i18nCompatibilityVersion1, ResultRenderingFunction as ResultRenderingFunction1 } from "./components";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 export { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
 export { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
@@ -2171,7 +2171,7 @@ export namespace Components {
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
           * @param resultRenderingFunction
          */
-        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
+        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction1) => Promise<void>;
     }
     /**
      * The `atomic-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
