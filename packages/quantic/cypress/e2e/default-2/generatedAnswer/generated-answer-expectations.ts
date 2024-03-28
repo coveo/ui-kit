@@ -286,10 +286,18 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
     searchQueryContainsCorrectRephraseOption: (expectedAnswerStyle: string) => {
       cy.get<Interception>(InterceptAliases.Search)
         .then((interception) => {
+          const body = interception?.request?.body;
           const answerStyle =
-            interception?.request?.body?.pipelineRuleParameters
-              ?.mlGenerativeQuestionAnswering?.responseFormat?.answerStyle;
+            body?.pipelineRuleParameters?.mlGenerativeQuestionAnswering
+              ?.responseFormat?.answerStyle;
+          const analyticsSection = body.analytics;
+
           expect(answerStyle).to.eq(expectedAnswerStyle);
+          expect(analyticsSection).to.exist;
+          expect(analyticsSection).to.have.property(
+            'actionCause',
+            'rephraseGeneratedAnswer'
+          );
         })
         .log(
           `the search query should contain the correct ${expectedAnswerStyle} parameter`

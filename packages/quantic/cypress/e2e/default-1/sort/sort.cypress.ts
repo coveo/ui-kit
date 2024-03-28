@@ -10,7 +10,6 @@ import {
   useCaseEnum,
   InsightInterfaceExpectations as InsightInterfaceExpect,
 } from '../../../page-objects/use-case';
-import {SearchExpectations} from '../../search-expectations';
 import {SortActions as Actions} from './sort-actions';
 import {SortExpectations as Expect} from './sort-expectations';
 
@@ -95,7 +94,13 @@ describe('quantic-sort', () => {
               Actions.selectOption(option);
 
               Expect.selectedOption(option);
-              SearchExpectations.sortedBy(option, param.useCase);
+              Expect.sendNewSearchRequest(
+                'resultsSort',
+                param.useCase,
+                (body) => {
+                  expect(body.sortCriteria).to.equal(option);
+                }
+              );
               Expect.logSortResults(option);
             });
           });
@@ -109,8 +114,13 @@ describe('quantic-sort', () => {
               it(`should sort by ${option.value}`, () => {
                 loadFromUrlHash(`sortCriteria=${encodeURI(option.value)}`);
 
-                SearchExpectations.sortedBy(option.value, param.useCase);
-
+                Expect.sendNewSearchRequest(
+                  'interfaceLoad',
+                  param.useCase,
+                  (body) => {
+                    expect(body.sortCriteria).to.equal(option.value);
+                  }
+                );
                 Actions.openDropdown();
 
                 Expect.displaySortDropdown(true);

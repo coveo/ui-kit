@@ -1,4 +1,5 @@
 import {InterceptAliases} from '../../../page-objects/search';
+import {sendNewSearchRequest} from '../../common-expectations';
 import {SearchExpectations} from '../../search-expectations';
 import {TabSelector, TabSelectors} from './tab-selectors';
 
@@ -44,5 +45,6 @@ function tabExpectations(selector: TabSelector) {
 
 export const TabExpectations = {
   ...tabExpectations(TabSelectors),
+  sendNewSearchRequest,
   search: SearchExpectations,
 };
