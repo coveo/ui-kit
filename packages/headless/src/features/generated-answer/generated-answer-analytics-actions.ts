@@ -1,5 +1,4 @@
 import {Qna} from '@coveo/relay-event-types';
-import {GeneratedAnswerStreamEndMeta} from 'coveo.analytics';
 import {
   CustomAction,
   LegacySearchAction,
@@ -248,8 +247,10 @@ export const logGeneratedAnswerStreamEnd = (
     (client, state) => {
       const generativeQuestionAnsweringId =
         generativeQuestionAnsweringIdSelector(state);
-      const answerTextIsEmpty =
-        !state.generatedAnswer?.answer || !state.generatedAnswer?.answer.length;
+      const answerTextIsEmpty = answerGenerated
+        ? !state.generatedAnswer?.answer ||
+          !state.generatedAnswer?.answer.length
+        : undefined;
       if (!generativeQuestionAnsweringId) {
         return null;
       }
@@ -257,7 +258,7 @@ export const logGeneratedAnswerStreamEnd = (
         generativeQuestionAnsweringId,
         answerGenerated,
         answerTextIsEmpty,
-      } as GeneratedAnswerStreamEndMeta);
+      });
     }
   );
 
