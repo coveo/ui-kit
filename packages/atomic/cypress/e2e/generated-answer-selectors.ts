@@ -19,7 +19,7 @@ export const GeneratedAnswerSelectors = {
   citationTitle: () =>
     GeneratedAnswerSelectors.citation().find('.citation-title'),
   citationIndex: () =>
-    GeneratedAnswerSelectors.citation().find('.citation-index'),
+    GeneratedAnswerSelectors.citation().find('[part="citation-index"]'),
   citationCard: () =>
     GeneratedAnswerSelectors.shadow().find('[part="citation-popover"]'),
   loader: () => GeneratedAnswerSelectors.shadow().find('.typing-indicator'),
