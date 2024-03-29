@@ -34,6 +34,8 @@ export const GeneratedAnswerSelectors = {
       .parent(),
   copyButton: () =>
     GeneratedAnswerSelectors.shadow().find('[part="copy-button"]'),
+  disclaimer: () =>
+    GeneratedAnswerSelectors.shadow().find('[slot="disclaimer"]'),
 };
 
 export const feedbackModalSelectors = {
