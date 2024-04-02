@@ -6,7 +6,7 @@ import {isErrorResponse} from '../../../api/search/search-api-client';
 import {validatePayload} from '../../../utils/validate-payload';
 import {logQueryError} from '../../search/search-analytics-actions';
 import {
-  StateNeededByQueryRecommendationsCommerceAPI,
+  StateNeededByQueryCommerceAPI,
   buildCommerceAPIRequest,
 } from '../common/actions';
 import {recommendationsSlotDefinition} from './recommendations';
@@ -18,10 +18,9 @@ export interface QueryRecommendationsCommerceAPIThunkReturn {
 
 const buildRecommendationCommerceAPIRequest = async (
   slotId: string,
-  state: StateNeededByQueryRecommendationsCommerceAPI
+  state: StateNeededByQueryCommerceAPI
 ): Promise<CommerceRecommendationsRequest> => {
   const commerceAPIRequest = await buildCommerceAPIRequest(state);
-  delete commerceAPIRequest.facets;
   return {
     ...commerceAPIRequest,
     id: slotId,
@@ -31,7 +30,7 @@ const buildRecommendationCommerceAPIRequest = async (
 export const fetchRecommendations = createAsyncThunk<
   QueryRecommendationsCommerceAPIThunkReturn,
   void,
-  AsyncThunkCommerceOptions<StateNeededByQueryRecommendationsCommerceAPI>
+  AsyncThunkCommerceOptions<StateNeededByQueryCommerceAPI>
 >(
   'commerce/recommendation/fetch',
   async (_action, {getState, dispatch, rejectWithValue, extra}) => {
