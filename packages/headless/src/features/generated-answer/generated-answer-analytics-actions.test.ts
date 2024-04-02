@@ -298,7 +298,7 @@ describe('generated answer analytics actions', () => {
         expect(mockToUse).toHaveBeenCalledWith({
           generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
           answerGenerated,
-          answerTextIsEmpty: true,
+          answerTextIsEmpty: answerGenerated || undefined,
         });
         expect(mockLogFunction).toHaveBeenCalledTimes(1);
       });
