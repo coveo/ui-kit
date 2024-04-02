@@ -158,5 +158,5 @@ export type {
   BreadcrumbValue,
   DeselectableValue,
 } from './controllers/commerce/core/breadcrumb-manager/headless-core-breadcrumb-manager';
-export {buildProductListingBreadcrumbManager} from './controllers/commerce/product-listing/facets/headless-product-listing-breadcrumb-manager';
-export {buildSearchBreadcrumbManager} from './controllers/commerce/search/facets/headless-search-breadcrumb-manager';
+export {buildProductListingBreadcrumbManager} from './controllers/commerce/product-listing/breadcrumb-manager/headless-product-listing-breadcrumb-manager';
+export {buildSearchBreadcrumbManager} from './controllers/commerce/search/breadcrumb-manager/headless-search-breadcrumb-manager';

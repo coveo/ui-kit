@@ -67,6 +67,9 @@ export type CoreBreadcrumbManagerOptions = Pick<
   'facetResponseSelector' | 'fetchResultsActionCreator'
 >;
 
+/**
+ * A scoped and simplified part of the headless state that is relevant to the `BreadcrumbManager` controller.
+ */
 interface BreadcrumbManagerState {
   /**
    * The list of facet breadcrumbs.
@@ -79,6 +82,9 @@ interface BreadcrumbManagerState {
   hasBreadcrumbs: boolean;
 }
 
+/**
+ * The `BreadcrumbManager` controller manages the breadcrumbs.
+ */
 export type BreadcrumbManager = Omit<CoreBreadcrumbManager, 'state'> & {
   /**
    * The state of the `BreadcrumbManager` controller.
@@ -111,6 +117,14 @@ const actions: Record<FacetType, ActionCreators> = {
   },
 };
 
+/**
+ * @internal
+ * Creates a `BreadcrumbManager` controller instance.
+ *
+ * @param engine - The headless commerce engine.
+ * @param options - The `BreadcrumbManager` options used internally.
+ * @returns A `BreadcrumbManager` controller instance.
+ **/
 export function buildCoreBreadcrumbManager(
   engine: CommerceEngine,
   options: CoreBreadcrumbManagerOptions
