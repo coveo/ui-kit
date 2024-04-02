@@ -1,4 +1,3 @@
-import {configuration} from '../../../app/common-reducers';
 import {contextReducer} from '../../../features/commerce/context/context-slice';
 import {fetchRecommendations} from '../../../features/commerce/recommendations/recommendations-actions';
 import {recommendationsReducer} from '../../../features/commerce/recommendations/recommendations-slice';
@@ -29,7 +28,6 @@ describe('headless recommendations', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       recommendations: recommendationsReducer,
       commerceContext: contextReducer,
-      configuration,
     });
   });
 

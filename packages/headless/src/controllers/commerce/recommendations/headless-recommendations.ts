@@ -5,7 +5,6 @@ import {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../app/commerce-engine/commerce-engine';
-import {configuration} from '../../../app/common-reducers';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
 import {recommendationsOptionsSchema} from '../../../features/commerce/recommendations/recommendations';
 import {
@@ -51,17 +50,6 @@ interface RecommendationsProps {
   options: RecommendationsOptions;
 }
 
-function validateRecommendationsInitialState(
-  engine: CommerceEngine,
-  options: RecommendationsOptions
-) {
-  validateInitialState(
-    engine,
-    recommendationsOptionsSchema,
-    options,
-    'buildRecommendations'
-  );
-}
 /**
  * Creates a `Recommendations` controller instance.
  *
@@ -79,18 +67,17 @@ export function buildRecommendations(
   const controller = buildController(engine);
   const {dispatch} = engine;
 
-  validateRecommendationsInitialState(engine, props.options);
+  validateInitialState(
+    engine,
+    recommendationsOptionsSchema,
+    props.options,
+    'buildRecommendations'
+  );
   dispatch(updateRecommendationsSlotId({slotId: props.options.slotId}));
 
   const recommendationStateSelector = createSelector(
     (state: CommerceEngineState) => state.recommendations,
-    (recommendation) => ({
-      headline: recommendation.headline,
-      products: recommendation.products,
-      error: recommendation.error,
-      isLoading: recommendation.isLoading,
-      responseId: recommendation.responseId,
-    })
+    (recommendations) => recommendations
   );
 
   return {
@@ -107,6 +94,6 @@ export function buildRecommendations(
 function loadBaseRecommendationsReducers(
   engine: CommerceEngine
 ): engine is CommerceEngine {
-  engine.addReducers({recommendations, commerceContext, configuration});
+  engine.addReducers({recommendations, commerceContext});
   return true;
 }

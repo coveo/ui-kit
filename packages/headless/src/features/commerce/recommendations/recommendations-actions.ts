@@ -39,7 +39,7 @@ export const fetchRecommendations = createAsyncThunk<
     const {apiClient} = extra;
     const fetched = await apiClient.getRecommendations(
       await buildRecommendationCommerceAPIRequest(
-        state.recommendations?.slotId || '',
+        state.recommendations.slotId,
         state
       )
     );
