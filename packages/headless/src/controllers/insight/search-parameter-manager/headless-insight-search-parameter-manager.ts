@@ -1,6 +1,7 @@
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 import {executeSearch} from '../../../features/insight-search/insight-search-actions';
 import {SearchParameters} from '../../../features/search-parameters/search-parameter-actions';
+import {parametersChange} from '../../../features/search-parameters/search-parameter-analytics-actions';
 import {logParametersChange} from '../../../features/search-parameters/search-parameter-insight-analytics-actions';
 import {deepEqualAnyOrder} from '../../../utils/compare-utils';
 import {
@@ -48,7 +49,10 @@ export function buildSearchParameterManager(
       }
       controller.synchronize(parameters);
       dispatch(
-        executeSearch({legacy: logParametersChange(oldParams, newParams)})
+        executeSearch({
+          legacy: logParametersChange(oldParams, newParams),
+          next: parametersChange(oldParams, newParams),
+        })
       );
     },
 

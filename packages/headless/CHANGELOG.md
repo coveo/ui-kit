@@ -1,3 +1,9 @@
+## 2.58.1 (2024-03-27)
+
+### Bug Fixes
+
+- **deps:** update dependency @reduxjs/toolkit to v2.2.2 j:kit-282 ([#3744](https://github.com/coveo/ui-kit/issues/3744)) ([5385009](https://github.com/coveo/ui-kit/commits/5385009e24fb718e884d8f90eb2f50481f1d7ce5))
+
 # 2.58.0 (2024-03-25)
 
 ### Bug Fixes
