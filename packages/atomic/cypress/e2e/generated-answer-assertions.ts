@@ -105,3 +105,11 @@ export function assertAnswerCopiedToClipboard(answer: string) {
     });
   });
 }
+
+export function assertDisclaimer(isDisplayed: boolean) {
+  it(`${should(isDisplayed)} show the disclaimer`, () => {
+    GeneratedAnswerSelectors.disclaimer().should(
+      isDisplayed ? 'exist' : 'not.exist'
+    );
+  });
+}
