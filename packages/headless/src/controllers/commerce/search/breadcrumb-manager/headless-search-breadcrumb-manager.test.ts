@@ -3,6 +3,7 @@ import {
   RegularFacetValue,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response';
 import {executeSearch} from '../../../../features/commerce/search/search-actions';
+import {commerceSearchReducer as commerceSearch} from '../../../../features/commerce/search/search-slice';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
 import {buildMockCommerceRegularFacetResponse} from '../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
@@ -57,6 +58,12 @@ describe('search breadcrumb manager', () => {
 
   it('initializes', () => {
     expect(breadcrumbManager).toBeTruthy();
+  });
+
+  it('adds correct reducers to engine', () => {
+    expect(engine.addReducers).toHaveBeenCalledWith({
+      commerceSearch,
+    });
   });
 
   it('exposes #subscribe method', () => {

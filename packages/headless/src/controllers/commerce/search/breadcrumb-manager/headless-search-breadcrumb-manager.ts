@@ -1,10 +1,12 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {executeSearch} from '../../../../features/commerce/search/search-actions';
+import {loadReducerError} from '../../../../utils/errors';
 import {
   BreadcrumbManager,
   buildCoreBreadcrumbManager,
 } from '../../core/breadcrumb-manager/headless-core-breadcrumb-manager';
-import {facetResponseSelector} from './headless-search-facet-options';
+import {facetResponseSelector} from '../facets/headless-search-facet-options';
+import {loadSearchReducer} from '../utils/load-search-reducers';
 
 /**
  * Creates `SearchBreadcrumbManager` controller instance.
@@ -15,6 +17,10 @@ import {facetResponseSelector} from './headless-search-facet-options';
 export function buildSearchBreadcrumbManager(
   engine: CommerceEngine
 ): BreadcrumbManager {
+  if (!loadSearchReducer(engine)) {
+    throw loadReducerError;
+  }
+
   return buildCoreBreadcrumbManager(engine, {
     facetResponseSelector: facetResponseSelector,
     fetchResultsActionCreator: executeSearch,

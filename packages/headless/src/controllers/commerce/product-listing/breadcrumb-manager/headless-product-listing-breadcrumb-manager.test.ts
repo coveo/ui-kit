@@ -3,6 +3,7 @@ import {
   RegularFacetValue,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
+import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
 import {buildMockCommerceRegularFacetResponse} from '../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
@@ -59,6 +60,12 @@ describe('product listing breadcrumb manager', () => {
 
   it('initializes', () => {
     expect(breadcrumbManager).toBeTruthy();
+  });
+
+  it('adds correct reducers to engine', () => {
+    expect(engine.addReducers).toHaveBeenCalledWith({
+      productListing,
+    });
   });
 
   it('exposes #subscribe method', () => {
