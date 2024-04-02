@@ -1,6 +1,6 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import {ResultTarget} from '../layout/display-options';
-import {LinkWithResultAnalytics} from '../result-link/result-link';
+import {LinkWithItemAnalytics} from '../item-link/item-link';
+import {ItemTarget} from '../layout/display-options';
 
 export interface DisplayGridProps {
   item: {clickUri: string; title: string};
@@ -8,7 +8,7 @@ export interface DisplayGridProps {
   select: () => void;
   beginDelayedSelect: () => void;
   cancelPendingSelect: () => void;
-  gridTarget?: ResultTarget;
+  gridTarget?: ItemTarget;
 }
 
 export const DisplayGrid: FunctionalComponent<DisplayGridProps> = (
@@ -29,7 +29,7 @@ export const DisplayGrid: FunctionalComponent<DisplayGridProps> = (
         );
       }}
     >
-      <LinkWithResultAnalytics
+      <LinkWithItemAnalytics
         part="result-list-grid-clickable"
         onSelect={() => select()}
         onBeginDelayedSelect={() => beginDelayedSelect()}
@@ -40,7 +40,7 @@ export const DisplayGrid: FunctionalComponent<DisplayGridProps> = (
         rel="noopener"
       >
         {item.title}
-      </LinkWithResultAnalytics>
+      </LinkWithItemAnalytics>
       {...children}
     </div>
   );

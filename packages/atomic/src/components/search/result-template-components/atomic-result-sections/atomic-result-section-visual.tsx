@@ -1,6 +1,6 @@
 import {Element, Component, Prop} from '@stencil/core';
 import {hideEmptySection} from '../../../../utils/result-section-utils';
-import {ResultDisplayImageSize} from '../../../common/layout/display-options';
+import {ItemDisplayImageSize} from '../../../common/layout/display-options';
 
 /**
  * This section provides visual information about the item.
@@ -23,7 +23,7 @@ export class AtomicResultSectionVisual {
   /**
    * How large or small the visual section of results using this template should be.
    */
-  @Prop({reflect: true}) public imageSize?: ResultDisplayImageSize;
+  @Prop({reflect: true}) public imageSize?: ItemDisplayImageSize;
 
   public componentDidRender() {
     hideEmptySection(this.host);

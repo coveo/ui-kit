@@ -1,12 +1,12 @@
 import {FunctionalComponent, VNode, h} from '@stencil/core';
 import {tableElementTagName} from '../../search/atomic-table-result/table-element-utils';
-import {AnyResult} from '../interface/result';
-import {ResultRenderingFunction} from './result-list-common';
+import {AnyItem} from '../interface/item';
+import {ItemRenderingFunction} from './item-list-common';
 
 interface TableColumnsProps {
-  templateContentForFirstResult: DocumentFragment;
-  firstResult: AnyResult;
-  resultRenderingFunction?: ResultRenderingFunction;
+  templateContentForFirstItem: DocumentFragment;
+  firstItem: AnyItem;
+  itemRenderingFunction?: ItemRenderingFunction;
 }
 
 export interface DisplayTableProps extends TableColumnsProps {
@@ -26,19 +26,19 @@ export interface DisplayTableRowProps {
 }
 
 const getFieldTableColumns = (props: TableColumnsProps) => {
-  if (props.resultRenderingFunction) {
+  if (props.itemRenderingFunction) {
     return getFieldTableColumnsFromRenderingFunction(props);
   }
   return getFieldTableColumnsFromHTMLTemplate(props);
 };
 
 const getFieldTableColumnsFromRenderingFunction = (
-  props: Pick<TableColumnsProps, 'resultRenderingFunction' | 'firstResult'>
+  props: Pick<TableColumnsProps, 'itemRenderingFunction' | 'firstItem'>
 ): HTMLAtomicTableElementElement[] => {
   const contentOfRenderingFunction = document.createElement('div');
 
-  const contentOfRenderingFunctionAsString = props.resultRenderingFunction!(
-    props.firstResult,
+  const contentOfRenderingFunctionAsString = props.itemRenderingFunction!(
+    props.firstItem,
     document.createElement('div')
   );
   contentOfRenderingFunction.innerHTML = contentOfRenderingFunctionAsString;
@@ -49,10 +49,10 @@ const getFieldTableColumnsFromRenderingFunction = (
 };
 
 const getFieldTableColumnsFromHTMLTemplate = (
-  props: Pick<DisplayTableProps, 'templateContentForFirstResult'>
+  props: Pick<DisplayTableProps, 'templateContentForFirstItem'>
 ): HTMLAtomicTableElementElement[] =>
   Array.from(
-    props.templateContentForFirstResult.querySelectorAll(tableElementTagName)
+    props.templateContentForFirstItem.querySelectorAll(tableElementTagName)
   );
 
 export const DisplayTable: FunctionalComponent<DisplayTableProps> = (
@@ -63,7 +63,7 @@ export const DisplayTable: FunctionalComponent<DisplayTableProps> = (
 
   if (!fieldColumns.length) {
     props.logger.error(
-      'atomic-table-element elements missing in the result template to display columns.',
+      'atomic-table-element elements missing in the template to display columns.',
       props.host
     );
   }
@@ -104,7 +104,7 @@ export const DisplayTableRow: FunctionalComponent<DisplayTableRowProps> = (
 
 export const DisplayTableData: FunctionalComponent<
   TableDataProps & {
-    renderResult: (content: HTMLAtomicTableElementElement) => VNode;
+    renderItem: (content: HTMLAtomicTableElementElement) => VNode;
   }
 > = (props) => {
   const fieldColumns = getFieldTableColumns(props);
@@ -113,7 +113,7 @@ export const DisplayTableData: FunctionalComponent<
     const key = column.getAttribute('label')! + props.key;
     return (
       <td key={key} part="result-table-cell">
-        {props.renderResult(column)}
+        {props.renderItem(column)}
       </td>
     );
   });

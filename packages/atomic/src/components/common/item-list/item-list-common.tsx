@@ -4,35 +4,35 @@ import {
 } from '../../../utils/accessibility-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
 import {defer, once} from '../../../utils/utils';
-import {AnyResult} from '../interface/result';
+import {AnyItem} from '../interface/item';
 import {AtomicCommonStore, AtomicCommonStoreData} from '../interface/store';
 import {
-  ResultDisplayDensity,
-  ResultDisplayImageSize,
+  ItemDisplayDensity,
+  ItemDisplayImageSize,
 } from '../layout/display-options';
 
 export const resultComponentClass = 'result-component';
 
-export type ResultRenderingFunction<
-  SpecificResult extends AnyResult = AnyResult,
-> = ((result: SpecificResult, root: HTMLElement) => string) | undefined;
+export type ItemRenderingFunction<SpecificResult extends AnyItem = AnyItem> =
+  | ((result: SpecificResult, root: HTMLElement) => string)
+  | undefined;
 
-export interface ResultListCommonProps {
+export interface ItemListCommonProps {
   store: AtomicCommonStore<AtomicCommonStoreData>;
   loadingFlag: string;
   host: HTMLElement;
-  nextNewResultTarget: FocusTargetController;
-  getCurrentNumberOfResults: () => number;
+  nextNewItemTarget: FocusTargetController;
+  getCurrentNumberOfItems: () => number;
   getIsLoading: () => boolean;
   engineSubscribe: (cb: () => void) => () => void;
 }
 
-export class ResultListCommon {
+export class ItemListCommon {
   private indexOfResultToFocus?: number;
   private firstResultEl?: HTMLElement;
   private updateBreakpointsOnce: () => void;
 
-  constructor(private props: ResultListCommonProps) {
+  constructor(private props: ItemListCommonProps) {
     this.props.store.setLoadingFlag(this.props.loadingFlag);
     this.props.store.registerResultList(this);
     this.updateBreakpointsOnce = once(() => updateBreakpoints(this.props.host));
@@ -45,8 +45,8 @@ export class ResultListCommon {
   public getResultId(
     uniqueIdOnResult: string,
     searchResponseId: string,
-    density: ResultDisplayDensity,
-    imageSize: ResultDisplayImageSize
+    density: ItemDisplayDensity,
+    imageSize: ItemDisplayImageSize
   ) {
     return `${uniqueIdOnResult}${searchResponseId}${density}${imageSize}`;
   }
@@ -65,12 +65,12 @@ export class ResultListCommon {
 
     this.indexOfResultToFocus = undefined;
     const elementToFocus = getFirstFocusableDescendant(element) ?? element;
-    this.props.nextNewResultTarget.setTarget(elementToFocus);
+    this.props.nextNewItemTarget.setTarget(elementToFocus);
   }
 
   public focusOnNextNewResult() {
-    this.indexOfResultToFocus = this.props.getCurrentNumberOfResults();
-    this.props.nextNewResultTarget.focusOnNextTarget();
+    this.indexOfResultToFocus = this.props.getCurrentNumberOfItems();
+    this.props.nextNewItemTarget.focusOnNextTarget();
   }
 
   public async focusOnFirstResultAfterNextSearch() {
@@ -86,8 +86,8 @@ export class ResultListCommon {
           const elementToFocus =
             getFirstFocusableDescendant(this.firstResultEl) ??
             this.firstResultEl;
-          this.props.nextNewResultTarget.setTarget(elementToFocus);
-          this.props.nextNewResultTarget.focus();
+          this.props.nextNewItemTarget.setTarget(elementToFocus);
+          this.props.nextNewItemTarget.focus();
           this.firstResultEl = undefined;
           unsub();
           resolve();
