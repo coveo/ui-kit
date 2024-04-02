@@ -88,43 +88,39 @@ describe('quantic-sort', () => {
       describe('when selecting a sort option', () => {
         sortOptionValues
           .filter((value) => value !== defaultOptionValue)
-          .forEach((option) => {
-            it(`should update the shown selected option to ${option}`, () => {
+          .forEach((value) => {
+            it(`should update the shown selected option to ${value}`, () => {
               visitSort({useCase: param.useCase});
-              Actions.selectOption(option);
+              Actions.selectOption(value);
 
-              Expect.selectedOption(option);
+              Expect.selectedOption(value);
               Expect.sendNewSearchRequest(
                 'resultsSort',
                 param.useCase,
-                (body) => {
-                  expect(body.sortCriteria).to.equal(option);
-                }
+                (body) => Expect.sortCriteriaInSearchRequest(body, value)
               );
-              Expect.logSortResults(option);
+              Expect.logSortResults(value);
             });
           });
       });
 
       if (param.useCase === useCaseEnum.search) {
         describe('when loading sort selection from URL', () => {
-          sortOptions
-            .filter((option) => option.value !== defaultOptionValue)
-            .forEach((option) => {
-              it(`should sort by ${option.value}`, () => {
-                loadFromUrlHash(`sortCriteria=${encodeURI(option.value)}`);
+          sortOptionValues
+            .filter((value) => value !== defaultOptionValue)
+            .forEach((value) => {
+              it(`should sort by ${value}`, () => {
+                loadFromUrlHash(`sortCriteria=${encodeURI(value)}`);
 
                 Expect.sendNewSearchRequest(
                   'interfaceLoad',
                   param.useCase,
-                  (body) => {
-                    expect(body.sortCriteria).to.equal(option.value);
-                  }
+                  (body) => Expect.sortCriteriaInSearchRequest(body, value)
                 );
                 Actions.openDropdown();
 
                 Expect.displaySortDropdown(true);
-                Expect.selectedOption(option.value);
+                Expect.selectedOption(value);
               });
             });
         });

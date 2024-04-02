@@ -83,9 +83,8 @@ describe('quantic-tab', () => {
           Expect.sendNewSearchRequest(
             param.useCase === 'search' ? 'interfaceLoad' : 'searchboxSubmit',
             param.useCase,
-            (body) => {
-              expect(body).to.have.property('cq', tabs.case.expression);
-            }
+            (body) =>
+              Expect.constantQueryInSearchRequest(body, tabs.case.expression)
           );
           Expect.numberOfTabs(3);
           Expect.tabsEqual([
@@ -100,9 +99,8 @@ describe('quantic-tab', () => {
             Expect.sendNewSearchRequest(
               'interfaceChange',
               param.useCase,
-              (body) => {
-                expect(body.cq).to.equal(next.expression);
-              }
+              (body) =>
+                Expect.constantQueryInSearchRequest(body, next.expression!)
             );
             Expect.logSelected(next.label);
             Expect.activeTabContains(next.label);
@@ -112,9 +110,11 @@ describe('quantic-tab', () => {
           Expect.sendNewSearchRequest(
             'searchboxSubmit',
             param.useCase,
-            (body) => {
-              expect(body).to.have.property('cq', tabs.knowledge.expression);
-            }
+            (body) =>
+              Expect.constantQueryInSearchRequest(
+                body,
+                tabs.knowledge.expression
+              )
           );
           Expect.displayTabs(true);
 
@@ -132,9 +132,11 @@ describe('quantic-tab', () => {
             Expect.sendNewSearchRequest(
               'interfaceLoad',
               param.useCase,
-              (body) => {
-                expect(body).to.have.property('cq', tabs.knowledge.expression);
-              }
+              (body) =>
+                Expect.constantQueryInSearchRequest(
+                  body,
+                  tabs.knowledge.expression
+                )
             );
             Expect.activeTabContains(tabs.knowledge.label);
           });

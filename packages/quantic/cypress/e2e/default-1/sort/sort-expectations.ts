@@ -31,6 +31,13 @@ function sortExpectations(selector: SortSelector) {
       });
     },
 
+    sortCriteriaInSearchRequest: (
+      body: Record<string, unknown>,
+      value: string
+    ) => {
+      expect(body.sortCriteria).to.equal(value);
+    },
+
     logSortResults: (value: string) => {
       cy.wait(InterceptAliases.UA.Sort.SortResults).then((interception) => {
         const analyticsBody = interception.request.body;
