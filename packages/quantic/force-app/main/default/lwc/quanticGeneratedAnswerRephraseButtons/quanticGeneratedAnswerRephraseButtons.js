@@ -51,7 +51,6 @@ export default class QuanticGeneratedAnswerRephraseButtons extends LightningElem
       tooltip: this.labels.automatic,
       value: 'default',
       iconName: 'utility:rows',
-      default: true,
     },
     {
       tooltip: this.labels.stepByStepInstructions,
@@ -76,23 +75,8 @@ export default class QuanticGeneratedAnswerRephraseButtons extends LightningElem
       label: this.rephraseButtonLabels[option.value],
       iconName: option.iconName,
       tooltip: option.tooltip,
-      defaultSelected: option.default,
     }));
   }
-
-  // get rephraseOptions() {
-  //   return this.options.map((option) => ({
-  //     ...option,
-  //     label: this.getRephraseButtonLabel(option.value),
-  //     isSelected: this.isSelected(option.value),
-  //     handleSelect: (event) => {
-  //       event.stopPropagation();
-  //       if(!this.isSelected(option.value)) {
-  //         this.handleRephrase(option.value);
-  //       }
-  //     },
-  //   }));
-  // }
 
   isSelected(option) {
     return this.value === option;
@@ -112,12 +96,5 @@ export default class QuanticGeneratedAnswerRephraseButtons extends LightningElem
         bubbles: true,
       })
     );
-  }
-
-  getRephraseButtonLabel(option) {
-    if (this.hideLabels) {
-      return '';
-    }
-    return this.rephraseButtonLabels[option];
   }
 }

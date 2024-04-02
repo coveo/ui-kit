@@ -1,5 +1,15 @@
 import {LightningElement, api, track} from 'lwc';
 
+/**
+ * The `QuanticRadioButtonsGroupOption` type defines the shape of an option
+ * that can be passed to the `QuanticRadioButtonsGroup` component.
+ * @typedef {Object} QuanticRadioButtonsGroupOption
+ * @property {String} label The label of the option.
+ * @property {String} value The value of the option.
+ * @property {String} iconName The name of the icon to be displayed.
+ * @property {String} tooltip The tooltip of the option.
+ */
+
 export default class QuanticRadioButtonsGroup extends LightningElement {
   /**
    * The value of the label for the Radio Buttons Group.
@@ -7,24 +17,29 @@ export default class QuanticRadioButtonsGroup extends LightningElement {
    * @type {String}
    */
   @api legend = '';
+  /**
+   * The list of options to be displayed.
+   * @api
+   * @type {QuanticRadioButtonsGroupOption[]}
+   */
   @api options;
   /**
    * If the labels should be hidden or visible.
    * @api
    * @type {Boolean}
    */
-  @api withoutLabels;
-
-  @track _value;
-
+  @api hideLabels;
+  /**
+   * The value of the selected radio button inside the Radio Buttons Group.
+   * @api
+   * @type {String}
+   */
   @api get value() {
     return this._value;
   }
-
   set value(value) {
     this._value = value;
   }
-
   /**
    * The size of the icon.
    * @api
@@ -39,6 +54,8 @@ export default class QuanticRadioButtonsGroup extends LightningElement {
       this._iconSize = value;
     }
   }
+
+  @track _value;
 
   /** @type {'xx-small' | 'x-small' | 'small' | 'medium' | 'large'} */
   _iconSize = 'xx-small';
@@ -65,7 +82,7 @@ export default class QuanticRadioButtonsGroup extends LightningElement {
   }
 
   get computedLabelClass() {
-    return `slds-radio_button__label radio-buttons-group__label ${this.withoutLabels ? 'slds-assistive-text' : ''}`;
+    return `slds-radio_button__label radio-buttons-group__label ${this.hideLabels ? 'slds-assistive-text' : ''}`;
   }
 
   makeIconCSSClass(option) {
@@ -74,7 +91,7 @@ export default class QuanticRadioButtonsGroup extends LightningElement {
 
   makeRadioButtonCSSClass(option) {
     let paddingClass = '';
-    if (this.withoutLabels && option.iconName) {
+    if (this.hideLabels && option.iconName) {
       paddingClass = 'slds-var-p-horizontal_x-small';
     } else if (option.iconName) {
       paddingClass = 'slds-var-p-left_medium';
@@ -91,11 +108,9 @@ export default class QuanticRadioButtonsGroup extends LightningElement {
   }
 
   handleChange(event) {
-    console.log('handleChange');
     event.stopPropagation();
 
     const value = event.target.value;
-
     this._value = value;
 
     this.dispatchEvent(
