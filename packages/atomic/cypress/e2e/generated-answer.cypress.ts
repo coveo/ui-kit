@@ -200,6 +200,7 @@ describe('Generated Answer Test Suites', () => {
         GeneratedAnswerAssertions.assertCopyButtonVisibility(false);
         GeneratedAnswerAssertions.assertLocalStorageData({isVisible: false});
         GeneratedAnswerAssertions.assertLogHideGeneratedAnswer();
+        GeneratedAnswerAssertions.assertDisclaimer(false);
 
         describe('when component is re-activated', () => {
           beforeEach(() => {
@@ -213,6 +214,7 @@ describe('Generated Answer Test Suites', () => {
           GeneratedAnswerAssertions.assertCopyButtonVisibility(true);
           GeneratedAnswerAssertions.assertLocalStorageData({isVisible: true});
           GeneratedAnswerAssertions.assertLogShowGeneratedAnswer();
+          GeneratedAnswerAssertions.assertDisclaimer(true);
         });
       });
 
@@ -253,6 +255,10 @@ describe('Generated Answer Test Suites', () => {
               'exist'
             )
           );
+        });
+
+        it('should display the disclaimer', () => {
+          GeneratedAnswerSelectors.disclaimer().should('exist');
         });
 
         describe('when like button is clicked', () => {
