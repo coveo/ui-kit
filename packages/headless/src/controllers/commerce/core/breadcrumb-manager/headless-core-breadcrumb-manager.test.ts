@@ -1,4 +1,5 @@
 import {Action} from '@reduxjs/toolkit';
+import {deselectAllBreadcrumbs} from '../../../../features/breadcrumb/breadcrumb-actions';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {
   AnyFacetResponse,
@@ -24,13 +25,12 @@ import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
 } from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {CommerceAppState} from '../../../../state/commerce-app-state';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
 import {
-  buildMockCommerceRegularFacetResponse,
-  buildMockCommerceNumericFacetResponse,
-  buildMockCommerceDateFacetResponse,
   buildMockCategoryFacetResponse,
+  buildMockCommerceDateFacetResponse,
+  buildMockCommerceNumericFacetResponse,
+  buildMockCommerceRegularFacetResponse,
 } from '../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {
@@ -42,6 +42,7 @@ import {
   BreadcrumbManager,
   buildCoreBreadcrumbManager,
   CoreBreadcrumbManagerOptions,
+  DeselectableValue,
 } from './headless-core-breadcrumb-manager';
 
 jest.mock('../../../../features/facets/facet-set/facet-set-actions');
@@ -57,10 +58,10 @@ jest.mock(
 jest.mock(
   '../../../../features/commerce/product-listing/product-listing-actions'
 );
+jest.mock('../../../../features/breadcrumb/breadcrumb-actions');
 
-describe('BreadcrumbManager', () => {
+describe('core breadcrumb manager', () => {
   let engine: MockedCommerceEngine;
-  let state: CommerceAppState;
   let options: CoreBreadcrumbManagerOptions;
   let breadcrumbManager: BreadcrumbManager;
 
@@ -90,9 +91,7 @@ describe('BreadcrumbManager', () => {
       fetchResultsActionCreator: fetchProductListing,
     };
 
-    state = buildMockCommerceState();
-
-    initEngine(state);
+    initEngine();
     initBreadcrumbManager();
   });
 
@@ -109,6 +108,21 @@ describe('BreadcrumbManager', () => {
 
   it('exposes #subscribe method', () => {
     expect(breadcrumbManager.subscribe).toBeTruthy();
+  });
+
+  it('#deselectAll deselects all breadcrumbs', () => {
+    breadcrumbManager.deselectAll();
+    expect(deselectAllBreadcrumbs).toHaveBeenCalled();
+  });
+
+  it('#deselectBreadcrumb deselects breadcrumb', () => {
+    const breadcrumb = {
+      deselect: jest.fn(),
+    } as DeselectableValue;
+
+    breadcrumbManager.deselectBreadcrumb(breadcrumb);
+
+    expect(breadcrumb.deselect).toHaveBeenCalled();
   });
 
   describe('regular facet breadcrumbs', () => {
