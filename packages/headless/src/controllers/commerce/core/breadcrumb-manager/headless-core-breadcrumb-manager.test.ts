@@ -10,10 +10,20 @@ import {
 } from '../../../../features/commerce/facets/facet-set/interfaces/response';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {toggleSelectCategoryFacetValue} from '../../../../features/facets/category-facet-set/category-facet-set-actions';
+import {FacetValueState} from '../../../../features/facets/facet-api/value';
 import {facetOrderReducer as facetOrder} from '../../../../features/facets/facet-order/facet-order-slice';
-import {toggleSelectFacetValue} from '../../../../features/facets/facet-set/facet-set-actions';
-import {toggleSelectDateFacetValue} from '../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
-import {toggleSelectNumericFacetValue} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {
+  toggleExcludeFacetValue,
+  toggleSelectFacetValue,
+} from '../../../../features/facets/facet-set/facet-set-actions';
+import {
+  toggleExcludeDateFacetValue,
+  toggleSelectDateFacetValue,
+} from '../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
+import {
+  toggleExcludeNumericFacetValue,
+  toggleSelectNumericFacetValue,
+} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {CommerceAppState} from '../../../../state/commerce-app-state';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
 import {
@@ -43,6 +53,9 @@ jest.mock(
 );
 jest.mock(
   '../../../../features/facets/category-facet-set/category-facet-set-actions'
+);
+jest.mock(
+  '../../../../features/commerce/product-listing/product-listing-actions'
 );
 
 describe('BreadcrumbManager', () => {
@@ -117,12 +130,13 @@ describe('BreadcrumbManager', () => {
     });
 
     it('generates breadcrumbs', () => {
-      expectBreadcrumb(breadcrumb);
+      expectBreadcrumbToBePresentInState(breadcrumb);
     });
 
-    it('#deselect deselects', () => {
-      expectDeselection(toggleSelectFacetValue, breadcrumb);
-    });
+    describe.each([
+      ['selected', toggleSelectFacetValue],
+      ['excluded', toggleExcludeFacetValue],
+    ])('#deselect when facet is %s', generateDeselectionTestCases(breadcrumb));
   });
 
   describe('numeric facet breadcrumbs', () => {
@@ -145,12 +159,13 @@ describe('BreadcrumbManager', () => {
     });
 
     it('generates breadcrumbs', () => {
-      expectBreadcrumb(breadcrumb);
+      expectBreadcrumbToBePresentInState(breadcrumb);
     });
 
-    it('#deselect deselects', () => {
-      expectDeselection(toggleSelectNumericFacetValue, breadcrumb);
-    });
+    describe.each([
+      ['selected', toggleSelectNumericFacetValue],
+      ['excluded', toggleExcludeNumericFacetValue],
+    ])('#deselect when facet is %s', generateDeselectionTestCases(breadcrumb));
   });
 
   describe('date facet breadcrumbs', () => {
@@ -173,12 +188,13 @@ describe('BreadcrumbManager', () => {
     });
 
     it('generates breadcrumbs', () => {
-      expectBreadcrumb(breadcrumb);
+      expectBreadcrumbToBePresentInState(breadcrumb);
     });
 
-    it('#deselect deselects', () => {
-      expectDeselection(toggleSelectDateFacetValue, breadcrumb);
-    });
+    describe.each([
+      ['selected', toggleSelectDateFacetValue],
+      ['excluded', toggleExcludeDateFacetValue],
+    ])('#deselect when facet is %s', generateDeselectionTestCases(breadcrumb));
   });
 
   describe('category facet breadcrumbs', () => {
@@ -210,15 +226,25 @@ describe('BreadcrumbManager', () => {
     });
 
     it('generates breadcrumbs', () => {
-      expectBreadcrumb(breadcrumb);
+      expectBreadcrumbToBePresentInState(breadcrumb);
     });
 
-    it('#deselect deselects', () => {
-      expectDeselection(toggleSelectCategoryFacetValue, breadcrumb);
+    describe.each([['selected', toggleSelectCategoryFacetValue]])(
+      '#deselect when facet is %s',
+      generateDeselectionTestCases(breadcrumb)
+    );
+
+    it('#deselect does not exclude when facet is excluded', () => {
+      breadcrumb.state = 'excluded';
+      deselectFirstBreadcrumb();
+
+      expect(fetchProductListing).not.toHaveBeenCalled();
     });
   });
 
-  function expectBreadcrumb(breadcrumb: AnyFacetValueResponse) {
+  function expectBreadcrumbToBePresentInState(
+    breadcrumb: AnyFacetValueResponse
+  ) {
     expect(breadcrumbManager.state.facetBreadcrumbs[0].values).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
@@ -229,15 +255,27 @@ describe('BreadcrumbManager', () => {
     );
   }
 
-  function expectDeselection(
-    action: Action,
-    breadcrumb: AnyFacetValueResponse
-  ) {
-    breadcrumbManager.state.facetBreadcrumbs[0].values[0].deselect();
+  function generateDeselectionTestCases(breadcrumb: AnyFacetValueResponse) {
+    return (state: string, action: Action) => {
+      beforeEach(() => {
+        breadcrumb.state = state as FacetValueState;
+        deselectFirstBreadcrumb();
+      });
 
-    expect(action).toHaveBeenCalledWith({
-      facetId,
-      selection: breadcrumb,
-    });
+      it('dispatches #toggleSelectActionCreator', () => {
+        expect(action).toHaveBeenCalledWith({
+          facetId,
+          selection: breadcrumb,
+        });
+      });
+
+      it('dispatches #fetchResultsActionCreator', () => {
+        expect(fetchProductListing).toHaveBeenCalled();
+      });
+    };
+  }
+
+  function deselectFirstBreadcrumb() {
+    breadcrumbManager.state.facetBreadcrumbs[0].values[0].deselect();
   }
 });
