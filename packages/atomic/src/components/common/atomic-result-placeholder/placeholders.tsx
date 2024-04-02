@@ -7,10 +7,24 @@ import {
 
 export interface ResultPlaceholderProps {
   density: ResultDisplayDensity;
-  imageSize?: ResultDisplayImageSize;
-  display?: ResultDisplayLayout;
+  imageSize: ResultDisplayImageSize;
+  display: ResultDisplayLayout;
   numberOfPlaceholders: number;
 }
+
+export const ResultsPlaceholdersGuard: FunctionalComponent<
+  ResultPlaceholderProps & {displayPlaceholders: boolean}
+> = (props) => {
+  if (!props.displayPlaceholders) {
+    return;
+  }
+  switch (props.display) {
+    case 'table':
+      return <TableDisplayResultsPlaceholder {...props} />;
+    default:
+      return <ResultsPlaceholder {...props} />;
+  }
+};
 
 export const ResultsPlaceholder: FunctionalComponent<ResultPlaceholderProps> = (
   props
@@ -20,12 +34,11 @@ export const ResultsPlaceholder: FunctionalComponent<ResultPlaceholderProps> = (
       key={`placeholder-${i}`}
       density={props.density}
       display={props.display || 'list'}
-      imageSize={props.imageSize!}
     ></atomic-result-placeholder>
   ));
 };
 
-export const TableDisplayResultsPlaceholder: FunctionalComponent<
+const TableDisplayResultsPlaceholder: FunctionalComponent<
   ResultPlaceholderProps
 > = (props) => {
   return (
