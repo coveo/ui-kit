@@ -117,7 +117,7 @@ function extractFolded(item: Record<string, unknown>, returnFolded: boolean) {
     if ('children' in item) {
       return item;
     } else {
-      return {children: [], item};
+      return {children: [], result: item};
     }
   }
 
