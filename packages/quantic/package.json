@@ -46,7 +46,8 @@
   },
   "dependencies": {
     "@coveo/bueno": "0.45.8",
-    "@coveo/headless": "2.58.1"
+    "@coveo/headless": "2.58.1",
+    "abortcontroller-polyfill": "1.7.5"
   },
   "engines": {
     "node": ">=14.0.0"

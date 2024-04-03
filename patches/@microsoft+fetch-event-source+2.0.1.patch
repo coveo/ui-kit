@@ -25,7 +25,7 @@ index ab40f1e..0dcb539 100644
          async function create() {
              var _a;
 -            curRequestController = new AbortController();
-+            curRequestController = typeof AbortController === 'undefined' ? null : new AbortController();
++            curRequestController = typeof AbortController === 'undefined' || window.AbortControllerPolyfillIsUsed ? null : new AbortController();
              try {
 -                const response = await fetch(input, Object.assign(Object.assign({}, rest), { headers, signal: curRequestController.signal }));
 +                const response = await fetch(input, Object.assign(Object.assign({}, rest), { headers, signal: curRequestController?.signal }));
@@ -68,7 +68,7 @@ index 31eb227..6433047 100644
          async function create() {
              var _a;
 -            curRequestController = new AbortController();
-+            curRequestController = typeof AbortController === 'undefined' ? null : new AbortController();
++            curRequestController = typeof AbortController === 'undefined' || window.AbortControllerPolyfillIsUsed ? null : new AbortController();
              try {
 -                const response = await fetch(input, Object.assign(Object.assign({}, rest), { headers, signal: curRequestController.signal }));
 +                const response = await fetch(input, Object.assign(Object.assign({}, rest), { headers, signal: curRequestController?.signal }));

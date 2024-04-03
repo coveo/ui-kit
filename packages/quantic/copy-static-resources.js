@@ -1,6 +1,8 @@
 const {promisify} = require('util');
 const ncp = promisify(require('ncp'));
 const mkdir = promisify(require('fs').mkdir);
+const readFile = promisify(require('fs').readFile);
+const writeFile = promisify(require('fs').writeFile);
 
 const copy = async (source, dest) => {
   try {
@@ -9,6 +11,24 @@ const copy = async (source, dest) => {
     console.log(`Failed to copy: ${source}\nDoes the resource exist?`);
     process.exit(1);
   }
+};
+
+const applyModificationToAbortControllerPolyfill = async () => {
+  const originalContent = await readFile(
+    './force-app/main/default/staticresources/abortcontrollerpolyfill/abortcontroller-polyfill-only.js',
+    'utf-8'
+  );
+
+  const updatedContent = originalContent.replace(
+    /self.AbortController = AbortController;/g,
+    'self.AbortControllerPolyfillIsUsed = true;\n    self.AbortController = AbortController;'
+  );
+
+  await writeFile(
+    './force-app/main/default/staticresources/abortcontrollerpolyfill/abortcontroller-polyfill-only.js',
+    updatedContent,
+    'utf-8'
+  );
 };
 
 const main = async () => {
@@ -39,9 +59,19 @@ const main = async () => {
       recursive: true,
     }
   );
+  await mkdir(
+    './force-app/main/default/staticresources/abortcontrollerpolyfill',
+    {
+      recursive: true,
+    }
+  );
   await copy(
     '../../node_modules/@coveo/headless/dist/browser/headless.js',
     './force-app/main/default/staticresources/coveoheadless/browser/headless.js'
+  );
+  await copy(
+    '../../node_modules/abortcontroller-polyfill/dist/abortcontroller-polyfill-only.js',
+    './force-app/main/default/staticresources/abortcontrollerpolyfill/abortcontroller-polyfill-only.js'
   );
   await copy(
     '../../node_modules/@coveo/headless/dist/browser/case-assist/headless.js',
@@ -68,7 +98,9 @@ const main = async () => {
     './force-app/main/default/staticresources/coveobueno/definitions'
   );
 
-  console.info('Headless copied.');
+  await applyModificationToAbortControllerPolyfill();
+
+  console.info('Static resources copied.');
 };
 
 main().then(() => {

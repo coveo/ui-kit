@@ -9,5 +9,9 @@ export function createAbortController(): AbortController | null {
     const {AbortController: nodeAbort} = require('node-abort-controller');
     return new nodeAbort() as AbortController;
   }
-  return typeof AbortController === 'undefined' ? null : new AbortController();
+  return typeof AbortController === 'undefined' ||
+    // @ts-ignore
+    window.AbortControllerPolyfillIsUsed
+    ? null
+    : new AbortController();
 }

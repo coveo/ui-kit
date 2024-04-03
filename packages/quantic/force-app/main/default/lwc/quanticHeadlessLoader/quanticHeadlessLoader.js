@@ -1,6 +1,7 @@
 import componentInitializationError from '@salesforce/label/c.quantic_ComponentInitializationError';
 import lookAtDeveloperConsole from '@salesforce/label/c.quantic_LookAtDeveloperConsole';
 import unableToInitializeComponent from '@salesforce/label/c.quantic_UnableToInitializeComponent';
+import AbortcontrollerpolyfillPath from '@salesforce/resourceUrl/abortcontrollerpolyfill';
 import BuenoPath from '@salesforce/resourceUrl/coveobueno';
 import HeadlessPath from '@salesforce/resourceUrl/coveoheadless';
 // @ts-ignore
@@ -57,6 +58,13 @@ const getBueno = (element) => {
   return loadScript(element, BuenoPath + '/browser/bueno.js');
 };
 
+const loadAbortControllerPolyfill = (element) => {
+  return loadScript(
+    element,
+    AbortcontrollerpolyfillPath + '/abortcontroller-polyfill-only.js'
+  );
+};
+
 /**
  * Initiates dependency loading promises.
  * @param element The Lightning element to use to load dependencies.
@@ -69,6 +77,7 @@ const loadDependencies = async (element, headlessUseCase) => {
 
   dependencyPromises = [
     ...dependencyPromises,
+    loadAbortControllerPolyfill(element),
     loadScript(element, HeadlessPath + bundleInfo.libPath),
     getBueno(element),
   ];
