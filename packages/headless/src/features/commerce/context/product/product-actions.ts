@@ -14,3 +14,20 @@ export const productView = createAsyncThunk<
 
   relay.emit('ec.productView', payload);
 });
+
+export type ProductClickPayload = Omit<Ec.ProductClick, 'currency'>;
+
+export const productClick = createAsyncThunk<
+  void,
+  ProductClickPayload,
+  AsyncThunkCommerceOptions<CommerceEngineState>
+>(
+  'commerce/product/click',
+  async (clickPayload: ProductClickPayload, {extra, getState}) => {
+    const {relay} = extra;
+    const {currency} = getState().commerceContext;
+    const payload = {currency, ...clickPayload};
+
+    relay.emit('ec.productClick', payload);
+  }
+);

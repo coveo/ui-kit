@@ -12,8 +12,12 @@ import {
   buildController,
   Controller,
 } from '../../controller/headless-controller';
+import {
+  buildSolutionTypeSubControllers,
+  SolutionTypeSubControllers,
+} from '../core/sub-controller/headless-sub-controller';
 
-export interface Search extends Controller {
+export interface Search extends Controller, SolutionTypeSubControllers {
   /**
    * Executes the first search.
    */
@@ -40,9 +44,13 @@ export function buildSearch(engine: CommerceEngine): Search {
   const controller = buildController(engine);
   const {dispatch} = engine;
   const getState = () => engine.state;
+  const subControllers = buildSolutionTypeSubControllers(engine, {
+    responseIdSelector: () => getState().commerceSearch.responseId,
+  });
 
   return {
     ...controller,
+    ...subControllers,
 
     get state() {
       return getState().commerceSearch;
