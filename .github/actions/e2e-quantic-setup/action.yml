@@ -13,8 +13,6 @@ runs:
     - run: npx nx run quantic:build
       shell: bash
     - run: |
-        echo 'Setup Quantic'
-        ls force-app/main/default/staticresources -r
         echo "${{ inputs.jwtkey }}" > ${{ env.SFDX_AUTH_JWT_KEY_FILE }}
         npx --no-install ts-node scripts/build/deploy-community.ts --ci
         rm ${{ env.SFDX_AUTH_JWT_KEY_FILE }}

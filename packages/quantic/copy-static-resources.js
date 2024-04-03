@@ -1,8 +1,8 @@
 const {promisify} = require('util');
 const ncp = promisify(require('ncp'));
 const mkdir = promisify(require('fs').mkdir);
-// const readFile = promisify(require('fs').readFile);
-// const writeFile = promisify(require('fs').writeFile);
+const readFile = promisify(require('fs').readFile);
+const writeFile = promisify(require('fs').writeFile);
 
 const copy = async (source, dest) => {
   try {
@@ -13,23 +13,23 @@ const copy = async (source, dest) => {
   }
 };
 
-// const applyModificationToAbortControllerPolyfill = async () => {
-//   const originalContent = await readFile(
-//     './force-app/main/default/staticresources/abortcontrollerpolyfill/abortcontroller-polyfill-only.js',
-//     'utf-8'
-//   );
+const applyModificationToAbortControllerPolyfill = async () => {
+  const originalContent = await readFile(
+    './force-app/main/default/staticresources/abortcontrollerpolyfill/abortcontroller-polyfill-only.js',
+    'utf-8'
+  );
 
-//   const updatedContent = originalContent.replace(
-//     /self.AbortController = AbortController;/g,
-//     'self.AbortControllerPolyfillIsUsed = true;\n    self.AbortController = AbortController;'
-//   );
+  const updatedContent = originalContent.replace(
+    /self.AbortController = AbortController;/g,
+    'self.AbortControllerPolyfillIsUsed = true;\n    self.AbortController = AbortController;'
+  );
 
-//   await writeFile(
-//     './force-app/main/default/staticresources/abortcontrollerpolyfill/abortcontroller-polyfill-only.js',
-//     updatedContent,
-//     'utf-8'
-//   );
-// };
+  await writeFile(
+    './force-app/main/default/staticresources/abortcontrollerpolyfill/abortcontroller-polyfill-only.js',
+    updatedContent,
+    'utf-8'
+  );
+};
 
 const main = async () => {
   console.info('Begin copy.');
@@ -98,7 +98,7 @@ const main = async () => {
     './force-app/main/default/staticresources/abortcontrollerpolyfill/abortcontroller-polyfill-only.js'
   );
 
-  // await applyModificationToAbortControllerPolyfill();
+  await applyModificationToAbortControllerPolyfill();
 
   console.info('Static resources copied.');
 };
