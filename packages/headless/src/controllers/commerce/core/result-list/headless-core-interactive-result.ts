@@ -1,4 +1,4 @@
-import {Product} from '../../../../api/commerce/common/product';
+import {Product} from '@coveo/relay-event-types';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {productClick} from '../../../../features/commerce/context/product/product-actions';
 import {
@@ -10,10 +10,14 @@ import {
 
 export interface InteractiveResultOptions extends InteractiveResultCoreOptions {
   /**
-   * The product.
+   * The product to log analytics for.
    */
-  // TODO: Which Product should this be? The headless one or the relay one? The product view controller uses the relay one.
   product: Product;
+
+  /**
+   * The product's position, using a 1-based index.
+   */
+  position: number;
 }
 
 export interface InteractiveResultCoreProps
@@ -59,22 +63,12 @@ export function buildCoreInteractiveResult(
     wasOpened = true;
     engine.dispatch(
       productClick({
-        // TODO: If we used the relay Product, we would not need to construct the product here.
-        product: {
-          productId: props.options.product.permanentid,
-          name: props.options.product.ec_name ?? '',
-          price: props.options.product.ec_price ?? 0,
-        },
-        // TODO: The Product does not contain a position. Should we add it to the interface?
-        position: 0,
+        product: props.options.product,
+        position: props.options.position,
         responseId: props.responseIdSelector(),
       })
     );
   };
 
-  const action = () => {
-    logAnalyticsIfNeverOpened();
-  };
-
-  return buildInteractiveResultCore(engine, props, action);
+  return buildInteractiveResultCore(engine, props, logAnalyticsIfNeverOpened);
 }
