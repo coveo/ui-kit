@@ -228,6 +228,36 @@ describe('c-quantic-radio-buttons-group', () => {
       ).toBeTruthy();
     });
 
+    it("shouldn't be possible to select multiple radio buttons", async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      const radioInputs = element.shadowRoot.querySelectorAll(
+        selectors.radioInputs
+      );
+      const radioButtonContainers = element.shadowRoot.querySelectorAll(
+        selectors.radioContainers
+      );
+
+      radioInputs[0].click();
+      radioInputs[1].click();
+      await flushPromises();
+
+      const selectedRadioInputs = element.shadowRoot.querySelectorAll(
+        `.radio-button--selected`
+      );
+
+      expect(radioInputs[0].checked).toBeFalsy();
+      expect(radioInputs[1].checked).toBeTruthy();
+      expect(
+        radioButtonContainers[0].classList.contains('radio-button--selected')
+      ).toBeFalsy();
+      expect(
+        radioButtonContainers[1].classList.contains('radio-button--selected')
+      ).toBeTruthy();
+      expect(selectedRadioInputs).toHaveLength(1);
+    });
+
     it('should dispatch the "focus" event when a radio button is focused', async () => {
       const element = createTestComponent();
       await flushPromises();
