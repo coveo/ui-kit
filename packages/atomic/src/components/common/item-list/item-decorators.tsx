@@ -57,7 +57,7 @@ export function ItemContext(
         const element = getElement(this);
         element.remove();
         console.error(
-          'Item component is in error and has been removed from the DOM',
+          'Result component is in error and has been removed from the DOM',
           this.error,
           this,
           element

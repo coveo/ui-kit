@@ -26,7 +26,7 @@ describe('ResultContext decorator', () => {
     });
 
     expect(console.error).toHaveBeenCalledWith(
-      'Item component is in error and has been removed from the DOM',
+      'Result component is in error and has been removed from the DOM',
       new MissingParentError('atomic-result-fields-list', 'atomic-result'),
       expect.anything(),
       expect.anything()
