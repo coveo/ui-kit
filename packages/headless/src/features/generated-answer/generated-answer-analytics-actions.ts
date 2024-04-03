@@ -247,12 +247,17 @@ export const logGeneratedAnswerStreamEnd = (
     (client, state) => {
       const generativeQuestionAnsweringId =
         generativeQuestionAnsweringIdSelector(state);
+      const answerTextIsEmpty = answerGenerated
+        ? !state.generatedAnswer?.answer ||
+          !state.generatedAnswer?.answer.length
+        : undefined;
       if (!generativeQuestionAnsweringId) {
         return null;
       }
       return client.makeGeneratedAnswerStreamEnd({
         generativeQuestionAnsweringId,
         answerGenerated,
+        answerTextIsEmpty,
       });
     }
   );

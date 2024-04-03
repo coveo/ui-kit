@@ -246,11 +246,7 @@ jobs:
       SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
       SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
   required-jobs:
-    if: |
-      ${{
-        !cancelled () &&
-        !contains(needs.*.result, 'failure')
-      }}
+    if: ${{!cancelled() && !contains(needs.*.result, 'failure')}}
     needs:
       - 'build'
       - 'lint-check'
@@ -274,11 +270,7 @@ jobs:
     steps:
       - run: echo 'All required jobs have passed'
   is-valid:
-    if: |
-      ${{
-        !cancelled () &&
-        !contains(needs.*.result, 'failure')
-      }}
+    if: ${{!cancelled() && !contains(needs.*.result, 'failure')}}
     name: 'Confirm build is valid'
     needs:
       - 'required-jobs'
