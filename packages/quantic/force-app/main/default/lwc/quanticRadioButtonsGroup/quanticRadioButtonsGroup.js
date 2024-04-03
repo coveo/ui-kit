@@ -4,10 +4,10 @@ import {LightningElement, api, track} from 'lwc';
  * The `QuanticRadioButtonsGroupOption` type defines the shape of an option
  * that can be passed to the `QuanticRadioButtonsGroup` component.
  * @typedef {Object} QuanticRadioButtonsGroupOption
- * @property {String} label The label of the option.
  * @property {String} value The value of the option.
- * @property {String} iconName The name of the icon to be displayed.
- * @property {String} tooltip The tooltip of the option.
+ * @property {String} [label] The label of the option.
+ * @property {String} [iconName] The name of the icon to be displayed.
+ * @property {String} [tooltip] The tooltip of the option.
  */
 
 export default class QuanticRadioButtonsGroup extends LightningElement {

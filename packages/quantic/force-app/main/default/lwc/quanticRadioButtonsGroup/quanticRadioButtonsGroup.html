@@ -9,7 +9,7 @@
     <div class="slds-form-element__control">
       <div class="slds-radio_button-group radio-buttons-group-container">
         <template for:each={transformedOptions} for:item="option">
-          <span class={option.buttonCSSClass} key={option.value}>
+          <span class={option.buttonCSSClass} key={option.value} data-cy={option.value}>
             <template lwc:if={option.iconName}>
               <span class="slds-grid slds-var-p-vertical_x-small">
                 <lightning-icon

@@ -23,6 +23,7 @@ export interface GeneratedAnswerSelector extends ComponentSelector {
   rephraseButtons: () => CypressSelector;
   rephraseLabel: () => CypressSelector;
   rephraseButtonByLabel: (label: string) => CypressSelector;
+  rephraseInputButtonByLabel: (label: string) => CypressSelector;
   generatedAnswerFooter: () => CypressSelector;
   copyToClipboardButton: () => CypressSelector;
   citationTooltip: (index: number) => CypressSelector;
@@ -93,10 +94,14 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
       '[data-cy="generated-answer__rephrase-buttons"]'
     ),
   rephraseLabel: () =>
-    GeneratedAnswerSelectors.get().find('[data-cy="rephrase-buttons__label"]'),
+    GeneratedAnswerSelectors.get().find('.radio-buttons-group__legend'),
   rephraseButtonByLabel: (label: string) =>
     GeneratedAnswerSelectors.get().find(
-      `[data-cy="rephrase-buttons__content"] c-quantic-stateful-button[data-cy="${label}"] button`
+      `c-quantic-radio-buttons-group [data-cy="${label}"]`
+    ),
+  rephraseInputButtonByLabel: (label: string) =>
+    GeneratedAnswerSelectors.get().find(
+      `c-quantic-radio-buttons-group [data-cy="${label}"] input[type="radio"]`
     ),
   generatedAnswerFooter: () =>
     GeneratedAnswerSelectors.get().find('[data-cy="generated-answer__footer"]'),

@@ -1,7 +1,8 @@
 <template>
   <c-quantic-radio-buttons-group
+    data-cy="rephrase-buttons__content"
     legend={labels.rephrase}
-    hide-labels="false"
+    hide-labels={hideLabels}
     options={rephraseOptions}
     onchange={handleRephraseChange}
     value={value}

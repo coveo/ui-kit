@@ -227,11 +227,11 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         .rephraseButtonByLabel(name)
         .should(
           selected ? 'have.class' : 'not.have.class',
-          'stateful-button--selected'
+          'radio-button--selected'
         )
         .should(
           selected ? 'not.have.class' : 'have.class',
-          'stateful-button--unselected'
+          'radio-button--unselected'
         )
         .log(`the ${name} rephrase button ${should(selected)} be selected`);
     },

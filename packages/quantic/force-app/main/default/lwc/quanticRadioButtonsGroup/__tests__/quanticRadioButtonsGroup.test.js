@@ -1,4 +1,5 @@
 import QuanticRadioButtonsGroup from 'c/quanticRadioButtonsGroup';
+// @ts-ignore
 import {createElement} from 'lwc';
 
 const selectors = {
@@ -74,6 +75,7 @@ describe('c-quantic-radio-buttons-group', () => {
       // @ts-ignore
       const element = createTestComponent({
         ...exampleOptions,
+        // @ts-ignore
         options: minimalOptions,
       });
       await flushPromises();
