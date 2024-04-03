@@ -1,6 +1,9 @@
 import {getVisitorID} from '../../../api/analytics/coveo-analytics-utils';
 import {SortParam} from '../../../api/commerce/commerce-api-params';
-import {CommerceAPIRequest} from '../../../api/commerce/common/request';
+import {
+  BaseCommerceAPIRequest,
+  CommerceAPIRequest,
+} from '../../../api/commerce/common/request';
 import {CommerceSuccessResponse} from '../../../api/commerce/common/response';
 import {
   CartSection,
@@ -14,6 +17,7 @@ import {
   FacetSection,
   NumericFacetSection,
   ProductListingV2Section,
+  RecommendationsSection,
   VersionSection,
 } from '../../../state/state-sections';
 import {PreparableAnalyticsAction} from '../../analytics/analytics-utils';
@@ -22,6 +26,7 @@ import {SortBy, SortCriterion} from '../sort/sort';
 
 export type StateNeededByQueryCommerceAPI = ConfigurationSection &
   ProductListingV2Section &
+  RecommendationsSection &
   CommerceContextSection &
   CartSection &
   Partial<
@@ -41,10 +46,9 @@ export interface QueryCommerceAPIThunkReturn {
   analyticsAction: PreparableAnalyticsAction<StateNeededByQueryCommerceAPI>;
 }
 
-export const buildCommerceAPIRequest = async (
+export const buildBaseCommerceAPIRequest = async (
   state: StateNeededByQueryCommerceAPI
-): Promise<CommerceAPIRequest> => {
-  const facets = getFacets(state);
+): Promise<BaseCommerceAPIRequest> => {
   const {view, user, ...restOfContext} = state.commerceContext;
   return {
     accessToken: state.configuration.accessToken,
@@ -58,8 +62,17 @@ export const buildCommerceAPIRequest = async (
       view,
       cart: state.cart.cartItems.map((id) => state.cart.cart[id]),
     },
-    facets,
     ...(state.commercePagination && {page: state.commercePagination.page}),
+  };
+};
+
+export const buildCommerceAPIRequest = async (
+  state: StateNeededByQueryCommerceAPI
+): Promise<CommerceAPIRequest> => {
+  const facets = getFacets(state);
+  return {
+    ...buildBaseCommerceAPIRequest(state),
+    facets,
     ...(state.commerceSort && {
       sort: getSort(state.commerceSort.appliedSort),
     }),
