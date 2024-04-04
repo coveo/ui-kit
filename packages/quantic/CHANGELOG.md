@@ -1,3 +1,9 @@
+# 2.48.0 (2024-04-03)
+
+### Features
+
+- **headless:** case assist analytics migrated to the event protocol ([#3742](https://github.com/coveo/ui-kit/issues/3742)) ([dd22a28](https://github.com/coveo/ui-kit/commits/dd22a282844e1de2a7787c29c92ad8c80663f8a7))
+
 ## 2.47.1 (2024-03-27)
 
 ### Bug Fixes
