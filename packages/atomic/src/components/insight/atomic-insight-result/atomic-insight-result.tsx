@@ -2,16 +2,16 @@ import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
 import {InsightResult, InsightInteractiveResult, InsightFoldedResult} from '..';
 import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
 import {
-  ResultLayout,
-  ResultDisplayDensity,
-  ResultDisplayImageSize,
-} from '../../common/layout/display-options';
-import {resultComponentClass} from '../../common/result-list/result-list-common';
-import {
   DisplayConfig,
-  InteractiveResultContextEvent,
-  ResultContextEvent,
-} from '../../search/result-template-components/result-template-decorators';
+  InteractiveItemContextEvent,
+  ItemContextEvent,
+} from '../../common/item-list/item-decorators';
+import {resultComponentClass} from '../../common/item-list/item-list-common';
+import {
+  ItemLayout,
+  ItemDisplayDensity,
+  ItemDisplayImageSize,
+} from '../../common/layout/display-options';
 import {AtomicInsightStore} from '../atomic-insight-interface/store';
 
 /**
@@ -23,7 +23,7 @@ import {AtomicInsightStore} from '../atomic-insight-interface/store';
   shadow: true,
 })
 export class AtomicInsightResult {
-  private layout!: ResultLayout;
+  private layout!: ItemLayout;
   @Element() host!: HTMLElement;
 
   /**
@@ -56,14 +56,14 @@ export class AtomicInsightResult {
   /**
    * How large or small results should be.
    */
-  @Prop() density: ResultDisplayDensity = 'normal';
+  @Prop() density: ItemDisplayDensity = 'normal';
 
   /**
    * The size of the visual section in result list items.
    *
    * This is overwritten by the image size defined in the result content, if it exists.
    */
-  @Prop() imageSize: ResultDisplayImageSize = 'icon';
+  @Prop() imageSize: ItemDisplayImageSize = 'icon';
 
   /**
    * The classes to add to the result element.
@@ -77,7 +77,7 @@ export class AtomicInsightResult {
 
   @Listen('atomic/resolveResult')
   public resolveResult(
-    event: ResultContextEvent<InsightFoldedResult | InsightResult>
+    event: ItemContextEvent<InsightFoldedResult | InsightResult>
   ) {
     event.preventDefault();
     event.stopPropagation();
@@ -85,7 +85,7 @@ export class AtomicInsightResult {
   }
 
   @Listen('atomic/resolveInteractiveResult')
-  public resolveInteractiveResult(event: InteractiveResultContextEvent) {
+  public resolveInteractiveResult(event: InteractiveItemContextEvent) {
     event.preventDefault();
     event.stopPropagation();
     if (this.interactiveResult) {
@@ -99,7 +99,7 @@ export class AtomicInsightResult {
   }
 
   @Listen('atomic/resolveResultDisplayConfig')
-  public resolveResultDisplayConfig(event: ResultContextEvent<DisplayConfig>) {
+  public resolveResultDisplayConfig(event: ItemContextEvent<DisplayConfig>) {
     event.preventDefault();
     event.stopPropagation();
     event.detail({
@@ -109,7 +109,7 @@ export class AtomicInsightResult {
   }
 
   public connectedCallback() {
-    this.layout = new ResultLayout(
+    this.layout = new ItemLayout(
       this.content!.children,
       'list',
       this.density,

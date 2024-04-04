@@ -1,15 +1,15 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {filterProtocol} from '../../../utils/xss-utils';
-import {ResultTarget} from '../layout/display-options';
+import {ItemTarget} from '../layout/display-options';
 
-export interface ResultLinkEventProps {
+interface ItemLinkEventProps {
   onSelect: () => void;
   onBeginDelayedSelect: () => void;
   onCancelPendingSelect: () => void;
   stopPropagation?: boolean;
 }
 
-export interface ResultLinkProps extends ResultLinkEventProps {
+export interface ItemLinkProps extends ItemLinkEventProps {
   href: string;
   className?: string;
   part?: string;
@@ -19,7 +19,7 @@ export interface ResultLinkProps extends ResultLinkEventProps {
   attributes?: Attr[];
   tabIndex?: number;
   ariaHidden?: boolean;
-  target?: ResultTarget;
+  target?: ItemTarget;
   rel?: string;
   onMouseOver?: () => void;
   onMouseLeave?: () => void;
@@ -34,7 +34,7 @@ export const bindAnalyticsToLink = (
     onBeginDelayedSelect,
     onCancelPendingSelect,
     stopPropagation = true,
-  }: ResultLinkEventProps
+  }: ItemLinkEventProps
 ) => {
   const stopPropagationAndProcess = (e: Event, process: () => void) => {
     stopPropagation && e.stopPropagation();
@@ -58,7 +58,7 @@ export const bindAnalyticsToLink = (
   );
 };
 
-export const LinkWithResultAnalytics: FunctionalComponent<ResultLinkProps> = (
+export const LinkWithItemAnalytics: FunctionalComponent<ItemLinkProps> = (
   {
     href,
     className,
