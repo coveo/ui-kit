@@ -26,7 +26,6 @@ import {
   State,
 } from '@stencil/core';
 import i18next, {i18n} from 'i18next';
-import {i18nCompatibilityVersion} from '../../../components';
 import {InitializeEvent} from '../../../utils/initialization-utils';
 import {
   SafeStorage,
@@ -35,6 +34,7 @@ import {
 } from '../../../utils/local-storage-utils';
 import {ArrayProp} from '../../../utils/props-utils';
 import {CommonBindings} from '../../common/interface/bindings';
+import {i18nCompatibilityVersion} from '../../common/interface/i18n';
 import {
   BaseAtomicInterface,
   CommonAtomicInterfaceHelper,
