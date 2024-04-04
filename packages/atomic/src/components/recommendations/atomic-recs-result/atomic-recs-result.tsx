@@ -2,20 +2,20 @@ import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
 import {RecsInteractiveResult, RecsResult} from '..';
 import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
 import {
-  ResultLayout,
-  ResultDisplayDensity,
-  ResultDisplayImageSize,
-  ResultDisplayLayout,
-} from '../../common/layout/display-options';
-import {
-  ResultRenderingFunction,
-  resultComponentClass,
-} from '../../common/result-list/result-list-common';
-import {
+  InteractiveItemContextEvent,
+  ItemContextEvent,
   DisplayConfig,
-  InteractiveResultContextEvent,
-  ResultContextEvent,
-} from '../../search/result-template-components/result-template-decorators';
+} from '../../common/item-list/item-decorators';
+import {
+  ItemRenderingFunction,
+  resultComponentClass,
+} from '../../common/item-list/item-list-common';
+import {
+  ItemLayout,
+  ItemDisplayDensity,
+  ItemDisplayImageSize,
+  ItemDisplayLayout,
+} from '../../common/layout/display-options';
 import {AtomicRecsStore} from '../atomic-recs-interface/store';
 
 /**
@@ -27,7 +27,7 @@ import {AtomicRecsStore} from '../atomic-recs-interface/store';
   shadow: true,
 })
 export class AtomicRecsResult {
-  private layout!: ResultLayout;
+  private layout!: ItemLayout;
   private resultRootRef?: HTMLElement;
   private executedRenderingFunctionOnce = false;
   @Element() host!: HTMLElement;
@@ -62,19 +62,19 @@ export class AtomicRecsResult {
   /**
    * The layout to apply to display results.
    */
-  @Prop() display: ResultDisplayLayout = 'list';
+  @Prop() display: ItemDisplayLayout = 'list';
 
   /**
    * The size of the results.
    */
-  @Prop() density: ResultDisplayDensity = 'normal';
+  @Prop() density: ItemDisplayDensity = 'normal';
 
   /**
    * The size of the visual section in result list items.
    *
    * This is overwritten by the image size defined in the result content, if it exists.
    */
-  @Prop() imageSize: ResultDisplayImageSize = 'icon';
+  @Prop() imageSize: ItemDisplayImageSize = 'icon';
 
   /**
    * The classes to add to the result element.
@@ -92,17 +92,17 @@ export class AtomicRecsResult {
    *
    * @internal
    */
-  @Prop() renderingFunction: ResultRenderingFunction;
+  @Prop() renderingFunction: ItemRenderingFunction;
 
   @Listen('atomic/resolveResult')
-  public resolveResult(event: ResultContextEvent<RecsResult>) {
+  public resolveResult(event: ItemContextEvent<RecsResult>) {
     event.preventDefault();
     event.stopPropagation();
     event.detail(this.result);
   }
 
   @Listen('atomic/resolveInteractiveResult')
-  public resolveInteractiveResult(event: InteractiveResultContextEvent) {
+  public resolveInteractiveResult(event: InteractiveItemContextEvent) {
     event.preventDefault();
     event.stopPropagation();
     event.detail(this.interactiveResult);
@@ -114,7 +114,7 @@ export class AtomicRecsResult {
   }
 
   @Listen('atomic/resolveResultDisplayConfig')
-  public resolveResultDisplayConfig(event: ResultContextEvent<DisplayConfig>) {
+  public resolveResultDisplayConfig(event: ItemContextEvent<DisplayConfig>) {
     event.preventDefault();
     event.stopPropagation();
     event.detail({
@@ -124,7 +124,7 @@ export class AtomicRecsResult {
   }
 
   public connectedCallback() {
-    this.layout = new ResultLayout(
+    this.layout = new ItemLayout(
       this.content!.children,
       this.display,
       this.density,

@@ -9,8 +9,8 @@ import { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, Face
 import { AnyBindings } from "./components/common/interface/bindings";
 import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
-import { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout, ResultTarget } from "./components/common/layout/display-options";
-import { ResultRenderingFunction } from "./components/common/result-list/result-list-common";
+import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout, ItemTarget } from "./components/common/layout/display-options";
+import { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
 import { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightGeneratedAnswerStyle, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 import { FacetDisplayValues } from "./components/common/facets/facet-common";
 import { i18n } from "i18next";
@@ -34,8 +34,8 @@ export { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, Face
 export { AnyBindings } from "./components/common/interface/bindings";
 export { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
-export { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout, ResultTarget } from "./components/common/layout/display-options";
-export { ResultRenderingFunction } from "./components/common/result-list/result-list-common";
+export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout, ItemTarget } from "./components/common/layout/display-options";
+export { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
 export { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightGeneratedAnswerStyle, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 export { FacetDisplayValues } from "./components/common/facets/facet-common";
 export { i18n } from "i18next";
@@ -442,11 +442,11 @@ export namespace Components {
         /**
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
-        "density": ResultDisplayDensity;
+        "density": ItemDisplayDensity;
         /**
           * The expected size of the image displayed in the results.
          */
-        "imageSize": ResultDisplayImageSize;
+        "imageSize": ItemDisplayImageSize;
         /**
           * The initial number of child results to request for each folded collection, before expansion.
           * @defaultValue `2`
@@ -461,7 +461,7 @@ export namespace Components {
         /**
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
          */
-        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
+        "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
     }
     /**
      * The `atomic-format-currency` component is used for formatting currencies.
@@ -631,11 +631,11 @@ export namespace Components {
         /**
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
-        "density": ResultDisplayDensity;
+        "density": ItemDisplayDensity;
         /**
           * The expected size of the image displayed in the results.
          */
-        "imageSize": ResultDisplayImageSize;
+        "imageSize": ItemDisplayImageSize;
         /**
           * The name of the field that determines whether a certain result is a top result containing other child results within a collection.
           * @defaultValue `foldingparent`
@@ -644,7 +644,7 @@ export namespace Components {
         /**
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
          */
-        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
+        "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
     }
     interface AtomicInsightFullSearchButton {
         "tooltip": string;
@@ -809,11 +809,11 @@ export namespace Components {
         /**
           * How large or small results should be.
          */
-        "density": ResultDisplayDensity;
+        "density": ItemDisplayDensity;
         /**
           * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
-        "imageSize": ResultDisplayImageSize;
+        "imageSize": ItemDisplayImageSize;
         /**
           * The InteractiveResult item.
          */
@@ -848,7 +848,7 @@ export namespace Components {
         /**
           * The expected size of the image displayed in the children results.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize"?: ItemDisplayImageSize;
         /**
           * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
          */
@@ -880,16 +880,16 @@ export namespace Components {
         /**
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
-        "density": ResultDisplayDensity;
+        "density": ItemDisplayDensity;
         /**
           * The expected size of the image displayed in the results.
          */
-        "imageSize": ResultDisplayImageSize;
+        "imageSize": ItemDisplayImageSize;
         /**
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
           * @param resultRenderingFunction
          */
-        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
+        "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
     }
     interface AtomicInsightResultTemplate {
         /**
@@ -1487,16 +1487,16 @@ export namespace Components {
         /**
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
-        "density": ResultDisplayDensity;
+        "density": ItemDisplayDensity;
         /**
           * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself. To modify the number of recommendations per column, modify the --atomic-recs-number-of-columns CSS variable.
          */
-        "display": ResultDisplayBasicLayout;
+        "display": ItemDisplayBasicLayout;
         /**
           * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
          */
-        "gridCellLinkTarget": ResultTarget;
+        "gridCellLinkTarget": ItemTarget;
         /**
           * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
          */
@@ -1504,7 +1504,7 @@ export namespace Components {
         /**
           * The expected size of the image displayed in the results.
          */
-        "imageSize": ResultDisplayImageSize;
+        "imageSize": ItemDisplayImageSize;
         /**
           * The non-localized label for the list of recommendations.
          */
@@ -1533,7 +1533,7 @@ export namespace Components {
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
           * @param resultRenderingFunction
          */
-        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
+        "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
     }
     /**
      * The `atomic-recs-result` component is used internally by the `atomic-recs-list` component.
@@ -1550,15 +1550,15 @@ export namespace Components {
         /**
           * The size of the results.
          */
-        "density": ResultDisplayDensity;
+        "density": ItemDisplayDensity;
         /**
           * The layout to apply to display results.
          */
-        "display": ResultDisplayLayout;
+        "display": ItemDisplayLayout;
         /**
           * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
-        "imageSize": ResultDisplayImageSize;
+        "imageSize": ItemDisplayImageSize;
         /**
           * The InteractiveResult item.
          */
@@ -1567,7 +1567,7 @@ export namespace Components {
         /**
           * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
          */
-        "renderingFunction": ResultRenderingFunction;
+        "renderingFunction": ItemRenderingFunction;
         /**
           * The result item.
          */
@@ -1653,15 +1653,15 @@ export namespace Components {
         /**
           * How large or small results should be.
          */
-        "density": ResultDisplayDensity;
+        "density": ItemDisplayDensity;
         /**
           * How results should be displayed.
          */
-        "display": ResultDisplayLayout;
+        "display": ItemDisplayLayout;
         /**
           * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
-        "imageSize": ResultDisplayImageSize;
+        "imageSize": ItemDisplayImageSize;
         /**
           * The InteractiveResult item.
          */
@@ -1670,7 +1670,7 @@ export namespace Components {
         /**
           * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
          */
-        "renderingFunction": ResultRenderingFunction;
+        "renderingFunction": ItemRenderingFunction;
         /**
           * The result item.
          */
@@ -1735,7 +1735,7 @@ export namespace Components {
         /**
           * The expected size of the image displayed in the children results.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize"?: ItemDisplayImageSize;
         /**
           * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
          */
@@ -1833,25 +1833,25 @@ export namespace Components {
         /**
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
-        "density": ResultDisplayDensity;
+        "density": ItemDisplayDensity;
         /**
           * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
          */
-        "display": ResultDisplayLayout;
+        "display": ItemDisplayLayout;
         /**
           * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
          */
-        "gridCellLinkTarget": ResultTarget;
+        "gridCellLinkTarget": ItemTarget;
         /**
           * The expected size of the image displayed in the results.
          */
-        "imageSize": ResultDisplayImageSize;
+        "imageSize": ItemDisplayImageSize;
         /**
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
           * @param resultRenderingFunction
          */
-        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
+        "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
     }
     /**
      * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
@@ -1908,9 +1908,9 @@ export namespace Components {
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultPlaceholder {
-        "density": ResultDisplayDensity;
-        "display": ResultDisplayLayout;
-        "imageSize": ResultDisplayImageSize;
+        "density": ItemDisplayDensity;
+        "display": ItemDisplayLayout;
+        "imageSize": ItemDisplayImageSize;
     }
     /**
      * The `atomic-result-printable-uri` component displays the URI, or path, to access a result.
@@ -2030,14 +2030,14 @@ export namespace Components {
         /**
           * How large or small the visual section of results using this template should be.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize"?: ItemDisplayImageSize;
     }
     /**
      * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultTablePlaceholder {
-        "density": ResultDisplayDensity;
-        "imageSize": ResultDisplayImageSize;
+        "density": ItemDisplayDensity;
+        "imageSize": ItemDisplayImageSize;
         "rows": number;
     }
     /**
@@ -2158,11 +2158,11 @@ export namespace Components {
         /**
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
-        "density": ResultDisplayDensity;
+        "density": ItemDisplayDensity;
         /**
           * The expected size of the image displayed in the results.
          */
-        "imageSize": ResultDisplayImageSize;
+        "imageSize": ItemDisplayImageSize;
         /**
           * The maximum number of results to show.
          */
@@ -2171,7 +2171,7 @@ export namespace Components {
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
           * @param resultRenderingFunction
          */
-        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
+        "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
     }
     /**
      * The `atomic-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
@@ -4692,11 +4692,11 @@ declare namespace LocalJSX {
         /**
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
-        "density"?: ResultDisplayDensity;
+        "density"?: ItemDisplayDensity;
         /**
           * The expected size of the image displayed in the results.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize"?: ItemDisplayImageSize;
         /**
           * The initial number of child results to request for each folded collection, before expansion.
           * @defaultValue `2`
@@ -4878,11 +4878,11 @@ declare namespace LocalJSX {
         /**
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
-        "density"?: ResultDisplayDensity;
+        "density"?: ItemDisplayDensity;
         /**
           * The expected size of the image displayed in the results.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize"?: ItemDisplayImageSize;
         /**
           * The name of the field that determines whether a certain result is a top result containing other child results within a collection.
           * @defaultValue `foldingparent`
@@ -5035,11 +5035,11 @@ declare namespace LocalJSX {
         /**
           * How large or small results should be.
          */
-        "density"?: ResultDisplayDensity;
+        "density"?: ItemDisplayDensity;
         /**
           * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize"?: ItemDisplayImageSize;
         /**
           * The InteractiveResult item.
          */
@@ -5074,7 +5074,7 @@ declare namespace LocalJSX {
         /**
           * The expected size of the image displayed in the children results.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize"?: ItemDisplayImageSize;
         /**
           * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
          */
@@ -5102,11 +5102,11 @@ declare namespace LocalJSX {
         /**
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
-        "density"?: ResultDisplayDensity;
+        "density"?: ItemDisplayDensity;
         /**
           * The expected size of the image displayed in the results.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize"?: ItemDisplayImageSize;
     }
     interface AtomicInsightResultTemplate {
         /**
@@ -5686,16 +5686,16 @@ declare namespace LocalJSX {
         /**
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
-        "density"?: ResultDisplayDensity;
+        "density"?: ItemDisplayDensity;
         /**
           * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself. To modify the number of recommendations per column, modify the --atomic-recs-number-of-columns CSS variable.
          */
-        "display"?: ResultDisplayBasicLayout;
+        "display"?: ItemDisplayBasicLayout;
         /**
           * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
          */
-        "gridCellLinkTarget"?: ResultTarget;
+        "gridCellLinkTarget"?: ItemTarget;
         /**
           * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
          */
@@ -5703,7 +5703,7 @@ declare namespace LocalJSX {
         /**
           * The expected size of the image displayed in the results.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize"?: ItemDisplayImageSize;
         /**
           * The non-localized label for the list of recommendations.
          */
@@ -5736,15 +5736,15 @@ declare namespace LocalJSX {
         /**
           * The size of the results.
          */
-        "density"?: ResultDisplayDensity;
+        "density"?: ItemDisplayDensity;
         /**
           * The layout to apply to display results.
          */
-        "display"?: ResultDisplayLayout;
+        "display"?: ItemDisplayLayout;
         /**
           * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize"?: ItemDisplayImageSize;
         /**
           * The InteractiveResult item.
          */
@@ -5753,7 +5753,7 @@ declare namespace LocalJSX {
         /**
           * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
          */
-        "renderingFunction"?: ResultRenderingFunction;
+        "renderingFunction"?: ItemRenderingFunction;
         /**
           * The result item.
          */
@@ -5836,15 +5836,15 @@ declare namespace LocalJSX {
         /**
           * How large or small results should be.
          */
-        "density"?: ResultDisplayDensity;
+        "density"?: ItemDisplayDensity;
         /**
           * How results should be displayed.
          */
-        "display"?: ResultDisplayLayout;
+        "display"?: ItemDisplayLayout;
         /**
           * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize"?: ItemDisplayImageSize;
         /**
           * The InteractiveResult item.
          */
@@ -5853,7 +5853,7 @@ declare namespace LocalJSX {
         /**
           * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
          */
-        "renderingFunction"?: ResultRenderingFunction;
+        "renderingFunction"?: ItemRenderingFunction;
         /**
           * The result item.
          */
@@ -5918,7 +5918,7 @@ declare namespace LocalJSX {
         /**
           * The expected size of the image displayed in the children results.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize"?: ItemDisplayImageSize;
         /**
           * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
          */
@@ -6012,20 +6012,20 @@ declare namespace LocalJSX {
         /**
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
-        "density"?: ResultDisplayDensity;
+        "density"?: ItemDisplayDensity;
         /**
           * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
          */
-        "display"?: ResultDisplayLayout;
+        "display"?: ItemDisplayLayout;
         /**
           * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
          */
-        "gridCellLinkTarget"?: ResultTarget;
+        "gridCellLinkTarget"?: ItemTarget;
         /**
           * The expected size of the image displayed in the results.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize"?: ItemDisplayImageSize;
     }
     /**
      * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
@@ -6082,9 +6082,9 @@ declare namespace LocalJSX {
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultPlaceholder {
-        "density": ResultDisplayDensity;
-        "display": ResultDisplayLayout;
-        "imageSize": ResultDisplayImageSize;
+        "density": ItemDisplayDensity;
+        "display": ItemDisplayLayout;
+        "imageSize": ItemDisplayImageSize;
     }
     /**
      * The `atomic-result-printable-uri` component displays the URI, or path, to access a result.
@@ -6204,14 +6204,14 @@ declare namespace LocalJSX {
         /**
           * How large or small the visual section of results using this template should be.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize"?: ItemDisplayImageSize;
     }
     /**
      * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultTablePlaceholder {
-        "density": ResultDisplayDensity;
-        "imageSize": ResultDisplayImageSize;
+        "density": ItemDisplayDensity;
+        "imageSize": ItemDisplayImageSize;
         "rows": number;
     }
     /**
@@ -6333,11 +6333,11 @@ declare namespace LocalJSX {
         /**
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
-        "density"?: ResultDisplayDensity;
+        "density"?: ItemDisplayDensity;
         /**
           * The expected size of the image displayed in the results.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize"?: ItemDisplayImageSize;
         /**
           * The maximum number of results to show.
          */

@@ -11,7 +11,7 @@ import {
   BindStateToController,
 } from '../../../../utils/initialization-utils';
 import {randomID} from '../../../../utils/utils';
-import {getAttributesFromLinkSlot} from '../../../common/result-link/attributes-slot';
+import {getAttributesFromLinkSlot} from '../../../common/item-link/attributes-slot';
 import {SmartSnippetCommon} from '../../../common/smart-snippets/atomic-smart-snippet/smart-snippet-common';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 

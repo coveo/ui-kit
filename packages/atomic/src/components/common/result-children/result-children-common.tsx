@@ -4,11 +4,11 @@ import {
   FoldedResultListState,
 } from '@coveo/headless';
 import {Host, VNode, h} from '@stencil/core';
-import {DisplayConfig} from '../../search/result-template-components/result-template-decorators';
 import {ResultsPlaceholder} from '../atomic-result-placeholder/placeholders';
 import {Button} from '../button';
 import {AnyBindings} from '../interface/bindings';
-import {ResultDisplayImageSize} from '../layout/display-options';
+import {DisplayConfig} from '../item-list/item-decorators';
+import {ItemDisplayImageSize} from '../layout/display-options';
 
 interface ResultChildrenProps {
   getHost: () => HTMLElement;
@@ -23,7 +23,7 @@ interface ResultChildrenProps {
   getTemplateHasError: () => boolean;
   getNoResultText: () => string;
   getDisplayConfig: () => DisplayConfig;
-  getImageSize: () => ResultDisplayImageSize | undefined;
+  getImageSize: () => ItemDisplayImageSize | undefined;
   renderChild: (child: FoldedResult, isLast: boolean) => VNode;
   setInitialChildren: (initialChildren: FoldedResult[]) => void;
   toggleShowInitialChildren: () => void;

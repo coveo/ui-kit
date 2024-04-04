@@ -1,12 +1,15 @@
-import {containsSections, ResultSectionTagName} from './sections';
+import {
+  containsSections,
+  ResultSectionTagName as ItemSectionTagName,
+} from './sections';
 
-export type ResultDisplayBasicLayout = 'list' | 'grid';
-export type ResultDisplayLayout = ResultDisplayBasicLayout | 'table';
-export type ResultDisplayDensity = 'comfortable' | 'normal' | 'compact';
-export type ResultDisplayImageSize = 'large' | 'small' | 'icon' | 'none';
-export type ResultTarget = '_self' | '_blank' | '_parent' | '_top';
+export type ItemDisplayBasicLayout = 'list' | 'grid';
+export type ItemDisplayLayout = ItemDisplayBasicLayout | 'table';
+export type ItemDisplayDensity = 'comfortable' | 'normal' | 'compact';
+export type ItemDisplayImageSize = 'large' | 'small' | 'icon' | 'none';
+export type ItemTarget = '_self' | '_blank' | '_parent' | '_top';
 
-function getDisplayClass(display: ResultDisplayLayout) {
+function getDisplayClass(display: ItemDisplayLayout) {
   switch (display) {
     case 'grid':
       return 'display-grid';
@@ -18,7 +21,7 @@ function getDisplayClass(display: ResultDisplayLayout) {
   }
 }
 
-function getDensityClass(density: ResultDisplayDensity) {
+function getDensityClass(density: ItemDisplayDensity) {
   switch (density) {
     case 'comfortable':
       return 'density-comfortable';
@@ -30,7 +33,7 @@ function getDensityClass(density: ResultDisplayDensity) {
   }
 }
 
-function getImageClass(image: ResultDisplayImageSize) {
+function getImageClass(image: ItemDisplayImageSize) {
   switch (image) {
     case 'large':
       return 'image-large';
@@ -44,14 +47,14 @@ function getImageClass(image: ResultDisplayImageSize) {
   }
 }
 
-export function getResultListDisplayClasses(
-  display: ResultDisplayLayout,
-  density: ResultDisplayDensity,
-  image: ResultDisplayImageSize,
+export function getItemListDisplayClasses(
+  display: ItemDisplayLayout,
+  density: ItemDisplayDensity,
+  image: ItemDisplayImageSize,
   isLoading: boolean,
   isAppLoading: boolean
 ) {
-  const classes = getResultDisplayClasses(display, density, image);
+  const classes = getItemDisplayClasses(display, density, image);
 
   if (isLoading) {
     classes.push('loading');
@@ -63,10 +66,10 @@ export function getResultListDisplayClasses(
   return classes.join(' ');
 }
 
-export function getResultDisplayClasses(
-  display: ResultDisplayLayout,
-  density: ResultDisplayDensity,
-  image: ResultDisplayImageSize
+export function getItemDisplayClasses(
+  display: ItemDisplayLayout,
+  density: ItemDisplayDensity,
+  image: ItemDisplayImageSize
 ) {
   const classes = [
     getDisplayClass(display),
@@ -76,17 +79,17 @@ export function getResultDisplayClasses(
   return classes;
 }
 
-export class ResultLayout {
+export class ItemLayout {
   private children: HTMLCollection;
-  private density: ResultDisplayDensity;
-  private imageSize: ResultDisplayImageSize;
-  private display: ResultDisplayLayout;
+  private density: ItemDisplayDensity;
+  private imageSize: ItemDisplayImageSize;
+  private display: ItemDisplayLayout;
 
   constructor(
     children: HTMLCollection,
-    display: ResultDisplayLayout,
-    density: ResultDisplayDensity,
-    imageSize: ResultDisplayImageSize
+    display: ItemDisplayLayout,
+    density: ItemDisplayDensity,
+    imageSize: ItemDisplayImageSize
   ) {
     this.children = children;
     this.display = display;
@@ -101,17 +104,17 @@ export class ResultLayout {
     if (!imageSize) {
       return undefined;
     }
-    return imageSize as ResultDisplayImageSize;
+    return imageSize as ItemDisplayImageSize;
   }
 
-  private getSection(section: ResultSectionTagName) {
+  private getSection(section: ItemSectionTagName) {
     return Array.from(this.children).find(
       (element) => element.tagName.toLowerCase() === section
     );
   }
 
   public getClasses(HTMLContent?: string) {
-    const classes = getResultDisplayClasses(
+    const classes = getItemDisplayClasses(
       this.display,
       this.density,
       this.getImageSizeFromSections() ?? this.imageSize
