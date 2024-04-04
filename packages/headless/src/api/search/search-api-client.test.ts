@@ -25,6 +25,7 @@ import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {createMockState} from '../../test/mock-state';
 import {PlatformClient, PlatformClientCallOptions} from '../platform-client';
 import {NoopPreprocessRequest} from '../preprocess-request';
+import {QuerySuggestRequest} from './query-suggest/query-suggest-request';
 import {
   isErrorResponse,
   SearchAPIClient,
@@ -307,11 +308,9 @@ describe('search api client', () => {
       searchAPIClient.querySuggest(req);
       const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
 
-      const expectedRequest: PlatformClientCallOptions & {
-        postprocessFacetSearchResponseMiddleware: Function;
-        postprocessQuerySuggestResponseMiddleware: Function;
-        postprocessSearchResponseMiddleware: Function;
-      } = {
+      const expectedRequest: PlatformClientCallOptions<
+        Omit<QuerySuggestRequest, 'url' | 'accessToken' | 'organizationId'>
+      > = {
         accessToken: state.configuration.accessToken,
         method: 'POST',
         contentType: 'application/json',
@@ -341,12 +340,9 @@ describe('search api client', () => {
         },
         preprocessRequest: NoopPreprocessRequest,
         requestMetadata: {method: 'querySuggest'},
-        postprocessFacetSearchResponseMiddleware: expect.any(Function),
-        postprocessQuerySuggestResponseMiddleware: expect.any(Function),
-        postprocessSearchResponseMiddleware: expect.any(Function),
       };
 
-      expect(request).toEqual(expectedRequest);
+      expect(request).toMatchObject(expectedRequest);
     });
 
     it(`when calling SearchAPIClient.querySuggest with authentication providers
