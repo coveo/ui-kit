@@ -5,15 +5,19 @@ import {
   ResultDisplayLayout,
 } from '../../common/layout/display-options';
 
-export interface ResultPlaceholderProps {
+interface ResultPlaceholderProps {
   density: ResultDisplayDensity;
   imageSize: ResultDisplayImageSize;
   display: ResultDisplayLayout;
   numberOfPlaceholders: number;
 }
 
+interface ResultPlaceholderGuardProps extends ResultPlaceholderProps {
+  displayPlaceholders: boolean;
+}
+
 export const ResultsPlaceholdersGuard: FunctionalComponent<
-  ResultPlaceholderProps & {displayPlaceholders: boolean}
+  ResultPlaceholderGuardProps
 > = (props) => {
   if (!props.displayPlaceholders) {
     return;
@@ -44,7 +48,7 @@ const TableDisplayResultsPlaceholder: FunctionalComponent<
   return (
     <atomic-result-table-placeholder
       density={props.density}
-      imageSize={props.imageSize!}
+      imageSize={props.imageSize}
       rows={props.numberOfPlaceholders}
     ></atomic-result-table-placeholder>
   );

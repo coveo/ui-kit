@@ -5,7 +5,6 @@ import {
   Result,
 } from '@coveo/headless';
 import {Component, Element, State, h, Prop, Method} from '@stencil/core';
-import {ResultRenderingFunction} from '../../../../components';
 import {InitializableComponent} from '../../../../utils/initialization-utils';
 import {encodeForDomAttribute} from '../../../../utils/string-utils';
 import {getClassNameForButtonStyle} from '../../../common/button-style';
@@ -14,6 +13,7 @@ import {
   ResultDisplayImageSize,
   ResultDisplayLayout,
 } from '../../../common/layout/display-options';
+import {ResultRenderingFunction} from '../../../common/result-list/result-list-common';
 import {ResultTemplateProvider} from '../../../common/result-list/result-template-provider';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {

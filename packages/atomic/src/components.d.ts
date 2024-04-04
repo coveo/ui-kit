@@ -21,7 +21,7 @@ import { AtomicInsightStore } from "./components/insight/atomic-insight-interfac
 import { Section } from "./components/common/atomic-layout-section/sections";
 import { PlatformEnvironment, RecommendationEngine } from "@coveo/headless/recommendation";
 import { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
-import { i18nCompatibilityVersion as i18nCompatibilityVersion1, ResultRenderingFunction as ResultRenderingFunction1 } from "./components";
+import { i18nCompatibilityVersion as i18nCompatibilityVersion1 } from "./components";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 import { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
@@ -46,7 +46,7 @@ export { AtomicInsightStore } from "./components/insight/atomic-insight-interfac
 export { Section } from "./components/common/atomic-layout-section/sections";
 export { PlatformEnvironment, RecommendationEngine } from "@coveo/headless/recommendation";
 export { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
-export { i18nCompatibilityVersion as i18nCompatibilityVersion1, ResultRenderingFunction as ResultRenderingFunction1 } from "./components";
+export { i18nCompatibilityVersion as i18nCompatibilityVersion1 } from "./components";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 export { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
 export { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
@@ -1910,7 +1910,7 @@ export namespace Components {
     interface AtomicResultPlaceholder {
         "density": ResultDisplayDensity;
         "display": ResultDisplayLayout;
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize": ResultDisplayImageSize;
     }
     /**
      * The `atomic-result-printable-uri` component displays the URI, or path, to access a result.
@@ -2171,7 +2171,7 @@ export namespace Components {
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
           * @param resultRenderingFunction
          */
-        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction1) => Promise<void>;
+        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
     }
     /**
      * The `atomic-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
@@ -2264,7 +2264,7 @@ export namespace Components {
         /**
           * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
          */
-        "localizationCompatibilityVersion": i18nCompatibilityVersion1;
+        "localizationCompatibilityVersion": i18nCompatibilityVersion;
         /**
           * The severity level of the messages to log in the console.
          */
@@ -6084,7 +6084,7 @@ declare namespace LocalJSX {
     interface AtomicResultPlaceholder {
         "density": ResultDisplayDensity;
         "display": ResultDisplayLayout;
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize": ResultDisplayImageSize;
     }
     /**
      * The `atomic-result-printable-uri` component displays the URI, or path, to access a result.
@@ -6416,7 +6416,7 @@ declare namespace LocalJSX {
         /**
           * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
          */
-        "localizationCompatibilityVersion"?: i18nCompatibilityVersion1;
+        "localizationCompatibilityVersion"?: i18nCompatibilityVersion;
         /**
           * The severity level of the messages to log in the console.
          */
