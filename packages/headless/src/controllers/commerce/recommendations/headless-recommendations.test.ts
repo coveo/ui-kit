@@ -1,7 +1,7 @@
 import {contextReducer} from '../../../features/commerce/context/context-slice';
 import {fetchRecommendations} from '../../../features/commerce/recommendations/recommendations-actions';
 import {recommendationsReducer} from '../../../features/commerce/recommendations/recommendations-slice';
-import {configurationReducer} from '../../../features/configuration/configuration-slice';
+import {configurationReducer} from '../../../app/common-reducers';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state';
 import {
   MockedCommerceEngine,
