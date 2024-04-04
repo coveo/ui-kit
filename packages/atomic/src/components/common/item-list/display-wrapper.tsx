@@ -1,8 +1,8 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import {ResultDisplayLayout} from '../layout/display-options';
+import {ItemDisplayLayout} from '../layout/display-options';
 
 export interface DisplayWrapperProps {
-  display: ResultDisplayLayout;
+  display: ItemDisplayLayout;
   listClasses: string;
 }
 

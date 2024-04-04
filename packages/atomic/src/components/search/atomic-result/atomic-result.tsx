@@ -5,18 +5,18 @@ import {
   AtomicCommonStore,
   AtomicCommonStoreData,
 } from '../../common/interface/store';
+import {DisplayConfig} from '../../common/item-list/item-decorators';
 import {
-  ResultLayout,
-  ResultDisplayDensity,
-  ResultDisplayImageSize,
-  ResultDisplayLayout,
+  ItemRenderingFunction,
+  resultComponentClass,
+} from '../../common/item-list/item-list-common';
+import {
+  ItemLayout,
+  ItemDisplayDensity,
+  ItemDisplayImageSize,
+  ItemDisplayLayout,
 } from '../../common/layout/display-options';
 import {
-  ResultRenderingFunction,
-  resultComponentClass,
-} from '../../common/result-list/result-list-common';
-import {
-  DisplayConfig,
   InteractiveResultContextEvent,
   ResultContextEvent,
 } from '../result-template-components/result-template-decorators';
@@ -30,7 +30,7 @@ import {
   shadow: true,
 })
 export class AtomicResult {
-  private layout!: ResultLayout;
+  private layout!: ItemLayout;
 
   @Element() host!: HTMLElement;
 
@@ -64,19 +64,19 @@ export class AtomicResult {
   /**
    * How results should be displayed.
    */
-  @Prop() display: ResultDisplayLayout = 'list';
+  @Prop() display: ItemDisplayLayout = 'list';
 
   /**
    * How large or small results should be.
    */
-  @Prop() density: ResultDisplayDensity = 'normal';
+  @Prop() density: ItemDisplayDensity = 'normal';
 
   /**
    * The size of the visual section in result list items.
    *
    * This is overwritten by the image size defined in the result content, if it exists.
    */
-  @Prop() imageSize: ResultDisplayImageSize = 'icon';
+  @Prop() imageSize: ItemDisplayImageSize = 'icon';
 
   /**
    * The classes to add to the result element.
@@ -94,7 +94,7 @@ export class AtomicResult {
    *
    * @internal
    */
-  @Prop() renderingFunction: ResultRenderingFunction;
+  @Prop() renderingFunction: ItemRenderingFunction;
 
   private resultRootRef?: HTMLElement;
   private executedRenderingFunctionOnce = false;
@@ -131,7 +131,7 @@ export class AtomicResult {
   }
 
   public connectedCallback() {
-    this.layout = new ResultLayout(
+    this.layout = new ItemLayout(
       this.content!.children,
       this.display,
       this.density,

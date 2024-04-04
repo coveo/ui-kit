@@ -8,13 +8,13 @@ import {Component, Element, State, h, Prop, Method} from '@stencil/core';
 import {InitializableComponent} from '../../../../utils/initialization-utils';
 import {encodeForDomAttribute} from '../../../../utils/string-utils';
 import {getClassNameForButtonStyle} from '../../../common/button-style';
+import {ItemRenderingFunction} from '../../../common/item-list/item-list-common';
+import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
 import {
-  ResultDisplayDensity,
-  ResultDisplayImageSize,
-  ResultDisplayLayout,
+  ItemDisplayDensity,
+  ItemDisplayImageSize,
+  ItemDisplayLayout,
 } from '../../../common/layout/display-options';
-import {ResultRenderingFunction} from '../../../common/result-list/result-list-common';
-import {ResultTemplateProvider} from '../../../common/result-list/result-template-provider';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {
   dispatchSearchBoxSuggestionsEvent,
@@ -41,11 +41,11 @@ export type AriaLabelGenerator = (
 })
 export class AtomicSearchBoxInstantResults implements InitializableComponent {
   public bindings!: SearchBoxSuggestionsBindings;
-  private resultRenderingFunction: ResultRenderingFunction;
+  private itemRenderingFunction: ItemRenderingFunction;
   private results: Result[] = [];
-  private resultTemplateProvider!: ResultTemplateProvider;
+  private itemTemplateProvider!: ItemTemplateProvider;
   private instantResults!: InstantResults;
-  private display: ResultDisplayLayout = 'list';
+  private display: ItemDisplayLayout = 'list';
 
   @Element() public host!: HTMLElement;
 
@@ -61,9 +61,9 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
    * @param resultRenderingFunction
    */
   @Method() public async setRenderFunction(
-    resultRenderingFunction: ResultRenderingFunction
+    resultRenderingFunction: ItemRenderingFunction
   ) {
-    this.resultRenderingFunction = resultRenderingFunction;
+    this.itemRenderingFunction = resultRenderingFunction;
   }
   /**
    * The maximum number of results to show.
@@ -72,11 +72,11 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
   /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
    */
-  @Prop({reflect: true}) public density: ResultDisplayDensity = 'normal';
+  @Prop({reflect: true}) public density: ItemDisplayDensity = 'normal';
   /**
    * The expected size of the image displayed in the results.
    */
-  @Prop({reflect: true}) public imageSize: ResultDisplayImageSize = 'icon';
+  @Prop({reflect: true}) public imageSize: ItemDisplayImageSize = 'icon';
   /**
    * The callback to generate an [`aria-label`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label) for a given result so that accessibility tools can fully describe what's visually rendered by a result.
    *
@@ -141,9 +141,9 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
             display={this.display}
             density={this.density}
             imageSize={this.imageSize}
-            content={this.resultTemplateProvider.getTemplateContent(result)}
+            content={this.itemTemplateProvider.getTemplateContent(result)}
             stopPropagation={false}
-            renderingFunction={this.resultRenderingFunction}
+            renderingFunction={this.itemRenderingFunction}
           ></atomic-result>
         ),
         ariaLabel: this.bindings.i18n.t('instant-results-suggestion-label', {
@@ -195,7 +195,7 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
       },
     });
 
-    this.resultTemplateProvider = new ResultTemplateProvider({
+    this.itemTemplateProvider = new ItemTemplateProvider({
       includeDefaultTemplate: true,
       templateElements: Array.from(
         this.host.querySelectorAll('atomic-result-template')
