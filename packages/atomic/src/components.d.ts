@@ -1908,9 +1908,9 @@ export namespace Components {
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultPlaceholder {
-        "density": ItemDisplayDensity;
-        "display": ItemDisplayLayout;
-        "imageSize"?: ItemDisplayImageSize;
+        "density": ResultDisplayDensity;
+        "display": ResultDisplayLayout;
+        "imageSize": ResultDisplayImageSize;
     }
     /**
      * The `atomic-result-printable-uri` component displays the URI, or path, to access a result.
@@ -2171,7 +2171,7 @@ export namespace Components {
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
           * @param resultRenderingFunction
          */
-        "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
+        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
     }
     /**
      * The `atomic-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
@@ -2264,7 +2264,7 @@ export namespace Components {
         /**
           * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
          */
-        "localizationCompatibilityVersion": i18nCompatibilityVersion1;
+        "localizationCompatibilityVersion": i18nCompatibilityVersion;
         /**
           * The severity level of the messages to log in the console.
          */
@@ -6082,9 +6082,9 @@ declare namespace LocalJSX {
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultPlaceholder {
-        "density": ItemDisplayDensity;
-        "display": ItemDisplayLayout;
-        "imageSize"?: ItemDisplayImageSize;
+        "density": ResultDisplayDensity;
+        "display": ResultDisplayLayout;
+        "imageSize": ResultDisplayImageSize;
     }
     /**
      * The `atomic-result-printable-uri` component displays the URI, or path, to access a result.
@@ -6416,7 +6416,7 @@ declare namespace LocalJSX {
         /**
           * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
          */
-        "localizationCompatibilityVersion"?: i18nCompatibilityVersion1;
+        "localizationCompatibilityVersion"?: i18nCompatibilityVersion;
         /**
           * The severity level of the messages to log in the console.
          */

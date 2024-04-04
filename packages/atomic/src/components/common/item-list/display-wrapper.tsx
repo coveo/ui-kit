@@ -6,10 +6,10 @@ export interface DisplayWrapperProps {
   listClasses: string;
 }
 
-export const DisplayWrapper: FunctionalComponent<{
-  display: ItemDisplayLayout;
-  listClasses: string;
-}> = ({display, listClasses}, children) => {
+export const DisplayWrapper: FunctionalComponent<DisplayWrapperProps> = (
+  {display, listClasses},
+  children
+) => {
   if (display === 'table') {
     return <ListWrapper listClasses={listClasses}>{...children}</ListWrapper>;
   }

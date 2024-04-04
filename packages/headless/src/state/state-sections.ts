@@ -11,6 +11,7 @@ import {CommerceFacetSetState} from '../features/commerce/facets/facet-set/facet
 import {CommercePaginationState} from '../features/commerce/pagination/pagination-state';
 import {ProductListingV2State} from '../features/commerce/product-listing/product-listing-state';
 import {CommerceQueryState} from '../features/commerce/query/query-state';
+import {RecommendationsState as CommerceRecommendationsState} from '../features/commerce/recommendations/recommendations-state';
 import {CommerceSearchState} from '../features/commerce/search/search-state';
 import {CommerceSortState} from '../features/commerce/sort/sort-state';
 import {ConfigurationState} from '../features/configuration/configuration-state';
@@ -334,6 +335,13 @@ export interface ProductListingV2Section {
    * The information related to the product listing endpoint.
    */
   productListing: ProductListingV2State;
+}
+
+export interface RecommendationsSection {
+  /**
+   * The information related to the recommendations endpoint.
+   */
+  recommendations: CommerceRecommendationsState;
 }
 
 export interface CommerceSearchSection {

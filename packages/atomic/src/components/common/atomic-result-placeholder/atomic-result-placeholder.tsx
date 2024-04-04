@@ -20,7 +20,7 @@ const placeholderClasses = 'block bg-neutral w-full h-full rounded';
 export class AtomicResultPlaceholder {
   @Prop() display!: ItemDisplayLayout;
   @Prop() density!: ItemDisplayDensity;
-  @Prop() imageSize?: ItemDisplayImageSize;
+  @Prop() imageSize!: ItemDisplayImageSize;
 
   private renderExcerptLine(width: string) {
     return (
@@ -44,7 +44,7 @@ export class AtomicResultPlaceholder {
         class={`result-root placeholder with-sections animate-pulse ${getItemDisplayClasses(
           this.display,
           this.density,
-          this.imageSize!
+          this.imageSize
         )
           .join(' ')
           .trim()}`}
