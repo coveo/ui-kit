@@ -38,6 +38,7 @@ export const ResultsPlaceholder: FunctionalComponent<ResultPlaceholderProps> = (
       key={`placeholder-${i}`}
       density={props.density}
       display={props.display || 'list'}
+      imageSize={props.imageSize}
     ></atomic-result-placeholder>
   ));
 };
