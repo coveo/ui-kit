@@ -27,6 +27,7 @@ import {debounce} from '../../../utils/debounce-utils';
 import {isMacOS} from '../../../utils/device-utils';
 import {
   BindStateToController,
+  InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {
@@ -42,6 +43,7 @@ import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {SearchInput} from '../../common/search-box/search-input';
 import {SearchTextArea} from '../../common/search-box/search-text-area';
 import {SubmitButton} from '../../common/search-box/submit-button';
+import {SuggestionManager} from '../../common/search-box/suggestion-manager';
 import {TextAreaSubmitButton} from '../../common/search-box/text-area-submit-button';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {
@@ -104,7 +106,7 @@ import {
   styleUrl: 'atomic-search-box.pcss',
   shadow: true,
 })
-export class AtomicSearchBox {
+export class AtomicSearchBox implements InitializableComponent<Bindings> {
   @InitializeBindings() public bindings!: Bindings;
   private searchBox!: SearchBox | StandaloneSearchBox;
   private id!: string;
@@ -116,6 +118,7 @@ export class AtomicSearchBox {
   private suggestionEvents: SearchBoxSuggestionsEvent[] = [];
   private suggestions: SearchBoxSuggestions[] = [];
   private searchBoxCommon!: SearchBoxCommon;
+  private suggestionManager!: SuggestionManager;
 
   @Element() private host!: HTMLElement;
 
@@ -287,6 +290,14 @@ export class AtomicSearchBox {
 
     this.suggestions = this.suggestionEvents.map((event) =>
       event(this.suggestionBindings)
+    );
+
+    this.suggestionManager = new SuggestionManager(
+      () => this.searchBoxState.value,
+      (value) => this.searchBoxCommon.updateQuery(value),
+      () => this.bindings.store.isMobile(),
+      () => this.suggestionTimeout,
+      () => this.numberOfQueries
     );
 
     this.searchBoxCommon = new SearchBoxCommon({
