@@ -73,18 +73,18 @@ describe('product listing breadcrumb manager', () => {
   });
 
   it('uses #facetResponseSelector to get the facets', () => {
-    deselectFirstBreadcrumb();
+    deselectBreadcrumb();
 
     expect(breadcrumbManager.state.hasBreadcrumbs).toBeTruthy();
   });
 
   it('dispatches #fetchProductListing when selecting a breadcrumb value', () => {
-    deselectFirstBreadcrumb();
+    deselectBreadcrumb();
 
     expect(fetchProductListing).toHaveBeenCalled();
   });
 
-  function deselectFirstBreadcrumb() {
+  function deselectBreadcrumb() {
     breadcrumbManager.state.facetBreadcrumbs[0].values[0].deselect();
   }
 });

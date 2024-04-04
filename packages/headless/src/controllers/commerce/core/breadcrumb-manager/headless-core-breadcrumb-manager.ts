@@ -6,6 +6,7 @@ import {
 import {deselectAllBreadcrumbs} from '../../../../features/breadcrumb/breadcrumb-actions';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {
+  AnyFacetResponse,
   AnyFacetValueResponse,
   BaseFacetValue,
   FacetType,
@@ -77,15 +78,18 @@ interface BreadcrumbManagerState {
   facetBreadcrumbs: Breadcrumb<AnyFacetValueResponse>[];
 
   /**
-   * Returns `true` if there are any available breadcrumbs (i.e., if there are any active facet values), and `false` if not.
+   * Whether any breadcrumbs are available (i.e., if any facet values are currently active).
    */
   hasBreadcrumbs: boolean;
 }
 
 /**
- * The `BreadcrumbManager` controller manages the breadcrumbs.
+ * The `BreadcrumbManager` controller manages a summary of the currently active facet filters.
  */
-export type BreadcrumbManager = Omit<CoreBreadcrumbManager, 'state'> & {
+export type BreadcrumbManager = Omit<
+  CoreBreadcrumbManager,
+  'deselectBreadcrumb' | 'state'
+> & {
   /**
    * The state of the `BreadcrumbManager` controller.
    */
@@ -136,57 +140,49 @@ export function buildCoreBreadcrumbManager(
   const controller = buildController(engine);
   const {dispatch} = engine;
 
-  const createBreadcrumb = (facetId: string) => {
-    const facet = options.facetResponseSelector(engine.state, facetId);
-
-    if (!facet) {
-      return {
-        facetId,
-        field: '',
-        type: 'regular',
-        values: [],
-      };
-    }
-
-    return {
-      facetId,
-      field: facet.field,
-      type: facet.type,
-      values: facet.values
-        .filter((value) => value.state !== 'idle')
-        .map((selection) => ({
-          value: selection,
-          deselect: () => {
-            if (selection.state === 'selected') {
-              // TODO: Do we need to handle freezing values?
-              dispatch(
-                actions[facet.type].toggleSelectActionCreator({
-                  facetId,
-                  selection,
-                })
-              );
-              dispatch(options.fetchResultsActionCreator());
-            } else if (
-              selection.state === 'excluded' &&
-              facet.type !== facetTypeWithoutExcludeAction
-            ) {
-              dispatch(
-                actions[facet.type].toggleExcludeActionCreator!({
-                  facetId,
-                  selection,
-                })
-              );
-              dispatch(options.fetchResultsActionCreator());
-            }
-          },
-        })),
-    };
-  };
+  const createBreadcrumb = (facet: AnyFacetResponse) => ({
+    facetId: facet.facetId,
+    field: facet.field,
+    type: facet.type,
+    values: facet.values
+      .filter((value) => value.state !== 'idle')
+      .map((selection) => ({
+        value: selection,
+        deselect: () => {
+          if (selection.state === 'selected') {
+            dispatch(
+              actions[facet.type].toggleSelectActionCreator({
+                facetId: facet.facetId,
+                selection,
+              })
+            );
+            dispatch(options.fetchResultsActionCreator());
+          } else if (
+            selection.state === 'excluded' &&
+            facet.type !== facetTypeWithoutExcludeAction
+          ) {
+            dispatch(
+              actions[facet.type].toggleExcludeActionCreator!({
+                facetId: facet.facetId,
+                selection,
+              })
+            );
+            dispatch(options.fetchResultsActionCreator());
+          }
+        },
+      })),
+  });
 
   const commerceFacetSelector = createSelector(
     (state: CommerceEngineState) => state.facetOrder,
     (facetOrder): BreadcrumbManagerState => {
-      const breadcrumbs = facetOrder.map(createBreadcrumb) ?? [];
+      const breadcrumbs =
+        facetOrder
+          .map((facetId) =>
+            options.facetResponseSelector(engine.state, facetId)
+          )
+          .filter((facet): facet is AnyFacetResponse => facet !== undefined)
+          .map(createBreadcrumb) ?? [];
       return {
         facetBreadcrumbs: breadcrumbs,
         hasBreadcrumbs: breadcrumbs.length > 0,
@@ -199,10 +195,6 @@ export function buildCoreBreadcrumbManager(
 
     deselectAll: () => {
       dispatch(deselectAllBreadcrumbs());
-    },
-
-    deselectBreadcrumb(value: DeselectableValue) {
-      value.deselect();
     },
 
     get state() {

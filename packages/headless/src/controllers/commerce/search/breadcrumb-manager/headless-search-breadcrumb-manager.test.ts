@@ -71,18 +71,18 @@ describe('search breadcrumb manager', () => {
   });
 
   it('uses #facetResponseSelector to get the facets', () => {
-    deselectFirstBreadcrumb();
+    deselectBreadcrumb();
 
     expect(breadcrumbManager.state.hasBreadcrumbs).toBeTruthy();
   });
 
   it('dispatches #executeSearch when selecting a breadcrumb value', () => {
-    deselectFirstBreadcrumb();
+    deselectBreadcrumb();
 
     expect(executeSearch).toHaveBeenCalled();
   });
 
-  function deselectFirstBreadcrumb() {
+  function deselectBreadcrumb() {
     breadcrumbManager.state.facetBreadcrumbs[0].values[0].deselect();
   }
 });

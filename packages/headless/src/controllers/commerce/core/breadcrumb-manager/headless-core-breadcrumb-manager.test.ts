@@ -42,7 +42,6 @@ import {
   BreadcrumbManager,
   buildCoreBreadcrumbManager,
   CoreBreadcrumbManagerOptions,
-  DeselectableValue,
 } from './headless-core-breadcrumb-manager';
 
 jest.mock('../../../../features/facets/facet-set/facet-set-actions');
@@ -113,16 +112,6 @@ describe('core breadcrumb manager', () => {
   it('#deselectAll deselects all breadcrumbs', () => {
     breadcrumbManager.deselectAll();
     expect(deselectAllBreadcrumbs).toHaveBeenCalled();
-  });
-
-  it('#deselectBreadcrumb deselects breadcrumb', () => {
-    const breadcrumb = {
-      deselect: jest.fn(),
-    } as DeselectableValue;
-
-    breadcrumbManager.deselectBreadcrumb(breadcrumb);
-
-    expect(breadcrumb.deselect).toHaveBeenCalled();
   });
 
   describe('regular facet breadcrumbs', () => {
@@ -243,14 +232,15 @@ describe('core breadcrumb manager', () => {
       expectBreadcrumbToBePresentInState(breadcrumb);
     });
 
-    describe.each([['selected', toggleSelectCategoryFacetValue]])(
-      '#deselect when facet is %s',
-      generateDeselectionTestCases(breadcrumb)
-    );
+    describe('#deselect when facet is selected', () =>
+      generateDeselectionTestCases(breadcrumb)(
+        'selected',
+        toggleSelectCategoryFacetValue
+      ));
 
     it('#deselect does not exclude when facet is excluded', () => {
       breadcrumb.state = 'excluded';
-      deselectFirstBreadcrumb();
+      deselectBreadcrumb();
 
       expect(fetchProductListing).not.toHaveBeenCalled();
     });
@@ -273,7 +263,7 @@ describe('core breadcrumb manager', () => {
     return (state: string, action: Action) => {
       beforeEach(() => {
         breadcrumb.state = state as FacetValueState;
-        deselectFirstBreadcrumb();
+        deselectBreadcrumb();
       });
 
       it('dispatches #toggleSelectActionCreator', () => {
@@ -289,7 +279,7 @@ describe('core breadcrumb manager', () => {
     };
   }
 
-  function deselectFirstBreadcrumb() {
+  function deselectBreadcrumb() {
     breadcrumbManager.state.facetBreadcrumbs[0].values[0].deselect();
   }
 });
