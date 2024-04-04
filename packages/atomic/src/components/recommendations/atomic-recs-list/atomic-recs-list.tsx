@@ -23,6 +23,7 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {randomID} from '../../../utils/utils';
+import {ResultsPlaceholdersGuard} from '../../common/atomic-result-placeholder/placeholders';
 import {Carousel} from '../../common/carousel';
 import {Heading} from '../../common/heading';
 import {
@@ -30,12 +31,15 @@ import {
   ResultDisplayImageSize,
   ResultDisplayBasicLayout,
   ResultTarget,
+  getResultListDisplayClasses,
 } from '../../common/layout/display-options';
-import {ResultListCommon} from '../../common/result-list/result-list-common';
+import {DisplayGrid} from '../../common/result-list/display-grid';
+import {DisplayWrapper} from '../../common/result-list/display-wrapper';
+import {ItemDisplayGuard} from '../../common/result-list/item-display-guard';
 import {
-  ResultListCommonState,
+  ResultListCommon,
   ResultRenderingFunction,
-} from '../../common/result-list/result-list-common-interface';
+} from '../../common/result-list/result-list-common';
 import {ResultTemplateProvider} from '../../common/result-list/result-template-provider';
 import {RecsBindings} from '../atomic-recs-interface/atomic-recs-interface';
 
@@ -60,9 +64,11 @@ import {RecsBindings} from '../atomic-recs-interface/atomic-recs-interface';
 export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   @InitializeBindings() public bindings!: RecsBindings;
   public recommendationList!: RecommendationList;
-  private resultListCommon!: ResultListCommon;
   private loadingFlag = randomID('firstRecommendationLoaded-');
   private resultRenderingFunction: ResultRenderingFunction;
+  private resultTemplateProvider!: ResultTemplateProvider;
+  private nextNewResultTarget?: FocusTargetController;
+  private resultListCommon!: ResultListCommon;
 
   @Element() public host!: HTMLDivElement;
 
@@ -73,8 +79,6 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   @BindStateToController('recommendationList')
   @State()
   public recommendationListState!: RecommendationListState;
-
-  private nextNewResultTarget?: FocusTargetController;
 
   /**
    * The Recommendation identifier used by the Coveo platform to retrieve recommended documents.
@@ -171,7 +175,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
       },
     });
 
-    const resultTemplateProvider = new ResultTemplateProvider({
+    this.resultTemplateProvider = new ResultTemplateProvider({
       includeDefaultTemplate: true,
       templateElements: Array.from(
         this.host.querySelectorAll('atomic-recs-result-template')
@@ -188,45 +192,32 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
     });
 
     this.resultListCommon = new ResultListCommon({
-      resultTemplateProvider,
-      getNumberOfPlaceholders: () =>
-        this.numberOfRecommendationsPerPage ?? this.numberOfRecommendations,
+      engineSubscribe: this.bindings.engine.subscribe,
+      getCurrentNumberOfResults: () =>
+        this.recommendationListState.recommendations.length,
+      getIsLoading: () => this.recommendationListState.isLoading,
       host: this.host,
-      bindings: this.bindings,
-      gridCellLinkTarget: this.gridCellLinkTarget,
-      getDensity: () => this.density,
-      getLayoutDisplay: () => 'grid',
-      getResultDisplay: () => this.display,
-      getImageSize: () => this.imageSize,
-      nextNewResultTarget: this.focusTarget,
       loadingFlag: this.loadingFlag,
-      getResultListState: () => this.resultListCommonState,
-      getResultRenderingFunction: () => this.resultRenderingFunction,
-      renderResult: (props) => (
-        <atomic-recs-result {...props}></atomic-recs-result>
-      ),
-      getInteractiveResult: (result: RecsResult) =>
-        buildRecsInteractiveResult(this.bindings.engine, {
-          options: {result},
-        }),
+      nextNewResultTarget: this.focusTarget,
+      store: this.bindings.store,
     });
   }
 
-  private get focusTarget() {
+  public get focusTarget() {
     if (!this.nextNewResultTarget) {
       this.nextNewResultTarget = new FocusTargetController(this);
     }
     return this.nextNewResultTarget;
   }
 
-  private get resultListCommonState(): ResultListCommonState<RecsResult> {
+  private get recommendationListStateWithAugment() {
     return {
-      firstSearchExecuted: this.recommendationListState.searchResponseId !== '',
-      isLoading: this.recommendationListState.isLoading,
+      ...this.recommendationListState,
+      firstRequestExecuted:
+        this.recommendationListState.searchResponseId !== '',
       hasError: this.recommendationListState.error !== null,
-      hasResults: this.recommendationListState.recommendations.length !== 0,
+      hasItems: this.recommendationListState.recommendations.length !== 0,
       results: this.subsetRecommendations,
-      searchResponseId: this.recommendationListState.searchResponseId,
     };
   }
 
@@ -272,13 +263,13 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
       return;
     }
 
-    if (this.resultListCommonState.hasError) {
+    if (this.recommendationListStateWithAugment.hasError) {
       return;
     }
 
     if (
-      this.resultListCommonState.firstSearchExecuted &&
-      !this.resultListCommonState.hasResults
+      this.recommendationListStateWithAugment.firstRequestExecuted &&
+      !this.recommendationListStateWithAugment.hasItems
     ) {
       return;
     }
@@ -320,7 +311,91 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   }
 
   private get shouldRenderPagination() {
-    return this.hasPagination && this.resultListCommonState.hasResults;
+    return (
+      this.hasPagination && this.recommendationListStateWithAugment.hasItems
+    );
+  }
+
+  private getPropsForAtomicRecsResult(recommendation: RecsResult) {
+    return {
+      interactiveResult: buildRecsInteractiveResult(this.bindings.engine, {
+        options: {result: recommendation},
+      }),
+      result: recommendation,
+      renderingFunction: this.resultRenderingFunction,
+      loadingFlag: this.loadingFlag,
+      key: this.resultListCommon.getResultId(
+        recommendation.uniqueId,
+        this.recommendationListState.searchResponseId,
+        this.density,
+        this.imageSize
+      ),
+      content: this.resultTemplateProvider.getTemplateContent(recommendation),
+      store: this.bindings.store,
+      density: this.density,
+      display: this.display,
+      imageSize: this.imageSize,
+    };
+  }
+
+  private computeListDisplayClasses() {
+    const displayPlaceholders = !this.bindings.store.isAppLoaded();
+
+    return getResultListDisplayClasses(
+      'grid',
+      this.density,
+      this.imageSize,
+      this.recommendationListState.isLoading,
+      displayPlaceholders
+    );
+  }
+
+  private renderAsGrid(recommendation: RecsResult, i: number) {
+    const propsForAtomicRecsResult =
+      this.getPropsForAtomicRecsResult(recommendation);
+    return (
+      <DisplayGrid
+        item={recommendation}
+        {...propsForAtomicRecsResult.interactiveResult}
+        setRef={(element) =>
+          element && this.resultListCommon.setNewResultRef(element, i)
+        }
+      >
+        <atomic-recs-result {...propsForAtomicRecsResult}></atomic-recs-result>
+      </DisplayGrid>
+    );
+  }
+
+  private renderListOfRecommendations() {
+    this.resultListCommon.updateBreakpoints();
+    const listClasses = this.computeListDisplayClasses();
+
+    if (
+      !this.resultTemplateRegistered ||
+      this.resultTemplateProvider.hasError ||
+      this.error
+    ) {
+      return;
+    }
+
+    return (
+      <DisplayWrapper listClasses={listClasses} display="grid">
+        <ResultsPlaceholdersGuard
+          density={this.density}
+          display={this.display}
+          imageSize={this.imageSize}
+          displayPlaceholders={!this.bindings.store.isAppLoaded()}
+          numberOfPlaceholders={
+            this.numberOfRecommendationsPerPage ?? this.numberOfRecommendations
+          }
+        ></ResultsPlaceholdersGuard>
+        <ItemDisplayGuard {...this.recommendationListStateWithAugment}>
+          {this.subsetRecommendations.map((recommendation, i) => {
+            return this.renderAsGrid(recommendation, i);
+          })}
+        </ItemDisplayGuard>
+      </DisplayWrapper>
+    );
   }
 
   public render() {
@@ -335,10 +410,10 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
             previousPage={() => this.previousPage()}
             numberOfPages={this.numberOfPages}
           >
-            {this.resultListCommon.render()}
+            {this.renderListOfRecommendations()}
           </Carousel>
         ) : (
-          this.resultListCommon.render()
+          this.renderListOfRecommendations()
         )}
       </Fragment>
     );

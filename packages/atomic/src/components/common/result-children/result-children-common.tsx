@@ -55,6 +55,7 @@ export class ResultChildrenCommon {
       <ResultsPlaceholder
         numberOfPlaceholders={this.numberOfChildren || 2}
         density={this.props.getDisplayConfig().density}
+        display={'list'}
         imageSize={
           this.props.getImageSize() || this.props.getDisplayConfig().imageSize
         }

@@ -13,7 +13,7 @@ import {
   ResultDisplayImageSize,
   ResultDisplayLayout,
 } from '../../../common/layout/display-options';
-import {ResultRenderingFunction} from '../../../common/result-list/result-list-common-interface';
+import {ResultRenderingFunction} from '../../../common/result-list/result-list-common';
 import {ResultTemplateProvider} from '../../../common/result-list/result-template-provider';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {
