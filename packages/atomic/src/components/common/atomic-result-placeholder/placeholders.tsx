@@ -5,12 +5,30 @@ import {
   ResultDisplayLayout,
 } from '../../common/layout/display-options';
 
-export interface ResultPlaceholderProps {
+interface ResultPlaceholderProps {
   density: ResultDisplayDensity;
-  imageSize?: ResultDisplayImageSize;
-  display?: ResultDisplayLayout;
+  imageSize: ResultDisplayImageSize;
+  display: ResultDisplayLayout;
   numberOfPlaceholders: number;
 }
+
+interface ResultPlaceholderGuardProps extends ResultPlaceholderProps {
+  displayPlaceholders: boolean;
+}
+
+export const ResultsPlaceholdersGuard: FunctionalComponent<
+  ResultPlaceholderGuardProps
+> = (props) => {
+  if (!props.displayPlaceholders) {
+    return;
+  }
+  switch (props.display) {
+    case 'table':
+      return <TableDisplayResultsPlaceholder {...props} />;
+    default:
+      return <ResultsPlaceholder {...props} />;
+  }
+};
 
 export const ResultsPlaceholder: FunctionalComponent<ResultPlaceholderProps> = (
   props
@@ -20,18 +38,18 @@ export const ResultsPlaceholder: FunctionalComponent<ResultPlaceholderProps> = (
       key={`placeholder-${i}`}
       density={props.density}
       display={props.display || 'list'}
-      imageSize={props.imageSize!}
+      imageSize={props.imageSize}
     ></atomic-result-placeholder>
   ));
 };
 
-export const TableDisplayResultsPlaceholder: FunctionalComponent<
+const TableDisplayResultsPlaceholder: FunctionalComponent<
   ResultPlaceholderProps
 > = (props) => {
   return (
     <atomic-result-table-placeholder
       density={props.density}
-      imageSize={props.imageSize!}
+      imageSize={props.imageSize}
       rows={props.numberOfPlaceholders}
     ></atomic-result-table-placeholder>
   );

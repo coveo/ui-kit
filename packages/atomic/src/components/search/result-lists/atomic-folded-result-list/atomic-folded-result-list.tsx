@@ -7,7 +7,6 @@ import {
   buildResultsPerPage,
   ResultListProps,
   FoldedCollection,
-  Result,
   buildInteractiveResult,
 } from '@coveo/headless';
 import {
@@ -26,13 +25,21 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {randomID} from '../../../../utils/utils';
+import {ResultsPlaceholdersGuard} from '../../../common/atomic-result-placeholder/placeholders';
+import {extractUnfoldedResult} from '../../../common/interface/result';
 import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
   ResultDisplayLayout,
+  getResultListDisplayClasses,
 } from '../../../common/layout/display-options';
-import {ResultListCommon} from '../../../common/result-list/result-list-common';
-import {ResultRenderingFunction} from '../../../common/result-list/result-list-common-interface';
+import {DisplayWrapper} from '../../../common/result-list/display-wrapper';
+import {ItemDisplayGuard} from '../../../common/result-list/item-display-guard';
+import {ItemListGuard} from '../../../common/result-list/item-list-guard';
+import {
+  ResultListCommon,
+  ResultRenderingFunction,
+} from '../../../common/result-list/result-list-common';
 import {FoldedResultListStateContextEvent} from '../../../common/result-list/result-list-decorators';
 import {ResultTemplateProvider} from '../../../common/result-list/result-template-provider';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
@@ -52,9 +59,11 @@ export class AtomicFoldedResultList implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   public foldedResultList!: FoldedResultList;
   public resultsPerPage!: ResultsPerPage;
-  private resultListCommon!: ResultListCommon;
   private resultRenderingFunction: ResultRenderingFunction;
   private loadingFlag = randomID('firstResultLoaded-');
+  private resultTemplateProvider!: ResultTemplateProvider;
+  private nextNewResultTarget?: FocusTargetController;
+  private resultListCommon!: ResultListCommon;
   private display: ResultDisplayLayout = 'list';
 
   @Element() public host!: HTMLDivElement;
@@ -68,8 +77,6 @@ export class AtomicFoldedResultList implements InitializableComponent {
   @State() private resultTemplateRegistered = false;
   @State() public error!: Error;
   @State() private templateHasError = false;
-
-  private nextNewResultTarget?: FocusTargetController;
 
   /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
@@ -135,7 +142,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
     this.foldedResultList.loadCollection(event.detail);
   }
 
-  private get focusTarget() {
+  public get focusTarget() {
     if (!this.nextNewResultTarget) {
       this.nextNewResultTarget = new FocusTargetController(this);
     }
@@ -150,7 +157,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
       this.error = e as Error;
     }
 
-    const resultTemplateProvider = new ResultTemplateProvider({
+    this.resultTemplateProvider = new ResultTemplateProvider({
       includeDefaultTemplate: true,
       templateElements: Array.from(
         this.host.querySelectorAll('atomic-result-template')
@@ -165,24 +172,16 @@ export class AtomicFoldedResultList implements InitializableComponent {
       },
       bindings: this.bindings,
     });
+
     this.resultListCommon = new ResultListCommon({
-      resultTemplateProvider,
-      getNumberOfPlaceholders: () => this.resultsPerPageState.numberOfResults,
+      engineSubscribe: this.bindings.engine.subscribe,
+      getCurrentNumberOfResults: () =>
+        this.foldedResultListState.results.length,
+      getIsLoading: () => this.foldedResultListState.isLoading,
       host: this.host,
-      bindings: this.bindings,
-      getDensity: () => this.density,
-      getResultDisplay: () => this.display,
-      getLayoutDisplay: () => this.display,
-      getImageSize: () => this.imageSize,
-      nextNewResultTarget: this.focusTarget,
       loadingFlag: this.loadingFlag,
-      getResultListState: () => this.foldedResultListState,
-      getResultRenderingFunction: () => this.resultRenderingFunction,
-      renderResult: (props) => <atomic-result {...props}></atomic-result>,
-      getInteractiveResult: (result: Result) =>
-        buildInteractiveResult(this.bindings.engine, {
-          options: {result},
-        }),
+      nextNewResultTarget: this.focusTarget,
+      store: this.bindings.store,
     });
   }
 
@@ -203,6 +202,84 @@ export class AtomicFoldedResultList implements InitializableComponent {
   }
 
   public render() {
-    return this.resultListCommon.render();
+    this.resultListCommon.updateBreakpoints();
+    const listClasses = this.computeListDisplayClasses();
+
+    return (
+      <ItemListGuard
+        hasError={this.foldedResultListState.hasError}
+        firstRequestExecuted={this.foldedResultListState.firstSearchExecuted}
+        hasItems={this.foldedResultListState.hasResults}
+        hasTemplate={this.resultTemplateRegistered}
+        templateHasError={this.resultTemplateProvider.hasError}
+      >
+        <DisplayWrapper listClasses={listClasses} display={this.display}>
+          <ResultsPlaceholdersGuard
+            density={this.density}
+            imageSize={this.imageSize}
+            display={this.display}
+            displayPlaceholders={!this.bindings.store.isAppLoaded()}
+            numberOfPlaceholders={this.resultsPerPageState.numberOfResults}
+          ></ResultsPlaceholdersGuard>
+          <ItemDisplayGuard
+            firstRequestExecuted={
+              this.foldedResultListState.firstSearchExecuted
+            }
+            hasItems={this.foldedResultListState.hasResults}
+          >
+            {this.foldedResultListState.results.map((collection, i) => {
+              const propsForAtomicResult =
+                this.getPropsForAtomicResult(collection);
+              return (
+                <atomic-result
+                  {...propsForAtomicResult}
+                  part="outline"
+                  ref={(element) =>
+                    element && this.resultListCommon.setNewResultRef(element, i)
+                  }
+                ></atomic-result>
+              );
+            })}
+          </ItemDisplayGuard>
+        </DisplayWrapper>
+      </ItemListGuard>
+    );
+  }
+
+  private computeListDisplayClasses() {
+    const displayPlaceholders = !this.bindings.store.isAppLoaded();
+
+    return getResultListDisplayClasses(
+      this.display,
+      this.density,
+      this.imageSize,
+      this.foldedResultListState.firstSearchExecuted &&
+        this.foldedResultListState.isLoading,
+      displayPlaceholders
+    );
+  }
+
+  private getPropsForAtomicResult(collection: FoldedCollection) {
+    const result = extractUnfoldedResult(collection);
+
+    return {
+      interactiveResult: buildInteractiveResult(this.bindings.engine, {
+        options: {result},
+      }),
+      result,
+      renderingFunction: this.resultRenderingFunction,
+      loadingFlag: this.loadingFlag,
+      key: this.resultListCommon.getResultId(
+        result.uniqueId,
+        this.foldedResultListState.searchResponseId,
+        this.density,
+        this.imageSize
+      ),
+      content: this.resultTemplateProvider.getTemplateContent(result),
+      store: this.bindings.store,
+      density: this.density,
+      imageSize: this.imageSize,
+      display: this.display,
+    };
   }
 }
