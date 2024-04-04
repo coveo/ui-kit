@@ -9,7 +9,6 @@ import {
   NumericFacetValue,
   RegularFacetValue,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response';
-import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {toggleSelectCategoryFacetValue} from '../../../../features/facets/category-facet-set/category-facet-set-actions';
 import {FacetValueState} from '../../../../features/facets/facet-api/value';
 import {facetOrderReducer as facetOrder} from '../../../../features/facets/facet-order/facet-order-slice';
@@ -37,7 +36,6 @@ import {
   buildMockCommerceEngine,
   MockedCommerceEngine,
 } from '../../../../test/mock-engine-v2';
-import {facetResponseSelector} from '../../product-listing/facets/headless-product-listing-facet-options';
 import {
   BreadcrumbManager,
   buildCoreBreadcrumbManager,
@@ -54,9 +52,6 @@ jest.mock(
 jest.mock(
   '../../../../features/facets/category-facet-set/category-facet-set-actions'
 );
-jest.mock(
-  '../../../../features/commerce/product-listing/product-listing-actions'
-);
 jest.mock('../../../../features/breadcrumb/breadcrumb-actions');
 
 describe('core breadcrumb manager', () => {
@@ -65,6 +60,8 @@ describe('core breadcrumb manager', () => {
   let breadcrumbManager: BreadcrumbManager;
 
   const facetId = 'some_facet_id';
+  const facetResponseSelector = jest.fn();
+  const fetchResultsActionCreator = jest.fn();
 
   function initEngine(preloadedState = buildMockCommerceState()) {
     engine = buildMockCommerceEngine(preloadedState);
@@ -79,15 +76,15 @@ describe('core breadcrumb manager', () => {
     engine.state.commerceFacetSet[facetId] = {
       request: buildMockCommerceFacetRequest(),
     };
-    engine.state.productListing.facets.push({facetId, ...restOfResponse});
+    facetResponseSelector.mockReturnValue({facetId, ...restOfResponse});
   }
 
   beforeEach(() => {
     jest.resetAllMocks();
 
     options = {
-      facetResponseSelector: facetResponseSelector,
-      fetchResultsActionCreator: fetchProductListing,
+      facetResponseSelector,
+      fetchResultsActionCreator,
     };
 
     initEngine();
@@ -242,7 +239,7 @@ describe('core breadcrumb manager', () => {
       breadcrumb.state = 'excluded';
       deselectBreadcrumb();
 
-      expect(fetchProductListing).not.toHaveBeenCalled();
+      expect(fetchResultsActionCreator).not.toHaveBeenCalled();
     });
   });
 
@@ -274,7 +271,7 @@ describe('core breadcrumb manager', () => {
       });
 
       it('dispatches #fetchResultsActionCreator', () => {
-        expect(fetchProductListing).toHaveBeenCalled();
+        expect(fetchResultsActionCreator).toHaveBeenCalled();
       });
     };
   }
