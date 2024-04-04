@@ -5,8 +5,8 @@ import {
   ResultsPerPageState,
   ResultsPerPage,
   buildResultsPerPage,
-  Result,
   buildInteractiveResult,
+  Result,
 } from '@coveo/headless';
 import {Component, Element, State, Prop, Method, h} from '@stencil/core';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
@@ -16,15 +16,28 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {randomID} from '../../../../utils/utils';
+import {ResultsPlaceholdersGuard} from '../../../common/atomic-result-placeholder/placeholders';
+import {DisplayGrid} from '../../../common/item-list/display-grid';
 import {
-  ResultDisplayDensity,
-  ResultDisplayImageSize,
-  ResultDisplayLayout,
-  ResultTarget,
+  DisplayTableData,
+  DisplayTable,
+  DisplayTableRow,
+} from '../../../common/item-list/display-table';
+import {DisplayWrapper} from '../../../common/item-list/display-wrapper';
+import {ItemDisplayGuard} from '../../../common/item-list/item-display-guard';
+import {
+  ItemListCommon,
+  ItemRenderingFunction,
+} from '../../../common/item-list/item-list-common';
+import {ItemListGuard} from '../../../common/item-list/item-list-guard';
+import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
+import {
+  ItemDisplayDensity,
+  ItemDisplayImageSize,
+  ItemDisplayLayout,
+  ItemTarget,
+  getItemListDisplayClasses,
 } from '../../../common/layout/display-options';
-import {ResultListCommon} from '../../../common/result-list/result-list-common';
-import {ResultRenderingFunction} from '../../../common/result-list/result-list-common-interface';
-import {ResultTemplateProvider} from '../../../common/result-list/result-template-provider';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -53,9 +66,11 @@ export class AtomicResultList implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   public resultList!: ResultList;
   public resultsPerPage!: ResultsPerPage;
-  private resultListCommon!: ResultListCommon;
   private loadingFlag = randomID('firstResultLoaded-');
-  private resultRenderingFunction: ResultRenderingFunction;
+  private itemRenderingFunction: ItemRenderingFunction;
+  private nextNewResultTarget?: FocusTargetController;
+  private itemTemplateProvider!: ItemTemplateProvider;
+  private resultListCommon!: ItemListCommon;
 
   @Element() public host!: HTMLDivElement;
 
@@ -69,29 +84,27 @@ export class AtomicResultList implements InitializableComponent {
   @State() public error!: Error;
   @State() private templateHasError = false;
 
-  private nextNewResultTarget?: FocusTargetController;
-
   /**
    * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
    */
-  @Prop({reflect: true}) public display: ResultDisplayLayout = 'list';
+  @Prop({reflect: true}) public display: ItemDisplayLayout = 'list';
   /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
    */
-  @Prop({reflect: true}) public density: ResultDisplayDensity = 'normal';
+  @Prop({reflect: true}) public density: ItemDisplayDensity = 'normal';
 
   /**
    * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)).
    * This property is only leveraged when `display` is `grid`.
    * @defaultValue `_self`
    */
-  @Prop() gridCellLinkTarget: ResultTarget = '_self';
+  @Prop() gridCellLinkTarget: ItemTarget = '_self';
 
   /**
    * The expected size of the image displayed in the results.
    */
   @Prop({reflect: true, mutable: true})
-  public imageSize: ResultDisplayImageSize = 'icon';
+  public imageSize: ItemDisplayImageSize = 'icon';
 
   /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
@@ -102,9 +115,9 @@ export class AtomicResultList implements InitializableComponent {
    * @param resultRenderingFunction
    */
   @Method() public async setRenderFunction(
-    resultRenderingFunction: ResultRenderingFunction
+    resultRenderingFunction: ItemRenderingFunction
   ) {
-    this.resultRenderingFunction = resultRenderingFunction;
+    this.itemRenderingFunction = resultRenderingFunction;
   }
 
   public get focusTarget() {
@@ -122,7 +135,7 @@ export class AtomicResultList implements InitializableComponent {
     }
     this.resultList = buildResultList(this.bindings.engine);
     this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
-    const resultTemplateProvider = new ResultTemplateProvider({
+    this.itemTemplateProvider = new ItemTemplateProvider({
       includeDefaultTemplate: true,
       templateElements: Array.from(
         this.host.querySelectorAll('atomic-result-template')
@@ -138,29 +151,166 @@ export class AtomicResultList implements InitializableComponent {
       bindings: this.bindings,
     });
 
-    this.resultListCommon = new ResultListCommon({
-      resultTemplateProvider,
-      getNumberOfPlaceholders: () => this.resultsPerPageState.numberOfResults,
-      gridCellLinkTarget: this.gridCellLinkTarget,
+    this.resultListCommon = new ItemListCommon({
+      engineSubscribe: this.bindings.engine.subscribe,
+      getCurrentNumberOfItems: () => this.resultListState.results.length,
+      getIsLoading: () => this.resultListState.isLoading,
       host: this.host,
-      bindings: this.bindings,
-      getDensity: () => this.density,
-      getResultDisplay: () => this.display,
-      getLayoutDisplay: () => this.display,
-      getImageSize: () => this.imageSize,
-      nextNewResultTarget: this.focusTarget,
       loadingFlag: this.loadingFlag,
-      getResultListState: () => this.resultListState,
-      getResultRenderingFunction: () => this.resultRenderingFunction,
-      renderResult: (props) => <atomic-result {...props}></atomic-result>,
-      getInteractiveResult: (result: Result) =>
-        buildInteractiveResult(this.bindings.engine, {
-          options: {result},
-        }),
+      nextNewItemTarget: this.focusTarget,
+      store: this.bindings.store,
     });
   }
 
   public render() {
-    return this.resultListCommon.render();
+    this.resultListCommon.updateBreakpoints();
+    const listClasses = this.computeListDisplayClasses();
+
+    return (
+      <ItemListGuard
+        hasError={this.resultListState.hasError}
+        hasTemplate={this.resultTemplateRegistered}
+        templateHasError={this.itemTemplateProvider.hasError}
+        firstRequestExecuted={this.resultListState.firstSearchExecuted}
+        hasItems={this.resultListState.hasResults}
+      >
+        <DisplayWrapper display={this.display} listClasses={listClasses}>
+          <ResultsPlaceholdersGuard
+            density={this.density}
+            display={this.display}
+            imageSize={this.imageSize}
+            displayPlaceholders={!this.bindings.store.isAppLoaded()}
+            numberOfPlaceholders={this.resultsPerPageState.numberOfResults}
+          ></ResultsPlaceholdersGuard>
+          <ItemDisplayGuard
+            firstRequestExecuted={this.resultListState.firstSearchExecuted}
+            hasItems={this.resultListState.hasResults}
+          >
+            {this.display === 'table'
+              ? this.renderAsTable()
+              : this.display === 'grid'
+                ? this.renderAsGrid()
+                : this.renderAsList()}
+          </ItemDisplayGuard>
+        </DisplayWrapper>
+      </ItemListGuard>
+    );
+  }
+
+  private getPropsForAtomicResult(result: Result) {
+    return {
+      interactiveResult: buildInteractiveResult(this.bindings.engine, {
+        options: {result},
+      }),
+      result,
+      renderingFunction: this.itemRenderingFunction,
+      loadingFlag: this.loadingFlag,
+      key: this.resultListCommon.getResultId(
+        result.uniqueId,
+        this.resultListState.searchResponseId,
+        this.density,
+        this.imageSize
+      ),
+      content: this.itemTemplateProvider.getTemplateContent(result),
+      store: this.bindings.store,
+      density: this.density,
+      imageSize: this.imageSize,
+      display: this.display,
+    };
+  }
+
+  private computeListDisplayClasses() {
+    const displayPlaceholders = !this.bindings.store.isAppLoaded();
+
+    return getItemListDisplayClasses(
+      this.display,
+      this.density,
+      this.imageSize,
+      this.resultListState.firstSearchExecuted &&
+        this.resultListState.isLoading,
+      displayPlaceholders
+    );
+  }
+
+  private renderAsGrid() {
+    return this.resultListState.results.map((result, i) => {
+      const propsForAtomicResult = this.getPropsForAtomicResult(result);
+      return (
+        <DisplayGrid
+          item={result}
+          {...propsForAtomicResult.interactiveResult}
+          setRef={(element) =>
+            element && this.resultListCommon.setNewResultRef(element, i)
+          }
+        >
+          <atomic-result {...this} {...propsForAtomicResult}></atomic-result>
+        </DisplayGrid>
+      );
+    });
+  }
+
+  private renderAsTable() {
+    if (!this.resultListState.hasResults) {
+      return;
+    }
+    const listClasses = this.computeListDisplayClasses();
+    const firstItem = this.resultListState.results[0];
+
+    const propsForTableColumns = {
+      firstItem,
+      templateContentForFirstItem:
+        this.itemTemplateProvider.getTemplateContent(firstItem),
+    };
+
+    return (
+      <DisplayTable
+        {...propsForTableColumns}
+        listClasses={listClasses}
+        logger={this.bindings.engine.logger}
+        itemRenderingFunction={this.itemRenderingFunction}
+        host={this.host}
+      >
+        {this.resultListState.results.map((result, i) => {
+          const propsForAtomicResult = this.getPropsForAtomicResult(result);
+          return (
+            <DisplayTableRow
+              {...propsForAtomicResult}
+              rowIndex={i}
+              setRef={(element) =>
+                element && this.resultListCommon.setNewResultRef(element, i)
+              }
+            >
+              <DisplayTableData
+                {...propsForTableColumns}
+                {...propsForAtomicResult}
+                renderItem={(content) => {
+                  return (
+                    <atomic-result
+                      {...propsForAtomicResult}
+                      content={content}
+                    ></atomic-result>
+                  );
+                }}
+              ></DisplayTableData>
+            </DisplayTableRow>
+          );
+        })}
+      </DisplayTable>
+    );
+  }
+
+  private renderAsList() {
+    return this.resultListState.results.map((result, i) => {
+      const propsForAtomicResult = this.getPropsForAtomicResult(result);
+      return (
+        <atomic-result
+          {...propsForAtomicResult}
+          ref={(element) =>
+            element && this.resultListCommon.setNewResultRef(element, i)
+          }
+          part="outline"
+        ></atomic-result>
+      );
+    });
   }
 }

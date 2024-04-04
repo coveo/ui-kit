@@ -1,3 +1,11 @@
+# 2.59.0 (2024-04-03)
+
+### Features
+
+- **headless:** add answerTextIsEmpty to genQA UA stream event ([#3722](https://github.com/coveo/ui-kit/issues/3722)) ([56e4318](https://github.com/coveo/ui-kit/commits/56e431886cdfc841cdf24885b50d21ade4c4295a))
+- **headless:** case assist analytics migrated to the event protocol ([#3742](https://github.com/coveo/ui-kit/issues/3742)) ([dd22a28](https://github.com/coveo/ui-kit/commits/dd22a282844e1de2a7787c29c92ad8c80663f8a7))
+- **headless:** started using the execute search action compatible with the new event protocol in all the insight controllers ([#3743](https://github.com/coveo/ui-kit/issues/3743)) ([1c4cb07](https://github.com/coveo/ui-kit/commits/1c4cb07a3313899677c9380076b0105ecf71e333)), closes [#3678](https://github.com/coveo/ui-kit/issues/3678)
+
 ## 2.58.1 (2024-03-27)
 
 ### Bug Fixes
