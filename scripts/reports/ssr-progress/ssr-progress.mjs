@@ -10,14 +10,9 @@ function getParsedDoc() {
     'packages/headless/dist/parsed_doc.json',
     'utf8'
   );
-  const rawSSRdata = fs.readFileSync(
-    'packages/headless/dist/ssr_parsed_doc.json',
-    'utf8'
-  );
   const parsed_doc = JSON.parse(rawdata);
-  const ssr_parsed_doc = JSON.parse(rawSSRdata);
 
-  return {parsed_doc, ssr_parsed_doc};
+  return parsed_doc;
 }
 
 function removeControllersWithNoSSRSupport(useCase) {
@@ -35,11 +30,11 @@ function checkControllerDefiner(ssrController, controller) {
   );
 }
 
-function prepareData(parsed_doc, ssr_parsed_doc) {
+function prepareData(parsed_doc) {
   let rows = [];
   let logs = [];
   parsed_doc.forEach((useCase) => {
-    const ssrUseCase = ssr_parsed_doc.find(
+    const ssrUseCase = parsed_doc.find(
       (ssrUseCase) => ssrUseCase.name === 'ssr.' + useCase.name
     );
     if (ssrUseCase) {
@@ -94,8 +89,8 @@ function buildVisualReport(rows, logs) {
 
 export async function buildSSRProgressReport() {
   await buildHeadless();
-  const {parsed_doc, ssr_parsed_doc} = getParsedDoc();
-  const {rows, logs} = prepareData(parsed_doc, ssr_parsed_doc);
+  const parsed_doc = getParsedDoc();
+  const {rows, logs} = prepareData(parsed_doc);
   const ssrProgress = buildVisualReport(rows, logs);
   return ssrProgress;
 }
