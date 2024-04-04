@@ -38,7 +38,6 @@ export type User = (UserId | Email | (UserId & Email)) & {
 
 export interface View {
   url: string;
-  referrer?: string;
 }
 
 export interface ContextProps {

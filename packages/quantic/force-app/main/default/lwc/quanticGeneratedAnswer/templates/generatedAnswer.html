@@ -8,33 +8,29 @@
         >
         <div class="generated-answer__header-actions slds-grid">
           <template lwc:if={shouldDisplayActions}>
-            <div class="slds-grid flex-one slds-grid_align-end">
-              <c-quantic-feedback
-                state={feedbackState}
-                onlike={handleLike}
-                ondislike={handleDislike}
-                like-icon-name="utility:like"
-                like-label={labels.thisAnswerWasHelpful}
-                dislike-icon-name="utility:dislike"
-                dislike-label={labels.thisAnswerWasNotHelpful}
-                size="xx-small"
-                question=""
-                hide-explain-why-button
-                hide-labels
-                data-cy="generated-answer__feedback"
-              ></c-quantic-feedback>
-              <c-quantic-generated-answer-copy-to-clipboard
-                data-cy="generated-answer__copy-to-clipboard"
-                answer={answer}
-                class="slds-var-m-horizontal_xx-small"
-              ></c-quantic-generated-answer-copy-to-clipboard>
-            </div>
+            <c-quantic-feedback
+              state={feedbackState}
+              onlike={handleLike}
+              ondislike={handleDislike}
+              like-icon-name="utility:like"
+              like-label={labels.thisAnswerWasHelpful}
+              dislike-icon-name="utility:dislike"
+              dislike-label={labels.thisAnswerWasNotHelpful}
+              size="xx-small"
+              question=""
+              hide-explain-why-button
+              hide-labels
+              data-cy="generated-answer__feedback"
+            ></c-quantic-feedback>
+            <c-quantic-generated-answer-copy-to-clipboard
+              data-cy="generated-answer__copy-to-clipboard"
+              answer={answer}
+              class="slds-var-m-horizontal_xx-small"
+            ></c-quantic-generated-answer-copy-to-clipboard>
           </template>
-          <div class="slds-grid flex-one slds-grid_align-end">
-            <c-quantic-generated-answer-toggle
+          <c-quantic-generated-answer-toggle
             is-generated-answer-visible={isVisible}
           ></c-quantic-generated-answer-toggle>
-          </div>
         </div>
       </div>
       <template lwc:if={isVisible}>
@@ -47,7 +43,7 @@
           </div>
           <div data-cy="generated-answer__footer" class={generatedAnswerFooterCssClass}>
             <template lwc:if={hasCitations}>
-              <div class="slds-var-m-top_small flex-one">
+              <div class="slds-var-m-top_small">
                 <c-quantic-source-citations
                   engine-id={engineId}
                   data-cy="generated-answer__citations"
@@ -57,7 +53,7 @@
               </div>
             </template>
             <template lwc:if={shouldDisplayActions}>
-              <div class={rephraseButtonsCssClass}>
+              <div class="slds-var-m-top_small">
                 <c-quantic-generated-answer-rephrase-buttons
                   data-cy="generated-answer__rephrase-buttons"
                   value={responseFormat}

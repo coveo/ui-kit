@@ -89,9 +89,4 @@ export {
   FoldedResult as InsightFoldedResult,
   FoldedResultList as InsightFoldedResultList,
   FoldedResultListState as InsightFoldedResultListState,
-  buildGeneratedAnswer as buildInsightGeneratedAnswer,
-  buildInteractiveCitation as buildInsightInteractiveCitation,
-  GeneratedAnswer as InsightGeneratedAnswer,
-  GeneratedAnswerState as InsightGeneratedAnswerState,
-  GeneratedAnswerStyle as InsightGeneratedAnswerStyle,
 } from '@coveo/headless/insight';

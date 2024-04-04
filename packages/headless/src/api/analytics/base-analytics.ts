@@ -42,16 +42,14 @@ export abstract class BaseAnalyticsProvider<
   }
 
   public getBaseMetadata() {
-    const {context, configuration} = this.state;
+    const {context} = this.state;
     const contextValues = context?.contextValues || {};
     const formattedObject: Record<string, string | string[]> = {};
     for (const [key, value] of Object.entries(contextValues)) {
       const formattedKey = `context_${key}`;
       formattedObject[formattedKey] = value;
     }
-    if (configuration.analytics.analyticsMode === 'legacy') {
-      formattedObject['coveoHeadlessVersion'] = VERSION;
-    }
+    formattedObject['coveoHeadlessVersion'] = VERSION;
     return formattedObject;
   }
 

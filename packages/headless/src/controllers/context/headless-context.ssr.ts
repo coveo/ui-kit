@@ -5,17 +5,14 @@ import {Context, buildContext} from './headless-context';
 
 export * from './headless-context';
 
-export interface ContextDefinition
-  extends ControllerDefinitionWithProps<SearchEngine, Context, ContextProps> {}
-
 /**
- * Defines a `Context` controller instance.
- *
- * @returns The `Context` controller definition.
- * */
-export function defineContext(): ContextDefinition {
-  return {
-    buildWithProps: (engine, props) =>
-      buildContext(engine, {initialState: props.initialState}),
-  };
-}
+ * @alpha
+ */
+export const defineContext = (): ControllerDefinitionWithProps<
+  SearchEngine,
+  Context,
+  ContextProps
+> => ({
+  buildWithProps: (engine, props) =>
+    buildContext(engine, {initialState: props.initialState}),
+});

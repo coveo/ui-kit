@@ -1,73 +1,73 @@
+import {Result} from '../../../api/search/search/result';
+import {configuration} from '../../../app/common-reducers';
 import {logRecommendationOpen} from '../../../features/recommendation/recommendation-analytics-actions';
 import {buildMockResult} from '../../../test';
 import {
-  buildMockRecommendationEngine,
-  MockedRecommendationEngine,
-} from '../../../test/mock-engine-v2';
-import {createMockRecommendationState} from '../../../test/mock-recommendation-state';
-import {buildInteractiveResultCore} from '../../core/interactive-result/headless-core-interactive-result';
+  buildMockRecommendationAppEngine,
+  MockRecommendationEngine,
+} from '../../../test/mock-engine';
 import {
   buildInteractiveResult,
-  RecommendationInteractiveResultProps,
+  InteractiveResult,
 } from './headless-recommendation-interactive-result';
 
-jest.mock('../../core/interactive-result/headless-core-interactive-result');
-jest.mock('../../../features/recommendation/recommendation-analytics-actions');
-
 describe('RecommendationInteractiveResult', () => {
-  let engine: MockedRecommendationEngine;
-  let interactiveResultProps: RecommendationInteractiveResultProps;
-  let mockedBuildInteractiveResultCore: jest.Mock;
+  let engine: MockRecommendationEngine;
+  let mockResult: Result;
+  let interactiveResult: InteractiveResult;
+  let logRecommendationOpenPendingActionType: string;
+
   const resultStringParams = {
+    title: 'title',
+    uri: 'uri',
+    printableUri: 'printable-uri',
+    clickUri: 'click-uri',
     uniqueId: 'unique-id',
+    excerpt: 'excerpt',
+    firstSentences: 'first-sentences',
+    flags: 'flags',
   };
 
   function initializeInteractiveResult(delay?: number) {
-    const result = buildMockResult(resultStringParams);
-    interactiveResultProps = {
+    const result = (mockResult = buildMockResult(resultStringParams));
+    logRecommendationOpenPendingActionType =
+      logRecommendationOpen(mockResult).pending.type;
+    interactiveResult = buildInteractiveResult(engine, {
       options: {result, selectionDelay: delay},
-    };
-    buildInteractiveResult(engine, interactiveResultProps);
+    });
   }
 
-  function initEngine(preloadedState = createMockRecommendationState()) {
-    engine = buildMockRecommendationEngine(preloadedState);
+  function findLogRecommendationAction() {
+    return (
+      engine.actions.find(
+        (action) => action.type === logRecommendationOpenPendingActionType
+      ) ?? null
+    );
   }
 
-  function mockedSelect() {
-    mockedBuildInteractiveResultCore.mock.calls[0][2]();
+  function expectLogRecommendationActionPending() {
+    const action = findLogRecommendationAction();
+    expect(action).toEqual(
+      logRecommendationOpen(mockResult).pending(action!.meta.requestId)
+    );
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
-    mockedBuildInteractiveResultCore = jest.mocked(buildInteractiveResultCore);
-    initEngine();
+    engine = buildMockRecommendationAppEngine();
     initializeInteractiveResult();
+    jest.useFakeTimers();
   });
 
-  it('initialize an interactive result core with the correct options', () => {
-    expect(mockedBuildInteractiveResultCore).toHaveBeenCalledWith(
-      engine,
-      interactiveResultProps,
-      expect.any(Function)
-    );
+  afterEach(() => {
+    jest.useRealTimers();
   });
 
-  it('calls logRecommendationOpen when the action is triggered for the first time', () => {
-    const mockedLogDocumentSuggestionOpen = jest.mocked(logRecommendationOpen);
-
-    mockedSelect();
-    expect(mockedLogDocumentSuggestionOpen).toHaveBeenCalledTimes(1);
-    expect(mockedLogDocumentSuggestionOpen).toHaveBeenCalledWith(
-      interactiveResultProps.options.result
-    );
+  it('it adds the correct reducers to engine', () => {
+    expect(engine.addReducers).toHaveBeenCalledWith({configuration});
   });
 
-  it('does not call #logRecommendationOpen when the action is triggered for the second time', () => {
-    const mockedLogDocumentSuggestionOpen = jest.mocked(logRecommendationOpen);
-
-    mockedSelect();
-    mockedSelect();
-    expect(mockedLogDocumentSuggestionOpen).toHaveBeenCalledTimes(1);
+  it('when calling select(), logs recommendationOpen', () => {
+    interactiveResult.select();
+    expectLogRecommendationActionPending();
   });
 });

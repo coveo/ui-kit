@@ -7,11 +7,12 @@ import {
 
 export * from './headless-breadcrumb-manager';
 
-export interface BreadcrumbManagerDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, BreadcrumbManager> {}
-
-export function defineBreadcrumbManager(): BreadcrumbManagerDefinition {
-  return {
-    build: (engine) => buildBreadcrumbManager(engine),
-  };
-}
+/**
+ * @alpha
+ */
+export const defineBreadcrumbManager = (): ControllerDefinitionWithoutProps<
+  SearchEngine,
+  BreadcrumbManager
+> => ({
+  build: (engine) => buildBreadcrumbManager(engine),
+});

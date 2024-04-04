@@ -41,10 +41,7 @@ describe('commerce api client', () => {
     currency: req.currency ?? '',
     clientId: req.clientId ?? '',
     context: req.context ?? {
-      view: {
-        url: '',
-        referrer: 'https://example.org/referrer',
-      },
+      view: {url: ''},
     },
   });
 

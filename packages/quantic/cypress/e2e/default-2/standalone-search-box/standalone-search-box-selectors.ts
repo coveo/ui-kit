@@ -4,7 +4,6 @@ export const standaloneSearchBoxComponent = 'c-quantic-standalone-search-box';
 
 export interface StandaloneSearchBoxSelector extends ComponentSelector {
   input: (textarea?: boolean) => CypressSelector;
-  quanticSearchBoxInput: () => CypressSelector;
   suggestionList: () => CypressSelector;
   clearButton: () => CypressSelector;
   searchIcon: () => CypressSelector;
@@ -13,30 +12,18 @@ export interface StandaloneSearchBoxSelector extends ComponentSelector {
 
 export const StandaloneSearchBoxSelectors: StandaloneSearchBoxSelector = {
   get: () => cy.get(standaloneSearchBoxComponent),
-  quanticSearchBoxInput: () =>
-    StandaloneSearchBoxSelectors.get().find(
-      '[data-cy="quantic-search-box-input"]'
-    ),
   input: (textarea = false) =>
     StandaloneSearchBoxSelectors.get().find(
-      textarea
-        ? 'c-quantic-search-box-input [data-cy="search-box-textarea"]'
-        : 'c-quantic-search-box-input [data-cy="search-box-input"]'
+      textarea ? 'textarea[type="search"]' : 'input[type="search"]'
     ),
   suggestionList: () =>
     StandaloneSearchBoxSelectors.get().find(
-      'c-quantic-search-box-input c-quantic-search-box-suggestions-list li'
+      'c-quantic-search-box-suggestions-list li'
     ),
   clearButton: () =>
-    StandaloneSearchBoxSelectors.get().find(
-      'c-quantic-search-box-input [data-cy="search-box-clear-button"]'
-    ),
+    StandaloneSearchBoxSelectors.get().find('.searchbox__clear-button'),
   searchIcon: () =>
-    StandaloneSearchBoxSelectors.get().find(
-      'c-quantic-search-box-input [data-cy="search-box-search-icon"]'
-    ),
+    StandaloneSearchBoxSelectors.get().find('.searchbox__search-icon'),
   searchButton: () =>
-    StandaloneSearchBoxSelectors.get().find(
-      'c-quantic-search-box-input [data-cy="search-box-submit-button"]'
-    ),
+    StandaloneSearchBoxSelectors.get().find('.searchbox__submit-button'),
 };

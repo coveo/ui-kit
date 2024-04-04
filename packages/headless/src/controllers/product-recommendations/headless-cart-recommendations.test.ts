@@ -1,47 +1,36 @@
 import {
-  buildMockProductRecommendationEngine,
-  MockedProductRecommendationEngine,
-} from '../../test/mock-engine-v2';
-import {buildMockProductRecommendationsState} from '../../test/mock-product-recommendations-state';
-import {buildBaseProductRecommendationsList} from './headless-base-product-recommendations';
+  buildMockProductRecommendationsAppEngine,
+  MockProductRecommendationEngine,
+} from '../../test/mock-engine';
 import {
   buildCartRecommendationsList,
   CartRecommendationsList,
 } from './headless-cart-recommendations';
 
-jest.mock('./headless-base-product-recommendations');
-
 describe('headless cart-recommendations', () => {
   let cartRecommender: CartRecommendationsList;
-  let engine: MockedProductRecommendationEngine;
-  let mockedBaseProductRecommendationsList: jest.Mock;
-
-  function initEngine(initialState = buildMockProductRecommendationsState()) {
-    engine = buildMockProductRecommendationEngine(initialState);
-  }
+  let engine: MockProductRecommendationEngine;
 
   beforeEach(() => {
-    jest.resetAllMocks();
-    mockedBaseProductRecommendationsList = jest.mocked(
-      buildBaseProductRecommendationsList
-    );
-    initEngine();
+    engine = buildMockProductRecommendationsAppEngine();
     cartRecommender = buildCartRecommendationsList(engine, {
-      options: {
-        skus: ['sku1', 'sku2'],
-      },
+      options: {},
     });
   });
 
-  it('builds a baseProductRecommendationsList with the good params and returns it', () => {
-    expect(mockedBaseProductRecommendationsList).toHaveBeenCalledWith(engine, {
-      options: {
-        id: 'cart',
-        skus: ['sku1', 'sku2'],
-      },
-    });
-    expect(cartRecommender).toBe(
-      mockedBaseProductRecommendationsList.mock.results[0].value
-    );
+  it('properly propagates the engine state to the recommender', () => {
+    expect(cartRecommender.state.isLoading).toBe(false);
+    engine.state.productRecommendations.isLoading = true;
+    expect(cartRecommender.state.isLoading).toBe(true);
+  });
+  it('object shape matches original', () => {
+    expect(cartRecommender.refresh).toBeTruthy();
+    expect(cartRecommender.setSkus).toBeTruthy();
+    expect(cartRecommender.subscribe).toBeTruthy();
+    expect(cartRecommender.state.error).toBeFalsy();
+    expect(cartRecommender.state.isLoading).toBeFalsy();
+    expect(cartRecommender.state.maxNumberOfRecommendations).toBe(5);
+    expect(cartRecommender.state.recommendations).toBeTruthy();
+    expect(cartRecommender.state.skus).toBeTruthy();
   });
 });

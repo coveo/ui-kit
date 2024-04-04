@@ -72,30 +72,6 @@ export class InsightAnalyticsProvider
     return buildFacetStateMetadata(getStateNeededForFacetMetadata(this.state));
   }
 
-  public getBaseMetadata() {
-    const state = this.getState();
-    const baseObject = super.getBaseMetadata();
-
-    const generativeQuestionAnsweringId =
-      state.search?.response?.extendedResults?.generativeQuestionAnsweringId;
-
-    if (generativeQuestionAnsweringId) {
-      baseObject['generativeQuestionAnsweringId'] =
-        generativeQuestionAnsweringId;
-    }
-
-    return baseObject;
-  }
-
-  public getGeneratedAnswerMetadata() {
-    const state = this.getState();
-    return {
-      ...(state.generatedAnswer?.isVisible !== undefined && {
-        showGeneratedAnswer: state.generatedAnswer.isVisible,
-      }),
-    };
-  }
-
   private get queryText() {
     return this.state.query?.q || getQueryInitialState().q;
   }

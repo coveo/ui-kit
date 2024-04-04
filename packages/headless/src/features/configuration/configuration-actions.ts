@@ -1,11 +1,4 @@
-import {
-  ArrayValue,
-  BooleanValue,
-  RecordValue,
-  SchemaDefinition,
-  StringValue,
-  Value,
-} from '@coveo/bueno';
+import {ArrayValue, BooleanValue, StringValue, Value} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {IRuntimeEnvironment} from 'coveo.analytics';
 import {doNotTrack} from '../../utils/utils';
@@ -13,9 +6,7 @@ import {
   nonEmptyString,
   validatePayload,
   requiredNonEmptyString,
-  optionalNonEmptyVersionString,
 } from '../../utils/validate-payload';
-import {COVEO_FRAMEWORK, CoveoFramework} from '../../utils/version';
 
 const originSchemaOnConfigUpdate = () => nonEmptyString;
 
@@ -157,52 +148,11 @@ export interface UpdateAnalyticsConfigurationActionCreatorPayload {
    * TBD
    */
   trackingId?: string;
-  /**
-   * Specifies the analytics mode to use.
-   * By default, `legacy`.
-   * @internal
-   */
+
   analyticsMode?: 'legacy' | 'next';
-  /**
-   * Specifies the frameworks and version used around Headless (e.g. @coveo/atomic).
-   * @internal
-   */
-  source?: Partial<Record<CoveoFramework, string>>;
 }
 
 export type AnalyticsRuntimeEnvironment = IRuntimeEnvironment;
-
-const analyticsConfigurationSchema: SchemaDefinition<
-  Required<UpdateAnalyticsConfigurationActionCreatorPayload>
-> = {
-  enabled: new BooleanValue({default: true}),
-  originContext: originSchemaOnConfigUpdate(),
-  originLevel2: originSchemaOnConfigUpdate(),
-  originLevel3: originSchemaOnConfigUpdate(),
-  apiBaseUrl: nonEmptyString,
-  nextApiBaseUrl: nonEmptyString,
-  runtimeEnvironment: new Value(),
-  anonymous: new BooleanValue({default: false}),
-  deviceId: nonEmptyString,
-  userDisplayName: nonEmptyString,
-  documentLocation: nonEmptyString,
-  trackingId: nonEmptyString,
-  analyticsMode: new StringValue<'legacy' | 'next'>({
-    constrainTo: ['legacy', 'next'],
-    required: false,
-    default: 'legacy',
-  }),
-  source: new RecordValue({
-    options: {required: false},
-    values: COVEO_FRAMEWORK.reduce(
-      (acc, framework) => {
-        acc[framework] = optionalNonEmptyVersionString;
-        return acc;
-      },
-      {} as Record<CoveoFramework, StringValue>
-    ),
-  }),
-};
 
 export const updateAnalyticsConfiguration = createAction(
   'configuration/updateAnalyticsConfiguration',
@@ -210,7 +160,25 @@ export const updateAnalyticsConfiguration = createAction(
     if (doNotTrack()) {
       payload.enabled = false;
     }
-    return validatePayload(payload, analyticsConfigurationSchema);
+    return validatePayload(payload, {
+      enabled: new BooleanValue({default: true}),
+      originContext: originSchemaOnConfigUpdate(),
+      originLevel2: originSchemaOnConfigUpdate(),
+      originLevel3: originSchemaOnConfigUpdate(),
+      apiBaseUrl: nonEmptyString,
+      nextApiBaseUrl: nonEmptyString,
+      runtimeEnvironment: new Value(),
+      anonymous: new BooleanValue({default: false}),
+      deviceId: nonEmptyString,
+      userDisplayName: nonEmptyString,
+      documentLocation: nonEmptyString,
+      trackingId: nonEmptyString,
+      analyticsMode: new StringValue<'legacy' | 'next'>({
+        constrainTo: ['legacy', 'next'],
+        required: false,
+        default: 'legacy',
+      }),
+    });
   }
 );
 

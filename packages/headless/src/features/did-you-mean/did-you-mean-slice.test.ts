@@ -7,7 +7,6 @@ import {
   disableDidYouMean,
   disableAutomaticQueryCorrection,
   enableAutomaticQueryCorrection,
-  setCorrectionMode,
 } from './did-you-mean-actions';
 import {didYouMeanReducer} from './did-you-mean-slice';
 import {getDidYouMeanInitialState, DidYouMeanState} from './did-you-mean-state';
@@ -112,33 +111,5 @@ describe('did you mean slice', () => {
       didYouMeanReducer(state, disableAutomaticQueryCorrection)
         .automaticallyCorrectQuery
     ).toBe(false);
-  });
-
-  it('should handle #setCorrectionMode', () => {
-    state.queryCorrectionMode = 'legacy';
-    expect(
-      didYouMeanReducer(state, setCorrectionMode('next')).queryCorrectionMode
-    ).toBe('next');
-  });
-
-  it('should set corrected query if mode is next', () => {
-    state.queryCorrectionMode = 'next';
-    const searchAction = executeSearch.fulfilled(
-      buildMockSearch({
-        response: buildMockSearchResponse({
-          queryCorrection: {
-            originalQuery: 'foo',
-            correctedQuery: 'bar',
-            corrections: [],
-          },
-        }),
-      }),
-      '',
-      {legacy: logSearchEvent({evt: 'foo'})}
-    );
-    const resultingState = didYouMeanReducer(state, searchAction);
-
-    expect(resultingState.queryCorrection.correctedQuery).toBe('bar');
-    expect(resultingState.wasCorrectedTo).toBe('bar');
   });
 });

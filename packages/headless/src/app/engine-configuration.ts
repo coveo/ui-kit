@@ -11,7 +11,6 @@ import {
 import {getOrganizationEndpoints} from '../api/platform-client';
 import {PreprocessRequest} from '../api/preprocess-request';
 import {requiredNonEmptyString} from '../utils/validate-payload';
-import {CoveoFramework} from '../utils/version';
 
 /**
  * The endpoints to use.
@@ -156,17 +155,7 @@ export interface AnalyticsConfiguration {
    * @internal
    */
   trackingId?: string;
-  /**
-   * Specifies the analytics mode to use.
-   * By default, `legacy`.
-   * @internal
-   */
   analyticsMode?: 'legacy' | 'next';
-  /**
-   * Specifies the frameworks and version used around Headless (e.g. @coveo/atomic).
-   * @internal
-   */
-  source?: Partial<Record<CoveoFramework, string>>;
 }
 
 export type AnalyticsRuntimeEnvironment = IRuntimeEnvironment;

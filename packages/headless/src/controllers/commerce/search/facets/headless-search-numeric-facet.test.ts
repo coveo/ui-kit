@@ -9,8 +9,8 @@ import {buildMockCommerceNumericFacetResponse} from '../../../../test/mock-comme
 import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceNumericFacetValue} from '../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
-import {CommerceFacetOptions} from '../../core/facets/headless-core-commerce-facet';
-import {CommerceNumericFacet} from '../../core/facets/numeric/headless-commerce-numeric-facet';
+import {CommerceFacetOptions} from '../../facets/core/headless-core-commerce-facet';
+import {CommerceNumericFacet} from '../../facets/core/numeric/headless-commerce-numeric-facet';
 import {buildSearchNumericFacet} from './headless-search-numeric-facet';
 
 describe('SearchNumericFacet', () => {
@@ -102,19 +102,6 @@ describe('SearchNumericFacet', () => {
       facet.showLessValues();
 
       expectContainAction(executeSearch.pending);
-    });
-  });
-
-  describe('#state', () => {
-    it('#state.values uses #facetResponseSelector', () => {
-      expect(facet.state.facetId).toEqual(
-        state.commerceSearch.facets[0].facetId
-      );
-    });
-
-    it('#state.isLoading uses #isFacetLoadingResponseSelector', () => {
-      state.commerceSearch.isLoading = true;
-      expect(facet.state.isLoading).toBe(true);
     });
   });
 });

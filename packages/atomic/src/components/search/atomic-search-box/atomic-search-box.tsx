@@ -23,7 +23,6 @@ import {
   Host,
 } from '@stencil/core';
 import {AriaLiveRegion} from '../../../utils/accessibility-utils';
-import {debounce} from '../../../utils/debounce-utils';
 import {isMacOS} from '../../../utils/device-utils';
 import {
   BindStateToController,
@@ -159,16 +158,6 @@ export class AtomicSearchBox {
   @Prop() public suggestionTimeout = 400;
 
   /**
-   * The delay for suggestion queries on input, in milliseconds.
-   *
-   * The suggestion request will be delayed until the end user stops typing for at least the specified amount of time.
-   *
-   * This delay is used to avoid sending too many requests to the Coveo Platform when the user is typing, as well as reducing potential input lag on low end devices.
-   * A higher delay will reduce input lag, at the cost of suggestions freshness.
-   */
-  @Prop() public suggestionDelay = 0;
-
-  /**
    * Whether to prevent the user from triggering searches and query suggestions from the component.
    * Perfect for use cases where you need to disable the search conditionally.
    * For the specific case when you need to disable the search based on the length of the query, refer to {@link minimumQueryLength}.
@@ -249,8 +238,6 @@ export class AtomicSearchBox {
   @AriaLiveRegion('search-suggestions', true)
   protected suggestionsAriaMessage!: string;
 
-  private debouncedQuerySuggestionOnKeypress!: () => void;
-
   public initialize() {
     this.id = randomID('atomic-search-box-');
     this.querySetActions = loadQuerySetActions(this.bindings.engine);
@@ -304,11 +291,6 @@ export class AtomicSearchBox {
       getActiveDescendantElement: () => this.activeDescendantElement,
       getAllSuggestionElements: () => this.allSuggestionElements,
     });
-
-    this.debouncedQuerySuggestionOnKeypress = debounce(
-      () => this.triggerSuggestions(),
-      this.suggestionDelay
-    );
   }
 
   public componentWillUpdate() {
@@ -517,7 +499,7 @@ export class AtomicSearchBox {
     this.isExpanded = true;
     this.searchBox.updateText(value);
     this.updateActiveDescendant();
-    this.debouncedQuerySuggestionOnKeypress();
+    this.triggerSuggestions();
   }
 
   private onFocus() {

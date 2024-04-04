@@ -2,7 +2,7 @@ import {
   DateRangeRequest,
   FacetValueRequest,
   NumericRangeRequest,
-} from '../../../../controllers/commerce/core/facets/headless-core-commerce-facet';
+} from '../../../../controllers/commerce/facets/core/headless-core-commerce-facet';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
 import {
   buildMockCommerceDateFacetResponse,
@@ -40,7 +40,6 @@ import {
   toggleSelectNumericFacetValue,
 } from '../../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {convertToNumericRangeRequests} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
-import {setContext, setUser, setView} from '../../context/context-actions';
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
 import {executeSearch} from '../../search/search-actions';
 import {commerceFacetSetReducer} from './facet-set-slice';
@@ -994,37 +993,17 @@ describe('commerceFacetSetReducer', () => {
     expect(finalState[anotherFacetId]!.request.preventAutoSelect).toBe(false);
   });
 
-  describe.each([
-    {
-      actionName: '#deselectAllBreadcrumbs',
-      action: deselectAllBreadcrumbs,
-    },
-    {
-      actionName: '#setContext',
-      action: setContext,
-    },
-    {
-      actionName: '#setView',
-      action: setView,
-    },
-    {
-      actionName: '#setUser',
-      action: setUser,
-    },
-  ])('$actionName', ({action}) => {
+  it('#deselectAllBreadcrumbs sets all responses #values to "idle"', () => {
     const facetId = '1';
-
-    it('resets facets', () => {
-      state[facetId] = buildMockCommerceFacetSlice({
-        request: buildMockCommerceFacetRequest({
-          type: 'regular',
-          facetId,
-          values: [{value: 'facet value', state: 'selected'}],
-        }),
-      });
-      const finalState = commerceFacetSetReducer(state, action);
-
-      expect(finalState[facetId].request.values[0].state).toEqual('idle');
+    state[facetId] = buildMockCommerceFacetSlice({
+      request: buildMockCommerceFacetRequest({
+        values: [{value: 'facet value', state: 'selected'}],
+      }),
     });
+    const action = deselectAllBreadcrumbs();
+
+    const finalState = commerceFacetSetReducer(state, action);
+
+    expect(finalState[facetId].request.values[0].state).toEqual('idle');
   });
 });

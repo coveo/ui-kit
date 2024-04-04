@@ -1,6 +1,5 @@
 import {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
-import {GeneratedAnswerAPIClient} from '../../api/generated-answer/generated-answer-client';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {InsightAPIClient} from '../../api/service/insight/insight-api-client';
 import {LegacySearchAction} from '../../features/analytics/analytics-utils';
@@ -79,12 +78,10 @@ export function buildInsightEngine(
     options.configuration,
     logger
   );
-  const generatedAnswerClient = createGeneratedAnswerAPIClient(logger);
 
   const thunkArguments: InsightThunkExtraArguments = {
     ...buildThunkExtraArguments(options.configuration, logger),
     apiClient: insightAPIClient,
-    streamingClient: generatedAnswerClient,
   };
 
   const augmentedOptions: EngineOptions<InsightEngineReducers> = {
@@ -139,11 +136,5 @@ function createInsightAPIClient(
   return new InsightAPIClient({
     logger,
     preprocessRequest: configuration.preprocessRequest || NoopPreprocessRequest,
-  });
-}
-
-function createGeneratedAnswerAPIClient(logger: Logger) {
-  return new GeneratedAnswerAPIClient({
-    logger,
   });
 }

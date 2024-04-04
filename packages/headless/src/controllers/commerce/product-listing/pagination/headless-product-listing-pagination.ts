@@ -4,7 +4,7 @@ import {loadReducerError} from '../../../../utils/errors';
 import {
   buildCorePagination,
   Pagination,
-} from '../../core/pagination/headless-core-commerce-pagination';
+} from '../../pagination/core/headless-core-commerce-pagination';
 import {loadProductListingReducer} from '../utils/load-product-listing-reducers';
 
 /**

@@ -124,7 +124,6 @@ export interface MockRecommendationEngine
  *
  * Returns a non-functional `RecommendationEngine`.
  * To be used only for unit testing controllers, not for functional tests.
- * @deprecated
  */
 export function buildMockRecommendationAppEngine(
   config: Partial<RecommendationEngine<RecommendationAppState>> = {}
@@ -141,7 +140,6 @@ export interface MockProductRecommendationEngine
  *
  * Returns a non-functional `ProductRecommendationEngine`.
  * To be used only for unit testing controllers, not for functional tests.
- * @deprecated
  */
 export function buildMockProductRecommendationsAppEngine(
   config: Partial<
@@ -186,7 +184,6 @@ export interface MockCaseAssistEngine
  *
  * Returns a non-functional `CaseAssistEngine`.
  * To be used only for unit testing controllers, not for functional tests.
- * @deprecated
  */
 export function buildMockCaseAssistEngine(
   config: Partial<CaseAssistEngine<CaseAssistAppState>> = {}

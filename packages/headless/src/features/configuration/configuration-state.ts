@@ -3,7 +3,6 @@ import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import {analyticsUrl, platformUrl} from '../../api/platform-client';
-import {CoveoFramework} from '../../utils/version';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -128,17 +127,8 @@ export interface AnalyticsState {
    * @internal
    */
   trackingId: string;
-  /**
-   * Specifies the analytics mode to use.
-   * By default, `legacy`.
-   * @internal
-   */
+
   analyticsMode: 'legacy' | 'next';
-  /**
-   * Specifies the frameworks and version used around Headless (e.g. @coveo/atomic)
-   * @internal
-   */
-  source: Partial<Record<CoveoFramework, string>>;
 }
 
 export const searchAPIEndpoint = '/rest/search/v2';
@@ -167,6 +157,5 @@ export const getConfigurationInitialState: () => ConfigurationState = () => ({
     documentLocation: '',
     trackingId: '',
     analyticsMode: 'legacy',
-    source: {},
   },
 });

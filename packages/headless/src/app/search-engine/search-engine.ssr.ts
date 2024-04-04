@@ -25,15 +25,22 @@ import {
 } from './search-engine';
 
 /**
- * The SSR search engine.
+ * @alpha
  */
 export interface SSRSearchEngine extends SearchEngine {
-  /**
-   * Waits for the search to be completed and returns a promise that resolves to a SearchCompletedAction.
-   */
   waitForSearchCompletedAction(): Promise<SearchCompletedAction>;
 }
 
+/**
+ * @alpha
+ */
+export type SearchEngineDefinition<
+  TControllers extends ControllerDefinitionsMap<SSRSearchEngine, Controller>,
+> = EngineDefinition<SSRSearchEngine, TControllers, SearchEngineOptions>;
+
+/**
+ * @alpha
+ */
 export type SearchEngineDefinitionOptions<
   TControllers extends ControllerDefinitionsMap<SSRSearchEngine, Controller>,
 > = EngineDefinitionOptions<SearchEngineOptions, TControllers>;
@@ -67,32 +74,26 @@ function buildSSRSearchEngine(options: SearchEngineOptions): SSRSearchEngine {
   };
 }
 
-type TControllerDefinitions = ControllerDefinitionsMap<
-  SearchEngine,
-  Controller
->;
-
-export interface SearchEngineDefinition
-  extends EngineDefinition<
-    SSRSearchEngine,
-    TControllerDefinitions,
-    SearchEngineOptions
-  > {}
-
 /**
+ * @alpha
+ *
  * Initializes a Search engine definition in SSR with given controllers definitions and search engine config.
- * @param options The search engine definition
  * @returns Three utility functions to fetch initial state of engine in SSR, hydrate the state in CSR
  *  and a build function that can be used for edge cases requiring more control.
  */
-export function defineSearchEngine(
-  options: SearchEngineDefinitionOptions<TControllerDefinitions>
-): SearchEngineDefinition {
-  const {controllers: controllerDefinitions, ...engineOptions} = options;
-  type BuildFunction = SearchEngineDefinition['build'];
-  type FetchStaticStateFunction = SearchEngineDefinition['fetchStaticState'];
-  type HydrateStaticStateFunction =
-    SearchEngineDefinition['hydrateStaticState'];
+export function defineSearchEngine<
+  TControllerDefinitions extends ControllerDefinitionsMap<
+    SearchEngine,
+    Controller
+  >,
+>({
+  controllers: controllerDefinitions,
+  ...engineOptions
+}: SearchEngineDefinitionOptions<TControllerDefinitions>): SearchEngineDefinition<TControllerDefinitions> {
+  type Definition = SearchEngineDefinition<TControllerDefinitions>;
+  type BuildFunction = Definition['build'];
+  type FetchStaticStateFunction = Definition['fetchStaticState'];
+  type HydrateStaticStateFunction = Definition['hydrateStaticState'];
   type FetchStaticStateFromBuildResultFunction =
     FetchStaticStateFunction['fromBuildResult'];
   type HydrateStaticStateFromBuildResultFunction =

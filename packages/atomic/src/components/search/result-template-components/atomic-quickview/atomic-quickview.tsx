@@ -154,7 +154,7 @@ export class AtomicQuickview implements InitializableComponent {
         >
           <atomic-icon
             part="icon"
-            class="w-5 flex justify-center"
+            class="w-5"
             icon={QuickviewIcon}
           ></atomic-icon>
         </Button>

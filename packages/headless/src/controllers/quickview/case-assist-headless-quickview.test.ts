@@ -1,133 +1,170 @@
+import {configuration} from '../../app/common-reducers';
+import {DocumentSuggestionResponse} from '../../case-assist.index';
 import {logQuickviewDocumentSuggestionClick} from '../../features/case-assist/case-assist-analytics-actions';
 import {documentSuggestionReducer as documentSuggestion} from '../../features/document-suggestion/document-suggestion-slice';
-import {preparePreviewPagination} from '../../features/result-preview/result-preview-actions';
-import {buildResultPreviewRequest} from '../../features/result-preview/result-preview-request-builder';
-import {CaseAssistAppState} from '../../state/case-assist-app-state';
+import {
+  fetchResultContent,
+  preparePreviewPagination,
+} from '../../features/result-preview/result-preview-actions';
+import {resultPreviewReducer as resultPreview} from '../../features/result-preview/result-preview-slice';
 import {buildMockResult} from '../../test';
-import {buildMockDocumentSuggestion} from '../../test/mock-case-assist-document-suggestion';
-import {buildMockCaseAssistState} from '../../test/mock-case-assist-state';
 import {
   buildMockCaseAssistEngine,
-  MockedCaseAssistEngine,
-} from '../../test/mock-engine-v2';
-import {buildCoreQuickview} from '../core/quickview/headless-core-quickview';
+  MockCaseAssistEngine,
+} from '../../test/mock-engine';
+import {buildMockResultPreviewState} from '../../test/mock-result-preview-state';
 import {
   buildCaseAssistQuickview,
   CaseAssistQuickviewOptions,
   CaseAssistQuickview,
 } from './case-assist-headless-quickview';
-import {CoreQuickviewState} from './headless-quickview';
-
-jest.mock('../core/quickview/headless-core-quickview');
-jest.mock('../../features/result-preview/result-preview-actions');
-jest.mock('../../features/case-assist/case-assist-analytics-actions');
 
 describe('CaseAssistQuickview', () => {
-  let engine: MockedCaseAssistEngine;
+  let engine: MockCaseAssistEngine;
   let options: CaseAssistQuickviewOptions;
   let quickview: CaseAssistQuickview;
-  let engineState: CaseAssistAppState;
-  let mockedBuildCoreQuickview: jest.Mock;
-  let coreQuickviewState: Partial<CoreQuickviewState>;
-
-  const testUniqueId = 'testUniqueId';
 
   function initQuickview() {
     quickview = buildCaseAssistQuickview(engine, {options});
   }
 
-  function initEngine(preloadedState = buildMockCaseAssistState()) {
-    engineState = preloadedState;
-    engine = buildMockCaseAssistEngine(preloadedState);
-  }
-
   beforeEach(() => {
-    coreQuickviewState = {};
-    jest.resetAllMocks();
-    mockedBuildCoreQuickview = jest.mocked(buildCoreQuickview);
-    mockedBuildCoreQuickview.mockImplementation(() => ({
-      state: coreQuickviewState,
-    }));
-    initEngine();
+    engine = buildMockCaseAssistEngine();
     options = {
       result: buildMockResult(),
       maximumPreviewSize: 0,
     };
+
     initQuickview();
   });
 
-  it('initializes a core quickview with the correct options', () => {
-    expect(mockedBuildCoreQuickview).toHaveBeenCalledWith(
-      engine,
-      {options},
-      buildResultPreviewRequest,
-      '/html',
-      expect.any(Function)
-    );
+  it('initializes', () => {
+    expect(quickview).toBeTruthy();
   });
 
-  it('it adds the case-assist specific reducers to engine', () => {
+  it('it adds the correct reducers to engine', () => {
     expect(engine.addReducers).toHaveBeenNthCalledWith(1, {
       documentSuggestion,
     });
+
+    expect(engine.addReducers).toHaveBeenNthCalledWith(2, {
+      configuration,
+      resultPreview,
+    });
   });
 
-  it('dispatches a #preparePreviewPagination on initialization', () => {
-    const mockedPreparePreviewPagination = jest.mocked(
-      preparePreviewPagination
-    );
+  it('exposes a subscribe method', () => {
+    expect(quickview.subscribe).toBeTruthy();
+  });
 
-    expect(mockedPreparePreviewPagination).toHaveBeenCalledWith({
-      results: engineState.documentSuggestion.documents,
+  describe('#fetchResultContent', () => {
+    const uniqueId = '1';
+    const requestedOutputSize = 0;
+
+    beforeEach(() => {
+      options.result = buildMockResult({uniqueId});
+      initQuickview();
+
+      quickview.fetchResultContent();
     });
-    expect(engine.dispatch).toHaveBeenCalledWith(
-      mockedPreparePreviewPagination.mock.results[0].value
+
+    it('dispatches a #fetchResultContent action with the result uniqueId', () => {
+      const action = engine.findAsyncAction(fetchResultContent.pending);
+      expect(action?.meta.arg).toEqual({uniqueId, requestedOutputSize});
+    });
+
+    it('dispatches a quickview document suggestion click event', () => {
+      const result = buildMockResult();
+      const thunk = logQuickviewDocumentSuggestionClick(result.uniqueId);
+      const action = engine.findAsyncAction(thunk.pending);
+      expect(action).toBeTruthy();
+    });
+  });
+
+  it(`when configured result uniqueId matches the uniqueId in state,
+  #state.content returns the content in state`, () => {
+    const uniqueId = '1';
+    const content = '<div></div>';
+
+    engine.state.resultPreview = buildMockResultPreviewState({
+      uniqueId,
+      content,
+    });
+    options.result = buildMockResult({uniqueId});
+    initQuickview();
+
+    expect(quickview.state.content).toEqual(content);
+  });
+
+  it(`when configured result uniqueId matches the uniqueId in state,
+  #state.content returns an empty string`, () => {
+    engine.state.resultPreview = buildMockResultPreviewState({
+      uniqueId: '1',
+      content: '<div></div>',
+    });
+    options.result = buildMockResult({uniqueId: '2'});
+    initQuickview();
+
+    expect(quickview.state.content).toEqual('');
+  });
+
+  [true, false].forEach((testValue) => {
+    it(`when the result #hasHtmlVersion is ${testValue} #state.resultHasPreview should be ${testValue}`, () => {
+      options.result = buildMockResult({hasHtmlVersion: testValue});
+      initQuickview();
+
+      expect(quickview.state.resultHasPreview).toBe(testValue);
+    });
+  });
+
+  [true, false].forEach((testValue) => {
+    it(`when the resultPreview state #isLoading is ${testValue} #state.isLoading should be ${testValue}`, () => {
+      engine.state.resultPreview = buildMockResultPreviewState({
+        isLoading: testValue,
+      });
+      initQuickview();
+
+      expect(quickview.state.isLoading).toBe(testValue);
+    });
+  });
+
+  it(`when the resultPreview is initialized,
+  #options.maximumPreviewSize is 0`, () => {
+    engine.state.resultPreview = buildMockResultPreviewState();
+    initQuickview();
+
+    expect(options.maximumPreviewSize).toBe(0);
+  });
+
+  it('#preparePreviewPagination on initialization', () => {
+    initQuickview();
+    expect(engine.actions).toContainEqual(
+      preparePreviewPagination({
+        results: engine.state.documentSuggestion.documents,
+      })
     );
   });
 
-  describe('state', () => {
-    it('exposes the core quickview state', () => {
-      coreQuickviewState.content = '🥔';
-
-      expect(quickview.state.content).toBe('🥔');
-    });
-
-    it('#state.currentDocument returns the 1-based position of the document suggestion being quick viewed', () => {
-      engineState.documentSuggestion.documents = [
-        buildMockDocumentSuggestion(),
-        buildMockDocumentSuggestion(),
-        buildMockDocumentSuggestion({uniqueId: testUniqueId}),
-        buildMockDocumentSuggestion(),
+  describe('pagination', () => {
+    beforeEach(() => {
+      engine = buildMockCaseAssistEngine();
+      engine.state.documentSuggestion.documents = [
+        {hasHtmlVersion: true, uniqueId: 'first'},
+        {hasHtmlVersion: true, uniqueId: 'second'},
+        {hasHtmlVersion: true, uniqueId: 'third'},
+      ] as DocumentSuggestionResponse[];
+      engine.state.resultPreview.resultsWithPreview = [
+        'first',
+        'second',
+        'third',
       ];
-      coreQuickviewState.currentResultUniqueId = testUniqueId;
-
-      expect(quickview.state.currentDocument).toBe(3);
+      engine.state.resultPreview.position = 0;
+      initQuickview();
     });
 
-    it('#state.totalDocuments returns the total number of document suggestions', () => {
-      engineState.documentSuggestion.documents = [
-        buildMockDocumentSuggestion(),
-        buildMockDocumentSuggestion(),
-        buildMockDocumentSuggestion(),
-        buildMockDocumentSuggestion(),
-      ];
-
-      expect(quickview.state.totalDocuments).toBe(4);
+    it('returns the proper current and total results for pagination purpose', () => {
+      expect(quickview.state.currentDocument).toBe(1);
+      expect(quickview.state.totalDocuments).toBe(3);
     });
-  });
-
-  it('#fetchResultContentCallback dispatches a #logQuickviewDocumentSuggestionClick with the proper uniqueId', () => {
-    const mockedLogQuickviewDocumentSuggestionClick = jest.mocked(
-      logQuickviewDocumentSuggestionClick
-    );
-
-    mockedBuildCoreQuickview.mock.calls[0][4]();
-
-    expect(mockedLogQuickviewDocumentSuggestionClick).toHaveBeenCalledWith(
-      options.result.uniqueId
-    );
-    expect(engine.dispatch).toHaveBeenCalledWith(
-      mockedLogQuickviewDocumentSuggestionClick.mock.results[0].value
-    );
   });
 });

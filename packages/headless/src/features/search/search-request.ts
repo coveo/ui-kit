@@ -46,19 +46,7 @@ export const buildSearchRequest = async (
   return mapSearchRequest({
     ...sharedWithFoldingRequest,
     ...(state.didYouMean && {
-      queryCorrection: {
-        enabled:
-          state.didYouMean.enableDidYouMean &&
-          state.didYouMean.queryCorrectionMode === 'next',
-        options: {
-          automaticallyCorrect: state.didYouMean.automaticallyCorrectQuery
-            ? ('whenNoResults' as const)
-            : ('never' as const),
-        },
-      },
-      enableDidYouMean:
-        state.didYouMean.enableDidYouMean &&
-        state.didYouMean.queryCorrectionMode === 'legacy',
+      enableDidYouMean: state.didYouMean.enableDidYouMean,
     }),
     ...(cq && {cq}),
     ...(facets.length && {facets}),

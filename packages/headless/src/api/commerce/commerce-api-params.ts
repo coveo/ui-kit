@@ -33,7 +33,6 @@ export interface ContextParams {
 
 export interface ViewParams {
   url: string;
-  referrer?: string;
 }
 
 interface UserIdRequired {

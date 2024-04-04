@@ -1,12 +1,12 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
+import {executeSearch} from '../../../../features/commerce/search/search-actions';
 import {loadReducerError} from '../../../../utils/errors';
-import {CommerceFacetOptions} from '../../core/facets/headless-core-commerce-facet';
+import {CommerceFacetOptions} from '../../facets/core/headless-core-commerce-facet';
 import {
   CommerceRegularFacet,
   buildCommerceRegularFacet,
-} from '../../core/facets/regular/headless-commerce-regular-facet';
+} from '../../facets/core/regular/headless-commerce-regular-facet';
 import {loadSearchReducer} from '../utils/load-search-reducers';
-import {commonOptions} from './headless-search-facet-options';
 
 export function buildSearchRegularFacet(
   engine: CommerceEngine,
@@ -18,6 +18,6 @@ export function buildSearchRegularFacet(
 
   return buildCommerceRegularFacet(engine, {
     ...options,
-    ...commonOptions,
+    fetchResultsActionCreator: executeSearch,
   });
 }

@@ -6,7 +6,6 @@ import {
 } from 'coveo.analytics';
 import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events';
 import {Logger} from 'pino';
-import {AnalyticsState} from '../../features/configuration/configuration-state';
 import {
   buildFacetStateMetadata,
   getStateNeededForFacetMetadata,
@@ -22,7 +21,6 @@ import {getSortCriteriaInitialState} from '../../features/sort-criteria/sort-cri
 import {StaticFilterValueMetadata} from '../../features/static-filter-set/static-filter-set-actions';
 import {SearchAppState} from '../../state/search-app-state';
 import {ConfigurationSection} from '../../state/state-sections';
-import {VERSION} from '../../utils/version';
 import {PreprocessRequest} from '../preprocess-request';
 import {BaseAnalyticsProvider} from './base-analytics';
 import {
@@ -305,12 +303,10 @@ export const configureAnalytics = (
     url: state.configuration.analytics.nextApiBaseUrl,
     token,
     trackingId,
-    source: getAnalyticsSource(state.configuration.analytics),
   });
   return emit;
 };
 
-//TODO: KIT-2859
 export const configureLegacyAnalytics = ({
   logger,
   getState,
@@ -365,13 +361,4 @@ export const getPageID = () => {
   }
 
   return lastPageView.value!;
-};
-
-export const getAnalyticsSource = (state: AnalyticsState) => {
-  return [`@coveo/headless@${VERSION}`].concat(
-    Object.entries(state.source).map(
-      ([frameworkName, frameworkVersion]) =>
-        `${frameworkName}@${frameworkVersion}`
-    )
-  );
 };

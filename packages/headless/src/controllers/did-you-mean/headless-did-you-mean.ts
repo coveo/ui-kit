@@ -11,19 +11,10 @@ import {executeSearch} from '../../features/search/search-actions';
 import {
   buildCoreDidYouMean,
   DidYouMean,
-  DidYouMeanProps,
   DidYouMeanState,
-  DidYouMeanOptions,
 } from '../core/did-you-mean/headless-core-did-you-mean';
 
-export type {
-  QueryCorrection,
-  WordCorrection,
-  DidYouMean,
-  DidYouMeanState,
-  DidYouMeanProps,
-  DidYouMeanOptions,
-};
+export type {QueryCorrection, WordCorrection, DidYouMean, DidYouMeanState};
 
 /**
  * The DidYouMean controller is responsible for handling query corrections.
@@ -31,13 +22,9 @@ export type {
  * automatically triggers a new query with the suggested term.
  *
  * @param engine - The headless engine.
- * @param props - The configurable `DidYouMean` properties.
  */
-export function buildDidYouMean(
-  engine: SearchEngine,
-  props: DidYouMeanProps = {}
-): DidYouMean {
-  const controller = buildCoreDidYouMean(engine, props);
+export function buildDidYouMean(engine: SearchEngine): DidYouMean {
+  const controller = buildCoreDidYouMean(engine);
   const {dispatch} = engine;
 
   return {

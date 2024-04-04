@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import {AnyAction} from '@reduxjs/toolkit';
 import {ThunkDispatch} from 'redux-thunk';
 import {
@@ -33,8 +32,9 @@ import {
   SortSection,
   TriggerSection,
 } from '../../state/state-sections';
+import {makeBasicNewSearchAnalyticsAction} from '../analytics/analytics-utils';
+import {SearchPageEvents} from '../analytics/search-action-cause';
 import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
-import {didYouMeanAutomatic} from '../did-you-mean/did-you-mean-analytics-actions';
 import {snapshot} from '../history/history-actions';
 import {extractHistory} from '../history/history-state';
 import {updateQuery} from '../query/query-actions';
@@ -164,54 +164,25 @@ export class AsyncSearchThunkProcessor<RejectionType> {
   ): Promise<ValidReturnTypeFromProcessingStep<RejectionType> | null> {
     const state = this.getState();
     const successResponse = this.getSuccessResponse(fetched);
-
     if (!successResponse || !state.didYouMean) {
       return null;
     }
 
     const {enableDidYouMean, automaticallyCorrectQuery} = state.didYouMean;
-    const {results, queryCorrections, queryCorrection} = successResponse;
+    const {results, queryCorrections} = successResponse;
 
-    if (!enableDidYouMean || !automaticallyCorrectQuery) {
+    const shouldBeAutomaticallyRetried =
+      results.length === 0 &&
+      queryCorrections.length !== 0 &&
+      enableDidYouMean &&
+      automaticallyCorrectQuery;
+
+    if (!shouldBeAutomaticallyRetried) {
       return null;
     }
 
-    const shouldExecuteClassicDidYouMeanAutoCorrection =
-      results.length === 0 && queryCorrections && queryCorrections.length !== 0;
-
-    const shouldExecuteModernDidYouMeanAutoCorrection =
-      !isNullOrUndefined(queryCorrection) &&
-      !isNullOrUndefined(queryCorrection.correctedQuery);
-
-    const shouldExitWithNoAutoCorrection =
-      !shouldExecuteClassicDidYouMeanAutoCorrection &&
-      !shouldExecuteModernDidYouMeanAutoCorrection;
-
-    if (shouldExitWithNoAutoCorrection) {
-      return null;
-    }
-
-    const ret = shouldExecuteClassicDidYouMeanAutoCorrection
-      ? await this.processLegacyDidYouMeanAutoCorrection(fetched)
-      : this.processModernDidYouMeanAutoCorrection(fetched);
-
-    this.dispatch(snapshot(extractHistory(this.getState())));
-
-    return ret;
-  }
-
-  private async processLegacyDidYouMeanAutoCorrection(
-    originalFetchedResponse: FetchedResponse
-  ): Promise<ExecuteSearchThunkReturn | RejectionType | null> {
     const originalQuery = this.getCurrentQuery();
-    const originalSearchSuccessResponse = this.getSuccessResponse(
-      originalFetchedResponse
-    )!;
-    if (!originalSearchSuccessResponse.queryCorrections) {
-      return null;
-    }
-
-    const {correctedQuery} = originalSearchSuccessResponse.queryCorrections[0];
+    const {correctedQuery} = successResponse.queryCorrections[0];
 
     const retried =
       await this.automaticallyRetryQueryWithCorrection(correctedQuery);
@@ -227,29 +198,14 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       ...retried,
       response: {
         ...retried.response.success,
-        queryCorrections: originalSearchSuccessResponse.queryCorrections,
+        queryCorrections: successResponse.queryCorrections,
       },
       automaticallyCorrected: true,
       originalQuery,
-    };
-  }
-
-  private processModernDidYouMeanAutoCorrection(
-    originalFetchedResponse: FetchedResponse
-  ): ExecuteSearchThunkReturn {
-    const successResponse = this.getSuccessResponse(originalFetchedResponse)!;
-    const {correctedQuery, originalQuery} = successResponse.queryCorrection!;
-
-    this.onUpdateQueryForCorrection(correctedQuery);
-
-    return {
-      ...originalFetchedResponse,
-      response: {
-        ...successResponse,
-      },
-      queryExecuted: correctedQuery,
-      automaticallyCorrected: true,
-      originalQuery,
+      analyticsAction: makeBasicNewSearchAnalyticsAction(
+        SearchPageEvents.didyoumeanAutomatic,
+        this.getState
+      ),
     };
   }
 
@@ -292,6 +248,10 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       },
       automaticallyCorrected: false,
       originalQuery,
+      analyticsAction: makeBasicNewSearchAnalyticsAction(
+        SearchPageEvents.triggerQuery,
+        this.getState
+      ),
     };
   }
 
@@ -304,6 +264,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       response: this.getSuccessResponse(fetched)!,
       automaticallyCorrected: false,
       originalQuery: this.getCurrentQuery(),
+      analyticsAction: this.analyticsAction!,
     };
   }
 
@@ -316,14 +277,8 @@ export class AsyncSearchThunkProcessor<RejectionType> {
 
   private async automaticallyRetryQueryWithCorrection(correction: string) {
     this.onUpdateQueryForCorrection(correction);
-    const state = this.getState();
-    const {actionCause, getEventExtraPayload} = didYouMeanAutomatic();
-
     const fetched = await this.fetchFromAPI(
-      await buildSearchRequest(state, {
-        actionCause,
-        customData: getEventExtraPayload(state),
-      }),
+      await buildSearchRequest(this.getState()),
       {origin: 'mainSearch'}
     );
     this.dispatch(applyDidYouMeanCorrection(correction));
@@ -363,6 +318,10 @@ export class AsyncSearchThunkProcessor<RejectionType> {
 
   private get dispatch() {
     return this.config.dispatch;
+  }
+
+  private get analyticsAction() {
+    return this.config.analyticsAction;
   }
 
   private get rejectWithValue() {

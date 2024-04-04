@@ -2,23 +2,19 @@ import {AuthorFacet} from '@/common/components/react/facets';
 import ResultList from '@/common/components/react/result-list';
 import SearchBox from '@/common/components/react/search-box';
 import {SearchPageProvider} from '@/common/components/react/search-page';
-import SearchSearchParameterManager from '@/common/components/react/search-parameter-manager';
+import UrlManager from '@/common/components/react/url-manager';
 import {SearchStaticState, fetchStaticState} from '@/common/lib/react/engine';
-import {buildSSRSearchParameterSerializer} from '@coveo/headless-react/ssr';
+import {buildSearchParameterSerializer} from '@coveo/headless';
 
 export async function getServerSideProps(context: {
   query: {[key: string]: string | string[] | undefined};
 }) {
-  const {toSearchParameters} = buildSSRSearchParameterSerializer();
-  const searchParameters = toSearchParameters(context.query);
-
+  const fragment = buildSearchParameterSerializer().serialize(context.query);
   const contextValues = {ageGroup: '30-45', mainInterest: 'sports'};
   const staticState = await fetchStaticState({
     controllers: {
       context: {initialState: {values: contextValues}},
-      searchParameterManager: {
-        initialState: {parameters: searchParameters},
-      },
+      urlManager: {initialState: {fragment}},
     },
   });
   return {props: {staticState}};
@@ -32,7 +28,7 @@ interface StaticStateProps {
 export default function Search({staticState}: StaticStateProps) {
   return (
     <SearchPageProvider staticState={staticState}>
-      <SearchSearchParameterManager />
+      <UrlManager />
       <SearchBox />
       <ResultList />
       <AuthorFacet />

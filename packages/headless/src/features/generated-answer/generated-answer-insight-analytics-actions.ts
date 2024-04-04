@@ -246,18 +246,3 @@ export const logCopyGeneratedAnswer = (): InsightAction =>
       );
     }
   );
-
-export const generatedAnswerInsightAnalyticsClient = {
-  logCopyGeneratedAnswer,
-  logGeneratedAnswerHideAnswers,
-  logGeneratedAnswerShowAnswers,
-  logGeneratedAnswerStreamEnd,
-  logGeneratedAnswerDetailedFeedback,
-  logGeneratedAnswerFeedback,
-  logDislikeGeneratedAnswer,
-  logLikeGeneratedAnswer,
-  logHoverCitation,
-  logOpenGeneratedAnswerSource,
-  logRetryGeneratedAnswer,
-  logRephraseGeneratedAnswer,
-};

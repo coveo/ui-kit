@@ -6,17 +6,11 @@ export * from './headless-date-facet';
 
 export {buildDateRange} from './headless-date-facet';
 
-export interface DateFacetDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, DateFacet> {}
-
 /**
- * Defines a `DateFacet` controller instance.
- *
- * @param props - The configurable `DateFacet` properties.
- * @returns The `DateFacet` controller definition.
- * */
-export function defineDateFacet(props: DateFacetProps): DateFacetDefinition {
-  return {
-    build: (engine) => buildDateFacet(engine, props),
-  };
-}
+ * @alpha
+ */
+export const defineDateFacet = (
+  props: DateFacetProps
+): ControllerDefinitionWithoutProps<SearchEngine, DateFacet> => ({
+  build: (engine) => buildDateFacet(engine, props),
+});

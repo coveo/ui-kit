@@ -13,76 +13,16 @@ import {buildNumericRange} from '../../controllers/facets/range-facet/numeric-fa
 import {RangeValueRequest} from '../facets/range-facets/generic/interfaces/range-facet';
 import {SearchParameters} from './search-parameter-actions';
 
-export const rangeDelimiterExclusive = '..';
-export const rangeDelimiterInclusive = '...';
-export const facetSearchParamRegex = /^(f|fExcluded|cf|nf|df|sf|af)-(.+)$/;
-export type SearchParameterKey = keyof SearchParameters;
-type UnknownObject = {[field: string]: unknown[]};
-
-type FacetSearchParameters = keyof Pick<
-  SearchParameters,
-  'f' | 'fExcluded' | 'cf' | 'sf' | 'af' | 'nf' | 'df'
->;
-
-type FacetKey = keyof typeof supportedFacetParameters;
-
-const supportedFacetParameters: Record<FacetSearchParameters, boolean> = {
-  f: true,
-  fExcluded: true,
-  cf: true,
-  sf: true,
-  af: true,
-  nf: true,
-  df: true,
-};
-
 const delimiter = '&';
 const equal = '=';
+const rangeDelimiterExclusive = '..';
+const rangeDelimiterInclusive = '...';
+
+type SearchParameterKey = keyof SearchParameters;
+type UnknownObject = {[field: string]: unknown[]};
 
 export function buildSearchParameterSerializer() {
   return {serialize, deserialize};
-}
-
-export function keyHasObjectValue(key: string): key is FacetKey {
-  return key in supportedFacetParameters;
-}
-
-export function isValidBasicKey(
-  key: string
-): key is Exclude<SearchParameterKey, FacetKey> {
-  const supportedBasicParameters: Record<
-    Exclude<keyof SearchParameters, FacetSearchParameters>,
-    boolean
-  > = {
-    q: true,
-    aq: true,
-    cq: true,
-    enableQuerySyntax: true,
-    firstResult: true,
-    numberOfResults: true,
-    sortCriteria: true,
-    debug: true,
-    tab: true,
-  };
-  return key in supportedBasicParameters;
-}
-
-export function isRangeFacetKey(
-  key: string
-): key is Extract<FacetKey, 'nf' | 'df'> {
-  const supportedRangeFacetParameters: Pick<
-    typeof supportedFacetParameters,
-    'df' | 'nf'
-  > = {
-    nf: true,
-    df: true,
-  };
-  const isRangeFacet = key in supportedRangeFacetParameters;
-  return keyHasObjectValue(key) && isRangeFacet;
-}
-
-export function isValidKey(key: string): key is SearchParameterKey {
-  return isValidBasicKey(key) || keyHasObjectValue(key);
 }
 
 function serialize(obj: SearchParameters) {
@@ -99,7 +39,7 @@ function serializePair(pair: [string, unknown]) {
     return '';
   }
 
-  if (keyHasObjectValue(key) && !isRangeFacetKey(key)) {
+  if (isSpecificFacetKey(key)) {
     return isFacetObject(val) ? serializeFacets(key, val) : '';
   }
 
@@ -112,7 +52,7 @@ function serializePair(pair: [string, unknown]) {
   )}`;
 }
 
-export function isFacetObject(obj: unknown): obj is Record<string, string[]> {
+function isFacetObject(obj: unknown): obj is Record<string, string[]> {
   if (!isObject(obj)) {
     return false;
   }
@@ -121,7 +61,7 @@ export function isFacetObject(obj: unknown): obj is Record<string, string[]> {
   return allEntriesAreValid(obj, isValidValue);
 }
 
-export function isRangeFacetObject(
+function isRangeFacetObject(
   obj: unknown
 ): obj is Record<string, RangeValueRequest[]> {
   if (!isObject(obj)) {
@@ -185,7 +125,7 @@ function deserialize(fragment: string): SearchParameters {
     .map((part) => splitOnFirstEqual(part))
     .map(preprocessObjectPairs)
     .filter(isValidPair)
-    .map((pair) => cast(pair));
+    .map(cast);
 
   return keyValuePairs.reduce((acc: SearchParameters, pair) => {
     const [key, val] = pair;
@@ -208,7 +148,8 @@ function splitOnFirstEqual(str: string) {
 
 function preprocessObjectPairs(pair: string[]) {
   const [key, val] = pair;
-  const result = facetSearchParamRegex.exec(key);
+  const objectKey = /^(f|fExcluded|cf|nf|df|sf|af)-(.+)$/;
+  const result = objectKey.exec(key);
 
   if (!result) {
     return pair;
@@ -235,7 +176,7 @@ function processObjectValues(key: string, values: string[]) {
   return values;
 }
 
-export function buildNumericRanges(ranges: string[]) {
+function buildNumericRanges(ranges: string[]) {
   return ranges
     .map((str) => {
       const {startAsString, endAsString, isEndInclusive} =
@@ -270,7 +211,7 @@ function isValidDateRangeValue(date: string) {
   }
 }
 
-export function buildDateRanges(ranges: string[]) {
+function buildDateRanges(ranges: string[]) {
   return ranges
     .map((str) => {
       const {isEndInclusive, startAsString, endAsString} =
@@ -299,10 +240,31 @@ function isValidPair<K extends SearchParameterKey>(
   return validKey && lengthOfTwo;
 }
 
-export function cast<K extends SearchParameterKey>(
-  pair: [K, string],
-  decode = true
-): [K, unknown] {
+function isValidKey(key: string): key is SearchParameterKey {
+  const supportedParameters: Record<keyof Required<SearchParameters>, boolean> =
+    {
+      q: true,
+      aq: true,
+      cq: true,
+      enableQuerySyntax: true,
+      firstResult: true,
+      numberOfResults: true,
+      sortCriteria: true,
+      f: true,
+      fExcluded: true,
+      cf: true,
+      nf: true,
+      df: true,
+      debug: true,
+      sf: true,
+      tab: true,
+      af: true,
+    };
+
+  return key in supportedParameters;
+}
+
+function cast<K extends SearchParameterKey>(pair: [K, string]): [K, unknown] {
   const [key, value] = pair;
 
   if (key === 'enableQuerySyntax') {
@@ -325,7 +287,7 @@ export function cast<K extends SearchParameterKey>(
     return [key, castUnknownObject(value)];
   }
 
-  return [key, decode ? decodeURIComponent(value) : value];
+  return [key, decodeURIComponent(value)];
 }
 
 function castUnknownObject(value: string) {
@@ -337,6 +299,20 @@ function castUnknownObject(value: string) {
   });
 
   return ret;
+}
+
+function keyHasObjectValue(
+  key: SearchParameterKey
+): key is 'f' | 'af' | 'cf' | 'df' | 'nf' | 'sf' | 'fExcluded' {
+  const keys = ['f', 'fExcluded', 'cf', 'nf', 'df', 'sf', 'af'];
+  return keys.includes(key);
+}
+
+function isSpecificFacetKey(
+  key: SearchParameterKey
+): key is 'f' | 'af' | 'cf' | 'sf' | 'fExcluded' {
+  const keys = ['f', 'af', 'cf', 'sf', 'fExcluded'];
+  return keys.includes(key);
 }
 
 function splitRangeValueAsStringByDelimiter(str: string) {

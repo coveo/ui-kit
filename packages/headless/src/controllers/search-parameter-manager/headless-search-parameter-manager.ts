@@ -3,10 +3,7 @@ import {getDebugInitialState} from '../../features/debug/debug-state';
 import {getPaginationInitialState} from '../../features/pagination/pagination-state';
 import {getQueryInitialState} from '../../features/query/query-state';
 import {SearchParameters} from '../../features/search-parameters/search-parameter-actions';
-import {
-  legacyLogParametersChange,
-  parametersChange,
-} from '../../features/search-parameters/search-parameter-analytics-actions';
+import {logParametersChange} from '../../features/search-parameters/search-parameter-analytics-actions';
 import {executeSearch} from '../../features/search/search-actions';
 import {StaticFilterValue} from '../../features/static-filter-set/static-filter-set-state';
 import {SearchParametersState} from '../../state/search-app-state';
@@ -62,10 +59,7 @@ export function buildSearchParameterManager(
 
       controller.synchronize(parameters);
       dispatch(
-        executeSearch({
-          legacy: legacyLogParametersChange(oldParams, newParams),
-          next: parametersChange(oldParams, newParams),
-        })
+        executeSearch({legacy: logParametersChange(oldParams, newParams)})
       );
     },
 

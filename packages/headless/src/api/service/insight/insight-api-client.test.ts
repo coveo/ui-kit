@@ -82,7 +82,6 @@ describe('insight api client', () => {
       cq: 'some expression',
       facets: [],
       tab: 'selected tab',
-      context: {somekey: 'somevalue'},
     };
 
     it('should call the platform endpoint with the correct arguments', async () => {
@@ -104,7 +103,6 @@ describe('insight api client', () => {
           q: queryRequest.q,
           cq: queryRequest.cq,
           tab: queryRequest.tab,
-          context: queryRequest.context,
         },
       });
     });

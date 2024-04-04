@@ -8,7 +8,6 @@ import {
   applyDidYouMeanCorrection,
   disableAutomaticQueryCorrection,
   enableDidYouMean,
-  setCorrectionMode,
 } from '../../../features/did-you-mean/did-you-mean-actions';
 import {didYouMeanReducer as didYouMean} from '../../../features/did-you-mean/did-you-mean-slice';
 import {
@@ -24,10 +23,6 @@ import {
 export type {QueryCorrection, WordCorrection};
 
 export interface DidYouMeanProps {
-  options?: DidYouMeanOptions;
-}
-
-export interface DidYouMeanOptions {
   /**
    * Whether to automatically apply corrections for queries that would otherwise return no results.
    * When `automaticallyCorrectQuery` is `true`, the controller automatically triggers a new query using the suggested term.
@@ -36,17 +31,6 @@ export interface DidYouMeanOptions {
    * The default value is `true`.
    */
   automaticallyCorrectQuery?: boolean;
-
-  // TODO: V3: Change the default value to `next`.
-  /**
-   * Define which query correction system to use
-   *
-   * `legacy`: Query correction is powered by the legacy index system. This system relies on an algorithm using solely the index content to compute the suggested terms.
-   * `next`: Query correction is powered by a machine learning system, requiring a valid query suggestion model configured in your Coveo environment to function properly. This system relies on machine learning algorithms to compute the suggested terms.
-   *
-   * Default value is `legacy`. In the next major version of Headless, the default value will be `next`.
-   */
-  queryCorrectionMode?: 'legacy' | 'next';
 }
 export interface DidYouMean extends Controller {
   /**
@@ -75,6 +59,7 @@ export interface DidYouMeanState {
    * This happens when there is no result returned by the API for a particular misspelling.
    */
   wasAutomaticallyCorrected: boolean;
+
   /**
    * The query correction that is currently applied by the "did you mean" module.
    */
@@ -108,11 +93,9 @@ export function buildCoreDidYouMean(
 
   dispatch(enableDidYouMean());
 
-  if (props.options?.automaticallyCorrectQuery === false) {
+  if (props.automaticallyCorrectQuery === false) {
     dispatch(disableAutomaticQueryCorrection());
   }
-
-  dispatch(setCorrectionMode(props.options?.queryCorrectionMode || 'legacy'));
 
   const getState = () => engine.state;
 

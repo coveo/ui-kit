@@ -22,6 +22,7 @@ const exampleCaseNumber = '5678';
 const exampleOriginLevel2 = 'exampleOriginLevel2';
 const exampleCreateArticleMetadata = {
   articleType: 'Knowledge__kav',
+  triggeredBy: 'CreateArticleButton',
 };
 
 jest.mock('coveo.analytics', () => {

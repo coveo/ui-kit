@@ -1,4 +1,3 @@
-import {createRelay} from '@coveo/relay';
 import {CoveoAnalyticsClient} from 'coveo.analytics';
 import pino from 'pino';
 import {getConfigurationInitialState} from '../../features/configuration/configuration-state';
@@ -22,18 +21,13 @@ import {buildMockFacetValueRequest} from '../../test/mock-facet-value-request';
 import {buildMockQueryState} from '../../test/mock-query-state';
 import {buildMockQuerySuggestSet} from '../../test/mock-query-suggest-slice';
 import {buildMockSearchState} from '../../test/mock-search-state';
-import {VERSION} from '../../utils/version';
 import {QuerySuggestCompletion} from '../search/query-suggest/query-suggest-response';
 import {
-  configureAnalytics,
   configureLegacyAnalytics,
-  getAnalyticsSource,
   getPageID,
   SearchAnalyticsProvider,
   StateNeededBySearchAnalyticsProvider,
 } from './search-analytics';
-
-jest.mock('@coveo/relay');
 
 const mockGetHistory = jest.fn();
 
@@ -51,7 +45,7 @@ jest.mock('coveo.analytics', () => {
   };
 });
 
-describe('#configureLegacyAnalytics', () => {
+describe('search analytics', () => {
   const logger = pino({level: 'silent'});
   it('should be enabled by default', () => {
     const state = createMockState();
@@ -476,53 +470,5 @@ describe('#configureLegacyAnalytics', () => {
         ...metadata,
       });
     });
-  });
-});
-
-describe('#configureAnalytics', () => {
-  const mockedCreateRelay = jest.mocked(createRelay).mockImplementation(() => ({
-    emit: jest.fn() as unknown as ReturnType<typeof createRelay>['emit'],
-    on: jest.fn(),
-    off: jest.fn(),
-    clearStorage: jest.fn(),
-    getMeta: jest.fn(),
-    updateConfig: jest.fn(),
-    version: 'test',
-  }));
-
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('creates a Relay client properly and returns the emit function', () => {
-    const state = createMockState();
-    const emit = configureAnalytics(state);
-    expect(mockedCreateRelay).toHaveBeenCalledWith({
-      url: state.configuration.analytics.nextApiBaseUrl,
-      token: state.configuration.accessToken,
-      trackingId: state.configuration.analytics.trackingId,
-      source: expect.arrayContaining([]),
-    });
-    expect(emit).toBe(mockedCreateRelay.mock.results[0].value.emit);
-  });
-});
-
-describe('#getAnalyticsSources', () => {
-  it('without a source, returns an array only with `@coveo/headless`', () => {
-    const state = createMockState();
-    expect(getAnalyticsSource(state.configuration.analytics)).toEqual([
-      `@coveo/headless@${VERSION}`,
-    ]);
-  });
-
-  it('with a source, returns an array with `@coveo/headless` and the serialized framework-version pair', () => {
-    const state = createMockState();
-    state.configuration.analytics.source = {
-      '@coveo/atomic': '1.2.3',
-    };
-    expect(getAnalyticsSource(state.configuration.analytics)).toEqual([
-      `@coveo/headless@${VERSION}`,
-      '@coveo/atomic@1.2.3',
-    ]);
   });
 });

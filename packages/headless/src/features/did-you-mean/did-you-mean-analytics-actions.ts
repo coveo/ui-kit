@@ -12,7 +12,6 @@ export const logDidYouMeanClick = (): LegacySearchAction =>
     client.makeDidYouMeanClick()
   );
 
-//TODO: KIT-2859
 export const logDidYouMeanAutomatic = (): LegacySearchAction =>
   makeAnalyticsAction('analytics/didyoumean/automatic', (client) =>
     client.makeDidYouMeanAutomatic()
@@ -21,14 +20,6 @@ export const logDidYouMeanAutomatic = (): LegacySearchAction =>
 export const didYouMeanClick = (): SearchAction => {
   return {
     actionCause: SearchPageEvents.didyoumeanClick,
-    getEventExtraPayload: (state) =>
-      new SearchAnalyticsProvider(() => state).getBaseMetadata(),
-  };
-};
-
-export const didYouMeanAutomatic = (): SearchAction => {
-  return {
-    actionCause: SearchPageEvents.didyoumeanAutomatic,
     getEventExtraPayload: (state) =>
       new SearchAnalyticsProvider(() => state).getBaseMetadata(),
   };

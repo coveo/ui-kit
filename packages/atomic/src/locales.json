@@ -7263,32 +7263,5 @@
     "zh": "已复制！",
     "zh-CN": "已复制！",
     "zh-TW": "已複製！"
-  },
-  "failed-to-copy-generated-answer": {
-    "en": "Failed to copy the answer",
-    "fr": "Échec de la copie de la réponse",
-    "cs": "Nepodařilo se zkopírovat odpověď",
-    "da": "Kunne ikke kopiere svaret",
-    "de": "Antwort konnte nicht kopiert werden",
-    "el": "Απέτυχε η αντιγραφή της απάντησης",
-    "es": "No se pudo copiar la respuesta",
-    "fi": "Vastauksen kopiointi epäonnistui",
-    "hu": "Nem sikerült a válasz másolása",
-    "id": "Gagal menyalin jawaban",
-    "it": "Impossibile copiare la risposta",
-    "ja": "答えのコピーに失敗しました",
-    "ko": "답변 복사 실패",
-    "nl": "Kopiëren van het antwoord is mislukt",
-    "no": "Kunne ikke kopiere svaret",
-    "pl": "Nie udało się skopiować odpowiedzi",
-    "pt": "Falha ao copiar a resposta",
-    "pt-BR": "Falha ao copiar a resposta",
-    "ru": "Не удалось скопировать ответ",
-    "sv": "Misslyckades att kopiera svaret",
-    "th": "ไม่สามารถคัดลอกคำตอบ",
-    "tr": "Cevap kopyalanamadı",
-    "zh": "无法复制答案",
-    "zh-CN": "无法复制答案",
-    "zh-TW": "無法複製答案"
   }
 }

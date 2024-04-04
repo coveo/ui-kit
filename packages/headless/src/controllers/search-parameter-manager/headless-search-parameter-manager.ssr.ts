@@ -24,34 +24,30 @@ import {
 
 export * from './headless-search-parameter-manager';
 
+/**
+ * @alpha
+ */
 export interface SearchParameterManagerBuildProps {
   initialState: SearchParameterManagerInitialState;
 }
 
-export interface SearchParameterManagerDefinition
-  extends ControllerDefinitionWithProps<
-    SearchEngine,
-    SearchParameterManager,
-    SearchParameterManagerBuildProps
-  > {}
-
 /**
- * Defines a `SearchParameterManager` controller instance.
- *
- * @returns The `SearchParameterManager` controller definition.
- * */
-export function defineSearchParameterManager(): SearchParameterManagerDefinition {
-  return {
-    buildWithProps: (engine, props) => {
-      if (!loadSearchParameterManagerReducers(engine)) {
-        throw loadReducerError;
-      }
-      return buildSearchParameterManager(engine, {
-        initialState: props.initialState,
-      });
-    },
-  };
-}
+ * @alpha
+ */
+export const defineSearchParameterManager = (): ControllerDefinitionWithProps<
+  SearchEngine,
+  SearchParameterManager,
+  SearchParameterManagerBuildProps
+> => ({
+  buildWithProps: (engine, props) => {
+    if (!loadSearchParameterManagerReducers(engine)) {
+      throw loadReducerError;
+    }
+    return buildSearchParameterManager(engine, {
+      initialState: props.initialState,
+    });
+  },
+});
 
 function loadSearchParameterManagerReducers(
   engine: CoreEngine

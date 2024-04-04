@@ -1,5 +1,6 @@
 import {execa} from 'execa';
 import {readdirSync} from 'node:fs';
+import padStream from 'pad-stream';
 
 const dir = './config/api-extractor';
 
@@ -11,8 +12,9 @@ async function main() {
 
   const jobs = paths.map((path) => {
     const apiProcess = execa('api-extractor', ['run', '-l', '-c', path], {});
-    apiProcess.stdout.pipe(process.stdout);
-    apiProcess.stderr.pipe(process.stderr);
+    const streamPrefix = path.split('/').pop().split('.json').shift() + ':\t';
+    apiProcess.stdout.pipe(padStream(1, streamPrefix)).pipe(process.stdout);
+    apiProcess.stderr.pipe(padStream(1, streamPrefix)).pipe(process.stderr);
     return apiProcess;
   });
   await Promise.all(jobs);

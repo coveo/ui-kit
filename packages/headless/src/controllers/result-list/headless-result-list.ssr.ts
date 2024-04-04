@@ -8,19 +8,11 @@ import {
 
 export * from './headless-result-list';
 
-export interface ResultListDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, ResultList> {}
-
 /**
- * Defines a `ResultList` controller instance.
- *
- * @param props - The configurable `ResultList` properties.
- * @returns The `ResultList` controller definition.
- * */
-export function defineResultList(
+ * @alpha
+ */
+export const defineResultList = (
   props?: ResultListProps
-): ResultListDefinition {
-  return {
-    build: (engine) => buildResultList(engine, props),
-  };
-}
+): ControllerDefinitionWithoutProps<SearchEngine, ResultList> => ({
+  build: (engine) => buildResultList(engine, props),
+});

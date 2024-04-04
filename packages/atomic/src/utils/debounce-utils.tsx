@@ -50,22 +50,3 @@ export function buildDebouncedQueue(
     cancelActionIfQueued,
   };
 }
-
-export function debounce<
-  ExecuteParameters extends unknown[],
-  ExecuteReturnType,
->(
-  execute: (
-    ...args: ExecuteParameters
-  ) => Promise<ExecuteReturnType> | ExecuteReturnType,
-  wait: number
-) {
-  let timer: ReturnType<typeof setTimeout>;
-
-  return (...args: ExecuteParameters): Promise<ExecuteReturnType> => {
-    clearTimeout(timer);
-    return new Promise((resolve) => {
-      timer = setTimeout(() => resolve(execute(...args)), wait);
-    });
-  };
-}

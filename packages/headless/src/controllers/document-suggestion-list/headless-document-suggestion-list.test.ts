@@ -5,33 +5,25 @@ import {caseInputReducer as caseInput} from '../../features/case-input/case-inpu
 import {fetchDocumentSuggestions} from '../../features/document-suggestion/document-suggestion-actions';
 import {documentSuggestionReducer as documentSuggestion} from '../../features/document-suggestion/document-suggestion-slice';
 import {getDocumentSuggestionInitialState} from '../../features/document-suggestion/document-suggestion-state';
-import {buildMockCaseAssistState} from '../../test/mock-case-assist-state';
 import {
   buildMockCaseAssistEngine,
-  MockedCaseAssistEngine,
-} from '../../test/mock-engine-v2';
+  MockCaseAssistEngine,
+} from '../../test/mock-engine';
 import {
   DocumentSuggestionList,
   buildDocumentSuggestionList,
 } from './headless-document-suggestion-list';
 
-jest.mock('../../features/document-suggestion/document-suggestion-actions');
-
-describe('DocumentSuggestionList', () => {
-  let engine: MockedCaseAssistEngine;
+describe('Document Suggestion List', () => {
+  let engine: MockCaseAssistEngine;
   let docSuggestionList: DocumentSuggestionList;
 
   function initDocumentSuggestion() {
     docSuggestionList = buildDocumentSuggestionList(engine);
   }
 
-  function initEngine(preloadedState = buildMockCaseAssistState()) {
-    engine = buildMockCaseAssistEngine(preloadedState);
-  }
-
   beforeEach(() => {
-    jest.resetAllMocks();
-    initEngine();
+    engine = buildMockCaseAssistEngine();
     initDocumentSuggestion();
   });
 
@@ -56,15 +48,12 @@ describe('DocumentSuggestionList', () => {
 
   describe('#fetch', () => {
     it('dispatches a #fetchDocumentSuggestions', () => {
-      const mockedFetchDocumentSuggestions = jest.mocked(
-        fetchDocumentSuggestions
-      );
-
       docSuggestionList.fetch();
 
-      expect(mockedFetchDocumentSuggestions).toHaveBeenCalled();
-      expect(engine.dispatch).toHaveBeenCalledWith(
-        mockedFetchDocumentSuggestions.mock.results[0].value
+      expect(engine.actions).toContainEqual(
+        expect.objectContaining({
+          type: fetchDocumentSuggestions.pending.type,
+        })
       );
     });
   });

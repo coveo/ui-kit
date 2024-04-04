@@ -516,32 +516,4 @@ describe('search request', () => {
     });
     expect((await buildSearchRequest(state)).request.cq).toBe('a');
   });
-
-  it('should enable #queryCorrection if did you mean is enabled and #queryCorrectionMode is `next`', async () => {
-    state.didYouMean.enableDidYouMean = true;
-    state.didYouMean.queryCorrectionMode = 'next';
-    expect(
-      (await buildSearchRequest(state)).request.queryCorrection?.enabled
-    ).toBe(true);
-  });
-
-  it('should #automaticallyCorrect if did you mean is enabled and #queryCorrectionMode is `next` and #automaticallyCorrectQuery is true', async () => {
-    state.didYouMean.enableDidYouMean = true;
-    state.didYouMean.queryCorrectionMode = 'next';
-    state.didYouMean.automaticallyCorrectQuery = true;
-    expect(
-      (await buildSearchRequest(state)).request.queryCorrection?.options
-        ?.automaticallyCorrect
-    ).toBe('whenNoResults');
-  });
-
-  it('should disable #automaticallyCorrect if did you mean is enabled and #queryCorrectionMode is `next` and #automaticallyCorrectQuery is false', async () => {
-    state.didYouMean.enableDidYouMean = true;
-    state.didYouMean.queryCorrectionMode = 'next';
-    state.didYouMean.automaticallyCorrectQuery = false;
-    expect(
-      (await buildSearchRequest(state)).request.queryCorrection?.options
-        ?.automaticallyCorrect
-    ).toBe('never');
-  });
 });

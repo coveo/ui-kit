@@ -8,9 +8,7 @@ import {
   disableDidYouMean,
   enableAutomaticQueryCorrection,
   enableDidYouMean,
-  setCorrectionMode,
 } from './did-you-mean-actions';
-import {CorrectionMode} from './did-you-mean-state';
 
 /**
  * The DidYouMean action creators.
@@ -51,15 +49,6 @@ export interface DidYouMeanActionCreators {
    * @returns A dispatchable action.
    */
   enableDidYouMean(): PayloadAction;
-
-  /**
-   * Sets the query correction mode.
-   *
-   * @param mode - The query correction mode to use. Must be either `"legacy"` (index based) or `"next"` (query suggestions based).
-   * @returns A dispatchable action.
-   *
-   */
-  setCorrectionMode(mode: CorrectionMode): PayloadAction<CorrectionMode>;
 }
 
 /**
@@ -79,6 +68,5 @@ export function loadDidYouMeanActions(
     enableDidYouMean,
     enableAutomaticQueryCorrection,
     disableAutomaticQueryCorrection,
-    setCorrectionMode,
   };
 }

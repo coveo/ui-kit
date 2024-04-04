@@ -37,8 +37,9 @@
   border-bottom-right-radius: 0.25rem;
 }
 
-.searchbox__icon-container {
+.searchbox__clear-button-container {
   height: 48px;
+  margin: inherit;
 }
 
 .searchbox__clear-button {

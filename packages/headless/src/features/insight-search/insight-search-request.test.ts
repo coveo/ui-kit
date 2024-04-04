@@ -110,26 +110,6 @@ describe('insight search request', () => {
       expect(params.firstResult).toBe(state.pagination.firstResult);
     });
 
-    it('#buildInsightSearchRequest returns the state #generatedAnswer.responseFormat', async () => {
-      state.generatedAnswer.responseFormat = {answerStyle: 'concise'};
-      const params = (await buildInsightSearchRequest(state)).request;
-
-      expect(
-        params.pipelineRuleParameters?.mlGenerativeQuestionAnswering
-          ?.responseFormat
-      ).toBe(state.generatedAnswer.responseFormat);
-    });
-
-    it('#buildInsightSearchRequest returns the state #generatedAnswer.citationsFieldToInclude', async () => {
-      state.generatedAnswer.fieldsToIncludeInCitations = ['foo', 'bar'];
-      const params = (await buildInsightSearchRequest(state)).request;
-
-      expect(
-        params.pipelineRuleParameters?.mlGenerativeQuestionAnswering
-          ?.citationsFieldToInclude
-      ).toBe(state.generatedAnswer.fieldsToIncludeInCitations);
-    });
-
     it('when there are no cq expressions in state, cq is undefined', async () => {
       expect(
         (await buildInsightSearchRequest(state)).request.cq
@@ -139,14 +119,6 @@ describe('insight search request', () => {
     it('when there is an active tab, it sets cq to the active tab expression', async () => {
       state.tabSet.a = buildMockTabSlice({expression: 'a', isActive: true});
       expect((await buildInsightSearchRequest(state)).request.cq).toBe('a');
-    });
-
-    it('when there is a context set, it returns the context', async () => {
-      const expectedState = {foo: 'bar'};
-      state.context.contextValues = expectedState;
-      expect((await buildInsightSearchRequest(state)).request.context).toEqual(
-        expectedState
-      );
     });
   });
 
@@ -242,16 +214,6 @@ describe('insight search request', () => {
         (await buildInsightLoadCollectionRequest(state, collectionId)).request
           .cq
       ).toBe(`@foldingcollection="${collectionId}"`);
-    });
-
-    it('when there is a context sets the context param', async () => {
-      const expectedContext = {foo: 'bar'};
-      state.context.contextValues = expectedContext;
-      const params = (
-        await buildInsightLoadCollectionRequest(state, collectionId)
-      ).request;
-
-      expect(params.context).toBe(expectedContext);
     });
   });
 });

@@ -8,19 +8,11 @@ import {
 
 export * from './headless-smart-snippet';
 
-export interface SmartSnippetDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, SmartSnippet> {}
-
 /**
- * Defines a `SmartSnippet` controller instance.
- *
- * @param props - The configurable `SmartSnippet` properties.
- * @returns The `SmartSnippet` controller definition.
- * */
-export function defineSmartSnippet(
+ * @alpha
+ */
+export const defineSmartSnippet = (
   props?: SmartSnippetProps
-): SmartSnippetDefinition {
-  return {
-    build: (engine) => buildSmartSnippet(engine, props),
-  };
-}
+): ControllerDefinitionWithoutProps<SearchEngine, SmartSnippet> => ({
+  build: (engine) => buildSmartSnippet(engine, props),
+});

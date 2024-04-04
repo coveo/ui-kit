@@ -9,8 +9,8 @@ import {buildMockCommerceDateFacetResponse} from '../../../../test/mock-commerce
 import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceDateFacetValue} from '../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
-import {CommerceDateFacet} from '../../core/facets/date/headless-commerce-date-facet';
-import {CommerceFacetOptions} from '../../core/facets/headless-core-commerce-facet';
+import {CommerceDateFacet} from '../../facets/core/date/headless-commerce-date-facet';
+import {CommerceFacetOptions} from '../../facets/core/headless-core-commerce-facet';
 import {buildSearchDateFacet} from './headless-search-date-facet';
 
 describe('SearchDateFacet', () => {
@@ -102,19 +102,6 @@ describe('SearchDateFacet', () => {
       facet.showLessValues();
 
       expectContainAction(executeSearch.pending);
-    });
-  });
-
-  describe('#state', () => {
-    it('#state.values uses #facetResponseSelector', () => {
-      expect(facet.state.facetId).toEqual(
-        state.commerceSearch.facets[0].facetId
-      );
-    });
-
-    it('#state.isLoading uses #isFacetLoadingResponseSelector', () => {
-      state.commerceSearch.isLoading = true;
-      expect(facet.state.isLoading).toBe(true);
     });
   });
 });

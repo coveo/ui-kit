@@ -62,7 +62,7 @@ describe('Color Facet Test Suites', () => {
     });
 
     describe('when selecting a value', () => {
-      const selectionIndex = 1;
+      const selectionIndex = 2;
       function setupSelectBoxValue() {
         selectIdleBoxValueAt(selectionIndex);
       }

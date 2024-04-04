@@ -6,8 +6,6 @@ import {
 import {getAnalyticsConfig} from './analytics-config';
 import {createAtomicStore} from './store';
 
-jest.mock('../../../global/environment');
-
 describe('analyticsConfig', () => {
   let config: SearchEngineConfiguration;
   let store: ReturnType<typeof createAtomicStore>;
@@ -54,7 +52,6 @@ describe('analyticsConfig', () => {
       const resultingConfig = getAnalyticsConfig(config, true, store);
       expect(resultingConfig.analyticsClientMiddleware).toBeDefined();
       expect(resultingConfig.originLevel3).toBe('foo');
-      expect(resultingConfig.source?.['@coveo/atomic']).toBe('0.0.0');
     });
 
     it('merges provided engine analytics config', () => {
@@ -63,15 +60,11 @@ describe('analyticsConfig', () => {
         enabled: true,
         originContext: 'something',
         originLevel3: 'bar',
-        source: {
-          '@coveo/atomic': '3.4.5',
-        },
       };
       const resultingConfig = getAnalyticsConfig(config, false, store);
       expect(resultingConfig.enabled).toBe(true);
       expect(resultingConfig.originContext).toBe('something');
       expect(resultingConfig.originLevel3).toBe('bar');
-      expect(resultingConfig.source?.['@coveo/atomic']).toBe('0.0.0');
     });
 
     it('use the existing analytic middleware if available', () => {

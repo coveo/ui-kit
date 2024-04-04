@@ -5,6 +5,10 @@ import {
 } from '@microsoft/api-extractor-model';
 import {findApi} from '../api-finder';
 
+export interface SSRControllerConfiguration {
+  initializer: string;
+}
+
 export interface SSRController {
   mirrorInitializer: string;
   definer: string;

@@ -2,7 +2,7 @@ import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {
   buildCommerceFacetGenerator,
   CommerceFacetGenerator,
-} from '../../core/facets/generator/headless-commerce-facet-generator';
+} from '../../facets/core/generator/headless-commerce-facet-generator';
 import {buildProductListingDateFacet} from './headless-product-listing-date-facet';
 import {buildProductListingNumericFacet} from './headless-product-listing-numeric-facet';
 import {buildProductListingRegularFacet} from './headless-product-listing-regular-facet';

@@ -7,6 +7,7 @@ import {GeneratedAnswerErrorPayload} from '../../features/generated-answer/gener
 import {createAbortController} from '../../utils/abort-controller-polyfill';
 import {URLPath} from '../../utils/url-utils';
 import {resetTimeout} from '../../utils/utils';
+import {SearchAPIClient} from '../search/search-api-client';
 import {GeneratedAnswerStreamEventData} from './generated-answer-event-payload';
 import {GeneratedAnswerStreamRequest} from './generated-answer-request';
 
@@ -18,7 +19,7 @@ export interface AsyncThunkGeneratedAnswerOptions<
   T extends Partial<SearchAppState>,
 > extends AsyncThunkOptions<
     T,
-    ClientThunkExtraArguments<GeneratedAnswerAPIClient>
+    ClientThunkExtraArguments<SearchAPIClient, GeneratedAnswerAPIClient>
   > {}
 
 const buildStreamingUrl = (url: string, orgId: string, streamId: string) =>

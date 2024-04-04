@@ -60,7 +60,7 @@ export const PagerCommon: FunctionalComponent<PagerProps> = (props) => {
         }}
         part="previous-button"
         disabled={!props.pagerState.hasPreviousPage}
-        class="p-1 min-w-[2.5rem] min-h-[2.5rem] flex justify-center items-center"
+        class="p-1 min-w-[2.5rem] min-h-[2.5rem]"
       >
         <atomic-icon
           icon={previousButtonIcon}
@@ -114,7 +114,7 @@ export const PagerCommon: FunctionalComponent<PagerProps> = (props) => {
         }}
         part="next-button"
         disabled={!props.pagerState.hasNextPage}
-        class="p-1 min-w-[2.5rem] min-h-[2.5rem] flex justify-center items-center"
+        class="p-1 min-w-[2.5rem] min-h-[2.5rem]"
       >
         <atomic-icon
           icon={nextButtonIcon}

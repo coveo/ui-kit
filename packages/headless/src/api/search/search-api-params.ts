@@ -55,13 +55,6 @@ export interface EnableDidYouMeanParam {
   enableDidYouMean?: boolean;
 }
 
-export interface QueryCorrectionParam {
-  queryCorrection?: {
-    enabled?: boolean;
-    options?: {automaticallyCorrect?: 'never' | 'whenNoResults'};
-  };
-}
-
 export interface EnableQuerySyntaxParam {
   enableQuerySyntax?: boolean;
 }
@@ -125,7 +118,6 @@ export interface AnalyticsParam {
     documentLocation?: string;
     trackingId?: string;
     capture?: boolean;
-    source?: string[];
   };
 }
 

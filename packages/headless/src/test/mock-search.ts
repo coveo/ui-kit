@@ -1,3 +1,4 @@
+import {SearchPageEvents} from '../features/analytics/search-action-cause';
 import {logSearchboxSubmit} from '../features/query/query-analytics-actions';
 import {ExecuteSearchThunkReturn as LegacyExecuteSearchThunkReturn} from '../features/search/legacy/search-actions';
 import {ExecuteSearchThunkReturn} from '../features/search/search-actions';
@@ -14,6 +15,9 @@ export function buildMockSearch(
     error: null,
     automaticallyCorrected: false,
     originalQuery: '',
+    analyticsAction: {
+      actionCause: SearchPageEvents.searchboxSubmit,
+    },
     ...config,
   };
 }

@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import {AnyAction} from '@reduxjs/toolkit';
 import {ThunkDispatch} from 'redux-thunk';
 import {StateNeededBySearchAnalyticsProvider} from '../../../api/analytics/search-analytics';
@@ -166,54 +165,25 @@ export class AsyncSearchThunkProcessor<RejectionType> {
   ): Promise<ValidReturnTypeFromProcessingStep<RejectionType> | null> {
     const state = this.getState();
     const successResponse = this.getSuccessResponse(fetched);
-
     if (!successResponse || !state.didYouMean) {
       return null;
     }
 
     const {enableDidYouMean, automaticallyCorrectQuery} = state.didYouMean;
-    const {results, queryCorrections, queryCorrection} = successResponse;
+    const {results, queryCorrections} = successResponse;
 
-    if (!enableDidYouMean || !automaticallyCorrectQuery) {
+    const shouldBeAutomaticallyRetried =
+      results.length === 0 &&
+      queryCorrections.length !== 0 &&
+      enableDidYouMean &&
+      automaticallyCorrectQuery;
+
+    if (!shouldBeAutomaticallyRetried) {
       return null;
     }
 
-    const shouldExecuteClassicDidYouMeanAutoCorrection =
-      results.length === 0 && queryCorrections && queryCorrections.length !== 0;
-
-    const shouldExecuteModernDidYouMeanAutoCorrection =
-      !isNullOrUndefined(queryCorrection) &&
-      !isNullOrUndefined(queryCorrection.correctedQuery);
-
-    const shouldExitWithNoAutoCorrection =
-      !shouldExecuteClassicDidYouMeanAutoCorrection &&
-      !shouldExecuteModernDidYouMeanAutoCorrection;
-
-    if (shouldExitWithNoAutoCorrection) {
-      return null;
-    }
-
-    const ret = shouldExecuteClassicDidYouMeanAutoCorrection
-      ? await this.processLegacyDidYouMeanAutoCorrection(fetched)
-      : this.processModernDidYouMeanAutoCorrection(fetched);
-
-    this.dispatch(snapshot(extractHistory(this.getState())));
-
-    return ret;
-  }
-
-  private async processLegacyDidYouMeanAutoCorrection(
-    originalFetchedResponse: FetchedResponse
-  ): Promise<ExecuteSearchThunkReturn | RejectionType | null> {
     const originalQuery = this.getCurrentQuery();
-    const originalSearchSuccessResponse = this.getSuccessResponse(
-      originalFetchedResponse
-    )!;
-    if (!originalSearchSuccessResponse.queryCorrections) {
-      return null;
-    }
-
-    const {correctedQuery} = originalSearchSuccessResponse.queryCorrections[0];
+    const {correctedQuery} = successResponse.queryCorrections[0];
 
     const retried =
       await this.automaticallyRetryQueryWithCorrection(correctedQuery);
@@ -223,58 +193,30 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       return this.rejectWithValue(retried.response.error) as RejectionType;
     }
 
-    this.logOriginalAnalyticsQueryBeforeAutoCorrection(originalFetchedResponse);
+    this.analyticsAction &&
+      this.analyticsAction()(
+        this.dispatch,
+        () =>
+          this.getStateAfterResponse(
+            fetched.queryExecuted,
+            fetched.duration,
+            state,
+            successResponse
+          ),
+        this.extra
+      );
     this.dispatch(snapshot(extractHistory(this.getState())));
 
     return {
       ...retried,
       response: {
         ...retried.response.success,
-        queryCorrections: originalSearchSuccessResponse.queryCorrections,
+        queryCorrections: successResponse.queryCorrections,
       },
       automaticallyCorrected: true,
       originalQuery,
       analyticsAction: logDidYouMeanAutomatic(),
     };
-  }
-
-  private processModernDidYouMeanAutoCorrection(
-    originalFetchedResponse: FetchedResponse
-  ): ExecuteSearchThunkReturn {
-    const successResponse = this.getSuccessResponse(originalFetchedResponse)!;
-    const {correctedQuery, originalQuery} = successResponse.queryCorrection!;
-
-    this.onUpdateQueryForCorrection(correctedQuery);
-
-    return {
-      ...originalFetchedResponse,
-      response: {
-        ...successResponse,
-      },
-      queryExecuted: correctedQuery,
-      automaticallyCorrected: true,
-      originalQuery,
-      analyticsAction: logDidYouMeanAutomatic(),
-    };
-  }
-
-  private logOriginalAnalyticsQueryBeforeAutoCorrection(
-    originalFetchedResponse: FetchedResponse
-  ) {
-    const state = this.getState();
-    const successResponse = this.getSuccessResponse(originalFetchedResponse)!;
-    this.analyticsAction &&
-      this.analyticsAction()(
-        this.dispatch,
-        () =>
-          this.getStateAfterResponse(
-            originalFetchedResponse.queryExecuted,
-            originalFetchedResponse.duration,
-            state,
-            successResponse
-          ),
-        this.extra
-      );
   }
 
   private async processQueryTriggersOrContinue(
@@ -324,29 +266,6 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     };
   }
 
-  private getStateAfterResponse(
-    query: string,
-    duration: number,
-    previousState: StateNeededByExecuteSearch,
-    response: SearchResponseSuccess
-  ): StateNeededBySearchAnalyticsProvider {
-    return {
-      ...previousState,
-      query: {
-        q: query,
-        enableQuerySyntax:
-          previousState.query?.enableQuerySyntax ??
-          getQueryInitialState().enableQuerySyntax,
-      },
-      search: {
-        ...getSearchInitialState(),
-        duration,
-        response,
-        results: response.results,
-      },
-    };
-  }
-
   private processSuccessResponse(
     fetched: FetchedResponse
   ): ValidReturnTypeFromProcessingStep<RejectionType> {
@@ -393,6 +312,29 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     );
 
     return fetched;
+  }
+
+  private getStateAfterResponse(
+    query: string,
+    duration: number,
+    previousState: StateNeededByExecuteSearch,
+    response: SearchResponseSuccess
+  ): StateNeededBySearchAnalyticsProvider {
+    return {
+      ...previousState,
+      query: {
+        q: query,
+        enableQuerySyntax:
+          previousState.query?.enableQuerySyntax ??
+          getQueryInitialState().enableQuerySyntax,
+      },
+      search: {
+        ...getSearchInitialState(),
+        duration,
+        response,
+        results: response.results,
+      },
+    };
   }
 
   private getCurrentQuery() {

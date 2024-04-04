@@ -2,7 +2,6 @@ import {
   DocumentSuggestionResponse,
   GetDocumentSuggestionsResponse,
 } from '../../api/service/case-assist/get-document-suggestions/get-document-suggestions-response';
-import {buildMockDocumentSuggestion} from '../../test/mock-case-assist-document-suggestion';
 import {fetchDocumentSuggestions} from './document-suggestion-actions';
 import {documentSuggestionReducer} from './document-suggestion-slice';
 import {
@@ -12,8 +11,16 @@ import {
 
 describe('document suggestion slice', () => {
   let state: DocumentSuggestionState;
-  const mockDocument: DocumentSuggestionResponse =
-    buildMockDocumentSuggestion();
+  const mockDocument: DocumentSuggestionResponse = {
+    clickUri: 'www.clickuri.com',
+    title: 'Mock Document',
+    excerpt: 'This is a dang good mock document.',
+    fields: {
+      type: 'mock',
+    },
+    hasHtmlVersion: true,
+    uniqueId: '123ID',
+  };
 
   beforeEach(() => {
     state = getDocumentSuggestionInitialState();

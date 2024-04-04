@@ -10,19 +10,11 @@ export * from './headless-numeric-facet';
 
 export {buildNumericRange} from './headless-numeric-facet';
 
-export interface NumericFacetDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, NumericFacet> {}
-
 /**
- * Defines a `NumericFacet` controller instance.
- *
- * @param props - The configurable `NumericFacet` properties.
- * @returns The `NumericFacet` controller definition.
- * */
-export function defineNumericFacet(
+ * @alpha
+ */
+export const defineNumericFacet = (
   props: NumericFacetProps
-): NumericFacetDefinition {
-  return {
-    build: (engine) => buildNumericFacet(engine, props),
-  };
-}
+): ControllerDefinitionWithoutProps<SearchEngine, NumericFacet> => ({
+  build: (engine) => buildNumericFacet(engine, props),
+});

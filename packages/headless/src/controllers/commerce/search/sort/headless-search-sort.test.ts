@@ -4,7 +4,7 @@ import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
 import {
   buildRelevanceSortCriterion,
   Sort,
-} from '../../core/sort/headless-core-commerce-sort';
+} from '../../sort/core/headless-core-commerce-sort';
 import {buildSearchSort} from './headless-search-sort';
 
 describe('commerce search sort', () => {

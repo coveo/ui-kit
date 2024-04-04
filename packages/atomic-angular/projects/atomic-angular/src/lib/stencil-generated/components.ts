@@ -161,14 +161,13 @@ export declare interface AtomicComponentError extends Components.AtomicComponent
 
 
 @ProxyCmp({
-  inputs: ['automaticallyCorrectQuery', 'queryCorrectionMode']
 })
 @Component({
   selector: 'atomic-did-you-mean',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['automaticallyCorrectQuery', 'queryCorrectionMode'],
+  inputs: [],
 })
 export class AtomicDidYouMean {
   protected el: HTMLElement;
@@ -1572,14 +1571,14 @@ export declare interface AtomicResultsPerPage extends Components.AtomicResultsPe
 
 
 @ProxyCmp({
-  inputs: ['clearFilters', 'disableSearch', 'enableQuerySyntax', 'minimumQueryLength', 'numberOfQueries', 'redirectionUrl', 'suggestionDelay', 'suggestionTimeout', 'textarea']
+  inputs: ['clearFilters', 'disableSearch', 'enableQuerySyntax', 'minimumQueryLength', 'numberOfQueries', 'redirectionUrl', 'suggestionTimeout', 'textarea']
 })
 @Component({
   selector: 'atomic-search-box',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['clearFilters', 'disableSearch', 'enableQuerySyntax', 'minimumQueryLength', 'numberOfQueries', 'redirectionUrl', 'suggestionDelay', 'suggestionTimeout', 'textarea'],
+  inputs: ['clearFilters', 'disableSearch', 'enableQuerySyntax', 'minimumQueryLength', 'numberOfQueries', 'redirectionUrl', 'suggestionTimeout', 'textarea'],
 })
 export class AtomicSearchBox {
   protected el: HTMLElement;

@@ -6,14 +6,8 @@ import {
   applyDidYouMeanCorrection,
   enableAutomaticQueryCorrection,
   disableAutomaticQueryCorrection,
-  setCorrectionMode,
 } from './did-you-mean-actions';
-import {
-  CorrectionMode,
-  emptyLegacyCorrection,
-  emptyNextCorrection,
-  getDidYouMeanInitialState,
-} from './did-you-mean-state';
+import {emptyCorrection, getDidYouMeanInitialState} from './did-you-mean-state';
 
 export const didYouMeanReducer = createReducer(
   getDidYouMeanInitialState(),
@@ -32,46 +26,18 @@ export const didYouMeanReducer = createReducer(
         state.automaticallyCorrectQuery = false;
       })
       .addCase(executeSearch.pending, (state) => {
-        state.queryCorrection = emptyLegacyCorrection();
+        state.queryCorrection = emptyCorrection();
         state.wasAutomaticallyCorrected = false;
         state.wasCorrectedTo = '';
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
-        const {queryCorrection, queryCorrections} = action.payload.response;
-
-        if (state.queryCorrectionMode === 'legacy') {
-          const nonOptionalQueryCorrections =
-            queryCorrections && queryCorrections[0]
-              ? queryCorrections[0]
-              : emptyLegacyCorrection();
-
-          state.queryCorrection = nonOptionalQueryCorrections;
-        }
-
-        if (state.queryCorrectionMode === 'next') {
-          const nonOptionalQueryCorrection = {
-            ...emptyNextCorrection(),
-            ...queryCorrection,
-            ...{
-              correctedQuery:
-                queryCorrection?.correctedQuery ||
-                queryCorrection?.corrections[0]?.correctedQuery ||
-                '',
-            },
-          };
-
-          state.queryCorrection = nonOptionalQueryCorrection;
-          state.wasCorrectedTo = nonOptionalQueryCorrection.correctedQuery;
-        }
-
-        state.wasAutomaticallyCorrected = action.payload.automaticallyCorrected;
+        state.queryCorrection =
+          action.payload.response.queryCorrections[0] || emptyCorrection();
         state.originalQuery = action.payload.originalQuery;
+        state.wasAutomaticallyCorrected = action.payload.automaticallyCorrected;
       })
       .addCase(applyDidYouMeanCorrection, (state, action) => {
         state.wasCorrectedTo = action.payload;
-      })
-      .addCase(setCorrectionMode, (state, action) => {
-        state.queryCorrectionMode = action.payload as CorrectionMode;
       });
   }
 );
