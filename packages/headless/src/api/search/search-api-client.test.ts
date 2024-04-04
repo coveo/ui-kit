@@ -307,7 +307,11 @@ describe('search api client', () => {
       searchAPIClient.querySuggest(req);
       const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
 
-      const expectedRequest: PlatformClientCallOptions = {
+      const expectedRequest: PlatformClientCallOptions & {
+        postprocessFacetSearchResponseMiddleware: Function;
+        postprocessQuerySuggestResponseMiddleware: Function;
+        postprocessSearchResponseMiddleware: Function;
+      } = {
         accessToken: state.configuration.accessToken,
         method: 'POST',
         contentType: 'application/json',
@@ -317,11 +321,19 @@ describe('search api client', () => {
         logger,
         origin: 'searchApiFetch',
         requestParams: {
+          analytics: {
+            capture: state.configuration.analytics.analyticsMode === 'next',
+            clientId: expect.any(String),
+            clientTimestamp: expect.any(String),
+            documentReferrer: state.configuration.analytics.originLevel3,
+            originContext: state.configuration.analytics.originContext,
+          },
           q: state.querySet[id],
           count: state.querySuggest[id]!.count,
           context: state.context.contextValues,
           pipeline: state.pipeline,
           searchHub: state.searchHub,
+          tab: state.configuration.analytics.originLevel2,
           timezone: state.configuration.search.timezone,
           locale: state.configuration.search.locale,
           actionsHistory: expect.any(Array),
@@ -329,9 +341,12 @@ describe('search api client', () => {
         },
         preprocessRequest: NoopPreprocessRequest,
         requestMetadata: {method: 'querySuggest'},
+        postprocessFacetSearchResponseMiddleware: expect.any(Function),
+        postprocessQuerySuggestResponseMiddleware: expect.any(Function),
+        postprocessSearchResponseMiddleware: expect.any(Function),
       };
 
-      expect(request).toMatchObject(expectedRequest);
+      expect(request).toEqual(expectedRequest);
     });
 
     it(`when calling SearchAPIClient.querySuggest with authentication providers
