@@ -24,13 +24,13 @@ function isThrottled(status: number): boolean {
   return status === 429;
 }
 
-export interface PlatformClientCallOptions {
+export interface PlatformClientCallOptions<T = unknown> {
   origin: PlatformClientOrigin;
   url: string;
   method: HttpMethods;
   contentType: HTTPContentType;
   headers?: Record<string, string>;
-  requestParams: unknown;
+  requestParams: T;
   accessToken: string;
   preprocessRequest: PreprocessRequest;
   requestMetadata?: RequestMetadata;
