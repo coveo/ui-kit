@@ -76,6 +76,15 @@ export default class QuanticRadioButtonsGroup extends LightningElement {
         buttonCSSClass: this.makeRadioButtonCSSClass(option),
         iconCSSClass: this.makeIconCSSClass(option),
         indexId: `radio-${index}`,
+        tooltip: option.tooltip,
+        mouseEnterHandler: () => {
+          const tooltipToShow = this.getTooltipComponentByValue(option.value);
+          tooltipToShow.showTooltip();
+        },
+        mouseLeaveHandler: () => {
+          const tooltipToHide = this.getTooltipComponentByValue(option.value);
+          tooltipToHide.hideTooltip();
+        },
       }));
     }
     return [];
@@ -124,5 +133,28 @@ export default class QuanticRadioButtonsGroup extends LightningElement {
         cancelable: true,
       })
     );
+  }
+
+  /**
+   * Find the tooltip element based on the option value.
+   * @param {String} value The value to find the tooltip for.
+   * @returns  {Object}
+   */
+  getTooltipComponentByValue(value) {
+    return this.template.querySelector(
+      `c-quantic-tooltip[data-tooltip-key="${value}"]`
+    );
+  }
+
+  handleOptionMouseEnter(event) {
+    event.stopPropagation();
+    const tooltipToShow = this.getTooltipComponentByValue(event.detail);
+    tooltipToShow.showTooltip();
+  }
+
+  handleOptionMouseLeave(event) {
+    event.stopPropagation();
+    const tooltipToHide = this.getTooltipComponentByValue(event.detail);
+    tooltipToHide.hideTooltip();
   }
 }

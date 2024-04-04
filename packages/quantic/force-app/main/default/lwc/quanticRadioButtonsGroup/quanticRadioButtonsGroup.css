@@ -56,3 +56,7 @@
   box-shadow: var(--radio-button-box-shadow, 0 0 3px #0176d3);
   z-index: 1;
 }
+
+.radio-buttons-group__tooltip-container {
+  position: relative;
+}
