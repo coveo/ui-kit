@@ -5,6 +5,7 @@ import {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../app/commerce-engine/commerce-engine';
+import {configuration} from '../../../app/common-reducers';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
 import {recommendationsOptionsSchema} from '../../../features/commerce/recommendations/recommendations';
 import {
@@ -94,6 +95,6 @@ export function buildRecommendations(
 function loadBaseRecommendationsReducers(
   engine: CommerceEngine
 ): engine is CommerceEngine {
-  engine.addReducers({recommendations, commerceContext});
+  engine.addReducers({recommendations, commerceContext, configuration});
   return true;
 }
