@@ -12,7 +12,7 @@ import {
   FacetConditionsManager,
   FacetResultsMustMatch,
 } from '@coveo/headless';
-import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
+import {Component, h, State, Prop, VNode, Element, Listen} from '@stencil/core';
 import {
   AriaLiveRegion,
   FocusTargetController,
@@ -111,6 +111,12 @@ export class AtomicColorFacet
   @State()
   public searchStatusState!: SearchStatusState;
   @State() public error!: Error;
+
+  @Listen('tabClick', {target: 'document'})
+  handleTabChange() {
+    this.facet.state.enabled = false;
+    this.facet.disable();
+  }
 
   /**
    * Specifies a unique identifier for the facet.

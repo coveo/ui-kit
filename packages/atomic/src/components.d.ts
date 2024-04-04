@@ -350,6 +350,10 @@ export namespace Components {
          */
         "sortCriteria": FacetSortCriterion;
         /**
+          * The tabs on which to display the facet.
+         */
+        "tabs": string;
+        /**
           * Whether this facet should contain a search box.
          */
         "withSearch": boolean;
@@ -1851,6 +1855,11 @@ export namespace Components {
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
           * @param resultRenderingFunction
          */
+        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
+        /**
+          * The tabs on which to display the result list.
+         */
+        "tabs": string;
         "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
     }
     /**
@@ -2215,7 +2224,6 @@ export namespace Components {
           * Whether analytics should be enabled.
          */
         "analytics": boolean;
-        "dataTab": string;
         /**
           * Whether the relevance inspector shortcut should be enabled for this interface.  The relevance inspector can be opened by holding the Alt key (Option on Mac) while over the interface, and performing a double click.  The relevance inspector allows to troubleshoot and debug queries.
          */
@@ -2465,10 +2473,22 @@ export namespace Components {
         "label": string;
     }
     interface AtomicTab {
+        /**
+          * Whether this tab is active upon rendering. If multiple tabs are set to active on render, the last one to be rendered will override the others.
+         */
+        "active": boolean;
+        /**
+          * The expression that will be passed to the search as a `cq` paramenter upon being selected.
+         */
+        "expression": string;
         "isActive": boolean;
         "label": string;
         "name": string;
         "pipeline": string;
+        /**
+          * Activates the tab.
+         */
+        "select": () => Promise<void>;
     }
     interface AtomicTabSection {
     }
@@ -4634,6 +4654,10 @@ declare namespace LocalJSX {
          */
         "sortCriteria"?: FacetSortCriterion;
         /**
+          * The tabs on which to display the facet.
+         */
+        "tabs"?: string;
+        /**
           * Whether this facet should contain a search box.
          */
         "withSearch"?: boolean;
@@ -6063,7 +6087,7 @@ declare namespace LocalJSX {
         /**
           * The expected size of the image displayed in the results.
          */
-        "imageSize"?: ItemDisplayImageSize;
+        "imageSize"?: ResultDisplayImageSize;
     }
     /**
      * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
@@ -6423,7 +6447,6 @@ declare namespace LocalJSX {
           * Whether analytics should be enabled.
          */
         "analytics"?: boolean;
-        "dataTab"?: string;
         /**
           * Whether the relevance inspector shortcut should be enabled for this interface.  The relevance inspector can be opened by holding the Alt key (Option on Mac) while over the interface, and performing a double click.  The relevance inspector allows to troubleshoot and debug queries.
          */
@@ -6668,6 +6691,14 @@ declare namespace LocalJSX {
         "label": string;
     }
     interface AtomicTab {
+        /**
+          * Whether this tab is active upon rendering. If multiple tabs are set to active on render, the last one to be rendered will override the others.
+         */
+        "active"?: boolean;
+        /**
+          * The expression that will be passed to the search as a `cq` paramenter upon being selected.
+         */
+        "expression"?: string;
         "isActive"?: boolean;
         "label": string;
         "name": string;

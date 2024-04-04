@@ -80,9 +80,17 @@ export class AtomicResultList implements InitializableComponent {
   @BindStateToController('resultsPerPage')
   @State()
   private resultsPerPageState!: ResultsPerPageState;
+  @BindStateToController('tab')
+  @State()
+  public tabState!: TabState;
   @State() private resultTemplateRegistered = false;
   @State() public error!: Error;
   @State() private templateHasError = false;
+
+  /**
+   * The tabs on which to display the result list.
+   */
+  @Prop({reflect: true}) public tabs: string = '';
 
   /**
    * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.

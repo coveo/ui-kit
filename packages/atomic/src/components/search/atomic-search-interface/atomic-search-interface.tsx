@@ -14,9 +14,6 @@ import {
   loadFieldActions,
   getOrganizationEndpoints as getOrganizationEndpointsHeadless,
   PlatformEnvironment,
-  loadBreadcrumbActions,
-  loadSearchActions,
-  loadSearchAnalyticsActions,
 } from '@coveo/headless';
 import {
   Component,
@@ -73,7 +70,7 @@ export class AtomicSearchInterface
   private initialized = false;
   private store = createAtomicStore();
   private commonInterfaceHelper: CommonAtomicInterfaceHelper<SearchEngine>;
-  @Prop() dataTab: string = '';
+
   @Element() public host!: HTMLAtomicSearchInterfaceElement;
 
   @State() public error?: Error;
@@ -203,44 +200,6 @@ export class AtomicSearchInterface
       deep?: boolean,
       overwrite?: boolean
     ) => this.addResourceBundleWithWarning(lng, ns, resources, deep, overwrite);
-
-    this.hideTargetComponents(this.host);
-  }
-
-  @Listen('tabClick')
-  handleTabClick(event: CustomEvent) {
-    this.dataTab = event.detail;
-    console.log(this.dataTab);
-    this.hideTargetComponents(this.host);
-    if (this.engine) {
-      const clearBreadcrumbAction = loadBreadcrumbActions(
-        this.engine
-      ).deselectAllBreadcrumbs();
-      this.engine.dispatch(clearBreadcrumbAction);
-
-      const executeSearchAction = loadSearchActions(this.engine).executeSearch(
-        loadSearchAnalyticsActions(this.engine).logInterfaceChange()
-      );
-      this.engine.dispatch(executeSearchAction);
-    }
-  }
-
-  hideTargetComponents(node: HTMLElement) {
-    if (
-      node.getAttribute('data-tab') &&
-      node.getAttribute('data-tab') !== this.dataTab
-    ) {
-      node.setAttribute('hidden', 'hidden');
-      //node.style.display = 'none';
-    } else {
-      node.removeAttribute('hidden');
-      // node.style.display = '';
-    }
-
-    const children = Array.from(node.children);
-    children.forEach((child) =>
-      this.hideTargetComponents(child as HTMLElement)
-    );
   }
 
   componentWillLoad() {

@@ -9,6 +9,7 @@ import {
   buildSearchStatus,
   buildFacetConditionsManager,
   FacetResultsMustMatch,
+  TabState,
 } from '@coveo/headless';
 import {Component, h, State, Prop, Element} from '@stencil/core';
 import {
@@ -21,6 +22,7 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
+import {shouldDisplayOnCurrentTab} from '../../../../utils/tab-utils';
 import {
   BaseFacet,
   FacetCommon,
@@ -88,16 +90,25 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   @State()
   public searchStatusState!: SearchStatusState;
   @State() public error!: Error;
+  @BindStateToController('tab')
+  @State()
+  public tabState!: TabState;
 
   /**
    * Specifies a unique identifier for the facet.
    */
-  @Prop({mutable: true, reflect: true}) public facetId?: string;
+  @Prop({mutable: true, reflect: true})
+  public facetId?: string;
   /**
    * The non-localized label for the facet.
    * Used in the `atomic-breadbox` component through the bindings store.
    */
   @Prop({reflect: true}) public label = 'no-label';
+
+  /**
+   * The tabs on which to display the facet.
+   */
+  @Prop({reflect: true}) public tabs: string = '';
   /**
    * The field whose values you want to display in the facet.
    */
@@ -231,6 +242,16 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   @AriaLiveRegion('facet-search')
   protected facetSearchAriaMessage!: string;
 
+  public disableFacet() {
+    this.facet.state.enabled = false;
+    this.facet.disable();
+  }
+
+  public enableFacet() {
+    this.facet.state.enabled = true;
+    this.facet.enable();
+  }
+
   public initialize() {
     this.facet = buildFacet(this.bindings.engine, {options: this.facetOptions});
 
@@ -301,6 +322,13 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
     prev: unknown,
     propName: keyof AtomicFacet
   ) {
+    if (this.tabs !== '') {
+      if (shouldDisplayOnCurrentTab(this.tabs, this.bindings.engine.state)) {
+        this.enableFacet();
+      } else {
+        this.disableFacet();
+      }
+    }
     return (
       !this.facetCommon ||
       this.facetCommon?.componentShouldUpdate(
