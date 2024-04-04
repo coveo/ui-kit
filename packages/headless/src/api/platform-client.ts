@@ -24,7 +24,7 @@ function isThrottled(status: number): boolean {
   return status === 429;
 }
 
-export interface PlatformClientCallOptions<T = unknown> {
+export interface PlatformClientCallOptions<T = Record<string, unknown>> {
   origin: PlatformClientOrigin;
   url: string;
   method: HttpMethods;
