@@ -8,6 +8,7 @@ const selectors = {
   radioLabels: 'label.radio-buttons-group__label',
   radioIcons: 'lightning-icon',
   radioContainers: '.slds-button.slds-radio_button.radio-button',
+  radioTooltips: 'c-quantic-tooltip',
 };
 
 const defaultOptionsList = [
@@ -66,7 +67,7 @@ describe('c-quantic-radio-buttons-group', () => {
   });
 
   describe('default rendering options', () => {
-    it('should render correctly with default options, without labels, without icons', async () => {
+    it('should render correctly with default options, without labels, without icons, without tooltips', async () => {
       const minimalOptions = [
         {value: 'value_option1'},
         {value: 'value_option2'},
@@ -112,12 +113,21 @@ describe('c-quantic-radio-buttons-group', () => {
         selectors.radioLabels
       );
       const icons = element.shadowRoot.querySelectorAll(selectors.radioIcons);
+      const tooltips = element.shadowRoot.querySelectorAll(
+        selectors.radioTooltips
+      );
 
       expect(legendElement).not.toBeNull();
       expect(legendElement.textContent).toBe(exampleOptions.legend);
       expect(radioInputs).toHaveLength(defaultOptionsList.length);
       expect(radioLabels).toHaveLength(defaultOptionsList.length);
+      expect(tooltips).toHaveLength(defaultOptionsList.length);
       expect(icons).toHaveLength(0);
+      defaultOptionsList.forEach((option, index) => {
+        expect(radioInputs[index].value).toBe(option.value);
+        expect(radioLabels[index].textContent).toBe(option.label);
+        expect(tooltips[index].textContent).toBe(option.tooltip);
+      });
     });
 
     it('should render correctly with default options', async () => {
