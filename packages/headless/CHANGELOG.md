@@ -1,3 +1,29 @@
+# 2.59.0 (2024-04-03)
+
+### Features
+
+- **headless:** add answerTextIsEmpty to genQA UA stream event ([#3722](https://github.com/coveo/ui-kit/issues/3722)) ([56e4318](https://github.com/coveo/ui-kit/commits/56e431886cdfc841cdf24885b50d21ade4c4295a))
+- **headless:** case assist analytics migrated to the event protocol ([#3742](https://github.com/coveo/ui-kit/issues/3742)) ([dd22a28](https://github.com/coveo/ui-kit/commits/dd22a282844e1de2a7787c29c92ad8c80663f8a7))
+- **headless:** started using the execute search action compatible with the new event protocol in all the insight controllers ([#3743](https://github.com/coveo/ui-kit/issues/3743)) ([1c4cb07](https://github.com/coveo/ui-kit/commits/1c4cb07a3313899677c9380076b0105ecf71e333)), closes [#3678](https://github.com/coveo/ui-kit/issues/3678)
+
+## 2.58.1 (2024-03-27)
+
+### Bug Fixes
+
+- **deps:** update dependency @reduxjs/toolkit to v2.2.2 j:kit-282 ([#3744](https://github.com/coveo/ui-kit/issues/3744)) ([5385009](https://github.com/coveo/ui-kit/commits/5385009e24fb718e884d8f90eb2f50481f1d7ce5))
+
+# 2.58.0 (2024-03-25)
+
+### Bug Fixes
+
+- **commerce:** replace barrel import with proper import ([#3729](https://github.com/coveo/ui-kit/issues/3729)) ([8f4d68d](https://github.com/coveo/ui-kit/commits/8f4d68d7a54d6aa539ed85b7fd0516c123097eb7))
+
+### Features
+
+- **commerce:** add commerce category facets ([#3495](https://github.com/coveo/ui-kit/issues/3495)) ([138a8b1](https://github.com/coveo/ui-kit/commits/138a8b184d07073103c83607c7aa4d7e6f05e2cd))
+- **headless:** add isAnswerGenerated to the state ([#3740](https://github.com/coveo/ui-kit/issues/3740)) ([940e661](https://github.com/coveo/ui-kit/commits/940e6611a38bf1c640ac780276b485be3f17520a))
+- **headless:** added the analytics section in the search requests made in the insight use case ([#3726](https://github.com/coveo/ui-kit/issues/3726)) ([55fc157](https://github.com/coveo/ui-kit/commits/55fc157acf743e66aaa4490be888365668aa5ea7))
+
 ## 2.57.1 (2024-03-20)
 
 ### Bug Fixes

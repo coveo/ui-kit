@@ -285,7 +285,7 @@ describe('generated answer analytics actions', () => {
     });
 
     [false, true].map((answerGenerated) => {
-      it(`should log #logGeneratedAnswerStreamEnd with ${answerGenerated ? 'generated' : 'not generated'} answer`, async () => {
+      it(`should log #logGeneratedAnswerStreamEnd with ${answerGenerated ? 'generated' : 'not generated'} and 'empty' answer`, async () => {
         await logGeneratedAnswerStreamEnd(answerGenerated)()(
           engine.dispatch,
           () => engine.state,
@@ -298,9 +298,44 @@ describe('generated answer analytics actions', () => {
         expect(mockToUse).toHaveBeenCalledWith({
           generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
           answerGenerated,
+          answerTextIsEmpty: answerGenerated || undefined,
         });
         expect(mockLogFunction).toHaveBeenCalledTimes(1);
       });
+    });
+
+    it("should log #logGeneratedAnswerStreamEnd with 'non empty' answer", async () => {
+      const newEngine = buildMockSearchEngine(
+        createMockState({
+          configuration: {
+            ...getConfigurationInitialState(),
+            analytics: {
+              ...getConfigurationInitialState().analytics,
+              analyticsMode: 'legacy',
+            },
+          },
+          search: searchState,
+          generatedAnswer: {
+            ...generatedAnswerState,
+            answer: 'generated answer',
+          },
+        })
+      );
+      await logGeneratedAnswerStreamEnd(true)()(
+        newEngine.dispatch,
+        () => newEngine.state,
+        {} as ThunkExtraArguments
+      );
+
+      const mockToUse = mockMakeGeneratedAnswerStreamEnd;
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith({
+        generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
+        answerGenerated: true,
+        answerTextIsEmpty: false,
+      });
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
 
     it('should log #logGeneratedAnswerShowAnswers with the right payload', async () => {

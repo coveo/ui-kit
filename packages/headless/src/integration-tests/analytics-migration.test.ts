@@ -126,13 +126,13 @@ const legacySearchEngine = buildSearchEngine({
   },
 });
 
-function assertNextEqualsLegacy(call: jest.SpyInstance) {
+export function assertNextEqualsLegacy(call: jest.SpyInstance) {
   expect(extractAndExcludeProperties(call, 0)).toEqual(
     extractAndExcludeProperties(call, 1)
   );
 }
 
-function extractAndExcludeProperties(
+export function extractAndExcludeProperties(
   call: jest.SpyInstance,
   callIndex: number
 ): Record<string, unknown> {

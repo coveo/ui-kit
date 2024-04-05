@@ -1,5 +1,5 @@
 import {RecordValue, Schema, SchemaDefinition} from '@coveo/bueno';
-import {AnyAction, AsyncThunkAction} from '@reduxjs/toolkit';
+import {AnyAction} from '@reduxjs/toolkit';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {Parameters} from '../../../../features/commerce/search-parameters/search-parameter-actions';
 import {deepEqualAnyOrder} from '../../../../utils/compare-utils';
@@ -8,6 +8,7 @@ import {
   buildController,
   Controller,
 } from '../../../controller/headless-controller';
+import {FetchResultsActionCreator} from '../common';
 
 export interface ParameterManagerProps<T extends Parameters> {
   /**
@@ -36,8 +37,7 @@ export interface CoreParameterManagerProps<T extends Parameters>
   /**
    * The action to dispatch to fetch more results.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  fetchResultsActionCreator: () => AsyncThunkAction<unknown, void, any>;
+  fetchResultsActionCreator: FetchResultsActionCreator;
 
   /**
    * Enriches the parameters with the active parameters.
