@@ -55,7 +55,7 @@
     "@stencil/core": "4.13.0",
     "@stencil/store": "2.0.14",
     "dayjs": "1.11.10",
-    "dompurify": "3.0.9",
+    "dompurify": "3.0.11",
     "escape-html": "1.0.3",
     "focus-visible": "5.2.0",
     "i18next": "23.10.1",
@@ -64,7 +64,7 @@
     "ts-debounce": "^4.0.0"
   },
   "devDependencies": {
-    "@babel/core": "7.24.0",
+    "@babel/core": "7.24.4",
     "@coveo/release": "1.0.0",
     "@coveo/headless": "2.59.0",
     "@fullhuman/postcss-purgecss": "5.0.0",
@@ -76,12 +76,12 @@
     "@types/dompurify": "3.0.5",
     "@types/escape-html": "1.0.4",
     "@types/jest": "29.5.12",
-    "@types/lodash": "4.14.202",
+    "@types/lodash": "4.17.0",
     "@types/postcss-import": "14.0.3",
     "@types/puppeteer": "5.4.7",
-    "autoprefixer": "10.4.18",
-    "axe-core": "4.8.4",
-    "cypress": "13.6.6",
+    "autoprefixer": "10.4.19",
+    "axe-core": "4.9.0",
+    "cypress": "13.7.2",
     "cypress-axe": "1.5.0",
     "cypress-repeat": "2.3.4",
     "cypress-split": "1.5.0",
@@ -94,13 +94,13 @@
     "lodash": "4.17.21",
     "ncp": "2.0.0",
     "postcss-focus-visible": "9.0.1",
-    "postcss-import": "16.0.1",
+    "postcss-import": "16.1.0",
     "postcss-mixins": "10.0.0",
     "postcss-nested": "6.0.1",
-    "puppeteer": "22.4.1",
+    "puppeteer": "22.6.3",
     "rollup-plugin-html": "0.2.1",
-    "tailwindcss": "3.4.1",
-    "typescript": "5.3.3"
+    "tailwindcss": "3.4.3",
+    "typescript": "5.4.4"
   },
   "peerDependencies": {
     "@coveo/headless": "2.59.0"
