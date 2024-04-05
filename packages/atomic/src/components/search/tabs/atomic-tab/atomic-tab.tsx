@@ -10,14 +10,14 @@ import {
   Method,
   State,
 } from '@stencil/core';
-import {AtomicInsightStore} from '../../../components';
+import {AtomicInsightStore} from '../../../../components';
 import {
   BindStateToController,
   InitializeBindings,
-} from '../../../utils/initialization-utils';
-import {Button} from '../../common/button';
-import {CommonBindings} from '../../common/interface/bindings';
-import {dispatchTabLoaded} from '../../common/tabs/tab-common';
+} from '../../../../utils/initialization-utils';
+import {Button} from '../../../common/button';
+import {CommonBindings} from '../../../common/interface/bindings';
+import {dispatchTabLoaded} from '../../../common/tabs/tab-common';
 
 export interface Tab extends Controller {
   /**
@@ -53,8 +53,7 @@ export class AtomicTab {
   label!: string;
   @Prop()
   name!: string;
-  @Prop()
-  pipeline!: string;
+
   @Prop() isActive: boolean = false;
 
   @Event()
