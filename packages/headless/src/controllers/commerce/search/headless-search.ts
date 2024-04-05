@@ -6,6 +6,7 @@ import {LegacySearchAction} from '../../../features/analytics/analytics-utils';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
 import {executeSearch} from '../../../features/commerce/search/search-actions';
+import {responseIdSelector} from '../../../features/commerce/search/search-selectors';
 import {commerceSearchReducer as commerceSearch} from '../../../features/commerce/search/search-slice';
 import {loadReducerError} from '../../../utils/errors';
 import {
@@ -16,7 +17,6 @@ import {
   buildSolutionTypeSubControllers,
   SolutionTypeSubControllers,
 } from '../core/sub-controller/headless-sub-controller';
-import {responseIdSelector} from './headless-search-selectors';
 
 export interface Search extends Controller, SolutionTypeSubControllers {
   /**

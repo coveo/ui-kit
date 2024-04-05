@@ -4,6 +4,7 @@ import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
 import {fetchProductListing} from '../../../features/commerce/product-listing/product-listing-actions';
+import {responseIdSelector} from '../../../features/commerce/product-listing/product-listing-selectors';
 import {productListingV2Reducer as productListing} from '../../../features/commerce/product-listing/product-listing-slice';
 import {loadReducerError} from '../../../utils/errors';
 import {
@@ -14,7 +15,6 @@ import {
   buildSolutionTypeSubControllers,
   SolutionTypeSubControllers,
 } from '../core/sub-controller/headless-sub-controller';
-import {responseIdSelector} from './headless-product-listing-selectors';
 
 /**
  * The `ProductListing` controller exposes a method for retrieving product listing content in a commerce interface.
