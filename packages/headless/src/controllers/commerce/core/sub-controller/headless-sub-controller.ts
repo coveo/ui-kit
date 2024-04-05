@@ -1,4 +1,7 @@
-import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
+import {
+  CommerceEngine,
+  CommerceEngineState,
+} from '../../../../app/commerce-engine/commerce-engine';
 import {
   buildCoreInteractiveResult,
   InteractiveResult,
@@ -10,7 +13,7 @@ export interface SolutionTypeSubControllers {
 }
 
 interface SubControllerProps {
-  responseIdSelector: () => string;
+  responseIdSelector: (state: CommerceEngineState) => string;
 }
 
 export function buildSolutionTypeSubControllers(

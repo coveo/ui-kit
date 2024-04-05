@@ -16,6 +16,7 @@ import {
   buildSolutionTypeSubControllers,
   SolutionTypeSubControllers,
 } from '../core/sub-controller/headless-sub-controller';
+import {responseIdSelector} from './headless-search-selectors';
 
 export interface Search extends Controller, SolutionTypeSubControllers {
   /**
@@ -45,7 +46,7 @@ export function buildSearch(engine: CommerceEngine): Search {
   const {dispatch} = engine;
   const getState = () => engine.state;
   const subControllers = buildSolutionTypeSubControllers(engine, {
-    responseIdSelector: () => getState().commerceSearch.responseId,
+    responseIdSelector,
   });
 
   return {
@@ -59,7 +60,7 @@ export function buildSearch(engine: CommerceEngine): Search {
     // eslint-disable-next-line @cspell/spellchecker
     // TODO CAPI-244: Handle analytics
     executeFirstSearch() {
-      const firstSearchExecuted = engine.state.commerceSearch.responseId !== '';
+      const firstSearchExecuted = responseIdSelector(engine.state) !== '';
 
       if (firstSearchExecuted) {
         return;

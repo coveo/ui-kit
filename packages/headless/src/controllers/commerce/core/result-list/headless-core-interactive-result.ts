@@ -1,5 +1,8 @@
 import {Product} from '@coveo/relay-event-types';
-import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
+import {
+  CommerceEngine,
+  CommerceEngineState,
+} from '../../../../app/commerce-engine/commerce-engine';
 import {productClick} from '../../../../features/commerce/context/product/product-actions';
 import {
   buildInteractiveResultCore,
@@ -30,7 +33,7 @@ export interface InteractiveResultCoreProps
   /**
    * The selector to fetch the response id from the state.
    */
-  responseIdSelector: () => string;
+  responseIdSelector: (state: CommerceEngineState) => string;
 }
 
 export type InteractiveResultProps = Omit<
@@ -65,7 +68,7 @@ export function buildCoreInteractiveResult(
       productClick({
         product: props.options.product,
         position: props.options.position,
-        responseId: props.responseIdSelector(),
+        responseId: props.responseIdSelector(engine.state),
       })
     );
   };

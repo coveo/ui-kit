@@ -14,6 +14,7 @@ import {
   buildSolutionTypeSubControllers,
   SolutionTypeSubControllers,
 } from '../core/sub-controller/headless-sub-controller';
+import {responseIdSelector} from './headless-product-listing-selectors';
 
 /**
  * The `ProductListing` controller exposes a method for retrieving product listing content in a commerce interface.
@@ -54,7 +55,7 @@ export function buildProductListing(engine: CommerceEngine): ProductListing {
   const {dispatch} = engine;
   const getState = () => engine.state;
   const subControllers = buildSolutionTypeSubControllers(engine, {
-    responseIdSelector: () => getState().productListing.responseId,
+    responseIdSelector,
   });
 
   return {
