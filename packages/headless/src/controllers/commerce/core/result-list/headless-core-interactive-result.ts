@@ -18,7 +18,7 @@ export interface InteractiveResultOptions extends InteractiveResultCoreOptions {
   product: Product;
 
   /**
-   * The product's position across the entire non-paginated response, using a 1-based index.
+   * The 1-based product's position across the non-paginated result set.
    */
   position: number;
 }
