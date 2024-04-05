@@ -1,5 +1,3 @@
-import {configuration} from '../../../app/common-reducers';
-import {contextReducer} from '../../../features/commerce/context/context-slice';
 import {fetchRecommendations} from '../../../features/commerce/recommendations/recommendations-actions';
 import {recommendationsReducer} from '../../../features/commerce/recommendations/recommendations-slice';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state';
@@ -28,8 +26,6 @@ describe('headless recommendations', () => {
   it('adds the correct reducers to engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       recommendations: recommendationsReducer,
-      commerceContext: contextReducer,
-      configuration,
     });
   });
 

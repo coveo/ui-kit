@@ -69,10 +69,9 @@ export const buildBaseCommerceAPIRequest = async (
 export const buildCommerceAPIRequest = async (
   state: StateNeededByQueryCommerceAPI
 ): Promise<CommerceAPIRequest> => {
-  const facets = getFacets(state);
   return {
-    ...buildBaseCommerceAPIRequest(state),
-    facets,
+    ...(await buildBaseCommerceAPIRequest(state)),
+    facets: getFacets(state),
     ...(state.commerceSort && {
       sort: getSort(state.commerceSort.appliedSort),
     }),
