@@ -62,7 +62,12 @@ export const buildBaseCommerceAPIRequest = async (
       view,
       cart: state.cart.cartItems.map((id) => state.cart.cart[id]),
     },
-    ...(state.commercePagination && {page: state.commercePagination.page}),
+    ...(state.commercePagination && {
+      page: state.commercePagination.page,
+      ...(state.commercePagination.perPage && {
+        perPage: state.commercePagination.perPage,
+      }),
+    }),
   };
 };
 
@@ -71,7 +76,7 @@ export const buildCommerceAPIRequest = async (
 ): Promise<CommerceAPIRequest> => {
   const facets = getFacets(state);
   return {
-    ...buildBaseCommerceAPIRequest(state),
+    ...(await buildBaseCommerceAPIRequest(state)),
     facets,
     ...(state.commerceSort && {
       sort: getSort(state.commerceSort.appliedSort),
