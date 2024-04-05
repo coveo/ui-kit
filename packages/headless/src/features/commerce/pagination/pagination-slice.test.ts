@@ -12,7 +12,12 @@ import {
 import {setContext, setUser, setView} from '../context/context-actions';
 import {fetchProductListing} from '../product-listing/product-listing-actions';
 import {executeSearch} from '../search/search-actions';
-import {nextPage, previousPage, selectPage} from './pagination-actions';
+import {
+  nextPage,
+  previousPage,
+  selectPage,
+  setPageSize,
+} from './pagination-actions';
 import {paginationReducer} from './pagination-slice';
 import {
   CommercePaginationState,
@@ -89,6 +94,13 @@ describe('pagination slice', () => {
     const finalState = paginationReducer(state, previousPage());
 
     expect(finalState.page).toBe(0);
+  });
+
+  it('#setPageSize sets the page size', () => {
+    const pageSize = 17;
+    const finalState = paginationReducer(state, setPageSize(pageSize));
+
+    expect(finalState.perPage).toBe(pageSize);
   });
 
   it('sets the pagination on #fetchProductListing.fulfilled', () => {

@@ -11,7 +11,12 @@ import {
 import {setContext, setUser, setView} from '../context/context-actions';
 import {fetchProductListing} from '../product-listing/product-listing-actions';
 import {executeSearch} from '../search/search-actions';
-import {nextPage, previousPage, selectPage} from './pagination-actions';
+import {
+  nextPage,
+  previousPage,
+  selectPage,
+  setPageSize,
+} from './pagination-actions';
 import {
   CommercePaginationState,
   getCommercePaginationInitialState,
@@ -35,6 +40,9 @@ export const paginationReducer = createReducer(
         if (action.payload >= 0 && action.payload < state.totalPages) {
           state.page = action.payload;
         }
+      })
+      .addCase(setPageSize, (state, action) => {
+        state.perPage = action.payload;
       })
       .addCase(
         fetchProductListing.fulfilled,

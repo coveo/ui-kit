@@ -1,14 +1,17 @@
+import {NumberValue, Schema} from '@coveo/bueno';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {
   nextPage,
-  selectPage,
   previousPage,
+  selectPage,
+  setPageSize,
 } from '../../../../features/commerce/pagination/pagination-actions';
 import {paginationReducer as commercePagination} from '../../../../features/commerce/pagination/pagination-slice';
 import {loadReducerError} from '../../../../utils/errors';
+import {validateOptions} from '../../../../utils/validate-payload';
 import {
-  Controller,
   buildController,
+  Controller,
 } from '../../../controller/headless-controller';
 import {FetchResultsActionCreator} from '../common';
 
@@ -34,6 +37,13 @@ export interface Pagination extends Controller {
   previousPage(): void;
 
   /**
+   * Sets the page size.
+   *
+   * @param pageSize - The page size.
+   */
+  setPageSize(pageSize: number): void;
+
+  /**
    * A scoped and simplified part of the headless state that is relevant to the `Pagination` controller.
    */
   state: PaginationState;
@@ -46,17 +56,30 @@ export interface PaginationState {
   totalPages: number;
 }
 
-export type PaginationControllerState = Pagination['state'];
+export interface PaginationOptions {
+  pageSize: number;
+}
 
 export interface CorePaginationProps {
   fetchResultsActionCreator: FetchResultsActionCreator;
+  options?: PaginationOptions;
 }
+
+export type PaginationProps = Omit<
+  CorePaginationProps,
+  'fetchResultsActionCreator'
+>;
+
+const optionsSchema = new Schema({
+  pageSize: new NumberValue({min: 0, required: false}),
+});
 
 /**
  * @internal
  * Creates a `Pagination` controller instance.
  *
  * @param engine - The headless commerce engine.
+ * @param props - The configurable `Pagination` controller properties.
  * @returns A `Pagination` controller instance.
  * */
 export function buildCorePagination(
@@ -66,8 +89,15 @@ export function buildCorePagination(
   if (!loadPaginationReducers(engine)) {
     throw loadReducerError;
   }
+
   const controller = buildController(engine);
   const {dispatch} = engine;
+
+  validateOptions(engine, optionsSchema, props.options, 'buildCorePagination');
+
+  if (props.options?.pageSize) {
+    dispatch(setPageSize(props.options.pageSize));
+  }
 
   const getState = () => {
     return engine.state.commercePagination;
@@ -92,6 +122,11 @@ export function buildCorePagination(
 
     previousPage() {
       dispatch(previousPage());
+      dispatch(props.fetchResultsActionCreator());
+    },
+
+    setPageSize(pageSize: number) {
+      dispatch(setPageSize(pageSize));
       dispatch(props.fetchResultsActionCreator());
     },
   };

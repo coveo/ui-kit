@@ -4,15 +4,16 @@ import {validatePayload} from '../../../utils/validate-payload';
 
 const numberValue = new NumberValue({required: true, min: 0});
 
-export const selectPage = createAction(
-  'commerce/productListing/pagination/selectPage',
+export const setPageSize = createAction(
+  'commerce/pagination/setPageSize',
   (payload: number) => validatePayload(payload, numberValue)
 );
 
-export const nextPage = createAction(
-  'commerce/productListing/pagination/nextPage'
+export const selectPage = createAction(
+  'commerce/pagination/selectPage',
+  (payload: number) => validatePayload(payload, numberValue)
 );
 
-export const previousPage = createAction(
-  'commerce/productListing/pagination/previousPage'
-);
+export const nextPage = createAction('commerce/pagination/nextPage');
+
+export const previousPage = createAction('commerce/pagination/previousPage');
