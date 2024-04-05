@@ -1,16 +1,23 @@
 import {SearchParametersState} from '@coveo/headless';
 
-export function getActiveTab(state: Partial<SearchParametersState>) {
+export function getActiveTab(
+  state: Partial<SearchParametersState>
+): {tab: string} | null {
   const activeTab = Object.values(state.tabSet ?? {}).find(
     (tab) => tab.isActive
   );
-  return activeTab ? {tab: activeTab.id} : {};
+  return activeTab ? {tab: activeTab.id} : null;
 }
 
 export function shouldDisplayOnCurrentTab(
   tabs: string,
   state: Partial<SearchParametersState>
 ) {
+  const activeTab = getActiveTab(state)?.tab;
+  if (!activeTab) {
+    return true;
+  }
+
   const tabList = tabs.split(';');
   const includeTabs: (string | undefined)[] = [];
   const excludeTabs: (string | undefined)[] = [];
@@ -22,7 +29,6 @@ export function shouldDisplayOnCurrentTab(
       includeTabs.push(tab);
     }
   });
-  const activeTab = getActiveTab(state).tab;
 
   const isIncluded =
     includeTabs.length === 0 || includeTabs.includes(activeTab);

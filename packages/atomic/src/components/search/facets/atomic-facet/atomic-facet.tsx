@@ -322,13 +322,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
     prev: unknown,
     propName: keyof AtomicFacet
   ) {
-    if (this.tabs !== '') {
-      if (shouldDisplayOnCurrentTab(this.tabs, this.bindings.engine.state)) {
-        this.enableFacet();
-      } else {
-        this.disableFacet();
-      }
-    }
+    this.updateFacetsForActiveTab();
     return (
       !this.facetCommon ||
       this.facetCommon?.componentShouldUpdate(
@@ -337,6 +331,16 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
         propName
       )
     );
+  }
+
+  private updateFacetsForActiveTab() {
+    if (this.tabs !== '') {
+      if (shouldDisplayOnCurrentTab(this.tabs, this.bindings.engine.state)) {
+        this.enableFacet();
+      } else {
+        this.disableFacet();
+      }
+    }
   }
 
   public render() {

@@ -1855,11 +1855,6 @@ export namespace Components {
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
           * @param resultRenderingFunction
          */
-        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
-        /**
-          * The tabs on which to display the result list.
-         */
-        "tabs": string;
         "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
     }
     /**
@@ -2484,7 +2479,6 @@ export namespace Components {
         "isActive": boolean;
         "label": string;
         "name": string;
-        "pipeline": string;
         /**
           * Activates the tab.
          */
@@ -6087,7 +6081,7 @@ declare namespace LocalJSX {
         /**
           * The expected size of the image displayed in the results.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize"?: ItemDisplayImageSize;
     }
     /**
      * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
@@ -6703,7 +6697,6 @@ declare namespace LocalJSX {
         "label": string;
         "name": string;
         "onTabClick"?: (event: AtomicTabCustomEvent<any>) => void;
-        "pipeline": string;
     }
     interface AtomicTabSection {
     }
