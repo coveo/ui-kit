@@ -7,6 +7,7 @@ import {
   buildResultsPerPage,
   buildInteractiveResult,
   Result,
+  TabState,
 } from '@coveo/headless';
 import {Component, Element, State, Prop, Method, h} from '@stencil/core';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
@@ -39,6 +40,7 @@ import {
   getItemListDisplayClasses,
 } from '../../../common/layout/display-options';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import TabVisibilityWrapper from '../../tabs/tabs-common';
 
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
@@ -80,10 +82,17 @@ export class AtomicResultList implements InitializableComponent {
   @BindStateToController('resultsPerPage')
   @State()
   private resultsPerPageState!: ResultsPerPageState;
+  @BindStateToController('tab')
+  @State()
+  public tabState!: TabState;
   @State() private resultTemplateRegistered = false;
   @State() public error!: Error;
   @State() private templateHasError = false;
 
+  /**
+   * The tabs on which to display the result list.
+   */
+  @Prop({reflect: true}) public tabs: string = '';
   /**
    * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
    */
@@ -167,33 +176,38 @@ export class AtomicResultList implements InitializableComponent {
     const listClasses = this.computeListDisplayClasses();
 
     return (
-      <ItemListGuard
-        hasError={this.resultListState.hasError}
-        hasTemplate={this.resultTemplateRegistered}
-        templateHasError={this.itemTemplateProvider.hasError}
-        firstRequestExecuted={this.resultListState.firstSearchExecuted}
-        hasItems={this.resultListState.hasResults}
+      <TabVisibilityWrapper
+        tabs={this.tabs}
+        engineState={this.bindings.engine.state}
       >
-        <DisplayWrapper display={this.display} listClasses={listClasses}>
-          <ResultsPlaceholdersGuard
-            density={this.density}
-            display={this.display}
-            imageSize={this.imageSize}
-            displayPlaceholders={!this.bindings.store.isAppLoaded()}
-            numberOfPlaceholders={this.resultsPerPageState.numberOfResults}
-          ></ResultsPlaceholdersGuard>
-          <ItemDisplayGuard
-            firstRequestExecuted={this.resultListState.firstSearchExecuted}
-            hasItems={this.resultListState.hasResults}
-          >
-            {this.display === 'table'
-              ? this.renderAsTable()
-              : this.display === 'grid'
-                ? this.renderAsGrid()
-                : this.renderAsList()}
-          </ItemDisplayGuard>
-        </DisplayWrapper>
-      </ItemListGuard>
+        <ItemListGuard
+          hasError={this.resultListState.hasError}
+          hasTemplate={this.resultTemplateRegistered}
+          templateHasError={this.itemTemplateProvider.hasError}
+          firstRequestExecuted={this.resultListState.firstSearchExecuted}
+          hasItems={this.resultListState.hasResults}
+        >
+          <DisplayWrapper display={this.display} listClasses={listClasses}>
+            <ResultsPlaceholdersGuard
+              density={this.density}
+              display={this.display}
+              imageSize={this.imageSize}
+              displayPlaceholders={!this.bindings.store.isAppLoaded()}
+              numberOfPlaceholders={this.resultsPerPageState.numberOfResults}
+            ></ResultsPlaceholdersGuard>
+            <ItemDisplayGuard
+              firstRequestExecuted={this.resultListState.firstSearchExecuted}
+              hasItems={this.resultListState.hasResults}
+            >
+              {this.display === 'table'
+                ? this.renderAsTable()
+                : this.display === 'grid'
+                  ? this.renderAsGrid()
+                  : this.renderAsList()}
+            </ItemDisplayGuard>
+          </DisplayWrapper>
+        </ItemListGuard>
+      </TabVisibilityWrapper>
     );
   }
 
