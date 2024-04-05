@@ -13,9 +13,9 @@ runs:
     - run: npx nx run quantic:build
       shell: bash
     - run: |
-        echo "${{ inputs.jwtkey }}" > ${{ env.SFDX_AUTH_JWT_KEY_FILE }}
+        echo "${{ inputs.jwtkey }}" > server.key
         npx --no-install ts-node scripts/build/deploy-community.ts --ci
-        rm ${{ env.SFDX_AUTH_JWT_KEY_FILE }}
+        rm server.key
       shell: bash
       working-directory: ./packages/quantic
       env:
