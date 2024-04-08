@@ -1,6 +1,7 @@
 import {
   BaseParam,
   ContextParam,
+  DictionaryFieldContextParam,
   LocaleParam,
   NumberOfResultsParam,
   VisitorIDParam,
@@ -25,6 +26,7 @@ export type RecommendationRequest = BaseParam &
   SearchHubParam &
   PipelineParam &
   ContextParam &
+  DictionaryFieldContextParam &
   FieldsToIncludeParam &
   AdvancedQueryParam &
   ConstantQueryParam &
