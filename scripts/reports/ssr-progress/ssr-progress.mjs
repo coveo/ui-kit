@@ -34,6 +34,8 @@ function prepareData(parsed_doc) {
   let rows = [];
   let logs = [];
   parsed_doc.forEach((useCase) => {
+    if (useCase.name.startsWith('ssr-')) return;
+
     const ssrUseCase = parsed_doc.find(
       (ssrUseCase) => ssrUseCase.name === 'ssr-' + useCase.name
     );
