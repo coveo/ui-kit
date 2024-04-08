@@ -7,11 +7,14 @@ import {Pagination} from './pagination';
 import {Product} from './product';
 import {Sort} from './sort';
 
-export interface CommerceSuccessResponse {
+export interface BaseCommerceSuccessResponse {
   responseId: string;
   products: Product[];
-  facets: AnyFacetResponse[];
   pagination: Pagination;
+}
+
+export interface CommerceSuccessResponse extends BaseCommerceSuccessResponse {
+  facets: AnyFacetResponse[];
   sort: Sort;
 }
 

@@ -1,3 +1,21 @@
+# 2.48.0 (2024-04-03)
+
+### Features
+
+- **headless:** case assist analytics migrated to the event protocol ([#3742](https://github.com/coveo/ui-kit/issues/3742)) ([dd22a28](https://github.com/coveo/ui-kit/commits/dd22a282844e1de2a7787c29c92ad8c80663f8a7))
+
+## 2.47.1 (2024-03-27)
+
+### Bug Fixes
+
+- **quantic:** avoid pushing to recent results when use case is not search ([#3731](https://github.com/coveo/ui-kit/issues/3731)) ([5166de0](https://github.com/coveo/ui-kit/commits/5166de06911ce737f191cce1c34ff6e38d2cef57))
+
+# 2.47.0 (2024-03-25)
+
+### Features
+
+- **quantic:** disclaimer message for rga ([#3739](https://github.com/coveo/ui-kit/issues/3739)) ([a085429](https://github.com/coveo/ui-kit/commits/a0854298b7e78dec6e4a301f3912e3d00c5a8e05))
+
 ## 2.46.11 (2024-03-20)
 
 ### Bug Fixes

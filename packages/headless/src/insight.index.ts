@@ -327,7 +327,7 @@ export type {GeneratedAnswerStyle} from './features/generated-answer/generated-r
 export type {
   ResultTemplate,
   ResultTemplateCondition,
-} from './features/result-templates/result-templates';
+} from './features/result-templates/result-templates-manager';
 export type {ResultTemplatesManager} from './features/result-templates/result-templates-manager';
 export {buildResultTemplatesManager} from './features/result-templates/result-templates-manager';
 export {ResultTemplatesHelpers} from './features/result-templates/result-templates-helpers';
