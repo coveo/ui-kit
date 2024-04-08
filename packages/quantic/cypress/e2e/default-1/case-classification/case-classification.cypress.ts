@@ -1640,18 +1640,6 @@ describe('quantic-case-classification', () => {
         Expect.numberOfInlineOptions(0);
         Expect.displaySelectInput(true);
       });
-
-      // scope('when selecting an option from the select input', () => {
-      //   const clickedIndex = 3;
-
-      //   Actions.openSelectInput();
-      //   Actions.clickSelectOption(clickedIndex);
-      //   Expect.logUpdatedClassificationFromSelectOption(
-      //     coveoDefaultField,
-      //     clickedIndex
-      //   );
-      //   Expect.correctValue(allOptions[clickedIndex].value);
-      // });
     });
 
     it('should render an error message when maxSuggestion is inferior to 0', () => {
