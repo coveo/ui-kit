@@ -128,6 +128,28 @@ const browserUmd = Object.entries(useCaseEntries).map((entry) => {
   );
 });
 
+const quanticUmd = Object.entries(useCaseEntries).map((entry) => {
+  const [useCase, entryPoint] = entry;
+  const outDir = getUseCaseDir('dist/quantic/', useCase);
+  const outfile = `${outDir}/headless.js`;
+
+  const globalName = getUmdGlobalName(useCase);
+
+  return buildBrowserConfig(
+    {
+      entryPoints: [entryPoint],
+      outfile,
+      format: 'cjs',
+      banner: {
+        js: `${base.banner.js}`,
+      },
+      inject: ['ponyfills/abortable-fetch-shim.js'],
+      plugins: [umdWrapper({libraryName: globalName})],
+    },
+    outDir
+  );
+});
+
 /**
  * @param {string} moduleName
  */
@@ -262,6 +284,7 @@ async function main() {
     ...browserEsmForAtomicDevelopment,
     ...nodeEsm,
     ...nodeCjs,
+    ...quanticUmd,
   ]);
   await Promise.all(adjustRequireImportsInNodeEsmBundles());
 }
