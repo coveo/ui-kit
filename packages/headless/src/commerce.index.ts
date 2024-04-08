@@ -51,6 +51,12 @@ export type {
 export {buildProductListing} from './controllers/commerce/product-listing/headless-product-listing';
 
 export type {
+  Recommendations,
+  RecommendationsState,
+} from './controllers/commerce/recommendations/headless-recommendations';
+export {buildRecommendations} from './controllers/commerce/recommendations/headless-recommendations';
+
+export type {
   Pagination,
   PaginationState,
   PaginationControllerState,
@@ -151,3 +157,12 @@ export type {
   ProductTemplatesManager,
 } from './features/commerce/product-templates/product-templates-manager';
 export {buildProductTemplatesManager} from './features/commerce/product-templates/product-templates-manager';
+
+export type {
+  BreadcrumbManager,
+  Breadcrumb,
+  BreadcrumbValue,
+  DeselectableValue,
+} from './controllers/commerce/core/breadcrumb-manager/headless-core-breadcrumb-manager';
+export {buildProductListingBreadcrumbManager} from './controllers/commerce/product-listing/breadcrumb-manager/headless-product-listing-breadcrumb-manager';
+export {buildSearchBreadcrumbManager} from './controllers/commerce/search/breadcrumb-manager/headless-search-breadcrumb-manager';

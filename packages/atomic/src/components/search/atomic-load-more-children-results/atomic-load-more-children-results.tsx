@@ -3,14 +3,14 @@ import {Component, Element, h, Prop, State} from '@stencil/core';
 import {buildCustomEvent} from '../../../utils/event-utils';
 import {InitializeBindings} from '../../../utils/initialization-utils';
 import {Button} from '../../common/button';
-import {getResultDisplayClasses} from '../../common/layout/display-options';
-import {FoldedResultListStateContext} from '../../common/result-list/result-list-decorators';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {
   DisplayConfig,
-  ResultContext,
-  ResultDisplayConfigContext,
-} from '../result-template-components/result-template-decorators';
+  ItemDisplayConfigContext,
+} from '../../common/item-list/item-decorators';
+import {FoldedItemListStateContext} from '../../common/item-list/item-list-decorators';
+import {getItemDisplayClasses} from '../../common/layout/display-options';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {ResultContext} from '../result-template-components/result-template-decorators';
 
 /**
  * The `atomic-load-more-children-results` component allows to load the full collection for a folded result.
@@ -28,11 +28,11 @@ export class AtomicLoadMoreChildrenResults {
   @State() public error!: Error;
   @Element() host!: HTMLElement;
 
-  @FoldedResultListStateContext()
+  @FoldedItemListStateContext()
   @State()
   private foldedResultListState!: FoldedResultListState;
 
-  @ResultDisplayConfigContext()
+  @ItemDisplayConfigContext()
   private displayConfig!: DisplayConfig;
 
   /**
@@ -76,7 +76,7 @@ export class AtomicLoadMoreChildrenResults {
   }
 
   private get wrapperClass() {
-    return getResultDisplayClasses(
+    return getItemDisplayClasses(
       'list',
       this.displayConfig.density,
       this.displayConfig.imageSize

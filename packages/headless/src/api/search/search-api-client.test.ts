@@ -25,6 +25,7 @@ import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {createMockState} from '../../test/mock-state';
 import {PlatformClient, PlatformClientCallOptions} from '../platform-client';
 import {NoopPreprocessRequest} from '../preprocess-request';
+import {QuerySuggestRequest} from './query-suggest/query-suggest-request';
 import {
   isErrorResponse,
   SearchAPIClient,
@@ -307,7 +308,9 @@ describe('search api client', () => {
       searchAPIClient.querySuggest(req);
       const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
 
-      const expectedRequest: PlatformClientCallOptions = {
+      const expectedRequest: PlatformClientCallOptions<
+        Omit<QuerySuggestRequest, 'url' | 'accessToken' | 'organizationId'>
+      > = {
         accessToken: state.configuration.accessToken,
         method: 'POST',
         contentType: 'application/json',
@@ -317,11 +320,19 @@ describe('search api client', () => {
         logger,
         origin: 'searchApiFetch',
         requestParams: {
+          analytics: {
+            capture: state.configuration.analytics.analyticsMode === 'next',
+            clientId: expect.any(String),
+            clientTimestamp: expect.any(String),
+            documentReferrer: state.configuration.analytics.originLevel3,
+            originContext: state.configuration.analytics.originContext,
+          },
           q: state.querySet[id],
           count: state.querySuggest[id]!.count,
           context: state.context.contextValues,
           pipeline: state.pipeline,
           searchHub: state.searchHub,
+          tab: state.configuration.analytics.originLevel2,
           timezone: state.configuration.search.timezone,
           locale: state.configuration.search.locale,
           actionsHistory: expect.any(Array),
