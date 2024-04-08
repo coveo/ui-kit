@@ -11,6 +11,9 @@ const selectors = {
   radioTooltips: 'c-quantic-tooltip',
 };
 
+/**
+ * @type {import('c/quanticRadioButtonsGroup').QuanticRadioButtonsGroupOption[]}
+ */
 const defaultOptionsList = [
   {
     value: 'value_option1',
@@ -73,10 +76,8 @@ describe('c-quantic-radio-buttons-group', () => {
         {value: 'value_option2'},
         {value: 'value_option3'},
       ];
-      // @ts-ignore
       const element = createTestComponent({
         ...exampleOptions,
-        // @ts-ignore
         options: minimalOptions,
       });
       await flushPromises();
@@ -101,7 +102,6 @@ describe('c-quantic-radio-buttons-group', () => {
     });
 
     it('should render correctly with default options, without icons', async () => {
-      // @ts-ignore
       const element = createTestComponent();
       await flushPromises();
 
@@ -135,7 +135,6 @@ describe('c-quantic-radio-buttons-group', () => {
         ...option,
         iconName: `utility:rows`,
       }));
-      // @ts-ignore
       const element = createTestComponent({
         ...exampleOptions,
         options: optionsWithIcons,
@@ -156,13 +155,15 @@ describe('c-quantic-radio-buttons-group', () => {
       expect(radioInputs).toHaveLength(defaultOptionsList.length);
       expect(radioLabels).toHaveLength(defaultOptionsList.length);
       expect(icons).toHaveLength(defaultOptionsList.length);
+      defaultOptionsList.forEach((_, index) => {
+        expect(icons[index].iconName).toBe('utility:rows');
+      });
     });
   });
 
   describe('hideLabels property', () => {
     const labelHiddenClass = 'slds-assistive-text';
     it('should render correctly with hideLabels set to true', async () => {
-      // @ts-ignore
       const element = createTestComponent({
         ...exampleOptions,
         hideLabels: true,
@@ -180,7 +181,6 @@ describe('c-quantic-radio-buttons-group', () => {
     });
 
     it('should render correctly with hideLabels set to false', async () => {
-      // @ts-ignore
       const element = createTestComponent({
         ...exampleOptions,
         hideLabels: false,

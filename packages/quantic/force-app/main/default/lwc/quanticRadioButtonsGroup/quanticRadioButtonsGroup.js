@@ -1,4 +1,4 @@
-import {LightningElement, api, track} from 'lwc';
+import {LightningElement, api} from 'lwc';
 
 /**
  * The `QuanticRadioButtonsGroupOption` type defines the shape of an option
@@ -10,6 +10,12 @@ import {LightningElement, api, track} from 'lwc';
  * @property {String} [tooltip] The tooltip of the option.
  */
 
+/**
+ * The `QuanticRadioButtonsGroup` component displays a group of radio buttons.
+ * @category Internal
+ * @example
+ * <c-quantic-radio-buttons-group options={options} legend="my legend"></c-quantic-radio-buttons-group>
+ */
 export default class QuanticRadioButtonsGroup extends LightningElement {
   /**
    * The value of the label for the Radio Buttons Group.
@@ -55,7 +61,10 @@ export default class QuanticRadioButtonsGroup extends LightningElement {
     }
   }
 
-  @track _value;
+  /**
+   * @type {string}
+   */
+  _value;
 
   /** @type {'xx-small' | 'x-small' | 'small' | 'medium' | 'large'} */
   _iconSize = 'xx-small';
@@ -65,14 +74,14 @@ export default class QuanticRadioButtonsGroup extends LightningElement {
   }
 
   get transformedOptions() {
-    const {options, value} = this;
+    const {options, value: selectedValue} = this;
     if (Array.isArray(options)) {
       return options.map((option, index) => ({
         label: option.label,
         value: option.value,
         iconName: option.iconName,
-        iconVariant: value === option.value ? 'inverse' : '',
-        isChecked: value === option.value,
+        iconVariant: selectedValue === option.value ? 'inverse' : '',
+        isChecked: selectedValue === option.value,
         buttonCSSClass: this.makeRadioButtonCSSClass(option),
         iconCSSClass: this.makeIconCSSClass(option),
         indexId: `radio-${index}`,
@@ -127,7 +136,6 @@ export default class QuanticRadioButtonsGroup extends LightningElement {
         detail: {
           value,
         },
-
         composed: true,
         bubbles: true,
         cancelable: true,

@@ -71,10 +71,8 @@ export default class QuanticGeneratedAnswerRephraseButtons extends LightningElem
 
   get rephraseOptions() {
     return this.options.map((option) => ({
-      value: option.value,
+      ...option,
       label: this.rephraseButtonLabels[option.value],
-      iconName: option.iconName,
-      tooltip: option.tooltip,
     }));
   }
 
@@ -85,11 +83,11 @@ export default class QuanticGeneratedAnswerRephraseButtons extends LightningElem
   handleRephraseChange(event) {
     event.stopPropagation();
     if (!this.isSelected(event.detail.value)) {
-      this.handleRephrase(event.detail.value);
+      this.dispatchRephraseEvent(event.detail.value);
     }
   }
 
-  handleRephrase(optionValue) {
+  dispatchRephraseEvent(optionValue) {
     this.dispatchEvent(
       new CustomEvent('quantic__generatedanswerrephrase', {
         detail: optionValue,
