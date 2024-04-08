@@ -128,19 +128,26 @@ const browserUmd = Object.entries(useCaseEntries).map((entry) => {
   );
 });
 
-const quanticIIFE = Object.entries(useCaseEntries).map((entry) => {
+const quanticUmd = Object.entries(useCaseEntries).map((entry) => {
   const [useCase, entryPoint] = entry;
-  const outDir = getUseCaseDir('dist/quantic', useCase);
-  const outfile = `${outDir}/headless.esm.js`;
+  const outDir = getUseCaseDir('dist/quantic/', useCase);
+  const outfile = `${outDir}/headless.js`;
 
-  let config = {
-    entryPoints: [entryPoint],
-    outfile,
-    format: 'iife',
-    inject: ['ponyfills/abortable-fetch-shim.js'],
-  };
+  const globalName = getUmdGlobalName(useCase);
 
-  return buildBrowserConfig(config, outDir);
+  return buildBrowserConfig(
+    {
+      entryPoints: [entryPoint],
+      outfile,
+      format: 'cjs',
+      banner: {
+        js: `${base.banner.js}`,
+      },
+      inject: ['ponyfills/abortable-fetch-shim.js'],
+      plugins: [umdWrapper({libraryName: globalName})],
+    },
+    outDir
+  );
 });
 
 /**
@@ -277,7 +284,7 @@ async function main() {
     ...browserEsmForAtomicDevelopment,
     ...nodeEsm,
     ...nodeCjs,
-    ...quanticIIFE,
+    ...quanticUmd,
   ]);
   await Promise.all(adjustRequireImportsInNodeEsmBundles());
 }
