@@ -25,7 +25,7 @@ function removeControllersWithNoSSRSupport(useCase) {
 
 function checkControllerDefiner(ssrController, controller) {
   return (
-    ssrController.definer ===
+    ssrController.initializer.name ===
     'define' + controller.initializer.name.substring(5)
   );
 }
@@ -35,7 +35,7 @@ function prepareData(parsed_doc) {
   let logs = [];
   parsed_doc.forEach((useCase) => {
     const ssrUseCase = parsed_doc.find(
-      (ssrUseCase) => ssrUseCase.name === 'ssr.' + useCase.name
+      (ssrUseCase) => ssrUseCase.name === 'ssr-' + useCase.name
     );
     if (ssrUseCase) {
       let counter = 0;
