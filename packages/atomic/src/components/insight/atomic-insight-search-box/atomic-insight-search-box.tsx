@@ -1,10 +1,9 @@
-import {QuerySetActionCreators, Suggestion} from '@coveo/headless';
+import {Suggestion} from '@coveo/headless';
 import {Component, h, Prop, State} from '@stencil/core';
 import {
   buildInsightSearchBox,
   InsightSearchBox,
   InsightSearchBoxState,
-  loadInsightQuerySetActions,
 } from '..';
 import SearchSlimIcon from '../../../images/search-slim.svg';
 import {AriaLiveRegion} from '../../../utils/accessibility-utils';
@@ -15,7 +14,6 @@ import {
 } from '../../../utils/initialization-utils';
 import {encodeForDomAttribute} from '../../../utils/string-utils';
 import {randomID} from '../../../utils/utils';
-import {SearchBoxCommon} from '../../common/search-box/search-box-common';
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {SearchTextArea} from '../../common/search-box/search-text-area';
 import {
@@ -44,15 +42,12 @@ export class AtomicInsightSearchBox {
   private id!: string;
   private textAreaRef!: HTMLTextAreaElement;
   private panelRef: HTMLElement | undefined;
-  private querySetActions!: QuerySetActionCreators;
-  private searchBoxCommon!: SearchBoxCommon;
 
   @BindStateToController('searchBox')
   @State()
   private searchBoxState!: InsightSearchBoxState;
   @State() public error!: Error;
   @State() private suggestedQuery = '';
-  @State() private isExpanded = false;
   @State() private suggestionElements: SearchBoxSuggestionElement[] = [];
   @State() private activeDescendant = '';
 
@@ -74,7 +69,6 @@ export class AtomicInsightSearchBox {
 
   public initialize() {
     this.id = randomID('atomic-search-box-');
-    this.querySetActions = loadInsightQuerySetActions(this.bindings.engine);
 
     const searchBoxOptions = {
       id: this.id,
@@ -93,20 +87,6 @@ export class AtomicInsightSearchBox {
 
     this.searchBox = buildInsightSearchBox(this.bindings.engine, {
       options: searchBoxOptions,
-    });
-
-    this.searchBoxCommon = new SearchBoxCommon({
-      id: this.id,
-      bindings: this.bindings,
-      querySetActions: this.querySetActions,
-      focusValue: this.focusValue.bind(this),
-      clearSuggestions: this.clearSuggestions.bind(this),
-      getIsSearchDisabled: () => this.disableSearch,
-      getIsExpanded: () => this.isExpanded,
-      getPanelInFocus: () => this.panelRef,
-      getActiveDescendant: () => this.activeDescendant,
-      getActiveDescendantElement: () => this.activeDescendantElement,
-      getAllSuggestionElements: () => this.suggestionElements,
     });
   }
 

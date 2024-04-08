@@ -1,5 +1,6 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {VNode} from '@stencil/core';
+import {debounce} from '../../../utils/debounce-utils';
 import {promiseTimeout} from '../../../utils/promise-utils';
 import {
   SearchBoxSuggestionsBindings,
@@ -75,33 +76,100 @@ export interface SearchBoxSuggestions {
   onSuggestedQueryChange?(q: string): Promise<unknown> | void;
 }
 
+interface SearchBoxProps {
+  getSearchBoxValue: () => string;
+  updateQuery: (suggestedQuery: string) => void;
+  getSuggestionTimeout: () => number;
+  getNumberOfSuggestionsToDisplay: () => number;
+  getSuggestionDelay: () => number;
+}
+
 export class SuggestionManager {
+  public suggestions: SearchBoxSuggestions[] = [];
+  public leftSuggestionElements: SearchBoxSuggestionElement[] = [];
+  public rightSuggestionElements: SearchBoxSuggestionElement[] = [];
+  public leftPanel: HTMLElement | undefined = undefined;
+  public rightPanel: HTMLElement | undefined = undefined;
+  public triggerSuggestions: () => Promise<void>;
+
   private queryDataAttribute = 'data-query';
-  private suggestions: SearchBoxSuggestions[] = [];
   private suggestionEvents: SearchBoxSuggestionsEvent[] = [];
   private suggestedQuery = '';
-
   private activeDescendant = '';
-  private activeDescendantElement: HTMLElement | null = null;
   private previousActiveDescendantElement: HTMLElement | null = null;
   private leftSuggestions: SearchBoxSuggestions[] = [];
-  private leftSuggestionElements: SearchBoxSuggestionElement[] = [];
   private rightSuggestions: SearchBoxSuggestions[] = [];
-  private rightSuggestionElements: SearchBoxSuggestionElement[] = [];
-  private leftPanel: HTMLElement | null = null;
-  private rightPanel: HTMLElement | null = null;
 
   constructor(
-    private getSearchBoxValue: () => string,
-    private updateQuery: (suggestedQuery: string) => void,
+    private ownerSearchBoxProps: SearchBoxProps,
     private getIsMobile: () => boolean,
-    private getSuggestionTimeout: () => number,
-    private getNumberOfSuggestionsToDisplay: () => number,
     private logger: Pick<typeof console, 'warn'>
   ) {
-    this.suggestions = this.suggestionEvents.map((event) =>
-      event(this.suggestionBindings)
+    this.triggerSuggestions = debounce(
+      () => this.executeQuerySuggestion(),
+      this.ownerSearchBoxProps.getSuggestionDelay()
     );
+  }
+
+  public get partialSuggestionBindings(): Pick<
+    SearchBoxSuggestionsBindings,
+    | 'suggestedQuery'
+    | 'clearSuggestions'
+    | 'triggerSuggestions'
+    | 'getSuggestions'
+    | 'getSuggestionElements'
+  > {
+    return {
+      suggestedQuery: () => this.suggestedQuery,
+      clearSuggestions: () => this.clearSuggestions(),
+      triggerSuggestions: () => this.triggerSuggestions(),
+      getSuggestions: () => this.suggestions,
+      getSuggestionElements: () => this.allSuggestionElements,
+    };
+  }
+
+  public get activeDescendantElement(): HTMLElement | null {
+    if (!this.hasActiveDescendant) {
+      return null;
+    }
+
+    return (
+      this.leftPanel?.querySelector(`#${this.activeDescendant}`) ||
+      this.leftPanel?.querySelector(`#${this.activeDescendant}`) ||
+      null
+    );
+  }
+
+  public onSubmit() {
+    this.updateActiveDescendant();
+    this.clearSuggestions();
+  }
+
+  public updateActiveDescendant(id = '') {
+    this.activeDescendant = id;
+  }
+
+  public clickOnActiveElement() {
+    this.activeDescendantElement?.click();
+    this.updateActiveDescendant();
+  }
+
+  public isRightPanelInFocus() {
+    return this.panelInFocus === this.rightPanel;
+  }
+
+  public initializeSuggestions(bindings: SearchBoxSuggestionsBindings) {
+    this.suggestions = this.suggestionEvents.map((event) => event(bindings));
+  }
+
+  public registerSuggestions(
+    event: CustomEvent<SearchBoxSuggestionsEvent>,
+    bindings: SearchBoxSuggestionsBindings
+  ) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.suggestionEvents.push(event.detail);
+    this.suggestions.push(event.detail(bindings));
   }
 
   public get isDoubleList() {
@@ -110,15 +178,13 @@ export class SuggestionManager {
     );
   }
 
-  public async triggerSuggestions() {
-    /*if (this.isSearchDisabledForEndUser(this.searchBoxState.value)) {
-      return;
-    }*/
+  private async executeQuerySuggestion() {
+    this.updateActiveDescendant();
     const settled = await Promise.allSettled(
       this.suggestions.map((suggestion) =>
         promiseTimeout(
           suggestion.onInput ? suggestion.onInput() : Promise.resolve(),
-          this.getSuggestionTimeout()
+          this.ownerSearchBoxProps.getSuggestionTimeout()
         )
       )
     );
@@ -177,7 +243,7 @@ export class SuggestionManager {
   }
 
   public clearSuggestions() {
-    this.activeDescendant = '';
+    this.updateActiveDescendant();
     this.clearSuggestionElements();
   }
 
@@ -190,7 +256,7 @@ export class SuggestionManager {
   }
 
   public focusValue(value: HTMLElement) {
-    this.activeDescendant = value.id;
+    this.updateActiveDescendant(value.id);
     this.scrollActiveDescendantIntoView();
     this.updateQueryFromSuggestion();
     //this.updateAriaLiveActiveDescendant(/*value*/);
@@ -203,7 +269,7 @@ export class SuggestionManager {
   ) {
     const thisPanel = side === 'left' ? this.leftPanel : this.rightPanel;
     if (this.panelInFocus === thisPanel) {
-      this.activeDescendant = id;
+      this.updateActiveDescendant(id);
     } else {
       this.updateDescendants(id);
     }
@@ -212,16 +278,48 @@ export class SuggestionManager {
     }
   }
 
+  public onSuggestionClick(item: SearchBoxSuggestionElement, e: Event) {
+    item.onSelect && item.onSelect(e);
+    item.query && this.clearSuggestions();
+  }
+
   public get hasSuggestions() {
     return !!this.allSuggestionElements.length;
   }
 
-  private sortSuggestions(a: SearchBoxSuggestions, b: SearchBoxSuggestions) {
-    return a.position - b.position;
+  public get allSuggestionElements() {
+    return [...this.leftSuggestionElements, ...this.rightSuggestionElements];
   }
 
-  private get allSuggestionElements() {
-    return [...this.leftSuggestionElements, ...this.rightSuggestionElements];
+  public focusPreviousValue() {
+    if (this.firstValue === this.activeDescendantElement) {
+      this.updateActiveDescendant();
+      return;
+    }
+
+    if (!this.hasSuggestions || !this.previousOrLastValue) {
+      return;
+    }
+
+    this.focusValue(this.previousOrLastValue as HTMLElement);
+  }
+
+  private get lastValue() {
+    return this.panelInFocus?.lastElementChild;
+  }
+
+  private get previousOrLastValue() {
+    if (!this.hasActiveDescendant) {
+      return this.lastValue;
+    }
+
+    return (
+      this.activeDescendantElement?.previousElementSibling || this.lastValue
+    );
+  }
+
+  private sortSuggestions(a: SearchBoxSuggestions, b: SearchBoxSuggestions) {
+    return a.position - b.position;
   }
 
   private get hasActiveDescendant() {
@@ -260,8 +358,11 @@ export class SuggestionManager {
     const suggestedQuery = this.activeDescendantElement?.getAttribute(
       this.queryDataAttribute
     );
-    if (suggestedQuery && this.getSearchBoxValue() !== suggestedQuery) {
-      this.updateQuery(suggestedQuery);
+    if (
+      suggestedQuery &&
+      this.ownerSearchBoxProps.getSearchBoxValue() !== suggestedQuery
+    ) {
+      this.ownerSearchBoxProps.updateQuery(suggestedQuery);
       this.updateSuggestedQuery(suggestedQuery);
     }
   }
@@ -274,7 +375,7 @@ export class SuggestionManager {
           suggestion.onSuggestedQueryChange
             ? suggestion.onSuggestedQueryChange(query)
             : Promise.resolve(),
-          this.getSuggestionTimeout()
+          this.ownerSearchBoxProps.getSuggestionTimeout()
         )
       )
     );
@@ -294,7 +395,10 @@ export class SuggestionManager {
     }
   }
 
-  private isPanelInFocus(panel: HTMLElement | null, query: string): boolean {
+  private isPanelInFocus(
+    panel: HTMLElement | undefined,
+    query: string
+  ): boolean {
     if (!this.activeDescendantElement) {
       return false;
     }
@@ -332,7 +436,7 @@ export class SuggestionManager {
       .flat();
 
     const max =
-      this.getNumberOfSuggestionsToDisplay() +
+      this.ownerSearchBoxProps.getNumberOfSuggestionsToDisplay() +
       elements.filter(elementHasNoQuery).length;
 
     return elements.slice(0, max);
@@ -348,21 +452,5 @@ export class SuggestionManager {
     this.leftSuggestionElements = [];
     this.rightSuggestionElements = [];
     //this.searchBoxAriaMessage = '';
-  }
-
-  private get suggestionBindings(): SearchBoxSuggestionsBindings {
-    return {
-      ...this.bindings,
-      id: this.id,
-      isStandalone: !!this.redirectionUrl,
-      searchBoxController: this.searchBox,
-      numberOfQueries: this.numberOfQueries,
-      clearFilters: this.clearFilters,
-      suggestedQuery: () => this.suggestedQuery,
-      clearSuggestions: () => this.suggestionManager.clearSuggestions(),
-      triggerSuggestions: () => this.suggestionManager.triggerSuggestions(),
-      getSuggestions: () => this.suggestions,
-      getSuggestionElements: () => this.allSuggestionElements,
-    };
   }
 }
