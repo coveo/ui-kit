@@ -1,5 +1,4 @@
 import {Schema} from '@coveo/bueno';
-import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {
   buildFieldsSortCriterion,
@@ -21,6 +20,7 @@ import {
   buildController,
   Controller,
 } from '../../../controller/headless-controller';
+import {FetchResultsActionCreator} from '../common';
 
 export type {SortByRelevance, SortByFields, SortByFieldsFields, SortCriterion};
 export {
@@ -38,8 +38,7 @@ export interface SortProps {
 }
 
 export interface CoreSortProps extends SortProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  fetchResultsActionCreator: () => AsyncThunkAction<unknown, void, any>;
+  fetchResultsActionCreator: FetchResultsActionCreator;
 }
 
 export interface SortInitialState {
