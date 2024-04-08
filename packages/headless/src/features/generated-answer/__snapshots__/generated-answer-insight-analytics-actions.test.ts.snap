@@ -7,7 +7,7 @@ exports[`generated answer insight analytics actions when analyticsMode is \`next
     "action": "copyToClipboard",
     "answer": {
       "id": "123",
-      "type": "CRGA",
+      "type": "RGA",
     },
   },
 ]
@@ -19,7 +19,7 @@ exports[`generated answer insight analytics actions when analyticsMode is \`next
   {
     "answer": {
       "id": "123",
-      "type": "CRGA",
+      "type": "RGA",
     },
     "feedback": {
       "liked": false,
@@ -34,7 +34,7 @@ exports[`generated answer insight analytics actions when analyticsMode is \`next
   {
     "answer": {
       "id": "123",
-      "type": "CRGA",
+      "type": "RGA",
     },
     "feedback": {
       "details": "example details",
@@ -52,7 +52,7 @@ exports[`generated answer insight analytics actions when analyticsMode is \`next
     "action": "hide",
     "answer": {
       "id": "123",
-      "type": "CRGA",
+      "type": "RGA",
     },
   },
 ]
@@ -65,7 +65,7 @@ exports[`generated answer insight analytics actions when analyticsMode is \`next
     "action": "show",
     "answer": {
       "id": "123",
-      "type": "CRGA",
+      "type": "RGA",
     },
   },
 ]
@@ -77,7 +77,7 @@ exports[`generated answer insight analytics actions when analyticsMode is \`next
   {
     "answer": {
       "id": "123",
-      "type": "CRGA",
+      "type": "RGA",
     },
     "citation": {
       "id": "citation_id",
@@ -93,7 +93,7 @@ exports[`generated answer insight analytics actions when analyticsMode is \`next
   {
     "answer": {
       "id": "123",
-      "type": "CRGA",
+      "type": "RGA",
     },
     "feedback": {
       "liked": true,
@@ -108,7 +108,7 @@ exports[`generated answer insight analytics actions when analyticsMode is \`next
   {
     "answer": {
       "id": "123",
-      "type": "CRGA",
+      "type": "RGA",
     },
     "citation": {
       "id": "citation_id",

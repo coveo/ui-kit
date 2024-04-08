@@ -30,7 +30,7 @@ interface GeneratedAnswerOptions {
 
 let analyticsMode: 'legacy' | 'next' = 'legacy';
 const exampleTrackingId = 'tracking_id_123';
-const answerType = 'CRGA';
+const answerType = 'RGA';
 
 const GENERATED_ANSWER_DATA_KEY = 'coveo-generated-answer-data';
 const otherOption = 'other';

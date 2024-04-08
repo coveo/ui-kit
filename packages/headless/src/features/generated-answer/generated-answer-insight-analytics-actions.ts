@@ -16,6 +16,7 @@ export type GeneratedAnswerFeedback =
   | 'notAccurate'
   | 'outOfDate'
   | 'harmful';
+const RGAType = 'RGA';
 
 //TODO: SFINT-5435
 export const logRetryGeneratedAnswer = (): InsightAction =>
@@ -79,7 +80,7 @@ export const logOpenGeneratedAnswerSource = (
         return {
           answer: {
             id: generativeQuestionAnsweringId!,
-            type: 'CRGA',
+            type: RGAType,
           },
           citation: {
             id: citationId,
@@ -122,7 +123,7 @@ export const logHoverCitation = (
       return {
         answer: {
           id: generativeQuestionAnsweringId!,
-          type: 'CRGA',
+          type: RGAType,
         },
         citation: {
           id: citationId,
@@ -155,7 +156,7 @@ export const logLikeGeneratedAnswer = (): InsightAction =>
       return {
         answer: {
           id: generativeQuestionAnsweringId!,
-          type: 'CRGA',
+          type: RGAType,
         },
         feedback: {
           liked: true,
@@ -187,7 +188,7 @@ export const logDislikeGeneratedAnswer = (): InsightAction =>
       return {
         answer: {
           id: generativeQuestionAnsweringId!,
-          type: 'CRGA',
+          type: RGAType,
         },
         feedback: {
           liked: false,
@@ -224,7 +225,7 @@ export const logGeneratedAnswerFeedback = (
       return {
         answer: {
           id: generativeQuestionAnsweringId!,
-          type: 'CRGA',
+          type: RGAType,
         },
         feedback: {
           liked: false,
@@ -263,7 +264,7 @@ export const logGeneratedAnswerDetailedFeedback = (
       return {
         answer: {
           id: generativeQuestionAnsweringId!,
-          type: 'CRGA',
+          type: RGAType,
         },
         feedback: {
           liked: false,
@@ -322,7 +323,7 @@ export const logGeneratedAnswerShowAnswers = (): InsightAction =>
         action: 'show',
         answer: {
           id: generativeQuestionAnsweringId!,
-          type: 'CRGA',
+          type: RGAType,
         },
       };
     },
@@ -354,7 +355,7 @@ export const logGeneratedAnswerHideAnswers = (): InsightAction =>
         action: 'hide',
         answer: {
           id: generativeQuestionAnsweringId!,
-          type: 'CRGA',
+          type: RGAType,
         },
       };
     },
@@ -386,7 +387,7 @@ export const logCopyGeneratedAnswer = (): InsightAction =>
         action: 'copyToClipboard',
         answer: {
           id: generativeQuestionAnsweringId!,
-          type: 'CRGA',
+          type: RGAType,
         },
       };
     },
