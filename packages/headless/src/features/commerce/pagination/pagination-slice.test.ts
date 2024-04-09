@@ -159,11 +159,13 @@ describe('pagination slice', () => {
   ])('$actionName', ({action}) => {
     it('resets pagination', () => {
       state.page = 5;
+      state.perPage = 17;
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const finalState = paginationReducer(state, action({} as any));
 
       expect(finalState.page).toBe(0);
+      expect(finalState.perPage).toBe(0);
     });
   });
 });

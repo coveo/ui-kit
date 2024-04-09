@@ -65,4 +65,5 @@ export const paginationReducer = createReducer(
 
 function handlePaginationReset(state: CommercePaginationState) {
   state.page = 0;
+  state.perPage = 0;
 }
