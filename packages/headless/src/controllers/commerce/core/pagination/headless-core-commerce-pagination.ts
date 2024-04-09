@@ -72,7 +72,7 @@ export type PaginationProps = Omit<
 >;
 
 const optionsSchema = new Schema({
-  pageSize: new NumberValue({min: 0, required: false}),
+  pageSize: new NumberValue({min: 1, max: 1000, required: false}),
 });
 
 /**
