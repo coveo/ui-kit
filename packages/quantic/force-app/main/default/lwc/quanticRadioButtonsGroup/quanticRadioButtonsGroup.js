@@ -86,6 +86,10 @@ export default class QuanticRadioButtonsGroup extends LightningElement {
         iconCSSClass: this.makeIconCSSClass(option),
         indexId: `radio-${index}`,
         tooltip: option.tooltip,
+        clickHandler: (event) => {
+          event.stopPropagation();
+          this.handleClick(option.value);
+        },
         mouseEnterHandler: () => {
           const tooltipToShow = this.getTooltipComponentByValue(option.value);
           tooltipToShow.showTooltip();
@@ -114,7 +118,24 @@ export default class QuanticRadioButtonsGroup extends LightningElement {
     } else if (option.iconName) {
       paddingClass = 'slds-var-p-left_medium';
     }
-    return `slds-button slds-radio_button ${paddingClass} radio-button radio-button--${option.value === this.value ? 'selected' : 'unselected'}`;
+    return `slds-button slds-radio_button radio-buttons-group__tooltip-container ${paddingClass} radio-button radio-button--${option.value === this.value ? 'selected' : 'unselected'}`;
+  }
+
+  handleClick(value) {
+    if (this._value === value) {
+      return;
+    }
+    this._value = value;
+    this.dispatchEvent(
+      new CustomEvent('change', {
+        detail: {
+          value,
+        },
+        composed: true,
+        bubbles: true,
+        cancelable: true,
+      })
+    );
   }
 
   handleFocus() {

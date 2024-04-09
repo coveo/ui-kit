@@ -9,47 +9,46 @@
     <div class="slds-form-element__control">
       <div class="slds-radio_button-group radio-buttons-group-container">
         <template for:each={transformedOptions} for:item="option">
-          <span
+          <div
             key={option.value}
             class={option.buttonCSSClass}
             data-cy={option.value}
             onmouseenter={option.mouseEnterHandler}
             onmouseleave={option.mouseLeaveHandler}
+            onclick={option.clickHandler}
           >
-            <div class="radio-buttons-group__tooltip-container">
-              <template lwc:if={option.iconName}>
-                <span class="slds-grid slds-var-p-vertical_x-small">
-                  <lightning-icon
-                    class={option.iconCSSClass}
-                    icon-name={option.iconName}
-                    variant={option.iconVariant}
-                    size={iconSize}
-                  ></lightning-icon>
-                </span>
-              </template>
-              <input
-                type="radio"
-                class="radio-input--no-outline"
-                name={option.label}
-                id={option.indexId}
-                checked={option.isChecked}
-                value={option.value}
-                onchange={handleChange}
-                onfocus={handleFocus}
-                onblur={handleBlur}
-              />
-              <template lwc:if={option.label}>
-                <label class={computedLabelClass} for={option.indexId}>
-                  <span class="slds-radio_faux">{option.label}</span>
-                </label>
-              </template>
-              <template lwc:if={option.tooltip}>
-                <c-quantic-tooltip data-tooltip-key={option.value}>
-                  <div slot="content">{option.tooltip}</div>
-                </c-quantic-tooltip>
-              </template>
-            </div>
-          </span>
+            <template lwc:if={option.iconName}>
+              <span class="slds-grid slds-var-p-vertical_x-small">
+                <lightning-icon
+                  class={option.iconCSSClass}
+                  icon-name={option.iconName}
+                  variant={option.iconVariant}
+                  size={iconSize}
+                ></lightning-icon>
+              </span>
+            </template>
+            <input
+              type="radio"
+              class="radio-input--no-outline"
+              name={option.label}
+              id={option.indexId}
+              checked={option.isChecked}
+              value={option.value}
+              onchange={handleChange}
+              onfocus={handleFocus}
+              onblur={handleBlur}
+            />
+            <template lwc:if={option.label}>
+              <label class={computedLabelClass} for={option.indexId}>
+                <span class="slds-radio_faux">{option.label}</span>
+              </label>
+            </template>
+            <template lwc:if={option.tooltip}>
+              <c-quantic-tooltip data-tooltip-key={option.value}>
+                <div slot="content">{option.tooltip}</div>
+              </c-quantic-tooltip>
+            </template>
+          </div>
         </template>
       </div>
     </div>

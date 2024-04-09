@@ -99,10 +99,6 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
     GeneratedAnswerSelectors.get().find(
       `c-quantic-radio-buttons-group [data-cy="${label}"]`
     ),
-  rephraseInputButtonByLabel: (label: string) =>
-    GeneratedAnswerSelectors.get().find(
-      `c-quantic-radio-buttons-group [data-cy="${label}"] input[type="radio"]`
-    ),
   generatedAnswerFooter: () =>
     GeneratedAnswerSelectors.get().find('[data-cy="generated-answer__footer"]'),
   copyToClipboardButton: () =>
