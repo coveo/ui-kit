@@ -24,7 +24,7 @@ describe('search pagination', () => {
   });
 
   it('adds correct reducers to engine', () => {
-    expect(engine.addReducers).toBeCalledWith({
+    expect(engine.addReducers).toHaveBeenCalledWith({
       commerceSearch,
     });
   });
