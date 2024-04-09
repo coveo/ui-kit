@@ -18,12 +18,11 @@ describe('core interactive result', () => {
     price: 17.99,
   };
 
-  function initializeInteractiveResult(delay?: number) {
+  function initializeInteractiveResult() {
     buildCoreInteractiveResult(engine, {
       options: {
         product,
         position: 1,
-        selectionDelay: delay,
       },
       responseIdSelector: () => 'responseId',
     });
