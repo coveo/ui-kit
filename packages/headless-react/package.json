@@ -54,7 +54,7 @@
     "rimraf": "5.0.5",
     "ts-jest": "29.1.2",
     "typescript": "5.4.4",
-    "undici": "5.28.3"
+    "undici": "5.28.4"
   },
   "peerDependencies": {
     "react": "^18",
