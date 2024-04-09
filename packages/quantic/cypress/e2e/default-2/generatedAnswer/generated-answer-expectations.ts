@@ -283,7 +283,10 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         );
     },
 
-    searchQueryContainsCorrectRephraseOption: (expectedAnswerStyle: string) => {
+    searchQueryContainsCorrectRephraseOption: (
+      expectedAnswerStyle: string,
+      expectedActionCause: string
+    ) => {
       cy.get<Interception>(InterceptAliases.Search)
         .then((interception) => {
           const body = interception?.request?.body;
@@ -296,7 +299,7 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
           expect(analyticsSection).to.exist;
           expect(analyticsSection).to.have.property(
             'actionCause',
-            'rephraseGeneratedAnswer'
+            expectedActionCause
           );
         })
         .log(
