@@ -31,8 +31,6 @@ import pastYear_plural from '@salesforce/label/c.quantic_PastYear_plural';
 
 /** @typedef {import("coveo").Result} Result */
 
-export {generateUniqueIdForInput} from './idGenerator';
-
 export class Debouncer {
   _timeout;
 

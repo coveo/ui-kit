@@ -1,4 +1,3 @@
-import {generateUniqueIdForInput} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 
 /**
@@ -24,13 +23,6 @@ export default class QuanticRadioButtonsGroup extends LightningElement {
    * @type {String}
    */
   @api legend = '';
-  /**
-   * The name of the Radio Buttons Group.
-   * @api
-   * @type {String}
-   * @defaultValue `radio-group-aUniqueNumber`
-   */
-  @api name = generateUniqueIdForInput('radio-group');
   /**
    * The list of options to be displayed.
    * @api
