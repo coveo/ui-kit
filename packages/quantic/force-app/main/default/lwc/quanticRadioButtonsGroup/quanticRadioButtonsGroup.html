@@ -36,6 +36,7 @@
               checked={option.isChecked}
               value={option.value}
               onchange={handleChange}
+              onclick={handleRadioInputClick}
             />
             <template lwc:if={option.label}>
               <label class={computedLabelClass} for={option.indexId}>

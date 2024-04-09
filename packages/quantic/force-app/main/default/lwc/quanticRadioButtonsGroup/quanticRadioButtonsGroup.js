@@ -146,6 +146,12 @@ export default class QuanticRadioButtonsGroup extends LightningElement {
     );
   }
 
+  handleRadioInputClick(event) {
+    // Stop further propagation of the event on click on the radio button.
+    // There is a separate onClick handler for the parent elements.
+    event.stopPropagation();
+  }
+
   handleChange(event) {
     event.stopPropagation();
 
