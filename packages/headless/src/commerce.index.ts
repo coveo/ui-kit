@@ -59,7 +59,8 @@ export {buildRecommendations} from './controllers/commerce/recommendations/headl
 export type {
   Pagination,
   PaginationState,
-  PaginationControllerState,
+  PaginationProps,
+  PaginationOptions,
 } from './controllers/commerce/core/pagination/headless-core-commerce-pagination';
 export {buildProductListingPagination} from './controllers/commerce/product-listing/pagination/headless-product-listing-pagination';
 export {buildSearchPagination} from './controllers/commerce/search/pagination/headless-search-pagination';
