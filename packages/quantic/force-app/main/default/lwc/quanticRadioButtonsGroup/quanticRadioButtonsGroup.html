@@ -30,13 +30,11 @@
             <input
               type="radio"
               class="radio-input--no-outline"
-              name={option.label}
+              name={name}
               id={option.indexId}
               checked={option.isChecked}
               value={option.value}
               onchange={handleChange}
-              onfocus={handleFocus}
-              onblur={handleBlur}
             />
             <template lwc:if={option.label}>
               <label class={computedLabelClass} for={option.indexId}>

@@ -269,21 +269,5 @@ describe('c-quantic-radio-buttons-group', () => {
       ).toBeTruthy();
       expect(selectedRadioInputs).toHaveLength(1);
     });
-
-    it('should dispatch the "focus" event when a radio button is focused', async () => {
-      const element = createTestComponent();
-      await flushPromises();
-
-      const radioInputs = element.shadowRoot.querySelectorAll(
-        selectors.radioInputs
-      );
-      const radioInput = radioInputs[0];
-      const focusHandler = jest.fn();
-      element.addEventListener('focus', focusHandler);
-
-      radioInput.focus();
-
-      expect(focusHandler).toHaveBeenCalledTimes(1);
-    });
   });
 });
