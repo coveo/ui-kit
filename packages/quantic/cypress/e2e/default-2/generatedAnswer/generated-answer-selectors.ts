@@ -94,7 +94,9 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
       '[data-cy="generated-answer__rephrase-buttons"]'
     ),
   rephraseLabel: () =>
-    GeneratedAnswerSelectors.get().find('.radio-buttons-group__legend'),
+    GeneratedAnswerSelectors.get().find(
+      'legend[data-cy="radio-buttons-group__legend"]'
+    ),
   rephraseButtonByLabel: (label: string) =>
     GeneratedAnswerSelectors.get().find(
       `c-quantic-radio-buttons-group [data-cy="${label}"]`
