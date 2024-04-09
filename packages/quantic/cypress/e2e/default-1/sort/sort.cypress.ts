@@ -94,7 +94,7 @@ describe('quantic-sort', () => {
               Actions.selectOption(value);
 
               Expect.selectedOption(value);
-              Expect.sendNewSearchRequest(
+              Expect.completeSearchRequest(
                 'resultsSort',
                 param.useCase,
                 (body) => Expect.sortCriteriaInSearchRequest(body, value)
@@ -112,7 +112,7 @@ describe('quantic-sort', () => {
               it(`should sort by ${value}`, () => {
                 loadFromUrlHash(`sortCriteria=${encodeURI(value)}`);
 
-                Expect.sendNewSearchRequest(
+                Expect.completeSearchRequest(
                   'interfaceLoad',
                   param.useCase,
                   (body) => Expect.sortCriteriaInSearchRequest(body, value)

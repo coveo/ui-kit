@@ -4,10 +4,11 @@ import {getQueryAlias} from '../page-objects/search';
 import {useCaseEnum} from '../page-objects/use-case';
 import {ComponentErrorSelector, should} from './common-selectors';
 
-export function sendNewSearchRequest(
+export function completeSearchRequest(
   actionCause: string,
   useCase?: 'search' | 'insight',
-  checkSearchRequestBodyCallback?: (body: Record<string, unknown>) => void
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  checkSearchRequestBodyCallback?: (body: Record<string, any>) => void
 ) {
   cy.wait(getQueryAlias(useCase))
     .then((interception) => {

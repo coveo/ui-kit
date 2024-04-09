@@ -13,12 +13,12 @@ describe('example insight panel', () => {
     interceptSearch();
     cy.visit(pageUrl);
     if (waitForFirstSearch) {
-      Expect.sendNewSearchRequest('interfaceLoad', useCaseEnum.insight);
+      Expect.completeSearchRequest('interfaceLoad', useCaseEnum.insight);
     }
   }
 
   describe('when loading the search page', () => {
-    it('should load results automatically', () => {
+    it('should render correctly and load results automatically', () => {
       visitInsightPanel();
 
       Expect.displaySearchbox(true);
@@ -30,13 +30,13 @@ describe('example insight panel', () => {
   });
 
   describe('when typing a search query', () => {
-    it('should trigger query when typing in searchbox', () => {
+    it('should trigger a query when typing in searchbox', () => {
       visitInsightPanel();
 
       const exampleQuery = 'Hello world!';
       Actions.typeInSearchbox(exampleQuery);
       Actions.submitQuery();
-      Expect.sendNewSearchRequest(
+      Expect.completeSearchRequest(
         'searchboxSubmit',
         useCaseEnum.insight,
         (body) => {
@@ -49,15 +49,35 @@ describe('example insight panel', () => {
   describe('when selecting a facet value', () => {
     it('should trigger query when selecting a facet value', () => {
       visitInsightPanel(false);
+      let firstFacetValue: string;
+      const exampleFacetField = 'objecttype';
 
       cy.wait(InterceptAliases.Insight).then((interception) => {
-        const firstFacetValue = interception.response?.body.facets.find(
-          (f: {field: string}) => f.field === 'objecttype'
+        firstFacetValue = interception.response?.body.facets.find(
+          (f: {field: string}) => f.field === exampleFacetField
         ).values[0].value;
         Actions.selectFacetValue(firstFacetValue);
       });
 
-      Expect.sendNewSearchRequest('facetSelect', useCaseEnum.insight);
+      Expect.completeSearchRequest(
+        'facetSelect',
+        useCaseEnum.insight,
+        (body) => {
+          const expectedSelectedFacetValue = body.facets
+            .find?.(
+              (facet: {field: string}) => facet.field === exampleFacetField
+            )
+            .currentValues.find(
+              (facetItem: {value: string}) =>
+                facetItem.value === firstFacetValue
+            );
+          console.log(expectedSelectedFacetValue);
+          expect(expectedSelectedFacetValue).to.have.property(
+            'state',
+            'selected'
+          );
+        }
+      );
     });
   });
 
@@ -67,7 +87,7 @@ describe('example insight panel', () => {
       Expect.summaryContainsText('Results 1-5');
 
       Actions.selectPagerButton(2);
-      Expect.sendNewSearchRequest(
+      Expect.completeSearchRequest(
         'pagerNumber',
         useCaseEnum.insight,
         (body) => {

@@ -1,4 +1,4 @@
-import {sendNewSearchRequest} from '../../common-expectations';
+import {completeSearchRequest} from '../../common-expectations';
 import {should} from '../../common-selectors';
 import {Selector, SelectorsFactory} from './selectors';
 
@@ -53,7 +53,7 @@ function expectations(selector: Selector) {
       selector
         .result()
         .should('have.length.greaterThan', 1)
-        .logDetail(' display the results');
+        .logDetail('display the results');
     },
 
     summaryContainsText: (expectedText: string) => {
@@ -67,10 +67,10 @@ function expectations(selector: Selector) {
 
 export const SearchExpectations = {
   ...expectations(SelectorsFactory(searchInterfaceComponent)),
-  sendNewSearchRequest,
+  completeSearchRequest,
 };
 
 export const InsightExpectations = {
   ...expectations(SelectorsFactory(insightInterfaceComponent)),
-  sendNewSearchRequest,
+  completeSearchRequest,
 };

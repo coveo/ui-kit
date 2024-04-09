@@ -80,7 +80,7 @@ describe('quantic-tab', () => {
         });
 
         it('should work as expected', () => {
-          Expect.sendNewSearchRequest(
+          Expect.completeSearchRequest(
             param.useCase === 'search' ? 'interfaceLoad' : 'searchboxSubmit',
             param.useCase,
             (body) =>
@@ -96,7 +96,7 @@ describe('quantic-tab', () => {
 
           [tabs.all, tabs.knowledge].forEach((next) => {
             Actions.selectTab(next.label);
-            Expect.sendNewSearchRequest(
+            Expect.completeSearchRequest(
               'interfaceChange',
               param.useCase,
               (body) =>
@@ -107,7 +107,7 @@ describe('quantic-tab', () => {
           });
 
           performSearch();
-          Expect.sendNewSearchRequest(
+          Expect.completeSearchRequest(
             'searchboxSubmit',
             param.useCase,
             (body) =>
@@ -129,7 +129,7 @@ describe('quantic-tab', () => {
         describe('when loading selected tab from URL', () => {
           it('should make the right tab active', () => {
             loadFromUrlHash({}, `tab=${tabs.knowledge.label}`);
-            Expect.sendNewSearchRequest(
+            Expect.completeSearchRequest(
               'interfaceLoad',
               param.useCase,
               (body) =>

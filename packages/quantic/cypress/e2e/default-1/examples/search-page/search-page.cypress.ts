@@ -13,12 +13,12 @@ describe('example search page', () => {
     interceptSearch();
     cy.visit(pageUrl);
     if (waitForFirstSearch) {
-      Expect.sendNewSearchRequest('interfaceLoad');
+      Expect.completeSearchRequest('interfaceLoad');
     }
   }
 
   describe('when loading the search page', () => {
-    it('should load results automatically', () => {
+    it('should render correctly and load results automatically', () => {
       visitSearchPage();
 
       Expect.displaySearchbox(true);
@@ -31,13 +31,13 @@ describe('example search page', () => {
   });
 
   describe('when typing a search query', () => {
-    it('should trigger query when typing in searchbox', () => {
+    it('should trigger a query when typing in searchbox', () => {
       visitSearchPage();
 
       const exampleQuery = 'Hello world!';
       Actions.typeInSearchbox(exampleQuery);
       Actions.submitQuery();
-      Expect.sendNewSearchRequest(
+      Expect.completeSearchRequest(
         'searchboxSubmit',
         useCaseEnum.search,
         (body) => {
@@ -51,15 +51,35 @@ describe('example search page', () => {
   describe('when selecting a facet value', () => {
     it('should trigger query when selecting a facet value', () => {
       visitSearchPage(false);
+      let firstFacetValue: string;
+      const exampleFacetField = 'objecttype';
 
       cy.wait(InterceptAliases.Search).then((interception) => {
-        const firstFacetValue = interception.response?.body.facets.find(
-          (f: {field: string}) => f.field === 'objecttype'
+        firstFacetValue = interception.response?.body.facets.find(
+          (f: {field: string}) => f.field === exampleFacetField
         ).values[0].value;
         Actions.selectFacetValue(firstFacetValue);
       });
 
-      Expect.sendNewSearchRequest('facetSelect');
+      Expect.completeSearchRequest(
+        'facetSelect',
+        useCaseEnum.search,
+        (body) => {
+          const expectedSelectedFacetValue = body.facets
+            .find?.(
+              (facet: {field: string}) => facet.field === exampleFacetField
+            )
+            .currentValues.find(
+              (facetItem: {value: string}) =>
+                facetItem.value === firstFacetValue
+            );
+          console.log(expectedSelectedFacetValue);
+          expect(expectedSelectedFacetValue).to.have.property(
+            'state',
+            'selected'
+          );
+        }
+      );
     });
   });
 
@@ -70,9 +90,13 @@ describe('example search page', () => {
 
       Actions.selectPagerButton(2);
 
-      Expect.sendNewSearchRequest('pagerNumber', useCaseEnum.search, (body) => {
-        expect(body).to.have.property('firstResult', 10);
-      });
+      Expect.completeSearchRequest(
+        'pagerNumber',
+        useCaseEnum.search,
+        (body) => {
+          expect(body).to.have.property('firstResult', 10);
+        }
+      );
       Expect.summaryContainsText('Results 11-20');
     });
   });
@@ -85,9 +109,13 @@ describe('example search page', () => {
       Actions.openSortDropdown();
       Actions.selectSortOption(expectedSortValue);
 
-      Expect.sendNewSearchRequest('resultsSort', useCaseEnum.search, (body) => {
-        expect(body).to.have.property('sortCriteria', expectedSortValue);
-      });
+      Expect.completeSearchRequest(
+        'resultsSort',
+        useCaseEnum.search,
+        (body) => {
+          expect(body).to.have.property('sortCriteria', expectedSortValue);
+        }
+      );
     });
   });
 

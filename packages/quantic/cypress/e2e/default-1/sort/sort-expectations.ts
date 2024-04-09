@@ -1,5 +1,5 @@
 import {InterceptAliases} from '../../../page-objects/search';
-import {sendNewSearchRequest} from '../../common-expectations';
+import {completeSearchRequest} from '../../common-expectations';
 import {SortSelector, SortSelectors} from './sort-selectors';
 
 function sortExpectations(selector: SortSelector) {
@@ -52,5 +52,5 @@ function sortExpectations(selector: SortSelector) {
 
 export const SortExpectations = {
   ...sortExpectations(SortSelectors),
-  sendNewSearchRequest,
+  completeSearchRequest,
 };
