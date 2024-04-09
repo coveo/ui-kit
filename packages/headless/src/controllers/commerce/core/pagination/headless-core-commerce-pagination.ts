@@ -1,4 +1,5 @@
 import {NumberValue, Schema} from '@coveo/bueno';
+import {createSelector} from '@reduxjs/toolkit';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {
   nextPage,
@@ -51,7 +52,7 @@ export interface Pagination extends Controller {
 
 export interface PaginationState {
   page: number;
-  perPage: number;
+  pageSize: number;
   totalCount: number;
   totalPages: number;
 }
@@ -99,15 +100,19 @@ export function buildCorePagination(
     dispatch(setPageSize(props.options.pageSize));
   }
 
-  const getState = () => {
-    return engine.state.commercePagination;
-  };
+  const paginationSelector = createSelector(
+    (state) => state.commercePagination,
+    ({perPage, ...rest}) => ({
+      pageSize: perPage,
+      ...rest,
+    })
+  );
 
   return {
     ...controller,
 
     get state() {
-      return getState();
+      return paginationSelector(engine.state);
     },
 
     selectPage(page: number) {
