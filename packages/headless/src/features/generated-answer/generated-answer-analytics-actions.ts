@@ -70,6 +70,7 @@ export const logOpenGeneratedAnswerSource = (
         },
         citation: {
           id: citationId,
+          type: 'Source',
         },
       };
     },
@@ -107,6 +108,7 @@ export const logHoverCitation = (
         },
         citation: {
           id: citationId,
+          type: 'Source',
         },
         citationHoverTimeInMs,
       };

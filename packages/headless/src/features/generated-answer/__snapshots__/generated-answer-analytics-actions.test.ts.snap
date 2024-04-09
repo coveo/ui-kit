@@ -81,6 +81,7 @@ exports[`generated answer analytics actions when analyticsMode is \`next\` shoul
     },
     "citation": {
       "id": "some-citation-id",
+      "type": "Source",
     },
     "citationHoverTimeInMs": 1234,
   },
@@ -112,6 +113,7 @@ exports[`generated answer analytics actions when analyticsMode is \`next\` shoul
     },
     "citation": {
       "id": "some-citation-id",
+      "type": "Source",
     },
   },
 ]
