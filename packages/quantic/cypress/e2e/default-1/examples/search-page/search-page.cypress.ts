@@ -73,7 +73,6 @@ describe('example search page', () => {
               (facetItem: {value: string}) =>
                 facetItem.value === firstFacetValue
             );
-          console.log(expectedSelectedFacetValue);
           expect(expectedSelectedFacetValue).to.have.property(
             'state',
             'selected'
