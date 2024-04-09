@@ -777,6 +777,7 @@ describe('quantic-generated-answer', () => {
                         },
                         citation: {
                           id: testCitations[hoveredCitationIndex].id,
+                          type: 'Source',
                         },
                       },
                       exampleTrackingId
@@ -810,6 +811,7 @@ describe('quantic-generated-answer', () => {
                       },
                       citation: {
                         id: testCitations[clickedCitationIndex].id,
+                        type: 'Source',
                       },
                     },
                     exampleTrackingId
