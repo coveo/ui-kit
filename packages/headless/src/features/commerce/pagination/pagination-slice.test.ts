@@ -41,7 +41,7 @@ describe('pagination slice', () => {
     const finalState = paginationReducer(undefined, {type: ''});
     expect(finalState).toEqual({
       page: 0,
-      perPage: 0,
+      perPage: undefined,
       totalCount: 0,
       totalPages: 0,
     });
@@ -165,7 +165,7 @@ describe('pagination slice', () => {
       const finalState = paginationReducer(state, action({} as any));
 
       expect(finalState.page).toBe(0);
-      expect(finalState.perPage).toBe(0);
+      expect(finalState.perPage).toBe(undefined);
     });
   });
 });
