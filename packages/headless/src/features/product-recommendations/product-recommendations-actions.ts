@@ -238,9 +238,9 @@ export const buildProductRecommendationsRequest = async (
     url: s.configuration.search.apiBaseUrl,
     locale: s.configuration.search.locale,
     timezone: s.configuration.search.timezone,
-    ...(s.configuration.analytics.enabled && {
-      visitorId: await getVisitorID(s.configuration.analytics),
-    }),
+    visitorId: s.configuration.analytics.enabled
+      ? await getVisitorID(s.configuration.analytics)
+      : undefined,
     recommendation: s.productRecommendations.id,
     numberOfResults: s.productRecommendations.maxNumberOfRecommendations,
     fieldsToInclude: [
@@ -248,28 +248,19 @@ export const buildProductRecommendationsRequest = async (
       ...(s.productRecommendations.additionalFields || []),
     ],
     mlParameters: {
-      ...(s.productRecommendations.skus &&
-        s.productRecommendations.skus.length > 0 && {
-          itemIds: s.productRecommendations.skus,
-        }),
-      ...(s.productRecommendations.filter.brand && {
-        brandFilter: s.productRecommendations.filter.brand,
-      }),
-      ...(s.productRecommendations.filter.category && {
-        categoryFilter: s.productRecommendations.filter.category,
-      }),
+      itemIds:
+        s.productRecommendations.skus &&
+        s.productRecommendations.skus.length > 0
+          ? s.productRecommendations.skus
+          : undefined,
+      brandFilter: undefined,
+      categoryFilter: s.productRecommendations.filter.category,
     },
     actionsHistory: s.configuration.analytics.enabled
       ? historyStore.getHistory()
       : [],
-    ...(s.context && {
-      context: s.context.contextValues,
-    }),
-    ...(s.dictionaryFieldContext && {
-      dictionaryFieldContext: s.dictionaryFieldContext.contextValues,
-    }),
-    ...(s.searchHub && {
-      searchHub: s.searchHub,
-    }),
+    context: s.context?.contextValues,
+    dictionaryFieldContext: s.dictionaryFieldContext?.contextValues,
+    searchHub: undefined,
   };
 };
