@@ -1,3 +1,9 @@
+# 2.49.0 (2024-04-10)
+
+### Features
+
+- **quantic:** Update the styling of the rephrase buttons ([#3750](https://github.com/coveo/ui-kit/issues/3750)) ([d5d114e](https://github.com/coveo/ui-kit/commits/d5d114ec7fcef7909e8212e88ccbccb66092ec1a))
+
 # 2.48.0 (2024-04-03)
 
 ### Features
