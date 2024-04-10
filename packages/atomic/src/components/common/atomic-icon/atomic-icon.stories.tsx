@@ -9,10 +9,8 @@ function snakeToCamel(value: string) {
     .replace(/([_][a-z])/g, (group) => group.toUpperCase().replace('_', ''));
 }
 
-const id = 'atomic-icon';
-
 const {defaultModuleExport, exportedStory} = defaultStory(
-  id,
+  'atomic-icon',
   {
     icon: 'assets://account.svg',
   },
@@ -74,5 +72,9 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   }
 );
 
-export default {...defaultModuleExport, title: 'Atomic/Icon'};
+export default {
+  ...defaultModuleExport,
+  title: 'Atomic/Icon',
+  id: 'atomic-icon',
+};
 export const Default = exportedStory;

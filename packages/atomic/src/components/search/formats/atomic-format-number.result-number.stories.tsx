@@ -25,5 +25,6 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
 export default {
   ...defaultModuleExport,
   title: 'Atomic/ResultList/ResultNumber/Format/Number',
+  id: 'atomic-format-number',
 };
 export const Default = exportedStory;

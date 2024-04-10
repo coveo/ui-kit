@@ -22,5 +22,6 @@ const {defaultModuleExport, exportedStory} = defaultStory(
 export default {
   ...defaultModuleExport,
   title: 'Atomic/SegmentedFacet/SegmentedFacetScrollable',
+  id: 'atomic-segmented-facet-scrollable',
 };
 export const Default = exportedStory;

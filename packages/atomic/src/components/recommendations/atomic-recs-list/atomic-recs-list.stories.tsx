@@ -1,9 +1,8 @@
 import recsStory from 'atomic-storybook/recommendation/recs-story';
 import {html} from 'lit-html';
 
-const id = 'atomic-recs-list';
 const {defaultModuleExport, exportedStory} = recsStory(
-  id,
+  'atomic-recs-list',
   {},
   {
     additionalMarkup: () =>
@@ -15,5 +14,9 @@ const {defaultModuleExport, exportedStory} = recsStory(
   }
 );
 
-export default {...defaultModuleExport, title: 'Atomic/RecsList'};
+export default {
+  ...defaultModuleExport,
+  title: 'Atomic/RecsList',
+  id: 'atomic-recs-list',
+};
 export const Default = exportedStory;

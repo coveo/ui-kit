@@ -19,5 +19,6 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
 export default {
   ...defaultModuleExport,
   title: 'Atomic/ResultList/ResultRating',
+  id: 'atomic-result-rating',
 };
 export const Default = exportedStory;

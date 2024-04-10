@@ -19,5 +19,6 @@ const {defaultModuleExport, exportedStory} = defaultStory(
 export default {
   ...defaultModuleExport,
   title: 'Atomic/NumericFacet/Format/Currency',
+  id: 'atomic-format-currency-facet',
 };
 export const Default = exportedStory;

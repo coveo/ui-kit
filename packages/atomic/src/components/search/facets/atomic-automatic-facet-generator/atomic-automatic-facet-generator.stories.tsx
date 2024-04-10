@@ -57,5 +57,6 @@ const {defaultModuleExport, exportedStory} = defaultStory(
 export default {
   ...defaultModuleExport,
   title: 'Atomic/AutomaticFacetGenerator',
+  id: 'atomic-automatic-facet-generator',
 };
 export const Default = exportedStory;

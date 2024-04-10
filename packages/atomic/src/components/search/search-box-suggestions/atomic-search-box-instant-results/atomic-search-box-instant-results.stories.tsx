@@ -72,6 +72,7 @@ const {defaultModuleExport, exportedStory} = defaultStory(
 export default {
   ...defaultModuleExport,
   title: 'Atomic/SearchBox/InstantResults',
+  id: 'atomic-search-box-instant-results',
 };
 
 export const Default = exportedStory;

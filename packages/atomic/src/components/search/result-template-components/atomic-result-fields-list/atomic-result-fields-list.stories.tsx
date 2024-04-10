@@ -65,5 +65,6 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
 export default {
   ...defaultModuleExport,
   title: 'Atomic/ResultList/ResultFieldsList',
+  id: 'atomic-result-fields-list',
 };
 export const Default = exportedStory;

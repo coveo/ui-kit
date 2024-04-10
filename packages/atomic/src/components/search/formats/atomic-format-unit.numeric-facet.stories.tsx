@@ -17,5 +17,6 @@ const {defaultModuleExport, exportedStory} = defaultStory(
 export default {
   ...defaultModuleExport,
   title: 'Atomic/NumericFacet/Format/Unit',
+  id: 'atomic-format-unit-facet',
 };
 export const Default = exportedStory;

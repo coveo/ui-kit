@@ -28,5 +28,6 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
 export default {
   ...defaultModuleExport,
   title: 'Atomic/ResultList/ResultNumber/Format/Currency',
+  id: 'atomic-format-currency',
 };
 export const Default = exportedStory;

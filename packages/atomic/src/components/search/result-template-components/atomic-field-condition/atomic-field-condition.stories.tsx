@@ -40,5 +40,6 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
 export default {
   ...defaultModuleExport,
   title: 'Atomic/ResultList/FieldCondition',
+  id: 'atomic-field-condition',
 };
 export const Default = exportedStory;

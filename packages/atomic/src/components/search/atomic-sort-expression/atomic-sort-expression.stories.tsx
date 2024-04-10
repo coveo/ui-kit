@@ -13,5 +13,6 @@ const {defaultModuleExport, exportedStory} = defaultStory(
 export default {
   ...defaultModuleExport,
   title: 'Atomic/SortDropdown/SortExpression',
+  id: 'atomic-sort-expression',
 };
 export const Default = exportedStory;

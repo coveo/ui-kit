@@ -19,5 +19,6 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
 export default {
   ...defaultModuleExport,
   title: 'Atomic/ResultList/ResultMultiValueText',
+  id: 'atomic-result-multi-value-text',
 };
 export const Default = exportedStory;

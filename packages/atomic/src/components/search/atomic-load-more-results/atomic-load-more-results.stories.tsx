@@ -1,7 +1,13 @@
 import defaultStory from 'atomic-storybook/default-story';
 
-const id = 'atomic-load-more-results';
-const {defaultModuleExport, exportedStory} = defaultStory(id, {});
+const {defaultModuleExport, exportedStory} = defaultStory(
+  'atomic-load-more-results',
+  {}
+);
 
-export default {...defaultModuleExport, title: 'Atomic/LoadMoreResults'};
+export default {
+  ...defaultModuleExport,
+  title: 'Atomic/LoadMoreResults',
+  id: 'atomic-load-more-results',
+};
 export const Default = exportedStory;

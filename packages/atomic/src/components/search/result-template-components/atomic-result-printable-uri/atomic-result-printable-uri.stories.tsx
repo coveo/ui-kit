@@ -8,5 +8,6 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
 export default {
   ...defaultModuleExport,
   title: 'Atomic/ResultList/ResultPrintableUri',
+  id: 'atomic-result-printable-uri',
 };
 export const Default = exportedStory;

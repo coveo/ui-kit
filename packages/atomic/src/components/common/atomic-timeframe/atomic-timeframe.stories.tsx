@@ -22,5 +22,6 @@ const {defaultModuleExport, exportedStory} = defaultStory(
 export default {
   ...defaultModuleExport,
   title: 'Atomic/TimeframeFacet/Timeframe',
+  id: 'atomic-timeframe',
 };
 export const Default = exportedStory;

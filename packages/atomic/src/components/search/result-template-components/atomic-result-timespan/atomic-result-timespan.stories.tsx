@@ -18,5 +18,6 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
 export default {
   ...defaultModuleExport,
   title: 'Atomic/ResultList/ResultTimespan',
+  id: 'atomic-result-timespan',
 };
 export const Default = exportedStory;

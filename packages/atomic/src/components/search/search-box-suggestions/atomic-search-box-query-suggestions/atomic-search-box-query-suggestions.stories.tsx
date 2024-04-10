@@ -13,6 +13,7 @@ const {defaultModuleExport, exportedStory} = defaultStory(
 export default {
   ...defaultModuleExport,
   title: 'Atomic/SearchBox/QuerySuggestions',
+  id: 'atomic-search-box-query-suggestions',
 };
 
 export const Default = exportedStory;
