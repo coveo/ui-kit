@@ -1,6 +1,5 @@
 import {SearchEngineConfiguration} from '@coveo/headless';
 import {h} from '@stencil/core';
-import {Args} from '@storybook/api';
 import {render, TemplateResult} from 'lit-html';
 import {mapPropsToArgTypes} from './map-props-to-args';
 import {resultComponentArgTypes} from './map-result-list-props-to-args';
@@ -21,7 +20,7 @@ function camelToKebab(value: string) {
 
 export function renderArgsToHTMLString(
   componentTag: string,
-  args: Args,
+  args: Record<string, unknown>,
   advancedConfig: DefaultStoryAdvancedConfig
 ) {
   const {additionalChildMarkup, parentElement} = advancedConfig;

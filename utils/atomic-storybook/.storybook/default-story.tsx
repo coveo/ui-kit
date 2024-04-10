@@ -1,7 +1,6 @@
 import {SearchEngineConfiguration} from '@coveo/headless';
 import {h} from '@stencil/core';
 import {DocsPage} from '@storybook/addon-docs';
-import {Args} from '@storybook/api';
 import {DebouncedFunc} from 'lodash';
 import {initializeInterfaceDebounced as defaultInitializeInterfaceDebounced} from './default-init';
 import sharedDefaultStory, {
@@ -13,7 +12,7 @@ import sharedDefaultStory, {
 
 export default function defaultStory<Config = SearchEngineConfiguration>(
   componentTag: string,
-  defaultArgs: Args,
+  defaultArgs: Record<string, unknown>,
   advancedConfig: DefaultStoryAdvancedConfig<Config> = {},
   initializeInterfaceDebounced: (
     renderComponentFunction: () => string,

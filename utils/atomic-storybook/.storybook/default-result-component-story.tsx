@@ -1,6 +1,6 @@
 import {h} from '@stencil/core';
 import {DocsPage} from '@storybook/addon-docs';
-import {Args} from '@storybook/api';
+import {Args} from '@storybook/manager-api';
 import {html, TemplateResult} from 'lit-html';
 import {initializeInterfaceDebounced} from './default-init';
 import sharedDefaultStory, {
