@@ -31,10 +31,13 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
  * @part generated-text - The text of the generated answer.
  * @part citations-label - The header of the citations list.
  * @part rephrase-label - The header of the rephrase options.
+ * @part rephrase-buttons - The container of the rephrase buttons section.
  * @part rephrase-button - The button for each of the rephrase options (step-by-step instructions, bulleted list, and summary).
+ * @part rephrase-button-label - The label of the rephrase button.
  *
  * @part citation - The link that allows the user to navigate to the item.
  * @part citation-popover - The pop-up that shows an item preview when the user hovers over the citation.
+ * @part citation-index - The content of the citation item.
  */
 @Component({
   tag: 'atomic-generated-answer',

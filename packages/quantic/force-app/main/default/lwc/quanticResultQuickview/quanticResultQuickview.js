@@ -174,7 +174,7 @@ export default class QuanticResultQuickview extends LightningElement {
   openQuickview() {
     this.isQuickviewOpen = true;
     this._isLoading = true;
-    if (!isHeadlessBundle(this.engineId, HeadlessBundleNames.caseAssist)) {
+    if (isHeadlessBundle(this.engineId, HeadlessBundleNames.search)) {
       this.addRecentResult();
     }
     this.quickview.fetchResultContent();
