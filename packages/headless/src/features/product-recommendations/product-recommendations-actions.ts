@@ -253,7 +253,7 @@ export const buildProductRecommendationsRequest = async (
         s.productRecommendations.skus.length > 0
           ? s.productRecommendations.skus
           : undefined,
-      brandFilter: undefined,
+      brandFilter: s.productRecommendations.filter.brand,
       categoryFilter: s.productRecommendations.filter.category,
     },
     actionsHistory: s.configuration.analytics.enabled
@@ -261,6 +261,6 @@ export const buildProductRecommendationsRequest = async (
       : [],
     context: s.context?.contextValues,
     dictionaryFieldContext: s.dictionaryFieldContext?.contextValues,
-    searchHub: undefined,
+    searchHub: s.searchHub,
   };
 };
