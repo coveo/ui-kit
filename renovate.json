@@ -166,6 +166,13 @@
       "rangeStrategy": "replace",
       "allowedVersions": "3.x",
       "description": "lock until ready to handle v4"
+    },
+    {
+      "matchPackagePatterns": ["^eslint$"],
+      "groupSlug": "eslint",
+      "groupName": "eslint",
+      "rangeStrategy": "replace",
+      "description": "Isolated until ready to handle v9 https://coveord.atlassian.net/browse/KIT-3085"
     }
   ],
   "rangeStrategy": "auto",
