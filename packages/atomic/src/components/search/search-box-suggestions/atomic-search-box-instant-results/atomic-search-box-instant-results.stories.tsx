@@ -2,7 +2,6 @@ import defaultStory from 'atomic-storybook/default-story';
 import {html} from 'lit-html';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
-  'Atomic/SearchBox/InstantResults',
   'atomic-search-box-instant-results',
   {imageSize: 'small'},
   {

@@ -108,7 +108,6 @@ export const renderArgsToResultTemplate = (
 };
 
 export default function defaultResultComponentStory(
-  title: string,
   componentTag: string,
   defaultArgs: Args,
   advancedConfig: DefaultStoryAdvancedConfig = {}
@@ -116,7 +115,7 @@ export default function defaultResultComponentStory(
   const config = buildConfigWithDefaultValues(advancedConfig);
 
   const {defaultModuleExport, exportedStory, getArgs, updateCurrentArgs} =
-    sharedDefaultStory(title, componentTag, defaultArgs, true, config);
+    sharedDefaultStory(componentTag, defaultArgs, true, config);
 
   defaultModuleExport.argTypes = {
     ...resultComponentArgTypes,

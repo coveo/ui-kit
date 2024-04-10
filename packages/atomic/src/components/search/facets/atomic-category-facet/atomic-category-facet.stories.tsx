@@ -2,7 +2,6 @@ import defaultStory from 'atomic-storybook/default-story';
 import {html} from 'lit-html';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
-  'Atomic/CategoryFacet',
   'atomic-category-facet',
   {field: 'geographicalhierarchy'},
   {

@@ -2,7 +2,6 @@ import defaultResultComponentStory from 'atomic-storybook/default-result-compone
 import {html} from 'lit-html';
 
 const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
-  'Atomic/ResultList/ResultFieldsList',
   'atomic-result-fields-list',
   {},
   {

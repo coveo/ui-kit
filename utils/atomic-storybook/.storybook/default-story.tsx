@@ -12,7 +12,6 @@ import sharedDefaultStory, {
 } from './default-story-shared';
 
 export default function defaultStory<Config = SearchEngineConfiguration>(
-  title: string,
   componentTag: string,
   defaultArgs: Args,
   advancedConfig: DefaultStoryAdvancedConfig<Config> = {},
@@ -22,7 +21,7 @@ export default function defaultStory<Config = SearchEngineConfiguration>(
   ) => DebouncedFunc<() => Promise<void>> = defaultInitializeInterfaceDebounced
 ) {
   const {defaultModuleExport, exportedStory, getArgs, updateCurrentArgs} =
-    sharedDefaultStory(title, componentTag, defaultArgs, false, advancedConfig);
+    sharedDefaultStory(componentTag, defaultArgs, false, advancedConfig);
 
   const defaultLoader = initializeInterfaceDebounced(() => {
     const argsToHTMLString = renderArgsToHTMLString(

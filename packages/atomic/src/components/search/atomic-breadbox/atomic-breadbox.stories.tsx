@@ -1,9 +1,9 @@
 import defaultStory from 'atomic-storybook/default-story';
 import {html} from 'lit-html';
 
+const id = 'atomic-breadbox';
 const {defaultModuleExport, exportedStory} = defaultStory(
-  'Atomic/Breadbox',
-  'atomic-breadbox',
+  id,
   {},
   {
     additionalMarkup: () => html`

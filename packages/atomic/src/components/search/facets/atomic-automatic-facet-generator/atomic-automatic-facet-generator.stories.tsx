@@ -2,7 +2,6 @@ import defaultStory from 'atomic-storybook/default-story';
 import {html} from 'lit-html';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
-  'Atomic/AutomaticFacetGenerator',
   'atomic-automatic-facet-generator',
   {desiredCount: '2', areCollapsed: 'false'},
   {

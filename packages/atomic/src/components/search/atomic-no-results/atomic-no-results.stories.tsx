@@ -1,7 +1,6 @@
 import defaultStory from 'atomic-storybook/default-story';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
-  'Atomic/NoResults',
   'atomic-no-results',
   {},
   {
@@ -19,6 +18,5 @@ const {defaultModuleExport, exportedStory} = defaultStory(
 export default {
   ...defaultModuleExport,
   title: 'Atomic/NoResults',
-  id: 'atomic-no-results',
 };
 export const Default = exportedStory;

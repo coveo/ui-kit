@@ -1,7 +1,6 @@
 import defaultStory from 'atomic-storybook/default-story';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
-  'Atomic/SmartSnippet/SmartSnippetSuggestions',
   'atomic-smart-snippet-suggestions',
   {},
   {
