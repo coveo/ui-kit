@@ -98,7 +98,6 @@ export function renderAdditionalMarkup(additionalMarkup: () => TemplateResult) {
 }
 
 export default function sharedDefaultStory(
-  title: string,
   componentTag: string,
   defaultArgs: Args,
   isResultComponent: boolean,
@@ -111,8 +110,6 @@ export default function sharedDefaultStory(
   };
 
   const defaultModuleExport = {
-    title,
-    id: componentTag,
     argTypes: mapPropsToArgTypes(componentTag),
     parameters: {
       docs: {

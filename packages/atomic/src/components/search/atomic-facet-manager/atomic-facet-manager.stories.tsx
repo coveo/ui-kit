@@ -1,9 +1,9 @@
 import defaultStory from 'atomic-storybook/default-story';
 import {html} from 'lit-html';
 
+const id = 'atomic-facet-manager';
 const {defaultModuleExport, exportedStory} = defaultStory(
-  'Atomic/FacetManager',
-  'atomic-facet-manager',
+  id,
   {},
   {
     additionalMarkup: () => html`
@@ -32,5 +32,5 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   }
 );
 
-export default {...defaultModuleExport, title: 'Atomic/FacetManager'};
+export default {...defaultModuleExport, title: 'Atomic/FacetManager', id};
 export const Default = exportedStory;
