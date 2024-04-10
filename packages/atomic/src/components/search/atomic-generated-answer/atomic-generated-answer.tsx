@@ -8,7 +8,7 @@ import {
   GeneratedAnswerStyle,
   buildInteractiveCitation,
 } from '@coveo/headless';
-import {Component, Element, State, Prop} from '@stencil/core';
+import {Component, Element, State, Prop, Watch} from '@stencil/core';
 import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
@@ -48,6 +48,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   public generatedAnswer!: GeneratedAnswer;
   public searchStatus!: SearchStatus;
+  private resizeObserver?: ResizeObserver;
 
   @BindStateToController('generatedAnswer', {
     onUpdateCallbackMethod: 'onGeneratedAnswerStateUpdate',
@@ -70,6 +71,9 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   @State()
   copyError = false;
 
+  @State()
+  isCollapsed = false;
+
   /**
    * The answer style to apply when the component first loads.
    * Options:
@@ -84,6 +88,8 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   protected ariaMessage!: string;
 
   private generatedAnswerCommon!: GeneratedAnswerCommon;
+  private fullAnswerHeight?: number;
+  private maxCollapsedHeight = 250;
 
   public initialize() {
     this.generatedAnswerCommon = new GeneratedAnswerCommon({
@@ -97,6 +103,8 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       getCopyError: () => this.copyError,
       setCopyError: this.setCopyError,
       setAriaMessage: this.setAriaMessage,
+      getIsCollapsed: () => this.isCollapsed,
+      setIsCollapsed: this.setIsCollapsed,
       buildInteractiveCitation: (props) =>
         buildInteractiveCitation(this.bindings.engine, props),
     });
@@ -110,6 +118,26 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     });
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.generatedAnswerCommon.insertFeedbackModal();
+
+    if (window.ResizeObserver) {
+      this.resizeObserver = new ResizeObserver(() => this.adaptAnswerHeight());
+      this.resizeObserver.observe(this.host);
+    }
+  }
+
+  @Watch('isCollapsed')
+  public updateAnswerCollapsed() {
+    const container = this.getAnswerContainer();
+
+    if (!container) {
+      return;
+    }
+
+    this.toggleClass(container, 'answer-collapsed', this.isCollapsed);
+  }
+
+  public disconnectedCallback() {
+    this.resizeObserver?.disconnect();
   }
 
   // @ts-expect-error: This function is used by BindStateToController.
@@ -128,6 +156,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     }
 
     this.setAriaMessage(this.generatedAnswerCommon.getGeneratedAnswerStatus());
+    this.setIsCollapsed(true);
   };
 
   private setCopied = (isCopied: boolean) => {
@@ -141,6 +170,68 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   private setAriaMessage = (message: string) => {
     this.ariaMessage = message;
   };
+
+  private setIsCollapsed = (isCollapsed: boolean) => {
+    this.isCollapsed = isCollapsed;
+  };
+
+  private toggleClass(element: Element, className: string, condition: boolean) {
+    if (condition) {
+      element.classList.add(className);
+    } else {
+      element.classList.remove(className);
+    }
+  }
+
+  private adaptAnswerHeight() {
+    if (this.isShowButtonDisplayed()) {
+      this.fullAnswerHeight = this.host?.shadowRoot
+        ?.querySelector('p[part="generated-text"')
+        ?.getBoundingClientRect().height;
+      this.updateAnswerHeight();
+    }
+  }
+
+  private getShowButton() {
+    return this.host?.shadowRoot?.querySelector('[part="answer-show-button"');
+  }
+
+  private getAnswerContainer() {
+    return this.host?.shadowRoot?.querySelector('[part="generated-container"');
+  }
+
+  private getAnswerFooter() {
+    return this.host?.shadowRoot?.querySelector(
+      '[part="generated-answer-footer"'
+    );
+  }
+
+  private updateAnswerHeight() {
+    const container = this.getAnswerContainer();
+    const footer = this.getAnswerFooter();
+    const showButton = this.getShowButton();
+
+    if (!container || !showButton || !footer) {
+      return;
+    }
+
+    if (this.fullAnswerHeight! > this.maxCollapsedHeight) {
+      this.toggleClass(container, 'answer-collapsed', this.isCollapsed);
+      this.toggleClass(showButton, 'show-button-hidden', false);
+    } else {
+      this.toggleClass(container, 'answer-collapsed', false);
+      this.toggleClass(footer, 'show-button-hidden', true);
+    }
+  }
+
+  private isShowButtonDisplayed() {
+    const showButton = this.getShowButton();
+    return (
+      showButton &&
+      showButton.getBoundingClientRect().width > 0 &&
+      showButton.getBoundingClientRect().height > 0
+    );
+  }
 
   public render() {
     return this.generatedAnswerCommon.render();

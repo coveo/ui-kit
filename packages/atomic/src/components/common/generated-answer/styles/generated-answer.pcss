@@ -26,11 +26,21 @@
       @apply mx-0;
     }
   }
+
+  [part='rephrase-button-label'] {
+    @apply block;
+  }
 }
 
 @define-mixin mobile-footer-xs-layout {
   [part='rephrase-button-label'] {
     @apply hidden;
+  }
+}
+
+@define-mixin mobile-generated-answer-footer-layout {
+  & {
+    @apply flex-col gap-1;
   }
 }
 
@@ -44,8 +54,7 @@
   container-type: inline-size;
 }
 
-.footer,
-[part='generated-answer-footer'] {
+.footer {
   @apply flex;
 
   .source-citations {
@@ -64,5 +73,32 @@
   }
   @container (max-width: 400px) {
     @mixin mobile-footer-xs-layout;
+  }
+}
+
+[part='generated-answer-footer'] {
+  &.show-button-hidden {
+    @apply justify-end;
+    [part='answer-show-button'] {
+      @apply hidden;
+    }
+  }
+
+  @container (max-width: 600px) {
+    @mixin mobile-generated-answer-footer-layout;
+  }
+
+  @screen mobile-only {
+    @mixin mobile-generated-answer-footer-layout;
+  }
+}
+
+[part='generated-container'] {
+  &.answer-collapsed {
+    @apply max-h-[250px] overflow-hidden relative content-[''];
+  }
+  &.answer-collapsed:before {
+    @apply h-full w-full absolute top-0 left-0 content-[''];
+    background: linear-gradient(transparent 180px, white);
   }
 }

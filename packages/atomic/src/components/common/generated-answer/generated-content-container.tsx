@@ -8,7 +8,7 @@ interface GeneratedContentContainerProps {
 export const GeneratedContentContainer: FunctionalComponent<
   GeneratedContentContainerProps
 > = (props, children) => (
-  <div class="mt-6">
+  <div part="generated-container" class="mt-6">
     <p
       part="generated-text"
       class={`mb-0 text-on-background whitespace-pre-wrap ${

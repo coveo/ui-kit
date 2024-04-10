@@ -21,6 +21,7 @@ import {FeedbackButton} from './feedback-button';
 import {GeneratedContentContainer} from './generated-content-container';
 import {RephraseButtons} from './rephrase-buttons';
 import {RetryPrompt} from './retry-prompt';
+import {ShowButton} from './show-button';
 import {SourceCitations} from './source-citations';
 import {TypingLoader} from './typing-loader';
 
@@ -35,6 +36,8 @@ interface GeneratedAnswerCommonOptions {
   getCopyError: () => boolean;
   setCopyError: (copyError: boolean) => void;
   setAriaMessage: (message: string) => void;
+  getIsCollapsed: () => boolean;
+  setIsCollapsed: (isCollapsed: boolean) => void;
   buildInteractiveCitation: (
     props: InteractiveCitationProps
   ) => InteractiveCitation;
@@ -318,11 +321,22 @@ export class GeneratedAnswerCommon {
           !this.props.getGeneratedAnswerState()?.isStreaming && (
             <div
               part="generated-answer-footer"
-              class="flex justify-end mt-6 text-neutral-dark text-xs"
+              class="flex justify-between mt-6"
             >
-              <slot name="disclaimer" slot="disclaimer">
-                {this.props.getBindings().i18n.t('generated-answer-disclaimer')}
-              </slot>
+              <ShowButton
+                i18n={this.props.getBindings().i18n}
+                onClick={() =>
+                  this.props.setIsCollapsed(!this.props.getIsCollapsed())
+                }
+                isCollapsed={this.props.getIsCollapsed()}
+              ></ShowButton>
+              <div class="text-neutral-dark text-xs">
+                <slot name="disclaimer" slot="disclaimer">
+                  {this.props
+                    .getBindings()
+                    .i18n.t('generated-answer-disclaimer')}
+                </slot>
+              </div>
             </div>
           )}
       </div>
