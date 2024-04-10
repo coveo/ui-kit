@@ -13,7 +13,7 @@ export function pickNonBaseParams<
   // cheap version of _.omit
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const {url, accessToken, organizationId, authentication, ...nonBase} = req;
-  return nonBase;
+  return recursivelyRemoveUndefinedProperties(nonBase);
 }
 
 export const unwrapError = (
@@ -81,3 +81,22 @@ const unwrapErrorByException = (
   statusCode: res.response.status,
   type: res.body.exception.code,
 });
+
+function recursivelyRemoveUndefinedProperties<T extends Object>(obj: T): T {
+  const objCopy = Object.assign({}, obj);
+  for (const [key, value] of Object.entries(objCopy)) {
+    if (value === undefined) {
+      delete objCopy[key as keyof T];
+    } else if (Object.prototype.toString.call(value) === '[object Object]') {
+      objCopy[key as keyof T] = recursivelyRemoveUndefinedProperties(value);
+    } else if (Object.prototype.toString.call(value) === '[object Array]') {
+      objCopy[key as keyof T] = value.map((v: unknown) =>
+        Object.prototype.toString.call(v) === '[object Object]'
+          ? recursivelyRemoveUndefinedProperties(v as Object)
+          : v
+      );
+    }
+  }
+
+  return objCopy;
+}
