@@ -2,6 +2,7 @@ import {
   executeCommerceFacetSearch,
   executeCommerceFieldSuggest,
 } from '../../../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions';
+import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
 import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
 import {
@@ -62,16 +63,22 @@ describe('CategoryFacetSearch', () => {
       expect(facetSearch).toBeTruthy();
     });
 
-    it('#search dispatches #executeCommerceFacetSearch when #isForFieldSuggestions is false', () => {
-      facetSearch.search();
-      expect(executeCommerceFacetSearch).toHaveBeenCalled();
+    it('adds #categoryFacetSearchSet reducer to engine', () => {
+      expect(engine.addReducers).toHaveBeenCalledWith({
+        categoryFacetSearchSet,
+      });
     });
+  });
 
-    it('#search dispatches #executeCommerceFieldSuggest when #isForFieldSuggestions is true', () => {
-      props.isForFieldSuggestions = true;
-      initFacetSearch();
-      facetSearch.search();
-      expect(executeCommerceFieldSuggest).toHaveBeenCalled();
-    });
+  it('#search dispatches #executeCommerceFacetSearch when #isForFieldSuggestions is false', () => {
+    facetSearch.search();
+    expect(executeCommerceFacetSearch).toHaveBeenCalled();
+  });
+
+  it('#search dispatches #executeCommerceFieldSuggest when #isForFieldSuggestions is true', () => {
+    props.isForFieldSuggestions = true;
+    initFacetSearch();
+    facetSearch.search();
+    expect(executeCommerceFieldSuggest).toHaveBeenCalled();
   });
 });
