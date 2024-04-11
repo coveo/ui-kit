@@ -42,7 +42,7 @@ describe('SearchCategoryFacet', () => {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, ...config}),
     });
-    state.productListing.facets = [buildMockCategoryFacetResponse({facetId})];
+    state.commerceSearch.facets = [buildMockCategoryFacetResponse({facetId})];
     state.categoryFacetSearchSet[facetId] = buildMockCategoryFacetSearch();
   }
 
@@ -91,6 +91,17 @@ describe('SearchCategoryFacet', () => {
 
   it('#showLessValues dispatches #executeSearch', () => {
     facet.showLessValues();
+
+    expect(executeSearch).toHaveBeenCalled();
+  });
+
+  it('#facetSearch.select dispatches #executeSearch', () => {
+    facet.facetSearch.select({
+      count: 0,
+      displayValue: '',
+      path: [''],
+      rawValue: '',
+    });
 
     expect(executeSearch).toHaveBeenCalled();
   });
