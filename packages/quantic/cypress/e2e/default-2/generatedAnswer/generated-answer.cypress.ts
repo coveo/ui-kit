@@ -159,7 +159,7 @@ describe('quantic-generated-answer', () => {
             );
           });
 
-          it('should display rephrase buttons', () => {
+          it('should display the rephrase buttons', () => {
             Expect.displayRephraseButtons(true);
             Expect.displayRephraseLabel(true);
           });
@@ -278,7 +278,6 @@ describe('quantic-generated-answer', () => {
           describe(`when clicking the ${rephraseOption} rephrase button`, () => {
             const streamId = crypto.randomUUID();
             const secondStreamId = crypto.randomUUID();
-            const thirdStreamId = crypto.randomUUID();
 
             beforeEach(() => {
               mockSearchWithGeneratedAnswer(streamId, param.useCase);
@@ -289,7 +288,12 @@ describe('quantic-generated-answer', () => {
             it(`should send a new search query with the rephrase option ${option} as a parameter`, () => {
               scope('when loading the page', () => {
                 Expect.displayRephraseButtonWithLabel(rephraseOption);
-                Expect.rephraseButtonIsSelected(rephraseOption, false);
+                const expectedRephraseButtonSelected =
+                  option === defaultRephraseOption;
+                Expect.rephraseButtonIsSelected(
+                  rephraseOption,
+                  expectedRephraseButtonSelected
+                );
               });
 
               scope('when selecting the rephrase button', () => {
@@ -312,26 +316,6 @@ describe('quantic-generated-answer', () => {
                   Expect.logRephraseGeneratedAnswer(
                     rephraseOption,
                     secondStreamId
-                  );
-                }
-              });
-
-              scope('when unselecting the rephrase button', () => {
-                mockSearchWithGeneratedAnswer(thirdStreamId, param.useCase);
-                mockStreamResponse(thirdStreamId, genQaMessageTypePayload);
-
-                Actions.clickRephraseButton(rephraseOption);
-                rephraseOptions.forEach((unselectedOption) => {
-                  Expect.displayRephraseButtonWithLabel(unselectedOption);
-                  Expect.rephraseButtonIsSelected(unselectedOption, false);
-                });
-                Expect.searchQueryContainsCorrectRephraseOption(
-                  defaultRephraseOption
-                );
-                if (analyticsMode === 'legacy') {
-                  Expect.logRephraseGeneratedAnswer(
-                    defaultRephraseOption,
-                    thirdStreamId
                   );
                 }
               });

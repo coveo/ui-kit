@@ -1,8 +1,8 @@
 import {Component, h, Prop} from '@stencil/core';
 import {
-  ResultDisplayDensity,
-  ResultDisplayImageSize,
-  getResultDisplayClasses,
+  ItemDisplayDensity,
+  ItemDisplayImageSize,
+  getItemDisplayClasses,
 } from '../../common/layout/display-options';
 
 const placeholderClasses = 'block bg-neutral rounded';
@@ -17,12 +17,12 @@ const placeholderClasses = 'block bg-neutral rounded';
   shadow: true,
 })
 export class AtomicResultTablePlaceholder {
-  @Prop() density!: ResultDisplayDensity;
-  @Prop() imageSize!: ResultDisplayImageSize;
+  @Prop() density!: ItemDisplayDensity;
+  @Prop() imageSize!: ItemDisplayImageSize;
   @Prop() rows!: number;
 
   private getClasses() {
-    return getResultDisplayClasses('table', this.density, this.imageSize);
+    return getItemDisplayClasses('table', this.density, this.imageSize);
   }
 
   public render() {

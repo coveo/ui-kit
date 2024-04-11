@@ -69,6 +69,10 @@ export interface PageParam {
   page?: number;
 }
 
+export interface PerPageParam {
+  perPage?: number;
+}
+
 export interface SortParam {
   sort?: SortOption;
 }
@@ -83,4 +87,8 @@ export interface FacetQueryParam {
 
 export interface FacetIdParam {
   facetId: string;
+}
+
+export interface SlotIdParam {
+  id: string;
 }
