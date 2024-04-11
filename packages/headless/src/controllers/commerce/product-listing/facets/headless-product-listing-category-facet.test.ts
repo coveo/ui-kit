@@ -96,4 +96,15 @@ describe('ProductListingCategoryFacet', () => {
 
     expect(fetchProductListing).toHaveBeenCalled();
   });
+
+  it('#facetSearch.select dispatches #fetchProductListing', () => {
+    facet.facetSearch.select({
+      count: 0,
+      displayValue: '',
+      path: [''],
+      rawValue: '',
+    });
+
+    expect(fetchProductListing).toHaveBeenCalled();
+  });
 });
