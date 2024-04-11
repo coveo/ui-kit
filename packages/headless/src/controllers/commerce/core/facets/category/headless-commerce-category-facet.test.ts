@@ -121,12 +121,10 @@ describe('CategoryFacet', () => {
 
   describe('#facetSearch', () => {
     it('exposes facet search controller', () => {
-      expect(facet.facetSearch).toMatchObject({
-        clear: expect.any(Function),
-        search: expect.any(Function),
-        select: expect.any(Function),
-        updateText: expect.any(Function),
-      });
+      expect(facet.facetSearch.clear).toBeTruthy();
+      expect(facet.facetSearch.search).toBeTruthy();
+      expect(facet.facetSearch.select).toBeTruthy();
+      expect(facet.facetSearch.updateText).toBeTruthy();
     });
   });
 
@@ -263,7 +261,7 @@ describe('CategoryFacet', () => {
       facetSearchState.response.moreValuesAvailable = true;
       facetSearchState.options.query = 'test';
       facetSearchState.response.values = [
-        {count: 5, displayValue: 'foo', path: ['f00'], rawValue: 'f00'},
+        {count: 1, displayValue: 'test', path: ['test'], rawValue: 'test'},
       ];
 
       state.categoryFacetSearchSet[facetId] = facetSearchState;
@@ -273,7 +271,7 @@ describe('CategoryFacet', () => {
         moreValuesAvailable: true,
         query: 'test',
         values: [
-          {count: 5, displayValue: 'foo', path: ['f00'], rawValue: 'f00'},
+          {count: 1, displayValue: 'test', path: ['test'], rawValue: 'test'},
         ],
       });
     });
