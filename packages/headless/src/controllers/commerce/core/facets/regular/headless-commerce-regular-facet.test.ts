@@ -95,4 +95,32 @@ describe('RegularFacet', () => {
       selection: facetValue,
     });
   });
+
+  describe('#facetSearch', () => {
+    it('exposes facet search controller', () => {
+      expect(facet.facetSearch.clear).toBeTruthy();
+      expect(facet.facetSearch.search).toBeTruthy();
+      expect(facet.facetSearch.select).toBeTruthy();
+      expect(facet.facetSearch.updateText).toBeTruthy();
+    });
+  });
+
+  it('#state.facetSearch returns the facet search state', () => {
+    const facetSearchState = buildMockFacetSearch();
+    facetSearchState.isLoading = true;
+    facetSearchState.response.moreValuesAvailable = true;
+    facetSearchState.options.query = 'test';
+    facetSearchState.response.values = [
+      {count: 1, displayValue: 'test', rawValue: 'test'},
+    ];
+
+    state.facetSearchSet[facetId] = facetSearchState;
+
+    expect(facet.state.facetSearch).toEqual({
+      isLoading: true,
+      moreValuesAvailable: true,
+      query: 'test',
+      values: [{count: 1, displayValue: 'test', rawValue: 'test'}],
+    });
+  });
 });
