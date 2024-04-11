@@ -1,11 +1,4 @@
-import {
-  AsyncThunkAction,
-  PayloadActionCreator,
-  PrepareAction,
-} from '@reduxjs/toolkit';
-import {AsyncThunkOptions} from '../../../../app/async-thunk-options';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {ThunkExtraArguments} from '../../../../app/thunk-extra-arguments';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {
   AnyFacetRequest,
@@ -36,6 +29,7 @@ import {
 } from '../../../core/facets/facet/headless-core-facet';
 import {DateRangeRequest} from '../../../core/facets/range-facet/date-facet/headless-core-date-facet';
 import {NumericRangeRequest} from '../../../core/facets/range-facet/numeric-facet/headless-core-numeric-facet';
+import {FetchResultsActionCreator, ToggleActionCreator} from '../common';
 
 export type {
   FacetType,
@@ -60,21 +54,9 @@ export interface CoreCommerceFacetProps {
 
 export interface CoreCommerceFacetOptions {
   facetId: string;
-  toggleSelectActionCreator: PayloadActionCreator<
-    unknown,
-    string,
-    PrepareAction<unknown>
-  >;
-  toggleExcludeActionCreator?: PayloadActionCreator<
-    unknown,
-    string,
-    PrepareAction<unknown>
-  >;
-  fetchResultsActionCreator: () => AsyncThunkAction<
-    unknown,
-    void,
-    AsyncThunkOptions<unknown, ThunkExtraArguments>
-  >;
+  toggleSelectActionCreator: ToggleActionCreator;
+  toggleExcludeActionCreator?: ToggleActionCreator;
+  fetchResultsActionCreator: FetchResultsActionCreator;
   facetResponseSelector: (
     state: CommerceEngine['state'],
     facetId: string

@@ -59,7 +59,8 @@ export {buildRecommendations} from './controllers/commerce/recommendations/headl
 export type {
   Pagination,
   PaginationState,
-  PaginationControllerState,
+  PaginationProps,
+  PaginationOptions,
 } from './controllers/commerce/core/pagination/headless-core-commerce-pagination';
 export {buildProductListingPagination} from './controllers/commerce/product-listing/pagination/headless-product-listing-pagination';
 export {buildSearchPagination} from './controllers/commerce/search/pagination/headless-search-pagination';
@@ -68,8 +69,7 @@ export type {
   InteractiveResult,
   InteractiveResultOptions,
   InteractiveResultProps,
-} from './controllers/commerce/product-listing/result-list/headless-product-listing-interactive-result';
-export {buildInteractiveResult} from './controllers/commerce/product-listing/result-list/headless-product-listing-interactive-result';
+} from './controllers/commerce/core/result-list/headless-core-interactive-result';
 
 export type {ProductView} from './controllers/commerce/product-view/headless-product-view';
 export {buildProductView} from './controllers/commerce/product-view/headless-product-view';
@@ -157,3 +157,12 @@ export type {
   ProductTemplatesManager,
 } from './features/commerce/product-templates/product-templates-manager';
 export {buildProductTemplatesManager} from './features/commerce/product-templates/product-templates-manager';
+
+export type {
+  BreadcrumbManager,
+  Breadcrumb,
+  BreadcrumbValue,
+  DeselectableValue,
+} from './controllers/commerce/core/breadcrumb-manager/headless-core-breadcrumb-manager';
+export {buildProductListingBreadcrumbManager} from './controllers/commerce/product-listing/breadcrumb-manager/headless-product-listing-breadcrumb-manager';
+export {buildSearchBreadcrumbManager} from './controllers/commerce/search/breadcrumb-manager/headless-search-breadcrumb-manager';
