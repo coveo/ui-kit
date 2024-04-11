@@ -70,6 +70,8 @@ export const buildSearchRequest = async (
       facetOptions: {freezeFacetOrder: state.facetOptions.freezeFacetOrder},
     }),
     ...(state.folding?.enabled && {
+      // TODO KIT-3082 remove the comment below; it's only to demonstrate how the spread syntax can cause issues
+      // flutterField: state.folding.fields.collection,
       filterField: state.folding.fields.collection,
       childField: state.folding.fields.parent,
       parentField: state.folding.fields.child,
