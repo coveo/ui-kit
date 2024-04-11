@@ -18,8 +18,8 @@ jest.mock(
   '../../../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions'
 );
 
-describe('CommerceFacetSearch', () => {
-  const facetId: string = 'searchable_facet_id';
+describe('RegularFacetSearch', () => {
+  const facetId: string = 'regular_facet_id';
   let engine: MockedCommerceEngine;
   let props: FacetSearchProps;
   let facetSearch: RegularFacetSearch;
@@ -28,7 +28,7 @@ describe('CommerceFacetSearch', () => {
     engine = buildMockCommerceEngine(preloadedState);
   }
 
-  function initCommerceFacetSearch() {
+  function initFacetSearch() {
     facetSearch = buildRegularFacetSearch(engine, props);
   }
 
@@ -53,7 +53,7 @@ describe('CommerceFacetSearch', () => {
     initEngine();
     setFacetSearchState();
 
-    initCommerceFacetSearch();
+    initFacetSearch();
   });
 
   describe('initialization', () => {
@@ -68,7 +68,7 @@ describe('CommerceFacetSearch', () => {
 
     it('#search dispatches #executeCommerceFieldSuggest when #isForFieldSuggestions is true', () => {
       props.isForFieldSuggestions = true;
-      initCommerceFacetSearch();
+      initFacetSearch();
       facetSearch.search();
       expect(executeCommerceFieldSuggest).toHaveBeenCalled();
     });

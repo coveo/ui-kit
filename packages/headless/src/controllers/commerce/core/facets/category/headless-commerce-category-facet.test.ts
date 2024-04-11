@@ -66,12 +66,6 @@ describe('CategoryFacet', () => {
     state.categoryFacetSearchSet[facetId] = buildMockCategoryFacetSearch();
   }
 
-  // eslint-disable-next-line @cspell/spellchecker
-  // TODO CAPI-90: Test facet search
-  /*function setFacetSearch() {
-    state.facetSearchSet[facetId] = buildMockFacetSearch();
-  }*/
-
   beforeEach(() => {
     jest.resetAllMocks();
 
@@ -82,9 +76,6 @@ describe('CategoryFacet', () => {
 
     state = buildMockCommerceState();
     setFacetState();
-    // eslint-disable-next-line @cspell/spellchecker
-    // TODO CAPI-90: Test facet search
-    //  setFacetSearch();
 
     initEngine(state);
     initCategoryFacet();
@@ -110,6 +101,15 @@ describe('CategoryFacet', () => {
     });
   });
 
+  it('#showMoreValues dispatches #updateCategoryFacetNumberOfValues with correct payload', () => {
+    facet.showMoreValues();
+
+    expect(updateCategoryFacetNumberOfValues).toHaveBeenCalledWith({
+      facetId,
+      numberOfValues: 5,
+    });
+  });
+
   it('#showLessValues dispatches #updateCategoryFacetNumberOfValues with correct payload', () => {
     facet.showLessValues();
 
@@ -119,12 +119,14 @@ describe('CategoryFacet', () => {
     });
   });
 
-  it('#showMoreValues dispatches #updateCategoryFacetNumberOfValues with correct payload', () => {
-    facet.showMoreValues();
-
-    expect(updateCategoryFacetNumberOfValues).toHaveBeenCalledWith({
-      facetId,
-      numberOfValues: 5,
+  describe('#facetSearch', () => {
+    it('exposes facet search controller', () => {
+      expect(facet.facetSearch).toMatchObject({
+        clear: expect.any(Function),
+        search: expect.any(Function),
+        select: expect.any(Function),
+        updateText: expect.any(Function),
+      });
     });
   });
 
@@ -252,6 +254,27 @@ describe('CategoryFacet', () => {
 
           expect(facet.state.canShowMoreValues).toBe(true);
         });
+      });
+    });
+
+    it('#facetSearch returns the facet search state', () => {
+      const facetSearchState = buildMockCategoryFacetSearch();
+      facetSearchState.isLoading = true;
+      facetSearchState.response.moreValuesAvailable = true;
+      facetSearchState.options.query = 'test';
+      facetSearchState.response.values = [
+        {count: 5, displayValue: 'foo', path: ['f00'], rawValue: 'f00'},
+      ];
+
+      state.categoryFacetSearchSet[facetId] = facetSearchState;
+
+      expect(facet.state.facetSearch).toEqual({
+        isLoading: true,
+        moreValuesAvailable: true,
+        query: 'test',
+        values: [
+          {count: 5, displayValue: 'foo', path: ['f00'], rawValue: 'f00'},
+        ],
       });
     });
 
