@@ -17,8 +17,8 @@ export type RegularFacetSearchState =
   CoreFacetSearchState<SpecificFacetSearchResult>;
 
 export type RegularFacetSearch = Omit<
-  ReturnType<typeof buildRegularFacetSearch>,
-  'state'
+  ReturnType<typeof buildFacetSearch>,
+  'showMoreResults' | 'updateCaptions' | 'state'
 > & {
   state: RegularFacetSearchState;
 };
@@ -29,7 +29,7 @@ export function buildRegularFacetSearch(
     FacetSearchProps,
     'executeFacetSearchActionCreator' | 'executeFieldSuggestActionCreator'
   >
-) {
+): RegularFacetSearch {
   if (!loadRegularFacetSearchReducers(engine)) {
     throw loadReducerError;
   }

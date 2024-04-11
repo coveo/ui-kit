@@ -15,8 +15,8 @@ export type CategoryFacetSearchState =
   CoreFacetSearchState<CategoryFacetSearchResult>;
 
 export type CategoryFacetSearch = Omit<
-  ReturnType<typeof buildCategoryFacetSearch>,
-  'state'
+  ReturnType<typeof buildCoreCategoryFacetSearch>,
+  'showMoreResults' | 'updateCaptions' | 'state'
 > & {
   state: CategoryFacetSearchState;
 };
@@ -27,7 +27,7 @@ export function buildCategoryFacetSearch(
     CategoryFacetSearchProps,
     'executeFacetSearchActionCreator' | 'executeFieldSuggestActionCreator'
   >
-) {
+): CategoryFacetSearch {
   if (!loadCategoryFacetSearchReducers(engine)) {
     throw loadReducerError;
   }
