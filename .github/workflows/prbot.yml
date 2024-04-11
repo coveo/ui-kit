@@ -245,8 +245,9 @@ jobs:
     secrets:
       SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
       SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
-  required-jobs:
-    if: ${{!cancelled() && !contains(needs.*.result, 'failure')}}
+  is-valid:
+    name: 'Confirm build is valid'
+    if: ${{ always() }}
     needs:
       - 'build'
       - 'lint-check'
@@ -268,16 +269,8 @@ jobs:
       - 'e2e-headless-ssr-test-pages-prod'
     runs-on: ubuntu-latest
     steps:
-      - run: echo 'All required jobs have passed'
-  is-valid:
-    if: ${{!cancelled() && !contains(needs.*.result, 'failure')}}
-    name: 'Confirm build is valid'
-    needs:
-      - 'required-jobs'
-    runs-on: ubuntu-latest
-    steps:
       - run: |
-          success="${{ needs.required-jobs.result == 'success' }}"
+          success="${{ !cancelled() && !contains(needs.*.result, 'failure')}}"
           if [[ $success == "true" ]]; then
             echo "Build is valid"
             exit 0
