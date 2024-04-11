@@ -1,7 +1,7 @@
 import {
   dispatchSearchBoxSuggestionsEvent,
   SearchBoxSuggestionElement,
-} from '../../../src/components/search/search-box-suggestions/suggestions-common';
+} from '../../../src/components/common/search-box/suggestions-common';
 import {
   SafeStorage,
   StorageItems,

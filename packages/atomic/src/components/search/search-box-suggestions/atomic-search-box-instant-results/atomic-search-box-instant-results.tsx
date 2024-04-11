@@ -3,6 +3,7 @@ import {
   buildInteractiveInstantResult,
   InstantResults,
   Result,
+  SearchBox,
 } from '@coveo/headless';
 import {Component, Element, State, h, Prop, Method} from '@stencil/core';
 import {InitializableComponent} from '../../../../utils/initialization-utils';
@@ -15,13 +16,14 @@ import {
   ItemDisplayImageSize,
   ItemDisplayLayout,
 } from '../../../common/layout/display-options';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {
   dispatchSearchBoxSuggestionsEvent,
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
-} from '../suggestions-common';
+} from '../../../common/search-box/suggestions-common';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {AtomicStore} from '../../atomic-search-interface/store';
 
 export type AriaLabelGenerator = (
   bindings: Bindings,
@@ -40,7 +42,7 @@ export type AriaLabelGenerator = (
   shadow: true,
 })
 export class AtomicSearchBoxInstantResults implements InitializableComponent {
-  public bindings!: SearchBoxSuggestionsBindings;
+  public bindings!: SearchBoxSuggestionsBindings<SearchBox, Bindings>;
   private itemRenderingFunction: ItemRenderingFunction;
   private results: Result[] = [];
   private itemTemplateProvider!: ItemTemplateProvider;
@@ -86,7 +88,7 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
 
   public componentWillLoad() {
     try {
-      dispatchSearchBoxSuggestionsEvent((bindings) => {
+      dispatchSearchBoxSuggestionsEvent<SearchBox, Bindings>((bindings) => {
         this.bindings = bindings;
         return this.initialize();
       }, this.host);
@@ -116,7 +118,10 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
   }
 
   private renderItems(): SearchBoxSuggestionElement[] {
-    if (!this.bindings.suggestedQuery() || this.bindings.store.isMobile()) {
+    if (
+      !this.bindings.suggestedQuery() ||
+      (this.bindings.store as AtomicStore).isMobile()
+    ) {
       return [];
     }
     const results = this.instantResults.state.results.length

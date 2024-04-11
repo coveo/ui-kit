@@ -39,13 +39,13 @@ import {SearchInput} from '../../common/search-box/search-input';
 import {SearchTextArea} from '../../common/search-box/search-text-area';
 import {SubmitButton} from '../../common/search-box/submit-button';
 import {SuggestionManager} from '../../common/search-box/suggestion-manager';
-import {TextAreaSubmitButton} from '../../common/search-box/text-area-submit-button';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {
   SearchBoxSuggestionElement,
   SearchBoxSuggestionsBindings,
   SearchBoxSuggestionsEvent,
-} from '../search-box-suggestions/suggestions-common';
+} from '../../common/search-box/suggestions-common';
+import {TextAreaSubmitButton} from '../../common/search-box/text-area-submit-button';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {RedirectionPayload} from './redirection-payload';
 import {
   ButtonSearchSuggestion,
@@ -100,10 +100,15 @@ import {
 export class AtomicSearchBox implements InitializableComponent<Bindings> {
   @InitializeBindings() public bindings!: Bindings;
   private searchBox!: SearchBox | StandaloneSearchBox;
+  private searchBoxSuggestionEventsQueue: CustomEvent<
+    SearchBoxSuggestionsEvent<SearchBox | StandaloneSearchBox>
+  >[] = [];
   private id!: string;
   private inputRef!: HTMLInputElement;
   private textAreaRef!: HTMLTextAreaElement;
-  @State() private suggestionManager!: SuggestionManager;
+  private suggestionManager!: SuggestionManager<
+    SearchBox | StandaloneSearchBox
+  >;
 
   @Element() private host!: HTMLElement;
 
@@ -112,7 +117,6 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
   private searchBoxState!: SearchBoxState | StandaloneSearchBoxState;
   @State() public error!: Error;
   @State() private isExpanded = false;
-  @State() private activeDescendant = '';
 
   /**
    * The amount of queries displayed when the user interacts with the search box.
@@ -251,18 +255,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
           options: this.searchBoxOptions,
         });
 
-    this.suggestionManager = new SuggestionManager(
-      {
-        getNumberOfSuggestionsToDisplay: () => this.numberOfQueries,
-        updateQuery: (query) => this.searchBox.updateText(query),
-        getSearchBoxValue: () => this.searchBoxState.value,
-        getSuggestionTimeout: () => this.suggestionTimeout,
-        getSuggestionDelay: () => this.suggestionDelay,
-      },
-      () => this.bindings.store.isMobile(),
-      this.bindings.engine.logger
-    );
-    this.suggestionManager.initializeSuggestions(this.suggestionBindings);
+    this.initializeSuggestionManager();
   }
 
   public componentWillUpdate() {
@@ -294,8 +287,29 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
   }
 
   @Listen('atomic/searchBoxSuggestion/register')
-  public registerSuggestions(event: CustomEvent<SearchBoxSuggestionsEvent>) {
-    this.suggestionManager.registerSuggestions(event, this.suggestionBindings);
+  public registerSuggestions(
+    event: CustomEvent<
+      SearchBoxSuggestionsEvent<SearchBox | StandaloneSearchBox>
+    >
+  ) {
+    if (!this.bindings) {
+      this.searchBoxSuggestionEventsQueue.push(event);
+    } else {
+      this.suggestionManager.registerSuggestionsFromEvent(
+        event,
+        this.suggestionBindings
+      );
+    }
+  }
+
+  public componentWillRender() {
+    this.searchBoxSuggestionEventsQueue.forEach((evt) => {
+      this.suggestionManager.registerSuggestionsFromEvent(
+        evt,
+        this.suggestionBindings
+      );
+    });
+    this.searchBoxSuggestionEventsQueue = [];
   }
 
   @Watch('redirectionUrl')
@@ -303,7 +317,26 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
     this.initialize();
   }
 
-  private get suggestionBindings(): SearchBoxSuggestionsBindings {
+  private initializeSuggestionManager() {
+    if (this.suggestionManager) {
+      return;
+    }
+
+    this.suggestionManager = new SuggestionManager({
+      getNumberOfSuggestionsToDisplay: () => this.numberOfQueries,
+      updateQuery: (query) => this.searchBox.updateText(query),
+      getSearchBoxValue: () => this.searchBoxState.value,
+      getSuggestionTimeout: () => this.suggestionTimeout,
+      getSuggestionDelay: () => this.suggestionDelay,
+      getHost: () => this.host,
+      getLogger: () => this.bindings.engine.logger,
+    });
+    this.suggestionManager.initializeSuggestions(this.suggestionBindings);
+  }
+
+  private get suggestionBindings(): SearchBoxSuggestionsBindings<
+    SearchBox | StandaloneSearchBox
+  > {
     return {
       ...this.bindings,
       ...this.suggestionManager.partialSuggestionBindings,
@@ -312,7 +345,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
   }
 
   private get partialSuggestionBindings(): Pick<
-    SearchBoxSuggestionsBindings,
+    SearchBoxSuggestionsBindings<SearchBox | StandaloneSearchBox>,
     | 'id'
     | 'isStandalone'
     | 'searchBoxController'
@@ -397,13 +430,19 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
         this.suggestionManager.focusPreviousValue();
         break;
       case 'ArrowRight':
-        if (this.activeDescendant || !this.searchBox.state.value) {
+        if (
+          this.suggestionManager.hasActiveDescendant ||
+          !this.searchBox.state.value
+        ) {
           e.preventDefault();
           this.suggestionManager.focusPanel('right');
         }
         break;
       case 'ArrowLeft':
-        if (this.activeDescendant || !this.searchBox.state.value) {
+        if (
+          this.suggestionManager.hasActiveDescendant ||
+          !this.searchBox.state.value
+        ) {
           e.preventDefault();
           this.suggestionManager.focusPanel('left');
         }
@@ -427,7 +466,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
   ) {
     const id = `${this.id}-${side}-suggestion-${item.key}`;
 
-    const isSelected = id === this.activeDescendant;
+    const isSelected = id === this.suggestionManager.activeDescendant;
 
     if (index === lastIndex && item.hideIfLast) {
       return null;
@@ -526,7 +565,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
             ? 'search-suggestions-double-list'
             : 'search-suggestions-single-list'
         )}
-        aria-activedescendant={this.activeDescendant}
+        aria-activedescendant={this.suggestionManager.activeDescendant}
       >
         {this.renderPanel(
           'left',
@@ -560,7 +599,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
       onClear: () => this.searchBox.clear(),
       popup: {
         id: `${this.id}-popup`,
-        activeDescendant: this.activeDescendant,
+        activeDescendant: this.suggestionManager.activeDescendant,
         expanded: this.isExpanded,
         hasSuggestions: this.suggestionManager.hasSuggestions,
       },
