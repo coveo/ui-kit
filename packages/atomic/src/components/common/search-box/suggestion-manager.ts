@@ -119,6 +119,13 @@ export class SuggestionManager<SearchBoxController> {
   }
 
   public isRightPanelInFocus() {
+    if (
+      isNullOrUndefined(this.panelInFocus) ||
+      isNullOrUndefined(this.rightPanel)
+    ) {
+      return false;
+    }
+
     return this.panelInFocus === this.rightPanel;
   }
 
@@ -166,8 +173,8 @@ export class SuggestionManager<SearchBoxController> {
   }
 
   public clearSuggestions() {
-    this.updateActiveDescendant();
     this.clearSuggestionElements();
+    this.updateActiveDescendant();
   }
 
   public focusNextValue() {
@@ -201,8 +208,11 @@ export class SuggestionManager<SearchBoxController> {
   }
 
   public onSuggestionClick(item: SearchBoxSuggestionElement, e: Event) {
+    if (item.query) {
+      this.clearSuggestions();
+      this.updateOwnerSearchboxQuery(item.query);
+    }
     item.onSelect && item.onSelect(e);
-    item.query && this.clearSuggestions();
   }
 
   public get hasSuggestions() {
@@ -327,12 +337,13 @@ export class SuggestionManager<SearchBoxController> {
     const suggestedQuery = this.activeDescendantElement?.getAttribute(
       this.queryDataAttribute
     );
-    if (
-      suggestedQuery &&
-      this.ownerSearchBoxProps.getSearchBoxValue() !== suggestedQuery
-    ) {
-      this.ownerSearchBoxProps.updateQuery(suggestedQuery);
-      this.updateSuggestedQuery(suggestedQuery);
+    this.updateOwnerSearchboxQuery(suggestedQuery || '');
+  }
+
+  private updateOwnerSearchboxQuery(query: string) {
+    if (query && this.ownerSearchBoxProps.getSearchBoxValue() !== query) {
+      this.ownerSearchBoxProps.updateQuery(query);
+      this.updateSuggestedQuery(query);
     }
   }
 
@@ -386,7 +397,7 @@ export class SuggestionManager<SearchBoxController> {
     const suggestionElements = this.getSuggestionElements(this.leftSuggestions);
     const filterOnDuplicate = new Set();
 
-    return suggestionElements.filter((suggestionElement) => {
+    const out = suggestionElements.filter((suggestionElement) => {
       if (isNullOrUndefined(suggestionElement.query)) {
         return true;
       }
@@ -397,6 +408,8 @@ export class SuggestionManager<SearchBoxController> {
         return true;
       }
     });
+
+    return out;
   }
 
   private getSuggestionElements(suggestions: SearchBoxSuggestions[]) {

@@ -405,6 +405,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
       return;
     }
 
+    this.isExpanded = false;
     this.searchBox.submit();
     this.suggestionManager.onSubmit();
   }
@@ -500,6 +501,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
         isDoubleList={this.suggestionManager.isDoubleList}
         onClick={(e: Event) => {
           this.suggestionManager.onSuggestionClick(item, e);
+          this.isExpanded = false;
           if (this.textarea) {
             this.triggerTextAreaChange(item.query ?? '');
           }
