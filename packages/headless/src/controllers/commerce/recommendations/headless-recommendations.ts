@@ -53,6 +53,7 @@ interface RecommendationsProps {
  * Creates a `Recommendations` controller instance.
  *
  * @param engine - The headless commerce engine.
+ * @param props - The configurable `Recommendations` controller properties.
  * @returns A `Recommendations` controller instance.
  */
 export function buildRecommendations(

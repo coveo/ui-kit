@@ -10,6 +10,7 @@ import {
   FacetsParam,
   PageParam,
   SortParam,
+  PerPageParam,
 } from '../commerce-api-params';
 
 export type BaseCommerceAPIRequest = BaseParam &
@@ -19,7 +20,8 @@ export type BaseCommerceAPIRequest = BaseParam &
   CurrencyParam &
   ClientIdParam &
   ContextParam &
-  PageParam;
+  PageParam &
+  PerPageParam;
 
 export type CommerceAPIRequest = BaseCommerceAPIRequest &
   FacetsParam &
@@ -41,6 +43,7 @@ const prepareRequestParams = (req: CommerceAPIRequest) => {
     country,
     currency,
     page,
+    perPage,
     facets,
     sort,
   } = req;
@@ -52,6 +55,7 @@ const prepareRequestParams = (req: CommerceAPIRequest) => {
     country,
     currency,
     page,
+    perPage,
     facets,
     sort,
   };

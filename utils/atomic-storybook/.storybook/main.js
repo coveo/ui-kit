@@ -1,3 +1,4 @@
+import { dirname, join } from "path";
 const path = require('path');
 const atomicDirectory = path.join(
   require.resolve('@coveo/atomic/package.json'),
@@ -11,12 +12,10 @@ module.exports = {
     path.join(atomicDirectory, 'src/**/*.stories.tsx'),
   ],
   staticDirs: [path.join(atomicDirectory, 'dist')],
-  features: {
-    storyStoreV7: false,
-  },
   addons: [
-    '@storybook/addon-controls',
-    '@storybook/addon-viewport',
+    getAbsolutePath("@storybook/addon-controls"),
+    getAbsolutePath("@storybook/addon-viewport"),
+    '@storybook/addon-webpack5-compiler-swc',
     './preset.js',
   ],
   /** @type {import('webpack')['config']['getNormalizedWebpackOptions']} */
@@ -62,10 +61,14 @@ module.exports = {
     };
   },
   framework: {
-    name: '@storybook/html-webpack5',
+    name: getAbsolutePath("@storybook/html-webpack5"),
     options: {},
   },
   docs: {
     autodocs: false,
   },
 };
+
+function getAbsolutePath(value) {
+  return dirname(require.resolve(join(value, "package.json")));
+}

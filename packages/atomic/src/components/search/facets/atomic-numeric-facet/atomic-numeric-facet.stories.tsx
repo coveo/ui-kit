@@ -2,7 +2,6 @@ import defaultStory from 'atomic-storybook/default-story';
 import {html} from 'lit-html';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
-  'Atomic/NumericFacet',
   'atomic-numeric-facet',
   {field: 'ytviewcount'},
   {
@@ -16,5 +15,9 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   }
 );
 
-export default {...defaultModuleExport, title: 'Atomic/NumericFacet'};
+export default {
+  ...defaultModuleExport,
+  title: 'Atomic/NumericFacet',
+  id: 'atomic-numeric-facet',
+};
 export const Default = exportedStory;

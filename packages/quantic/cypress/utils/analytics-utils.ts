@@ -2,6 +2,7 @@ import {CyHttpMessages} from 'cypress/types/net-stubbing';
 
 export function setCookieToEnableNextAnalytics(trackingId: string) {
   cy.setCookie('LSKey-c$Coveo-Pendragon', trackingId);
+  cy.setCookie('Coveo-Pendragon', trackingId);
 }
 
 export function nextAnalyticsAlias(eventName: string) {

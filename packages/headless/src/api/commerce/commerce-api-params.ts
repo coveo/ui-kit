@@ -69,6 +69,10 @@ export interface PageParam {
   page?: number;
 }
 
+export interface PerPageParam {
+  perPage?: number;
+}
+
 export interface SortParam {
   sort?: SortOption;
 }
