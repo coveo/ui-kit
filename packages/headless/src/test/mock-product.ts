@@ -6,8 +6,8 @@ export function buildMockProduct(config: Partial<Product> = {}): Product {
     clickUri: '',
     ec_name: '',
     additionalFields: {},
-    childProducts: [],
-    totalNumberOfChildProducts: 0,
+    children: [],
+    totalNumberOfChildren: 0,
     ...config,
   };
 }

@@ -1,7 +1,4 @@
-export type ChildProduct = Omit<
-  Product,
-  'childProducts' | 'totalNumberOfChildProducts'
->;
+export type ChildProduct = Omit<Product, 'children' | 'totalNumberOfChildren'>;
 
 export interface Product {
   /**
@@ -88,10 +85,10 @@ export interface Product {
   /**
    * The child products of the product, fetched through [product grouping](https://docs.coveo.com/en/l78i2152).
    */
-  childProducts: ChildProduct[];
+  children: ChildProduct[];
 
   /**
    * The total number of child products fetched through [product grouping](https://docs.coveo.com/en/l78i2152).
    */
-  totalNumberOfChildProducts: number;
+  totalNumberOfChildren: number;
 }
