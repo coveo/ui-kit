@@ -3,6 +3,8 @@ import couldNotGenerateAnAnswer from '@salesforce/label/c.quantic_CouldNotGenera
 import feedback from '@salesforce/label/c.quantic_Feedback';
 import generatedAnswerForYou from '@salesforce/label/c.quantic_GeneratedAnswerForYou';
 import generatedAnswerIsHidden from '@salesforce/label/c.quantic_GeneratedAnswerIsHidden';
+import showLess from '@salesforce/label/c.quantic_GeneratedAnswerShowLess';
+import showMore from '@salesforce/label/c.quantic_GeneratedAnswerShowMore';
 import generatingAnswer from '@salesforce/label/c.quantic_GeneratingAnswer';
 import harmful from '@salesforce/label/c.quantic_Harmful';
 import inaccurate from '@salesforce/label/c.quantic_Inaccurate';
@@ -21,7 +23,7 @@ import {
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
-import {AriaLiveRegion, I18nUtils} from 'c/quanticUtils';
+import {AriaLiveRegion, I18nUtils, getAbsoluteHeight} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 // @ts-ignore
 import errorTemplate from './templates/errorTemplate.html';
@@ -85,6 +87,13 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * @default {false}
    */
   @api multilineFooter;
+  /**
+   * Whether the generated answer should be collapsible when it exceeds the maximum height of 250px.
+   * @api
+   * @type {boolean}
+   * @default {false}
+   */
+  @api collapsible = false;
 
   labels = {
     generatedAnswerForYou,
@@ -104,6 +113,8 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     generatedAnswerIsHidden,
     answerGenerated,
     rgaDisclaimer,
+    showMore,
+    showLess,
   };
 
   /** @type {GeneratedAnswer} */
@@ -122,6 +133,14 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   ariaLiveMessage;
   /** @type {boolean} */
   hasInitializationError = false;
+  /** @type {boolean} */
+  _collapsed = false;
+  /** @type {boolean} */
+  _answerDisplayUpdated = false;
+  /** @type {number} */
+  _maximumAnswerHeight = 250;
+  /** @type {boolean} */
+  _exceedsMaximumHeight = false;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -137,6 +156,9 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       'quantic__generatedanswertoggle',
       this.handleGeneratedAnswerToggle
     );
+    if (this.collapsible) {
+      this._collapsed = true;
+    }
   }
 
   renderedCallback() {
@@ -193,6 +215,22 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     this.state = this.generatedAnswer.state;
     this.updateFeedbackState();
     this.ariaLiveMessage.dispatchMessage(this.getGeneratedAnswerStatus());
+
+    if (this._collapsed) {
+      if (this.isStreaming) {
+        this._exceedsMaximumHeight =
+          this.generatedAnswerElementHeight + 100 > this._maximumAnswerHeight;
+      } else {
+        this._exceedsMaximumHeight =
+          this.generatedAnswerElementHeight > this._maximumAnswerHeight;
+      }
+      console.log('this._exceedsMaximumHeight', this._exceedsMaximumHeight);
+      console.log(
+        'this.generatedAnswerElementHeight',
+        this.generatedAnswerElementHeight
+      );
+      this.updateExpandableAnswerDisplay();
+    }
   }
 
   getGeneratedAnswerStatus() {
@@ -319,6 +357,50 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     sessionStorage?.setItem(GENERATED_ANSWER_DATA_KEY, JSON.stringify(data));
   }
 
+  /**
+   * Returns the smart snippet answer element.
+   * @returns {HTMLElement}
+   */
+  get generatedAnswerElement() {
+    return this.template.querySelector('.generated-answer__answer');
+  }
+
+  /**
+   * Returns the smart snippet answer height.
+   * @returns {number}
+   */
+  get generatedAnswerElementHeight() {
+    // @ts-ignore
+    return getAbsoluteHeight(this.generatedAnswerElement?.firstChild);
+  }
+
+  handleToggleCollapseAnswer() {
+    this._collapsed = !this._collapsed;
+    this.updateExpandableAnswerDisplay();
+  }
+
+  /**
+   * Updates the display of the expandable smart snippet answer.
+   */
+  updateExpandableAnswerDisplay() {
+    if (this._exceedsMaximumHeight) {
+      this.updateGeneratedAnswerCSSVariables();
+    }
+  }
+
+  /**
+   * Sets the the value of the CSS variable "--maxHeight" the value of the _maximumAnswerHeight property.
+   * Sets the the value of the CSS variable "--fullHeight" the value of the actual height of the generated answer.
+   */
+  updateGeneratedAnswerCSSVariables() {
+    const styles = this.generatedAnswerElement?.style;
+    styles.setProperty('--maxHeight', `${this._maximumAnswerHeight}px`);
+    styles.setProperty(
+      '--fullHeight',
+      `${this.generatedAnswerElementHeight}px`
+    );
+  }
+
   get answer() {
     return this?.state?.answer;
   }
@@ -327,8 +409,8 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     return this?.state?.citations;
   }
 
-  get hasCitations() {
-    return !!this.citations.length;
+  get shouldDisplayCitations() {
+    return !!this.citations.length && !this._collapsed;
   }
 
   get isLoading() {
@@ -340,7 +422,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get shouldDisplayActions() {
-    return this.isVisible && !this.isStreaming;
+    return this.isVisible && !this.isStreaming && !this._collapsed;
   }
 
   get isVisible() {
@@ -357,8 +439,15 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get generatedAnswerClass() {
+    console.log('generatedAnswerClass', this._exceedsMaximumHeight);
     return `generated-answer__answer ${
       this.isStreaming ? 'generated-answer__answer--streaming' : ''
+    } ${
+      this._collapsed
+        ? 'generated-answer__answer--collapsed'
+        : 'generated-answer__answer--expanded'
+    } ${
+      this._exceedsMaximumHeight ? 'generated-answer__answer--overflow' : ''
     }`;
   }
 
@@ -401,9 +490,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get generatedAnswerFooterCssClass() {
-    return `slds-grid slds-wrap slds-grid_align-spread generated-answer__footer--${
-      this.multilineFooter ? 'multiline' : 'standard'
-    }`;
+    return `slds-grid slds-wrap slds-grid_align-spread generated-answer__footer`;
   }
 
   get shouldHideRephraseLabels() {
@@ -428,7 +515,23 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get disclaimerCssClass() {
-    return `slds-var-m-top_small slds-col slds-size_1-of-1 slds-text-color_weak slds-text-body_small ${this.multilineFooter ? '' : 'slds-text-align_right'}`;
+    return `slds-grid_vertical-align-center slds-col slds-text-color_weak slds-text-body_small ${this.multilineFooter ? '' : 'slds-text-align_right'}`;
+  }
+
+  get toggleCollapseAnswerIcon() {
+    return this._collapsed ? 'utility:chevrondown' : 'utility:chevronup';
+  }
+
+  get shouldShowToggleCollapseAnswer() {
+    return this.collapsible && this.isVisible && !this.isStreaming;
+  }
+
+  /**
+   * Returns the label to display in the smart snippet toggle.
+   * @returns {string}
+   */
+  get toggleCollapseAnswerLabel() {
+    return this._collapsed ? this.labels.showMore : this.labels.showLess;
   }
 
   /**

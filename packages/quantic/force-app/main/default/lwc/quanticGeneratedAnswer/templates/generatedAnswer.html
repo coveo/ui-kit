@@ -32,8 +32,8 @@
           </template>
           <div class="slds-grid flex-one slds-grid_align-end">
             <c-quantic-generated-answer-toggle
-            is-generated-answer-visible={isVisible}
-          ></c-quantic-generated-answer-toggle>
+              is-generated-answer-visible={isVisible}
+            ></c-quantic-generated-answer-toggle>
           </div>
         </div>
       </div>
@@ -43,35 +43,54 @@
           class="generated-answer__content slds-var-m-top_medium"
         >
           <div data-cy="generated-answer__answer" class={generatedAnswerClass}>
-            {answer}
+            <span>{answer}</span>
           </div>
-          <div data-cy="generated-answer__footer" class={generatedAnswerFooterCssClass}>
-            <template lwc:if={hasCitations}>
-              <div class="slds-var-m-top_small flex-one">
-                <c-quantic-source-citations
-                  engine-id={engineId}
-                  data-cy="generated-answer__citations"
-                  citations={citations}
-                  citation-hover-handler={handleCitationHover}
-                ></c-quantic-source-citations>
-              </div>
-            </template>
-            <template lwc:if={shouldDisplayActions}>
-              <div class={rephraseButtonsCssClass}>
-                <c-quantic-generated-answer-rephrase-buttons
-                  data-cy="generated-answer__rephrase-buttons"
-                  value={responseFormat}
-                  hide-labels={shouldHideRephraseLabels}
-                ></c-quantic-generated-answer-rephrase-buttons>
-              </div>
-            </template>
-            <template lwc:if={shouldShowDisclaimer}>
-              <div class={disclaimerCssClass} data-cy="generated-answer__disclaimer">
-                <slot name="disclaimer">
-                    {labels.rgaDisclaimer}
-                </slot>
-              </div>
-            </template>
+          <div
+            data-cy="generated-answer__footer"
+            class={generatedAnswerFooterCssClass}
+          >
+            <div class="generated-answer__footer-row slds-grid slds-col slds-size_1-of-1">
+              <template lwc:if={shouldDisplayCitations}>
+                <div class="slds-var-m-top_small flex-one">
+                  <c-quantic-source-citations
+                    engine-id={engineId}
+                    data-cy="generated-answer__citations"
+                    citations={citations}
+                    citation-hover-handler={handleCitationHover}
+                  ></c-quantic-source-citations>
+                </div>
+              </template>
+              <template lwc:if={shouldDisplayActions}>
+                <div class={rephraseButtonsCssClass}>
+                  <c-quantic-generated-answer-rephrase-buttons
+                    data-cy="generated-answer__rephrase-buttons"
+                    value={responseFormat}
+                    hide-labels={shouldHideRephraseLabels}
+                  ></c-quantic-generated-answer-rephrase-buttons>
+                </div>
+              </template>
+            </div>
+            <div class="generated-answer__footer-row slds-col slds-size_1-of-1 slds-grid slds-grid_align-spread">
+              <template lwc:if={shouldShowToggleCollapseAnswer}>
+                <lightning-button
+                  data-cy="generated-answer__answer-toggle"
+                  icon-name={toggleCollapseAnswerIcon}
+                  variant="base"
+                  label={toggleCollapseAnswerLabel}
+                  title={toggleCollapseAnswerLabel}
+                  onclick={handleToggleCollapseAnswer}
+                  icon-position="right"
+                ></lightning-button>
+              </template>
+              <template lwc:if={shouldShowDisclaimer}>
+                <div
+                  class={disclaimerCssClass}
+                  data-cy="generated-answer__disclaimer"
+                >
+                  <slot name="disclaimer"> {labels.rgaDisclaimer} </slot>
+                </div>
+              </template>
+            </div>
           </div>
         </div>
       </template>
