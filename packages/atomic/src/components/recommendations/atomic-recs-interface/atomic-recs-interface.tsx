@@ -18,6 +18,7 @@ import {
   Prop,
   Watch,
   State,
+  setNonce,
 } from '@stencil/core';
 import i18next, {i18n} from 'i18next';
 import {RecsLogLevel} from '..';
@@ -140,6 +141,11 @@ export class AtomicRecsInterface
    */
   @Prop({reflect: true}) public iconAssetsPath = './assets';
 
+  /**
+   * Doc TODO
+   */
+  @Prop({reflect: true}) public nonce?: string;
+
   public constructor() {
     this.commonInterfaceHelper = new CommonAtomicInterfaceHelper(
       this,
@@ -153,11 +159,31 @@ export class AtomicRecsInterface
       i18n: this.i18n,
       store: this.store,
       interfaceElement: this.host,
+      createStyleElement: () => {
+        const styleTag = document.createElement('style');
+        if (this.nonce) {
+          styleTag.setAttribute('nonce', this.nonce);
+        }
+        return styleTag;
+      },
+      createScriptElement: () => {
+        const styleTag = document.createElement('script');
+        if (this.nonce) {
+          styleTag.setAttribute('nonce', this.nonce);
+        }
+        return styleTag;
+      },
     };
   }
 
   public connectedCallback() {
     this.store.setLoadingFlag(FirstRecommendationExecutedFlag);
+  }
+
+  componentWillLoad() {
+    if (this.nonce) {
+      setNonce(this.nonce);
+    }
   }
 
   /**

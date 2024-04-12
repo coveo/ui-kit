@@ -24,6 +24,7 @@ import {
   Watch,
   Element,
   State,
+  setNonce,
 } from '@stencil/core';
 import i18next, {i18n} from 'i18next';
 import {InitializeEvent} from '../../../utils/initialization-utils';
@@ -177,6 +178,11 @@ export class AtomicSearchInterface
   @Prop({reflect: true}) public enableRelevanceInspector = true;
 
   /**
+   * Doc TODO
+   */
+  @Prop({reflect: true}) public nonce?: string;
+
+  /**
    * A reference clone of the search interface i18next instance.
    */
   private i18nClone!: i18n;
@@ -203,6 +209,9 @@ export class AtomicSearchInterface
   }
 
   componentWillLoad() {
+    if (this.nonce) {
+      setNonce(this.nonce);
+    }
     this.initAriaLive();
     this.initFieldsToInclude();
   }
@@ -384,6 +393,20 @@ export class AtomicSearchInterface
       i18n: this.i18n,
       store: this.store,
       interfaceElement: this.host,
+      createStyleElement: () => {
+        const styleTag = document.createElement('style');
+        if (this.nonce) {
+          styleTag.setAttribute('nonce', this.nonce);
+        }
+        return styleTag;
+      },
+      createScriptElement: () => {
+        const styleTag = document.createElement('script');
+        if (this.nonce) {
+          styleTag.setAttribute('nonce', this.nonce);
+        }
+        return styleTag;
+      },
     };
   }
 

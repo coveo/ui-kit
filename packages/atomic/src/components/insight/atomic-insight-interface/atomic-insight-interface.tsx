@@ -6,6 +6,7 @@ import {
   Listen,
   Method,
   Prop,
+  setNonce,
   State,
   Watch,
 } from '@stencil/core';
@@ -112,6 +113,11 @@ export class AtomicInsightInterface
    */
   @Prop({reflect: true}) resultsPerPage = 5;
 
+  /**
+   * Doc TODO
+   */
+  @Prop({reflect: true}) public nonce?: string;
+
   @Element() public host!: HTMLAtomicInsightInterfaceElement;
 
   private store = createAtomicInsightStore();
@@ -126,6 +132,12 @@ export class AtomicInsightInterface
 
   public connectedCallback() {
     this.store.setLoadingFlag(FirstInsightRequestExecutedFlag);
+  }
+
+  public componentWillLoad() {
+    if (this.nonce) {
+      setNonce(this.nonce);
+    }
   }
 
   private initResultsPerPage() {
@@ -218,6 +230,20 @@ export class AtomicInsightInterface
       i18n: this.i18n,
       store: this.store,
       interfaceElement: this.host,
+      createStyleElement: () => {
+        const styleTag = document.createElement('style');
+        if (this.nonce) {
+          styleTag.setAttribute('nonce', this.nonce);
+        }
+        return styleTag;
+      },
+      createScriptElement: () => {
+        const styleTag = document.createElement('script');
+        if (this.nonce) {
+          styleTag.setAttribute('nonce', this.nonce);
+        }
+        return styleTag;
+      },
     };
   }
 
