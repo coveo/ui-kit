@@ -168,12 +168,19 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
     },
 
     sessionStorageContains: (key: string, expectedData: object) => {
-      cy.window()
-        .its('sessionStorage')
-        .invoke('getItem', `LSKey[c]${key}`)
-        .then((data) => {
-          const storedData = JSON.parse(data ?? '{}');
-          expect(storedData).eql(expectedData);
+      cy.getAllSessionStorage()
+        .then((sessionStorage) => {
+          const matchingKeys = Object.values(sessionStorage).filter(
+            (val) =>
+              Object.keys(val).includes(`LSKey[c]${key}`) ||
+              Object.keys(val).includes(key)
+          );
+          const storedData = String(
+            matchingKeys?.[0]?.[`LSKey[c]${key}`] ||
+              matchingKeys?.[0]?.[key] ||
+              '{}'
+          );
+          expect(JSON.parse(storedData)).eql(expectedData);
         })
         .log(
           `the key ${key} should have the value ${expectedData} in the session storage`
@@ -227,11 +234,11 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         .rephraseButtonByLabel(name)
         .should(
           selected ? 'have.class' : 'not.have.class',
-          'stateful-button--selected'
+          'radio-button--selected'
         )
         .should(
           selected ? 'not.have.class' : 'have.class',
-          'stateful-button--unselected'
+          'radio-button--unselected'
         )
         .log(`the ${name} rephrase button ${should(selected)} be selected`);
     },

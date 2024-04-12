@@ -1,7 +1,6 @@
 import defaultStory from 'atomic-storybook/default-story';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
-  'Atomic/Notifications',
   'atomic-notifications',
   {},
   {
@@ -27,5 +26,9 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   }
 );
 
-export default {...defaultModuleExport, title: 'Atomic/Notifications'};
+export default {
+  ...defaultModuleExport,
+  title: 'Atomic/Notifications',
+  id: 'atomic-notifications',
+};
 export const Default = exportedStory;

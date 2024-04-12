@@ -1,7 +1,6 @@
 import defaultResultComponentStory from 'atomic-storybook/default-result-component-story';
 
 const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
-  'Atomic/ResultList/ResultRating',
   'atomic-result-rating',
   {field: 'snrating'},
   {
@@ -20,5 +19,6 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
 export default {
   ...defaultModuleExport,
   title: 'Atomic/ResultList/ResultRating',
+  id: 'atomic-result-rating',
 };
 export const Default = exportedStory;

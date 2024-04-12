@@ -2,9 +2,9 @@ import {
   selectPage,
   nextPage,
   previousPage,
+  setPageSize,
 } from '../../../../features/commerce/pagination/pagination-actions';
 import {paginationReducer as commercePagination} from '../../../../features/commerce/pagination/pagination-slice';
-import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {
   MockedCommerceEngine,
@@ -12,24 +12,23 @@ import {
 } from '../../../../test/mock-engine-v2';
 import {
   buildCorePagination,
+  CorePaginationProps,
   Pagination,
 } from './headless-core-commerce-pagination';
 
 jest.mock('../../../../features/commerce/pagination/pagination-actions');
 
-jest.mock(
-  '../../../../features/commerce/product-listing/product-listing-actions'
-);
-
 describe('core pagination', () => {
   let engine: MockedCommerceEngine;
   let pagination: Pagination;
+  const fetchResultsActionCreator = jest.fn();
 
-  function initPagination() {
+  function initPagination(props: Partial<CorePaginationProps> = {}) {
     engine = buildMockCommerceEngine(buildMockCommerceState());
 
     pagination = buildCorePagination(engine, {
-      fetchResultsActionCreator: fetchProductListing,
+      fetchResultsActionCreator,
+      ...props,
     });
   }
 
@@ -37,14 +36,28 @@ describe('core pagination', () => {
     initPagination();
   });
 
-  it('adds correct reducers to engine', () => {
-    expect(engine.addReducers).toBeCalledWith({
-      commercePagination,
-    });
-  });
-
   it('exposes #subscribe method', () => {
     expect(pagination.subscribe).toBeTruthy();
+  });
+
+  describe('initialization', () => {
+    it('adds correct reducers to engine', () => {
+      expect(engine.addReducers).toHaveBeenCalledWith({
+        commercePagination,
+      });
+    });
+
+    it('does not set page size when not provided', () => {
+      expect(setPageSize).not.toHaveBeenCalled();
+    });
+
+    it('sets page size when provided', () => {
+      const pageSize = 11;
+      initPagination({
+        options: {pageSize},
+      });
+      expect(setPageSize).toHaveBeenCalledWith(pageSize);
+    });
   });
 
   describe('#selectPage', () => {
@@ -56,8 +69,8 @@ describe('core pagination', () => {
       expect(selectPage).toHaveBeenCalledWith(0);
     });
 
-    it('dispatches #fetchProductListing', () => {
-      expect(fetchProductListing).toHaveBeenCalled();
+    it('dispatches #fetchResultsActionCreator', () => {
+      expect(fetchResultsActionCreator).toHaveBeenCalled();
     });
   });
 
@@ -70,8 +83,8 @@ describe('core pagination', () => {
       expect(nextPage).toHaveBeenCalled();
     });
 
-    it('dispatches #fetchProductListing', () => {
-      expect(fetchProductListing).toHaveBeenCalled();
+    it('dispatches #fetchResultsActionCreator', () => {
+      expect(fetchResultsActionCreator).toHaveBeenCalled();
     });
   });
 
@@ -84,8 +97,23 @@ describe('core pagination', () => {
       expect(previousPage).toHaveBeenCalled();
     });
 
-    it('dispatches #fetchProductListing', () => {
-      expect(fetchProductListing).toHaveBeenCalled();
+    it('dispatches #fetchResultsActionCreator', () => {
+      expect(fetchResultsActionCreator).toHaveBeenCalled();
+    });
+  });
+
+  describe('#setPageSize', () => {
+    const pageSize = 10;
+    beforeEach(() => {
+      pagination.setPageSize(pageSize);
+    });
+
+    it('dispatches #setPageSize', () => {
+      expect(setPageSize).toHaveBeenCalledWith(pageSize);
+    });
+
+    it('dispatches #fetchResultsActionCreator', () => {
+      expect(fetchResultsActionCreator).toHaveBeenCalled();
     });
   });
 });

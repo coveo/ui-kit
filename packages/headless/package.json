@@ -14,7 +14,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "2.58.1",
+  "version": "2.60.0",
   "files": [
     "dist/",
     "recommendation/",
@@ -47,28 +47,28 @@
   },
   "peerDependencies": {
     "encoding": "^0.1.13",
-    "pino-pretty": "^6.0.0 || ^10.0.0"
+    "pino-pretty": "^6.0.0 || ^10.0.0 || ^11.0.0"
   },
   "dependencies": {
     "@coveo/bueno": "0.45.8",
-    "@coveo/relay": "0.7.4",
+    "@coveo/relay": "0.7.7",
     "@coveo/relay-event-types": "7.7.3",
     "@microsoft/fetch-event-source": "2.0.1",
-    "@reduxjs/toolkit": "2.2.2",
+    "@reduxjs/toolkit": "2.2.3",
     "abab": "2.0.6",
-    "coveo.analytics": "2.29.3",
+    "coveo.analytics": "2.29.6",
     "dayjs": "1.11.10",
     "exponential-backoff": "3.1.0",
     "fast-equals": "5.0.1",
     "node-abort-controller": "^3.0.0",
     "pino": "8.19.0",
     "redux-thunk": "3.1.0",
-    "ts-debounce": "3.0.0",
-    "undici": "5.28.3"
+    "ts-debounce": "4.0.0",
+    "undici": "5.28.4"
   },
   "devDependencies": {
     "@coveo/release": "1.0.0",
-    "@microsoft/api-extractor": "7.42.3",
+    "@microsoft/api-extractor": "7.43.0",
     "@microsoft/api-extractor-model": "7.28.13",
     "@microsoft/tsdoc": "0.14.2",
     "eslint-plugin-canonical": "4.18.0",

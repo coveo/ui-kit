@@ -27,7 +27,7 @@ describe('product listing pagination', () => {
   });
 
   it('adds correct reducers to engine', () => {
-    expect(engine.addReducers).toBeCalledWith({
+    expect(engine.addReducers).toHaveBeenCalledWith({
       productListing,
     });
   });
