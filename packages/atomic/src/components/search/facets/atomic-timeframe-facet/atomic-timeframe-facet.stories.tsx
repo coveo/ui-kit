@@ -2,7 +2,6 @@ import defaultStory from 'atomic-storybook/default-story';
 import {html} from 'lit-html';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
-  'Atomic/TimeframeFacet',
   'atomic-timeframe-facet',
   {
     unit: 'year',
@@ -27,5 +26,9 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   }
 );
 
-export default {...defaultModuleExport, title: 'Atomic/TimeframeFacet'};
+export default {
+  ...defaultModuleExport,
+  title: 'Atomic/TimeframeFacet',
+  id: 'atomic-timeframe-facet',
+};
 export const Default = exportedStory;

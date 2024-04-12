@@ -1,3 +1,5 @@
+import auto from '@salesforce/label/c.quantic_Auto';
+import automatic from '@salesforce/label/c.quantic_Automatic';
 import bulletPointSummary from '@salesforce/label/c.quantic_BulletPointSummary';
 import bullets from '@salesforce/label/c.quantic_Bullets';
 import rephrase from '@salesforce/label/c.quantic_Rephrase';
@@ -27,6 +29,8 @@ export default class QuanticGeneratedAnswerRephraseButtons extends LightningElem
   @api hideLabels;
 
   labels = {
+    auto,
+    automatic,
     steps,
     rephrase,
     stepByStepInstructions,
@@ -36,12 +40,18 @@ export default class QuanticGeneratedAnswerRephraseButtons extends LightningElem
   };
 
   rephraseButtonLabels = {
+    default: this.labels.auto,
     step: this.labels.steps,
     bullet: this.labels.bullets,
     concise: this.labels.summary,
   };
 
   options = [
+    {
+      tooltip: this.labels.automatic,
+      value: 'default',
+      iconName: 'utility:rows',
+    },
     {
       tooltip: this.labels.stepByStepInstructions,
       value: 'step',
@@ -62,12 +72,7 @@ export default class QuanticGeneratedAnswerRephraseButtons extends LightningElem
   get rephraseOptions() {
     return this.options.map((option) => ({
       ...option,
-      label: this.getRephraseButtonLabel(option.value),
-      isSelected: this.isSelected(option.value),
-      handleSelect: (event) => {
-        event.stopPropagation();
-        this.handleRephrase(option.value);
-      },
+      label: this.rephraseButtonLabels[option.value],
     }));
   }
 
@@ -75,24 +80,19 @@ export default class QuanticGeneratedAnswerRephraseButtons extends LightningElem
     return this.value === option;
   }
 
-  handleRephrase(optionValue) {
+  handleRephraseChange(event) {
+    event.stopPropagation();
+    if (!this.isSelected(event.detail.value)) {
+      this.dispatchRephraseEvent(event.detail.value);
+    }
+  }
+
+  dispatchRephraseEvent(optionValue) {
     this.dispatchEvent(
       new CustomEvent('quantic__generatedanswerrephrase', {
         detail: optionValue,
         bubbles: true,
       })
     );
-  }
-
-  handleDeselect(event) {
-    event.stopPropagation();
-    this.handleRephrase('default');
-  }
-
-  getRephraseButtonLabel(option) {
-    if (this.hideLabels) {
-      return '';
-    }
-    return this.rephraseButtonLabels[option];
   }
 }

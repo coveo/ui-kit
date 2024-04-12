@@ -1,7 +1,6 @@
 import {SearchEngineConfiguration} from '@coveo/headless';
 import {h} from '@stencil/core';
 import {DocsPage} from '@storybook/addon-docs';
-import {Args} from '@storybook/api';
 import {DebouncedFunc} from 'lodash';
 import {initializeInterfaceDebounced as defaultInitializeInterfaceDebounced} from './default-init';
 import sharedDefaultStory, {
@@ -12,9 +11,8 @@ import sharedDefaultStory, {
 } from './default-story-shared';
 
 export default function defaultStory<Config = SearchEngineConfiguration>(
-  title: string,
   componentTag: string,
-  defaultArgs: Args,
+  defaultArgs: Record<string, unknown>,
   advancedConfig: DefaultStoryAdvancedConfig<Config> = {},
   initializeInterfaceDebounced: (
     renderComponentFunction: () => string,
@@ -22,7 +20,7 @@ export default function defaultStory<Config = SearchEngineConfiguration>(
   ) => DebouncedFunc<() => Promise<void>> = defaultInitializeInterfaceDebounced
 ) {
   const {defaultModuleExport, exportedStory, getArgs, updateCurrentArgs} =
-    sharedDefaultStory(title, componentTag, defaultArgs, false, advancedConfig);
+    sharedDefaultStory(componentTag, defaultArgs, false, advancedConfig);
 
   const defaultLoader = initializeInterfaceDebounced(() => {
     const argsToHTMLString = renderArgsToHTMLString(
