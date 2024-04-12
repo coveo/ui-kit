@@ -7,15 +7,12 @@ import {
 import {CommerceSuccessResponse} from '../../../api/commerce/common/response';
 import {
   CartSection,
-  CategoryFacetSection,
   CommerceContextSection,
+  CommerceFacetSetSection,
   CommercePaginationSection,
   CommerceSortSection,
   ConfigurationSection,
-  DateFacetSection,
   FacetOrderSection,
-  FacetSection,
-  NumericFacetSection,
   ProductListingV2Section,
   RecommendationsSection,
   VersionSection,
@@ -32,10 +29,7 @@ export type StateNeededByQueryCommerceAPI = ConfigurationSection &
   Partial<
     CommercePaginationSection &
       CommerceSortSection &
-      FacetSection &
-      NumericFacetSection &
-      CategoryFacetSection &
-      DateFacetSection &
+      CommerceFacetSetSection &
       FacetOrderSection &
       VersionSection
   >;
@@ -46,7 +40,19 @@ export interface QueryCommerceAPIThunkReturn {
   analyticsAction: PreparableAnalyticsAction<StateNeededByQueryCommerceAPI>;
 }
 
-export const buildBaseCommerceAPIRequest = async (
+export const buildCommerceAPIRequest = async (
+  state: StateNeededByQueryCommerceAPI
+): Promise<CommerceAPIRequest> => {
+  return {
+    ...(await buildBaseCommerceAPIRequest(state)),
+    facets: getFacets(state),
+    ...(state.commerceSort && {
+      sort: getSort(state.commerceSort.appliedSort),
+    }),
+  };
+};
+
+const buildBaseCommerceAPIRequest = async (
   state: StateNeededByQueryCommerceAPI
 ): Promise<BaseCommerceAPIRequest> => {
   const {view, user, ...restOfContext} = state.commerceContext;
@@ -60,25 +66,19 @@ export const buildBaseCommerceAPIRequest = async (
     context: {
       user,
       view,
-      cart: state.cart.cartItems.map((id) => state.cart.cart[id]),
+      cart: state.cart.cartItems.map((id) => {
+        const {productId, quantity} = state.cart.cart[id];
+        return {
+          productId,
+          quantity,
+        };
+      }),
     },
     ...(state.commercePagination && {
       page: state.commercePagination.page,
       ...(state.commercePagination.perPage && {
         perPage: state.commercePagination.perPage,
       }),
-    }),
-  };
-};
-
-export const buildCommerceAPIRequest = async (
-  state: StateNeededByQueryCommerceAPI
-): Promise<CommerceAPIRequest> => {
-  return {
-    ...(await buildBaseCommerceAPIRequest(state)),
-    facets: getFacets(state),
-    ...(state.commerceSort && {
-      sort: getSort(state.commerceSort.appliedSort),
     }),
   };
 };
@@ -94,10 +94,6 @@ function getFacets(state: StateNeededByFetchProductListingV2) {
 }
 
 function getSort(appliedSort: SortCriterion): SortParam['sort'] | undefined {
-  if (!appliedSort) {
-    return;
-  }
-
   if (appliedSort.by === SortBy.Relevance) {
     return {
       sortCriteria: SortBy.Relevance,
