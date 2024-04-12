@@ -1,7 +1,6 @@
 import defaultStory from 'atomic-storybook/default-story';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
-  'Atomic/SortDropdown/SortExpression',
   'atomic-sort-expression',
   {label: 'Relevance', expression: 'relevancy'},
   {
@@ -14,5 +13,6 @@ const {defaultModuleExport, exportedStory} = defaultStory(
 export default {
   ...defaultModuleExport,
   title: 'Atomic/SortDropdown/SortExpression',
+  id: 'atomic-sort-expression',
 };
 export const Default = exportedStory;

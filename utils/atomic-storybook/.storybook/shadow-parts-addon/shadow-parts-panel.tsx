@@ -1,4 +1,4 @@
-import {useParameter, useArgs} from '@storybook/api';
+import {useParameter, useArgs} from '@storybook/manager-api';
 import {Placeholder} from '@storybook/components';
 import React, {useState} from 'react';
 import {getDocumentationFromTag} from '../map-props-to-args';
