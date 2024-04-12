@@ -1,7 +1,6 @@
 import defaultResultComponentStory from 'atomic-storybook/default-result-component-story';
 
 const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
-  'Atomic/ResultList/ResultNumber/Format/Currency',
   'atomic-format-currency',
   {
     currency: 'USD',
@@ -29,5 +28,6 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
 export default {
   ...defaultModuleExport,
   title: 'Atomic/ResultList/ResultNumber/Format/Currency',
+  id: 'atomic-format-currency',
 };
 export const Default = exportedStory;
