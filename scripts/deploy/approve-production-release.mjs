@@ -15,8 +15,7 @@ const authSecrets = {
 const productionEnvironments = [
   'NPM Production',
   'Docs Production',
-  // TODO KIT-3072: uncomment
-  // 'Quantic Production',
+  'Quantic Production',
 
   // TODO KIT-3074: uncomment
   // 'GitHub Production',

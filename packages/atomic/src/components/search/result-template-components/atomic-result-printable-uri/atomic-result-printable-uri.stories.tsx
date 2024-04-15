@@ -1,7 +1,6 @@
 import defaultResultComponentStory from 'atomic-storybook/default-result-component-story';
 
 const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
-  'Atomic/ResultList/ResultPrintableUri',
   'atomic-result-printable-uri',
   {}
 );
@@ -9,5 +8,6 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
 export default {
   ...defaultModuleExport,
   title: 'Atomic/ResultList/ResultPrintableUri',
+  id: 'atomic-result-printable-uri',
 };
 export const Default = exportedStory;
