@@ -21,6 +21,7 @@ const links = [
   },
   {href: '/examples/ipx.html', label: 'IPX'},
   {href: '/examples/genqa.html', label: 'Gen Q&A'},
+  {href: '/examples/tabs.html', label: 'Tabs'},
 ];
 
 const header = document.createElement('header');
