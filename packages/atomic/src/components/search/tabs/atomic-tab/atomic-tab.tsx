@@ -55,7 +55,9 @@ export class AtomicTab {
 
   @Prop() isActive: boolean = false;
 
-  @Event()
+  @Event({
+    eventName: 'atomic/tabClick',
+  })
   tabClick!: EventEmitter;
 
   private tab!: Tab;
@@ -111,7 +113,7 @@ export class AtomicTab {
   }
 
   public handleClick = () => {
-    this.tabClick.emit(this.name);
+    this.tabClick.emit();
     this.select();
   };
 

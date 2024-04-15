@@ -16,7 +16,7 @@ export class AtomicTabSection {
 
   @State() public error!: Error;
 
-  @Listen('tabClick')
+  @Listen('atomic/tabClick')
   handleTabClick() {
     this.updateActiveTab();
   }

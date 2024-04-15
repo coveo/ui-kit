@@ -4165,7 +4165,7 @@ declare global {
         new (): HTMLAtomicSortExpressionElement;
     };
     interface HTMLAtomicTabElementEventMap {
-        "tabClick": any;
+        "atomic/tabClick": any;
     }
     interface HTMLAtomicTabElement extends Components.AtomicTab, HTMLStencilElement {
         addEventListener<K extends keyof HTMLAtomicTabElementEventMap>(type: K, listener: (this: HTMLAtomicTabElement, ev: AtomicTabCustomEvent<HTMLAtomicTabElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -6748,7 +6748,7 @@ declare namespace LocalJSX {
         "isActive"?: boolean;
         "label": string;
         "name": string;
-        "onTabClick"?: (event: AtomicTabCustomEvent<any>) => void;
+        "onAtomic/tabClick"?: (event: AtomicTabCustomEvent<any>) => void;
     }
     interface AtomicTabSection {
     }
