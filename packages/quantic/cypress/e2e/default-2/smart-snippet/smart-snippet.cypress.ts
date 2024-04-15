@@ -92,16 +92,6 @@ describe('quantic-smart-snippet', {browser: 'chrome'}, () => {
           });
         });
       });
-
-      Cypress.on('uncaught:exception', (error: Error) => {
-        // returning false here prevents Cypress from failing the test
-        console.error('Caught error', error);
-        if (error.stack?.includes('PrimaryOriginCommunicator.toSource')) {
-          return false;
-        }
-        return true;
-      });
-
       analyticsModeTest.forEach((analytics) => {
         describe(analytics.label, () => {
           before(() => {
