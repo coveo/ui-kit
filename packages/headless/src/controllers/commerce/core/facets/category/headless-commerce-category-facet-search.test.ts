@@ -9,9 +9,9 @@ import {
   MockedCommerceEngine,
   buildMockCommerceEngine,
 } from '../../../../../test/mock-engine-v2';
-import {FacetSearchProps} from '../../../../core/facets/facet-search/specific/headless-facet-search';
 import {
   CategoryFacetSearch,
+  CategoryFacetSearchProps,
   buildCategoryFacetSearch,
 } from './headless-commerce-category-facet-search';
 
@@ -22,7 +22,7 @@ jest.mock(
 describe('CategoryFacetSearch', () => {
   const facetId: string = 'category_facet_id';
   let engine: MockedCommerceEngine;
-  let props: FacetSearchProps;
+  let props: CategoryFacetSearchProps;
   let facetSearch: CategoryFacetSearch;
 
   function initEngine(preloadedState = buildMockCommerceState()) {
@@ -42,10 +42,7 @@ describe('CategoryFacetSearch', () => {
     jest.resetAllMocks();
 
     props = {
-      exclude: jest.fn(),
       select: jest.fn(),
-      executeFacetSearchActionCreator: jest.fn(),
-      executeFieldSuggestActionCreator: jest.fn(),
       isForFieldSuggestions: false,
       options: {
         facetId,
@@ -54,7 +51,6 @@ describe('CategoryFacetSearch', () => {
 
     initEngine();
     setFacetSearchState();
-
     initFacetSearch();
   });
 
