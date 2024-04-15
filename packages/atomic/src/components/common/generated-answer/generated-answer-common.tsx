@@ -27,6 +27,7 @@ import {TypingLoader} from './typing-loader';
 
 interface GeneratedAnswerCommonOptions {
   host: HTMLElement;
+  collapsible?: boolean;
   getGeneratedAnswer: () => GeneratedAnswer | undefined;
   getGeneratedAnswerState: () => GeneratedAnswerState | undefined;
   getSearchStatusState: () => SearchStatusState | undefined;
@@ -316,20 +317,18 @@ export class GeneratedAnswerCommon {
           </GeneratedContentContainer>
         ) : null}
 
-        {!this.hasRetryableError &&
-          this.isAnswerVisible &&
-          !this.props.getGeneratedAnswerState()?.isStreaming && (
-            <div
-              part="generated-answer-footer"
-              class="flex justify-between mt-6"
-            >
-              <ShowButton
-                i18n={this.props.getBindings().i18n}
-                onClick={() =>
-                  this.props.setIsCollapsed(!this.props.getIsCollapsed())
-                }
-                isCollapsed={this.props.getIsCollapsed()}
-              ></ShowButton>
+        {!this.hasRetryableError && this.isAnswerVisible && (
+          <div part="generated-answer-footer" class="flex justify-end mt-6">
+            <ShowButton
+              i18n={this.props.getBindings().i18n}
+              onClick={() =>
+                this.props.setIsCollapsed(!this.props.getIsCollapsed())
+              }
+              isStreaming={this.props.getGeneratedAnswerState()?.isStreaming}
+              collapsable={this.props.collapsible}
+              isCollapsed={this.props.getIsCollapsed()}
+            ></ShowButton>
+            {!this.props.getGeneratedAnswerState()?.isStreaming && (
               <div class="text-neutral-dark text-xs">
                 <slot name="disclaimer" slot="disclaimer">
                   {this.props
@@ -337,8 +336,9 @@ export class GeneratedAnswerCommon {
                     .i18n.t('generated-answer-disclaimer')}
                 </slot>
               </div>
-            </div>
-          )}
+            )}
+          </div>
+        )}
       </div>
     );
   }

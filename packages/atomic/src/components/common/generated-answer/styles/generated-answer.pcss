@@ -77,13 +77,6 @@
 }
 
 [part='generated-answer-footer'] {
-  &.show-button-hidden {
-    @apply justify-end;
-    [part='answer-show-button'] {
-      @apply hidden;
-    }
-  }
-
   @container (max-width: 600px) {
     @mixin mobile-generated-answer-footer-layout;
   }
@@ -95,10 +88,18 @@
 
 [part='generated-container'] {
   &.answer-collapsed {
-    @apply max-h-[250px] overflow-hidden relative content-[''];
+    @apply max-h-64 overflow-hidden relative content-[''];
   }
   &.answer-collapsed:before {
     @apply h-full w-full absolute top-0 left-0 content-[''];
     background: linear-gradient(transparent 180px, white);
   }
+}
+
+.is-collapsible {
+  @apply justify-between;
+}
+
+.show-button-visible {
+  @apply flex;
 }

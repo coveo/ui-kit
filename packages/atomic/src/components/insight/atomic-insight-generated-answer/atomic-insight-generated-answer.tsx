@@ -84,6 +84,11 @@ export class AtomicInsightGeneratedAnswer
    */
   @Prop() answerStyle: InsightGeneratedAnswerStyle = 'default';
 
+  /**
+   * The answer is collapsed when the text is longer than 250px
+   */
+  @Prop() collapsible?: boolean;
+
   @AriaLiveRegion('generated-answer')
   protected ariaMessage!: string;
 
@@ -94,6 +99,7 @@ export class AtomicInsightGeneratedAnswer
   public initialize() {
     this.generatedAnswerCommon = new GeneratedAnswerCommon({
       host: this.host,
+      collapsible: this.collapsible,
       getGeneratedAnswer: () => this.generatedAnswer,
       getGeneratedAnswerState: () => this.generatedAnswerState,
       getSearchStatusState: () => this.searchStatusState,
@@ -156,6 +162,7 @@ export class AtomicInsightGeneratedAnswer
     }
 
     this.setAriaMessage(this.generatedAnswerCommon.getGeneratedAnswerStatus());
+    this.setIsCollapsed(true);
   };
 
   private setCopied = (isCopied: boolean) => {
@@ -170,8 +177,8 @@ export class AtomicInsightGeneratedAnswer
     this.ariaMessage = message;
   };
 
-  private setIsCollapsed = () => {
-    this.isCollapsed = !this.isCollapsed;
+  private setIsCollapsed = (isCollapsed: boolean) => {
+    this.isCollapsed = isCollapsed;
   };
 
   private toggleClass(element: Element, className: string, condition: boolean) {
@@ -183,25 +190,25 @@ export class AtomicInsightGeneratedAnswer
   }
 
   private adaptAnswerHeight() {
-    if (this.isShowButtonDisplayed()) {
+    if (this.collapsible) {
       this.fullAnswerHeight = this.host?.shadowRoot
-        ?.querySelector('p[part="generated-text"')
+        ?.querySelector('p[part="generated-text"]')
         ?.getBoundingClientRect().height;
       this.updateAnswerHeight();
     }
   }
 
   private getShowButton() {
-    return this.host?.shadowRoot?.querySelector('[part="answer-show-button"');
+    return this.host?.shadowRoot?.querySelector('[part="answer-show-button"]');
   }
 
   private getAnswerContainer() {
-    return this.host?.shadowRoot?.querySelector('[part="generated-container"');
+    return this.host?.shadowRoot?.querySelector('[part="generated-container"]');
   }
 
   private getAnswerFooter() {
     return this.host?.shadowRoot?.querySelector(
-      '[part="generated-answer-footer"'
+      '[part="generated-answer-footer"]'
     );
   }
 
@@ -216,20 +223,13 @@ export class AtomicInsightGeneratedAnswer
 
     if (this.fullAnswerHeight! > this.maxCollapsedHeight) {
       this.toggleClass(container, 'answer-collapsed', this.isCollapsed);
-      this.toggleClass(showButton, 'show-button-hidden', false);
+      this.toggleClass(showButton, 'show-button-visible', true);
+      this.toggleClass(footer, 'is-collapsible', true);
     } else {
-      this.toggleClass(container, 'answer-collapsed', false);
-      this.toggleClass(footer, 'show-button-hidden', true);
+      this.toggleClass(container, 'answer-collapsed', this.isCollapsed);
+      this.toggleClass(showButton, 'show-button-visible', false);
+      this.toggleClass(footer, 'is-collapsible', false);
     }
-  }
-
-  private isShowButtonDisplayed() {
-    const showButton = this.getShowButton();
-    return (
-      showButton &&
-      showButton.getBoundingClientRect().width > 0 &&
-      showButton.getBoundingClientRect().height > 0
-    );
   }
 
   public render() {
