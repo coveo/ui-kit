@@ -1,4 +1,3 @@
-// atomic-tab.tsx
 import {Controller, SearchEngine, Unsubscribe, buildTab} from '@coveo/headless';
 import {
   Component,

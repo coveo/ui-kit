@@ -1,4 +1,3 @@
-// atomic-tab-section.tsx
 import {Component, h, Element, State, Listen} from '@stencil/core';
 import {InitializeBindings} from '../../../../utils/initialization-utils';
 import {getActiveTab} from '../../../../utils/tab-utils';
