@@ -10,7 +10,6 @@ import {
   Method,
   State,
 } from '@stencil/core';
-import {AtomicInsightStore} from '../../../../components';
 import {
   BindStateToController,
   InitializeBindings,
@@ -18,6 +17,7 @@ import {
 import {Button} from '../../../common/button';
 import {CommonBindings} from '../../../common/interface/bindings';
 import {dispatchTabLoaded} from '../../../common/tabs/tab-common';
+import {AtomicStore} from '../../atomic-search-interface/store';
 
 export interface Tab extends Controller {
   /**
@@ -39,8 +39,8 @@ export interface TabState {
 
 export type TabBindings = CommonBindings<
   SearchEngine,
-  AtomicInsightStore,
-  HTMLAtomicInsightInterfaceElement
+  AtomicStore,
+  HTMLAtomicSearchInterfaceElement
 >;
 
 @Component({
