@@ -39,14 +39,12 @@ export type {
   ContextProps,
   Context,
   ContextState,
-  ContextControllerState,
 } from './controllers/commerce/context/headless-context';
 export {buildContext} from './controllers/commerce/context/headless-context';
 
 export type {
   ProductListing,
   ProductListingState,
-  ProductListingControllerState,
 } from './controllers/commerce/product-listing/headless-product-listing';
 export {buildProductListing} from './controllers/commerce/product-listing/headless-product-listing';
 

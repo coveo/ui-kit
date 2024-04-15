@@ -84,7 +84,7 @@ exports[`question answering insight analytics actions when analyticsMode is \`ne
 
 exports[`question answering insight analytics actions when analyticsMode is \`next\` should log #logOpenSmartSnippetSource with the right payload 1`] = `
 [
-  "ItemClick",
+  "itemClick",
   {
     "itemMetadata": {
       "author": "unknown",
@@ -101,7 +101,7 @@ exports[`question answering insight analytics actions when analyticsMode is \`ne
 
 exports[`question answering insight analytics actions when analyticsMode is \`next\` should log #logOpenSmartSnippetSuggestionSource with the right payload 1`] = `
 [
-  "ItemClick",
+  "itemClick",
   {
     "itemMetadata": {
       "author": "unknown",
@@ -126,7 +126,7 @@ exports[`question answering insight analytics actions when analyticsMode is \`ne
     },
     "feedback": {
       "details": "example feedback details",
-      "liked": true,
+      "liked": false,
       "reason": "other",
     },
   },
@@ -142,7 +142,7 @@ exports[`question answering insight analytics actions when analyticsMode is \`ne
       "type": "SmartSnippet",
     },
     "feedback": {
-      "liked": true,
+      "liked": false,
       "reason": "does_not_answer",
     },
   },
