@@ -52,7 +52,7 @@
   "dependencies": {
     "@coveo/bueno": "0.45.8",
     "@coveo/relay": "0.7.7",
-    "@coveo/relay-event-types": "7.7.3",
+    "@coveo/relay-event-types": "7.9.7",
     "@microsoft/fetch-event-source": "2.0.1",
     "@reduxjs/toolkit": "2.2.3",
     "abab": "2.0.6",
