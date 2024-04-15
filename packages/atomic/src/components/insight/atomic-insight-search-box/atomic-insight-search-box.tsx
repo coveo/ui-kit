@@ -19,6 +19,11 @@ import {SearchBoxCommon} from '../../common/search-box/search-box-common';
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {SearchTextArea} from '../../common/search-box/search-text-area';
 import {
+  QuerySuggestionContainer,
+  QuerySuggestionIcon,
+  QuerySuggestionText,
+} from '../../common/suggestions/query-suggestions';
+import {
   ButtonSearchSuggestion,
   queryDataAttribute,
 } from '../../search/atomic-search-box/search-suggestion';
@@ -299,24 +304,14 @@ export class AtomicInsightSearchBox {
     return {
       part: 'query-suggestion-item',
       content: (
-        <div part="query-suggestion-content" class="flex items-center">
-          <atomic-icon
-            part="query-suggestion-icon"
+        <QuerySuggestionContainer>
+          <QuerySuggestionIcon
             icon={SearchSlimIcon}
-            class="w-4 h-4 mr-2 shrink-0"
-          ></atomic-icon>
-          {hasQuery ? (
-            <span
-              part="query-suggestion-text"
-              class="break-all line-clamp-2"
-              innerHTML={suggestion.highlightedValue}
-            ></span>
-          ) : (
-            <span part="query-suggestion-text" class="break-all line-clamp-2">
-              {suggestion.rawValue}
-            </span>
-          )}
-        </div>
+            hasSuggestion={this.searchBoxState.suggestions.length > 1}
+          />
+
+          <QuerySuggestionText suggestion={suggestion} hasQuery={hasQuery} />
+        </QuerySuggestionContainer>
       ),
       key: `qs-${encodeForDomAttribute(suggestion.rawValue)}`,
       query: suggestion.rawValue,

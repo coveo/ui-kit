@@ -11,6 +11,11 @@ import {Component, Element, Prop, State, h} from '@stencil/core';
 import SearchIcon from '../../../../images/search.svg';
 import {encodeForDomAttribute} from '../../../../utils/string-utils';
 import {
+  QuerySuggestionContainer,
+  QuerySuggestionIcon,
+  QuerySuggestionText,
+} from '../../../common/suggestions/query-suggestions';
+import {
   dispatchSearchBoxSuggestionsEvent,
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
@@ -59,10 +64,6 @@ export class AtomicSearchBoxQuerySuggestions {
     }
   }
 
-  private renderIcon() {
-    return this.icon || SearchIcon;
-  }
-
   private initialize(): SearchBoxSuggestions {
     const engine = this.bindings.engine as SearchEngine<
       QuerySuggestionSection & QuerySetSection
@@ -102,26 +103,14 @@ export class AtomicSearchBoxQuerySuggestions {
     return {
       part: 'query-suggestion-item',
       content: (
-        <div part="query-suggestion-content" class="flex items-center">
-          {this.bindings.getSuggestions().length > 1 && (
-            <atomic-icon
-              part="query-suggestion-icon"
-              icon={this.renderIcon()}
-              class="w-4 h-4 mr-2 shrink-0"
-            ></atomic-icon>
-          )}
-          {hasQuery ? (
-            <span
-              part="query-suggestion-text"
-              class="break-all line-clamp-2"
-              innerHTML={suggestion.highlightedValue}
-            ></span>
-          ) : (
-            <span part="query-suggestion-text" class="break-all line-clamp-2">
-              {suggestion.rawValue}
-            </span>
-          )}
-        </div>
+        <QuerySuggestionContainer>
+          <QuerySuggestionIcon
+            icon={this.icon || SearchIcon}
+            hasSuggestion={this.bindings.getSuggestions().length > 1}
+          />
+
+          <QuerySuggestionText suggestion={suggestion} hasQuery={hasQuery} />
+        </QuerySuggestionContainer>
       ),
       key: `qs-${encodeForDomAttribute(suggestion.rawValue)}`,
       query: suggestion.rawValue,
