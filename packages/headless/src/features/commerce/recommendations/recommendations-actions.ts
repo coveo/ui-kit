@@ -1,10 +1,11 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
+import {
+  AsyncThunkCommerceOptions,
+  isErrorResponse,
+} from '../../../api/commerce/commerce-api-client';
 import {CommerceRecommendationsRequest} from '../../../api/commerce/recommendations/recommendations-request';
 import {RecommendationsCommerceSuccessResponse} from '../../../api/commerce/recommendations/recommendations-response';
-import {isErrorResponse} from '../../../api/search/search-api-client';
 import {validatePayload} from '../../../utils/validate-payload';
-import {logQueryError} from '../../search/search-analytics-actions';
 import {
   StateNeededByQueryCommerceAPI,
   buildCommerceAPIRequest,
@@ -27,28 +28,33 @@ const buildRecommendationCommerceAPIRequest = async (
   };
 };
 
+export interface FetchRecommendationsActionCreatorPayload {
+  /**
+   * The unique identifier of the recommendations slot (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
+   */
+  slotId: string;
+}
+
 export const fetchRecommendations = createAsyncThunk<
   QueryRecommendationsCommerceAPIThunkReturn,
-  void,
+  FetchRecommendationsActionCreatorPayload,
   AsyncThunkCommerceOptions<StateNeededByQueryCommerceAPI>
 >(
   'commerce/recommendation/fetch',
-  async (_action, {getState, dispatch, rejectWithValue, extra}) => {
-    const state = getState();
-    const {apiClient} = extra;
-    const fetched = await apiClient.getRecommendations(
-      await buildRecommendationCommerceAPIRequest(
-        state.recommendations.slotId,
-        state
-      )
+  async (payload, {getState, rejectWithValue, extra: {apiClient}}) => {
+    const slotId = payload.slotId;
+    const request = await buildRecommendationCommerceAPIRequest(
+      slotId,
+      getState()
     );
+    const fetched = await apiClient.getRecommendations(request);
 
     if (isErrorResponse(fetched)) {
-      dispatch(logQueryError(fetched.error));
       return rejectWithValue(fetched.error);
     }
 
     return {
+      slotId,
       response: fetched.success,
     };
   }
@@ -58,7 +64,7 @@ export interface SlotIdPayload {
   slotId: string;
 }
 
-export const updateRecommendationsSlotId = createAction(
+export const registerRecommendationsSlot = createAction(
   'recommendation/updateSlotId',
   (payload: SlotIdPayload) =>
     validatePayload(payload, recommendationsSlotDefinition)

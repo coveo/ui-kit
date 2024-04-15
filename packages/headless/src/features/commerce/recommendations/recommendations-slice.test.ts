@@ -1,14 +1,17 @@
 import {buildMockProduct} from '../../../test/mock-product';
 import {buildMockRecommendationsResponse} from '../../../test/mock-recommendations';
+import {buildMockRecommendationsSlice} from '../../../test/mock-recommendations-slice';
 import {fetchRecommendations} from './recommendations-actions';
 import {recommendationsReducer} from './recommendations-slice';
 import {
-  RecommendationsState,
   getRecommendationsInitialState,
+  RecommendationsState,
 } from './recommendations-state';
 
 describe('recommendation-slice', () => {
   let state: RecommendationsState;
+  const slotId = 'some-slot-id';
+
   beforeEach(() => {
     state = getRecommendationsInitialState();
   });
@@ -27,12 +30,16 @@ describe('recommendation-slice', () => {
       responseId,
     });
 
-    const action = fetchRecommendations.fulfilled(response, '');
+    state[slotId] = buildMockRecommendationsSlice();
+
+    const action = fetchRecommendations.fulfilled(response, '', {slotId});
     const finalState = recommendationsReducer(state, action);
 
-    expect(finalState.products[0]).toEqual(result);
-    expect(finalState.responseId).toEqual(responseId);
-    expect(finalState.isLoading).toBe(false);
+    const slot = finalState[slotId];
+
+    expect(slot.products[0]).toEqual(result);
+    expect(slot.responseId).toEqual(responseId);
+    expect(slot.isLoading).toBe(false);
   });
 
   it('set the error on rejection', () => {
@@ -44,27 +51,38 @@ describe('recommendation-slice', () => {
     const action = {
       type: 'commerce/recommendation/fetch/rejected',
       payload: err,
+      meta: {
+        arg: {
+          slotId,
+        },
+      },
     };
+
+    state[slotId] = buildMockRecommendationsSlice();
+
     const finalState = recommendationsReducer(state, action);
-    expect(finalState.error).toEqual(err);
-    expect(finalState.isLoading).toBe(false);
+    expect(finalState[slotId].error).toEqual(err);
+    expect(finalState[slotId].isLoading).toBe(false);
   });
 
   it('set the error to null on success', () => {
-    const err = {message: 'message', statusCode: 500, type: 'type'};
-    state.error = err;
+    state[slotId] = buildMockRecommendationsSlice({
+      error: {message: 'message', statusCode: 500, type: 'type'},
+    });
 
     const response = buildMockRecommendationsResponse();
 
-    const action = fetchRecommendations.fulfilled(response, '');
+    const action = fetchRecommendations.fulfilled(response, '', {slotId});
     const finalState = recommendationsReducer(state, action);
-    expect(finalState.error).toBeNull();
+    expect(finalState[slotId].error).toBeNull();
   });
 
   it('set the isLoading state to true during fetchRecommendations.pending', () => {
-    const pendingAction = fetchRecommendations.pending('');
+    state[slotId] = buildMockRecommendationsSlice({isLoading: false});
+
+    const pendingAction = fetchRecommendations.pending('', {slotId});
     const finalState = recommendationsReducer(state, pendingAction);
 
-    expect(finalState.isLoading).toBe(true);
+    expect(finalState[slotId].isLoading).toBe(true);
   });
 });

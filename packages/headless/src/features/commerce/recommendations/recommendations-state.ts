@@ -1,7 +1,7 @@
 import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
 import {Product} from '../../../api/commerce/common/product';
 
-export interface RecommendationsState {
+export interface RecommendationsSlice {
   slotId: string;
   headline: string;
   error: CommerceAPIErrorStatusResponse | null;
@@ -10,11 +10,18 @@ export interface RecommendationsState {
   products: Product[];
 }
 
-export const getRecommendationsInitialState = (): RecommendationsState => ({
-  slotId: '',
-  headline: '',
-  error: null,
-  isLoading: false,
-  responseId: '',
-  products: [],
-});
+/**
+ * An object in which each key is a slot identifier, and each value is the corresponding recommendations slice.
+ */
+export type RecommendationsState = Record<string, RecommendationsSlice>;
+
+export const getRecommendationsInitialState = (): RecommendationsState => ({});
+export const getRecommendationsSliceInitialState =
+  (): RecommendationsSlice => ({
+    slotId: '',
+    headline: '',
+    error: null,
+    isLoading: false,
+    responseId: '',
+    products: [],
+  });

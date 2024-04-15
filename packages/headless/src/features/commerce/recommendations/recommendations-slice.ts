@@ -1,31 +1,67 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {
   fetchRecommendations,
-  updateRecommendationsSlotId,
+  registerRecommendationsSlot,
 } from './recommendations-actions';
-import {getRecommendationsInitialState} from './recommendations-state';
+import {
+  getRecommendationsInitialState,
+  getRecommendationsSliceInitialState,
+  RecommendationsSlice,
+} from './recommendations-state';
 
 export const recommendationsReducer = createReducer(
   getRecommendationsInitialState(),
 
   (builder) => {
     builder
-      .addCase(updateRecommendationsSlotId, (state, action) => {
-        state.slotId = action.payload.slotId;
+      .addCase(registerRecommendationsSlot, (state, action) => {
+        const slotId = action.payload.slotId;
+
+        if (slotId in state) {
+          return;
+        }
+
+        state[slotId] = buildRecommendationsSlice({slotId});
       })
       .addCase(fetchRecommendations.rejected, (state, action) => {
-        state.error = action.payload ? action.payload : null;
-        state.isLoading = false;
+        const recommendations = state[action.meta.arg.slotId];
+
+        if (!recommendations) {
+          return;
+        }
+
+        recommendations.error = action.payload ? action.payload : null;
+        recommendations.isLoading = false;
       })
       .addCase(fetchRecommendations.fulfilled, (state, action) => {
-        state.error = null;
-        state.headline = action.payload.response.headline;
-        state.products = action.payload.response.products;
-        state.responseId = action.payload.response.responseId;
-        state.isLoading = false;
+        const recommendations = state[action.meta.arg.slotId];
+
+        if (!recommendations) {
+          return;
+        }
+
+        recommendations.error = null;
+        recommendations.headline = action.payload.response.headline;
+        recommendations.products = action.payload.response.products;
+        recommendations.responseId = action.payload.response.responseId;
+        recommendations.isLoading = false;
       })
-      .addCase(fetchRecommendations.pending, (state) => {
-        state.isLoading = true;
+      .addCase(fetchRecommendations.pending, (state, action) => {
+        const recommendations = state[action.meta.arg.slotId];
+
+        if (!recommendations) {
+          return;
+        }
+        recommendations.isLoading = true;
       });
   }
 );
+
+function buildRecommendationsSlice(
+  config: Partial<RecommendationsSlice>
+): RecommendationsSlice {
+  return {
+    ...getRecommendationsSliceInitialState(),
+    ...config,
+  };
+}
