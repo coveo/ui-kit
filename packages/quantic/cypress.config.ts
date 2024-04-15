@@ -9,6 +9,7 @@ export default defineConfig({
     runMode: 3,
     openMode: 1,
   },
+  numTestsKeptInMemory: 0,
   viewportHeight: 1080,
   viewportWidth: 1920,
   e2e: {

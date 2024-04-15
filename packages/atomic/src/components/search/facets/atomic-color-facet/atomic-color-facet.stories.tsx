@@ -2,7 +2,6 @@ import defaultStory from 'atomic-storybook/default-story';
 import {html} from 'lit-html';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
-  'Atomic/ColorFacet',
   'atomic-color-facet',
   {field: 'filetype', numberOfValues: '9'},
   {
@@ -96,5 +95,9 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   }
 );
 
-export default {...defaultModuleExport, title: 'Atomic/ColorFacet'};
+export default {
+  ...defaultModuleExport,
+  title: 'Atomic/ColorFacet',
+  id: 'atomic-color-facet',
+};
 export const Default = exportedStory;

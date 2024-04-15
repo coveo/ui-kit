@@ -2,7 +2,6 @@ import defaultStory from 'atomic-storybook/default-story';
 import {html} from 'lit-html';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
-  'Atomic/Popover',
   'atomic-popover',
   {},
   {
@@ -11,5 +10,9 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   }
 );
 
-export default {...defaultModuleExport, title: 'Atomic/Popover'};
+export default {
+  ...defaultModuleExport,
+  title: 'Atomic/Popover',
+  id: 'atomic-popover',
+};
 export const Default = exportedStory;

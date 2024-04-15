@@ -1,7 +1,6 @@
 import defaultStory from 'atomic-storybook/default-story';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
-  'Atomic/NumericFacet/Format/Unit',
   'atomic-format-unit',
   {unit: 'byte'},
   {
@@ -18,5 +17,6 @@ const {defaultModuleExport, exportedStory} = defaultStory(
 export default {
   ...defaultModuleExport,
   title: 'Atomic/NumericFacet/Format/Unit',
+  id: 'atomic-format-unit-facet',
 };
 export const Default = exportedStory;
