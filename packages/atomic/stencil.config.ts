@@ -126,7 +126,7 @@ export const config: Config = {
     },
     transformIgnorePatterns: [],
     testPathIgnorePatterns: ['.snap'],
-    setupFiles: ['jest-localstorage-mock'],
+    setupFiles: ['./jest/setup.js', 'jest-localstorage-mock'],
     resetMocks: false,
   },
   devServer: {
