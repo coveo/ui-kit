@@ -31,6 +31,7 @@ import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
 import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
 import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
+import {updateFacetVisibilityForActiveTab} from '../../../common/facets/facet-tabs/facet-tabs-utils';
 import {FacetValueCheckbox} from '../../../common/facets/facet-value-checkbox/facet-value-checkbox';
 import {FacetValueLink} from '../../../common/facets/facet-value-link/facet-value-link';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
@@ -98,6 +99,10 @@ export class AtomicRatingFacet
    * The field whose values you want to display in the facet.
    */
   @Prop({reflect: true}) public field!: string;
+  /**
+   * The tabs on which to display the facet.
+   */
+  @Prop({reflect: true}) public tabs: string = '';
   /**
    * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
    */
@@ -239,6 +244,10 @@ export class AtomicRatingFacet
       !this.facet.state.enabled ||
       !this.valuesToRender.length
     );
+  }
+
+  public componentShouldUpdate(): void {
+    updateFacetVisibilityForActiveTab(this.tabs, this.facet, this.bindings);
   }
 
   private get scaleFactor() {

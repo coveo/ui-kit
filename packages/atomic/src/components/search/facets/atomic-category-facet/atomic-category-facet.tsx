@@ -45,6 +45,7 @@ import {
   shouldDisplaySearchResults,
 } from '../../../common/facets/facet-search/facet-search-utils';
 import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/facet-show-more-less';
+import {updateFacetVisibilityForActiveTab} from '../../../common/facets/facet-tabs/facet-tabs-utils';
 import {FacetValueLabelHighlight} from '../../../common/facets/facet-value-label-highlight/facet-value-label-highlight';
 import {FacetValueLink} from '../../../common/facets/facet-value-link/facet-value-link';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
@@ -133,6 +134,10 @@ export class AtomicCategoryFacet
    * Also determines the number of additional values to request each time more values are shown.
    */
   @Prop({reflect: true}) public numberOfValues = 8;
+  /**
+   * The tabs on which to display the facet.
+   */
+  @Prop({reflect: true}) public tabs: string = '';
   /**
    * Whether this facet should contain a search box.
    *
@@ -307,6 +312,7 @@ export class AtomicCategoryFacet
     prev: unknown,
     propName: keyof AtomicCategoryFacet
   ) {
+    updateFacetVisibilityForActiveTab(this.tabs, this.facet, this.bindings);
     if (propName === 'facetState' && prev && this.withSearch) {
       return shouldUpdateFacetSearchComponent(
         (next as CategoryFacetState).facetSearch,

@@ -25,6 +25,7 @@ import {
 import {MapProp} from '../../../../utils/props-utils';
 import {BaseFacet, parseDependsOn} from '../../../common/facets/facet-common';
 import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
+import {updateFacetVisibilityForActiveTab} from '../../../common/facets/facet-tabs/facet-tabs-utils';
 import {TimeframeFacetCommon} from '../../../common/facets/timeframe-facet-common';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
@@ -95,6 +96,10 @@ export class AtomicTimeframeFacet
    * The field whose values you want to display in the facet.
    */
   @Prop({reflect: true}) public field = 'date';
+  /**
+   * The tabs on which to display the facet.
+   */
+  @Prop({reflect: true}) public tabs: string = '';
   /**
    * Whether this facet should contain an datepicker allowing users to set custom ranges.
    */
@@ -211,6 +216,14 @@ export class AtomicTimeframeFacet
 
   public disconnectedCallback() {
     this.timeframeFacetCommon?.disconnectedCallback();
+  }
+
+  public componentWillUpdate(): void {
+    updateFacetVisibilityForActiveTab(
+      this.tabs,
+      this.facetForDateRange,
+      this.bindings
+    );
   }
 
   private initializeFacetForDatePicker() {

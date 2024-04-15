@@ -12,7 +12,7 @@ import {
   FacetConditionsManager,
   FacetResultsMustMatch,
 } from '@coveo/headless';
-import {Component, h, State, Prop, VNode, Element, Listen} from '@stencil/core';
+import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
 import {
   AriaLiveRegion,
   FocusTargetController,
@@ -44,6 +44,7 @@ import {
   shouldDisplaySearchResults,
 } from '../../../common/facets/facet-search/facet-search-utils';
 import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/facet-show-more-less';
+import {updateFacetVisibilityForActiveTab} from '../../../common/facets/facet-tabs/facet-tabs-utils';
 import {FacetValueBox} from '../../../common/facets/facet-value-box/facet-value-box';
 import {FacetValueLabelHighlight} from '../../../common/facets/facet-value-label-highlight/facet-value-label-highlight';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
@@ -112,12 +113,6 @@ export class AtomicColorFacet
   public searchStatusState!: SearchStatusState;
   @State() public error!: Error;
 
-  @Listen('tabClick', {target: 'document'})
-  handleTabChange() {
-    this.facet.state.enabled = false;
-    this.facet.disable();
-  }
-
   /**
    * Specifies a unique identifier for the facet.
    */
@@ -136,6 +131,10 @@ export class AtomicColorFacet
    * Also determines the number of additional values to request each time more values are shown.
    */
   @Prop({reflect: true}) public numberOfValues = 8;
+  /**
+   * The tabs on which to display the facet.
+   */
+  @Prop({reflect: true}) public tabs: string = '';
   /**
    * Whether this facet should contain a search box.
    *
@@ -325,6 +324,7 @@ export class AtomicColorFacet
     prev: unknown,
     propName: keyof AtomicColorFacet
   ) {
+    updateFacetVisibilityForActiveTab(this.tabs, this.facet, this.bindings);
     if (propName === 'facetState' && prev && this.withSearch) {
       return shouldUpdateFacetSearchComponent(
         (next as FacetState).facetSearch,

@@ -25,6 +25,7 @@ import {MapProp} from '../../../../utils/props-utils';
 import {BaseFacet, parseDependsOn} from '../../../common/facets/facet-common';
 import {NumberInputType} from '../../../common/facets/facet-number-input/number-input-type';
 import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
+import {updateFacetVisibilityForActiveTab} from '../../../common/facets/facet-tabs/facet-tabs-utils';
 import {
   NumericFacetCommon,
   NumericRangeWithLabel,
@@ -115,6 +116,10 @@ export class AtomicNumericFacet
    * If the number of values is 0, no ranges will be displayed.
    */
   @Prop({reflect: true}) public numberOfValues = 8;
+  /**
+   * The tabs on which to display the facet.
+   */
+  @Prop({reflect: true}) public tabs: string = '';
   /**
    * Whether this facet should contain an input allowing users to set custom ranges.
    * Depending on the field, the input can allow either decimal or integer values.
@@ -219,6 +224,14 @@ export class AtomicNumericFacet
 
   public disconnectedCallback() {
     this.numericFacetCommon?.disconnectedCallback();
+  }
+
+  public componentShouldUpdate(): void {
+    updateFacetVisibilityForActiveTab(
+      this.tabs,
+      this.facetForRange,
+      this.bindings
+    );
   }
 
   private initializeFacetForInput() {

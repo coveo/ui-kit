@@ -167,6 +167,10 @@ export namespace Components {
          */
         "sortCriteria": CategoryFacetSortCriterion;
         /**
+          * The tabs on which to display the facet.
+         */
+        "tabs": string;
+        /**
           * Whether this facet should contain a search box.
          */
         "withSearch": boolean;
@@ -250,6 +254,10 @@ export namespace Components {
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */
         "sortCriteria": FacetSortCriterion;
+        /**
+          * The tabs on which to display the facet.
+         */
+        "tabs": string;
         /**
           * Whether this facet should contain a search box.
          */
@@ -1221,6 +1229,10 @@ export namespace Components {
          */
         "sortCriteria": RangeFacetSortCriterion;
         /**
+          * The tabs on which to display the facet.
+         */
+        "tabs": string;
+        /**
           * Whether this facet should contain an input allowing users to set custom ranges. Depending on the field, the input can allow either decimal or integer values.
          */
         "withInput"?: NumberInputType;
@@ -1357,6 +1369,10 @@ export namespace Components {
           * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
          */
         "numberOfIntervals": number;
+        /**
+          * The tabs on which to display the facet.
+         */
+        "tabs": string;
     }
     /**
      * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -1412,6 +1428,10 @@ export namespace Components {
           * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
          */
         "numberOfIntervals": number;
+        /**
+          * The tabs on which to display the facet.
+         */
+        "tabs": string;
     }
     /**
      * The `atomic-recs-error` component handles fatal errors when performing a recommendations request on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -1856,10 +1876,6 @@ export namespace Components {
           * @param resultRenderingFunction
          */
         "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
-        /**
-          * The tabs on which to display the result list.
-         */
-        "tabs": string;
     }
     /**
      * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
@@ -2351,6 +2367,10 @@ export namespace Components {
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */
         "sortCriteria": FacetSortCriterion;
+        /**
+          * The tabs on which to display the facet.
+         */
+        "tabs": string;
     }
     /**
      * The 'atomic-segmented-facet-scrollable' component wraps around one or several 'atomic-segmented-facet' to provide horizontal scrolling capabilities.
@@ -2583,6 +2603,10 @@ export namespace Components {
           * The sort criterion to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
          */
         "sortCriteria": RangeFacetSortCriterion;
+        /**
+          * The tabs on which to display the facet.
+         */
+        "tabs": string;
         /**
           * Whether this facet should contain an datepicker allowing users to set custom ranges.
          */
@@ -4469,6 +4493,10 @@ declare namespace LocalJSX {
          */
         "sortCriteria"?: CategoryFacetSortCriterion;
         /**
+          * The tabs on which to display the facet.
+         */
+        "tabs"?: string;
+        /**
           * Whether this facet should contain a search box.
          */
         "withSearch"?: boolean;
@@ -4552,6 +4580,10 @@ declare namespace LocalJSX {
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */
         "sortCriteria"?: FacetSortCriterion;
+        /**
+          * The tabs on which to display the facet.
+         */
+        "tabs"?: string;
         /**
           * Whether this facet should contain a search box.
          */
@@ -5487,6 +5519,10 @@ declare namespace LocalJSX {
          */
         "sortCriteria"?: RangeFacetSortCriterion;
         /**
+          * The tabs on which to display the facet.
+         */
+        "tabs"?: string;
+        /**
           * Whether this facet should contain an input allowing users to set custom ranges. Depending on the field, the input can allow either decimal or integer values.
          */
         "withInput"?: NumberInputType;
@@ -5625,6 +5661,10 @@ declare namespace LocalJSX {
           * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
          */
         "numberOfIntervals"?: number;
+        /**
+          * The tabs on which to display the facet.
+         */
+        "tabs"?: string;
     }
     /**
      * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -5680,6 +5720,10 @@ declare namespace LocalJSX {
           * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
          */
         "numberOfIntervals"?: number;
+        /**
+          * The tabs on which to display the facet.
+         */
+        "tabs"?: string;
     }
     /**
      * The `atomic-recs-error` component handles fatal errors when performing a recommendations request on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -6086,10 +6130,6 @@ declare namespace LocalJSX {
           * The expected size of the image displayed in the results.
          */
         "imageSize"?: ItemDisplayImageSize;
-        /**
-          * The tabs on which to display the result list.
-         */
-        "tabs"?: string;
     }
     /**
      * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
@@ -6559,6 +6599,10 @@ declare namespace LocalJSX {
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */
         "sortCriteria"?: FacetSortCriterion;
+        /**
+          * The tabs on which to display the facet.
+         */
+        "tabs"?: string;
     }
     /**
      * The 'atomic-segmented-facet-scrollable' component wraps around one or several 'atomic-segmented-facet' to provide horizontal scrolling capabilities.
@@ -6801,6 +6845,10 @@ declare namespace LocalJSX {
           * The sort criterion to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
          */
         "sortCriteria"?: RangeFacetSortCriterion;
+        /**
+          * The tabs on which to display the facet.
+         */
+        "tabs"?: string;
         /**
           * Whether this facet should contain an datepicker allowing users to set custom ranges.
          */

@@ -22,7 +22,6 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
-import {shouldDisplayOnCurrentTab} from '../../../../utils/tab-utils';
 import {
   BaseFacet,
   FacetCommon,
@@ -30,6 +29,7 @@ import {
 } from '../../../common/facets/facet-common';
 import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
 import {announceFacetSearchResultsWithAriaLive} from '../../../common/facets/facet-search/facet-search-aria-live';
+import {updateFacetVisibilityForActiveTab} from '../../../common/facets/facet-tabs/facet-tabs-utils';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -106,10 +106,6 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   @Prop({reflect: true}) public label = 'no-label';
 
   /**
-   * The tabs on which to display the facet.
-   */
-  @Prop({reflect: true}) public tabs: string = '';
-  /**
    * The field whose values you want to display in the facet.
    */
   @Prop({reflect: true}) public field!: string;
@@ -118,6 +114,10 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
    * Also determines the number of additional values to request each time more values are shown.
    */
   @Prop({reflect: true}) public numberOfValues = 8;
+  /**
+   * The tabs on which to display the facet.
+   */
+  @Prop({reflect: true}) public tabs: string = '';
   /**
    * Whether this facet should contain a search box.
    *
@@ -242,16 +242,6 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   @AriaLiveRegion('facet-search')
   protected facetSearchAriaMessage!: string;
 
-  public disableFacet() {
-    this.facet.state.enabled = false;
-    this.facet.disable();
-  }
-
-  public enableFacet() {
-    this.facet.state.enabled = true;
-    this.facet.enable();
-  }
-
   public initialize() {
     this.facet = buildFacet(this.bindings.engine, {options: this.facetOptions});
 
@@ -322,7 +312,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
     prev: unknown,
     propName: keyof AtomicFacet
   ) {
-    this.updateFacetsForActiveTab();
+    updateFacetVisibilityForActiveTab(this.tabs, this.facet, this.bindings);
     return (
       !this.facetCommon ||
       this.facetCommon?.componentShouldUpdate(
@@ -331,16 +321,6 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
         propName
       )
     );
-  }
-
-  private updateFacetsForActiveTab() {
-    if (this.tabs !== '') {
-      if (shouldDisplayOnCurrentTab(this.tabs, this.bindings.engine.state)) {
-        this.enableFacet();
-      } else {
-        this.disableFacet();
-      }
-    }
   }
 
   public render() {
