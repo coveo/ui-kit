@@ -148,7 +148,8 @@ describe('quantic-generated-answer', () => {
           it('should perform a search query with the default rephrase button', () => {
             cy.wait(InterceptAliases.Search);
             Expect.searchQueryContainsCorrectRephraseOption(
-              defaultRephraseOption
+              defaultRephraseOption,
+              param.useCase === 'search' ? 'interfaceLoad' : 'searchboxSubmit'
             );
           });
 
@@ -191,7 +192,8 @@ describe('quantic-generated-answer', () => {
               Expect.rephraseButtonIsSelected(conciseRephraseOption, false);
               Expect.rephraseButtonIsSelected(bulletRephraseOption, true);
               Expect.searchQueryContainsCorrectRephraseOption(
-                bulletRephraseOption
+                bulletRephraseOption,
+                param.useCase === 'search' ? 'interfaceLoad' : 'searchboxSubmit'
               );
             });
           });
@@ -311,7 +313,10 @@ describe('quantic-generated-answer', () => {
                     Expect.displayRephraseButtonWithLabel(unselectedOption);
                     Expect.rephraseButtonIsSelected(unselectedOption, false);
                   });
-                Expect.searchQueryContainsCorrectRephraseOption(rephraseOption);
+                Expect.searchQueryContainsCorrectRephraseOption(
+                  rephraseOption,
+                  'rephraseGeneratedAnswer'
+                );
                 if (analyticsMode === 'legacy') {
                   Expect.logRephraseGeneratedAnswer(
                     rephraseOption,
