@@ -104,6 +104,7 @@ export class GeneratedAnswerAPIClient {
     const stream = () =>
       fetchEventSource(buildStreamingUrl(url, organizationId, streamId), {
         method: 'GET',
+        fetch,
         headers: {
           Authorization: `Bearer ${accessToken}`,
           accept: '*/*',
