@@ -116,7 +116,7 @@ export class AtomicInsightInterface
   /**
    * Doc TODO
    */
-  @Prop({reflect: true}) public nonce?: string;
+  @Prop({reflect: true}) public CspNonce?: string;
 
   @Element() public host!: HTMLAtomicInsightInterfaceElement;
 
@@ -135,8 +135,8 @@ export class AtomicInsightInterface
   }
 
   public componentWillLoad() {
-    if (this.nonce) {
-      setNonce(this.nonce);
+    if (this.CspNonce) {
+      setNonce(this.CspNonce);
     }
   }
 
@@ -232,15 +232,15 @@ export class AtomicInsightInterface
       interfaceElement: this.host,
       createStyleElement: () => {
         const styleTag = document.createElement('style');
-        if (this.nonce) {
-          styleTag.setAttribute('nonce', this.nonce);
+        if (this.CspNonce) {
+          styleTag.setAttribute('nonce', this.CspNonce);
         }
         return styleTag;
       },
       createScriptElement: () => {
         const styleTag = document.createElement('script');
-        if (this.nonce) {
-          styleTag.setAttribute('nonce', this.nonce);
+        if (this.CspNonce) {
+          styleTag.setAttribute('nonce', this.CspNonce);
         }
         return styleTag;
       },

@@ -1,5 +1,8 @@
 import {Component, Element, Prop, Watch} from '@stencil/core';
-import {InitializeBindings} from '../../../utils/initialization-utils';
+import {
+  InitializableComponent,
+  InitializeBindings,
+} from '../../../utils/initialization-utils';
 import {randomID} from '../../../utils/utils';
 import {AnyBindings} from '../../common/interface/bindings';
 import {buildInsightLayout} from './insight-layout';

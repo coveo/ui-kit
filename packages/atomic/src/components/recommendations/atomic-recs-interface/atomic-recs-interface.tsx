@@ -144,7 +144,7 @@ export class AtomicRecsInterface
   /**
    * Doc TODO
    */
-  @Prop({reflect: true}) public nonce?: string;
+  @Prop({reflect: true}) public CspNonce?: string;
 
   public constructor() {
     this.commonInterfaceHelper = new CommonAtomicInterfaceHelper(
@@ -161,15 +161,15 @@ export class AtomicRecsInterface
       interfaceElement: this.host,
       createStyleElement: () => {
         const styleTag = document.createElement('style');
-        if (this.nonce) {
-          styleTag.setAttribute('nonce', this.nonce);
+        if (this.CspNonce) {
+          styleTag.setAttribute('nonce', this.CspNonce);
         }
         return styleTag;
       },
       createScriptElement: () => {
         const styleTag = document.createElement('script');
-        if (this.nonce) {
-          styleTag.setAttribute('nonce', this.nonce);
+        if (this.CspNonce) {
+          styleTag.setAttribute('nonce', this.CspNonce);
         }
         return styleTag;
       },
@@ -181,8 +181,8 @@ export class AtomicRecsInterface
   }
 
   componentWillLoad() {
-    if (this.nonce) {
-      setNonce(this.nonce);
+    if (this.CspNonce) {
+      setNonce(this.CspNonce);
     }
   }
 

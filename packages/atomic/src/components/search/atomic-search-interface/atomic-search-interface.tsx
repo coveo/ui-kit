@@ -180,7 +180,7 @@ export class AtomicSearchInterface
   /**
    * Doc TODO
    */
-  @Prop({reflect: true}) public nonce?: string;
+  @Prop({reflect: true}) public CspNonce?: string;
 
   /**
    * A reference clone of the search interface i18next instance.
@@ -209,8 +209,8 @@ export class AtomicSearchInterface
   }
 
   componentWillLoad() {
-    if (this.nonce) {
-      setNonce(this.nonce);
+    if (this.CspNonce) {
+      setNonce(this.CspNonce);
     }
     this.initAriaLive();
     this.initFieldsToInclude();
@@ -395,15 +395,15 @@ export class AtomicSearchInterface
       interfaceElement: this.host,
       createStyleElement: () => {
         const styleTag = document.createElement('style');
-        if (this.nonce) {
-          styleTag.setAttribute('nonce', this.nonce);
+        if (this.CspNonce) {
+          styleTag.setAttribute('nonce', this.CspNonce);
         }
         return styleTag;
       },
       createScriptElement: () => {
         const styleTag = document.createElement('script');
-        if (this.nonce) {
-          styleTag.setAttribute('nonce', this.nonce);
+        if (this.CspNonce) {
+          styleTag.setAttribute('nonce', this.CspNonce);
         }
         return styleTag;
       },

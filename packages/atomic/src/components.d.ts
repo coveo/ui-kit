@@ -657,6 +657,10 @@ export namespace Components {
     }
     interface AtomicInsightInterface {
         /**
+          * Doc TODO
+         */
+        "CspNonce"?: string;
+        /**
           * Whether analytics should be enabled.
          */
         "analytics": boolean;
@@ -710,10 +714,6 @@ export namespace Components {
           * The severity level of the messages to log in the console.
          */
         "logLevel"?: InsightLogLevel;
-        /**
-          * Doc TODO
-         */
-        "nonce"?: string;
         /**
           * The number of results per page. By default, this is set to `5`.
          */
@@ -1419,6 +1419,10 @@ export namespace Components {
      */
     interface AtomicRecsInterface {
         /**
+          * Doc TODO
+         */
+        "CspNonce"?: string;
+        /**
           * Whether analytics should be enabled.
          */
         "analytics": boolean;
@@ -1467,10 +1471,6 @@ export namespace Components {
           * The severity level of the messages to log in the console.
          */
         "logLevel"?: RecsLogLevel;
-        /**
-          * Doc TODO
-         */
-        "nonce"?: string;
         /**
           * The recommendation interface [query pipeline](https://docs.coveo.com/en/180/).  If the recommendation interface is initialized using [`initializeWithRecommendationEngine`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface/#initializewithrecommendationengine), the query pipeline should instead be configured in the target engine.
          */
@@ -2216,6 +2216,10 @@ export namespace Components {
      */
     interface AtomicSearchInterface {
         /**
+          * Doc TODO
+         */
+        "CspNonce"?: string;
+        /**
           * Whether analytics should be enabled.
          */
         "analytics": boolean;
@@ -2273,10 +2277,6 @@ export namespace Components {
           * The severity level of the messages to log in the console.
          */
         "logLevel"?: LogLevel;
-        /**
-          * Doc TODO
-         */
-        "nonce"?: string;
         /**
           * The search interface [query pipeline](https://docs.coveo.com/en/180/).  If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine), the query pipeline should instead be configured in the target engine.
          */
@@ -4908,6 +4908,10 @@ declare namespace LocalJSX {
     }
     interface AtomicInsightInterface {
         /**
+          * Doc TODO
+         */
+        "CspNonce"?: string;
+        /**
           * Whether analytics should be enabled.
          */
         "analytics"?: boolean;
@@ -4943,10 +4947,6 @@ declare namespace LocalJSX {
           * The severity level of the messages to log in the console.
          */
         "logLevel"?: InsightLogLevel;
-        /**
-          * Doc TODO
-         */
-        "nonce"?: string;
         /**
           * The number of results per page. By default, this is set to `5`.
          */
@@ -5639,6 +5639,10 @@ declare namespace LocalJSX {
      */
     interface AtomicRecsInterface {
         /**
+          * Doc TODO
+         */
+        "CspNonce"?: string;
+        /**
           * Whether analytics should be enabled.
          */
         "analytics"?: boolean;
@@ -5674,10 +5678,6 @@ declare namespace LocalJSX {
           * The severity level of the messages to log in the console.
          */
         "logLevel"?: RecsLogLevel;
-        /**
-          * Doc TODO
-         */
-        "nonce"?: string;
         /**
           * The recommendation interface [query pipeline](https://docs.coveo.com/en/180/).  If the recommendation interface is initialized using [`initializeWithRecommendationEngine`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface/#initializewithrecommendationengine), the query pipeline should instead be configured in the target engine.
          */
@@ -6394,6 +6394,10 @@ declare namespace LocalJSX {
      */
     interface AtomicSearchInterface {
         /**
+          * Doc TODO
+         */
+        "CspNonce"?: string;
+        /**
           * Whether analytics should be enabled.
          */
         "analytics"?: boolean;
@@ -6433,10 +6437,6 @@ declare namespace LocalJSX {
           * The severity level of the messages to log in the console.
          */
         "logLevel"?: LogLevel;
-        /**
-          * Doc TODO
-         */
-        "nonce"?: string;
         /**
           * The search interface [query pipeline](https://docs.coveo.com/en/180/).  If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine), the query pipeline should instead be configured in the target engine.
          */
