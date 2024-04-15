@@ -80,9 +80,11 @@ describe('quantic-tab', () => {
         });
 
         it('should work as expected', () => {
-          Expect.search.constantExpressionEqual(
-            tabs.case.expression,
-            param.useCase
+          Expect.completeSearchRequest(
+            param.useCase === 'search' ? 'interfaceLoad' : 'searchboxSubmit',
+            param.useCase,
+            (body) =>
+              Expect.constantQueryInSearchRequest(body, tabs.case.expression)
           );
           Expect.numberOfTabs(3);
           Expect.tabsEqual([
@@ -94,18 +96,25 @@ describe('quantic-tab', () => {
 
           [tabs.all, tabs.knowledge].forEach((next) => {
             Actions.selectTab(next.label);
-            Expect.search.constantExpressionEqual(
-              next.expression,
-              param.useCase
+            Expect.completeSearchRequest(
+              'interfaceChange',
+              param.useCase,
+              (body) =>
+                Expect.constantQueryInSearchRequest(body, next.expression!)
             );
             Expect.logSelected(next.label);
             Expect.activeTabContains(next.label);
           });
 
           performSearch();
-          Expect.search.constantExpressionEqual(
-            tabs.knowledge.expression,
-            param.useCase
+          Expect.completeSearchRequest(
+            'searchboxSubmit',
+            param.useCase,
+            (body) =>
+              Expect.constantQueryInSearchRequest(
+                body,
+                tabs.knowledge.expression
+              )
           );
           Expect.displayTabs(true);
 
@@ -120,10 +129,14 @@ describe('quantic-tab', () => {
         describe('when loading selected tab from URL', () => {
           it('should make the right tab active', () => {
             loadFromUrlHash({}, `tab=${tabs.knowledge.label}`);
-
-            Expect.search.constantExpressionEqual(
-              tabs.knowledge.expression,
-              param.useCase
+            Expect.completeSearchRequest(
+              'interfaceLoad',
+              param.useCase,
+              (body) =>
+                Expect.constantQueryInSearchRequest(
+                  body,
+                  tabs.knowledge.expression
+                )
             );
             Expect.activeTabContains(tabs.knowledge.label);
           });

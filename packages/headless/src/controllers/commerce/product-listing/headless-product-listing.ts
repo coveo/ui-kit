@@ -38,8 +38,6 @@ export interface ProductListingState {
   responseId: string;
 }
 
-export type ProductListingControllerState = ProductListing['state'];
-
 /**
  * Creates a `ProductListing` controller instance.
  *
