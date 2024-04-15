@@ -7,8 +7,10 @@ import {
 import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
 import {CategoryFacetSearchSection} from '../../../../../state/state-sections';
 import {loadReducerError} from '../../../../../utils/errors';
-import {CategoryFacetSearchProps as CoreCategoryFacetSearchProps} from '../../../../core/facets/facet-search/category/headless-category-facet-search';
-import {buildCategoryFacetSearch as buildCoreCategoryFacetSearch} from '../../../../facets/category-facet/headless-category-facet-search';
+import {
+  CategoryFacetSearchProps as CoreCategoryFacetSearchProps,
+  buildCoreCategoryFacetSearch,
+} from '../../../../core/facets/facet-search/category/headless-category-facet-search';
 import {CoreFacetSearchState} from '../searchable/headless-commerce-searchable-facet';
 
 export type CategoryFacetSearchProps = Omit<
