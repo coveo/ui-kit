@@ -1,5 +1,6 @@
 import {
   loadQuerySuggestActions,
+  SearchBox,
   SearchEngine,
   Suggestion,
 } from '@coveo/headless';
@@ -11,16 +12,16 @@ import {Component, Element, Prop, State, h} from '@stencil/core';
 import SearchIcon from '../../../../images/search.svg';
 import {encodeForDomAttribute} from '../../../../utils/string-utils';
 import {
-  QuerySuggestionContainer,
-  QuerySuggestionIcon,
-  QuerySuggestionText,
-} from '../../../common/suggestions/query-suggestions';
-import {
   dispatchSearchBoxSuggestionsEvent,
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
-} from '../suggestions-common';
+} from '../../../common/search-box/suggestions-common';
+import {
+  QuerySuggestionContainer,
+  QuerySuggestionIcon,
+  QuerySuggestionText,
+} from '../../../common/suggestions/query-suggestions';
 
 /**
  * The `atomic-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
@@ -30,7 +31,7 @@ import {
   shadow: true,
 })
 export class AtomicSearchBoxQuerySuggestions {
-  private bindings!: SearchBoxSuggestionsBindings;
+  private bindings!: SearchBoxSuggestionsBindings<SearchBox>;
   @Element() private host!: HTMLElement;
 
   @State() public error!: Error;
@@ -55,7 +56,7 @@ export class AtomicSearchBoxQuerySuggestions {
 
   componentWillLoad() {
     try {
-      dispatchSearchBoxSuggestionsEvent((bindings) => {
+      dispatchSearchBoxSuggestionsEvent<SearchBox>((bindings) => {
         this.bindings = bindings;
         return this.initialize();
       }, this.host);

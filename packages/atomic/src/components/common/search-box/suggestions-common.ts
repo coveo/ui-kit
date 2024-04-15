@@ -1,8 +1,45 @@
-import {SearchBox} from '@coveo/headless';
 import {VNode} from '@stencil/core';
 import {buildCustomEvent} from '../../../utils/event-utils';
 import {closest} from '../../../utils/utils';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {AnyBindings} from '../interface/bindings';
+
+/**
+ * Element which will be rendered in the list of suggestions.
+ */
+export interface SearchBoxSuggestionElement {
+  /**
+   * Stable identity which enables Stencil to reuse DOM elements for better performance.
+   * The best way to pick a key is to use a string that uniquely identifies that list item among its siblings (often your data will already have IDs).
+   */
+  key: string;
+  /**
+   * Rendered content of the element.
+   */
+  content: Element | VNode;
+  /**
+   * Hook called when the selection is selected.
+   * @param e DOM event.
+   */
+  onSelect?(e: Event): void;
+  /**
+   * The query associated with the suggestion which will replace the query in the search box if the suggestion is selected.
+   */
+  query?: string;
+  /**
+   * For improved accessibility, provide this property with additional information.
+   * https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label
+   */
+  ariaLabel?: string;
+  /**
+   * Adds a specific shadow part attribute that can be selected with the CSS ::part pseudo-element.
+   * https://developer.mozilla.org/en-US/docs/Web/CSS/::part
+   */
+  part?: string;
+  /**
+   * Hide the suggestion if it's the last in the list.
+   */
+  hideIfLast?: boolean;
+}
 
 /**
  * Element which will be rendered in the list of suggestions.
@@ -74,11 +111,14 @@ export interface SearchBoxSuggestions {
 /**
  * Event sent from the registered query suggestions to the parent search box.
  */
-export type SearchBoxSuggestionsEvent = (
+export type SearchBoxSuggestionsEvent<
+  SearchBoxController,
+  Bindings = AnyBindings,
+> = (
   /**
    * The bindings passed from the search box to the suggestions.
    */
-  bindings: SearchBoxSuggestionsBindings
+  bindings: SearchBoxSuggestionsBindings<SearchBoxController, Bindings>
 ) => SearchBoxSuggestions;
 
 const searchBoxElements = ['atomic-search-box', 'atomic-insight-search-box'];
@@ -86,7 +126,10 @@ const searchBoxElements = ['atomic-search-box', 'atomic-insight-search-box'];
 /**
  * The bindings passed from the search box to the suggestions.
  */
-export interface SearchBoxSuggestionsBindings extends Bindings {
+export type SearchBoxSuggestionsBindings<
+  SearchBoxController,
+  Bindings = AnyBindings,
+> = Bindings & {
   /**
    * The unique id of the search box.
    */
@@ -96,9 +139,9 @@ export interface SearchBoxSuggestionsBindings extends Bindings {
    */
   isStandalone: boolean;
   /**
-   * The [search box headless controller](https://docs.coveo.com/en/headless/latest/reference/search/controllers/search-box/).
+   * The search box headless controller.
    */
-  searchBoxController: SearchBox;
+  searchBoxController: SearchBoxController;
   /**
    * The amount of queries displayed when the user interacts with the search box, property set on the [Atomic Search box](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-box/#properties).
    */
@@ -128,15 +171,18 @@ export interface SearchBoxSuggestionsBindings extends Bindings {
    * Retrieves the current suggestions elements.
    */
   getSuggestionElements(): SearchBoxSuggestionElement[];
-}
+};
 
 /**
  * Dispatches an event which retrieves the `SearchBoxSuggestionsBindings` on a configured parent search box.
  * @param event Event sent from the registered query suggestions to the parent search box.
  * @param element Element on which to dispatch the event, which must be the child of a configured search box.
  */
-export const dispatchSearchBoxSuggestionsEvent = (
-  event: SearchBoxSuggestionsEvent,
+export const dispatchSearchBoxSuggestionsEvent = <
+  SearchBoxController,
+  Bindings = AnyBindings,
+>(
+  event: SearchBoxSuggestionsEvent<SearchBoxController, Bindings>,
   element: HTMLElement
 ) => {
   element.dispatchEvent(
