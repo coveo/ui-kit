@@ -43,6 +43,7 @@ import {
   SearchBoxSuggestionElement,
   SearchBoxSuggestionsBindings,
   SearchBoxSuggestionsEvent,
+  elementHasQuery,
 } from '../../common/search-box/suggestions-common';
 import {TextAreaSubmitButton} from '../../common/search-box/text-area-submit-button';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
@@ -383,7 +384,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
 
   private updateBreakpoints = once(() => updateBreakpoints(this.host));
 
-  private onInput(value: string) {
+  private async onInput(value: string) {
     this.searchBox.updateText(value);
 
     if (this.isSearchDisabledForEndUser(value)) {
@@ -391,12 +392,14 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
       return;
     }
     this.isExpanded = true;
-    this.suggestionManager.triggerSuggestions();
+    await this.suggestionManager.triggerSuggestions();
+    this.announceNewSuggestionsToScreenReader();
   }
 
-  private onFocus() {
+  private async onFocus() {
     this.isExpanded = true;
-    this.suggestionManager.triggerSuggestions();
+    await this.suggestionManager.triggerSuggestions();
+    this.announceNewSuggestionsToScreenReader();
   }
 
   private onSubmit() {
@@ -425,10 +428,12 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
       case 'ArrowDown':
         e.preventDefault();
         this.suggestionManager.focusNextValue();
+        this.announceNewActiveSuggestionToScreenReader();
         break;
       case 'ArrowUp':
         e.preventDefault();
         this.suggestionManager.focusPreviousValue();
+        this.announceNewActiveSuggestionToScreenReader();
         break;
       case 'ArrowRight':
         if (
@@ -437,6 +442,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
         ) {
           e.preventDefault();
           this.suggestionManager.focusPanel('right');
+          this.announceNewActiveSuggestionToScreenReader();
         }
         break;
       case 'ArrowLeft':
@@ -446,6 +452,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
         ) {
           e.preventDefault();
           this.suggestionManager.focusPanel('left');
+          this.announceNewActiveSuggestionToScreenReader();
         }
         break;
       case 'Tab':
@@ -663,6 +670,25 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
       return this.bindings.i18n.t('search-box-with-suggestions-keyboardless');
     }
     return this.bindings.i18n.t('search-box-with-suggestions');
+  }
+
+  private announceNewActiveSuggestionToScreenReader() {
+    const ariaLabel = this.suggestionManager.activeDescendantElement?.ariaLabel;
+    if (isMacOS() && ariaLabel) {
+      this.suggestionsAriaMessage = ariaLabel;
+    }
+  }
+
+  private announceNewSuggestionsToScreenReader() {
+    const elsLength =
+      this.suggestionManager.allSuggestionElements.filter(
+        elementHasQuery
+      ).length;
+    this.searchBoxAriaMessage = elsLength
+      ? this.bindings.i18n.t('query-suggestions-available', {
+          count: elsLength,
+        })
+      : this.bindings.i18n.t('query-suggestions-unavailable');
   }
 
   public render() {
