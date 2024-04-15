@@ -168,6 +168,7 @@ function smartSnippetExpectations(selector: SmartSnippetSelector) {
           expect(customData).to.have.property('contentIDKey', 'permanentid');
           expect(customData).to.have.property('contentIDValue', permanentId);
           expect(customData).to.have.property('linkText', linkText);
+          console.log(customData.linkURL);
           expect(customData).to.have.property('linkURL', linkUrl);
         })
         .logDetail("should log the 'openSmartSnippetInlineLink' UA event");
