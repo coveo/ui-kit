@@ -1,4 +1,5 @@
 import {InterceptAliases} from '../../../page-objects/search';
+import {completeSearchRequest} from '../../common-expectations';
 import {SearchExpectations} from '../../search-expectations';
 import {TabSelector, TabSelectors} from './tab-selectors';
 
@@ -26,6 +27,13 @@ function tabExpectations(selector: TabSelector) {
       selector.active().should('have.length', 1).should('contain', value);
     },
 
+    constantQueryInSearchRequest: (
+      body: Record<string, unknown>,
+      value: string
+    ) => {
+      expect(body.cq).to.equal(value);
+    },
+
     logSelected(value: string) {
       cy.wait(InterceptAliases.UA.Tab.InterfaceChange).then((interception) => {
         const analyticsBody = interception.request.body;
@@ -44,5 +52,6 @@ function tabExpectations(selector: TabSelector) {
 
 export const TabExpectations = {
   ...tabExpectations(TabSelectors),
+  completeSearchRequest,
   search: SearchExpectations,
 };
