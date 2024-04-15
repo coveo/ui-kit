@@ -10,18 +10,18 @@ import {
 } from '@coveo/headless/dist/definitions/state/state-sections';
 import {Component, Element, Prop, State, h} from '@stencil/core';
 import SearchIcon from '../../../../images/search.svg';
-import {encodeForDomAttribute} from '../../../../utils/string-utils';
+import {
+  getPartialSearchBoxSuggestionElement,
+  QuerySuggestionContainer,
+  QuerySuggestionIcon,
+  QuerySuggestionText,
+} from '../../../common/suggestions/query-suggestions';
 import {
   dispatchSearchBoxSuggestionsEvent,
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
-} from '../../../common/search-box/suggestions-common';
-import {
-  QuerySuggestionContainer,
-  QuerySuggestionIcon,
-  QuerySuggestionText,
-} from '../../../common/suggestions/query-suggestions';
+} from '../../../common/suggestions/suggestions-common';
 
 /**
  * The `atomic-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
@@ -101,8 +101,13 @@ export class AtomicSearchBoxQuerySuggestions {
 
   private renderItem(suggestion: Suggestion) {
     const hasQuery = this.bindings.searchBoxController.state.value !== '';
+    const partialItem = getPartialSearchBoxSuggestionElement(
+      suggestion,
+      this.bindings.i18n
+    );
+
     return {
-      part: 'query-suggestion-item',
+      ...partialItem,
       content: (
         <QuerySuggestionContainer>
           <QuerySuggestionIcon
@@ -113,12 +118,6 @@ export class AtomicSearchBoxQuerySuggestions {
           <QuerySuggestionText suggestion={suggestion} hasQuery={hasQuery} />
         </QuerySuggestionContainer>
       ),
-      key: `qs-${encodeForDomAttribute(suggestion.rawValue)}`,
-      query: suggestion.rawValue,
-      ariaLabel: this.bindings.i18n.t('query-suggestion-label', {
-        query: suggestion.rawValue,
-        interpolation: {escapeValue: false},
-      }),
       onSelect: () => {
         this.bindings.searchBoxController.selectSuggestion(suggestion.rawValue);
       },

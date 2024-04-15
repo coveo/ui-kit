@@ -14,7 +14,7 @@ import {
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
-} from '../../../common/search-box/suggestions-common';
+} from '../../../common/suggestions/suggestions-common';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**

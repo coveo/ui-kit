@@ -38,14 +38,14 @@ import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {SearchInput} from '../../common/search-box/search-input';
 import {SearchTextArea} from '../../common/search-box/search-text-area';
 import {SubmitButton} from '../../common/search-box/submit-button';
-import {SuggestionManager} from '../../common/search-box/suggestion-manager';
+import {TextAreaSubmitButton} from '../../common/search-box/text-area-submit-button';
+import {SuggestionManager} from '../../common/suggestions/suggestion-manager';
 import {
   SearchBoxSuggestionElement,
   SearchBoxSuggestionsBindings,
   SearchBoxSuggestionsEvent,
   elementHasQuery,
-} from '../../common/search-box/suggestions-common';
-import {TextAreaSubmitButton} from '../../common/search-box/text-area-submit-button';
+} from '../../common/suggestions/suggestions-common';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {RedirectionPayload} from './redirection-payload';
 import {

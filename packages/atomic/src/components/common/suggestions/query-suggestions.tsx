@@ -1,4 +1,27 @@
 import {FunctionalComponent, h} from '@stencil/core';
+import {i18n} from 'i18next';
+import {encodeForDomAttribute} from '../../../utils/string-utils';
+import {SearchBoxSuggestionElement} from './suggestions-common';
+
+interface Suggestion {
+  highlightedValue: string;
+  rawValue: string;
+}
+
+export const getPartialSearchBoxSuggestionElement = (
+  suggestion: Suggestion,
+  i18n: i18n
+): Pick<SearchBoxSuggestionElement, 'ariaLabel' | 'key' | 'query' | 'part'> => {
+  return {
+    part: 'query-suggestion-item',
+    key: `qs-${encodeForDomAttribute(suggestion.rawValue)}`,
+    query: suggestion.rawValue,
+    ariaLabel: i18n.t('query-suggestion-label', {
+      query: suggestion.rawValue,
+      interpolation: {escapeValue: false},
+    }),
+  };
+};
 
 export const QuerySuggestionContainer: FunctionalComponent = (_, children) => {
   return (
@@ -30,7 +53,7 @@ export const QuerySuggestionIcon: FunctionalComponent<
 };
 
 interface QuerySuggestionTextProps {
-  suggestion: {highlightedValue: string; rawValue: string};
+  suggestion: Suggestion;
   hasQuery: boolean;
 }
 

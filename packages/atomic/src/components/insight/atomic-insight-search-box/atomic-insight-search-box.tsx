@@ -13,20 +13,20 @@ import {
   BindStateToController,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {encodeForDomAttribute} from '../../../utils/string-utils';
 import {randomID} from '../../../utils/utils';
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {SearchTextArea} from '../../common/search-box/search-text-area';
-import {SuggestionManager} from '../../common/search-box/suggestion-manager';
 import {
-  elementHasQuery,
-  SearchBoxSuggestionElement,
-} from '../../common/search-box/suggestions-common';
-import {
+  getPartialSearchBoxSuggestionElement,
   QuerySuggestionContainer,
   QuerySuggestionIcon,
   QuerySuggestionText,
 } from '../../common/suggestions/query-suggestions';
+import {SuggestionManager} from '../../common/suggestions/suggestion-manager';
+import {
+  elementHasQuery,
+  SearchBoxSuggestionElement,
+} from '../../common/suggestions/suggestions-common';
 import {ButtonSearchSuggestion} from '../../search/atomic-search-box/search-suggestion';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
@@ -204,9 +204,13 @@ export class AtomicInsightSearchBox {
     suggestion: InsightSuggestion
   ): SearchBoxSuggestionElement {
     const hasQuery = this.searchBox.state.value !== '';
+    const partialItem = getPartialSearchBoxSuggestionElement(
+      suggestion,
+      this.bindings.i18n
+    );
 
     return {
-      part: 'query-suggestion-item',
+      ...partialItem,
       content: (
         <QuerySuggestionContainer>
           <QuerySuggestionIcon
@@ -217,12 +221,6 @@ export class AtomicInsightSearchBox {
           <QuerySuggestionText suggestion={suggestion} hasQuery={hasQuery} />
         </QuerySuggestionContainer>
       ),
-      key: `qs-${encodeForDomAttribute(suggestion.rawValue)}`,
-      query: suggestion.rawValue,
-      ariaLabel: this.bindings.i18n.t('query-suggestion-label', {
-        query: suggestion.rawValue,
-        interpolation: {escapeValue: false},
-      }),
       onSelect: () => {
         this.searchBox.selectSuggestion(suggestion.rawValue);
       },
