@@ -119,13 +119,13 @@ export class AtomicTab {
 
   public render() {
     return (
-      <div>
+      <div class={this.tabState.isActive ? 'active-tab' : ''}>
         <Button
-          style={this.tabState.isActive ? 'text-primary' : 'text-neutral'}
-          class={`p-3 w-full text-xl ${this.tabState.isActive ? 'font-bold' : ''}`}
+          style="text-transparent"
+          class={`px-4 pb-1 w-full text-xl ${this.tabState.isActive ? '' : 'text-neutral-dark'} `}
           text={this.label}
           part="button"
-          onClick={() => this.handleClick()}
+          onClick={this.handleClick}
         ></Button>
       </div>
     );

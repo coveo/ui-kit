@@ -7,4 +7,14 @@
   & > slot {
     height: inherit;
   }
+  .active-tab::after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 5px;
+    position: relative;
+    top: 2.5px;
+    background: var(--atomic-primary);
+    border-radius: 20px;
+  }
 }

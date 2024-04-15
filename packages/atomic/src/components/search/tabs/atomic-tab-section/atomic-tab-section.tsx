@@ -37,7 +37,7 @@ export class AtomicTabSection {
 
   public render() {
     return (
-      <div class="flex flex-row gap-2 mb-2">
+      <div class="my-4 flex flex-row gap-2 mb-2 border-b">
         <slot></slot>
       </div>
     );
