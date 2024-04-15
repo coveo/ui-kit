@@ -7,7 +7,7 @@ import {Button} from '../button';
 interface ShowButtonProps {
   i18n: i18n;
   isCollapsed: boolean;
-  onClick(): void;
+  onClick: () => void;
   isStreaming?: boolean;
   collapsable?: boolean;
 }
