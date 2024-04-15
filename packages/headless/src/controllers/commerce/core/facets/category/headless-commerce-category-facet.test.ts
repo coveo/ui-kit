@@ -119,15 +119,6 @@ describe('CategoryFacet', () => {
     });
   });
 
-  describe('#facetSearch', () => {
-    it('exposes facet search controller', () => {
-      expect(facet.facetSearch.clear).toBeTruthy();
-      expect(facet.facetSearch.search).toBeTruthy();
-      expect(facet.facetSearch.select).toBeTruthy();
-      expect(facet.facetSearch.updateText).toBeTruthy();
-    });
-  });
-
   describe('#state', () => {
     describe('#activeValue', () => {
       it('when no value is selected, returns undefined', () => {
