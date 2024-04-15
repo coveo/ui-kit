@@ -33,7 +33,7 @@
 }
 
 .generated-answer__answer--expanded {
-  max-height: var(--fullHeight, 100%);
+  max-height: var(100%);
   margin-bottom: 1rem;
   overflow: visible;
 }
@@ -64,6 +64,10 @@
   clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0% 100%);
   opacity: 0.2;
   visibility: hidden;
+}
+
+.generated-answer__disclaimer {
+  line-height: 2rem;
 }
 
 .flex-one {

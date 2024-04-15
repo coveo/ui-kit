@@ -163,6 +163,15 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
+    if (this.collapsible) {
+      if (this.isStreaming) {
+        this._exceedsMaximumHeight =
+          this.generatedAnswerElementHeight + 50 > this._maximumAnswerHeight;
+      } else {
+        this._exceedsMaximumHeight =
+          this.generatedAnswerElementHeight > this._maximumAnswerHeight;
+      }
+    }
   }
 
   /**
@@ -217,18 +226,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     this.ariaLiveMessage.dispatchMessage(this.getGeneratedAnswerStatus());
 
     if (this._collapsed) {
-      if (this.isStreaming) {
-        this._exceedsMaximumHeight =
-          this.generatedAnswerElementHeight + 100 > this._maximumAnswerHeight;
-      } else {
-        this._exceedsMaximumHeight =
-          this.generatedAnswerElementHeight > this._maximumAnswerHeight;
-      }
-      console.log('this._exceedsMaximumHeight', this._exceedsMaximumHeight);
-      console.log(
-        'this.generatedAnswerElementHeight',
-        this.generatedAnswerElementHeight
-      );
       this.updateExpandableAnswerDisplay();
     }
   }
@@ -395,10 +392,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   updateGeneratedAnswerCSSVariables() {
     const styles = this.generatedAnswerElement?.style;
     styles.setProperty('--maxHeight', `${this._maximumAnswerHeight}px`);
-    styles.setProperty(
-      '--fullHeight',
-      `${this.generatedAnswerElementHeight}px`
-    );
   }
 
   get answer() {
@@ -515,7 +508,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get disclaimerCssClass() {
-    return `slds-grid_vertical-align-center slds-col slds-text-color_weak slds-text-body_small ${this.multilineFooter ? '' : 'slds-text-align_right'}`;
+    return `generated-answer__disclaimer slds-grid_vertical-align-center slds-col slds-text-color_weak slds-text-body_small ${this.multilineFooter ? '' : 'slds-text-align_right'}`;
   }
 
   get toggleCollapseAnswerIcon() {

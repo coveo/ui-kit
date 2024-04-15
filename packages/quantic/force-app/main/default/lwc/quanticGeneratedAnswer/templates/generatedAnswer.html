@@ -49,9 +49,9 @@
             data-cy="generated-answer__footer"
             class={generatedAnswerFooterCssClass}
           >
-            <div class="generated-answer__footer-row slds-grid slds-col slds-size_1-of-1">
+            <div class="generated-answer__footer-row slds-grid slds-col slds-size_1-of-1 slds-wrap slds-grid_align-spread">
               <template lwc:if={shouldDisplayCitations}>
-                <div class="slds-var-m-top_small flex-one">
+                <div class="slds-var-m-top_small">
                   <c-quantic-source-citations
                     engine-id={engineId}
                     data-cy="generated-answer__citations"
@@ -70,7 +70,7 @@
                 </div>
               </template>
             </div>
-            <div class="generated-answer__footer-row slds-col slds-size_1-of-1 slds-grid slds-grid_align-spread">
+            <div class="generated-answer__footer-row slds-col slds-size_1-of-1 slds-grid slds-grid_align-spread slds-wrap">
               <template lwc:if={shouldShowToggleCollapseAnswer}>
                 <lightning-button
                   data-cy="generated-answer__answer-toggle"
@@ -80,6 +80,7 @@
                   title={toggleCollapseAnswerLabel}
                   onclick={handleToggleCollapseAnswer}
                   icon-position="right"
+                  class="generated-answer__answer-toggle slds-shrink-none slds-var-m-right_small"
                 ></lightning-button>
               </template>
               <template lwc:if={shouldShowDisclaimer}>
