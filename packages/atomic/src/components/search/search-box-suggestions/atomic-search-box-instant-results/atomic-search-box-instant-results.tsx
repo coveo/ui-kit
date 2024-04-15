@@ -23,7 +23,6 @@ import {
   SearchBoxSuggestionsBindings,
 } from '../../../common/search-box/suggestions-common';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {AtomicStore} from '../../atomic-search-interface/store';
 
 export type AriaLabelGenerator = (
   bindings: Bindings,
@@ -118,10 +117,7 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
   }
 
   private renderItems(): SearchBoxSuggestionElement[] {
-    if (
-      !this.bindings.suggestedQuery() ||
-      (this.bindings.store as AtomicStore).isMobile()
-    ) {
+    if (!this.bindings.suggestedQuery() || this.bindings.store.isMobile()) {
       return [];
     }
     const results = this.instantResults.state.results.length
