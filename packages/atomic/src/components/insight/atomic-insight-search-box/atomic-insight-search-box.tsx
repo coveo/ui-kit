@@ -18,7 +18,10 @@ import {randomID} from '../../../utils/utils';
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {SearchTextArea} from '../../common/search-box/search-text-area';
 import {SuggestionManager} from '../../common/search-box/suggestion-manager';
-import {SearchBoxSuggestionElement} from '../../common/search-box/suggestions-common';
+import {
+  elementHasQuery,
+  SearchBoxSuggestionElement,
+} from '../../common/search-box/suggestions-common';
 import {ButtonSearchSuggestion} from '../../search/atomic-search-box/search-suggestion';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
@@ -139,10 +142,12 @@ export class AtomicInsightSearchBox {
       case 'ArrowDown':
         e.preventDefault();
         this.suggestionManager.focusNextValue();
+        this.announceNewActiveSuggestionToScreenReader();
         break;
       case 'ArrowUp':
         e.preventDefault();
         this.suggestionManager.focusPreviousValue();
+        this.announceNewActiveSuggestionToScreenReader();
         break;
       case 'Tab':
         this.suggestionManager.clearSuggestions();
@@ -294,15 +299,36 @@ export class AtomicInsightSearchBox {
     return this.bindings.i18n.t('search-box-with-suggestions');
   }
 
-  private onFocus() {
+  private async onFocus() {
     this.isExpanded = true;
-    this.suggestionManager.triggerSuggestions();
+    await this.suggestionManager.triggerSuggestions();
+    this.announceNewSuggestionsToScreenReader();
   }
 
-  private onInput(value: string) {
+  private async onInput(value: string) {
     this.searchBox.updateText(value);
     this.isExpanded = true;
-    this.suggestionManager.triggerSuggestions();
+    await this.suggestionManager.triggerSuggestions();
+    this.announceNewSuggestionsToScreenReader();
+  }
+
+  private announceNewActiveSuggestionToScreenReader() {
+    const ariaLabel = this.suggestionManager.activeDescendantElement?.ariaLabel;
+    if (isMacOS() && ariaLabel) {
+      this.suggestionsAriaMessage = ariaLabel;
+    }
+  }
+
+  private announceNewSuggestionsToScreenReader() {
+    const numberOfSuggestionsToAnnounce =
+      this.suggestionManager.allSuggestionElements.filter(
+        elementHasQuery
+      ).length;
+    this.searchBoxAriaMessage = numberOfSuggestionsToAnnounce
+      ? this.bindings.i18n.t('query-suggestions-available', {
+          count: numberOfSuggestionsToAnnounce,
+        })
+      : this.bindings.i18n.t('query-suggestions-unavailable');
   }
 
   public render() {

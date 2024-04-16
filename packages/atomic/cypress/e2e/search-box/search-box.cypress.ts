@@ -124,10 +124,10 @@ describe('Search Box Test Suites', () => {
 
       it('is accessible', () => {
         CommonAssertions.assertAccessibility(searchBoxComponent);
-        /*CommonAssertions.assertAriaLiveMessage(
+        CommonAssertions.assertAriaLiveMessageWithoutIt(
           SearchBoxSelectors.searchBoxAriaLive,
           expectedSum.toString()
-        );*/
+        );
       });
     });
 
@@ -233,10 +233,12 @@ describe('Search Box Test Suites', () => {
 
         SearchBoxAssertions.assertHasSuggestionsCount(expectedSum);
 
-        /*CommonAssertions.assertAriaLiveMessage(
-          SearchBoxSelectors.searchBoxAriaLive,
-          expectedSum.toString()
-        );*/
+        it('it updates aria-live message', () => {
+          CommonAssertions.assertAriaLiveMessageWithoutIt(
+            SearchBoxSelectors.searchBoxAriaLive,
+            expectedSum.toString()
+          );
+        });
       });
 
       describe('with custom suggestions provider', () => {
@@ -471,13 +473,17 @@ describe('Search Box Test Suites', () => {
         .init();
     });
 
-    it('should be accessible', () => {
+    it('should update aria live message', () => {
       SearchBoxSelectors.inputBox().click();
-      /*CommonAssertions.assertAriaLiveMessage(
+      CommonAssertions.assertAriaLiveMessageWithoutIt(
         SearchBoxSelectors.searchBoxAriaLive,
         ' no '
-      );*/
-      CommonAssertions.assertAccessibility(searchBoxComponent);
+      );
+    });
+
+    it('should be accessible', () => {
+      SearchBoxSelectors.inputBox().click();
+      CommonAssertions.assertAccessibilityWithoutIt(searchBoxComponent);
     });
   });
 
