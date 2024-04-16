@@ -49,7 +49,7 @@ describe('recommendation-slice', () => {
       type: 'type',
     };
     const action = {
-      type: 'commerce/recommendation/fetch/rejected',
+      type: fetchRecommendations.rejected.type,
       payload: err,
       meta: {
         arg: {

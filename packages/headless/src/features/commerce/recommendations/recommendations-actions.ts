@@ -8,7 +8,7 @@ import {RecommendationsCommerceSuccessResponse} from '../../../api/commerce/reco
 import {validatePayload} from '../../../utils/validate-payload';
 import {
   StateNeededByQueryCommerceAPI,
-  buildCommerceAPIRequest,
+  buildBaseCommerceAPIRequest,
 } from '../common/actions';
 import {recommendationsSlotDefinition} from './recommendations';
 
@@ -21,7 +21,7 @@ const buildRecommendationCommerceAPIRequest = async (
   slotId: string,
   state: StateNeededByQueryCommerceAPI
 ): Promise<CommerceRecommendationsRequest> => {
-  const commerceAPIRequest = await buildCommerceAPIRequest(state);
+  const commerceAPIRequest = await buildBaseCommerceAPIRequest(state);
   return {
     ...commerceAPIRequest,
     id: slotId,
@@ -40,7 +40,7 @@ export const fetchRecommendations = createAsyncThunk<
   FetchRecommendationsActionCreatorPayload,
   AsyncThunkCommerceOptions<StateNeededByQueryCommerceAPI>
 >(
-  'commerce/recommendation/fetch',
+  'commerce/recommendations/fetch',
   async (payload, {getState, rejectWithValue, extra: {apiClient}}) => {
     const slotId = payload.slotId;
     const request = await buildRecommendationCommerceAPIRequest(
@@ -65,7 +65,7 @@ export interface SlotIdPayload {
 }
 
 export const registerRecommendationsSlot = createAction(
-  'recommendation/updateSlotId',
+  'commerce/recommendations/registerSlot',
   (payload: SlotIdPayload) =>
     validatePayload(payload, recommendationsSlotDefinition)
 );
