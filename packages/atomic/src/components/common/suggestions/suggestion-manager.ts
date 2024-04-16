@@ -15,7 +15,7 @@ import {
  */
 export interface SearchBoxSuggestions {
   /**
-   * The search box will sort the position of suggestions using this value. The lowest value being first.
+   * The search box will sort the position of suggestions using this value, the lowest value being first.
    * By default, the DOM position will be used.
    */
   position: number;
@@ -32,9 +32,9 @@ export interface SearchBoxSuggestions {
    */
   onInput?(): Promise<unknown> | void;
   /**
-   * Hook called when the suggested query changes as a user traverses through the list of suggestions.
+   * Hook called when the current suggested query changes as the user navigates the list of suggestions.
    * This is used for instant results, which are rendered based on the current suggested query.
-   * @param q The new suggested query.
+   * @param q The new current suggested query.
    */
   onSuggestedQueryChange?(q: string): Promise<unknown> | void;
 }

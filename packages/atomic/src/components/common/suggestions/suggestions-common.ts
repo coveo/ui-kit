@@ -17,7 +17,7 @@ export interface SearchBoxSuggestionElement {
    */
   content: Element | VNode;
   /**
-   * Hook called when the selection is selected.
+   * Hook called when the suggestion is selected.
    * @param e DOM event.
    */
   onSelect?(e: Event): void;
@@ -26,7 +26,7 @@ export interface SearchBoxSuggestionElement {
    */
   query?: string;
   /**
-   * For improved accessibility, provide this property with additional information.
+   * For improved accessibility, set this property with additional information.
    * https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label
    */
   ariaLabel?: string;
@@ -36,7 +36,7 @@ export interface SearchBoxSuggestionElement {
    */
   part?: string;
   /**
-   * Hide the suggestion if it's the last in the list.
+   * Whether to hide the suggestion when it's the last one in the list.
    */
   hideIfLast?: boolean;
 }
@@ -143,7 +143,7 @@ export type SearchBoxSuggestionsBindings<
    */
   searchBoxController: SearchBoxController;
   /**
-   * The amount of queries displayed when the user interacts with the search box, property set on the [Atomic Search box](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-box/#properties).
+   * The number of queries to display when the user interacts with the search box.
    */
   numberOfQueries: number;
   /**
