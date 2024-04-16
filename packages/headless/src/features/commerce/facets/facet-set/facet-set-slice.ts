@@ -255,24 +255,6 @@ export const commerceFacetSetReducer = createReducer(
 
         updateExistingFacetValueState(existingValue, 'select');
       })
-      .addCase(selectCategoryFacetSearchResult, (state, action) => {
-        const {facetId, value} = action.payload;
-        const facetRequest = state[facetId];
-
-        if (
-          !facetRequest ||
-          !ensureCategoryFacetRequest(facetRequest?.request)
-        ) {
-          return;
-        }
-
-        const path = [...value.path, value.rawValue];
-        selectPath(
-          facetRequest.request,
-          path,
-          facetRequest.request.initialNumberOfValues
-        );
-      })
       .addCase(excludeFacetSearchResult, (state, action) => {
         const {facetId, value} = action.payload;
         const facetRequest = state[facetId]?.request;
@@ -301,6 +283,24 @@ export const commerceFacetSetReducer = createReducer(
         }
 
         updateExistingFacetValueState(existingValue, 'exclude');
+      })
+      .addCase(selectCategoryFacetSearchResult, (state, action) => {
+        const {facetId, value} = action.payload;
+        const facetRequest = state[facetId];
+
+        if (
+          !facetRequest ||
+          !ensureCategoryFacetRequest(facetRequest?.request)
+        ) {
+          return;
+        }
+
+        const path = [...value.path, value.rawValue];
+        selectPath(
+          facetRequest.request,
+          path,
+          facetRequest.request.initialNumberOfValues
+        );
       })
       .addCase(updateFacetNumberOfValues, (state, action) => {
         const {facetId, numberOfValues} = action.payload;
