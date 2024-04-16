@@ -313,13 +313,13 @@ export class AtomicInsightSearchBox {
   }
 
   private announceNewSuggestionsToScreenReader() {
-    const elsLength =
+    const numberOfSuggestionsToAnnounce =
       this.suggestionManager.allSuggestionElements.filter(
         elementHasQuery
       ).length;
-    this.searchBoxAriaMessage = elsLength
+    this.searchBoxAriaMessage = numberOfSuggestionsToAnnounce
       ? this.bindings.i18n.t('query-suggestions-available', {
-          count: elsLength,
+          count: numberOfSuggestionsToAnnounce,
         })
       : this.bindings.i18n.t('query-suggestions-unavailable');
   }
