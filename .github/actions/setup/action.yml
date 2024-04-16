@@ -39,7 +39,7 @@ runs:
       with:
         path: node_modules/.cache/nx
         key: nx-${{ github.sha }}
-        fail-on-cache-miss: ${{ inputs.fail-on-cache-miss }}
+        fail-on-cache-miss: ${{ inputs.fail-on-cache-miss == 'true' }}
     - if: steps.npm-cache.outputs.cache-hit != 'true'
       run: npm ci
       shell: bash
