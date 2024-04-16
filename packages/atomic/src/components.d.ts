@@ -2716,6 +2716,10 @@ export interface AtomicTabCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicTabElement;
 }
+export interface AtomicTabSectionCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicTabSectionElement;
+}
 declare global {
     /**
      * The `atomic-aria-live` component notifies screen readers of changes in the search interface.
@@ -4198,7 +4202,18 @@ declare global {
         prototype: HTMLAtomicTabElement;
         new (): HTMLAtomicTabElement;
     };
+    interface HTMLAtomicTabSectionElementEventMap {
+        "atomic/tabInit": any;
+    }
     interface HTMLAtomicTabSectionElement extends Components.AtomicTabSection, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicTabSectionElementEventMap>(type: K, listener: (this: HTMLAtomicTabSectionElement, ev: AtomicTabSectionCustomEvent<HTMLAtomicTabSectionElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicTabSectionElementEventMap>(type: K, listener: (this: HTMLAtomicTabSectionElement, ev: AtomicTabSectionCustomEvent<HTMLAtomicTabSectionElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLAtomicTabSectionElement: {
         prototype: HTMLAtomicTabSectionElement;
@@ -6785,6 +6800,7 @@ declare namespace LocalJSX {
           * When provided, this tab will be selected by default when the component loads. Otherwise, the first tab is selected automatically.
          */
         "defaultActiveTab"?: string;
+        "onAtomic/tabInit"?: (event: AtomicTabSectionCustomEvent<any>) => void;
     }
     /**
      * The `atomic-table-element` element defines a table column in a result list.
