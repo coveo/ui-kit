@@ -149,6 +149,13 @@ export class AtomicRecsInterface
    * Otherwise you may see console errors such as
    *  - Refused to execute inline script because it violates the following Content Security Policy directive: [...]
    *  - Refused to apply inline style because it violates the following Content Security Policy directive: [...].
+   * @example:
+   * ```html
+   * <script nonce="<YOUR_GENERATED_NONCE>">
+   *  import {setNonce} from '@coveo/atomic';
+   *  setNonce('<YOUR_GENERATED_NONCE>');
+   * </script>
+   * ```
    */
   @Prop({reflect: true}) public CspNonce?: string;
 
