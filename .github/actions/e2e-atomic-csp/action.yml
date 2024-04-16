@@ -3,8 +3,10 @@ description: 'Runs Cypress tests for Atomic'
 runs:
   using: composite
   steps:
-    - name: Ensure `npm ci` ran
-      run: npm ci
+    - name: Complementary setup
+      run: |
+        npm ci
+        npm run build -w=@coveo/atomic
       shell: bash
     - name: Run tests
       run: node ./csp/test.mjs
