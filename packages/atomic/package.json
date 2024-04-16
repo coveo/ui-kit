@@ -65,8 +65,8 @@
   },
   "devDependencies": {
     "@babel/core": "7.24.4",
-    "@coveo/release": "1.0.0",
     "@coveo/headless": "2.60.0",
+    "@coveo/release": "1.0.0",
     "@fullhuman/postcss-purgecss": "6.0.0",
     "@rollup/plugin-alias": "5.1.0",
     "@rollup/plugin-replace": "5.0.5",

@@ -1,0 +1,12 @@
+name: 'Atomic E2E tests'
+description: 'Runs Cypress tests for Atomic'
+runs:
+  using: composite
+  steps:
+    - name: Ensure `npm ci` ran
+      run: npm ci
+      shell: bash
+    - name: Run tests
+      run: node ./csp/test.mjs
+      working-directory: packages/atomic
+      shell: bash

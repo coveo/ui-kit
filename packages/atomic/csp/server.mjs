@@ -14,10 +14,16 @@ function getContentTypeFromExtension(filePath) {
   switch (extension[1]) {
     case 'html':
       return 'text/html';
+    case 'json':
+      return 'application/json';
     case 'js':
       return 'text/javascript';
     case 'css':
       return 'text/css';
+    case 'svg':
+      return 'image/svg+xml';
+    case 'ico':
+      return 'image/x-icon';
   }
 }
 const server = createServer((req, res) => {
@@ -53,4 +59,5 @@ const server = createServer((req, res) => {
 
 server.listen(3000, () => {
   console.log('Server is running on port 3000');
+  process.send('ready');
 });
