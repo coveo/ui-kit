@@ -7,9 +7,9 @@ export const buildFacetSearchRequest = async (
   state: StateNeededForRegularFacetSearch,
   isFieldSuggestionsRequest: boolean
 ): Promise<CommerceFacetSearchRequest> => {
-  const baseFacetQuery = state.facetSearchSet[facetId].options.query;
+  const baseFacetQuery = state.facetSearchSet[facetId]!.options.query;
   const facetQuery = `*${baseFacetQuery}*`;
-  const query = state.query?.q;
+  const query = state.commerceQuery?.query;
 
   const {
     url,

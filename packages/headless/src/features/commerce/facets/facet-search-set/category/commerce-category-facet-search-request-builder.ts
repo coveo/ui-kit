@@ -12,14 +12,14 @@ export const buildCategoryFacetSearchRequest = async (
   state: StateNeededForCategoryFacetSearch,
   isFieldSuggestionsRequest: boolean
 ): Promise<CategoryFacetSearchRequest> => {
-  const baseFacetQuery = state.categoryFacetSearchSet[facetId].options.query;
+  const baseFacetQuery = state.categoryFacetSearchSet[facetId]!.options.query;
   const facetQuery = `*${baseFacetQuery}*`;
   const categoryFacet = state.commerceFacetSet[facetId]!.request;
   const path = isCategoryFacetRequest(categoryFacet)
     ? getPathToSelectedCategoryFacetItem(categoryFacet)
     : [];
   const ignorePaths = path.length ? [path] : [];
-  const query = state.query?.q;
+  const query = state.commerceQuery?.query;
 
   const {
     url,
@@ -54,7 +54,7 @@ export const buildCategoryFacetSearchRequest = async (
 function isCategoryFacetRequest(
   request: AnyFacetRequest
 ): request is CommerceFacetRequest<CategoryFacetValueRequest> {
-  return request.delimitingCharacter !== undefined;
+  return request.type === 'hierarchical';
 }
 
 const getPathToSelectedCategoryFacetItem = (
