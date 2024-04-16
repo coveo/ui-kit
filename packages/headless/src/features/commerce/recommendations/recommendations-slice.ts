@@ -21,7 +21,7 @@ export const recommendationsReducer = createReducer(
           return;
         }
 
-        state[slotId] = buildRecommendationsSlice({slotId});
+        state[slotId] = buildRecommendationsSlice();
       })
       .addCase(fetchRecommendations.rejected, (state, action) => {
         const recommendations = state[action.meta.arg.slotId];
@@ -58,7 +58,7 @@ export const recommendationsReducer = createReducer(
 );
 
 function buildRecommendationsSlice(
-  config: Partial<RecommendationsSlice>
+  config?: Partial<RecommendationsSlice>
 ): RecommendationsSlice {
   return {
     ...getRecommendationsSliceInitialState(),

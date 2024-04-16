@@ -2,7 +2,6 @@ import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api
 import {Product} from '../../../api/commerce/common/product';
 
 export interface RecommendationsSlice {
-  slotId: string;
   headline: string;
   error: CommerceAPIErrorStatusResponse | null;
   isLoading: boolean;
@@ -18,7 +17,6 @@ export type RecommendationsState = Record<string, RecommendationsSlice>;
 export const getRecommendationsInitialState = (): RecommendationsState => ({});
 export const getRecommendationsSliceInitialState =
   (): RecommendationsSlice => ({
-    slotId: '',
     headline: '',
     error: null,
     isLoading: false,
