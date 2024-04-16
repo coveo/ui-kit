@@ -113,66 +113,69 @@ describe('quantic-smart-snippet-suggestions', () => {
             it('should properly display the smart snippet suggestions', () => {
               visitPage({useCase: param.useCase});
 
-              scope('when loading the page', () => {
-                Expect.displaySmartSnippetSuggestionsCard(true);
-                exampleRelatedQuestions.forEach((suggestion, index) => {
-                  Actions.toggleSuggestion(index);
-                  if (analyticsMode === 'next') {
-                    NextAnalyticsExpectations.emitQnaAnswerActionEvent(
-                      {
-                        answer: {
-                          type: answerType,
+              scope(
+                'when expanding and collapsing the smart snippet suggestions',
+                () => {
+                  Expect.displaySmartSnippetSuggestionsCard(true);
+                  exampleRelatedQuestions.forEach((suggestion, index) => {
+                    Actions.toggleSuggestion(index);
+                    if (analyticsMode === 'next') {
+                      NextAnalyticsExpectations.emitQnaAnswerActionEvent(
+                        {
+                          answer: {
+                            type: answerType,
+                          },
+                          action: 'expand',
                         },
-                        action: 'expand',
-                      },
-                      exampleTrackingId
+                        exampleTrackingId
+                      );
+                    } else {
+                      Expect.logExpandSmartSnippetSuggestion({
+                        answerSnippet: suggestion.answerSnippet,
+                        question: suggestion.question,
+                        documentId: suggestion.documentId,
+                      });
+                    }
+                    Expect.displaySmartSnippetSuggestionsQuestion(
+                      index,
+                      suggestion.question
                     );
-                  } else {
-                    Expect.logExpandSmartSnippetSuggestion({
-                      answerSnippet: suggestion.answerSnippet,
-                      question: suggestion.question,
-                      documentId: suggestion.documentId,
+                    Expect.displaySmartSnippetSuggestionsAnswer(index, {
+                      text: exampleAnswerText,
+                      link: {
+                        href: exampleInlineLink,
+                        text: exampleInlineLinkText,
+                      },
                     });
-                  }
-                  Expect.displaySmartSnippetSuggestionsQuestion(
-                    index,
-                    suggestion.question
-                  );
-                  Expect.displaySmartSnippetSuggestionsAnswer(index, {
-                    text: exampleAnswerText,
-                    link: {
-                      href: exampleInlineLink,
-                      text: exampleInlineLinkText,
-                    },
+                    Expect.displaySmartSnippetSuggestionsSourceUri(
+                      index,
+                      suggestion.uri
+                    );
+                    Expect.displaySmartSnippetSuggestionsSourceTitle(
+                      index,
+                      suggestion.title
+                    );
+                    Actions.toggleSuggestion(index);
+                    if (analyticsMode === 'next') {
+                      NextAnalyticsExpectations.emitQnaAnswerActionEvent(
+                        {
+                          answer: {
+                            type: answerType,
+                          },
+                          action: 'collapse',
+                        },
+                        exampleTrackingId
+                      );
+                    } else {
+                      Expect.logCollapseSmartSnippetSuggestion({
+                        answerSnippet: suggestion.answerSnippet,
+                        question: suggestion.question,
+                        documentId: suggestion.documentId,
+                      });
+                    }
                   });
-                  Expect.displaySmartSnippetSuggestionsSourceUri(
-                    index,
-                    suggestion.uri
-                  );
-                  Expect.displaySmartSnippetSuggestionsSourceTitle(
-                    index,
-                    suggestion.title
-                  );
-                  Actions.toggleSuggestion(index);
-                  if (analyticsMode === 'next') {
-                    NextAnalyticsExpectations.emitQnaAnswerActionEvent(
-                      {
-                        answer: {
-                          type: answerType,
-                        },
-                        action: 'collapse',
-                      },
-                      exampleTrackingId
-                    );
-                  } else {
-                    Expect.logCollapseSmartSnippetSuggestion({
-                      answerSnippet: suggestion.answerSnippet,
-                      question: suggestion.question,
-                      documentId: suggestion.documentId,
-                    });
-                  }
-                });
-              });
+                }
+              );
 
               scope(
                 'when the source title of one of the suggestions is clicked',
