@@ -15,8 +15,10 @@ import {
   Event,
   EventEmitter,
 } from '@stencil/core';
+import ArrowDown from '../../../../images/arrow-down.svg';
 import {InitializeBindings} from '../../../../utils/initialization-utils';
 import {getActiveTab} from '../../../../utils/tab-utils';
+import {Button} from '../../../common/button';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -55,9 +57,11 @@ export class AtomicTabSection {
       this.clearState();
     }
   }
-
   componentDidRender() {
     const firstTab = this.host.querySelector('atomic-tab');
+    const tabs = [...this.host.querySelectorAll('atomic-tab')];
+
+    this.buildDropdown(tabs);
 
     if (firstTab && !getActiveTab(this.bindings.engine.state)?.tab) {
       this.bindings.engine.dispatch(
@@ -67,14 +71,51 @@ export class AtomicTabSection {
       );
       this.tabInit.emit();
     }
+  }
 
-    this.updateActiveTab();
+  buildDropdown(tabs: HTMLAtomicTabElement[]) {
+    tabs.slice(3).forEach((tab) => {
+      tab.isHidden = true;
+
+      const dropdownOptionLi = document.createElement('li');
+      const dropdownOptionButton = document.createElement('button');
+
+      dropdownOptionButton.className = 'btn-text-transparent text-left';
+      dropdownOptionButton.innerText = tab.label;
+      dropdownOptionButton.name = tab.name;
+      dropdownOptionButton.onclick = () => {
+        tab.select();
+        setTimeout(() => {
+          const buttonInTab = tab.shadowRoot?.querySelector('button');
+          buttonInTab?.focus();
+        }, 0);
+      };
+
+      dropdownOptionLi.appendChild(dropdownOptionButton);
+
+      this.host.shadowRoot
+        ?.querySelector('.dropdown-content')
+        ?.appendChild(dropdownOptionLi);
+    });
   }
 
   updateActiveTab() {
     const tabs = Array.from(this.host.querySelectorAll('atomic-tab'));
+    const dropdownContentArea =
+      this.host.shadowRoot?.querySelector('.dropdown-content');
+    const dropdownButtons = Array.from(
+      dropdownContentArea?.querySelectorAll('button') || []
+    );
+
     tabs.forEach((tab) => {
       tab.isActive = tab.name === getActiveTab(this.bindings.engine.state)?.tab;
+    });
+
+    tabs.slice(3).forEach((tab) => {
+      const buttonExists = dropdownButtons.some(
+        (button) => button.name === tab.name
+      );
+      tab.isHidden = !tab.isActive && buttonExists;
     });
   }
 
@@ -98,9 +139,27 @@ export class AtomicTabSection {
 
   public render() {
     return (
-      <div class="overflow-x-scroll">
-        <div class="my-4 flex flex-row gap-2 mb-2 border-b">
+      <div class="overflow-visible">
+        <div class="my-4 flex flex-row mb-2 border-b">
           <slot></slot>
+          <div class="group dropdown-area relative cursor-pointer ">
+            <Button
+              tabIndex="0"
+              style="text-transparent"
+              class={
+                'px-6 pb-1 w-full text-xl text-neutral-dark group-focus-within:text-primary group-hover:text-primary-light'
+              }
+              text="More"
+              part="button"
+            >
+              {' '}
+              <atomic-icon
+                icon={ArrowDown}
+                class="w-3 ml-2 align-baseline"
+              ></atomic-icon>
+            </Button>
+            <ul class="absolute gap-2 flex group-focus-within:visible focus:visible group-hover:visible invisible dropdown-content absolute top-0 mt-6 flex-col rounded-md shadow-lg bg-white z-50 p-4"></ul>
+          </div>
         </div>
       </div>
     );

@@ -8,7 +8,7 @@ module.exports = {
       variants: {
         textColor: ['group-hover'],
         fill: ['hover', 'group-hover', 'responsive'],
-        visibility: ['group-hover', 'responsive'],
+        visibility: ['group-hover', 'responsive', 'group-focus-within'],
       },
       colors: {
         // Primary

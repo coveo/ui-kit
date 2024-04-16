@@ -82,6 +82,10 @@ export class AtomicTab {
    */
   @Prop({reflect: true}) isActive: boolean = false;
   /**
+   * Indicates whether the tab is currently hidden.
+   */
+  @Prop({reflect: true}) isHidden: boolean = false;
+  /**
    * The expression that will be passed to the search as a `cq` paramenter upon being selected.
    */
   @Prop() public expression: string = '';
@@ -96,6 +100,7 @@ export class AtomicTab {
   @Method()
   async select() {
     this.tab.select();
+    this.tabClick.emit();
   }
 
   public initialize() {
@@ -123,10 +128,13 @@ export class AtomicTab {
 
   public render() {
     return (
-      <div class={this.tabState.isActive ? 'active-tab' : ''}>
+      <div
+        hidden={this.isHidden}
+        class={this.tabState.isActive ? 'active-tab' : ''}
+      >
         <Button
           style="text-transparent"
-          class={`px-4 pb-1 w-full text-xl ${this.tabState.isActive ? '' : 'text-neutral-dark'} `}
+          class={`px-6 pb-1 w-full text-xl ${this.tabState.isActive ? '' : 'text-neutral-dark'} `}
           text={this.label}
           part="button"
           onClick={this.handleClick}
