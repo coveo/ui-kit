@@ -1,6 +1,6 @@
 import {
   CommerceFacetSetSection,
-  QuerySection,
+  CommerceQuerySection,
 } from '../../../../state/state-sections';
 import {StateNeededByQueryCommerceAPI} from '../../common/actions';
 import {StateNeededForCategoryFacetSearch} from './category/commerce-category-facet-search-state';
@@ -8,7 +8,7 @@ import {StateNeededForRegularFacetSearch} from './regular/commerce-regular-facet
 
 export type CoreStateNeededForFacetSearch = StateNeededByQueryCommerceAPI &
   CommerceFacetSetSection &
-  Partial<QuerySection>;
+  Partial<CommerceQuerySection>;
 
 export type StateNeededForAnyFacetSearch =
   | StateNeededForRegularFacetSearch
