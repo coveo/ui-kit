@@ -12,7 +12,7 @@ import {logDocumentQuickview} from './result-preview-analytics-actions';
 jest.mock('@coveo/relay');
 jest.mock('coveo.analytics');
 
-describe('#logRecommendationOpen', () => {
+describe('#logDocumentQuickview', () => {
   const testResult = buildMockNonEmptyResult();
   let engine: SearchEngine;
   const makeDocumentQuickview = jest.fn();

@@ -177,11 +177,6 @@ describe('quantic-smart-snippet', {browser: 'chrome'}, () => {
                       permanentId: examplePermanentId,
                     });
                   }
-                  // Expect.logOpenSmartSnippetSource({
-                  //   title: exampleSmartSnippetSourceTitle,
-                  //   uri: exampleSmartSnippetSourceUri,
-                  //   permanentId: examplePermanentId,
-                  // });
                 });
 
                 scope(

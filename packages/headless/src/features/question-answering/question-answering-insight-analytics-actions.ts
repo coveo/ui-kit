@@ -117,7 +117,7 @@ export const logOpenSmartSnippetSource = (): InsightAction =>
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
-    analyticsType: 'ItemClick',
+    analyticsType: 'itemClick',
     analyticsPayloadBuilder: (state): ItemClick => {
       const result = answerSourceSelector(state)!;
       const information = partialDocumentInformation(result, state);
@@ -188,7 +188,7 @@ export const logSmartSnippetFeedback = (
           type: 'SmartSnippet',
         },
         feedback: {
-          liked: true,
+          liked: false,
           reason: feedback as Feedback['reason'],
         },
       };
@@ -215,7 +215,7 @@ export const logSmartSnippetDetailedFeedback = (
           type: 'SmartSnippet',
         },
         feedback: {
-          liked: true,
+          liked: false,
           reason: 'other',
           details: details,
         },
@@ -330,7 +330,7 @@ export const logOpenSmartSnippetSuggestionSource = (
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
-    analyticsType: 'ItemClick',
+    analyticsType: 'itemClick',
     analyticsPayloadBuilder: (state): ItemClick => {
       const relatedQuestion = relatedQuestionSelector(
         state,
