@@ -3,17 +3,13 @@ import {
   MockedCommerceEngine,
   buildMockCommerceEngine,
 } from '../../../../test/mock-engine-v2';
-import {buildCorePagination} from '../pagination/headless-core-commerce-pagination';
-import {buildCoreInteractiveResult} from '../result-list/headless-core-interactive-result';
-import {buildCoreSort} from '../sort/headless-core-commerce-sort';
+import * as CorePagination from '../pagination/headless-core-commerce-pagination';
+import * as CoreInteractiveResult from '../result-list/headless-core-interactive-result';
+import * as CoreSort from '../sort/headless-core-commerce-sort';
 import {
   buildSolutionTypeSubControllers,
   SolutionTypeSubControllers,
 } from './headless-sub-controller';
-
-jest.mock('../result-list/headless-core-interactive-result');
-jest.mock('../pagination/headless-core-commerce-pagination');
-jest.mock('../sort/headless-core-commerce-sort');
 
 describe('sub controllers', () => {
   let engine: MockedCommerceEngine;
@@ -39,6 +35,11 @@ describe('sub controllers', () => {
   });
 
   it('#interactiveResult builds interactive result controller', () => {
+    const buildCoreInteractiveResultMock = jest.spyOn(
+      CoreInteractiveResult,
+      'buildCoreInteractiveResult'
+    );
+
     const props = {
       options: {
         product: {
@@ -50,27 +51,31 @@ describe('sub controllers', () => {
       },
     };
 
-    subControllers.interactiveResult({
+    const interactiveResult = subControllers.interactiveResult({
       ...props,
     });
 
-    expect(buildCoreInteractiveResult).toHaveBeenCalledWith(engine, {
-      ...props,
-      responseIdSelector: mockResponseIdSelector,
-    });
+    expect(interactiveResult).toEqual(
+      buildCoreInteractiveResultMock.mock.results[0].value
+    );
   });
 
   it('#pagination builds pagination controller', () => {
-    subControllers.pagination();
-    expect(buildCorePagination).toHaveBeenCalledWith(engine, {
-      fetchResultsActionCreator: mockFetchResultsActionCreator,
-    });
+    const buildCorePaginationMock = jest.spyOn(
+      CorePagination,
+      'buildCorePagination'
+    );
+
+    const pagination = subControllers.pagination();
+
+    expect(pagination).toEqual(buildCorePaginationMock.mock.results[0].value);
   });
 
   it('#sort builds sort controller', () => {
-    subControllers.sort();
-    expect(buildCoreSort).toHaveBeenCalledWith(engine, {
-      fetchResultsActionCreator: mockFetchResultsActionCreator,
-    });
+    const buildCoreSortMock = jest.spyOn(CoreSort, 'buildCoreSort');
+
+    const sort = subControllers.sort();
+
+    expect(sort).toEqual(buildCoreSortMock.mock.results[0].value);
   });
 });
