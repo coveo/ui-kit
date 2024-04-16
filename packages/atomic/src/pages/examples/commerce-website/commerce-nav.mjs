@@ -44,6 +44,13 @@ const makeLinks = () => {
     .join('');
 };
 
+const escapeHTML = (html) => {
+  var text = document.createTextNode(html);
+  var p = document.createElement('p');
+  p.appendChild(text);
+  return p.innerHTML;
+};
+
 const searchBox = () => {
   const searchBox = document.createElement('input');
   searchBox.type = 'search';
@@ -52,7 +59,7 @@ const searchBox = () => {
   searchBox.onkeydown = (e) => {
     if (e.key === 'Enter') {
       if (window.location.href.indexOf(navContent['Search'].href) === -1) {
-        window.location.href = 'search.html#q=' + searchBox.value;
+        window.location.href = 'search.html#q=' + escapeHTML(searchBox.value);
       } else {
         window.location.hash = `#q=${searchBox.value}`;
         window.location.reload();
