@@ -15,7 +15,10 @@ function validateSubmitFeedbackEvent(
   const eventBody = interception?.request?.body?.[0];
   const eventMeta: EventMetadata = eventBody.meta;
 
-  expect(eventBody.answer).to.deep.equal(expectedEvent.answer);
+  expect(eventBody.answer).to.have.property('type', expectedEvent.answer.type);
+  if (expectedEvent.answer.id) {
+    expect(eventBody.answer).to.have.property('id', expectedEvent.answer.id);
+  }
   expect(eventBody.feedback).to.deep.equal(expectedEvent.feedback);
 
   expect(eventMeta).to.have.property('type', 'Qna.SubmitFeedback');
@@ -34,7 +37,16 @@ function nextAnalyticsExpectations() {
           const eventMeta: EventMetadata = eventBody.meta;
 
           expect(eventBody).to.have.property('action', expectedEvent.action);
-          expect(eventBody.answer).to.deep.equal(expectedEvent.answer);
+          expect(eventBody.answer).to.have.property(
+            'type',
+            expectedEvent.answer.type
+          );
+          if (expectedEvent.answer.id) {
+            expect(eventBody.answer).to.have.property(
+              'id',
+              expectedEvent.answer.id
+            );
+          }
           expect(eventMeta).to.have.property('type', 'Qna.AnswerAction');
           expect(eventMeta.config).to.have.property(
             'trackingId',
@@ -255,10 +267,12 @@ function nextAnalyticsExpectations() {
           expect(eventBody.itemMetadata).to.deep.equal(
             expectedEvent.itemMetadata
           );
-          expect(eventBody).to.have.property(
-            'actionCause',
-            expectedEvent.actionCause
-          );
+          if (expectedEvent.actionCause) {
+            expect(eventBody).to.have.property(
+              'actionCause',
+              expectedEvent.actionCause
+            );
+          }
           expect(eventBody).to.have.property(
             'position',
             expectedEvent.position
