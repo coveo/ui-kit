@@ -8,98 +8,96 @@
     <script type="module" src="/build/atomic.esm.js"></script>
     <script nomodule src="/build/atomic.js"></script>
     <link rel="stylesheet" href="/themes/accessible.css" />
-    <script>
-      (async () => {
-        await customElements.whenDefined('atomic-search-interface');
-        const searchInterface = document.querySelector('atomic-search-interface');
+    <script type="module">
+      await customElements.whenDefined('atomic-search-interface');
+      const searchInterface = document.querySelector('atomic-search-interface');
 
-        await searchInterface.initialize({
-          accessToken: 'xxc23ce82a-3733-496e-b37e-9736168c4fd9',
-          organizationId: 'electronicscoveodemocomo0n2fu8v',
-          platformUrl: 'https://platform.cloud.coveo.com',
-          search: {
-            preprocessSearchResponseMiddleware: (response) => {
-              response.body.results.forEach((result) => {
-                if (!result.raw.ec_category || !result.raw.ec_category.length) {
-                  return;
-                }
-                const parentsElement = document.createElement('parents');
-                result.raw.ec_category
-                  .map((path) => path.split('|'))
-                  .forEach((path) => {
-                    const name = path.slice(-1)[0];
-                    const parentElement = document.createElement('parent');
-                    parentElement.setAttribute('name', name);
-                    parentElement.setAttribute(
-                      'uri',
-                      'https://electronics.coveodemo.com/plp/' +
-                        path
-                          .map((part) =>
-                            part
-                              .replace(/&\s/g, '')
-                              .replace(/[,:]?\s/g, '-')
-                              .toLowerCase()
-                          )
-                          .join('/')
-                    );
-                    parentsElement.appendChild(parentElement);
-                  });
-                result.raw.parents = '<?xml version="1.0" encoding="utf-16"?>' + parentsElement.outerHTML;
-              });
-              return response;
-            },
+      await searchInterface.initialize({
+        accessToken: 'xxc23ce82a-3733-496e-b37e-9736168c4fd9',
+        organizationId: 'electronicscoveodemocomo0n2fu8v',
+        platformUrl: 'https://platform.cloud.coveo.com',
+        search: {
+          preprocessSearchResponseMiddleware: (response) => {
+            response.body.results.forEach((result) => {
+              if (!result.raw.ec_category || !result.raw.ec_category.length) {
+                return;
+              }
+              const parentsElement = document.createElement('parents');
+              result.raw.ec_category
+                .map((path) => path.split('|'))
+                .forEach((path) => {
+                  const name = path.slice(-1)[0];
+                  const parentElement = document.createElement('parent');
+                  parentElement.setAttribute('name', name);
+                  parentElement.setAttribute(
+                    'uri',
+                    'https://electronics.coveodemo.com/plp/' +
+                      path
+                        .map((part) =>
+                          part
+                            .replace(/&\s/g, '')
+                            .replace(/[,:]?\s/g, '-')
+                            .toLowerCase()
+                        )
+                        .join('/')
+                  );
+                  parentsElement.appendChild(parentElement);
+                });
+              result.raw.parents = '<?xml version="1.0" encoding="utf-16"?>' + parentsElement.outerHTML;
+            });
+            return response;
           },
-        });
+        },
+      });
 
-        searchInterface.executeFirstSearch();
+      searchInterface.executeFirstSearch();
 
-        searchInterface.i18n.addResourceBundle('en', 'caption-filetype', {
-          '.html': 'html',
-        });
+      searchInterface.i18n.addResourceBundle('en', 'caption-filetype', {
+        '.html': 'html',
+      });
 
-        const displaySelect = document.getElementById('result-display-select');
-        const resultList = document.querySelector('atomic-result-list');
-        displaySelect.value = resultList.display;
-        displaySelect.addEventListener('change', (e) => resultList.setAttribute('display', e.target.value));
+      const displaySelect = document.getElementById('result-display-select');
+      const resultList = document.querySelector('atomic-result-list');
+      displaySelect.value = resultList.display;
+      displaySelect.addEventListener('change', (e) => resultList.setAttribute('display', e.target.value));
 
-        const useLoadMoreResultsClass = 'use-load-more-results';
-        const paginationSelect = document.getElementById('pagination-select');
-        const pagination = document.querySelector('atomic-layout-section[section="pagination"]');
-        paginationSelect.value = pagination.classList.contains(useLoadMoreResultsClass) ? 'load-more' : 'pager';
-        paginationSelect.addEventListener('change', (e) =>
-          pagination.classList.toggle(useLoadMoreResultsClass, e.target.value === 'load-more')
-        );
+      const useLoadMoreResultsClass = 'use-load-more-results';
+      const paginationSelect = document.getElementById('pagination-select');
+      const pagination = document.querySelector('atomic-layout-section[section="pagination"]');
+      paginationSelect.value = pagination.classList.contains(useLoadMoreResultsClass) ? 'load-more' : 'pager';
+      paginationSelect.addEventListener('change', (e) =>
+        pagination.classList.toggle(useLoadMoreResultsClass, e.target.value === 'load-more')
+      );
 
-        searchInterface.i18n.addResourceBundle('en', 'translation', {
-          'no-ratings-available': 'No ratings available',
-        });
+      searchInterface.i18n.addResourceBundle('en', 'translation', {
+        'no-ratings-available': 'No ratings available',
+      });
 
-        document.querySelector('atomic-search-box-instant-results').ariaLabelGenerator = ({i18n}, result) => {
-          const information = [result.title];
+      document.querySelector('atomic-search-box-instant-results').ariaLabelGenerator = ({i18n}, result) => {
+        const information = [result.title];
 
-          if ('ec_rating' in result.raw) {
-            information.push(
-              i18n.t('stars', {
-                count: result.raw.ec_rating,
-                max: 5,
-              })
-            );
-          } else {
-            information.push(i18n.t('no-ratings-available'));
-          }
+        if ('ec_rating' in result.raw) {
+          information.push(
+            i18n.t('stars', {
+              count: result.raw.ec_rating,
+              max: 5,
+            })
+          );
+        } else {
+          information.push(i18n.t('no-ratings-available'));
+        }
 
-          if ('ec_price' in result.raw) {
-            information.push(
-              result.raw.ec_price.toLocaleString(i18n.languages, {
-                style: 'currency',
-                currency: 'USD',
-              })
-            );
-          }
+        if ('ec_price' in result.raw) {
+          information.push(
+            result.raw.ec_price.toLocaleString(i18n.languages, {
+              style: 'currency',
+              currency: 'USD',
+            })
+          );
+        }
 
-          return information.join(', ');
-        };
-      })();
+        return information.join(', ');
+      };
     </script>
     <style>
       atomic-color-facet[field='cat_color']::part(value-Black) {
