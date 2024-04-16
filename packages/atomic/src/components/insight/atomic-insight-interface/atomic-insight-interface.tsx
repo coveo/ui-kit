@@ -22,7 +22,7 @@ import {
 } from '..';
 import {InitializeEvent} from '../../../utils/initialization-utils';
 import {ArrayProp} from '../../../utils/props-utils';
-import {CommonBindings} from '../../common/interface/bindings';
+import {CommonBindings, NonceBindings} from '../../common/interface/bindings';
 import {i18nCompatibilityVersion} from '../../common/interface/i18n';
 import {
   BaseAtomicInterface,
@@ -37,7 +37,8 @@ export type InsightBindings = CommonBindings<
   InsightEngine,
   AtomicInsightStore,
   HTMLAtomicInsightInterfaceElement
->;
+> &
+  NonceBindings;
 
 /**
  * @internal

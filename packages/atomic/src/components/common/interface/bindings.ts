@@ -47,7 +47,8 @@ export interface CommonBindings<
    * A reference to the atomic interface element.
    */
   interfaceElement: InterfaceElement;
-
+}
+export interface NonceBindings {
   /**
    * Creates a Style Information element with the nonce attribute if it exists.
    * Note: the element is **not** appended to the DOM.

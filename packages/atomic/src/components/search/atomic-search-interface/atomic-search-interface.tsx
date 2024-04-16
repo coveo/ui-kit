@@ -34,7 +34,7 @@ import {
   StorageItems,
 } from '../../../utils/local-storage-utils';
 import {ArrayProp} from '../../../utils/props-utils';
-import {CommonBindings} from '../../common/interface/bindings';
+import {CommonBindings, NonceBindings} from '../../common/interface/bindings';
 import {i18nCompatibilityVersion} from '../../common/interface/i18n';
 import {
   BaseAtomicInterface,
@@ -50,7 +50,8 @@ export type Bindings = CommonBindings<
   SearchEngine,
   AtomicStore,
   HTMLAtomicSearchInterfaceElement
->;
+> &
+  NonceBindings;
 
 /**
  * The `atomic-search-interface` component is the parent to all other atomic components in a search page. It handles the headless search engine and localization configurations.

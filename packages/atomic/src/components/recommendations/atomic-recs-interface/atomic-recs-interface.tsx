@@ -172,20 +172,6 @@ export class AtomicRecsInterface
       i18n: this.i18n,
       store: this.store,
       interfaceElement: this.host,
-      createStyleElement: () => {
-        const styleTag = document.createElement('style');
-        if (this.CspNonce) {
-          styleTag.setAttribute('nonce', this.CspNonce);
-        }
-        return styleTag;
-      },
-      createScriptElement: () => {
-        const styleTag = document.createElement('script');
-        if (this.CspNonce) {
-          styleTag.setAttribute('nonce', this.CspNonce);
-        }
-        return styleTag;
-      },
     };
   }
 

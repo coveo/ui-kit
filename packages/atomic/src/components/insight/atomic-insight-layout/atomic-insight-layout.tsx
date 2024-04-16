@@ -4,7 +4,7 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {randomID} from '../../../utils/utils';
-import {AnyBindings} from '../../common/interface/bindings';
+import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 import {buildInsightLayout} from './insight-layout';
 
 /**
@@ -15,7 +15,7 @@ import {buildInsightLayout} from './insight-layout';
   shadow: false,
 })
 export class AtomicInsightLayout
-  implements InitializableComponent<AnyBindings>
+  implements InitializableComponent<InsightBindings>
 {
   public error!: Error;
   private styleTag?: HTMLStyleElement;
@@ -24,7 +24,7 @@ export class AtomicInsightLayout
    * Whether the interface should be shown in widget format.
    */
   @Prop({reflect: true, mutable: true}) public widget = false;
-  @InitializeBindings() public bindings!: AnyBindings;
+  @InitializeBindings() public bindings!: InsightBindings;
   @Watch('widget')
   public updateStyles() {
     if (this.styleTag) {

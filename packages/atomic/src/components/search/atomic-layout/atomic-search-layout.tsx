@@ -5,7 +5,7 @@ import {
 } from '../../../utils/initialization-utils';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
 import {randomID} from '../../../utils/utils';
-import {AnyBindings} from '../../common/interface/bindings';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {buildSearchLayout} from './search-layout';
 
 /**
@@ -16,7 +16,7 @@ import {buildSearchLayout} from './search-layout';
   styleUrl: 'atomic-search-layout.pcss',
   shadow: false,
 })
-export class AtomicSearchLayout implements InitializableComponent<AnyBindings> {
+export class AtomicSearchLayout implements InitializableComponent<Bindings> {
   public error!: Error;
 
   @Element() private host!: HTMLElement;
@@ -25,7 +25,7 @@ export class AtomicSearchLayout implements InitializableComponent<AnyBindings> {
    * e.g., 800px, 65rem.
    */
   @Prop({reflect: true}) public mobileBreakpoint = DEFAULT_MOBILE_BREAKPOINT;
-  @InitializeBindings() public bindings!: AnyBindings;
+  @InitializeBindings() public bindings!: Bindings;
 
   public componentDidLoad() {
     const id = this.host.id || randomID('atomic-search-layout-');
