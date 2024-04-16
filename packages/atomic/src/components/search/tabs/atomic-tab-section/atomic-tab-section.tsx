@@ -8,21 +8,22 @@ import {InitializeBindings} from '../../../../utils/initialization-utils';
 import {getActiveTab} from '../../../../utils/tab-utils';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
+/**
+ * @internal
+ */
 @Component({
   tag: 'atomic-tab-section',
   styleUrl: 'atomic-tab-section.pcss',
   shadow: true,
 })
 export class AtomicTabSection {
+  @InitializeBindings() public bindings!: Bindings;
   @Element()
   private host!: HTMLElement;
-  @Prop()
   /**
    * When provided, this tab will be selected by default when the component loads. Otherwise, the first tab is selected automatically.
    */
-  defaultActiveTab?: string;
-
-  @InitializeBindings() public bindings!: Bindings;
+  @Prop() defaultActiveTab?: string;
 
   @State() public error!: Error;
 

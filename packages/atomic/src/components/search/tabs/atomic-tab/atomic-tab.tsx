@@ -18,7 +18,7 @@ import {CommonBindings} from '../../../common/interface/bindings';
 import {dispatchTabLoaded} from '../../../common/tabs/tab-common';
 import {AtomicStore} from '../../atomic-search-interface/store';
 
-export interface Tab extends Controller {
+interface Tab extends Controller {
   /**
    * Activates the tab.
    */
@@ -29,56 +29,65 @@ export interface Tab extends Controller {
   state: TabState;
 }
 
-export interface TabState {
+interface TabState {
   /**
    * Indicates whether the current tab is selected.
    * */
   isActive: boolean;
 }
 
-export type TabBindings = CommonBindings<
+type TabBindings = CommonBindings<
   SearchEngine,
   AtomicStore,
   HTMLAtomicSearchInterfaceElement
 >;
 
+/**
+ * @internal
+ */
 @Component({
   tag: 'atomic-tab',
   styleUrl: 'atomic-tab.pcss',
   shadow: true,
 })
 export class AtomicTab {
-  @Prop()
-  label!: string;
-  @Prop()
-  name!: string;
+  @InitializeBindings() public bindings!: TabBindings;
+  @Element() host!: HTMLElement;
 
-  @Prop() isActive: boolean = false;
+  @State() public error!: Error;
+  @BindStateToController('tab')
+  @State()
+  private tabState!: TabState;
 
   @Event({
     eventName: 'atomic/tabClick',
   })
   tabClick!: EventEmitter;
 
-  private tab!: Tab;
-  private tabId = this.name;
-
-  @Element() host!: HTMLElement;
-
-  @InitializeBindings() public bindings!: TabBindings;
-
-  @State() public error!: Error;
-
-  @BindStateToController('tab')
-  @State()
-  private tabState!: TabState;
-
   /**
    * Whether this tab is active upon rendering.
    * If multiple tabs are set to active on render, the last one to be rendered will override the others.
    */
   @Prop({reflect: true, mutable: true}) public active = false;
+  /**
+   * The label displayed on the tab.
+   */
+  @Prop() label!: string;
+  /**
+   * The internal name of the atomic tab.
+   */
+  @Prop() name!: string;
+  /**
+   * Indicates whether the tab is currently active.
+   */
+  @Prop({reflect: true}) isActive: boolean = false;
+  /**
+   * The expression that will be passed to the search as a `cq` paramenter upon being selected.
+   */
+  @Prop() public expression: string = '';
 
+  private tab!: Tab;
+  private tabId = this.name;
   private unsubscribe: Unsubscribe = () => {};
 
   /**
@@ -88,11 +97,6 @@ export class AtomicTab {
   async select() {
     this.tab.select();
   }
-
-  /**
-   * The expression that will be passed to the search as a `cq` paramenter upon being selected.
-   */
-  @Prop() public expression: string = '';
 
   public initialize() {
     this.tab = buildTab(this.bindings.engine, {
