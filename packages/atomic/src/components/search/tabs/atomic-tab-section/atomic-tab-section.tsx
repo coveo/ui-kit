@@ -1,4 +1,6 @@
 import {
+  loadBreadcrumbActions,
+  loadQueryActions,
   loadSearchActions,
   loadSearchAnalyticsActions,
   loadTabSetActions,
@@ -20,16 +22,24 @@ export class AtomicTabSection {
   @InitializeBindings() public bindings!: Bindings;
   @Element()
   private host!: HTMLElement;
+
   /**
    * When provided, this tab will be selected by default when the component loads. Otherwise, the first tab is selected automatically.
    */
   @Prop() defaultActiveTab?: string;
+  /**
+   * Specifies whether the state should be cleared when the tab changes.
+   */
+  @Prop() clearStateOnTabChange?: boolean = false;
 
   @State() public error!: Error;
 
   @Listen('atomic/tabClick')
   handleTabClick() {
     this.updateActiveTab();
+    if (this.clearStateOnTabChange) {
+      this.clearState();
+    }
   }
 
   componentDidRender() {
@@ -58,6 +68,24 @@ export class AtomicTabSection {
     tabs.forEach((tab) => {
       tab.isActive = tab.name === getActiveTab(this.bindings.engine.state)?.tab;
     });
+  }
+
+  clearState() {
+    const breadcrumbActions = loadBreadcrumbActions(this.bindings.engine);
+    const queryActions = loadQueryActions(this.bindings.engine);
+    const searchActions = loadSearchActions(this.bindings.engine);
+    const searchAnalyticsActions = loadSearchAnalyticsActions(
+      this.bindings.engine
+    );
+
+    this.bindings.engine.dispatch(breadcrumbActions.deselectAllBreadcrumbs());
+    this.bindings.engine.dispatch(
+      breadcrumbActions.deselectAllNonBreadcrumbs()
+    );
+    this.bindings.engine.dispatch(queryActions.updateQuery({q: ''}));
+    this.bindings.engine.dispatch(
+      searchActions.executeSearch(searchAnalyticsActions.logInterfaceChange())
+    );
   }
 
   public render() {

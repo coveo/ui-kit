@@ -2519,6 +2519,10 @@ export namespace Components {
     }
     interface AtomicTabSection {
         /**
+          * Specifies whether the state should be cleared when the tab changes.
+         */
+        "clearStateOnTabChange"?: boolean;
+        /**
           * When provided, this tab will be selected by default when the component loads. Otherwise, the first tab is selected automatically.
          */
         "defaultActiveTab"?: string;
@@ -6773,6 +6777,10 @@ declare namespace LocalJSX {
         "onAtomic/tabClick"?: (event: AtomicTabCustomEvent<any>) => void;
     }
     interface AtomicTabSection {
+        /**
+          * Specifies whether the state should be cleared when the tab changes.
+         */
+        "clearStateOnTabChange"?: boolean;
         /**
           * When provided, this tab will be selected by default when the component loads. Otherwise, the first tab is selected automatically.
          */
