@@ -4,6 +4,7 @@ import {
   CommerceFacetSearchAPIClient,
 } from '../../../../api/commerce/commerce-api-client';
 import {CommerceFacetSearchRequest} from '../../../../api/commerce/facet-search/facet-search-request';
+import {CategoryFacetSearchResponse} from '../../../../api/search/facet-search/category-facet-search/category-facet-search-response';
 import {SpecificFacetSearchResponse} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
 import {AsyncThunkOptions} from '../../../../app/async-thunk-options';
 import {ClientThunkExtraArguments} from '../../../../app/thunk-extra-arguments';
@@ -15,7 +16,9 @@ import {StateNeededForRegularFacetSearch} from './regular/commerce-regular-facet
 
 type ExecuteCommerceFacetSearchThunkReturn = {
   facetId: string;
-  response: CommerceAPIResponse<SpecificFacetSearchResponse>;
+  response: CommerceAPIResponse<
+    SpecificFacetSearchResponse | CategoryFacetSearchResponse
+  >;
 };
 
 type ExecuteCommerceFacetSearchThunkArg = string;
