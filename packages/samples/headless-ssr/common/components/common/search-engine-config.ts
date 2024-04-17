@@ -23,6 +23,11 @@ export const config = {
     authorFacet: defineFacet({options: {facetId: 'author-1', field: 'author'}}),
     searchParameterManager: defineSearchParameterManager(),
   },
+  navigatorContextProvider: () => ({
+    location: 'todo',
+    referrer: 'todo',
+    userAgent: 'todo',
+  }),
 } satisfies SearchEngineDefinitionOptions<
   ControllerDefinitionsMap<SearchEngine, Controller>
 >;
