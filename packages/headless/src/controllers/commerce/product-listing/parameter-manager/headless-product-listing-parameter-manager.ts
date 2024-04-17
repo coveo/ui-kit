@@ -1,4 +1,5 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
+import {defaultSolutionTypeId} from '../../../../features/commerce/common/actions';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {
   ProductListingParameters,
@@ -27,7 +28,8 @@ export function buildProductListingParameterManager(
     parametersDefinition: productListingParametersDefinition,
     activeParametersSelector,
     restoreActionCreator: restoreProductListingParameters,
-    fetchResultsActionCreator: fetchProductListing,
+    fetchResultsActionCreator: () =>
+      fetchProductListing({solutionTypeId: defaultSolutionTypeId}),
     enrichParameters: () => ({}),
   });
 }

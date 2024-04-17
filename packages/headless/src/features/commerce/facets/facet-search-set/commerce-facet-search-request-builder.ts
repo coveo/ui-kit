@@ -3,6 +3,7 @@ import {buildCommerceAPIRequest} from '../../common/actions';
 import {StateNeededForCommerceFacetSearch} from './commerce-facet-search-state';
 
 export const buildCommerceFacetSearchRequest = async (
+  solutionTypeId: string,
   facetId: string,
   state: StateNeededForCommerceFacetSearch,
   isFieldSuggestionsRequest: boolean
@@ -22,7 +23,7 @@ export const buildCommerceFacetSearchRequest = async (
     clientId,
     context,
     ...restOfCommerceAPIRequest
-  } = await buildCommerceAPIRequest(state);
+  } = await buildCommerceAPIRequest(solutionTypeId, state);
 
   return {
     url,

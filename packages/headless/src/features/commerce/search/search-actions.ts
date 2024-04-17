@@ -8,6 +8,7 @@ import {logQueryError} from '../../search/search-analytics-actions';
 import {
   buildCommerceAPIRequest,
   QueryCommerceAPIThunkReturn,
+  SolutionTypeActionCreatorPayload,
   StateNeededByQueryCommerceAPI,
 } from '../common/actions';
 import {logProductListingV2Load} from '../product-listing/product-listing-analytics';
@@ -17,15 +18,15 @@ export type StateNeededByExecuteSearch = StateNeededByQueryCommerceAPI &
 
 export const executeSearch = createAsyncThunk<
   QueryCommerceAPIThunkReturn,
-  void,
+  SolutionTypeActionCreatorPayload,
   AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
 >(
   'commerce/search/executeSearch',
-  async (_action, {getState, dispatch, rejectWithValue, extra}) => {
+  async (action, {getState, dispatch, rejectWithValue, extra}) => {
     const state = getState();
     const {apiClient} = extra;
     const fetched = await apiClient.search({
-      ...(await buildCommerceAPIRequest(state)),
+      ...(await buildCommerceAPIRequest(action.solutionTypeId, state)),
       query: state.commerceQuery?.query,
     });
 
@@ -35,6 +36,7 @@ export const executeSearch = createAsyncThunk<
     }
 
     return {
+      solutionTypeId: action.solutionTypeId,
       response: fetched.success,
       // eslint-disable-next-line @cspell/spellchecker
       // TODO CAPI-244: Use actual search analytics action

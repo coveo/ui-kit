@@ -1,4 +1,5 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
+import {defaultSolutionTypeId} from '../../../../features/commerce/common/actions';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {loadReducerError} from '../../../../utils/errors';
 import {
@@ -23,6 +24,7 @@ export function buildProductListingBreadcrumbManager(
 
   return buildCoreBreadcrumbManager(engine, {
     facetResponseSelector: facetResponseSelector,
-    fetchResultsActionCreator: fetchProductListing,
+    fetchResultsActionCreator: () =>
+      fetchProductListing({solutionTypeId: defaultSolutionTypeId}),
   });
 }

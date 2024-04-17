@@ -1,3 +1,4 @@
+import {defaultSolutionTypeId} from '../../../../features/commerce/common/actions';
 import {isFacetResponse} from '../../../../features/commerce/facets/facet-set/facet-set-selector';
 import {executeSearch} from '../../../../features/commerce/search/search-actions';
 import {
@@ -29,7 +30,8 @@ export const commonOptions: Pick<
   | 'facetResponseSelector'
   | 'isFacetLoadingResponseSelector'
 > = {
-  fetchResultsActionCreator: executeSearch,
+  fetchResultsActionCreator: () =>
+    executeSearch({solutionTypeId: defaultSolutionTypeId}),
   facetResponseSelector,
   isFacetLoadingResponseSelector,
 };

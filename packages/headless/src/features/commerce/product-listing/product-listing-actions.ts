@@ -18,6 +18,7 @@ import {logQueryError} from '../../search/search-analytics-actions';
 import {
   buildCommerceAPIRequest,
   QueryCommerceAPIThunkReturn,
+  SolutionTypeActionCreatorPayload,
   StateNeededByQueryCommerceAPI,
 } from '../common/actions';
 import {logProductListingV2Load} from './product-listing-analytics';
@@ -36,15 +37,15 @@ export type StateNeededByFetchProductListingV2 = ConfigurationSection &
 
 export const fetchProductListing = createAsyncThunk<
   QueryCommerceAPIThunkReturn,
-  void,
+  SolutionTypeActionCreatorPayload,
   AsyncThunkCommerceOptions<StateNeededByQueryCommerceAPI>
 >(
   'commerce/productListing/fetch',
-  async (_action, {getState, dispatch, rejectWithValue, extra}) => {
+  async (action, {getState, dispatch, rejectWithValue, extra}) => {
     const state = getState();
     const {apiClient} = extra;
     const fetched = await apiClient.getProductListing(
-      await buildCommerceAPIRequest(state)
+      await buildCommerceAPIRequest(action.solutionTypeId, state)
     );
 
     if (isErrorResponse(fetched)) {

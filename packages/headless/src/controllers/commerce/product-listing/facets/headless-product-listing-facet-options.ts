@@ -1,3 +1,4 @@
+import {defaultSolutionTypeId} from '../../../../features/commerce/common/actions';
 import {isFacetResponse} from '../../../../features/commerce/facets/facet-set/facet-set-selector';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {
@@ -29,7 +30,8 @@ export const commonOptions: Pick<
   | 'facetResponseSelector'
   | 'isFacetLoadingResponseSelector'
 > = {
-  fetchResultsActionCreator: fetchProductListing,
+  fetchResultsActionCreator: () =>
+    fetchProductListing({solutionTypeId: defaultSolutionTypeId}),
   facetResponseSelector,
   isFacetLoadingResponseSelector,
 };

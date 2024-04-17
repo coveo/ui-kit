@@ -1,4 +1,5 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
+import {defaultSolutionTypeId} from '../../../../features/commerce/common/actions';
 import {executeSearch} from '../../../../features/commerce/search/search-actions';
 import {loadReducerError} from '../../../../utils/errors';
 import {
@@ -25,6 +26,7 @@ export function buildSearchPagination(
 
   return buildCorePagination(engine, {
     ...props,
-    fetchResultsActionCreator: executeSearch,
+    fetchResultsActionCreator: () =>
+      executeSearch({solutionTypeId: defaultSolutionTypeId}),
   });
 }

@@ -3,6 +3,7 @@ import {Product} from '../../../api/commerce/common/product';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
 import {LegacySearchAction} from '../../../features/analytics/analytics-utils';
+import {defaultSolutionTypeId} from '../../../features/commerce/common/actions';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
 import {executeSearch} from '../../../features/commerce/search/search-actions';
@@ -47,7 +48,8 @@ export function buildSearch(engine: CommerceEngine): Search {
   const getState = () => engine.state;
   const subControllers = buildSolutionTypeSubControllers(engine, {
     responseIdSelector,
-    fetchResultsActionCreator: executeSearch,
+    fetchResultsActionCreator: () =>
+      executeSearch({solutionTypeId: defaultSolutionTypeId}),
   });
 
   return {
@@ -67,7 +69,11 @@ export function buildSearch(engine: CommerceEngine): Search {
         return;
       }
 
-      dispatch(executeSearch());
+      dispatch(
+        executeSearch({
+          solutionTypeId: defaultSolutionTypeId,
+        })
+      );
     },
   };
 }

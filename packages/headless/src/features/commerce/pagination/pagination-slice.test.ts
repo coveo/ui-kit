@@ -21,6 +21,7 @@ import {
 import {paginationReducer} from './pagination-slice';
 import {
   CommercePaginationState,
+  getCommercePaginationInitialSlice,
   getCommercePaginationInitialState,
 } from './pagination-state';
 
@@ -32,6 +33,7 @@ describe('pagination slice', () => {
     totalCount: 999,
     totalPages: 999,
   };
+  const solutionTypeId = 'solution-type-id';
 
   beforeEach(() => {
     state = getCommercePaginationInitialState();
@@ -48,57 +50,84 @@ describe('pagination slice', () => {
   });
 
   it('#selectPage does not update the current page if specified page is invalid', () => {
-    state.totalPages = 1;
+    state[solutionTypeId].totalPages = 1;
 
-    let finalState = paginationReducer(state, selectPage(1));
+    let finalState = paginationReducer(
+      state,
+      selectPage({
+        solutionTypeId,
+        page: 1,
+      })
+    );
 
     expect(finalState.page).toBe(0);
 
-    finalState = paginationReducer(state, selectPage(-1));
+    finalState = paginationReducer(
+      state,
+      selectPage({
+        solutionTypeId,
+        page: -1,
+      })
+    );
 
-    expect(finalState.page).toBe(0);
+    expect(finalState[solutionTypeId].page).toBe(0);
   });
 
   it('#selectPage updates the current page if valid', () => {
-    state.totalPages = 2;
-    const finalState = paginationReducer(state, selectPage(1));
+    state[solutionTypeId].totalPages = 2;
+    const finalState = paginationReducer(
+      state,
+      selectPage({
+        solutionTypeId,
+        page: 1,
+      })
+    );
 
-    expect(finalState.page).toBe(1);
+    expect(finalState[solutionTypeId].page).toBe(1);
   });
 
   it('#nextPage does not update the current page if already on the last page', () => {
-    state.totalPages = 2;
-    state.page = 1;
-    const finalState = paginationReducer(state, nextPage());
+    state[solutionTypeId].totalPages = 2;
+    state[solutionTypeId].page = 1;
+    const finalState = paginationReducer(state, nextPage({solutionTypeId}));
 
-    expect(finalState.page).toBe(1);
+    expect(finalState[solutionTypeId].page).toBe(1);
   });
 
   it('#nextPage increments the current page if not already on last page', () => {
-    state.totalPages = 2;
-    const finalState = paginationReducer(state, nextPage());
+    state[solutionTypeId].totalPages = 2;
+    const finalState = paginationReducer(state, nextPage({solutionTypeId}));
 
-    expect(finalState.page).toBe(1);
+    expect(finalState[solutionTypeId].page).toBe(1);
   });
 
   it('#previousPage does not update the current page if already on the first page', () => {
-    state.totalPages = 2;
-    const finalState = paginationReducer(state, previousPage());
+    state[solutionTypeId].totalPages = 2;
+    const finalState = paginationReducer(state, previousPage({solutionTypeId}));
 
-    expect(finalState.page).toBe(0);
+    expect(finalState[solutionTypeId].page).toBe(0);
   });
 
   it('#previousPage decrements the current page if not already on first page', () => {
-    state.totalPages = 2;
-    state.page = 1;
-    const finalState = paginationReducer(state, previousPage());
+    state[solutionTypeId] = {
+      ...getCommercePaginationInitialSlice(),
+      totalPages: 2,
+      page: 1,
+    };
+    const finalState = paginationReducer(state, previousPage({solutionTypeId}));
 
-    expect(finalState.page).toBe(0);
+    expect(finalState[solutionTypeId].page).toBe(0);
   });
 
   it('#setPageSize sets the page size', () => {
     const pageSize = 17;
-    const finalState = paginationReducer(state, setPageSize(pageSize));
+    const finalState = paginationReducer(
+      state,
+      setPageSize({
+        solutionTypeId,
+        pageSize,
+      })
+    );
 
     expect(finalState.perPage).toBe(pageSize);
   });
@@ -109,7 +138,10 @@ describe('pagination slice', () => {
     });
 
     expect(
-      paginationReducer(state, fetchProductListing.fulfilled(response, ''))
+      paginationReducer(
+        state,
+        fetchProductListing.fulfilled(response, '', {solutionTypeId})
+      )
     ).toEqual(pagination);
   });
 
@@ -119,7 +151,10 @@ describe('pagination slice', () => {
     });
 
     expect(
-      paginationReducer(state, executeSearch.fulfilled(response, ''))
+      paginationReducer(
+        state,
+        executeSearch.fulfilled(response, '', {solutionTypeId})
+      )
     ).toEqual(pagination);
   });
 
@@ -158,8 +193,11 @@ describe('pagination slice', () => {
     },
   ])('$actionName', ({action}) => {
     it('resets pagination', () => {
-      state.page = 5;
-      state.perPage = 17;
+      state[solutionTypeId] = {
+        ...getCommercePaginationInitialSlice(),
+        page: 5,
+        perPage: 17,
+      };
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const finalState = paginationReducer(state, action({} as any));

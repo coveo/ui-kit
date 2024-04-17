@@ -26,32 +26,67 @@ export const paginationReducer = createReducer(
   getCommercePaginationInitialState(),
   (builder) => {
     builder
-      .addCase(nextPage, (state) => {
-        if (state.page < state.totalPages - 1) {
-          ++state.page;
+      .addCase(nextPage, (state, action) => {
+        const slice = state[action.payload.solutionTypeId];
+
+        if (!slice) {
+          return;
+        }
+
+        if (slice.page < slice.totalPages - 1) {
+          ++slice.page;
         }
       })
-      .addCase(previousPage, (state) => {
-        if (state.page > 0) {
-          --state.page;
+      .addCase(previousPage, (state, action) => {
+        const slice = state[action.payload.solutionTypeId];
+
+        if (!slice) {
+          return;
+        }
+
+        if (slice.page > 0) {
+          --slice.page;
         }
       })
       .addCase(selectPage, (state, action) => {
-        if (action.payload >= 0 && action.payload < state.totalPages) {
-          state.page = action.payload;
+        const slice = state[action.payload.solutionTypeId];
+
+        if (!slice) {
+          return;
+        }
+
+        if (
+          action.payload.page >= 0 &&
+          action.payload.page < slice.totalPages
+        ) {
+          slice.page = action.payload.page;
         }
       })
       .addCase(setPageSize, (state, action) => {
-        state.perPage = action.payload;
+        const slice = state[action.payload.solutionTypeId];
+
+        if (!slice) {
+          return;
+        }
+
+        slice.perPage = action.payload.pageSize;
       })
-      .addCase(
-        fetchProductListing.fulfilled,
-        (_, action) => action.payload.response.pagination
-      )
-      .addCase(
-        executeSearch.fulfilled,
-        (_, action) => action.payload.response.pagination
-      )
+      .addCase(fetchProductListing.fulfilled, (state, action) => {
+        if (!state[action.meta.arg.solutionTypeId]) {
+          return;
+        }
+
+        state[action.meta.arg.solutionTypeId] =
+          action.payload.response.pagination;
+      })
+      .addCase(executeSearch.fulfilled, (state, action) => {
+        if (!state[action.meta.arg.solutionTypeId]) {
+          return;
+        }
+
+        state[action.meta.arg.solutionTypeId] =
+          action.payload.response.pagination;
+      })
       .addCase(deselectAllFacetValues, handlePaginationReset)
       .addCase(toggleSelectFacetValue, handlePaginationReset)
       .addCase(toggleExcludeFacetValue, handlePaginationReset)
@@ -64,6 +99,8 @@ export const paginationReducer = createReducer(
 );
 
 function handlePaginationReset(state: CommercePaginationState) {
-  state.page = 0;
-  state.perPage = undefined;
+  for (const solutionTypeId in state) {
+    state[solutionTypeId].page = 0;
+    state[solutionTypeId].perPage = undefined;
+  }
 }

@@ -1,5 +1,3 @@
-import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {productListingV2Reducer as productListing} from '../../../features/commerce/product-listing/product-listing-slice';
 import {ProductListingV2Action} from '../../analytics/analytics-utils';
@@ -14,10 +12,6 @@ import {
   LogFacetSelectActionCreatorPayload,
   LogFacetUpdateSortActionCreatorPayload,
 } from '../../facets/facet-set/facet-set-product-listing-v2-analytics-actions';
-import {
-  QueryCommerceAPIThunkReturn,
-  StateNeededByQueryCommerceAPI,
-} from '../common/actions';
 import {fetchProductListing} from './product-listing-actions';
 
 /**
@@ -31,11 +25,7 @@ export interface ProductListingActionCreators {
    *
    * @returns A dispatchable action.
    */
-  fetchProductListing(): AsyncThunkAction<
-    QueryCommerceAPIThunkReturn,
-    void,
-    AsyncThunkCommerceOptions<StateNeededByQueryCommerceAPI>
-  >;
+  fetchProductListing: typeof fetchProductListing;
 }
 
 /**

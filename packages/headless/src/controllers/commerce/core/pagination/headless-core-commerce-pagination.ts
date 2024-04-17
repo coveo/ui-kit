@@ -1,6 +1,7 @@
 import {NumberValue, Schema} from '@coveo/bueno';
 import {createSelector} from '@reduxjs/toolkit';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
+import {defaultSolutionTypeId} from '../../../../features/commerce/common/actions';
 import {
   nextPage,
   previousPage,
@@ -97,7 +98,12 @@ export function buildCorePagination(
   validateOptions(engine, optionsSchema, props.options, 'buildCorePagination');
 
   if (props.options?.pageSize) {
-    dispatch(setPageSize(props.options.pageSize));
+    dispatch(
+      setPageSize({
+        solutionTypeId: defaultSolutionTypeId,
+        pageSize: props.options.pageSize,
+      })
+    );
   }
 
   const paginationSelector = createSelector(
@@ -116,22 +122,27 @@ export function buildCorePagination(
     },
 
     selectPage(page: number) {
-      dispatch(selectPage(page));
+      dispatch(
+        selectPage({
+          solutionTypeId: defaultSolutionTypeId,
+          page,
+        })
+      );
       dispatch(props.fetchResultsActionCreator());
     },
 
     nextPage() {
-      dispatch(nextPage());
+      dispatch(nextPage({solutionTypeId: defaultSolutionTypeId}));
       dispatch(props.fetchResultsActionCreator());
     },
 
     previousPage() {
-      dispatch(previousPage());
+      dispatch(previousPage({solutionTypeId: defaultSolutionTypeId}));
       dispatch(props.fetchResultsActionCreator());
     },
 
     setPageSize(pageSize: number) {
-      dispatch(setPageSize(pageSize));
+      dispatch(setPageSize({solutionTypeId: defaultSolutionTypeId, pageSize}));
       dispatch(props.fetchResultsActionCreator());
     },
   };

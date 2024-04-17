@@ -1,6 +1,7 @@
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
 import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions';
+import {defaultSolutionTypeId} from '../../../features/commerce/common/actions';
 import {selectPage} from '../../../features/commerce/pagination/pagination-actions';
 import {fetchQuerySuggestions} from '../../../features/commerce/query-suggest/query-suggest-actions';
 import {updateQuery} from '../../../features/commerce/query/query-actions';
@@ -114,8 +115,17 @@ export function buildSearchBox(
 
     dispatch(updateFacetAutoSelection({allow: true}));
     dispatch(updateQuery({query: getValue()}));
-    dispatch(selectPage(0));
-    dispatch(executeSearch());
+    dispatch(
+      selectPage({
+        solutionTypeId: defaultSolutionTypeId,
+        page: 0,
+      })
+    );
+    dispatch(
+      executeSearch({
+        solutionTypeId: defaultSolutionTypeId,
+      })
+    );
   };
 
   return {

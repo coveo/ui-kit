@@ -20,7 +20,7 @@ const buildRecommendationCommerceAPIRequest = async (
   slotId: string,
   state: StateNeededByQueryCommerceAPI
 ): Promise<CommerceRecommendationsRequest> => {
-  const commerceAPIRequest = await buildCommerceAPIRequest(state);
+  const commerceAPIRequest = await buildCommerceAPIRequest(slotId, state);
   return {
     ...commerceAPIRequest,
     id: slotId,
