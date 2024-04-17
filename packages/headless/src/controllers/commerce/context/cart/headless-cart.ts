@@ -191,7 +191,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     currentItem: CartItem,
     prevItem: CartItemWithMetadata | undefined
   ): Ec.CartAction {
-    const {quantity: currentQuantity, ...product} = currentItem;
+    const {quantity: currentQuantity, sku, ...product} = currentItem;
     const action = getCartAction(currentItem, prevItem);
     const quantity = !prevItem
       ? currentQuantity

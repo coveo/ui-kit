@@ -138,6 +138,7 @@ describe('headless commerce cart', () => {
       name: 'product-name-1',
       price: 100,
     };
+    const {sku, ...productWithoutQuantityAndSku} = productWithoutQuantity;
 
     const productWithQuantity = (quantity: number) => ({
       ...productWithoutQuantity,
@@ -161,7 +162,7 @@ describe('headless commerce cart', () => {
       quantity: number = 1
     ) => ({
       action,
-      product: productWithoutQuantity,
+      product: productWithoutQuantityAndSku,
       quantity,
       currency: 'USD',
     });
