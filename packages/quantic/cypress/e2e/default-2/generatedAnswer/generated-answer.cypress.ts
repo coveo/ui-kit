@@ -26,6 +26,7 @@ interface GeneratedAnswerOptions {
   multilineFooter: boolean;
   fieldsToIncludeInCitations: string;
   useCase: string;
+  collapsible: boolean;
 }
 
 let analyticsMode: 'legacy' | 'next' = 'legacy';
@@ -59,6 +60,17 @@ const genQaMessageTypePayload = {
   payloadType: 'genqa.messageType',
   payload: JSON.stringify({
     textDelta: testText,
+  }),
+  finishReason: 'COMPLETED',
+};
+
+const testLongText = `Call me Ishmael. Some years ago—never mind how long precisely—having little or no money in my purse, and nothing particular to interest me on shore, I thought I would sail about a little and see the watery part of the world. It is a way I have of driving off the spleen and regulating the circulation. Whenever I find myself growing grim about the mouth; whenever it is a damp, drizzly November in my soul; whenever I find myself involuntarily pausing before coffin warehouses, and bringing up the rear of every funeral I meet; and especially whenever my hypos get such an upper hand of me, that it requires a strong moral principle to prevent me from deliberately stepping into the street, and methodically knocking people’s hats off—then, I account it high time to get to sea as soon as I can. This is my substitute for pistol and ball. With a philosophical flourish Cato throws himself upon his sword; I quietly take to the ship. There is nothing surprising in this. If they but knew it, almost all men in their degree, some time or other, cherish very nearly the same feelings towards the ocean with me.
+
+There now is your insular city of the Manhattoes, belted round by wharves as Indian isles by coral reefs—commerce surrounds it with her surf. Right and left, the streets take you waterward. Its extreme downtown is the battery, where that noble mole is washed by waves, and cooled by breezes, which a few hours previous were out of sight of land. Look at the crowds of water-gazers there.`;
+const genQaLongMessageTypePayload = {
+  payloadType: 'genqa.messageType',
+  payload: JSON.stringify({
+    textDelta: testLongText,
   }),
   finishReason: 'COMPLETED',
 };
@@ -131,6 +143,7 @@ describe('quantic-generated-answer', () => {
             Expect.displayGeneratedAnswerContent(true);
             Expect.sessionStorageContains(GENERATED_ANSWER_DATA_KEY, {});
             Expect.generatedAnswerFooterRowsIsOnMultiline(false);
+            Expect.generatedAnswerCollapsed(false);
           });
 
           it('should display the correct message', () => {
@@ -241,6 +254,54 @@ describe('quantic-generated-answer', () => {
               Expect.generatedAnswerFooterRowsIsOnMultiline(true);
               Expect.displayDisclaimer(true);
             });
+          });
+        });
+
+        describe('when the collapsible property is set to true', () => {
+          const streamId = crypto.randomUUID();
+
+          beforeEach(() => {
+            mockSearchWithGeneratedAnswer(streamId, param.useCase);
+            mockStreamResponse(streamId, genQaLongMessageTypePayload);
+            visitGeneratedAnswer({
+              collapsible: true,
+              useCase: param.useCase,
+            });
+          });
+
+          it('should properly display the generated answer collapsed when the answer is too long', () => {
+            scope('when loading the page', () => {
+              Expect.displayGeneratedAnswerCard(true);
+              Expect.generatedAnswerCollapsed(true);
+              Expect.displayGeneratedAnswerToggleCollapseButton(true);
+              Expect.generatedAnswerToggleCollapseButtonContains('Show more');
+              Expect.displayCitations(false);
+              Expect.displayRephraseButtons(false);
+              Expect.displayDisclaimer(true);
+            });
+
+            scope('when clicking the toggle collapse button', () => {
+              Actions.clickToggleCollapseButton();
+              // TODO: Expect analytics to be sent
+              Expect.generatedAnswerCollapsed(false);
+              Expect.generatedAnswerToggleCollapseButtonContains('Show less');
+              Expect.displayCitations(false);
+              Expect.displayRephraseButtons(true);
+              Expect.displayDisclaimer(true);
+            });
+
+            scope(
+              'when clicking the toggle collapse button a second time',
+              () => {
+                Actions.clickToggleCollapseButton();
+                // TODO: Expect analytics to be sent
+                Expect.generatedAnswerCollapsed(true);
+                Expect.generatedAnswerToggleCollapseButtonContains('Show more');
+                Expect.displayCitations(false);
+                Expect.displayRephraseButtons(false);
+                Expect.displayDisclaimer(true);
+              }
+            );
           });
         });
 
@@ -397,52 +458,94 @@ describe('quantic-generated-answer', () => {
               });
             });
 
-            describe(
-              'when providing detailed feedback',
-              {
-                retries: 20,
-              },
-              () => {
-                const streamId = crypto.randomUUID();
+            describe('when providing detailed feedback', {retries: 20}, () => {
+              const streamId = crypto.randomUUID();
 
-                beforeEach(() => {
-                  mockSearchWithGeneratedAnswer(streamId, param.useCase);
-                  mockStreamResponse(streamId, genQaMessageTypePayload);
-                  visitGeneratedAnswer({useCase: param.useCase});
+              beforeEach(() => {
+                mockSearchWithGeneratedAnswer(streamId, param.useCase);
+                mockStreamResponse(streamId, genQaMessageTypePayload);
+                visitGeneratedAnswer({useCase: param.useCase});
+              });
+
+              it('should send detailed feedback', () => {
+                const exampleDetails = 'example details';
+
+                Expect.displayLikeButton(true);
+                Expect.displayDislikeButton(true);
+                Expect.likeButtonIsChecked(false);
+                Expect.dislikeButtonIsChecked(false);
+
+                scope('when disliking the generated answer', () => {
+                  Actions.dislikeGeneratedAnswer();
+                  if (analyticsMode === 'next') {
+                    NextAnalyticsExpectations.emitQnaDislikeEvent(
+                      {
+                        feedback: {
+                          liked: false,
+                        },
+                        answer: {
+                          id: streamId,
+                          type: answerType,
+                        },
+                      },
+                      exampleTrackingId
+                    );
+                  } else {
+                    Expect.logDislikeGeneratedAnswer(streamId);
+                  }
+                  Expect.likeButtonIsChecked(false);
+                  Expect.dislikeButtonIsChecked(true);
+                  Expect.displayFeedbackModal(true);
                 });
 
-                it('should send detailed feedback', () => {
-                  const exampleDetails = 'example details';
-
-                  Expect.displayLikeButton(true);
-                  Expect.displayDislikeButton(true);
-                  Expect.likeButtonIsChecked(false);
-                  Expect.dislikeButtonIsChecked(false);
-
-                  scope('when disliking the generated answer', () => {
-                    Actions.dislikeGeneratedAnswer();
-                    if (analyticsMode === 'next') {
-                      NextAnalyticsExpectations.emitQnaDislikeEvent(
-                        {
-                          feedback: {
-                            liked: false,
-                          },
-                          answer: {
-                            id: streamId,
-                            type: answerType,
-                          },
+                scope('when selecting a feedback option', () => {
+                  Actions.clickFeedbackOption(
+                    feedbackOptions.indexOf(otherOption)
+                  );
+                  Actions.typeInFeedbackDetailsInput(exampleDetails);
+                  Actions.clickFeedbackSubmitButton();
+                  if (analyticsMode === 'next') {
+                    NextAnalyticsExpectations.emitQnaSubmitFeedbackReasonEvent(
+                      {
+                        feedback: {
+                          liked: false,
+                          details: exampleDetails,
+                          reason: 'other',
                         },
-                        exampleTrackingId
-                      );
-                    } else {
-                      Expect.logDislikeGeneratedAnswer(streamId);
-                    }
-                    Expect.likeButtonIsChecked(false);
-                    Expect.dislikeButtonIsChecked(true);
-                    Expect.displayFeedbackModal(true);
-                  });
+                        answer: {
+                          id: streamId,
+                          type: answerType,
+                        },
+                      },
+                      exampleTrackingId
+                    );
+                  } else {
+                    Expect.logGeneratedAnswerFeedbackSubmit(streamId, {
+                      reason: otherOption,
+                      details: exampleDetails,
+                    });
+                  }
+                  Actions.clickFeedbackDoneButton();
+                });
 
-                  scope('when selecting a feedback option', () => {
+                scope('when trying to open the feedback modal again', () => {
+                  Actions.dislikeGeneratedAnswer();
+                  Expect.displayFeedbackModal(false);
+                });
+
+                scope(
+                  'when trying to open the feedback modal after rephrasing the generated answer',
+                  () => {
+                    const secondStreamId = crypto.randomUUID();
+
+                    mockSearchWithGeneratedAnswer(
+                      secondStreamId,
+                      param.useCase
+                    );
+                    mockStreamResponse(secondStreamId, genQaMessageTypePayload);
+                    Actions.clickRephraseButton(rephraseOptions[0]);
+                    Actions.dislikeGeneratedAnswer();
+                    Expect.displayFeedbackModal(true);
                     Actions.clickFeedbackOption(
                       feedbackOptions.indexOf(otherOption)
                     );
@@ -457,125 +560,65 @@ describe('quantic-generated-answer', () => {
                             reason: 'other',
                           },
                           answer: {
-                            id: streamId,
+                            id: secondStreamId,
                             type: answerType,
                           },
                         },
                         exampleTrackingId
                       );
                     } else {
-                      Expect.logGeneratedAnswerFeedbackSubmit(streamId, {
+                      Expect.logGeneratedAnswerFeedbackSubmit(secondStreamId, {
                         reason: otherOption,
                         details: exampleDetails,
                       });
                     }
+
                     Actions.clickFeedbackDoneButton();
-                  });
+                  }
+                );
 
-                  scope('when trying to open the feedback modal again', () => {
+                scope(
+                  'when trying to open the feedback modal after executing a new query',
+                  () => {
+                    const thirdStreamId = crypto.randomUUID();
+
+                    mockSearchWithGeneratedAnswer(thirdStreamId, param.useCase);
+                    mockStreamResponse(thirdStreamId, genQaMessageTypePayload);
+                    performSearch();
                     Actions.dislikeGeneratedAnswer();
-                    Expect.displayFeedbackModal(false);
-                  });
-
-                  scope(
-                    'when trying to open the feedback modal after rephrasing the generated answer',
-                    () => {
-                      const secondStreamId = crypto.randomUUID();
-
-                      mockSearchWithGeneratedAnswer(
-                        secondStreamId,
-                        param.useCase
-                      );
-                      mockStreamResponse(
-                        secondStreamId,
-                        genQaMessageTypePayload
-                      );
-                      Actions.clickRephraseButton(rephraseOptions[0]);
-                      Actions.dislikeGeneratedAnswer();
-                      Expect.displayFeedbackModal(true);
-                      Actions.clickFeedbackOption(
-                        feedbackOptions.indexOf(otherOption)
-                      );
-                      Actions.typeInFeedbackDetailsInput(exampleDetails);
-                      Actions.clickFeedbackSubmitButton();
-                      if (analyticsMode === 'next') {
-                        NextAnalyticsExpectations.emitQnaSubmitFeedbackReasonEvent(
-                          {
-                            feedback: {
-                              liked: false,
-                              details: exampleDetails,
-                              reason: 'other',
-                            },
-                            answer: {
-                              id: secondStreamId,
-                              type: answerType,
-                            },
-                          },
-                          exampleTrackingId
-                        );
-                      } else {
-                        Expect.logGeneratedAnswerFeedbackSubmit(
-                          secondStreamId,
-                          {
-                            reason: otherOption,
+                    Expect.displayFeedbackModal(true);
+                    Actions.clickFeedbackOption(
+                      feedbackOptions.indexOf(otherOption)
+                    );
+                    Actions.typeInFeedbackDetailsInput(exampleDetails);
+                    Actions.clickFeedbackSubmitButton();
+                    if (analyticsMode === 'next') {
+                      NextAnalyticsExpectations.emitQnaSubmitFeedbackReasonEvent(
+                        {
+                          feedback: {
+                            liked: false,
                             details: exampleDetails,
-                          }
-                        );
-                      }
-
-                      Actions.clickFeedbackDoneButton();
-                    }
-                  );
-
-                  scope(
-                    'when trying to open the feedback modal after executing a new query',
-                    () => {
-                      const thirdStreamId = crypto.randomUUID();
-
-                      mockSearchWithGeneratedAnswer(
-                        thirdStreamId,
-                        param.useCase
-                      );
-                      mockStreamResponse(
-                        thirdStreamId,
-                        genQaMessageTypePayload
-                      );
-                      performSearch();
-                      Actions.dislikeGeneratedAnswer();
-                      Expect.displayFeedbackModal(true);
-                      Actions.clickFeedbackOption(
-                        feedbackOptions.indexOf(otherOption)
-                      );
-                      Actions.typeInFeedbackDetailsInput(exampleDetails);
-                      Actions.clickFeedbackSubmitButton();
-                      if (analyticsMode === 'next') {
-                        NextAnalyticsExpectations.emitQnaSubmitFeedbackReasonEvent(
-                          {
-                            feedback: {
-                              liked: false,
-                              details: exampleDetails,
-                              reason: 'other',
-                            },
-                            answer: {
-                              id: thirdStreamId,
-                              type: answerType,
-                            },
+                            reason: 'other',
                           },
-                          exampleTrackingId
-                        );
-                      } else {
-                        Expect.logGeneratedAnswerFeedbackSubmit(thirdStreamId, {
-                          reason: otherOption,
-                          details: exampleDetails,
-                        });
-                      }
-
-                      Actions.clickFeedbackDoneButton();
+                          answer: {
+                            id: thirdStreamId,
+                            type: answerType,
+                          },
+                        },
+                        exampleTrackingId
+                      );
+                    } else {
+                      Expect.logGeneratedAnswerFeedbackSubmit(thirdStreamId, {
+                        reason: otherOption,
+                        details: exampleDetails,
+                      });
                     }
-                  );
-                });
-              }
-            );
+
+                    Actions.clickFeedbackDoneButton();
+                  }
+                );
+              });
+            });
 
             describe('the generated answer toggle button', () => {
               const streamId = crypto.randomUUID();

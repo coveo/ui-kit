@@ -117,6 +117,30 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         );
     },
 
+    generatedAnswerCollapsed: (collapsible: boolean) => {
+      selector
+        .generatedAnswer()
+        .should(
+          collapsible ? 'have.class' : 'not.have.class',
+          'generated-answer__answer--collapsed'
+        )
+        .log(`the generated answer ${should(collapsible)} be collapsed`);
+    },
+
+    displayGeneratedAnswerToggleCollapseButton: (display: boolean) => {
+      selector
+        .toggleCollapseButton()
+        .should(display ? 'exist' : 'not.exist')
+        .log(`${should(display)} display the generated answer collapse button`);
+    },
+
+    generatedAnswerToggleCollapseButtonContains: (text: string) => {
+      selector
+        .toggleCollapseButton()
+        .contains(text)
+        .log(`the generated answer collapse button should contain "${text}"`);
+    },
+
     generatedAnswerContains: (answer: string) => {
       selector
         .generatedAnswer()

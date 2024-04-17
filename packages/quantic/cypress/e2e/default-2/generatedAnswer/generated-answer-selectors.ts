@@ -31,6 +31,7 @@ export interface GeneratedAnswerSelector extends ComponentSelector {
   citationTooltipTitle: (index: number) => CypressSelector;
   citationTooltipText: (index: number) => CypressSelector;
   disclaimer: () => CypressSelector;
+  toggleCollapseButton: () => CypressSelector;
 }
 
 export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
@@ -133,5 +134,9 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
   disclaimer: () =>
     GeneratedAnswerSelectors.get().find(
       '[data-cy="generated-answer__disclaimer"]'
+    ),
+  toggleCollapseButton: () =>
+    GeneratedAnswerSelectors.get().find(
+      '[data-cy="generated-answer__answer-toggle"]'
     ),
 };
