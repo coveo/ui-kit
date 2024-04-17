@@ -253,6 +253,12 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   updateSearchStatusState() {
     this.feedbackSubmitted = false;
     this.searchStatusState = this.searchStatus.state;
+
+    if (this.collapsible) {
+      if (!this._collapsed) {
+        this._collapsed = true;
+      }
+    }
   }
 
   updateFeedbackState() {
@@ -432,7 +438,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get generatedAnswerClass() {
-    console.log('generatedAnswerClass', this._exceedsMaximumHeight);
     return `generated-answer__answer ${
       this.isStreaming ? 'generated-answer__answer--streaming' : ''
     } ${
@@ -484,6 +489,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   get generatedAnswerFooterCssClass() {
     return `slds-grid slds-wrap slds-grid_align-spread generated-answer__footer`;
+  }
+
+  get generatedAnswerFooterRowClass() {
+    return `generated-answer__footer-row slds-grid slds-col slds-size_1-of-1 slds-wrap slds-grid_align-spread ${this.multilineFooter ? 'slds-grid_vertical' : ''}`;
   }
 
   get shouldHideRephraseLabels() {
