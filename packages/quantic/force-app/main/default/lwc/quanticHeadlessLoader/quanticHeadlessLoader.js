@@ -31,19 +31,19 @@ const HeadlessBundleNames = {
 
 const headlessBundles = {
   [HeadlessBundleNames.search]: {
-    libPath: '/browser/headless.js',
+    libPath: '/headless.js',
     bundle: () => CoveoHeadless,
   },
   [HeadlessBundleNames.caseAssist]: {
-    libPath: '/browser/case-assist/headless.js',
+    libPath: '/case-assist/headless.js',
     bundle: () => CoveoHeadlessCaseAssist,
   },
   [HeadlessBundleNames.insight]: {
-    libPath: '/browser/insight/headless.js',
+    libPath: '/insight/headless.js',
     bundle: () => CoveoHeadlessInsight,
   },
   [HeadlessBundleNames.recommendation]: {
-    libPath: '/browser/recommendation/headless.js',
+    libPath: '/recommendation/headless.js',
     bundle: () => CoveoHeadlessRecommendation,
   },
 };

@@ -15,15 +15,15 @@ const main = async () => {
   console.info('Begin copy.');
 
   await mkdir(
-    './force-app/main/default/staticresources/coveoheadless/browser/case-assist',
+    './force-app/main/default/staticresources/coveoheadless/case-assist',
     {recursive: true}
   );
   await mkdir(
-    './force-app/main/default/staticresources/coveoheadless/browser/insight',
+    './force-app/main/default/staticresources/coveoheadless/insight',
     {recursive: true}
   );
   await mkdir(
-    './force-app/main/default/staticresources/coveoheadless/browser/recommendation',
+    './force-app/main/default/staticresources/coveoheadless/recommendation',
     {recursive: true}
   );
   await mkdir(
@@ -40,20 +40,20 @@ const main = async () => {
     }
   );
   await copy(
-    '../../node_modules/@coveo/headless/dist/browser/headless.js',
-    './force-app/main/default/staticresources/coveoheadless/browser/headless.js'
+    '../../node_modules/@coveo/headless/dist/quantic/headless.js',
+    './force-app/main/default/staticresources/coveoheadless/headless.js'
   );
   await copy(
-    '../../node_modules/@coveo/headless/dist/browser/case-assist/headless.js',
-    './force-app/main/default/staticresources/coveoheadless/browser/case-assist/headless.js'
+    '../../node_modules/@coveo/headless/dist/quantic/case-assist/headless.js',
+    './force-app/main/default/staticresources/coveoheadless/case-assist/headless.js'
   );
   await copy(
-    '../../node_modules/@coveo/headless/dist/browser/insight/headless.js',
-    './force-app/main/default/staticresources/coveoheadless/browser/insight/headless.js'
+    '../../node_modules/@coveo/headless/dist/quantic/insight/headless.js',
+    './force-app/main/default/staticresources/coveoheadless/insight/headless.js'
   );
   await copy(
-    '../../node_modules/@coveo/headless/dist/browser/recommendation/headless.js',
-    './force-app/main/default/staticresources/coveoheadless/browser/recommendation/headless.js'
+    '../../node_modules/@coveo/headless/dist/quantic/recommendation/headless.js',
+    './force-app/main/default/staticresources/coveoheadless/recommendation/headless.js'
   );
   await copy(
     '../../node_modules/@coveo/headless/dist/definitions',
