@@ -11,7 +11,7 @@ function tableFlip(res) {
 
 function getContentTypeFromExtension(filePath) {
   const extension = /\.(html|json|js|css|svg|ico)$/.exec(filePath);
-  
+
   if (!extension) {
     return;
   }
