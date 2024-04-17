@@ -43,6 +43,11 @@ describe('AsyncInsightSearchThunkProcessor', () => {
         validatePayload: jest.fn(),
         preprocessRequest: jest.fn(),
         relay: jest.fn() as unknown as Relay,
+        navigatorContext: {
+          referrer: 'referrer',
+          location: 'location',
+          userAgent: 'userAgent',
+        },
       },
       getState: jest.fn().mockReturnValue({
         insightConfiguration: getInsightConfigurationInitialState(),

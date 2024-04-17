@@ -127,6 +127,11 @@ describe('SSR', () => {
           resultList: defineResultList(),
         },
         middlewares: [createMockResultsMiddleware({defaultNumberOfResults})],
+        navigatorContextProvider: () => ({
+          location: 'https://www.coveo.com/',
+          referrer: 'https://www.coveo.com/',
+          userAgent: 'userAgent',
+        }),
       });
     });
 

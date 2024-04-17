@@ -18,6 +18,11 @@ describe('buildProductRecommendationEngine', () => {
     options = {
       configuration: getSampleProductRecommendationEngineConfiguration(),
       loggerOptions: {level: 'silent'},
+      navigatorContextProvider: () => ({
+        location: 'https://www.coveo.com/',
+        referrer: 'https://www.coveo.com/',
+        userAgent: 'userAgent',
+      }),
     };
 
     initEngine();

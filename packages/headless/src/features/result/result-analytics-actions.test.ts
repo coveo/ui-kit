@@ -39,6 +39,11 @@ describe('#logDocumentOpen', () => {
         configuration: {
           ...getSampleSearchEngineConfiguration(),
         },
+        navigatorContextProvider: () => ({
+          location: 'https://www.coveo.com/',
+          referrer: 'https://www.coveo.com/',
+          userAgent: 'userAgent',
+        }),
       });
     });
 
@@ -61,6 +66,11 @@ describe('#logDocumentOpen', () => {
             trackingId: 'alex',
           },
         },
+        navigatorContextProvider: () => ({
+          location: 'https://www.coveo.com/',
+          referrer: 'https://www.coveo.com/',
+          userAgent: 'userAgent',
+        }),
       });
     });
 

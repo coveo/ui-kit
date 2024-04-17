@@ -21,6 +21,11 @@ describe('searchEngine', () => {
       options = {
         configuration: getSampleSearchEngineConfiguration(),
         loggerOptions: {level: 'silent'},
+        navigatorContextProvider: () => ({
+          location: 'https://www.coveo.com/',
+          referrer: 'https://www.coveo.com/',
+          userAgent: 'userAgent',
+        }),
       };
 
       initEngine();
@@ -60,6 +65,11 @@ describe('searchEngine', () => {
             organizationId: 'bar',
             organizationEndpoints: getOrganizationEndpoints('bar'),
           },
+          navigatorContextProvider: () => ({
+            location: 'https://www.coveo.com/',
+            referrer: 'https://www.coveo.com/',
+            userAgent: 'userAgent',
+          }),
         });
 
         expect(engine.state.configuration.platformUrl).toBe(
@@ -84,6 +94,11 @@ describe('searchEngine', () => {
               platform: 'https://myorg.org.coveo.com',
             },
           },
+          navigatorContextProvider: () => ({
+            location: 'https://www.coveo.com/',
+            referrer: 'https://www.coveo.com/',
+            userAgent: 'userAgent',
+          }),
         });
 
         expect(engine.state.configuration.platformUrl).toBe(
@@ -104,6 +119,11 @@ describe('searchEngine', () => {
             organizationId: 'bar',
             platformUrl: 'https://platform-eu.cloud.coveo.com',
           },
+          navigatorContextProvider: () => ({
+            location: 'https://www.coveo.com/',
+            referrer: 'https://www.coveo.com/',
+            userAgent: 'userAgent',
+          }),
         });
 
         expect(engine.state.configuration.platformUrl).toBe(

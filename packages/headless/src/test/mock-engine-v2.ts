@@ -76,6 +76,11 @@ export function buildMockCoreEngine<State extends StateFromEngine<CoreEngine>>(
       [Symbol.observable]: jest.fn(),
     },
     subscribe: jest.fn(),
+    navigatorContext: {
+      location: 'http://localhost/',
+      referrer: '',
+      userAgent: '',
+    },
   };
 }
 

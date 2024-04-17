@@ -99,12 +99,22 @@ const nextInsightEngine = buildInsightEngine({
       trackingId: 'alex',
     },
   },
+  navigatorContextProvider: () => ({
+    location: 'https://www.coveo.com/',
+    referrer: 'https://www.coveo.com/',
+    userAgent: 'userAgent',
+  }),
 });
 
 const legacyInsightEngine = buildInsightEngine({
   configuration: {
     ...getSampleInsightEngineConfiguration(),
   },
+  navigatorContextProvider: () => ({
+    location: 'https://www.coveo.com/',
+    referrer: 'https://www.coveo.com/',
+    userAgent: 'userAgent',
+  }),
 });
 
 const ANY_FACET_VALUE = 'any facet value';
