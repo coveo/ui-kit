@@ -1,4 +1,5 @@
 import {SearchAppState} from '../../../../state/search-app-state';
+import {mockRelay} from '../../../../test/mock-engine-v2';
 import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
 import {buildMockFacetSlice} from '../../../../test/mock-facet-slice';
 import {buildMockFacetValueRequest} from '../../../../test/mock-facet-value-request';
@@ -17,7 +18,13 @@ describe('#buildSpecificFacetSearchRequest', () => {
   }
 
   function buildParams() {
-    return buildSpecificFacetSearchRequest(id, state, false);
+    return buildSpecificFacetSearchRequest(
+      id,
+      state,
+      {location: '', referrer: '', userAgent: ''},
+      mockRelay(),
+      false
+    );
   }
 
   beforeEach(() => setupState());
@@ -68,7 +75,13 @@ describe('#buildSpecificFacetSearchRequest', () => {
   });
 
   it('sets the #searchContext to the search request params', async () => {
-    const request = (await buildSearchRequest(state)).request;
+    const request = (
+      await buildSearchRequest(
+        state,
+        {location: '', referrer: '', userAgent: ''},
+        mockRelay()
+      )
+    ).request;
 
     expect((await buildParams()).searchContext).toEqual({
       ...request,

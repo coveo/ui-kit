@@ -7,6 +7,7 @@ import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice'
 import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request';
 import {buildMockDateFacetSlice} from '../../test/mock-date-facet-slice';
 import {buildMockDateFacetValue} from '../../test/mock-date-facet-value';
+import {mockRelay} from '../../test/mock-engine-v2';
 import {buildMockFacetOptions} from '../../test/mock-facet-options';
 import {buildFacetOptionsSlice} from '../../test/mock-facet-options-slice';
 import {buildMockFacetRequest} from '../../test/mock-facet-request';
@@ -30,28 +31,52 @@ describe('search request', () => {
 
   it('#searchRequest returns the state #query', async () => {
     state.query.q = 'hello';
-    const params = (await buildSearchRequest(state)).request;
+    const params = (
+      await buildSearchRequest(
+        state,
+        {location: '', referrer: '', userAgent: ''},
+        mockRelay()
+      )
+    ).request;
 
     expect(params.q).toBe(state.query.q);
   });
 
   it('#searchRequest returns the state #enableQuerySyntax', async () => {
     state.query.enableQuerySyntax = true;
-    const params = (await buildSearchRequest(state)).request;
+    const params = (
+      await buildSearchRequest(
+        state,
+        {location: '', referrer: '', userAgent: ''},
+        mockRelay()
+      )
+    ).request;
 
     expect(params.enableQuerySyntax).toBe(state.query.enableQuerySyntax);
   });
 
   it('#searchRequest returns the state #sortCriteria', async () => {
     state.sortCriteria = 'qre';
-    const params = (await buildSearchRequest(state)).request;
+    const params = (
+      await buildSearchRequest(
+        state,
+        {location: '', referrer: '', userAgent: ''},
+        mockRelay()
+      )
+    ).request;
 
     expect(params.sortCriteria).toBe(state.sortCriteria);
   });
 
   it('#searchRequest returns the state #numberOfResults', async () => {
     state.pagination.numberOfResults = 10;
-    const params = (await buildSearchRequest(state)).request;
+    const params = (
+      await buildSearchRequest(
+        state,
+        {location: '', referrer: '', userAgent: ''},
+        mockRelay()
+      )
+    ).request;
 
     expect(params.numberOfResults).toBe(state.pagination.numberOfResults);
   });
@@ -60,14 +85,26 @@ describe('search request', () => {
     state.pagination.numberOfResults = 10;
     state.pagination.firstResult = maximumNumberOfResultsFromIndex - 9;
 
-    const params = (await buildSearchRequest(state)).request;
+    const params = (
+      await buildSearchRequest(
+        state,
+        {location: '', referrer: '', userAgent: ''},
+        mockRelay()
+      )
+    ).request;
 
     expect(params.numberOfResults).toBe(9);
   });
 
   it('#searchRequest returns the state #firstResult', async () => {
     state.pagination.firstResult = 10;
-    const params = (await buildSearchRequest(state)).request;
+    const params = (
+      await buildSearchRequest(
+        state,
+        {location: '', referrer: '', userAgent: ''},
+        mockRelay()
+      )
+    ).request;
 
     expect(params.firstResult).toBe(state.pagination.firstResult);
   });
@@ -75,7 +112,13 @@ describe('search request', () => {
   it('#searchRequest returns the state #dictionaryFieldContext.contextValues', async () => {
     const contextValues = {price: 'cad'};
     state.dictionaryFieldContext.contextValues = contextValues;
-    const params = (await buildSearchRequest(state)).request;
+    const params = (
+      await buildSearchRequest(
+        state,
+        {location: '', referrer: '', userAgent: ''},
+        mockRelay()
+      )
+    ).request;
 
     expect(params.dictionaryFieldContext).toBe(contextValues);
   });
@@ -83,7 +126,13 @@ describe('search request', () => {
   it('#searchRequest returns the facets in the state #facetSet', async () => {
     const request = buildMockFacetRequest({field: 'objecttype'});
     state.facetSet[1] = buildMockFacetSlice({request});
-    const {facets} = (await buildSearchRequest(state)).request;
+    const {facets} = (
+      await buildSearchRequest(
+        state,
+        {location: '', referrer: '', userAgent: ''},
+        mockRelay()
+      )
+    ).request;
 
     expect(facets).toContainEqual(request);
   });
@@ -94,7 +143,13 @@ describe('search request', () => {
       sortCriteria: 'alphanumericDescending',
     });
     state.facetSet[1] = buildMockFacetSlice({request});
-    const {facets} = (await buildSearchRequest(state)).request;
+    const {facets} = (
+      await buildSearchRequest(
+        state,
+        {location: '', referrer: '', userAgent: ''},
+        mockRelay()
+      )
+    ).request;
 
     expect(facets?.map((f) => f.sortCriteria)).toContainEqual({
       order: 'descending',
@@ -109,7 +164,13 @@ describe('search request', () => {
     });
     state.numericFacetSet[1] = buildMockNumericFacetSlice({request});
 
-    const {facets} = (await buildSearchRequest(state)).request;
+    const {facets} = (
+      await buildSearchRequest(
+        state,
+        {location: '', referrer: '', userAgent: ''},
+        mockRelay()
+      )
+    ).request;
     expect(facets).toContainEqual(request);
   });
 
@@ -121,7 +182,13 @@ describe('search request', () => {
     });
     state.numericFacetSet[1] = buildMockNumericFacetSlice({request});
 
-    const {facets} = (await buildSearchRequest(state)).request;
+    const {facets} = (
+      await buildSearchRequest(
+        state,
+        {location: '', referrer: '', userAgent: ''},
+        mockRelay()
+      )
+    ).request;
     expect(facets).toContainEqual(
       buildMockNumericFacetRequest({
         field: 'objecttype',
@@ -142,7 +209,13 @@ describe('search request', () => {
     });
     state.numericFacetSet[1] = buildMockNumericFacetSlice({request});
 
-    const {facets} = (await buildSearchRequest(state)).request;
+    const {facets} = (
+      await buildSearchRequest(
+        state,
+        {location: '', referrer: '', userAgent: ''},
+        mockRelay()
+      )
+    ).request;
     expect(facets).toContainEqual(request);
   });
 
@@ -153,7 +226,13 @@ describe('search request', () => {
     });
     state.dateFacetSet[1] = buildMockDateFacetSlice({request});
 
-    const {facets} = (await buildSearchRequest(state)).request;
+    const {facets} = (
+      await buildSearchRequest(
+        state,
+        {location: '', referrer: '', userAgent: ''},
+        mockRelay()
+      )
+    ).request;
     expect(facets).toContainEqual(request);
   });
 
@@ -165,7 +244,13 @@ describe('search request', () => {
     });
     state.dateFacetSet[1] = buildMockDateFacetSlice({request});
 
-    const {facets} = (await buildSearchRequest(state)).request;
+    const {facets} = (
+      await buildSearchRequest(
+        state,
+        {location: '', referrer: '', userAgent: ''},
+        mockRelay()
+      )
+    ).request;
     expect(facets).toContainEqual(
       buildMockDateFacetRequest({
         field: 'date',
@@ -186,13 +271,25 @@ describe('search request', () => {
     });
     state.dateFacetSet[1] = buildMockDateFacetSlice({request});
 
-    const {facets} = (await buildSearchRequest(state)).request;
+    const {facets} = (
+      await buildSearchRequest(
+        state,
+        {location: '', referrer: '', userAgent: ''},
+        mockRelay()
+      )
+    ).request;
     expect(facets).toContainEqual(request);
   });
 
   it('#searchRequest returns the state #generateAutomaticFacets.desiredCount', async () => {
     state.automaticFacetSet.desiredCount = 5;
-    const params = (await buildSearchRequest(state)).request;
+    const params = (
+      await buildSearchRequest(
+        state,
+        {location: '', referrer: '', userAgent: ''},
+        mockRelay()
+      )
+    ).request;
 
     expect(params.generateAutomaticFacets?.desiredCount).toBe(
       state.automaticFacetSet.desiredCount
@@ -201,7 +298,13 @@ describe('search request', () => {
 
   it('#searchRequest returns the state #generateAutomaticFacets.numberOfValues', async () => {
     state.automaticFacetSet.numberOfValues = 5;
-    const params = (await buildSearchRequest(state)).request;
+    const params = (
+      await buildSearchRequest(
+        state,
+        {location: '', referrer: '', userAgent: ''},
+        mockRelay()
+      )
+    ).request;
 
     expect(params.generateAutomaticFacets?.numberOfValues).toBe(
       state.automaticFacetSet.numberOfValues
@@ -223,7 +326,13 @@ describe('search request', () => {
       }),
     });
 
-    const {generateAutomaticFacets} = (await buildSearchRequest(state)).request;
+    const {generateAutomaticFacets} = (
+      await buildSearchRequest(
+        state,
+        {location: '', referrer: '', userAgent: ''},
+        mockRelay()
+      )
+    ).request;
     expect(generateAutomaticFacets?.currentFacets).toContainEqual(request);
   });
 
@@ -240,13 +349,25 @@ describe('search request', () => {
       }),
     });
 
-    const {generateAutomaticFacets} = (await buildSearchRequest(state)).request;
+    const {generateAutomaticFacets} = (
+      await buildSearchRequest(
+        state,
+        {location: '', referrer: '', userAgent: ''},
+        mockRelay()
+      )
+    ).request;
     expect(generateAutomaticFacets?.currentFacets).toContainEqual(request);
   });
 
   it('#searchRequest returns the state #generatedAnswer.responseFormat', async () => {
     state.generatedAnswer.responseFormat = {answerStyle: 'concise'};
-    const params = (await buildSearchRequest(state)).request;
+    const params = (
+      await buildSearchRequest(
+        state,
+        {location: '', referrer: '', userAgent: ''},
+        mockRelay()
+      )
+    ).request;
 
     expect(
       params.pipelineRuleParameters?.mlGenerativeQuestionAnswering
@@ -256,7 +377,13 @@ describe('search request', () => {
 
   it('#searchRequest returns the state #generatedAnswer.citationsFieldToInclude', async () => {
     state.generatedAnswer.fieldsToIncludeInCitations = ['foo', 'bar'];
-    const params = (await buildSearchRequest(state)).request;
+    const params = (
+      await buildSearchRequest(
+        state,
+        {location: '', referrer: '', userAgent: ''},
+        mockRelay()
+      )
+    ).request;
 
     expect(
       params.pipelineRuleParameters?.mlGenerativeQuestionAnswering
@@ -268,7 +395,13 @@ describe('search request', () => {
     const request = buildMockCategoryFacetRequest({field: 'objecttype'});
     state.categoryFacetSet[1] = buildMockCategoryFacetSlice({request});
 
-    const {facets} = (await buildSearchRequest(state)).request;
+    const {facets} = (
+      await buildSearchRequest(
+        state,
+        {location: '', referrer: '', userAgent: ''},
+        mockRelay()
+      )
+    ).request;
     expect(facets).toContainEqual(request);
   });
 
@@ -336,7 +469,13 @@ describe('search request', () => {
     state.facetOptions.facets['g'] = buildFacetOptionsSlice();
     state.facetOptions.facets['h'] = buildFacetOptionsSlice({enabled: false});
 
-    const {facets} = (await buildSearchRequest(state)).request;
+    const {facets} = (
+      await buildSearchRequest(
+        state,
+        {location: '', referrer: '', userAgent: ''},
+        mockRelay()
+      )
+    ).request;
     expect(facets).toContainEqual(enabledFacetRequest);
     expect(facets).toContainEqual(enabledNumericFacetRequest);
     expect(facets).toContainEqual(enabledDateFacetRequest);
@@ -348,7 +487,13 @@ describe('search request', () => {
   });
 
   it('when no facets are configured, the #searchRequestParams does not contain a #facets key', async () => {
-    const request = (await buildSearchRequest(state)).request;
+    const request = (
+      await buildSearchRequest(
+        state,
+        {location: '', referrer: '', userAgent: ''},
+        mockRelay()
+      )
+    ).request;
     expect(request.facets).toBe(undefined);
   });
 
@@ -366,7 +511,13 @@ describe('search request', () => {
       request: buildMockFacetRequest({facetId: facetId2}),
     });
 
-    const {facets} = (await buildSearchRequest(state)).request;
+    const {facets} = (
+      await buildSearchRequest(
+        state,
+        {location: '', referrer: '', userAgent: ''},
+        mockRelay()
+      )
+    ).request;
     expect(facets).toEqual([
       state.facetSet[facetId2].request,
       state.facetSet[facetId1].request,
@@ -387,7 +538,13 @@ describe('search request', () => {
       request: buildMockFacetRequest({facetId: facetId2}),
     });
 
-    const {facets} = (await buildSearchRequest(state)).request;
+    const {facets} = (
+      await buildSearchRequest(
+        state,
+        {location: '', referrer: '', userAgent: ''},
+        mockRelay()
+      )
+    ).request;
     expect(facets).toEqual([
       state.facetSet[facetId2].request,
       state.facetSet[facetId1].request,
@@ -397,7 +554,13 @@ describe('search request', () => {
   it('#searchRequestParams returns the freezeFacetOrder in state', async () => {
     state.facetOptions = buildMockFacetOptions({freezeFacetOrder: true});
 
-    const params = (await buildSearchRequest(state)).request;
+    const params = (
+      await buildSearchRequest(
+        state,
+        {location: '', referrer: '', userAgent: ''},
+        mockRelay()
+      )
+    ).request;
     expect(params.facetOptions).toEqual({
       freezeFacetOrder: state.facetOptions.freezeFacetOrder,
     });
@@ -405,57 +568,121 @@ describe('search request', () => {
 
   it('should send visitorId if analytics is enable', async () => {
     state.configuration.analytics.enabled = true;
-    expect((await buildSearchRequest(state)).request.visitorId).toBeDefined();
+    expect(
+      (
+        await buildSearchRequest(
+          state,
+          {location: '', referrer: '', userAgent: ''},
+          mockRelay()
+        )
+      ).request.visitorId
+    ).toBeDefined();
   });
 
   it('should not send visitorId if analytics is disabled', async () => {
     state.configuration.analytics.enabled = false;
     expect(
-      (await buildSearchRequest(state)).request.visitorId
+      (
+        await buildSearchRequest(
+          state,
+          {location: '', referrer: '', userAgent: ''},
+          mockRelay()
+        )
+      ).request.visitorId
     ).not.toBeDefined();
   });
 
   it('#searchRequest.tab holds the #originLevel2', async () => {
     const originLevel2 = 'youtube';
     state.configuration.analytics.originLevel2 = originLevel2;
-    expect((await buildSearchRequest(state)).request.tab).toBe(originLevel2);
+    expect(
+      (
+        await buildSearchRequest(
+          state,
+          {location: '', referrer: '', userAgent: ''},
+          mockRelay()
+        )
+      ).request.tab
+    ).toBe(originLevel2);
   });
 
   it('#searchRequest.referrer holds the #originLevel3', async () => {
     const originLevel3 = 'www.coveo.com';
     state.configuration.analytics.originLevel3 = originLevel3;
-    expect((await buildSearchRequest(state)).request.referrer).toBe(
-      originLevel3
-    );
+    expect(
+      (
+        await buildSearchRequest(
+          state,
+          {location: '', referrer: '', userAgent: ''},
+          mockRelay()
+        )
+      ).request.referrer
+    ).toBe(originLevel3);
   });
 
   it('#searchRequest.fieldsToInclude holds the #fieldsToInclude', async () => {
     state.fields.fieldsToInclude = ['foo', 'bar'];
-    expect((await buildSearchRequest(state)).request.fieldsToInclude).toEqual(
-      expect.arrayContaining(['foo', 'bar'])
-    );
+    expect(
+      (
+        await buildSearchRequest(
+          state,
+          {location: '', referrer: '', userAgent: ''},
+          mockRelay()
+        )
+      ).request.fieldsToInclude
+    ).toEqual(expect.arrayContaining(['foo', 'bar']));
   });
 
   it('#searchRequest.fieldsToInclude does not holds #fieldsToInclude if #fetchAllFields is active', async () => {
     state.fields.fieldsToInclude = ['foo', 'bar'];
     state.fields.fetchAllFields = true;
     expect(
-      (await buildSearchRequest(state)).request.fieldsToInclude
+      (
+        await buildSearchRequest(
+          state,
+          {location: '', referrer: '', userAgent: ''},
+          mockRelay()
+        )
+      ).request.fieldsToInclude
     ).not.toBeDefined();
   });
 
   it('when there are no cq expressions in state, cq is undefined', async () => {
-    expect((await buildSearchRequest(state)).request.cq).toBe(undefined);
+    expect(
+      (
+        await buildSearchRequest(
+          state,
+          {location: '', referrer: '', userAgent: ''},
+          mockRelay()
+        )
+      ).request.cq
+    ).toBe(undefined);
   });
 
   it('when there is a cq expression, it sets the cq to the expression', async () => {
     state.advancedSearchQueries.cq = 'a';
-    expect((await buildSearchRequest(state)).request.cq).toBe('a');
+    expect(
+      (
+        await buildSearchRequest(
+          state,
+          {location: '', referrer: '', userAgent: ''},
+          mockRelay()
+        )
+      ).request.cq
+    ).toBe('a');
   });
 
   it('when there is an active tab, it sets cq to the active tab expression', async () => {
     state.tabSet.a = buildMockTabSlice({expression: 'a', isActive: true});
-    expect((await buildSearchRequest(state)).request.cq).toBe('a');
+    expect(
+      (
+        await buildSearchRequest(
+          state,
+          {location: '', referrer: '', userAgent: ''},
+          mockRelay()
+        )
+      ).request.cq
+    ).toBe('a');
   });
 
   it(`when there is cq and an active tab,
@@ -463,7 +690,15 @@ describe('search request', () => {
     state.advancedSearchQueries.cq = 'a';
     state.tabSet.b = buildMockTabSlice({expression: 'b', isActive: true});
 
-    expect((await buildSearchRequest(state)).request.cq).toBe('a AND b');
+    expect(
+      (
+        await buildSearchRequest(
+          state,
+          {location: '', referrer: '', userAgent: ''},
+          mockRelay()
+        )
+      ).request.cq
+    ).toBe('a AND b');
   });
 
   it(`when the cq and active tab expressions are surrounded by spaces,
@@ -471,7 +706,15 @@ describe('search request', () => {
     state.advancedSearchQueries.cq = ' a ';
     state.tabSet.b = buildMockTabSlice({expression: ' b ', isActive: true});
 
-    expect((await buildSearchRequest(state)).request.cq).toBe('a AND b');
+    expect(
+      (
+        await buildSearchRequest(
+          state,
+          {location: '', referrer: '', userAgent: ''},
+          mockRelay()
+        )
+      ).request.cq
+    ).toBe('a AND b');
   });
 
   it('static filter with an active value, it sets cq to the active filter value expression', async () => {
@@ -480,7 +723,15 @@ describe('search request', () => {
       state: 'selected',
     });
     state.staticFilterSet.a = buildMockStaticFilterSlice({values: [value]});
-    expect((await buildSearchRequest(state)).request.cq).toBe('a');
+    expect(
+      (
+        await buildSearchRequest(
+          state,
+          {location: '', referrer: '', userAgent: ''},
+          mockRelay()
+        )
+      ).request.cq
+    ).toBe('a');
   });
 
   it(`static filter with two active values,
@@ -497,7 +748,15 @@ describe('search request', () => {
     state.staticFilterSet.a = buildMockStaticFilterSlice({
       values: [valueA, valueB],
     });
-    expect((await buildSearchRequest(state)).request.cq).toBe('(a OR b)');
+    expect(
+      (
+        await buildSearchRequest(
+          state,
+          {location: '', referrer: '', userAgent: ''},
+          mockRelay()
+        )
+      ).request.cq
+    ).toBe('(a OR b)');
   });
 
   it(`static filter with two active values, one value has an empty space as an expression,
@@ -514,14 +773,28 @@ describe('search request', () => {
     state.staticFilterSet.a = buildMockStaticFilterSlice({
       values: [valueA, valueB],
     });
-    expect((await buildSearchRequest(state)).request.cq).toBe('a');
+    expect(
+      (
+        await buildSearchRequest(
+          state,
+          {location: '', referrer: '', userAgent: ''},
+          mockRelay()
+        )
+      ).request.cq
+    ).toBe('a');
   });
 
   it('should enable #queryCorrection if did you mean is enabled and #queryCorrectionMode is `next`', async () => {
     state.didYouMean.enableDidYouMean = true;
     state.didYouMean.queryCorrectionMode = 'next';
     expect(
-      (await buildSearchRequest(state)).request.queryCorrection?.enabled
+      (
+        await buildSearchRequest(
+          state,
+          {location: '', referrer: '', userAgent: ''},
+          mockRelay()
+        )
+      ).request.queryCorrection?.enabled
     ).toBe(true);
   });
 
@@ -530,8 +803,13 @@ describe('search request', () => {
     state.didYouMean.queryCorrectionMode = 'next';
     state.didYouMean.automaticallyCorrectQuery = true;
     expect(
-      (await buildSearchRequest(state)).request.queryCorrection?.options
-        ?.automaticallyCorrect
+      (
+        await buildSearchRequest(
+          state,
+          {location: '', referrer: '', userAgent: ''},
+          mockRelay()
+        )
+      ).request.queryCorrection?.options?.automaticallyCorrect
     ).toBe('whenNoResults');
   });
 
@@ -540,8 +818,13 @@ describe('search request', () => {
     state.didYouMean.queryCorrectionMode = 'next';
     state.didYouMean.automaticallyCorrectQuery = false;
     expect(
-      (await buildSearchRequest(state)).request.queryCorrection?.options
-        ?.automaticallyCorrect
+      (
+        await buildSearchRequest(
+          state,
+          {location: '', referrer: '', userAgent: ''},
+          mockRelay()
+        )
+      ).request.queryCorrection?.options?.automaticallyCorrect
     ).toBe('never');
   });
 });
