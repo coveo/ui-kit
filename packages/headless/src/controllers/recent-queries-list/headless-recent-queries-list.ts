@@ -1,4 +1,10 @@
-import {ArrayValue, BooleanValue, NumberValue, Schema} from '@coveo/bueno';
+import {
+  ArrayValue,
+  BooleanValue,
+  NumberValue,
+  Schema,
+  isBoolean,
+} from '@coveo/bueno';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   clearRecentQueries,
@@ -199,6 +205,9 @@ export function buildRecentQueriesList(
         prepareForSearchWithQuery({
           q: this.state.queries[index],
           clearFilters: registrationOptions.clearFilters,
+          ...(isBoolean(engine.state.query?.enableQuerySyntax) && {
+            enableQuerySyntax: engine.state.query.enableQuerySyntax,
+          }),
         })
       );
       dispatch(
