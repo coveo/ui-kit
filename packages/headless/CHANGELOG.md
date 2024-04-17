@@ -1,3 +1,15 @@
+# 2.61.0 (2024-04-17)
+
+### Bug Fixes
+
+- **headless:** analytics payload of quick view and smart snippet feedback fixed ([#3797](https://github.com/coveo/ui-kit/issues/3797)) ([6eca769](https://github.com/coveo/ui-kit/commits/6eca7690e16905a5243d632411f90cf28650a4c9))
+- **headless:** qna answer type for rga updated to be valid with new analytics schema ([#3780](https://github.com/coveo/ui-kit/issues/3780)) ([9b5eb13](https://github.com/coveo/ui-kit/commits/9b5eb13e38a923b3e9b8c37fb7c2d8060406cd4e))
+
+### Features
+
+- **commerce:** add pagination and sort sub-controllers ([#3800](https://github.com/coveo/ui-kit/issues/3800)) ([5f2d2a2](https://github.com/coveo/ui-kit/commits/5f2d2a2acf0b81409783a866753ab292af84c38d))
+- **commerce:** remove unused controller state exports ([#3789](https://github.com/coveo/ui-kit/issues/3789)) ([cb39602](https://github.com/coveo/ui-kit/commits/cb3960285894eb8d757ffbe828f180a7a3695720)), closes [/github.com/coveo/ui-kit/pull/3734#discussion_r1537951235](https://github.com//github.com/coveo/ui-kit/pull/3734/issues/discussion_r1537951235)
+
 # 2.60.0 (2024-04-10)
 
 ### Bug Fixes
