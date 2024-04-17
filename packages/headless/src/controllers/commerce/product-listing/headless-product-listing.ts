@@ -54,6 +54,7 @@ export function buildProductListing(engine: CommerceEngine): ProductListing {
   const getState = () => engine.state;
   const subControllers = buildSolutionTypeSubControllers(engine, {
     responseIdSelector,
+    fetchResultsActionCreator: fetchProductListing,
   });
 
   return {
