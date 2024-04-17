@@ -63,6 +63,10 @@ export interface PaginationOptions {
 
 export interface CorePaginationProps {
   fetchResultsActionCreator: FetchResultsActionCreator;
+  /**
+   * Recs slot id, or none for listings and search
+   */
+  slotId?: string;
   options?: PaginationOptions;
 }
 
@@ -96,8 +100,15 @@ export function buildCorePagination(
 
   validateOptions(engine, optionsSchema, props.options, 'buildCorePagination');
 
+  const slotId = props.slotId;
+
   if (props.options?.pageSize) {
-    dispatch(setPageSize(props.options.pageSize));
+    dispatch(
+      setPageSize({
+        slotId,
+        pageSize: props.options.pageSize,
+      })
+    );
   }
 
   const paginationSelector = createSelector(
@@ -116,22 +127,27 @@ export function buildCorePagination(
     },
 
     selectPage(page: number) {
-      dispatch(selectPage(page));
+      dispatch(
+        selectPage({
+          slotId,
+          page,
+        })
+      );
       dispatch(props.fetchResultsActionCreator());
     },
 
     nextPage() {
-      dispatch(nextPage());
+      dispatch(nextPage({slotId}));
       dispatch(props.fetchResultsActionCreator());
     },
 
     previousPage() {
-      dispatch(previousPage());
+      dispatch(previousPage({slotId}));
       dispatch(props.fetchResultsActionCreator());
     },
 
     setPageSize(pageSize: number) {
-      dispatch(setPageSize(pageSize));
+      dispatch(setPageSize({slotId, pageSize}));
       dispatch(props.fetchResultsActionCreator());
     },
   };
