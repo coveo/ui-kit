@@ -12,7 +12,10 @@ export interface RecommendationsSlice {
 /**
  * An object in which each key is a slot identifier, and each value is the corresponding recommendations slice.
  */
-export type RecommendationsState = Record<string, RecommendationsSlice>;
+export type RecommendationsState = Record<
+  string,
+  RecommendationsSlice | undefined
+>;
 
 export const getRecommendationsInitialState = (): RecommendationsState => ({});
 export const getRecommendationsSliceInitialState =

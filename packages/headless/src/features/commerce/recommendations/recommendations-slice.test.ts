@@ -75,7 +75,7 @@ describe('recommendation-slice', () => {
       const action = fetchRecommendations.fulfilled(response, '', {slotId});
       const finalState = recommendationsReducer(state, action);
 
-      const slot = finalState[slotId];
+      const slot = finalState[slotId]!;
 
       expect(slot.products[0]).toEqual(result);
       expect(slot.responseId).toEqual(responseId);
@@ -108,8 +108,8 @@ describe('recommendation-slice', () => {
       state[slotId] = buildMockRecommendationsSlice();
 
       const finalState = recommendationsReducer(state, action);
-      expect(finalState[slotId].error).toEqual(err);
-      expect(finalState[slotId].isLoading).toBe(false);
+      expect(finalState[slotId]!.error).toEqual(err);
+      expect(finalState[slotId]!.isLoading).toBe(false);
     });
 
     it('when slot exists, sets the error to null on success', () => {
@@ -121,7 +121,7 @@ describe('recommendation-slice', () => {
 
       const action = fetchRecommendations.fulfilled(response, '', {slotId});
       const finalState = recommendationsReducer(state, action);
-      expect(finalState[slotId].error).toBeNull();
+      expect(finalState[slotId]!.error).toBeNull();
     });
   });
 
@@ -138,7 +138,7 @@ describe('recommendation-slice', () => {
 
       const finalState = recommendationsReducer(state, action);
 
-      expect(finalState[slotId].isLoading).toBe(true);
+      expect(finalState[slotId]!.isLoading).toBe(true);
     });
   });
 

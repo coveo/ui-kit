@@ -81,7 +81,7 @@ export function buildRecommendations(
   dispatch(registerRecommendationsSlot({slotId}));
 
   const recommendationStateSelector = createSelector(
-    (state: CommerceEngineState) => state.recommendations[slotId],
+    (state: CommerceEngineState) => state.recommendations[slotId]!,
     (recommendations) => recommendations
   );
 
