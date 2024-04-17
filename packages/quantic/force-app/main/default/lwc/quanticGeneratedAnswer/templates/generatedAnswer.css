@@ -54,7 +54,7 @@
   );
 }
 
-.generated-answer__answer--collapsed.generated-answer__answer--overflow::after {
+.generated-answer__answer--collapsed::after {
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
   opacity: 1;
   visibility: visible;

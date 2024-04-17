@@ -433,15 +433,15 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get generatedAnswerClass() {
+    let collapsedClass = '';
+    if (this._exceedsMaximumHeight) {
+      collapsedClass = this._collapsed
+        ? 'generated-answer__answer--collapsed'
+        : 'generated-answer__answer--expanded';
+    }
     return `generated-answer__answer ${
       this.isStreaming ? 'generated-answer__answer--streaming' : ''
-    } ${
-      this._collapsed
-        ? 'generated-answer__answer--collapsed'
-        : 'generated-answer__answer--expanded'
-    } ${
-      this._exceedsMaximumHeight ? 'generated-answer__answer--overflow' : ''
-    }`;
+    } ${collapsedClass}`;
   }
 
   get hasRetryableError() {
