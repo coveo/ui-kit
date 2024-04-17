@@ -17,6 +17,7 @@ import {
   registerFieldsToIncludeInCitations,
   setAnswerMediaType,
   setRawAnswerMediaType,
+  setIsAnswerGenerated,
 } from './generated-answer-actions';
 import {generatedAnswerReducer, Helpers} from './generated-answer-slice';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
@@ -431,6 +432,26 @@ describe('generated answer slice', () => {
       );
 
       expect(finalState.isVisible).toEqual(false);
+    });
+  });
+
+  describe('#setIsAnswerGenerated', () => {
+    it('should set isAnswerGenerated to true when given true', () => {
+      const finalState = generatedAnswerReducer(
+        {...baseState, isAnswerGenerated: false},
+        setIsAnswerGenerated(true)
+      );
+
+      expect(finalState.isAnswerGenerated).toEqual(true);
+    });
+
+    it('should set isAnswerGenerated to false when given false', () => {
+      const finalState = generatedAnswerReducer(
+        {...baseState, isAnswerGenerated: true},
+        setIsAnswerGenerated(false)
+      );
+
+      expect(finalState.isAnswerGenerated).toEqual(false);
     });
   });
 });

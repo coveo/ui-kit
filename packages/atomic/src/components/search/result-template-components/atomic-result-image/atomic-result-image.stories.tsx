@@ -2,7 +2,6 @@ import defaultResultComponentStory from 'atomic-storybook/default-result-compone
 
 // TODO: This will require KIT-1178 to actually be usable properly
 const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
-  'Atomic/ResultList/ResultImage',
   'atomic-result-image',
   {
     field: 'randomimage',
@@ -20,5 +19,9 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
     },
   }
 );
-export default {...defaultModuleExport, title: 'Atomic/ResultList/ResultImage'};
+export default {
+  ...defaultModuleExport,
+  title: 'Atomic/ResultList/ResultImage',
+  id: 'atomic-result-image',
+};
 export const Default = exportedStory;

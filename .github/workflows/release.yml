@@ -28,6 +28,8 @@ jobs:
         with:
           fetch-depth: 0
       - uses: ./.github/actions/setup
+        with:
+          fail-on-cache-miss: 'false'
       - name: Release
         run: npm run release
         env:
@@ -40,22 +42,13 @@ jobs:
           RELEASER_INSTALLATION_ID: ${{ secrets.RELEASER_INSTALLATION_ID }}
           DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      # - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4
-      #   with:
-      #     registry-url: 'https://npm.pkg.github.com'
-      #     node-version-file: '.nvmrc'
-      # - name: Publish to GitHub Packages
-      #   run: npm run release:phase5
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     DEBUG: ${{ inputs.debug && '*' || '' }}
       - name: Call ui-kit-cd
         run: node ./scripts/deploy/trigger-ui-kit-cd.mjs
         env:
           GH_TOKEN: ${{ secrets.UI_KIT_CD_DISPATCHER }}
-  promote-prod:
+  npm-prod:
     needs: release
-    environment: 'Production'
+    environment: 'NPM Production'
     runs-on: 'ubuntu-latest'
     permissions:
       contents: read
@@ -67,19 +60,59 @@ jobs:
         with:
           ref: 'release/v2'
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/setup-sfdx
       - name: Promote NPM package to production
         run: npm run promote:npm:latest
+  docs-prod:
+    needs: release
+    runs-on: ubuntu-latest
+    environment: 'Docs Production'
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+        with:
+          ref: 'release/v2'
+      - uses: ./.github/actions/setup
+      - name: Notify Docs
+        run: npm run notify:docs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+  quantic-prod:
+    needs: release
+    runs-on: ubuntu-latest
+    environment: 'Quantic Production'
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+        with:
+          ref: 'release/v2'
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup-sfdx
       - name: Promote SFDX package to production
         run: |
-          echo "${{ secrets.SFDX_AUTH_PACKAGE_JWT_KEY }}" > server.key
+          echo "${{ secrets.SFDX_AUTH_JWT_KEY }}" > ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
           npx --no-install nx run quantic:"promote:sfdx:ci"
-          rm server.key
+          rm ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
         env:
           SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
           SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
-          SFDX_AUTH_JWT_USERNAME: ${{ secrets.SFDX_AUTH_JWT_USERNAME }}
-          SFDX_AUTH_JWT_KEY_FILE: server.key
+          SFDX_AUTH_JWT_USERNAME: ${{ vars.SFDX_AUTH_JWT_USERNAME }}
+          SFDX_AUTH_JWT_KEY_FILE: ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Notify Docs
-        run: npm run notify:docs
+        working-directory: ./packages/quantic
+
+  # TODO KIT-3074 Fix the publication into the GitHub Packages, and uncomment
+  # github-prod:
+  #   needs: release
+  #   runs-on: ubuntu-latest
+  #   environment: 'GitHub Production'
+  #   steps:
+  #     - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4
+  #       with:
+  #         registry-url: 'https://npm.pkg.github.com'
+  #         node-version-file: '.nvmrc'
+  #     - name: Publish to GitHub Packages
+  #       run: npm run release:phase5
+  #       env:
+  #         NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #         DEBUG: ${{ inputs.debug && '*' || '' }}

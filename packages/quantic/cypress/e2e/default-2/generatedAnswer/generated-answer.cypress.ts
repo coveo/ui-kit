@@ -30,7 +30,7 @@ interface GeneratedAnswerOptions {
 
 let analyticsMode: 'legacy' | 'next' = 'legacy';
 const exampleTrackingId = 'tracking_id_123';
-const answerType = 'CRGA';
+const answerType = 'RGA';
 
 const GENERATED_ANSWER_DATA_KEY = 'coveo-generated-answer-data';
 const otherOption = 'other';
@@ -64,6 +64,9 @@ const genQaMessageTypePayload = {
 };
 
 const retryableErrorCodes = [500, 429];
+
+const GENERATED_ANSWER_DISCLAIMER =
+  'Generated content may contain errors. Verify important information.';
 
 describe('quantic-generated-answer', () => {
   beforeEach(() => {
@@ -136,10 +139,17 @@ describe('quantic-generated-answer', () => {
             Expect.generatedAnswerIsStreaming(false);
           });
 
+          it('should display the disclaimer', () => {
+            Expect.displayDisclaimer(true);
+            Expect.disclaimerContains(GENERATED_ANSWER_DISCLAIMER);
+            Expect.generatedAnswerIsStreaming(false);
+          });
+
           it('should perform a search query with the default rephrase button', () => {
             cy.wait(InterceptAliases.Search);
             Expect.searchQueryContainsCorrectRephraseOption(
-              defaultRephraseOption
+              defaultRephraseOption,
+              param.useCase === 'search' ? 'interfaceLoad' : 'searchboxSubmit'
             );
           });
 
@@ -150,7 +160,7 @@ describe('quantic-generated-answer', () => {
             );
           });
 
-          it('should display rephrase buttons', () => {
+          it('should display the rephrase buttons', () => {
             Expect.displayRephraseButtons(true);
             Expect.displayRephraseLabel(true);
           });
@@ -182,7 +192,8 @@ describe('quantic-generated-answer', () => {
               Expect.rephraseButtonIsSelected(conciseRephraseOption, false);
               Expect.rephraseButtonIsSelected(bulletRephraseOption, true);
               Expect.searchQueryContainsCorrectRephraseOption(
-                bulletRephraseOption
+                bulletRephraseOption,
+                param.useCase === 'search' ? 'interfaceLoad' : 'searchboxSubmit'
               );
             });
           });
@@ -228,6 +239,7 @@ describe('quantic-generated-answer', () => {
             scope('when loading the page', () => {
               Expect.displayGeneratedAnswerCard(true);
               Expect.generatedAnswerFooterIsOnMultiline(true);
+              Expect.displayDisclaimer(true);
             });
           });
         });
@@ -258,6 +270,7 @@ describe('quantic-generated-answer', () => {
             Expect.displayCopyToClipboardButton(false);
             Expect.displayToggleGeneratedAnswerButton(true);
             Expect.toggleGeneratedAnswerButtonIsChecked(true);
+            Expect.displayDisclaimer(false);
           });
         });
 
@@ -267,7 +280,6 @@ describe('quantic-generated-answer', () => {
           describe(`when clicking the ${rephraseOption} rephrase button`, () => {
             const streamId = crypto.randomUUID();
             const secondStreamId = crypto.randomUUID();
-            const thirdStreamId = crypto.randomUUID();
 
             beforeEach(() => {
               mockSearchWithGeneratedAnswer(streamId, param.useCase);
@@ -278,7 +290,12 @@ describe('quantic-generated-answer', () => {
             it(`should send a new search query with the rephrase option ${option} as a parameter`, () => {
               scope('when loading the page', () => {
                 Expect.displayRephraseButtonWithLabel(rephraseOption);
-                Expect.rephraseButtonIsSelected(rephraseOption, false);
+                const expectedRephraseButtonSelected =
+                  option === defaultRephraseOption;
+                Expect.rephraseButtonIsSelected(
+                  rephraseOption,
+                  expectedRephraseButtonSelected
+                );
               });
 
               scope('when selecting the rephrase button', () => {
@@ -296,31 +313,14 @@ describe('quantic-generated-answer', () => {
                     Expect.displayRephraseButtonWithLabel(unselectedOption);
                     Expect.rephraseButtonIsSelected(unselectedOption, false);
                   });
-                Expect.searchQueryContainsCorrectRephraseOption(rephraseOption);
+                Expect.searchQueryContainsCorrectRephraseOption(
+                  rephraseOption,
+                  'rephraseGeneratedAnswer'
+                );
                 if (analyticsMode === 'legacy') {
                   Expect.logRephraseGeneratedAnswer(
                     rephraseOption,
                     secondStreamId
-                  );
-                }
-              });
-
-              scope('when unselecting the rephrase button', () => {
-                mockSearchWithGeneratedAnswer(thirdStreamId, param.useCase);
-                mockStreamResponse(thirdStreamId, genQaMessageTypePayload);
-
-                Actions.clickRephraseButton(rephraseOption);
-                rephraseOptions.forEach((unselectedOption) => {
-                  Expect.displayRephraseButtonWithLabel(unselectedOption);
-                  Expect.rephraseButtonIsSelected(unselectedOption, false);
-                });
-                Expect.searchQueryContainsCorrectRephraseOption(
-                  defaultRephraseOption
-                );
-                if (analyticsMode === 'legacy') {
-                  Expect.logRephraseGeneratedAnswer(
-                    defaultRephraseOption,
-                    thirdStreamId
                   );
                 }
               });
@@ -596,6 +596,7 @@ describe('quantic-generated-answer', () => {
                   Expect.displayGeneratedAnswerContent(false);
                   Expect.displayLikeButton(false);
                   Expect.displayDislikeButton(false);
+                  Expect.displayDisclaimer(false);
                   if (analyticsMode === 'next') {
                     NextAnalyticsExpectations.emitQnaAnswerActionEvent(
                       {
@@ -765,6 +766,7 @@ describe('quantic-generated-answer', () => {
                         },
                         citation: {
                           id: testCitations[hoveredCitationIndex].id,
+                          type: 'Source',
                         },
                       },
                       exampleTrackingId
@@ -798,6 +800,7 @@ describe('quantic-generated-answer', () => {
                       },
                       citation: {
                         id: testCitations[clickedCitationIndex].id,
+                        type: 'Source',
                       },
                     },
                     exampleTrackingId
@@ -864,6 +867,7 @@ describe('quantic-generated-answer', () => {
                     cy.wait(getStreamInterceptAlias(streamId));
                   }
                   Expect.displayGeneratedAnswerCard(true);
+                  Expect.displayDisclaimer(false);
 
                   Actions.clickRetry();
                   cy.wait(InterceptAliases.Search);

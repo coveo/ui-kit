@@ -1,7 +1,6 @@
 import defaultResultComponentStory from 'atomic-storybook/default-result-component-story';
 
 const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
-  'Atomic/ResultList/Quickview',
   'atomic-quickview',
   {},
   {
@@ -33,5 +32,9 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
   }
 );
 
-export default {...defaultModuleExport, title: 'Atomic/ResultList/Quickview'};
+export default {
+  ...defaultModuleExport,
+  title: 'Atomic/ResultList/Quickview',
+  id: 'atomic-quickview',
+};
 export const Default = exportedStory;

@@ -4,6 +4,8 @@ import {
   LegacySearchAction,
   makeAnalyticsAction,
 } from '../analytics/analytics-utils';
+import {SearchPageEvents} from '../analytics/search-action-cause';
+import {SearchAction} from '../search/search-actions';
 import {
   citationSourceSelector,
   generativeQuestionAnsweringIdSelector,
@@ -15,6 +17,7 @@ export type GeneratedAnswerFeedback =
   | 'notAccurate'
   | 'outOfDate'
   | 'harmful';
+const RGAType = 'RGA';
 
 //TODO: KIT-2859
 export const logRetryGeneratedAnswer = (): LegacySearchAction =>
@@ -63,10 +66,11 @@ export const logOpenGeneratedAnswerSource = (
       return {
         answer: {
           id: generativeQuestionAnsweringId!,
-          type: 'CRGA',
+          type: RGAType,
         },
         citation: {
           id: citationId,
+          type: 'Source',
         },
       };
     },
@@ -100,10 +104,11 @@ export const logHoverCitation = (
       return {
         answer: {
           id: generativeQuestionAnsweringId!,
-          type: 'CRGA',
+          type: RGAType,
         },
         citation: {
           id: citationId,
+          type: 'Source',
         },
         citationHoverTimeInMs,
       };
@@ -130,7 +135,7 @@ export const logLikeGeneratedAnswer = (): CustomAction =>
       return {
         answer: {
           id: generativeQuestionAnsweringId!,
-          type: 'CRGA',
+          type: RGAType,
         },
         feedback: {
           liked: true,
@@ -159,7 +164,7 @@ export const logDislikeGeneratedAnswer = (): CustomAction =>
       return {
         answer: {
           id: generativeQuestionAnsweringId!,
-          type: 'CRGA',
+          type: RGAType,
         },
         feedback: {
           liked: false,
@@ -191,7 +196,7 @@ export const logGeneratedAnswerFeedback = (
       return {
         answer: {
           id: generativeQuestionAnsweringId!,
-          type: 'CRGA',
+          type: RGAType,
         },
         feedback: {
           liked: false,
@@ -225,7 +230,7 @@ export const logGeneratedAnswerDetailedFeedback = (
       return {
         answer: {
           id: generativeQuestionAnsweringId!,
-          type: 'CRGA',
+          type: RGAType,
         },
         feedback: {
           liked: false,
@@ -245,12 +250,17 @@ export const logGeneratedAnswerStreamEnd = (
     (client, state) => {
       const generativeQuestionAnsweringId =
         generativeQuestionAnsweringIdSelector(state);
+      const answerTextIsEmpty = answerGenerated
+        ? !state.generatedAnswer?.answer ||
+          !state.generatedAnswer?.answer.length
+        : undefined;
       if (!generativeQuestionAnsweringId) {
         return null;
       }
       return client.makeGeneratedAnswerStreamEnd({
         generativeQuestionAnsweringId,
         answerGenerated,
+        answerTextIsEmpty,
       });
     }
   );
@@ -276,7 +286,7 @@ export const logGeneratedAnswerShowAnswers = (): CustomAction =>
         action: 'show',
         answer: {
           id: generativeQuestionAnsweringId!,
-          type: 'CRGA',
+          type: RGAType,
         },
       };
     },
@@ -303,7 +313,7 @@ export const logGeneratedAnswerHideAnswers = (): CustomAction =>
         action: 'hide',
         answer: {
           id: generativeQuestionAnsweringId!,
-          type: 'CRGA',
+          type: RGAType,
         },
       };
     },
@@ -330,11 +340,19 @@ export const logCopyGeneratedAnswer = (): CustomAction =>
         action: 'copyToClipboard',
         answer: {
           id: generativeQuestionAnsweringId!,
-          type: 'CRGA',
+          type: RGAType,
         },
       };
     },
   });
+
+export const retryGeneratedAnswer = (): SearchAction => ({
+  actionCause: SearchPageEvents.retryGeneratedAnswer,
+});
+
+export const rephraseGeneratedAnswer = (): SearchAction => ({
+  actionCause: SearchPageEvents.rephraseGeneratedAnswer,
+});
 
 export const generatedAnswerAnalyticsClient = {
   logCopyGeneratedAnswer,

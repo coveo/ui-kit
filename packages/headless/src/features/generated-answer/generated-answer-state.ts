@@ -67,6 +67,10 @@ export interface GeneratedAnswerState {
    * A list of indexed fields to include in the citations returned with the generated answer.
    */
   fieldsToIncludeInCitations: string[];
+  /**
+   * Determines if the answer is generated.
+   */
+  isAnswerGenerated: boolean;
 }
 
 export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
@@ -84,5 +88,6 @@ export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
     feedbackModalOpen: false,
     feedbackSubmitted: false,
     fieldsToIncludeInCitations: [],
+    isAnswerGenerated: false,
   };
 }

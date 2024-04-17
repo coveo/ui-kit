@@ -1,7 +1,7 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {Result} from '../../api/search/search/result';
 import {isArray} from '../../utils/utils';
-import {ResultTemplateCondition} from './result-templates';
+import {ResultTemplateCondition} from './result-templates-manager';
 
 /**
  * Extracts a property from a result object.

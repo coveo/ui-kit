@@ -114,7 +114,7 @@ export const logOpenSmartSnippetSource = (): ClickAction =>
         documentIdentifier(result)
       );
     },
-    analyticsType: 'ItemClick',
+    analyticsType: 'itemClick',
     analyticsPayloadBuilder: (state): ItemClick => {
       const result = answerSourceSelector(state)!;
       const information = partialDocumentInformation(result, state);
@@ -132,7 +132,10 @@ export const logOpenSmartSnippetInlineLink = (
 ): ClickAction =>
   makeAnalyticsAction('analytics/smartSnippet/source/open', (client, state) => {
     validatePayload(payload, inlineLinkPayloadDefinition());
-    const result = answerSourceSelector(state)!;
+    const result = answerSourceSelector(state);
+    if (!result) {
+      return null;
+    }
     return client.makeOpenSmartSnippetInlineLink(
       partialDocumentInformation(result, state),
       {
@@ -170,7 +173,7 @@ export const logSmartSnippetFeedback = (
           type: 'SmartSnippet',
         },
         feedback: {
-          liked: true,
+          liked: false,
           reason: feedback as Feedback['reason'],
         },
       };
@@ -193,7 +196,7 @@ export const logSmartSnippetDetailedFeedback = (
           type: 'SmartSnippet',
         },
         feedback: {
-          liked: true,
+          liked: false,
           reason: 'other',
           details: details,
         },
@@ -298,7 +301,7 @@ export const logOpenSmartSnippetSuggestionSource = (
         }
       );
     },
-    analyticsType: 'ItemClick',
+    analyticsType: 'itemClick',
     analyticsPayloadBuilder: (state): ItemClick => {
       const relatedQuestion = relatedQuestionSelector(
         state,

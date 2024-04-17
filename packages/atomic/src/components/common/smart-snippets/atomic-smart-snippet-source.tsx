@@ -15,7 +15,7 @@ import {
 } from '../../../utils/initialization-utils';
 import {ResultContextEvent} from '../../search/result-template-components/result-template-decorators';
 import {AnyBindings} from '../interface/bindings';
-import {LinkWithResultAnalytics} from '../result-link/result-link';
+import {LinkWithItemAnalytics} from '../item-link/item-link';
 
 /**
  * @part source-url
@@ -51,7 +51,7 @@ export class AtomicSmartSnippetSource
   render() {
     return (
       <Host>
-        <LinkWithResultAnalytics
+        <LinkWithItemAnalytics
           title={this.source.clickUri}
           href={this.source.clickUri}
           className="block truncate"
@@ -62,8 +62,8 @@ export class AtomicSmartSnippetSource
           onCancelPendingSelect={() => this.cancelPendingSelectSource.emit()}
         >
           {this.source.clickUri}
-        </LinkWithResultAnalytics>
-        <LinkWithResultAnalytics
+        </LinkWithItemAnalytics>
+        <LinkWithItemAnalytics
           title={this.source.title}
           href={this.source.clickUri}
           attributes={this.anchorAttributes}
@@ -78,7 +78,7 @@ export class AtomicSmartSnippetSource
             default="no-title"
             key={this.source.uniqueId}
           ></atomic-result-text>
-        </LinkWithResultAnalytics>
+        </LinkWithItemAnalytics>
       </Host>
     );
   }

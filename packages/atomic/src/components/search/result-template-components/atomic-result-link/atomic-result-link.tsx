@@ -1,4 +1,5 @@
 import {isUndefined} from '@coveo/bueno';
+import {InteractiveResult} from '@coveo/headless';
 import {Component, h, Prop, Element} from '@stencil/core';
 import {buildCustomEvent} from '../../../../utils/event-utils';
 import {
@@ -7,12 +8,9 @@ import {
 } from '../../../../utils/initialization-utils';
 import {buildStringTemplateFromResult} from '../../../../utils/result-utils';
 import {getDefaultSlotFromHost} from '../../../../utils/slot-utils';
-import {
-  AnyInteractiveResult,
-  AnyUnfoldedResult,
-} from '../../../common/interface/result';
-import {getAttributesFromLinkSlot} from '../../../common/result-link/attributes-slot';
-import {LinkWithResultAnalytics} from '../../../common/result-link/result-link';
+import {AnyUnfoldedItem} from '../../../common/interface/item';
+import {getAttributesFromLinkSlot} from '../../../common/item-link/attributes-slot';
+import {LinkWithItemAnalytics} from '../../../common/item-link/item-link';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {
   InteractiveResultContext,
@@ -33,8 +31,8 @@ export class AtomicResultLink implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   public error!: Error;
 
-  @ResultContext() private result!: AnyUnfoldedResult;
-  @InteractiveResultContext() private interactiveResult!: AnyInteractiveResult;
+  @ResultContext() private result!: AnyUnfoldedItem;
+  @InteractiveResultContext() private interactiveResult!: InteractiveResult;
 
   @Element() private host!: HTMLElement;
 
@@ -82,7 +80,7 @@ export class AtomicResultLink implements InitializableComponent {
         );
 
     return (
-      <LinkWithResultAnalytics
+      <LinkWithItemAnalytics
         href={href}
         onSelect={() => this.interactiveResult.select()}
         onBeginDelayedSelect={() => this.interactiveResult.beginDelayedSelect()}
@@ -100,7 +98,7 @@ export class AtomicResultLink implements InitializableComponent {
             default="no-title"
           ></atomic-result-text>
         )}
-      </LinkWithResultAnalytics>
+      </LinkWithItemAnalytics>
     );
   }
 }

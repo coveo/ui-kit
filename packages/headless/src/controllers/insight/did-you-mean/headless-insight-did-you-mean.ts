@@ -3,6 +3,7 @@ import {
   WordCorrection,
 } from '../../../api/search/search/query-corrections';
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
+import {didYouMeanClick} from '../../../features/did-you-mean/did-you-mean-analytics-actions';
 import {logDidYouMeanClick} from '../../../features/did-you-mean/did-you-mean-insight-analytics-actions';
 import {executeSearch} from '../../../features/insight-search/insight-search-actions';
 import {
@@ -33,7 +34,9 @@ export function buildDidYouMean(engine: InsightEngine): DidYouMean {
 
     applyCorrection() {
       controller.applyCorrection();
-      dispatch(executeSearch({legacy: logDidYouMeanClick()}));
+      dispatch(
+        executeSearch({legacy: logDidYouMeanClick(), next: didYouMeanClick()})
+      );
     },
   };
 }
