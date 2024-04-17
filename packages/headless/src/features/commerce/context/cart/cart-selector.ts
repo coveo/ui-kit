@@ -35,7 +35,7 @@ export const itemsSelector = createSelector(
 );
 
 const productQuantitySelector = createSelector(itemsSelector, (items) =>
-  items.map(({quantity, ...product}) => ({
+  items.map(({quantity, sku, ...product}) => ({
     quantity,
     product,
   }))

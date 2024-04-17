@@ -42,13 +42,15 @@ describe('headless commerce cart', () => {
     initialState = {
       items: [
         {
-          productId: 'product-id-1',
+          productId: 'product-id',
+          sku: 'product-id-1',
           quantity: 2,
           name: 'product-name-1',
           price: 100,
         },
         {
-          productId: 'product-id-2',
+          productId: 'product-id',
+          sku: 'product-id-2',
           quantity: 4,
           name: 'product-name-2',
           price: 25,
@@ -131,7 +133,8 @@ describe('headless commerce cart', () => {
 
   describe('#updateItem', () => {
     const productWithoutQuantity = {
-      productId: 'product-id-1',
+      productId: 'product-id',
+      sku: 'product-id-1',
       name: 'product-name-1',
       price: 100,
     };

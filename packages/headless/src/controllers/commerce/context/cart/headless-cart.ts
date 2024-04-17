@@ -38,6 +38,11 @@ export interface CartItem {
   productId: string;
 
   /**
+   * The unique identifier of the product variant.
+   */
+  sku: string;
+
+  /**
    * The human-readable name of the product.
    */
   name: string;
@@ -215,7 +220,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     },
 
     updateItem(item: CartItem) {
-      const prevItem = itemSelector(getState(), item.productId);
+      const prevItem = itemSelector(getState(), item.sku);
       const doesNotNeedUpdate = !prevItem && item.quantity <= 0;
 
       if (doesNotNeedUpdate || isEqual(item, prevItem)) {
