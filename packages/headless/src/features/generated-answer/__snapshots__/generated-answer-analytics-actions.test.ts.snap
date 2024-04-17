@@ -6,7 +6,7 @@ exports[`generated answer analytics actions when analyticsMode is \`next\` shoul
   {
     "action": "copyToClipboard",
     "answer": {
-      "id": "123",
+      "responseId": "456",
       "type": "RGA",
     },
   },
@@ -18,7 +18,7 @@ exports[`generated answer analytics actions when analyticsMode is \`next\` shoul
   "Qna.SubmitFeedback",
   {
     "answer": {
-      "id": "123",
+      "responseId": "456",
       "type": "RGA",
     },
     "feedback": {
@@ -33,7 +33,7 @@ exports[`generated answer analytics actions when analyticsMode is \`next\` shoul
   "Qna.SubmitFeedback",
   {
     "answer": {
-      "id": "123",
+      "responseId": "456",
       "type": "RGA",
     },
     "feedback": {
@@ -51,7 +51,7 @@ exports[`generated answer analytics actions when analyticsMode is \`next\` shoul
   {
     "action": "hide",
     "answer": {
-      "id": "123",
+      "responseId": "456",
       "type": "RGA",
     },
   },
@@ -64,7 +64,7 @@ exports[`generated answer analytics actions when analyticsMode is \`next\` shoul
   {
     "action": "show",
     "answer": {
-      "id": "123",
+      "responseId": "456",
       "type": "RGA",
     },
   },
@@ -76,7 +76,7 @@ exports[`generated answer analytics actions when analyticsMode is \`next\` shoul
   "Qna.CitationHover",
   {
     "answer": {
-      "id": "123",
+      "responseId": "456",
       "type": "RGA",
     },
     "citation": {
@@ -93,7 +93,7 @@ exports[`generated answer analytics actions when analyticsMode is \`next\` shoul
   "Qna.SubmitFeedback",
   {
     "answer": {
-      "id": "123",
+      "responseId": "456",
       "type": "RGA",
     },
     "feedback": {
@@ -108,7 +108,7 @@ exports[`generated answer analytics actions when analyticsMode is \`next\` shoul
   "Qna.CitationClick",
   {
     "answer": {
-      "id": "123",
+      "responseId": "456",
       "type": "RGA",
     },
     "citation": {
