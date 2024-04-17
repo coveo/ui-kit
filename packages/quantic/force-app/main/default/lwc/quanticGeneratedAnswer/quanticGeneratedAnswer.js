@@ -167,6 +167,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       if (this.isStreaming) {
         this._exceedsMaximumHeight =
           this.generatedAnswerElementHeight + 50 > this._maximumAnswerHeight;
+        this._collapsed = this._exceedsMaximumHeight;
       } else {
         this._exceedsMaximumHeight =
           this.generatedAnswerElementHeight > this._maximumAnswerHeight;
@@ -253,12 +254,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   updateSearchStatusState() {
     this.feedbackSubmitted = false;
     this.searchStatusState = this.searchStatus.state;
-
-    if (this.collapsible) {
-      if (!this._collapsed) {
-        this._collapsed = true;
-      }
-    }
   }
 
   updateFeedbackState() {
@@ -525,7 +520,12 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get shouldShowToggleCollapseAnswer() {
-    return this.collapsible && this.isVisible && !this.isStreaming;
+    return (
+      this.collapsible &&
+      this.isVisible &&
+      !this.isStreaming &&
+      this._exceedsMaximumHeight
+    );
   }
 
   /**
