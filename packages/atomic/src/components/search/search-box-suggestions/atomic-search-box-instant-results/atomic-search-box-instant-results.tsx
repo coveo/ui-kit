@@ -8,7 +8,6 @@ import {
 import {Component, Element, State, h, Prop, Method} from '@stencil/core';
 import {InitializableComponent} from '../../../../utils/initialization-utils';
 import {encodeForDomAttribute} from '../../../../utils/string-utils';
-import {getClassNameForButtonStyle} from '../../../common/button-style';
 import {ItemRenderingFunction} from '../../../common/item-list/item-list-common';
 import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
 import {
@@ -17,11 +16,16 @@ import {
   ItemDisplayLayout,
 } from '../../../common/layout/display-options';
 import {
+  getPartialInstantItemElement,
+  getPartialInstantItemShowAllElement,
+  InstantItemShowAllButton,
+} from '../../../common/suggestions/instant-item';
+import {
   dispatchSearchBoxSuggestionsEvent,
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
-} from '../../../common/search-box/suggestions-common';
+} from '../../../common/suggestions/suggestions-common';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 export type AriaLabelGenerator = (
@@ -125,58 +129,51 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
       : this.results;
 
     const elements: SearchBoxSuggestionElement[] = results.map(
-      (result: Result) => ({
-        key: `instant-result-${encodeForDomAttribute(result.uniqueId)}`,
-        part: 'instant-results-item',
-        content: (
-          <atomic-result
-            key={`instant-result-${encodeForDomAttribute(result.uniqueId)}`}
-            part="outline"
-            result={result}
-            interactiveResult={buildInteractiveInstantResult(
-              this.bindings.engine,
-              {
-                options: {result},
-              }
-            )}
-            display={this.display}
-            density={this.density}
-            imageSize={this.imageSize}
-            content={this.itemTemplateProvider.getTemplateContent(result)}
-            stopPropagation={false}
-            renderingFunction={this.itemRenderingFunction}
-          ></atomic-result>
-        ),
-        ariaLabel: this.bindings.i18n.t('instant-results-suggestion-label', {
-          title:
-            this.ariaLabelGenerator?.(this.bindings, result) || result.title,
-          interpolation: {escapeValue: false},
-        }),
-        onSelect: (e: MouseEvent) => {
-          const link = this.getLink(e.target as HTMLElement);
+      (result: Result) => {
+        const partialItem = getPartialInstantItemElement(
+          this.bindings.i18n,
+          this.ariaLabelGenerator?.(this.bindings, result) || result.title,
+          result.uniqueId
+        );
+        return {
+          ...partialItem,
+          content: (
+            <atomic-result
+              key={`instant-result-${encodeForDomAttribute(result.uniqueId)}`}
+              part="outline"
+              result={result}
+              interactiveResult={buildInteractiveInstantResult(
+                this.bindings.engine,
+                {
+                  options: {result},
+                }
+              )}
+              display={this.display}
+              density={this.density}
+              imageSize={this.imageSize}
+              content={this.itemTemplateProvider.getTemplateContent(result)}
+              stopPropagation={false}
+              renderingFunction={this.itemRenderingFunction}
+            ></atomic-result>
+          ),
+          onSelect: (e: MouseEvent) => {
+            const link = this.getLink(e.target as HTMLElement);
 
-          if (!link) {
-            return;
-          }
-          this.handleLinkClick(link, e.ctrlKey || e.metaKey);
-        },
-      })
+            if (!link) {
+              return;
+            }
+            this.handleLinkClick(link, e.ctrlKey || e.metaKey);
+          },
+        };
+      }
     );
     if (elements.length) {
-      const showAllText = this.bindings.i18n.t('show-all-results');
-
+      const partialItem = getPartialInstantItemShowAllElement(
+        this.bindings.i18n
+      );
       elements.push({
-        key: 'instant-results-show-all-button',
-        content: (
-          <div
-            part="instant-results-show-all-button"
-            class={getClassNameForButtonStyle('text-primary')}
-          >
-            {showAllText}
-          </div>
-        ),
-        part: 'instant-results-show-all',
-        ariaLabel: showAllText,
+        ...partialItem,
+        content: <InstantItemShowAllButton i18n={this.bindings.i18n} />,
         onSelect: () => {
           this.bindings.clearSuggestions();
           this.bindings.searchBoxController.updateText(

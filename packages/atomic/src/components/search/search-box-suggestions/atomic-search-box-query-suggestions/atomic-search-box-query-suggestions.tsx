@@ -10,13 +10,18 @@ import {
 } from '@coveo/headless/dist/definitions/state/state-sections';
 import {Component, Element, Prop, State, h} from '@stencil/core';
 import SearchIcon from '../../../../images/search.svg';
-import {encodeForDomAttribute} from '../../../../utils/string-utils';
+import {
+  getPartialSearchBoxSuggestionElement,
+  QuerySuggestionContainer,
+  QuerySuggestionIcon,
+  QuerySuggestionText,
+} from '../../../common/suggestions/query-suggestions';
 import {
   dispatchSearchBoxSuggestionsEvent,
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
-} from '../../../common/search-box/suggestions-common';
+} from '../../../common/suggestions/suggestions-common';
 
 /**
  * The `atomic-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
@@ -60,10 +65,6 @@ export class AtomicSearchBoxQuerySuggestions {
     }
   }
 
-  private renderIcon() {
-    return this.icon || SearchIcon;
-  }
-
   private initialize(): SearchBoxSuggestions {
     const engine = this.bindings.engine as SearchEngine<
       QuerySuggestionSection & QuerySetSection
@@ -100,36 +101,23 @@ export class AtomicSearchBoxQuerySuggestions {
 
   private renderItem(suggestion: Suggestion) {
     const hasQuery = this.bindings.searchBoxController.state.value !== '';
+    const partialItem = getPartialSearchBoxSuggestionElement(
+      suggestion,
+      this.bindings.i18n
+    );
+
     return {
-      part: 'query-suggestion-item',
+      ...partialItem,
       content: (
-        <div part="query-suggestion-content" class="flex items-center">
-          {this.bindings.getSuggestions().length > 1 && (
-            <atomic-icon
-              part="query-suggestion-icon"
-              icon={this.renderIcon()}
-              class="w-4 h-4 mr-2 shrink-0"
-            ></atomic-icon>
-          )}
-          {hasQuery ? (
-            <span
-              part="query-suggestion-text"
-              class="break-all line-clamp-2"
-              innerHTML={suggestion.highlightedValue}
-            ></span>
-          ) : (
-            <span part="query-suggestion-text" class="break-all line-clamp-2">
-              {suggestion.rawValue}
-            </span>
-          )}
-        </div>
+        <QuerySuggestionContainer>
+          <QuerySuggestionIcon
+            icon={this.icon || SearchIcon}
+            hasSuggestion={this.bindings.getSuggestions().length > 1}
+          />
+
+          <QuerySuggestionText suggestion={suggestion} hasQuery={hasQuery} />
+        </QuerySuggestionContainer>
       ),
-      key: `qs-${encodeForDomAttribute(suggestion.rawValue)}`,
-      query: suggestion.rawValue,
-      ariaLabel: this.bindings.i18n.t('query-suggestion-label', {
-        query: suggestion.rawValue,
-        interpolation: {escapeValue: false},
-      }),
       onSelect: () => {
         this.bindings.searchBoxController.selectSuggestion(suggestion.rawValue);
       },
