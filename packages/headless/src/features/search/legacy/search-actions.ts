@@ -33,11 +33,11 @@ import {
 import {buildSearchAndFoldingLoadCollectionRequest} from '../../search-and-folding/legacy/search-and-folding-request';
 import {logFetchMoreResults} from '../search-analytics-actions';
 import {MappedSearchRequest, mapSearchRequest} from '../search-mappings';
-import {buildSearchRequest} from '../search-request';
 import {
   AsyncSearchThunkProcessor,
   StateNeededByExecuteSearch,
 } from './search-actions-thunk-processor';
+import {buildSearchRequest} from './search-request';
 
 export type {StateNeededByExecuteSearch} from './search-actions-thunk-processor';
 
