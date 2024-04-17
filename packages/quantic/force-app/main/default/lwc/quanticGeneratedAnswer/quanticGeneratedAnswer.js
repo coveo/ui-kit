@@ -488,7 +488,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get generatedAnswerFooterCssClass() {
-    return `slds-grid slds-wrap slds-grid_align-spread generated-answer__footer`;
+    return `slds-grid slds-wrap slds-grid_align-spread generated-answer__footer ${this.multilineFooter ? 'slds-grid_vertical' : ''}`;
   }
 
   get generatedAnswerFooterRowClass() {

@@ -24,7 +24,7 @@ export interface GeneratedAnswerSelector extends ComponentSelector {
   rephraseLabel: () => CypressSelector;
   rephraseButtonByLabel: (label: string) => CypressSelector;
   rephraseInputButtonByLabel: (label: string) => CypressSelector;
-  generatedAnswerFooter: () => CypressSelector;
+  generatedAnswerFooterRow: () => CypressSelector;
   copyToClipboardButton: () => CypressSelector;
   citationTooltip: (index: number) => CypressSelector;
   citationTooltipUri: (index: number) => CypressSelector;
@@ -101,8 +101,8 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
     GeneratedAnswerSelectors.get().find(
       `c-quantic-radio-buttons-group [data-cy="${label}"]`
     ),
-  generatedAnswerFooter: () =>
-    GeneratedAnswerSelectors.get().find('[data-cy="generated-answer__footer"]'),
+  generatedAnswerFooterRow: () =>
+    GeneratedAnswerSelectors.get().find('.generated-answer__footer-row'),
   copyToClipboardButton: () =>
     GeneratedAnswerSelectors.get().find(
       '[data-cy="generated-answer__copy-to-clipboard"]'

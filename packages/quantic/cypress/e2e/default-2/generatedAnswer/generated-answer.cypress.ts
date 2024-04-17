@@ -130,7 +130,7 @@ describe('quantic-generated-answer', () => {
           it('should display the generated answer content', () => {
             Expect.displayGeneratedAnswerContent(true);
             Expect.sessionStorageContains(GENERATED_ANSWER_DATA_KEY, {});
-            Expect.generatedAnswerFooterIsOnMultiline(false);
+            Expect.generatedAnswerFooterRowsIsOnMultiline(false);
           });
 
           it('should display the correct message', () => {
@@ -238,7 +238,7 @@ describe('quantic-generated-answer', () => {
           it('should properly display the generated answer footer on multiple lines', () => {
             scope('when loading the page', () => {
               Expect.displayGeneratedAnswerCard(true);
-              Expect.generatedAnswerFooterIsOnMultiline(true);
+              Expect.generatedAnswerFooterRowsIsOnMultiline(true);
               Expect.displayDisclaimer(true);
             });
           });

@@ -103,17 +103,17 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         );
     },
 
-    generatedAnswerFooterIsOnMultiline: (multilineDisplay: boolean) => {
+    generatedAnswerFooterRowsIsOnMultiline: (multilineDisplay: boolean) => {
       selector
-        .generatedAnswerFooter()
+        .generatedAnswerFooterRow()
         .should(
           multilineDisplay ? 'have.class' : 'not.have.class',
-          'generated-answer__footer--multiline'
+          'slds-grid_vertical'
         )
         .log(
-          `the generated answer footer ${should(
+          `the generated answer footer rows ${should(
             multilineDisplay
-          )} be displayed on multiple lines`
+          )} be displayed on multiple lines with slds-grid_vertical`
         );
     },
 
