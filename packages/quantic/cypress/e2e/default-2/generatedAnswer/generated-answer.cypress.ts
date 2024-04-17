@@ -258,18 +258,16 @@ describe('quantic-generated-answer', () => {
         });
 
         describe('when the collapsible property is set to true', () => {
-          const streamId = crypto.randomUUID();
+          it('should properly display the generated answer collapsed when the answer is too long', () => {
+            const streamId = crypto.randomUUID();
 
-          beforeEach(() => {
             mockSearchWithGeneratedAnswer(streamId, param.useCase);
             mockStreamResponse(streamId, genQaLongMessageTypePayload);
             visitGeneratedAnswer({
               collapsible: true,
               useCase: param.useCase,
             });
-          });
 
-          it('should properly display the generated answer collapsed when the answer is too long', () => {
             scope('when loading the page', () => {
               Expect.displayGeneratedAnswerCard(true);
               Expect.generatedAnswerCollapsed(true);
@@ -302,6 +300,25 @@ describe('quantic-generated-answer', () => {
                 Expect.displayDisclaimer(true);
               }
             );
+          });
+
+          it('should not display the answer collapsed when the answer is short', () => {
+            const newStreamId = crypto.randomUUID();
+
+            mockSearchWithGeneratedAnswer(newStreamId, param.useCase);
+            mockStreamResponse(newStreamId, genQaMessageTypePayload);
+            visitGeneratedAnswer({
+              collapsible: true,
+              useCase: param.useCase,
+            });
+
+            scope('when loading the page', () => {
+              Expect.displayGeneratedAnswerCard(true);
+              Expect.generatedAnswerCollapsed(false);
+              Expect.displayGeneratedAnswerToggleCollapseButton(false);
+              Expect.displayRephraseButtons(true);
+              Expect.displayDisclaimer(true);
+            });
           });
         });
 
