@@ -21,7 +21,7 @@ const buildRecommendationCommerceAPIRequest = async (
   slotId: string,
   state: StateNeededByQueryCommerceAPI
 ): Promise<CommerceRecommendationsRequest> => {
-  const commerceAPIRequest = await buildBaseCommerceAPIRequest(state);
+  const commerceAPIRequest = await buildBaseCommerceAPIRequest(state, slotId);
   return {
     ...commerceAPIRequest,
     slotId,
@@ -54,7 +54,6 @@ export const fetchRecommendations = createAsyncThunk<
     }
 
     return {
-      slotId,
       response: fetched.success,
     };
   }

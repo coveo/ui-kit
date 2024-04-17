@@ -56,7 +56,7 @@ describe('core pagination', () => {
       initPagination({
         options: {pageSize},
       });
-      expect(setPageSize).toHaveBeenCalledWith(pageSize);
+      expect(setPageSize).toHaveBeenCalledWith({pageSize});
     });
   });
 
@@ -66,7 +66,7 @@ describe('core pagination', () => {
     });
 
     it('dispatches #selectPage', () => {
-      expect(selectPage).toHaveBeenCalledWith(0);
+      expect(selectPage).toHaveBeenCalledWith({page: 0});
     });
 
     it('dispatches #fetchResultsActionCreator', () => {
@@ -109,7 +109,7 @@ describe('core pagination', () => {
     });
 
     it('dispatches #setPageSize', () => {
-      expect(setPageSize).toHaveBeenCalledWith(pageSize);
+      expect(setPageSize).toHaveBeenCalledWith({pageSize});
     });
 
     it('dispatches #fetchResultsActionCreator', () => {

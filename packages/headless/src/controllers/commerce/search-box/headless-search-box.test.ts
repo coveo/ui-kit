@@ -261,7 +261,7 @@ describe('headless search box', () => {
     });
 
     it('updates the page to the first one', () => {
-      expect(selectPage).toHaveBeenCalledWith(0);
+      expect(selectPage).toHaveBeenCalledWith({page: 0});
     });
 
     it('dispatches #executeSearch', () => {
