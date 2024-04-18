@@ -8,44 +8,42 @@
     <script type="module" src="/build/atomic.esm.js"></script>
     <script nomodule src="/build/atomic.js"></script>
     <link rel="stylesheet" href="/themes/coveo.css" />
-    <script>
-      (async () => {
-        await customElements.whenDefined('atomic-search-interface');
-        const searchInterface = document.querySelector('atomic-search-interface');
+    <script type="module">
+      await customElements.whenDefined('atomic-search-interface');
+      const searchInterface = document.querySelector('atomic-search-interface');
 
-        // Initialization
-        await searchInterface.initialize({
-          accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
-          organizationId: 'searchuisamples',
-        });
+      // Initialization
+      await searchInterface.initialize({
+        accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+        organizationId: 'searchuisamples',
+      });
 
-        // Trigger a first search
-        searchInterface.executeFirstSearch();
+      // Trigger a first search
+      searchInterface.executeFirstSearch();
 
-        // Add/modify a translation
-        // searchInterface.i18n.addResourceBundle('en', 'translation', {
-        //   search: 'Make me feel lucky!'
-        // });
+      // Add/modify a translation
+      // searchInterface.i18n.addResourceBundle('en', 'translation', {
+      //   search: 'Make me feel lucky!'
+      // });
 
-        // Change the language of the interface dynamically
-        // searchInterface.language = 'fr';
+      // Change the language of the interface dynamically
+      // searchInterface.language = 'fr';
 
-        // Interact with the engine
-        // searchInterface.engine.dispatch(...);
+      // Interact with the engine
+      // searchInterface.engine.dispatch(...);
 
-        // Get all translated strings for a language/namespace
-        // const allStrings = searchInterface.i18n.getResourceBundle('en', 'translation');
+      // Get all translated strings for a language/namespace
+      // const allStrings = searchInterface.i18n.getResourceBundle('en', 'translation');
 
-        // Add field value captions, using caption-[field]
-        // searchInterface.i18n.addResourceBundle('en', 'caption-author', {
-        //   'BBC News': 'The BBC',
-        //   amoreau: 'Alexandre Moreau',
-        // });
+      // Add field value captions, using caption-[field]
+      // searchInterface.i18n.addResourceBundle('en', 'caption-author', {
+      //   'BBC News': 'The BBC',
+      //   amoreau: 'Alexandre Moreau',
+      // });
 
-        searchInterface.i18n.addResourceBundle('en', 'caption-filetype', {
-          '.html': 'html',
-        });
-      })();
+      searchInterface.i18n.addResourceBundle('en', 'caption-filetype', {
+        '.html': 'html',
+      });
     </script>
     <style>
       /* Example on how to customize CSS variables */
@@ -85,7 +83,7 @@
       }
 
       atomic-color-facet::part(value-YouTubeVideo) {
-        background-image: url('build/assets/video.svg');
+        background-image: url('/build/assets/video.svg');
         background-position: center;
         background-size: contain;
         background-repeat: no-repeat;
@@ -93,7 +91,7 @@
       }
 
       atomic-color-facet::part(value-lithiummessage) {
-        background-image: url('build/assets/knowledge.svg');
+        background-image: url('/build/assets/knowledge.svg');
         background-position: center;
         background-size: contain;
         background-repeat: no-repeat;
@@ -101,7 +99,7 @@
       }
 
       atomic-color-facet::part(value-lithiumthread) {
-        background-image: url('build/assets/post.svg');
+        background-image: url('/build/assets/post.svg');
         background-position: center;
         background-size: contain;
         background-repeat: no-repeat;
@@ -109,7 +107,7 @@
       }
 
       atomic-color-facet::part(value-html) {
-        background-image: url('build/assets/html.svg');
+        background-image: url('/build/assets/html.svg');
         background-position: center;
         background-size: contain;
         background-repeat: no-repeat;
