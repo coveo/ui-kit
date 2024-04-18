@@ -99,6 +99,10 @@ export const openGeneratedAnswerFeedbackModal = createAction(
   'generatedAnswer/feedbackModal/open'
 );
 
+export const expandGeneratedAnswer = createAction('generatedAnswer/expand');
+
+export const collapseGeneratedAnswer = createAction('generatedAnswer/collapse');
+
 export const setId = createAction(
   'generatedAnswer/setId',
   (payload: {id: string}) =>

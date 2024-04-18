@@ -363,6 +363,70 @@ export const logGeneratedAnswerHideAnswers = (): InsightAction =>
     },
   });
 
+export const logExpandGeneratedAnswer = (): InsightAction =>
+  makeInsightAnalyticsActionFactory(
+    SearchPageEvents.generatedAnswerShowAnswers
+  )({
+    prefix: 'analytics/generatedAnswer/show',
+    __legacy__getBuilder: (client, state) => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      if (!generativeQuestionAnsweringId) {
+        return null;
+      }
+      return client.logExpandGeneratedAnswer(
+        {
+          generativeQuestionAnsweringId,
+        },
+        getCaseContextAnalyticsMetadata(state.insightCaseContext)
+      );
+    },
+    analyticsType: 'Qna.AnswerAction',
+    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      return {
+        action: 'expand',
+        answer: {
+          id: generativeQuestionAnsweringId!,
+          type: RGAType,
+        },
+      };
+    },
+  });
+
+export const logCollapseGeneratedAnswer = (): InsightAction =>
+  makeInsightAnalyticsActionFactory(
+    SearchPageEvents.generatedAnswerShowAnswers
+  )({
+    prefix: 'analytics/generatedAnswer/show',
+    __legacy__getBuilder: (client, state) => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      if (!generativeQuestionAnsweringId) {
+        return null;
+      }
+      return client.logCollapseGeneratedAnswer(
+        {
+          generativeQuestionAnsweringId,
+        },
+        getCaseContextAnalyticsMetadata(state.insightCaseContext)
+      );
+    },
+    analyticsType: 'Qna.AnswerAction',
+    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      return {
+        action: 'collapse',
+        answer: {
+          id: generativeQuestionAnsweringId!,
+          type: RGAType,
+        },
+      };
+    },
+  });
+
 export const logCopyGeneratedAnswer = (): InsightAction =>
   makeInsightAnalyticsActionFactory(
     SearchPageEvents.generatedAnswerCopyToClipboard
@@ -408,4 +472,6 @@ export const generatedAnswerInsightAnalyticsClient = {
   logOpenGeneratedAnswerSource,
   logRetryGeneratedAnswer,
   logRephraseGeneratedAnswer,
+  logExpandGeneratedAnswer,
+  logCollapseGeneratedAnswer,
 };

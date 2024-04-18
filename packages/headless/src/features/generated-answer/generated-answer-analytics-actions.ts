@@ -319,6 +319,60 @@ export const logGeneratedAnswerHideAnswers = (): CustomAction =>
     },
   });
 
+export const logExpandGeneratedAnswer = (): CustomAction =>
+  makeAnalyticsAction({
+    prefix: 'analytics/generatedAnswer/expand',
+    __legacy__getBuilder: (client, state) => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      if (!generativeQuestionAnsweringId) {
+        return null;
+      }
+      return client.makeExpandGeneratedAnswer({
+        generativeQuestionAnsweringId,
+      });
+    },
+    analyticsType: 'Qna.AnswerAction',
+    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      return {
+        action: 'expand',
+        answer: {
+          id: generativeQuestionAnsweringId!,
+          type: RGAType,
+        },
+      };
+    },
+  });
+
+export const logCollapseGeneratedAnswer = (): CustomAction =>
+  makeAnalyticsAction({
+    prefix: 'analytics/generatedAnswer/collapse',
+    __legacy__getBuilder: (client, state) => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      if (!generativeQuestionAnsweringId) {
+        return null;
+      }
+      return client.makeCollapseGeneratedAnswer({
+        generativeQuestionAnsweringId,
+      });
+    },
+    analyticsType: 'Qna.AnswerAction',
+    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      return {
+        action: 'collapse',
+        answer: {
+          id: generativeQuestionAnsweringId!,
+          type: RGAType,
+        },
+      };
+    },
+  });
+
 export const logCopyGeneratedAnswer = (): CustomAction =>
   makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/copy',
@@ -367,4 +421,6 @@ export const generatedAnswerAnalyticsClient = {
   logOpenGeneratedAnswerSource,
   logRetryGeneratedAnswer,
   logRephraseGeneratedAnswer,
+  logExpandGeneratedAnswer,
+  logCollapseGeneratedAnswer,
 };

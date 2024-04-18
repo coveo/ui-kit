@@ -1,5 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`generated answer analytics actions when analyticsMode is \`next\` should log #logCollapseGeneratedAnswer with the right payload 1`] = `
+[
+  "Qna.AnswerAction",
+  {
+    "action": "expand",
+    "answer": {
+      "id": "123",
+      "type": "RGA",
+    },
+  },
+]
+`;
+
 exports[`generated answer analytics actions when analyticsMode is \`next\` should log #logCopyGeneratedAnswer with the right payload 1`] = `
 [
   "Qna.AnswerAction",
@@ -23,6 +36,19 @@ exports[`generated answer analytics actions when analyticsMode is \`next\` shoul
     },
     "feedback": {
       "liked": false,
+    },
+  },
+]
+`;
+
+exports[`generated answer analytics actions when analyticsMode is \`next\` should log #logExpandGeneratedAnswer with the right payload 1`] = `
+[
+  "Qna.AnswerAction",
+  {
+    "action": "expand",
+    "answer": {
+      "id": "123",
+      "type": "RGA",
     },
   },
 ]

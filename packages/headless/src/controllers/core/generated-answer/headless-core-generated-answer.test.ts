@@ -7,6 +7,8 @@ import {
   setIsVisible,
   updateResponseFormat,
   registerFieldsToIncludeInCitations,
+  expandGeneratedAnswer,
+  collapseGeneratedAnswer,
 } from '../../../features/generated-answer/generated-answer-actions';
 import {
   generatedAnswerAnalyticsClient,
@@ -19,6 +21,8 @@ import {
   logHoverCitation,
   logLikeGeneratedAnswer,
   logOpenGeneratedAnswerSource,
+  logExpandGeneratedAnswer,
+  logCollapseGeneratedAnswer,
 } from '../../../features/generated-answer/generated-answer-analytics-actions';
 import {generatedAnswerReducer} from '../../../features/generated-answer/generated-answer-slice';
 import {
@@ -223,6 +227,52 @@ describe('generated answer', () => {
 
         generatedAnswer.hide();
         expect(logGeneratedAnswerHideAnswers).toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('#expand', () => {
+    describe('when already expanded', () => {
+      it('should not make any changes', () => {
+        engine = buildEngineWithGeneratedAnswer({expanded: true});
+        initGeneratedAnswer();
+        generatedAnswer.expand();
+
+        expect(expandGeneratedAnswer).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('when not expanded', () => {
+      it('should dispatch the expandGeneratedAnswer action and the analytics action', () => {
+        engine = buildEngineWithGeneratedAnswer({expanded: false});
+        initGeneratedAnswer();
+        generatedAnswer.expand();
+
+        expect(expandGeneratedAnswer).toHaveBeenCalled();
+        expect(logExpandGeneratedAnswer).toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('#collapse', () => {
+    describe('when is not expanded', () => {
+      it('should not make any changes', () => {
+        engine = buildEngineWithGeneratedAnswer({expanded: false});
+        initGeneratedAnswer();
+        generatedAnswer.collapse();
+
+        expect(collapseGeneratedAnswer).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('when expanded', () => {
+      it('should dispatch the collapseGeneratedAnswer action and the analytics action', () => {
+        engine = buildEngineWithGeneratedAnswer({expanded: true});
+        initGeneratedAnswer();
+        generatedAnswer.collapse();
+
+        expect(collapseGeneratedAnswer).toHaveBeenCalled();
+        expect(logCollapseGeneratedAnswer).toHaveBeenCalled();
       });
     });
   });
