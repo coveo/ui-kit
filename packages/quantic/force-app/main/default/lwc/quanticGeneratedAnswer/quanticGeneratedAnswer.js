@@ -133,8 +133,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   ariaLiveMessage;
   /** @type {boolean} */
   hasInitializationError = false;
-  /** @type {boolean} */
-  _answerDisplayUpdated = false;
   /** @type {number} */
   _maximumAnswerHeight = 250;
   /** @type {boolean} */
@@ -161,6 +159,8 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
     if (this.collapsible) {
+      // If we are still streaming add a little extra height to the answer element to account for the next answer chunk.
+      // This helps a lot with the jankyness of the answer fading out when the chunk is close but not yet over the max height.
       const answerElementHeight = this.isStreaming
         ? this.generatedAnswerElementHeight + 50
         : this.generatedAnswerElementHeight;
@@ -351,7 +351,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   /**
-   * Returns the smart snippet answer element.
+   * Returns the generated answer element.
    * @returns {HTMLElement}
    */
   get generatedAnswerElement() {
@@ -359,7 +359,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   /**
-   * Returns the smart snippet answer height.
+   * Returns the generated answer height.
    * @returns {number}
    */
   get generatedAnswerElementHeight() {
@@ -521,7 +521,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   /**
-   * Returns the label to display in the smart snippet toggle.
+   * Returns the label to display in the generated answer show more|show less button.
    * @returns {string}
    */
   get toggleCollapseAnswerLabel() {
