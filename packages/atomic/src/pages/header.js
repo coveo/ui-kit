@@ -15,10 +15,6 @@ const links = [
     label: 'Recommendations',
   },
   {href: '/examples/horizontal-facets.html', label: 'Horizontal Facets'},
-  {
-    href: '/accessibility/commerce-full.html',
-    label: 'Accessible Commerce Full',
-  },
   {href: '/examples/ipx.html', label: 'IPX'},
   {href: '/examples/genqa.html', label: 'Gen Q&A'},
 ];
