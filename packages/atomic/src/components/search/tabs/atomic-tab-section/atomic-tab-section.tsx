@@ -12,8 +12,8 @@ import {
   State,
   Listen,
   Prop,
-  Event,
   EventEmitter,
+  Event,
 } from '@stencil/core';
 import ArrowDown from '../../../../images/arrow-down.svg';
 import {InitializeBindings} from '../../../../utils/initialization-utils';
@@ -44,6 +44,7 @@ export class AtomicTabSection {
   @Prop() clearStateOnTabChange?: boolean = false;
 
   @State() public error!: Error;
+  @State() tabs: HTMLAtomicTabElement[] = [];
 
   @Event({
     eventName: 'atomic/tabInit',
@@ -57,65 +58,79 @@ export class AtomicTabSection {
       this.clearState();
     }
   }
-  componentDidRender() {
-    const firstTab = this.host.querySelector('atomic-tab');
+
+  componentDidLoad() {
+    this.setInitialTab();
+  }
+
+  componentWillUpdate() {
     const tabs = [...this.host.querySelectorAll('atomic-tab')];
+    this.tabs = tabs;
 
-    this.buildDropdown(tabs);
-
-    if (firstTab && !getActiveTab(this.bindings.engine.state)?.tab) {
-      this.bindings.engine.dispatch(
-        loadTabSetActions(this.bindings.engine).updateActiveTab(
-          this.defaultActiveTab ?? firstTab?.name
-        )
+    if (tabs.length === 0) {
+      this.error = new Error(
+        'The "atomic-tab-section" element requires at least one "atomic-tab" child.'
       );
-      this.tabInit.emit();
+      return;
     }
   }
 
-  buildDropdown(tabs: HTMLAtomicTabElement[]) {
-    tabs.slice(3).forEach((tab) => {
-      tab.isHidden = true;
+  setInitialTab() {
+    const initialTab =
+      this.tabs.find((tab) => tab.name === this.defaultActiveTab) ||
+      this.tabs[0];
+    const activeTab = getActiveTab(this.bindings.engine.state)?.tab;
 
-      const dropdownOptionLi = document.createElement('li');
-      const dropdownOptionButton = document.createElement('button');
+    if (initialTab && !activeTab) {
+      this.bindings.engine.dispatch(
+        loadTabSetActions(this.bindings.engine).updateActiveTab(initialTab.name)
+      );
+      this.tabInit.emit();
+    }
+    this.updateActiveTab();
+  }
 
-      dropdownOptionButton.className = 'btn-text-transparent text-left';
-      dropdownOptionButton.innerText = tab.label;
-      dropdownOptionButton.name = tab.name;
-      dropdownOptionButton.onclick = () => {
-        tab.select();
-        setTimeout(() => {
-          const buttonInTab = tab.shadowRoot?.querySelector('button');
-          buttonInTab?.focus();
-        }, 0);
-      };
-
-      dropdownOptionLi.appendChild(dropdownOptionButton);
-
-      this.host.shadowRoot
-        ?.querySelector('.dropdown-content')
-        ?.appendChild(dropdownOptionLi);
-    });
+  buildDropdown() {
+    return this.tabs.map((tab) => (
+      <li>
+        <Button
+          style="text-transparent"
+          title={tab.name}
+          class="px-6 pb-1 w-full text-xl text-neutral-dark dropdown-option"
+          text={tab.label}
+          onClick={() => {
+            tab.select();
+          }}
+        />
+      </li>
+    ));
   }
 
   updateActiveTab() {
-    const tabs = Array.from(this.host.querySelectorAll('atomic-tab'));
-    const dropdownContentArea =
-      this.host.shadowRoot?.querySelector('.dropdown-content');
-    const dropdownButtons = Array.from(
-      dropdownContentArea?.querySelectorAll('button') || []
-    );
+    const dropdownButton =
+      this.host.shadowRoot?.querySelector('.dropdown-button');
+    const dropdownOptions = [
+      ...(this.host.shadowRoot?.querySelectorAll('.dropdown-option') || []),
+    ];
+    const activeTabName = getActiveTab(this.bindings.engine.state)?.tab;
 
-    tabs.forEach((tab) => {
-      tab.isActive = tab.name === getActiveTab(this.bindings.engine.state)?.tab;
+    this.tabs.forEach((tab) => {
+      tab.isActive = tab.name === activeTabName;
+
+      if (tab.isActive) {
+        const span = dropdownButton?.getElementsByTagName('span')[0];
+        if (span) {
+          span.textContent = tab.label;
+        }
+      }
     });
 
-    tabs.slice(3).forEach((tab) => {
-      const buttonExists = dropdownButtons.some(
-        (button) => button.name === tab.name
-      );
-      tab.isHidden = !tab.isActive && buttonExists;
+    dropdownOptions.forEach((option) => {
+      if ((option as HTMLButtonElement).title === activeTabName) {
+        option.classList.add('font-bold');
+      } else {
+        option.classList.remove('font-bold');
+      }
     });
   }
 
@@ -139,26 +154,30 @@ export class AtomicTabSection {
 
   public render() {
     return (
-      <div class="overflow-visible">
-        <div class="my-4 flex flex-row mb-2 border-b">
-          <slot></slot>
-          <div class="group dropdown-area relative cursor-pointer ">
+      <div class="overflow-visible mb-4 ">
+        <div class="tabs-container flex flex-row">
+          <div class="tabs-area flex flex-row mb-2 border-b w-full ">
+            <slot></slot>
+          </div>
+          <div class="flex flex-row border-b mb-2 group dropdown-area relative cursor-pointer hidden ">
             <Button
               tabIndex="0"
               style="text-transparent"
               class={
-                'px-6 pb-1 w-full text-xl text-neutral-dark group-focus-within:text-primary group-hover:text-primary-light'
+                'px-6 pb-1 text-xl group-focus-within:text-primary group-hover:text-primary-light dropdown-button'
               }
-              text="More"
+              text="Tabs"
               part="button"
             >
-              {' '}
               <atomic-icon
                 icon={ArrowDown}
                 class="w-3 ml-2 align-baseline"
               ></atomic-icon>
             </Button>
-            <ul class="absolute gap-2 flex group-focus-within:visible focus:visible group-hover:visible invisible dropdown-content absolute top-0 mt-6 flex-col rounded-md shadow-lg bg-white z-50 p-4"></ul>
+            <ul class="absolute gap-2 flex group-focus-within:visible focus:visible group:visible invisible dropdown-content absolute top-0 mt-6 flex-col rounded-md shadow-lg bg-white z-50 p-4">
+              {' '}
+              {this.buildDropdown()}
+            </ul>
           </div>
         </div>
       </div>

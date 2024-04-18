@@ -82,16 +82,11 @@ export class AtomicTab {
    */
   @Prop({reflect: true}) isActive: boolean = false;
   /**
-   * Indicates whether the tab is currently hidden.
-   */
-  @Prop({reflect: true}) isHidden: boolean = false;
-  /**
    * The expression that will be passed to the search as a `cq` paramenter upon being selected.
    */
   @Prop() public expression: string = '';
 
   private tab!: Tab;
-  private tabId = this.name;
   private unsubscribe: Unsubscribe = () => {};
 
   /**
@@ -99,13 +94,15 @@ export class AtomicTab {
    */
   @Method()
   async select() {
-    this.tab.select();
-    this.tabClick.emit();
+    if (!this.tab.state.isActive) {
+      this.tab.select();
+      this.tabClick.emit();
+    }
   }
 
   public initialize() {
     this.tab = buildTab(this.bindings.engine, {
-      options: {expression: this.expression, id: this.tabId},
+      options: {expression: this.expression, id: this.name},
       initialState: {isActive: this.active},
     });
     this.unsubscribe = this.tab.subscribe(
@@ -122,19 +119,19 @@ export class AtomicTab {
   }
 
   public handleClick = () => {
-    this.tabClick.emit();
     this.select();
   };
 
   public render() {
+    const {isActive} = this.tabState;
+    const activeTabClass = isActive ? 'active-tab' : '';
+    const activeTabTextClass = isActive ? '' : 'text-neutral-dark';
+
     return (
-      <div
-        hidden={this.isHidden}
-        class={this.tabState.isActive ? 'active-tab' : ''}
-      >
+      <div class={activeTabClass}>
         <Button
           style="text-transparent"
-          class={`px-6 pb-1 w-full text-xl ${this.tabState.isActive ? '' : 'text-neutral-dark'} `}
+          class={`px-6 pb-1 w-full text-xl ${activeTabTextClass}`}
           text={this.label}
           part="button"
           onClick={this.handleClick}

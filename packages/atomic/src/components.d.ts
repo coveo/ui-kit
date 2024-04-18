@@ -2505,10 +2505,6 @@ export namespace Components {
          */
         "isActive": boolean;
         /**
-          * Indicates whether the tab is currently hidden.
-         */
-        "isHidden": boolean;
-        /**
           * The label displayed on the tab.
          */
         "label": string;
@@ -2520,11 +2516,6 @@ export namespace Components {
           * Activates the tab.
          */
         "select": () => Promise<void>;
-    }
-    /**
-     * The 'atomic-segmented-facet-scrollable' component wraps around one or several 'atomic-segmented-facet' to provide horizontal scrolling capabilities.
-     */
-    interface AtomicTabMore {
     }
     interface AtomicTabSection {
         /**
@@ -4211,15 +4202,6 @@ declare global {
         prototype: HTMLAtomicTabElement;
         new (): HTMLAtomicTabElement;
     };
-    /**
-     * The 'atomic-segmented-facet-scrollable' component wraps around one or several 'atomic-segmented-facet' to provide horizontal scrolling capabilities.
-     */
-    interface HTMLAtomicTabMoreElement extends Components.AtomicTabMore, HTMLStencilElement {
-    }
-    var HTMLAtomicTabMoreElement: {
-        prototype: HTMLAtomicTabMoreElement;
-        new (): HTMLAtomicTabMoreElement;
-    };
     interface HTMLAtomicTabSectionElementEventMap {
         "atomic/tabInit": any;
     }
@@ -4425,7 +4407,6 @@ declare global {
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
         "atomic-tab": HTMLAtomicTabElement;
-        "atomic-tab-more": HTMLAtomicTabMoreElement;
         "atomic-tab-section": HTMLAtomicTabSectionElement;
         "atomic-table-element": HTMLAtomicTableElementElement;
         "atomic-text": HTMLAtomicTextElement;
@@ -6801,10 +6782,6 @@ declare namespace LocalJSX {
          */
         "isActive"?: boolean;
         /**
-          * Indicates whether the tab is currently hidden.
-         */
-        "isHidden"?: boolean;
-        /**
           * The label displayed on the tab.
          */
         "label": string;
@@ -6813,11 +6790,6 @@ declare namespace LocalJSX {
          */
         "name": string;
         "onAtomic/tabClick"?: (event: AtomicTabCustomEvent<any>) => void;
-    }
-    /**
-     * The 'atomic-segmented-facet-scrollable' component wraps around one or several 'atomic-segmented-facet' to provide horizontal scrolling capabilities.
-     */
-    interface AtomicTabMore {
     }
     interface AtomicTabSection {
         /**
@@ -7074,7 +7046,6 @@ declare namespace LocalJSX {
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
         "atomic-tab": AtomicTab;
-        "atomic-tab-more": AtomicTabMore;
         "atomic-tab-section": AtomicTabSection;
         "atomic-table-element": AtomicTableElement;
         "atomic-text": AtomicText;
@@ -7653,10 +7624,6 @@ declare module "@stencil/core" {
              */
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
             "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
-            /**
-             * The 'atomic-segmented-facet-scrollable' component wraps around one or several 'atomic-segmented-facet' to provide horizontal scrolling capabilities.
-             */
-            "atomic-tab-more": LocalJSX.AtomicTabMore & JSXBase.HTMLAttributes<HTMLAtomicTabMoreElement>;
             "atomic-tab-section": LocalJSX.AtomicTabSection & JSXBase.HTMLAttributes<HTMLAtomicTabSectionElement>;
             /**
              * The `atomic-table-element` element defines a table column in a result list.
