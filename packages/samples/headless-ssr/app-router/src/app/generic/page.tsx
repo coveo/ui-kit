@@ -1,6 +1,6 @@
 import SearchPage from '@/common/components/generic/search-page';
 import {fetchStaticState} from '@/common/lib/generic/engine';
-import {buildSSRSearchParameterSerializer} from '@coveo/headless-react/ssr';
+import {buildSSRSearchParameterSerializer} from '@coveo/headless/ssr';
 
 /**
  * This file defines a Search component that uses the Coveo Headless library to manage its state.
