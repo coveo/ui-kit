@@ -1,14 +1,21 @@
+import {Action} from '@reduxjs/toolkit';
 import {buildMockProduct} from '../../../test/mock-product';
 import {buildMockRecommendationsResponse} from '../../../test/mock-recommendations';
-import {fetchRecommendations} from './recommendations-actions';
+import {buildMockRecommendationsSlice} from '../../../test/mock-recommendations-slice';
+import {
+  fetchRecommendations,
+  registerRecommendationsSlot,
+} from './recommendations-actions';
 import {recommendationsReducer} from './recommendations-slice';
 import {
-  RecommendationsState,
   getRecommendationsInitialState,
+  RecommendationsState,
 } from './recommendations-state';
 
 describe('recommendation-slice', () => {
   let state: RecommendationsState;
+  const slotId = 'some-slot-id';
+
   beforeEach(() => {
     state = getRecommendationsInitialState();
   });
@@ -19,52 +26,127 @@ describe('recommendation-slice', () => {
     );
   });
 
-  it('when a fetchRecommendations.fulfilled is received, should set the state to the received payload', () => {
+  describe('on #registerRecommendationsSlot', () => {
+    it('when slot already exists, does not add a new one', () => {
+      state[slotId] = buildMockRecommendationsSlice();
+      const originalSlot = state[slotId];
+
+      const finalState = recommendationsReducer(
+        state,
+        registerRecommendationsSlot({slotId})
+      );
+
+      expect(finalState[slotId]).toEqual(originalSlot);
+    });
+
+    it('when slot does not exist, registers a new one', () => {
+      const finalState = recommendationsReducer(
+        state,
+        registerRecommendationsSlot({slotId})
+      );
+      expect(finalState[slotId]).toEqual(buildMockRecommendationsSlice());
+    });
+  });
+
+  describe('on #fetchRecommendations.fulfilled', () => {
     const result = buildMockProduct();
     const responseId = 'some-response-id';
     const response = buildMockRecommendationsResponse({
       products: [result],
       responseId,
     });
+    const action = fetchRecommendations.fulfilled(response, '', {slotId});
 
-    const action = fetchRecommendations.fulfilled(response, '');
-    const finalState = recommendationsReducer(state, action);
+    it(
+      'when slot does not exist, ignores response',
+      expectSlotToStayUnchanged(action)
+    );
 
-    expect(finalState.products[0]).toEqual(result);
-    expect(finalState.responseId).toEqual(responseId);
-    expect(finalState.isLoading).toBe(false);
+    it('when slot exists, sets the state to the received payload', () => {
+      const result = buildMockProduct();
+      const responseId = 'some-response-id';
+      const response = buildMockRecommendationsResponse({
+        products: [result],
+        responseId,
+      });
+
+      state[slotId] = buildMockRecommendationsSlice();
+
+      const action = fetchRecommendations.fulfilled(response, '', {slotId});
+      const finalState = recommendationsReducer(state, action);
+
+      const slot = finalState[slotId]!;
+
+      expect(slot.products[0]).toEqual(result);
+      expect(slot.responseId).toEqual(responseId);
+      expect(slot.isLoading).toBe(false);
+    });
   });
 
-  it('set the error on rejection', () => {
+  describe('on #fetchRecommendations.rejected', () => {
     const err = {
       message: 'message',
       statusCode: 500,
       type: 'type',
     };
     const action = {
-      type: 'commerce/recommendation/fetch/rejected',
+      type: fetchRecommendations.rejected.type,
       payload: err,
+      meta: {
+        arg: {
+          slotId,
+        },
+      },
     };
-    const finalState = recommendationsReducer(state, action);
-    expect(finalState.error).toEqual(err);
-    expect(finalState.isLoading).toBe(false);
+
+    it(
+      'when slot does not exist, ignores response',
+      expectSlotToStayUnchanged(action)
+    );
+
+    it('when slot exists, sets the error on rejection', () => {
+      state[slotId] = buildMockRecommendationsSlice();
+
+      const finalState = recommendationsReducer(state, action);
+      expect(finalState[slotId]!.error).toEqual(err);
+      expect(finalState[slotId]!.isLoading).toBe(false);
+    });
+
+    it('when slot exists, sets the error to null on success', () => {
+      state[slotId] = buildMockRecommendationsSlice({
+        error: {message: 'message', statusCode: 500, type: 'type'},
+      });
+
+      const response = buildMockRecommendationsResponse();
+
+      const action = fetchRecommendations.fulfilled(response, '', {slotId});
+      const finalState = recommendationsReducer(state, action);
+      expect(finalState[slotId]!.error).toBeNull();
+    });
   });
 
-  it('set the error to null on success', () => {
-    const err = {message: 'message', statusCode: 500, type: 'type'};
-    state.error = err;
+  describe('on #fetchRecommendations.pending', () => {
+    const action = fetchRecommendations.pending('', {slotId});
 
-    const response = buildMockRecommendationsResponse();
+    it(
+      'when slot does not exist, does not alter slot',
+      expectSlotToStayUnchanged(action)
+    );
 
-    const action = fetchRecommendations.fulfilled(response, '');
-    const finalState = recommendationsReducer(state, action);
-    expect(finalState.error).toBeNull();
+    it('when slot exists, sets #isLoading to true', () => {
+      state[slotId] = buildMockRecommendationsSlice({isLoading: false});
+
+      const finalState = recommendationsReducer(state, action);
+
+      expect(finalState[slotId]!.isLoading).toBe(true);
+    });
   });
 
-  it('set the isLoading state to true during fetchRecommendations.pending', () => {
-    const pendingAction = fetchRecommendations.pending('');
-    const finalState = recommendationsReducer(state, pendingAction);
+  function expectSlotToStayUnchanged(action: Action) {
+    return () => {
+      const finalState = recommendationsReducer(state, action);
 
-    expect(finalState.isLoading).toBe(true);
-  });
+      expect(finalState[slotId]).toBeUndefined();
+    };
+  }
 });
