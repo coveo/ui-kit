@@ -13,6 +13,7 @@ import {getFacetSearchSetInitialState} from '../features/facets/facet-search-set
 import {getQuerySetInitialState} from '../features/query-set/query-set-state';
 import {getQuerySuggestSetInitialState} from '../features/query-suggest/query-suggest-state';
 import {CommerceAppState} from '../state/commerce-app-state';
+import {getSliced} from '../features/commerce/common/state';
 
 export function buildMockCommerceState(
   config: Partial<CommerceAppState> = {}
@@ -32,6 +33,7 @@ export function buildMockCommerceState(
     querySuggest: getQuerySuggestSetInitialState(),
     querySet: getQuerySetInitialState(),
     cart: getCartInitialState(),
+    slices: getSliced(),
     version: 'unit-testing-version',
     ...config,
   };

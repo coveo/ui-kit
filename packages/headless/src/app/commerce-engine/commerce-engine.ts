@@ -1,4 +1,4 @@
-import {StateFromReducersMapObject} from '@reduxjs/toolkit';
+import {combineReducers, Reducer, StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
 import {CommerceAPIClient} from '../../api/commerce/commerce-api-client';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
@@ -17,7 +17,7 @@ import {CommerceAppState} from '../../state/commerce-app-state';
 import {CommerceThunkExtraArguments} from '../commerce-thunk-extra-arguments';
 import {
   buildEngine,
-  CoreEngine,
+  CoreEngine, CoreState, EngineDispatch,
   EngineOptions,
   ExternalEngineOptions,
 } from '../engine';
@@ -58,7 +58,10 @@ export interface CommerceEngine<State extends object = {}>
   extends CoreEngine<
     State & CommerceEngineState,
     CommerceThunkExtraArguments
-  > {}
+  > {
+  setSliceReducers: (slice: string, reducers: Reducer[]) => void;
+  dispatchOnSlice: (slice: string) => (action: any) => EngineDispatch<State & CommerceEngineState & CoreState, CommerceThunkExtraArguments>;
+}
 
 /**
  * The commerce engine options.
@@ -102,6 +105,39 @@ export function buildCommerceEngine(
 
   return {
     ...engine,
+
+    dispatchOnSlice(slice: string) {
+      return (action: any) => {
+        return engine.dispatch({
+          ...action,
+          // Enrich the action with a slice to target the correct reducer
+          slice,
+        })
+      }
+    },
+
+    setSliceReducers(slice: string, reducers: Reducer[]) {
+      const namespaceReducer = (reducerFunction: Reducer, reducerName: string) => {
+        // TODO(nico): Handle any
+        return (state: any, action: any) => {
+          // This is where we extract the enriched sliced in `dispatchOnSlice`
+          const { slice } = action
+          const isInitializationCall = state === undefined
+          if (slice !== reducerName && !isInitializationCall) return state
+
+          return reducerFunction(state[slice], action)
+        }
+      }
+
+      const sliceReducer = combineReducers(reducers);
+
+      // TODO(nico): We're adding the reducers to the engine as top-level reducers because it's a bit difficult to get
+      //  headless to play nice with nested reducers. We should and CAN revisit this in the future since the top-level
+      //  engine state won't be exposed on the commerce engine.
+      engine.addReducers({
+        [slice]: namespaceReducer(sliceReducer, slice),
+      });
+    },
 
     get state() {
       return engine.state;

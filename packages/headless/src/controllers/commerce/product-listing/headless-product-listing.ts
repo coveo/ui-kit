@@ -72,7 +72,7 @@ export function buildProductListing(engine: CommerceEngine): ProductListing {
       };
     },
 
-    refresh: () => dispatch(fetchProductListing()),
+    refresh: () => dispatch(fetchProductListing({sliceId: 'default'})),
   };
 }
 

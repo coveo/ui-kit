@@ -7,7 +7,7 @@ import {CommerceQuerySection} from '../../../state/state-sections';
 import {logQueryError} from '../../search/search-analytics-actions';
 import {
   buildCommerceAPIRequest,
-  QueryCommerceAPIThunkReturn,
+  QueryCommerceAPIThunkReturn, SliceIdPart,
   StateNeededByQueryCommerceAPI,
 } from '../common/actions';
 import {logProductListingV2Load} from '../product-listing/product-listing-analytics';
@@ -17,15 +17,15 @@ export type StateNeededByExecuteSearch = StateNeededByQueryCommerceAPI &
 
 export const executeSearch = createAsyncThunk<
   QueryCommerceAPIThunkReturn,
-  void,
+  SliceIdPart,
   AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
 >(
   'commerce/search/executeSearch',
-  async (_action, {getState, dispatch, rejectWithValue, extra}) => {
+  async (action, {getState, dispatch, rejectWithValue, extra}) => {
     const state = getState();
     const {apiClient} = extra;
     const fetched = await apiClient.search({
-      ...(await buildCommerceAPIRequest(state)),
+      ...(await buildCommerceAPIRequest(action.sliceId, state)),
       query: state.commerceQuery?.query,
     });
 

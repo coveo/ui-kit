@@ -5,11 +5,10 @@ import {
 } from 'coveo.analytics';
 import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events';
 import {Logger} from 'pino';
-import {SectionNeededForFacetMetadata} from '../../features/facets/facet-set/facet-set-analytics-actions-utils';
 import {
+  CommerceSearchSection,
   ConfigurationSection,
-  ProductListingV2Section,
-  SearchHubSection,
+  ProductListingV2Section, SearchHubSection,
 } from '../../state/state-sections';
 import {PreprocessRequest} from '../preprocess-request';
 import {getProductListingInitialState} from './../../features/product-listing/product-listing-state';
@@ -18,15 +17,17 @@ import {
   wrapAnalyticsClientSendEventHook,
   wrapPreprocessRequest,
 } from './coveo-analytics-utils';
+import {SectionNeededForFacetMetadata} from '../../features/facets/facet-set/facet-set-analytics-actions-utils';
 
+// TODO(nico): SearchHubSection and SectionNeededForFacetMetadata should NOT be required
 export type StateNeededByCommerceAnalyticsProvider = ConfigurationSection &
-  ProductListingV2Section &
-  Partial<SearchHubSection & SectionNeededForFacetMetadata>;
+  Partial<ProductListingV2Section & CommerceSearchSection & SearchHubSection & SectionNeededForFacetMetadata>;
 
 export class CommerceAnalyticsProvider
   extends BaseAnalyticsProvider<StateNeededByCommerceAnalyticsProvider>
   implements SearchPageClientProvider
 {
+  // TODO(nico): This should be solution-type specific
   private initialState = getProductListingInitialState();
 
   public getPipeline(): string {
@@ -59,7 +60,7 @@ export class CommerceAnalyticsProvider
   }
 
   private get numberOfResults() {
-    return this.state.productListing.products.length;
+    return this.state.productListing?.products.length ?? 0;
   }
 }
 

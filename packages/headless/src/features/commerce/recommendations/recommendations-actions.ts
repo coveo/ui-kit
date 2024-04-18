@@ -10,6 +10,10 @@ import {
   buildCommerceAPIRequest,
 } from '../common/actions';
 import {recommendationsSlotDefinition} from './recommendations';
+import {RecommendationsSection} from '../../../state/state-sections';
+
+export type StateNeededByFetchRecommendations = StateNeededByQueryCommerceAPI &
+  RecommendationsSection;
 
 export interface QueryRecommendationsCommerceAPIThunkReturn {
   /** The successful recommendations response. */
@@ -20,7 +24,7 @@ const buildRecommendationCommerceAPIRequest = async (
   slotId: string,
   state: StateNeededByQueryCommerceAPI
 ): Promise<CommerceRecommendationsRequest> => {
-  const commerceAPIRequest = await buildCommerceAPIRequest(state);
+  const commerceAPIRequest = await buildCommerceAPIRequest(slotId, state);
   return {
     ...commerceAPIRequest,
     id: slotId,
@@ -30,7 +34,7 @@ const buildRecommendationCommerceAPIRequest = async (
 export const fetchRecommendations = createAsyncThunk<
   QueryRecommendationsCommerceAPIThunkReturn,
   void,
-  AsyncThunkCommerceOptions<StateNeededByQueryCommerceAPI>
+  AsyncThunkCommerceOptions<StateNeededByFetchRecommendations>
 >(
   'commerce/recommendation/fetch',
   async (_action, {getState, dispatch, rejectWithValue, extra}) => {

@@ -7,8 +7,6 @@ import {
   selectPage,
   setPageSize,
 } from '../../../../features/commerce/pagination/pagination-actions';
-import {paginationReducer as commercePagination} from '../../../../features/commerce/pagination/pagination-slice';
-import {loadReducerError} from '../../../../utils/errors';
 import {validateOptions} from '../../../../utils/validate-payload';
 import {
   buildController,
@@ -87,12 +85,10 @@ export function buildCorePagination(
   engine: CommerceEngine,
   props: CorePaginationProps
 ): Pagination {
-  if (!loadPaginationReducers(engine)) {
-    throw loadReducerError;
-  }
+  const sliceId = 'default';
 
   const controller = buildController(engine);
-  const {dispatch} = engine;
+  const dispatch = engine.dispatchOnSlice(sliceId);
 
   validateOptions(engine, optionsSchema, props.options, 'buildCorePagination');
 
@@ -101,7 +97,7 @@ export function buildCorePagination(
   }
 
   const paginationSelector = createSelector(
-    (state) => state.commercePagination,
+    (state) => state.commercePagination[sliceId],
     ({perPage, ...rest}) => ({
       pageSize: perPage,
       ...rest,
@@ -117,31 +113,22 @@ export function buildCorePagination(
 
     selectPage(page: number) {
       dispatch(selectPage(page));
-      dispatch(props.fetchResultsActionCreator());
+      dispatch(props.fetchResultsActionCreator({sliceId}));
     },
 
     nextPage() {
       dispatch(nextPage());
-      dispatch(props.fetchResultsActionCreator());
+      dispatch(props.fetchResultsActionCreator({sliceId}));
     },
 
     previousPage() {
       dispatch(previousPage());
-      dispatch(props.fetchResultsActionCreator());
+      dispatch(props.fetchResultsActionCreator({sliceId}));
     },
 
     setPageSize(pageSize: number) {
       dispatch(setPageSize(pageSize));
-      dispatch(props.fetchResultsActionCreator());
+      dispatch(props.fetchResultsActionCreator({sliceId}));
     },
   };
-}
-
-function loadPaginationReducers(
-  engine: CommerceEngine
-): engine is CommerceEngine {
-  engine.addReducers({
-    commercePagination,
-  });
-  return true;
 }

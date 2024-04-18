@@ -25,6 +25,6 @@ export function buildSearchSort(
 
   return buildCoreSort(engine, {
     ...props,
-    fetchResultsActionCreator: executeSearch,
+    fetchResultsActionCreator: () => executeSearch({sliceId: 'default'}),
   });
 }

@@ -127,7 +127,7 @@ export function buildCoreParameterManager<T extends Parameters>(
       }
 
       dispatch(props.restoreActionCreator(parameters));
-      dispatch(props.fetchResultsActionCreator());
+      dispatch(props.fetchResultsActionCreator({sliceId: 'default'}));
     },
 
     get state() {

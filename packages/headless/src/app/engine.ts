@@ -36,10 +36,10 @@ import {ExtraArgumentsWithRelay, Store, configureStore} from './store';
 import {ThunkExtraArguments} from './thunk-extra-arguments';
 
 const coreReducers = {configuration, version};
-type CoreState = StateFromReducersMapObject<typeof coreReducers> &
+export type CoreState = StateFromReducersMapObject<typeof coreReducers> &
   Partial<SearchParametersState>;
 
-type EngineDispatch<
+export type EngineDispatch<
   State,
   ExtraArguments extends ThunkExtraArguments,
 > = ThunkDispatch<State, ExtraArguments, UnknownAction> &

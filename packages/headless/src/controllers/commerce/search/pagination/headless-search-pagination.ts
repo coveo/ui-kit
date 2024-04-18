@@ -25,6 +25,6 @@ export function buildSearchPagination(
 
   return buildCorePagination(engine, {
     ...props,
-    fetchResultsActionCreator: executeSearch,
+    fetchResultsActionCreator: () => executeSearch({sliceId: 'default'}),
   });
 }

@@ -121,6 +121,8 @@ export function buildMockCommerceEngine<
 >(initialState: State): CommerceEngine {
   return {
     ...buildMockCoreEngine(initialState),
+    dispatchOnSlice: jest.fn(),
+    setSliceReducers: jest.fn(),
   };
 }
 

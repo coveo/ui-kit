@@ -4,10 +4,11 @@ import {
   PrepareAction,
 } from '@reduxjs/toolkit';
 import {AsyncThunkOptions} from '../../../app/async-thunk-options';
+import {SliceIdPart} from '../../../features/commerce/common/actions';
 
-export type FetchResultsActionCreator = () => AsyncThunkAction<
+export type FetchResultsActionCreator = (part: SliceIdPart) => AsyncThunkAction<
   unknown,
-  void,
+  SliceIdPart,
   AsyncThunkOptions<unknown>
 >;
 

@@ -7,38 +7,31 @@ import {
 import {CommerceSuccessResponse} from '../../../api/commerce/common/response';
 import {
   CartSection,
-  CategoryFacetSection,
-  CommerceContextSection,
+  CommerceContextSection, CommerceFacetSetSection,
   CommercePaginationSection,
   CommerceSortSection,
   ConfigurationSection,
-  DateFacetSection,
   FacetOrderSection,
-  FacetSection,
-  NumericFacetSection,
-  ProductListingV2Section,
-  RecommendationsSection,
   VersionSection,
 } from '../../../state/state-sections';
 import {PreparableAnalyticsAction} from '../../analytics/analytics-utils';
-import {StateNeededByFetchProductListingV2} from '../product-listing/product-listing-actions';
 import {SortBy, SortCriterion} from '../sort/sort';
+import {Sliced} from './state';
 
 export type StateNeededByQueryCommerceAPI = ConfigurationSection &
-  ProductListingV2Section &
-  RecommendationsSection &
   CommerceContextSection &
   CartSection &
   Partial<
-    CommercePaginationSection &
       CommerceSortSection &
-      FacetSection &
-      NumericFacetSection &
-      CategoryFacetSection &
-      DateFacetSection &
+      CommerceFacetSetSection &
       FacetOrderSection &
       VersionSection
-  >;
+  > &
+  Sliced<Partial<CommercePaginationSection>>;
+
+export interface SliceIdPart {
+  sliceId: string;
+}
 
 export interface QueryCommerceAPIThunkReturn {
   /** The successful search response. */
@@ -47,6 +40,7 @@ export interface QueryCommerceAPIThunkReturn {
 }
 
 export const buildBaseCommerceAPIRequest = async (
+  sliceId: string,
   state: StateNeededByQueryCommerceAPI
 ): Promise<BaseCommerceAPIRequest> => {
   const {view, user, ...restOfContext} = state.commerceContext;
@@ -62,20 +56,21 @@ export const buildBaseCommerceAPIRequest = async (
       view,
       cart: state.cart.cartItems.map((id) => state.cart.cart[id]),
     },
-    ...(state.commercePagination && {
-      page: state.commercePagination.page,
-      ...(state.commercePagination.perPage && {
-        perPage: state.commercePagination.perPage,
+    ...(state[sliceId]?.commercePagination && {
+      page: state[sliceId].commercePagination!.page,
+      ...(state[sliceId].commercePagination!.perPage && {
+        perPage: state[sliceId].commercePagination!.perPage,
       }),
     }),
   };
 };
 
 export const buildCommerceAPIRequest = async (
+  sliceId: string,
   state: StateNeededByQueryCommerceAPI
 ): Promise<CommerceAPIRequest> => {
   return {
-    ...(await buildBaseCommerceAPIRequest(state)),
+    ...(await buildBaseCommerceAPIRequest(sliceId, state)),
     facets: getFacets(state),
     ...(state.commerceSort && {
       sort: getSort(state.commerceSort.appliedSort),
@@ -83,7 +78,7 @@ export const buildCommerceAPIRequest = async (
   };
 };
 
-function getFacets(state: StateNeededByFetchProductListingV2) {
+function getFacets(state: StateNeededByQueryCommerceAPI) {
   if (!state.facetOrder || !state.commerceFacetSet) {
     return [];
   }

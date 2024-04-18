@@ -185,7 +185,7 @@ export function buildCoreCommerceFacet<
           facetId,
         })
       );
-      dispatch(props.options.fetchResultsActionCreator());
+      dispatch(props.options.fetchResultsActionCreator({sliceId: 'default'}));
       // TODO: analytics
     },
 
@@ -200,7 +200,7 @@ export function buildCoreCommerceFacet<
       }
 
       dispatch(props.options.toggleExcludeActionCreator({selection, facetId}));
-      dispatch(props.options.fetchResultsActionCreator());
+      dispatch(props.options.fetchResultsActionCreator({sliceId: 'default'}));
       // TODO: analytics
     },
 
@@ -241,7 +241,7 @@ export function buildCoreCommerceFacet<
 
     deselectAll() {
       dispatch(deselectAllFacetValues(facetId));
-      dispatch(props.options.fetchResultsActionCreator());
+      dispatch(props.options.fetchResultsActionCreator({sliceId: 'default'}));
     },
 
     showMoreValues() {
@@ -253,7 +253,7 @@ export function buildCoreCommerceFacet<
 
       dispatch(updateFacetNumberOfValues({facetId, numberOfValues}));
       dispatch(updateFacetIsFieldExpanded({facetId, isFieldExpanded: true}));
-      dispatch(props.options.fetchResultsActionCreator());
+      dispatch(props.options.fetchResultsActionCreator({sliceId: 'default'}));
     },
 
     showLessValues() {
@@ -267,7 +267,7 @@ export function buildCoreCommerceFacet<
         updateFacetNumberOfValues({facetId, numberOfValues: newNumberOfValues})
       );
       dispatch(updateFacetIsFieldExpanded({facetId, isFieldExpanded: false}));
-      dispatch(props.options.fetchResultsActionCreator());
+      dispatch(props.options.fetchResultsActionCreator({sliceId: 'default'}));
     },
 
     get state() {

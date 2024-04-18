@@ -4,47 +4,29 @@ import {
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client';
 import {
-  CartSection,
-  CommerceContextSection,
-  CommerceFacetSetSection,
-  CommercePaginationSection,
-  CommerceSortSection,
-  ConfigurationSection,
-  FacetOrderSection,
   ProductListingV2Section,
-  VersionSection,
 } from '../../../state/state-sections';
 import {logQueryError} from '../../search/search-analytics-actions';
 import {
   buildCommerceAPIRequest,
-  QueryCommerceAPIThunkReturn,
-  StateNeededByQueryCommerceAPI,
+  QueryCommerceAPIThunkReturn, SliceIdPart, StateNeededByQueryCommerceAPI,
 } from '../common/actions';
 import {logProductListingV2Load} from './product-listing-analytics';
 
-export type StateNeededByFetchProductListingV2 = ConfigurationSection &
-  ProductListingV2Section &
-  CommerceContextSection &
-  CartSection &
-  Partial<
-    CommercePaginationSection &
-      CommerceFacetSetSection &
-      CommerceSortSection &
-      FacetOrderSection &
-      VersionSection
-  >;
+export type StateNeededByFetchProductListingV2 = StateNeededByQueryCommerceAPI &
+  ProductListingV2Section;
 
 export const fetchProductListing = createAsyncThunk<
   QueryCommerceAPIThunkReturn,
-  void,
-  AsyncThunkCommerceOptions<StateNeededByQueryCommerceAPI>
+  SliceIdPart,
+  AsyncThunkCommerceOptions<StateNeededByFetchProductListingV2>
 >(
   'commerce/productListing/fetch',
-  async (_action, {getState, dispatch, rejectWithValue, extra}) => {
+  async (action, {getState, dispatch, rejectWithValue, extra}) => {
     const state = getState();
     const {apiClient} = extra;
     const fetched = await apiClient.getProductListing(
-      await buildCommerceAPIRequest(state)
+      await buildCommerceAPIRequest(action.sliceId, state)
     );
 
     if (isErrorResponse(fetched)) {

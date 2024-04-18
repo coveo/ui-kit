@@ -15,6 +15,7 @@ import {
   QuerySetSection,
   FacetSearchSection,
 } from './state-sections';
+import {Sliced} from '../features/commerce/common/state';
 
 // eslint-disable-next-line @cspell/spellchecker
 // TODO CAPI-546: Handle only the query param for now. Add facets, sort, pagination later.
@@ -35,4 +36,5 @@ export type CommerceAppState = ConfigurationSection &
   CartSection &
   QuerySuggestionSection &
   QuerySetSection &
-  VersionSection;
+  VersionSection &
+  Sliced<unknown>;

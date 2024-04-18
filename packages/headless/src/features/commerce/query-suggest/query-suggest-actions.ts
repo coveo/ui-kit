@@ -24,7 +24,9 @@ export type StateNeededByQuerySuggest = ConfigurationSection &
   CartSection &
   QuerySetSection &
   CommerceQuerySection &
-  Partial<VersionSection>;
+  Partial<VersionSection>
+  // TODO(nico): This satisfies the type checker. We should remove it.
+  & Record<string, unknown>;
 
 export interface FetchQuerySuggestionsThunkReturn
   extends FetchQuerySuggestionsActionCreatorPayload,

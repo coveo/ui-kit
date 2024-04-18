@@ -18,6 +18,8 @@ import {
   Sort,
   SortProps,
 } from '../sort/headless-core-commerce-sort';
+import {paginationReducer as commercePagination} from '../../../../features/commerce/pagination/pagination-slice';
+import {Reducer} from '@reduxjs/toolkit';
 
 export interface SolutionTypeSubControllers {
   interactiveResult: (props: InteractiveResultProps) => InteractiveResult;
@@ -34,6 +36,8 @@ export function buildSolutionTypeSubControllers(
   engine: CommerceEngine,
   subControllerProps: SubControllerProps
 ): SolutionTypeSubControllers {
+  const sliceId = 'default';
+  const sliceReducers: Reducer[] = [];
   const {responseIdSelector, fetchResultsActionCreator} = subControllerProps;
   return {
     interactiveResult(props: InteractiveResultProps) {
@@ -43,6 +47,8 @@ export function buildSolutionTypeSubControllers(
       });
     },
     pagination(props?: PaginationProps) {
+      sliceReducers.push(commercePagination);
+      engine.setSliceReducers(sliceId, sliceReducers);
       return buildCorePagination(engine, {
         ...props,
         fetchResultsActionCreator,

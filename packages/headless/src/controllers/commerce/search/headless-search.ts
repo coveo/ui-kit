@@ -67,7 +67,7 @@ export function buildSearch(engine: CommerceEngine): Search {
         return;
       }
 
-      dispatch(executeSearch());
+      dispatch(executeSearch({sliceId: 'default'}));
     },
   };
 }

@@ -115,7 +115,7 @@ export function buildSearchBox(
     dispatch(updateFacetAutoSelection({allow: true}));
     dispatch(updateQuery({query: getValue()}));
     dispatch(selectPage(0));
-    dispatch(executeSearch());
+    dispatch(executeSearch({sliceId: 'default'}));
   };
 
   return {
