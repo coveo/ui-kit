@@ -286,7 +286,6 @@ export const logCollapseSmartSnippetSuggestion = (
       return {
         action: 'collapse',
         answer: {
-          // we can't really tell which of the suggestions was clicked.
           responseId: state.search?.response.searchUid || '',
           type: 'SmartSnippetSuggestion',
         },
