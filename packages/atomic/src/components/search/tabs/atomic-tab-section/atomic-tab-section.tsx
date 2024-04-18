@@ -96,7 +96,7 @@ export class AtomicTabSection {
         <Button
           style="text-transparent"
           title={tab.name}
-          class="px-6 pb-1 w-full text-xl text-neutral-dark dropdown-option"
+          class="w-full px-6 pb-1 text-xl text-neutral-dark dropdown-option"
           text={tab.label}
           onClick={() => {
             tab.select();
@@ -154,12 +154,12 @@ export class AtomicTabSection {
 
   public render() {
     return (
-      <div class="overflow-visible mb-4 ">
-        <div class="tabs-container flex flex-row">
-          <div class="tabs-area flex flex-row mb-2 border-b w-full ">
+      <div class="mb-4 overflow-visible ">
+        <div class="flex flex-row tabs-container">
+          <div class="flex flex-row w-full mb-2 border-b tabs-area ">
             <slot></slot>
           </div>
-          <div class="flex flex-row border-b mb-2 group dropdown-area relative cursor-pointer hidden ">
+          <div class="relative flex-row hidden mb-2 border-b cursor-pointer group dropdown-area ">
             <Button
               tabIndex="0"
               style="text-transparent"
@@ -174,8 +174,7 @@ export class AtomicTabSection {
                 class="w-3 ml-2 align-baseline"
               ></atomic-icon>
             </Button>
-            <ul class="absolute gap-2 flex group-focus-within:visible focus:visible group:visible invisible dropdown-content absolute top-0 mt-6 flex-col rounded-md shadow-lg bg-white z-50 p-4">
-              {' '}
+            <ul class="absolute top-0 z-50 flex flex-col invisible gap-2 p-4 mt-6 bg-white rounded-md shadow-lg focus:visible group-focus-within:visible group:visible dropdown-content">
               {this.buildDropdown()}
             </ul>
           </div>
