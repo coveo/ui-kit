@@ -1573,6 +1573,34 @@ describe('SearchPageClient', () => {
         expectMatchDescription(built.description, SearchPageEvents.generatedAnswerShowAnswers, meta);
     });
 
+    it('should send proper payload for #logExpandGeneratedAnswer', async () => {
+        const meta = {generativeQuestionAnsweringId: fakeStreamId};
+        await client.logExpandGeneratedAnswer(meta);
+        expectMatchCustomEventPayload(SearchPageEvents.expandGeneratedAnswer, meta);
+    });
+
+    it('should send proper payload for #makeExpandGeneratedAnswer', async () => {
+        const meta = {generativeQuestionAnsweringId: fakeStreamId};
+        const built = await client.makeExpandGeneratedAnswer(meta);
+        await built.log({searchUID: provider.getSearchUID()});
+        expectMatchCustomEventPayload(SearchPageEvents.expandGeneratedAnswer, meta);
+        expectMatchDescription(built.description, SearchPageEvents.expandGeneratedAnswer, meta);
+    });
+
+    it('should send proper payload for #logCollapseGeneratedAnswer', async () => {
+        const meta = {generativeQuestionAnsweringId: fakeStreamId};
+        await client.logCollapseGeneratedAnswer(meta);
+        expectMatchCustomEventPayload(SearchPageEvents.collapseGeneratedAnswer, meta);
+    });
+
+    it('should send proper payload for #makeCollapseGeneratedAnswer', async () => {
+        const meta = {generativeQuestionAnsweringId: fakeStreamId};
+        const built = await client.makeCollapseGeneratedAnswer(meta);
+        await built.log({searchUID: provider.getSearchUID()});
+        expectMatchCustomEventPayload(SearchPageEvents.collapseGeneratedAnswer, meta);
+        expectMatchDescription(built.description, SearchPageEvents.collapseGeneratedAnswer, meta);
+    });
+
     it('should send proper payload for #logGeneratedAnswerFeedbackSubmit', async () => {
         const meta = {
             generativeQuestionAnsweringId: fakeStreamId,
