@@ -64,11 +64,13 @@ export const generatedAnswerReducer = createReducer(
 
         state.rawAnswer += payload.textDelta;
         state.answer =
-          state.rawAnswerMediaType === 'markdown'
+          state.rawAnswerMediaType === 'text/markdown'
             ? Helpers.convertMarkdownToHtml(state?.rawAnswer)
             : state.rawAnswer;
         state.answerMediaType =
-          state.rawAnswerMediaType === 'markdown' ? 'html' : 'plain';
+          state.rawAnswerMediaType === 'text/markdown'
+            ? 'text/html'
+            : state.rawAnswerMediaType;
         delete state.error;
       })
       .addCase(updateCitations, (state, {payload}) => {

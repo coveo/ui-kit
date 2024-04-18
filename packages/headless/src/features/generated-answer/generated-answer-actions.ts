@@ -10,6 +10,7 @@ import {AsyncThunkGeneratedAnswerOptions} from '../../api/generated-answer/gener
 import {
   GeneratedAnswerCitationsPayload,
   GeneratedAnswerEndOfStreamPayload,
+  GeneratedAnswerHeaderMessagePayload,
   GeneratedAnswerMessagePayload,
   GeneratedAnswerPayloadType,
   GeneratedAnswerStreamEventData,
@@ -134,7 +135,7 @@ export const setAnswerMediaType = createAction(
       payload,
       new StringValue({
         required: true,
-        constrainTo: ['plain', 'html'],
+        constrainTo: ['text/plain', 'text/html'],
       })
     )
 );
@@ -146,7 +147,7 @@ export const setRawAnswerMediaType = createAction(
       payload,
       new StringValue({
         required: true,
-        constrainTo: ['plain', 'markdown'],
+        constrainTo: ['text/plain', 'text/markdown'],
       })
     )
 );
@@ -159,6 +160,7 @@ export const updateResponseFormat = createAction(
         required: true,
         constrainTo: generatedAnswerStyle,
       }),
+      contentFormat: nonEmptyStringArray,
     })
 );
 
@@ -193,6 +195,13 @@ export const streamAnswer = createAsyncThunk<
     payload: string
   ) => {
     switch (payloadType) {
+      case 'genqa.headerMessageType': {
+        const header = JSON.parse(
+          payload
+        ) as GeneratedAnswerHeaderMessagePayload;
+        dispatch(setRawAnswerMediaType(header.contentFormat));
+        break;
+      }
       case 'genqa.messageType':
         dispatch(
           updateMessage(JSON.parse(payload) as GeneratedAnswerMessagePayload)
@@ -222,8 +231,6 @@ export const streamAnswer = createAsyncThunk<
   };
 
   dispatch(setIsLoading(true));
-  dispatch(setRawAnswerMediaType('plain'));
-  dispatch(setAnswerMediaType('plain'));
 
   const currentStreamRequestMatchesOriginalStreamRequest = (
     request: GeneratedAnswerStreamRequest

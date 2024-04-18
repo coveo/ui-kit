@@ -208,7 +208,9 @@ export class GeneratedAnswerCommon {
       this.props.getGeneratedAnswerState()?.responseFormat.answerStyle !==
       answerStyle
     ) {
-      this.props.getGeneratedAnswer()?.rephrase({answerStyle});
+      this.props.getGeneratedAnswer()?.rephrase({
+        answerStyle,
+      });
     }
   }
 

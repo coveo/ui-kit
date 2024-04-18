@@ -64,7 +64,7 @@ describe('generated answer slice', () => {
         const finalState = generatedAnswerReducer(
           {
             ...getGeneratedAnswerInitialState(),
-            rawAnswerMediaType: 'markdown',
+            rawAnswerMediaType: 'text/markdown',
           },
           updateMessage({
             textDelta: 'some content',
@@ -73,7 +73,7 @@ describe('generated answer slice', () => {
 
         expect(convertMarkdownToHtmlSpy).toHaveBeenCalledWith('some content');
         expect(finalState.answer).toBe('<p>some content</p>');
-        expect(finalState.answerMediaType).toBe('html');
+        expect(finalState.answerMediaType).toBe('text/html');
       });
     });
   });
