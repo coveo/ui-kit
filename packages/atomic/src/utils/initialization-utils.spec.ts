@@ -109,6 +109,8 @@ describe('InitializeBindings decorator', () => {
         i18n: i18next,
         store: createAtomicStore(),
         interfaceElement: document.createElement('atomic-search-interface'),
+        createScriptElement: jest.fn(),
+        createStyleElement: jest.fn(),
       };
       InitializeBindings()(component, 'bindings');
       component.initialize!();
@@ -129,6 +131,8 @@ describe('BindStateToController decorator', () => {
         i18n: i18next,
         store: createAtomicStore(),
         interfaceElement: document.createElement('atomic-search-interface'),
+        createScriptElement: jest.fn(),
+        createStyleElement: jest.fn(),
       },
       error: {} as Error,
     };

@@ -6,19 +6,17 @@
     <title>Coveo Atomic Hosted Page</title>
 
     <script type="module" src="/build/atomic-hosted-page.esm.js"></script>
-    <script>
-      (async () => {
-        await customElements.whenDefined('atomic-hosted-page');
+    <script type="module">
+      await customElements.whenDefined('atomic-hosted-page');
 
-        const page = document.querySelector('atomic-hosted-page');
-        // TODO: switch for prod - searchuisamples
-        await page.initialize({
-          pageId: '88411b30-39fb-4bd3-8663-2d1af2b27659',
-          accessToken: 'xx71d82ce9-f6fe-4be0-9209-c0e43f6fae81',
-          organizationId: 'searchuisamples',
-          organizationEndpoints: await page.getOrganizationEndpoints('searchuisamples'),
-        });
-      })();
+      const page = document.querySelector('atomic-hosted-page');
+      // TODO: switch for prod - searchuisamples
+      await page.initialize({
+        pageId: '88411b30-39fb-4bd3-8663-2d1af2b27659',
+        accessToken: 'xx71d82ce9-f6fe-4be0-9209-c0e43f6fae81',
+        organizationId: 'searchuisamples',
+        organizationEndpoints: await page.getOrganizationEndpoints('searchuisamples'),
+      });
     </script>
   </head>
   <body>

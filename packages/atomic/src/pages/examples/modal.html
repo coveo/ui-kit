@@ -8,32 +8,30 @@
     <script type="module" src="/build/atomic.esm.js"></script>
     <script nomodule src="/build/atomic.js"></script>
     <link rel="stylesheet" href="/themes/coveo.css" />
-    <script>
-      (async () => {
-        await customElements.whenDefined('atomic-search-interface');
+    <script type="module">
+      await customElements.whenDefined('atomic-search-interface');
 
-        const searchInterface = document.querySelector('atomic-search-interface');
-        await searchInterface.initialize({
-          accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
-          organizationId: 'searchuisamples',
-          organizationEndpoints: await searchInterface.getOrganizationEndpoints('searchuisamples'),
-        });
+      const searchInterface = document.querySelector('atomic-search-interface');
+      await searchInterface.initialize({
+        accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+        organizationId: 'searchuisamples',
+        organizationEndpoints: await searchInterface.getOrganizationEndpoints('searchuisamples'),
+      });
 
-        const fullscreenCheckbox = document.getElementById('checkbox-fullscreen');
-        const openModalButton = document.getElementById('btn-open-modal');
-        const closeModalButton = document.getElementById('btn-done');
-        const modal = document.getElementById('modal');
-        modal.source = openModalButton;
+      const fullscreenCheckbox = document.getElementById('checkbox-fullscreen');
+      const openModalButton = document.getElementById('btn-open-modal');
+      const closeModalButton = document.getElementById('btn-done');
+      const modal = document.getElementById('modal');
+      modal.source = openModalButton;
 
-        function updateFullscreen() {
-          modal.setAttribute('fullscreen', `${fullscreenCheckbox.checked}`);
-        }
+      function updateFullscreen() {
+        modal.setAttribute('fullscreen', `${fullscreenCheckbox.checked}`);
+      }
 
-        fullscreenCheckbox.addEventListener('change', () => updateFullscreen());
-        openModalButton.addEventListener('click', () => modal.setAttribute('is-open', 'true'));
-        closeModalButton.addEventListener('click', () => modal.setAttribute('is-open', 'false'));
-        updateFullscreen();
-      })();
+      fullscreenCheckbox.addEventListener('change', () => updateFullscreen());
+      openModalButton.addEventListener('click', () => modal.setAttribute('is-open', 'true'));
+      closeModalButton.addEventListener('click', () => modal.setAttribute('is-open', 'false'));
+      updateFullscreen();
     </script>
   </head>
 

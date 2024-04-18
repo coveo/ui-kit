@@ -2,7 +2,6 @@ import defaultStory from 'atomic-storybook/default-story';
 import {html} from 'lit-html';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
-  'Atomic/RatingRangeFacet',
   'atomic-rating-range-facet',
   {field: 'snrating'},
   {
@@ -15,5 +14,9 @@ const {defaultModuleExport, exportedStory} = defaultStory(
       </style>`,
   }
 );
-export default {...defaultModuleExport, title: 'Atomic/RatingRangeFacet'};
+export default {
+  ...defaultModuleExport,
+  title: 'Atomic/RatingRangeFacet',
+  id: 'atomic-rating-range-facet',
+};
 export const Default = exportedStory;

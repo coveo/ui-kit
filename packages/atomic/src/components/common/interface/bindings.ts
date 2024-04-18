@@ -48,6 +48,21 @@ export interface CommonBindings<
    */
   interfaceElement: InterfaceElement;
 }
+export interface NonceBindings {
+  /**
+   * Creates a Style Information element with the nonce attribute if it exists.
+   * Note: the element is **not** appended to the DOM.
+   * @returns a style element.
+   */
+  createStyleElement: () => HTMLStyleElement;
+
+  /**
+   * Creates a Script element with the nonce attribute if it exists.
+   * Note: the element is **not** appended to the DOM.
+   * @returns a script element.
+   */
+  createScriptElement: () => HTMLScriptElement;
+}
 
 export type AnyBindings = CommonBindings<
   AnyEngineType,
