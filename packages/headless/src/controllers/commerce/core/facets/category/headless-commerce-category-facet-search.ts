@@ -43,9 +43,7 @@ export function buildCategoryFacetSearch(
       executeFieldSuggestActionCreator: executeCommerceFieldSuggest,
     });
 
-  return {
-    ...restOfFacetSearch,
-  };
+  return restOfFacetSearch;
 }
 
 function loadCategoryFacetSearchReducers(
