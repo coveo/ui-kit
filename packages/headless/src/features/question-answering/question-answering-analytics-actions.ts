@@ -334,7 +334,6 @@ export const logOpenSmartSnippetSuggestionSource = (
           type: 'SmartSnippetSuggestion',
         },
         citation: {
-          // Question what should be the citation id for SS.
           id: relatedQuestion?.documentId.contentIdValue || '',
           type: 'Source',
         },
