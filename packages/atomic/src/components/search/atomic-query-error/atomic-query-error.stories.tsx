@@ -1,7 +1,6 @@
 import defaultStory from 'atomic-storybook/default-story';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
-  'Atomic/QueryError',
   'atomic-query-error',
   {},
   {
@@ -11,5 +10,9 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   }
 );
 
-export default {...defaultModuleExport, title: 'Atomic/QueryError'};
+export default {
+  ...defaultModuleExport,
+  title: 'Atomic/QueryError',
+  id: 'atomic-query-error',
+};
 export const Default = exportedStory;

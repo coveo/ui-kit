@@ -10,7 +10,6 @@ function snakeToCamel(value: string) {
 }
 
 const {defaultModuleExport, exportedStory} = defaultStory(
-  'Atomic/Icon',
   'atomic-icon',
   {
     icon: 'assets://account.svg',
@@ -73,5 +72,9 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   }
 );
 
-export default {...defaultModuleExport, title: 'Atomic/Icon'};
+export default {
+  ...defaultModuleExport,
+  title: 'Atomic/Icon',
+  id: 'atomic-icon',
+};
 export const Default = exportedStory;

@@ -1,3 +1,15 @@
+## 2.49.1 (2024-04-17)
+
+### Bug Fixes
+
+- **headless:** qna answer type for rga updated to be valid with new analytics schema ([#3780](https://github.com/coveo/ui-kit/issues/3780)) ([9b5eb13](https://github.com/coveo/ui-kit/commits/9b5eb13e38a923b3e9b8c37fb7c2d8060406cd4e))
+
+# 2.49.0 (2024-04-10)
+
+### Features
+
+- **quantic:** Update the styling of the rephrase buttons ([#3750](https://github.com/coveo/ui-kit/issues/3750)) ([d5d114e](https://github.com/coveo/ui-kit/commits/d5d114ec7fcef7909e8212e88ccbccb66092ec1a))
+
 # 2.48.0 (2024-04-03)
 
 ### Features

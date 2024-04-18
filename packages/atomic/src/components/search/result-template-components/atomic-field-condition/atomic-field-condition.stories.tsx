@@ -2,7 +2,6 @@ import defaultResultComponentStory from 'atomic-storybook/default-result-compone
 import {html} from 'lit-html';
 
 const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
-  'Atomic/ResultList/FieldCondition',
   'atomic-field-condition',
   {},
   {
@@ -41,5 +40,6 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
 export default {
   ...defaultModuleExport,
   title: 'Atomic/ResultList/FieldCondition',
+  id: 'atomic-field-condition',
 };
 export const Default = exportedStory;

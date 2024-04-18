@@ -20,6 +20,13 @@ const useCaseEntries = {
   commerce: 'src/commerce.index.ts',
 };
 
+const quanticUseCaseEntries = {
+  search: 'src/index.ts',
+  recommendation: 'src/recommendation.index.ts',
+  'case-assist': 'src/case-assist.index.ts',
+  insight: 'src/insight.index.ts',
+};
+
 function getUmdGlobalName(useCase) {
   const map = {
     search: 'CoveoHeadless',
@@ -122,6 +129,28 @@ const browserUmd = Object.entries(useCaseEntries).map((entry) => {
       banner: {
         js: `${base.banner.js}`,
       },
+      plugins: [umdWrapper({libraryName: globalName})],
+    },
+    outDir
+  );
+});
+
+const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
+  const [useCase, entryPoint] = entry;
+  const outDir = getUseCaseDir('dist/quantic/', useCase);
+  const outfile = `${outDir}/headless.js`;
+
+  const globalName = getUmdGlobalName(useCase);
+
+  return buildBrowserConfig(
+    {
+      entryPoints: [entryPoint],
+      outfile,
+      format: 'cjs',
+      banner: {
+        js: `${base.banner.js}`,
+      },
+      inject: ['ponyfills/abortable-fetch-shim.js'],
       plugins: [umdWrapper({libraryName: globalName})],
     },
     outDir
@@ -262,6 +291,7 @@ async function main() {
     ...browserEsmForAtomicDevelopment,
     ...nodeEsm,
     ...nodeCjs,
+    ...quanticUmd,
   ]);
   await Promise.all(adjustRequireImportsInNodeEsmBundles());
 }

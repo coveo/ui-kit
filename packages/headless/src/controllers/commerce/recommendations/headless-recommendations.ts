@@ -5,12 +5,10 @@ import {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../app/commerce-engine/commerce-engine';
-import {configuration} from '../../../app/common-reducers';
-import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
 import {recommendationsOptionsSchema} from '../../../features/commerce/recommendations/recommendations';
 import {
   fetchRecommendations,
-  updateRecommendationsSlotId,
+  registerRecommendationsSlot,
 } from '../../../features/commerce/recommendations/recommendations-actions';
 import {recommendationsReducer as recommendations} from '../../../features/commerce/recommendations/recommendations-slice';
 import {loadReducerError} from '../../../utils/errors';
@@ -44,6 +42,9 @@ export interface RecommendationsState {
 }
 
 export interface RecommendationsOptions {
+  /**
+   * The unique identifier of the recommendations slot (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
+   */
   slotId: string;
 }
 
@@ -55,6 +56,7 @@ interface RecommendationsProps {
  * Creates a `Recommendations` controller instance.
  *
  * @param engine - The headless commerce engine.
+ * @param props - The configurable `Recommendations` controller properties.
  * @returns A `Recommendations` controller instance.
  */
 export function buildRecommendations(
@@ -65,19 +67,21 @@ export function buildRecommendations(
     throw loadReducerError;
   }
 
-  const controller = buildController(engine);
-  const {dispatch} = engine;
-
   validateInitialState(
     engine,
     recommendationsOptionsSchema,
     props.options,
     'buildRecommendations'
   );
-  dispatch(updateRecommendationsSlotId({slotId: props.options.slotId}));
+
+  const controller = buildController(engine);
+  const {dispatch} = engine;
+
+  const {slotId} = props.options;
+  dispatch(registerRecommendationsSlot({slotId}));
 
   const recommendationStateSelector = createSelector(
-    (state: CommerceEngineState) => state.recommendations,
+    (state: CommerceEngineState) => state.recommendations[slotId]!,
     (recommendations) => recommendations
   );
 
@@ -88,13 +92,13 @@ export function buildRecommendations(
       return recommendationStateSelector(engine.state);
     },
 
-    refresh: () => dispatch(fetchRecommendations()),
+    refresh: () => dispatch(fetchRecommendations({slotId})),
   };
 }
 
 function loadBaseRecommendationsReducers(
   engine: CommerceEngine
 ): engine is CommerceEngine {
-  engine.addReducers({recommendations, commerceContext, configuration});
+  engine.addReducers({recommendations});
   return true;
 }
