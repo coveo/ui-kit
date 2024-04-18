@@ -1,6 +1,6 @@
 import {
   GeneratedAnswerStyle,
-  GeneratedContentFormat,
+  GeneratedRawContentFormat,
 } from '../../features/generated-answer/generated-response-format';
 import {Raw} from '../search/search/raw';
 
@@ -24,7 +24,7 @@ export interface GeneratedAnswerCitation {
 
 export interface GeneratedAnswerHeaderMessagePayload {
   answerStyle: GeneratedAnswerStyle;
-  contentFormat: GeneratedContentFormat;
+  contentFormat: GeneratedRawContentFormat;
 }
 
 export interface GeneratedAnswerMessagePayload {

@@ -30,8 +30,12 @@ import {logGeneratedAnswerStreamEnd} from './generated-answer-analytics-actions'
 import {buildStreamingRequest} from './generated-answer-request';
 import {
   GeneratedAnswerStyle,
+  GeneratedContentFormat,
+  GeneratedRawContentFormat,
   GeneratedResponseFormat,
   generatedAnswerStyle,
+  generatedContentFormat,
+  generatedRawContentFormat,
 } from './generated-response-format';
 
 type StateNeededByGeneratedAnswerStream = ConfigurationSection &
@@ -49,6 +53,18 @@ const citationSchema = {
   permanentid: stringValue,
   clickUri: optionalStringValue,
 };
+
+const rawAnswerContentFormatSchema = new StringValue<GeneratedRawContentFormat>(
+  {
+    required: true,
+    constrainTo: generatedRawContentFormat,
+  }
+);
+
+const answerContentFormatSchema = new StringValue<GeneratedContentFormat>({
+  required: true,
+  constrainTo: generatedContentFormat,
+});
 
 export interface GeneratedAnswerErrorPayload {
   message?: string;
@@ -128,28 +144,16 @@ export const setIsStreaming = createAction(
   (payload: boolean) => validatePayload(payload, booleanValue)
 );
 
-export const setAnswerMediaType = createAction(
-  'generatedAnswer/setAnswerMediaType',
-  (payload: string) =>
-    validatePayload(
-      payload,
-      new StringValue({
-        required: true,
-        constrainTo: ['text/plain', 'text/html'],
-      })
-    )
+export const setAnswerContentFormat = createAction(
+  'generatedAnswer/setAnswerContentFormat',
+  (payload: GeneratedContentFormat) =>
+    validatePayload(payload, answerContentFormatSchema)
 );
 
-export const setRawAnswerMediaType = createAction(
-  'generatedAnswer/setRawAnswerMediaType',
-  (payload: string) =>
-    validatePayload(
-      payload,
-      new StringValue({
-        required: true,
-        constrainTo: ['text/plain', 'text/markdown'],
-      })
-    )
+export const setRawAnswerContentFormat = createAction(
+  'generatedAnswer/setRawAnswerContentFormat',
+  (payload: GeneratedRawContentFormat) =>
+    validatePayload(payload, rawAnswerContentFormatSchema)
 );
 
 export const updateResponseFormat = createAction(
@@ -160,7 +164,10 @@ export const updateResponseFormat = createAction(
         required: true,
         constrainTo: generatedAnswerStyle,
       }),
-      contentFormat: nonEmptyStringArray,
+      contentFormat: new ArrayValue<GeneratedRawContentFormat>({
+        each: rawAnswerContentFormatSchema,
+        default: ['text/plain'],
+      }),
     })
 );
 
@@ -199,7 +206,7 @@ export const streamAnswer = createAsyncThunk<
         const header = JSON.parse(
           payload
         ) as GeneratedAnswerHeaderMessagePayload;
-        dispatch(setRawAnswerMediaType(header.contentFormat));
+        dispatch(setRawAnswerContentFormat(header.contentFormat));
         break;
       }
       case 'genqa.messageType':
@@ -246,7 +253,6 @@ export const streamAnswer = createAsyncThunk<
       write: (data: GeneratedAnswerStreamEventData) => {
         if (currentStreamRequestMatchesOriginalStreamRequest(request)) {
           dispatch(setIsLoading(false));
-
           if (data.payload && data.payloadType) {
             handleStreamPayload(data.payloadType, data.payload);
           }

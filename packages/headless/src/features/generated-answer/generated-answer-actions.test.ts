@@ -7,12 +7,16 @@ import {
   updateMessage,
   updateResponseFormat,
   registerFieldsToIncludeInCitations,
-  setAnswerMediaType,
-  setRawAnswerMediaType,
+  setAnswerContentFormat,
+  setRawAnswerContentFormat,
 } from './generated-answer-actions';
 import {
   GeneratedAnswerStyle,
+  GeneratedContentFormat,
+  GeneratedRawContentFormat,
   generatedAnswerStyle,
+  generatedContentFormat,
+  generatedRawContentFormat,
 } from './generated-response-format';
 
 describe('generated answer', () => {
@@ -71,6 +75,18 @@ describe('generated answer', () => {
         expect(() => updateResponseFormat({answerStyle: style})).not.toThrow();
       }
     );
+
+    test.each(generatedRawContentFormat)(
+      'should accept a valid payload with format: "%i"',
+      (format: GeneratedRawContentFormat) => {
+        expect(() =>
+          updateResponseFormat({
+            answerStyle: 'default',
+            contentFormat: [format],
+          })
+        ).not.toThrow();
+      }
+    );
   });
 
   describe('#registerFieldsToIncludeInCitations', () => {
@@ -89,19 +105,21 @@ describe('generated answer', () => {
     });
   });
 
-  describe('#setAnswerMediaType', () => {
-    ['plain', 'html'].map((payload) => {
-      it(`should accept a valid payload: ${payload}`, () => {
-        expect(() => setAnswerMediaType(payload)).not.toThrow();
-      });
-    });
+  describe('#setAnswerContentFormat', () => {
+    test.each(generatedContentFormat)(
+      'should accept a valid payload with format: "%i"',
+      (format: GeneratedContentFormat) => {
+        expect(() => setAnswerContentFormat(format)).not.toThrow();
+      }
+    );
   });
 
-  describe('#setRawAnswerMediaType', () => {
-    ['plain', 'markdown'].map((payload) => {
-      it(`should accept a valid payload: ${payload}`, () => {
-        expect(() => setRawAnswerMediaType(payload)).not.toThrow();
-      });
-    });
+  describe('#setRawAnswerContentFormat', () => {
+    test.each(generatedRawContentFormat)(
+      'should accept a valid payload with format: "%i"',
+      (format: GeneratedRawContentFormat) => {
+        expect(() => setRawAnswerContentFormat(format)).not.toThrow();
+      }
+    );
   });
 });
