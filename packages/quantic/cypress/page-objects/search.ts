@@ -7,6 +7,7 @@ import {
 import {getAnalyticsBodyFromRequest} from '../e2e/common-expectations';
 import {buildMockRaw, buildMockResult} from '../fixtures/mock-result';
 import {
+  aliasCitationClickEventRequest,
   aliasSubmitFeedbackEventRequest,
   nextAnalyticsAlias,
 } from '../utils/analytics-utils';
@@ -98,7 +99,10 @@ export const InterceptAliases = {
     Qna: {
       AnswerAction: nextAnalyticsAlias('Qna.AnswerAction'),
       CitationHover: nextAnalyticsAlias('Qna.CitationHover'),
-      CitationClick: nextAnalyticsAlias('Qna.CitationClick'),
+      CitationClick: {
+        Source: nextAnalyticsAlias('Qna.CitationClick.Source'),
+        InlineLink: nextAnalyticsAlias('Qna.CitationClick.InlineLink'),
+      },
       SubmitFeedback: {
         Like: nextAnalyticsAlias('Qna.SubmitFeedback.Like'),
         Dislike: nextAnalyticsAlias('Qna.SubmitFeedback.Dislike'),
@@ -153,6 +157,8 @@ export function interceptSearch() {
       const eventType = req.body?.[0]?.meta.type;
       if (eventType === 'Qna.SubmitFeedback') {
         aliasSubmitFeedbackEventRequest(req);
+      } else if (eventType === 'Qna.CitationClick') {
+        aliasCitationClickEventRequest(req);
       } else {
         req.alias = nextAnalyticsAlias(eventType).substring(1);
       }
@@ -481,13 +487,17 @@ export function mockSearchWithoutSmartSnippetSuggestions(useCase?: string) {
 
 export function mockSearchWithGeneratedAnswer(
   streamId: string,
-  useCase?: string
+  useCase?: string,
+  responseId?: string
 ) {
   cy.intercept(getRoute(useCase), (req) => {
     req.continue((res) => {
       res.body.extendedResults = {
         generativeQuestionAnsweringId: streamId,
       };
+      if (responseId) {
+        res.body.searchUid = responseId;
+      }
       res.send();
     });
   }).as(InterceptAliases.Search.substring(1));
