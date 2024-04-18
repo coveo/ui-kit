@@ -9,7 +9,6 @@ import {
   buildSearchStatus,
   buildFacetConditionsManager,
   FacetResultsMustMatch,
-  TabState,
 } from '@coveo/headless';
 import {Component, h, State, Prop, Element} from '@stencil/core';
 import {
@@ -90,9 +89,6 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   @State()
   public searchStatusState!: SearchStatusState;
   @State() public error!: Error;
-  @BindStateToController('tab')
-  @State()
-  public tabState!: TabState;
 
   /**
    * Specifies a unique identifier for the facet.
