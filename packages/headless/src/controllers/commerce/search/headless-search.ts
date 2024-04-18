@@ -47,6 +47,7 @@ export function buildSearch(engine: CommerceEngine): Search {
   const getState = () => engine.state;
   const subControllers = buildSolutionTypeSubControllers(engine, {
     responseIdSelector,
+    fetchResultsActionCreator: executeSearch,
   });
 
   return {
