@@ -38,8 +38,8 @@ export interface CartItem {
   productId: string;
 
   /**
-   * The unique identifier of the product's variant.
-   * If the item is not a variant, set the same value as the productId.
+   * The stock keeping unit for the item being added to cart.
+   * Depending on how your catalog is structured, this may be the same value as the productId.
    */
   sku: string;
 
