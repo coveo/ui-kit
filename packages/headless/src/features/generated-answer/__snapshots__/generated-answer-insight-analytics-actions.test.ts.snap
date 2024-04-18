@@ -4,7 +4,7 @@ exports[`generated answer insight analytics actions when analyticsMode is \`next
 [
   "Qna.AnswerAction",
   {
-    "action": "expand",
+    "action": "collapse",
     "answer": {
       "id": "123",
       "type": "RGA",

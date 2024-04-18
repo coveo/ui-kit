@@ -341,6 +341,14 @@ export enum SearchPageEvents {
    */
   generatedAnswerShowAnswers = 'generatedAnswerShowAnswers',
   /**
+   * Identifies the custom event that gets logged when a user expand a generated answer.
+   */
+  expandGeneratedAnswer = 'expandGeneratedAnswer',
+  /**
+   * Identifies the custom event that gets logged when a user collapse a generated answer.
+   */
+  collapseGeneratedAnswer = 'collapseGeneratedAnswer',
+  /**
    * Identifies the custom event that gets logged when a user clicks the copy to clipboard button of a generated answer.
    */
   generatedAnswerCopyToClipboard = 'generatedAnswerCopyToClipboard',

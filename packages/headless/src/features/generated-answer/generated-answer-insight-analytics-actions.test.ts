@@ -526,7 +526,7 @@ describe('generated answer insight analytics actions', () => {
     });
 
     it('should log #logCollapseGeneratedAnswer with the right payload', async () => {
-      await logExpandGeneratedAnswer()()(
+      await logCollapseGeneratedAnswer()()(
         engine.dispatch,
         () => engine.state,
         {} as ThunkExtraArguments

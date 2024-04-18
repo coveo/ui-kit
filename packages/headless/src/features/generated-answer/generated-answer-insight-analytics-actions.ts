@@ -364,10 +364,8 @@ export const logGeneratedAnswerHideAnswers = (): InsightAction =>
   });
 
 export const logExpandGeneratedAnswer = (): InsightAction =>
-  makeInsightAnalyticsActionFactory(
-    SearchPageEvents.generatedAnswerShowAnswers
-  )({
-    prefix: 'analytics/generatedAnswer/show',
+  makeInsightAnalyticsActionFactory(SearchPageEvents.expandGeneratedAnswer)({
+    prefix: 'analytics/generatedAnswer/expand',
     __legacy__getBuilder: (client, state) => {
       const generativeQuestionAnsweringId =
         generativeQuestionAnsweringIdSelector(state);
@@ -396,10 +394,8 @@ export const logExpandGeneratedAnswer = (): InsightAction =>
   });
 
 export const logCollapseGeneratedAnswer = (): InsightAction =>
-  makeInsightAnalyticsActionFactory(
-    SearchPageEvents.generatedAnswerShowAnswers
-  )({
-    prefix: 'analytics/generatedAnswer/show',
+  makeInsightAnalyticsActionFactory(SearchPageEvents.collapseGeneratedAnswer)({
+    prefix: 'analytics/generatedAnswer/collapse',
     __legacy__getBuilder: (client, state) => {
       const generativeQuestionAnsweringId =
         generativeQuestionAnsweringIdSelector(state);
