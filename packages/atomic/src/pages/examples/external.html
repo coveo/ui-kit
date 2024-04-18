@@ -25,28 +25,26 @@
         font-size: 1rem;
       }
     </style>
-    <script>
-      (async () => {
-        await customElements.whenDefined('atomic-search-interface');
-        const searchInterface1 = document.querySelector('#interface-1');
-        const searchInterface2 = document.querySelector('#interface-2');
+    <script type="module">
+      await customElements.whenDefined('atomic-search-interface');
+      const searchInterface1 = document.querySelector('#interface-1');
+      const searchInterface2 = document.querySelector('#interface-2');
 
-        await Promise.all([
-          searchInterface1.initialize({
-            accessToken: 'xxc23ce82a-3733-496e-b37e-9736168c4fd9',
-            organizationId: 'electronicscoveodemocomo0n2fu8v',
-            organizationEndpoints: await searchInterface1.getOrganizationEndpoints('electronicscoveodemocomo0n2fu8v'),
-          }),
-          searchInterface2.initialize({
-            accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
-            organizationId: 'searchuisamples',
-            organizationEndpoints: await searchInterface2.getOrganizationEndpoints('searchuisamples'),
-          }),
-        ]);
+      await Promise.all([
+        searchInterface1.initialize({
+          accessToken: 'xxc23ce82a-3733-496e-b37e-9736168c4fd9',
+          organizationId: 'electronicscoveodemocomo0n2fu8v',
+          organizationEndpoints: await searchInterface1.getOrganizationEndpoints('electronicscoveodemocomo0n2fu8v'),
+        }),
+        searchInterface2.initialize({
+          accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+          organizationId: 'searchuisamples',
+          organizationEndpoints: await searchInterface2.getOrganizationEndpoints('searchuisamples'),
+        }),
+      ]);
 
-        searchInterface1.executeFirstSearch();
-        searchInterface2.executeFirstSearch();
-      })();
+      searchInterface1.executeFirstSearch();
+      searchInterface2.executeFirstSearch();
     </script>
   </head>
   <body>

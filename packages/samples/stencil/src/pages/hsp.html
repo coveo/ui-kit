@@ -14,21 +14,19 @@
       document.head.appendChild(script);
     </script>
 
-    <script>
-      (async () => {
-        await customElements.whenDefined('atomic-search-interface');
-        const searchInterface = document.querySelector('atomic-search-interface');
+    <script type="module">
+      await customElements.whenDefined('atomic-search-interface');
+      const searchInterface = document.querySelector('atomic-search-interface');
 
-        // Initialization
-        await searchInterface.initialize({
-          accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
-          organizationId: 'searchuisamples',
-          organizationEndpoints: await searchInterface.getOrganizationEndpoints('searchuisamples'),
-        });
+      // Initialization
+      await searchInterface.initialize({
+        accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+        organizationId: 'searchuisamples',
+        organizationEndpoints: await searchInterface.getOrganizationEndpoints('searchuisamples'),
+      });
 
-        // Trigger a first search
-        searchInterface.executeFirstSearch();
-      })();
+      // Trigger a first search
+      searchInterface.executeFirstSearch();
     </script>
   </head>
   <body>
