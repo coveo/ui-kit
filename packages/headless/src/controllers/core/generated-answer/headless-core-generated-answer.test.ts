@@ -262,6 +262,7 @@ describe('generated answer', () => {
         generatedAnswer.collapse();
 
         expect(collapseGeneratedAnswer).not.toHaveBeenCalled();
+        expect(logGeneratedAnswerCollapse).not.toHaveBeenCalled();
       });
     });
 
