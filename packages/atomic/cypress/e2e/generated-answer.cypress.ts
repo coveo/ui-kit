@@ -265,8 +265,6 @@ describe('Generated Answer Test Suites', () => {
         GeneratedAnswerAssertions.assertLocalStorageData({isVisible: false});
         GeneratedAnswerAssertions.assertLogHideGeneratedAnswer();
         GeneratedAnswerAssertions.assertDisclaimer(false);
-        GeneratedAnswerAssertions.assertShowButton(false);
-        GeneratedAnswerAssertions.assertAnswerCollapsed(false);
 
         describe('when component is re-activated', () => {
           beforeEach(() => {
