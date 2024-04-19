@@ -1,11 +1,4 @@
 import {
-  loadBreadcrumbActions,
-  loadQueryActions,
-  loadSearchActions,
-  loadSearchAnalyticsActions,
-  loadTabSetActions,
-} from '@coveo/headless';
-import {
   Component,
   h,
   Element,
@@ -54,9 +47,6 @@ export class AtomicTabSection {
   @Listen('atomic/tabClick')
   handleTabClick() {
     this.updateActiveTab();
-    if (this.clearStateOnTabChange) {
-      this.clearState();
-    }
   }
 
   componentDidLoad() {
@@ -82,15 +72,13 @@ export class AtomicTabSection {
     const activeTab = getActiveTab(this.bindings.engine.state)?.tab;
 
     if (initialTab && !activeTab) {
-      this.bindings.engine.dispatch(
-        loadTabSetActions(this.bindings.engine).updateActiveTab(initialTab.name)
-      );
+      initialTab.select();
       this.tabInit.emit();
     }
     this.updateActiveTab();
   }
 
-  buildDropdown() {
+  renderDropdown() {
     return this.tabs.map((tab) => (
       <li>
         <Button
@@ -134,24 +122,6 @@ export class AtomicTabSection {
     });
   }
 
-  clearState() {
-    const breadcrumbActions = loadBreadcrumbActions(this.bindings.engine);
-    const queryActions = loadQueryActions(this.bindings.engine);
-    const searchActions = loadSearchActions(this.bindings.engine);
-    const searchAnalyticsActions = loadSearchAnalyticsActions(
-      this.bindings.engine
-    );
-
-    this.bindings.engine.dispatch(breadcrumbActions.deselectAllBreadcrumbs());
-    this.bindings.engine.dispatch(
-      breadcrumbActions.deselectAllNonBreadcrumbs()
-    );
-    this.bindings.engine.dispatch(queryActions.updateQuery({q: ''}));
-    this.bindings.engine.dispatch(
-      searchActions.executeSearch(searchAnalyticsActions.logInterfaceChange())
-    );
-  }
-
   public render() {
     return (
       <div class="mb-4 overflow-visible ">
@@ -175,7 +145,7 @@ export class AtomicTabSection {
               ></atomic-icon>
             </Button>
             <ul class="absolute top-0 z-50 flex flex-col invisible gap-2 p-4 mt-6 bg-white rounded-md shadow-lg focus:visible group-focus-within:visible group:visible dropdown-content">
-              {this.buildDropdown()}
+              {this.renderDropdown()}
             </ul>
           </div>
         </div>

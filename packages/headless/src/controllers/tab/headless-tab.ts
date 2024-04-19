@@ -44,5 +44,9 @@ export function buildTab(engine: SearchEngine, props: TabProps): Tab {
       tab.select();
       search();
     },
+
+    selectWithoutSearch() {
+      tab.select();
+    },
   };
 }

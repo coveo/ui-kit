@@ -1,4 +1,10 @@
-import {Controller, SearchEngine, Unsubscribe, buildTab} from '@coveo/headless';
+import {
+  SearchEngine,
+  Tab,
+  TabState,
+  Unsubscribe,
+  buildTab,
+} from '@coveo/headless';
 import {
   Component,
   Prop,
@@ -17,24 +23,6 @@ import {Button} from '../../../common/button';
 import {CommonBindings} from '../../../common/interface/bindings';
 import {dispatchTabLoaded} from '../../../common/tabs/tab-common';
 import {AtomicStore} from '../../atomic-search-interface/store';
-
-interface Tab extends Controller {
-  /**
-   * Makes the tab the active one.
-   */
-  select(): void;
-  /**
-   * The state of the `Tab` controller.
-   */
-  state: TabState;
-}
-
-interface TabState {
-  /**
-   * Whether the current tab is the active one.
-   * */
-  isActive: boolean;
-}
 
 type TabBindings = CommonBindings<
   SearchEngine,
@@ -93,18 +81,26 @@ export class AtomicTab {
    * Makes the tab the active one.
    */
   @Method()
-  async select() {
+  async select(triggerSearch: boolean = true) {
     if (!this.tab.state.isActive) {
-      this.tab.select();
+      this.tab.select(triggerSearch);
       this.tabClick.emit();
     }
   }
-
   public initialize() {
+    const clearStateOnTabChange =
+      this.host.parentElement?.getAttribute('clear-state-on-tab-change') ===
+      'true';
+
     this.tab = buildTab(this.bindings.engine, {
-      options: {expression: this.expression, id: this.name},
+      options: {
+        expression: this.expression,
+        id: this.name,
+        clearStateOnTabChange: clearStateOnTabChange,
+      },
       initialState: {isActive: this.active},
     });
+
     this.unsubscribe = this.tab.subscribe(
       () => (this.active = this.tab.state.isActive)
     );
