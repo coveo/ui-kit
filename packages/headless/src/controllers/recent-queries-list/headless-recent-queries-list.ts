@@ -17,10 +17,12 @@ import {
 } from '../../features/recent-queries/recent-queries-analytics-actions';
 import {recentQueriesReducer as recentQueries} from '../../features/recent-queries/recent-queries-slice';
 import {
+  PrepareForSearchWithQueryOptions,
   executeSearch,
   prepareForSearchWithQuery,
 } from '../../features/search/search-actions';
 import {searchReducer as search} from '../../features/search/search-slice';
+import {UpdateQueryActionCreatorPayload} from '../../ssr.index';
 import {RecentQueriesSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
 import {
@@ -201,15 +203,18 @@ export function buildRecentQueriesList(
       if (errorMessage) {
         throw new Error(errorMessage);
       }
-      dispatch(
-        prepareForSearchWithQuery({
-          q: this.state.queries[index],
-          clearFilters: registrationOptions.clearFilters,
-          ...(isBoolean(engine.state.query?.enableQuerySyntax) && {
-            enableQuerySyntax: engine.state.query.enableQuerySyntax,
-          }),
-        })
-      );
+
+      const queryOptions: UpdateQueryActionCreatorPayload &
+        PrepareForSearchWithQueryOptions = {
+        q: this.state.queries[index],
+        clearFilters: registrationOptions.clearFilters,
+      };
+
+      if (isBoolean(engine.state.query?.enableQuerySyntax)) {
+        queryOptions.enableQuerySyntax = engine.state.query.enableQuerySyntax;
+      }
+
+      dispatch(prepareForSearchWithQuery(queryOptions));
       dispatch(
         executeSearch({
           legacy: logRecentQueryClick(),
