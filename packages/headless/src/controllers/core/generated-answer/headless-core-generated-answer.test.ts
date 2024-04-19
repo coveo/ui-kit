@@ -239,6 +239,7 @@ describe('generated answer', () => {
         generatedAnswer.expand();
 
         expect(expandGeneratedAnswer).not.toHaveBeenCalled();
+        expect(logGeneratedAnswerExpand).not.toHaveBeenCalled();
       });
     });
 
