@@ -2526,7 +2526,7 @@ export namespace Components {
         /**
           * Makes the tab the active one.
          */
-        "select": () => Promise<void>;
+        "select": (triggerSearch?: boolean) => Promise<void>;
     }
     interface AtomicTabSection {
         /**

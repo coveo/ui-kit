@@ -73,9 +73,9 @@ export class AtomicTabSection {
 
     if (initialTab && !activeTab) {
       initialTab.select();
-      this.tabInit.emit();
     }
     this.updateActiveTab();
+    this.tabInit.emit();
   }
 
   renderDropdown() {
