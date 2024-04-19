@@ -22,8 +22,8 @@ import {
   logOpenGeneratedAnswerSource,
   logRephraseGeneratedAnswer,
   logRetryGeneratedAnswer,
-  logExpandGeneratedAnswer,
-  logCollapseGeneratedAnswer,
+  logGeneratedAnswerExpand,
+  logGeneratedAnswerCollapse,
 } from './generated-answer-analytics-actions';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
 import {generatedAnswerStyle} from './generated-response-format';
@@ -62,10 +62,10 @@ const mockMakeGeneratedAnswerHideAnswers = jest.fn(() => ({
 const mockMakeGeneratedAnswerCopyToClipboard = jest.fn(() => ({
   log: mockLogFunction,
 }));
-const mockMakeExpandGeneratedAnswer = jest.fn(() => ({
+const mockMakeGeneratedAnswerExpand = jest.fn(() => ({
   log: mockLogFunction,
 }));
-const mockMakeCollapseGeneratedAnswer = jest.fn(() => ({
+const mockMakeGeneratedAnswerCollapse = jest.fn(() => ({
   log: mockLogFunction,
 }));
 const emit = jest.fn();
@@ -96,8 +96,8 @@ jest.mock('coveo.analytics', () => {
     makeGeneratedAnswerShowAnswers: mockMakeGeneratedAnswerShowAnswers,
     makeGeneratedAnswerHideAnswers: mockMakeGeneratedAnswerHideAnswers,
     makeGeneratedAnswerCopyToClipboard: mockMakeGeneratedAnswerCopyToClipboard,
-    makeExpandGeneratedAnswer: mockMakeExpandGeneratedAnswer,
-    makeCollapseGeneratedAnswer: mockMakeCollapseGeneratedAnswer,
+    makeGeneratedAnswerExpand: mockMakeGeneratedAnswerExpand,
+    makeGeneratedAnswerCollapse: mockMakeGeneratedAnswerCollapse,
   }));
 
   return {
@@ -380,14 +380,14 @@ describe('generated answer analytics actions', () => {
       expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
 
-    it('should log #logExpandGeneratedAnswer with the right payload', async () => {
-      await logExpandGeneratedAnswer()()(
+    it('should log #logGeneratedAnswerExpand with the right payload', async () => {
+      await logGeneratedAnswerExpand()()(
         engine.dispatch,
         () => engine.state,
         {} as ThunkExtraArguments
       );
 
-      const mockToUse = mockMakeExpandGeneratedAnswer;
+      const mockToUse = mockMakeGeneratedAnswerExpand;
 
       expect(mockToUse).toHaveBeenCalledTimes(1);
       expect(mockToUse).toHaveBeenCalledWith({
@@ -396,14 +396,14 @@ describe('generated answer analytics actions', () => {
       expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
 
-    it('should log #logCollapseGeneratedAnswer with the right payload', async () => {
-      await logCollapseGeneratedAnswer()()(
+    it('should log #logGeneratedAnswerCollapse with the right payload', async () => {
+      await logGeneratedAnswerCollapse()()(
         engine.dispatch,
         () => engine.state,
         {} as ThunkExtraArguments
       );
 
-      const mockToUse = mockMakeCollapseGeneratedAnswer;
+      const mockToUse = mockMakeGeneratedAnswerCollapse;
 
       expect(mockToUse).toHaveBeenCalledTimes(1);
       expect(mockToUse).toHaveBeenCalledWith({
@@ -525,8 +525,8 @@ describe('generated answer analytics actions', () => {
       expect(emit.mock.calls[0]).toMatchSnapshot();
     });
 
-    it('should log #logExpandGeneratedAnswer with the right payload', async () => {
-      await logExpandGeneratedAnswer()()(
+    it('should log #logGeneratedAnswerExpand with the right payload', async () => {
+      await logGeneratedAnswerExpand()()(
         engine.dispatch,
         () => engine.state,
         {} as ThunkExtraArguments
@@ -536,8 +536,8 @@ describe('generated answer analytics actions', () => {
       expect(emit.mock.calls[0]).toMatchSnapshot();
     });
 
-    it('should log #logCollapseGeneratedAnswer with the right payload', async () => {
-      await logCollapseGeneratedAnswer()()(
+    it('should log #logGeneratedAnswerCollapse with the right payload', async () => {
+      await logGeneratedAnswerCollapse()()(
         engine.dispatch,
         () => engine.state,
         {} as ThunkExtraArguments

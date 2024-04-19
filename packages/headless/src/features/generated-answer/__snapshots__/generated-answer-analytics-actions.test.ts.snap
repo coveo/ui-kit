@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`generated answer analytics actions when analyticsMode is \`next\` should log #logCollapseGeneratedAnswer with the right payload 1`] = `
+exports[`generated answer analytics actions when analyticsMode is \`next\` should log #logGeneratedAnswerCollapse with the right payload 1`] = `
 [
   "Qna.AnswerAction",
   {
@@ -41,7 +41,7 @@ exports[`generated answer analytics actions when analyticsMode is \`next\` shoul
 ]
 `;
 
-exports[`generated answer analytics actions when analyticsMode is \`next\` should log #logExpandGeneratedAnswer with the right payload 1`] = `
+exports[`generated answer analytics actions when analyticsMode is \`next\` should log #logGeneratedAnswerExpand with the right payload 1`] = `
 [
   "Qna.AnswerAction",
   {

@@ -57,7 +57,7 @@
     "@reduxjs/toolkit": "2.2.3",
     "abab": "2.0.6",
     "abortcontroller-polyfill": "1.7.5",
-    "coveo.analytics": "2.29.6",
+    "coveo.analytics": "2.30.2",
     "dayjs": "1.11.10",
     "exponential-backoff": "3.1.0",
     "fast-equals": "5.0.1",

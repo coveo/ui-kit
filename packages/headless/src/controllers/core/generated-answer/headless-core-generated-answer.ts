@@ -227,8 +227,8 @@ export interface GeneratedAnswerAnalyticsClient {
     responseFormat: GeneratedResponseFormat
   ) => LegacySearchAction;
   logRetryGeneratedAnswer: () => LegacySearchAction;
-  logExpandGeneratedAnswer: () => CustomAction;
-  logCollapseGeneratedAnswer: () => CustomAction;
+  logGeneratedAnswerExpand: () => CustomAction;
+  logGeneratedAnswerCollapse: () => CustomAction;
 }
 
 /**
@@ -347,14 +347,14 @@ export function buildCoreGeneratedAnswer(
     expand() {
       if (!this.state.expanded) {
         dispatch(expandGeneratedAnswer());
-        dispatch(analyticsClient.logExpandGeneratedAnswer());
+        dispatch(analyticsClient.logGeneratedAnswerExpand());
       }
     },
 
     collapse() {
       if (this.state.expanded) {
         dispatch(collapseGeneratedAnswer());
-        dispatch(analyticsClient.logCollapseGeneratedAnswer());
+        dispatch(analyticsClient.logGeneratedAnswerCollapse());
       }
     },
 

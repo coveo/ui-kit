@@ -21,8 +21,8 @@ import {
   logHoverCitation,
   logLikeGeneratedAnswer,
   logOpenGeneratedAnswerSource,
-  logExpandGeneratedAnswer,
-  logCollapseGeneratedAnswer,
+  logGeneratedAnswerExpand,
+  logGeneratedAnswerCollapse,
 } from '../../../features/generated-answer/generated-answer-analytics-actions';
 import {generatedAnswerReducer} from '../../../features/generated-answer/generated-answer-slice';
 import {
@@ -249,7 +249,7 @@ describe('generated answer', () => {
         generatedAnswer.expand();
 
         expect(expandGeneratedAnswer).toHaveBeenCalled();
-        expect(logExpandGeneratedAnswer).toHaveBeenCalled();
+        expect(logGeneratedAnswerExpand).toHaveBeenCalled();
       });
     });
   });
@@ -272,7 +272,7 @@ describe('generated answer', () => {
         generatedAnswer.collapse();
 
         expect(collapseGeneratedAnswer).toHaveBeenCalled();
-        expect(logCollapseGeneratedAnswer).toHaveBeenCalled();
+        expect(logGeneratedAnswerCollapse).toHaveBeenCalled();
       });
     });
   });

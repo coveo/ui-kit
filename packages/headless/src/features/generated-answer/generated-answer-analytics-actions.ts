@@ -319,7 +319,7 @@ export const logGeneratedAnswerHideAnswers = (): CustomAction =>
     },
   });
 
-export const logExpandGeneratedAnswer = (): CustomAction =>
+export const logGeneratedAnswerExpand = (): CustomAction =>
   makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/expand',
     __legacy__getBuilder: (client, state) => {
@@ -328,7 +328,7 @@ export const logExpandGeneratedAnswer = (): CustomAction =>
       if (!generativeQuestionAnsweringId) {
         return null;
       }
-      return client.makeExpandGeneratedAnswer({
+      return client.makeGeneratedAnswerExpand({
         generativeQuestionAnsweringId,
       });
     },
@@ -346,7 +346,7 @@ export const logExpandGeneratedAnswer = (): CustomAction =>
     },
   });
 
-export const logCollapseGeneratedAnswer = (): CustomAction =>
+export const logGeneratedAnswerCollapse = (): CustomAction =>
   makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/collapse',
     __legacy__getBuilder: (client, state) => {
@@ -355,7 +355,7 @@ export const logCollapseGeneratedAnswer = (): CustomAction =>
       if (!generativeQuestionAnsweringId) {
         return null;
       }
-      return client.makeCollapseGeneratedAnswer({
+      return client.makeGeneratedAnswerCollapse({
         generativeQuestionAnsweringId,
       });
     },
@@ -421,6 +421,6 @@ export const generatedAnswerAnalyticsClient = {
   logOpenGeneratedAnswerSource,
   logRetryGeneratedAnswer,
   logRephraseGeneratedAnswer,
-  logExpandGeneratedAnswer,
-  logCollapseGeneratedAnswer,
+  logGeneratedAnswerExpand,
+  logGeneratedAnswerCollapse,
 };

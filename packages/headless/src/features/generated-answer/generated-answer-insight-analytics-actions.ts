@@ -363,8 +363,8 @@ export const logGeneratedAnswerHideAnswers = (): InsightAction =>
     },
   });
 
-export const logExpandGeneratedAnswer = (): InsightAction =>
-  makeInsightAnalyticsActionFactory(SearchPageEvents.expandGeneratedAnswer)({
+export const logGeneratedAnswerExpand = (): InsightAction =>
+  makeInsightAnalyticsActionFactory(SearchPageEvents.generatedAnswerExpand)({
     prefix: 'analytics/generatedAnswer/expand',
     __legacy__getBuilder: (client, state) => {
       const generativeQuestionAnsweringId =
@@ -372,7 +372,7 @@ export const logExpandGeneratedAnswer = (): InsightAction =>
       if (!generativeQuestionAnsweringId) {
         return null;
       }
-      return client.logExpandGeneratedAnswer(
+      return client.logGeneratedAnswerExpand(
         {
           generativeQuestionAnsweringId,
         },
@@ -393,8 +393,8 @@ export const logExpandGeneratedAnswer = (): InsightAction =>
     },
   });
 
-export const logCollapseGeneratedAnswer = (): InsightAction =>
-  makeInsightAnalyticsActionFactory(SearchPageEvents.collapseGeneratedAnswer)({
+export const logGeneratedAnswerCollapse = (): InsightAction =>
+  makeInsightAnalyticsActionFactory(SearchPageEvents.generatedAnswerCollapse)({
     prefix: 'analytics/generatedAnswer/collapse',
     __legacy__getBuilder: (client, state) => {
       const generativeQuestionAnsweringId =
@@ -402,7 +402,7 @@ export const logCollapseGeneratedAnswer = (): InsightAction =>
       if (!generativeQuestionAnsweringId) {
         return null;
       }
-      return client.logCollapseGeneratedAnswer(
+      return client.logGeneratedAnswerCollapse(
         {
           generativeQuestionAnsweringId,
         },
@@ -468,6 +468,6 @@ export const generatedAnswerInsightAnalyticsClient = {
   logOpenGeneratedAnswerSource,
   logRetryGeneratedAnswer,
   logRephraseGeneratedAnswer,
-  logExpandGeneratedAnswer,
-  logCollapseGeneratedAnswer,
+  logGeneratedAnswerExpand,
+  logGeneratedAnswerCollapse,
 };
