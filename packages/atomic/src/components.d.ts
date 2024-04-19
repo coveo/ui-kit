@@ -2504,19 +2504,19 @@ export namespace Components {
     }
     interface AtomicTab {
         /**
-          * Whether this tab is active upon rendering. If multiple tabs are set to active on render, the last one to be rendered will override the others.
+          * Whether to make this tab the active one upon rendering. If this prop is set to `true` on multiple tabs, the last tab to render will be the active one.
          */
         "active": boolean;
         /**
-          * The expression that will be passed to the search as a `cq` paramenter upon being selected.
+          * The [constant query expression (`cq`)](https://docs.coveo.com/en/2830/searching-with-coveo/about-the-query-expression#constant-query-expression-cq) to apply when the tab is the active one.
          */
         "expression": string;
         /**
-          * Indicates whether the tab is currently active.
+          * Whether the tab is the active one.
          */
         "isActive": boolean;
         /**
-          * The label displayed on the tab.
+          * The label to display on the tab.
          */
         "label": string;
         /**
@@ -2524,13 +2524,13 @@ export namespace Components {
          */
         "name": string;
         /**
-          * Activates the tab.
+          * Makes the tab the active one.
          */
         "select": () => Promise<void>;
     }
     interface AtomicTabSection {
         /**
-          * Specifies whether the state should be cleared when the tab changes.
+          * Whether to clear the state when the active tab changes.
          */
         "clearStateOnTabChange"?: boolean;
         /**
@@ -6792,19 +6792,19 @@ declare namespace LocalJSX {
     }
     interface AtomicTab {
         /**
-          * Whether this tab is active upon rendering. If multiple tabs are set to active on render, the last one to be rendered will override the others.
+          * Whether to make this tab the active one upon rendering. If this prop is set to `true` on multiple tabs, the last tab to render will be the active one.
          */
         "active"?: boolean;
         /**
-          * The expression that will be passed to the search as a `cq` paramenter upon being selected.
+          * The [constant query expression (`cq`)](https://docs.coveo.com/en/2830/searching-with-coveo/about-the-query-expression#constant-query-expression-cq) to apply when the tab is the active one.
          */
         "expression"?: string;
         /**
-          * Indicates whether the tab is currently active.
+          * Whether the tab is the active one.
          */
         "isActive"?: boolean;
         /**
-          * The label displayed on the tab.
+          * The label to display on the tab.
          */
         "label": string;
         /**
@@ -6815,7 +6815,7 @@ declare namespace LocalJSX {
     }
     interface AtomicTabSection {
         /**
-          * Specifies whether the state should be cleared when the tab changes.
+          * Whether to clear the state when the active tab changes.
          */
         "clearStateOnTabChange"?: boolean;
         /**
