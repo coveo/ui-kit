@@ -2,6 +2,10 @@ import {CartItemParam} from '../../../../api/commerce/commerce-api-params';
 
 export interface CartItemWithMetadata extends CartItemParam {
   /**
+   * The unique identifier of the product.
+   */
+  productId: string;
+  /**
    * The name of the cart item.
    */
   name: string;

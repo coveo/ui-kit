@@ -2,7 +2,6 @@ import defaultStory from 'atomic-storybook/default-story';
 import {html} from 'lit-html';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
-  'Atomic/SearchBox/RecentQueries',
   'atomic-search-box-recent-queries',
   {},
   {
@@ -21,5 +20,6 @@ const {defaultModuleExport, exportedStory} = defaultStory(
 export default {
   ...defaultModuleExport,
   title: 'Atomic/SearchBox/RecentQueries',
+  id: 'atomic-search-box-recent-queries',
 };
 export const Default = exportedStory;

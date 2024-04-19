@@ -1,5 +1,5 @@
 import {InterceptAliases} from '../../../page-objects/search';
-import {SearchExpectations} from '../../search-expectations';
+import {completeSearchRequest} from '../../common-expectations';
 import {SortSelector, SortSelectors} from './sort-selectors';
 
 function sortExpectations(selector: SortSelector) {
@@ -31,6 +31,13 @@ function sortExpectations(selector: SortSelector) {
       });
     },
 
+    sortCriteriaInSearchRequest: (
+      body: Record<string, unknown>,
+      value: string
+    ) => {
+      expect(body.sortCriteria).to.equal(value);
+    },
+
     logSortResults: (value: string) => {
       cy.wait(InterceptAliases.UA.Sort.SortResults).then((interception) => {
         const analyticsBody = interception.request.body;
@@ -45,7 +52,5 @@ function sortExpectations(selector: SortSelector) {
 
 export const SortExpectations = {
   ...sortExpectations(SortSelectors),
-  search: {
-    ...SearchExpectations,
-  },
+  completeSearchRequest,
 };

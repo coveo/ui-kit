@@ -1,7 +1,6 @@
 import defaultStory from 'atomic-storybook/default-story';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
-  'Atomic/NumericFacet/Range',
   'atomic-numeric-facet-range',
   {start: 0, end: 1000},
   {
@@ -13,5 +12,9 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   }
 );
 
-export default {...defaultModuleExport, title: 'Atomic/NumericFacet/Range'};
+export default {
+  ...defaultModuleExport,
+  title: 'Atomic/NumericFacet/Range',
+  id: 'atomic-numeric-facet-range',
+};
 export const Default = exportedStory;

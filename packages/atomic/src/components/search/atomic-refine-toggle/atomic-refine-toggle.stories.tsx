@@ -2,7 +2,6 @@ import defaultStory from 'atomic-storybook/default-story';
 import {html} from 'lit-html';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
-  'Atomic/RefineToggle',
   'atomic-refine-toggle',
   {},
   {
@@ -25,5 +24,9 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   }
 );
 
-export default {...defaultModuleExport, title: 'Atomic/RefineToggle'};
+export default {
+  ...defaultModuleExport,
+  title: 'Atomic/RefineToggle',
+  id: 'atomic-refine-toggle',
+};
 export const Default = exportedStory;

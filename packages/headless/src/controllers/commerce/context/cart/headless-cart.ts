@@ -38,6 +38,12 @@ export interface CartItem {
   productId: string;
 
   /**
+   * The stock keeping unit for the item being added to cart.
+   * Depending on how your catalog is structured, this may be the same value as the productId.
+   */
+  sku: string;
+
+  /**
    * The human-readable name of the product.
    */
   name: string;
@@ -186,7 +192,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     currentItem: CartItem,
     prevItem: CartItemWithMetadata | undefined
   ): Ec.CartAction {
-    const {quantity: currentQuantity, ...product} = currentItem;
+    const {quantity: currentQuantity, sku, ...product} = currentItem;
     const action = getCartAction(currentItem, prevItem);
     const quantity = !prevItem
       ? currentQuantity
@@ -215,7 +221,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     },
 
     updateItem(item: CartItem) {
-      const prevItem = itemSelector(getState(), item.productId);
+      const prevItem = itemSelector(getState(), item.sku);
       const doesNotNeedUpdate = !prevItem && item.quantity <= 0;
 
       if (doesNotNeedUpdate || isEqual(item, prevItem)) {
