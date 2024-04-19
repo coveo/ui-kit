@@ -52,7 +52,7 @@ export const buildCommerceAPIRequest = async (
   };
 };
 
-const buildBaseCommerceAPIRequest = async (
+export const buildBaseCommerceAPIRequest = async (
   state: StateNeededByQueryCommerceAPI
 ): Promise<BaseCommerceAPIRequest> => {
   const {view, user, ...restOfContext} = state.commerceContext;
