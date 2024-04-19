@@ -99,12 +99,10 @@ export function buildCategoryFacet(
   const facetSearchStateSelector = createSelector(
     (state: CommerceEngineState) => state.categoryFacetSearchSet[getFacetId()],
     (facetSearch) => ({
-      facetSearch: {
-        isLoading: facetSearch.isLoading,
-        moreValuesAvailable: facetSearch.response.moreValuesAvailable,
-        query: facetSearch.options.query,
-        values: facetSearch.response.values,
-      },
+      isLoading: facetSearch.isLoading,
+      moreValuesAvailable: facetSearch.response.moreValuesAvailable,
+      query: facetSearch.options.query,
+      values: facetSearch.response.values,
     })
   );
 
@@ -162,7 +160,7 @@ export function buildCategoryFacet(
         canShowMoreValues,
         hasActiveValues,
         selectedValueAncestry,
-        ...facetSearchStateSelector(engine.state),
+        facetSearch: facetSearchStateSelector(engine.state),
       };
     },
   };
