@@ -65,17 +65,17 @@ export class AtomicTabSection {
     }
   }
 
-  setInitialTab() {
+  async setInitialTab() {
     const initialTab =
       this.tabs.find((tab) => tab.name === this.defaultActiveTab) ||
       this.tabs[0];
     const activeTab = getActiveTab(this.bindings.engine.state)?.tab;
 
     if (initialTab && !activeTab) {
-      initialTab.select();
+      await initialTab.select(false);
+      this.tabInit.emit();
     }
     this.updateActiveTab();
-    this.tabInit.emit();
   }
 
   renderDropdown() {
