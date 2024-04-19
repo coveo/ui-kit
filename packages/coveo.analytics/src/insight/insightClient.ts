@@ -560,6 +560,24 @@ export class CoveoInsightClient {
         );
     }
 
+    public logGeneratedAnswerExpand(generatedAnswerMetadata: GeneratedAnswerBaseMeta, metadata?: CaseMetadata) {
+        return this.logCustomEvent(
+            SearchPageEvents.generatedAnswerExpand,
+            metadata
+                ? {...generateMetadataToSend(metadata, false), ...generatedAnswerMetadata}
+                : generatedAnswerMetadata
+        );
+    }
+
+    public logGeneratedAnswerCollapse(generatedAnswerMetadata: GeneratedAnswerBaseMeta, metadata?: CaseMetadata) {
+        return this.logCustomEvent(
+            SearchPageEvents.generatedAnswerCollapse,
+            metadata
+                ? {...generateMetadataToSend(metadata, false), ...generatedAnswerMetadata}
+                : generatedAnswerMetadata
+        );
+    }
+
     public logGeneratedAnswerFeedbackSubmit(
         generatedAnswerFeedbackMetadata: GeneratedAnswerFeedbackMeta,
         metadata?: CaseMetadata

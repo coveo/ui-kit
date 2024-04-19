@@ -585,6 +585,24 @@ describe('InsightClient', () => {
             expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerShowAnswers, exampleGeneratedAnswerMetadata);
         });
 
+        it('should send proper payload for #generatedAnswerExpand', async () => {
+            const exampleGeneratedAnswerMetadata = {
+                generativeQuestionAnsweringId: '123',
+            };
+
+            await client.logGeneratedAnswerExpand(exampleGeneratedAnswerMetadata);
+            expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerExpand, exampleGeneratedAnswerMetadata);
+        });
+
+        it('should send proper payload for #generatedAnswerCollapse', async () => {
+            const exampleGeneratedAnswerMetadata = {
+                generativeQuestionAnsweringId: '123',
+            };
+
+            await client.logGeneratedAnswerCollapse(exampleGeneratedAnswerMetadata);
+            expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerCollapse, exampleGeneratedAnswerMetadata);
+        });
+
         it('should send proper payload for #generatedAnswerFeedbackSubmit', async () => {
             const exampleGeneratedAnswerMetadata = {
                 generativeQuestionAnsweringId: '123',
@@ -1338,6 +1356,32 @@ describe('InsightClient', () => {
 
             await client.logGeneratedAnswerShowAnswers(exampleGeneratedAnswerMetadata, baseCaseMetadata);
             expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerShowAnswers, expectedMetadata);
+        });
+
+        it('should send proper payload for #generatedAnswerExpand', async () => {
+            const exampleGeneratedAnswerMetadata = {
+                generativeQuestionAnsweringId: '123',
+            };
+            const expectedMetadata = {
+                ...exampleGeneratedAnswerMetadata,
+                ...expectedBaseCaseMetadata,
+            };
+
+            await client.logGeneratedAnswerExpand(exampleGeneratedAnswerMetadata, baseCaseMetadata);
+            expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerExpand, expectedMetadata);
+        });
+
+        it('should send proper payload for #generatedAnswerCollapse', async () => {
+            const exampleGeneratedAnswerMetadata = {
+                generativeQuestionAnsweringId: '123',
+            };
+            const expectedMetadata = {
+                ...exampleGeneratedAnswerMetadata,
+                ...expectedBaseCaseMetadata,
+            };
+
+            await client.logGeneratedAnswerCollapse(exampleGeneratedAnswerMetadata, baseCaseMetadata);
+            expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerCollapse, expectedMetadata);
         });
 
         it('should send proper payload for #generatedAnswerFeedbackSubmit', async () => {

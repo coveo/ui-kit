@@ -331,6 +331,14 @@ export enum SearchPageEvents {
      */
     generatedAnswerShowAnswers = 'generatedAnswerShowAnswers',
     /**
+     * Identifies the custom event that gets logged when a user expand a generated answer.
+     */
+    generatedAnswerExpand = 'generatedAnswerExpand',
+    /**
+     * Identifies the custom event that gets logged when a user collapse a generated answer.
+     */
+    generatedAnswerCollapse = 'generatedAnswerCollapse',
+    /**
      * Identifies the custom event that gets logged when a user submits a feedback of a generated answer.
      */
     generatedAnswerFeedbackSubmit = 'generatedAnswerFeedbackSubmit',
@@ -382,6 +390,8 @@ export const CustomEventsTypes: Partial<Record<SearchPageEvents | InsightEvents,
     [SearchPageEvents.generatedAnswerCopyToClipboard]: 'generatedAnswer',
     [SearchPageEvents.generatedAnswerHideAnswers]: 'generatedAnswer',
     [SearchPageEvents.generatedAnswerShowAnswers]: 'generatedAnswer',
+    [SearchPageEvents.generatedAnswerExpand]: 'generatedAnswer',
+    [SearchPageEvents.generatedAnswerCollapse]: 'generatedAnswer',
     [SearchPageEvents.generatedAnswerFeedbackSubmit]: 'generatedAnswer',
     [InsightEvents.expandToFullUI]: 'interface',
     [InsightEvents.openUserActions]: 'User Actions',
