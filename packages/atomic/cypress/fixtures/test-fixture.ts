@@ -300,9 +300,5 @@ export const generateComponentHTML = (tag: string, props: TagProps = {}) => {
 };
 
 export const generateLongTextAnswer = () => {
-  let longText = '';
-  for (let i = 0; i < 200; i++) {
-    longText += 'This is my long answer. ';
-  }
-  return longText.trim();
+  return new Array(200).fill('This is a long answer.').join(' ');
 };
