@@ -95,6 +95,10 @@ export class GeneratedAnswerCommon {
     }
 
     if (isGenerating) {
+      if (this.props.collapsible) {
+        this.props.setIsCollapsed(true);
+      }
+
       return this.props.getBindings().i18n.t('generating-answer');
     }
 
@@ -230,6 +234,7 @@ export class GeneratedAnswerCommon {
           <div class="flex gap-2 h-9 items-center ml-auto">
             {!this.hasRetryableError &&
               !this.props.getGeneratedAnswerState()?.isStreaming &&
+              !this.props.getIsCollapsed() &&
               this.isAnswerVisible && (
                 <div class="feedback-buttons flex shrink-0 gap-2 ml-auto">
                   <FeedbackButton

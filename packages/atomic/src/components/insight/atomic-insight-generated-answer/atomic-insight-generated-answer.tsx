@@ -10,6 +10,7 @@ import {
   InsightGeneratedAnswerStyle,
 } from '..';
 import {AriaLiveRegion} from '../../../utils/accessibility-utils';
+import {debounce} from '../../../utils/debounce-utils';
 import {
   BindStateToController,
   InitializableComponent,
@@ -126,7 +127,11 @@ export class AtomicInsightGeneratedAnswer
     this.generatedAnswerCommon.insertFeedbackModal();
 
     if (window.ResizeObserver) {
-      this.resizeObserver = new ResizeObserver(() => this.adaptAnswerHeight());
+      const debouncedAdaptAnswerHeight = debounce(
+        () => this.adaptAnswerHeight(),
+        100
+      );
+      this.resizeObserver = new ResizeObserver(debouncedAdaptAnswerHeight);
       this.resizeObserver.observe(this.host);
     }
   }
@@ -162,7 +167,6 @@ export class AtomicInsightGeneratedAnswer
     }
 
     this.setAriaMessage(this.generatedAnswerCommon.getGeneratedAnswerStatus());
-    this.setIsCollapsed(true);
   };
 
   private setCopied = (isCopied: boolean) => {
@@ -226,9 +230,10 @@ export class AtomicInsightGeneratedAnswer
       this.toggleClass(showButton, 'show-button-visible', true);
       this.toggleClass(footer, 'is-collapsible', true);
     } else {
-      this.toggleClass(container, 'answer-collapsed', this.isCollapsed);
+      this.toggleClass(container, 'answer-collapsed', false);
       this.toggleClass(showButton, 'show-button-visible', false);
       this.toggleClass(footer, 'is-collapsible', false);
+      this.setIsCollapsed(false);
     }
   }
 
