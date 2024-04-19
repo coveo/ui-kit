@@ -13,27 +13,17 @@ type AnyFacetType = Facet | NumericFacet | CategoryFacet | DateFacet;
  */
 export function updateFacetVisibilityForActiveTab(
   tabs: string,
-  facet?: AnyFacetType,
-  bindings: AnyBindings
+  bindings: AnyBindings,
+  facet?: AnyFacetType
 ): boolean {
   if (tabs !== '' && facet) {
     if (shouldDisplayOnCurrentTab(tabs, bindings.engine.state)) {
-      enableFacet(facet);
+      facet.enable();
       return true;
     } else {
-      disableFacet(facet);
+      facet.disable();
       return false;
     }
   }
   return true;
-}
-
-function disableFacet(facet: AnyFacetType) {
-  facet.state.enabled = false;
-  facet.disable();
-}
-
-function enableFacet(facet: AnyFacetType) {
-  facet.state.enabled = true;
-  facet.enable();
 }
