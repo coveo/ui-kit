@@ -80,7 +80,7 @@ describe('recent queries list', () => {
     });
 
     afterEach(() => {
-      mockedprepareForSearchWithQuery.mockClear();
+      mockedPrepareForSearchWithQuery.mockClear();
     });
 
     it('should register with props on init', () => {
@@ -110,8 +110,8 @@ describe('recent queries list', () => {
       engine.state.query = buildMockQueryState();
       engine.state.recentQueries = {...testInitialState, ...testOptions};
       recentQueriesList.executeRecentQuery(0);
-      expect(mockedprepareForSearchWithQuery).toHaveBeenCalledTimes(1);
-      expect(mockedprepareForSearchWithQuery).toHaveBeenCalledWith({
+      expect(mockedPrepareForSearchWithQuery).toHaveBeenCalledTimes(1);
+      expect(mockedPrepareForSearchWithQuery).toHaveBeenCalledWith({
         q: testInitialState.queries[0],
         clearFilters: testOptions.clearFilters,
         enableQuerySyntax: false,
@@ -122,8 +122,8 @@ describe('recent queries list', () => {
       engine.state.query = buildMockQueryState({enableQuerySyntax: true});
       recentQueriesList = buildRecentQueriesList(engine);
       recentQueriesList.executeRecentQuery(0);
-      expect(mockedprepareForSearchWithQuery).toHaveBeenCalledTimes(1);
-      expect(mockedprepareForSearchWithQuery).toHaveBeenCalledWith(
+      expect(mockedPrepareForSearchWithQuery).toHaveBeenCalledTimes(1);
+      expect(mockedPrepareForSearchWithQuery).toHaveBeenCalledWith(
         expect.objectContaining({
           enableQuerySyntax: true,
         })
