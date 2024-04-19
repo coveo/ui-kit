@@ -9,7 +9,7 @@ interface ShowButtonProps {
   isCollapsed: boolean;
   onClick: () => void;
   isStreaming?: boolean;
-  collapsable?: boolean;
+  collapsible?: boolean;
 }
 
 export const ShowButton: FunctionalComponent<ShowButtonProps> = (props) => {
@@ -19,7 +19,7 @@ export const ShowButton: FunctionalComponent<ShowButtonProps> = (props) => {
     <Button
       style="text-primary"
       part="answer-show-button"
-      class={`${btnClasses} ${props.collapsable ? (props.isStreaming ? 'flex invisible' : 'flex') : 'hidden'}`}
+      class={`${btnClasses} ${props.collapsible ? (props.isStreaming ? 'flex invisible' : 'flex') : 'hidden'}`}
       onClick={() => props.onClick()}
     >
       <div class="font-light text-base">

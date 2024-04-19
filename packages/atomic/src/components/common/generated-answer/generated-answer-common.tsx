@@ -330,7 +330,7 @@ export class GeneratedAnswerCommon {
                 this.props.setIsCollapsed(!this.props.getIsCollapsed())
               }
               isStreaming={this.props.getGeneratedAnswerState()?.isStreaming}
-              collapsable={this.props.collapsible}
+              collapsible={this.props.collapsible}
               isCollapsed={this.props.getIsCollapsed()}
             ></ShowButton>
             {!this.props.getGeneratedAnswerState()?.isStreaming && (
