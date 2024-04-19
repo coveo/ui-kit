@@ -38,8 +38,6 @@ export interface ProductListingState {
   responseId: string;
 }
 
-export type ProductListingControllerState = ProductListing['state'];
-
 /**
  * Creates a `ProductListing` controller instance.
  *
@@ -56,6 +54,7 @@ export function buildProductListing(engine: CommerceEngine): ProductListing {
   const getState = () => engine.state;
   const subControllers = buildSolutionTypeSubControllers(engine, {
     responseIdSelector,
+    fetchResultsActionCreator: fetchProductListing,
   });
 
   return {

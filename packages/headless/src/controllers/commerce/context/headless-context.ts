@@ -95,8 +95,6 @@ export interface ContextState {
   view: View;
 }
 
-export type ContextControllerState = Context['state'];
-
 /**
  * Creates a `Context` controller instance.
  *
