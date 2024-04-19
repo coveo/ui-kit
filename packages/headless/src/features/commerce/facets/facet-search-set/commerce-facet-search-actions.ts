@@ -3,7 +3,6 @@ import {
   CommerceAPIResponse,
   CommerceFacetSearchAPIClient,
 } from '../../../../api/commerce/commerce-api-client';
-import {CommerceFacetSearchRequest} from '../../../../api/commerce/facet-search/facet-search-request';
 import {CategoryFacetSearchResponse} from '../../../../api/search/facet-search/category-facet-search/category-facet-search-response';
 import {SpecificFacetSearchResponse} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
 import {AsyncThunkOptions} from '../../../../app/async-thunk-options';
@@ -38,23 +37,16 @@ const getExecuteFacetSearchThunkPayloadCreator =
   > =>
   async (facetId: string, {getState, extra: {apiClient, validatePayload}}) => {
     const state = getState();
-    let req: CommerceFacetSearchRequest;
     validatePayload(facetId, requiredNonEmptyString);
-    if (isRegularFacetSearchState(state, facetId)) {
-      req = await buildFacetSearchRequest(
-        facetId,
-        state,
-        isFieldSuggestionsRequest
-      );
-    } else {
-      req = await buildCategoryFacetSearchRequest(
-        facetId,
-        state,
-        isFieldSuggestionsRequest
-      );
-    }
+    const req = isRegularFacetSearchState(state, facetId)
+      ? buildFacetSearchRequest(facetId, state, isFieldSuggestionsRequest)
+      : buildCategoryFacetSearchRequest(
+          facetId,
+          state,
+          isFieldSuggestionsRequest
+        );
 
-    const response = await apiClient.facetSearch(req);
+    const response = await apiClient.facetSearch(await req);
 
     return {facetId, response};
   };
