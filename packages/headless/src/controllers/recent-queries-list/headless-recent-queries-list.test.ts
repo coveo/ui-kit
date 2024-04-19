@@ -12,6 +12,7 @@ import {
   buildMockSearchEngine,
   MockedSearchEngine,
 } from '../../test/mock-engine-v2';
+import {buildMockQueryState} from '../../test/mock-query-state';
 import {createMockState} from '../../test/mock-state';
 import {
   buildRecentQueriesList,
@@ -70,9 +71,16 @@ describe('recent queries list', () => {
       initialState: testInitialState,
       options: testOptions,
     };
+    const mockedPrepareForSearchWithQuery = jest.mocked(
+      prepareForSearchWithQuery
+    );
 
     beforeEach(() => {
       recentQueriesList = buildRecentQueriesList(engine, testProps);
+    });
+
+    afterEach(() => {
+      mockedPrepareForSearchWithQuery.mockClear();
     });
 
     it('should register with props on init', () => {
@@ -95,16 +103,31 @@ describe('recent queries list', () => {
       engine.state.recentQueries = {...testInitialState, ...testOptions};
 
       expect(() => recentQueriesList.executeRecentQuery(100)).toThrow();
-      expect(validationSpy).toBeCalled();
+      expect(validationSpy).toHaveBeenCalled();
     });
 
     it('#executeRecentQuery should execute #prepareForSearchWithQuery with the proper parameters', () => {
+      engine.state.query = buildMockQueryState();
       engine.state.recentQueries = {...testInitialState, ...testOptions};
       recentQueriesList.executeRecentQuery(0);
-      expect(prepareForSearchWithQuery).toHaveBeenCalledWith({
+      expect(mockedPrepareForSearchWithQuery).toHaveBeenCalledTimes(1);
+      expect(mockedPrepareForSearchWithQuery).toHaveBeenCalledWith({
         q: testInitialState.queries[0],
         clearFilters: testOptions.clearFilters,
+        enableQuerySyntax: false,
       });
+    });
+
+    it('#executeRecentQuery should execute #prepareForSearchWithQuery with the proper enableQuerySyntax parameter', () => {
+      engine.state.query = buildMockQueryState({enableQuerySyntax: true});
+      recentQueriesList = buildRecentQueriesList(engine);
+      recentQueriesList.executeRecentQuery(0);
+      expect(mockedPrepareForSearchWithQuery).toHaveBeenCalledTimes(1);
+      expect(mockedPrepareForSearchWithQuery).toHaveBeenCalledWith(
+        expect.objectContaining({
+          enableQuerySyntax: true,
+        })
+      );
     });
 
     it('should not clear filters if the #clearFilters option is false', () => {

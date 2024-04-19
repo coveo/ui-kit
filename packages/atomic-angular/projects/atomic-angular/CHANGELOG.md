@@ -1,3 +1,9 @@
+# 2.24.0 (2024-04-17)
+
+### Features
+
+- add nonce support ([#3791](https://github.com/coveo/ui-kit/issues/3791)) ([fc4be2e](https://github.com/coveo/ui-kit/commits/fc4be2e7cbeb5815e43105a8584a7bfd0db82682))
+
 ## 2.23.8 (2024-04-10)
 
 # 2.23.0 (2024-03-13)

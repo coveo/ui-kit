@@ -169,3 +169,5 @@ export type {
 } from './controllers/commerce/core/breadcrumb-manager/headless-core-breadcrumb-manager';
 export {buildProductListingBreadcrumbManager} from './controllers/commerce/product-listing/breadcrumb-manager/headless-product-listing-breadcrumb-manager';
 export {buildSearchBreadcrumbManager} from './controllers/commerce/search/breadcrumb-manager/headless-search-breadcrumb-manager';
+
+export {getOrganizationEndpoints} from './api/platform-client';
