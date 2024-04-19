@@ -951,20 +951,20 @@ export class CoveoSearchPageClient {
         });
     }
 
-    public makeExpandGeneratedAnswer(metadata: GeneratedAnswerBaseMeta) {
-        return this.makeCustomEvent(SearchPageEvents.expandGeneratedAnswer, metadata);
+    public makeGeneratedAnswerExpand(metadata: GeneratedAnswerBaseMeta) {
+        return this.makeCustomEvent(SearchPageEvents.generatedAnswerExpand, metadata);
     }
 
-    public async logExpandGeneratedAnswer(metadata: GeneratedAnswerBaseMeta) {
-        return (await this.makeExpandGeneratedAnswer(metadata)).log({searchUID: this.provider.getSearchUID()});
+    public async logGeneratedAnswerExpand(metadata: GeneratedAnswerBaseMeta) {
+        return (await this.makeGeneratedAnswerExpand(metadata)).log({searchUID: this.provider.getSearchUID()});
     }
 
-    public makeCollapseGeneratedAnswer(metadata: GeneratedAnswerBaseMeta) {
-        return this.makeCustomEvent(SearchPageEvents.collapseGeneratedAnswer, metadata);
+    public makeGeneratedAnswerCollapse(metadata: GeneratedAnswerBaseMeta) {
+        return this.makeCustomEvent(SearchPageEvents.generatedAnswerCollapse, metadata);
     }
 
-    public async logCollapseGeneratedAnswer(metadata: GeneratedAnswerBaseMeta) {
-        return (await this.makeCollapseGeneratedAnswer(metadata)).log({searchUID: this.provider.getSearchUID()});
+    public async logGeneratedAnswerCollapse(metadata: GeneratedAnswerBaseMeta) {
+        return (await this.makeGeneratedAnswerCollapse(metadata)).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeGeneratedAnswerFeedbackSubmit(meta: GeneratedAnswerFeedbackMeta) {
