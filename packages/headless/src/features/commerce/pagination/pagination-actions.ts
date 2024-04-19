@@ -1,32 +1,55 @@
 import {NumberValue} from '@coveo/bueno';
-import {createSolutionTypeAction} from '../common/actions';
+import {createAction} from '@reduxjs/toolkit';
+import {
+  requiredNonEmptyString,
+  validatePayload,
+} from '../../../utils/validate-payload';
+
+export const solutionTypeDefinition = {
+  solutionTypeId: requiredNonEmptyString,
+};
+
+interface SolutionTypePayload {
+  solutionTypeId: string;
+}
 
 const setPageSizeDefinition = {
+  ...solutionTypeDefinition,
   pageSize: new NumberValue({required: true, min: 0}),
 };
 
-interface SetPageSizePayload {
+type SetPageSizePayload = SolutionTypePayload & {
   pageSize: number;
-}
+};
 
-export const setPageSize = createSolutionTypeAction<SetPageSizePayload>(
+export const setPageSize = createAction(
   'commerce/pagination/setPageSize',
-  setPageSizeDefinition
+  (payload: SetPageSizePayload) =>
+    validatePayload(payload, setPageSizeDefinition)
 );
 
 const selectPageDefinition = {
+  ...solutionTypeDefinition,
   page: new NumberValue({required: true, min: 0}),
 };
 
-export const selectPage = createSolutionTypeAction(
+type SelectPagePayload = SolutionTypePayload & {
+  page: number;
+};
+
+export const selectPage = createAction(
   'commerce/pagination/selectPage',
-  selectPageDefinition
+  (payload: SelectPagePayload) => validatePayload(payload, selectPageDefinition)
 );
 
-export const nextPage = createSolutionTypeAction(
-  'commerce/pagination/nextPage'
+export const nextPage = createAction(
+  'commerce/pagination/nextPage',
+  (payload: SolutionTypePayload) =>
+    validatePayload(payload, solutionTypeDefinition)
 );
 
-export const previousPage = createSolutionTypeAction(
-  'commerce/pagination/previousPage'
+export const previousPage = createAction(
+  'commerce/pagination/previousPage',
+  (payload: SolutionTypePayload) =>
+    validatePayload(payload, solutionTypeDefinition)
 );

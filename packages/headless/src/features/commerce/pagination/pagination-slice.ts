@@ -8,6 +8,7 @@ import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
 } from '../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {defaultSolutionTypeId} from '../common/actions';
 import {setContext, setUser, setView} from '../context/context-actions';
 import {fetchProductListing} from '../product-listing/product-listing-actions';
 import {executeSearch} from '../search/search-actions';
@@ -72,20 +73,19 @@ export const paginationReducer = createReducer(
         slice.perPage = action.payload.pageSize;
       })
       .addCase(fetchProductListing.fulfilled, (state, action) => {
-        if (!state[action.meta.arg.solutionTypeId]) {
+        // TODO: Revisit this
+        if (!state[defaultSolutionTypeId]) {
           return;
         }
 
-        state[action.meta.arg.solutionTypeId] =
-          action.payload.response.pagination;
+        state[defaultSolutionTypeId] = action.payload.response.pagination;
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
-        if (!state[action.meta.arg.solutionTypeId]) {
+        if (!state[defaultSolutionTypeId]) {
           return;
         }
 
-        state[action.meta.arg.solutionTypeId] =
-          action.payload.response.pagination;
+        state[defaultSolutionTypeId] = action.payload.response.pagination;
       })
       .addCase(deselectAllFacetValues, handlePaginationReset)
       .addCase(toggleSelectFacetValue, handlePaginationReset)
@@ -100,7 +100,9 @@ export const paginationReducer = createReducer(
 
 function handlePaginationReset(state: CommercePaginationState) {
   for (const solutionTypeId in state) {
-    state[solutionTypeId].page = 0;
-    state[solutionTypeId].perPage = undefined;
+    if (state[solutionTypeId]) {
+      state[solutionTypeId]!.page = 0;
+      state[solutionTypeId]!.perPage = undefined;
+    }
   }
 }

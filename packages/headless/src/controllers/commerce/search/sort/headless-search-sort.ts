@@ -1,5 +1,4 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {defaultSolutionTypeId} from '../../../../features/commerce/common/actions';
 import {executeSearch} from '../../../../features/commerce/search/search-actions';
 import {loadReducerError} from '../../../../utils/errors';
 import {
@@ -26,7 +25,6 @@ export function buildSearchSort(
 
   return buildCoreSort(engine, {
     ...props,
-    fetchResultsActionCreator: () =>
-      executeSearch({solutionTypeId: defaultSolutionTypeId}),
+    fetchResultsActionCreator: executeSearch,
   });
 }

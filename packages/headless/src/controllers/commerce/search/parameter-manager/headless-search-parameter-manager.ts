@@ -1,5 +1,4 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {defaultSolutionTypeId} from '../../../../features/commerce/common/actions';
 import {queryReducer as commerceQuery} from '../../../../features/commerce/query/query-slice';
 import {getCommerceQueryInitialState} from '../../../../features/commerce/query/query-state';
 import {
@@ -36,8 +35,7 @@ export function buildSearchParameterManager(
     activeParametersSelector,
     restoreActionCreator: restoreSearchParameters,
     parametersDefinition: searchParametersDefinition,
-    fetchResultsActionCreator: () =>
-      executeSearch({solutionTypeId: defaultSolutionTypeId}),
+    fetchResultsActionCreator: executeSearch,
     enrichParameters: (_state, activeParams) => ({
       q: getCommerceQueryInitialState().query!,
       ...activeParams,

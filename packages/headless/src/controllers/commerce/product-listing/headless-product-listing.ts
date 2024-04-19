@@ -2,7 +2,6 @@ import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api
 import {Product} from '../../../api/commerce/common/product';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
-import {defaultSolutionTypeId} from '../../../features/commerce/common/actions';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
 import {fetchProductListing} from '../../../features/commerce/product-listing/product-listing-actions';
 import {responseIdSelector} from '../../../features/commerce/product-listing/product-listing-selectors';
@@ -55,8 +54,7 @@ export function buildProductListing(engine: CommerceEngine): ProductListing {
   const getState = () => engine.state;
   const subControllers = buildSolutionTypeSubControllers(engine, {
     responseIdSelector,
-    fetchResultsActionCreator: () =>
-      fetchProductListing({solutionTypeId: defaultSolutionTypeId}),
+    fetchResultsActionCreator: fetchProductListing,
   });
 
   return {
@@ -74,8 +72,7 @@ export function buildProductListing(engine: CommerceEngine): ProductListing {
       };
     },
 
-    refresh: () =>
-      dispatch(fetchProductListing({solutionTypeId: defaultSolutionTypeId})),
+    refresh: () => dispatch(fetchProductListing()),
   };
 }
 

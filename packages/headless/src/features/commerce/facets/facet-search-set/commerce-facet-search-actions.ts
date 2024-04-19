@@ -7,7 +7,6 @@ import {SpecificFacetSearchResponse} from '../../../../api/search/facet-search/s
 import {AsyncThunkOptions} from '../../../../app/async-thunk-options';
 import {ClientThunkExtraArguments} from '../../../../app/thunk-extra-arguments';
 import {requiredNonEmptyString} from '../../../../utils/validate-payload';
-import {SolutionTypeActionCreatorPayload} from '../../common/actions';
 import {buildCommerceFacetSearchRequest} from './commerce-facet-search-request-builder';
 import {StateNeededForCommerceFacetSearch} from './commerce-facet-search-state';
 
@@ -16,10 +15,7 @@ type ExecuteCommerceFacetSearchThunkReturn = {
   response: CommerceAPIResponse<SpecificFacetSearchResponse>;
 };
 
-export type ExecuteCommerceFacetSearchThunkArg =
-  SolutionTypeActionCreatorPayload & {
-    facetId: string;
-  };
+type ExecuteCommerceFacetSearchThunkArg = string;
 
 type ExecuteCommerceFacetSearchThunkApiConfig = AsyncThunkOptions<
   StateNeededForCommerceFacetSearch,
@@ -34,14 +30,10 @@ const getExecuteFacetSearchThunkPayloadCreator =
     ExecuteCommerceFacetSearchThunkArg,
     ExecuteCommerceFacetSearchThunkApiConfig
   > =>
-  async (
-    {facetId, solutionTypeId},
-    {getState, extra: {apiClient, validatePayload}}
-  ) => {
+  async (facetId: string, {getState, extra: {apiClient, validatePayload}}) => {
     const state = getState();
     validatePayload(facetId, requiredNonEmptyString);
     const req = await buildCommerceFacetSearchRequest(
-      solutionTypeId,
       facetId,
       state,
       isFieldSuggestionsRequest
@@ -54,7 +46,7 @@ const getExecuteFacetSearchThunkPayloadCreator =
 
 export const executeCommerceFacetSearch = createAsyncThunk<
   ExecuteCommerceFacetSearchThunkReturn,
-  ExecuteCommerceFacetSearchThunkArg,
+  string,
   AsyncThunkOptions<
     StateNeededForCommerceFacetSearch,
     ClientThunkExtraArguments<CommerceFacetSearchAPIClient>
@@ -66,7 +58,7 @@ export const executeCommerceFacetSearch = createAsyncThunk<
 
 export const executeCommerceFieldSuggest = createAsyncThunk<
   ExecuteCommerceFacetSearchThunkReturn,
-  ExecuteCommerceFacetSearchThunkArg,
+  string,
   AsyncThunkOptions<
     StateNeededForCommerceFacetSearch,
     ClientThunkExtraArguments<CommerceFacetSearchAPIClient>

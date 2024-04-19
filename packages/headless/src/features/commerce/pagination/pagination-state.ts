@@ -1,8 +1,3 @@
-import {
-  getSlicedBySolutionTypeInitialState,
-  SlicedBySolutionType,
-} from '../common/state';
-
 export interface PaginationSlice {
   page: number;
   perPage?: number;
@@ -10,10 +5,14 @@ export interface PaginationSlice {
   totalPages: number;
 }
 
-export type CommercePaginationState = SlicedBySolutionType<PaginationSlice>;
+export type CommercePaginationState = Record<
+  string,
+  PaginationSlice | undefined
+>;
 
-export const getCommercePaginationInitialState =
-  getSlicedBySolutionTypeInitialState<PaginationSlice>;
+export function getCommercePaginationInitialState(): CommercePaginationState {
+  return {};
+}
 
 export function getCommercePaginationInitialSlice(): PaginationSlice {
   return {

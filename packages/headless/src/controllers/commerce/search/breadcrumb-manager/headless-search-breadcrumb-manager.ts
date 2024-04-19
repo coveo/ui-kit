@@ -1,5 +1,4 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {defaultSolutionTypeId} from '../../../../features/commerce/common/actions';
 import {executeSearch} from '../../../../features/commerce/search/search-actions';
 import {loadReducerError} from '../../../../utils/errors';
 import {
@@ -24,7 +23,6 @@ export function buildSearchBreadcrumbManager(
 
   return buildCoreBreadcrumbManager(engine, {
     facetResponseSelector: facetResponseSelector,
-    fetchResultsActionCreator: () =>
-      executeSearch({solutionTypeId: defaultSolutionTypeId}),
+    fetchResultsActionCreator: executeSearch,
   });
 }

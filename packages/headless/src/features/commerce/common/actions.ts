@@ -1,5 +1,3 @@
-import {SchemaDefinition} from '@coveo/bueno';
-import {createAction} from '@reduxjs/toolkit';
 import {getVisitorID} from '../../../api/analytics/coveo-analytics-utils';
 import {SortParam} from '../../../api/commerce/commerce-api-params';
 import {
@@ -22,10 +20,6 @@ import {
   RecommendationsSection,
   VersionSection,
 } from '../../../state/state-sections';
-import {
-  requiredNonEmptyString,
-  validatePayload,
-} from '../../../utils/validate-payload';
 import {PreparableAnalyticsAction} from '../../analytics/analytics-utils';
 import {StateNeededByFetchProductListingV2} from '../product-listing/product-listing-actions';
 import {SortBy, SortCriterion} from '../sort/sort';
@@ -53,8 +47,8 @@ export interface QueryCommerceAPIThunkReturn {
 }
 
 export const buildBaseCommerceAPIRequest = async (
-  solutionTypeId: string,
-  state: StateNeededByQueryCommerceAPI
+  state: StateNeededByQueryCommerceAPI,
+  solutionTypeId: string
 ): Promise<BaseCommerceAPIRequest> => {
   const {view, user, ...restOfContext} = state.commerceContext;
   return {
@@ -70,20 +64,20 @@ export const buildBaseCommerceAPIRequest = async (
       cart: state.cart.cartItems.map((id) => state.cart.cart[id]),
     },
     ...(state.commercePagination?.[solutionTypeId] && {
-      page: state.commercePagination[solutionTypeId].page,
-      ...(state.commercePagination[solutionTypeId].perPage && {
-        perPage: state.commercePagination[solutionTypeId].perPage,
+      page: state.commercePagination[solutionTypeId]!.page,
+      ...(state.commercePagination[solutionTypeId]!.perPage && {
+        perPage: state.commercePagination[solutionTypeId]!.perPage,
       }),
     }),
   };
 };
 
 export const buildCommerceAPIRequest = async (
-  solutionTypeId: string,
-  state: StateNeededByQueryCommerceAPI
+  state: StateNeededByQueryCommerceAPI,
+  solutionTypeId: string = defaultSolutionTypeId
 ): Promise<CommerceAPIRequest> => {
   return {
-    ...(await buildBaseCommerceAPIRequest(solutionTypeId, state)),
+    ...(await buildBaseCommerceAPIRequest(state, solutionTypeId)),
     facets: getFacets(state),
     ...(state.commerceSort && {
       sort: getSort(state.commerceSort.appliedSort),
@@ -122,24 +116,3 @@ function getSort(appliedSort: SortCriterion): SortParam['sort'] | undefined {
 }
 
 export const defaultSolutionTypeId = 'default';
-
-export const solutionTypeDefinition = {
-  solutionTypeId: requiredNonEmptyString,
-};
-
-export interface SolutionTypePayload {
-  solutionTypeId: string;
-}
-
-export type SolutionTypeActionCreatorPayload = SolutionTypePayload;
-
-export const createSolutionTypeAction = <P>(
-  type: string,
-  definition?: SchemaDefinition<Required<P>>
-) =>
-  createAction(type, (payload: P & SolutionTypePayload) =>
-    validatePayload(payload, {
-      ...solutionTypeDefinition,
-      ...definition,
-    } as SchemaDefinition<Required<P & SolutionTypePayload>>)
-  );

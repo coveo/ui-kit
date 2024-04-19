@@ -121,11 +121,7 @@ export function buildSearchBox(
         page: 0,
       })
     );
-    dispatch(
-      executeSearch({
-        solutionTypeId: defaultSolutionTypeId,
-      })
-    );
+    dispatch(executeSearch());
   };
 
   return {

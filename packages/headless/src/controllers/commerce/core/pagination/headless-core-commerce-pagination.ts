@@ -64,6 +64,10 @@ export interface PaginationOptions {
 
 export interface CorePaginationProps {
   fetchResultsActionCreator: FetchResultsActionCreator;
+  /**
+   * Recs slot id, or 'default' for listings and search
+   */
+  solutionTypeId?: string;
   options?: PaginationOptions;
 }
 
@@ -97,10 +101,12 @@ export function buildCorePagination(
 
   validateOptions(engine, optionsSchema, props.options, 'buildCorePagination');
 
+  const solutionTypeId = props.solutionTypeId ?? defaultSolutionTypeId;
+
   if (props.options?.pageSize) {
     dispatch(
       setPageSize({
-        solutionTypeId: defaultSolutionTypeId,
+        solutionTypeId,
         pageSize: props.options.pageSize,
       })
     );
@@ -124,7 +130,7 @@ export function buildCorePagination(
     selectPage(page: number) {
       dispatch(
         selectPage({
-          solutionTypeId: defaultSolutionTypeId,
+          solutionTypeId,
           page,
         })
       );
@@ -132,17 +138,17 @@ export function buildCorePagination(
     },
 
     nextPage() {
-      dispatch(nextPage({solutionTypeId: defaultSolutionTypeId}));
+      dispatch(nextPage({solutionTypeId}));
       dispatch(props.fetchResultsActionCreator());
     },
 
     previousPage() {
-      dispatch(previousPage({solutionTypeId: defaultSolutionTypeId}));
+      dispatch(previousPage({solutionTypeId}));
       dispatch(props.fetchResultsActionCreator());
     },
 
     setPageSize(pageSize: number) {
-      dispatch(setPageSize({solutionTypeId: defaultSolutionTypeId, pageSize}));
+      dispatch(setPageSize({solutionTypeId, pageSize}));
       dispatch(props.fetchResultsActionCreator());
     },
   };
