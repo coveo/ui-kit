@@ -20,7 +20,7 @@ import {AtomicStore} from '../../atomic-search-interface/store';
 
 interface Tab extends Controller {
   /**
-   * Activates the tab.
+   * Makes the tab the active one.
    */
   select(): void;
   /**
@@ -31,7 +31,7 @@ interface Tab extends Controller {
 
 interface TabState {
   /**
-   * Indicates whether the current tab is selected.
+   * Whether the current tab is the active one.
    * */
   isActive: boolean;
 }
@@ -65,12 +65,12 @@ export class AtomicTab {
   tabClick!: EventEmitter;
 
   /**
-   * Whether this tab is active upon rendering.
-   * If multiple tabs are set to active on render, the last one to be rendered will override the others.
+   * Whether to make this tab the active one upon rendering.
+   * If this prop is set to `true` on multiple tabs, the last tab to render will be the active one.
    */
   @Prop({reflect: true, mutable: true}) public active = false;
   /**
-   * The label displayed on the tab.
+   * The label to display on the tab.
    */
   @Prop() label!: string;
   /**
@@ -78,11 +78,11 @@ export class AtomicTab {
    */
   @Prop() name!: string;
   /**
-   * Indicates whether the tab is currently active.
+   * Whether the tab is the active one.
    */
   @Prop({reflect: true}) isActive: boolean = false;
   /**
-   * The expression that will be passed to the search as a `cq` paramenter upon being selected.
+   * The [constant query expression (`cq`)](https://docs.coveo.com/en/2830/searching-with-coveo/about-the-query-expression#constant-query-expression-cq) to apply when the tab is the active one.
    */
   @Prop() public expression: string = '';
 
@@ -90,7 +90,7 @@ export class AtomicTab {
   private unsubscribe: Unsubscribe = () => {};
 
   /**
-   * Activates the tab.
+   * Makes the tab the active one.
    */
   @Method()
   async select() {

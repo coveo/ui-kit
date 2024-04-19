@@ -13,7 +13,7 @@ type AnyFacetType = Facet | NumericFacet | CategoryFacet | DateFacet;
  */
 export function updateFacetVisibilityForActiveTab(
   tabs: string,
-  facet: AnyFacetType | undefined,
+  facet?: AnyFacetType,
   bindings: AnyBindings
 ): boolean {
   if (tabs !== '' && facet) {

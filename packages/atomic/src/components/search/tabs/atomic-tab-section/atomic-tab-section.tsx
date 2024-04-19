@@ -39,7 +39,7 @@ export class AtomicTabSection {
    */
   @Prop() defaultActiveTab?: string;
   /**
-   * Specifies whether the state should be cleared when the tab changes.
+   * Whether to clear the state when the active tab changes.
    */
   @Prop() clearStateOnTabChange?: boolean = false;
 

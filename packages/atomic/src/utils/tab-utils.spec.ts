@@ -41,7 +41,7 @@ describe('getActiveTab', () => {
 });
 
 describe('shouldDisplayOnCurrentTab', () => {
-  it('returns true when active tab is included and no tabs are excluded', () => {
+  it('returns true when active tab is included and not excluded', () => {
     const tabs = 'tab1;tab2;tab3';
     const state = {
       tabSet: {
@@ -53,7 +53,7 @@ describe('shouldDisplayOnCurrentTab', () => {
     expect(shouldDisplayOnCurrentTab(tabs, state)).toBe(true);
   });
 
-  it('returns false when active tab is excluded and no tabs are included', () => {
+  it('returns false when active tab is excluded', () => {
     const tabs = '!tab1;!tab2;!tab3';
     const state = {
       tabSet: {
