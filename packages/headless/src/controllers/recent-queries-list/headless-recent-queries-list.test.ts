@@ -71,7 +71,7 @@ describe('recent queries list', () => {
       initialState: testInitialState,
       options: testOptions,
     };
-    const mockedprepareForSearchWithQuery = jest.mocked(
+    const mockedPrepareForSearchWithQuery = jest.mocked(
       prepareForSearchWithQuery
     );
 
