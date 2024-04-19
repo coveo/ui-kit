@@ -67,9 +67,9 @@ const buildBaseCommerceAPIRequest = async (
       user,
       view,
       cart: state.cart.cartItems.map((id) => {
-        const {productId, quantity} = state.cart.cart[id];
+        const {sku, quantity} = state.cart.cart[id];
         return {
-          productId,
+          sku,
           quantity,
         };
       }),

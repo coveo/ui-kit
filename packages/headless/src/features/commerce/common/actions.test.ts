@@ -21,10 +21,11 @@ describe('buildCommerceAPIRequest', () => {
   let state: StateNeededByQueryCommerceAPI;
   beforeEach(() => {
     const product = {
+      productId: 'product_id',
       name: 'product_name',
       quantity: 1,
       price: 1,
-      productId: 'product_id',
+      sku: 'product_sku',
     };
 
     expected = {
@@ -49,7 +50,7 @@ describe('buildCommerceAPIRequest', () => {
         },
         cart: [
           {
-            productId: product.productId,
+            sku: product.sku,
             quantity: product.quantity,
           },
         ],
@@ -75,7 +76,7 @@ describe('buildCommerceAPIRequest', () => {
     };
   });
 
-  it('when state has none of the optional sections, returns the expected base request along an empty #facets array', async () => {
+  it('given a state with none of the optional sections, returns the expected base request along an empty #facets array', async () => {
     delete state.commerceSort;
     delete state.commercePagination;
     delete state.facetOrder;
@@ -86,7 +87,7 @@ describe('buildCommerceAPIRequest', () => {
     expect(request).toEqual({...expected, facets: []});
   });
 
-  it('when state has facetOrder but not commerceFacetSet, returns the expected base request with an empty #facets array', async () => {
+  it('given a state that has the facetOrder section but not the commerceFacetSet section, returns the expected base request with an empty #facets array', async () => {
     delete state.commerceSort;
     delete state.commercePagination;
     delete state.commerceFacetSet;
@@ -98,7 +99,7 @@ describe('buildCommerceAPIRequest', () => {
     expect(request).toEqual({...expected, facets: []});
   });
 
-  it('when state has commerceFacetSet but not facetOrder, returns the expected base request with an empty #facets array', async () => {
+  it('given a state that has the commerceFacetSet section but not the facetOrder section, returns the expected base request with an empty #facets array', async () => {
     delete state.commerceSort;
     delete state.commercePagination;
     delete state.commerceFacetSet;
@@ -112,7 +113,7 @@ describe('buildCommerceAPIRequest', () => {
     expect(request).toEqual({...expected, facets: []});
   });
 
-  describe('when state has commerceFacetSet and facetOrder', () => {
+  describe('given a state that has the commerceFacetSet and facetOrder sections', () => {
     let facet1: CommerceFacetSlice;
     let facet2: CommerceFacetSlice;
 
@@ -177,7 +178,7 @@ describe('buildCommerceAPIRequest', () => {
     });
   });
 
-  it('when state has commercePagination, returns expected base request with expected #page and #perPage', async () => {
+  it('given a state that has the commercePagination section, returns expected base request with expected #page and #perPage', async () => {
     delete state.commerceSort;
     delete state.facetOrder;
     delete state.commerceFacetSet;
@@ -200,14 +201,14 @@ describe('buildCommerceAPIRequest', () => {
     expect(request).toEqual(expectedWithPagination);
   });
 
-  describe('when state has commerceSort', () => {
+  describe('give a state that has the commerceSort section', () => {
     beforeEach(() => {
       delete state.commercePagination;
       delete state.facetOrder;
       delete state.commerceFacetSet;
     });
 
-    it('when applied sort is relevance, returns expected base request with expected #sort.sortCriteria', async () => {
+    it('when applied sort is "relevance", returns expected base request with expected #sort.sortCriteria', async () => {
       state.commerceSort = {
         ...getCommerceSortInitialState(),
         appliedSort: {
@@ -228,7 +229,7 @@ describe('buildCommerceAPIRequest', () => {
       expect(request).toEqual(expectedWithSort);
     });
 
-    it('when applied sort is field, returns expected base request with expected #sort.sortCriteria and #sort.fields', async () => {
+    it('when applied sort is "fields", returns expected base request with expected #sort.sortCriteria and #sort.fields', async () => {
       const sortCriterion: SortCriterion = {
         by: SortBy.Fields,
         fields: [
