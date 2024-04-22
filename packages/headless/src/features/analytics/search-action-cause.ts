@@ -345,7 +345,7 @@ export enum SearchPageEvents {
    */
   generatedAnswerExpand = 'generatedAnswerExpand',
   /**
-   * Identifies the custom event that gets logged when a user collapse a generated answer.
+   * Identifies the custom event that gets logged when a user collapses a generated answer.
    */
   generatedAnswerCollapse = 'generatedAnswerCollapse',
   /**
