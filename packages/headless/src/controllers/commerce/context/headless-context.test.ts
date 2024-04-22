@@ -44,8 +44,16 @@ describe('headless commerce context', () => {
     });
   });
 
-  it('dispatches #setContext on load', () => {
+  it('when context is provided, dispatches #setContext on load', () => {
     expect(setContext).toHaveBeenCalled();
+  });
+
+  it('when context is not provided, does not dispatch #setContext on load', () => {
+    jest.resetAllMocks();
+
+    context = buildContext(engine);
+
+    expect(setContext).not.toHaveBeenCalled();
   });
 
   it('setLanguage dispatches #setContext', () => {
