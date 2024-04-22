@@ -12,6 +12,7 @@ import {
   buildMockCommerceEngine,
 } from '../../../../test/mock-engine-v2';
 import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
+import {buildMockFacetSearchResult} from '../../../../test/mock-facet-search-result';
 import {
   CommerceFacetOptions,
   FacetValueRequest,
@@ -114,23 +115,13 @@ describe('SearchRegularFacet', () => {
 
   describe('#facetSearch', () => {
     it('#facetSearch.select dispatches #executeSearch', () => {
-      const value = 'ted';
-      facet.facetSearch.select({
-        count: 0,
-        displayValue: value,
-        rawValue: value,
-      });
+      facet.facetSearch.select(buildMockFacetSearchResult());
 
       expect(executeSearch).toHaveBeenCalled();
     });
 
     it('#facetSearch.exclude dispatches #executeSearch', () => {
-      const value = 'ted';
-      facet.facetSearch.exclude({
-        count: 0,
-        displayValue: value,
-        rawValue: value,
-      });
+      facet.facetSearch.exclude(buildMockFacetSearchResult());
 
       expect(executeSearch).toHaveBeenCalled();
     });

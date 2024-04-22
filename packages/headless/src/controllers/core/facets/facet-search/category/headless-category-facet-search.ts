@@ -1,15 +1,14 @@
+import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {CategoryFacetSearchResult} from '../../../../../api/search/facet-search/category-facet-search/category-facet-search-response';
+import {AsyncThunkOptions} from '../../../../../app/async-thunk-options';
 import {CoreEngine} from '../../../../../app/engine';
+import {ThunkExtraArguments} from '../../../../../app/thunk-extra-arguments';
 import {
   registerCategoryFacetSearch,
   selectCategoryFacetSearchResult,
 } from '../../../../../features/facets/facet-search-set/category/category-facet-search-actions';
 import {defaultFacetSearchOptions} from '../../../../../features/facets/facet-search-set/facet-search-reducer-helpers';
 import {FacetSearchOptions} from '../../../../../features/facets/facet-search-set/facet-search-request-options';
-import {
-  executeFacetSearch,
-  executeFieldSuggest,
-} from '../../../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
 import {
   CategoryFacetSearchSection,
   ConfigurationSection,
@@ -19,6 +18,21 @@ import {buildGenericFacetSearch} from '../facet-search';
 export interface CategoryFacetSearchProps {
   options: FacetSearchOptions;
   isForFieldSuggestions: boolean;
+  select: (value: CategoryFacetSearchResult) => void;
+  executeFacetSearchActionCreator: (
+    facetId: string
+  ) => AsyncThunkAction<
+    unknown,
+    string,
+    AsyncThunkOptions<unknown, ThunkExtraArguments>
+  >;
+  executeFieldSuggestActionCreator: (
+    facetId: string
+  ) => AsyncThunkAction<
+    unknown,
+    string,
+    AsyncThunkOptions<unknown, ThunkExtraArguments>
+  >;
 }
 
 export type CategoryFacetSearch = ReturnType<
@@ -40,8 +54,8 @@ export function buildCoreCategoryFacetSearch(
     options,
     getFacetSearch,
     isForFieldSuggestions: props.isForFieldSuggestions,
-    executeFacetSearchActionCreator: executeFacetSearch,
-    executeFieldSuggestActionCreator: executeFieldSuggest,
+    executeFacetSearchActionCreator: props.executeFacetSearchActionCreator,
+    executeFieldSuggestActionCreator: props.executeFieldSuggestActionCreator,
   });
 
   return {
@@ -54,6 +68,7 @@ export function buildCoreCategoryFacetSearch(
           value,
         })
       );
+      props.select(value);
     },
 
     get state() {
