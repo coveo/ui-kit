@@ -7,12 +7,13 @@ import {
   updateMessage,
   updateResponseFormat,
   registerFieldsToIncludeInCitations,
-  setAnswerMediaType,
-  setRawAnswerMediaType,
+  setAnswerContentFormat,
 } from './generated-answer-actions';
 import {
   GeneratedAnswerStyle,
+  GeneratedContentFormat,
   generatedAnswerStyle,
+  generatedContentFormat,
 } from './generated-response-format';
 
 describe('generated answer', () => {
@@ -71,6 +72,18 @@ describe('generated answer', () => {
         expect(() => updateResponseFormat({answerStyle: style})).not.toThrow();
       }
     );
+
+    test.each(generatedContentFormat)(
+      'should accept a valid payload with format: "%i"',
+      (format: GeneratedContentFormat) => {
+        expect(() =>
+          updateResponseFormat({
+            answerStyle: 'default',
+            contentFormat: [format],
+          })
+        ).not.toThrow();
+      }
+    );
   });
 
   describe('#registerFieldsToIncludeInCitations', () => {
@@ -89,19 +102,12 @@ describe('generated answer', () => {
     });
   });
 
-  describe('#setAnswerMediaType', () => {
-    ['plain', 'html'].map((payload) => {
-      it(`should accept a valid payload: ${payload}`, () => {
-        expect(() => setAnswerMediaType(payload)).not.toThrow();
-      });
-    });
-  });
-
-  describe('#setRawAnswerMediaType', () => {
-    ['plain', 'markdown'].map((payload) => {
-      it(`should accept a valid payload: ${payload}`, () => {
-        expect(() => setRawAnswerMediaType(payload)).not.toThrow();
-      });
-    });
+  describe('#setAnswerContentFormat', () => {
+    test.each(generatedContentFormat)(
+      'should accept a valid payload with format: "%i"',
+      (format: GeneratedContentFormat) => {
+        expect(() => setAnswerContentFormat(format)).not.toThrow();
+      }
+    );
   });
 });

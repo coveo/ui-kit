@@ -1,20 +1,25 @@
 import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
-import {ProductRecommendation} from '../../../api/search/search/product-recommendation';
+import {Product} from '../../../api/commerce/common/product';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
 import {fetchProductListing} from '../../../features/commerce/product-listing/product-listing-actions';
+import {responseIdSelector} from '../../../features/commerce/product-listing/product-listing-selectors';
 import {productListingV2Reducer as productListing} from '../../../features/commerce/product-listing/product-listing-slice';
 import {loadReducerError} from '../../../utils/errors';
 import {
   buildController,
   Controller,
 } from '../../controller/headless-controller';
+import {
+  buildSolutionTypeSubControllers,
+  SolutionTypeSubControllers,
+} from '../core/sub-controller/headless-sub-controller';
 
 /**
  * The `ProductListing` controller exposes a method for retrieving product listing content in a commerce interface.
  */
-export interface ProductListing extends Controller {
+export interface ProductListing extends Controller, SolutionTypeSubControllers {
   /**
    * Fetches the product listing.
    */
@@ -27,13 +32,11 @@ export interface ProductListing extends Controller {
 }
 
 export interface ProductListingState {
-  products: ProductRecommendation[];
+  products: Product[];
   error: CommerceAPIErrorStatusResponse | null;
   isLoading: boolean;
   responseId: string;
 }
-
-export type ProductListingControllerState = ProductListing['state'];
 
 /**
  * Creates a `ProductListing` controller instance.
@@ -49,9 +52,14 @@ export function buildProductListing(engine: CommerceEngine): ProductListing {
   const controller = buildController(engine);
   const {dispatch} = engine;
   const getState = () => engine.state;
+  const subControllers = buildSolutionTypeSubControllers(engine, {
+    responseIdSelector,
+    fetchResultsActionCreator: fetchProductListing,
+  });
 
   return {
     ...controller,
+    ...subControllers,
 
     get state() {
       const {products, error, isLoading, responseId} =

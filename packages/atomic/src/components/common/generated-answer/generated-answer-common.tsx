@@ -315,6 +315,19 @@ export class GeneratedAnswerCommon {
             )}
           </GeneratedContentContainer>
         ) : null}
+
+        {!this.hasRetryableError &&
+          this.isAnswerVisible &&
+          !this.props.getGeneratedAnswerState()?.isStreaming && (
+            <div
+              part="generated-answer-footer"
+              class="flex justify-end mt-6 text-neutral-dark text-xs"
+            >
+              <slot name="disclaimer" slot="disclaimer">
+                {this.props.getBindings().i18n.t('generated-answer-disclaimer')}
+              </slot>
+            </div>
+          )}
       </div>
     );
   }

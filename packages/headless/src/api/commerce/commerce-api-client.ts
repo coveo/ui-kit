@@ -13,6 +13,11 @@ import {buildRequest, CommerceAPIRequest} from './common/request';
 import {CommerceSuccessResponse} from './common/response';
 import {CommerceFacetSearchRequest} from './facet-search/facet-search-request';
 import {
+  CommerceRecommendationsRequest,
+  buildRecommendationsRequest,
+} from './recommendations/recommendations-request';
+import {RecommendationsCommerceSuccessResponse} from './recommendations/recommendations-response';
+import {
   buildQuerySuggestRequest,
   QuerySuggestRequest,
 } from './search/query-suggest/query-suggest-request';
@@ -46,6 +51,12 @@ export interface CommerceAPISuccessResponse<T> {
   success: T;
 }
 
+export const isErrorResponse = <T>(
+  r: CommerceAPIResponse<T>
+): r is CommerceAPIErrorResponse => {
+  return (r as CommerceAPIErrorResponse).error !== undefined;
+};
+
 export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
   constructor(private options: CommerceAPIClientOptions) {}
 
@@ -54,6 +65,15 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
   ): Promise<CommerceAPIResponse<CommerceSuccessResponse>> {
     return this.query({
       ...buildRequest(req, 'listing'),
+      ...this.options,
+    });
+  }
+
+  async getRecommendations(
+    req: CommerceRecommendationsRequest
+  ): Promise<CommerceAPIResponse<RecommendationsCommerceSuccessResponse>> {
+    return this.query({
+      ...buildRecommendationsRequest(req, 'recommendations'),
       ...this.options,
     });
   }

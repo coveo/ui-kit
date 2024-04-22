@@ -10,6 +10,7 @@ import {AsyncThunkGeneratedAnswerOptions} from '../../api/generated-answer/gener
 import {
   GeneratedAnswerCitationsPayload,
   GeneratedAnswerEndOfStreamPayload,
+  GeneratedAnswerHeaderMessagePayload,
   GeneratedAnswerMessagePayload,
   GeneratedAnswerPayloadType,
   GeneratedAnswerStreamEventData,
@@ -29,8 +30,10 @@ import {logGeneratedAnswerStreamEnd} from './generated-answer-analytics-actions'
 import {buildStreamingRequest} from './generated-answer-request';
 import {
   GeneratedAnswerStyle,
+  GeneratedContentFormat,
   GeneratedResponseFormat,
   generatedAnswerStyle,
+  generatedContentFormat,
 } from './generated-response-format';
 
 type StateNeededByGeneratedAnswerStream = ConfigurationSection &
@@ -48,6 +51,11 @@ const citationSchema = {
   permanentid: stringValue,
   clickUri: optionalStringValue,
 };
+
+const answerContentFormatSchema = new StringValue<GeneratedContentFormat>({
+  required: true,
+  constrainTo: generatedContentFormat,
+});
 
 export interface GeneratedAnswerErrorPayload {
   message?: string;
@@ -127,28 +135,10 @@ export const setIsStreaming = createAction(
   (payload: boolean) => validatePayload(payload, booleanValue)
 );
 
-export const setAnswerMediaType = createAction(
-  'generatedAnswer/setAnswerMediaType',
-  (payload: string) =>
-    validatePayload(
-      payload,
-      new StringValue({
-        required: true,
-        constrainTo: ['plain', 'html'],
-      })
-    )
-);
-
-export const setRawAnswerMediaType = createAction(
-  'generatedAnswer/setRawAnswerMediaType',
-  (payload: string) =>
-    validatePayload(
-      payload,
-      new StringValue({
-        required: true,
-        constrainTo: ['plain', 'markdown'],
-      })
-    )
+export const setAnswerContentFormat = createAction(
+  'generatedAnswer/setAnswerContentFormat',
+  (payload: GeneratedContentFormat) =>
+    validatePayload(payload, answerContentFormatSchema)
 );
 
 export const updateResponseFormat = createAction(
@@ -159,12 +149,21 @@ export const updateResponseFormat = createAction(
         required: true,
         constrainTo: generatedAnswerStyle,
       }),
+      contentFormat: new ArrayValue<GeneratedContentFormat>({
+        each: answerContentFormatSchema,
+        default: ['text/plain'],
+      }),
     })
 );
 
 export const registerFieldsToIncludeInCitations = createAction(
   'generatedAnswer/registerFieldsToIncludeInCitations',
   (payload: string[]) => validatePayload<string[]>(payload, nonEmptyStringArray)
+);
+
+export const setIsAnswerGenerated = createAction(
+  'generatedAnswer/setIsAnswerGenerated',
+  (payload: boolean) => validatePayload(payload, booleanValue)
 );
 
 interface StreamAnswerArgs {
@@ -188,6 +187,13 @@ export const streamAnswer = createAsyncThunk<
     payload: string
   ) => {
     switch (payloadType) {
+      case 'genqa.headerMessageType': {
+        const header = JSON.parse(
+          payload
+        ) as GeneratedAnswerHeaderMessagePayload;
+        dispatch(setAnswerContentFormat(header.contentFormat));
+        break;
+      }
       case 'genqa.messageType':
         dispatch(
           updateMessage(JSON.parse(payload) as GeneratedAnswerMessagePayload)
@@ -200,15 +206,15 @@ export const streamAnswer = createAsyncThunk<
           )
         );
         break;
-      case 'genqa.endOfStreamType':
+      case 'genqa.endOfStreamType': {
+        const isAnswerGenerated = (
+          JSON.parse(payload) as GeneratedAnswerEndOfStreamPayload
+        ).answerGenerated;
         dispatch(setIsStreaming(false));
-        dispatch(
-          logGeneratedAnswerStreamEnd(
-            (JSON.parse(payload) as GeneratedAnswerEndOfStreamPayload)
-              .answerGenerated
-          )
-        );
+        dispatch(setIsAnswerGenerated(isAnswerGenerated));
+        dispatch(logGeneratedAnswerStreamEnd(isAnswerGenerated));
         break;
+      }
       default:
         if (state.debug) {
           extra.logger.warn(`Unknown payloadType: "${payloadType}"`);
@@ -217,8 +223,6 @@ export const streamAnswer = createAsyncThunk<
   };
 
   dispatch(setIsLoading(true));
-  dispatch(setRawAnswerMediaType('plain'));
-  dispatch(setAnswerMediaType('plain'));
 
   const currentStreamRequestMatchesOriginalStreamRequest = (
     request: GeneratedAnswerStreamRequest
@@ -234,7 +238,6 @@ export const streamAnswer = createAsyncThunk<
       write: (data: GeneratedAnswerStreamEventData) => {
         if (currentStreamRequestMatchesOriginalStreamRequest(request)) {
           dispatch(setIsLoading(false));
-
           if (data.payload && data.payloadType) {
             handleStreamPayload(data.payloadType, data.payload);
           }

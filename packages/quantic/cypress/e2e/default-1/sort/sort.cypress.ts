@@ -10,7 +10,6 @@ import {
   useCaseEnum,
   InsightInterfaceExpectations as InsightInterfaceExpect,
 } from '../../../page-objects/use-case';
-import {SearchExpectations} from '../../search-expectations';
 import {SortActions as Actions} from './sort-actions';
 import {SortExpectations as Expect} from './sort-expectations';
 
@@ -89,32 +88,39 @@ describe('quantic-sort', () => {
       describe('when selecting a sort option', () => {
         sortOptionValues
           .filter((value) => value !== defaultOptionValue)
-          .forEach((option) => {
-            it(`should update the shown selected option to ${option}`, () => {
+          .forEach((value) => {
+            it(`should update the shown selected option to ${value}`, () => {
               visitSort({useCase: param.useCase});
-              Actions.selectOption(option);
+              Actions.selectOption(value);
 
-              Expect.selectedOption(option);
-              SearchExpectations.sortedBy(option, param.useCase);
-              Expect.logSortResults(option);
+              Expect.selectedOption(value);
+              Expect.completeSearchRequest(
+                'resultsSort',
+                param.useCase,
+                (body) => Expect.sortCriteriaInSearchRequest(body, value)
+              );
+              Expect.logSortResults(value);
             });
           });
       });
 
       if (param.useCase === useCaseEnum.search) {
         describe('when loading sort selection from URL', () => {
-          sortOptions
-            .filter((option) => option.value !== defaultOptionValue)
-            .forEach((option) => {
-              it(`should sort by ${option.value}`, () => {
-                loadFromUrlHash(`sortCriteria=${encodeURI(option.value)}`);
+          sortOptionValues
+            .filter((value) => value !== defaultOptionValue)
+            .forEach((value) => {
+              it(`should sort by ${value}`, () => {
+                loadFromUrlHash(`sortCriteria=${encodeURI(value)}`);
 
-                SearchExpectations.sortedBy(option.value, param.useCase);
-
+                Expect.completeSearchRequest(
+                  'interfaceLoad',
+                  param.useCase,
+                  (body) => Expect.sortCriteriaInSearchRequest(body, value)
+                );
                 Actions.openDropdown();
 
                 Expect.displaySortDropdown(true);
-                Expect.selectedOption(option.value);
+                Expect.selectedOption(value);
               });
             });
         });

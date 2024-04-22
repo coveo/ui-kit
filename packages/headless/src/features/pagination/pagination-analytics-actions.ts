@@ -3,6 +3,8 @@ import {
   makeAnalyticsAction,
   LegacySearchAction,
 } from '../analytics/analytics-utils';
+import {SearchPageEvents} from '../analytics/search-action-cause';
+import {SearchAction} from '../search/search-actions';
 import {currentPageSelector} from './pagination-selectors';
 import {getPaginationInitialState} from './pagination-state';
 
@@ -35,3 +37,20 @@ export const logPagePrevious = (): LegacySearchAction =>
       pagerNumber: currentPageSelector(state as PaginationSection),
     })
   );
+
+// TODO KIT-2983
+export const pagerResize = (): SearchAction => ({
+  actionCause: SearchPageEvents.pagerResize,
+});
+
+export const pagerNext = (): SearchAction => ({
+  actionCause: SearchPageEvents.pagerNext,
+});
+
+export const pagerPrevious = (): SearchAction => ({
+  actionCause: SearchPageEvents.pagerPrevious,
+});
+
+export const pagerNumber = (): SearchAction => ({
+  actionCause: SearchPageEvents.pagerNumber,
+});

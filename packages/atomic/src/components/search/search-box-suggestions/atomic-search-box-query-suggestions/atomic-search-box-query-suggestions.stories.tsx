@@ -1,7 +1,6 @@
 import defaultStory from 'atomic-storybook/default-story';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
-  'Atomic/SearchBox/QuerySuggestions',
   'atomic-search-box-query-suggestions',
   {},
   {
@@ -14,6 +13,7 @@ const {defaultModuleExport, exportedStory} = defaultStory(
 export default {
   ...defaultModuleExport,
   title: 'Atomic/SearchBox/QuerySuggestions',
+  id: 'atomic-search-box-query-suggestions',
 };
 
 export const Default = exportedStory;

@@ -19,12 +19,11 @@ export type {
 } from './app/engine-configuration';
 export type {LogLevel, LoggerOptions} from './app/logger';
 
-export type {ProductRecommendation} from './api/search/search/product-recommendation';
+export type {Product} from './api/commerce/common/product';
 
 // Actions
 export * from './features/commerce/product-listing/product-listing-actions-loader';
 export * from './features/configuration/configuration-actions-loader';
-export * from './features/analytics/search-analytics-actions-loader';
 
 // Controllers
 export type {
@@ -40,21 +39,26 @@ export type {
   ContextProps,
   Context,
   ContextState,
-  ContextControllerState,
 } from './controllers/commerce/context/headless-context';
 export {buildContext} from './controllers/commerce/context/headless-context';
 
 export type {
   ProductListing,
   ProductListingState,
-  ProductListingControllerState,
 } from './controllers/commerce/product-listing/headless-product-listing';
 export {buildProductListing} from './controllers/commerce/product-listing/headless-product-listing';
 
 export type {
+  Recommendations,
+  RecommendationsState,
+} from './controllers/commerce/recommendations/headless-recommendations';
+export {buildRecommendations} from './controllers/commerce/recommendations/headless-recommendations';
+
+export type {
   Pagination,
   PaginationState,
-  PaginationControllerState,
+  PaginationProps,
+  PaginationOptions,
 } from './controllers/commerce/core/pagination/headless-core-commerce-pagination';
 export {buildProductListingPagination} from './controllers/commerce/product-listing/pagination/headless-product-listing-pagination';
 export {buildSearchPagination} from './controllers/commerce/search/pagination/headless-search-pagination';
@@ -63,8 +67,7 @@ export type {
   InteractiveResult,
   InteractiveResultOptions,
   InteractiveResultProps,
-} from './controllers/commerce/product-listing/result-list/headless-product-listing-interactive-result';
-export {buildInteractiveResult} from './controllers/commerce/product-listing/result-list/headless-product-listing-interactive-result';
+} from './controllers/commerce/core/result-list/headless-core-interactive-result';
 
 export type {ProductView} from './controllers/commerce/product-view/headless-product-view';
 export {buildProductView} from './controllers/commerce/product-view/headless-product-view';
@@ -98,6 +101,7 @@ export {
 export {buildProductListingSort} from './controllers/commerce/product-listing/sort/headless-product-listing-sort';
 export {buildSearchSort} from './controllers/commerce/search/sort/headless-search-sort';
 
+export type {CategoryFacet} from './controllers/commerce/core/facets/category/headless-commerce-category-facet';
 export type {RegularFacet} from './controllers/commerce/core/facets/regular/headless-commerce-regular-facet';
 export type {NumericFacet} from './controllers/commerce/core/facets/numeric/headless-commerce-numeric-facet';
 export type {DateFacet} from './controllers/commerce/core/facets/date/headless-commerce-date-facet';
@@ -109,6 +113,8 @@ export type {
   NumericFacetValue,
   DateRangeRequest,
   DateFacetValue,
+  CategoryFacetValueRequest,
+  CategoryFacetValue,
 } from './controllers/commerce/core/facets/headless-core-commerce-facet';
 export type {ProductListingFacetGenerator} from './controllers/commerce/product-listing/facets/headless-product-listing-facet-generator';
 export {buildProductListingFacetGenerator} from './controllers/commerce/product-listing/facets/headless-product-listing-facet-generator';
@@ -142,3 +148,21 @@ export {buildCoreUrlManager} from './controllers/commerce/core/url-manager/headl
 
 export {buildSearchUrlManager} from './controllers/commerce/search/url-manager/headless-search-url-manager';
 export {buildProductListingUrlManager} from './controllers/commerce/product-listing/url-manager/headless-product-listing-url-manager';
+
+export type {
+  ProductTemplate,
+  ProductTemplateCondition,
+  ProductTemplatesManager,
+} from './features/commerce/product-templates/product-templates-manager';
+export {buildProductTemplatesManager} from './features/commerce/product-templates/product-templates-manager';
+
+export type {
+  BreadcrumbManager,
+  Breadcrumb,
+  BreadcrumbValue,
+  DeselectableValue,
+} from './controllers/commerce/core/breadcrumb-manager/headless-core-breadcrumb-manager';
+export {buildProductListingBreadcrumbManager} from './controllers/commerce/product-listing/breadcrumb-manager/headless-product-listing-breadcrumb-manager';
+export {buildSearchBreadcrumbManager} from './controllers/commerce/search/breadcrumb-manager/headless-search-breadcrumb-manager';
+
+export {getOrganizationEndpoints} from './api/platform-client';

@@ -1,6 +1,28 @@
 // eslint-disable-next-line node/no-unpublished-import
 import {CyHttpMessages, Interception} from 'cypress/types/net-stubbing';
+import {getQueryAlias} from '../page-objects/search';
+import {useCaseEnum} from '../page-objects/use-case';
 import {ComponentErrorSelector, should} from './common-selectors';
+
+export function completeSearchRequest(
+  actionCause: string,
+  useCase?: 'search' | 'insight',
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  checkSearchRequestBodyCallback?: (body: Record<string, any>) => void
+) {
+  cy.wait(getQueryAlias(useCase))
+    .then((interception) => {
+      const body = interception.request.body;
+      const analyticsSection = body.analytics;
+
+      expect(analyticsSection).to.exist;
+      expect(analyticsSection).to.have.property('actionCause', actionCause);
+      checkSearchRequestBodyCallback?.(body);
+    })
+    .logDetail(
+      `should send a new ${useCase === useCaseEnum.insight ? 'insight' : ''} search request caused by ${actionCause}`
+    );
+}
 
 export function logUaEvent(
   requestAlias: string,

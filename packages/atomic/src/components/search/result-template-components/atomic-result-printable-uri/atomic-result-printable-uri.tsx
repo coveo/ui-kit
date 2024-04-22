@@ -9,8 +9,8 @@ import Arrow from '../../../../images/arrow-right.svg';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
 import {InitializeBindings} from '../../../../utils/initialization-utils';
 import {parseXML} from '../../../../utils/utils';
-import {getAttributesFromLinkSlot} from '../../../common/result-link/attributes-slot';
-import {LinkWithResultAnalytics} from '../../../common/result-link/result-link';
+import {getAttributesFromLinkSlot} from '../../../common/item-link/attributes-slot';
+import {LinkWithItemAnalytics} from '../../../common/item-link/item-link';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {ResultContext} from '../result-template-decorators';
 
@@ -137,7 +137,7 @@ export class AtomicResultPrintableUri {
     shouldSetTarget: boolean
   ) {
     return (
-      <LinkWithResultAnalytics
+      <LinkWithItemAnalytics
         href={uri}
         title={typeof content === 'string' ? content : undefined}
         onSelect={() => this.interactiveResult.select()}
@@ -153,7 +153,7 @@ export class AtomicResultPrintableUri {
         }
       >
         {content}
-      </LinkWithResultAnalytics>
+      </LinkWithItemAnalytics>
     );
   }
 

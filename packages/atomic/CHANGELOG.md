@@ -1,3 +1,26 @@
+# 2.64.0 (2024-04-17)
+
+### Bug Fixes
+
+- **deps:** update stencil j:kit-282 ([#3764](https://github.com/coveo/ui-kit/issues/3764)) ([82b6948](https://github.com/coveo/ui-kit/commits/82b694835e9e0a29859590f16bd64a8e028eb888))
+
+### Features
+
+- add nonce support ([#3791](https://github.com/coveo/ui-kit/issues/3791)) ([fc4be2e](https://github.com/coveo/ui-kit/commits/fc4be2e7cbeb5815e43105a8584a7bfd0db82682))
+
+## 2.63.1 (2024-04-10)
+
+# 2.63.0 (2024-04-03)
+
+### Features
+
+- **atomic:** add part attribute for genQA component ([#3753](https://github.com/coveo/ui-kit/issues/3753)) ([0a55222](https://github.com/coveo/ui-kit/commits/0a55222e982d7fa384fa402b1b7c00d8e2625f6f))
+- **atomic:** add rga disclaimer ([#3761](https://github.com/coveo/ui-kit/issues/3761)) ([d6c8b34](https://github.com/coveo/ui-kit/commits/d6c8b34e654cd72df053d1aae184ec045ffb5d8f))
+
+## 2.62.3 (2024-03-27)
+
+## 2.62.1 (2024-03-20)
+
 # 2.62.0 (2024-03-20)
 
 ### Bug Fixes

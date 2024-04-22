@@ -1,3 +1,14 @@
+## 1.0.1 (2024-04-17)
+
+## 0.2.37 (2024-04-10)
+
+### Bug Fixes
+
+- **deps:** update dependency @testing-library/react to v14 j:kit-282 ([#3777](https://github.com/coveo/ui-kit/issues/3777)) ([0f13d01](https://github.com/coveo/ui-kit/commits/0f13d016f67adc742230d99761ac32100c7671d8))
+- **deps:** update dependency undici to v5.28.4 j:kit-282 ([#3776](https://github.com/coveo/ui-kit/issues/3776)) ([792d23e](https://github.com/coveo/ui-kit/commits/792d23e417a4e7c3b07608d585c12bcfa7657cfe))
+
+## 0.2.35 (2024-03-27)
+
 ## 0.2.23 (2024-03-08)
 
 ## 0.2.20 (2024-02-21)

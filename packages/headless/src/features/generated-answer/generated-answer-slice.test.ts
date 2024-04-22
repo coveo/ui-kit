@@ -15,14 +15,16 @@ import {
   closeGeneratedAnswerFeedbackModal,
   sendGeneratedAnswerFeedback,
   registerFieldsToIncludeInCitations,
-  setAnswerMediaType,
-  setRawAnswerMediaType,
+  setAnswerContentFormat,
+  setIsAnswerGenerated,
 } from './generated-answer-actions';
-import {generatedAnswerReducer, Helpers} from './generated-answer-slice';
+import {generatedAnswerReducer} from './generated-answer-slice';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
 import {
   GeneratedAnswerStyle,
+  GeneratedContentFormat,
   GeneratedResponseFormat,
+  generatedContentFormat,
 } from './generated-response-format';
 
 const baseState = getGeneratedAnswerInitialState();
@@ -41,7 +43,7 @@ describe('generated answer slice', () => {
       const finalState = generatedAnswerReducer(
         {
           ...getGeneratedAnswerInitialState(),
-          rawAnswer: existingAnswer,
+          answer: existingAnswer,
         },
         updateMessage({
           textDelta: newMessage,
@@ -52,28 +54,6 @@ describe('generated answer slice', () => {
       expect(finalState.error).toBeUndefined();
       expect(finalState.isLoading).toBe(false);
       expect(finalState.isStreaming).toBe(true);
-    });
-
-    describe('when rawAnswerMediaType is markdown', () => {
-      it('should convert the rawAnswer to HTML', () => {
-        const convertMarkdownToHtmlSpy = jest
-          .spyOn(Helpers, 'convertMarkdownToHtml')
-          .mockImplementation((input) => `<p>${input}</p>`);
-
-        const finalState = generatedAnswerReducer(
-          {
-            ...getGeneratedAnswerInitialState(),
-            rawAnswerMediaType: 'markdown',
-          },
-          updateMessage({
-            textDelta: 'some content',
-          })
-        );
-
-        expect(convertMarkdownToHtmlSpy).toHaveBeenCalledWith('some content');
-        expect(finalState.answer).toBe('<p>some content</p>');
-        expect(finalState.answerMediaType).toBe('html');
-      });
     });
   });
 
@@ -255,29 +235,35 @@ describe('generated answer slice', () => {
     });
   });
 
-  it('#setAnswerMediaType should set the media type in the state', () => {
-    const finalState = generatedAnswerReducer(
-      baseState,
-      setAnswerMediaType('markdown')
-    );
+  test.each(generatedContentFormat)(
+    '#setAnswerContentFormat should set the "%i" content format in the state',
+    (format: GeneratedContentFormat) => {
+      const finalState = generatedAnswerReducer(
+        baseState,
+        setAnswerContentFormat(format)
+      );
 
-    expect(finalState).toEqual({
-      ...getGeneratedAnswerInitialState(),
-      answerMediaType: 'markdown',
-    });
-  });
+      expect(finalState).toEqual({
+        ...getGeneratedAnswerInitialState(),
+        answerContentFormat: format,
+      });
+    }
+  );
 
-  it('#setRawAnswerMediaType should set the raw answer media type in the state', () => {
-    const finalState = generatedAnswerReducer(
-      baseState,
-      setRawAnswerMediaType('html')
-    );
+  test.each(generatedContentFormat)(
+    '#setAnswerContentFormat should set the "%i" content format in the state',
+    (format: GeneratedContentFormat) => {
+      const finalState = generatedAnswerReducer(
+        baseState,
+        setAnswerContentFormat(format)
+      );
 
-    expect(finalState).toEqual({
-      ...getGeneratedAnswerInitialState(),
-      rawAnswerMediaType: 'html',
-    });
-  });
+      expect(finalState).toEqual({
+        ...getGeneratedAnswerInitialState(),
+        answerContentFormat: format,
+      });
+    }
+  );
 
   it('#likeGeneratedAnswer should set the answer as liked in the state', () => {
     const finalState = generatedAnswerReducer(baseState, likeGeneratedAnswer());
@@ -431,6 +417,26 @@ describe('generated answer slice', () => {
       );
 
       expect(finalState.isVisible).toEqual(false);
+    });
+  });
+
+  describe('#setIsAnswerGenerated', () => {
+    it('should set isAnswerGenerated to true when given true', () => {
+      const finalState = generatedAnswerReducer(
+        {...baseState, isAnswerGenerated: false},
+        setIsAnswerGenerated(true)
+      );
+
+      expect(finalState.isAnswerGenerated).toEqual(true);
+    });
+
+    it('should set isAnswerGenerated to false when given false', () => {
+      const finalState = generatedAnswerReducer(
+        {...baseState, isAnswerGenerated: true},
+        setIsAnswerGenerated(false)
+      );
+
+      expect(finalState.isAnswerGenerated).toEqual(false);
     });
   });
 });

@@ -105,6 +105,19 @@ export const InterceptAliases = {
         ReasonSubmit: nextAnalyticsAlias('Qna.SubmitFeedback.ReasonSubmit'),
       },
     },
+    CaseAssist: {
+      DocumentSuggestionClick: nextAnalyticsAlias(
+        'caseAssist.documentSuggestionClick'
+      ),
+      DocumentSuggestionFeedback: nextAnalyticsAlias(
+        'caseAssist.documentSuggestionFeedback'
+      ),
+      SelectFieldClassification: nextAnalyticsAlias(
+        'caseAssist.selectFieldClassification'
+      ),
+      UpdateField: nextAnalyticsAlias('caseAssist.updateField'),
+    },
+    ItemClick: nextAnalyticsAlias('itemClick'),
   },
   QuerySuggestions: '@coveoQuerySuggest',
   Search: '@coveoSearch',
@@ -356,10 +369,12 @@ export function mockSearchWithSmartSnippet(
     uri: string;
     permanentId: string;
     uriHash: string;
+    author?: string;
   },
-  useCase?: string
+  useCase?: string,
+  responseId?: string
 ) {
-  const {question, answer, title, uri, permanentId, uriHash} =
+  const {question, answer, title, uri, permanentId, uriHash, author} =
     smartSnippetOptions;
   cy.intercept(getRoute(useCase), (req) => {
     req.continue((res) => {
@@ -379,9 +394,16 @@ export function mockSearchWithSmartSnippet(
           title: title,
           clickUri: uri,
           uniqueId: '123',
-          raw: buildMockRaw({permanentid: permanentId, urihash: uriHash}),
+          raw: buildMockRaw({
+            permanentid: permanentId,
+            urihash: uriHash,
+            author,
+          }),
         }),
       ];
+      if (responseId) {
+        res.body.searchUid = responseId;
+      }
       res.send();
     });
   }).as(InterceptAliases.Search.substring(1));
@@ -405,13 +427,15 @@ export function mockSearchWithSmartSnippetSuggestions(
     answerSnippet: string;
     title: string;
     uri: string;
+    author?: string;
     documentId: {
       contentIdKey: string;
       contentIdValue: string;
     };
     uriHash: string;
   }>,
-  useCase?: string
+  useCase?: string,
+  responseId?: string
 ) {
   cy.intercept(getRoute(useCase), (req) => {
     req.continue((res) => {
@@ -423,7 +447,7 @@ export function mockSearchWithSmartSnippetSuggestions(
         },
       };
       res.body.results = relatedQuestions.map(
-        ({title, uri, documentId, uriHash}) =>
+        ({title, uri, documentId, uriHash, author}) =>
           buildMockResult({
             uri,
             title,
@@ -432,9 +456,13 @@ export function mockSearchWithSmartSnippetSuggestions(
             raw: buildMockRaw({
               permanentid: documentId.contentIdValue,
               urihash: uriHash,
+              author: author,
             }),
           })
       );
+      if (responseId) {
+        res.body.searchUid = responseId;
+      }
       res.send();
     });
   }).as(InterceptAliases.Search.substring(1));

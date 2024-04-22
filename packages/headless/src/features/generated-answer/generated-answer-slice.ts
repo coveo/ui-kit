@@ -1,10 +1,4 @@
 import {createReducer} from '@reduxjs/toolkit';
-import rehypeSanitize from 'rehype-sanitize';
-import rehypeStringify from 'rehype-stringify';
-import remarkGfm from 'remark-gfm';
-import remarkParse from 'remark-parse';
-import remarkRehype from 'remark-rehype';
-import {unified} from 'unified';
 import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client';
 import {
   closeGeneratedAnswerFeedbackModal,
@@ -22,30 +16,10 @@ import {
   sendGeneratedAnswerFeedback,
   registerFieldsToIncludeInCitations,
   setId,
-  setAnswerMediaType,
-  setRawAnswerMediaType,
+  setAnswerContentFormat,
+  setIsAnswerGenerated,
 } from './generated-answer-actions';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
-import {rehypeCleanListItem} from './unified-plugins/rehype-clean-list-item';
-import {rehypeScrollableTable} from './unified-plugins/rehype-scrollable-table';
-
-const convertMarkdownToHtml = (text: string): string => {
-  const file = unified()
-    .use(remarkParse)
-    .use(remarkGfm)
-    .use(remarkRehype)
-    .use(rehypeSanitize)
-    .use(rehypeCleanListItem) // custom plugin
-    .use(rehypeScrollableTable) // custom plugin
-    .use(rehypeStringify)
-    .processSync(text);
-
-  return String(file);
-};
-
-export const Helpers = {
-  convertMarkdownToHtml,
-};
 
 export const generatedAnswerReducer = createReducer(
   getGeneratedAnswerInitialState(),
@@ -60,18 +34,11 @@ export const generatedAnswerReducer = createReducer(
       .addCase(updateMessage, (state, {payload}) => {
         state.isLoading = false;
         state.isStreaming = true;
-        if (!state.rawAnswer) {
-          state.rawAnswer = '';
+        if (!state.answer) {
           state.answer = '';
         }
 
-        state.rawAnswer += payload.textDelta;
-        state.answer =
-          state.rawAnswerMediaType === 'markdown'
-            ? Helpers.convertMarkdownToHtml(state?.rawAnswer)
-            : state.rawAnswer;
-        state.answerMediaType =
-          state.rawAnswerMediaType === 'markdown' ? 'html' : 'plain';
+        state.answer += payload.textDelta;
         delete state.error;
       })
       .addCase(updateCitations, (state, {payload}) => {
@@ -122,11 +89,8 @@ export const generatedAnswerReducer = createReducer(
       .addCase(setIsStreaming, (state, {payload}) => {
         state.isStreaming = payload;
       })
-      .addCase(setAnswerMediaType, (state, {payload}) => {
-        state.answerMediaType = payload;
-      })
-      .addCase(setRawAnswerMediaType, (state, {payload}) => {
-        state.rawAnswerMediaType = payload;
+      .addCase(setAnswerContentFormat, (state, {payload}) => {
+        state.answerContentFormat = payload;
       })
       .addCase(updateResponseFormat, (state, {payload}) => {
         state.responseFormat = payload;
@@ -135,5 +99,8 @@ export const generatedAnswerReducer = createReducer(
         state.fieldsToIncludeInCitations = [
           ...new Set(state.fieldsToIncludeInCitations.concat(action.payload)),
         ];
+      })
+      .addCase(setIsAnswerGenerated, (state, {payload}) => {
+        state.isAnswerGenerated = payload;
       })
 );
