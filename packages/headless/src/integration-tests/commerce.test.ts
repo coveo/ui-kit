@@ -35,8 +35,8 @@ describe.skip('commerce', () => {
           trackingId: 'barca',
         },
         context: {
-          language: 'en-gb',
-          country: 'gb',
+          language: 'en',
+          country: 'GB',
           currency: 'GBP',
           view: {
             url: 'https://sports-dev.barca.group/browse/promotions/surf-with-us-this-year',
