@@ -197,14 +197,14 @@
           </atomic-facet-manager>
         </atomic-layout-section>
         <atomic-layout-section section="main">
-          <atomic-tab-section default-active-tab="product">
+          <atomic-tab-manager clear-state-on-tab-change="true">
             <atomic-tab name="all" label="All"></atomic-tab>
             <atomic-tab name="article" label="Articles"></atomic-tab>
-            <atomic-tab name="product" label="Products"></atomic-tab>
+            <atomic-tab name="product" label="Products" active></atomic-tab>
             <atomic-tab name="parts" label="Parts"></atomic-tab>
             <atomic-tab name="accessories" label="Accessories"></atomic-tab>
             <atomic-tab name="video" label="Videos" expression="@filetype=YouTubeVideo"></atomic-tab>
-          </atomic-tab-section>
+          </atomic-tab-manager>
           <atomic-layout-section section="horizontal-facets">
             <atomic-segmented-facet-scrollable>
               <atomic-segmented-facet tabs="all" field="inat_kingdom" label="Kingdom"></atomic-segmented-facet>

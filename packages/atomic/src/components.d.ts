@@ -2528,7 +2528,7 @@ export namespace Components {
          */
         "select": (triggerSearch?: boolean) => Promise<void>;
     }
-    interface AtomicTabSection {
+    interface AtomicTabManager {
         /**
           * Whether to clear the state when the active tab changes.
          */
@@ -4190,11 +4190,11 @@ declare global {
         prototype: HTMLAtomicTabElement;
         new (): HTMLAtomicTabElement;
     };
-    interface HTMLAtomicTabSectionElement extends Components.AtomicTabSection, HTMLStencilElement {
+    interface HTMLAtomicTabManagerElement extends Components.AtomicTabManager, HTMLStencilElement {
     }
-    var HTMLAtomicTabSectionElement: {
-        prototype: HTMLAtomicTabSectionElement;
-        new (): HTMLAtomicTabSectionElement;
+    var HTMLAtomicTabManagerElement: {
+        prototype: HTMLAtomicTabManagerElement;
+        new (): HTMLAtomicTabManagerElement;
     };
     /**
      * The `atomic-table-element` element defines a table column in a result list.
@@ -4384,7 +4384,7 @@ declare global {
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
         "atomic-tab": HTMLAtomicTabElement;
-        "atomic-tab-section": HTMLAtomicTabSectionElement;
+        "atomic-tab-manager": HTMLAtomicTabManagerElement;
         "atomic-table-element": HTMLAtomicTableElementElement;
         "atomic-text": HTMLAtomicTextElement;
         "atomic-timeframe": HTMLAtomicTimeframeElement;
@@ -6778,7 +6778,7 @@ declare namespace LocalJSX {
          */
         "name": string;
     }
-    interface AtomicTabSection {
+    interface AtomicTabManager {
         /**
           * Whether to clear the state when the active tab changes.
          */
@@ -7028,7 +7028,7 @@ declare namespace LocalJSX {
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
         "atomic-tab": AtomicTab;
-        "atomic-tab-section": AtomicTabSection;
+        "atomic-tab-manager": AtomicTabManager;
         "atomic-table-element": AtomicTableElement;
         "atomic-text": AtomicText;
         "atomic-timeframe": AtomicTimeframe;
@@ -7606,7 +7606,7 @@ declare module "@stencil/core" {
              */
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
             "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
-            "atomic-tab-section": LocalJSX.AtomicTabSection & JSXBase.HTMLAttributes<HTMLAtomicTabSectionElement>;
+            "atomic-tab-manager": LocalJSX.AtomicTabManager & JSXBase.HTMLAttributes<HTMLAtomicTabManagerElement>;
             /**
              * The `atomic-table-element` element defines a table column in a result list.
              */

@@ -10,11 +10,11 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  * @internal
  */
 @Component({
-  tag: 'atomic-tab-section',
-  styleUrl: 'atomic-tab-section.pcss',
+  tag: 'atomic-tab-manager',
+  styleUrl: 'atomic-tab-manager.pcss',
   shadow: true,
 })
-export class AtomicTabSection {
+export class AtomicTabManager {
   @InitializeBindings() public bindings!: Bindings;
   @BindStateToController('tabManager')
   @State()
