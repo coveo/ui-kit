@@ -42,6 +42,14 @@ jobs:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
       - uses: ./.github/actions/setup
       - run: npm test
+  e2e-atomic-csp-test:
+    name: 'Run e2e tests on Atomic CSP'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/e2e-atomic-csp
   e2e-atomic-test:
     name: 'Run e2e tests on Atomic'
     needs: build
@@ -253,6 +261,7 @@ jobs:
       - 'lint-check'
       - 'unit-test'
       - 'e2e-atomic-test'
+      - 'e2e-atomic-csp-test'
       - 'e2e-quantic'
       - 'e2e-atomic-screenshots'
       - 'e2e-atomic-react-test'
