@@ -49,12 +49,14 @@ describe.skip('commerce', () => {
     const cart = buildCart(engine);
     cart.updateItem({
       productId: 'p1',
+      sku: 'p1_1',
       quantity: 2,
       price: 100,
       name: 'Nice Shoes',
     });
     cart.updateItem({
-      productId: 'p2',
+      productId: 'p1',
+      sku: 'p1_2',
       quantity: 3,
       price: 200,
       name: 'Nicer Shoes',

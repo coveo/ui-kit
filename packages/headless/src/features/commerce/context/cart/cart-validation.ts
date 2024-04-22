@@ -10,6 +10,7 @@ import {requiredNonEmptyString} from '../../../../utils/validate-payload';
 
 export const updateItemPayloadDefinition = {
   productId: requiredNonEmptyString,
+  sku: requiredNonEmptyString,
   quantity: new NumberValue({
     required: true,
     min: 0,
