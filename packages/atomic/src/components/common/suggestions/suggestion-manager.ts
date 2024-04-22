@@ -1,5 +1,6 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {forceUpdate} from '@stencil/core';
+import DOMPurify from 'dompurify';
 import {debounce} from '../../../utils/debounce-utils';
 import {promiseTimeout} from '../../../utils/promise-utils';
 import {
@@ -384,7 +385,7 @@ export class SuggestionManager<SearchBoxController> {
     }
 
     if (query) {
-      const escaped = query.replace(/"/g, '\\"');
+      const escaped = DOMPurify.sanitize(query);
       return !!panel?.querySelector(
         `[${this.queryDataAttribute}="${escaped}"]`
       );
