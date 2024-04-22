@@ -322,6 +322,11 @@ export class AtomicSearchInterface
     this.relevanceInspectorIsOpen = false;
   }
 
+  @Listen('atomic/tabInit')
+  public handleTabInit() {
+    this.updateHash();
+  }
+
   /**
    * Initializes the connection with the headless search engine using options for accessToken (required), organizationId (required), renewAccessToken, organizationEndpoints (recommended), and platformUrl (deprecated).
    */

@@ -2719,6 +2719,10 @@ export interface AtomicSmartSnippetSourceCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicSmartSnippetSourceElement;
 }
+export interface AtomicTabManagerCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicTabManagerElement;
+}
 declare global {
     /**
      * The `atomic-aria-live` component notifies screen readers of changes in the search interface.
@@ -4190,7 +4194,18 @@ declare global {
         prototype: HTMLAtomicTabElement;
         new (): HTMLAtomicTabElement;
     };
+    interface HTMLAtomicTabManagerElementEventMap {
+        "atomic/tabInit": any;
+    }
     interface HTMLAtomicTabManagerElement extends Components.AtomicTabManager, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicTabManagerElementEventMap>(type: K, listener: (this: HTMLAtomicTabManagerElement, ev: AtomicTabManagerCustomEvent<HTMLAtomicTabManagerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicTabManagerElementEventMap>(type: K, listener: (this: HTMLAtomicTabManagerElement, ev: AtomicTabManagerCustomEvent<HTMLAtomicTabManagerElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLAtomicTabManagerElement: {
         prototype: HTMLAtomicTabManagerElement;
@@ -6783,6 +6798,7 @@ declare namespace LocalJSX {
           * Whether to clear the state when the active tab changes.
          */
         "clearStateOnTabChange"?: boolean;
+        "onAtomic/tabInit"?: (event: AtomicTabManagerCustomEvent<any>) => void;
     }
     /**
      * The `atomic-table-element` element defines a table column in a result list.
