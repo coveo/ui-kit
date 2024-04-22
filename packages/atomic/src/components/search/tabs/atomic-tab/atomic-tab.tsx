@@ -5,16 +5,7 @@ import {
   Unsubscribe,
   buildTab,
 } from '@coveo/headless';
-import {
-  Component,
-  Prop,
-  h,
-  Event,
-  EventEmitter,
-  Element,
-  Method,
-  State,
-} from '@stencil/core';
+import {Component, Prop, h, Element, Method, State} from '@stencil/core';
 import {
   BindStateToController,
   InitializeBindings,
@@ -46,11 +37,6 @@ export class AtomicTab {
   @BindStateToController('tab')
   @State()
   private tabState!: TabState;
-
-  @Event({
-    eventName: 'atomic/tabClick',
-  })
-  tabClick!: EventEmitter;
 
   /**
    * Whether to make this tab the active one upon rendering.
@@ -84,7 +70,6 @@ export class AtomicTab {
   async select(triggerSearch: boolean = true) {
     if (!this.tab.state.isActive) {
       this.tab.select(triggerSearch);
-      this.tabClick.emit();
     }
   }
   public initialize() {

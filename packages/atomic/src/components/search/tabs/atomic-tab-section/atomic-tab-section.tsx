@@ -1,15 +1,18 @@
+import {TabManager, TabManagerState, buildTabManager} from '@coveo/headless';
 import {
   Component,
   h,
   Element,
   State,
-  Listen,
   Prop,
   EventEmitter,
   Event,
 } from '@stencil/core';
 import ArrowDown from '../../../../images/arrow-down.svg';
-import {InitializeBindings} from '../../../../utils/initialization-utils';
+import {
+  BindStateToController,
+  InitializeBindings,
+} from '../../../../utils/initialization-utils';
 import {getActiveTab} from '../../../../utils/tab-utils';
 import {Button} from '../../../common/button';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
@@ -24,8 +27,12 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 })
 export class AtomicTabSection {
   @InitializeBindings() public bindings!: Bindings;
+  @BindStateToController('tabManager')
+  @State()
+  private tabManagerState!: TabManagerState;
   @Element()
   private host!: HTMLElement;
+  public tabManager!: TabManager;
 
   /**
    * When provided, this tab will be selected by default when the component loads. Otherwise, the first tab is selected automatically.
@@ -36,6 +43,8 @@ export class AtomicTabSection {
    */
   @Prop() clearStateOnTabChange?: boolean = false;
 
+  @Prop({reflect: true}) activeTab: string = '';
+
   @State() public error!: Error;
   @State() tabs: HTMLAtomicTabElement[] = [];
 
@@ -43,11 +52,6 @@ export class AtomicTabSection {
     eventName: 'atomic/tabInit',
   })
   tabInit!: EventEmitter;
-
-  @Listen('atomic/tabClick')
-  handleTabClick() {
-    this.updateActiveTab();
-  }
 
   componentDidLoad() {
     this.setInitialTab();
@@ -65,6 +69,10 @@ export class AtomicTabSection {
     }
   }
 
+  public initialize() {
+    this.tabManager = buildTabManager(this.bindings.engine);
+  }
+
   async setInitialTab() {
     const initialTab =
       this.tabs.find((tab) => tab.name === this.defaultActiveTab) ||
@@ -75,51 +83,6 @@ export class AtomicTabSection {
       await initialTab.select(false);
       this.tabInit.emit();
     }
-    this.updateActiveTab();
-  }
-
-  renderDropdown() {
-    return this.tabs.map((tab) => (
-      <li>
-        <Button
-          style="text-transparent"
-          title={tab.name}
-          class="w-full px-6 pb-1 text-xl text-neutral-dark dropdown-option"
-          text={tab.label}
-          onClick={() => {
-            tab.select();
-          }}
-        />
-      </li>
-    ));
-  }
-
-  updateActiveTab() {
-    const dropdownButton =
-      this.host.shadowRoot?.querySelector('.dropdown-button');
-    const dropdownOptions = [
-      ...(this.host.shadowRoot?.querySelectorAll('.dropdown-option') || []),
-    ];
-    const activeTabName = getActiveTab(this.bindings.engine.state)?.tab;
-
-    this.tabs.forEach((tab) => {
-      tab.isActive = tab.name === activeTabName;
-
-      if (tab.isActive) {
-        const span = dropdownButton?.getElementsByTagName('span')[0];
-        if (span) {
-          span.textContent = tab.label;
-        }
-      }
-    });
-
-    dropdownOptions.forEach((option) => {
-      if ((option as HTMLButtonElement).title === activeTabName) {
-        option.classList.add('font-bold');
-      } else {
-        option.classList.remove('font-bold');
-      }
-    });
   }
 
   public render() {
@@ -136,7 +99,11 @@ export class AtomicTabSection {
               class={
                 'px-6 pb-1 text-xl group-focus-within:text-primary group-hover:text-primary-light dropdown-button'
               }
-              text="Tabs"
+              text={
+                this.tabs.find(
+                  (tab) => tab.name === this.tabManagerState.activeTab
+                )?.label
+              }
               part="button"
             >
               <atomic-icon
@@ -145,7 +112,24 @@ export class AtomicTabSection {
               ></atomic-icon>
             </Button>
             <ul class="absolute top-0 z-50 flex flex-col invisible gap-2 p-4 mt-6 bg-white rounded-md shadow-lg focus:visible group-focus-within:visible group:visible dropdown-content">
-              {this.renderDropdown()}
+              {this.tabs.map((tab) => (
+                <li>
+                  <Button
+                    style="text-transparent"
+                    title={tab.name}
+                    class={
+                      'w-full px-6 pb-1 text-xl text-neutral-dark dropdown-option' +
+                      (tab.name === this.tabManagerState.activeTab
+                        ? ' font-bold'
+                        : '')
+                    }
+                    text={tab.label}
+                    onClick={() => {
+                      tab.select();
+                    }}
+                  />
+                </li>
+              ))}
             </ul>
           </div>
         </div>
