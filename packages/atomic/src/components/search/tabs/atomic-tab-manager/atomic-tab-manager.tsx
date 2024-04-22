@@ -49,13 +49,13 @@ export class AtomicTabManager {
 
   public render() {
     return (
-      <div class=" overflow-x-auto ">
-        <div class=" flex flex-row w-full border-b mb-2 tabs-area tabs-container ">
+      <div class="mb-2 overflow-x-auto">
+        <div class="flex flex-row w-full mb-2 border-b tabs-area">
           <slot></slot>
         </div>
 
         <select
-          class="btn-primary text-xl p-2 hidden cursor-pointer dropdown-area"
+          class="hidden py-2 text-xl font-bold cursor-pointer btn-text-primary dropdown-area"
           onChange={(e) => {
             const selectedTab = this.tabs.find(
               (tab) => tab.name === (e.target as HTMLSelectElement).value
