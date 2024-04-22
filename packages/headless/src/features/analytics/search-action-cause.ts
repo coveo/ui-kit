@@ -341,7 +341,7 @@ export enum SearchPageEvents {
    */
   generatedAnswerShowAnswers = 'generatedAnswerShowAnswers',
   /**
-   * Identifies the custom event that gets logged when a user expand a generated answer.
+   * Identifies the custom event that gets logged when a user expands a generated answer.
    */
   generatedAnswerExpand = 'generatedAnswerExpand',
   /**
