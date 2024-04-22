@@ -37,7 +37,7 @@ export class AtomicTabManager {
 
     if (tabs.length === 0) {
       this.error = new Error(
-        'The "atomic-tab-section" element requires at least one "atomic-tab" child.'
+        'The "atomic-tab-manager" element requires at least one "atomic-tab" child.'
       );
       return;
     }
