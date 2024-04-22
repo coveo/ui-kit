@@ -9,6 +9,9 @@ import {
   buildSearchStatus,
   buildFacetConditionsManager,
   FacetResultsMustMatch,
+  FacetConditionsManager,
+  FacetValueRequest,
+  CategoryFacetValueRequest,
 } from '@coveo/headless';
 import {Component, h, State, Prop, Element, VNode} from '@stencil/core';
 import {
@@ -22,11 +25,8 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
-import {
-  BaseFacet,
-  FacetCommon,
-  parseDependsOn,
-} from '../../../common/facets/facet-common';
+import {parseDependsOn} from '../../../common/facets/depends-on';
+import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
 import {FacetGuard} from '../../../common/facets/facet-guard';
 import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
@@ -35,7 +35,10 @@ import {announceFacetSearchResultsWithAriaLive} from '../../../common/facets/fac
 import {FacetSearchInput} from '../../../common/facets/facet-search/facet-search-input';
 import {FacetSearchInputGuard} from '../../../common/facets/facet-search/facet-search-input-guard';
 import {FacetSearchMatches} from '../../../common/facets/facet-search/facet-search-matches';
-import {shouldDisplaySearchResults} from '../../../common/facets/facet-search/facet-search-utils';
+import {
+  shouldDisplaySearchResults,
+  shouldUpdateFacetSearchComponent,
+} from '../../../common/facets/facet-search/facet-search-utils';
 import {FacetSearchValue} from '../../../common/facets/facet-search/facet-search-value';
 import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/facet-show-more-less';
 import {
@@ -44,6 +47,7 @@ import {
 } from '../../../common/facets/facet-value/facet-value';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {initializePopover} from '../atomic-popover/popover-type';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -89,9 +93,8 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
   styleUrl: 'atomic-facet.pcss',
   shadow: true,
 })
-export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
+export class AtomicFacet implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
-  public facetCommon?: FacetCommon;
   public facet!: Facet;
   public searchStatus!: SearchStatus;
   @Element() private host!: HTMLElement;
@@ -238,77 +241,25 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   public customSort: string[] | string = '[]';
 
   private showLessFocus?: FocusTargetController;
-
   private showMoreFocus?: FocusTargetController;
-
   private headerFocus?: FocusTargetController;
+  private facetConditionsManager?: FacetConditionsManager;
 
   @AriaLiveRegion('facet-search')
   protected facetSearchAriaMessage!: string;
 
   public initialize() {
     this.facet = buildFacet(this.bindings.engine, {options: this.facetOptions});
-
-    announceFacetSearchResultsWithAriaLive(
-      this.facet,
-      this.label,
-      (msg) => (this.facetSearchAriaMessage = msg),
-      this.bindings.i18n
-    );
     this.facetId = this.facet.state.facetId;
-
-    this.facetCommon = new FacetCommon({
-      host: this.host,
-      bindings: this.bindings,
-      label: this.definedLabel,
-      field: this.field,
-      headingLevel: this.headingLevel,
-      displayValuesAs: this.displayValuesAs,
-      enableExclusion: this.enableExclusion,
-      dependsOn: this.dependsOn,
-      dependenciesManager: buildFacetConditionsManager(this.bindings.engine, {
-        facetId: this.facetId!,
-        conditions: parseDependsOn(this.dependsOn),
-      }),
-      facet: this.facet,
-      facetId: this.facetId,
-      withSearch: this.withSearch,
-      sortCriteria: this.sortCriteria,
-    });
-
     this.searchStatus = buildSearchStatus(this.bindings.engine);
-  }
-
-  private get definedLabel() {
-    return this.label === 'no-label' && this.facetState?.label
-      ? this.facetState.label
-      : this.label;
-  }
-
-  private get focusTargets(): {
-    showLess: FocusTargetController;
-    showMore: FocusTargetController;
-    header: FocusTargetController;
-  } {
-    if (!this.showLessFocus) {
-      this.showLessFocus = new FocusTargetController(this);
-    }
-    if (!this.showMoreFocus) {
-      this.showMoreFocus = new FocusTargetController(this);
-    }
-    if (!this.headerFocus) {
-      this.headerFocus = new FocusTargetController(this);
-    }
-
-    return {
-      showLess: this.showLessFocus,
-      showMore: this.showMoreFocus,
-      header: this.headerFocus,
-    };
+    this.initAriaLive();
+    this.initConditionManager();
+    this.initPopover();
+    this.registerFacet();
   }
 
   public disconnectedCallback() {
-    this.facetCommon?.disconnectedCallback();
+    this.facetConditionsManager?.stopWatching();
   }
 
   public componentShouldUpdate(
@@ -316,14 +267,16 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
     prev: unknown,
     propName: keyof AtomicFacet
   ) {
-    return (
-      !this.facetCommon ||
-      this.facetCommon?.componentShouldUpdate(
-        (next as FacetState)?.facetSearch,
-        (prev as FacetState)?.facetSearch,
-        propName
-      )
-    );
+    if (
+      this.isFacetState(prev, propName) &&
+      this.isFacetState(next, propName)
+    ) {
+      return shouldUpdateFacetSearchComponent(
+        next.facetSearch,
+        prev.facetSearch
+      );
+    }
+    return true;
   }
 
   public render() {
@@ -515,5 +468,86 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
       field: this.field,
       i18n: this.bindings.i18n,
     };
+  }
+
+  private get isHidden() {
+    return !this.facet.state.enabled || !this.facet.state.values.length;
+  }
+
+  private initConditionManager() {
+    this.facetConditionsManager = buildFacetConditionsManager(
+      this.bindings.engine,
+      {
+        facetId: this.facetId!,
+        conditions: parseDependsOn<
+          FacetValueRequest | CategoryFacetValueRequest
+        >(this.dependsOn),
+      }
+    );
+  }
+
+  private registerFacet() {
+    this.bindings.store.registerFacet('facets', this.facetInfo);
+  }
+
+  private initPopover() {
+    initializePopover(this.host, {
+      ...this.facetInfo,
+      hasValues: () => !!this.facet.state.values.length,
+      numberOfActiveValues: () => this.activeValues.length,
+    });
+  }
+
+  private initAriaLive() {
+    announceFacetSearchResultsWithAriaLive(
+      this.facet,
+      this.label,
+      (msg) => (this.facetSearchAriaMessage = msg),
+      this.bindings.i18n
+    );
+  }
+
+  private get facetInfo(): FacetInfo {
+    return {
+      label: () => this.bindings.i18n.t(this.label),
+      facetId: this.facetId!,
+      element: this.host,
+      isHidden: () => this.isHidden,
+    };
+  }
+
+  private get definedLabel() {
+    return this.label === 'no-label' && this.facetState?.label
+      ? this.facetState.label
+      : this.label;
+  }
+
+  private get focusTargets(): {
+    showLess: FocusTargetController;
+    showMore: FocusTargetController;
+    header: FocusTargetController;
+  } {
+    if (!this.showLessFocus) {
+      this.showLessFocus = new FocusTargetController(this);
+    }
+    if (!this.showMoreFocus) {
+      this.showMoreFocus = new FocusTargetController(this);
+    }
+    if (!this.headerFocus) {
+      this.headerFocus = new FocusTargetController(this);
+    }
+
+    return {
+      showLess: this.showLessFocus,
+      showMore: this.showMoreFocus,
+      header: this.headerFocus,
+    };
+  }
+
+  private isFacetState(state: unknown, propName: string): state is FacetState {
+    return (
+      propName === 'facetState' &&
+      typeof (state as FacetState)?.facetId === 'string'
+    );
   }
 }

@@ -14,6 +14,8 @@ import {
   loadDateFacetSetActions,
   SearchStatus,
   SearchStatusState,
+  FacetValueRequest,
+  CategoryFacetValueRequest,
 } from '@coveo/headless';
 import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
@@ -23,7 +25,7 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {MapProp} from '../../../../utils/props-utils';
-import {BaseFacet, parseDependsOn} from '../../../common/facets/facet-common';
+import {parseDependsOn} from '../../../common/facets/depends-on';
 import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
 import {TimeframeFacetCommon} from '../../../common/facets/timeframe-facet-common';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
@@ -56,9 +58,7 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
   styleUrl: './atomic-timeframe-facet.pcss',
   shadow: true,
 })
-export class AtomicTimeframeFacet
-  implements InitializableComponent, BaseFacet<DateFacet>
-{
+export class AtomicTimeframeFacet implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   public facetForDateRange?: DateFacet;
   public facetForDatePicker?: DateFacet;
@@ -193,7 +193,9 @@ export class AtomicTimeframeFacet
         buildFacetConditionsManager(this.bindings.engine, {
           facetId:
             this.facetForDateRange?.state.facetId ?? this.filter!.state.facetId,
-          conditions: parseDependsOn(this.dependsOn),
+          conditions: parseDependsOn<
+            FacetValueRequest | CategoryFacetValueRequest
+          >(this.dependsOn),
         }),
       buildDateRange,
       getSearchStatusState: () => this.searchStatusState,
