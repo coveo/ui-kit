@@ -89,6 +89,10 @@ export interface FacetIdParam {
   facetId: string;
 }
 
+export interface IgnorePathsParam {
+  ignorePaths: string[][];
+}
+
 export interface SlotIdParam {
   id: string;
 }

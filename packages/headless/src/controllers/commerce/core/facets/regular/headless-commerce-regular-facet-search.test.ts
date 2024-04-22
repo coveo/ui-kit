@@ -2,6 +2,7 @@ import {
   executeCommerceFacetSearch,
   executeCommerceFieldSuggest,
 } from '../../../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions';
+import {specificFacetSearchSetReducer as facetSearchSet} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
 import {
   MockedCommerceEngine,
@@ -10,26 +11,26 @@ import {
 import {buildMockFacetSearch} from '../../../../../test/mock-facet-search';
 import {FacetSearchProps} from '../../../../core/facets/facet-search/specific/headless-facet-search';
 import {
-  FacetSearch,
-  buildCommerceFacetSearch,
-} from './headless-commerce-facet-search';
+  RegularFacetSearch,
+  buildRegularFacetSearch,
+} from './headless-commerce-regular-facet-search';
 
 jest.mock(
   '../../../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions'
 );
 
-describe('CommerceFacetSearch', () => {
-  const facetId: string = 'searchable_facet_id';
+describe('RegularFacetSearch', () => {
+  const facetId: string = 'regular_facet_id';
   let engine: MockedCommerceEngine;
   let props: FacetSearchProps;
-  let facetSearch: FacetSearch;
+  let facetSearch: RegularFacetSearch;
 
   function initEngine(preloadedState = buildMockCommerceState()) {
     engine = buildMockCommerceEngine(preloadedState);
   }
 
-  function initCommerceFacetSearch() {
-    facetSearch = buildCommerceFacetSearch(engine, props);
+  function initFacetSearch() {
+    facetSearch = buildRegularFacetSearch(engine, props);
   }
 
   function setFacetSearchState() {
@@ -53,7 +54,7 @@ describe('CommerceFacetSearch', () => {
     initEngine();
     setFacetSearchState();
 
-    initCommerceFacetSearch();
+    initFacetSearch();
   });
 
   describe('initialization', () => {
@@ -61,16 +62,22 @@ describe('CommerceFacetSearch', () => {
       expect(facetSearch).toBeTruthy();
     });
 
-    it('#search dispatches #executeCommerceFacetSearch when #isForFieldSuggestions is false', () => {
-      facetSearch.search();
-      expect(executeCommerceFacetSearch).toHaveBeenCalled();
+    it('adds #facetSearchSet reducer to engine', () => {
+      expect(engine.addReducers).toHaveBeenCalledWith({
+        facetSearchSet,
+      });
     });
+  });
 
-    it('#search dispatches #executeCommerceFieldSuggest when #isForFieldSuggestions is true', () => {
-      props.isForFieldSuggestions = true;
-      initCommerceFacetSearch();
-      facetSearch.search();
-      expect(executeCommerceFieldSuggest).toHaveBeenCalled();
-    });
+  it('#search dispatches #executeCommerceFacetSearch when #isForFieldSuggestions is false', () => {
+    facetSearch.search();
+    expect(executeCommerceFacetSearch).toHaveBeenCalled();
+  });
+
+  it('#search dispatches #executeCommerceFieldSuggest when #isForFieldSuggestions is true', () => {
+    props.isForFieldSuggestions = true;
+    initFacetSearch();
+    facetSearch.search();
+    expect(executeCommerceFieldSuggest).toHaveBeenCalled();
   });
 });
