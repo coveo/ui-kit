@@ -1,20 +1,9 @@
 import {TabManager, TabManagerState, buildTabManager} from '@coveo/headless';
-import {
-  Component,
-  h,
-  Element,
-  State,
-  Prop,
-  EventEmitter,
-  Event,
-} from '@stencil/core';
-import ArrowDown from '../../../../images/arrow-down.svg';
+import {Component, h, Element, State, Prop} from '@stencil/core';
 import {
   BindStateToController,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {getActiveTab} from '../../../../utils/tab-utils';
-import {Button} from '../../../common/button';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -35,27 +24,12 @@ export class AtomicTabSection {
   public tabManager!: TabManager;
 
   /**
-   * When provided, this tab will be selected by default when the component loads. Otherwise, the first tab is selected automatically.
-   */
-  @Prop() defaultActiveTab?: string;
-  /**
    * Whether to clear the state when the active tab changes.
    */
   @Prop() clearStateOnTabChange?: boolean = false;
 
-  @Prop({reflect: true}) activeTab: string = '';
-
   @State() public error!: Error;
   @State() tabs: HTMLAtomicTabElement[] = [];
-
-  @Event({
-    eventName: 'atomic/tabInit',
-  })
-  tabInit!: EventEmitter;
-
-  componentDidLoad() {
-    this.setInitialTab();
-  }
 
   componentWillUpdate() {
     const tabs = [...this.host.querySelectorAll('atomic-tab')];
@@ -73,66 +47,33 @@ export class AtomicTabSection {
     this.tabManager = buildTabManager(this.bindings.engine);
   }
 
-  async setInitialTab() {
-    const initialTab =
-      this.tabs.find((tab) => tab.name === this.defaultActiveTab) ||
-      this.tabs[0];
-    const activeTab = getActiveTab(this.bindings.engine.state)?.tab;
-
-    if (initialTab && !activeTab) {
-      await initialTab.select(false);
-      this.tabInit.emit();
-    }
-  }
-
   public render() {
     return (
-      <div class="mb-4 overflow-visible ">
-        <div class="flex flex-row tabs-container">
-          <div class="flex flex-row w-full mb-2 border-b tabs-area ">
-            <slot></slot>
-          </div>
-          <div class="relative flex-row hidden mb-2 border-b cursor-pointer group dropdown-area ">
-            <Button
-              tabIndex="0"
-              style="text-transparent"
-              class={
-                'px-6 pb-1 text-xl group-focus-within:text-primary group-hover:text-primary-light dropdown-button'
-              }
-              text={
-                this.tabs.find(
-                  (tab) => tab.name === this.tabManagerState.activeTab
-                )?.label
-              }
-              part="button"
-            >
-              <atomic-icon
-                icon={ArrowDown}
-                class="w-3 ml-2 align-baseline"
-              ></atomic-icon>
-            </Button>
-            <ul class="absolute top-0 z-50 flex flex-col invisible gap-2 p-4 mt-6 bg-white rounded-md shadow-lg focus:visible group-focus-within:visible group:visible dropdown-content">
-              {this.tabs.map((tab) => (
-                <li>
-                  <Button
-                    style="text-transparent"
-                    title={tab.name}
-                    class={
-                      'w-full px-6 pb-1 text-xl text-neutral-dark dropdown-option' +
-                      (tab.name === this.tabManagerState.activeTab
-                        ? ' font-bold'
-                        : '')
-                    }
-                    text={tab.label}
-                    onClick={() => {
-                      tab.select();
-                    }}
-                  />
-                </li>
-              ))}
-            </ul>
-          </div>
+      <div class=" overflow-x-auto ">
+        <div class=" flex flex-row w-full border-b mb-2 tabs-area tabs-container ">
+          <slot></slot>
         </div>
+
+        <select
+          class="btn-primary text-xl p-2 hidden cursor-pointer dropdown-area"
+          onChange={(e) => {
+            const selectedTab = this.tabs.find(
+              (tab) => tab.name === (e.target as HTMLSelectElement).value
+            );
+            if (selectedTab) {
+              selectedTab.select();
+            }
+          }}
+        >
+          {this.tabs.map((tab) => (
+            <option
+              value={tab.name}
+              selected={tab.name === this.tabManagerState.activeTab}
+            >
+              {tab.label}
+            </option>
+          ))}
+        </select>
       </div>
     );
   }
