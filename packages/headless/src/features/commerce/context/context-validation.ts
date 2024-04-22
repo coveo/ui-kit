@@ -31,15 +31,11 @@ export const contextDefinition = {
   country: requiredNonEmptyString,
   currency: currencyDefinition,
   user: new RecordValue({
-    values: {
-      ...userDefinition,
-    },
+    values: userDefinition,
   }),
   view: new RecordValue({
     options: {required: true},
-    values: {
-      ...viewDefinition,
-    },
+    values: viewDefinition,
   }),
 };
 
