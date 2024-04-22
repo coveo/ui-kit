@@ -256,7 +256,7 @@ describe('generated answer', () => {
   });
 
   describe('#collapse', () => {
-    describe('when is not expanded', () => {
+    describe('when not expanded', () => {
       it('should not make any changes', () => {
         engine = buildEngineWithGeneratedAnswer({expanded: false});
         initGeneratedAnswer();
