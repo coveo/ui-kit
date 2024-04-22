@@ -60,7 +60,7 @@ export interface GeneratedAnswerState {
    */
   isAnswerGenerated: boolean;
   /**
-   * Determines if the answer is expanded.
+   * Whether the answer is expanded.
    */
   expanded: boolean;
 }
