@@ -15,10 +15,6 @@ const links = [
     label: 'Recommendations',
   },
   {href: '/examples/horizontal-facets.html', label: 'Horizontal Facets'},
-  {
-    href: '/accessibility/commerce-full.html',
-    label: 'Accessible Commerce Full',
-  },
   {href: '/examples/ipx.html', label: 'IPX'},
   {href: '/examples/genqa.html', label: 'Gen Q&A'},
   {href: '/examples/tabs.html', label: 'Tabs'},
@@ -35,22 +31,45 @@ const makeLinks = () => {
     .filter((link) => link.href !== window.location.pathname)
     .map(
       (link) =>
-        `<li style="display: inline-block; list-decoration: none;">
-           <a href="${link.href}" style="margin-right: 10px; color: var(--atomic-primary); text-decoration: none;">${link.label}</a>
+        `<li>
+           <a href="${link.href}">${link.label}</a>
          </li>`
     )
     .join('');
 };
 const example = getCurrentExample();
+const styleTag = document.createElement('style');
+styleTag.innerHTML = `
+  html {
+    nav {
+      padding: 10px 20px;
+      font-family: var(--atomic-font-family);
+      span {
+        font-weight: var(--atomic-font-bold);
+      }
+      ul {
+        display: inline-block;
+        font-size: var(--atomic-text-sm);
+      }
+      li {
+        display: inline-block;
+        list-decoration: none;
+      }
+      a {
+        margin-right: 10px;
+        color: var(--atomic-primary);
+        text-decoration: none;
+      }
+    }`;
+styleTag.setAttribute('nonce', '1234567890');
+
 header.innerHTML = `
-  <nav style="padding: 10px 20px; font-family: var(--atomic-font-family);">
-    <span style="font-weight: var(--atomic-font-bold);">${
-      example ? example.label : ''
-    } example</span>
-    <ul style="display: inline-block; font-size: var(--atomic-text-sm);">
+  <nav>
+    <span>${example ? example.label : ''} example</span>
+    <ul>
       ${makeLinks()}
     </ul>
   </nav>
 `;
-
+document.head.appendChild(styleTag);
 document.body.insertAdjacentElement('afterbegin', header);
