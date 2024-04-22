@@ -17,8 +17,13 @@ import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").SmartSnippet} SmartSnippet */
+/** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SmartSnippetState} SmartSnippetState */
 /** @typedef {import("coveo").SmartSnippetFeedback} SmartSnippetFeedback */
+
+const FEEDBACK_LIKED_STATE = 'liked';
+const FEEDBACK_DISLIKED_STATE = 'disliked';
+const FEEDBACK_NEUTRAL_STATE = 'neutral';
 
 const expandableAnswerBaseClass = 'smart-snippet__answer slds-is-relative';
 
@@ -60,6 +65,12 @@ export default class QuanticSmartSnippet extends LightningElement {
   feedbackSubmitted = false;
   /** @type {boolean} */
   hasInitializationError = false;
+  /** @type {SearchStatus} */
+  searchStatus;
+  /** @type {Function} */
+  unsubscribeSearchStatus;
+  /** @type {boolean} */
+  shouldBeInNeutralState;
 
   labels = {
     showMore,
@@ -90,7 +101,12 @@ export default class QuanticSmartSnippet extends LightningElement {
     this.engine = engine;
     this.headless = getHeadlessBundle(this.engineId);
     this.smartSnippet = this.headless.buildSmartSnippet(engine);
+    this.searchStatus = this.headless.buildSearchStatus(engine);
+
     this.unsubscribe = this.smartSnippet.subscribe(() => this.updateState());
+    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
+      this.updateSearchStatusState()
+    );
   };
 
   disconnectedCallback() {
@@ -108,6 +124,11 @@ export default class QuanticSmartSnippet extends LightningElement {
       this.initializeExpandableAnswerClass();
       this.expandableAnswerDisplayUpdated = false;
     }
+  }
+
+  updateSearchStatusState() {
+    this.feedbackSubmitted = false;
+    this.shouldBeInNeutralState = true;
   }
 
   /**
@@ -186,7 +207,8 @@ export default class QuanticSmartSnippet extends LightningElement {
    */
   like = (event) => {
     event.stopPropagation();
-    if (!this.liked) {
+    if (this.feedbackState !== FEEDBACK_LIKED_STATE) {
+      this.shouldBeInNeutralState = false;
       this.smartSnippet.like();
       this.hideExplainWhyFeedbackButton = true;
     }
@@ -198,7 +220,8 @@ export default class QuanticSmartSnippet extends LightningElement {
    */
   dislike = (event) => {
     event.stopPropagation();
-    if (!this.disliked) {
+    if (this.feedbackState !== FEEDBACK_DISLIKED_STATE) {
+      this.shouldBeInNeutralState = false;
       this.smartSnippet.dislike();
       if (!this.feedbackSubmitted) {
         this.hideExplainWhyFeedbackButton = false;
@@ -386,6 +409,13 @@ export default class QuanticSmartSnippet extends LightningElement {
    * @returns {'liked' | 'disliked' | 'neutral'}
    */
   get feedbackState() {
-    return this.liked ? 'liked' : this.disliked ? 'disliked' : 'neutral';
+    if (this.shouldBeInNeutralState) {
+      return FEEDBACK_NEUTRAL_STATE;
+    }
+    return this.liked
+      ? FEEDBACK_LIKED_STATE
+      : this.disliked
+        ? FEEDBACK_DISLIKED_STATE
+        : FEEDBACK_NEUTRAL_STATE;
   }
 }

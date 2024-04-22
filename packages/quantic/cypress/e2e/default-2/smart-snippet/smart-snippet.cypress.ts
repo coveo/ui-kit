@@ -372,6 +372,31 @@ describe('quantic-smart-snippet', {browser: 'chrome'}, () => {
                       Expect.logCloseSmartSnippetFeedbackModal();
                     }
                   });
+
+                  scope(
+                    'when trying to open the feedback modal after executing a new query',
+                    () => {
+                      performSearch();
+                      Expect.displaySmartSnippetCard(true);
+                      Actions.clickSmartSnippetDislikeButton();
+                      if (analyticsMode === 'next') {
+                        NextAnalyticsExpectations.emitQnaDislikeEvent(
+                          {
+                            feedback: {
+                              liked: false,
+                            },
+                            answer: {
+                              type: answerType,
+                            },
+                          },
+                          exampleTrackingId
+                        );
+                      } else {
+                        Expect.logDislikeSmartSnippet();
+                      }
+                      Expect.displayExplainWhyButton(true);
+                    }
+                  );
                 });
               }
             );
