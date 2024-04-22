@@ -1,5 +1,5 @@
 import {buildMockCommerceState} from '../../test/mock-commerce-state';
-import {buildMockProductRecommendation} from '../../test/mock-product-recommendation';
+import {buildMockProduct} from '../../test/mock-product';
 import {
   CommerceAnalyticsProvider,
   StateNeededByCommerceAnalyticsProvider,
@@ -11,10 +11,7 @@ describe('commerce analytics', () => {
 
   it('should properly return getSearchEventRequestPayload', () => {
     const state = getBaseState();
-    state.productListing!.products = [
-      buildMockProductRecommendation(),
-      buildMockProductRecommendation(),
-    ];
+    state.productListing!.products = [buildMockProduct(), buildMockProduct()];
     expect(
       new CommerceAnalyticsProvider(() => state).getSearchEventRequestPayload()
     ).toMatchObject({
