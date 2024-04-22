@@ -17,11 +17,9 @@ import {
   registerFieldsToIncludeInCitations,
   setId,
   setAnswerContentFormat,
-  setRawAnswerContentFormat,
   setIsAnswerGenerated,
 } from './generated-answer-actions';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
-import {AnswerTransformer} from './generated-answer-transformer';
 
 export const generatedAnswerReducer = createReducer(
   getGeneratedAnswerInitialState(),
@@ -36,18 +34,11 @@ export const generatedAnswerReducer = createReducer(
       .addCase(updateMessage, (state, {payload}) => {
         state.isLoading = false;
         state.isStreaming = true;
-        if (!state.rawAnswer) {
-          state.rawAnswer = '';
+        if (!state.answer) {
           state.answer = '';
         }
 
-        state.rawAnswer += payload.textDelta;
-        const transformed = AnswerTransformer.get(
-          state.rawAnswerContentFormat!
-        )(state.rawAnswer ?? '');
-
-        state.answer = transformed.answer;
-        state.answerContentFormat = transformed.contentFormat;
+        state.answer += payload.textDelta;
         delete state.error;
       })
       .addCase(updateCitations, (state, {payload}) => {
@@ -100,9 +91,6 @@ export const generatedAnswerReducer = createReducer(
       })
       .addCase(setAnswerContentFormat, (state, {payload}) => {
         state.answerContentFormat = payload;
-      })
-      .addCase(setRawAnswerContentFormat, (state, {payload}) => {
-        state.rawAnswerContentFormat = payload;
       })
       .addCase(updateResponseFormat, (state, {payload}) => {
         state.responseFormat = payload;

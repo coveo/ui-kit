@@ -16,19 +16,15 @@ import {
   sendGeneratedAnswerFeedback,
   registerFieldsToIncludeInCitations,
   setAnswerContentFormat,
-  setRawAnswerContentFormat,
   setIsAnswerGenerated,
 } from './generated-answer-actions';
 import {generatedAnswerReducer} from './generated-answer-slice';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
-import {AnswerTransformer} from './generated-answer-transformer';
 import {
   GeneratedAnswerStyle,
   GeneratedContentFormat,
-  GeneratedRawContentFormat,
   GeneratedResponseFormat,
   generatedContentFormat,
-  generatedRawContentFormat,
 } from './generated-response-format';
 
 const baseState = getGeneratedAnswerInitialState();
@@ -47,7 +43,7 @@ describe('generated answer slice', () => {
       const finalState = generatedAnswerReducer(
         {
           ...getGeneratedAnswerInitialState(),
-          rawAnswer: existingAnswer,
+          answer: existingAnswer,
         },
         updateMessage({
           textDelta: newMessage,
@@ -58,56 +54,6 @@ describe('generated answer slice', () => {
       expect(finalState.error).toBeUndefined();
       expect(finalState.isLoading).toBe(false);
       expect(finalState.isStreaming).toBe(true);
-    });
-
-    describe('when rawAnswerContentFormat is text/markdown', () => {
-      it('should convert the rawAnswer to text/html', () => {
-        const getAnswerTransformerSpy = jest
-          .spyOn(AnswerTransformer, 'get')
-          .mockImplementation(() => (input) => ({
-            answer: `<p>${input}</p>`,
-            contentFormat: 'text/html',
-          }));
-
-        const finalState = generatedAnswerReducer(
-          {
-            ...getGeneratedAnswerInitialState(),
-            rawAnswerContentFormat: 'text/markdown',
-          },
-          updateMessage({
-            textDelta: 'some content',
-          })
-        );
-
-        expect(getAnswerTransformerSpy).toHaveBeenCalledWith('text/markdown');
-        expect(finalState.answer).toBe('<p>some content</p>');
-        expect(finalState.answerContentFormat).toBe('text/html');
-      });
-    });
-
-    describe('when rawAnswerContentFormat is text/plain', () => {
-      it('should keep the answer in plain text', () => {
-        const getAnswerTransformerSpy = jest
-          .spyOn(AnswerTransformer, 'get')
-          .mockImplementation(() => (input) => ({
-            answer: input,
-            contentFormat: 'text/plain',
-          }));
-
-        const finalState = generatedAnswerReducer(
-          {
-            ...getGeneratedAnswerInitialState(),
-            rawAnswerContentFormat: 'text/plain',
-          },
-          updateMessage({
-            textDelta: 'some content',
-          })
-        );
-
-        expect(getAnswerTransformerSpy).toHaveBeenCalledWith('text/plain');
-        expect(finalState.answer).toBe('some content');
-        expect(finalState.answerContentFormat).toBe('text/plain');
-      });
     });
   });
 
@@ -304,17 +250,17 @@ describe('generated answer slice', () => {
     }
   );
 
-  test.each(generatedRawContentFormat)(
-    '#setRawAnswerContentFormat should set the "%i" raw content format in the state',
-    (format: GeneratedRawContentFormat) => {
+  test.each(generatedContentFormat)(
+    '#setAnswerContentFormat should set the "%i" content format in the state',
+    (format: GeneratedContentFormat) => {
       const finalState = generatedAnswerReducer(
         baseState,
-        setRawAnswerContentFormat(format)
+        setAnswerContentFormat(format)
       );
 
       expect(finalState).toEqual({
         ...getGeneratedAnswerInitialState(),
-        rawAnswerContentFormat: format,
+        answerContentFormat: format,
       });
     }
   );

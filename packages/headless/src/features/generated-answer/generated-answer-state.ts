@@ -1,7 +1,6 @@
 import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload';
 import {
   GeneratedContentFormat,
-  GeneratedRawContentFormat,
   GeneratedResponseFormat,
 } from './generated-response-format';
 
@@ -26,19 +25,9 @@ export interface GeneratedAnswerState {
   /**
    * The content format of the generated answer. Possible values are:
    * - `text/plain`
-   * - `text/html`
-   */
-  answerContentFormat?: GeneratedContentFormat;
-  /**
-   * The raw generated answer (i.e., as received from the Coveo Platform).
-   */
-  rawAnswer?: string;
-  /**
-   * The content format for the raw generated answer. Possible values are:
-   * - `text/plain`
    * - `text/markdown`
    */
-  rawAnswerContentFormat?: GeneratedRawContentFormat;
+  answerContentFormat?: GeneratedContentFormat;
   /**
    * The document snippets retrieved to generate the answer.
    */

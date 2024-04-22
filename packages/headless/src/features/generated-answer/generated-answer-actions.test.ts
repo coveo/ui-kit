@@ -8,15 +8,12 @@ import {
   updateResponseFormat,
   registerFieldsToIncludeInCitations,
   setAnswerContentFormat,
-  setRawAnswerContentFormat,
 } from './generated-answer-actions';
 import {
   GeneratedAnswerStyle,
   GeneratedContentFormat,
-  GeneratedRawContentFormat,
   generatedAnswerStyle,
   generatedContentFormat,
-  generatedRawContentFormat,
 } from './generated-response-format';
 
 describe('generated answer', () => {
@@ -76,9 +73,9 @@ describe('generated answer', () => {
       }
     );
 
-    test.each(generatedRawContentFormat)(
+    test.each(generatedContentFormat)(
       'should accept a valid payload with format: "%i"',
-      (format: GeneratedRawContentFormat) => {
+      (format: GeneratedContentFormat) => {
         expect(() =>
           updateResponseFormat({
             answerStyle: 'default',
@@ -110,15 +107,6 @@ describe('generated answer', () => {
       'should accept a valid payload with format: "%i"',
       (format: GeneratedContentFormat) => {
         expect(() => setAnswerContentFormat(format)).not.toThrow();
-      }
-    );
-  });
-
-  describe('#setRawAnswerContentFormat', () => {
-    test.each(generatedRawContentFormat)(
-      'should accept a valid payload with format: "%i"',
-      (format: GeneratedRawContentFormat) => {
-        expect(() => setRawAnswerContentFormat(format)).not.toThrow();
       }
     );
   });

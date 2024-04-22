@@ -31,11 +31,9 @@ import {buildStreamingRequest} from './generated-answer-request';
 import {
   GeneratedAnswerStyle,
   GeneratedContentFormat,
-  GeneratedRawContentFormat,
   GeneratedResponseFormat,
   generatedAnswerStyle,
   generatedContentFormat,
-  generatedRawContentFormat,
 } from './generated-response-format';
 
 type StateNeededByGeneratedAnswerStream = ConfigurationSection &
@@ -53,13 +51,6 @@ const citationSchema = {
   permanentid: stringValue,
   clickUri: optionalStringValue,
 };
-
-const rawAnswerContentFormatSchema = new StringValue<GeneratedRawContentFormat>(
-  {
-    required: true,
-    constrainTo: generatedRawContentFormat,
-  }
-);
 
 const answerContentFormatSchema = new StringValue<GeneratedContentFormat>({
   required: true,
@@ -150,12 +141,6 @@ export const setAnswerContentFormat = createAction(
     validatePayload(payload, answerContentFormatSchema)
 );
 
-export const setRawAnswerContentFormat = createAction(
-  'generatedAnswer/setRawAnswerContentFormat',
-  (payload: GeneratedRawContentFormat) =>
-    validatePayload(payload, rawAnswerContentFormatSchema)
-);
-
 export const updateResponseFormat = createAction(
   'generatedAnswer/updateResponseFormat',
   (payload: GeneratedResponseFormat) =>
@@ -164,8 +149,8 @@ export const updateResponseFormat = createAction(
         required: true,
         constrainTo: generatedAnswerStyle,
       }),
-      contentFormat: new ArrayValue<GeneratedRawContentFormat>({
-        each: rawAnswerContentFormatSchema,
+      contentFormat: new ArrayValue<GeneratedContentFormat>({
+        each: answerContentFormatSchema,
         default: ['text/plain'],
       }),
     })
@@ -206,7 +191,7 @@ export const streamAnswer = createAsyncThunk<
         const header = JSON.parse(
           payload
         ) as GeneratedAnswerHeaderMessagePayload;
-        dispatch(setRawAnswerContentFormat(header.contentFormat));
+        dispatch(setAnswerContentFormat(header.contentFormat));
         break;
       }
       case 'genqa.messageType':

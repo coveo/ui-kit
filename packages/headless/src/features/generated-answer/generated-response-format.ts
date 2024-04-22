@@ -5,16 +5,10 @@ export const generatedAnswerStyle = [
   'concise',
 ] as const;
 
-export const generatedRawContentFormat = [
-  'text/plain',
-  'text/markdown',
-] as const;
-export const generatedContentFormat = ['text/plain', 'text/html'] as const;
+export const generatedContentFormat = ['text/plain', 'text/markdown'] as const;
 
 export type GeneratedAnswerStyle = (typeof generatedAnswerStyle)[number];
 
-export type GeneratedRawContentFormat =
-  (typeof generatedRawContentFormat)[number];
 export type GeneratedContentFormat = (typeof generatedContentFormat)[number];
 
 export interface GeneratedResponseFormat {
@@ -33,5 +27,5 @@ export interface GeneratedResponseFormat {
    *   - `text/plain`: The answer can be streamed as plain text.
    *   - `text/markdown`: The answer can be streamed as a Markdown document.
    */
-  contentFormat?: GeneratedRawContentFormat[];
+  contentFormat?: GeneratedContentFormat[];
 }
