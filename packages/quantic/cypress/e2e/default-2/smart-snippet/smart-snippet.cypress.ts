@@ -129,17 +129,16 @@ describe('quantic-smart-snippet', {browser: 'chrome'}, () => {
                 scope('when the source title is clicked', () => {
                   Actions.clickSmartSnippetSourceTitle();
                   if (analyticsMode === 'next') {
-                    NextAnalyticsExpectations.emitItemClick(
+                    NextAnalyticsExpectations.emitQnaCitationClick(
                       {
-                        position: 1,
-                        itemMetadata: {
-                          uniqueFieldName: 'permanentid',
-                          uniqueFieldValue: examplePermanentId,
-                          title: exampleSmartSnippetSourceTitle,
-                          url: exampleSmartSnippetSourceUri,
-                          author: exampleAuthor,
+                        answer: {
+                          responseId: exampleResponseId,
+                          type: answerType,
                         },
-                        searchUid: exampleResponseId,
+                        citation: {
+                          id: examplePermanentId,
+                          type: 'Source',
+                        },
                       },
                       exampleTrackingId
                     );
@@ -156,17 +155,16 @@ describe('quantic-smart-snippet', {browser: 'chrome'}, () => {
                   visitPage({useCase: param.useCase});
                   Actions.clickSmartSnippetSourceUri();
                   if (analyticsMode === 'next') {
-                    NextAnalyticsExpectations.emitItemClick(
+                    NextAnalyticsExpectations.emitQnaCitationClick(
                       {
-                        position: 1,
-                        itemMetadata: {
-                          uniqueFieldName: 'permanentid',
-                          uniqueFieldValue: examplePermanentId,
-                          title: exampleSmartSnippetSourceTitle,
-                          url: exampleSmartSnippetSourceUri,
-                          author: exampleAuthor,
+                        answer: {
+                          responseId: exampleResponseId,
+                          type: answerType,
                         },
-                        searchUid: exampleResponseId,
+                        citation: {
+                          id: examplePermanentId,
+                          type: 'Source',
+                        },
                       },
                       exampleTrackingId
                     );
@@ -185,7 +183,22 @@ describe('quantic-smart-snippet', {browser: 'chrome'}, () => {
                     visitPage({useCase: param.useCase});
 
                     Actions.clickSmartSnippetInlineLink();
-                    if (analyticsMode === 'legacy') {
+
+                    if (analyticsMode === 'next') {
+                      NextAnalyticsExpectations.emitQnaCitationClick(
+                        {
+                          answer: {
+                            responseId: exampleResponseId,
+                            type: answerType,
+                          },
+                          citation: {
+                            id: examplePermanentId,
+                            type: 'InlineLink',
+                          },
+                        },
+                        exampleTrackingId
+                      );
+                    } else {
                       Expect.logOpenSmartSnippetInlineLink({
                         title: exampleSmartSnippetSourceTitle,
                         uri: exampleSmartSnippetSourceUri,
@@ -231,6 +244,7 @@ describe('quantic-smart-snippet', {browser: 'chrome'}, () => {
                     NextAnalyticsExpectations.emitQnaAnswerActionEvent(
                       {
                         answer: {
+                          responseId: exampleResponseId,
                           type: answerType,
                         },
                         action: 'expand',
@@ -251,6 +265,7 @@ describe('quantic-smart-snippet', {browser: 'chrome'}, () => {
                     NextAnalyticsExpectations.emitQnaAnswerActionEvent(
                       {
                         answer: {
+                          responseId: exampleResponseId,
                           type: answerType,
                         },
                         action: 'collapse',
@@ -278,6 +293,7 @@ describe('quantic-smart-snippet', {browser: 'chrome'}, () => {
                           liked: true,
                         },
                         answer: {
+                          responseId: exampleResponseId,
                           type: answerType,
                         },
                       },
@@ -310,6 +326,7 @@ describe('quantic-smart-snippet', {browser: 'chrome'}, () => {
                             liked: false,
                           },
                           answer: {
+                            responseId: exampleResponseId,
                             type: answerType,
                           },
                         },
@@ -355,6 +372,7 @@ describe('quantic-smart-snippet', {browser: 'chrome'}, () => {
                             reason: 'other',
                           },
                           answer: {
+                            responseId: exampleResponseId,
                             type: answerType,
                           },
                         },
