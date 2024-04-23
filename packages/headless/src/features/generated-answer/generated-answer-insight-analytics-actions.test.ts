@@ -21,6 +21,8 @@ import {
   logGeneratedAnswerShowAnswers,
   logGeneratedAnswerHideAnswers,
   logCopyGeneratedAnswer,
+  logGeneratedAnswerExpand,
+  logGeneratedAnswerCollapse,
 } from './generated-answer-insight-analytics-actions';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
 
@@ -35,6 +37,8 @@ const mockLogGeneratedAnswerStreamEnd = jest.fn();
 const mockLogGeneratedAnswerShowAnswers = jest.fn();
 const mockLogGeneratedAnswerHideAnswers = jest.fn();
 const mockLogCopyGeneratedAnswer = jest.fn();
+const mockLogGeneratedAnswerExpand = jest.fn();
+const mockLogGeneratedAnswerCollapse = jest.fn();
 const emit = jest.fn();
 
 jest.mock('@coveo/relay');
@@ -63,6 +67,8 @@ jest.mock('coveo.analytics', () => {
     logGeneratedAnswerShowAnswers: mockLogGeneratedAnswerShowAnswers,
     logGeneratedAnswerHideAnswers: mockLogGeneratedAnswerHideAnswers,
     logGeneratedAnswerCopyToClipboard: mockLogCopyGeneratedAnswer,
+    logGeneratedAnswerExpand: mockLogGeneratedAnswerExpand,
+    logGeneratedAnswerCollapse: mockLogGeneratedAnswerCollapse,
   }));
 
   return {
@@ -73,6 +79,7 @@ jest.mock('coveo.analytics', () => {
 
 const exampleFeedback = 'irrelevant';
 const exampleGenerativeQuestionAnsweringId = '123';
+const exampleSearchUid = '456';
 const exampleDetails = 'example details';
 const exampleCitationId = 'citation_id';
 const exampleCitationPermanentid = 'citation_permanentid';
@@ -94,6 +101,7 @@ describe('generated answer insight analytics actions', () => {
   let engine: MockedInsightEngine;
   const searchState = buildMockSearchState({
     response: buildMockSearchResponse({
+      searchUid: exampleSearchUid,
       extendedResults: {
         generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
       },
@@ -356,6 +364,42 @@ describe('generated answer insight analytics actions', () => {
       );
     });
 
+    it('should log #logGeneratedAnswerExpand with the right payload', async () => {
+      await logGeneratedAnswerExpand()()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      const mockToUse = mockLogGeneratedAnswerExpand;
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith(
+        {
+          generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
+        },
+        expectedCaseContext
+      );
+    });
+
+    it('should log #logGeneratedAnswerCollapse with the right payload', async () => {
+      await logGeneratedAnswerCollapse()()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      const mockToUse = mockLogGeneratedAnswerCollapse;
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith(
+        {
+          generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
+        },
+        expectedCaseContext
+      );
+    });
+
     it('should log #logCopyGeneratedAnswer with the right payload', async () => {
       await logCopyGeneratedAnswer()()(
         engine.dispatch,
@@ -463,6 +507,28 @@ describe('generated answer insight analytics actions', () => {
 
     it('should log #logGeneratedAnswerHideAnswers with the right payload', async () => {
       await logGeneratedAnswerHideAnswers()()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toMatchSnapshot();
+    });
+
+    it('should log #logGeneratedAnswerExpand with the right payload', async () => {
+      await logGeneratedAnswerExpand()()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toMatchSnapshot();
+    });
+
+    it('should log #logGeneratedAnswerCollapse with the right payload', async () => {
+      await logGeneratedAnswerCollapse()()(
         engine.dispatch,
         () => engine.state,
         {} as ThunkExtraArguments

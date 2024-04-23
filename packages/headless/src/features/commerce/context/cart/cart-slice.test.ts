@@ -9,9 +9,10 @@ import {
 
 describe('cart-slice', () => {
   const someItem: CartItemWithMetadata = {
-    productId: 'product-id-1',
+    productId: 'product-id',
+    sku: 'product-id-1',
     quantity: 10,
-    name: 'product 2',
+    name: 'product 1',
     price: 50,
   };
   let state: CartState;
@@ -27,33 +28,32 @@ describe('cart-slice', () => {
 
   it('#setItems replaces current cart state with specified state', () => {
     const secondItem: CartItemWithMetadata = {
-      productId: 'product-id-2',
+      productId: 'product-id',
+      sku: 'product-id-2',
       quantity: 20,
       name: 'product 2',
       price: 100,
     };
     const updatedState = cartReducer(state, setItems([someItem, secondItem]));
-    expect(updatedState.cartItems).toEqual([
-      someItem.productId,
-      secondItem.productId,
-    ]);
+    expect(updatedState.cartItems).toEqual([someItem.sku, secondItem.sku]);
     expect(updatedState.cart).toEqual({
-      [someItem.productId]: someItem,
-      [secondItem.productId]: secondItem,
+      [someItem.sku]: someItem,
+      [secondItem.sku]: secondItem,
     });
   });
 
   it('#purchase.fulfilled replaces current cart state with empty state', async () => {
     const secondItem: CartItemWithMetadata = {
-      productId: 'product-id-2',
+      productId: 'product-id',
+      sku: 'product-id-2',
       quantity: 20,
       name: 'product 2',
       price: 100,
     };
-    state.cartItems = [someItem.productId, secondItem.productId];
+    state.cartItems = [someItem.sku, secondItem.sku];
     state.cart = {
-      [someItem.productId]: someItem,
-      [secondItem.productId]: secondItem,
+      [someItem.sku]: someItem,
+      [secondItem.sku]: secondItem,
     };
     const fakePurchaseAction = createAction(purchase.fulfilled.type);
     const updatedState = cartReducer(state, fakePurchaseAction());
@@ -64,9 +64,9 @@ describe('cart-slice', () => {
   describe('#updateItem', () => {
     it('adds new item to cart if item is not already in cart and specified quantity is positive', () => {
       const updatedState = cartReducer(state, updateItem(someItem));
-      expect(updatedState.cartItems).toEqual([someItem.productId]);
+      expect(updatedState.cartItems).toEqual([someItem.sku]);
       expect(updatedState.cart).toEqual({
-        [someItem.productId]: someItem,
+        [someItem.sku]: someItem,
       });
     });
 
@@ -82,9 +82,9 @@ describe('cart-slice', () => {
     it('removes existing item from cart if specified quantity is 0', () => {
       const updatedState = cartReducer(
         {
-          cartItems: [someItem.productId],
+          cartItems: [someItem.sku],
           cart: {
-            [someItem.productId]: someItem,
+            [someItem.sku]: someItem,
           },
         },
         updateItem({...someItem, quantity: 0})
@@ -96,9 +96,9 @@ describe('cart-slice', () => {
     it('updates existing item in cart if specified quantity is greater than 0', () => {
       const updatedState = cartReducer(
         {
-          cartItems: [someItem.productId],
+          cartItems: [someItem.sku],
           cart: {
-            [someItem.productId]: someItem,
+            [someItem.sku]: someItem,
           },
         },
         updateItem({
@@ -108,10 +108,11 @@ describe('cart-slice', () => {
           price: 25,
         })
       );
-      expect(updatedState.cartItems).toEqual([someItem.productId]);
+      expect(updatedState.cartItems).toEqual([someItem.sku]);
       expect(updatedState.cart).toEqual({
-        [someItem.productId]: {
+        [someItem.sku]: {
           productId: someItem.productId,
+          sku: someItem.sku,
           name: 'renamed product',
           quantity: 5,
           price: 25,

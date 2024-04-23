@@ -5,6 +5,7 @@ import {
   buildCategoryFacet,
 } from '../../core/facets/category/headless-commerce-category-facet';
 import {CommerceFacetOptions} from '../../core/facets/headless-core-commerce-facet';
+import {SearchableFacetOptions} from '../../core/facets/searchable/headless-commerce-searchable-facet';
 import {loadProductListingReducer} from '../utils/load-product-listing-reducers';
 import {commonOptions} from './headless-product-listing-facet-options';
 
@@ -13,7 +14,7 @@ export type ProductListingCategoryFacetBuilder =
 
 export function buildProductListingCategoryFacet(
   engine: CommerceEngine,
-  options: CommerceFacetOptions
+  options: CommerceFacetOptions & SearchableFacetOptions
 ): CategoryFacet {
   if (!loadProductListingReducer(engine)) {
     throw loadReducerError;

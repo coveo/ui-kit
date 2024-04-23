@@ -438,9 +438,14 @@ describe('quantic-generated-answer', () => {
 
             describe('when liking the generated answer', () => {
               const streamId = crypto.randomUUID();
+              const responseId = crypto.randomUUID();
 
               beforeEach(() => {
-                mockSearchWithGeneratedAnswer(streamId, param.useCase);
+                mockSearchWithGeneratedAnswer(
+                  streamId,
+                  param.useCase,
+                  responseId
+                );
                 mockStreamResponse(streamId, genQaMessageTypePayload);
                 visitGeneratedAnswer({useCase: param.useCase});
               });
@@ -460,7 +465,7 @@ describe('quantic-generated-answer', () => {
                           liked: true,
                         },
                         answer: {
-                          id: streamId,
+                          responseId,
                           type: answerType,
                         },
                       },
@@ -475,173 +480,245 @@ describe('quantic-generated-answer', () => {
               });
             });
 
-            describe('when providing detailed feedback', {retries: 20}, () => {
-              const streamId = crypto.randomUUID();
+            describe(
+              'when providing detailed feedback',
+              {
+                retries: 20,
+              },
+              () => {
+                const streamId = crypto.randomUUID();
+                const responseId = crypto.randomUUID();
 
-              beforeEach(() => {
-                mockSearchWithGeneratedAnswer(streamId, param.useCase);
-                mockStreamResponse(streamId, genQaMessageTypePayload);
-                visitGeneratedAnswer({useCase: param.useCase});
-              });
-
-              it('should send detailed feedback', () => {
-                const exampleDetails = 'example details';
-
-                Expect.displayLikeButton(true);
-                Expect.displayDislikeButton(true);
-                Expect.likeButtonIsChecked(false);
-                Expect.dislikeButtonIsChecked(false);
-
-                scope('when disliking the generated answer', () => {
-                  Actions.dislikeGeneratedAnswer();
-                  if (analyticsMode === 'next') {
-                    NextAnalyticsExpectations.emitQnaDislikeEvent(
-                      {
-                        feedback: {
-                          liked: false,
-                        },
-                        answer: {
-                          id: streamId,
-                          type: answerType,
-                        },
-                      },
-                      exampleTrackingId
-                    );
-                  } else {
-                    Expect.logDislikeGeneratedAnswer(streamId);
-                  }
-                  Expect.likeButtonIsChecked(false);
-                  Expect.dislikeButtonIsChecked(true);
-                  Expect.displayFeedbackModal(true);
-                });
-
-                scope('when selecting a feedback option', () => {
-                  Actions.clickFeedbackOption(
-                    feedbackOptions.indexOf(otherOption)
+                beforeEach(() => {
+                  mockSearchWithGeneratedAnswer(
+                    streamId,
+                    param.useCase,
+                    responseId
                   );
-                  Actions.typeInFeedbackDetailsInput(exampleDetails);
-                  Actions.clickFeedbackSubmitButton();
-                  if (analyticsMode === 'next') {
-                    NextAnalyticsExpectations.emitQnaSubmitFeedbackReasonEvent(
-                      {
-                        feedback: {
-                          liked: false,
+                  mockStreamResponse(streamId, genQaMessageTypePayload);
+                  visitGeneratedAnswer({useCase: param.useCase});
+                });
+
+                it('should send detailed feedback', () => {
+                  const exampleDetails = 'example details';
+
+                  Expect.displayLikeButton(true);
+                  Expect.displayDislikeButton(true);
+                  Expect.likeButtonIsChecked(false);
+                  Expect.dislikeButtonIsChecked(false);
+
+                  scope('when disliking the generated answer', () => {
+                    Actions.dislikeGeneratedAnswer();
+                    if (analyticsMode === 'next') {
+                      NextAnalyticsExpectations.emitQnaDislikeEvent(
+                        {
+                          feedback: {
+                            liked: false,
+                          },
+                          answer: {
+                            responseId,
+                            type: answerType,
+                          },
+                        },
+                        exampleTrackingId
+                      );
+                    } else {
+                      Expect.logGeneratedAnswerFeedbackSubmit(streamId, {
+                        reason: otherOption,
+                        details: exampleDetails,
+                      });
+                    }
+                    Actions.clickFeedbackDoneButton();
+                  });
+
+                  scope('when trying to open the feedback modal again', () => {
+                    Actions.dislikeGeneratedAnswer();
+                    Expect.displayFeedbackModal(false);
+                  });
+
+                  scope(
+                    'when trying to open the feedback modal after rephrasing the generated answer',
+                    () => {
+                      const secondStreamId = crypto.randomUUID();
+
+                      mockSearchWithGeneratedAnswer(
+                        secondStreamId,
+                        param.useCase
+                      );
+                      mockStreamResponse(
+                        secondStreamId,
+                        genQaMessageTypePayload
+                      );
+                      Actions.clickRephraseButton(rephraseOptions[0]);
+                      Actions.dislikeGeneratedAnswer();
+                      Expect.displayFeedbackModal(true);
+                      Actions.clickFeedbackOption(
+                        feedbackOptions.indexOf(otherOption)
+                      );
+                      Actions.typeInFeedbackDetailsInput(exampleDetails);
+                      Actions.clickFeedbackSubmitButton();
+                      if (analyticsMode === 'next') {
+                        NextAnalyticsExpectations.emitQnaSubmitFeedbackReasonEvent(
+                          {
+                            feedback: {
+                              liked: false,
+                              details: exampleDetails,
+                              reason: 'other',
+                            },
+                            answer: {
+                              responseId,
+                              type: answerType,
+                            },
+                          },
+                          exampleTrackingId
+                        );
+                      } else {
+                        Expect.logGeneratedAnswerFeedbackSubmit(
+                          secondStreamId,
+                          {
+                            reason: otherOption,
+                            details: exampleDetails,
+                          }
+                        );
+                      }
+
+                      Actions.clickFeedbackDoneButton();
+                    }
+                  );
+
+                  scope(
+                    'when trying to open the feedback modal after executing a new query',
+                    () => {
+                      const thirdStreamId = crypto.randomUUID();
+
+                      mockSearchWithGeneratedAnswer(
+                        thirdStreamId,
+                        param.useCase
+                      );
+                      mockStreamResponse(
+                        thirdStreamId,
+                        genQaMessageTypePayload
+                      );
+                      performSearch();
+                      Actions.dislikeGeneratedAnswer();
+                      Expect.displayFeedbackModal(false);
+                    }
+                  );
+
+                  scope(
+                    'when trying to open the feedback modal after rephrasing the generated answer',
+                    () => {
+                      const secondStreamId = crypto.randomUUID();
+                      const secondResponseId = crypto.randomUUID();
+
+                      mockSearchWithGeneratedAnswer(
+                        secondStreamId,
+                        param.useCase,
+                        secondResponseId
+                      );
+                      mockStreamResponse(
+                        secondStreamId,
+                        genQaMessageTypePayload
+                      );
+                      Actions.clickRephraseButton(rephraseOptions[0]);
+                      Actions.dislikeGeneratedAnswer();
+                      Expect.displayFeedbackModal(true);
+                      Actions.clickFeedbackOption(
+                        feedbackOptions.indexOf(otherOption)
+                      );
+                      Actions.typeInFeedbackDetailsInput(exampleDetails);
+                      Actions.clickFeedbackSubmitButton();
+                      if (analyticsMode === 'next') {
+                        NextAnalyticsExpectations.emitQnaSubmitFeedbackReasonEvent(
+                          {
+                            feedback: {
+                              liked: false,
+                              details: exampleDetails,
+                              reason: 'other',
+                            },
+                            answer: {
+                              responseId: secondResponseId,
+                              type: answerType,
+                            },
+                          },
+                          exampleTrackingId
+                        );
+                      } else {
+                        Expect.logGeneratedAnswerFeedbackSubmit(
+                          secondStreamId,
+                          {
+                            reason: otherOption,
+                            details: exampleDetails,
+                          }
+                        );
+                      }
+
+                      Actions.clickFeedbackDoneButton();
+                    }
+                  );
+
+                  scope(
+                    'when trying to open the feedback modal after executing a new query',
+                    () => {
+                      const thirdStreamId = crypto.randomUUID();
+                      const thirdResponseId = crypto.randomUUID();
+
+                      mockSearchWithGeneratedAnswer(
+                        thirdStreamId,
+                        param.useCase,
+                        thirdResponseId
+                      );
+                      mockStreamResponse(
+                        thirdStreamId,
+                        genQaMessageTypePayload
+                      );
+                      performSearch();
+                      Actions.dislikeGeneratedAnswer();
+                      Expect.displayFeedbackModal(true);
+                      Actions.clickFeedbackOption(
+                        feedbackOptions.indexOf(otherOption)
+                      );
+                      Actions.typeInFeedbackDetailsInput(exampleDetails);
+                      Actions.clickFeedbackSubmitButton();
+                      if (analyticsMode === 'next') {
+                        NextAnalyticsExpectations.emitQnaSubmitFeedbackReasonEvent(
+                          {
+                            feedback: {
+                              liked: false,
+                              details: exampleDetails,
+                              reason: 'other',
+                            },
+                            answer: {
+                              responseId: thirdResponseId,
+                              type: answerType,
+                            },
+                          },
+                          exampleTrackingId
+                        );
+                      } else {
+                        Expect.logGeneratedAnswerFeedbackSubmit(thirdStreamId, {
+                          reason: otherOption,
                           details: exampleDetails,
-                          reason: 'other',
-                        },
-                        answer: {
-                          id: streamId,
-                          type: answerType,
-                        },
-                      },
-                      exampleTrackingId
-                    );
-                  } else {
-                    Expect.logGeneratedAnswerFeedbackSubmit(streamId, {
-                      reason: otherOption,
-                      details: exampleDetails,
-                    });
-                  }
-                  Actions.clickFeedbackDoneButton();
-                });
+                        });
+                      }
 
-                scope('when trying to open the feedback modal again', () => {
-                  Actions.dislikeGeneratedAnswer();
-                  Expect.displayFeedbackModal(false);
-                });
-
-                scope(
-                  'when trying to open the feedback modal after rephrasing the generated answer',
-                  () => {
-                    const secondStreamId = crypto.randomUUID();
-
-                    mockSearchWithGeneratedAnswer(
-                      secondStreamId,
-                      param.useCase
-                    );
-                    mockStreamResponse(secondStreamId, genQaMessageTypePayload);
-                    Actions.clickRephraseButton(rephraseOptions[0]);
-                    Actions.dislikeGeneratedAnswer();
-                    Expect.displayFeedbackModal(true);
-                    Actions.clickFeedbackOption(
-                      feedbackOptions.indexOf(otherOption)
-                    );
-                    Actions.typeInFeedbackDetailsInput(exampleDetails);
-                    Actions.clickFeedbackSubmitButton();
-                    if (analyticsMode === 'next') {
-                      NextAnalyticsExpectations.emitQnaSubmitFeedbackReasonEvent(
-                        {
-                          feedback: {
-                            liked: false,
-                            details: exampleDetails,
-                            reason: 'other',
-                          },
-                          answer: {
-                            id: secondStreamId,
-                            type: answerType,
-                          },
-                        },
-                        exampleTrackingId
-                      );
-                    } else {
-                      Expect.logGeneratedAnswerFeedbackSubmit(secondStreamId, {
-                        reason: otherOption,
-                        details: exampleDetails,
-                      });
+                      Actions.clickFeedbackDoneButton();
                     }
-
-                    Actions.clickFeedbackDoneButton();
-                  }
-                );
-
-                scope(
-                  'when trying to open the feedback modal after executing a new query',
-                  () => {
-                    const thirdStreamId = crypto.randomUUID();
-
-                    mockSearchWithGeneratedAnswer(thirdStreamId, param.useCase);
-                    mockStreamResponse(thirdStreamId, genQaMessageTypePayload);
-                    performSearch();
-                    Actions.dislikeGeneratedAnswer();
-                    Expect.displayFeedbackModal(true);
-                    Actions.clickFeedbackOption(
-                      feedbackOptions.indexOf(otherOption)
-                    );
-                    Actions.typeInFeedbackDetailsInput(exampleDetails);
-                    Actions.clickFeedbackSubmitButton();
-                    if (analyticsMode === 'next') {
-                      NextAnalyticsExpectations.emitQnaSubmitFeedbackReasonEvent(
-                        {
-                          feedback: {
-                            liked: false,
-                            details: exampleDetails,
-                            reason: 'other',
-                          },
-                          answer: {
-                            id: thirdStreamId,
-                            type: answerType,
-                          },
-                        },
-                        exampleTrackingId
-                      );
-                    } else {
-                      Expect.logGeneratedAnswerFeedbackSubmit(thirdStreamId, {
-                        reason: otherOption,
-                        details: exampleDetails,
-                      });
-                    }
-
-                    Actions.clickFeedbackDoneButton();
-                  }
-                );
-              });
-            });
+                  );
+                });
+              }
+            );
 
             describe('the generated answer toggle button', () => {
               const streamId = crypto.randomUUID();
+              const responseId = crypto.randomUUID();
 
               beforeEach(() => {
-                mockSearchWithGeneratedAnswer(streamId, param.useCase);
+                mockSearchWithGeneratedAnswer(
+                  streamId,
+                  param.useCase,
+                  responseId
+                );
                 mockStreamResponse(streamId, genQaMessageTypePayload);
                 visitGeneratedAnswer({useCase: param.useCase});
               });
@@ -661,7 +738,7 @@ describe('quantic-generated-answer', () => {
                     NextAnalyticsExpectations.emitQnaAnswerActionEvent(
                       {
                         answer: {
-                          id: streamId,
+                          responseId,
                           type: answerType,
                         },
                         action: 'hide',
@@ -686,7 +763,7 @@ describe('quantic-generated-answer', () => {
                     NextAnalyticsExpectations.emitQnaAnswerActionEvent(
                       {
                         answer: {
-                          id: streamId,
+                          responseId,
                           type: answerType,
                         },
                         action: 'show',
@@ -711,9 +788,14 @@ describe('quantic-generated-answer', () => {
               {browser: 'electron'},
               () => {
                 const streamId = crypto.randomUUID();
+                const responseId = crypto.randomUUID();
 
                 beforeEach(() => {
-                  mockSearchWithGeneratedAnswer(streamId, param.useCase);
+                  mockSearchWithGeneratedAnswer(
+                    streamId,
+                    param.useCase,
+                    responseId
+                  );
                   mockStreamResponse(streamId, genQaMessageTypePayload);
                   visitGeneratedAnswer({
                     multilineFooter: true,
@@ -729,7 +811,7 @@ describe('quantic-generated-answer', () => {
                       NextAnalyticsExpectations.emitQnaAnswerActionEvent(
                         {
                           answer: {
-                            id: streamId,
+                            responseId,
                             type: answerType,
                           },
                           action: 'copyToClipboard',
@@ -752,6 +834,7 @@ describe('quantic-generated-answer', () => {
             describe('when a citation event is received', () => {
               const exampleLinkUrl = '#';
               const streamId = crypto.randomUUID();
+              const responseId = crypto.randomUUID();
               const firstTestCitation = {
                 id: 'some-id-1',
                 title: 'Some Title 1',
@@ -778,7 +861,11 @@ describe('quantic-generated-answer', () => {
               };
 
               beforeEach(() => {
-                mockSearchWithGeneratedAnswer(streamId, param.useCase);
+                mockSearchWithGeneratedAnswer(
+                  streamId,
+                  param.useCase,
+                  responseId
+                );
                 mockStreamResponse(streamId, testMessagePayload);
                 visitGeneratedAnswer({useCase: param.useCase});
               });
@@ -821,7 +908,7 @@ describe('quantic-generated-answer', () => {
                     NextAnalyticsExpectations.emitQnaCitationHover(
                       {
                         answer: {
-                          id: streamId,
+                          responseId,
                           type: answerType,
                         },
                         citation: {
@@ -855,7 +942,7 @@ describe('quantic-generated-answer', () => {
                   NextAnalyticsExpectations.emitQnaCitationClick(
                     {
                       answer: {
-                        id: streamId,
+                        responseId,
                         type: answerType,
                       },
                       citation: {
