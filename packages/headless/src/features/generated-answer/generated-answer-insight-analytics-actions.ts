@@ -75,11 +75,10 @@ export const logOpenGeneratedAnswerSource = (
       },
       analyticsType: 'Qna.CitationClick',
       analyticsPayloadBuilder: (state): Qna.CitationClick => {
-        const generativeQuestionAnsweringId =
-          generativeQuestionAnsweringIdSelector(state);
         return {
           answer: {
-            id: generativeQuestionAnsweringId!,
+            responseId: state.search?.response.searchUid || '',
+
             type: RGAType,
           },
           citation: {
@@ -119,11 +118,10 @@ export const logHoverCitation = (
     },
     analyticsType: 'Qna.CitationHover',
     analyticsPayloadBuilder: (state): Qna.CitationHover => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
       return {
         answer: {
-          id: generativeQuestionAnsweringId!,
+          responseId: state.search?.response.searchUid || '',
+
           type: RGAType,
         },
         citation: {
@@ -153,11 +151,9 @@ export const logLikeGeneratedAnswer = (): InsightAction =>
     },
     analyticsType: 'Qna.SubmitFeedback',
     analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
       return {
         answer: {
-          id: generativeQuestionAnsweringId!,
+          responseId: state.search?.response.searchUid || '',
           type: RGAType,
         },
         feedback: {
@@ -185,11 +181,9 @@ export const logDislikeGeneratedAnswer = (): InsightAction =>
     },
     analyticsType: 'Qna.SubmitFeedback',
     analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
       return {
         answer: {
-          id: generativeQuestionAnsweringId!,
+          responseId: state.search?.response.searchUid || '',
           type: RGAType,
         },
         feedback: {
@@ -222,11 +216,9 @@ export const logGeneratedAnswerFeedback = (
     },
     analyticsType: 'Qna.SubmitFeedback',
     analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
       return {
         answer: {
-          id: generativeQuestionAnsweringId!,
+          responseId: state.search?.response.searchUid || '',
           type: RGAType,
         },
         feedback: {
@@ -261,11 +253,9 @@ export const logGeneratedAnswerDetailedFeedback = (
     },
     analyticsType: 'Qna.SubmitFeedback',
     analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
       return {
         answer: {
-          id: generativeQuestionAnsweringId!,
+          responseId: state.search?.response.searchUid || '',
           type: RGAType,
         },
         feedback: {
@@ -319,12 +309,10 @@ export const logGeneratedAnswerShowAnswers = (): InsightAction =>
     },
     analyticsType: 'Qna.AnswerAction',
     analyticsPayloadBuilder: (state): Qna.AnswerAction => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
       return {
         action: 'show',
         answer: {
-          id: generativeQuestionAnsweringId!,
+          responseId: state.search?.response.searchUid || '',
           type: RGAType,
         },
       };
@@ -351,12 +339,66 @@ export const logGeneratedAnswerHideAnswers = (): InsightAction =>
     },
     analyticsType: 'Qna.AnswerAction',
     analyticsPayloadBuilder: (state): Qna.AnswerAction => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
       return {
         action: 'hide',
         answer: {
-          id: generativeQuestionAnsweringId!,
+          responseId: state.search?.response.searchUid || '',
+          type: RGAType,
+        },
+      };
+    },
+  });
+
+export const logGeneratedAnswerExpand = (): InsightAction =>
+  makeInsightAnalyticsActionFactory(SearchPageEvents.generatedAnswerExpand)({
+    prefix: 'analytics/generatedAnswer/expand',
+    __legacy__getBuilder: (client, state) => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      if (!generativeQuestionAnsweringId) {
+        return null;
+      }
+      return client.logGeneratedAnswerExpand(
+        {
+          generativeQuestionAnsweringId,
+        },
+        getCaseContextAnalyticsMetadata(state.insightCaseContext)
+      );
+    },
+    analyticsType: 'Qna.AnswerAction',
+    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
+      return {
+        action: 'expand',
+        answer: {
+          responseId: state.search?.response.searchUid || '',
+          type: RGAType,
+        },
+      };
+    },
+  });
+
+export const logGeneratedAnswerCollapse = (): InsightAction =>
+  makeInsightAnalyticsActionFactory(SearchPageEvents.generatedAnswerCollapse)({
+    prefix: 'analytics/generatedAnswer/collapse',
+    __legacy__getBuilder: (client, state) => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      if (!generativeQuestionAnsweringId) {
+        return null;
+      }
+      return client.logGeneratedAnswerCollapse(
+        {
+          generativeQuestionAnsweringId,
+        },
+        getCaseContextAnalyticsMetadata(state.insightCaseContext)
+      );
+    },
+    analyticsType: 'Qna.AnswerAction',
+    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
+      return {
+        action: 'collapse',
+        answer: {
+          responseId: state.search?.response.searchUid || '',
           type: RGAType,
         },
       };
@@ -383,12 +425,10 @@ export const logCopyGeneratedAnswer = (): InsightAction =>
     },
     analyticsType: 'Qna.AnswerAction',
     analyticsPayloadBuilder: (state): Qna.AnswerAction => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
       return {
         action: 'copyToClipboard',
         answer: {
-          id: generativeQuestionAnsweringId!,
+          responseId: state.search?.response.searchUid || '',
           type: RGAType,
         },
       };
@@ -408,4 +448,6 @@ export const generatedAnswerInsightAnalyticsClient = {
   logOpenGeneratedAnswerSource,
   logRetryGeneratedAnswer,
   logRephraseGeneratedAnswer,
+  logGeneratedAnswerExpand,
+  logGeneratedAnswerCollapse,
 };
