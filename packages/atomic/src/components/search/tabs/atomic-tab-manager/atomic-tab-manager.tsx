@@ -81,27 +81,28 @@ export class AtomicTabManager {
         <div class="flex flex-row w-full mb-2 border-b tabs-area">
           <slot></slot>
         </div>
-
-        <select
-          class="hidden py-2 text-xl font-bold cursor-pointer btn-text-primary dropdown-area"
-          onChange={(e) => {
-            const selectedTab = this.tabs.find(
-              (tab) => tab.name === (e.target as HTMLSelectElement).value
-            );
-            if (selectedTab) {
-              selectedTab.select();
-            }
-          }}
-        >
-          {this.tabs.map((tab) => (
-            <option
-              value={tab.name}
-              selected={tab.name === this.tabManagerState.activeTab}
-            >
-              {tab.label}
-            </option>
-          ))}
-        </select>
+        <div class="hidden pb-1 border-b dropdown-area">
+          <select
+            class="py-2 text-xl font-bold cursor-pointer btn-text-primary"
+            onChange={(e) => {
+              const selectedTab = this.tabs.find(
+                (tab) => tab.name === (e.target as HTMLSelectElement).value
+              );
+              if (selectedTab) {
+                selectedTab.select();
+              }
+            }}
+          >
+            {this.tabs.map((tab) => (
+              <option
+                value={tab.name}
+                selected={tab.name === this.tabManagerState.activeTab}
+              >
+                {tab.label}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
     );
   }
