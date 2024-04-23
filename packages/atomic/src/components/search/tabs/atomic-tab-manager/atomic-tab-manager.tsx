@@ -1,13 +1,5 @@
 import {TabManager, TabManagerState, buildTabManager} from '@coveo/headless';
-import {
-  Component,
-  h,
-  Element,
-  State,
-  Prop,
-  EventEmitter,
-  Event,
-} from '@stencil/core';
+import {Component, h, Element, State, Prop} from '@stencil/core';
 import {
   BindStateToController,
   InitializeBindings,
@@ -40,11 +32,6 @@ export class AtomicTabManager {
   @State() public error!: Error;
   @State() tabs: HTMLAtomicTabElement[] = [];
 
-  @Event({
-    eventName: 'atomic/tabInit',
-  })
-  tabInit!: EventEmitter;
-
   componentDidLoad() {
     this.setInitialTab();
   }
@@ -67,7 +54,6 @@ export class AtomicTabManager {
 
     if (initialTab && !activeTab) {
       await initialTab.select(false);
-      this.tabInit.emit();
     }
   }
 

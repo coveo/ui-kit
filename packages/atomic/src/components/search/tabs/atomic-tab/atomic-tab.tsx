@@ -39,11 +39,6 @@ export class AtomicTab {
   private tabState!: TabState;
 
   /**
-   * Whether to make this tab the active one upon rendering.
-   * If this prop is set to `true` on multiple tabs, the last tab to render will be the active one.
-   */
-  @Prop({reflect: true, mutable: true}) public active = false;
-  /**
    * The label to display on the tab.
    */
   @Prop() label!: string;
@@ -52,14 +47,11 @@ export class AtomicTab {
    */
   @Prop() name!: string;
   /**
-   * Whether the tab is the active one.
-   */
-  @Prop({reflect: true}) isActive: boolean = false;
-  /**
    * The [constant query expression (`cq`)](https://docs.coveo.com/en/2830/searching-with-coveo/about-the-query-expression#constant-query-expression-cq) to apply when the tab is the active one.
    */
   @Prop() public expression: string = '';
 
+  private active: boolean = false;
   private tab!: Tab;
   private unsubscribe: Unsubscribe = () => {};
 

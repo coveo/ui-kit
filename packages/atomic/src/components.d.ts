@@ -2504,17 +2504,9 @@ export namespace Components {
     }
     interface AtomicTab {
         /**
-          * Whether to make this tab the active one upon rendering. If this prop is set to `true` on multiple tabs, the last tab to render will be the active one.
-         */
-        "active": boolean;
-        /**
           * The [constant query expression (`cq`)](https://docs.coveo.com/en/2830/searching-with-coveo/about-the-query-expression#constant-query-expression-cq) to apply when the tab is the active one.
          */
         "expression": string;
-        /**
-          * Whether the tab is the active one.
-         */
-        "isActive": boolean;
         /**
           * The label to display on the tab.
          */
@@ -2718,10 +2710,6 @@ export interface AtomicSmartSnippetFeedbackModalCustomEvent<T> extends CustomEve
 export interface AtomicSmartSnippetSourceCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicSmartSnippetSourceElement;
-}
-export interface AtomicTabManagerCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicTabManagerElement;
 }
 declare global {
     /**
@@ -4194,18 +4182,7 @@ declare global {
         prototype: HTMLAtomicTabElement;
         new (): HTMLAtomicTabElement;
     };
-    interface HTMLAtomicTabManagerElementEventMap {
-        "atomic/tabInit": any;
-    }
     interface HTMLAtomicTabManagerElement extends Components.AtomicTabManager, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicTabManagerElementEventMap>(type: K, listener: (this: HTMLAtomicTabManagerElement, ev: AtomicTabManagerCustomEvent<HTMLAtomicTabManagerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicTabManagerElementEventMap>(type: K, listener: (this: HTMLAtomicTabManagerElement, ev: AtomicTabManagerCustomEvent<HTMLAtomicTabManagerElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLAtomicTabManagerElement: {
         prototype: HTMLAtomicTabManagerElement;
@@ -6773,17 +6750,9 @@ declare namespace LocalJSX {
     }
     interface AtomicTab {
         /**
-          * Whether to make this tab the active one upon rendering. If this prop is set to `true` on multiple tabs, the last tab to render will be the active one.
-         */
-        "active"?: boolean;
-        /**
           * The [constant query expression (`cq`)](https://docs.coveo.com/en/2830/searching-with-coveo/about-the-query-expression#constant-query-expression-cq) to apply when the tab is the active one.
          */
         "expression"?: string;
-        /**
-          * Whether the tab is the active one.
-         */
-        "isActive"?: boolean;
         /**
           * The label to display on the tab.
          */
@@ -6798,7 +6767,6 @@ declare namespace LocalJSX {
           * Whether to clear the state when the active tab changes.
          */
         "clearStateOnTabChange"?: boolean;
-        "onAtomic/tabInit"?: (event: AtomicTabManagerCustomEvent<any>) => void;
     }
     /**
      * The `atomic-table-element` element defines a table column in a result list.
