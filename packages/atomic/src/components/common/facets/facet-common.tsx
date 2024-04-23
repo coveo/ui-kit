@@ -1,16 +1,5 @@
-import {FacetValueState, FacetManager} from '@coveo/headless';
 import {i18n} from 'i18next';
-import {FacetInfoMap} from '../../search/atomic-search-interface/store';
 import {FacetValue, SearchStatusState} from '../types';
-
-export type PropsOnAllFacets = {
-  facetId?: string;
-  label?: string;
-  field: string;
-  filterFacetCount: boolean;
-  injectionDepth: number;
-  dependsOn: Record<string, string>;
-};
 
 export interface FacetValueProps {
   i18n: i18n;
@@ -24,11 +13,6 @@ export interface FacetValueProps {
   additionalPart?: string;
   buttonRef?: (element?: HTMLButtonElement) => void;
 }
-
-export type TriStateFacetValueProps = Omit<FacetValueProps, 'isSelected'> & {
-  state: FacetValueState;
-  onExclude(): void;
-};
 
 export function shouldDisplayInputForFacetRange(facetRange: {
   hasInput: boolean;
@@ -68,7 +52,7 @@ export type BaseFacetElement = HTMLElement & {
 
 export function sortFacetVisibility(
   facetElements: BaseFacetElement[],
-  facetInfoMap: FacetInfoMap
+  facetInfoMap: Record<string, {isHidden: () => boolean}>
 ) {
   const visibleFacets: BaseFacetElement[] = [];
   const invisibleFacets: BaseFacetElement[] = [];
@@ -154,15 +138,4 @@ export function triageFacetsByParents(
     sortedFacets[indice].push(facet);
   }
   return sortedFacets;
-}
-
-export function sortFacetsUsingManager(
-  facets: BaseFacetElement[],
-  facetManager: FacetManager
-): BaseFacetElement[] {
-  const payload = facets.map((f) => ({
-    facetId: f.facetId,
-    payload: f,
-  }));
-  return facetManager.sort(payload).map((f) => f.payload);
 }
