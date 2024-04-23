@@ -360,9 +360,14 @@ describe('quantic-generated-answer', () => {
 
             describe('when liking the generated answer', () => {
               const streamId = crypto.randomUUID();
+              const responseId = crypto.randomUUID();
 
               beforeEach(() => {
-                mockSearchWithGeneratedAnswer(streamId, param.useCase);
+                mockSearchWithGeneratedAnswer(
+                  streamId,
+                  param.useCase,
+                  responseId
+                );
                 mockStreamResponse(streamId, genQaMessageTypePayload);
                 visitGeneratedAnswer({useCase: param.useCase});
               });
@@ -382,7 +387,7 @@ describe('quantic-generated-answer', () => {
                           liked: true,
                         },
                         answer: {
-                          id: streamId,
+                          responseId,
                           type: answerType,
                         },
                       },
@@ -404,9 +409,14 @@ describe('quantic-generated-answer', () => {
               },
               () => {
                 const streamId = crypto.randomUUID();
+                const responseId = crypto.randomUUID();
 
                 beforeEach(() => {
-                  mockSearchWithGeneratedAnswer(streamId, param.useCase);
+                  mockSearchWithGeneratedAnswer(
+                    streamId,
+                    param.useCase,
+                    responseId
+                  );
                   mockStreamResponse(streamId, genQaMessageTypePayload);
                   visitGeneratedAnswer({useCase: param.useCase});
                 });
@@ -428,7 +438,7 @@ describe('quantic-generated-answer', () => {
                             liked: false,
                           },
                           answer: {
-                            id: streamId,
+                            responseId,
                             type: answerType,
                           },
                         },
@@ -457,7 +467,7 @@ describe('quantic-generated-answer', () => {
                             reason: 'other',
                           },
                           answer: {
-                            id: streamId,
+                            responseId,
                             type: answerType,
                           },
                         },
@@ -481,10 +491,12 @@ describe('quantic-generated-answer', () => {
                     'when trying to open the feedback modal after rephrasing the generated answer',
                     () => {
                       const secondStreamId = crypto.randomUUID();
+                      const secondResponseId = crypto.randomUUID();
 
                       mockSearchWithGeneratedAnswer(
                         secondStreamId,
-                        param.useCase
+                        param.useCase,
+                        secondResponseId
                       );
                       mockStreamResponse(
                         secondStreamId,
@@ -507,7 +519,7 @@ describe('quantic-generated-answer', () => {
                               reason: 'other',
                             },
                             answer: {
-                              id: secondStreamId,
+                              responseId: secondResponseId,
                               type: answerType,
                             },
                           },
@@ -531,10 +543,12 @@ describe('quantic-generated-answer', () => {
                     'when trying to open the feedback modal after executing a new query',
                     () => {
                       const thirdStreamId = crypto.randomUUID();
+                      const thirdResponseId = crypto.randomUUID();
 
                       mockSearchWithGeneratedAnswer(
                         thirdStreamId,
-                        param.useCase
+                        param.useCase,
+                        thirdResponseId
                       );
                       mockStreamResponse(
                         thirdStreamId,
@@ -557,7 +571,7 @@ describe('quantic-generated-answer', () => {
                               reason: 'other',
                             },
                             answer: {
-                              id: thirdStreamId,
+                              responseId: thirdResponseId,
                               type: answerType,
                             },
                           },
@@ -579,9 +593,14 @@ describe('quantic-generated-answer', () => {
 
             describe('the generated answer toggle button', () => {
               const streamId = crypto.randomUUID();
+              const responseId = crypto.randomUUID();
 
               beforeEach(() => {
-                mockSearchWithGeneratedAnswer(streamId, param.useCase);
+                mockSearchWithGeneratedAnswer(
+                  streamId,
+                  param.useCase,
+                  responseId
+                );
                 mockStreamResponse(streamId, genQaMessageTypePayload);
                 visitGeneratedAnswer({useCase: param.useCase});
               });
@@ -601,7 +620,7 @@ describe('quantic-generated-answer', () => {
                     NextAnalyticsExpectations.emitQnaAnswerActionEvent(
                       {
                         answer: {
-                          id: streamId,
+                          responseId,
                           type: answerType,
                         },
                         action: 'hide',
@@ -626,7 +645,7 @@ describe('quantic-generated-answer', () => {
                     NextAnalyticsExpectations.emitQnaAnswerActionEvent(
                       {
                         answer: {
-                          id: streamId,
+                          responseId,
                           type: answerType,
                         },
                         action: 'show',
@@ -651,9 +670,14 @@ describe('quantic-generated-answer', () => {
               {browser: 'electron'},
               () => {
                 const streamId = crypto.randomUUID();
+                const responseId = crypto.randomUUID();
 
                 beforeEach(() => {
-                  mockSearchWithGeneratedAnswer(streamId, param.useCase);
+                  mockSearchWithGeneratedAnswer(
+                    streamId,
+                    param.useCase,
+                    responseId
+                  );
                   mockStreamResponse(streamId, genQaMessageTypePayload);
                   visitGeneratedAnswer({
                     multilineFooter: true,
@@ -669,7 +693,7 @@ describe('quantic-generated-answer', () => {
                       NextAnalyticsExpectations.emitQnaAnswerActionEvent(
                         {
                           answer: {
-                            id: streamId,
+                            responseId,
                             type: answerType,
                           },
                           action: 'copyToClipboard',
@@ -692,6 +716,7 @@ describe('quantic-generated-answer', () => {
             describe('when a citation event is received', () => {
               const exampleLinkUrl = '#';
               const streamId = crypto.randomUUID();
+              const responseId = crypto.randomUUID();
               const firstTestCitation = {
                 id: 'some-id-1',
                 title: 'Some Title 1',
@@ -718,7 +743,11 @@ describe('quantic-generated-answer', () => {
               };
 
               beforeEach(() => {
-                mockSearchWithGeneratedAnswer(streamId, param.useCase);
+                mockSearchWithGeneratedAnswer(
+                  streamId,
+                  param.useCase,
+                  responseId
+                );
                 mockStreamResponse(streamId, testMessagePayload);
                 visitGeneratedAnswer({useCase: param.useCase});
               });
@@ -761,7 +790,7 @@ describe('quantic-generated-answer', () => {
                     NextAnalyticsExpectations.emitQnaCitationHover(
                       {
                         answer: {
-                          id: streamId,
+                          responseId,
                           type: answerType,
                         },
                         citation: {
@@ -795,7 +824,7 @@ describe('quantic-generated-answer', () => {
                   NextAnalyticsExpectations.emitQnaCitationClick(
                     {
                       answer: {
-                        id: streamId,
+                        responseId,
                         type: answerType,
                       },
                       citation: {

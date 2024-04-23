@@ -25,3 +25,16 @@ export function aliasSubmitFeedbackEventRequest(
     );
   }
 }
+
+export function aliasCitationClickEventRequest(
+  request: CyHttpMessages.IncomingHttpRequest
+) {
+  const citation = request?.body?.[0]?.citation;
+  if (citation.type === 'Source') {
+    request.alias = nextAnalyticsAlias('Qna.CitationClick.Source').substring(1);
+  } else {
+    request.alias = nextAnalyticsAlias(
+      'Qna.CitationClick.InlineLink'
+    ).substring(1);
+  }
+}

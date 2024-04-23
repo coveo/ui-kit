@@ -16,10 +16,18 @@ export const buildRecommendationsRequest = (
 const prepareRecommendationsRequestParams = (
   req: CommerceRecommendationsRequest
 ) => {
-  const {id, trackingId, clientId, context, language, country, currency, page} =
-    req;
+  const {
+    slotId,
+    trackingId,
+    clientId,
+    context,
+    language,
+    country,
+    currency,
+    page,
+  } = req;
   return {
-    id,
+    slotId,
     trackingId,
     clientId,
     context,

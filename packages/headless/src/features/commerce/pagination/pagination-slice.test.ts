@@ -29,7 +29,7 @@ describe('pagination slice', () => {
   const pagination = {
     page: 999,
     perPage: 999,
-    totalCount: 999,
+    totalItems: 999,
     totalPages: 999,
   };
 
@@ -42,7 +42,7 @@ describe('pagination slice', () => {
     expect(finalState).toEqual({
       page: 0,
       perPage: undefined,
-      totalCount: 0,
+      totalItems: 0,
       totalPages: 0,
     });
   });
