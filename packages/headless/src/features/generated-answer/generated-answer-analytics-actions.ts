@@ -318,12 +318,10 @@ export const logGeneratedAnswerExpand = (): CustomAction =>
     },
     analyticsType: 'Qna.AnswerAction',
     analyticsPayloadBuilder: (state): Qna.AnswerAction => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
       return {
         action: 'expand',
         answer: {
-          id: generativeQuestionAnsweringId!,
+          responseId: state.search?.response.searchUid || '',
           type: RGAType,
         },
       };
@@ -345,12 +343,10 @@ export const logGeneratedAnswerCollapse = (): CustomAction =>
     },
     analyticsType: 'Qna.AnswerAction',
     analyticsPayloadBuilder: (state): Qna.AnswerAction => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
       return {
         action: 'collapse',
         answer: {
-          id: generativeQuestionAnsweringId!,
+          responseId: state.search?.response.searchUid || '',
           type: RGAType,
         },
       };
