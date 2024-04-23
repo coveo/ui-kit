@@ -1,4 +1,4 @@
-import {AsyncThunkAction} from '@reduxjs/toolkit';
+import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
 import {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-client';
 import {InsightEngine} from '../../app/insight-engine/insight-engine';
 import {searchReducer as search} from '../../features/search/search-slice';
@@ -6,6 +6,8 @@ import {InsightAction} from '../analytics/analytics-utils';
 import {
   FetchQuerySuggestionsActionCreatorPayload,
   FetchQuerySuggestionsThunkReturn,
+  RegisterQuerySuggestActionCreatorPayload,
+  registerQuerySuggest,
 } from '../query-suggest/query-suggest-actions';
 import {ExecuteSearchThunkReturn} from '../search/legacy/search-actions';
 import {
@@ -20,7 +22,10 @@ import {
   fetchPage,
 } from './legacy/insight-search-actions';
 
-export type {FetchQuerySuggestionsActionCreatorPayload};
+export type {
+  FetchQuerySuggestionsActionCreatorPayload,
+  RegisterQuerySuggestActionCreatorPayload,
+};
 
 export interface InsightSearchActionCreators {
   /**
@@ -97,6 +102,16 @@ export interface InsightSearchActionCreators {
     FetchQuerySuggestionsActionCreatorPayload,
     AsyncThunkInsightOptions<StateNeededByQuerySuggest>
   >;
+
+  /**
+   * Registers a new query suggest entity to the headless state to enable the Coveo ML query suggestions feature.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  registerQuerySuggest(
+    payload: RegisterQuerySuggestActionCreatorPayload
+  ): PayloadAction<RegisterQuerySuggestActionCreatorPayload>;
 }
 
 /**
@@ -116,5 +131,6 @@ export function loadInsightSearchActions(
     fetchMoreResults,
     fetchPage,
     fetchQuerySuggestions,
+    registerQuerySuggest,
   };
 }

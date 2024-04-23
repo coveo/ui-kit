@@ -6,6 +6,7 @@ import {
 } from '../../test/mock-engine-v2';
 import {buildMockRaw} from '../../test/mock-raw';
 import {buildMockResult} from '../../test/mock-result';
+import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {buildMockSearchState} from '../../test/mock-search-state';
 import {createMockState} from '../../test/mock-state';
 import {getConfigurationInitialState} from '../configuration/configuration-state';
@@ -112,6 +113,7 @@ jest.mock('coveo.analytics', () => {
   };
 });
 
+const exampleSearchUid = '456';
 const exampleQuestion = 'Where am I?';
 const exampleAnswerSnippet = 'You are here.';
 const exampleScore = 9001;
@@ -191,6 +193,9 @@ const exampleInlineLink = {
 describe('question answering analytics actions', () => {
   let engine: MockedSearchEngine;
   const searchState = buildMockSearchState({
+    response: buildMockSearchResponse({
+      searchUid: exampleSearchUid,
+    }),
     results: [exampleResult],
     questionAnswer: {
       ...emptyQuestionAnswer(),
@@ -515,6 +520,17 @@ describe('question answering analytics actions', () => {
       expect(emit.mock.calls[0]).toMatchSnapshot();
     });
 
+    it('should log #logOpenSmartSnippetInlineLink with the right payload', async () => {
+      await logOpenSmartSnippetInlineLink(exampleInlineLink)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toMatchSnapshot();
+    });
+
     it('should log #logSmartSnippetFeedback with the right payload', async () => {
       await logSmartSnippetFeedback(exampleFeedback)()(
         engine.dispatch,
@@ -559,6 +575,16 @@ describe('question answering analytics actions', () => {
       await logOpenSmartSnippetSuggestionSource({
         questionAnswerId: exampleQuestionAnswerId,
       })()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toMatchSnapshot();
+    });
+
+    it('should log #logOpenSmartSnippetSuggestionInlineLink with the right payload', async () => {
+      await logOpenSmartSnippetSuggestionInlineLink(
+        {questionAnswerId: exampleQuestionAnswerId},
+        exampleInlineLink
+      )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
       expect(emit).toHaveBeenCalledTimes(1);
       expect(emit.mock.calls[0]).toMatchSnapshot();

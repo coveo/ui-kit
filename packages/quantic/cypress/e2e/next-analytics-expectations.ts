@@ -15,10 +15,7 @@ function validateSubmitFeedbackEvent(
   const eventBody = interception?.request?.body?.[0];
   const eventMeta: EventMetadata = eventBody.meta;
 
-  expect(eventBody.answer).to.have.property('type', expectedEvent.answer.type);
-  if (expectedEvent.answer.id) {
-    expect(eventBody.answer).to.have.property('id', expectedEvent.answer.id);
-  }
+  expect(eventBody.answer).to.deep.equal(expectedEvent.answer);
   expect(eventBody.feedback).to.deep.equal(expectedEvent.feedback);
 
   expect(eventMeta).to.have.property('type', 'Qna.SubmitFeedback');
@@ -37,16 +34,7 @@ function nextAnalyticsExpectations() {
           const eventMeta: EventMetadata = eventBody.meta;
 
           expect(eventBody).to.have.property('action', expectedEvent.action);
-          expect(eventBody.answer).to.have.property(
-            'type',
-            expectedEvent.answer.type
-          );
-          if (expectedEvent.answer.id) {
-            expect(eventBody.answer).to.have.property(
-              'id',
-              expectedEvent.answer.id
-            );
-          }
+          expect(eventBody.answer).to.deep.equal(expectedEvent.answer);
           expect(eventMeta).to.have.property('type', 'Qna.AnswerAction');
           expect(eventMeta.config).to.have.property(
             'trackingId',
@@ -82,7 +70,8 @@ function nextAnalyticsExpectations() {
       expectedEvent: Qna.CitationClick,
       expectedTrackingId: string
     ) => {
-      cy.wait(InterceptAliases.NextAnalytics.Qna.CitationClick)
+      const type: 'Source' | 'InlineLink' = expectedEvent.citation.type;
+      cy.wait(InterceptAliases.NextAnalytics.Qna.CitationClick[type])
         .then((interception): void => {
           const eventBody = interception?.request?.body?.[0];
           const eventMeta: EventMetadata = eventBody.meta;
