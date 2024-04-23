@@ -34,7 +34,7 @@ const componentTag = 'atomic-result-children';
  * The `atomic-result-children` component is responsible for displaying child results by applying one or more child result templates.
  * Includes two slots, "before-children" and "after-children", which allow for rendering content before and after the list of children,
  * only when children exist.
- * @part children-root - The wrapper for the message.
+ * @part children-root - The wrapper for the message when there are child results
  * @part no-result-root - The wrapper for the message when there are no results.
  * @part show-hide-button - The button that allows to collapse or show all child results.
  * @slot before-children - Slot that allows rendering content before the list of children, only when children exist.
