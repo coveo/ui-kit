@@ -18,6 +18,8 @@ import {
   setId,
   setAnswerContentFormat,
   setIsAnswerGenerated,
+  expandGeneratedAnswer,
+  collapseGeneratedAnswer,
 } from './generated-answer-actions';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
 
@@ -102,5 +104,11 @@ export const generatedAnswerReducer = createReducer(
       })
       .addCase(setIsAnswerGenerated, (state, {payload}) => {
         state.isAnswerGenerated = payload;
+      })
+      .addCase(expandGeneratedAnswer, (state) => {
+        state.expanded = true;
+      })
+      .addCase(collapseGeneratedAnswer, (state) => {
+        state.expanded = false;
       })
 );

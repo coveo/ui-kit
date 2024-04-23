@@ -22,14 +22,14 @@
     "@storybook/preview-api": "8.0.6",
     "@storybook/react": "8.0.6",
     "@storybook/react-webpack5": "8.0.6",
-    "@types/lodash": "4.14.198",
+    "@types/lodash": "4.17.0",
     "@types/react": "18.2.21",
     "lit-analyzer": "2.0.3",
     "lodash": "4.17.21",
     "monaco-editor-webpack-plugin": "7.1.0",
     "prop-types": "15.8.1",
-    "storybook": "8.0.6",
-    "typescript": "5.4.4"
+    "storybook": "8.0.9",
+    "typescript": "5.4.5"
   },
   "scripts": {
     "build": "nx build",
@@ -38,7 +38,7 @@
   "devDependencies": {
     "@storybook/addon-webpack5-compiler-swc": "1.0.2",
     "@storybook/types": "8.0.6",
-    "@typescript-eslint/eslint-plugin": "7.5.0",
+    "@typescript-eslint/eslint-plugin": "7.7.1",
     "gts": "5.3.0"
   }
 }
