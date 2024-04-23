@@ -6,6 +6,7 @@ import {
 import {
   CoreCommerceFacet,
   CoreCommerceFacetOptions,
+  CoreCommerceFacetState,
   NumericFacetValue,
   NumericRangeRequest,
   buildCoreCommerceFacet,
@@ -16,14 +17,18 @@ export type NumericFacetOptions = Omit<
   'toggleSelectActionCreator' | 'toggleExcludeActionCreator'
 >;
 
+export type NumericFacetState = CoreCommerceFacetState<NumericFacetValue>;
+
 /**
  * The `NumericFacet` controller offers a high-level programming interface for implementing numeric commerce
  * facet UI component.
  */
-export type NumericFacet = CoreCommerceFacet<
-  NumericRangeRequest,
-  NumericFacetValue
->;
+export type NumericFacet = Omit<
+  CoreCommerceFacet<NumericRangeRequest, NumericFacetValue>,
+  'state'
+> & {
+  state: NumericFacetState;
+};
 
 /**
  * @internal
