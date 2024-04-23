@@ -13,7 +13,15 @@ import {
   FacetValueRequest,
   CategoryFacetValueRequest,
 } from '@coveo/headless';
-import {Component, h, State, Prop, Element, VNode} from '@stencil/core';
+import {
+  Component,
+  h,
+  State,
+  Prop,
+  Element,
+  VNode,
+  Fragment,
+} from '@stencil/core';
 import {
   AriaLiveRegion,
   FocusTargetController,
@@ -291,7 +299,7 @@ export class AtomicFacet implements InitializableComponent {
           <FacetContainer>
             <FacetHeader
               i18n={this.bindings.i18n}
-              label={this.label}
+              label={this.definedLabel}
               onClearFilters={() => {
                 this.focusTargets.header.focusAfterSearch();
                 this.facet.deselectAll();
@@ -302,32 +310,7 @@ export class AtomicFacet implements InitializableComponent {
               onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
               headerRef={(el) => this.focusTargets.header.setTarget(el)}
             ></FacetHeader>
-            <FacetSearchInputGuard
-              canShowMoreValues={this.facetState.canShowMoreValues}
-              numberOfDisplayedValues={this.facetState.values.length}
-              withSearch={this.withSearch}
-            >
-              <FacetSearchInput
-                i18n={this.bindings.i18n}
-                label={this.definedLabel}
-                onChange={(value) => {
-                  if (value === '') {
-                    this.facet.facetSearch.clear();
-                    return;
-                  }
-                  this.facet.facetSearch.updateCaptions(
-                    getFieldCaptions(this.field, this.bindings.i18n)
-                  );
-                  this.facet.facetSearch.updateText(value);
-                  this.facet.facetSearch.search();
-                }}
-                onClear={() => this.facet.facetSearch.clear()}
-                query={this.facetState.facetSearch.query}
-              />
-            </FacetSearchInputGuard>
-            {shouldDisplaySearchResults(this.facetState.facetSearch)
-              ? [this.renderSearchResults(), this.renderMatches()]
-              : [this.renderValues(), this.renderShowMoreLess()]}
+            {this.renderBody()}
           </FacetContainer>
         ) : (
           <FacetPlaceholder
@@ -336,6 +319,42 @@ export class AtomicFacet implements InitializableComponent {
           />
         )}
       </FacetGuard>
+    );
+  }
+
+  private renderBody() {
+    if (this.isCollapsed) {
+      return;
+    }
+    return (
+      <Fragment>
+        <FacetSearchInputGuard
+          canShowMoreValues={this.facetState.canShowMoreValues}
+          numberOfDisplayedValues={this.facetState.values.length}
+          withSearch={this.withSearch}
+        >
+          <FacetSearchInput
+            i18n={this.bindings.i18n}
+            label={this.definedLabel}
+            onChange={(value) => {
+              if (value === '') {
+                this.facet.facetSearch.clear();
+                return;
+              }
+              this.facet.facetSearch.updateCaptions(
+                getFieldCaptions(this.field, this.bindings.i18n)
+              );
+              this.facet.facetSearch.updateText(value);
+              this.facet.facetSearch.search();
+            }}
+            onClear={() => this.facet.facetSearch.clear()}
+            query={this.facetState.facetSearch.query}
+          />
+        </FacetSearchInputGuard>
+        {shouldDisplaySearchResults(this.facetState.facetSearch)
+          ? [this.renderSearchResults(), this.renderMatches()]
+          : [this.renderValues(), this.renderShowMoreLess()]}
+      </Fragment>
     );
   }
 
@@ -363,7 +382,11 @@ export class AtomicFacet implements InitializableComponent {
           {...this.facetValueProps}
           facetCount={value.count}
           onExclude={() => this.facet.facetSearch.exclude(value)}
-          onSelect={() => this.facet.facetSearch.select(value)}
+          onSelect={() =>
+            this.displayValuesAs === 'link'
+              ? this.facet.facetSearch.singleSelect(value)
+              : this.facet.facetSearch.select(value)
+          }
           facetValue={value.rawValue}
         />
       ))
@@ -378,14 +401,18 @@ export class AtomicFacet implements InitializableComponent {
           i ===
           (this.sortCriteria === 'automatic'
             ? 0
-            : this.facetState.values.length - 1);
+            : this.facet.state.values.length - this.numberOfValues);
 
         return (
           <FacetValue
             {...this.facetValueProps}
             facetCount={value.numberOfResults}
             onExclude={() => this.facet.toggleExclude(value)}
-            onSelect={() => this.facet.toggleSelect(value)}
+            onSelect={() =>
+              this.displayValuesAs === 'link'
+                ? this.facet.toggleSingleSelect(value)
+                : this.facet.toggleSelect(value)
+            }
             facetValue={value.value}
             facetState={value.state}
             setRef={(btn) => {
