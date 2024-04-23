@@ -108,6 +108,7 @@ jest.mock('coveo.analytics', () => {
 
 const exampleFeedback = 'irrelevant';
 const exampleGenerativeQuestionAnsweringId = '123';
+const exampleSearchUid = '456';
 const exampleDetails = 'example details';
 
 const exampleCitation: GeneratedAnswerCitation = {
@@ -121,6 +122,7 @@ describe('generated answer analytics actions', () => {
   let engine: MockedSearchEngine;
   const searchState = buildMockSearchState({
     response: buildMockSearchResponse({
+      searchUid: exampleSearchUid,
       extendedResults: {
         generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
       },
