@@ -1,3 +1,5 @@
+export type ChildProduct = Omit<Product, 'children' | 'totalNumberOfChildren'>;
+
 export interface Product {
   /**
    * The SKU of the product.
@@ -81,12 +83,12 @@ export interface Product {
   additionalFields: Record<string, unknown>;
 
   /**
-   * The child results of the product, fetched through [product grouping](https://docs.coveo.com/en/l78i2152).
+   * The child products of the product, fetched through [product grouping](https://docs.coveo.com/en/l78i2152).
    */
-  childResults: Product[];
+  children: ChildProduct[];
 
   /**
-   * The total number of child results fetched through [product grouping](https://docs.coveo.com/en/l78i2152).
+   * The total number of child products fetched through [product grouping](https://docs.coveo.com/en/l78i2152).
    */
-  totalNumberOfChildResults: number;
+  totalNumberOfChildren: number;
 }
