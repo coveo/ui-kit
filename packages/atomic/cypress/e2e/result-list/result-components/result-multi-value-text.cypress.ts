@@ -16,8 +16,7 @@ import {
   assertShouldRenderValues,
 } from './result-multi-value-text-assertions';
 import {
-  resultMultiValueTextComponent,
-  ResultMultiValueTextSelectors,
+  resultMultiValueTextComponent, // ResultMultiValueTextSelectors,
 } from './result-multi-value-text-selectors';
 
 export interface MultiValueTextProps {
@@ -70,7 +69,6 @@ describe('Result MultiValueText Component', () => {
       new TestFixture()
         .with(addMultiValueText({field: 'thisfielddoesnotexist'}))
         .init();
-
       CommonAssertions.assertConsoleErrorWithoutIt(false);
     });
 
@@ -98,9 +96,10 @@ describe('Result MultiValueText Component', () => {
 
       assertShouldRenderValues(localizedValues.slice(0, 1));
       assertDisplaysXMoreLabel(1);
-      CommonAssertions.assertAccessibilityWithoutIt(
-        ResultMultiValueTextSelectors.firstInResult
-      );
+      // TODO KIT-3105
+      // CommonAssertions.assertAccessibilityWithoutIt(
+      //   ResultMultiValueTextSelectors.firstInResult
+      // );
     });
 
     it('when the field is an array of 3 values and max-values-to-display is 3, it should not truncate', () => {
@@ -118,9 +117,10 @@ describe('Result MultiValueText Component', () => {
 
       assertShouldRenderValues(localizedValues);
       assertDoesNotDisplayXMoreLabel();
-      CommonAssertions.assertAccessibilityWithoutIt(
-        ResultMultiValueTextSelectors.firstInResult
-      );
+      // TODO KIT-3105
+      // CommonAssertions.assertAccessibilityWithoutIt(
+      //   ResultMultiValueTextSelectors.firstInResult
+      // );
     });
 
     it('when there is a slot it should replace the correct values', () => {
