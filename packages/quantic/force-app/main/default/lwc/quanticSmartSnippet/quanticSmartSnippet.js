@@ -17,9 +17,9 @@ import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").SmartSnippet} SmartSnippet */
-/** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SmartSnippetState} SmartSnippetState */
 /** @typedef {import("coveo").SmartSnippetFeedback} SmartSnippetFeedback */
+/** @typedef {import("coveo").SearchStatus} SearchStatus */
 
 const FEEDBACK_LIKED_STATE = 'liked';
 const FEEDBACK_DISLIKED_STATE = 'disliked';
@@ -69,8 +69,6 @@ export default class QuanticSmartSnippet extends LightningElement {
   searchStatus;
   /** @type {Function} */
   unsubscribeSearchStatus;
-  /** @type {boolean} */
-  shouldBeInNeutralState;
 
   labels = {
     showMore,
@@ -127,8 +125,9 @@ export default class QuanticSmartSnippet extends LightningElement {
   }
 
   updateSearchStatusState() {
-    this.feedbackSubmitted = false;
-    this.shouldBeInNeutralState = true;
+    if (!this.state.disliked && !this.state.liked) {
+      this.feedbackSubmitted = false;
+    }
   }
 
   /**
@@ -207,8 +206,7 @@ export default class QuanticSmartSnippet extends LightningElement {
    */
   like = (event) => {
     event.stopPropagation();
-    if (this.feedbackState !== FEEDBACK_LIKED_STATE) {
-      this.shouldBeInNeutralState = false;
+    if (!this.liked) {
       this.smartSnippet.like();
       this.hideExplainWhyFeedbackButton = true;
     }
@@ -220,8 +218,7 @@ export default class QuanticSmartSnippet extends LightningElement {
    */
   dislike = (event) => {
     event.stopPropagation();
-    if (this.feedbackState !== FEEDBACK_DISLIKED_STATE) {
-      this.shouldBeInNeutralState = false;
+    if (!this.disliked) {
       this.smartSnippet.dislike();
       if (!this.feedbackSubmitted) {
         this.hideExplainWhyFeedbackButton = false;
@@ -409,9 +406,6 @@ export default class QuanticSmartSnippet extends LightningElement {
    * @returns {'liked' | 'disliked' | 'neutral'}
    */
   get feedbackState() {
-    if (this.shouldBeInNeutralState) {
-      return FEEDBACK_NEUTRAL_STATE;
-    }
     return this.liked
       ? FEEDBACK_LIKED_STATE
       : this.disliked

@@ -374,10 +374,40 @@ describe('quantic-smart-snippet', {browser: 'chrome'}, () => {
                   });
 
                   scope(
-                    'when trying to open the feedback modal after executing a new query',
+                    'when trying to open the feedback modal after executing the same query',
                     () => {
                       performSearch();
+                      Expect.displayExplainWhyButton(false);
                       Expect.displaySmartSnippetCard(true);
+                      Actions.clickSmartSnippetDislikeButton();
+                      Expect.displayExplainWhyButton(false);
+                    }
+                  );
+
+                  scope(
+                    'when trying to open the feedback modal after executing a query that gave a new answer',
+                    () => {
+                      const exampleNewQuestion = 'new example question';
+                      const exampleNewAnswer = 'new example answer';
+
+                      mockSearchWithSmartSnippet(
+                        {
+                          question: exampleNewQuestion,
+                          answer: exampleNewAnswer,
+                          title: exampleSmartSnippetSourceTitle,
+                          uri: exampleSmartSnippetSourceUri,
+                          permanentId: '456',
+                          uriHash: exampleUriHash,
+                          author: exampleAuthor,
+                        },
+                        param.useCase,
+                        exampleResponseId
+                      );
+                      performSearch();
+
+                      Expect.displayExplainWhyButton(false);
+                      Expect.displaySmartSnippetCard(true);
+                      Expect.displaySmartSnippetQuestion(exampleNewQuestion);
                       Actions.clickSmartSnippetDislikeButton();
                       if (analyticsMode === 'next') {
                         NextAnalyticsExpectations.emitQnaDislikeEvent(
