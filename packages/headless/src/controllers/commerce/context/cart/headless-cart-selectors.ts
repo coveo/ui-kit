@@ -2,8 +2,8 @@ import {createSelector} from '@reduxjs/toolkit';
 import {itemsSelector} from '../../../../features/commerce/context/cart/cart-selector';
 import {CartState} from '../../../../features/commerce/context/cart/cart-state';
 
-export function itemSelector(cartState: CartState, productId: string) {
-  return cartState.cart[productId];
+export function itemSelector(cartState: CartState, sku: string) {
+  return cartState.cart[sku];
 }
 
 export const totalQuantitySelector = createSelector(itemsSelector, (items) =>

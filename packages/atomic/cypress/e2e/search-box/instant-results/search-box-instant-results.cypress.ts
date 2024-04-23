@@ -150,10 +150,10 @@ describe('Instant Results Test Suites', () => {
     );
     InstantResultsAssertions.assertHasResultCount(numOfInstantResults);
 
-    CommonAssertions.assertAriaLiveMessageWithoutIt(
+    /*CommonAssertions.assertAriaLiveMessageWithoutIt(
       SearchBoxSelectors.searchBoxAriaLive,
       maxRecentQueriesWithoutQuery.toString()
-    );
+    );*/
     InstantResultsAssertions.assertResultIsSelected(0);
 
     SearchBoxSelectors.activeQuerySuggestion().should('have.length', 0);

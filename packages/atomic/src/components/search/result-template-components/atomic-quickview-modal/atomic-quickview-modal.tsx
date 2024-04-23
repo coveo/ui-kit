@@ -267,7 +267,8 @@ export class AtomicQuickviewModal implements InitializableComponent {
     const scriptId = `${this.highlightScriptId}${
       identifier ? `:${identifier}` : ''
     }`;
-    const style = doc.getElementById(scriptId) || doc.createElement('style');
+    const style =
+      doc.getElementById(scriptId) || this.bindings.createStyleElement();
     style.setAttribute('id', scriptId);
     head.appendChild(style);
     style.appendChild(

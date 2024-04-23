@@ -3,7 +3,8 @@
     "window": "readonly"
   },
   "env": {
-    "browser": true
+    "browser": true,
+    "es2020": true
   },
   "rules": {
     "curly": ["error"]

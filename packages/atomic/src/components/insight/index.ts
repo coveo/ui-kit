@@ -99,4 +99,5 @@ export {
   GeneratedAnswer as InsightGeneratedAnswer,
   GeneratedAnswerState as InsightGeneratedAnswerState,
   GeneratedAnswerStyle as InsightGeneratedAnswerStyle,
+  Suggestion as InsightSuggestion,
 } from '@coveo/headless/insight';
