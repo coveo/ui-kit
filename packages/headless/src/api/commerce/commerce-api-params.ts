@@ -94,5 +94,5 @@ export interface IgnorePathsParam {
 }
 
 export interface SlotIdParam {
-  id: string;
+  slotId: string;
 }

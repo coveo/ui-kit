@@ -24,7 +24,7 @@ const buildRecommendationCommerceAPIRequest = async (
   const commerceAPIRequest = await buildBaseCommerceAPIRequest(state);
   return {
     ...commerceAPIRequest,
-    id: slotId,
+    slotId,
   };
 };
 

@@ -53,7 +53,7 @@ describe('commerce api client', () => {
     req: Partial<CommerceRecommendationsRequest> = {}
   ): Promise<CommerceRecommendationsRequest> => {
     return {
-      id: 'slotId',
+      slotId: 'slotId',
       accessToken: accessToken,
       organizationId: organizationId,
       url: platformUrl,
