@@ -448,7 +448,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
           i ===
           (this.sortCriteria === 'automatic'
             ? 0
-            : this.facetState.values.length - 1);
+            : this.facet.state.values.length - this.numberOfValues);
 
         return (
           <FacetValue
