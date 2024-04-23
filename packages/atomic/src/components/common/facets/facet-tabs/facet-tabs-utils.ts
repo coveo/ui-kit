@@ -16,14 +16,18 @@ export function updateFacetVisibilityForActiveTab(
   bindings: AnyBindings,
   facet?: AnyFacetType
 ): boolean {
-  if (tabs !== '' && facet) {
-    if (shouldDisplayOnCurrentTab(tabs, bindings.engine.state)) {
-      facet.enable();
-      return true;
-    } else {
-      facet.disable();
-      return false;
-    }
+  if (tabs === '') {
+    return true;
   }
-  return true;
+  if (!facet) {
+    return true;
+  }
+  if (shouldDisplayOnCurrentTab(tabs, bindings.engine.state)) {
+    facet.enable();
+    return true;
+  } else {
+    facet.disable();
+    return false;
+  }
+  
 }
