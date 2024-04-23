@@ -20,7 +20,7 @@
     "typescript": "^5.2.2",
     "vite": "^5.1.0",
     "vue-tsc": "^2.0.0",
-    "cypress": "13.7.2",
+    "cypress": "13.8.0",
     "cypress-repeat": "2.3.4",
     "ncp": "2.0.0"
   }
