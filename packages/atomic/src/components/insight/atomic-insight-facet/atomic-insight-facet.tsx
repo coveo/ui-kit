@@ -4,30 +4,33 @@ import {
   buildInsightFacet,
   buildInsightFacetConditionsManager,
   buildInsightSearchStatus,
+  InsightCategoryFacetValueRequest,
   InsightFacet,
+  InsightFacetConditionsManager,
   InsightFacetOptions,
   InsightFacetSortCriterion,
   InsightFacetState,
+  InsightFacetValueRequest,
   InsightSearchStatus,
   InsightSearchStatusState,
 } from '..';
-import {FocusTargetController} from '../../../utils/accessibility-utils';
+import {
+  AriaLiveRegion,
+  FocusTargetController,
+} from '../../../utils/accessibility-utils';
 import {getFieldCaptions} from '../../../utils/field-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {
-  BaseFacet,
-  FacetCommon,
-  FacetDisplayValues,
-} from '../../common/facets/facet-common';
-import {parseDependsOn} from '../../common/facets/facet-common';
+import {parseDependsOn} from '../../common/facets/depends-on';
+import {FacetInfo} from '../../common/facets/facet-common-store';
 import {FacetContainer} from '../../common/facets/facet-container/facet-container';
 import {FacetGuard} from '../../common/facets/facet-guard';
 import {FacetHeader} from '../../common/facets/facet-header/facet-header';
 import {FacetPlaceholder} from '../../common/facets/facet-placeholder/facet-placeholder';
+import {announceFacetSearchResultsWithAriaLive} from '../../common/facets/facet-search/facet-search-aria-live';
 import {FacetSearchInput} from '../../common/facets/facet-search/facet-search-input';
 import {FacetSearchInputGuard} from '../../common/facets/facet-search/facet-search-input-guard';
 import {FacetSearchMatches} from '../../common/facets/facet-search/facet-search-matches';
@@ -39,6 +42,7 @@ import {
   FacetValue,
 } from '../../common/facets/facet-value/facet-value';
 import {FacetValuesGroup} from '../../common/facets/facet-values-group/facet-values-group';
+import {initializePopover} from '../../search/facets/atomic-popover/popover-type';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
@@ -50,10 +54,9 @@ import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interf
   shadow: true,
 })
 export class AtomicInsightFacet
-  implements InitializableComponent<InsightBindings>, BaseFacet<InsightFacet>
+  implements InitializableComponent<InsightBindings>
 {
   @InitializeBindings() public bindings!: InsightBindings;
-  public facetCommon?: FacetCommon;
   public facet!: InsightFacet;
   public searchStatus!: InsightSearchStatus;
   public withSearch = false;
@@ -103,7 +106,7 @@ export class AtomicInsightFacet
    * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection).
    * Possible values are 'checkbox', 'link', and 'box'.
    */
-  @Prop({reflect: true}) public displayValuesAs: FacetDisplayValues =
+  @Prop({reflect: true}) public displayValuesAs: 'checkbox' | 'link' | 'box' =
     'checkbox';
   /**
    * Specifies if the facet is collapsed.
@@ -130,10 +133,12 @@ export class AtomicInsightFacet
   @Prop({reflect: true}) public enableExclusion = false;
 
   private showLessFocus?: FocusTargetController;
-
   private showMoreFocus?: FocusTargetController;
-
   private headerFocus?: FocusTargetController;
+  private facetConditionsManager?: InsightFacetConditionsManager;
+
+  @AriaLiveRegion('facet-search')
+  protected facetSearchAriaMessage!: string;
 
   public initialize() {
     const options: InsightFacetOptions = {
@@ -148,30 +153,11 @@ export class AtomicInsightFacet
 
     this.facet = buildInsightFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-
-    this.facetCommon = new FacetCommon({
-      host: this.host,
-      bindings: this.bindings,
-      label: this.label,
-      field: this.field,
-      headingLevel: this.headingLevel,
-      displayValuesAs: this.displayValuesAs,
-      dependsOn: this.dependsOn,
-      dependenciesManager: buildInsightFacetConditionsManager(
-        this.bindings.engine,
-        {
-          facetId: this.facetId!,
-          conditions: parseDependsOn(this.dependsOn),
-        }
-      ),
-      facet: this.facet,
-      facetId: this.facetId,
-      withSearch: this.withSearch,
-      sortCriteria: this.sortCriteria,
-      enableExclusion: this.enableExclusion,
-    });
-
     this.searchStatus = buildInsightSearchStatus(this.bindings.engine);
+    this.initAriaLive();
+    this.initConditionManager();
+    this.initPopover();
+    this.registerFacet();
   }
 
   private get focusTargets(): {
@@ -196,7 +182,7 @@ export class AtomicInsightFacet
   }
 
   public disconnectedCallback() {
-    this.facetCommon?.disconnectedCallback();
+    this.facetConditionsManager?.stopWatching();
   }
 
   public render() {
@@ -371,5 +357,51 @@ export class AtomicInsightFacet
       field: this.field,
       i18n: this.bindings.i18n,
     };
+  }
+
+  private initAriaLive() {
+    announceFacetSearchResultsWithAriaLive(
+      this.facet,
+      this.label,
+      (msg) => (this.facetSearchAriaMessage = msg),
+      this.bindings.i18n
+    );
+  }
+
+  private initConditionManager() {
+    this.facetConditionsManager = buildInsightFacetConditionsManager(
+      this.bindings.engine,
+      {
+        facetId: this.facetId!,
+        conditions: parseDependsOn<
+          InsightFacetValueRequest | InsightCategoryFacetValueRequest
+        >(this.dependsOn),
+      }
+    );
+  }
+
+  private initPopover() {
+    initializePopover(this.host, {
+      ...this.facetInfo,
+      hasValues: () => !!this.facet.state.values.length,
+      numberOfActiveValues: () => this.activeValues.length,
+    });
+  }
+
+  private get isHidden() {
+    return !this.facet.state.enabled || !this.facet.state.values.length;
+  }
+
+  private get facetInfo(): FacetInfo {
+    return {
+      label: () => this.bindings.i18n.t(this.label),
+      facetId: this.facetId!,
+      element: this.host,
+      isHidden: () => this.isHidden,
+    };
+  }
+
+  private registerFacet() {
+    this.bindings.store.registerFacet('facets', this.facetInfo);
   }
 }
