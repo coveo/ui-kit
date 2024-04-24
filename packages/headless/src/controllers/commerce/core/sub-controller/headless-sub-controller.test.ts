@@ -7,75 +7,128 @@ import * as CorePagination from '../pagination/headless-core-commerce-pagination
 import * as CoreInteractiveResult from '../result-list/headless-core-interactive-result';
 import * as CoreSort from '../sort/headless-core-commerce-sort';
 import {
+  BaseSolutionTypeSubControllers,
+  buildBaseSolutionTypeControllers,
   buildSolutionTypeSubControllers,
-  SolutionTypeSubControllers,
+  SearchAndListingSubControllers,
 } from './headless-sub-controller';
 
 describe('sub controllers', () => {
   let engine: MockedCommerceEngine;
-  let subControllers: SolutionTypeSubControllers;
   const mockResponseIdSelector = jest.fn();
   const mockFetchResultsActionCreator = jest.fn();
 
-  function initSubControllers() {
-    engine = buildMockCommerceEngine(buildMockCommerceState());
-
-    subControllers = buildSolutionTypeSubControllers(engine, {
-      responseIdSelector: mockResponseIdSelector,
-      fetchResultsActionCreator: mockFetchResultsActionCreator,
-    });
-  }
-
   beforeEach(() => {
-    initSubControllers();
+    engine = buildMockCommerceEngine(buildMockCommerceState());
   });
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('#interactiveResult builds interactive result controller', () => {
-    const buildCoreInteractiveResultMock = jest.spyOn(
-      CoreInteractiveResult,
-      'buildCoreInteractiveResult'
-    );
+  it.each([
+    {
+      name: 'buildSolutionTypeSubControllers',
+      subControllersBuilder: buildSolutionTypeSubControllers,
+    },
+    {
+      name: 'buildBaseSolutionTypeControllers',
+      subControllersBuilder: buildBaseSolutionTypeControllers,
+    },
+  ])(
+    '#interactiveResult builds interactive result controller',
+    ({
+      subControllersBuilder,
+    }: {
+      subControllersBuilder:
+        | typeof buildSolutionTypeSubControllers
+        | typeof buildBaseSolutionTypeControllers;
+    }) => {
+      const subControllers = subControllersBuilder(engine, {
+        responseIdSelector: mockResponseIdSelector,
+        fetchResultsActionCreator: mockFetchResultsActionCreator,
+      });
+      const buildCoreInteractiveResultMock = jest.spyOn(
+        CoreInteractiveResult,
+        'buildCoreInteractiveResult'
+      );
 
-    const props = {
-      options: {
-        product: {
-          productId: '1',
-          name: 'Product name',
-          price: 17.99,
+      const props = {
+        options: {
+          product: {
+            productId: '1',
+            name: 'Product name',
+            price: 17.99,
+          },
+          position: 1,
         },
-        position: 1,
-      },
-    };
+      };
 
-    const interactiveResult = subControllers.interactiveResult({
-      ...props,
+      const interactiveResult = subControllers.interactiveResult({
+        ...props,
+      });
+
+      expect(interactiveResult).toEqual(
+        buildCoreInteractiveResultMock.mock.results[0].value
+      );
+    }
+  );
+
+  describe('#buildSolutionTypeSubControllers', () => {
+    let subControllers: SearchAndListingSubControllers;
+
+    beforeEach(() => {
+      subControllers = buildSolutionTypeSubControllers(engine, {
+        responseIdSelector: mockResponseIdSelector,
+        fetchResultsActionCreator: mockFetchResultsActionCreator,
+      });
     });
 
-    expect(interactiveResult).toEqual(
-      buildCoreInteractiveResultMock.mock.results[0].value
-    );
+    it('#pagination builds pagination controller', () => {
+      const buildCorePaginationMock = jest.spyOn(
+        CorePagination,
+        'buildCorePagination'
+      );
+
+      const pagination = subControllers.pagination();
+
+      expect(pagination).toEqual(buildCorePaginationMock.mock.results[0].value);
+    });
+
+    it('#sort builds sort controller', () => {
+      const buildCoreSortMock = jest.spyOn(CoreSort, 'buildCoreSort');
+
+      const sort = subControllers.sort();
+
+      expect(sort).toEqual(buildCoreSortMock.mock.results[0].value);
+    });
   });
 
-  it('#pagination builds pagination controller', () => {
-    const buildCorePaginationMock = jest.spyOn(
-      CorePagination,
-      'buildCorePagination'
-    );
+  describe('#buildRecommendationsSubControllers', () => {
+    const slotId = 'recommendations-slot-id';
+    let subControllers: BaseSolutionTypeSubControllers;
 
-    const pagination = subControllers.pagination();
+    beforeEach(() => {
+      subControllers = buildBaseSolutionTypeControllers(engine, {
+        slotId,
+        responseIdSelector: mockResponseIdSelector,
+        fetchResultsActionCreator: mockFetchResultsActionCreator,
+      });
+    });
 
-    expect(pagination).toEqual(buildCorePaginationMock.mock.results[0].value);
-  });
+    it('#pagination builds pagination controller with slot id', () => {
+      const buildCorePaginationMock = jest.spyOn(
+        CorePagination,
+        'buildCorePagination'
+      );
 
-  it('#sort builds sort controller', () => {
-    const buildCoreSortMock = jest.spyOn(CoreSort, 'buildCoreSort');
+      const pagination = subControllers.pagination();
 
-    const sort = subControllers.sort();
-
-    expect(sort).toEqual(buildCoreSortMock.mock.results[0].value);
+      expect(pagination).toEqual(buildCorePaginationMock.mock.results[0].value);
+      expect(buildCorePaginationMock).toHaveBeenCalledWith(engine, {
+        fetchResultsActionCreator: mockFetchResultsActionCreator,
+        slotId,
+      });
+    });
   });
 });
