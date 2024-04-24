@@ -5,13 +5,11 @@ import {TabSetState} from '@coveo/headless/dist/definitions/features/tab-set/tab
  * @param tabSetState - The state object containing the set of tabs..
  * @returns An object containing the active tab ID, or null if no active tab is found.
  */
-export function getActiveTab(
-  tabSetState: Partial<TabSetState>
-): {tab: string} | null {
+export function getActiveTab(tabSetState: Partial<TabSetState>): string | null {
   const activeTab = Object.values(tabSetState ?? {}).find(
     (tab) => tab?.isActive
   );
-  return activeTab ? {tab: activeTab.id} : null;
+  return activeTab ? activeTab.id : null;
 }
 
 /**
@@ -27,7 +25,7 @@ export function shouldDisplayOnCurrentTab(
   excludeTabs: string[] | string,
   tabSetState: Partial<TabSetState>
 ) {
-  const activeTab = getActiveTab(tabSetState)?.tab;
+  const activeTab = getActiveTab(tabSetState);
   if (!activeTab) {
     return true;
   }

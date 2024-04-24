@@ -28,13 +28,13 @@ describe('tab-utils', () => {
 
     it('returns the active tab when one tab is active', () => {
       tabSetState.tab1.isActive = true;
-      expect(getActiveTab(tabSetState)).toEqual({tab: 'tab1'});
+      expect(getActiveTab(tabSetState)).toEqual('tab1');
     });
 
     it('returns the first active tab when multiple tabs are active', () => {
       tabSetState.tab1.isActive = true;
       tabSetState.tab2.isActive = true;
-      expect(getActiveTab(tabSetState)).toEqual({tab: 'tab1'});
+      expect(getActiveTab(tabSetState)).toEqual('tab1');
     });
   });
   describe('shouldDisplayOnCurrentTab', () => {

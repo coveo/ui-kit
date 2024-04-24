@@ -50,9 +50,7 @@ export class AtomicTabManager {
 
   async setInitialTab() {
     const initialTab = this.tabs[0];
-    const activeTab = getActiveTab(
-      this.bindings.engine.state.tabSet || {}
-    )?.tab;
+    const activeTab = getActiveTab(this.bindings.engine.state.tabSet || {});
 
     if (initialTab && !activeTab) {
       await initialTab.select(false);
