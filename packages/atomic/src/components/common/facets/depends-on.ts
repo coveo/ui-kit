@@ -1,20 +1,20 @@
-type GenericCondition<AnyRequest> = {
+type GenericCondition<AnyFacetValueRequest> = {
   parentFacetId: string;
-  condition(parentValues: AnyRequest[]): boolean;
+  condition(parentValues: AnyFacetValueRequest[]): boolean;
 };
 
-interface SimpleFacet {
+interface SimpleFacetValue {
   value: string;
   state: string;
 }
 
-interface CategoryFacet extends SimpleFacet {
-  children: SimpleFacet[];
+interface CategoryFacetValue extends SimpleFacetValue {
+  children: SimpleFacetValue[];
 }
 
-export function parseDependsOn<Facet extends SimpleFacet | CategoryFacet>(
-  dependsOn: Record<string, string>
-): GenericCondition<Facet>[] {
+export function parseDependsOn<
+  FacetValue extends SimpleFacetValue | CategoryFacetValue,
+>(dependsOn: Record<string, string>): GenericCondition<FacetValue>[] {
   if (Object.keys(dependsOn).length > 1) {
     throw "Depending on multiple facets isn't supported";
   }
@@ -24,7 +24,7 @@ export function parseDependsOn<Facet extends SimpleFacet | CategoryFacet>(
       parentFacetId,
       condition: (values) => {
         return values.some((value) => {
-          if (isCategoryFacet(value)) {
+          if (isCategoryFacetValue(value)) {
             const selectedValue = getSelectedCategoryFacetValueRequest(value);
             if (!selectedValue) {
               return false;
@@ -34,7 +34,7 @@ export function parseDependsOn<Facet extends SimpleFacet | CategoryFacet>(
             }
             return selectedValue.value === expectedValue;
           }
-          if (isSimpleFacet(value)) {
+          if (isSimpleFacetValue(value)) {
             if (value.state !== 'selected') {
               return false;
             }
@@ -50,7 +50,7 @@ export function parseDependsOn<Facet extends SimpleFacet | CategoryFacet>(
   });
 }
 
-function isCategoryFacet(request: unknown): request is CategoryFacet {
+function isCategoryFacetValue(request: unknown): request is CategoryFacetValue {
   const requestAsRecord = request as Record<string, unknown>;
   return (
     (requestAsRecord?.children &&
@@ -62,8 +62,8 @@ function isCategoryFacet(request: unknown): request is CategoryFacet {
 
 function getSelectedCategoryFacetValueRequest(
   value: unknown
-): CategoryFacet | null {
-  if (!isCategoryFacet(value)) {
+): CategoryFacetValue | null {
+  if (!isCategoryFacetValue(value)) {
     return null;
   }
   if (value.state === 'selected') {
@@ -78,7 +78,7 @@ function getSelectedCategoryFacetValueRequest(
   return null;
 }
 
-function isSimpleFacet(value: unknown): value is SimpleFacet {
+function isSimpleFacetValue(value: unknown): value is SimpleFacetValue {
   const asRecord = value as Record<string, unknown>;
   return (
     'value' in asRecord &&
