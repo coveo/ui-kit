@@ -15,6 +15,7 @@ import {
   closeGeneratedAnswerFeedbackModal,
   sendGeneratedAnswerFeedback,
   registerFieldsToIncludeInCitations,
+  setAnswerContentFormat,
   setIsAnswerGenerated,
   expandGeneratedAnswer,
   collapseGeneratedAnswer,
@@ -23,7 +24,9 @@ import {generatedAnswerReducer} from './generated-answer-slice';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
 import {
   GeneratedAnswerStyle,
+  GeneratedContentFormat,
   GeneratedResponseFormat,
+  generatedContentFormat,
 } from './generated-response-format';
 
 const baseState = getGeneratedAnswerInitialState();
@@ -233,6 +236,36 @@ describe('generated answer slice', () => {
       expect(finalState.responseFormat).toEqual(responseFormat);
     });
   });
+
+  test.each(generatedContentFormat)(
+    '#setAnswerContentFormat should set the "%i" content format in the state',
+    (format: GeneratedContentFormat) => {
+      const finalState = generatedAnswerReducer(
+        baseState,
+        setAnswerContentFormat(format)
+      );
+
+      expect(finalState).toEqual({
+        ...getGeneratedAnswerInitialState(),
+        answerContentFormat: format,
+      });
+    }
+  );
+
+  test.each(generatedContentFormat)(
+    '#setAnswerContentFormat should set the "%i" content format in the state',
+    (format: GeneratedContentFormat) => {
+      const finalState = generatedAnswerReducer(
+        baseState,
+        setAnswerContentFormat(format)
+      );
+
+      expect(finalState).toEqual({
+        ...getGeneratedAnswerInitialState(),
+        answerContentFormat: format,
+      });
+    }
+  );
 
   it('#likeGeneratedAnswer should set the answer as liked in the state', () => {
     const finalState = generatedAnswerReducer(baseState, likeGeneratedAnswer());

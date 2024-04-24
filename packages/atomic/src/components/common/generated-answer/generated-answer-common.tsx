@@ -22,7 +22,6 @@ import {GeneratedContentContainer} from './generated-content-container';
 import {RephraseButtons} from './rephrase-buttons';
 import {RetryPrompt} from './retry-prompt';
 import {SourceCitations} from './source-citations';
-import {TypingLoader} from './typing-loader';
 
 interface GeneratedAnswerCommonOptions {
   host: HTMLElement;
@@ -47,7 +46,6 @@ export class GeneratedAnswerCommon {
 
   private contentClasses =
     'mt-0 mb-4 border border-neutral shadow-lg p-6 bg-background rounded-lg p-6 text-on-background';
-  private loadingClasses = 'my-3';
 
   constructor(private props: GeneratedAnswerCommonOptions) {
     this._data = this.readStoredData();
@@ -115,11 +113,9 @@ export class GeneratedAnswerCommon {
   }
 
   private get shouldBeHidden() {
-    const {isLoading, answer, citations} =
-      this.props.getGeneratedAnswerState() ?? {};
+    const {answer, citations} = this.props.getGeneratedAnswerState() ?? {};
     return (
-      !(isLoading || answer !== undefined || citations?.length) &&
-      !this.hasRetryableError
+      answer === undefined && !citations?.length && !this.hasRetryableError
     );
   }
 
@@ -330,21 +326,13 @@ export class GeneratedAnswerCommon {
   }
 
   public render() {
-    const {isLoading} = this.props.getGeneratedAnswerState() ?? {};
     if (this.shouldBeHidden) {
       return null;
     }
     return (
       <div>
-        <aside
-          class={`mx-auto ${
-            isLoading ? this.loadingClasses : this.contentClasses
-          }`}
-          part="container"
-        >
-          <article>
-            {isLoading ? <TypingLoader /> : this.renderContent()}
-          </article>
+        <aside class={`mx-auto ${this.contentClasses}`} part="container">
+          <article>{this.renderContent()}</article>
         </aside>
       </div>
     );

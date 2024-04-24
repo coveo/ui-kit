@@ -9,7 +9,6 @@ import generatingAnswer from '@salesforce/label/c.quantic_GeneratingAnswer';
 import harmful from '@salesforce/label/c.quantic_Harmful';
 import inaccurate from '@salesforce/label/c.quantic_Inaccurate';
 import irrelevant from '@salesforce/label/c.quantic_Irrelevant';
-import loading from '@salesforce/label/c.quantic_Loading';
 import other from '@salesforce/label/c.quantic_Other';
 import outOfDate from '@salesforce/label/c.quantic_OutOfDate';
 import rgaDisclaimer from '@salesforce/label/c.quantic_RGADisclaimer';
@@ -29,8 +28,6 @@ import {LightningElement, api} from 'lwc';
 import errorTemplate from './templates/errorTemplate.html';
 // @ts-ignore
 import generatedAnswerTemplate from './templates/generatedAnswer.html';
-// @ts-ignore
-import loadingTemplate from './templates/loading.html';
 // @ts-ignore
 import retryPromptTemplate from './templates/retryPrompt.html';
 
@@ -97,7 +94,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   labels = {
     generatedAnswerForYou,
-    loading,
     thisAnswerWasNotHelpful,
     thisAnswerWasHelpful,
     tryAgain,
@@ -396,10 +392,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     return !!this.citations.length && !this.isAnswerCollapsed;
   }
 
-  get isLoading() {
-    return this?.state?.isLoading;
-  }
-
   get isStreaming() {
     return this?.state?.isStreaming;
   }
@@ -552,9 +544,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   render() {
     if (this.hasInitializationError) {
       return errorTemplate;
-    }
-    if (this.isLoading) {
-      return loadingTemplate;
     }
     if (this.hasRetryableError) {
       return retryPromptTemplate;
