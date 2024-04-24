@@ -17,6 +17,8 @@ import {
   registerFieldsToIncludeInCitations,
   setAnswerContentFormat,
   setIsAnswerGenerated,
+  expandGeneratedAnswer,
+  collapseGeneratedAnswer,
 } from './generated-answer-actions';
 import {generatedAnswerReducer} from './generated-answer-slice';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
@@ -322,6 +324,22 @@ describe('generated answer slice', () => {
       ...getGeneratedAnswerInitialState(),
       feedbackSubmitted: true,
     });
+  });
+
+  it('#expandGeneratedAnswer should set expanded to true in the state', () => {
+    const finalState = generatedAnswerReducer(
+      {...baseState, expanded: false},
+      expandGeneratedAnswer()
+    );
+    expect(finalState.expanded).toBe(true);
+  });
+
+  it('#collapseGeneratedAnswer should set expanded to false in the state', () => {
+    const finalState = generatedAnswerReducer(
+      {...baseState, expanded: true},
+      collapseGeneratedAnswer()
+    );
+    expect(finalState.expanded).toBe(false);
   });
 
   describe('#setIsLoading', () => {

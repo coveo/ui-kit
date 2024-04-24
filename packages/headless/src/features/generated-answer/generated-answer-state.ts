@@ -68,6 +68,10 @@ export interface GeneratedAnswerState {
    * Determines if the answer is generated.
    */
   isAnswerGenerated: boolean;
+  /**
+   * Whether the answer is expanded.
+   */
+  expanded: boolean;
 }
 
 export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
@@ -87,5 +91,6 @@ export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
     feedbackSubmitted: false,
     fieldsToIncludeInCitations: [],
     isAnswerGenerated: false,
+    expanded: true,
   };
 }

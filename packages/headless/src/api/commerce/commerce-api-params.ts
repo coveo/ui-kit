@@ -57,7 +57,7 @@ export type UserParams = (UserIdRequired | EmailRequired | UserIdAndEmail) & {
 };
 
 export interface CartItemParam {
-  productId: string;
+  sku: string;
   quantity: number;
 }
 
@@ -89,6 +89,10 @@ export interface FacetIdParam {
   facetId: string;
 }
 
+export interface IgnorePathsParam {
+  ignorePaths: string[][];
+}
+
 export interface SlotIdParam {
-  id: string;
+  slotId: string;
 }
