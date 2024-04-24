@@ -2550,7 +2550,7 @@ export namespace Components {
     }
     interface AtomicTabManager {
         /**
-          * Whether to clear the state when the active tab changes.
+          * Whether to clear the filters when the active tab changes.
          */
         "clearFiltersOnTabChange"?: boolean;
     }
@@ -6824,7 +6824,7 @@ declare namespace LocalJSX {
     }
     interface AtomicTabManager {
         /**
-          * Whether to clear the state when the active tab changes.
+          * Whether to clear the filters when the active tab changes.
          */
         "clearFiltersOnTabChange"?: boolean;
     }
