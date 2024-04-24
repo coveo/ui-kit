@@ -206,7 +206,7 @@ export class TestFixture {
 
   public init() {
     !this.redirected &&
-      cy.visit('about:blank') &&
+      cy.visit('chrome://dino/') &&
       cy.visit(buildTestUrl(this.hash));
     cy.injectAxe();
     setupIntercept();
