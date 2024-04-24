@@ -143,7 +143,6 @@ export class AtomicResultMultiText {
     return (
       <li
         aria-hidden="true"
-        role="separator"
         part="result-multi-value-text-separator"
         key={`${beforeValue}~${afterValue}`}
         class="separator"
