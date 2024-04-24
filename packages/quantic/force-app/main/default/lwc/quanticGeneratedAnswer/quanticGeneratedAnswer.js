@@ -371,7 +371,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   /**
    * Sets the the value of the CSS variable "--maxHeight" the value of the _maximumAnswerHeight property.
-   * Sets the the value of the CSS variable "--fullHeight" the value of the actual height of the generated answer.
    */
   updateGeneratedAnswerCSSVariables() {
     if (this._exceedsMaximumHeight) {
