@@ -38,6 +38,10 @@
   overflow: visible;
 }
 
+.generated-answer__collapse-generating-message {
+  color: var(--lwc-brandPrimary, #1b96ff);
+}
+
 .generated-answer__answer::after {
   transition: 0.5s;
   position: absolute;

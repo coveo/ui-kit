@@ -259,48 +259,86 @@ describe('quantic-generated-answer', () => {
         });
 
         describe('when the collapsible property is set to true', () => {
-          it('should properly display the generated answer collapsed when the answer is too long', () => {
-            const streamId = crypto.randomUUID();
+          describe('when the generated answer is still streaming', () => {
+            it('should properly display the generating answer message', () => {
+              const streamId = crypto.randomUUID();
 
-            mockSearchWithGeneratedAnswer(streamId, param.useCase);
-            mockStreamResponse(streamId, genQaLongMessageTypePayload);
-            visitGeneratedAnswer({
-              collapsible: true,
-              useCase: param.useCase,
-            });
+              const testMessagePayload = {
+                payloadType: 'genqa.messageType',
+                payload: JSON.stringify({
+                  textDelta: testLongText,
+                }),
+              };
 
-            scope('when loading the page', () => {
-              Expect.displayGeneratedAnswerCard(true);
-              Expect.generatedAnswerCollapsed(true);
-              Expect.displayGeneratedAnswerToggleCollapseButton(true);
-              Expect.generatedAnswerToggleCollapseButtonContains('Show more');
-              Expect.displayCitations(false);
-              Expect.displayRephraseButtons(false);
-              Expect.displayDisclaimer(true);
-            });
+              mockSearchWithGeneratedAnswer(streamId, param.useCase);
+              mockStreamResponse(streamId, testMessagePayload);
+              visitGeneratedAnswer({
+                collapsible: true,
+                useCase: param.useCase,
+              });
 
-            scope('when clicking the toggle collapse button', () => {
-              Actions.clickToggleCollapseButton();
-              // TODO: Expect analytics to be sent
-              Expect.generatedAnswerCollapsed(false);
-              Expect.generatedAnswerToggleCollapseButtonContains('Show less');
-              Expect.displayCitations(false);
-              Expect.displayRephraseButtons(true);
-              Expect.displayDisclaimer(true);
-            });
-
-            scope(
-              'when clicking the toggle collapse button a second time',
-              () => {
-                Actions.clickToggleCollapseButton();
-                // TODO: Expect analytics to be sent
+              scope('when loading the page', () => {
+                Expect.displayGeneratedAnswerCard(true);
                 Expect.generatedAnswerCollapsed(true);
+                Expect.displayGeneratedAnswerToggleCollapseButton(false);
+                Expect.displayGeneratedAnswerGeneratingMessage(true);
+                Expect.displayCitations(false);
+                Expect.displayRephraseButtons(false);
+                Expect.displayDisclaimer(false);
+              });
+            });
+          });
+
+          describe('when the generated answer is done streaming', () => {
+            it('should properly display the generated answer collapsed when the answer is too long', () => {
+              const streamId = crypto.randomUUID();
+
+              mockSearchWithGeneratedAnswer(streamId, param.useCase);
+              mockStreamResponse(streamId, genQaLongMessageTypePayload);
+              visitGeneratedAnswer({
+                collapsible: true,
+                useCase: param.useCase,
+              });
+
+              scope('when loading the page', () => {
+                Expect.displayGeneratedAnswerCard(true);
+                Expect.generatedAnswerCollapsed(true);
+                Expect.displayGeneratedAnswerToggleCollapseButton(true);
                 Expect.generatedAnswerToggleCollapseButtonContains('Show more');
                 Expect.displayCitations(false);
                 Expect.displayRephraseButtons(false);
                 Expect.displayDisclaimer(true);
-              }
-            );
+              });
+
+              scope('when clicking the show more button to expand', () => {
+                Actions.clickToggleCollapseButton();
+                Expect.generatedAnswerCollapsed(false);
+                Expect.generatedAnswerToggleCollapseButtonContains('Show less');
+                Expect.displayCitations(false);
+                Expect.displayRephraseButtons(true);
+                Expect.displayDisclaimer(true);
+                if (analyticsMode === 'legacy') {
+                  Expect.logGeneratedAnswerExpand(streamId);
+                }
+              });
+
+              scope(
+                'when clicking the show less button a second time to collapse',
+                () => {
+                  Actions.clickToggleCollapseButton();
+                  Expect.generatedAnswerCollapsed(true);
+                  Expect.generatedAnswerToggleCollapseButtonContains(
+                    'Show more'
+                  );
+                  Expect.displayCitations(false);
+                  Expect.displayRephraseButtons(false);
+                  Expect.displayDisclaimer(true);
+                  if (analyticsMode === 'legacy') {
+                    Expect.logGeneratedAnswerCollapse(streamId);
+                  }
+                }
+              );
+            });
           });
 
           it('should not display the answer collapsed when the answer is short', () => {
@@ -781,6 +819,87 @@ describe('quantic-generated-answer', () => {
                     isVisible: true,
                   });
                 });
+              });
+            });
+
+            describe('the collapsible option', () => {
+              const streamId = crypto.randomUUID();
+              const responseId = crypto.randomUUID();
+
+              beforeEach(() => {
+                mockSearchWithGeneratedAnswer(
+                  streamId,
+                  param.useCase,
+                  responseId
+                );
+                mockStreamResponse(streamId, genQaLongMessageTypePayload);
+                visitGeneratedAnswer({
+                  useCase: param.useCase,
+                  collapsible: true,
+                });
+              });
+
+              it('should display the toggle collapse button', () => {
+                Expect.displayGeneratedAnswerCard(true);
+                Expect.generatedAnswerCollapsed(true);
+                Expect.displayGeneratedAnswerToggleCollapseButton(true);
+                Expect.displayGeneratedAnswerGeneratingMessage(false);
+                Expect.displayCitations(false);
+                Expect.displayRephraseButtons(false);
+                Expect.displayDisclaimer(true);
+
+                scope('when clicking the show more button to expand', () => {
+                  Actions.clickToggleCollapseButton();
+                  Expect.generatedAnswerCollapsed(false);
+                  Expect.generatedAnswerToggleCollapseButtonContains(
+                    'Show less'
+                  );
+                  Expect.displayCitations(false);
+                  Expect.displayRephraseButtons(true);
+                  Expect.displayDisclaimer(true);
+                  if (analyticsMode === 'next') {
+                    NextAnalyticsExpectations.emitQnaAnswerActionEvent(
+                      {
+                        answer: {
+                          responseId,
+                          type: answerType,
+                        },
+                        action: 'expand',
+                      },
+                      exampleTrackingId
+                    );
+                  } else {
+                    Expect.logGeneratedAnswerExpand(streamId);
+                  }
+                });
+
+                scope(
+                  'when clicking the show less button a second time to collapse',
+                  () => {
+                    Actions.clickToggleCollapseButton();
+                    Expect.generatedAnswerCollapsed(true);
+                    Expect.generatedAnswerToggleCollapseButtonContains(
+                      'Show more'
+                    );
+                    Expect.displayCitations(false);
+                    Expect.displayRephraseButtons(false);
+                    Expect.displayDisclaimer(true);
+                    if (analyticsMode === 'next') {
+                      NextAnalyticsExpectations.emitQnaAnswerActionEvent(
+                        {
+                          answer: {
+                            responseId,
+                            type: answerType,
+                          },
+                          action: 'collapse',
+                        },
+                        exampleTrackingId
+                      );
+                    } else {
+                      Expect.logGeneratedAnswerCollapse(streamId);
+                    }
+                  }
+                );
               });
             });
 

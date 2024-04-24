@@ -81,6 +81,6 @@ export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
     feedbackSubmitted: false,
     fieldsToIncludeInCitations: [],
     isAnswerGenerated: false,
-    expanded: true,
+    expanded: false,
   };
 }

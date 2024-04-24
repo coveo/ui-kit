@@ -23,7 +23,6 @@ export interface GeneratedAnswerSelector extends ComponentSelector {
   rephraseButtons: () => CypressSelector;
   rephraseLabel: () => CypressSelector;
   rephraseButtonByLabel: (label: string) => CypressSelector;
-  rephraseInputButtonByLabel: (label: string) => CypressSelector;
   generatedAnswerFooterRow: () => CypressSelector;
   copyToClipboardButton: () => CypressSelector;
   citationTooltip: (index: number) => CypressSelector;
@@ -32,6 +31,7 @@ export interface GeneratedAnswerSelector extends ComponentSelector {
   citationTooltipText: (index: number) => CypressSelector;
   disclaimer: () => CypressSelector;
   toggleCollapseButton: () => CypressSelector;
+  generatingMessage: () => CypressSelector;
 }
 
 export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
@@ -138,5 +138,9 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
   toggleCollapseButton: () =>
     GeneratedAnswerSelectors.get().find(
       '[data-cy="generated-answer__answer-toggle"]'
+    ),
+  generatingMessage: () =>
+    GeneratedAnswerSelectors.get().find(
+      'div.generated-answer__collapse-generating-message'
     ),
 };

@@ -71,6 +71,11 @@
               </template>
             </div>
             <div class={generatedAnswerFooterRowClass}>
+              <template lwc:if={shouldShowCollapseGeneratingMessage}>
+                <div class="generated-answer__collapse-generating-message">
+                  {labels.generatingAnswer}...
+                </div>
+              </template>
               <template lwc:if={shouldShowToggleCollapseAnswer}>
                 <lightning-button
                   data-cy="generated-answer__answer-toggle"

@@ -137,8 +137,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   _maximumAnswerHeight = 250;
   /** @type {boolean} */
   _exceedsMaximumHeight = false;
-  /** @type {boolean} */
-  _expandedAnswer = false;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -184,10 +182,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
       this.updateSearchStatusState()
     );
-    if (this.collapsible) {
-      console.log('collapsible so collapsing');
-      this.generatedAnswer.collapse();
-    }
   };
 
   buildHeadlessGeneratedAnswerController(engine) {
@@ -252,7 +246,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   updateSearchStatusState() {
     this.feedbackSubmitted = false;
     this.searchStatusState = this.searchStatus.state;
-    // this._expandedAnswer = false;
   }
 
   updateFeedbackState() {
@@ -517,6 +510,15 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   get toggleCollapseAnswerIcon() {
     return this.isAnswerCollapsed ? 'utility:chevrondown' : 'utility:chevronup';
+  }
+
+  get shouldShowCollapseGeneratingMessage() {
+    return (
+      this.collapsible &&
+      this.isVisible &&
+      this.isStreaming &&
+      this._exceedsMaximumHeight
+    );
   }
 
   get shouldShowToggleCollapseAnswer() {

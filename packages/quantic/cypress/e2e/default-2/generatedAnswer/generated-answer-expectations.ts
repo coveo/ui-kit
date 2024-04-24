@@ -127,6 +127,13 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         .log(`the generated answer ${should(collapsible)} be collapsed`);
     },
 
+    displayGeneratedAnswerGeneratingMessage: (display: boolean) => {
+      selector
+        .generatingMessage()
+        .should(display ? 'exist' : 'not.exist')
+        .log(`${should(display)} display the generating message`);
+    },
+
     displayGeneratedAnswerToggleCollapseButton: (display: boolean) => {
       selector
         .toggleCollapseButton()
@@ -566,6 +573,40 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
     logCopyGeneratedAnswer(streamId: string) {
       logGeneratedAnswerEvent(
         InterceptAliases.UA.GeneratedAnswer.GeneratedAnswerCopyToClipboard,
+        (analyticsBody: {customData: object; eventType: string}) => {
+          const customData = analyticsBody?.customData;
+          expect(analyticsBody).to.have.property(
+            'eventType',
+            'generatedAnswer'
+          );
+          expect(customData).to.have.property(
+            'generativeQuestionAnsweringId',
+            streamId
+          );
+        }
+      );
+    },
+
+    logGeneratedAnswerExpand(streamId: string) {
+      logGeneratedAnswerEvent(
+        InterceptAliases.UA.GeneratedAnswer.GeneratedAnswerExpand,
+        (analyticsBody: {customData: object; eventType: string}) => {
+          const customData = analyticsBody?.customData;
+          expect(analyticsBody).to.have.property(
+            'eventType',
+            'generatedAnswer'
+          );
+          expect(customData).to.have.property(
+            'generativeQuestionAnsweringId',
+            streamId
+          );
+        }
+      );
+    },
+
+    logGeneratedAnswerCollapse(streamId: string) {
+      logGeneratedAnswerEvent(
+        InterceptAliases.UA.GeneratedAnswer.GeneratedAnswerCollapse,
         (analyticsBody: {customData: object; eventType: string}) => {
           const customData = analyticsBody?.customData;
           expect(analyticsBody).to.have.property(
