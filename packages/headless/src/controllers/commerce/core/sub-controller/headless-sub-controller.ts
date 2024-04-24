@@ -19,22 +19,43 @@ import {
   SortProps,
 } from '../sort/headless-core-commerce-sort';
 
-export interface SolutionTypeSubControllers {
+export interface BaseSolutionTypeSubControllers {
   interactiveResult: (props: InteractiveResultProps) => InteractiveResult;
   pagination: (props?: PaginationProps) => Pagination;
-  sort: (props?: SortProps) => Sort;
 }
+
+export type SearchAndListingSubControllers = BaseSolutionTypeSubControllers & {
+  sort: (props?: SortProps) => Sort;
+};
 
 interface SubControllerProps {
   responseIdSelector: (state: CommerceEngineState) => string;
   fetchResultsActionCreator: FetchResultsActionCreator;
+  slotId?: string;
 }
 
 export function buildSolutionTypeSubControllers(
   engine: CommerceEngine,
   subControllerProps: SubControllerProps
-): SolutionTypeSubControllers {
-  const {responseIdSelector, fetchResultsActionCreator} = subControllerProps;
+): SearchAndListingSubControllers {
+  const {fetchResultsActionCreator} = subControllerProps;
+  return {
+    ...buildBaseSolutionTypeControllers(engine, subControllerProps),
+    sort(props?: SortProps) {
+      return buildCoreSort(engine, {
+        ...props,
+        fetchResultsActionCreator,
+      });
+    },
+  };
+}
+
+export function buildBaseSolutionTypeControllers(
+  engine: CommerceEngine,
+  subControllerProps: SubControllerProps
+): BaseSolutionTypeSubControllers {
+  const {responseIdSelector, fetchResultsActionCreator, slotId} =
+    subControllerProps;
   return {
     interactiveResult(props: InteractiveResultProps) {
       return buildCoreInteractiveResult(engine, {
@@ -45,12 +66,7 @@ export function buildSolutionTypeSubControllers(
     pagination(props?: PaginationProps) {
       return buildCorePagination(engine, {
         ...props,
-        fetchResultsActionCreator,
-      });
-    },
-    sort(props?: SortProps) {
-      return buildCoreSort(engine, {
-        ...props,
+        slotId,
         fetchResultsActionCreator,
       });
     },
