@@ -186,7 +186,7 @@ export class AtomicTimeframeFacet implements InitializableComponent {
       label: this.label,
       field: this.field,
       headingLevel: this.headingLevel,
-      dependsOn: this.dependsOn,
+      dependsOn: parseDependsOn(this.dependsOn) && this.dependsOn,
       withDatePicker: this.withDatePicker,
       setFacetId: (id: string) => (this.facetId = id),
       buildDependenciesManager: () =>
