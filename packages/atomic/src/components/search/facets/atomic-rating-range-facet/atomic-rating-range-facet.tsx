@@ -194,7 +194,12 @@ export class AtomicRatingRangeFacet
   }
 
   public componentShouldUpdate(): void {
-    updateFacetVisibilityForActiveTab(this.tabs, this.facet, this.bindings);
+    updateFacetVisibilityForActiveTab(
+      this.tabsIncluded,
+      this.tabsExcluded,
+      this.bindings.engine.state.tabSet,
+      this.facet
+    );
   }
 
   private get isHidden() {

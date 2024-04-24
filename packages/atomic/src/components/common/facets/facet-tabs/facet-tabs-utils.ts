@@ -1,33 +1,42 @@
 import {CategoryFacet, DateFacet, Facet, NumericFacet} from '@coveo/headless';
+import {TabSetState} from '@coveo/headless/dist/definitions/features/tab-set/tab-set-state';
 import {shouldDisplayOnCurrentTab} from '../../../../utils/tab-utils';
-import {AnyBindings} from '../../interface/bindings';
 
 type AnyFacetType = Facet | NumericFacet | CategoryFacet | DateFacet;
 
 /**
  * Updates the visibility of a facet based on the active tab.
- * @param tabs - The active tab.
+ * @param tabsIncluded - An array of tab names that should include the facet.
+ * @param tabsExcluded - An array of tab names that should exclude the facet.
+ * @param tabSetState - The state object containing the set of tabs.
  * @param facet - The facet to update.
- * @param bindings - The bindings object.
- * @returns A boolean indicating whether the facet was enabled or disabled.
  */
 export function updateFacetVisibilityForActiveTab(
-  tabs: string,
-  bindings: AnyBindings,
+  tabsIncluded: string[] | string,
+  tabsExcluded: string[] | string,
+  tabSetState: Partial<TabSetState> | undefined,
   facet?: AnyFacetType
-): boolean {
-  if (tabs === '') {
-    return true;
+): void {
+  if (
+    !facet ||
+    (tabsIncluded.length === 0 && tabsExcluded.length === 0) ||
+    !tabSetState
+  ) {
+    return;
   }
-  if (!facet) {
-    return true;
-  }
-  if (shouldDisplayOnCurrentTab(tabs, bindings.engine.state)) {
+  const shouldDisplay = shouldDisplayOnCurrentTab(
+    tabsIncluded,
+    tabsExcluded,
+    tabSetState
+  );
+
+  if (shouldDisplay && !facet.state.enabled) {
     facet.enable();
-    return true;
-  } else {
-    facet.disable();
-    return false;
+    return;
   }
-  
+
+  if (!shouldDisplay && facet.state.enabled) {
+    facet.disable();
+    return;
+  }
 }

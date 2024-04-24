@@ -308,7 +308,13 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
     prev: unknown,
     propName: keyof AtomicFacet
   ) {
-    updateFacetVisibilityForActiveTab(this.tabs, this.facet, this.bindings);
+    updateFacetVisibilityForActiveTab(
+      this.tabsIncluded,
+      this.tabsExcluded,
+      this.bindings.engine.state.tabSet,
+      this.facet
+    );
+
     return (
       !this.facetCommon ||
       this.facetCommon?.componentShouldUpdate(

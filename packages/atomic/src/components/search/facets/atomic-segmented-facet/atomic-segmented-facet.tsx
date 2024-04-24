@@ -178,7 +178,12 @@ export class AtomicSegmentedFacet implements InitializableComponent {
   }
 
   public componentShouldUpdate(): void {
-    updateFacetVisibilityForActiveTab(this.tabs, this.facet, this.bindings);
+    updateFacetVisibilityForActiveTab(
+      this.tabsIncluded,
+      this.tabsExcluded,
+      this.bindings.engine.state.tabSet,
+      this.facet
+    );
   }
 
   private renderValuesContainer(children: VNode[]) {

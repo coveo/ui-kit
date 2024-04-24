@@ -218,11 +218,12 @@ export class AtomicTimeframeFacet
     this.timeframeFacetCommon?.disconnectedCallback();
   }
 
-  public componentWillUpdate(): void {
+  public componentShouldUpdate(): void {
     updateFacetVisibilityForActiveTab(
-      this.tabs,
-      this.facetForDateRange,
-      this.bindings
+      this.tabsIncluded,
+      this.tabsExcluded,
+      this.bindings.engine.state.tabSet,
+      this.facetForDateRange
     );
   }
 

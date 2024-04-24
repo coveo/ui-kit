@@ -324,7 +324,12 @@ export class AtomicColorFacet
     prev: unknown,
     propName: keyof AtomicColorFacet
   ) {
-    updateFacetVisibilityForActiveTab(this.tabs, this.facet, this.bindings);
+    updateFacetVisibilityForActiveTab(
+      this.tabsIncluded,
+      this.tabsExcluded,
+      this.bindings.engine.state.tabSet,
+      this.facet
+    );
     if (propName === 'facetState' && prev && this.withSearch) {
       return shouldUpdateFacetSearchComponent(
         (next as FacetState).facetSearch,

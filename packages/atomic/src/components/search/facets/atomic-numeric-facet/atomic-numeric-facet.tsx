@@ -228,9 +228,10 @@ export class AtomicNumericFacet
 
   public componentShouldUpdate(): void {
     updateFacetVisibilityForActiveTab(
-      this.tabs,
-      this.facetForRange,
-      this.bindings
+      this.tabsIncluded,
+      this.tabsExcluded,
+      this.bindings.engine.state.tabSet,
+      this.facetForRange
     );
   }
 

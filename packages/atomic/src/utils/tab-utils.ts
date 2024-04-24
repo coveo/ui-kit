@@ -1,34 +1,36 @@
-import {SearchParametersState} from '@coveo/headless';
+import {TabSetState} from '@coveo/headless/dist/definitions/features/tab-set/tab-set-state';
 
+/**
+ * Retrieves the active tab from the given tab set state.
+ * @param tabSetState - The state object containing the set of tabs..
+ * @returns An object containing the active tab ID, or null if no active tab is found.
+ */
 export function getActiveTab(
-  state: Partial<SearchParametersState>
+  tabSetState: Partial<TabSetState>
 ): {tab: string} | null {
-  const activeTab = Object.values(state.tabSet ?? {}).find(
-    (tab) => tab.isActive
+  const activeTab = Object.values(tabSetState ?? {}).find(
+    (tab) => tab?.isActive
   );
   return activeTab ? {tab: activeTab.id} : null;
 }
 
+/**
+ * Determines whether the component should be displayed on the current tab.
+ *
+ * @param tabsIncluded - An array of tab names that should include the facet.
+ * @param tabsExcluded - An array of tab names that should exclude the facet.
+ * @param tabSetState - The state object containing the set of tabs.
+ * @returns A boolean indicating whether the component should be displayed on the current tab.
+ */
 export function shouldDisplayOnCurrentTab(
-  tabs: string,
-  state: Partial<SearchParametersState>
+  includeTabs: string[] | string,
+  excludeTabs: string[] | string,
+  tabSetState: Partial<TabSetState>
 ) {
-  const activeTab = getActiveTab(state)?.tab;
+  const activeTab = getActiveTab(tabSetState)?.tab;
   if (!activeTab) {
     return true;
   }
-
-  const tabList = tabs.split(';');
-  const includeTabs: (string | undefined)[] = [];
-  const excludeTabs: (string | undefined)[] = [];
-
-  tabList.forEach((tab) => {
-    if (tab.startsWith('!')) {
-      excludeTabs.push(tab.slice(1));
-    } else {
-      includeTabs.push(tab);
-    }
-  });
 
   const isIncluded =
     includeTabs.length === 0 || includeTabs.includes(activeTab);
