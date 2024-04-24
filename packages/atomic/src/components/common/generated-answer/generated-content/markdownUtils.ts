@@ -1,9 +1,9 @@
 import {marked} from 'marked';
 
-const unclosedItalic = /(?:\*)([\w\s]*)$/;
-const unclosedStrong = /(?:\*{2})([\w\s]*)$/;
-const unclosedStrongItalic = /(?:\*{3})([\w\s]*)$/;
-const unclosedCode = /(?:`)([\w\s]*)$/;
+const unclosedItalic = /(?:\*)(\w[\w\s]*)$/;
+const unclosedStrong = /(?:\*{2})(\w[\w\s]*)$/;
+const unclosedStrongItalic = /(?:\*{3})(\w[\w\s]*)$/;
+const unclosedCode = /(?:`)(\w[\w\s]*)$/;
 
 const completeUnclosedElement = (text: string) => {
   if (unclosedStrongItalic.test(text)) {
