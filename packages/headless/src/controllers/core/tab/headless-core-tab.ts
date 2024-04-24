@@ -38,7 +38,7 @@ export interface TabOptions {
   /**
    * Whether to clear the state when the active tab changes.
    */
-  clearStateOnTabChange?: boolean;
+  clearFiltersOnTabChange?: boolean;
 
   /**
    * A unique identifier for the tab. The value will be used as the originLevel2 when the tab is active.
@@ -57,7 +57,7 @@ export interface TabInitialState {
 const optionsSchema = new Schema<Required<TabOptions>>({
   expression: requiredEmptyAllowedString,
   id: requiredNonEmptyString,
-  clearStateOnTabChange: new BooleanValue(),
+  clearFiltersOnTabChange: new BooleanValue(),
 });
 
 const initialStateSchema = new Schema({
@@ -124,9 +124,9 @@ export function buildCoreTab(engine: CoreEngine, props: TabProps): Tab {
     'buildTab'
   );
 
-  const {id, expression, clearStateOnTabChange = false} = props.options;
+  const {id, expression, clearFiltersOnTabChange = false} = props.options;
 
-  dispatch(registerTab({id, expression, clearStateOnTabChange}));
+  dispatch(registerTab({id, expression, clearFiltersOnTabChange}));
 
   if (initialState.isActive) {
     dispatch(updateActiveTab(id));
@@ -136,7 +136,7 @@ export function buildCoreTab(engine: CoreEngine, props: TabProps): Tab {
     ...controller,
 
     select() {
-      if (props.options.clearStateOnTabChange) {
+      if (props.options.clearFiltersOnTabChange) {
         dispatch(deselectAllBreadcrumbs());
         dispatch(deselectAllNonBreadcrumbs());
         dispatch(updateQuery({q: ''}));

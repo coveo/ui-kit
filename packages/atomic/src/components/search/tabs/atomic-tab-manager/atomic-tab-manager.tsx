@@ -25,9 +25,9 @@ export class AtomicTabManager {
   public tabManager!: TabManager;
 
   /**
-   * Whether to clear the state when the active tab changes.
+   * Whether to clear the filters when the active tab changes.
    */
-  @Prop() clearStateOnTabChange?: boolean = false;
+  @Prop() clearFiltersOnTabChange?: boolean = false;
 
   @State() public error!: Error;
   @State() tabs: HTMLAtomicTabElement[] = [];

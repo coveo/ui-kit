@@ -65,15 +65,15 @@ export class AtomicTab {
     }
   }
   public initialize() {
-    const clearStateOnTabChange =
-      this.host.parentElement?.getAttribute('clear-state-on-tab-change') ===
+    const clearFiltersOnTabChange =
+      this.host.parentElement?.getAttribute('clear-filters-on-tab-change') ===
       'true';
 
     this.tab = buildTab(this.bindings.engine, {
       options: {
         expression: this.expression,
         id: this.name,
-        clearStateOnTabChange: clearStateOnTabChange,
+        clearFiltersOnTabChange: clearFiltersOnTabChange,
       },
       initialState: {isActive: this.active},
     });

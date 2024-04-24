@@ -19,7 +19,7 @@ export interface RegisterTabActionCreatorPayload {
   /**
    * Whether to clear the state when the active tab changes.
    */
-  clearStateOnTabChange: boolean;
+  clearFiltersOnTabChange: boolean;
 }
 
 export const registerTab = createAction(
@@ -29,7 +29,7 @@ export const registerTab = createAction(
       values: {
         id: requiredNonEmptyString,
         expression: requiredEmptyAllowedString,
-        clearStateOnTabChange: new BooleanValue(),
+        clearFiltersOnTabChange: new BooleanValue(),
       },
     });
 

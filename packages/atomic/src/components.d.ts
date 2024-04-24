@@ -2552,7 +2552,7 @@ export namespace Components {
         /**
           * Whether to clear the state when the active tab changes.
          */
-        "clearStateOnTabChange"?: boolean;
+        "clearFiltersOnTabChange"?: boolean;
     }
     /**
      * The `atomic-table-element` element defines a table column in a result list.
@@ -6826,7 +6826,7 @@ declare namespace LocalJSX {
         /**
           * Whether to clear the state when the active tab changes.
          */
-        "clearStateOnTabChange"?: boolean;
+        "clearFiltersOnTabChange"?: boolean;
     }
     /**
      * The `atomic-table-element` element defines a table column in a result list.
