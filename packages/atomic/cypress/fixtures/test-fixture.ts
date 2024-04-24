@@ -205,7 +205,9 @@ export class TestFixture {
   }
 
   public init() {
-    !this.redirected && cy.visit(buildTestUrl(this.hash));
+    !this.redirected &&
+      cy.visit('about:blank') &&
+      cy.visit(buildTestUrl(this.hash));
     cy.injectAxe();
     setupIntercept();
     spyConsole();
@@ -283,6 +285,11 @@ export class TestFixture {
     this.aliases.forEach((alias) => alias(this));
 
     return this;
+  }
+  public waitForComponentHydration(componentTag: string) {
+    cy.document()
+      .find(componentTag, {timeout: 10e3, includeShadowDom: true})
+      .should('have.class', 'hydrated');
   }
 }
 

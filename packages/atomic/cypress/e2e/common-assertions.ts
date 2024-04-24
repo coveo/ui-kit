@@ -84,9 +84,15 @@ export function assertAccessibilityWithoutIt<T extends HTMLElement>(
   const axeOptions = {rules, retries: 3};
 
   if (typeof component === 'string') {
+    cy.get(component).then((el) => {
+      cy.log(el.html());
+      cy.log(el[0]?.shadowRoot?.innerHTML ?? '');
+    });
     cy.checkA11y(component, axeOptions, logAxeIssues);
   } else if (typeof component === 'function') {
     component().then(([el]) => {
+      cy.log(el.outerHTML);
+      cy.log(el?.shadowRoot?.innerHTML ?? '');
       cy.checkA11y(el, axeOptions, logAxeIssues);
     });
   } else {
