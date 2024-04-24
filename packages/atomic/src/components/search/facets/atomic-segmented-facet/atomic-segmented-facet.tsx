@@ -76,9 +76,30 @@ export class AtomicSegmentedFacet implements InitializableComponent {
    */
   @Prop() public injectionDepth = 1000;
   /**
-   * The tabs on which to display the facet.
+   * The tabs on which the facet can be displayed. This property complements `tabs-excluded`.
+   *
+   * Set this property as a stringified JSON array, e.g.,
+   * ```html
+   *  <atomic-segmented-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-segmented-facet>
+   * ```
+   * If you don't set this property, or set it to `'[]'`, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs. In either case, the facet won't be displayed on any of the tabs specified in the `tabs-excluded` property (exclusion takes precedence).
    */
-  @Prop({reflect: true}) public tabs: string = '';
+  @ArrayProp()
+  @Prop({reflect: true, mutable: true})
+  public tabsIncluded: string[] | string = '[]';
+
+  /**
+   * The tabs on which this facet must not be displayed. This property complements `tabs-included`.
+   *
+   * Set this property as a stringified JSON array, e.g.,
+   * ```html
+   *  <atomic-segmented-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-segmented-facet>
+   * ```
+   * If you don't set this property, or set it to `'[]'`, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs. In either case, the `tabs-included` property can further restrict the tabs on which the facet can be displayed.
+   */
+  @ArrayProp()
+  @Prop({reflect: true, mutable: true})
+  public tabsExcluded: string[] | string = '[]';
   /**
    * The number of values to request for this facet.
    * Also determines the number of additional values to request each time more values are shown.
@@ -263,7 +284,7 @@ export class AtomicSegmentedFacet implements InitializableComponent {
         <div
           part="placeholder"
           aria-hidden
-          class="h-8 w-48 bg-neutral animate-pulse rounded"
+          class="w-48 h-8 rounded bg-neutral animate-pulse"
         ></div>
       );
     }
@@ -275,7 +296,7 @@ export class AtomicSegmentedFacet implements InitializableComponent {
     return (
       <div
         part="segmented-container"
-        class="flex whitespace-nowrap h-10 items-center"
+        class="flex items-center h-10 whitespace-nowrap"
       >
         {this.renderLabel()}
         {this.renderValues()}

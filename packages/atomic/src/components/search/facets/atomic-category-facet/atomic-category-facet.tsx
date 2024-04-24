@@ -135,9 +135,30 @@ export class AtomicCategoryFacet
    */
   @Prop({reflect: true}) public numberOfValues = 8;
   /**
-   * The tabs on which to display the facet.
+   * The tabs on which the facet can be displayed. This property complements `tabs-excluded`.
+   *
+   * Set this property as a stringified JSON array, e.g.,
+   * ```html
+   *  <atomic-category-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-category-facet>
+   * ```
+   * If you don't set this property, or set it to `'[]'`, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs. In either case, the facet won't be displayed on any of the tabs specified in the `tabs-excluded` property (exclusion takes precedence).
    */
-  @Prop({reflect: true}) public tabs: string = '';
+  @ArrayProp()
+  @Prop({reflect: true, mutable: true})
+  public tabsIncluded: string[] | string = '[]';
+
+  /**
+   * The tabs on which this facet must not be displayed. This property complements `tabs-included`.
+   *
+   * Set this property as a stringified JSON array, e.g.,
+   * ```html
+   *  <atomic-category-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-category-facet>
+   * ```
+   * If you don't set this property, or set it to `'[]'`, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs. In either case, the `tabs-included` property can further restrict the tabs on which the facet can be displayed.
+   */
+  @ArrayProp()
+  @Prop({reflect: true, mutable: true})
+  public tabsExcluded: string[] | string = '[]';
   /**
    * Whether this facet should contain a search box.
    *

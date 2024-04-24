@@ -21,7 +21,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {MapProp} from '../../../../utils/props-utils';
+import {ArrayProp, MapProp} from '../../../../utils/props-utils';
 import {
   parseDependsOn,
   validateDependsOn,
@@ -100,9 +100,30 @@ export class AtomicRatingFacet
    */
   @Prop({reflect: true}) public field!: string;
   /**
-   * The tabs on which to display the facet.
+   * The tabs on which the facet can be displayed. This property complements `tabs-excluded`.
+   *
+   * Set this property as a stringified JSON array, e.g.,
+   * ```html
+   *  <atomic-rating-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-rating-facet>
+   * ```
+   * If you don't set this property, or set it to `'[]'`, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs. In either case, the facet won't be displayed on any of the tabs specified in the `tabs-excluded` property (exclusion takes precedence).
    */
-  @Prop({reflect: true}) public tabs: string = '';
+  @ArrayProp()
+  @Prop({reflect: true, mutable: true})
+  public tabsIncluded: string[] | string = '[]';
+
+  /**
+   * The tabs on which this facet must not be displayed. This property complements `tabs-included`.
+   *
+   * Set this property as a stringified JSON array, e.g.,
+   * ```html
+   *  <atomic-rating-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-rating-facet>
+   * ```
+   * If you don't set this property, or set it to `'[]'`, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs. In either case, the `tabs-included` property can further restrict the tabs on which the facet can be displayed.
+   */
+  @ArrayProp()
+  @Prop({reflect: true, mutable: true})
+  public tabsExcluded: string[] | string = '[]';
   /**
    * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
    */

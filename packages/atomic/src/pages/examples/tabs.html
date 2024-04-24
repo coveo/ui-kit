@@ -142,20 +142,23 @@
         <atomic-layout-section section="facets">
           <atomic-facet-manager>
             <!-- <atomic-automatic-facet-generator desired-count="3"></atomic-automatic-facet-generator> -->
-            <atomic-category-facet tabs="all" field="geographicalhierarchy" label="World Atlas" with-search>
+            <atomic-category-facet
+              tabs-included='["all"]'
+              field="geographicalhierarchy"
+              label="World Atlas"
+              with-search
+            >
             </atomic-category-facet>
-            <atomic-facet tabs="all;article" field="author" label="Authors"></atomic-facet>
-            <atomic-facet tabs="all" field="source" label="Source" display-values-as="link"></atomic-facet>
-            <atomic-facet tabs="all" field="year" label="Year" display-values-as="box"></atomic-facet>
+            <atomic-facet tabs-included='["all","article"]' field="author" label="Authors"></atomic-facet>
+            <atomic-facet tabs-included='["all"]' field="source" label="Source" display-values-as="link"></atomic-facet>
+            <atomic-facet tabs-included='["all"]' field="year" label="Year" display-values-as="box"></atomic-facet>
             <atomic-numeric-facet
-              tabs="video"
               field="ytviewcount"
               label="Youtube Views"
               depends-on-filetype="YouTubeVideo"
               with-input="integer"
             ></atomic-numeric-facet>
             <atomic-numeric-facet
-              tabs="video"
               field="ytlikecount"
               label="Youtube Likes"
               depends-on-filetype="YouTubeVideo"
@@ -166,10 +169,10 @@
               <atomic-numeric-range start="8000" end="100000" label="Popular"></atomic-numeric-range>
               <atomic-numeric-range start="100000" end="999999999" label="Treasured"></atomic-numeric-range>
             </atomic-numeric-facet>
-            <atomic-numeric-facet tabs="all" field="sncost" label="Cost Range (auto)">
+            <atomic-numeric-facet tabs-included='["all"]' field="sncost" label="Cost Range (auto)">
               <atomic-format-currency currency="CAD"></atomic-format-currency>
             </atomic-numeric-facet>
-            <atomic-timeframe-facet tabs="all;product" label="Timeframe" with-date-picker>
+            <atomic-timeframe-facet tabs-excluded='["product","video"]' label="Timeframe" with-date-picker>
               <atomic-timeframe unit="hour"></atomic-timeframe>
               <atomic-timeframe unit="day"></atomic-timeframe>
               <atomic-timeframe unit="week"></atomic-timeframe>
@@ -178,10 +181,10 @@
               <atomic-timeframe unit="year"></atomic-timeframe>
               <atomic-timeframe unit="year" amount="10" period="next"></atomic-timeframe>
             </atomic-timeframe-facet>
-            <atomic-rating-facet tabs="all" field="snrating" label="Rating" number-of-intervals="5">
+            <atomic-rating-facet tabs-included='["all"]' field="snrating" label="Rating" number-of-intervals="5">
             </atomic-rating-facet>
             <atomic-rating-range-facet
-              tabs="all"
+              tabs-included='["all"]'
               facet-id="snrating_range"
               field="snrating"
               label="Rating Range (auto)"
@@ -207,18 +210,22 @@
           </atomic-tab-manager>
           <atomic-layout-section section="horizontal-facets">
             <atomic-segmented-facet-scrollable>
-              <atomic-segmented-facet tabs="all" field="inat_kingdom" label="Kingdom"></atomic-segmented-facet>
+              <atomic-segmented-facet
+                tabs-included='["all"]'
+                field="inat_kingdom"
+                label="Kingdom"
+              ></atomic-segmented-facet>
             </atomic-segmented-facet-scrollable>
             <atomic-popover>
               <atomic-facet
-                tabs="all"
+                tabs-included='["all"]'
                 field="inat_family"
                 label="Family"
                 sort-criteria="alphanumericDescending"
               ></atomic-facet>
             </atomic-popover>
             <atomic-popover>
-              <atomic-facet tabs="all" field="inat_class" label="Class"></atomic-facet>
+              <atomic-facet tabs-included='["all"]' field="inat_class" label="Class"></atomic-facet>
             </atomic-popover>
           </atomic-layout-section>
           <atomic-layout-section section="status">
