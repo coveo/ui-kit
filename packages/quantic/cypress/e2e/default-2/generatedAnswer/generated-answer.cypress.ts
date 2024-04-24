@@ -1,3 +1,4 @@
+/* eslint-disable @cspell/spellchecker */
 import {performSearch} from '../../../page-objects/actions/action-perform-search';
 import {analyticsModeTest} from '../../../page-objects/analytics';
 import {configure} from '../../../page-objects/configurator';
@@ -480,10 +481,13 @@ describe('quantic-generated-answer', () => {
               });
             });
 
-            describe(
+            // The Salesforce lightning-modal is very flaky, sometimes throwing random errors in Cypress test runs.
+            // We are skipping this test for now until we can find a more reliable way to test it.
+            // Common stack trace when clicking on the dislike: `Cannot read properties of null (reading 'appendChild')`
+            xdescribe(
               'when providing detailed feedback',
               {
-                retries: 20,
+                retries: 5,
               },
               () => {
                 const streamId = crypto.randomUUID();

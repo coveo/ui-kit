@@ -184,6 +184,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
       this.updateSearchStatusState()
     );
+    if (this.collapsible) {
+      console.log('collapsible so collapsing');
+      this.generatedAnswer.collapse();
+    }
   };
 
   buildHeadlessGeneratedAnswerController(engine) {
@@ -248,7 +252,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   updateSearchStatusState() {
     this.feedbackSubmitted = false;
     this.searchStatusState = this.searchStatus.state;
-    this._expandedAnswer = false;
+    // this._expandedAnswer = false;
   }
 
   updateFeedbackState() {
@@ -338,6 +342,15 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     }
   };
 
+  handleToggleCollapseAnswer() {
+    if (this.state?.expanded) {
+      this.generatedAnswer.collapse();
+    } else {
+      this.generatedAnswer.expand();
+    }
+    this.updateGeneratedAnswerCSSVariables();
+  }
+
   readStoredData() {
     try {
       return JSON.parse(sessionStorage?.getItem(GENERATED_ANSWER_DATA_KEY));
@@ -365,11 +378,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   get generatedAnswerElementHeight() {
     // @ts-ignore
     return getAbsoluteHeight(this.generatedAnswerElement?.firstChild);
-  }
-
-  handleToggleCollapseAnswer() {
-    this._expandedAnswer = !this._expandedAnswer;
-    this.updateGeneratedAnswerCSSVariables();
   }
 
   /**
@@ -412,7 +420,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get isAnswerCollapsed() {
-    return this._exceedsMaximumHeight && !this._expandedAnswer;
+    return this._exceedsMaximumHeight && !this.isExpanded;
   }
 
   get shouldDisplayGeneratedAnswer() {
@@ -427,7 +435,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   get generatedAnswerClass() {
     let collapsedClass = '';
     if (this._exceedsMaximumHeight) {
-      collapsedClass = this._expandedAnswer
+      collapsedClass = this.isExpanded
         ? 'generated-answer__answer--expanded'
         : 'generated-answer__answer--collapsed';
     }
@@ -526,6 +534,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    */
   get toggleCollapseAnswerLabel() {
     return this.isAnswerCollapsed ? this.labels.showMore : this.labels.showLess;
+  }
+
+  get isExpanded() {
+    return this.state?.expanded;
   }
 
   /**
