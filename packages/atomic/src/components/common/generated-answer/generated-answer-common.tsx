@@ -208,7 +208,10 @@ export class GeneratedAnswerCommon {
       this.props.getGeneratedAnswerState()?.responseFormat.answerStyle !==
       answerStyle
     ) {
-      this.props.getGeneratedAnswer()?.rephrase({answerStyle});
+      this.props.getGeneratedAnswer()?.rephrase({
+        ...this.props.getGeneratedAnswerState()?.responseFormat,
+        answerStyle,
+      });
     }
   }
 
@@ -287,8 +290,8 @@ export class GeneratedAnswerCommon {
         {!this.hasRetryableError && this.isAnswerVisible ? (
           <GeneratedContentContainer
             answer={this.props.getGeneratedAnswerState()?.answer}
-            answerMediaType={
-              this.props.getGeneratedAnswerState()?.answerMediaType
+            answerContentFormat={
+              this.props.getGeneratedAnswerState()?.answerContentFormat
             }
             isStreaming={!!this.props.getGeneratedAnswerState()?.isStreaming}
           >

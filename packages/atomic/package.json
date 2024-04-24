@@ -60,6 +60,7 @@
     "focus-visible": "5.2.0",
     "i18next": "23.10.1",
     "i18next-http-backend": "2.5.0",
+    "marked": "12.0.2",
     "stencil-inline-svg": "1.1.0",
     "ts-debounce": "^4.0.0"
   },
