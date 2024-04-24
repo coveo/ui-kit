@@ -49,7 +49,7 @@
             data-cy="generated-answer__footer"
             class={generatedAnswerFooterCssClass}
           >
-            <div class={generatedAnswerFooterRowClass}>
+            <div class={generatedAnswerFooterRowClass} data-cy="generated-answer__footer-row">
               <template lwc:if={shouldDisplayCitations}>
                 <div class="slds-var-m-top_small">
                   <c-quantic-source-citations
@@ -70,7 +70,7 @@
                 </div>
               </template>
             </div>
-            <div class={generatedAnswerFooterRowClass}>
+            <div class={generatedAnswerFooterRowClass} data-cy="generated-answer__footer-row">
               <template lwc:if={shouldShowCollapseGeneratingMessage}>
                 <div class="generated-answer__collapse-generating-message">
                   {labels.generatingAnswer}...

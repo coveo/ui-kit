@@ -103,7 +103,9 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
       `c-quantic-radio-buttons-group [data-cy="${label}"]`
     ),
   generatedAnswerFooterRow: () =>
-    GeneratedAnswerSelectors.get().find('.generated-answer__footer-row'),
+    GeneratedAnswerSelectors.get().find(
+      '[data-cy="generated-answer__footer-row"]'
+    ),
   copyToClipboardButton: () =>
     GeneratedAnswerSelectors.get().find(
       '[data-cy="generated-answer__copy-to-clipboard"]'
