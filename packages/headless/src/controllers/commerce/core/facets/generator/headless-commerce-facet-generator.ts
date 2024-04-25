@@ -21,6 +21,7 @@ import {DateFacet} from '../date/headless-commerce-date-facet';
 import {
   CommerceFacetOptions,
   CoreCommerceFacet,
+  CoreCommerceFacetState,
 } from '../headless-core-commerce-facet';
 import {NumericFacet} from '../numeric/headless-commerce-numeric-facet';
 import {RegularFacet} from '../regular/headless-commerce-regular-facet';
@@ -49,7 +50,11 @@ export interface FacetGeneratorState {
    * The generated commerce facet controllers.
    */
   facets: Omit<
-    CoreCommerceFacet<AnyFacetValueRequest, AnyFacetValueResponse>,
+    CoreCommerceFacet<
+      AnyFacetValueRequest,
+      AnyFacetValueResponse,
+      CoreCommerceFacetState<AnyFacetValueResponse>
+    >,
     | 'isValueExcluded'
     | 'toggleExclude'
     | 'toggleSingleExclude'
@@ -59,7 +64,11 @@ export interface FacetGeneratorState {
 
 type CommerceFacetBuilder<
   Facet extends Omit<
-    CoreCommerceFacet<AnyFacetValueRequest, AnyFacetValueResponse>,
+    CoreCommerceFacet<
+      AnyFacetValueRequest,
+      AnyFacetValueResponse,
+      CoreCommerceFacetState<AnyFacetValueResponse>
+    >,
     | 'isValueExcluded'
     | 'toggleExclude'
     | 'toggleSingleExclude'
@@ -68,7 +77,11 @@ type CommerceFacetBuilder<
 > = (engine: CommerceEngine, options: CommerceFacetOptions) => Facet;
 
 type CommerceSearchableFacetBuilder<
-  Facet extends CoreCommerceFacet<AnyFacetValueRequest, AnyFacetValueResponse>,
+  Facet extends CoreCommerceFacet<
+    AnyFacetValueRequest,
+    AnyFacetValueResponse,
+    CoreCommerceFacetState<AnyFacetValueResponse>
+  >,
 > = (
   engine: CommerceEngine,
   options: CommerceFacetOptions & SearchableFacetOptions
