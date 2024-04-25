@@ -115,7 +115,6 @@ describe('Facet DependsOn Test Suites', () => {
 
     describe('when deselecting a parent facet', () => {
       beforeEach(() => {
-        cy.window().then((window) => (window.location.href = 'about:blank'));
         new TestFixture()
           .with(addThreeLevelDependantFacet())
           .withHash(hashToDisplayFacets(true, true))
@@ -134,7 +133,7 @@ describe('Facet DependsOn Test Suites', () => {
 
         it('should not have a duplicate history state', () => {
           cy.go('back');
-          cy.location('href').should('eq', 'about:blank');
+          cy.location('pathname').should('eq', '/');
         });
       });
     });

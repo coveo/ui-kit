@@ -10,6 +10,8 @@ import {
   CategoryFacetValue,
   buildFacetConditionsManager,
   FacetConditionsManager,
+  FacetValueRequest,
+  CategoryFacetValueRequest,
 } from '@coveo/headless';
 import {Component, h, State, Prop, Element, Fragment} from '@stencil/core';
 import LeftArrow from '../../../../images/arrow-left-rounded.svg';
@@ -28,11 +30,7 @@ import {
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
 import {Button} from '../../../common/button';
-import {
-  parseDependsOn,
-  validateDependsOn,
-} from '../../../common/facets/facet-common';
-import {BaseFacet} from '../../../common/facets/facet-common';
+import {parseDependsOn} from '../../../common/facets/depends-on';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
 import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
@@ -97,9 +95,7 @@ import {CategoryFacetSearchResult} from '../category-facet-search-result/categor
   styleUrl: 'atomic-category-facet.pcss',
   shadow: true,
 })
-export class AtomicCategoryFacet
-  implements InitializableComponent, BaseFacet<CategoryFacet>
-{
+export class AtomicCategoryFacet implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: CategoryFacet;
   private dependenciesManager?: FacetConditionsManager;
@@ -223,12 +219,7 @@ export class AtomicCategoryFacet
   @AriaLiveRegion('facet-search')
   protected facetSearchAriaMessage!: string;
 
-  private validateProps() {
-    validateDependsOn(this.dependsOn);
-  }
-
   public initialize() {
-    this.validateProps();
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     const options: CategoryFacetOptions = {
       facetId: this.facetId,
@@ -326,7 +317,9 @@ export class AtomicCategoryFacet
       this.bindings.engine,
       {
         facetId: this.facetId!,
-        conditions: parseDependsOn(this.dependsOn),
+        conditions: parseDependsOn<
+          FacetValueRequest | CategoryFacetValueRequest
+        >(this.dependsOn),
       }
     );
   }
