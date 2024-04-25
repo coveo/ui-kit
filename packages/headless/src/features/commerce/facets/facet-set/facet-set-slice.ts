@@ -337,10 +337,10 @@ export const commerceFacetSetReducer = createReducer(
 
         handleDeselectAllFacetValues(request);
       })
-      .addCase(deselectAllBreadcrumbs, resetAllFacetValues)
-      .addCase(setContext, resetAllFacetValues)
-      .addCase(setView, resetAllFacetValues)
-      .addCase(setUser, resetAllFacetValues);
+      .addCase(deselectAllBreadcrumbs, setAllFacetValuesToIdle)
+      .addCase(setContext, clearAllFacetValues)
+      .addCase(setView, clearAllFacetValues)
+      .addCase(setUser, clearAllFacetValues);
   }
 );
 
@@ -540,9 +540,15 @@ function insertNewValue(
   facetRequest.numberOfValues = facetRequest.values.length;
 }
 
-function resetAllFacetValues(state: CommerceFacetSetState) {
+function setAllFacetValuesToIdle(state: CommerceFacetSetState) {
   Object.values(state).forEach((facet) => {
     facet.request.values.forEach((value) => (value.state = 'idle'));
+  });
+}
+
+function clearAllFacetValues(state: CommerceFacetSetState) {
+  Object.values(state).forEach((facet) => {
+    facet.request.values = [];
   });
 }
 
