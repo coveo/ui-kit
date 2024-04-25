@@ -44,12 +44,15 @@ export type CategoryFacetState = CoreCommerceFacetState<CategoryFacetValue> & {
  * facet UI component.
  */
 export type CategoryFacet = Omit<
-  CoreCommerceFacet<CategoryFacetValueRequest, CategoryFacetValue>,
+  CoreCommerceFacet<
+    CategoryFacetValueRequest,
+    CategoryFacetValue,
+    CategoryFacetState
+  >,
   | 'isValueExcluded'
   | 'toggleExclude'
   | 'toggleSingleExclude'
   | 'toggleSingleSelect'
-  | 'state'
 > & {
   facetSearch: Omit<CategoryFacetSearch, 'state'>;
   state: CategoryFacetState;
@@ -73,7 +76,8 @@ export function buildCategoryFacet(
 ): CategoryFacet {
   const coreController = buildCoreCommerceFacet<
     CategoryFacetValueRequest,
-    CategoryFacetValue
+    CategoryFacetValue,
+    CategoryFacetState
   >(engine, {
     options: {
       ...options,

@@ -29,6 +29,7 @@ import {
   buildCoreCommerceFacet,
   CoreCommerceFacet,
   CoreCommerceFacetOptions,
+  CoreCommerceFacetState,
 } from './headless-core-commerce-facet';
 
 jest.mock('../../../../features/facets/facet-set/facet-set-actions');
@@ -47,7 +48,11 @@ describe('CoreCommerceFacet', () => {
   let options: CoreCommerceFacetOptions;
   let state: CommerceAppState;
   let engine: MockedCommerceEngine;
-  let facet: CoreCommerceFacet<AnyFacetValueRequest, AnyFacetValueResponse>;
+  let facet: CoreCommerceFacet<
+    AnyFacetValueRequest,
+    AnyFacetValueResponse,
+    CoreCommerceFacetState<AnyFacetValueResponse>
+  >;
 
   function initFacet() {
     engine = buildMockCommerceEngine(state);

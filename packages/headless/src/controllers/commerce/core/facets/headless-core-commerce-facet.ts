@@ -76,6 +76,7 @@ export type CommerceFacetOptions = Omit<
 export type CoreCommerceFacet<
   ValueRequest extends AnyFacetValueRequest,
   ValueResponse extends AnyFacetValueResponse,
+  FacetState extends CoreCommerceFacetState<ValueResponse>,
 > = Pick<
   HeadlessCoreFacet,
   'deselectAll' | 'showLessValues' | 'showMoreValues' | 'subscribe'
@@ -119,7 +120,7 @@ export type CoreCommerceFacet<
   /**
    * The state of this commerce facet controller instance.
    */
-  state: CoreCommerceFacetState<ValueResponse>;
+  state: FacetState | CoreCommerceFacetState<ValueResponse>;
 };
 
 /**
@@ -151,10 +152,11 @@ export type CoreCommerceFacetBuilder = typeof buildCoreCommerceFacet;
 export function buildCoreCommerceFacet<
   ValueRequest extends AnyFacetValueRequest,
   ValueResponse extends AnyFacetValueResponse,
+  FacetState extends CoreCommerceFacetState<ValueResponse>,
 >(
   engine: CommerceEngine,
   props: CoreCommerceFacetProps
-): CoreCommerceFacet<ValueRequest, ValueResponse> {
+): CoreCommerceFacet<ValueRequest, ValueResponse, FacetState> {
   if (!loadCommerceFacetReducers(engine)) {
     throw loadReducerError;
   }

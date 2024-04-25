@@ -23,12 +23,11 @@ export type NumericFacetState = CoreCommerceFacetState<NumericFacetValue>;
  * The `NumericFacet` controller offers a high-level programming interface for implementing numeric commerce
  * facet UI component.
  */
-export type NumericFacet = Omit<
-  CoreCommerceFacet<NumericRangeRequest, NumericFacetValue>,
-  'state'
-> & {
-  state: NumericFacetState;
-};
+export type NumericFacet = CoreCommerceFacet<
+  NumericRangeRequest,
+  NumericFacetValue,
+  NumericFacetState
+>;
 
 /**
  * @internal
@@ -46,14 +45,15 @@ export function buildCommerceNumericFacet(
   engine: CommerceEngine,
   options: NumericFacetOptions
 ): NumericFacet {
-  return buildCoreCommerceFacet<NumericRangeRequest, NumericFacetValue>(
-    engine,
-    {
-      options: {
-        ...options,
-        toggleSelectActionCreator: toggleSelectNumericFacetValue,
-        toggleExcludeActionCreator: toggleExcludeNumericFacetValue,
-      },
-    }
-  );
+  return buildCoreCommerceFacet<
+    NumericRangeRequest,
+    NumericFacetValue,
+    NumericFacetState
+  >(engine, {
+    options: {
+      ...options,
+      toggleSelectActionCreator: toggleSelectNumericFacetValue,
+      toggleExcludeActionCreator: toggleExcludeNumericFacetValue,
+    },
+  });
 }
