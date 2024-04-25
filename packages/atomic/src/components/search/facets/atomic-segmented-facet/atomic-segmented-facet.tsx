@@ -2,12 +2,14 @@ import {
   buildFacet,
   buildFacetConditionsManager,
   buildSearchStatus,
+  CategoryFacetValueRequest,
   Facet,
   FacetConditionsManager,
   FacetOptions,
   FacetSortCriterion,
   FacetState,
   FacetValue,
+  FacetValueRequest,
   SearchStatus,
   SearchStatusState,
 } from '@coveo/headless';
@@ -19,7 +21,7 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
-import {parseDependsOn} from '../../../common/facets/facet-common';
+import {parseDependsOn} from '../../../common/facets/depends-on';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
 import {Hidden} from '../../../common/hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
@@ -163,7 +165,9 @@ export class AtomicSegmentedFacet implements InitializableComponent {
       this.bindings.engine,
       {
         facetId: this.facetId!,
-        conditions: parseDependsOn(this.dependsOn),
+        conditions: parseDependsOn<
+          FacetValueRequest | CategoryFacetValueRequest
+        >(this.dependsOn),
       }
     );
   }

@@ -1,14 +1,14 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {
-  ResultDisplayDensity,
-  ResultDisplayImageSize,
-  ResultDisplayLayout,
+  ItemDisplayDensity,
+  ItemDisplayImageSize,
+  ItemDisplayLayout,
 } from '../../common/layout/display-options';
 
 interface ResultPlaceholderProps {
-  density: ResultDisplayDensity;
-  imageSize: ResultDisplayImageSize;
-  display: ResultDisplayLayout;
+  density: ItemDisplayDensity;
+  imageSize: ItemDisplayImageSize;
+  display: ItemDisplayLayout;
   numberOfPlaceholders: number;
 }
 

@@ -17,27 +17,27 @@ import {
 } from '../../../../utils/initialization-utils';
 import {randomID} from '../../../../utils/utils';
 import {ResultsPlaceholdersGuard} from '../../../common/atomic-result-placeholder/placeholders';
-import {
-  ResultDisplayDensity,
-  ResultDisplayImageSize,
-  ResultDisplayLayout,
-  ResultTarget,
-  getResultListDisplayClasses,
-} from '../../../common/layout/display-options';
-import {DisplayGrid} from '../../../common/result-list/display-grid';
+import {DisplayGrid} from '../../../common/item-list/display-grid';
 import {
   DisplayTableData,
   DisplayTable,
   DisplayTableRow,
-} from '../../../common/result-list/display-table';
-import {DisplayWrapper} from '../../../common/result-list/display-wrapper';
-import {ItemDisplayGuard} from '../../../common/result-list/item-display-guard';
-import {ItemListGuard} from '../../../common/result-list/item-list-guard';
+} from '../../../common/item-list/display-table';
+import {DisplayWrapper} from '../../../common/item-list/display-wrapper';
+import {ItemDisplayGuard} from '../../../common/item-list/item-display-guard';
 import {
-  ResultListCommon,
-  ResultRenderingFunction,
-} from '../../../common/result-list/result-list-common';
-import {ResultTemplateProvider} from '../../../common/result-list/result-template-provider';
+  ItemListCommon,
+  ItemRenderingFunction,
+} from '../../../common/item-list/item-list-common';
+import {ItemListGuard} from '../../../common/item-list/item-list-guard';
+import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
+import {
+  ItemDisplayDensity,
+  ItemDisplayImageSize,
+  ItemDisplayLayout,
+  ItemTarget,
+  getItemListDisplayClasses,
+} from '../../../common/layout/display-options';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -67,10 +67,10 @@ export class AtomicResultList implements InitializableComponent {
   public resultList!: ResultList;
   public resultsPerPage!: ResultsPerPage;
   private loadingFlag = randomID('firstResultLoaded-');
-  private resultRenderingFunction: ResultRenderingFunction;
+  private itemRenderingFunction: ItemRenderingFunction;
   private nextNewResultTarget?: FocusTargetController;
-  private resultTemplateProvider!: ResultTemplateProvider;
-  private resultListCommon!: ResultListCommon;
+  private itemTemplateProvider!: ItemTemplateProvider;
+  private resultListCommon!: ItemListCommon;
 
   @Element() public host!: HTMLDivElement;
 
@@ -87,24 +87,24 @@ export class AtomicResultList implements InitializableComponent {
   /**
    * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
    */
-  @Prop({reflect: true}) public display: ResultDisplayLayout = 'list';
+  @Prop({reflect: true}) public display: ItemDisplayLayout = 'list';
   /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
    */
-  @Prop({reflect: true}) public density: ResultDisplayDensity = 'normal';
+  @Prop({reflect: true}) public density: ItemDisplayDensity = 'normal';
 
   /**
    * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)).
    * This property is only leveraged when `display` is `grid`.
    * @defaultValue `_self`
    */
-  @Prop() gridCellLinkTarget: ResultTarget = '_self';
+  @Prop() gridCellLinkTarget: ItemTarget = '_self';
 
   /**
    * The expected size of the image displayed in the results.
    */
   @Prop({reflect: true, mutable: true})
-  public imageSize: ResultDisplayImageSize = 'icon';
+  public imageSize: ItemDisplayImageSize = 'icon';
 
   /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
@@ -115,9 +115,9 @@ export class AtomicResultList implements InitializableComponent {
    * @param resultRenderingFunction
    */
   @Method() public async setRenderFunction(
-    resultRenderingFunction: ResultRenderingFunction
+    resultRenderingFunction: ItemRenderingFunction
   ) {
-    this.resultRenderingFunction = resultRenderingFunction;
+    this.itemRenderingFunction = resultRenderingFunction;
   }
 
   public get focusTarget() {
@@ -135,7 +135,7 @@ export class AtomicResultList implements InitializableComponent {
     }
     this.resultList = buildResultList(this.bindings.engine);
     this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
-    this.resultTemplateProvider = new ResultTemplateProvider({
+    this.itemTemplateProvider = new ItemTemplateProvider({
       includeDefaultTemplate: true,
       templateElements: Array.from(
         this.host.querySelectorAll('atomic-result-template')
@@ -151,13 +151,13 @@ export class AtomicResultList implements InitializableComponent {
       bindings: this.bindings,
     });
 
-    this.resultListCommon = new ResultListCommon({
+    this.resultListCommon = new ItemListCommon({
       engineSubscribe: this.bindings.engine.subscribe,
-      getCurrentNumberOfResults: () => this.resultListState.results.length,
+      getCurrentNumberOfItems: () => this.resultListState.results.length,
       getIsLoading: () => this.resultListState.isLoading,
       host: this.host,
       loadingFlag: this.loadingFlag,
-      nextNewResultTarget: this.focusTarget,
+      nextNewItemTarget: this.focusTarget,
       store: this.bindings.store,
     });
   }
@@ -170,7 +170,7 @@ export class AtomicResultList implements InitializableComponent {
       <ItemListGuard
         hasError={this.resultListState.hasError}
         hasTemplate={this.resultTemplateRegistered}
-        templateHasError={this.resultTemplateProvider.hasError}
+        templateHasError={this.itemTemplateProvider.hasError}
         firstRequestExecuted={this.resultListState.firstSearchExecuted}
         hasItems={this.resultListState.hasResults}
       >
@@ -203,7 +203,7 @@ export class AtomicResultList implements InitializableComponent {
         options: {result},
       }),
       result,
-      renderingFunction: this.resultRenderingFunction,
+      renderingFunction: this.itemRenderingFunction,
       loadingFlag: this.loadingFlag,
       key: this.resultListCommon.getResultId(
         result.uniqueId,
@@ -211,7 +211,7 @@ export class AtomicResultList implements InitializableComponent {
         this.density,
         this.imageSize
       ),
-      content: this.resultTemplateProvider.getTemplateContent(result),
+      content: this.itemTemplateProvider.getTemplateContent(result),
       store: this.bindings.store,
       density: this.density,
       imageSize: this.imageSize,
@@ -222,7 +222,7 @@ export class AtomicResultList implements InitializableComponent {
   private computeListDisplayClasses() {
     const displayPlaceholders = !this.bindings.store.isAppLoaded();
 
-    return getResultListDisplayClasses(
+    return getItemListDisplayClasses(
       this.display,
       this.density,
       this.imageSize,
@@ -254,12 +254,12 @@ export class AtomicResultList implements InitializableComponent {
       return;
     }
     const listClasses = this.computeListDisplayClasses();
-    const firstResult = this.resultListState.results[0];
+    const firstItem = this.resultListState.results[0];
 
     const propsForTableColumns = {
-      firstResult,
-      templateContentForFirstResult:
-        this.resultTemplateProvider.getTemplateContent(firstResult),
+      firstItem,
+      templateContentForFirstItem:
+        this.itemTemplateProvider.getTemplateContent(firstItem),
     };
 
     return (
@@ -267,7 +267,7 @@ export class AtomicResultList implements InitializableComponent {
         {...propsForTableColumns}
         listClasses={listClasses}
         logger={this.bindings.engine.logger}
-        resultRenderingFunction={this.resultRenderingFunction}
+        itemRenderingFunction={this.itemRenderingFunction}
         host={this.host}
       >
         {this.resultListState.results.map((result, i) => {
@@ -283,7 +283,7 @@ export class AtomicResultList implements InitializableComponent {
               <DisplayTableData
                 {...propsForTableColumns}
                 {...propsForAtomicResult}
-                renderResult={(content) => {
+                renderItem={(content) => {
                   return (
                     <atomic-result
                       {...propsForAtomicResult}

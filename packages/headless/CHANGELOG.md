@@ -1,3 +1,52 @@
+# 2.62.0 (2024-04-24)
+
+### Bug Fixes
+
+- `enableQuerySyntax` is not passed to recent-query-list controller ([#3818](https://github.com/coveo/ui-kit/issues/3818)) ([e1bb701](https://github.com/coveo/ui-kit/commits/e1bb701eb8a9b150e2d23af794140c0a7b189e2a))
+- do not kill unfocused streams ([#3799](https://github.com/coveo/ui-kit/issues/3799)) ([e1b2c3a](https://github.com/coveo/ui-kit/commits/e1b2c3ae56658da7ccc528231372716f28369d3c)), closes [/github.com/Azure/fetch-event-source/blob/main/src/fetch.ts#L46-L50](https://github.com//github.com/Azure/fetch-event-source/blob/main/src/fetch.ts/issues/L46-L50)
+
+### Features
+
+- **commerce:** allow multiple recommendations slots at once ([#3801](https://github.com/coveo/ui-kit/issues/3801)) ([7d9f4e0](https://github.com/coveo/ui-kit/commits/7d9f4e06ae62ceba59dc03e8c890c8b36baa169c))
+- **commerce:** require context on engine initialization ([#3828](https://github.com/coveo/ui-kit/issues/3828)) ([564091d](https://github.com/coveo/ui-kit/commits/564091d8cb92a3e23ff1b68caa466a589874a1a1))
+- **commerce:** use new product and pagination properties ([#3785](https://github.com/coveo/ui-kit/issues/3785)) ([2d991f8](https://github.com/coveo/ui-kit/commits/2d991f890ea8ed3c98f839da36d8dc1a7674647f))
+- **commerce:** use slotId for Commerce recommendations requests ([#3839](https://github.com/coveo/ui-kit/issues/3839)) ([6867325](https://github.com/coveo/ui-kit/commits/68673255a8c6f5931a50b314c79c91211befad0f))
+- **headless-cart:** allow both productid and SKU when updating a cart item with the cart controller ([#3809](https://github.com/coveo/ui-kit/issues/3809)) ([571553f](https://github.com/coveo/ui-kit/commits/571553f1939418ad3cfe7fa31207477cfef0f764))
+- **headless/commerce:** commerce category facet search ([#3748](https://github.com/coveo/ui-kit/issues/3748)) ([db73ca5](https://github.com/coveo/ui-kit/commits/db73ca5850e8cdbb9d48c6dc870b377b9d494eab))
+- **headless/commerce:** rework and test the buildCommerceAPIRequest function ([#3790](https://github.com/coveo/ui-kit/issues/3790)) ([7142c18](https://github.com/coveo/ui-kit/commits/7142c18c54be752545871dfa09e2e091674dcaa9))
+- **headless:** adapting the analytics sent for the qna features to send the response id ([#3812](https://github.com/coveo/ui-kit/issues/3812)) ([3727e7a](https://github.com/coveo/ui-kit/commits/3727e7aff19b9838cdbe74356eae12cd4e77178c))
+- **headless:** add core support of rich formatting for CRGA ([#3824](https://github.com/coveo/ui-kit/issues/3824)) ([e38b303](https://github.com/coveo/ui-kit/commits/e38b3036ef7535dfcb19ef0600b7b00bdb7f153c))
+- **headless:** expand and collapse methods added to generated answer controller ([#3813](https://github.com/coveo/ui-kit/issues/3813)) ([6e7301a](https://github.com/coveo/ui-kit/commits/6e7301afa53e3fee37295af03d81b0322ebd6411))
+
+# 2.61.0 (2024-04-17)
+
+### Bug Fixes
+
+- **headless:** analytics payload of quick view and smart snippet feedback fixed ([#3797](https://github.com/coveo/ui-kit/issues/3797)) ([6eca769](https://github.com/coveo/ui-kit/commits/6eca7690e16905a5243d632411f90cf28650a4c9))
+- **headless:** qna answer type for rga updated to be valid with new analytics schema ([#3780](https://github.com/coveo/ui-kit/issues/3780)) ([9b5eb13](https://github.com/coveo/ui-kit/commits/9b5eb13e38a923b3e9b8c37fb7c2d8060406cd4e))
+
+### Features
+
+- **commerce:** add pagination and sort sub-controllers ([#3800](https://github.com/coveo/ui-kit/issues/3800)) ([5f2d2a2](https://github.com/coveo/ui-kit/commits/5f2d2a2acf0b81409783a866753ab292af84c38d))
+- **commerce:** remove unused controller state exports ([#3789](https://github.com/coveo/ui-kit/issues/3789)) ([cb39602](https://github.com/coveo/ui-kit/commits/cb3960285894eb8d757ffbe828f180a7a3695720)), closes [/github.com/coveo/ui-kit/pull/3734#discussion_r1537951235](https://github.com//github.com/coveo/ui-kit/pull/3734/issues/discussion_r1537951235)
+
+# 2.60.0 (2024-04-10)
+
+### Bug Fixes
+
+- **commerce:** Add back configuration reducer ([#3771](https://github.com/coveo/ui-kit/issues/3771)) ([265c4af](https://github.com/coveo/ui-kit/commits/265c4afd66271d726f35470412b20f927c8e8e40))
+- **commerce:** bugfix missing recs request configuration ([#3774](https://github.com/coveo/ui-kit/issues/3774)) ([da0d89f](https://github.com/coveo/ui-kit/commits/da0d89f02b69041db6310ff90232e89f5967a859))
+- **deps:** update dependency @reduxjs/toolkit to v2.2.3 j:kit-282 ([#3763](https://github.com/coveo/ui-kit/issues/3763)) ([eaeb74d](https://github.com/coveo/ui-kit/commits/eaeb74da59f634e71d61a50d5c4e1bf4475ee047))
+- **deps:** update dependency undici to v5.28.4 j:kit-282 ([#3776](https://github.com/coveo/ui-kit/issues/3776)) ([792d23e](https://github.com/coveo/ui-kit/commits/792d23e417a4e7c3b07608d585c12bcfa7657cfe))
+- **headless:** pass tab parameter in query suggest requests ([#3770](https://github.com/coveo/ui-kit/issues/3770)) ([bda1901](https://github.com/coveo/ui-kit/commits/bda1901450d690fe296f548a0a77dffcd7a392d2))
+
+### Features
+
+- **commerce:** allow setting custom page size ([#3773](https://github.com/coveo/ui-kit/issues/3773)) ([12d520f](https://github.com/coveo/ui-kit/commits/12d520f1dbee44ffc58cadd610e3d0800aa7f981))
+- **commerce:** commerce api recommendations controller ([#3734](https://github.com/coveo/ui-kit/issues/3734)) ([b0ce0f5](https://github.com/coveo/ui-kit/commits/b0ce0f5f0e3bd2a0b56027ad0301e0c53d1a2d52))
+- **commerce:** create breadcrumbs ([#3746](https://github.com/coveo/ui-kit/issues/3746)) ([195a07a](https://github.com/coveo/ui-kit/commits/195a07ab24de0a7c9b0365f03fcb92070ad08f8c))
+- **commerce:** expose interactive result sub-controllers ([#3768](https://github.com/coveo/ui-kit/issues/3768)) ([2d249f2](https://github.com/coveo/ui-kit/commits/2d249f25442ff875a528e7a9ed6207ebb851e3e8))
+
 # 2.59.0 (2024-04-03)
 
 ### Features

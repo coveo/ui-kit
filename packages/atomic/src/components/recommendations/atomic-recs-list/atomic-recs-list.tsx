@@ -26,21 +26,21 @@ import {randomID} from '../../../utils/utils';
 import {ResultsPlaceholdersGuard} from '../../common/atomic-result-placeholder/placeholders';
 import {Carousel} from '../../common/carousel';
 import {Heading} from '../../common/heading';
+import {DisplayGrid} from '../../common/item-list/display-grid';
+import {DisplayWrapper} from '../../common/item-list/display-wrapper';
+import {ItemDisplayGuard} from '../../common/item-list/item-display-guard';
 import {
-  ResultDisplayDensity,
-  ResultDisplayImageSize,
-  ResultDisplayBasicLayout,
-  ResultTarget,
-  getResultListDisplayClasses,
+  ItemListCommon,
+  ItemRenderingFunction,
+} from '../../common/item-list/item-list-common';
+import {ItemTemplateProvider} from '../../common/item-list/item-template-provider';
+import {
+  ItemDisplayDensity,
+  ItemDisplayImageSize,
+  ItemDisplayBasicLayout,
+  ItemTarget,
+  getItemListDisplayClasses,
 } from '../../common/layout/display-options';
-import {DisplayGrid} from '../../common/result-list/display-grid';
-import {DisplayWrapper} from '../../common/result-list/display-wrapper';
-import {ItemDisplayGuard} from '../../common/result-list/item-display-guard';
-import {
-  ResultListCommon,
-  ResultRenderingFunction,
-} from '../../common/result-list/result-list-common';
-import {ResultTemplateProvider} from '../../common/result-list/result-template-provider';
 import {RecsBindings} from '../atomic-recs-interface/atomic-recs-interface';
 
 /**
@@ -65,10 +65,10 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   @InitializeBindings() public bindings!: RecsBindings;
   public recommendationList!: RecommendationList;
   private loadingFlag = randomID('firstRecommendationLoaded-');
-  private resultRenderingFunction: ResultRenderingFunction;
-  private resultTemplateProvider!: ResultTemplateProvider;
+  private itemRenderingFunction: ItemRenderingFunction;
+  private itemTemplateProvider!: ItemTemplateProvider;
   private nextNewResultTarget?: FocusTargetController;
-  private resultListCommon!: ResultListCommon;
+  private itemListCommon!: ItemListCommon;
 
   @Element() public host!: HTMLDivElement;
 
@@ -90,22 +90,22 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
    * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself.
    * To modify the number of recommendations per column, modify the --atomic-recs-number-of-columns CSS variable.
    */
-  @Prop({reflect: true}) public display: ResultDisplayBasicLayout = 'list';
+  @Prop({reflect: true}) public display: ItemDisplayBasicLayout = 'list';
   /**
    * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)).
    * This property is only leveraged when `display` is `grid`.
    * @defaultValue `_self`
    */
-  @Prop() gridCellLinkTarget: ResultTarget = '_self';
+  @Prop() gridCellLinkTarget: ItemTarget = '_self';
   /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
    */
-  @Prop({reflect: true}) public density: ResultDisplayDensity = 'normal';
+  @Prop({reflect: true}) public density: ItemDisplayDensity = 'normal';
   /**
    * The expected size of the image displayed in the results.
    */
   @Prop({reflect: true})
-  public imageSize: ResultDisplayImageSize = 'small';
+  public imageSize: ItemDisplayImageSize = 'small';
 
   /**
    * The total number of recommendations to display.
@@ -144,9 +144,9 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
    * @param resultRenderingFunction
    */
   @Method() public async setRenderFunction(
-    resultRenderingFunction: ResultRenderingFunction
+    resultRenderingFunction: ItemRenderingFunction
   ) {
-    this.resultRenderingFunction = resultRenderingFunction;
+    this.itemRenderingFunction = resultRenderingFunction;
   }
 
   /**
@@ -175,7 +175,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
       },
     });
 
-    this.resultTemplateProvider = new ResultTemplateProvider({
+    this.itemTemplateProvider = new ItemTemplateProvider({
       includeDefaultTemplate: true,
       templateElements: Array.from(
         this.host.querySelectorAll('atomic-recs-result-template')
@@ -191,14 +191,14 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
       bindings: this.bindings,
     });
 
-    this.resultListCommon = new ResultListCommon({
+    this.itemListCommon = new ItemListCommon({
       engineSubscribe: this.bindings.engine.subscribe,
-      getCurrentNumberOfResults: () =>
+      getCurrentNumberOfItems: () =>
         this.recommendationListState.recommendations.length,
       getIsLoading: () => this.recommendationListState.isLoading,
       host: this.host,
       loadingFlag: this.loadingFlag,
-      nextNewResultTarget: this.focusTarget,
+      nextNewItemTarget: this.focusTarget,
       store: this.bindings.store,
     });
   }
@@ -322,15 +322,15 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
         options: {result: recommendation},
       }),
       result: recommendation,
-      renderingFunction: this.resultRenderingFunction,
+      renderingFunction: this.itemRenderingFunction,
       loadingFlag: this.loadingFlag,
-      key: this.resultListCommon.getResultId(
+      key: this.itemListCommon.getResultId(
         recommendation.uniqueId,
         this.recommendationListState.searchResponseId,
         this.density,
         this.imageSize
       ),
-      content: this.resultTemplateProvider.getTemplateContent(recommendation),
+      content: this.itemTemplateProvider.getTemplateContent(recommendation),
       store: this.bindings.store,
       density: this.density,
       display: this.display,
@@ -341,7 +341,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   private computeListDisplayClasses() {
     const displayPlaceholders = !this.bindings.store.isAppLoaded();
 
-    return getResultListDisplayClasses(
+    return getItemListDisplayClasses(
       'grid',
       this.density,
       this.imageSize,
@@ -358,7 +358,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
         item={recommendation}
         {...propsForAtomicRecsResult.interactiveResult}
         setRef={(element) =>
-          element && this.resultListCommon.setNewResultRef(element, i)
+          element && this.itemListCommon.setNewResultRef(element, i)
         }
       >
         <atomic-recs-result {...propsForAtomicRecsResult}></atomic-recs-result>
@@ -367,12 +367,12 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   }
 
   private renderListOfRecommendations() {
-    this.resultListCommon.updateBreakpoints();
+    this.itemListCommon.updateBreakpoints();
     const listClasses = this.computeListDisplayClasses();
 
     if (
       !this.resultTemplateRegistered ||
-      this.resultTemplateProvider.hasError ||
+      this.itemTemplateProvider.hasError ||
       this.error
     ) {
       return;

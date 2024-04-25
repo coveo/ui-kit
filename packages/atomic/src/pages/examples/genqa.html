@@ -8,23 +8,21 @@
     <script type="module" src="/build/atomic.esm.js"></script>
     <script nomodule src="/build/atomic.js"></script>
     <link rel="stylesheet" href="/themes/coveo.css" />
-    <script>
-      (async () => {
-        await customElements.whenDefined('atomic-search-interface');
-        const searchInterface = document.querySelector('atomic-search-interface');
+    <script type="module">
+      await customElements.whenDefined('atomic-search-interface');
+      const searchInterface = document.querySelector('atomic-search-interface');
 
-        // Initialization
-        await searchInterface.initialize({
-          accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
-          organizationId: 'searchuisamples',
-          search: {
-            pipeline: 'genqatest',
-          },
-        });
+      // Initialization
+      await searchInterface.initialize({
+        accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+        organizationId: 'searchuisamples',
+        search: {
+          pipeline: 'genqatest',
+        },
+      });
 
-        // Trigger a first search
-        searchInterface.executeFirstSearch();
-      })();
+      // Trigger a first search
+      searchInterface.executeFirstSearch();
     </script>
     <style>
       body {

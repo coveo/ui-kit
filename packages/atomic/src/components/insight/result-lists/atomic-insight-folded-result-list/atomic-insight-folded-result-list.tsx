@@ -25,22 +25,22 @@ import {
 } from '../../../../utils/initialization-utils';
 import {randomID} from '../../../../utils/utils';
 import {ResultsPlaceholdersGuard} from '../../../common/atomic-result-placeholder/placeholders';
-import {extractUnfoldedResult} from '../../../common/interface/result';
+import {extractUnfoldedItem} from '../../../common/interface/item';
+import {DisplayWrapper} from '../../../common/item-list/display-wrapper';
+import {ItemDisplayGuard} from '../../../common/item-list/item-display-guard';
 import {
-  ResultDisplayDensity,
-  ResultDisplayImageSize,
-  ResultDisplayLayout,
-  getResultListDisplayClasses,
+  ItemListCommon,
+  ItemRenderingFunction,
+} from '../../../common/item-list/item-list-common';
+import {FoldedItemListStateContextEvent} from '../../../common/item-list/item-list-decorators';
+import {ItemListGuard} from '../../../common/item-list/item-list-guard';
+import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
+import {
+  ItemDisplayDensity,
+  ItemDisplayImageSize,
+  ItemDisplayLayout,
+  getItemListDisplayClasses,
 } from '../../../common/layout/display-options';
-import {DisplayWrapper} from '../../../common/result-list/display-wrapper';
-import {ItemDisplayGuard} from '../../../common/result-list/item-display-guard';
-import {ItemListGuard} from '../../../common/result-list/item-list-guard';
-import {
-  ResultListCommon,
-  ResultRenderingFunction,
-} from '../../../common/result-list/result-list-common';
-import {FoldedResultListStateContextEvent} from '../../../common/result-list/result-list-decorators';
-import {ResultTemplateProvider} from '../../../common/result-list/result-template-provider';
 import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 
 /**
@@ -57,12 +57,12 @@ export class AtomicInsightFoldedResultList
   @InitializeBindings() public bindings!: InsightBindings;
   public foldedResultList!: InsightFoldedResultList;
   public resultsPerPage!: InsightResultsPerPage;
-  private resultRenderingFunction: ResultRenderingFunction;
+  private itemRenderingFunction: ItemRenderingFunction;
   private loadingFlag = randomID('firstResultLoaded-');
-  private resultTemplateProvider!: ResultTemplateProvider;
+  private itemTemplateProvider!: ItemTemplateProvider;
   private nextNewResultTarget?: FocusTargetController;
-  private display: ResultDisplayLayout = 'list';
-  private resultListCommon!: ResultListCommon;
+  private display: ItemDisplayLayout = 'list';
+  private itemListCommon!: ItemListCommon;
 
   @Element() public host!: HTMLDivElement;
 
@@ -79,11 +79,11 @@ export class AtomicInsightFoldedResultList
   /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
    */
-  @Prop({reflect: true}) density: ResultDisplayDensity = 'normal';
+  @Prop({reflect: true}) density: ItemDisplayDensity = 'normal';
   /**
    * The expected size of the image displayed in the results.
    */
-  @Prop({reflect: true}) imageSize: ResultDisplayImageSize = 'icon';
+  @Prop({reflect: true}) imageSize: ItemDisplayImageSize = 'icon';
   /**
    * The name of the field on which to do the folding. The folded result list component will use the values of this field to resolve the collections of result items.
    *
@@ -110,13 +110,13 @@ export class AtomicInsightFoldedResultList
    * Do not use this method if you integrate Atomic in a plain HTML deployment.
    */
   @Method() public async setRenderFunction(
-    resultRenderingFunction: ResultRenderingFunction
+    resultRenderingFunction: ItemRenderingFunction
   ) {
-    this.resultRenderingFunction = resultRenderingFunction;
+    this.itemRenderingFunction = resultRenderingFunction;
   }
 
   @Listen('atomic/resolveFoldedResultList')
-  resolveFoldedResultList(event: FoldedResultListStateContextEvent) {
+  resolveFoldedResultList(event: FoldedItemListStateContextEvent) {
     event.preventDefault();
     event.stopPropagation();
     event.detail(this.foldedResultList);
@@ -137,7 +137,7 @@ export class AtomicInsightFoldedResultList
       this.error = e as Error;
     }
 
-    this.resultTemplateProvider = new ResultTemplateProvider({
+    this.itemTemplateProvider = new ItemTemplateProvider({
       includeDefaultTemplate: true,
       templateElements: Array.from(
         this.host.querySelectorAll('atomic-insight-result-template')
@@ -153,14 +153,13 @@ export class AtomicInsightFoldedResultList
       bindings: this.bindings,
     });
 
-    this.resultListCommon = new ResultListCommon({
+    this.itemListCommon = new ItemListCommon({
       engineSubscribe: this.bindings.engine.subscribe,
-      getCurrentNumberOfResults: () =>
-        this.foldedResultListState.results.length,
+      getCurrentNumberOfItems: () => this.foldedResultListState.results.length,
       getIsLoading: () => this.foldedResultListState.isLoading,
       host: this.host,
       loadingFlag: this.loadingFlag,
-      nextNewResultTarget: this.focusTarget,
+      nextNewItemTarget: this.focusTarget,
       store: this.bindings.store,
     });
   }
@@ -186,7 +185,7 @@ export class AtomicInsightFoldedResultList
   }
 
   public render() {
-    this.resultListCommon.updateBreakpoints();
+    this.itemListCommon.updateBreakpoints();
     const listClasses = this.computeListDisplayClasses();
 
     return (
@@ -194,7 +193,7 @@ export class AtomicInsightFoldedResultList
         firstRequestExecuted={this.foldedResultListState.firstSearchExecuted}
         hasItems={this.foldedResultListState.hasResults}
         hasTemplate={this.resultTemplateRegistered}
-        templateHasError={this.resultTemplateProvider.hasError}
+        templateHasError={this.itemTemplateProvider.hasError}
         hasError={this.foldedResultListState.hasError}
       >
         <DisplayWrapper listClasses={listClasses} display={this.display}>
@@ -219,7 +218,7 @@ export class AtomicInsightFoldedResultList
                   {...atomicInsightResultProps}
                   part="outline"
                   ref={(element) =>
-                    element && this.resultListCommon.setNewResultRef(element, i)
+                    element && this.itemListCommon.setNewResultRef(element, i)
                   }
                 ></atomic-insight-result>
               );
@@ -233,7 +232,7 @@ export class AtomicInsightFoldedResultList
   private computeListDisplayClasses() {
     const displayPlaceholders = !this.bindings.store.isAppLoaded();
 
-    return getResultListDisplayClasses(
+    return getItemListDisplayClasses(
       this.display,
       this.density,
       this.imageSize,
@@ -244,22 +243,22 @@ export class AtomicInsightFoldedResultList
   }
 
   private getPropsForAtomicInsightResult(collection: InsightFoldedCollection) {
-    const result = extractUnfoldedResult(collection);
+    const result = extractUnfoldedItem(collection);
 
     return {
       interactiveResult: buildInsightInteractiveResult(this.bindings.engine, {
         options: {result},
       }),
       result,
-      renderingFunction: this.resultRenderingFunction,
+      renderingFunction: this.itemRenderingFunction,
       loadingFlag: this.loadingFlag,
-      key: this.resultListCommon.getResultId(
+      key: this.itemListCommon.getResultId(
         result.uniqueId,
         this.foldedResultListState.searchResponseId,
         this.density,
         this.imageSize
       ),
-      content: this.resultTemplateProvider.getTemplateContent(result),
+      content: this.itemTemplateProvider.getTemplateContent(result),
       store: this.bindings.store,
       density: this.density,
       display: this.display,

@@ -4,6 +4,7 @@ import {
   FacetValueRequest,
   NumericRangeRequest,
 } from '../../../../controllers/commerce/core/facets/headless-core-commerce-facet';
+import {buildMockCategoryFacetSearchResult} from '../../../../test/mock-category-facet-search-result';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
 import {
   buildMockCategoryFacetResponse,
@@ -31,6 +32,7 @@ import {
   FacetValueState,
   facetValueStates,
 } from '../../../facets/facet-api/value';
+import {selectCategoryFacetSearchResult} from '../../../facets/facet-search-set/category/category-facet-search-actions';
 import {
   excludeFacetSearchResult,
   selectFacetSearchResult,
@@ -141,21 +143,17 @@ describe('commerceFacetSetReducer', () => {
 
             expect(finalState[facetId]).toBeDefined();
           });
-          it('sets the facet #initialNumberOfResults to #values length from facet response', () => {
+          it('sets the facet #initialNumberOfResults to #numberOfValues from facet response', () => {
             const facet = buildMockCommerceRegularFacetResponse({
               facetId,
-              values: [
-                buildMockCommerceRegularFacetValue(),
-                buildMockCommerceRegularFacetValue(),
-                buildMockCommerceRegularFacetValue(),
-              ],
+              numberOfValues: 5,
             });
 
             const action = buildQueryAction([facet]);
             const finalState = commerceFacetSetReducer(state, action);
 
             expect(finalState[facetId]?.request.initialNumberOfValues).toEqual(
-              facet.values.length
+              5
             );
           });
         });
@@ -165,24 +163,19 @@ describe('commerceFacetSetReducer', () => {
             request: buildMockCommerceFacetRequest({
               type: 'regular',
               facetId,
-              initialNumberOfValues: 1,
-              values: [buildMockCommerceRegularFacetValue()],
+              initialNumberOfValues: 8,
             }),
           });
 
           const facet = buildMockCommerceRegularFacetResponse({
             facetId,
-            values: [
-              buildMockCommerceRegularFacetValue(),
-              buildMockCommerceRegularFacetValue(),
-              buildMockCommerceRegularFacetValue(),
-            ],
+            numberOfValues: 2,
           });
 
           const action = buildQueryAction([facet]);
           const finalState = commerceFacetSetReducer(state, action);
 
-          expect(finalState[facetId]?.request.initialNumberOfValues).toEqual(1);
+          expect(finalState[facetId]?.request.initialNumberOfValues).toEqual(8);
         });
 
         it('sets/updates facet request #displayName in state from response', () => {
@@ -236,10 +229,10 @@ describe('commerceFacetSetReducer', () => {
           expect(updatedState2[facetId]?.request.field).toEqual(field2);
         });
 
-        it('sets/updates facet request #numberOfValues in state from #values length in response', () => {
+        it('sets/updates facet request #numberOfValues in state from #numberOfValues in response', () => {
           const facetResponse1 = buildMockCommerceRegularFacetResponse({
             facetId,
-            values: [buildMockCommerceRegularFacetValue()],
+            numberOfValues: 1,
           });
 
           const action1 = buildQueryAction([facetResponse1]);
@@ -249,11 +242,7 @@ describe('commerceFacetSetReducer', () => {
 
           const facetResponse2 = buildMockCommerceRegularFacetResponse({
             facetId,
-            values: [
-              buildMockCommerceRegularFacetValue(),
-              buildMockCommerceRegularFacetValue(),
-              buildMockCommerceRegularFacetValue(),
-            ],
+            numberOfValues: 3,
           });
 
           const action2 = buildQueryAction([facetResponse2]);
@@ -1803,11 +1792,11 @@ describe('commerceFacetSetReducer', () => {
         expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
       });
 
-      it('when facet request type is invalid (i.e., is not "regular" or "hierarchical"), does not throw', () => {
+      it('when facet request type is invalid (i.e., is not "regular"), does not throw', () => {
         const facetId = 'date_range_facet_id';
         state[facetId] = buildMockCommerceFacetSlice({
           request: buildMockCommerceFacetRequest({
-            type: 'dateRange',
+            type: 'hierarchical',
             values: [],
           }),
         });
@@ -1876,6 +1865,95 @@ describe('commerceFacetSetReducer', () => {
       });
     }
   );
+
+  describe('#selectCategoryFacetSearchResult', () => {
+    it('when facet request is not found in state, does not throw', () => {
+      const action = selectCategoryFacetSearchResult({
+        facetId: 'invalid!',
+        value: buildMockCategoryFacetSearchResult(),
+      });
+
+      expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
+    });
+
+    it('when facet request type is invalid (i.e., is not "hierarchical"), does not throw', () => {
+      const facetId = 'regular_facet_id';
+      state[facetId] = buildMockCommerceFacetSlice({
+        request: buildMockCommerceFacetRequest({
+          type: 'regular',
+          values: [],
+        }),
+      });
+      const action = selectCategoryFacetSearchResult({
+        facetId,
+        value: buildMockCategoryFacetSearchResult(),
+      });
+
+      expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
+    });
+
+    it('when facet search result exists in request values array, updates its state to "selected"', () => {
+      const facetId = 'category_facet_id';
+      const facetValue = buildMockCategoryFacetValue({value: 'test'});
+      const facetValueRequest = convertCategoryFacetValueToRequest(facetValue);
+
+      state[facetId] = buildMockCommerceFacetSlice({
+        request: buildMockCommerceFacetRequest({
+          type: 'hierarchical',
+          values: [facetValueRequest],
+        }),
+      });
+
+      const facetSearchResult = buildMockCategoryFacetSearchResult({
+        displayValue: facetValue.value,
+        rawValue: facetValue.value,
+      });
+
+      const action = selectCategoryFacetSearchResult({
+        facetId,
+        value: facetSearchResult,
+      });
+      const finalState = commerceFacetSetReducer(state, action);
+
+      const targetValue = finalState[facetId]?.request
+        .values[0] as CategoryFacetValueRequest;
+      expect(targetValue?.state).toBe('selected');
+    });
+
+    it('when facet search result is nested in request, updates its state to "selected"', () => {
+      const facetId = 'category_facet_id';
+      const nestedFacetValue = buildMockCategoryFacetValue({value: 'nested'});
+      const facetValue = buildMockCategoryFacetValue({
+        value: 'test',
+        children: [nestedFacetValue],
+      });
+      const facetValueRequest = convertCategoryFacetValueToRequest(facetValue);
+
+      state[facetId] = buildMockCommerceFacetSlice({
+        request: buildMockCommerceFacetRequest({
+          type: 'hierarchical',
+          values: [facetValueRequest],
+        }),
+      });
+
+      const facetSearchResult = buildMockCategoryFacetSearchResult({
+        displayValue: nestedFacetValue.value,
+        rawValue: nestedFacetValue.value,
+        path: [facetValue.value],
+      });
+
+      const action = selectCategoryFacetSearchResult({
+        facetId,
+        value: facetSearchResult,
+      });
+      const finalState = commerceFacetSetReducer(state, action);
+
+      const targetValue = (
+        finalState[facetId]?.request.values[0] as CategoryFacetValueRequest
+      ).children[0];
+      expect(targetValue?.state).toBe('selected');
+    });
+  });
 
   describe('#updateFacetIsFieldExpanded', () => {
     describe.each([
@@ -1996,11 +2074,31 @@ describe('commerceFacetSetReducer', () => {
     });
   });
 
+  it('#deselectAllBreadcrumbs resets the state of all facet values to "idle"', () => {
+    const facetIds = ['1', '2'];
+    for (const facetId of facetIds) {
+      state[facetId] = buildMockCommerceFacetSlice({
+        request: buildMockCommerceFacetRequest({
+          facetId,
+          values: [
+            buildMockCommerceRegularFacetValue({state: 'selected'}),
+            buildMockCommerceRegularFacetValue({state: 'excluded'}),
+            buildMockCommerceRegularFacetValue({state: 'idle'}),
+          ],
+        }),
+      });
+    }
+
+    const finalState = commerceFacetSetReducer(state, deselectAllBreadcrumbs());
+
+    for (const facetId in finalState) {
+      for (const value of finalState[facetId]!.request.values) {
+        expect(value.state).toBe('idle');
+      }
+    }
+  });
+
   describe.each([
-    {
-      actionName: '#deselectAllBreadcrumbs',
-      action: deselectAllBreadcrumbs,
-    },
     {
       actionName: '#setContext',
       action: setContext,
@@ -2014,20 +2112,26 @@ describe('commerceFacetSetReducer', () => {
       action: setUser,
     },
   ])('$actionName', ({action}: {action: ActionCreator}) => {
-    const facetId = '1';
-
-    it('resets facets', () => {
-      state[facetId] = buildMockCommerceFacetSlice({
-        request: buildMockCommerceFacetRequest({
-          type: 'regular',
-          facetId,
-          values: [{value: 'facet value', state: 'selected'}],
-        }),
-      });
+    it('clears all facets values', () => {
+      const facetIds = ['1', '2'];
+      for (const facetId of facetIds) {
+        state[facetId] = buildMockCommerceFacetSlice({
+          request: buildMockCommerceFacetRequest({
+            facetId,
+            values: [
+              buildMockCommerceRegularFacetValue({state: 'selected'}),
+              buildMockCommerceRegularFacetValue({state: 'excluded'}),
+              buildMockCommerceRegularFacetValue({state: 'idle'}),
+            ],
+          }),
+        });
+      }
 
       const finalState = commerceFacetSetReducer(state, action({}));
 
-      expect(finalState[facetId].request.values[0].state).toEqual('idle');
+      for (const facetId in finalState) {
+        expect(finalState[facetId].request.values.length).toBe(0);
+      }
     });
   });
 });

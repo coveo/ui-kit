@@ -1,8 +1,4 @@
-import {
-  AnyAction,
-  createReducer,
-  type Draft as WritableDraft,
-} from '@reduxjs/toolkit';
+import {createReducer, type Draft as WritableDraft} from '@reduxjs/toolkit';
 import {
   CategoryFacetValueRequest,
   DateRangeRequest,
@@ -15,6 +11,7 @@ import {
   toggleSelectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
 } from '../../../facets/category-facet-set/category-facet-set-actions';
+import {selectCategoryFacetSearchResult} from '../../../facets/facet-search-set/category/category-facet-search-actions';
 import {
   excludeFacetSearchResult,
   selectFacetSearchResult,
@@ -235,11 +232,7 @@ export const commerceFacetSetReducer = createReducer(
         const {facetId, value} = action.payload;
         const facetRequest = state[facetId]?.request;
 
-        if (
-          !facetRequest ||
-          (facetRequest.type !== 'regular' &&
-            facetRequest.type !== 'hierarchical')
-        ) {
+        if (!facetRequest || !ensureRegularFacetRequest(facetRequest)) {
           return;
         }
 
@@ -248,9 +241,7 @@ export const commerceFacetSetReducer = createReducer(
         facetRequest.preventAutoSelect = true;
 
         const existingValue = facetRequest.values.find(
-          (v) =>
-            (v as FacetValueRequest | CategoryFacetValueRequest).value ===
-            rawValue
+          (v) => v.value === rawValue
         );
 
         if (!existingValue) {
@@ -289,6 +280,24 @@ export const commerceFacetSetReducer = createReducer(
 
         updateExistingFacetValueState(existingValue, 'exclude');
       })
+      .addCase(selectCategoryFacetSearchResult, (state, action) => {
+        const {facetId, value} = action.payload;
+        const facetRequest = state[facetId];
+
+        if (
+          !facetRequest ||
+          !ensureCategoryFacetRequest(facetRequest?.request)
+        ) {
+          return;
+        }
+
+        const path = [...value.path, value.rawValue];
+        selectPath(
+          facetRequest.request,
+          path,
+          facetRequest.request.initialNumberOfValues
+        );
+      })
       .addCase(updateFacetNumberOfValues, (state, action) => {
         const {facetId, numberOfValues} = action.payload;
         const facetRequest = state[facetId]?.request;
@@ -324,10 +333,10 @@ export const commerceFacetSetReducer = createReducer(
 
         handleDeselectAllFacetValues(request);
       })
-      .addCase(deselectAllBreadcrumbs, resetAllFacetValues)
-      .addCase(setContext, resetAllFacetValues)
-      .addCase(setView, resetAllFacetValues)
-      .addCase(setUser, resetAllFacetValues);
+      .addCase(deselectAllBreadcrumbs, setAllFacetValuesToIdle)
+      .addCase(setContext, clearAllFacetValues)
+      .addCase(setView, clearAllFacetValues)
+      .addCase(setUser, clearAllFacetValues);
   }
 );
 
@@ -357,7 +366,9 @@ function ensureCategoryFacetRequest(
 
 function handleQueryFulfilled(
   state: WritableDraft<CommerceFacetSetState>,
-  action: AnyAction
+  action: ReturnType<
+    typeof fetchProductListing.fulfilled | typeof executeSearch.fulfilled
+  >
 ) {
   const existingFacets = new Set(Object.keys(state));
   const facets = action.payload.response.facets;
@@ -451,14 +462,14 @@ function updateStateFromFacetResponse(
   if (!facetRequest) {
     state[facetId] = {request: {} as AnyFacetRequest};
     facetRequest = state[facetId].request;
-    facetRequest.initialNumberOfValues = facetResponse.values.length;
+    facetRequest.initialNumberOfValues = facetResponse.numberOfValues;
   } else {
     facetsToRemove.delete(facetId);
   }
 
   facetRequest.facetId = facetId;
   facetRequest.displayName = facetResponse.displayName;
-  facetRequest.numberOfValues = facetResponse.values.length;
+  facetRequest.numberOfValues = facetResponse.numberOfValues;
   facetRequest.field = facetResponse.field;
   facetRequest.type = facetResponse.type;
   facetRequest.values =
@@ -527,8 +538,43 @@ function insertNewValue(
   facetRequest.numberOfValues = facetRequest.values.length;
 }
 
-function resetAllFacetValues(state: CommerceFacetSetState) {
+function setAllFacetValuesToIdle(state: CommerceFacetSetState) {
   Object.values(state).forEach((facet) => {
     facet.request.values.forEach((value) => (value.state = 'idle'));
   });
+}
+
+function clearAllFacetValues(state: CommerceFacetSetState) {
+  Object.values(state).forEach((facet) => {
+    facet.request.values = [];
+  });
+}
+
+export function selectPath(
+  request: CommerceFacetRequest<CategoryFacetValueRequest>,
+  path: string[],
+  initialNumberOfValues: number
+) {
+  request.values = buildCurrentValuesFromPath(path, initialNumberOfValues);
+  request.numberOfValues = path.length ? 1 : initialNumberOfValues;
+  request.preventAutoSelect = true;
+}
+
+function buildCurrentValuesFromPath(path: string[], retrieveCount: number) {
+  if (!path.length) {
+    return [];
+  }
+
+  const root = buildCategoryFacetValueRequest(path[0], retrieveCount);
+  let curr = root;
+
+  for (const segment of path.splice(1)) {
+    const next = buildCategoryFacetValueRequest(segment, retrieveCount);
+    curr.children.push(next);
+    curr = next;
+  }
+
+  curr.state = 'selected';
+
+  return [root];
 }

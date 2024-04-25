@@ -3,25 +3,30 @@ import {
   buildInteractiveInstantResult,
   InstantResults,
   Result,
+  SearchBox,
 } from '@coveo/headless';
 import {Component, Element, State, h, Prop, Method} from '@stencil/core';
 import {InitializableComponent} from '../../../../utils/initialization-utils';
 import {encodeForDomAttribute} from '../../../../utils/string-utils';
-import {getClassNameForButtonStyle} from '../../../common/button-style';
+import {ItemRenderingFunction} from '../../../common/item-list/item-list-common';
+import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
 import {
-  ResultDisplayDensity,
-  ResultDisplayImageSize,
-  ResultDisplayLayout,
+  ItemDisplayDensity,
+  ItemDisplayImageSize,
+  ItemDisplayLayout,
 } from '../../../common/layout/display-options';
-import {ResultRenderingFunction} from '../../../common/result-list/result-list-common';
-import {ResultTemplateProvider} from '../../../common/result-list/result-template-provider';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {
+  getPartialInstantItemElement,
+  getPartialInstantItemShowAllElement,
+  InstantItemShowAllButton,
+} from '../../../common/suggestions/instant-item';
 import {
   dispatchSearchBoxSuggestionsEvent,
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
-} from '../suggestions-common';
+} from '../../../common/suggestions/suggestions-common';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 export type AriaLabelGenerator = (
   bindings: Bindings,
@@ -40,12 +45,12 @@ export type AriaLabelGenerator = (
   shadow: true,
 })
 export class AtomicSearchBoxInstantResults implements InitializableComponent {
-  public bindings!: SearchBoxSuggestionsBindings;
-  private resultRenderingFunction: ResultRenderingFunction;
+  public bindings!: SearchBoxSuggestionsBindings<SearchBox, Bindings>;
+  private itemRenderingFunction: ItemRenderingFunction;
   private results: Result[] = [];
-  private resultTemplateProvider!: ResultTemplateProvider;
+  private itemTemplateProvider!: ItemTemplateProvider;
   private instantResults!: InstantResults;
-  private display: ResultDisplayLayout = 'list';
+  private display: ItemDisplayLayout = 'list';
 
   @Element() public host!: HTMLElement;
 
@@ -61,9 +66,9 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
    * @param resultRenderingFunction
    */
   @Method() public async setRenderFunction(
-    resultRenderingFunction: ResultRenderingFunction
+    resultRenderingFunction: ItemRenderingFunction
   ) {
-    this.resultRenderingFunction = resultRenderingFunction;
+    this.itemRenderingFunction = resultRenderingFunction;
   }
   /**
    * The maximum number of results to show.
@@ -72,11 +77,11 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
   /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
    */
-  @Prop({reflect: true}) public density: ResultDisplayDensity = 'normal';
+  @Prop({reflect: true}) public density: ItemDisplayDensity = 'normal';
   /**
    * The expected size of the image displayed in the results.
    */
-  @Prop({reflect: true}) public imageSize: ResultDisplayImageSize = 'icon';
+  @Prop({reflect: true}) public imageSize: ItemDisplayImageSize = 'icon';
   /**
    * The callback to generate an [`aria-label`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label) for a given result so that accessibility tools can fully describe what's visually rendered by a result.
    *
@@ -86,7 +91,7 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
 
   public componentWillLoad() {
     try {
-      dispatchSearchBoxSuggestionsEvent((bindings) => {
+      dispatchSearchBoxSuggestionsEvent<SearchBox, Bindings>((bindings) => {
         this.bindings = bindings;
         return this.initialize();
       }, this.host);
@@ -124,58 +129,51 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
       : this.results;
 
     const elements: SearchBoxSuggestionElement[] = results.map(
-      (result: Result) => ({
-        key: `instant-result-${encodeForDomAttribute(result.uniqueId)}`,
-        part: 'instant-results-item',
-        content: (
-          <atomic-result
-            key={`instant-result-${encodeForDomAttribute(result.uniqueId)}`}
-            part="outline"
-            result={result}
-            interactiveResult={buildInteractiveInstantResult(
-              this.bindings.engine,
-              {
-                options: {result},
-              }
-            )}
-            display={this.display}
-            density={this.density}
-            imageSize={this.imageSize}
-            content={this.resultTemplateProvider.getTemplateContent(result)}
-            stopPropagation={false}
-            renderingFunction={this.resultRenderingFunction}
-          ></atomic-result>
-        ),
-        ariaLabel: this.bindings.i18n.t('instant-results-suggestion-label', {
-          title:
-            this.ariaLabelGenerator?.(this.bindings, result) || result.title,
-          interpolation: {escapeValue: false},
-        }),
-        onSelect: (e: MouseEvent) => {
-          const link = this.getLink(e.target as HTMLElement);
+      (result: Result) => {
+        const partialItem = getPartialInstantItemElement(
+          this.bindings.i18n,
+          this.ariaLabelGenerator?.(this.bindings, result) || result.title,
+          result.uniqueId
+        );
+        return {
+          ...partialItem,
+          content: (
+            <atomic-result
+              key={`instant-result-${encodeForDomAttribute(result.uniqueId)}`}
+              part="outline"
+              result={result}
+              interactiveResult={buildInteractiveInstantResult(
+                this.bindings.engine,
+                {
+                  options: {result},
+                }
+              )}
+              display={this.display}
+              density={this.density}
+              imageSize={this.imageSize}
+              content={this.itemTemplateProvider.getTemplateContent(result)}
+              stopPropagation={false}
+              renderingFunction={this.itemRenderingFunction}
+            ></atomic-result>
+          ),
+          onSelect: (e: MouseEvent) => {
+            const link = this.getLink(e.target as HTMLElement);
 
-          if (!link) {
-            return;
-          }
-          this.handleLinkClick(link, e.ctrlKey || e.metaKey);
-        },
-      })
+            if (!link) {
+              return;
+            }
+            this.handleLinkClick(link, e.ctrlKey || e.metaKey);
+          },
+        };
+      }
     );
     if (elements.length) {
-      const showAllText = this.bindings.i18n.t('show-all-results');
-
+      const partialItem = getPartialInstantItemShowAllElement(
+        this.bindings.i18n
+      );
       elements.push({
-        key: 'instant-results-show-all-button',
-        content: (
-          <div
-            part="instant-results-show-all-button"
-            class={getClassNameForButtonStyle('text-primary')}
-          >
-            {showAllText}
-          </div>
-        ),
-        part: 'instant-results-show-all',
-        ariaLabel: showAllText,
+        ...partialItem,
+        content: <InstantItemShowAllButton i18n={this.bindings.i18n} />,
         onSelect: () => {
           this.bindings.clearSuggestions();
           this.bindings.searchBoxController.updateText(
@@ -195,7 +193,7 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
       },
     });
 
-    this.resultTemplateProvider = new ResultTemplateProvider({
+    this.itemTemplateProvider = new ItemTemplateProvider({
       includeDefaultTemplate: true,
       templateElements: Array.from(
         this.host.querySelectorAll('atomic-result-template')

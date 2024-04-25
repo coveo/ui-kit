@@ -22,8 +22,12 @@ describe('buildCommerceEngine', () => {
     initEngine();
   });
 
-  it('works', () => {
+  it('initializes', () => {
     expect(initEngine).not.toThrow();
     expect(engine.state).toBeTruthy();
+  });
+
+  it('sets the context', () => {
+    expect(engine.state.commerceContext).toEqual(options.configuration.context);
   });
 });

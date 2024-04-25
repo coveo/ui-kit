@@ -19,6 +19,8 @@ import {
   sendGeneratedAnswerFeedback,
   registerFieldsToIncludeInCitations,
   setId,
+  expandGeneratedAnswer,
+  collapseGeneratedAnswer,
 } from '../../../features/generated-answer/generated-answer-actions';
 import {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions';
 import {generatedAnswerReducer as generatedAnswer} from '../../../features/generated-answer/generated-answer-slice';
@@ -95,6 +97,14 @@ export interface GeneratedAnswer extends Controller {
    * Hides the generated answer.
    */
   hide(): void;
+  /**
+   * Expands the generated answer.
+   */
+  expand(): void;
+  /**
+   * Collapses the generated answer.
+   */
+  collapse(): void;
   /**
    * Logs a custom event indicating the generated answer was copied to the clipboard.
    */
@@ -217,6 +227,8 @@ export interface GeneratedAnswerAnalyticsClient {
     responseFormat: GeneratedResponseFormat
   ) => LegacySearchAction;
   logRetryGeneratedAnswer: () => LegacySearchAction;
+  logGeneratedAnswerExpand: () => CustomAction;
+  logGeneratedAnswerCollapse: () => CustomAction;
 }
 
 /**
@@ -329,6 +341,20 @@ export function buildCoreGeneratedAnswer(
       if (this.state.isVisible) {
         dispatch(setIsVisible(false));
         dispatch(analyticsClient.logGeneratedAnswerHideAnswers());
+      }
+    },
+
+    expand() {
+      if (!this.state.expanded) {
+        dispatch(expandGeneratedAnswer());
+        dispatch(analyticsClient.logGeneratedAnswerExpand());
+      }
+    },
+
+    collapse() {
+      if (this.state.expanded) {
+        dispatch(collapseGeneratedAnswer());
+        dispatch(analyticsClient.logGeneratedAnswerCollapse());
       }
     },
 
