@@ -3,6 +3,10 @@ import {
   CommerceEngineState,
 } from '../../../../app/commerce-engine/commerce-engine';
 import {AnyFacetResponse} from '../../../../features/commerce/facets/facet-set/interfaces/response';
+import {
+  BreadcrumbManager,
+  buildCoreBreadcrumbManager,
+} from '../breadcrumb-manager/headless-core-breadcrumb-manager';
 import {FetchResultsActionCreator} from '../common';
 import {buildCategoryFacet} from '../facets/category/headless-commerce-category-facet';
 import {buildCommerceDateFacet} from '../facets/date/headless-commerce-date-facet';
@@ -37,6 +41,7 @@ export interface SearchAndListingSubControllers
   extends BaseSolutionTypeSubControllers {
   sort: (props?: SortProps) => Sort;
   facetGenerator: () => FacetGenerator;
+  breadcrumbManager: () => BreadcrumbManager;
 }
 
 interface BaseSubControllerProps {
@@ -86,6 +91,12 @@ export function buildSolutionTypeSubControllers(
           buildCommerceDateFacet(engine, {...options, ...commonOptions}),
         buildCategoryFacet: (_engine, options) =>
           buildCategoryFacet(engine, {...options, ...commonOptions}),
+      });
+    },
+    breadcrumbManager() {
+      return buildCoreBreadcrumbManager(engine, {
+        facetResponseSelector,
+        fetchResultsActionCreator,
       });
     },
   };
