@@ -86,7 +86,7 @@ export class AtomicInsightGeneratedAnswer
   @Prop() answerStyle: InsightGeneratedAnswerStyle = 'default';
 
   /**
-   * The answer is collapsed when the text is longer than 250px
+   * Whether to allow the answer to be collapsed when the text is taller than 250px.
    */
   @Prop() collapsible?: boolean;
 
@@ -126,7 +126,7 @@ export class AtomicInsightGeneratedAnswer
     this.searchStatus = buildInsightSearchStatus(this.bindings.engine);
     this.generatedAnswerCommon.insertFeedbackModal();
 
-    if (window.ResizeObserver) {
+    if (window.ResizeObserver && this.collapsible) {
       const debouncedAdaptAnswerHeight = debounce(
         () => this.adaptAnswerHeight(),
         100
@@ -186,24 +186,14 @@ export class AtomicInsightGeneratedAnswer
   };
 
   private toggleClass(element: Element, className: string, condition: boolean) {
-    if (condition) {
-      element.classList.add(className);
-    } else {
-      element.classList.remove(className);
-    }
+    element.classList.toggle(className, condition);
   }
 
   private adaptAnswerHeight() {
-    if (this.collapsible) {
-      this.fullAnswerHeight = this.host?.shadowRoot
-        ?.querySelector('p[part="generated-text"]')
-        ?.getBoundingClientRect().height;
-      this.updateAnswerHeight();
-    }
-  }
-
-  private getShowButton() {
-    return this.host?.shadowRoot?.querySelector('[part="answer-show-button"]');
+    this.fullAnswerHeight = this.host?.shadowRoot
+      ?.querySelector('p[part="generated-text"]')
+      ?.getBoundingClientRect().height;
+    this.updateAnswerHeight();
   }
 
   private getAnswerContainer() {
@@ -219,20 +209,24 @@ export class AtomicInsightGeneratedAnswer
   private updateAnswerHeight() {
     const container = this.getAnswerContainer();
     const footer = this.getAnswerFooter();
-    const showButton = this.getShowButton();
 
-    if (!container || !showButton || !footer) {
+    if (!container || !footer) {
       return;
     }
 
     if (this.fullAnswerHeight! > this.maxCollapsedHeight) {
       this.toggleClass(container, 'answer-collapsed', this.isCollapsed);
-      this.toggleClass(showButton, 'show-button-visible', true);
       this.toggleClass(footer, 'is-collapsible', true);
+      this.toggleClass(
+        footer,
+        'generating-label-visible',
+        this.generatedAnswerState.isStreaming
+      );
     } else {
       this.toggleClass(container, 'answer-collapsed', false);
-      this.toggleClass(showButton, 'show-button-visible', false);
       this.toggleClass(footer, 'is-collapsible', false);
+      this.toggleClass(footer, 'generating-label-visible', false);
+
       this.setIsCollapsed(false);
     }
   }

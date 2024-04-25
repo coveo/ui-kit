@@ -528,7 +528,7 @@ export namespace Components {
          */
         "answerStyle": GeneratedAnswerStyle;
         /**
-          * The answer is collapsed when the text is longer than 250px
+          * Whether to allow the answer to be collapsed when the text is taller than 250px.
          */
         "collapsible"?: boolean;
     }
@@ -659,7 +659,7 @@ export namespace Components {
          */
         "answerStyle": InsightGeneratedAnswerStyle;
         /**
-          * The answer is collapsed when the text is longer than 250px
+          * Whether to allow the answer to be collapsed when the text is taller than 250px.
          */
         "collapsible"?: boolean;
     }
@@ -4782,7 +4782,7 @@ declare namespace LocalJSX {
          */
         "answerStyle"?: GeneratedAnswerStyle;
         /**
-          * The answer is collapsed when the text is longer than 250px
+          * Whether to allow the answer to be collapsed when the text is taller than 250px.
          */
         "collapsible"?: boolean;
     }
@@ -4910,7 +4910,7 @@ declare namespace LocalJSX {
          */
         "answerStyle"?: InsightGeneratedAnswerStyle;
         /**
-          * The answer is collapsed when the text is longer than 250px
+          * Whether to allow the answer to be collapsed when the text is taller than 250px.
          */
         "collapsible"?: boolean;
     }

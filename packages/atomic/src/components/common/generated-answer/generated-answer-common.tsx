@@ -220,6 +220,112 @@ export class GeneratedAnswerCommon {
     }
   }
 
+  private renderRephraseButtons() {
+    if (this.props.getGeneratedAnswerState()?.isStreaming) {
+      return null;
+    }
+    return (
+      <RephraseButtons
+        answerStyle={
+          this.props.getGeneratedAnswerState()?.responseFormat.answerStyle ??
+          'default'
+        }
+        i18n={this.props.getBindings().i18n}
+        onChange={(answerStyle) => this.onChangeAnswerStyle(answerStyle)}
+      />
+    );
+  }
+
+  private renderDisclaimer() {
+    if (this.props.getGeneratedAnswerState()?.isStreaming) {
+      return null;
+    }
+    return (
+      <div class="text-neutral-dark text-xs">
+        <slot name="disclaimer" slot="disclaimer">
+          {this.props.getBindings().i18n.t('generated-answer-disclaimer')}
+        </slot>
+      </div>
+    );
+  }
+
+  private renderShowButton() {
+    const canRender =
+      this.props.collapsible &&
+      !this.props.getGeneratedAnswerState()?.isStreaming;
+
+    if (!canRender) {
+      return null;
+    }
+    return (
+      <ShowButton
+        i18n={this.props.getBindings().i18n}
+        onClick={() => this.props.setIsCollapsed(!this.props.getIsCollapsed())}
+        isCollapsed={this.props.getIsCollapsed()}
+      ></ShowButton>
+    );
+  }
+
+  private renderGeneratingAnswerLabel() {
+    const canRender =
+      this.props.collapsible &&
+      this.props.getGeneratedAnswerState()?.isStreaming;
+
+    if (!canRender) {
+      return null;
+    }
+    return (
+      <div
+        part="is-generating"
+        class="hidden text-primary font-light text-base"
+      >
+        {this.props.getBindings().i18n.t('generating-answer')}...
+      </div>
+    );
+  }
+
+  private renderFeedbackAndCopyButtons() {
+    const canRender =
+      !this.hasRetryableError &&
+      !this.props.getGeneratedAnswerState()?.isStreaming &&
+      !this.props.getIsCollapsed() &&
+      this.isAnswerVisible;
+
+    if (!canRender) {
+      return null;
+    }
+
+    return (
+      <div class="feedback-buttons flex shrink-0 gap-2 ml-auto">
+        <FeedbackButton
+          title={this.props.getBindings().i18n.t('this-answer-was-helpful')}
+          variant="like"
+          active={!!this.props.getGeneratedAnswerState()?.liked}
+          onClick={() => this.props.getGeneratedAnswer()?.like()}
+        />
+        <FeedbackButton
+          title={this.props.getBindings().i18n.t('this-answer-was-not-helpful')}
+          variant="dislike"
+          active={!!this.props.getGeneratedAnswerState()?.disliked}
+          onClick={() => this.clickDislike()}
+        />
+        {this.hasClipboard ? (
+          <CopyButton
+            title={this.copyToClipboardTooltip}
+            isCopied={this.props.getCopied()}
+            error={this.props.getCopyError()}
+            onClick={async () => {
+              const answer = this.props.getGeneratedAnswerState()?.answer;
+              if (answer) {
+                await this.copyToClipboard(answer);
+              }
+            }}
+          />
+        ) : null}
+      </div>
+    );
+  }
+
   private renderContent() {
     return (
       <div part="generated-content">
@@ -232,44 +338,7 @@ export class GeneratedAnswerCommon {
             {this.props.getBindings().i18n.t('generated-answer-title')}
           </Heading>
           <div class="flex gap-2 h-9 items-center ml-auto">
-            {!this.hasRetryableError &&
-              !this.props.getGeneratedAnswerState()?.isStreaming &&
-              !this.props.getIsCollapsed() &&
-              this.isAnswerVisible && (
-                <div class="feedback-buttons flex shrink-0 gap-2 ml-auto">
-                  <FeedbackButton
-                    title={this.props
-                      .getBindings()
-                      .i18n.t('this-answer-was-helpful')}
-                    variant="like"
-                    active={!!this.props.getGeneratedAnswerState()?.liked}
-                    onClick={() => this.props.getGeneratedAnswer()?.like()}
-                  />
-                  <FeedbackButton
-                    title={this.props
-                      .getBindings()
-                      .i18n.t('this-answer-was-not-helpful')}
-                    variant="dislike"
-                    active={!!this.props.getGeneratedAnswerState()?.disliked}
-                    onClick={() => this.clickDislike()}
-                  />
-                  {this.hasClipboard ? (
-                    <CopyButton
-                      title={this.copyToClipboardTooltip}
-                      isCopied={this.props.getCopied()}
-                      error={this.props.getCopyError()}
-                      onClick={async () => {
-                        const answer =
-                          this.props.getGeneratedAnswerState()?.answer;
-                        if (answer) {
-                          await this.copyToClipboard(answer);
-                        }
-                      }}
-                    />
-                  ) : null}
-                </div>
-              )}
-
+            {this.renderFeedbackAndCopyButtons()}
             <Switch
               part="toggle"
               checked={this.isAnswerVisible}
@@ -307,41 +376,15 @@ export class GeneratedAnswerCommon {
               {this.renderCitations()}
             </SourceCitations>
 
-            {!this.props.getGeneratedAnswerState()?.isStreaming && (
-              <RephraseButtons
-                answerStyle={
-                  this.props.getGeneratedAnswerState()?.responseFormat
-                    .answerStyle ?? 'default'
-                }
-                i18n={this.props.getBindings().i18n}
-                onChange={(answerStyle) =>
-                  this.onChangeAnswerStyle(answerStyle)
-                }
-              />
-            )}
+            {this.renderRephraseButtons()}
           </GeneratedContentContainer>
         ) : null}
 
         {!this.hasRetryableError && this.isAnswerVisible && (
           <div part="generated-answer-footer" class="flex justify-end mt-6">
-            <ShowButton
-              i18n={this.props.getBindings().i18n}
-              onClick={() =>
-                this.props.setIsCollapsed(!this.props.getIsCollapsed())
-              }
-              isStreaming={this.props.getGeneratedAnswerState()?.isStreaming}
-              collapsible={this.props.collapsible}
-              isCollapsed={this.props.getIsCollapsed()}
-            ></ShowButton>
-            {!this.props.getGeneratedAnswerState()?.isStreaming && (
-              <div class="text-neutral-dark text-xs">
-                <slot name="disclaimer" slot="disclaimer">
-                  {this.props
-                    .getBindings()
-                    .i18n.t('generated-answer-disclaimer')}
-                </slot>
-              </div>
-            )}
+            {this.renderGeneratingAnswerLabel()}
+            {this.renderShowButton()}
+            {this.renderDisclaimer()}
           </div>
         )}
       </div>
