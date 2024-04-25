@@ -2075,18 +2075,27 @@ describe('commerceFacetSetReducer', () => {
   });
 
   it('#deselectAllBreadcrumbs resets the state of all facet values to "idle"', () => {
-    const facetId = '1';
-    state[facetId] = buildMockCommerceFacetSlice({
-      request: buildMockCommerceFacetRequest({
-        type: 'regular',
-        facetId,
-        values: [{value: 'facet value', state: 'selected'}],
-      }),
-    });
+    const facetIds = ['1', '2'];
+    for (const facetId of facetIds) {
+      state[facetId] = buildMockCommerceFacetSlice({
+        request: buildMockCommerceFacetRequest({
+          facetId,
+          values: [
+            buildMockCommerceRegularFacetValue({state: 'selected'}),
+            buildMockCommerceRegularFacetValue({state: 'excluded'}),
+            buildMockCommerceRegularFacetValue({state: 'idle'}),
+          ],
+        }),
+      });
+    }
 
     const finalState = commerceFacetSetReducer(state, deselectAllBreadcrumbs());
 
-    expect(finalState[facetId].request.values[0].state).toEqual('idle');
+    for (const facetId in finalState) {
+      for (const value of finalState[facetId]!.request.values) {
+        expect(value.state).toBe('idle');
+      }
+    }
   });
 
   describe.each([
@@ -2103,20 +2112,26 @@ describe('commerceFacetSetReducer', () => {
       action: setUser,
     },
   ])('$actionName', ({action}: {action: ActionCreator}) => {
-    const facetId = '1';
-
     it('clears all facets values', () => {
-      state[facetId] = buildMockCommerceFacetSlice({
-        request: buildMockCommerceFacetRequest({
-          type: 'regular',
-          facetId,
-          values: [{value: 'facet value', state: 'selected'}],
-        }),
-      });
+      const facetIds = ['1', '2'];
+      for (const facetId of facetIds) {
+        state[facetId] = buildMockCommerceFacetSlice({
+          request: buildMockCommerceFacetRequest({
+            facetId,
+            values: [
+              buildMockCommerceRegularFacetValue({state: 'selected'}),
+              buildMockCommerceRegularFacetValue({state: 'excluded'}),
+              buildMockCommerceRegularFacetValue({state: 'idle'}),
+            ],
+          }),
+        });
+      }
 
       const finalState = commerceFacetSetReducer(state, action({}));
 
-      expect(finalState[facetId].request.values.length).toBe(0);
+      for (const facetId in finalState) {
+        expect(finalState[facetId].request.values.length).toBe(0);
+      }
     });
   });
 });
