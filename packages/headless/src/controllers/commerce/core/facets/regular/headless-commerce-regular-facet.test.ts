@@ -14,7 +14,6 @@ import {
   buildMockCommerceEngine,
 } from '../../../../../test/mock-engine-v2';
 import {buildMockFacetSearch} from '../../../../../test/mock-facet-search';
-import {commonOptions} from '../../../product-listing/facets/headless-product-listing-facet-options';
 import {FacetValueRequest} from '../headless-core-commerce-facet';
 import {
   RegularFacet,
@@ -56,7 +55,9 @@ describe('RegularFacet', () => {
 
     options = {
       facetId,
-      ...commonOptions,
+      fetchResultsActionCreator: jest.fn(),
+      facetResponseSelector: jest.fn(),
+      isFacetLoadingResponseSelector: jest.fn(),
     };
 
     state = buildMockCommerceState();

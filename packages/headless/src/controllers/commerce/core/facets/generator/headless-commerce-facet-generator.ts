@@ -67,7 +67,7 @@ type CommerceFacetBuilder<
   >,
 > = (engine: CommerceEngine, options: CommerceFacetOptions) => Facet;
 
-type CommerceSearchableFacetBuilder<
+export type CommerceSearchableFacetBuilder<
   Facet extends CoreCommerceFacet<AnyFacetValueRequest, AnyFacetValueResponse>,
 > = (
   engine: CommerceEngine,

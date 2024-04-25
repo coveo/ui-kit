@@ -4,7 +4,6 @@ import {
   AnyFacetValueResponse,
   RegularFacetResponse,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response';
-import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {
   deselectAllFacetValues,
   toggleExcludeFacetValue,
@@ -24,7 +23,6 @@ import {
   buildMockCommerceEngine,
 } from '../../../../test/mock-engine-v2';
 import {FacetValueState} from '../../../core/facets/facet/headless-core-facet';
-import {commonOptions} from '../../product-listing/facets/headless-product-listing-facet-options';
 import {
   buildCoreCommerceFacet,
   CoreCommerceFacet,
@@ -32,13 +30,10 @@ import {
 } from './headless-core-commerce-facet';
 
 jest.mock('../../../../features/facets/facet-set/facet-set-actions');
-jest.mock(
-  '../../../../features/commerce/product-listing/product-listing-actions'
-);
 
 describe('CoreCommerceFacet', () => {
   const facetId = 'facet_id';
-  const fetchResultsActionCreator = fetchProductListing;
+  const fetchResultsActionCreator = jest.fn();
   const toggleExcludeActionCreator = toggleExcludeFacetValue;
   const toggleSelectActionCreator = toggleSelectFacetValue;
   const field = 'some_field';
@@ -77,7 +72,9 @@ describe('CoreCommerceFacet', () => {
       facetId,
       toggleExcludeActionCreator,
       toggleSelectActionCreator,
-      ...commonOptions,
+      fetchResultsActionCreator,
+      facetResponseSelector: jest.fn(),
+      isFacetLoadingResponseSelector: jest.fn(),
     };
 
     state = buildMockCommerceState();
@@ -127,7 +124,9 @@ describe('CoreCommerceFacet', () => {
         options = {
           facetId,
           toggleSelectActionCreator,
-          ...commonOptions,
+          fetchResultsActionCreator: jest.fn(),
+          facetResponseSelector: jest.fn(),
+          isFacetLoadingResponseSelector: jest.fn(),
         };
 
         initFacet();
@@ -212,7 +211,9 @@ describe('CoreCommerceFacet', () => {
         options = {
           facetId,
           toggleSelectActionCreator,
-          ...commonOptions,
+          fetchResultsActionCreator: jest.fn(),
+          facetResponseSelector: jest.fn(),
+          isFacetLoadingResponseSelector: jest.fn(),
         };
 
         initFacet();

@@ -14,7 +14,6 @@ import {
   buildMockCommerceEngine,
   MockedCommerceEngine,
 } from '../../../../../test/mock-engine-v2';
-import {commonOptions} from '../../../product-listing/facets/headless-product-listing-facet-options';
 import {NumericRangeRequest} from '../headless-core-commerce-facet';
 import {
   NumericFacet,
@@ -55,7 +54,9 @@ describe('NumericFacet', () => {
   beforeEach(() => {
     options = {
       facetId,
-      ...commonOptions,
+      fetchResultsActionCreator: jest.fn(),
+      facetResponseSelector: jest.fn(),
+      isFacetLoadingResponseSelector: jest.fn(),
     };
 
     state = buildMockCommerceState();

@@ -60,8 +60,6 @@ export type {
   PaginationProps,
   PaginationOptions,
 } from './controllers/commerce/core/pagination/headless-core-commerce-pagination';
-export {buildProductListingPagination} from './controllers/commerce/product-listing/pagination/headless-product-listing-pagination';
-export {buildSearchPagination} from './controllers/commerce/search/pagination/headless-search-pagination';
 
 export type {
   InteractiveResult,
@@ -98,9 +96,6 @@ export {
   SortDirection,
 } from './controllers/commerce/core/sort/headless-core-commerce-sort';
 
-export {buildProductListingSort} from './controllers/commerce/product-listing/sort/headless-product-listing-sort';
-export {buildSearchSort} from './controllers/commerce/search/sort/headless-search-sort';
-
 export type {CategoryFacet} from './controllers/commerce/core/facets/category/headless-commerce-category-facet';
 export type {RegularFacet} from './controllers/commerce/core/facets/regular/headless-commerce-regular-facet';
 export type {NumericFacet} from './controllers/commerce/core/facets/numeric/headless-commerce-numeric-facet';
@@ -116,10 +111,6 @@ export type {
   CategoryFacetValueRequest,
   CategoryFacetValue,
 } from './controllers/commerce/core/facets/headless-core-commerce-facet';
-export type {ProductListingFacetGenerator} from './controllers/commerce/product-listing/facets/headless-product-listing-facet-generator';
-export {buildProductListingFacetGenerator} from './controllers/commerce/product-listing/facets/headless-product-listing-facet-generator';
-export type {SearchFacetGenerator} from './controllers/commerce/search/facets/headless-search-facet-generator';
-export {buildSearchFacetGenerator} from './controllers/commerce/search/facets/headless-search-facet-generator';
 
 export type {
   RegularFacetSearch,
