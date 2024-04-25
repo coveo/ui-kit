@@ -1,9 +1,14 @@
 import {configuration} from '../../../app/common-reducers';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
+import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {categoryFacetSetReducer as categoryFacetSet} from '../../../features/facets/category-facet-set/category-facet-set-slice';
 import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
 import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response';
 import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
+import {
+  executeFacetSearch,
+  executeFieldSuggest,
+} from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
 import {
   logFacetUpdateSort,
   logFacetShowMore,
@@ -82,6 +87,20 @@ export function buildCategoryFacet(
     options: {
       facetId: getFacetId(),
       ...props.options.facetSearch,
+    },
+    executeFacetSearchActionCreator: executeFacetSearch,
+    executeFieldSuggestActionCreator: executeFieldSuggest,
+    select: (value: CategoryFacetSearchResult) => {
+      dispatch(updateFacetOptions());
+      dispatch(
+        executeSearch({
+          legacy: logFacetSelect({
+            facetId: getFacetId(),
+            facetValue: value.rawValue,
+          }),
+          next: facetSelect(),
+        })
+      );
     },
     isForFieldSuggestions: false,
   });

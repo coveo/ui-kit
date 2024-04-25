@@ -11,6 +11,8 @@ import {
   buildFacetConditionsManager,
   FacetConditionsManager,
   FacetResultsMustMatch,
+  FacetValueRequest,
+  CategoryFacetValueRequest,
 } from '@coveo/headless';
 import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
 import {
@@ -27,11 +29,7 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
-import {
-  BaseFacet,
-  parseDependsOn,
-  validateDependsOn,
-} from '../../../common/facets/facet-common';
+import {parseDependsOn} from '../../../common/facets/depends-on';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
 import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
@@ -94,9 +92,7 @@ import {ColorFacetCheckbox} from '../color-facet-checkbox/color-facet-checkbox';
   styleUrl: 'atomic-color-facet.pcss',
   shadow: true,
 })
-export class AtomicColorFacet
-  implements InitializableComponent, BaseFacet<Facet>
-{
+export class AtomicColorFacet implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: Facet;
   private dependenciesManager?: FacetConditionsManager;
@@ -251,12 +247,7 @@ export class AtomicColorFacet
   @AriaLiveRegion('facet-search')
   protected facetSearchAriaMessage!: string;
 
-  private validateProps() {
-    validateDependsOn(this.dependsOn);
-  }
-
   public initialize() {
-    this.validateProps();
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.facet = buildFacet(this.bindings.engine, {options: this.facetOptions});
     announceFacetSearchResultsWithAriaLive(
@@ -339,7 +330,9 @@ export class AtomicColorFacet
       this.bindings.engine,
       {
         facetId: this.facetId!,
-        conditions: parseDependsOn(this.dependsOn),
+        conditions: parseDependsOn<
+          FacetValueRequest | CategoryFacetValueRequest
+        >(this.dependsOn),
       }
     );
   }

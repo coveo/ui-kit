@@ -61,11 +61,9 @@ export const logOpenGeneratedAnswerSource = (
     },
     analyticsType: 'Qna.CitationClick',
     analyticsPayloadBuilder: (state): Qna.CitationClick => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
       return {
         answer: {
-          id: generativeQuestionAnsweringId!,
+          responseId: state.search?.response.searchUid || '',
           type: RGAType,
         },
         citation: {
@@ -99,11 +97,9 @@ export const logHoverCitation = (
     },
     analyticsType: 'Qna.CitationHover',
     analyticsPayloadBuilder: (state): Qna.CitationHover => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
       return {
         answer: {
-          id: generativeQuestionAnsweringId!,
+          responseId: state.search?.response.searchUid || '',
           type: RGAType,
         },
         citation: {
@@ -130,11 +126,9 @@ export const logLikeGeneratedAnswer = (): CustomAction =>
     },
     analyticsType: 'Qna.SubmitFeedback',
     analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
       return {
         answer: {
-          id: generativeQuestionAnsweringId!,
+          responseId: state.search?.response.searchUid || '',
           type: RGAType,
         },
         feedback: {
@@ -159,11 +153,9 @@ export const logDislikeGeneratedAnswer = (): CustomAction =>
     },
     analyticsType: 'Qna.SubmitFeedback',
     analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
       return {
         answer: {
-          id: generativeQuestionAnsweringId!,
+          responseId: state.search?.response.searchUid || '',
           type: RGAType,
         },
         feedback: {
@@ -191,11 +183,9 @@ export const logGeneratedAnswerFeedback = (
     },
     analyticsType: 'Qna.SubmitFeedback',
     analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
       return {
         answer: {
-          id: generativeQuestionAnsweringId!,
+          responseId: state.search?.response.searchUid || '',
           type: RGAType,
         },
         feedback: {
@@ -225,11 +215,9 @@ export const logGeneratedAnswerDetailedFeedback = (
     },
     analyticsType: 'Qna.SubmitFeedback',
     analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
       return {
         answer: {
-          id: generativeQuestionAnsweringId!,
+          responseId: state.search?.response.searchUid || '',
           type: RGAType,
         },
         feedback: {
@@ -280,12 +268,10 @@ export const logGeneratedAnswerShowAnswers = (): CustomAction =>
     },
     analyticsType: 'Qna.AnswerAction',
     analyticsPayloadBuilder: (state): Qna.AnswerAction => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
       return {
         action: 'show',
         answer: {
-          id: generativeQuestionAnsweringId!,
+          responseId: state.search?.response.searchUid || '',
           type: RGAType,
         },
       };
@@ -307,12 +293,60 @@ export const logGeneratedAnswerHideAnswers = (): CustomAction =>
     },
     analyticsType: 'Qna.AnswerAction',
     analyticsPayloadBuilder: (state): Qna.AnswerAction => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
       return {
         action: 'hide',
         answer: {
-          id: generativeQuestionAnsweringId!,
+          responseId: state.search?.response.searchUid || '',
+          type: RGAType,
+        },
+      };
+    },
+  });
+
+export const logGeneratedAnswerExpand = (): CustomAction =>
+  makeAnalyticsAction({
+    prefix: 'analytics/generatedAnswer/expand',
+    __legacy__getBuilder: (client, state) => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      if (!generativeQuestionAnsweringId) {
+        return null;
+      }
+      return client.makeGeneratedAnswerExpand({
+        generativeQuestionAnsweringId,
+      });
+    },
+    analyticsType: 'Qna.AnswerAction',
+    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
+      return {
+        action: 'expand',
+        answer: {
+          responseId: state.search?.response.searchUid || '',
+          type: RGAType,
+        },
+      };
+    },
+  });
+
+export const logGeneratedAnswerCollapse = (): CustomAction =>
+  makeAnalyticsAction({
+    prefix: 'analytics/generatedAnswer/collapse',
+    __legacy__getBuilder: (client, state) => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      if (!generativeQuestionAnsweringId) {
+        return null;
+      }
+      return client.makeGeneratedAnswerCollapse({
+        generativeQuestionAnsweringId,
+      });
+    },
+    analyticsType: 'Qna.AnswerAction',
+    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
+      return {
+        action: 'collapse',
+        answer: {
+          responseId: state.search?.response.searchUid || '',
           type: RGAType,
         },
       };
@@ -334,12 +368,10 @@ export const logCopyGeneratedAnswer = (): CustomAction =>
     },
     analyticsType: 'Qna.AnswerAction',
     analyticsPayloadBuilder: (state): Qna.AnswerAction => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
       return {
         action: 'copyToClipboard',
         answer: {
-          id: generativeQuestionAnsweringId!,
+          responseId: state.search?.response.searchUid || '',
           type: RGAType,
         },
       };
@@ -367,4 +399,6 @@ export const generatedAnswerAnalyticsClient = {
   logOpenGeneratedAnswerSource,
   logRetryGeneratedAnswer,
   logRephraseGeneratedAnswer,
+  logGeneratedAnswerExpand,
+  logGeneratedAnswerCollapse,
 };

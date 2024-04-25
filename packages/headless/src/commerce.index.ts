@@ -122,10 +122,15 @@ export type {SearchFacetGenerator} from './controllers/commerce/search/facets/he
 export {buildSearchFacetGenerator} from './controllers/commerce/search/facets/headless-search-facet-generator';
 
 export type {
-  FacetSearch,
-  FacetSearchResult,
-} from './controllers/commerce/core/facets/searchable/headless-commerce-facet-search';
-export type {FacetSearchState} from './controllers/commerce/core/facets/searchable/headless-commerce-searchable-facet';
+  RegularFacetSearch,
+  RegularFacetSearchState,
+} from './controllers/commerce/core/facets/regular/headless-commerce-regular-facet-search';
+export type {SpecificFacetSearchResult as RegularFacetSearchResult} from './api/search/facet-search/specific-facet-search/specific-facet-search-response';
+export type {
+  CategoryFacetSearch,
+  CategoryFacetSearchState,
+} from './controllers/commerce/core/facets/category/headless-commerce-category-facet-search';
+export type {CategoryFacetSearchResult} from './api/search/facet-search/category-facet-search/category-facet-search-response';
 
 export type {Search} from './controllers/commerce/search/headless-search';
 export {buildSearch} from './controllers/commerce/search/headless-search';

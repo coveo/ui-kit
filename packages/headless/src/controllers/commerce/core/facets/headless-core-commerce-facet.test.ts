@@ -106,7 +106,7 @@ describe('CoreCommerceFacet', () => {
   describe('#toggleSelect', () => {
     const facetValue = () => buildMockCommerceRegularFacetValue({});
 
-    it('dispatches #toggleSelectActionCreatorwith with correct payload', () => {
+    it('dispatches #toggleSelectActionCreator with correct payload', () => {
       facet.toggleSelect(facetValue());
       expect(toggleSelectActionCreator).toHaveBeenCalledWith({
         facetId,

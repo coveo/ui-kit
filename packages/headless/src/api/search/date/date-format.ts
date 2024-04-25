@@ -33,7 +33,7 @@ export function validateAbsoluteDate(date: AbsoluteDate, dateFormat?: string) {
   if (!dayJSDate.isValid()) {
     const provideFormat =
       '. Please provide a date format string in the configuration options. See https://day.js.org/docs/en/parse/string-format for more information.';
-    const withFormat = ` with the format "${dateFormat}""`;
+    const withFormat = ` with the format "${dateFormat}"`;
     throw new Error(
       `Could not parse the provided date "${date}"${
         dateFormat ? withFormat : provideFormat
