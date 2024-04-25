@@ -438,7 +438,7 @@ export class AtomicCategoryFacet implements InitializableComponent {
         isLeafValue={activeParent.isLeafValue}
         onClick={() => {
           this.focusTargets.activeValueFocus.focusAfterSearch();
-          this.facet.toggleSelect(activeParent);
+          this.facet.deselectAll();
         }}
         searchQuery={this.facetState.facetSearch.query}
         setRef={(el) => this.focusTargets.activeValueFocus.setTarget(el)}
