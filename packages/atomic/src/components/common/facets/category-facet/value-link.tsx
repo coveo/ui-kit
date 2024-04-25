@@ -31,7 +31,19 @@ export const CategoryFacetValueLink: FunctionalComponent<
   },
   children
 ) => {
-  const partName = `${isParent ? 'active-parent' : ''} ${isLeafValue ? 'leaf-value' : 'node-value'}`;
+  const partNames = [];
+  if (isParent) {
+    partNames.push('active-parent');
+  } else {
+    partNames.push(`value-link${isSelected ? ' value-link-selected' : ''}`);
+  }
+
+  if (isLeafValue) {
+    partNames.push('leaf-value');
+  } else {
+    partNames.push('node-value');
+  }
+
   return (
     <FacetValueLink
       displayValue={displayValue}
@@ -42,7 +54,7 @@ export const CategoryFacetValueLink: FunctionalComponent<
         onClick();
       }}
       searchQuery={searchQuery}
-      part={partName}
+      part={partNames.join(' ')}
       class="contents"
       buttonRef={(btn) => setRef(btn)}
       subList={children}
