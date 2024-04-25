@@ -3,6 +3,7 @@ import {
   nextPage,
   previousPage,
   setPageSize,
+  registerRecommendationsSlotPagination,
 } from '../../../../features/commerce/pagination/pagination-actions';
 import {paginationReducer as commercePagination} from '../../../../features/commerce/pagination/pagination-slice';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
@@ -22,6 +23,7 @@ describe('core pagination', () => {
   let engine: MockedCommerceEngine;
   let pagination: Pagination;
   const fetchResultsActionCreator = jest.fn();
+  const slotId = 'recommendations-slot-id';
 
   function initPagination(props: Partial<CorePaginationProps> = {}) {
     engine = buildMockCommerceEngine(buildMockCommerceState());
@@ -57,6 +59,46 @@ describe('core pagination', () => {
         options: {pageSize},
       });
       expect(setPageSize).toHaveBeenCalledWith({pageSize});
+    });
+
+    it('when slot id is provided, registers recommendation slot pagination', () => {
+      initPagination({slotId});
+      expect(registerRecommendationsSlotPagination).toHaveBeenCalledWith({
+        slotId,
+      });
+    });
+  });
+
+  describe('#state', () => {
+    it('when slot id is specified, reflects the recommendations slot state', () => {
+      initPagination({slotId: 'slot-id'});
+      engine.state.commercePagination.recommendations['slot-id'] = {
+        perPage: 111,
+        page: 111,
+        totalItems: 111,
+        totalPages: 111,
+      };
+      expect(pagination.state).toEqual({
+        pageSize: 111,
+        page: 111,
+        totalItems: 111,
+        totalPages: 111,
+      });
+    });
+
+    it('when slot id is not specified, reflects the principal state', () => {
+      engine.state.commercePagination.principal = {
+        perPage: 222,
+        page: 222,
+        totalItems: 222,
+        totalPages: 222,
+      };
+      expect(pagination.state).toEqual({
+        pageSize: 222,
+        page: 222,
+        totalItems: 222,
+        totalPages: 222,
+      });
     });
   });
 

@@ -1,9 +1,13 @@
 import {NumberValue, Schema} from '@coveo/bueno';
 import {createSelector} from '@reduxjs/toolkit';
-import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
+import {
+  CommerceEngine,
+  CommerceEngineState,
+} from '../../../../app/commerce-engine/commerce-engine';
 import {
   nextPage,
   previousPage,
+  registerRecommendationsSlotPagination,
   selectPage,
   setPageSize,
 } from '../../../../features/commerce/pagination/pagination-actions';
@@ -111,10 +115,17 @@ export function buildCorePagination(
     );
   }
 
+  if (slotId) {
+    dispatch(registerRecommendationsSlotPagination({slotId}));
+  }
+
   const paginationSelector = createSelector(
-    (state) => state.commercePagination,
+    (state: CommerceEngineState) =>
+      slotId
+        ? state.commercePagination.recommendations[slotId]!
+        : state.commercePagination.principal,
     ({perPage, ...rest}) => ({
-      pageSize: perPage,
+      pageSize: perPage || 0,
       ...rest,
     })
   );
