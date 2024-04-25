@@ -143,21 +143,17 @@ describe('commerceFacetSetReducer', () => {
 
             expect(finalState[facetId]).toBeDefined();
           });
-          it('sets the facet #initialNumberOfResults to #values length from facet response', () => {
+          it('sets the facet #initialNumberOfResults to #numberOfValues from facet response', () => {
             const facet = buildMockCommerceRegularFacetResponse({
               facetId,
-              values: [
-                buildMockCommerceRegularFacetValue(),
-                buildMockCommerceRegularFacetValue(),
-                buildMockCommerceRegularFacetValue(),
-              ],
+              numberOfValues: 5,
             });
 
             const action = buildQueryAction([facet]);
             const finalState = commerceFacetSetReducer(state, action);
 
             expect(finalState[facetId]?.request.initialNumberOfValues).toEqual(
-              facet.values.length
+              5
             );
           });
         });
@@ -167,24 +163,19 @@ describe('commerceFacetSetReducer', () => {
             request: buildMockCommerceFacetRequest({
               type: 'regular',
               facetId,
-              initialNumberOfValues: 1,
-              values: [buildMockCommerceRegularFacetValue()],
+              initialNumberOfValues: 8,
             }),
           });
 
           const facet = buildMockCommerceRegularFacetResponse({
             facetId,
-            values: [
-              buildMockCommerceRegularFacetValue(),
-              buildMockCommerceRegularFacetValue(),
-              buildMockCommerceRegularFacetValue(),
-            ],
+            numberOfValues: 2,
           });
 
           const action = buildQueryAction([facet]);
           const finalState = commerceFacetSetReducer(state, action);
 
-          expect(finalState[facetId]?.request.initialNumberOfValues).toEqual(1);
+          expect(finalState[facetId]?.request.initialNumberOfValues).toEqual(8);
         });
 
         it('sets/updates facet request #displayName in state from response', () => {
@@ -238,10 +229,10 @@ describe('commerceFacetSetReducer', () => {
           expect(updatedState2[facetId]?.request.field).toEqual(field2);
         });
 
-        it('sets/updates facet request #numberOfValues in state from #values length in response', () => {
+        it('sets/updates facet request #numberOfValues in state from #numberOfValues in response', () => {
           const facetResponse1 = buildMockCommerceRegularFacetResponse({
             facetId,
-            values: [buildMockCommerceRegularFacetValue()],
+            numberOfValues: 1,
           });
 
           const action1 = buildQueryAction([facetResponse1]);
@@ -251,11 +242,7 @@ describe('commerceFacetSetReducer', () => {
 
           const facetResponse2 = buildMockCommerceRegularFacetResponse({
             facetId,
-            values: [
-              buildMockCommerceRegularFacetValue(),
-              buildMockCommerceRegularFacetValue(),
-              buildMockCommerceRegularFacetValue(),
-            ],
+            numberOfValues: 3,
           });
 
           const action2 = buildQueryAction([facetResponse2]);
@@ -2087,11 +2074,22 @@ describe('commerceFacetSetReducer', () => {
     });
   });
 
+  it('#deselectAllBreadcrumbs resets the state of all facet values to "idle"', () => {
+    const facetId = '1';
+    state[facetId] = buildMockCommerceFacetSlice({
+      request: buildMockCommerceFacetRequest({
+        type: 'regular',
+        facetId,
+        values: [{value: 'facet value', state: 'selected'}],
+      }),
+    });
+
+    const finalState = commerceFacetSetReducer(state, deselectAllBreadcrumbs());
+
+    expect(finalState[facetId].request.values[0].state).toEqual('idle');
+  });
+
   describe.each([
-    {
-      actionName: '#deselectAllBreadcrumbs',
-      action: deselectAllBreadcrumbs,
-    },
     {
       actionName: '#setContext',
       action: setContext,
@@ -2107,7 +2105,7 @@ describe('commerceFacetSetReducer', () => {
   ])('$actionName', ({action}: {action: ActionCreator}) => {
     const facetId = '1';
 
-    it('resets facets', () => {
+    it('clears all facets values', () => {
       state[facetId] = buildMockCommerceFacetSlice({
         request: buildMockCommerceFacetRequest({
           type: 'regular',
@@ -2118,7 +2116,7 @@ describe('commerceFacetSetReducer', () => {
 
       const finalState = commerceFacetSetReducer(state, action({}));
 
-      expect(finalState[facetId].request.values[0].state).toEqual('idle');
+      expect(finalState[facetId].request.values.length).toBe(0);
     });
   });
 });
