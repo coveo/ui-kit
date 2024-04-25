@@ -1,8 +1,4 @@
-import {
-  AnyAction,
-  createReducer,
-  type Draft as WritableDraft,
-} from '@reduxjs/toolkit';
+import {createReducer, type Draft as WritableDraft} from '@reduxjs/toolkit';
 import {
   CategoryFacetValueRequest,
   DateRangeRequest,
@@ -337,10 +333,10 @@ export const commerceFacetSetReducer = createReducer(
 
         handleDeselectAllFacetValues(request);
       })
-      .addCase(deselectAllBreadcrumbs, resetAllFacetValues)
-      .addCase(setContext, resetAllFacetValues)
-      .addCase(setView, resetAllFacetValues)
-      .addCase(setUser, resetAllFacetValues);
+      .addCase(deselectAllBreadcrumbs, setAllFacetValuesToIdle)
+      .addCase(setContext, clearAllFacetValues)
+      .addCase(setView, clearAllFacetValues)
+      .addCase(setUser, clearAllFacetValues);
   }
 );
 
@@ -370,7 +366,9 @@ function ensureCategoryFacetRequest(
 
 function handleQueryFulfilled(
   state: WritableDraft<CommerceFacetSetState>,
-  action: AnyAction
+  action: ReturnType<
+    typeof fetchProductListing.fulfilled | typeof executeSearch.fulfilled
+  >
 ) {
   const existingFacets = new Set(Object.keys(state));
   const facets = action.payload.response.facets;
@@ -464,14 +462,14 @@ function updateStateFromFacetResponse(
   if (!facetRequest) {
     state[facetId] = {request: {} as AnyFacetRequest};
     facetRequest = state[facetId].request;
-    facetRequest.initialNumberOfValues = facetResponse.values.length;
+    facetRequest.initialNumberOfValues = facetResponse.numberOfValues;
   } else {
     facetsToRemove.delete(facetId);
   }
 
   facetRequest.facetId = facetId;
   facetRequest.displayName = facetResponse.displayName;
-  facetRequest.numberOfValues = facetResponse.values.length;
+  facetRequest.numberOfValues = facetResponse.numberOfValues;
   facetRequest.field = facetResponse.field;
   facetRequest.type = facetResponse.type;
   facetRequest.values =
@@ -540,9 +538,15 @@ function insertNewValue(
   facetRequest.numberOfValues = facetRequest.values.length;
 }
 
-function resetAllFacetValues(state: CommerceFacetSetState) {
+function setAllFacetValuesToIdle(state: CommerceFacetSetState) {
   Object.values(state).forEach((facet) => {
     facet.request.values.forEach((value) => (value.state = 'idle'));
+  });
+}
+
+function clearAllFacetValues(state: CommerceFacetSetState) {
+  Object.values(state).forEach((facet) => {
+    facet.request.values = [];
   });
 }
 
