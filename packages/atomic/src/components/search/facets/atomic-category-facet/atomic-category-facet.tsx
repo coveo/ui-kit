@@ -395,7 +395,7 @@ export class AtomicCategoryFacet implements InitializableComponent {
               this.facet.deselectAll();
             }}
           />
-          <CategoryFacetParentAsTreeContainer isRoot={isRoot}>
+          <CategoryFacetParentAsTreeContainer isTopLevel={false}>
             {this.renderValuesTree(parents, false)}
           </CategoryFacetParentAsTreeContainer>
         </CategoryFacetTreeValueContainer>
@@ -416,7 +416,7 @@ export class AtomicCategoryFacet implements InitializableComponent {
               this.facet.toggleSelect(parentValue);
             }}
           />
-          <CategoryFacetParentAsTreeContainer isRoot={isRoot}>
+          <CategoryFacetParentAsTreeContainer isTopLevel={false}>
             {this.renderValuesTree(parents.slice(1), false)}
           </CategoryFacetParentAsTreeContainer>
         </CategoryFacetTreeValueContainer>
@@ -594,7 +594,7 @@ export class AtomicCategoryFacet implements InitializableComponent {
                 <FacetValuesGroup i18n={i18n} label={label}>
                   {this.hasParents ? (
                     <CategoryFacetParentAsTreeContainer
-                      isRoot={true}
+                      isTopLevel={true}
                       className="mt-3"
                     >
                       {this.renderValuesTree(parents, true)}
