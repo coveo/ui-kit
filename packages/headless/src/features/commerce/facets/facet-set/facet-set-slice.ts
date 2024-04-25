@@ -464,14 +464,14 @@ function updateStateFromFacetResponse(
   if (!facetRequest) {
     state[facetId] = {request: {} as AnyFacetRequest};
     facetRequest = state[facetId].request;
-    facetRequest.initialNumberOfValues = facetResponse.values.length;
+    facetRequest.initialNumberOfValues = facetResponse.numberOfValues;
   } else {
     facetsToRemove.delete(facetId);
   }
 
   facetRequest.facetId = facetId;
   facetRequest.displayName = facetResponse.displayName;
-  facetRequest.numberOfValues = facetResponse.values.length;
+  facetRequest.numberOfValues = facetResponse.numberOfValues;
   facetRequest.field = facetResponse.field;
   facetRequest.type = facetResponse.type;
   facetRequest.values =
