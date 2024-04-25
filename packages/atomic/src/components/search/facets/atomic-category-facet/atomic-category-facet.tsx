@@ -42,6 +42,7 @@ import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
 import {FacetGuard} from '../../../common/facets/facet-guard';
 import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
+import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
 import {announceFacetSearchResultsWithAriaLive} from '../../../common/facets/facet-search/facet-search-aria-live';
 import {FacetSearchInput} from '../../../common/facets/facet-search/facet-search-input';
 import {FacetSearchMatches} from '../../../common/facets/facet-search/facet-search-matches';
@@ -570,46 +571,53 @@ export class AtomicCategoryFacet implements InitializableComponent {
         hasError={hasError}
         hasResults={valuesAsTrees.length > 0}
       >
-        <FacetContainer>
-          {this.renderHeader()}
-          {!this.isCollapsed && [
-            this.renderSearchInput(),
-            shouldDisplaySearchResults(facetSearch) ? (
-              <Fragment>
-                {facetSearch.values.length ? (
-                  <FacetValuesGroup
-                    i18n={i18n}
-                    label={label}
-                    query={facetSearch.query}
-                  >
-                    {this.renderSearchResults()}
-                  </FacetValuesGroup>
-                ) : (
-                  <div class="mt-3"></div>
-                )}
-                {this.renderMatches()}
-              </Fragment>
-            ) : (
-              <Fragment>
-                <FacetValuesGroup i18n={i18n} label={label}>
-                  {this.hasParents ? (
-                    <CategoryFacetParentAsTreeContainer
-                      isTopLevel={true}
-                      className="mt-3"
+        {firstSearchExecuted ? (
+          <FacetContainer>
+            {this.renderHeader()}
+            {!this.isCollapsed && [
+              this.renderSearchInput(),
+              shouldDisplaySearchResults(facetSearch) ? (
+                <Fragment>
+                  {facetSearch.values.length ? (
+                    <FacetValuesGroup
+                      i18n={i18n}
+                      label={label}
+                      query={facetSearch.query}
                     >
-                      {this.renderValuesTree(parents, true)}
-                    </CategoryFacetParentAsTreeContainer>
+                      {this.renderSearchResults()}
+                    </FacetValuesGroup>
                   ) : (
-                    <CategoryFacetChildrenAsTreeContainer className="mt-3">
-                      {this.renderChildren()}
-                    </CategoryFacetChildrenAsTreeContainer>
+                    <div class="mt-3"></div>
                   )}
-                </FacetValuesGroup>
-                {this.renderShowMoreLess()}
-              </Fragment>
-            ),
-          ]}
-        </FacetContainer>
+                  {this.renderMatches()}
+                </Fragment>
+              ) : (
+                <Fragment>
+                  <FacetValuesGroup i18n={i18n} label={label}>
+                    {this.hasParents ? (
+                      <CategoryFacetParentAsTreeContainer
+                        isTopLevel={true}
+                        className="mt-3"
+                      >
+                        {this.renderValuesTree(parents, true)}
+                      </CategoryFacetParentAsTreeContainer>
+                    ) : (
+                      <CategoryFacetChildrenAsTreeContainer className="mt-3">
+                        {this.renderChildren()}
+                      </CategoryFacetChildrenAsTreeContainer>
+                    )}
+                  </FacetValuesGroup>
+                  {this.renderShowMoreLess()}
+                </Fragment>
+              ),
+            ]}
+          </FacetContainer>
+        ) : (
+          <FacetPlaceholder
+            isCollapsed={this.isCollapsed}
+            numberOfValues={this.numberOfValues}
+          />
+        )}
       </FacetGuard>
     );
   }
