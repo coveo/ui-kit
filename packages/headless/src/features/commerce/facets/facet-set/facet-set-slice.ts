@@ -1,8 +1,4 @@
-import {
-  AnyAction,
-  createReducer,
-  type Draft as WritableDraft,
-} from '@reduxjs/toolkit';
+import {createReducer, type Draft as WritableDraft} from '@reduxjs/toolkit';
 import {
   CategoryFacetValueRequest,
   DateRangeRequest,
@@ -370,7 +366,9 @@ function ensureCategoryFacetRequest(
 
 function handleQueryFulfilled(
   state: WritableDraft<CommerceFacetSetState>,
-  action: AnyAction
+  action: ReturnType<
+    typeof fetchProductListing.fulfilled | typeof executeSearch.fulfilled
+  >
 ) {
   const existingFacets = new Set(Object.keys(state));
   const facets = action.payload.response.facets;
