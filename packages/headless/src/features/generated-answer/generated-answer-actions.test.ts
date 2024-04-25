@@ -7,10 +7,13 @@ import {
   updateMessage,
   updateResponseFormat,
   registerFieldsToIncludeInCitations,
+  setAnswerContentFormat,
 } from './generated-answer-actions';
 import {
   GeneratedAnswerStyle,
+  GeneratedContentFormat,
   generatedAnswerStyle,
+  generatedContentFormat,
 } from './generated-response-format';
 
 describe('generated answer', () => {
@@ -69,6 +72,18 @@ describe('generated answer', () => {
         expect(() => updateResponseFormat({answerStyle: style})).not.toThrow();
       }
     );
+
+    test.each(generatedContentFormat)(
+      'should accept a valid payload with format: "%i"',
+      (format: GeneratedContentFormat) => {
+        expect(() =>
+          updateResponseFormat({
+            answerStyle: 'default',
+            contentFormat: [format],
+          })
+        ).not.toThrow();
+      }
+    );
   });
 
   describe('#registerFieldsToIncludeInCitations', () => {
@@ -85,5 +100,14 @@ describe('generated answer', () => {
     it('should accept a valid payload', () => {
       expect(() => setIsVisible(true)).not.toThrow();
     });
+  });
+
+  describe('#setAnswerContentFormat', () => {
+    test.each(generatedContentFormat)(
+      'should accept a valid payload with format: "%i"',
+      (format: GeneratedContentFormat) => {
+        expect(() => setAnswerContentFormat(format)).not.toThrow();
+      }
+    );
   });
 });

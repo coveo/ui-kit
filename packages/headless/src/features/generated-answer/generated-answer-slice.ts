@@ -16,6 +16,7 @@ import {
   sendGeneratedAnswerFeedback,
   registerFieldsToIncludeInCitations,
   setId,
+  setAnswerContentFormat,
   setIsAnswerGenerated,
   expandGeneratedAnswer,
   collapseGeneratedAnswer,
@@ -38,6 +39,7 @@ export const generatedAnswerReducer = createReducer(
         if (!state.answer) {
           state.answer = '';
         }
+
         state.answer += payload.textDelta;
         delete state.error;
       })
@@ -88,6 +90,9 @@ export const generatedAnswerReducer = createReducer(
       })
       .addCase(setIsStreaming, (state, {payload}) => {
         state.isStreaming = payload;
+      })
+      .addCase(setAnswerContentFormat, (state, {payload}) => {
+        state.answerContentFormat = payload;
       })
       .addCase(updateResponseFormat, (state, {payload}) => {
         state.responseFormat = payload;

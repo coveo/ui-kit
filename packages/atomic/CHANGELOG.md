@@ -1,3 +1,9 @@
+## 2.64.1 (2024-04-24)
+
+### Bug Fixes
+
+- **genqa:** fix rephrase buttons for very small layout ([#3830](https://github.com/coveo/ui-kit/issues/3830)) ([79fbccc](https://github.com/coveo/ui-kit/commits/79fbccc14e75556e845c871e1c13e57920110208))
+
 # 2.64.0 (2024-04-17)
 
 ### Bug Fixes
