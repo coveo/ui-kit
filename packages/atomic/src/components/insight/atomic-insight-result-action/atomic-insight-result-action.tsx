@@ -27,7 +27,7 @@ export class AtomicInsightResultAction implements InitializableComponent {
   @State() public error!: Error;
 
   @Event({
-    eventName: 'AtomicInsightResultActionClicked',
+    eventName: 'atomicInsightResultActionClicked',
     composed: true,
     cancelable: true,
     bubbles: true,

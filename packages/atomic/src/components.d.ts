@@ -3064,7 +3064,7 @@ declare global {
         new (): HTMLAtomicInsightResultElement;
     };
     interface HTMLAtomicInsightResultActionElementEventMap {
-        "AtomicInsightResultActionClicked": InsightResultActionClickedEvent;
+        "atomicInsightResultActionClicked": InsightResultActionClickedEvent;
     }
     interface HTMLAtomicInsightResultActionElement extends Components.AtomicInsightResultAction, HTMLStencilElement {
         addEventListener<K extends keyof HTMLAtomicInsightResultActionElementEventMap>(type: K, listener: (this: HTMLAtomicInsightResultActionElement, ev: AtomicInsightResultActionCustomEvent<HTMLAtomicInsightResultActionElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
