@@ -34,8 +34,16 @@
 }
 
 @define-mixin mobile-footer-xs-layout {
+  & {
+    @apply mt-4;
+  }
+
   [part='rephrase-button-label'] {
     @apply hidden;
+  }
+
+  .feedback-buttons {
+    @apply relative top-0 right-0;
   }
 }
 

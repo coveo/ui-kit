@@ -17,6 +17,7 @@ function getMockBaseCommerceFacetResponse(): Omit<
     fromAutoSelect: false,
     isFieldExpanded: false,
     moreValuesAvailable: false,
+    numberOfValues: 0,
   };
 }
 

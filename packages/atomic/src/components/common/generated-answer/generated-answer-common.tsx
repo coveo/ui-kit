@@ -189,6 +189,41 @@ export class GeneratedAnswerCommon {
       });
   }
 
+  private renderFeedbackAndCopyButtons() {
+    if (this.props.getGeneratedAnswerState()?.isStreaming) {
+      return null;
+    }
+    return (
+      <div class="feedback-buttons flex h-9 absolute top-6 right-20 shrink-0 gap-2">
+        <FeedbackButton
+          title={this.props.getBindings().i18n.t('this-answer-was-helpful')}
+          variant="like"
+          active={!!this.props.getGeneratedAnswerState()?.liked}
+          onClick={() => this.props.getGeneratedAnswer()?.like()}
+        />
+        <FeedbackButton
+          title={this.props.getBindings().i18n.t('this-answer-was-not-helpful')}
+          variant="dislike"
+          active={!!this.props.getGeneratedAnswerState()?.disliked}
+          onClick={() => this.clickDislike()}
+        />
+        {this.hasClipboard ? (
+          <CopyButton
+            title={this.copyToClipboardTooltip}
+            isCopied={this.props.getCopied()}
+            error={this.props.getCopyError()}
+            onClick={async () => {
+              const answer = this.props.getGeneratedAnswerState()?.answer;
+              if (answer) {
+                await this.copyToClipboard(answer);
+              }
+            }}
+          />
+        ) : null}
+      </div>
+    );
+  }
+
   private clickDislike() {
     if (
       this.modalRef &&
@@ -222,44 +257,7 @@ export class GeneratedAnswerCommon {
           >
             {this.props.getBindings().i18n.t('generated-answer-title')}
           </Heading>
-          <div class="flex gap-2 h-9 items-center ml-auto">
-            {!this.hasRetryableError &&
-              !this.props.getGeneratedAnswerState()?.isStreaming &&
-              this.isAnswerVisible && (
-                <div class="feedback-buttons flex shrink-0 gap-2 ml-auto">
-                  <FeedbackButton
-                    title={this.props
-                      .getBindings()
-                      .i18n.t('this-answer-was-helpful')}
-                    variant="like"
-                    active={!!this.props.getGeneratedAnswerState()?.liked}
-                    onClick={() => this.props.getGeneratedAnswer()?.like()}
-                  />
-                  <FeedbackButton
-                    title={this.props
-                      .getBindings()
-                      .i18n.t('this-answer-was-not-helpful')}
-                    variant="dislike"
-                    active={!!this.props.getGeneratedAnswerState()?.disliked}
-                    onClick={() => this.clickDislike()}
-                  />
-                  {this.hasClipboard ? (
-                    <CopyButton
-                      title={this.copyToClipboardTooltip}
-                      isCopied={this.props.getCopied()}
-                      error={this.props.getCopyError()}
-                      onClick={async () => {
-                        const answer =
-                          this.props.getGeneratedAnswerState()?.answer;
-                        if (answer) {
-                          await this.copyToClipboard(answer);
-                        }
-                      }}
-                    />
-                  ) : null}
-                </div>
-              )}
-
+          <div class="flex h-9 items-center ml-auto">
             <Switch
               part="toggle"
               checked={this.isAnswerVisible}
@@ -291,6 +289,7 @@ export class GeneratedAnswerCommon {
             }
             isStreaming={!!this.props.getGeneratedAnswerState()?.isStreaming}
           >
+            {this.renderFeedbackAndCopyButtons()}
             <SourceCitations
               label={this.props.getBindings().i18n.t('citations')}
               isVisible={
