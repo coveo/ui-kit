@@ -3,9 +3,10 @@ import {
   ProductListingState,
   ProductListing,
   buildSearch,
+  SearchState,
   Search,
+  Product,
 } from '@coveo/headless/commerce';
-import {SearchState} from '@coveo/headless/dist/definitions/controllers/commerce/search/headless-search';
 import {Component, Element, State, h} from '@stencil/core';
 import {
   BindStateToController,
@@ -69,8 +70,8 @@ export class AtomicCommerceResultList
     }
 
     return (
-      <ul class="gap-4 result-grid">
-        {products.map((product) => (
+      <ul class="gap-4 mx-4 result-grid">
+        {products.map((product: Product) => (
           <a class="flex" href={product.clickUri}>
             <li class="p-2 mx-auto border-2 rounded-md hover:shadow">
               <img
