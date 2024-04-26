@@ -35,7 +35,7 @@ describe('ProductListingRegularFacet', () => {
     engine = buildMockCommerceEngine(preloadedState);
   }
 
-  function initProductListingRegularFacet() {
+  function initFacet() {
     facet = buildProductListingRegularFacet(engine, options);
   }
 
@@ -66,7 +66,7 @@ describe('ProductListingRegularFacet', () => {
     setFacetSearch();
 
     initEngine(state);
-    initProductListingRegularFacet();
+    initFacet();
   });
 
   it('initializes', () => {
@@ -142,6 +142,7 @@ describe('ProductListingRegularFacet', () => {
 
     it('#state.isLoading uses #isFacetLoadingResponseSelector', () => {
       state.productListing.isLoading = true;
+      initFacet();
       expect(facet.state.isLoading).toBe(true);
     });
 
@@ -150,7 +151,7 @@ describe('ProductListingRegularFacet', () => {
       expect(facet.state.facetSearch.isLoading).toBe(false);
 
       state.facetSearchSet[facetId].isLoading = true;
-      initProductListingRegularFacet();
+      initFacet();
       expect(facet.state.facetSearch.isLoading).toBe(true);
     });
   });
