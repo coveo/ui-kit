@@ -1,7 +1,23 @@
-import {transformMarkdownToHtml} from './markdownUtils';
+import {transformMarkdownToHtml} from './markdown-utils';
 
 describe('markdownUtils', () => {
   describe('transformMarkdownToHtml', () => {
+    const textVariants = [
+      {title: 'text', text: 'content'},
+      {title: 'text with spaces', text: 'content with spaces'},
+    ];
+
+    const inlineElements = [
+      {
+        title: 'bold-italic',
+        symbol: '***',
+        html: '<strong><em>{0}</em></strong>',
+      },
+      {title: 'bold', symbol: '**', html: '<strong>{0}</strong>'},
+      {title: 'italic', symbol: '*', html: '<em>{0}</em>'},
+      {title: 'code', symbol: '`', html: '<code>{0}</code>'},
+    ];
+
     const removeLineBreaks = (text: string) => text.replace(/\n/g, '');
     const unindentHtml = (html: string) =>
       html.replace(/\s+</g, '<').replace(/>\s+/g, '>');
@@ -126,135 +142,67 @@ describe('markdownUtils', () => {
     });
 
     describe('with unclosed inline elements in text', () => {
-      it('should complete bold element', () => {
-        const text = 'some incomplete **content';
+      inlineElements.map((inlineElement) => {
+        textVariants.map((textVariant) => {
+          it(`should complete ${inlineElement.title} element for ${textVariant.title}`, () => {
+            const text = `some incomplete ${inlineElement.symbol}${textVariant.text}`;
 
-        const html = transformMarkdownToHtml(text);
+            const html = transformMarkdownToHtml(text);
 
-        expect(removeLineBreaks(html)).toBe(
-          '<p>some incomplete <strong>content</strong></p>'
-        );
-      });
-
-      it('should complete italic element', () => {
-        const text = 'some incomplete *content';
-
-        const html = transformMarkdownToHtml(text);
-
-        expect(removeLineBreaks(html)).toBe(
-          '<p>some incomplete <em>content</em></p>'
-        );
-      });
-
-      it('should complete bold-italic element', () => {
-        const text = 'some incomplete ***content';
-
-        const html = transformMarkdownToHtml(text);
-
-        expect(removeLineBreaks(html)).toBe(
-          '<p>some incomplete <strong><em>content</em></strong></p>'
-        );
-      });
-
-      it('should complete code element', () => {
-        const text = 'some incomplete `content';
-
-        const html = transformMarkdownToHtml(text);
-
-        expect(removeLineBreaks(html)).toBe(
-          '<p>some incomplete <code>content</code></p>'
-        );
+            expect(removeLineBreaks(html)).toBe(
+              `<p>some incomplete ${inlineElement.html.replace('{0}', textVariant.text)}</p>`
+            );
+          });
+        });
       });
     });
 
     describe('with unclosed inline elements in list items', () => {
-      it('should complete bold element', () => {
-        const text = '1. item A\n2. **item';
+      inlineElements.map((inlineElement) => {
+        textVariants.map((textVariant) => {
+          it(`should complete ${inlineElement.title} element for ${textVariant.title}`, () => {
+            const text = `1. item A\n2. ${inlineElement.symbol}${textVariant.text}`;
 
-        const html = transformMarkdownToHtml(text);
+            const html = transformMarkdownToHtml(text);
 
-        expect(removeLineBreaks(html)).toBe(
-          removeLineBreaks(
-            unindentHtml(`
-              <ol>
-                <li>item A</li>
-                <li><strong>item</strong></li>
-              </ol>
-            `)
-          )
-        );
-      });
-
-      it('should complete italic element', () => {
-        const text = '1. item A\n2. *item';
-
-        const html = transformMarkdownToHtml(text);
-
-        expect(removeLineBreaks(html)).toBe(
-          removeLineBreaks(
-            unindentHtml(`
-              <ol>
-                <li>item A</li>
-                <li><em>item</em></li>
-              </ol>
-            `)
-          )
-        );
-      });
-
-      it('should complete bold-italic element', () => {
-        const text = '1. item A\n2. ***item';
-
-        const html = transformMarkdownToHtml(text);
-
-        expect(removeLineBreaks(html)).toBe(
-          removeLineBreaks(
-            unindentHtml(`
-              <ol>
-                <li>item A</li>
-                <li><strong><em>item</em></strong></li>
-              </ol>
-            `)
-          )
-        );
-      });
-
-      it('should complete code element', () => {
-        const text = '1. item A\n2. `item';
-
-        const html = transformMarkdownToHtml(text);
-
-        expect(removeLineBreaks(html)).toBe(
-          removeLineBreaks(
-            unindentHtml(`
-              <ol>
-                <li>item A</li>
-                <li><code>item</code></li>
-              </ol>
-            `)
-          )
-        );
+            expect(removeLineBreaks(html)).toBe(
+              removeLineBreaks(
+                unindentHtml(`
+                  <ol>
+                    <li>item A</li>
+                    <li>${inlineElement.html.replace('{0}', textVariant.text)}</li>
+                  </ol>
+                `)
+              )
+            );
+          });
+        });
       });
     });
 
     describe('with escaped unclosed inline elements', () => {
-      const inlineElementTests = [
-        {title: 'italic', symbol: '*'},
-        {title: 'bold', symbol: '**'},
-        {title: 'bold-italic', symbol: '***'},
-        {title: 'code', symbol: '`'},
-      ];
-
-      test.each(inlineElementTests)(
-        'should not complete %i element',
-        (testCase) => {
-          const text = `text with ${testCase.symbol} that is not transformed`;
+      inlineElements.map((inlineElement) => {
+        it(`should not complete ${inlineElement.title} element`, () => {
+          const text = `text with ${inlineElement.symbol} that is not transformed`;
 
           const html = transformMarkdownToHtml(text);
 
           expect(removeLineBreaks(html)).toBe(`<p>${text}</p>`);
-        }
-      );
+        });
+      });
+    });
+
+    describe('with nested inline elements', () => {
+      it('should parse text correctly', () => {
+        const text =
+          'text with **bold text having *italic* and `code` nested elements**';
+
+        const html = transformMarkdownToHtml(text);
+
+        expect(removeLineBreaks(html)).toBe(
+          '<p>text with <strong>bold text having <em>italic</em> and <code>code</code> nested elements</strong></p>'
+        );
+      });
     });
   });
 });

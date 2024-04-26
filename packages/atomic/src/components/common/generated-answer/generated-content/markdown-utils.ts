@@ -1,22 +1,20 @@
 import {marked} from 'marked';
 
-const unclosedItalic = /(?:\*)(\w[\w\s]*)$/;
-const unclosedStrong = /(?:\*{2})(\w[\w\s]*)$/;
-const unclosedStrongItalic = /(?:\*{3})(\w[\w\s]*)$/;
-const unclosedCode = /(?:`)(\w[\w\s]*)$/;
+const unclosedElement = /(\*{1,3}|`)($|\w[\w\s]*$)/;
 
 const completeUnclosedElement = (text: string) => {
-  if (unclosedStrongItalic.test(text)) {
-    return text.replace(unclosedStrongItalic, '<strong><em>$1</em></strong>');
-  }
-  if (unclosedStrong.test(text)) {
-    return text.replace(unclosedStrong, '<strong>$1</strong>');
-  }
-  if (unclosedItalic.test(text)) {
-    return text.replace(unclosedItalic, '<em>$1</em>');
-  }
-  if (unclosedCode.test(text)) {
-    return text.replace(unclosedCode, '<code>$1</code>');
+  const match = unclosedElement.exec(text);
+  if (match) {
+    const symbol = match[1];
+
+    const replacements: Record<string, string> = {
+      '***': '<strong><em>$2</em></strong>',
+      '**': '<strong>$2</strong>',
+      '*': '<em>$2</em>',
+      '`': '<code>$2</code>',
+    };
+
+    return text.replace(unclosedElement, replacements[symbol]);
   }
 
   return text;

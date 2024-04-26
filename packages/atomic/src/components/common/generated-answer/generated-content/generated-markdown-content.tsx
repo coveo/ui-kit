@@ -1,6 +1,6 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import DOMPurify from 'dompurify';
-import {transformMarkdownToHtml} from './markdownUtils';
+import {transformMarkdownToHtml} from './markdown-utils';
 
 interface GeneratedMarkdownContentProps {
   answer?: string;
