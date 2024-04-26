@@ -23,6 +23,9 @@ export interface Search extends Controller, SolutionTypeSubControllers {
    * Executes the first search.
    */
   executeFirstSearch(analyticsEvent?: LegacySearchAction): void;
+  executeFirstSearchAfterStandaloneSearchBoxRedirect(
+    analyticsEvent?: LegacySearchAction
+  ): void;
 
   /**
    * A scoped and simplified part of the headless state that is relevant to the `Search` controller.
@@ -66,8 +69,11 @@ export function buildSearch(engine: CommerceEngine): Search {
       if (firstSearchExecuted) {
         return;
       }
-
       dispatch(executeSearch());
+    },
+
+    executeFirstSearchAfterStandaloneSearchBoxRedirect() {
+      this.executeFirstSearch();
     },
   };
 }

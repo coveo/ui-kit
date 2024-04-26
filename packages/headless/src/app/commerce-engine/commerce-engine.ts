@@ -10,6 +10,8 @@ import {paginationReducer} from '../../features/commerce/pagination/pagination-s
 import {productListingV2Reducer} from '../../features/commerce/product-listing/product-listing-slice';
 import {queryReducer} from '../../features/commerce/query/query-slice';
 import {recommendationsReducer} from '../../features/commerce/recommendations/recommendations-slice';
+import {executeSearch} from '../../features/commerce/search/search-actions';
+import {responseIdSelector} from '../../features/commerce/search/search-selectors';
 import {commerceSearchReducer} from '../../features/commerce/search/search-slice';
 import {sortReducer} from '../../features/commerce/sort/sort-slice';
 import {facetOrderReducer} from '../../features/facets/facet-order/facet-order-slice';
@@ -58,10 +60,11 @@ export type CommerceEngineState =
  * @internal WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
  */
 export interface CommerceEngine<State extends object = {}>
-  extends CoreEngine<
-    State & CommerceEngineState,
-    CommerceThunkExtraArguments
-  > {}
+  extends CoreEngine<State & CommerceEngineState, CommerceThunkExtraArguments> {
+  executeFirstSearch(): void;
+
+  executeFirstSearchAfterStandaloneSearchBoxRedirect(): void;
+}
 
 /**
  * The commerce engine options.
@@ -110,6 +113,19 @@ export function buildCommerceEngine(
 
     get state() {
       return engine.state;
+    },
+
+    executeFirstSearch() {
+      const firstSearchExecuted = responseIdSelector(engine.state);
+
+      if (firstSearchExecuted) {
+        return;
+      }
+
+      engine.dispatch(executeSearch());
+    },
+    executeFirstSearchAfterStandaloneSearchBoxRedirect() {
+      return;
     },
   };
 }

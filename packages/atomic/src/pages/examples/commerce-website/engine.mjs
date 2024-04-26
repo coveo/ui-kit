@@ -10,6 +10,9 @@ import {
   buildSearchBox,
 } from '/build/headless/commerce/headless.esm.js';
 
+export {getParamValue} from './commerce-nav.mjs';
+
+export {buildSearchBox} from '/build/headless/commerce/headless.esm.js';
 export const setupEngine = async () => {
   const engine = buildCommerceEngine({
     configuration: {
@@ -22,10 +25,18 @@ export const setupEngine = async () => {
       analytics: {
         trackingId: 'sports',
       },
+      context: {
+        language: 'en',
+        country: 'US',
+        currency: 'USD',
+        view: {
+          url: navContent[document.title].barcaUrl,
+          referrer: document.referrer,
+        },
+      },
     },
   });
-
-  buildContext(engine, {
+  const context = buildContext(engine, {
     options: {
       view: {
         url: navContent[document.title].barcaUrl,
