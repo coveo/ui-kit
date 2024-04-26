@@ -1,17 +1,17 @@
 [part='generated-text'] {
   h1 {
-    font-size: 1.375em;
+    font-size: var(--atomic-text-2xl);
   }
 
   h2 {
-    font-size: 1.25em;
+    font-size: var(--atomic-text-xl);
   }
 
   h3,
   h4,
   h5,
   h6 {
-    font-size: var(--atomic-text-xl);
+    font-size: var(--atomic-text-lg);
   }
 
   h1,
@@ -20,9 +20,8 @@
   h4,
   h5,
   h6 {
+    @apply mt-4 mb-2;
     font-weight: var(--atomic-font-bold);
-    margin-top: 1em;
-    margin-bottom: 0.5em;
   }
 
   li,
@@ -30,63 +29,50 @@
   blockquote,
   th,
   td {
-    line-height: 1.5em;
+    @apply leading-6;
   }
 
   ol {
-    list-style: number;
-    padding-inline-start: 2em;
+    @apply list-decimal ps-8;
   }
 
   ul {
-    list-style: disc;
-    padding-inline-start: 2em;
+    @apply list-disc ps-8;
   }
 
   code {
+    @apply px-2 py-1 border border-solid;
     color: var(--atomic-inline-code);
     font-size: var(--atomic-text-sm);
-    padding: 0.25em 0.5em;
     background-color: var(--atomic-neutral-light);
-    border: solid 1px var(--atomic-neutral);
+    border-color: var(--atomic-neutral);
     border-radius: var(--atomic-border-radius);
   }
 
   pre {
-    padding: 0.5em;
+    @apply border border-solid p-2 overflow-auto max-h-96;
     background-color: var(--atomic-neutral-light);
-    border: solid 1px var(--atomic-neutral);
+    border-color: var(--atomic-neutral);
     border-radius: var(--atomic-border-radius-md);
-    overflow: auto;
     scrollbar-color: var(--atomic-neutral);
-    max-height: 22em;
 
     code {
+      @apply p-0 border-0 bg-transparent;
       color: var(--atomic-on-background);
-      border: unset;
-      background-color: unset;
-      padding: unset;
     }
   }
 
   blockquote {
-    font-style: italic;
-    margin-left: 3.75em;
-    margin-right: 3.75em;
+    @apply mx-16 italic;
   }
 
   .scrollable-table {
-    display: inline-block;
-    overflow: auto;
-    max-height: 22em;
-    margin-bottom: 1.5em;
-
-    border: solid 1px var(--atomic-table-outer-border);
+    @apply mb-6 inline-block border border-solid overflow-auto max-h-96;
+    border-color: var(--atomic-neutral-dim);
     border-radius: var(--atomic-border-radius-md);
 
     th {
-      position: sticky;
-      top: 0;
+      @apply top-0 sticky;
     }
   }
 
@@ -95,11 +81,10 @@
 
     thead {
       th {
-        padding: 1em;
-        text-align: left;
-        background-color: var(--atomic-table-header-background);
-        border-bottom: solid 2px var(--atomic-table-header-delimiter);
-        border-left: solid 1px var(--atomic-table-inner-border);
+        @apply p-4 text-left;
+        background-color: var(--atomic-neutral);
+        border-bottom: solid 2px var(--atomic-neutral-dim);
+        border-left: solid 1px var(--atomic-neutral-dim);
       }
 
       th:first-of-type {
@@ -114,9 +99,9 @@
         }
 
         td {
-          padding: 1em;
-          border-left: solid 1px var(--atomic-table-inner-border);
-          border-bottom: solid 1px var(--atomic-table-inner-border);
+          @apply p-4;
+          border-left: solid 1px var(--atomic-neutral-dim);
+          border-bottom: solid 1px var(--atomic-neutral-dim);
         }
 
         td:first-of-type {
