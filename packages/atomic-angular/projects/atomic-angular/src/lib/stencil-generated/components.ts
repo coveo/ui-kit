@@ -139,15 +139,15 @@ export declare interface AtomicColorFacet extends Components.AtomicColorFacet {}
 
 
 @ProxyCmp({
-  inputs: ['CspNonce', 'analytics', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'localizationCompatibilityVersion', 'logLevel', 'reflectStateInUrl', 'scrollContainer', 'type'],
-  methods: ['initialize', 'initializeWithEngine', 'initializeWithCommerceEngine', 'executeFirstSearch', 'getOrganizationEndpoints']
+  inputs: ['CspNonce', 'analytics', 'enableRelevanceInspector', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'localizationCompatibilityVersion', 'logLevel', 'pipeline', 'reflectStateInUrl', 'scrollContainer', 'searchHub', 'timezone', 'type'],
+  methods: ['initialize', 'initializeWithCommerceEngine', 'executeFirstSearch', 'getOrganizationEndpoints']
 })
 @Component({
   selector: 'atomic-commerce-interface',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['CspNonce', 'analytics', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'localizationCompatibilityVersion', 'logLevel', 'reflectStateInUrl', 'scrollContainer', 'type'],
+  inputs: ['CspNonce', 'analytics', 'enableRelevanceInspector', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'localizationCompatibilityVersion', 'logLevel', 'pipeline', 'reflectStateInUrl', 'scrollContainer', 'searchHub', 'timezone', 'type'],
 })
 export class AtomicCommerceInterface {
   protected el: HTMLElement;
