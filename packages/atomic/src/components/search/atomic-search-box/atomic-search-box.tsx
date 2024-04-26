@@ -574,7 +574,9 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
             ? 'search-suggestions-double-list'
             : 'search-suggestions-single-list'
         )}
-        aria-activedescendant={this.suggestionManager.activeDescendant}
+        {...(this.suggestionManager.activeDescendant && {
+          'aria-activedescendant': this.suggestionManager.activeDescendant,
+        })}
       >
         {this.renderPanel(
           'left',
