@@ -139,6 +139,29 @@ export declare interface AtomicColorFacet extends Components.AtomicColorFacet {}
 
 
 @ProxyCmp({
+  inputs: ['CspNonce', 'analytics', 'enableRelevanceInspector', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'localizationCompatibilityVersion', 'logLevel', 'pipeline', 'reflectStateInUrl', 'scrollContainer', 'searchHub', 'timezone', 'type'],
+  methods: ['initialize', 'initializeWithCommerceEngine', 'executeFirstSearch', 'getOrganizationEndpoints']
+})
+@Component({
+  selector: 'atomic-commerce-interface',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['CspNonce', 'analytics', 'enableRelevanceInspector', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'localizationCompatibilityVersion', 'logLevel', 'pipeline', 'reflectStateInUrl', 'scrollContainer', 'searchHub', 'timezone', 'type'],
+})
+export class AtomicCommerceInterface {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicCommerceInterface extends Components.AtomicCommerceInterface {}
+
+
+@ProxyCmp({
   inputs: ['element', 'error']
 })
 @Component({

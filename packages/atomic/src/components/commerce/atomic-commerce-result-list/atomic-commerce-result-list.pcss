@@ -1,0 +1,13 @@
+@import '../../../global/global.pcss';
+@import '../../../global/mixins.pcss';
+
+:host {
+  .result-link {
+    @mixin link-style;
+  }
+  .result-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    justify-items: center;
+    max-width: 1000px;
+  }
+}

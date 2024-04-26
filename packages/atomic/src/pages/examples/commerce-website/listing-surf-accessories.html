@@ -16,20 +16,29 @@
       /*
        * The following code section should be replaced by actual atomic commerce listing page
        */
-      const listing = setupProductListing(engine);
-      listing.subscribe(() => {
-        renderProducts('#productList', 'Surf accessories', listing.state.products);
-      });
+      /*  const listing = setupProductListing(engine);
+       listing.subscribe(() => {
+         renderProducts('#productList', 'Surf accessories', listing.state.products);
+       }); */
+
+      await customElements.whenDefined('atomic-commerce-interface');
+      const commerceInterface = document.querySelector('atomic-commerce-interface');
+
+      // Initialization
+      await commerceInterface.initializeWithEngine(engine);
       /**
        * End of section to be replaced
        */
     </script>
   </head>
+
   <body>
     <h1>Product listing page</h1>
     <main>
       <section>
-        <article id="productList">REPLACE ME; THIS SHOULD BE THE PRODUCT LISTING PAGE</article>
+        <atomic-commerce-interface type="product-listing">
+          <atomic-commerce-result-list> </atomic-commerce-result-list>
+        </atomic-commerce-interface>
       </section>
     </main>
 
