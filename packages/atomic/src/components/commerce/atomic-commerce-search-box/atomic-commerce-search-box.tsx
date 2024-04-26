@@ -217,17 +217,8 @@ export class AtomicCommerceSearchBox
     this.searchBox = buildSearchBox(this.bindings.engine, {
       options: this.searchBoxOptions,
     });
-    // TODO: KIT-support standalone searchbox
-    // this.searchBox = this.redirectionUrl
-    // ? buildStandaloneSearchBox(this.bindings.engine, {
-    //     options: {
-    //       ...this.searchBoxOptions,
-    //       redirectionUrl: this.redirectionUrl,
-    //     },
-    //   })
-    // : buildSearchBox(this.bindings.engine, {
-    //     options: this.searchBoxOptions,
-    //   });
+
+    // TODO: KIT-3129 Support standalone searchbox
 
     this.initializeSuggestionManager();
   }
