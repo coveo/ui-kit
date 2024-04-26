@@ -8,6 +8,17 @@
   .result-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     justify-items: center;
-    max-width: 1000px;
+  }
+  @screen desktop-only {
+    .result-grid {
+      display: grid;
+    }
+  }
+
+  @screen mobile-only {
+    .result-grid {
+      display: flex;
+      flex-direction: column;
+    }
   }
 }
