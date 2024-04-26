@@ -24,24 +24,28 @@
     font-weight: var(--atomic-font-bold);
   }
 
-  li,
-  p,
-  blockquote,
-  th,
-  td {
+  [part='answer-paragraph'] {
+    @apply mb-6;
+  }
+
+  [part='answer-list-item'],
+  [part='answer-paragraph'],
+  [part='answer-quote-block'],
+  [part='answer-table-header'],
+  [part='answer-table-content'] {
     @apply leading-6;
   }
 
-  ol {
+  [part='answer-ordered-list'] {
     @apply list-decimal ps-8;
   }
 
-  ul {
+  [part='answer-unordered-list'] {
     @apply list-disc ps-8;
   }
 
-  code {
-    @apply px-2 py-1 border border-solid;
+  [part='answer-inline-code'] {
+    @apply px-1 py-0.5 border border-solid;
     color: var(--atomic-inline-code);
     font-size: var(--atomic-text-sm);
     background-color: var(--atomic-neutral-light);
@@ -49,45 +53,43 @@
     border-radius: var(--atomic-border-radius);
   }
 
-  pre {
-    @apply border border-solid p-2 overflow-auto max-h-96;
+  [part='answer-code-block'] {
+    @apply border border-solid p-2 my-4 overflow-auto max-h-96;
     background-color: var(--atomic-neutral-light);
     border-color: var(--atomic-neutral);
     border-radius: var(--atomic-border-radius-md);
     scrollbar-color: var(--atomic-neutral);
 
-    code {
-      @apply p-0 border-0 bg-transparent;
-      color: var(--atomic-on-background);
-    }
+    color: var(--atomic-on-background);
+    font-size: var(--atomic-text-sm);
   }
 
-  blockquote {
+  [part='answer-quote-block'] {
     @apply mx-16 italic;
   }
 
-  .scrollable-table {
+  [part='answer-table-container'] {
     @apply mb-6 inline-block border border-solid overflow-auto max-h-96;
     border-color: var(--atomic-neutral-dim);
     border-radius: var(--atomic-border-radius-md);
 
-    th {
+    [part='answer-table-header'] {
       @apply top-0 sticky;
     }
   }
 
-  table {
+  [part='answer-table'] {
     font-size: var(--atomic-text-base);
 
     thead {
-      th {
+      [part='answer-table-header'] {
         @apply p-4 text-left;
         background-color: var(--atomic-neutral);
         border-bottom: solid 2px var(--atomic-neutral-dim);
         border-left: solid 1px var(--atomic-neutral-dim);
       }
 
-      th:first-of-type {
+      [part='answer-table-header']:first-of-type {
         border-left: none;
       }
     }
@@ -98,17 +100,17 @@
           background-color: var(--atomic-neutral-light);
         }
 
-        td {
+        [part='answer-table-content'] {
           @apply p-4;
           border-left: solid 1px var(--atomic-neutral-dim);
           border-bottom: solid 1px var(--atomic-neutral-dim);
         }
 
-        td:first-of-type {
+        [part='answer-table-content']:first-of-type {
           border-left: none;
         }
 
-        &:last-of-type td {
+        &:last-of-type [part='answer-table-content'] {
           border-bottom: unset;
         }
       }

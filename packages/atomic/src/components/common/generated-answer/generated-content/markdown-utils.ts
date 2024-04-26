@@ -8,10 +8,11 @@ const completeUnclosedElement = (text: string) => {
     const symbol = match[1];
 
     const replacements: Record<string, string> = {
-      '***': '<strong><em>$2</em></strong>',
-      '**': '<strong>$2</strong>',
-      '*': '<em>$2</em>',
-      '`': '<code>$2</code>',
+      '***':
+        '<strong part="answer-strong"><em part="answer-emphasis">$2</em></strong>',
+      '**': '<strong part="answer-strong">$2</strong>',
+      '*': '<em part="answer-emphasis">$2</em>',
+      '`': '<code part="answer-inline-code">$2</code>',
     };
 
     return text.replace(unclosedElement, replacements[symbol]);
@@ -20,16 +21,63 @@ const completeUnclosedElement = (text: string) => {
   return text;
 };
 
+const escapeHtml = (text: string) => {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+};
+
 const customRenderer = {
+  blockquote(quote: string) {
+    return `<blockquote part="answer-quote-block">${quote}</blockquote>`;
+  },
+
+  code(code: string) {
+    return `<pre part="answer-code-block"><code>${escapeHtml(code)}</code></pre>`;
+  },
+
+  codespan(text: string) {
+    return `<code part="answer-inline-code">${text}</code>`;
+  },
+
+  em(text: string) {
+    return `<em part="answer-emphasis">${text}</em>`;
+  },
+
+  list(body: string, ordered: boolean, start: number | '') {
+    const type = ordered ? 'ol' : 'ul';
+    const part = ordered ? 'answer-ordered-list' : 'answer-unordered-list';
+
+    const tag =
+      ordered && start !== 1
+        ? `<${type} part="${part}" start="${start}">`
+        : `<${type} part="${part}">`;
+
+    return `${tag}${body}</${type}>`;
+  },
+
   /**
    * Custom Marked renderer to remove wrapping `<p>` element around list item content.
    * @param text The element text content.
    * @returns The list item element to render.
    */
   listitem(text: string) {
-    const unwrappedText = text.replace(/^<p>/, '').replace(/<\/p>\n?$/, '');
+    const unwrappedText = text
+      .replace(/^<p[^>]*>/, '')
+      .replace(/<\/p>\n?$/, '');
     const withClosedElement = completeUnclosedElement(unwrappedText);
-    return `<li>${withClosedElement}</li>`;
+    return `<li part="answer-list-item">${withClosedElement}</li>`;
+  },
+
+  paragraph(text: string) {
+    return `<p part="answer-paragraph">${text}</p>`;
+  },
+
+  strong(text: string) {
+    return `<strong part="answer-strong">${text}</strong>`;
   },
 
   /**
@@ -39,7 +87,20 @@ const customRenderer = {
    * @returns The element to render.
    */
   table(header: string, body: string) {
-    return `<div class="scrollable-table"><table><thead>${header}</thead><tbody>${body}</tbody></table></div>`;
+    return `<div part="answer-table-container" class="scrollable-table"><table part="answer-table"><thead>${header}</thead><tbody>${body}</tbody></table></div>`;
+  },
+
+  tablecell(
+    content: string,
+    flags: {header: boolean; align: 'center' | 'left' | 'right' | null}
+  ) {
+    const type = flags.header ? 'th' : 'td';
+    const part = flags.header ? 'answer-table-header' : 'answer-table-content';
+    const tag = flags.align
+      ? `<${type} part="${part}" align="${flags.align}">`
+      : `<${type} part="${part}">`;
+
+    return `${tag}${content}</${type}>`;
   },
 
   /**

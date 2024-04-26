@@ -11,11 +11,23 @@ describe('markdownUtils', () => {
       {
         title: 'bold-italic',
         symbol: '***',
-        html: '<strong><em>{0}</em></strong>',
+        html: '<strong part="answer-strong"><em part="answer-emphasis">{0}</em></strong>',
       },
-      {title: 'bold', symbol: '**', html: '<strong>{0}</strong>'},
-      {title: 'italic', symbol: '*', html: '<em>{0}</em>'},
-      {title: 'code', symbol: '`', html: '<code>{0}</code>'},
+      {
+        title: 'bold',
+        symbol: '**',
+        html: '<strong part="answer-strong">{0}</strong>',
+      },
+      {
+        title: 'italic',
+        symbol: '*',
+        html: '<em part="answer-emphasis">{0}</em>',
+      },
+      {
+        title: 'code',
+        symbol: '`',
+        html: '<code part="answer-inline-code">{0}</code>',
+      },
     ];
 
     const removeLineBreaks = (text: string) => text.replace(/\n/g, '');
@@ -35,7 +47,15 @@ describe('markdownUtils', () => {
 
       const html = transformMarkdownToHtml(text);
 
-      expect(removeLineBreaks(html)).toBe('<p><strong>text</strong></p>');
+      expect(removeLineBreaks(html)).toBe(
+        removeLineBreaks(
+          unindentHtml(`
+            <p part="answer-paragraph">
+              <strong part="answer-strong">text</strong>
+            </p>
+          `)
+        )
+      );
     });
 
     it('should transform italic text', () => {
@@ -43,7 +63,15 @@ describe('markdownUtils', () => {
 
       const html = transformMarkdownToHtml(text);
 
-      expect(removeLineBreaks(html)).toBe('<p><em>text</em></p>');
+      expect(removeLineBreaks(html)).toBe(
+        removeLineBreaks(
+          unindentHtml(`
+            <p part="answer-paragraph">
+              <em part="answer-emphasis">text</em>
+            </p>
+          `)
+        )
+      );
     });
 
     it('should transform inline code', () => {
@@ -51,7 +79,15 @@ describe('markdownUtils', () => {
 
       const html = transformMarkdownToHtml(text);
 
-      expect(removeLineBreaks(html)).toBe('<p><code>text</code></p>');
+      expect(removeLineBreaks(html)).toBe(
+        removeLineBreaks(
+          unindentHtml(`
+            <p part="answer-paragraph">
+              <code part="answer-inline-code">text</code>
+            </p>
+          `)
+        )
+      );
     });
 
     it('should transform unordered lists', () => {
@@ -60,7 +96,14 @@ describe('markdownUtils', () => {
       const html = transformMarkdownToHtml(text);
 
       expect(removeLineBreaks(html)).toBe(
-        '<ul><li>item A</li><li>item B</li></ul>'
+        removeLineBreaks(
+          unindentHtml(`
+            <ul part="answer-unordered-list">
+              <li part="answer-list-item">item A</li>
+              <li part="answer-list-item">item B</li>
+            </ul>
+          `)
+        )
       );
     });
 
@@ -70,7 +113,14 @@ describe('markdownUtils', () => {
       const html = transformMarkdownToHtml(text);
 
       expect(removeLineBreaks(html)).toBe(
-        '<ul><li>item A</li><li>item B</li></ul>'
+        removeLineBreaks(
+          unindentHtml(`
+            <ul part="answer-unordered-list">
+              <li part="answer-list-item">item A</li>
+              <li part="answer-list-item">item B</li>
+            </ul>
+          `)
+        )
       );
     });
 
@@ -80,7 +130,14 @@ describe('markdownUtils', () => {
       const html = transformMarkdownToHtml(text);
 
       expect(removeLineBreaks(html)).toBe(
-        '<ol><li>item A</li><li>item B</li></ol>'
+        removeLineBreaks(
+          unindentHtml(`
+            <ol part="answer-ordered-list">
+              <li part="answer-list-item">item A</li>
+              <li part="answer-list-item">item B</li>
+            </ol>
+          `)
+        )
       );
     });
 
@@ -90,7 +147,14 @@ describe('markdownUtils', () => {
       const html = transformMarkdownToHtml(text);
 
       expect(removeLineBreaks(html)).toBe(
-        '<ol><li>item A</li><li>item B</li></ol>'
+        removeLineBreaks(
+          unindentHtml(`
+            <ol part="answer-ordered-list">
+              <li part="answer-list-item">item A</li>
+              <li part="answer-list-item">item B</li>
+            </ol>
+          `)
+        )
       );
     });
 
@@ -99,7 +163,15 @@ describe('markdownUtils', () => {
 
       const html = transformMarkdownToHtml(text);
 
-      expect(removeLineBreaks(html)).toBe('<pre><code>text</code></pre>');
+      expect(removeLineBreaks(html)).toBe(
+        removeLineBreaks(
+          unindentHtml(`
+            <pre part="answer-code-block">
+              <code>text</code>
+            </pre>
+          `)
+        )
+      );
     });
 
     it('should transform quote blocks', () => {
@@ -108,7 +180,13 @@ describe('markdownUtils', () => {
       const html = transformMarkdownToHtml(text);
 
       expect(removeLineBreaks(html)).toBe(
-        '<blockquote><p>text</p></blockquote>'
+        removeLineBreaks(
+          unindentHtml(`
+            <blockquote part="answer-quote-block">
+              <p part="answer-paragraph">text</p>
+            </blockquote>
+          `)
+        )
       );
     });
 
@@ -120,18 +198,18 @@ describe('markdownUtils', () => {
       expect(removeLineBreaks(html)).toBe(
         removeLineBreaks(
           unindentHtml(`
-            <div class="scrollable-table">
-              <table>
+            <div part="answer-table-container" class="scrollable-table">
+              <table part="answer-table">
                 <thead>
                   <tr>
-                    <th>Col A</th>
-                    <th>Col B</th>
+                    <th part="answer-table-header">Col A</th>
+                    <th part="answer-table-header">Col B</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td>A</td>
-                    <td>B</td>
+                    <td part="answer-table-content">A</td>
+                    <td part="answer-table-content">B</td>
                   </tr>
                 </tbody>
               </table>
@@ -150,7 +228,7 @@ describe('markdownUtils', () => {
             const html = transformMarkdownToHtml(text);
 
             expect(removeLineBreaks(html)).toBe(
-              `<p>some incomplete ${inlineElement.html.replace('{0}', textVariant.text)}</p>`
+              `<p part="answer-paragraph">some incomplete ${inlineElement.html.replace('{0}', textVariant.text)}</p>`
             );
           });
         });
@@ -168,9 +246,9 @@ describe('markdownUtils', () => {
             expect(removeLineBreaks(html)).toBe(
               removeLineBreaks(
                 unindentHtml(`
-                  <ol>
-                    <li>item A</li>
-                    <li>${inlineElement.html.replace('{0}', textVariant.text)}</li>
+                  <ol part="answer-ordered-list">
+                    <li part="answer-list-item">item A</li>
+                    <li part="answer-list-item">${inlineElement.html.replace('{0}', textVariant.text)}</li>
                   </ol>
                 `)
               )
@@ -187,7 +265,9 @@ describe('markdownUtils', () => {
 
           const html = transformMarkdownToHtml(text);
 
-          expect(removeLineBreaks(html)).toBe(`<p>${text}</p>`);
+          expect(removeLineBreaks(html)).toBe(
+            `<p part="answer-paragraph">${text}</p>`
+          );
         });
       });
     });
@@ -200,7 +280,9 @@ describe('markdownUtils', () => {
         const html = transformMarkdownToHtml(text);
 
         expect(removeLineBreaks(html)).toBe(
-          '<p>text with <strong>bold text having <em>italic</em> and <code>code</code> nested elements</strong></p>'
+          removeLineBreaks(
+            '<p part="answer-paragraph">text with <strong part="answer-strong">bold text having <em part="answer-emphasis">italic</em> and <code part="answer-inline-code">code</code> nested elements</strong></p>'
+          )
         );
       });
     });

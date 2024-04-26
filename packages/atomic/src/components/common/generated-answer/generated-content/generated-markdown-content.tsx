@@ -11,7 +11,8 @@ export const GeneratedMarkdownContent: FunctionalComponent<
   GeneratedMarkdownContentProps
 > = (props) => {
   const answerAsHtml = DOMPurify.sanitize(
-    transformMarkdownToHtml(props.answer ?? '')
+    transformMarkdownToHtml(props.answer ?? ''),
+    {ADD_ATTR: ['part']}
   );
 
   return (
