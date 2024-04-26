@@ -57,7 +57,7 @@ export type CommerceBindings = CommonBindings<
   NonceBindings;
 
 /**
- * The `atomic-commerce-interface` component is the parent to all other atomic components in a search page. It handles the headless search engine and localization configurations.
+ * The `atomic-commerce-interface` component is the parent to all other atomic commerce components in a commerce page. It handles the headless search engine and localization configurations.
  */
 @Component({
   tag: 'atomic-commerce-interface',
@@ -79,8 +79,12 @@ export class AtomicCommerceInterface
   @Element() public host!: HTMLAtomicCommerceInterfaceElement;
 
   @State() public error?: Error;
-  @State() relevanceInspectorIsOpen = false;
 
+  /**
+   * The type of the interface.
+   * - 'search': Indicates that the interface is used for Search.
+   * - 'product-listing': Indicates that the interface is used for Product listing.
+   */
   @Prop({reflect: true, mutable: true}) public type:
     | 'search'
     | 'product-listing' = 'search';
@@ -90,7 +94,7 @@ export class AtomicCommerceInterface
    *
    * Specify the property as an array using a JSON string representation:
    * ```html
-   * <atomic-search-interface fields-to-include='["fieldA", "fieldB"]'></atomic-search-interface>
+   * <atomic-commerce-interface fields-to-include='["fieldA", "fieldB"]'></atomic-commerce-interface>
    * ```
    */
   @ArrayProp()
@@ -114,17 +118,17 @@ export class AtomicCommerceInterface
     'v3';
 
   /**
-   * The search interface i18next instance.
+   * the commerce interface i18next instance.
    */
   @Prop() public i18n: i18n = i18next.createInstance();
 
   /**
-   * The search interface language.
+   * the commerce interface language.
    */
   @Prop({reflect: true}) public language = 'en';
 
   /**
-   * The search interface headless engine.
+   * The commerce interface headless engine.
    */
   @Prop({mutable: true}) public engine?: CommerceEngine;
 
@@ -173,12 +177,11 @@ export class AtomicCommerceInterface
   @Prop({reflect: true}) public CspNonce?: string;
 
   /**
-   * A reference clone of the search interface i18next instance.
+   * A reference clone of the interface i18next instance.
    */
   private i18nClone!: i18n;
 
   public constructor() {
-    // this.initRelevanceInspector();
     this.commonInterfaceHelper = new CommonAtomicInterfaceHelper(
       this,
       'CoveoAtomic'
@@ -187,7 +190,7 @@ export class AtomicCommerceInterface
 
   public connectedCallback() {
     this.store.setLoadingFlag(FirstSearchExecutedFlag);
-    this.updateMobileBreakpoint();
+    //this.updateMobileBreakpoint();
     this.i18nClone = this.i18n.cloneInstance();
     this.i18n.addResourceBundle = (
       lng: string,
@@ -252,11 +255,6 @@ export class AtomicCommerceInterface
     scrollContainerElement.scrollIntoView({behavior: 'smooth'});
   }
 
-  @Listen('atomic/relevanceInspector/close')
-  public closeRelevanceInspector() {
-    this.relevanceInspectorIsOpen = false;
-  }
-
   /**
    * Initializes the connection with the headless search engine using options for accessToken (required), organizationId (required), renewAccessToken, organizationEndpoints (recommended), and platformUrl (deprecated).
    */
@@ -297,7 +295,7 @@ export class AtomicCommerceInterface
 
     if (this.localizationCompatibilityVersion !== 'v4') {
       this.engine.logger.warn(
-        `As of Atomic version 3.0.0, support for JSON compatibility ${this.localizationCompatibilityVersion} will be deprecated. Please update the JSON compatibility to v4: <atomic-search-interface localization-compatibility-version="v4" ...></atomic-search-interface> For more information, see i18next Migration Guide: https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0.`
+        `As of Atomic version 3.0.0, support for JSON compatibility ${this.localizationCompatibilityVersion} will be deprecated. Please update the JSON compatibility to v4: <atomic-commerce-interface localization-compatibility-version="v4" ...></atomic-commerce-interface> For more information, see i18next Migration Guide: https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0.`
       );
     }
 
@@ -369,14 +367,14 @@ export class AtomicCommerceInterface
     );
   }
 
-  private updateMobileBreakpoint() {
+  /*   private updateMobileBreakpoint() {
     const breakpoint = this.host.querySelector(
-      'atomic-search-layout'
+      'atomic-commerce-layout'
     )?.mobileBreakpoint;
     if (breakpoint) {
       this.store.set('mobileBreakpoint', breakpoint);
     }
-  }
+  } */
 
   private initEngine(options: CommerceInitializationOptions) {
     const analyticsConfig = getAnalyticsConfig(
@@ -434,26 +432,6 @@ export class AtomicCommerceInterface
   private initSearchStatus() {
     this.searchStatus = buildSearch(this.engine!);
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() => {
-      const hasNoResultsAfterInitialSearch =
-        !this.searchStatus.state.products &&
-        !this.searchStatus.state.isLoading &&
-        !this.searchStatus.state.error;
-
-      this.host.classList.toggle(
-        'atomic-search-interface-no-results',
-        hasNoResultsAfterInitialSearch
-      );
-
-      this.host.classList.toggle(
-        'atomic-search-interface-error',
-        this.searchStatus.state.error !== null
-      );
-
-      this.host.classList.toggle(
-        'atomic-search-interface-search-executed',
-        !this.searchStatus.state.isLoading
-      );
-
       if (
         !this.searchStatus.state.isLoading &&
         this.store.hasLoadingFlag(FirstSearchExecutedFlag)
@@ -513,14 +491,6 @@ export class AtomicCommerceInterface
   }
 
   public render() {
-    return [
-      /*  this.engine && this.enableRelevanceInspector && (
-        <atomic-relevance-inspector
-          open={this.relevanceInspectorIsOpen}
-          bindings={this.bindings}
-        ></atomic-relevance-inspector>
-      ), */
-      <slot></slot>,
-    ];
+    return [<slot></slot>];
   }
 }
