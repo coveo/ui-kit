@@ -93,4 +93,8 @@ describe('DateFacet', () => {
       });
     });
   });
+
+  it('#type returns "dateRange"', () => {
+    expect(facet.type).toBe('dateRange');
+  });
 });

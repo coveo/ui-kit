@@ -93,4 +93,8 @@ describe('NumericFacet', () => {
       });
     });
   });
+
+  it('#type returns "numericalRange"', () => {
+    expect(facet.type).toBe('numericalRange');
+  });
 });

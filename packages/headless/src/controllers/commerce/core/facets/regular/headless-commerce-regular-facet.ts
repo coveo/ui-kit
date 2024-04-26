@@ -11,6 +11,7 @@ import {
   CoreCommerceFacet,
   CoreCommerceFacetOptions,
   CoreCommerceFacetState,
+  FacetControllerType,
   FacetValueRequest,
   RegularFacetValue,
   buildCoreCommerceFacet,
@@ -42,7 +43,7 @@ export type RegularFacet = CoreCommerceFacet<
 > & {
   facetSearch: Omit<RegularFacetSearch, 'state'>;
   state: RegularFacetState;
-};
+} & FacetControllerType<'regular'>;
 
 /**
  * @internal
@@ -109,5 +110,7 @@ export function buildCommerceRegularFacet(
         ...facetSearchStateSelector(engine.state),
       };
     },
+
+    type: 'regular',
   };
 }

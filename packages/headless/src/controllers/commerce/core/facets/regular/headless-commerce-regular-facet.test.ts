@@ -114,4 +114,8 @@ describe('RegularFacet', () => {
       values: [{count: 1, displayValue: 'test', rawValue: 'test'}],
     });
   });
+
+  it('#type returns "regular"', () => {
+    expect(facet.type).toBe('regular');
+  });
 });

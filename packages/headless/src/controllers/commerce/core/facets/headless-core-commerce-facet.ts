@@ -43,6 +43,10 @@ export type {
   CategoryFacetValue,
 };
 
+export interface FacetControllerType<T extends FacetType> {
+  type: T;
+}
+
 /**
  * @internal
  *
