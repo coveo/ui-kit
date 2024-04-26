@@ -71,8 +71,8 @@ export class AtomicCommerceResultList
     return (
       <ul class="gap-4 result-grid">
         {products.map((product) => (
-          <a class="flex group" href={product.clickUri}>
-            <li class="p-2 mx-auto border-2 rounded-md group-hover:shadow">
+          <a class="flex" href={product.clickUri}>
+            <li class="p-2 mx-auto border-2 rounded-md hover:shadow">
               <img
                 width={400}
                 class="p-2 rounded"
