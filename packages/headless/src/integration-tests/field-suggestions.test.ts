@@ -19,11 +19,6 @@ describe('field suggestions', () => {
         analytics: {enabled: false},
       },
       loggerOptions: {level: 'silent'},
-      navigatorContextProvider: () => ({
-        location: 'https://www.coveo.com/',
-        referrer: 'https://www.coveo.com/',
-        userAgent: 'userAgent',
-      }),
     });
   });
 

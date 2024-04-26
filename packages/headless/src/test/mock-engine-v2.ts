@@ -4,6 +4,7 @@ import {CaseAssistEngine} from '../app/case-assist-engine/case-assist-engine';
 import {CommerceEngine} from '../app/commerce-engine/commerce-engine';
 import type {CoreEngine} from '../app/engine';
 import {InsightEngine} from '../app/insight-engine/insight-engine';
+import {defaultNodeJSNavigatorContextProvider} from '../app/navigatorContextProvider';
 import {ProductListingEngine} from '../app/product-listing-engine/product-listing-engine';
 import {ProductRecommendationEngine} from '../app/product-recommendation-engine/product-recommendation-engine';
 import {RecommendationEngine} from '../app/recommendation-engine/recommendation-engine';
@@ -76,11 +77,7 @@ export function buildMockCoreEngine<State extends StateFromEngine<CoreEngine>>(
       [Symbol.observable]: jest.fn(),
     },
     subscribe: jest.fn(),
-    navigatorContext: {
-      location: 'http://localhost/',
-      referrer: '',
-      userAgent: '',
-    },
+    navigatorContext: defaultNodeJSNavigatorContextProvider(),
   };
 }
 

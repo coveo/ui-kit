@@ -47,11 +47,6 @@ function initEngine() {
   engine = buildSearchEngine({
     configuration,
     loggerOptions: {level: 'silent'},
-    navigatorContextProvider: () => ({
-      location: 'http://localhost/',
-      referrer: '',
-      userAgent: '',
-    }),
   });
 }
 

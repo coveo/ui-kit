@@ -1,6 +1,7 @@
 import {Relay} from '@coveo/relay';
 import {Logger} from 'pino';
 import {SearchAPIClient} from '../../../api/search/search-api-client';
+import {defaultNodeJSNavigatorContextProvider} from '../../../app/navigatorContextProvider';
 import {buildMockResult} from '../../../test/mock-result';
 import {buildMockSearchRequest} from '../../../test/mock-search-request';
 import {buildMockSearchResponse} from '../../../test/mock-search-response';
@@ -31,11 +32,7 @@ describe('AsyncSearchThunkProcessor', () => {
         validatePayload: jest.fn(),
         preprocessRequest: jest.fn(),
         relay: jest.fn() as unknown as Relay,
-        navigatorContext: {
-          referrer: 'referrer',
-          location: 'location',
-          userAgent: 'userAgent',
-        },
+        navigatorContext: defaultNodeJSNavigatorContextProvider(),
       },
       getState: jest.fn().mockReturnValue({
         configuration: getConfigurationInitialState(),

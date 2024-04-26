@@ -118,22 +118,12 @@ const nextSearchEngine = buildSearchEngine({
       trackingId: 'alex',
     },
   },
-  navigatorContextProvider: () => ({
-    location: 'https://www.coveo.com/',
-    referrer: 'https://www.coveo.com/',
-    userAgent: 'userAgent',
-  }),
 });
 
 const legacySearchEngine = buildSearchEngine({
   configuration: {
     ...getSampleSearchEngineConfiguration(),
   },
-  navigatorContextProvider: () => ({
-    location: 'https://www.coveo.com/',
-    referrer: 'https://www.coveo.com/',
-    userAgent: 'userAgent',
-  }),
 });
 
 export function assertNextEqualsLegacy(call: jest.SpyInstance) {

@@ -22,6 +22,7 @@ import {
 } from '../features/configuration/configuration-actions';
 import {versionReducer as version} from '../features/debug/version-slice';
 import {SearchParametersState} from '../state/search-app-state';
+import {isBrowser} from '../utils/runtime';
 import {matchCoveoOrganizationEndpointUrlAnyOrganization} from '../utils/url-utils';
 import {doNotTrack} from '../utils/utils';
 import {analyticsMiddleware} from './analytics-middleware';
@@ -34,6 +35,7 @@ import {
   NavigatorContext,
   NavigatorContextProvider,
   defaultBrowserNavigatorContextProvider,
+  defaultNodeJSNavigatorContextProvider,
 } from './navigatorContextProvider';
 import {createReducerManager, ReducerManager} from './reducer-manager';
 import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware';
@@ -262,7 +264,9 @@ function buildCoreEngine<
   }
   const logger = thunkExtraArguments.logger;
   const navigatorContextProvider =
-    options.navigatorContextProvider ?? defaultBrowserNavigatorContextProvider;
+    options.navigatorContextProvider ?? isBrowser()
+      ? defaultBrowserNavigatorContextProvider
+      : defaultNodeJSNavigatorContextProvider;
   const thunkExtraArgumentsWithRelay: CoreExtraArguments & ExtraArguments = {
     ...thunkExtraArguments,
     get relay() {
