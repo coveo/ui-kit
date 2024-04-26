@@ -336,6 +336,11 @@ export namespace Components {
     | 'product-listing';
     }
     /**
+     * The `atomic-commerce-result-list` component is responsible for displaying product results.
+     */
+    interface AtomicCommerceResultList {
+    }
+    /**
      * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
      */
     interface AtomicComponentError {
@@ -2818,6 +2823,15 @@ declare global {
         new (): HTMLAtomicCommerceInterfaceElement;
     };
     /**
+     * The `atomic-commerce-result-list` component is responsible for displaying product results.
+     */
+    interface HTMLAtomicCommerceResultListElement extends Components.AtomicCommerceResultList, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceResultListElement: {
+        prototype: HTMLAtomicCommerceResultListElement;
+        new (): HTMLAtomicCommerceResultListElement;
+    };
+    /**
      * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
      */
     interface HTMLAtomicComponentErrorElement extends Components.AtomicComponentError, HTMLStencilElement {
@@ -4268,6 +4282,7 @@ declare global {
         "atomic-citation": HTMLAtomicCitationElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
         "atomic-commerce-interface": HTMLAtomicCommerceInterfaceElement;
+        "atomic-commerce-result-list": HTMLAtomicCommerceResultListElement;
         "atomic-component-error": HTMLAtomicComponentErrorElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-external": HTMLAtomicExternalElement;
@@ -4660,6 +4675,11 @@ declare namespace LocalJSX {
          */
         "type"?: | 'search'
     | 'product-listing';
+    }
+    /**
+     * The `atomic-commerce-result-list` component is responsible for displaying product results.
+     */
+    interface AtomicCommerceResultList {
     }
     /**
      * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
@@ -6910,6 +6930,7 @@ declare namespace LocalJSX {
         "atomic-citation": AtomicCitation;
         "atomic-color-facet": AtomicColorFacet;
         "atomic-commerce-interface": AtomicCommerceInterface;
+        "atomic-commerce-result-list": AtomicCommerceResultList;
         "atomic-component-error": AtomicComponentError;
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-external": AtomicExternal;
@@ -7092,6 +7113,10 @@ declare module "@stencil/core" {
              * The `atomic-commerce-interface` component is the parent to all other atomic commerce components in a commerce page. It handles the headless search engine and localization configurations.
              */
             "atomic-commerce-interface": LocalJSX.AtomicCommerceInterface & JSXBase.HTMLAttributes<HTMLAtomicCommerceInterfaceElement>;
+            /**
+             * The `atomic-commerce-result-list` component is responsible for displaying product results.
+             */
+            "atomic-commerce-result-list": LocalJSX.AtomicCommerceResultList & JSXBase.HTMLAttributes<HTMLAtomicCommerceResultListElement>;
             /**
              * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
              */
