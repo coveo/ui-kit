@@ -137,6 +137,7 @@ export default class QuanticSearchBox extends LightningElement {
    * Updates the input value.
    */
   handleInputValueChange = (event) => {
+    event.stopPropagation();
     const updatedValue = event.detail.newInputValue;
     const isSelectionReset = event.detail.resetSelection;
     if (this.searchBox?.state?.value !== updatedValue) {
@@ -151,7 +152,8 @@ export default class QuanticSearchBox extends LightningElement {
    * Submits a search.
    * @returns {void}
    */
-  handleSubmit = () => {
+  handleSubmit = (event) => {
+    event.stopPropagation();
     this.searchBox?.submit();
   };
 
@@ -159,7 +161,8 @@ export default class QuanticSearchBox extends LightningElement {
    * Shows the suggestions.
    * @returns {void}
    */
-  showSuggestion = () => {
+  showSuggestion = (event) => {
+    event.stopPropagation();
     this.searchBox?.showSuggestions();
   };
 
@@ -167,6 +170,7 @@ export default class QuanticSearchBox extends LightningElement {
    * Handles the selection of a suggestion.
    */
   selectSuggestion = (event) => {
+    event.stopPropagation();
     const selectedSuggestion = event.detail.selectedSuggestion;
     this.searchBox?.selectSuggestion(selectedSuggestion);
   };
