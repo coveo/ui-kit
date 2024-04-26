@@ -336,7 +336,7 @@ export namespace Components {
     | 'product-listing';
     }
     /**
-     * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
+     * The `atomic-commerce-result-list` component is responsible for displaying product results.
      */
     interface AtomicCommerceResultList {
     }
@@ -2823,7 +2823,7 @@ declare global {
         new (): HTMLAtomicCommerceInterfaceElement;
     };
     /**
-     * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
+     * The `atomic-commerce-result-list` component is responsible for displaying product results.
      */
     interface HTMLAtomicCommerceResultListElement extends Components.AtomicCommerceResultList, HTMLStencilElement {
     }
@@ -4677,7 +4677,7 @@ declare namespace LocalJSX {
     | 'product-listing';
     }
     /**
-     * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
+     * The `atomic-commerce-result-list` component is responsible for displaying product results.
      */
     interface AtomicCommerceResultList {
     }
@@ -7114,7 +7114,7 @@ declare module "@stencil/core" {
              */
             "atomic-commerce-interface": LocalJSX.AtomicCommerceInterface & JSXBase.HTMLAttributes<HTMLAtomicCommerceInterfaceElement>;
             /**
-             * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
+             * The `atomic-commerce-result-list` component is responsible for displaying product results.
              */
             "atomic-commerce-result-list": LocalJSX.AtomicCommerceResultList & JSXBase.HTMLAttributes<HTMLAtomicCommerceResultListElement>;
             /**
