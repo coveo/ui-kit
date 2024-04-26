@@ -7,6 +7,7 @@ module.exports = {
     extend: {
       variants: {
         textColor: ['group-hover'],
+        boxShadow: ['group-hover'],
         fill: ['hover', 'group-hover', 'responsive'],
         visibility: ['group-hover', 'responsive'],
       },
