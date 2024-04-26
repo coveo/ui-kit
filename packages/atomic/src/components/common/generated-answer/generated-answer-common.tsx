@@ -36,8 +36,6 @@ interface GeneratedAnswerCommonOptions {
   getCopyError: () => boolean;
   setCopyError: (copyError: boolean) => void;
   setAriaMessage: (message: string) => void;
-  getIsCollapsed: () => boolean;
-  setIsCollapsed: (isCollapsed: boolean) => void;
   buildInteractiveCitation: (
     props: InteractiveCitationProps
   ) => InteractiveCitation;
@@ -93,10 +91,6 @@ export class GeneratedAnswerCommon {
     }
 
     if (isGenerating) {
-      if (this.props.collapsible) {
-        this.props.setIsCollapsed(true);
-      }
-
       return this.props.getBindings().i18n.t('generating-answer');
     }
 
@@ -168,6 +162,14 @@ export class GeneratedAnswerCommon {
       this.props.setCopied(false);
       this.props.setCopyError(false);
     }, 2000);
+  }
+
+  private clickOnShowButton() {
+    if (this.props.getGeneratedAnswerState()?.expanded) {
+      this.props.getGeneratedAnswer()?.collapse();
+    } else {
+      this.props.getGeneratedAnswer()?.expand();
+    }
   }
 
   private renderCitations() {
@@ -291,8 +293,8 @@ export class GeneratedAnswerCommon {
     return (
       <ShowButton
         i18n={this.props.getBindings().i18n}
-        onClick={() => this.props.setIsCollapsed(!this.props.getIsCollapsed())}
-        isCollapsed={this.props.getIsCollapsed()}
+        onClick={() => this.clickOnShowButton()}
+        isCollapsed={!this.props.getGeneratedAnswerState()?.expanded}
       ></ShowButton>
     );
   }

@@ -97,6 +97,10 @@
 [part='generated-container'] {
   &.answer-collapsed {
     @apply max-h-64 overflow-hidden relative content-[''];
+
+    .feedback-buttons {
+      @apply hidden;
+    }
   }
   &.answer-collapsed:before {
     @apply h-full w-full absolute top-0 left-0 content-[''];

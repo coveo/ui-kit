@@ -72,9 +72,6 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   @State()
   copyError = false;
 
-  @State()
-  isCollapsed = false;
-
   /**
    * The answer style to apply when the component first loads.
    * Options:
@@ -110,8 +107,6 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       getCopyError: () => this.copyError,
       setCopyError: this.setCopyError,
       setAriaMessage: this.setAriaMessage,
-      getIsCollapsed: () => this.isCollapsed,
-      setIsCollapsed: this.setIsCollapsed,
       buildInteractiveCitation: (props) =>
         buildInteractiveCitation(this.bindings.engine, props),
     });
@@ -136,15 +131,23 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     }
   }
 
-  @Watch('isCollapsed')
-  public updateAnswerCollapsed() {
-    const container = this.getAnswerContainer();
+  @Watch('generatedAnswerState')
+  public updateAnswerCollapsed(
+    newState: GeneratedAnswerState,
+    oldState: GeneratedAnswerState
+  ) {
+    const newExpanded = newState.expanded;
+    const oldExpanded = oldState ? oldState.expanded : undefined;
 
-    if (!container) {
-      return;
+    if (newExpanded !== oldExpanded) {
+      const container = this.getAnswerContainer();
+
+      if (!container) {
+        return;
+      }
+
+      this.toggleClass(container, 'answer-collapsed', !newExpanded);
     }
-
-    this.toggleClass(container, 'answer-collapsed', this.isCollapsed);
   }
 
   public disconnectedCallback() {
@@ -181,10 +184,6 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     this.ariaMessage = message;
   };
 
-  private setIsCollapsed = (isCollapsed: boolean) => {
-    this.isCollapsed = isCollapsed;
-  };
-
   private toggleClass(element: Element, className: string, condition: boolean) {
     element.classList.toggle(className, condition);
   }
@@ -215,7 +214,11 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     }
 
     if (this.fullAnswerHeight! > this.maxCollapsedHeight) {
-      this.toggleClass(container, 'answer-collapsed', this.isCollapsed);
+      this.toggleClass(
+        container,
+        'answer-collapsed',
+        !this.generatedAnswerState.expanded
+      );
       this.toggleClass(footer, 'is-collapsible', true);
       this.toggleClass(
         footer,
@@ -226,8 +229,6 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       this.toggleClass(container, 'answer-collapsed', false);
       this.toggleClass(footer, 'is-collapsible', false);
       this.toggleClass(footer, 'generating-label-visible', false);
-
-      this.setIsCollapsed(false);
     }
   }
 
