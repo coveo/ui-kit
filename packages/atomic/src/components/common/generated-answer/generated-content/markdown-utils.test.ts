@@ -18,17 +18,15 @@ describe('markdownUtils', () => {
       {title: 'code', symbol: '`', html: '<code>{0}</code>'},
     ];
 
+    const headings = [1, 2, 3, 4, 5, 6].map((level) => ({
+      title: `level ${level} heading`,
+      level,
+      symbol: '#'.repeat(level),
+    }));
+
     const removeLineBreaks = (text: string) => text.replace(/\n/g, '');
     const unindentHtml = (html: string) =>
       html.replace(/\s+</g, '<').replace(/>\s+/g, '>');
-
-    it('should transform headings', () => {
-      const text = '# title';
-
-      const html = transformMarkdownToHtml(text);
-
-      expect(removeLineBreaks(html)).toBe('<h1>title</h1>');
-    });
 
     it('should transform bold text', () => {
       const text = '**text**';
@@ -139,6 +137,20 @@ describe('markdownUtils', () => {
           `)
         )
       );
+    });
+
+    describe('headings', () => {
+      headings.map((heading) => {
+        it(`should transform ${heading.title}`, () => {
+          const text = `${heading.symbol} title`;
+
+          const html = transformMarkdownToHtml(text);
+
+          expect(removeLineBreaks(html)).toBe(
+            `<div part="heading-${heading.level}" aria-label="title">title</div>`
+          );
+        });
+      });
     });
 
     describe('with unclosed inline elements in text', () => {
