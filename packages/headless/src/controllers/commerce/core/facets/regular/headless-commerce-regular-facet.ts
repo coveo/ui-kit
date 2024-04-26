@@ -38,10 +38,10 @@ export type RegularFacetState = CoreCommerceFacetState<RegularFacetValue> & {
  */
 export type RegularFacet = CoreCommerceFacet<
   FacetValueRequest,
-  RegularFacetValue,
-  RegularFacetState
+  RegularFacetValue
 > & {
   facetSearch: Omit<RegularFacetSearch, 'state'>;
+  state: RegularFacetState;
 };
 
 /**
@@ -62,8 +62,7 @@ export function buildCommerceRegularFacet(
 ): RegularFacet {
   const coreController = buildCoreCommerceFacet<
     FacetValueRequest,
-    RegularFacetValue,
-    RegularFacetState
+    RegularFacetValue
   >(engine, {
     options: {
       ...options,

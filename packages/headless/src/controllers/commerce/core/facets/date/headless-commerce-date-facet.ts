@@ -23,11 +23,9 @@ export type DateFacetState = CoreCommerceFacetState<DateFacetValue>;
  * The `DateFacet` controller offers a high-level programming interface for implementing date commerce
  * facet UI component.
  */
-export type DateFacet = CoreCommerceFacet<
-  DateRangeRequest,
-  DateFacetValue,
-  DateFacetState
->;
+export type DateFacet = CoreCommerceFacet<DateRangeRequest, DateFacetValue> & {
+  state: DateFacetState;
+};
 
 /**
  * @internal
@@ -45,10 +43,9 @@ export function buildCommerceDateFacet(
   engine: CommerceEngine,
   options: DateFacetOptions
 ): DateFacet {
-  return buildCoreCommerceFacet<
+  const coreController = buildCoreCommerceFacet<
     DateRangeRequest,
-    DateFacetValue,
-    DateFacetState
+    DateFacetValue
   >(engine, {
     options: {
       ...options,
@@ -56,4 +53,7 @@ export function buildCommerceDateFacet(
       toggleExcludeActionCreator: toggleExcludeDateFacetValue,
     },
   });
+  return {
+    ...coreController,
+  };
 }

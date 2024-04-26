@@ -25,9 +25,10 @@ export type NumericFacetState = CoreCommerceFacetState<NumericFacetValue>;
  */
 export type NumericFacet = CoreCommerceFacet<
   NumericRangeRequest,
-  NumericFacetValue,
-  NumericFacetState
->;
+  NumericFacetValue
+> & {
+  state: NumericFacetState;
+};
 
 /**
  * @internal
@@ -45,10 +46,9 @@ export function buildCommerceNumericFacet(
   engine: CommerceEngine,
   options: NumericFacetOptions
 ): NumericFacet {
-  return buildCoreCommerceFacet<
+  const coreController = buildCoreCommerceFacet<
     NumericRangeRequest,
-    NumericFacetValue,
-    NumericFacetState
+    NumericFacetValue
   >(engine, {
     options: {
       ...options,
@@ -56,4 +56,8 @@ export function buildCommerceNumericFacet(
       toggleExcludeActionCreator: toggleExcludeNumericFacetValue,
     },
   });
+
+  return {
+    ...coreController,
+  };
 }
