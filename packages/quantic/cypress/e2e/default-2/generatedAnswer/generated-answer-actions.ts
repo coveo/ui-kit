@@ -76,7 +76,7 @@ function generatedAnswerActions(selector: GeneratedAnswerSelector) {
     clickRephraseButton: (name: string) =>
       selector
         .rephraseButtonByLabel(name)
-        .click()
+        .click({force: true})
         .logAction(`When clicking on the ${name} rephrase button`),
 
     hoverOverCitation: (index: number) =>

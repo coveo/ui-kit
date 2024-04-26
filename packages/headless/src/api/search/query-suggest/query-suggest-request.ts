@@ -11,6 +11,7 @@ import {
   PipelineParam,
   QueryParam,
   SearchHubParam,
+  TabParam,
   TimezoneParam,
 } from '../search-api-params';
 
@@ -19,6 +20,7 @@ export type QuerySuggestRequest = BaseParam &
   ContextParam &
   PipelineParam &
   SearchHubParam &
+  TabParam &
   LocaleParam &
   TimezoneParam &
   ActionsHistoryParam &

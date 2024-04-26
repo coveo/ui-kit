@@ -1,6 +1,6 @@
 import SearchPage from '@/common/components/generic/search-page';
 import {SearchStaticState, fetchStaticState} from '@/common/lib/generic/engine';
-import {buildSSRSearchParameterSerializer} from '@coveo/headless-react/ssr';
+import {buildSSRSearchParameterSerializer} from '@coveo/headless/ssr';
 
 export async function getServerSideProps(context: {
   query: {[key: string]: string | string[] | undefined};

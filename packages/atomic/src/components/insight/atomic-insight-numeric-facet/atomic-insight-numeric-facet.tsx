@@ -5,6 +5,8 @@ import {
   buildInsightNumericFilter,
   buildInsightNumericRange,
   buildInsightSearchStatus,
+  InsightCategoryFacetValueRequest,
+  InsightFacetValueRequest,
   InsightNumericFacet,
   InsightNumericFacetState,
   InsightNumericFilter,
@@ -22,7 +24,7 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {MapProp} from '../../../utils/props-utils';
-import {BaseFacet, parseDependsOn} from '../../common/facets/facet-common';
+import {parseDependsOn} from '../../common/facets/depends-on';
 import {NumberInputType} from '../../common/facets/facet-number-input/number-input-type';
 import {FacetPlaceholder} from '../../common/facets/facet-placeholder/facet-placeholder';
 import {
@@ -45,9 +47,7 @@ import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interf
   shadow: true,
 })
 export class AtomicInsightNumericFacet
-  implements
-    InitializableComponent<InsightBindings>,
-    BaseFacet<InsightNumericFacet>
+  implements InitializableComponent<InsightBindings>
 {
   @InitializeBindings() public bindings!: InsightBindings;
   public facetForRange?: InsightNumericFacet;
@@ -175,7 +175,9 @@ export class AtomicInsightNumericFacet
         buildInsightFacetConditionsManager(this.bindings.engine, {
           facetId:
             this.facetForRange?.state.facetId ?? this.filter!.state.facetId,
-          conditions: parseDependsOn(this.dependsOn),
+          conditions: parseDependsOn<
+            InsightFacetValueRequest | InsightCategoryFacetValueRequest
+          >(this.dependsOn),
         }),
       buildNumericRange: buildInsightNumericRange,
       initializeFacetForInput: () => this.initializeFacetForInput(),

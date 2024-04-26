@@ -10,6 +10,8 @@ import {
   CategoryFacetValue,
   buildFacetConditionsManager,
   FacetConditionsManager,
+  FacetValueRequest,
+  CategoryFacetValueRequest,
 } from '@coveo/headless';
 import {Component, h, State, Prop, Element, Fragment} from '@stencil/core';
 import LeftArrow from '../../../../images/arrow-left-rounded.svg';
@@ -28,11 +30,7 @@ import {
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
 import {Button} from '../../../common/button';
-import {
-  parseDependsOn,
-  validateDependsOn,
-} from '../../../common/facets/facet-common';
-import {BaseFacet} from '../../../common/facets/facet-common';
+import {parseDependsOn} from '../../../common/facets/depends-on';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
 import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
@@ -97,9 +95,7 @@ import {CategoryFacetSearchResult} from '../category-facet-search-result/categor
   styleUrl: 'atomic-category-facet.pcss',
   shadow: true,
 })
-export class AtomicCategoryFacet
-  implements InitializableComponent, BaseFacet<CategoryFacet>
-{
+export class AtomicCategoryFacet implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: CategoryFacet;
   private dependenciesManager?: FacetConditionsManager;
@@ -141,6 +137,9 @@ export class AtomicCategoryFacet
   /**
    * The sort criterion to apply to the returned facet values.
    * Possible values are 'alphanumeric' and 'occurrences'.
+   * For this criterion to apply to the top-layer facet values, disable
+   * [facet value ordering](https://docs.coveo.com/en/l1qf4156/#facet-value-ordering)
+   * in your Dynamic Navigation Experience configuration.
    */
   // TODO: add automatic (occurrences when not expanded, alphanumeric when expanded)
   @Prop({reflect: true}) public sortCriteria: CategoryFacetSortCriterion =
@@ -220,12 +219,7 @@ export class AtomicCategoryFacet
   @AriaLiveRegion('facet-search')
   protected facetSearchAriaMessage!: string;
 
-  private validateProps() {
-    validateDependsOn(this.dependsOn);
-  }
-
   public initialize() {
-    this.validateProps();
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     const options: CategoryFacetOptions = {
       facetId: this.facetId,
@@ -323,7 +317,9 @@ export class AtomicCategoryFacet
       this.bindings.engine,
       {
         facetId: this.facetId!,
-        conditions: parseDependsOn(this.dependsOn),
+        conditions: parseDependsOn<
+          FacetValueRequest | CategoryFacetValueRequest
+        >(this.dependsOn),
       }
     );
   }

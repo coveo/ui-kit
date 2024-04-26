@@ -168,12 +168,19 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
     },
 
     sessionStorageContains: (key: string, expectedData: object) => {
-      cy.window()
-        .its('sessionStorage')
-        .invoke('getItem', `LSKey[c]${key}`)
-        .then((data) => {
-          const storedData = JSON.parse(data ?? '{}');
-          expect(storedData).eql(expectedData);
+      cy.getAllSessionStorage()
+        .then((sessionStorage) => {
+          const matchingKeys = Object.values(sessionStorage).filter(
+            (val) =>
+              Object.keys(val).includes(`LSKey[c]${key}`) ||
+              Object.keys(val).includes(key)
+          );
+          const storedData = String(
+            matchingKeys?.[0]?.[`LSKey[c]${key}`] ||
+              matchingKeys?.[0]?.[key] ||
+              '{}'
+          );
+          expect(JSON.parse(storedData)).eql(expectedData);
         })
         .log(
           `the key ${key} should have the value ${expectedData} in the session storage`
@@ -208,16 +215,30 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         .log(`should display the rephrase button with the label ${label}`);
     },
 
+    displayDisclaimer: (display: boolean) => {
+      selector
+        .disclaimer()
+        .should(display ? 'exist' : 'not.exist')
+        .log(`${should(display)} display the disclaimer`);
+    },
+
+    disclaimerContains: (text: string) => {
+      selector
+        .disclaimer()
+        .contains(text)
+        .log(`the disclaimer should contain "${text}"`);
+    },
+
     rephraseButtonIsSelected: (name: string, selected: boolean) => {
       selector
         .rephraseButtonByLabel(name)
         .should(
           selected ? 'have.class' : 'not.have.class',
-          'stateful-button--selected'
+          'radio-button--selected'
         )
         .should(
           selected ? 'not.have.class' : 'have.class',
-          'stateful-button--unselected'
+          'radio-button--unselected'
         )
         .log(`the ${name} rephrase button ${should(selected)} be selected`);
     },
@@ -269,13 +290,24 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         );
     },
 
-    searchQueryContainsCorrectRephraseOption: (expectedAnswerStyle: string) => {
+    searchQueryContainsCorrectRephraseOption: (
+      expectedAnswerStyle: string,
+      expectedActionCause: string
+    ) => {
       cy.get<Interception>(InterceptAliases.Search)
         .then((interception) => {
+          const body = interception?.request?.body;
           const answerStyle =
-            interception?.request?.body?.pipelineRuleParameters
-              ?.mlGenerativeQuestionAnswering?.responseFormat?.answerStyle;
+            body?.pipelineRuleParameters?.mlGenerativeQuestionAnswering
+              ?.responseFormat?.answerStyle;
+          const analyticsSection = body.analytics;
+
           expect(answerStyle).to.eq(expectedAnswerStyle);
+          expect(analyticsSection).to.exist;
+          expect(analyticsSection).to.have.property(
+            'actionCause',
+            expectedActionCause
+          );
         })
         .log(
           `the search query should contain the correct ${expectedAnswerStyle} parameter`

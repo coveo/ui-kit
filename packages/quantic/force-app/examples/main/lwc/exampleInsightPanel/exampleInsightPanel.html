@@ -13,6 +13,7 @@
                 engine-id={engineId}
               ></c-quantic-search-box>
             </div>
+            
             <div class="slds-var-p-left_x-small">
               <c-quantic-refine-toggle
                 engine-id={engineId}
@@ -117,6 +118,14 @@
               engine-id={engineId}
             ></c-quantic-tab>
           </c-quantic-tab-bar>
+        </div>
+
+        <div class="slds-var-p-top_small">
+          <c-quantic-summary engine-id={engineId}></c-quantic-summary>
+        </div>
+
+        <div class="slds-var-p-horizontal_medium">
+          <c-quantic-generated-answer engine-id={engineId} multiline-footer></c-quantic-generated-answer>
         </div>
 
         <div class="slds-var-p-bottom_medium insight-panel_body">

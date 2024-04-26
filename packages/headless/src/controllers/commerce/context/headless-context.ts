@@ -44,7 +44,7 @@ export interface ContextProps {
   /**
    * The initial options that should be applied to this `Context` controller.
    */
-  options: ContextOptions;
+  options?: ContextOptions;
 }
 
 /**
@@ -95,8 +95,6 @@ export interface ContextState {
   view: View;
 }
 
-export type ContextControllerState = Context['state'];
-
 /**
  * Creates a `Context` controller instance.
  *
@@ -106,7 +104,7 @@ export type ContextControllerState = Context['state'];
  */
 export function buildContext(
   engine: CommerceEngine,
-  props: ContextProps
+  props: ContextProps = {}
 ): Context {
   if (!loadBaseContextReducers(engine)) {
     throw loadReducerError;
@@ -116,17 +114,10 @@ export function buildContext(
   const {dispatch} = engine;
   const getState = () => engine.state;
 
-  const options = {
-    ...props.options,
-  };
-
-  validateOptions(engine, contextSchema, options, 'buildContext');
-
-  dispatch(
-    setContext({
-      ...options,
-    })
-  );
+  if (props.options) {
+    validateOptions(engine, contextSchema, props.options, 'buildContext');
+    dispatch(setContext(props.options));
+  }
 
   return {
     ...controller,

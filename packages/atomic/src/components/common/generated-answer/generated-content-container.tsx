@@ -1,24 +1,30 @@
 import {FunctionalComponent, h} from '@stencil/core';
+import {GeneratedMarkdownContent} from './generated-content/generated-markdown-content';
+import {GeneratedTextContent} from './generated-content/generated-text-content';
 
 interface GeneratedContentContainerProps {
   answer?: string;
-  answerMediaType?: string;
+  answerContentFormat?: string;
   isStreaming: boolean;
 }
 
 export const GeneratedContentContainer: FunctionalComponent<
   GeneratedContentContainerProps
-> = (props, children) => (
-  <div class="mt-6">
-    <p
-      part="generated-text"
-      class={`mb-0 text-on-background whitespace-pre-wrap ${
-        props.isStreaming ? 'cursor' : ''
-      }`}
-      innerHTML={props.answerMediaType === 'html' ? props.answer : undefined}
-    >
-      {props.answerMediaType === 'plain' ? props.answer : null}
-    </p>
-    <div class="footer mt-6">{children}</div>
-  </div>
-);
+> = (props, children) => {
+  return (
+    <div class="mt-6">
+      {props.answerContentFormat === 'text/markdown' ? (
+        <GeneratedMarkdownContent
+          answer={props.answer}
+          isStreaming={props.isStreaming}
+        />
+      ) : (
+        <GeneratedTextContent
+          answer={props.answer}
+          isStreaming={props.isStreaming}
+        />
+      )}
+      <div class="footer mt-6">{children}</div>
+    </div>
+  );
+};

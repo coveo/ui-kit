@@ -8,6 +8,7 @@
 
   /* Neutral colors */
   --atomic-neutral-dark: #626971;
+  --atomic-neutral-dim: #bfc4c8;
   --atomic-neutral: #e5e8e8;
   --atomic-neutral-light: #f6f7f9;
   --atomic-neutral-lighter: #f2f2f2;
@@ -23,12 +24,6 @@
   --atomic-error-background: #fcbdc0;
   --atomic-primary-background: #edf6ff;
   --atomic-inline-code: #cd2113;
-
-  /* Table colors */
-  --atomic-table-outer-border: #bfc4c8;
-  --atomic-table-inner-border: #bfc4c8;
-  --atomic-table-header-background: #e5e8e8;
-  --atomic-table-header-delimiter: #b7bcc0;
 
   /* Border radius */
   --atomic-border-radius: 0.25rem;

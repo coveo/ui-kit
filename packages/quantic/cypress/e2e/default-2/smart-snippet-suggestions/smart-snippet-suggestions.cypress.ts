@@ -1,4 +1,5 @@
 import {performSearch} from '../../../page-objects/actions/action-perform-search';
+import {analyticsModeTest} from '../../../page-objects/analytics';
 import {configure} from '../../../page-objects/configurator';
 import {
   interceptSearch,
@@ -11,11 +12,17 @@ import {
   InsightInterfaceExpectations as InsightInterfaceExpect,
 } from '../../../page-objects/use-case';
 import {scope} from '../../../reporters/detailed-collector';
+import {setCookieToEnableNextAnalytics} from '../../../utils/analytics-utils';
 import {stubConsoleError} from '../../console-selectors';
+import {NextAnalyticsExpectations} from '../../next-analytics-expectations';
 import {SmartSnippetSuggestionsActions as Actions} from './smart-snippet-suggestions-actions';
 import {SmartSnippetSuggestionsExpectations as Expect} from './smart-snippet-suggestions-expectations';
 
-const inactiveLink = 'javascript:void(0);';
+let analyticsMode: 'legacy' | 'next' = 'legacy';
+const exampleTrackingId = 'tracking_id_123';
+const answerType = 'SmartSnippetSuggestion';
+const exampleResponseId = 'example response id';
+
 const exampleInlineLink = 'https://www.coveo.com/en';
 const exampleInlineLinkText = 'Example inline link';
 const exampleAnswerText = 'Example smart snippet answer';
@@ -26,7 +33,8 @@ const exampleRelatedQuestions = [
     question: 'first example question',
     answerSnippet: exampleSmartSnippetAnswer,
     title: 'first example title',
-    uri: inactiveLink,
+    author: 'first example author',
+    uri: '#',
     uriHash: exampleUriHash,
     documentId: {
       contentIdKey: 'permanentid',
@@ -37,7 +45,8 @@ const exampleRelatedQuestions = [
     question: 'second example question',
     answerSnippet: exampleSmartSnippetAnswer,
     title: 'second example title',
-    uri: inactiveLink,
+    author: 'second example author',
+    uri: '#',
     uriHash: exampleUriHash,
     documentId: {
       contentIdKey: 'permanentid',
@@ -57,13 +66,17 @@ describe('quantic-smart-snippet-suggestions', () => {
     options: Partial<SmartSnippetSuggestionsOptions>,
     withoutSmartSnippet = false
   ) {
+    if (analyticsMode === 'next') {
+      setCookieToEnableNextAnalytics(exampleTrackingId);
+    }
     interceptSearch();
     if (withoutSmartSnippet) {
       mockSearchWithoutSmartSnippetSuggestions(options.useCase);
     } else {
       mockSearchWithSmartSnippetSuggestions(
         exampleRelatedQuestions,
-        options.useCase
+        options.useCase,
+        exampleResponseId
       );
     }
     cy.visit(pageUrl, {
@@ -90,88 +103,177 @@ describe('quantic-smart-snippet-suggestions', () => {
         });
       });
 
-      describe('when the query returns smart snippet suggestions', () => {
-        it('should properly display the smart snippet suggestions', () => {
-          visitPage({useCase: param.useCase});
-
-          scope('when loading the page', () => {
-            Expect.displaySmartSnippetSuggestionsCard(true);
-            exampleRelatedQuestions.forEach((suggestion, index) => {
-              Actions.toggleSuggestion(index);
-              Expect.logExpandSmartSnippetSuggestion({
-                answerSnippet: suggestion.answerSnippet,
-                question: suggestion.question,
-                documentId: suggestion.documentId,
-              });
-              Expect.displaySmartSnippetSuggestionsQuestion(
-                index,
-                suggestion.question
-              );
-              Expect.displaySmartSnippetSuggestionsAnswer(index, {
-                text: exampleAnswerText,
-                link: {
-                  href: exampleInlineLink,
-                  text: exampleInlineLinkText,
-                },
-              });
-              Expect.displaySmartSnippetSuggestionsSourceUri(
-                index,
-                suggestion.uri
-              );
-              Expect.displaySmartSnippetSuggestionsSourceTitle(
-                index,
-                suggestion.title
-              );
-              Actions.toggleSuggestion(index);
-              Expect.logCollapseSmartSnippetSuggestion({
-                answerSnippet: suggestion.answerSnippet,
-                question: suggestion.question,
-                documentId: suggestion.documentId,
-              });
-            });
+      analyticsModeTest.forEach((analytics) => {
+        describe(analytics.label, () => {
+          before(() => {
+            analyticsMode = analytics.mode;
           });
 
-          scope(
-            'when the source title of one of the suggestions is clicked',
-            () => {
-              const index = 0;
-              Actions.toggleSuggestion(index);
-              Actions.clickSmartSnippetSuggestionsSourceTitle(index);
-              Expect.logOpenSmartSnippetSuggestionSource({
-                ...exampleRelatedQuestions[index],
-                position: index + 1,
-              });
-            }
-          );
-
-          scope(
-            'when the source uri of one of the suggestions is clicked',
-            () => {
-              const index = 0;
+          describe('when the query returns smart snippet suggestions', () => {
+            it('should properly display the smart snippet suggestions', () => {
               visitPage({useCase: param.useCase});
-              Actions.toggleSuggestion(index);
-              Actions.clickSmartSnippetSuggestionsSourceUri(index);
-              Expect.logOpenSmartSnippetSuggestionSource({
-                ...exampleRelatedQuestions[index],
-                position: index + 1,
-              });
-            }
-          );
 
-          scope(
-            'when an inline link of one of the suggestions is clicked',
-            () => {
-              const index = 0;
-              Actions.clickSmartSnippetSuggestionsInlineLink(index);
-              Expect.logOpenSmartSnippetSuggestionInlineLink({
-                ...exampleRelatedQuestions[index],
-                position: index + 1,
-                linkUrl: exampleInlineLink,
-                linkText: exampleInlineLinkText,
-              });
-              visitPage({useCase: param.useCase});
-            }
-          );
+              scope(
+                'when expanding and collapsing the smart snippet suggestions',
+                () => {
+                  Expect.displaySmartSnippetSuggestionsCard(true);
+                  exampleRelatedQuestions.forEach((suggestion, index) => {
+                    Actions.toggleSuggestion(index);
+                    if (analyticsMode === 'next') {
+                      NextAnalyticsExpectations.emitQnaAnswerActionEvent(
+                        {
+                          answer: {
+                            responseId: exampleResponseId,
+                            type: answerType,
+                          },
+                          action: 'expand',
+                        },
+                        exampleTrackingId
+                      );
+                    } else {
+                      Expect.logExpandSmartSnippetSuggestion({
+                        answerSnippet: suggestion.answerSnippet,
+                        question: suggestion.question,
+                        documentId: suggestion.documentId,
+                      });
+                    }
+                    Expect.displaySmartSnippetSuggestionsQuestion(
+                      index,
+                      suggestion.question
+                    );
+                    Expect.displaySmartSnippetSuggestionsAnswer(index, {
+                      text: exampleAnswerText,
+                      link: {
+                        href: exampleInlineLink,
+                        text: exampleInlineLinkText,
+                      },
+                    });
+                    Expect.displaySmartSnippetSuggestionsSourceUri(
+                      index,
+                      suggestion.uri
+                    );
+                    Expect.displaySmartSnippetSuggestionsSourceTitle(
+                      index,
+                      suggestion.title
+                    );
+                    Actions.toggleSuggestion(index);
+                    if (analyticsMode === 'next') {
+                      NextAnalyticsExpectations.emitQnaAnswerActionEvent(
+                        {
+                          answer: {
+                            responseId: exampleResponseId,
+                            type: answerType,
+                          },
+                          action: 'collapse',
+                        },
+                        exampleTrackingId
+                      );
+                    } else {
+                      Expect.logCollapseSmartSnippetSuggestion({
+                        answerSnippet: suggestion.answerSnippet,
+                        question: suggestion.question,
+                        documentId: suggestion.documentId,
+                      });
+                    }
+                  });
+                }
+              );
+
+              scope(
+                'when the source title of one of the suggestions is clicked',
+                () => {
+                  const index = 0;
+                  Actions.toggleSuggestion(index);
+                  Actions.clickSmartSnippetSuggestionsSourceTitle(index);
+                  if (analyticsMode === 'next') {
+                    NextAnalyticsExpectations.emitQnaCitationClick(
+                      {
+                        answer: {
+                          responseId: exampleResponseId,
+                          type: answerType,
+                        },
+                        citation: {
+                          id: exampleRelatedQuestions[index].documentId
+                            .contentIdValue,
+                          type: 'Source',
+                        },
+                      },
+                      exampleTrackingId
+                    );
+                  } else {
+                    Expect.logOpenSmartSnippetSuggestionSource({
+                      ...exampleRelatedQuestions[index],
+                      position: index + 1,
+                    });
+                  }
+                }
+              );
+
+              scope(
+                'when the source uri of one of the suggestions is clicked',
+                () => {
+                  const index = 0;
+                  visitPage({useCase: param.useCase});
+                  Actions.toggleSuggestion(index);
+                  Actions.clickSmartSnippetSuggestionsSourceUri(index);
+                  if (analyticsMode === 'next') {
+                    NextAnalyticsExpectations.emitQnaCitationClick(
+                      {
+                        answer: {
+                          responseId: exampleResponseId,
+                          type: answerType,
+                        },
+                        citation: {
+                          id: exampleRelatedQuestions[index].documentId
+                            .contentIdValue,
+                          type: 'Source',
+                        },
+                      },
+                      exampleTrackingId
+                    );
+                  } else {
+                    Expect.logOpenSmartSnippetSuggestionSource({
+                      ...exampleRelatedQuestions[index],
+                      position: index + 1,
+                    });
+                  }
+                }
+              );
+
+              scope(
+                'when an inline link of one of the suggestions is clicked',
+                () => {
+                  const index = 0;
+                  visitPage({useCase: param.useCase});
+                  Actions.toggleSuggestion(index);
+                  Actions.clickSmartSnippetSuggestionsInlineLink(index);
+                  if (analyticsMode === 'next') {
+                    NextAnalyticsExpectations.emitQnaCitationClick(
+                      {
+                        answer: {
+                          responseId: exampleResponseId,
+                          type: answerType,
+                        },
+                        citation: {
+                          id: exampleRelatedQuestions[index].documentId
+                            .contentIdValue,
+                          type: 'InlineLink',
+                        },
+                      },
+                      exampleTrackingId
+                    );
+                  } else {
+                    Expect.logOpenSmartSnippetSuggestionInlineLink({
+                      ...exampleRelatedQuestions[index],
+                      position: index + 1,
+                      linkUrl: exampleInlineLink,
+                      linkText: exampleInlineLinkText,
+                    });
+                  }
+                }
+              );
+            });
+          });
         });
       });
     });

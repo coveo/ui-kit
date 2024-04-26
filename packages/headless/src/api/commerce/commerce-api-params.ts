@@ -1,4 +1,4 @@
-import {AnyCommerceFacetRequest} from '../../features/commerce/facets/facet-set/interfaces/request';
+import {AnyFacetRequest} from '../../features/commerce/facets/facet-set/interfaces/request';
 import {SortOption} from './common/sort';
 
 export interface TrackingIdParam {
@@ -57,16 +57,20 @@ export type UserParams = (UserIdRequired | EmailRequired | UserIdAndEmail) & {
 };
 
 export interface CartItemParam {
-  productId: string;
+  sku: string;
   quantity: number;
 }
 
 export interface FacetsParam {
-  facets?: AnyCommerceFacetRequest[];
+  facets?: AnyFacetRequest[];
 }
 
 export interface PageParam {
   page?: number;
+}
+
+export interface PerPageParam {
+  perPage?: number;
 }
 
 export interface SortParam {
@@ -83,4 +87,12 @@ export interface FacetQueryParam {
 
 export interface FacetIdParam {
   facetId: string;
+}
+
+export interface IgnorePathsParam {
+  ignorePaths: string[][];
+}
+
+export interface SlotIdParam {
+  slotId: string;
 }

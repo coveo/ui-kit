@@ -16,10 +16,7 @@ import {
   NumericRangeRequest,
   SearchStatusState,
 } from '../types';
-import {
-  shouldDisplayInputForFacetRange,
-  validateDependsOn,
-} from './facet-common';
+import {shouldDisplayInputForFacetRange} from './facet-common';
 import {FacetInfo} from './facet-common-store';
 import {FacetContainer} from './facet-container/facet-container';
 import {FacetHeader} from './facet-header/facet-header';
@@ -185,7 +182,6 @@ export class NumericFacetCommon {
       displayValuesAs: this.props.displayValuesAs,
       withInput: this.props.withInput,
     });
-    validateDependsOn(this.props.dependsOn);
   }
 
   public disconnectedCallback() {

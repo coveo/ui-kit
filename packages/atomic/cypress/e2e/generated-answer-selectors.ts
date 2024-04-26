@@ -19,7 +19,7 @@ export const GeneratedAnswerSelectors = {
   citationTitle: () =>
     GeneratedAnswerSelectors.citation().find('.citation-title'),
   citationIndex: () =>
-    GeneratedAnswerSelectors.citation().find('.citation-index'),
+    GeneratedAnswerSelectors.citation().find('[part="citation-index"]'),
   citationCard: () =>
     GeneratedAnswerSelectors.shadow().find('[part="citation-popover"]'),
   loader: () => GeneratedAnswerSelectors.shadow().find('.typing-indicator'),
@@ -34,6 +34,8 @@ export const GeneratedAnswerSelectors = {
       .parent(),
   copyButton: () =>
     GeneratedAnswerSelectors.shadow().find('[part="copy-button"]'),
+  disclaimer: () =>
+    GeneratedAnswerSelectors.shadow().find('[slot="disclaimer"]'),
 };
 
 export const feedbackModalSelectors = {

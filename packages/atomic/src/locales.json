@@ -7371,5 +7371,32 @@
     "zh": "无法复制答案",
     "zh-CN": "无法复制答案",
     "zh-TW": "無法複製答案"
+  },
+  "generated-answer-disclaimer": {
+    "en": "Generated content may contain errors. Verify important information.",
+    "fr": "Le contenu généré peut contenir des erreurs. Vérifiez les informations importantes.",
+    "cs": "Generovaný obsah může obsahovat chyby. Ověřte důležité informace.",
+    "da": "Genereret indhold kan indeholde fejl. Bekræft vigtig information.",
+    "de": "Generierte Inhalte können Fehler enthalten. Überprüfen Sie wichtige Informationen.",
+    "el": "Το παραγμένο περιεχόμενο μπορεί να περιέχει σφάλματα. Επιβεβαιώστε σημαντικές πληροφορίες.",
+    "es": "El contenido generado puede contener errores. Verifique información importante.",
+    "fi": "Tuotettu sisältö voi sisältää virheitä. Varmista tärkeät tiedot.",
+    "hu": "Az előállított tartalom hibákat tartalmazhat. Ellenőrizze a fontos információkat.",
+    "id": "Konten yang dihasilkan mungkin mengandung kesalahan. Verifikasi informasi penting.",
+    "it": "Il contenuto generato può contenere errori. Verifica le informazioni importanti.",
+    "ja": "生成されたコンテンツにはエラーが含まれている可能性があります。重要な情報を確認してください。",
+    "ko": "생성된 콘텐츠에는 오류가 포함될 수 있습니다. 중요한 정보를 확인하세요.",
+    "nl": "Gegenereerde inhoud kan fouten bevatten. Verifieer belangrijke informatie.",
+    "no": "Generert innhold kan inneholde feil. Verifiser viktig informasjon.",
+    "pl": "Wygenerowane treści mogą zawierać błędy. Zweryfikuj ważne informacje.",
+    "pt": "O conteúdo gerado pode conter erros. Verifique as informações importantes.",
+    "pt-BR": "O conteúdo gerado pode conter erros. Verifique as informações importantes.",
+    "ru": "Сгенерированный контент может содержать ошибки. Проверьте важную информацию.",
+    "sv": "Genererat innehåll kan innehålla fel. Verifiera viktig information.",
+    "th": "เนื้อหาที่สร้างขึ้นอาจมีข้อผิดพลาด ตรวจสอบข้อมูลที่สำคัญ",
+    "tr": "Oluşturulan içerik hatalar içerebilir. Önemli bilgileri doğrulayın.",
+    "zh": "生成的內容可能包含錯誤。驗證重要信息。",
+    "zh-CN": "生成的内容可能包含错误。验证重要信息。",
+    "zh-TW": "生成的內容可能包含錯誤。驗證重要資訊。"
   }
 }

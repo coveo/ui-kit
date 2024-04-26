@@ -15,6 +15,8 @@ import {
   InsightSearchStatusState,
   loadInsightDateFacetSetActions,
   InsightRangeFacetSortCriterion,
+  InsightFacetValueRequest,
+  InsightCategoryFacetValueRequest,
 } from '..';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {
@@ -23,7 +25,7 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {MapProp} from '../../../utils/props-utils';
-import {BaseFacet, parseDependsOn} from '../../common/facets/facet-common';
+import {parseDependsOn} from '../../common/facets/depends-on';
 import {FacetPlaceholder} from '../../common/facets/facet-placeholder/facet-placeholder';
 import {TimeframeFacetCommon} from '../../common/facets/timeframe-facet-common';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
@@ -37,9 +39,7 @@ import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interf
   shadow: true,
 })
 export class AtomicInsightTimeframeFacet
-  implements
-    InitializableComponent<InsightBindings>,
-    BaseFacet<InsightDateFacet>
+  implements InitializableComponent<InsightBindings>
 {
   @InitializeBindings() public bindings!: InsightBindings;
   public facetForDateRange?: InsightDateFacet;
@@ -146,7 +146,9 @@ export class AtomicInsightTimeframeFacet
         buildInsightFacetConditionsManager(this.bindings.engine, {
           facetId:
             this.facetForDateRange?.state.facetId ?? this.filter!.state.facetId,
-          conditions: parseDependsOn(this.dependsOn),
+          conditions: parseDependsOn<
+            InsightFacetValueRequest | InsightCategoryFacetValueRequest
+          >(this.dependsOn),
         }),
       buildDateRange: buildInsightDateRange,
       getSearchStatusState: () => this.searchStatusState,

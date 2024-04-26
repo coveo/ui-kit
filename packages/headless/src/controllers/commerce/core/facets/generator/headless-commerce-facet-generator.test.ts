@@ -2,6 +2,7 @@ import {commerceFacetSetReducer as commerceFacetSet} from '../../../../../featur
 import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
 import {facetOrderReducer as facetOrder} from '../../../../../features/facets/facet-order/facet-order-slice';
 import {CommerceAppState} from '../../../../../state/commerce-app-state';
+import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search';
 import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
 import {
@@ -9,6 +10,7 @@ import {
   buildMockCommerceEngine,
 } from '../../../../../test/mock-engine-v2';
 import {buildMockFacetSearch} from '../../../../../test/mock-facet-search';
+import {buildProductListingCategoryFacet} from '../../../product-listing/facets/headless-product-listing-category-facet';
 import {buildProductListingDateFacet} from '../../../product-listing/facets/headless-product-listing-date-facet';
 import {buildProductListingNumericFacet} from '../../../product-listing/facets/headless-product-listing-numeric-facet';
 import {buildProductListingRegularFacet} from '../../../product-listing/facets/headless-product-listing-regular-facet';
@@ -42,6 +44,8 @@ describe('FacetGenerator', () => {
         }),
       };
       state.facetSearchSet[facet.facetId] = buildMockFacetSearch();
+      state.categoryFacetSearchSet[facet.facetId] =
+        buildMockCategoryFacetSearch();
     }
   }
 
@@ -52,6 +56,7 @@ describe('FacetGenerator', () => {
       buildNumericFacet: buildProductListingNumericFacet,
       buildRegularFacet: buildProductListingRegularFacet,
       buildDateFacet: buildProductListingDateFacet,
+      buildCategoryFacet: buildProductListingCategoryFacet,
     };
 
     state = buildMockCommerceState();
@@ -61,100 +66,97 @@ describe('FacetGenerator', () => {
     initCommerceFacetGenerator();
   });
 
-  describe('initialization', () => {
-    describe('regardless of the current facet state', () => {
-      beforeEach(() => {
-        initCommerceFacetGenerator();
-      });
+  it('initializes', () => {
+    expect(facetGenerator).toBeTruthy();
+  });
 
-      it('initializes', () => {
-        expect(facetGenerator).toBeTruthy();
-      });
-
-      it('adds correct reducers to engine', () => {
-        expect(engine.addReducers).toHaveBeenCalledWith({
-          facetOrder,
-          commerceFacetSet,
-        });
-      });
-
-      it('exposes #subscribe method', () => {
-        expect(facetGenerator.subscribe).toBeTruthy();
-      });
-    });
-
-    describe('when facet state contains a regular facet', () => {
-      it('generates a regular facet controller', () => {
-        const facetId = 'regular_facet_id';
-        setFacetState([{facetId, type: 'regular'}]);
-
-        expect(facetGenerator.state.facets.length).toEqual(1);
-        expect(facetGenerator.state.facets[0].state).toEqual(
-          buildProductListingRegularFacet(engine, {facetId}).state
-        );
-      });
-    });
-
-    describe('when facet state contains a numeric facet', () => {
-      it('generates a numeric facet controller', () => {
-        const facetId = 'numeric_facet_id';
-        setFacetState([{facetId, type: 'numericalRange'}]);
-
-        expect(facetGenerator.state.facets.length).toEqual(1);
-        expect(facetGenerator.state.facets[0].state).toEqual(
-          buildProductListingNumericFacet(engine, {facetId}).state
-        );
-      });
-    });
-
-    describe('when facet state contains a date facet', () => {
-      it('generates a date facet controller', () => {
-        const facetId = 'date_facet_id';
-        setFacetState([{facetId, type: 'dateRange'}]);
-
-        expect(facetGenerator.state.facets.length).toEqual(1);
-        expect(facetGenerator.state.facets[0].state).toEqual(
-          buildProductListingDateFacet(engine, {facetId}).state
-        );
-      });
-    });
-
-    describe('when facet state contains multiple facets', () => {
-      it('generates the proper facet controllers', () => {
-        const facets: {facetId: string; type: FacetType}[] = [
-          {
-            facetId: 'regular_facet_id',
-            type: 'regular',
-          },
-          {
-            facetId: 'numeric_facet_id',
-            type: 'numericalRange',
-          },
-          {
-            facetId: 'date_facet_id',
-            type: 'dateRange',
-          },
-        ];
-        setFacetState(facets);
-
-        expect(facetGenerator.state.facets.length).toEqual(3);
-        expect(facetGenerator.state.facets[0].state).toEqual(
-          buildProductListingRegularFacet(engine, {facetId: facets[0].facetId})
-            .state
-        );
-        expect(facetGenerator.state.facets[1].state).toEqual(
-          buildProductListingNumericFacet(engine, {facetId: facets[1].facetId})
-            .state
-        );
-        expect(facetGenerator.state.facets[2].state).toEqual(
-          buildProductListingDateFacet(engine, {facetId: facets[2].facetId})
-            .state
-        );
-      });
+  it('adds correct reducers to engine', () => {
+    expect(engine.addReducers).toHaveBeenCalledWith({
+      facetOrder,
+      commerceFacetSet,
     });
   });
 
-  it('should generate category facet controllers', () => {
-    // TODO
+  it('exposes #subscribe method', () => {
+    expect(facetGenerator.subscribe).toBeTruthy();
+  });
+
+  it('when facet state contains a regular facet, generates a regular facet controller', () => {
+    const facetId = 'regular_facet_id';
+    setFacetState([{facetId, type: 'regular'}]);
+
+    expect(facetGenerator.state.facets.length).toEqual(1);
+    expect(facetGenerator.state.facets[0].state).toEqual(
+      buildProductListingRegularFacet(engine, {facetId}).state
+    );
+  });
+
+  it('when facet state contains a numeric facet, generates a numeric facet controller', () => {
+    const facetId = 'numeric_facet_id';
+    setFacetState([{facetId, type: 'numericalRange'}]);
+
+    expect(facetGenerator.state.facets.length).toEqual(1);
+    expect(facetGenerator.state.facets[0].state).toEqual(
+      buildProductListingNumericFacet(engine, {facetId}).state
+    );
+  });
+
+  it('when facet state contains a date facet, generates a date facet controller', () => {
+    const facetId = 'date_facet_id';
+    setFacetState([{facetId, type: 'dateRange'}]);
+
+    expect(facetGenerator.state.facets.length).toEqual(1);
+    expect(facetGenerator.state.facets[0].state).toEqual(
+      buildProductListingDateFacet(engine, {facetId}).state
+    );
+  });
+
+  it('when facet state contains a category facet, generates a category facet controller', () => {
+    const facetId = 'category_facet_id';
+    setFacetState([{facetId, type: 'hierarchical'}]);
+
+    expect(facetGenerator.state.facets.length).toEqual(1);
+    expect(facetGenerator.state.facets[0].state).toEqual(
+      buildProductListingCategoryFacet(engine, {facetId}).state
+    );
+  });
+
+  it('when facet state contains multiple facets, generates the proper facet controllers', () => {
+    const facets: {facetId: string; type: FacetType}[] = [
+      {
+        facetId: 'regular_facet_id',
+        type: 'regular',
+      },
+      {
+        facetId: 'numeric_facet_id',
+        type: 'numericalRange',
+      },
+      {
+        facetId: 'date_facet_id',
+        type: 'dateRange',
+      },
+      {
+        facetId: 'category_facet_id',
+        type: 'hierarchical',
+      },
+    ];
+    setFacetState(facets);
+
+    expect(facetGenerator.state.facets.length).toEqual(4);
+    expect(facetGenerator.state.facets[0].state).toEqual(
+      buildProductListingRegularFacet(engine, {facetId: facets[0].facetId})
+        .state
+    );
+    expect(facetGenerator.state.facets[1].state).toEqual(
+      buildProductListingNumericFacet(engine, {facetId: facets[1].facetId})
+        .state
+    );
+    expect(facetGenerator.state.facets[2].state).toEqual(
+      buildProductListingDateFacet(engine, {facetId: facets[2].facetId}).state
+    );
+    expect(facetGenerator.state.facets[3].state).toEqual(
+      buildProductListingCategoryFacet(engine, {facetId: facets[3].facetId})
+        .state
+    );
   });
 });

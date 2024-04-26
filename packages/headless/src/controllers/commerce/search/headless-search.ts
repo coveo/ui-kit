@@ -1,19 +1,24 @@
 import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
-import {ProductRecommendation} from '../../../api/search/search/product-recommendation';
+import {Product} from '../../../api/commerce/common/product';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
 import {LegacySearchAction} from '../../../features/analytics/analytics-utils';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
 import {executeSearch} from '../../../features/commerce/search/search-actions';
+import {responseIdSelector} from '../../../features/commerce/search/search-selectors';
 import {commerceSearchReducer as commerceSearch} from '../../../features/commerce/search/search-slice';
 import {loadReducerError} from '../../../utils/errors';
 import {
   buildController,
   Controller,
 } from '../../controller/headless-controller';
+import {
+  buildSolutionTypeSubControllers,
+  SolutionTypeSubControllers,
+} from '../core/sub-controller/headless-sub-controller';
 
-export interface Search extends Controller {
+export interface Search extends Controller, SolutionTypeSubControllers {
   /**
    * Executes the first search.
    */
@@ -26,7 +31,7 @@ export interface Search extends Controller {
 }
 
 export interface SearchState {
-  products: ProductRecommendation[];
+  products: Product[];
   error: CommerceAPIErrorStatusResponse | null;
   isLoading: boolean;
   responseId: string;
@@ -40,9 +45,14 @@ export function buildSearch(engine: CommerceEngine): Search {
   const controller = buildController(engine);
   const {dispatch} = engine;
   const getState = () => engine.state;
+  const subControllers = buildSolutionTypeSubControllers(engine, {
+    responseIdSelector,
+    fetchResultsActionCreator: executeSearch,
+  });
 
   return {
     ...controller,
+    ...subControllers,
 
     get state() {
       return getState().commerceSearch;
@@ -51,7 +61,7 @@ export function buildSearch(engine: CommerceEngine): Search {
     // eslint-disable-next-line @cspell/spellchecker
     // TODO CAPI-244: Handle analytics
     executeFirstSearch() {
-      const firstSearchExecuted = engine.state.commerceSearch.responseId !== '';
+      const firstSearchExecuted = responseIdSelector(engine.state) !== '';
 
       if (firstSearchExecuted) {
         return;
