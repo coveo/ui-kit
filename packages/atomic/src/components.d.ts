@@ -258,7 +258,7 @@ export namespace Components {
         "withSearch": boolean;
     }
     /**
-     * The `atomic-commerce-interface` component is the parent to all other atomic components in a search page. It handles the headless search engine and localization configurations.
+     * The `atomic-commerce-interface` component is the parent to all other atomic commerce components in a commerce page. It handles the headless search engine and localization configurations.
      */
     interface AtomicCommerceInterface {
         /**
@@ -271,7 +271,7 @@ export namespace Components {
          */
         "analytics": boolean;
         /**
-          * The search interface headless engine.
+          * The commerce interface headless engine.
          */
         "engine"?: CommerceEngine;
         /**
@@ -279,7 +279,7 @@ export namespace Components {
          */
         "executeFirstSearch": () => Promise<void>;
         /**
-          * A list of non-default fields to include in the query results.  Specify the property as an array using a JSON string representation: ```html <atomic-search-interface fields-to-include='["fieldA", "fieldB"]'></atomic-search-interface> ```
+          * A list of non-default fields to include in the query results.  Specify the property as an array using a JSON string representation: ```html <atomic-commerce-interface fields-to-include='["fieldA", "fieldB"]'></atomic-commerce-interface> ```
          */
         "fieldsToInclude": string[] | string;
         /**
@@ -289,7 +289,7 @@ export namespace Components {
          */
         "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
         /**
-          * The search interface i18next instance.
+          * the commerce interface i18next instance.
          */
         "i18n": i18n;
         /**
@@ -306,7 +306,7 @@ export namespace Components {
         "initializeWithCommerceEngine": (engine: CommerceEngine) => Promise<void>;
         "initializeWithEngine": (engine: CommerceEngine) => Promise<void>;
         /**
-          * The search interface language.
+          * the commerce interface language.
          */
         "language": string;
         /**
@@ -329,13 +329,11 @@ export namespace Components {
           * The CSS selector for the container where the interface will scroll back to.
          */
         "scrollContainer": string;
+        /**
+          * The type of the interface. - 'search': Indicates that the interface is used for Search. - 'product-listing': Indicates that the interface is used for Product listing.
+         */
         "type": | 'search'
     | 'product-listing';
-    }
-    /**
-     * The `atomic-commerce-result-list` component is responsible for displaying product results.
-     */
-    interface AtomicCommerceResultList {
     }
     /**
      * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
@@ -2811,22 +2809,13 @@ declare global {
         new (): HTMLAtomicColorFacetElement;
     };
     /**
-     * The `atomic-commerce-interface` component is the parent to all other atomic components in a search page. It handles the headless search engine and localization configurations.
+     * The `atomic-commerce-interface` component is the parent to all other atomic commerce components in a commerce page. It handles the headless search engine and localization configurations.
      */
     interface HTMLAtomicCommerceInterfaceElement extends Components.AtomicCommerceInterface, HTMLStencilElement {
     }
     var HTMLAtomicCommerceInterfaceElement: {
         prototype: HTMLAtomicCommerceInterfaceElement;
         new (): HTMLAtomicCommerceInterfaceElement;
-    };
-    /**
-     * The `atomic-commerce-result-list` component is responsible for displaying product results.
-     */
-    interface HTMLAtomicCommerceResultListElement extends Components.AtomicCommerceResultList, HTMLStencilElement {
-    }
-    var HTMLAtomicCommerceResultListElement: {
-        prototype: HTMLAtomicCommerceResultListElement;
-        new (): HTMLAtomicCommerceResultListElement;
     };
     /**
      * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
@@ -4279,7 +4268,6 @@ declare global {
         "atomic-citation": HTMLAtomicCitationElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
         "atomic-commerce-interface": HTMLAtomicCommerceInterfaceElement;
-        "atomic-commerce-result-list": HTMLAtomicCommerceResultListElement;
         "atomic-component-error": HTMLAtomicComponentErrorElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-external": HTMLAtomicExternalElement;
@@ -4615,7 +4603,7 @@ declare namespace LocalJSX {
         "withSearch"?: boolean;
     }
     /**
-     * The `atomic-commerce-interface` component is the parent to all other atomic components in a search page. It handles the headless search engine and localization configurations.
+     * The `atomic-commerce-interface` component is the parent to all other atomic commerce components in a commerce page. It handles the headless search engine and localization configurations.
      */
     interface AtomicCommerceInterface {
         /**
@@ -4628,15 +4616,15 @@ declare namespace LocalJSX {
          */
         "analytics"?: boolean;
         /**
-          * The search interface headless engine.
+          * The commerce interface headless engine.
          */
         "engine"?: CommerceEngine;
         /**
-          * A list of non-default fields to include in the query results.  Specify the property as an array using a JSON string representation: ```html <atomic-search-interface fields-to-include='["fieldA", "fieldB"]'></atomic-search-interface> ```
+          * A list of non-default fields to include in the query results.  Specify the property as an array using a JSON string representation: ```html <atomic-commerce-interface fields-to-include='["fieldA", "fieldB"]'></atomic-commerce-interface> ```
          */
         "fieldsToInclude"?: string[] | string;
         /**
-          * The search interface i18next instance.
+          * the commerce interface i18next instance.
          */
         "i18n"?: i18n;
         /**
@@ -4644,7 +4632,7 @@ declare namespace LocalJSX {
          */
         "iconAssetsPath"?: string;
         /**
-          * The search interface language.
+          * the commerce interface language.
          */
         "language"?: string;
         /**
@@ -4667,13 +4655,11 @@ declare namespace LocalJSX {
           * The CSS selector for the container where the interface will scroll back to.
          */
         "scrollContainer"?: string;
+        /**
+          * The type of the interface. - 'search': Indicates that the interface is used for Search. - 'product-listing': Indicates that the interface is used for Product listing.
+         */
         "type"?: | 'search'
     | 'product-listing';
-    }
-    /**
-     * The `atomic-commerce-result-list` component is responsible for displaying product results.
-     */
-    interface AtomicCommerceResultList {
     }
     /**
      * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
@@ -6924,7 +6910,6 @@ declare namespace LocalJSX {
         "atomic-citation": AtomicCitation;
         "atomic-color-facet": AtomicColorFacet;
         "atomic-commerce-interface": AtomicCommerceInterface;
-        "atomic-commerce-result-list": AtomicCommerceResultList;
         "atomic-component-error": AtomicComponentError;
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-external": AtomicExternal;
@@ -7104,13 +7089,9 @@ declare module "@stencil/core" {
              */
             "atomic-color-facet": LocalJSX.AtomicColorFacet & JSXBase.HTMLAttributes<HTMLAtomicColorFacetElement>;
             /**
-             * The `atomic-commerce-interface` component is the parent to all other atomic components in a search page. It handles the headless search engine and localization configurations.
+             * The `atomic-commerce-interface` component is the parent to all other atomic commerce components in a commerce page. It handles the headless search engine and localization configurations.
              */
             "atomic-commerce-interface": LocalJSX.AtomicCommerceInterface & JSXBase.HTMLAttributes<HTMLAtomicCommerceInterfaceElement>;
-            /**
-             * The `atomic-commerce-result-list` component is responsible for displaying product results.
-             */
-            "atomic-commerce-result-list": LocalJSX.AtomicCommerceResultList & JSXBase.HTMLAttributes<HTMLAtomicCommerceResultListElement>;
             /**
              * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
              */
