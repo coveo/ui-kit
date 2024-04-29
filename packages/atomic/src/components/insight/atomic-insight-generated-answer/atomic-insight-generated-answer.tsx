@@ -34,6 +34,20 @@ import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interf
  * @part rephrase-label - The header of the rephrase options.
  * @part rephrase-button - The button for each of the rephrase options (step-by-step instructions, bulleted list, and summary).
  *
+ * @part answer-code-block - The generated answer multi-line code blocks.
+ * @part answer-emphasis - The generated answer emphasized text elements.
+ * @part answer-inline-code - The generated answer inline code elements.
+ * @part answer-list-item - The generated answer list item elements for both ordered and unordered lists.
+ * @part answer-ordered-list - The generated answer ordered list elements.
+ * @part answer-paragraph - The generated answer paragraph elements.
+ * @part answer-quote-block - The generated answer quote block elements.
+ * @part answer-unordered-list - The generated answer unordered list elements.
+ * @part answer-strong - The generated answer strong text elements.
+ * @part answer-table - The generated answer table elements.
+ * @part answer-table-container - The generated answer table container elements.
+ * @part answer-table-content - The generated answer table content cell elements.
+ * @part answer-table-header - The generated answer table header cell elements.
+ *
  * @part citation - The link that allows the user to navigate to the item.
  * @part citation-popover - The pop-up that shows an item preview when the user hovers over the citation.
  */
