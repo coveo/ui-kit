@@ -13,17 +13,10 @@
 
       const engine = await setupEngine();
 
-      /*
-       * The following code section should be replaced by actual atomic commerce listing page
-       */
       await customElements.whenDefined('atomic-commerce-interface');
       const commerceInterface = document.querySelector('atomic-commerce-interface');
 
-      // Initialization
       await commerceInterface.initializeWithEngine(engine);
-      /**
-       * End of section to be replaced
-       */
     </script>
   </head>
 
