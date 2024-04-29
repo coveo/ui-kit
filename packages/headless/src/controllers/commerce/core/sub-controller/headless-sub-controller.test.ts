@@ -127,7 +127,9 @@ describe('sub controllers', () => {
       expect(pagination).toEqual(buildCorePaginationMock.mock.results[0].value);
       expect(buildCorePaginationMock).toHaveBeenCalledWith(engine, {
         fetchResultsActionCreator: mockFetchResultsActionCreator,
-        slotId,
+        options: {
+          slotId,
+        },
       });
     });
   });

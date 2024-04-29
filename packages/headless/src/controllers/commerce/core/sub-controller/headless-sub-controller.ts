@@ -66,7 +66,10 @@ export function buildBaseSolutionTypeControllers(
     pagination(props?: PaginationProps) {
       return buildCorePagination(engine, {
         ...props,
-        slotId,
+        options: {
+          ...props?.options,
+          slotId,
+        },
         fetchResultsActionCreator,
       });
     },
