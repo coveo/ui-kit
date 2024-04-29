@@ -8,7 +8,10 @@ import {buildMockCommerceFacetSlice} from '../../../test/mock-commerce-facet-sli
 import {buildMockCommerceRegularFacetValue} from '../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state';
 import {CommerceFacetSlice} from '../facets/facet-set/facet-set-state';
-import {getCommercePaginationInitialState} from '../pagination/pagination-state';
+import {
+  getCommercePaginationInitialSlice,
+  getCommercePaginationInitialState,
+} from '../pagination/pagination-state';
 import {SortBy, SortCriterion, SortDirection} from '../sort/sort';
 import {getCommerceSortInitialState} from '../sort/sort-state';
 import * as Actions from './actions';
@@ -87,17 +90,46 @@ describe('commerce common actions', () => {
 
       state.commercePagination = {
         ...getCommercePaginationInitialState(),
-        page: 1,
-        perPage: 10,
+        principal: {
+          ...getCommercePaginationInitialSlice(),
+          page: 1,
+          perPage: 10,
+        },
       };
 
       const expectedWithPagination: CommerceAPIRequest = {
         ...expected,
-        page: state.commercePagination.page,
-        perPage: state.commercePagination.perPage,
+        page: state.commercePagination.principal.page,
+        perPage: state.commercePagination.principal.perPage,
       };
 
       const request = await Actions.buildBaseCommerceAPIRequest(state);
+
+      expect(request).toEqual(expectedWithPagination);
+    });
+
+    it('given a slotId, returns expected base request with the effective pagination for that slot', async () => {
+      delete state.commerceSort;
+
+      const slotId = 'slot_id';
+      state.commercePagination = {
+        ...getCommercePaginationInitialState(),
+        recommendations: {
+          [slotId]: {
+            ...getCommercePaginationInitialSlice(),
+            page: 2,
+            perPage: 17,
+          },
+        },
+      };
+
+      const expectedWithPagination: CommerceAPIRequest = {
+        ...expected,
+        page: state.commercePagination.recommendations[slotId]!.page,
+        perPage: state.commercePagination.recommendations[slotId]!.perPage,
+      };
+
+      const request = await Actions.buildBaseCommerceAPIRequest(state, slotId);
 
       expect(request).toEqual(expectedWithPagination);
     });
