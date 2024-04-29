@@ -62,15 +62,15 @@ export interface PaginationState {
 }
 
 export interface PaginationOptions {
-  pageSize: number;
-}
-
-export interface CorePaginationProps {
-  fetchResultsActionCreator: FetchResultsActionCreator;
   /**
    * Recs slot id, or none for listings and search
    */
   slotId?: string;
+  pageSize?: number;
+}
+
+export interface CorePaginationProps {
+  fetchResultsActionCreator: FetchResultsActionCreator;
   options?: PaginationOptions;
 }
 
@@ -104,7 +104,7 @@ export function buildCorePagination(
 
   validateOptions(engine, optionsSchema, props.options, 'buildCorePagination');
 
-  const slotId = props.slotId;
+  const slotId = props.options?.slotId;
 
   if (props.options?.pageSize) {
     dispatch(

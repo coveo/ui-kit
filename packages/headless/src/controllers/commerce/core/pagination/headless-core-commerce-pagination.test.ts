@@ -13,8 +13,8 @@ import {
 } from '../../../../test/mock-engine-v2';
 import {
   buildCorePagination,
-  CorePaginationProps,
   Pagination,
+  PaginationOptions,
 } from './headless-core-commerce-pagination';
 
 jest.mock('../../../../features/commerce/pagination/pagination-actions');
@@ -25,12 +25,12 @@ describe('core pagination', () => {
   const fetchResultsActionCreator = jest.fn();
   const slotId = 'recommendations-slot-id';
 
-  function initPagination(props: Partial<CorePaginationProps> = {}) {
+  function initPagination(options: PaginationOptions = {}) {
     engine = buildMockCommerceEngine(buildMockCommerceState());
 
     pagination = buildCorePagination(engine, {
       fetchResultsActionCreator,
-      ...props,
+      options,
     });
   }
 
@@ -55,9 +55,7 @@ describe('core pagination', () => {
 
     it('sets page size when provided', () => {
       const pageSize = 11;
-      initPagination({
-        options: {pageSize},
-      });
+      initPagination({pageSize});
       expect(setPageSize).toHaveBeenCalledWith({pageSize});
     });
 
@@ -70,7 +68,7 @@ describe('core pagination', () => {
   });
 
   describe('#state', () => {
-    it('when slot id is specified, reflects the recommendations slot state', () => {
+    it('when slot id is specified, reflects the recommendations slot pagination state', () => {
       initPagination({slotId: 'slot-id'});
       engine.state.commercePagination.recommendations['slot-id'] = {
         perPage: 111,
@@ -86,7 +84,7 @@ describe('core pagination', () => {
       });
     });
 
-    it('when slot id is not specified, reflects the principal state', () => {
+    it('when slot id is not specified, reflects the principal pagination state', () => {
       engine.state.commercePagination.principal = {
         perPage: 222,
         page: 222,
