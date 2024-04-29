@@ -7,7 +7,6 @@ import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events';
 import {Logger} from 'pino';
 import {SectionNeededForFacetMetadata} from '../../features/facets/facet-set/facet-set-analytics-actions-utils';
 import {
-  CommerceSearchSection,
   ConfigurationSection,
   ProductListingV2Section,
   SearchHubSection,
@@ -21,7 +20,7 @@ import {
 } from './coveo-analytics-utils';
 
 export type StateNeededByCommerceAnalyticsProvider = ConfigurationSection &
-  Partial<ProductListingV2Section & CommerceSearchSection> &
+  ProductListingV2Section &
   Partial<SearchHubSection & SectionNeededForFacetMetadata>;
 
 export class CommerceAnalyticsProvider
@@ -48,11 +47,7 @@ export class CommerceAnalyticsProvider
 
   public getSearchUID() {
     const newState = this.getState();
-    return (
-      newState.productListing?.responseId ||
-      newState.commerceSearch?.responseId ||
-      this.initialState.responseId
-    );
+    return newState.productListing?.responseId || this.initialState.responseId;
   }
 
   private mapResultsToAnalyticsDocument() {
@@ -64,7 +59,7 @@ export class CommerceAnalyticsProvider
   }
 
   private get numberOfResults() {
-    return this.state.productListing?.products.length;
+    return this.state.productListing.products.length;
   }
 }
 
