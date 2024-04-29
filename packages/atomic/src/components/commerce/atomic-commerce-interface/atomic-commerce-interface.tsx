@@ -308,7 +308,7 @@ export class AtomicCommerceInterface
       );
 
     if (!standaloneSearchBoxData) {
-      this.engine.executeFirstSearch();
+      //this.engine.executeFirstSearch();
       return;
     }
 
@@ -316,7 +316,7 @@ export class AtomicCommerceInterface
     //const {updateQuery} = loadQueryActions(this.engine!);
     const {value} = standaloneSearchBoxData;
     this.engine!.dispatch(updateQuery({query: value}));
-    this.engine.executeFirstSearchAfterStandaloneSearchBoxRedirect();
+    //  this.engine.executeFirstSearchAfterStandaloneSearchBoxRedirect();
   }
 
   /**
