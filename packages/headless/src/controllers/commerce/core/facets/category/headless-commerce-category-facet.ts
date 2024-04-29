@@ -49,7 +49,6 @@ export type CategoryFacet = Omit<
   | 'toggleExclude'
   | 'toggleSingleExclude'
   | 'toggleSingleSelect'
-  | 'state'
 > & {
   facetSearch: Omit<CategoryFacetSearch, 'state'>;
   state: CategoryFacetState;

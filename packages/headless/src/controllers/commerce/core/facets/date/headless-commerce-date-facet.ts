@@ -6,6 +6,7 @@ import {
 import {
   CoreCommerceFacet,
   CoreCommerceFacetOptions,
+  CoreCommerceFacetState,
   DateFacetValue,
   DateRangeRequest,
   buildCoreCommerceFacet,
@@ -16,11 +17,15 @@ export type DateFacetOptions = Omit<
   'toggleSelectActionCreator' | 'toggleExcludeActionCreator'
 >;
 
+export type DateFacetState = CoreCommerceFacetState<DateFacetValue>;
+
 /**
  * The `DateFacet` controller offers a high-level programming interface for implementing date commerce
  * facet UI component.
  */
-export type DateFacet = CoreCommerceFacet<DateRangeRequest, DateFacetValue>;
+export type DateFacet = CoreCommerceFacet<DateRangeRequest, DateFacetValue> & {
+  state: DateFacetState;
+};
 
 /**
  * @internal
@@ -38,11 +43,17 @@ export function buildCommerceDateFacet(
   engine: CommerceEngine,
   options: DateFacetOptions
 ): DateFacet {
-  return buildCoreCommerceFacet<DateRangeRequest, DateFacetValue>(engine, {
+  const coreController = buildCoreCommerceFacet<
+    DateRangeRequest,
+    DateFacetValue
+  >(engine, {
     options: {
       ...options,
       toggleSelectActionCreator: toggleSelectDateFacetValue,
       toggleExcludeActionCreator: toggleExcludeDateFacetValue,
     },
   });
+  return {
+    ...coreController,
+  };
 }

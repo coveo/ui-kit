@@ -33,7 +33,7 @@ describe('SearchRegularFacet', () => {
     engine = buildMockCommerceEngine(preloadedState);
   }
 
-  function initSearchRegularFacet() {
+  function initFacet() {
     facet = buildSearchRegularFacet(engine, options);
   }
 
@@ -64,7 +64,7 @@ describe('SearchRegularFacet', () => {
     setFacetSearch();
 
     initEngine(state);
-    initSearchRegularFacet();
+    initFacet();
   });
 
   it('initializes', () => {
@@ -136,6 +136,7 @@ describe('SearchRegularFacet', () => {
 
     it('#state.isLoading uses #isFacetLoadingResponseSelector', () => {
       state.commerceSearch.isLoading = true;
+      initFacet();
       expect(facet.state.isLoading).toBe(true);
     });
 
@@ -144,7 +145,7 @@ describe('SearchRegularFacet', () => {
       expect(facet.state.facetSearch.isLoading).toBe(false);
 
       state.facetSearchSet[facetId].isLoading = true;
-      initSearchRegularFacet();
+      initFacet();
       expect(facet.state.facetSearch.isLoading).toBe(true);
     });
   });

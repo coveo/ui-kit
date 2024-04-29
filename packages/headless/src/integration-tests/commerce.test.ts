@@ -4,6 +4,10 @@ import {
   buildCommerceEngine,
 } from '../app/commerce-engine/commerce-engine';
 import {buildCart} from '../controllers/commerce/context/cart/headless-cart';
+import {CategoryFacet} from '../controllers/commerce/core/facets/category/headless-commerce-category-facet';
+import {DateFacet} from '../controllers/commerce/core/facets/date/headless-commerce-date-facet';
+import {NumericFacet} from '../controllers/commerce/core/facets/numeric/headless-commerce-numeric-facet';
+import {RegularFacet} from '../controllers/commerce/core/facets/regular/headless-commerce-regular-facet';
 import {buildRelevanceSortCriterion} from '../controllers/commerce/core/sort/headless-core-commerce-sort';
 import {buildProductListingFacetGenerator} from '../controllers/commerce/product-listing/facets/headless-product-listing-facet-generator';
 import {ProductListing} from '../controllers/commerce/product-listing/headless-product-listing';
@@ -117,10 +121,25 @@ describe.skip('commerce', () => {
     // Select a facet
     await waitForNextStateChange(engine, {
       action: () => {
-        facetController.toggleSelect({
-          ...facetController.state.values[0],
-          state: 'selected',
-        });
+        let facet;
+        switch (facetController.state.type) {
+          case 'regular':
+            facet = facetController as RegularFacet;
+            facet.toggleSelect(facet.state.values[0]);
+            break;
+          case 'numericalRange':
+            facet = facetController as NumericFacet;
+            facet.toggleSelect(facet.state.values[0]);
+            break;
+          case 'dateRange':
+            facet = facetController as DateFacet;
+            facet.toggleSelect(facet.state.values[0]);
+            break;
+          case 'hierarchical':
+            facet = facetController as CategoryFacet;
+            facet.toggleSelect(facet.state.values[0]);
+            break;
+        }
       },
       expectedSubscriberCalls: 8,
     });
