@@ -339,6 +339,18 @@ export namespace Components {
      * The `atomic-commerce-result-list` component is responsible for displaying product results.
      */
     interface AtomicCommerceResultList {
+        /**
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+         */
+        "density": 'normal' | 'compact';
+        /**
+          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
+         */
+        "display": 'grid' | 'list';
+        /**
+          * The expected size of the image displayed in the results.
+         */
+        "imageSize": number;
     }
     /**
      * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
@@ -4680,6 +4692,18 @@ declare namespace LocalJSX {
      * The `atomic-commerce-result-list` component is responsible for displaying product results.
      */
     interface AtomicCommerceResultList {
+        /**
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+         */
+        "density"?: 'normal' | 'compact';
+        /**
+          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
+         */
+        "display"?: 'grid' | 'list';
+        /**
+          * The expected size of the image displayed in the results.
+         */
+        "imageSize"?: number;
     }
     /**
      * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.

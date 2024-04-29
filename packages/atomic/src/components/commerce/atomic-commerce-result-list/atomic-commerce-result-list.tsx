@@ -7,7 +7,7 @@ import {
   Search,
   Product,
 } from '@coveo/headless/commerce';
-import {Component, Element, State, h} from '@stencil/core';
+import {Component, Element, Prop, State, h} from '@stencil/core';
 import StarIcon from '../../../images/star.svg';
 import {
   BindStateToController,
@@ -40,6 +40,21 @@ export class AtomicCommerceResultList
   @State()
   private searchState!: SearchState;
   @State() public error!: Error;
+
+  /**
+   * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
+   */
+  @Prop({reflect: true}) display: 'grid' | 'list' = 'grid';
+
+  /**
+   * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+   */
+  @Prop({reflect: true}) density: 'normal' | 'compact' = 'normal';
+
+  /**
+   * The expected size of the image displayed in the results.
+   */
+  @Prop({reflect: true}) imageSize: number = 400;
 
   public initialize() {
     if (this.host.innerHTML.includes('<atomic-result-children')) {
@@ -88,26 +103,31 @@ export class AtomicCommerceResultList
     }
 
     return (
-      <ul class="gap-4 mx-4 result-grid">
+      <ul
+        class={`mx-4 ${this.density === 'normal' ? 'gap-8' : 'gap-2'} ${this.display === 'grid' ? 'result-grid' : 'result-list'}`}
+      >
         {products.map((product: Product) => (
           <a class="flex" href={product.clickUri}>
-            <li class="p-2 mx-auto border-2 rounded-md hover:shadow">
+            <li class="p-2 border-2 rounded-md result-item hover:shadow">
               <img
-                width={400}
+                height={this.imageSize}
+                width={this.imageSize}
                 class="p-2 rounded"
                 src={
                   product?.ec_thumbnails
                     ? product?.ec_thumbnails[0]
-                    : 'https://placehold.co/100x100/EEE/31343C'
+                    : `https://placehold.co/${this.imageSize}x${this.imageSize}/EEE/31343C`
                 }
                 alt="Product Thumbnail"
               />
-              <div class="result-link">{product.ec_name}</div>
-              <div class="star-rating">
-                {product.ec_rating &&
-                  this.generateStarRating(product.ec_rating)}
+              <div class="result-details">
+                <div class="result-link">{product.ec_name}</div>
+                <div class="star-rating">
+                  {product.ec_rating &&
+                    this.generateStarRating(product.ec_rating)}
+                </div>
+                <div class="text-2xl">${product.ec_price}</div>
               </div>
-              <div class="text-2xl">${product.ec_price}</div>
             </li>
           </a>
         ))}
