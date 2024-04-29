@@ -3,7 +3,6 @@ import {
   buildCommerceEngine,
   getOrganizationEndpoints,
   buildRecommendations,
-  buildContext,
   buildProductListing,
   buildCart,
   buildSearch,
@@ -34,17 +33,6 @@ export const setupEngine = async () => {
           referrer: document.referrer,
         },
       },
-    },
-  });
-  const context = buildContext(engine, {
-    options: {
-      view: {
-        url: navContent[document.title].barcaUrl,
-        referrer: document.referrer,
-      },
-      language: 'en',
-      country: 'US',
-      currency: 'USD',
     },
   });
   return engine;
