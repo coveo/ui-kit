@@ -8,6 +8,7 @@ import {
   Product,
 } from '@coveo/headless/commerce';
 import {Component, Element, State, h} from '@stencil/core';
+import StarIcon from '../../../images/star.svg';
 import {
   BindStateToController,
   InitializableComponent,
@@ -55,6 +56,23 @@ export class AtomicCommerceResultList
     }
   }
 
+  private generateStarRating(rating: number) {
+    const stars = [];
+    for (let i = 0; i < 5; i++) {
+      stars.push(
+        <atomic-icon
+          class="w-5"
+          style={
+            i < rating ? {fill: 'gray'} : {fill: 'white', stroke: 'lightgray'}
+          }
+          icon={StarIcon}
+        ></atomic-icon>
+      );
+    }
+
+    return stars;
+  }
+
   public render() {
     const products =
       this.bindings.interfaceElement.type === 'product-listing'
@@ -84,9 +102,12 @@ export class AtomicCommerceResultList
                 }
                 alt="Product Thumbnail"
               />
-
               <div class="result-link">{product.ec_name}</div>
-              <div class="text-xl">${product.ec_price}</div>
+              <div class="star-rating">
+                {product.ec_rating &&
+                  this.generateStarRating(product.ec_rating)}
+              </div>
+              <div class="text-2xl">${product.ec_price}</div>
             </li>
           </a>
         ))}
