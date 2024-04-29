@@ -73,13 +73,13 @@ describe('core pagination', () => {
       engine.state.commercePagination.recommendations['slot-id'] = {
         perPage: 111,
         page: 111,
-        totalItems: 111,
+        totalEntries: 111,
         totalPages: 111,
       };
       expect(pagination.state).toEqual({
         pageSize: 111,
         page: 111,
-        totalItems: 111,
+        totalEntries: 111,
         totalPages: 111,
       });
     });
@@ -88,13 +88,13 @@ describe('core pagination', () => {
       engine.state.commercePagination.principal = {
         perPage: 222,
         page: 222,
-        totalItems: 222,
+        totalEntries: 222,
         totalPages: 222,
       };
       expect(pagination.state).toEqual({
         pageSize: 222,
         page: 222,
-        totalItems: 222,
+        totalEntries: 222,
         totalPages: 222,
       });
     });

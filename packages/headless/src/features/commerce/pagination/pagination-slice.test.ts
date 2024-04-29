@@ -33,7 +33,7 @@ describe('pagination slice', () => {
   const pagination = {
     page: 999,
     perPage: 999,
-    totalItems: 999,
+    totalEntries: 999,
     totalPages: 999,
   };
   const slotId = 'recommendations-slot-id';
@@ -49,7 +49,7 @@ describe('pagination slice', () => {
       principal: {
         page: 0,
         perPage: undefined,
-        totalItems: 0,
+        totalEntries: 0,
         totalPages: 0,
       },
     });
