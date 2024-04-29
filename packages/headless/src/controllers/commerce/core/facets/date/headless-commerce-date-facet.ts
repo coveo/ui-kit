@@ -9,6 +9,7 @@ import {
   CoreCommerceFacetState,
   DateFacetValue,
   DateRangeRequest,
+  FacetControllerType,
   buildCoreCommerceFacet,
 } from '../headless-core-commerce-facet';
 
@@ -25,7 +26,7 @@ export type DateFacetState = CoreCommerceFacetState<DateFacetValue>;
  */
 export type DateFacet = CoreCommerceFacet<DateRangeRequest, DateFacetValue> & {
   state: DateFacetState;
-};
+} & FacetControllerType<'dateRange'>;
 
 /**
  * @internal
@@ -55,5 +56,7 @@ export function buildCommerceDateFacet(
   });
   return {
     ...coreController,
+
+    type: 'dateRange',
   };
 }

@@ -7,6 +7,7 @@ import {
   CoreCommerceFacet,
   CoreCommerceFacetOptions,
   CoreCommerceFacetState,
+  FacetControllerType,
   NumericFacetValue,
   NumericRangeRequest,
   buildCoreCommerceFacet,
@@ -28,7 +29,7 @@ export type NumericFacet = CoreCommerceFacet<
   NumericFacetValue
 > & {
   state: NumericFacetState;
-};
+} & FacetControllerType<'numericalRange'>;
 
 /**
  * @internal
@@ -59,5 +60,7 @@ export function buildCommerceNumericFacet(
 
   return {
     ...coreController,
+
+    type: 'numericalRange',
   };
 }
