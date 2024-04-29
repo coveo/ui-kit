@@ -17,12 +17,17 @@ import {
   buildController,
   Controller,
 } from '../../controller/headless-controller';
-import {buildBaseSolutionTypeControllers} from '../core/sub-controller/headless-sub-controller';
+import {
+  BaseSolutionTypeSubControllers,
+  buildBaseSolutionTypeControllers,
+} from '../core/sub-controller/headless-sub-controller';
 
 /**
  * The `Recommendations` controller exposes a method for retrieving recommendations content in a commerce interface.
  */
-export interface Recommendations extends Controller {
+export interface Recommendations
+  extends Controller,
+    BaseSolutionTypeSubControllers {
   /**
    * Fetches the recommendations.
    */
