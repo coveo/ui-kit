@@ -37,7 +37,7 @@ export type StateNeededByQueryCommerceAPI = ConfigurationSection &
 export interface QueryCommerceAPIThunkReturn {
   /** The successful search response. */
   response: CommerceSuccessResponse;
-  analyticsAction: PreparableAnalyticsAction<StateNeededByQueryCommerceAPI>;
+  analyticsAction?: PreparableAnalyticsAction<StateNeededByQueryCommerceAPI>;
 }
 
 export const buildCommerceAPIRequest = async (
