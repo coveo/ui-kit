@@ -125,7 +125,7 @@ export function buildCorePagination(
         ? state.commercePagination.recommendations[slotId]!
         : state.commercePagination.principal,
     ({perPage, ...rest}) => ({
-      pageSize: perPage || 0,
+      pageSize: perPage ?? 0,
       ...rest,
     })
   );
