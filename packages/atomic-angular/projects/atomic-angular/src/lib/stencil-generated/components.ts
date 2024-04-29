@@ -162,13 +162,14 @@ export declare interface AtomicCommerceInterface extends Components.AtomicCommer
 
 
 @ProxyCmp({
+  inputs: ['density', 'display', 'imageSize']
 })
 @Component({
   selector: 'atomic-commerce-result-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
+  inputs: ['density', 'display', 'imageSize'],
 })
 export class AtomicCommerceResultList {
   protected el: HTMLElement;
