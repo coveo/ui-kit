@@ -4,6 +4,8 @@ import {
   buildNumericFilter,
   buildNumericRange,
   buildSearchStatus,
+  CategoryFacetValueRequest,
+  FacetValueRequest,
   loadNumericFacetSetActions,
   NumericFacet,
   NumericFacetState,
@@ -22,7 +24,7 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {MapProp} from '../../../../utils/props-utils';
-import {BaseFacet, parseDependsOn} from '../../../common/facets/facet-common';
+import {parseDependsOn} from '../../../common/facets/depends-on';
 import {NumberInputType} from '../../../common/facets/facet-number-input/number-input-type';
 import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
 import {
@@ -70,9 +72,7 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
   styleUrl: './atomic-numeric-facet.pcss',
   shadow: true,
 })
-export class AtomicNumericFacet
-  implements InitializableComponent, BaseFacet<NumericFacet>
-{
+export class AtomicNumericFacet implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   public facetForRange?: NumericFacet;
   public facetForInput?: NumericFacet;
@@ -207,7 +207,9 @@ export class AtomicNumericFacet
         buildFacetConditionsManager(this.bindings.engine, {
           facetId:
             this.facetForRange?.state.facetId ?? this.filter!.state.facetId,
-          conditions: parseDependsOn(this.dependsOn),
+          conditions: parseDependsOn<
+            FacetValueRequest | CategoryFacetValueRequest
+          >(this.dependsOn),
         }),
       buildNumericRange: buildNumericRange,
       initializeFacetForInput: () => this.initializeFacetForInput(),

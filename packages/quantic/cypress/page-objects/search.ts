@@ -6,16 +6,17 @@ import {
 } from 'cypress/types/net-stubbing';
 import {getAnalyticsBodyFromRequest} from '../e2e/common-expectations';
 import {buildMockRaw, buildMockResult} from '../fixtures/mock-result';
+import {
+  aliasCitationClickEventRequest,
+  aliasSubmitFeedbackEventRequest,
+  nextAnalyticsAlias,
+} from '../utils/analytics-utils';
 import {useCaseEnum} from './use-case';
 
 type RequestParams = Record<string, string | number | boolean | undefined>;
 
 function uaAlias(eventName: string) {
   return `@UA-${eventName}`;
-}
-
-function nextAnalyticsAlias(eventName: string) {
-  return `@EP-${eventName}`;
 }
 
 function paramsInclude(superset: RequestParams, subset: RequestParams) {
@@ -97,7 +98,30 @@ export const InterceptAliases = {
   NextAnalytics: {
     Qna: {
       AnswerAction: nextAnalyticsAlias('Qna.AnswerAction'),
+      CitationHover: nextAnalyticsAlias('Qna.CitationHover'),
+      CitationClick: {
+        Source: nextAnalyticsAlias('Qna.CitationClick.Source'),
+        InlineLink: nextAnalyticsAlias('Qna.CitationClick.InlineLink'),
+      },
+      SubmitFeedback: {
+        Like: nextAnalyticsAlias('Qna.SubmitFeedback.Like'),
+        Dislike: nextAnalyticsAlias('Qna.SubmitFeedback.Dislike'),
+        ReasonSubmit: nextAnalyticsAlias('Qna.SubmitFeedback.ReasonSubmit'),
+      },
     },
+    CaseAssist: {
+      DocumentSuggestionClick: nextAnalyticsAlias(
+        'caseAssist.documentSuggestionClick'
+      ),
+      DocumentSuggestionFeedback: nextAnalyticsAlias(
+        'caseAssist.documentSuggestionFeedback'
+      ),
+      SelectFieldClassification: nextAnalyticsAlias(
+        'caseAssist.selectFieldClassification'
+      ),
+      UpdateField: nextAnalyticsAlias('caseAssist.updateField'),
+    },
+    ItemClick: nextAnalyticsAlias('itemClick'),
   },
   QuerySuggestions: '@coveoQuerySuggest',
   Search: '@coveoSearch',
@@ -131,7 +155,13 @@ export function interceptSearch() {
 
     .intercept('POST', routeMatchers.nextAnalytics, (req) => {
       const eventType = req.body?.[0]?.meta.type;
-      req.alias = nextAnalyticsAlias(eventType).substring(1);
+      if (eventType === 'Qna.SubmitFeedback') {
+        aliasSubmitFeedbackEventRequest(req);
+      } else if (eventType === 'Qna.CitationClick') {
+        aliasCitationClickEventRequest(req);
+      } else {
+        req.alias = nextAnalyticsAlias(eventType).substring(1);
+      }
     })
 
     .intercept('POST', routeMatchers.querySuggest)
@@ -345,10 +375,12 @@ export function mockSearchWithSmartSnippet(
     uri: string;
     permanentId: string;
     uriHash: string;
+    author?: string;
   },
-  useCase?: string
+  useCase?: string,
+  responseId?: string
 ) {
-  const {question, answer, title, uri, permanentId, uriHash} =
+  const {question, answer, title, uri, permanentId, uriHash, author} =
     smartSnippetOptions;
   cy.intercept(getRoute(useCase), (req) => {
     req.continue((res) => {
@@ -368,9 +400,16 @@ export function mockSearchWithSmartSnippet(
           title: title,
           clickUri: uri,
           uniqueId: '123',
-          raw: buildMockRaw({permanentid: permanentId, urihash: uriHash}),
+          raw: buildMockRaw({
+            permanentid: permanentId,
+            urihash: uriHash,
+            author,
+          }),
         }),
       ];
+      if (responseId) {
+        res.body.searchUid = responseId;
+      }
       res.send();
     });
   }).as(InterceptAliases.Search.substring(1));
@@ -394,13 +433,15 @@ export function mockSearchWithSmartSnippetSuggestions(
     answerSnippet: string;
     title: string;
     uri: string;
+    author?: string;
     documentId: {
       contentIdKey: string;
       contentIdValue: string;
     };
     uriHash: string;
   }>,
-  useCase?: string
+  useCase?: string,
+  responseId?: string
 ) {
   cy.intercept(getRoute(useCase), (req) => {
     req.continue((res) => {
@@ -412,7 +453,7 @@ export function mockSearchWithSmartSnippetSuggestions(
         },
       };
       res.body.results = relatedQuestions.map(
-        ({title, uri, documentId, uriHash}) =>
+        ({title, uri, documentId, uriHash, author}) =>
           buildMockResult({
             uri,
             title,
@@ -421,9 +462,13 @@ export function mockSearchWithSmartSnippetSuggestions(
             raw: buildMockRaw({
               permanentid: documentId.contentIdValue,
               urihash: uriHash,
+              author: author,
             }),
           })
       );
+      if (responseId) {
+        res.body.searchUid = responseId;
+      }
       res.send();
     });
   }).as(InterceptAliases.Search.substring(1));
@@ -442,13 +487,17 @@ export function mockSearchWithoutSmartSnippetSuggestions(useCase?: string) {
 
 export function mockSearchWithGeneratedAnswer(
   streamId: string,
-  useCase?: string
+  useCase?: string,
+  responseId?: string
 ) {
   cy.intercept(getRoute(useCase), (req) => {
     req.continue((res) => {
       res.body.extendedResults = {
         generativeQuestionAnsweringId: streamId,
       };
+      if (responseId) {
+        res.body.searchUid = responseId;
+      }
       res.send();
     });
   }).as(InterceptAliases.Search.substring(1));

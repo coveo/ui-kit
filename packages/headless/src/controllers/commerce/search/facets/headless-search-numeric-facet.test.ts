@@ -110,6 +110,7 @@ describe('SearchNumericFacet', () => {
 
     it('#state.isLoading uses #isFacetLoadingResponseSelector', () => {
       state.commerceSearch.isLoading = true;
+      initFacet();
       expect(facet.state.isLoading).toBe(true);
     });
   });

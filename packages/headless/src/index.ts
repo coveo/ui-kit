@@ -582,11 +582,15 @@ export {
   buildRelevanceSortCriterion,
 } from './features/sort-criteria/criteria';
 export {parseCriterionExpression} from './features/sort-criteria/criteria-parser';
-export type {ResultTemplatesManager} from './features/result-templates/result-templates-manager';
 export type {
+  ResultTemplatesManager,
   ResultTemplate,
   ResultTemplateCondition,
-} from './features/result-templates/result-templates';
+} from './features/result-templates/result-templates-manager';
+export type {
+  TemplatesManager,
+  Template,
+} from './features/templates/templates-manager';
 export {
   platformUrl,
   analyticsUrl,
@@ -633,7 +637,10 @@ export {
   deserializeRelativeDate,
   validateRelativeDate,
 } from './api/search/date/relative-date';
-export type {GeneratedAnswerStyle} from './features/generated-answer/generated-response-format';
+export type {
+  GeneratedAnswerStyle,
+  GeneratedContentFormat,
+} from './features/generated-answer/generated-response-format';
 
 export * from './utils/query-expression/query-expression';
 

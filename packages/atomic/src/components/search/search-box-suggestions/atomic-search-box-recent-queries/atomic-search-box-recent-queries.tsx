@@ -1,19 +1,27 @@
 import {
   buildRecentQueriesList,
-  HighlightUtils,
   RecentQueriesList,
+  SearchBox,
 } from '@coveo/headless';
 import {Component, Element, Prop, State, h} from '@stencil/core';
 import Clock from '../../../../images/clock.svg';
 import {SafeStorage, StorageItems} from '../../../../utils/local-storage-utils';
-import {encodeForDomAttribute} from '../../../../utils/string-utils';
 import {once} from '../../../../utils/utils';
+import {
+  getPartialRecentQueryClearElement,
+  getPartialRecentQueryElement,
+  RecentQueriesContainer,
+  RecentQueryClear,
+  RecentQueryIcon,
+  RecentQueryText,
+} from '../../../common/suggestions/recent-queries';
 import {
   dispatchSearchBoxSuggestionsEvent,
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
-} from '../suggestions-common';
+} from '../../../common/suggestions/suggestions-common';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-search-box-recent-queries` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of recent query suggestions.
@@ -26,7 +34,7 @@ import {
   shadow: true,
 })
 export class AtomicSearchBoxRecentQueries {
-  private bindings!: SearchBoxSuggestionsBindings;
+  private bindings!: SearchBoxSuggestionsBindings<SearchBox, Bindings>;
   private recentQueriesList!: RecentQueriesList;
   private storage!: SafeStorage;
 
@@ -54,7 +62,7 @@ export class AtomicSearchBoxRecentQueries {
 
   componentWillLoad() {
     try {
-      dispatchSearchBoxSuggestionsEvent((bindings) => {
+      dispatchSearchBoxSuggestionsEvent<SearchBox, Bindings>((bindings) => {
         this.bindings = bindings;
         return this.initialize();
       }, this.host);
@@ -134,75 +142,30 @@ export class AtomicSearchBoxRecentQueries {
   }
 
   private renderClear(): SearchBoxSuggestionElement {
+    const partialItem = getPartialRecentQueryClearElement(this.bindings.i18n);
+
     return {
-      key: 'recent-query-clear',
-      content: (
-        <div
-          part="recent-query-title-content"
-          class="flex justify-between w-full"
-        >
-          <span class="font-bold" part="recent-query-title">
-            {this.bindings.i18n.t('recent-searches')}
-          </span>
-          <span part="recent-query-clear">{this.bindings.i18n.t('clear')}</span>
-        </div>
-      ),
-      ariaLabel: this.bindings.i18n.t('clear-recent-searches', {
-        interpolation: {escapeValue: false},
-      }),
+      ...partialItem,
+      content: <RecentQueryClear i18n={this.bindings.i18n} />,
       onSelect: () => {
         this.recentQueriesList.clear();
         this.bindings.triggerSuggestions();
       },
-      part: 'recent-query-title-item suggestion-divider',
-      hideIfLast: true,
     };
   }
 
   private renderItem(value: string): SearchBoxSuggestionElement {
     const query = this.bindings.searchBoxController.state.value;
+    const partialItem = getPartialRecentQueryElement(value, this.bindings.i18n);
     return {
-      key: `recent-${encodeForDomAttribute(value)}`,
-      query: value,
-      part: 'recent-query-item',
+      ...partialItem,
       content: (
-        <div
-          part="recent-query-content"
-          class="flex items-center break-all text-left"
-        >
-          <atomic-icon
-            part="recent-query-icon"
-            icon={this.renderIcon()}
-            class="w-4 h-4 mr-2 shrink-0"
-          ></atomic-icon>
-          {query === '' ? (
-            <span part="recent-query-text" class="break-all line-clamp-2">
-              {value}
-            </span>
-          ) : (
-            <span
-              part="recent-query-text"
-              class="break-all line-clamp-2"
-              innerHTML={HighlightUtils.highlightString({
-                content: value,
-                openingDelimiter:
-                  '<span part="recent-query-text-highlight" class="font-bold">',
-                closingDelimiter: '</span>',
-                highlights: [
-                  {
-                    offset: query.length,
-                    length: value.length - query.length,
-                  },
-                ],
-              })}
-            ></span>
-          )}
-        </div>
+        <RecentQueriesContainer>
+          <RecentQueryIcon icon={this.renderIcon()} />
+          <RecentQueryText query={query} value={value} />
+        </RecentQueriesContainer>
       ),
-      ariaLabel: this.bindings.i18n.t('recent-query-suggestion-label', {
-        query: value,
-        interpolation: {escapeValue: false},
-      }),
+
       onSelect: () => {
         if (this.bindings.isStandalone) {
           this.bindings.searchBoxController.updateText(value);

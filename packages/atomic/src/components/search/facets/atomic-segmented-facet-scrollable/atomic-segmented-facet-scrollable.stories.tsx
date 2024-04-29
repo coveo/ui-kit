@@ -2,7 +2,6 @@ import defaultStory from 'atomic-storybook/default-story';
 import {html} from 'lit-html';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
-  'Atomic/SegmentedFacet/SegmentedFacetScrollable',
   'atomic-segmented-facet-scrollable',
   {},
   {
@@ -23,5 +22,6 @@ const {defaultModuleExport, exportedStory} = defaultStory(
 export default {
   ...defaultModuleExport,
   title: 'Atomic/SegmentedFacet/SegmentedFacetScrollable',
+  id: 'atomic-segmented-facet-scrollable',
 };
 export const Default = exportedStory;

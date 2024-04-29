@@ -23,7 +23,7 @@ import {
 } from '../../../../utils/initialization-utils';
 import {Button} from '../../../common/button';
 import {IconButton} from '../../../common/iconButton';
-import {LinkWithResultAnalytics} from '../../../common/result-link/result-link';
+import {LinkWithItemAnalytics} from '../../../common/item-link/item-link';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {QuickviewSidebar} from '../atomic-quickview-sidebar/atomic-quickview-sidebar';
 import {QuickviewIframe} from '../quickview-iframe/quickview-iframe';
@@ -107,7 +107,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
       });
       headerContent = (
         <Fragment>
-          <LinkWithResultAnalytics
+          <LinkWithItemAnalytics
             href={this.result?.clickUri}
             onSelect={() => this.interactiveResult?.select()}
             onBeginDelayedSelect={() =>
@@ -119,7 +119,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
             className="truncate"
           >
             {this.result.title}
-          </LinkWithResultAnalytics>
+          </LinkWithItemAnalytics>
           <IconButton
             partPrefix="quickview-modal-header"
             icon={CloseIcon}
@@ -267,7 +267,8 @@ export class AtomicQuickviewModal implements InitializableComponent {
     const scriptId = `${this.highlightScriptId}${
       identifier ? `:${identifier}` : ''
     }`;
-    const style = doc.getElementById(scriptId) || doc.createElement('style');
+    const style =
+      doc.getElementById(scriptId) || this.bindings.createStyleElement();
     style.setAttribute('id', scriptId);
     head.appendChild(style);
     style.appendChild(

@@ -12,6 +12,7 @@ import {
   buildMockCommerceEngine,
 } from '../../../../test/mock-engine-v2';
 import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
+import {buildMockFacetSearchResult} from '../../../../test/mock-facet-search-result';
 import {
   CommerceFacetOptions,
   FacetValueRequest,
@@ -34,7 +35,7 @@ describe('ProductListingRegularFacet', () => {
     engine = buildMockCommerceEngine(preloadedState);
   }
 
-  function initProductListingRegularFacet() {
+  function initFacet() {
     facet = buildProductListingRegularFacet(engine, options);
   }
 
@@ -65,7 +66,7 @@ describe('ProductListingRegularFacet', () => {
     setFacetSearch();
 
     initEngine(state);
-    initProductListingRegularFacet();
+    initFacet();
   });
 
   it('initializes', () => {
@@ -120,23 +121,13 @@ describe('ProductListingRegularFacet', () => {
 
   describe('#facetSearch', () => {
     it('#facetSearch.select dispatches #fetchProductListing', () => {
-      const value = 'ted';
-      facet.facetSearch.select({
-        count: 0,
-        displayValue: value,
-        rawValue: value,
-      });
+      facet.facetSearch.select(buildMockFacetSearchResult());
 
       expect(fetchProductListing).toHaveBeenCalled();
     });
 
     it('#facetSearch.exclude dispatches #fetchProductListing', () => {
-      const value = 'ted';
-      facet.facetSearch.exclude({
-        count: 0,
-        displayValue: value,
-        rawValue: value,
-      });
+      facet.facetSearch.exclude(buildMockFacetSearchResult());
 
       expect(fetchProductListing).toHaveBeenCalled();
     });
@@ -151,6 +142,7 @@ describe('ProductListingRegularFacet', () => {
 
     it('#state.isLoading uses #isFacetLoadingResponseSelector', () => {
       state.productListing.isLoading = true;
+      initFacet();
       expect(facet.state.isLoading).toBe(true);
     });
 
@@ -159,7 +151,7 @@ describe('ProductListingRegularFacet', () => {
       expect(facet.state.facetSearch.isLoading).toBe(false);
 
       state.facetSearchSet[facetId].isLoading = true;
-      initProductListingRegularFacet();
+      initFacet();
       expect(facet.state.facetSearch.isLoading).toBe(true);
     });
   });

@@ -1,19 +1,20 @@
 import {getVisitorID} from '../../../api/analytics/coveo-analytics-utils';
 import {SortParam} from '../../../api/commerce/commerce-api-params';
-import {CommerceAPIRequest} from '../../../api/commerce/common/request';
+import {
+  BaseCommerceAPIRequest,
+  CommerceAPIRequest,
+} from '../../../api/commerce/common/request';
 import {CommerceSuccessResponse} from '../../../api/commerce/common/response';
 import {
   CartSection,
-  CategoryFacetSection,
   CommerceContextSection,
+  CommerceFacetSetSection,
   CommercePaginationSection,
   CommerceSortSection,
   ConfigurationSection,
-  DateFacetSection,
   FacetOrderSection,
-  FacetSection,
-  NumericFacetSection,
   ProductListingV2Section,
+  RecommendationsSection,
   VersionSection,
 } from '../../../state/state-sections';
 import {PreparableAnalyticsAction} from '../../analytics/analytics-utils';
@@ -22,15 +23,13 @@ import {SortBy, SortCriterion} from '../sort/sort';
 
 export type StateNeededByQueryCommerceAPI = ConfigurationSection &
   ProductListingV2Section &
+  RecommendationsSection &
   CommerceContextSection &
   CartSection &
   Partial<
     CommercePaginationSection &
       CommerceSortSection &
-      FacetSection &
-      NumericFacetSection &
-      CategoryFacetSection &
-      DateFacetSection &
+      CommerceFacetSetSection &
       FacetOrderSection &
       VersionSection
   >;
@@ -44,7 +43,19 @@ export interface QueryCommerceAPIThunkReturn {
 export const buildCommerceAPIRequest = async (
   state: StateNeededByQueryCommerceAPI
 ): Promise<CommerceAPIRequest> => {
-  const facets = getFacets(state);
+  return {
+    ...(await buildBaseCommerceAPIRequest(state)),
+    facets: getFacets(state),
+    ...(state.commerceSort && {
+      sort: getSort(state.commerceSort.appliedSort),
+    }),
+  };
+};
+
+export const buildBaseCommerceAPIRequest = async (
+  state: StateNeededByQueryCommerceAPI,
+  slotId?: string
+): Promise<BaseCommerceAPIRequest> => {
   const {view, user, ...restOfContext} = state.commerceContext;
   return {
     accessToken: state.configuration.accessToken,
@@ -56,14 +67,33 @@ export const buildCommerceAPIRequest = async (
     context: {
       user,
       view,
-      cart: state.cart.cartItems.map((id) => state.cart.cart[id]),
+      cart: state.cart.cartItems.map((id) => {
+        const {sku, quantity} = state.cart.cart[id];
+        return {
+          sku,
+          quantity,
+        };
+      }),
     },
-    facets,
-    ...(state.commercePagination && {page: state.commercePagination.page}),
-    ...(state.commerceSort && {
-      sort: getSort(state.commerceSort.appliedSort),
-    }),
+    ...effectivePagination(state, slotId),
   };
+};
+
+const effectivePagination = (
+  state: StateNeededByQueryCommerceAPI,
+  slotId?: string
+) => {
+  const effectiveSlice = slotId
+    ? state.commercePagination?.recommendations[slotId]
+    : state.commercePagination?.principal;
+  return (
+    effectiveSlice && {
+      page: effectiveSlice!.page,
+      ...(effectiveSlice!.perPage && {
+        perPage: effectiveSlice!.perPage,
+      }),
+    }
+  );
 };
 
 function getFacets(state: StateNeededByFetchProductListingV2) {
@@ -77,10 +107,6 @@ function getFacets(state: StateNeededByFetchProductListingV2) {
 }
 
 function getSort(appliedSort: SortCriterion): SortParam['sort'] | undefined {
-  if (!appliedSort) {
-    return;
-  }
-
   if (appliedSort.by === SortBy.Relevance) {
     return {
       sortCriteria: SortBy.Relevance,

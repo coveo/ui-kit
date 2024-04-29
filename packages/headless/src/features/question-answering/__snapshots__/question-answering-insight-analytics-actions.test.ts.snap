@@ -6,7 +6,7 @@ exports[`question answering insight analytics actions when analyticsMode is \`ne
   {
     "action": "collapse",
     "answer": {
-      "id": "bar",
+      "responseId": "456",
       "type": "SmartSnippet",
     },
   },
@@ -19,7 +19,7 @@ exports[`question answering insight analytics actions when analyticsMode is \`ne
   {
     "action": "collapse",
     "answer": {
-      "id": "foo",
+      "responseId": "456",
       "type": "SmartSnippetSuggestion",
     },
   },
@@ -31,7 +31,7 @@ exports[`question answering insight analytics actions when analyticsMode is \`ne
   "Qna.SubmitFeedback",
   {
     "answer": {
-      "id": "bar",
+      "responseId": "456",
       "type": "SmartSnippet",
     },
     "feedback": {
@@ -47,7 +47,7 @@ exports[`question answering insight analytics actions when analyticsMode is \`ne
   {
     "action": "expand",
     "answer": {
-      "id": "bar",
+      "responseId": "456",
       "type": "SmartSnippet",
     },
   },
@@ -60,7 +60,7 @@ exports[`question answering insight analytics actions when analyticsMode is \`ne
   {
     "action": "expand",
     "answer": {
-      "id": "foo",
+      "responseId": "456",
       "type": "SmartSnippetSuggestion",
     },
   },
@@ -72,7 +72,7 @@ exports[`question answering insight analytics actions when analyticsMode is \`ne
   "Qna.SubmitFeedback",
   {
     "answer": {
-      "id": "bar",
+      "responseId": "456",
       "type": "SmartSnippet",
     },
     "feedback": {
@@ -82,36 +82,66 @@ exports[`question answering insight analytics actions when analyticsMode is \`ne
 ]
 `;
 
+exports[`question answering insight analytics actions when analyticsMode is \`next\` should log #logOpenSmartSnippetInlineLink with the right payload 1`] = `
+[
+  "Qna.CitationClick",
+  {
+    "answer": {
+      "responseId": "456",
+      "type": "SmartSnippet",
+    },
+    "citation": {
+      "id": "example permanent id",
+      "type": "InlineLink",
+    },
+  },
+]
+`;
+
 exports[`question answering insight analytics actions when analyticsMode is \`next\` should log #logOpenSmartSnippetSource with the right payload 1`] = `
 [
-  "ItemClick",
+  "Qna.CitationClick",
   {
-    "itemMetadata": {
-      "author": "unknown",
-      "title": "example documentTitle",
-      "uniqueFieldName": "permanentid",
-      "uniqueFieldValue": "example permanent id",
-      "url": "example documentUri",
+    "answer": {
+      "responseId": "456",
+      "type": "SmartSnippet",
     },
-    "position": 1,
-    "searchUid": "",
+    "citation": {
+      "id": "example permanent id",
+      "type": "Source",
+    },
+  },
+]
+`;
+
+exports[`question answering insight analytics actions when analyticsMode is \`next\` should log #logOpenSmartSnippetSuggestionInlineLink with the right payload 1`] = `
+[
+  "Qna.CitationClick",
+  {
+    "answer": {
+      "responseId": "456",
+      "type": "SmartSnippetSuggestion",
+    },
+    "citation": {
+      "id": "example permanent id",
+      "type": "InlineLink",
+    },
   },
 ]
 `;
 
 exports[`question answering insight analytics actions when analyticsMode is \`next\` should log #logOpenSmartSnippetSuggestionSource with the right payload 1`] = `
 [
-  "ItemClick",
+  "Qna.CitationClick",
   {
-    "itemMetadata": {
-      "author": "unknown",
-      "title": "example documentTitle",
-      "uniqueFieldName": "permanentid",
-      "uniqueFieldValue": "example permanent id",
-      "url": "example documentUri",
+    "answer": {
+      "responseId": "456",
+      "type": "SmartSnippetSuggestion",
     },
-    "position": 1,
-    "searchUid": "",
+    "citation": {
+      "id": "example permanent id",
+      "type": "Source",
+    },
   },
 ]
 `;
@@ -121,12 +151,12 @@ exports[`question answering insight analytics actions when analyticsMode is \`ne
   "Qna.SubmitFeedback",
   {
     "answer": {
-      "id": "bar",
+      "responseId": "456",
       "type": "SmartSnippet",
     },
     "feedback": {
       "details": "example feedback details",
-      "liked": true,
+      "liked": false,
       "reason": "other",
     },
   },
@@ -138,11 +168,11 @@ exports[`question answering insight analytics actions when analyticsMode is \`ne
   "Qna.SubmitFeedback",
   {
     "answer": {
-      "id": "bar",
+      "responseId": "456",
       "type": "SmartSnippet",
     },
     "feedback": {
-      "liked": true,
+      "liked": false,
       "reason": "does_not_answer",
     },
   },

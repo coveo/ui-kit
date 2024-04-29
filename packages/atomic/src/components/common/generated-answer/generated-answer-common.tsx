@@ -22,7 +22,6 @@ import {GeneratedContentContainer} from './generated-content-container';
 import {RephraseButtons} from './rephrase-buttons';
 import {RetryPrompt} from './retry-prompt';
 import {SourceCitations} from './source-citations';
-import {TypingLoader} from './typing-loader';
 
 interface GeneratedAnswerCommonOptions {
   host: HTMLElement;
@@ -47,7 +46,6 @@ export class GeneratedAnswerCommon {
 
   private contentClasses =
     'mt-0 mb-4 border border-neutral shadow-lg p-6 bg-background rounded-lg p-6 text-on-background';
-  private loadingClasses = 'my-3';
 
   constructor(private props: GeneratedAnswerCommonOptions) {
     this._data = this.readStoredData();
@@ -115,11 +113,9 @@ export class GeneratedAnswerCommon {
   }
 
   private get shouldBeHidden() {
-    const {isLoading, answer, citations} =
-      this.props.getGeneratedAnswerState() ?? {};
+    const {answer, citations} = this.props.getGeneratedAnswerState() ?? {};
     return (
-      !(isLoading || answer !== undefined || citations?.length) &&
-      !this.hasRetryableError
+      answer === undefined && !citations?.length && !this.hasRetryableError
     );
   }
 
@@ -193,6 +189,41 @@ export class GeneratedAnswerCommon {
       });
   }
 
+  private renderFeedbackAndCopyButtons() {
+    if (this.props.getGeneratedAnswerState()?.isStreaming) {
+      return null;
+    }
+    return (
+      <div class="feedback-buttons flex h-9 absolute top-6 right-20 shrink-0 gap-2">
+        <FeedbackButton
+          title={this.props.getBindings().i18n.t('this-answer-was-helpful')}
+          variant="like"
+          active={!!this.props.getGeneratedAnswerState()?.liked}
+          onClick={() => this.props.getGeneratedAnswer()?.like()}
+        />
+        <FeedbackButton
+          title={this.props.getBindings().i18n.t('this-answer-was-not-helpful')}
+          variant="dislike"
+          active={!!this.props.getGeneratedAnswerState()?.disliked}
+          onClick={() => this.clickDislike()}
+        />
+        {this.hasClipboard ? (
+          <CopyButton
+            title={this.copyToClipboardTooltip}
+            isCopied={this.props.getCopied()}
+            error={this.props.getCopyError()}
+            onClick={async () => {
+              const answer = this.props.getGeneratedAnswerState()?.answer;
+              if (answer) {
+                await this.copyToClipboard(answer);
+              }
+            }}
+          />
+        ) : null}
+      </div>
+    );
+  }
+
   private clickDislike() {
     if (
       this.modalRef &&
@@ -223,44 +254,7 @@ export class GeneratedAnswerCommon {
           >
             {this.props.getBindings().i18n.t('generated-answer-title')}
           </Heading>
-          <div class="flex gap-2 h-9 items-center ml-auto">
-            {!this.hasRetryableError &&
-              !this.props.getGeneratedAnswerState()?.isStreaming &&
-              this.isAnswerVisible && (
-                <div class="feedback-buttons flex shrink-0 gap-2 ml-auto">
-                  <FeedbackButton
-                    title={this.props
-                      .getBindings()
-                      .i18n.t('this-answer-was-helpful')}
-                    variant="like"
-                    active={!!this.props.getGeneratedAnswerState()?.liked}
-                    onClick={() => this.props.getGeneratedAnswer()?.like()}
-                  />
-                  <FeedbackButton
-                    title={this.props
-                      .getBindings()
-                      .i18n.t('this-answer-was-not-helpful')}
-                    variant="dislike"
-                    active={!!this.props.getGeneratedAnswerState()?.disliked}
-                    onClick={() => this.clickDislike()}
-                  />
-                  {this.hasClipboard ? (
-                    <CopyButton
-                      title={this.copyToClipboardTooltip}
-                      isCopied={this.props.getCopied()}
-                      error={this.props.getCopyError()}
-                      onClick={async () => {
-                        const answer =
-                          this.props.getGeneratedAnswerState()?.answer;
-                        if (answer) {
-                          await this.copyToClipboard(answer);
-                        }
-                      }}
-                    />
-                  ) : null}
-                </div>
-              )}
-
+          <div class="flex h-9 items-center ml-auto">
             <Switch
               part="toggle"
               checked={this.isAnswerVisible}
@@ -289,6 +283,7 @@ export class GeneratedAnswerCommon {
             answer={this.props.getGeneratedAnswerState()?.answer}
             isStreaming={!!this.props.getGeneratedAnswerState()?.isStreaming}
           >
+            {this.renderFeedbackAndCopyButtons()}
             <SourceCitations
               label={this.props.getBindings().i18n.t('citations')}
               isVisible={
@@ -312,26 +307,31 @@ export class GeneratedAnswerCommon {
             )}
           </GeneratedContentContainer>
         ) : null}
+
+        {!this.hasRetryableError &&
+          this.isAnswerVisible &&
+          !this.props.getGeneratedAnswerState()?.isStreaming && (
+            <div
+              part="generated-answer-footer"
+              class="flex justify-end mt-6 text-neutral-dark text-xs"
+            >
+              <slot name="disclaimer" slot="disclaimer">
+                {this.props.getBindings().i18n.t('generated-answer-disclaimer')}
+              </slot>
+            </div>
+          )}
       </div>
     );
   }
 
   public render() {
-    const {isLoading} = this.props.getGeneratedAnswerState() ?? {};
     if (this.shouldBeHidden) {
       return null;
     }
     return (
       <div>
-        <aside
-          class={`mx-auto ${
-            isLoading ? this.loadingClasses : this.contentClasses
-          }`}
-          part="container"
-        >
-          <article>
-            {isLoading ? <TypingLoader /> : this.renderContent()}
-          </article>
+        <aside class={`mx-auto ${this.contentClasses}`} part="container">
+          <article>{this.renderContent()}</article>
         </aside>
       </div>
     );

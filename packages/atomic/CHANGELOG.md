@@ -1,3 +1,42 @@
+## 2.64.1 (2024-04-24)
+
+### Bug Fixes
+
+- **genqa:** fix rephrase buttons for very small layout ([#3830](https://github.com/coveo/ui-kit/issues/3830)) ([79fbccc](https://github.com/coveo/ui-kit/commits/79fbccc14e75556e845c871e1c13e57920110208))
+
+# 2.64.0 (2024-04-17)
+
+### Bug Fixes
+
+- **deps:** update stencil j:kit-282 ([#3764](https://github.com/coveo/ui-kit/issues/3764)) ([82b6948](https://github.com/coveo/ui-kit/commits/82b694835e9e0a29859590f16bd64a8e028eb888))
+
+### Features
+
+- add nonce support ([#3791](https://github.com/coveo/ui-kit/issues/3791)) ([fc4be2e](https://github.com/coveo/ui-kit/commits/fc4be2e7cbeb5815e43105a8584a7bfd0db82682))
+
+## 2.63.1 (2024-04-10)
+
+# 2.63.0 (2024-04-03)
+
+### Features
+
+- **atomic:** add part attribute for genQA component ([#3753](https://github.com/coveo/ui-kit/issues/3753)) ([0a55222](https://github.com/coveo/ui-kit/commits/0a55222e982d7fa384fa402b1b7c00d8e2625f6f))
+- **atomic:** add rga disclaimer ([#3761](https://github.com/coveo/ui-kit/issues/3761)) ([d6c8b34](https://github.com/coveo/ui-kit/commits/d6c8b34e654cd72df053d1aae184ec045ffb5d8f))
+
+## 2.62.3 (2024-03-27)
+
+## 2.62.1 (2024-03-20)
+
+# 2.62.0 (2024-03-20)
+
+### Bug Fixes
+
+- **deps:** update dependency @stencil/core to v4.13.0 j:kit-282 ([#3725](https://github.com/coveo/ui-kit/issues/3725)) ([aee2015](https://github.com/coveo/ui-kit/commits/aee20158c892bf1ec73ea3e66c2cdfa6823420c1))
+
+### Features
+
+- **atomic:** style rephrase buttons and add auto option ([#3702](https://github.com/coveo/ui-kit/issues/3702)) ([cdae484](https://github.com/coveo/ui-kit/commits/cdae48449176e4913f61b461fab689dbc604e25f))
+
 # 2.61.0 (2024-03-13)
 
 ### Features

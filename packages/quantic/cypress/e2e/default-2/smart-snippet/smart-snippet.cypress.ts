@@ -170,6 +170,8 @@ describe('quantic-smart-snippet', {browser: 'chrome'}, () => {
 
         // Disabling this test temporarily, will be fixed as part of : https://coveord.atlassian.net/browse/SFINT-5514
         describe.skip('when clicking the feedback like button', () => {
+        // Disabling this test temporarily, will be fixed as part of : https://coveord.atlassian.net/browse/SFINT-5514
+        describe.skip('when clicking the feedback like button', () => {
           it('should properly log the analytics', () => {
             visitPage({useCase: param.useCase});
 
@@ -182,6 +184,8 @@ describe('quantic-smart-snippet', {browser: 'chrome'}, () => {
           });
         });
 
+        // Disabling this test temporarily, will be fixed as part of : https://coveord.atlassian.net/browse/SFINT-5514
+        describe.skip(
         // Disabling this test temporarily, will be fixed as part of : https://coveord.atlassian.net/browse/SFINT-5514
         describe.skip(
           'when clicking the feedback dislike button',

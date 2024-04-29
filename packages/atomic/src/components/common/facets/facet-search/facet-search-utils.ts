@@ -1,6 +1,11 @@
 import escape from 'escape-html';
 import {regexEncode} from '../../../../utils/string-utils';
-import {FacetSearchState} from '../../types';
+
+interface FacetSearchState {
+  query: string;
+  values: unknown[];
+  isLoading: boolean;
+}
 
 /**
  * Meant to be used inside the `componentShouldUpdate` lifecycle method.

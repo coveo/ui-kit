@@ -6,7 +6,7 @@ import {
 } from '@popperjs/core';
 import {Component, h, State, Prop, Element, Watch} from '@stencil/core';
 import {Heading} from '../../heading';
-import {LinkWithResultAnalytics} from '../../result-link/result-link';
+import {LinkWithItemAnalytics} from '../../item-link/item-link';
 
 /**
  * @internal
@@ -137,7 +137,7 @@ export class AtomicCitation {
   public render() {
     return (
       <div class="relative">
-        <LinkWithResultAnalytics
+        <LinkWithItemAnalytics
           href={this.citation.clickUri ?? this.citation.uri}
           ref={(el) => (this.citationRef = el!)}
           part="citation"
@@ -158,13 +158,16 @@ export class AtomicCitation {
           onFocus={this.openPopover}
           onBlur={this.closePopover}
         >
-          <div class="citation-index rounded-full font-medium flex items-center text-bg-primary shrink-0">
+          <div
+            part="citation-index"
+            class="rounded-full font-medium flex items-center text-bg-primary shrink-0"
+          >
             <div class="mx-auto">{this.index + 1}</div>
           </div>
           <span class="citation-title truncate mx-1">
             {this.citation.title}
           </span>
-        </LinkWithResultAnalytics>
+        </LinkWithItemAnalytics>
         {this.renderPopover()}
       </div>
     );

@@ -776,4 +776,16 @@
     <label>Réponse générée OFF</label>
     <name>quantic_GeneratedAnswerOff</name>
   </customLabels>
+  <customLabels>
+    <label>Le contenu généré peut contenir des erreurs. Vérifiez les informations importantes.</label>
+    <name>quantic_RGADisclaimer</name>
+  </customLabels>
+  <customLabels>
+    <label>Auto</label>
+    <name>quantic_Auto</name>
+  </customLabels>
+  <customLabels>
+    <label>Automatique</label>
+    <name>quantic_Automatic</name>
+  </customLabels>
 </Translations>

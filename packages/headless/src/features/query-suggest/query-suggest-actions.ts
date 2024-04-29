@@ -162,6 +162,7 @@ export const buildQuerySuggestRequest = async (
     ...(s.context && {context: s.context.contextValues}),
     ...(s.pipeline && {pipeline: s.pipeline}),
     ...(s.searchHub && {searchHub: s.searchHub}),
+    tab: s.configuration.analytics.originLevel2,
     ...(s.configuration.analytics.enabled && {
       visitorId: await getVisitorID(s.configuration.analytics),
       ...(s.configuration.analytics.enabled &&

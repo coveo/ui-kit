@@ -1,3 +1,19 @@
+## 0.5.39 (2024-04-24)
+
+## 0.5.38 (2024-04-17)
+
+### Bug Fixes
+
+- **deps:** update stencil j:kit-282 ([#3764](https://github.com/coveo/ui-kit/issues/3764)) ([82b6948](https://github.com/coveo/ui-kit/commits/82b694835e9e0a29859590f16bd64a8e028eb888))
+
+## 0.5.37 (2024-04-10)
+
+## 0.5.32 (2024-03-20)
+
+### Bug Fixes
+
+- **deps:** update dependency @stencil/core to v4.13.0 j:kit-282 ([#3725](https://github.com/coveo/ui-kit/issues/3725)) ([aee2015](https://github.com/coveo/ui-kit/commits/aee20158c892bf1ec73ea3e66c2cdfa6823420c1))
+
 ## 0.5.23 (2024-03-08)
 
 ### Bug Fixes

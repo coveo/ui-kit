@@ -15,12 +15,18 @@ import {
   closeGeneratedAnswerFeedbackModal,
   sendGeneratedAnswerFeedback,
   registerFieldsToIncludeInCitations,
+  setAnswerContentFormat,
+  setIsAnswerGenerated,
+  expandGeneratedAnswer,
+  collapseGeneratedAnswer,
 } from './generated-answer-actions';
 import {generatedAnswerReducer} from './generated-answer-slice';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
 import {
   GeneratedAnswerStyle,
+  GeneratedContentFormat,
   GeneratedResponseFormat,
+  generatedContentFormat,
 } from './generated-response-format';
 
 const baseState = getGeneratedAnswerInitialState();
@@ -231,6 +237,36 @@ describe('generated answer slice', () => {
     });
   });
 
+  test.each(generatedContentFormat)(
+    '#setAnswerContentFormat should set the "%i" content format in the state',
+    (format: GeneratedContentFormat) => {
+      const finalState = generatedAnswerReducer(
+        baseState,
+        setAnswerContentFormat(format)
+      );
+
+      expect(finalState).toEqual({
+        ...getGeneratedAnswerInitialState(),
+        answerContentFormat: format,
+      });
+    }
+  );
+
+  test.each(generatedContentFormat)(
+    '#setAnswerContentFormat should set the "%i" content format in the state',
+    (format: GeneratedContentFormat) => {
+      const finalState = generatedAnswerReducer(
+        baseState,
+        setAnswerContentFormat(format)
+      );
+
+      expect(finalState).toEqual({
+        ...getGeneratedAnswerInitialState(),
+        answerContentFormat: format,
+      });
+    }
+  );
+
   it('#likeGeneratedAnswer should set the answer as liked in the state', () => {
     const finalState = generatedAnswerReducer(baseState, likeGeneratedAnswer());
 
@@ -288,6 +324,22 @@ describe('generated answer slice', () => {
       ...getGeneratedAnswerInitialState(),
       feedbackSubmitted: true,
     });
+  });
+
+  it('#expandGeneratedAnswer should set expanded to true in the state', () => {
+    const finalState = generatedAnswerReducer(
+      {...baseState, expanded: false},
+      expandGeneratedAnswer()
+    );
+    expect(finalState.expanded).toBe(true);
+  });
+
+  it('#collapseGeneratedAnswer should set expanded to false in the state', () => {
+    const finalState = generatedAnswerReducer(
+      {...baseState, expanded: true},
+      collapseGeneratedAnswer()
+    );
+    expect(finalState.expanded).toBe(false);
   });
 
   describe('#setIsLoading', () => {
@@ -383,6 +435,26 @@ describe('generated answer slice', () => {
       );
 
       expect(finalState.isVisible).toEqual(false);
+    });
+  });
+
+  describe('#setIsAnswerGenerated', () => {
+    it('should set isAnswerGenerated to true when given true', () => {
+      const finalState = generatedAnswerReducer(
+        {...baseState, isAnswerGenerated: false},
+        setIsAnswerGenerated(true)
+      );
+
+      expect(finalState.isAnswerGenerated).toEqual(true);
+    });
+
+    it('should set isAnswerGenerated to false when given false', () => {
+      const finalState = generatedAnswerReducer(
+        {...baseState, isAnswerGenerated: true},
+        setIsAnswerGenerated(false)
+      );
+
+      expect(finalState.isAnswerGenerated).toEqual(false);
     });
   });
 });

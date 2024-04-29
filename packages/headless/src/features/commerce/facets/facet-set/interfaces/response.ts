@@ -9,6 +9,7 @@ export interface BaseFacetResponse<Value, Type extends FacetType> {
   fromAutoSelect: boolean;
   values: Value[];
   type: Type;
+  numberOfValues: number;
 }
 
 export type RegularFacetResponse = BaseFacetResponse<
@@ -26,7 +27,9 @@ export type NumericFacetResponse = BaseFacetResponse<
 export type CategoryFacetResponse = BaseFacetResponse<
   CategoryFacetValue,
   'hierarchical'
->;
+> & {
+  delimitingCharacter: string;
+};
 export type FacetType =
   | 'regular'
   | 'dateRange'

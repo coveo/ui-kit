@@ -12,6 +12,8 @@ import {
   buildNumericRange,
   buildFacetConditionsManager,
   FacetConditionsManager,
+  FacetValueRequest,
+  CategoryFacetValueRequest,
 } from '@coveo/headless';
 import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
 import Star from '../../../../images/star.svg';
@@ -22,11 +24,7 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {MapProp} from '../../../../utils/props-utils';
-import {
-  parseDependsOn,
-  validateDependsOn,
-} from '../../../common/facets/facet-common';
-import {BaseFacet} from '../../../common/facets/facet-common';
+import {parseDependsOn} from '../../../common/facets/depends-on';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
 import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
@@ -68,9 +66,7 @@ import {initializePopover} from '../atomic-popover/popover-type';
   styleUrl: 'atomic-rating-facet.pcss',
   shadow: true,
 })
-export class AtomicRatingFacet
-  implements InitializableComponent, BaseFacet<NumericFacet>
-{
+export class AtomicRatingFacet implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: NumericFacet;
   private dependenciesManager?: FacetConditionsManager;
@@ -185,7 +181,6 @@ export class AtomicRatingFacet
     }).validate({
       displayValuesAs: this.displayValuesAs,
     });
-    validateDependsOn(this.dependsOn);
   }
 
   public initialize() {
@@ -255,7 +250,9 @@ export class AtomicRatingFacet
       this.bindings.engine,
       {
         facetId: this.facetId!,
-        conditions: parseDependsOn(this.dependsOn),
+        conditions: parseDependsOn<
+          FacetValueRequest | CategoryFacetValueRequest
+        >(this.dependsOn),
       }
     );
   }

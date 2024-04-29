@@ -1,3 +1,45 @@
+# 2.50.0 (2024-04-24)
+
+### Features
+
+- **headless:** adapting the analytics sent for the qna features to send the response id ([#3812](https://github.com/coveo/ui-kit/issues/3812)) ([3727e7a](https://github.com/coveo/ui-kit/commits/3727e7aff19b9838cdbe74356eae12cd4e77178c))
+
+## 2.49.1 (2024-04-17)
+
+### Bug Fixes
+
+- **headless:** qna answer type for rga updated to be valid with new analytics schema ([#3780](https://github.com/coveo/ui-kit/issues/3780)) ([9b5eb13](https://github.com/coveo/ui-kit/commits/9b5eb13e38a923b3e9b8c37fb7c2d8060406cd4e))
+
+# 2.49.0 (2024-04-10)
+
+### Features
+
+- **quantic:** Update the styling of the rephrase buttons ([#3750](https://github.com/coveo/ui-kit/issues/3750)) ([d5d114e](https://github.com/coveo/ui-kit/commits/d5d114ec7fcef7909e8212e88ccbccb66092ec1a))
+
+# 2.48.0 (2024-04-03)
+
+### Features
+
+- **headless:** case assist analytics migrated to the event protocol ([#3742](https://github.com/coveo/ui-kit/issues/3742)) ([dd22a28](https://github.com/coveo/ui-kit/commits/dd22a282844e1de2a7787c29c92ad8c80663f8a7))
+
+## 2.47.1 (2024-03-27)
+
+### Bug Fixes
+
+- **quantic:** avoid pushing to recent results when use case is not search ([#3731](https://github.com/coveo/ui-kit/issues/3731)) ([5166de0](https://github.com/coveo/ui-kit/commits/5166de06911ce737f191cce1c34ff6e38d2cef57))
+
+# 2.47.0 (2024-03-25)
+
+### Features
+
+- **quantic:** disclaimer message for rga ([#3739](https://github.com/coveo/ui-kit/issues/3739)) ([a085429](https://github.com/coveo/ui-kit/commits/a0854298b7e78dec6e4a301f3912e3d00c5a8e05))
+
+## 2.46.11 (2024-03-20)
+
+### Bug Fixes
+
+- **quantic:** SmartSnippet to open in a new tab ([#3721](https://github.com/coveo/ui-kit/issues/3721)) ([1d4958a](https://github.com/coveo/ui-kit/commits/1d4958a8850175f6e849137789d8c32ef38f4438))
+
 ## 2.46.10 (2024-03-14)
 
 ## 2.46.4 (2024-03-11)

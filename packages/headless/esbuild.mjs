@@ -1,9 +1,9 @@
-import {build} from 'esbuild';
 import alias from 'esbuild-plugin-alias';
+import {umdWrapper} from 'esbuild-plugin-umd-wrapper';
 import {readFileSync, promises, writeFileSync} from 'node:fs';
 import {createRequire} from 'node:module';
 import {dirname, resolve} from 'node:path';
-import {umdWrapper} from '../../scripts/bundle/umd.mjs';
+import {build} from '../../scripts/esbuild/build.mjs';
 import {apacheLicense} from '../../scripts/license/apache.mjs';
 
 const require = createRequire(import.meta.url);
@@ -18,6 +18,13 @@ const useCaseEntries = {
   insight: 'src/insight.index.ts',
   ssr: 'src/ssr.index.ts',
   commerce: 'src/commerce.index.ts',
+};
+
+const quanticUseCaseEntries = {
+  search: 'src/index.ts',
+  recommendation: 'src/recommendation.index.ts',
+  'case-assist': 'src/case-assist.index.ts',
+  insight: 'src/insight.index.ts',
 };
 
 function getUmdGlobalName(useCase) {
@@ -55,6 +62,7 @@ function getUseCaseDir(prefix, useCase) {
  * @type {import('esbuild').BuildOptions}
  */
 const base = {
+  target: ['es2020'],
   bundle: true,
   tsconfig: './src/tsconfig.build.json',
   define: {
@@ -112,7 +120,6 @@ const browserUmd = Object.entries(useCaseEntries).map((entry) => {
   const outfile = `${outDir}/headless.js`;
 
   const globalName = getUmdGlobalName(useCase);
-  const umd = umdWrapper(globalName);
 
   return buildBrowserConfig(
     {
@@ -120,11 +127,31 @@ const browserUmd = Object.entries(useCaseEntries).map((entry) => {
       outfile,
       format: 'cjs',
       banner: {
-        js: `${base.banner.js}\n${umd.header}`,
+        js: `${base.banner.js}`,
       },
-      footer: {
-        js: umd.footer,
+      plugins: [umdWrapper({libraryName: globalName})],
+    },
+    outDir
+  );
+});
+
+const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
+  const [useCase, entryPoint] = entry;
+  const outDir = getUseCaseDir('dist/quantic/', useCase);
+  const outfile = `${outDir}/headless.js`;
+
+  const globalName = getUmdGlobalName(useCase);
+
+  return buildBrowserConfig(
+    {
+      entryPoints: [entryPoint],
+      outfile,
+      format: 'cjs',
+      banner: {
+        js: `${base.banner.js}`,
       },
+      inject: ['ponyfills/abortable-fetch-shim.js'],
+      plugins: [umdWrapper({libraryName: globalName})],
     },
     outDir
   );
@@ -154,6 +181,7 @@ async function buildBrowserConfig(options, outDir) {
     sourcemap: true,
     metafile: true,
     external: ['crypto'],
+    ...options,
     plugins: [
       alias({
         'coveo.analytics': resolveEsm('coveo.analytics'),
@@ -163,8 +191,8 @@ async function buildBrowserConfig(options, outDir) {
         ),
         '@coveo/pendragon': resolve('./ponyfills', 'magic-cookie-browser.js'),
       }),
+      ...(options.plugins || []),
     ],
-    ...options,
   });
   outputMetafile(`browser.${options.format}`, outDir, out.metafile);
   return out;
@@ -263,6 +291,7 @@ async function main() {
     ...browserEsmForAtomicDevelopment,
     ...nodeEsm,
     ...nodeCjs,
+    ...quanticUmd,
   ]);
   await Promise.all(adjustRequireImportsInNodeEsmBundles());
 }

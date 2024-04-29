@@ -1,6 +1,7 @@
 import {
   BaseParam,
   ContextParam,
+  DictionaryFieldContextParam,
   LocaleParam,
   NumberOfResultsParam,
   VisitorIDParam,
@@ -20,6 +21,7 @@ export type ProductRecommendationsRequest = BaseParam &
   MachineLearningParam &
   RecommendationParam &
   ContextParam &
+  DictionaryFieldContextParam &
   SearchHubParam &
   ActionsHistoryParam &
   VisitorIDParam &
