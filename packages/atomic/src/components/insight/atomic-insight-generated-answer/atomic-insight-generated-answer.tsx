@@ -34,6 +34,13 @@ import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interf
  * @part rephrase-label - The header of the rephrase options.
  * @part rephrase-button - The button for each of the rephrase options (step-by-step instructions, bulleted list, and summary).
  *
+ * @part answer-heading-1 - The generated answer level 1 heading elements.
+ * @part answer-heading-2 - The generated answer level 2 heading elements.
+ * @part answer-heading-3 - The generated answer level 3 heading elements.
+ * @part answer-heading-4 - The generated answer level 4 heading elements.
+ * @part answer-heading-5 - The generated answer level 5 heading elements.
+ * @part answer-heading-6 - The generated answer level 6 heading elements.
+ *
  * @part citation - The link that allows the user to navigate to the item.
  * @part citation-popover - The pop-up that shows an item preview when the user hovers over the citation.
  */

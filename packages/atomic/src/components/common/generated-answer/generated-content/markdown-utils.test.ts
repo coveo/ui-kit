@@ -147,7 +147,7 @@ describe('markdownUtils', () => {
           const html = transformMarkdownToHtml(text);
 
           expect(removeLineBreaks(html)).toBe(
-            `<div part="heading-${heading.level}" aria-label="title">title</div>`
+            `<div part="answer-heading-${heading.level}" aria-label="title">title</div>`
           );
         });
       });

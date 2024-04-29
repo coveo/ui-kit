@@ -22,7 +22,7 @@ const completeUnclosedElement = (text: string) => {
 
 const customRenderer = {
   heading(text: string, level: number) {
-    return `<div part="heading-${level}" aria-label="${text}">${text}</div>`;
+    return `<div part="answer-heading-${level}" aria-label="${text}">${text}</div>`;
   },
 
   /**
