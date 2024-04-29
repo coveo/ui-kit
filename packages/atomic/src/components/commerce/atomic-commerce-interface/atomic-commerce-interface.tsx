@@ -12,8 +12,6 @@ import {
   buildSearchUrlManager,
   getOrganizationEndpoints as getOrganizationEndpointsHeadless,
   updateQuery,
-} from '@coveo/headless/commerce';
-import {
   CommerceEngine,
   CommerceEngineConfiguration,
   buildCommerceEngine,
@@ -190,7 +188,6 @@ export class AtomicCommerceInterface
 
   public connectedCallback() {
     this.store.setLoadingFlag(FirstSearchExecutedFlag);
-    //this.updateMobileBreakpoint();
     this.i18nClone = this.i18n.cloneInstance();
     this.i18n.addResourceBundle = (
       lng: string,
@@ -367,21 +364,8 @@ export class AtomicCommerceInterface
     );
   }
 
-  /*   private updateMobileBreakpoint() {
-    const breakpoint = this.host.querySelector(
-      'atomic-commerce-layout'
-    )?.mobileBreakpoint;
-    if (breakpoint) {
-      this.store.set('mobileBreakpoint', breakpoint);
-    }
-  } */
-
   private initEngine(options: CommerceInitializationOptions) {
-    const analyticsConfig = getAnalyticsConfig(
-      options,
-      this.analytics,
-      this.store
-    );
+    const analyticsConfig = getAnalyticsConfig(options, this.analytics);
     try {
       this.engine = buildCommerceEngine({
         configuration: {
