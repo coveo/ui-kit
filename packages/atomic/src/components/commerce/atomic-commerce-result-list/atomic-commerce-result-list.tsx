@@ -57,12 +57,6 @@ export class AtomicCommerceResultList
   @Prop({reflect: true}) imageSize: number = 400;
 
   public initialize() {
-    if (this.host.innerHTML.includes('<atomic-result-children')) {
-      console.warn(
-        'Folded results will not render any children for the "atomic-result-list". Please use "atomic-folded-result-list" instead.'
-      );
-    }
-
     if (this.bindings.interfaceElement.type === 'product-listing') {
       this.productListing = buildProductListing(this.bindings.engine);
       this.productListing.refresh();
@@ -88,6 +82,8 @@ export class AtomicCommerceResultList
     return stars;
   }
 
+  // TODO: Refactor to support result templates
+  // TODO: Refactor to use guards/wrappers as in atomic-result-list
   public render() {
     const products =
       this.bindings.interfaceElement.type === 'product-listing'
