@@ -25,6 +25,8 @@ import {
   totalQuantitySelector,
 } from './headless-cart-selectors';
 
+export type CartActionPayload = Omit<Ec.CartAction, 'currency'>;
+
 export interface CartInitialState {
   items?: CartItemWithMetadata[];
 }
@@ -72,8 +74,7 @@ export interface CartProps {
  */
 export interface Cart extends Controller {
   /**
-   * Creates, updates, or deletes an item in the cart, and emits an `ec.cartAction` analytics event if the `quantity` of
-   * the item in the cart changes.
+   * Creates, updates, or deletes an item in the cart.
    *
    * If an item with the specified `productId` already exists in the cart:
    * - Setting `quantity` to `0` deletes the item from the cart; `name` and `price` have no effect.
@@ -84,19 +85,21 @@ export interface Cart extends Controller {
    * - Setting `quantity` to a positive number creates the item in the cart with the specified `productName`,
    * `pricePerUnit`, and `quantity`.
    *
-   * If the specified `quantity` is equivalent to the current quantity of the item in the cart, no analytics event is
-   * emitted. Otherwise, the method emits an `ec.cartAction` event with the appropriate action (`add` or `remove`).
-   *
    * @param item - The cart item to create, update, or delete.
    */
   updateItem(item: CartItem): void;
 
   /**
    * Sets the quantity of each item in the cart to 0, effectively emptying the cart.
-   *
-   * Emits an `ec.cartAction` analytics event with the `remove` action for each item removed from the cart.
    */
   empty(): void;
+
+  /**
+   * Emits an `ec.cartAction` analytics event.
+   *
+   * @param transaction - The object with the id and the total revenue from the transaction, including taxes, shipping, and discounts.
+   */
+  cartAction(payload: CartActionPayload): void;
 
   /**
    * Emits an `ec.purchase` analytics event and then empties the cart without emitting any additional events.
@@ -158,22 +161,6 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     dispatch(setItems(initialState.items));
   }
 
-  function isNewQuantityDifferent(
-    currentItem: CartItem,
-    prevItem: CartItemWithMetadata
-  ) {
-    return prevItem ? prevItem.quantity !== currentItem.quantity : true;
-  }
-
-  function getCartAction(
-    currentItem: CartItem,
-    prevItem: CartItemWithMetadata | undefined
-  ): 'add' | 'remove' {
-    const isCurrentQuantityGreater =
-      !prevItem || currentItem.quantity > prevItem.quantity;
-    return isCurrentQuantityGreater ? 'add' : 'remove';
-  }
-
   function getCurrency(): CurrencyCodeISO4217 {
     return engine.state.commerceContext.currency;
   }
@@ -189,25 +176,6 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
       : false;
   }
 
-  function createEcCartActionPayload(
-    currentItem: CartItem,
-    prevItem: CartItemWithMetadata | undefined
-  ): Ec.CartAction {
-    const {quantity: currentQuantity, sku, ...product} = currentItem;
-    const action = getCartAction(currentItem, prevItem);
-    const quantity = !prevItem
-      ? currentQuantity
-      : Math.abs(currentQuantity - prevItem.quantity);
-    const currency = getCurrency();
-
-    return {
-      action,
-      currency,
-      quantity,
-      product,
-    };
-  }
-
   return {
     ...controller,
 
@@ -215,6 +183,14 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
       for (const item of itemsSelector(getState())) {
         this.updateItem({...item, quantity: 0});
       }
+    },
+
+    cartAction(payload: CartActionPayload) {
+      const enrichedPayload: Ec.CartAction = {
+        ...payload,
+        currency: getCurrency(),
+      };
+      engine.relay.emit('ec.cartAction', enrichedPayload);
     },
 
     purchase(transaction: Transaction) {
@@ -227,13 +203,6 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
 
       if (doesNotNeedUpdate || isEqual(item, prevItem)) {
         return;
-      }
-
-      if (isNewQuantityDifferent(item, prevItem)) {
-        engine.relay.emit(
-          'ec.cartAction',
-          createEcCartActionPayload(item, prevItem)
-        );
       }
 
       dispatch(updateItem(item));

@@ -12,7 +12,12 @@ import {
   MockedCommerceEngine,
   buildMockCommerceEngine,
 } from '../../../../test/mock-engine-v2';
-import {buildCart, Cart, CartInitialState} from './headless-cart';
+import {
+  buildCart,
+  Cart,
+  CartActionPayload,
+  CartInitialState,
+} from './headless-cart';
 import {
   itemSelector,
   totalPriceSelector,
@@ -138,7 +143,6 @@ describe('headless commerce cart', () => {
       name: 'product-name-1',
       price: 100,
     };
-    const {sku, ...productWithoutQuantityAndSku} = productWithoutQuantity;
 
     const productWithQuantity = (quantity: number) => ({
       ...productWithoutQuantity,
@@ -156,27 +160,6 @@ describe('headless commerce cart', () => {
     afterEach(() => {
       jest.resetAllMocks();
     });
-
-    const getExpectedCartActionPayload = (
-      action: 'add' | 'remove',
-      quantity: number = 1
-    ) => ({
-      action,
-      product: productWithoutQuantityAndSku,
-      quantity,
-      currency: 'USD',
-    });
-
-    const expectCartAction = (
-      action: 'add' | 'remove',
-      quantity: number | undefined = undefined
-    ) => {
-      expect(engine.relay.emit).toHaveBeenCalledTimes(1);
-      expect(engine.relay.emit).toHaveBeenCalledWith(
-        'ec.cartAction',
-        getExpectedCartActionPayload(action, quantity)
-      );
-    };
 
     it('will not dispatch an action or emit an event if the item = cartItem', () => {
       const mockedUpdateItem = jest.mocked(updateItem);
@@ -231,31 +214,33 @@ describe('headless commerce cart', () => {
       expect(mockedUpdateItem).toHaveBeenCalledTimes(1);
       expect(engine.relay.emit).toHaveBeenCalledTimes(0);
     });
+  });
 
-    it('emits #ec.cartAction with "add" action and correct payload if quantity > 0 and item does not exist in cart', () => {
-      jest
-        .mocked(itemSelector)
-        .mockReturnValue(undefined as unknown as CartItemWithMetadata);
-
-      cart.updateItem(productWithQuantity(3));
-
-      expectCartAction('add', 3);
+  describe('#cartAction', () => {
+    beforeEach(() => {
+      initEngine({
+        ...buildMockCommerceState(),
+        commerceContext: {...getContextInitialState(), currency: 'USD'},
+      });
+      initCart();
     });
 
-    it('emits #ec.cartAction with "add" action and correct payload if item exists in cart and new quantity > current', () => {
-      jest.mocked(itemSelector).mockReturnValue(productWithQuantity(1));
+    it('emits a cart action event', () => {
+      const payload: CartActionPayload = {
+        action: 'add',
+        product: {
+          name: 'product-name-1',
+          price: 10,
+          productId: 'product-id-1',
+        },
+        quantity: 1,
+      };
 
-      cart.updateItem(productWithQuantity(5));
-
-      expectCartAction('add', 4);
-    });
-
-    it('emits #ec.cartAction with "remove" action and correct payload if item exists in cart and new quantity < current', () => {
-      jest.mocked(itemSelector).mockReturnValue(productWithQuantity(3));
-
-      cart.updateItem(productWithQuantity(1));
-
-      expectCartAction('remove', 2);
+      cart.cartAction(payload);
+      expect(engine.relay.emit).toHaveBeenCalledWith('ec.cartAction', {
+        ...payload,
+        currency: 'USD',
+      });
     });
   });
 
