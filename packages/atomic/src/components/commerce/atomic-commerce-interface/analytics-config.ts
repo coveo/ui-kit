@@ -7,16 +7,6 @@ export function getAnalyticsConfig(
   commerceEngineConfig: CommerceEngineConfiguration,
   enabled: boolean
 ): AnalyticsConfiguration {
-  switch (commerceEngineConfig.analytics?.analyticsMode) {
-    default:
-      return getNextAnalyticsConfig(commerceEngineConfig, enabled);
-  }
-}
-
-export function getNextAnalyticsConfig(
-  commerceEngineConfig: CommerceEngineConfiguration,
-  enabled: boolean
-): AnalyticsConfiguration {
   const defaultConfiguration: AnalyticsConfiguration = {
     enabled,
     documentLocation: document.location.href,
