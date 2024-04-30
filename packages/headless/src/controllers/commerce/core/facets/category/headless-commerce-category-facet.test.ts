@@ -326,4 +326,8 @@ describe('CategoryFacet', () => {
       });
     });
   });
+
+  it('#type returns "hierarchical"', () => {
+    expect(facet.type).toBe('hierarchical');
+  });
 });
