@@ -23,6 +23,7 @@ export const initializeEventName = 'atomic/initializeComponent';
 const initializableElements = [
   'atomic-recs-interface',
   'atomic-search-interface',
+  'atomic-commerce-interface',
   'atomic-relevance-inspector',
   'atomic-insight-interface',
   'atomic-external',

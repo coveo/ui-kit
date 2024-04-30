@@ -50,7 +50,7 @@ import {
   ButtonSearchSuggestion,
   SimpleSearchSuggestion,
 } from '../../search/atomic-search-box/search-suggestion';
-import type {Bindings} from '../atomic-commerce-search-interface/atomic-commerce-search-interface';
+import type {CommerceBindings as Bindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
  * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
