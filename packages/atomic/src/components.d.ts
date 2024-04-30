@@ -275,7 +275,7 @@ export namespace Components {
          */
         "engine"?: CommerceEngine;
         /**
-          * Executes the first search and logs the interface load event to analytics, after initializing connection to the headless search engine.
+          * Executes the first search after initializing connection to the headless search engine.
          */
         "executeFirstSearch": () => Promise<void>;
         /**
