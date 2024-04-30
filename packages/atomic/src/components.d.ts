@@ -299,7 +299,7 @@ export namespace Components {
         /**
           * Initializes the connection with an already preconfigured [headless search engine](https://docs.coveo.com/en/headless/latest/reference/search/), as opposed to the `initialize` method, which will internally create a new search engine instance. This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
          */
-        "initializeWithCommerceEngine": (engine: CommerceEngine) => Promise<void>;
+        "initializeWithEngine": (engine: CommerceEngine) => Promise<void>;
         /**
           * the commerce interface language.
          */
