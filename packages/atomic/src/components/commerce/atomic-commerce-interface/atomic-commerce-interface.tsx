@@ -244,7 +244,7 @@ export class AtomicCommerceInterface
 
   /**
    *
-   * Executes the first search and logs the interface load event to analytics, after initializing connection to the headless search engine.
+   * Executes the first search after initializing connection to the headless search engine.
    */
   @Method() public async executeFirstSearch() {
     if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
@@ -268,15 +268,15 @@ export class AtomicCommerceInterface
       );
 
     if (!standaloneSearchBoxData) {
-      //this.engine.executeFirstSearch();
+      this.engine.dispatch(updateQuery({query: ''}));
+      this.engine.executeFirstSearch();
       return;
     }
 
     safeStorage.removeItem(StorageItems.STANDALONE_SEARCH_BOX_DATA);
-    //const {updateQuery} = loadQueryActions(this.engine!);
     const {value} = standaloneSearchBoxData;
     this.engine!.dispatch(updateQuery({query: value}));
-    //  this.engine.executeFirstSearchAfterStandaloneSearchBoxRedirect();
+    this.engine.executeFirstSearch();
   }
 
   /**
