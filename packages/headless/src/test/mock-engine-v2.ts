@@ -121,6 +121,8 @@ export function buildMockCommerceEngine<
 >(initialState: State): CommerceEngine {
   return {
     ...buildMockCoreEngine(initialState),
+    executeFirstSearch: jest.fn(),
+    executeFirstSearchAfterStandaloneSearchBoxRedirect: jest.fn(),
   };
 }
 

@@ -6,6 +6,8 @@ import {
 import {
   CoreCommerceFacet,
   CoreCommerceFacetOptions,
+  CoreCommerceFacetState,
+  FacetControllerType,
   NumericFacetValue,
   NumericRangeRequest,
   buildCoreCommerceFacet,
@@ -16,6 +18,8 @@ export type NumericFacetOptions = Omit<
   'toggleSelectActionCreator' | 'toggleExcludeActionCreator'
 >;
 
+export type NumericFacetState = CoreCommerceFacetState<NumericFacetValue>;
+
 /**
  * The `NumericFacet` controller offers a high-level programming interface for implementing numeric commerce
  * facet UI component.
@@ -23,7 +27,9 @@ export type NumericFacetOptions = Omit<
 export type NumericFacet = CoreCommerceFacet<
   NumericRangeRequest,
   NumericFacetValue
->;
+> & {
+  state: NumericFacetState;
+} & FacetControllerType<'numericalRange'>;
 
 /**
  * @internal
@@ -41,14 +47,20 @@ export function buildCommerceNumericFacet(
   engine: CommerceEngine,
   options: NumericFacetOptions
 ): NumericFacet {
-  return buildCoreCommerceFacet<NumericRangeRequest, NumericFacetValue>(
-    engine,
-    {
-      options: {
-        ...options,
-        toggleSelectActionCreator: toggleSelectNumericFacetValue,
-        toggleExcludeActionCreator: toggleExcludeNumericFacetValue,
-      },
-    }
-  );
+  const coreController = buildCoreCommerceFacet<
+    NumericRangeRequest,
+    NumericFacetValue
+  >(engine, {
+    options: {
+      ...options,
+      toggleSelectActionCreator: toggleSelectNumericFacetValue,
+      toggleExcludeActionCreator: toggleExcludeNumericFacetValue,
+    },
+  });
+
+  return {
+    ...coreController,
+
+    type: 'numericalRange',
+  };
 }

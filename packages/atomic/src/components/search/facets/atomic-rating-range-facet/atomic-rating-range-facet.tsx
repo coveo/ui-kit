@@ -11,6 +11,8 @@ import {
   buildNumericRange,
   buildFacetConditionsManager,
   FacetConditionsManager,
+  FacetValueRequest,
+  CategoryFacetValueRequest,
 } from '@coveo/headless';
 import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
 import Star from '../../../../images/star.svg';
@@ -21,11 +23,7 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {MapProp} from '../../../../utils/props-utils';
-import {
-  parseDependsOn,
-  validateDependsOn,
-} from '../../../common/facets/facet-common';
-import {BaseFacet} from '../../../common/facets/facet-common';
+import {parseDependsOn} from '../../../common/facets/depends-on';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
 import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
@@ -64,9 +62,7 @@ import {initializePopover} from '../atomic-popover/popover-type';
   styleUrl: 'atomic-rating-range-facet.pcss',
   shadow: true,
 })
-export class AtomicRatingRangeFacet
-  implements InitializableComponent, BaseFacet<NumericFacet>
-{
+export class AtomicRatingRangeFacet implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: NumericFacet;
   private dependenciesManager?: FacetConditionsManager;
@@ -163,10 +159,6 @@ export class AtomicRatingRangeFacet
 
   private headerFocus?: FocusTargetController;
 
-  private validateProps() {
-    validateDependsOn(this.dependsOn);
-  }
-
   private get focusTarget() {
     if (!this.headerFocus) {
       this.headerFocus = new FocusTargetController(this);
@@ -175,7 +167,6 @@ export class AtomicRatingRangeFacet
   }
 
   public initialize() {
-    this.validateProps();
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.initializeFacet();
     this.initializeDependenciesManager();
@@ -241,7 +232,9 @@ export class AtomicRatingRangeFacet
       this.bindings.engine,
       {
         facetId: this.facetId!,
-        conditions: parseDependsOn(this.dependsOn),
+        conditions: parseDependsOn<
+          FacetValueRequest | CategoryFacetValueRequest
+        >(this.dependsOn),
       }
     );
   }

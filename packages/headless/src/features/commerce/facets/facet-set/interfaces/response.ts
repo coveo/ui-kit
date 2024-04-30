@@ -9,6 +9,7 @@ export interface BaseFacetResponse<Value, Type extends FacetType> {
   fromAutoSelect: boolean;
   values: Value[];
   type: Type;
+  numberOfValues: number;
 }
 
 export type RegularFacetResponse = BaseFacetResponse<
