@@ -1,3 +1,4 @@
+import {Schema, StringValue} from '@coveo/bueno';
 import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
 import {
   buildInsightFacetConditionsManager,
@@ -164,6 +165,7 @@ export class AtomicInsightNumericFacet
   private headerFocus?: FocusTargetController;
 
   public initialize() {
+    this.validateProps();
     this.computeFacetId();
     this.initializeFacetForInput();
     this.initializeFacetForRange();
@@ -315,7 +317,6 @@ export class AtomicInsightNumericFacet
 
   public render() {
     const {
-      facetState: {enabled, values},
       searchStatusState: {firstSearchExecuted, hasError},
       bindings: {i18n},
       label,
@@ -328,10 +329,10 @@ export class AtomicInsightNumericFacet
     } = this;
     return (
       <FacetGuard
-        enabled={enabled}
+        enabled={this.enabled}
         firstSearchExecuted={firstSearchExecuted}
         hasError={hasError}
-        hasResults={values.length > 0}
+        hasResults={this.shouldRenderFacet}
       >
         {firstSearchExecuted ? (
           <FacetContainer>
@@ -475,5 +476,19 @@ export class AtomicInsightNumericFacet
     }
 
     return !!this.valuesToRender.length;
+  }
+
+  private get enabled() {
+    return this.facetState?.enabled ?? this.filter?.state.enabled ?? true;
+  }
+
+  private validateProps() {
+    new Schema({
+      displayValuesAs: new StringValue({constrainTo: ['checkbox', 'link']}),
+      withInput: new StringValue({constrainTo: ['integer', 'decimal']}),
+    }).validate({
+      displayValuesAs: this.displayValuesAs,
+      withInput: this.withInput,
+    });
   }
 }

@@ -1,3 +1,4 @@
+import {Schema, StringValue} from '@coveo/bueno';
 import {
   buildFacetConditionsManager,
   FacetConditionsManager,
@@ -196,6 +197,7 @@ export class AtomicNumericFacet implements InitializableComponent {
   }
 
   public initialize() {
+    this.validateProps();
     this.computeFacetId();
     this.initializeFacetForInput();
     this.initializeFacetForRange();
@@ -339,16 +341,15 @@ export class AtomicNumericFacet implements InitializableComponent {
 
   public render() {
     const {
-      facetState: {enabled, values},
       searchStatusState: {firstSearchExecuted, hasError},
       bindings: {i18n},
     } = this;
     return (
       <FacetGuard
-        enabled={enabled}
+        enabled={this.enabled}
         firstSearchExecuted={firstSearchExecuted}
         hasError={hasError}
-        hasResults={values.length > 0}
+        hasResults={this.shouldRenderFacet}
       >
         {firstSearchExecuted ? (
           <FacetContainer>
@@ -479,8 +480,12 @@ export class AtomicNumericFacet implements InitializableComponent {
     this.facetId = this.field;
   }
 
+  private get enabled() {
+    return this.facetState?.enabled ?? this.filter?.state.enabled ?? true;
+  }
+
   private get isHidden() {
-    return !this.shouldRenderFacet || !this.facetState.enabled;
+    return !this.shouldRenderFacet || !this.enabled;
   }
 
   private get shouldRenderFacet() {
@@ -493,5 +498,15 @@ export class AtomicNumericFacet implements InitializableComponent {
     }
 
     return !!this.valuesToRender.length;
+  }
+
+  private validateProps() {
+    new Schema({
+      displayValuesAs: new StringValue({constrainTo: ['checkbox', 'link']}),
+      withInput: new StringValue({constrainTo: ['integer', 'decimal']}),
+    }).validate({
+      displayValuesAs: this.displayValuesAs,
+      withInput: this.withInput,
+    });
   }
 }
