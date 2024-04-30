@@ -156,6 +156,9 @@ export type {
   SearchBoxState,
 } from './controllers/commerce/search-box/headless-search-box';
 
+export {buildRecentQueriesList} from './controllers/commerce/recent-queries-list/headless-recent-queries-list';
+export type {RecentQueriesList} from './controllers/commerce/recent-queries-list/headless-recent-queries-list';
+
 export {buildStandaloneSearchBox} from './controllers/commerce/standalone-search-box/headless-standalone-search-box';
 export type {
   StandaloneSearchBox,
