@@ -150,7 +150,6 @@ describe('headless standalone searchBox', () => {
       const expectedQuery = state.querySet[id];
       searchBox.submit();
 
-      // TODO: check for enable query syntax (enableQuerySyntax)
       expect(updateQuery).toHaveBeenCalledWith({
         query: expectedQuery,
       });
