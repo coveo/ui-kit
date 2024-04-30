@@ -8,6 +8,7 @@ import {
   SearchBox,
   SearchBoxState,
   buildSearchBox,
+  buildStandaloneSearchBox,
 } from '@coveo/headless/commerce';
 import {
   Component,
@@ -218,7 +219,16 @@ export class AtomicCommerceSearchBox
       options: this.searchBoxOptions,
     });
 
-    // TODO: KIT-3129 Support standalone searchbox
+    this.searchBox = this.redirectionUrl
+      ? buildStandaloneSearchBox(this.bindings.engine, {
+          options: {
+            ...this.searchBoxOptions,
+            redirectionUrl: this.redirectionUrl,
+          },
+        })
+      : buildSearchBox(this.bindings.engine, {
+          options: this.searchBoxOptions,
+        });
 
     this.initializeSuggestionManager();
   }
