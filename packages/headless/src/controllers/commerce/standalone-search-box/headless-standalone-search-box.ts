@@ -148,7 +148,7 @@ function loadStandaloneSearchBoxReducers(
 > {
   engine.addReducers({
     commerceQuery,
-    standaloneSearchBoxSetReducer: standaloneSearchBoxSet,
+    commerceStandaloneSearchBoxSet: standaloneSearchBoxSet,
     configuration,
     querySuggest,
   });
