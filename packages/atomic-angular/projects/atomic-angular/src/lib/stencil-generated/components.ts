@@ -140,7 +140,7 @@ export declare interface AtomicColorFacet extends Components.AtomicColorFacet {}
 
 @ProxyCmp({
   inputs: ['CspNonce', 'analytics', 'engine', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'logLevel', 'reflectStateInUrl', 'scrollContainer', 'type'],
-  methods: ['initialize', 'initializeWithCommerceEngine', 'executeFirstSearch', 'getOrganizationEndpoints']
+  methods: ['initialize', 'initializeWithEngine', 'executeFirstSearch', 'getOrganizationEndpoints']
 })
 @Component({
   selector: 'atomic-commerce-interface',

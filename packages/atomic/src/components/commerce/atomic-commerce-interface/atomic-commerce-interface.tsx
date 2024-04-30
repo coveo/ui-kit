@@ -238,7 +238,7 @@ export class AtomicCommerceInterface
    * Initializes the connection with an already preconfigured [headless search engine](https://docs.coveo.com/en/headless/latest/reference/search/), as opposed to the `initialize` method, which will internally create a new search engine instance.
    * This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
    */
-  @Method() public initializeWithCommerceEngine(engine: CommerceEngine) {
+  @Method() public initializeWithEngine(engine: CommerceEngine) {
     return this.internalInitialization(() => (this.engine = engine));
   }
 
