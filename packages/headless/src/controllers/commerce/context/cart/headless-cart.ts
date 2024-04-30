@@ -12,6 +12,7 @@ import {
 import {cartReducer as cart} from '../../../../features/commerce/context/cart/cart-slice';
 import {CartItemWithMetadata} from '../../../../features/commerce/context/cart/cart-state';
 import {cartSchema} from '../../../../features/commerce/context/cart/cart-validation';
+import {CartSection} from '../../../../state/state-sections';
 import {loadReducerError} from '../../../../utils/errors';
 import {validateInitialState} from '../../../../utils/validate-payload';
 import {
@@ -36,6 +37,12 @@ export interface CartItem {
    * The unique identifier of the product.
    */
   productId: string;
+
+  /**
+   * The stock keeping unit for the item being added to cart.
+   * Depending on how your catalog is structured, this may be the same value as the productId.
+   */
+  sku: string;
 
   /**
    * The human-readable name of the product.
@@ -186,7 +193,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     currentItem: CartItem,
     prevItem: CartItemWithMetadata | undefined
   ): Ec.CartAction {
-    const {quantity: currentQuantity, ...product} = currentItem;
+    const {quantity: currentQuantity, sku, ...product} = currentItem;
     const action = getCartAction(currentItem, prevItem);
     const quantity = !prevItem
       ? currentQuantity
@@ -215,7 +222,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     },
 
     updateItem(item: CartItem) {
-      const prevItem = itemSelector(getState(), item.productId);
+      const prevItem = itemSelector(getState(), item.sku);
       const doesNotNeedUpdate = !prevItem && item.quantity <= 0;
 
       if (doesNotNeedUpdate || isEqual(item, prevItem)) {
@@ -246,7 +253,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
 
 function loadBaseCartReducers(
   engine: CommerceEngine
-): engine is CommerceEngine {
+): engine is CommerceEngine<CartSection> {
   engine.addReducers({cart});
   return true;
 }

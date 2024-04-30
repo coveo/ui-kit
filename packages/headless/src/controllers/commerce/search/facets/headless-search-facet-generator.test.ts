@@ -1,6 +1,7 @@
 import {FacetType} from '../../../../features/commerce/facets/facet-set/interfaces/response';
 import {executeSearch} from '../../../../features/commerce/search/search-actions';
 import {CommerceAppState} from '../../../../state/commerce-app-state';
+import {buildMockCategoryFacetSearch} from '../../../../test/mock-category-facet-search';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {
@@ -38,6 +39,8 @@ describe('SearchFacetGenerator', () => {
         }),
       };
       state.facetSearchSet[facet.facetId] = buildMockFacetSearch();
+      state.categoryFacetSearchSet[facet.facetId] =
+        buildMockCategoryFacetSearch();
     }
   }
 
@@ -59,7 +62,7 @@ describe('SearchFacetGenerator', () => {
     setFacetState([{facetId: 'regular_facet_id', type: 'regular'}]);
     initSearchFacetGenerator();
 
-    facetGenerator.state.facets[0].deselectAll();
+    facetGenerator.facets[0].deselectAll();
     expect(executeSearch).toHaveBeenCalled();
   });
 
@@ -67,21 +70,21 @@ describe('SearchFacetGenerator', () => {
     setFacetState([{facetId: 'numeric_facet_id', type: 'numericalRange'}]);
     initSearchFacetGenerator();
 
-    facetGenerator.state.facets[0].deselectAll();
+    facetGenerator.facets[0].deselectAll();
     expect(executeSearch).toHaveBeenCalled();
   });
 
   it('generated date facet controller dispatches #executeSearch', () => {
     setFacetState([{facetId: 'date_facet_id', type: 'dateRange'}]);
 
-    facetGenerator.state.facets[0].deselectAll();
+    facetGenerator.facets[0].deselectAll();
     expect(executeSearch).toHaveBeenCalled();
   });
 
   it('generated category facet controllers dispatch #executeSearch', () => {
     setFacetState([{facetId: 'category_facet_id', type: 'hierarchical'}]);
 
-    facetGenerator.state.facets[0].deselectAll();
+    facetGenerator.facets[0].deselectAll();
     expect(executeSearch).toHaveBeenCalled();
   });
 });

@@ -41,6 +41,8 @@ describe('Folded Result List Component - Children results', () => {
       )
       .init();
 
+    FoldedResultListSelectors.childrenRoot().should('be.visible');
+
     FoldedResultListSelectors.firstResult()
       .contains(ExpectedHierarchy.rootName)
       .should('be.visible');
@@ -89,6 +91,7 @@ describe('Folded Result List Component - Children results', () => {
       .init();
 
     FoldedResultListSelectors.noResultsLabel().should('be.visible');
+    FoldedResultListSelectors.childrenRoot().should('not.exist');
   });
 
   it('should not show a "no results" label when no child results are found when no-result-text is empty', () => {

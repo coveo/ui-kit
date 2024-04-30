@@ -123,6 +123,7 @@ describe('quantic-smart-snippet-suggestions', () => {
                       NextAnalyticsExpectations.emitQnaAnswerActionEvent(
                         {
                           answer: {
+                            responseId: exampleResponseId,
                             type: answerType,
                           },
                           action: 'expand',
@@ -160,6 +161,7 @@ describe('quantic-smart-snippet-suggestions', () => {
                       NextAnalyticsExpectations.emitQnaAnswerActionEvent(
                         {
                           answer: {
+                            responseId: exampleResponseId,
                             type: answerType,
                           },
                           action: 'collapse',
@@ -184,21 +186,17 @@ describe('quantic-smart-snippet-suggestions', () => {
                   Actions.toggleSuggestion(index);
                   Actions.clickSmartSnippetSuggestionsSourceTitle(index);
                   if (analyticsMode === 'next') {
-                    NextAnalyticsExpectations.emitItemClick(
+                    NextAnalyticsExpectations.emitQnaCitationClick(
                       {
-                        position: index + 1,
-                        itemMetadata: {
-                          uniqueFieldName:
-                            exampleRelatedQuestions[index].documentId
-                              .contentIdKey,
-                          uniqueFieldValue:
-                            exampleRelatedQuestions[index].documentId
-                              .contentIdValue,
-                          title: exampleRelatedQuestions[index].title,
-                          url: exampleRelatedQuestions[index].uri,
-                          author: exampleRelatedQuestions[index].author,
+                        answer: {
+                          responseId: exampleResponseId,
+                          type: answerType,
                         },
-                        searchUid: exampleResponseId,
+                        citation: {
+                          id: exampleRelatedQuestions[index].documentId
+                            .contentIdValue,
+                          type: 'Source',
+                        },
                       },
                       exampleTrackingId
                     );
@@ -219,21 +217,17 @@ describe('quantic-smart-snippet-suggestions', () => {
                   Actions.toggleSuggestion(index);
                   Actions.clickSmartSnippetSuggestionsSourceUri(index);
                   if (analyticsMode === 'next') {
-                    NextAnalyticsExpectations.emitItemClick(
+                    NextAnalyticsExpectations.emitQnaCitationClick(
                       {
-                        position: index + 1,
-                        itemMetadata: {
-                          uniqueFieldName:
-                            exampleRelatedQuestions[index].documentId
-                              .contentIdKey,
-                          uniqueFieldValue:
-                            exampleRelatedQuestions[index].documentId
-                              .contentIdValue,
-                          title: exampleRelatedQuestions[index].title,
-                          url: exampleRelatedQuestions[index].uri,
-                          author: exampleRelatedQuestions[index].author,
+                        answer: {
+                          responseId: exampleResponseId,
+                          type: answerType,
                         },
-                        searchUid: exampleResponseId,
+                        citation: {
+                          id: exampleRelatedQuestions[index].documentId
+                            .contentIdValue,
+                          type: 'Source',
+                        },
                       },
                       exampleTrackingId
                     );
@@ -253,7 +247,22 @@ describe('quantic-smart-snippet-suggestions', () => {
                   visitPage({useCase: param.useCase});
                   Actions.toggleSuggestion(index);
                   Actions.clickSmartSnippetSuggestionsInlineLink(index);
-                  if (analyticsMode === 'legacy') {
+                  if (analyticsMode === 'next') {
+                    NextAnalyticsExpectations.emitQnaCitationClick(
+                      {
+                        answer: {
+                          responseId: exampleResponseId,
+                          type: answerType,
+                        },
+                        citation: {
+                          id: exampleRelatedQuestions[index].documentId
+                            .contentIdValue,
+                          type: 'InlineLink',
+                        },
+                      },
+                      exampleTrackingId
+                    );
+                  } else {
                     Expect.logOpenSmartSnippetSuggestionInlineLink({
                       ...exampleRelatedQuestions[index],
                       position: index + 1,

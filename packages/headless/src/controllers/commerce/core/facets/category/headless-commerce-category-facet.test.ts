@@ -8,6 +8,7 @@ import {
   updateCategoryFacetNumberOfValues,
 } from '../../../../../features/facets/category-facet-set/category-facet-set-actions';
 import {CommerceAppState} from '../../../../../state/commerce-app-state';
+import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search';
 import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request';
 import {buildMockCategoryFacetResponse} from '../../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceFacetSlice} from '../../../../../test/mock-commerce-facet-slice';
@@ -62,13 +63,8 @@ describe('CategoryFacet', () => {
         values: (config.values as CategoryFacetValue[]) ?? [],
       }),
     ];
+    state.categoryFacetSearchSet[facetId] = buildMockCategoryFacetSearch();
   }
-
-  // eslint-disable-next-line @cspell/spellchecker
-  // TODO CAPI-90: Test facet search
-  /*function setFacetSearch() {
-    state.facetSearchSet[facetId] = buildMockFacetSearch();
-  }*/
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -80,9 +76,6 @@ describe('CategoryFacet', () => {
 
     state = buildMockCommerceState();
     setFacetState();
-    // eslint-disable-next-line @cspell/spellchecker
-    // TODO CAPI-90: Test facet search
-    //  setFacetSearch();
 
     initEngine(state);
     initCategoryFacet();
@@ -108,8 +101,8 @@ describe('CategoryFacet', () => {
     });
   });
 
-  it('#showLessValues dispatches #updateCategoryFacetNumberOfValues with correct payload', () => {
-    facet.showLessValues();
+  it('#showMoreValues dispatches #updateCategoryFacetNumberOfValues with correct payload', () => {
+    facet.showMoreValues();
 
     expect(updateCategoryFacetNumberOfValues).toHaveBeenCalledWith({
       facetId,
@@ -117,8 +110,8 @@ describe('CategoryFacet', () => {
     });
   });
 
-  it('#showMoreValues dispatches #updateCategoryFacetNumberOfValues with correct payload', () => {
-    facet.showMoreValues();
+  it('#showLessValues dispatches #updateCategoryFacetNumberOfValues with correct payload', () => {
+    facet.showLessValues();
 
     expect(updateCategoryFacetNumberOfValues).toHaveBeenCalledWith({
       facetId,
@@ -253,6 +246,27 @@ describe('CategoryFacet', () => {
       });
     });
 
+    it('#facetSearch returns the facet search state', () => {
+      const facetSearchState = buildMockCategoryFacetSearch();
+      facetSearchState.isLoading = true;
+      facetSearchState.response.moreValuesAvailable = true;
+      facetSearchState.options.query = 'test';
+      facetSearchState.response.values = [
+        {count: 1, displayValue: 'test', path: ['test'], rawValue: 'test'},
+      ];
+
+      state.categoryFacetSearchSet[facetId] = facetSearchState;
+
+      expect(facet.state.facetSearch).toEqual({
+        isLoading: true,
+        moreValuesAvailable: true,
+        query: 'test',
+        values: [
+          {count: 1, displayValue: 'test', path: ['test'], rawValue: 'test'},
+        ],
+      });
+    });
+
     describe('#hasActiveValues', () => {
       it('when no value is selected, returns false', () => {
         expect(facet.state.hasActiveValues).toBe(false);
@@ -311,5 +325,9 @@ describe('CategoryFacet', () => {
         ]);
       });
     });
+  });
+
+  it('#type returns "hierarchical"', () => {
+    expect(facet.type).toBe('hierarchical');
   });
 });

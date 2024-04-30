@@ -1,6 +1,7 @@
 import {FacetType} from '../../../../features/commerce/facets/facet-set/interfaces/response';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {CommerceAppState} from '../../../../state/commerce-app-state';
+import {buildMockCategoryFacetSearch} from '../../../../test/mock-category-facet-search';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {
@@ -40,6 +41,8 @@ describe('ProductListingFacetGenerator', () => {
         }),
       };
       state.facetSearchSet[facet.facetId] = buildMockFacetSearch();
+      state.categoryFacetSearchSet[facet.facetId] =
+        buildMockCategoryFacetSearch();
     }
   }
 
@@ -61,7 +64,7 @@ describe('ProductListingFacetGenerator', () => {
     setFacetState([{facetId: 'regular_facet_id', type: 'regular'}]);
     initProductListingFacetGenerator();
 
-    facetGenerator.state.facets[0].deselectAll();
+    facetGenerator.facets[0].deselectAll();
 
     expect(fetchProductListing).toHaveBeenCalled();
   });
@@ -70,7 +73,7 @@ describe('ProductListingFacetGenerator', () => {
     setFacetState([{facetId: 'numeric_facet_id', type: 'numericalRange'}]);
     initProductListingFacetGenerator();
 
-    facetGenerator.state.facets[0].deselectAll();
+    facetGenerator.facets[0].deselectAll();
 
     expect(fetchProductListing).toHaveBeenCalled();
   });
@@ -78,7 +81,7 @@ describe('ProductListingFacetGenerator', () => {
   it('generated date facet controller dispatches #fetchProductListing', () => {
     setFacetState([{facetId: 'date_facet_id', type: 'dateRange'}]);
 
-    facetGenerator.state.facets[0].deselectAll();
+    facetGenerator.facets[0].deselectAll();
 
     expect(fetchProductListing).toHaveBeenCalled();
   });
@@ -86,7 +89,7 @@ describe('ProductListingFacetGenerator', () => {
   it('generated category facet controller dispatches #fetchProductListing', () => {
     setFacetState([{facetId: 'category_facet_id', type: 'hierarchical'}]);
 
-    facetGenerator.state.facets[0].deselectAll();
+    facetGenerator.facets[0].deselectAll();
 
     expect(fetchProductListing).toHaveBeenCalled();
   });

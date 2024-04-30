@@ -1,4 +1,8 @@
-import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
+import {createSelector} from '@reduxjs/toolkit';
+import {
+  CommerceEngine,
+  CommerceEngineState,
+} from '../../../../../app/commerce-engine/commerce-engine';
 import {CategoryFacetValueRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
 import {
   defaultNumberOfValuesIncrement,
@@ -11,13 +15,21 @@ import {
   CoreCommerceFacet,
   CoreCommerceFacetOptions,
   CoreCommerceFacetState,
+  FacetControllerType,
   buildCoreCommerceFacet,
 } from '../headless-core-commerce-facet';
+import {SearchableFacetOptions} from '../searchable/headless-commerce-searchable-facet';
+import {
+  CategoryFacetSearch,
+  CategoryFacetSearchState,
+  buildCategoryFacetSearch,
+} from './headless-commerce-category-facet-search';
 
 export type CategoryFacetOptions = Omit<
   CoreCommerceFacetOptions,
   'toggleExcludeActionCreator' | 'toggleSelectActionCreator'
->;
+> &
+  SearchableFacetOptions;
 
 export type CategoryFacetState = CoreCommerceFacetState<CategoryFacetValue> & {
   activeValue?: CategoryFacetValue;
@@ -25,6 +37,7 @@ export type CategoryFacetState = CoreCommerceFacetState<CategoryFacetValue> & {
   canShowMoreValues: boolean;
   hasActiveValues: boolean;
   selectedValueAncestry?: CategoryFacetValue[];
+  facetSearch: CategoryFacetSearchState;
 };
 
 /**
@@ -37,10 +50,10 @@ export type CategoryFacet = Omit<
   | 'toggleExclude'
   | 'toggleSingleExclude'
   | 'toggleSingleSelect'
-  | 'state'
 > & {
+  facetSearch: Omit<CategoryFacetSearch, 'state'>;
   state: CategoryFacetState;
-};
+} & FacetControllerType<'hierarchical'>;
 
 /**
  * @internal
@@ -69,6 +82,29 @@ export function buildCategoryFacet(
   });
   const {deselectAll, isValueSelected, subscribe, toggleSelect} =
     coreController;
+  const {dispatch} = engine;
+  const getFacetId = () => coreController.state.facetId;
+  const createFacetSearch = () => {
+    return buildCategoryFacetSearch(engine, {
+      options: {facetId: getFacetId(), ...options.facetSearch},
+      select: () => {
+        dispatch(options.fetchResultsActionCreator());
+      },
+      isForFieldSuggestions: false,
+    });
+  };
+
+  const facetSearch = createFacetSearch();
+  const {state, ...restOfFacetSearch} = facetSearch;
+  const facetSearchStateSelector = createSelector(
+    (state: CommerceEngineState) => state.categoryFacetSearchSet[getFacetId()],
+    (facetSearch) => ({
+      isLoading: facetSearch.isLoading,
+      moreValuesAvailable: facetSearch.response.moreValuesAvailable,
+      query: facetSearch.options.query,
+      values: facetSearch.response.values,
+    })
+  );
 
   return {
     deselectAll,
@@ -83,23 +119,23 @@ export function buildCategoryFacet(
         (activeValue?.children.length ?? values.length) +
         defaultNumberOfValuesIncrement;
 
-      engine.dispatch(
-        updateCategoryFacetNumberOfValues({facetId, numberOfValues})
-      );
-      engine.dispatch(options.fetchResultsActionCreator());
+      dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
+      dispatch(options.fetchResultsActionCreator());
     },
 
     showLessValues() {
       const {facetId} = options;
 
-      engine.dispatch(
+      dispatch(
         updateCategoryFacetNumberOfValues({
           facetId,
           numberOfValues: defaultNumberOfValuesIncrement,
         })
       );
-      engine.dispatch(options.fetchResultsActionCreator());
+      dispatch(options.fetchResultsActionCreator());
     },
+
+    facetSearch: restOfFacetSearch,
 
     get state() {
       const selectedValueAncestry = findActiveValueAncestry(
@@ -124,7 +160,10 @@ export function buildCategoryFacet(
         canShowMoreValues,
         hasActiveValues,
         selectedValueAncestry,
+        facetSearch: facetSearchStateSelector(engine.state),
       };
     },
+
+    type: 'hierarchical',
   };
 }

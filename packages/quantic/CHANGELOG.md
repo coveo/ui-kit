@@ -1,3 +1,9 @@
+# 2.50.0 (2024-04-24)
+
+### Features
+
+- **headless:** adapting the analytics sent for the qna features to send the response id ([#3812](https://github.com/coveo/ui-kit/issues/3812)) ([3727e7a](https://github.com/coveo/ui-kit/commits/3727e7aff19b9838cdbe74356eae12cd4e77178c))
+
 ## 2.49.1 (2024-04-17)
 
 ### Bug Fixes

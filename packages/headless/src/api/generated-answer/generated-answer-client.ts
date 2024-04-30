@@ -109,6 +109,7 @@ export class GeneratedAnswerAPIClient {
           Authorization: `Bearer ${accessToken}`,
           accept: '*/*',
         },
+        openWhenHidden: true,
         signal: abortController?.signal,
         async onopen(response) {
           if (

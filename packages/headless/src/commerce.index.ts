@@ -101,10 +101,22 @@ export {
 export {buildProductListingSort} from './controllers/commerce/product-listing/sort/headless-product-listing-sort';
 export {buildSearchSort} from './controllers/commerce/search/sort/headless-search-sort';
 
-export type {CategoryFacet} from './controllers/commerce/core/facets/category/headless-commerce-category-facet';
-export type {RegularFacet} from './controllers/commerce/core/facets/regular/headless-commerce-regular-facet';
-export type {NumericFacet} from './controllers/commerce/core/facets/numeric/headless-commerce-numeric-facet';
-export type {DateFacet} from './controllers/commerce/core/facets/date/headless-commerce-date-facet';
+export type {
+  CategoryFacet,
+  CategoryFacetState,
+} from './controllers/commerce/core/facets/category/headless-commerce-category-facet';
+export type {
+  RegularFacet,
+  RegularFacetState,
+} from './controllers/commerce/core/facets/regular/headless-commerce-regular-facet';
+export type {
+  NumericFacet,
+  NumericFacetState,
+} from './controllers/commerce/core/facets/numeric/headless-commerce-numeric-facet';
+export type {
+  DateFacet,
+  DateFacetState,
+} from './controllers/commerce/core/facets/date/headless-commerce-date-facet';
 export type {
   FacetType,
   FacetValueRequest,
@@ -122,10 +134,15 @@ export type {SearchFacetGenerator} from './controllers/commerce/search/facets/he
 export {buildSearchFacetGenerator} from './controllers/commerce/search/facets/headless-search-facet-generator';
 
 export type {
-  FacetSearch,
-  FacetSearchResult,
-} from './controllers/commerce/core/facets/searchable/headless-commerce-facet-search';
-export type {FacetSearchState} from './controllers/commerce/core/facets/searchable/headless-commerce-searchable-facet';
+  RegularFacetSearch,
+  RegularFacetSearchState,
+} from './controllers/commerce/core/facets/regular/headless-commerce-regular-facet-search';
+export type {SpecificFacetSearchResult as RegularFacetSearchResult} from './api/search/facet-search/specific-facet-search/specific-facet-search-response';
+export type {
+  CategoryFacetSearch,
+  CategoryFacetSearchState,
+} from './controllers/commerce/core/facets/category/headless-commerce-category-facet-search';
+export type {CategoryFacetSearchResult} from './api/search/facet-search/category-facet-search/category-facet-search-response';
 
 export type {Search} from './controllers/commerce/search/headless-search';
 export {buildSearch} from './controllers/commerce/search/headless-search';
@@ -164,3 +181,5 @@ export type {
 } from './controllers/commerce/core/breadcrumb-manager/headless-core-breadcrumb-manager';
 export {buildProductListingBreadcrumbManager} from './controllers/commerce/product-listing/breadcrumb-manager/headless-product-listing-breadcrumb-manager';
 export {buildSearchBreadcrumbManager} from './controllers/commerce/search/breadcrumb-manager/headless-search-breadcrumb-manager';
+
+export {getOrganizationEndpoints} from './api/platform-client';
