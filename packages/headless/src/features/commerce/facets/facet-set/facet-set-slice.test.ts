@@ -42,6 +42,7 @@ import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
   updateFacetIsFieldExpanded,
+  updateFacetNumberOfValues,
 } from '../../../facets/facet-set/facet-set-actions';
 import {convertFacetValueToRequest} from '../../../facets/facet-set/facet-set-slice';
 import {updateFacetAutoSelection} from '../../../facets/generic/facet-actions';
@@ -55,6 +56,7 @@ import {findExactRangeValue} from '../../../facets/range-facets/generic/range-fa
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
+  updateNumericFacetValues,
 } from '../../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {convertToNumericRangeRequests} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {setContext, setUser, setView} from '../../context/context-actions';
@@ -69,12 +71,9 @@ import {
   CommerceFacetSetState,
   getCommerceFacetSetInitialState,
 } from './facet-set-state';
+import {FacetType} from './interfaces/common';
 import {CategoryFacetValueRequest} from './interfaces/request';
-import {
-  AnyFacetResponse,
-  CategoryFacetValue,
-  FacetType,
-} from './interfaces/response';
+import {AnyFacetResponse, CategoryFacetValue} from './interfaces/response';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ActionCreator = (payload: any) => Action;
@@ -155,6 +154,26 @@ describe('commerceFacetSetReducer', () => {
             expect(finalState[facetId]?.request.initialNumberOfValues).toEqual(
               5
             );
+          });
+
+          it('when the facet is a numeric facet with a continuous range, sets the #domain from the facet response', () => {
+            const facet = buildMockCommerceNumericFacetResponse({
+              facetId,
+              domain: {
+                min: 0,
+                max: 10,
+                increment: 1,
+              },
+            });
+
+            const action = buildQueryAction([facet]);
+            const finalState = commerceFacetSetReducer(state, action);
+
+            expect(finalState[facetId]?.request.domain).toEqual({
+              min: 0,
+              max: 10,
+              increment: 1,
+            });
           });
         });
 
@@ -945,6 +964,38 @@ describe('commerceFacetSetReducer', () => {
             const finalState = commerceFacetSetReducer(state, action);
 
             expect(finalState[facetId]?.request.preventAutoSelect).toBe(true);
+          });
+
+          it('clears the facet values if value is continuous range and new value state is "idle"', () => {
+            const facetValue = buildMockCommerceNumericFacetValue({
+              start: 0,
+              end: 5,
+              endInclusive: true,
+              state: facetValueState,
+            });
+            const facetValueRequests = convertToNumericRangeRequests([
+              facetValue,
+            ]);
+
+            state[facetId] = buildMockCommerceFacetSlice({
+              request: buildMockCommerceFacetRequest({
+                type: 'numericalRange',
+                values: facetValueRequests,
+                domain: {
+                  min: 0,
+                  max: 5,
+                  increment: 1,
+                },
+              }),
+            });
+
+            const action = toggleAction({
+              facetId,
+              selection: facetValue,
+            });
+            const finalState = commerceFacetSetReducer(state, action);
+
+            expect(finalState[facetId]?.request.values).toEqual([]);
           });
         });
 
@@ -1952,6 +2003,92 @@ describe('commerceFacetSetReducer', () => {
         finalState[facetId]?.request.values[0] as CategoryFacetValueRequest
       ).children[0];
       expect(targetValue?.state).toBe('selected');
+    });
+  });
+
+  describe('#updateNumericFacetValues', () => {
+    it('when facet request is not found in state, does not throw', () => {
+      const action = updateNumericFacetValues({
+        facetId: 'invalid!',
+        values: [],
+      });
+
+      expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
+    });
+
+    it('when facet request type is invalid (i.e., is not "numericalRange"), does not throw', () => {
+      const facetId = 'regular_facet_id';
+      state[facetId] = buildMockCommerceFacetSlice({
+        request: buildMockCommerceFacetRequest({
+          type: 'regular',
+          values: [],
+        }),
+      });
+      const action = updateNumericFacetValues({
+        facetId,
+        values: [],
+      });
+
+      expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
+    });
+
+    it('when facet request is found in state, updates its values', () => {
+      const facetId = 'numerical_range_facet_id';
+      const values = [
+        buildMockCommerceNumericFacetValue({start: 0, end: 5}),
+        buildMockCommerceNumericFacetValue({start: 6, end: 10}),
+      ];
+      const valuesRequest = convertToNumericRangeRequests(values);
+
+      state[facetId] = buildMockCommerceFacetSlice({
+        request: buildMockCommerceFacetRequest({
+          type: 'numericalRange',
+          values: valuesRequest,
+        }),
+      });
+
+      const newValues = [
+        buildMockCommerceNumericFacetValue({start: 0, end: 5}),
+        buildMockCommerceNumericFacetValue({start: 6, end: 10}),
+        buildMockCommerceNumericFacetValue({start: 11, end: 15}),
+      ];
+
+      const action = updateNumericFacetValues({
+        facetId,
+        values: newValues,
+      });
+      const finalState = commerceFacetSetReducer(state, action);
+
+      const targetValues = finalState[facetId]?.request.values;
+      expect(targetValues).toEqual(convertToNumericRangeRequests(newValues));
+    });
+  });
+
+  describe('#updateFacetNumberOfValues', () => {
+    it('when facet request is not found in state, does not throw', () => {
+      const action = updateFacetNumberOfValues({
+        facetId: 'invalid!',
+        numberOfValues: 10,
+      });
+
+      expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
+    });
+
+    it('when facet request is found in state, updates its #numberOfValues', () => {
+      const facetId = 'regular_facet_id';
+      const request = buildMockCommerceFacetRequest({
+        type: 'regular',
+        numberOfValues: 5,
+      });
+      state[facetId] = buildMockCommerceFacetSlice({request});
+
+      const action = updateFacetNumberOfValues({
+        facetId,
+        numberOfValues: 10,
+      });
+      const finalState = commerceFacetSetReducer(state, action);
+
+      expect(finalState[facetId]?.request.numberOfValues).toBe(10);
     });
   });
 

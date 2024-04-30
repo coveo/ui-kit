@@ -2,6 +2,7 @@ import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
+  updateNumericFacetValues,
 } from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {
   CoreCommerceFacet,
@@ -18,7 +19,37 @@ export type NumericFacetOptions = Omit<
   'toggleSelectActionCreator' | 'toggleExcludeActionCreator'
 >;
 
-export type NumericFacetState = CoreCommerceFacetState<NumericFacetValue>;
+export type NumericFacetState = CoreCommerceFacetState<NumericFacetValue> & {
+  /**
+   * The domain of the numeric facet.
+   *
+   * This property is only defined when the facet consists of a single continuous range whose boundaries (i.e.,
+   * `start` and `end` properties) are meant to be updated by calling the `setRanges` method when the end user
+   * interacts with the range (e.g., by dragging a slider or by entering a value in an input field).
+   */
+  domain?: NumericFacetRequestDomain;
+};
+
+type NumericFacetRequestDomain = {
+  /**
+   * The minimum value that the continuous range can have.
+   *
+   * No products will be returned if you set the `start` property of the range to a value lower than this.
+   */
+  min: number;
+  /**
+   * The maximum value that the continuous range can have.
+   *
+   * No products will be returned if you set the `end` property of the range to a value higher than this.
+   */
+  max: number;
+  /**
+   * The value to add or subtract when incrementing or decrementing the range.
+   *
+   * This values comes from the facet configuration in the Coveo Merchandising Hub (CMH).
+   */
+  increment?: number;
+};
 
 /**
  * The `NumericFacet` controller offers a high-level programming interface for implementing numeric commerce
@@ -28,6 +59,14 @@ export type NumericFacet = CoreCommerceFacet<
   NumericRangeRequest,
   NumericFacetValue
 > & {
+  /**
+   * Replaces the current range values with the specified ones.
+   * @param ranges - The new ranges to set.
+   */
+  setRanges: (ranges: NumericFacetValue[]) => void;
+  /**
+   * The state of the `NumericFacet` controller.
+   */
   state: NumericFacetState;
 } & FacetControllerType<'numericalRange'>;
 
@@ -58,8 +97,35 @@ export function buildCommerceNumericFacet(
     },
   });
 
+  const {dispatch} = engine;
+  const {facetId, fetchResultsActionCreator} = options;
+
   return {
     ...coreController,
+
+    setRanges(ranges: NumericFacetValue[]) {
+      dispatch(
+        updateNumericFacetValues({
+          facetId,
+          values: ranges,
+        })
+      );
+      dispatch(fetchResultsActionCreator());
+    },
+
+    get state() {
+      const response = options.facetResponseSelector(engine.state, facetId);
+      if (response?.type === 'numericalRange') {
+        return {
+          ...coreController.state,
+          domain: response.domain,
+        };
+      }
+
+      return {
+        ...coreController.state,
+      };
+    },
 
     type: 'numericalRange',
   };

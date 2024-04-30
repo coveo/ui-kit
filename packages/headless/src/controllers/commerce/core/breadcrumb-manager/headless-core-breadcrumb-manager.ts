@@ -5,11 +5,11 @@ import {
 } from '../../../../app/commerce-engine/commerce-engine';
 import {deselectAllBreadcrumbs} from '../../../../features/breadcrumb/breadcrumb-actions';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
+import {FacetType} from '../../../../features/commerce/facets/facet-set/interfaces/common';
 import {
   AnyFacetResponse,
   AnyFacetValueResponse,
   BaseFacetValue,
-  FacetType,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response';
 import {toggleSelectCategoryFacetValue} from '../../../../features/facets/category-facet-set/category-facet-set-actions';
 import {facetOrderReducer as facetOrder} from '../../../../features/facets/facet-order/facet-order-slice';
