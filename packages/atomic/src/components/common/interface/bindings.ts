@@ -1,4 +1,5 @@
 import type {SearchEngine} from '@coveo/headless';
+import {CommerceEngine} from '@coveo/headless/dist/definitions/commerce.index';
 import type {RecommendationEngine} from '@coveo/headless/recommendation';
 import {HTMLStencilElement} from '@stencil/core/internal';
 import {i18n} from 'i18next';
@@ -70,4 +71,8 @@ export type AnyBindings = CommonBindings<
   HTMLStencilElement
 >;
 
-export type AnyEngineType = SearchEngine | RecommendationEngine | InsightEngine;
+export type AnyEngineType =
+  | SearchEngine
+  | RecommendationEngine
+  | InsightEngine
+  | CommerceEngine;

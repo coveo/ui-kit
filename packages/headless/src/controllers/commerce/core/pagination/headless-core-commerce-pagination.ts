@@ -1,9 +1,13 @@
 import {NumberValue, Schema} from '@coveo/bueno';
 import {createSelector} from '@reduxjs/toolkit';
-import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
+import {
+  CommerceEngine,
+  CommerceEngineState,
+} from '../../../../app/commerce-engine/commerce-engine';
 import {
   nextPage,
   previousPage,
+  registerRecommendationsSlotPagination,
   selectPage,
   setPageSize,
 } from '../../../../features/commerce/pagination/pagination-actions';
@@ -58,7 +62,11 @@ export interface PaginationState {
 }
 
 export interface PaginationOptions {
-  pageSize: number;
+  /**
+   * Recs slot id, or none for listings and search
+   */
+  slotId?: string;
+  pageSize?: number;
 }
 
 export interface CorePaginationProps {
@@ -96,14 +104,28 @@ export function buildCorePagination(
 
   validateOptions(engine, optionsSchema, props.options, 'buildCorePagination');
 
+  const slotId = props.options?.slotId;
+
   if (props.options?.pageSize) {
-    dispatch(setPageSize(props.options.pageSize));
+    dispatch(
+      setPageSize({
+        slotId,
+        pageSize: props.options.pageSize,
+      })
+    );
+  }
+
+  if (slotId) {
+    dispatch(registerRecommendationsSlotPagination({slotId}));
   }
 
   const paginationSelector = createSelector(
-    (state) => state.commercePagination,
+    (state: CommerceEngineState) =>
+      slotId
+        ? state.commercePagination.recommendations[slotId]!
+        : state.commercePagination.principal,
     ({perPage, ...rest}) => ({
-      pageSize: perPage,
+      pageSize: perPage ?? 0,
       ...rest,
     })
   );
@@ -116,22 +138,27 @@ export function buildCorePagination(
     },
 
     selectPage(page: number) {
-      dispatch(selectPage(page));
+      dispatch(
+        selectPage({
+          slotId,
+          page,
+        })
+      );
       dispatch(props.fetchResultsActionCreator());
     },
 
     nextPage() {
-      dispatch(nextPage());
+      dispatch(nextPage({slotId}));
       dispatch(props.fetchResultsActionCreator());
     },
 
     previousPage() {
-      dispatch(previousPage());
+      dispatch(previousPage({slotId}));
       dispatch(props.fetchResultsActionCreator());
     },
 
     setPageSize(pageSize: number) {
-      dispatch(setPageSize(pageSize));
+      dispatch(setPageSize({slotId, pageSize}));
       dispatch(props.fetchResultsActionCreator());
     },
   };
