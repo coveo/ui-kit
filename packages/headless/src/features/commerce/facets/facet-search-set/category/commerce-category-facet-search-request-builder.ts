@@ -2,8 +2,7 @@ import {CategoryFacetSearchRequest} from '../../../../../api/commerce/facet-sear
 import {buildCommerceAPIRequest} from '../../../common/actions';
 import {
   AnyFacetRequest,
-  CategoryFacetValueRequest,
-  CommerceFacetRequest,
+  CategoryFacetRequest,
 } from '../../facet-set/interfaces/request';
 import {StateNeededForCategoryFacetSearch} from './commerce-category-facet-search-state';
 
@@ -53,12 +52,12 @@ export const buildCategoryFacetSearchRequest = async (
 
 function isCategoryFacetRequest(
   request: AnyFacetRequest
-): request is CommerceFacetRequest<CategoryFacetValueRequest> {
+): request is CategoryFacetRequest {
   return request.type === 'hierarchical';
 }
 
 const getPathToSelectedCategoryFacetItem = (
-  categoryFacet: CommerceFacetRequest<CategoryFacetValueRequest>
+  categoryFacet: CategoryFacetRequest
 ): string[] => {
   const path = [];
   let selectedValue = categoryFacet.values[0];
