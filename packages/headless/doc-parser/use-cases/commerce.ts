@@ -8,11 +8,11 @@ const controllers: ControllerConfiguration[] = [
     samplePaths: {},
   },
   {
-    initializer: 'buildProductListing',
+    initializer: 'buildCart',
     samplePaths: {},
   },
   {
-    initializer: 'buildCart',
+    initializer: 'buildProductListing',
     samplePaths: {},
   },
   {
@@ -113,7 +113,14 @@ const controllers: ControllerConfiguration[] = [
   },
 ];
 
-const actionLoaders: ActionLoaderConfiguration[] = [];
+const actionLoaders: ActionLoaderConfiguration[] = [
+  {
+    initializer: 'loadProductListingActions',
+  },
+  {
+    initializer: 'loadProductListingAnalyticsActions',
+  },
+];
 
 const engine: EngineConfiguration = {
   initializer: 'buildCommerceEngine',
