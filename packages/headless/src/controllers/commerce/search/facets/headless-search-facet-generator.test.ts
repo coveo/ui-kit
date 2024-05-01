@@ -62,7 +62,7 @@ describe('SearchFacetGenerator', () => {
     setFacetState([{facetId: 'regular_facet_id', type: 'regular'}]);
     initSearchFacetGenerator();
 
-    facetGenerator.state.facets[0].deselectAll();
+    facetGenerator.facets[0].deselectAll();
     expect(executeSearch).toHaveBeenCalled();
   });
 
@@ -70,21 +70,21 @@ describe('SearchFacetGenerator', () => {
     setFacetState([{facetId: 'numeric_facet_id', type: 'numericalRange'}]);
     initSearchFacetGenerator();
 
-    facetGenerator.state.facets[0].deselectAll();
+    facetGenerator.facets[0].deselectAll();
     expect(executeSearch).toHaveBeenCalled();
   });
 
   it('generated date facet controller dispatches #executeSearch', () => {
     setFacetState([{facetId: 'date_facet_id', type: 'dateRange'}]);
 
-    facetGenerator.state.facets[0].deselectAll();
+    facetGenerator.facets[0].deselectAll();
     expect(executeSearch).toHaveBeenCalled();
   });
 
   it('generated category facet controllers dispatch #executeSearch', () => {
     setFacetState([{facetId: 'category_facet_id', type: 'hierarchical'}]);
 
-    facetGenerator.state.facets[0].deselectAll();
+    facetGenerator.facets[0].deselectAll();
     expect(executeSearch).toHaveBeenCalled();
   });
 });
