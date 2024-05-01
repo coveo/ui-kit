@@ -20,6 +20,7 @@ export type {
 export type {LogLevel, LoggerOptions} from './app/logger';
 
 export type {Product} from './api/commerce/common/product';
+export type {PlatformEnvironment} from './utils/url-utils';
 
 // Actions
 export * from './features/commerce/product-listing/product-listing-actions-loader';
@@ -144,7 +145,10 @@ export type {
 } from './controllers/commerce/core/facets/category/headless-commerce-category-facet-search';
 export type {CategoryFacetSearchResult} from './api/search/facet-search/category-facet-search/category-facet-search-response';
 
-export type {Search} from './controllers/commerce/search/headless-search';
+export type {
+  Search,
+  SearchState,
+} from './controllers/commerce/search/headless-search';
 export {buildSearch} from './controllers/commerce/search/headless-search';
 
 export {updateQuery} from './features/commerce/query/query-actions';
