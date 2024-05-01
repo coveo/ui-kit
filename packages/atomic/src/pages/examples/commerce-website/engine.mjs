@@ -6,12 +6,10 @@ import {
   buildProductListing,
   buildCart,
   buildSearch,
-  buildSearchBox,
 } from '/build/headless/commerce/headless.esm.js';
 
 export {getParamValue} from './commerce-nav.mjs';
 
-export {buildSearchBox} from '/build/headless/commerce/headless.esm.js';
 export const setupEngine = async () => {
   const engine = buildCommerceEngine({
     configuration: {
@@ -67,14 +65,6 @@ export const setupProductListing = (engine) => {
 export const setupCart = (engine) => {
   const cart = buildCart(engine);
   return cart;
-};
-
-export const setupSearch = (engine) => {
-  const search = buildSearch(engine);
-  const searchBox = buildSearchBox(engine);
-  searchBox.updateText(getParamValue('q'));
-  searchBox.submit();
-  return search;
 };
 
 export const renderProducts = (elem, title, products) => {
