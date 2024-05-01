@@ -111,6 +111,18 @@ const controllers: ControllerConfiguration[] = [
     initializer: 'buildSearchBox',
     samplePaths: {},
   },
+  {
+    initializer: 'buildRelevanceSortCriterion',
+    samplePaths: {},
+  },
+  {
+    initializer: 'buildFieldsSortCriterion',
+    samplePaths: {},
+  },
+  {
+    initializer: 'buildProductTemplatesManager',
+    samplePaths: {},
+  },
 ];
 
 const actionLoaders: ActionLoaderConfiguration[] = [
