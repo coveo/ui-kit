@@ -131,7 +131,7 @@ describe('NumericFacet', () => {
 
       initFacet();
 
-      expect(facet.state.domain).toEqual(domain);
+      expect(facet.state.domain).toEqual({min: domain.min, max: domain.max});
     });
 
     it('does not include #domain if not present in the response state', () => {

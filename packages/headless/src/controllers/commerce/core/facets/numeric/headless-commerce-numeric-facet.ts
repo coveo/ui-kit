@@ -22,33 +22,23 @@ export type NumericFacetOptions = Omit<
 export type NumericFacetState = CoreCommerceFacetState<NumericFacetValue> & {
   /**
    * The domain of the numeric facet.
-   *
-   * This property is only defined when the facet consists of a single continuous range whose boundaries (i.e.,
-   * `start` and `end` properties) are meant to be updated by calling the `setRanges` method when the end user
-   * interacts with the range (e.g., by dragging a slider or by entering a value in an input field).
    */
-  domain?: NumericFacetRequestDomain;
+  domain?: NumericFacetDomain;
 };
 
-type NumericFacetRequestDomain = {
+type NumericFacetDomain = {
   /**
    * The minimum value that the continuous range can have.
    *
-   * No products will be returned if you set the `start` property of the range to a value lower than this.
+   * No products will be returned if the `start` property of a selected range is set to a value lower than this.
    */
   min: number;
   /**
    * The maximum value that the continuous range can have.
    *
-   * No products will be returned if you set the `end` property of the range to a value higher than this.
+   * No products will be returned if the `end` property of a selected range is set to a value higher than this.
    */
   max: number;
-  /**
-   * The value to add or subtract when incrementing or decrementing the range.
-   *
-   * This values comes from the facet configuration in the Coveo Merchandising Hub (CMH).
-   */
-  increment?: number;
 };
 
 /**
@@ -61,6 +51,7 @@ export type NumericFacet = CoreCommerceFacet<
 > & {
   /**
    * Replaces the current range values with the specified ones.
+   *
    * @param ranges - The new ranges to set.
    */
   setRanges: (ranges: NumericFacetValue[]) => void;
@@ -115,10 +106,14 @@ export function buildCommerceNumericFacet(
 
     get state() {
       const response = options.facetResponseSelector(engine.state, facetId);
-      if (response?.type === 'numericalRange') {
+      if (response?.type === 'numericalRange' && response.domain) {
+        const {min, max} = response.domain;
         return {
           ...coreController.state,
-          domain: response.domain,
+          domain: {
+            min,
+            max,
+          },
         };
       }
 
