@@ -59,7 +59,7 @@ export class AtomicInsightResultAction implements InitializableComponent {
   /**
    * The type of action to perform when the result action is clicked. This will be sent along the event fired when the button is clicked.
    */
-  @Prop({mutable: true}) public action = '';
+  @Prop({mutable: true}) public action: Actions | string = '';
 
   private onClick() {
     this.actionClicked.emit({action: this.action, result: this.result});
