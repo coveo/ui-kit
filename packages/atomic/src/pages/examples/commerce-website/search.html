@@ -9,20 +9,24 @@
     <script nomodule src="/build/atomic.js"></script>
     <link rel="stylesheet" href="/themes/coveo.css" />
     <script type="module">
-      import {setupEngine, setupSearch, renderProducts} from './engine.mjs';
+      import {
+        setupEngine,
+        setupProductListing,
+        setupSearch,
+        renderProducts,
+        buildSearchBox,
+        getParamValue,
+      } from './engine.mjs';
 
       const engine = await setupEngine();
 
-      /*
-       * The following code section should be replaced by actual atomic commerce search page
-       */
-      const search = setupSearch(engine);
-      search.subscribe(() => {
-        renderProducts('#productList', 'Search', search.state.products);
-      });
-      /**
-       * End of section to be replaced
-       */
+      await customElements.whenDefined('atomic-commerce-interface');
+      const commerceInterface = document.querySelector('atomic-commerce-interface');
+
+      await commerceInterface.initializeWithEngine(engine);
+
+      const searchBox = buildSearchBox(engine);
+      searchBox.submit();
     </script>
   </head>
 
@@ -30,7 +34,9 @@
     <h1>Search page</h1>
     <main>
       <section>
-        <article id="productList">REPLACE ME; THIS SHOULD BE THE SEARCH PAGE</article>
+        <atomic-commerce-interface type="search">
+          <atomic-commerce-result-list display="list" density="compact" image-size="200"> </atomic-commerce-result-list>
+        </atomic-commerce-interface>
       </section>
     </main>
 

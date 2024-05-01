@@ -62,7 +62,6 @@ const searchBox = () => {
         window.location.href = 'search.html#q=' + escapeHTML(searchBox.value);
       } else {
         window.location.hash = `#q=${searchBox.value}`;
-        window.location.reload();
       }
     }
   };
