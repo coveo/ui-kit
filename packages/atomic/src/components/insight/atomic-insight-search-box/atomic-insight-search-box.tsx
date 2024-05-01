@@ -271,7 +271,9 @@ export class AtomicInsightSearchBox {
         }`}
         role="application"
         aria-label={this.bindings.i18n.t('search-suggestions-single-list')}
-        aria-activedescendant={this.suggestionManager.activeDescendant}
+        {...(this.suggestionManager.activeDescendant && {
+          'aria-activedescendant': this.suggestionManager.activeDescendant,
+        })}
       >
         {this.renderPanel(
           this.suggestionManager.allSuggestionElements,

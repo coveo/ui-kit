@@ -32,7 +32,10 @@ import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interf
  * @part generated-text - The text of the generated answer.
  * @part citations-label - The header of the citations list.
  * @part rephrase-label - The header of the rephrase options.
+ * @part rephrase-buttons - The container of the rephrase buttons section.
  * @part rephrase-button - The button for each of the rephrase options (step-by-step instructions, bulleted list, and summary).
+ * @part rephrase-buttons-container - The container of the rephrase buttons.
+ * @part rephrase-button-label - The label of the rephrase button.
  *
  * @part answer-heading-1 - The generated answer level 1 heading elements.
  * @part answer-heading-2 - The generated answer level 2 heading elements.
@@ -43,6 +46,7 @@ import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interf
  *
  * @part citation - The link that allows the user to navigate to the item.
  * @part citation-popover - The pop-up that shows an item preview when the user hovers over the citation.
+ * @part citation-index - The content of the citation item.
  */
 @Component({
   tag: 'atomic-insight-generated-answer',
