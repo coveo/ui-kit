@@ -17,7 +17,7 @@ export const GeneratedMarkdownContent: FunctionalComponent<
   return (
     <div
       part="generated-text"
-      class={`mb-0 text-on-background whitespace-pre-wrap ${props.isStreaming ? 'cursor' : ''}`}
+      class={`mb-0 text-on-background ${props.isStreaming ? 'cursor' : ''}`}
       innerHTML={answerAsHtml}
     />
   );
