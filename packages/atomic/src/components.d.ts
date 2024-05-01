@@ -5,7 +5,8 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+import { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+import { CommerceEngine, LogLevel, PlatformEnvironment } from "@coveo/headless/commerce";
 import { i18n } from "i18next";
 import { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
@@ -21,7 +22,6 @@ import { InsightInitializationOptions } from "./components/insight/atomic-insigh
 import { NumericFacetDisplayValues } from "./components/common/facets/numeric-facet-common";
 import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Section } from "./components/common/atomic-layout-section/sections";
-import { PlatformEnvironment, RecommendationEngine } from "@coveo/headless/recommendation";
 import { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
 import { i18nCompatibilityVersion as i18nCompatibilityVersion1 } from "./components";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
@@ -30,7 +30,8 @@ import { Bindings } from "./components/search/atomic-search-interface/atomic-sea
 import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 import { AriaLabelGenerator } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
-export { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+export { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+export { CommerceEngine, LogLevel, PlatformEnvironment } from "@coveo/headless/commerce";
 export { i18n } from "i18next";
 export { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { StandaloneSearchBoxData } from "./utils/local-storage-utils";
@@ -46,7 +47,6 @@ export { InsightInitializationOptions } from "./components/insight/atomic-insigh
 export { NumericFacetDisplayValues } from "./components/common/facets/numeric-facet-common";
 export { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 export { Section } from "./components/common/atomic-layout-section/sections";
-export { PlatformEnvironment, RecommendationEngine } from "@coveo/headless/recommendation";
 export { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
 export { i18nCompatibilityVersion as i18nCompatibilityVersion1 } from "./components";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
@@ -281,7 +281,7 @@ export namespace Components {
           * @param organizationId
           * @param env
          */
-        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
+        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<any>;
         /**
           * the commerce interface i18next instance.
          */
@@ -360,23 +360,6 @@ export namespace Components {
           * The timeout for suggestion queries, in milliseconds. If a suggestion query times out, the suggestions from that particular query won't be shown.
          */
         "suggestionTimeout": number;
-    }
-    /**
-     * The `atomic-commerce-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
-     */
-    interface AtomicCommerceSearchBoxQuerySuggestions {
-        /**
-          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
-         */
-        "icon"?: string;
-        /**
-          * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
-         */
-        "maxWithQuery"?: number;
-        /**
-          * The maximum number of suggestions that will be displayed initially when the input field is empty.
-         */
-        "maxWithoutQuery"?: number;
     }
     /**
      * The `atomic-commerce-search-box-recent-queries` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of recent query suggestions.
@@ -822,7 +805,7 @@ export namespace Components {
           * @param organizationId
           * @param env
          */
-        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironmentInsight) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
+        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironmentInsight) => Promise<any>;
         /**
           * The service insight interface i18next instance.
          */
@@ -1576,7 +1559,7 @@ export namespace Components {
           * A list of non-default fields to include in the query results.  Specify the property as an array using a JSON string representation: ```html <atomic-recs-interface fields-to-include='["fieldA", "fieldB"]'></atomic-recs-interface> ```
          */
         "fieldsToInclude": string[] | string;
-        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
+        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<any>;
         /**
           * Fetches new recommendations.
          */
@@ -1592,7 +1575,7 @@ export namespace Components {
         /**
           * Initializes the connection with the headless recommendation engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
          */
-        "initialize": (options: RecsInitializationOptions) => Promise<void>;
+        "initialize": (options: RecommendationEngineConfiguration) => Promise<void>;
         /**
           * Initializes the connection with an already preconfigured headless recommendation engine. This bypasses the properties set on the component, such as analytics, recommendation, searchHub, language, timezone & logLevel.
          */
@@ -2387,7 +2370,7 @@ export namespace Components {
           * @param organizationId
           * @param env
          */
-        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment1) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
+        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment1) => Promise<any>;
         /**
           * The search interface i18next instance.
          */
@@ -2419,7 +2402,7 @@ export namespace Components {
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel;
+        "logLevel"?: LogLevel1;
         /**
           * The search interface [query pipeline](https://docs.coveo.com/en/180/).  If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine), the query pipeline should instead be configured in the target engine.
          */
@@ -2900,15 +2883,6 @@ declare global {
     var HTMLAtomicCommerceSearchBoxElement: {
         prototype: HTMLAtomicCommerceSearchBoxElement;
         new (): HTMLAtomicCommerceSearchBoxElement;
-    };
-    /**
-     * The `atomic-commerce-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
-     */
-    interface HTMLAtomicCommerceSearchBoxQuerySuggestionsElement extends Components.AtomicCommerceSearchBoxQuerySuggestions, HTMLStencilElement {
-    }
-    var HTMLAtomicCommerceSearchBoxQuerySuggestionsElement: {
-        prototype: HTMLAtomicCommerceSearchBoxQuerySuggestionsElement;
-        new (): HTMLAtomicCommerceSearchBoxQuerySuggestionsElement;
     };
     /**
      * The `atomic-commerce-search-box-recent-queries` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of recent query suggestions.
@@ -4371,7 +4345,6 @@ declare global {
         "atomic-color-facet": HTMLAtomicColorFacetElement;
         "atomic-commerce-interface": HTMLAtomicCommerceInterfaceElement;
         "atomic-commerce-search-box": HTMLAtomicCommerceSearchBoxElement;
-        "atomic-commerce-search-box-query-suggestions": HTMLAtomicCommerceSearchBoxQuerySuggestionsElement;
         "atomic-commerce-search-box-recent-queries": HTMLAtomicCommerceSearchBoxRecentQueriesElement;
         "atomic-component-error": HTMLAtomicComponentErrorElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
@@ -4798,23 +4771,6 @@ declare namespace LocalJSX {
           * The timeout for suggestion queries, in milliseconds. If a suggestion query times out, the suggestions from that particular query won't be shown.
          */
         "suggestionTimeout"?: number;
-    }
-    /**
-     * The `atomic-commerce-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
-     */
-    interface AtomicCommerceSearchBoxQuerySuggestions {
-        /**
-          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
-         */
-        "icon"?: string;
-        /**
-          * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
-         */
-        "maxWithQuery"?: number;
-        /**
-          * The maximum number of suggestions that will be displayed initially when the input field is empty.
-         */
-        "maxWithoutQuery"?: number;
     }
     /**
      * The `atomic-commerce-search-box-recent-queries` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of recent query suggestions.
@@ -6763,7 +6719,7 @@ declare namespace LocalJSX {
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel;
+        "logLevel"?: LogLevel1;
         /**
           * The search interface [query pipeline](https://docs.coveo.com/en/180/).  If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine), the query pipeline should instead be configured in the target engine.
          */
@@ -7083,7 +7039,6 @@ declare namespace LocalJSX {
         "atomic-color-facet": AtomicColorFacet;
         "atomic-commerce-interface": AtomicCommerceInterface;
         "atomic-commerce-search-box": AtomicCommerceSearchBox;
-        "atomic-commerce-search-box-query-suggestions": AtomicCommerceSearchBoxQuerySuggestions;
         "atomic-commerce-search-box-recent-queries": AtomicCommerceSearchBoxRecentQueries;
         "atomic-component-error": AtomicComponentError;
         "atomic-did-you-mean": AtomicDidYouMean;
@@ -7271,10 +7226,6 @@ declare module "@stencil/core" {
              * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
              */
             "atomic-commerce-search-box": LocalJSX.AtomicCommerceSearchBox & JSXBase.HTMLAttributes<HTMLAtomicCommerceSearchBoxElement>;
-            /**
-             * The `atomic-commerce-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
-             */
-            "atomic-commerce-search-box-query-suggestions": LocalJSX.AtomicCommerceSearchBoxQuerySuggestions & JSXBase.HTMLAttributes<HTMLAtomicCommerceSearchBoxQuerySuggestionsElement>;
             /**
              * The `atomic-commerce-search-box-recent-queries` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of recent query suggestions.
              */
