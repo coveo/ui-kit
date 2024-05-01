@@ -50,6 +50,10 @@ export interface Breadcrumb<Value extends BaseFacetValue> {
    */
   facetId: string;
   /**
+   * The display name of the underlying facet.
+   */
+  facetDisplayName: string;
+  /**
    * The field on which the underlying facet is configured.
    */
   field: string;
@@ -142,6 +146,7 @@ export function buildCoreBreadcrumbManager(
 
   const createBreadcrumb = (facet: AnyFacetResponse) => ({
     facetId: facet.facetId,
+    facetDisplayName: facet.displayName,
     field: facet.field,
     type: facet.type,
     values: facet.values
