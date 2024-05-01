@@ -114,7 +114,11 @@ export function buildSearchBox(
 
     dispatch(updateFacetAutoSelection({allow: true}));
     dispatch(updateQuery({query: getValue()}));
-    dispatch(selectPage(0));
+    dispatch(
+      selectPage({
+        page: 0,
+      })
+    );
     dispatch(executeSearch());
   };
 

@@ -522,7 +522,7 @@ describe('quantic-generated-answer', () => {
             // The Salesforce lightning-modal is very flaky, sometimes throwing random errors in Cypress test runs.
             // We are skipping this test for now until we can find a more reliable way to test it.
             // Common stack trace when clicking on the dislike: `Cannot read properties of null (reading 'appendChild')`
-            xdescribe(
+            describe.skip(
               'when providing detailed feedback',
               {
                 retries: 5,

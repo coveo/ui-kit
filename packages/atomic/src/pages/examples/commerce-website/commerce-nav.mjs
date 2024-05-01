@@ -9,7 +9,7 @@ export const navContent = {
   'Surf accessories': {
     href: 'listing-surf-accessories.html',
     label: 'Surf accessories',
-    barcaUrl: `${barcaRoot}/browse/promotions/surf-with-us-this-year`,
+    barcaUrl: `${barcaRoot}/browse/promotions/accessories/surf-with-us-this-year`,
   },
   Towels: {
     href: 'listing-towels.html',
@@ -62,7 +62,6 @@ const searchBox = () => {
         window.location.href = 'search.html#q=' + escapeHTML(searchBox.value);
       } else {
         window.location.hash = `#q=${searchBox.value}`;
-        window.location.reload();
       }
     }
   };
