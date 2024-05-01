@@ -19,7 +19,11 @@ export const recentQueriesReducer = createReducer(
       .addCase(clearRecentQueries, handleClearRecentQueries)
       .addCase(commerceExecuteSearch.fulfilled, (state, action) => {
         const query = action.payload.queryExecuted?.trim() || '';
-        handleExecuteSearchFulfilled(query, state, action);
+        const products = action.payload.response.products;
+        if (!query.length || !products.length) {
+          return;
+        }
+        handleExecuteSearchFulfilled(query, state);
       });
   }
 );

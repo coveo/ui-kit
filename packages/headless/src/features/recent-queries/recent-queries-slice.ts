@@ -18,7 +18,11 @@ export const recentQueriesReducer = createReducer(
       .addCase(clearRecentQueries, handleClearRecentQueries)
       .addCase(executeSearch.fulfilled, (state, action) => {
         const query = action.payload.queryExecuted.trim();
-        handleExecuteSearchFulfilled(query, state, action);
+        const results = action.payload.response.results;
+        if (!query.length || !results.length) {
+          return;
+        }
+        handleExecuteSearchFulfilled(query, state);
       });
   }
 );
@@ -39,13 +43,8 @@ export function handleClearRecentQueries(
 
 export function handleExecuteSearchFulfilled(
   query: string,
-  state: WritableDraft<RecentQueriesState>,
-  action: AnyAction
+  state: WritableDraft<RecentQueriesState>
 ) {
-  const results = action.payload.response.results;
-  if (!query.length || !results.length) {
-    return;
-  }
   state.queries = state.queries.filter((q) => q !== query);
   const remaining = state.queries.slice(0, state.maxLength - 1);
   state.queries = [query, ...remaining];
