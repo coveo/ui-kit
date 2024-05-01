@@ -44,30 +44,6 @@ const makeLinks = () => {
     .join('');
 };
 
-const escapeHTML = (html) => {
-  var text = document.createTextNode(html);
-  var p = document.createElement('p');
-  p.appendChild(text);
-  return p.innerHTML;
-};
-
-const searchBox = () => {
-  const searchBox = document.createElement('input');
-  searchBox.type = 'search';
-  searchBox.placeholder = 'Atomic search box';
-  searchBox.value = getParamValue('q') || '';
-  searchBox.onkeydown = (e) => {
-    if (e.key === 'Enter') {
-      if (window.location.href.indexOf(navContent['Search'].href) === -1) {
-        window.location.href = 'search.html#q=' + escapeHTML(searchBox.value);
-      } else {
-        window.location.hash = `#q=${searchBox.value}`;
-      }
-    }
-  };
-  return searchBox;
-};
-
 const nav = document.createElement('nav');
 nav.style.borderTop = '1px solid var(--atomic-neutral-dark)';
 nav.style.marginBottom = '2em';
@@ -78,7 +54,5 @@ nav.innerHTML = `
               ${makeLinks()}
             </ul>
         `;
-
-nav.appendChild(searchBox());
 
 document.body.querySelector('header').insertAdjacentElement('beforeend', nav);

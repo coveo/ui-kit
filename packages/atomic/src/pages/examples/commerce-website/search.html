@@ -9,14 +9,7 @@
     <script nomodule src="/build/atomic.js"></script>
     <link rel="stylesheet" href="/themes/coveo.css" />
     <script type="module">
-      import {
-        setupEngine,
-        setupProductListing,
-        setupSearch,
-        renderProducts,
-        buildSearchBox,
-        getParamValue,
-      } from './engine.mjs';
+      import {setupEngine, setupProductListing, renderProducts} from './engine.mjs';
 
       const engine = await setupEngine();
 
@@ -24,9 +17,6 @@
       const commerceInterface = document.querySelector('atomic-commerce-interface');
 
       await commerceInterface.initializeWithEngine(engine);
-
-      const searchBox = buildSearchBox(engine);
-      searchBox.submit();
     </script>
   </head>
 
@@ -35,7 +25,16 @@
     <main>
       <section>
         <atomic-commerce-interface type="search">
-          <atomic-commerce-result-list display="list" density="compact" image-size="200"> </atomic-commerce-result-list>
+          <atomic-search-layout>
+            <atomic-layout-section section="search">
+              <atomic-commerce-search-box textarea></atomic-commerce-search-box>
+            </atomic-layout-section>
+          </atomic-search-layout>
+
+          <atomic-layout-section section="main">
+            <atomic-commerce-result-list display="list" density="compact" image-size="200">
+            </atomic-commerce-result-list>
+          </atomic-layout-section>
         </atomic-commerce-interface>
       </section>
     </main>
