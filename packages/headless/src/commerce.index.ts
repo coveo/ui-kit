@@ -159,6 +159,12 @@ export type {
   SearchBoxState,
 } from './controllers/commerce/search-box/headless-search-box';
 
+export {buildStandaloneSearchBox} from './controllers/commerce/standalone-search-box/headless-standalone-search-box';
+export type {
+  StandaloneSearchBox,
+  StandaloneSearchBoxState,
+} from './controllers/commerce/standalone-search-box/headless-standalone-search-box';
+
 export type {
   UrlManagerProps,
   UrlManagerInitialState,
