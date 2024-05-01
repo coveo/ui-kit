@@ -494,15 +494,6 @@ function updateStateFromFacetResponse(
     state[facetId] = {request: {} as AnyFacetRequest};
     facetRequest = state[facetId].request;
     facetRequest.initialNumberOfValues = facetResponse.numberOfValues;
-    // eslint-disable-next-line @cspell/spellchecker
-    // TODO CAPI-817: When the API starts returning the correct domain, we'll set it on every response, not just the initial one.
-    if (facetResponse.type === 'numericalRange' && facetResponse.domain) {
-      facetRequest.domain = {
-        min: facetResponse.domain.min,
-        max: facetResponse.domain.max,
-        increment: facetResponse.domain.increment,
-      };
-    }
   } else {
     facetsToRemove.delete(facetId);
   }
@@ -520,6 +511,12 @@ function updateStateFromFacetResponse(
     ensureCategoryFacetRequest(facetRequest)
   ) {
     facetRequest.delimitingCharacter = facetResponse.delimitingCharacter;
+  } else if (facetResponse.type === 'numericalRange' && facetResponse.domain) {
+    facetRequest.domain = {
+      min: facetResponse.domain.min,
+      max: facetResponse.domain.max,
+      increment: facetResponse.domain.increment,
+    };
   }
 }
 
@@ -619,6 +616,8 @@ function buildCurrentValuesFromPath(path: string[], retrieveCount: number) {
   return [root];
 }
 
+// eslint-disable-next-line @cspell/spellchecker
+// TODO CAPI-850: Tthis is the best we can do for now to identify a continuous range. When the `interval` property gets added to the facet response, we'll use that instead.
 function isContinuousRangeRequest(request: NumericFacetRequest): boolean {
-  return !!request.domain;
+  return request.values.length === 1 && request.domain?.increment === 0;
 }
