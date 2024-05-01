@@ -25,6 +25,7 @@ export type {PlatformEnvironment} from './utils/url-utils';
 // Actions
 export * from './features/commerce/product-listing/product-listing-actions-loader';
 export * from './features/configuration/configuration-actions-loader';
+export * from './features/query-suggest/query-suggest-actions-loader';
 
 // Controllers
 export type {
