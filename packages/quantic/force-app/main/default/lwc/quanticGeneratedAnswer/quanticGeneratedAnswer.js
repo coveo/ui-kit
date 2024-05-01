@@ -417,15 +417,15 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get generatedAnswerClass() {
-    let collapsedClass = '';
+    let collapsedStateClass = '';
     if (this._exceedsMaximumHeight) {
-      collapsedClass = this.isExpanded
+      collapsedStateClass = this.isExpanded
         ? 'generated-answer__answer--expanded'
         : 'generated-answer__answer--collapsed';
     }
     return `generated-answer__answer ${
       this.isStreaming ? 'generated-answer__answer--streaming' : ''
-    } ${collapsedClass}`;
+    } ${collapsedStateClass}`;
   }
 
   get hasRetryableError() {
