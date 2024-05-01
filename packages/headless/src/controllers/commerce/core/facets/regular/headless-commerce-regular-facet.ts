@@ -11,6 +11,7 @@ import {
   CoreCommerceFacet,
   CoreCommerceFacetOptions,
   CoreCommerceFacetState,
+  FacetControllerType,
   FacetValueRequest,
   RegularFacetValue,
   buildCoreCommerceFacet,
@@ -28,6 +29,10 @@ export type RegularFacetOptions = Omit<
 > &
   SearchableFacetOptions;
 
+export type RegularFacetState = CoreCommerceFacetState<RegularFacetValue> & {
+  facetSearch: RegularFacetSearchState;
+};
+
 /**
  * The `RegularFacet` controller offers a high-level programming interface for implementing a regular commerce
  * facet UI component.
@@ -37,10 +42,8 @@ export type RegularFacet = CoreCommerceFacet<
   RegularFacetValue
 > & {
   facetSearch: Omit<RegularFacetSearch, 'state'>;
-  state: CoreCommerceFacetState<RegularFacetValue> & {
-    facetSearch: RegularFacetSearchState;
-  };
-};
+  state: RegularFacetState;
+} & FacetControllerType<'regular'>;
 
 /**
  * @internal
@@ -107,5 +110,7 @@ export function buildCommerceRegularFacet(
         ...facetSearchStateSelector(engine.state),
       };
     },
+
+    type: 'regular',
   };
 }
