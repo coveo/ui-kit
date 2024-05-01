@@ -97,7 +97,7 @@ export interface Cart extends Controller {
   /**
    * Emits an `ec.cartAction` analytics event.
    *
-   * @param transaction - The object with the id and the total revenue from the transaction, including taxes, shipping, and discounts.
+   * @param payload - The payload for the cart action event. Note that `quantity` should be the amount added or removed rather than the final quantity in the cart.
    */
   cartAction(payload: CartActionPayload): void;
 
