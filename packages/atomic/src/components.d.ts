@@ -10,7 +10,6 @@ import { CommerceEngine, LogLevel, PlatformEnvironment } from "@coveo/headless/c
 import { i18n } from "i18next";
 import { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
-import { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
@@ -36,7 +35,6 @@ export { CommerceEngine, LogLevel, PlatformEnvironment } from "@coveo/headless/c
 export { i18n } from "i18next";
 export { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { StandaloneSearchBoxData } from "./utils/local-storage-utils";
-export { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
@@ -327,41 +325,21 @@ export namespace Components {
     | 'product-listing';
     }
     /**
-     * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
+     * The `atomic-commerce-result-list` component is responsible for displaying product results.
      */
-    interface AtomicCommerceSearchBox {
+    interface AtomicCommerceResultList {
         /**
-          * Whether to clear all active query filters when the end user submits a new query from the search box. Setting this option to "false" is not recommended & can lead to an increasing number of queries returning no results.
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
-        "clearFilters": boolean;
+        "density": 'normal' | 'compact';
         /**
-          * Whether to prevent the user from triggering searches and query suggestions from the component. Perfect for use cases where you need to disable the search conditionally. For the specific case when you need to disable the search based on the length of the query, refer to {@link minimumQueryLength}.
+          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
          */
-        "disableSearch": boolean;
+        "display": 'grid' | 'list';
         /**
-          * Whether to interpret advanced [Coveo Cloud query syntax](https://docs.coveo.com/en/1814/) in the query. You should only enable query syntax in the search box if you have good reasons to do so, as it requires end users to be familiar with Coveo Cloud query syntax, otherwise they will likely be surprised by the search box behaviour.  When the `redirection-url` property is set and redirects to a page with more `atomic-commerce-search-box` components, all `atomic-commerce-search-box` components need to have the same `enable-query-syntax` value.
+          * The expected size of the image displayed in the results.
          */
-        "enableQuerySyntax": boolean;
-        /**
-          * The minimum query length required to enable search. For example, to disable the search for empty queries, set this to `1`.
-         */
-        "minimumQueryLength": number;
-        /**
-          * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-commerce-search-box-query-suggestions  - atomic-commerce-search-box-recent-queries
-         */
-        "numberOfQueries": number;
-        /**
-          * Defining this option makes the search box standalone (see [Use a Standalone Search Box](https://docs.coveo.com/en/atomic/latest/usage/ssb/)).  This option defines the default URL the user should be redirected to, when a query is submitted. If a query pipeline redirect is triggered, it will redirect to that URL instead (see [query pipeline triggers](https://docs.coveo.com/en/1458)).
-         */
-        "redirectionUrl"?: string;
-        /**
-          * The delay for suggestion queries on input, in milliseconds.  The suggestion request will be delayed until the end user stops typing for at least the specified amount of time.  This delay is used to avoid sending too many requests to the Coveo Platform when the user is typing, as well as reducing potential input lag on low end devices. A higher delay will reduce input lag, at the cost of suggestions freshness.
-         */
-        "suggestionDelay": number;
-        /**
-          * The timeout for suggestion queries, in milliseconds. If a suggestion query times out, the suggestions from that particular query won't be shown.
-         */
-        "suggestionTimeout": number;
+        "imageSize": number;
     }
     /**
      * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
@@ -2849,25 +2827,14 @@ declare global {
         prototype: HTMLAtomicCommerceInterfaceElement;
         new (): HTMLAtomicCommerceInterfaceElement;
     };
-    interface HTMLAtomicCommerceSearchBoxElementEventMap {
-        "redirect": RedirectionPayload;
-    }
     /**
-     * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
+     * The `atomic-commerce-result-list` component is responsible for displaying product results.
      */
-    interface HTMLAtomicCommerceSearchBoxElement extends Components.AtomicCommerceSearchBox, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicCommerceSearchBoxElementEventMap>(type: K, listener: (this: HTMLAtomicCommerceSearchBoxElement, ev: AtomicCommerceSearchBoxCustomEvent<HTMLAtomicCommerceSearchBoxElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicCommerceSearchBoxElementEventMap>(type: K, listener: (this: HTMLAtomicCommerceSearchBoxElement, ev: AtomicCommerceSearchBoxCustomEvent<HTMLAtomicCommerceSearchBoxElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    interface HTMLAtomicCommerceResultListElement extends Components.AtomicCommerceResultList, HTMLStencilElement {
     }
-    var HTMLAtomicCommerceSearchBoxElement: {
-        prototype: HTMLAtomicCommerceSearchBoxElement;
-        new (): HTMLAtomicCommerceSearchBoxElement;
+    var HTMLAtomicCommerceResultListElement: {
+        prototype: HTMLAtomicCommerceResultListElement;
+        new (): HTMLAtomicCommerceResultListElement;
     };
     /**
      * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
@@ -4320,7 +4287,7 @@ declare global {
         "atomic-citation": HTMLAtomicCitationElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
         "atomic-commerce-interface": HTMLAtomicCommerceInterfaceElement;
-        "atomic-commerce-search-box": HTMLAtomicCommerceSearchBoxElement;
+        "atomic-commerce-result-list": HTMLAtomicCommerceResultListElement;
         "atomic-component-error": HTMLAtomicComponentErrorElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-external": HTMLAtomicExternalElement;
@@ -4707,45 +4674,21 @@ declare namespace LocalJSX {
     | 'product-listing';
     }
     /**
-     * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
+     * The `atomic-commerce-result-list` component is responsible for displaying product results.
      */
-    interface AtomicCommerceSearchBox {
+    interface AtomicCommerceResultList {
         /**
-          * Whether to clear all active query filters when the end user submits a new query from the search box. Setting this option to "false" is not recommended & can lead to an increasing number of queries returning no results.
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
-        "clearFilters"?: boolean;
+        "density"?: 'normal' | 'compact';
         /**
-          * Whether to prevent the user from triggering searches and query suggestions from the component. Perfect for use cases where you need to disable the search conditionally. For the specific case when you need to disable the search based on the length of the query, refer to {@link minimumQueryLength}.
+          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
          */
-        "disableSearch"?: boolean;
+        "display"?: 'grid' | 'list';
         /**
-          * Whether to interpret advanced [Coveo Cloud query syntax](https://docs.coveo.com/en/1814/) in the query. You should only enable query syntax in the search box if you have good reasons to do so, as it requires end users to be familiar with Coveo Cloud query syntax, otherwise they will likely be surprised by the search box behaviour.  When the `redirection-url` property is set and redirects to a page with more `atomic-commerce-search-box` components, all `atomic-commerce-search-box` components need to have the same `enable-query-syntax` value.
+          * The expected size of the image displayed in the results.
          */
-        "enableQuerySyntax"?: boolean;
-        /**
-          * The minimum query length required to enable search. For example, to disable the search for empty queries, set this to `1`.
-         */
-        "minimumQueryLength"?: number;
-        /**
-          * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-commerce-search-box-query-suggestions  - atomic-commerce-search-box-recent-queries
-         */
-        "numberOfQueries"?: number;
-        /**
-          * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.  Example: ```html <script>   document.querySelector('atomic-commerce-search-box').addEventListener((e) => {     e.preventDefault();     // handle redirection   }); </script> ... <atomic-commerce-search-box redirection-url="/search"></atomic-commerce-search-box> ```
-         */
-        "onRedirect"?: (event: AtomicCommerceSearchBoxCustomEvent<RedirectionPayload>) => void;
-        /**
-          * Defining this option makes the search box standalone (see [Use a Standalone Search Box](https://docs.coveo.com/en/atomic/latest/usage/ssb/)).  This option defines the default URL the user should be redirected to, when a query is submitted. If a query pipeline redirect is triggered, it will redirect to that URL instead (see [query pipeline triggers](https://docs.coveo.com/en/1458)).
-         */
-        "redirectionUrl"?: string;
-        /**
-          * The delay for suggestion queries on input, in milliseconds.  The suggestion request will be delayed until the end user stops typing for at least the specified amount of time.  This delay is used to avoid sending too many requests to the Coveo Platform when the user is typing, as well as reducing potential input lag on low end devices. A higher delay will reduce input lag, at the cost of suggestions freshness.
-         */
-        "suggestionDelay"?: number;
-        /**
-          * The timeout for suggestion queries, in milliseconds. If a suggestion query times out, the suggestions from that particular query won't be shown.
-         */
-        "suggestionTimeout"?: number;
+        "imageSize"?: number;
     }
     /**
      * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
@@ -6996,7 +6939,7 @@ declare namespace LocalJSX {
         "atomic-citation": AtomicCitation;
         "atomic-color-facet": AtomicColorFacet;
         "atomic-commerce-interface": AtomicCommerceInterface;
-        "atomic-commerce-search-box": AtomicCommerceSearchBox;
+        "atomic-commerce-result-list": AtomicCommerceResultList;
         "atomic-component-error": AtomicComponentError;
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-external": AtomicExternal;
@@ -7180,9 +7123,9 @@ declare module "@stencil/core" {
              */
             "atomic-commerce-interface": LocalJSX.AtomicCommerceInterface & JSXBase.HTMLAttributes<HTMLAtomicCommerceInterfaceElement>;
             /**
-             * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
+             * The `atomic-commerce-result-list` component is responsible for displaying product results.
              */
-            "atomic-commerce-search-box": LocalJSX.AtomicCommerceSearchBox & JSXBase.HTMLAttributes<HTMLAtomicCommerceSearchBoxElement>;
+            "atomic-commerce-result-list": LocalJSX.AtomicCommerceResultList & JSXBase.HTMLAttributes<HTMLAtomicCommerceResultListElement>;
             /**
              * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
              */
