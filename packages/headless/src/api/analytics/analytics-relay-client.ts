@@ -10,8 +10,9 @@ export const getRelayInstanceFromState = createSelector(
     state.configuration.analytics,
   (state: StateNeededBySearchAnalyticsProvider) =>
     getAnalyticsSource(state.configuration.analytics),
-  (token, {trackingId, nextApiBaseUrl}, source) =>
+  (token, {trackingId, nextApiBaseUrl, enabled}, source) =>
     createRelay({
+      mode: enabled ? 'emit' : 'disabled',
       url: nextApiBaseUrl,
       token,
       trackingId,
