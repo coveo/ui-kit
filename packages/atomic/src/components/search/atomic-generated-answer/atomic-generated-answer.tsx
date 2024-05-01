@@ -71,6 +71,13 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   @State()
   copyError = false;
 
+  @State()
+  private generatedAnswerDisplayedText!: string;
+
+  private isTextAnimating!: boolean;
+
+  private startTimestamp!: number;
+
   /**
    * The answer style to apply when the component first loads.
    * Options:
@@ -90,7 +97,10 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     this.generatedAnswerCommon = new GeneratedAnswerCommon({
       host: this.host,
       getGeneratedAnswer: () => this.generatedAnswer,
-      getGeneratedAnswerState: () => this.generatedAnswerState,
+      getGeneratedAnswerState: () => ({
+        ...this.generatedAnswerState,
+        answer: this.generatedAnswerDisplayedText,
+      }),
       getSearchStatusState: () => this.searchStatusState,
       getBindings: () => this.bindings,
       getCopied: () => this.copied,
@@ -128,8 +138,68 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       );
     }
 
+    if (
+      this.generatedAnswerState.answer === undefined ||
+      this.generatedAnswerState.answer === null
+    ) {
+      this.isTextAnimating = false;
+      this.generatedAnswerDisplayedText = '';
+    } else if (
+      !this.isTextAnimating &&
+      this.generatedAnswerState.isVisible &&
+      this.generatedAnswerState.answer?.length > 0
+    ) {
+      this.isTextAnimating = true;
+      this.startTimestamp = -1;
+      requestAnimationFrame(this.animateText.bind(this));
+    }
+
     this.setAriaMessage(this.generatedAnswerCommon.getGeneratedAnswerStatus());
   };
+
+  private animateText(timestamp: DOMHighResTimeStamp) {
+    if (
+      this.generatedAnswerState.answer === undefined ||
+      this.generatedAnswerState.answer === null
+    ) {
+      return;
+    }
+
+    if (this.startTimestamp < 0) {
+      if (this.generatedAnswerState.answer?.length > 0) {
+        this.startTimestamp = timestamp;
+      }
+    }
+
+    const secondsSinceBeginning = (timestamp - this.startTimestamp) / 1000;
+    const charactersPerSecond = 180;
+    const preBufferInSeconds = 1; // Pre-buffer 1 second of text to avoid flickering at the beginning.
+    const charactersToShow = Math.floor(
+      secondsSinceBeginning * charactersPerSecond -
+        preBufferInSeconds * charactersPerSecond
+    );
+
+    while (
+      this.generatedAnswerDisplayedText.length <
+        this.generatedAnswerState.answer?.length &&
+      charactersToShow > this.generatedAnswerDisplayedText.length
+    ) {
+      this.generatedAnswerDisplayedText +=
+        this.generatedAnswerState.answer[
+          this.generatedAnswerDisplayedText.length
+        ];
+    }
+
+    if (
+      this.generatedAnswerDisplayedText.length !==
+        this.generatedAnswerState.answer.length ||
+      this.generatedAnswerState.isStreaming
+    ) {
+      requestAnimationFrame(this.animateText.bind(this));
+    } else {
+      this.isTextAnimating = false;
+    }
+  }
 
   private setCopied = (isCopied: boolean) => {
     this.copied = isCopied;
