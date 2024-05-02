@@ -3,12 +3,12 @@ import {
   buildCommerceEngine,
   getOrganizationEndpoints,
   buildRecommendations,
-  buildContext,
   buildProductListing,
   buildCart,
   buildSearch,
-  buildSearchBox,
 } from '/build/headless/commerce/headless.esm.js';
+
+export {getParamValue} from './commerce-nav.mjs';
 
 export const setupEngine = async () => {
   const engine = buildCommerceEngine({
@@ -22,18 +22,15 @@ export const setupEngine = async () => {
       analytics: {
         trackingId: 'sports',
       },
-    },
-  });
-
-  buildContext(engine, {
-    options: {
-      view: {
-        url: navContent[document.title].barcaUrl,
-        referrer: document.referrer,
+      context: {
+        language: 'en',
+        country: 'US',
+        currency: 'USD',
+        view: {
+          url: navContent[document.title].barcaUrl,
+          referrer: document.referrer,
+        },
       },
-      language: 'en',
-      country: 'US',
-      currency: 'USD',
     },
   });
   return engine;
@@ -68,14 +65,6 @@ export const setupProductListing = (engine) => {
 export const setupCart = (engine) => {
   const cart = buildCart(engine);
   return cart;
-};
-
-export const setupSearch = (engine) => {
-  const search = buildSearch(engine);
-  const searchBox = buildSearchBox(engine);
-  searchBox.updateText(getParamValue('q'));
-  searchBox.submit();
-  return search;
 };
 
 export const renderProducts = (elem, title, products) => {

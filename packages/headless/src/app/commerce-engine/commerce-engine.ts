@@ -10,6 +10,7 @@ import {paginationReducer} from '../../features/commerce/pagination/pagination-s
 import {productListingV2Reducer} from '../../features/commerce/product-listing/product-listing-slice';
 import {queryReducer} from '../../features/commerce/query/query-slice';
 import {recommendationsReducer} from '../../features/commerce/recommendations/recommendations-slice';
+import {executeSearch} from '../../features/commerce/search/search-actions';
 import {commerceSearchReducer} from '../../features/commerce/search/search-slice';
 import {sortReducer} from '../../features/commerce/sort/sort-slice';
 import {facetOrderReducer} from '../../features/facets/facet-order/facet-order-slice';
@@ -58,10 +59,21 @@ export type CommerceEngineState =
  * @internal WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
  */
 export interface CommerceEngine<State extends object = {}>
-  extends CoreEngine<
-    State & CommerceEngineState,
-    CommerceThunkExtraArguments
-  > {}
+  extends CoreEngine<State & CommerceEngineState, CommerceThunkExtraArguments> {
+  /**
+   * Executes the first search.
+   *
+   * @param analyticsEvent - The analytics event to log in association with the first search. If unspecified, `logInterfaceLoad` will be used.
+   */
+  executeFirstSearch(): void;
+
+  /**
+   * Executes the first search, and logs the analytics event that triggered a redirection from a standalone search box.
+   *
+   * @param analytics - The standalone search box analytics data.
+   */
+  executeFirstSearchAfterStandaloneSearchBoxRedirect(): void;
+}
 
 /**
  * The commerce engine options.
@@ -110,6 +122,15 @@ export function buildCommerceEngine(
 
     get state() {
       return engine.state;
+    },
+    executeFirstSearch() {
+      const action = executeSearch();
+      engine.dispatch(action);
+    },
+
+    executeFirstSearchAfterStandaloneSearchBoxRedirect() {
+      const action = executeSearch();
+      engine.dispatch(action);
     },
   };
 }
