@@ -2,7 +2,7 @@ import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api
 import {Product} from '../../../api/commerce/common/product';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
-import {stateKey} from '../../../app/engine';
+import {stateKey} from '../../../app/state-key';
 import {LegacySearchAction} from '../../../features/analytics/analytics-utils';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';

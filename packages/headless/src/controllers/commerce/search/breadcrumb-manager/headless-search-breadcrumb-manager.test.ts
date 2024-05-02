@@ -1,4 +1,4 @@
-import {stateKey} from '../../../../app/engine';
+import {stateKey} from '../../../../app/state-key';
 import {
   AnyFacetResponse,
   RegularFacetValue,

@@ -2,7 +2,7 @@ import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api
 import {Product} from '../../../api/commerce/common/product';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
-import {stateKey} from '../../../app/engine';
+import {stateKey} from '../../../app/state-key';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
 import {fetchProductListing} from '../../../features/commerce/product-listing/product-listing-actions';
 import {responseIdSelector} from '../../../features/commerce/product-listing/product-listing-selectors';

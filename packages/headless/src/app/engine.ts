@@ -32,6 +32,7 @@ import {LoggerOptions} from './logger';
 import {logActionErrorMiddleware} from './logger-middlewares';
 import {createReducerManager, ReducerManager} from './reducer-manager';
 import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware';
+import {stateKey} from './state-key';
 import {ExtraArgumentsWithRelay, Store, configureStore} from './store';
 import {ThunkExtraArguments} from './thunk-extra-arguments';
 
@@ -98,8 +99,6 @@ export interface CoreEngine<
    */
   disableAnalytics(): void;
 }
-
-export const stateKey = Symbol('state');
 
 export type CoreEngineNext<
   State extends object = {},

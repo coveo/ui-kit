@@ -1,6 +1,6 @@
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
-import {stateKey} from '../../../app/engine';
+import {stateKey} from '../../../app/state-key';
 import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions';
 import {selectPage} from '../../../features/commerce/pagination/pagination-actions';
 import {fetchQuerySuggestions} from '../../../features/commerce/query-suggest/query-suggest-actions';

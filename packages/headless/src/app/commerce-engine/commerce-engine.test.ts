@@ -1,4 +1,4 @@
-import {stateKey} from '../engine';
+import {stateKey} from '../state-key';
 import {
   buildCommerceEngine,
   CommerceEngine,

@@ -1,4 +1,4 @@
-import {CoreEngine, CoreEngineNext} from '../app/engine';
+import type {CoreEngine, CoreEngineNext} from '../app/engine';
 import {Controller} from '../controllers/controller/headless-controller';
 
 function isEngine(obj: object): obj is CoreEngine {

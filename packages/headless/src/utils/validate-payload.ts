@@ -9,7 +9,7 @@ import {
 } from '@coveo/bueno';
 import {SerializedError} from '@reduxjs/toolkit';
 import type {CoreEngine, CoreEngineNext} from '../app/engine';
-import {stateKey} from '../app/engine';
+import {stateKey} from '../app/state-key';
 
 export const requiredNonEmptyString = new StringValue({
   required: true,

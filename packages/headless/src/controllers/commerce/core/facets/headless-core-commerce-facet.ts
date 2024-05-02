@@ -1,5 +1,5 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {stateKey} from '../../../../app/engine';
+import {stateKey} from '../../../../app/state-key';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {FacetType} from '../../../../features/commerce/facets/facet-set/interfaces/common';
 import {

@@ -1,4 +1,4 @@
-import {stateKey} from '../../../../app/engine';
+import {stateKey} from '../../../../app/state-key';
 import {queryReducer as commerceQuery} from '../../../../features/commerce/query/query-slice';
 import {restoreSearchParameters} from '../../../../features/commerce/search-parameters/search-parameter-actions';
 import {executeSearch} from '../../../../features/commerce/search/search-actions';

@@ -1,5 +1,5 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {stateKey} from '../../../../app/engine';
+import {stateKey} from '../../../../app/state-key';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {
   ProductListingParameters,

@@ -23,9 +23,9 @@ import {
   CoreEngineNext,
   EngineOptions,
   ExternalEngineOptions,
-  stateKey,
 } from '../engine';
 import {buildLogger} from '../logger';
+import {stateKey} from '../state-key';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {
   CommerceEngineConfiguration,

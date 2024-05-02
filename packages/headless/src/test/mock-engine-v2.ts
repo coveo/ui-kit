@@ -3,13 +3,13 @@ import pino, {Logger} from 'pino';
 import {CaseAssistEngine} from '../app/case-assist-engine/case-assist-engine';
 import {CommerceEngine} from '../app/commerce-engine/commerce-engine';
 import type {CoreEngine, CoreEngineNext} from '../app/engine';
-import {stateKey} from '../app/engine';
 import {InsightEngine} from '../app/insight-engine/insight-engine';
 import {ProductListingEngine} from '../app/product-listing-engine/product-listing-engine';
 import {ProductRecommendationEngine} from '../app/product-recommendation-engine/product-recommendation-engine';
 import {RecommendationEngine} from '../app/recommendation-engine/recommendation-engine';
 import {SearchEngine} from '../app/search-engine/search-engine';
 import {SSRSearchEngine} from '../app/search-engine/search-engine.ssr';
+import {stateKey} from '../app/state-key';
 
 type SpyEverything<T> = {
   [K in keyof T]: T[K] extends (...args: infer A) => infer R

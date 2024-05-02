@@ -3,7 +3,7 @@ import {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../../../app/commerce-engine/commerce-engine';
-import {stateKey} from '../../../../../app/engine';
+import {stateKey} from '../../../../../app/state-key';
 import {CategoryFacetValueRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
 import {
   defaultNumberOfValuesIncrement,

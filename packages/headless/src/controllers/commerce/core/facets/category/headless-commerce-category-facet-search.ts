@@ -1,6 +1,6 @@
 import {CategoryFacetSearchResult} from '../../../../../api/search/facet-search/category-facet-search/category-facet-search-response';
 import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
-import {stateKey} from '../../../../../app/engine';
+import {stateKey} from '../../../../../app/state-key';
 import {
   executeCommerceFacetSearch,
   executeCommerceFieldSuggest,
