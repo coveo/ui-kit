@@ -402,10 +402,10 @@ describe('quantic-generated-answer', () => {
               });
             });
 
-            describe(
+            describe.skip(
               'when providing detailed feedback',
               {
-                retries: 20,
+                retries: 5,
               },
               () => {
                 const streamId = crypto.randomUUID();

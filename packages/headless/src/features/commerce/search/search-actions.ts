@@ -18,7 +18,6 @@ import {
   QueryCommerceAPIThunkReturn,
   StateNeededByQueryCommerceAPI,
 } from '../common/actions';
-import {logProductListingV2Load} from '../product-listing/product-listing-analytics';
 import {
   UpdateQueryActionCreatorPayload,
   updateQuery,
@@ -59,7 +58,6 @@ export const executeSearch = createAsyncThunk<
       queryExecuted: state.commerceQuery?.query,
       // eslint-disable-next-line @cspell/spellchecker
       // TODO CAPI-244: Use actual search analytics action
-      analyticsAction: logProductListingV2Load(),
     };
   }
 );
