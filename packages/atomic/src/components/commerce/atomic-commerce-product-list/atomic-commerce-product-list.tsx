@@ -18,7 +18,7 @@ import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-int
 
 /**
  * @internal
- * The `atomic-commerce-product-list` component is responsible for displaying product products.
+ * The `atomic-commerce-product-list` component is responsible for displaying products.
  */
 @Component({
   tag: 'atomic-commerce-product-list',
