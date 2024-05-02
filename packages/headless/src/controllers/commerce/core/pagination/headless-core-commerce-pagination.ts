@@ -61,23 +61,24 @@ export interface PaginationState {
   totalPages: number;
 }
 
-export interface PaginationOptions {
-  /**
-   * Recs slot id, or none for listings and search
-   */
+export interface CorePaginationOptions {
   slotId?: string;
+  /**
+   * The number of products to fetch per page.
+   */
   pageSize?: number;
 }
 
 export interface CorePaginationProps {
   fetchResultsActionCreator: FetchResultsActionCreator;
-  options?: PaginationOptions;
+  options?: CorePaginationOptions;
 }
 
-export type PaginationProps = Omit<
-  CorePaginationProps,
-  'fetchResultsActionCreator'
->;
+export type PaginationOptions = Omit<CorePaginationOptions, 'slotId'>;
+
+export interface PaginationProps {
+  options?: PaginationOptions;
+}
 
 const optionsSchema = new Schema({
   pageSize: new NumberValue({min: 1, max: 1000, required: false}),

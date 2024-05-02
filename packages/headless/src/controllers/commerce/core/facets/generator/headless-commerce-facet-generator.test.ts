@@ -1,5 +1,5 @@
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../../features/commerce/facets/facet-set/facet-set-slice';
-import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
+import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/common';
 import {facetOrderReducer as facetOrder} from '../../../../../features/facets/facet-order/facet-order-slice';
 import {CommerceAppState} from '../../../../../state/commerce-app-state';
 import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search';

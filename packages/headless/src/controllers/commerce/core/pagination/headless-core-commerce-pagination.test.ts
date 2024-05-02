@@ -13,8 +13,8 @@ import {
 } from '../../../../test/mock-engine-v2';
 import {
   buildCorePagination,
+  CorePaginationOptions,
   Pagination,
-  PaginationOptions,
 } from './headless-core-commerce-pagination';
 
 jest.mock('../../../../features/commerce/pagination/pagination-actions');
@@ -25,7 +25,7 @@ describe('core pagination', () => {
   const fetchResultsActionCreator = jest.fn();
   const slotId = 'recommendations-slot-id';
 
-  function initPagination(options: PaginationOptions = {}) {
+  function initPagination(options: CorePaginationOptions = {}) {
     engine = buildMockCommerceEngine(buildMockCommerceState());
 
     pagination = buildCorePagination(engine, {

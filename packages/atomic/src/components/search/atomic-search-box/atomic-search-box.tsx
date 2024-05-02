@@ -548,11 +548,15 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
     );
   }
 
-  private renderSuggestions() {
-    if (!this.suggestionManager.hasSuggestions) {
-      return null;
-    }
+  private get shouldShowSuggestions() {
+    return (
+      this.suggestionManager.hasSuggestions &&
+      this.isExpanded &&
+      !this.isSearchDisabledForEndUser(this.searchBoxState.value)
+    );
+  }
 
+  private renderSuggestions() {
     return (
       <div
         id={`${this.id}-popup`}
@@ -562,11 +566,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
             : 'suggestions-single-list'
         }`}
         class={`flex w-full z-10 absolute left-0 top-full rounded-md bg-background border border-neutral ${
-          this.suggestionManager.hasSuggestions &&
-          this.isExpanded &&
-          !this.isSearchDisabledForEndUser(this.searchBoxState.value)
-            ? ''
-            : 'hidden'
+          this.shouldShowSuggestions ? '' : 'hidden'
         }`}
         role="application"
         aria-label={this.bindings.i18n.t(
@@ -574,7 +574,9 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
             ? 'search-suggestions-double-list'
             : 'search-suggestions-single-list'
         )}
-        aria-activedescendant={this.suggestionManager.activeDescendant}
+        {...(this.suggestionManager.activeDescendant && {
+          'aria-activedescendant': this.suggestionManager.activeDescendant,
+        })}
       >
         {this.renderPanel(
           'left',
