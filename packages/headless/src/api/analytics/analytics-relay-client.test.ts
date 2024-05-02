@@ -31,11 +31,22 @@ describe('#getRelayInstanceFromState', () => {
     const relay = getRelayInstanceFromState(state);
 
     expect(mockedCreateRelay).toHaveBeenCalledWith({
+      mode: 'emit',
       url: state.configuration.analytics.nextApiBaseUrl,
       token: state.configuration.accessToken,
       trackingId: state.configuration.analytics.trackingId,
       source: expect.arrayContaining(['baguette']),
     });
     expect(mockedCreateRelay).toHaveReturnedWith(relay);
+  });
+
+  it('when headless analytics are disabled, relay is disabled', () => {
+    const state = createMockState();
+    state.configuration.analytics.enabled = false;
+
+    getRelayInstanceFromState(state);
+    expect(mockedCreateRelay).toHaveBeenCalledWith(
+      expect.objectContaining({mode: 'disabled'})
+    );
   });
 });
