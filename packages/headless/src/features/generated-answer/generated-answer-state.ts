@@ -1,5 +1,8 @@
 import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload';
-import {GeneratedResponseFormat} from './generated-response-format';
+import {
+  GeneratedContentFormat,
+  GeneratedResponseFormat,
+} from './generated-response-format';
 
 export interface GeneratedAnswerState {
   id: string;
@@ -19,6 +22,12 @@ export interface GeneratedAnswerState {
    * The generated answer.
    */
   answer?: string;
+  /**
+   * The content format of the generated answer. Possible values are:
+   * - `text/plain`
+   * - `text/markdown`
+   */
+  answerContentFormat?: GeneratedContentFormat;
   /**
    * The document snippets retrieved to generate the answer.
    */
@@ -76,11 +85,12 @@ export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
     disliked: false,
     responseFormat: {
       answerStyle: 'default',
+      contentFormat: ['text/plain'],
     },
     feedbackModalOpen: false,
     feedbackSubmitted: false,
     fieldsToIncludeInCitations: [],
     isAnswerGenerated: false,
-    expanded: true,
+    expanded: false,
   };
 }

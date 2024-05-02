@@ -3,6 +3,7 @@ import {
   nextPage,
   previousPage,
   setPageSize,
+  registerRecommendationsSlotPagination,
 } from '../../../../features/commerce/pagination/pagination-actions';
 import {paginationReducer as commercePagination} from '../../../../features/commerce/pagination/pagination-slice';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
@@ -12,7 +13,7 @@ import {
 } from '../../../../test/mock-engine-v2';
 import {
   buildCorePagination,
-  CorePaginationProps,
+  CorePaginationOptions,
   Pagination,
 } from './headless-core-commerce-pagination';
 
@@ -22,13 +23,14 @@ describe('core pagination', () => {
   let engine: MockedCommerceEngine;
   let pagination: Pagination;
   const fetchResultsActionCreator = jest.fn();
+  const slotId = 'recommendations-slot-id';
 
-  function initPagination(props: Partial<CorePaginationProps> = {}) {
+  function initPagination(options: CorePaginationOptions = {}) {
     engine = buildMockCommerceEngine(buildMockCommerceState());
 
     pagination = buildCorePagination(engine, {
       fetchResultsActionCreator,
-      ...props,
+      options,
     });
   }
 
@@ -53,10 +55,48 @@ describe('core pagination', () => {
 
     it('sets page size when provided', () => {
       const pageSize = 11;
-      initPagination({
-        options: {pageSize},
+      initPagination({pageSize});
+      expect(setPageSize).toHaveBeenCalledWith({pageSize});
+    });
+
+    it('when slot id is provided, registers recommendation slot pagination', () => {
+      initPagination({slotId});
+      expect(registerRecommendationsSlotPagination).toHaveBeenCalledWith({
+        slotId,
       });
-      expect(setPageSize).toHaveBeenCalledWith(pageSize);
+    });
+  });
+
+  describe('#state', () => {
+    it('when slot id is specified, reflects the recommendations slot pagination state', () => {
+      initPagination({slotId: 'slot-id'});
+      engine.state.commercePagination.recommendations['slot-id'] = {
+        perPage: 111,
+        page: 111,
+        totalEntries: 111,
+        totalPages: 111,
+      };
+      expect(pagination.state).toEqual({
+        pageSize: 111,
+        page: 111,
+        totalEntries: 111,
+        totalPages: 111,
+      });
+    });
+
+    it('when slot id is not specified, reflects the principal pagination state', () => {
+      engine.state.commercePagination.principal = {
+        perPage: 222,
+        page: 222,
+        totalEntries: 222,
+        totalPages: 222,
+      };
+      expect(pagination.state).toEqual({
+        pageSize: 222,
+        page: 222,
+        totalEntries: 222,
+        totalPages: 222,
+      });
     });
   });
 
@@ -66,7 +106,7 @@ describe('core pagination', () => {
     });
 
     it('dispatches #selectPage', () => {
-      expect(selectPage).toHaveBeenCalledWith(0);
+      expect(selectPage).toHaveBeenCalledWith({page: 0});
     });
 
     it('dispatches #fetchResultsActionCreator', () => {
@@ -109,7 +149,7 @@ describe('core pagination', () => {
     });
 
     it('dispatches #setPageSize', () => {
-      expect(setPageSize).toHaveBeenCalledWith(pageSize);
+      expect(setPageSize).toHaveBeenCalledWith({pageSize});
     });
 
     it('dispatches #fetchResultsActionCreator', () => {

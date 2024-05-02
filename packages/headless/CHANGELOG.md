@@ -1,3 +1,42 @@
+# 2.63.0 (2024-05-02)
+
+### Bug Fixes
+
+- disable relay when headless analytics are disabled ([#3880](https://github.com/coveo/ui-kit/issues/3880)) ([029d5ed](https://github.com/coveo/ui-kit/commits/029d5edd85f8c8530af12d8c2b893ee25deab7f0))
+- **headless/commerce:** subscribing to the facet generator controller state causes stack overflow ([#3863](https://github.com/coveo/ui-kit/issues/3863)) ([40a5178](https://github.com/coveo/ui-kit/commits/40a5178a901a3e8cf581cf6de53ed4c13f515b19))
+- **headless/commerce:** use numberOfValues from response when setting initialNumberOfValues / numberOfValues in facet request ([#3856](https://github.com/coveo/ui-kit/issues/3856)) ([946d4e4](https://github.com/coveo/ui-kit/commits/946d4e46079cd8586389f7a2ff551db2e8d83ca2))
+- **headless:** generated-answer-state expanded should be false ([#3848](https://github.com/coveo/ui-kit/issues/3848)) ([8c22beb](https://github.com/coveo/ui-kit/commits/8c22beba0c6a4fabad5bddd0d47af16d52c58242))
+- remove double quote ([#3849](https://github.com/coveo/ui-kit/issues/3849)) ([6a4e14e](https://github.com/coveo/ui-kit/commits/6a4e14ea9478b7fde2a0eda2e568448b5098a310)), closes [#3832](https://github.com/coveo/ui-kit/issues/3832)
+
+### Features
+
+- **Commerce Atomic:** add atomic-commerce-interface ([#3868](https://github.com/coveo/ui-kit/issues/3868)) ([4527419](https://github.com/coveo/ui-kit/commits/45274198ea6af6e1d4a2acd6472dbf706b279588))
+- **Commerce Atomic:** add atomic-commerce-result-list ([#3872](https://github.com/coveo/ui-kit/issues/3872)) ([8db0aee](https://github.com/coveo/ui-kit/commits/8db0aee7690a70f517e136c206c7c20d926086d0))
+- **Commerce Atomic:** add standalone searchbox ([#3875](https://github.com/coveo/ui-kit/issues/3875)) ([e1f2b6f](https://github.com/coveo/ui-kit/commits/e1f2b6f23eb30be4972a7e46a7878515004cec46))
+- **commerce:** structure pagination slices by solution types ([#3842](https://github.com/coveo/ui-kit/issues/3842)) ([178a08e](https://github.com/coveo/ui-kit/commits/178a08efd191a47cdeb3b3249555854f4bd2139d))
+- **headless/commerce:** Export facet state types ([#3844](https://github.com/coveo/ui-kit/issues/3844)) ([96c9800](https://github.com/coveo/ui-kit/commits/96c9800e154067ae79cba0220e0b4447bf3a82ba))
+- **headless/commerce:** support continuous ranges on numeric facets ([#3879](https://github.com/coveo/ui-kit/issues/3879)) ([618ea00](https://github.com/coveo/ui-kit/commits/618ea00e067850389abe96b42ccae27df9d6684f))
+
+# 2.62.0 (2024-04-24)
+
+### Bug Fixes
+
+- `enableQuerySyntax` is not passed to recent-query-list controller ([#3818](https://github.com/coveo/ui-kit/issues/3818)) ([e1bb701](https://github.com/coveo/ui-kit/commits/e1bb701eb8a9b150e2d23af794140c0a7b189e2a))
+- do not kill unfocused streams ([#3799](https://github.com/coveo/ui-kit/issues/3799)) ([e1b2c3a](https://github.com/coveo/ui-kit/commits/e1b2c3ae56658da7ccc528231372716f28369d3c)), closes [/github.com/Azure/fetch-event-source/blob/main/src/fetch.ts#L46-L50](https://github.com//github.com/Azure/fetch-event-source/blob/main/src/fetch.ts/issues/L46-L50)
+
+### Features
+
+- **commerce:** allow multiple recommendations slots at once ([#3801](https://github.com/coveo/ui-kit/issues/3801)) ([7d9f4e0](https://github.com/coveo/ui-kit/commits/7d9f4e06ae62ceba59dc03e8c890c8b36baa169c))
+- **commerce:** require context on engine initialization ([#3828](https://github.com/coveo/ui-kit/issues/3828)) ([564091d](https://github.com/coveo/ui-kit/commits/564091d8cb92a3e23ff1b68caa466a589874a1a1))
+- **commerce:** use new product and pagination properties ([#3785](https://github.com/coveo/ui-kit/issues/3785)) ([2d991f8](https://github.com/coveo/ui-kit/commits/2d991f890ea8ed3c98f839da36d8dc1a7674647f))
+- **commerce:** use slotId for Commerce recommendations requests ([#3839](https://github.com/coveo/ui-kit/issues/3839)) ([6867325](https://github.com/coveo/ui-kit/commits/68673255a8c6f5931a50b314c79c91211befad0f))
+- **headless-cart:** allow both productid and SKU when updating a cart item with the cart controller ([#3809](https://github.com/coveo/ui-kit/issues/3809)) ([571553f](https://github.com/coveo/ui-kit/commits/571553f1939418ad3cfe7fa31207477cfef0f764))
+- **headless/commerce:** commerce category facet search ([#3748](https://github.com/coveo/ui-kit/issues/3748)) ([db73ca5](https://github.com/coveo/ui-kit/commits/db73ca5850e8cdbb9d48c6dc870b377b9d494eab))
+- **headless/commerce:** rework and test the buildCommerceAPIRequest function ([#3790](https://github.com/coveo/ui-kit/issues/3790)) ([7142c18](https://github.com/coveo/ui-kit/commits/7142c18c54be752545871dfa09e2e091674dcaa9))
+- **headless:** adapting the analytics sent for the qna features to send the response id ([#3812](https://github.com/coveo/ui-kit/issues/3812)) ([3727e7a](https://github.com/coveo/ui-kit/commits/3727e7aff19b9838cdbe74356eae12cd4e77178c))
+- **headless:** add core support of rich formatting for CRGA ([#3824](https://github.com/coveo/ui-kit/issues/3824)) ([e38b303](https://github.com/coveo/ui-kit/commits/e38b3036ef7535dfcb19ef0600b7b00bdb7f153c))
+- **headless:** expand and collapse methods added to generated answer controller ([#3813](https://github.com/coveo/ui-kit/issues/3813)) ([6e7301a](https://github.com/coveo/ui-kit/commits/6e7301afa53e3fee37295af03d81b0322ebd6411))
+
 # 2.61.0 (2024-04-17)
 
 ### Bug Fixes

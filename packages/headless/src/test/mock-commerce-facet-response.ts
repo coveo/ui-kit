@@ -1,7 +1,7 @@
 import {
   RegularFacetResponse,
   NumericFacetResponse,
-  DateRangeFacetResponse,
+  DateFacetResponse,
   AnyFacetResponse,
   CategoryFacetResponse,
 } from '../features/commerce/facets/facet-set/interfaces/response';
@@ -17,6 +17,7 @@ function getMockBaseCommerceFacetResponse(): Omit<
     fromAutoSelect: false,
     isFieldExpanded: false,
     moreValuesAvailable: false,
+    numberOfValues: 0,
   };
 }
 
@@ -43,8 +44,8 @@ export function buildMockCommerceNumericFacetResponse(
 }
 
 export function buildMockCommerceDateFacetResponse(
-  config: Partial<DateRangeFacetResponse> = {}
-): DateRangeFacetResponse {
+  config: Partial<DateFacetResponse> = {}
+): DateFacetResponse {
   return {
     ...getMockBaseCommerceFacetResponse(),
     type: 'dateRange',

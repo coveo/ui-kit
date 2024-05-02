@@ -10,6 +10,7 @@ import {AsyncThunkGeneratedAnswerOptions} from '../../api/generated-answer/gener
 import {
   GeneratedAnswerCitationsPayload,
   GeneratedAnswerEndOfStreamPayload,
+  GeneratedAnswerHeaderMessagePayload,
   GeneratedAnswerMessagePayload,
   GeneratedAnswerPayloadType,
   GeneratedAnswerStreamEventData,
@@ -29,8 +30,10 @@ import {logGeneratedAnswerStreamEnd} from './generated-answer-analytics-actions'
 import {buildStreamingRequest} from './generated-answer-request';
 import {
   GeneratedAnswerStyle,
+  GeneratedContentFormat,
   GeneratedResponseFormat,
   generatedAnswerStyle,
+  generatedContentFormat,
 } from './generated-response-format';
 
 type StateNeededByGeneratedAnswerStream = ConfigurationSection &
@@ -48,6 +51,11 @@ const citationSchema = {
   permanentid: stringValue,
   clickUri: optionalStringValue,
 };
+
+const answerContentFormatSchema = new StringValue<GeneratedContentFormat>({
+  required: true,
+  constrainTo: generatedContentFormat,
+});
 
 export interface GeneratedAnswerErrorPayload {
   message?: string;
@@ -131,6 +139,12 @@ export const setIsStreaming = createAction(
   (payload: boolean) => validatePayload(payload, booleanValue)
 );
 
+export const setAnswerContentFormat = createAction(
+  'generatedAnswer/setAnswerContentFormat',
+  (payload: GeneratedContentFormat) =>
+    validatePayload(payload, answerContentFormatSchema)
+);
+
 export const updateResponseFormat = createAction(
   'generatedAnswer/updateResponseFormat',
   (payload: GeneratedResponseFormat) =>
@@ -138,6 +152,10 @@ export const updateResponseFormat = createAction(
       answerStyle: new StringValue<GeneratedAnswerStyle>({
         required: true,
         constrainTo: generatedAnswerStyle,
+      }),
+      contentFormat: new ArrayValue<GeneratedContentFormat>({
+        each: answerContentFormatSchema,
+        default: ['text/plain'],
       }),
     })
 );
@@ -173,6 +191,13 @@ export const streamAnswer = createAsyncThunk<
     payload: string
   ) => {
     switch (payloadType) {
+      case 'genqa.headerMessageType': {
+        const header = JSON.parse(
+          payload
+        ) as GeneratedAnswerHeaderMessagePayload;
+        dispatch(setAnswerContentFormat(header.contentFormat));
+        break;
+      }
       case 'genqa.messageType':
         dispatch(
           updateMessage(JSON.parse(payload) as GeneratedAnswerMessagePayload)
