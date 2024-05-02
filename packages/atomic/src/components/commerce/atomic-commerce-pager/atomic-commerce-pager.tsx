@@ -44,7 +44,9 @@ import {getCurrentPagesRange} from './commerce-pager-utils';
   styleUrl: 'atomic-commerce-pager.pcss',
   shadow: true,
 })
-export class AtomicPager implements InitializableComponent<CommerceBindings> {
+export class AtomicCommercePager
+  implements InitializableComponent<CommerceBindings>
+{
   @InitializeBindings() public bindings!: CommerceBindings;
   public pager!: Pagination;
 
