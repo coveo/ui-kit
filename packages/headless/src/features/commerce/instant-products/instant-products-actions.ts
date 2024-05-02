@@ -20,7 +20,7 @@ export interface UpdateInstantProductQueryActionCreatorPayload {
   /**
    * The initial basic query expression for instant products.
    */
-  q: string;
+  query: string;
 }
 
 export interface ClearExpiredInstantProductsActionCreatorPayload {
@@ -36,7 +36,7 @@ const instantProductsRegisterDefinition = {
 
 const instantProductsQueryDefinition = {
   ...instantProductsRegisterDefinition,
-  q: requiredEmptyAllowedString,
+  query: requiredEmptyAllowedString,
 };
 
 export const registerInstantProducts = createAction(
@@ -65,7 +65,7 @@ export interface FetchInstantProductsActionCreatorPayload {
   /**
    * The query for which instant products are retrieved.
    */
-  q: string;
+  query: string;
   /**
    * The maximum items to be stored in the instant product list for each query.
    */

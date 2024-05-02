@@ -75,7 +75,7 @@ describe('instant products slice', () => {
       expect(
         instantProductsReducer(
           initialState,
-          updateInstantProductsQuery({id: id1, q: query})
+          updateInstantProductsQuery({id: id1, query: query})
         )
       ).toEqual(expectedState);
     });
@@ -88,7 +88,7 @@ describe('instant products slice', () => {
       expect(
         instantProductsReducer(
           initialState,
-          updateInstantProductsQuery({id: id1, q: ''})
+          updateInstantProductsQuery({id: id1, query: ''})
         )
       ).toEqual(initialState);
     });

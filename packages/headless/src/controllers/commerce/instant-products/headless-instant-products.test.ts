@@ -12,7 +12,7 @@ jest.mock(
   '../../../features/commerce/instant-products/instant-products-actions'
 );
 
-describe('instant results', () => {
+describe('instant products', () => {
   let engine: MockedCommerceEngine;
   let state: CommerceAppState;
 
@@ -22,7 +22,7 @@ describe('instant results', () => {
     engine = buildMockCommerceEngine(state);
   });
 
-  it('it adds the correct reducers to engine', () => {
+  it('adds the correct reducers to engine', () => {
     const searchBoxId = 'search_box_1';
     buildInstantProducts(engine, {
       options: {searchBoxId},
@@ -33,7 +33,7 @@ describe('instant results', () => {
     });
   });
 
-  it('it registers search box', () => {
+  it('registers search box', () => {
     const searchBoxId = 'search_box_1';
     buildInstantProducts(engine, {
       options: {searchBoxId},

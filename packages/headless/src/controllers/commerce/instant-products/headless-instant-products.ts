@@ -51,9 +51,9 @@ export interface InstantProducts extends Controller {
   /**
    * Updates the specified query and shows instant products for it.
    *
-   * @param q - The query to get instant products for. For more precise instant products, query suggestions are recommended.
+   * @param query - The query to get instant products for. For more precise instant products, query suggestions are recommended.
    */
-  updateQuery(q: string): void;
+  updateQuery(query: string): void;
   /**
    * Clears all expired instant products queries.
    */
@@ -68,7 +68,7 @@ export interface InstantProductsState {
   /**
    * The current query for instant products.
    */
-  q: string;
+  query: string;
   /**
    * The instant products for the current query.
    */
@@ -86,7 +86,7 @@ export interface InstantProductsState {
 /**
  * Creates an `InstantProducts` controller instance.
  *
- * @param engine - The Headless engine.
+ * @param engine - The headless commerce engine.
  * @param props - The configurable `InstantProducts` properties.
  * @returns An `InstantProducts` controller instance.
  */
@@ -120,9 +120,9 @@ export function buildInstantProducts(
   const getStateForSearchBox = () => getState().instantProducts[searchBoxId];
 
   const getCached = (q: string) => getStateForSearchBox().cache[q];
-  const getQ = () => getStateForSearchBox().q;
+  const getQuery = () => getStateForSearchBox().q;
   const getProducts = () => {
-    const cached = getCached(getQ());
+    const cached = getCached(getQuery());
     if (!cached) {
       return [];
     }
@@ -135,11 +135,11 @@ export function buildInstantProducts(
   return {
     ...controller,
 
-    updateQuery(q: string) {
-      if (!q) {
+    updateQuery(query: string) {
+      if (!query) {
         return;
       }
-      const cached = getCached(q);
+      const cached = getCached(query);
       if (
         !cached ||
         (!cached.isLoading && (cached.error || hasExpired(cached)))
@@ -147,12 +147,12 @@ export function buildInstantProducts(
         dispatch(
           fetchInstantProducts({
             id: searchBoxId,
-            q,
+            q: query,
             cacheTimeout: options.cacheTimeout,
           })
         );
       }
-      dispatch(updateInstantProductsQuery({id: searchBoxId, q}));
+      dispatch(updateInstantProductsQuery({id: searchBoxId, query}));
     },
 
     clearExpired() {
@@ -164,10 +164,10 @@ export function buildInstantProducts(
     },
 
     get state() {
-      const q = getQ();
-      const cached = getCached(q);
+      const query = getQuery();
+      const cached = getCached(query);
       return {
-        q,
+        query,
         isLoading: cached?.isLoading || false,
         error: cached?.error || null,
         products: getProducts(),
