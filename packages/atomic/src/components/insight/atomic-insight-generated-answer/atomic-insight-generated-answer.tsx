@@ -85,7 +85,7 @@ export class AtomicInsightGeneratedAnswer
   @Prop() answerStyle: InsightGeneratedAnswerStyle = 'default';
 
   /**
-   * Wether to allow the answer to be shown or hidden using the toggle button
+   * Whether to allow the answer to be shown or hidden using the toggle button
    */
   @Prop() withToggle?: boolean;
 
