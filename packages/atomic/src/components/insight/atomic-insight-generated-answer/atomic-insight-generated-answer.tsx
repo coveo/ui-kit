@@ -190,7 +190,7 @@ export class AtomicInsightGeneratedAnswer
 
   private adaptAnswerHeight() {
     this.fullAnswerHeight = this.host?.shadowRoot
-      ?.querySelector('p[part="generated-text"]')
+      ?.querySelector('[part="generated-text"]')
       ?.getBoundingClientRect().height;
     this.updateAnswerHeight();
   }
