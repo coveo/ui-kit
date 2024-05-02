@@ -52,6 +52,23 @@ const testCitationsPayload = {
   finishReason: 'COMPLETED',
 };
 
+const testCitationWithEmptyTitle = {
+  id: 'some-id-123',
+  title: '',
+  uri: 'https://www.coveo.com',
+  permanentid: 'some-permanent-id-123',
+  clickUri: 'https://www.coveo.com/en',
+  text: 'This is the snippet given to the generative model.',
+};
+
+const testCitationsWithEmptyTitlePayload = {
+  payloadType: 'genqa.citationsType',
+  payload: JSON.stringify({
+    citations: [testCitationWithEmptyTitle],
+  }),
+  finishReason: 'COMPLETED',
+};
+
 describe('Generated Answer Test Suites', () => {
   describe('Generated Answer', () => {
     function setupGeneratedAnswer(streamId?: string, props: TagProps = {}) {
@@ -400,6 +417,23 @@ describe('Generated Answer Test Suites', () => {
           it('should log an openGeneratedAnswerSource click event', () => {
             GeneratedAnswerAssertions.assertLogOpenGeneratedAnswerSource();
           });
+        });
+      });
+
+      describe('When a citation event is received with empty title', () => {
+        const streamId = crypto.randomUUID();
+
+        beforeEach(() => {
+          mockStreamResponse(streamId, testCitationsWithEmptyTitlePayload);
+          setupGeneratedAnswer(streamId);
+          cy.wait(getStreamInterceptAlias(streamId));
+        });
+
+        it('should display the citation with no title label', () => {
+          GeneratedAnswerSelectors.citationCard().should(
+            'contain.text',
+            'No title'
+          );
         });
       });
 
