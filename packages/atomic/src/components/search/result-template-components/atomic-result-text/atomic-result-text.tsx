@@ -102,15 +102,18 @@ export class AtomicResultText implements InitializableComponent {
     }
 
     const textValue = `${resultValueAsString}`;
+
+    if (!this.shouldHighlight) {
+      return getFieldValueCaption(this.field, textValue, this.bindings.i18n);
+    }
+
     const highlightsValue = ResultTemplatesHelpers.getResultProperty(
       this.result,
       `${this.field}Highlights`
     ) as HighlightUtils.HighlightKeyword[];
 
-    if (this.shouldHighlight && highlightsValue) {
+    if (highlightsValue) {
       return this.renderWithHighlights(textValue, highlightsValue);
     }
-
-    return getFieldValueCaption(this.field, textValue, this.bindings.i18n);
   }
 }
