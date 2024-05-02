@@ -25,6 +25,7 @@ import {SourceCitations} from './source-citations';
 
 interface GeneratedAnswerCommonOptions {
   host: HTMLElement;
+  withToggle?: boolean;
   getGeneratedAnswer: () => GeneratedAnswer | undefined;
   getGeneratedAnswerState: () => GeneratedAnswerState | undefined;
   getSearchStatusState: () => SearchStatusState | undefined;
@@ -190,11 +191,23 @@ export class GeneratedAnswerCommon {
   }
 
   private renderFeedbackAndCopyButtons() {
+    const containerClasses = [
+      'feedback-buttons',
+      'flex',
+      'h-9',
+      'absolute',
+      'top-6',
+      'shrink-0',
+      'gap-2',
+      this.props.withToggle ? 'right-20' : 'right-6',
+    ].join(' ');
+
     if (this.props.getGeneratedAnswerState()?.isStreaming) {
       return null;
     }
+
     return (
-      <div class="feedback-buttons flex h-9 absolute top-6 right-20 shrink-0 gap-2">
+      <div class={containerClasses}>
         <FeedbackButton
           title={this.props.getBindings().i18n.t('this-answer-was-helpful')}
           variant="like"
@@ -267,6 +280,7 @@ export class GeneratedAnswerCommon {
                 .getBindings()
                 .i18n.t('generated-answer-title')}
               title={this.toggleTooltip}
+              withToggle={this.props.withToggle}
             ></Switch>
           </div>
         </div>

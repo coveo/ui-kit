@@ -84,6 +84,11 @@ export class AtomicInsightGeneratedAnswer
    */
   @Prop() answerStyle: InsightGeneratedAnswerStyle = 'default';
 
+  /**
+   * Wether to allow the answer to be shown or hidden using the toggle button
+   */
+  @Prop() withToggle?: boolean;
+
   @AriaLiveRegion('generated-answer')
   protected ariaMessage!: string;
 
@@ -92,6 +97,7 @@ export class AtomicInsightGeneratedAnswer
   public initialize() {
     this.generatedAnswerCommon = new GeneratedAnswerCommon({
       host: this.host,
+      withToggle: this.withToggle,
       getGeneratedAnswer: () => this.generatedAnswer,
       getGeneratedAnswerState: () => this.generatedAnswerState,
       getSearchStatusState: () => this.searchStatusState,

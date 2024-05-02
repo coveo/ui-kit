@@ -174,8 +174,18 @@ describe('Generated Answer Test Suites', () => {
       });
     });
 
+    describe('when withToggle prop is NOT provided', () => {
+      beforeEach(() => {
+        setupGeneratedAnswerWithoutFirstIntercept('dummy-stream-id');
+      });
+
+      it('should hide the toggle button', () => {
+        GeneratedAnswerAssertions.assertToggleVisibility(false);
+      });
+    });
+
     describe('when a stream ID is returned', () => {
-      describe('when component is deactivated', () => {
+      describe('when withToggle prop is provided and component is deactivated', () => {
         const streamId = crypto.randomUUID();
         const testTextDelta = 'Some text';
         const testMessagePayload = {
@@ -188,7 +198,9 @@ describe('Generated Answer Test Suites', () => {
 
         beforeEach(() => {
           mockStreamResponse(streamId, testMessagePayload);
-          setupGeneratedAnswer(streamId);
+          setupGeneratedAnswerWithoutFirstIntercept(streamId, {
+            'with-toggle': true,
+          });
           cy.wait(getStreamInterceptAlias(streamId));
 
           GeneratedAnswerSelectors.toggle().click();
@@ -196,13 +208,14 @@ describe('Generated Answer Test Suites', () => {
 
         GeneratedAnswerAssertions.assertAnswerVisibility(false);
         GeneratedAnswerAssertions.assertFeedbackButtonsVisibility(false);
+        GeneratedAnswerAssertions.assertToggleVisibility(true);
         GeneratedAnswerAssertions.assertToggleValue(false);
         GeneratedAnswerAssertions.assertCopyButtonVisibility(false);
         GeneratedAnswerAssertions.assertLocalStorageData({isVisible: false});
         GeneratedAnswerAssertions.assertLogHideGeneratedAnswer();
         GeneratedAnswerAssertions.assertDisclaimer(false);
 
-        describe('when component is re-activated', () => {
+        describe('when withToggle prop is provided and component is re-activated', () => {
           beforeEach(() => {
             AnalyticsTracker.reset();
             GeneratedAnswerSelectors.toggle().click();
@@ -210,6 +223,7 @@ describe('Generated Answer Test Suites', () => {
 
           GeneratedAnswerAssertions.assertAnswerVisibility(true);
           GeneratedAnswerAssertions.assertFeedbackButtonsVisibility(true);
+          GeneratedAnswerAssertions.assertToggleVisibility(true);
           GeneratedAnswerAssertions.assertToggleValue(true);
           GeneratedAnswerAssertions.assertCopyButtonVisibility(true);
           GeneratedAnswerAssertions.assertLocalStorageData({isVisible: true});

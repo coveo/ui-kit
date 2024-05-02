@@ -7,6 +7,7 @@ export interface SwitchProps {
   part?: string;
   tabIndex?: number;
   title?: string;
+  withToggle?: boolean;
 }
 
 export const Switch: FunctionalComponent<SwitchProps> = (props) => {
@@ -35,12 +36,14 @@ export const Switch: FunctionalComponent<SwitchProps> = (props) => {
     props.checked ? 'ml-6' : '',
   ].join(' ');
 
+  const buttonClasses = [
+    'rounded-full',
+    'btn-outline-neutral',
+    props.withToggle ? 'flex' : 'hidden',
+  ].join(' ');
+
   return (
-    <button
-      role="switch"
-      {...attributes}
-      class="rounded-full btn-outline-neutral"
-    >
+    <button role="switch" {...attributes} class={buttonClasses}>
       <div class={containerClasses}>
         <div class={handleClasses}></div>
       </div>
