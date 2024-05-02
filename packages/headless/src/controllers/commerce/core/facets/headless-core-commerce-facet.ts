@@ -1,5 +1,6 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
+import {FacetType} from '../../../../features/commerce/facets/facet-set/interfaces/common';
 import {
   AnyFacetRequest,
   CategoryFacetValueRequest,
@@ -9,7 +10,6 @@ import {
   AnyFacetValueResponse,
   CategoryFacetValue,
   DateFacetValue,
-  FacetType,
   NumericFacetValue,
   RegularFacetValue,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response';
@@ -42,6 +42,10 @@ export type {
   CategoryFacetValueRequest,
   CategoryFacetValue,
 };
+
+export interface FacetControllerType<T extends FacetType> {
+  type: T;
+}
 
 /**
  * @internal
@@ -116,10 +120,6 @@ export type CoreCommerceFacet<
    * @param value - The facet value to evaluate.
    */
   isValueExcluded(value: ValueResponse): boolean;
-  /**
-   * The state of this commerce facet controller instance.
-   */
-  state: CoreCommerceFacetState<ValueResponse>;
 };
 
 /**
@@ -151,10 +151,7 @@ export type CoreCommerceFacetBuilder = typeof buildCoreCommerceFacet;
 export function buildCoreCommerceFacet<
   ValueRequest extends AnyFacetValueRequest,
   ValueResponse extends AnyFacetValueResponse,
->(
-  engine: CommerceEngine,
-  props: CoreCommerceFacetProps
-): CoreCommerceFacet<ValueRequest, ValueResponse> {
+>(engine: CommerceEngine, props: CoreCommerceFacetProps) {
   if (!loadCommerceFacetReducers(engine)) {
     throw loadReducerError;
   }
@@ -270,7 +267,7 @@ export function buildCoreCommerceFacet<
       dispatch(props.options.fetchResultsActionCreator());
     },
 
-    get state() {
+    get state(): CoreCommerceFacetState<ValueResponse> {
       const response = getResponse();
       const canShowMoreValues = response?.moreValuesAvailable ?? false;
 

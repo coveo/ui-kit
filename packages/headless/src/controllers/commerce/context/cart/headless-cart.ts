@@ -12,6 +12,7 @@ import {
 import {cartReducer as cart} from '../../../../features/commerce/context/cart/cart-slice';
 import {CartItemWithMetadata} from '../../../../features/commerce/context/cart/cart-state';
 import {cartSchema} from '../../../../features/commerce/context/cart/cart-validation';
+import {CartSection} from '../../../../state/state-sections';
 import {loadReducerError} from '../../../../utils/errors';
 import {validateInitialState} from '../../../../utils/validate-payload';
 import {
@@ -252,7 +253,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
 
 function loadBaseCartReducers(
   engine: CommerceEngine
-): engine is CommerceEngine {
+): engine is CommerceEngine<CartSection> {
   engine.addReducers({cart});
   return true;
 }

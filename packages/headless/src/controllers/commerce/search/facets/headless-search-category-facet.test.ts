@@ -1,7 +1,4 @@
-import {
-  CategoryFacetValueRequest,
-  CommerceFacetRequest,
-} from '../../../../features/commerce/facets/facet-set/interfaces/request';
+import {CategoryFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
 import {executeSearch} from '../../../../features/commerce/search/search-actions';
 import {commerceSearchReducer as commerceSearch} from '../../../../features/commerce/search/search-slice';
 import {CommerceAppState} from '../../../../state/commerce-app-state';
@@ -37,9 +34,7 @@ describe('SearchCategoryFacet', () => {
     facet = buildSearchCategoryFacet(engine, options);
   }
 
-  function setFacetState(
-    config: Partial<CommerceFacetRequest<CategoryFacetValueRequest>> = {}
-  ) {
+  function setFacetState(config: Partial<CategoryFacetRequest> = {}) {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, ...config}),
     });

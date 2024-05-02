@@ -1,9 +1,13 @@
 import {NumberValue, Schema} from '@coveo/bueno';
 import {createSelector} from '@reduxjs/toolkit';
-import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
+import {
+  CommerceEngine,
+  CommerceEngineState,
+} from '../../../../app/commerce-engine/commerce-engine';
 import {
   nextPage,
   previousPage,
+  registerRecommendationsSlotPagination,
   selectPage,
   setPageSize,
 } from '../../../../features/commerce/pagination/pagination-actions';
@@ -57,23 +61,24 @@ export interface PaginationState {
   totalPages: number;
 }
 
-export interface PaginationOptions {
-  pageSize: number;
+export interface CorePaginationOptions {
+  slotId?: string;
+  /**
+   * The number of products to fetch per page.
+   */
+  pageSize?: number;
 }
 
 export interface CorePaginationProps {
   fetchResultsActionCreator: FetchResultsActionCreator;
-  /**
-   * Recs slot id, or none for listings and search
-   */
-  slotId?: string;
-  options?: PaginationOptions;
+  options?: CorePaginationOptions;
 }
 
-export type PaginationProps = Omit<
-  CorePaginationProps,
-  'fetchResultsActionCreator'
->;
+export type PaginationOptions = Omit<CorePaginationOptions, 'slotId'>;
+
+export interface PaginationProps {
+  options?: PaginationOptions;
+}
 
 const optionsSchema = new Schema({
   pageSize: new NumberValue({min: 1, max: 1000, required: false}),
@@ -100,7 +105,7 @@ export function buildCorePagination(
 
   validateOptions(engine, optionsSchema, props.options, 'buildCorePagination');
 
-  const slotId = props.slotId;
+  const slotId = props.options?.slotId;
 
   if (props.options?.pageSize) {
     dispatch(
@@ -111,10 +116,17 @@ export function buildCorePagination(
     );
   }
 
+  if (slotId) {
+    dispatch(registerRecommendationsSlotPagination({slotId}));
+  }
+
   const paginationSelector = createSelector(
-    (state) => state.commercePagination,
+    (state: CommerceEngineState) =>
+      slotId
+        ? state.commercePagination.recommendations[slotId]!
+        : state.commercePagination.principal,
     ({perPage, ...rest}) => ({
-      pageSize: perPage,
+      pageSize: perPage ?? 0,
       ...rest,
     })
   );

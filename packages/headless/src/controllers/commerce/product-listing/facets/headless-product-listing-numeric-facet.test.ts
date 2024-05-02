@@ -1,4 +1,4 @@
-import {CommerceFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
+import {NumericFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice';
 import {CommerceAppState} from '../../../../state/commerce-app-state';
@@ -11,10 +11,7 @@ import {
   buildMockCommerceEngine,
   MockedCommerceEngine,
 } from '../../../../test/mock-engine-v2';
-import {
-  CommerceFacetOptions,
-  NumericRangeRequest,
-} from '../../core/facets/headless-core-commerce-facet';
+import {CommerceFacetOptions} from '../../core/facets/headless-core-commerce-facet';
 import {NumericFacet} from '../../core/facets/numeric/headless-commerce-numeric-facet';
 import {buildProductListingNumericFacet} from './headless-product-listing-numeric-facet';
 
@@ -36,9 +33,7 @@ describe('ProductListingNumericFacet', () => {
     facet = buildProductListingNumericFacet(engine, options);
   }
 
-  function setFacetRequest(
-    config: Partial<CommerceFacetRequest<NumericRangeRequest>> = {}
-  ) {
+  function setFacetRequest(config: Partial<NumericFacetRequest> = {}) {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, ...config}),
     });
@@ -113,6 +108,7 @@ describe('ProductListingNumericFacet', () => {
 
     it('#state.isLoading uses #isFacetLoadingResponseSelector', () => {
       state.productListing.isLoading = true;
+      initFacet();
       expect(facet.state.isLoading).toBe(true);
     });
   });
