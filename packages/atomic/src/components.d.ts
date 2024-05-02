@@ -612,7 +612,7 @@ export namespace Components {
          */
         "answerStyle": GeneratedAnswerStyle;
         /**
-          * Wether to allow the answer to be shown or hidden using the toggle button
+          * Whether to allow the answer to be shown or hidden using the toggle button
          */
         "withToggle"?: boolean;
     }
@@ -4965,7 +4965,7 @@ declare namespace LocalJSX {
          */
         "answerStyle"?: GeneratedAnswerStyle;
         /**
-          * Wether to allow the answer to be shown or hidden using the toggle button
+          * Whether to allow the answer to be shown or hidden using the toggle button
          */
         "withToggle"?: boolean;
     }

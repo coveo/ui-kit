@@ -82,7 +82,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   @Prop() answerStyle: GeneratedAnswerStyle = 'default';
 
   /**
-   * Wether to allow the answer to be shown or hidden using the toggle button
+   * Whether to allow the answer to be shown or hidden using the toggle button
    */
   @Prop() withToggle?: boolean;
 
