@@ -26,10 +26,6 @@ export interface InstantProductsOptions {
    */
   searchBoxId?: string;
   /**
-   * The maximum item to be stored in the instant product list for each query.
-   */
-  maxProductsPerQuery: number;
-  /**
    * Number in milliseconds that cached products will be valid for. Defaults to 1 minute. Set to 0 so that products never expire.
    */
   cacheTimeout?: number;
@@ -37,10 +33,6 @@ export interface InstantProductsOptions {
 
 const instantProductsOptionDefinitions = {
   searchBoxId: nonEmptyString,
-  maxProductsPerQuery: new NumberValue({
-    required: true,
-    min: 1,
-  }),
   cacheTimeout: new NumberValue(),
 };
 
@@ -113,7 +105,6 @@ export function buildInstantProducts(
   const options: Required<InstantProductsOptions> = {
     searchBoxId: props.options.searchBoxId || randomID('instant-products-'),
     cacheTimeout: props.options.cacheTimeout || 6e4,
-    maxProductsPerQuery: props.options.maxProductsPerQuery,
   };
 
   validateOptions(
@@ -157,7 +148,6 @@ export function buildInstantProducts(
           fetchInstantProducts({
             id: searchBoxId,
             q,
-            maxProductsPerQuery: options.maxProductsPerQuery,
             cacheTimeout: options.cacheTimeout,
           })
         );

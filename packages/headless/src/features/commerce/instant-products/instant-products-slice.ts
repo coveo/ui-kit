@@ -28,7 +28,7 @@ export const instantProductsReducer = createReducer(
       clearExpiredItems(action.payload, state);
     });
     builder.addCase(fetchInstantProducts.pending, (state, action) => {
-      fetchItemsPending(action.meta.arg, state, {results: []});
+      fetchItemsPending(action.meta.arg, state, {products: []});
     });
     builder.addCase(fetchInstantProducts.fulfilled, (state, action) => {
       const {

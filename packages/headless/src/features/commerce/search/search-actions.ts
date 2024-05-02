@@ -25,10 +25,6 @@ export interface FetchInstantProductsActionCreatorPayload {
    */
   q: string;
   /**
-   * The maximum items to be stored in the instant products list for each query.
-   */
-  maxProductsPerQuery: number;
-  /**
    * Number in milliseconds that cached products will be valid for. Set to 0 so that products never expire.
    */
   cacheTimeout?: number;
@@ -68,12 +64,13 @@ export const fetchInstantProducts = createAsyncThunk<
   AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
 >(
   'commerce/search/fetchInstantProducts',
-  async (_action, {getState, dispatch, rejectWithValue, extra}) => {
+  async (payload, {getState, dispatch, rejectWithValue, extra}) => {
     const state = getState();
+    const {q} = payload;
     const {apiClient} = extra;
     const fetched = await apiClient.search({
       ...(await buildCommerceAPIRequest(state)),
-      query: state.commerceQuery?.query,
+      query: q,
     });
 
     if (isErrorResponse(fetched)) {
@@ -81,8 +78,12 @@ export const fetchInstantProducts = createAsyncThunk<
       return rejectWithValue(fetched.error);
     }
 
+    // TODO: Should ultimately rely on different config for product suggest endpoint which would support
+    // different config for pagination: Would not have to cull array of products client side.
+    const products = fetched.success.products.slice(0, 5);
+
     return {
-      response: fetched.success,
+      response: {...fetched.success, products},
       // eslint-disable-next-line @cspell/spellchecker
       // TODO CAPI-244: Use actual search analytics action
       analyticsAction: logProductListingV2Load(),
