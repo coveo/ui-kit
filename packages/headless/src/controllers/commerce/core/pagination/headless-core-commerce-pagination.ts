@@ -64,7 +64,7 @@ export interface PaginationState {
 export interface CorePaginationOptions {
   slotId?: string;
   /**
-   * The number of items to fetch per page.
+   * The number of products to fetch per page.
    */
   pageSize?: number;
 }
