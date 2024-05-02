@@ -332,11 +332,9 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   };
 
   handleToggleCollapseAnswer() {
-    if (this.state?.expanded) {
-      this.generatedAnswer.collapse();
-    } else {
-      this.generatedAnswer.expand();
-    }
+    this.state?.expanded
+      ? this.generatedAnswer.collapse()
+      : this.generatedAnswer.expand();
     this.updateGeneratedAnswerCSSVariables();
   }
 
@@ -388,7 +386,8 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get shouldDisplayCitations() {
-    return !!this.citations.length && !this.isAnswerCollapsed;
+    const hasCitations = !!this.citations.length;
+    return hasCitations && !this.isAnswerCollapsed;
   }
 
   get isStreaming() {
@@ -404,14 +403,16 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get isAnswerCollapsed() {
+    // Answer is considered collapsed only if it exceeds the maximum height and was not expanded.
     return this._exceedsMaximumHeight && !this.isExpanded;
   }
 
   get shouldDisplayGeneratedAnswer() {
+    const hasCitations = !!this.citations.length;
     return (
       !!this.answer ||
       this.isStreaming ||
-      this.citations?.length > 0 ||
+      hasCitations ||
       this.hasRetryableError
     );
   }
@@ -504,6 +505,8 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get shouldShowCollapseGeneratingMessage() {
+    // If the answer is collapsed and is still streaming,
+    // we should show a message letting the user know it's still generating.
     return (
       this.collapsible &&
       this.isVisible &&
@@ -513,6 +516,8 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get shouldShowToggleCollapseAnswer() {
+    // Only show the toggle collapse button if the answer is
+    // collapsible, visible, not streaming, and exceeds the maximum height.
     return (
       this.collapsible &&
       this.isVisible &&
