@@ -175,6 +175,13 @@ export const config: Config = {
               ),
             },
             {
+              find: '@coveo/headless/commerce',
+              replacement: path.resolve(
+                __dirname,
+                './src/external-builds/commerce/headless.esm.js'
+              ),
+            },
+            {
               find: '@coveo/headless/product-recommendation',
               replacement: path.resolve(
                 __dirname,
