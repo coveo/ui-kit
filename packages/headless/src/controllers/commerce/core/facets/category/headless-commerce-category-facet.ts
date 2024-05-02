@@ -15,6 +15,7 @@ import {
   CoreCommerceFacet,
   CoreCommerceFacetOptions,
   CoreCommerceFacetState,
+  FacetControllerType,
   buildCoreCommerceFacet,
 } from '../headless-core-commerce-facet';
 import {SearchableFacetOptions} from '../searchable/headless-commerce-searchable-facet';
@@ -49,11 +50,10 @@ export type CategoryFacet = Omit<
   | 'toggleExclude'
   | 'toggleSingleExclude'
   | 'toggleSingleSelect'
-  | 'state'
 > & {
   facetSearch: Omit<CategoryFacetSearch, 'state'>;
   state: CategoryFacetState;
-};
+} & FacetControllerType<'hierarchical'>;
 
 /**
  * @internal
@@ -163,5 +163,7 @@ export function buildCategoryFacet(
         facetSearch: facetSearchStateSelector(engine.state),
       };
     },
+
+    type: 'hierarchical',
   };
 }

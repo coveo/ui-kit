@@ -20,6 +20,7 @@ export type {
 export type {LogLevel, LoggerOptions} from './app/logger';
 
 export type {Product} from './api/commerce/common/product';
+export type {PlatformEnvironment} from './utils/url-utils';
 
 // Actions
 export * from './features/commerce/product-listing/product-listing-actions-loader';
@@ -101,10 +102,22 @@ export {
 export {buildProductListingSort} from './controllers/commerce/product-listing/sort/headless-product-listing-sort';
 export {buildSearchSort} from './controllers/commerce/search/sort/headless-search-sort';
 
-export type {CategoryFacet} from './controllers/commerce/core/facets/category/headless-commerce-category-facet';
-export type {RegularFacet} from './controllers/commerce/core/facets/regular/headless-commerce-regular-facet';
-export type {NumericFacet} from './controllers/commerce/core/facets/numeric/headless-commerce-numeric-facet';
-export type {DateFacet} from './controllers/commerce/core/facets/date/headless-commerce-date-facet';
+export type {
+  CategoryFacet,
+  CategoryFacetState,
+} from './controllers/commerce/core/facets/category/headless-commerce-category-facet';
+export type {
+  RegularFacet,
+  RegularFacetState,
+} from './controllers/commerce/core/facets/regular/headless-commerce-regular-facet';
+export type {
+  NumericFacet,
+  NumericFacetState,
+} from './controllers/commerce/core/facets/numeric/headless-commerce-numeric-facet';
+export type {
+  DateFacet,
+  DateFacetState,
+} from './controllers/commerce/core/facets/date/headless-commerce-date-facet';
 export type {
   FacetType,
   FacetValueRequest,
@@ -132,7 +145,10 @@ export type {
 } from './controllers/commerce/core/facets/category/headless-commerce-category-facet-search';
 export type {CategoryFacetSearchResult} from './api/search/facet-search/category-facet-search/category-facet-search-response';
 
-export type {Search} from './controllers/commerce/search/headless-search';
+export type {
+  Search,
+  SearchState,
+} from './controllers/commerce/search/headless-search';
 export {buildSearch} from './controllers/commerce/search/headless-search';
 
 export {updateQuery} from './features/commerce/query/query-actions';
@@ -142,6 +158,12 @@ export type {
   SearchBox,
   SearchBoxState,
 } from './controllers/commerce/search-box/headless-search-box';
+
+export {buildStandaloneSearchBox} from './controllers/commerce/standalone-search-box/headless-standalone-search-box';
+export type {
+  StandaloneSearchBox,
+  StandaloneSearchBoxState,
+} from './controllers/commerce/standalone-search-box/headless-standalone-search-box';
 
 export type {
   UrlManagerProps,

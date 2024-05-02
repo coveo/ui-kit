@@ -34,6 +34,7 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
  * @part rephrase-label - The header of the rephrase options.
  * @part rephrase-buttons - The container of the rephrase buttons section.
  * @part rephrase-button - The button for each of the rephrase options (step-by-step instructions, bulleted list, and summary).
+ * @part rephrase-buttons-container - The container of the rephrase buttons.
  * @part rephrase-button-label - The label of the rephrase button.
  *
  * @part citation - The link that allows the user to navigate to the item.

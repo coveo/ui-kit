@@ -37,7 +37,7 @@ export type StateNeededByQueryCommerceAPI = ConfigurationSection &
 export interface QueryCommerceAPIThunkReturn {
   /** The successful search response. */
   response: CommerceSuccessResponse;
-  analyticsAction: PreparableAnalyticsAction<StateNeededByQueryCommerceAPI>;
+  analyticsAction?: PreparableAnalyticsAction<StateNeededByQueryCommerceAPI>;
 }
 
 export const buildCommerceAPIRequest = async (
@@ -53,7 +53,8 @@ export const buildCommerceAPIRequest = async (
 };
 
 export const buildBaseCommerceAPIRequest = async (
-  state: StateNeededByQueryCommerceAPI
+  state: StateNeededByQueryCommerceAPI,
+  slotId?: string
 ): Promise<BaseCommerceAPIRequest> => {
   const {view, user, ...restOfContext} = state.commerceContext;
   return {
@@ -74,13 +75,25 @@ export const buildBaseCommerceAPIRequest = async (
         };
       }),
     },
-    ...(state.commercePagination && {
-      page: state.commercePagination.page,
-      ...(state.commercePagination.perPage && {
-        perPage: state.commercePagination.perPage,
-      }),
-    }),
+    ...effectivePagination(state, slotId),
   };
+};
+
+const effectivePagination = (
+  state: StateNeededByQueryCommerceAPI,
+  slotId?: string
+) => {
+  const effectiveSlice = slotId
+    ? state.commercePagination?.recommendations[slotId]
+    : state.commercePagination?.principal;
+  return (
+    effectiveSlice && {
+      page: effectiveSlice!.page,
+      ...(effectiveSlice!.perPage && {
+        perPage: effectiveSlice!.perPage,
+      }),
+    }
+  );
 };
 
 function getFacets(state: StateNeededByFetchProductListingV2) {
