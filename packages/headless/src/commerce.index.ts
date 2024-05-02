@@ -155,6 +155,12 @@ export type {
   SearchBoxState,
 } from './controllers/commerce/search-box/headless-search-box';
 
+export {buildInstantProducts} from './controllers/commerce/instant-products/headless-instant-products';
+export type {
+  InstantProducts,
+  InstantProductsState,
+} from './controllers/commerce/instant-products/headless-instant-products';
+
 export type {
   UrlManagerProps,
   UrlManagerInitialState,
