@@ -26,7 +26,88 @@
     <main>
       <section>
         <atomic-commerce-interface type="product-listing">
-          <atomic-commerce-product-list> </atomic-commerce-product-list>
+          <atomic-commerce-product-list display="grid" density="compact" image-size="small">
+            <atomic-result-template>
+              <template>
+                <style>
+                  .field {
+                    display: inline-flex;
+                    align-items: center;
+                  }
+
+                  .field-label {
+                    font-weight: bold;
+                    margin-right: 0.25rem;
+                  }
+
+                  .thumbnail {
+                    display: none;
+                    width: 100%;
+                    height: 100%;
+                  }
+
+                  .icon {
+                    display: none;
+                  }
+
+                  .brand {
+                    font-weight: 600;
+                  }
+
+                  .result-root.image-small .thumbnail,
+                  .result-root.image-large .thumbnail {
+                    display: inline-block;
+                  }
+
+                  .result-root.image-icon .icon {
+                    display: inline-block;
+                  }
+
+                  .result-root.image-small atomic-result-section-visual,
+                  .result-root.image-large atomic-result-section-visual {
+                    border-radius: var(--atomic-border-radius-xl);
+                  }
+
+                  .salesforce-badge::part(result-badge-element) {
+                    background-color: #44a1da;
+                    color: white;
+                  }
+                </style>
+                <atomic-result-section-visual>
+                  <atomic-result-image class="thumbnail" field="ec_thumbnails"
+                    fallback="https://picsum.photos/350"></atomic-result-image>
+                </atomic-result-section-visual>
+                <atomic-result-section-badges> </atomic-result-section-badges>
+                <atomic-result-section-title><atomic-product-link class="font-bold"></atomic-product-link>
+                </atomic-result-section-title>
+
+                <atomic-result-section-title-metadata class="flex flex-col">
+                  <atomic-field-condition class="brand text-neutral-dark" if-defined="ec_brand">
+                    <atomic-result-text should-highlight="false" field="ec_brand"></atomic-result-text>
+                  </atomic-field-condition>
+
+                  <atomic-field-condition class="field" if-defined="ec_rating">
+                    <atomic-result-rating field="ec_rating"></atomic-result-rating>
+                  </atomic-field-condition>
+
+                  <atomic-field-condition class="mt-4 text-2xl font-bold field" if-defined="ec_price">
+                    <atomic-result-number field="ec_price">
+                      <atomic-format-currency currency="CAD"></atomic-format-currency>
+                    </atomic-result-number>
+                  </atomic-field-condition>
+                </atomic-result-section-title-metadata>
+                <atomic-result-section-excerpt><atomic-result-text should-highlight="false"
+                    field="ec_description"></atomic-result-text></atomic-result-section-excerpt>
+                <atomic-result-section-bottom-metadata>
+                  <atomic-result-fields-list>
+                    <atomic-field-condition must-match-ec_in_stock="true">
+                      <atomic-result-badge label="In stock"></atomic-result-badge>
+                    </atomic-field-condition>
+                  </atomic-result-fields-list>
+                </atomic-result-section-bottom-metadata>
+              </template>
+            </atomic-result-template>
+          </atomic-commerce-product-list>
           <atomic-commerce-pager></atomic-commerce-pager>
         </atomic-commerce-interface>
       </section>
