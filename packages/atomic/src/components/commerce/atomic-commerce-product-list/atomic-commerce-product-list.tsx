@@ -18,14 +18,14 @@ import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-int
 
 /**
  * @internal
- * The `atomic-commerce-result-list` component is responsible for displaying product results.
+ * The `atomic-commerce-product-list` component is responsible for displaying product products.
  */
 @Component({
-  tag: 'atomic-commerce-result-list',
-  styleUrl: 'atomic-commerce-result-list.pcss',
+  tag: 'atomic-commerce-product-list',
+  styleUrl: 'atomic-commerce-product-list.pcss',
   shadow: true,
 })
-export class AtomicCommerceResultList
+export class AtomicCommerceProductList
   implements InitializableComponent<CommerceBindings>
 {
   @InitializeBindings() public bindings!: CommerceBindings;
@@ -43,17 +43,17 @@ export class AtomicCommerceResultList
   @State() public error!: Error;
 
   /**
-   * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
+   * The desired layout to use when displaying products. Layouts affect how many products to display per row and how visually distinct they are from each other.
    */
   @Prop({reflect: true}) display: 'grid' | 'list' = 'grid';
 
   /**
-   * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+   * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of different parts in a product.
    */
   @Prop({reflect: true}) density: 'normal' | 'compact' = 'normal';
 
   /**
-   * The expected size of the image displayed in the results.
+   * The expected size of the image displayed for products.
    */
   @Prop({reflect: true}) imageSize: number = 400;
 

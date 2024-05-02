@@ -321,17 +321,17 @@ export namespace Components {
         "type": | 'search'
     | 'product-listing';
     }
-    interface AtomicCommerceResultList {
+    interface AtomicCommerceProductList {
         /**
-          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+          * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of different parts in a product.
          */
         "density": 'normal' | 'compact';
         /**
-          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
+          * The desired layout to use when displaying products. Layouts affect how many products to display per row and how visually distinct they are from each other.
          */
         "display": 'grid' | 'list';
         /**
-          * The expected size of the image displayed in the results.
+          * The expected size of the image displayed for products.
          */
         "imageSize": number;
     }
@@ -2855,11 +2855,11 @@ declare global {
         prototype: HTMLAtomicCommerceInterfaceElement;
         new (): HTMLAtomicCommerceInterfaceElement;
     };
-    interface HTMLAtomicCommerceResultListElement extends Components.AtomicCommerceResultList, HTMLStencilElement {
+    interface HTMLAtomicCommerceProductListElement extends Components.AtomicCommerceProductList, HTMLStencilElement {
     }
-    var HTMLAtomicCommerceResultListElement: {
-        prototype: HTMLAtomicCommerceResultListElement;
-        new (): HTMLAtomicCommerceResultListElement;
+    var HTMLAtomicCommerceProductListElement: {
+        prototype: HTMLAtomicCommerceProductListElement;
+        new (): HTMLAtomicCommerceProductListElement;
     };
     interface HTMLAtomicCommerceSearchBoxElementEventMap {
         "redirect": RedirectionPayload;
@@ -4332,7 +4332,7 @@ declare global {
         "atomic-citation": HTMLAtomicCitationElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
         "atomic-commerce-interface": HTMLAtomicCommerceInterfaceElement;
-        "atomic-commerce-result-list": HTMLAtomicCommerceResultListElement;
+        "atomic-commerce-product-list": HTMLAtomicCommerceProductListElement;
         "atomic-commerce-search-box": HTMLAtomicCommerceSearchBoxElement;
         "atomic-component-error": HTMLAtomicComponentErrorElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
@@ -4716,17 +4716,17 @@ declare namespace LocalJSX {
         "type"?: | 'search'
     | 'product-listing';
     }
-    interface AtomicCommerceResultList {
+    interface AtomicCommerceProductList {
         /**
-          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+          * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of different parts in a product.
          */
         "density"?: 'normal' | 'compact';
         /**
-          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
+          * The desired layout to use when displaying products. Layouts affect how many products to display per row and how visually distinct they are from each other.
          */
         "display"?: 'grid' | 'list';
         /**
-          * The expected size of the image displayed in the results.
+          * The expected size of the image displayed for products.
          */
         "imageSize"?: number;
     }
@@ -7020,7 +7020,7 @@ declare namespace LocalJSX {
         "atomic-citation": AtomicCitation;
         "atomic-color-facet": AtomicColorFacet;
         "atomic-commerce-interface": AtomicCommerceInterface;
-        "atomic-commerce-result-list": AtomicCommerceResultList;
+        "atomic-commerce-product-list": AtomicCommerceProductList;
         "atomic-commerce-search-box": AtomicCommerceSearchBox;
         "atomic-component-error": AtomicComponentError;
         "atomic-did-you-mean": AtomicDidYouMean;
@@ -7201,7 +7201,7 @@ declare module "@stencil/core" {
              */
             "atomic-color-facet": LocalJSX.AtomicColorFacet & JSXBase.HTMLAttributes<HTMLAtomicColorFacetElement>;
             "atomic-commerce-interface": LocalJSX.AtomicCommerceInterface & JSXBase.HTMLAttributes<HTMLAtomicCommerceInterfaceElement>;
-            "atomic-commerce-result-list": LocalJSX.AtomicCommerceResultList & JSXBase.HTMLAttributes<HTMLAtomicCommerceResultListElement>;
+            "atomic-commerce-product-list": LocalJSX.AtomicCommerceProductList & JSXBase.HTMLAttributes<HTMLAtomicCommerceProductListElement>;
             /**
              * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
              */
