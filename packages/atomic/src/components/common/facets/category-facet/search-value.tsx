@@ -1,12 +1,11 @@
-import {CategoryFacetSearchResult as HeadlessCategoryFacetSearchResult} from '@coveo/headless';
 import {FunctionalComponent, h} from '@stencil/core';
 import {i18n} from 'i18next';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
-import {Button} from '../../../common/button';
-import {FacetValueLabelHighlight} from '../../../common/facets/facet-value-label-highlight/facet-value-label-highlight';
+import {Button} from '../../button';
+import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 
-interface CategoryFacetSearchResultProps {
-  result: HeadlessCategoryFacetSearchResult;
+interface CategoryFacetSearchValueProps {
+  value: {count: number; path: string[]; displayValue: string};
   i18n: i18n;
   field: string;
   onClick(): void;
@@ -17,19 +16,19 @@ const SEPARATOR = '/';
 const ELLIPSIS = '...';
 const PATH_MAX_LENGTH = 3;
 
-export const CategoryFacetSearchResult: FunctionalComponent<
-  CategoryFacetSearchResultProps
-> = ({result, field, i18n, onClick, searchQuery}) => {
-  const count = result.count.toLocaleString(i18n.language);
+export const CategoryFacetSearchValue: FunctionalComponent<
+  CategoryFacetSearchValueProps
+> = ({value, field, i18n, onClick, searchQuery}) => {
+  const count = value.count.toLocaleString(i18n.language);
   const inLabel = i18n.t('in');
   const allCategories = i18n.t('all-categories');
-  const localizedPath = result.path.length
-    ? result.path.map((value) => getFieldValueCaption(field, value, i18n))
+  const localizedPath = value.path.length
+    ? value.path.map((value) => getFieldValueCaption(field, value, i18n))
     : [allCategories];
   const ariaLabel = i18n.t('under', {
     child: i18n.t('facet-value', {
-      numberOfResults: result.count,
-      value: result.displayValue,
+      numberOfResults: value.count,
+      value: value.displayValue,
     }),
     parent: localizedPath.join(', '),
   });
@@ -60,7 +59,7 @@ export const CategoryFacetSearchResult: FunctionalComponent<
   }
 
   return (
-    <li key={result.displayValue}>
+    <li key={value.displayValue}>
       <Button
         style="text-neutral"
         part="search-result"
@@ -70,7 +69,7 @@ export const CategoryFacetSearchResult: FunctionalComponent<
       >
         <div class="w-full flex">
           <FacetValueLabelHighlight
-            displayValue={result.displayValue}
+            displayValue={value.displayValue}
             isSelected={false}
             searchQuery={searchQuery}
           ></FacetValueLabelHighlight>

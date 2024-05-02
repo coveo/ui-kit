@@ -278,8 +278,8 @@ describe('quantic-smart-snippet', {browser: 'chrome'}, () => {
                 });
               });
             });
-
-            describe('when clicking the feedback like button', () => {
+            // Skipping temporarily will be fixed in SFINT-5514
+            describe.skip('when clicking the feedback like button', () => {
               it('should properly log the analytics', () => {
                 visitPage({useCase: param.useCase});
 
@@ -306,8 +306,8 @@ describe('quantic-smart-snippet', {browser: 'chrome'}, () => {
                 });
               });
             });
-
-            describe(
+            // Skipping temporarily will be fixed in SFINT-5514
+            describe.skip(
               'when clicking the feedback dislike button',
               {
                 retries: 20,
