@@ -15,10 +15,10 @@ import {
 } from '../../controller/headless-controller';
 import {
   buildSolutionTypeSubControllers,
-  SolutionTypeSubControllers,
+  SearchAndListingSubControllers,
 } from '../core/sub-controller/headless-sub-controller';
 
-export interface Search extends Controller, SolutionTypeSubControllers {
+export interface Search extends Controller, SearchAndListingSubControllers {
   /**
    * Executes the first search.
    */
