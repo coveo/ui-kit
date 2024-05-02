@@ -1,7 +1,7 @@
 export interface PaginationSlice {
   page: number;
   perPage?: number;
-  totalItems: number;
+  totalEntries: number;
   totalPages: number;
 }
 
@@ -20,7 +20,7 @@ export function getCommercePaginationInitialState(): CommercePaginationState {
 export function getCommercePaginationInitialSlice(): PaginationSlice {
   return {
     page: 0,
-    totalItems: 0,
+    totalEntries: 0,
     totalPages: 0,
   };
 }

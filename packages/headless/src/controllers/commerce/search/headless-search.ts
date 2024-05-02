@@ -17,6 +17,10 @@ import {
   buildSolutionTypeSubControllers,
   SearchAndListingSubControllers,
 } from '../core/sub-controller/headless-sub-controller';
+import {
+  facetResponseSelector,
+  isFacetLoadingResponseSelector,
+} from './facets/headless-search-facet-options';
 
 export interface Search extends Controller, SearchAndListingSubControllers {
   /**
@@ -48,6 +52,8 @@ export function buildSearch(engine: CommerceEngine): Search {
   const subControllers = buildSolutionTypeSubControllers(engine, {
     responseIdSelector,
     fetchResultsActionCreator: executeSearch,
+    facetResponseSelector,
+    isFacetLoadingResponseSelector,
   });
 
   return {
