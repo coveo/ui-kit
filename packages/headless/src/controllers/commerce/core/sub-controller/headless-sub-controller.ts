@@ -2,6 +2,7 @@ import {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../app/state-key';
 import {AnyFacetResponse} from '../../../../features/commerce/facets/facet-set/interfaces/response';
 import {FetchResultsActionCreator} from '../common';
 import {buildCategoryFacet} from '../facets/category/headless-commerce-category-facet';
@@ -48,10 +49,12 @@ interface BaseSubControllerProps {
 export interface SearchAndListingSubControllerProps
   extends BaseSubControllerProps {
   facetResponseSelector: (
-    state: CommerceEngine['state'],
+    state: CommerceEngine[typeof stateKey],
     facetId: string
   ) => AnyFacetResponse | undefined;
-  isFacetLoadingResponseSelector: (state: CommerceEngine['state']) => boolean;
+  isFacetLoadingResponseSelector: (
+    state: CommerceEngine[typeof stateKey]
+  ) => boolean;
 }
 
 export function buildSolutionTypeSubControllers(
