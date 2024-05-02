@@ -58,7 +58,7 @@ export interface Pagination extends Controller {
 export interface PaginationState {
   page: number;
   pageSize: number;
-  totalItems: number;
+  totalEntries: number;
   totalPages: number;
 }
 
