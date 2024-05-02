@@ -66,15 +66,11 @@ export interface CommerceEngine<State extends object = {}>
   > {
   /**
    * Executes the first search.
-   *
-   * @param analyticsEvent - The analytics event to log in association with the first search. If unspecified, `logInterfaceLoad` will be used.
    */
   executeFirstSearch(): void;
 
   /**
-   * Executes the first search, and logs the analytics event that triggered a redirection from a standalone search box.
-   *
-   * @param analytics - The standalone search box analytics data.
+   * Executes the first search after a redirection from a standalone search box.
    */
   executeFirstSearchAfterStandaloneSearchBoxRedirect(): void;
 }
