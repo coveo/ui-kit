@@ -8,7 +8,8 @@ import {
   ArrayValue,
 } from '@coveo/bueno';
 import {SerializedError} from '@reduxjs/toolkit';
-import {CoreEngine} from '../app/engine';
+import type {CoreEngine, CoreEngineNext} from '../app/engine';
+import {stateKey} from '../app/engine';
 
 export const requiredNonEmptyString = new StringValue({
   required: true,
@@ -112,6 +113,27 @@ export const validateInitialState = <T extends object>(
   );
 };
 
+export const validateInitialStateNext = <T extends object>(
+  engine: CoreEngineNext,
+  schema: Schema<T>,
+  obj: T | undefined,
+  functionName: string
+) => {
+  const message = `Check the initialState of ${functionName}`;
+  return validateObject(
+    {
+      ...engine,
+      get state() {
+        return engine[stateKey];
+      },
+    },
+    schema,
+    obj,
+    message,
+    'Controller initialization error'
+  );
+};
+
 export const validateOptions = <T extends object>(
   engine: CoreEngine<object>,
   schema: Schema<T>,
@@ -125,6 +147,25 @@ export const validateOptions = <T extends object>(
     obj,
     message,
     'Controller initialization error'
+  );
+};
+
+export const validateOptionsNext = <T extends object>(
+  engine: CoreEngineNext<object>,
+  schema: Schema<T>,
+  obj: Partial<T> | undefined,
+  functionName: string
+) => {
+  return validateOptions(
+    {
+      ...engine,
+      get state() {
+        return engine[stateKey];
+      },
+    },
+    schema,
+    obj,
+    functionName
   );
 };
 

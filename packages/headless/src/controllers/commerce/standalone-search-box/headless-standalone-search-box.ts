@@ -1,5 +1,6 @@
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
+import {stateKey} from '../../../app/engine';
 import {updateQuery} from '../../../features/commerce/query/query-actions';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
 import {
@@ -18,7 +19,7 @@ import {
 } from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
 import {randomID} from '../../../utils/utils';
-import {validateOptions} from '../../../utils/validate-payload';
+import {validateOptionsNext} from '../../../utils/validate-payload';
 import {StandaloneSearchBoxProps} from '../../standalone-search-box/headless-standalone-search-box';
 import {
   SearchBox,
@@ -71,7 +72,7 @@ export function buildStandaloneSearchBox(
   }
 
   const {dispatch} = engine;
-  const getState = () => engine.state;
+  const getState = () => engine[stateKey];
 
   const id = props.options.id || randomID('standalone_search_box');
   const options: Required<StandaloneSearchBoxOptions> = {
@@ -81,7 +82,7 @@ export function buildStandaloneSearchBox(
     ...props.options,
   };
 
-  validateOptions(
+  validateOptionsNext(
     engine,
     standaloneSearchBoxSchema,
     options,

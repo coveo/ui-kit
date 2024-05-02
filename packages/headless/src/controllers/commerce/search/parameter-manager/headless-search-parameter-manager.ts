@@ -1,4 +1,5 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../app/engine';
 import {queryReducer as commerceQuery} from '../../../../features/commerce/query/query-slice';
 import {getCommerceQueryInitialState} from '../../../../features/commerce/query/query-state';
 import {
@@ -44,7 +45,7 @@ export function buildSearchParameterManager(
 }
 
 function activeParametersSelector(
-  state: CommerceEngine['state']
+  state: CommerceEngine[typeof stateKey]
 ): CommerceSearchParameters {
   return {
     ...getQ(state),

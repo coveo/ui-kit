@@ -1,4 +1,5 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../app/engine';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {FacetType} from '../../../../features/commerce/facets/facet-set/interfaces/common';
 import {
@@ -22,7 +23,7 @@ import {FacetValueRequest} from '../../../../features/facets/facet-set/interface
 import {AnyFacetValueRequest} from '../../../../features/facets/generic/interfaces/generic-facet-request';
 import {CommerceFacetSetSection} from '../../../../state/state-sections';
 import {loadReducerError} from '../../../../utils/errors';
-import {buildController} from '../../../controller/headless-controller';
+import {buildControllerNext} from '../../../controller/headless-controller';
 import {
   CoreFacet as HeadlessCoreFacet,
   CoreFacetState,
@@ -62,10 +63,12 @@ export interface CoreCommerceFacetOptions {
   toggleExcludeActionCreator?: ToggleActionCreator;
   fetchResultsActionCreator: FetchResultsActionCreator;
   facetResponseSelector: (
-    state: CommerceEngine['state'],
+    state: CommerceEngine[typeof stateKey],
     facetId: string
   ) => AnyFacetResponse | undefined;
-  isFacetLoadingResponseSelector: (state: CommerceEngine['state']) => boolean;
+  isFacetLoadingResponseSelector: (
+    state: CommerceEngine[typeof stateKey]
+  ) => boolean;
 }
 
 export type CommerceFacetOptions = Omit<
@@ -157,16 +160,16 @@ export function buildCoreCommerceFacet<
   }
 
   const {dispatch} = engine;
-  const controller = buildController(engine);
+  const controller = buildControllerNext(engine);
 
   const facetId = props.options.facetId;
 
   const getRequest = (): AnyFacetRequest | undefined =>
-    engine.state.commerceFacetSet[facetId]?.request;
+    engine[stateKey].commerceFacetSet[facetId]?.request;
   const getResponse = () =>
-    props.options.facetResponseSelector(engine.state, facetId);
+    props.options.facetResponseSelector(engine[stateKey], facetId);
   const getIsLoading = () =>
-    props.options.isFacetLoadingResponseSelector(engine.state);
+    props.options.isFacetLoadingResponseSelector(engine[stateKey]);
 
   const getNumberOfActiveValues = () => {
     return getRequest()?.values?.filter((v) => v.state !== 'idle').length ?? 0;

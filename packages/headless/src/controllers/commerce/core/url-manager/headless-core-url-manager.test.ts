@@ -1,3 +1,4 @@
+import {stateKey} from '../../../../app/engine';
 import {
   CommerceSearchParameters,
   restoreSearchParameters,
@@ -81,7 +82,7 @@ describe('core url manager', () => {
 
   describe('#state', () => {
     it('contains the serialized fragment of the search parameters state', () => {
-      engine.state.commerceQuery.query = 'books';
+      engine[stateKey].commerceQuery.query = 'books';
       expect(manager.state.fragment).toBe('q=books');
     });
   });
@@ -98,7 +99,7 @@ describe('core url manager', () => {
 
     it(`when removing a parameter
     should restore the right parameters and execute a search`, () => {
-      engine.state.commerceQuery.query = 'test';
+      engine[stateKey].commerceQuery.query = 'test';
       manager.synchronize('');
 
       testLatestRestoreSearchParameters({});
@@ -107,7 +108,7 @@ describe('core url manager', () => {
 
     it(`when the fragment is unchanged
     should not execute a search`, () => {
-      engine.state.commerceQuery.query = 'test';
+      engine[stateKey].commerceQuery.query = 'test';
       manager.synchronize('q=test');
 
       expect(mockedExecuteSearchAction).not.toHaveBeenCalled();
@@ -115,7 +116,7 @@ describe('core url manager', () => {
 
     it(`when a parameter's value changes
     should restore the right parameters and execute a search`, () => {
-      engine.state.commerceQuery.query = 'books';
+      engine[stateKey].commerceQuery.query = 'books';
       manager.synchronize('q=movies');
 
       testLatestRestoreSearchParameters({
@@ -144,7 +145,7 @@ describe('core url manager', () => {
         const listener = jest.fn();
         manager.subscribe(listener);
 
-        engine.state.commerceSearch.requestId = 'abcde';
+        engine[stateKey].commerceSearch.requestId = 'abcde';
         callListener();
 
         expect(listener).not.toHaveBeenCalled();
@@ -154,7 +155,7 @@ describe('core url manager', () => {
         const listener = jest.fn();
         manager.subscribe(listener);
 
-        engine.state.commerceQuery.query = 'albums';
+        engine[stateKey].commerceQuery.query = 'albums';
         callListener();
 
         expect(listener).not.toHaveBeenCalled();
@@ -166,8 +167,8 @@ describe('core url manager', () => {
         const listener = jest.fn();
         manager.subscribe(listener);
 
-        engine.state.commerceSearch.requestId = 'abcde';
-        engine.state.commerceQuery.query = 'books';
+        engine[stateKey].commerceSearch.requestId = 'abcde';
+        engine[stateKey].commerceQuery.query = 'books';
         callListener();
 
         expect(listener).toHaveBeenCalledTimes(1);
@@ -179,8 +180,8 @@ describe('core url manager', () => {
         const listener = jest.fn();
         manager.subscribe(listener);
 
-        engine.state.commerceSearch.requestId = 'abcde';
-        engine.state.commerceQuery.query = '';
+        engine[stateKey].commerceSearch.requestId = 'abcde';
+        engine[stateKey].commerceQuery.query = '';
         callListener();
 
         expect(listener).toHaveBeenCalledTimes(1);

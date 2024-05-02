@@ -1,9 +1,10 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../app/engine';
 import {Parameters} from '../../../../features/commerce/search-parameters/search-parameter-actions';
 import {Serializer} from '../../../../features/commerce/search-parameters/search-parameter-serializer';
 import {deepEqualAnyOrder} from '../../../../utils/compare-utils';
-import {validateInitialState} from '../../../../utils/validate-payload';
-import {buildController} from '../../../controller/headless-controller';
+import {validateInitialStateNext} from '../../../../utils/validate-payload';
+import {buildControllerNext} from '../../../controller/headless-controller';
 import {
   initialStateSchema,
   UrlManager,
@@ -24,7 +25,7 @@ export type {
 };
 
 interface CoreUrlManagerProps<T extends Parameters> extends UrlManagerProps {
-  requestIdSelector: (state: CommerceEngine['state']) => string;
+  requestIdSelector: (state: CommerceEngine[typeof stateKey]) => string;
   parameterManagerBuilder: (
     engine: CommerceEngine,
     props: ParameterManagerProps<T>
@@ -47,21 +48,21 @@ export function buildCoreUrlManager<T extends Parameters>(
   let lastRequestId: string;
 
   function updateLastRequestId() {
-    lastRequestId = props.requestIdSelector(engine.state);
+    lastRequestId = props.requestIdSelector(engine[stateKey]);
   }
 
   function hasRequestIdChanged() {
-    return lastRequestId !== props.requestIdSelector(engine.state);
+    return lastRequestId !== props.requestIdSelector(engine[stateKey]);
   }
 
-  validateInitialState(
+  validateInitialStateNext(
     engine,
     initialStateSchema,
     props.initialState,
     'buildUrlManager'
   );
 
-  const controller = buildController(engine);
+  const controller = buildControllerNext(engine);
   let previousFragment = props.initialState.fragment;
   updateLastRequestId();
 

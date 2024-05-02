@@ -1,5 +1,6 @@
 import {CurrencyCodeISO4217} from '@coveo/relay-event-types';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../app/engine';
 import {
   setContext,
   setUser,
@@ -8,9 +9,9 @@ import {
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
 import {contextSchema} from '../../../features/commerce/context/context-validation';
 import {loadReducerError} from '../../../utils/errors';
-import {validateOptions} from '../../../utils/validate-payload';
+import {validateOptionsNext} from '../../../utils/validate-payload';
 import {
-  buildController,
+  buildControllerNext,
   Controller,
 } from '../../controller/headless-controller';
 
@@ -110,12 +111,12 @@ export function buildContext(
     throw loadReducerError;
   }
 
-  const controller = buildController(engine);
+  const controller = buildControllerNext(engine);
   const {dispatch} = engine;
-  const getState = () => engine.state;
+  const getState = () => engine[stateKey];
 
   if (props.options) {
-    validateOptions(engine, contextSchema, props.options, 'buildContext');
+    validateOptionsNext(engine, contextSchema, props.options, 'buildContext');
     dispatch(setContext(props.options));
   }
 

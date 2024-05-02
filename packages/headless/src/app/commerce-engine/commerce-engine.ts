@@ -20,9 +20,10 @@ import {CommerceAppState} from '../../state/commerce-app-state';
 import {CommerceThunkExtraArguments} from '../commerce-thunk-extra-arguments';
 import {
   buildEngine,
-  CoreEngine,
+  CoreEngineNext,
   EngineOptions,
   ExternalEngineOptions,
+  stateKey,
 } from '../engine';
 import {buildLogger} from '../logger';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
@@ -59,7 +60,10 @@ export type CommerceEngineState =
  * @internal WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
  */
 export interface CommerceEngine<State extends object = {}>
-  extends CoreEngine<State & CommerceEngineState, CommerceThunkExtraArguments> {
+  extends CoreEngineNext<
+    State & CommerceEngineState,
+    CommerceThunkExtraArguments
+  > {
   /**
    * Executes the first search.
    *
@@ -113,24 +117,26 @@ export function buildCommerceEngine(
     reducers: commerceEngineReducers,
   };
 
-  const engine = buildEngine(augmentedOptions, thunkArguments);
+  const internalEngine = buildEngine(augmentedOptions, thunkArguments);
+  const {state: _, ...engine} = internalEngine;
 
   engine.dispatch(setContext(options.configuration.context));
 
   return {
     ...engine,
 
-    get state() {
-      return engine.state;
+    get [stateKey]() {
+      return internalEngine.state;
     },
+
     executeFirstSearch() {
       const action = executeSearch();
-      engine.dispatch(action);
+      internalEngine.dispatch(action);
     },
 
     executeFirstSearchAfterStandaloneSearchBoxRedirect() {
       const action = executeSearch();
-      engine.dispatch(action);
+      internalEngine.dispatch(action);
     },
   };
 }

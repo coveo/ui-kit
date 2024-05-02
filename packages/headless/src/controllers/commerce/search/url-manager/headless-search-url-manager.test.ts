@@ -1,3 +1,4 @@
+import {stateKey} from '../../../../app/engine';
 import {queryReducer as commerceQuery} from '../../../../features/commerce/query/query-slice';
 import {restoreSearchParameters} from '../../../../features/commerce/search-parameters/search-parameter-actions';
 import {executeSearch} from '../../../../features/commerce/search/search-actions';
@@ -76,7 +77,7 @@ describe('search url manager', () => {
 
   describe('#state', () => {
     it('contains the serialized fragment of the search parameters state', () => {
-      engine.state.commerceQuery.query = 'books';
+      engine[stateKey].commerceQuery.query = 'books';
       expect(manager.state.fragment).toBe('q=books');
     });
   });

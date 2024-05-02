@@ -1,5 +1,6 @@
 import {Schema} from '@coveo/bueno';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../app/engine';
 import {
   buildFieldsSortCriterion,
   buildRelevanceSortCriterion,
@@ -15,9 +16,9 @@ import {applySort} from '../../../../features/commerce/sort/sort-actions';
 import {sortReducer as commerceSort} from '../../../../features/commerce/sort/sort-slice';
 import {updatePage} from '../../../../features/pagination/pagination-actions';
 import {loadReducerError} from '../../../../utils/errors';
-import {validateInitialState} from '../../../../utils/validate-payload';
+import {validateInitialStateNext} from '../../../../utils/validate-payload';
 import {
-  buildController,
+  buildControllerNext,
   Controller,
 } from '../../../controller/headless-controller';
 import {FetchResultsActionCreator} from '../common';
@@ -60,7 +61,7 @@ function validateSortInitialState(
     criterion: sortCriterionDefinition,
   });
 
-  validateInitialState(engine, schema, state, 'buildSort');
+  validateInitialStateNext(engine, schema, state, 'buildSort');
 }
 
 export interface Sort extends Controller {
@@ -122,8 +123,7 @@ export function buildCoreSort(
   }
 
   const {dispatch} = engine;
-  const controller = buildController(engine);
-  const getState = () => engine.state;
+  const controller = buildControllerNext(engine);
 
   validateSortInitialState(engine, props.initialState);
 
@@ -137,7 +137,7 @@ export function buildCoreSort(
     ...controller,
 
     get state() {
-      return getState().commerceSort;
+      return engine[stateKey].commerceSort;
     },
 
     sortBy(criterion: SortCriterion) {

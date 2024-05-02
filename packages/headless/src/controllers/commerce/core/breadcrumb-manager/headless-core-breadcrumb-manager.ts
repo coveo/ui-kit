@@ -3,6 +3,7 @@ import {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../app/engine';
 import {deselectAllBreadcrumbs} from '../../../../features/breadcrumb/breadcrumb-actions';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {FacetType} from '../../../../features/commerce/facets/facet-set/interfaces/common';
@@ -35,7 +36,7 @@ import {
   CoreBreadcrumbManager,
   DeselectableValue,
 } from '../../../breadcrumb-manager/headless-breadcrumb-manager';
-import {buildController} from '../../../controller/headless-controller';
+import {buildControllerNext} from '../../../controller/headless-controller';
 import {ToggleActionCreator} from '../common';
 import {CoreCommerceFacetOptions} from '../facets/headless-core-commerce-facet';
 
@@ -141,7 +142,7 @@ export function buildCoreBreadcrumbManager(
     throw loadReducerError;
   }
 
-  const controller = buildController(engine);
+  const controller = buildControllerNext(engine);
   const {dispatch} = engine;
 
   const createBreadcrumb = (facet: AnyFacetResponse) => ({
@@ -184,7 +185,7 @@ export function buildCoreBreadcrumbManager(
       const breadcrumbs =
         facetOrder
           .map((facetId) =>
-            options.facetResponseSelector(engine.state, facetId)
+            options.facetResponseSelector(engine[stateKey], facetId)
           )
           .filter((facet): facet is AnyFacetResponse => facet !== undefined)
           .map(createBreadcrumb) ?? [];
@@ -203,7 +204,7 @@ export function buildCoreBreadcrumbManager(
     },
 
     get state() {
-      return commerceFacetSelector(engine.state);
+      return commerceFacetSelector(engine[stateKey]);
     },
   };
 }

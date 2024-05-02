@@ -1,3 +1,4 @@
+import {stateKey} from '../../../../app/engine';
 import {
   AnyFacetResponse,
   RegularFacetValue,
@@ -35,11 +36,11 @@ describe('search breadcrumb manager', () => {
   }
 
   function setFacetsState({facetId, ...restOfResponse}: AnyFacetResponse) {
-    engine.state.facetOrder.push(facetId);
-    engine.state.commerceFacetSet[facetId] = {
+    engine[stateKey].facetOrder.push(facetId);
+    engine[stateKey].commerceFacetSet[facetId] = {
       request: buildMockCommerceFacetRequest(),
     };
-    engine.state.commerceSearch.facets.push({facetId, ...restOfResponse});
+    engine[stateKey].commerceSearch.facets.push({facetId, ...restOfResponse});
   }
 
   beforeEach(() => {

@@ -1,4 +1,5 @@
 import {configuration} from '../../../app/common-reducers';
+import {stateKey} from '../../../app/engine';
 import {updateQuery} from '../../../features/commerce/query/query-actions';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
 import {
@@ -112,7 +113,7 @@ describe('headless standalone searchBox', () => {
 
   it('#state.redirectTo uses the value in the standalone search-box reducer', () => {
     const redirectTo = '/search-page';
-    engine.state.commerceStandaloneSearchBoxSet![id] =
+    engine[stateKey].commerceStandaloneSearchBoxSet![id] =
       buildMockStandaloneSearchBoxEntry({redirectTo});
     expect(searchBox.state.redirectTo).toBe(redirectTo);
   });

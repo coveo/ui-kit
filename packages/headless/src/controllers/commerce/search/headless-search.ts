@@ -2,6 +2,7 @@ import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api
 import {Product} from '../../../api/commerce/common/product';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
+import {stateKey} from '../../../app/engine';
 import {LegacySearchAction} from '../../../features/analytics/analytics-utils';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
@@ -10,7 +11,7 @@ import {responseIdSelector} from '../../../features/commerce/search/search-selec
 import {commerceSearchReducer as commerceSearch} from '../../../features/commerce/search/search-slice';
 import {loadReducerError} from '../../../utils/errors';
 import {
-  buildController,
+  buildControllerNext,
   Controller,
 } from '../../controller/headless-controller';
 import {
@@ -42,9 +43,9 @@ export function buildSearch(engine: CommerceEngine): Search {
     throw loadReducerError;
   }
 
-  const controller = buildController(engine);
+  const controller = buildControllerNext(engine);
   const {dispatch} = engine;
-  const getState = () => engine.state;
+  const getState = () => engine[stateKey];
   const subControllers = buildSolutionTypeSubControllers(engine, {
     responseIdSelector,
     fetchResultsActionCreator: executeSearch,
@@ -61,7 +62,7 @@ export function buildSearch(engine: CommerceEngine): Search {
     // eslint-disable-next-line @cspell/spellchecker
     // TODO CAPI-244: Handle analytics
     executeFirstSearch() {
-      const firstSearchExecuted = responseIdSelector(engine.state) !== '';
+      const firstSearchExecuted = responseIdSelector(getState()) !== '';
 
       if (firstSearchExecuted) {
         return;

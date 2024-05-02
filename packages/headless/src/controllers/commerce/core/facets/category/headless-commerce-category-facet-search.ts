@@ -1,5 +1,6 @@
 import {CategoryFacetSearchResult} from '../../../../../api/search/facet-search/category-facet-search/category-facet-search-response';
 import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../../app/engine';
 import {
   executeCommerceFacetSearch,
   executeCommerceFieldSuggest,
@@ -37,11 +38,19 @@ export function buildCategoryFacetSearch(
   }
 
   const {showMoreResults, updateCaptions, ...restOfFacetSearch} =
-    buildCoreCategoryFacetSearch(engine, {
-      ...props,
-      executeFacetSearchActionCreator: executeCommerceFacetSearch,
-      executeFieldSuggestActionCreator: executeCommerceFieldSuggest,
-    });
+    buildCoreCategoryFacetSearch(
+      {
+        ...engine,
+        get state() {
+          return engine[stateKey];
+        },
+      },
+      {
+        ...props,
+        executeFacetSearchActionCreator: executeCommerceFacetSearch,
+        executeFieldSuggestActionCreator: executeCommerceFieldSuggest,
+      }
+    );
 
   return restOfFacetSearch;
 }

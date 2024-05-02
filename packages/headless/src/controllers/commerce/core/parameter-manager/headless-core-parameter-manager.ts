@@ -1,11 +1,12 @@
 import {RecordValue, Schema, SchemaDefinition} from '@coveo/bueno';
-import {AnyAction} from '@reduxjs/toolkit';
+import {UnknownAction} from '@reduxjs/toolkit';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../app/engine';
 import {Parameters} from '../../../../features/commerce/search-parameters/search-parameter-actions';
 import {deepEqualAnyOrder} from '../../../../utils/compare-utils';
-import {validateInitialState} from '../../../../utils/validate-payload';
+import {validateInitialStateNext} from '../../../../utils/validate-payload';
 import {
-  buildController,
+  buildControllerNext,
   Controller,
 } from '../../../controller/headless-controller';
 import {FetchResultsActionCreator} from '../common';
@@ -27,12 +28,12 @@ export interface CoreParameterManagerProps<T extends Parameters>
   /**
    * The selector to retrieve the active parameters from the state.
    */
-  activeParametersSelector: (state: CommerceEngine['state']) => T;
+  activeParametersSelector: (state: CommerceEngine[typeof stateKey]) => T;
 
   /**
    * The action to dispatch to update the parameters in the state.
    */
-  restoreActionCreator: (parameters: T) => AnyAction;
+  restoreActionCreator: (parameters: T) => UnknownAction;
 
   /**
    * The action to dispatch to fetch more results.
@@ -45,7 +46,7 @@ export interface CoreParameterManagerProps<T extends Parameters>
    * @param activeParams
    */
   enrichParameters(
-    state: CommerceEngine['state'],
+    state: CommerceEngine[typeof stateKey],
     activeParams: T
   ): Required<T>;
 }
@@ -104,9 +105,9 @@ export function buildCoreParameterManager<T extends Parameters>(
   props: CoreParameterManagerProps<T>
 ): ParameterManager<T> {
   const {dispatch} = engine;
-  const controller = buildController(engine);
+  const controller = buildControllerNext(engine);
 
-  validateInitialState(
+  validateInitialStateNext(
     engine,
     initialStateSchema(props.parametersDefinition),
     props.initialState,
@@ -118,9 +119,9 @@ export function buildCoreParameterManager<T extends Parameters>(
     ...controller,
 
     synchronize(parameters: T) {
-      const activeParams = props.activeParametersSelector(engine.state);
-      const oldParams = props.enrichParameters(engine.state, activeParams);
-      const newParams = props.enrichParameters(engine.state, parameters);
+      const activeParams = props.activeParametersSelector(engine[stateKey]);
+      const oldParams = props.enrichParameters(engine[stateKey], activeParams);
+      const newParams = props.enrichParameters(engine[stateKey], parameters);
 
       if (deepEqualAnyOrder(oldParams, newParams)) {
         return;
@@ -131,7 +132,7 @@ export function buildCoreParameterManager<T extends Parameters>(
     },
 
     get state() {
-      const parameters = props.activeParametersSelector(engine.state);
+      const parameters = props.activeParametersSelector(engine[stateKey]);
       return {parameters};
     },
   };

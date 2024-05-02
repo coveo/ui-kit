@@ -1,5 +1,6 @@
 import {SpecificFacetSearchResult} from '../../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
 import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../../app/engine';
 import {
   executeCommerceFacetSearch,
   executeCommerceFieldSuggest,
@@ -35,11 +36,19 @@ export function buildRegularFacetSearch(
   }
 
   const {showMoreResults, updateCaptions, ...restOfFacetSearch} =
-    buildFacetSearch(engine, {
-      ...props,
-      executeFacetSearchActionCreator: executeCommerceFacetSearch,
-      executeFieldSuggestActionCreator: executeCommerceFieldSuggest,
-    });
+    buildFacetSearch(
+      {
+        ...engine,
+        get state() {
+          return engine[stateKey];
+        },
+      },
+      {
+        ...props,
+        executeFacetSearchActionCreator: executeCommerceFacetSearch,
+        executeFieldSuggestActionCreator: executeCommerceFieldSuggest,
+      }
+    );
 
   return {
     ...restOfFacetSearch,

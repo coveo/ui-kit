@@ -2,13 +2,14 @@ import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api
 import {Product} from '../../../api/commerce/common/product';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
+import {stateKey} from '../../../app/engine';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
 import {fetchProductListing} from '../../../features/commerce/product-listing/product-listing-actions';
 import {responseIdSelector} from '../../../features/commerce/product-listing/product-listing-selectors';
 import {productListingV2Reducer as productListing} from '../../../features/commerce/product-listing/product-listing-slice';
 import {loadReducerError} from '../../../utils/errors';
 import {
-  buildController,
+  buildControllerNext,
   Controller,
 } from '../../controller/headless-controller';
 import {
@@ -51,9 +52,9 @@ export function buildProductListing(engine: CommerceEngine): ProductListing {
     throw loadReducerError;
   }
 
-  const controller = buildController(engine);
+  const controller = buildControllerNext(engine);
   const {dispatch} = engine;
-  const getState = () => engine.state;
+  const getState = () => engine[stateKey];
   const subControllers = buildSolutionTypeSubControllers(engine, {
     responseIdSelector,
     fetchResultsActionCreator: fetchProductListing,

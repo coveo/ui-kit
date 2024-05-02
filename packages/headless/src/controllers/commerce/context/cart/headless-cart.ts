@@ -1,5 +1,6 @@
 import {CurrencyCodeISO4217, Ec} from '@coveo/relay-event-types';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../app/engine';
 import {
   purchase,
   setItems,
@@ -14,9 +15,9 @@ import {CartItemWithMetadata} from '../../../../features/commerce/context/cart/c
 import {cartSchema} from '../../../../features/commerce/context/cart/cart-validation';
 import {CartSection} from '../../../../state/state-sections';
 import {loadReducerError} from '../../../../utils/errors';
-import {validateInitialState} from '../../../../utils/validate-payload';
+import {validateInitialStateNext} from '../../../../utils/validate-payload';
 import {
-  buildController,
+  buildControllerNext,
   Controller,
 } from '../../../controller/headless-controller';
 import {
@@ -144,14 +145,14 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
   }
 
   const {dispatch} = engine;
-  const controller = buildController(engine);
-  const getState = () => engine.state.cart;
+  const controller = buildControllerNext(engine);
+  const getState = () => engine[stateKey].cart;
 
   const initialState = {
     ...props.initialState,
   };
 
-  validateInitialState(engine, cartSchema, initialState, 'buildCart');
+  validateInitialStateNext(engine, cartSchema, initialState, 'buildCart');
 
   // TODO: expose some helpers to facilitate storing / restoring the cart state for MPAs
   if (initialState.items !== undefined) {
@@ -175,7 +176,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
   }
 
   function getCurrency(): CurrencyCodeISO4217 {
-    return engine.state.commerceContext.currency;
+    return engine[stateKey].commerceContext.currency;
   }
 
   function isEqual(

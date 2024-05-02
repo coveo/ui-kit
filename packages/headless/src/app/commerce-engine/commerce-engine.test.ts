@@ -1,3 +1,4 @@
+import {stateKey} from '../engine';
 import {
   buildCommerceEngine,
   CommerceEngine,
@@ -24,10 +25,12 @@ describe('buildCommerceEngine', () => {
 
   it('initializes', () => {
     expect(initEngine).not.toThrow();
-    expect(engine.state).toBeTruthy();
+    expect(engine[stateKey]).toBeTruthy();
   });
 
   it('sets the context', () => {
-    expect(engine.state.commerceContext).toEqual(options.configuration.context);
+    expect(engine[stateKey].commerceContext).toEqual(
+      options.configuration.context
+    );
   });
 });

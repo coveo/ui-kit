@@ -3,6 +3,7 @@ import {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../../app/engine';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
@@ -107,7 +108,7 @@ export function buildCommerceRegularFacet(
     get state() {
       return {
         ...coreController.state,
-        ...facetSearchStateSelector(engine.state),
+        ...facetSearchStateSelector(engine[stateKey]),
       };
     },
 

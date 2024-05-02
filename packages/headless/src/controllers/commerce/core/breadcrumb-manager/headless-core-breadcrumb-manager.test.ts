@@ -1,4 +1,5 @@
 import {Action} from '@reduxjs/toolkit';
+import {stateKey} from '../../../../app/engine';
 import {deselectAllBreadcrumbs} from '../../../../features/breadcrumb/breadcrumb-actions';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {
@@ -72,8 +73,8 @@ describe('core breadcrumb manager', () => {
   }
 
   function setFacetsState({facetId, ...restOfResponse}: AnyFacetResponse) {
-    engine.state.facetOrder.push(facetId);
-    engine.state.commerceFacetSet[facetId] = {
+    engine[stateKey].facetOrder.push(facetId);
+    engine[stateKey].commerceFacetSet[facetId] = {
       request: buildMockCommerceFacetRequest(),
     };
     facetResponseSelector.mockReturnValue({facetId, ...restOfResponse});

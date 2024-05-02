@@ -99,6 +99,20 @@ export interface CoreEngine<
   disableAnalytics(): void;
 }
 
+export const stateKey = Symbol('state');
+
+export type CoreEngineNext<
+  State extends object = {},
+  ExtraArguments extends ThunkExtraArguments = ThunkExtraArguments,
+> = Omit<CoreEngine<State, ExtraArguments>, 'state'> & {
+  /**
+   * The internal state of the headless engine.
+   *
+   * @internal
+   */
+  [stateKey]: State & CoreState;
+};
+
 export interface EngineOptions<Reducers extends ReducersMapObject>
   extends ExternalEngineOptions<StateFromReducersMapObject<Reducers>> {
   /**

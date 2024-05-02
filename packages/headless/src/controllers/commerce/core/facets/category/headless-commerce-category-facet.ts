@@ -3,6 +3,7 @@ import {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../../app/engine';
 import {CategoryFacetValueRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
 import {
   defaultNumberOfValuesIncrement,
@@ -160,7 +161,7 @@ export function buildCategoryFacet(
         canShowMoreValues,
         hasActiveValues,
         selectedValueAncestry,
-        facetSearch: facetSearchStateSelector(engine.state),
+        facetSearch: facetSearchStateSelector(engine[stateKey]),
       };
     },
 

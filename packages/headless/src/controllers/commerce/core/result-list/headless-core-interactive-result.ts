@@ -3,6 +3,7 @@ import {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../app/engine';
 import {productClick} from '../../../../features/commerce/context/product/product-actions';
 import {
   buildInteractiveResultCore,
@@ -68,10 +69,19 @@ export function buildCoreInteractiveResult(
       productClick({
         product: props.options.product,
         position: props.options.position,
-        responseId: props.responseIdSelector(engine.state),
+        responseId: props.responseIdSelector(engine[stateKey]),
       })
     );
   };
 
-  return buildInteractiveResultCore(engine, props, logAnalyticsIfNeverOpened);
+  return buildInteractiveResultCore(
+    {
+      ...engine,
+      get state() {
+        return engine[stateKey];
+      },
+    },
+    props,
+    logAnalyticsIfNeverOpened
+  );
 }

@@ -1,5 +1,5 @@
 import {Unsubscribe} from '@reduxjs/toolkit';
-import {CoreEngine} from '../../app/engine';
+import {CoreEngine, CoreEngineNext, stateKey} from '../../app/engine';
 
 export interface Subscribable {
   /**
@@ -65,4 +65,15 @@ export function buildController<T extends object>(
       return {};
     },
   };
+}
+
+export function buildControllerNext<T extends object>(
+  engine: CoreEngineNext<T>
+): Controller {
+  return buildController({
+    ...engine,
+    get state() {
+      return engine[stateKey];
+    },
+  });
 }

@@ -4,6 +4,7 @@ import {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../app/engine';
 import {
   nextPage,
   previousPage,
@@ -13,9 +14,9 @@ import {
 } from '../../../../features/commerce/pagination/pagination-actions';
 import {paginationReducer as commercePagination} from '../../../../features/commerce/pagination/pagination-slice';
 import {loadReducerError} from '../../../../utils/errors';
-import {validateOptions} from '../../../../utils/validate-payload';
+import {validateOptionsNext} from '../../../../utils/validate-payload';
 import {
-  buildController,
+  buildControllerNext,
   Controller,
 } from '../../../controller/headless-controller';
 import {FetchResultsActionCreator} from '../common';
@@ -100,10 +101,15 @@ export function buildCorePagination(
     throw loadReducerError;
   }
 
-  const controller = buildController(engine);
+  const controller = buildControllerNext(engine);
   const {dispatch} = engine;
 
-  validateOptions(engine, optionsSchema, props.options, 'buildCorePagination');
+  validateOptionsNext(
+    engine,
+    optionsSchema,
+    props.options,
+    'buildCorePagination'
+  );
 
   const slotId = props.options?.slotId;
 
@@ -135,7 +141,7 @@ export function buildCorePagination(
     ...controller,
 
     get state() {
-      return paginationSelector(engine.state);
+      return paginationSelector(engine[stateKey]);
     },
 
     selectPage(page: number) {

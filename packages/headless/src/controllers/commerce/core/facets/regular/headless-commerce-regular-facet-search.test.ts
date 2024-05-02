@@ -1,3 +1,4 @@
+import {stateKey} from '../../../../../app/engine';
 import {
   executeCommerceFacetSearch,
   executeCommerceFieldSuggest,
@@ -34,7 +35,7 @@ describe('RegularFacetSearch', () => {
   }
 
   function setFacetSearchState() {
-    engine.state.facetSearchSet[facetId] = buildMockFacetSearch();
+    engine[stateKey].facetSearchSet[facetId] = buildMockFacetSearch();
   }
 
   beforeEach(() => {

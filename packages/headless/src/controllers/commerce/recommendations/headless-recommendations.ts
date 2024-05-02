@@ -5,6 +5,7 @@ import {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../app/engine';
 import {recommendationsOptionsSchema} from '../../../features/commerce/recommendations/recommendations';
 import {
   fetchRecommendations,
@@ -12,9 +13,9 @@ import {
 } from '../../../features/commerce/recommendations/recommendations-actions';
 import {recommendationsReducer as recommendations} from '../../../features/commerce/recommendations/recommendations-slice';
 import {loadReducerError} from '../../../utils/errors';
-import {validateInitialState} from '../../../utils/validate-payload';
+import {validateInitialStateNext} from '../../../utils/validate-payload';
 import {
-  buildController,
+  buildControllerNext,
   Controller,
 } from '../../controller/headless-controller';
 import {
@@ -73,14 +74,14 @@ export function buildRecommendations(
     throw loadReducerError;
   }
 
-  validateInitialState(
+  validateInitialStateNext(
     engine,
     recommendationsOptionsSchema,
     props.options,
     'buildRecommendations'
   );
 
-  const controller = buildController(engine);
+  const controller = buildControllerNext(engine);
   const {dispatch} = engine;
 
   const {slotId} = props.options;
@@ -101,7 +102,7 @@ export function buildRecommendations(
     ...subControllers,
 
     get state() {
-      return recommendationStateSelector(engine.state);
+      return recommendationStateSelector(engine[stateKey]);
     },
 
     refresh: () => dispatch(fetchRecommendations({slotId})),

@@ -2,7 +2,8 @@ import {Relay} from '@coveo/relay';
 import pino, {Logger} from 'pino';
 import {CaseAssistEngine} from '../app/case-assist-engine/case-assist-engine';
 import {CommerceEngine} from '../app/commerce-engine/commerce-engine';
-import type {CoreEngine} from '../app/engine';
+import type {CoreEngine, CoreEngineNext} from '../app/engine';
+import {stateKey} from '../app/engine';
 import {InsightEngine} from '../app/insight-engine/insight-engine';
 import {ProductListingEngine} from '../app/product-listing-engine/product-listing-engine';
 import {ProductRecommendationEngine} from '../app/product-recommendation-engine/product-recommendation-engine';
@@ -79,6 +80,38 @@ export function buildMockCoreEngine<State extends StateFromEngine<CoreEngine>>(
   };
 }
 
+type MockedCoreEngineNext<
+  State extends
+    StateFromEngineNext<CoreEngineNext> = StateFromEngineNext<CoreEngineNext>,
+> = CoreEngineNext & {
+  [stateKey]: State;
+  logger: MockedLogger;
+  relay: MockedRelay;
+} & SpyEverything<Omit<CoreEngineNext, 'logger' | 'stateKey' | 'relay'>>;
+
+export function buildMockCoreEngineNext<
+  State extends StateFromEngineNext<CoreEngineNext>,
+>(initialState: State): MockedCoreEngineNext<State> {
+  const state: State = initialState;
+  return {
+    [stateKey]: state,
+    dispatch: jest.fn(),
+    addReducers: jest.fn(),
+    disableAnalytics: jest.fn(),
+    enableAnalytics: jest.fn(),
+    logger: mockLogger(pino({level: 'silent'})),
+    relay: mockRelay(),
+    store: {
+      dispatch: jest.fn(),
+      getState: jest.fn(),
+      replaceReducer: jest.fn(),
+      subscribe: jest.fn(),
+      [Symbol.observable]: jest.fn(),
+    },
+    subscribe: jest.fn(),
+  };
+}
+
 export type MockedSearchEngine = SearchEngine &
   MockedCoreEngine<StateFromEngine<SearchEngine>> &
   SpyEverything<
@@ -97,6 +130,9 @@ export type MockedInsightEngine = InsightEngine;
 export type MockedProductListingEngine = ProductListingEngine;
 
 type StateFromEngine<TEngine extends CoreEngine> = TEngine['state'];
+
+type StateFromEngineNext<TEngine extends CoreEngineNext> =
+  TEngine[typeof stateKey];
 
 export function buildMockSearchEngine(
   initialState: StateFromEngine<SearchEngine>
@@ -117,10 +153,10 @@ export function buildMockCaseAssistEngine<
 }
 
 export function buildMockCommerceEngine<
-  State extends StateFromEngine<CommerceEngine>,
+  State extends StateFromEngineNext<CommerceEngine>,
 >(initialState: State): CommerceEngine {
   return {
-    ...buildMockCoreEngine(initialState),
+    ...buildMockCoreEngineNext(initialState),
     executeFirstSearch: jest.fn(),
     executeFirstSearchAfterStandaloneSearchBoxRedirect: jest.fn(),
   };
