@@ -172,6 +172,15 @@ export class GeneratedAnswerCommon {
     }
   }
 
+  private getCitation(citation: GeneratedAnswerCitation) {
+    const {title} = citation;
+    const {i18n} = this.props.getBindings();
+
+    return title.trim() !== ''
+      ? citation
+      : {...citation, title: i18n.t('no-title')};
+  }
+
   private renderCitations() {
     const {
       getGeneratedAnswerState,
@@ -191,7 +200,7 @@ export class GeneratedAnswerCommon {
         return (
           <li key={citation.id} class="max-w-full">
             <atomic-citation
-              citation={citation}
+              citation={this.getCitation(citation)}
               index={index}
               sendHoverEndEvent={(citationHoverTimeMs: number) => {
                 logCitationHover?.(citation.id, citationHoverTimeMs);
