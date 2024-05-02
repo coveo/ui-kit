@@ -82,9 +82,6 @@ export const fetchInstantProducts = createAsyncThunk<
 
     return {
       response: {...fetched.success, products},
-      // eslint-disable-next-line @cspell/spellchecker
-      // TODO CAPI-244: Use actual search analytics action
-      analyticsAction: logProductListingV2Load(),
     };
   }
 );
