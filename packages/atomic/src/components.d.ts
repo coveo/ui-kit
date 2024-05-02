@@ -1447,7 +1447,7 @@ export namespace Components {
          */
         "product": Product;
         /**
-          * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
+          * Internal function used in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
          */
         "renderingFunction": ItemRenderingFunction;
         /**
@@ -5938,7 +5938,7 @@ declare namespace LocalJSX {
          */
         "product": Product;
         /**
-          * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
+          * Internal function used in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
          */
         "renderingFunction"?: ItemRenderingFunction;
         /**
