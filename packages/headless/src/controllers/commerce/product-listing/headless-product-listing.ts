@@ -13,13 +13,19 @@ import {
 } from '../../controller/headless-controller';
 import {
   buildSolutionTypeSubControllers,
-  SolutionTypeSubControllers,
+  SearchAndListingSubControllers,
 } from '../core/sub-controller/headless-sub-controller';
+import {
+  facetResponseSelector,
+  isFacetLoadingResponseSelector,
+} from './facets/headless-product-listing-facet-options';
 
 /**
  * The `ProductListing` controller exposes a method for retrieving product listing content in a commerce interface.
  */
-export interface ProductListing extends Controller, SolutionTypeSubControllers {
+export interface ProductListing
+  extends Controller,
+    SearchAndListingSubControllers {
   /**
    * Fetches the product listing.
    */
@@ -55,6 +61,8 @@ export function buildProductListing(engine: CommerceEngine): ProductListing {
   const subControllers = buildSolutionTypeSubControllers(engine, {
     responseIdSelector,
     fetchResultsActionCreator: fetchProductListing,
+    facetResponseSelector,
+    isFacetLoadingResponseSelector,
   });
 
   return {

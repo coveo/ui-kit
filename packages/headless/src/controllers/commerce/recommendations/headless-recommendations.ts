@@ -17,11 +17,17 @@ import {
   buildController,
   Controller,
 } from '../../controller/headless-controller';
+import {
+  BaseSolutionTypeSubControllers,
+  buildBaseSolutionTypeControllers,
+} from '../core/sub-controller/headless-sub-controller';
 
 /**
  * The `Recommendations` controller exposes a method for retrieving recommendations content in a commerce interface.
  */
-export interface Recommendations extends Controller {
+export interface Recommendations
+  extends Controller,
+    BaseSolutionTypeSubControllers {
   /**
    * Fetches the recommendations.
    */
@@ -84,9 +90,15 @@ export function buildRecommendations(
     (state: CommerceEngineState) => state.recommendations[slotId]!,
     (recommendations) => recommendations
   );
+  const subControllers = buildBaseSolutionTypeControllers(engine, {
+    slotId,
+    responseIdSelector: (state) => state.recommendations[slotId]!.responseId,
+    fetchResultsActionCreator: () => fetchRecommendations({slotId}),
+  });
 
   return {
     ...controller,
+    ...subControllers,
 
     get state() {
       return recommendationStateSelector(engine.state);
