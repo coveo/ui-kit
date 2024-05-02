@@ -386,7 +386,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get shouldDisplayCitations() {
-    const hasCitations = !!this.citations.length;
+    const hasCitations = !!this.citations?.length;
     return hasCitations && !this.isAnswerCollapsed;
   }
 
@@ -408,7 +408,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get shouldDisplayGeneratedAnswer() {
-    const hasCitations = !!this.citations.length;
+    const hasCitations = !!this.citations?.length;
     return (
       !!this.answer ||
       this.isStreaming ||
