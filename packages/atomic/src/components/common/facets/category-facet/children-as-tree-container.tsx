@@ -7,7 +7,7 @@ export const CategoryFacetChildrenAsTreeContainer: FunctionalComponent<
   CategoryFacetChildrenAsTreeContainerProps
 > = ({className}, children) => {
   return (
-    <ul part="values" class={className ? className : ''}>
+    <ul part="values" class={className ?? ''}>
       {children}
     </ul>
   );

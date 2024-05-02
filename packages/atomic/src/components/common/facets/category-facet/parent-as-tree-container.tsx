@@ -8,10 +8,7 @@ export const CategoryFacetParentAsTreeContainer: FunctionalComponent<
   CategoryFacetParentAsTreeContainerProps
 > = ({isTopLevel, className}, children) => {
   return (
-    <ul
-      class={className ? className : ''}
-      part={`${isTopLevel ? '' : 'sub-'}parents`}
-    >
+    <ul class={className ?? ''} part={`${isTopLevel ? '' : 'sub-'}parents`}>
       {children}
     </ul>
   );
