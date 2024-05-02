@@ -69,7 +69,7 @@ describe('sub controllers', () => {
         },
       };
 
-      const interactiveResult = subControllers.interactiveResult({
+      const interactiveResult = subControllers.interactiveProduct({
         ...props,
       });
 
