@@ -20,6 +20,7 @@ import { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightG
 import { i18nCompatibilityVersion } from "./components/common/interface/i18n";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
+import { InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { Section } from "./components/common/atomic-layout-section/sections";
 import { PlatformEnvironment as PlatformEnvironment1, RecommendationEngine } from "@coveo/headless/recommendation";
 import { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
@@ -45,6 +46,7 @@ export { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightG
 export { i18nCompatibilityVersion } from "./components/common/interface/i18n";
 export { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 export { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
+export { InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { Section } from "./components/common/atomic-layout-section/sections";
 export { PlatformEnvironment as PlatformEnvironment1, RecommendationEngine } from "@coveo/headless/recommendation";
 export { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
@@ -952,11 +954,15 @@ export namespace Components {
     }
     interface AtomicInsightResultAction {
         /**
+          * The type of action to perform when the result action is clicked. This will be sent along the event fired when the button is clicked.
+         */
+        "action": Actions | string;
+        /**
           * Specify the result action icon to display.
          */
         "icon": string;
         /**
-          * The text tooltip to show on the result action icon
+          * The text tooltip to show on the result action icon.
          */
         "tooltip": string;
     }
@@ -2720,6 +2726,10 @@ export interface AtomicInsightPagerCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicInsightPagerElement;
 }
+export interface AtomicInsightResultActionCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicInsightResultActionElement;
+}
 export interface AtomicInsightSmartSnippetFeedbackModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicInsightSmartSnippetFeedbackModalElement;
@@ -3206,7 +3216,18 @@ declare global {
         prototype: HTMLAtomicInsightResultElement;
         new (): HTMLAtomicInsightResultElement;
     };
+    interface HTMLAtomicInsightResultActionElementEventMap {
+        "atomicInsightResultActionClicked": InsightResultActionClickedEvent;
+    }
     interface HTMLAtomicInsightResultActionElement extends Components.AtomicInsightResultAction, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicInsightResultActionElementEventMap>(type: K, listener: (this: HTMLAtomicInsightResultActionElement, ev: AtomicInsightResultActionCustomEvent<HTMLAtomicInsightResultActionElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicInsightResultActionElementEventMap>(type: K, listener: (this: HTMLAtomicInsightResultActionElement, ev: AtomicInsightResultActionCustomEvent<HTMLAtomicInsightResultActionElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLAtomicInsightResultActionElement: {
         prototype: HTMLAtomicInsightResultActionElement;
@@ -5331,11 +5352,16 @@ declare namespace LocalJSX {
     }
     interface AtomicInsightResultAction {
         /**
+          * The type of action to perform when the result action is clicked. This will be sent along the event fired when the button is clicked.
+         */
+        "action"?: Actions | string;
+        /**
           * Specify the result action icon to display.
          */
         "icon"?: string;
+        "onAtomicInsightResultActionClicked"?: (event: AtomicInsightResultActionCustomEvent<InsightResultActionClickedEvent>) => void;
         /**
-          * The text tooltip to show on the result action icon
+          * The text tooltip to show on the result action icon.
          */
         "tooltip"?: string;
     }
