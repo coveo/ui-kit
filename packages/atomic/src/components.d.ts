@@ -6,7 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-import { CommerceEngine, InteractiveProduct, LogLevel, PlatformEnvironment, Product, ProductTemplateCondition } from "@coveo/headless/commerce";
+import { CommerceEngine, InteractiveProduct, LogLevel, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition } from "@coveo/headless/commerce";
 import { i18n } from "i18next";
 import { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
@@ -32,7 +32,7 @@ import { Bindings } from "./components/search/atomic-search-interface/atomic-sea
 import { AriaLabelGenerator } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 export { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-export { CommerceEngine, InteractiveProduct, LogLevel, PlatformEnvironment, Product, ProductTemplateCondition } from "@coveo/headless/commerce";
+export { CommerceEngine, InteractiveProduct, LogLevel, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition } from "@coveo/headless/commerce";
 export { i18n } from "i18next";
 export { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { StandaloneSearchBoxData } from "./utils/local-storage-utils";
@@ -1468,52 +1468,6 @@ export namespace Components {
           * Global Atomic state.
          */
         "store"?: AtomicCommonStore<AtomicCommonStoreData>;
-      }
-    /*
-     * The `atomic-product-image` component renders an image from a result field.
-     */
-    interface AtomicProductImage {
-        /**
-          * The classes to add to the product element.
-         */
-        "classes": string;
-        /**
-          * The product content to display.
-         */
-        "content"?: ParentNode;
-        /**
-          * How large or small products should be.
-         */
-        "density": ItemDisplayDensity;
-        /**
-          * How products should be displayed.
-         */
-        "display": ItemDisplayLayout;
-        /**
-          * The size of the visual section in product list items.  This is overwritten by the image size defined in the product content, if it exists.
-         */
-        "imageSize": ItemDisplayImageSize;
-        /**
-          * The InteractiveResult item.
-         */
-        "interactiveResult": InteractiveResult;
-        "loadingFlag"?: string;
-        /**
-          * The product item.
-         */
-        "product": Product;
-        /**
-          * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
-         */
-        "renderingFunction": ItemRenderingFunction;
-        /**
-          * Whether an atomic-product-link inside atomic-product should stop click event propagation.
-         */
-        "stopPropagation"?: boolean;
-        /**
-          * Global Atomic state.
-         */
-        "store"?: AtomicCommonStore<AtomicCommonStoreData>;
     }
     /**
      * The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
@@ -1940,7 +1894,7 @@ export namespace Components {
         /**
           * The InteractiveResult item.
          */
-        "interactiveResult": InteractiveResult1;
+        "interactiveResult": InteractiveResult;
         "loadingFlag"?: string;
         /**
           * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
@@ -3689,6 +3643,9 @@ declare global {
         prototype: HTMLAtomicPopoverElement;
         new (): HTMLAtomicPopoverElement;
     };
+    /**
+     * The `atomic-product` component is used internally by the `atomic-product-list` component.
+     */
     interface HTMLAtomicProductElement extends Components.AtomicProduct, HTMLStencilElement {
     }
     var HTMLAtomicProductElement: {
@@ -3698,12 +3655,6 @@ declare global {
     /**
      * The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
      */
-    interface HTMLAtomicProductElement extends Components.AtomicProduct, HTMLStencilElement {
-    }
-    var HTMLAtomicProductElement: {
-        prototype: HTMLAtomicProductElement;
-        new (): HTMLAtomicProductElement;
-    }
     interface HTMLAtomicProductLinkElement extends Components.AtomicProductLink, HTMLStencilElement {
     }
     var HTMLAtomicProductLinkElement: {
@@ -4621,7 +4572,6 @@ declare global {
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-popover": HTMLAtomicPopoverElement;
         "atomic-product": HTMLAtomicProductElement;
-        "atomic-product-image": HTMLAtomicProductImageElement;
         "atomic-product-link": HTMLAtomicProductLinkElement;
         "atomic-product-template": HTMLAtomicProductTemplateElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
@@ -6007,53 +5957,6 @@ declare namespace LocalJSX {
     }
     /**
      * The `atomic-product` component is used internally by the `atomic-product-list` component.
-     * The `atomic-product-image` component renders an image from a result field.
-     */
-    interface AtomicProductImage {
-        /**
-          * The classes to add to the product element.
-         */
-        "classes"?: string;
-        /**
-          * The product content to display.
-         */
-        "content"?: ParentNode;
-        /**
-          * How large or small products should be.
-         */
-        "density"?: ItemDisplayDensity;
-        /**
-          * How products should be displayed.
-         */
-        "display"?: ItemDisplayLayout;
-        /**
-          * The size of the visual section in product list items.  This is overwritten by the image size defined in the product content, if it exists.
-         */
-        "imageSize"?: ItemDisplayImageSize;
-        /**
-          * The InteractiveResult item.
-         */
-        "interactiveResult": InteractiveResult;
-        "loadingFlag"?: string;
-        /**
-          * The product item.
-         */
-        "product": Product;
-        /**
-          * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
-         */
-        "renderingFunction"?: ItemRenderingFunction;
-        /**
-          * Whether an atomic-product-link inside atomic-product should stop click event propagation.
-         */
-        "stopPropagation"?: boolean;
-        /**
-          * Global Atomic state.
-         */
-        "store"?: AtomicCommonStore<AtomicCommonStoreData>;
-    }
-    /**
-     * The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
      */
     interface AtomicProduct {
         /**
@@ -6097,7 +6000,10 @@ declare namespace LocalJSX {
           * Global Atomic state.
          */
         "store"?: AtomicCommonStore<AtomicCommonStoreData>;
-         }
+    }
+    /**
+     * The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
+     */
     interface AtomicProductLink {
         /**
           * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of product properties from the parent product. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the product's `clickUri` and `itemtitle` fields. ```html <atomic-product-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-product-link> ```
@@ -6488,7 +6394,7 @@ declare namespace LocalJSX {
         /**
           * The InteractiveResult item.
          */
-        "interactiveResult": InteractiveResult1;
+        "interactiveResult": InteractiveResult;
         "loadingFlag"?: string;
         /**
           * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
@@ -7455,7 +7361,6 @@ declare namespace LocalJSX {
         "atomic-pager": AtomicPager;
         "atomic-popover": AtomicPopover;
         "atomic-product": AtomicProduct;
-        "atomic-product-image": AtomicProductImage;
         "atomic-product-link": AtomicProductLink;
         "atomic-product-template": AtomicProductTemplate;
         "atomic-query-error": AtomicQueryError;
@@ -7739,16 +7644,13 @@ declare module "@stencil/core" {
              * The `atomic-popover` component displays any facet as a popover menu.
              */
             "atomic-popover": LocalJSX.AtomicPopover & JSXBase.HTMLAttributes<HTMLAtomicPopoverElement>;
-            "atomic-product": LocalJSX.AtomicProduct & JSXBase.HTMLAttributes<HTMLAtomicProductElement>;
             /**
              * The `atomic-product` component is used internally by the `atomic-product-list` component.
-             * The `atomic-product-image` component renders an image from a result field.
-             */
-            "atomic-product-image": LocalJSX.AtomicProductImage & JSXBase.HTMLAttributes<HTMLAtomicProductImageElement>;
-            /**
-             * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
              */
             "atomic-product": LocalJSX.AtomicProduct & JSXBase.HTMLAttributes<HTMLAtomicProductElement>;
+            /**
+             * The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
+             */
             "atomic-product-link": LocalJSX.AtomicProductLink & JSXBase.HTMLAttributes<HTMLAtomicProductLinkElement>;
             "atomic-product-template": LocalJSX.AtomicProductTemplate & JSXBase.HTMLAttributes<HTMLAtomicProductTemplateElement>;
             /**
