@@ -323,7 +323,6 @@ export namespace Components {
         "type": | 'search'
     | 'product-listing';
     }
-    interface AtomicCommerceProductList {
     /**
      * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
      */
@@ -341,6 +340,7 @@ export namespace Components {
          */
         "previousButtonIcon": string;
     }
+    interface AtomicCommerceProductList {
         /**
           * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of different parts in a product.
          */
@@ -2886,7 +2886,6 @@ declare global {
         prototype: HTMLAtomicCommerceInterfaceElement;
         new (): HTMLAtomicCommerceInterfaceElement;
     };
-    interface HTMLAtomicCommerceProductListElement extends Components.AtomicCommerceProductList, HTMLStencilElement {
     interface HTMLAtomicCommercePagerElementEventMap {
         "atomic/scrollToTop": any;
     }
@@ -2907,6 +2906,7 @@ declare global {
         prototype: HTMLAtomicCommercePagerElement;
         new (): HTMLAtomicCommercePagerElement;
     };
+    interface HTMLAtomicCommerceProductListElement extends Components.AtomicCommerceProductList, HTMLStencilElement {
     }
     var HTMLAtomicCommerceProductListElement: {
         prototype: HTMLAtomicCommerceProductListElement;
@@ -4394,8 +4394,8 @@ declare global {
         "atomic-citation": HTMLAtomicCitationElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
         "atomic-commerce-interface": HTMLAtomicCommerceInterfaceElement;
-        "atomic-commerce-product-list": HTMLAtomicCommerceProductListElement;
         "atomic-commerce-pager": HTMLAtomicCommercePagerElement;
+        "atomic-commerce-product-list": HTMLAtomicCommerceProductListElement;
         "atomic-commerce-search-box": HTMLAtomicCommerceSearchBoxElement;
         "atomic-component-error": HTMLAtomicComponentErrorElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
@@ -4779,7 +4779,6 @@ declare namespace LocalJSX {
         "type"?: | 'search'
     | 'product-listing';
     }
-    interface AtomicCommerceProductList {
     /**
      * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
      */
@@ -4798,6 +4797,7 @@ declare namespace LocalJSX {
          */
         "previousButtonIcon"?: string;
     }
+    interface AtomicCommerceProductList {
         /**
           * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of different parts in a product.
          */
@@ -7106,8 +7106,8 @@ declare namespace LocalJSX {
         "atomic-citation": AtomicCitation;
         "atomic-color-facet": AtomicColorFacet;
         "atomic-commerce-interface": AtomicCommerceInterface;
-        "atomic-commerce-product-list": AtomicCommerceProductList;
         "atomic-commerce-pager": AtomicCommercePager;
+        "atomic-commerce-product-list": AtomicCommerceProductList;
         "atomic-commerce-search-box": AtomicCommerceSearchBox;
         "atomic-component-error": AtomicComponentError;
         "atomic-did-you-mean": AtomicDidYouMean;
@@ -7288,11 +7288,11 @@ declare module "@stencil/core" {
              */
             "atomic-color-facet": LocalJSX.AtomicColorFacet & JSXBase.HTMLAttributes<HTMLAtomicColorFacetElement>;
             "atomic-commerce-interface": LocalJSX.AtomicCommerceInterface & JSXBase.HTMLAttributes<HTMLAtomicCommerceInterfaceElement>;
-            "atomic-commerce-product-list": LocalJSX.AtomicCommerceProductList & JSXBase.HTMLAttributes<HTMLAtomicCommerceProductListElement>;
             /**
              * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
              */
             "atomic-commerce-pager": LocalJSX.AtomicCommercePager & JSXBase.HTMLAttributes<HTMLAtomicCommercePagerElement>;
+            "atomic-commerce-product-list": LocalJSX.AtomicCommerceProductList & JSXBase.HTMLAttributes<HTMLAtomicCommerceProductListElement>;
             /**
              * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
              */
