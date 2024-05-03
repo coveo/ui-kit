@@ -303,3 +303,7 @@ export const generateComponentHTML = (tag: string, props: TagProps = {}) => {
   }
   return e;
 };
+
+export const generateLongTextAnswer = () => {
+  return new Array(200).fill('This is a long answer.').join(' ');
+};
