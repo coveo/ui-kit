@@ -11,11 +11,11 @@ import { i18n } from "i18next";
 import { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout, ItemTarget } from "./components/common/layout/display-options";
+import { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
 import { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
-import { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
 import { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightGeneratedAnswerStyle, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 import { i18nCompatibilityVersion } from "./components/common/interface/i18n";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
@@ -37,11 +37,11 @@ export { i18n } from "i18next";
 export { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout, ItemTarget } from "./components/common/layout/display-options";
+export { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
 export { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
-export { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
 export { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightGeneratedAnswerStyle, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 export { i18nCompatibilityVersion } from "./components/common/interface/i18n";
 export { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
@@ -350,9 +350,19 @@ export namespace Components {
          */
         "display": ItemDisplayLayout;
         /**
+          * The target location to open the product link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
+          * @defaultValue `_self`
+         */
+        "gridCellLinkTarget": ItemTarget;
+        /**
           * The expected size of the image displayed for products.
          */
         "imageSize": ItemDisplayImageSize;
+        /**
+          * Sets a rendering function to bypass the standard HTML template mechanism for rendering products. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
+          * @param productRenderingFunction
+         */
+        "setRenderFunction": (productRenderingFunction: ItemRenderingFunction) => Promise<void>;
     }
     /**
      * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
@@ -1464,37 +1474,63 @@ export namespace Components {
      */
     interface AtomicProductImage {
         /**
-          * An optional fallback image URL that will be used in case the specified image field is not available or encounters an error.
+          * The classes to add to the product element.
          */
-        "fallback"?: string;
+        "classes": string;
         /**
-          * The result field which the component should use. This will look for the field in the Result object first, then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
+          * The product content to display.
          */
-        "field": string;
+        "content"?: ParentNode;
+        /**
+          * How large or small products should be.
+         */
+        "density": ItemDisplayDensity;
+        /**
+          * How products should be displayed.
+         */
+        "display": ItemDisplayLayout;
+        /**
+          * The size of the visual section in product list items.  This is overwritten by the image size defined in the product content, if it exists.
+         */
+        "imageSize": ItemDisplayImageSize;
+        /**
+          * The InteractiveResult item.
+         */
+        "interactiveResult": InteractiveResult;
+        "loadingFlag"?: string;
+        /**
+          * The product item.
+         */
+        "product": Product;
+        /**
+          * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
+         */
+        "renderingFunction": ItemRenderingFunction;
+        /**
+          * Whether an atomic-product-link inside atomic-product should stop click event propagation.
+         */
+        "stopPropagation"?: boolean;
+        /**
+          * Global Atomic state.
+         */
+        "store"?: AtomicCommonStore<AtomicCommonStoreData>;
     }
     /**
-     * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
+     * The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
      */
     interface AtomicProductLink {
         /**
-          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the result's `clickUri` and `itemtitle` fields. ```html <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link> ```
+          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of product properties from the parent product. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the product's `clickUri` and `itemtitle` fields. ```html <atomic-product-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-product-link> ```
          */
         "hrefTemplate"?: string;
     }
-    /**
-     * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
-     * A `template` element must be the child of an `atomic-result-template`, and either an `atomic-result-list` or `atomic-folded-result-list` must be the parent of each `atomic-result-template`.
-     * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
-     * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
-     * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
-     */
     interface AtomicProductTemplate {
         /**
-          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
+          * A function that must return true on products for the product template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to products whose `ec_name` contains `singapore`: `document.querySelector('#target-template').conditions = [(product) => /singapore/i.test(product.ec_name)];`
          */
         "conditions": ProductTemplateCondition[];
         /**
-          * Gets the appropriate result template based on conditions applied.
+          * Gets the appropriate product template based on conditions applied.
          */
         "getTemplate": () => Promise<ProductTemplate<DocumentFragment> | null>;
     }
@@ -1904,7 +1940,7 @@ export namespace Components {
         /**
           * The InteractiveResult item.
          */
-        "interactiveResult": InteractiveResult;
+        "interactiveResult": InteractiveResult1;
         "loadingFlag"?: string;
         /**
           * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
@@ -3653,17 +3689,14 @@ declare global {
         prototype: HTMLAtomicPopoverElement;
         new (): HTMLAtomicPopoverElement;
     };
-    /**
-     * The `atomic-product-image` component renders an image from a result field.
-     */
-    interface HTMLAtomicProductImageElement extends Components.AtomicProductImage, HTMLStencilElement {
+    interface HTMLAtomicProductElement extends Components.AtomicProduct, HTMLStencilElement {
     }
-    var HTMLAtomicProductImageElement: {
-        prototype: HTMLAtomicProductImageElement;
-        new (): HTMLAtomicProductImageElement;
+    var HTMLAtomicProductElement: {
+        prototype: HTMLAtomicProductElement;
+        new (): HTMLAtomicProductElement;
     };
     /**
-     * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
+     * The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
      */
     interface HTMLAtomicProductElement extends Components.AtomicProduct, HTMLStencilElement {
     }
@@ -3677,13 +3710,6 @@ declare global {
         prototype: HTMLAtomicProductLinkElement;
         new (): HTMLAtomicProductLinkElement;
     };
-    /**
-     * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
-     * A `template` element must be the child of an `atomic-result-template`, and either an `atomic-result-list` or `atomic-folded-result-list` must be the parent of each `atomic-result-template`.
-     * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
-     * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
-     * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
-     */
     interface HTMLAtomicProductTemplateElement extends Components.AtomicProductTemplate, HTMLStencilElement {
     }
     var HTMLAtomicProductTemplateElement: {
@@ -4941,6 +4967,11 @@ declare namespace LocalJSX {
          */
         "display"?: ItemDisplayLayout;
         /**
+          * The target location to open the product link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
+          * @defaultValue `_self`
+         */
+        "gridCellLinkTarget"?: ItemTarget;
+        /**
           * The expected size of the image displayed for products.
          */
         "imageSize"?: ItemDisplayImageSize;
@@ -5980,16 +6011,49 @@ declare namespace LocalJSX {
      */
     interface AtomicProductImage {
         /**
-          * An optional fallback image URL that will be used in case the specified image field is not available or encounters an error.
+          * The classes to add to the product element.
          */
-        "fallback"?: string;
+        "classes"?: string;
         /**
-          * The result field which the component should use. This will look for the field in the Result object first, then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
+          * The product content to display.
          */
-        "field": string;
+        "content"?: ParentNode;
+        /**
+          * How large or small products should be.
+         */
+        "density"?: ItemDisplayDensity;
+        /**
+          * How products should be displayed.
+         */
+        "display"?: ItemDisplayLayout;
+        /**
+          * The size of the visual section in product list items.  This is overwritten by the image size defined in the product content, if it exists.
+         */
+        "imageSize"?: ItemDisplayImageSize;
+        /**
+          * The InteractiveResult item.
+         */
+        "interactiveResult": InteractiveResult;
+        "loadingFlag"?: string;
+        /**
+          * The product item.
+         */
+        "product": Product;
+        /**
+          * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
+         */
+        "renderingFunction"?: ItemRenderingFunction;
+        /**
+          * Whether an atomic-product-link inside atomic-product should stop click event propagation.
+         */
+        "stopPropagation"?: boolean;
+        /**
+          * Global Atomic state.
+         */
+        "store"?: AtomicCommonStore<AtomicCommonStoreData>;
     }
     /**
-     * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
+     * The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
      */
     interface AtomicProduct {
         /**
@@ -6036,20 +6100,13 @@ declare namespace LocalJSX {
          }
     interface AtomicProductLink {
         /**
-          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the result's `clickUri` and `itemtitle` fields. ```html <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link> ```
+          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of product properties from the parent product. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the product's `clickUri` and `itemtitle` fields. ```html <atomic-product-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-product-link> ```
          */
         "hrefTemplate"?: string;
     }
-    /**
-     * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
-     * A `template` element must be the child of an `atomic-result-template`, and either an `atomic-result-list` or `atomic-folded-result-list` must be the parent of each `atomic-result-template`.
-     * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
-     * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
-     * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
-     */
     interface AtomicProductTemplate {
         /**
-          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
+          * A function that must return true on products for the product template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to products whose `ec_name` contains `singapore`: `document.querySelector('#target-template').conditions = [(product) => /singapore/i.test(product.ec_name)];`
          */
         "conditions"?: ProductTemplateCondition[];
     }
@@ -6431,7 +6488,7 @@ declare namespace LocalJSX {
         /**
           * The InteractiveResult item.
          */
-        "interactiveResult": InteractiveResult;
+        "interactiveResult": InteractiveResult1;
         "loadingFlag"?: string;
         /**
           * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
@@ -7682,6 +7739,7 @@ declare module "@stencil/core" {
              * The `atomic-popover` component displays any facet as a popover menu.
              */
             "atomic-popover": LocalJSX.AtomicPopover & JSXBase.HTMLAttributes<HTMLAtomicPopoverElement>;
+            "atomic-product": LocalJSX.AtomicProduct & JSXBase.HTMLAttributes<HTMLAtomicProductElement>;
             /**
              * The `atomic-product` component is used internally by the `atomic-product-list` component.
              * The `atomic-product-image` component renders an image from a result field.
@@ -7692,13 +7750,6 @@ declare module "@stencil/core" {
              */
             "atomic-product": LocalJSX.AtomicProduct & JSXBase.HTMLAttributes<HTMLAtomicProductElement>;
             "atomic-product-link": LocalJSX.AtomicProductLink & JSXBase.HTMLAttributes<HTMLAtomicProductLinkElement>;
-            /**
-             * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
-             * A `template` element must be the child of an `atomic-result-template`, and either an `atomic-result-list` or `atomic-folded-result-list` must be the parent of each `atomic-result-template`.
-             * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
-             * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
-             * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
-             */
             "atomic-product-template": LocalJSX.AtomicProductTemplate & JSXBase.HTMLAttributes<HTMLAtomicProductTemplateElement>;
             /**
              * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.

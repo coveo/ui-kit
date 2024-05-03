@@ -7,7 +7,7 @@ import {
   Search,
   Product,
 } from '@coveo/headless/commerce';
-import {Component, Element, Prop, State, h} from '@stencil/core';
+import {Component, Element, Method, Prop, State, h} from '@stencil/core';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
@@ -32,6 +32,7 @@ import {
   ItemDisplayDensity,
   ItemDisplayImageSize,
   ItemDisplayLayout,
+  ItemTarget,
   getItemListDisplayClasses,
 } from '../../common/layout/display-options';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
@@ -52,11 +53,11 @@ export class AtomicCommerceProductList
   @InitializeBindings() public bindings!: CommerceBindings;
   public productListing!: ProductListing;
   public search!: Search;
-  private resultListCommon!: ItemListCommon;
-  private itemRenderingFunction: ItemRenderingFunction;
   private loadingFlag = randomID('firstResultLoaded-');
-  private productTemplateProvider!: ProductTemplateProvider;
+  private itemRenderingFunction: ItemRenderingFunction;
   private nextNewResultTarget?: FocusTargetController;
+  private productTemplateProvider!: ProductTemplateProvider;
+  private productListCommon!: ItemListCommon;
 
   @Element() public host!: HTMLDivElement;
 
@@ -84,6 +85,27 @@ export class AtomicCommerceProductList
    * The expected size of the image displayed for products.
    */
   @Prop({reflect: true}) imageSize: ItemDisplayImageSize = 'small';
+
+  /**
+   * The target location to open the product link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)).
+   * This property is only leveraged when `display` is `grid`.
+   * @defaultValue `_self`
+   */
+  @Prop() gridCellLinkTarget: ItemTarget = '_self';
+
+  /**
+   * Sets a rendering function to bypass the standard HTML template mechanism for rendering products.
+   * You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.
+   *
+   * Do not use this method if you integrate Atomic in a plain HTML deployment.
+   *
+   * @param productRenderingFunction
+   */
+  @Method() public async setRenderFunction(
+    productRenderingFunction: ItemRenderingFunction
+  ) {
+    this.itemRenderingFunction = productRenderingFunction;
+  }
 
   public get focusTarget() {
     if (!this.nextNewResultTarget) {
@@ -115,7 +137,7 @@ export class AtomicCommerceProductList
       },
     });
 
-    this.resultListCommon = new ItemListCommon({
+    this.productListCommon = new ItemListCommon({
       engineSubscribe: this.bindings.engine.subscribe,
       getCurrentNumberOfItems: () => this.productState.products.length,
       getIsLoading: () => this.productState.isLoading,
@@ -132,8 +154,6 @@ export class AtomicCommerceProductList
       : this.searchState;
   }
 
-  // TODO: Refactor to support result templates
-  // TODO: Refactor to use guards/wrappers as in atomic-result-list
   public render() {
     if (
       this.productState.products.length === 0 &&
@@ -180,22 +200,22 @@ export class AtomicCommerceProductList
     );
   }
 
-  private getPropsForAtomicResult(result: Product) {
+  private getPropsForAtomicProduct(product: Product) {
     return {
-      // TODO: add back once the interactive result is implemented
+      // TODO: add back once interactive result is implemented for products
       /* interactiveResult: buildInteractiveResult(this.bindings.engine, {
         options: {result},
       }), */
-      result,
+      product,
       renderingFunction: this.itemRenderingFunction,
       loadingFlag: this.loadingFlag,
-      key: this.resultListCommon.getResultId(
-        result.permanentid,
+      key: this.productListCommon.getResultId(
+        product.permanentid,
         this.productState.responseId,
         this.density,
         this.imageSize
       ),
-      content: this.productTemplateProvider.getTemplateContent(result),
+      content: this.productTemplateProvider.getTemplateContent(product),
       store: this.bindings.store,
       density: this.density,
       imageSize: this.imageSize,
@@ -204,20 +224,20 @@ export class AtomicCommerceProductList
   }
 
   private renderAsGrid() {
-    return this.productState.products.map((result, i) => {
-      const propsForAtomicResult = this.getPropsForAtomicResult(result);
+    return this.productState.products.map((product, i) => {
+      const propsForAtomicProduct = this.getPropsForAtomicProduct(product);
       return (
         <DisplayGrid
           item={{
-            ...result,
-            clickUri: result.clickUri,
-            title: result.ec_name ?? 'temp',
+            ...product,
+            clickUri: product.clickUri,
+            title: product.ec_name ?? 'temp',
           }}
           // TODO: add back once the interactive result is implemented
-          //{...propsForAtomicResult?.interactiveResult}
+          //{...propsForAtomicProduct.interactiveResult}
           // TODO: Remove these back once the interactive result is implemented
           setRef={(element) =>
-            element && this.resultListCommon.setNewResultRef(element, i)
+            element && this.productListCommon.setNewResultRef(element, i)
           }
           select={function (): void {
             throw new Error('Function not implemented.');
@@ -229,7 +249,7 @@ export class AtomicCommerceProductList
             throw new Error('Function not implemented.');
           }}
         >
-          <atomic-result {...this} {...propsForAtomicResult}></atomic-result>
+          <atomic-product {...this} {...propsForAtomicProduct}></atomic-product>
         </DisplayGrid>
       );
     });
@@ -256,26 +276,26 @@ export class AtomicCommerceProductList
         itemRenderingFunction={this.itemRenderingFunction}
         host={this.host}
       >
-        {this.productState.products.map((result, i) => {
-          const propsForAtomicResult = this.getPropsForAtomicResult(result);
+        {this.productState.products.map((product, i) => {
+          const propsForAtomicProduct = this.getPropsForAtomicProduct(product);
           return (
             <DisplayTableRow
-              {...propsForAtomicResult}
+              {...propsForAtomicProduct}
               rowIndex={i}
               setRef={(element) =>
-                element && this.resultListCommon.setNewResultRef(element, i)
+                element && this.productListCommon.setNewResultRef(element, i)
               }
             >
               <DisplayTableData
                 {...propsForTableColumns}
-                {...propsForAtomicResult}
+                {...propsForAtomicProduct}
                 renderItem={(content) => {
                   return (
-                    <atomic-result
+                    <atomic-product
                       {...this}
-                      {...propsForAtomicResult}
+                      {...propsForAtomicProduct}
                       content={content}
-                    ></atomic-result>
+                    ></atomic-product>
                   );
                 }}
               ></DisplayTableData>
@@ -287,17 +307,17 @@ export class AtomicCommerceProductList
   }
 
   private renderAsList() {
-    return this.productState.products.map((result, i) => {
-      const propsForAtomicResult = this.getPropsForAtomicResult(result);
+    return this.productState.products.map((product, i) => {
+      const propsForAtomicProduct = this.getPropsForAtomicProduct(product);
       return (
-        <atomic-result
+        <atomic-product
           {...this}
-          {...propsForAtomicResult}
+          {...propsForAtomicProduct}
           ref={(element) =>
-            element && this.resultListCommon.setNewResultRef(element, i)
+            element && this.productListCommon.setNewResultRef(element, i)
           }
           part="outline"
-        ></atomic-result>
+        ></atomic-product>
       );
     });
   }

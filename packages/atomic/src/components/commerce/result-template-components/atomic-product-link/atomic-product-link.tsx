@@ -1,5 +1,5 @@
 import {isUndefined} from '@coveo/bueno';
-import {InteractiveResult} from '@coveo/headless';
+import {InteractiveResult as InteractiveProduct} from '@coveo/headless/commerce';
 import {Product} from '@coveo/headless/commerce';
 import {Component, h, Prop, Element} from '@stencil/core';
 import {buildCustomEvent} from '../../../../utils/event-utils';
@@ -12,12 +12,12 @@ import {getAttributesFromLinkSlot} from '../../../common/item-link/attributes-sl
 import {LinkWithItemAnalytics} from '../../../common/item-link/item-link';
 import {Bindings} from '../../../search/atomic-search-interface/atomic-search-interface';
 import {
-  InteractiveResultContext,
+  InteractiveProductContext,
   ProductContext,
 } from '../product-template-decorators';
 
 /**
- * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
+ * The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
  * @slot default - Lets you display alternative content inside the link
  * @slot attributes - Lets you pass [attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#attributes) down to the link element, overriding other attributes, to be used exclusively with an "a" tag such as `<a slot="attributes" target="_blank" download></a>`.
  */
@@ -33,7 +33,7 @@ export class AtomicProductLink implements InitializableComponent {
   public static isCompatibleWithProductList = true;
 
   @ProductContext() private product!: Product;
-  @InteractiveResultContext() private interactiveResult!: InteractiveResult;
+  @InteractiveProductContext() private interactiveProduct!: InteractiveProduct;
 
   @Element() private host!: HTMLElement;
 
@@ -41,11 +41,11 @@ export class AtomicProductLink implements InitializableComponent {
    * Specifies a template literal from which to generate the `href` attribute value (see
    * [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).
    *
-   * The template literal can reference any number of result properties from the parent result. It can also reference the window object.
+   * The template literal can reference any number of product properties from the parent product. It can also reference the window object.
    *
-   * For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the result's `clickUri` and `itemtitle` fields.
+   * For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the product's `clickUri` and `itemtitle` fields.
    * ```html
-   * <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link>
+   * <atomic-product-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-product-link>
    * ```
    */
   @Prop({reflect: true}) hrefTemplate?: string;
@@ -72,6 +72,7 @@ export class AtomicProductLink implements InitializableComponent {
   }
 
   public render() {
+    console.log(this);
     const href = isUndefined(this.hrefTemplate)
       ? this.product.clickUri
       : 'test';
@@ -79,10 +80,12 @@ export class AtomicProductLink implements InitializableComponent {
     return (
       <LinkWithItemAnalytics
         href={href}
-        onSelect={() => this.interactiveResult.select()}
-        onBeginDelayedSelect={() => this.interactiveResult.beginDelayedSelect()}
+        onSelect={() => this.interactiveProduct.select()}
+        onBeginDelayedSelect={() =>
+          this.interactiveProduct.beginDelayedSelect()
+        }
         onCancelPendingSelect={() =>
-          this.interactiveResult.cancelPendingSelect()
+          this.interactiveProduct.cancelPendingSelect()
         }
         attributes={this.linkAttributes}
         stopPropagation={this.stopPropagation}

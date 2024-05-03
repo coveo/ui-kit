@@ -98,7 +98,7 @@ export class ProductTemplateCommon {
 
     if (template.content.querySelector('script')) {
       console.warn(
-        'Any "script" tags defined inside of "template" elements are not supported and will not be executed when the results are rendered.',
+        'Any "script" tags defined inside of "template" elements are not supported and will not be executed when the products are rendered.',
         host
       );
     }
@@ -108,7 +108,7 @@ export class ProductTemplateCommon {
     );
     if (sectionNodes?.length && otherNodes?.length) {
       console.warn(
-        'Result templates should only contain section elements or non-section elements. Future updates could unpredictably affect this result template.',
+        'Product templates should only contain section elements or non-section elements. Future updates could unpredictably affect this product template.',
         host,
         {sectionNodes, otherNodes}
       );
