@@ -36,6 +36,10 @@ export const GeneratedAnswerSelectors = {
     GeneratedAnswerSelectors.shadow().find('[part="copy-button"]'),
   disclaimer: () =>
     GeneratedAnswerSelectors.shadow().find('[slot="disclaimer"]'),
+  answerContainer: () =>
+    GeneratedAnswerSelectors.shadow().find('[part="generated-container"]'),
+  showButton: () =>
+    GeneratedAnswerSelectors.shadow().find('[part="answer-show-button"]'),
 };
 
 export const feedbackModalSelectors = {
