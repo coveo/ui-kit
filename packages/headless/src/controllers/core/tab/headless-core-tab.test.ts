@@ -5,12 +5,18 @@ import {
   updateActiveTab,
 } from '../../../features/tab-set/tab-set-actions';
 import {tabSetReducer as tabSet} from '../../../features/tab-set/tab-set-slice';
-import {buildMockSearchAppEngine, MockSearchEngine} from '../../../test';
+import {
+  buildMockSearchEngine,
+  MockedSearchEngine,
+} from '../../../test/mock-engine-v2';
+import {createMockState} from '../../../test/mock-state';
 import {buildMockTabSlice} from '../../../test/mock-tab-state';
 import {buildCoreTab, Tab, TabProps} from './headless-core-tab';
 
+jest.mock('../../../features/tab-set/tab-set-actions');
+
 describe('Core Tab', () => {
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
   let props: TabProps;
   let tab: Tab;
 
@@ -19,7 +25,7 @@ describe('Core Tab', () => {
   }
 
   beforeEach(() => {
-    engine = buildMockSearchAppEngine();
+    engine = buildMockSearchEngine(createMockState());
     props = {
       options: {
         expression: '@objecttype==Message',
@@ -55,8 +61,7 @@ describe('Core Tab', () => {
       initTab();
 
       const {id, expression} = props.options;
-      const action = registerTab({id, expression});
-      expect(engine.actions).toContainEqual(action);
+      expect(registerTab).toHaveBeenCalledWith({id, expression});
     });
 
     it('when isActive is true, it dispatches #updateActiveTab', () => {
@@ -64,7 +69,7 @@ describe('Core Tab', () => {
       props.initialState!.isActive = true;
       initTab();
 
-      expect(engine.actions).toContainEqual(updateActiveTab(id));
+      expect(updateActiveTab).toHaveBeenCalledWith(id);
     });
 
     it('does not throw if initialState is undefined', () => {
@@ -93,20 +98,19 @@ describe('Core Tab', () => {
     it('dispatches #updateActiveTab', () => {
       const {id} = props.options;
       tab.select();
-
-      expect(engine.actions).toContainEqual(updateActiveTab(id));
+      expect(updateActiveTab).toHaveBeenCalledWith(id);
     });
   });
 
   it('when the entry in the tabSet is not active, #state.isActive is false', () => {
     const {id} = props.options;
-    engine.state.tabSet[id] = buildMockTabSlice({id, isActive: false});
+    engine.state.tabSet![id] = buildMockTabSlice({id, isActive: false});
     expect(tab.state.isActive).toBe(false);
   });
 
   it('when the entry in the tabSet is active, #state.isActive is true', () => {
     const {id} = props.options;
-    engine.state.tabSet[id] = buildMockTabSlice({id, isActive: true});
+    engine.state.tabSet![id] = buildMockTabSlice({id, isActive: true});
     expect(tab.state.isActive).toBe(true);
   });
 });

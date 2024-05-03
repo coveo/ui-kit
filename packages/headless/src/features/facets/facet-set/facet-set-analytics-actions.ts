@@ -1,5 +1,4 @@
 import {Value} from '@coveo/bueno';
-import {SearchAnalyticsProvider} from '../../../api/analytics/search-analytics';
 import {
   validatePayload,
   requiredNonEmptyString,
@@ -236,64 +235,40 @@ export const logFacetBreadcrumb = (
   });
 
 // --------------------- KIT-2859 : Everything above this will get deleted ! :) ---------------------
-export const facetUpdateSort = (
-  id: string,
-  criterion: FacetSortCriterion | RangeFacetSortCriterion
-): SearchAction => {
-  return {
-    actionCause: SearchPageEvents.facetUpdateSort,
-    getEventExtraPayload: (state) =>
-      new SearchAnalyticsProvider(() => state).getFacetUpdateSortMetadata(
-        id,
-        criterion
-      ),
-  };
-};
+export const facetUpdateSort = (): SearchAction => ({
+  actionCause: SearchPageEvents.facetUpdateSort,
+});
 
-export const facetClearAll = (id: string): SearchAction => {
+export const facetClearAll = (): SearchAction => {
   return {
     actionCause: SearchPageEvents.facetClearAll,
-    getEventExtraPayload: (state) =>
-      new SearchAnalyticsProvider(() => state).getFacetClearAllMetadata(id),
   };
 };
 
-export const facetSelect = (id: string, value: string): SearchAction => {
-  return {
-    actionCause: SearchPageEvents.facetSelect,
-    getEventExtraPayload: (state) =>
-      new SearchAnalyticsProvider(() => state).getFacetMetadata(id, value),
-  };
-};
+export const facetSelect = (): SearchAction => ({
+  actionCause: SearchPageEvents.facetSelect,
+});
 
-export const facetExclude = (id: string, value: string): SearchAction => {
-  return {
-    actionCause: SearchPageEvents.facetExclude,
-    getEventExtraPayload: (state) =>
-      new SearchAnalyticsProvider(() => state).getFacetMetadata(id, value),
-  };
-};
+export const facetExclude = (): SearchAction => ({
+  actionCause: SearchPageEvents.facetExclude,
+});
 
-export const facetDeselect = (id: string, value: string): SearchAction => {
-  return {
-    actionCause: SearchPageEvents.facetDeselect,
-    getEventExtraPayload: (state) =>
-      new SearchAnalyticsProvider(() => state).getFacetMetadata(id, value),
-  };
-};
+export const facetDeselect = (): SearchAction => ({
+  actionCause: SearchPageEvents.facetDeselect,
+});
 
-export const facetUnexclude = (id: string, value: string): SearchAction => {
-  return {
-    actionCause: SearchPageEvents.facetUnexclude,
-    getEventExtraPayload: (state) =>
-      new SearchAnalyticsProvider(() => state).getFacetMetadata(id, value),
-  };
-};
+export const facetUnexclude = (): SearchAction => ({
+  actionCause: SearchPageEvents.facetUnexclude,
+});
 
-export const breadcrumbFacet = (id: string, value: string): SearchAction => {
-  return {
-    actionCause: SearchPageEvents.breadcrumbFacet,
-    getEventExtraPayload: (state) =>
-      new SearchAnalyticsProvider(() => state).getFacetMetadata(id, value),
-  };
-};
+export const breadcrumbFacet = (): SearchAction => ({
+  actionCause: SearchPageEvents.breadcrumbFacet,
+});
+
+export const facetShowLess = (): SearchAction => ({
+  actionCause: SearchPageEvents.facetShowLess,
+});
+
+export const facetShowMore = (): SearchAction => ({
+  actionCause: SearchPageEvents.facetShowMore,
+});

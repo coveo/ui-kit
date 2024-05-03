@@ -1,10 +1,11 @@
-import {PlatformClient} from '../../api/platform-client';
+import {SearchAPIClient} from '../../api/search/search-api-client';
+import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {
-  buildMockSearchAppEngine,
-  createMockState,
-  MockSearchEngine,
-} from '../../test';
+  MockedSearchEngine,
+  buildMockSearchEngine,
+} from '../../test/mock-engine-v2';
 import {buildMockFieldDescription} from '../../test/mock-field-description';
+import {createMockState} from '../../test/mock-state';
 import {
   disableFetchAllFields,
   enableFetchAllFields,
@@ -55,29 +56,22 @@ describe('fields slice', () => {
   });
 
   describe('when fetching fields description', () => {
-    let e: MockSearchEngine;
+    let e: MockedSearchEngine;
+    let apiClient: SearchAPIClient;
 
     beforeEach(() => {
-      e = buildMockSearchAppEngine({state: createMockState()});
-      PlatformClient.call = jest.fn().mockImplementation(() => {
-        const body = JSON.stringify([
-          buildMockFieldDescription(),
-          buildMockFieldDescription(),
-        ]);
-        const response = new Response(body);
-
-        return Promise.resolve(response);
-      });
+      e = buildMockSearchEngine(createMockState());
+      apiClient = {
+        fieldDescriptions: jest.fn(),
+      } as unknown as SearchAPIClient;
     });
 
     it('calls platform client to get fields description', async () => {
-      await e.dispatch(fetchFieldsDescription());
-      expect(PlatformClient.call).toHaveBeenCalledWith(
-        expect.objectContaining({
-          url: expect.stringContaining('/fields'),
-          method: 'GET',
-        })
-      );
+      await fetchFieldsDescription()(e.dispatch, () => e.state, {
+        apiClient,
+      } as ClientThunkExtraArguments<SearchAPIClient>);
+
+      expect(apiClient.fieldDescriptions).toHaveBeenCalled();
     });
 
     it('should add fields description to the state', () => {

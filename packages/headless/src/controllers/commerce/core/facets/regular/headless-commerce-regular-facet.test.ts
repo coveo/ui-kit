@@ -1,44 +1,56 @@
-import {CommerceFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
+import {RegularFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
 } from '../../../../../features/facets/facet-set/facet-set-actions';
 import {CommerceAppState} from '../../../../../state/commerce-app-state';
-import {MockCommerceEngine, buildMockCommerceEngine} from '../../../../../test';
 import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request';
 import {buildMockCommerceRegularFacetResponse} from '../../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceFacetSlice} from '../../../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceRegularFacetValue} from '../../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
+import {
+  MockedCommerceEngine,
+  buildMockCommerceEngine,
+} from '../../../../../test/mock-engine-v2';
+import {buildMockFacetSearch} from '../../../../../test/mock-facet-search';
 import {commonOptions} from '../../../product-listing/facets/headless-product-listing-facet-options';
 import {
-  CommerceRegularFacet,
-  CommerceRegularFacetOptions,
+  RegularFacet,
+  RegularFacetOptions,
   buildCommerceRegularFacet,
 } from './headless-commerce-regular-facet';
 
-describe('CommerceRegularFacet', () => {
+jest.mock('../../../../../features/facets/facet-set/facet-set-actions');
+
+describe('RegularFacet', () => {
   const facetId: string = 'regular_facet_id';
-  let options: CommerceRegularFacetOptions;
+  let engine: MockedCommerceEngine;
   let state: CommerceAppState;
-  let engine: MockCommerceEngine;
-  let facet: CommerceRegularFacet;
+  let options: RegularFacetOptions;
+  let facet: RegularFacet;
+
+  function initEngine(preloadedState = buildMockCommerceState()) {
+    engine = buildMockCommerceEngine(preloadedState);
+  }
 
   function initFacet() {
-    engine = buildMockCommerceEngine({state});
     facet = buildCommerceRegularFacet(engine, options);
   }
 
-  function setFacetRequest(config: Partial<CommerceFacetRequest> = {}) {
+  function setFacetRequest(config: Partial<RegularFacetRequest> = {}) {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, ...config}),
     });
     state.productListing.facets = [
       buildMockCommerceRegularFacetResponse({facetId}),
     ];
+    state.facetSearchSet[facetId] = buildMockFacetSearch();
   }
 
   beforeEach(() => {
+    jest.resetAllMocks();
+
     options = {
       facetId,
       ...commonOptions,
@@ -47,36 +59,60 @@ describe('CommerceRegularFacet', () => {
     state = buildMockCommerceState();
     setFacetRequest();
 
+    initEngine(state);
     initFacet();
   });
 
-  it('initializes', () => {
-    expect(facet).toBeTruthy();
-  });
+  describe('initialization', () => {
+    it('initializes', () => {
+      expect(facet).toBeTruthy();
+    });
 
-  it('exposes #subscribe method', () => {
-    expect(facet.subscribe).toBeTruthy();
-  });
-
-  describe('#toggleSelect', () => {
-    it('dispatches a #toggleSelectFacetValue', () => {
-      const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
-      facet.toggleSelect(facetValue);
-
-      expect(engine.actions).toContainEqual(
-        toggleSelectFacetValue({facetId, selection: facetValue})
-      );
+    it('exposes #subscribe method', () => {
+      expect(facet.subscribe).toBeTruthy();
     });
   });
 
-  describe('#toggleExclude', () => {
-    it('dispatches a #toggleExcludeFacetValue', () => {
-      const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
-      facet.toggleExclude(facetValue);
+  it('#toggleSelect dispatches #toggleSelectFacetValue with correct payload', () => {
+    const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
+    facet.toggleSelect(facetValue);
 
-      expect(engine.actions).toContainEqual(
-        toggleExcludeFacetValue({facetId, selection: facetValue})
-      );
+    expect(toggleSelectFacetValue).toHaveBeenCalledWith({
+      facetId,
+      selection: facetValue,
     });
+  });
+
+  it('#toggleExclude dispatches #toggleExcludeFacetValue with correct payload', () => {
+    const facetValue = buildMockCommerceRegularFacetValue({value: 'TED'});
+    facet.toggleExclude(facetValue);
+
+    expect(toggleExcludeFacetValue).toHaveBeenCalledWith({
+      facetId,
+      selection: facetValue,
+    });
+  });
+
+  it('#state.facetSearch returns the facet search state', () => {
+    const facetSearchState = buildMockFacetSearch();
+    facetSearchState.isLoading = true;
+    facetSearchState.response.moreValuesAvailable = true;
+    facetSearchState.options.query = 'test';
+    facetSearchState.response.values = [
+      {count: 1, displayValue: 'test', rawValue: 'test'},
+    ];
+
+    state.facetSearchSet[facetId] = facetSearchState;
+
+    expect(facet.state.facetSearch).toEqual({
+      isLoading: true,
+      moreValuesAvailable: true,
+      query: 'test',
+      values: [{count: 1, displayValue: 'test', rawValue: 'test'}],
+    });
+  });
+
+  it('#type returns "regular"', () => {
+    expect(facet.type).toBe('regular');
   });
 });

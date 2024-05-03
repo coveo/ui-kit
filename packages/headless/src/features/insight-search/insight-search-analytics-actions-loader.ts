@@ -1,9 +1,7 @@
-import {InsightEngine} from '../../insight.index';
+import {InsightEngine} from '../../app/insight-engine/insight-engine';
 import {InsightAction} from '../analytics/analytics-utils';
-import {
-  logContextChanged,
-  logExpandToFullUI,
-} from './insight-search-analytics-actions';
+import {logExpandToFullUI} from './insight-analytics-actions';
+import {logContextChanged} from './insight-search-analytics-actions';
 
 /**
  * The Insight Search analytics action creators.

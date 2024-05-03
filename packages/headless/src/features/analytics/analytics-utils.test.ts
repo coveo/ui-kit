@@ -1,13 +1,14 @@
 import {createRelay} from '@coveo/relay';
-import {
-  MockSearchEngine,
-  buildMockSearchAppEngine,
-  createMockState,
-} from '../../test';
-import {buildMockResult} from '../../test';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {buildMockAnalyticsState} from '../../test/mock-analytics-state';
+import {
+  MockedSearchEngine,
+  buildMockSearchEngine,
+} from '../../test/mock-engine-v2';
 import {createMockRecommendationState} from '../../test/mock-recommendation-state';
+import {buildMockResult} from '../../test/mock-result';
 import {buildMockResultWithFolding} from '../../test/mock-result-with-folding';
+import {createMockState} from '../../test/mock-state';
 import {getConfigurationInitialState} from '../configuration/configuration-state';
 import {
   documentIdentifier,
@@ -186,7 +187,7 @@ describe('analytics-utils', () => {
   });
 
   describe('#makeAnalytics', () => {
-    let engine: MockSearchEngine;
+    let engine: MockedSearchEngine;
     let analyticsMode: 'legacy' | 'next';
     let relayEmitSpy: jest.SpyInstance;
     const fakeCAJSLog = jest.fn();
@@ -219,14 +220,14 @@ describe('analytics-utils', () => {
     beforeEach(() => {
       jest.resetAllMocks();
       buildMockRelay();
-      engine = buildMockSearchAppEngine({
-        state: createMockState({
+      engine = buildMockSearchEngine(
+        createMockState({
           configuration: {
             ...getConfigurationInitialState(),
             analytics: buildMockAnalyticsState({analyticsMode}),
           },
-        }),
-      });
+        })
+      );
     });
 
     describe('when analyticsMode=next', () => {
@@ -241,7 +242,11 @@ describe('analytics-utils', () => {
             ...additionalMakeAnalyticParamsForRelay,
           });
 
-          await engine.dispatch(action);
+          await action()(
+            engine.dispatch,
+            () => engine.state,
+            {} as ThunkExtraArguments
+          );
 
           expect(fakeCAJSLog).not.toHaveBeenCalled();
           expect(relayEmitSpy).toHaveBeenCalled();
@@ -278,7 +283,11 @@ describe('analytics-utils', () => {
           ...additionalMakeAnalyticParamsForRelay,
         });
 
-        await engine.dispatch(action);
+        await action()(
+          engine.dispatch,
+          () => engine.state,
+          {} as ThunkExtraArguments
+        );
 
         expect(fakeCAJSLog).toHaveBeenCalled();
         expect(relayEmitSpy).not.toHaveBeenCalled();

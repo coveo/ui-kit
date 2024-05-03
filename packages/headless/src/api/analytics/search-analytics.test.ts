@@ -1,6 +1,6 @@
-import {createRelay} from '@coveo/relay';
 import {CoveoAnalyticsClient} from 'coveo.analytics';
 import pino from 'pino';
+import {DateFacetValue} from '../../controllers/product-listing/range-facet/date-facet/headless-product-listing-date-facet';
 import {getConfigurationInitialState} from '../../features/configuration/configuration-state';
 import {getCategoryFacetSetInitialState} from '../../features/facets/category-facet-set/category-facet-set-state';
 import {getFacetSetInitialState} from '../../features/facets/facet-set/facet-set-state';
@@ -8,11 +8,7 @@ import {FacetSortCriterion} from '../../features/facets/facet-set/interfaces/req
 import {getGeneratedAnswerInitialState} from '../../features/generated-answer/generated-answer-state';
 import {OmniboxSuggestionMetadata} from '../../features/query-suggest/query-suggest-analytics-actions';
 import {getQuerySuggestSetInitialState} from '../../features/query-suggest/query-suggest-state';
-import {
-  DateFacetValue,
-  StaticFilterValueMetadata,
-} from '../../product-listing.index';
-import {buildMockResult, createMockState} from '../../test';
+import {StaticFilterValueMetadata} from '../../features/static-filter-set/static-filter-set-actions';
 import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
 import {buildMockFacetRequest} from '../../test/mock-facet-request';
 import {buildMockFacetResponse} from '../../test/mock-facet-response';
@@ -21,13 +17,12 @@ import {buildMockFacetValue} from '../../test/mock-facet-value';
 import {buildMockFacetValueRequest} from '../../test/mock-facet-value-request';
 import {buildMockQueryState} from '../../test/mock-query-state';
 import {buildMockQuerySuggestSet} from '../../test/mock-query-suggest-slice';
+import {buildMockResult} from '../../test/mock-result';
 import {buildMockSearchState} from '../../test/mock-search-state';
-import {VERSION} from '../../utils/version';
+import {createMockState} from '../../test/mock-state';
 import {QuerySuggestCompletion} from '../search/query-suggest/query-suggest-response';
 import {
-  configureAnalytics,
   configureLegacyAnalytics,
-  getAnalyticsSource,
   getPageID,
   SearchAnalyticsProvider,
   StateNeededBySearchAnalyticsProvider,
@@ -476,53 +471,5 @@ describe('#configureLegacyAnalytics', () => {
         ...metadata,
       });
     });
-  });
-});
-
-describe('#configureAnalytics', () => {
-  const mockedCreateRelay = jest.mocked(createRelay).mockImplementation(() => ({
-    emit: jest.fn() as unknown as ReturnType<typeof createRelay>['emit'],
-    on: jest.fn(),
-    off: jest.fn(),
-    clearStorage: jest.fn(),
-    getMeta: jest.fn(),
-    updateConfig: jest.fn(),
-    version: 'test',
-  }));
-
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('creates a Relay client properly and returns the emit function', () => {
-    const state = createMockState();
-    const emit = configureAnalytics(state);
-    expect(mockedCreateRelay).toHaveBeenCalledWith({
-      url: state.configuration.analytics.nextApiBaseUrl,
-      token: state.configuration.accessToken,
-      trackingId: state.configuration.analytics.trackingId,
-      source: expect.arrayContaining([]),
-    });
-    expect(emit).toBe(mockedCreateRelay.mock.results[0].value.emit);
-  });
-});
-
-describe('#getAnalyticsSources', () => {
-  it('without a source, returns an array only with `@coveo/headless`', () => {
-    const state = createMockState();
-    expect(getAnalyticsSource(state.configuration.analytics)).toEqual([
-      `@coveo/headless@${VERSION}`,
-    ]);
-  });
-
-  it('with a source, returns an array with `@coveo/headless` and the serialized framework-version pair', () => {
-    const state = createMockState();
-    state.configuration.analytics.source = {
-      '@coveo/atomic': '1.2.3',
-    };
-    expect(getAnalyticsSource(state.configuration.analytics)).toEqual([
-      `@coveo/headless@${VERSION}`,
-      '@coveo/atomic@1.2.3',
-    ]);
   });
 });

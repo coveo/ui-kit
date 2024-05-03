@@ -7,7 +7,6 @@ import {
   buildResultsPerPage,
   ResultListProps,
   FoldedCollection,
-  Result,
   buildInteractiveResult,
 } from '@coveo/headless';
 import {
@@ -26,15 +25,23 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {randomID} from '../../../../utils/utils';
+import {ResultsPlaceholdersGuard} from '../../../common/atomic-result-placeholder/placeholders';
+import {extractUnfoldedItem} from '../../../common/interface/item';
+import {DisplayWrapper} from '../../../common/item-list/display-wrapper';
+import {ItemDisplayGuard} from '../../../common/item-list/item-display-guard';
 import {
-  ResultDisplayDensity,
-  ResultDisplayImageSize,
-  ResultDisplayLayout,
+  ItemListCommon,
+  ItemRenderingFunction,
+} from '../../../common/item-list/item-list-common';
+import {FoldedItemListStateContextEvent} from '../../../common/item-list/item-list-decorators';
+import {ItemListGuard} from '../../../common/item-list/item-list-guard';
+import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
+import {
+  ItemDisplayDensity,
+  ItemDisplayImageSize,
+  ItemDisplayLayout,
+  getItemListDisplayClasses,
 } from '../../../common/layout/display-options';
-import {ResultListCommon} from '../../../common/result-list/result-list-common';
-import {ResultRenderingFunction} from '../../../common/result-list/result-list-common-interface';
-import {FoldedResultListStateContextEvent} from '../../../common/result-list/result-list-decorators';
-import {ResultTemplateProvider} from '../../../common/result-list/result-template-provider';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -52,10 +59,12 @@ export class AtomicFoldedResultList implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   public foldedResultList!: FoldedResultList;
   public resultsPerPage!: ResultsPerPage;
-  private resultListCommon!: ResultListCommon;
-  private resultRenderingFunction: ResultRenderingFunction;
+  private resultRenderingFunction: ItemRenderingFunction;
   private loadingFlag = randomID('firstResultLoaded-');
-  private display: ResultDisplayLayout = 'list';
+  private itemTemplateProvider!: ItemTemplateProvider;
+  private nextNewResultTarget?: FocusTargetController;
+  private itemListCommon!: ItemListCommon;
+  private display: ItemDisplayLayout = 'list';
 
   @Element() public host!: HTMLDivElement;
 
@@ -69,16 +78,14 @@ export class AtomicFoldedResultList implements InitializableComponent {
   @State() public error!: Error;
   @State() private templateHasError = false;
 
-  private nextNewResultTarget?: FocusTargetController;
-
   /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
    */
-  @Prop({reflect: true}) density: ResultDisplayDensity = 'normal';
+  @Prop({reflect: true}) density: ItemDisplayDensity = 'normal';
   /**
    * The expected size of the image displayed in the results.
    */
-  @Prop({reflect: true}) imageSize: ResultDisplayImageSize = 'icon';
+  @Prop({reflect: true}) imageSize: ItemDisplayImageSize = 'icon';
   /**
    * The name of the field on which to do the folding. The folded result list component will use the values of this field to resolve the collections of result items.
    *
@@ -99,19 +106,30 @@ export class AtomicFoldedResultList implements InitializableComponent {
   @Prop({reflect: true}) public childField?: string;
 
   /**
+   * The initial number of child results to request for each folded collection, before expansion.
+   *
+   * @defaultValue `2`
+   *
+   * @example For an email thread with a total of 20 messages, using the default value of `2` will request the top two child messages, based on the current sort criteria and query, to be returned as children of the parent message.
+   * The user can then click to expand the collection and see the remaining messages that match the current query (i.e., not necessarily all remaining 18 messages). Those messages will be sorted based on the current sort criteria (i.e., not necessarily by date). See the `atomic-load-more-children-results` component.
+   * For more info on Result Folding, see [Result Folding](https://docs.coveo.com/en/1884).
+   **/
+  @Prop({reflect: true}) public numberOfFoldedResults = 2;
+
+  /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
    * You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.
    *
    * Do not use this method if you integrate Atomic in a plain HTML deployment.
    */
   @Method() public async setRenderFunction(
-    resultRenderingFunction: ResultRenderingFunction
+    resultRenderingFunction: ItemRenderingFunction
   ) {
     this.resultRenderingFunction = resultRenderingFunction;
   }
 
   @Listen('atomic/resolveFoldedResultList')
-  resolveFoldedResultList(event: FoldedResultListStateContextEvent) {
+  resolveFoldedResultList(event: FoldedItemListStateContextEvent) {
     event.preventDefault();
     event.stopPropagation();
     event.detail(this.foldedResultList);
@@ -124,7 +142,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
     this.foldedResultList.loadCollection(event.detail);
   }
 
-  private get focusTarget() {
+  public get focusTarget() {
     if (!this.nextNewResultTarget) {
       this.nextNewResultTarget = new FocusTargetController(this);
     }
@@ -139,7 +157,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
       this.error = e as Error;
     }
 
-    const resultTemplateProvider = new ResultTemplateProvider({
+    this.itemTemplateProvider = new ItemTemplateProvider({
       includeDefaultTemplate: true,
       templateElements: Array.from(
         this.host.querySelectorAll('atomic-result-template')
@@ -154,24 +172,15 @@ export class AtomicFoldedResultList implements InitializableComponent {
       },
       bindings: this.bindings,
     });
-    this.resultListCommon = new ResultListCommon({
-      resultTemplateProvider,
-      getNumberOfPlaceholders: () => this.resultsPerPageState.numberOfResults,
+
+    this.itemListCommon = new ItemListCommon({
+      engineSubscribe: this.bindings.engine.subscribe,
+      getCurrentNumberOfItems: () => this.foldedResultListState.results.length,
+      getIsLoading: () => this.foldedResultListState.isLoading,
       host: this.host,
-      bindings: this.bindings,
-      getDensity: () => this.density,
-      getResultDisplay: () => this.display,
-      getLayoutDisplay: () => this.display,
-      getImageSize: () => this.imageSize,
-      nextNewResultTarget: this.focusTarget,
       loadingFlag: this.loadingFlag,
-      getResultListState: () => this.foldedResultListState,
-      getResultRenderingFunction: () => this.resultRenderingFunction,
-      renderResult: (props) => <atomic-result {...props}></atomic-result>,
-      getInteractiveResult: (result: Result) =>
-        buildInteractiveResult(this.bindings.engine, {
-          options: {result},
-        }),
+      nextNewItemTarget: this.focusTarget,
+      store: this.bindings.store,
     });
   }
 
@@ -185,12 +194,91 @@ export class AtomicFoldedResultList implements InitializableComponent {
           collectionField: this.collectionField,
           parentField: this.parentField,
           childField: this.childField,
+          numberOfFoldedResults: this.numberOfFoldedResults,
         },
       },
     });
   }
 
   public render() {
-    return this.resultListCommon.render();
+    this.itemListCommon.updateBreakpoints();
+    const listClasses = this.computeListDisplayClasses();
+
+    return (
+      <ItemListGuard
+        hasError={this.foldedResultListState.hasError}
+        firstRequestExecuted={this.foldedResultListState.firstSearchExecuted}
+        hasItems={this.foldedResultListState.hasResults}
+        hasTemplate={this.resultTemplateRegistered}
+        templateHasError={this.itemTemplateProvider.hasError}
+      >
+        <DisplayWrapper listClasses={listClasses} display={this.display}>
+          <ResultsPlaceholdersGuard
+            density={this.density}
+            imageSize={this.imageSize}
+            display={this.display}
+            displayPlaceholders={!this.bindings.store.isAppLoaded()}
+            numberOfPlaceholders={this.resultsPerPageState.numberOfResults}
+          ></ResultsPlaceholdersGuard>
+          <ItemDisplayGuard
+            firstRequestExecuted={
+              this.foldedResultListState.firstSearchExecuted
+            }
+            hasItems={this.foldedResultListState.hasResults}
+          >
+            {this.foldedResultListState.results.map((collection, i) => {
+              const propsForAtomicResult =
+                this.getPropsForAtomicResult(collection);
+              return (
+                <atomic-result
+                  {...propsForAtomicResult}
+                  part="outline"
+                  ref={(element) =>
+                    element && this.itemListCommon.setNewResultRef(element, i)
+                  }
+                ></atomic-result>
+              );
+            })}
+          </ItemDisplayGuard>
+        </DisplayWrapper>
+      </ItemListGuard>
+    );
+  }
+
+  private computeListDisplayClasses() {
+    const displayPlaceholders = !this.bindings.store.isAppLoaded();
+
+    return getItemListDisplayClasses(
+      this.display,
+      this.density,
+      this.imageSize,
+      this.foldedResultListState.firstSearchExecuted &&
+        this.foldedResultListState.isLoading,
+      displayPlaceholders
+    );
+  }
+
+  private getPropsForAtomicResult(collection: FoldedCollection) {
+    const result = extractUnfoldedItem(collection);
+
+    return {
+      interactiveResult: buildInteractiveResult(this.bindings.engine, {
+        options: {result},
+      }),
+      result,
+      renderingFunction: this.resultRenderingFunction,
+      loadingFlag: this.loadingFlag,
+      key: this.itemListCommon.getResultId(
+        result.uniqueId,
+        this.foldedResultListState.searchResponseId,
+        this.density,
+        this.imageSize
+      ),
+      content: this.itemTemplateProvider.getTemplateContent(result),
+      store: this.bindings.store,
+      density: this.density,
+      imageSize: this.imageSize,
+      display: this.display,
+    };
   }
 }

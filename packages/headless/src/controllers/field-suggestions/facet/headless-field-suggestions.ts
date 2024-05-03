@@ -3,6 +3,10 @@ import {CoreEngine} from '../../../app/engine';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
+import {
+  executeFacetSearch,
+  executeFieldSuggest,
+} from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
 import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {registerFacet} from '../../../features/facets/facet-set/facet-set-actions';
 import {
@@ -184,7 +188,7 @@ export function buildFieldSuggestions(
       engine.dispatch(
         executeSearch({
           legacy: logFacetSelect({facetId, facetValue: value.rawValue}),
-          next: facetSelect(facetId, value.rawValue),
+          next: facetSelect(),
         })
       );
     },
@@ -193,11 +197,13 @@ export function buildFieldSuggestions(
       engine.dispatch(
         executeSearch({
           legacy: logFacetExclude({facetId, facetValue: value.rawValue}),
-          next: facetExclude(facetId, value.rawValue),
+          next: facetExclude(),
         })
       );
     },
     isForFieldSuggestions: true,
+    executeFacetSearchActionCreator: executeFacetSearch,
+    executeFieldSuggestActionCreator: executeFieldSuggest,
   });
   const controller = buildController(engine);
   return {

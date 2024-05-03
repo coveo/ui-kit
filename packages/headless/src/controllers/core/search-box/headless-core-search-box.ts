@@ -1,6 +1,6 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {CoreEngine} from '../../..';
 import {configuration} from '../../../app/common-reducers';
+import {CoreEngine} from '../../../app/engine';
 import {
   InsightAction,
   LegacySearchAction,
@@ -278,7 +278,7 @@ export function buildCoreSearchBox(
       dispatch(selectQuerySuggestion({id, expression: value}));
       performSearch({
         legacy: logQuerySuggestionClick({id, suggestion: value}),
-        next: omniboxAnalytics(id, value),
+        next: omniboxAnalytics(),
       }).then(() => {
         dispatch(clearQuerySuggest({id}));
       });

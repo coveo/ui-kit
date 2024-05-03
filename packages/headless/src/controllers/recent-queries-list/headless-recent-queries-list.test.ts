@@ -1,33 +1,35 @@
 import {NumberValue} from '@coveo/bueno';
-import {Action} from '@reduxjs/toolkit';
 import {deselectAllBreadcrumbs} from '../../features/breadcrumb/breadcrumb-actions';
-import {updatePage} from '../../features/pagination/pagination-actions';
-import {updateQuery} from '../../features/query/query-actions';
 import {
   clearRecentQueries,
   registerRecentQueries,
 } from '../../features/recent-queries/recent-queries-actions';
 import {logClearRecentQueries} from '../../features/recent-queries/recent-queries-analytics-actions';
 import {recentQueriesReducer as recentQueries} from '../../features/recent-queries/recent-queries-slice';
-import {executeSearch} from '../../features/search/search-actions';
+import {prepareForSearchWithQuery} from '../../features/search/search-actions';
 import {searchReducer as search} from '../../features/search/search-slice';
-import {buildMockSearchAppEngine, MockSearchEngine} from '../../test';
+import {
+  buildMockSearchEngine,
+  MockedSearchEngine,
+} from '../../test/mock-engine-v2';
+import {buildMockQueryState} from '../../test/mock-query-state';
+import {createMockState} from '../../test/mock-state';
 import {
   buildRecentQueriesList,
   RecentQueriesList,
 } from './headless-recent-queries-list';
 
+jest.mock('../../features/recent-queries/recent-queries-actions');
+jest.mock('../../features/breadcrumb/breadcrumb-actions');
+jest.mock('../../features/search/search-actions');
+jest.mock('../../features/recent-queries/recent-queries-analytics-actions');
+
 describe('recent queries list', () => {
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
   let recentQueriesList: RecentQueriesList;
 
-  const expectContainAction = (action: Action) => {
-    const found = engine.actions.find((a) => a.type === action.type);
-    expect(found).toBeDefined();
-  };
-
   beforeEach(() => {
-    engine = buildMockSearchAppEngine();
+    engine = buildMockSearchEngine(createMockState());
   });
 
   it('adds the correct reducers to the engine', () => {
@@ -42,12 +44,10 @@ describe('recent queries list', () => {
     });
 
     it('should register with default props on init', () => {
-      expect(engine.actions).toContainEqual(
-        registerRecentQueries({
-          queries: [],
-          maxLength: 10,
-        })
-      );
+      expect(registerRecentQueries).toHaveBeenCalledWith({
+        queries: [],
+        maxLength: 10,
+      });
     });
 
     it('#state.queries initial state is empty', () => {
@@ -71,28 +71,31 @@ describe('recent queries list', () => {
       initialState: testInitialState,
       options: testOptions,
     };
+    const mockedPrepareForSearchWithQuery = jest.mocked(
+      prepareForSearchWithQuery
+    );
 
     beforeEach(() => {
       recentQueriesList = buildRecentQueriesList(engine, testProps);
     });
 
+    afterEach(() => {
+      mockedPrepareForSearchWithQuery.mockClear();
+    });
+
     it('should register with props on init', () => {
-      expect(engine.actions).toContainEqual(
-        registerRecentQueries({
-          queries: testProps.initialState.queries,
-          maxLength: testProps.options.maxLength,
-        })
-      );
+      expect(registerRecentQueries).toHaveBeenCalledWith({
+        queries: testProps.initialState.queries,
+        maxLength: testProps.options.maxLength,
+      });
     });
 
     it('#clear should log analytics and dispatch clear action', () => {
       recentQueriesList.clear();
+      expect(clearRecentQueries).toHaveBeenCalled();
 
-      expectContainAction(clearRecentQueries);
       expect(recentQueriesList.state.queries.length).toBe(0);
-      expect(
-        engine.findAsyncAction(logClearRecentQueries().pending)
-      ).toBeDefined();
+      expect(logClearRecentQueries).toHaveBeenCalled();
     });
 
     it('#executeRecentQuery should validate the given index parameter', () => {
@@ -100,20 +103,31 @@ describe('recent queries list', () => {
       engine.state.recentQueries = {...testInitialState, ...testOptions};
 
       expect(() => recentQueriesList.executeRecentQuery(100)).toThrow();
-      expect(validationSpy).toBeCalled();
+      expect(validationSpy).toHaveBeenCalled();
     });
 
-    it('#executeRecentQuery should execute the query and log proper analytics', () => {
+    it('#executeRecentQuery should execute #prepareForSearchWithQuery with the proper parameters', () => {
+      engine.state.query = buildMockQueryState();
       engine.state.recentQueries = {...testInitialState, ...testOptions};
       recentQueriesList.executeRecentQuery(0);
+      expect(mockedPrepareForSearchWithQuery).toHaveBeenCalledTimes(1);
+      expect(mockedPrepareForSearchWithQuery).toHaveBeenCalledWith({
+        q: testInitialState.queries[0],
+        clearFilters: testOptions.clearFilters,
+        enableQuerySyntax: false,
+      });
+    });
 
-      expect(engine.actions).toContainEqual(deselectAllBreadcrumbs());
-      expectContainAction(updateQuery);
-      expect(engine.actions).toContainEqual(
-        updateQuery({q: testInitialState.queries[0]})
+    it('#executeRecentQuery should execute #prepareForSearchWithQuery with the proper enableQuerySyntax parameter', () => {
+      engine.state.query = buildMockQueryState({enableQuerySyntax: true});
+      recentQueriesList = buildRecentQueriesList(engine);
+      recentQueriesList.executeRecentQuery(0);
+      expect(mockedPrepareForSearchWithQuery).toHaveBeenCalledTimes(1);
+      expect(mockedPrepareForSearchWithQuery).toHaveBeenCalledWith(
+        expect.objectContaining({
+          enableQuerySyntax: true,
+        })
       );
-      expect(engine.actions).toContainEqual(updatePage(1));
-      expect(engine.findAsyncAction(executeSearch.pending)).toBeDefined();
     });
 
     it('should not clear filters if the #clearFilters option is false', () => {
@@ -121,7 +135,7 @@ describe('recent queries list', () => {
         options: {clearFilters: false, maxLength: 10},
       });
       recentQueriesList.executeRecentQuery(0);
-      expect(engine.actions).not.toContainEqual(deselectAllBreadcrumbs());
+      expect(deselectAllBreadcrumbs).not.toHaveBeenCalled();
     });
   });
 });

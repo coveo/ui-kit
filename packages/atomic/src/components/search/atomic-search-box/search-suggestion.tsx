@@ -2,7 +2,7 @@ import {h, FunctionalComponent, VNode, Fragment} from '@stencil/core';
 import {JSXBase} from '@stencil/core/internal';
 import {isMacOS} from '../../../utils/device-utils';
 import {AnyBindings} from '../../common/interface/bindings';
-import {SearchBoxSuggestionElement} from '../search-box-suggestions/suggestions-common';
+import {SearchBoxSuggestionElement} from '../../common/suggestions/suggestions-common';
 
 export const queryDataAttribute = 'data-query';
 
@@ -42,7 +42,7 @@ function getPartsForSuggestion(
 }
 
 function getClassesForSuggestion(isSelected: boolean) {
-  return `flex px-4 min-h-[40px] items-center text-left text-neutral-dark hover:bg-neutral-light cursor-pointer ${
+  return `flex px-4 min-h-[40px] items-center text-left text-neutral-dark cursor-pointer ${
     isSelected ? 'bg-neutral-light' : ''
   }`;
 }

@@ -5,13 +5,17 @@ export const getStreamInterceptAlias = (streamId: string) =>
   `${RouteAlias.GenQAStream}-${streamId}`;
 
 export function mockStreamResponse(streamId: string, body: unknown) {
+  const streamContent = Array.isArray(body)
+    ? body.map((message) => `data: ${JSON.stringify(message)} \n\n`).join('')
+    : `data: ${JSON.stringify(body)} \n\n`;
+
   cy.intercept(
     {
       method: 'GET',
       url: `**/machinelearning/streaming/${streamId}`,
     },
     (request) => {
-      request.reply(200, `data: ${JSON.stringify(body)} \n\n`, {
+      request.reply(200, streamContent, {
         'content-type': 'text/event-stream',
       });
     }

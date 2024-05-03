@@ -105,12 +105,12 @@ describe('InitializeBindings decorator', () => {
     it(`when "engine" is defined
     should render the content `, () => {
       component['bindings'] = {
-        engine: TestUtils.buildMockSearchAppEngine({
-          state: TestUtils.createMockState(),
-        }),
+        engine: TestUtils.buildMockSearchEngine(TestUtils.createMockState()),
         i18n: i18next,
         store: createAtomicStore(),
         interfaceElement: document.createElement('atomic-search-interface'),
+        createScriptElement: jest.fn(),
+        createStyleElement: jest.fn(),
       };
       InitializeBindings()(component, 'bindings');
       component.initialize!();
@@ -127,12 +127,12 @@ describe('BindStateToController decorator', () => {
     console.error = jest.fn();
     component = {
       bindings: {
-        engine: TestUtils.buildMockSearchAppEngine({
-          state: TestUtils.createMockState(),
-        }),
+        engine: TestUtils.buildMockSearchEngine(TestUtils.createMockState()),
         i18n: i18next,
         store: createAtomicStore(),
         interfaceElement: document.createElement('atomic-search-interface'),
+        createScriptElement: jest.fn(),
+        createStyleElement: jest.fn(),
       },
       error: {} as Error,
     };
@@ -193,7 +193,7 @@ describe('BindStateToController decorator', () => {
     });
 
     it('should subscribe to the controller', () => {
-      spyOn(controller, 'subscribe');
+      jest.spyOn(controller, 'subscribe');
       BindStateToController('controller')(component, 'controllerState');
       component.initialize!();
 

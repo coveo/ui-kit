@@ -1,26 +1,30 @@
 import {PlatformClientCallOptions} from '../../platform-client';
 import {BaseParam} from '../../platform-service-params';
 import {
+  TrackingIdParam,
+  LanguageParam,
+  CountryParam,
+  CurrencyParam,
   ClientIdParam,
   ContextParam,
-  CurrencyParam,
-  LanguageParam,
   FacetsParam,
   PageParam,
   SortParam,
-  TrackingIdParam,
-  CountryParam,
+  PerPageParam,
 } from '../commerce-api-params';
 
-export type CommerceAPIRequest = BaseParam &
+export type BaseCommerceAPIRequest = BaseParam &
   TrackingIdParam &
   LanguageParam &
   CountryParam &
   CurrencyParam &
   ClientIdParam &
   ContextParam &
-  FacetsParam &
   PageParam &
+  PerPageParam;
+
+export type CommerceAPIRequest = BaseCommerceAPIRequest &
+  FacetsParam &
   SortParam;
 
 export const buildRequest = (req: CommerceAPIRequest, path: string) => {
@@ -39,6 +43,7 @@ const prepareRequestParams = (req: CommerceAPIRequest) => {
     country,
     currency,
     page,
+    perPage,
     facets,
     sort,
   } = req;
@@ -50,13 +55,14 @@ const prepareRequestParams = (req: CommerceAPIRequest) => {
     country,
     currency,
     page,
+    perPage,
     facets,
     sort,
   };
 };
 
 export const baseRequest = (
-  req: BaseParam & TrackingIdParam,
+  req: BaseParam,
   path: string
 ): Pick<
   PlatformClientCallOptions,

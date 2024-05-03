@@ -18,34 +18,16 @@ node('heavy && linux && docker') {
     stage('Setup') {
       sh 'npm ci'
     }
-    
-    stage('Npm publish') {
-      withCredentials([
-      string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
-        sh 'echo //registry.npmjs.org/:_authToken=$NPM_TOKEN > ~/.npmrc'
-        sh 'npm run promote:npm:latest'
-      }
-    }
 
-    stage('Quantic publish') {
+ stage('Approve production release') {
       withCredentials([
-        usernamePassword(credentialsId: 'github-commit-token', usernameVariable: 'GITHUB_USERNAME', passwordVariable: 'GITHUB_TOKEN'),
-        string(credentialsId: 'sfdx-auth-pkg-client-id', variable: 'SFDX_AUTH_CLIENT_ID'),
-        file(credentialsId: 'sfdx-auth-pkg-jwt-key', variable: 'SFDX_AUTH_JWT_KEY'),
+        string(credentialsId: 'RELEASER_APP_ID', variable: 'RELEASER_APP_ID'),
+        file(credentialsId: 'RELEASER_PRIVATE_KEY', variable: 'RELEASER_PRIVATE_KEY_PATH'),
+        string(credentialsId: 'RELEASER_CLIENT_ID', variable: 'RELEASER_CLIENT_ID'),
+        string(credentialsId: 'RELEASER_CLIENT_SECRET', variable: 'RELEASER_CLIENT_SECRET'),
+        string(credentialsId: 'RELEASER_INSTALLATION_ID', variable: 'RELEASER_INSTALLATION_ID'),
       ]) {
-        withEnv([
-          'SFDX_AUTH_JWT_USERNAME=sfdc.integration.devv2.hub@coveo.com'
-        ]) {
-          sh 'npx --no-install nx run quantic:"promote:sfdx:ci"'
-        }
-      }
-    }
-
-    stage('Notify Docs') {
-      withCredentials([
-        usernamePassword(credentialsId: 'github-commit-token', usernameVariable: 'GITHUB_USERNAME', passwordVariable: 'GITHUB_TOKEN')
-      ]) {
-        sh 'npm run notify:docs'
+          sh "node ./scripts/deploy/approve-production-release.mjs ${params.GITHUB_RUN_ID}"
       }
     }
 

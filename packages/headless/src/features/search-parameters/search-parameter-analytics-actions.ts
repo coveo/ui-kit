@@ -1,4 +1,5 @@
-import {DateRangeRequest, NumericRangeRequest} from '../../controllers';
+import {DateRangeRequest} from '../../controllers/core/facets/range-facet/date-facet/headless-core-date-facet';
+import {NumericRangeRequest} from '../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet';
 import {
   logFacetClearAll,
   logFacetDeselect,
@@ -282,16 +283,13 @@ function facetAction(
   if (removedIds.length) {
     const facetId = removedIds[0];
     return previousFacets[facetId].length > 1
-      ? facetClearAll(facetId)
-      : facetDeselect(facetId, previousFacets[facetId][0]);
+      ? facetClearAll()
+      : facetDeselect();
   }
 
   const addedIds = newIds.filter((id) => !previousIds.includes(id));
   if (addedIds.length) {
-    const facetId = addedIds[0];
-    return excluded
-      ? facetExclude(facetId, newFacets[facetId][0])
-      : facetSelect(facetId, newFacets[facetId][0]);
+    return excluded ? facetExclude() : facetSelect();
   }
 
   const facetIdWithDifferentValues = newIds.find((key) =>
@@ -311,9 +309,7 @@ function facetAction(
   );
 
   if (addedValues.length) {
-    return excluded
-      ? facetExclude(facetIdWithDifferentValues, addedValues[0])
-      : facetSelect(facetIdWithDifferentValues, addedValues[0]);
+    return excluded ? facetExclude() : facetSelect();
   }
 
   const removedValues = previousValues.filter(
@@ -321,7 +317,7 @@ function facetAction(
   );
 
   if (removedValues.length) {
-    return facetDeselect(facetIdWithDifferentValues, removedValues[0]);
+    return facetDeselect();
   }
 
   return interfaceChange();

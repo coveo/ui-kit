@@ -13,15 +13,13 @@ import {
   DateRangeOptions,
   DateRangeRequest,
   FacetConditionsManager,
+  RangeFacetSortCriterion,
   RelativeDate,
   RelativeDatePeriod,
   RelativeDateUnit,
   SearchStatusState,
 } from '../types';
-import {
-  shouldDisplayInputForFacetRange,
-  validateDependsOn,
-} from './facet-common';
+import {shouldDisplayInputForFacetRange} from './facet-common';
 import {FacetInfo} from './facet-common-store';
 import {FacetContainer} from './facet-container/facet-container';
 import {FacetHeader} from './facet-header/facet-header';
@@ -56,6 +54,7 @@ interface TimeframeFacetCommonOptions {
   initializeFilter(): DateFilter;
   min?: string;
   max?: string;
+  sortCriteria: RangeFacetSortCriterion;
 }
 
 interface TimeframeFacetCommonRenderProps {
@@ -75,7 +74,6 @@ export class TimeframeFacetCommon {
   private dependenciesManager?: FacetConditionsManager;
 
   constructor(private props: TimeframeFacetCommonOptions) {
-    this.validateProps();
     this.facetId = this.determineFacetId;
     this.props.setFacetId(this.facetId);
 
@@ -195,10 +193,6 @@ export class TimeframeFacetCommon {
 
   private get isHidden() {
     return !this.shouldRenderFacet || !this.enabled;
-  }
-
-  private validateProps() {
-    validateDependsOn(this.props.dependsOn);
   }
 
   private registerFacetToStore() {

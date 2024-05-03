@@ -1,7 +1,7 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {Result} from '../../api/search/search/result';
 import {isArray} from '../../utils/utils';
-import {ResultTemplateCondition} from './result-templates';
+import {ResultTemplateCondition} from './result-templates-manager';
 
 /**
  * Extracts a property from a result object.
@@ -97,4 +97,12 @@ export const fieldMustNotMatch = (
 const getFieldValuesFromResult = (fieldName: string, result: Result) => {
   const rawValue = getResultProperty(result, fieldName);
   return isArray(rawValue) ? rawValue : [rawValue];
+};
+
+export const ResultTemplatesHelpers = {
+  getResultProperty,
+  fieldsMustBeDefined,
+  fieldsMustNotBeDefined,
+  fieldMustMatch,
+  fieldMustNotMatch,
 };

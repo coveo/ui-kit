@@ -1,13 +1,16 @@
 import {logNotifyTrigger} from '../../features/triggers/trigger-analytics-actions';
 import {triggerReducer as triggers} from '../../features/triggers/triggers-slice';
 import {
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../test/mock-engine';
+  buildMockSearchEngine,
+  MockedSearchEngine,
+} from '../../test/mock-engine-v2';
+import {createMockState} from '../../test/mock-state';
 import {NotifyTrigger, buildNotifyTrigger} from './headless-notify-trigger';
 
+jest.mock('../../features/triggers/trigger-analytics-actions');
+
 describe('NotifyTrigger', () => {
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
   let notifyTrigger: NotifyTrigger;
 
   function initNotifyTrigger() {
@@ -15,13 +18,7 @@ describe('NotifyTrigger', () => {
   }
 
   function setEngineTriggersState(notifications: string[]) {
-    engine.state.triggers.notifications = notifications;
-  }
-
-  function getLogTriggerNotifyAction() {
-    return engine.actions.find(
-      (a) => a.type === logNotifyTrigger().pending.type
-    );
+    engine.state.triggers!.notifications = notifications;
   }
 
   function registeredListeners() {
@@ -29,7 +26,8 @@ describe('NotifyTrigger', () => {
   }
 
   beforeEach(() => {
-    engine = buildMockSearchAppEngine();
+    jest.resetAllMocks();
+    engine = buildMockSearchEngine(createMockState());
     initNotifyTrigger();
   });
 
@@ -50,7 +48,7 @@ describe('NotifyTrigger', () => {
   describe('when the #engine.state.triggers.notifications is not updated', () => {
     const listener = jest.fn();
     beforeEach(() => {
-      engine = buildMockSearchAppEngine();
+      engine = buildMockSearchEngine(createMockState());
       initNotifyTrigger();
       notifyTrigger.subscribe(listener);
       const [firstListener] = registeredListeners();
@@ -62,14 +60,14 @@ describe('NotifyTrigger', () => {
     });
 
     it('it does not dispatch #logNotifyTrigger', () => {
-      expect(getLogTriggerNotifyAction()).toBeFalsy();
+      expect(logNotifyTrigger).not.toHaveBeenCalled();
     });
   });
 
   describe('when the #engine.state.triggers.notifications is updated', () => {
     const listener = jest.fn();
     beforeEach(() => {
-      engine = buildMockSearchAppEngine();
+      engine = buildMockSearchEngine(createMockState());
       initNotifyTrigger();
       notifyTrigger.subscribe(listener);
       setEngineTriggersState(['hello']);
@@ -82,14 +80,14 @@ describe('NotifyTrigger', () => {
     });
 
     it('it dispatches #logNotifyTrigger', () => {
-      expect(getLogTriggerNotifyAction()).toBeTruthy();
+      expect(logNotifyTrigger).toHaveBeenCalled();
     });
   });
 
   describe('when the #engine.state.triggers.notifications is updated with an empty array', () => {
     const listener = jest.fn();
     beforeEach(() => {
-      engine = buildMockSearchAppEngine();
+      engine = buildMockSearchEngine(createMockState());
       initNotifyTrigger();
       notifyTrigger.subscribe(listener);
       setEngineTriggersState([]);
@@ -102,14 +100,14 @@ describe('NotifyTrigger', () => {
     });
 
     it('it does not dispatch #logNotifyTrigger', () => {
-      expect(getLogTriggerNotifyAction()).toBeFalsy();
+      expect(logNotifyTrigger).not.toHaveBeenCalled();
     });
   });
 
   describe('when a non-empty #engine.state.triggers.notifications is updated with an empty array', () => {
     const listener = jest.fn();
     beforeEach(() => {
-      engine = buildMockSearchAppEngine();
+      engine = buildMockSearchEngine(createMockState());
       setEngineTriggersState(['hello', 'world']);
       initNotifyTrigger();
       notifyTrigger.subscribe(listener);
@@ -123,14 +121,14 @@ describe('NotifyTrigger', () => {
     });
 
     it('it dispatches #logNotifyTrigger', () => {
-      expect(getLogTriggerNotifyAction()).toBeTruthy();
+      expect(logNotifyTrigger).toHaveBeenCalled();
     });
   });
 
   describe('when a non-empty #engine.state.triggers.notifications is updated with the same array', () => {
     const listener = jest.fn();
     beforeEach(() => {
-      engine = buildMockSearchAppEngine();
+      engine = buildMockSearchEngine(createMockState());
       setEngineTriggersState(['hello', 'world']);
       initNotifyTrigger();
       notifyTrigger.subscribe(listener);
@@ -144,7 +142,7 @@ describe('NotifyTrigger', () => {
     });
 
     it('it does not dispatch #logNotifyTrigger', () => {
-      expect(getLogTriggerNotifyAction()).toBeFalsy();
+      expect(logNotifyTrigger).not.toHaveBeenCalled();
     });
   });
 });

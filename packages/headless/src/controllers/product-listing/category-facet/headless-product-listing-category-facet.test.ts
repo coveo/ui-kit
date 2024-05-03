@@ -1,15 +1,15 @@
 import {CategoryFacetRequest} from '../../../features/facets/category-facet-set/interfaces/request';
 import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
 import {ProductListingAppState} from '../../../state/product-listing-app-state';
-import {
-  buildMockProductListingEngine,
-  MockProductListingEngine,
-} from '../../../test';
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
 import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response';
 import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search';
 import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
 import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value';
+import {
+  MockedProductListingEngine,
+  buildMockProductListingEngine,
+} from '../../../test/mock-engine-v2';
 import {buildMockProductListingState} from '../../../test/mock-product-listing-state';
 import * as CategoryFacetSearch from '../../core/facets/facet-search/category/headless-category-facet-search';
 import {
@@ -18,15 +18,17 @@ import {
   CategoryFacetOptions,
 } from './headless-product-listing-category-facet';
 
+jest.mock('../../../features/product-listing/product-listing-actions');
+
 describe('category facet', () => {
   const facetId = '1';
   let options: CategoryFacetOptions;
   let state: ProductListingAppState;
-  let engine: MockProductListingEngine;
+  let engine: MockedProductListingEngine;
   let categoryFacet: CategoryFacet;
 
   function initCategoryFacet() {
-    engine = buildMockProductListingEngine({state});
+    engine = buildMockProductListingEngine(state);
     categoryFacet = buildCategoryFacet(engine, {options});
   }
 
@@ -122,11 +124,7 @@ describe('category facet', () => {
       const selection = buildMockCategoryFacetValue({value: 'A'});
       categoryFacet.toggleSelect(selection);
 
-      expect(engine.actions).toContainEqual(
-        expect.objectContaining({
-          type: fetchProductListing.pending.type,
-        })
-      );
+      expect(fetchProductListing).toHaveBeenCalled();
     });
   });
 
@@ -134,11 +132,7 @@ describe('category facet', () => {
     it('executes a fetch product listing', () => {
       categoryFacet.deselectAll();
 
-      expect(engine.actions).toContainEqual(
-        expect.objectContaining({
-          type: fetchProductListing.pending.type,
-        })
-      );
+      expect(fetchProductListing).toHaveBeenCalled();
     });
   });
 
@@ -146,11 +140,7 @@ describe('category facet', () => {
     it('executes a fetch product listing', () => {
       categoryFacet.showMoreValues();
 
-      expect(engine.actions).toContainEqual(
-        expect.objectContaining({
-          type: fetchProductListing.pending.type,
-        })
-      );
+      expect(fetchProductListing).toHaveBeenCalled();
     });
   });
 
@@ -158,11 +148,7 @@ describe('category facet', () => {
     it('executes a fetch product listing', () => {
       categoryFacet.showLessValues();
 
-      expect(engine.actions).toContainEqual(
-        expect.objectContaining({
-          type: fetchProductListing.pending.type,
-        })
-      );
+      expect(fetchProductListing).toHaveBeenCalled();
     });
   });
 
@@ -170,11 +156,7 @@ describe('category facet', () => {
     it('executes a fetch product listing', () => {
       categoryFacet.sortBy('alphanumeric');
 
-      expect(engine.actions).toContainEqual(
-        expect.objectContaining({
-          type: fetchProductListing.pending.type,
-        })
-      );
+      expect(fetchProductListing).toHaveBeenCalled();
     });
   });
 
@@ -199,7 +181,7 @@ describe('category facet', () => {
       path: ['bar', 'bazz'],
     };
 
-    engine.state.categoryFacetSearchSet[facetId].response.values = [
+    engine.state.categoryFacetSearchSet![facetId].response.values = [
       fakeResponseValue,
     ];
 

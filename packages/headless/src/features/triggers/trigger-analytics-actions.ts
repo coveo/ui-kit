@@ -1,5 +1,4 @@
 import {RecordValue} from '@coveo/bueno';
-import {SearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {
   requiredEmptyAllowedString,
   validatePayload,
@@ -73,12 +72,6 @@ export const logTriggerExecute = (): LegacySearchAction =>
   });
 
 // --------------------- KIT-2859 : Everything above this will get deleted ! :) ---------------------
-export const undoTriggerQuery = (undoneQuery: string): SearchAction => {
-  return {
-    actionCause: SearchPageEvents.undoTriggerQuery,
-    getEventExtraPayload: (state) =>
-      new SearchAnalyticsProvider(() => state).getUndoTriggerQueryMetadata(
-        undoneQuery
-      ),
-  };
-};
+export const undoTriggerQuery = (): SearchAction => ({
+  actionCause: SearchPageEvents.undoTriggerQuery,
+});

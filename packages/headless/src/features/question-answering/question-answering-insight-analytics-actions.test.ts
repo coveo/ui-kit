@@ -1,11 +1,15 @@
+import {createRelay} from '@coveo/relay';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {
   buildMockInsightEngine,
-  MockInsightEngine,
-} from '../../test/mock-engine';
+  MockedInsightEngine,
+} from '../../test/mock-engine-v2';
 import {buildMockInsightState} from '../../test/mock-insight-state';
 import {buildMockRaw} from '../../test/mock-raw';
 import {buildMockResult} from '../../test/mock-result';
+import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {buildMockSearchState} from '../../test/mock-search-state';
+import {getConfigurationInitialState} from '../configuration/configuration-state';
 import {emptyQuestionAnswer} from '../search/search-state';
 import {
   logExpandSmartSnippet,
@@ -39,6 +43,19 @@ const mockLogExpandSmartSnippetSuggestion = jest.fn();
 const mockLogCollapseSmartSnippetSuggestion = jest.fn();
 const mockLogOpenSmartSnippetSuggestionSource = jest.fn();
 const mockLogOpenSmartSnippetSuggestionInlineLink = jest.fn();
+const emit = jest.fn();
+
+jest.mock('@coveo/relay');
+
+jest.mocked(createRelay).mockReturnValue({
+  emit,
+  getMeta: jest.fn(),
+  on: jest.fn(),
+  off: jest.fn(),
+  updateConfig: jest.fn(),
+  clearStorage: jest.fn(),
+  version: 'foo',
+});
 
 jest.mock('coveo.analytics', () => {
   const mockCoveoInsightClient = jest.fn(() => ({
@@ -67,6 +84,7 @@ jest.mock('coveo.analytics', () => {
   };
 });
 
+const exampleSearchUid = '456';
 const exampleQuestion = 'Where am I?';
 const exampleAnswerSnippet = 'You are here.';
 const exampleScore = 9001;
@@ -75,7 +93,7 @@ const exampleDescription = 'example description';
 const exampleCaseId = '1234';
 const exampleCaseNumber = '5678';
 const examplePermanentId = 'example permanent id';
-const exampleQuestionAnswerId = '1';
+const exampleQuestionAnswerId = 'foo';
 const exampleFeedback = 'does_not_answer';
 const exampleFeedbackDetails = 'example feedback details';
 
@@ -104,7 +122,7 @@ const exampleQuestionAnsweringState = {
   disliked: false,
   expanded: false,
   feedbackModalOpen: false,
-  questionAnsweringId: 1,
+  questionAnswerId: 'bar',
 };
 
 const exampleRelatedQuestionState = {
@@ -156,224 +174,414 @@ const exampleInlineLink = {
   linkURL: 'example link url',
 };
 
-describe('the analytics related to the question answering feature in the insight use case', () => {
-  let engine: MockInsightEngine;
-
-  beforeEach(() => {
-    engine = buildMockInsightEngine({
-      state: buildMockInsightState({
-        insightCaseContext: {
-          caseContext: {
-            Case_Subject: exampleSubject,
-            Case_Description: exampleDescription,
-          },
-          caseId: exampleCaseId,
-          caseNumber: exampleCaseNumber,
-        },
-        questionAnswering: {
-          ...getQuestionAnsweringInitialState(),
-          ...exampleQuestionAnsweringState,
-          relatedQuestions: [exampleRelatedQuestionState],
-        },
-        search: buildMockSearchState({
-          results: [exampleResult],
-          questionAnswer: {
-            ...emptyQuestionAnswer(),
-            ...exampleQuestionAnswer,
-            relatedQuestions: [exampleRelatedQuestion],
-          },
-        }),
-      }),
-    });
+describe('question answering insight analytics actions', () => {
+  let engine: MockedInsightEngine;
+  const searchState = buildMockSearchState({
+    response: buildMockSearchResponse({
+      searchUid: exampleSearchUid,
+    }),
+    results: [exampleResult],
+    questionAnswer: {
+      ...emptyQuestionAnswer(),
+      ...exampleQuestionAnswer,
+      relatedQuestions: [exampleRelatedQuestion],
+    },
   });
+  const questionAnsweringState = {
+    ...getQuestionAnsweringInitialState(),
+    ...exampleQuestionAnsweringState,
+    relatedQuestions: [exampleRelatedQuestionState],
+  };
+  const insightCaseContextState = {
+    caseContext: {
+      Case_Subject: exampleSubject,
+      Case_Description: exampleDescription,
+    },
+    caseId: exampleCaseId,
+    caseNumber: exampleCaseNumber,
+  };
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should log #logExpandSmartSnippet with the case payload', async () => {
-    await engine.dispatch(logExpandSmartSnippet());
-
-    const mockToUse = mockLogExpandSmartSnippet;
-    expect(mockToUse).toBeCalledTimes(1);
-    expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedCaseContext);
-  });
-
-  it('should log #logCollapseSmartSnippet with the case payload', async () => {
-    await engine.dispatch(logCollapseSmartSnippet());
-
-    const mockToUse = mockLogCollapseSmartSnippet;
-    expect(mockToUse).toBeCalledTimes(1);
-    expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedCaseContext);
-  });
-
-  it('should log #logLikeSmartSnippet with the case payload', async () => {
-    await engine.dispatch(logLikeSmartSnippet());
-
-    const mockToUse = mockLogLikeSmartSnippet;
-    expect(mockToUse).toBeCalledTimes(1);
-    expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedCaseContext);
-  });
-
-  it('should log #logDislikeSmartSnippet with the case payload', async () => {
-    await engine.dispatch(logDislikeSmartSnippet());
-
-    const mockToUse = mockLogDislikeSmartSnippet;
-    expect(mockToUse).toBeCalledTimes(1);
-    expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedCaseContext);
-  });
-
-  it('should log #logOpenSmartSnippetSource with the right payload', async () => {
-    await engine.dispatch(logOpenSmartSnippetSource());
-
-    const mockToUse = mockLogOpenSmartSnippetSource;
-    expect(mockToUse).toBeCalledTimes(1);
-    expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedDocumentInfo);
-    expect(mockToUse.mock.calls[0][1]).toStrictEqual({
-      contentIDKey: exampleQuestionAnswer.documentId.contentIdKey,
-      contentIDValue: exampleQuestionAnswer.documentId.contentIdValue,
+  describe('when analyticsMode is `legacy`', () => {
+    beforeEach(() => {
+      engine = buildMockInsightEngine(
+        buildMockInsightState({
+          configuration: {
+            ...getConfigurationInitialState(),
+            analytics: {
+              ...getConfigurationInitialState().analytics,
+              analyticsMode: 'legacy',
+            },
+          },
+          search: searchState,
+          questionAnswering: questionAnsweringState,
+          insightCaseContext: insightCaseContextState,
+        })
+      );
     });
-    expect(mockToUse.mock.calls[0][2]).toStrictEqual(expectedCaseContext);
-  });
 
-  it('should log #logOpenSmartSnippetInlineLink with the right payload', async () => {
-    await engine.dispatch(logOpenSmartSnippetInlineLink(exampleInlineLink));
+    it('should log #logExpandSmartSnippet with the case payload', async () => {
+      await logExpandSmartSnippet()()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
 
-    const mockToUse = mockLogOpenSmartSnippetInlineLink;
-    expect(mockToUse).toBeCalledTimes(1);
-    expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedDocumentInfo);
-    expect(mockToUse.mock.calls[0][1]).toStrictEqual({
-      contentIDKey: exampleQuestionAnswer.documentId.contentIdKey,
-      contentIDValue: exampleQuestionAnswer.documentId.contentIdValue,
-      ...exampleInlineLink,
+      const mockToUse = mockLogExpandSmartSnippet;
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedCaseContext);
     });
-    expect(mockToUse.mock.calls[0][2]).toStrictEqual(expectedCaseContext);
-  });
 
-  it('should log #logOpenSmartSnippetFeedbackModal with the case payload', async () => {
-    await engine.dispatch(logOpenSmartSnippetFeedbackModal());
+    it('should log #logCollapseSmartSnippet with the case payload', async () => {
+      await logCollapseSmartSnippet()()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
 
-    const mockToUse = mockLogOpenSmartSnippetFeedbackModal;
-    expect(mockToUse).toBeCalledTimes(1);
-    expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedCaseContext);
-  });
+      const mockToUse = mockLogCollapseSmartSnippet;
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedCaseContext);
+    });
 
-  it('should log #logCloseSmartSnippetFeedbackModal with the case payload', async () => {
-    await engine.dispatch(logCloseSmartSnippetFeedbackModal());
+    it('should log #logLikeSmartSnippet with the case payload', async () => {
+      await logLikeSmartSnippet()()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
 
-    const mockToUse = mockLogCloseSmartSnippetFeedbackModal;
-    expect(mockToUse).toBeCalledTimes(1);
-    expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedCaseContext);
-  });
+      const mockToUse = mockLogLikeSmartSnippet;
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedCaseContext);
+    });
 
-  it('should log #logSmartSnippetFeedback with the right payload', async () => {
-    await engine.dispatch(logSmartSnippetFeedback(exampleFeedback));
+    it('should log #logDislikeSmartSnippet with the case payload', async () => {
+      await logDislikeSmartSnippet()()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
 
-    const mockToUse = mockLogSmartSnippetFeedback;
-    expect(mockToUse).toBeCalledTimes(1);
-    expect(mockToUse.mock.calls[0][0]).toStrictEqual(exampleFeedback);
-    expect(mockToUse.mock.calls[0][1]).toStrictEqual(undefined);
-    expect(mockToUse.mock.calls[0][2]).toStrictEqual(expectedCaseContext);
-  });
+      const mockToUse = mockLogDislikeSmartSnippet;
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedCaseContext);
+    });
 
-  it('should log #logSmartSnippetDetailedFeedback with the right payload', async () => {
-    await engine.dispatch(
-      logSmartSnippetDetailedFeedback(exampleFeedbackDetails)
-    );
+    it('should log #logOpenSmartSnippetSource with the right payload', async () => {
+      await logOpenSmartSnippetSource()()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
 
-    const expectedFeedbackReason = 'other';
+      const mockToUse = mockLogOpenSmartSnippetSource;
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedDocumentInfo);
+      expect(mockToUse.mock.calls[0][1]).toStrictEqual({
+        contentIDKey: exampleQuestionAnswer.documentId.contentIdKey,
+        contentIDValue: exampleQuestionAnswer.documentId.contentIdValue,
+      });
+      expect(mockToUse.mock.calls[0][2]).toStrictEqual(expectedCaseContext);
+    });
 
-    const mockToUse = mockLogSmartSnippetFeedback;
-    expect(mockToUse).toBeCalledTimes(1);
-    expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedFeedbackReason);
-    expect(mockToUse.mock.calls[0][1]).toStrictEqual(exampleFeedbackDetails);
-    expect(mockToUse.mock.calls[0][2]).toStrictEqual(expectedCaseContext);
-  });
+    it('should log #logOpenSmartSnippetInlineLink with the right payload', async () => {
+      await logOpenSmartSnippetInlineLink(exampleInlineLink)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
 
-  it('should log #logExpandSmartSnippetSuggestion with the right payload', async () => {
-    await engine.dispatch(
-      logExpandSmartSnippetSuggestion({
+      const mockToUse = mockLogOpenSmartSnippetInlineLink;
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedDocumentInfo);
+      expect(mockToUse.mock.calls[0][1]).toStrictEqual({
+        contentIDKey: exampleQuestionAnswer.documentId.contentIdKey,
+        contentIDValue: exampleQuestionAnswer.documentId.contentIdValue,
+        ...exampleInlineLink,
+      });
+      expect(mockToUse.mock.calls[0][2]).toStrictEqual(expectedCaseContext);
+    });
+
+    it('should log #logOpenSmartSnippetFeedbackModal with the case payload', async () => {
+      await logOpenSmartSnippetFeedbackModal()()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      const mockToUse = mockLogOpenSmartSnippetFeedbackModal;
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedCaseContext);
+    });
+
+    it('should log #logCloseSmartSnippetFeedbackModal with the case payload', async () => {
+      await logCloseSmartSnippetFeedbackModal()()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      const mockToUse = mockLogCloseSmartSnippetFeedbackModal;
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedCaseContext);
+    });
+
+    it('should log #logSmartSnippetFeedback with the right payload', async () => {
+      await logSmartSnippetFeedback(exampleFeedback)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      const mockToUse = mockLogSmartSnippetFeedback;
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse.mock.calls[0][0]).toStrictEqual(exampleFeedback);
+      expect(mockToUse.mock.calls[0][1]).toStrictEqual(undefined);
+      expect(mockToUse.mock.calls[0][2]).toStrictEqual(expectedCaseContext);
+    });
+
+    it('should log #logSmartSnippetDetailedFeedback with the right payload', async () => {
+      await logSmartSnippetDetailedFeedback(exampleFeedbackDetails)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      const expectedFeedbackReason = 'other';
+
+      const mockToUse = mockLogSmartSnippetFeedback;
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedFeedbackReason);
+      expect(mockToUse.mock.calls[0][1]).toStrictEqual(exampleFeedbackDetails);
+      expect(mockToUse.mock.calls[0][2]).toStrictEqual(expectedCaseContext);
+    });
+
+    it('should log #logExpandSmartSnippetSuggestion with the right payload', async () => {
+      await logExpandSmartSnippetSuggestion({
         questionAnswerId: exampleQuestionAnswerId,
-      })
-    );
-    const expectedRelatedQuestionPayload = {
-      question: exampleRelatedQuestion.question,
-      answerSnippet: exampleRelatedQuestion.answerSnippet,
-      documentId: exampleRelatedQuestion.documentId,
-    };
+      })()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
-    const mockToUse = mockLogExpandSmartSnippetSuggestion;
-    expect(mockToUse).toBeCalledTimes(1);
-    expect(mockToUse.mock.calls[0][0]).toStrictEqual(
-      expectedRelatedQuestionPayload
-    );
-    expect(mockToUse.mock.calls[0][1]).toStrictEqual(expectedCaseContext);
-  });
+      const expectedRelatedQuestionPayload = {
+        question: exampleRelatedQuestion.question,
+        answerSnippet: exampleRelatedQuestion.answerSnippet,
+        documentId: exampleRelatedQuestion.documentId,
+      };
 
-  it('should log #logCollapseSmartSnippetSuggestion with the right payload', async () => {
-    await engine.dispatch(
-      logCollapseSmartSnippetSuggestion({
+      const mockToUse = mockLogExpandSmartSnippetSuggestion;
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse.mock.calls[0][0]).toStrictEqual(
+        expectedRelatedQuestionPayload
+      );
+      expect(mockToUse.mock.calls[0][1]).toStrictEqual(expectedCaseContext);
+    });
+
+    it('should log #logCollapseSmartSnippetSuggestion with the right payload', async () => {
+      await logCollapseSmartSnippetSuggestion({
         questionAnswerId: exampleQuestionAnswerId,
-      })
-    );
+      })()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
-    const expectedRelatedQuestionPayload = {
-      question: exampleRelatedQuestion.question,
-      answerSnippet: exampleRelatedQuestion.answerSnippet,
-      documentId: exampleRelatedQuestion.documentId,
-    };
+      const expectedRelatedQuestionPayload = {
+        question: exampleRelatedQuestion.question,
+        answerSnippet: exampleRelatedQuestion.answerSnippet,
+        documentId: exampleRelatedQuestion.documentId,
+      };
 
-    const mockToUse = mockLogCollapseSmartSnippetSuggestion;
-    expect(mockToUse).toBeCalledTimes(1);
-    expect(mockToUse.mock.calls[0][0]).toStrictEqual(
-      expectedRelatedQuestionPayload
-    );
-    expect(mockToUse.mock.calls[0][1]).toStrictEqual(expectedCaseContext);
-  });
+      const mockToUse = mockLogCollapseSmartSnippetSuggestion;
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse.mock.calls[0][0]).toStrictEqual(
+        expectedRelatedQuestionPayload
+      );
+      expect(mockToUse.mock.calls[0][1]).toStrictEqual(expectedCaseContext);
+    });
 
-  it('should log #logOpenSmartSnippetSuggestionSource with the right payload', async () => {
-    await engine.dispatch(
-      logOpenSmartSnippetSuggestionSource({
+    it('should log #logOpenSmartSnippetSuggestionSource with the right payload', async () => {
+      await logOpenSmartSnippetSuggestionSource({
         questionAnswerId: exampleQuestionAnswerId,
-      })
-    );
+      })()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
-    const expectedRelatedQuestionPayload = {
-      question: exampleRelatedQuestion.question,
-      answerSnippet: exampleRelatedQuestion.answerSnippet,
-      documentId: exampleRelatedQuestion.documentId,
-    };
+      const expectedRelatedQuestionPayload = {
+        question: exampleRelatedQuestion.question,
+        answerSnippet: exampleRelatedQuestion.answerSnippet,
+        documentId: exampleRelatedQuestion.documentId,
+      };
 
-    const mockToUse = mockLogOpenSmartSnippetSuggestionSource;
-    expect(mockToUse).toBeCalledTimes(1);
-    expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedDocumentInfo);
-    expect(mockToUse.mock.calls[0][1]).toStrictEqual(
-      expectedRelatedQuestionPayload
-    );
-    expect(mockToUse.mock.calls[0][2]).toStrictEqual(expectedCaseContext);
-  });
+      const mockToUse = mockLogOpenSmartSnippetSuggestionSource;
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedDocumentInfo);
+      expect(mockToUse.mock.calls[0][1]).toStrictEqual(
+        expectedRelatedQuestionPayload
+      );
+      expect(mockToUse.mock.calls[0][2]).toStrictEqual(expectedCaseContext);
+    });
 
-  it('should log #logOpenSmartSnippetSuggestionInlineLink with the right payload', async () => {
-    await engine.dispatch(
-      logOpenSmartSnippetSuggestionInlineLink(
+    it('should log #logOpenSmartSnippetSuggestionInlineLink with the right payload', async () => {
+      await logOpenSmartSnippetSuggestionInlineLink(
         {questionAnswerId: exampleQuestionAnswerId},
         exampleInlineLink
-      )
-    );
+      )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
-    const expectedRelatedQuestionPayload = {
-      question: exampleRelatedQuestion.question,
-      answerSnippet: exampleRelatedQuestion.answerSnippet,
-      documentId: exampleRelatedQuestion.documentId,
-    };
+      const expectedRelatedQuestionPayload = {
+        question: exampleRelatedQuestion.question,
+        answerSnippet: exampleRelatedQuestion.answerSnippet,
+        documentId: exampleRelatedQuestion.documentId,
+      };
 
-    const mockToUse = mockLogOpenSmartSnippetSuggestionInlineLink;
-    expect(mockToUse).toBeCalledTimes(1);
-    expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedDocumentInfo);
-    expect(mockToUse.mock.calls[0][1]).toStrictEqual({
-      ...expectedRelatedQuestionPayload,
-      ...exampleInlineLink,
+      const mockToUse = mockLogOpenSmartSnippetSuggestionInlineLink;
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedDocumentInfo);
+      expect(mockToUse.mock.calls[0][1]).toStrictEqual({
+        ...expectedRelatedQuestionPayload,
+        ...exampleInlineLink,
+      });
+      expect(mockToUse.mock.calls[0][2]).toStrictEqual(expectedCaseContext);
     });
-    expect(mockToUse.mock.calls[0][2]).toStrictEqual(expectedCaseContext);
+  });
+
+  describe('when analyticsMode is `next`', () => {
+    beforeEach(() => {
+      engine = buildMockInsightEngine(
+        buildMockInsightState({
+          configuration: {
+            ...getConfigurationInitialState(),
+            analytics: {
+              ...getConfigurationInitialState().analytics,
+              analyticsMode: 'next',
+            },
+          },
+          search: searchState,
+          questionAnswering: questionAnsweringState,
+          insightCaseContext: insightCaseContextState,
+        })
+      );
+    });
+
+    it('should log #logExpandSmartSnippet with the case payload', async () => {
+      await logExpandSmartSnippet()()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toMatchSnapshot();
+    });
+
+    it('should log #logCollapseSmartSnippet with the case payload', async () => {
+      await logCollapseSmartSnippet()()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toMatchSnapshot();
+    });
+
+    it('should log #logLikeSmartSnippet with the case payload', async () => {
+      await logLikeSmartSnippet()()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toMatchSnapshot();
+    });
+
+    it('should log #logDislikeSmartSnippet with the case payload', async () => {
+      await logDislikeSmartSnippet()()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toMatchSnapshot();
+    });
+
+    it('should log #logOpenSmartSnippetSource with the right payload', async () => {
+      await logOpenSmartSnippetSource()()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toMatchSnapshot();
+    });
+
+    it('should log #logOpenSmartSnippetInlineLink with the right payload', async () => {
+      await logOpenSmartSnippetInlineLink(exampleInlineLink)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toMatchSnapshot();
+    });
+
+    it('should log #logSmartSnippetFeedback with the right payload', async () => {
+      await logSmartSnippetFeedback(exampleFeedback)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toMatchSnapshot();
+    });
+
+    it('should log #logSmartSnippetDetailedFeedback with the right payload', async () => {
+      await logSmartSnippetDetailedFeedback(exampleFeedbackDetails)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toMatchSnapshot();
+    });
+
+    it('should log #logExpandSmartSnippetSuggestion with the right payload', async () => {
+      await logExpandSmartSnippetSuggestion({
+        questionAnswerId: exampleQuestionAnswerId,
+      })()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toMatchSnapshot();
+    });
+
+    it('should log #logCollapseSmartSnippetSuggestion with the right payload', async () => {
+      await logCollapseSmartSnippetSuggestion({
+        questionAnswerId: exampleQuestionAnswerId,
+      })()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toMatchSnapshot();
+    });
+
+    it('should log #logOpenSmartSnippetSuggestionSource with the right payload', async () => {
+      await logOpenSmartSnippetSuggestionSource({
+        questionAnswerId: exampleQuestionAnswerId,
+      })()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toMatchSnapshot();
+    });
+
+    it('should log #logOpenSmartSnippetSuggestionInlineLink with the right payload', async () => {
+      await logOpenSmartSnippetSuggestionInlineLink(
+        {questionAnswerId: exampleQuestionAnswerId},
+        exampleInlineLink
+      )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toMatchSnapshot();
+    });
   });
 });

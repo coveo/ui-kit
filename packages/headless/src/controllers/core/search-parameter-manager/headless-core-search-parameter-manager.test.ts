@@ -1,6 +1,5 @@
 import {restoreSearchParameters} from '../../../features/search-parameters/search-parameter-actions';
 import {initialSearchParameterSelector} from '../../../features/search-parameters/search-parameter-selectors';
-import {buildMockSearchAppEngine, MockSearchEngine} from '../../../test';
 import {buildMockAutomaticFacetResponse} from '../../../test/mock-automatic-facet-response';
 import {buildMockAutomaticFacetSlice} from '../../../test/mock-automatic-facet-slice';
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
@@ -9,6 +8,10 @@ import {buildMockCategoryFacetValueRequest} from '../../../test/mock-category-fa
 import {buildMockDateFacetRequest} from '../../../test/mock-date-facet-request';
 import {buildMockDateFacetSlice} from '../../../test/mock-date-facet-slice';
 import {buildMockDateFacetValue} from '../../../test/mock-date-facet-value';
+import {
+  buildMockSearchEngine,
+  MockedSearchEngine,
+} from '../../../test/mock-engine-v2';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
 import {buildMockFacetValue} from '../../../test/mock-facet-value';
@@ -17,6 +20,7 @@ import {buildMockNumericFacetRequest} from '../../../test/mock-numeric-facet-req
 import {buildMockNumericFacetSlice} from '../../../test/mock-numeric-facet-slice';
 import {buildMockNumericFacetValue} from '../../../test/mock-numeric-facet-value';
 import {buildMockSearchParameters} from '../../../test/mock-search-parameters';
+import {createMockState} from '../../../test/mock-state';
 import {buildMockStaticFilterSlice} from '../../../test/mock-static-filter-slice';
 import {buildMockStaticFilterValue} from '../../../test/mock-static-filter-value';
 import {buildMockTabSlice} from '../../../test/mock-tab-state';
@@ -27,8 +31,10 @@ import {
   validateParams,
 } from './headless-core-search-parameter-manager';
 
+jest.mock('../../../features/search-parameters/search-parameter-actions');
+
 describe('search parameter manager', () => {
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
   let props: SearchParameterManagerProps;
   let manager: SearchParameterManager;
 
@@ -37,7 +43,7 @@ describe('search parameter manager', () => {
   }
 
   beforeEach(() => {
-    engine = buildMockSearchAppEngine();
+    engine = buildMockSearchEngine(createMockState());
     props = {
       initialState: {
         parameters: {},
@@ -56,8 +62,9 @@ describe('search parameter manager', () => {
   });
 
   it('dispatches #restoreSearchParameters on registration', () => {
-    const action = restoreSearchParameters(props.initialState.parameters);
-    expect(engine.actions).toContainEqual(action);
+    expect(restoreSearchParameters).toHaveBeenCalledWith(
+      props.initialState.parameters
+    );
   });
 
   it('throws an error when #parameters is not an object', () => {
@@ -69,7 +76,7 @@ describe('search parameter manager', () => {
 
   describe('#state.parameters.q', () => {
     it('is included when the parameter does not equal the default value', () => {
-      engine.state.query.q = 'a';
+      engine.state.query!.q = 'a';
       expect(manager.state.parameters.q).toBe('a');
     });
 
@@ -264,12 +271,12 @@ describe('search parameter manager', () => {
       const slice = buildMockAutomaticFacetSlice({
         response: buildMockAutomaticFacetResponse({values: currentValues}),
       });
-      engine.state.automaticFacetSet.set = {author: slice};
+      engine.state.automaticFacetSet!.set = {author: slice};
       expect(manager.state.parameters.af).toEqual({author: ['a']});
     });
 
     it('is not included when there are no facets with selected values', () => {
-      engine.state.automaticFacetSet.set = {
+      engine.state.automaticFacetSet!.set = {
         author: buildMockAutomaticFacetSlice(),
       };
       expect(manager.state.parameters).not.toContain('af');
@@ -338,9 +345,9 @@ describe('search parameter manager', () => {
     const slice = buildMockAutomaticFacetSlice({
       response: buildMockAutomaticFacetResponse({values: automaticFacetValues}),
     });
-    engine.state.automaticFacetSet.set = {a: slice};
+    engine.state.automaticFacetSet!.set = {a: slice};
 
-    engine.state.query.q = 'a';
+    engine.state.query!.q = 'a';
     engine.state.sortCriteria = 'qre';
 
     const stateParams = manager.state.parameters;
@@ -364,12 +371,11 @@ describe('search parameter manager', () => {
       manager.synchronize(params);
 
       const initialParameters = initialSearchParameterSelector(engine.state);
-      const action = restoreSearchParameters({
+
+      expect(restoreSearchParameters).toHaveBeenCalledWith({
         ...initialParameters,
         ...params,
       });
-
-      expect(engine.actions).toContainEqual(action);
     });
   });
 

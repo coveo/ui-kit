@@ -1,23 +1,24 @@
 import {searchReducer as search} from '../../features/search/search-slice';
-import {buildMockSearchAppEngine} from '../../test';
+import {buildMockSearchEngine} from '../../test/mock-engine-v2';
+import {createMockState} from '../../test/mock-state';
 import {buildQueryError} from './headless-query-error';
 
 describe('query error', () => {
   it('it adds the correct reducers to engine', () => {
-    const e = buildMockSearchAppEngine();
+    const e = buildMockSearchEngine(createMockState());
     buildQueryError(e);
 
     expect(e.addReducers).toHaveBeenCalledWith({search});
   });
 
   it('should expose proper state for #hasError when there is no error', () => {
-    const e = buildMockSearchAppEngine();
+    const e = buildMockSearchEngine(createMockState());
     e.state.search.error = null;
     expect(buildQueryError(e).state.hasError).toBe(false);
   });
 
   it('should expose proper state for #hasError when there is an error', () => {
-    const e = buildMockSearchAppEngine();
+    const e = buildMockSearchEngine(createMockState());
     e.state.search.error = {
       message: 'oh no',
       statusCode: 500,

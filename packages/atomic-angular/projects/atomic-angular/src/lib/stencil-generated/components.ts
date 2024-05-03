@@ -249,14 +249,14 @@ export declare interface AtomicFacetManager extends Components.AtomicFacetManage
 
 
 @ProxyCmp({
-  inputs: ['conditions', 'ifDefined', 'ifNotDefined']
+  inputs: ['ifDefined', 'ifNotDefined']
 })
 @Component({
   selector: 'atomic-field-condition',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['conditions', 'ifDefined', 'ifNotDefined'],
+  inputs: ['ifDefined', 'ifNotDefined'],
 })
 export class AtomicFieldCondition {
   protected el: HTMLElement;
@@ -271,7 +271,7 @@ export declare interface AtomicFieldCondition extends Components.AtomicFieldCond
 
 
 @ProxyCmp({
-  inputs: ['childField', 'collectionField', 'density', 'imageSize', 'parentField'],
+  inputs: ['childField', 'collectionField', 'density', 'imageSize', 'numberOfFoldedResults', 'parentField'],
   methods: ['setRenderFunction']
 })
 @Component({
@@ -279,7 +279,7 @@ export declare interface AtomicFieldCondition extends Components.AtomicFieldCond
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['childField', 'collectionField', 'density', 'imageSize', 'parentField'],
+  inputs: ['childField', 'collectionField', 'density', 'imageSize', 'numberOfFoldedResults', 'parentField'],
 })
 export class AtomicFoldedResultList {
   protected el: HTMLElement;
@@ -776,7 +776,7 @@ export declare interface AtomicRecsError extends Components.AtomicRecsError {}
 
 
 @ProxyCmp({
-  inputs: ['analytics', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'localizationCompatibilityVersion', 'logLevel', 'pipeline', 'searchHub', 'timezone'],
+  inputs: ['CspNonce', 'analytics', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'localizationCompatibilityVersion', 'logLevel', 'pipeline', 'searchHub', 'timezone'],
   methods: ['initialize', 'initializeWithRecommendationEngine', 'getRecommendations', 'getOrganizationEndpoints']
 })
 @Component({
@@ -784,7 +784,7 @@ export declare interface AtomicRecsError extends Components.AtomicRecsError {}
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['analytics', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'localizationCompatibilityVersion', 'logLevel', 'pipeline', 'searchHub', 'timezone'],
+  inputs: ['CspNonce', 'analytics', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'localizationCompatibilityVersion', 'logLevel', 'pipeline', 'searchHub', 'timezone'],
 })
 export class AtomicRecsInterface {
   protected el: HTMLElement;
@@ -1681,7 +1681,7 @@ export declare interface AtomicSearchBoxRecentQueries extends Components.AtomicS
 
 
 @ProxyCmp({
-  inputs: ['analytics', 'enableRelevanceInspector', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'localizationCompatibilityVersion', 'logLevel', 'pipeline', 'reflectStateInUrl', 'scrollContainer', 'searchHub', 'timezone'],
+  inputs: ['CspNonce', 'analytics', 'enableRelevanceInspector', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'localizationCompatibilityVersion', 'logLevel', 'pipeline', 'reflectStateInUrl', 'scrollContainer', 'searchHub', 'timezone'],
   methods: ['initialize', 'initializeWithSearchEngine', 'executeFirstSearch', 'getOrganizationEndpoints']
 })
 @Component({
@@ -1689,7 +1689,7 @@ export declare interface AtomicSearchBoxRecentQueries extends Components.AtomicS
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['analytics', 'enableRelevanceInspector', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'localizationCompatibilityVersion', 'logLevel', 'pipeline', 'reflectStateInUrl', 'scrollContainer', 'searchHub', 'timezone'],
+  inputs: ['CspNonce', 'analytics', 'enableRelevanceInspector', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'localizationCompatibilityVersion', 'logLevel', 'pipeline', 'reflectStateInUrl', 'scrollContainer', 'searchHub', 'timezone'],
 })
 export class AtomicSearchInterface {
   protected el: HTMLElement;
@@ -1948,14 +1948,14 @@ export declare interface AtomicTimeframe extends Components.AtomicTimeframe {}
 
 
 @ProxyCmp({
-  inputs: ['dependsOn', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'max', 'min', 'withDatePicker']
+  inputs: ['dependsOn', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'max', 'min', 'sortCriteria', 'withDatePicker']
 })
 @Component({
   selector: 'atomic-timeframe-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['dependsOn', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'max', 'min', 'withDatePicker'],
+  inputs: ['dependsOn', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'max', 'min', 'sortCriteria', 'withDatePicker'],
 })
 export class AtomicTimeframeFacet {
   protected el: HTMLElement;

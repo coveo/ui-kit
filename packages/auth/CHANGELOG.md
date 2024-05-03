@@ -1,3 +1,31 @@
+## 1.11.18 (2024-04-24)
+
+## 1.11.17 (2024-04-10)
+
+## 1.11.16 (2024-03-20)
+
+## 1.11.15 (2024-03-12)
+
+## 1.11.14 (2024-03-11)
+
+## 1.11.12 (2024-03-06)
+
+## 1.11.11 (2024-02-21)
+
+## 1.11.10 (2024-02-14)
+
+## 1.11.9 (2024-02-09)
+
+### Bug Fixes
+
+- **deps:** update all dependencies j:kit-282 ([#3576](https://github.com/coveo/ui-kit/issues/3576)) ([4887772](https://github.com/coveo/ui-kit/commits/48877723d6f8c5e5446a48296326519f009ae850))
+
+## 1.11.8 (2024-01-31)
+
+### Bug Fixes
+
+- **deps:** update all dependencies j:kit-282 ([#3535](https://github.com/coveo/ui-kit/issues/3535)) ([8cbc113](https://github.com/coveo/ui-kit/commits/8cbc113c323134c73ec9643260ee4580289e891b))
+
 ## 1.11.7 (2024-01-24)
 
 ### Bug Fixes

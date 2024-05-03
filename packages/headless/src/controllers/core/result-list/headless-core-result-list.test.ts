@@ -4,21 +4,30 @@ import {registerFieldsToInclude} from '../../../features/fields/fields-actions';
 import {fieldsReducer as fields} from '../../../features/fields/fields-slice';
 import {fetchMoreResults} from '../../../features/search/search-actions';
 import {searchReducer as search} from '../../../features/search/search-slice';
-import {buildMockResult, MockSearchEngine} from '../../../test';
-import {buildMockSearchAppEngine} from '../../../test/mock-engine';
+import {
+  buildMockSearchEngine,
+  MockedSearchEngine,
+} from '../../../test/mock-engine-v2';
+import {buildMockResult} from '../../../test/mock-result';
+import {createMockState} from '../../../test/mock-state';
 import {buildCoreResultList, ResultList} from './headless-core-result-list';
+
+jest.mock('../../../features/fields/fields-actions');
+jest.mock('../../../features/search/search-actions');
 
 describe('CoreResultList', () => {
   const testProps = {
     fetchMoreResultsActionCreator: fetchMoreResults,
   };
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
 
   beforeEach(() => {
-    engine = buildMockSearchAppEngine();
+    jest.resetAllMocks();
+    const state = createMockState();
     const results = new Array(10).fill(buildMockResult());
-    engine.state.search.results = results;
-    engine.state.search.response.totalCountFiltered = 1000;
+    state.search.results = results;
+    state.search.response.totalCountFiltered = 1000;
+    engine = buildMockSearchEngine(state);
     jest.useFakeTimers();
   });
 
@@ -37,19 +46,15 @@ describe('CoreResultList', () => {
 
   it('initializes correctly with no fields to include', () => {
     expect(buildCoreResultList(engine)).toBeTruthy();
-    const action = engine.actions.find(
-      (a) => a.type === registerFieldsToInclude.type
-    );
-    expect(action).toBeUndefined();
+    expect(registerFieldsToInclude).not.toHaveBeenCalled();
   });
 
   it('initializes correctly with fields to include', () => {
-    expect(
-      buildCoreResultList(engine, {
-        options: {fieldsToInclude: ['test']},
-      })
-    ).toBeTruthy();
-    expect(engine.actions).toContainEqual(registerFieldsToInclude(['test']));
+    buildCoreResultList(engine, {
+      options: {fieldsToInclude: ['test']},
+    });
+
+    expect(registerFieldsToInclude).toHaveBeenCalledWith(['test']);
   });
 
   it('throws the correct error if the validation is not correct', () => {
@@ -57,26 +62,19 @@ describe('CoreResultList', () => {
       buildCoreResultList(engine, {
         options: {fieldsToInclude: [1 as unknown as string]},
       })
-    ).toThrowError(SchemaValidationError);
+    ).toThrow(SchemaValidationError);
   });
 
   it('fetchMoreResults should dispatch a fetchMoreResults action', () => {
     buildCoreResultList(engine, testProps).fetchMoreResults();
-    expect(
-      engine.actions.find(
-        (action) => action.type === fetchMoreResults.pending.type
-      )
-    ).toBeTruthy();
+
+    expect(fetchMoreResults).toHaveBeenCalled();
   });
 
   it('fetchMoreResults should not dispatch a fetchMoreResults action if search state is loading', () => {
     engine.state.search.isLoading = true;
     buildCoreResultList(engine, testProps).fetchMoreResults();
-    expect(
-      engine.actions.find(
-        (action) => action.type === fetchMoreResults.pending.type
-      )
-    ).toBeFalsy();
+    expect(fetchMoreResults).not.toHaveBeenCalled();
   });
 
   it('moreResultsAvailable should return true when totalCountFiltered is greater than the results length', () => {

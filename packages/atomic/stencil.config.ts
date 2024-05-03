@@ -126,7 +126,7 @@ export const config: Config = {
     },
     transformIgnorePatterns: [],
     testPathIgnorePatterns: ['.snap'],
-    setupFiles: ['jest-localstorage-mock'],
+    setupFiles: ['./jest/setup.js', 'jest-localstorage-mock'],
     resetMocks: false,
   },
   devServer: {
@@ -161,10 +161,24 @@ export const config: Config = {
               ),
             },
             {
+              find: '@coveo/headless/commerce',
+              replacement: path.resolve(
+                __dirname,
+                './src/external-builds/commerce/headless.esm.js'
+              ),
+            },
+            {
               find: '@coveo/headless/recommendation',
               replacement: path.resolve(
                 __dirname,
                 './src/external-builds/recommendation/headless.esm.js'
+              ),
+            },
+            {
+              find: '@coveo/headless/commerce',
+              replacement: path.resolve(
+                __dirname,
+                './src/external-builds/commerce/headless.esm.js'
               ),
             },
             {

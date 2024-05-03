@@ -1,3 +1,4 @@
+import {Relay} from '@coveo/relay';
 import {
   configureStore as configureStoreToolkit,
   ReducersMapObject,
@@ -6,13 +7,23 @@ import {
   Reducer,
 } from '@reduxjs/toolkit';
 import {logActionMiddleware} from './logger-middlewares';
+import {NavigatorContext} from './navigatorContextProvider';
 import {ThunkExtraArguments} from './thunk-extra-arguments';
+
+export interface CoreExtraArguments
+  extends ThunkExtraArguments,
+    AdditionalCoreExtraArguments {}
+
+export interface AdditionalCoreExtraArguments {
+  relay: Relay;
+  navigatorContext: NavigatorContext;
+}
 
 interface ConfigureStoreOptions<Reducers extends ReducersMapObject> {
   reducer: Reducer;
   preloadedState?: StateFromReducersMapObject<Reducers>;
   middlewares?: Middleware[];
-  thunkExtraArguments: ThunkExtraArguments;
+  thunkExtraArguments: CoreExtraArguments;
   name: string;
 }
 
@@ -34,11 +45,10 @@ export function configureStore<Reducers extends ReducersMapObject>({
       name,
       shouldHotReload: false, // KIT-961 -> Redux dev tool + hot reloading interacts badly with replaceReducers mechanism.
     },
-    middleware: (getDefaultMiddleware) => [
-      ...middlewares,
-      ...getDefaultMiddleware({thunk: {extraArgument: thunkExtraArguments}}),
-      logActionMiddleware(thunkExtraArguments.logger),
-    ],
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({thunk: {extraArgument: thunkExtraArguments}})
+        .prepend(...middlewares)
+        .concat(logActionMiddleware(thunkExtraArguments.logger)),
   });
 }
 

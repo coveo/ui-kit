@@ -1,17 +1,22 @@
+import {Relay} from '@coveo/relay';
 import {Logger} from 'pino';
 import {SearchAPIClient} from '../../../api/search/search-api-client';
-import {buildMockResult} from '../../../test';
+import {defaultNodeJSNavigatorContextProvider} from '../../../app/navigatorContextProvider';
+import {buildMockResult} from '../../../test/mock-result';
 import {buildMockSearchRequest} from '../../../test/mock-search-request';
 import {buildMockSearchResponse} from '../../../test/mock-search-response';
 import {buildMockSearchState} from '../../../test/mock-search-state';
 import {getConfigurationInitialState} from '../../configuration/configuration-state';
 import {updateQuery} from '../../query/query-actions';
 import {logSearchboxSubmit} from '../../query/query-analytics-actions';
+import {logQueryError} from '../search-analytics-actions';
 import {ExecuteSearchThunkReturn} from './search-actions';
 import {
   AsyncSearchThunkProcessor,
   AsyncThunkConfig,
 } from './search-actions-thunk-processor';
+
+jest.mock('../search-analytics-actions');
 
 describe('AsyncSearchThunkProcessor', () => {
   let config: AsyncThunkConfig;
@@ -26,6 +31,8 @@ describe('AsyncSearchThunkProcessor', () => {
         logger: jest.fn() as unknown as Logger,
         validatePayload: jest.fn(),
         preprocessRequest: jest.fn(),
+        relay: jest.fn() as unknown as Relay,
+        navigatorContext: defaultNodeJSNavigatorContextProvider(),
       },
       getState: jest.fn().mockReturnValue({
         configuration: getConfigurationInitialState(),
@@ -87,6 +94,7 @@ describe('AsyncSearchThunkProcessor', () => {
 
     expect(config.rejectWithValue).toHaveBeenCalledWith(theError);
     expect(config.extra.apiClient.search).not.toHaveBeenCalled();
+    expect(logQueryError).toHaveBeenCalledWith(theError);
   });
 
   it('process properly when there are no results returned and there is a did you mean correction', async () => {

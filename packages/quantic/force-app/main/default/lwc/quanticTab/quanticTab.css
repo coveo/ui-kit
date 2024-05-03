@@ -1,6 +1,11 @@
-.tab_button{
+.tab_button {
     padding: 0;
     margin: 0 0px;
-    padding:0 10px;
+    padding: 0 10px;
     max-width: 150px;
+}
+
+.slds-tabs_default__item:hover:after {
+    height: calc(var(--slds-c-tabs-list-sizing-border, var(--sds-c-tabs-list-sizing-border, var(--lwc-borderWidthThin, 1px))) + 1px);
+    background-color: var(--slds-c-tabs-item-color-border-hover, var(--sds-c-tabs-item-color-border-hover, var(--lwc-brandPrimary, rgb(1, 118, 211))));
 }

@@ -13,7 +13,7 @@ import {loadReducerError} from '../../utils/errors';
 import {buildController, Controller} from '../controller/headless-controller';
 
 /**
- * The `QueryTrigger` controller handles query triggers.
+ * The `QueryTrigger` controller handles query triggers. A [Query trigger](https://docs.coveo.com/en/3413#query) query pipeline rule lets you define a query to be automatically executed against the index when a certain condition is met.
  */
 export interface QueryTrigger extends Controller {
   /**
@@ -85,7 +85,7 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
           legacy: logUndoTriggerQuery({
             undoneQuery: modification(),
           }),
-          next: undoTriggerQuery(modification()),
+          next: undoTriggerQuery(),
         })
       );
     },

@@ -1,59 +1,70 @@
 import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
 import {
   InsightAction,
-  makeInsightAnalyticsAction,
+  makeInsightAnalyticsActionFactory,
 } from '../analytics/analytics-utils';
+import {SearchPageEvents} from '../analytics/search-action-cause';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
 import {getQueryInitialState} from '../query/query-state';
 
 export const logFetchMoreResults = (): InsightAction =>
-  makeInsightAnalyticsAction('search/logFetchMoreResults', (client, state) =>
-    client.logFetchMoreResults(
-      getCaseContextAnalyticsMetadata(state.insightCaseContext)
-    )
+  makeInsightAnalyticsActionFactory(SearchPageEvents.pagerScrolling)(
+    'search/logFetchMoreResults',
+    (client, state) =>
+      client.logFetchMoreResults(
+        getCaseContextAnalyticsMetadata(state.insightCaseContext)
+      )
   );
 
 export const logQueryError = (
   error: SearchAPIErrorWithStatusCode
 ): InsightAction =>
-  makeInsightAnalyticsAction('search/queryError', (client, state) =>
-    client.logQueryError({
-      ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
-      query: state.query?.q || getQueryInitialState().q,
-      aq: '',
-      cq: '',
-      dq: '',
-      errorType: error.type,
-      errorMessage: error.message,
-    })
+  makeInsightAnalyticsActionFactory(SearchPageEvents.queryError)(
+    'search/queryError',
+    (client, state) =>
+      client.logQueryError({
+        ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
+        query: state.query?.q || getQueryInitialState().q,
+        aq: '',
+        cq: '',
+        dq: '',
+        errorType: error.type,
+        errorMessage: error.message,
+      })
   );
 
 export const logContextChanged = (
   caseId: string,
   caseNumber: string
 ): InsightAction =>
-  makeInsightAnalyticsAction('analytics/contextChanged', (client, state) => {
-    const meta = {
-      caseId,
-      caseNumber,
-      caseContext: state.insightCaseContext?.caseContext || {},
-    };
-    client.logContextChanged(meta);
-  });
+  makeInsightAnalyticsActionFactory(SearchPageEvents.contextChanged)(
+    'analytics/contextChanged',
+    (client, state) => {
+      const meta = {
+        caseId,
+        caseNumber,
+        caseContext: state.insightCaseContext?.caseContext || {},
+      };
+      client.logContextChanged(meta);
+    }
+  );
 
-export const logExpandToFullUI = (
-  caseId: string,
-  caseNumber: string,
-  fullSearchComponentName: string,
-  triggeredBy: string
-): InsightAction =>
-  makeInsightAnalyticsAction('analytics/expandToFullUI', (client, state) => {
-    const meta = {
-      caseId,
-      caseNumber,
-      fullSearchComponentName,
-      triggeredBy,
-      caseContext: state.insightCaseContext?.caseContext || {},
-    };
-    client.logExpandToFullUI(meta);
-  });
+export const logInsightInterfaceLoad = (): InsightAction =>
+  makeInsightAnalyticsActionFactory(SearchPageEvents.interfaceLoad)(
+    'analytics/interface/load',
+    (client, state) =>
+      client.logInterfaceLoad(
+        getCaseContextAnalyticsMetadata(state.insightCaseContext)
+      )
+  );
+
+export const logInsightInterfaceChange = (): InsightAction =>
+  makeInsightAnalyticsActionFactory(SearchPageEvents.interfaceChange)(
+    'analytics/interface/change',
+    (client, state) => {
+      client.logInterfaceChange({
+        ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
+        interfaceChangeTo: state.configuration.analytics.originLevel2,
+      });
+    }
+  );

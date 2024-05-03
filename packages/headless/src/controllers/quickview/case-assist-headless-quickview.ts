@@ -1,6 +1,6 @@
-import {CoreEngine} from '../..';
 import {CaseAssistAPIClient} from '../../api/service/case-assist/case-assist-api-client';
 import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine';
+import {CoreEngine} from '../../app/engine';
 import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {logQuickviewDocumentSuggestionClick} from '../../features/case-assist/case-assist-analytics-actions';
 import {documentSuggestionReducer as documentSuggestion} from '../../features/document-suggestion/document-suggestion-slice';

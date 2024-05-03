@@ -1,3 +1,4 @@
+import {CommerceAPIResponse} from '../../../api/commerce/commerce-api-client';
 import {FacetSearchRequestOptions} from '../../../api/search/facet-search/base/base-facet-search-request';
 import {FacetSearchResponse} from '../../../api/search/facet-search/facet-search-response';
 import {FacetSearchOptions} from './facet-search-request-options';
@@ -113,6 +114,33 @@ export function handleFacetSearchFulfilled<T extends FacetSearchResponse>(
 
   search.isLoading = false;
   search.response = response;
+}
+
+export function handleCommerceFacetSearchFulfilled<
+  T extends FacetSearchResponse,
+>(
+  state: FacetSearchSetState<T>,
+  payload: {
+    facetId: string;
+    response: CommerceAPIResponse<T>;
+  },
+  requestId: string
+) {
+  const {facetId, response} = payload;
+  const search = state[facetId];
+
+  if (!search) {
+    return;
+  }
+
+  if (search.requestId !== requestId) {
+    return;
+  }
+
+  search.isLoading = false;
+  if ('success' in response) {
+    search.response = response.success;
+  }
 }
 
 export function handleFacetSearchClear<T extends FacetSearchResponse>(

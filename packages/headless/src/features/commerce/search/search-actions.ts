@@ -1,6 +1,8 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
-import {isErrorResponse} from '../../../api/search/search-api-client';
+import {
+  AsyncThunkCommerceOptions,
+  isErrorResponse,
+} from '../../../api/commerce/commerce-api-client';
 import {CommerceQuerySection} from '../../../state/state-sections';
 import {logQueryError} from '../../search/search-analytics-actions';
 import {
@@ -8,7 +10,6 @@ import {
   QueryCommerceAPIThunkReturn,
   StateNeededByQueryCommerceAPI,
 } from '../common/actions';
-import {logProductListingV2Load} from '../product-listing/product-listing-analytics';
 
 export type StateNeededByExecuteSearch = StateNeededByQueryCommerceAPI &
   CommerceQuerySection;
@@ -23,7 +24,7 @@ export const executeSearch = createAsyncThunk<
     const state = getState();
     const {apiClient} = extra;
     const fetched = await apiClient.search({
-      ...buildCommerceAPIRequest(state),
+      ...(await buildCommerceAPIRequest(state)),
       query: state.commerceQuery?.query,
     });
 
@@ -36,7 +37,6 @@ export const executeSearch = createAsyncThunk<
       response: fetched.success,
       // eslint-disable-next-line @cspell/spellchecker
       // TODO CAPI-244: Use actual search analytics action
-      analyticsAction: logProductListingV2Load(),
     };
   }
 );

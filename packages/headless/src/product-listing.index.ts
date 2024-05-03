@@ -2,6 +2,7 @@ import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
 
 polyfillCryptoNode();
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
+export type {Relay} from '@coveo/relay';
 
 export type {
   ProductListingEngine,
@@ -21,6 +22,7 @@ export type {
 } from './app/engine-configuration';
 export type {LoggerOptions} from './app/logger';
 export type {LogLevel} from './app/logger';
+export type {NavigatorContext} from './app/navigatorContextProvider';
 
 export type {ProductRecommendation} from './api/search/search/product-recommendation';
 
@@ -200,7 +202,7 @@ export {buildInteractiveResult} from './controllers/product-listing/result-list/
 export type {
   ResultTemplate,
   ResultTemplateCondition,
-} from './features/result-templates/result-templates';
+} from './features/result-templates/result-templates-manager';
 
 export type {Result} from './api/search/search/result';
 

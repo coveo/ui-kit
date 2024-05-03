@@ -94,7 +94,8 @@ describe('Result MultiValueText Component', () => {
         .with(addFieldValueInResponse(field, originalValues.slice(0, 2)))
         .withFieldCaptions(field, values)
         .withTranslation({'n-more': '{{value}} more'})
-        .init();
+        .init()
+        .waitForComponentHydration(resultMultiValueTextComponent);
 
       assertShouldRenderValues(localizedValues.slice(0, 1));
       assertDisplaysXMoreLabel(1);
@@ -114,7 +115,8 @@ describe('Result MultiValueText Component', () => {
         .with(addFieldValueInResponse(field, originalValues))
         .withFieldCaptions(field, values)
         .withTranslation({'n-more': '{{value}} more'})
-        .init();
+        .init()
+        .waitForComponentHydration(resultMultiValueTextComponent);
 
       assertShouldRenderValues(localizedValues);
       assertDoesNotDisplayXMoreLabel();
@@ -143,7 +145,8 @@ describe('Result MultiValueText Component', () => {
         .with(addFieldValueInResponse(field, originalValues))
         .withFieldCaptions(field, values)
         .withTranslation({'n-more': '{{value}} more'})
-        .init();
+        .init()
+        .waitForComponentHydration(resultMultiValueTextComponent);
 
       assertShouldRenderValues([
         localizedValues[0],
@@ -185,7 +188,8 @@ describe('Result MultiValueText Component', () => {
               ];
             });
         })
-        .init();
+        .init()
+        .waitForComponentHydration(resultMultiValueTextComponent);
 
       assertShouldRenderValues([
         localizedValues[1],

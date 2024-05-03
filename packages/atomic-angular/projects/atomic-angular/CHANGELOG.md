@@ -1,3 +1,34 @@
+# 2.25.0 (2024-05-02)
+
+### Features
+
+- **Commerce Atomic:** add atomic-commerce-interface ([#3868](https://github.com/coveo/ui-kit/issues/3868)) ([4527419](https://github.com/coveo/ui-kit/commits/45274198ea6af6e1d4a2acd6472dbf706b279588))
+- **Commerce Atomic:** add atomic-commerce-result-list ([#3872](https://github.com/coveo/ui-kit/issues/3872)) ([8db0aee](https://github.com/coveo/ui-kit/commits/8db0aee7690a70f517e136c206c7c20d926086d0))
+
+# 2.24.0 (2024-04-17)
+
+### Features
+
+- add nonce support ([#3791](https://github.com/coveo/ui-kit/issues/3791)) ([fc4be2e](https://github.com/coveo/ui-kit/commits/fc4be2e7cbeb5815e43105a8584a7bfd0db82682))
+
+## 2.23.8 (2024-04-10)
+
+# 2.23.0 (2024-03-13)
+
+### Features
+
+- **atomic:** add sort-criteria to timeframe facet ([#3692](https://github.com/coveo/ui-kit/issues/3692)) ([1a6f1ab](https://github.com/coveo/ui-kit/commits/1a6f1ab9c943a2b977bdece4c39cbfd1d3dda3de))
+
+## 2.22.5 (2024-03-11)
+
+# 2.22.0 (2024-02-21)
+
+### Features
+
+- **atomic:** exposes numberOfFoldedResults ([#3597](https://github.com/coveo/ui-kit/issues/3597)) ([3da9ac6](https://github.com/coveo/ui-kit/commits/3da9ac63984eef223e5a766ff1371435b9c1dc9c))
+
+## 2.21.5 (2024-02-14)
+
 # 2.21.0 (2024-01-19)
 
 ### Features

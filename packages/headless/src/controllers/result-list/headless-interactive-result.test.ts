@@ -2,21 +2,24 @@ import {Result} from '../../api/search/search/result';
 import {configuration} from '../../app/common-reducers';
 import {pushRecentResult} from '../../features/recent-results/recent-results-actions';
 import {logDocumentOpen} from '../../features/result/result-analytics-actions';
-import {buildMockResult} from '../../test';
 import {
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../test/mock-engine';
+  buildMockSearchEngine,
+  MockedSearchEngine,
+} from '../../test/mock-engine-v2';
+import {buildMockResult} from '../../test/mock-result';
+import {createMockState} from '../../test/mock-state';
 import {
   buildInteractiveResult,
   InteractiveResult,
 } from './headless-interactive-result';
 
+jest.mock('../../features/recent-results/recent-results-actions');
+jest.mock('../../features/result/result-analytics-actions');
+
 describe('InteractiveResult', () => {
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
   let mockResult: Result;
   let interactiveResult: InteractiveResult;
-  let logDocumentOpenPendingActionType: string;
 
   const resultStringParams = {
     title: 'title',
@@ -31,29 +34,13 @@ describe('InteractiveResult', () => {
 
   function initializeInteractiveResult(delay?: number) {
     const result = (mockResult = buildMockResult(resultStringParams));
-    logDocumentOpenPendingActionType = logDocumentOpen(mockResult).pending.type;
     interactiveResult = buildInteractiveResult(engine, {
       options: {result, selectionDelay: delay},
     });
   }
 
-  function findLogDocumentAction() {
-    return (
-      engine.actions.find(
-        (action) => action.type === logDocumentOpenPendingActionType
-      ) ?? null
-    );
-  }
-
-  function expectLogDocumentActionPending() {
-    const action = findLogDocumentAction();
-    expect(action).toEqual(
-      logDocumentOpen(mockResult).pending(action!.meta.requestId)
-    );
-  }
-
   beforeEach(() => {
-    engine = buildMockSearchAppEngine();
+    engine = buildMockSearchEngine(createMockState());
     initializeInteractiveResult();
     jest.useFakeTimers();
   });
@@ -69,14 +56,11 @@ describe('InteractiveResult', () => {
   it('when calling select() should add the result to recent results list', () => {
     interactiveResult.select();
     jest.runAllTimers();
-
-    expect(
-      engine.actions.find((a) => a.type === pushRecentResult.type)
-    ).toBeDefined();
+    expect(pushRecentResult).toHaveBeenCalled();
   });
 
   it('when calling select(), logs documentOpen', () => {
     interactiveResult.select();
-    expectLogDocumentActionPending();
+    expect(logDocumentOpen).toHaveBeenCalledWith(mockResult);
   });
 });

@@ -1,9 +1,13 @@
-import {CoreEngine} from '../../..';
 import {configuration} from '../../../app/common-reducers';
+import {CoreEngine} from '../../../app/engine';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {FacetValueState} from '../../../features/facets/facet-api/value';
+import {
+  executeFacetSearch,
+  executeFieldSuggest,
+} from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
 import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {
   logFacetClearAll,
@@ -120,7 +124,7 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
               facetId: getFacetId(),
               facetValue: value.rawValue,
             }),
-            next: facetSelect(getFacetId(), value.rawValue),
+            next: facetSelect(),
           })
         );
       },
@@ -132,11 +136,13 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
               facetId: getFacetId(),
               facetValue: value.rawValue,
             }),
-            next: facetExclude(getFacetId(), value.rawValue),
+            next: facetExclude(),
           })
         );
       },
       isForFieldSuggestions: false,
+      executeFacetSearchActionCreator: executeFacetSearch,
+      executeFieldSuggestActionCreator: executeFieldSuggest,
     });
   };
 
@@ -156,7 +162,7 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
             getFacetId(),
             selection
           ),
-          next: getAnalyticsActionForToggleFacetSelect(getFacetId(), selection),
+          next: getAnalyticsActionForToggleFacetSelect(selection),
         })
       );
     },
@@ -169,10 +175,7 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
             getFacetId(),
             selection
           ),
-          next: getAnalyticsActionForToggleFacetExclude(
-            getFacetId(),
-            selection
-          ),
+          next: getAnalyticsActionForToggleFacetExclude(selection),
         })
       );
     },
@@ -182,7 +185,7 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
       dispatch(
         executeSearch({
           legacy: logFacetClearAll(getFacetId()),
-          next: facetClearAll(getFacetId()),
+          next: facetClearAll(),
         })
       );
     },
@@ -192,7 +195,7 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
       dispatch(
         executeSearch({
           legacy: logFacetUpdateSort({facetId: getFacetId(), criterion}),
-          next: facetUpdateSort(getFacetId(), criterion),
+          next: facetUpdateSort(),
         })
       );
     },

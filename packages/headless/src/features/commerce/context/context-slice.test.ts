@@ -19,22 +19,18 @@ describe('context-slice', () => {
       contextReducer(
         state,
         setContext({
-          trackingId: 'some-tracking-id',
           language: 'fr',
           country: 'ca',
           currency: 'CAD',
-          clientId: 'some-client-id',
           view: {
             url: 'https://example.org',
           },
         })
       )
     ).toEqual({
-      trackingId: 'some-tracking-id',
       language: 'fr',
       country: 'ca',
       currency: 'CAD',
-      clientId: 'some-client-id',
       view: {
         url: 'https://example.org',
       },

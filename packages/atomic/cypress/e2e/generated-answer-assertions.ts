@@ -10,6 +10,28 @@ export function assertLogGeneratedAnswerSourceHover() {
   cy.expectCustomEvent('generatedAnswer', 'generatedAnswerSourceHover');
 }
 
+export function assertLogGeneratedAnswerStreamEnd() {
+  cy.expectCustomEvent('generatedAnswer', 'generatedAnswerStreamEnd');
+}
+
+export function assertLogLikeGeneratedAnswer() {
+  cy.expectCustomEvent('generatedAnswer', 'likeGeneratedAnswer');
+}
+
+export function assertLogDislikeGeneratedAnswer() {
+  cy.expectCustomEvent('generatedAnswer', 'dislikeGeneratedAnswer');
+}
+
+export function assertLogCopyGeneratedAnswer() {
+  cy.expectCustomEvent('generatedAnswer', 'generatedAnswerCopyToClipboard');
+}
+
+export function assertLogRephraseGeneratedAnswer(format: string) {
+  cy.expectSearchEvent('rephraseGeneratedAnswer').then((analyticsBody) => {
+    expect(analyticsBody.customData).to.have.property('rephraseFormat', format);
+  });
+}
+
 export function assertAnswerVisibility(isVisible: boolean) {
   it(`${should(isVisible)} show the generated answer`, () => {
     GeneratedAnswerSelectors.answer().should(
@@ -47,6 +69,18 @@ export function assertLocalStorageData(data: {isVisible: boolean}) {
   });
 }
 
+export function assertLogHideGeneratedAnswer() {
+  it('should log generatedAnswerHideAnswers analytics event', () => {
+    cy.expectCustomEvent('generatedAnswer', 'generatedAnswerHideAnswers');
+  });
+}
+
+export function assertLogShowGeneratedAnswer() {
+  it('should log generatedAnswerShowAnswers analytics event', () => {
+    cy.expectCustomEvent('generatedAnswer', 'generatedAnswerShowAnswers');
+  });
+}
+
 export function assertAnswerStyle(expected: string) {
   cy.wait(TestFixture.interceptAliases.Search).should((firstSearch) => {
     expect(
@@ -69,5 +103,13 @@ export function assertAnswerCopiedToClipboard(answer: string) {
     win.navigator.clipboard.readText().then((text) => {
       expect(text).to.eq(answer);
     });
+  });
+}
+
+export function assertDisclaimer(isDisplayed: boolean) {
+  it(`${should(isDisplayed)} show the disclaimer`, () => {
+    GeneratedAnswerSelectors.disclaimer().should(
+      isDisplayed ? 'exist' : 'not.exist'
+    );
   });
 }

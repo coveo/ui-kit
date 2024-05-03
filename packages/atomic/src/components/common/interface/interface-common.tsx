@@ -27,10 +27,10 @@ export interface BaseAtomicInterface<EngineType extends AnyEngineType>
   host: HTMLStencilElement;
   bindings: AnyBindings;
   error?: Error;
-  localizationCompatibilityVersion: i18nCompatibilityVersion;
+  localizationCompatibilityVersion?: i18nCompatibilityVersion;
 
   updateIconAssetsPath(): void;
-  registerFieldsToInclude(): void;
+  registerFieldsToInclude?: () => void; // Fix: Removed the question mark and added a semicolon.
 }
 
 export const mismatchedInterfaceAndEnginePropError = (
@@ -101,7 +101,9 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
 
     this.atomicInterface.updateIconAssetsPath();
     initEngine();
-    this.atomicInterface.registerFieldsToInclude();
+    if (this.atomicInterface.registerFieldsToInclude) {
+      this.atomicInterface.registerFieldsToInclude();
+    }
     loadDayjsLocale(this.atomicInterface.language);
     await this.i18nPromise;
     this.initComponents();
@@ -128,7 +130,7 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
     new Backend(i18n.services, i18nBackendOptions(this.atomicInterface)).read(
       language,
       i18nTranslationNamespace,
-      (_, data) => {
+      (_: unknown, data: unknown) => {
         i18n.addResourceBundle(
           language,
           i18nTranslationNamespace,

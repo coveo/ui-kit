@@ -1,3 +1,51 @@
+## 0.5.39 (2024-04-24)
+
+## 0.5.38 (2024-04-17)
+
+### Bug Fixes
+
+- **deps:** update stencil j:kit-282 ([#3764](https://github.com/coveo/ui-kit/issues/3764)) ([82b6948](https://github.com/coveo/ui-kit/commits/82b694835e9e0a29859590f16bd64a8e028eb888))
+
+## 0.5.37 (2024-04-10)
+
+## 0.5.32 (2024-03-20)
+
+### Bug Fixes
+
+- **deps:** update dependency @stencil/core to v4.13.0 j:kit-282 ([#3725](https://github.com/coveo/ui-kit/issues/3725)) ([aee2015](https://github.com/coveo/ui-kit/commits/aee20158c892bf1ec73ea3e66c2cdfa6823420c1))
+
+## 0.5.23 (2024-03-08)
+
+### Bug Fixes
+
+- **deps:** update stencil j:kit-282 ([#3635](https://github.com/coveo/ui-kit/issues/3635)) ([63b333e](https://github.com/coveo/ui-kit/commits/63b333eb5ef5b5017288883102503fd47863357b))
+
+## 0.5.22 (2024-03-06)
+
+## 0.5.20 (2024-02-21)
+
+### Bug Fixes
+
+- **deps:** update stencil j:kit-282 ([#3578](https://github.com/coveo/ui-kit/issues/3578)) ([a5b645d](https://github.com/coveo/ui-kit/commits/a5b645d4f5395c9942af38feb5cfc2c08585405d))
+
+## 0.5.18 (2024-02-14)
+
+### Bug Fixes
+
+- **hsp:** use admin url ([#3600](https://github.com/coveo/ui-kit/issues/3600)) ([4f6ef02](https://github.com/coveo/ui-kit/commits/4f6ef02fe185ab66ac4bfc037e4d091e4fe11808))
+
+## 0.5.17 (2024-02-09)
+
+### Bug Fixes
+
+- **deps:** update all dependencies j:kit-282 ([#3576](https://github.com/coveo/ui-kit/issues/3576)) ([4887772](https://github.com/coveo/ui-kit/commits/48877723d6f8c5e5446a48296326519f009ae850))
+
+## 0.5.15 (2024-01-31)
+
+### Bug Fixes
+
+- **deps:** update all dependencies j:kit-282 ([#3535](https://github.com/coveo/ui-kit/issues/3535)) ([8cbc113](https://github.com/coveo/ui-kit/commits/8cbc113c323134c73ec9643260ee4580289e891b))
+
 ## 0.5.11 (2024-01-03)
 
 ### Bug Fixes

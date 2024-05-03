@@ -4,6 +4,7 @@ import * as HighlightUtils from './utils/highlight';
 polyfillCryptoNode();
 // 3rd Party Libraries
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
+export type {Relay} from '@coveo/relay';
 
 // Main App
 export type {
@@ -22,6 +23,7 @@ export type {
 export type {LoggerOptions} from './app/logger';
 
 export type {LogLevel} from './app/logger';
+export type {NavigatorContext} from './app/navigatorContextProvider';
 
 // Action loaders
 export * from './features/insight-interface/insight-interface-actions-loader';
@@ -326,10 +328,10 @@ export type {GeneratedAnswerStyle} from './features/generated-answer/generated-r
 export type {
   ResultTemplate,
   ResultTemplateCondition,
-} from './features/result-templates/result-templates';
+} from './features/result-templates/result-templates-manager';
 export type {ResultTemplatesManager} from './features/result-templates/result-templates-manager';
 export {buildResultTemplatesManager} from './features/result-templates/result-templates-manager';
-export {ResultTemplatesHelpers} from './features';
+export {ResultTemplatesHelpers} from './features/result-templates/result-templates-helpers';
 
 export type {NumericFacetValue} from './features/facets/range-facets/numeric-facet-set/interfaces/response';
 

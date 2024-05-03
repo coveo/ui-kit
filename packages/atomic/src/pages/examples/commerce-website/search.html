@@ -1,0 +1,47 @@
+<!doctype html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>Search</title>
+
+    <script type="module" src="/build/atomic.esm.js"></script>
+    <script nomodule src="/build/atomic.js"></script>
+    <link rel="stylesheet" href="/themes/coveo.css" />
+    <script type="module">
+      import {setupEngine, setupProductListing, renderProducts} from './engine.mjs';
+
+      const engine = await setupEngine();
+
+      await customElements.whenDefined('atomic-commerce-interface');
+      const commerceInterface = document.querySelector('atomic-commerce-interface');
+
+      await commerceInterface.initializeWithEngine(engine);
+    </script>
+  </head>
+
+  <body>
+    <h1>Search page</h1>
+    <main>
+      <section>
+        <atomic-commerce-interface type="search">
+          <atomic-search-layout>
+            <atomic-layout-section section="search">
+              <atomic-commerce-search-box textarea></atomic-commerce-search-box>
+              <!-- <atomic-commerce-search-box redirection-url="https://docs.coveo.com/en/1458" textarea></atomic-commerce-search-box> -->
+            </atomic-layout-section>
+          </atomic-search-layout>
+
+          <atomic-layout-section section="main">
+            <atomic-commerce-result-list display="list" density="compact" image-size="200">
+            </atomic-commerce-result-list>
+            <atomic-commerce-pager></atomic-commerce-pager>
+          </atomic-layout-section>
+        </atomic-commerce-interface>
+      </section>
+    </main>
+
+    <script src="../../header.js" type="text/javascript"></script>
+    <script src="commerce-nav.mjs" type="module"></script>
+  </body>
+</html>

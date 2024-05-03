@@ -1,4 +1,4 @@
-import {buildMockResult} from '../../test';
+import {buildMockResult} from '../../test/mock-result';
 import {buildMockResultPreviewRequest} from '../../test/mock-result-preview-request-builder';
 import {buildMockLegacySearch, buildMockSearch} from '../../test/mock-search';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
@@ -43,11 +43,9 @@ describe('ResultPreview', () => {
       state.contentURL = 'url';
       state.isLoading = true;
       state.uniqueId = 'uniqueId';
-      const action = executeSearch.fulfilled(
-        buildMockLegacySearch(),
-        '',
-        logInterfaceLoad()
-      );
+      const action = executeSearch.fulfilled(buildMockLegacySearch(), '', {
+        legacy: logInterfaceLoad(),
+      });
 
       const finalState = resultPreviewReducer(state, action);
 
@@ -67,7 +65,9 @@ describe('ResultPreview', () => {
           ],
         }),
       });
-      const action = executeSearch.fulfilled(search, '', logInterfaceLoad());
+      const action = executeSearch.fulfilled(search, '', {
+        legacy: logInterfaceLoad(),
+      });
       const finalState = resultPreviewReducer(state, action);
       expect(finalState.resultsWithPreview).toEqual(['first', 'fourth']);
     });

@@ -26,38 +26,43 @@ Usage for both the npm package and CDN are explained in separate sections furthe
 
 ## Configuration
 
-Add Vue configuration to help it handle Atomic components.
+1. Add Vue configuration to help it handle Atomic components.
 
-```js
-// vue.config.js
-{
-  ...,
-  chainWebpack: (config) => {
-    // lets us parse html templates, which will be necessary for atomic components that require the native <template> tag
-    config.module
-      .rule('html')
-      .test(/\.html$/)
-      .use('html-loader')
-      .loader('html-loader');
-
-    // tells Vue to treat any components starting with 'atomic-' as native components, and therefore not try and create Vue components out of them
-    config.module
-      .rule('vue')
-      .use('vue-loader')
-      .tap((options) => ({
-        ...options,
-        compilerOptions: {
-          isCustomElement: (tag) => tag.startsWith('atomic-'),
-        },
-      }));
-  }
-}
+```patch
+// vite.config.ts
+export default defineConfig({
+-  plugins: [vue()],
++  plugins: [
++    vue({
++      template: {
++        compilerOptions: {
++          // treat all tags with a dash as custom elements
++          isCustomElement: (tag) => tag.startsWith('atomic-'),
++        },
++      },
++    }),
++  ],
+})
 ```
 
-Add the `html-loader` dev-dependency
+2. Includes `.html` files into the static assets to load result templates
 
-```sh
-npm install --save-dev html-loader
+```patch
+// vite.config.ts
+export default defineConfig({
+  plugins: [
+    vue({
+      template: {
+        compilerOptions: {
+          // treat all tags with a dash as custom elements
+          isCustomElement: (tag) => tag.startsWith('atomic-'),
+        },
+      },
+    }),
+  ],
++ // Includes html files into the static assets to load the result templates files.
++ assetsInclude: ['**/*.html'],
+})
 ```
 
 ## Using the `@coveo/atomic` npm package
@@ -106,9 +111,8 @@ import {createApp} from 'vue';
 import App from './App.vue';
 
 // Bind the custom elements to the window object [https://stenciljs.com/docs/vue]
-applyPolyfills().then(() => {
-  defineCustomElements(window);
-});
+await applyPolyfills();
+defineCustomElements(window);
 
 createApp(App).mount('#app');
 ```
@@ -147,10 +151,12 @@ onMounted(initInterface);
 
 As you are aware, Vue treats the `<template>` tag as a container for Vue components and therefore doesn't render it to the page. This poses an obstacle for working with the `<atomic-result-template>`, which expects a native `<template>` that it will then use to create each result element. In order for this to work, your result templates will need to live in an HTML file (like in this example's `src/templates/result-template.html` file) and then imported and used like below
 
+> Note: Do append `?raw` in the import URI of the template, so that it's loaded as raw text.
+
 ```html
 <!-- .vue component -->
 <script setup lang="ts">
-  import resultTemplate from '../templates/result-template.html';
+  import resultTemplate from '../templates/result-template.html?raw';
 </script>
 
 <template>
@@ -212,7 +218,7 @@ If you try to use this component in an html template like the snippet below, and
 ```html
 <!-- .vue component -->
 <script setup lang="ts">
-  import resultTemplate from '../templates/result-template.html';
+  import resultTemplate from '../templates/result-template.html?raw';
 </script>
 
 <template>

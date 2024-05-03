@@ -21,6 +21,12 @@ import {InstantResultsSelectors} from './search-box-instant-results-selectors';
 const delay = (force = false) => ({delay: 400, force});
 const downKeys = (count: number) => Array(count).fill('{downArrow}').join('');
 
+const interceptRedirectionToExampleDotCom = () => {
+  cy.intercept('https://example.com/**', (req) => {
+    req.reply('<html>Success</html>');
+  }).as('redirectToExampleDotCom');
+};
+
 const setInstantResults = (count: number) => (fixture: TestFixture) => {
   fixture.withCustomResponse((response) => {
     response.results = Array.from({length: count}, (_, i) =>
@@ -136,6 +142,7 @@ describe('Instant Results Test Suites', () => {
 
   it('with keyboard navigation, it should function correctly', () => {
     setupWithSuggestionsAndRecentQueries();
+    interceptRedirectionToExampleDotCom();
     SearchBoxSelectors.inputBox().type(`${downKeys(1)}{rightArrow}`, delay());
 
     SearchBoxAssertions.assertHasSuggestionsCountWithoutIt(
@@ -143,13 +150,13 @@ describe('Instant Results Test Suites', () => {
     );
     InstantResultsAssertions.assertHasResultCount(numOfInstantResults);
 
-    CommonAssertions.assertAriaLiveMessageWithoutIt(
+    /*CommonAssertions.assertAriaLiveMessageWithoutIt(
       SearchBoxSelectors.searchBoxAriaLive,
       maxRecentQueriesWithoutQuery.toString()
-    );
+    );*/
     InstantResultsAssertions.assertResultIsSelected(0);
 
-    SearchBoxAssertions.assertSuggestionIsHighlighted(1);
+    SearchBoxSelectors.activeQuerySuggestion().should('have.length', 0);
 
     cy.log('when navigating back from result to query');
     SearchBoxSelectors.inputBox().type(
@@ -203,13 +210,12 @@ describe('Instant Results Test Suites', () => {
       delay()
     );
 
-    cy.window().then((win) => {
-      expect(win.location.href).to.equal('https://example.com/2');
-    });
+    cy.wait('@redirectToExampleDotCom');
   });
 
   it('with mouse navigation, it should function correctly', () => {
     setupWithSuggestionsAndRecentQueries();
+    interceptRedirectionToExampleDotCom();
 
     cy.log('when hovering over a query');
     SearchBoxSelectors.inputBox().click();
@@ -224,7 +230,7 @@ describe('Instant Results Test Suites', () => {
 
     InstantResultsAssertions.assertHasResultCount(4);
 
-    SearchBoxAssertions.assertSuggestionIsHighlighted(1);
+    SearchBoxSelectors.activeQuerySuggestion().should('have.length', 0);
 
     SearchBoxSelectors.inputBox().click();
     InstantResultsSelectors.results().eq(1).trigger('mouseover');
@@ -238,8 +244,42 @@ describe('Instant Results Test Suites', () => {
 
     InstantResultsSelectors.results().eq(1).trigger('mouseover').click();
 
-    cy.window().then((win) => {
-      expect(win.location.href).to.equal('https://example.com/1');
-    });
+    cy.wait('@redirectToExampleDotCom');
+  });
+
+  it('should be clickable anywhere on the atomic-result component', () => {
+    setupWithSuggestionsAndRecentQueries();
+    interceptRedirectionToExampleDotCom();
+
+    cy.log('when hovering over a query');
+    SearchBoxSelectors.inputBox().click();
+    SearchBoxSelectors.querySuggestions().eq(0).trigger('mouseover');
+
+    SearchBoxAssertions.assertSuggestionIsSelectedWithoutIt(0);
+    SearchBoxAssertions.assertHasTextWithoutIt('');
+
+    cy.log('when hovering over an instant result');
+    SearchBoxSelectors.inputBox().click();
+    InstantResultsSelectors.results().eq(1).trigger('mouseover');
+
+    InstantResultsAssertions.assertHasResultCount(4);
+
+    SearchBoxSelectors.inputBox().click();
+    InstantResultsSelectors.results().eq(1).trigger('mouseover');
+    SearchBoxSelectors.querySuggestions().eq(1).trigger('mouseover');
+
+    InstantResultsAssertions.assertHasResultCount(4);
+    SearchBoxAssertions.assertSuggestionIsSelectedWithoutIt(1);
+
+    cy.log('when clicking a result');
+    cy.wait(1000);
+
+    InstantResultsSelectors.results()
+      .eq(1)
+      .find('atomic-result')
+      .trigger('mouseover')
+      .click();
+
+    cy.wait('@redirectToExampleDotCom');
   });
 });

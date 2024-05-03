@@ -3,6 +3,7 @@ import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
 polyfillCryptoNode();
 
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
+export type {Relay} from '@coveo/relay';
 
 export type {
   ProductRecommendationEngine,
@@ -22,6 +23,7 @@ export type {
 } from './app/engine-configuration';
 export type {LoggerOptions} from './app/logger';
 export type {LogLevel} from './app/logger';
+export type {NavigatorContext} from './app/navigatorContextProvider';
 
 // Actions
 export * from './features/configuration/configuration-actions-loader';

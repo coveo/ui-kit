@@ -8,6 +8,11 @@ import {ResultUtils} from 'c/quanticUtils';
 import {NavigationMixin} from 'lightning/navigation';
 import {LightningElement, api} from 'lwc';
 
+/**
+ * Some document types cannot be opened directly in Salesforce, but we need to open their parent record, as is the case for the Case Comment document type.
+ */
+const documentTypesRequiringParentRecord = ['CaseComment'];
+
 /** @typedef {import("coveo").Result} Result */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 
@@ -66,6 +71,13 @@ export default class QuanticResultLink extends NavigationMixin(
       focusTarget.focus();
     }
   }
+  /**
+   * Indicates the result field to display as the link text.
+   * @api
+   * @type {string}
+   * @defaultValue `'title'`
+   */
+  @api displayedField = 'title';
 
   /** @type {SearchEngine} */
   engine;
@@ -139,7 +151,18 @@ export default class QuanticResultLink extends NavigationMixin(
     if (this.result?.raw?.sfkbid && this.result?.raw?.sfkavid) {
       return this.result.raw.sfkavid;
     }
+    if (this.shouldOpenParentRecord) {
+      return this.result?.raw?.sfparentid;
+    }
     return this.result.raw.sfid;
+  }
+
+  get shouldOpenParentRecord() {
+    return (
+      documentTypesRequiringParentRecord.includes(
+        this.result?.raw?.documenttype
+      ) && this.result?.raw?.sfparentid
+    );
   }
 
   /**
@@ -150,10 +173,13 @@ export default class QuanticResultLink extends NavigationMixin(
   }
 
   /**
-   * Returns the title of the link to display.
+   * Returns the result field to display as the link title.
    */
-  get displayedField() {
-    return this.result.title ? 'title' : 'clickUri';
+  get fieldToDisplay() {
+    return this.result[this.displayedField] ||
+      this.result.raw?.[this.displayedField]
+      ? this.displayedField
+      : 'clickUri';
   }
 
   /**

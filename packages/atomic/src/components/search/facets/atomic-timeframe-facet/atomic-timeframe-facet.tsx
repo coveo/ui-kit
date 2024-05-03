@@ -10,9 +10,12 @@ import {
   DateFilterState,
   DateRangeRequest,
   deserializeRelativeDate,
+  RangeFacetSortCriterion,
   loadDateFacetSetActions,
   SearchStatus,
   SearchStatusState,
+  FacetValueRequest,
+  CategoryFacetValueRequest,
 } from '@coveo/headless';
 import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
@@ -22,7 +25,7 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {MapProp} from '../../../../utils/props-utils';
-import {BaseFacet, parseDependsOn} from '../../../common/facets/facet-common';
+import {parseDependsOn} from '../../../common/facets/depends-on';
 import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
 import {TimeframeFacetCommon} from '../../../common/facets/timeframe-facet-common';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
@@ -55,9 +58,7 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
   styleUrl: './atomic-timeframe-facet.pcss',
   shadow: true,
 })
-export class AtomicTimeframeFacet
-  implements InitializableComponent, BaseFacet<DateFacet>
-{
+export class AtomicTimeframeFacet implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   public facetForDateRange?: DateFacet;
   public facetForDatePicker?: DateFacet;
@@ -161,6 +162,13 @@ export class AtomicTimeframeFacet
    */
   @Prop({reflect: true}) public max?: string;
 
+  /**
+   * The sort criterion to apply to the returned facet values.
+   * Possible values are 'ascending' and 'descending'.
+   */
+  @Prop({reflect: true}) public sortCriteria: RangeFacetSortCriterion =
+    'descending';
+
   private headerFocus?: FocusTargetController;
 
   private get focusTarget(): FocusTargetController {
@@ -178,14 +186,16 @@ export class AtomicTimeframeFacet
       label: this.label,
       field: this.field,
       headingLevel: this.headingLevel,
-      dependsOn: this.dependsOn,
+      dependsOn: parseDependsOn(this.dependsOn) && this.dependsOn,
       withDatePicker: this.withDatePicker,
       setFacetId: (id: string) => (this.facetId = id),
       buildDependenciesManager: () =>
         buildFacetConditionsManager(this.bindings.engine, {
           facetId:
             this.facetForDateRange?.state.facetId ?? this.filter!.state.facetId,
-          conditions: parseDependsOn(this.dependsOn),
+          conditions: parseDependsOn<
+            FacetValueRequest | CategoryFacetValueRequest
+          >(this.dependsOn),
         }),
       buildDateRange,
       getSearchStatusState: () => this.searchStatusState,
@@ -196,6 +206,7 @@ export class AtomicTimeframeFacet
       initializeFilter: () => this.initializeFilter(),
       min: this.min,
       max: this.max,
+      sortCriteria: this.sortCriteria,
     });
     this.searchStatus = buildSearchStatus(this.bindings.engine);
   }
@@ -225,7 +236,7 @@ export class AtomicTimeframeFacet
         field: this.field,
         currentValues: values,
         generateAutomaticRanges: false,
-        sortCriteria: 'descending',
+        sortCriteria: this.sortCriteria,
         filterFacetCount: this.filterFacetCount,
         injectionDepth: this.injectionDepth,
       },

@@ -1,18 +1,62 @@
 import {NumberValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
-import {validatePayload} from '../../../utils/validate-payload';
+import {
+  nonRequiredEmptyAllowedString,
+  requiredNonEmptyString,
+  validatePayload,
+} from '../../../utils/validate-payload';
 
-const numberValue = new NumberValue({required: true, min: 0});
+export const slotIdDefinition = {
+  slotId: nonRequiredEmptyAllowedString,
+};
+
+interface SlotIdPayload {
+  slotId?: string;
+}
+
+const setPageSizeDefinition = {
+  ...slotIdDefinition,
+  pageSize: new NumberValue({required: true, min: 0}),
+};
+
+type SetPageSizePayload = SlotIdPayload & {
+  pageSize: number;
+};
+
+export const setPageSize = createAction(
+  'commerce/pagination/setPageSize',
+  (payload: SetPageSizePayload) =>
+    validatePayload(payload, setPageSizeDefinition)
+);
+
+const selectPageDefinition = {
+  ...slotIdDefinition,
+  page: new NumberValue({required: true, min: 0}),
+};
+
+type SelectPagePayload = SlotIdPayload & {
+  page: number;
+};
 
 export const selectPage = createAction(
-  'commerce/productListing/pagination/selectPage',
-  (payload: number) => validatePayload(payload, numberValue)
+  'commerce/pagination/selectPage',
+  (payload: SelectPagePayload) => validatePayload(payload, selectPageDefinition)
 );
 
 export const nextPage = createAction(
-  'commerce/productListing/pagination/nextPage'
+  'commerce/pagination/nextPage',
+  (payload?: SlotIdPayload) => validatePayload(payload, slotIdDefinition)
 );
 
 export const previousPage = createAction(
-  'commerce/productListing/pagination/previousPage'
+  'commerce/pagination/previousPage',
+  (payload?: SlotIdPayload) => validatePayload(payload, slotIdDefinition)
+);
+
+export const registerRecommendationsSlotPagination = createAction(
+  'commerce/pagination/registerRecommendationsSlot',
+  (payload: Required<SlotIdPayload>) =>
+    validatePayload(payload, {
+      slotId: requiredNonEmptyString,
+    })
 );

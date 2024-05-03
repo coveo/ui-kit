@@ -15,6 +15,11 @@ import {
   updateResponseFormat,
   sendGeneratedAnswerFeedback,
   registerFieldsToIncludeInCitations,
+  setId,
+  setAnswerContentFormat,
+  setIsAnswerGenerated,
+  expandGeneratedAnswer,
+  collapseGeneratedAnswer,
 } from './generated-answer-actions';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
 
@@ -25,12 +30,16 @@ export const generatedAnswerReducer = createReducer(
       .addCase(setIsVisible, (state, {payload}) => {
         state.isVisible = payload;
       })
+      .addCase(setId, (state, {payload}) => {
+        state.id = payload.id;
+      })
       .addCase(updateMessage, (state, {payload}) => {
         state.isLoading = false;
         state.isStreaming = true;
         if (!state.answer) {
           state.answer = '';
         }
+
         state.answer += payload.textDelta;
         delete state.error;
       })
@@ -73,6 +82,7 @@ export const generatedAnswerReducer = createReducer(
           responseFormat: state.responseFormat,
           fieldsToIncludeInCitations: state.fieldsToIncludeInCitations,
           isVisible: state.isVisible,
+          id: state.id,
         };
       })
       .addCase(setIsLoading, (state, {payload}) => {
@@ -81,6 +91,9 @@ export const generatedAnswerReducer = createReducer(
       .addCase(setIsStreaming, (state, {payload}) => {
         state.isStreaming = payload;
       })
+      .addCase(setAnswerContentFormat, (state, {payload}) => {
+        state.answerContentFormat = payload;
+      })
       .addCase(updateResponseFormat, (state, {payload}) => {
         state.responseFormat = payload;
       })
@@ -88,5 +101,14 @@ export const generatedAnswerReducer = createReducer(
         state.fieldsToIncludeInCitations = [
           ...new Set(state.fieldsToIncludeInCitations.concat(action.payload)),
         ];
+      })
+      .addCase(setIsAnswerGenerated, (state, {payload}) => {
+        state.isAnswerGenerated = payload;
+      })
+      .addCase(expandGeneratedAnswer, (state) => {
+        state.expanded = true;
+      })
+      .addCase(collapseGeneratedAnswer, (state) => {
+        state.expanded = false;
       })
 );

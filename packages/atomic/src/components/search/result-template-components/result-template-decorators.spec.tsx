@@ -1,14 +1,12 @@
 import {buildInteractiveResult, TestUtils} from '@coveo/headless';
 import {h} from '@stencil/core';
 import {newSpecPage, SpecPage} from '@stencil/core/testing';
+import {MissingParentError} from '../../common/item-list/item-decorators';
 import {AtomicResult} from '../atomic-result/atomic-result';
 import {AtomicSearchInterface} from '../atomic-search-interface/atomic-search-interface';
 import {createAtomicStore} from '../atomic-search-interface/store';
 import {AtomicResultFieldsList} from './atomic-result-fields-list/atomic-result-fields-list';
-import {
-  MissingResultParentError,
-  resultContext,
-} from './result-template-decorators';
+import {resultContext} from './result-template-decorators';
 
 // https://github.com/ionic-team/stencil/issues/3260
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -29,7 +27,7 @@ describe('ResultContext decorator', () => {
 
     expect(console.error).toHaveBeenCalledWith(
       'Result component is in error and has been removed from the DOM',
-      new MissingResultParentError('atomic-result-fields-list'),
+      new MissingParentError('atomic-result-fields-list', 'atomic-result'),
       expect.anything(),
       expect.anything()
     );
@@ -57,12 +55,14 @@ describe('resultContext method', () => {
   it('rejects when the component is not the child of an atomic-result element', async () => {
     const element = document.createElement('my-component');
     await expect(resultContext(element)).rejects.toEqual(
-      new MissingResultParentError('my-component')
+      new MissingParentError('my-component', 'atomic-result')
     );
   });
 
   it("revolves the bindings when it's a child of an atomic-result element", async () => {
-    const mockEngine = TestUtils.buildMockSearchAppEngine();
+    const mockEngine = TestUtils.buildMockSearchEngine(
+      TestUtils.createMockState()
+    );
     const mockResult = TestUtils.buildMockResult();
 
     const page = await newSpecPage({

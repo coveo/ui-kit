@@ -89,16 +89,22 @@ function smartSnippetSuggestionsExpectations(
         );
     },
 
-    displaySmartSnippetSuggestionsAnswer: (index: number, value: string) => {
+    displaySmartSnippetSuggestionsAnswer: (
+      index: number,
+      answer: {text: string; link: {text: string; href: string}}
+    ) => {
       selector
         .smartSnippetSuggestionsAnswer(index)
         .then((elem) => {
-          // we need to remove unnecessary attributes automatically added to LWCs.
-          const cleanHTML = elem[0].innerHTML.replaceAll(
-            ' c-quanticsmartsnippetanswer_quanticsmartsnippetanswer=""',
-            ''
+          const linkElement: HTMLAnchorElement | null = elem[0].querySelector(
+            '[data-cy="answer-inline-link"]'
           );
-          expect(cleanHTML).to.eq(value);
+          const textElement = elem[0].querySelector('[data-cy="answer-text"]');
+
+          expect(textElement?.textContent).to.equal(answer.text);
+          expect(linkElement?.target).to.equal('_blank');
+          expect(linkElement?.textContent).to.equal(answer.link.text);
+          expect(linkElement?.href).to.equal(answer.link.href);
         })
         .logDetail(
           `should display the correct answer of the suggestion at the index ${index}`

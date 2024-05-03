@@ -1,4 +1,5 @@
 import type {SearchEngine} from '@coveo/headless';
+import {CommerceEngine} from '@coveo/headless/commerce';
 import type {RecommendationEngine} from '@coveo/headless/recommendation';
 import {HTMLStencilElement} from '@stencil/core/internal';
 import {i18n} from 'i18next';
@@ -48,6 +49,21 @@ export interface CommonBindings<
    */
   interfaceElement: InterfaceElement;
 }
+export interface NonceBindings {
+  /**
+   * Creates a Style Information element with the nonce attribute if it exists.
+   * Note: the element is **not** appended to the DOM.
+   * @returns a style element.
+   */
+  createStyleElement: () => HTMLStyleElement;
+
+  /**
+   * Creates a Script element with the nonce attribute if it exists.
+   * Note: the element is **not** appended to the DOM.
+   * @returns a script element.
+   */
+  createScriptElement: () => HTMLScriptElement;
+}
 
 export type AnyBindings = CommonBindings<
   AnyEngineType,
@@ -55,4 +71,8 @@ export type AnyBindings = CommonBindings<
   HTMLStencilElement
 >;
 
-export type AnyEngineType = SearchEngine | RecommendationEngine | InsightEngine;
+export type AnyEngineType =
+  | SearchEngine
+  | RecommendationEngine
+  | InsightEngine
+  | CommerceEngine;

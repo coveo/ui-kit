@@ -1,13 +1,17 @@
-import {buildMockSearchAppEngine, MockSearchEngine} from '../../../../test';
+import {
+  buildMockSearchEngine,
+  MockedSearchEngine,
+} from '../../../../test/mock-engine-v2';
 import {buildMockFacetIdConfig} from '../../../../test/mock-facet-id-config';
+import {createMockState} from '../../../../test/mock-state';
 import {determineFacetId} from './facet-id-determinor';
 import * as FacetIdGenerator from './facet-id-generator';
 
 describe('#determineFacetId', () => {
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
 
   beforeEach(() => {
-    engine = buildMockSearchAppEngine();
+    engine = buildMockSearchEngine(createMockState());
   });
 
   it('when a #facetId key is passed, it returns it', () => {

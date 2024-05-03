@@ -6,9 +6,9 @@ import {
 import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice';
 import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
 import {
-  MockProductListingEngine,
+  MockedProductListingEngine,
   buildMockProductListingEngine,
-} from '../../../test/mock-engine';
+} from '../../../test/mock-engine-v2';
 import {buildMockPagination} from '../../../test/mock-pagination';
 import {buildMockProductListingState} from '../../../test/mock-product-listing-state';
 import {
@@ -17,8 +17,11 @@ import {
   buildResultsPerPage,
 } from './headless-product-listing-results-per-page';
 
+jest.mock('../../../features/pagination/pagination-actions');
+jest.mock('../../../features/product-listing/product-listing-actions');
+
 describe('ResultsPerPage', () => {
-  let engine: MockProductListingEngine;
+  let engine: MockedProductListingEngine;
   let props: ResultsPerPageProps;
   let resultsPerPage: ResultsPerPage;
 
@@ -27,7 +30,8 @@ describe('ResultsPerPage', () => {
   }
 
   beforeEach(() => {
-    engine = buildMockProductListingEngine({});
+    jest.resetAllMocks();
+    engine = buildMockProductListingEngine(buildMockProductListingState());
     props = {
       initialState: {},
     };
@@ -46,24 +50,18 @@ describe('ResultsPerPage', () => {
     const num = 10;
     props.initialState!.numberOfResults = num;
     initResultsPerPage();
-
-    expect(engine.actions).toContainEqual(registerNumberOfResults(num));
+    expect(registerNumberOfResults).toHaveBeenCalledWith(num);
   });
 
   it('when the #numberOfResults option is specified to 0, it dispatches a register action', () => {
     const num = 0;
     props.initialState!.numberOfResults = num;
     initResultsPerPage();
-
-    expect(engine.actions).toContainEqual(registerNumberOfResults(num));
+    expect(registerNumberOfResults).toHaveBeenCalledWith(num);
   });
 
   it('when the #numberOfResults option is not specified, it does not dispatch a register action', () => {
-    const action = engine.actions.find(
-      (a) => a.type === registerNumberOfResults.type
-    );
-
-    expect(action).toBe(undefined);
+    expect(registerNumberOfResults).not.toHaveBeenCalled();
   });
 
   it('when #numberOfResults is set to a string, it throws an error with a context message', () => {
@@ -77,17 +75,12 @@ describe('ResultsPerPage', () => {
   it('calling #set updates the number of results to the passed value', () => {
     const num = 10;
     resultsPerPage.set(num);
-
-    expect(engine.actions).toContainEqual(updateNumberOfResults(num));
+    expect(updateNumberOfResults).toHaveBeenCalledWith(num);
   });
 
   it('calling #set executes a fetch product listing', () => {
     resultsPerPage.set(10);
-
-    const action = engine.actions.find(
-      (a) => a.type === fetchProductListing.pending.type
-    );
-    expect(action).toBeTruthy();
+    expect(fetchProductListing).toHaveBeenCalled();
   });
 
   describe('when the state #numberOfResults is set to a value', () => {
@@ -98,7 +91,7 @@ describe('ResultsPerPage', () => {
         numberOfResults: numOfResultsInState,
       });
       const state = buildMockProductListingState({pagination});
-      engine = buildMockProductListingEngine({state});
+      engine = buildMockProductListingEngine(state);
       initResultsPerPage();
     });
 

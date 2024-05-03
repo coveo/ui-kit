@@ -3,12 +3,13 @@ import {Logger} from 'pino';
 import {GeneratedAnswerAPIClient} from '../../api/generated-answer/generated-answer-client';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {InsightAPIClient} from '../../api/service/insight/insight-api-client';
+import {interfaceLoad} from '../../features/analytics/analytics-actions';
 import {LegacySearchAction} from '../../features/analytics/analytics-utils';
-import {logInsightInterfaceLoad} from '../../features/analytics/insight-analytics-actions';
 import {setInsightConfiguration} from '../../features/insight-configuration/insight-configuration-actions';
 import {insightConfigurationReducer as insightConfiguration} from '../../features/insight-configuration/insight-configuration-slice';
 import {insightInterfaceReducer as insightInterface} from '../../features/insight-interface/insight-interface-slice';
 import {executeSearch} from '../../features/insight-search/insight-search-actions';
+import {logInsightInterfaceLoad} from '../../features/insight-search/insight-search-analytics-actions';
 import {resultPreviewReducer as resultPreview} from '../../features/result-preview/result-preview-slice';
 import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice';
 import {firstSearchExecutedSelector} from '../../features/search/search-selectors';
@@ -22,6 +23,7 @@ import {
 } from '../engine';
 import {InsightThunkExtraArguments} from '../insight-thunk-extra-arguments';
 import {buildLogger} from '../logger';
+import {AdditionalCoreExtraArguments} from '../store';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {
   InsightEngineConfiguration,
@@ -81,7 +83,10 @@ export function buildInsightEngine(
   );
   const generatedAnswerClient = createGeneratedAnswerAPIClient(logger);
 
-  const thunkArguments: InsightThunkExtraArguments = {
+  const thunkArguments: Omit<
+    InsightThunkExtraArguments,
+    keyof AdditionalCoreExtraArguments
+  > = {
     ...buildThunkExtraArguments(options.configuration, logger),
     apiClient: insightAPIClient,
     streamingClient: generatedAnswerClient,
@@ -116,7 +121,9 @@ export function buildInsightEngine(
         return;
       }
 
-      engine.dispatch(executeSearch(analyticsEvent));
+      engine.dispatch(
+        executeSearch({legacy: analyticsEvent, next: interfaceLoad()})
+      );
     },
   };
 }

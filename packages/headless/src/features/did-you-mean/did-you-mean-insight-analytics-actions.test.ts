@@ -1,5 +1,5 @@
-//import {CoveoInsightClient} from 'coveo.analytics';
-import {buildMockInsightEngine} from '../../test/mock-engine';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
+import {buildMockInsightEngine} from '../../test/mock-engine-v2';
 import {buildMockInsightState} from '../../test/mock-insight-state';
 import {
   logDidYouMeanAutomatic,
@@ -29,8 +29,8 @@ const exampleCaseNumber = '5678';
 
 describe('logDidYouMeanClick', () => {
   it('should log #logDidYouMeanClick with the right payload', async () => {
-    const engine = buildMockInsightEngine({
-      state: buildMockInsightState({
+    const engine = buildMockInsightEngine(
+      buildMockInsightState({
         insightCaseContext: {
           caseContext: {
             Case_Subject: exampleSubject,
@@ -39,10 +39,13 @@ describe('logDidYouMeanClick', () => {
           caseId: exampleCaseId,
           caseNumber: exampleCaseNumber,
         },
-      }),
-    });
-
-    await engine.dispatch(logDidYouMeanClick());
+      })
+    );
+    await logDidYouMeanClick()()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const expectedPayload = {
       caseContext: {
@@ -62,8 +65,8 @@ describe('logDidYouMeanClick', () => {
 
 describe('logDidYouMeanAutomatic', () => {
   it('should log #logDidYouMeanAutomatic with the right payload', async () => {
-    const engine = buildMockInsightEngine({
-      state: buildMockInsightState({
+    const engine = buildMockInsightEngine(
+      buildMockInsightState({
         insightCaseContext: {
           caseContext: {
             Case_Subject: exampleSubject,
@@ -72,10 +75,14 @@ describe('logDidYouMeanAutomatic', () => {
           caseId: exampleCaseId,
           caseNumber: exampleCaseNumber,
         },
-      }),
-    });
+      })
+    );
 
-    await engine.dispatch(logDidYouMeanAutomatic());
+    await logDidYouMeanAutomatic()()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const expectedPayload = {
       caseContext: {

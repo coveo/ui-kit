@@ -1,7 +1,11 @@
 import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload';
-import {GeneratedResponseFormat} from './generated-response-format';
+import {
+  GeneratedContentFormat,
+  GeneratedResponseFormat,
+} from './generated-response-format';
 
 export interface GeneratedAnswerState {
+  id: string;
   /**
    * Determines if the generated answer is visible.
    */
@@ -18,6 +22,12 @@ export interface GeneratedAnswerState {
    * The generated answer.
    */
   answer?: string;
+  /**
+   * The content format of the generated answer. Possible values are:
+   * - `text/plain`
+   * - `text/markdown`
+   */
+  answerContentFormat?: GeneratedContentFormat;
   /**
    * The document snippets retrieved to generate the answer.
    */
@@ -54,10 +64,19 @@ export interface GeneratedAnswerState {
    * A list of indexed fields to include in the citations returned with the generated answer.
    */
   fieldsToIncludeInCitations: string[];
+  /**
+   * Determines if the answer is generated.
+   */
+  isAnswerGenerated: boolean;
+  /**
+   * Whether the answer is expanded.
+   */
+  expanded: boolean;
 }
 
 export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
   return {
+    id: '',
     isVisible: true,
     isLoading: false,
     isStreaming: false,
@@ -66,9 +85,12 @@ export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
     disliked: false,
     responseFormat: {
       answerStyle: 'default',
+      contentFormat: ['text/plain'],
     },
     feedbackModalOpen: false,
     feedbackSubmitted: false,
     fieldsToIncludeInCitations: [],
+    isAnswerGenerated: false,
+    expanded: false,
   };
 }

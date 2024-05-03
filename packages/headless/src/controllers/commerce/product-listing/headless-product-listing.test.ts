@@ -1,24 +1,24 @@
-import {Action} from '@reduxjs/toolkit';
 import {configuration} from '../../../app/common-reducers';
 import {contextReducer} from '../../../features/commerce/context/context-slice';
 import {fetchProductListing} from '../../../features/commerce/product-listing/product-listing-actions';
 import {productListingV2Reducer} from '../../../features/commerce/product-listing/product-listing-slice';
-import {buildMockCommerceEngine, MockCommerceEngine} from '../../../test';
+import {buildMockCommerceState} from '../../../test/mock-commerce-state';
+import {
+  MockedCommerceEngine,
+  buildMockCommerceEngine,
+} from '../../../test/mock-engine-v2';
 import {buildProductListing, ProductListing} from './headless-product-listing';
+
+jest.mock('../../../features/commerce/product-listing/product-listing-actions');
 
 describe('headless product-listing', () => {
   let productListing: ProductListing;
-  let engine: MockCommerceEngine;
+  let engine: MockedCommerceEngine;
 
   beforeEach(() => {
-    engine = buildMockCommerceEngine();
+    engine = buildMockCommerceEngine(buildMockCommerceState());
     productListing = buildProductListing(engine);
   });
-
-  const expectContainAction = (action: Action) => {
-    const found = engine.actions.find((a) => a.type === action.type);
-    expect(engine.actions).toContainEqual(found);
-  };
 
   it('adds the correct reducers to engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
@@ -30,6 +30,6 @@ describe('headless product-listing', () => {
 
   it('refresh dispatches #fetchProductListing', () => {
     productListing.refresh();
-    expectContainAction(fetchProductListing.pending);
+    expect(fetchProductListing).toHaveBeenCalled();
   });
 });

@@ -1,8 +1,8 @@
 import {configuration} from '../../../app/common-reducers';
+import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
 import {logPagerResize} from '../../../features/pagination/pagination-analytics-actions';
 import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice';
 import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
-import {ProductListingEngine} from '../../../product-listing.index';
 import {
   ConfigurationSection,
   PaginationSection,
@@ -50,9 +50,10 @@ export function buildResultsPerPage(
       };
     },
 
-    set(num: number) {
+    async set(num: number) {
       coreController.set(num);
-      dispatch(fetchProductListing()).then(() => dispatch(logPagerResize()));
+      await dispatch(fetchProductListing());
+      dispatch(logPagerResize());
     },
   };
 }

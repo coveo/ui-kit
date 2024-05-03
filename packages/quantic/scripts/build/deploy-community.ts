@@ -5,7 +5,7 @@ import * as path from 'path';
 import waitOn from 'wait-on';
 import {StepLogger, StepsRunner} from './util/log';
 import * as sfdx from './util/sfdx-commands';
-import {SfdxJWTAuth} from './util/sfdx-commands';
+import {SfdxJWTAuth, authorizeOrg} from './util/sfdx-commands';
 
 interface Options {
   configFile: string;
@@ -26,9 +26,9 @@ interface Options {
 
 function ensureEnvVariables() {
   [
-    'BRANCH_NAME',
+    'COMMIT_SHA',
     'SFDX_AUTH_CLIENT_ID',
-    'SFDX_AUTH_JWT_KEY',
+    'SFDX_AUTH_JWT_KEY_FILE',
     'SFDX_AUTH_JWT_USERNAME',
   ].forEach((v) => {
     if (!process.env[v]) {
@@ -42,7 +42,7 @@ function isCi() {
 }
 
 function getBranchName() {
-  return process.env.BRANCH_NAME.replace(/[^a-zA-Z0-9-]/g, '-');
+  return process.env.COMMIT_SHA.substring(0, 6);
 }
 
 function getCiOrgName() {
@@ -121,7 +121,7 @@ async function buildOptions(): Promise<Options> {
     },
     jwt: {
       clientId: process.env.SFDX_AUTH_CLIENT_ID,
-      keyFile: process.env.SFDX_AUTH_JWT_KEY,
+      keyFile: process.env.SFDX_AUTH_JWT_KEY_FILE,
       username: process.env.SFDX_AUTH_JWT_USERNAME,
     },
     deleteOldOrgs: ci,
@@ -271,6 +271,17 @@ async function updateCommunityConfigFile(
   log('Configuration file updated.');
 }
 
+async function authorizeDevOrg(log: StepLogger, options: Options) {
+  log(`Authorizing user: ${options.jwt.username}`);
+  await authorizeOrg({
+    username: options.jwt.username,
+    isScratchOrg: false,
+    jwtClientId: options.jwt.clientId,
+    jwtKeyFile: options.jwt.keyFile,
+  });
+  log('Authorization successful');
+}
+
 async function waitForCommunity(
   log: StepLogger,
   communityUrl: string
@@ -301,13 +312,14 @@ async function deleteScratchOrg(
 
   try {
     let communityUrl = '';
-
+    if (isCi()) {
+      runner.add(async (log) => await authorizeDevOrg(log, options));
+    }
     if (options.deleteOldOrgs) {
       runner.add(async (log) => {
         await deleteOldOrgs(log, options);
       });
     }
-
     runner
       .add(async (log) => {
         await ensureScratchOrgExists(log, options);

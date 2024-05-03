@@ -25,6 +25,7 @@ exports[`#logRecommendationOpen when analyticsMode is \`next\` should call relay
 [
   "itemClick",
   {
+    "actionCause": "open",
     "itemMetadata": {
       "author": "unknown",
       "title": "example documentTitle",

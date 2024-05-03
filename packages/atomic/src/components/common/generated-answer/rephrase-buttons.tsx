@@ -4,6 +4,7 @@ import {i18n} from 'i18next';
 import BulletsIcon from '../../../images/bullets.svg';
 import IdeaIcon from '../../../images/idea.svg';
 import StepsIcon from '../../../images/steps.svg';
+import TextIcon from '../../../images/text.svg';
 import {Button} from '../button';
 
 interface RephraseOption {
@@ -14,6 +15,12 @@ interface RephraseOption {
 }
 
 const options: RephraseOption[] = [
+  {
+    value: 'default',
+    icon: TextIcon,
+    titleKey: 'auto',
+    tooltipKey: 'auto-tooltip',
+  },
   {
     value: 'step',
     icon: StepsIcon,
@@ -45,28 +52,34 @@ export const RephraseButtons: FunctionalComponent<RephraseButtonProps> = (
 ) => {
   const {i18n} = props;
   return (
-    <div class="rephrase-buttons shrink-0">
+    <div part="rephrase-buttons" class="shrink-0">
       <p part="rephrase-label" class="mb-2 text-neutral-dark shrink-0">
         {i18n.t('rephrase')}
       </p>
-      <div class="flex flex-wrap gap-2 ml-auto">
+      <div
+        part="rephrase-buttons-container"
+        class="flex flex-wrap gap-2 ml-auto border border-solid rounded-md p-1"
+      >
         {options.map((option) => {
           const isActive = props.answerStyle === option.value;
           return (
             <Button
               title={i18n.t(option.tooltipKey)}
               part="rephrase-button"
-              style="outline-primary"
-              class={`flex items-center rounded-md ${isActive ? 'active' : ''}`}
+              style="text-transparent"
+              class={`flex items-center rounded ${isActive ? 'active' : ''}`}
               onClick={() => {
-                props.onChange(isActive ? 'default' : option.value);
+                props.onChange(option.value);
               }}
               ariaPressed={String(isActive)}
             >
               <div class="icon-container text-neutral-dark h-full mx-auto shrink-0 relative">
                 <atomic-icon icon={option.icon}></atomic-icon>
               </div>
-              <div class="rephrase-btn-label hidden text-neutral-dark">
+              <div
+                part="rephrase-button-label"
+                class="hidden text-neutral-dark"
+              >
                 {i18n.t(option.titleKey)}
               </div>
             </Button>

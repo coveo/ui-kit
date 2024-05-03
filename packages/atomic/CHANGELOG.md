@@ -1,3 +1,148 @@
+# 2.65.0 (2024-05-02)
+
+### Bug Fixes
+
+- always include suggestions popup in the DOM ([#3860](https://github.com/coveo/ui-kit/issues/3860)) ([c13d91f](https://github.com/coveo/ui-kit/commits/c13d91f9c380bc690ddbb73ef12e0862808711ef))
+- **atomic:** answer generation component glitch ([#3841](https://github.com/coveo/ui-kit/issues/3841)) ([71d3aa5](https://github.com/coveo/ui-kit/commits/71d3aa54fb6879550da4f527baa5f033c247cdc2))
+- **atomic:** separator should not be consider for ARIA ([#3846](https://github.com/coveo/ui-kit/issues/3846)) ([329a914](https://github.com/coveo/ui-kit/commits/329a91472de21f1e4344e53e247c092526876dbd))
+
+### Features
+
+- **Commerce Atomic:** add atomic-commerce-interface ([#3868](https://github.com/coveo/ui-kit/issues/3868)) ([4527419](https://github.com/coveo/ui-kit/commits/45274198ea6af6e1d4a2acd6472dbf706b279588))
+- **Commerce Atomic:** add atomic-commerce-result-list ([#3872](https://github.com/coveo/ui-kit/issues/3872)) ([8db0aee](https://github.com/coveo/ui-kit/commits/8db0aee7690a70f517e136c206c7c20d926086d0))
+- **Commerce Atomic:** add standalone searchbox ([#3875](https://github.com/coveo/ui-kit/issues/3875)) ([e1f2b6f](https://github.com/coveo/ui-kit/commits/e1f2b6f23eb30be4972a7e46a7878515004cec46))
+- **Commerce Atomic:** setup search box skeleton ([#3861](https://github.com/coveo/ui-kit/issues/3861)) ([d6c87b5](https://github.com/coveo/ui-kit/commits/d6c87b50ecf266574d1062861c345c7827d19090))
+- **genQA:** add part attribute to rephrase buttons container ([#3831](https://github.com/coveo/ui-kit/issues/3831)) ([d2c062d](https://github.com/coveo/ui-kit/commits/d2c062dcf10372bd5c72bb522ba07e1ec9549c5b))
+- **genQa:** change feedback buttons position for small layout ([#3847](https://github.com/coveo/ui-kit/issues/3847)) ([38e101c](https://github.com/coveo/ui-kit/commits/38e101c2e64a79bb6ea6560060ba711070ceea32))
+
+## 2.64.1 (2024-04-24)
+
+### Bug Fixes
+
+- **genqa:** fix rephrase buttons for very small layout ([#3830](https://github.com/coveo/ui-kit/issues/3830)) ([79fbccc](https://github.com/coveo/ui-kit/commits/79fbccc14e75556e845c871e1c13e57920110208))
+
+# 2.64.0 (2024-04-17)
+
+### Bug Fixes
+
+- **deps:** update stencil j:kit-282 ([#3764](https://github.com/coveo/ui-kit/issues/3764)) ([82b6948](https://github.com/coveo/ui-kit/commits/82b694835e9e0a29859590f16bd64a8e028eb888))
+
+### Features
+
+- add nonce support ([#3791](https://github.com/coveo/ui-kit/issues/3791)) ([fc4be2e](https://github.com/coveo/ui-kit/commits/fc4be2e7cbeb5815e43105a8584a7bfd0db82682))
+
+## 2.63.1 (2024-04-10)
+
+# 2.63.0 (2024-04-03)
+
+### Features
+
+- **atomic:** add part attribute for genQA component ([#3753](https://github.com/coveo/ui-kit/issues/3753)) ([0a55222](https://github.com/coveo/ui-kit/commits/0a55222e982d7fa384fa402b1b7c00d8e2625f6f))
+- **atomic:** add rga disclaimer ([#3761](https://github.com/coveo/ui-kit/issues/3761)) ([d6c8b34](https://github.com/coveo/ui-kit/commits/d6c8b34e654cd72df053d1aae184ec045ffb5d8f))
+
+## 2.62.3 (2024-03-27)
+
+## 2.62.1 (2024-03-20)
+
+# 2.62.0 (2024-03-20)
+
+### Bug Fixes
+
+- **deps:** update dependency @stencil/core to v4.13.0 j:kit-282 ([#3725](https://github.com/coveo/ui-kit/issues/3725)) ([aee2015](https://github.com/coveo/ui-kit/commits/aee20158c892bf1ec73ea3e66c2cdfa6823420c1))
+
+### Features
+
+- **atomic:** style rephrase buttons and add auto option ([#3702](https://github.com/coveo/ui-kit/issues/3702)) ([cdae484](https://github.com/coveo/ui-kit/commits/cdae48449176e4913f61b461fab689dbc604e25f))
+
+# 2.61.0 (2024-03-13)
+
+### Features
+
+- **atomic:** add sort-criteria to timeframe facet ([#3692](https://github.com/coveo/ui-kit/issues/3692)) ([1a6f1ab](https://github.com/coveo/ui-kit/commits/1a6f1ab9c943a2b977bdece4c39cbfd1d3dda3de))
+
+## 2.60.5 (2024-03-12)
+
+### Bug Fixes
+
+- **atomic:** fix query suggestions mismatch on searchbox disabled + manual input clear ([#3699](https://github.com/coveo/ui-kit/issues/3699)) ([7e23c3a](https://github.com/coveo/ui-kit/commits/7e23c3a8b4f9711d927799e5d7463c4e16c97214))
+
+## 2.60.3 (2024-03-11)
+
+### Bug Fixes
+
+- **atomic:** add missing end label ([#3689](https://github.com/coveo/ui-kit/issues/3689)) ([4b404ab](https://github.com/coveo/ui-kit/commits/4b404abe5398f0b06047365b400bc981a273ce90))
+
+### Features
+
+- **quantic|atomic:** update genQA answer section title ([#3674](https://github.com/coveo/ui-kit/issues/3674)) ([1aaeb08](https://github.com/coveo/ui-kit/commits/1aaeb08802fd71ad9bdc98c213c830f676088adb))
+
+# 2.60.0 (2024-03-08)
+
+### Bug Fixes
+
+- **atomic:** fix search disabled check for query suggestion ([#3669](https://github.com/coveo/ui-kit/issues/3669)) ([8b4bb3d](https://github.com/coveo/ui-kit/commits/8b4bb3d14c876bb4b39be51f8ccb8e2add41f7ca))
+- **deps:** update stencil j:kit-282 ([#3635](https://github.com/coveo/ui-kit/issues/3635)) ([63b333e](https://github.com/coveo/ui-kit/commits/63b333eb5ef5b5017288883102503fd47863357b))
+
+### Features
+
+- **atomic,headless:** remove customData & middleware iff analyticsMode=next ([#3670](https://github.com/coveo/ui-kit/issues/3670)) ([ac15f5c](https://github.com/coveo/ui-kit/commits/ac15f5c11c89fd6af30a92d6abf7c6a5b984b8e5))
+
+# 2.59.0 (2024-03-06)
+
+### Features
+
+- **auto-facet:** bump max count to 20 ([#3642](https://github.com/coveo/ui-kit/issues/3642)) ([069a4be](https://github.com/coveo/ui-kit/commits/069a4be48522b65ae4c582162757fe1e441b1db7))
+- **IPX:** add PageView in IPX actions history ([#3607](https://github.com/coveo/ui-kit/issues/3607)) ([155f04c](https://github.com/coveo/ui-kit/commits/155f04c66c2961c55ea337c0e37f2c1cee1bb1d2)), closes [/github.com/coveo/coveo.analytics.js/blob/master/src/coveoua/browser.ts#L29](https://github.com//github.com/coveo/coveo.analytics.js/blob/master/src/coveoua/browser.ts/issues/L29)
+
+## 2.58.1 (2024-02-28)
+
+# 2.58.0 (2024-02-21)
+
+### Bug Fixes
+
+- **deps:** update stencil j:kit-282 ([#3578](https://github.com/coveo/ui-kit/issues/3578)) ([a5b645d](https://github.com/coveo/ui-kit/commits/a5b645d4f5395c9942af38feb5cfc2c08585405d))
+- **refine-modal:** Sort facets values based on their DOM position ([#3619](https://github.com/coveo/ui-kit/issues/3619)) ([3cf03af](https://github.com/coveo/ui-kit/commits/3cf03afc9f28065d94fa723a4b2c417585d67d30))
+
+### Features
+
+- **atomic:** exposes numberOfFoldedResults ([#3597](https://github.com/coveo/ui-kit/issues/3597)) ([3da9ac6](https://github.com/coveo/ui-kit/commits/3da9ac63984eef223e5a766ff1371435b9c1dc9c))
+
+## 2.57.2 (2024-02-14)
+
+### Bug Fixes
+
+- **atomic:** ensure redirection on instant result click ([#3585](https://github.com/coveo/ui-kit/issues/3585)) ([b47e3cb](https://github.com/coveo/ui-kit/commits/b47e3cb7b2a4febd98132d0e22ed22e45ae478af))
+- **atomic:** improve query suggestions selection ([#3582](https://github.com/coveo/ui-kit/issues/3582)) ([f8b06e9](https://github.com/coveo/ui-kit/commits/f8b06e926fcba970c334696080bac543686e2a61))
+
+## 2.57.1 (2024-02-09)
+
+### Bug Fixes
+
+- **deps:** update all dependencies j:kit-282 ([#3576](https://github.com/coveo/ui-kit/issues/3576)) ([4887772](https://github.com/coveo/ui-kit/commits/48877723d6f8c5e5446a48296326519f009ae850))
+
+# 2.57.0 (2024-02-08)
+
+### Bug Fixes
+
+- **atomic:** fix facet order in modal refine ([#3572](https://github.com/coveo/ui-kit/issues/3572)) ([9dc777e](https://github.com/coveo/ui-kit/commits/9dc777ea622d8d763ca4f628f87f733bf0d50d49))
+- **atomic:** fix input minimum length behaving incorrectly with clear button ([#3564](https://github.com/coveo/ui-kit/issues/3564)) ([eda7dfa](https://github.com/coveo/ui-kit/commits/eda7dfa3cfd320edaa6a5d48e03655b5adf1796b))
+
+### Features
+
+- **atomic:** add shadow part of result-multi-value-text list element ([#3567](https://github.com/coveo/ui-kit/issues/3567)) ([9c94377](https://github.com/coveo/ui-kit/commits/9c9437722223f707a6dead944e45d721ff8a1bc4))
+- **headless,atomic:** expose and leverage user defined label in administration tool for facets ([#3566](https://github.com/coveo/ui-kit/issues/3566)) ([5848396](https://github.com/coveo/ui-kit/commits/58483961a702887b54a5a51625a267753d727d6f))
+
+# 2.56.0 (2024-01-31)
+
+### Bug Fixes
+
+- **atomic:** fix insight search box width ([#3550](https://github.com/coveo/ui-kit/issues/3550)) ([797d50c](https://github.com/coveo/ui-kit/commits/797d50cd98d4f8e3ecff764fde6be01836cc849a))
+- **deps:** update all dependencies j:kit-282 ([#3535](https://github.com/coveo/ui-kit/issues/3535)) ([8cbc113](https://github.com/coveo/ui-kit/commits/8cbc113c323134c73ec9643260ee4580289e891b))
+
+### Features
+
+- **headless,atomic:** migrate framework versions from customData to source w/ next analytics ([#3544](https://github.com/coveo/ui-kit/issues/3544)) ([b4c9262](https://github.com/coveo/ui-kit/commits/b4c9262e89cf0e02d9f7392a3f1f198a5e61c64e))
+
 ## 2.55.1 (2024-01-24)
 
 ### Bug Fixes

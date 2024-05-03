@@ -1,21 +1,22 @@
 import {fieldsReducer as fields} from '../../features/fields/fields-slice';
 import {
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../test/mock-engine';
+  buildMockSearchEngine,
+  MockedSearchEngine,
+} from '../../test/mock-engine-v2';
 import {buildMockResult} from '../../test/mock-result';
-import {ResultTemplate} from './result-templates';
+import {createMockState} from '../../test/mock-state';
 import {
   ResultTemplatesManager,
   buildResultTemplatesManager,
+  ResultTemplate,
 } from './result-templates-manager';
 
 describe('result template manager', () => {
   let resultTemplateManager: ResultTemplatesManager<string>;
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
 
   beforeEach(() => {
-    engine = buildMockSearchAppEngine();
+    engine = buildMockSearchEngine(createMockState());
     resultTemplateManager = buildResultTemplatesManager(engine);
   });
 

@@ -3,6 +3,7 @@ import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
 polyfillCryptoNode();
 // 3rd Party Libraries
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
+export type {Relay} from '@coveo/relay';
 
 // Main App
 export type {
@@ -21,6 +22,7 @@ export type {
 export type {LoggerOptions} from './app/logger';
 
 export type {LogLevel} from './app/logger';
+export type {NavigatorContext} from './app/navigatorContextProvider';
 
 // Case Assist Action Loaders
 export * from './features/case-input/case-input-actions-loader';
@@ -99,4 +101,4 @@ export type {
 export {buildCaseAssistInteractiveResult} from './controllers/document-suggestion-list/case-assist-headless-interactive-result';
 
 // Features
-export {ResultTemplatesHelpers} from './features';
+export {ResultTemplatesHelpers} from './features/result-templates/result-templates-helpers';

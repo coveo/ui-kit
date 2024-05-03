@@ -1,7 +1,6 @@
 import defaultResultComponentStory from 'atomic-storybook/default-result-component-story';
 
 const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
-  'Atomic/ResultList/ResultTimespan',
   'atomic-result-timespan',
   {field: 'ytvideoduration', unit: 's'},
   {
@@ -19,5 +18,6 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
 export default {
   ...defaultModuleExport,
   title: 'Atomic/ResultList/ResultTimespan',
+  id: 'atomic-result-timespan',
 };
 export const Default = exportedStory;

@@ -2,38 +2,102 @@ import {
   selectPage,
   nextPage,
   previousPage,
+  setPageSize,
+  registerRecommendationsSlotPagination,
 } from '../../../../features/commerce/pagination/pagination-actions';
 import {paginationReducer as commercePagination} from '../../../../features/commerce/pagination/pagination-slice';
-import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
-import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
+import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
+import {
+  MockedCommerceEngine,
+  buildMockCommerceEngine,
+} from '../../../../test/mock-engine-v2';
 import {
   buildCorePagination,
+  CorePaginationOptions,
   Pagination,
 } from './headless-core-commerce-pagination';
 
+jest.mock('../../../../features/commerce/pagination/pagination-actions');
+
 describe('core pagination', () => {
-  let engine: MockCommerceEngine;
+  let engine: MockedCommerceEngine;
   let pagination: Pagination;
-  const fetchResultsActionCreator = fetchProductListing;
+  const fetchResultsActionCreator = jest.fn();
+  const slotId = 'recommendations-slot-id';
 
-  function initPagination() {
-    engine = buildMockCommerceEngine();
+  function initPagination(options: CorePaginationOptions = {}) {
+    engine = buildMockCommerceEngine(buildMockCommerceState());
 
-    pagination = buildCorePagination(engine, {fetchResultsActionCreator});
+    pagination = buildCorePagination(engine, {
+      fetchResultsActionCreator,
+      options,
+    });
   }
 
   beforeEach(() => {
     initPagination();
   });
 
-  it('adds correct reducers to engine', () => {
-    expect(engine.addReducers).toBeCalledWith({
-      commercePagination,
+  it('exposes #subscribe method', () => {
+    expect(pagination.subscribe).toBeTruthy();
+  });
+
+  describe('initialization', () => {
+    it('adds correct reducers to engine', () => {
+      expect(engine.addReducers).toHaveBeenCalledWith({
+        commercePagination,
+      });
+    });
+
+    it('does not set page size when not provided', () => {
+      expect(setPageSize).not.toHaveBeenCalled();
+    });
+
+    it('sets page size when provided', () => {
+      const pageSize = 11;
+      initPagination({pageSize});
+      expect(setPageSize).toHaveBeenCalledWith({pageSize});
+    });
+
+    it('when slot id is provided, registers recommendation slot pagination', () => {
+      initPagination({slotId});
+      expect(registerRecommendationsSlotPagination).toHaveBeenCalledWith({
+        slotId,
+      });
     });
   });
 
-  it('exposes #subscribe method', () => {
-    expect(pagination.subscribe).toBeTruthy();
+  describe('#state', () => {
+    it('when slot id is specified, reflects the recommendations slot pagination state', () => {
+      initPagination({slotId: 'slot-id'});
+      engine.state.commercePagination.recommendations['slot-id'] = {
+        perPage: 111,
+        page: 111,
+        totalEntries: 111,
+        totalPages: 111,
+      };
+      expect(pagination.state).toEqual({
+        pageSize: 111,
+        page: 111,
+        totalEntries: 111,
+        totalPages: 111,
+      });
+    });
+
+    it('when slot id is not specified, reflects the principal pagination state', () => {
+      engine.state.commercePagination.principal = {
+        perPage: 222,
+        page: 222,
+        totalEntries: 222,
+        totalPages: 222,
+      };
+      expect(pagination.state).toEqual({
+        pageSize: 222,
+        page: 222,
+        totalEntries: 222,
+        totalPages: 222,
+      });
+    });
   });
 
   describe('#selectPage', () => {
@@ -42,12 +106,11 @@ describe('core pagination', () => {
     });
 
     it('dispatches #selectPage', () => {
-      expect(engine.actions).toContainEqual(selectPage(0));
+      expect(selectPage).toHaveBeenCalledWith({page: 0});
     });
 
     it('dispatches #fetchResultsActionCreator', () => {
-      const action = engine.findAsyncAction(fetchResultsActionCreator.pending);
-      expect(action).toBeTruthy();
+      expect(fetchResultsActionCreator).toHaveBeenCalled();
     });
   });
 
@@ -57,12 +120,11 @@ describe('core pagination', () => {
     });
 
     it('dispatches #nextPage', () => {
-      expect(engine.actions).toContainEqual(nextPage());
+      expect(nextPage).toHaveBeenCalled();
     });
 
     it('dispatches #fetchResultsActionCreator', () => {
-      const action = engine.findAsyncAction(fetchResultsActionCreator.pending);
-      expect(action).toBeTruthy();
+      expect(fetchResultsActionCreator).toHaveBeenCalled();
     });
   });
 
@@ -72,12 +134,26 @@ describe('core pagination', () => {
     });
 
     it('dispatches #previousPage', () => {
-      expect(engine.actions).toContainEqual(previousPage());
+      expect(previousPage).toHaveBeenCalled();
     });
 
     it('dispatches #fetchResultsActionCreator', () => {
-      const action = engine.findAsyncAction(fetchResultsActionCreator.pending);
-      expect(action).toBeTruthy();
+      expect(fetchResultsActionCreator).toHaveBeenCalled();
+    });
+  });
+
+  describe('#setPageSize', () => {
+    const pageSize = 10;
+    beforeEach(() => {
+      pagination.setPageSize(pageSize);
+    });
+
+    it('dispatches #setPageSize', () => {
+      expect(setPageSize).toHaveBeenCalledWith({pageSize});
+    });
+
+    it('dispatches #fetchResultsActionCreator', () => {
+      expect(fetchResultsActionCreator).toHaveBeenCalled();
     });
   });
 });

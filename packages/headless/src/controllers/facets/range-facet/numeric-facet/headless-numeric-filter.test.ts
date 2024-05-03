@@ -3,19 +3,20 @@ import {updateFacetOptions} from '../../../../features/facet-options/facet-optio
 import {
   registerNumericFacet,
   updateNumericFacetValues,
+  validateManualNumericRanges,
 } from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {numericFacetSetReducer as numericFacetSet} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {executeSearch} from '../../../../features/search/search-actions';
 import {searchReducer as search} from '../../../../features/search/search-slice';
 import {SearchAppState} from '../../../../state/search-app-state';
 import {
-  buildMockSearchAppEngine,
-  createMockState,
-  MockSearchEngine,
-} from '../../../../test';
+  buildMockSearchEngine,
+  MockedSearchEngine,
+} from '../../../../test/mock-engine-v2';
 import {buildMockNumericFacetResponse} from '../../../../test/mock-numeric-facet-response';
 import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
+import {createMockState} from '../../../../test/mock-state';
 import * as FacetIdDeterminor from '../../../core/facets/_common/facet-id-determinor';
 import {buildNumericRange} from '../../../core/facets/range-facet/numeric-facet/numeric-range';
 import {
@@ -25,16 +26,22 @@ import {
   NumericFilterOptions,
 } from './headless-numeric-filter';
 
+jest.mock('../../../../features/search/search-actions');
+jest.mock('../../../../features/facet-options/facet-options-actions');
+jest.mock(
+  '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions'
+);
+
 describe('numeric filter', () => {
   const facetId = '1';
   let options: NumericFilterOptions;
   let initialState: NumericFilterInitialState | undefined;
   let state: SearchAppState;
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
   let numericFacet: NumericFilter;
 
   function initNumericFilter() {
-    engine = buildMockSearchAppEngine({state});
+    engine = buildMockSearchEngine(state);
     numericFacet = buildNumericFilter(engine, {options, initialState});
   }
 
@@ -59,8 +66,13 @@ describe('numeric filter', () => {
         end: 0,
       }),
     };
-    expect(() => initNumericFilter()).toThrow(
-      'The start value is greater than the end value for the numeric range 10 to 0'
+    initNumericFilter();
+    expect(validateManualNumericRanges).toHaveBeenCalledWith(
+      expect.objectContaining({
+        currentValues: expect.arrayContaining([
+          expect.objectContaining({start: 10, end: 0}),
+        ]),
+      })
     );
   });
 
@@ -84,7 +96,7 @@ describe('numeric filter', () => {
   });
 
   it('registers a numeric facet with the passed options', () => {
-    const action = registerNumericFacet({
+    expect(registerNumericFacet).toHaveBeenCalledWith({
       facetId,
       generateAutomaticRanges: false,
       currentValues: initialState?.range
@@ -92,7 +104,6 @@ describe('numeric filter', () => {
         : [],
       ...options,
     });
-    expect(engine.actions).toContainEqual(action);
   });
 
   it('when an option is invalid, it throws an error', () => {
@@ -103,11 +114,15 @@ describe('numeric filter', () => {
   });
 
   describe('#setRange', () => {
+    beforeEach(() => {
+      (updateNumericFacetValues as unknown as jest.Mock).mockReturnValueOnce(
+        {}
+      );
+    });
     it('dispatches a updateNumericFacetValues with the passed value', () => {
       const value = buildMockNumericFacetValue({});
       numericFacet.setRange(value);
-
-      const action = updateNumericFacetValues({
+      expect(updateNumericFacetValues).toHaveBeenCalledWith({
         facetId,
         values: [
           {
@@ -118,27 +133,12 @@ describe('numeric filter', () => {
           },
         ],
       });
-      expect(engine.actions).toContainEqual(action);
     });
 
     it('dispatches a search', () => {
       const value = buildMockNumericFacetValue();
       numericFacet.setRange(value);
-
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-      expect(action).toBeTruthy();
-    });
-
-    it('should return true when range is valid', () => {
-      const value = buildMockNumericFacetValue({start: 5, end: 10});
-      expect(numericFacet.setRange(value)).toBe(true);
-    });
-
-    it('should return false when range start value is greater than range end value', () => {
-      const value = buildMockNumericFacetValue({start: 10, end: 5});
-      expect(numericFacet.setRange(value)).toBe(false);
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 
@@ -146,21 +146,18 @@ describe('numeric filter', () => {
     beforeEach(() => numericFacet.clear());
 
     it('dispatches #updateNumericFacetValues with the facet id and an empty array', () => {
-      expect(engine.actions).toContainEqual(
-        updateNumericFacetValues({facetId, values: []})
-      );
+      expect(updateNumericFacetValues).toHaveBeenCalledWith({
+        facetId,
+        values: [],
+      });
     });
 
     it('dispatches a #updateFacetOptions action with #freezeFacetOrder true', () => {
-      expect(engine.actions).toContainEqual(updateFacetOptions());
+      expect(updateFacetOptions).toHaveBeenCalledWith();
     });
 
     it('dispatches a search', () => {
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-
-      expect(engine.actions).toContainEqual(action);
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 

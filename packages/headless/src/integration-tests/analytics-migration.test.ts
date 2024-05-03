@@ -108,6 +108,7 @@ import {
   logUndoTriggerQuery,
   undoTriggerQuery,
 } from '../features/triggers/trigger-analytics-actions';
+import {clearMicrotaskQueue} from '../test/unit-test-utils';
 
 const nextSearchEngine = buildSearchEngine({
   configuration: {
@@ -125,13 +126,13 @@ const legacySearchEngine = buildSearchEngine({
   },
 });
 
-function assertNextEqualsLegacy(call: jest.SpyInstance) {
+export function assertNextEqualsLegacy(call: jest.SpyInstance) {
   expect(extractAndExcludeProperties(call, 0)).toEqual(
     extractAndExcludeProperties(call, 1)
   );
 }
 
-function extractAndExcludeProperties(
+export function extractAndExcludeProperties(
   call: jest.SpyInstance,
   callIndex: number
 ): Record<string, unknown> {
@@ -142,15 +143,7 @@ function extractAndExcludeProperties(
   };
   let result = analytics;
   result = excludeProperties(result, excludedBaseProperties);
-  result.customData = excludeProperties(
-    result?.customData ?? {},
-    excludedCustomDataProperties
-  );
   return result;
-}
-
-async function wait() {
-  return new Promise((resolve) => setTimeout(resolve, 0));
 }
 
 function excludeProperties(
@@ -168,9 +161,8 @@ const excludedBaseProperties = [
   'clientTimestamp',
   'trackingId',
   'source',
+  'customData',
 ];
-
-const excludedCustomDataProperties = ['coveoHeadlessVersion'];
 
 const ANY_FACET_VALUE = 'any facet value';
 const ANY_FACET_ID = 'any facet id';
@@ -210,7 +202,7 @@ describe('Analytics Search Migration', () => {
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -221,12 +213,12 @@ describe('Analytics Search Migration', () => {
         facetId: ANY_FACET_ID,
         facetValue: ANY_FACET_VALUE,
       }),
-      next: facetSelect(ANY_FACET_ID, ANY_FACET_VALUE),
+      next: facetSelect(),
     });
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -239,7 +231,7 @@ describe('Analytics Search Migration', () => {
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -250,12 +242,12 @@ describe('Analytics Search Migration', () => {
         facetId: ANY_FACET_ID,
         facetValue: ANY_FACET_VALUE,
       }),
-      next: facetDeselect(ANY_FACET_ID, ANY_FACET_VALUE),
+      next: facetDeselect(),
     });
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -267,7 +259,7 @@ describe('Analytics Search Migration', () => {
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -278,12 +270,12 @@ describe('Analytics Search Migration', () => {
         facetId: ANY_FACET_ID,
         facetValue: ANY_FACET_VALUE,
       }),
-      next: facetExclude(ANY_FACET_ID, ANY_FACET_VALUE),
+      next: facetExclude(),
     });
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -294,12 +286,12 @@ describe('Analytics Search Migration', () => {
         facetId: ANY_FACET_ID,
         criterion: ANY_CRITERION,
       }),
-      next: facetUpdateSort(ANY_FACET_ID, ANY_CRITERION),
+      next: facetUpdateSort(),
     });
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -312,7 +304,7 @@ describe('Analytics Search Migration', () => {
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -323,12 +315,12 @@ describe('Analytics Search Migration', () => {
         facetId: ANY_FACET_ID,
         facetValue: ANY_FACET_VALUE,
       }),
-      next: breadcrumbFacet(ANY_FACET_ID, ANY_FACET_VALUE),
+      next: breadcrumbFacet(),
     });
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -339,12 +331,12 @@ describe('Analytics Search Migration', () => {
         facetId: ANY_FACET_ID,
         facetValue: ANY_FACET_VALUE,
       }),
-      next: breadcrumbFacet(ANY_FACET_ID, ANY_FACET_VALUE),
+      next: breadcrumbFacet(),
     });
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -357,7 +349,7 @@ describe('Analytics Search Migration', () => {
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -365,12 +357,12 @@ describe('Analytics Search Migration', () => {
   it('analytics/facet/reset', async () => {
     const action = executeSearch({
       legacy: logFacetClearAll(ANY_FACET_ID),
-      next: facetClearAll(ANY_FACET_ID),
+      next: facetClearAll(),
     });
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -378,12 +370,12 @@ describe('Analytics Search Migration', () => {
   it('analytics/facet/reset', async () => {
     const action = executeSearch({
       legacy: logFacetClearAll(ANY_FACET_ID),
-      next: facetClearAll(ANY_FACET_ID),
+      next: facetClearAll(),
     });
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -396,7 +388,7 @@ describe('Analytics Search Migration', () => {
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -427,12 +419,12 @@ describe('Analytics Search Migration', () => {
         facetId: ANY_FACET_ID,
         selection: ANY_RANGE_FACET_BREADCRUMB_VALUE,
       }),
-      next: dateBreadcrumbFacet(ANY_FACET_ID, ANY_RANGE_FACET_BREADCRUMB_VALUE),
+      next: dateBreadcrumbFacet(),
     });
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -464,15 +456,12 @@ describe('Analytics Search Migration', () => {
         selection:
           ANY_RANGE_FACET_BREADCRUMB_VALUE as unknown as NumericFacetValue,
       }),
-      next: numericBreadcrumbFacet(
-        ANY_FACET_ID,
-        ANY_RANGE_FACET_BREADCRUMB_VALUE as unknown as NumericFacetValue
-      ),
+      next: numericBreadcrumbFacet(),
     });
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -485,7 +474,7 @@ describe('Analytics Search Migration', () => {
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -517,7 +506,7 @@ describe('Analytics Search Migration', () => {
     const value = 'i like this expression';
     nextSearchBox.selectSuggestion(value);
     legacySearchBox.selectSuggestion(value);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -528,12 +517,12 @@ describe('Analytics Search Migration', () => {
         staticFilterId: ANY_STATIC_FILTER_ID,
         staticFilterValue: ANY_STATIC_FILTER_VALUE,
       }),
-      next: staticFilterSelect(ANY_STATIC_FILTER_ID, ANY_STATIC_FILTER_VALUE),
+      next: staticFilterSelect(),
     });
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -544,12 +533,12 @@ describe('Analytics Search Migration', () => {
         staticFilterId: ANY_STATIC_FILTER_ID,
         staticFilterValue: ANY_STATIC_FILTER_VALUE,
       }),
-      next: staticFilterDeselect(ANY_STATIC_FILTER_ID, ANY_STATIC_FILTER_VALUE),
+      next: staticFilterDeselect(),
     });
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -559,12 +548,12 @@ describe('Analytics Search Migration', () => {
       legacy: logStaticFilterClearAll({
         staticFilterId: ANY_STATIC_FILTER_ID,
       }),
-      next: staticFilterClearAll(ANY_STATIC_FILTER_ID),
+      next: staticFilterClearAll(),
     });
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -574,12 +563,12 @@ describe('Analytics Search Migration', () => {
       legacy: logUndoTriggerQuery({
         undoneQuery: ANY_QUERY,
       }),
-      next: undoTriggerQuery(ANY_QUERY),
+      next: undoTriggerQuery(),
     });
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -608,12 +597,12 @@ describe('Analytics Search Migration', () => {
         categoryFacetId: ANY_FACET_ID,
         categoryFacetPath: ANY_CATEGORY_FACET_PATH,
       }),
-      next: categoryBreadcrumbFacet(ANY_FACET_ID, ANY_CATEGORY_FACET_PATH),
+      next: categoryBreadcrumbFacet(),
     });
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -644,12 +633,12 @@ describe('Analytics Search Migration', () => {
         facetId: ANY_FACET_ID,
         selection: ANY_RANGE_FACET_BREADCRUMB_VALUE,
       }),
-      next: dateBreadcrumbFacet(ANY_FACET_ID, ANY_RANGE_FACET_BREADCRUMB_VALUE),
+      next: dateBreadcrumbFacet(),
     });
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -681,15 +670,12 @@ describe('Analytics Search Migration', () => {
         selection:
           ANY_RANGE_FACET_BREADCRUMB_VALUE as unknown as NumericFacetValue,
       }),
-      next: numericBreadcrumbFacet(
-        ANY_FACET_ID,
-        ANY_RANGE_FACET_BREADCRUMB_VALUE as unknown as NumericFacetValue
-      ),
+      next: numericBreadcrumbFacet(),
     });
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -702,7 +688,7 @@ describe('Analytics Search Migration', () => {
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -734,7 +720,7 @@ describe('Analytics Search Migration', () => {
     const value = 'i like this expression';
     nextSearchBox.selectSuggestion(value);
     legacySearchBox.selectSuggestion(value);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -745,12 +731,12 @@ describe('Analytics Search Migration', () => {
         staticFilterId: ANY_STATIC_FILTER_ID,
         staticFilterValue: ANY_STATIC_FILTER_VALUE,
       }),
-      next: staticFilterSelect(ANY_STATIC_FILTER_ID, ANY_STATIC_FILTER_VALUE),
+      next: staticFilterSelect(),
     });
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -761,12 +747,12 @@ describe('Analytics Search Migration', () => {
         staticFilterId: ANY_STATIC_FILTER_ID,
         staticFilterValue: ANY_STATIC_FILTER_VALUE,
       }),
-      next: staticFilterDeselect(ANY_STATIC_FILTER_ID, ANY_STATIC_FILTER_VALUE),
+      next: staticFilterDeselect(),
     });
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -776,12 +762,12 @@ describe('Analytics Search Migration', () => {
       legacy: logStaticFilterClearAll({
         staticFilterId: ANY_STATIC_FILTER_ID,
       }),
-      next: staticFilterClearAll(ANY_STATIC_FILTER_ID),
+      next: staticFilterClearAll(),
     });
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -791,12 +777,12 @@ describe('Analytics Search Migration', () => {
       legacy: logUndoTriggerQuery({
         undoneQuery: ANY_QUERY,
       }),
-      next: undoTriggerQuery(ANY_QUERY),
+      next: undoTriggerQuery(),
     });
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -825,12 +811,12 @@ describe('Analytics Search Migration', () => {
         categoryFacetId: ANY_FACET_ID,
         categoryFacetPath: ANY_CATEGORY_FACET_PATH,
       }),
-      next: categoryBreadcrumbFacet(ANY_FACET_ID, ANY_CATEGORY_FACET_PATH),
+      next: categoryBreadcrumbFacet(),
     });
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -843,7 +829,7 @@ describe('Analytics Search Migration', () => {
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -856,7 +842,7 @@ describe('Analytics Search Migration', () => {
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -869,7 +855,7 @@ describe('Analytics Search Migration', () => {
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -885,12 +871,12 @@ describe('Analytics Search Migration', () => {
 
     const action = executeSearch({
       legacy: logOmniboxFromLink(metadata),
-      next: omniboxFromLink(metadata),
+      next: omniboxFromLink(),
     });
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -903,7 +889,7 @@ describe('Analytics Search Migration', () => {
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -916,7 +902,7 @@ describe('Analytics Search Migration', () => {
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -932,12 +918,12 @@ describe('Analytics Search Migration', () => {
 
     const action = executeSearch({
       legacy: logOmniboxFromLink(metadata),
-      next: omniboxFromLink(metadata),
+      next: omniboxFromLink(),
     });
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -949,7 +935,7 @@ describe('Analytics Search Migration', () => {
     });
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -961,7 +947,7 @@ describe('Analytics Search Migration', () => {
     });
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -972,7 +958,7 @@ describe('Analytics Search Migration', () => {
     });
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });
@@ -985,7 +971,7 @@ describe('Analytics Search Migration', () => {
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
-    await wait();
+    await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
   });

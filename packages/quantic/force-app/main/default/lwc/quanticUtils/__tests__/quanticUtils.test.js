@@ -1,4 +1,8 @@
-import {I18nUtils, copyToClipboard} from 'c/quanticUtils';
+import {
+  I18nUtils,
+  buildTemplateTextFromResult,
+  copyToClipboard,
+} from 'c/quanticUtils';
 
 describe('c/quanticUtils', () => {
   describe('I18nUtils', () => {
@@ -158,6 +162,42 @@ describe('c/quanticUtils', () => {
         expect(mockWriteText).toHaveBeenCalledTimes(0);
         expect(mockExecCommand).toHaveBeenCalledTimes(1);
       });
+    });
+  });
+
+  describe('buildTemplateTextFromResult', () => {
+    const testTemplate =
+      '<a href="${clickUri}">${title}</a><br/><br/><quote>${excerpt}</quote>';
+    const testResult = {
+      clickUri: 'https://www.example.com',
+      title: 'Example Title',
+      excerpt: 'This is an example excerpt.',
+    };
+
+    it('should return a string with the result values inserted into the template', () => {
+      // @ts-ignore
+      expect(buildTemplateTextFromResult(testTemplate, testResult)).toBe(
+        `<a href="${testResult.clickUri}">${testResult.title}</a><br/><br/><quote>${testResult.excerpt}</quote>`
+      );
+    });
+
+    it('should return an empty string if the template is undefined or falsy', () => {
+      // @ts-ignore
+      expect(buildTemplateTextFromResult(undefined, testResult)).toBe('');
+    });
+
+    it('should not return the template field name as placeholder if the result does not contain the field', () => {
+      const resultWithoutExcerpt = {
+        clickUri: 'https://www.example.com',
+        title: 'Example Title',
+      };
+
+      // @ts-ignore
+      expect(
+        buildTemplateTextFromResult(testTemplate, resultWithoutExcerpt)
+      ).toBe(
+        `<a href="${testResult.clickUri}">${testResult.title}</a><br/><br/><quote></quote>`
+      );
     });
   });
 });

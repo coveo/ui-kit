@@ -3,6 +3,7 @@ import {CommerceThunkExtraArguments} from '../../app/commerce-thunk-extra-argume
 import {CommerceAppState} from '../../state/commerce-app-state';
 import {PlatformClient, PlatformClientCallOptions} from '../platform-client';
 import {PreprocessRequest} from '../preprocess-request';
+import {SpecificFacetSearchResponse} from '../search/facet-search/specific-facet-search/specific-facet-search-response';
 import {buildAPIResponseFromErrorOrThrow} from '../search/search-api-error-response';
 import {
   CommerceAPIErrorResponse,
@@ -10,12 +11,24 @@ import {
 } from './commerce-api-error-response';
 import {buildRequest, CommerceAPIRequest} from './common/request';
 import {CommerceSuccessResponse} from './common/response';
+import {CommerceFacetSearchRequest} from './facet-search/facet-search-request';
+import {
+  CommerceRecommendationsRequest,
+  buildRecommendationsRequest,
+} from './recommendations/recommendations-request';
+import {RecommendationsCommerceSuccessResponse} from './recommendations/recommendations-response';
 import {
   buildQuerySuggestRequest,
   QuerySuggestRequest,
 } from './search/query-suggest/query-suggest-request';
 import {QuerySuggestSuccessResponse} from './search/query-suggest/query-suggest-response';
 import {CommerceSearchRequest} from './search/request';
+
+export interface CommerceFacetSearchAPIClient {
+  facetSearch(
+    req: CommerceFacetSearchRequest
+  ): Promise<CommerceAPIResponse<SpecificFacetSearchResponse>>;
+}
 
 export interface AsyncThunkCommerceOptions<
   T extends Partial<CommerceAppState>,
@@ -38,7 +51,13 @@ export interface CommerceAPISuccessResponse<T> {
   success: T;
 }
 
-export class CommerceAPIClient {
+export const isErrorResponse = <T>(
+  r: CommerceAPIResponse<T>
+): r is CommerceAPIErrorResponse => {
+  return (r as CommerceAPIErrorResponse).error !== undefined;
+};
+
+export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
   constructor(private options: CommerceAPIClientOptions) {}
 
   async getProductListing(
@@ -46,6 +65,15 @@ export class CommerceAPIClient {
   ): Promise<CommerceAPIResponse<CommerceSuccessResponse>> {
     return this.query({
       ...buildRequest(req, 'listing'),
+      ...this.options,
+    });
+  }
+
+  async getRecommendations(
+    req: CommerceRecommendationsRequest
+  ): Promise<CommerceAPIResponse<RecommendationsCommerceSuccessResponse>> {
+    return this.query({
+      ...buildRecommendationsRequest(req, 'recommendations'),
       ...this.options,
     });
   }
@@ -72,6 +100,22 @@ export class CommerceAPIClient {
       ...requestOptions,
       requestParams: {
         ...requestOptions.requestParams,
+        query: req?.query,
+      },
+      ...this.options,
+    });
+  }
+
+  async facetSearch(
+    req: CommerceFacetSearchRequest
+  ): Promise<CommerceAPIResponse<SpecificFacetSearchResponse>> {
+    const requestOptions = buildRequest(req, 'facet');
+    return this.query<SpecificFacetSearchResponse>({
+      ...requestOptions,
+      requestParams: {
+        ...requestOptions.requestParams,
+        facetId: req?.facetId,
+        facetQuery: req?.facetQuery,
         query: req?.query,
       },
       ...this.options,

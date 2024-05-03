@@ -1,9 +1,9 @@
 import {Component, h, Prop} from '@stencil/core';
 import {
-  ResultDisplayLayout,
-  ResultDisplayDensity,
-  ResultDisplayImageSize,
-  getResultDisplayClasses,
+  ItemDisplayLayout,
+  ItemDisplayDensity,
+  ItemDisplayImageSize,
+  getItemDisplayClasses,
 } from '../../common/layout/display-options';
 
 const placeholderClasses = 'block bg-neutral w-full h-full rounded';
@@ -18,9 +18,9 @@ const placeholderClasses = 'block bg-neutral w-full h-full rounded';
   shadow: true,
 })
 export class AtomicResultPlaceholder {
-  @Prop() display!: ResultDisplayLayout;
-  @Prop() density!: ResultDisplayDensity;
-  @Prop() imageSize?: ResultDisplayImageSize;
+  @Prop() display!: ItemDisplayLayout;
+  @Prop() density!: ItemDisplayDensity;
+  @Prop() imageSize!: ItemDisplayImageSize;
 
   private renderExcerptLine(width: string) {
     return (
@@ -41,10 +41,10 @@ export class AtomicResultPlaceholder {
   public render() {
     return (
       <div
-        class={`result-root placeholder with-sections animate-pulse ${getResultDisplayClasses(
+        class={`result-root placeholder with-sections animate-pulse ${getItemDisplayClasses(
           this.display,
           this.density,
-          this.imageSize!
+          this.imageSize
         )
           .join(' ')
           .trim()}`}

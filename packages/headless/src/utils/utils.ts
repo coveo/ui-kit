@@ -1,4 +1,4 @@
-import {Middleware, AnyAction} from '@reduxjs/toolkit';
+import {Middleware, Action} from '@reduxjs/toolkit';
 import {btoa as btoashim} from 'abab';
 
 export const randomID = (prepend?: string, length = 5) =>
@@ -129,8 +129,8 @@ function createDeferredPromise<T>(): {
   return {promise, resolve: resolve!, reject: reject!};
 }
 
-export function createWaitForActionMiddleware<TAction extends AnyAction>(
-  isDesiredAction: (action: AnyAction) => action is TAction
+export function createWaitForActionMiddleware<TAction extends Action>(
+  isDesiredAction: (action: unknown) => action is TAction
 ): {promise: Promise<TAction>; middleware: Middleware} {
   const {promise, resolve} = createDeferredPromise<TAction>();
 

@@ -10,22 +10,22 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {elementHasAncestorTag} from '../../../../utils/utils';
-import {extractUnfoldedResult} from '../../../common/interface/result';
-import {ResultDisplayImageSize} from '../../../common/layout/display-options';
-import {ResultChildrenCommon} from '../../../common/result-children/result-children-common';
+import {extractUnfoldedItem} from '../../../common/interface/item';
 import {
-  FoldedResultListContext,
-  FoldedResultListStateContext,
-} from '../../../common/result-list/result-list-decorators';
-import {ResultTemplateProvider} from '../../../common/result-list/result-template-provider';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {
-  ResultContext,
-  ChildTemplatesContextEvent,
-  ResultDisplayConfigContext,
-  DisplayConfig,
   ChildTemplatesContext,
-} from '../../result-template-components/result-template-decorators';
+  ChildTemplatesContextEvent,
+  DisplayConfig,
+  ItemDisplayConfigContext,
+} from '../../../common/item-list/item-decorators';
+import {
+  FoldedItemListContext,
+  FoldedItemListStateContext,
+} from '../../../common/item-list/item-list-decorators';
+import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
+import {ItemDisplayImageSize} from '../../../common/layout/display-options';
+import {ResultChildrenCommon} from '../../../common/result-children/result-children-common';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {ResultContext} from '../../result-template-components/result-template-decorators';
 
 const childTemplateComponent = 'atomic-result-children-template';
 const componentTag = 'atomic-result-children';
@@ -34,6 +34,7 @@ const componentTag = 'atomic-result-children';
  * The `atomic-result-children` component is responsible for displaying child results by applying one or more child result templates.
  * Includes two slots, "before-children" and "after-children", which allow for rendering content before and after the list of children,
  * only when children exist.
+ * @part children-root - The wrapper for the message when there are child results
  * @part no-result-root - The wrapper for the message when there are no results.
  * @part show-hide-button - The button that allows to collapse or show all child results.
  * @slot before-children - Slot that allows rendering content before the list of children, only when children exist.
@@ -47,12 +48,12 @@ const componentTag = 'atomic-result-children';
 export class AtomicResultChildren implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   @ChildTemplatesContext()
-  public resultTemplateProvider?: ResultTemplateProvider;
-  @FoldedResultListContext()
+  public itemTemplateProvider?: ItemTemplateProvider;
+  @FoldedItemListContext()
   private foldedResultList!: FoldedResultList;
   @ResultContext({folded: true})
   private result!: FoldedResult;
-  @ResultDisplayConfigContext()
+  @ItemDisplayConfigContext()
   private displayConfig!: DisplayConfig;
   private initialChildren!: FoldedResult[];
 
@@ -60,7 +61,7 @@ export class AtomicResultChildren implements InitializableComponent {
   @State() public error!: Error;
   @State() private resultTemplateRegistered = false;
   @State() private templateHasError = false;
-  @FoldedResultListStateContext()
+  @FoldedItemListStateContext()
   @State()
   private foldedResultListState!: FoldedResultListState;
   @State()
@@ -73,7 +74,7 @@ export class AtomicResultChildren implements InitializableComponent {
   /**
    * The expected size of the image displayed in the children results.
    */
-  @Prop({reflect: true}) imageSize?: ResultDisplayImageSize;
+  @Prop({reflect: true}) imageSize?: ItemDisplayImageSize;
   /**
    * The non-localized copy for an empty result state. An empty string will result in the component being hidden.
    */
@@ -84,7 +85,7 @@ export class AtomicResultChildren implements InitializableComponent {
   @Listen('atomic/resolveChildTemplates')
   public resolveChildTemplates(event: ChildTemplatesContextEvent) {
     event.preventDefault();
-    event.detail(this.resultTemplateProvider);
+    event.detail(this.itemTemplateProvider);
   }
 
   public initialize() {
@@ -126,7 +127,7 @@ export class AtomicResultChildren implements InitializableComponent {
       return;
     }
 
-    this.resultTemplateProvider = new ResultTemplateProvider({
+    this.itemTemplateProvider = new ItemTemplateProvider({
       includeDefaultTemplate: false,
       templateElements: childrenTemplates,
       getResultTemplateRegistered: () => this.resultTemplateRegistered,
@@ -142,9 +143,7 @@ export class AtomicResultChildren implements InitializableComponent {
   }
 
   private renderChild(child: FoldedResult, isLast: boolean) {
-    const content = this.resultTemplateProvider?.getTemplateContent(
-      child.result
-    );
+    const content = this.itemTemplateProvider?.getTemplateContent(child.result);
 
     if (!content) {
       return;
@@ -159,7 +158,7 @@ export class AtomicResultChildren implements InitializableComponent {
         content={content}
         result={child}
         interactiveResult={buildInteractiveResult(this.bindings.engine, {
-          options: {result: extractUnfoldedResult(child)},
+          options: {result: extractUnfoldedItem(child)},
         })}
         store={this.bindings.store}
         density={this.displayConfig.density}

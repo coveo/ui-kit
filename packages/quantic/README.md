@@ -17,7 +17,7 @@
 
 [Salesforce cli](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli.htm#sfdx_setup_install_cli_npm)
 
-- Run `npm install --global @salesforce/cli`
+- Run `npm install --global @salesforce/cli@2.x`
 - Optional: [Setup CLI autocomplete](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_dev_cli_autocomplete.htm)
 
 ### Update SFDX CLI Plugins
@@ -42,15 +42,25 @@ Optionally install the [VSCode Salesforce Extension Pack](https://marketplace.vi
 - You can also run this command from the command line. `sf org login web --set-default-dev-hub --alias LWC-Hub`
 - Running this command opens a browser to the Salesforce login page. Enter your Salesforce username and password. Authorize only once, not every time you work on your project.
 
-### Create a Default Scratch Org
+### Single command run
 
+- Make sure you are at the root of `packages/quantic`.
+- Run `npm run scratch:dev`.
+- You should now have a scratch org with Quantic and the test community deployed. Watch your commandline for the url to the examples community.
+
+Or you can run the individual commands below.
+
+#### Create a Default Scratch Org
+
+- Make sure you are in the `packages/quantic` root folder.
+- Run this command to create the default scratch org. `npm run scratch:create`.
 - In VS Code, press Command + Shift P, enter sfdx, and select SFDX: Create a Default Scratch Org.
 - You can also run this command from the command line. `sf org create scratch --set-default --definition-file config/project-scratch-def.json --alias "LWC"`
 - `LWC` is an alias for the scratch org that you can use in other Salesforce CLI commands. You can create any alias that you like.
 
-### Deploy the Quantic code
+#### Deploy the Quantic code
 
-- Run this command from the command line. `sf project deploy start --source-dir force-app/main/default`.
+- Run this command from the command line. `sf project deploy start --source-dir force-app/main`.
 
 ## Testing
 

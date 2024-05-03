@@ -1,4 +1,3 @@
-import {SearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {
   makeAnalyticsAction,
   CustomAction,
@@ -18,10 +17,6 @@ export const logRecentQueryClick = (): LegacySearchAction =>
     return client.makeRecentQueryClick();
   });
 
-export const recentQueryClick = (): SearchAction => {
-  return {
-    actionCause: SearchPageEvents.recentQueryClick,
-    getEventExtraPayload: (state) =>
-      new SearchAnalyticsProvider(() => state).getBaseMetadata(),
-  };
-};
+export const recentQueryClick = (): SearchAction => ({
+  actionCause: SearchPageEvents.recentQueryClick,
+});

@@ -1,12 +1,13 @@
-import {DateRangeRequest, NumericRangeRequest} from '../../controllers';
+import {DateRangeRequest} from '../../controllers/insight/facets/range-facet/date-facet/headless-insight-date-facet';
+import {NumericRangeRequest} from '../../controllers/insight/facets/range-facet/numeric-facet/headless-insight-numeric-facet';
 import {InsightAction} from '../analytics/analytics-utils';
-import {logInsightInterfaceChange} from '../analytics/insight-analytics-actions';
 import {logFacetUnexclude} from '../facets/facet-set/facet-set-analytics-actions';
 import {
   logFacetClearAll,
   logFacetDeselect,
   logFacetSelect,
 } from '../facets/facet-set/facet-set-insight-analytics-actions';
+import {logInsightInterfaceChange} from '../insight-search/insight-search-analytics-actions';
 import {logSearchboxSubmit} from '../query/query-insight-analytics-actions';
 import {logResultsSort} from '../sort-criteria/sort-criteria-insight-analytics-actions';
 import {SearchParameters} from './search-parameter-actions';

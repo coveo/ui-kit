@@ -2,8 +2,8 @@ import {fetchProductListing} from '../../../../features/product-listing/product-
 import {ProductListingAppState} from '../../../../state/product-listing-app-state';
 import {
   buildMockProductListingEngine,
-  MockProductListingEngine,
-} from '../../../../test';
+  MockedProductListingEngine,
+} from '../../../../test/mock-engine-v2';
 import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
 import {buildMockProductListingState} from '../../../../test/mock-product-listing-state';
@@ -14,12 +14,14 @@ import {
   NumericFilterOptions,
 } from './headless-product-listing-numeric-filter';
 
+jest.mock('../../../../features/product-listing/product-listing-actions');
+
 describe('numeric filter', () => {
   const facetId = '1';
   let options: NumericFilterOptions;
   let initialState: NumericFilterInitialState | undefined;
   let state: ProductListingAppState;
-  let engine: MockProductListingEngine;
+  let engine: MockedProductListingEngine;
   let numericFacet: NumericFilter;
 
   beforeEach(() => {
@@ -33,7 +35,8 @@ describe('numeric filter', () => {
     state = buildMockProductListingState();
     state.numericFacetSet[facetId] = buildMockNumericFacetSlice();
 
-    engine = buildMockProductListingEngine({state});
+    engine = buildMockProductListingEngine(state);
+    engine.dispatch = jest.fn().mockReturnValue(Promise.resolve());
     numericFacet = buildNumericFilter(engine, {options, initialState});
   });
 
@@ -41,24 +44,14 @@ describe('numeric filter', () => {
     it('dispatches #fetchProductListing', () => {
       const value = buildMockNumericFacetValue();
       numericFacet.setRange(value);
-
-      expect(engine.actions).toContainEqual(
-        expect.objectContaining({
-          type: fetchProductListing.pending.type,
-        })
-      );
+      expect(fetchProductListing).toHaveBeenCalled();
     });
   });
 
   describe('#clear', () => {
     it('dispatches #fetchProductListing', () => {
       numericFacet.clear();
-
-      expect(engine.actions).toContainEqual(
-        expect.objectContaining({
-          type: fetchProductListing.pending.type,
-        })
-      );
+      expect(fetchProductListing).toHaveBeenCalled();
     });
   });
 });

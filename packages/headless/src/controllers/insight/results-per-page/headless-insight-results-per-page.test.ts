@@ -1,17 +1,21 @@
 import {executeSearch} from '../../../features/insight-search/insight-search-actions';
 import {updateNumberOfResults} from '../../../features/pagination/pagination-actions';
 import {
-  MockInsightEngine,
+  MockedInsightEngine,
   buildMockInsightEngine,
-} from '../../../test/mock-engine';
+} from '../../../test/mock-engine-v2';
+import {buildMockInsightState} from '../../../test/mock-insight-state';
 import {
   ResultsPerPage,
   ResultsPerPageProps,
   buildResultsPerPage,
 } from './headless-insight-results-per-page';
 
+jest.mock('../../../features/pagination/pagination-actions');
+jest.mock('../../../features/insight-search/insight-search-actions');
+
 describe('InsightResultsPerPage', () => {
-  let engine: MockInsightEngine;
+  let engine: MockedInsightEngine;
   let props: ResultsPerPageProps;
   let resultsPerPage: ResultsPerPage;
 
@@ -20,7 +24,7 @@ describe('InsightResultsPerPage', () => {
   }
 
   beforeEach(() => {
-    engine = buildMockInsightEngine({});
+    engine = buildMockInsightEngine(buildMockInsightState());
     props = {
       initialState: {},
     };
@@ -31,16 +35,11 @@ describe('InsightResultsPerPage', () => {
   it('calling #set updates the number of results to the passed value', () => {
     const num = 10;
     resultsPerPage.set(num);
-
-    expect(engine.actions).toContainEqual(updateNumberOfResults(num));
+    expect(updateNumberOfResults).toHaveBeenCalledWith(num);
   });
 
   it('calling #set executes an executeSearch', () => {
     resultsPerPage.set(10);
-
-    const action = engine.actions.find(
-      (a) => a.type === executeSearch.pending.type
-    );
-    expect(action).toBeTruthy();
+    expect(executeSearch).toHaveBeenCalled();
   });
 });

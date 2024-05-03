@@ -1,7 +1,11 @@
 import {facetOptionsReducer as facetOptions} from '../../../features/facet-options/facet-options-slice';
 import {searchReducer as search} from '../../../features/search/search-slice';
-import {buildMockSearchAppEngine, MockSearchEngine} from '../../../test';
+import {
+  buildMockSearchEngine,
+  MockedSearchEngine,
+} from '../../../test/mock-engine-v2';
 import {buildMockFacetResponse} from '../../../test/mock-facet-response';
+import {createMockState} from '../../../test/mock-state';
 import {
   buildCoreFacetManager,
   FacetManager,
@@ -9,11 +13,11 @@ import {
 } from './headless-core-facet-manager';
 
 describe('facet manager', () => {
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
   let facetManager: FacetManager;
 
   beforeEach(() => {
-    engine = buildMockSearchAppEngine();
+    engine = buildMockSearchEngine(createMockState());
     facetManager = buildCoreFacetManager(engine);
   });
 

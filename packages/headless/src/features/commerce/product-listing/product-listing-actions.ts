@@ -1,6 +1,8 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
-import {isErrorResponse} from '../../../api/search/search-api-client';
+import {
+  AsyncThunkCommerceOptions,
+  isErrorResponse,
+} from '../../../api/commerce/commerce-api-client';
 import {
   CartSection,
   CommerceContextSection,
@@ -42,7 +44,7 @@ export const fetchProductListing = createAsyncThunk<
     const state = getState();
     const {apiClient} = extra;
     const fetched = await apiClient.getProductListing(
-      buildCommerceAPIRequest(state)
+      await buildCommerceAPIRequest(state)
     );
 
     if (isErrorResponse(fetched)) {

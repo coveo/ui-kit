@@ -1,7 +1,7 @@
 import {
   dispatchSearchBoxSuggestionsEvent,
   SearchBoxSuggestionElement,
-} from '../../../src/components/search/search-box-suggestions/suggestions-common';
+} from '../../../src/components/common/suggestions/suggestions-common';
 import {
   SafeStorage,
   StorageItems,
@@ -37,7 +37,7 @@ const setSuggestions = (count: number) => () => {
         newResponse.completions = Array.from({length: count}, (_, i) => ({
           expression: `query-suggestion-${i}`,
           executableConfidence: 0,
-          highlighted: `Suggestion ${i}`,
+          highlighted: `query-suggestion-${i}`,
           score: 0,
         }));
         response.send(200, newResponse);
@@ -124,7 +124,7 @@ describe('Search Box Test Suites', () => {
 
       it('is accessible', () => {
         CommonAssertions.assertAccessibility(searchBoxComponent);
-        CommonAssertions.assertAriaLiveMessage(
+        CommonAssertions.assertAriaLiveMessageWithoutIt(
           SearchBoxSelectors.searchBoxAriaLive,
           expectedSum.toString()
         );
@@ -143,10 +143,11 @@ describe('Search Box Test Suites', () => {
             })
           )
           .init();
+        cy.wait(2000);
         cy.get(searchBoxComponent).invoke('attr', 'redirection-url', '');
-        cy.wait(100);
 
         SearchBoxSelectors.inputBox().click();
+
         SearchBoxSelectors.querySuggestion('query-suggestion-1').click();
       });
 
@@ -232,10 +233,12 @@ describe('Search Box Test Suites', () => {
 
         SearchBoxAssertions.assertHasSuggestionsCount(expectedSum);
 
-        CommonAssertions.assertAriaLiveMessage(
-          SearchBoxSelectors.searchBoxAriaLive,
-          expectedSum.toString()
-        );
+        it('it updates aria-live message', () => {
+          CommonAssertions.assertAriaLiveMessageWithoutIt(
+            SearchBoxSelectors.searchBoxAriaLive,
+            expectedSum.toString()
+          );
+        });
       });
 
       describe('with custom suggestions provider', () => {
@@ -368,9 +371,35 @@ describe('Search Box Test Suites', () => {
           SearchBoxAssertions.assertHasText('Recent query 1');
         });
 
+        it('should always have one active suggestion at a time', () => {
+          SearchBoxSelectors.querySuggestion('Recent query 2').trigger(
+            'mouseover'
+          );
+
+          SearchBoxSelectors.activeQuerySuggestion().then(($el) => {
+            expect($el.length).to.equal(1);
+          });
+        });
+
         it('still has recent query after pressing the search button', () => {
           SearchBoxSelectors.submitButton().click();
           SearchBoxAssertions.assertHasText('Recent query 1');
+        });
+      });
+
+      describe('after focusing on suggestion with the mouse but with no click', () => {
+        beforeEach(() => {
+          setupWithSuggestionsAndRecentQueries();
+          SearchBoxSelectors.inputBox().focus();
+          SearchBoxSelectors.inputBox().type('Rec');
+        });
+
+        it('should submit what is in the search box regardless of the mouse position', () => {
+          SearchBoxSelectors.querySuggestion('Recent query 1').trigger(
+            'mouseover'
+          );
+          SearchBoxSelectors.submitButton().click();
+          SearchBoxAssertions.assertHasText('Rec');
         });
       });
 
@@ -444,13 +473,17 @@ describe('Search Box Test Suites', () => {
         .init();
     });
 
-    it('should be accessible', () => {
+    it('should update aria live message', () => {
       SearchBoxSelectors.inputBox().click();
-      CommonAssertions.assertAriaLiveMessage(
+      CommonAssertions.assertAriaLiveMessageWithoutIt(
         SearchBoxSelectors.searchBoxAriaLive,
         ' no '
       );
-      CommonAssertions.assertAccessibility(searchBoxComponent);
+    });
+
+    it('should be accessible', () => {
+      SearchBoxSelectors.inputBox().click();
+      CommonAssertions.assertAccessibilityWithoutIt(searchBoxComponent);
     });
   });
 
@@ -533,6 +566,7 @@ describe('Search Box Test Suites', () => {
     const testQuery = 'test';
     const numOfSuggestions = 2;
     const minimumQueryLength = testQuery.length;
+
     beforeEach(() => {
       new TestFixture()
         .with(setSuggestions(numOfSuggestions))
@@ -545,28 +579,58 @@ describe('Search Box Test Suites', () => {
     });
 
     it('should be accessible', () => {
-      CommonAssertions.assertAccessibility(searchBoxComponent);
+      CommonAssertions.assertAccessibilityWithoutIt(searchBoxComponent);
     });
 
     it('search button is enabled when a query with minimum length is input', () => {
-      typeSearchInput(testQuery.slice(0, minimumQueryLength - 1)); // enter query less than min len
+      SearchBoxSelectors.inputBox()
+        .clear()
+        .type(testQuery.slice(0, minimumQueryLength - 1));
+
+      cy.wait(500);
+
       SearchBoxSelectors.submitButton().should('be.disabled');
       SearchBoxAssertions.assertNoSuggestionGenerated();
 
-      typeSearchInput(testQuery.slice(minimumQueryLength - 1)); // enter rest of the query
-      SearchBoxSelectors.submitButton().should('not.be.disabled');
+      SearchBoxSelectors.inputBox().type(
+        testQuery.slice(minimumQueryLength - 1)
+      );
 
-      typeSearchInput('{downarrow}'.repeat(numOfSuggestions));
-      SearchBoxAssertions.assertHasSuggestionsCount(numOfSuggestions);
-      SearchBoxAssertions.assertSuggestionIsSelected(numOfSuggestions);
+      cy.wait(500);
+
+      SearchBoxSelectors.submitButton().should('not.be.disabled');
+      SearchBoxAssertions.assertHasSuggestionsCountWithoutIt(numOfSuggestions);
+
+      SearchBoxSelectors.inputBox().type(
+        '{downarrow}'.repeat(numOfSuggestions)
+      );
+
+      SearchBoxAssertions.assertSuggestionIsSelectedWithoutIt(
+        numOfSuggestions - 1
+      );
     });
 
     it('search button is disabled when query is deleted', () => {
-      typeSearchInput(testQuery);
+      SearchBoxSelectors.inputBox().type(testQuery);
+
       SearchBoxSelectors.submitButton().should('not.be.disabled');
 
-      typeSearchInput('{backspace}'.repeat(minimumQueryLength), '');
+      SearchBoxSelectors.inputBox().type(
+        '{backspace}'.repeat(minimumQueryLength)
+      );
       SearchBoxSelectors.submitButton().should('be.disabled');
+    });
+
+    it('clear button should appear or disappear depending on the content of the input', () => {
+      SearchBoxSelectors.inputBox().type(testQuery);
+
+      SearchBoxSelectors.clearButton().should('exist');
+
+      SearchBoxSelectors.inputBox().type(
+        '{backspace}'.repeat(testQuery.length)
+      );
+
+      SearchBoxSelectors.clearButton().should('not.exist');
     });
   });
 

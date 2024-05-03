@@ -11,7 +11,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: actions/cache@e12d46a63a90f2fae62d114769bbf2a179198b5c # v3
+    - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
       with:
         path: packages/quantic/cypress/plugins/config
         key: quantic-cypress-config-${{ github.sha }}
@@ -29,5 +29,5 @@ runs:
     - uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3
       if: failure()
       with:
-        name: cypress-screenshots
+        name: quantic-screenshots-${{ inputs.spec}}
         path: packages/quantic/cypress/screenshots

@@ -1,15 +1,16 @@
-import {AnyAction} from '@reduxjs/toolkit';
-import {PlatformClient} from '../../api/platform-client';
+import {Action} from '@reduxjs/toolkit';
+import {SearchAPIClient} from '../../api/search/search-api-client';
 import {Result} from '../../api/search/search/result';
+import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {
-  buildMockResult,
-  buildMockSearchAppEngine,
-  createMockState,
-  MockSearchEngine,
-} from '../../test';
+  MockedSearchEngine,
+  buildMockSearchEngine,
+} from '../../test/mock-engine-v2';
+import {buildMockResult} from '../../test/mock-result';
 import {buildMockResultWithFolding} from '../../test/mock-result-with-folding';
 import {buildMockSearch} from '../../test/mock-search';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
+import {createMockState} from '../../test/mock-state';
 import {executeSearch, fetchMoreResults} from '../search/search-actions';
 import {loadCollection} from './folding-actions';
 import {foldingReducer, ResultWithFolding} from './folding-slice';
@@ -134,12 +135,12 @@ describe('folding slice', () => {
 
     let state: FoldingState;
 
-    function dispatch(action: AnyAction) {
+    function dispatch(action: Action) {
       state = foldingReducer(state, action);
     }
 
     function dispatchAsync<Arg, Meta>(
-      actionCreator: (param0: Arg, param1: string, param2: Meta) => AnyAction,
+      actionCreator: (param0: Arg, param1: string, param2: Meta) => Action,
       parameter: Arg,
       meta: Meta | null = null
     ) {
@@ -179,22 +180,14 @@ describe('folding slice', () => {
 
     describe('when calling the platform to load a collection', () => {
       let rootResult: ResultWithFolding;
-      let mockEngine: MockSearchEngine;
+      let mockEngine: MockedSearchEngine;
+      let apiClient: SearchAPIClient;
 
       beforeEach(() => {
-        const fetched = () => {
-          const payload = buildMockSearchResponse({
-            results: [],
-          });
-
-          const body = JSON.stringify(payload);
-          const response = new Response(body);
-
-          return Promise.resolve(response);
-        };
-
-        PlatformClient.call = jest.fn().mockImplementationOnce(fetched);
-        mockEngine = buildMockSearchAppEngine();
+        apiClient = {
+          search: jest.fn().mockResolvedValue({success: {results: []}}),
+        } as unknown as SearchAPIClient;
+        mockEngine = buildMockSearchEngine(createMockState());
       });
 
       const doLoadCollection = async () => {
@@ -203,80 +196,74 @@ describe('folding slice', () => {
           testThreadHierarchy
         );
         rootResult = emulateAPIFolding(indexedResults);
-
-        await Promise.resolve(
-          mockEngine.dispatch(loadCollection(rootResult.raw.collection!))
+        await loadCollection(rootResult.raw.collection!)(
+          mockEngine.dispatch,
+          () => mockEngine.state as Required<typeof mockEngine.state>,
+          {
+            apiClient,
+          } as ClientThunkExtraArguments<SearchAPIClient>
         );
       };
 
       it('uses #cq with correct expression to obtain the full collection', async () => {
         await doLoadCollection();
-        expect(PlatformClient.call).toHaveBeenCalledWith(
+        expect(apiClient.search).toHaveBeenCalledWith(
           expect.objectContaining({
-            requestParams: expect.objectContaining({
-              cq: `@foldingcollection="${rootResult.raw.collection!}"`,
-            }),
-          })
+            cq: `@foldingcollection="${rootResult.raw.collection!}"`,
+          }),
+          {origin: 'foldingCollection'}
         );
       });
 
       it('uses #folding parameters to obtain parent and max 100 child results', async () => {
         await doLoadCollection();
-        expect(PlatformClient.call).toHaveBeenCalledWith(
+        expect(apiClient.search).toHaveBeenCalledWith(
           expect.objectContaining({
-            requestParams: expect.objectContaining({
-              filterField: 'foldingcollection',
-              parentField: 'foldingchild',
-              filterFieldRange: 100,
-            }),
-          })
+            filterField: 'foldingcollection',
+            parentField: 'foldingchild',
+            filterFieldRange: 100,
+          }),
+          {origin: 'foldingCollection'}
         );
       });
 
       it('when #querySyntax is enabled and #q is non empty, it build a proper query expression to get keywords highlighting', async () => {
-        mockEngine = buildMockSearchAppEngine({
-          state: {
-            ...createMockState(),
-            query: {enableQuerySyntax: true, q: 'hello'},
-          },
+        mockEngine = buildMockSearchEngine({
+          ...createMockState(),
+          query: {enableQuerySyntax: true, q: 'hello'},
         });
         await doLoadCollection();
-        expect(PlatformClient.call).toHaveBeenCalledWith(
+        expect(apiClient.search).toHaveBeenCalledWith(
           expect.objectContaining({
-            requestParams: expect.objectContaining({
-              q: 'hello OR @uri',
-              enableQuerySyntax: true,
-            }),
-          })
+            q: 'hello OR @uri',
+            enableQuerySyntax: true,
+          }),
+          {origin: 'foldingCollection'}
         );
       });
 
       it('when #querySyntax is disabled and #q is non empty, it build a proper query expression to get keywords highlighting', async () => {
-        mockEngine = buildMockSearchAppEngine({
-          state: {
-            ...createMockState(),
-            query: {enableQuerySyntax: false, q: 'hello'},
-          },
+        mockEngine = buildMockSearchEngine({
+          ...createMockState(),
+          query: {enableQuerySyntax: false, q: 'hello'},
         });
         await doLoadCollection();
-        expect(PlatformClient.call).toHaveBeenCalledWith(
+        expect(apiClient.search).toHaveBeenCalledWith(
           expect.objectContaining({
-            requestParams: expect.objectContaining({
-              q: '( <@- hello -@> ) OR @uri',
-              enableQuerySyntax: true,
-            }),
-          })
+            q: '( <@- hello -@> ) OR @uri',
+            enableQuerySyntax: true,
+          }),
+          {origin: 'foldingCollection'}
         );
       });
 
       it('does not uses facets to get the full collection', async () => {
         await doLoadCollection();
-        expect(PlatformClient.call).toHaveBeenCalledWith(
-          expect.objectContaining({
-            requestParams: expect.not.objectContaining({
-              facet: expect.anything(),
-            }),
-          })
+        expect(apiClient.search).toHaveBeenCalledWith(
+          expect.not.objectContaining({
+            facet: expect.anything(),
+          }),
+          {origin: 'foldingCollection'}
         );
       });
     });

@@ -21,7 +21,7 @@
       "groupName": "Angular",
       "groupSlug": "angular",
       "rangeStrategy": "replace",
-      "allowedVersions": "16.x"
+      "allowedVersions": "17.x"
     },
     {
       "matchPackagePatterns": [
@@ -50,6 +50,12 @@
       "matchPackagePatterns": ["^@stencil/*"],
       "groupName": "Stencil",
       "groupSlug": "stencil",
+      "rangeStrategy": "replace"
+    },
+    {
+      "matchPackagePatterns": ["^@lwc/compiler$"],
+      "groupName": "LWC Compiler",
+      "groupSlug": "lwc-compiler",
       "rangeStrategy": "replace"
     },
     {
@@ -127,8 +133,30 @@
       "matchPackagePatterns": ["^undici$"],
       "groupSlug": "undici",
       "rangeStrategy": "replace",
-      "allowedVersions": "6.x",
+      "allowedVersions": "5.x",
       "description": "undici 6.x drops support for Node 16"
+    },
+    {
+      "matchFileNames": ["packages/quantic/package.json"],
+      "matchPackagePatterns": ["^@​salesforce/sfdx-lwc-jest$"],
+      "groupSlug": "sfdx-lwc-jest",
+      "rangeStrategy": "replace",
+      "allowedVersions": "3.x",
+      "description": "sfdx-lwc-jest uses a not GA version of Salesforce API (60)"
+    },
+    {
+      "matchPackagePatterns": ["^actions/upload-artifact$"],
+      "groupSlug": "actions-upload-artifact",
+      "rangeStrategy": "replace",
+      "allowedVersions": "3.x",
+      "description": "lock until ready to handle v4"
+    },
+    {
+      "matchPackagePatterns": ["^eslint$"],
+      "groupSlug": "eslint",
+      "groupName": "eslint",
+      "rangeStrategy": "replace",
+      "description": "Isolated until ready to handle v9 https://coveord.atlassian.net/browse/KIT-3085"
     }
   ],
   "rangeStrategy": "auto",
@@ -139,5 +167,5 @@
   "vulnerabilityAlerts": {
     "enabled": false
   },
-  "ignoreDeps": ["esbuild", "@monaco-editor/react"]
+  "ignoreDeps": ["@monaco-editor/react"]
 }

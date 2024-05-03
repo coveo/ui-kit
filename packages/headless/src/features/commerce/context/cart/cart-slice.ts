@@ -1,11 +1,10 @@
 import {createReducer} from '@reduxjs/toolkit';
+import {purchase, setItems, updateItem} from './cart-actions';
 import {
-  addItem,
-  removeItem,
-  setItems,
-  updateItemQuantity,
-} from './cart-actions';
-import {CartState, getCartInitialState} from './cart-state';
+  CartItemWithMetadata,
+  CartState,
+  getCartInitialState,
+} from './cart-state';
 
 export const cartReducer = createReducer(
   getCartInitialState(),
@@ -15,38 +14,56 @@ export const cartReducer = createReducer(
       .addCase(setItems, (state, {payload}) => {
         const {cart, cartItems} = payload.reduce((acc, item) => {
           return {
-            cartItems: [...acc.cartItems, item.productId],
+            cartItems: [...acc.cartItems, item.sku],
             cart: {
               ...acc.cart,
-              [item.productId]: item,
+              [item.sku]: item,
             },
           } as CartState;
         }, getCartInitialState());
 
-        state.cartItems = cartItems;
-        state.cart = cart;
+        setItemsInState(state, cartItems, cart);
       })
-      .addCase(addItem, (state, {payload}) => {
-        if (payload.productId in state.cart) {
-          state.cart[payload.productId].quantity += payload.quantity;
+      .addCase(updateItem, (state, {payload}) => {
+        if (!(payload.sku in state.cart)) {
+          createItemInCart(payload, state);
           return;
         }
 
-        state.cartItems = [...state.cartItems, payload.productId];
-        state.cart[payload.productId] = payload;
-      })
-      .addCase(removeItem, (state, {payload}) => {
-        state.cartItems = state.cartItems.filter(
-          (itemId) => itemId !== payload
-        );
-        delete state.cart[payload];
-      })
-      .addCase(updateItemQuantity, (state, {payload}) => {
-        if (!(payload.productId in state.cart)) {
+        if (payload.quantity <= 0) {
+          deleteProductFromCart(payload.sku, state);
           return;
         }
 
-        state.cart[payload.productId].quantity = payload.quantity;
+        state.cart[payload.sku] = payload;
+        return;
+      })
+      .addCase(purchase.fulfilled, (state) => {
+        const {cart, cartItems} = getCartInitialState();
+        setItemsInState(state, cartItems, cart);
       });
   }
 );
+
+function setItemsInState(
+  state: CartState,
+  cartItems: string[],
+  cart: Record<string, CartItemWithMetadata>
+) {
+  state.cartItems = cartItems;
+  state.cart = cart;
+}
+
+function createItemInCart(item: CartItemWithMetadata, state: CartState) {
+  if (item.quantity <= 0) {
+    return;
+  }
+
+  state.cartItems = [...state.cartItems, item.sku];
+  state.cart[item.sku] = item;
+}
+
+function deleteProductFromCart(sku: string, state: CartState) {
+  state.cartItems = state.cartItems.filter((itemId) => itemId !== sku);
+  delete state.cart[sku];
+}

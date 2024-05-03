@@ -1,15 +1,14 @@
-import {TestUtils} from '../../..';
 import {
   closeGeneratedAnswerFeedbackModal,
   dislikeGeneratedAnswer,
   likeGeneratedAnswer,
   openGeneratedAnswerFeedbackModal,
-  resetAnswer,
   sendGeneratedAnswerFeedback,
   setIsVisible,
-  streamAnswer,
   updateResponseFormat,
   registerFieldsToIncludeInCitations,
+  expandGeneratedAnswer,
+  collapseGeneratedAnswer,
 } from '../../../features/generated-answer/generated-answer-actions';
 import {
   generatedAnswerAnalyticsClient,
@@ -22,6 +21,8 @@ import {
   logHoverCitation,
   logLikeGeneratedAnswer,
   logOpenGeneratedAnswerSource,
+  logGeneratedAnswerExpand,
+  logGeneratedAnswerCollapse,
 } from '../../../features/generated-answer/generated-answer-analytics-actions';
 import {generatedAnswerReducer} from '../../../features/generated-answer/generated-answer-slice';
 import {
@@ -29,21 +30,28 @@ import {
   getGeneratedAnswerInitialState,
 } from '../../../features/generated-answer/generated-answer-state';
 import {GeneratedResponseFormat} from '../../../features/generated-answer/generated-response-format';
+import {SearchAppState} from '../../../state/search-app-state';
 import {buildMockCitation} from '../../../test/mock-citation';
 import {
-  buildMockInsightEngine,
-  MockInsightEngine,
-} from '../../../test/mock-engine';
-import {buildMockInsightState} from '../../../test/mock-insight-state';
+  buildMockSearchEngine,
+  MockedSearchEngine,
+} from '../../../test/mock-engine-v2';
+import {createMockState} from '../../../test/mock-state';
 import {
   buildCoreGeneratedAnswer,
   GeneratedAnswer,
   GeneratedAnswerProps,
 } from './headless-core-generated-answer';
 
+jest.mock('../../../features/generated-answer/generated-answer-actions');
+jest.mock(
+  '../../../features/generated-answer/generated-answer-analytics-actions'
+);
+
 describe('generated answer', () => {
   let generatedAnswer: GeneratedAnswer;
-  let engine: MockInsightEngine;
+  let engine: MockedSearchEngine;
+  let state: SearchAppState;
 
   function initGeneratedAnswer(props: GeneratedAnswerProps = {}) {
     generatedAnswer = buildCoreGeneratedAnswer(
@@ -53,27 +61,21 @@ describe('generated answer', () => {
     );
   }
 
-  function findAction(actionType: string) {
-    return engine.actions.find((a) => a.type === actionType);
-  }
-
   function buildEngineWithGeneratedAnswer(
     initialState: Partial<GeneratedAnswerState> = {}
   ) {
-    const mockState = TestUtils.createMockState();
-    return buildMockInsightEngine({
-      state: {
-        ...buildMockInsightState(),
-        generatedAnswer: {
-          ...mockState.generatedAnswer,
-          ...initialState,
-        },
+    state = createMockState({
+      generatedAnswer: {
+        ...getGeneratedAnswerInitialState(),
+        ...initialState,
       },
     });
+    return buildMockSearchEngine(state);
   }
 
   beforeEach(() => {
-    engine = buildMockInsightEngine();
+    jest.resetAllMocks();
+    engine = buildEngineWithGeneratedAnswer();
     initGeneratedAnswer();
   });
 
@@ -93,97 +95,63 @@ describe('generated answer', () => {
 
   it('#like dispatches analytics action', () => {
     generatedAnswer.like();
-    const action = findAction(likeGeneratedAnswer.type);
-    const analyticsAction = engine.findAsyncAction(
-      logLikeGeneratedAnswer().pending
-    );
-
-    expect(action).toBeTruthy();
-    expect(analyticsAction).toBeTruthy();
+    expect(likeGeneratedAnswer).toHaveBeenCalled();
+    expect(logLikeGeneratedAnswer).toHaveBeenCalled();
   });
 
   it('#like dispatches no analytics action when #liked is set to true', () => {
-    engine.state.generatedAnswer.liked = true;
-    generatedAnswer.like();
-    const action = findAction(likeGeneratedAnswer.type);
-    const analyticsAction = engine.findAsyncAction(
-      logLikeGeneratedAnswer().pending
-    );
+    engine = buildEngineWithGeneratedAnswer({liked: true});
+    initGeneratedAnswer();
 
-    expect(action).not.toBeTruthy();
-    expect(analyticsAction).not.toBeTruthy();
+    generatedAnswer.like();
+    expect(likeGeneratedAnswer).not.toHaveBeenCalled();
+    expect(logLikeGeneratedAnswer).not.toHaveBeenCalled();
   });
 
   it('#dislike dispatches analytics action', () => {
     generatedAnswer.dislike();
-    const action = findAction(dislikeGeneratedAnswer.type);
-    const analyticsAction = engine.findAsyncAction(
-      logDislikeGeneratedAnswer().pending
-    );
-
-    expect(action).toBeTruthy();
-    expect(analyticsAction).toBeTruthy();
+    expect(dislikeGeneratedAnswer).toHaveBeenCalled();
+    expect(logDislikeGeneratedAnswer).toHaveBeenCalled();
   });
 
   it('#dislike dispatches no analytics action when #disliked is set to true', () => {
-    engine.state.generatedAnswer.disliked = true;
+    engine = buildEngineWithGeneratedAnswer({disliked: true});
+    initGeneratedAnswer();
     generatedAnswer.dislike();
-    const action = findAction(dislikeGeneratedAnswer.type);
-    const analyticsAction = engine.findAsyncAction(
-      logDislikeGeneratedAnswer().pending
-    );
-
-    expect(action).not.toBeTruthy();
-    expect(analyticsAction).not.toBeTruthy();
+    expect(dislikeGeneratedAnswer).not.toHaveBeenCalled();
+    expect(logDislikeGeneratedAnswer).not.toHaveBeenCalled();
   });
 
   it('#openFeedbackModal dispatches the right actions', () => {
     generatedAnswer.openFeedbackModal();
-    const action = findAction(openGeneratedAnswerFeedbackModal.type);
-
-    expect(action).toBeTruthy();
+    expect(openGeneratedAnswerFeedbackModal).toHaveBeenCalled();
   });
 
   it('#closeFeedbackModal dispatches the right actions', () => {
     generatedAnswer.closeFeedbackModal();
-    const action = findAction(closeGeneratedAnswerFeedbackModal.type);
-
-    expect(action).toBeTruthy();
+    expect(closeGeneratedAnswerFeedbackModal).toHaveBeenCalled();
   });
 
   it('#sendFeedback dispatches the right actions', () => {
     const exampleFeedback = 'notAccurate';
     generatedAnswer.sendFeedback(exampleFeedback);
-    const action = findAction(sendGeneratedAnswerFeedback.type);
-    const analyticsAction = engine.findAsyncAction(
-      logGeneratedAnswerFeedback(exampleFeedback).pending
-    );
-
-    expect(action).toBeTruthy();
-    expect(analyticsAction).toBeTruthy();
+    expect(sendGeneratedAnswerFeedback).toHaveBeenCalled();
+    expect(logGeneratedAnswerFeedback).toHaveBeenCalledWith(exampleFeedback);
   });
 
   it('#sendDetailedFeedback dispatches the right actions', () => {
     const exampleDetails = 'Example details';
     generatedAnswer.sendDetailedFeedback(exampleDetails);
-    const action = findAction(sendGeneratedAnswerFeedback.type);
-    const analyticsAction = engine.findAsyncAction(
-      logGeneratedAnswerDetailedFeedback(exampleDetails).pending
+    expect(sendGeneratedAnswerFeedback).toHaveBeenCalled();
+    expect(logGeneratedAnswerDetailedFeedback).toHaveBeenCalledWith(
+      exampleDetails
     );
-
-    expect(action).toBeTruthy();
-    expect(analyticsAction).toBeTruthy();
   });
 
   it('#logCitationClick dispatches analytics action', () => {
     const testCitation = buildMockCitation();
-
     generatedAnswer.logCitationClick(testCitation.id);
-    const action = engine.findAsyncAction(
-      logOpenGeneratedAnswerSource(testCitation.id).pending
-    );
-
-    expect(action).toBeTruthy();
+    expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(testCitation.id);
   });
 
   it('#logCitationHover dispatches analytics action', () => {
@@ -191,21 +159,15 @@ describe('generated answer', () => {
     const exampleDuration = 100;
 
     generatedAnswer.logCitationHover(testCitation.id, exampleDuration);
-    const action = engine.findAsyncAction(
-      logHoverCitation(testCitation.id, exampleDuration).pending
+    expect(logHoverCitation).toHaveBeenCalledWith(
+      testCitation.id,
+      exampleDuration
     );
-
-    expect(action).toBeTruthy();
   });
 
   it('#logCopyToClipboard dispatches analytics action', () => {
     generatedAnswer.logCopyToClipboard();
-
-    const analyticsAction = engine.findAsyncAction(
-      logCopyGeneratedAnswer().pending
-    );
-
-    expect(analyticsAction).toBeDefined();
+    expect(logCopyGeneratedAnswer).toHaveBeenCalled();
   });
 
   describe('#show', () => {
@@ -215,9 +177,7 @@ describe('generated answer', () => {
         initGeneratedAnswer();
 
         generatedAnswer.show();
-
-        const action = findAction(setIsVisible.type);
-        expect(action).toBeUndefined();
+        expect(setIsVisible).not.toHaveBeenCalled();
       });
     });
 
@@ -228,9 +188,7 @@ describe('generated answer', () => {
 
         generatedAnswer.show();
 
-        const action = findAction(setIsVisible.type);
-        expect(action).toBeDefined();
-        expect(action).toHaveProperty('payload', true);
+        expect(setIsVisible).toHaveBeenCalledWith(true);
       });
 
       it('should dispatch the analytics action', () => {
@@ -238,11 +196,7 @@ describe('generated answer', () => {
         initGeneratedAnswer();
 
         generatedAnswer.show();
-
-        const analyticsAction = findAction(
-          logGeneratedAnswerShowAnswers().pending.type
-        );
-        expect(analyticsAction).toBeDefined();
+        expect(logGeneratedAnswerShowAnswers).toHaveBeenCalled();
       });
     });
   });
@@ -254,9 +208,7 @@ describe('generated answer', () => {
         initGeneratedAnswer();
 
         generatedAnswer.hide();
-
-        const action = findAction(setIsVisible.type);
-        expect(action).toBeUndefined();
+        expect(setIsVisible).not.toHaveBeenCalled();
       });
     });
 
@@ -266,10 +218,7 @@ describe('generated answer', () => {
         initGeneratedAnswer();
 
         generatedAnswer.hide();
-
-        const action = findAction(setIsVisible.type);
-        expect(action).toBeDefined();
-        expect(action).toHaveProperty('payload', false);
+        expect(setIsVisible).toHaveBeenCalledWith(false);
       });
 
       it('should dispatch the analytics action', () => {
@@ -277,11 +226,55 @@ describe('generated answer', () => {
         initGeneratedAnswer();
 
         generatedAnswer.hide();
+        expect(logGeneratedAnswerHideAnswers).toHaveBeenCalled();
+      });
+    });
+  });
 
-        const analyticsAction = findAction(
-          logGeneratedAnswerHideAnswers().pending.type
-        );
-        expect(analyticsAction).toBeDefined();
+  describe('#expand', () => {
+    describe('when already expanded', () => {
+      it('should not make any changes', () => {
+        engine = buildEngineWithGeneratedAnswer({expanded: true});
+        initGeneratedAnswer();
+        generatedAnswer.expand();
+
+        expect(expandGeneratedAnswer).not.toHaveBeenCalled();
+        expect(logGeneratedAnswerExpand).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('when not expanded', () => {
+      it('should dispatch the expandGeneratedAnswer action and the analytics action', () => {
+        engine = buildEngineWithGeneratedAnswer({expanded: false});
+        initGeneratedAnswer();
+        generatedAnswer.expand();
+
+        expect(expandGeneratedAnswer).toHaveBeenCalled();
+        expect(logGeneratedAnswerExpand).toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('#collapse', () => {
+    describe('when not expanded', () => {
+      it('should not make any changes', () => {
+        engine = buildEngineWithGeneratedAnswer({expanded: false});
+        initGeneratedAnswer();
+        generatedAnswer.collapse();
+
+        expect(collapseGeneratedAnswer).not.toHaveBeenCalled();
+        expect(logGeneratedAnswerCollapse).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('when expanded', () => {
+      it('should dispatch the collapseGeneratedAnswer action and the analytics action', () => {
+        engine = buildEngineWithGeneratedAnswer({expanded: true});
+        initGeneratedAnswer();
+        generatedAnswer.collapse();
+
+        expect(collapseGeneratedAnswer).toHaveBeenCalled();
+        expect(logGeneratedAnswerCollapse).toHaveBeenCalled();
       });
     });
   });
@@ -291,17 +284,12 @@ describe('generated answer', () => {
       it('should dispatch setIsVisible action when set to true', () => {
         initGeneratedAnswer({initialState: {isVisible: true}});
 
-        const action = findAction(setIsVisible.type);
-        expect(action).toBeDefined();
-        expect(action).toHaveProperty('payload', true);
+        expect(setIsVisible).toHaveBeenCalledWith(true);
       });
 
       it('should dispatch setIsVisible action when set to false', () => {
         initGeneratedAnswer({initialState: {isVisible: false}});
-
-        const action = findAction(setIsVisible.type);
-        expect(action).toBeDefined();
-        expect(action).toHaveProperty('payload', false);
+        expect(setIsVisible).toHaveBeenCalledWith(false);
       });
     });
 
@@ -311,10 +299,7 @@ describe('generated answer', () => {
           answerStyle: 'concise',
         };
         initGeneratedAnswer({initialState: {responseFormat}});
-
-        const action = findAction(updateResponseFormat.type);
-        expect(action).toBeDefined();
-        expect(action).toHaveProperty('payload', responseFormat);
+        expect(updateResponseFormat).toHaveBeenCalledWith(responseFormat);
       });
     });
   });
@@ -326,75 +311,9 @@ describe('generated answer', () => {
       initGeneratedAnswer({
         fieldsToIncludeInCitations: exampleFieldsToIncludeInCitations,
       });
-
-      const action = findAction(registerFieldsToIncludeInCitations.type);
-      expect(action).toBeDefined();
-      expect(action).toHaveProperty(
-        'payload',
+      expect(registerFieldsToIncludeInCitations).toHaveBeenCalledWith(
         exampleFieldsToIncludeInCitations
       );
-    });
-  });
-
-  describe('subscription to changes', () => {
-    function callListener() {
-      return (engine.subscribe as jest.Mock).mock.calls
-        .map((args) => args[0])
-        .forEach((listener) => {
-          listener();
-        });
-    }
-
-    it('should not dispatch the stream action when there is no stream ID', () => {
-      callListener();
-
-      const action = findAction(streamAnswer.pending.type);
-
-      expect(action).toBeFalsy();
-    });
-
-    it('should dispatch the resetAnswer action when the requestId has changed', () => {
-      engine.state.search.requestId = 'some-fake-test-id';
-
-      callListener();
-
-      const action = findAction(resetAnswer.type);
-
-      expect(action).toBeTruthy();
-    });
-
-    it('should dispatch the stream action when there is a new stream ID', () => {
-      engine.state.search.extendedResults = {
-        generativeQuestionAnsweringId: 'some-fake-test-id',
-      };
-
-      callListener();
-
-      const action = findAction(streamAnswer.pending.type);
-
-      expect(action).toBeTruthy();
-    });
-
-    describe('when we have multiple controllers', () => {
-      let secondEngine: MockInsightEngine;
-
-      beforeEach(() => {
-        secondEngine = buildMockInsightEngine();
-        buildCoreGeneratedAnswer(secondEngine, generatedAnswerAnalyticsClient);
-      });
-
-      it('should dispatch the stream action only once', () => {
-        engine.state.search.extendedResults = {
-          generativeQuestionAnsweringId: 'another-fake-test-id',
-        };
-
-        callListener();
-
-        const count = engine.actions.filter(
-          (a) => a.type === streamAnswer.pending.type
-        ).length;
-        expect(count).toEqual(1);
-      });
     });
   });
 });

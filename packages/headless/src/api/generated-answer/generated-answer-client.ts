@@ -1,9 +1,9 @@
 import {fetchEventSource} from '@microsoft/fetch-event-source';
 import {Logger} from 'pino';
-import {SearchAppState} from '../..';
 import {AsyncThunkOptions} from '../../app/async-thunk-options';
 import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {GeneratedAnswerErrorPayload} from '../../features/generated-answer/generated-answer-actions';
+import {SearchAppState} from '../../state/search-app-state';
 import {createAbortController} from '../../utils/abort-controller-polyfill';
 import {URLPath} from '../../utils/url-utils';
 import {resetTimeout} from '../../utils/utils';
@@ -104,10 +104,12 @@ export class GeneratedAnswerAPIClient {
     const stream = () =>
       fetchEventSource(buildStreamingUrl(url, organizationId, streamId), {
         method: 'GET',
+        fetch,
         headers: {
           Authorization: `Bearer ${accessToken}`,
           accept: '*/*',
         },
+        openWhenHidden: true,
         signal: abortController?.signal,
         async onopen(response) {
           if (

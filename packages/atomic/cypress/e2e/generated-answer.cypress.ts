@@ -15,6 +15,7 @@ import {
 } from './generated-answer-selectors';
 
 const rephraseOptions: {label: string; value: GeneratedAnswerStyle}[] = [
+  {label: 'Auto', value: 'default'},
   {label: 'Bullet', value: 'bullet'},
   {label: 'Steps', value: 'step'},
   {label: 'Summary', value: 'concise'},
@@ -36,10 +37,34 @@ const testMessagePayload = {
   }),
   finishReason: 'COMPLETED',
 };
+const testStreamEndPayload = {
+  payloadType: 'genqa.endOfStreamType',
+  payload: JSON.stringify({
+    answerGenerated: true,
+    finishReason: 'COMPLETED',
+  }),
+};
 const testCitationsPayload = {
   payloadType: 'genqa.citationsType',
   payload: JSON.stringify({
     citations: [testCitation],
+  }),
+  finishReason: 'COMPLETED',
+};
+
+const testCitationWithEmptyTitle = {
+  id: 'some-id-123',
+  title: '',
+  uri: 'https://www.coveo.com',
+  permanentid: 'some-permanent-id-123',
+  clickUri: 'https://www.coveo.com/en',
+  text: 'This is the snippet given to the generative model.',
+};
+
+const testCitationsWithEmptyTitlePayload = {
+  payloadType: 'genqa.citationsType',
+  payload: JSON.stringify({
+    citations: [testCitationWithEmptyTitle],
   }),
   finishReason: 'COMPLETED',
 };
@@ -75,14 +100,17 @@ describe('Generated Answer Test Suites', () => {
         GeneratedAnswerAssertions.assertAnswerStyle(answerStyle.value);
       });
 
-      it('deselecting should return to "default" style', () => {
+      it('should keep the same button active when we click on the same answer style', () => {
         const initialButtonLabel = answerStyle.label;
 
         cy.wait(TestFixture.interceptAliases.Search);
 
         GeneratedAnswerSelectors.rephraseButton(initialButtonLabel).click();
 
-        GeneratedAnswerAssertions.assertAnswerStyle('default');
+        GeneratedAnswerSelectors.rephraseButton(initialButtonLabel).should(
+          'have.class',
+          'active'
+        );
       });
     });
 
@@ -188,9 +216,12 @@ describe('Generated Answer Test Suites', () => {
         GeneratedAnswerAssertions.assertToggleValue(false);
         GeneratedAnswerAssertions.assertCopyButtonVisibility(false);
         GeneratedAnswerAssertions.assertLocalStorageData({isVisible: false});
+        GeneratedAnswerAssertions.assertLogHideGeneratedAnswer();
+        GeneratedAnswerAssertions.assertDisclaimer(false);
 
         describe('when component is re-activated', () => {
           beforeEach(() => {
+            AnalyticsTracker.reset();
             GeneratedAnswerSelectors.toggle().click();
           });
 
@@ -199,6 +230,8 @@ describe('Generated Answer Test Suites', () => {
           GeneratedAnswerAssertions.assertToggleValue(true);
           GeneratedAnswerAssertions.assertCopyButtonVisibility(true);
           GeneratedAnswerAssertions.assertLocalStorageData({isVisible: true});
+          GeneratedAnswerAssertions.assertLogShowGeneratedAnswer();
+          GeneratedAnswerAssertions.assertDisclaimer(true);
         });
       });
 
@@ -241,23 +274,67 @@ describe('Generated Answer Test Suites', () => {
           );
         });
 
-        describe('when a rephrase option is selected', () => {
-          rephraseOptions.forEach((option) => {
-            it(`should rephrase in "${option.value}" format`, () => {
-              GeneratedAnswerSelectors.rephraseButton(option.label).click();
+        it('should display the disclaimer', () => {
+          GeneratedAnswerSelectors.disclaimer().should('exist');
+        });
 
-              GeneratedAnswerAssertions.assertAnswerStyle(option.value);
-            });
+        describe('when like button is clicked', () => {
+          beforeEach(() => {
+            AnalyticsTracker.reset();
+            GeneratedAnswerSelectors.likeButton().click();
+          });
+
+          it('should log likeGeneratedAnswer event', () => {
+            GeneratedAnswerAssertions.assertLogLikeGeneratedAnswer();
           });
         });
 
-        describe('when we click on copy button', () => {
+        describe('when dislike button is clicked', () => {
+          beforeEach(() => {
+            AnalyticsTracker.reset();
+            GeneratedAnswerSelectors.dislikeButton().click();
+          });
+
+          it('should log dislikeGeneratedAnswer event', () => {
+            GeneratedAnswerAssertions.assertLogDislikeGeneratedAnswer();
+          });
+        });
+
+        describe('when copy button is clicked', () => {
           it('should copy the generated answer to the clipboard', async () => {
             GeneratedAnswerSelectors.copyButton().focus().click();
+
             GeneratedAnswerAssertions.assertAnswerCopiedToClipboard(
               testTextDelta
             );
           });
+
+          it('should log copyGeneratedAnswer event', async () => {
+            AnalyticsTracker.reset();
+            GeneratedAnswerSelectors.copyButton().focus().click();
+
+            GeneratedAnswerAssertions.assertLogCopyGeneratedAnswer();
+          });
+        });
+
+        describe('when a rephrase option is selected', () => {
+          rephraseOptions
+            .filter((option) => option.value !== 'default')
+            .forEach((option) => {
+              it(`should rephrase in "${option.value}" format`, () => {
+                GeneratedAnswerSelectors.rephraseButton(option.label).click();
+
+                GeneratedAnswerAssertions.assertAnswerStyle(option.value);
+              });
+
+              it(`should log rephraseGeneratedAnswer event with "${option.label}"`, () => {
+                GeneratedAnswerSelectors.rephraseButton(option.label).click();
+
+                GeneratedAnswerAssertions.assertLogRephraseGeneratedAnswer(
+                  option.value
+                );
+              });
+            });
         });
       });
 
@@ -343,6 +420,23 @@ describe('Generated Answer Test Suites', () => {
         });
       });
 
+      describe('When a citation event is received with empty title', () => {
+        const streamId = crypto.randomUUID();
+
+        beforeEach(() => {
+          mockStreamResponse(streamId, testCitationsWithEmptyTitlePayload);
+          setupGeneratedAnswer(streamId);
+          cy.wait(getStreamInterceptAlias(streamId));
+        });
+
+        it('should display the citation with no title label', () => {
+          GeneratedAnswerSelectors.citationCard().should(
+            'contain.text',
+            'No title'
+          );
+        });
+      });
+
       describe('when an error event is received', () => {
         const streamId = crypto.randomUUID();
 
@@ -360,6 +454,23 @@ describe('Generated Answer Test Suites', () => {
 
         it('should not display the component', () => {
           GeneratedAnswerSelectors.container().should('not.exist');
+        });
+      });
+
+      describe('when streamEnd event is received', () => {
+        const streamId = crypto.randomUUID();
+
+        beforeEach(() => {
+          mockStreamResponse(streamId, [
+            {...testMessagePayload, finishReason: null},
+            testStreamEndPayload,
+          ]);
+          setupGeneratedAnswer(streamId);
+          cy.wait(getStreamInterceptAlias(streamId));
+        });
+
+        it('should log the streamEnd event', () => {
+          GeneratedAnswerAssertions.assertLogGeneratedAnswerStreamEnd();
         });
       });
 
@@ -383,7 +494,7 @@ describe('Generated Answer Test Suites', () => {
             describe(`${errorCode} error`, () => {
               beforeEach(() => {
                 Cypress.on('uncaught:exception', () => false);
-                mockStreamError(streamId, 500);
+                mockStreamError(streamId, errorCode);
                 setupGeneratedAnswer(streamId);
                 cy.wait(getStreamInterceptAlias(streamId));
               });

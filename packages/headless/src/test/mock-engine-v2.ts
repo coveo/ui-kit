@@ -1,12 +1,15 @@
+import {Relay} from '@coveo/relay';
 import pino, {Logger} from 'pino';
+import {CaseAssistEngine} from '../app/case-assist-engine/case-assist-engine';
+import {CommerceEngine} from '../app/commerce-engine/commerce-engine';
 import type {CoreEngine} from '../app/engine';
-import type {CaseAssistEngine} from '../case-assist.index';
-import type {CommerceEngine} from '../commerce.index';
-import type {SearchEngine} from '../index';
-import type {InsightEngine} from '../insight.index';
-import type {ProductListingEngine} from '../product-listing.index';
-import type {ProductRecommendationEngine} from '../product-recommendation.index';
-import type {RecommendationEngine} from '../recommendation.index';
+import {InsightEngine} from '../app/insight-engine/insight-engine';
+import {defaultNodeJSNavigatorContextProvider} from '../app/navigatorContextProvider';
+import {ProductListingEngine} from '../app/product-listing-engine/product-listing-engine';
+import {ProductRecommendationEngine} from '../app/product-recommendation-engine/product-recommendation-engine';
+import {RecommendationEngine} from '../app/recommendation-engine/recommendation-engine';
+import {SearchEngine} from '../app/search-engine/search-engine';
+import {SSRSearchEngine} from '../app/search-engine/search-engine.ssr';
 
 type SpyEverything<T> = {
   [K in keyof T]: T[K] extends (...args: infer A) => infer R
@@ -32,12 +35,27 @@ function mockLogger(logger: Logger): MockedLogger {
   });
 }
 
+type MockedRelay = Relay & Pick<Relay, 'emit'>;
+
+function mockRelay(): MockedRelay {
+  return {
+    clearStorage: jest.fn(),
+    emit: jest.fn(),
+    getMeta: jest.fn(),
+    off: jest.fn(),
+    on: jest.fn(),
+    updateConfig: jest.fn(),
+    version: 'test',
+  };
+}
+
 type MockedCoreEngine<
   State extends StateFromEngine<CoreEngine> = StateFromEngine<CoreEngine>,
 > = CoreEngine & {
   state: State;
   logger: MockedLogger;
-} & SpyEverything<Omit<CoreEngine, 'logger' | 'state'>>;
+  relay: MockedRelay;
+} & SpyEverything<Omit<CoreEngine, 'logger' | 'state' | 'relay'>>;
 
 export function buildMockCoreEngine<State extends StateFromEngine<CoreEngine>>(
   initialState: State
@@ -50,6 +68,7 @@ export function buildMockCoreEngine<State extends StateFromEngine<CoreEngine>>(
     disableAnalytics: jest.fn(),
     enableAnalytics: jest.fn(),
     logger: mockLogger(pino({level: 'silent'})),
+    relay: mockRelay(),
     store: {
       dispatch: jest.fn(),
       getState: jest.fn(),
@@ -58,6 +77,7 @@ export function buildMockCoreEngine<State extends StateFromEngine<CoreEngine>>(
       [Symbol.observable]: jest.fn(),
     },
     subscribe: jest.fn(),
+    navigatorContext: defaultNodeJSNavigatorContextProvider(),
   };
 }
 
@@ -74,6 +94,9 @@ export type MockedSearchEngine = SearchEngine &
 export type MockedCaseAssistEngine = CaseAssistEngine;
 export type MockedRecommendationEngine = RecommendationEngine;
 export type MockedProductRecommendationEngine = ProductRecommendationEngine;
+export type MockedCommerceEngine = CommerceEngine;
+export type MockedInsightEngine = InsightEngine;
+export type MockedProductListingEngine = ProductListingEngine;
 
 type StateFromEngine<TEngine extends CoreEngine> = TEngine['state'];
 
@@ -100,6 +123,8 @@ export function buildMockCommerceEngine<
 >(initialState: State): CommerceEngine {
   return {
     ...buildMockCoreEngine(initialState),
+    executeFirstSearch: jest.fn(),
+    executeFirstSearchAfterStandaloneSearchBoxRedirect: jest.fn(),
   };
 }
 
@@ -132,5 +157,15 @@ export function buildMockRecommendationEngine<
 >(initialState: State): RecommendationEngine {
   return {
     ...buildMockCoreEngine(initialState),
+  };
+}
+
+export function buildMockSSRSearchEngine(
+  initialState: StateFromEngine<SearchEngine>
+): SSRSearchEngine {
+  const engine = buildMockSearchEngine(initialState);
+  return {
+    ...engine,
+    waitForSearchCompletedAction: jest.fn(),
   };
 }

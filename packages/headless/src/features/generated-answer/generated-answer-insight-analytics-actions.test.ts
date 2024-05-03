@@ -1,9 +1,13 @@
-import {InsightAppState} from '../../state/insight-app-state';
+import {createRelay} from '@coveo/relay';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {
   buildMockInsightEngine,
-  MockInsightEngine,
-} from '../../test/mock-engine';
+  MockedInsightEngine,
+} from '../../test/mock-engine-v2';
 import {buildMockInsightState} from '../../test/mock-insight-state';
+import {buildMockSearchResponse} from '../../test/mock-search-response';
+import {buildMockSearchState} from '../../test/mock-search-state';
+import {getConfigurationInitialState} from '../configuration/configuration-state';
 import {
   logGeneratedAnswerDetailedFeedback,
   logGeneratedAnswerFeedback,
@@ -17,7 +21,10 @@ import {
   logGeneratedAnswerShowAnswers,
   logGeneratedAnswerHideAnswers,
   logCopyGeneratedAnswer,
+  logGeneratedAnswerExpand,
+  logGeneratedAnswerCollapse,
 } from './generated-answer-insight-analytics-actions';
+import {getGeneratedAnswerInitialState} from './generated-answer-state';
 
 const mockLogGeneratedAnswerFeedbackSubmit = jest.fn();
 const mockLogRetryGeneratedAnswer = jest.fn();
@@ -30,6 +37,21 @@ const mockLogGeneratedAnswerStreamEnd = jest.fn();
 const mockLogGeneratedAnswerShowAnswers = jest.fn();
 const mockLogGeneratedAnswerHideAnswers = jest.fn();
 const mockLogCopyGeneratedAnswer = jest.fn();
+const mockLogGeneratedAnswerExpand = jest.fn();
+const mockLogGeneratedAnswerCollapse = jest.fn();
+const emit = jest.fn();
+
+jest.mock('@coveo/relay');
+
+jest.mocked(createRelay).mockReturnValue({
+  emit,
+  getMeta: jest.fn(),
+  on: jest.fn(),
+  off: jest.fn(),
+  updateConfig: jest.fn(),
+  clearStorage: jest.fn(),
+  version: 'foo',
+});
 
 jest.mock('coveo.analytics', () => {
   const mockCoveoInsightClient = jest.fn(() => ({
@@ -45,6 +67,8 @@ jest.mock('coveo.analytics', () => {
     logGeneratedAnswerShowAnswers: mockLogGeneratedAnswerShowAnswers,
     logGeneratedAnswerHideAnswers: mockLogGeneratedAnswerHideAnswers,
     logGeneratedAnswerCopyToClipboard: mockLogCopyGeneratedAnswer,
+    logGeneratedAnswerExpand: mockLogGeneratedAnswerExpand,
+    logGeneratedAnswerCollapse: mockLogGeneratedAnswerCollapse,
   }));
 
   return {
@@ -55,6 +79,7 @@ jest.mock('coveo.analytics', () => {
 
 const exampleFeedback = 'irrelevant';
 const exampleGenerativeQuestionAnsweringId = '123';
+const exampleSearchUid = '456';
 const exampleDetails = 'example details';
 const exampleCitationId = 'citation_id';
 const exampleCitationPermanentid = 'citation_permanentid';
@@ -72,226 +97,456 @@ const expectedCaseContext = {
   caseNumber: exampleCaseNumber,
 };
 
-describe('the analytics related to the generated answer feature in the insight use case', () => {
-  let engine: MockInsightEngine;
-  let state: InsightAppState;
-
-  beforeEach(() => {
-    state = buildMockInsightState();
-    state.search.response.extendedResults.generativeQuestionAnsweringId =
-      exampleGenerativeQuestionAnsweringId;
-    state.generatedAnswer.citations = [
+describe('generated answer insight analytics actions', () => {
+  let engine: MockedInsightEngine;
+  const searchState = buildMockSearchState({
+    response: buildMockSearchResponse({
+      searchUid: exampleSearchUid,
+      extendedResults: {
+        generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
+      },
+    }),
+  });
+  const generatedAnswerState = {
+    ...getGeneratedAnswerInitialState(),
+    citations: [
       {
         id: exampleCitationId,
         permanentid: exampleCitationPermanentid,
         title: 'example title',
         uri: 'example: uri',
       },
-    ];
-    state.insightCaseContext = {
-      caseContext: {
-        Case_Subject: exampleSubject,
-        Case_Description: exampleDescription,
-      },
-      caseId: exampleCaseId,
-      caseNumber: exampleCaseNumber,
-    };
-    engine = buildMockInsightEngine({state});
-  });
+    ],
+  };
+  const insightCaseContextState = {
+    caseContext: {
+      Case_Subject: exampleSubject,
+      Case_Description: exampleDescription,
+    },
+    caseId: exampleCaseId,
+    caseNumber: exampleCaseNumber,
+  };
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should log #logRetryGeneratedAnswer with the right payload', async () => {
-    await engine.dispatch(logRetryGeneratedAnswer());
+  describe('when analyticsMode is `legacy`', () => {
+    beforeEach(() => {
+      engine = buildMockInsightEngine(
+        buildMockInsightState({
+          configuration: {
+            ...getConfigurationInitialState(),
+            analytics: {
+              ...getConfigurationInitialState().analytics,
+              analyticsMode: 'legacy',
+            },
+          },
+          search: searchState,
+          generatedAnswer: generatedAnswerState,
+          insightCaseContext: insightCaseContextState,
+        })
+      );
+    });
 
-    const mockToUse = mockLogRetryGeneratedAnswer;
+    it('should log #logRetryGeneratedAnswer with the right payload', async () => {
+      await logRetryGeneratedAnswer()()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
 
-    expect(mockToUse).toHaveBeenCalledTimes(1);
-    expect(mockToUse).toHaveBeenCalledWith(expectedCaseContext);
+      const mockToUse = mockLogRetryGeneratedAnswer;
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith(expectedCaseContext);
+    });
+
+    it('should log #logRephraseGeneratedAnswer with the right payload', async () => {
+      const exampleRephraseFormat = 'step';
+      await logRephraseGeneratedAnswer({answerStyle: exampleRephraseFormat})()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      const mockToUse = mockLogRephraseGeneratedAnswer;
+      const expectedMetadata = {
+        generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
+        rephraseFormat: exampleRephraseFormat,
+      };
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith(
+        expectedMetadata,
+        expectedCaseContext
+      );
+    });
+
+    it('should log #logOpenGeneratedAnswerSource with the right payload', async () => {
+      await logOpenGeneratedAnswerSource(exampleCitationId)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      const mockToUse = mockLogOpenGeneratedAnswerSource;
+      const expectedMetadata = {
+        generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
+        permanentId: exampleCitationPermanentid,
+        citationId: exampleCitationId,
+      };
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith(
+        expectedMetadata,
+        expectedCaseContext
+      );
+    });
+
+    it('should log #logHoverCitation with the right payload', async () => {
+      const exampleHoverTime = 100;
+      await logHoverCitation(exampleCitationId, exampleHoverTime)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      const mockToUse = mockLogHoverCitation;
+      const expectedMetadata = {
+        generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
+        permanentId: exampleCitationPermanentid,
+        citationId: exampleCitationId,
+        citationHoverTimeMs: exampleHoverTime,
+      };
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith(
+        expectedMetadata,
+        expectedCaseContext
+      );
+    });
+
+    it('should log #logLikeGeneratedAnswer with the right payload', async () => {
+      await logLikeGeneratedAnswer()()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      const mockToUse = mockLogLikeGeneratedAnswer;
+      const expectedMetadata = {
+        generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
+      };
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith(
+        expectedMetadata,
+        expectedCaseContext
+      );
+    });
+
+    it('should log #logDislikeGeneratedAnswer with the right payload', async () => {
+      await logDislikeGeneratedAnswer()()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      const mockToUse = mockLogDislikeGeneratedAnswer;
+      const expectedMetadata = {
+        generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
+      };
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith(
+        expectedMetadata,
+        expectedCaseContext
+      );
+    });
+
+    it('should log #logGeneratedAnswerFeedback with the right payload', async () => {
+      await logGeneratedAnswerFeedback(exampleFeedback)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      const mockToUse = mockLogGeneratedAnswerFeedbackSubmit;
+      const expectedMetadata = {
+        generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
+        reason: exampleFeedback,
+      };
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith(
+        expectedMetadata,
+        expectedCaseContext
+      );
+    });
+
+    it('should log #logGeneratedAnswerDetailedFeedback with the right payload', async () => {
+      await logGeneratedAnswerDetailedFeedback(exampleDetails)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      const mockToUse = mockLogGeneratedAnswerFeedbackSubmit;
+      const expectedMetadata = {
+        generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
+        reason: 'other',
+        details: exampleDetails,
+      };
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith(
+        expectedMetadata,
+        expectedCaseContext
+      );
+    });
+
+    it('should log #logGeneratedAnswerStreamEnd with the right payload', async () => {
+      await logGeneratedAnswerStreamEnd(true)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      const mockToUse = mockLogGeneratedAnswerStreamEnd;
+      const expectedMetadata = {
+        generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
+        answerGenerated: true,
+      };
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith(
+        expectedMetadata,
+        expectedCaseContext
+      );
+    });
+
+    it('should log #logGeneratedAnswerShowAnswers with the right payload', async () => {
+      await logGeneratedAnswerShowAnswers()()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      const mockToUse = mockLogGeneratedAnswerShowAnswers;
+      const expectedMetadata = {
+        generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
+      };
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith(
+        expectedMetadata,
+        expectedCaseContext
+      );
+    });
+
+    it('should log #logGeneratedAnswerHideAnswers with the right payload', async () => {
+      await logGeneratedAnswerHideAnswers()()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      const mockToUse = mockLogGeneratedAnswerHideAnswers;
+      const expectedMetadata = {
+        generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
+      };
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith(
+        expectedMetadata,
+        expectedCaseContext
+      );
+    });
+
+    it('should log #logGeneratedAnswerExpand with the right payload', async () => {
+      await logGeneratedAnswerExpand()()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      const mockToUse = mockLogGeneratedAnswerExpand;
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith(
+        {
+          generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
+        },
+        expectedCaseContext
+      );
+    });
+
+    it('should log #logGeneratedAnswerCollapse with the right payload', async () => {
+      await logGeneratedAnswerCollapse()()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      const mockToUse = mockLogGeneratedAnswerCollapse;
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith(
+        {
+          generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
+        },
+        expectedCaseContext
+      );
+    });
+
+    it('should log #logCopyGeneratedAnswer with the right payload', async () => {
+      await logCopyGeneratedAnswer()()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      const mockToUse = mockLogCopyGeneratedAnswer;
+      const expectedMetadata = {
+        generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
+      };
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith(
+        expectedMetadata,
+        expectedCaseContext
+      );
+    });
   });
 
-  it('should log #logRephraseGeneratedAnswer with the right payload', async () => {
-    const exampleRephraseFormat = 'step';
-    await engine.dispatch(
-      logRephraseGeneratedAnswer({
-        answerStyle: exampleRephraseFormat,
-      })
-    );
+  describe('when analyticsMode is `next`', () => {
+    beforeEach(() => {
+      engine = buildMockInsightEngine(
+        buildMockInsightState({
+          configuration: {
+            ...getConfigurationInitialState(),
+            analytics: {
+              ...getConfigurationInitialState().analytics,
+              analyticsMode: 'next',
+            },
+          },
+          search: searchState,
+          generatedAnswer: generatedAnswerState,
+          insightCaseContext: insightCaseContextState,
+        })
+      );
+    });
 
-    const mockToUse = mockLogRephraseGeneratedAnswer;
-    const expectedMetadata = {
-      generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
-      rephraseFormat: exampleRephraseFormat,
-    };
+    it('should log #logOpenGeneratedAnswerSource with the right payload', async () => {
+      await logOpenGeneratedAnswerSource(exampleCitationId)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
 
-    expect(mockToUse).toHaveBeenCalledTimes(1);
-    expect(mockToUse).toHaveBeenCalledWith(
-      expectedMetadata,
-      expectedCaseContext
-    );
-  });
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toMatchSnapshot();
+    });
 
-  it('should log #logOpenGeneratedAnswerSource with the right payload', async () => {
-    await engine.dispatch(logOpenGeneratedAnswerSource(exampleCitationId));
+    it('should log #logHoverCitation with the right payload', async () => {
+      const exampleHoverTime = 100;
+      await logHoverCitation(exampleCitationId, exampleHoverTime)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
 
-    const mockToUse = mockLogOpenGeneratedAnswerSource;
-    const expectedMetadata = {
-      generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
-      permanentId: exampleCitationPermanentid,
-      citationId: exampleCitationId,
-    };
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toMatchSnapshot();
+    });
 
-    expect(mockToUse).toHaveBeenCalledTimes(1);
-    expect(mockToUse).toHaveBeenCalledWith(
-      expectedMetadata,
-      expectedCaseContext
-    );
-  });
+    it('should log #logLikeGeneratedAnswer with the right payload', async () => {
+      await logLikeGeneratedAnswer()()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
 
-  it('should log #logHoverCitation with the right payload', async () => {
-    const exampleHoverTime = 100;
-    await engine.dispatch(
-      logHoverCitation(exampleCitationId, exampleHoverTime)
-    );
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toMatchSnapshot();
+    });
 
-    const mockToUse = mockLogHoverCitation;
-    const expectedMetadata = {
-      generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
-      permanentId: exampleCitationPermanentid,
-      citationId: exampleCitationId,
-      citationHoverTimeMs: exampleHoverTime,
-    };
+    it('should log #logDislikeGeneratedAnswer with the right payload', async () => {
+      await logDislikeGeneratedAnswer()()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
 
-    expect(mockToUse).toHaveBeenCalledTimes(1);
-    expect(mockToUse).toHaveBeenCalledWith(
-      expectedMetadata,
-      expectedCaseContext
-    );
-  });
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toMatchSnapshot();
+    });
 
-  it('should log #logLikeGeneratedAnswer with the right payload', async () => {
-    await engine.dispatch(logLikeGeneratedAnswer());
+    it('should log #logGeneratedAnswerDetailedFeedback with the right payload', async () => {
+      await logGeneratedAnswerDetailedFeedback(exampleDetails)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
 
-    const mockToUse = mockLogLikeGeneratedAnswer;
-    const expectedMetadata = {
-      generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
-    };
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toMatchSnapshot();
+    });
 
-    expect(mockToUse).toHaveBeenCalledTimes(1);
-    expect(mockToUse).toHaveBeenCalledWith(
-      expectedMetadata,
-      expectedCaseContext
-    );
-  });
+    it('should log #logGeneratedAnswerShowAnswers with the right payload', async () => {
+      await logGeneratedAnswerShowAnswers()()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
 
-  it('should log #logDislikeGeneratedAnswer with the right payload', async () => {
-    await engine.dispatch(logDislikeGeneratedAnswer());
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toMatchSnapshot();
+    });
 
-    const mockToUse = mockLogDislikeGeneratedAnswer;
-    const expectedMetadata = {
-      generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
-    };
+    it('should log #logGeneratedAnswerHideAnswers with the right payload', async () => {
+      await logGeneratedAnswerHideAnswers()()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
 
-    expect(mockToUse).toHaveBeenCalledTimes(1);
-    expect(mockToUse).toHaveBeenCalledWith(
-      expectedMetadata,
-      expectedCaseContext
-    );
-  });
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toMatchSnapshot();
+    });
 
-  it('should log #logGeneratedAnswerFeedback with the right payload', async () => {
-    await engine.dispatch(logGeneratedAnswerFeedback(exampleFeedback));
+    it('should log #logGeneratedAnswerExpand with the right payload', async () => {
+      await logGeneratedAnswerExpand()()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
 
-    const mockToUse = mockLogGeneratedAnswerFeedbackSubmit;
-    const expectedMetadata = {
-      generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
-      reason: exampleFeedback,
-    };
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toMatchSnapshot();
+    });
 
-    expect(mockToUse).toHaveBeenCalledTimes(1);
-    expect(mockToUse).toHaveBeenCalledWith(
-      expectedMetadata,
-      expectedCaseContext
-    );
-  });
+    it('should log #logGeneratedAnswerCollapse with the right payload', async () => {
+      await logGeneratedAnswerCollapse()()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
 
-  it('should log #logGeneratedAnswerDetailedFeedback with the right payload', async () => {
-    await engine.dispatch(logGeneratedAnswerDetailedFeedback(exampleDetails));
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toMatchSnapshot();
+    });
 
-    const mockToUse = mockLogGeneratedAnswerFeedbackSubmit;
-    const expectedMetadata = {
-      generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
-      reason: 'other',
-      details: exampleDetails,
-    };
+    it('should log #logCopyGeneratedAnswer with the right payload', async () => {
+      await logCopyGeneratedAnswer()()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
 
-    expect(mockToUse).toHaveBeenCalledTimes(1);
-    expect(mockToUse).toHaveBeenCalledWith(
-      expectedMetadata,
-      expectedCaseContext
-    );
-  });
-
-  it('should log #logGeneratedAnswerStreamEnd with the right payload', async () => {
-    await engine.dispatch(logGeneratedAnswerStreamEnd(true));
-
-    const mockToUse = mockLogGeneratedAnswerStreamEnd;
-    const expectedMetadata = {
-      generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
-      answerGenerated: true,
-    };
-
-    expect(mockToUse).toHaveBeenCalledTimes(1);
-    expect(mockToUse).toHaveBeenCalledWith(
-      expectedMetadata,
-      expectedCaseContext
-    );
-  });
-
-  it('should log #logGeneratedAnswerShowAnswers with the right payload', async () => {
-    await engine.dispatch(logGeneratedAnswerShowAnswers());
-
-    const mockToUse = mockLogGeneratedAnswerShowAnswers;
-    const expectedMetadata = {
-      generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
-    };
-
-    expect(mockToUse).toHaveBeenCalledTimes(1);
-    expect(mockToUse).toHaveBeenCalledWith(
-      expectedMetadata,
-      expectedCaseContext
-    );
-  });
-
-  it('should log #logGeneratedAnswerHideAnswers with the right payload', async () => {
-    await engine.dispatch(logGeneratedAnswerHideAnswers());
-
-    const mockToUse = mockLogGeneratedAnswerHideAnswers;
-    const expectedMetadata = {
-      generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
-    };
-
-    expect(mockToUse).toHaveBeenCalledTimes(1);
-    expect(mockToUse).toHaveBeenCalledWith(
-      expectedMetadata,
-      expectedCaseContext
-    );
-  });
-
-  it('should log #logCopyGeneratedAnswer with the right payload', async () => {
-    await engine.dispatch(logCopyGeneratedAnswer());
-
-    const mockToUse = mockLogCopyGeneratedAnswer;
-    const expectedMetadata = {
-      generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
-    };
-
-    expect(mockToUse).toHaveBeenCalledTimes(1);
-    expect(mockToUse).toHaveBeenCalledWith(
-      expectedMetadata,
-      expectedCaseContext
-    );
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toMatchSnapshot();
+    });
   });
 });

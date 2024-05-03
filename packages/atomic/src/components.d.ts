@@ -5,56 +5,56 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+import { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+import { CommerceEngine, LogLevel, PlatformEnvironment } from "@coveo/headless/commerce";
+import { i18n } from "i18next";
+import { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
+import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
+import { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
-import { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout, ResultTarget } from "./components/common/layout/display-options";
-import { ResultRenderingFunction } from "./components/common/result-list/result-list-common-interface";
+import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout, ItemTarget } from "./components/common/layout/display-options";
+import { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
 import { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightGeneratedAnswerStyle, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
-import { FacetDisplayValues } from "./components/common/facets/facet-common";
-import { i18n } from "i18next";
 import { i18nCompatibilityVersion } from "./components/common/interface/i18n";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
-import { NumericFacetDisplayValues } from "./components/common/facets/numeric-facet-common";
 import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Section } from "./components/common/atomic-layout-section/sections";
-import { PlatformEnvironment, RecommendationEngine } from "@coveo/headless/recommendation";
+import { PlatformEnvironment as PlatformEnvironment1, RecommendationEngine } from "@coveo/headless/recommendation";
 import { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
 import { i18nCompatibilityVersion as i18nCompatibilityVersion1 } from "./components";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 import { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
-import { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 import { AriaLabelGenerator } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
-import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
-export { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+export { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+export { CommerceEngine, LogLevel, PlatformEnvironment } from "@coveo/headless/commerce";
+export { i18n } from "i18next";
+export { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
+export { StandaloneSearchBoxData } from "./utils/local-storage-utils";
+export { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
-export { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout, ResultTarget } from "./components/common/layout/display-options";
-export { ResultRenderingFunction } from "./components/common/result-list/result-list-common-interface";
+export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout, ItemTarget } from "./components/common/layout/display-options";
+export { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
 export { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightGeneratedAnswerStyle, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
-export { FacetDisplayValues } from "./components/common/facets/facet-common";
-export { i18n } from "i18next";
 export { i18nCompatibilityVersion } from "./components/common/interface/i18n";
 export { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
-export { NumericFacetDisplayValues } from "./components/common/facets/numeric-facet-common";
 export { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 export { Section } from "./components/common/atomic-layout-section/sections";
-export { PlatformEnvironment, RecommendationEngine } from "@coveo/headless/recommendation";
+export { PlatformEnvironment as PlatformEnvironment1, RecommendationEngine } from "@coveo/headless/recommendation";
 export { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
 export { i18nCompatibilityVersion as i18nCompatibilityVersion1 } from "./components";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 export { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
 export { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
 export { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
-export { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 export { AriaLabelGenerator } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 export { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
-export { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 export namespace Components {
     /**
      * The `atomic-aria-live` component notifies screen readers of changes in the search interface.
@@ -88,7 +88,7 @@ export namespace Components {
      */
     interface AtomicAutomaticFacetGenerator {
         /**
-          * The desired count of automatic facets.  Minimum: `1` Maximum: `10`
+          * The desired count of automatic facets.  Minimum: `1` Maximum: `20`
           * @defaultValue `5`
          */
         "desiredCount": number;
@@ -163,7 +163,7 @@ export namespace Components {
          */
         "numberOfValues": number;
         /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'alphanumeric' and 'occurrences'.
+          * The sort criterion to apply to the returned facet values. Possible values are 'alphanumeric' and 'occurrences'. For this criterion to apply to the top-layer facet values, disable [facet value ordering](https://docs.coveo.com/en/l1qf4156/#facet-value-ordering) in your Dynamic Navigation Experience configuration.
          */
         "sortCriteria": CategoryFacetSortCriterion;
         /**
@@ -254,6 +254,140 @@ export namespace Components {
           * Whether this facet should contain a search box.
          */
         "withSearch": boolean;
+    }
+    interface AtomicCommerceInterface {
+        /**
+          * The value to set the [nonce](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) attribute to on inline script and style elements generated by this interface and its child components. If your application is served with a Content Security Policy (CSP) that doesn't include the `script-src: 'unsafe-inline'` or `style-src: 'unsafe-inline'` directives, you should ensure that your application server generates a new nonce on every page load and uses the generated value to set this prop and serve the corresponding CSP response headers (i.e., script-src 'nonce-<YOUR_GENERATED_NONCE>' and style-src 'nonce-<YOUR_GENERATED_NONCE>'). Otherwise you may see console errors such as  - Refused to execute inline script because it violates the following Content Security Policy directive: [...]  - Refused to apply inline style because it violates the following Content Security Policy directive: [...].
+          * @example : ```html <script nonce="<YOUR_GENERATED_NONCE>"> import {setNonce} from '@coveo/atomic'; setNonce('<YOUR_GENERATED_NONCE>'); </script> ```
+         */
+        "CspNonce"?: string;
+        /**
+          * Whether analytics should be enabled.
+         */
+        "analytics": boolean;
+        /**
+          * The commerce interface headless engine.
+         */
+        "engine"?: CommerceEngine;
+        /**
+          * Executes the first search after initializing connection to the headless search engine.
+         */
+        "executeFirstSearch": () => Promise<void>;
+        /**
+          * Returns the unique, organization-specific endpoint(s).
+          * @param organizationId
+          * @param env
+         */
+        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
+        /**
+          * the commerce interface i18next instance.
+         */
+        "i18n": i18n;
+        /**
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
+         */
+        "iconAssetsPath": string;
+        /**
+          * Initializes the connection with the headless search engine using options for accessToken (required), organizationId (required), renewAccessToken, organizationEndpoints (recommended), and platformUrl (deprecated).
+         */
+        "initialize": (options: CommerceInitializationOptions) => Promise<void>;
+        /**
+          * Initializes the connection with an already preconfigured [headless search engine](https://docs.coveo.com/en/headless/latest/reference/search/), as opposed to the `initialize` method, which will internally create a new search engine instance. This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
+         */
+        "initializeWithEngine": (engine: CommerceEngine) => Promise<void>;
+        /**
+          * the commerce interface language.
+         */
+        "language": string;
+        /**
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
+         */
+        "languageAssetsPath": string;
+        /**
+          * The severity level of the messages to log in the console.
+         */
+        "logLevel"?: LogLevel;
+        /**
+          * Whether the state should be reflected in the URL parameters.
+         */
+        "reflectStateInUrl": boolean;
+        /**
+          * The CSS selector for the container where the interface will scroll back to.
+         */
+        "scrollContainer": string;
+        /**
+          * The type of the interface. - 'search': Indicates that the interface is used for Search. - 'product-listing': Indicates that the interface is used for Product listing.
+         */
+        "type": | 'search'
+    | 'product-listing';
+    }
+    /**
+     * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
+     */
+    interface AtomicCommercePager {
+        /**
+          * The SVG icon to use to display the Next button.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "nextButtonIcon": string;
+        /**
+          * Specifies how many page buttons to display in the pager.
+         */
+        "numberOfPages": number;
+        /**
+          * The SVG icon to use to display the Previous button.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "previousButtonIcon": string;
+    }
+    interface AtomicCommerceResultList {
+        /**
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+         */
+        "density": 'normal' | 'compact';
+        /**
+          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
+         */
+        "display": 'grid' | 'list';
+        /**
+          * The expected size of the image displayed in the results.
+         */
+        "imageSize": number;
+    }
+    /**
+     * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
+     */
+    interface AtomicCommerceSearchBox {
+        /**
+          * Whether to clear all active query filters when the end user submits a new query from the search box. Setting this option to "false" is not recommended & can lead to an increasing number of queries returning no results.
+         */
+        "clearFilters": boolean;
+        /**
+          * Whether to prevent the user from triggering searches and query suggestions from the component. Perfect for use cases where you need to disable the search conditionally. For the specific case when you need to disable the search based on the length of the query, refer to {@link minimumQueryLength}.
+         */
+        "disableSearch": boolean;
+        /**
+          * Whether to interpret advanced [Coveo Cloud query syntax](https://docs.coveo.com/en/1814/) in the query. You should only enable query syntax in the search box if you have good reasons to do so, as it requires end users to be familiar with Coveo Cloud query syntax, otherwise they will likely be surprised by the search box behaviour.  When the `redirection-url` property is set and redirects to a page with more `atomic-commerce-search-box` components, all `atomic-commerce-search-box` components need to have the same `enable-query-syntax` value.
+         */
+        "enableQuerySyntax": boolean;
+        /**
+          * The minimum query length required to enable search. For example, to disable the search for empty queries, set this to `1`.
+         */
+        "minimumQueryLength": number;
+        /**
+          * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-commerce-search-box-query-suggestions  - atomic-commerce-search-box-recent-queries
+         */
+        "numberOfQueries": number;
+        /**
+          * Defining this option makes the search box standalone (see [Use a Standalone Search Box](https://docs.coveo.com/en/atomic/latest/usage/ssb/)).  This option defines the default URL the user should be redirected to, when a query is submitted. If a query pipeline redirect is triggered, it will redirect to that URL instead (see [query pipeline triggers](https://docs.coveo.com/en/1458)).
+         */
+        "redirectionUrl"?: string;
+        /**
+          * The delay for suggestion queries on input, in milliseconds.  The suggestion request will be delayed until the end user stops typing for at least the specified amount of time.  This delay is used to avoid sending too many requests to the Coveo Platform when the user is typing, as well as reducing potential input lag on low end devices. A higher delay will reduce input lag, at the cost of suggestions freshness.
+         */
+        "suggestionDelay": number;
+        /**
+          * The timeout for suggestion queries, in milliseconds. If a suggestion query times out, the suggestions from that particular query won't be shown.
+         */
+        "suggestionTimeout": number;
     }
     /**
      * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
@@ -392,10 +526,6 @@ export namespace Components {
      */
     interface AtomicFieldCondition {
         /**
-          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  Use only when the condition you need to define can't be expressed through `if-defined`, `if-not-defined`, `must-match`, etc. markup attributes of the component. For example, the following targets an `atomic-field-condition` component and sets a condition to make it apply only to results whose title contains singapore: `document.querySelector('atomic-result-template#templateId').conditions = [(result) => /singapore/i.test(result.title)];`
-         */
-        "conditions": ResultTemplateCondition[];
-        /**
           * Verifies whether the specified fields are defined.
          */
         "ifDefined"?: string;
@@ -442,11 +572,17 @@ export namespace Components {
         /**
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
-        "density": ResultDisplayDensity;
+        "density": ItemDisplayDensity;
         /**
           * The expected size of the image displayed in the results.
          */
-        "imageSize": ResultDisplayImageSize;
+        "imageSize": ItemDisplayImageSize;
+        /**
+          * The initial number of child results to request for each folded collection, before expansion.
+          * @defaultValue `2`
+          * @example For an email thread with a total of 20 messages, using the default value of `2` will request the top two child messages, based on the current sort criteria and query, to be returned as children of the parent message. The user can then click to expand the collection and see the remaining messages that match the current query (i.e., not necessarily all remaining 18 messages). Those messages will be sorted based on the current sort criteria (i.e., not necessarily by date). See the `atomic-load-more-children-results` component. For more info on Result Folding, see [Result Folding](https://docs.coveo.com/en/1884).
+         */
+        "numberOfFoldedResults": number;
         /**
           * The name of the field that determines whether a certain result is a top result containing other child results within a collection.
           * @defaultValue `foldingparent`
@@ -455,7 +591,7 @@ export namespace Components {
         /**
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
          */
-        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
+        "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
     }
     /**
      * The `atomic-format-currency` component is used for formatting currencies.
@@ -565,7 +701,7 @@ export namespace Components {
         /**
           * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
          */
-        "displayValuesAs": FacetDisplayValues;
+        "displayValuesAs": 'checkbox' | 'link' | 'box';
         /**
           * Whether to allow excluding values from the facet.
          */
@@ -625,11 +761,11 @@ export namespace Components {
         /**
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
-        "density": ResultDisplayDensity;
+        "density": ItemDisplayDensity;
         /**
           * The expected size of the image displayed in the results.
          */
-        "imageSize": ResultDisplayImageSize;
+        "imageSize": ItemDisplayImageSize;
         /**
           * The name of the field that determines whether a certain result is a top result containing other child results within a collection.
           * @defaultValue `foldingparent`
@@ -638,7 +774,7 @@ export namespace Components {
         /**
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
          */
-        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
+        "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
     }
     interface AtomicInsightFullSearchButton {
         "tooltip": string;
@@ -654,6 +790,11 @@ export namespace Components {
         "tooltip": string;
     }
     interface AtomicInsightInterface {
+        /**
+          * The value to set the [nonce](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) attribute to on inline script and style elements generated by this interface and its child components. If your application is served with a Content Security Policy (CSP) that doesn't include the `script-src: 'unsafe-inline'` or `style-src: 'unsafe-inline'` directives, you should ensure that your application server generates a new nonce on every page load and uses the generated value to set this prop and serve the corresponding CSP response headers (i.e., script-src 'nonce-<YOUR_GENERATED_NONCE>' and style-src 'nonce-<YOUR_GENERATED_NONCE>'). Otherwise you may see console errors such as  - Refused to execute inline script because it violates the following Content Security Policy directive: [...]  - Refused to apply inline style because it violates the following Content Security Policy directive: [...]. When using a nonce, the first import of Atomic should be to import & call the `setNonce` function with the generated nonce value.
+          * @example : ```html <script nonce="<YOUR_GENERATED_NONCE>"> import {setNonce} from '@coveo/atomic'; setNonce('<YOUR_GENERATED_NONCE>'); </script> ```
+         */
+        "CspNonce"?: string;
         /**
           * Whether analytics should be enabled.
          */
@@ -729,7 +870,7 @@ export namespace Components {
         /**
           * Whether to display the facet values as checkboxes (multiple selection) or links (single selection). Possible values are 'checkbox' and 'link'.
          */
-        "displayValuesAs": NumericFacetDisplayValues;
+        "displayValuesAs": 'checkbox' | 'link';
         /**
           * Specifies a unique identifier for the facet.
          */
@@ -803,11 +944,11 @@ export namespace Components {
         /**
           * How large or small results should be.
          */
-        "density": ResultDisplayDensity;
+        "density": ItemDisplayDensity;
         /**
           * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
-        "imageSize": ResultDisplayImageSize;
+        "imageSize": ItemDisplayImageSize;
         /**
           * The InteractiveResult item.
          */
@@ -842,7 +983,7 @@ export namespace Components {
         /**
           * The expected size of the image displayed in the children results.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize"?: ItemDisplayImageSize;
         /**
           * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
          */
@@ -874,16 +1015,16 @@ export namespace Components {
         /**
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
-        "density": ResultDisplayDensity;
+        "density": ItemDisplayDensity;
         /**
           * The expected size of the image displayed in the results.
          */
-        "imageSize": ResultDisplayImageSize;
+        "imageSize": ItemDisplayImageSize;
         /**
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
           * @param resultRenderingFunction
          */
-        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
+        "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
     }
     interface AtomicInsightResultTemplate {
         /**
@@ -999,6 +1140,10 @@ export namespace Components {
          */
         "label": string;
         /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
+         */
+        "sortCriteria": InsightRangeFacetSortCriterion;
+        /**
           * Whether this facet should contain an datepicker allowing users to set custom ranges.
          */
         "withDatePicker": boolean;
@@ -1052,6 +1197,15 @@ export namespace Components {
           * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
          */
         "collapseFacetsAfter": number;
+    }
+    /**
+     * The `atomic-ipx-result-link` component automatically transforms a search result title into a clickable link that points to the original item. It is an experimental internal component not intended for general use.
+     */
+    interface AtomicIpxResultLink {
+        /**
+          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the result's `clickUri` and `itemtitle` fields. ```html <atomic-ipx-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-ipx-result-link> ```
+         */
+        "hrefTemplate"?: string;
     }
     interface AtomicIpxTab {
         /**
@@ -1400,6 +1554,11 @@ export namespace Components {
      */
     interface AtomicRecsInterface {
         /**
+          * The value to set the [nonce](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) attribute to on inline script and style elements generated by this interface and its child components. If your application is served with a Content Security Policy (CSP) that doesn't include the `script-src: 'unsafe-inline'` or `style-src: 'unsafe-inline'` directives, you should ensure that your application server generates a new nonce on every page load and uses the generated value to set this prop and serve the corresponding CSP response headers (i.e., script-src 'nonce-<YOUR_GENERATED_NONCE>' and style-src 'nonce-<YOUR_GENERATED_NONCE>'). Otherwise you may see console errors such as  - Refused to execute inline script because it violates the following Content Security Policy directive: [...]  - Refused to apply inline style because it violates the following Content Security Policy directive: [...].
+          * @example : ```html <script nonce="<YOUR_GENERATED_NONCE>"> import {setNonce} from '@coveo/atomic'; setNonce('<YOUR_GENERATED_NONCE>'); </script> ```
+         */
+        "CspNonce"?: string;
+        /**
           * Whether analytics should be enabled.
          */
         "analytics": boolean;
@@ -1411,7 +1570,7 @@ export namespace Components {
           * A list of non-default fields to include in the query results.  Specify the property as an array using a JSON string representation: ```html <atomic-recs-interface fields-to-include='["fieldA", "fieldB"]'></atomic-recs-interface> ```
          */
         "fieldsToInclude": string[] | string;
-        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
+        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment1) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
         /**
           * Fetches new recommendations.
          */
@@ -1468,16 +1627,16 @@ export namespace Components {
         /**
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
-        "density": ResultDisplayDensity;
+        "density": ItemDisplayDensity;
         /**
           * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself. To modify the number of recommendations per column, modify the --atomic-recs-number-of-columns CSS variable.
          */
-        "display": ResultDisplayBasicLayout;
+        "display": ItemDisplayBasicLayout;
         /**
           * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
          */
-        "gridCellLinkTarget": ResultTarget;
+        "gridCellLinkTarget": ItemTarget;
         /**
           * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
          */
@@ -1485,7 +1644,7 @@ export namespace Components {
         /**
           * The expected size of the image displayed in the results.
          */
-        "imageSize": ResultDisplayImageSize;
+        "imageSize": ItemDisplayImageSize;
         /**
           * The non-localized label for the list of recommendations.
          */
@@ -1514,7 +1673,7 @@ export namespace Components {
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
           * @param resultRenderingFunction
          */
-        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
+        "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
     }
     /**
      * The `atomic-recs-result` component is used internally by the `atomic-recs-list` component.
@@ -1531,15 +1690,15 @@ export namespace Components {
         /**
           * The size of the results.
          */
-        "density": ResultDisplayDensity;
+        "density": ItemDisplayDensity;
         /**
           * The layout to apply to display results.
          */
-        "display": ResultDisplayLayout;
+        "display": ItemDisplayLayout;
         /**
           * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
-        "imageSize": ResultDisplayImageSize;
+        "imageSize": ItemDisplayImageSize;
         /**
           * The InteractiveResult item.
          */
@@ -1548,7 +1707,7 @@ export namespace Components {
         /**
           * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
          */
-        "renderingFunction": ResultRenderingFunction;
+        "renderingFunction": ItemRenderingFunction;
         /**
           * The result item.
          */
@@ -1563,8 +1722,9 @@ export namespace Components {
         "store"?: AtomicRecsStore;
     }
     /**
-     * The `atomic-recs-result-template` component determines the format of the query results, depending on the conditions that are defined for each template. A `template` element must be the child of an `atomic-recs-result-template`, and an `atomic-recs-list` must be the parent of each `atomic-recs-result-template`.
-     * Note: Any `<script>` tags defined inside of a `<template>` element will not be executed when results are being rendered.
+     * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
+     * A `template` element must be the child of an `atomic-recs-result-template`, and an `atomic-recs-list` must be the parent of each `atomic-recs-result-template`.
+     * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
      * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
      * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
@@ -1633,15 +1793,15 @@ export namespace Components {
         /**
           * How large or small results should be.
          */
-        "density": ResultDisplayDensity;
+        "density": ItemDisplayDensity;
         /**
           * How results should be displayed.
          */
-        "display": ResultDisplayLayout;
+        "display": ItemDisplayLayout;
         /**
           * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
-        "imageSize": ResultDisplayImageSize;
+        "imageSize": ItemDisplayImageSize;
         /**
           * The InteractiveResult item.
          */
@@ -1650,7 +1810,7 @@ export namespace Components {
         /**
           * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
          */
-        "renderingFunction": ResultRenderingFunction;
+        "renderingFunction": ItemRenderingFunction;
         /**
           * The result item.
          */
@@ -1715,7 +1875,7 @@ export namespace Components {
         /**
           * The expected size of the image displayed in the children results.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize"?: ItemDisplayImageSize;
         /**
           * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
          */
@@ -1813,25 +1973,25 @@ export namespace Components {
         /**
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
-        "density": ResultDisplayDensity;
+        "density": ItemDisplayDensity;
         /**
           * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
          */
-        "display": ResultDisplayLayout;
+        "display": ItemDisplayLayout;
         /**
           * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
          */
-        "gridCellLinkTarget": ResultTarget;
+        "gridCellLinkTarget": ItemTarget;
         /**
           * The expected size of the image displayed in the results.
          */
-        "imageSize": ResultDisplayImageSize;
+        "imageSize": ItemDisplayImageSize;
         /**
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
           * @param resultRenderingFunction
          */
-        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
+        "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
     }
     /**
      * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
@@ -1888,9 +2048,9 @@ export namespace Components {
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultPlaceholder {
-        "density": ResultDisplayDensity;
-        "display": ResultDisplayLayout;
-        "imageSize"?: ResultDisplayImageSize;
+        "density": ItemDisplayDensity;
+        "display": ItemDisplayLayout;
+        "imageSize": ItemDisplayImageSize;
     }
     /**
      * The `atomic-result-printable-uri` component displays the URI, or path, to access a result.
@@ -2010,19 +2170,20 @@ export namespace Components {
         /**
           * How large or small the visual section of results using this template should be.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize"?: ItemDisplayImageSize;
     }
     /**
      * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultTablePlaceholder {
-        "density": ResultDisplayDensity;
-        "imageSize": ResultDisplayImageSize;
+        "density": ItemDisplayDensity;
+        "imageSize": ItemDisplayImageSize;
         "rows": number;
     }
     /**
-     * The `atomic-result-template` component determines the format of the query results, depending on the conditions that are defined for each template. A `template` element must be the child of an `atomic-result-template`, and either an `atomic-result-list` or `atomic-folded-result-list` must be the parent of each `atomic-result-template`.
-     * Note: Any `<script>` tags defined inside of a `<template>` element will not be executed when results are being rendered.
+     * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
+     * A `template` element must be the child of an `atomic-result-template`, and either an `atomic-result-list` or `atomic-folded-result-list` must be the parent of each `atomic-result-template`.
+     * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
      * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
      * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
@@ -2127,6 +2288,7 @@ export namespace Components {
     /**
      * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
      * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
+     * This component is not supported on mobile.
      */
     interface AtomicSearchBoxInstantResults {
         /**
@@ -2136,11 +2298,11 @@ export namespace Components {
         /**
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
-        "density": ResultDisplayDensity;
+        "density": ItemDisplayDensity;
         /**
           * The expected size of the image displayed in the results.
          */
-        "imageSize": ResultDisplayImageSize;
+        "imageSize": ItemDisplayImageSize;
         /**
           * The maximum number of results to show.
          */
@@ -2149,7 +2311,7 @@ export namespace Components {
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
           * @param resultRenderingFunction
          */
-        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
+        "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
     }
     /**
      * The `atomic-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
@@ -2190,6 +2352,11 @@ export namespace Components {
      */
     interface AtomicSearchInterface {
         /**
+          * The value to set the [nonce](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) attribute to on inline script and style elements generated by this interface and its child components. If your application is served with a Content Security Policy (CSP) that doesn't include the `script-src: 'unsafe-inline'` or `style-src: 'unsafe-inline'` directives, you should ensure that your application server generates a new nonce on every page load and uses the generated value to set this prop and serve the corresponding CSP response headers (i.e., script-src 'nonce-<YOUR_GENERATED_NONCE>' and style-src 'nonce-<YOUR_GENERATED_NONCE>'). Otherwise you may see console errors such as  - Refused to execute inline script because it violates the following Content Security Policy directive: [...]  - Refused to apply inline style because it violates the following Content Security Policy directive: [...].
+          * @example : ```html <script nonce="<YOUR_GENERATED_NONCE>"> import {setNonce} from '@coveo/atomic'; setNonce('<YOUR_GENERATED_NONCE>'); </script> ```
+         */
+        "CspNonce"?: string;
+        /**
           * Whether analytics should be enabled.
          */
         "analytics": boolean;
@@ -2214,7 +2381,7 @@ export namespace Components {
           * @param organizationId
           * @param env
          */
-        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment1) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
+        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment2) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
         /**
           * The search interface i18next instance.
          */
@@ -2242,11 +2409,11 @@ export namespace Components {
         /**
           * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
          */
-        "localizationCompatibilityVersion": i18nCompatibilityVersion1;
+        "localizationCompatibilityVersion": i18nCompatibilityVersion;
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel;
+        "logLevel"?: LogLevel1;
         /**
           * The search interface [query pipeline](https://docs.coveo.com/en/180/).  If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine), the query pipeline should instead be configured in the target engine.
          */
@@ -2531,6 +2698,10 @@ export namespace Components {
          */
         "min"?: string;
         /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
+         */
+        "sortCriteria": RangeFacetSortCriterion;
+        /**
           * Whether this facet should contain an datepicker allowing users to set custom ranges.
          */
         "withDatePicker": boolean;
@@ -2541,6 +2712,14 @@ export namespace Components {
         "setButtonVisibility": (isVisible: boolean) => Promise<void>;
         "togglePopover": () => Promise<void>;
     }
+}
+export interface AtomicCommercePagerCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicCommercePagerElement;
+}
+export interface AtomicCommerceSearchBoxCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicCommerceSearchBoxElement;
 }
 export interface AtomicFacetDateInputCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -2690,6 +2869,58 @@ declare global {
     var HTMLAtomicColorFacetElement: {
         prototype: HTMLAtomicColorFacetElement;
         new (): HTMLAtomicColorFacetElement;
+    };
+    interface HTMLAtomicCommerceInterfaceElement extends Components.AtomicCommerceInterface, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceInterfaceElement: {
+        prototype: HTMLAtomicCommerceInterfaceElement;
+        new (): HTMLAtomicCommerceInterfaceElement;
+    };
+    interface HTMLAtomicCommercePagerElementEventMap {
+        "atomic/scrollToTop": any;
+    }
+    /**
+     * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
+     */
+    interface HTMLAtomicCommercePagerElement extends Components.AtomicCommercePager, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicCommercePagerElementEventMap>(type: K, listener: (this: HTMLAtomicCommercePagerElement, ev: AtomicCommercePagerCustomEvent<HTMLAtomicCommercePagerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicCommercePagerElementEventMap>(type: K, listener: (this: HTMLAtomicCommercePagerElement, ev: AtomicCommercePagerCustomEvent<HTMLAtomicCommercePagerElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLAtomicCommercePagerElement: {
+        prototype: HTMLAtomicCommercePagerElement;
+        new (): HTMLAtomicCommercePagerElement;
+    };
+    interface HTMLAtomicCommerceResultListElement extends Components.AtomicCommerceResultList, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceResultListElement: {
+        prototype: HTMLAtomicCommerceResultListElement;
+        new (): HTMLAtomicCommerceResultListElement;
+    };
+    interface HTMLAtomicCommerceSearchBoxElementEventMap {
+        "redirect": RedirectionPayload;
+    }
+    /**
+     * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
+     */
+    interface HTMLAtomicCommerceSearchBoxElement extends Components.AtomicCommerceSearchBox, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicCommerceSearchBoxElementEventMap>(type: K, listener: (this: HTMLAtomicCommerceSearchBoxElement, ev: AtomicCommerceSearchBoxCustomEvent<HTMLAtomicCommerceSearchBoxElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicCommerceSearchBoxElementEventMap>(type: K, listener: (this: HTMLAtomicCommerceSearchBoxElement, ev: AtomicCommerceSearchBoxCustomEvent<HTMLAtomicCommerceSearchBoxElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLAtomicCommerceSearchBoxElement: {
+        prototype: HTMLAtomicCommerceSearchBoxElement;
+        new (): HTMLAtomicCommerceSearchBoxElement;
     };
     /**
      * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
@@ -3174,6 +3405,15 @@ declare global {
         prototype: HTMLAtomicIpxRefineToggleElement;
         new (): HTMLAtomicIpxRefineToggleElement;
     };
+    /**
+     * The `atomic-ipx-result-link` component automatically transforms a search result title into a clickable link that points to the original item. It is an experimental internal component not intended for general use.
+     */
+    interface HTMLAtomicIpxResultLinkElement extends Components.AtomicIpxResultLink, HTMLStencilElement {
+    }
+    var HTMLAtomicIpxResultLinkElement: {
+        prototype: HTMLAtomicIpxResultLinkElement;
+        new (): HTMLAtomicIpxResultLinkElement;
+    };
     interface HTMLAtomicIpxTabElement extends Components.AtomicIpxTab, HTMLStencilElement {
     }
     var HTMLAtomicIpxTabElement: {
@@ -3406,8 +3646,9 @@ declare global {
         new (): HTMLAtomicRecsResultElement;
     };
     /**
-     * The `atomic-recs-result-template` component determines the format of the query results, depending on the conditions that are defined for each template. A `template` element must be the child of an `atomic-recs-result-template`, and an `atomic-recs-list` must be the parent of each `atomic-recs-result-template`.
-     * Note: Any `<script>` tags defined inside of a `<template>` element will not be executed when results are being rendered.
+     * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
+     * A `template` element must be the child of an `atomic-recs-result-template`, and an `atomic-recs-list` must be the parent of each `atomic-recs-result-template`.
+     * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
      * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
      * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
@@ -3791,8 +4032,9 @@ declare global {
         new (): HTMLAtomicResultTablePlaceholderElement;
     };
     /**
-     * The `atomic-result-template` component determines the format of the query results, depending on the conditions that are defined for each template. A `template` element must be the child of an `atomic-result-template`, and either an `atomic-result-list` or `atomic-folded-result-list` must be the parent of each `atomic-result-template`.
-     * Note: Any `<script>` tags defined inside of a `<template>` element will not be executed when results are being rendered.
+     * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
+     * A `template` element must be the child of an `atomic-result-template`, and either an `atomic-result-list` or `atomic-folded-result-list` must be the parent of each `atomic-result-template`.
+     * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
      * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
      * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
@@ -3863,6 +4105,7 @@ declare global {
     /**
      * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
      * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
+     * This component is not supported on mobile.
      */
     interface HTMLAtomicSearchBoxInstantResultsElement extends Components.AtomicSearchBoxInstantResults, HTMLStencilElement {
     }
@@ -4129,6 +4372,10 @@ declare global {
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
         "atomic-citation": HTMLAtomicCitationElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
+        "atomic-commerce-interface": HTMLAtomicCommerceInterfaceElement;
+        "atomic-commerce-pager": HTMLAtomicCommercePagerElement;
+        "atomic-commerce-result-list": HTMLAtomicCommerceResultListElement;
+        "atomic-commerce-search-box": HTMLAtomicCommerceSearchBoxElement;
         "atomic-component-error": HTMLAtomicComponentErrorElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-external": HTMLAtomicExternalElement;
@@ -4183,6 +4430,7 @@ declare global {
         "atomic-ipx-modal": HTMLAtomicIpxModalElement;
         "atomic-ipx-refine-modal": HTMLAtomicIpxRefineModalElement;
         "atomic-ipx-refine-toggle": HTMLAtomicIpxRefineToggleElement;
+        "atomic-ipx-result-link": HTMLAtomicIpxResultLinkElement;
         "atomic-ipx-tab": HTMLAtomicIpxTabElement;
         "atomic-ipx-tabs": HTMLAtomicIpxTabsElement;
         "atomic-layout-section": HTMLAtomicLayoutSectionElement;
@@ -4296,7 +4544,7 @@ declare namespace LocalJSX {
      */
     interface AtomicAutomaticFacetGenerator {
         /**
-          * The desired count of automatic facets.  Minimum: `1` Maximum: `10`
+          * The desired count of automatic facets.  Minimum: `1` Maximum: `20`
           * @defaultValue `5`
          */
         "desiredCount"?: number;
@@ -4370,7 +4618,7 @@ declare namespace LocalJSX {
          */
         "numberOfValues"?: number;
         /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'alphanumeric' and 'occurrences'.
+          * The sort criterion to apply to the returned facet values. Possible values are 'alphanumeric' and 'occurrences'. For this criterion to apply to the top-layer facet values, disable [facet value ordering](https://docs.coveo.com/en/l1qf4156/#facet-value-ordering) in your Dynamic Navigation Experience configuration.
          */
         "sortCriteria"?: CategoryFacetSortCriterion;
         /**
@@ -4461,6 +4709,127 @@ declare namespace LocalJSX {
           * Whether this facet should contain a search box.
          */
         "withSearch"?: boolean;
+    }
+    interface AtomicCommerceInterface {
+        /**
+          * The value to set the [nonce](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) attribute to on inline script and style elements generated by this interface and its child components. If your application is served with a Content Security Policy (CSP) that doesn't include the `script-src: 'unsafe-inline'` or `style-src: 'unsafe-inline'` directives, you should ensure that your application server generates a new nonce on every page load and uses the generated value to set this prop and serve the corresponding CSP response headers (i.e., script-src 'nonce-<YOUR_GENERATED_NONCE>' and style-src 'nonce-<YOUR_GENERATED_NONCE>'). Otherwise you may see console errors such as  - Refused to execute inline script because it violates the following Content Security Policy directive: [...]  - Refused to apply inline style because it violates the following Content Security Policy directive: [...].
+          * @example : ```html <script nonce="<YOUR_GENERATED_NONCE>"> import {setNonce} from '@coveo/atomic'; setNonce('<YOUR_GENERATED_NONCE>'); </script> ```
+         */
+        "CspNonce"?: string;
+        /**
+          * Whether analytics should be enabled.
+         */
+        "analytics"?: boolean;
+        /**
+          * The commerce interface headless engine.
+         */
+        "engine"?: CommerceEngine;
+        /**
+          * the commerce interface i18next instance.
+         */
+        "i18n"?: i18n;
+        /**
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
+         */
+        "iconAssetsPath"?: string;
+        /**
+          * the commerce interface language.
+         */
+        "language"?: string;
+        /**
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
+         */
+        "languageAssetsPath"?: string;
+        /**
+          * The severity level of the messages to log in the console.
+         */
+        "logLevel"?: LogLevel;
+        /**
+          * Whether the state should be reflected in the URL parameters.
+         */
+        "reflectStateInUrl"?: boolean;
+        /**
+          * The CSS selector for the container where the interface will scroll back to.
+         */
+        "scrollContainer"?: string;
+        /**
+          * The type of the interface. - 'search': Indicates that the interface is used for Search. - 'product-listing': Indicates that the interface is used for Product listing.
+         */
+        "type"?: | 'search'
+    | 'product-listing';
+    }
+    /**
+     * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
+     */
+    interface AtomicCommercePager {
+        /**
+          * The SVG icon to use to display the Next button.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "nextButtonIcon"?: string;
+        /**
+          * Specifies how many page buttons to display in the pager.
+         */
+        "numberOfPages"?: number;
+        "onAtomic/scrollToTop"?: (event: AtomicCommercePagerCustomEvent<any>) => void;
+        /**
+          * The SVG icon to use to display the Previous button.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "previousButtonIcon"?: string;
+    }
+    interface AtomicCommerceResultList {
+        /**
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+         */
+        "density"?: 'normal' | 'compact';
+        /**
+          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
+         */
+        "display"?: 'grid' | 'list';
+        /**
+          * The expected size of the image displayed in the results.
+         */
+        "imageSize"?: number;
+    }
+    /**
+     * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
+     */
+    interface AtomicCommerceSearchBox {
+        /**
+          * Whether to clear all active query filters when the end user submits a new query from the search box. Setting this option to "false" is not recommended & can lead to an increasing number of queries returning no results.
+         */
+        "clearFilters"?: boolean;
+        /**
+          * Whether to prevent the user from triggering searches and query suggestions from the component. Perfect for use cases where you need to disable the search conditionally. For the specific case when you need to disable the search based on the length of the query, refer to {@link minimumQueryLength}.
+         */
+        "disableSearch"?: boolean;
+        /**
+          * Whether to interpret advanced [Coveo Cloud query syntax](https://docs.coveo.com/en/1814/) in the query. You should only enable query syntax in the search box if you have good reasons to do so, as it requires end users to be familiar with Coveo Cloud query syntax, otherwise they will likely be surprised by the search box behaviour.  When the `redirection-url` property is set and redirects to a page with more `atomic-commerce-search-box` components, all `atomic-commerce-search-box` components need to have the same `enable-query-syntax` value.
+         */
+        "enableQuerySyntax"?: boolean;
+        /**
+          * The minimum query length required to enable search. For example, to disable the search for empty queries, set this to `1`.
+         */
+        "minimumQueryLength"?: number;
+        /**
+          * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-commerce-search-box-query-suggestions  - atomic-commerce-search-box-recent-queries
+         */
+        "numberOfQueries"?: number;
+        /**
+          * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.  Example: ```html <script>   document.querySelector('atomic-commerce-search-box').addEventListener((e) => {     e.preventDefault();     // handle redirection   }); </script> ... <atomic-commerce-search-box redirection-url="/search"></atomic-commerce-search-box> ```
+         */
+        "onRedirect"?: (event: AtomicCommerceSearchBoxCustomEvent<RedirectionPayload>) => void;
+        /**
+          * Defining this option makes the search box standalone (see [Use a Standalone Search Box](https://docs.coveo.com/en/atomic/latest/usage/ssb/)).  This option defines the default URL the user should be redirected to, when a query is submitted. If a query pipeline redirect is triggered, it will redirect to that URL instead (see [query pipeline triggers](https://docs.coveo.com/en/1458)).
+         */
+        "redirectionUrl"?: string;
+        /**
+          * The delay for suggestion queries on input, in milliseconds.  The suggestion request will be delayed until the end user stops typing for at least the specified amount of time.  This delay is used to avoid sending too many requests to the Coveo Platform when the user is typing, as well as reducing potential input lag on low end devices. A higher delay will reduce input lag, at the cost of suggestions freshness.
+         */
+        "suggestionDelay"?: number;
+        /**
+          * The timeout for suggestion queries, in milliseconds. If a suggestion query times out, the suggestions from that particular query won't be shown.
+         */
+        "suggestionTimeout"?: number;
     }
     /**
      * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
@@ -4601,10 +4970,6 @@ declare namespace LocalJSX {
      */
     interface AtomicFieldCondition {
         /**
-          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  Use only when the condition you need to define can't be expressed through `if-defined`, `if-not-defined`, `must-match`, etc. markup attributes of the component. For example, the following targets an `atomic-field-condition` component and sets a condition to make it apply only to results whose title contains singapore: `document.querySelector('atomic-result-template#templateId').conditions = [(result) => /singapore/i.test(result.title)];`
-         */
-        "conditions"?: ResultTemplateCondition[];
-        /**
           * Verifies whether the specified fields are defined.
          */
         "ifDefined"?: string;
@@ -4653,11 +5018,17 @@ declare namespace LocalJSX {
         /**
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
-        "density"?: ResultDisplayDensity;
+        "density"?: ItemDisplayDensity;
         /**
           * The expected size of the image displayed in the results.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize"?: ItemDisplayImageSize;
+        /**
+          * The initial number of child results to request for each folded collection, before expansion.
+          * @defaultValue `2`
+          * @example For an email thread with a total of 20 messages, using the default value of `2` will request the top two child messages, based on the current sort criteria and query, to be returned as children of the parent message. The user can then click to expand the collection and see the remaining messages that match the current query (i.e., not necessarily all remaining 18 messages). Those messages will be sorted based on the current sort criteria (i.e., not necessarily by date). See the `atomic-load-more-children-results` component. For more info on Result Folding, see [Result Folding](https://docs.coveo.com/en/1884).
+         */
+        "numberOfFoldedResults"?: number;
         /**
           * The name of the field that determines whether a certain result is a top result containing other child results within a collection.
           * @defaultValue `foldingparent`
@@ -4773,7 +5144,7 @@ declare namespace LocalJSX {
         /**
           * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
          */
-        "displayValuesAs"?: FacetDisplayValues;
+        "displayValuesAs"?: 'checkbox' | 'link' | 'box';
         /**
           * Whether to allow excluding values from the facet.
          */
@@ -4833,11 +5204,11 @@ declare namespace LocalJSX {
         /**
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
-        "density"?: ResultDisplayDensity;
+        "density"?: ItemDisplayDensity;
         /**
           * The expected size of the image displayed in the results.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize"?: ItemDisplayImageSize;
         /**
           * The name of the field that determines whether a certain result is a top result containing other child results within a collection.
           * @defaultValue `foldingparent`
@@ -4858,6 +5229,11 @@ declare namespace LocalJSX {
         "tooltip"?: string;
     }
     interface AtomicInsightInterface {
+        /**
+          * The value to set the [nonce](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) attribute to on inline script and style elements generated by this interface and its child components. If your application is served with a Content Security Policy (CSP) that doesn't include the `script-src: 'unsafe-inline'` or `style-src: 'unsafe-inline'` directives, you should ensure that your application server generates a new nonce on every page load and uses the generated value to set this prop and serve the corresponding CSP response headers (i.e., script-src 'nonce-<YOUR_GENERATED_NONCE>' and style-src 'nonce-<YOUR_GENERATED_NONCE>'). Otherwise you may see console errors such as  - Refused to execute inline script because it violates the following Content Security Policy directive: [...]  - Refused to apply inline style because it violates the following Content Security Policy directive: [...]. When using a nonce, the first import of Atomic should be to import & call the `setNonce` function with the generated nonce value.
+          * @example : ```html <script nonce="<YOUR_GENERATED_NONCE>"> import {setNonce} from '@coveo/atomic'; setNonce('<YOUR_GENERATED_NONCE>'); </script> ```
+         */
+        "CspNonce"?: string;
         /**
           * Whether analytics should be enabled.
          */
@@ -4915,7 +5291,7 @@ declare namespace LocalJSX {
         /**
           * Whether to display the facet values as checkboxes (multiple selection) or links (single selection). Possible values are 'checkbox' and 'link'.
          */
-        "displayValuesAs"?: NumericFacetDisplayValues;
+        "displayValuesAs"?: 'checkbox' | 'link';
         /**
           * Specifies a unique identifier for the facet.
          */
@@ -4990,11 +5366,11 @@ declare namespace LocalJSX {
         /**
           * How large or small results should be.
          */
-        "density"?: ResultDisplayDensity;
+        "density"?: ItemDisplayDensity;
         /**
           * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize"?: ItemDisplayImageSize;
         /**
           * The InteractiveResult item.
          */
@@ -5029,7 +5405,7 @@ declare namespace LocalJSX {
         /**
           * The expected size of the image displayed in the children results.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize"?: ItemDisplayImageSize;
         /**
           * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
          */
@@ -5057,11 +5433,11 @@ declare namespace LocalJSX {
         /**
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
-        "density"?: ResultDisplayDensity;
+        "density"?: ItemDisplayDensity;
         /**
           * The expected size of the image displayed in the results.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize"?: ItemDisplayImageSize;
     }
     interface AtomicInsightResultTemplate {
         /**
@@ -5170,6 +5546,10 @@ declare namespace LocalJSX {
          */
         "label"?: string;
         /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
+         */
+        "sortCriteria"?: InsightRangeFacetSortCriterion;
+        /**
           * Whether this facet should contain an datepicker allowing users to set custom ranges.
          */
         "withDatePicker"?: boolean;
@@ -5226,6 +5606,15 @@ declare namespace LocalJSX {
           * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
          */
         "collapseFacetsAfter"?: number;
+    }
+    /**
+     * The `atomic-ipx-result-link` component automatically transforms a search result title into a clickable link that points to the original item. It is an experimental internal component not intended for general use.
+     */
+    interface AtomicIpxResultLink {
+        /**
+          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the result's `clickUri` and `itemtitle` fields. ```html <atomic-ipx-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-ipx-result-link> ```
+         */
+        "hrefTemplate"?: string;
     }
     interface AtomicIpxTab {
         /**
@@ -5573,6 +5962,11 @@ declare namespace LocalJSX {
      */
     interface AtomicRecsInterface {
         /**
+          * The value to set the [nonce](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) attribute to on inline script and style elements generated by this interface and its child components. If your application is served with a Content Security Policy (CSP) that doesn't include the `script-src: 'unsafe-inline'` or `style-src: 'unsafe-inline'` directives, you should ensure that your application server generates a new nonce on every page load and uses the generated value to set this prop and serve the corresponding CSP response headers (i.e., script-src 'nonce-<YOUR_GENERATED_NONCE>' and style-src 'nonce-<YOUR_GENERATED_NONCE>'). Otherwise you may see console errors such as  - Refused to execute inline script because it violates the following Content Security Policy directive: [...]  - Refused to apply inline style because it violates the following Content Security Policy directive: [...].
+          * @example : ```html <script nonce="<YOUR_GENERATED_NONCE>"> import {setNonce} from '@coveo/atomic'; setNonce('<YOUR_GENERATED_NONCE>'); </script> ```
+         */
+        "CspNonce"?: string;
+        /**
           * Whether analytics should be enabled.
          */
         "analytics"?: boolean;
@@ -5628,16 +6022,16 @@ declare namespace LocalJSX {
         /**
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
-        "density"?: ResultDisplayDensity;
+        "density"?: ItemDisplayDensity;
         /**
           * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself. To modify the number of recommendations per column, modify the --atomic-recs-number-of-columns CSS variable.
          */
-        "display"?: ResultDisplayBasicLayout;
+        "display"?: ItemDisplayBasicLayout;
         /**
           * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
          */
-        "gridCellLinkTarget"?: ResultTarget;
+        "gridCellLinkTarget"?: ItemTarget;
         /**
           * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
          */
@@ -5645,7 +6039,7 @@ declare namespace LocalJSX {
         /**
           * The expected size of the image displayed in the results.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize"?: ItemDisplayImageSize;
         /**
           * The non-localized label for the list of recommendations.
          */
@@ -5678,15 +6072,15 @@ declare namespace LocalJSX {
         /**
           * The size of the results.
          */
-        "density"?: ResultDisplayDensity;
+        "density"?: ItemDisplayDensity;
         /**
           * The layout to apply to display results.
          */
-        "display"?: ResultDisplayLayout;
+        "display"?: ItemDisplayLayout;
         /**
           * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize"?: ItemDisplayImageSize;
         /**
           * The InteractiveResult item.
          */
@@ -5695,7 +6089,7 @@ declare namespace LocalJSX {
         /**
           * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
          */
-        "renderingFunction"?: ResultRenderingFunction;
+        "renderingFunction"?: ItemRenderingFunction;
         /**
           * The result item.
          */
@@ -5710,8 +6104,9 @@ declare namespace LocalJSX {
         "store"?: AtomicRecsStore;
     }
     /**
-     * The `atomic-recs-result-template` component determines the format of the query results, depending on the conditions that are defined for each template. A `template` element must be the child of an `atomic-recs-result-template`, and an `atomic-recs-list` must be the parent of each `atomic-recs-result-template`.
-     * Note: Any `<script>` tags defined inside of a `<template>` element will not be executed when results are being rendered.
+     * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
+     * A `template` element must be the child of an `atomic-recs-result-template`, and an `atomic-recs-list` must be the parent of each `atomic-recs-result-template`.
+     * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
      * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
      * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
@@ -5777,15 +6172,15 @@ declare namespace LocalJSX {
         /**
           * How large or small results should be.
          */
-        "density"?: ResultDisplayDensity;
+        "density"?: ItemDisplayDensity;
         /**
           * How results should be displayed.
          */
-        "display"?: ResultDisplayLayout;
+        "display"?: ItemDisplayLayout;
         /**
           * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize"?: ItemDisplayImageSize;
         /**
           * The InteractiveResult item.
          */
@@ -5794,7 +6189,7 @@ declare namespace LocalJSX {
         /**
           * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
          */
-        "renderingFunction"?: ResultRenderingFunction;
+        "renderingFunction"?: ItemRenderingFunction;
         /**
           * The result item.
          */
@@ -5859,7 +6254,7 @@ declare namespace LocalJSX {
         /**
           * The expected size of the image displayed in the children results.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize"?: ItemDisplayImageSize;
         /**
           * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
          */
@@ -5953,20 +6348,20 @@ declare namespace LocalJSX {
         /**
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
-        "density"?: ResultDisplayDensity;
+        "density"?: ItemDisplayDensity;
         /**
           * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
          */
-        "display"?: ResultDisplayLayout;
+        "display"?: ItemDisplayLayout;
         /**
           * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
          */
-        "gridCellLinkTarget"?: ResultTarget;
+        "gridCellLinkTarget"?: ItemTarget;
         /**
           * The expected size of the image displayed in the results.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize"?: ItemDisplayImageSize;
     }
     /**
      * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
@@ -6023,9 +6418,9 @@ declare namespace LocalJSX {
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultPlaceholder {
-        "density": ResultDisplayDensity;
-        "display": ResultDisplayLayout;
-        "imageSize"?: ResultDisplayImageSize;
+        "density": ItemDisplayDensity;
+        "display": ItemDisplayLayout;
+        "imageSize": ItemDisplayImageSize;
     }
     /**
      * The `atomic-result-printable-uri` component displays the URI, or path, to access a result.
@@ -6145,19 +6540,20 @@ declare namespace LocalJSX {
         /**
           * How large or small the visual section of results using this template should be.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize"?: ItemDisplayImageSize;
     }
     /**
      * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultTablePlaceholder {
-        "density": ResultDisplayDensity;
-        "imageSize": ResultDisplayImageSize;
+        "density": ItemDisplayDensity;
+        "imageSize": ItemDisplayImageSize;
         "rows": number;
     }
     /**
-     * The `atomic-result-template` component determines the format of the query results, depending on the conditions that are defined for each template. A `template` element must be the child of an `atomic-result-template`, and either an `atomic-result-list` or `atomic-folded-result-list` must be the parent of each `atomic-result-template`.
-     * Note: Any `<script>` tags defined inside of a `<template>` element will not be executed when results are being rendered.
+     * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
+     * A `template` element must be the child of an `atomic-result-template`, and either an `atomic-result-list` or `atomic-folded-result-list` must be the parent of each `atomic-result-template`.
+     * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
      * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
      * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
@@ -6263,6 +6659,7 @@ declare namespace LocalJSX {
     /**
      * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
      * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
+     * This component is not supported on mobile.
      */
     interface AtomicSearchBoxInstantResults {
         /**
@@ -6272,11 +6669,11 @@ declare namespace LocalJSX {
         /**
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
-        "density"?: ResultDisplayDensity;
+        "density"?: ItemDisplayDensity;
         /**
           * The expected size of the image displayed in the results.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize"?: ItemDisplayImageSize;
         /**
           * The maximum number of results to show.
          */
@@ -6321,6 +6718,11 @@ declare namespace LocalJSX {
      */
     interface AtomicSearchInterface {
         /**
+          * The value to set the [nonce](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) attribute to on inline script and style elements generated by this interface and its child components. If your application is served with a Content Security Policy (CSP) that doesn't include the `script-src: 'unsafe-inline'` or `style-src: 'unsafe-inline'` directives, you should ensure that your application server generates a new nonce on every page load and uses the generated value to set this prop and serve the corresponding CSP response headers (i.e., script-src 'nonce-<YOUR_GENERATED_NONCE>' and style-src 'nonce-<YOUR_GENERATED_NONCE>'). Otherwise you may see console errors such as  - Refused to execute inline script because it violates the following Content Security Policy directive: [...]  - Refused to apply inline style because it violates the following Content Security Policy directive: [...].
+          * @example : ```html <script nonce="<YOUR_GENERATED_NONCE>"> import {setNonce} from '@coveo/atomic'; setNonce('<YOUR_GENERATED_NONCE>'); </script> ```
+         */
+        "CspNonce"?: string;
+        /**
           * Whether analytics should be enabled.
          */
         "analytics"?: boolean;
@@ -6355,11 +6757,11 @@ declare namespace LocalJSX {
         /**
           * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
          */
-        "localizationCompatibilityVersion"?: i18nCompatibilityVersion1;
+        "localizationCompatibilityVersion"?: i18nCompatibilityVersion;
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel;
+        "logLevel"?: LogLevel1;
         /**
           * The search interface [query pipeline](https://docs.coveo.com/en/180/).  If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine), the query pipeline should instead be configured in the target engine.
          */
@@ -6657,6 +7059,10 @@ declare namespace LocalJSX {
          */
         "min"?: string;
         /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
+         */
+        "sortCriteria"?: RangeFacetSortCriterion;
+        /**
           * Whether this facet should contain an datepicker allowing users to set custom ranges.
          */
         "withDatePicker"?: boolean;
@@ -6673,6 +7079,10 @@ declare namespace LocalJSX {
         "atomic-category-facet": AtomicCategoryFacet;
         "atomic-citation": AtomicCitation;
         "atomic-color-facet": AtomicColorFacet;
+        "atomic-commerce-interface": AtomicCommerceInterface;
+        "atomic-commerce-pager": AtomicCommercePager;
+        "atomic-commerce-result-list": AtomicCommerceResultList;
+        "atomic-commerce-search-box": AtomicCommerceSearchBox;
         "atomic-component-error": AtomicComponentError;
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-external": AtomicExternal;
@@ -6727,6 +7137,7 @@ declare namespace LocalJSX {
         "atomic-ipx-modal": AtomicIpxModal;
         "atomic-ipx-refine-modal": AtomicIpxRefineModal;
         "atomic-ipx-refine-toggle": AtomicIpxRefineToggle;
+        "atomic-ipx-result-link": AtomicIpxResultLink;
         "atomic-ipx-tab": AtomicIpxTab;
         "atomic-ipx-tabs": AtomicIpxTabs;
         "atomic-layout-section": AtomicLayoutSection;
@@ -6850,6 +7261,16 @@ declare module "@stencil/core" {
              * An `atomic-color-facet` displays a facet of the results for the current query as colors.
              */
             "atomic-color-facet": LocalJSX.AtomicColorFacet & JSXBase.HTMLAttributes<HTMLAtomicColorFacetElement>;
+            "atomic-commerce-interface": LocalJSX.AtomicCommerceInterface & JSXBase.HTMLAttributes<HTMLAtomicCommerceInterfaceElement>;
+            /**
+             * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
+             */
+            "atomic-commerce-pager": LocalJSX.AtomicCommercePager & JSXBase.HTMLAttributes<HTMLAtomicCommercePagerElement>;
+            "atomic-commerce-result-list": LocalJSX.AtomicCommerceResultList & JSXBase.HTMLAttributes<HTMLAtomicCommerceResultListElement>;
+            /**
+             * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
+             */
+            "atomic-commerce-search-box": LocalJSX.AtomicCommerceSearchBox & JSXBase.HTMLAttributes<HTMLAtomicCommerceSearchBoxElement>;
             /**
              * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
              */
@@ -6963,6 +7384,10 @@ declare module "@stencil/core" {
             "atomic-ipx-modal": LocalJSX.AtomicIpxModal & JSXBase.HTMLAttributes<HTMLAtomicIpxModalElement>;
             "atomic-ipx-refine-modal": LocalJSX.AtomicIpxRefineModal & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineModalElement>;
             "atomic-ipx-refine-toggle": LocalJSX.AtomicIpxRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineToggleElement>;
+            /**
+             * The `atomic-ipx-result-link` component automatically transforms a search result title into a clickable link that points to the original item. It is an experimental internal component not intended for general use.
+             */
+            "atomic-ipx-result-link": LocalJSX.AtomicIpxResultLink & JSXBase.HTMLAttributes<HTMLAtomicIpxResultLinkElement>;
             "atomic-ipx-tab": LocalJSX.AtomicIpxTab & JSXBase.HTMLAttributes<HTMLAtomicIpxTabElement>;
             "atomic-ipx-tabs": LocalJSX.AtomicIpxTabs & JSXBase.HTMLAttributes<HTMLAtomicIpxTabsElement>;
             /**
@@ -7051,8 +7476,9 @@ declare module "@stencil/core" {
              */
             "atomic-recs-result": LocalJSX.AtomicRecsResult & JSXBase.HTMLAttributes<HTMLAtomicRecsResultElement>;
             /**
-             * The `atomic-recs-result-template` component determines the format of the query results, depending on the conditions that are defined for each template. A `template` element must be the child of an `atomic-recs-result-template`, and an `atomic-recs-list` must be the parent of each `atomic-recs-result-template`.
-             * Note: Any `<script>` tags defined inside of a `<template>` element will not be executed when results are being rendered.
+             * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
+             * A `template` element must be the child of an `atomic-recs-result-template`, and an `atomic-recs-list` must be the parent of each `atomic-recs-result-template`.
+             * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
              * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
              * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
              */
@@ -7270,8 +7696,9 @@ declare module "@stencil/core" {
              */
             "atomic-result-table-placeholder": LocalJSX.AtomicResultTablePlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultTablePlaceholderElement>;
             /**
-             * The `atomic-result-template` component determines the format of the query results, depending on the conditions that are defined for each template. A `template` element must be the child of an `atomic-result-template`, and either an `atomic-result-list` or `atomic-folded-result-list` must be the parent of each `atomic-result-template`.
-             * Note: Any `<script>` tags defined inside of a `<template>` element will not be executed when results are being rendered.
+             * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
+             * A `template` element must be the child of an `atomic-result-template`, and either an `atomic-result-list` or `atomic-folded-result-list` must be the parent of each `atomic-result-template`.
+             * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
              * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
              * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
              */
@@ -7295,6 +7722,7 @@ declare module "@stencil/core" {
             /**
              * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
              * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
+             * This component is not supported on mobile.
              */
             "atomic-search-box-instant-results": LocalJSX.AtomicSearchBoxInstantResults & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxInstantResultsElement>;
             /**

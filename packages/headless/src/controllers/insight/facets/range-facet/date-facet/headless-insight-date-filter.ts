@@ -1,6 +1,10 @@
 import {configuration} from '../../../../../app/common-reducers';
 import {InsightEngine} from '../../../../../app/insight-engine/insight-engine';
 import {
+  facetClearAll,
+  facetSelect,
+} from '../../../../../features/facets/facet-set/facet-set-analytics-actions';
+import {
   logFacetClearAll,
   logFacetSelect,
 } from '../../../../../features/facets/facet-set/facet-set-insight-analytics-actions';
@@ -54,18 +58,24 @@ export function buildDateFilter(
     ...coreController,
     clear: () => {
       coreController.clear();
-      dispatch(executeSearch(logFacetClearAll(getFacetId())));
+      dispatch(
+        executeSearch({
+          legacy: logFacetClearAll(getFacetId()),
+          next: facetClearAll(),
+        })
+      );
     },
     setRange: (range) => {
       const success = coreController.setRange(range);
       if (success) {
         dispatch(
-          executeSearch(
-            logFacetSelect({
+          executeSearch({
+            legacy: logFacetSelect({
               facetId: getFacetId(),
               facetValue: `${range.start}..${range.end}`,
-            })
-          )
+            }),
+            next: facetSelect(),
+          })
         );
       }
       return success;

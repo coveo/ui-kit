@@ -1,24 +1,34 @@
-import {ArrayValue, NumberValue, RecordValue, Schema} from '@coveo/bueno';
+import {
+  ArrayValue,
+  NumberValue,
+  RecordValue,
+  Schema,
+  StringValue,
+} from '@coveo/bueno';
+import {CartInitialState} from '../../../../controllers/commerce/context/cart/headless-cart';
 import {requiredNonEmptyString} from '../../../../utils/validate-payload';
 
-export const cartItemDefinition = {
+export const updateItemPayloadDefinition = {
   productId: requiredNonEmptyString,
+  sku: requiredNonEmptyString,
   quantity: new NumberValue({
     required: true,
-    min: 1,
+    min: 0,
   }),
+  name: new StringValue({required: false}),
+  price: new NumberValue({required: false, min: 0}),
 };
 
-export const itemsDefinition = new ArrayValue({
+export const setItemsPayloadDefinition = new ArrayValue({
   each: new RecordValue({
     values: {
-      ...cartItemDefinition,
+      ...updateItemPayloadDefinition,
     },
   }),
 });
 
 export const cartDefinition = {
-  items: itemsDefinition,
+  items: setItemsPayloadDefinition,
 };
 
-export const cartSchema = new Schema(cartDefinition);
+export const cartSchema = new Schema<CartInitialState>(cartDefinition);

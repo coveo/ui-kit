@@ -1,5 +1,5 @@
 :host {
-  --main-color: var(--selected-state-color, #0176d3);
+  --main-color: var(--selected-state-color,var(--lwc-brandPrimary, #0176d3));
   --neutral-color: rgb(94, 94, 94);
   --color-gray-6: rgb(201, 199, 197);
 }

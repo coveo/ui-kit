@@ -252,6 +252,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
    * Updates the input value.
    */
   handleInputValueChange = (event) => {
+    event.stopPropagation();
     const updatedValue = event.detail.newInputValue;
     const isSelectionReset = event.detail.resetSelection;
     if (this.standaloneSearchBox?.state?.value !== updatedValue) {
@@ -266,7 +267,8 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
    * Submits a search.
    * @returns {void}
    */
-  handleSubmit = () => {
+  handleSubmit = (event) => {
+    event.stopPropagation();
     this.standaloneSearchBox?.submit();
   };
 
@@ -274,7 +276,8 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
    * Shows the suggestions.
    * @returns {void}
    */
-  showSuggestions = () => {
+  showSuggestions = (event) => {
+    event.stopPropagation();
     this.standaloneSearchBox?.showSuggestions();
   };
 
@@ -282,6 +285,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
    * Handles the selection of a suggestion.
    */
   selectSuggestion = (event) => {
+    event.stopPropagation();
     const selectedSuggestion = event.detail.selectedSuggestion;
     this.standaloneSearchBox?.selectSuggestion(selectedSuggestion);
   };

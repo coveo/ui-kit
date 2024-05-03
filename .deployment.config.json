@@ -9,7 +9,7 @@
       "sequential": ["dev", "stg", "prd"]
     },
     "team_jenkins": "searchuibuilds",
-    "start_environment_automatically": true,
+    "start_environment_automatically": false,
     "notifications": {
       "slack_channels": ["#searchuibuilds"]
     }
@@ -198,6 +198,9 @@
         "job_name": "ui-kit-production-release",
         "prd": {
           "disabled": false
+        },
+        "extra_parameters": {
+          "GITHUB_RUN_ID": "$[GITHUB_RUN_ID]"
         }
       }
     }

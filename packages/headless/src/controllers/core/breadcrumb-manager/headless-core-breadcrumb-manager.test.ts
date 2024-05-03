@@ -1,35 +1,34 @@
 import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions';
-import {SearchAppState} from '../../../state/search-app-state';
 import {
-  buildMockSearchAppEngine,
-  createMockState,
-  MockSearchEngine,
-} from '../../../test';
+  buildMockSearchEngine,
+  MockedSearchEngine,
+} from '../../../test/mock-engine-v2';
+import {createMockState} from '../../../test/mock-state';
 import {
   BreadcrumbManager,
   buildCoreBreadcrumbManager,
 } from './headless-core-breadcrumb-manager';
 
+jest.mock('../../../features/breadcrumb/breadcrumb-actions');
+
 describe('headless breadcrumb manager', () => {
-  let engine: MockSearchEngine;
-  let state: SearchAppState;
+  let engine: MockedSearchEngine;
   let breadcrumbManager: BreadcrumbManager;
 
   function initController() {
-    engine = buildMockSearchAppEngine();
-    engine.state = state;
+    engine = buildMockSearchEngine(createMockState());
     breadcrumbManager = buildCoreBreadcrumbManager(engine);
   }
 
   beforeEach(() => {
-    state = createMockState();
+    jest.resetAllMocks();
     initController();
   });
 
   describe('#deselectAll', () => {
     it('dispatches #deselectAllBreadcrumbs', () => {
       breadcrumbManager.deselectAll();
-      expect(engine.actions).toContainEqual(deselectAllBreadcrumbs());
+      expect(deselectAllBreadcrumbs).toHaveBeenCalledTimes(1);
     });
   });
 });

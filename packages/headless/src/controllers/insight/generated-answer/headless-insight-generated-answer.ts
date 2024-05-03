@@ -1,9 +1,13 @@
 import {GeneratedAnswerCitation} from '../../../api/generated-answer/generated-answer-event-payload';
+import {InsightEngine} from '../../../app/insight-engine/insight-engine';
+import {
+  retryGeneratedAnswer,
+  rephraseGeneratedAnswer,
+} from '../../../features/generated-answer/generated-answer-analytics-actions';
 import {generatedAnswerInsightAnalyticsClient} from '../../../features/generated-answer/generated-answer-insight-analytics-actions';
 import {GeneratedAnswerState} from '../../../features/generated-answer/generated-answer-state';
 import {GeneratedResponseFormat} from '../../../features/generated-answer/generated-response-format';
 import {executeSearch} from '../../../features/insight-search/insight-search-actions';
-import {InsightEngine} from '../../../insight.index';
 import {
   GeneratedAnswer,
   GeneratedAnswerProps,
@@ -45,20 +49,24 @@ export function buildGeneratedAnswer(
 
     retry() {
       dispatch(
-        executeSearch(
-          generatedAnswerInsightAnalyticsClient.logRetryGeneratedAnswer()
-        )
+        executeSearch({
+          legacy:
+            generatedAnswerInsightAnalyticsClient.logRetryGeneratedAnswer(),
+          next: retryGeneratedAnswer(),
+        })
       );
     },
 
     rephrase(responseFormat: GeneratedResponseFormat) {
       controller.rephrase(responseFormat);
       dispatch(
-        executeSearch(
-          generatedAnswerInsightAnalyticsClient.logRephraseGeneratedAnswer(
-            responseFormat
-          )
-        )
+        executeSearch({
+          legacy:
+            generatedAnswerInsightAnalyticsClient.logRephraseGeneratedAnswer(
+              responseFormat
+            ),
+          next: rephraseGeneratedAnswer(),
+        })
       );
     },
   };

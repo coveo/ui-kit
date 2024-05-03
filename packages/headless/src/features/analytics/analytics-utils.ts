@@ -5,6 +5,7 @@ import {
   StringValue,
 } from '@coveo/bueno';
 import {type createRelay} from '@coveo/relay';
+import {ItemMetaData} from '@coveo/relay-event-types';
 import {
   AsyncThunk,
   AsyncThunkPayloadCreator,
@@ -26,6 +27,7 @@ import {
   DocumentIdentifier,
 } from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
 import {Logger} from 'pino';
+import {getRelayInstanceFromState} from '../../api/analytics/analytics-relay-client';
 import {
   CaseAssistAnalyticsProvider,
   configureCaseAssistAnalytics,
@@ -49,16 +51,15 @@ import {
 } from '../../api/analytics/product-listing-analytics';
 import {StateNeededByProductRecommendationsAnalyticsProvider} from '../../api/analytics/product-recommendations-analytics';
 import {
-  configureAnalytics,
   configureLegacyAnalytics,
   SearchAnalyticsProvider,
   StateNeededBySearchAnalyticsProvider,
 } from '../../api/analytics/search-analytics';
 import {PreprocessRequest} from '../../api/preprocess-request';
+import {ProductRecommendation} from '../../api/search/search/product-recommendation';
 import {Raw} from '../../api/search/search/raw';
 import {Result} from '../../api/search/search/result';
 import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
-import {ProductRecommendation} from '../../product-listing.index';
 import {RecommendationAppState} from '../../state/recommendation-app-state';
 import {SearchAppState} from '../../state/search-app-state';
 import {
@@ -242,7 +243,7 @@ export type AnalyticsActionOptions<
   LegacyProvider,
   Client,
   PayloadType,
-> = Exclude<
+> = Omit<
   LegacyAnalyticsOptions<LegacyStateNeeded, Client, LegacyProvider>,
   '__legacy__getBuilder'
 > &
@@ -509,7 +510,7 @@ const internalMakeAnalyticsAction = <
           );
         }
       });
-      const emitEvent = configureAnalytics(state);
+      const {emit} = getRelayInstanceFromState(state);
       loggers.push(async (state: LegacyStateNeeded & StateNeeded) => {
         if (
           shouldSendNextEvent(state) &&
@@ -517,7 +518,7 @@ const internalMakeAnalyticsAction = <
           analyticsPayloadBuilder
         ) {
           const payload = analyticsPayloadBuilder(state);
-          await logNextEvent(emitEvent, analyticsType, payload);
+          await logNextEvent(emit, analyticsType, payload);
         }
       });
       return analyticsAction;
@@ -547,20 +548,23 @@ type LogFunction<Client, StateNeeded> = (
   state: StateNeeded
 ) => Promise<void | SearchEventResponse> | void | null;
 
-const fromLogToLegacyBuilder =
-  <Client extends CommonClient, StateNeeded>(
+const fromLogToLegacyBuilderFactory = (actionCause: string) => {
+  const fromLogToLegacyBuilder = <Client extends CommonClient, StateNeeded>(
     log: (
       client: Client,
       state: StateNeeded
     ) => Promise<void | SearchEventResponse> | void | null
-  ): ((client: Client, state: StateNeeded) => Promise<EventBuilder>) =>
-  (client, state) =>
-    Promise.resolve({
-      description: {actionCause: 'caseAssist'},
-      log: async (_metadata: {searchUID: string}) => {
-        log(client, state);
-      },
-    });
+  ): ((client: Client, state: StateNeeded) => Promise<EventBuilder>) => {
+    return (client, state) =>
+      Promise.resolve({
+        description: {actionCause: actionCause},
+        log: async (_metadata: {searchUID: string}) => {
+          log(client, state);
+        },
+      });
+  };
+  return fromLogToLegacyBuilder;
+};
 
 export const makeAnalyticsAction = makeAnalyticsActionFactory<
   StateNeededBySearchAnalyticsProvider,
@@ -577,17 +581,24 @@ export const makeCaseAssistAnalyticsAction = makeAnalyticsActionFactory<
   LogFunction<CaseAssistClient, StateNeededByCaseAssistAnalytics>
 >(
   configureCaseAssistAnalytics,
-  fromLogToLegacyBuilder,
+  fromLogToLegacyBuilderFactory('caseAssist'),
   CaseAssistAnalyticsProvider
 );
 
-export const makeInsightAnalyticsAction = makeAnalyticsActionFactory<
-  StateNeededByInsightAnalyticsProvider,
-  StateNeededByInsightAnalyticsProvider,
-  CoveoInsightClient,
-  InsightAnalyticsProvider,
-  LogFunction<CoveoInsightClient, StateNeededByInsightAnalyticsProvider>
->(configureInsightAnalytics, fromLogToLegacyBuilder, InsightAnalyticsProvider);
+export const makeInsightAnalyticsActionFactory = (actionCause: string) => {
+  const makeInsightAnalyticsAction = makeAnalyticsActionFactory<
+    StateNeededByInsightAnalyticsProvider,
+    StateNeededByInsightAnalyticsProvider,
+    CoveoInsightClient,
+    InsightAnalyticsProvider,
+    LogFunction<CoveoInsightClient, StateNeededByInsightAnalyticsProvider>
+  >(
+    configureInsightAnalytics,
+    fromLogToLegacyBuilderFactory(actionCause),
+    InsightAnalyticsProvider
+  );
+  return makeInsightAnalyticsAction;
+};
 
 export const makeCommerceAnalyticsAction = makeAnalyticsActionFactory<
   StateNeededByCommerceAnalyticsProvider,
@@ -784,3 +795,18 @@ async function logNextEvent<PayloadType>(
   await emitEvent(type, payload);
   return;
 }
+
+export const analyticsEventItemMetadata = (
+  result: Result,
+  state: Partial<SearchAppState>
+): ItemMetaData => {
+  const identifier = documentIdentifier(result);
+  const information = partialDocumentInformation(result, state);
+  return {
+    uniqueFieldName: identifier.contentIDKey,
+    uniqueFieldValue: identifier.contentIDValue,
+    title: information.documentTitle,
+    author: information.documentAuthor,
+    url: information.documentUri,
+  };
+};

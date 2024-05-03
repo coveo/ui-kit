@@ -1,6 +1,7 @@
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 import {executeSearch} from '../../../features/insight-search/insight-search-actions';
 import {SortCriterion} from '../../../features/sort-criteria/criteria';
+import {resultsSort} from '../../../features/sort-criteria/sort-criteria-analytics-actions';
 import {logResultsSort} from '../../../features/sort-criteria/sort-criteria-insight-analytics-actions';
 import {
   buildCoreSort,
@@ -22,7 +23,8 @@ export type {Sort, SortProps, SortState, SortInitialState};
 export function buildSort(engine: InsightEngine, props: SortProps = {}): Sort {
   const {dispatch} = engine;
   const sort = buildCoreSort(engine, props);
-  const search = () => dispatch(executeSearch(logResultsSort()));
+  const search = () =>
+    dispatch(executeSearch({legacy: logResultsSort(), next: resultsSort()}));
 
   return {
     ...sort,

@@ -1,39 +1,46 @@
-import {CommerceFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
-import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
+import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/common';
+import {DateFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
 import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
 } from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {CommerceAppState} from '../../../../../state/commerce-app-state';
-import {MockCommerceEngine, buildMockCommerceEngine} from '../../../../../test';
 import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request';
 import {buildMockCommerceDateFacetResponse} from '../../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceFacetSlice} from '../../../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceDateFacetValue} from '../../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
+import {
+  buildMockCommerceEngine,
+  MockedCommerceEngine,
+} from '../../../../../test/mock-engine-v2';
 import {commonOptions} from '../../../product-listing/facets/headless-product-listing-facet-options';
 import {
-  CommerceDateFacet,
-  CommerceDateFacetOptions,
+  DateFacet,
+  DateFacetOptions,
   buildCommerceDateFacet,
 } from './headless-commerce-date-facet';
 
-describe('CommerceDateFacet', () => {
+jest.mock(
+  '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions'
+);
+
+describe('DateFacet', () => {
   const facetId: string = 'date_facet_id';
   const type: FacetType = 'dateRange';
   const start = '2023-01-01';
   const end = '2024-01-01';
-  let options: CommerceDateFacetOptions;
+  let options: DateFacetOptions;
   let state: CommerceAppState;
-  let engine: MockCommerceEngine;
-  let facet: CommerceDateFacet;
+  let engine: MockedCommerceEngine;
+  let facet: DateFacet;
 
   function initFacet() {
-    engine = buildMockCommerceEngine({state});
+    engine = buildMockCommerceEngine(state);
     facet = buildCommerceDateFacet(engine, options);
   }
 
-  function setFacetRequest(config: Partial<CommerceFacetRequest> = {}) {
+  function setFacetRequest(config: Partial<DateFacetRequest> = {}) {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, type, ...config}),
     });
@@ -66,10 +73,10 @@ describe('CommerceDateFacet', () => {
     it('dispatches #toggleSelectDateFacetValue', () => {
       const facetValue = buildMockCommerceDateFacetValue({start, end});
       facet.toggleSelect(facetValue);
-
-      expect(engine.actions).toContainEqual(
-        toggleSelectDateFacetValue({facetId, selection: facetValue})
-      );
+      expect(toggleSelectDateFacetValue).toHaveBeenCalledWith({
+        facetId,
+        selection: facetValue,
+      });
     });
   });
 
@@ -77,10 +84,14 @@ describe('CommerceDateFacet', () => {
     it('dispatches #toggleExcludeDateFacetValue', () => {
       const facetValue = buildMockCommerceDateFacetValue({start, end});
       facet.toggleExclude(facetValue);
-
-      expect(engine.actions).toContainEqual(
-        toggleExcludeDateFacetValue({facetId, selection: facetValue})
-      );
+      expect(toggleExcludeDateFacetValue).toHaveBeenCalledWith({
+        facetId,
+        selection: facetValue,
+      });
     });
+  });
+
+  it('#type returns "dateRange"', () => {
+    expect(facet.type).toBe('dateRange');
   });
 });

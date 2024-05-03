@@ -3,13 +3,13 @@
   "compilerOptions": {
     "isolatedModules": true,
     "declaration": false,
-    "lib": ["DOM", "ES2019"],
+    "lib": ["DOM", "ES2019", "ES2022"],
     "module": "ESNext",
     "moduleResolution": "node",
     "esModuleInterop": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "types": ["node", "jest"],
+    "types": ["node", "jest"]
   },
-  "exclude": ["./temp/**", "./dist/**", "./docs/**", "./ponyfills/**"],
+  "exclude": ["./temp/**", "./dist/**", "./docs/**", "./ponyfills/**"]
 }

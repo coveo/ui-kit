@@ -1,3 +1,4 @@
+import {CurrencyCodeISO4217} from '@coveo/relay-event-types';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {
   setContext,
@@ -14,11 +15,9 @@ import {
 } from '../../controller/headless-controller';
 
 export interface ContextOptions {
-  trackingId: string;
   language: string;
   country: string;
-  currency: string;
-  clientId: string;
+  currency: CurrencyCodeISO4217;
   user?: User;
   view: View;
 }
@@ -45,19 +44,13 @@ export interface ContextProps {
   /**
    * The initial options that should be applied to this `Context` controller.
    */
-  options: ContextOptions;
+  options?: ContextOptions;
 }
 
 /**
  * The `Context` controller exposes methods for managing the global context in a commerce interface.
  */
 export interface Context extends Controller {
-  /**
-   * Sets the tracking ID.
-   * @param trackingId - The new tracking ID.
-   */
-  setTrackingId(trackingId: string): void;
-
   /**
    * Sets the language.
    * @param language - The new language.
@@ -74,13 +67,7 @@ export interface Context extends Controller {
    * Sets the currency.
    * @param currency - The new currency.
    */
-  setCurrency(currency: string): void;
-
-  /**
-   * Sets the client ID.
-   * @param clientId - The new client ID.
-   */
-  setClientId(clientId: string): void;
+  setCurrency(currency: CurrencyCodeISO4217): void;
 
   /**
    * Sets the user.
@@ -101,16 +88,12 @@ export interface Context extends Controller {
 }
 
 export interface ContextState {
-  trackingId: string;
   language: string;
   country: string;
-  currency: string;
-  clientId: string;
+  currency: CurrencyCodeISO4217;
   user?: User;
   view: View;
 }
-
-export type ContextControllerState = Context['state'];
 
 /**
  * Creates a `Context` controller instance.
@@ -121,7 +104,7 @@ export type ContextControllerState = Context['state'];
  */
 export function buildContext(
   engine: CommerceEngine,
-  props: ContextProps
+  props: ContextProps = {}
 ): Context {
   if (!loadBaseContextReducers(engine)) {
     throw loadReducerError;
@@ -131,17 +114,10 @@ export function buildContext(
   const {dispatch} = engine;
   const getState = () => engine.state;
 
-  const options = {
-    ...props.options,
-  };
-
-  validateOptions(engine, contextSchema, options, 'buildContext');
-
-  dispatch(
-    setContext({
-      ...options,
-    })
-  );
+  if (props.options) {
+    validateOptions(engine, contextSchema, props.options, 'buildContext');
+    dispatch(setContext(props.options));
+  }
 
   return {
     ...controller,
@@ -149,14 +125,6 @@ export function buildContext(
     get state() {
       return getState().commerceContext;
     },
-
-    setTrackingId: (trackingId: string) =>
-      dispatch(
-        setContext({
-          ...getState().commerceContext,
-          trackingId,
-        })
-      ),
 
     setLanguage: (language: string) =>
       dispatch(
@@ -174,19 +142,11 @@ export function buildContext(
         })
       ),
 
-    setCurrency: (currency: string) =>
+    setCurrency: (currency: CurrencyCodeISO4217) =>
       dispatch(
         setContext({
           ...getState().commerceContext,
           currency,
-        })
-      ),
-
-    setClientId: (clientId: string) =>
-      dispatch(
-        setContext({
-          ...getState().commerceContext,
-          clientId,
         })
       ),
 

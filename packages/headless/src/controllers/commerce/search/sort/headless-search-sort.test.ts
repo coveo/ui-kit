@@ -1,18 +1,24 @@
 import {executeSearch} from '../../../../features/commerce/search/search-actions';
 import {commerceSearchReducer as commerceSearch} from '../../../../features/commerce/search/search-slice';
-import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
+import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
+import {
+  MockedCommerceEngine,
+  buildMockCommerceEngine,
+} from '../../../../test/mock-engine-v2';
 import {
   buildRelevanceSortCriterion,
   Sort,
 } from '../../core/sort/headless-core-commerce-sort';
 import {buildSearchSort} from './headless-search-sort';
 
+jest.mock('../../../../features/commerce/search/search-actions');
+
 describe('commerce search sort', () => {
   let sort: Sort;
-  let engine: MockCommerceEngine;
+  let engine: MockedCommerceEngine;
 
   beforeEach(() => {
-    engine = buildMockCommerceEngine();
+    engine = buildMockCommerceEngine(buildMockCommerceState());
     sort = buildSearchSort(engine);
   });
 
@@ -24,7 +30,6 @@ describe('commerce search sort', () => {
 
   it('#sortBy dispatches #executeSearch', () => {
     sort.sortBy(buildRelevanceSortCriterion());
-    const action = engine.findAsyncAction(executeSearch.pending);
-    expect(action).toBeTruthy();
+    expect(executeSearch).toHaveBeenCalled();
   });
 });

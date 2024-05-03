@@ -25,5 +25,5 @@ a {
 }
 
 .empty-list-message {
-  color: var(--lwc-colorTextIconDefault, #747474);
+  color: var(--lwc-colorTextPlaceholder, var(--lwc-colorTextIconDefault, #747474));
 }

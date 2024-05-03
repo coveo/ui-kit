@@ -1,47 +1,44 @@
-import {AnyAction} from '@reduxjs/toolkit';
 import {
   disableFacet,
   enableFacet,
 } from '../../../../features/facet-options/facet-options-actions';
 import {SearchAppState} from '../../../../state/search-app-state';
-import {
-  createMockState,
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../../../test';
 import {buildMockCategoryFacetSlice} from '../../../../test/mock-category-facet-slice';
 import {buildMockCategoryFacetValueRequest} from '../../../../test/mock-category-facet-value-request';
 import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
+import {
+  MockedSearchEngine,
+  buildMockSearchEngine,
+} from '../../../../test/mock-engine-v2';
 import {buildFacetOptionsSlice} from '../../../../test/mock-facet-options-slice';
 import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
 import {buildMockFacetSlice} from '../../../../test/mock-facet-slice';
 import {buildMockFacetValueRequest} from '../../../../test/mock-facet-value-request';
 import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
+import {createMockState} from '../../../../test/mock-state';
 import {FacetValueState} from '../facet/headless-core-facet';
 import {
   buildCoreFacetConditionsManager,
   FacetConditionsManager,
 } from './headless-facet-conditions-manager';
 
+jest.mock('../../../../features/facet-options/facet-options-actions');
+
 describe('facet conditions manager', () => {
   let state: SearchAppState;
-  let engine: MockSearchEngine;
+  let engine: MockedSearchEngine;
   let engineListener: Function;
   let engineUnsubscriber: jest.Mock;
 
   beforeEach(() => {
+    jest.resetAllMocks();
     state = createMockState();
-    engine = buildMockSearchAppEngine({
-      state,
-      subscribe: jest.fn((listener) => {
-        engineListener = listener;
-        return (engineUnsubscriber = jest.fn());
-      }),
-      dispatch: jest.fn((action: AnyAction) =>
-        engine.actions.push(action)
-      ) as unknown as MockSearchEngine['dispatch'],
+    engine = buildMockSearchEngine(state);
+    engine.subscribe = jest.fn((listener) => {
+      engineListener = listener;
+      return (engineUnsubscriber = jest.fn());
     });
   });
 
@@ -251,7 +248,7 @@ describe('facet conditions manager', () => {
           conditionMet: false,
         });
         initConditions();
-        expect(engine.actions).toContainEqual(disableFacet(dependentFacetId));
+        expect(disableFacet).toHaveBeenCalledWith(dependentFacetId);
       });
 
       it('when all facets are enabled and one condition is met, does not dispatch any action', () => {
@@ -263,7 +260,7 @@ describe('facet conditions manager', () => {
           conditionMet: false,
         });
         initConditions();
-        expect(engine.actions).toEqual([]);
+        expect(engine.dispatch).not.toHaveBeenCalled();
       });
 
       it('when only the child facet is disabled and no condition is met, does not dispatch any action', () => {
@@ -279,7 +276,7 @@ describe('facet conditions manager', () => {
           conditionMet: false,
         });
         initConditions();
-        expect(engine.actions).toEqual([]);
+        expect(engine.dispatch).not.toHaveBeenCalled();
       });
 
       it('when only the child facet is disabled and one condition is met, enables the facet', () => {
@@ -291,7 +288,7 @@ describe('facet conditions manager', () => {
           conditionMet: false,
         });
         initConditions();
-        expect(engine.actions).toContainEqual(enableFacet(dependentFacetId));
+        expect(enableFacet).toHaveBeenCalledWith(dependentFacetId);
       });
 
       it('when only facet B is enabled and condition A is met, does not dispatch any action', () => {
@@ -307,7 +304,7 @@ describe('facet conditions manager', () => {
           conditionMet: false,
         });
         initConditions();
-        expect(engine.actions).toEqual([]);
+        expect(engine.dispatch).not.toHaveBeenCalled();
       });
 
       it('when only facet A is enabled and condition A is met, enables the facet', () => {
@@ -319,7 +316,7 @@ describe('facet conditions manager', () => {
           conditionMet: false,
         });
         initConditions();
-        expect(engine.actions).toContainEqual(enableFacet(dependentFacetId));
+        expect(enableFacet).toHaveBeenCalledWith(dependentFacetId);
       });
 
       it('when only facet A is disabled and condition A is met, disables the facet', () => {
@@ -335,7 +332,7 @@ describe('facet conditions manager', () => {
           conditionMet: false,
         });
         initConditions();
-        expect(engine.actions).toContainEqual(disableFacet(dependentFacetId));
+        expect(disableFacet).toHaveBeenCalledWith(dependentFacetId);
       });
 
       it('when only facet B is disabled and condition A is met, does not dispatch any action', () => {
@@ -347,7 +344,7 @@ describe('facet conditions manager', () => {
           conditionMet: false,
         });
         initConditions();
-        expect(engine.actions).toEqual([]);
+        expect(engine.dispatch).not.toHaveBeenCalled();
       });
     });
 
@@ -358,7 +355,7 @@ describe('facet conditions manager', () => {
       });
 
       it('does not dispatch any action', () => {
-        expect(engine.actions).toEqual([]);
+        expect(engine.dispatch).not.toHaveBeenCalled();
       });
 
       describe('when the dependent facet is initialized and enabled', () => {
@@ -372,9 +369,7 @@ describe('facet conditions manager', () => {
           });
 
           it('disables the facet', () => {
-            expect(engine.actions).toContainEqual(
-              disableFacet(dependentFacetId)
-            );
+            expect(disableFacet).toHaveBeenCalledWith(dependentFacetId);
           });
         });
 
@@ -389,9 +384,7 @@ describe('facet conditions manager', () => {
           });
 
           it('disables the facet', () => {
-            expect(engine.actions).toContainEqual(
-              disableFacet(dependentFacetId)
-            );
+            expect(disableFacet).toHaveBeenCalledWith(dependentFacetId);
           });
         });
       });
@@ -412,9 +405,7 @@ describe('facet conditions manager', () => {
           });
 
           it('enables the facet', () => {
-            expect(engine.actions).toContainEqual(
-              enableFacet(dependentFacetId)
-            );
+            expect(enableFacet).toHaveBeenCalledWith(dependentFacetId);
           });
         });
 
@@ -429,7 +420,7 @@ describe('facet conditions manager', () => {
           });
 
           it('does not dispatch any action', () => {
-            expect(engine.actions).toEqual([]);
+            expect(engine.dispatch).not.toHaveBeenCalled();
           });
 
           describe('then facet values are updated and the condition becomes met', () => {
@@ -439,9 +430,7 @@ describe('facet conditions manager', () => {
             });
 
             it('enables the facet', () => {
-              expect(engine.actions).toContainEqual(
-                enableFacet(dependentFacetId)
-              );
+              expect(enableFacet).toHaveBeenCalledWith(dependentFacetId);
             });
           });
         });

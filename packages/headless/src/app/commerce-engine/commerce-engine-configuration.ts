@@ -1,5 +1,7 @@
-import {Schema} from '@coveo/bueno';
-import {getOrganizationEndpoints} from '../..';
+import {RecordValue, Schema} from '@coveo/bueno';
+import {getOrganizationEndpoints} from '../../api/platform-client';
+import {ContextOptions} from '../../controllers/commerce/context/headless-context';
+import {contextDefinition} from '../../features/commerce/context/context-validation';
 import {
   EngineConfiguration,
   engineConfigurationDefinitions,
@@ -10,11 +12,17 @@ import {
  *
  * @internal WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
  */
-export interface CommerceEngineConfiguration extends EngineConfiguration {}
+export interface CommerceEngineConfiguration extends EngineConfiguration {
+  context: ContextOptions;
+}
 
 export const commerceEngineConfigurationSchema =
   new Schema<CommerceEngineConfiguration>({
     ...engineConfigurationDefinitions,
+    context: new RecordValue({
+      options: {required: true},
+      values: contextDefinition,
+    }),
   });
 
 export function getSampleCommerceEngineConfiguration(): CommerceEngineConfiguration {
@@ -25,5 +33,13 @@ export function getSampleCommerceEngineConfiguration(): CommerceEngineConfigurat
     organizationEndpoints: getOrganizationEndpoints(
       'fashioncoveodemocomgzh7iep8'
     ),
+    context: {
+      language: 'en',
+      country: 'CA',
+      currency: 'CAD',
+      view: {
+        url: 'https://www.example.com',
+      },
+    },
   };
 }

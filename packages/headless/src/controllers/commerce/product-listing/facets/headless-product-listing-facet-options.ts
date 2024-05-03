@@ -6,7 +6,7 @@ import {
 } from '../../../../state/state-sections';
 import {CoreCommerceFacetOptions} from '../../core/facets/headless-core-commerce-facet';
 
-const facetResponseSelector = (
+export const facetResponseSelector = (
   state: ProductListingV2Section & CommerceFacetSetSection,
   facetId: string
 ) => {
@@ -20,8 +20,9 @@ const facetResponseSelector = (
   return undefined;
 };
 
-const isFacetLoadingResponseSelector = (state: ProductListingV2Section) =>
-  state.productListing.isLoading;
+export const isFacetLoadingResponseSelector = (
+  state: ProductListingV2Section
+) => state.productListing.isLoading;
 
 export const commonOptions: Pick<
   CoreCommerceFacetOptions,

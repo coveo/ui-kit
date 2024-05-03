@@ -1,9 +1,11 @@
-import {buildMockRaw, buildMockResult} from '../../test';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {
-  MockInsightEngine,
+  MockedInsightEngine,
   buildMockInsightEngine,
-} from '../../test/mock-engine';
+} from '../../test/mock-engine-v2';
 import {buildMockInsightState} from '../../test/mock-insight-state';
+import {buildMockRaw} from '../../test/mock-raw';
+import {buildMockResult} from '../../test/mock-result';
 import {buildMockSearchState} from '../../test/mock-search-state';
 import {
   logShowMoreFoldedResults,
@@ -81,11 +83,11 @@ const expectedDocumentIdentifier = {
 };
 
 describe('the analytics related to the folding feature in the insight use case', () => {
-  let engine: MockInsightEngine;
+  let engine: MockedInsightEngine;
 
   beforeEach(() => {
-    engine = buildMockInsightEngine({
-      state: buildMockInsightState({
+    engine = buildMockInsightEngine(
+      buildMockInsightState({
         insightCaseContext: {
           caseContext: {
             Case_Subject: exampleSubject,
@@ -100,8 +102,8 @@ describe('the analytics related to the folding feature in the insight use case',
         search: buildMockSearchState({
           results: [exampleResult],
         }),
-      }),
-    });
+      })
+    );
   });
 
   afterEach(() => {
@@ -109,10 +111,14 @@ describe('the analytics related to the folding feature in the insight use case',
   });
 
   it('should log #logShowMoreFoldedResults with the result payload', async () => {
-    await engine.dispatch(logShowMoreFoldedResults(exampleResult));
+    await logShowMoreFoldedResults(exampleResult)()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const mockToUse = mockLogShowMoreFoldedResults;
-    expect(mockToUse).toBeCalledTimes(1);
+    expect(mockToUse).toHaveBeenCalledTimes(1);
     expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedDocumentInfo);
     expect(mockToUse.mock.calls[0][1]).toStrictEqual(
       expectedDocumentIdentifier
@@ -121,10 +127,14 @@ describe('the analytics related to the folding feature in the insight use case',
   });
 
   it('should log #logShowLessFoldedResults', async () => {
-    await engine.dispatch(logShowLessFoldedResults());
+    await logShowLessFoldedResults()()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
     const mockToUse = mockLogShowLessFoldedResults;
-    expect(mockToUse).toBeCalledTimes(1);
+    expect(mockToUse).toHaveBeenCalledTimes(1);
     expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedCaseContext);
   });
 });

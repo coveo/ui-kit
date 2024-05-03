@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {isNullOrUndefined, isUndefined} from '@coveo/bueno';
+import {type Relay} from '@coveo/relay';
 import {
-  AnyAction,
   Dispatch,
   ThunkDispatch,
   Unsubscribe,
@@ -8,8 +9,10 @@ import {
   StateFromReducersMapObject,
   Middleware,
   Reducer,
+  UnknownAction,
 } from '@reduxjs/toolkit';
 import {Logger} from 'pino';
+import {getRelayInstanceFromState} from '../api/analytics/analytics-relay-client';
 import {
   disableAnalytics,
   enableAnalytics,
@@ -19,6 +22,7 @@ import {
 } from '../features/configuration/configuration-actions';
 import {versionReducer as version} from '../features/debug/version-slice';
 import {SearchParametersState} from '../state/search-app-state';
+import {isBrowser} from '../utils/runtime';
 import {matchCoveoOrganizationEndpointUrlAnyOrganization} from '../utils/url-utils';
 import {doNotTrack} from '../utils/utils';
 import {analyticsMiddleware} from './analytics-middleware';
@@ -27,9 +31,15 @@ import {EngineConfiguration} from './engine-configuration';
 import {instantlyCallableThunkActionMiddleware} from './instantly-callable-middleware';
 import {LoggerOptions} from './logger';
 import {logActionErrorMiddleware} from './logger-middlewares';
+import {
+  NavigatorContext,
+  NavigatorContextProvider,
+  defaultBrowserNavigatorContextProvider,
+  defaultNodeJSNavigatorContextProvider,
+} from './navigatorContextProvider';
 import {createReducerManager, ReducerManager} from './reducer-manager';
 import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware';
-import {Store, configureStore} from './store';
+import {CoreExtraArguments, Store, configureStore} from './store';
 import {ThunkExtraArguments} from './thunk-extra-arguments';
 
 const coreReducers = {configuration, version};
@@ -39,7 +49,8 @@ type CoreState = StateFromReducersMapObject<typeof coreReducers> &
 type EngineDispatch<
   State,
   ExtraArguments extends ThunkExtraArguments,
-> = ThunkDispatch<State, ExtraArguments, AnyAction> & Dispatch<AnyAction>;
+> = ThunkDispatch<State, ExtraArguments, UnknownAction> &
+  Dispatch<UnknownAction>;
 
 export interface CoreEngine<
   State extends object = {},
@@ -68,6 +79,10 @@ export interface CoreEngine<
    */
   state: State & CoreState;
   /**
+   * The Relay instance used by Headless.
+   */
+  relay: Relay;
+  /**
    * The redux store.
    */
   store: Store;
@@ -89,6 +104,10 @@ export interface CoreEngine<
    * Disable analytics tracking
    */
   disableAnalytics(): void;
+  /**
+   * The navigator context (referer, location, UserAgent)
+   */
+  navigatorContext: NavigatorContext;
 }
 
 export interface EngineOptions<Reducers extends ReducersMapObject>
@@ -140,20 +159,24 @@ export interface ExternalEngineOptions<State extends object> {
    * The logger options.
    */
   loggerOptions?: LoggerOptions;
+  /**
+   * An optional function returning navigation context. (referer, location, UserAgent)
+   */
+  navigatorContextProvider?: NavigatorContextProvider;
 }
 
 function getUpdateAnalyticsConfigurationPayload(
-  options: EngineOptions<ReducersMapObject>,
+  configuration: EngineConfiguration,
   logger: Logger
 ): UpdateAnalyticsConfigurationActionCreatorPayload | null {
   const apiBaseUrl =
-    options.configuration.organizationEndpoints?.analytics || undefined;
+    configuration.organizationEndpoints?.analytics || undefined;
   const {analyticsClientMiddleware: _, ...payload} =
-    options.configuration.analytics ?? {};
+    configuration.analytics ?? {};
 
   const payloadWithURL = {
     ...payload,
-    nextApiBaseUrl: `${apiBaseUrl}/rest/organizations/${options.configuration.organizationId}/events/v1`,
+    nextApiBaseUrl: `${apiBaseUrl}/rest/organizations/${configuration.organizationId}/events/v1`,
     apiBaseUrl,
   };
 
@@ -174,27 +197,30 @@ export function buildEngine<
 >(
   options: EngineOptions<Reducers>,
   thunkExtraArguments: ExtraArguments
-): CoreEngine<StateFromReducersMapObject<Reducers>, ExtraArguments> {
+): CoreEngine<
+  StateFromReducersMapObject<Reducers>,
+  CoreExtraArguments & ExtraArguments
+> {
   const engine = buildCoreEngine(options, thunkExtraArguments);
   const {accessToken, organizationId} = options.configuration;
   const {organizationEndpoints} = options.configuration;
   const platformUrl =
     organizationEndpoints?.platform || options.configuration.platformUrl;
 
-  if (shouldWarnAboutPlatformURL(options)) {
+  if (shouldWarnAboutPlatformURL(options.configuration)) {
     engine.logger.warn(
       `The \`platformUrl\` (${options.configuration.platformUrl}) option will be deprecated in the next major version. Consider using the \`organizationEndpoints\` option instead. See [Organization endpoints](https://docs.coveo.com/en/mcc80216).`
     );
   }
 
-  if (shouldWarnAboutOrganizationEndpoints(options)) {
+  if (shouldWarnAboutOrganizationEndpoints(options.configuration)) {
     // @v3 make organizationEndpoints the default.
     engine.logger.warn(
       'The `organizationEndpoints` options was not explicitly set in the Headless engine configuration. Coveo recommends setting this option, as it has resiliency benefits and simplifies the overall configuration for multi-region deployments. See [Organization endpoints](https://docs.coveo.com/en/mcc80216).'
     );
   } else if (
     shouldWarnAboutMismatchBetweenOrganizationIDAndOrganizationEndpoints(
-      options
+      options.configuration
     )
   ) {
     engine.logger.warn(
@@ -211,7 +237,7 @@ export function buildEngine<
   );
 
   const analyticsPayload = getUpdateAnalyticsConfigurationPayload(
-    options,
+    options.configuration,
     engine.logger
   );
   if (analyticsPayload) {
@@ -237,9 +263,26 @@ function buildCoreEngine<
     reducerManager.addCrossReducer(options.crossReducer);
   }
   const logger = thunkExtraArguments.logger;
-  const store = createStore(options, thunkExtraArguments, reducerManager);
+  const navigatorContextProvider =
+    options.navigatorContextProvider ?? isBrowser()
+      ? defaultBrowserNavigatorContextProvider
+      : defaultNodeJSNavigatorContextProvider;
+  const thunkExtraArgumentsWithRelay: CoreExtraArguments & ExtraArguments = {
+    ...thunkExtraArguments,
+    get relay() {
+      return getRelayInstanceFromState(engine.state);
+    },
+    get navigatorContext() {
+      return navigatorContextProvider();
+    },
+  };
+  const store = createStore(
+    options,
+    thunkExtraArgumentsWithRelay,
+    reducerManager
+  );
 
-  return {
+  const engine = {
     addReducers(reducers: ReducersMapObject) {
       if (reducerManager.containsAll(reducers)) {
         return;
@@ -265,15 +308,24 @@ function buildCoreEngine<
       return store.getState();
     },
 
+    get relay() {
+      return getRelayInstanceFromState(this.state);
+    },
+
+    get navigatorContext() {
+      return navigatorContextProvider();
+    },
+
     logger,
 
     store,
   };
+  return engine;
 }
 
 function createStore<
   Reducers extends ReducersMapObject,
-  ExtraArguments extends ThunkExtraArguments,
+  ExtraArguments extends CoreExtraArguments,
 >(
   options: EngineOptions<Reducers>,
   thunkExtraArguments: ExtraArguments,
@@ -311,27 +363,27 @@ function createMiddleware<Reducers extends ReducersMapObject>(
 }
 
 function shouldWarnAboutOrganizationEndpoints(
-  options: EngineOptions<ReducersMapObject>
+  configuration: EngineConfiguration
 ) {
-  return isUndefined(options.configuration.organizationEndpoints);
+  return isUndefined(configuration.organizationEndpoints);
 }
 
-function shouldWarnAboutPlatformURL(options: EngineOptions<ReducersMapObject>) {
+function shouldWarnAboutPlatformURL(configuration: EngineConfiguration) {
   return (
-    !isNullOrUndefined(options.configuration.platformUrl) ||
-    isNullOrUndefined(options.configuration.organizationEndpoints?.platform)
+    !isNullOrUndefined(configuration.platformUrl) ||
+    isNullOrUndefined(configuration.organizationEndpoints?.platform)
   );
 }
 
 function shouldWarnAboutMismatchBetweenOrganizationIDAndOrganizationEndpoints(
-  options: EngineOptions<ReducersMapObject>
+  configuration: EngineConfiguration
 ) {
-  const {platform} = options.configuration.organizationEndpoints!;
+  const {platform} = configuration.organizationEndpoints!;
 
   if (isUndefined(platform)) {
     return false;
   }
 
   const match = matchCoveoOrganizationEndpointUrlAnyOrganization(platform);
-  return match && match.organizationId !== options.configuration.organizationId;
+  return match && match.organizationId !== configuration.organizationId;
 }

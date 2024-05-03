@@ -1,3 +1,120 @@
+## 2.50.1 (2024-05-02)
+
+### Bug Fixes
+
+- **headless:** generated-answer-state expanded should be false ([#3848](https://github.com/coveo/ui-kit/issues/3848)) ([8c22beb](https://github.com/coveo/ui-kit/commits/8c22beba0c6a4fabad5bddd0d47af16d52c58242))
+- **quantic:** answer generation glitch ([#3843](https://github.com/coveo/ui-kit/issues/3843)) ([f6bebd6](https://github.com/coveo/ui-kit/commits/f6bebd6c134e5f3c688684d8108efda2fbd3c817))
+- **quantic:** fixed issue with glitchy state caused by the standalone search box ([#3864](https://github.com/coveo/ui-kit/issues/3864)) ([8694f94](https://github.com/coveo/ui-kit/commits/8694f94206ad9d661b67a9bdc07a8728c1c3e959))
+- **quantic:** fixed issue with reseting feedback state after new queries ([#3836](https://github.com/coveo/ui-kit/issues/3836)) ([707e6c9](https://github.com/coveo/ui-kit/commits/707e6c9baaa229d4f1479b54f723e23798523d4e))
+- **quantic:** skipping temporarily failing smart snippets cypress tests ([#3870](https://github.com/coveo/ui-kit/issues/3870)) ([d94f9e0](https://github.com/coveo/ui-kit/commits/d94f9e0981e0d694c3bb3fe85693021913e04d5d))
+
+# 2.50.0 (2024-04-24)
+
+### Features
+
+- **headless:** adapting the analytics sent for the qna features to send the response id ([#3812](https://github.com/coveo/ui-kit/issues/3812)) ([3727e7a](https://github.com/coveo/ui-kit/commits/3727e7aff19b9838cdbe74356eae12cd4e77178c))
+
+## 2.49.1 (2024-04-17)
+
+### Bug Fixes
+
+- **headless:** qna answer type for rga updated to be valid with new analytics schema ([#3780](https://github.com/coveo/ui-kit/issues/3780)) ([9b5eb13](https://github.com/coveo/ui-kit/commits/9b5eb13e38a923b3e9b8c37fb7c2d8060406cd4e))
+
+# 2.49.0 (2024-04-10)
+
+### Features
+
+- **quantic:** Update the styling of the rephrase buttons ([#3750](https://github.com/coveo/ui-kit/issues/3750)) ([d5d114e](https://github.com/coveo/ui-kit/commits/d5d114ec7fcef7909e8212e88ccbccb66092ec1a))
+
+# 2.48.0 (2024-04-03)
+
+### Features
+
+- **headless:** case assist analytics migrated to the event protocol ([#3742](https://github.com/coveo/ui-kit/issues/3742)) ([dd22a28](https://github.com/coveo/ui-kit/commits/dd22a282844e1de2a7787c29c92ad8c80663f8a7))
+
+## 2.47.1 (2024-03-27)
+
+### Bug Fixes
+
+- **quantic:** avoid pushing to recent results when use case is not search ([#3731](https://github.com/coveo/ui-kit/issues/3731)) ([5166de0](https://github.com/coveo/ui-kit/commits/5166de06911ce737f191cce1c34ff6e38d2cef57))
+
+# 2.47.0 (2024-03-25)
+
+### Features
+
+- **quantic:** disclaimer message for rga ([#3739](https://github.com/coveo/ui-kit/issues/3739)) ([a085429](https://github.com/coveo/ui-kit/commits/a0854298b7e78dec6e4a301f3912e3d00c5a8e05))
+
+## 2.46.11 (2024-03-20)
+
+### Bug Fixes
+
+- **quantic:** SmartSnippet to open in a new tab ([#3721](https://github.com/coveo/ui-kit/issues/3721)) ([1d4958a](https://github.com/coveo/ui-kit/commits/1d4958a8850175f6e849137789d8c32ef38f4438))
+
+## 2.46.10 (2024-03-14)
+
+## 2.46.4 (2024-03-11)
+
+### Features
+
+- **quantic|atomic:** update genQA answer section title ([#3674](https://github.com/coveo/ui-kit/issues/3674)) ([1aaeb08](https://github.com/coveo/ui-kit/commits/1aaeb08802fd71ad9bdc98c213c830f676088adb))
+
+## 2.46.1 (2024-03-08)
+
+# 2.46.0 (2024-03-06)
+
+### Features
+
+- **quantic:** logic to open links in salesforce refactored ([#3636](https://github.com/coveo/ui-kit/issues/3636)) ([d968b19](https://github.com/coveo/ui-kit/commits/d968b19dfb3d1869e43e08ebcff3d24b7df1d146))
+
+## 2.45.1 (2024-02-28)
+
+# 2.45.0 (2024-02-21)
+
+### Bug Fixes
+
+- **quantic:** adding support to opening case comments in Salesforce sub tabs ([#3626](https://github.com/coveo/ui-kit/issues/3626)) ([ec0c2dc](https://github.com/coveo/ui-kit/commits/ec0c2dc261017fecb1bfd7c219bf122448ab061f))
+- **Quantic:** Should not return placeholder instead of field value ([#3615](https://github.com/coveo/ui-kit/issues/3615)) ([ec47b16](https://github.com/coveo/ui-kit/commits/ec47b16dc7b2c74fbc2cc38be99f5d1e3f302384))
+
+### Features
+
+- **quantic:** recommendations controller APEX class created ([#3611](https://github.com/coveo/ui-kit/issues/3611)) ([cd03248](https://github.com/coveo/ui-kit/commits/cd03248ba6dec9869be5d9cf440833dcde49a202))
+- **quantic:** styling rules updated to support salesforce community builder customization ([#3603](https://github.com/coveo/ui-kit/issues/3603)) ([25002cd](https://github.com/coveo/ui-kit/commits/25002cda865b3492a6a531a43997bc1426540e8a))
+
+## 2.44.3 (2024-02-15)
+
+### Bug Fixes
+
+- **quantic:** fixed issue with timeframe facet not communicating properly with the refine toggle ([#3588](https://github.com/coveo/ui-kit/issues/3588)) ([4856465](https://github.com/coveo/ui-kit/commits/4856465e87371d871696890c96827570b163fdbb))
+
+## 2.44.2 (2024-02-14)
+
+## 2.44.1 (2024-02-09)
+
+### Bug Fixes
+
+- **deps:** update all dependencies j:kit-282 ([#3576](https://github.com/coveo/ui-kit/issues/3576)) ([4887772](https://github.com/coveo/ui-kit/commits/48877723d6f8c5e5446a48296326519f009ae850))
+- **quantic:** minor styling issue fixed with rephrase buttons of the generated answer component ([#3587](https://github.com/coveo/ui-kit/issues/3587)) ([0ea8fbd](https://github.com/coveo/ui-kit/commits/0ea8fbd16741cec54aca2c2f0a45cbe1bd9021f2))
+
+# 2.44.0 (2024-02-08)
+
+### Bug Fixes
+
+- **quantic:** Fix an issue with the results not re-rendering between queries ([#3562](https://github.com/coveo/ui-kit/issues/3562)) ([4a70334](https://github.com/coveo/ui-kit/commits/4a70334c03b7e58dc33a36d128ca64c47736befa))
+- **quantic:** improved the Quantic Printable URI to support opening links inside salesforce ([#3579](https://github.com/coveo/ui-kit/issues/3579)) ([37e6b96](https://github.com/coveo/ui-kit/commits/37e6b962ba709dc3e7be216ea9370679683d4f95))
+- **quantic:** Pressing ENTER key while targeting the clear icon submits search request in standalone searchbox ([#3537](https://github.com/coveo/ui-kit/issues/3537)) ([a8fd585](https://github.com/coveo/ui-kit/commits/a8fd5855cc745711fe5e4d0d4611e08948a4f7be))
+
+### Features
+
+- **quantic:** added support to entering line breaks in expandable search box ([#3569](https://github.com/coveo/ui-kit/issues/3569)) ([60ccf6e](https://github.com/coveo/ui-kit/commits/60ccf6e12fe0540bc8c3fd1a00ecdb9e1e7b4f49))
+
+## 2.43.4 (2024-01-31)
+
+### Bug Fixes
+
+- **deps:** update all dependencies j:kit-282 ([#3535](https://github.com/coveo/ui-kit/issues/3535)) ([8cbc113](https://github.com/coveo/ui-kit/commits/8cbc113c323134c73ec9643260ee4580289e891b))
+- **quantic:** fixed couple issues with generated answer and the expandable search box components ([#3549](https://github.com/coveo/ui-kit/issues/3549)) ([445bb5c](https://github.com/coveo/ui-kit/commits/445bb5c0409e9bac009c68ee052d950c3bfa12ab))
+- **quantic:** fixed issue with the Quantic Search Box Input ([#3548](https://github.com/coveo/ui-kit/issues/3548)) ([327a31f](https://github.com/coveo/ui-kit/commits/327a31f9bccfe6e9bcd4702138a49a1cb05c9110))
+
 ## 2.43.3 (2024-01-24)
 
 ### Bug Fixes

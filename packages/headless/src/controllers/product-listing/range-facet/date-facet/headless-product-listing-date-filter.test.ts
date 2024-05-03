@@ -1,11 +1,11 @@
 import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions';
 import {ProductListingAppState} from '../../../../state/product-listing-app-state';
-import {
-  buildMockProductListingEngine,
-  MockProductListingEngine,
-} from '../../../../test';
 import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
+import {
+  buildMockProductListingEngine,
+  MockedProductListingEngine,
+} from '../../../../test/mock-engine-v2';
 import {buildMockProductListingState} from '../../../../test/mock-product-listing-state';
 import {
   buildDateFilter,
@@ -14,12 +14,14 @@ import {
   DateFilterOptions,
 } from './headless-product-listing-date-filter';
 
+jest.mock('../../../../features/product-listing/product-listing-actions');
+
 describe('date filter', () => {
   const facetId = '1';
   let options: DateFilterOptions;
   let initialState: DateFilterInitialState | undefined;
   let state: ProductListingAppState;
-  let engine: MockProductListingEngine;
+  let engine: MockedProductListingEngine;
   let dateFacet: DateFilter;
   beforeEach(() => {
     initialState = undefined;
@@ -32,7 +34,7 @@ describe('date filter', () => {
     state = buildMockProductListingState();
     state.dateFacetSet[facetId] = buildMockDateFacetSlice();
 
-    engine = buildMockProductListingEngine({state});
+    engine = buildMockProductListingEngine(state);
     dateFacet = buildDateFilter(engine, {options, initialState});
   });
 
@@ -41,22 +43,14 @@ describe('date filter', () => {
       const value = buildMockDateFacetValue();
       dateFacet.setRange(value);
 
-      expect(engine.actions).toContainEqual(
-        expect.objectContaining({
-          type: fetchProductListing.pending.type,
-        })
-      );
+      expect(fetchProductListing).toHaveBeenCalled();
     });
   });
 
   describe('#clear', () => {
     it('dispatches #fetchProductListing', () => {
       dateFacet.clear();
-      expect(engine.actions).toContainEqual(
-        expect.objectContaining({
-          type: fetchProductListing.pending.type,
-        })
-      );
+      expect(fetchProductListing).toHaveBeenCalled();
     });
   });
 });

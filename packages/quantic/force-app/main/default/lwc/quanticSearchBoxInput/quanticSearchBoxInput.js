@@ -93,6 +93,9 @@ export default class QuanticSearchBoxInput extends LightningElement {
     this.suggestionListElement?.resetSelection();
   }
 
+  /** @type {boolean} */
+  ignoreNextEnterKeyPress = false;
+
   connectedCallback() {
     this.addEventListener(
       'suggestionlistrender',
@@ -179,24 +182,22 @@ export default class QuanticSearchBoxInput extends LightningElement {
     this.dispatchEvent(selectSuggestionEvent);
   }
 
-  handleEnter() {
-    const selectedSuggestion =
-      this.suggestionListElement?.getCurrentSelectedValue();
-    if (this.areSuggestionsOpen && selectedSuggestion) {
-      this.sendSelectSuggestionEvent(selectedSuggestion.rawValue);
-    } else {
-      this.sendSubmitSearchEvent();
+  handleEnter(event) {
+    const isLineBreak = this.textarea && event.shiftKey;
+    if (!(this.ignoreNextEnterKeyPress || isLineBreak)) {
+      const selectedSuggestion =
+        this.suggestionListElement?.getCurrentSelectedValue();
+      if (this.areSuggestionsOpen && selectedSuggestion) {
+        this.sendSelectSuggestionEvent(selectedSuggestion.rawValue);
+      } else {
+        this.sendSubmitSearchEvent();
+      }
+      this.input.blur();
     }
-    this.input.blur();
   }
 
   handleValueChange() {
     this.sendInputValueChangeEvent(this.input.value, false);
-  }
-
-  handleKeyValues() {
-    // Reset selection set to true for key pressed other than ARROW keys and ENTER.
-    this.sendInputValueChangeEvent(this.input.value, true);
   }
 
   onSubmit(event) {
@@ -206,12 +207,19 @@ export default class QuanticSearchBoxInput extends LightningElement {
     this.input.blur();
   }
 
+  handleKeyDownOnClearButton(event) {
+    if (event.key === keys.ENTER) {
+      // Ignore the next enter key press in the searchbox input to prevent submitting a search when we press enter on the clear button.
+      this.ignoreNextEnterKeyPress = true;
+    }
+  }
+
   /**
    * Prevent default behavior of enter key, on textArea, to prevent skipping a line.
    * @param {KeyboardEvent} event
    */
   onKeydown(event) {
-    if (event.key === keys.ENTER) {
+    if (event.key === keys.ENTER && !event.shiftKey) {
       event.preventDefault();
     }
   }
@@ -222,7 +230,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
   onKeyup(event) {
     switch (event.key) {
       case keys.ENTER:
-        this.handleEnter();
+        this.handleEnter(event);
         break;
       case keys.ARROWUP:
         this.suggestionListElement?.selectionUp();
@@ -231,8 +239,10 @@ export default class QuanticSearchBoxInput extends LightningElement {
         this.suggestionListElement?.selectionDown();
         break;
       default:
-        this.handleKeyValues();
+        // Reset selection set to true for key pressed other than ARROW keys and ENTER.
+        this.sendInputValueChangeEvent(this.input.value, true);
     }
+    this.ignoreNextEnterKeyPress = false;
   }
 
   onFocus() {
@@ -246,7 +256,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
   }
 
   onTextAreaInput() {
-    this.handleValueChange();
+    this.sendInputValueChangeEvent(this.input.value, true);
     this.adjustTextAreaHeight();
   }
 
@@ -254,10 +264,10 @@ export default class QuanticSearchBoxInput extends LightningElement {
     if (!this.textarea) {
       return;
     }
-    this.input.value = this.input.value.replace(/\n/g, '');
     this.input.style.height = '';
     this.input.style.whiteSpace = 'pre-wrap';
     this.input.style.height = this.input.scrollHeight + 'px';
+    this.input.style.overflow = 'auto';
   }
 
   collapseTextArea() {
@@ -265,7 +275,9 @@ export default class QuanticSearchBoxInput extends LightningElement {
       return;
     }
     this.input.style.height = '';
+    this.input.scrollTop = 0;
     this.input.style.whiteSpace = 'nowrap';
+    this.input.style.overflow = 'hidden';
   }
 
   clearInput() {
@@ -291,6 +303,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
 
   handleHighlightChange(event) {
     this.input.value = event.detail?.rawValue;
+    this.adjustTextAreaHeight();
   }
 
   handleSuggestionSelection(event) {

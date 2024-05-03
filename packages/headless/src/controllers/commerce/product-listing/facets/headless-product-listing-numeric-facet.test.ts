@@ -1,17 +1,23 @@
-import {Action} from '@reduxjs/toolkit';
-import {CommerceFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
+import {NumericFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice';
 import {CommerceAppState} from '../../../../state/commerce-app-state';
-import {MockCommerceEngine, buildMockCommerceEngine} from '../../../../test';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
 import {buildMockCommerceNumericFacetResponse} from '../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceNumericFacetValue} from '../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
+import {
+  buildMockCommerceEngine,
+  MockedCommerceEngine,
+} from '../../../../test/mock-engine-v2';
 import {CommerceFacetOptions} from '../../core/facets/headless-core-commerce-facet';
-import {CommerceNumericFacet} from '../../core/facets/numeric/headless-commerce-numeric-facet';
+import {NumericFacet} from '../../core/facets/numeric/headless-commerce-numeric-facet';
 import {buildProductListingNumericFacet} from './headless-product-listing-numeric-facet';
+
+jest.mock(
+  '../../../../features/commerce/product-listing/product-listing-actions'
+);
 
 describe('ProductListingNumericFacet', () => {
   const facetId: string = 'numeric_facet_id';
@@ -19,15 +25,15 @@ describe('ProductListingNumericFacet', () => {
   const end = 100;
   let options: CommerceFacetOptions;
   let state: CommerceAppState;
-  let engine: MockCommerceEngine;
-  let facet: CommerceNumericFacet;
+  let engine: MockedCommerceEngine;
+  let facet: NumericFacet;
 
   function initFacet() {
-    engine = buildMockCommerceEngine({state});
+    engine = buildMockCommerceEngine(state);
     facet = buildProductListingNumericFacet(engine, options);
   }
 
-  function setFacetRequest(config: Partial<CommerceFacetRequest> = {}) {
+  function setFacetRequest(config: Partial<NumericFacetRequest> = {}) {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, ...config}),
     });
@@ -35,14 +41,6 @@ describe('ProductListingNumericFacet', () => {
       buildMockCommerceNumericFacetResponse({facetId}),
     ];
   }
-
-  const expectContainAction = (action: Action) => {
-    expect(engine.actions).toContainEqual(
-      expect.objectContaining({
-        type: action.type,
-      })
-    );
-  };
 
   beforeEach(() => {
     options = {
@@ -68,7 +66,7 @@ describe('ProductListingNumericFacet', () => {
       const facetValue = buildMockCommerceNumericFacetValue({start, end});
       facet.toggleSelect(facetValue);
 
-      expectContainAction(fetchProductListing.pending);
+      expect(fetchProductListing).toHaveBeenCalled();
     });
   });
 
@@ -76,32 +74,28 @@ describe('ProductListingNumericFacet', () => {
     it('dispatches #fetchproductlisting', () => {
       const facetValue = buildMockCommerceNumericFacetValue({start, end});
       facet.toggleExclude(facetValue);
-
-      expectContainAction(fetchProductListing.pending);
+      expect(fetchProductListing).toHaveBeenCalled();
     });
   });
 
   describe('#deselectAll', () => {
     it('dispatches #fetchProductListing', () => {
       facet.deselectAll();
-
-      expectContainAction(fetchProductListing.pending);
+      expect(fetchProductListing).toHaveBeenCalled();
     });
   });
 
   describe('#showMoreValues', () => {
     it('dispatches #fetchProductListing', () => {
       facet.showMoreValues();
-
-      expectContainAction(fetchProductListing.pending);
+      expect(fetchProductListing).toHaveBeenCalled();
     });
   });
 
   describe('#showLessValues', () => {
     it('dispatches #fetchProductListing', () => {
       facet.showLessValues();
-
-      expectContainAction(fetchProductListing.pending);
+      expect(fetchProductListing).toHaveBeenCalled();
     });
   });
 
@@ -114,6 +108,7 @@ describe('ProductListingNumericFacet', () => {
 
     it('#state.isLoading uses #isFacetLoadingResponseSelector', () => {
       state.productListing.isLoading = true;
+      initFacet();
       expect(facet.state.isLoading).toBe(true);
     });
   });
