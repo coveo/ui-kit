@@ -105,6 +105,7 @@ export function buildMockCoreEngineNext<
     logger: mockLogger(pino({level: 'silent'})),
     relay: mockRelay(),
     subscribe: jest.fn(),
+    navigatorContext: defaultNodeJSNavigatorContextProvider(),
   };
 }
 
