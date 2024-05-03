@@ -155,13 +155,6 @@ export class AtomicCommerceProductList
   }
 
   public render() {
-    if (
-      this.productState.products.length === 0 &&
-      !this.productState?.isLoading
-    ) {
-      return <div>No products found.</div>;
-    }
-
     const listClasses = this.computeListDisplayClasses();
 
     return (
