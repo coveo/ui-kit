@@ -10,6 +10,11 @@ import {
   QueryCommerceAPIThunkReturn,
   StateNeededByQueryCommerceAPI,
 } from '../common/actions';
+import {perPagePrincipalSelector} from '../pagination/pagination-selectors';
+import {
+  moreProductsAvailableSelector,
+  numberOfProductsSelector,
+} from './search-selectors';
 
 export type StateNeededByExecuteSearch = StateNeededByQueryCommerceAPI &
   CommerceQuerySection;
@@ -35,23 +40,29 @@ export const executeSearch = createAsyncThunk<
 
     return {
       response: fetched.success,
-      // eslint-disable-next-line @cspell/spellchecker
-      // TODO CAPI-244: Use actual search analytics action
     };
   }
 );
 
 export const fetchMoreProducts = createAsyncThunk<
-  QueryCommerceAPIThunkReturn,
+  QueryCommerceAPIThunkReturn | null,
   void,
   AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
 >(
   'commerce/search/fetchMoreProducts',
   async (_action, {getState, dispatch, rejectWithValue, extra}) => {
     const state = getState();
+    const moreProductsAvailable = moreProductsAvailableSelector(state);
+    if (!moreProductsAvailable) {
+      return null;
+    }
+
     const {apiClient} = extra;
-    const perPage = state.commercePagination?.principal.perPage ?? 10;
-    const nextPageToRequest = state.commerceSearch.products.length / perPage;
+
+    const perPage = perPagePrincipalSelector(state);
+    const numberOfProducts = numberOfProductsSelector(state);
+    const nextPageToRequest = numberOfProducts / perPage;
+
     const fetched = await apiClient.search({
       ...(await buildCommerceAPIRequest(state)),
       query: state.commerceQuery?.query,
@@ -65,8 +76,6 @@ export const fetchMoreProducts = createAsyncThunk<
 
     return {
       response: fetched.success,
-      // eslint-disable-next-line @cspell/spellchecker
-      // TODO CAPI-244: Use actual search analytics action
     };
   }
 );

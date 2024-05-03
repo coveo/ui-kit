@@ -151,6 +151,7 @@ describe('sub controllers', () => {
       expect(pagination).toEqual(buildCorePaginationMock.mock.results[0].value);
       expect(buildCorePaginationMock).toHaveBeenCalledWith(engine, {
         fetchProductsActionCreator: mockfetchProductsActionCreator,
+        fetchMoreProductsActionCreator: mockfetchMoreProductsActionCreator,
         options: {
           slotId,
         },

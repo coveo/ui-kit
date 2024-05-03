@@ -14,13 +14,17 @@ import {
   ProductListingV2Section,
   VersionSection,
 } from '../../../state/state-sections';
-import {getPaginationInitialState} from '../../pagination/pagination-state';
 import {logQueryError} from '../../search/search-analytics-actions';
 import {
   buildCommerceAPIRequest,
   QueryCommerceAPIThunkReturn,
   StateNeededByQueryCommerceAPI,
 } from '../common/actions';
+import {perPagePrincipalSelector} from '../pagination/pagination-selectors';
+import {
+  moreProductsAvailableSelector,
+  numberOfProductsSelector,
+} from './product-listing-selectors';
 
 export type StateNeededByFetchProductListingV2 = ConfigurationSection &
   ProductListingV2Section &
@@ -59,18 +63,21 @@ export const fetchProductListing = createAsyncThunk<
 );
 
 export const fetchMoreProducts = createAsyncThunk<
-  QueryCommerceAPIThunkReturn,
+  QueryCommerceAPIThunkReturn | null,
   void,
   AsyncThunkCommerceOptions<StateNeededByQueryCommerceAPI>
 >(
   'commerce/productListing/fetchMoreProducts',
   async (_action, {getState, dispatch, rejectWithValue, extra}) => {
     const state = getState();
+    const moreProductsAvailable = moreProductsAvailableSelector(state);
+    if (!moreProductsAvailable) {
+      return null;
+    }
     const {apiClient} = extra;
-    const perPage =
-      state.commercePagination?.principal.perPage ??
-      getPaginationInitialState().defaultNumberOfResults;
-    const nextPageToRequest = state.commerceSearch.products.length / perPage;
+    const perPage = perPagePrincipalSelector(state);
+    const numberOfProducts = numberOfProductsSelector(state);
+    const nextPageToRequest = numberOfProducts / perPage;
 
     const fetched = await apiClient.getProductListing({
       ...(await buildCommerceAPIRequest(state)),

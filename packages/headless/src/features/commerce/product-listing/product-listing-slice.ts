@@ -26,6 +26,9 @@ export const productListingV2Reducer = createReducer(
         state.products = action.payload.response.products;
       })
       .addCase(fetchMoreProducts.fulfilled, (state, action) => {
+        if (!action.payload) {
+          return;
+        }
         handleFullfilled(state, action.payload.response);
         state.products = state.products.concat(
           action.payload.response.products

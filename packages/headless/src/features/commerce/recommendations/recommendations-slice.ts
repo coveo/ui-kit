@@ -46,6 +46,9 @@ export const recommendationsReducer = createReducer(
         recommendations.products = response.products;
       })
       .addCase(fetchMoreRecommendations.fulfilled, (state, action) => {
+        if (!action.payload) {
+          return;
+        }
         const slotId = action.meta.arg.slotId;
         const response = action.payload.response;
 

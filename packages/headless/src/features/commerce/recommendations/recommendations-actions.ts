@@ -6,12 +6,16 @@ import {
 import {CommerceRecommendationsRequest} from '../../../api/commerce/recommendations/recommendations-request';
 import {RecommendationsCommerceSuccessResponse} from '../../../api/commerce/recommendations/recommendations-response';
 import {validatePayload} from '../../../utils/validate-payload';
-import {getPaginationInitialState} from '../../pagination/pagination-state';
 import {
   StateNeededByQueryCommerceAPI,
   buildBaseCommerceAPIRequest,
 } from '../common/actions';
+import {perPageRecommendationSelector} from '../pagination/pagination-selectors';
 import {recommendationsSlotDefinition} from './recommendations';
+import {
+  moreRecommendationsAvailableSelector,
+  numberOfRecommendationsSelector,
+} from './recommendations-selector';
 
 export interface QueryRecommendationsCommerceAPIThunkReturn {
   /** The successful recommendations response. */
@@ -61,7 +65,7 @@ export const fetchRecommendations = createAsyncThunk<
 );
 
 export const fetchMoreRecommendations = createAsyncThunk<
-  QueryRecommendationsCommerceAPIThunkReturn,
+  QueryRecommendationsCommerceAPIThunkReturn | null,
   FetchRecommendationsActionCreatorPayload,
   AsyncThunkCommerceOptions<StateNeededByQueryCommerceAPI>
 >(
@@ -69,17 +73,21 @@ export const fetchMoreRecommendations = createAsyncThunk<
   async (payload, {getState, rejectWithValue, extra: {apiClient}}) => {
     const slotId = payload.slotId;
     const state = getState();
+    const moreRecommendationsAvailable = moreRecommendationsAvailableSelector(
+      state,
+      slotId
+    );
+    if (!moreRecommendationsAvailable === false) {
+      return null;
+    }
 
-    const perPage =
-      state.commercePagination?.recommendations[slotId]?.perPage ||
-      getPaginationInitialState().defaultNumberOfResults;
-    const currentNumberOfRecommendation =
-      state.recommendations[slotId]?.products.length || 0;
-    const nextPage = currentNumberOfRecommendation / perPage;
+    const perPage = perPageRecommendationSelector(state, slotId);
+    const numberOfProducts = numberOfRecommendationsSelector(state, slotId);
+    const nextPageToRequest = numberOfProducts / perPage;
 
     const request = {
       ...(await buildRecommendationCommerceAPIRequest(slotId, state)),
-      page: nextPage,
+      page: nextPageToRequest,
     };
     const fetched = await apiClient.getRecommendations(request);
 
