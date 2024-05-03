@@ -659,6 +659,10 @@ export namespace Components {
           * The answer style to apply when the component first loads. Options:   - `default`: Generate the answer without specific formatting instructions.   - `bullet`: Generate the answer as a bulleted list.   - `step`: Generate the answer as step-by-step instructions.   - `concise`: Generate the answer as briefly as possible.
          */
         "answerStyle": GeneratedAnswerStyle;
+        /**
+          * Whether to allow the answer to be collapsed when the text is taller than 250px.
+         */
+        "collapsible"?: boolean;
     }
     interface AtomicGeneratedAnswerFeedbackModal {
         /**
@@ -786,6 +790,10 @@ export namespace Components {
           * The answer style to apply when the component first loads. Options:   - `default`: Generate the answer without specific formatting instructions.   - `bullet`: Generate the answer as a bulleted list.   - `step`: Generate the answer as step-by-step instructions.   - `concise`: Generate the answer as briefly as possible.
          */
         "answerStyle": InsightGeneratedAnswerStyle;
+        /**
+          * Whether to allow the answer to be collapsed when the text is taller than 250px.
+         */
+        "collapsible"?: boolean;
     }
     interface AtomicInsightHistoryToggle {
         "clickCallback": () => void;
@@ -5120,6 +5128,10 @@ declare namespace LocalJSX {
           * The answer style to apply when the component first loads. Options:   - `default`: Generate the answer without specific formatting instructions.   - `bullet`: Generate the answer as a bulleted list.   - `step`: Generate the answer as step-by-step instructions.   - `concise`: Generate the answer as briefly as possible.
          */
         "answerStyle"?: GeneratedAnswerStyle;
+        /**
+          * Whether to allow the answer to be collapsed when the text is taller than 250px.
+         */
+        "collapsible"?: boolean;
     }
     interface AtomicGeneratedAnswerFeedbackModal {
         /**
@@ -5244,6 +5256,10 @@ declare namespace LocalJSX {
           * The answer style to apply when the component first loads. Options:   - `default`: Generate the answer without specific formatting instructions.   - `bullet`: Generate the answer as a bulleted list.   - `step`: Generate the answer as step-by-step instructions.   - `concise`: Generate the answer as briefly as possible.
          */
         "answerStyle"?: InsightGeneratedAnswerStyle;
+        /**
+          * Whether to allow the answer to be collapsed when the text is taller than 250px.
+         */
+        "collapsible"?: boolean;
     }
     interface AtomicInsightHistoryToggle {
         "clickCallback"?: () => void;
