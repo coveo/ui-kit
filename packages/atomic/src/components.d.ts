@@ -324,6 +324,11 @@ export namespace Components {
     | 'product-listing';
     }
     /**
+     * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
+     */
+    interface AtomicCommerceLoadMoreProducts {
+    }
+    /**
      * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
      */
     interface AtomicCommercePager {
@@ -2894,6 +2899,15 @@ declare global {
         prototype: HTMLAtomicCommerceInterfaceElement;
         new (): HTMLAtomicCommerceInterfaceElement;
     };
+    /**
+     * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
+     */
+    interface HTMLAtomicCommerceLoadMoreProductsElement extends Components.AtomicCommerceLoadMoreProducts, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceLoadMoreProductsElement: {
+        prototype: HTMLAtomicCommerceLoadMoreProductsElement;
+        new (): HTMLAtomicCommerceLoadMoreProductsElement;
+    };
     interface HTMLAtomicCommercePagerElementEventMap {
         "atomic/scrollToTop": any;
     }
@@ -4402,6 +4416,7 @@ declare global {
         "atomic-citation": HTMLAtomicCitationElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
         "atomic-commerce-interface": HTMLAtomicCommerceInterfaceElement;
+        "atomic-commerce-load-more-products": HTMLAtomicCommerceLoadMoreProductsElement;
         "atomic-commerce-pager": HTMLAtomicCommercePagerElement;
         "atomic-commerce-product-list": HTMLAtomicCommerceProductListElement;
         "atomic-commerce-search-box": HTMLAtomicCommerceSearchBoxElement;
@@ -4786,6 +4801,11 @@ declare namespace LocalJSX {
          */
         "type"?: | 'search'
     | 'product-listing';
+    }
+    /**
+     * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
+     */
+    interface AtomicCommerceLoadMoreProducts {
     }
     /**
      * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
@@ -7122,6 +7142,7 @@ declare namespace LocalJSX {
         "atomic-citation": AtomicCitation;
         "atomic-color-facet": AtomicColorFacet;
         "atomic-commerce-interface": AtomicCommerceInterface;
+        "atomic-commerce-load-more-products": AtomicCommerceLoadMoreProducts;
         "atomic-commerce-pager": AtomicCommercePager;
         "atomic-commerce-product-list": AtomicCommerceProductList;
         "atomic-commerce-search-box": AtomicCommerceSearchBox;
@@ -7304,6 +7325,10 @@ declare module "@stencil/core" {
              */
             "atomic-color-facet": LocalJSX.AtomicColorFacet & JSXBase.HTMLAttributes<HTMLAtomicColorFacetElement>;
             "atomic-commerce-interface": LocalJSX.AtomicCommerceInterface & JSXBase.HTMLAttributes<HTMLAtomicCommerceInterfaceElement>;
+            /**
+             * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
+             */
+            "atomic-commerce-load-more-products": LocalJSX.AtomicCommerceLoadMoreProducts & JSXBase.HTMLAttributes<HTMLAtomicCommerceLoadMoreProductsElement>;
             /**
              * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
              */

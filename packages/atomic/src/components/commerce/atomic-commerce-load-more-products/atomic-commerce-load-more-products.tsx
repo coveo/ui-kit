@@ -21,13 +21,13 @@ import {LoadMoreSummary} from '../../common/load-more/summary';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
- * The `atomic-load-more-results` component allows the user to load additional results if more are available.
+ * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
  *
  * @part container - The container of the component.
- * @part showing-results - The summary displaying which results are shown and how many are available.
- * @part highlight - The highlighted number of results displayed and number of results available.
- * @part progress-bar - The progress bar displaying a percentage of results shown over the total number of results available.
- * @part load-more-results-button - The "Load more results" button.
+ * @part showing-results - The summary displaying which products are shown and how many are available.
+ * @part highlight - The highlighted number of products displayed and number of products available.
+ * @part progress-bar - The progress bar displaying a percentage of results shown over the total number of products available.
+ * @part load-more-results-button - The "Load more products" button.
  *
  * @internal
  */
