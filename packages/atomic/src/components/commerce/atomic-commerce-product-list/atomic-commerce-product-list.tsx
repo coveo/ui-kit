@@ -195,7 +195,7 @@ export class AtomicCommerceProductList
 
   private getPropsForAtomicProduct(product: Product) {
     return {
-      // TODO: add back once interactive result is implemented for products
+      // TODO: add back once interactive result is implemented for products in KIT-3149
       /* interactiveResult: buildInteractiveResult(this.bindings.engine, {
         options: {result},
       }), */
