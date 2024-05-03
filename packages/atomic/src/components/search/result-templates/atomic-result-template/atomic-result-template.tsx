@@ -48,7 +48,6 @@ export class AtomicResultTemplate {
       },
       validParents: [
         'atomic-result-list',
-        'atomic-commerce-product-list',
         'atomic-folded-result-list',
         'atomic-search-box-instant-results',
       ],
