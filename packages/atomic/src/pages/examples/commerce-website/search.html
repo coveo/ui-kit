@@ -27,7 +27,7 @@
     <h1>Search page</h1>
     <main>
       <section>
-        <atomic-commerce-interface type="search">
+        <atomic-commerce-interface type="search" style="max-width: 1000px; margin: auto">
           <atomic-search-layout>
             <atomic-layout-section section="search">
               <atomic-commerce-search-box textarea></atomic-commerce-search-box>
@@ -37,7 +37,7 @@
 
           <atomic-layout-section section="main">
             <atomic-commerce-product-list display="list" density="compact" image-size="small">
-              <atomic-result-template>
+              <atomic-product-template>
                 <template>
                   <style>
                     .field {
@@ -84,11 +84,11 @@
                     }
                   </style>
                   <atomic-result-section-visual>
-                    <atomic-result-image
+                    <atomic-product-image
                       class="thumbnail"
                       field="ec_thumbnails"
                       fallback="https://picsum.photos/350"
-                    ></atomic-result-image>
+                    ></atomic-product-image>
                   </atomic-result-section-visual>
                   <atomic-result-section-badges> </atomic-result-section-badges>
                   <atomic-result-section-title
@@ -121,7 +121,7 @@
                     </atomic-result-fields-list>
                   </atomic-result-section-bottom-metadata>
                 </template>
-              </atomic-result-template>
+              </atomic-product-template>
             </atomic-commerce-product-list>
             <atomic-commerce-pager></atomic-commerce-pager>
           </atomic-layout-section>

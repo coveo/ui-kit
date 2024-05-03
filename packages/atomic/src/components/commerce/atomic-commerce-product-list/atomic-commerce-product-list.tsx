@@ -28,7 +28,6 @@ import {
   ItemListCommon,
   ItemRenderingFunction,
 } from '../../common/item-list/item-list-common';
-import {ItemTemplateProvider} from '../../common/item-list/item-template-provider';
 import {
   ItemDisplayDensity,
   ItemDisplayImageSize,
@@ -36,6 +35,7 @@ import {
   getItemListDisplayClasses,
 } from '../../common/layout/display-options';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import {ProductTemplateProvider} from '../product-list/product-template-provider';
 
 /**
  * @internal
@@ -55,7 +55,7 @@ export class AtomicCommerceProductList
   private resultListCommon!: ItemListCommon;
   private itemRenderingFunction: ItemRenderingFunction;
   private loadingFlag = randomID('firstResultLoaded-');
-  private itemTemplateProvider!: ItemTemplateProvider;
+  private productTemplateProvider!: ProductTemplateProvider;
   private nextNewResultTarget?: FocusTargetController;
 
   @Element() public host!: HTMLDivElement;
@@ -100,10 +100,10 @@ export class AtomicCommerceProductList
       this.search = buildSearch(this.bindings.engine);
     }
 
-    this.itemTemplateProvider = new ItemTemplateProvider({
+    this.productTemplateProvider = new ProductTemplateProvider({
       includeDefaultTemplate: true,
       templateElements: Array.from(
-        this.host.querySelectorAll('atomic-result-template')
+        this.host.querySelectorAll('atomic-product-template')
       ),
       getResultTemplateRegistered: () => this.resultTemplateRegistered,
       getTemplateHasError: () => this.templateHasError,
@@ -113,7 +113,6 @@ export class AtomicCommerceProductList
       setTemplateHasError: (value: boolean) => {
         this.templateHasError = value;
       },
-      bindings: this.bindings,
     });
 
     this.resultListCommon = new ItemListCommon({
@@ -196,7 +195,7 @@ export class AtomicCommerceProductList
         this.density,
         this.imageSize
       ),
-      content: this.itemTemplateProvider.getTemplateContent(result),
+      content: this.productTemplateProvider.getTemplateContent(result),
       store: this.bindings.store,
       density: this.density,
       imageSize: this.imageSize,
@@ -246,7 +245,7 @@ export class AtomicCommerceProductList
     const propsForTableColumns = {
       firstItem,
       templateContentForFirstItem:
-        this.itemTemplateProvider.getTemplateContent(firstItem),
+        this.productTemplateProvider.getTemplateContent(firstItem),
     };
 
     return (
