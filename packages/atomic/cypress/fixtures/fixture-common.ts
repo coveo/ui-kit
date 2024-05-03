@@ -19,7 +19,7 @@ export type Translations = Record<string, string>;
 
 export type TestFeature<T> = (e: T) => void | Promise<void>;
 
-export type TagProps = Record<string, string | number>;
+export type TagProps = Record<string, string | number | boolean>;
 
 export const RouteAlias = {
   UA: '@coveoAnalytics',

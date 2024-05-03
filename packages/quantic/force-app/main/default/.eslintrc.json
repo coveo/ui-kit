@@ -9,6 +9,9 @@
     "CoveoHeadlessRecommendation": "readonly",
     "Bueno": "readonly"
   },
+  "rules": {
+    "no-unused-expressions": ["error", {"allowTernary": true}]
+  },
   "overrides": [
     {
       "files": ["**/__tests__/**"],
