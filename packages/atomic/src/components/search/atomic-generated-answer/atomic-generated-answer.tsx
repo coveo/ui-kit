@@ -106,6 +106,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
         isVisible: this.generatedAnswerCommon.data.isVisible,
         responseFormat: {
           answerStyle: this.answerStyle,
+          contentFormat: ['text/markdown', 'text/plain'],
         },
       },
     });

@@ -12,6 +12,7 @@
   color: var(--lwc-colorTextPlaceholder, #747474);
   font-weight: normal;
   font-size: inherit;
+  padding-top: 0;
 }
 
 .radio-buttons-group__label {
