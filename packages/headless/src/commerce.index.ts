@@ -18,6 +18,7 @@ export type {
   AnalyticsRuntimeEnvironment,
 } from './app/engine-configuration';
 export type {LogLevel, LoggerOptions} from './app/logger';
+export type {NavigatorContext} from './app/navigatorContextProvider';
 
 export type {Product} from './api/commerce/common/product';
 export type {PlatformEnvironment} from './utils/url-utils';
