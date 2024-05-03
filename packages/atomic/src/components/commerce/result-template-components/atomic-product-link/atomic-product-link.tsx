@@ -1,5 +1,5 @@
 import {isUndefined} from '@coveo/bueno';
-import {InteractiveResult as InteractiveProduct} from '@coveo/headless/commerce';
+import {InteractiveProduct} from '@coveo/headless/commerce';
 import {Product} from '@coveo/headless/commerce';
 import {Component, h, Prop, Element} from '@stencil/core';
 import {buildCustomEvent} from '../../../../utils/event-utils';
