@@ -36,7 +36,7 @@ import {
   CoreBreadcrumbManager,
   DeselectableValue,
 } from '../../../breadcrumb-manager/headless-breadcrumb-manager';
-import {buildControllerNext} from '../../../controller/headless-controller';
+import {buildController} from '../../../controller/headless-controller';
 import {ToggleActionCreator} from '../common';
 import {CoreCommerceFacetOptions} from '../facets/headless-core-commerce-facet';
 
@@ -142,7 +142,7 @@ export function buildCoreBreadcrumbManager(
     throw loadReducerError;
   }
 
-  const controller = buildControllerNext(engine);
+  const controller = buildController(engine);
   const {dispatch} = engine;
 
   const createBreadcrumb = (facet: AnyFacetResponse) => ({

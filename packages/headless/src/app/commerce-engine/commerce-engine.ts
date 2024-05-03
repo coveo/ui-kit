@@ -125,6 +125,10 @@ export function buildCommerceEngine(
       return internalEngine.state;
     },
 
+    get configuration() {
+      return internalEngine.state.configuration;
+    },
+
     executeFirstSearch() {
       const action = executeSearch();
       internalEngine.dispatch(action);

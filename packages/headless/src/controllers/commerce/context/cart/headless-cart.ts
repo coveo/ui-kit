@@ -15,9 +15,9 @@ import {CartItemWithMetadata} from '../../../../features/commerce/context/cart/c
 import {cartSchema} from '../../../../features/commerce/context/cart/cart-validation';
 import {CartSection} from '../../../../state/state-sections';
 import {loadReducerError} from '../../../../utils/errors';
-import {validateInitialStateNext} from '../../../../utils/validate-payload';
+import {validateInitialState} from '../../../../utils/validate-payload';
 import {
-  buildControllerNext,
+  buildController,
   Controller,
 } from '../../../controller/headless-controller';
 import {
@@ -145,14 +145,14 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
   }
 
   const {dispatch} = engine;
-  const controller = buildControllerNext(engine);
+  const controller = buildController(engine);
   const getState = () => engine[stateKey].cart;
 
   const initialState = {
     ...props.initialState,
   };
 
-  validateInitialStateNext(engine, cartSchema, initialState, 'buildCart');
+  validateInitialState(engine, cartSchema, initialState, 'buildCart');
 
   // TODO: expose some helpers to facilitate storing / restoring the cart state for MPAs
   if (initialState.items !== undefined) {

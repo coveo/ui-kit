@@ -16,10 +16,10 @@ import {applySort} from '../../../../features/commerce/sort/sort-actions';
 import {sortReducer as commerceSort} from '../../../../features/commerce/sort/sort-slice';
 import {updatePage} from '../../../../features/pagination/pagination-actions';
 import {loadReducerError} from '../../../../utils/errors';
-import {validateInitialStateNext} from '../../../../utils/validate-payload';
+import {validateInitialState} from '../../../../utils/validate-payload';
 import {
-  buildControllerNext,
   Controller,
+  buildController,
 } from '../../../controller/headless-controller';
 import {FetchResultsActionCreator} from '../common';
 
@@ -61,7 +61,7 @@ function validateSortInitialState(
     criterion: sortCriterionDefinition,
   });
 
-  validateInitialStateNext(engine, schema, state, 'buildSort');
+  validateInitialState(engine, schema, state, 'buildSort');
 }
 
 export interface Sort extends Controller {
@@ -123,7 +123,7 @@ export function buildCoreSort(
   }
 
   const {dispatch} = engine;
-  const controller = buildControllerNext(engine);
+  const controller = buildController(engine);
 
   validateSortInitialState(engine, props.initialState);
 

@@ -1,5 +1,6 @@
 import {Result} from '../../api/search/search/result';
-import {CoreEngine} from '../../app/engine';
+import {CoreEngine, CoreEngineNext} from '../../app/engine';
+import {stateKey} from '../../app/state-key';
 import {fieldsReducer as fields} from '../../features/fields/fields-slice';
 import {FieldsSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
@@ -34,9 +35,20 @@ export interface ResultTemplatesManager<Content = unknown> {
  * @returns (ResultTemplatesManager<Content, State>) A new result templates manager.
  */
 export function buildResultTemplatesManager<Content = unknown>(
-  engine: CoreEngine
+  engine: CoreEngine | CoreEngineNext
 ): ResultTemplatesManager<Content> {
-  if (!loadResultTemplatesManagerReducers(engine)) {
+  if (
+    !loadResultTemplatesManagerReducers(
+      'state' in engine
+        ? engine
+        : {
+            ...engine,
+            get state() {
+              return engine[stateKey];
+            },
+          }
+    )
+  ) {
     throw loadReducerError;
   }
 
@@ -56,7 +68,7 @@ export function buildResultTemplatesManager<Content = unknown>(
 }
 
 function loadResultTemplatesManagerReducers(
-  engine: CoreEngine
+  engine: Omit<CoreEngine, 'store'>
 ): engine is CoreEngine<FieldsSection> {
   engine.addReducers({fields});
   return true;

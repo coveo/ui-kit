@@ -1,6 +1,5 @@
 import {Unsubscribe} from '@reduxjs/toolkit';
 import type {CoreEngine, CoreEngineNext} from '../../app/engine';
-import {stateKey} from '../../app/state-key';
 
 export interface Subscribable {
   /**
@@ -17,7 +16,7 @@ export interface Controller extends Subscribable {
 }
 
 export function buildController<T extends object>(
-  engine: CoreEngine<T>
+  engine: CoreEngine<T> | CoreEngineNext<T>
 ): Controller {
   let prevState: string;
   const listeners: Map<Symbol, () => void> = new Map();
@@ -66,15 +65,4 @@ export function buildController<T extends object>(
       return {};
     },
   };
-}
-
-export function buildControllerNext<T extends object>(
-  engine: CoreEngineNext<T>
-): Controller {
-  return buildController({
-    ...engine,
-    get state() {
-      return engine[stateKey];
-    },
-  });
 }

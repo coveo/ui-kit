@@ -13,9 +13,9 @@ import {
 } from '../../../features/commerce/recommendations/recommendations-actions';
 import {recommendationsReducer as recommendations} from '../../../features/commerce/recommendations/recommendations-slice';
 import {loadReducerError} from '../../../utils/errors';
-import {validateInitialStateNext} from '../../../utils/validate-payload';
+import {validateInitialState} from '../../../utils/validate-payload';
 import {
-  buildControllerNext,
+  buildController,
   Controller,
 } from '../../controller/headless-controller';
 import {
@@ -74,14 +74,14 @@ export function buildRecommendations(
     throw loadReducerError;
   }
 
-  validateInitialStateNext(
+  validateInitialState(
     engine,
     recommendationsOptionsSchema,
     props.options,
     'buildRecommendations'
   );
 
-  const controller = buildControllerNext(engine);
+  const controller = buildController(engine);
   const {dispatch} = engine;
 
   const {slotId} = props.options;

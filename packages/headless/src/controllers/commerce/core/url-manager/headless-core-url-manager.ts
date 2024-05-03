@@ -3,8 +3,8 @@ import {stateKey} from '../../../../app/state-key';
 import {Parameters} from '../../../../features/commerce/search-parameters/search-parameter-actions';
 import {Serializer} from '../../../../features/commerce/search-parameters/search-parameter-serializer';
 import {deepEqualAnyOrder} from '../../../../utils/compare-utils';
-import {validateInitialStateNext} from '../../../../utils/validate-payload';
-import {buildControllerNext} from '../../../controller/headless-controller';
+import {validateInitialState} from '../../../../utils/validate-payload';
+import {buildController} from '../../../controller/headless-controller';
 import {
   initialStateSchema,
   UrlManager,
@@ -55,14 +55,14 @@ export function buildCoreUrlManager<T extends Parameters>(
     return lastRequestId !== props.requestIdSelector(engine[stateKey]);
   }
 
-  validateInitialStateNext(
+  validateInitialState(
     engine,
     initialStateSchema,
     props.initialState,
     'buildUrlManager'
   );
 
-  const controller = buildControllerNext(engine);
+  const controller = buildController(engine);
   let previousFragment = props.initialState.fragment;
   updateLastRequestId();
 

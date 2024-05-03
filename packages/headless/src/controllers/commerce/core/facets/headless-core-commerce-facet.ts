@@ -23,7 +23,7 @@ import {FacetValueRequest} from '../../../../features/facets/facet-set/interface
 import {AnyFacetValueRequest} from '../../../../features/facets/generic/interfaces/generic-facet-request';
 import {CommerceFacetSetSection} from '../../../../state/state-sections';
 import {loadReducerError} from '../../../../utils/errors';
-import {buildControllerNext} from '../../../controller/headless-controller';
+import {buildController} from '../../../controller/headless-controller';
 import {
   CoreFacet as HeadlessCoreFacet,
   CoreFacetState,
@@ -160,7 +160,7 @@ export function buildCoreCommerceFacet<
   }
 
   const {dispatch} = engine;
-  const controller = buildControllerNext(engine);
+  const controller = buildController(engine);
 
   const facetId = props.options.facetId;
 

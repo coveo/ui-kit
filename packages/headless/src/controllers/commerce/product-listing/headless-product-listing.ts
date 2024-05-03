@@ -9,7 +9,7 @@ import {responseIdSelector} from '../../../features/commerce/product-listing/pro
 import {productListingV2Reducer as productListing} from '../../../features/commerce/product-listing/product-listing-slice';
 import {loadReducerError} from '../../../utils/errors';
 import {
-  buildControllerNext,
+  buildController,
   Controller,
 } from '../../controller/headless-controller';
 import {
@@ -56,7 +56,7 @@ export function buildProductListing(engine: CommerceEngine): ProductListing {
     throw loadReducerError;
   }
 
-  const controller = buildControllerNext(engine);
+  const controller = buildController(engine);
   const {dispatch} = engine;
   const getState = () => engine[stateKey];
   const subControllers = buildSolutionTypeSubControllers(engine, {

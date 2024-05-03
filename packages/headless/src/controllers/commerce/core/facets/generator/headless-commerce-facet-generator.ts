@@ -16,8 +16,8 @@ import {
 } from '../../../../../state/state-sections';
 import {loadReducerError} from '../../../../../utils/errors';
 import {
-  buildControllerNext,
   Controller,
+  buildController,
 } from '../../../../controller/headless-controller';
 import {CategoryFacet} from '../category/headless-commerce-category-facet';
 import {DateFacet} from '../date/headless-commerce-date-facet';
@@ -103,7 +103,7 @@ export function buildFacetGenerator(
     throw loadReducerError;
   }
 
-  const controller = buildControllerNext(engine);
+  const controller = buildController(engine);
 
   const createFacetControllers = createSelector(
     [

@@ -9,7 +9,6 @@ import {
 } from '@coveo/bueno';
 import {SerializedError} from '@reduxjs/toolkit';
 import type {CoreEngine, CoreEngineNext} from '../app/engine';
-import {stateKey} from '../app/state-key';
 
 export const requiredNonEmptyString = new StringValue({
   required: true,
@@ -98,7 +97,7 @@ export const validatePayload = <P>(
 };
 
 export const validateInitialState = <T extends object>(
-  engine: CoreEngine,
+  engine: CoreEngine | CoreEngineNext,
   schema: Schema<T>,
   obj: T | undefined,
   functionName: string
@@ -113,29 +112,8 @@ export const validateInitialState = <T extends object>(
   );
 };
 
-export const validateInitialStateNext = <T extends object>(
-  engine: CoreEngineNext,
-  schema: Schema<T>,
-  obj: T | undefined,
-  functionName: string
-) => {
-  const message = `Check the initialState of ${functionName}`;
-  return validateObject(
-    {
-      ...engine,
-      get state() {
-        return engine[stateKey];
-      },
-    },
-    schema,
-    obj,
-    message,
-    'Controller initialization error'
-  );
-};
-
 export const validateOptions = <T extends object>(
-  engine: CoreEngine<object>,
+  engine: CoreEngine<object> | CoreEngineNext<object>,
   schema: Schema<T>,
   obj: Partial<T> | undefined,
   functionName: string
@@ -150,27 +128,8 @@ export const validateOptions = <T extends object>(
   );
 };
 
-export const validateOptionsNext = <T extends object>(
-  engine: CoreEngineNext<object>,
-  schema: Schema<T>,
-  obj: Partial<T> | undefined,
-  functionName: string
-) => {
-  return validateOptions(
-    {
-      ...engine,
-      get state() {
-        return engine[stateKey];
-      },
-    },
-    schema,
-    obj,
-    functionName
-  );
-};
-
 const validateObject = <T extends object>(
-  engine: CoreEngine<object>,
+  engine: CoreEngine<object> | CoreEngineNext<object>,
   schema: Schema<T>,
   obj: T | undefined,
   validationMessage: string,

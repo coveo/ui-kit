@@ -33,8 +33,8 @@ import {
   SuggestionHighlightingOptions,
 } from '../../../utils/highlight';
 import {randomID} from '../../../utils/utils';
-import {validateOptionsNext} from '../../../utils/validate-payload';
-import {buildControllerNext} from '../../controller/headless-controller';
+import {validateOptions} from '../../../utils/validate-payload';
+import {buildController} from '../../controller/headless-controller';
 import {
   getSuggestions,
   SearchBoxState,
@@ -88,7 +88,7 @@ export function buildSearchBox(
     throw loadReducerError;
   }
 
-  const controller = buildControllerNext(engine);
+  const controller = buildController(engine);
   const {dispatch} = engine;
   const getState = () => engine[stateKey];
 
@@ -100,12 +100,7 @@ export function buildSearchBox(
     ...props.options,
   };
 
-  validateOptionsNext(
-    engine,
-    searchBoxOptionsSchema,
-    options,
-    'buildSearchBox'
-  );
+  validateOptions(engine, searchBoxOptionsSchema, options, 'buildSearchBox');
   dispatch(
     registerQuerySetQuery({id, query: getState().commerceQuery.query ?? ''})
   );

@@ -9,9 +9,9 @@ import {
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
 import {contextSchema} from '../../../features/commerce/context/context-validation';
 import {loadReducerError} from '../../../utils/errors';
-import {validateOptionsNext} from '../../../utils/validate-payload';
+import {validateOptions} from '../../../utils/validate-payload';
 import {
-  buildControllerNext,
+  buildController,
   Controller,
 } from '../../controller/headless-controller';
 
@@ -111,12 +111,12 @@ export function buildContext(
     throw loadReducerError;
   }
 
-  const controller = buildControllerNext(engine);
+  const controller = buildController(engine);
   const {dispatch} = engine;
   const getState = () => engine[stateKey];
 
   if (props.options) {
-    validateOptionsNext(engine, contextSchema, props.options, 'buildContext');
+    validateOptions(engine, contextSchema, props.options, 'buildContext');
     dispatch(setContext(props.options));
   }
 

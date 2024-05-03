@@ -95,19 +95,13 @@ export function buildMockCoreEngineNext<
   const state: State = initialState;
   return {
     [stateKey]: state,
+    configuration: state.configuration,
     dispatch: jest.fn(),
     addReducers: jest.fn(),
     disableAnalytics: jest.fn(),
     enableAnalytics: jest.fn(),
     logger: mockLogger(pino({level: 'silent'})),
     relay: mockRelay(),
-    store: {
-      dispatch: jest.fn(),
-      getState: jest.fn(),
-      replaceReducer: jest.fn(),
-      subscribe: jest.fn(),
-      [Symbol.observable]: jest.fn(),
-    },
     subscribe: jest.fn(),
   };
 }

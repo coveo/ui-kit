@@ -19,7 +19,7 @@ import {
 } from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
 import {randomID} from '../../../utils/utils';
-import {validateOptionsNext} from '../../../utils/validate-payload';
+import {validateOptions} from '../../../utils/validate-payload';
 import {StandaloneSearchBoxProps} from '../../standalone-search-box/headless-standalone-search-box';
 import {
   SearchBox,
@@ -82,7 +82,7 @@ export function buildStandaloneSearchBox(
     ...props.options,
   };
 
-  validateOptionsNext(
+  validateOptions(
     engine,
     standaloneSearchBoxSchema,
     options,

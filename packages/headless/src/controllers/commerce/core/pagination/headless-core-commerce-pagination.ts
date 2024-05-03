@@ -14,9 +14,9 @@ import {
 } from '../../../../features/commerce/pagination/pagination-actions';
 import {paginationReducer as commercePagination} from '../../../../features/commerce/pagination/pagination-slice';
 import {loadReducerError} from '../../../../utils/errors';
-import {validateOptionsNext} from '../../../../utils/validate-payload';
+import {validateOptions} from '../../../../utils/validate-payload';
 import {
-  buildControllerNext,
+  buildController,
   Controller,
 } from '../../../controller/headless-controller';
 import {FetchResultsActionCreator} from '../common';
@@ -101,15 +101,10 @@ export function buildCorePagination(
     throw loadReducerError;
   }
 
-  const controller = buildControllerNext(engine);
+  const controller = buildController(engine);
   const {dispatch} = engine;
 
-  validateOptionsNext(
-    engine,
-    optionsSchema,
-    props.options,
-    'buildCorePagination'
-  );
+  validateOptions(engine, optionsSchema, props.options, 'buildCorePagination');
 
   const slotId = props.options?.slotId;
 

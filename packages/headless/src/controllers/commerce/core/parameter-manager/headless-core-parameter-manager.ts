@@ -4,10 +4,10 @@ import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../../app/state-key';
 import {Parameters} from '../../../../features/commerce/search-parameters/search-parameter-actions';
 import {deepEqualAnyOrder} from '../../../../utils/compare-utils';
-import {validateInitialStateNext} from '../../../../utils/validate-payload';
+import {validateInitialState} from '../../../../utils/validate-payload';
 import {
-  buildControllerNext,
   Controller,
+  buildController,
 } from '../../../controller/headless-controller';
 import {FetchResultsActionCreator} from '../common';
 
@@ -105,9 +105,9 @@ export function buildCoreParameterManager<T extends Parameters>(
   props: CoreParameterManagerProps<T>
 ): ParameterManager<T> {
   const {dispatch} = engine;
-  const controller = buildControllerNext(engine);
+  const controller = buildController(engine);
 
-  validateInitialStateNext(
+  validateInitialState(
     engine,
     initialStateSchema(props.parametersDefinition),
     props.initialState,

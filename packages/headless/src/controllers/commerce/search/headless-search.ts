@@ -11,7 +11,7 @@ import {responseIdSelector} from '../../../features/commerce/search/search-selec
 import {commerceSearchReducer as commerceSearch} from '../../../features/commerce/search/search-slice';
 import {loadReducerError} from '../../../utils/errors';
 import {
-  buildControllerNext,
+  buildController,
   Controller,
 } from '../../controller/headless-controller';
 import {
@@ -47,7 +47,7 @@ export function buildSearch(engine: CommerceEngine): Search {
     throw loadReducerError;
   }
 
-  const controller = buildControllerNext(engine);
+  const controller = buildController(engine);
   const {dispatch} = engine;
   const getState = () => engine[stateKey];
   const subControllers = buildSolutionTypeSubControllers(engine, {

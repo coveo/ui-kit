@@ -74,14 +74,5 @@ export function buildCoreInteractiveResult(
     );
   };
 
-  return buildInteractiveResultCore(
-    {
-      ...engine,
-      get state() {
-        return engine[stateKey];
-      },
-    },
-    props,
-    logAnalyticsIfNeverOpened
-  );
+  return buildInteractiveResultCore(engine, props, logAnalyticsIfNeverOpened);
 }
