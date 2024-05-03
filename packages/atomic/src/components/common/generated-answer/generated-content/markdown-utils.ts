@@ -21,6 +21,10 @@ const completeUnclosedElement = (text: string) => {
 };
 
 const customRenderer = {
+  heading(text: string, level: number) {
+    return `<div part="answer-heading-${level}" aria-label="${text}">${text}</div>`;
+  },
+
   /**
    * Custom Marked renderer to remove wrapping `<p>` element around list item content.
    * @param text The element text content.
