@@ -1,4 +1,3 @@
-import {ResultTemplateCondition, ResultTemplatesHelpers} from '@coveo/headless';
 import {
   ProductTemplate,
   ProductTemplateCondition,
@@ -167,7 +166,7 @@ function getTemplateElement(host: HTMLElement) {
 } */
 
 // TODO: Use ProductTemplatesHelpers when implemented
-export function makeDefinedConditions(
+/* export function makeDefinedConditions(
   ifDefined?: string,
   ifNotDefined?: string
 ): ResultTemplateCondition[] {
@@ -182,4 +181,4 @@ export function makeDefinedConditions(
     conditions.push(ResultTemplatesHelpers.fieldsMustNotBeDefined(fieldNames));
   }
   return conditions;
-}
+} */

@@ -53,7 +53,7 @@ export class AtomicCommerceProductList
   @InitializeBindings() public bindings!: CommerceBindings;
   public productListing!: ProductListing;
   public search!: Search;
-  private loadingFlag = randomID('firstResultLoaded-');
+  private loadingFlag = randomID('firstProductLoaded-');
   private itemRenderingFunction: ItemRenderingFunction;
   private nextNewResultTarget?: FocusTargetController;
   private productTemplateProvider!: ProductTemplateProvider;
