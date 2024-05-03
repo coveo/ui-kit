@@ -14,13 +14,13 @@ import {
   ProductListingV2Section,
   VersionSection,
 } from '../../../state/state-sections';
+import {getPaginationInitialState} from '../../pagination/pagination-state';
 import {logQueryError} from '../../search/search-analytics-actions';
 import {
   buildCommerceAPIRequest,
   QueryCommerceAPIThunkReturn,
   StateNeededByQueryCommerceAPI,
 } from '../common/actions';
-import {logProductListingV2Load} from './product-listing-analytics';
 
 export type StateNeededByFetchProductListingV2 = ConfigurationSection &
   ProductListingV2Section &
@@ -54,7 +54,36 @@ export const fetchProductListing = createAsyncThunk<
 
     return {
       response: fetched.success,
-      analyticsAction: logProductListingV2Load(),
+    };
+  }
+);
+
+export const fetchMoreProducts = createAsyncThunk<
+  QueryCommerceAPIThunkReturn,
+  void,
+  AsyncThunkCommerceOptions<StateNeededByQueryCommerceAPI>
+>(
+  'commerce/productListing/fetchMoreProducts',
+  async (_action, {getState, dispatch, rejectWithValue, extra}) => {
+    const state = getState();
+    const {apiClient} = extra;
+    const perPage =
+      state.commercePagination?.principal.perPage ??
+      getPaginationInitialState().defaultNumberOfResults;
+    const nextPageToRequest = state.commerceSearch.products.length / perPage;
+
+    const fetched = await apiClient.getProductListing({
+      ...(await buildCommerceAPIRequest(state)),
+      page: nextPageToRequest,
+    });
+
+    if (isErrorResponse(fetched)) {
+      dispatch(logQueryError(fetched.error));
+      return rejectWithValue(fetched.error);
+    }
+
+    return {
+      response: fetched.success,
     };
   }
 );

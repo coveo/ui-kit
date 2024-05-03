@@ -25,6 +25,6 @@ export function buildProductListingSort(
 
   return buildCoreSort(engine, {
     ...props,
-    fetchResultsActionCreator: fetchProductListing,
+    fetchProductsActionCreator: fetchProductListing,
   });
 }

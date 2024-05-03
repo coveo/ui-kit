@@ -321,6 +321,11 @@ export namespace Components {
         "type": | 'search'
     | 'product-listing';
     }
+    /**
+     * The `atomic-load-more-results` component allows the user to load additional results if more are available.
+     */
+    interface AtomicCommerceLoadMoreProducts {
+    }
     interface AtomicCommerceResultList {
         /**
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
@@ -2855,6 +2860,15 @@ declare global {
         prototype: HTMLAtomicCommerceInterfaceElement;
         new (): HTMLAtomicCommerceInterfaceElement;
     };
+    /**
+     * The `atomic-load-more-results` component allows the user to load additional results if more are available.
+     */
+    interface HTMLAtomicCommerceLoadMoreProductsElement extends Components.AtomicCommerceLoadMoreProducts, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceLoadMoreProductsElement: {
+        prototype: HTMLAtomicCommerceLoadMoreProductsElement;
+        new (): HTMLAtomicCommerceLoadMoreProductsElement;
+    };
     interface HTMLAtomicCommerceResultListElement extends Components.AtomicCommerceResultList, HTMLStencilElement {
     }
     var HTMLAtomicCommerceResultListElement: {
@@ -4332,6 +4346,7 @@ declare global {
         "atomic-citation": HTMLAtomicCitationElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
         "atomic-commerce-interface": HTMLAtomicCommerceInterfaceElement;
+        "atomic-commerce-load-more-products": HTMLAtomicCommerceLoadMoreProductsElement;
         "atomic-commerce-result-list": HTMLAtomicCommerceResultListElement;
         "atomic-commerce-search-box": HTMLAtomicCommerceSearchBoxElement;
         "atomic-component-error": HTMLAtomicComponentErrorElement;
@@ -4715,6 +4730,11 @@ declare namespace LocalJSX {
          */
         "type"?: | 'search'
     | 'product-listing';
+    }
+    /**
+     * The `atomic-load-more-results` component allows the user to load additional results if more are available.
+     */
+    interface AtomicCommerceLoadMoreProducts {
     }
     interface AtomicCommerceResultList {
         /**
@@ -7020,6 +7040,7 @@ declare namespace LocalJSX {
         "atomic-citation": AtomicCitation;
         "atomic-color-facet": AtomicColorFacet;
         "atomic-commerce-interface": AtomicCommerceInterface;
+        "atomic-commerce-load-more-products": AtomicCommerceLoadMoreProducts;
         "atomic-commerce-result-list": AtomicCommerceResultList;
         "atomic-commerce-search-box": AtomicCommerceSearchBox;
         "atomic-component-error": AtomicComponentError;
@@ -7201,6 +7222,10 @@ declare module "@stencil/core" {
              */
             "atomic-color-facet": LocalJSX.AtomicColorFacet & JSXBase.HTMLAttributes<HTMLAtomicColorFacetElement>;
             "atomic-commerce-interface": LocalJSX.AtomicCommerceInterface & JSXBase.HTMLAttributes<HTMLAtomicCommerceInterfaceElement>;
+            /**
+             * The `atomic-load-more-results` component allows the user to load additional results if more are available.
+             */
+            "atomic-commerce-load-more-products": LocalJSX.AtomicCommerceLoadMoreProducts & JSXBase.HTMLAttributes<HTMLAtomicCommerceLoadMoreProductsElement>;
             "atomic-commerce-result-list": LocalJSX.AtomicCommerceResultList & JSXBase.HTMLAttributes<HTMLAtomicCommerceResultListElement>;
             /**
              * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.

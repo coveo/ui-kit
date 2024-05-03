@@ -6,6 +6,7 @@ import {
 import {CommerceRecommendationsRequest} from '../../../api/commerce/recommendations/recommendations-request';
 import {RecommendationsCommerceSuccessResponse} from '../../../api/commerce/recommendations/recommendations-response';
 import {validatePayload} from '../../../utils/validate-payload';
+import {getPaginationInitialState} from '../../pagination/pagination-state';
 import {
   StateNeededByQueryCommerceAPI,
   buildBaseCommerceAPIRequest,
@@ -47,6 +48,39 @@ export const fetchRecommendations = createAsyncThunk<
       slotId,
       getState()
     );
+    const fetched = await apiClient.getRecommendations(request);
+
+    if (isErrorResponse(fetched)) {
+      return rejectWithValue(fetched.error);
+    }
+
+    return {
+      response: fetched.success,
+    };
+  }
+);
+
+export const fetchMoreRecommendations = createAsyncThunk<
+  QueryRecommendationsCommerceAPIThunkReturn,
+  FetchRecommendationsActionCreatorPayload,
+  AsyncThunkCommerceOptions<StateNeededByQueryCommerceAPI>
+>(
+  'commerce/recommendations/fetchMore',
+  async (payload, {getState, rejectWithValue, extra: {apiClient}}) => {
+    const slotId = payload.slotId;
+    const state = getState();
+
+    const perPage =
+      state.commercePagination?.recommendations[slotId]?.perPage ||
+      getPaginationInitialState().defaultNumberOfResults;
+    const currentNumberOfRecommendation =
+      state.recommendations[slotId]?.products.length || 0;
+    const nextPage = currentNumberOfRecommendation / perPage;
+
+    const request = {
+      ...(await buildRecommendationCommerceAPIRequest(slotId, state)),
+      page: nextPage,
+    };
     const fetched = await apiClient.getRecommendations(request);
 
     if (isErrorResponse(fetched)) {

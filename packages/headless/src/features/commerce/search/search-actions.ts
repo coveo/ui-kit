@@ -40,3 +40,33 @@ export const executeSearch = createAsyncThunk<
     };
   }
 );
+
+export const fetchMoreProducts = createAsyncThunk<
+  QueryCommerceAPIThunkReturn,
+  void,
+  AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
+>(
+  'commerce/search/fetchMoreProducts',
+  async (_action, {getState, dispatch, rejectWithValue, extra}) => {
+    const state = getState();
+    const {apiClient} = extra;
+    const perPage = state.commercePagination?.principal.perPage ?? 10;
+    const nextPageToRequest = state.commerceSearch.products.length / perPage;
+    const fetched = await apiClient.search({
+      ...(await buildCommerceAPIRequest(state)),
+      query: state.commerceQuery?.query,
+      page: nextPageToRequest,
+    });
+
+    if (isErrorResponse(fetched)) {
+      dispatch(logQueryError(fetched.error));
+      return rejectWithValue(fetched.error);
+    }
+
+    return {
+      response: fetched.success,
+      // eslint-disable-next-line @cspell/spellchecker
+      // TODO CAPI-244: Use actual search analytics action
+    };
+  }
+);

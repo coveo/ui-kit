@@ -23,12 +23,12 @@ jest.mock(
 describe('commerce core sort', () => {
   let sort: Sort;
   let engine: MockedCommerceEngine;
-  const fetchResultsActionCreator = fetchProductListing;
+  const fetchProductsActionCreator = fetchProductListing;
 
   beforeEach(() => {
     engine = buildMockCommerceEngine(buildMockCommerceState());
     sort = buildCoreSort(engine, {
-      fetchResultsActionCreator,
+      fetchProductsActionCreator,
     });
   });
 
@@ -43,7 +43,7 @@ describe('commerce core sort', () => {
       initialState: {
         criterion: buildRelevanceSortCriterion(),
       },
-      fetchResultsActionCreator,
+      fetchProductsActionCreator,
     });
     expect(applySort).toHaveBeenCalled();
   });
@@ -61,8 +61,8 @@ describe('commerce core sort', () => {
       expect(updatePage).toHaveBeenCalled();
     });
 
-    it('dispatches #fetchResultsActionCreator', () => {
-      expect(fetchResultsActionCreator).toHaveBeenCalled();
+    it('dispatches #fetchProductsActionCreator', () => {
+      expect(fetchProductsActionCreator).toHaveBeenCalled();
     });
   });
 
@@ -80,7 +80,9 @@ describe('commerce core sort', () => {
           availableSorts: [appliedSort],
         },
       });
-      sort = buildCoreSort(engine, {fetchResultsActionCreator});
+      sort = buildCoreSort(engine, {
+        fetchProductsActionCreator,
+      });
     });
 
     it('calling #isSortedBy with a criterion equal to the one in state returns true', () => {
