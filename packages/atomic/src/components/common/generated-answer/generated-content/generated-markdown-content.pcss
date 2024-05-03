@@ -1,0 +1,117 @@
+[part='generated-text'] {
+  h1 {
+    font-size: var(--atomic-text-2xl);
+  }
+
+  h2 {
+    font-size: var(--atomic-text-xl);
+  }
+
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-size: var(--atomic-text-lg);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply mt-4 mb-2;
+    font-weight: var(--atomic-font-bold);
+  }
+
+  li,
+  p,
+  blockquote,
+  th,
+  td {
+    @apply leading-6;
+  }
+
+  ol {
+    @apply list-decimal ps-8 mb-2;
+  }
+
+  ul {
+    @apply list-disc ps-8 mb-2;
+  }
+
+  code {
+    @apply px-2 py-1 border border-solid;
+    color: var(--atomic-inline-code);
+    font-size: var(--atomic-text-sm);
+    background-color: var(--atomic-neutral-light);
+    border-color: var(--atomic-neutral);
+    border-radius: var(--atomic-border-radius);
+  }
+
+  pre {
+    @apply border border-solid p-2 overflow-auto max-h-96;
+    background-color: var(--atomic-neutral-light);
+    border-color: var(--atomic-neutral);
+    border-radius: var(--atomic-border-radius-md);
+    scrollbar-color: var(--atomic-neutral);
+
+    code {
+      @apply p-0 border-0 bg-transparent;
+      color: var(--atomic-on-background);
+    }
+  }
+
+  blockquote {
+    @apply mx-16 italic;
+  }
+
+  .scrollable-table {
+    @apply mb-6 inline-block border border-solid overflow-auto max-h-96;
+    border-color: var(--atomic-neutral-dim);
+    border-radius: var(--atomic-border-radius-md);
+
+    th {
+      @apply top-0 sticky;
+    }
+  }
+
+  table {
+    font-size: var(--atomic-text-base);
+
+    thead {
+      th {
+        @apply p-4 text-left;
+        background-color: var(--atomic-neutral);
+        border-bottom: solid 2px var(--atomic-neutral-dim);
+        border-left: solid 1px var(--atomic-neutral-dim);
+      }
+
+      th:first-of-type {
+        border-left: none;
+      }
+    }
+
+    tbody {
+      tr {
+        &:nth-child(even) {
+          background-color: var(--atomic-neutral-light);
+        }
+
+        td {
+          @apply p-4;
+          border-left: solid 1px var(--atomic-neutral-dim);
+          border-bottom: solid 1px var(--atomic-neutral-dim);
+        }
+
+        td:first-of-type {
+          border-left: none;
+        }
+
+        &:last-of-type td {
+          border-bottom: unset;
+        }
+      }
+    }
+  }
+}
