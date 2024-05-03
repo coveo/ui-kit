@@ -22,6 +22,7 @@ export type {
 } from './app/engine-configuration';
 export type {LoggerOptions} from './app/logger';
 export type {LogLevel} from './app/logger';
+export type {NavigatorContext} from './app/navigatorContextProvider';
 
 export type {ProductRecommendation} from './api/search/search/product-recommendation';
 
