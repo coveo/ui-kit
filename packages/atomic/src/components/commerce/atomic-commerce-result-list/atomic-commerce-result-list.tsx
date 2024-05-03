@@ -17,6 +17,7 @@ import {
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
+ * @internal
  * The `atomic-commerce-result-list` component is responsible for displaying product results.
  */
 @Component({

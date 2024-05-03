@@ -274,7 +274,10 @@ export class GeneratedAnswerCommon {
       this.props.getGeneratedAnswerState()?.responseFormat.answerStyle !==
       answerStyle
     ) {
-      this.props.getGeneratedAnswer()?.rephrase({answerStyle});
+      this.props.getGeneratedAnswer()?.rephrase({
+        ...this.props.getGeneratedAnswerState()?.responseFormat,
+        answerStyle,
+      });
     }
   }
 
@@ -355,7 +358,8 @@ export class GeneratedAnswerCommon {
     const {getGeneratedAnswerState, getBindings, getGeneratedAnswer} =
       this.props;
     const {i18n} = getBindings();
-    const {isStreaming, answer, citations} = getGeneratedAnswerState() ?? {};
+    const {isStreaming, answer, citations, answerContentFormat} =
+      getGeneratedAnswerState() ?? {};
 
     return (
       <div part="generated-content">
@@ -392,6 +396,7 @@ export class GeneratedAnswerCommon {
         {!this.hasRetryableError && this.isAnswerVisible ? (
           <GeneratedContentContainer
             answer={answer}
+            answerContentFormat={answerContentFormat}
             isStreaming={!!isStreaming}
           >
             {this.renderFeedbackAndCopyButtons()}
