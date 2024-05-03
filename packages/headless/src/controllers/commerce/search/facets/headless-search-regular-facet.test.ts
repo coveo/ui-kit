@@ -1,4 +1,4 @@
-import {CommerceFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
+import {RegularFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
 import {executeSearch} from '../../../../features/commerce/search/search-actions';
 import {commerceSearchReducer as commerceSearch} from '../../../../features/commerce/search/search-slice';
 import {CommerceAppState} from '../../../../state/commerce-app-state';
@@ -13,10 +13,7 @@ import {
 } from '../../../../test/mock-engine-v2';
 import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
 import {buildMockFacetSearchResult} from '../../../../test/mock-facet-search-result';
-import {
-  CommerceFacetOptions,
-  FacetValueRequest,
-} from '../../core/facets/headless-core-commerce-facet';
+import {CommerceFacetOptions} from '../../core/facets/headless-core-commerce-facet';
 import {RegularFacet} from '../../core/facets/regular/headless-commerce-regular-facet';
 import {buildSearchRegularFacet} from './headless-search-regular-facet';
 
@@ -37,9 +34,7 @@ describe('SearchRegularFacet', () => {
     facet = buildSearchRegularFacet(engine, options);
   }
 
-  function setFacetRequest(
-    config: Partial<CommerceFacetRequest<FacetValueRequest>> = {}
-  ) {
+  function setFacetRequest(config: Partial<RegularFacetRequest> = {}) {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, ...config}),
     });

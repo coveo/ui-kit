@@ -9,6 +9,7 @@ import {getFacetRequests} from '../facets/generic/interfaces/generic-facet-reque
 import {AnyFacetValue} from '../facets/generic/interfaces/generic-facet-response';
 import {RangeFacetSetState} from '../facets/range-facets/generic/interfaces/range-facet';
 import {maximumNumberOfResultsFromIndex} from '../pagination/pagination-constants';
+import {buildSearchAndFoldingLoadCollectionRequest as legacyBuildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/legacy/search-and-folding-request';
 import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request';
 import {mapSearchRequest} from './search-mappings';
 
@@ -23,7 +24,15 @@ export const buildSearchRequest = async (
   const facets = getFacets(state);
   const automaticFacets = getAutomaticFacets(state);
   const sharedWithFoldingRequest =
-    await buildSearchAndFoldingLoadCollectionRequest(state, eventDescription);
+    state.configuration.analytics.analyticsMode === 'legacy'
+      ? await legacyBuildSearchAndFoldingLoadCollectionRequest(
+          state,
+          eventDescription
+        )
+      : await buildSearchAndFoldingLoadCollectionRequest(
+          state,
+          eventDescription
+        );
 
   // Corner case:
   // If the number of results requested would go over the index limit (maximumNumberOfResultsFromIndex)
