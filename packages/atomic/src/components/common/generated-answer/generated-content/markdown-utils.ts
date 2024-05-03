@@ -47,6 +47,10 @@ const customRenderer = {
     return `<em part="answer-emphasis">${text}</em>`;
   },
 
+  heading(text: string, level: number) {
+    return `<div part="answer-heading-${level}" aria-label="${text}">${text}</div>`;
+  },
+
   list(body: string, ordered: boolean, start: number | '') {
     const type = ordered ? 'ol' : 'ul';
     const part = ordered ? 'answer-ordered-list' : 'answer-unordered-list';

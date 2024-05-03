@@ -12,7 +12,7 @@ export const GeneratedContentContainer: FunctionalComponent<
   GeneratedContentContainerProps
 > = (props, children) => {
   return (
-    <div class="mt-6">
+    <div part="generated-container" class="mt-6">
       {props.answerContentFormat === 'text/markdown' ? (
         <GeneratedMarkdownContent
           answer={props.answer}
