@@ -95,7 +95,7 @@ describe('FacetGenerator', () => {
       setFacetState([{facetId, type: 'numericalRange'}]);
 
       expect(facetGenerator.facets.length).toEqual(1);
-      expect(mockBuildRegularFacet).toHaveBeenCalledWith(engine, {facetId});
+      expect(mockBuildNumericFacet).toHaveBeenCalledWith(engine, {facetId});
     });
 
     it('when engine facet state contains a date facet, generates a date facet controller', () => {
@@ -153,15 +153,16 @@ describe('FacetGenerator', () => {
       expect(facetState[1].state.facetId).toEqual(facets[1].facetId);
       expect(facetState[2].state.facetId).toEqual(facets[2].facetId);
       expect(facetState[3].state.facetId).toEqual(facets[3].facetId);
-      expect(facetGenerator.state).toEqual(state.facetOrder);
     });
   });
 
   it('#state exposes the facet order', () => {
+    expect(facetGenerator.state).toEqual(state.facetOrder);
+
     state.facetOrder.push('new_facet_id');
 
     initCommerceFacetGenerator();
 
-    expect(facetGenerator.facets.length).toEqual(1);
+    expect(facetGenerator.state).toEqual(state.facetOrder);
   });
 });
