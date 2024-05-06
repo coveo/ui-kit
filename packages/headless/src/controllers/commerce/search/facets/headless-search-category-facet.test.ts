@@ -1,10 +1,9 @@
-import {
-  CategoryFacetValueRequest,
-  CommerceFacetRequest,
-} from '../../../../features/commerce/facets/facet-set/interfaces/request';
+import {CategoryFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
 import {executeSearch} from '../../../../features/commerce/search/search-actions';
 import {commerceSearchReducer as commerceSearch} from '../../../../features/commerce/search/search-slice';
 import {CommerceAppState} from '../../../../state/commerce-app-state';
+import {buildMockCategoryFacetSearch} from '../../../../test/mock-category-facet-search';
+import {buildMockCategoryFacetSearchResult} from '../../../../test/mock-category-facet-search-result';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
 import {buildMockCategoryFacetResponse} from '../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
@@ -35,13 +34,12 @@ describe('SearchCategoryFacet', () => {
     facet = buildSearchCategoryFacet(engine, options);
   }
 
-  function setFacetState(
-    config: Partial<CommerceFacetRequest<CategoryFacetValueRequest>> = {}
-  ) {
+  function setFacetState(config: Partial<CategoryFacetRequest> = {}) {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, ...config}),
     });
-    state.productListing.facets = [buildMockCategoryFacetResponse({facetId})];
+    state.commerceSearch.facets = [buildMockCategoryFacetResponse({facetId})];
+    state.categoryFacetSearchSet[facetId] = buildMockCategoryFacetSearch();
   }
 
   beforeEach(() => {
@@ -54,7 +52,7 @@ describe('SearchCategoryFacet', () => {
     state = buildMockCommerceState();
     setFacetState();
 
-    initEngine();
+    initEngine(state);
     initFacet();
   });
 
@@ -89,6 +87,12 @@ describe('SearchCategoryFacet', () => {
 
   it('#showLessValues dispatches #executeSearch', () => {
     facet.showLessValues();
+
+    expect(executeSearch).toHaveBeenCalled();
+  });
+
+  it('#facetSearch.select dispatches #executeSearch', () => {
+    facet.facetSearch.select(buildMockCategoryFacetSearchResult());
 
     expect(executeSearch).toHaveBeenCalled();
   });

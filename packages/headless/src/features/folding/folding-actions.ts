@@ -11,6 +11,7 @@ import {
   QuerySection,
 } from '../../state/state-sections';
 import {validatePayload} from '../../utils/validate-payload';
+import {buildSearchAndFoldingLoadCollectionRequest as legacyBuildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/legacy/search-and-folding-request';
 import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request';
 import {ResultWithFolding} from './folding-slice';
 import {CollectionId} from './folding-state';
@@ -79,7 +80,9 @@ export const loadCollection = createAsyncThunk<
   ) => {
     const state = getState();
     const sharedWithSearchRequest =
-      await buildSearchAndFoldingLoadCollectionRequest(state);
+      state.configuration.analytics.analyticsMode === 'legacy'
+        ? await legacyBuildSearchAndFoldingLoadCollectionRequest(state)
+        : await buildSearchAndFoldingLoadCollectionRequest(state);
 
     const response = await apiClient.search(
       {

@@ -2,6 +2,7 @@ import {Relay} from '@coveo/relay';
 import {Logger} from 'pino';
 import {InsightAPIClient} from '../../api/service/insight/insight-api-client';
 import {InsightQueryRequest} from '../../api/service/insight/query/query-request';
+import {defaultNodeJSNavigatorContextProvider} from '../../app/navigatorContextProvider';
 import {buildMockInsightQueryRequest} from '../../test/mock-insight-request';
 import {buildMockResult} from '../../test/mock-result';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
@@ -36,6 +37,7 @@ describe('AsyncInsightSearchThunkProcessor', () => {
         validatePayload: jest.fn(),
         preprocessRequest: jest.fn(),
         relay: jest.fn() as unknown as Relay,
+        navigatorContext: defaultNodeJSNavigatorContextProvider(),
       },
       getState: jest.fn().mockReturnValue({
         insightConfiguration: getInsightConfigurationInitialState(),

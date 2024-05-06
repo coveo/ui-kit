@@ -3,8 +3,13 @@ import {createRipple} from '../../../../utils/ripple';
 import {randomID} from '../../../../utils/utils';
 import {Checkbox} from '../../checkbox';
 import {TriStateCheckbox} from '../../triStateCheckbox';
-import {FacetValueProps, TriStateFacetValueProps} from '../facet-common';
+import {FacetValueProps} from '../facet-common';
 import {FacetValueExclude} from '../facet-value-exclude/facet-value-exclude';
+
+type TriStateFacetValueProps = Omit<FacetValueProps, 'isSelected'> & {
+  state: 'idle' | 'selected' | 'excluded';
+  onExclude(): void;
+};
 
 export const FacetValueCheckbox: FunctionalComponent<
   FacetValueProps | TriStateFacetValueProps

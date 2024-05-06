@@ -1,7 +1,7 @@
 import {
   dispatchSearchBoxSuggestionsEvent,
   SearchBoxSuggestionElement,
-} from '../../../src/components/search/search-box-suggestions/suggestions-common';
+} from '../../../src/components/common/suggestions/suggestions-common';
 import {
   SafeStorage,
   StorageItems,
@@ -37,7 +37,7 @@ const setSuggestions = (count: number) => () => {
         newResponse.completions = Array.from({length: count}, (_, i) => ({
           expression: `query-suggestion-${i}`,
           executableConfidence: 0,
-          highlighted: `Suggestion ${i}`,
+          highlighted: `query-suggestion-${i}`,
           score: 0,
         }));
         response.send(200, newResponse);
@@ -124,7 +124,7 @@ describe('Search Box Test Suites', () => {
 
       it('is accessible', () => {
         CommonAssertions.assertAccessibility(searchBoxComponent);
-        CommonAssertions.assertAriaLiveMessage(
+        CommonAssertions.assertAriaLiveMessageWithoutIt(
           SearchBoxSelectors.searchBoxAriaLive,
           expectedSum.toString()
         );
@@ -143,10 +143,11 @@ describe('Search Box Test Suites', () => {
             })
           )
           .init();
+        cy.wait(2000);
         cy.get(searchBoxComponent).invoke('attr', 'redirection-url', '');
-        cy.wait(100);
 
         SearchBoxSelectors.inputBox().click();
+
         SearchBoxSelectors.querySuggestion('query-suggestion-1').click();
       });
 
@@ -232,10 +233,12 @@ describe('Search Box Test Suites', () => {
 
         SearchBoxAssertions.assertHasSuggestionsCount(expectedSum);
 
-        CommonAssertions.assertAriaLiveMessage(
-          SearchBoxSelectors.searchBoxAriaLive,
-          expectedSum.toString()
-        );
+        it('it updates aria-live message', () => {
+          CommonAssertions.assertAriaLiveMessageWithoutIt(
+            SearchBoxSelectors.searchBoxAriaLive,
+            expectedSum.toString()
+          );
+        });
       });
 
       describe('with custom suggestions provider', () => {
@@ -470,13 +473,17 @@ describe('Search Box Test Suites', () => {
         .init();
     });
 
-    it('should be accessible', () => {
+    it('should update aria live message', () => {
       SearchBoxSelectors.inputBox().click();
-      CommonAssertions.assertAriaLiveMessage(
+      CommonAssertions.assertAriaLiveMessageWithoutIt(
         SearchBoxSelectors.searchBoxAriaLive,
         ' no '
       );
-      CommonAssertions.assertAccessibility(searchBoxComponent);
+    });
+
+    it('should be accessible', () => {
+      SearchBoxSelectors.inputBox().click();
+      CommonAssertions.assertAccessibilityWithoutIt(searchBoxComponent);
     });
   });
 

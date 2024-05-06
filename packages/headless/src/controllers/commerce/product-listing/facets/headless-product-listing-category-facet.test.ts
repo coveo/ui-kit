@@ -1,10 +1,9 @@
-import {
-  CategoryFacetValueRequest,
-  CommerceFacetRequest,
-} from '../../../../features/commerce/facets/facet-set/interfaces/request';
+import {CategoryFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice';
 import {CommerceAppState} from '../../../../state/commerce-app-state';
+import {buildMockCategoryFacetSearch} from '../../../../test/mock-category-facet-search';
+import {buildMockCategoryFacetSearchResult} from '../../../../test/mock-category-facet-search-result';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
 import {buildMockCategoryFacetResponse} from '../../../../test/mock-commerce-facet-response';
 import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
@@ -37,13 +36,12 @@ describe('ProductListingCategoryFacet', () => {
     facet = buildProductListingCategoryFacet(engine, options);
   }
 
-  function setFacetState(
-    config: Partial<CommerceFacetRequest<CategoryFacetValueRequest>> = {}
-  ) {
+  function setFacetState(config: Partial<CategoryFacetRequest> = {}) {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, ...config}),
     });
     state.productListing.facets = [buildMockCategoryFacetResponse({facetId})];
+    state.categoryFacetSearchSet[facetId] = buildMockCategoryFacetSearch();
   }
 
   beforeEach(() => {
@@ -56,7 +54,7 @@ describe('ProductListingCategoryFacet', () => {
     state = buildMockCommerceState();
     setFacetState();
 
-    initEngine();
+    initEngine(state);
     initFacet();
   });
 
@@ -91,6 +89,12 @@ describe('ProductListingCategoryFacet', () => {
 
   it('#showLessValues dispatches #fetchProductListing', () => {
     facet.showLessValues();
+
+    expect(fetchProductListing).toHaveBeenCalled();
+  });
+
+  it('#facetSearch.select dispatches #fetchProductListing', () => {
+    facet.facetSearch.select(buildMockCategoryFacetSearchResult());
 
     expect(fetchProductListing).toHaveBeenCalled();
   });

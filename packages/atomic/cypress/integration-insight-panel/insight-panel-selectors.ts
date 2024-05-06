@@ -44,7 +44,7 @@ export const InsightPanelsSelectors = {
     InsightPanelsSelectors.tabPopover().find('[part="popover-button"]'),
   layoutStyleTags: () =>
     InsightPanelsSelectors.interface().find('atomic-insight-layout > style'),
-  topLevelStyleTags: () => cy.get('style[data-styles]'),
+  topLevelStyleTags: () => cy.get('head > style'),
   smartSnippet: () =>
     InsightPanelsSelectors.interface().find('atomic-insight-smart-snippet'),
   smartSnippetExpandableAnswer: () =>

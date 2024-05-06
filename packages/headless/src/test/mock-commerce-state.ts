@@ -7,8 +7,10 @@ import {getCommerceQueryInitialState} from '../features/commerce/query/query-sta
 import {getRecommendationsInitialState} from '../features/commerce/recommendations/recommendations-state';
 import {getCommerceSearchInitialState} from '../features/commerce/search/search-state';
 import {getCommerceSortInitialState} from '../features/commerce/sort/sort-state';
+import {getCommerceStandaloneSearchBoxSetInitialState} from '../features/commerce/standalone-search-box-set/standalone-search-box-set-state';
 import {getConfigurationInitialState} from '../features/configuration/configuration-state';
 import {getFacetOrderInitialState} from '../features/facets/facet-order/facet-order-state';
+import {getCategoryFacetSearchSetInitialState} from '../features/facets/facet-search-set/category/category-facet-search-set-state';
 import {getFacetSearchSetInitialState} from '../features/facets/facet-search-set/specific/specific-facet-search-set-state';
 import {getQuerySetInitialState} from '../features/query-set/query-set-state';
 import {getQuerySuggestSetInitialState} from '../features/query-suggest/query-suggest-state';
@@ -26,12 +28,15 @@ export function buildMockCommerceState(
     facetOrder: getFacetOrderInitialState(),
     commerceFacetSet: getCommerceFacetSetInitialState(),
     facetSearchSet: getFacetSearchSetInitialState(),
+    categoryFacetSearchSet: getCategoryFacetSearchSetInitialState(),
     commercePagination: getCommercePaginationInitialState(),
     commerceSort: getCommerceSortInitialState(),
     commerceContext: getContextInitialState(),
     querySuggest: getQuerySuggestSetInitialState(),
     querySet: getQuerySetInitialState(),
     cart: getCartInitialState(),
+    commerceStandaloneSearchBoxSet:
+      getCommerceStandaloneSearchBoxSetInitialState(),
     version: 'unit-testing-version',
     ...config,
   };

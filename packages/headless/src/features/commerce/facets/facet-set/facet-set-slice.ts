@@ -1,8 +1,4 @@
-import {
-  AnyAction,
-  createReducer,
-  type Draft as WritableDraft,
-} from '@reduxjs/toolkit';
+import {createReducer, type Draft as WritableDraft} from '@reduxjs/toolkit';
 import {
   CategoryFacetValueRequest,
   DateRangeRequest,
@@ -15,6 +11,7 @@ import {
   toggleSelectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
 } from '../../../facets/category-facet-set/category-facet-set-actions';
+import {selectCategoryFacetSearchResult} from '../../../facets/facet-search-set/category/category-facet-search-actions';
 import {
   excludeFacetSearchResult,
   selectFacetSearchResult,
@@ -38,6 +35,7 @@ import {findExactRangeValue} from '../../../facets/range-facets/generic/range-fa
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
+  updateNumericFacetValues,
 } from '../../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {convertToNumericRangeRequests} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {setContext, setUser, setView} from '../../context/context-actions';
@@ -50,8 +48,11 @@ import {
 } from './facet-set-state';
 import {
   AnyFacetRequest,
-  CommerceFacetRequest,
   AnyFacetValueRequest,
+  RegularFacetRequest,
+  NumericFacetRequest,
+  DateFacetRequest,
+  CategoryFacetRequest,
 } from './interfaces/request';
 import {CategoryFacetValue} from './interfaces/response';
 import {AnyFacetResponse} from './interfaces/response';
@@ -102,6 +103,14 @@ export const commerceFacetSetReducer = createReducer(
           return;
         }
         updateExistingFacetValueState(existingValue, 'select');
+
+        if (
+          isContinuousRangeRequest(facetRequest) &&
+          existingValue.state === 'idle'
+        ) {
+          facetRequest.values = [];
+          return;
+        }
       })
       .addCase(toggleSelectDateFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
@@ -195,6 +204,14 @@ export const commerceFacetSetReducer = createReducer(
         }
 
         updateExistingFacetValueState(existingValue, 'exclude');
+
+        if (
+          isContinuousRangeRequest(facetRequest) &&
+          existingValue.state === 'idle'
+        ) {
+          facetRequest.values = [];
+          return;
+        }
       })
       .addCase(toggleExcludeDateFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
@@ -235,11 +252,7 @@ export const commerceFacetSetReducer = createReducer(
         const {facetId, value} = action.payload;
         const facetRequest = state[facetId]?.request;
 
-        if (
-          !facetRequest ||
-          (facetRequest.type !== 'regular' &&
-            facetRequest.type !== 'hierarchical')
-        ) {
+        if (!facetRequest || !ensureRegularFacetRequest(facetRequest)) {
           return;
         }
 
@@ -248,9 +261,7 @@ export const commerceFacetSetReducer = createReducer(
         facetRequest.preventAutoSelect = true;
 
         const existingValue = facetRequest.values.find(
-          (v) =>
-            (v as FacetValueRequest | CategoryFacetValueRequest).value ===
-            rawValue
+          (v) => v.value === rawValue
         );
 
         if (!existingValue) {
@@ -289,6 +300,35 @@ export const commerceFacetSetReducer = createReducer(
 
         updateExistingFacetValueState(existingValue, 'exclude');
       })
+      .addCase(selectCategoryFacetSearchResult, (state, action) => {
+        const {facetId, value} = action.payload;
+        const facetRequest = state[facetId];
+
+        if (
+          !facetRequest ||
+          !ensureCategoryFacetRequest(facetRequest?.request)
+        ) {
+          return;
+        }
+
+        const path = [...value.path, value.rawValue];
+        selectPath(
+          facetRequest.request,
+          path,
+          facetRequest.request.initialNumberOfValues
+        );
+      })
+      .addCase(updateNumericFacetValues, (state, action) => {
+        const {facetId, values} = action.payload;
+        const request = state[facetId]?.request;
+
+        if (!request || !ensureNumericFacetRequest(request)) {
+          return;
+        }
+
+        request.values = convertToNumericRangeRequests(values);
+        request.numberOfValues = values.length;
+      })
       .addCase(updateFacetNumberOfValues, (state, action) => {
         const {facetId, numberOfValues} = action.payload;
         const facetRequest = state[facetId]?.request;
@@ -324,40 +364,42 @@ export const commerceFacetSetReducer = createReducer(
 
         handleDeselectAllFacetValues(request);
       })
-      .addCase(deselectAllBreadcrumbs, resetAllFacetValues)
-      .addCase(setContext, resetAllFacetValues)
-      .addCase(setView, resetAllFacetValues)
-      .addCase(setUser, resetAllFacetValues);
+      .addCase(deselectAllBreadcrumbs, setAllFacetValuesToIdle)
+      .addCase(setContext, clearAllFacetValues)
+      .addCase(setView, clearAllFacetValues)
+      .addCase(setUser, clearAllFacetValues);
   }
 );
 
 function ensureRegularFacetRequest(
   facetRequest: AnyFacetRequest
-): facetRequest is CommerceFacetRequest<FacetValueRequest> {
+): facetRequest is RegularFacetRequest {
   return facetRequest.type === 'regular';
 }
 
 function ensureNumericFacetRequest(
   facetRequest: AnyFacetRequest
-): facetRequest is CommerceFacetRequest<NumericRangeRequest> {
+): facetRequest is NumericFacetRequest {
   return facetRequest.type === 'numericalRange';
 }
 
 function ensureDateFacetRequest(
   facetRequest: AnyFacetRequest
-): facetRequest is CommerceFacetRequest<DateRangeRequest> {
+): facetRequest is DateFacetRequest {
   return facetRequest.type === 'dateRange';
 }
 
 function ensureCategoryFacetRequest(
   facetRequest: AnyFacetRequest
-): facetRequest is CommerceFacetRequest<CategoryFacetValueRequest> {
+): facetRequest is CategoryFacetRequest {
   return facetRequest.type === 'hierarchical';
 }
 
 function handleQueryFulfilled(
   state: WritableDraft<CommerceFacetSetState>,
-  action: AnyAction
+  action: ReturnType<
+    typeof fetchProductListing.fulfilled | typeof executeSearch.fulfilled
+  >
 ) {
   const existingFacets = new Set(Object.keys(state));
   const facets = action.payload.response.facets;
@@ -381,7 +423,7 @@ function handleDeselectAllFacetValues(request: AnyFacetRequest) {
 }
 
 function ensurePathAndReturnChildren(
-  request: CommerceFacetRequest<CategoryFacetValueRequest>,
+  request: CategoryFacetRequest,
   path: string[],
   retrieveCount: number
 ) {
@@ -451,14 +493,14 @@ function updateStateFromFacetResponse(
   if (!facetRequest) {
     state[facetId] = {request: {} as AnyFacetRequest};
     facetRequest = state[facetId].request;
-    facetRequest.initialNumberOfValues = facetResponse.values.length;
+    facetRequest.initialNumberOfValues = facetResponse.numberOfValues;
   } else {
     facetsToRemove.delete(facetId);
   }
 
   facetRequest.facetId = facetId;
   facetRequest.displayName = facetResponse.displayName;
-  facetRequest.numberOfValues = facetResponse.values.length;
+  facetRequest.numberOfValues = facetResponse.numberOfValues;
   facetRequest.field = facetResponse.field;
   facetRequest.type = facetResponse.type;
   facetRequest.values =
@@ -469,6 +511,12 @@ function updateStateFromFacetResponse(
     ensureCategoryFacetRequest(facetRequest)
   ) {
     facetRequest.delimitingCharacter = facetResponse.delimitingCharacter;
+  } else if (facetResponse.type === 'numericalRange' && facetResponse.domain) {
+    facetRequest.domain = {
+      min: facetResponse.domain.min,
+      max: facetResponse.domain.max,
+      increment: facetResponse.domain.increment,
+    };
   }
 }
 
@@ -527,8 +575,49 @@ function insertNewValue(
   facetRequest.numberOfValues = facetRequest.values.length;
 }
 
-function resetAllFacetValues(state: CommerceFacetSetState) {
+function setAllFacetValuesToIdle(state: CommerceFacetSetState) {
   Object.values(state).forEach((facet) => {
     facet.request.values.forEach((value) => (value.state = 'idle'));
   });
+}
+
+function clearAllFacetValues(state: CommerceFacetSetState) {
+  Object.values(state).forEach((facet) => {
+    facet.request.values = [];
+  });
+}
+
+export function selectPath(
+  request: CategoryFacetRequest,
+  path: string[],
+  initialNumberOfValues: number
+) {
+  request.values = buildCurrentValuesFromPath(path, initialNumberOfValues);
+  request.numberOfValues = path.length ? 1 : initialNumberOfValues;
+  request.preventAutoSelect = true;
+}
+
+function buildCurrentValuesFromPath(path: string[], retrieveCount: number) {
+  if (!path.length) {
+    return [];
+  }
+
+  const root = buildCategoryFacetValueRequest(path[0], retrieveCount);
+  let curr = root;
+
+  for (const segment of path.splice(1)) {
+    const next = buildCategoryFacetValueRequest(segment, retrieveCount);
+    curr.children.push(next);
+    curr = next;
+  }
+
+  curr.state = 'selected';
+
+  return [root];
+}
+
+// eslint-disable-next-line @cspell/spellchecker
+// TODO CAPI-850: Tthis is the best we can do for now to identify a continuous range. When the `interval` property gets added to the facet response, we'll use that instead.
+function isContinuousRangeRequest(request: NumericFacetRequest): boolean {
+  return request.values.length === 1 && request.domain?.increment === 0;
 }

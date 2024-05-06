@@ -1,4 +1,4 @@
-import {CommerceFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
+import {DateFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice';
 import {CommerceAppState} from '../../../../state/commerce-app-state';
@@ -12,10 +12,7 @@ import {
   buildMockCommerceEngine,
 } from '../../../../test/mock-engine-v2';
 import {DateFacet} from '../../core/facets/date/headless-commerce-date-facet';
-import {
-  CommerceFacetOptions,
-  DateRangeRequest,
-} from '../../core/facets/headless-core-commerce-facet';
+import {CommerceFacetOptions} from '../../core/facets/headless-core-commerce-facet';
 import {buildProductListingDateFacet} from './headless-product-listing-date-facet';
 
 jest.mock(
@@ -36,9 +33,7 @@ describe('ProductListingDateFacet', () => {
     facet = buildProductListingDateFacet(engine, options);
   }
 
-  function setFacetRequest(
-    config: Partial<CommerceFacetRequest<DateRangeRequest>> = {}
-  ) {
+  function setFacetRequest(config: Partial<DateFacetRequest> = {}) {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, ...config}),
     });
@@ -112,6 +107,7 @@ describe('ProductListingDateFacet', () => {
 
     it('#state.isLoading uses #isFacetLoadingResponseSelector', () => {
       state.productListing.isLoading = true;
+      initFacet();
       expect(facet.state.isLoading).toBe(true);
     });
   });

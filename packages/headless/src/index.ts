@@ -41,6 +41,7 @@ export type {
 export type {LoggerOptions} from './app/logger';
 
 export type {LogLevel} from './app/logger';
+export type {NavigatorContext} from './app/navigatorContextProvider';
 
 // State
 export type {
@@ -637,7 +638,10 @@ export {
   deserializeRelativeDate,
   validateRelativeDate,
 } from './api/search/date/relative-date';
-export type {GeneratedAnswerStyle} from './features/generated-answer/generated-response-format';
+export type {
+  GeneratedAnswerStyle,
+  GeneratedContentFormat,
+} from './features/generated-answer/generated-response-format';
 
 export * from './utils/query-expression/query-expression';
 

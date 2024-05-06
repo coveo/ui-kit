@@ -50,6 +50,9 @@ describe('CategoryFacetSearch', () => {
         ...defaultFacetSearchOptions,
         facetId,
       },
+      executeFacetSearchActionCreator: jest.fn(),
+      executeFieldSuggestActionCreator: jest.fn(),
+      select: jest.fn(),
       isForFieldSuggestions: false,
     };
 

@@ -53,7 +53,7 @@ describe('commerce api client', () => {
     req: Partial<CommerceRecommendationsRequest> = {}
   ): Promise<CommerceRecommendationsRequest> => {
     return {
-      id: 'slotId',
+      slotId: 'slotId',
       accessToken: accessToken,
       organizationId: organizationId,
       url: platformUrl,
@@ -253,7 +253,7 @@ describe('commerce api client', () => {
     const expectedBody: CommerceResponse = {
       products: [],
       facets: [],
-      pagination: {page: 0, perPage: 0, totalCount: 0, totalPages: 0},
+      pagination: {page: 0, perPage: 0, totalEntries: 0, totalPages: 0},
       responseId: '',
       sort: {
         appliedSort: {sortCriteria: SortBy.Relevance},

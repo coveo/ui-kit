@@ -6,7 +6,7 @@ exports[`generated answer insight analytics actions when analyticsMode is \`next
   {
     "action": "copyToClipboard",
     "answer": {
-      "id": "123",
+      "responseId": "456",
       "type": "RGA",
     },
   },
@@ -18,11 +18,24 @@ exports[`generated answer insight analytics actions when analyticsMode is \`next
   "Qna.SubmitFeedback",
   {
     "answer": {
-      "id": "123",
+      "responseId": "456",
       "type": "RGA",
     },
     "feedback": {
       "liked": false,
+    },
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions when analyticsMode is \`next\` should log #logGeneratedAnswerCollapse with the right payload 1`] = `
+[
+  "Qna.AnswerAction",
+  {
+    "action": "collapse",
+    "answer": {
+      "responseId": "456",
+      "type": "RGA",
     },
   },
 ]
@@ -33,7 +46,7 @@ exports[`generated answer insight analytics actions when analyticsMode is \`next
   "Qna.SubmitFeedback",
   {
     "answer": {
-      "id": "123",
+      "responseId": "456",
       "type": "RGA",
     },
     "feedback": {
@@ -45,13 +58,26 @@ exports[`generated answer insight analytics actions when analyticsMode is \`next
 ]
 `;
 
+exports[`generated answer insight analytics actions when analyticsMode is \`next\` should log #logGeneratedAnswerExpand with the right payload 1`] = `
+[
+  "Qna.AnswerAction",
+  {
+    "action": "expand",
+    "answer": {
+      "responseId": "456",
+      "type": "RGA",
+    },
+  },
+]
+`;
+
 exports[`generated answer insight analytics actions when analyticsMode is \`next\` should log #logGeneratedAnswerHideAnswers with the right payload 1`] = `
 [
   "Qna.AnswerAction",
   {
     "action": "hide",
     "answer": {
-      "id": "123",
+      "responseId": "456",
       "type": "RGA",
     },
   },
@@ -64,7 +90,7 @@ exports[`generated answer insight analytics actions when analyticsMode is \`next
   {
     "action": "show",
     "answer": {
-      "id": "123",
+      "responseId": "456",
       "type": "RGA",
     },
   },
@@ -76,7 +102,7 @@ exports[`generated answer insight analytics actions when analyticsMode is \`next
   "Qna.CitationHover",
   {
     "answer": {
-      "id": "123",
+      "responseId": "456",
       "type": "RGA",
     },
     "citation": {
@@ -93,7 +119,7 @@ exports[`generated answer insight analytics actions when analyticsMode is \`next
   "Qna.SubmitFeedback",
   {
     "answer": {
-      "id": "123",
+      "responseId": "456",
       "type": "RGA",
     },
     "feedback": {
@@ -108,7 +134,7 @@ exports[`generated answer insight analytics actions when analyticsMode is \`next
   "Qna.CitationClick",
   {
     "answer": {
-      "id": "123",
+      "responseId": "456",
       "type": "RGA",
     },
     "citation": {

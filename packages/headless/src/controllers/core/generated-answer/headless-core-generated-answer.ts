@@ -19,6 +19,8 @@ import {
   sendGeneratedAnswerFeedback,
   registerFieldsToIncludeInCitations,
   setId,
+  expandGeneratedAnswer,
+  collapseGeneratedAnswer,
 } from '../../../features/generated-answer/generated-answer-actions';
 import {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions';
 import {generatedAnswerReducer as generatedAnswer} from '../../../features/generated-answer/generated-answer-slice';
@@ -96,6 +98,14 @@ export interface GeneratedAnswer extends Controller {
    */
   hide(): void;
   /**
+   * Expands the generated answer.
+   */
+  expand(): void;
+  /**
+   * Collapses the generated answer.
+   */
+  collapse(): void;
+  /**
    * Logs a custom event indicating the generated answer was copied to the clipboard.
    */
   logCopyToClipboard(): void;
@@ -117,6 +127,10 @@ export interface GeneratedAnswerProps {
      * The initial formatting options applied to generated answers when the controller first loads.
      */
     responseFormat?: GeneratedResponseFormat;
+    /**
+     * The initial expanded state of the generated answer.
+     */
+    expanded?: boolean;
   };
   /**
    * A list of indexed fields to include in the citations returned with the generated answer.
@@ -217,6 +231,8 @@ export interface GeneratedAnswerAnalyticsClient {
     responseFormat: GeneratedResponseFormat
   ) => LegacySearchAction;
   logRetryGeneratedAnswer: () => LegacySearchAction;
+  logGeneratedAnswerExpand: () => CustomAction;
+  logGeneratedAnswerCollapse: () => CustomAction;
 }
 
 /**
@@ -261,6 +277,11 @@ export function buildCoreGeneratedAnswer(
   const fieldsToIncludeInCitations = props.fieldsToIncludeInCitations;
   if (fieldsToIncludeInCitations) {
     dispatch(registerFieldsToIncludeInCitations(fieldsToIncludeInCitations));
+  }
+
+  const expanded = props.initialState?.expanded;
+  if (expanded) {
+    dispatch(expandGeneratedAnswer());
   }
 
   subscribeStateManager.subscribeToSearchRequests(engine);
@@ -329,6 +350,20 @@ export function buildCoreGeneratedAnswer(
       if (this.state.isVisible) {
         dispatch(setIsVisible(false));
         dispatch(analyticsClient.logGeneratedAnswerHideAnswers());
+      }
+    },
+
+    expand() {
+      if (!this.state.expanded) {
+        dispatch(expandGeneratedAnswer());
+        dispatch(analyticsClient.logGeneratedAnswerExpand());
+      }
+    },
+
+    collapse() {
+      if (this.state.expanded) {
+        dispatch(collapseGeneratedAnswer());
+        dispatch(analyticsClient.logGeneratedAnswerCollapse());
       }
     },
 

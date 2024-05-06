@@ -205,7 +205,7 @@ export class TestFixture {
   }
 
   public init() {
-    !this.redirected && cy.visit(buildTestUrl(this.hash));
+    !this.redirected && cy.visit('/') && cy.visit(buildTestUrl(this.hash));
     cy.injectAxe();
     setupIntercept();
     spyConsole();
@@ -284,6 +284,11 @@ export class TestFixture {
 
     return this;
   }
+  public waitForComponentHydration(componentTag: string) {
+    cy.document()
+      .find(componentTag, {timeout: 10e3, includeShadowDom: true})
+      .should('have.class', 'hydrated');
+  }
 }
 
 export const addTag = (env: TestFixture, tag: string, props: TagProps) => {
@@ -297,4 +302,8 @@ export const generateComponentHTML = (tag: string, props: TagProps = {}) => {
     e.setAttribute(k, v.toString());
   }
   return e;
+};
+
+export const generateLongTextAnswer = () => {
+  return new Array(200).fill('This is a long answer.').join(' ');
 };

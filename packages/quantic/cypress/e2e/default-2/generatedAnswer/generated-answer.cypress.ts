@@ -1,3 +1,4 @@
+/* eslint-disable @cspell/spellchecker */
 import {performSearch} from '../../../page-objects/actions/action-perform-search';
 import {analyticsModeTest} from '../../../page-objects/analytics';
 import {configure} from '../../../page-objects/configurator';
@@ -26,6 +27,7 @@ interface GeneratedAnswerOptions {
   multilineFooter: boolean;
   fieldsToIncludeInCitations: string;
   useCase: string;
+  collapsible: boolean;
 }
 
 let analyticsMode: 'legacy' | 'next' = 'legacy';
@@ -59,6 +61,17 @@ const genQaMessageTypePayload = {
   payloadType: 'genqa.messageType',
   payload: JSON.stringify({
     textDelta: testText,
+  }),
+  finishReason: 'COMPLETED',
+};
+
+const testLongText = `Call me Ishmael. Some years ago—never mind how long precisely—having little or no money in my purse, and nothing particular to interest me on shore, I thought I would sail about a little and see the watery part of the world. It is a way I have of driving off the spleen and regulating the circulation. Whenever I find myself growing grim about the mouth; whenever it is a damp, drizzly November in my soul; whenever I find myself involuntarily pausing before coffin warehouses, and bringing up the rear of every funeral I meet; and especially whenever my hypos get such an upper hand of me, that it requires a strong moral principle to prevent me from deliberately stepping into the street, and methodically knocking people’s hats off—then, I account it high time to get to sea as soon as I can. This is my substitute for pistol and ball. With a philosophical flourish Cato throws himself upon his sword; I quietly take to the ship. There is nothing surprising in this. If they but knew it, almost all men in their degree, some time or other, cherish very nearly the same feelings towards the ocean with me.
+
+There now is your insular city of the Manhattoes, belted round by wharves as Indian isles by coral reefs—commerce surrounds it with her surf. Right and left, the streets take you waterward. Its extreme downtown is the battery, where that noble mole is washed by waves, and cooled by breezes, which a few hours previous were out of sight of land. Look at the crowds of water-gazers there.`;
+const genQaLongMessageTypePayload = {
+  payloadType: 'genqa.messageType',
+  payload: JSON.stringify({
+    textDelta: testLongText,
   }),
   finishReason: 'COMPLETED',
 };
@@ -130,7 +143,8 @@ describe('quantic-generated-answer', () => {
           it('should display the generated answer content', () => {
             Expect.displayGeneratedAnswerContent(true);
             Expect.sessionStorageContains(GENERATED_ANSWER_DATA_KEY, {});
-            Expect.generatedAnswerFooterIsOnMultiline(false);
+            Expect.generatedAnswerFooterRowsIsOnMultiline(false);
+            Expect.generatedAnswerCollapsed(false);
           });
 
           it('should display the correct message', () => {
@@ -238,7 +252,110 @@ describe('quantic-generated-answer', () => {
           it('should properly display the generated answer footer on multiple lines', () => {
             scope('when loading the page', () => {
               Expect.displayGeneratedAnswerCard(true);
-              Expect.generatedAnswerFooterIsOnMultiline(true);
+              Expect.generatedAnswerFooterRowsIsOnMultiline(true);
+              Expect.displayDisclaimer(true);
+            });
+          });
+        });
+
+        describe('when the collapsible property is set to true', () => {
+          describe('when the generated answer is still streaming', () => {
+            it('should properly display the generating answer message', () => {
+              const streamId = crypto.randomUUID();
+
+              const testMessagePayload = {
+                payloadType: 'genqa.messageType',
+                payload: JSON.stringify({
+                  textDelta: testLongText,
+                }),
+              };
+
+              mockSearchWithGeneratedAnswer(streamId, param.useCase);
+              mockStreamResponse(streamId, testMessagePayload);
+              visitGeneratedAnswer({
+                collapsible: true,
+                useCase: param.useCase,
+              });
+
+              scope('when loading the page', () => {
+                Expect.displayGeneratedAnswerCard(true);
+                Expect.generatedAnswerCollapsed(true);
+                Expect.displayGeneratedAnswerToggleCollapseButton(false);
+                Expect.displayGeneratedAnswerGeneratingMessage(true);
+                Expect.displayCitations(false);
+                Expect.displayRephraseButtons(false);
+                Expect.displayDisclaimer(false);
+              });
+            });
+          });
+
+          describe('when the generated answer is done streaming', () => {
+            it('should properly display the generated answer collapsed when the answer is too long', () => {
+              const streamId = crypto.randomUUID();
+
+              mockSearchWithGeneratedAnswer(streamId, param.useCase);
+              mockStreamResponse(streamId, genQaLongMessageTypePayload);
+              visitGeneratedAnswer({
+                collapsible: true,
+                useCase: param.useCase,
+              });
+
+              scope('when loading the page', () => {
+                Expect.displayGeneratedAnswerCard(true);
+                Expect.generatedAnswerCollapsed(true);
+                Expect.displayGeneratedAnswerToggleCollapseButton(true);
+                Expect.generatedAnswerToggleCollapseButtonContains('Show more');
+                Expect.displayCitations(false);
+                Expect.displayRephraseButtons(false);
+                Expect.displayDisclaimer(true);
+              });
+
+              scope('when clicking the show more button to expand', () => {
+                Actions.clickToggleCollapseButton();
+                Expect.generatedAnswerCollapsed(false);
+                Expect.generatedAnswerToggleCollapseButtonContains('Show less');
+                Expect.displayCitations(false);
+                Expect.displayRephraseButtons(true);
+                Expect.displayDisclaimer(true);
+                if (analyticsMode === 'legacy') {
+                  Expect.logGeneratedAnswerExpand(streamId);
+                }
+              });
+
+              scope(
+                'when clicking the show less button a second time to collapse',
+                () => {
+                  Actions.clickToggleCollapseButton();
+                  Expect.generatedAnswerCollapsed(true);
+                  Expect.generatedAnswerToggleCollapseButtonContains(
+                    'Show more'
+                  );
+                  Expect.displayCitations(false);
+                  Expect.displayRephraseButtons(false);
+                  Expect.displayDisclaimer(true);
+                  if (analyticsMode === 'legacy') {
+                    Expect.logGeneratedAnswerCollapse(streamId);
+                  }
+                }
+              );
+            });
+          });
+
+          it('should not display the answer collapsed when the answer is short', () => {
+            const newStreamId = crypto.randomUUID();
+
+            mockSearchWithGeneratedAnswer(newStreamId, param.useCase);
+            mockStreamResponse(newStreamId, genQaMessageTypePayload);
+            visitGeneratedAnswer({
+              collapsible: true,
+              useCase: param.useCase,
+            });
+
+            scope('when loading the page', () => {
+              Expect.displayGeneratedAnswerCard(true);
+              Expect.generatedAnswerCollapsed(false);
+              Expect.displayGeneratedAnswerToggleCollapseButton(false);
+              Expect.displayRephraseButtons(true);
               Expect.displayDisclaimer(true);
             });
           });
@@ -360,9 +477,14 @@ describe('quantic-generated-answer', () => {
 
             describe('when liking the generated answer', () => {
               const streamId = crypto.randomUUID();
+              const responseId = crypto.randomUUID();
 
               beforeEach(() => {
-                mockSearchWithGeneratedAnswer(streamId, param.useCase);
+                mockSearchWithGeneratedAnswer(
+                  streamId,
+                  param.useCase,
+                  responseId
+                );
                 mockStreamResponse(streamId, genQaMessageTypePayload);
                 visitGeneratedAnswer({useCase: param.useCase});
               });
@@ -382,7 +504,7 @@ describe('quantic-generated-answer', () => {
                           liked: true,
                         },
                         answer: {
-                          id: streamId,
+                          responseId,
                           type: answerType,
                         },
                       },
@@ -397,16 +519,24 @@ describe('quantic-generated-answer', () => {
               });
             });
 
-            describe(
+            // The Salesforce lightning-modal is very flaky, sometimes throwing random errors in Cypress test runs.
+            // We are skipping this test for now until we can find a more reliable way to test it.
+            // Common stack trace when clicking on the dislike: `Cannot read properties of null (reading 'appendChild')`
+            describe.skip(
               'when providing detailed feedback',
               {
-                retries: 20,
+                retries: 5,
               },
               () => {
                 const streamId = crypto.randomUUID();
+                const responseId = crypto.randomUUID();
 
                 beforeEach(() => {
-                  mockSearchWithGeneratedAnswer(streamId, param.useCase);
+                  mockSearchWithGeneratedAnswer(
+                    streamId,
+                    param.useCase,
+                    responseId
+                  );
                   mockStreamResponse(streamId, genQaMessageTypePayload);
                   visitGeneratedAnswer({useCase: param.useCase});
                 });
@@ -428,36 +558,7 @@ describe('quantic-generated-answer', () => {
                             liked: false,
                           },
                           answer: {
-                            id: streamId,
-                            type: answerType,
-                          },
-                        },
-                        exampleTrackingId
-                      );
-                    } else {
-                      Expect.logDislikeGeneratedAnswer(streamId);
-                    }
-                    Expect.likeButtonIsChecked(false);
-                    Expect.dislikeButtonIsChecked(true);
-                    Expect.displayFeedbackModal(true);
-                  });
-
-                  scope('when selecting a feedback option', () => {
-                    Actions.clickFeedbackOption(
-                      feedbackOptions.indexOf(otherOption)
-                    );
-                    Actions.typeInFeedbackDetailsInput(exampleDetails);
-                    Actions.clickFeedbackSubmitButton();
-                    if (analyticsMode === 'next') {
-                      NextAnalyticsExpectations.emitQnaSubmitFeedbackReasonEvent(
-                        {
-                          feedback: {
-                            liked: false,
-                            details: exampleDetails,
-                            reason: 'other',
-                          },
-                          answer: {
-                            id: streamId,
+                            responseId,
                             type: answerType,
                           },
                         },
@@ -507,7 +608,7 @@ describe('quantic-generated-answer', () => {
                               reason: 'other',
                             },
                             answer: {
-                              id: secondStreamId,
+                              responseId,
                               type: answerType,
                             },
                           },
@@ -542,6 +643,27 @@ describe('quantic-generated-answer', () => {
                       );
                       performSearch();
                       Actions.dislikeGeneratedAnswer();
+                      Expect.displayFeedbackModal(false);
+                    }
+                  );
+
+                  scope(
+                    'when trying to open the feedback modal after rephrasing the generated answer',
+                    () => {
+                      const secondStreamId = crypto.randomUUID();
+                      const secondResponseId = crypto.randomUUID();
+
+                      mockSearchWithGeneratedAnswer(
+                        secondStreamId,
+                        param.useCase,
+                        secondResponseId
+                      );
+                      mockStreamResponse(
+                        secondStreamId,
+                        genQaMessageTypePayload
+                      );
+                      Actions.clickRephraseButton(rephraseOptions[0]);
+                      Actions.dislikeGeneratedAnswer();
                       Expect.displayFeedbackModal(true);
                       Actions.clickFeedbackOption(
                         feedbackOptions.indexOf(otherOption)
@@ -557,7 +679,59 @@ describe('quantic-generated-answer', () => {
                               reason: 'other',
                             },
                             answer: {
-                              id: thirdStreamId,
+                              responseId: secondResponseId,
+                              type: answerType,
+                            },
+                          },
+                          exampleTrackingId
+                        );
+                      } else {
+                        Expect.logGeneratedAnswerFeedbackSubmit(
+                          secondStreamId,
+                          {
+                            reason: otherOption,
+                            details: exampleDetails,
+                          }
+                        );
+                      }
+
+                      Actions.clickFeedbackDoneButton();
+                    }
+                  );
+
+                  scope(
+                    'when trying to open the feedback modal after executing a new query',
+                    () => {
+                      const thirdStreamId = crypto.randomUUID();
+                      const thirdResponseId = crypto.randomUUID();
+
+                      mockSearchWithGeneratedAnswer(
+                        thirdStreamId,
+                        param.useCase,
+                        thirdResponseId
+                      );
+                      mockStreamResponse(
+                        thirdStreamId,
+                        genQaMessageTypePayload
+                      );
+                      performSearch();
+                      Actions.dislikeGeneratedAnswer();
+                      Expect.displayFeedbackModal(true);
+                      Actions.clickFeedbackOption(
+                        feedbackOptions.indexOf(otherOption)
+                      );
+                      Actions.typeInFeedbackDetailsInput(exampleDetails);
+                      Actions.clickFeedbackSubmitButton();
+                      if (analyticsMode === 'next') {
+                        NextAnalyticsExpectations.emitQnaSubmitFeedbackReasonEvent(
+                          {
+                            feedback: {
+                              liked: false,
+                              details: exampleDetails,
+                              reason: 'other',
+                            },
+                            answer: {
+                              responseId: thirdResponseId,
                               type: answerType,
                             },
                           },
@@ -579,9 +753,14 @@ describe('quantic-generated-answer', () => {
 
             describe('the generated answer toggle button', () => {
               const streamId = crypto.randomUUID();
+              const responseId = crypto.randomUUID();
 
               beforeEach(() => {
-                mockSearchWithGeneratedAnswer(streamId, param.useCase);
+                mockSearchWithGeneratedAnswer(
+                  streamId,
+                  param.useCase,
+                  responseId
+                );
                 mockStreamResponse(streamId, genQaMessageTypePayload);
                 visitGeneratedAnswer({useCase: param.useCase});
               });
@@ -601,7 +780,7 @@ describe('quantic-generated-answer', () => {
                     NextAnalyticsExpectations.emitQnaAnswerActionEvent(
                       {
                         answer: {
-                          id: streamId,
+                          responseId,
                           type: answerType,
                         },
                         action: 'hide',
@@ -626,7 +805,7 @@ describe('quantic-generated-answer', () => {
                     NextAnalyticsExpectations.emitQnaAnswerActionEvent(
                       {
                         answer: {
-                          id: streamId,
+                          responseId,
                           type: answerType,
                         },
                         action: 'show',
@@ -643,6 +822,87 @@ describe('quantic-generated-answer', () => {
               });
             });
 
+            describe('the collapsible option', () => {
+              const streamId = crypto.randomUUID();
+              const responseId = crypto.randomUUID();
+
+              beforeEach(() => {
+                mockSearchWithGeneratedAnswer(
+                  streamId,
+                  param.useCase,
+                  responseId
+                );
+                mockStreamResponse(streamId, genQaLongMessageTypePayload);
+                visitGeneratedAnswer({
+                  useCase: param.useCase,
+                  collapsible: true,
+                });
+              });
+
+              it('should display the toggle collapse button', () => {
+                Expect.displayGeneratedAnswerCard(true);
+                Expect.generatedAnswerCollapsed(true);
+                Expect.displayGeneratedAnswerToggleCollapseButton(true);
+                Expect.displayGeneratedAnswerGeneratingMessage(false);
+                Expect.displayCitations(false);
+                Expect.displayRephraseButtons(false);
+                Expect.displayDisclaimer(true);
+
+                scope('when clicking the show more button to expand', () => {
+                  Actions.clickToggleCollapseButton();
+                  Expect.generatedAnswerCollapsed(false);
+                  Expect.generatedAnswerToggleCollapseButtonContains(
+                    'Show less'
+                  );
+                  Expect.displayCitations(false);
+                  Expect.displayRephraseButtons(true);
+                  Expect.displayDisclaimer(true);
+                  if (analyticsMode === 'next') {
+                    NextAnalyticsExpectations.emitQnaAnswerActionEvent(
+                      {
+                        answer: {
+                          responseId,
+                          type: answerType,
+                        },
+                        action: 'expand',
+                      },
+                      exampleTrackingId
+                    );
+                  } else {
+                    Expect.logGeneratedAnswerExpand(streamId);
+                  }
+                });
+
+                scope(
+                  'when clicking the show less button a second time to collapse',
+                  () => {
+                    Actions.clickToggleCollapseButton();
+                    Expect.generatedAnswerCollapsed(true);
+                    Expect.generatedAnswerToggleCollapseButtonContains(
+                      'Show more'
+                    );
+                    Expect.displayCitations(false);
+                    Expect.displayRephraseButtons(false);
+                    Expect.displayDisclaimer(true);
+                    if (analyticsMode === 'next') {
+                      NextAnalyticsExpectations.emitQnaAnswerActionEvent(
+                        {
+                          answer: {
+                            responseId,
+                            type: answerType,
+                          },
+                          action: 'collapse',
+                        },
+                        exampleTrackingId
+                      );
+                    } else {
+                      Expect.logGeneratedAnswerCollapse(streamId);
+                    }
+                  }
+                );
+              });
+            });
+
             // access to the clipboard reliably works in Electron browser
             // in other browsers, there are popups asking for permission
             // thus we should only run these tests in Electron
@@ -651,9 +911,14 @@ describe('quantic-generated-answer', () => {
               {browser: 'electron'},
               () => {
                 const streamId = crypto.randomUUID();
+                const responseId = crypto.randomUUID();
 
                 beforeEach(() => {
-                  mockSearchWithGeneratedAnswer(streamId, param.useCase);
+                  mockSearchWithGeneratedAnswer(
+                    streamId,
+                    param.useCase,
+                    responseId
+                  );
                   mockStreamResponse(streamId, genQaMessageTypePayload);
                   visitGeneratedAnswer({
                     multilineFooter: true,
@@ -669,7 +934,7 @@ describe('quantic-generated-answer', () => {
                       NextAnalyticsExpectations.emitQnaAnswerActionEvent(
                         {
                           answer: {
-                            id: streamId,
+                            responseId,
                             type: answerType,
                           },
                           action: 'copyToClipboard',
@@ -692,6 +957,7 @@ describe('quantic-generated-answer', () => {
             describe('when a citation event is received', () => {
               const exampleLinkUrl = '#';
               const streamId = crypto.randomUUID();
+              const responseId = crypto.randomUUID();
               const firstTestCitation = {
                 id: 'some-id-1',
                 title: 'Some Title 1',
@@ -718,7 +984,11 @@ describe('quantic-generated-answer', () => {
               };
 
               beforeEach(() => {
-                mockSearchWithGeneratedAnswer(streamId, param.useCase);
+                mockSearchWithGeneratedAnswer(
+                  streamId,
+                  param.useCase,
+                  responseId
+                );
                 mockStreamResponse(streamId, testMessagePayload);
                 visitGeneratedAnswer({useCase: param.useCase});
               });
@@ -761,7 +1031,7 @@ describe('quantic-generated-answer', () => {
                     NextAnalyticsExpectations.emitQnaCitationHover(
                       {
                         answer: {
-                          id: streamId,
+                          responseId,
                           type: answerType,
                         },
                         citation: {
@@ -795,7 +1065,7 @@ describe('quantic-generated-answer', () => {
                   NextAnalyticsExpectations.emitQnaCitationClick(
                     {
                       answer: {
-                        id: streamId,
+                        responseId,
                         type: answerType,
                       },
                       citation: {

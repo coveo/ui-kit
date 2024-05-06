@@ -4,7 +4,6 @@ import {
   buildCommerceEngine,
 } from '../app/commerce-engine/commerce-engine';
 import {buildCart} from '../controllers/commerce/context/cart/headless-cart';
-import {buildContext} from '../controllers/commerce/context/headless-context';
 import {buildRelevanceSortCriterion} from '../controllers/commerce/core/sort/headless-core-commerce-sort';
 import {buildProductListingFacetGenerator} from '../controllers/commerce/product-listing/facets/headless-product-listing-facet-generator';
 import {ProductListing} from '../controllers/commerce/product-listing/headless-product-listing';
@@ -35,19 +34,16 @@ describe.skip('commerce', () => {
         analytics: {
           trackingId: 'barca',
         },
-      },
-      loggerOptions: {level: 'silent'},
-    });
-
-    buildContext(engine, {
-      options: {
-        language: 'en-gb',
-        country: 'gb',
-        currency: 'GBP',
-        view: {
-          url: 'https://sports-dev.barca.group/browse/promotions/surf-with-us-this-year',
+        context: {
+          language: 'en',
+          country: 'GB',
+          currency: 'GBP',
+          view: {
+            url: 'https://sports-dev.barca.group/browse/promotions/surf-with-us-this-year',
+          },
         },
       },
+      loggerOptions: {level: 'silent'},
     });
 
     const cart = buildCart(engine);
@@ -115,16 +111,28 @@ describe.skip('commerce', () => {
 
     // Generate the facets from the response
     const facetGenerator = buildProductListingFacetGenerator(engine);
-    const controllers = facetGenerator.state.facets;
+    const controllers = facetGenerator.facets;
     const facetController = controllers[0];
 
     // Select a facet
     await waitForNextStateChange(engine, {
       action: () => {
-        facetController.toggleSelect({
-          ...facetController.state.values[0],
-          state: 'selected',
-        });
+        switch (facetController.type) {
+          case 'numericalRange':
+            facetController.toggleSelect(facetController.state.values[0]);
+            break;
+          case 'dateRange':
+            facetController.toggleSelect(facetController.state.values[0]);
+            break;
+          case 'regular':
+            facetController.toggleSelect(facetController.state.values[0]);
+            break;
+          case 'hierarchical':
+            facetController.toggleSelect(facetController.state.values[0]);
+            break;
+          default:
+            break;
+        }
       },
       expectedSubscriberCalls: 8,
     });

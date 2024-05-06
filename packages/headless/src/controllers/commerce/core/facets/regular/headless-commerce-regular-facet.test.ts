@@ -1,4 +1,4 @@
-import {CommerceFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
+import {RegularFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
@@ -15,7 +15,6 @@ import {
 } from '../../../../../test/mock-engine-v2';
 import {buildMockFacetSearch} from '../../../../../test/mock-facet-search';
 import {commonOptions} from '../../../product-listing/facets/headless-product-listing-facet-options';
-import {FacetValueRequest} from '../headless-core-commerce-facet';
 import {
   RegularFacet,
   RegularFacetOptions,
@@ -35,22 +34,17 @@ describe('RegularFacet', () => {
     engine = buildMockCommerceEngine(preloadedState);
   }
 
-  function initCommerceRegularFacet() {
+  function initFacet() {
     facet = buildCommerceRegularFacet(engine, options);
   }
 
-  function setFacetRequest(
-    config: Partial<CommerceFacetRequest<FacetValueRequest>> = {}
-  ) {
+  function setFacetRequest(config: Partial<RegularFacetRequest> = {}) {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, ...config}),
     });
     state.productListing.facets = [
       buildMockCommerceRegularFacetResponse({facetId}),
     ];
-  }
-
-  function setFacetSearch() {
     state.facetSearchSet[facetId] = buildMockFacetSearch();
   }
 
@@ -64,10 +58,9 @@ describe('RegularFacet', () => {
 
     state = buildMockCommerceState();
     setFacetRequest();
-    setFacetSearch();
 
     initEngine(state);
-    initCommerceRegularFacet();
+    initFacet();
   });
 
   describe('initialization', () => {
@@ -98,5 +91,28 @@ describe('RegularFacet', () => {
       facetId,
       selection: facetValue,
     });
+  });
+
+  it('#state.facetSearch returns the facet search state', () => {
+    const facetSearchState = buildMockFacetSearch();
+    facetSearchState.isLoading = true;
+    facetSearchState.response.moreValuesAvailable = true;
+    facetSearchState.options.query = 'test';
+    facetSearchState.response.values = [
+      {count: 1, displayValue: 'test', rawValue: 'test'},
+    ];
+
+    state.facetSearchSet[facetId] = facetSearchState;
+
+    expect(facet.state.facetSearch).toEqual({
+      isLoading: true,
+      moreValuesAvailable: true,
+      query: 'test',
+      values: [{count: 1, displayValue: 'test', rawValue: 'test'}],
+    });
+  });
+
+  it('#type returns "regular"', () => {
+    expect(facet.type).toBe('regular');
   });
 });

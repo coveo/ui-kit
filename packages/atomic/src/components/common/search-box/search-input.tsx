@@ -24,7 +24,9 @@ function getPopupAttributes(props: Required<Props>['popup']) {
     autocomplete: 'off',
     autocapitalize: 'off',
     autocorrect: 'off',
-    'aria-activedescendant': props.activeDescendant,
+    ...(props.activeDescendant && {
+      'aria-activedescendant': props.activeDescendant,
+    }),
     'aria-expanded': `${props.hasSuggestions && props.expanded}`,
     'aria-autocomplete': 'both',
     'aria-haspopup': 'true',

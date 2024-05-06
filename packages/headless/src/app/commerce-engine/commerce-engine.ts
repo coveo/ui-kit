@@ -3,15 +3,18 @@ import {Logger} from 'pino';
 import {CommerceAPIClient} from '../../api/commerce/commerce-api-client';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {cartReducer} from '../../features/commerce/context/cart/cart-slice';
+import {setContext} from '../../features/commerce/context/context-actions';
 import {contextReducer} from '../../features/commerce/context/context-slice';
 import {commerceFacetSetReducer} from '../../features/commerce/facets/facet-set/facet-set-slice';
 import {paginationReducer} from '../../features/commerce/pagination/pagination-slice';
 import {productListingV2Reducer} from '../../features/commerce/product-listing/product-listing-slice';
 import {queryReducer} from '../../features/commerce/query/query-slice';
 import {recommendationsReducer} from '../../features/commerce/recommendations/recommendations-slice';
+import {executeSearch} from '../../features/commerce/search/search-actions';
 import {commerceSearchReducer} from '../../features/commerce/search/search-slice';
 import {sortReducer} from '../../features/commerce/sort/sort-slice';
 import {facetOrderReducer} from '../../features/facets/facet-order/facet-order-slice';
+import {categoryFacetSearchSetReducer} from '../../features/facets/facet-search-set/category/category-facet-search-set-slice';
 import {specificFacetSearchSetReducer} from '../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {CommerceAppState} from '../../state/commerce-app-state';
 import {CommerceThunkExtraArguments} from '../commerce-thunk-extra-arguments';
@@ -38,6 +41,7 @@ const commerceEngineReducers = {
   commerceSort: sortReducer,
   facetOrder: facetOrderReducer,
   facetSearchSet: specificFacetSearchSetReducer,
+  categoryFacetSearchSet: categoryFacetSearchSetReducer,
   commerceFacetSet: commerceFacetSetReducer,
   commerceContext: contextReducer,
   commerceQuery: queryReducer,
@@ -55,10 +59,21 @@ export type CommerceEngineState =
  * @internal WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
  */
 export interface CommerceEngine<State extends object = {}>
-  extends CoreEngine<
-    State & CommerceEngineState,
-    CommerceThunkExtraArguments
-  > {}
+  extends CoreEngine<State & CommerceEngineState, CommerceThunkExtraArguments> {
+  /**
+   * Executes the first search.
+   *
+   * @param analyticsEvent - The analytics event to log in association with the first search. If unspecified, `logInterfaceLoad` will be used.
+   */
+  executeFirstSearch(): void;
+
+  /**
+   * Executes the first search, and logs the analytics event that triggered a redirection from a standalone search box.
+   *
+   * @param analytics - The standalone search box analytics data.
+   */
+  executeFirstSearchAfterStandaloneSearchBoxRedirect(): void;
+}
 
 /**
  * The commerce engine options.
@@ -100,11 +115,22 @@ export function buildCommerceEngine(
 
   const engine = buildEngine(augmentedOptions, thunkArguments);
 
+  engine.dispatch(setContext(options.configuration.context));
+
   return {
     ...engine,
 
     get state() {
       return engine.state;
+    },
+    executeFirstSearch() {
+      const action = executeSearch();
+      engine.dispatch(action);
+    },
+
+    executeFirstSearchAfterStandaloneSearchBoxRedirect() {
+      const action = executeSearch();
+      engine.dispatch(action);
     },
   };
 }

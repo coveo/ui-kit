@@ -22,6 +22,7 @@ export type {
 export type {LoggerOptions} from './app/logger';
 
 export type {LogLevel} from './app/logger';
+export type {NavigatorContext} from './app/navigatorContextProvider';
 
 // Case Assist Action Loaders
 export * from './features/case-input/case-input-actions-loader';

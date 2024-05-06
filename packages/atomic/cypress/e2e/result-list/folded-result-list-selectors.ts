@@ -65,6 +65,10 @@ export const FoldedResultListSelectors = {
       .should('have.attr', 'data-atomic-rendered', 'true')
       .shadow()
       .find('[part="no-result-root"]'),
+  childrenRoot: () =>
+    FoldedResultListSelectors.resultChildren()
+      .shadow()
+      .find('[part="children-root"]'),
   sections: {
     visual: () =>
       FoldedResultListSelectors.firstResult().find(resultSectionTags.visual),

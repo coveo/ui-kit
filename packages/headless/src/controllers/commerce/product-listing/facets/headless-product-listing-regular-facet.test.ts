@@ -1,4 +1,4 @@
-import {CommerceFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
+import {RegularFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice';
 import {CommerceAppState} from '../../../../state/commerce-app-state';
@@ -12,10 +12,8 @@ import {
   buildMockCommerceEngine,
 } from '../../../../test/mock-engine-v2';
 import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
-import {
-  CommerceFacetOptions,
-  FacetValueRequest,
-} from '../../core/facets/headless-core-commerce-facet';
+import {buildMockFacetSearchResult} from '../../../../test/mock-facet-search-result';
+import {CommerceFacetOptions} from '../../core/facets/headless-core-commerce-facet';
 import {RegularFacet} from '../../core/facets/regular/headless-commerce-regular-facet';
 import {buildProductListingRegularFacet} from './headless-product-listing-regular-facet';
 
@@ -34,13 +32,11 @@ describe('ProductListingRegularFacet', () => {
     engine = buildMockCommerceEngine(preloadedState);
   }
 
-  function initProductListingRegularFacet() {
+  function initFacet() {
     facet = buildProductListingRegularFacet(engine, options);
   }
 
-  function setFacetRequest(
-    config: Partial<CommerceFacetRequest<FacetValueRequest>> = {}
-  ) {
+  function setFacetRequest(config: Partial<RegularFacetRequest> = {}) {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, ...config}),
     });
@@ -65,7 +61,7 @@ describe('ProductListingRegularFacet', () => {
     setFacetSearch();
 
     initEngine(state);
-    initProductListingRegularFacet();
+    initFacet();
   });
 
   it('initializes', () => {
@@ -120,23 +116,13 @@ describe('ProductListingRegularFacet', () => {
 
   describe('#facetSearch', () => {
     it('#facetSearch.select dispatches #fetchProductListing', () => {
-      const value = 'ted';
-      facet.facetSearch.select({
-        count: 0,
-        displayValue: value,
-        rawValue: value,
-      });
+      facet.facetSearch.select(buildMockFacetSearchResult());
 
       expect(fetchProductListing).toHaveBeenCalled();
     });
 
     it('#facetSearch.exclude dispatches #fetchProductListing', () => {
-      const value = 'ted';
-      facet.facetSearch.exclude({
-        count: 0,
-        displayValue: value,
-        rawValue: value,
-      });
+      facet.facetSearch.exclude(buildMockFacetSearchResult());
 
       expect(fetchProductListing).toHaveBeenCalled();
     });
@@ -151,6 +137,7 @@ describe('ProductListingRegularFacet', () => {
 
     it('#state.isLoading uses #isFacetLoadingResponseSelector', () => {
       state.productListing.isLoading = true;
+      initFacet();
       expect(facet.state.isLoading).toBe(true);
     });
 
@@ -159,7 +146,7 @@ describe('ProductListingRegularFacet', () => {
       expect(facet.state.facetSearch.isLoading).toBe(false);
 
       state.facetSearchSet[facetId].isLoading = true;
-      initProductListingRegularFacet();
+      initFacet();
       expect(facet.state.facetSearch.isLoading).toBe(true);
     });
   });
