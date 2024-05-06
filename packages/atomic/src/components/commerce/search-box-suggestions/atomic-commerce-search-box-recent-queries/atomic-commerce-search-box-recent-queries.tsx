@@ -27,7 +27,7 @@ import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atom
  * The `atomic-commerce-search-box-recent-queries` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of recent query suggestions.
  *
  * @part recent-query-title - The 'Recent queries' title.
- * @part recent-query-clear - The 'Clear' button for clearing recent queries    .
+ * @part recent-query-clear - The 'Clear' button for clearing recent queries.
  *
  * @internal
  */
@@ -54,11 +54,11 @@ export class AtomicSearchBoxRecentQueries {
   @Prop() public icon?: string;
 
   /**
-   * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
+   * The maximum number of suggestions to display when the user types in the input field.
    */
   @Prop({reflect: true}) public maxWithQuery = 3;
   /**
-   * The maximum number of suggestions that will be displayed initially when the input field is empty.
+   * The maximum number of suggestions to display initially, when the input field is empty.
    */
   @Prop({reflect: true}) public maxWithoutQuery?: number;
 
@@ -109,7 +109,7 @@ export class AtomicSearchBoxRecentQueries {
 
   private warnUser = once(() =>
     this.bindings.engine.logger.warn(
-      'Because analytics are disabled, the recent queries feature is deactivated.'
+      'The recent queries feature is deactivated because analytics are disabled.'
     )
   );
 
