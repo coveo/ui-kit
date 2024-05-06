@@ -114,7 +114,7 @@ describe('FacetGenerator', () => {
       expect(mockBuildCategoryFacet).toHaveBeenCalledWith(engine, {facetId});
     });
 
-    it('when facet state contains multiple facets, generates the proper facet controllers', () => {
+    it('when engine facet state contains multiple facets, generates the proper facet controllers', () => {
       const facets: {facetId: string; type: FacetType}[] = [
         {
           facetId: 'regular_facet_id',
