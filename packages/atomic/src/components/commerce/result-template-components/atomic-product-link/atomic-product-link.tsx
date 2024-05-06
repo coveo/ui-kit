@@ -95,11 +95,10 @@ export class AtomicProductLink
         {this.hasDefaultSlot ? (
           <slot />
         ) : (
-          <atomic-result-text
-            shouldHighlight={false}
+          <atomic-product-text
             field="ec_name"
             default="no-title"
-          ></atomic-result-text>
+          ></atomic-product-text>
         )}
       </LinkWithItemAnalytics>
     );
