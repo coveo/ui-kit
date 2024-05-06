@@ -14,8 +14,8 @@ import {
   getFacetsInChildren,
   getAutomaticFacetGenerator,
   sortFacetVisibility,
-  sortFacetsUsingManager,
   collapseFacetsAfter,
+  BaseFacetElement,
 } from '../../common/facets/facet-common';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
@@ -59,7 +59,7 @@ export class AtomicFacetManager implements InitializableComponent {
   private sortFacets = () => {
     const facets = getFacetsInChildren(this.host);
 
-    const sortedFacets = sortFacetsUsingManager(facets, this.facetManager);
+    const sortedFacets = this.sortFacetsUsingManager(facets, this.facetManager);
 
     const {visibleFacets, invisibleFacets} = sortFacetVisibility(
       sortedFacets,
@@ -90,6 +90,17 @@ export class AtomicFacetManager implements InitializableComponent {
     }).validate({
       collapseFacetAfter: this.collapseFacetsAfter,
     });
+  }
+
+  private sortFacetsUsingManager(
+    facets: BaseFacetElement[],
+    facetManager: FacetManager
+  ): BaseFacetElement[] {
+    const payload = facets.map((f) => ({
+      facetId: f.facetId,
+      payload: f,
+    }));
+    return facetManager.sort(payload).map((f) => f.payload);
   }
 
   disconnectedCallback() {

@@ -15,6 +15,7 @@ import {executeSearch} from '../search/search-actions';
 import {
   nextPage,
   previousPage,
+  registerRecommendationsSlotPagination,
   selectPage,
   setPageSize,
 } from './pagination-actions';
@@ -82,6 +83,15 @@ export const paginationReducer = createReducer(
       .addCase(fetchRecommendations.fulfilled, (state, action) => {
         state.recommendations[action.meta.arg.slotId] =
           action.payload.response.pagination;
+      })
+      .addCase(registerRecommendationsSlotPagination, (state, action) => {
+        const slotId = action.payload.slotId;
+
+        if (slotId in state) {
+          return;
+        }
+
+        state.recommendations[slotId] = getCommercePaginationInitialSlice();
       })
       .addCase(deselectAllFacetValues, handlePaginationReset)
       .addCase(toggleSelectFacetValue, handlePaginationReset)

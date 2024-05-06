@@ -2,6 +2,7 @@ import {NumberValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {
   nonRequiredEmptyAllowedString,
+  requiredNonEmptyString,
   validatePayload,
 } from '../../../utils/validate-payload';
 
@@ -50,4 +51,12 @@ export const nextPage = createAction(
 export const previousPage = createAction(
   'commerce/pagination/previousPage',
   (payload?: SlotIdPayload) => validatePayload(payload, slotIdDefinition)
+);
+
+export const registerRecommendationsSlotPagination = createAction(
+  'commerce/pagination/registerRecommendationsSlot',
+  (payload: Required<SlotIdPayload>) =>
+    validatePayload(payload, {
+      slotId: requiredNonEmptyString,
+    })
 );

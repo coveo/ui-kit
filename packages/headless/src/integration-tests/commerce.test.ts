@@ -110,16 +110,28 @@ describe.skip('commerce', () => {
 
     // Generate the facets from the response
     const facetGenerator = productListing.facetGenerator();
-    const controllers = facetGenerator.state.facets;
+    const controllers = facetGenerator.facets;
     const facetController = controllers[0];
 
     // Select a facet
     await waitForNextStateChange(engine, {
       action: () => {
-        facetController.toggleSelect({
-          ...facetController.state.values[0],
-          state: 'selected',
-        });
+        switch (facetController.type) {
+          case 'numericalRange':
+            facetController.toggleSelect(facetController.state.values[0]);
+            break;
+          case 'dateRange':
+            facetController.toggleSelect(facetController.state.values[0]);
+            break;
+          case 'regular':
+            facetController.toggleSelect(facetController.state.values[0]);
+            break;
+          case 'hierarchical':
+            facetController.toggleSelect(facetController.state.values[0]);
+            break;
+          default:
+            break;
+        }
       },
       expectedSubscriberCalls: 8,
     });

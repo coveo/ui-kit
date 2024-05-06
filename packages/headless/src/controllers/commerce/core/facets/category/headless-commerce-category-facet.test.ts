@@ -1,8 +1,4 @@
-import {
-  CategoryFacetValueRequest,
-  CommerceFacetRequest,
-} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
-import {CategoryFacetValue} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
+import {CategoryFacetResponse} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
 import {
   toggleSelectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
@@ -47,7 +43,7 @@ describe('CategoryFacet', () => {
   }
 
   function setFacetState(
-    config: Partial<CommerceFacetRequest<CategoryFacetValueRequest>> = {},
+    config: Partial<CategoryFacetResponse> = {},
     moreValuesAvailable = false
   ) {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
@@ -62,7 +58,7 @@ describe('CategoryFacet', () => {
         moreValuesAvailable,
         facetId,
         type: 'hierarchical',
-        values: (config.values as CategoryFacetValue[]) ?? [],
+        values: config.values ?? [],
       })
     );
     state.categoryFacetSearchSet[facetId] = buildMockCategoryFacetSearch();
@@ -136,7 +132,7 @@ describe('CategoryFacet', () => {
           values: [activeValue, buildMockCategoryFacetValue()],
         });
 
-        expect(facet.state.activeValue).toBe(activeValue);
+        expect(facet.state.activeValue).toEqual(activeValue);
       });
     });
 
@@ -329,5 +325,9 @@ describe('CategoryFacet', () => {
         ]);
       });
     });
+  });
+
+  it('#type returns "hierarchical"', () => {
+    expect(facet.type).toBe('hierarchical');
   });
 });

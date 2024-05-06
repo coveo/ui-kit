@@ -1,9 +1,6 @@
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {AnyFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
-import {
-  AnyFacetValueResponse,
-  RegularFacetResponse,
-} from '../../../../features/commerce/facets/facet-set/interfaces/response';
+import {RegularFacetResponse} from '../../../../features/commerce/facets/facet-set/interfaces/response';
 import {
   deselectAllFacetValues,
   toggleExcludeFacetValue,
@@ -11,7 +8,6 @@ import {
   updateFacetIsFieldExpanded,
   updateFacetNumberOfValues,
 } from '../../../../features/facets/facet-set/facet-set-actions';
-import {AnyFacetValueRequest} from '../../../../features/facets/generic/interfaces/generic-facet-request';
 import {CommerceAppState} from '../../../../state/commerce-app-state';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
 import {buildMockCommerceRegularFacetResponse} from '../../../../test/mock-commerce-facet-response';
@@ -25,7 +21,6 @@ import {
 import {FacetValueState} from '../../../core/facets/facet/headless-core-facet';
 import {
   buildCoreCommerceFacet,
-  CoreCommerceFacet,
   CoreCommerceFacetOptions,
 } from './headless-core-commerce-facet';
 
@@ -42,7 +37,7 @@ describe('CoreCommerceFacet', () => {
   let options: CoreCommerceFacetOptions;
   let state: CommerceAppState;
   let engine: MockedCommerceEngine;
-  let facet: CoreCommerceFacet<AnyFacetValueRequest, AnyFacetValueResponse>;
+  let facet: ReturnType<typeof buildCoreCommerceFacet>;
 
   function initFacet() {
     engine = buildMockCommerceEngine(state);
