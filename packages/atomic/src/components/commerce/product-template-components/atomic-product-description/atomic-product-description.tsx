@@ -67,7 +67,7 @@ export class AtomicProductDescription
     }
   }
 
-  private onToggleCollapse() {
+  private onToggleExpand() {
     this.isExpanded = !this.isExpanded;
   }
 
@@ -88,6 +88,7 @@ export class AtomicProductDescription
   }
 
   private renderProductDescription() {
+    // TODO: add support for ec_description
     const productDescription = this.product.ec_shortdesc ?? '';
 
     if (productDescription !== null) {
@@ -111,7 +112,7 @@ export class AtomicProductDescription
         part="label-button"
         class={`mt-1 p-1 self-end ${this.isExpanded ? 'hidden' : ''}`}
         title={this.bindings.i18n.t('show-more')}
-        onClick={() => this.onToggleCollapse()}
+        onClick={() => this.onToggleExpand()}
       >
         {this.bindings.i18n.t('show-more')}
         <atomic-icon
