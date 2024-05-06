@@ -35,7 +35,7 @@ import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atom
   tag: 'atomic-commerce-search-box-recent-queries',
   shadow: true,
 })
-export class AtomicSearchBoxRecentQueries {
+export class AtomicCommerceSearchBoxRecentQueries {
   private bindings!: SearchBoxSuggestionsBindings<SearchBox, Bindings>;
   private recentQueriesList!: RecentQueriesList;
   private storage!: SafeStorage;

@@ -389,11 +389,11 @@ export namespace Components {
          */
         "icon"?: string;
         /**
-          * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
+          * The maximum number of suggestions to display when the user types in the input field.
          */
         "maxWithQuery": number;
         /**
-          * The maximum number of suggestions that will be displayed initially when the input field is empty.
+          * The maximum number of suggestions to display initially, when the input field is empty.
          */
         "maxWithoutQuery"?: number;
     }
@@ -4827,11 +4827,11 @@ declare namespace LocalJSX {
          */
         "icon"?: string;
         /**
-          * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
+          * The maximum number of suggestions to display when the user types in the input field.
          */
         "maxWithQuery"?: number;
         /**
-          * The maximum number of suggestions that will be displayed initially when the input field is empty.
+          * The maximum number of suggestions to display initially, when the input field is empty.
          */
         "maxWithoutQuery"?: number;
     }
