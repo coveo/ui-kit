@@ -193,7 +193,7 @@ describe('instant products slice', () => {
           {
             response: {
               products: [buildMockProduct()],
-              pagination: {totalItems: 123},
+              pagination: {totalEntries: 123},
               responseId: 'someid',
             } as unknown as CommerceSuccessResponse,
           } as QueryCommerceAPIThunkReturn,
@@ -237,7 +237,7 @@ describe('instant products slice', () => {
           {
             response: {
               products: [buildMockProduct()],
-              pagination: {totalItems: 123},
+              pagination: {totalEntries: 123},
               responseId: 'someid',
             } as unknown as CommerceSuccessResponse,
           } as QueryCommerceAPIThunkReturn,

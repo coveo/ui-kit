@@ -39,14 +39,14 @@ export const instantProductsReducer = createReducer(
           response: {
             products,
             responseId,
-            pagination: {totalItems},
+            pagination: {totalEntries},
           },
         } = action.payload;
         fetchItemsFulfilled(
           {
             duration: 0,
             searchUid: responseId,
-            totalCountFiltered: totalItems,
+            totalCountFiltered: totalEntries,
             ...action.meta.arg,
           },
           state,
