@@ -156,6 +156,7 @@ export type {
   SearchBox,
   SearchBoxState,
   Suggestion,
+  SearchBoxOptions,
 } from './controllers/commerce/search-box/headless-search-box';
 
 export {buildRecentQueriesList} from './controllers/commerce/recent-queries-list/headless-recent-queries-list';
