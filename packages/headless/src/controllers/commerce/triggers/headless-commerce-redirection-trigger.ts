@@ -1,10 +1,9 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {logTriggerRedirect} from '../../features/triggers/trigger-analytics-actions';
-import {triggerReducer as triggers} from '../../features/triggers/triggers-slice';
-import {TriggerSection} from '../../state/state-sections';
-import {loadReducerError} from '../../utils/errors';
-import {buildController} from '../controller/headless-controller';
-import {RedirectionTrigger} from '../core/triggers/headless-core-redirection-trigger';
+import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
+import {commerceTriggersReducer as triggers} from '../../../features/commerce/triggers/triggers-slice';
+import {TriggerSection} from '../../../state/state-sections';
+import {loadReducerError} from '../../../utils/errors';
+import {buildController} from '../../controller/headless-controller';
+import {RedirectionTrigger} from '../../core/triggers/headless-core-redirection-trigger';
 
 /**
  * Creates a `RedirectionTrigger` controller instance.
@@ -13,14 +12,13 @@ import {RedirectionTrigger} from '../core/triggers/headless-core-redirection-tri
  * @returns A `RedirectionTrigger` controller instance.
  * */
 export function buildRedirectionTrigger(
-  engine: SearchEngine
+  engine: CommerceEngine
 ): RedirectionTrigger {
   if (!loadRedirectionReducers(engine)) {
     throw loadReducerError;
   }
 
   const controller = buildController(engine);
-  const {dispatch} = engine;
 
   const getState = () => engine.state;
 
@@ -36,7 +34,6 @@ export function buildRedirectionTrigger(
 
         if (hasChanged && this.state.redirectTo) {
           listener();
-          dispatch(logTriggerRedirect());
         }
       };
       strictListener();
@@ -52,8 +49,8 @@ export function buildRedirectionTrigger(
 }
 
 function loadRedirectionReducers(
-  engine: SearchEngine
-): engine is SearchEngine<TriggerSection> {
+  engine: CommerceEngine
+): engine is CommerceEngine<TriggerSection> {
   engine.addReducers({triggers});
   return true;
 }

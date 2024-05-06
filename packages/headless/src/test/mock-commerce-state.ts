@@ -14,6 +14,7 @@ import {getCategoryFacetSearchSetInitialState} from '../features/facets/facet-se
 import {getFacetSearchSetInitialState} from '../features/facets/facet-search-set/specific/specific-facet-search-set-state';
 import {getQuerySetInitialState} from '../features/query-set/query-set-state';
 import {getQuerySuggestSetInitialState} from '../features/query-suggest/query-suggest-state';
+import {getTriggerInitialState} from '../features/triggers/triggers-state';
 import {CommerceAppState} from '../state/commerce-app-state';
 
 export function buildMockCommerceState(
@@ -38,6 +39,7 @@ export function buildMockCommerceState(
     commerceStandaloneSearchBoxSet:
       getCommerceStandaloneSearchBoxSetInitialState(),
     version: 'unit-testing-version',
+    triggers: getTriggerInitialState(),
     ...config,
   };
 }

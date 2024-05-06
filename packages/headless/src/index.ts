@@ -365,7 +365,7 @@ export {buildFoldedResultList} from './controllers/folded-result-list/headless-f
 export type {
   RedirectionTrigger,
   RedirectionTriggerState,
-} from './controllers/triggers/headless-redirection-trigger';
+} from './controllers/core/triggers/headless-core-redirection-trigger';
 export {buildRedirectionTrigger} from './controllers/triggers/headless-redirection-trigger';
 
 export type {
