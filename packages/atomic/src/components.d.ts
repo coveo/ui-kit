@@ -401,6 +401,16 @@ export namespace Components {
          */
         "suggestionTimeout": number;
     }
+    interface AtomicCommerceText {
+        /**
+          * The count value used for plurals.
+         */
+        "count"?: number;
+        /**
+          * The string key value.
+         */
+        "value": string;
+    }
     /**
      * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
      */
@@ -1484,6 +1494,16 @@ export namespace Components {
           * Gets the appropriate product template based on conditions applied.
          */
         "getTemplate": () => Promise<ProductTemplate<DocumentFragment> | null>;
+    }
+    interface AtomicProductText {
+        /**
+          * The locale key for the text to display when the configured field has no value.
+         */
+        "default"?: string;
+        /**
+          * The product field which the component should use. This will look in the Product object first, and then in the product.additionalFields object for the fields.
+         */
+        "field": string;
     }
     /**
      * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -3012,6 +3032,12 @@ declare global {
         prototype: HTMLAtomicCommerceSearchBoxElement;
         new (): HTMLAtomicCommerceSearchBoxElement;
     };
+    interface HTMLAtomicCommerceTextElement extends Components.AtomicCommerceText, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceTextElement: {
+        prototype: HTMLAtomicCommerceTextElement;
+        new (): HTMLAtomicCommerceTextElement;
+    };
     /**
      * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
      */
@@ -3660,6 +3686,12 @@ declare global {
     var HTMLAtomicProductTemplateElement: {
         prototype: HTMLAtomicProductTemplateElement;
         new (): HTMLAtomicProductTemplateElement;
+    };
+    interface HTMLAtomicProductTextElement extends Components.AtomicProductText, HTMLStencilElement {
+    }
+    var HTMLAtomicProductTextElement: {
+        prototype: HTMLAtomicProductTextElement;
+        new (): HTMLAtomicProductTextElement;
     };
     /**
      * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -4498,6 +4530,7 @@ declare global {
         "atomic-commerce-pager": HTMLAtomicCommercePagerElement;
         "atomic-commerce-product-list": HTMLAtomicCommerceProductListElement;
         "atomic-commerce-search-box": HTMLAtomicCommerceSearchBoxElement;
+        "atomic-commerce-text": HTMLAtomicCommerceTextElement;
         "atomic-component-error": HTMLAtomicComponentErrorElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-external": HTMLAtomicExternalElement;
@@ -4568,6 +4601,7 @@ declare global {
         "atomic-product": HTMLAtomicProductElement;
         "atomic-product-link": HTMLAtomicProductLinkElement;
         "atomic-product-template": HTMLAtomicProductTemplateElement;
+        "atomic-product-text": HTMLAtomicProductTextElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
         "atomic-quickview": HTMLAtomicQuickviewElement;
@@ -4960,6 +4994,16 @@ declare namespace LocalJSX {
           * The timeout for suggestion queries, in milliseconds. If a suggestion query times out, the suggestions from that particular query won't be shown.
          */
         "suggestionTimeout"?: number;
+    }
+    interface AtomicCommerceText {
+        /**
+          * The count value used for plurals.
+         */
+        "count"?: number;
+        /**
+          * The string key value.
+         */
+        "value": string;
     }
     /**
      * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
@@ -6006,6 +6050,16 @@ declare namespace LocalJSX {
           * A function that must return true on products for the product template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to products whose `ec_name` contains `singapore`: `document.querySelector('#target-template').conditions = [(product) => /singapore/i.test(product.ec_name)];`
          */
         "conditions"?: ProductTemplateCondition[];
+    }
+    interface AtomicProductText {
+        /**
+          * The locale key for the text to display when the configured field has no value.
+         */
+        "default"?: string;
+        /**
+          * The product field which the component should use. This will look in the Product object first, and then in the product.additionalFields object for the fields.
+         */
+        "field": string;
     }
     /**
      * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -7284,6 +7338,7 @@ declare namespace LocalJSX {
         "atomic-commerce-pager": AtomicCommercePager;
         "atomic-commerce-product-list": AtomicCommerceProductList;
         "atomic-commerce-search-box": AtomicCommerceSearchBox;
+        "atomic-commerce-text": AtomicCommerceText;
         "atomic-component-error": AtomicComponentError;
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-external": AtomicExternal;
@@ -7354,6 +7409,7 @@ declare namespace LocalJSX {
         "atomic-product": AtomicProduct;
         "atomic-product-link": AtomicProductLink;
         "atomic-product-template": AtomicProductTemplate;
+        "atomic-product-text": AtomicProductText;
         "atomic-query-error": AtomicQueryError;
         "atomic-query-summary": AtomicQuerySummary;
         "atomic-quickview": AtomicQuickview;
@@ -7475,6 +7531,7 @@ declare module "@stencil/core" {
              * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
              */
             "atomic-commerce-search-box": LocalJSX.AtomicCommerceSearchBox & JSXBase.HTMLAttributes<HTMLAtomicCommerceSearchBoxElement>;
+            "atomic-commerce-text": LocalJSX.AtomicCommerceText & JSXBase.HTMLAttributes<HTMLAtomicCommerceTextElement>;
             /**
              * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
              */
@@ -7641,6 +7698,7 @@ declare module "@stencil/core" {
             "atomic-product": LocalJSX.AtomicProduct & JSXBase.HTMLAttributes<HTMLAtomicProductElement>;
             "atomic-product-link": LocalJSX.AtomicProductLink & JSXBase.HTMLAttributes<HTMLAtomicProductLinkElement>;
             "atomic-product-template": LocalJSX.AtomicProductTemplate & JSXBase.HTMLAttributes<HTMLAtomicProductTemplateElement>;
+            "atomic-product-text": LocalJSX.AtomicProductText & JSXBase.HTMLAttributes<HTMLAtomicProductTextElement>;
             /**
              * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
              */
