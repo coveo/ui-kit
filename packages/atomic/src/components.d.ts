@@ -360,7 +360,7 @@ export namespace Components {
         "imageSize": number;
     }
     /**
-     * The `atomic-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
+     * The `atomic-commerce-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
      */
     interface AtomicCommerceQuerySummary {
     }
@@ -2940,7 +2940,7 @@ declare global {
         new (): HTMLAtomicCommerceProductListElement;
     };
     /**
-     * The `atomic-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
+     * The `atomic-commerce-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
      */
     interface HTMLAtomicCommerceQuerySummaryElement extends Components.AtomicCommerceQuerySummary, HTMLStencilElement {
     }
@@ -4855,7 +4855,7 @@ declare namespace LocalJSX {
         "imageSize"?: number;
     }
     /**
-     * The `atomic-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
+     * The `atomic-commerce-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
      */
     interface AtomicCommerceQuerySummary {
     }
@@ -7356,7 +7356,7 @@ declare module "@stencil/core" {
             "atomic-commerce-pager": LocalJSX.AtomicCommercePager & JSXBase.HTMLAttributes<HTMLAtomicCommercePagerElement>;
             "atomic-commerce-product-list": LocalJSX.AtomicCommerceProductList & JSXBase.HTMLAttributes<HTMLAtomicCommerceProductListElement>;
             /**
-             * The `atomic-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
+             * The `atomic-commerce-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
              */
             "atomic-commerce-query-summary": LocalJSX.AtomicCommerceQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicCommerceQuerySummaryElement>;
             /**

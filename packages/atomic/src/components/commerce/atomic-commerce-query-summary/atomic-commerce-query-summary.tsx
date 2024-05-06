@@ -1,12 +1,11 @@
 import {
+  ListingSummary,
+  ListingSummaryState,
   Pagination,
-  PaginationState,
-  ProductListing,
-  ProductListingState,
-  Search,
-  SearchState,
-  buildProductListing,
-  buildSearch,
+  SearchSummary,
+  SearchSummaryState,
+  buildListingSummary,
+  buildSearchSummary,
 } from '@coveo/headless/commerce';
 import {Component, h, State} from '@stencil/core';
 import {AriaLiveRegion} from '../../../utils/accessibility-utils';
@@ -42,15 +41,15 @@ export class AtomicQuerySummary
   implements InitializableComponent<CommerceBindings>
 {
   @InitializeBindings() public bindings!: CommerceBindings;
-  public listingOrSearch!: ProductListing | Search;
+  public listingOrSearchSummary!: SearchSummary | ListingSummary;
   public pagination!: Pagination;
 
-  @BindStateToController('querySummary')
+  @BindStateToController('listingOrSearchSummary')
   @State()
-  private listingOrSearchState!: ProductListingState | SearchState;
-  @BindStateToController('pagination')
-  @State()
-  private paginationState!: PaginationState;
+  private listingOrSearchSummaryState!:
+    | SearchSummaryState
+    | ListingSummaryState;
+
   @State() public error!: Error;
 
   @AriaLiveRegion('query-summary')
@@ -58,27 +57,31 @@ export class AtomicQuerySummary
 
   public initialize() {
     if (this.bindings.interfaceElement.type === 'product-listing') {
-      this.listingOrSearch = buildProductListing(this.bindings.engine);
+      this.listingOrSearchSummary = buildListingSummary(this.bindings.engine);
     } else {
-      this.listingOrSearch = buildSearch(this.bindings.engine);
+      this.listingOrSearchSummary = buildSearchSummary(this.bindings.engine);
     }
-    this.pagination = this.listingOrSearch.pagination();
   }
 
   public render() {
-    console.log(this.bindings.engine.state.commerceSearch.queryExecuted);
-    /*const {error, isLoading, products, responseId} = this.listingOrSearchState;
-    const {pageSize, page, totalEntries, totalPages} = this.paginationState;
-    buildSearchBox(this.bindings.engine).state.value
-    buildSearch(this.bindings.engine).state.
-    (this.listingOrSearch as SearchState).*/
+    const {
+      firstProduct,
+      firstSearchExecuted,
+      lastProduct,
+      totalNumberOfProducts,
+      hasProducts,
+      hasError,
+    } = this.listingOrSearchSummaryState;
 
     const {i18nKey, highlights, ariaLiveMessage} =
       getQuerySummaryI18nParameters({
-        first: 1,
-        last: 10,
-        query: 'asd',
-        total: 123,
+        first: firstProduct,
+        last: lastProduct,
+        query:
+          'query' in this.listingOrSearchSummaryState
+            ? this.listingOrSearchSummaryState.query
+            : '',
+        total: totalNumberOfProducts,
         i18n: this.bindings.i18n,
         isLoading: false,
       });
@@ -87,16 +90,16 @@ export class AtomicQuerySummary
 
     return (
       <QuerySummaryGuard
-        firstSearchExecuted={true}
-        hasResults={true}
-        hasError={false}
+        firstSearchExecuted={firstSearchExecuted}
+        hasResults={hasProducts}
+        hasError={hasError}
       >
         <QuerySummaryContainer>
           <LocalizedString
             key={i18nKey}
             bindings={this.bindings}
             params={highlights}
-            count={123}
+            count={lastProduct}
           />
         </QuerySummaryContainer>
       </QuerySummaryGuard>
