@@ -1479,6 +1479,16 @@ export namespace Components {
          */
         "store"?: AtomicCommonStore<AtomicCommonStoreData>;
     }
+    interface AtomicProductDescription {
+        /**
+          * Whether the product description should be truncated.
+         */
+        "shouldTruncate": boolean;
+        /**
+          * The number of lines after which the product description should be truncated.
+         */
+        "truncateAfter"?: 1 | 2 | 3 | 4;
+    }
     interface AtomicProductLink {
         /**
           * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of product properties from the parent product. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the product's `clickUri` and `itemtitle` fields. ```html <atomic-product-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-product-link> ```
@@ -3675,6 +3685,12 @@ declare global {
         prototype: HTMLAtomicProductElement;
         new (): HTMLAtomicProductElement;
     };
+    interface HTMLAtomicProductDescriptionElement extends Components.AtomicProductDescription, HTMLStencilElement {
+    }
+    var HTMLAtomicProductDescriptionElement: {
+        prototype: HTMLAtomicProductDescriptionElement;
+        new (): HTMLAtomicProductDescriptionElement;
+    };
     interface HTMLAtomicProductLinkElement extends Components.AtomicProductLink, HTMLStencilElement {
     }
     var HTMLAtomicProductLinkElement: {
@@ -4599,6 +4615,7 @@ declare global {
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-popover": HTMLAtomicPopoverElement;
         "atomic-product": HTMLAtomicProductElement;
+        "atomic-product-description": HTMLAtomicProductDescriptionElement;
         "atomic-product-link": HTMLAtomicProductLinkElement;
         "atomic-product-template": HTMLAtomicProductTemplateElement;
         "atomic-product-text": HTMLAtomicProductTextElement;
@@ -6039,6 +6056,16 @@ declare namespace LocalJSX {
          */
         "store"?: AtomicCommonStore<AtomicCommonStoreData>;
     }
+    interface AtomicProductDescription {
+        /**
+          * Whether the product description should be truncated.
+         */
+        "shouldTruncate"?: boolean;
+        /**
+          * The number of lines after which the product description should be truncated.
+         */
+        "truncateAfter"?: 1 | 2 | 3 | 4;
+    }
     interface AtomicProductLink {
         /**
           * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of product properties from the parent product. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the product's `clickUri` and `itemtitle` fields. ```html <atomic-product-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-product-link> ```
@@ -7407,6 +7434,7 @@ declare namespace LocalJSX {
         "atomic-pager": AtomicPager;
         "atomic-popover": AtomicPopover;
         "atomic-product": AtomicProduct;
+        "atomic-product-description": AtomicProductDescription;
         "atomic-product-link": AtomicProductLink;
         "atomic-product-template": AtomicProductTemplate;
         "atomic-product-text": AtomicProductText;
@@ -7696,6 +7724,7 @@ declare module "@stencil/core" {
              * The `atomic-product` component is used internally by the `atomic-product-list` component.
              */
             "atomic-product": LocalJSX.AtomicProduct & JSXBase.HTMLAttributes<HTMLAtomicProductElement>;
+            "atomic-product-description": LocalJSX.AtomicProductDescription & JSXBase.HTMLAttributes<HTMLAtomicProductDescriptionElement>;
             "atomic-product-link": LocalJSX.AtomicProductLink & JSXBase.HTMLAttributes<HTMLAtomicProductLinkElement>;
             "atomic-product-template": LocalJSX.AtomicProductTemplate & JSXBase.HTMLAttributes<HTMLAtomicProductTemplateElement>;
             "atomic-product-text": LocalJSX.AtomicProductText & JSXBase.HTMLAttributes<HTMLAtomicProductTextElement>;
