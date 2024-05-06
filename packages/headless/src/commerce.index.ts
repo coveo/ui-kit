@@ -66,9 +66,9 @@ export {buildProductListingPagination} from './controllers/commerce/product-list
 export {buildSearchPagination} from './controllers/commerce/search/pagination/headless-search-pagination';
 
 export type {
-  InteractiveResult,
-  InteractiveResultOptions,
-  InteractiveResultProps,
+  InteractiveProduct,
+  InteractiveProductOptions,
+  InteractiveProductProps,
 } from './controllers/commerce/core/result-list/headless-core-interactive-result';
 
 export type {ProductView} from './controllers/commerce/product-view/headless-product-view';

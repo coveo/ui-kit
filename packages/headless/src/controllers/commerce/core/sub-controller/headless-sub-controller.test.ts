@@ -39,7 +39,7 @@ describe('sub controllers', () => {
       subControllersBuilder: buildBaseSolutionTypeControllers,
     },
   ])(
-    '#interactiveResult builds interactive result controller',
+    '#interactiveProduct builds interactive result controller',
     ({
       subControllersBuilder,
     }: {
@@ -55,7 +55,7 @@ describe('sub controllers', () => {
       });
       const buildCoreInteractiveResultMock = jest.spyOn(
         CoreInteractiveResult,
-        'buildCoreInteractiveResult'
+        'buildCoreInteractiveProduct'
       );
 
       const props = {
@@ -69,11 +69,11 @@ describe('sub controllers', () => {
         },
       };
 
-      const interactiveResult = subControllers.interactiveResult({
+      const interactiveProduct = subControllers.interactiveProduct({
         ...props,
       });
 
-      expect(interactiveResult).toEqual(
+      expect(interactiveProduct).toEqual(
         buildCoreInteractiveResultMock.mock.results[0].value
       );
     }
