@@ -1469,6 +1469,15 @@ export namespace Components {
          */
         "store"?: AtomicCommonStore<AtomicCommonStoreData>;
     }
+    /**
+     * The `atomic-product-image` component renders an image from a product field.
+     */
+    interface AtomicProductImage {
+        /**
+          * An optional fallback image URL that will be used in case the specified image field is not available or encounters an error.
+         */
+        "fallback"?: string;
+    }
     interface AtomicProductLink {
         /**
           * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of product properties from the parent product. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the product's `clickUri` and `itemtitle` fields. ```html <atomic-product-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-product-link> ```
@@ -3649,6 +3658,15 @@ declare global {
         prototype: HTMLAtomicProductElement;
         new (): HTMLAtomicProductElement;
     };
+    /**
+     * The `atomic-product-image` component renders an image from a product field.
+     */
+    interface HTMLAtomicProductImageElement extends Components.AtomicProductImage, HTMLStencilElement {
+    }
+    var HTMLAtomicProductImageElement: {
+        prototype: HTMLAtomicProductImageElement;
+        new (): HTMLAtomicProductImageElement;
+    };
     interface HTMLAtomicProductLinkElement extends Components.AtomicProductLink, HTMLStencilElement {
     }
     var HTMLAtomicProductLinkElement: {
@@ -4566,6 +4584,7 @@ declare global {
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-popover": HTMLAtomicPopoverElement;
         "atomic-product": HTMLAtomicProductElement;
+        "atomic-product-image": HTMLAtomicProductImageElement;
         "atomic-product-link": HTMLAtomicProductLinkElement;
         "atomic-product-template": HTMLAtomicProductTemplateElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
@@ -5995,6 +6014,15 @@ declare namespace LocalJSX {
          */
         "store"?: AtomicCommonStore<AtomicCommonStoreData>;
     }
+    /**
+     * The `atomic-product-image` component renders an image from a product field.
+     */
+    interface AtomicProductImage {
+        /**
+          * An optional fallback image URL that will be used in case the specified image field is not available or encounters an error.
+         */
+        "fallback"?: string;
+    }
     interface AtomicProductLink {
         /**
           * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of product properties from the parent product. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the product's `clickUri` and `itemtitle` fields. ```html <atomic-product-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-product-link> ```
@@ -7352,6 +7380,7 @@ declare namespace LocalJSX {
         "atomic-pager": AtomicPager;
         "atomic-popover": AtomicPopover;
         "atomic-product": AtomicProduct;
+        "atomic-product-image": AtomicProductImage;
         "atomic-product-link": AtomicProductLink;
         "atomic-product-template": AtomicProductTemplate;
         "atomic-query-error": AtomicQueryError;
@@ -7639,6 +7668,10 @@ declare module "@stencil/core" {
              * The `atomic-product` component is used internally by the `atomic-product-list` component.
              */
             "atomic-product": LocalJSX.AtomicProduct & JSXBase.HTMLAttributes<HTMLAtomicProductElement>;
+            /**
+             * The `atomic-product-image` component renders an image from a product field.
+             */
+            "atomic-product-image": LocalJSX.AtomicProductImage & JSXBase.HTMLAttributes<HTMLAtomicProductImageElement>;
             "atomic-product-link": LocalJSX.AtomicProductLink & JSXBase.HTMLAttributes<HTMLAtomicProductLinkElement>;
             "atomic-product-template": LocalJSX.AtomicProductTemplate & JSXBase.HTMLAttributes<HTMLAtomicProductTemplateElement>;
             /**

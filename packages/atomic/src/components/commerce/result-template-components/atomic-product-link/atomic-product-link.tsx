@@ -10,7 +10,7 @@ import {
 import {getDefaultSlotFromHost} from '../../../../utils/slot-utils';
 import {getAttributesFromLinkSlot} from '../../../common/item-link/attributes-slot';
 import {LinkWithItemAnalytics} from '../../../common/item-link/item-link';
-import {Bindings} from '../../../search/atomic-search-interface/atomic-search-interface';
+import {CommerceBindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 import {
   InteractiveProductContext,
   ProductContext,
@@ -27,8 +27,10 @@ import {
   styleUrl: 'atomic-product-link.pcss',
   shadow: false,
 })
-export class AtomicProductLink implements InitializableComponent {
-  @InitializeBindings() public bindings!: Bindings;
+export class AtomicProductLink
+  implements InitializableComponent<CommerceBindings>
+{
+  @InitializeBindings() public bindings!: CommerceBindings;
   public error!: Error;
 
   public static isCompatibleWithProductList = true;
