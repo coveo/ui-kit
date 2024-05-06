@@ -17,6 +17,12 @@
   gap: 1rem;
 }
 
+.generated-answer__rephrase--width {
+  width: 100%;
+  /** Absolute maximum width for the rephrase buttons including labels. */
+  max-width: 425px;
+}
+
 .generated-answer__answer--streaming > span::after {
   content: '';
   width: 0.5rem;
@@ -71,7 +77,7 @@
 }
 
 .generated-answer__disclaimer {
-  line-height: 2rem;
+  min-height: var(--lwc-lineHeightButton,1.875rem);
 }
 
 .flex-one {

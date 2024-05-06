@@ -112,13 +112,7 @@ export default class QuanticRadioButtonsGroup extends LightningElement {
   }
 
   makeRadioButtonCSSClass(option) {
-    let paddingClass = '';
-    if (this.hideLabels && option.iconName) {
-      paddingClass = 'slds-var-p-horizontal_x-small';
-    } else if (option.iconName) {
-      paddingClass = 'slds-var-p-left_medium';
-    }
-    return `slds-button slds-radio_button radio-buttons-group__tooltip-container ${paddingClass} radio-button radio-button--${option.value === this.value ? 'selected' : 'unselected'}`;
+    return `slds-button slds-radio_button radio-buttons-group__tooltip-container radio-button slds-col slds-grid_align-space radio-button--${option.value === this.value ? 'selected' : 'unselected'}`;
   }
 
   handleClick(value) {
