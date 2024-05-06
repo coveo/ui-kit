@@ -9,6 +9,13 @@ import {SearchableFacetOptions} from '../../core/facets/searchable/headless-comm
 import {loadProductListingReducer} from '../utils/load-product-listing-reducers';
 import {commonOptions} from './headless-product-listing-facet-options';
 
+/**
+ * Builds a regular facet for a product listing.
+ *
+ * @param engine - The commerce engine.
+ * @param options - The facet options.
+ * @returns The regular facet.
+ */
 export function buildProductListingRegularFacet(
   engine: CommerceEngine,
   options: CommerceFacetOptions & SearchableFacetOptions

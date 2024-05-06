@@ -25,6 +25,16 @@ export type {PlatformEnvironment} from './utils/url-utils';
 // Actions
 export * from './features/commerce/product-listing/product-listing-actions-loader';
 export * from './features/configuration/configuration-actions-loader';
+export * from './features/configuration/configuration-actions-loader';
+export * from './features/pagination/pagination-actions-loader';
+export * from './features/analytics/search-analytics-actions-loader';
+export * from './features/sort/sort-actions-loader';
+export * from './features/facet-options/facet-options-actions-loader';
+export * from './features/facets/facet-set/facet-set-actions-loader';
+export * from './features/facets/category-facet-set/category-facet-set-actions-loader';
+export * from './features/facets/range-facets/date-facet-set/date-facet-actions-loader';
+export * from './features/facets/range-facets/numeric-facet-set/numeric-facet-actions-loader';
+export * from './features/context/context-actions-loader';
 
 // Controllers
 export type {
@@ -52,6 +62,8 @@ export {buildProductListing} from './controllers/commerce/product-listing/headle
 export type {
   Recommendations,
   RecommendationsState,
+  RecommendationsProps,
+  RecommendationsOptions,
 } from './controllers/commerce/recommendations/headless-recommendations';
 export {buildRecommendations} from './controllers/commerce/recommendations/headless-recommendations';
 
@@ -80,7 +92,19 @@ export type {
   Cart,
   CartState,
 } from './controllers/commerce/context/cart/headless-cart';
+export type {CartItemWithMetadata} from './features/commerce/context/cart/cart-state';
+export type {CartItemParam} from './api/commerce/commerce-api-params';
+export type {Transaction} from './features/commerce/context/cart/cart-selector';
+export type {SolutionTypeSubControllers} from './controllers/commerce/core/sub-controller/headless-sub-controller';
 export {buildCart} from './controllers/commerce/context/cart/headless-cart';
+
+export {buildProductListingParameterManager} from './controllers/commerce/product-listing/parameter-manager/headless-product-listing-parameter-manager';
+export type {
+  ParameterManager,
+  ParameterManagerState,
+  ParameterManagerProps,
+  ParameterManagerInitialState,
+} from './controllers/commerce/core/parameter-manager/headless-core-parameter-manager';
 
 export type {
   SortByRelevance,
@@ -133,6 +157,22 @@ export type {ProductListingFacetGenerator} from './controllers/commerce/product-
 export {buildProductListingFacetGenerator} from './controllers/commerce/product-listing/facets/headless-product-listing-facet-generator';
 export type {SearchFacetGenerator} from './controllers/commerce/search/facets/headless-search-facet-generator';
 export {buildSearchFacetGenerator} from './controllers/commerce/search/facets/headless-search-facet-generator';
+export type {SearchCategoryFacetBuilder} from './controllers/commerce/search/facets/headless-search-category-facet';
+export {buildSearchCategoryFacet} from './controllers/commerce/search/facets/headless-search-category-facet';
+export {buildSearchDateFacet} from './controllers/commerce/search/facets/headless-search-date-facet';
+export {buildSearchNumericFacet} from './controllers/commerce/search/facets/headless-search-numeric-facet';
+export type {FacetGenerator} from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator';
+export {buildFacetGenerator} from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator';
+export {buildSearchRegularFacet} from './controllers/commerce/search/facets/headless-search-regular-facet';
+
+export type {ProductListingCategoryFacetBuilder} from './controllers/commerce/product-listing/facets/headless-product-listing-category-facet';
+export {buildProductListingCategoryFacet} from './controllers/commerce/product-listing/facets/headless-product-listing-category-facet';
+export {buildProductListingDateFacet} from './controllers/commerce/product-listing/facets/headless-product-listing-date-facet';
+export {buildProductListingNumericFacet} from './controllers/commerce/product-listing/facets/headless-product-listing-numeric-facet';
+export {buildProductListingRegularFacet} from './controllers/commerce/product-listing/facets/headless-product-listing-regular-facet';
+
+export type {SearchBoxProps} from './controllers/commerce/search-box/headless-search-box';
+export {buildSearchParameterManager} from './controllers/commerce/search/parameter-manager/headless-search-parameter-manager';
 
 export type {
   RegularFacetSearch,

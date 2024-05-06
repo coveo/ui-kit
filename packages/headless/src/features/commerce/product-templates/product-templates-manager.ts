@@ -11,7 +11,7 @@ export type ProductTemplateCondition = TemplateCondition<Product>;
 export interface ProductTemplatesManager<Content = unknown> {
   /**
    * Registers any number of product templates in the manager.
-   * @param templates (...Template<Product, Content>) A list of templates to register.
+   * @param templates (...Template<Product>) A list of templates to register.
    */
   registerTemplates(...templates: Template<Product, Content>[]): void;
   /**

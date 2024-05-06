@@ -8,6 +8,13 @@ import {CommerceFacetOptions} from '../../core/facets/headless-core-commerce-fac
 import {loadProductListingReducer} from '../utils/load-product-listing-reducers';
 import {commonOptions} from './headless-product-listing-facet-options';
 
+/**
+ * Builds a date facet for a product listing in a commerce engine.
+ *
+ * @param engine - The commerce engine.
+ * @param options - The facet options.
+ * @returns The built date facet.
+ */
 export function buildProductListingDateFacet(
   engine: CommerceEngine,
   options: CommerceFacetOptions

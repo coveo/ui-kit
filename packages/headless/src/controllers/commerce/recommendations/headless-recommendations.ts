@@ -48,7 +48,10 @@ export interface RecommendationsOptions {
   slotId: string;
 }
 
-interface RecommendationsProps {
+export interface RecommendationsProps {
+  /**
+   * The optional parameters for the `Recommendations` controller.
+   */
   options: RecommendationsOptions;
 }
 

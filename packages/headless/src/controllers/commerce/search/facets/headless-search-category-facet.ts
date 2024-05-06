@@ -11,6 +11,13 @@ import {commonOptions} from './headless-search-facet-options';
 
 export type SearchCategoryFacetBuilder = typeof buildSearchCategoryFacet;
 
+/**
+ * Builds a search category facet.
+ *
+ * @param engine - The commerce engine.
+ * @param options - The facet options.
+ * @returns The built category facet.
+ */
 export function buildSearchCategoryFacet(
   engine: CommerceEngine,
   options: CommerceFacetOptions & SearchableFacetOptions

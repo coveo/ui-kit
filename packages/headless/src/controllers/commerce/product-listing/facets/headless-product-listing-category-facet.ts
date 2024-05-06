@@ -12,6 +12,12 @@ import {commonOptions} from './headless-product-listing-facet-options';
 export type ProductListingCategoryFacetBuilder =
   typeof buildProductListingCategoryFacet;
 
+/**
+ * Builds the category facet for the product listing.
+ * @param engine - The commerce engine.
+ * @param options - The options for building the category facet.
+ * @returns The category facet.
+ */
 export function buildProductListingCategoryFacet(
   engine: CommerceEngine,
   options: CommerceFacetOptions & SearchableFacetOptions

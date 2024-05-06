@@ -8,6 +8,13 @@ import {
 import {loadProductListingReducer} from '../utils/load-product-listing-reducers';
 import {commonOptions} from './headless-product-listing-facet-options';
 
+/**
+ * Builds a numeric facet for a product listing.
+ *
+ * @param engine - The commerce engine.
+ * @param options - The facet options.
+ * @returns The built numeric facet.
+ */
 export function buildProductListingNumericFacet(
   engine: CommerceEngine,
   options: CommerceFacetOptions

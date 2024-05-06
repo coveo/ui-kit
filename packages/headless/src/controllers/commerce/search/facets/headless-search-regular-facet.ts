@@ -9,6 +9,13 @@ import {SearchableFacetOptions} from '../../core/facets/searchable/headless-comm
 import {loadSearchReducer} from '../utils/load-search-reducers';
 import {commonOptions} from './headless-search-facet-options';
 
+/**
+ * Builds a regular facet for search functionality.
+ *
+ * @param engine - The commerce engine.
+ * @param options - The facet options and searchable facet options.
+ * @returns The regular facet.
+ */
 export function buildSearchRegularFacet(
   engine: CommerceEngine,
   options: CommerceFacetOptions & SearchableFacetOptions

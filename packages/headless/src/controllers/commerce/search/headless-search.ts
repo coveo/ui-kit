@@ -21,6 +21,7 @@ import {
 export interface Search extends Controller, SolutionTypeSubControllers {
   /**
    * Executes the first search.
+   * @param analyticsEvent - The analytics event to log.
    */
   executeFirstSearch(analyticsEvent?: LegacySearchAction): void;
 
@@ -37,6 +38,11 @@ export interface SearchState {
   responseId: string;
 }
 
+/**
+ * Builds a search object for the given commerce engine.
+ * @param engine The commerce engine.
+ * @returns The search object.
+ */
 export function buildSearch(engine: CommerceEngine): Search {
   if (!loadBaseSearchReducers(engine)) {
     throw loadReducerError;

@@ -8,6 +8,13 @@ import {
 import {loadSearchReducer} from '../utils/load-search-reducers';
 import {commonOptions} from './headless-search-facet-options';
 
+/**
+ * Builds a search numeric facet.
+ *
+ * @param engine - The commerce engine.
+ * @param options - The facet options.
+ * @returns The numeric facet.
+ */
 export function buildSearchNumericFacet(
   engine: CommerceEngine,
   options: CommerceFacetOptions

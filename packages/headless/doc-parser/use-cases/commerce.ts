@@ -119,10 +119,6 @@ const controllers: ControllerConfiguration[] = [
     initializer: 'buildFieldsSortCriterion',
     samplePaths: {},
   },
-  {
-    initializer: 'buildProductTemplatesManager',
-    samplePaths: {},
-  },
 ];
 
 const actionLoaders: ActionLoaderConfiguration[] = [

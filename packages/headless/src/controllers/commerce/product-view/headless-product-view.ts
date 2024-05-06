@@ -8,7 +8,7 @@ import {productView} from '../../../features/commerce/context/product/product-ac
 export interface ProductView {
   /**
    * Trigger a view event for the product.
-   * @param payload - The product view event payload.
+   * @param product - The product view event payload.
    */
   view(product: Product): void;
 }
