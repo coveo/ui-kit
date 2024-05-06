@@ -268,7 +268,6 @@ export class AtomicCommerceInterface
       );
 
     if (!standaloneSearchBoxData) {
-      // this.engine.dispatch(updateQuery({query: ''}));
       this.engine.executeFirstSearch();
       return;
     }
