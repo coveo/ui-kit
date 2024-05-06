@@ -1,6 +1,7 @@
 import {
   ProductTemplate,
   ProductTemplateCondition,
+  ProductTemplatesHelpers,
 } from '@coveo/headless/commerce';
 import {h} from '@stencil/core';
 import {aggregate, isElementNode, isVisualNode} from '../../../utils/utils';
@@ -144,41 +145,38 @@ export class ProductTemplateCommon {
 function getTemplateElement(host: HTMLElement) {
   return host.querySelector('template')!;
 }
-
-// TODO: implement match conditions for product templates
-/* export function makeMatchConditions(
+export function makeMatchConditions(
   mustMatch: Record<string, string[]>,
   mustNotMatch: Record<string, string[]>
 ): ProductTemplateCondition[] {
   const conditions: ProductTemplateCondition[] = [];
   for (const field in mustMatch) {
     conditions.push(
-      ResultTemplatesHelpers.fieldMustMatch(field, mustMatch[field])
+      ProductTemplatesHelpers.fieldMustMatch(field, mustMatch[field])
     );
   }
 
   for (const field in mustNotMatch) {
     conditions.push(
-      ResultTemplatesHelpers.fieldMustNotMatch(field, mustNotMatch[field])
+      ProductTemplatesHelpers.fieldMustNotMatch(field, mustNotMatch[field])
     );
   }
   return conditions;
-} */
+}
 
-// TODO: Use ProductTemplatesHelpers when implemented
-/* export function makeDefinedConditions(
+export function makeDefinedConditions(
   ifDefined?: string,
   ifNotDefined?: string
-): ResultTemplateCondition[] {
-  const conditions: ResultTemplateCondition[] = [];
+): ProductTemplateCondition[] {
+  const conditions: ProductTemplateCondition[] = [];
   if (ifDefined) {
     const fieldNames = ifDefined.split(',');
-    conditions.push(ResultTemplatesHelpers.fieldsMustBeDefined(fieldNames));
+    conditions.push(ProductTemplatesHelpers.fieldsMustBeDefined(fieldNames));
   }
 
   if (ifNotDefined) {
     const fieldNames = ifNotDefined.split(',');
-    conditions.push(ResultTemplatesHelpers.fieldsMustNotBeDefined(fieldNames));
+    conditions.push(ProductTemplatesHelpers.fieldsMustNotBeDefined(fieldNames));
   }
   return conditions;
-} */
+}

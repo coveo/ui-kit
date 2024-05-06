@@ -4,7 +4,10 @@ import {
 } from '@coveo/headless/commerce';
 import {Component, Element, Prop, Method, State} from '@stencil/core';
 import {MapProp} from '../../../utils/props-utils';
-import {ProductTemplateCommon} from './product-template-common';
+import {
+  ProductTemplateCommon,
+  makeMatchConditions,
+} from './product-template-common';
 
 /**
  * @internal
@@ -46,11 +49,10 @@ export class AtomicProductTemplate {
   }
 
   public componentWillLoad() {
-    // TODO: Uncomment this when the `makeMatchConditions` function is implemented for product templates.
-    /*  this.productTemplateCommon.matchConditions = makeMatchConditions(
+    this.productTemplateCommon.matchConditions = makeMatchConditions(
       this.mustMatch,
       this.mustNotMatch
-    ); */
+    );
   }
 
   /**
