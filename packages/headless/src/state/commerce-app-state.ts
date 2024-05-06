@@ -15,6 +15,7 @@ import {
   QuerySetSection,
   FacetSearchSection,
   CategoryFacetSearchSection,
+  InstantProductsSection,
   CommerceStandaloneSearchBoxSection,
 } from './state-sections';
 
@@ -39,4 +40,5 @@ export type CommerceAppState = ConfigurationSection &
   CartSection &
   QuerySuggestionSection &
   QuerySetSection &
+  InstantProductsSection &
   VersionSection;

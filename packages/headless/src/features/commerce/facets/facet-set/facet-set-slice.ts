@@ -105,7 +105,7 @@ export const commerceFacetSetReducer = createReducer(
         updateExistingFacetValueState(existingValue, 'select');
 
         if (
-          isContinuousRangeRequest(facetRequest) &&
+          facetRequest.interval === 'continuous' &&
           existingValue.state === 'idle'
         ) {
           facetRequest.values = [];
@@ -206,7 +206,7 @@ export const commerceFacetSetReducer = createReducer(
         updateExistingFacetValueState(existingValue, 'exclude');
 
         if (
-          isContinuousRangeRequest(facetRequest) &&
+          facetRequest.interval === 'continuous' &&
           existingValue.state === 'idle'
         ) {
           facetRequest.values = [];
@@ -511,12 +511,15 @@ function updateStateFromFacetResponse(
     ensureCategoryFacetRequest(facetRequest)
   ) {
     facetRequest.delimitingCharacter = facetResponse.delimitingCharacter;
-  } else if (facetResponse.type === 'numericalRange' && facetResponse.domain) {
-    facetRequest.domain = {
-      min: facetResponse.domain.min,
-      max: facetResponse.domain.max,
-      increment: facetResponse.domain.increment,
-    };
+  } else if (facetResponse.type === 'numericalRange') {
+    facetRequest.interval = facetResponse.interval;
+    if (facetResponse.domain) {
+      facetRequest.domain = {
+        min: facetResponse.domain.min,
+        max: facetResponse.domain.max,
+        increment: facetResponse.domain.increment,
+      };
+    }
   }
 }
 
@@ -614,10 +617,4 @@ function buildCurrentValuesFromPath(path: string[], retrieveCount: number) {
   curr.state = 'selected';
 
   return [root];
-}
-
-// eslint-disable-next-line @cspell/spellchecker
-// TODO CAPI-850: Tthis is the best we can do for now to identify a continuous range. When the `interval` property gets added to the facet response, we'll use that instead.
-function isContinuousRangeRequest(request: NumericFacetRequest): boolean {
-  return request.values.length === 1 && request.domain?.increment === 0;
 }

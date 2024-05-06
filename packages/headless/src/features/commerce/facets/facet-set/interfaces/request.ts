@@ -10,7 +10,7 @@ import {
 import {
   CategoryFacetDelimitingCharacter,
   FacetType,
-  NumericFacetDomain,
+  NumericFacetExtraProperties,
 } from './common';
 
 export type CategoryFacetRequest = BaseCommerceFacetRequest<
@@ -34,7 +34,7 @@ export type NumericFacetRequest = BaseCommerceFacetRequest<
   NumericRangeRequest,
   'numericalRange'
 > &
-  Partial<NumericFacetDomain>;
+  NumericFacetExtraProperties;
 
 export type RegularFacetRequest = BaseCommerceFacetRequest<
   FacetValueRequest,
@@ -75,7 +75,7 @@ export type AnyFacetRequest = Pick<
   values: AnyFacetValueRequest[];
   initialNumberOfValues: number;
   numberOfValues?: number;
-} & Partial<CategoryFacetDelimitingCharacter & NumericFacetDomain>;
+} & Partial<CategoryFacetDelimitingCharacter & NumericFacetExtraProperties>;
 
 type MappedFacetRequest = {
   [T in FacetType]: T extends 'numericalRange'
