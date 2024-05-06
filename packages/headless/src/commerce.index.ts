@@ -160,6 +160,11 @@ export type {
   SearchBoxState,
 } from './controllers/commerce/search-box/headless-search-box';
 
+export {buildInstantProducts} from './controllers/commerce/instant-products/headless-instant-products';
+export type {
+  InstantProducts,
+  InstantProductsState,
+} from './controllers/commerce/instant-products/headless-instant-products';
 export {buildStandaloneSearchBox} from './controllers/commerce/standalone-search-box/headless-standalone-search-box';
 export type {
   StandaloneSearchBox,
