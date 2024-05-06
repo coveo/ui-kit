@@ -327,23 +327,6 @@ export namespace Components {
     | 'product-listing';
     }
     /**
-     * The `atomic-commerce-result-list` component is responsible for displaying product results.
-     */
-    interface AtomicCommerceResultList {
-        /**
-          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
-         */
-        "density": 'normal' | 'compact';
-        /**
-          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
-         */
-        "display": 'grid' | 'list';
-        /**
-          * The expected size of the image displayed in the results.
-         */
-        "imageSize": number;
-    }
-    /**
      * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
      */
     interface AtomicCommerceSearchBox {
@@ -2900,15 +2883,6 @@ declare global {
         prototype: HTMLAtomicCommerceInterfaceElement;
         new (): HTMLAtomicCommerceInterfaceElement;
     };
-    /**
-     * The `atomic-commerce-result-list` component is responsible for displaying product results.
-     */
-    interface HTMLAtomicCommerceResultListElement extends Components.AtomicCommerceResultList, HTMLStencilElement {
-    }
-    var HTMLAtomicCommerceResultListElement: {
-        prototype: HTMLAtomicCommerceResultListElement;
-        new (): HTMLAtomicCommerceResultListElement;
-    };
     interface HTMLAtomicCommerceSearchBoxElementEventMap {
         "redirect": RedirectionPayload;
     }
@@ -4398,7 +4372,6 @@ declare global {
         "atomic-citation": HTMLAtomicCitationElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
         "atomic-commerce-interface": HTMLAtomicCommerceInterfaceElement;
-        "atomic-commerce-result-list": HTMLAtomicCommerceResultListElement;
         "atomic-commerce-search-box": HTMLAtomicCommerceSearchBoxElement;
         "atomic-commerce-search-box-query-suggestions": HTMLAtomicCommerceSearchBoxQuerySuggestionsElement;
         "atomic-commerce-search-box-recent-queries": HTMLAtomicCommerceSearchBoxRecentQueriesElement;
@@ -4786,23 +4759,6 @@ declare namespace LocalJSX {
          */
         "type"?: | 'search'
     | 'product-listing';
-    }
-    /**
-     * The `atomic-commerce-result-list` component is responsible for displaying product results.
-     */
-    interface AtomicCommerceResultList {
-        /**
-          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
-         */
-        "density"?: 'normal' | 'compact';
-        /**
-          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
-         */
-        "display"?: 'grid' | 'list';
-        /**
-          * The expected size of the image displayed in the results.
-         */
-        "imageSize"?: number;
     }
     /**
      * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
@@ -7128,7 +7084,6 @@ declare namespace LocalJSX {
         "atomic-citation": AtomicCitation;
         "atomic-color-facet": AtomicColorFacet;
         "atomic-commerce-interface": AtomicCommerceInterface;
-        "atomic-commerce-result-list": AtomicCommerceResultList;
         "atomic-commerce-search-box": AtomicCommerceSearchBox;
         "atomic-commerce-search-box-query-suggestions": AtomicCommerceSearchBoxQuerySuggestions;
         "atomic-commerce-search-box-recent-queries": AtomicCommerceSearchBoxRecentQueries;
@@ -7314,10 +7269,6 @@ declare module "@stencil/core" {
              * The `atomic-commerce-interface` component is the parent to all other atomic commerce components in a commerce page. It handles the headless search engine and localization configurations.
              */
             "atomic-commerce-interface": LocalJSX.AtomicCommerceInterface & JSXBase.HTMLAttributes<HTMLAtomicCommerceInterfaceElement>;
-            /**
-             * The `atomic-commerce-result-list` component is responsible for displaying product results.
-             */
-            "atomic-commerce-result-list": LocalJSX.AtomicCommerceResultList & JSXBase.HTMLAttributes<HTMLAtomicCommerceResultListElement>;
             /**
              * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
              */
