@@ -15,7 +15,6 @@ export const AtomicBreadbox = /*@__PURE__*/createReactComponent<JSX.AtomicBreadb
 export const AtomicCategoryFacet = /*@__PURE__*/createReactComponent<JSX.AtomicCategoryFacet, HTMLAtomicCategoryFacetElement>('atomic-category-facet');
 export const AtomicColorFacet = /*@__PURE__*/createReactComponent<JSX.AtomicColorFacet, HTMLAtomicColorFacetElement>('atomic-color-facet');
 export const AtomicCommerceInterface = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceInterface, HTMLAtomicCommerceInterfaceElement>('atomic-commerce-interface');
-export const AtomicCommerceSearchBoxQuerySuggestions = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceSearchBoxQuerySuggestions, HTMLAtomicCommerceSearchBoxQuerySuggestionsElement>('atomic-commerce-search-box-query-suggestions');
 export const AtomicComponentError = /*@__PURE__*/createReactComponent<JSX.AtomicComponentError, HTMLAtomicComponentErrorElement>('atomic-component-error');
 export const AtomicDidYouMean = /*@__PURE__*/createReactComponent<JSX.AtomicDidYouMean, HTMLAtomicDidYouMeanElement>('atomic-did-you-mean');
 export const AtomicExternal = /*@__PURE__*/createReactComponent<JSX.AtomicExternal, HTMLAtomicExternalElement>('atomic-external');
