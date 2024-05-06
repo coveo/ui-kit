@@ -220,6 +220,13 @@ export type {
 export {buildNotifyTrigger} from './controllers/commerce/triggers/headless-commerce-notify-trigger';
 
 export type {
+  RedirectionTrigger,
+  RedirectionTriggerState,
+} from './controllers/core/triggers/headless-core-redirection-trigger';
+
+export {buildRedirectionTrigger} from './controllers/triggers/headless-redirection-trigger';
+
+export type {
   FieldSuggestions,
   FieldSuggestionsState,
 } from './controllers/commerce/field-suggestions/headless-field-suggestions';
