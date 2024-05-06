@@ -38,6 +38,7 @@ export interface QueryCommerceAPIThunkReturn {
   /** The successful search response. */
   response: CommerceSuccessResponse;
   analyticsAction?: PreparableAnalyticsAction<StateNeededByQueryCommerceAPI>;
+  queryExecuted?: string;
 }
 
 export const buildCommerceAPIRequest = async (

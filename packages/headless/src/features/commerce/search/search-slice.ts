@@ -17,6 +17,7 @@ export const commerceSearchReducer = createReducer(
         state.products = action.payload.response.products;
         state.responseId = action.payload.response.responseId;
         state.isLoading = false;
+        state.queryExecuted = action.payload.queryExecuted ?? '';
       })
       .addCase(executeSearch.pending, (state, action) => {
         state.isLoading = true;

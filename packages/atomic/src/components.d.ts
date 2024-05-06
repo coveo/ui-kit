@@ -355,6 +355,11 @@ export namespace Components {
         "imageSize": number;
     }
     /**
+     * The `atomic-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
+     */
+    interface AtomicCommerceQuerySummary {
+    }
+    /**
      * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
      */
     interface AtomicCommerceSearchBox {
@@ -2920,6 +2925,15 @@ declare global {
         prototype: HTMLAtomicCommerceProductListElement;
         new (): HTMLAtomicCommerceProductListElement;
     };
+    /**
+     * The `atomic-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
+     */
+    interface HTMLAtomicCommerceQuerySummaryElement extends Components.AtomicCommerceQuerySummary, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceQuerySummaryElement: {
+        prototype: HTMLAtomicCommerceQuerySummaryElement;
+        new (): HTMLAtomicCommerceQuerySummaryElement;
+    };
     interface HTMLAtomicCommerceSearchBoxElementEventMap {
         "redirect": RedirectionPayload;
     }
@@ -4404,6 +4418,7 @@ declare global {
         "atomic-commerce-interface": HTMLAtomicCommerceInterfaceElement;
         "atomic-commerce-pager": HTMLAtomicCommercePagerElement;
         "atomic-commerce-product-list": HTMLAtomicCommerceProductListElement;
+        "atomic-commerce-query-summary": HTMLAtomicCommerceQuerySummaryElement;
         "atomic-commerce-search-box": HTMLAtomicCommerceSearchBoxElement;
         "atomic-component-error": HTMLAtomicComponentErrorElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
@@ -4818,6 +4833,11 @@ declare namespace LocalJSX {
           * The expected size of the image displayed for products.
          */
         "imageSize"?: number;
+    }
+    /**
+     * The `atomic-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
+     */
+    interface AtomicCommerceQuerySummary {
     }
     /**
      * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
@@ -7124,6 +7144,7 @@ declare namespace LocalJSX {
         "atomic-commerce-interface": AtomicCommerceInterface;
         "atomic-commerce-pager": AtomicCommercePager;
         "atomic-commerce-product-list": AtomicCommerceProductList;
+        "atomic-commerce-query-summary": AtomicCommerceQuerySummary;
         "atomic-commerce-search-box": AtomicCommerceSearchBox;
         "atomic-component-error": AtomicComponentError;
         "atomic-did-you-mean": AtomicDidYouMean;
@@ -7309,6 +7330,10 @@ declare module "@stencil/core" {
              */
             "atomic-commerce-pager": LocalJSX.AtomicCommercePager & JSXBase.HTMLAttributes<HTMLAtomicCommercePagerElement>;
             "atomic-commerce-product-list": LocalJSX.AtomicCommerceProductList & JSXBase.HTMLAttributes<HTMLAtomicCommerceProductListElement>;
+            /**
+             * The `atomic-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
+             */
+            "atomic-commerce-query-summary": LocalJSX.AtomicCommerceQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicCommerceQuerySummaryElement>;
             /**
              * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
              */
