@@ -103,18 +103,49 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         );
     },
 
-    generatedAnswerFooterIsOnMultiline: (multilineDisplay: boolean) => {
+    generatedAnswerFooterRowsIsOnMultiline: (multilineDisplay: boolean) => {
       selector
-        .generatedAnswerFooter()
+        .generatedAnswerFooterRow()
         .should(
           multilineDisplay ? 'have.class' : 'not.have.class',
-          'generated-answer__footer--multiline'
+          'slds-grid_vertical'
         )
         .log(
-          `the generated answer footer ${should(
+          `the generated answer footer rows ${should(
             multilineDisplay
-          )} be displayed on multiple lines`
+          )} be displayed on multiple lines with slds-grid_vertical`
         );
+    },
+
+    generatedAnswerCollapsed: (collapsible: boolean) => {
+      selector
+        .generatedAnswer()
+        .should(
+          collapsible ? 'have.class' : 'not.have.class',
+          'generated-answer__answer--collapsed'
+        )
+        .log(`the generated answer ${should(collapsible)} be collapsed`);
+    },
+
+    displayGeneratedAnswerGeneratingMessage: (display: boolean) => {
+      selector
+        .generatingMessage()
+        .should(display ? 'exist' : 'not.exist')
+        .log(`${should(display)} display the generating message`);
+    },
+
+    displayGeneratedAnswerToggleCollapseButton: (display: boolean) => {
+      selector
+        .toggleCollapseButton()
+        .should(display ? 'exist' : 'not.exist')
+        .log(`${should(display)} display the generated answer collapse button`);
+    },
+
+    generatedAnswerToggleCollapseButtonContains: (text: string) => {
+      selector
+        .toggleCollapseButton()
+        .contains(text)
+        .log(`the generated answer collapse button should contain "${text}"`);
     },
 
     generatedAnswerContains: (answer: string) => {
@@ -542,6 +573,40 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
     logCopyGeneratedAnswer(streamId: string) {
       logGeneratedAnswerEvent(
         InterceptAliases.UA.GeneratedAnswer.GeneratedAnswerCopyToClipboard,
+        (analyticsBody: {customData: object; eventType: string}) => {
+          const customData = analyticsBody?.customData;
+          expect(analyticsBody).to.have.property(
+            'eventType',
+            'generatedAnswer'
+          );
+          expect(customData).to.have.property(
+            'generativeQuestionAnsweringId',
+            streamId
+          );
+        }
+      );
+    },
+
+    logGeneratedAnswerExpand(streamId: string) {
+      logGeneratedAnswerEvent(
+        InterceptAliases.UA.GeneratedAnswer.GeneratedAnswerExpand,
+        (analyticsBody: {customData: object; eventType: string}) => {
+          const customData = analyticsBody?.customData;
+          expect(analyticsBody).to.have.property(
+            'eventType',
+            'generatedAnswer'
+          );
+          expect(customData).to.have.property(
+            'generativeQuestionAnsweringId',
+            streamId
+          );
+        }
+      );
+    },
+
+    logGeneratedAnswerCollapse(streamId: string) {
+      logGeneratedAnswerEvent(
+        InterceptAliases.UA.GeneratedAnswer.GeneratedAnswerCollapse,
         (analyticsBody: {customData: object; eventType: string}) => {
           const customData = analyticsBody?.customData;
           expect(analyticsBody).to.have.property(
