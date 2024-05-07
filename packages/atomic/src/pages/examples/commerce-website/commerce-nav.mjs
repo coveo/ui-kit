@@ -9,7 +9,7 @@ export const navContent = {
   'Surf accessories': {
     href: 'listing-surf-accessories.html',
     label: 'Surf accessories',
-    barcaUrl: `${barcaRoot}/browse/promotions/accessories/surf-with-us-this-year`,
+    barcaUrl: `${barcaRoot}/browse/promotions/surf-with-us-this-year`,
   },
   Towels: {
     href: 'listing-towels.html',

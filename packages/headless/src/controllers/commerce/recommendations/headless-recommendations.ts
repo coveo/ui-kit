@@ -7,6 +7,7 @@ import {
 } from '../../../app/commerce-engine/commerce-engine';
 import {recommendationsOptionsSchema} from '../../../features/commerce/recommendations/recommendations';
 import {
+  fetchMoreRecommendations,
   fetchRecommendations,
   registerRecommendationsSlot,
 } from '../../../features/commerce/recommendations/recommendations-actions';
@@ -97,7 +98,8 @@ export function buildRecommendations(
   const subControllers = buildBaseSolutionTypeControllers(engine, {
     slotId,
     responseIdSelector: (state) => state.recommendations[slotId]!.responseId,
-    fetchResultsActionCreator: () => fetchRecommendations({slotId}),
+    fetchProductsActionCreator: () => fetchRecommendations({slotId}),
+    fetchMoreProductsActionCreator: () => fetchMoreRecommendations({slotId}),
   });
 
   return {
