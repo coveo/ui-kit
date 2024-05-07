@@ -7,7 +7,7 @@ import {
   executeSearch,
   prepareForSearchWithQuery,
 } from '../../../features/commerce/search/search-actions';
-import {commerceSearchReducer as commerceSearch} from '../../../features/commerce/search/search-slice';
+import {commerceSearchReducer as search} from '../../../features/commerce/search/search-slice';
 import {
   clearRecentQueries,
   registerRecentQueries,
@@ -185,6 +185,6 @@ export function buildRecentQueriesList(
 function loadRecentQueriesListReducer(
   engine: CommerceEngine
 ): engine is CommerceEngine<RecentQueriesSection> {
-  engine.addReducers({commerceSearch, recentQueries});
+  engine.addReducers({search: search, recentQueries});
   return true;
 }
