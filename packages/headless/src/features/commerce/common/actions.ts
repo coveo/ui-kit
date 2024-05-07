@@ -13,25 +13,18 @@ import {
   CommerceSortSection,
   ConfigurationSection,
   FacetOrderSection,
-  ProductListingV2Section,
-  RecommendationsSection,
   VersionSection,
 } from '../../../state/state-sections';
-import {StateNeededByFetchProductListingV2} from '../product-listing/product-listing-actions';
 import {SortBy, SortCriterion} from '../sort/sort';
 
 export type StateNeededByQueryCommerceAPI = ConfigurationSection &
-  ProductListingV2Section &
-  RecommendationsSection &
   CommerceContextSection &
   CartSection &
-  Partial<
-    CommercePaginationSection &
-      CommerceSortSection &
-      CommerceFacetSetSection &
-      FacetOrderSection &
-      VersionSection
-  >;
+  Partial<CommercePaginationSection & VersionSection>;
+
+export type ListingAndSearchStateNeededByQueryCommerceAPI =
+  StateNeededByQueryCommerceAPI &
+    Partial<CommerceSortSection & CommerceFacetSetSection & FacetOrderSection>;
 
 export interface QueryCommerceAPIThunkReturn {
   /** The successful response. */
@@ -39,7 +32,7 @@ export interface QueryCommerceAPIThunkReturn {
 }
 
 export const buildCommerceAPIRequest = async (
-  state: StateNeededByQueryCommerceAPI
+  state: ListingAndSearchStateNeededByQueryCommerceAPI
 ): Promise<CommerceAPIRequest> => {
   return {
     ...(await buildBaseCommerceAPIRequest(state)),
@@ -94,7 +87,7 @@ const effectivePagination = (
   );
 };
 
-function getFacets(state: StateNeededByFetchProductListingV2) {
+function getFacets(state: ListingAndSearchStateNeededByQueryCommerceAPI) {
   if (!state.facetOrder || !state.commerceFacetSet) {
     return [];
   }

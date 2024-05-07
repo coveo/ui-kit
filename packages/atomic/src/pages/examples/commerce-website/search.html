@@ -9,27 +9,37 @@
     <script nomodule src="/build/atomic.js"></script>
     <link rel="stylesheet" href="/themes/coveo.css" />
     <script type="module">
-      import {setupEngine, setupSearch, renderProducts} from './engine.mjs';
+      import {commerceEngineConfig} from './engine.mjs';
 
-      const engine = await setupEngine();
+      (async () => {
+        await customElements.whenDefined('atomic-commerce-interface');
+        const searchInterface = document.querySelector('atomic-commerce-interface');
+        await searchInterface.initialize(commerceEngineConfig);
 
-      /*
-       * The following code section should be replaced by actual atomic commerce search page
-       */
-      const search = setupSearch(engine);
-      search.subscribe(() => {
-        renderProducts('#productList', 'Search', search.state.products);
-      });
-      /**
-       * End of section to be replaced
-       */
+        searchInterface.executeFirstSearch();
+      })();
     </script>
   </head>
+
   <body>
     <h1>Search page</h1>
     <main>
       <section>
-        <article id="productList">REPLACE ME; THIS SHOULD BE THE SEARCH PAGE</article>
+        <atomic-commerce-interface type="search">
+          <atomic-search-layout>
+            <atomic-layout-section section="search">
+              <atomic-commerce-search-box textarea></atomic-commerce-search-box>
+              <!-- <atomic-commerce-search-box redirection-url="https://docs.coveo.com/en/1458" textarea></atomic-commerce-search-box> -->
+            </atomic-layout-section>
+          </atomic-search-layout>
+
+          <atomic-layout-section section="main">
+            <atomic-commerce-product-list display="list" density="compact" image-size="200">
+            </atomic-commerce-product-list>
+            <atomic-commerce-load-more-products></atomic-commerce-load-more-products>
+            <atomic-commerce-pager></atomic-commerce-pager>
+          </atomic-layout-section>
+        </atomic-commerce-interface>
       </section>
     </main>
 

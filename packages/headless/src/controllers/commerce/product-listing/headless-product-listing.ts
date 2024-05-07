@@ -3,7 +3,10 @@ import {Product} from '../../../api/commerce/common/product';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
-import {fetchProductListing} from '../../../features/commerce/product-listing/product-listing-actions';
+import {
+  fetchProductListing,
+  fetchMoreProducts,
+} from '../../../features/commerce/product-listing/product-listing-actions';
 import {responseIdSelector} from '../../../features/commerce/product-listing/product-listing-selectors';
 import {productListingV2Reducer as productListing} from '../../../features/commerce/product-listing/product-listing-slice';
 import {loadReducerError} from '../../../utils/errors';
@@ -13,13 +16,19 @@ import {
 } from '../../controller/headless-controller';
 import {
   buildSolutionTypeSubControllers,
-  SolutionTypeSubControllers,
+  SearchAndListingSubControllers,
 } from '../core/sub-controller/headless-sub-controller';
+import {
+  facetResponseSelector,
+  isFacetLoadingResponseSelector,
+} from './facets/headless-product-listing-facet-options';
 
 /**
  * The `ProductListing` controller exposes a method for retrieving product listing content in a commerce interface.
  */
-export interface ProductListing extends Controller, SolutionTypeSubControllers {
+export interface ProductListing
+  extends Controller,
+    SearchAndListingSubControllers {
   /**
    * Fetches the product listing.
    */
@@ -54,7 +63,10 @@ export function buildProductListing(engine: CommerceEngine): ProductListing {
   const getState = () => engine.state;
   const subControllers = buildSolutionTypeSubControllers(engine, {
     responseIdSelector,
-    fetchResultsActionCreator: fetchProductListing,
+    fetchProductsActionCreator: fetchProductListing,
+    fetchMoreProductsActionCreator: fetchMoreProducts,
+    facetResponseSelector,
+    isFacetLoadingResponseSelector,
   });
 
   return {

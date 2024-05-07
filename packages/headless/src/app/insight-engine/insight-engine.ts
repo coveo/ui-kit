@@ -23,6 +23,7 @@ import {
 } from '../engine';
 import {InsightThunkExtraArguments} from '../insight-thunk-extra-arguments';
 import {buildLogger} from '../logger';
+import {AdditionalCoreExtraArguments} from '../store';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {
   InsightEngineConfiguration,
@@ -82,7 +83,10 @@ export function buildInsightEngine(
   );
   const generatedAnswerClient = createGeneratedAnswerAPIClient(logger);
 
-  const thunkArguments: Omit<InsightThunkExtraArguments, 'relay'> = {
+  const thunkArguments: Omit<
+    InsightThunkExtraArguments,
+    keyof AdditionalCoreExtraArguments
+  > = {
     ...buildThunkExtraArguments(options.configuration, logger),
     apiClient: insightAPIClient,
     streamingClient: generatedAnswerClient,

@@ -4,7 +4,8 @@ import {buildFetchProductListingV2Response} from './mock-product-listing-v2';
 
 export function buildSearchResponse(
   response: Partial<SearchCommerceSuccessResponse> = {},
-  originalQuery: string = ''
+  originalQuery: string = '',
+  queryExecuted: string = ''
 ): QuerySearchCommerceAPIThunkReturn {
   return {
     response: {
@@ -12,5 +13,6 @@ export function buildSearchResponse(
       queryCorrection: response.queryCorrection,
     },
     originalQuery,
+    queryExecuted,
   };
 }

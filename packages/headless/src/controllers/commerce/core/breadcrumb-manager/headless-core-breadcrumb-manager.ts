@@ -5,11 +5,11 @@ import {
 } from '../../../../app/commerce-engine/commerce-engine';
 import {deselectAllBreadcrumbs} from '../../../../features/breadcrumb/breadcrumb-actions';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
+import {FacetType} from '../../../../features/commerce/facets/facet-set/interfaces/common';
 import {
   AnyFacetResponse,
   AnyFacetValueResponse,
   BaseFacetValue,
-  FacetType,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response';
 import {toggleSelectCategoryFacetValue} from '../../../../features/facets/category-facet-set/category-facet-set-actions';
 import {facetOrderReducer as facetOrder} from '../../../../features/facets/facet-order/facet-order-slice';
@@ -50,6 +50,10 @@ export interface Breadcrumb<Value extends BaseFacetValue> {
    */
   facetId: string;
   /**
+   * The display name of the underlying facet.
+   */
+  facetDisplayName: string;
+  /**
    * The field on which the underlying facet is configured.
    */
   field: string;
@@ -65,7 +69,7 @@ export interface Breadcrumb<Value extends BaseFacetValue> {
 
 export type CoreBreadcrumbManagerOptions = Pick<
   CoreCommerceFacetOptions,
-  'facetResponseSelector' | 'fetchResultsActionCreator'
+  'facetResponseSelector' | 'fetchProductsActionCreator'
 >;
 
 /**
@@ -142,6 +146,7 @@ export function buildCoreBreadcrumbManager(
 
   const createBreadcrumb = (facet: AnyFacetResponse) => ({
     facetId: facet.facetId,
+    facetDisplayName: facet.displayName,
     field: facet.field,
     type: facet.type,
     values: facet.values
@@ -156,7 +161,7 @@ export function buildCoreBreadcrumbManager(
                 selection,
               })
             );
-            dispatch(options.fetchResultsActionCreator());
+            dispatch(options.fetchProductsActionCreator());
           } else if (
             selection.state === 'excluded' &&
             facet.type !== facetTypeWithoutExcludeAction
@@ -167,7 +172,7 @@ export function buildCoreBreadcrumbManager(
                 selection,
               })
             );
-            dispatch(options.fetchResultsActionCreator());
+            dispatch(options.fetchProductsActionCreator());
           }
         },
       })),

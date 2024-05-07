@@ -10,7 +10,7 @@ export function buildMockRecommendationsResponse(
       pagination: response.pagination ?? {
         page: 0,
         perPage: 0,
-        totalItems: 0,
+        totalEntries: 0,
         totalPages: 0,
       },
       products: response.products ?? [],

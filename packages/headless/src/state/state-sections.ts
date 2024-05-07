@@ -9,12 +9,14 @@ import {CartState} from '../features/commerce/context/cart/cart-state';
 import {CommerceContextState} from '../features/commerce/context/context-state';
 import {DidYouMeanState as CommerceDidYouMeanState} from '../features/commerce/did-you-mean/did-you-mean-state';
 import {CommerceFacetSetState} from '../features/commerce/facets/facet-set/facet-set-state';
+import {InstantProductsState} from '../features/commerce/instant-products/instant-products-state';
 import {CommercePaginationState} from '../features/commerce/pagination/pagination-state';
 import {ProductListingV2State} from '../features/commerce/product-listing/product-listing-state';
 import {CommerceQueryState} from '../features/commerce/query/query-state';
 import {RecommendationsState as CommerceRecommendationsState} from '../features/commerce/recommendations/recommendations-state';
 import {CommerceSearchState} from '../features/commerce/search/search-state';
 import {CommerceSortState} from '../features/commerce/sort/sort-state';
+import {CommerceStandaloneSearchBoxSetState} from '../features/commerce/standalone-search-box-set/standalone-search-box-set-state';
 import {ConfigurationState} from '../features/configuration/configuration-state';
 import {ContextState} from '../features/context/context-state';
 import {DictionaryFieldContextState} from '../features/dictionary-field-context/dictionary-field-context-state';
@@ -164,6 +166,13 @@ export interface InstantResultSection {
    * The set of results loaded for query expressions.
    */
   instantResults: InstantResultsState;
+}
+
+export interface InstantProductsSection {
+  /**
+   * The set of products loaded for query expressions.
+   */
+  instantProducts: InstantProductsState;
 }
 
 export interface PipelineSection {
@@ -350,6 +359,13 @@ export interface CommerceSearchSection {
    * The information related to the commerce search endpoint.
    */
   commerceSearch: CommerceSearchState;
+}
+
+export interface CommerceStandaloneSearchBoxSection {
+  /**
+   * The set of standalone search boxes.
+   */
+  commerceStandaloneSearchBoxSet: CommerceStandaloneSearchBoxSetState;
 }
 
 export interface CommerceQuerySection {
