@@ -1,5 +1,6 @@
 export type ChildProduct = Omit<Product, 'children' | 'totalNumberOfChildren'>;
 
+// TODO: update based on https://coveord.atlassian.net/browse/DOC-14667
 export interface Product {
   /**
    * The SKU of the product.

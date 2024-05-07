@@ -10,7 +10,6 @@ import {Component, Element, State, h, Prop, Method} from '@stencil/core';
 import {InitializableComponent} from '../../../../utils/initialization-utils';
 import {encodeForDomAttribute} from '../../../../utils/string-utils';
 import {ItemRenderingFunction} from '../../../common/item-list/item-list-common';
-import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
 import {
   ItemDisplayDensity,
   ItemDisplayImageSize,
@@ -28,24 +27,26 @@ import {
   SearchBoxSuggestionsBindings,
 } from '../../../common/suggestions/suggestions-common';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
+import {ProductTemplateProvider} from '../../product-list/product-template-provider';
 
 export type AriaLabelGenerator = (
   bindings: Bindings,
   result: Product
 ) => string | undefined;
 
-// TODO: KIT-???? Uncomment once the `buildInteractiveInstantResult` function is implemented in headless.
-function buildInteractiveInstantResult(
+// TODO: KIT-???? Uncomment once the `buildInteractiveInstantProduct` function is implemented in headless.
+function buildInteractiveInstantProduct(
   _engine: CommerceEngine<{}>,
-  _arg: {options: {result: Product}}
+  _arg: {options: {product: Product}}
 ): InteractiveProduct {
-  throw new Error('TODO: KIT-???? Function not implemented.');
+  console.log('TODO: KIT-???? Function not implemented.');
+  return {} as InteractiveProduct;
 }
 
 /**
  * The `atomic-commerce-search-box-instant-products` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
  *
- * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
+ * ,,This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
  *
  * This component is not supported on mobile.
  *
@@ -61,7 +62,7 @@ export class AtomicCommerceSearchBoxInstantProducts
   public bindings!: SearchBoxSuggestionsBindings<SearchBox, Bindings>;
   private itemRenderingFunction: ItemRenderingFunction;
   private products: Product[] = [];
-  private itemTemplateProvider!: ItemTemplateProvider;
+  private itemTemplateProvider!: ProductTemplateProvider;
   private instantProducts!: InstantProducts;
   private display: ItemDisplayLayout = 'list';
 
@@ -84,21 +85,17 @@ export class AtomicCommerceSearchBoxInstantProducts
     this.itemRenderingFunction = resultRenderingFunction;
   }
   /**
-   * The maximum number of results to show.
-   */
-  @Prop({reflect: true}) public maxResultsPerQuery = 4;
-  /**
-   * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+   * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of different parts in a product.
    */
   @Prop({reflect: true}) public density: ItemDisplayDensity = 'normal';
   /**
-   * The expected size of the image displayed in the results.
+   * The expected size of the image displayed in the products.
    */
   @Prop({reflect: true}) public imageSize: ItemDisplayImageSize = 'icon';
   /**
-   * The callback to generate an [`aria-label`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label) for a given result so that accessibility tools can fully describe what's visually rendered by a result.
+   * The callback to generate an [`aria-label`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label) for a given product so that accessibility tools can fully describe what's visually rendered by a product.
    *
-   * By default, or if an empty string is returned, `result.title` is used.
+   * By default, or if an empty string is returned, `product.ec_name` is used.
    */
   @Prop() public ariaLabelGenerator?: AriaLabelGenerator;
 
@@ -114,12 +111,15 @@ export class AtomicCommerceSearchBoxInstantProducts
   }
 
   private getLink(el: HTMLElement): HTMLElement | null {
-    const atomicResult =
-      el.tagName === 'ATOMIC-RESULT' ? el : el?.querySelector('atomic-result');
+    const atomicProduct =
+      el.tagName === 'ATOMIC-PRODUCT'
+        ? el
+        : el?.querySelector('atomic-product');
 
     return (
-      atomicResult?.shadowRoot?.querySelector('atomic-result-link a') || null
+      atomicProduct?.shadowRoot?.querySelector('atomic-product-link a') || null // TODO: add a atomic-product-link
     );
+    // return <a href="https://perdu.com">hello</a>
   }
 
   private handleLinkClick(el: HTMLElement, hasModifier: boolean) {
@@ -137,29 +137,28 @@ export class AtomicCommerceSearchBoxInstantProducts
     if (!this.bindings.suggestedQuery() || this.bindings.store.isMobile()) {
       return [];
     }
-    const results = this.instantProducts.state.products.length
+    const products = this.instantProducts.state.products.length
       ? this.instantProducts.state.products
       : this.products;
 
-    const elements: SearchBoxSuggestionElement[] = results.map(
+    const elements: SearchBoxSuggestionElement[] = products.map(
       (product: Product) => {
         const partialItem = getPartialInstantItemElement(
           this.bindings.i18n,
-          this.ariaLabelGenerator?.(this.bindings, product) ||
-            product.permanentid,
+          this.ariaLabelGenerator?.(this.bindings, product) || product.ec_name!, // TODO: remove !
           product.permanentid
         );
         return {
           ...partialItem,
           content: (
             <atomic-product
-              key={`instant-result-${encodeForDomAttribute(product.permanentid)}`}
+              key={`instant-product-${encodeForDomAttribute(product.permanentid)}`}
               part="outline"
               product={product}
-              interactiveProduct={buildInteractiveInstantResult(
+              interactiveProduct={buildInteractiveInstantProduct(
                 this.bindings.engine,
                 {
-                  options: {result: product},
+                  options: {product},
                 }
               )}
               display={this.display}
@@ -205,10 +204,10 @@ export class AtomicCommerceSearchBoxInstantProducts
       options: {},
     });
 
-    this.itemTemplateProvider = new ItemTemplateProvider({
+    this.itemTemplateProvider = new ProductTemplateProvider({
       includeDefaultTemplate: true,
       templateElements: Array.from(
-        this.host.querySelectorAll('atomic-result-template')
+        this.host.querySelectorAll('atomic-product-template') // TODO: change that
       ),
       getResultTemplateRegistered: () => true,
       setResultTemplateRegistered: () => {},
@@ -216,7 +215,6 @@ export class AtomicCommerceSearchBoxInstantProducts
       setTemplateHasError: (value: boolean) => {
         this.templateHasError = value;
       },
-      bindings: this.bindings,
     });
 
     return {
@@ -236,7 +234,7 @@ export class AtomicCommerceSearchBoxInstantProducts
       !this.bindings.searchBoxController.state.value
     ) {
       console.warn(
-        "There doesn't seem to be any query suggestions configured. Make sure to include either an atomic-search-box-query-suggestions or atomic-search-box-recent-queries in your search box in order to see some instant results."
+        "There doesn't seem to be any query suggestions configured. Make sure to include either an atomic-search-box-query-suggestions or atomic-search-box-recent-queries in your search box in order to see some instant products."
       );
     }
 

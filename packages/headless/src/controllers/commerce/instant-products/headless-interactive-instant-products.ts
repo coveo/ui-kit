@@ -1,5 +1,4 @@
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
-// import {pushRecentProduct} from '../../../features/commerce/recent-products/recent-products-actions';
 import {
   InteractiveProduct,
   InteractiveProductCoreProps,
@@ -34,10 +33,6 @@ export function buildInteractiveInstantProduct(
   engine: CommerceEngine,
   props: InteractiveInstantProductProps
 ): InteractiveInstantProduct {
-  // TODO: find a way to dispatch this action
-  // const action = () => {
-  //   engine.dispatch(pushRecentProduct(props.options.product));
-  // };
-
+  // TODO: KIT-???? dispatch recent result action
   return buildCoreInteractiveProduct(engine, props);
 }
