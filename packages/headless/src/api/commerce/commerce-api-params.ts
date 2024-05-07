@@ -25,10 +25,14 @@ export interface ContextParam {
   context: ContextParams;
 }
 
+export interface ProductParam {
+  productId: string;
+}
+
 export interface ContextParams {
   view: ViewParams;
   user?: UserParams;
-  product?: {productId: string};
+  product?: ProductParam;
   cart?: CartItemParam[];
 }
 

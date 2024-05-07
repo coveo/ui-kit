@@ -27,11 +27,7 @@ const buildRecommendationCommerceAPIRequest = async (
     ...commerceAPIRequest,
     context: {
       ...commerceAPIRequest.context,
-      product: productId
-        ? {
-            productId,
-          }
-        : undefined,
+      ...(productId ? {product: {productId}} : {}),
     },
     slotId,
   };
