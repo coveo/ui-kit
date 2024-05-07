@@ -1,10 +1,8 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {
   SearchBoxOptions,
-  StandaloneSearchBox,
   StandaloneSearchBoxState,
-} from '@coveo/headless';
-import {
+  StandaloneSearchBox,
   SearchBox,
   SearchBoxState,
   buildSearchBox,
@@ -215,10 +213,6 @@ export class AtomicCommerceSearchBox
   public initialize() {
     this.id = randomID('atomic-commerce-search-box-');
 
-    this.searchBox = buildSearchBox(this.bindings.engine, {
-      options: this.searchBoxOptions,
-    });
-
     this.searchBox = this.redirectionUrl
       ? buildStandaloneSearchBox(this.bindings.engine, {
           options: {
@@ -241,15 +235,14 @@ export class AtomicCommerceSearchBox
       return;
     }
 
-    const {redirectTo, value, analytics} = this.searchBoxState;
+    const {redirectTo, value} = this.searchBoxState;
 
     if (redirectTo === '') {
       return;
     }
-    const data: StandaloneSearchBoxData = {
+    const data: Omit<StandaloneSearchBoxData, 'analytics'> = {
       value,
       enableQuerySyntax: this.enableQuerySyntax,
-      analytics,
     };
     const storage = new SafeStorage();
     storage.setJSON(StorageItems.STANDALONE_SEARCH_BOX_DATA, data);
@@ -340,7 +333,6 @@ export class AtomicCommerceSearchBox
   private get searchBoxOptions(): SearchBoxOptions {
     return {
       id: this.id,
-      numberOfSuggestions: 0,
       highlightOptions: {
         notMatchDelimiters: {
           open: '<span class="font-bold">',
@@ -352,7 +344,6 @@ export class AtomicCommerceSearchBox
         },
       },
       clearFilters: this.clearFilters,
-      enableQuerySyntax: this.enableQuerySyntax,
     };
   }
 
@@ -688,10 +679,8 @@ export class AtomicCommerceSearchBox
           </SearchBoxWrapper>,
           !this.suggestionManager.suggestions.length && (
             <slot>
-              {/* TODO: KIT-3130 Add recent queries */}
-              {/* <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries> */}
-              {/* TODO: KIT-3128 Add query suggestions */}
-              {/* <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions> */}
+              <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
+              <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
             </slot>
           ),
         ]}

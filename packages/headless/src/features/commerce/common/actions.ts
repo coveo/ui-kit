@@ -10,6 +10,7 @@ import {
   CommerceContextSection,
   CommerceFacetSetSection,
   CommercePaginationSection,
+  CommerceSearchSection,
   CommerceSortSection,
   ConfigurationSection,
   FacetOrderSection,
@@ -23,6 +24,7 @@ import {SortBy, SortCriterion} from '../sort/sort';
 
 export type StateNeededByQueryCommerceAPI = ConfigurationSection &
   ProductListingV2Section &
+  CommerceSearchSection &
   RecommendationsSection &
   CommerceContextSection &
   CartSection &
@@ -35,6 +37,8 @@ export type StateNeededByQueryCommerceAPI = ConfigurationSection &
   >;
 
 export interface QueryCommerceAPIThunkReturn {
+  /** The query that was executed. */
+  queryExecuted?: string;
   /** The successful search response. */
   response: CommerceSuccessResponse;
   analyticsAction?: PreparableAnalyticsAction<StateNeededByQueryCommerceAPI>;

@@ -35,8 +35,8 @@ describe('NumericFacet', () => {
   const type: FacetType = 'numericalRange';
   const start = 0;
   const end = 100;
-  const mockFetchResultsActionCreator = jest.fn();
-  const mockFacetResponseSelector = jest.fn();
+  const facetResponseSelector = jest.fn();
+  const fetchProductsActionCreator = jest.fn();
   let options: NumericFacetOptions;
   let state: CommerceAppState;
   let engine: MockedCommerceEngine;
@@ -51,7 +51,7 @@ describe('NumericFacet', () => {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, type, ...config}),
     });
-    mockFacetResponseSelector.mockReturnValue(
+    facetResponseSelector.mockReturnValue(
       buildMockCommerceNumericFacetResponse({facetId})
     );
   }
@@ -61,8 +61,8 @@ describe('NumericFacet', () => {
 
     options = {
       facetId,
-      fetchResultsActionCreator: mockFetchResultsActionCreator,
-      facetResponseSelector: mockFacetResponseSelector,
+      fetchProductsActionCreator,
+      facetResponseSelector,
       isFacetLoadingResponseSelector: jest.fn(),
     };
 
@@ -115,15 +115,15 @@ describe('NumericFacet', () => {
       });
     });
 
-    it('dispatches #fetchResultsActionCreator', () => {
-      expect(mockFetchResultsActionCreator).toHaveBeenCalledTimes(1);
+    it('dispatches #fetchProductsActionCreator', () => {
+      expect(fetchProductsActionCreator).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('#state', () => {
     it('includes #domain if present in the response state', () => {
       const domain = {increment: 1, max: 100, min: 0};
-      mockFacetResponseSelector.mockReturnValue(
+      facetResponseSelector.mockReturnValue(
         buildMockCommerceNumericFacetResponse({facetId, domain})
       );
 
