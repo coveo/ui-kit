@@ -1,14 +1,15 @@
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
 import {stateKey} from '../../../app/state-key';
-import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions';
-import {selectPage} from '../../../features/commerce/pagination/pagination-actions';
 import {fetchQuerySuggestions} from '../../../features/commerce/query-suggest/query-suggest-actions';
-import {updateQuery} from '../../../features/commerce/query/query-actions';
+import {UpdateQueryActionCreatorPayload} from '../../../features/commerce/query/query-actions';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
 import {executeSearch} from '../../../features/commerce/search/search-actions';
+import {
+  PrepareForSearchWithQueryOptions,
+  prepareForSearchWithQuery,
+} from '../../../features/commerce/search/search-actions';
 import {commerceSearchReducer as commerceSearch} from '../../../features/commerce/search/search-slice';
-import {updateFacetAutoSelection} from '../../../features/facets/generic/facet-actions';
 import {
   registerQuerySetQuery,
   updateQuerySetQuery,
@@ -109,17 +110,13 @@ export function buildSearchBox(
   const getValue = () => getState().querySet[options.id];
 
   const performSearch = async () => {
-    if (options.clearFilters) {
-      dispatch(deselectAllBreadcrumbs());
-    }
+    const queryOptions: UpdateQueryActionCreatorPayload &
+      PrepareForSearchWithQueryOptions = {
+      query: getValue(),
+      clearFilters: options.clearFilters,
+    };
 
-    dispatch(updateFacetAutoSelection({allow: true}));
-    dispatch(updateQuery({query: getValue()}));
-    dispatch(
-      selectPage({
-        page: 0,
-      })
-    );
+    dispatch(prepareForSearchWithQuery(queryOptions));
     dispatch(executeSearch());
   };
 

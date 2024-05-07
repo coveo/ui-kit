@@ -9,7 +9,7 @@ import {
   Controller,
   buildController,
 } from '../../../controller/headless-controller';
-import {FetchResultsActionCreator} from '../common';
+import {FetchProductsActionCreator} from '../common';
 
 export interface ParameterManagerProps<T extends Parameters> {
   /**
@@ -38,7 +38,7 @@ export interface CoreParameterManagerProps<T extends Parameters>
   /**
    * The action to dispatch to fetch more results.
    */
-  fetchResultsActionCreator: FetchResultsActionCreator;
+  fetchProductsActionCreator: FetchProductsActionCreator;
 
   /**
    * Enriches the parameters with the active parameters.
@@ -128,7 +128,7 @@ export function buildCoreParameterManager<T extends Parameters>(
       }
 
       dispatch(props.restoreActionCreator(parameters));
-      dispatch(props.fetchResultsActionCreator());
+      dispatch(props.fetchProductsActionCreator());
     },
 
     get state() {

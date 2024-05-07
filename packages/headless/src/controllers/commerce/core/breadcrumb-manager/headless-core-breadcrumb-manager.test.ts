@@ -62,7 +62,7 @@ describe('core breadcrumb manager', () => {
 
   const facetId = 'some_facet_id';
   const facetResponseSelector = jest.fn();
-  const fetchResultsActionCreator = jest.fn();
+  const fetchProductsActionCreator = jest.fn();
 
   function initEngine(preloadedState = buildMockCommerceState()) {
     engine = buildMockCommerceEngine(preloadedState);
@@ -85,7 +85,7 @@ describe('core breadcrumb manager', () => {
 
     options = {
       facetResponseSelector,
-      fetchResultsActionCreator,
+      fetchProductsActionCreator,
     };
 
     initEngine();
@@ -240,7 +240,7 @@ describe('core breadcrumb manager', () => {
       breadcrumb.state = 'excluded';
       deselectBreadcrumb();
 
-      expect(fetchResultsActionCreator).not.toHaveBeenCalled();
+      expect(fetchProductsActionCreator).not.toHaveBeenCalled();
     });
   });
 
@@ -271,8 +271,8 @@ describe('core breadcrumb manager', () => {
         });
       });
 
-      it('dispatches #fetchResultsActionCreator', () => {
-        expect(fetchResultsActionCreator).toHaveBeenCalled();
+      it('dispatches #fetchProductsActionCreator', () => {
+        expect(fetchProductsActionCreator).toHaveBeenCalled();
       });
     };
   }

@@ -70,7 +70,7 @@ export interface Breadcrumb<Value extends BaseFacetValue> {
 
 export type CoreBreadcrumbManagerOptions = Pick<
   CoreCommerceFacetOptions,
-  'facetResponseSelector' | 'fetchResultsActionCreator'
+  'facetResponseSelector' | 'fetchProductsActionCreator'
 >;
 
 /**
@@ -162,7 +162,7 @@ export function buildCoreBreadcrumbManager(
                 selection,
               })
             );
-            dispatch(options.fetchResultsActionCreator());
+            dispatch(options.fetchProductsActionCreator());
           } else if (
             selection.state === 'excluded' &&
             facet.type !== facetTypeWithoutExcludeAction
@@ -173,7 +173,7 @@ export function buildCoreBreadcrumbManager(
                 selection,
               })
             );
-            dispatch(options.fetchResultsActionCreator());
+            dispatch(options.fetchProductsActionCreator());
           }
         },
       })),

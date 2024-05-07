@@ -4,7 +4,7 @@ import {
 } from '../../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../../app/state-key';
 import {AnyFacetResponse} from '../../../../features/commerce/facets/facet-set/interfaces/response';
-import {FetchResultsActionCreator} from '../common';
+import {FetchProductsActionCreator} from '../common';
 import {buildCategoryFacet} from '../facets/category/headless-commerce-category-facet';
 import {buildCommerceDateFacet} from '../facets/date/headless-commerce-date-facet';
 import {
@@ -19,9 +19,9 @@ import {
   PaginationProps,
 } from '../pagination/headless-core-commerce-pagination';
 import {
-  buildCoreInteractiveResult,
-  InteractiveResult,
-  InteractiveResultProps,
+  buildCoreInteractiveProduct,
+  InteractiveProduct,
+  InteractiveProductProps,
 } from '../result-list/headless-core-interactive-result';
 import {
   buildCoreSort,
@@ -30,7 +30,7 @@ import {
 } from '../sort/headless-core-commerce-sort';
 
 export interface BaseSolutionTypeSubControllers {
-  interactiveResult: (props: InteractiveResultProps) => InteractiveResult;
+  interactiveProduct: (props: InteractiveProductProps) => InteractiveProduct;
   pagination: (props?: PaginationProps) => Pagination;
 }
 
@@ -42,7 +42,8 @@ export interface SearchAndListingSubControllers
 
 interface BaseSubControllerProps {
   responseIdSelector: (state: CommerceEngineState) => string;
-  fetchResultsActionCreator: FetchResultsActionCreator;
+  fetchProductsActionCreator: FetchProductsActionCreator;
+  fetchMoreProductsActionCreator: FetchProductsActionCreator;
   slotId?: string;
 }
 
@@ -62,7 +63,7 @@ export function buildSolutionTypeSubControllers(
   subControllerProps: SearchAndListingSubControllerProps
 ): SearchAndListingSubControllers {
   const {
-    fetchResultsActionCreator,
+    fetchProductsActionCreator: fetchProductsActionCreator,
     facetResponseSelector,
     isFacetLoadingResponseSelector,
   } = subControllerProps;
@@ -71,12 +72,12 @@ export function buildSolutionTypeSubControllers(
     sort(props?: SortProps) {
       return buildCoreSort(engine, {
         ...props,
-        fetchResultsActionCreator,
+        fetchProductsActionCreator: fetchProductsActionCreator,
       });
     },
     facetGenerator() {
       const commonOptions = {
-        fetchResultsActionCreator,
+        fetchProductsActionCreator,
         facetResponseSelector,
         isFacetLoadingResponseSelector,
       };
@@ -98,11 +99,15 @@ export function buildBaseSolutionTypeControllers(
   engine: CommerceEngine,
   subControllerProps: BaseSubControllerProps
 ): BaseSolutionTypeSubControllers {
-  const {responseIdSelector, fetchResultsActionCreator, slotId} =
-    subControllerProps;
+  const {
+    responseIdSelector,
+    fetchProductsActionCreator,
+    fetchMoreProductsActionCreator,
+    slotId,
+  } = subControllerProps;
   return {
-    interactiveResult(props: InteractiveResultProps) {
-      return buildCoreInteractiveResult(engine, {
+    interactiveProduct(props: InteractiveProductProps) {
+      return buildCoreInteractiveProduct(engine, {
         ...props,
         responseIdSelector,
       });
@@ -114,7 +119,8 @@ export function buildBaseSolutionTypeControllers(
           ...props?.options,
           slotId,
         },
-        fetchResultsActionCreator,
+        fetchProductsActionCreator,
+        fetchMoreProductsActionCreator,
       });
     },
   };

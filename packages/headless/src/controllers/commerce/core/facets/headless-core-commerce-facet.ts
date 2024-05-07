@@ -30,7 +30,7 @@ import {
 } from '../../../core/facets/facet/headless-core-facet';
 import {DateRangeRequest} from '../../../core/facets/range-facet/date-facet/headless-core-date-facet';
 import {NumericRangeRequest} from '../../../core/facets/range-facet/numeric-facet/headless-core-numeric-facet';
-import {FetchResultsActionCreator, ToggleActionCreator} from '../common';
+import {FetchProductsActionCreator, ToggleActionCreator} from '../common';
 
 export type {
   FacetType,
@@ -61,7 +61,7 @@ export interface CoreCommerceFacetOptions {
   facetId: string;
   toggleSelectActionCreator: ToggleActionCreator;
   toggleExcludeActionCreator?: ToggleActionCreator;
-  fetchResultsActionCreator: FetchResultsActionCreator;
+  fetchProductsActionCreator: FetchProductsActionCreator;
   facetResponseSelector: (
     state: CommerceEngine[typeof stateKey],
     facetId: string
@@ -73,7 +73,7 @@ export interface CoreCommerceFacetOptions {
 
 export type CommerceFacetOptions = Omit<
   CoreCommerceFacetOptions,
-  | 'fetchResultsActionCreator'
+  | 'fetchProductsActionCreator'
   | 'toggleSelectActionCreator'
   | 'toggleExcludeActionCreator'
   | 'facetResponseSelector'
@@ -185,7 +185,7 @@ export function buildCoreCommerceFacet<
           facetId,
         })
       );
-      dispatch(props.options.fetchResultsActionCreator());
+      dispatch(props.options.fetchProductsActionCreator());
       // TODO: analytics
     },
 
@@ -200,7 +200,7 @@ export function buildCoreCommerceFacet<
       }
 
       dispatch(props.options.toggleExcludeActionCreator({selection, facetId}));
-      dispatch(props.options.fetchResultsActionCreator());
+      dispatch(props.options.fetchProductsActionCreator());
       // TODO: analytics
     },
 
@@ -241,7 +241,7 @@ export function buildCoreCommerceFacet<
 
     deselectAll() {
       dispatch(deselectAllFacetValues(facetId));
-      dispatch(props.options.fetchResultsActionCreator());
+      dispatch(props.options.fetchProductsActionCreator());
     },
 
     showMoreValues() {
@@ -253,7 +253,7 @@ export function buildCoreCommerceFacet<
 
       dispatch(updateFacetNumberOfValues({facetId, numberOfValues}));
       dispatch(updateFacetIsFieldExpanded({facetId, isFieldExpanded: true}));
-      dispatch(props.options.fetchResultsActionCreator());
+      dispatch(props.options.fetchProductsActionCreator());
     },
 
     showLessValues() {
@@ -267,7 +267,7 @@ export function buildCoreCommerceFacet<
         updateFacetNumberOfValues({facetId, numberOfValues: newNumberOfValues})
       );
       dispatch(updateFacetIsFieldExpanded({facetId, isFieldExpanded: false}));
-      dispatch(props.options.fetchResultsActionCreator());
+      dispatch(props.options.fetchProductsActionCreator());
     },
 
     get state(): CoreCommerceFacetState<ValueResponse> {

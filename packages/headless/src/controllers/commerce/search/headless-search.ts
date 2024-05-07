@@ -6,7 +6,10 @@ import {stateKey} from '../../../app/state-key';
 import {LegacySearchAction} from '../../../features/analytics/analytics-utils';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
-import {executeSearch} from '../../../features/commerce/search/search-actions';
+import {
+  executeSearch,
+  fetchMoreProducts,
+} from '../../../features/commerce/search/search-actions';
 import {responseIdSelector} from '../../../features/commerce/search/search-selectors';
 import {commerceSearchReducer as commerceSearch} from '../../../features/commerce/search/search-slice';
 import {loadReducerError} from '../../../utils/errors';
@@ -52,7 +55,8 @@ export function buildSearch(engine: CommerceEngine): Search {
   const getState = () => engine[stateKey];
   const subControllers = buildSolutionTypeSubControllers(engine, {
     responseIdSelector,
-    fetchResultsActionCreator: executeSearch,
+    fetchProductsActionCreator: executeSearch,
+    fetchMoreProductsActionCreator: fetchMoreProducts,
     facetResponseSelector,
     isFacetLoadingResponseSelector,
   });

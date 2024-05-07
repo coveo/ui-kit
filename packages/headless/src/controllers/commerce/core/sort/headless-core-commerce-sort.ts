@@ -21,7 +21,7 @@ import {
   Controller,
   buildController,
 } from '../../../controller/headless-controller';
-import {FetchResultsActionCreator} from '../common';
+import {FetchProductsActionCreator} from '../common';
 
 export type {SortByRelevance, SortByFields, SortByFieldsFields, SortCriterion};
 export {
@@ -39,7 +39,7 @@ export interface SortProps {
 }
 
 export interface CoreSortProps extends SortProps {
-  fetchResultsActionCreator: FetchResultsActionCreator;
+  fetchProductsActionCreator: FetchProductsActionCreator;
 }
 
 export interface SortInitialState {
@@ -143,7 +143,7 @@ export function buildCoreSort(
     sortBy(criterion: SortCriterion) {
       dispatch(applySort(criterion));
       dispatch(updatePage(0));
-      dispatch(props.fetchResultsActionCreator());
+      dispatch(props.fetchProductsActionCreator());
     },
 
     isSortedBy(criterion: SortCriterion) {

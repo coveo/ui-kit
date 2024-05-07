@@ -23,14 +23,16 @@ jest.mock('../../../../features/commerce/pagination/pagination-actions');
 describe('core pagination', () => {
   let engine: MockedCommerceEngine;
   let pagination: Pagination;
-  const fetchResultsActionCreator = jest.fn();
+  const fetchProductsActionCreator = jest.fn();
+  const fetchMoreProductsActionCreator = jest.fn();
   const slotId = 'recommendations-slot-id';
 
   function initPagination(options: CorePaginationOptions = {}) {
     engine = buildMockCommerceEngine(buildMockCommerceState());
 
     pagination = buildCorePagination(engine, {
-      fetchResultsActionCreator,
+      fetchProductsActionCreator,
+      fetchMoreProductsActionCreator,
       options,
     });
   }
@@ -110,8 +112,8 @@ describe('core pagination', () => {
       expect(selectPage).toHaveBeenCalledWith({page: 0});
     });
 
-    it('dispatches #fetchResultsActionCreator', () => {
-      expect(fetchResultsActionCreator).toHaveBeenCalled();
+    it('dispatches #fetchProductsActionCreator', () => {
+      expect(fetchProductsActionCreator).toHaveBeenCalled();
     });
   });
 
@@ -124,8 +126,8 @@ describe('core pagination', () => {
       expect(nextPage).toHaveBeenCalled();
     });
 
-    it('dispatches #fetchResultsActionCreator', () => {
-      expect(fetchResultsActionCreator).toHaveBeenCalled();
+    it('dispatches #fetchProductsActionCreator', () => {
+      expect(fetchProductsActionCreator).toHaveBeenCalled();
     });
   });
 
@@ -138,8 +140,8 @@ describe('core pagination', () => {
       expect(previousPage).toHaveBeenCalled();
     });
 
-    it('dispatches #fetchResultsActionCreator', () => {
-      expect(fetchResultsActionCreator).toHaveBeenCalled();
+    it('dispatches #fetchProductsActionCreator', () => {
+      expect(fetchProductsActionCreator).toHaveBeenCalled();
     });
   });
 
@@ -153,8 +155,15 @@ describe('core pagination', () => {
       expect(setPageSize).toHaveBeenCalledWith({pageSize});
     });
 
-    it('dispatches #fetchResultsActionCreator', () => {
-      expect(fetchResultsActionCreator).toHaveBeenCalled();
+    it('dispatches #fetchProductsActionCreator', () => {
+      expect(fetchProductsActionCreator).toHaveBeenCalled();
+    });
+  });
+
+  describe('#fetchMoreProducts', () => {
+    it('dispatches #fetchMoreProductsActionCreator', () => {
+      pagination.fetchMoreProducts();
+      expect(fetchMoreProductsActionCreator).toHaveBeenCalled();
     });
   });
 });

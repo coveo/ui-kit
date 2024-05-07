@@ -78,10 +78,10 @@ export function buildCommerceRegularFacet(
     return buildRegularFacetSearch(engine, {
       options: {facetId: getFacetId(), ...options.facetSearch},
       select: () => {
-        dispatch(options.fetchResultsActionCreator());
+        dispatch(options.fetchProductsActionCreator());
       },
       exclude: () => {
-        dispatch(options.fetchResultsActionCreator());
+        dispatch(options.fetchProductsActionCreator());
       },
       isForFieldSuggestions: false,
     });
