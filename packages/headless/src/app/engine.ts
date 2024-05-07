@@ -39,6 +39,7 @@ import {
 } from './navigatorContextProvider';
 import {createReducerManager, ReducerManager} from './reducer-manager';
 import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware';
+import {stateKey} from './state-key';
 import {CoreExtraArguments, Store, configureStore} from './store';
 import {ThunkExtraArguments} from './thunk-extra-arguments';
 
@@ -109,6 +110,23 @@ export interface CoreEngine<
    */
   navigatorContext: NavigatorContext;
 }
+
+export type CoreEngineNext<
+  State extends object = {},
+  ExtraArguments extends ThunkExtraArguments = ThunkExtraArguments,
+> = Omit<CoreEngine<State, ExtraArguments>, 'state' | 'store'> & {
+  /**
+   * The readonly internal state of the headless engine.
+   *
+   * @internal
+   */
+  readonly [stateKey]: State & CoreState;
+
+  /**
+   * The readonly global headless engine configuration
+   */
+  readonly configuration: EngineConfiguration;
+};
 
 export interface EngineOptions<Reducers extends ReducersMapObject>
   extends ExternalEngineOptions<StateFromReducersMapObject<Reducers>> {
