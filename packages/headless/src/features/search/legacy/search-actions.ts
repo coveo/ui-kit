@@ -30,7 +30,7 @@ import {
   updateQuery,
   UpdateQueryActionCreatorPayload,
 } from '../../query/query-actions';
-import {buildSearchAndFoldingLoadCollectionRequest} from '../../search-and-folding/search-and-folding-request';
+import {buildSearchAndFoldingLoadCollectionRequest} from '../../search-and-folding/legacy/search-and-folding-request';
 import {logFetchMoreResults} from '../search-analytics-actions';
 import {MappedSearchRequest, mapSearchRequest} from '../search-mappings';
 import {buildSearchRequest} from '../search-request';

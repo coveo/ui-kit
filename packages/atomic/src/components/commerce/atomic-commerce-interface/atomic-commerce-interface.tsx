@@ -49,6 +49,7 @@ export type CommerceBindings = CommonBindings<
   NonceBindings;
 
 /**
+ * @internal
  * The `atomic-commerce-interface` component is the parent to all other atomic commerce components in a commerce page. It handles the headless search engine and localization configurations.
  */
 @Component({
