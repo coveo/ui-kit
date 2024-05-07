@@ -22,7 +22,7 @@ export type SortByFieldsFields = CoreSortByFieldsFields & {
 export type SortCriterion = SortByRelevance | SortByFields;
 
 /**
- * Builds a sort criterion based on fields.
+ * Builds a field sort criterion.
  *
  * @param fields - An array of fields to sort by.
  * @returns The sort criterion object.
