@@ -7,11 +7,12 @@ import {productClick} from '../../../../features/commerce/context/product/produc
 import {
   buildInteractiveResultCore,
   InteractiveResultCore,
-  InteractiveResultCoreOptions,
+  InteractiveResultCoreOptions as InteractiveProductCoreOptions,
   InteractiveResultCoreProps as InteractiveResultHeadlessCoreProps,
 } from '../../../core/interactive-result/headless-core-interactive-result';
 
-export interface InteractiveResultOptions extends InteractiveResultCoreOptions {
+export interface InteractiveProductOptions
+  extends InteractiveProductCoreOptions {
   /**
    * The product to log analytics for.
    */
@@ -23,12 +24,12 @@ export interface InteractiveResultOptions extends InteractiveResultCoreOptions {
   position: number;
 }
 
-export interface InteractiveResultCoreProps
+export interface InteractiveProductCoreProps
   extends InteractiveResultHeadlessCoreProps {
   /**
    * The options for the `InteractiveResult` controller.
    */
-  options: InteractiveResultOptions;
+  options: InteractiveProductOptions;
 
   /**
    * The selector to fetch the response id from the state.
@@ -36,27 +37,27 @@ export interface InteractiveResultCoreProps
   responseIdSelector: (state: CommerceEngineState) => string;
 }
 
-export type InteractiveResultProps = Omit<
-  InteractiveResultCoreProps,
+export type InteractiveProductProps = Omit<
+  InteractiveProductCoreProps,
   'responseIdSelector'
 >;
 
 /**
  * The `InteractiveProduct` controller provides an interface for handling long presses, multiple clicks, etc. to ensure analytics events are logged properly when a user selects a product.
  */
-export interface InteractiveResult extends InteractiveResultCore {}
+export interface InteractiveProduct extends InteractiveResultCore {}
 
 /**
- * Creates an `InteractiveResult` controller instance.
+ * Creates an `InteractiveProduct` controller instance.
  *
  * @param engine - The headless commerce engine.
- * @param props - The configurable `InteractiveResult` properties.
- * @returns An `InteractiveResult` controller instance.
+ * @param props - The configurable `InteractiveProduct` properties.
+ * @returns An `InteractiveProduct` controller instance.
  */
-export function buildCoreInteractiveResult(
+export function buildCoreInteractiveProduct(
   engine: CommerceEngine,
-  props: InteractiveResultCoreProps
-): InteractiveResult {
+  props: InteractiveProductCoreProps
+): InteractiveProduct {
   let wasOpened = false;
 
   const logAnalyticsIfNeverOpened = () => {

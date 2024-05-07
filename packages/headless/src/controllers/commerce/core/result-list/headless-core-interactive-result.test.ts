@@ -5,7 +5,7 @@ import {
   buildMockCommerceEngine,
   MockedCommerceEngine,
 } from '../../../../test/mock-engine-v2';
-import {buildCoreInteractiveResult} from './headless-core-interactive-result';
+import {buildCoreInteractiveProduct} from './headless-core-interactive-result';
 
 jest.mock('../../../../features/commerce/context/product/product-actions');
 
@@ -19,7 +19,7 @@ describe('core interactive result', () => {
   };
 
   function initializeInteractiveResult() {
-    buildCoreInteractiveResult(engine, {
+    buildCoreInteractiveProduct(engine, {
       options: {
         product,
         position: 1,
@@ -38,7 +38,7 @@ describe('core interactive result', () => {
   });
 
   it('#select dispatches productClick', () => {
-    const controller = buildCoreInteractiveResult(engine, {
+    const controller = buildCoreInteractiveProduct(engine, {
       options: {
         product,
         position: 2,

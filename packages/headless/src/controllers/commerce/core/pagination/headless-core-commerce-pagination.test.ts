@@ -160,7 +160,7 @@ describe('core pagination', () => {
   });
 
   describe('#fetchMoreProducts', () => {
-    it('dispatches #fetchMoreProducts', () => {
+    it('dispatches #fetchMoreProductsActionCreator', () => {
       pagination.fetchMoreProducts();
       expect(fetchMoreProductsActionCreator).toHaveBeenCalled();
     });

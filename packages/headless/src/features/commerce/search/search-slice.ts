@@ -25,8 +25,15 @@ export const commerceSearchReducer = createReducer(
           action.payload.queryExecuted
         );
         state.products = action.payload.response.products;
-        state.responseId = action.payload.response.responseId;
-        state.isLoading = false;
+      })
+      .addCase(fetchMoreProducts.fulfilled, (state, action) => {
+        if (!action.payload) {
+          return;
+        }
+        handleFulfilled(state, action.payload.response);
+        state.products = state.products.concat(
+          action.payload.response.products
+        );
       })
       .addCase(fetchMoreProducts.fulfilled, (state, action) => {
         if (!action.payload) {

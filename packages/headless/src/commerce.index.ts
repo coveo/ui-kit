@@ -25,6 +25,7 @@ export type {PlatformEnvironment} from './utils/url-utils';
 
 // Actions
 export * from './features/commerce/product-listing/product-listing-actions-loader';
+export * from './features/commerce/query-suggest/query-suggest-actions-loader';
 export * from './features/configuration/configuration-actions-loader';
 
 // Controllers
@@ -66,9 +67,9 @@ export {buildProductListingPagination} from './controllers/commerce/product-list
 export {buildSearchPagination} from './controllers/commerce/search/pagination/headless-search-pagination';
 
 export type {
-  InteractiveResult,
-  InteractiveResultOptions,
-  InteractiveResultProps,
+  InteractiveProduct,
+  InteractiveProductOptions,
+  InteractiveProductProps,
 } from './controllers/commerce/core/result-list/headless-core-interactive-result';
 
 export type {ProductView} from './controllers/commerce/product-view/headless-product-view';
@@ -158,8 +159,18 @@ export {buildSearchBox} from './controllers/commerce/search-box/headless-search-
 export type {
   SearchBox,
   SearchBoxState,
+  Suggestion,
+  SearchBoxOptions,
 } from './controllers/commerce/search-box/headless-search-box';
 
+export {buildRecentQueriesList} from './controllers/commerce/recent-queries-list/headless-recent-queries-list';
+export type {RecentQueriesList} from './controllers/commerce/recent-queries-list/headless-recent-queries-list';
+
+export {buildInstantProducts} from './controllers/commerce/instant-products/headless-instant-products';
+export type {
+  InstantProducts,
+  InstantProductsState,
+} from './controllers/commerce/instant-products/headless-instant-products';
 export {buildStandaloneSearchBox} from './controllers/commerce/standalone-search-box/headless-standalone-search-box';
 export type {
   StandaloneSearchBox,
