@@ -37,12 +37,12 @@ export class AtomicProductDescription
   private resizeObserver: ResizeObserver;
 
   /**
-   * The number of lines after which the product description should be truncated. A value of -1 will disable truncation
+   * The number of lines after which the product description should be truncated. A value of "none" will disable truncation.
    */
-  @Prop() public truncateAfter: '-1' | '1' | '2' | '3' | '4' = '2';
+  @Prop() public truncateAfter: 'none' | '1' | '2' | '3' | '4' = '2';
 
   /**
-   * Which description field to use
+   * The name of the description field to use.
    */
   @Prop() public field: 'ec_description' | 'ec_shortdesc' = 'ec_shortdesc';
 
@@ -62,7 +62,9 @@ export class AtomicProductDescription
 
   private validateProps() {
     new Schema({
-      truncateAfter: new StringValue({constrainTo: ['-1', '1', '2', '3', '4']}),
+      truncateAfter: new StringValue({
+        constrainTo: ['none', '1', '2', '3', '4'],
+      }),
       field: new StringValue({constrainTo: ['ec_shortdesc', 'ec_description']}),
     }).validate({
       truncateAfter: this.truncateAfter,
@@ -85,11 +87,11 @@ export class AtomicProductDescription
 
   private getLineClampClass() {
     const lineClampMap: Record<typeof this.truncateAfter, string> = {
-      '-1': '',
-      '1': 'line-clamp-1',
-      '2': 'line-clamp-2',
-      '3': 'line-clamp-3',
-      '4': 'line-clamp-4',
+      none: 'line-clamp-none',
+      1: 'line-clamp-1',
+      2: 'line-clamp-2',
+      3: 'line-clamp-3',
+      4: 'line-clamp-4',
     };
     return lineClampMap[this.truncateAfter] || 'line-clamp-2';
   }
@@ -104,7 +106,7 @@ export class AtomicProductDescription
     if (productDescription !== null) {
       return (
         <atomic-commerce-text
-          class={`product-description-text ${!this.isExpanded && this.truncateAfter !== '-1' ? this.getLineClampClass() : ''}`}
+          class={`product-description-text ${!this.isExpanded ? this.getLineClampClass() : ''}`}
           value={getFieldValueCaption(
             this.field,
             productDescription,
@@ -138,7 +140,7 @@ export class AtomicProductDescription
       <div class="flex flex-col items-start">
         {this.renderProductDescription()}
         {this.isTruncated &&
-          this.truncateAfter !== '-1' &&
+          this.truncateAfter !== 'none' &&
           this.renderShowMoreButton()}
       </div>
     );
