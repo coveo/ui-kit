@@ -38,7 +38,7 @@ export class AtomicProductDescription
   /**
    * The number of lines after which the product description should be truncated.
    */
-  @Prop() public truncateAfter?: 1 | 2 | 3 | 4 = 2;
+  @Prop() public truncateAfter: 1 | 2 | 3 | 4 = 2;
 
   /**
    * Whether the product description should be truncated.
