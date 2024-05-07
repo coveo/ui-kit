@@ -9,14 +9,15 @@
     <script nomodule src="/build/atomic.js"></script>
     <link rel="stylesheet" href="/themes/coveo.css" />
     <script type="module">
-      import {setupEngine, setupProductListing, renderProducts} from './engine.mjs';
+      import {commerceEngineConfig} from './engine.mjs';
 
-      const engine = await setupEngine();
+      (async () => {
+        await customElements.whenDefined('atomic-commerce-interface');
+        const searchInterface = document.querySelector('atomic-commerce-interface');
+        await searchInterface.initialize(commerceEngineConfig);
 
-      await customElements.whenDefined('atomic-commerce-interface');
-      const commerceInterface = document.querySelector('atomic-commerce-interface');
-
-      await commerceInterface.initializeWithEngine(engine);
+        searchInterface.executeFirstSearch();
+      })();
     </script>
   </head>
 
