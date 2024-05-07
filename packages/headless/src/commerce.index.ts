@@ -83,11 +83,11 @@ export type {
   Cart,
   CartState,
 } from './controllers/commerce/context/cart/headless-cart';
+export type {Transaction} from './features/commerce/context/cart/cart-selector';
 export type {CartItemWithMetadata} from './features/commerce/context/cart/cart-state';
 export type {CartItemParam} from './api/commerce/commerce-api-params';
 export {buildCart} from './controllers/commerce/context/cart/headless-cart';
 
-export type {Transaction} from './features/commerce/context/cart/cart-selector';
 export type {SolutionTypeSubControllers} from './controllers/commerce/core/sub-controller/headless-sub-controller';
 
 export type {
@@ -156,7 +156,6 @@ export {buildSearchNumericFacet} from './controllers/commerce/search/facets/head
 export type {FacetGenerator} from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator';
 export {buildFacetGenerator} from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator';
 export {buildSearchRegularFacet} from './controllers/commerce/search/facets/headless-search-regular-facet';
-
 export type {ProductListingCategoryFacetBuilder} from './controllers/commerce/product-listing/facets/headless-product-listing-category-facet';
 export {buildProductListingCategoryFacet} from './controllers/commerce/product-listing/facets/headless-product-listing-category-facet';
 export {buildProductListingDateFacet} from './controllers/commerce/product-listing/facets/headless-product-listing-date-facet';

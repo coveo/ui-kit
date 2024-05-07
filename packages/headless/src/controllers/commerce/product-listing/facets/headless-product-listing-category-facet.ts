@@ -13,7 +13,12 @@ export type ProductListingCategoryFacetBuilder =
   typeof buildProductListingCategoryFacet;
 
 /**
- * Builds the category facet for the product listing.
+ * Builds a category facet controller for a product listing page.
+ *
+ * Commerce facets are not requested by the implementer, but rather pre-configured through the Coveo Merchandising Hub
+ * (CMH). The implementer is only responsible for leveraging the facet controllers created by the
+ * `headless-product-listing-facet-generator` controller to properly render facets in their application.
+ *
  * @param engine - The commerce engine.
  * @param options - The options for building the category facet.
  * @returns The category facet.
