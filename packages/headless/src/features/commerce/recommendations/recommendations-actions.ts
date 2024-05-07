@@ -15,7 +15,7 @@ import {recommendationsSlotDefinition} from './recommendations';
 import {
   moreRecommendationsAvailableSelector,
   numberOfRecommendationsSelector,
-} from './recommendations-selector';
+} from './recommendations-selectors';
 
 export interface QueryRecommendationsCommerceAPIThunkReturn {
   /** The successful recommendations response. */
