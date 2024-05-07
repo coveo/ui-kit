@@ -6,7 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-import { CommerceEngine, LogLevel, PlatformEnvironment } from "@coveo/headless/commerce";
+import { CommerceEngine, InteractiveProduct, LogLevel, PlatformEnvironment, Product } from "@coveo/headless/commerce";
 import { i18n } from "i18next";
 import { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
@@ -19,20 +19,20 @@ import { ItemRenderingFunction } from "./components/common/item-list/item-list-c
 import { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightGeneratedAnswerStyle, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 import { i18nCompatibilityVersion } from "./components/common/interface/i18n";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
-import { NumericFacetDisplayValues } from "./components/common/facets/numeric-facet-common";
 import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
+import { InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { Section } from "./components/common/atomic-layout-section/sections";
+import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 import { PlatformEnvironment as PlatformEnvironment1, RecommendationEngine } from "@coveo/headless/recommendation";
 import { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
 import { i18nCompatibilityVersion as i18nCompatibilityVersion1 } from "./components";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 import { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
-import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 import { AriaLabelGenerator } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 export { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-export { CommerceEngine, LogLevel, PlatformEnvironment } from "@coveo/headless/commerce";
+export { CommerceEngine, InteractiveProduct, LogLevel, PlatformEnvironment, Product } from "@coveo/headless/commerce";
 export { i18n } from "i18next";
 export { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { StandaloneSearchBoxData } from "./utils/local-storage-utils";
@@ -45,16 +45,16 @@ export { ItemRenderingFunction } from "./components/common/item-list/item-list-c
 export { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightGeneratedAnswerStyle, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 export { i18nCompatibilityVersion } from "./components/common/interface/i18n";
 export { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
-export { NumericFacetDisplayValues } from "./components/common/facets/numeric-facet-common";
 export { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
+export { InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { Section } from "./components/common/atomic-layout-section/sections";
+export { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 export { PlatformEnvironment as PlatformEnvironment1, RecommendationEngine } from "@coveo/headless/recommendation";
 export { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
 export { i18nCompatibilityVersion as i18nCompatibilityVersion1 } from "./components";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 export { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
 export { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
-export { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 export { AriaLabelGenerator } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 export { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 export namespace Components {
@@ -257,9 +257,6 @@ export namespace Components {
          */
         "withSearch": boolean;
     }
-    /**
-     * The `atomic-commerce-interface` component is the parent to all other atomic commerce components in a commerce page. It handles the headless search engine and localization configurations.
-     */
     interface AtomicCommerceInterface {
         /**
           * The value to set the [nonce](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) attribute to on inline script and style elements generated by this interface and its child components. If your application is served with a Content Security Policy (CSP) that doesn't include the `script-src: 'unsafe-inline'` or `style-src: 'unsafe-inline'` directives, you should ensure that your application server generates a new nonce on every page load and uses the generated value to set this prop and serve the corresponding CSP response headers (i.e., script-src 'nonce-<YOUR_GENERATED_NONCE>' and style-src 'nonce-<YOUR_GENERATED_NONCE>'). Otherwise you may see console errors such as  - Refused to execute inline script because it violates the following Content Security Policy directive: [...]  - Refused to apply inline style because it violates the following Content Security Policy directive: [...].
@@ -327,19 +324,33 @@ export namespace Components {
     | 'product-listing';
     }
     /**
-     * The `atomic-commerce-result-list` component is responsible for displaying product results.
+     * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
      */
-    interface AtomicCommerceResultList {
+    interface AtomicCommercePager {
         /**
-          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+          * The SVG icon to use to display the Next button.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "nextButtonIcon": string;
+        /**
+          * Specifies how many page buttons to display in the pager.
+         */
+        "numberOfPages": number;
+        /**
+          * The SVG icon to use to display the Previous button.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "previousButtonIcon": string;
+    }
+    interface AtomicCommerceProductList {
+        /**
+          * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of different parts in a product.
          */
         "density": 'normal' | 'compact';
         /**
-          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
+          * The desired layout to use when displaying products. Layouts affect how many products to display per row and how visually distinct they are from each other.
          */
         "display": 'grid' | 'list';
         /**
-          * The expected size of the image displayed in the results.
+          * The expected size of the image displayed for products.
          */
         "imageSize": number;
     }
@@ -665,6 +676,10 @@ export namespace Components {
           * The answer style to apply when the component first loads. Options:   - `default`: Generate the answer without specific formatting instructions.   - `bullet`: Generate the answer as a bulleted list.   - `step`: Generate the answer as step-by-step instructions.   - `concise`: Generate the answer as briefly as possible.
          */
         "answerStyle": GeneratedAnswerStyle;
+        /**
+          * Whether to allow the answer to be collapsed when the text is taller than 250px.
+         */
+        "collapsible"?: boolean;
     }
     interface AtomicGeneratedAnswerFeedbackModal {
         /**
@@ -792,6 +807,10 @@ export namespace Components {
           * The answer style to apply when the component first loads. Options:   - `default`: Generate the answer without specific formatting instructions.   - `bullet`: Generate the answer as a bulleted list.   - `step`: Generate the answer as step-by-step instructions.   - `concise`: Generate the answer as briefly as possible.
          */
         "answerStyle": InsightGeneratedAnswerStyle;
+        /**
+          * Whether to allow the answer to be collapsed when the text is taller than 250px.
+         */
+        "collapsible"?: boolean;
     }
     interface AtomicInsightHistoryToggle {
         "clickCallback": () => void;
@@ -878,7 +897,7 @@ export namespace Components {
         /**
           * Whether to display the facet values as checkboxes (multiple selection) or links (single selection). Possible values are 'checkbox' and 'link'.
          */
-        "displayValuesAs": NumericFacetDisplayValues;
+        "displayValuesAs": 'checkbox' | 'link';
         /**
           * Specifies a unique identifier for the facet.
          */
@@ -977,11 +996,15 @@ export namespace Components {
     }
     interface AtomicInsightResultAction {
         /**
+          * The type of action to perform when the result action is clicked. This will be sent along the event fired when the button is clicked.
+         */
+        "action": Actions | string;
+        /**
           * Specify the result action icon to display.
          */
         "icon": string;
         /**
-          * The text tooltip to show on the result action icon
+          * The text tooltip to show on the result action icon.
          */
         "tooltip": string;
     }
@@ -1406,6 +1429,52 @@ export namespace Components {
      * The `atomic-popover` component displays any facet as a popover menu.
      */
     interface AtomicPopover {
+    }
+    /**
+     * The `atomic-product` component is used internally by the `atomic-product-list` component.
+     */
+    interface AtomicProduct {
+        /**
+          * The classes to add to the product element.
+         */
+        "classes": string;
+        /**
+          * The product content to display.
+         */
+        "content"?: ParentNode;
+        /**
+          * How large or small products should be.
+         */
+        "density": ItemDisplayDensity;
+        /**
+          * How products should be displayed.
+         */
+        "display": ItemDisplayLayout;
+        /**
+          * The size of the visual section in product list items.  This is overwritten by the image size defined in the product content, if it exists.
+         */
+        "imageSize": ItemDisplayImageSize;
+        /**
+          * The InteractiveProduct item.
+         */
+        "interactiveProduct": InteractiveProduct;
+        "loadingFlag"?: string;
+        /**
+          * The product item.
+         */
+        "product": Product;
+        /**
+          * Internal function used in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
+         */
+        "renderingFunction": ItemRenderingFunction;
+        /**
+          * Whether an atomic-product-link inside atomic-product should stop click event propagation.
+         */
+        "stopPropagation"?: boolean;
+        /**
+          * Global Atomic state.
+         */
+        "store"?: AtomicCommonStore<AtomicCommonStoreData>;
     }
     /**
      * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -2721,6 +2790,10 @@ export namespace Components {
         "togglePopover": () => Promise<void>;
     }
 }
+export interface AtomicCommercePagerCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicCommercePagerElement;
+}
 export interface AtomicCommerceSearchBoxCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicCommerceSearchBoxElement;
@@ -2744,6 +2817,10 @@ export interface AtomicGeneratedAnswerFeedbackModalCustomEvent<T> extends Custom
 export interface AtomicInsightPagerCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicInsightPagerElement;
+}
+export interface AtomicInsightResultActionCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicInsightResultActionElement;
 }
 export interface AtomicInsightSmartSnippetFeedbackModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -2874,23 +2951,37 @@ declare global {
         prototype: HTMLAtomicColorFacetElement;
         new (): HTMLAtomicColorFacetElement;
     };
-    /**
-     * The `atomic-commerce-interface` component is the parent to all other atomic commerce components in a commerce page. It handles the headless search engine and localization configurations.
-     */
     interface HTMLAtomicCommerceInterfaceElement extends Components.AtomicCommerceInterface, HTMLStencilElement {
     }
     var HTMLAtomicCommerceInterfaceElement: {
         prototype: HTMLAtomicCommerceInterfaceElement;
         new (): HTMLAtomicCommerceInterfaceElement;
     };
-    /**
-     * The `atomic-commerce-result-list` component is responsible for displaying product results.
-     */
-    interface HTMLAtomicCommerceResultListElement extends Components.AtomicCommerceResultList, HTMLStencilElement {
+    interface HTMLAtomicCommercePagerElementEventMap {
+        "atomic/scrollToTop": any;
     }
-    var HTMLAtomicCommerceResultListElement: {
-        prototype: HTMLAtomicCommerceResultListElement;
-        new (): HTMLAtomicCommerceResultListElement;
+    /**
+     * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
+     */
+    interface HTMLAtomicCommercePagerElement extends Components.AtomicCommercePager, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicCommercePagerElementEventMap>(type: K, listener: (this: HTMLAtomicCommercePagerElement, ev: AtomicCommercePagerCustomEvent<HTMLAtomicCommercePagerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicCommercePagerElementEventMap>(type: K, listener: (this: HTMLAtomicCommercePagerElement, ev: AtomicCommercePagerCustomEvent<HTMLAtomicCommercePagerElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLAtomicCommercePagerElement: {
+        prototype: HTMLAtomicCommercePagerElement;
+        new (): HTMLAtomicCommercePagerElement;
+    };
+    interface HTMLAtomicCommerceProductListElement extends Components.AtomicCommerceProductList, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceProductListElement: {
+        prototype: HTMLAtomicCommerceProductListElement;
+        new (): HTMLAtomicCommerceProductListElement;
     };
     interface HTMLAtomicCommerceSearchBoxElementEventMap {
         "redirect": RedirectionPayload;
@@ -3246,7 +3337,18 @@ declare global {
         prototype: HTMLAtomicInsightResultElement;
         new (): HTMLAtomicInsightResultElement;
     };
+    interface HTMLAtomicInsightResultActionElementEventMap {
+        "atomicInsightResultActionClicked": InsightResultActionClickedEvent;
+    }
     interface HTMLAtomicInsightResultActionElement extends Components.AtomicInsightResultAction, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicInsightResultActionElementEventMap>(type: K, listener: (this: HTMLAtomicInsightResultActionElement, ev: AtomicInsightResultActionCustomEvent<HTMLAtomicInsightResultActionElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicInsightResultActionElementEventMap>(type: K, listener: (this: HTMLAtomicInsightResultActionElement, ev: AtomicInsightResultActionCustomEvent<HTMLAtomicInsightResultActionElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLAtomicInsightResultActionElement: {
         prototype: HTMLAtomicInsightResultActionElement;
@@ -3537,6 +3639,15 @@ declare global {
     var HTMLAtomicPopoverElement: {
         prototype: HTMLAtomicPopoverElement;
         new (): HTMLAtomicPopoverElement;
+    };
+    /**
+     * The `atomic-product` component is used internally by the `atomic-product-list` component.
+     */
+    interface HTMLAtomicProductElement extends Components.AtomicProduct, HTMLStencilElement {
+    }
+    var HTMLAtomicProductElement: {
+        prototype: HTMLAtomicProductElement;
+        new (): HTMLAtomicProductElement;
     };
     /**
      * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -4372,7 +4483,8 @@ declare global {
         "atomic-citation": HTMLAtomicCitationElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
         "atomic-commerce-interface": HTMLAtomicCommerceInterfaceElement;
-        "atomic-commerce-result-list": HTMLAtomicCommerceResultListElement;
+        "atomic-commerce-pager": HTMLAtomicCommercePagerElement;
+        "atomic-commerce-product-list": HTMLAtomicCommerceProductListElement;
         "atomic-commerce-search-box": HTMLAtomicCommerceSearchBoxElement;
         "atomic-commerce-search-box-recent-queries": HTMLAtomicCommerceSearchBoxRecentQueriesElement;
         "atomic-component-error": HTMLAtomicComponentErrorElement;
@@ -4442,6 +4554,7 @@ declare global {
         "atomic-numeric-range": HTMLAtomicNumericRangeElement;
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-popover": HTMLAtomicPopoverElement;
+        "atomic-product": HTMLAtomicProductElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
         "atomic-quickview": HTMLAtomicQuickviewElement;
@@ -4709,9 +4822,6 @@ declare namespace LocalJSX {
          */
         "withSearch"?: boolean;
     }
-    /**
-     * The `atomic-commerce-interface` component is the parent to all other atomic commerce components in a commerce page. It handles the headless search engine and localization configurations.
-     */
     interface AtomicCommerceInterface {
         /**
           * The value to set the [nonce](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) attribute to on inline script and style elements generated by this interface and its child components. If your application is served with a Content Security Policy (CSP) that doesn't include the `script-src: 'unsafe-inline'` or `style-src: 'unsafe-inline'` directives, you should ensure that your application server generates a new nonce on every page load and uses the generated value to set this prop and serve the corresponding CSP response headers (i.e., script-src 'nonce-<YOUR_GENERATED_NONCE>' and style-src 'nonce-<YOUR_GENERATED_NONCE>'). Otherwise you may see console errors such as  - Refused to execute inline script because it violates the following Content Security Policy directive: [...]  - Refused to apply inline style because it violates the following Content Security Policy directive: [...].
@@ -4761,19 +4871,34 @@ declare namespace LocalJSX {
     | 'product-listing';
     }
     /**
-     * The `atomic-commerce-result-list` component is responsible for displaying product results.
+     * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
      */
-    interface AtomicCommerceResultList {
+    interface AtomicCommercePager {
         /**
-          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+          * The SVG icon to use to display the Next button.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "nextButtonIcon"?: string;
+        /**
+          * Specifies how many page buttons to display in the pager.
+         */
+        "numberOfPages"?: number;
+        "onAtomic/scrollToTop"?: (event: AtomicCommercePagerCustomEvent<any>) => void;
+        /**
+          * The SVG icon to use to display the Previous button.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "previousButtonIcon"?: string;
+    }
+    interface AtomicCommerceProductList {
+        /**
+          * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of different parts in a product.
          */
         "density"?: 'normal' | 'compact';
         /**
-          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
+          * The desired layout to use when displaying products. Layouts affect how many products to display per row and how visually distinct they are from each other.
          */
         "display"?: 'grid' | 'list';
         /**
-          * The expected size of the image displayed in the results.
+          * The expected size of the image displayed for products.
          */
         "imageSize"?: number;
     }
@@ -5103,6 +5228,10 @@ declare namespace LocalJSX {
           * The answer style to apply when the component first loads. Options:   - `default`: Generate the answer without specific formatting instructions.   - `bullet`: Generate the answer as a bulleted list.   - `step`: Generate the answer as step-by-step instructions.   - `concise`: Generate the answer as briefly as possible.
          */
         "answerStyle"?: GeneratedAnswerStyle;
+        /**
+          * Whether to allow the answer to be collapsed when the text is taller than 250px.
+         */
+        "collapsible"?: boolean;
     }
     interface AtomicGeneratedAnswerFeedbackModal {
         /**
@@ -5227,6 +5356,10 @@ declare namespace LocalJSX {
           * The answer style to apply when the component first loads. Options:   - `default`: Generate the answer without specific formatting instructions.   - `bullet`: Generate the answer as a bulleted list.   - `step`: Generate the answer as step-by-step instructions.   - `concise`: Generate the answer as briefly as possible.
          */
         "answerStyle"?: InsightGeneratedAnswerStyle;
+        /**
+          * Whether to allow the answer to be collapsed when the text is taller than 250px.
+         */
+        "collapsible"?: boolean;
     }
     interface AtomicInsightHistoryToggle {
         "clickCallback"?: () => void;
@@ -5295,7 +5428,7 @@ declare namespace LocalJSX {
         /**
           * Whether to display the facet values as checkboxes (multiple selection) or links (single selection). Possible values are 'checkbox' and 'link'.
          */
-        "displayValuesAs"?: NumericFacetDisplayValues;
+        "displayValuesAs"?: 'checkbox' | 'link';
         /**
           * Specifies a unique identifier for the facet.
          */
@@ -5395,11 +5528,16 @@ declare namespace LocalJSX {
     }
     interface AtomicInsightResultAction {
         /**
+          * The type of action to perform when the result action is clicked. This will be sent along the event fired when the button is clicked.
+         */
+        "action"?: Actions | string;
+        /**
           * Specify the result action icon to display.
          */
         "icon"?: string;
+        "onAtomicInsightResultActionClicked"?: (event: AtomicInsightResultActionCustomEvent<InsightResultActionClickedEvent>) => void;
         /**
-          * The text tooltip to show on the result action icon
+          * The text tooltip to show on the result action icon.
          */
         "tooltip"?: string;
     }
@@ -5809,6 +5947,52 @@ declare namespace LocalJSX {
      * The `atomic-popover` component displays any facet as a popover menu.
      */
     interface AtomicPopover {
+    }
+    /**
+     * The `atomic-product` component is used internally by the `atomic-product-list` component.
+     */
+    interface AtomicProduct {
+        /**
+          * The classes to add to the product element.
+         */
+        "classes"?: string;
+        /**
+          * The product content to display.
+         */
+        "content"?: ParentNode;
+        /**
+          * How large or small products should be.
+         */
+        "density"?: ItemDisplayDensity;
+        /**
+          * How products should be displayed.
+         */
+        "display"?: ItemDisplayLayout;
+        /**
+          * The size of the visual section in product list items.  This is overwritten by the image size defined in the product content, if it exists.
+         */
+        "imageSize"?: ItemDisplayImageSize;
+        /**
+          * The InteractiveProduct item.
+         */
+        "interactiveProduct": InteractiveProduct;
+        "loadingFlag"?: string;
+        /**
+          * The product item.
+         */
+        "product": Product;
+        /**
+          * Internal function used in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
+         */
+        "renderingFunction"?: ItemRenderingFunction;
+        /**
+          * Whether an atomic-product-link inside atomic-product should stop click event propagation.
+         */
+        "stopPropagation"?: boolean;
+        /**
+          * Global Atomic state.
+         */
+        "store"?: AtomicCommonStore<AtomicCommonStoreData>;
     }
     /**
      * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -7084,7 +7268,8 @@ declare namespace LocalJSX {
         "atomic-citation": AtomicCitation;
         "atomic-color-facet": AtomicColorFacet;
         "atomic-commerce-interface": AtomicCommerceInterface;
-        "atomic-commerce-result-list": AtomicCommerceResultList;
+        "atomic-commerce-pager": AtomicCommercePager;
+        "atomic-commerce-product-list": AtomicCommerceProductList;
         "atomic-commerce-search-box": AtomicCommerceSearchBox;
         "atomic-commerce-search-box-recent-queries": AtomicCommerceSearchBoxRecentQueries;
         "atomic-component-error": AtomicComponentError;
@@ -7154,6 +7339,7 @@ declare namespace LocalJSX {
         "atomic-numeric-range": AtomicNumericRange;
         "atomic-pager": AtomicPager;
         "atomic-popover": AtomicPopover;
+        "atomic-product": AtomicProduct;
         "atomic-query-error": AtomicQueryError;
         "atomic-query-summary": AtomicQuerySummary;
         "atomic-quickview": AtomicQuickview;
@@ -7265,14 +7451,12 @@ declare module "@stencil/core" {
              * An `atomic-color-facet` displays a facet of the results for the current query as colors.
              */
             "atomic-color-facet": LocalJSX.AtomicColorFacet & JSXBase.HTMLAttributes<HTMLAtomicColorFacetElement>;
-            /**
-             * The `atomic-commerce-interface` component is the parent to all other atomic commerce components in a commerce page. It handles the headless search engine and localization configurations.
-             */
             "atomic-commerce-interface": LocalJSX.AtomicCommerceInterface & JSXBase.HTMLAttributes<HTMLAtomicCommerceInterfaceElement>;
             /**
-             * The `atomic-commerce-result-list` component is responsible for displaying product results.
+             * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
              */
-            "atomic-commerce-result-list": LocalJSX.AtomicCommerceResultList & JSXBase.HTMLAttributes<HTMLAtomicCommerceResultListElement>;
+            "atomic-commerce-pager": LocalJSX.AtomicCommercePager & JSXBase.HTMLAttributes<HTMLAtomicCommercePagerElement>;
+            "atomic-commerce-product-list": LocalJSX.AtomicCommerceProductList & JSXBase.HTMLAttributes<HTMLAtomicCommerceProductListElement>;
             /**
              * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
              */
@@ -7441,6 +7625,10 @@ declare module "@stencil/core" {
              * The `atomic-popover` component displays any facet as a popover menu.
              */
             "atomic-popover": LocalJSX.AtomicPopover & JSXBase.HTMLAttributes<HTMLAtomicPopoverElement>;
+            /**
+             * The `atomic-product` component is used internally by the `atomic-product-list` component.
+             */
+            "atomic-product": LocalJSX.AtomicProduct & JSXBase.HTMLAttributes<HTMLAtomicProductElement>;
             /**
              * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
              */

@@ -23,14 +23,15 @@ export interface GeneratedAnswerSelector extends ComponentSelector {
   rephraseButtons: () => CypressSelector;
   rephraseLabel: () => CypressSelector;
   rephraseButtonByLabel: (label: string) => CypressSelector;
-  rephraseInputButtonByLabel: (label: string) => CypressSelector;
-  generatedAnswerFooter: () => CypressSelector;
+  generatedAnswerFooterRow: () => CypressSelector;
   copyToClipboardButton: () => CypressSelector;
   citationTooltip: (index: number) => CypressSelector;
   citationTooltipUri: (index: number) => CypressSelector;
   citationTooltipTitle: (index: number) => CypressSelector;
   citationTooltipText: (index: number) => CypressSelector;
   disclaimer: () => CypressSelector;
+  toggleCollapseButton: () => CypressSelector;
+  generatingMessage: () => CypressSelector;
 }
 
 export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
@@ -101,8 +102,10 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
     GeneratedAnswerSelectors.get().find(
       `c-quantic-radio-buttons-group [data-cy="${label}"]`
     ),
-  generatedAnswerFooter: () =>
-    GeneratedAnswerSelectors.get().find('[data-cy="generated-answer__footer"]'),
+  generatedAnswerFooterRow: () =>
+    GeneratedAnswerSelectors.get().find(
+      '[data-cy="generated-answer__footer-row"]'
+    ),
   copyToClipboardButton: () =>
     GeneratedAnswerSelectors.get().find(
       '[data-cy="generated-answer__copy-to-clipboard"]'
@@ -133,5 +136,13 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
   disclaimer: () =>
     GeneratedAnswerSelectors.get().find(
       '[data-cy="generated-answer__disclaimer"]'
+    ),
+  toggleCollapseButton: () =>
+    GeneratedAnswerSelectors.get().find(
+      '[data-cy="generated-answer__answer-toggle"]'
+    ),
+  generatingMessage: () =>
+    GeneratedAnswerSelectors.get().find(
+      'div.generated-answer__collapse-generating-message'
     ),
 };

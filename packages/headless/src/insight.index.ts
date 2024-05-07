@@ -23,6 +23,7 @@ export type {
 export type {LoggerOptions} from './app/logger';
 
 export type {LogLevel} from './app/logger';
+export type {NavigatorContext} from './app/navigatorContextProvider';
 
 // Action loaders
 export * from './features/insight-interface/insight-interface-actions-loader';

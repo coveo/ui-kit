@@ -3,6 +3,7 @@ import {
   MockedCommerceEngine,
   buildMockCommerceEngine,
 } from '../../../../test/mock-engine-v2';
+import * as CoreFacetGenerator from '../facets/generator/headless-commerce-facet-generator';
 import * as CorePagination from '../pagination/headless-core-commerce-pagination';
 import * as CoreInteractiveResult from '../result-list/headless-core-interactive-result';
 import * as CoreSort from '../sort/headless-core-commerce-sort';
@@ -17,6 +18,8 @@ describe('sub controllers', () => {
   let engine: MockedCommerceEngine;
   const mockResponseIdSelector = jest.fn();
   const mockFetchResultsActionCreator = jest.fn();
+  const mockFacetResponseSelector = jest.fn();
+  const mockIsFacetLoadingResponseSelector = jest.fn();
 
   beforeEach(() => {
     engine = buildMockCommerceEngine(buildMockCommerceState());
@@ -36,7 +39,7 @@ describe('sub controllers', () => {
       subControllersBuilder: buildBaseSolutionTypeControllers,
     },
   ])(
-    '#interactiveResult builds interactive result controller',
+    '#interactiveProduct builds interactive result controller',
     ({
       subControllersBuilder,
     }: {
@@ -47,10 +50,12 @@ describe('sub controllers', () => {
       const subControllers = subControllersBuilder(engine, {
         responseIdSelector: mockResponseIdSelector,
         fetchResultsActionCreator: mockFetchResultsActionCreator,
+        facetResponseSelector: mockFacetResponseSelector,
+        isFacetLoadingResponseSelector: mockIsFacetLoadingResponseSelector,
       });
       const buildCoreInteractiveResultMock = jest.spyOn(
         CoreInteractiveResult,
-        'buildCoreInteractiveResult'
+        'buildCoreInteractiveProduct'
       );
 
       const props = {
@@ -64,11 +69,11 @@ describe('sub controllers', () => {
         },
       };
 
-      const interactiveResult = subControllers.interactiveResult({
+      const interactiveProduct = subControllers.interactiveProduct({
         ...props,
       });
 
-      expect(interactiveResult).toEqual(
+      expect(interactiveProduct).toEqual(
         buildCoreInteractiveResultMock.mock.results[0].value
       );
     }
@@ -81,6 +86,8 @@ describe('sub controllers', () => {
       subControllers = buildSolutionTypeSubControllers(engine, {
         responseIdSelector: mockResponseIdSelector,
         fetchResultsActionCreator: mockFetchResultsActionCreator,
+        facetResponseSelector: mockFacetResponseSelector,
+        isFacetLoadingResponseSelector: mockIsFacetLoadingResponseSelector,
       });
     });
 
@@ -101,6 +108,19 @@ describe('sub controllers', () => {
       const sort = subControllers.sort();
 
       expect(sort).toEqual(buildCoreSortMock.mock.results[0].value);
+    });
+
+    it('#facetGenerator builds facet generator', () => {
+      const buildCoreFacetGenerator = jest.spyOn(
+        CoreFacetGenerator,
+        'buildFacetGenerator'
+      );
+
+      const facetGenerator = subControllers.facetGenerator();
+
+      expect(facetGenerator).toEqual(
+        buildCoreFacetGenerator.mock.results[0].value
+      );
     });
   });
 

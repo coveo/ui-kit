@@ -18,6 +18,7 @@ export type {
   AnalyticsRuntimeEnvironment,
 } from './app/engine-configuration';
 export type {LogLevel, LoggerOptions} from './app/logger';
+export type {NavigatorContext} from './app/navigatorContextProvider';
 
 export type {Product} from './api/commerce/common/product';
 export type {PlatformEnvironment} from './utils/url-utils';
@@ -65,9 +66,9 @@ export {buildProductListingPagination} from './controllers/commerce/product-list
 export {buildSearchPagination} from './controllers/commerce/search/pagination/headless-search-pagination';
 
 export type {
-  InteractiveResult,
-  InteractiveResultOptions,
-  InteractiveResultProps,
+  InteractiveProduct,
+  InteractiveProductOptions,
+  InteractiveProductProps,
 } from './controllers/commerce/core/result-list/headless-core-interactive-result';
 
 export type {ProductView} from './controllers/commerce/product-view/headless-product-view';
@@ -162,6 +163,11 @@ export type {
 export {buildRecentQueriesList} from './controllers/commerce/recent-queries-list/headless-recent-queries-list';
 export type {RecentQueriesList} from './controllers/commerce/recent-queries-list/headless-recent-queries-list';
 
+export {buildInstantProducts} from './controllers/commerce/instant-products/headless-instant-products';
+export type {
+  InstantProducts,
+  InstantProductsState,
+} from './controllers/commerce/instant-products/headless-instant-products';
 export {buildStandaloneSearchBox} from './controllers/commerce/standalone-search-box/headless-standalone-search-box';
 export type {
   StandaloneSearchBox,
