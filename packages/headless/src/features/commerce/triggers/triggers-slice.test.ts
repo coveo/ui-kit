@@ -13,7 +13,6 @@ import {
   TriggerState,
   getTriggerInitialState,
 } from '../../triggers/triggers-state';
-import {fetchProductListing} from '../product-listing/product-listing-actions';
 import {executeSearch} from '../search/search-actions';
 import {
   applyQueryTriggerModification,
@@ -48,14 +47,6 @@ describe('commerce triggers slice', () => {
     expect(finalState).toEqual(expectedState);
   });
 
-  it('on #executeProductListing.pending, updates state using #handleFetchItemsPending', () => {
-    expectedState = handleFetchItemsPending(initialStateCopy);
-    const action = fetchProductListing.pending('');
-    finalState = commerceTriggersReducer(initialState, action);
-
-    expect(finalState).toEqual(expectedState);
-  });
-
   it('on #executeSearch.fulfilled, updates state using #handleFetchItemsFulfilled', () => {
     const searchResponse = buildFetchProductListingV2Response();
     searchResponse.response.triggers = [
@@ -65,24 +56,6 @@ describe('commerce triggers slice', () => {
       buildMockRedirectTrigger(),
     ];
     const action = executeSearch.fulfilled(searchResponse, '');
-    expectedState = handleFetchItemsFulfilled(
-      initialStateCopy,
-      action.payload.response.triggers
-    );
-    finalState = commerceTriggersReducer(initialState, action);
-
-    expect(finalState).toEqual(expectedState);
-  });
-
-  it('on #executeProductListing.fulfilled, updates state using #handleFetchItemsFulfilled', () => {
-    const searchResponse = buildFetchProductListingV2Response();
-    searchResponse.response.triggers = [
-      buildMockQueryTrigger(),
-      buildMockNotifyTrigger(),
-      buildMockExecuteTrigger(),
-      buildMockRedirectTrigger(),
-    ];
-    const action = fetchProductListing.fulfilled(searchResponse, '');
     expectedState = handleFetchItemsFulfilled(
       initialStateCopy,
       action.payload.response.triggers
