@@ -18,9 +18,9 @@ import {
   PaginationProps,
 } from '../pagination/headless-core-commerce-pagination';
 import {
-  buildCoreInteractiveResult,
-  InteractiveResult,
-  InteractiveResultProps,
+  buildCoreInteractiveProduct,
+  InteractiveProduct,
+  InteractiveProductProps,
 } from '../result-list/headless-core-interactive-result';
 import {
   buildCoreSort,
@@ -29,7 +29,7 @@ import {
 } from '../sort/headless-core-commerce-sort';
 
 export interface BaseSolutionTypeSubControllers {
-  interactiveResult: (props: InteractiveResultProps) => InteractiveResult;
+  interactiveProduct: (props: InteractiveProductProps) => InteractiveProduct;
   pagination: (props?: PaginationProps) => Pagination;
 }
 
@@ -98,8 +98,8 @@ export function buildBaseSolutionTypeControllers(
   const {responseIdSelector, fetchResultsActionCreator, slotId} =
     subControllerProps;
   return {
-    interactiveResult(props: InteractiveResultProps) {
-      return buildCoreInteractiveResult(engine, {
+    interactiveProduct(props: InteractiveProductProps) {
+      return buildCoreInteractiveProduct(engine, {
         ...props,
         responseIdSelector,
       });
