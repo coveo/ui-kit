@@ -1,5 +1,8 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {executeSearch} from '../../../../features/commerce/search/search-actions';
+import {
+  executeSearch,
+  fetchMoreProducts,
+} from '../../../../features/commerce/search/search-actions';
 import {loadReducerError} from '../../../../utils/errors';
 import {
   buildCorePagination,
@@ -25,6 +28,7 @@ export function buildSearchPagination(
 
   return buildCorePagination(engine, {
     ...props,
-    fetchResultsActionCreator: executeSearch,
+    fetchProductsActionCreator: executeSearch,
+    fetchMoreProductsActionCreator: fetchMoreProducts,
   });
 }

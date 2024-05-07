@@ -38,6 +38,26 @@ import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interf
  * @part rephrase-buttons-container - The container of the rephrase buttons.
  * @part rephrase-button-label - The label of the rephrase button.
  *
+ * @part answer-code-block - The generated answer multi-line code blocks.
+ * @part answer-emphasis - The generated answer emphasized text elements.
+ * @part answer-inline-code - The generated answer inline code elements.
+ * @part answer-heading-1 - The generated answer level 1 heading elements.
+ * @part answer-heading-2 - The generated answer level 2 heading elements.
+ * @part answer-heading-3 - The generated answer level 3 heading elements.
+ * @part answer-heading-4 - The generated answer level 4 heading elements.
+ * @part answer-heading-5 - The generated answer level 5 heading elements.
+ * @part answer-heading-6 - The generated answer level 6 heading elements.
+ * @part answer-list-item - The generated answer list item elements for both ordered and unordered lists.
+ * @part answer-ordered-list - The generated answer ordered list elements.
+ * @part answer-paragraph - The generated answer paragraph elements.
+ * @part answer-quote-block - The generated answer quote block elements.
+ * @part answer-unordered-list - The generated answer unordered list elements.
+ * @part answer-strong - The generated answer strong text elements.
+ * @part answer-table - The generated answer table elements.
+ * @part answer-table-container - The generated answer table container elements.
+ * @part answer-table-content - The generated answer table content cell elements.
+ * @part answer-table-header - The generated answer table header cell elements.
+ *
  * @part citation - The link that allows the user to navigate to the item.
  * @part citation-popover - The pop-up that shows an item preview when the user hovers over the citation.
  * @part citation-index - The content of the citation item.

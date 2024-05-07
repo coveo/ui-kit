@@ -33,7 +33,7 @@ jest.mock(
 
 describe('CoreCommerceFacet', () => {
   const facetId = 'facet_id';
-  const fetchResultsActionCreator = fetchProductListing;
+  const fetchProductsActionCreator = fetchProductListing;
   const toggleExcludeActionCreator = toggleExcludeFacetValue;
   const toggleSelectActionCreator = toggleSelectFacetValue;
   const field = 'some_field';
@@ -109,9 +109,9 @@ describe('CoreCommerceFacet', () => {
       });
     });
 
-    it('dispatches #fetchResultsActionCreator', () => {
+    it('dispatches #fetchProductsActionCreator', () => {
       facet.toggleSelect(facetValue());
-      expect(fetchResultsActionCreator).toHaveBeenCalled();
+      expect(fetchProductsActionCreator).toHaveBeenCalled();
     });
   });
 
@@ -135,9 +135,9 @@ describe('CoreCommerceFacet', () => {
         expect(engine.logger.warn).toHaveBeenCalledTimes(1);
       });
 
-      it('does not dispatch #fetchResultsActionCreator', () => {
+      it('does not dispatch #fetchProductsActionCreator', () => {
         facet.toggleExclude(facetValue());
-        expect(fetchResultsActionCreator).not.toHaveBeenCalled();
+        expect(fetchProductsActionCreator).not.toHaveBeenCalled();
       });
     });
 
@@ -150,9 +150,9 @@ describe('CoreCommerceFacet', () => {
         });
       });
 
-      it('dispatches #fetchResultsActionCreator', () => {
+      it('dispatches #fetchProductsActionCreator', () => {
         facet.toggleExclude(facetValue());
-        expect(fetchResultsActionCreator).toHaveBeenCalled();
+        expect(fetchProductsActionCreator).toHaveBeenCalled();
       });
     });
   });
@@ -346,9 +346,9 @@ describe('CoreCommerceFacet', () => {
       });
     });
 
-    it('dispatches #fetchResultsActionCreator', () => {
+    it('dispatches #fetchProductsActionCreator', () => {
       facet.showMoreValues();
-      expect(fetchResultsActionCreator).toHaveBeenCalled();
+      expect(fetchProductsActionCreator).toHaveBeenCalled();
     });
   });
 
@@ -402,9 +402,9 @@ describe('CoreCommerceFacet', () => {
       });
     });
 
-    it('dispatches #fetchResultsActionCreator', () => {
+    it('dispatches #fetchProductsActionCreator', () => {
       facet.showLessValues();
-      expect(fetchResultsActionCreator).toHaveBeenCalled();
+      expect(fetchProductsActionCreator).toHaveBeenCalled();
     });
   });
 

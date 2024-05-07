@@ -2,6 +2,8 @@ name: PR Robot
 on:
   pull_request:
   merge_group:
+env:
+  CYPRESS_VERIFY_TIMEOUT: 60000
 jobs:
   report-size:
     if: github.event_name == 'pull_request'
