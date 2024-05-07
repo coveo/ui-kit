@@ -25,16 +25,7 @@ export type {PlatformEnvironment} from './utils/url-utils';
 // Actions
 export * from './features/commerce/product-listing/product-listing-actions-loader';
 export * from './features/configuration/configuration-actions-loader';
-export * from './features/configuration/configuration-actions-loader';
-export * from './features/pagination/pagination-actions-loader';
 export * from './features/analytics/search-analytics-actions-loader';
-export * from './features/sort/sort-actions-loader';
-export * from './features/facet-options/facet-options-actions-loader';
-export * from './features/facets/facet-set/facet-set-actions-loader';
-export * from './features/facets/category-facet-set/category-facet-set-actions-loader';
-export * from './features/facets/range-facets/date-facet-set/date-facet-actions-loader';
-export * from './features/facets/range-facets/numeric-facet-set/numeric-facet-actions-loader';
-export * from './features/context/context-actions-loader';
 
 // Controllers
 export type {
@@ -94,17 +85,18 @@ export type {
 } from './controllers/commerce/context/cart/headless-cart';
 export type {CartItemWithMetadata} from './features/commerce/context/cart/cart-state';
 export type {CartItemParam} from './api/commerce/commerce-api-params';
-export type {Transaction} from './features/commerce/context/cart/cart-selector';
-export type {SolutionTypeSubControllers} from './controllers/commerce/core/sub-controller/headless-sub-controller';
 export {buildCart} from './controllers/commerce/context/cart/headless-cart';
 
-export {buildProductListingParameterManager} from './controllers/commerce/product-listing/parameter-manager/headless-product-listing-parameter-manager';
+export type {Transaction} from './features/commerce/context/cart/cart-selector';
+export type {SolutionTypeSubControllers} from './controllers/commerce/core/sub-controller/headless-sub-controller';
+
 export type {
   ParameterManager,
   ParameterManagerState,
   ParameterManagerProps,
   ParameterManagerInitialState,
 } from './controllers/commerce/core/parameter-manager/headless-core-parameter-manager';
+export {buildProductListingParameterManager} from './controllers/commerce/product-listing/parameter-manager/headless-product-listing-parameter-manager';
 
 export type {
   SortByRelevance,
@@ -171,9 +163,6 @@ export {buildProductListingDateFacet} from './controllers/commerce/product-listi
 export {buildProductListingNumericFacet} from './controllers/commerce/product-listing/facets/headless-product-listing-numeric-facet';
 export {buildProductListingRegularFacet} from './controllers/commerce/product-listing/facets/headless-product-listing-regular-facet';
 
-export type {SearchBoxProps} from './controllers/commerce/search-box/headless-search-box';
-export {buildSearchParameterManager} from './controllers/commerce/search/parameter-manager/headless-search-parameter-manager';
-
 export type {
   RegularFacetSearch,
   RegularFacetSearchState,
@@ -190,6 +179,7 @@ export type {
   SearchState,
 } from './controllers/commerce/search/headless-search';
 export {buildSearch} from './controllers/commerce/search/headless-search';
+export {buildSearchParameterManager} from './controllers/commerce/search/parameter-manager/headless-search-parameter-manager';
 
 export {updateQuery} from './features/commerce/query/query-actions';
 
@@ -197,6 +187,7 @@ export {buildSearchBox} from './controllers/commerce/search-box/headless-search-
 export type {
   SearchBox,
   SearchBoxState,
+  SearchBoxProps,
 } from './controllers/commerce/search-box/headless-search-box';
 
 export type {
