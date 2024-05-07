@@ -23,6 +23,7 @@ import {bindAnalyticsToLink} from '../../item-link/item-link';
 })
 export class AtomicSmartSnippetAnswer {
   @Prop() htmlContent!: string;
+  @Prop() public truncateAfter: 1 | 2 | 3 | 4 = 2;
   @Prop() innerStyle?: string;
 
   @Element() public host!: HTMLElement;

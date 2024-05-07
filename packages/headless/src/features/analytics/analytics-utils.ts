@@ -55,6 +55,7 @@ import {
   SearchAnalyticsProvider,
   StateNeededBySearchAnalyticsProvider,
 } from '../../api/analytics/search-analytics';
+import {Product} from '../../api/commerce/common/product';
 import {PreprocessRequest} from '../../api/preprocess-request';
 import {ProductRecommendation} from '../../api/search/search/product-recommendation';
 import {Raw} from '../../api/search/search/raw';
@@ -718,6 +719,8 @@ export const resultPartialDefinition = {
   rankingModifier: new StringValue({required: false, emptyAllowed: true}),
 };
 
+export const productPartialDefinition = {};
+
 export const productRecommendationPartialDefinition = {
   permanentid: requiredNonEmptyString,
   documentUri: requiredNonEmptyString,
@@ -740,6 +743,16 @@ function partialResultPayload(result: Result): Partial<Result> {
   );
 }
 
+function partialProductPayload(result: Product): Partial<Product> {
+  return Object.assign(
+    {},
+    ...Object.keys(productPartialDefinition).map((key) => ({
+      [key]: result[key as keyof typeof productPartialDefinition],
+    }))
+    // {raw: partialRawPayload(result.raw)}
+  );
+}
+
 function getDocumentAuthor(result: Result) {
   const author = result.raw['author'];
   if (isNullOrUndefined(author)) {
@@ -759,6 +772,9 @@ function getSourceName(result: Result) {
 
 export const validateResultPayload = (result: Result) =>
   new Schema(resultPartialDefinition).validate(partialResultPayload(result));
+
+export const validateProductPayload = (product: Product) =>
+  new Schema(resultPartialDefinition).validate(partialProductPayload(product)); // TODO: not sure about this
 
 function findPositionInChildResults(
   targetResult: Result,

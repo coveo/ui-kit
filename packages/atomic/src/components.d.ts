@@ -394,11 +394,12 @@ export namespace Components {
         "suggestionTimeout": number;
     }
     /**
-     * The `atomic-commerce-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
+     * The `atomic-commerce-search-box-instant-products` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
      * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
      * This component is not supported on mobile.
+     * @Internal 
      */
-    interface AtomicCommerceSearchBoxInstantResults {
+    interface AtomicCommerceSearchBoxInstantProducts {
         /**
           * The callback to generate an [`aria-label`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label) for a given result so that accessibility tools can fully describe what's visually rendered by a result.  By default, or if an empty string is returned, `result.title` is used.
          */
@@ -902,7 +903,7 @@ export namespace Components {
         /**
           * Initializes the connection with the headless insight engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
          */
-        "initialize": (options: InsightInitializationOptions) => Promise<void>;
+        "initialize": (options: InsightEngineConfiguration) => Promise<void>;
         /**
           * Initializes the connection with an already preconfigured headless insight engine.
          */
@@ -1710,7 +1711,7 @@ export namespace Components {
         /**
           * Initializes the connection with the headless recommendation engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
          */
-        "initialize": (options: RecsInitializationOptions) => Promise<void>;
+        "initialize": (options: RecommendationEngineConfiguration) => Promise<void>;
         /**
           * Initializes the connection with an already preconfigured headless recommendation engine. This bypasses the properties set on the component, such as analytics, recommendation, searchHub, language, timezone & logLevel.
          */
@@ -2517,7 +2518,7 @@ export namespace Components {
         /**
           * Initializes the connection with the headless search engine using options for accessToken (required), organizationId (required), renewAccessToken, organizationEndpoints (recommended), and platformUrl (deprecated).
          */
-        "initialize": (options: InitializationOptions) => Promise<void>;
+        "initialize": (options: SearchEngineConfiguration) => Promise<void>;
         /**
           * Initializes the connection with an already preconfigured [headless search engine](https://docs.coveo.com/en/headless/latest/reference/search/), as opposed to the `initialize` method, which will internally create a new search engine instance. This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
          */
@@ -2656,6 +2657,7 @@ export namespace Components {
     interface AtomicSmartSnippetAnswer {
         "htmlContent": string;
         "innerStyle"?: string;
+        "truncateAfter": 1 | 2 | 3 | 4;
     }
     interface AtomicSmartSnippetCollapseWrapper {
         "collapsedHeight"?: number;
@@ -3051,15 +3053,16 @@ declare global {
         new (): HTMLAtomicCommerceSearchBoxElement;
     };
     /**
-     * The `atomic-commerce-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
+     * The `atomic-commerce-search-box-instant-products` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
      * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
      * This component is not supported on mobile.
+     * @Internal 
      */
-    interface HTMLAtomicCommerceSearchBoxInstantResultsElement extends Components.AtomicCommerceSearchBoxInstantResults, HTMLStencilElement {
+    interface HTMLAtomicCommerceSearchBoxInstantProductsElement extends Components.AtomicCommerceSearchBoxInstantProducts, HTMLStencilElement {
     }
-    var HTMLAtomicCommerceSearchBoxInstantResultsElement: {
-        prototype: HTMLAtomicCommerceSearchBoxInstantResultsElement;
-        new (): HTMLAtomicCommerceSearchBoxInstantResultsElement;
+    var HTMLAtomicCommerceSearchBoxInstantProductsElement: {
+        prototype: HTMLAtomicCommerceSearchBoxInstantProductsElement;
+        new (): HTMLAtomicCommerceSearchBoxInstantProductsElement;
     };
     /**
      * The `atomic-commerce-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
@@ -4553,7 +4556,7 @@ declare global {
         "atomic-commerce-pager": HTMLAtomicCommercePagerElement;
         "atomic-commerce-product-list": HTMLAtomicCommerceProductListElement;
         "atomic-commerce-search-box": HTMLAtomicCommerceSearchBoxElement;
-        "atomic-commerce-search-box-instant-results": HTMLAtomicCommerceSearchBoxInstantResultsElement;
+        "atomic-commerce-search-box-instant-products": HTMLAtomicCommerceSearchBoxInstantProductsElement;
         "atomic-commerce-search-box-query-suggestions": HTMLAtomicCommerceSearchBoxQuerySuggestionsElement;
         "atomic-commerce-search-box-recent-queries": HTMLAtomicCommerceSearchBoxRecentQueriesElement;
         "atomic-component-error": HTMLAtomicComponentErrorElement;
@@ -5013,11 +5016,12 @@ declare namespace LocalJSX {
         "suggestionTimeout"?: number;
     }
     /**
-     * The `atomic-commerce-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
+     * The `atomic-commerce-search-box-instant-products` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
      * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
      * This component is not supported on mobile.
+     * @Internal 
      */
-    interface AtomicCommerceSearchBoxInstantResults {
+    interface AtomicCommerceSearchBoxInstantProducts {
         /**
           * The callback to generate an [`aria-label`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label) for a given result so that accessibility tools can fully describe what's visually rendered by a result.  By default, or if an empty string is returned, `result.title` is used.
          */
@@ -7181,6 +7185,7 @@ declare namespace LocalJSX {
         "onBeginDelayedSelectInlineLink"?: (event: AtomicSmartSnippetAnswerCustomEvent<InlineLink>) => void;
         "onCancelPendingSelectInlineLink"?: (event: AtomicSmartSnippetAnswerCustomEvent<InlineLink>) => void;
         "onSelectInlineLink"?: (event: AtomicSmartSnippetAnswerCustomEvent<InlineLink>) => void;
+        "truncateAfter"?: 1 | 2 | 3 | 4;
     }
     interface AtomicSmartSnippetCollapseWrapper {
         "collapsedHeight"?: number;
@@ -7380,7 +7385,7 @@ declare namespace LocalJSX {
         "atomic-commerce-pager": AtomicCommercePager;
         "atomic-commerce-product-list": AtomicCommerceProductList;
         "atomic-commerce-search-box": AtomicCommerceSearchBox;
-        "atomic-commerce-search-box-instant-results": AtomicCommerceSearchBoxInstantResults;
+        "atomic-commerce-search-box-instant-products": AtomicCommerceSearchBoxInstantProducts;
         "atomic-commerce-search-box-query-suggestions": AtomicCommerceSearchBoxQuerySuggestions;
         "atomic-commerce-search-box-recent-queries": AtomicCommerceSearchBoxRecentQueries;
         "atomic-component-error": AtomicComponentError;
@@ -7573,11 +7578,12 @@ declare module "@stencil/core" {
              */
             "atomic-commerce-search-box": LocalJSX.AtomicCommerceSearchBox & JSXBase.HTMLAttributes<HTMLAtomicCommerceSearchBoxElement>;
             /**
-             * The `atomic-commerce-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
+             * The `atomic-commerce-search-box-instant-products` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
              * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
              * This component is not supported on mobile.
+             * @Internal 
              */
-            "atomic-commerce-search-box-instant-results": LocalJSX.AtomicCommerceSearchBoxInstantResults & JSXBase.HTMLAttributes<HTMLAtomicCommerceSearchBoxInstantResultsElement>;
+            "atomic-commerce-search-box-instant-products": LocalJSX.AtomicCommerceSearchBoxInstantProducts & JSXBase.HTMLAttributes<HTMLAtomicCommerceSearchBoxInstantProductsElement>;
             /**
              * The `atomic-commerce-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
              */
