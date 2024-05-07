@@ -5,8 +5,10 @@ import {
   MockedSearchEngine,
 } from '../../test/mock-engine-v2';
 import {createMockState} from '../../test/mock-state';
-import {RedirectionTrigger} from '../core/triggers/headless-core-redirection-trigger';
-import {buildRedirectionTrigger} from './headless-redirection-trigger';
+import {
+  RedirectionTrigger,
+  buildRedirectionTrigger,
+} from './headless-redirection-trigger';
 
 jest.mock('../../features/triggers/trigger-analytics-actions');
 
