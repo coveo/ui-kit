@@ -26,6 +26,7 @@ const initializableElements = [
   'atomic-commerce-interface',
   'atomic-relevance-inspector',
   'atomic-insight-interface',
+  'atomic-commerce-interface',
   'atomic-external',
 ];
 
