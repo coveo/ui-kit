@@ -3,20 +3,26 @@ import {
   AsyncThunkCommerceOptions,
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client';
+import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response';
 import {CommerceQuerySection} from '../../../state/state-sections';
 import {logQueryError} from '../../search/search-analytics-actions';
 import {
   buildCommerceAPIRequest,
-  QueryCommerceAPIThunkReturn,
   StateNeededByQueryCommerceAPI,
 } from '../common/actions';
-import {logProductListingV2Load} from '../product-listing/product-listing-analytics';
+
+export interface QuerySearchCommerceAPIThunkReturn {
+  /** The successful response. */
+  response: SearchCommerceSuccessResponse;
+  /** The original query that was performed when an automatic correction is executed. */
+  originalQuery: string;
+}
 
 export type StateNeededByExecuteSearch = StateNeededByQueryCommerceAPI &
   CommerceQuerySection;
 
 export const executeSearch = createAsyncThunk<
-  QueryCommerceAPIThunkReturn,
+  QuerySearchCommerceAPIThunkReturn,
   void,
   AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
 >(
@@ -36,9 +42,10 @@ export const executeSearch = createAsyncThunk<
 
     return {
       response: fetched.success,
-      // eslint-disable-next-line @cspell/spellchecker
-      // TODO CAPI-244: Use actual search analytics action
-      analyticsAction: logProductListingV2Load(),
+      originalQuery:
+        state.commerceQuery?.query !== undefined
+          ? state.commerceQuery.query
+          : '',
     };
   }
 );

@@ -7,6 +7,7 @@ import {CaseFieldState} from '../features/case-field/case-field-state';
 import {CaseInputState} from '../features/case-input/case-input-state';
 import {CartState} from '../features/commerce/context/cart/cart-state';
 import {CommerceContextState} from '../features/commerce/context/context-state';
+import {DidYouMeanState as CommerceDidYouMeanState} from '../features/commerce/did-you-mean/did-you-mean-state';
 import {CommerceFacetSetState} from '../features/commerce/facets/facet-set/facet-set-state';
 import {CommercePaginationState} from '../features/commerce/pagination/pagination-state';
 import {ProductListingV2State} from '../features/commerce/product-listing/product-listing-state';
@@ -356,6 +357,13 @@ export interface CommerceQuerySection {
    * The current user query.
    */
   commerceQuery: CommerceQueryState;
+}
+
+export interface CommerceDidYouMeanSection {
+  /**
+   * DidYouMean allows to retrieve query corrections from the index related to end user misspelling.
+   */
+  didYouMean: CommerceDidYouMeanState;
 }
 
 export interface StructuredSortSection {

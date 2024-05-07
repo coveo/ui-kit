@@ -183,3 +183,11 @@ export {buildProductListingBreadcrumbManager} from './controllers/commerce/produ
 export {buildSearchBreadcrumbManager} from './controllers/commerce/search/breadcrumb-manager/headless-search-breadcrumb-manager';
 
 export {getOrganizationEndpoints} from './api/platform-client';
+
+export type {
+  DidYouMean,
+  DidYouMeanProps,
+  DidYouMeanOptions,
+  DidYouMeanState,
+} from './controllers/commerce/did-you-mean/headless-did-you-mean';
+export {buildDidYouMean} from './controllers/commerce/did-you-mean/headless-did-you-mean';

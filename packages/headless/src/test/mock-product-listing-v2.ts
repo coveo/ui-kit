@@ -1,6 +1,5 @@
 import {CommerceSuccessResponse} from '../api/commerce/common/response';
 import {QueryCommerceAPIThunkReturn} from '../features/commerce/common/actions';
-import {logProductListingV2Load} from '../features/commerce/product-listing/product-listing-analytics';
 import {SortBy} from '../features/sort/sort';
 
 export function buildFetchProductListingV2Response(
@@ -22,6 +21,5 @@ export function buildFetchProductListingV2Response(
       products: response.products ?? [],
       responseId: response.responseId ?? '',
     },
-    analyticsAction: logProductListingV2Load(),
   };
 }
