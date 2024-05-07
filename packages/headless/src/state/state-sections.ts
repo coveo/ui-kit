@@ -8,6 +8,7 @@ import {CaseInputState} from '../features/case-input/case-input-state';
 import {CartState} from '../features/commerce/context/cart/cart-state';
 import {CommerceContextState} from '../features/commerce/context/context-state';
 import {CommerceFacetSetState} from '../features/commerce/facets/facet-set/facet-set-state';
+import {InstantProductsState} from '../features/commerce/instant-products/instant-products-state';
 import {CommercePaginationState} from '../features/commerce/pagination/pagination-state';
 import {ProductListingV2State} from '../features/commerce/product-listing/product-listing-state';
 import {CommerceQueryState} from '../features/commerce/query/query-state';
@@ -164,6 +165,13 @@ export interface InstantResultSection {
    * The set of results loaded for query expressions.
    */
   instantResults: InstantResultsState;
+}
+
+export interface InstantProductsSection {
+  /**
+   * The set of products loaded for query expressions.
+   */
+  instantProducts: InstantProductsState;
 }
 
 export interface PipelineSection {
