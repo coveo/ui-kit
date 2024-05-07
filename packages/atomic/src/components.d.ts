@@ -441,6 +441,11 @@ export namespace Components {
         "maxWithoutQuery"?: number;
     }
     /**
+     * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
+     */
+    interface AtomicCommerceSortDropdown {
+    }
+    /**
      * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
      */
     interface AtomicComponentError {
@@ -3079,6 +3084,15 @@ declare global {
         new (): HTMLAtomicCommerceSearchBoxRecentQueriesElement;
     };
     /**
+     * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
+     */
+    interface HTMLAtomicCommerceSortDropdownElement extends Components.AtomicCommerceSortDropdown, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceSortDropdownElement: {
+        prototype: HTMLAtomicCommerceSortDropdownElement;
+        new (): HTMLAtomicCommerceSortDropdownElement;
+    };
+    /**
      * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
      */
     interface HTMLAtomicComponentErrorElement extends Components.AtomicComponentError, HTMLStencilElement {
@@ -4567,6 +4581,7 @@ declare global {
         "atomic-commerce-search-box": HTMLAtomicCommerceSearchBoxElement;
         "atomic-commerce-search-box-query-suggestions": HTMLAtomicCommerceSearchBoxQuerySuggestionsElement;
         "atomic-commerce-search-box-recent-queries": HTMLAtomicCommerceSearchBoxRecentQueriesElement;
+        "atomic-commerce-sort-dropdown": HTMLAtomicCommerceSortDropdownElement;
         "atomic-component-error": HTMLAtomicComponentErrorElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-external": HTMLAtomicExternalElement;
@@ -5068,6 +5083,11 @@ declare namespace LocalJSX {
           * The maximum number of suggestions to display initially, when the input field is empty.
          */
         "maxWithoutQuery"?: number;
+    }
+    /**
+     * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
+     */
+    interface AtomicCommerceSortDropdown {
     }
     /**
      * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
@@ -7395,6 +7415,7 @@ declare namespace LocalJSX {
         "atomic-commerce-search-box": AtomicCommerceSearchBox;
         "atomic-commerce-search-box-query-suggestions": AtomicCommerceSearchBoxQuerySuggestions;
         "atomic-commerce-search-box-recent-queries": AtomicCommerceSearchBoxRecentQueries;
+        "atomic-commerce-sort-dropdown": AtomicCommerceSortDropdown;
         "atomic-component-error": AtomicComponentError;
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-external": AtomicExternal;
@@ -7598,6 +7619,10 @@ declare module "@stencil/core" {
              * The `atomic-commerce-search-box-recent-queries` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of recent query suggestions.
              */
             "atomic-commerce-search-box-recent-queries": LocalJSX.AtomicCommerceSearchBoxRecentQueries & JSXBase.HTMLAttributes<HTMLAtomicCommerceSearchBoxRecentQueriesElement>;
+            /**
+             * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
+             */
+            "atomic-commerce-sort-dropdown": LocalJSX.AtomicCommerceSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicCommerceSortDropdownElement>;
             /**
              * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
              */
