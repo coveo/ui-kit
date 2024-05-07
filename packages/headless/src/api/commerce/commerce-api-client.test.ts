@@ -259,6 +259,7 @@ describe('commerce api client', () => {
         appliedSort: {sortCriteria: SortBy.Relevance},
         availableSorts: [{sortCriteria: SortBy.Relevance}],
       },
+      triggers: [],
     };
 
     mockPlatformCall({

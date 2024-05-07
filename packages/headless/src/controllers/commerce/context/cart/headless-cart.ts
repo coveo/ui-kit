@@ -1,5 +1,6 @@
 import {CurrencyCodeISO4217, Ec} from '@coveo/relay-event-types';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../app/state-key';
 import {
   purchase,
   setItems,
@@ -145,7 +146,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
 
   const {dispatch} = engine;
   const controller = buildController(engine);
-  const getState = () => engine.state.cart;
+  const getState = () => engine[stateKey].cart;
 
   const initialState = {
     ...props.initialState,
@@ -175,7 +176,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
   }
 
   function getCurrency(): CurrencyCodeISO4217 {
-    return engine.state.commerceContext.currency;
+    return engine[stateKey].commerceContext.currency;
   }
 
   function isEqual(

@@ -2,6 +2,7 @@ import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api
 import {Product} from '../../../api/commerce/common/product';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
+import {stateKey} from '../../../app/state-key';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
 import {
   fetchProductListing,
@@ -60,7 +61,7 @@ export function buildProductListing(engine: CommerceEngine): ProductListing {
 
   const controller = buildController(engine);
   const {dispatch} = engine;
-  const getState = () => engine.state;
+  const getState = () => engine[stateKey];
   const subControllers = buildSolutionTypeSubControllers(engine, {
     responseIdSelector,
     fetchProductsActionCreator: fetchProductListing,
