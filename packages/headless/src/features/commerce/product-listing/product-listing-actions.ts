@@ -20,7 +20,6 @@ import {
   QueryCommerceAPIThunkReturn,
   StateNeededByQueryCommerceAPI,
 } from '../common/actions';
-import {logProductListingV2Load} from './product-listing-analytics';
 
 export type StateNeededByFetchProductListingV2 = ConfigurationSection &
   ProductListingV2Section &
@@ -54,7 +53,6 @@ export const fetchProductListing = createAsyncThunk<
 
     return {
       response: fetched.success,
-      analyticsAction: logProductListingV2Load(),
     };
   }
 );
