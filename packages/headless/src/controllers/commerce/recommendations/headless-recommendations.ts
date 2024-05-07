@@ -5,6 +5,7 @@ import {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../app/state-key';
 import {recommendationsOptionsSchema} from '../../../features/commerce/recommendations/recommendations';
 import {
   fetchMoreRecommendations,
@@ -107,7 +108,7 @@ export function buildRecommendations(
     ...subControllers,
 
     get state() {
-      return recommendationStateSelector(engine.state);
+      return recommendationStateSelector(engine[stateKey]);
     },
 
     refresh: () => dispatch(fetchRecommendations({slotId, productId})),
