@@ -56,7 +56,7 @@ export const fieldsMustNotBeDefined = (
  * Creates a condition that verifies whether the value of a field is equal to any of the specified values (casing insensitive).
  * @param fieldName (string) - The name of the field to evaluate the condition against.
  * @param allowedValues (string[]) - The list of values that the field value can be equal to in order for the condition to evaluate to "true" (case insensitive).
- * @returns (ProductTemplateCondition) - A function that takes a Product as an argument and returns "true" if the value for the specified field is equal to any of the values in the specified list (case insensentive), and "false" otherwise.
+ * @returns (ProductTemplateCondition) - A function that takes a Product as an argument and returns "true" if the value for the specified field is equal to any of the values in the specified list (case insensitive), and "false" otherwise.
  */
 export const fieldMustMatch = (
   fieldName: string,
@@ -85,10 +85,10 @@ export const fieldMustNotMatch = (
 ): ProductTemplateCondition => {
   return (product: Product) => {
     const fieldValues = getFieldValuesFromProduct(fieldName, product);
-    return blacklistedValues.every((blacklistedValue) =>
+    return disallowedValues.every((disallowedValues) =>
       fieldValues.every(
         (fieldValue) =>
-          `${fieldValue}`.toLowerCase() !== blacklistedValue.toLowerCase()
+          `${fieldValue}`.toLowerCase() !== disallowedValues.toLowerCase()
       )
     );
   };
