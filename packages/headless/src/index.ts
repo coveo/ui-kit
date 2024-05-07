@@ -380,7 +380,7 @@ export type {
 } from './controllers/triggers/headless-execute-trigger';
 export {buildExecuteTrigger} from './controllers/triggers/headless-execute-trigger';
 
-export type {ExecuteTriggerParams} from './controllers/../api/search/trigger';
+export type {ExecuteTriggerParams} from './api/common/trigger';
 
 export type {
   NotifyTrigger,
