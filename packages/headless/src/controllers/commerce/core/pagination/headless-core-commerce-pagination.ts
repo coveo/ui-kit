@@ -49,7 +49,7 @@ export interface Pagination extends Controller {
   setPageSize(pageSize: number): void;
 
   /**
-   * Fetch the next page of products, and append them to the current list of products.
+   * Fetches the next page of products, and appends them to the current list of products.
    */
   fetchMoreProducts(): void;
 
