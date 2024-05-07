@@ -21,16 +21,33 @@ describe('commerce search summary', () => {
       )
     );
 
-    expect(controller.state.hasError).toBe(true);
+    expect(controller.state).toEqual({
+      firstProduct: 0,
+      firstSearchExecuted: false,
+      lastProduct: 0,
+      totalNumberOfProducts: 0,
+      hasProducts: false,
+      hasError: true,
+      query: '',
+      isLoading: false,
+    });
   });
 
   it('should return correct state when no search has been executed', () => {
     const controller = buildSearchSummary(
       buildMockCommerceEngine(buildMockCommerceState())
     );
-    expect(controller.state.firstSearchExecuted).toBe(false);
-    expect(controller.state.hasProducts).toBe(false);
-    expect(controller.state.isLoading).toBe(false);
+
+    expect(controller.state).toEqual({
+      firstProduct: 0,
+      firstSearchExecuted: false,
+      lastProduct: 0,
+      totalNumberOfProducts: 0,
+      hasProducts: false,
+      hasError: false,
+      query: '',
+      isLoading: false,
+    });
   });
 
   it('should return correct state when search has been executed but no products are returned', () => {
@@ -141,6 +158,34 @@ describe('commerce search summary', () => {
       hasError: false,
       query: 'foo',
       isLoading: false,
+    });
+  });
+
+  it('should return correct state when loading', () => {
+    const controller = buildSearchSummary(
+      buildMockCommerceEngine(
+        buildMockCommerceState({
+          commerceSearch: {
+            error: null,
+            products: [],
+            facets: [],
+            isLoading: true,
+            queryExecuted: 'foo',
+            requestId: 'bar',
+            responseId: 'baz',
+          },
+        })
+      )
+    );
+    expect(controller.state).toEqual({
+      firstProduct: 0,
+      firstSearchExecuted: true,
+      lastProduct: 0,
+      totalNumberOfProducts: 0,
+      hasProducts: false,
+      hasError: false,
+      query: 'foo',
+      isLoading: true,
     });
   });
 });

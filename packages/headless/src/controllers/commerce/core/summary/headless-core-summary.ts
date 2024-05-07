@@ -1,6 +1,7 @@
 import {CommerceAPIErrorStatusResponse} from '../../../../api/commerce/commerce-api-error-response';
 import {CommerceEngineState} from '../../../../app/commerce-engine/commerce-engine';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../app/state-key';
 import {
   pagePrincipalSelector,
   perPagePrincipalSelector,
@@ -77,7 +78,7 @@ export const buildCoreSummary = (
     options: {selectNumProducts, selectResponseId, selectLoading, selectError},
   } = props;
 
-  const getState = () => engine.state;
+  const getState = () => engine[stateKey];
   const page = () => pagePrincipalSelector(getState());
   const perPage = () => perPagePrincipalSelector(getState());
   const totalNumberOfProducts = () => totalEntriesPrincipalSelector(getState());

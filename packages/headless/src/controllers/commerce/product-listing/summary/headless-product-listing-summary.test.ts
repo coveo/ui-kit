@@ -22,13 +22,13 @@ describe('commerce product-listing summary', () => {
 
     expect(controller.state).toEqual({
       firstSearchExecuted: false,
-      firstProduct: 0
+      firstProduct: 0,
       lastProduct: 0,
       totalNumberOfProducts: 0,
       hasProducts: false,
-      isLoading: false
+      isLoading: false,
       hasError: true,
-    })
+    });
   });
 
   it('should return correct state when no search has been executed', () => {
@@ -37,13 +37,13 @@ describe('commerce product-listing summary', () => {
     );
     expect(controller.state).toEqual({
       firstSearchExecuted: false,
-      firstProduct: 0
+      firstProduct: 0,
       lastProduct: 0,
       totalNumberOfProducts: 0,
       hasProducts: false,
-      isLoading: false
+      isLoading: false,
       hasError: false,
-    })
+    });
   });
 
   it('should return correct state when search has been executed but no products are returned', () => {
@@ -148,6 +148,33 @@ describe('commerce product-listing summary', () => {
       hasProducts: true,
       hasError: false,
       isLoading: false,
+    });
+  });
+
+  it('should return correct state when loading', () => {
+    const controller = buildListingSummary(
+      buildMockCommerceEngine(
+        buildMockCommerceState({
+          productListing: {
+            error: null,
+            products: [],
+            facets: [],
+            isLoading: true,
+            requestId: 'bar',
+            responseId: 'baz',
+          },
+        })
+      )
+    );
+
+    expect(controller.state).toEqual({
+      firstProduct: 0,
+      firstSearchExecuted: true,
+      lastProduct: 0,
+      totalNumberOfProducts: 0,
+      hasProducts: false,
+      hasError: false,
+      isLoading: true,
     });
   });
 });

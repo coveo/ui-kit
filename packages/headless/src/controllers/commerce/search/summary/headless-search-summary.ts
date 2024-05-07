@@ -1,4 +1,5 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../app/state-key';
 import {
   errorSelector,
   isLoadingSelector,
@@ -52,7 +53,7 @@ export const buildSearchSummary = (engine: CommerceEngine) => {
     get state(): SearchSummaryState {
       return {
         ...controller.state,
-        query: querySelector(engine.state) || '',
+        query: querySelector(engine[stateKey]) || '',
       };
     },
   };
