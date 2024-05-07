@@ -215,10 +215,6 @@ export class AtomicCommerceSearchBox
   public initialize() {
     this.id = randomID('atomic-commerce-search-box-');
 
-    this.searchBox = buildSearchBox(this.bindings.engine, {
-      options: this.searchBoxOptions,
-    });
-
     this.searchBox = this.redirectionUrl
       ? buildStandaloneSearchBox(this.bindings.engine, {
           options: {
@@ -688,10 +684,8 @@ export class AtomicCommerceSearchBox
           </SearchBoxWrapper>,
           !this.suggestionManager.suggestions.length && (
             <slot>
-              {/* TODO: KIT-3130 Add recent queries */}
-              {/* <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries> */}
-              {/* TODO: KIT-3128 Add query suggestions */}
-              {/* <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions> */}
+              <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
+              <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
             </slot>
           ),
         ]}

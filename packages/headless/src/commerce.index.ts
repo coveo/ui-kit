@@ -25,6 +25,7 @@ export type {PlatformEnvironment} from './utils/url-utils';
 
 // Actions
 export * from './features/commerce/product-listing/product-listing-actions-loader';
+export * from './features/commerce/query-suggest/query-suggest-actions-loader';
 export * from './features/configuration/configuration-actions-loader';
 
 // Controllers
@@ -158,7 +159,11 @@ export {buildSearchBox} from './controllers/commerce/search-box/headless-search-
 export type {
   SearchBox,
   SearchBoxState,
+  Suggestion,
 } from './controllers/commerce/search-box/headless-search-box';
+
+export {buildRecentQueriesList} from './controllers/commerce/recent-queries-list/headless-recent-queries-list';
+export type {RecentQueriesList} from './controllers/commerce/recent-queries-list/headless-recent-queries-list';
 
 export {buildInstantProducts} from './controllers/commerce/instant-products/headless-instant-products';
 export type {

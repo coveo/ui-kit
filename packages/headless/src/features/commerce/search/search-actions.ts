@@ -1,18 +1,38 @@
+import {BooleanValue, StringValue} from '@coveo/bueno';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {
   AsyncThunkCommerceOptions,
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client';
 import {CommerceQuerySection} from '../../../state/state-sections';
+import {validatePayload} from '../../../utils/validate-payload';
+import {
+  deselectAllBreadcrumbs,
+  deselectAllNonBreadcrumbs,
+} from '../../breadcrumb/breadcrumb-actions';
+import {updateFacetAutoSelection} from '../../facets/generic/facet-actions';
+import {updatePage} from '../../pagination/pagination-actions';
 import {logQueryError} from '../../search/search-analytics-actions';
 import {
   buildCommerceAPIRequest,
   QueryCommerceAPIThunkReturn,
   StateNeededByQueryCommerceAPI,
 } from '../common/actions';
+import {
+  UpdateQueryActionCreatorPayload,
+  updateQuery,
+} from '../query/query-actions';
 
 export type StateNeededByExecuteSearch = StateNeededByQueryCommerceAPI &
   CommerceQuerySection;
+
+export interface PrepareForSearchWithQueryOptions {
+  /**
+   * Whether to clear all active query filters when the end user submits a new query from the search box.
+   * Setting this option to "false" is not recommended & can lead to an increasing number of queries returning no results.
+   */
+  clearFilters: boolean;
+}
 
 export interface FetchInstantProductsActionCreatorPayload {
   /**
@@ -50,11 +70,37 @@ export const executeSearch = createAsyncThunk<
 
     return {
       response: fetched.success,
+      queryExecuted: state.commerceQuery?.query,
       // eslint-disable-next-line @cspell/spellchecker
       // TODO CAPI-244: Use actual search analytics action
     };
   }
 );
+
+export const prepareForSearchWithQuery = createAsyncThunk<
+  void,
+  UpdateQueryActionCreatorPayload & PrepareForSearchWithQueryOptions,
+  AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
+>('commerce/search/prepareForSearchWithQuery', (payload, thunk) => {
+  const {dispatch} = thunk;
+  validatePayload(payload, {
+    query: new StringValue(),
+    clearFilters: new BooleanValue(),
+  });
+
+  if (payload.clearFilters) {
+    dispatch(deselectAllBreadcrumbs());
+    dispatch(deselectAllNonBreadcrumbs());
+  }
+
+  dispatch(updateFacetAutoSelection({allow: true}));
+  dispatch(
+    updateQuery({
+      query: payload.query,
+    })
+  );
+  dispatch(updatePage(1));
+});
 
 export const fetchInstantProducts = createAsyncThunk<
   QueryCommerceAPIThunkReturn,
