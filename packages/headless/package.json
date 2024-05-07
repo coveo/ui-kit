@@ -55,7 +55,6 @@
     "@coveo/relay-event-types": "7.10.5",
     "@microsoft/fetch-event-source": "2.0.1",
     "@reduxjs/toolkit": "2.2.3",
-    "abab": "2.0.6",
     "abortcontroller-polyfill": "1.7.5",
     "coveo.analytics": "2.30.2",
     "dayjs": "1.11.11",
