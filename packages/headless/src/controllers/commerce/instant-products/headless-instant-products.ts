@@ -3,6 +3,7 @@ import {SerializedError} from '@reduxjs/toolkit';
 import {CommerceAPIErrorResponse} from '../../../api/commerce/commerce-api-error-response';
 import {Product} from '../../../api/commerce/common/product';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../app/state-key';
 import {
   clearExpiredProducts,
   registerInstantProducts,
@@ -100,7 +101,7 @@ export function buildInstantProducts(
 
   const controller = buildController(engine);
   const {dispatch} = engine;
-  const getState = () => engine.state;
+  const getState = () => engine[stateKey];
 
   const options: Required<InstantProductsOptions> = {
     searchBoxId: props.options.searchBoxId || randomID('instant-products-'),

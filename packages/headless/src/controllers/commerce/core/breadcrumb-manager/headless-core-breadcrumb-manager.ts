@@ -3,6 +3,7 @@ import {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../app/state-key';
 import {deselectAllBreadcrumbs} from '../../../../features/breadcrumb/breadcrumb-actions';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {FacetType} from '../../../../features/commerce/facets/facet-set/interfaces/common';
@@ -69,7 +70,7 @@ export interface Breadcrumb<Value extends BaseFacetValue> {
 
 export type CoreBreadcrumbManagerOptions = Pick<
   CoreCommerceFacetOptions,
-  'facetResponseSelector' | 'fetchResultsActionCreator'
+  'facetResponseSelector' | 'fetchProductsActionCreator'
 >;
 
 /**
@@ -161,7 +162,7 @@ export function buildCoreBreadcrumbManager(
                 selection,
               })
             );
-            dispatch(options.fetchResultsActionCreator());
+            dispatch(options.fetchProductsActionCreator());
           } else if (
             selection.state === 'excluded' &&
             facet.type !== facetTypeWithoutExcludeAction
@@ -172,7 +173,7 @@ export function buildCoreBreadcrumbManager(
                 selection,
               })
             );
-            dispatch(options.fetchResultsActionCreator());
+            dispatch(options.fetchProductsActionCreator());
           }
         },
       })),
@@ -184,7 +185,7 @@ export function buildCoreBreadcrumbManager(
       const breadcrumbs =
         facetOrder
           .map((facetId) =>
-            options.facetResponseSelector(engine.state, facetId)
+            options.facetResponseSelector(engine[stateKey], facetId)
           )
           .filter((facet): facet is AnyFacetResponse => facet !== undefined)
           .map(createBreadcrumb) ?? [];
@@ -203,7 +204,7 @@ export function buildCoreBreadcrumbManager(
     },
 
     get state() {
-      return commerceFacetSelector(engine.state);
+      return commerceFacetSelector(engine[stateKey]);
     },
   };
 }

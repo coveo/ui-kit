@@ -1,4 +1,5 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../app/state-key';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {FacetType} from '../../../../features/commerce/facets/facet-set/interfaces/common';
 import {
@@ -29,7 +30,7 @@ import {
 } from '../../../core/facets/facet/headless-core-facet';
 import {DateRangeRequest} from '../../../core/facets/range-facet/date-facet/headless-core-date-facet';
 import {NumericRangeRequest} from '../../../core/facets/range-facet/numeric-facet/headless-core-numeric-facet';
-import {FetchResultsActionCreator, ToggleActionCreator} from '../common';
+import {FetchProductsActionCreator, ToggleActionCreator} from '../common';
 
 export type {
   FacetType,
@@ -60,17 +61,19 @@ export interface CoreCommerceFacetOptions {
   facetId: string;
   toggleSelectActionCreator: ToggleActionCreator;
   toggleExcludeActionCreator?: ToggleActionCreator;
-  fetchResultsActionCreator: FetchResultsActionCreator;
+  fetchProductsActionCreator: FetchProductsActionCreator;
   facetResponseSelector: (
-    state: CommerceEngine['state'],
+    state: CommerceEngine[typeof stateKey],
     facetId: string
   ) => AnyFacetResponse | undefined;
-  isFacetLoadingResponseSelector: (state: CommerceEngine['state']) => boolean;
+  isFacetLoadingResponseSelector: (
+    state: CommerceEngine[typeof stateKey]
+  ) => boolean;
 }
 
 export type CommerceFacetOptions = Omit<
   CoreCommerceFacetOptions,
-  | 'fetchResultsActionCreator'
+  | 'fetchProductsActionCreator'
   | 'toggleSelectActionCreator'
   | 'toggleExcludeActionCreator'
   | 'facetResponseSelector'
@@ -162,11 +165,11 @@ export function buildCoreCommerceFacet<
   const facetId = props.options.facetId;
 
   const getRequest = (): AnyFacetRequest | undefined =>
-    engine.state.commerceFacetSet[facetId]?.request;
+    engine[stateKey].commerceFacetSet[facetId]?.request;
   const getResponse = () =>
-    props.options.facetResponseSelector(engine.state, facetId);
+    props.options.facetResponseSelector(engine[stateKey], facetId);
   const getIsLoading = () =>
-    props.options.isFacetLoadingResponseSelector(engine.state);
+    props.options.isFacetLoadingResponseSelector(engine[stateKey]);
 
   const getNumberOfActiveValues = () => {
     return getRequest()?.values?.filter((v) => v.state !== 'idle').length ?? 0;
@@ -182,7 +185,7 @@ export function buildCoreCommerceFacet<
           facetId,
         })
       );
-      dispatch(props.options.fetchResultsActionCreator());
+      dispatch(props.options.fetchProductsActionCreator());
       // TODO: analytics
     },
 
@@ -197,7 +200,7 @@ export function buildCoreCommerceFacet<
       }
 
       dispatch(props.options.toggleExcludeActionCreator({selection, facetId}));
-      dispatch(props.options.fetchResultsActionCreator());
+      dispatch(props.options.fetchProductsActionCreator());
       // TODO: analytics
     },
 
@@ -238,7 +241,7 @@ export function buildCoreCommerceFacet<
 
     deselectAll() {
       dispatch(deselectAllFacetValues(facetId));
-      dispatch(props.options.fetchResultsActionCreator());
+      dispatch(props.options.fetchProductsActionCreator());
     },
 
     showMoreValues() {
@@ -250,7 +253,7 @@ export function buildCoreCommerceFacet<
 
       dispatch(updateFacetNumberOfValues({facetId, numberOfValues}));
       dispatch(updateFacetIsFieldExpanded({facetId, isFieldExpanded: true}));
-      dispatch(props.options.fetchResultsActionCreator());
+      dispatch(props.options.fetchProductsActionCreator());
     },
 
     showLessValues() {
@@ -264,7 +267,7 @@ export function buildCoreCommerceFacet<
         updateFacetNumberOfValues({facetId, numberOfValues: newNumberOfValues})
       );
       dispatch(updateFacetIsFieldExpanded({facetId, isFieldExpanded: false}));
-      dispatch(props.options.fetchResultsActionCreator());
+      dispatch(props.options.fetchProductsActionCreator());
     },
 
     get state(): CoreCommerceFacetState<ValueResponse> {

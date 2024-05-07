@@ -10,6 +10,7 @@ import {
   CommerceContextSection,
   CommerceFacetSetSection,
   CommercePaginationSection,
+  CommerceSearchSection,
   CommerceSortSection,
   ConfigurationSection,
   FacetOrderSection,
@@ -23,6 +24,7 @@ import {SortBy, SortCriterion} from '../sort/sort';
 
 export type StateNeededByQueryCommerceAPI = ConfigurationSection &
   ProductListingV2Section &
+  CommerceSearchSection &
   RecommendationsSection &
   CommerceContextSection &
   CartSection &

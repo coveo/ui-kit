@@ -36,7 +36,7 @@ describe('NumericFacet', () => {
   const type: FacetType = 'numericalRange';
   const start = 0;
   const end = 100;
-  const fetchResultsActionCreator = jest.fn();
+  const fetchProductsActionCreator = jest.fn();
   let options: NumericFacetOptions;
   let state: CommerceAppState;
   let engine: MockedCommerceEngine;
@@ -62,7 +62,7 @@ describe('NumericFacet', () => {
     options = {
       facetId,
       ...commonOptions,
-      fetchResultsActionCreator,
+      fetchProductsActionCreator: fetchProductsActionCreator,
     };
 
     state = buildMockCommerceState();
@@ -114,8 +114,8 @@ describe('NumericFacet', () => {
       });
     });
 
-    it('dispatches #fetchResultsActionCreator', () => {
-      expect(fetchResultsActionCreator).toHaveBeenCalledTimes(1);
+    it('dispatches #fetchProductsActionCreator', () => {
+      expect(fetchProductsActionCreator).toHaveBeenCalledTimes(1);
     });
   });
 

@@ -17,7 +17,8 @@ import {
 describe('sub controllers', () => {
   let engine: MockedCommerceEngine;
   const mockResponseIdSelector = jest.fn();
-  const mockFetchResultsActionCreator = jest.fn();
+  const mockfetchProductsActionCreator = jest.fn();
+  const mockfetchMoreProductsActionCreator = jest.fn();
   const mockFacetResponseSelector = jest.fn();
   const mockIsFacetLoadingResponseSelector = jest.fn();
 
@@ -49,7 +50,8 @@ describe('sub controllers', () => {
     }) => {
       const subControllers = subControllersBuilder(engine, {
         responseIdSelector: mockResponseIdSelector,
-        fetchResultsActionCreator: mockFetchResultsActionCreator,
+        fetchProductsActionCreator: mockfetchProductsActionCreator,
+        fetchMoreProductsActionCreator: mockfetchMoreProductsActionCreator,
         facetResponseSelector: mockFacetResponseSelector,
         isFacetLoadingResponseSelector: mockIsFacetLoadingResponseSelector,
       });
@@ -85,7 +87,8 @@ describe('sub controllers', () => {
     beforeEach(() => {
       subControllers = buildSolutionTypeSubControllers(engine, {
         responseIdSelector: mockResponseIdSelector,
-        fetchResultsActionCreator: mockFetchResultsActionCreator,
+        fetchProductsActionCreator: mockfetchProductsActionCreator,
+        fetchMoreProductsActionCreator: mockfetchMoreProductsActionCreator,
         facetResponseSelector: mockFacetResponseSelector,
         isFacetLoadingResponseSelector: mockIsFacetLoadingResponseSelector,
       });
@@ -132,7 +135,8 @@ describe('sub controllers', () => {
       subControllers = buildBaseSolutionTypeControllers(engine, {
         slotId,
         responseIdSelector: mockResponseIdSelector,
-        fetchResultsActionCreator: mockFetchResultsActionCreator,
+        fetchProductsActionCreator: mockfetchProductsActionCreator,
+        fetchMoreProductsActionCreator: mockfetchMoreProductsActionCreator,
       });
     });
 
@@ -146,7 +150,8 @@ describe('sub controllers', () => {
 
       expect(pagination).toEqual(buildCorePaginationMock.mock.results[0].value);
       expect(buildCorePaginationMock).toHaveBeenCalledWith(engine, {
-        fetchResultsActionCreator: mockFetchResultsActionCreator,
+        fetchProductsActionCreator: mockfetchProductsActionCreator,
+        fetchMoreProductsActionCreator: mockfetchMoreProductsActionCreator,
         options: {
           slotId,
         },

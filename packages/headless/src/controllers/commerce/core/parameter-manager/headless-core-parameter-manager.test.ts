@@ -37,7 +37,7 @@ describe('product listing parameter manager', () => {
       parametersDefinition: searchParametersDefinition,
       activeParametersSelector: (_) => ({q: ''}),
       restoreActionCreator: restoreSearchParameters,
-      fetchResultsActionCreator: executeSearch,
+      fetchProductsActionCreator: executeSearch,
       enrichParameters: (_, activeParams) => ({
         q: activeParams.q!,
       }),
@@ -67,7 +67,7 @@ describe('product listing parameter manager', () => {
             q: new StringValue({required: true}),
           },
         })
-      ).toThrowError(SchemaValidationError);
+      ).toThrow(SchemaValidationError);
     });
 
     it('dispatches #restoreActionCreator with initial parameters', () => {
@@ -112,7 +112,7 @@ describe('product listing parameter manager', () => {
         });
       });
 
-      it('dispatches #fetchResultsActionCreator', () => {
+      it('dispatches #fetchProductsActionCreator', () => {
         const mockedExecuteSearch = jest.mocked(executeSearch);
         const parameters = {};
         parameterManager.synchronize(parameters);
