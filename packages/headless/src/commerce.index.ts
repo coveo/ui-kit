@@ -205,3 +205,4 @@ export {buildProductListingBreadcrumbManager} from './controllers/commerce/produ
 export {buildSearchBreadcrumbManager} from './controllers/commerce/search/breadcrumb-manager/headless-search-breadcrumb-manager';
 
 export {getOrganizationEndpoints} from './api/platform-client';
+export {ProductTemplatesHelpers} from './features/commerce/product-templates/product-templates-helpers';
