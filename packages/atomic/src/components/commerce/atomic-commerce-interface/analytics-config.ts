@@ -11,6 +11,7 @@ export function getAnalyticsConfig(
     enabled,
     documentLocation: document.location.href,
     ...(document.referrer && {originLevel3: document.referrer}),
+    analyticsMode: 'next',
   };
 
   if (commerceEngineConfig.analytics) {

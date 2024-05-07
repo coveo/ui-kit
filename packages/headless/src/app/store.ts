@@ -7,17 +7,23 @@ import {
   Reducer,
 } from '@reduxjs/toolkit';
 import {logActionMiddleware} from './logger-middlewares';
+import {NavigatorContext} from './navigatorContextProvider';
 import {ThunkExtraArguments} from './thunk-extra-arguments';
 
-export interface ExtraArgumentsWithRelay extends ThunkExtraArguments {
+export interface CoreExtraArguments
+  extends ThunkExtraArguments,
+    AdditionalCoreExtraArguments {}
+
+export interface AdditionalCoreExtraArguments {
   relay: Relay;
+  navigatorContext: NavigatorContext;
 }
 
 interface ConfigureStoreOptions<Reducers extends ReducersMapObject> {
   reducer: Reducer;
   preloadedState?: StateFromReducersMapObject<Reducers>;
   middlewares?: Middleware[];
-  thunkExtraArguments: ExtraArgumentsWithRelay;
+  thunkExtraArguments: CoreExtraArguments;
   name: string;
 }
 

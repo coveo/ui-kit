@@ -1,7 +1,6 @@
 import {ArrayValue, BooleanValue, NumberValue, Schema} from '@coveo/bueno';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {UpdateQueryActionCreatorPayload} from '../../../features/commerce/query/query-actions';
-import {logClearRecentQueries} from '../../../features/commerce/recent-queries/recent-queries-analytics-actions';
 import {recentQueriesReducer as recentQueries} from '../../../features/commerce/recent-queries/recent-queries-slice';
 import {
   PrepareForSearchWithQueryOptions,
@@ -158,7 +157,6 @@ export function buildRecentQueriesList(
     },
 
     clear() {
-      dispatch(logClearRecentQueries());
       dispatch(clearRecentQueries());
     },
 

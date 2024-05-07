@@ -96,6 +96,12 @@ function generatedAnswerActions(selector: GeneratedAnswerSelector) {
         .copyToClipboardButton()
         .click()
         .logAction('When clicking on the copy to clipboard button'),
+
+    clickToggleCollapseButton: () =>
+      selector
+        .toggleCollapseButton()
+        .click()
+        .logAction('When clicking on the toggle collapse button'),
   };
 }
 

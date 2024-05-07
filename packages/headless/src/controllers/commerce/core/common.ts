@@ -7,7 +7,7 @@ import {AsyncThunkOptions} from '../../../app/async-thunk-options';
 
 export type FetchResultsActionCreator = () => AsyncThunkAction<
   unknown,
-  void,
+  unknown,
   AsyncThunkOptions<unknown>
 >;
 

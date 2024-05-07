@@ -1,4 +1,4 @@
-import {CommerceFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
+import {NumericFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
 import {executeSearch} from '../../../../features/commerce/search/search-actions';
 import {commerceSearchReducer as commerceSearch} from '../../../../features/commerce/search/search-slice';
 import {CommerceAppState} from '../../../../state/commerce-app-state';
@@ -11,10 +11,7 @@ import {
   buildMockCommerceEngine,
   MockedCommerceEngine,
 } from '../../../../test/mock-engine-v2';
-import {
-  CommerceFacetOptions,
-  NumericRangeRequest,
-} from '../../core/facets/headless-core-commerce-facet';
+import {CommerceFacetOptions} from '../../core/facets/headless-core-commerce-facet';
 import {NumericFacet} from '../../core/facets/numeric/headless-commerce-numeric-facet';
 import {buildSearchNumericFacet} from './headless-search-numeric-facet';
 
@@ -34,9 +31,7 @@ describe('SearchNumericFacet', () => {
     facet = buildSearchNumericFacet(engine, options);
   }
 
-  function setFacetRequest(
-    config: Partial<CommerceFacetRequest<NumericRangeRequest>> = {}
-  ) {
+  function setFacetRequest(config: Partial<NumericFacetRequest> = {}) {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, ...config}),
     });
