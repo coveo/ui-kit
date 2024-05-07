@@ -1,3 +1,22 @@
+## 2.65.1 (2024-05-06)
+
+# 2.65.0 (2024-05-02)
+
+### Bug Fixes
+
+- always include suggestions popup in the DOM ([#3860](https://github.com/coveo/ui-kit/issues/3860)) ([c13d91f](https://github.com/coveo/ui-kit/commits/c13d91f9c380bc690ddbb73ef12e0862808711ef))
+- **atomic:** answer generation component glitch ([#3841](https://github.com/coveo/ui-kit/issues/3841)) ([71d3aa5](https://github.com/coveo/ui-kit/commits/71d3aa54fb6879550da4f527baa5f033c247cdc2))
+- **atomic:** separator should not be consider for ARIA ([#3846](https://github.com/coveo/ui-kit/issues/3846)) ([329a914](https://github.com/coveo/ui-kit/commits/329a91472de21f1e4344e53e247c092526876dbd))
+
+### Features
+
+- **Commerce Atomic:** add atomic-commerce-interface ([#3868](https://github.com/coveo/ui-kit/issues/3868)) ([4527419](https://github.com/coveo/ui-kit/commits/45274198ea6af6e1d4a2acd6472dbf706b279588))
+- **Commerce Atomic:** add atomic-commerce-result-list ([#3872](https://github.com/coveo/ui-kit/issues/3872)) ([8db0aee](https://github.com/coveo/ui-kit/commits/8db0aee7690a70f517e136c206c7c20d926086d0))
+- **Commerce Atomic:** add standalone searchbox ([#3875](https://github.com/coveo/ui-kit/issues/3875)) ([e1f2b6f](https://github.com/coveo/ui-kit/commits/e1f2b6f23eb30be4972a7e46a7878515004cec46))
+- **Commerce Atomic:** setup search box skeleton ([#3861](https://github.com/coveo/ui-kit/issues/3861)) ([d6c87b5](https://github.com/coveo/ui-kit/commits/d6c87b50ecf266574d1062861c345c7827d19090))
+- **genQA:** add part attribute to rephrase buttons container ([#3831](https://github.com/coveo/ui-kit/issues/3831)) ([d2c062d](https://github.com/coveo/ui-kit/commits/d2c062dcf10372bd5c72bb522ba07e1ec9549c5b))
+- **genQa:** change feedback buttons position for small layout ([#3847](https://github.com/coveo/ui-kit/issues/3847)) ([38e101c](https://github.com/coveo/ui-kit/commits/38e101c2e64a79bb6ea6560060ba711070ceea32))
+
 ## 2.64.1 (2024-04-24)
 
 ### Bug Fixes

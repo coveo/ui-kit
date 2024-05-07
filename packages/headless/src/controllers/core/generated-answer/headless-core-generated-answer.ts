@@ -127,6 +127,10 @@ export interface GeneratedAnswerProps {
      * The initial formatting options applied to generated answers when the controller first loads.
      */
     responseFormat?: GeneratedResponseFormat;
+    /**
+     * The initial expanded state of the generated answer.
+     */
+    expanded?: boolean;
   };
   /**
    * A list of indexed fields to include in the citations returned with the generated answer.
@@ -273,6 +277,11 @@ export function buildCoreGeneratedAnswer(
   const fieldsToIncludeInCitations = props.fieldsToIncludeInCitations;
   if (fieldsToIncludeInCitations) {
     dispatch(registerFieldsToIncludeInCitations(fieldsToIncludeInCitations));
+  }
+
+  const expanded = props.initialState?.expanded;
+  if (expanded) {
+    dispatch(expandGeneratedAnswer());
   }
 
   subscribeStateManager.subscribeToSearchRequests(engine);

@@ -20,8 +20,9 @@ export const facetResponseSelector = (
   return undefined;
 };
 
-const isFacetLoadingResponseSelector = (state: ProductListingV2Section) =>
-  state.productListing.isLoading;
+export const isFacetLoadingResponseSelector = (
+  state: ProductListingV2Section
+) => state.productListing.isLoading;
 
 export const commonOptions: Pick<
   CoreCommerceFacetOptions,

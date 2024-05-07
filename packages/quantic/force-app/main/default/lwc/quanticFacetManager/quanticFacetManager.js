@@ -129,7 +129,6 @@ export default class QuanticFacetManager extends LightningElement {
 
   resolveItemTemplate() {
     this.itemTemplate = document.createElement('div');
-    this.itemTemplate.classList.add('slds-var-m-bottom_large');
 
     const slotElement = this.querySelector('*[slot="itemTemplate"]');
     if (slotElement) {
