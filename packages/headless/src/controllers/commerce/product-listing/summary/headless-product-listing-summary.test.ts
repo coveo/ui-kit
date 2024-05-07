@@ -20,16 +20,30 @@ describe('commerce product-listing summary', () => {
       )
     );
 
-    expect(controller.state.hasError).toBe(true);
+    expect(controller.state).toEqual({
+      firstSearchExecuted: false,
+      firstProduct: 0
+      lastProduct: 0,
+      totalNumberOfProducts: 0,
+      hasProducts: false,
+      isLoading: false
+      hasError: true,
+    })
   });
 
   it('should return correct state when no search has been executed', () => {
     const controller = buildListingSummary(
       buildMockCommerceEngine(buildMockCommerceState())
     );
-    expect(controller.state.firstSearchExecuted).toBe(false);
-    expect(controller.state.hasProducts).toBe(false);
-    expect(controller.state.isLoading).toBe(false);
+    expect(controller.state).toEqual({
+      firstSearchExecuted: false,
+      firstProduct: 0
+      lastProduct: 0,
+      totalNumberOfProducts: 0,
+      hasProducts: false,
+      isLoading: false
+      hasError: false,
+    })
   });
 
   it('should return correct state when search has been executed but no products are returned', () => {

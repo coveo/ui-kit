@@ -21,7 +21,7 @@ export interface SummaryState {
    */
   lastProduct: number;
   /**
-   * Determines if a first search has been executed.
+   * Whether the first search has been executed.
    */
   firstSearchExecuted: boolean;
 
@@ -30,15 +30,15 @@ export interface SummaryState {
    */
   totalNumberOfProducts: number;
   /**
-   * Determines if the search has returned any products.
+   * Whether the search has returned any products.
    */
   hasProducts: boolean;
   /**
-   * Determines if the search is currently loading.
+   * Whether the search is currently loading.
    */
   isLoading: boolean;
   /**
-   * Determines if the search has returned an error.
+   * Whether the search has returned an error.
    */
   hasError: boolean;
 }
