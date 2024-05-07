@@ -351,6 +351,28 @@ describe('commerceFacetSetReducer', () => {
             );
           });
 
+          it('sets/updates #interval in the facet state from response', () => {
+            let facet = buildMockCommerceNumericFacetResponse({
+              facetId,
+              interval: 'continuous',
+            });
+
+            let action = buildQueryAction([facet]);
+            let finalState = commerceFacetSetReducer(state, action);
+
+            expect(finalState[facetId]?.request.interval).toEqual('continuous');
+
+            facet = buildMockCommerceNumericFacetResponse({
+              facetId,
+              interval: 'discrete',
+            });
+
+            action = buildQueryAction([facet]);
+            finalState = commerceFacetSetReducer(state, action);
+
+            expect(finalState[facetId]?.request.interval).toEqual('discrete');
+          });
+
           it('sets/updates #domain in the facet state from response', () => {
             let facet = buildMockCommerceNumericFacetResponse({
               facetId,
@@ -1008,6 +1030,7 @@ describe('commerceFacetSetReducer', () => {
                   max: 5,
                   increment: 0,
                 },
+                interval: 'continuous',
               }),
             });
 

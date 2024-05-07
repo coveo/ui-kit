@@ -29,6 +29,9 @@ export type StateNeededByQueryCommerceAPI = ConfigurationSection &
   >;
 
 export interface QueryCommerceAPIThunkReturn {
+  /** The query that was executed. */
+  queryExecuted?: string;
+  /** The successful search response. */
   response: CommerceSuccessResponse;
 }
 

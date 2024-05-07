@@ -8,6 +8,7 @@ function defaultTemplate() {
   const content = document.createDocumentFragment();
   const linkEl = document.createElement('atomic-product-link');
   const imgEl = document.createElement('atomic-product-image');
+  imgEl.setAttribute('field', 'ec_thumbnails');
   content.appendChild(linkEl);
   content.appendChild(imgEl);
   return {
