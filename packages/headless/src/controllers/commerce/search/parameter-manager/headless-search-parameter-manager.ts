@@ -35,7 +35,7 @@ export function buildSearchParameterManager(
     activeParametersSelector,
     restoreActionCreator: restoreSearchParameters,
     parametersDefinition: searchParametersDefinition,
-    fetchResultsActionCreator: executeSearch,
+    fetchProductsActionCreator: executeSearch,
     enrichParameters: (_state, activeParams) => ({
       q: getCommerceQueryInitialState().query!,
       ...activeParams,
