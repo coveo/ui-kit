@@ -49,7 +49,7 @@ function buildInteractiveInstantResult(
  *
  * This component is not supported on mobile.
  *
- * @Internal
+ * @internal
  */
 @Component({
   tag: 'atomic-commerce-search-box-instant-products',
