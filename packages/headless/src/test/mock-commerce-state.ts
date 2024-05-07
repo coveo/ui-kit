@@ -15,6 +15,7 @@ import {getCategoryFacetSearchSetInitialState} from '../features/facets/facet-se
 import {getFacetSearchSetInitialState} from '../features/facets/facet-search-set/specific/specific-facet-search-set-state';
 import {getQuerySetInitialState} from '../features/query-set/query-set-state';
 import {getQuerySuggestSetInitialState} from '../features/query-suggest/query-suggest-state';
+import {getRecentQueriesInitialState} from '../features/recent-queries/recent-queries-state';
 import {CommerceAppState} from '../state/commerce-app-state';
 
 export function buildMockCommerceState(
@@ -33,6 +34,7 @@ export function buildMockCommerceState(
     commercePagination: getCommercePaginationInitialState(),
     commerceSort: getCommerceSortInitialState(),
     commerceContext: getContextInitialState(),
+    recentQueries: getRecentQueriesInitialState(),
     querySuggest: getQuerySuggestSetInitialState(),
     querySet: getQuerySetInitialState(),
     cart: getCartInitialState(),

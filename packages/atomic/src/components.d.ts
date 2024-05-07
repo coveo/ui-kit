@@ -401,6 +401,40 @@ export namespace Components {
          */
         "suggestionTimeout": number;
     }
+    /**
+     * The `atomic-commerce-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
+     */
+    interface AtomicCommerceSearchBoxQuerySuggestions {
+        /**
+          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "icon"?: string;
+        /**
+          * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
+         */
+        "maxWithQuery"?: number;
+        /**
+          * The maximum number of suggestions that will be displayed initially when the input field is empty.
+         */
+        "maxWithoutQuery"?: number;
+    }
+    /**
+     * The `atomic-commerce-search-box-recent-queries` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of recent query suggestions.
+     */
+    interface AtomicCommerceSearchBoxRecentQueries {
+        /**
+          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "icon"?: string;
+        /**
+          * The maximum number of suggestions to display when the user types in the input field.
+         */
+        "maxWithQuery": number;
+        /**
+          * The maximum number of suggestions to display initially, when the input field is empty.
+         */
+        "maxWithoutQuery"?: number;
+    }
     interface AtomicCommerceText {
         /**
           * The count value used for plurals.
@@ -3042,6 +3076,24 @@ declare global {
         prototype: HTMLAtomicCommerceSearchBoxElement;
         new (): HTMLAtomicCommerceSearchBoxElement;
     };
+    /**
+     * The `atomic-commerce-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
+     */
+    interface HTMLAtomicCommerceSearchBoxQuerySuggestionsElement extends Components.AtomicCommerceSearchBoxQuerySuggestions, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceSearchBoxQuerySuggestionsElement: {
+        prototype: HTMLAtomicCommerceSearchBoxQuerySuggestionsElement;
+        new (): HTMLAtomicCommerceSearchBoxQuerySuggestionsElement;
+    };
+    /**
+     * The `atomic-commerce-search-box-recent-queries` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of recent query suggestions.
+     */
+    interface HTMLAtomicCommerceSearchBoxRecentQueriesElement extends Components.AtomicCommerceSearchBoxRecentQueries, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceSearchBoxRecentQueriesElement: {
+        prototype: HTMLAtomicCommerceSearchBoxRecentQueriesElement;
+        new (): HTMLAtomicCommerceSearchBoxRecentQueriesElement;
+    };
     interface HTMLAtomicCommerceTextElement extends Components.AtomicCommerceText, HTMLStencilElement {
     }
     var HTMLAtomicCommerceTextElement: {
@@ -4546,6 +4598,8 @@ declare global {
         "atomic-commerce-pager": HTMLAtomicCommercePagerElement;
         "atomic-commerce-product-list": HTMLAtomicCommerceProductListElement;
         "atomic-commerce-search-box": HTMLAtomicCommerceSearchBoxElement;
+        "atomic-commerce-search-box-query-suggestions": HTMLAtomicCommerceSearchBoxQuerySuggestionsElement;
+        "atomic-commerce-search-box-recent-queries": HTMLAtomicCommerceSearchBoxRecentQueriesElement;
         "atomic-commerce-text": HTMLAtomicCommerceTextElement;
         "atomic-component-error": HTMLAtomicComponentErrorElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
@@ -5011,6 +5065,40 @@ declare namespace LocalJSX {
           * The timeout for suggestion queries, in milliseconds. If a suggestion query times out, the suggestions from that particular query won't be shown.
          */
         "suggestionTimeout"?: number;
+    }
+    /**
+     * The `atomic-commerce-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
+     */
+    interface AtomicCommerceSearchBoxQuerySuggestions {
+        /**
+          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "icon"?: string;
+        /**
+          * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
+         */
+        "maxWithQuery"?: number;
+        /**
+          * The maximum number of suggestions that will be displayed initially when the input field is empty.
+         */
+        "maxWithoutQuery"?: number;
+    }
+    /**
+     * The `atomic-commerce-search-box-recent-queries` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of recent query suggestions.
+     */
+    interface AtomicCommerceSearchBoxRecentQueries {
+        /**
+          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "icon"?: string;
+        /**
+          * The maximum number of suggestions to display when the user types in the input field.
+         */
+        "maxWithQuery"?: number;
+        /**
+          * The maximum number of suggestions to display initially, when the input field is empty.
+         */
+        "maxWithoutQuery"?: number;
     }
     interface AtomicCommerceText {
         /**
@@ -7365,6 +7453,8 @@ declare namespace LocalJSX {
         "atomic-commerce-pager": AtomicCommercePager;
         "atomic-commerce-product-list": AtomicCommerceProductList;
         "atomic-commerce-search-box": AtomicCommerceSearchBox;
+        "atomic-commerce-search-box-query-suggestions": AtomicCommerceSearchBoxQuerySuggestions;
+        "atomic-commerce-search-box-recent-queries": AtomicCommerceSearchBoxRecentQueries;
         "atomic-commerce-text": AtomicCommerceText;
         "atomic-component-error": AtomicComponentError;
         "atomic-did-you-mean": AtomicDidYouMean;
@@ -7559,6 +7649,14 @@ declare module "@stencil/core" {
              * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
              */
             "atomic-commerce-search-box": LocalJSX.AtomicCommerceSearchBox & JSXBase.HTMLAttributes<HTMLAtomicCommerceSearchBoxElement>;
+            /**
+             * The `atomic-commerce-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
+             */
+            "atomic-commerce-search-box-query-suggestions": LocalJSX.AtomicCommerceSearchBoxQuerySuggestions & JSXBase.HTMLAttributes<HTMLAtomicCommerceSearchBoxQuerySuggestionsElement>;
+            /**
+             * The `atomic-commerce-search-box-recent-queries` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of recent query suggestions.
+             */
+            "atomic-commerce-search-box-recent-queries": LocalJSX.AtomicCommerceSearchBoxRecentQueries & JSXBase.HTMLAttributes<HTMLAtomicCommerceSearchBoxRecentQueriesElement>;
             "atomic-commerce-text": LocalJSX.AtomicCommerceText & JSXBase.HTMLAttributes<HTMLAtomicCommerceTextElement>;
             /**
              * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
