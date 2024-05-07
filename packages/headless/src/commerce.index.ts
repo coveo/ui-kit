@@ -160,6 +160,9 @@ export type {
   SearchBoxState,
 } from './controllers/commerce/search-box/headless-search-box';
 
+export {buildRecentQueriesList} from './controllers/commerce/recent-queries-list/headless-recent-queries-list';
+export type {RecentQueriesList} from './controllers/commerce/recent-queries-list/headless-recent-queries-list';
+
 export {buildInstantProducts} from './controllers/commerce/instant-products/headless-instant-products';
 export type {
   InstantProducts,
