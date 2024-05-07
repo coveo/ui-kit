@@ -41,9 +41,9 @@ export class AtomicProductDescription
   @Prop() public truncateAfter: 1 | 2 | 3 | 4 = 2;
 
   /**
-   * Whether the product description should be truncated.
+   * Which description field to use
    */
-  @Prop() public shouldTruncate: boolean = true;
+  @Prop() public field: 'ec_description' | 'ec_shortdesc' = 'ec_shortdesc';
 
   constructor() {
     this.resizeObserver = new ResizeObserver(() => {
@@ -88,15 +88,14 @@ export class AtomicProductDescription
   }
 
   private renderProductDescription() {
-    // TODO: add support for ec_description
-    const productDescription = this.product.ec_shortdesc ?? '';
+    const productDescription = this.product[this.field] ?? '';
 
     if (productDescription !== null) {
       return (
         <atomic-commerce-text
-          class={`product-description-text ${!this.isExpanded && this.shouldTruncate ? this.getLineClampClass() : ''}`}
+          class={`product-description-text ${!this.isExpanded && this.truncateAfter !== '-1' ? this.getLineClampClass() : ''}`}
           value={getFieldValueCaption(
-            'ec_shortdesc',
+            this.field,
             productDescription,
             this.bindings.i18n
           )}
