@@ -89,7 +89,8 @@ export function buildCommerceNumericFacet(
   });
 
   const {dispatch} = engine;
-  const {facetId, fetchResultsActionCreator} = options;
+  const {facetId, fetchProductsActionCreator: fetchProductsActionCreator} =
+    options;
 
   return {
     ...coreController,
@@ -101,7 +102,7 @@ export function buildCommerceNumericFacet(
           values: ranges,
         })
       );
-      dispatch(fetchResultsActionCreator());
+      dispatch(fetchProductsActionCreator());
     },
 
     get state() {
