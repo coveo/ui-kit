@@ -14,7 +14,7 @@ import {CommerceBindings} from '../../atomic-commerce-interface/atomic-commerce-
 import {
   InteractiveProductContext,
   ProductContext,
-} from '../product-template-decorators';
+} from '../../product-template-components/product-template-decorators';
 
 /**
  * @internal
