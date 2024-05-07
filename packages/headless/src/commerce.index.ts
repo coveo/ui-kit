@@ -217,3 +217,4 @@ export type {
 } from './controllers/commerce/product-listing/summary/headless-product-listing-summary';
 
 export {getOrganizationEndpoints} from './api/platform-client';
+export {ProductTemplatesHelpers} from './features/commerce/product-templates/product-templates-helpers';

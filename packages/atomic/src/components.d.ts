@@ -6,16 +6,16 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-import { CommerceEngine, InteractiveProduct, LogLevel, PlatformEnvironment, Product } from "@coveo/headless/commerce";
+import { CommerceEngine, InteractiveProduct, LogLevel, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition } from "@coveo/headless/commerce";
 import { i18n } from "i18next";
 import { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
+import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout, ItemTarget } from "./components/common/layout/display-options";
+import { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
 import { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
-import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout, ItemTarget } from "./components/common/layout/display-options";
-import { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
 import { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightGeneratedAnswerStyle, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 import { i18nCompatibilityVersion } from "./components/common/interface/i18n";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
@@ -32,16 +32,16 @@ import { Bindings } from "./components/search/atomic-search-interface/atomic-sea
 import { AriaLabelGenerator } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 export { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-export { CommerceEngine, InteractiveProduct, LogLevel, PlatformEnvironment, Product } from "@coveo/headless/commerce";
+export { CommerceEngine, InteractiveProduct, LogLevel, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition } from "@coveo/headless/commerce";
 export { i18n } from "i18next";
 export { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { StandaloneSearchBoxData } from "./utils/local-storage-utils";
+export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout, ItemTarget } from "./components/common/layout/display-options";
+export { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
 export { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
-export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout, ItemTarget } from "./components/common/layout/display-options";
-export { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
 export { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightGeneratedAnswerStyle, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 export { i18nCompatibilityVersion } from "./components/common/interface/i18n";
 export { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
@@ -349,15 +349,25 @@ export namespace Components {
         /**
           * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of different parts in a product.
          */
-        "density": 'normal' | 'compact';
+        "density": ItemDisplayDensity;
         /**
           * The desired layout to use when displaying products. Layouts affect how many products to display per row and how visually distinct they are from each other.
          */
-        "display": 'grid' | 'list';
+        "display": ItemDisplayLayout;
+        /**
+          * The target location to open the product link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
+          * @defaultValue `_self`
+         */
+        "gridCellLinkTarget": ItemTarget;
         /**
           * The expected size of the image displayed for products.
          */
-        "imageSize": number;
+        "imageSize": ItemDisplayImageSize;
+        /**
+          * Sets a rendering function to bypass the standard HTML template mechanism for rendering products. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
+          * @param productRenderingFunction
+         */
+        "setRenderFunction": (productRenderingFunction: ItemRenderingFunction) => Promise<void>;
     }
     /**
      * The `atomic-commerce-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
@@ -1502,6 +1512,22 @@ export namespace Components {
           * Global Atomic state.
          */
         "store"?: AtomicCommonStore<AtomicCommonStoreData>;
+    }
+    interface AtomicProductLink {
+        /**
+          * The [template literal](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals) from which to generate the `href` attribute value  The template literal can reference any number of product properties from the parent product. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the product's `clickUri` and `itemtitle` fields. ```html <atomic-product-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-product-link> ```
+         */
+        "hrefTemplate"?: string;
+    }
+    interface AtomicProductTemplate {
+        /**
+          * A function that must return true on products for the product template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to products whose `ec_name` contains `singapore`: `document.querySelector('#target-template').conditions = [(product) => /singapore/i.test(product.ec_name)];`
+         */
+        "conditions": ProductTemplateCondition[];
+        /**
+          * Gets the product template to apply based on the evaluated conditions.
+         */
+        "getTemplate": () => Promise<ProductTemplate<DocumentFragment> | null>;
     }
     /**
      * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -3703,6 +3729,18 @@ declare global {
         prototype: HTMLAtomicProductElement;
         new (): HTMLAtomicProductElement;
     };
+    interface HTMLAtomicProductLinkElement extends Components.AtomicProductLink, HTMLStencilElement {
+    }
+    var HTMLAtomicProductLinkElement: {
+        prototype: HTMLAtomicProductLinkElement;
+        new (): HTMLAtomicProductLinkElement;
+    };
+    interface HTMLAtomicProductTemplateElement extends Components.AtomicProductTemplate, HTMLStencilElement {
+    }
+    var HTMLAtomicProductTemplateElement: {
+        prototype: HTMLAtomicProductTemplateElement;
+        new (): HTMLAtomicProductTemplateElement;
+    };
     /**
      * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
      */
@@ -4612,6 +4650,8 @@ declare global {
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-popover": HTMLAtomicPopoverElement;
         "atomic-product": HTMLAtomicProductElement;
+        "atomic-product-link": HTMLAtomicProductLinkElement;
+        "atomic-product-template": HTMLAtomicProductTemplateElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
         "atomic-quickview": HTMLAtomicQuickviewElement;
@@ -4954,15 +4994,20 @@ declare namespace LocalJSX {
         /**
           * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of different parts in a product.
          */
-        "density"?: 'normal' | 'compact';
+        "density"?: ItemDisplayDensity;
         /**
           * The desired layout to use when displaying products. Layouts affect how many products to display per row and how visually distinct they are from each other.
          */
-        "display"?: 'grid' | 'list';
+        "display"?: ItemDisplayLayout;
+        /**
+          * The target location to open the product link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
+          * @defaultValue `_self`
+         */
+        "gridCellLinkTarget"?: ItemTarget;
         /**
           * The expected size of the image displayed for products.
          */
-        "imageSize"?: number;
+        "imageSize"?: ItemDisplayImageSize;
     }
     /**
      * The `atomic-commerce-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
@@ -6077,6 +6122,18 @@ declare namespace LocalJSX {
           * Global Atomic state.
          */
         "store"?: AtomicCommonStore<AtomicCommonStoreData>;
+    }
+    interface AtomicProductLink {
+        /**
+          * The [template literal](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals) from which to generate the `href` attribute value  The template literal can reference any number of product properties from the parent product. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the product's `clickUri` and `itemtitle` fields. ```html <atomic-product-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-product-link> ```
+         */
+        "hrefTemplate"?: string;
+    }
+    interface AtomicProductTemplate {
+        /**
+          * A function that must return true on products for the product template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to products whose `ec_name` contains `singapore`: `document.querySelector('#target-template').conditions = [(product) => /singapore/i.test(product.ec_name)];`
+         */
+        "conditions"?: ProductTemplateCondition[];
     }
     /**
      * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -7427,6 +7484,8 @@ declare namespace LocalJSX {
         "atomic-pager": AtomicPager;
         "atomic-popover": AtomicPopover;
         "atomic-product": AtomicProduct;
+        "atomic-product-link": AtomicProductLink;
+        "atomic-product-template": AtomicProductTemplate;
         "atomic-query-error": AtomicQueryError;
         "atomic-query-summary": AtomicQuerySummary;
         "atomic-quickview": AtomicQuickview;
@@ -7728,6 +7787,8 @@ declare module "@stencil/core" {
              * The `atomic-product` component is used internally by the `atomic-product-list` component.
              */
             "atomic-product": LocalJSX.AtomicProduct & JSXBase.HTMLAttributes<HTMLAtomicProductElement>;
+            "atomic-product-link": LocalJSX.AtomicProductLink & JSXBase.HTMLAttributes<HTMLAtomicProductLinkElement>;
+            "atomic-product-template": LocalJSX.AtomicProductTemplate & JSXBase.HTMLAttributes<HTMLAtomicProductTemplateElement>;
             /**
              * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
              */
