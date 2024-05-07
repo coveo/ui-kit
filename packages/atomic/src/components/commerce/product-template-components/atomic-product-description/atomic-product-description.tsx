@@ -1,6 +1,6 @@
 import {Product} from '@coveo/headless/commerce';
 import {Component, State, h, Element, Prop} from '@stencil/core';
-import ArrowDown from '../../../../images/arrow-down.svg';
+import PlusIcon from '../../../../images/plus.svg';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
 import {
   InitializableComponent,
@@ -110,15 +110,15 @@ export class AtomicProductDescription
       <Button
         style="text-primary"
         part="label-button"
-        class={`mt-1 p-1 self-end ${this.isExpanded ? 'hidden' : ''}`}
+        class={`my-2 p-1 text-xs ${this.isExpanded ? 'hidden' : ''}`}
         title={this.bindings.i18n.t('show-more')}
         onClick={() => this.onToggleExpand()}
       >
-        {this.bindings.i18n.t('show-more')}
         <atomic-icon
-          icon={ArrowDown}
+          icon={PlusIcon}
           class="w-2 ml-1 align-baseline"
-        ></atomic-icon>
+        ></atomic-icon>{' '}
+        {this.bindings.i18n.t('show-more')}
       </Button>
     );
   }
