@@ -185,6 +185,6 @@ export function buildRecentQueriesList(
 function loadRecentQueriesListReducer(
   engine: CommerceEngine
 ): engine is CommerceEngine<RecentQueriesSection> {
-  engine.addReducers({search: search, recentQueries});
+  engine.addReducers({search, recentQueries});
   return true;
 }
