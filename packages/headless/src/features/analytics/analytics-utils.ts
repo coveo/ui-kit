@@ -718,8 +718,6 @@ export const resultPartialDefinition = {
   rankingModifier: new StringValue({required: false, emptyAllowed: true}),
 };
 
-export const productPartialDefinition = {};
-
 export const productRecommendationPartialDefinition = {
   permanentid: requiredNonEmptyString,
   documentUri: requiredNonEmptyString,

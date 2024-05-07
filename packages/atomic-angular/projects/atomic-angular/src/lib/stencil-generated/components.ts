@@ -139,29 +139,6 @@ export declare interface AtomicColorFacet extends Components.AtomicColorFacet {}
 
 
 @ProxyCmp({
-  inputs: ['ariaLabelGenerator', 'density', 'imageSize', 'maxResultsPerQuery'],
-  methods: ['setRenderFunction']
-})
-@Component({
-  selector: 'atomic-commerce-search-box-instant-products',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['ariaLabelGenerator', 'density', 'imageSize', 'maxResultsPerQuery'],
-})
-export class AtomicCommerceSearchBoxInstantProducts {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicCommerceSearchBoxInstantProducts extends Components.AtomicCommerceSearchBoxInstantProducts {}
-
-
-@ProxyCmp({
   inputs: ['element', 'error']
 })
 @Component({
