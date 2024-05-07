@@ -6,8 +6,6 @@ import {
   buildCart,
 } from '/build/headless/commerce/headless.esm.js';
 
-export {buildSearchBox} from '/build/headless/commerce/headless.esm.js';
-
 export const commerceEngineConfig = {
   accessToken: 'xxc481d5de-16cb-4290-bd78-45345319d94c',
   organizationId: 'barcasportsmcy01fvu',
