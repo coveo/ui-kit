@@ -1,5 +1,6 @@
 import {CurrencyCodeISO4217} from '@coveo/relay-event-types';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../app/state-key';
 import {
   setContext,
   setUser,
@@ -112,7 +113,7 @@ export function buildContext(
 
   const controller = buildController(engine);
   const {dispatch} = engine;
-  const getState = () => engine.state;
+  const getState = () => engine[stateKey];
 
   if (props.options) {
     validateOptions(engine, contextSchema, props.options, 'buildContext');

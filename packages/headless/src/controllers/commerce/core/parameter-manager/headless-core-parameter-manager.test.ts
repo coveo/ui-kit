@@ -67,7 +67,7 @@ describe('product listing parameter manager', () => {
             q: new StringValue({required: true}),
           },
         })
-      ).toThrowError(SchemaValidationError);
+      ).toThrow(SchemaValidationError);
     });
 
     it('dispatches #restoreActionCreator with initial parameters', () => {
