@@ -117,6 +117,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
               this.interactiveResult?.cancelPendingSelect()
             }
             className="truncate"
+            part="quickview-modal-header-title"
           >
             {this.result.title}
           </LinkWithItemAnalytics>
