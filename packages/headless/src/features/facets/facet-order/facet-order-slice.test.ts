@@ -91,7 +91,8 @@ describe('facet-order slice', () => {
         })
       );
 
-      return action(response, '');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return action(response as any, '');
     }
     it('saves the facet order when a query is successful', () => {
       const facetIds = ['facetA', 'facetB'];
