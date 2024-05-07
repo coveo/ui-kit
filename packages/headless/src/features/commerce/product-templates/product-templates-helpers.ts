@@ -4,8 +4,8 @@ import {ProductTemplateCondition} from './product-templates-manager';
 
 /**
  * Extracts a property from a product object.
- * @param product (Product) The target product.
- * @param property (string) The property to extract.
+ * @param product (Product) - The target product.
+ * @param property (string) - The property to extract.
  * @returns (unknown) The value of the specified property in the specified product, or null if the property does not exist.
  */
 export const getProductProperty = (product: Product, property: string) => {
@@ -24,7 +24,7 @@ export const getProductProperty = (product: Product, property: string) => {
 
 /**
  * Creates a condition that verifies if the specified fields are defined.
- * @param fieldNames (string[]) A list of fields that must be defined.
+ * @param fieldNames (string[]) - A list of fields that must be defined.
  * @returns (ProductTemplateCondition) A function that takes a product and checks if every field in the specified list is defined.
  */
 export const fieldsMustBeDefined = (
@@ -39,7 +39,7 @@ export const fieldsMustBeDefined = (
 
 /**
  * Creates a condition that verifies if the specified fields are not defined.
- * @param fieldNames (string[]) A list of fields that must not be defined.
+ * @param fieldNames (string[]) - A list of fields that must not be defined.
  * @returns (ProductTemplateCondition) A function that takes a product and checks if every field in the specified list is not defined.
  */
 export const fieldsMustNotBeDefined = (
@@ -53,10 +53,10 @@ export const fieldsMustNotBeDefined = (
 };
 
 /**
- * Creates a condition that verifies if a field's value contains any of the specified values.
- * @param fieldName (string) The name of the field to check.
- * @param valuesToMatch (string[]) A list of possible values to match.
- * @returns (ProductTemplateCondition) A function that takes a product and checks if the value for the specified field matches any value in the specified list.
+ * Creates a condition that verifies whether the value of a field is equal to any of the specified values (casing insensitive).
+ * @param fieldName (string) - The name of the field to evaluate the condition against.
+ * @param allowedValues (string[]) - The list of values that the field value can be equal to in order for the condition to evaluate to "true" (case insensitive).
+ * @returns (ProductTemplateCondition) - A function that takes a Product as an argument and returns "true" if the value for the specified field is equal to any of the values in the specified list (case insensitive), and "false" otherwise.
  */
 export const fieldMustMatch = (
   fieldName: string,
@@ -74,21 +74,21 @@ export const fieldMustMatch = (
 };
 
 /**
- * Creates a condition that verifies that a field's value does not contain any of the specified values.
- * @param fieldName (string) The name of the field to check.
- * @param blacklistedValues (string[]) A list of all disallowed values.
- * @returns (ProductTemplateCondition) A function that takes a product and checks that the value for the specified field does not match any value in the given list.
+ * Creates a condition that verifies whether the value of a field is not equal to any of the specified values (case insensitive).
+ * @param fieldName (string) - The name of the field to evaluate the condition against.
+ * @param disallowedValues (string[]) - The list of values that the field value must not be equal to in order for the condition to evaluate to "true" (case insensitive).
+ * @returns (ProductTemplateCondition) A function that takes a Product as an argument and returns "true" if the value for the specified field is not equal to any of the values in the given list (case insensitive), or "false" otherwise.
  */
 export const fieldMustNotMatch = (
   fieldName: string,
-  blacklistedValues: string[]
+  disallowedValues: string[]
 ): ProductTemplateCondition => {
   return (product: Product) => {
     const fieldValues = getFieldValuesFromProduct(fieldName, product);
-    return blacklistedValues.every((blacklistedValue) =>
+    return disallowedValues.every((disallowedValues) =>
       fieldValues.every(
         (fieldValue) =>
-          `${fieldValue}`.toLowerCase() !== blacklistedValue.toLowerCase()
+          `${fieldValue}`.toLowerCase() !== disallowedValues.toLowerCase()
       )
     );
   };

@@ -56,7 +56,7 @@ export class AtomicProductTemplate {
   }
 
   /**
-   * Gets the appropriate product template based on conditions applied.
+   * Gets the product template to apply based on the evaluated conditions.
    */
   @Method()
   public async getTemplate(): Promise<ProductTemplate<DocumentFragment> | null> {
