@@ -1,3 +1,4 @@
+import {Schema, StringValue} from '@coveo/bueno';
 import {Product} from '@coveo/headless/commerce';
 import {Component, State, h, Element, Prop} from '@stencil/core';
 import PlusIcon from '../../../../images/plus.svg';
@@ -33,12 +34,12 @@ export class AtomicProductDescription
   @State() private isTruncated = false;
 
   private descriptionText!: HTMLDivElement;
-  private resizeObserver!: ResizeObserver;
+  private resizeObserver: ResizeObserver;
 
   /**
-   * The number of lines after which the product description should be truncated.
+   * The number of lines after which the product description should be truncated. A value of -1 will disable truncation
    */
-  @Prop() public truncateAfter: 1 | 2 | 3 | 4 = 2;
+  @Prop() public truncateAfter: '-1' | '1' | '2' | '3' | '4' = '2';
 
   /**
    * Which description field to use
@@ -56,6 +57,17 @@ export class AtomicProductDescription
         this.isTruncated = false;
       }
     });
+    this.validateProps();
+  }
+
+  private validateProps() {
+    new Schema({
+      truncateAfter: new StringValue({constrainTo: ['-1', '1', '2', '3', '4']}),
+      field: new StringValue({constrainTo: ['ec_shortdesc', 'ec_description']}),
+    }).validate({
+      truncateAfter: this.truncateAfter,
+      field: this.field,
+    });
   }
 
   componentDidLoad() {
@@ -72,15 +84,14 @@ export class AtomicProductDescription
   }
 
   private getLineClampClass() {
-    const lineClampMap = {
-      1: 'line-clamp-1',
-      3: 'line-clamp-3',
-      4: 'line-clamp-4',
+    const lineClampMap: Record<typeof this.truncateAfter, string> = {
+      '-1': '',
+      '1': 'line-clamp-1',
+      '2': 'line-clamp-2',
+      '3': 'line-clamp-3',
+      '4': 'line-clamp-4',
     };
-    return (
-      lineClampMap[this.truncateAfter as keyof typeof lineClampMap] ||
-      'line-clamp-2'
-    );
+    return lineClampMap[this.truncateAfter] || 'line-clamp-2';
   }
 
   disconnectedCallback() {
@@ -126,7 +137,9 @@ export class AtomicProductDescription
     return (
       <div class="flex flex-col items-start">
         {this.renderProductDescription()}
-        {this.isTruncated && this.shouldTruncate && this.renderShowMoreButton()}
+        {this.isTruncated &&
+          this.truncateAfter !== '-1' &&
+          this.renderShowMoreButton()}
       </div>
     );
   }

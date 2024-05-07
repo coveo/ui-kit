@@ -1481,13 +1481,13 @@ export namespace Components {
     }
     interface AtomicProductDescription {
         /**
-          * Whether the product description should be truncated.
+          * Which description field to use
          */
-        "shouldTruncate": boolean;
+        "field": 'ec_description' | 'ec_shortdesc';
         /**
-          * The number of lines after which the product description should be truncated.
+          * The number of lines after which the product description should be truncated. A value of -1 will disable truncation
          */
-        "truncateAfter": 1 | 2 | 3 | 4;
+        "truncateAfter": '-1' | '1' | '2' | '3' | '4';
     }
     interface AtomicProductLink {
         /**
@@ -6058,13 +6058,13 @@ declare namespace LocalJSX {
     }
     interface AtomicProductDescription {
         /**
-          * Whether the product description should be truncated.
+          * Which description field to use
          */
-        "shouldTruncate"?: boolean;
+        "field"?: 'ec_description' | 'ec_shortdesc';
         /**
-          * The number of lines after which the product description should be truncated.
+          * The number of lines after which the product description should be truncated. A value of -1 will disable truncation
          */
-        "truncateAfter"?: 1 | 2 | 3 | 4;
+        "truncateAfter"?: '-1' | '1' | '2' | '3' | '4';
     }
     interface AtomicProductLink {
         /**
