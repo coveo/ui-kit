@@ -10,22 +10,14 @@ import {
   CommerceContextSection,
   CommerceFacetSetSection,
   CommercePaginationSection,
-  CommerceSearchSection,
   CommerceSortSection,
   ConfigurationSection,
   FacetOrderSection,
-  ProductListingV2Section,
-  RecommendationsSection,
   VersionSection,
 } from '../../../state/state-sections';
-import {PreparableAnalyticsAction} from '../../analytics/analytics-utils';
-import {StateNeededByFetchProductListingV2} from '../product-listing/product-listing-actions';
 import {SortBy, SortCriterion} from '../sort/sort';
 
 export type StateNeededByQueryCommerceAPI = ConfigurationSection &
-  ProductListingV2Section &
-  CommerceSearchSection &
-  RecommendationsSection &
   CommerceContextSection &
   CartSection &
   Partial<
@@ -41,7 +33,6 @@ export interface QueryCommerceAPIThunkReturn {
   queryExecuted?: string;
   /** The successful search response. */
   response: CommerceSuccessResponse;
-  analyticsAction?: PreparableAnalyticsAction<StateNeededByQueryCommerceAPI>;
 }
 
 export const buildCommerceAPIRequest = async (
@@ -100,7 +91,7 @@ const effectivePagination = (
   );
 };
 
-function getFacets(state: StateNeededByFetchProductListingV2) {
+function getFacets(state: StateNeededByQueryCommerceAPI) {
   if (!state.facetOrder || !state.commerceFacetSet) {
     return [];
   }
