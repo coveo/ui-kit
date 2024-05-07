@@ -15,9 +15,9 @@ import {
   QuerySetSection,
   FacetSearchSection,
   CategoryFacetSearchSection,
-  RecentQueriesSection,
   InstantProductsSection,
   CommerceStandaloneSearchBoxSection,
+  RecentQueriesSection,
 } from './state-sections';
 
 // eslint-disable-next-line @cspell/spellchecker

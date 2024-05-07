@@ -4,10 +4,6 @@ import {
   CommerceEngine,
   loadQuerySuggestActions,
 } from '@coveo/headless/commerce';
-import {
-  QuerySetSection,
-  QuerySuggestionSection,
-} from '@coveo/headless/dist/definitions/state/state-sections';
 import {Component, Element, Prop, State, h} from '@stencil/core';
 import SearchIcon from '../../../../images/search.svg';
 import {
@@ -25,6 +21,7 @@ import {
 
 /**
  * The `atomic-commerce-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
+ * @internal
  */
 @Component({
   tag: 'atomic-commerce-search-box-query-suggestions',
@@ -66,9 +63,7 @@ export class AtomicCommerceSearchBoxQuerySuggestions {
   }
 
   private initialize(): SearchBoxSuggestions {
-    const engine = this.bindings.engine as CommerceEngine<
-      QuerySuggestionSection & QuerySetSection
-    >;
+    const engine = this.bindings.engine as CommerceEngine<{querySet: string}>;
     const {registerQuerySuggest, fetchQuerySuggestions} =
       loadQuerySuggestActions(engine);
 

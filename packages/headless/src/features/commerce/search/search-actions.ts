@@ -77,6 +77,31 @@ export const executeSearch = createAsyncThunk<
   }
 );
 
+export const prepareForSearchWithQuery = createAsyncThunk<
+  void,
+  UpdateQueryActionCreatorPayload & PrepareForSearchWithQueryOptions,
+  AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
+>('commerce/search/prepareForSearchWithQuery', (payload, thunk) => {
+  const {dispatch} = thunk;
+  validatePayload(payload, {
+    query: new StringValue(),
+    clearFilters: new BooleanValue(),
+  });
+
+  if (payload.clearFilters) {
+    dispatch(deselectAllBreadcrumbs());
+    dispatch(deselectAllNonBreadcrumbs());
+  }
+
+  dispatch(updateFacetAutoSelection({allow: true}));
+  dispatch(
+    updateQuery({
+      query: payload.query,
+    })
+  );
+  dispatch(updatePage(1));
+});
+
 export const fetchInstantProducts = createAsyncThunk<
   QueryCommerceAPIThunkReturn,
   FetchInstantProductsActionCreatorPayload,
@@ -107,28 +132,3 @@ export const fetchInstantProducts = createAsyncThunk<
     };
   }
 );
-
-export const prepareForSearchWithQuery = createAsyncThunk<
-  void,
-  UpdateQueryActionCreatorPayload & PrepareForSearchWithQueryOptions,
-  AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
->('commerce/search/prepareForSearchWithQuery', (payload, thunk) => {
-  const {dispatch} = thunk;
-  validatePayload(payload, {
-    query: new StringValue(),
-    clearFilters: new BooleanValue(),
-  });
-
-  if (payload.clearFilters) {
-    dispatch(deselectAllBreadcrumbs());
-    dispatch(deselectAllNonBreadcrumbs());
-  }
-
-  dispatch(updateFacetAutoSelection({allow: true}));
-  dispatch(
-    updateQuery({
-      query: payload.query,
-    })
-  );
-  dispatch(updatePage(1));
-});

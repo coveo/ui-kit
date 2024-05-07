@@ -1,39 +1,32 @@
-import {getParamValue, navContent} from './commerce-nav.mjs';
+import {navContent} from './commerce-nav.mjs';
 import {
-  buildCommerceEngine,
   getOrganizationEndpoints,
   buildRecommendations,
   buildProductListing,
   buildCart,
-  buildSearch,
 } from '/build/headless/commerce/headless.esm.js';
 
-export {getParamValue} from './commerce-nav.mjs';
+export {buildSearchBox} from '/build/headless/commerce/headless.esm.js';
 
-export const setupEngine = async () => {
-  const engine = buildCommerceEngine({
-    configuration: {
-      accessToken: 'xxc481d5de-16cb-4290-bd78-45345319d94c',
-      organizationId: 'barcasportsmcy01fvu',
-      organizationEndpoints: await getOrganizationEndpoints(
-        'barcasportsmcy01fvu',
-        'dev'
-      ),
-      analytics: {
-        trackingId: 'sports',
-      },
-      context: {
-        language: 'en',
-        country: 'US',
-        currency: 'USD',
-        view: {
-          url: navContent[document.title].barcaUrl,
-          referrer: document.referrer,
-        },
-      },
+export const commerceEngineConfig = {
+  accessToken: 'xxc481d5de-16cb-4290-bd78-45345319d94c',
+  organizationId: 'barcasportsmcy01fvu',
+  organizationEndpoints: await getOrganizationEndpoints(
+    'barcasportsmcy01fvu',
+    'dev'
+  ),
+  analytics: {
+    trackingId: 'sports',
+  },
+  context: {
+    language: 'en',
+    country: 'US',
+    currency: 'USD',
+    view: {
+      url: navContent[document.title].barcaUrl,
+      referrer: document.referrer,
     },
-  });
-  return engine;
+  },
 };
 
 export const setupRecommendationsMostPurchased = (engine) => {

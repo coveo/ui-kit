@@ -1,6 +1,5 @@
 import {NumberValue} from '@coveo/bueno';
 import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions';
-import {logClearRecentQueries} from '../../../features/commerce/recent-queries/recent-queries-analytics-actions';
 import {recentQueriesReducer as recentQueries} from '../../../features/commerce/recent-queries/recent-queries-slice';
 import {prepareForSearchWithQuery} from '../../../features/commerce/search/search-actions';
 import {commerceSearchReducer as search} from '../../../features/commerce/search/search-slice';
@@ -97,7 +96,6 @@ describe('recent queries list', () => {
       expect(clearRecentQueries).toHaveBeenCalled();
 
       expect(recentQueriesList.state.queries.length).toBe(0);
-      expect(logClearRecentQueries).toHaveBeenCalled();
     });
 
     it('#executeRecentQuery should validate the given index parameter', () => {
