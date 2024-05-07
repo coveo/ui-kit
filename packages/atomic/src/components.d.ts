@@ -1487,7 +1487,7 @@ export namespace Components {
         /**
           * The number of lines after which the product description should be truncated.
          */
-        "truncateAfter"?: 1 | 2 | 3 | 4;
+        "truncateAfter": 1 | 2 | 3 | 4;
     }
     interface AtomicProductLink {
         /**
