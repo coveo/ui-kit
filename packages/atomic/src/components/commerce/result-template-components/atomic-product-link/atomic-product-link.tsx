@@ -19,8 +19,8 @@ import {
 /**
  * @internal
  * The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
- * @slot default - Lets you display alternative content inside the link
- * @slot attributes - Lets you pass [attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#attributes) down to the link element, overriding other attributes, to be used exclusively with an "a" tag such as `<a slot="attributes" target="_blank" download></a>`.
+ * @slot default - Lets you display alternative content inside the link.
+ * @slot attributes - Lets you pass [attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#attributes) down to the link element, overriding other attributes. Use only with an "a" tag, e.g., `<a slot="attributes" target="_blank" download></a>`.
  */
 @Component({
   tag: 'atomic-product-link',
@@ -41,8 +41,7 @@ export class AtomicProductLink
   @Element() private host!: HTMLElement;
 
   /**
-   * Specifies a template literal from which to generate the `href` attribute value (see
-   * [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).
+   * The [template literal](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals) from which to generate the `href` attribute value
    *
    * The template literal can reference any number of product properties from the parent product. It can also reference the window object.
    *

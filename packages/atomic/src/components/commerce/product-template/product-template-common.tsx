@@ -83,7 +83,7 @@ export class ProductTemplateCommon {
     if (!template) {
       setError(
         new Error(
-          `The "${tagName}" component has to contain a "template" element as a child.`
+          `The "${tagName}" component must contain a "template" element as a child.`
         )
       );
       return;
