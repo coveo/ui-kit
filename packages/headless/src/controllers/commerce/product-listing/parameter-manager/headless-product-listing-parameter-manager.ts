@@ -27,7 +27,7 @@ export function buildProductListingParameterManager(
     parametersDefinition: productListingParametersDefinition,
     activeParametersSelector,
     restoreActionCreator: restoreProductListingParameters,
-    fetchResultsActionCreator: fetchProductListing,
+    fetchProductsActionCreator: fetchProductListing,
     enrichParameters: () => ({}),
   });
 }

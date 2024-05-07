@@ -25,11 +25,11 @@ export const isFacetLoadingResponseSelector = (state: CommerceSearchSection) =>
 
 export const commonOptions: Pick<
   CoreCommerceFacetOptions,
-  | 'fetchResultsActionCreator'
+  | 'fetchProductsActionCreator'
   | 'facetResponseSelector'
   | 'isFacetLoadingResponseSelector'
 > = {
-  fetchResultsActionCreator: executeSearch,
+  fetchProductsActionCreator: executeSearch,
   facetResponseSelector,
   isFacetLoadingResponseSelector,
 };
