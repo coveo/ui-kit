@@ -3,8 +3,8 @@ import {
   buildInstantProducts,
   Product,
   InstantProducts,
-  CommerceEngine,
   InteractiveProduct,
+  CommerceEngine,
 } from '@coveo/headless/commerce';
 import {Component, Element, State, h, Prop, Method} from '@stencil/core';
 import {InitializableComponent} from '../../../../utils/initialization-utils';
@@ -34,12 +34,11 @@ export type AriaLabelGenerator = (
   result: Product
 ) => string | undefined;
 
-// TODO: KIT-???? Uncomment once the `buildInteractiveInstantProduct` function is implemented in headless.
+// TODO: KIT-3165 Uncomment once the `buildInteractiveInstantProduct` function is implemented in headless.
 function buildInteractiveInstantProduct(
   _engine: CommerceEngine<{}>,
   _arg: {options: {product: Product}}
 ): InteractiveProduct {
-  console.log('TODO: KIT-???? Function not implemented.');
   return {} as InteractiveProduct;
 }
 
@@ -117,9 +116,8 @@ export class AtomicCommerceSearchBoxInstantProducts
         : el?.querySelector('atomic-product');
 
     return (
-      atomicProduct?.shadowRoot?.querySelector('atomic-product-link a') || null // TODO: add a atomic-product-link
+      atomicProduct?.shadowRoot?.querySelector('atomic-product-link a') || null
     );
-    // return <a href="https://perdu.com">hello</a>
   }
 
   private handleLinkClick(el: HTMLElement, hasModifier: boolean) {
@@ -145,7 +143,7 @@ export class AtomicCommerceSearchBoxInstantProducts
       (product: Product) => {
         const partialItem = getPartialInstantItemElement(
           this.bindings.i18n,
-          this.ariaLabelGenerator?.(this.bindings, product) || product.ec_name!, // TODO: remove !
+          this.ariaLabelGenerator?.(this.bindings, product) || product.ec_name!,
           product.permanentid
         );
         return {
@@ -207,7 +205,7 @@ export class AtomicCommerceSearchBoxInstantProducts
     this.itemTemplateProvider = new ProductTemplateProvider({
       includeDefaultTemplate: true,
       templateElements: Array.from(
-        this.host.querySelectorAll('atomic-product-template') // TODO: change that
+        this.host.querySelectorAll('atomic-product-template')
       ),
       getResultTemplateRegistered: () => true,
       setResultTemplateRegistered: () => {},
