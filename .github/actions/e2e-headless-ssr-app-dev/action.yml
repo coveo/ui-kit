@@ -12,7 +12,7 @@ runs:
       name: Run Cypress
       with:
         browser: chrome
-        command-prefix: 'npm run -w @coveo/headless-ssr-samples-app-router e2e'
+        command-prefix: 'npx -w @coveo/headless-ssr-samples-app-router cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
         start: npx nx run headless-ssr-samples-app-router:dev
         wait-on: 'http://localhost:3000'
         wait-on-timeout: 600000
