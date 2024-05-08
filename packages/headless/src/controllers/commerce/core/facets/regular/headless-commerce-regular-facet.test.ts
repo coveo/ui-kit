@@ -52,7 +52,7 @@ describe('RegularFacet', () => {
 
     options = {
       facetId,
-      fetchResultsActionCreator: jest.fn(),
+      fetchProductsActionCreator: jest.fn(),
       facetResponseSelector: jest.fn(),
       isFacetLoadingResponseSelector: jest.fn(),
     };

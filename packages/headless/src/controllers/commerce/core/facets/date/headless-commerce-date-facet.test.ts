@@ -51,7 +51,7 @@ describe('DateFacet', () => {
   beforeEach(() => {
     options = {
       facetId,
-      fetchResultsActionCreator: jest.fn(),
+      fetchProductsActionCreator: jest.fn(),
       facetResponseSelector: jest.fn(),
       isFacetLoadingResponseSelector: jest.fn(),
     };

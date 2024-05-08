@@ -30,7 +30,7 @@ describe('CategoryFacet', () => {
   let state: CommerceAppState;
   let options: CategoryFacetOptions;
   let facet: CategoryFacet;
-  const mockFetchResultsActionCreator = jest.fn();
+  const mockFetchProductsActionCreator = jest.fn();
   const mockFacetResponseSelector = jest.fn();
   const mockIsFacetLoadingResponseSelector = jest.fn();
 
@@ -69,7 +69,7 @@ describe('CategoryFacet', () => {
 
     options = {
       facetId,
-      fetchResultsActionCreator: mockFetchResultsActionCreator,
+      fetchProductsActionCreator: mockFetchProductsActionCreator,
       facetResponseSelector: mockFacetResponseSelector,
       isFacetLoadingResponseSelector: mockIsFacetLoadingResponseSelector,
     };
