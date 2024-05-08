@@ -25,12 +25,12 @@ export class AtomicProductImage implements InitializableComponent {
   @State() private currentImage = 0;
 
   /**
-   * The product field which the component should use. This will look for the field in the Product object first, then in the Product.additionalFields object.
+   * The product field which the component should use. This will look for the field in the product object first, then in the product.additionalFields object.
    */
   @Prop({reflect: true}) field: string = 'ec_thumbnails';
 
   /**
-   * An optional fallback image URL that will be used in case the specified image field is not available or encounters an error.
+   * An optional fallback image URL that will be used in case the specified image is not available or an error is encountered.
    */
   @Prop({reflect: true}) fallback?: string;
 
@@ -99,21 +99,6 @@ export class AtomicProductImage implements InitializableComponent {
     return url;
   }
 
-  private renderCurrentImage(image: {src: string; alt: string} | null) {
-    if (image === null) {
-      return;
-    }
-
-    return (
-      <img
-        alt={image.alt}
-        src={image.src}
-        onError={() => this.handleImageError(image.src)}
-        loading="lazy"
-      />
-    );
-  }
-
   private get images() {
     const urls = this.imageUrls.flat();
 
@@ -131,6 +116,21 @@ export class AtomicProductImage implements InitializableComponent {
         return {src: filterProtocol(finalUrl), alt: `${this.field} image`};
       })
       .filter(Boolean);
+  }
+
+  private renderCurrentImage(image: {src: string; alt: string} | null) {
+    if (image === null) {
+      return;
+    }
+
+    return (
+      <img
+        alt={image.alt}
+        src={image.src}
+        onError={() => this.handleImageError(image.src)}
+        loading="lazy"
+      />
+    );
   }
 
   public render() {

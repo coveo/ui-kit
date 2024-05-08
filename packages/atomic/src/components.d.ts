@@ -1533,11 +1533,11 @@ export namespace Components {
      */
     interface AtomicProductImage {
         /**
-          * An optional fallback image URL that will be used in case the specified image field is not available or encounters an error.
+          * An optional fallback image URL that will be used in case the specified image is not available or an error is encountered.
          */
         "fallback"?: string;
         /**
-          * The product field which the component should use. This will look for the field in the Product object first, then in the Product.additionalFields object.
+          * The product field which the component should use. This will look for the field in the product object first, then in the product.additionalFields object.
          */
         "field": string;
         /**
@@ -6210,11 +6210,11 @@ declare namespace LocalJSX {
      */
     interface AtomicProductImage {
         /**
-          * An optional fallback image URL that will be used in case the specified image field is not available or encounters an error.
+          * An optional fallback image URL that will be used in case the specified image is not available or an error is encountered.
          */
         "fallback"?: string;
         /**
-          * The product field which the component should use. This will look for the field in the Product object first, then in the Product.additionalFields object.
+          * The product field which the component should use. This will look for the field in the product object first, then in the product.additionalFields object.
          */
         "field"?: string;
     }
