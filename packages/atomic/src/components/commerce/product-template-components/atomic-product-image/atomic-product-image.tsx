@@ -100,9 +100,7 @@ export class AtomicProductImage implements InitializableComponent {
   }
 
   private get images() {
-    const urls = this.imageUrls.flat();
-
-    return urls
+    return this.imageUrls
       .map((url) => {
         let finalUrl = this.useFallback ? this.fallback : url;
 
