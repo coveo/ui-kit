@@ -1,5 +1,6 @@
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
+import {stateKey} from '../../../app/state-key';
 import {fetchQuerySuggestions} from '../../../features/commerce/query-suggest/query-suggest-actions';
 import {UpdateQueryActionCreatorPayload} from '../../../features/commerce/query/query-actions';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
@@ -90,7 +91,7 @@ export function buildSearchBox(
 
   const controller = buildController(engine);
   const {dispatch} = engine;
-  const getState = () => engine.state;
+  const getState = () => engine[stateKey];
 
   const id = props.options?.id || randomID('search_box');
   const options: Required<SearchBoxOptions> = {
@@ -102,11 +103,11 @@ export function buildSearchBox(
 
   validateOptions(engine, searchBoxOptionsSchema, options, 'buildSearchBox');
   dispatch(
-    registerQuerySetQuery({id, query: engine.state.commerceQuery.query ?? ''})
+    registerQuerySetQuery({id, query: getState().commerceQuery.query ?? ''})
   );
   dispatch(registerQuerySuggest({id}));
 
-  const getValue = () => engine.state.querySet[options.id];
+  const getValue = () => getState().querySet[options.id];
 
   const performSearch = async () => {
     const queryOptions: UpdateQueryActionCreatorPayload &
@@ -149,8 +150,7 @@ export function buildSearchBox(
     },
 
     get state() {
-      const state = getState();
-      const querySuggest = state.querySuggest[options.id];
+      const querySuggest = getState().querySuggest[options.id];
       const suggestions = getSuggestions(
         querySuggest,
         options.highlightOptions
@@ -162,7 +162,7 @@ export function buildSearchBox(
       return {
         value: getValue(),
         suggestions,
-        isLoading: state.commerceSearch.isLoading,
+        isLoading: getState().commerceSearch.isLoading,
         isLoadingSuggestions,
       };
     },

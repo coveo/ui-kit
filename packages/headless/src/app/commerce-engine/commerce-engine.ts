@@ -20,11 +20,12 @@ import {CommerceAppState} from '../../state/commerce-app-state';
 import {CommerceThunkExtraArguments} from '../commerce-thunk-extra-arguments';
 import {
   buildEngine,
-  CoreEngine,
+  CoreEngineNext,
   EngineOptions,
   ExternalEngineOptions,
 } from '../engine';
 import {buildLogger} from '../logger';
+import {stateKey} from '../state-key';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {
   CommerceEngineConfiguration,
@@ -59,18 +60,17 @@ export type CommerceEngineState =
  * @internal WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
  */
 export interface CommerceEngine<State extends object = {}>
-  extends CoreEngine<State & CommerceEngineState, CommerceThunkExtraArguments> {
+  extends CoreEngineNext<
+    State & CommerceEngineState,
+    CommerceThunkExtraArguments
+  > {
   /**
    * Executes the first search.
-   *
-   * @param analyticsEvent - The analytics event to log in association with the first search. If unspecified, `logInterfaceLoad` will be used.
    */
   executeFirstSearch(): void;
 
   /**
-   * Executes the first search, and logs the analytics event that triggered a redirection from a standalone search box.
-   *
-   * @param analytics - The standalone search box analytics data.
+   * Executes the first search after a redirection from a standalone search box.
    */
   executeFirstSearchAfterStandaloneSearchBoxRedirect(): void;
 }
@@ -113,24 +113,30 @@ export function buildCommerceEngine(
     reducers: commerceEngineReducers,
   };
 
-  const engine = buildEngine(augmentedOptions, thunkArguments);
+  const internalEngine = buildEngine(augmentedOptions, thunkArguments);
+  const {state: _, ...engine} = internalEngine;
 
   engine.dispatch(setContext(options.configuration.context));
 
   return {
     ...engine,
 
-    get state() {
-      return engine.state;
+    get [stateKey]() {
+      return internalEngine.state;
     },
+
+    get configuration() {
+      return internalEngine.state.configuration;
+    },
+
     executeFirstSearch() {
       const action = executeSearch();
-      engine.dispatch(action);
+      internalEngine.dispatch(action);
     },
 
     executeFirstSearchAfterStandaloneSearchBoxRedirect() {
       const action = executeSearch();
-      engine.dispatch(action);
+      internalEngine.dispatch(action);
     },
   };
 }
