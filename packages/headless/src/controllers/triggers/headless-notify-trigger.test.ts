@@ -5,7 +5,8 @@ import {
   MockedSearchEngine,
 } from '../../test/mock-engine-v2';
 import {createMockState} from '../../test/mock-state';
-import {NotifyTrigger, buildNotifyTrigger} from './headless-notify-trigger';
+import {NotifyTrigger} from '../core/triggers/headless-core-notify-trigger';
+import {buildNotifyTrigger} from './headless-notify-trigger';
 
 jest.mock('../../features/triggers/trigger-analytics-actions');
 
