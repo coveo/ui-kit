@@ -1,7 +1,5 @@
-import {
-  Correction,
-  QueryCorrection,
-} from '../../../api/search/search/query-corrections';
+import {QueryCorrection} from '../../../api/search/search/query-corrections';
+import {emptyNextCorrection} from '../../did-you-mean/did-you-mean-state';
 
 export interface DidYouMeanState {
   /**
@@ -18,16 +16,10 @@ export interface DidYouMeanState {
   originalQuery: string;
 }
 
-export const emptyCorrection: () => Correction = () => ({
-  correctedQuery: '',
-  corrections: [],
-  originalQuery: '',
-});
-
 export function getDidYouMeanInitialState(): DidYouMeanState {
   return {
     wasCorrectedTo: '',
-    queryCorrection: emptyCorrection(),
+    queryCorrection: emptyNextCorrection(),
     originalQuery: '',
   };
 }

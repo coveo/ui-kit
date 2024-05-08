@@ -5,6 +5,7 @@ import {
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {CoreEngine} from '../../../app/engine';
 import {didYouMeanReducer as didYouMean} from '../../../features/commerce/did-you-mean/did-you-mean-slice';
+import {hasQueryCorrectionSelector} from '../../../features/did-you-mean/did-you-mean-selectors';
 import {CommerceDidYouMeanSection} from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
 import {
@@ -35,8 +36,10 @@ export function buildDidYouMean(engine: CommerceEngine): DidYouMean {
   }
 
   const controller = buildController(engine);
-
   const getState = () => engine.state;
+
+  const hasQueryCorrection = () =>
+    hasQueryCorrectionSelector(getState().didYouMean);
 
   return {
     ...controller,
@@ -44,16 +47,12 @@ export function buildDidYouMean(engine: CommerceEngine): DidYouMean {
     get state() {
       const state = getState();
 
-      const hasQueryCorrection =
-        state.didYouMean.queryCorrection.correctedQuery !== '' ||
-        state.didYouMean.wasCorrectedTo !== '';
-
       return {
         originalQuery: state.didYouMean.originalQuery,
         wasCorrectedTo: state.didYouMean.wasCorrectedTo,
         queryCorrection: state.didYouMean.queryCorrection,
-        hasQueryCorrection,
-        wasAutomaticallyCorrected: hasQueryCorrection,
+        hasQueryCorrection: hasQueryCorrection(),
+        wasAutomaticallyCorrected: hasQueryCorrection(),
       };
     },
   };
