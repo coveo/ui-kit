@@ -13,7 +13,7 @@ export const queryReducer = createReducer(
         ...action.payload,
       }))
       .addCase(restoreSearchParameters, (state, action) => {
-        state.query = action.payload.q ?? getCommerceQueryInitialState().query;
+        state.query = action.payload.q ?? '';
       });
   }
 );
