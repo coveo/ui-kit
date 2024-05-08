@@ -1,3 +1,4 @@
+// TODO: delete this  file if not needed
 import {isArray, isNullOrUndefined} from '@coveo/bueno';
 import {Product} from '../../../api/commerce/common/product';
 import {ProductTemplateCondition} from './product-templates-manager';
@@ -10,13 +11,8 @@ import {ProductTemplateCondition} from './product-templates-manager';
  */
 export const getProductProperty = (product: Product, property: string) => {
   const anyProduct = product as unknown as Record<string, unknown>;
-
   if (!isNullOrUndefined(anyProduct[property])) {
     return anyProduct[property];
-  }
-
-  if (!isNullOrUndefined(product.additionalFields[property])) {
-    return product.additionalFields[property];
   }
 
   return null;

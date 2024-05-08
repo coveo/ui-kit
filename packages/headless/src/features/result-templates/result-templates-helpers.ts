@@ -1,4 +1,5 @@
 import {isNullOrUndefined} from '@coveo/bueno';
+import {Product} from '../../api/commerce/common/product';
 import {Result} from '../../api/search/search/result';
 import {isArray} from '../../utils/utils';
 import {ResultTemplateCondition} from './result-templates-manager';
@@ -10,13 +11,27 @@ import {ResultTemplateCondition} from './result-templates-manager';
  * @returns (unknown) The value of the specified property in the specified result, or null if the property does not exist.
  */
 export const getResultProperty = (result: Result, property: string) => {
-  const anyResult = result as unknown as Record<string, unknown>;
-  if (!isNullOrUndefined(anyResult[property])) {
-    return anyResult[property];
+  // TODO: no no
+  console.log('YOP');
+  const anyProduct = result as unknown as Record<string, unknown>;
+  if (!isNullOrUndefined(anyProduct[property])) {
+    return anyProduct[property];
   }
 
-  if (!isNullOrUndefined(result.raw[property])) {
-    return result.raw[property];
+  return null;
+};
+
+/**
+ * Extracts a property from a result object.
+ * @param result (Product) The target result.
+ * @param property (string) The property to extract.
+ * @returns (unknown) The value of the specified property in the specified result, or null if the property does not exist.
+ * @internal
+ */
+export const getProductProperty = (product: Product, property: string) => {
+  const anyProduct = product as unknown as Record<string, unknown>;
+  if (!isNullOrUndefined(anyProduct[property])) {
+    return anyProduct[property];
   }
 
   return null;
