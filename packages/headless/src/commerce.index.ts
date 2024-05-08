@@ -11,7 +11,11 @@ export type {
 } from './app/commerce-engine/commerce-engine';
 export {buildCommerceEngine} from './app/commerce-engine/commerce-engine';
 
-export type {CoreEngine, ExternalEngineOptions} from './app/engine';
+export type {
+  CoreEngine,
+  ExternalEngineOptions,
+  CoreEngineNext,
+} from './app/engine';
 export type {
   EngineConfiguration,
   AnalyticsConfiguration,
@@ -90,7 +94,10 @@ export type {CartItemWithMetadata} from './features/commerce/context/cart/cart-s
 export type {CartItemParam} from './api/commerce/commerce-api-params';
 export {buildCart} from './controllers/commerce/context/cart/headless-cart';
 
-export type {SolutionTypeSubControllers} from './controllers/commerce/core/sub-controller/headless-sub-controller';
+export type {
+  BaseSolutionTypeSubControllers,
+  SearchAndListingSubControllers,
+} from './controllers/commerce/core/sub-controller/headless-sub-controller';
 
 export type {
   ParameterManager,
