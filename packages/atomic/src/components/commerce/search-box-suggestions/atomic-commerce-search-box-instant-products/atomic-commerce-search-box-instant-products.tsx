@@ -31,7 +31,7 @@ import {ProductTemplateProvider} from '../../product-list/product-template-provi
 
 export type AriaLabelGenerator = (
   bindings: Bindings,
-  result: Product
+  product: Product
 ) => string | undefined;
 
 // TODO: KIT-3165 Uncomment once the `buildInteractiveInstantProduct` function is implemented in headless.
