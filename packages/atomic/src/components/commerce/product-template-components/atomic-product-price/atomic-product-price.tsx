@@ -38,7 +38,7 @@ export class AtomicProductPrice
     return (
       <div>
         <atomic-result-number
-          class="mx-1 font-bold"
+          class={`mx-1 ${hasPromo && 'text-error'}`}
           field={hasPromo ? 'ec_promo_price' : 'ec_price'}
         >
           <atomic-format-currency
