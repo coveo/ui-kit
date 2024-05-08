@@ -20,16 +20,16 @@ export const facetResponseSelector = (
   return undefined;
 };
 
-const isFacetLoadingResponseSelector = (state: CommerceSearchSection) =>
+export const isFacetLoadingResponseSelector = (state: CommerceSearchSection) =>
   state.commerceSearch.isLoading;
 
 export const commonOptions: Pick<
   CoreCommerceFacetOptions,
-  | 'fetchResultsActionCreator'
+  | 'fetchProductsActionCreator'
   | 'facetResponseSelector'
   | 'isFacetLoadingResponseSelector'
 > = {
-  fetchResultsActionCreator: executeSearch,
+  fetchProductsActionCreator: executeSearch,
   facetResponseSelector,
   isFacetLoadingResponseSelector,
 };

@@ -1,6 +1,6 @@
 import {GeneratedAnswerStyle} from '@coveo/headless';
 import {RouteAlias, TagProps} from '../fixtures/fixture-common';
-import {TestFixture} from '../fixtures/test-fixture';
+import {TestFixture, generateLongTextAnswer} from '../fixtures/test-fixture';
 import {AnalyticsTracker} from '../utils/analyticsUtils';
 import {
   addGeneratedAnswer,
@@ -48,6 +48,23 @@ const testCitationsPayload = {
   payloadType: 'genqa.citationsType',
   payload: JSON.stringify({
     citations: [testCitation],
+  }),
+  finishReason: 'COMPLETED',
+};
+
+const testCitationWithEmptyTitle = {
+  id: 'some-id-123',
+  title: '',
+  uri: 'https://www.coveo.com',
+  permanentid: 'some-permanent-id-123',
+  clickUri: 'https://www.coveo.com/en',
+  text: 'This is the snippet given to the generative model.',
+};
+
+const testCitationsWithEmptyTitlePayload = {
+  payloadType: 'genqa.citationsType',
+  payload: JSON.stringify({
+    citations: [testCitationWithEmptyTitle],
   }),
   finishReason: 'COMPLETED',
 };
@@ -171,6 +188,70 @@ describe('Generated Answer Test Suites', () => {
           feedbackModalSelectors.detailsInput().should('exist');
           feedbackModalSelectors.submitButton().should('be.enabled');
         });
+      });
+    });
+
+    describe('when collapsible prop is provided', () => {
+      describe('answer height is more than 250px', () => {
+        const streamId = crypto.randomUUID();
+
+        const testTextDelta = generateLongTextAnswer();
+        const testMessagePayload = {
+          payloadType: 'genqa.messageType',
+          payload: JSON.stringify({
+            textDelta: testTextDelta,
+          }),
+          finishReason: 'COMPLETED',
+        };
+
+        beforeEach(() => {
+          mockStreamResponse(streamId, testMessagePayload);
+          setupGeneratedAnswerWithoutFirstIntercept(streamId, {
+            collapsible: true,
+          });
+        });
+
+        GeneratedAnswerAssertions.assertShowButton(true);
+        GeneratedAnswerAssertions.assertAnswerCollapsed(true);
+        GeneratedAnswerAssertions.assertShowMoreLabel(true);
+        GeneratedAnswerAssertions.assertFeedbackButtonsVisibility(false);
+        GeneratedAnswerAssertions.assertCopyButtonVisibility(false);
+
+        describe('when we click on show more button', () => {
+          beforeEach(() => {
+            GeneratedAnswerSelectors.showButton().click();
+          });
+
+          GeneratedAnswerAssertions.assertAnswerCollapsed(false);
+          GeneratedAnswerAssertions.assertShowMoreLabel(false);
+          GeneratedAnswerAssertions.assertFeedbackButtonsVisibility(true);
+          GeneratedAnswerAssertions.assertCopyButtonVisibility(true);
+        });
+      });
+
+      describe('answer height is less than 250px', () => {
+        const streamId = crypto.randomUUID();
+
+        const testTextDelta = 'Some text';
+        const testMessagePayload = {
+          payloadType: 'genqa.messageType',
+          payload: JSON.stringify({
+            textDelta: testTextDelta,
+          }),
+          finishReason: 'COMPLETED',
+        };
+
+        beforeEach(() => {
+          mockStreamResponse(streamId, testMessagePayload);
+          setupGeneratedAnswerWithoutFirstIntercept(streamId, {
+            collapsible: true,
+          });
+        });
+
+        GeneratedAnswerAssertions.assertShowButton(false);
+        GeneratedAnswerAssertions.assertAnswerCollapsed(false);
+        GeneratedAnswerAssertions.assertFeedbackButtonsVisibility(true);
+        GeneratedAnswerAssertions.assertCopyButtonVisibility(true);
       });
     });
 
@@ -400,6 +481,23 @@ describe('Generated Answer Test Suites', () => {
           it('should log an openGeneratedAnswerSource click event', () => {
             GeneratedAnswerAssertions.assertLogOpenGeneratedAnswerSource();
           });
+        });
+      });
+
+      describe('When a citation event is received with empty title', () => {
+        const streamId = crypto.randomUUID();
+
+        beforeEach(() => {
+          mockStreamResponse(streamId, testCitationsWithEmptyTitlePayload);
+          setupGeneratedAnswer(streamId);
+          cy.wait(getStreamInterceptAlias(streamId));
+        });
+
+        it('should display the citation with no title label', () => {
+          GeneratedAnswerSelectors.citationCard().should(
+            'contain.text',
+            'No title'
+          );
         });
       });
 

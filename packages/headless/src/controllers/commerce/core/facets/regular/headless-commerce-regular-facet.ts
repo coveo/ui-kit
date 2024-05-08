@@ -3,6 +3,7 @@ import {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../../app/state-key';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
@@ -77,10 +78,10 @@ export function buildCommerceRegularFacet(
     return buildRegularFacetSearch(engine, {
       options: {facetId: getFacetId(), ...options.facetSearch},
       select: () => {
-        dispatch(options.fetchResultsActionCreator());
+        dispatch(options.fetchProductsActionCreator());
       },
       exclude: () => {
-        dispatch(options.fetchResultsActionCreator());
+        dispatch(options.fetchProductsActionCreator());
       },
       isForFieldSuggestions: false,
     });
@@ -107,7 +108,7 @@ export function buildCommerceRegularFacet(
     get state() {
       return {
         ...coreController.state,
-        ...facetSearchStateSelector(engine.state),
+        ...facetSearchStateSelector(engine[stateKey]),
       };
     },
 

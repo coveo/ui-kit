@@ -41,6 +41,7 @@ export type {
 export type {LoggerOptions} from './app/logger';
 
 export type {LogLevel} from './app/logger';
+export type {NavigatorContext} from './app/navigatorContextProvider';
 
 // State
 export type {
@@ -379,7 +380,7 @@ export type {
 } from './controllers/triggers/headless-execute-trigger';
 export {buildExecuteTrigger} from './controllers/triggers/headless-execute-trigger';
 
-export type {ExecuteTriggerParams} from './controllers/../api/search/trigger';
+export type {ExecuteTriggerParams} from './api/common/trigger';
 
 export type {
   NotifyTrigger,

@@ -1,7 +1,9 @@
 import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../../app/state-key';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
+  updateNumericFacetValues,
 } from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {
   CoreCommerceFacet,
@@ -18,7 +20,27 @@ export type NumericFacetOptions = Omit<
   'toggleSelectActionCreator' | 'toggleExcludeActionCreator'
 >;
 
-export type NumericFacetState = CoreCommerceFacetState<NumericFacetValue>;
+export type NumericFacetState = CoreCommerceFacetState<NumericFacetValue> & {
+  /**
+   * The domain of the numeric facet.
+   */
+  domain?: NumericFacetDomain;
+};
+
+type NumericFacetDomain = {
+  /**
+   * The minimum value that the continuous range can have.
+   *
+   * No products will be returned if the `start` property of a selected range is set to a value lower than this.
+   */
+  min: number;
+  /**
+   * The maximum value that the continuous range can have.
+   *
+   * No products will be returned if the `end` property of a selected range is set to a value higher than this.
+   */
+  max: number;
+};
 
 /**
  * The `NumericFacet` controller offers a high-level programming interface for implementing numeric commerce
@@ -28,6 +50,15 @@ export type NumericFacet = CoreCommerceFacet<
   NumericRangeRequest,
   NumericFacetValue
 > & {
+  /**
+   * Replaces the current range values with the specified ones.
+   *
+   * @param ranges - The new ranges to set.
+   */
+  setRanges: (ranges: NumericFacetValue[]) => void;
+  /**
+   * The state of the `NumericFacet` controller.
+   */
   state: NumericFacetState;
 } & FacetControllerType<'numericalRange'>;
 
@@ -58,8 +89,40 @@ export function buildCommerceNumericFacet(
     },
   });
 
+  const {dispatch} = engine;
+  const {facetId, fetchProductsActionCreator: fetchProductsActionCreator} =
+    options;
+
   return {
     ...coreController,
+
+    setRanges(ranges: NumericFacetValue[]) {
+      dispatch(
+        updateNumericFacetValues({
+          facetId,
+          values: ranges,
+        })
+      );
+      dispatch(fetchProductsActionCreator());
+    },
+
+    get state() {
+      const response = options.facetResponseSelector(engine[stateKey], facetId);
+      if (response?.type === 'numericalRange' && response.domain) {
+        const {min, max} = response.domain;
+        return {
+          ...coreController.state,
+          domain: {
+            min,
+            max,
+          },
+        };
+      }
+
+      return {
+        ...coreController.state,
+      };
+    },
 
     type: 'numericalRange',
   };

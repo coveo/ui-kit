@@ -22,6 +22,7 @@ import {
 } from '../features/configuration/configuration-actions';
 import {versionReducer as version} from '../features/debug/version-slice';
 import {SearchParametersState} from '../state/search-app-state';
+import {isBrowser} from '../utils/runtime';
 import {matchCoveoOrganizationEndpointUrlAnyOrganization} from '../utils/url-utils';
 import {doNotTrack} from '../utils/utils';
 import {analyticsMiddleware} from './analytics-middleware';
@@ -30,9 +31,16 @@ import {EngineConfiguration} from './engine-configuration';
 import {instantlyCallableThunkActionMiddleware} from './instantly-callable-middleware';
 import {LoggerOptions} from './logger';
 import {logActionErrorMiddleware} from './logger-middlewares';
+import {
+  NavigatorContext,
+  NavigatorContextProvider,
+  defaultBrowserNavigatorContextProvider,
+  defaultNodeJSNavigatorContextProvider,
+} from './navigatorContextProvider';
 import {createReducerManager, ReducerManager} from './reducer-manager';
 import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware';
-import {ExtraArgumentsWithRelay, Store, configureStore} from './store';
+import {stateKey} from './state-key';
+import {CoreExtraArguments, Store, configureStore} from './store';
 import {ThunkExtraArguments} from './thunk-extra-arguments';
 
 const coreReducers = {configuration, version};
@@ -97,7 +105,28 @@ export interface CoreEngine<
    * Disable analytics tracking
    */
   disableAnalytics(): void;
+  /**
+   * The navigator context (referer, location, UserAgent)
+   */
+  navigatorContext: NavigatorContext;
 }
+
+export type CoreEngineNext<
+  State extends object = {},
+  ExtraArguments extends ThunkExtraArguments = ThunkExtraArguments,
+> = Omit<CoreEngine<State, ExtraArguments>, 'state' | 'store'> & {
+  /**
+   * The readonly internal state of the headless engine.
+   *
+   * @internal
+   */
+  readonly [stateKey]: State & CoreState;
+
+  /**
+   * The readonly global headless engine configuration
+   */
+  readonly configuration: EngineConfiguration;
+};
 
 export interface EngineOptions<Reducers extends ReducersMapObject>
   extends ExternalEngineOptions<StateFromReducersMapObject<Reducers>> {
@@ -148,6 +177,10 @@ export interface ExternalEngineOptions<State extends object> {
    * The logger options.
    */
   loggerOptions?: LoggerOptions;
+  /**
+   * An optional function returning navigation context. (referer, location, UserAgent)
+   */
+  navigatorContextProvider?: NavigatorContextProvider;
 }
 
 function getUpdateAnalyticsConfigurationPayload(
@@ -184,7 +217,7 @@ export function buildEngine<
   thunkExtraArguments: ExtraArguments
 ): CoreEngine<
   StateFromReducersMapObject<Reducers>,
-  ExtraArgumentsWithRelay & ExtraArguments
+  CoreExtraArguments & ExtraArguments
 > {
   const engine = buildCoreEngine(options, thunkExtraArguments);
   const {accessToken, organizationId} = options.configuration;
@@ -248,13 +281,19 @@ function buildCoreEngine<
     reducerManager.addCrossReducer(options.crossReducer);
   }
   const logger = thunkExtraArguments.logger;
-  const thunkExtraArgumentsWithRelay: ExtraArgumentsWithRelay & ExtraArguments =
-    {
-      ...thunkExtraArguments,
-      get relay() {
-        return getRelayInstanceFromState(engine.state);
-      },
-    };
+  const navigatorContextProvider =
+    options.navigatorContextProvider ?? isBrowser()
+      ? defaultBrowserNavigatorContextProvider
+      : defaultNodeJSNavigatorContextProvider;
+  const thunkExtraArgumentsWithRelay: CoreExtraArguments & ExtraArguments = {
+    ...thunkExtraArguments,
+    get relay() {
+      return getRelayInstanceFromState(engine.state);
+    },
+    get navigatorContext() {
+      return navigatorContextProvider();
+    },
+  };
   const store = createStore(
     options,
     thunkExtraArgumentsWithRelay,
@@ -291,6 +330,10 @@ function buildCoreEngine<
       return getRelayInstanceFromState(this.state);
     },
 
+    get navigatorContext() {
+      return navigatorContextProvider();
+    },
+
     logger,
 
     store,
@@ -300,7 +343,7 @@ function buildCoreEngine<
 
 function createStore<
   Reducers extends ReducersMapObject,
-  ExtraArguments extends ExtraArgumentsWithRelay,
+  ExtraArguments extends CoreExtraArguments,
 >(
   options: EngineOptions<Reducers>,
   thunkExtraArguments: ExtraArguments,

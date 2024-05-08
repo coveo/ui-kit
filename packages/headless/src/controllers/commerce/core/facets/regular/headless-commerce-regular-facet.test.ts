@@ -1,4 +1,4 @@
-import {CommerceFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
+import {RegularFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
@@ -15,7 +15,6 @@ import {
 } from '../../../../../test/mock-engine-v2';
 import {buildMockFacetSearch} from '../../../../../test/mock-facet-search';
 import {commonOptions} from '../../../product-listing/facets/headless-product-listing-facet-options';
-import {FacetValueRequest} from '../headless-core-commerce-facet';
 import {
   RegularFacet,
   RegularFacetOptions,
@@ -39,9 +38,7 @@ describe('RegularFacet', () => {
     facet = buildCommerceRegularFacet(engine, options);
   }
 
-  function setFacetRequest(
-    config: Partial<CommerceFacetRequest<FacetValueRequest>> = {}
-  ) {
+  function setFacetRequest(config: Partial<RegularFacetRequest> = {}) {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, ...config}),
     });

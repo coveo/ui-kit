@@ -1,3 +1,15 @@
+## 2.50.2 (2024-05-06)
+
+## 2.50.1 (2024-05-02)
+
+### Bug Fixes
+
+- **headless:** generated-answer-state expanded should be false ([#3848](https://github.com/coveo/ui-kit/issues/3848)) ([8c22beb](https://github.com/coveo/ui-kit/commits/8c22beba0c6a4fabad5bddd0d47af16d52c58242))
+- **quantic:** answer generation glitch ([#3843](https://github.com/coveo/ui-kit/issues/3843)) ([f6bebd6](https://github.com/coveo/ui-kit/commits/f6bebd6c134e5f3c688684d8108efda2fbd3c817))
+- **quantic:** fixed issue with glitchy state caused by the standalone search box ([#3864](https://github.com/coveo/ui-kit/issues/3864)) ([8694f94](https://github.com/coveo/ui-kit/commits/8694f94206ad9d661b67a9bdc07a8728c1c3e959))
+- **quantic:** fixed issue with reseting feedback state after new queries ([#3836](https://github.com/coveo/ui-kit/issues/3836)) ([707e6c9](https://github.com/coveo/ui-kit/commits/707e6c9baaa229d4f1479b54f723e23798523d4e))
+- **quantic:** skipping temporarily failing smart snippets cypress tests ([#3870](https://github.com/coveo/ui-kit/issues/3870)) ([d94f9e0](https://github.com/coveo/ui-kit/commits/d94f9e0981e0d694c3bb3fe85693021913e04d5d))
+
 # 2.50.0 (2024-04-24)
 
 ### Features
