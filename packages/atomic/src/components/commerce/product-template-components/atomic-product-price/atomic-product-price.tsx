@@ -30,7 +30,7 @@ export class AtomicProductPrice
   @Prop({reflect: true}) public currency!: string;
 
   public render() {
-    const hasPromo =
+    const hasPromotionalPrice =
       this.product?.ec_promo_price !== undefined &&
       this.product?.ec_price !== undefined &&
       this.product?.ec_promo_price < this.product?.ec_price;
@@ -38,14 +38,14 @@ export class AtomicProductPrice
     return (
       <div>
         <atomic-result-number
-          class={`mx-1 ${hasPromo && 'text-error'}`}
-          field={hasPromo ? 'ec_promo_price' : 'ec_price'}
+          class={`mx-1 ${hasPromotionalPrice && 'text-error'}`}
+          field={hasPromotionalPrice ? 'ec_promo_price' : 'ec_price'}
         >
           <atomic-format-currency
             currency={this.currency}
           ></atomic-format-currency>
         </atomic-result-number>
-        {hasPromo && (
+        {hasPromotionalPrice && (
           <atomic-result-number
             class="mx-1 text-xl line-through"
             field="ec_price"
