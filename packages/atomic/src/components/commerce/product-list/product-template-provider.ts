@@ -14,10 +14,10 @@ function defaultTemplate() {
   brandEl.setAttribute('field', 'ec_brand');
   brandEl.className = 'block text-neutral-dark';
 
-  const imgEl = document.createElement('atomic-result-image');
+  const imgEl = document.createElement('atomic-product-image');
   imgEl.setAttribute('field', 'ec_thumbnails');
 
-  const ratingEl = document.createElement('atomic-result-rating');
+  const ratingEl = document.createElement('atomic-product-rating');
   ratingEl.setAttribute('field', 'ec_rating');
 
   const priceEl = document.createElement('atomic-product-price');
