@@ -1570,6 +1570,12 @@ export namespace Components {
          */
         "hrefTemplate"?: string;
     }
+    interface AtomicProductPrice {
+        /**
+          * The currency to use in currency formatting. Possible values are the ISO 4217 currency codes, such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB. See the current [currency & funds code list](https://www.six-group.com/en/products-services/financial-information/data-standards.html#scrollTo=maintenance-agency).
+         */
+        "currency": string;
+    }
     interface AtomicProductTemplate {
         /**
           * A function that must return true on products for the product template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to products whose `ec_name` contains `singapore`: `document.querySelector('#target-template').conditions = [(product) => /singapore/i.test(product.ec_name)];`
@@ -3828,6 +3834,12 @@ declare global {
         prototype: HTMLAtomicProductLinkElement;
         new (): HTMLAtomicProductLinkElement;
     };
+    interface HTMLAtomicProductPriceElement extends Components.AtomicProductPrice, HTMLStencilElement {
+    }
+    var HTMLAtomicProductPriceElement: {
+        prototype: HTMLAtomicProductPriceElement;
+        new (): HTMLAtomicProductPriceElement;
+    };
     interface HTMLAtomicProductTemplateElement extends Components.AtomicProductTemplate, HTMLStencilElement {
     }
     var HTMLAtomicProductTemplateElement: {
@@ -4754,6 +4766,7 @@ declare global {
         "atomic-product": HTMLAtomicProductElement;
         "atomic-product-description": HTMLAtomicProductDescriptionElement;
         "atomic-product-link": HTMLAtomicProductLinkElement;
+        "atomic-product-price": HTMLAtomicProductPriceElement;
         "atomic-product-template": HTMLAtomicProductTemplateElement;
         "atomic-product-text": HTMLAtomicProductTextElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
@@ -6277,6 +6290,12 @@ declare namespace LocalJSX {
          */
         "hrefTemplate"?: string;
     }
+    interface AtomicProductPrice {
+        /**
+          * The currency to use in currency formatting. Possible values are the ISO 4217 currency codes, such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB. See the current [currency & funds code list](https://www.six-group.com/en/products-services/financial-information/data-standards.html#scrollTo=maintenance-agency).
+         */
+        "currency": string;
+    }
     interface AtomicProductTemplate {
         /**
           * A function that must return true on products for the product template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to products whose `ec_name` contains `singapore`: `document.querySelector('#target-template').conditions = [(product) => /singapore/i.test(product.ec_name)];`
@@ -7647,6 +7666,7 @@ declare namespace LocalJSX {
         "atomic-product": AtomicProduct;
         "atomic-product-description": AtomicProductDescription;
         "atomic-product-link": AtomicProductLink;
+        "atomic-product-price": AtomicProductPrice;
         "atomic-product-template": AtomicProductTemplate;
         "atomic-product-text": AtomicProductText;
         "atomic-query-error": AtomicQueryError;
@@ -7963,6 +7983,7 @@ declare module "@stencil/core" {
             "atomic-product": LocalJSX.AtomicProduct & JSXBase.HTMLAttributes<HTMLAtomicProductElement>;
             "atomic-product-description": LocalJSX.AtomicProductDescription & JSXBase.HTMLAttributes<HTMLAtomicProductDescriptionElement>;
             "atomic-product-link": LocalJSX.AtomicProductLink & JSXBase.HTMLAttributes<HTMLAtomicProductLinkElement>;
+            "atomic-product-price": LocalJSX.AtomicProductPrice & JSXBase.HTMLAttributes<HTMLAtomicProductPriceElement>;
             "atomic-product-template": LocalJSX.AtomicProductTemplate & JSXBase.HTMLAttributes<HTMLAtomicProductTemplateElement>;
             "atomic-product-text": LocalJSX.AtomicProductText & JSXBase.HTMLAttributes<HTMLAtomicProductTextElement>;
             /**
