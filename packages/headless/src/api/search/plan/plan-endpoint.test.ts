@@ -1,4 +1,4 @@
-import {TriggerRedirect} from '../trigger';
+import {TriggerRedirect} from '../../common/trigger';
 import {ExecutionPlan} from './plan-endpoint';
 import {PlanResponseSuccess} from './plan-response';
 

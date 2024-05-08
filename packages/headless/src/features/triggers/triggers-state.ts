@@ -1,4 +1,4 @@
-import {ExecuteTriggerParams} from '../../api/search/trigger';
+import {ExecuteTriggerParams} from '../../api/common/trigger';
 
 /**
  * The name of a function to execute and its parameters.

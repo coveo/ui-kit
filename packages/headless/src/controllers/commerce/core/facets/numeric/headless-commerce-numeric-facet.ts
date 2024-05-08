@@ -1,4 +1,5 @@
 import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../../app/state-key';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
@@ -106,7 +107,7 @@ export function buildCommerceNumericFacet(
     },
 
     get state() {
-      const response = options.facetResponseSelector(engine.state, facetId);
+      const response = options.facetResponseSelector(engine[stateKey], facetId);
       if (response?.type === 'numericalRange' && response.domain) {
         const {min, max} = response.domain;
         return {

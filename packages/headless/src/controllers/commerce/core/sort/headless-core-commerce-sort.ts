@@ -1,5 +1,6 @@
 import {Schema} from '@coveo/bueno';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../app/state-key';
 import {
   buildFieldsSortCriterion,
   buildRelevanceSortCriterion,
@@ -17,8 +18,8 @@ import {updatePage} from '../../../../features/pagination/pagination-actions';
 import {loadReducerError} from '../../../../utils/errors';
 import {validateInitialState} from '../../../../utils/validate-payload';
 import {
-  buildController,
   Controller,
+  buildController,
 } from '../../../controller/headless-controller';
 import {FetchProductsActionCreator} from '../common';
 
@@ -123,7 +124,6 @@ export function buildCoreSort(
 
   const {dispatch} = engine;
   const controller = buildController(engine);
-  const getState = () => engine.state;
 
   validateSortInitialState(engine, props.initialState);
 
@@ -137,7 +137,7 @@ export function buildCoreSort(
     ...controller,
 
     get state() {
-      return getState().commerceSort;
+      return engine[stateKey].commerceSort;
     },
 
     sortBy(criterion: SortCriterion) {
