@@ -6216,7 +6216,7 @@ declare namespace LocalJSX {
         /**
           * The product field which the component should use. This will look for the field in the Product object first, then in the Product.additionalFields object.
          */
-        "field": string;
+        "field"?: string;
     }
     interface AtomicProductLink {
         /**

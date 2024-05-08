@@ -27,7 +27,7 @@ export class AtomicProductImage implements InitializableComponent {
   /**
    * The product field which the component should use. This will look for the field in the Product object first, then in the Product.additionalFields object.
    */
-  @Prop({reflect: true}) field!: string;
+  @Prop({reflect: true}) field: string = 'ec_thumbnails';
 
   /**
    * An optional fallback image URL that will be used in case the specified image field is not available or encounters an error.

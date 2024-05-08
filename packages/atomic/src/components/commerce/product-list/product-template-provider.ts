@@ -9,7 +9,14 @@ function defaultTemplate() {
   const linkEl = document.createElement('atomic-product-link');
   const descEl = document.createElement('atomic-product-description');
   const imgEl = document.createElement('atomic-product-image');
-  imgEl.setAttribute('field', 'ec_thumbnails');
+
+  const ratingEl = document.createElement('atomic-product-rating');
+  ratingEl.setAttribute('field', 'ec_rating');
+
+  const priceEl = document.createElement('atomic-product-price');
+  priceEl.setAttribute('currency', 'USD');
+  priceEl.className = 'text-2xl';
+
   content.appendChild(linkEl);
   content.appendChild(imgEl);
   content.appendChild(descEl);
