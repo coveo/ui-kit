@@ -1,4 +1,3 @@
-// TODO: delete this  file if not needed
 import {isArray, isNullOrUndefined} from '@coveo/bueno';
 import {Product} from '../../../api/commerce/common/product';
 import {ProductTemplateCondition} from './product-templates-manager';
