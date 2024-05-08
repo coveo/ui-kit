@@ -44,5 +44,9 @@ describe('query slice', () => {
         query: 'new query',
       });
     });
+
+    it('default to empty string if no query in payload', () => {
+      expect(queryReducer(state, restoreSearchParameters({})).query).toBe('');
+    });
   });
 });
