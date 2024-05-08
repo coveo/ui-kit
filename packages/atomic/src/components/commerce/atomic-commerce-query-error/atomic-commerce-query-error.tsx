@@ -1,4 +1,12 @@
-import {QueryError, QueryErrorState, buildQueryError} from '@coveo/headless';
+import {isNullOrUndefined} from '@coveo/bueno';
+import {
+  Search,
+  ProductListing,
+  SearchState,
+  ProductListingState,
+  buildProductListing,
+  buildSearch,
+} from '@coveo/headless/commerce';
 import {Component, h, State} from '@stencil/core';
 import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {
@@ -14,10 +22,10 @@ import {QueryErrorIcon} from '../../common/query-error/icon';
 import {QueryErrorLink} from '../../common/query-error/link';
 import {QueryErrorShowMore} from '../../common/query-error/show-more';
 import {QueryErrorTitle} from '../../common/query-error/title';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
- * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
+ * The `atomic-commerce-query-error` component handles fatal errors when performing a query on the Commerce API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
  *
  * @part icon - The svg related to the error.
  * @part title - The title of the error.
@@ -25,43 +33,50 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
  * @part doc-link - A link to the relevant documentation.
  * @part more-info-btn - A button to request additional error information.
  * @part error-info - Additional error information.
+ *
+ * @internal
  */
 @Component({
-  tag: 'atomic-query-error',
-  styleUrl: 'atomic-query-error.pcss',
+  tag: 'atomic-commerce-query-error',
+  styleUrl: 'atomic-commerce-query-error.pcss',
   shadow: true,
 })
-export class AtomicQueryError implements InitializableComponent {
-  @InitializeBindings() public bindings!: Bindings;
-  public queryError!: QueryError;
+export class AtomicQueryError
+  implements InitializableComponent<CommerceBindings>
+{
+  @InitializeBindings() public bindings!: CommerceBindings;
+  public searchOrListing!: Search | ProductListing;
 
-  @BindStateToController('queryError')
+  @BindStateToController('searchOrListing')
   @State()
-  private queryErrorState!: QueryErrorState;
+  private searchOrListingState!: SearchState | ProductListingState;
   @State() public error!: Error;
   @State() showMoreInfo = false;
 
-  @AriaLiveRegion('query-error')
+  @AriaLiveRegion('commerce-query-error')
   protected ariaMessage!: string;
 
   public initialize() {
-    this.queryError = buildQueryError(this.bindings.engine);
+    if (this.bindings.interfaceElement.type === 'product-listing') {
+      this.searchOrListing = buildProductListing(this.bindings.engine);
+    } else {
+      this.searchOrListing = buildSearch(this.bindings.engine);
+    }
   }
 
   public render() {
-    const {hasError, error} = this.queryErrorState;
+    const {error} = this.searchOrListingState;
+
     const {
       bindings: {
         i18n,
         engine: {
-          state: {
-            configuration: {organizationId, platformUrl},
-          },
+          configuration: {organizationId, organizationEndpoints, platformUrl},
         },
       },
     } = this;
     return (
-      <QueryErrorGuard hasError={hasError}>
+      <QueryErrorGuard hasError={!isNullOrUndefined(error)}>
         <QueryErrorContainer>
           <QueryErrorIcon errorType={error?.type} />
           <QueryErrorTitle
@@ -72,7 +87,7 @@ export class AtomicQueryError implements InitializableComponent {
           <QueryErrorDescription
             i18n={i18n}
             organizationId={organizationId}
-            url={platformUrl}
+            url={organizationEndpoints?.platform || platformUrl || ''}
             errorType={error?.type}
           />
           <QueryErrorShowMore
