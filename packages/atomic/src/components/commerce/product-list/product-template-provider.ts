@@ -7,10 +7,12 @@ import {
 function defaultTemplate() {
   const content = document.createDocumentFragment();
   const linkEl = document.createElement('atomic-product-link');
+  const descEl = document.createElement('atomic-product-description');
   const imgEl = document.createElement('atomic-product-image');
   imgEl.setAttribute('field', 'ec_thumbnails');
   content.appendChild(linkEl);
   content.appendChild(imgEl);
+  content.appendChild(descEl);
   return {
     content,
     conditions: [],
