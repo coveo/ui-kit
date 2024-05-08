@@ -1528,6 +1528,27 @@ export namespace Components {
          */
         "truncateAfter": 'none' | '1' | '2' | '3' | '4';
     }
+    /**
+     * The `atomic-product-image` component renders an image from a product field.
+     */
+    interface AtomicProductImage {
+        /**
+          * An optional fallback image URL that will be used in case the specified image field is not available or encounters an error.
+         */
+        "fallback"?: string;
+        /**
+          * The product field which the component should use. This will look for the field in the Product object first, then in the Product.additionalFields object.
+         */
+        "field": string;
+        /**
+          * Moves to the next image, when the carousel is activated.
+         */
+        "nextImage": () => Promise<void>;
+        /**
+          * Moves to the previous image, when the carousel is activated.
+         */
+        "previousImage": () => Promise<void>;
+    }
     interface AtomicProductLink {
         /**
           * The [template literal](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals) from which to generate the `href` attribute value  The template literal can reference any number of product properties from the parent product. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the product's `clickUri` and `itemtitle` fields. ```html <atomic-product-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-product-link> ```
@@ -3757,6 +3778,15 @@ declare global {
         prototype: HTMLAtomicProductDescriptionElement;
         new (): HTMLAtomicProductDescriptionElement;
     };
+    /**
+     * The `atomic-product-image` component renders an image from a product field.
+     */
+    interface HTMLAtomicProductImageElement extends Components.AtomicProductImage, HTMLStencilElement {
+    }
+    var HTMLAtomicProductImageElement: {
+        prototype: HTMLAtomicProductImageElement;
+        new (): HTMLAtomicProductImageElement;
+    };
     interface HTMLAtomicProductLinkElement extends Components.AtomicProductLink, HTMLStencilElement {
     }
     var HTMLAtomicProductLinkElement: {
@@ -4685,6 +4715,7 @@ declare global {
         "atomic-popover": HTMLAtomicPopoverElement;
         "atomic-product": HTMLAtomicProductElement;
         "atomic-product-description": HTMLAtomicProductDescriptionElement;
+        "atomic-product-image": HTMLAtomicProductImageElement;
         "atomic-product-link": HTMLAtomicProductLinkElement;
         "atomic-product-template": HTMLAtomicProductTemplateElement;
         "atomic-product-text": HTMLAtomicProductTextElement;
@@ -6174,6 +6205,19 @@ declare namespace LocalJSX {
          */
         "truncateAfter"?: 'none' | '1' | '2' | '3' | '4';
     }
+    /**
+     * The `atomic-product-image` component renders an image from a product field.
+     */
+    interface AtomicProductImage {
+        /**
+          * An optional fallback image URL that will be used in case the specified image field is not available or encounters an error.
+         */
+        "fallback"?: string;
+        /**
+          * The product field which the component should use. This will look for the field in the Product object first, then in the Product.additionalFields object.
+         */
+        "field": string;
+    }
     interface AtomicProductLink {
         /**
           * The [template literal](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals) from which to generate the `href` attribute value  The template literal can reference any number of product properties from the parent product. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the product's `clickUri` and `itemtitle` fields. ```html <atomic-product-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-product-link> ```
@@ -7546,6 +7590,7 @@ declare namespace LocalJSX {
         "atomic-popover": AtomicPopover;
         "atomic-product": AtomicProduct;
         "atomic-product-description": AtomicProductDescription;
+        "atomic-product-image": AtomicProductImage;
         "atomic-product-link": AtomicProductLink;
         "atomic-product-template": AtomicProductTemplate;
         "atomic-product-text": AtomicProductText;
@@ -7848,6 +7893,10 @@ declare module "@stencil/core" {
              */
             "atomic-product": LocalJSX.AtomicProduct & JSXBase.HTMLAttributes<HTMLAtomicProductElement>;
             "atomic-product-description": LocalJSX.AtomicProductDescription & JSXBase.HTMLAttributes<HTMLAtomicProductDescriptionElement>;
+            /**
+             * The `atomic-product-image` component renders an image from a product field.
+             */
+            "atomic-product-image": LocalJSX.AtomicProductImage & JSXBase.HTMLAttributes<HTMLAtomicProductImageElement>;
             "atomic-product-link": LocalJSX.AtomicProductLink & JSXBase.HTMLAttributes<HTMLAtomicProductLinkElement>;
             "atomic-product-template": LocalJSX.AtomicProductTemplate & JSXBase.HTMLAttributes<HTMLAtomicProductTemplateElement>;
             "atomic-product-text": LocalJSX.AtomicProductText & JSXBase.HTMLAttributes<HTMLAtomicProductTextElement>;
