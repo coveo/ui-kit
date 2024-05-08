@@ -1,8 +1,8 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import {createSelector} from '@reduxjs/toolkit';
 import {CommerceEngineState} from '../../../app/commerce-engine/commerce-engine';
 import {
   CommercePaginationSection,
+  CommerceQuerySection,
   CommerceSearchSection,
 } from '../../../state/state-sections';
 import {totalEntriesPrincipalSelector} from '../pagination/pagination-selectors';
@@ -26,7 +26,7 @@ export const moreProductsAvailableSelector = createSelector(
   ({current, total}) => current < total
 );
 
-export const isLoadingSelector = createSelector(
-  (state: Partial<CommerceSearchSection>) => state.commerceSearch?.isLoading,
-  (isLoading) => (isNullOrUndefined(isLoading) ? false : isLoading)
+export const querySelector = createSelector(
+  (state: CommerceQuerySection) => state.commerceQuery?.query,
+  (query) => query ?? ''
 );

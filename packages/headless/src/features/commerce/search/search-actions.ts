@@ -27,6 +27,7 @@ import {
   updateQuery,
 } from '../query/query-actions';
 import {
+  querySelector,
   moreProductsAvailableSelector,
   numberOfProductsSelector,
 } from './search-selectors';
@@ -68,6 +69,11 @@ export interface FetchInstantProductsActionCreatorPayload {
   cacheTimeout?: number;
 }
 
+export interface FetchInstantProductsThunkReturn {
+  /** The successful response. */
+  response: SearchCommerceSuccessResponse;
+}
+
 export const executeSearch = createAsyncThunk<
   QuerySearchCommerceAPIThunkReturn,
   void,
@@ -77,9 +83,11 @@ export const executeSearch = createAsyncThunk<
   async (_action, {getState, dispatch, rejectWithValue, extra}) => {
     const state = getState();
     const {apiClient} = extra;
+
+    const query = querySelector(state);
     const fetched = await apiClient.search({
       ...(await buildCommerceAPIRequest(state)),
-      query: state.commerceQuery?.query,
+      query,
     });
 
     if (isErrorResponse(fetched)) {
@@ -89,11 +97,8 @@ export const executeSearch = createAsyncThunk<
 
     return {
       response: fetched.success,
-      originalQuery:
-        state.commerceQuery?.query !== undefined
-          ? state.commerceQuery.query
-          : '',
-      queryExecuted: state.commerceQuery?.query ?? '',
+      originalQuery: query,
+      queryExecuted: querySelector(state),
     };
   }
 );
@@ -116,10 +121,11 @@ export const fetchMoreProducts = createAsyncThunk<
     const perPage = perPagePrincipalSelector(state);
     const numberOfProducts = numberOfProductsSelector(state);
     const nextPageToRequest = numberOfProducts / perPage;
+    const query = querySelector(state);
 
     const fetched = await apiClient.search({
       ...(await buildCommerceAPIRequest(state)),
-      query: state.commerceQuery?.query,
+      query,
       page: nextPageToRequest,
     });
 
@@ -130,8 +136,8 @@ export const fetchMoreProducts = createAsyncThunk<
 
     return {
       response: fetched.success,
-      queryExecuted: state.commerceQuery?.query ?? '',
-      originalQuery: state.commerceQuery?.query ?? '',
+      originalQuery: query,
+      queryExecuted: querySelector(state),
     };
   }
 );
@@ -162,7 +168,7 @@ export const prepareForSearchWithQuery = createAsyncThunk<
 });
 
 export const fetchInstantProducts = createAsyncThunk<
-  QuerySearchCommerceAPIThunkReturn,
+  FetchInstantProductsThunkReturn,
   FetchInstantProductsActionCreatorPayload,
   AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
 >(
@@ -188,8 +194,6 @@ export const fetchInstantProducts = createAsyncThunk<
 
     return {
       response: {...fetched.success, products},
-      queryExecuted: q ?? '',
-      originalQuery: state.commerceQuery?.query ?? '',
     };
   }
 );
