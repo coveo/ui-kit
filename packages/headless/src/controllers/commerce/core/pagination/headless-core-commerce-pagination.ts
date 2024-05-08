@@ -4,6 +4,7 @@ import {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../app/state-key';
 import {
   nextPage,
   previousPage,
@@ -141,7 +142,7 @@ export function buildCorePagination(
     ...controller,
 
     get state() {
-      return paginationSelector(engine.state);
+      return paginationSelector(engine[stateKey]);
     },
 
     selectPage(page: number) {

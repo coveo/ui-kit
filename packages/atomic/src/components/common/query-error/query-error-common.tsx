@@ -74,11 +74,15 @@ export const QueryErrorCommon: FunctionalComponent<QueryErrorCommonProps> = (
   };
 
   const getOrg = () => {
-    return props.bindings.engine.state.configuration.organizationId;
+    return 'state' in props.bindings.engine
+      ? props.bindings.engine.state.configuration.organizationId
+      : props.bindings.engine.configuration.organizationId;
   };
 
   const getUrl = () => {
-    return props.bindings.engine.state.configuration.platformUrl;
+    return 'state' in props.bindings.engine
+      ? props.bindings.engine.state.configuration.platformUrl
+      : props.bindings.engine.configuration.platformUrl;
   };
 
   const getErrorType = () => {

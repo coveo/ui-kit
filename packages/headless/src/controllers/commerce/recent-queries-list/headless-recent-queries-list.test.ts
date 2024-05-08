@@ -1,4 +1,5 @@
 import {NumberValue} from '@coveo/bueno';
+import {stateKey} from '../../../app/state-key';
 import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions';
 import {recentQueriesReducer as recentQueries} from '../../../features/commerce/recent-queries/recent-queries-slice';
 import {prepareForSearchWithQuery} from '../../../features/commerce/search/search-actions';
@@ -100,15 +101,15 @@ describe('recent queries list', () => {
 
     it('#executeRecentQuery should validate the given index parameter', () => {
       const validationSpy = jest.spyOn(NumberValue.prototype, 'validate');
-      engine.state.recentQueries = {...testInitialState, ...testOptions};
+      engine[stateKey].recentQueries = {...testInitialState, ...testOptions};
 
       expect(() => recentQueriesList.executeRecentQuery(100)).toThrow();
       expect(validationSpy).toHaveBeenCalled();
     });
 
     it('#executeRecentQuery should execute #prepareForSearchWithQuery with the proper parameters', () => {
-      engine.state.query = buildMockQueryState();
-      engine.state.recentQueries = {...testInitialState, ...testOptions};
+      engine[stateKey].query = buildMockQueryState();
+      engine[stateKey].recentQueries = {...testInitialState, ...testOptions};
       recentQueriesList.executeRecentQuery(0);
       expect(mockedPrepareForSearchWithQuery).toHaveBeenCalledTimes(1);
       expect(mockedPrepareForSearchWithQuery).toHaveBeenCalledWith({
