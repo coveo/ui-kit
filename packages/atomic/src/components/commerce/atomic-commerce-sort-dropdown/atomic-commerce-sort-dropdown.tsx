@@ -108,7 +108,7 @@ export class AtomicCommerceSortDropdown
               return (
                 <SortOption
                   i18n={i18n}
-                  label={this.getLabel(availableSort)}
+                  label={label}
                   selected={this.sort.isSortedBy(availableSort)}
                   value={label}
                 />
