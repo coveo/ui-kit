@@ -84,18 +84,17 @@ export class AtomicQuerySummary implements InitializableComponent {
             bindings={this.bindings}
             params={highlights}
             count={total}
-          >
-            <span class="hidden" part="duration">
-              &nbsp;
-              <LocalizedString
-                key="in-seconds"
-                bindings={this.bindings}
-                params={{
-                  count: durationInSeconds.toLocaleString(),
-                }}
-              />
-            </span>
-          </LocalizedString>
+          />
+          <span class="hidden" part="duration">
+            &nbsp;
+            <LocalizedString
+              key="in-seconds"
+              bindings={this.bindings}
+              params={{
+                count: durationInSeconds.toLocaleString(),
+              }}
+            />
+          </span>
         </QuerySummaryContainer>
       </QuerySummaryGuard>
     );
