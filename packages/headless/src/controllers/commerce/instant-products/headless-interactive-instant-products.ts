@@ -33,6 +33,5 @@ export function buildInteractiveInstantProduct(
   engine: CommerceEngine,
   props: InteractiveInstantProductProps
 ): InteractiveInstantProduct {
-  // TODO: KIT-???? dispatch recent result action
   return buildCoreInteractiveProduct(engine, props);
 }

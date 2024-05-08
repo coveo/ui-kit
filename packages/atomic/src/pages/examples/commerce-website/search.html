@@ -32,7 +32,6 @@
               <atomic-commerce-search-box textarea>
                 <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
                 <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
-                <!-- It does not work because template is trying to read highlights returned by the API. In the meantime, see if can print text -->
                 <atomic-commerce-search-box-instant-products
                   image-size="small"
                 ></atomic-commerce-search-box-instant-products>
@@ -40,7 +39,7 @@
             </atomic-layout-section>
           </atomic-search-layout>
 
-          <!-- <atomic-layout-section section="main">
+          <atomic-layout-section section="main">
             <atomic-commerce-product-list display="list" density="compact" image-size="small">
               <atomic-product-template>
                 <template>
@@ -76,7 +75,7 @@
             </atomic-commerce-product-list>
             <atomic-commerce-load-more-products></atomic-commerce-load-more-products>
             <atomic-commerce-pager></atomic-commerce-pager>
-          </atomic-layout-section> -->
+          </atomic-layout-section>
         </atomic-commerce-interface>
       </section>
     </main>
