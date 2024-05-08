@@ -158,18 +158,6 @@ export type {ProductListingFacetGenerator} from './controllers/commerce/product-
 export {buildProductListingFacetGenerator} from './controllers/commerce/product-listing/facets/headless-product-listing-facet-generator';
 export type {SearchFacetGenerator} from './controllers/commerce/search/facets/headless-search-facet-generator';
 export {buildSearchFacetGenerator} from './controllers/commerce/search/facets/headless-search-facet-generator';
-export type {SearchCategoryFacetBuilder} from './controllers/commerce/search/facets/headless-search-category-facet';
-export {buildSearchCategoryFacet} from './controllers/commerce/search/facets/headless-search-category-facet';
-export {buildSearchDateFacet} from './controllers/commerce/search/facets/headless-search-date-facet';
-export {buildSearchNumericFacet} from './controllers/commerce/search/facets/headless-search-numeric-facet';
-export type {FacetGenerator} from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator';
-export {buildFacetGenerator} from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator';
-export {buildSearchRegularFacet} from './controllers/commerce/search/facets/headless-search-regular-facet';
-export type {ProductListingCategoryFacetBuilder} from './controllers/commerce/product-listing/facets/headless-product-listing-category-facet';
-export {buildProductListingCategoryFacet} from './controllers/commerce/product-listing/facets/headless-product-listing-category-facet';
-export {buildProductListingDateFacet} from './controllers/commerce/product-listing/facets/headless-product-listing-date-facet';
-export {buildProductListingNumericFacet} from './controllers/commerce/product-listing/facets/headless-product-listing-numeric-facet';
-export {buildProductListingRegularFacet} from './controllers/commerce/product-listing/facets/headless-product-listing-regular-facet';
 
 export type {
   RegularFacetSearch,

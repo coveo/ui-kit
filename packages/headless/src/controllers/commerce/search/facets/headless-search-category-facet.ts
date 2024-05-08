@@ -11,17 +11,6 @@ import {commonOptions} from './headless-search-facet-options';
 
 export type SearchCategoryFacetBuilder = typeof buildSearchCategoryFacet;
 
-/**
- * Builds a category facet for the search page.
- *
- * Commerce facets are not requested by the implementer, but rather pre-configured through the Coveo Merchandising Hub
- * (CMH). The implementer is only responsible for leveraging the facet controllers created by the
- * `headless-search-facet-generator` controller to properly render facets in their application.
- *
- * @param engine - The commerce engine.
- * @param options - The facet options.
- * @returns The built category facet.
- */
 export function buildSearchCategoryFacet(
   engine: CommerceEngine,
   options: CommerceFacetOptions & SearchableFacetOptions

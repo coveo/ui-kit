@@ -9,17 +9,6 @@ import {SearchableFacetOptions} from '../../core/facets/searchable/headless-comm
 import {loadSearchReducer} from '../utils/load-search-reducers';
 import {commonOptions} from './headless-search-facet-options';
 
-/**
- * Builds a regular facet for the search page.
- *
- * Commerce facets are not requested by the implementer, but rather pre-configured through the Coveo Merchandising Hub
- * (CMH). The implementer is only responsible for leveraging the facet controllers created by the
- * `headless-search-facet-generator` controller to properly render facets in their application.
- *
- * @param engine - The commerce engine.
- * @param options - The facet options.
- * @returns The regular facet.
- */
 export function buildSearchRegularFacet(
   engine: CommerceEngine,
   options: CommerceFacetOptions & SearchableFacetOptions

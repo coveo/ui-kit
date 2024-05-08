@@ -20,35 +20,7 @@ const controllers: ControllerConfiguration[] = [
     samplePaths: {},
   },
   {
-    initializer: 'buildProductListingCategoryFacet',
-    samplePaths: {},
-  },
-  {
-    initializer: 'buildProductListingDateFacet',
-    samplePaths: {},
-  },
-  {
-    initializer: 'buildProductListingFacetGenerator',
-    samplePaths: {},
-  },
-  {
-    initializer: 'buildProductListingNumericFacet',
-    samplePaths: {},
-  },
-  {
-    initializer: 'buildProductListingRegularFacet',
-    samplePaths: {},
-  },
-  {
-    initializer: 'buildProductListingPagination',
-    samplePaths: {},
-  },
-  {
     initializer: 'buildProductListingParameterManager',
-    samplePaths: {},
-  },
-  {
-    initializer: 'buildProductListingSort',
     samplePaths: {},
   },
   {
@@ -72,35 +44,7 @@ const controllers: ControllerConfiguration[] = [
     samplePaths: {},
   },
   {
-    initializer: 'buildSearchCategoryFacet',
-    samplePaths: {},
-  },
-  {
-    initializer: 'buildSearchDateFacet',
-    samplePaths: {},
-  },
-  {
-    initializer: 'buildSearchFacetGenerator',
-    samplePaths: {},
-  },
-  {
-    initializer: 'buildSearchNumericFacet',
-    samplePaths: {},
-  },
-  {
-    initializer: 'buildSearchRegularFacet',
-    samplePaths: {},
-  },
-  {
-    initializer: 'buildSearchPagination',
-    samplePaths: {},
-  },
-  {
     initializer: 'buildSearchParameterManager',
-    samplePaths: {},
-  },
-  {
-    initializer: 'buildSearchSort',
     samplePaths: {},
   },
   {
@@ -124,9 +68,6 @@ const controllers: ControllerConfiguration[] = [
 const actionLoaders: ActionLoaderConfiguration[] = [
   {
     initializer: 'loadProductListingActions',
-  },
-  {
-    initializer: 'loadProductListingAnalyticsActions',
   },
 ];
 
