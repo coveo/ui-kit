@@ -232,7 +232,7 @@ export class AtomicCommerceSearchBoxInstantProducts
       !this.bindings.searchBoxController.state.value
     ) {
       console.warn(
-        "There doesn't seem to be any query suggestions configured. Make sure to include either an atomic-search-box-query-suggestions or atomic-search-box-recent-queries in your search box in order to see some instant products."
+        "There doesn't seem to be any query suggestions configured. Make sure to include either an atomic-commerce-search-box-query-suggestions or atomic-commerce-search-box-recent-queries in your search box in order to see some instant products."
       );
     }
 
