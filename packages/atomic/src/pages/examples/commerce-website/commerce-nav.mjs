@@ -66,8 +66,6 @@ if (window.location.pathname !== '/examples/commerce-website/search.html') {
   const standaloneSearchBox = document.createElement('search');
   standaloneSearchBox.innerHTML = `
   <atomic-commerce-interface id="standaloneSearchBox" type="search">
-  <atomic-search-layout>
-    <atomic-layout-section section="search">
       <atomic-commerce-search-box redirection-url="./search.html">
         <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
         <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
@@ -75,8 +73,6 @@ if (window.location.pathname !== '/examples/commerce-website/search.html') {
           image-size="small"
         ></atomic-commerce-search-box-instant-products>
       </atomic-commerce-search-box>
-    </atomic-layout-section>
-  </atomic-search-layout>
   </atomic-commerce-interface>
   `;
   document.body
