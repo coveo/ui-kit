@@ -18,7 +18,7 @@ import {updatePage} from '../../pagination/pagination-actions';
 import {logQueryError} from '../../search/search-analytics-actions';
 import {
   buildCommerceAPIRequest,
-  SearchQueryCommerceAPIThunkReturn,
+  QueryCommerceAPIThunkReturn,
   StateNeededByQueryCommerceAPI,
 } from '../common/actions';
 import {perPagePrincipalSelector} from '../pagination/pagination-selectors';
@@ -59,7 +59,7 @@ export interface FetchInstantProductsActionCreatorPayload {
 }
 
 export const executeSearch = createAsyncThunk<
-  SearchQueryCommerceAPIThunkReturn,
+  QueryCommerceAPIThunkReturn,
   void,
   AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
 >(
@@ -112,7 +112,7 @@ export const prepareForSearchWithQuery = createAsyncThunk<
 });
 
 export const fetchInstantProducts = createAsyncThunk<
-  SearchQueryCommerceAPIThunkReturn,
+  QueryCommerceAPIThunkReturn,
   FetchInstantProductsActionCreatorPayload,
   AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
 >(
@@ -144,7 +144,7 @@ export const fetchInstantProducts = createAsyncThunk<
 );
 
 export const fetchMoreProducts = createAsyncThunk<
-  SearchQueryCommerceAPIThunkReturn | null,
+  QueryCommerceAPIThunkReturn | null,
   void,
   AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
 >(

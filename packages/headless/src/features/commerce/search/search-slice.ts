@@ -64,11 +64,11 @@ function handlePending(state: CommerceSearchState, requestId: string) {
 function handleFulfilled(
   state: CommerceSearchState,
   response: CommerceSuccessResponse,
-  query: string
+  query?: string
 ) {
   state.error = null;
   state.facets = response.facets;
   state.responseId = response.responseId;
   state.isLoading = false;
-  state.queryExecuted = query;
+  state.queryExecuted = query ?? '';
 }

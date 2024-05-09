@@ -29,14 +29,10 @@ export type StateNeededByQueryCommerceAPI = ConfigurationSection &
   >;
 
 export interface QueryCommerceAPIThunkReturn {
+  /** The query that was executed. */
+  queryExecuted?: string;
   /** The successful search response. */
   response: CommerceSuccessResponse;
-}
-
-export interface SearchQueryCommerceAPIThunkReturn
-  extends QueryCommerceAPIThunkReturn {
-  /** The query that was executed. */
-  queryExecuted: string;
 }
 
 export const buildCommerceAPIRequest = async (
