@@ -1,1 +1,1 @@
-export * from '../cypress.config';
+../cypress.config.ts
