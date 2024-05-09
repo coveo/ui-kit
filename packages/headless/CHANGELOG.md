@@ -1,3 +1,24 @@
+## 2.63.1 (2024-05-06)
+
+# 2.63.0 (2024-05-02)
+
+### Bug Fixes
+
+- disable relay when headless analytics are disabled ([#3880](https://github.com/coveo/ui-kit/issues/3880)) ([029d5ed](https://github.com/coveo/ui-kit/commits/029d5edd85f8c8530af12d8c2b893ee25deab7f0))
+- **headless/commerce:** subscribing to the facet generator controller state causes stack overflow ([#3863](https://github.com/coveo/ui-kit/issues/3863)) ([40a5178](https://github.com/coveo/ui-kit/commits/40a5178a901a3e8cf581cf6de53ed4c13f515b19))
+- **headless/commerce:** use numberOfValues from response when setting initialNumberOfValues / numberOfValues in facet request ([#3856](https://github.com/coveo/ui-kit/issues/3856)) ([946d4e4](https://github.com/coveo/ui-kit/commits/946d4e46079cd8586389f7a2ff551db2e8d83ca2))
+- **headless:** generated-answer-state expanded should be false ([#3848](https://github.com/coveo/ui-kit/issues/3848)) ([8c22beb](https://github.com/coveo/ui-kit/commits/8c22beba0c6a4fabad5bddd0d47af16d52c58242))
+- remove double quote ([#3849](https://github.com/coveo/ui-kit/issues/3849)) ([6a4e14e](https://github.com/coveo/ui-kit/commits/6a4e14ea9478b7fde2a0eda2e568448b5098a310)), closes [#3832](https://github.com/coveo/ui-kit/issues/3832)
+
+### Features
+
+- **Commerce Atomic:** add atomic-commerce-interface ([#3868](https://github.com/coveo/ui-kit/issues/3868)) ([4527419](https://github.com/coveo/ui-kit/commits/45274198ea6af6e1d4a2acd6472dbf706b279588))
+- **Commerce Atomic:** add atomic-commerce-result-list ([#3872](https://github.com/coveo/ui-kit/issues/3872)) ([8db0aee](https://github.com/coveo/ui-kit/commits/8db0aee7690a70f517e136c206c7c20d926086d0))
+- **Commerce Atomic:** add standalone searchbox ([#3875](https://github.com/coveo/ui-kit/issues/3875)) ([e1f2b6f](https://github.com/coveo/ui-kit/commits/e1f2b6f23eb30be4972a7e46a7878515004cec46))
+- **commerce:** structure pagination slices by solution types ([#3842](https://github.com/coveo/ui-kit/issues/3842)) ([178a08e](https://github.com/coveo/ui-kit/commits/178a08efd191a47cdeb3b3249555854f4bd2139d))
+- **headless/commerce:** Export facet state types ([#3844](https://github.com/coveo/ui-kit/issues/3844)) ([96c9800](https://github.com/coveo/ui-kit/commits/96c9800e154067ae79cba0220e0b4447bf3a82ba))
+- **headless/commerce:** support continuous ranges on numeric facets ([#3879](https://github.com/coveo/ui-kit/issues/3879)) ([618ea00](https://github.com/coveo/ui-kit/commits/618ea00e067850389abe96b42ccae27df9d6684f))
+
 # 2.62.0 (2024-04-24)
 
 ### Bug Fixes

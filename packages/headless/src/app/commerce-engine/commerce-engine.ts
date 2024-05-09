@@ -10,8 +10,10 @@ import {paginationReducer} from '../../features/commerce/pagination/pagination-s
 import {productListingV2Reducer} from '../../features/commerce/product-listing/product-listing-slice';
 import {queryReducer} from '../../features/commerce/query/query-slice';
 import {recommendationsReducer} from '../../features/commerce/recommendations/recommendations-slice';
+import {executeSearch} from '../../features/commerce/search/search-actions';
 import {commerceSearchReducer} from '../../features/commerce/search/search-slice';
 import {sortReducer} from '../../features/commerce/sort/sort-slice';
+import {commerceTriggersReducer} from '../../features/commerce/triggers/triggers-slice';
 import {facetOrderReducer} from '../../features/facets/facet-order/facet-order-slice';
 import {categoryFacetSearchSetReducer} from '../../features/facets/facet-search-set/category/category-facet-search-set-slice';
 import {specificFacetSearchSetReducer} from '../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
@@ -19,11 +21,12 @@ import {CommerceAppState} from '../../state/commerce-app-state';
 import {CommerceThunkExtraArguments} from '../commerce-thunk-extra-arguments';
 import {
   buildEngine,
-  CoreEngine,
+  CoreEngineNext,
   EngineOptions,
   ExternalEngineOptions,
 } from '../engine';
 import {buildLogger} from '../logger';
+import {stateKey} from '../state-key';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {
   CommerceEngineConfiguration,
@@ -45,6 +48,7 @@ const commerceEngineReducers = {
   commerceContext: contextReducer,
   commerceQuery: queryReducer,
   cart: cartReducer,
+  triggers: commerceTriggersReducer,
 };
 type CommerceEngineReducers = typeof commerceEngineReducers;
 
@@ -58,10 +62,20 @@ export type CommerceEngineState =
  * @internal WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
  */
 export interface CommerceEngine<State extends object = {}>
-  extends CoreEngine<
+  extends CoreEngineNext<
     State & CommerceEngineState,
     CommerceThunkExtraArguments
-  > {}
+  > {
+  /**
+   * Executes the first search.
+   */
+  executeFirstSearch(): void;
+
+  /**
+   * Executes the first search after a redirection from a standalone search box.
+   */
+  executeFirstSearchAfterStandaloneSearchBoxRedirect(): void;
+}
 
 /**
  * The commerce engine options.
@@ -101,15 +115,30 @@ export function buildCommerceEngine(
     reducers: commerceEngineReducers,
   };
 
-  const engine = buildEngine(augmentedOptions, thunkArguments);
+  const internalEngine = buildEngine(augmentedOptions, thunkArguments);
+  const {state: _, ...engine} = internalEngine;
 
   engine.dispatch(setContext(options.configuration.context));
 
   return {
     ...engine,
 
-    get state() {
-      return engine.state;
+    get [stateKey]() {
+      return internalEngine.state;
+    },
+
+    get configuration() {
+      return internalEngine.state.configuration;
+    },
+
+    executeFirstSearch() {
+      const action = executeSearch();
+      internalEngine.dispatch(action);
+    },
+
+    executeFirstSearchAfterStandaloneSearchBoxRedirect() {
+      const action = executeSearch();
+      internalEngine.dispatch(action);
     },
   };
 }

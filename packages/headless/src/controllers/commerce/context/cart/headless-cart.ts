@@ -1,5 +1,6 @@
 import {CurrencyCodeISO4217, Ec} from '@coveo/relay-event-types';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../app/state-key';
 import {
   purchase,
   setItems,
@@ -12,6 +13,7 @@ import {
 import {cartReducer as cart} from '../../../../features/commerce/context/cart/cart-slice';
 import {CartItemWithMetadata} from '../../../../features/commerce/context/cart/cart-state';
 import {cartSchema} from '../../../../features/commerce/context/cart/cart-validation';
+import {CartSection} from '../../../../state/state-sections';
 import {loadReducerError} from '../../../../utils/errors';
 import {validateInitialState} from '../../../../utils/validate-payload';
 import {
@@ -144,7 +146,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
 
   const {dispatch} = engine;
   const controller = buildController(engine);
-  const getState = () => engine.state.cart;
+  const getState = () => engine[stateKey].cart;
 
   const initialState = {
     ...props.initialState,
@@ -174,7 +176,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
   }
 
   function getCurrency(): CurrencyCodeISO4217 {
-    return engine.state.commerceContext.currency;
+    return engine[stateKey].commerceContext.currency;
   }
 
   function isEqual(
@@ -252,7 +254,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
 
 function loadBaseCartReducers(
   engine: CommerceEngine
-): engine is CommerceEngine {
+): engine is CommerceEngine<CartSection> {
   engine.addReducers({cart});
   return true;
 }

@@ -2,10 +2,14 @@ import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api
 import {Product} from '../../../api/commerce/common/product';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
+import {stateKey} from '../../../app/state-key';
 import {LegacySearchAction} from '../../../features/analytics/analytics-utils';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
-import {executeSearch} from '../../../features/commerce/search/search-actions';
+import {
+  executeSearch,
+  fetchMoreProducts,
+} from '../../../features/commerce/search/search-actions';
 import {responseIdSelector} from '../../../features/commerce/search/search-selectors';
 import {commerceSearchReducer as commerceSearch} from '../../../features/commerce/search/search-slice';
 import {loadReducerError} from '../../../utils/errors';
@@ -15,10 +19,14 @@ import {
 } from '../../controller/headless-controller';
 import {
   buildSolutionTypeSubControllers,
-  SolutionTypeSubControllers,
+  SearchAndListingSubControllers,
 } from '../core/sub-controller/headless-sub-controller';
+import {
+  facetResponseSelector,
+  isFacetLoadingResponseSelector,
+} from './facets/headless-search-facet-options';
 
-export interface Search extends Controller, SolutionTypeSubControllers {
+export interface Search extends Controller, SearchAndListingSubControllers {
   /**
    * Executes the first search.
    */
@@ -44,10 +52,13 @@ export function buildSearch(engine: CommerceEngine): Search {
 
   const controller = buildController(engine);
   const {dispatch} = engine;
-  const getState = () => engine.state;
+  const getState = () => engine[stateKey];
   const subControllers = buildSolutionTypeSubControllers(engine, {
     responseIdSelector,
-    fetchResultsActionCreator: executeSearch,
+    fetchProductsActionCreator: executeSearch,
+    fetchMoreProductsActionCreator: fetchMoreProducts,
+    facetResponseSelector,
+    isFacetLoadingResponseSelector,
   });
 
   return {
@@ -61,7 +72,7 @@ export function buildSearch(engine: CommerceEngine): Search {
     // eslint-disable-next-line @cspell/spellchecker
     // TODO CAPI-244: Handle analytics
     executeFirstSearch() {
-      const firstSearchExecuted = responseIdSelector(engine.state) !== '';
+      const firstSearchExecuted = responseIdSelector(getState()) !== '';
 
       if (firstSearchExecuted) {
         return;

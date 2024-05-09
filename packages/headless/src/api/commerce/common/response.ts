@@ -1,4 +1,5 @@
 import {AnyFacetResponse} from '../../../features/commerce/facets/facet-set/interfaces/response';
+import {Trigger} from '../../common/trigger';
 import {
   SearchAPIErrorWithExceptionInBody,
   SearchAPIErrorWithStatusCode,
@@ -11,6 +12,7 @@ export interface BaseCommerceSuccessResponse {
   responseId: string;
   products: Product[];
   pagination: Pagination;
+  triggers: Trigger[];
 }
 
 export interface CommerceSuccessResponse extends BaseCommerceSuccessResponse {

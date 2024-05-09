@@ -23,6 +23,6 @@ export function buildSearchBreadcrumbManager(
 
   return buildCoreBreadcrumbManager(engine, {
     facetResponseSelector: facetResponseSelector,
-    fetchResultsActionCreator: executeSearch,
+    fetchProductsActionCreator: executeSearch,
   });
 }

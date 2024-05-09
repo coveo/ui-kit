@@ -5,10 +5,8 @@ import {
 } from '../app/commerce-engine/commerce-engine';
 import {buildCart} from '../controllers/commerce/context/cart/headless-cart';
 import {buildRelevanceSortCriterion} from '../controllers/commerce/core/sort/headless-core-commerce-sort';
-import {buildProductListingFacetGenerator} from '../controllers/commerce/product-listing/facets/headless-product-listing-facet-generator';
 import {ProductListing} from '../controllers/commerce/product-listing/headless-product-listing';
 import {buildProductListing} from '../controllers/commerce/product-listing/headless-product-listing';
-import {buildProductListingSort} from '../controllers/commerce/product-listing/sort/headless-product-listing-sort';
 import {buildSearchBox} from '../controllers/commerce/search-box/headless-search-box';
 import {buildSearch} from '../controllers/commerce/search/headless-search';
 import {updateQuery} from '../features/commerce/query/query-actions';
@@ -94,7 +92,8 @@ describe.skip('commerce', () => {
   });
 
   it('applies sort to product listing', async () => {
-    const sort = buildProductListingSort(engine);
+    const productListing = await fetchProductListing();
+    const sort = productListing.sort();
     const relevance = buildRelevanceSortCriterion();
     sort.sortBy(relevance);
 
@@ -107,20 +106,32 @@ describe.skip('commerce', () => {
 
   it('has selectable facets', async () => {
     // Query the commerce api
-    await fetchProductListing();
+    const productListing = await fetchProductListing();
 
     // Generate the facets from the response
-    const facetGenerator = buildProductListingFacetGenerator(engine);
-    const controllers = facetGenerator.state.facets;
+    const facetGenerator = productListing.facetGenerator();
+    const controllers = facetGenerator.facets;
     const facetController = controllers[0];
 
     // Select a facet
     await waitForNextStateChange(engine, {
       action: () => {
-        facetController.toggleSelect({
-          ...facetController.state.values[0],
-          state: 'selected',
-        });
+        switch (facetController.type) {
+          case 'numericalRange':
+            facetController.toggleSelect(facetController.state.values[0]);
+            break;
+          case 'dateRange':
+            facetController.toggleSelect(facetController.state.values[0]);
+            break;
+          case 'regular':
+            facetController.toggleSelect(facetController.state.values[0]);
+            break;
+          case 'hierarchical':
+            facetController.toggleSelect(facetController.state.values[0]);
+            break;
+          default:
+            break;
+        }
       },
       expectedSubscriberCalls: 8,
     });

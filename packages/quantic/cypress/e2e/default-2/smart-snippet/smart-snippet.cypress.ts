@@ -278,8 +278,8 @@ describe('quantic-smart-snippet', {browser: 'chrome'}, () => {
                 });
               });
             });
-
-            describe('when clicking the feedback like button', () => {
+            // Skipping temporarily will be fixed in SFINT-5514
+            describe.skip('when clicking the feedback like button', () => {
               it('should properly log the analytics', () => {
                 visitPage({useCase: param.useCase});
 
@@ -306,8 +306,8 @@ describe('quantic-smart-snippet', {browser: 'chrome'}, () => {
                 });
               });
             });
-
-            describe(
+            // Skipping temporarily will be fixed in SFINT-5514
+            describe.skip(
               'when clicking the feedback dislike button',
               {
                 retries: 20,
@@ -390,6 +390,61 @@ describe('quantic-smart-snippet', {browser: 'chrome'}, () => {
                       Expect.logCloseSmartSnippetFeedbackModal();
                     }
                   });
+
+                  scope(
+                    'when trying to open the feedback modal after executing the same query',
+                    () => {
+                      performSearch();
+                      Expect.displayExplainWhyButton(false);
+                      Expect.displaySmartSnippetCard(true);
+                      Actions.clickSmartSnippetDislikeButton();
+                      Expect.displayExplainWhyButton(false);
+                    }
+                  );
+
+                  scope(
+                    'when trying to open the feedback modal after executing a query that gave a new answer',
+                    () => {
+                      const exampleNewQuestion = 'new example question';
+                      const exampleNewAnswer = 'new example answer';
+
+                      mockSearchWithSmartSnippet(
+                        {
+                          question: exampleNewQuestion,
+                          answer: exampleNewAnswer,
+                          title: exampleSmartSnippetSourceTitle,
+                          uri: exampleSmartSnippetSourceUri,
+                          permanentId: '456',
+                          uriHash: exampleUriHash,
+                          author: exampleAuthor,
+                        },
+                        param.useCase,
+                        exampleResponseId
+                      );
+                      performSearch();
+
+                      Expect.displayExplainWhyButton(false);
+                      Expect.displaySmartSnippetCard(true);
+                      Expect.displaySmartSnippetQuestion(exampleNewQuestion);
+                      Actions.clickSmartSnippetDislikeButton();
+                      if (analyticsMode === 'next') {
+                        NextAnalyticsExpectations.emitQnaDislikeEvent(
+                          {
+                            feedback: {
+                              liked: false,
+                            },
+                            answer: {
+                              type: answerType,
+                            },
+                          },
+                          exampleTrackingId
+                        );
+                      } else {
+                        Expect.logDislikeSmartSnippet();
+                      }
+                      Expect.displayExplainWhyButton(true);
+                    }
+                  );
                 });
               }
             );

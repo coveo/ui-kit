@@ -1,12 +1,12 @@
 import {configuration} from '../../../app/common-reducers';
 import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions';
-import {selectPage} from '../../../features/commerce/pagination/pagination-actions';
 import {fetchQuerySuggestions} from '../../../features/commerce/query-suggest/query-suggest-actions';
-import {updateQuery} from '../../../features/commerce/query/query-actions';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
-import {executeSearch} from '../../../features/commerce/search/search-actions';
+import {
+  executeSearch,
+  prepareForSearchWithQuery,
+} from '../../../features/commerce/search/search-actions';
 import {commerceSearchReducer as commerceSearch} from '../../../features/commerce/search/search-slice';
-import {updateFacetAutoSelection} from '../../../features/facets/generic/facet-actions';
 import {
   registerQuerySetQuery,
   updateQuerySetQuery,
@@ -230,8 +230,8 @@ describe('headless search box', () => {
       searchBox.submit();
     });
 
-    it('when clearFilters option is true, dispatches #deselectAllBreadcrumbs', () => {
-      expect(deselectAllBreadcrumbs).toHaveBeenCalled();
+    it('dispatches #prepareForSearchWithQuery', () => {
+      expect(prepareForSearchWithQuery).toHaveBeenCalled();
     });
 
     it('when clearFilters option is false, does not dispatch #deselectAllBreadcrumbs', () => {
@@ -243,25 +243,6 @@ describe('headless search box', () => {
       });
       searchBox.submit();
       expect(deselectAllBreadcrumbs).not.toHaveBeenCalled();
-    });
-
-    it('dispatches #updateFacetAutoSelection with proper payload', () => {
-      expect(updateFacetAutoSelection).toHaveBeenCalledWith({allow: true});
-    });
-
-    it('allows autoSelection after deselecting facets', () => {
-      expect(deselectAllBreadcrumbs).toHaveBeenCalled();
-      expect(updateFacetAutoSelection).toHaveBeenCalled();
-    });
-
-    it('dispatches #updateQuery', () => {
-      const expectedQuery = state.querySet[id];
-
-      expect(updateQuery).toHaveBeenCalledWith({query: expectedQuery});
-    });
-
-    it('updates the page to the first one', () => {
-      expect(selectPage).toHaveBeenCalledWith(0);
     });
 
     it('dispatches #executeSearch', () => {

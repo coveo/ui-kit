@@ -253,12 +253,13 @@ describe('commerce api client', () => {
     const expectedBody: CommerceResponse = {
       products: [],
       facets: [],
-      pagination: {page: 0, perPage: 0, totalItems: 0, totalPages: 0},
+      pagination: {page: 0, perPage: 0, totalEntries: 0, totalPages: 0},
       responseId: '',
       sort: {
         appliedSort: {sortCriteria: SortBy.Relevance},
         availableSorts: [{sortCriteria: SortBy.Relevance}],
       },
+      triggers: [],
     };
 
     mockPlatformCall({

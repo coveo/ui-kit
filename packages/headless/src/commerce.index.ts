@@ -18,11 +18,14 @@ export type {
   AnalyticsRuntimeEnvironment,
 } from './app/engine-configuration';
 export type {LogLevel, LoggerOptions} from './app/logger';
+export type {NavigatorContext} from './app/navigatorContextProvider';
 
 export type {Product} from './api/commerce/common/product';
+export type {PlatformEnvironment} from './utils/url-utils';
 
 // Actions
 export * from './features/commerce/product-listing/product-listing-actions-loader';
+export * from './features/commerce/query-suggest/query-suggest-actions-loader';
 export * from './features/configuration/configuration-actions-loader';
 
 // Controllers
@@ -60,13 +63,11 @@ export type {
   PaginationProps,
   PaginationOptions,
 } from './controllers/commerce/core/pagination/headless-core-commerce-pagination';
-export {buildProductListingPagination} from './controllers/commerce/product-listing/pagination/headless-product-listing-pagination';
-export {buildSearchPagination} from './controllers/commerce/search/pagination/headless-search-pagination';
 
 export type {
-  InteractiveResult,
-  InteractiveResultOptions,
-  InteractiveResultProps,
+  InteractiveProduct,
+  InteractiveProductOptions,
+  InteractiveProductProps,
 } from './controllers/commerce/core/result-list/headless-core-interactive-result';
 
 export type {ProductView} from './controllers/commerce/product-view/headless-product-view';
@@ -98,13 +99,22 @@ export {
   SortDirection,
 } from './controllers/commerce/core/sort/headless-core-commerce-sort';
 
-export {buildProductListingSort} from './controllers/commerce/product-listing/sort/headless-product-listing-sort';
-export {buildSearchSort} from './controllers/commerce/search/sort/headless-search-sort';
-
-export type {CategoryFacet} from './controllers/commerce/core/facets/category/headless-commerce-category-facet';
-export type {RegularFacet} from './controllers/commerce/core/facets/regular/headless-commerce-regular-facet';
-export type {NumericFacet} from './controllers/commerce/core/facets/numeric/headless-commerce-numeric-facet';
-export type {DateFacet} from './controllers/commerce/core/facets/date/headless-commerce-date-facet';
+export type {
+  CategoryFacet,
+  CategoryFacetState,
+} from './controllers/commerce/core/facets/category/headless-commerce-category-facet';
+export type {
+  RegularFacet,
+  RegularFacetState,
+} from './controllers/commerce/core/facets/regular/headless-commerce-regular-facet';
+export type {
+  NumericFacet,
+  NumericFacetState,
+} from './controllers/commerce/core/facets/numeric/headless-commerce-numeric-facet';
+export type {
+  DateFacet,
+  DateFacetState,
+} from './controllers/commerce/core/facets/date/headless-commerce-date-facet';
 export type {
   FacetType,
   FacetValueRequest,
@@ -116,10 +126,6 @@ export type {
   CategoryFacetValueRequest,
   CategoryFacetValue,
 } from './controllers/commerce/core/facets/headless-core-commerce-facet';
-export type {ProductListingFacetGenerator} from './controllers/commerce/product-listing/facets/headless-product-listing-facet-generator';
-export {buildProductListingFacetGenerator} from './controllers/commerce/product-listing/facets/headless-product-listing-facet-generator';
-export type {SearchFacetGenerator} from './controllers/commerce/search/facets/headless-search-facet-generator';
-export {buildSearchFacetGenerator} from './controllers/commerce/search/facets/headless-search-facet-generator';
 
 export type {
   RegularFacetSearch,
@@ -132,7 +138,10 @@ export type {
 } from './controllers/commerce/core/facets/category/headless-commerce-category-facet-search';
 export type {CategoryFacetSearchResult} from './api/search/facet-search/category-facet-search/category-facet-search-response';
 
-export type {Search} from './controllers/commerce/search/headless-search';
+export type {
+  Search,
+  SearchState,
+} from './controllers/commerce/search/headless-search';
 export {buildSearch} from './controllers/commerce/search/headless-search';
 
 export {updateQuery} from './features/commerce/query/query-actions';
@@ -141,7 +150,23 @@ export {buildSearchBox} from './controllers/commerce/search-box/headless-search-
 export type {
   SearchBox,
   SearchBoxState,
+  Suggestion,
+  SearchBoxOptions,
 } from './controllers/commerce/search-box/headless-search-box';
+
+export {buildRecentQueriesList} from './controllers/commerce/recent-queries-list/headless-recent-queries-list';
+export type {RecentQueriesList} from './controllers/commerce/recent-queries-list/headless-recent-queries-list';
+
+export {buildInstantProducts} from './controllers/commerce/instant-products/headless-instant-products';
+export type {
+  InstantProducts,
+  InstantProductsState,
+} from './controllers/commerce/instant-products/headless-instant-products';
+export {buildStandaloneSearchBox} from './controllers/commerce/standalone-search-box/headless-standalone-search-box';
+export type {
+  StandaloneSearchBox,
+  StandaloneSearchBoxState,
+} from './controllers/commerce/standalone-search-box/headless-standalone-search-box';
 
 export type {
   UrlManagerProps,
@@ -171,3 +196,10 @@ export {buildProductListingBreadcrumbManager} from './controllers/commerce/produ
 export {buildSearchBreadcrumbManager} from './controllers/commerce/search/breadcrumb-manager/headless-search-breadcrumb-manager';
 
 export {getOrganizationEndpoints} from './api/platform-client';
+export {ProductTemplatesHelpers} from './features/commerce/product-templates/product-templates-helpers';
+
+export type {
+  NotifyTrigger,
+  NotifyTriggerState,
+} from './controllers/core/triggers/headless-core-notify-trigger';
+export {buildNotifyTrigger} from './controllers/commerce/triggers/headless-commerce-notify-trigger';

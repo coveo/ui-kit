@@ -1,6 +1,6 @@
 import {debounce} from 'ts-debounce';
 import {configuration} from '../../../app/common-reducers';
-import {CoreEngine} from '../../../app/engine';
+import {CoreEngine, CoreEngineNext} from '../../../app/engine';
 import {ConfigurationSection} from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
 
@@ -66,7 +66,7 @@ export interface InteractiveResultCore {
  * @returns A controller core instance.
  */
 export function buildInteractiveResultCore(
-  engine: CoreEngine,
+  engine: CoreEngine | CoreEngineNext,
   props: InteractiveResultCoreProps,
   action: () => void
 ): InteractiveResultCore {
@@ -98,8 +98,10 @@ export function buildInteractiveResultCore(
 }
 
 function loadInteractiveResultCoreReducers(
-  engine: CoreEngine
-): engine is CoreEngine<ConfigurationSection> {
+  engine: CoreEngine | CoreEngineNext
+): engine is
+  | CoreEngine<ConfigurationSection>
+  | CoreEngineNext<ConfigurationSection> {
   engine.addReducers({configuration});
   return true;
 }

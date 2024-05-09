@@ -20,7 +20,11 @@ import {
   QueryCommerceAPIThunkReturn,
   StateNeededByQueryCommerceAPI,
 } from '../common/actions';
-import {logProductListingV2Load} from './product-listing-analytics';
+import {perPagePrincipalSelector} from '../pagination/pagination-selectors';
+import {
+  moreProductsAvailableSelector,
+  numberOfProductsSelector,
+} from './product-listing-selectors';
 
 export type StateNeededByFetchProductListingV2 = ConfigurationSection &
   ProductListingV2Section &
@@ -54,7 +58,41 @@ export const fetchProductListing = createAsyncThunk<
 
     return {
       response: fetched.success,
-      analyticsAction: logProductListingV2Load(),
+    };
+  }
+);
+
+export const fetchMoreProducts = createAsyncThunk<
+  QueryCommerceAPIThunkReturn | null,
+  void,
+  AsyncThunkCommerceOptions<
+    StateNeededByQueryCommerceAPI & ProductListingV2Section
+  >
+>(
+  'commerce/productListing/fetchMoreProducts',
+  async (_action, {getState, dispatch, rejectWithValue, extra}) => {
+    const state = getState();
+    const moreProductsAvailable = moreProductsAvailableSelector(state);
+    if (!moreProductsAvailable) {
+      return null;
+    }
+    const {apiClient} = extra;
+    const perPage = perPagePrincipalSelector(state);
+    const numberOfProducts = numberOfProductsSelector(state);
+    const nextPageToRequest = numberOfProducts / perPage;
+
+    const fetched = await apiClient.getProductListing({
+      ...(await buildCommerceAPIRequest(state)),
+      page: nextPageToRequest,
+    });
+
+    if (isErrorResponse(fetched)) {
+      dispatch(logQueryError(fetched.error));
+      return rejectWithValue(fetched.error);
+    }
+
+    return {
+      response: fetched.success,
     };
   }
 );

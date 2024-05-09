@@ -1,5 +1,8 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
+import {
+  fetchProductListing,
+  fetchMoreProducts,
+} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {loadReducerError} from '../../../../utils/errors';
 import {
   buildCorePagination,
@@ -25,6 +28,7 @@ export function buildProductListingPagination(
 
   return buildCorePagination(engine, {
     ...props,
-    fetchResultsActionCreator: fetchProductListing,
+    fetchProductsActionCreator: fetchProductListing,
+    fetchMoreProductsActionCreator: fetchMoreProducts,
   });
 }

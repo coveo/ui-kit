@@ -3,6 +3,7 @@ import {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../../app/state-key';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
@@ -11,6 +12,7 @@ import {
   CoreCommerceFacet,
   CoreCommerceFacetOptions,
   CoreCommerceFacetState,
+  FacetControllerType,
   FacetValueRequest,
   RegularFacetValue,
   buildCoreCommerceFacet,
@@ -28,6 +30,10 @@ export type RegularFacetOptions = Omit<
 > &
   SearchableFacetOptions;
 
+export type RegularFacetState = CoreCommerceFacetState<RegularFacetValue> & {
+  facetSearch: RegularFacetSearchState;
+};
+
 /**
  * The `RegularFacet` controller offers a high-level programming interface for implementing a regular commerce
  * facet UI component.
@@ -37,10 +43,8 @@ export type RegularFacet = CoreCommerceFacet<
   RegularFacetValue
 > & {
   facetSearch: Omit<RegularFacetSearch, 'state'>;
-  state: CoreCommerceFacetState<RegularFacetValue> & {
-    facetSearch: RegularFacetSearchState;
-  };
-};
+  state: RegularFacetState;
+} & FacetControllerType<'regular'>;
 
 /**
  * @internal
@@ -74,10 +78,10 @@ export function buildCommerceRegularFacet(
     return buildRegularFacetSearch(engine, {
       options: {facetId: getFacetId(), ...options.facetSearch},
       select: () => {
-        dispatch(options.fetchResultsActionCreator());
+        dispatch(options.fetchProductsActionCreator());
       },
       exclude: () => {
-        dispatch(options.fetchResultsActionCreator());
+        dispatch(options.fetchProductsActionCreator());
       },
       isForFieldSuggestions: false,
     });
@@ -104,8 +108,10 @@ export function buildCommerceRegularFacet(
     get state() {
       return {
         ...coreController.state,
-        ...facetSearchStateSelector(engine.state),
+        ...facetSearchStateSelector(engine[stateKey]),
       };
     },
+
+    type: 'regular',
   };
 }

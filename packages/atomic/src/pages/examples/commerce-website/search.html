@@ -9,27 +9,75 @@
     <script nomodule src="/build/atomic.js"></script>
     <link rel="stylesheet" href="/themes/coveo.css" />
     <script type="module">
-      import {setupEngine, setupSearch, renderProducts} from './engine.mjs';
+      import {commerceEngineConfig} from './engine.mjs';
 
-      const engine = await setupEngine();
+      (async () => {
+        await customElements.whenDefined('atomic-commerce-interface');
+        const commerceInterface = document.querySelector('atomic-commerce-interface');
 
-      /*
-       * The following code section should be replaced by actual atomic commerce search page
-       */
-      const search = setupSearch(engine);
-      search.subscribe(() => {
-        renderProducts('#productList', 'Search', search.state.products);
-      });
-      /**
-       * End of section to be replaced
-       */
+        await commerceInterface.initialize(commerceEngineConfig);
+
+        commerceInterface.executeFirstSearch();
+      })();
     </script>
   </head>
+
   <body>
     <h1>Search page</h1>
     <main>
       <section>
-        <article id="productList">REPLACE ME; THIS SHOULD BE THE SEARCH PAGE</article>
+        <atomic-commerce-interface type="search" style="max-width: 1000px; margin: auto">
+          <atomic-search-layout>
+            <atomic-layout-section section="search">
+              <atomic-commerce-search-box>
+                <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
+                <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
+                <atomic-commerce-search-box-instant-products
+                  image-size="small"
+                ></atomic-commerce-search-box-instant-products>
+              </atomic-commerce-search-box>
+            </atomic-layout-section>
+          </atomic-search-layout>
+
+          <atomic-layout-section section="main">
+            <atomic-commerce-sort-dropdown></atomic-commerce-sort-dropdown>
+            <atomic-commerce-product-list display="list" density="compact" image-size="small">
+              <atomic-product-template>
+                <template>
+                  <atomic-product-image
+                    class="thumbnail"
+                    field="ec_thumbnails"
+                    fallback="https://picsum.photos/350"
+                  ></atomic-product-image>
+
+                  <atomic-product-link class="font-bold"></atomic-product-link>
+
+                  <atomic-field-condition class="brand text-neutral-dark" if-defined="ec_brand">
+                    <atomic-product-text field="ec_brand"></atomic-product-text>
+                  </atomic-field-condition>
+
+                  <atomic-field-condition class="field" if-defined="ec_rating">
+                    <atomic-result-rating field="ec_rating"></atomic-result-rating>
+                  </atomic-field-condition>
+
+                  <atomic-field-condition class="mt-4 text-2xl font-bold field" if-defined="ec_price">
+                    <atomic-result-number field="ec_price">
+                      <atomic-format-currency currency="CAD"></atomic-format-currency>
+                    </atomic-result-number>
+                  </atomic-field-condition>
+                  <atomic-product-description></atomic-product-description>
+                  <atomic-result-fields-list>
+                    <atomic-field-condition must-match-ec_in_stock="true">
+                      <atomic-result-badge label="In stock"></atomic-result-badge>
+                    </atomic-field-condition>
+                  </atomic-result-fields-list>
+                </template>
+              </atomic-product-template>
+            </atomic-commerce-product-list>
+            <atomic-commerce-load-more-products></atomic-commerce-load-more-products>
+            <atomic-commerce-pager></atomic-commerce-pager>
+          </atomic-layout-section>
+        </atomic-commerce-interface>
       </section>
     </main>
 
