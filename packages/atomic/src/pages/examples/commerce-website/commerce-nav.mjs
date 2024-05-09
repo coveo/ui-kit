@@ -60,35 +60,25 @@ document.body.querySelector('header').insertAdjacentElement('beforeend', nav);
 if (window.location.pathname !== '/examples/commerce-website/search.html') {
   const script = document.createElement('script');
   script.type = 'module';
-  script.textContent = `
-import {commerceEngineConfig} from './engine.mjs';
-
-(async () => {
-  await customElements.whenDefined('atomic-commerce-interface');
-  const searchBox = document.getElementById('standaloneSearchBox');
-  await searchBox.initialize(commerceEngineConfig);
-})();
-`;
-
+  script.src = './init-standalone-search-box.js';
   document.head.insertAdjacentElement('beforeend', script);
 
   const standaloneSearchBox = document.createElement('section');
   standaloneSearchBox.innerHTML = `
-<atomic-commerce-interface id="standaloneSearchBox" type="search">
-<atomic-search-layout>
-  <atomic-layout-section section="search">
-    <atomic-commerce-search-box redirection-url="./search.html">
-      <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
-      <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
-      <atomic-commerce-search-box-instant-products
-        image-size="small"
-      ></atomic-commerce-search-box-instant-products>
-    </atomic-commerce-search-box>
-  </atomic-layout-section>
-</atomic-search-layout>
-</atomic-commerce-interface>
-`;
-
+  <atomic-commerce-interface id="standaloneSearchBox" type="search">
+  <atomic-search-layout>
+    <atomic-layout-section section="search">
+      <atomic-commerce-search-box redirection-url="./search.html">
+        <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
+        <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
+        <atomic-commerce-search-box-instant-products
+          image-size="small"
+        ></atomic-commerce-search-box-instant-products>
+      </atomic-commerce-search-box>
+    </atomic-layout-section>
+  </atomic-search-layout>
+  </atomic-commerce-interface>
+  `;
   document.body
     .querySelector('main')
     .insertAdjacentElement('beforebegin', standaloneSearchBox);
