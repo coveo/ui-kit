@@ -10,24 +10,22 @@
     <link rel="stylesheet" href="/themes/coveo.css" />
     <script type="module">
       import {
-        setupEngine,
+        commerceEngineConfig,
         setupRecommendationsMostPurchased,
         setupRecommendationsMostViewed,
         renderProducts,
       } from './engine.mjs';
 
-      const engine = await setupEngine();
-
       /*
        * The following code section should be replaced by actual atomic recommendations
        */
 
-      const recommendationsMostPurchased = setupRecommendationsMostPurchased(engine);
+      const recommendationsMostPurchased = setupRecommendationsMostPurchased(commerceEngineConfig);
       recommendationsMostPurchased.subscribe(() => {
         renderProducts('#mostPurchased', 'MOST PURCHASED', recommendationsMostPurchased.state.products);
       });
 
-      const recommendationsMostViewed = setupRecommendationsMostViewed(engine);
+      const recommendationsMostViewed = setupRecommendationsMostViewed(commerceEngineConfig);
       recommendationsMostViewed.subscribe(() => {
         renderProducts('#mostViewed', 'MOST VIEWED', recommendationsMostViewed.state.products);
       });
