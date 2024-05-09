@@ -4,7 +4,10 @@ import {
   AsyncThunkCommerceOptions,
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client';
-import {CommerceQuerySection} from '../../../state/state-sections';
+import {
+  CommerceQuerySection,
+  CommerceSearchSection,
+} from '../../../state/state-sections';
 import {validatePayload} from '../../../utils/validate-payload';
 import {
   deselectAllBreadcrumbs,
@@ -29,6 +32,7 @@ import {
 } from './search-selectors';
 
 export type StateNeededByExecuteSearch = StateNeededByQueryCommerceAPI &
+  CommerceSearchSection &
   CommerceQuerySection;
 
 export interface PrepareForSearchWithQueryOptions {

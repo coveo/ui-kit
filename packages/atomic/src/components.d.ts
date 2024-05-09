@@ -445,6 +445,11 @@ export namespace Components {
          */
         "maxWithoutQuery"?: number;
     }
+    /**
+     * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
+     */
+    interface AtomicCommerceSortDropdown {
+    }
     interface AtomicCommerceText {
         /**
           * The count value used for plurals.
@@ -1522,6 +1527,16 @@ export namespace Components {
           * Global Atomic state.
          */
         "store"?: AtomicCommonStore<AtomicCommonStoreData>;
+    }
+    interface AtomicProductDescription {
+        /**
+          * The name of the description field to use.
+         */
+        "field": 'ec_description' | 'ec_shortdesc';
+        /**
+          * The number of lines after which the product description should be truncated. A value of "none" will disable truncation.
+         */
+        "truncateAfter": 'none' | '1' | '2' | '3' | '4';
     }
     interface AtomicProductLink {
         /**
@@ -3112,6 +3127,15 @@ declare global {
         prototype: HTMLAtomicCommerceSearchBoxRecentQueriesElement;
         new (): HTMLAtomicCommerceSearchBoxRecentQueriesElement;
     };
+    /**
+     * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
+     */
+    interface HTMLAtomicCommerceSortDropdownElement extends Components.AtomicCommerceSortDropdown, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceSortDropdownElement: {
+        prototype: HTMLAtomicCommerceSortDropdownElement;
+        new (): HTMLAtomicCommerceSortDropdownElement;
+    };
     interface HTMLAtomicCommerceTextElement extends Components.AtomicCommerceText, HTMLStencilElement {
     }
     var HTMLAtomicCommerceTextElement: {
@@ -3754,6 +3778,12 @@ declare global {
     var HTMLAtomicProductElement: {
         prototype: HTMLAtomicProductElement;
         new (): HTMLAtomicProductElement;
+    };
+    interface HTMLAtomicProductDescriptionElement extends Components.AtomicProductDescription, HTMLStencilElement {
+    }
+    var HTMLAtomicProductDescriptionElement: {
+        prototype: HTMLAtomicProductDescriptionElement;
+        new (): HTMLAtomicProductDescriptionElement;
     };
     interface HTMLAtomicProductLinkElement extends Components.AtomicProductLink, HTMLStencilElement {
     }
@@ -4614,6 +4644,7 @@ declare global {
         "atomic-commerce-search-box": HTMLAtomicCommerceSearchBoxElement;
         "atomic-commerce-search-box-query-suggestions": HTMLAtomicCommerceSearchBoxQuerySuggestionsElement;
         "atomic-commerce-search-box-recent-queries": HTMLAtomicCommerceSearchBoxRecentQueriesElement;
+        "atomic-commerce-sort-dropdown": HTMLAtomicCommerceSortDropdownElement;
         "atomic-commerce-text": HTMLAtomicCommerceTextElement;
         "atomic-component-error": HTMLAtomicComponentErrorElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
@@ -4683,6 +4714,7 @@ declare global {
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-popover": HTMLAtomicPopoverElement;
         "atomic-product": HTMLAtomicProductElement;
+        "atomic-product-description": HTMLAtomicProductDescriptionElement;
         "atomic-product-link": HTMLAtomicProductLinkElement;
         "atomic-product-template": HTMLAtomicProductTemplateElement;
         "atomic-product-text": HTMLAtomicProductTextElement;
@@ -5122,6 +5154,11 @@ declare namespace LocalJSX {
           * The maximum number of suggestions to display initially, when the input field is empty.
          */
         "maxWithoutQuery"?: number;
+    }
+    /**
+     * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
+     */
+    interface AtomicCommerceSortDropdown {
     }
     interface AtomicCommerceText {
         /**
@@ -6166,6 +6203,16 @@ declare namespace LocalJSX {
           * Global Atomic state.
          */
         "store"?: AtomicCommonStore<AtomicCommonStoreData>;
+    }
+    interface AtomicProductDescription {
+        /**
+          * The name of the description field to use.
+         */
+        "field"?: 'ec_description' | 'ec_shortdesc';
+        /**
+          * The number of lines after which the product description should be truncated. A value of "none" will disable truncation.
+         */
+        "truncateAfter"?: 'none' | '1' | '2' | '3' | '4';
     }
     interface AtomicProductLink {
         /**
@@ -7470,6 +7517,7 @@ declare namespace LocalJSX {
         "atomic-commerce-search-box": AtomicCommerceSearchBox;
         "atomic-commerce-search-box-query-suggestions": AtomicCommerceSearchBoxQuerySuggestions;
         "atomic-commerce-search-box-recent-queries": AtomicCommerceSearchBoxRecentQueries;
+        "atomic-commerce-sort-dropdown": AtomicCommerceSortDropdown;
         "atomic-commerce-text": AtomicCommerceText;
         "atomic-component-error": AtomicComponentError;
         "atomic-did-you-mean": AtomicDidYouMean;
@@ -7539,6 +7587,7 @@ declare namespace LocalJSX {
         "atomic-pager": AtomicPager;
         "atomic-popover": AtomicPopover;
         "atomic-product": AtomicProduct;
+        "atomic-product-description": AtomicProductDescription;
         "atomic-product-link": AtomicProductLink;
         "atomic-product-template": AtomicProductTemplate;
         "atomic-product-text": AtomicProductText;
@@ -7679,6 +7728,10 @@ declare module "@stencil/core" {
              * The `atomic-commerce-search-box-recent-queries` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of recent query suggestions.
              */
             "atomic-commerce-search-box-recent-queries": LocalJSX.AtomicCommerceSearchBoxRecentQueries & JSXBase.HTMLAttributes<HTMLAtomicCommerceSearchBoxRecentQueriesElement>;
+            /**
+             * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
+             */
+            "atomic-commerce-sort-dropdown": LocalJSX.AtomicCommerceSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicCommerceSortDropdownElement>;
             "atomic-commerce-text": LocalJSX.AtomicCommerceText & JSXBase.HTMLAttributes<HTMLAtomicCommerceTextElement>;
             /**
              * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
@@ -7844,6 +7897,7 @@ declare module "@stencil/core" {
              * The `atomic-product` component is used internally by the `atomic-product-list` component.
              */
             "atomic-product": LocalJSX.AtomicProduct & JSXBase.HTMLAttributes<HTMLAtomicProductElement>;
+            "atomic-product-description": LocalJSX.AtomicProductDescription & JSXBase.HTMLAttributes<HTMLAtomicProductDescriptionElement>;
             "atomic-product-link": LocalJSX.AtomicProductLink & JSXBase.HTMLAttributes<HTMLAtomicProductLinkElement>;
             "atomic-product-template": LocalJSX.AtomicProductTemplate & JSXBase.HTMLAttributes<HTMLAtomicProductTemplateElement>;
             "atomic-product-text": LocalJSX.AtomicProductText & JSXBase.HTMLAttributes<HTMLAtomicProductTextElement>;
