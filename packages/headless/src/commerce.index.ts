@@ -105,6 +105,12 @@ export {buildProductListingSort} from './controllers/commerce/product-listing/so
 export {buildSearchSort} from './controllers/commerce/search/sort/headless-search-sort';
 
 export type {
+  FacetConditionsManager,
+  // FacetConditionsManagerProps,
+} from './controllers/commerce/core/facet-conditions-manager/headless-facet-conditions-manager';
+export {buildCoreFacetConditionsManager as buildFacetConditionsManager} from './controllers/commerce/core/facet-conditions-manager/headless-facet-conditions-manager';
+
+export type {
   CategoryFacet,
   CategoryFacetState,
 } from './controllers/commerce/core/facets/category/headless-commerce-category-facet';
@@ -135,6 +141,14 @@ export type {ProductListingFacetGenerator} from './controllers/commerce/product-
 export {buildProductListingFacetGenerator} from './controllers/commerce/product-listing/facets/headless-product-listing-facet-generator';
 export type {SearchFacetGenerator} from './controllers/commerce/search/facets/headless-search-facet-generator';
 export {buildSearchFacetGenerator} from './controllers/commerce/search/facets/headless-search-facet-generator';
+
+export type {FacetGeneratorState} from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator';
+
+export type {
+  SearchStatus,
+  SearchStatusState,
+} from './controllers/commerce/search-status/headless-search-status';
+export {buildSearchStatus} from './controllers/commerce/search-status/headless-search-status';
 
 export type {
   RegularFacetSearch,

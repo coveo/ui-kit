@@ -48,6 +48,8 @@ export interface FacetGenerator extends Controller {
   facets: GeneratedFacetControllers;
 }
 
+export type FacetGeneratorState = FacetGenerator['state'];
+
 export type GeneratedFacetControllers = Array<
   MappedGeneratedFacetController[FacetType]
 >;
