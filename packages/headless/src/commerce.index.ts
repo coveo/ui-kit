@@ -199,8 +199,6 @@ export {getOrganizationEndpoints} from './api/platform-client';
 
 export type {
   DidYouMean,
-  DidYouMeanProps,
-  DidYouMeanOptions,
   DidYouMeanState,
 } from './controllers/commerce/did-you-mean/headless-did-you-mean';
 export {buildDidYouMean} from './controllers/commerce/did-you-mean/headless-did-you-mean';

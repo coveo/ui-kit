@@ -1,3 +1,4 @@
+import {stateKey} from '../../../app/state-key';
 import {didYouMeanReducer} from '../../../features/commerce/did-you-mean/did-you-mean-slice';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state';
 import {
@@ -30,7 +31,7 @@ describe('did you mean', () => {
   });
 
   it('state should reflect correction state', () => {
-    engine.state.didYouMean = {
+    engine[stateKey].didYouMean = {
       originalQuery: 'original query',
       wasCorrectedTo: 'corrected query',
       queryCorrection: {

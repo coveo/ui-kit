@@ -3,7 +3,7 @@ import {
   WordCorrection,
 } from '../../../api/search/search/query-corrections';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
-import {CoreEngine} from '../../../app/engine';
+import {stateKey} from '../../../app/state-key';
 import {didYouMeanReducer as didYouMean} from '../../../features/commerce/did-you-mean/did-you-mean-slice';
 import {hasQueryCorrectionSelector} from '../../../features/did-you-mean/did-you-mean-selectors';
 import {CommerceDidYouMeanSection} from '../../../state/state-sections';
@@ -36,7 +36,7 @@ export function buildDidYouMean(engine: CommerceEngine): DidYouMean {
   }
 
   const controller = buildController(engine);
-  const getState = () => engine.state;
+  const getState = () => engine[stateKey];
 
   const hasQueryCorrection = () =>
     hasQueryCorrectionSelector(getState().didYouMean);
@@ -59,8 +59,8 @@ export function buildDidYouMean(engine: CommerceEngine): DidYouMean {
 }
 
 function loadDidYouMeanReducers(
-  engine: CoreEngine
-): engine is CoreEngine<CommerceDidYouMeanSection> {
+  engine: CommerceEngine
+): engine is CommerceEngine<CommerceDidYouMeanSection> {
   engine.addReducers({
     didYouMean,
   });
