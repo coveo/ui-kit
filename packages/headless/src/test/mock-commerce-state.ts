@@ -16,6 +16,7 @@ import {getFacetSearchSetInitialState} from '../features/facets/facet-search-set
 import {getQuerySetInitialState} from '../features/query-set/query-set-state';
 import {getQuerySuggestSetInitialState} from '../features/query-suggest/query-suggest-state';
 import {getRecentQueriesInitialState} from '../features/recent-queries/recent-queries-state';
+import {getTriggerInitialState} from '../features/triggers/triggers-state';
 import {CommerceAppState} from '../state/commerce-app-state';
 
 export function buildMockCommerceState(
@@ -41,6 +42,7 @@ export function buildMockCommerceState(
     instantProducts: getInstantProductsInitialState(),
     commerceStandaloneSearchBoxSet:
       getCommerceStandaloneSearchBoxSetInitialState(),
+    triggers: getTriggerInitialState(),
     version: 'unit-testing-version',
     ...config,
   };
