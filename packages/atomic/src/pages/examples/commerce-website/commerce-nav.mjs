@@ -57,7 +57,22 @@ nav.innerHTML = `
 
 document.body.querySelector('header').insertAdjacentElement('beforeend', nav);
 
-if (window.location.pathname !== '/examples/commerce-website/search.html') {
+const baseStandaloneSearchBoxHtml = `
+<atomic-commerce-search-box redirection-url="./search.html">
+<atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
+<atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
+<atomic-commerce-search-box-instant-products
+  image-size="small"
+></atomic-commerce-search-box-instant-products>
+</atomic-commerce-search-box>
+`;
+
+if (
+  [
+    '/examples/commerce-website/homepage.html',
+    '/examples/commerce-website/cart.html',
+  ].includes(window.location.pathname)
+) {
   const script = document.createElement('script');
   script.type = 'module';
   script.src = './init-standalone-search-box.js';
@@ -66,16 +81,18 @@ if (window.location.pathname !== '/examples/commerce-website/search.html') {
   const standaloneSearchBox = document.createElement('search');
   standaloneSearchBox.innerHTML = `
   <atomic-commerce-interface id="standaloneSearchBox" type="search">
-      <atomic-commerce-search-box redirection-url="./search.html">
-        <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
-        <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
-        <atomic-commerce-search-box-instant-products
-          image-size="small"
-        ></atomic-commerce-search-box-instant-products>
-      </atomic-commerce-search-box>
+    ${baseStandaloneSearchBoxHtml}
   </atomic-commerce-interface>
   `;
   document.body
     .querySelector('header')
+    .insertAdjacentElement('afterbegin', standaloneSearchBox);
+} else if (
+  window.location.pathname !== '/examples/commerce-website/search.html'
+) {
+  const standaloneSearchBox = document.createElement('search');
+  standaloneSearchBox.innerHTML = baseStandaloneSearchBoxHtml;
+  document.body
+    .querySelector('atomic-commerce-interface')
     .insertAdjacentElement('afterbegin', standaloneSearchBox);
 }
