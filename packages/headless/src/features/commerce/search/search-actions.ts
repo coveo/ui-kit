@@ -30,6 +30,7 @@ import {
   querySelector,
   moreProductsAvailableSelector,
   numberOfProductsSelector,
+  queryExecutedSelector,
 } from './search-selectors';
 
 export interface QuerySearchCommerceAPIThunkReturn {
@@ -98,7 +99,7 @@ export const executeSearch = createAsyncThunk<
     return {
       response: fetched.success,
       originalQuery: query,
-      queryExecuted: querySelector(state),
+      queryExecuted: queryExecutedSelector(state, fetched.success),
     };
   }
 );
@@ -137,7 +138,7 @@ export const fetchMoreProducts = createAsyncThunk<
     return {
       response: fetched.success,
       originalQuery: query,
-      queryExecuted: querySelector(state),
+      queryExecuted: queryExecutedSelector(state, fetched.success),
     };
   }
 );

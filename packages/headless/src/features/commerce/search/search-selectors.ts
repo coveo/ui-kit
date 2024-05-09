@@ -1,4 +1,5 @@
 import {createSelector} from '@reduxjs/toolkit';
+import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response';
 import {CommerceEngineState} from '../../../app/commerce-engine/commerce-engine';
 import {
   CommercePaginationSection,
@@ -30,3 +31,14 @@ export const querySelector = createSelector(
   (state: CommerceQuerySection) => state.commerceQuery?.query,
   (query) => query ?? ''
 );
+
+export const queryExecutedSelector = (
+  state: CommerceQuerySection,
+  response: SearchCommerceSuccessResponse
+) => {
+  if (response.queryCorrection?.correctedQuery !== undefined) {
+    return response.queryCorrection?.correctedQuery;
+  }
+
+  return querySelector(state);
+};
