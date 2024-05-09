@@ -49,7 +49,7 @@ export const queryExecutedFromResponseSelector = (
 };
 
 export const errorSelector = createSelector(
-  (state: CommerceSearchSection) => state.commerceSearch.error,
+  (state: Partial<CommerceSearchSection>) => state.commerceSearch?.error,
   (error) => error
 );
 
