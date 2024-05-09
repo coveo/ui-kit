@@ -1,3 +1,4 @@
+import {isNullOrUndefined} from '@coveo/bueno';
 import {createSelector} from '@reduxjs/toolkit';
 import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response';
 import {CommerceEngineState} from '../../../app/commerce-engine/commerce-engine';
@@ -27,6 +28,11 @@ export const moreProductsAvailableSelector = createSelector(
   ({current, total}) => current < total
 );
 
+export const isLoadingSelector = createSelector(
+  (state: Partial<CommerceSearchSection>) => state.commerceSearch?.isLoading,
+  (isLoading) => (isNullOrUndefined(isLoading) ? false : isLoading)
+);
+
 export const querySelector = createSelector(
   (state: CommerceQuerySection) => state.commerceQuery?.query,
   (query) => query ?? ''
@@ -51,9 +57,4 @@ export const queryExecutedFromResponseSelector = (
 export const errorSelector = createSelector(
   (state: Partial<CommerceSearchSection>) => state.commerceSearch?.error,
   (error) => error
-);
-
-export const isLoadingSelector = createSelector(
-  (state: CommerceSearchSection) => state.commerceSearch.isLoading,
-  (isLoading) => isLoading
 );
