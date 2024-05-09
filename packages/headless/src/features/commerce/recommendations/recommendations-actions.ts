@@ -5,6 +5,7 @@ import {
 } from '../../../api/commerce/commerce-api-client';
 import {CommerceRecommendationsRequest} from '../../../api/commerce/recommendations/recommendations-request';
 import {RecommendationsCommerceSuccessResponse} from '../../../api/commerce/recommendations/recommendations-response';
+import {RecommendationsSection} from '../../../state/state-sections';
 import {validatePayload} from '../../../utils/validate-payload';
 import {
   StateNeededByQueryCommerceAPI,
@@ -49,7 +50,9 @@ export interface FetchRecommendationsActionCreatorPayload {
 export const fetchRecommendations = createAsyncThunk<
   QueryRecommendationsCommerceAPIThunkReturn,
   FetchRecommendationsActionCreatorPayload,
-  AsyncThunkCommerceOptions<StateNeededByQueryCommerceAPI>
+  AsyncThunkCommerceOptions<
+    StateNeededByQueryCommerceAPI & RecommendationsSection
+  >
 >(
   'commerce/recommendations/fetch',
   async (payload, {getState, rejectWithValue, extra: {apiClient}}) => {
@@ -74,7 +77,9 @@ export const fetchRecommendations = createAsyncThunk<
 export const fetchMoreRecommendations = createAsyncThunk<
   QueryRecommendationsCommerceAPIThunkReturn | null,
   FetchRecommendationsActionCreatorPayload,
-  AsyncThunkCommerceOptions<StateNeededByQueryCommerceAPI>
+  AsyncThunkCommerceOptions<
+    StateNeededByQueryCommerceAPI & RecommendationsSection
+  >
 >(
   'commerce/recommendations/fetchMore',
   async (payload, {getState, rejectWithValue, extra: {apiClient}}) => {
