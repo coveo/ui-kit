@@ -19,6 +19,7 @@ import {QueryErrorIcon} from '../../common/query-error/icon';
 import {QueryErrorLink} from '../../common/query-error/link';
 import {QueryErrorShowMore} from '../../common/query-error/show-more';
 import {QueryErrorTitle} from '../../common/query-error/title';
+import {getAriaMessageFromErrorType} from '../../common/query-error/utils';
 import {RecsBindings} from '../atomic-recs-interface/atomic-recs-interface';
 
 /**
@@ -67,8 +68,19 @@ export class AtomicRecsError implements InitializableComponent<RecsBindings> {
       },
     } = this;
 
+    const hasError = !isNullOrUndefined(error);
+
+    if (hasError) {
+      this.ariaMessage = getAriaMessageFromErrorType(
+        i18n,
+        organizationId,
+        platformUrl,
+        error?.type
+      );
+    }
+
     return (
-      <QueryErrorGuard hasError={!isNullOrUndefined(error)}>
+      <QueryErrorGuard hasError={hasError}>
         <QueryErrorContainer>
           <QueryErrorIcon errorType={error?.type} />
           <QueryErrorTitle i18n={i18n} organizationId={organizationId} />

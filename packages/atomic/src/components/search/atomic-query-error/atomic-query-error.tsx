@@ -14,6 +14,7 @@ import {QueryErrorIcon} from '../../common/query-error/icon';
 import {QueryErrorLink} from '../../common/query-error/link';
 import {QueryErrorShowMore} from '../../common/query-error/show-more';
 import {QueryErrorTitle} from '../../common/query-error/title';
+import {getAriaMessageFromErrorType} from '../../common/query-error/utils';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -60,6 +61,14 @@ export class AtomicQueryError implements InitializableComponent {
         },
       },
     } = this;
+    if (hasError) {
+      this.ariaMessage = getAriaMessageFromErrorType(
+        i18n,
+        organizationId,
+        platformUrl,
+        error?.type
+      );
+    }
     return (
       <QueryErrorGuard hasError={hasError}>
         <QueryErrorContainer>
