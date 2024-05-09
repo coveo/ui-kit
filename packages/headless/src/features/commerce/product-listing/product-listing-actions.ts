@@ -65,7 +65,9 @@ export const fetchProductListing = createAsyncThunk<
 export const fetchMoreProducts = createAsyncThunk<
   QueryCommerceAPIThunkReturn | null,
   void,
-  AsyncThunkCommerceOptions<StateNeededByQueryCommerceAPI>
+  AsyncThunkCommerceOptions<
+    StateNeededByQueryCommerceAPI & ProductListingV2Section
+  >
 >(
   'commerce/productListing/fetchMoreProducts',
   async (_action, {getState, dispatch, rejectWithValue, extra}) => {
