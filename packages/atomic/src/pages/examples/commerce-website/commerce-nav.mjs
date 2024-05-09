@@ -63,7 +63,7 @@ if (window.location.pathname !== '/examples/commerce-website/search.html') {
   script.src = './init-standalone-search-box.js';
   document.head.insertAdjacentElement('beforeend', script);
 
-  const standaloneSearchBox = document.createElement('section');
+  const standaloneSearchBox = document.createElement('search');
   standaloneSearchBox.innerHTML = `
   <atomic-commerce-interface id="standaloneSearchBox" type="search">
   <atomic-search-layout>
@@ -80,6 +80,6 @@ if (window.location.pathname !== '/examples/commerce-website/search.html') {
   </atomic-commerce-interface>
   `;
   document.body
-    .querySelector('main')
-    .insertAdjacentElement('beforebegin', standaloneSearchBox);
+    .querySelector('header')
+    .insertAdjacentElement('afterbegin', standaloneSearchBox);
 }
