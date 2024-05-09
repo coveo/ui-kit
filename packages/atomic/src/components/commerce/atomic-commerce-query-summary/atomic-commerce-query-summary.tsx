@@ -77,10 +77,9 @@ export class AtomicQuerySummary
       getQuerySummaryI18nParameters({
         first: firstProduct,
         last: lastProduct,
-        query:
-          'query' in this.listingOrSearchSummaryState
-            ? this.listingOrSearchSummaryState.query
-            : '',
+        query: this.isSearch(this.listingOrSearchSummaryState)
+          ? this.listingOrSearchSummaryState.query
+          : '',
         total: totalNumberOfProducts,
         i18n: this.bindings.i18n,
         isLoading: false,
@@ -104,5 +103,11 @@ export class AtomicQuerySummary
         </QuerySummaryContainer>
       </QuerySummaryGuard>
     );
+  }
+
+  private isSearch(
+    state: ListingSummaryState | SearchSummaryState
+  ): state is SearchSummaryState {
+    return 'query' in state;
   }
 }
