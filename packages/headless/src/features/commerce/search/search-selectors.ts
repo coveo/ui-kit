@@ -30,3 +30,14 @@ export const isLoadingSelector = createSelector(
   (state: Partial<CommerceSearchSection>) => state.commerceSearch?.isLoading,
   (isLoading) => (isNullOrUndefined(isLoading) ? false : isLoading)
 );
+
+export const errorSelector = createSelector(
+  (state: Partial<CommerceSearchSection>) => state.commerceSearch?.error,
+  (error) => error
+);
+
+export const querySelector = createSelector(
+  (state: Partial<CommerceSearchSection>) =>
+    state.commerceSearch?.queryExecuted,
+  (query) => query
+);

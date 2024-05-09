@@ -16,6 +16,7 @@ describe('commerce search selectors', () => {
         error: null,
         requestId: 'some-request-id',
         facets: [],
+        queryExecuted: '',
       },
     });
     expect(responseIdSelector(state)).toEqual('some-response-id');
@@ -35,6 +36,7 @@ describe('commerce search selectors', () => {
         error: null,
         requestId: 'some-request-id',
         facets: [],
+        queryExecuted: '',
       },
     });
     expect(numberOfProductsSelector(state)).toEqual(2);
@@ -54,6 +56,7 @@ describe('commerce search selectors', () => {
         error: null,
         requestId: 'some-request-id',
         facets: [],
+        queryExecuted: '',
       },
       commercePagination: {
         principal: {perPage: 10, page: 1, totalEntries: 100, totalPages: 10},
@@ -72,6 +75,7 @@ describe('commerce search selectors', () => {
         error: null,
         requestId: 'some-request-id',
         facets: [],
+        queryExecuted: '',
       },
       commercePagination: {
         principal: {perPage: 10, page: 1, totalEntries: 2, totalPages: 1},
@@ -90,6 +94,7 @@ describe('commerce search selectors', () => {
         error: null,
         requestId: 'some-request-id',
         facets: [],
+        queryExecuted: '',
       },
       commercePagination: {
         principal: {perPage: 10, page: 1, totalEntries: 1, totalPages: 1},
