@@ -1,8 +1,10 @@
 import {
-  buildProductListingPagination,
-  buildSearchPagination,
   Pagination,
   PaginationState,
+  ProductListing,
+  Search,
+  buildProductListing,
+  buildSearch,
 } from '@coveo/headless/commerce';
 import {Component, Event, EventEmitter, h, Prop, State} from '@stencil/core';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
@@ -49,6 +51,7 @@ export class AtomicCommercePager
 {
   @InitializeBindings() public bindings!: CommerceBindings;
   public pager!: Pagination;
+  public listingOrSearch!: ProductListing | Search;
 
   @BindStateToController('pager')
   @State()
@@ -89,10 +92,11 @@ export class AtomicCommercePager
 
   public initialize() {
     if (this.bindings.interfaceElement.type === 'product-listing') {
-      this.pager = buildProductListingPagination(this.bindings.engine);
-    } else if (this.bindings.interfaceElement.type === 'search') {
-      this.pager = buildSearchPagination(this.bindings.engine);
+      this.listingOrSearch = buildProductListing(this.bindings.engine);
+    } else {
+      this.listingOrSearch = buildSearch(this.bindings.engine);
     }
+    this.pager = this.listingOrSearch.pagination();
   }
 
   public render() {

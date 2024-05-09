@@ -29,12 +29,19 @@
         <atomic-commerce-interface type="search" style="max-width: 1000px; margin: auto">
           <atomic-search-layout>
             <atomic-layout-section section="search">
-              <atomic-commerce-search-box textarea></atomic-commerce-search-box>
-              <!-- <atomic-commerce-search-box redirection-url="https://docs.coveo.com/en/1458" textarea></atomic-commerce-search-box> -->
+              <atomic-commerce-search-box>
+                <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
+                <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
+                <atomic-commerce-search-box-instant-products
+                  image-size="small"
+                ></atomic-commerce-search-box-instant-products>
+              </atomic-commerce-search-box>
             </atomic-layout-section>
           </atomic-search-layout>
 
           <atomic-layout-section section="main">
+            <atomic-commerce-query-summary></atomic-commerce-query-summary>
+            <atomic-commerce-sort-dropdown></atomic-commerce-sort-dropdown>
             <atomic-commerce-product-list display="list" density="compact" image-size="small">
               <atomic-product-template>
                 <template>

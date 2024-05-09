@@ -30,3 +30,8 @@ export const isLoadingSelector = createSelector(
   (state: Partial<ProductListingV2Section>) => state.productListing?.isLoading,
   (isLoading) => (isNullOrUndefined(isLoading) ? false : isLoading)
 );
+
+export const errorSelector = createSelector(
+  (state: Partial<ProductListingV2Section>) => state.productListing?.error,
+  (error) => error
+);
