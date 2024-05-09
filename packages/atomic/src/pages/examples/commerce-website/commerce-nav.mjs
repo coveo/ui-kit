@@ -57,40 +57,44 @@ nav.innerHTML = `
 
 document.body.querySelector('header').insertAdjacentElement('beforeend', nav);
 
-const baseStandaloneSearchBoxHtml = `
-<atomic-commerce-search-box redirection-url="./search.html">
-  <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
-  <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
-  <atomic-commerce-search-box-instant-products image-size="small"></atomic-commerce-search-box-instant-products>
-</atomic-commerce-search-box>
-`;
+const isOnSearchPage = () => {
+  return window.location.pathname === '/examples/commerce-website/search.html';
+};
 
-if (
-  [
-    '/examples/commerce-website/homepage.html',
-    '/examples/commerce-website/cart.html',
-  ].includes(window.location.pathname)
-) {
-  const script = document.createElement('script');
-  script.type = 'module';
-  script.src = './init-standalone-search-box.js';
-  document.head.insertAdjacentElement('beforeend', script);
-
-  const standaloneSearchBox = document.createElement('search');
-  standaloneSearchBox.innerHTML = `
-  <atomic-commerce-interface id="standaloneSearchBox" type="search">
-    ${baseStandaloneSearchBoxHtml}
-  </atomic-commerce-interface>
+if (!isOnSearchPage()) {
+  const standaloneSearchBoxHTML = `
+    <atomic-commerce-search-box redirection-url="./search.html">
+      <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
+      <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
+      <atomic-commerce-search-box-instant-products image-size="small"></atomic-commerce-search-box-instant-products>
+    </atomic-commerce-search-box>
   `;
-  document.body
-    .querySelector('header')
-    .insertAdjacentElement('afterbegin', standaloneSearchBox);
-} else if (
-  window.location.pathname !== '/examples/commerce-website/search.html'
-) {
+
   const standaloneSearchBox = document.createElement('search');
-  standaloneSearchBox.innerHTML = baseStandaloneSearchBoxHtml;
-  document.body
-    .querySelector('atomic-commerce-interface')
-    .insertAdjacentElement('afterbegin', standaloneSearchBox);
+
+  const atomicCommerceInterface = document.body.querySelector(
+    'atomic-commerce-interface'
+  );
+
+  if (atomicCommerceInterface) {
+    standaloneSearchBox.innerHTML = standaloneSearchBoxHTML;
+    atomicCommerceInterface.insertAdjacentElement(
+      'afterbegin',
+      standaloneSearchBox
+    );
+  } else {
+    const script = document.createElement('script');
+    script.type = 'module';
+    script.src = './init-standalone-search-box.js';
+    document.head.insertAdjacentElement('beforeend', script);
+
+    standaloneSearchBox.innerHTML = `
+      <atomic-commerce-interface id="standaloneSearchBox" type="search">
+        ${standaloneSearchBoxHTML}
+      </atomic-commerce-interface>`;
+
+    document.body
+      .querySelector('main')
+      .insertAdjacentElement('afterbegin', standaloneSearchBox);
+  }
 }
