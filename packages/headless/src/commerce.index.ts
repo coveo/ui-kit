@@ -195,6 +195,18 @@ export type {
 export {buildProductListingBreadcrumbManager} from './controllers/commerce/product-listing/breadcrumb-manager/headless-product-listing-breadcrumb-manager';
 export {buildSearchBreadcrumbManager} from './controllers/commerce/search/breadcrumb-manager/headless-search-breadcrumb-manager';
 
+export {buildSearchSummary} from './controllers/commerce/search/summary/headless-search-summary';
+export type {
+  SearchSummary,
+  SearchSummaryState,
+} from './controllers/commerce/search/summary/headless-search-summary';
+
+export {buildListingSummary} from './controllers/commerce/product-listing/summary/headless-product-listing-summary';
+export type {
+  ListingSummary,
+  ListingSummaryState,
+} from './controllers/commerce/product-listing/summary/headless-product-listing-summary';
+
 export {getOrganizationEndpoints} from './api/platform-client';
 
 export type {
@@ -203,3 +215,9 @@ export type {
 } from './controllers/commerce/did-you-mean/headless-did-you-mean';
 export {buildDidYouMean} from './controllers/commerce/did-you-mean/headless-did-you-mean';
 export {ProductTemplatesHelpers} from './features/commerce/product-templates/product-templates-helpers';
+
+export type {
+  NotifyTrigger,
+  NotifyTriggerState,
+} from './controllers/core/triggers/headless-core-notify-trigger';
+export {buildNotifyTrigger} from './controllers/commerce/triggers/headless-commerce-notify-trigger';

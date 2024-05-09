@@ -32,6 +32,11 @@ export const querySelector = createSelector(
   (query) => query ?? ''
 );
 
+export const lastExecutedQuerySelector = createSelector(
+  (state: CommerceSearchSection) => state.commerceSearch?.queryExecuted,
+  (query) => query
+);
+
 export const queryExecutedSelector = (
   state: CommerceQuerySection,
   response: SearchCommerceSuccessResponse
@@ -42,3 +47,13 @@ export const queryExecutedSelector = (
 
   return querySelector(state);
 };
+
+export const errorSelector = createSelector(
+  (state: CommerceSearchSection) => state.commerceSearch.error,
+  (error) => error
+);
+
+export const isLoadingSelector = createSelector(
+  (state: CommerceSearchSection) => state.commerceSearch.isLoading,
+  (isLoading) => isLoading
+);

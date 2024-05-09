@@ -123,6 +123,22 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
     });
   }
 
+  // eslint-disable-next-line @cspell/spellchecker
+  // TODO: CAPI-867 - Use Commerce API's equivalent of the /plan endpoint when it becomes available.
+  async plan(
+    req: CommerceSearchRequest
+  ): Promise<CommerceAPIResponse<CommerceSuccessResponse>> {
+    const requestOptions = buildRequest(req, 'search');
+    return this.query({
+      ...requestOptions,
+      requestParams: {
+        ...requestOptions.requestParams,
+        query: req?.query,
+      },
+      ...this.options,
+    });
+  }
+
   private async query<T = CommerceSuccessResponse>(
     options: PlatformClientCallOptions
   ) {

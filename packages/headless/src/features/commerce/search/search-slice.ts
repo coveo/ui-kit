@@ -19,14 +19,22 @@ export const commerceSearchReducer = createReducer(
         handleError(state, action.payload);
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
-        handleFulfilled(state, action.payload.response);
+        handleFulfilled(
+          state,
+          action.payload.response,
+          action.payload.queryExecuted
+        );
         state.products = action.payload.response.products;
       })
       .addCase(fetchMoreProducts.fulfilled, (state, action) => {
         if (!action.payload) {
           return;
         }
-        handleFulfilled(state, action.payload.response);
+        handleFulfilled(
+          state,
+          action.payload.response,
+          action.payload.queryExecuted
+        );
         state.products = state.products.concat(
           action.payload.response.products
         );
@@ -55,10 +63,12 @@ function handlePending(state: CommerceSearchState, requestId: string) {
 
 function handleFulfilled(
   state: CommerceSearchState,
-  response: CommerceSuccessResponse
+  response: CommerceSuccessResponse,
+  query?: string
 ) {
   state.error = null;
   state.facets = response.facets;
   state.responseId = response.responseId;
   state.isLoading = false;
+  state.queryExecuted = query ?? '';
 }
