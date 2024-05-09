@@ -10,7 +10,7 @@ import {NotifyTrigger} from '../../core/triggers/headless-core-notify-trigger';
 /**
  * Creates a `NotifyTrigger` controller instance.
  *
- * @param engine - The headless engine.
+ * @param engine - The headless commerce engine.
  * @returns A `NotifyTrigger` controller instance.
  * */
 export function buildNotifyTrigger(engine: CommerceEngine): NotifyTrigger {
