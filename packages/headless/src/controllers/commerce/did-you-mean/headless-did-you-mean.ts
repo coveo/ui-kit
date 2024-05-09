@@ -25,8 +25,6 @@ export interface DidYouMean extends Controller {
 
 /**
  * The DidYouMean controller is responsible for handling query corrections.
- * When a query returns no result but finds a possible query correction, the controller automatically triggers a new
- * query with the suggested term.
  *
  * @param engine - The headless commerce engine.
  */
@@ -36,10 +34,9 @@ export function buildDidYouMean(engine: CommerceEngine): DidYouMean {
   }
 
   const controller = buildController(engine);
-  const getState = () => engine[stateKey];
+  const getState = () => engine[stateKey].didYouMean;
 
-  const hasQueryCorrection = () =>
-    hasQueryCorrectionSelector(getState().didYouMean);
+  const hasQueryCorrection = () => hasQueryCorrectionSelector(getState());
 
   return {
     ...controller,
@@ -48,9 +45,9 @@ export function buildDidYouMean(engine: CommerceEngine): DidYouMean {
       const state = getState();
 
       return {
-        originalQuery: state.didYouMean.originalQuery,
-        wasCorrectedTo: state.didYouMean.wasCorrectedTo,
-        queryCorrection: state.didYouMean.queryCorrection,
+        originalQuery: state.originalQuery,
+        wasCorrectedTo: state.wasCorrectedTo,
+        queryCorrection: state.queryCorrection,
         hasQueryCorrection: hasQueryCorrection(),
         wasAutomaticallyCorrected: hasQueryCorrection(),
       };

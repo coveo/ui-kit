@@ -377,7 +377,8 @@ export interface CommerceQuerySection {
 
 export interface CommerceDidYouMeanSection {
   /**
-   * DidYouMean allows to retrieve query corrections from the index related to end user misspelling.
+   * The information related to the "did you mean" feature, which retrieves and automatically
+   * executes query corrections when a misspelled user query returns no results.
    */
   didYouMean: CommerceDidYouMeanState;
 }

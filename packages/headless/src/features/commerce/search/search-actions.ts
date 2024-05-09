@@ -38,7 +38,7 @@ export interface QuerySearchCommerceAPIThunkReturn {
   response: SearchCommerceSuccessResponse;
   /** The query that was executed. */
   queryExecuted: string;
-  /** The original query that was performed when an automatic correction is executed. */
+  /** The original query expression that was received and automatically corrected. */
   originalQuery: string;
 }
 

@@ -7,11 +7,11 @@ export interface DidYouMeanState {
    */
   wasCorrectedTo: string;
   /**
-   * The query correction that is currently applied by the "did you mean" module.
+   * The query correction that is currently applied by the "did you mean" feature.
    */
   queryCorrection: QueryCorrection;
   /**
-   * The original query that was originally performed when an automatic correction is executed.
+   * The original query expression that was received and automatically corrected.
    */
   originalQuery: string;
 }
