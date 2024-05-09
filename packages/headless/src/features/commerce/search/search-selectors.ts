@@ -32,12 +32,12 @@ export const querySelector = createSelector(
   (query) => query ?? ''
 );
 
-export const lastExecutedQuerySelector = createSelector(
+export const queryExecutedSelector = createSelector(
   (state: CommerceSearchSection) => state.commerceSearch?.queryExecuted,
   (query) => query
 );
 
-export const queryExecutedSelector = (
+export const queryExecutedFromResponseSelector = (
   state: CommerceQuerySection,
   response: SearchCommerceSuccessResponse
 ) => {

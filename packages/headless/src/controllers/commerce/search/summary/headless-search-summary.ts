@@ -3,7 +3,7 @@ import {stateKey} from '../../../../app/state-key';
 import {
   errorSelector,
   isLoadingSelector,
-  lastExecutedQuerySelector,
+  queryExecutedSelector,
   numberOfProductsSelector,
   responseIdSelector,
 } from '../../../../features/commerce/search/search-selectors';
@@ -53,7 +53,7 @@ export const buildSearchSummary = (engine: CommerceEngine) => {
     get state(): SearchSummaryState {
       return {
         ...controller.state,
-        query: lastExecutedQuerySelector(engine[stateKey]) || '',
+        query: queryExecutedSelector(engine[stateKey]) || '',
       };
     },
   };
