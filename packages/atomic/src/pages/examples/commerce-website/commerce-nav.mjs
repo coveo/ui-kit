@@ -59,11 +59,9 @@ document.body.querySelector('header').insertAdjacentElement('beforeend', nav);
 
 const baseStandaloneSearchBoxHtml = `
 <atomic-commerce-search-box redirection-url="./search.html">
-<atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
-<atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
-<atomic-commerce-search-box-instant-products
-  image-size="small"
-></atomic-commerce-search-box-instant-products>
+  <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
+  <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
+  <atomic-commerce-search-box-instant-products image-size="small"></atomic-commerce-search-box-instant-products>
 </atomic-commerce-search-box>
 `;
 
