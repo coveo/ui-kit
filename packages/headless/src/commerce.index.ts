@@ -197,3 +197,9 @@ export {buildSearchBreadcrumbManager} from './controllers/commerce/search/breadc
 
 export {getOrganizationEndpoints} from './api/platform-client';
 export {ProductTemplatesHelpers} from './features/commerce/product-templates/product-templates-helpers';
+
+export type {
+  NotifyTrigger,
+  NotifyTriggerState,
+} from './controllers/core/triggers/headless-core-notify-trigger';
+export {buildNotifyTrigger} from './controllers/commerce/triggers/headless-commerce-notify-trigger';

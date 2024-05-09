@@ -18,6 +18,7 @@ import {
   InstantProductsSection,
   CommerceStandaloneSearchBoxSection,
   RecentQueriesSection,
+  TriggerSection,
 } from './state-sections';
 
 // eslint-disable-next-line @cspell/spellchecker
@@ -43,4 +44,5 @@ export type CommerceAppState = ConfigurationSection &
   QuerySuggestionSection &
   QuerySetSection &
   InstantProductsSection &
+  TriggerSection &
   VersionSection;
