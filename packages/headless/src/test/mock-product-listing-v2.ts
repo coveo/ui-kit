@@ -20,6 +20,7 @@ export function buildFetchProductListingV2Response(
       facets: response.facets ?? [],
       products: response.products ?? [],
       responseId: response.responseId ?? '',
+      triggers: response.triggers ?? [],
     },
   };
 }

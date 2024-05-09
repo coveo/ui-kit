@@ -3,6 +3,7 @@ import {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../../app/state-key';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {CommerceFacetSetState} from '../../../../../features/commerce/facets/facet-set/facet-set-state';
 import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/common';
@@ -15,8 +16,8 @@ import {
 } from '../../../../../state/state-sections';
 import {loadReducerError} from '../../../../../utils/errors';
 import {
-  buildController,
   Controller,
+  buildController,
 } from '../../../../controller/headless-controller';
 import {CategoryFacet} from '../category/headless-commerce-category-facet';
 import {DateFacet} from '../date/headless-commerce-date-facet';
@@ -26,6 +27,7 @@ import {
 } from '../headless-core-commerce-facet';
 import {NumericFacet} from '../numeric/headless-commerce-numeric-facet';
 import {RegularFacet} from '../regular/headless-commerce-regular-facet';
+import {SearchableFacetOptions} from '../searchable/headless-commerce-searchable-facet';
 
 /**
  * The `FacetGenerator` headless controller creates commerce facet controllers from the Commerce API search or
@@ -73,6 +75,12 @@ type CommerceFacetBuilder<
   >,
 > = (engine: CommerceEngine, options: CommerceFacetOptions) => Facet;
 
+export type CommerceSearchableFacetBuilder<
+  Facet extends CoreCommerceFacet<AnyFacetValueRequest, AnyFacetValueResponse>,
+> = (
+  engine: CommerceEngine,
+  options: CommerceFacetOptions & SearchableFacetOptions
+) => Facet;
 /**
  * @internal
  *
@@ -104,20 +112,19 @@ export function buildFacetGenerator(
 
   const controller = buildController(engine);
 
-  const commerceFacetSelector = createSelector(
+  const createFacetControllers = createSelector(
     [
       (state: CommerceEngineState) => state.facetOrder,
       (state: CommerceEngineState) => state.commerceFacetSet,
     ],
 
-    (facetOrder, commerceFacetSet) => ({
-      facets: facetOrder.map((facetId: string) =>
-        createFacet(commerceFacetSet, facetId)
-      ),
-    })
+    (facetOrder, commerceFacetSet) =>
+      facetOrder.map((facetId: string) =>
+        createFacetController(commerceFacetSet, facetId)
+      )
   );
 
-  const createFacet = createSelector(
+  const createFacetController = createSelector(
     (commerceFacetSet: CommerceFacetSetState, facetId: string) => ({
       facetId,
       type: commerceFacetSet[facetId].request.type,
@@ -141,11 +148,11 @@ export function buildFacetGenerator(
     ...controller,
 
     get facets() {
-      return commerceFacetSelector(engine.state).facets;
+      return createFacetControllers(engine[stateKey]);
     },
 
     get state() {
-      return engine.state.facetOrder;
+      return engine[stateKey].facetOrder;
     },
   };
 }

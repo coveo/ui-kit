@@ -14,7 +14,6 @@ import {
   buildMockCommerceEngine,
   MockedCommerceEngine,
 } from '../../../../../test/mock-engine-v2';
-import {commonOptions} from '../../../product-listing/facets/headless-product-listing-facet-options';
 import {
   DateFacet,
   DateFacetOptions,
@@ -52,7 +51,9 @@ describe('DateFacet', () => {
   beforeEach(() => {
     options = {
       facetId,
-      ...commonOptions,
+      fetchProductsActionCreator: jest.fn(),
+      facetResponseSelector: jest.fn(),
+      isFacetLoadingResponseSelector: jest.fn(),
     };
 
     state = buildMockCommerceState();

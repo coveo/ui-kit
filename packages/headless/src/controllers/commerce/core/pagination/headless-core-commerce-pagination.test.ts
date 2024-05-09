@@ -1,3 +1,4 @@
+import {stateKey} from '../../../../app/state-key';
 import {
   selectPage,
   nextPage,
@@ -72,7 +73,7 @@ describe('core pagination', () => {
   describe('#state', () => {
     it('when slot id is specified, reflects the recommendations slot pagination state', () => {
       initPagination({slotId: 'slot-id'});
-      engine.state.commercePagination.recommendations['slot-id'] = {
+      engine[stateKey].commercePagination.recommendations['slot-id'] = {
         perPage: 111,
         page: 111,
         totalEntries: 111,
@@ -87,7 +88,7 @@ describe('core pagination', () => {
     });
 
     it('when slot id is not specified, reflects the principal pagination state', () => {
-      engine.state.commercePagination.principal = {
+      engine[stateKey].commercePagination.principal = {
         perPage: 222,
         page: 222,
         totalEntries: 222,

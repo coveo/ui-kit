@@ -16,6 +16,12 @@ export interface Product {
    */
   ec_name?: string;
   /**
+   * The description of the product.
+   *
+   * From the `ec_description` field.
+   */
+  ec_description?: string;
+  /**
    * The brand of the product.
    *
    * From the `ec_brand` field.
