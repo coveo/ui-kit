@@ -4,6 +4,7 @@ import {
   TemplateProviderProps,
 } from '../../common/template-provider/template-provider';
 
+// TODO: Add JSX support for default template
 function defaultTemplate() {
   const content = document.createDocumentFragment();
 

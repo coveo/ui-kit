@@ -36,23 +36,23 @@ export class AtomicProductPrice
 
     return (
       <div>
-        <atomic-product-number
+        <atomic-product-numeric-field-value
           class={`mx-1 ${hasPromotionalPrice && 'text-error'}`}
           field={hasPromotionalPrice ? 'ec_promo_price' : 'ec_price'}
         >
           <atomic-format-currency
             currency={this.currency}
           ></atomic-format-currency>
-        </atomic-product-number>
+        </atomic-product-numeric-field-value>
         {hasPromotionalPrice && (
-          <atomic-product-number
+          <atomic-product-numeric-field-value
             class="mx-1 text-xl line-through"
             field="ec_price"
           >
             <atomic-format-currency
               currency={this.currency}
             ></atomic-format-currency>
-          </atomic-product-number>
+          </atomic-product-numeric-field-value>
         )}
       </div>
     );

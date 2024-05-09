@@ -1570,11 +1570,7 @@ export namespace Components {
          */
         "hrefTemplate"?: string;
     }
-    /**
-     * The `atomic-product-number` component renders the value of a number product field.
-     * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
-     */
-    interface AtomicProductNumber {
+    interface AtomicProductNumericFieldValue {
         /**
           * The field that the component should use. The component will try to find this field in the `Product.additionalFields` object unless it finds it in the `Product` object first.
          */
@@ -1582,7 +1578,7 @@ export namespace Components {
     }
     interface AtomicProductPrice {
         /**
-          * The currency to use in currency formatting. Possible values are the ISO 4217 currency codes, such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB. See the current [currency & funds code list](https://www.six-group.com/en/products-services/financial-information/data-standards.html#scrollTo=maintenance-agency).
+          * The currency to use in currency formatting. Allowed values are the [ISO 4217 currency codes](https://www.six-group.com/en/products-services/financial-information/data-standards.html#scrollTo=maintenance-agency), such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB.
          */
         "currency": string;
     }
@@ -3844,15 +3840,11 @@ declare global {
         prototype: HTMLAtomicProductLinkElement;
         new (): HTMLAtomicProductLinkElement;
     };
-    /**
-     * The `atomic-product-number` component renders the value of a number product field.
-     * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
-     */
-    interface HTMLAtomicProductNumberElement extends Components.AtomicProductNumber, HTMLStencilElement {
+    interface HTMLAtomicProductNumericFieldValueElement extends Components.AtomicProductNumericFieldValue, HTMLStencilElement {
     }
-    var HTMLAtomicProductNumberElement: {
-        prototype: HTMLAtomicProductNumberElement;
-        new (): HTMLAtomicProductNumberElement;
+    var HTMLAtomicProductNumericFieldValueElement: {
+        prototype: HTMLAtomicProductNumericFieldValueElement;
+        new (): HTMLAtomicProductNumericFieldValueElement;
     };
     interface HTMLAtomicProductPriceElement extends Components.AtomicProductPrice, HTMLStencilElement {
     }
@@ -4786,7 +4778,7 @@ declare global {
         "atomic-product": HTMLAtomicProductElement;
         "atomic-product-description": HTMLAtomicProductDescriptionElement;
         "atomic-product-link": HTMLAtomicProductLinkElement;
-        "atomic-product-number": HTMLAtomicProductNumberElement;
+        "atomic-product-numeric-field-value": HTMLAtomicProductNumericFieldValueElement;
         "atomic-product-price": HTMLAtomicProductPriceElement;
         "atomic-product-template": HTMLAtomicProductTemplateElement;
         "atomic-product-text": HTMLAtomicProductTextElement;
@@ -6311,11 +6303,7 @@ declare namespace LocalJSX {
          */
         "hrefTemplate"?: string;
     }
-    /**
-     * The `atomic-product-number` component renders the value of a number product field.
-     * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
-     */
-    interface AtomicProductNumber {
+    interface AtomicProductNumericFieldValue {
         /**
           * The field that the component should use. The component will try to find this field in the `Product.additionalFields` object unless it finds it in the `Product` object first.
          */
@@ -6323,7 +6311,7 @@ declare namespace LocalJSX {
     }
     interface AtomicProductPrice {
         /**
-          * The currency to use in currency formatting. Possible values are the ISO 4217 currency codes, such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB. See the current [currency & funds code list](https://www.six-group.com/en/products-services/financial-information/data-standards.html#scrollTo=maintenance-agency).
+          * The currency to use in currency formatting. Allowed values are the [ISO 4217 currency codes](https://www.six-group.com/en/products-services/financial-information/data-standards.html#scrollTo=maintenance-agency), such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB.
          */
         "currency"?: string;
     }
@@ -7697,7 +7685,7 @@ declare namespace LocalJSX {
         "atomic-product": AtomicProduct;
         "atomic-product-description": AtomicProductDescription;
         "atomic-product-link": AtomicProductLink;
-        "atomic-product-number": AtomicProductNumber;
+        "atomic-product-numeric-field-value": AtomicProductNumericFieldValue;
         "atomic-product-price": AtomicProductPrice;
         "atomic-product-template": AtomicProductTemplate;
         "atomic-product-text": AtomicProductText;
@@ -8015,11 +8003,7 @@ declare module "@stencil/core" {
             "atomic-product": LocalJSX.AtomicProduct & JSXBase.HTMLAttributes<HTMLAtomicProductElement>;
             "atomic-product-description": LocalJSX.AtomicProductDescription & JSXBase.HTMLAttributes<HTMLAtomicProductDescriptionElement>;
             "atomic-product-link": LocalJSX.AtomicProductLink & JSXBase.HTMLAttributes<HTMLAtomicProductLinkElement>;
-            /**
-             * The `atomic-product-number` component renders the value of a number product field.
-             * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
-             */
-            "atomic-product-number": LocalJSX.AtomicProductNumber & JSXBase.HTMLAttributes<HTMLAtomicProductNumberElement>;
+            "atomic-product-numeric-field-value": LocalJSX.AtomicProductNumericFieldValue & JSXBase.HTMLAttributes<HTMLAtomicProductNumericFieldValueElement>;
             "atomic-product-price": LocalJSX.AtomicProductPrice & JSXBase.HTMLAttributes<HTMLAtomicProductPriceElement>;
             "atomic-product-template": LocalJSX.AtomicProductTemplate & JSXBase.HTMLAttributes<HTMLAtomicProductTemplateElement>;
             "atomic-product-text": LocalJSX.AtomicProductText & JSXBase.HTMLAttributes<HTMLAtomicProductTextElement>;
