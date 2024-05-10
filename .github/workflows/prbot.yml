@@ -262,10 +262,7 @@ jobs:
       - 'e2e-atomic-stencil-test'
       - 'e2e-atomic-hosted-page-test'
       - 'e2e-atomic-insight-panel-test'
-      - 'e2e-headless-ssr-test-app-dev'
-      - 'e2e-headless-ssr-test-app-prod'
-      - 'e2e-headless-ssr-test-pages-dev'
-      - 'e2e-headless-ssr-test-pages-prod'
+      - 'e2e-headless-ssr'
     runs-on: ubuntu-latest
     steps:
       - run: |
@@ -294,7 +291,7 @@ jobs:
       - 'e2e-atomic-stencil-test'
       - 'e2e-atomic-hosted-page-test'
       - 'e2e-atomic-insight-panel-test'
-      - 'e2e-headless-ssr-test'
+      - 'e2e-headless-ssr'
     runs-on: ubuntu-latest
     steps:
       - run: |
