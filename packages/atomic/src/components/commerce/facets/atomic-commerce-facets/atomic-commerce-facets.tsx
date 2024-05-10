@@ -68,15 +68,23 @@ export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
                 ></atomic-commerce-numeric-facet>
               );
             case 'dateRange':
-              return <atomic-TODO facet={facet as DateFacet}></atomic-TODO>;
+              return (
+                <atomic-commerce-timeframe-facet
+                  facet={facet as DateFacet}
+                ></atomic-commerce-timeframe-facet>
+              );
             case 'hierarchical':
               return (
                 <atomic-commerce-category-facet
                   facet={facet as CategoryFacet}
                 ></atomic-commerce-category-facet>
               );
-            default:
-              return <div>TODO: default</div>;
+            default: {
+              this.bindings.engine.logger.warn(
+                `Unexpected facet type ${facet.state.type}.`
+              );
+              return;
+            }
           }
         })}
       </Host>
