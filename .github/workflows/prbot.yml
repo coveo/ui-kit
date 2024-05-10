@@ -202,38 +202,26 @@ jobs:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-insight-panel
-  e2e-headless-ssr-test-app-dev:
-    name: 'Run e2e tests on Headless SSR App router sample in dev mode'
+  e2e-headless-ssr:
+    strategy:
+      fail-fast: false
+      matrix:
+        workspace:
+          [
+            '@coveo/headless-ssr-samples-app-router',
+            '@coveo/headless-ssr-samples-pages-router',
+          ]
+        mode: ['dev', 'prod']
+    name: 'Run e2e tests on Headless SSR ${{ matrix.workspace }} sample in ${{ matrix.mode }} mode'
     needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/e2e-headless-ssr-app-dev
-  e2e-headless-ssr-test-app-prod:
-    name: 'Run e2e tests on Headless SSR App router sample in prod mode'
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
-      - uses: ./.github/actions/setup
-      - uses: ./.github/actions/e2e-headless-ssr-app-prod
-  e2e-headless-ssr-test-pages-dev:
-    name: 'Run e2e tests on Headless SSR Pages router sample in dev mode'
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
-      - uses: ./.github/actions/setup
-      - uses: ./.github/actions/e2e-headless-ssr-pages-dev
-  e2e-headless-ssr-test-pages-prod:
-    name: 'Run e2e tests on Headless SSR Pages router sample in prod mode'
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
-      - uses: ./.github/actions/setup
-      - uses: ./.github/actions/e2e-headless-ssr-pages-prod
+      - uses: ./.github/actions/e2e-headless-ssr
+        with:
+          workspace: ${{ matrix.workspace }}
+          mode: ${{ matrix.mode }}
   should-e2e-quantic:
     name: 'Should test Quantic?'
     needs: build
@@ -306,10 +294,7 @@ jobs:
       - 'e2e-atomic-stencil-test'
       - 'e2e-atomic-hosted-page-test'
       - 'e2e-atomic-insight-panel-test'
-      - 'e2e-headless-ssr-test-app-dev'
-      - 'e2e-headless-ssr-test-app-prod'
-      - 'e2e-headless-ssr-test-pages-dev'
-      - 'e2e-headless-ssr-test-pages-prod'
+      - 'e2e-headless-ssr-test'
     runs-on: ubuntu-latest
     steps:
       - run: |
