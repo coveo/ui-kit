@@ -20,7 +20,7 @@ export const ImageCarousel: FunctionalComponent<
   const commonPaginationClasses =
     'w-6 h-6 grid justify-center items-center z-1 group rounded-full duration-200 opacity-50 hover:opacity-100 focus:opacity-100 transition-opacity hover:shadow bottom-0 mb-1 absolute';
   const commonArrowClasses =
-    'w-4 align-middle text-on-background group-hover:text-primary-light group-focus:text-primary';
+    'w-4 align-middle text-on-background group-hover:text-primary';
 
   function renderPreviousButton() {
     return (
@@ -42,7 +42,7 @@ export const ImageCarousel: FunctionalComponent<
   function renderNextButton() {
     return (
       <Button
-        style="text-neutral"
+        style="text-primary"
         ariaLabel={props.bindings.i18n.t('next')}
         onClick={() => props.nextImage()}
         part="next-button"
