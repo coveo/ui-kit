@@ -110,6 +110,7 @@ export class AtomicInsightGeneratedAnswer
    * Whether to render a toggle button that lets the user hide or show the answer.
    */
   @Prop() withToggle?: boolean;
+
   /**
    * Whether to allow the answer to be collapsed when the text is taller than 250px.
    */

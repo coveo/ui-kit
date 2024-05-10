@@ -758,6 +758,10 @@ export namespace Components {
           * Whether to allow the answer to be collapsed when the text is taller than 250px.
          */
         "collapsible"?: boolean;
+        /**
+          * Whether to render a toggle button that lets the user hide or show the answer.
+         */
+        "withToggle"?: boolean;
     }
     interface AtomicGeneratedAnswerFeedbackModal {
         /**
@@ -889,6 +893,10 @@ export namespace Components {
           * Whether to allow the answer to be collapsed when the text is taller than 250px.
          */
         "collapsible"?: boolean;
+        /**
+          * Whether to render a toggle button that lets the user hide or show the answer.
+         */
+        "withToggle"?: boolean;
     }
     interface AtomicInsightHistoryToggle {
         "clickCallback": () => void;
@@ -5525,6 +5533,10 @@ declare namespace LocalJSX {
           * Whether to allow the answer to be collapsed when the text is taller than 250px.
          */
         "collapsible"?: boolean;
+        /**
+          * Whether to render a toggle button that lets the user hide or show the answer.
+         */
+        "withToggle"?: boolean;
     }
     interface AtomicGeneratedAnswerFeedbackModal {
         /**
@@ -5653,6 +5665,10 @@ declare namespace LocalJSX {
           * Whether to allow the answer to be collapsed when the text is taller than 250px.
          */
         "collapsible"?: boolean;
+        /**
+          * Whether to render a toggle button that lets the user hide or show the answer.
+         */
+        "withToggle"?: boolean;
     }
     interface AtomicInsightHistoryToggle {
         "clickCallback"?: () => void;
