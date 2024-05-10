@@ -488,16 +488,14 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   get rephraseButtonsCssClass() {
     return `slds-var-m-top_small slds-grid ${
-      this.multilineFooter ? '' : 'slds-grid_align-end'
+      this.multilineFooter
+        ? 'generated-answer__rephrase--width'
+        : 'slds-grid_align-end'
     }`;
   }
 
   get shouldShowDisclaimer() {
     return this.isVisible && !this.isStreaming;
-  }
-
-  get disclaimerCssClass() {
-    return `generated-answer__disclaimer slds-grid_vertical-align-center slds-col slds-text-color_weak slds-text-body_small ${this.multilineFooter ? '' : 'slds-text-align_right'}`;
   }
 
   get toggleCollapseAnswerIcon() {
