@@ -1577,6 +1577,11 @@ export namespace Components {
          */
         "field": string;
         /**
+          * Navigates to the specified image index.
+          * @param index - The index of the image to navigate to.
+         */
+        "navigateToImage": (index: number) => Promise<void>;
+        /**
           * Moves to the next image, when the carousel is activated.
          */
         "nextImage": () => Promise<void>;

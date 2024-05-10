@@ -31,6 +31,8 @@ export class AtomicProductImage implements InitializableComponent {
   @State() private currentImage = 0;
   @State() private images: Image[] = [];
 
+  public error!: Error;
+
   /**
    * The product field which the component should use. This will look for the field in the product object first, then in the product.additionalFields object.
    */
@@ -40,8 +42,6 @@ export class AtomicProductImage implements InitializableComponent {
    * An optional fallback image URL that will be used in case the specified image is not available or an error is encountered.
    */
   @Prop({reflect: true}) fallback?: string;
-
-  public error!: Error;
 
   /**
    * Moves to the previous image, when the carousel is activated.
@@ -58,6 +58,15 @@ export class AtomicProductImage implements InitializableComponent {
    */
   @Method() public async nextImage() {
     this.currentImage = (this.currentImage + 1) % this.numberOfImages;
+  }
+
+  /**
+   * Navigates to the specified image index.
+   *
+   * @param index - The index of the image to navigate to.
+   */
+  @Method() public async navigateToImage(index: number) {
+    this.currentImage = index;
   }
 
   private logWarning(message: string) {
@@ -77,8 +86,27 @@ export class AtomicProductImage implements InitializableComponent {
     }
   }
 
-  navigateToImage(index: number): void {
-    this.currentImage = index;
+  private handleMissingFallback(message: string) {
+    if (!this.fallback) {
+      this.logWarning(message);
+      this.host.remove();
+      return null;
+    }
+    return this.fallback;
+  }
+
+  private validateUrl(url: string | undefined) {
+    if (!url) {
+      const message = `Image for ${this.product.ec_name} is missing. Please review your indexation. You might want to add a "fallback" property.`;
+      return this.handleMissingFallback(message);
+    }
+
+    if (typeof url !== 'string') {
+      const message = `Expected "${this.field}" to be a text field. Please review your indexation. You might want to add a "fallback" property.`;
+      return this.handleMissingFallback(message);
+    }
+
+    return url;
   }
 
   componentWillLoad(): void {
@@ -111,29 +139,6 @@ export class AtomicProductImage implements InitializableComponent {
     return this.images?.length ?? 0;
   }
 
-  private handleMissingFallback(message: string) {
-    if (!this.fallback) {
-      this.logWarning(message);
-      this.host.remove();
-      return null;
-    }
-    return this.fallback;
-  }
-
-  private validateUrl(url: string | undefined) {
-    if (!url) {
-      const message = `Image for ${this.product.ec_name} is missing. Please review your indexation. You might want to add a "fallback" property.`;
-      return this.handleMissingFallback(message);
-    }
-
-    if (typeof url !== 'string') {
-      const message = `Expected "${this.field}" to be a text field. Please review your indexation. You might want to add a "fallback" property.`;
-      return this.handleMissingFallback(message);
-    }
-
-    return url;
-  }
-
   private renderCurrentImage(image: Image | null) {
     if (image === null) {
       return;
@@ -160,7 +165,7 @@ export class AtomicProductImage implements InitializableComponent {
     if (this.images.length === 0) {
       this.validateUrl(this.fallback);
       return (
-        <img alt={'No image available'} src={this.fallback} loading="lazy" />
+        <img alt={'No image available'} src={this.fallback} loading="eager" />
       );
     }
     if (this.images.length === 1) {
