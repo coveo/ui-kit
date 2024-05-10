@@ -10,7 +10,6 @@
     "prod": "next start",
     "lint": "next lint",
     "e2e": "cypress run --browser chrome --e2e --env NEXTJS_ROUTER=app"
-    "e2e:watch": "cypress open --browser chrome --e2e --project ../"
   },
   "dependencies": {
     "@coveo/headless-ssr-samples-common": "0.0.0",
