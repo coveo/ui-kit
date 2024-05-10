@@ -152,8 +152,8 @@ jobs:
       matrix:
         workspace:
           [
-            '@coveo/headless-ssr-samples-app-router',
-            '@coveo/headless-ssr-samples-pages-router',
+            'headless-ssr-samples-app-router',
+            'headless-ssr-samples-pages-router',
           ]
         mode: ['dev', 'prod']
     name: 'Run e2e tests on Headless SSR ${{ matrix.workspace }} sample in ${{ matrix.mode }} mode'
