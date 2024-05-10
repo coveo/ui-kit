@@ -9,7 +9,10 @@ function defaultTemplate() {
   const linkEl = document.createElement('atomic-product-link');
   const descEl = document.createElement('atomic-product-description');
   const imgEl = document.createElement('atomic-product-image');
-  imgEl.setAttribute('fallback', 'https://picsum.photos/600');
+  imgEl.setAttribute(
+    'fallback',
+    'https://placehold.co/600?text=No+image+available'
+  );
 
   const ratingEl = document.createElement('atomic-product-rating');
   ratingEl.setAttribute('field', 'ec_rating');

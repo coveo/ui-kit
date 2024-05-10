@@ -6,16 +6,22 @@ import {
   InitializableComponent,
 } from '../../../../utils/initialization-utils';
 import {filterProtocol} from '../../../../utils/xss-utils';
-import {Carousel} from '../../../common/carousel';
+import {ImageCarousel} from '../../../common/image-carousel/image-carousel';
 import {ProductContext} from '../product-template-decorators';
+
+type Image = {
+  src: string;
+  alt: string;
+};
 
 /**
  * The `atomic-product-image` component renders an image from a product field.
+ * @internal
  */
 @Component({
   tag: 'atomic-product-image',
   styleUrl: 'atomic-product-image.pcss',
-  shadow: false,
+  shadow: true,
 })
 export class AtomicProductImage implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
@@ -23,6 +29,7 @@ export class AtomicProductImage implements InitializableComponent {
   @Element() private host!: HTMLElement;
   @State() private useFallback = false;
   @State() private currentImage = 0;
+  @State() private images: Image[] = [];
 
   /**
    * The product field which the component should use. This will look for the field in the product object first, then in the product.additionalFields object.
@@ -57,10 +64,38 @@ export class AtomicProductImage implements InitializableComponent {
     this.bindings.engine.logger.warn(message, this.host);
   }
 
-  private handleImageError(url: string) {
-    const message = `The image url "${url}" is not valid or could not be loaded. You might want to add a "fallback" property.`;
+  private handleImageError(event: Event) {
+    const image = event.target as HTMLImageElement;
+    const message = `The image url "${image.src}" is not valid or could not be loaded. You might want to add a "fallback" property.`;
+    if (this.fallback && image.src !== this.fallback) {
+      this.useFallback = true;
+      image.src = this.fallback;
+    } else if (image.src === this.fallback) {
+      this.logWarning('The fallback image failed to load.');
+    } else {
+      this.logWarning(message);
+    }
+  }
 
-    this.fallback ? (this.useFallback = true) : this.logWarning(message);
+  navigateToImage(index: number): void {
+    this.currentImage = index;
+  }
+
+  componentWillLoad(): void {
+    const validImages = this.imageUrls.filter(
+      (image) => typeof image === 'string'
+    );
+
+    this.images = validImages.map((url, index) => {
+      const finalUrl = this.useFallback ? this.fallback : url;
+
+      this.validateUrl(finalUrl);
+
+      return {
+        src: filterProtocol(finalUrl),
+        alt: `Image ${index + 1} out of ${validImages?.length} for ${this.product.ec_name}`,
+      };
+    }) as Image[];
   }
 
   private get imageUrls() {
@@ -85,9 +120,9 @@ export class AtomicProductImage implements InitializableComponent {
     return this.fallback;
   }
 
-  private validateUrl(url: string) {
+  private validateUrl(url: string | undefined) {
     if (!url) {
-      const message = `"${this.field}" is missing. Please review your indexation. You might want to add a "fallback" property.`;
+      const message = `Image for ${this.product.ec_name} is missing. Please review your indexation. You might want to add a "fallback" property.`;
       return this.handleMissingFallback(message);
     }
 
@@ -99,55 +134,50 @@ export class AtomicProductImage implements InitializableComponent {
     return url;
   }
 
-  private get images() {
-    return this.imageUrls
-      .map((url) => {
-        let finalUrl = this.useFallback ? this.fallback : url;
-
-        if (!this.useFallback) {
-          finalUrl = this.validateUrl(finalUrl);
-          if (!finalUrl) {
-            return null;
-          }
-        }
-
-        return {src: filterProtocol(finalUrl), alt: `${this.field} image`};
-      })
-      .filter(Boolean);
-  }
-
-  private renderCurrentImage(image: {src: string; alt: string} | null) {
+  private renderCurrentImage(image: Image | null) {
     if (image === null) {
       return;
     }
 
     return (
       <img
+        class="aspect-square"
         alt={image.alt}
         src={image.src}
-        onError={() => this.handleImageError(image.src)}
+        onError={(image) => this.handleImageError(image)}
         loading="lazy"
       />
     );
   }
 
   public render() {
+    const imagesToRender = this.images.map((image: Image, index: number) => {
+      return {
+        src: image.src,
+        alt: `Image ${index} out of ${this.images?.length} for ${this.product.ec_name}`,
+      };
+    });
+    if (this.images.length === 0) {
+      this.validateUrl(this.fallback);
+      return (
+        <img alt={'No image available'} src={this.fallback} loading="lazy" />
+      );
+    }
     if (this.images.length === 1) {
-      return this.renderCurrentImage(this.images[this.currentImage]);
+      return this.renderCurrentImage(imagesToRender[this.currentImage]);
     }
 
     return (
-      <div class="pb-4">
-        <Carousel
-          bindings={this.bindings}
-          currentPage={this.currentImage}
-          nextPage={() => this.nextImage()}
-          previousPage={() => this.previousImage()}
-          numberOfPages={this.numberOfImages}
-        >
-          {this.renderCurrentImage(this.images[this.currentImage])}
-        </Carousel>
-      </div>
+      <ImageCarousel
+        bindings={this.bindings}
+        currentImage={this.currentImage}
+        navigateToImage={(index) => this.navigateToImage(index)}
+        nextImage={() => this.nextImage()}
+        previousImage={() => this.previousImage()}
+        numberOfImages={this.numberOfImages}
+      >
+        {this.renderCurrentImage(this.images[this.currentImage])}
+      </ImageCarousel>
     );
   }
 }
