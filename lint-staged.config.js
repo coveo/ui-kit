@@ -6,7 +6,7 @@ module.exports = {
     return `eslint --fix ${filteredFiles.join(' ')}`;
   },
   '**/*.{scss,css,pcss,html,md,yml,ts,tsx,js,mjs,json}': (files) => {
-    return `prettier --write ${files.join(' ')}`;
+    return `prettier --no-error-on-unmatched-pattern  --write ${files.join(' ')}`;
   },
   '**/*.md': (files) => {
     return `cspell --no-progress --show-suggestions --show-context --no-must-find-files ${files.join(

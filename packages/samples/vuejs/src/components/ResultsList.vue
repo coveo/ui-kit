@@ -5,10 +5,7 @@ import resultTemplate from '../templates/result-template.html?raw';
 <template>
   <div class="results">
     <atomic-did-you-mean></atomic-did-you-mean>
-    <atomic-result-list
-      display="grid"
-      image-size="large"
-    >
+    <atomic-result-list display="grid" image-size="large">
       <atomic-result-template v-html="resultTemplate"> </atomic-result-template>
     </atomic-result-list>
     <div class="pagination">
