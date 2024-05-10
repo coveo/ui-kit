@@ -5,8 +5,10 @@ import {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../app/state-key';
 import {recommendationsOptionsSchema} from '../../../features/commerce/recommendations/recommendations';
 import {
+  fetchMoreRecommendations,
   fetchRecommendations,
   registerRecommendationsSlot,
 } from '../../../features/commerce/recommendations/recommendations-actions';
@@ -17,12 +19,17 @@ import {
   buildController,
   Controller,
 } from '../../controller/headless-controller';
-import {buildBaseSolutionTypeControllers} from '../core/sub-controller/headless-sub-controller';
+import {
+  BaseSolutionTypeSubControllers,
+  buildBaseSolutionTypeControllers,
+} from '../core/sub-controller/headless-sub-controller';
 
 /**
  * The `Recommendations` controller exposes a method for retrieving recommendations content in a commerce interface.
  */
-export interface Recommendations extends Controller {
+export interface Recommendations
+  extends Controller,
+    BaseSolutionTypeSubControllers {
   /**
    * Fetches the recommendations.
    */
@@ -47,6 +54,10 @@ export interface RecommendationsOptions {
    * The unique identifier of the recommendations slot (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
    */
   slotId: string;
+  /**
+   * The unique identifier of the product to use for seeded recommendations.
+   */
+  productId?: string;
 }
 
 interface RecommendationsProps {
@@ -78,7 +89,7 @@ export function buildRecommendations(
   const controller = buildController(engine);
   const {dispatch} = engine;
 
-  const {slotId} = props.options;
+  const {slotId, productId} = props.options;
   dispatch(registerRecommendationsSlot({slotId}));
 
   const recommendationStateSelector = createSelector(
@@ -88,7 +99,8 @@ export function buildRecommendations(
   const subControllers = buildBaseSolutionTypeControllers(engine, {
     slotId,
     responseIdSelector: (state) => state.recommendations[slotId]!.responseId,
-    fetchResultsActionCreator: () => fetchRecommendations({slotId}),
+    fetchProductsActionCreator: () => fetchRecommendations({slotId}),
+    fetchMoreProductsActionCreator: () => fetchMoreRecommendations({slotId}),
   });
 
   return {
@@ -96,10 +108,10 @@ export function buildRecommendations(
     ...subControllers,
 
     get state() {
-      return recommendationStateSelector(engine.state);
+      return recommendationStateSelector(engine[stateKey]);
     },
 
-    refresh: () => dispatch(fetchRecommendations({slotId})),
+    refresh: () => dispatch(fetchRecommendations({slotId, productId})),
   };
 }
 

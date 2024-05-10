@@ -1,3 +1,4 @@
+import {Schema, StringValue} from '@coveo/bueno';
 import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
 import {
   buildInsightFacetConditionsManager,
@@ -5,10 +6,14 @@ import {
   buildInsightNumericFilter,
   buildInsightNumericRange,
   buildInsightSearchStatus,
+  InsightCategoryFacetValueRequest,
+  InsightFacetConditionsManager,
+  InsightFacetValueRequest,
   InsightNumericFacet,
   InsightNumericFacetState,
   InsightNumericFilter,
   InsightNumericFilterState,
+  InsightNumericRangeRequest,
   InsightRangeFacetRangeAlgorithm,
   InsightRangeFacetSortCriterion,
   InsightSearchStatus,
@@ -22,18 +27,23 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {MapProp} from '../../../utils/props-utils';
-import {BaseFacet, parseDependsOn} from '../../common/facets/facet-common';
+import {randomID} from '../../../utils/utils';
+import {parseDependsOn} from '../../common/facets/depends-on';
+import {shouldDisplayInputForFacetRange} from '../../common/facets/facet-common';
+import {FacetInfo} from '../../common/facets/facet-common-store';
+import {FacetContainer} from '../../common/facets/facet-container/facet-container';
+import {FacetGuard} from '../../common/facets/facet-guard';
+import {FacetHeader} from '../../common/facets/facet-header/facet-header';
 import {NumberInputType} from '../../common/facets/facet-number-input/number-input-type';
 import {FacetPlaceholder} from '../../common/facets/facet-placeholder/facet-placeholder';
-import {
-  NumericFacetCommon,
-  NumericFacetDisplayValues,
-  NumericRangeWithLabel,
-} from '../../common/facets/numeric-facet-common';
+import {formatHumanReadable} from '../../common/facets/numeric-facet/formatter';
+import {NumericFacetValueLink} from '../../common/facets/numeric-facet/value-link';
+import {NumericFacetValuesContainer} from '../../common/facets/numeric-facet/values-container';
 import {
   defaultNumberFormatter,
   NumberFormatter,
 } from '../../common/formats/format-common';
+import {initializePopover} from '../../search/facets/atomic-popover/popover-type';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
@@ -45,19 +55,18 @@ import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interf
   shadow: true,
 })
 export class AtomicInsightNumericFacet
-  implements
-    InitializableComponent<InsightBindings>,
-    BaseFacet<InsightNumericFacet>
+  implements InitializableComponent<InsightBindings>
 {
   @InitializeBindings() public bindings!: InsightBindings;
   public facetForRange?: InsightNumericFacet;
   public facetForInput?: InsightNumericFacet;
   public filter?: InsightNumericFilter;
   public searchStatus!: InsightSearchStatus;
-  private manualRanges: NumericRangeWithLabel[] = [];
+  private manualRanges: (InsightNumericRangeRequest & {label?: string})[] = [];
+  private dependenciesManager?: InsightFacetConditionsManager;
+
   @Element() private host!: HTMLElement;
   private formatter: NumberFormatter = defaultNumberFormatter;
-  private numericFacetCommon?: NumericFacetCommon;
   @BindStateToController('facetForRange')
   @State()
   public facetState!: InsightNumericFacetState;
@@ -110,7 +119,7 @@ export class AtomicInsightNumericFacet
    * Whether to display the facet values as checkboxes (multiple selection) or links (single selection).
    * Possible values are 'checkbox' and 'link'.
    */
-  @Prop({reflect: true}) public displayValuesAs: NumericFacetDisplayValues =
+  @Prop({reflect: true}) public displayValuesAs: 'checkbox' | 'link' =
     'checkbox';
   /**
    * Specifies if the facet is collapsed.
@@ -156,33 +165,14 @@ export class AtomicInsightNumericFacet
   private headerFocus?: FocusTargetController;
 
   public initialize() {
-    this.numericFacetCommon = new NumericFacetCommon({
-      facetId: this.facetId,
-      host: this.host,
-      bindings: this.bindings,
-      label: this.label,
-      field: this.field,
-      headingLevel: this.headingLevel,
-      dependsOn: this.dependsOn,
-      displayValuesAs: this.displayValuesAs,
-      withInput: this.withInput,
-      numberOfValues: this.numberOfValues,
-      setFacetId: (id: string) => (this.facetId = id),
-      setManualRanges: (manualRanges) => (this.manualRanges = manualRanges),
-      getFormatter: () => this.formatter,
-      getSearchStatusState: () => this.searchStatusState,
-      buildDependenciesManager: () =>
-        buildInsightFacetConditionsManager(this.bindings.engine, {
-          facetId:
-            this.facetForRange?.state.facetId ?? this.filter!.state.facetId,
-          conditions: parseDependsOn(this.dependsOn),
-        }),
-      buildNumericRange: buildInsightNumericRange,
-      initializeFacetForInput: () => this.initializeFacetForInput(),
-      initializeFacetForRange: () => this.initializeFacetForRange(),
-      initializeFilter: () => this.initializeFilter(),
-    });
-    this.searchStatus = buildInsightSearchStatus(this.bindings.engine);
+    this.validateProps();
+    this.computeFacetId();
+    this.initializeFacetForInput();
+    this.initializeFacetForRange();
+    this.initializeFilter();
+    this.initializeDependenciesManager();
+    this.initializeSearchStatus();
+    this.registerFacetToStore();
   }
 
   private get focusTarget(): FocusTargetController {
@@ -193,10 +183,13 @@ export class AtomicInsightNumericFacet
   }
 
   public disconnectedCallback() {
-    this.numericFacetCommon?.disconnectedCallback();
+    this.dependenciesManager?.stopWatching();
   }
 
   private initializeFacetForInput() {
+    if (!this.withInput) {
+      return;
+    }
     this.facetForInput = buildInsightNumericFacet(this.bindings.engine, {
       options: {
         facetId: `${this.facetId}_input_range`,
@@ -214,6 +207,17 @@ export class AtomicInsightNumericFacet
   }
 
   private initializeFacetForRange() {
+    if (this.numberOfValues <= 0) {
+      return;
+    }
+
+    this.manualRanges = Array.from(
+      this.host.querySelectorAll('atomic-numeric-range')
+    ).map(({start, end, endInclusive, label}) => ({
+      ...buildInsightNumericRange({start, end, endInclusive}),
+      label,
+    }));
+
     this.facetForRange = buildInsightNumericFacet(this.bindings.engine, {
       options: {
         facetId: this.facetId,
@@ -232,17 +236,66 @@ export class AtomicInsightNumericFacet
   }
 
   private initializeFilter() {
+    if (!this.withInput) {
+      return;
+    }
+
     this.filter = buildInsightNumericFilter(this.bindings.engine, {
       options: {
         facetId: `${this.facetId}_input`,
         field: this.field,
       },
     });
+  }
 
-    if (!this.facetId) {
-      this.facetId = this.filter.state.facetId;
+  private initializeDependenciesManager() {
+    this.dependenciesManager = buildInsightFacetConditionsManager(
+      this.bindings.engine,
+      {
+        facetId:
+          this.facetForRange?.state.facetId ?? this.filter!.state.facetId,
+        conditions: parseDependsOn<
+          InsightFacetValueRequest | InsightCategoryFacetValueRequest
+        >(this.dependsOn),
+      }
+    );
+  }
+
+  private initializeSearchStatus() {
+    this.searchStatus = buildInsightSearchStatus(this.bindings.engine);
+  }
+
+  private registerFacetToStore() {
+    const facetInfo: FacetInfo = {
+      label: () => this.bindings.i18n.t(this.label),
+      facetId: this.facetId!,
+      element: this.host,
+      isHidden: () => this.isHidden,
+    };
+
+    this.bindings.store.registerFacet('numericFacets', {
+      ...facetInfo,
+      format: (value) =>
+        formatHumanReadable({
+          facetValue: value,
+          logger: this.bindings.engine.logger,
+          i18n: this.bindings.i18n,
+          field: this.field,
+          manualRanges: this.manualRanges,
+          formatter: this.formatter,
+        }),
+    });
+
+    initializePopover(this.host, {
+      ...facetInfo,
+      hasValues: () => this.hasValues,
+      numberOfActiveValues: () => this.numberOfSelectedValues,
+    });
+
+    if (this.filter) {
+      this.bindings.store.state.numericFacets[this.filter.state.facetId] =
+        this.bindings.store.state.numericFacets[this.facetId!];
     }
-    return this.filter;
   }
 
   @Listen('atomic/numberFormat')
@@ -263,20 +316,179 @@ export class AtomicInsightNumericFacet
   }
 
   public render() {
-    if (!this.numericFacetCommon) {
-      return (
-        <FacetPlaceholder
-          numberOfValues={this.numberOfValues}
-          isCollapsed={this.isCollapsed}
-        ></FacetPlaceholder>
-      );
+    const {
+      searchStatusState: {firstSearchExecuted, hasError},
+      bindings: {i18n},
+      label,
+      numberOfSelectedValues,
+      isCollapsed,
+      headingLevel,
+      focusTarget,
+      withInput,
+      filter,
+    } = this;
+    return (
+      <FacetGuard
+        enabled={this.enabled}
+        firstSearchExecuted={firstSearchExecuted}
+        hasError={hasError}
+        hasResults={this.shouldRenderFacet}
+      >
+        {firstSearchExecuted ? (
+          <FacetContainer>
+            <FacetHeader
+              i18n={i18n}
+              label={label}
+              onClearFilters={() => {
+                focusTarget.focusAfterSearch();
+                if (this.filterState?.range) {
+                  this.filter?.clear();
+                  return;
+                }
+                this.facetForRange?.deselectAll();
+              }}
+              numberOfActiveValues={numberOfSelectedValues}
+              isCollapsed={isCollapsed}
+              headingLevel={headingLevel}
+              onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
+              headerRef={(el) => focusTarget.setTarget(el)}
+            />
+            {!isCollapsed && [
+              this.shouldRenderValues && this.renderValues(),
+              this.shouldRenderInput && (
+                <atomic-facet-number-input
+                  type={withInput!}
+                  bindings={this.bindings}
+                  label={label}
+                  filter={filter!}
+                  filterState={filter!.state}
+                ></atomic-facet-number-input>
+              ),
+            ]}
+          </FacetContainer>
+        ) : (
+          <FacetPlaceholder
+            isCollapsed={this.isCollapsed}
+            numberOfValues={this.numberOfValues}
+          />
+        )}
+      </FacetGuard>
+    );
+  }
+
+  private renderValues() {
+    const {
+      displayValuesAs,
+      field,
+      manualRanges,
+      label,
+      bindings: {
+        i18n,
+        engine: {logger},
+      },
+    } = this;
+
+    return (
+      <NumericFacetValuesContainer i18n={i18n} label={label}>
+        {this.valuesToRender.map((value) => (
+          <NumericFacetValueLink
+            formatter={this.formatter}
+            displayValuesAs={displayValuesAs}
+            facetValue={value}
+            field={field}
+            i18n={i18n}
+            logger={logger}
+            manualRanges={manualRanges}
+            onClick={() =>
+              this.displayValuesAs === 'link'
+                ? this.facetForRange!.toggleSingleSelect(value)
+                : this.facetForRange!.toggleSelect(value)
+            }
+          />
+        ))}
+      </NumericFacetValuesContainer>
+    );
+  }
+
+  private get numberOfSelectedValues() {
+    if (this.filter?.state.range) {
+      return 1;
     }
-    return this.numericFacetCommon.render({
-      hasError: this.searchStatusState.hasError,
-      firstSearchExecuted: this.searchStatusState.firstSearchExecuted,
-      isCollapsed: this.isCollapsed,
-      headerFocus: this.focusTarget,
-      onToggleCollapse: () => (this.isCollapsed = !this.isCollapsed),
+
+    return (
+      this.facetForRange?.state.values.filter(({state}) => state === 'selected')
+        .length || 0
+    );
+  }
+
+  private get shouldRenderValues() {
+    return (
+      !this.hasInputRange &&
+      this.numberOfValues > 0 &&
+      !!this.valuesToRender.length
+    );
+  }
+
+  private get hasInputRange() {
+    return !!this.filter?.state.range;
+  }
+
+  private get valuesToRender() {
+    return (
+      this.facetForRange?.state.values.filter(
+        (value) => value.numberOfResults || value.state !== 'idle'
+      ) || []
+    );
+  }
+
+  private get shouldRenderInput() {
+    return shouldDisplayInputForFacetRange({
+      hasInputRange: this.hasInputRange,
+      searchStatusState: this.searchStatusState,
+      facetValues: this.facetForInput?.state.values || [],
+      hasInput: !!this.withInput,
+    });
+  }
+
+  private computeFacetId() {
+    if (this.facetId) {
+      return;
+    }
+
+    if (this.bindings.store.get('numericFacets')[this.field]) {
+      this.facetId = randomID(`${this.field}_`);
+    }
+
+    this.facetId = this.field;
+  }
+
+  private get isHidden() {
+    return !this.shouldRenderFacet || !this.facetState.enabled;
+  }
+
+  private get shouldRenderFacet() {
+    return this.shouldRenderInput || this.shouldRenderValues;
+  }
+
+  private get hasValues() {
+    if (this.facetForInput?.state.values.length) {
+      return true;
+    }
+
+    return !!this.valuesToRender.length;
+  }
+
+  private get enabled() {
+    return this.facetState?.enabled ?? this.filter?.state.enabled ?? true;
+  }
+
+  private validateProps() {
+    new Schema({
+      displayValuesAs: new StringValue({constrainTo: ['checkbox', 'link']}),
+      withInput: new StringValue({constrainTo: ['integer', 'decimal']}),
+    }).validate({
+      displayValuesAs: this.displayValuesAs,
+      withInput: this.withInput,
     });
   }
 }

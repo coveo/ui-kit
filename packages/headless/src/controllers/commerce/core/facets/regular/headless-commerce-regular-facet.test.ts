@@ -1,4 +1,4 @@
-import {CommerceFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
+import {RegularFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
@@ -14,7 +14,6 @@ import {
   buildMockCommerceEngine,
 } from '../../../../../test/mock-engine-v2';
 import {buildMockFacetSearch} from '../../../../../test/mock-facet-search';
-import {FacetValueRequest} from '../headless-core-commerce-facet';
 import {
   RegularFacet,
   RegularFacetOptions,
@@ -38,9 +37,7 @@ describe('RegularFacet', () => {
     facet = buildCommerceRegularFacet(engine, options);
   }
 
-  function setFacetRequest(
-    config: Partial<CommerceFacetRequest<FacetValueRequest>> = {}
-  ) {
+  function setFacetRequest(config: Partial<RegularFacetRequest> = {}) {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, ...config}),
     });
@@ -55,7 +52,7 @@ describe('RegularFacet', () => {
 
     options = {
       facetId,
-      fetchResultsActionCreator: jest.fn(),
+      fetchProductsActionCreator: jest.fn(),
       facetResponseSelector: jest.fn(),
       isFacetLoadingResponseSelector: jest.fn(),
     };
@@ -114,5 +111,9 @@ describe('RegularFacet', () => {
       query: 'test',
       values: [{count: 1, displayValue: 'test', rawValue: 'test'}],
     });
+  });
+
+  it('#type returns "regular"', () => {
+    expect(facet.type).toBe('regular');
   });
 });

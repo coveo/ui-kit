@@ -3,6 +3,7 @@ import {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../../app/state-key';
 import {CategoryFacetValueRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
 import {
   defaultNumberOfValuesIncrement,
@@ -15,6 +16,7 @@ import {
   CoreCommerceFacet,
   CoreCommerceFacetOptions,
   CoreCommerceFacetState,
+  FacetControllerType,
   buildCoreCommerceFacet,
 } from '../headless-core-commerce-facet';
 import {SearchableFacetOptions} from '../searchable/headless-commerce-searchable-facet';
@@ -49,11 +51,10 @@ export type CategoryFacet = Omit<
   | 'toggleExclude'
   | 'toggleSingleExclude'
   | 'toggleSingleSelect'
-  | 'state'
 > & {
   facetSearch: Omit<CategoryFacetSearch, 'state'>;
   state: CategoryFacetState;
-};
+} & FacetControllerType<'hierarchical'>;
 
 /**
  * @internal
@@ -88,7 +89,7 @@ export function buildCategoryFacet(
     return buildCategoryFacetSearch(engine, {
       options: {facetId: getFacetId(), ...options.facetSearch},
       select: () => {
-        dispatch(options.fetchResultsActionCreator());
+        dispatch(options.fetchProductsActionCreator());
       },
       isForFieldSuggestions: false,
     });
@@ -120,7 +121,7 @@ export function buildCategoryFacet(
         defaultNumberOfValuesIncrement;
 
       dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
-      dispatch(options.fetchResultsActionCreator());
+      dispatch(options.fetchProductsActionCreator());
     },
 
     showLessValues() {
@@ -132,7 +133,7 @@ export function buildCategoryFacet(
           numberOfValues: defaultNumberOfValuesIncrement,
         })
       );
-      dispatch(options.fetchResultsActionCreator());
+      dispatch(options.fetchProductsActionCreator());
     },
 
     facetSearch: restOfFacetSearch,
@@ -160,8 +161,10 @@ export function buildCategoryFacet(
         canShowMoreValues,
         hasActiveValues,
         selectedValueAncestry,
-        facetSearch: facetSearchStateSelector(engine.state),
+        facetSearch: facetSearchStateSelector(engine[stateKey]),
       };
     },
+
+    type: 'hierarchical',
   };
 }

@@ -19,6 +19,11 @@ import {LightningElement, api} from 'lwc';
 /** @typedef {import("coveo").SmartSnippet} SmartSnippet */
 /** @typedef {import("coveo").SmartSnippetState} SmartSnippetState */
 /** @typedef {import("coveo").SmartSnippetFeedback} SmartSnippetFeedback */
+/** @typedef {import("coveo").SearchStatus} SearchStatus */
+
+const FEEDBACK_LIKED_STATE = 'liked';
+const FEEDBACK_DISLIKED_STATE = 'disliked';
+const FEEDBACK_NEUTRAL_STATE = 'neutral';
 
 const expandableAnswerBaseClass = 'smart-snippet__answer slds-is-relative';
 
@@ -60,6 +65,10 @@ export default class QuanticSmartSnippet extends LightningElement {
   feedbackSubmitted = false;
   /** @type {boolean} */
   hasInitializationError = false;
+  /** @type {SearchStatus} */
+  searchStatus;
+  /** @type {Function} */
+  unsubscribeSearchStatus;
 
   labels = {
     showMore,
@@ -90,7 +99,12 @@ export default class QuanticSmartSnippet extends LightningElement {
     this.engine = engine;
     this.headless = getHeadlessBundle(this.engineId);
     this.smartSnippet = this.headless.buildSmartSnippet(engine);
+    this.searchStatus = this.headless.buildSearchStatus(engine);
+
     this.unsubscribe = this.smartSnippet.subscribe(() => this.updateState());
+    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
+      this.updateSearchStatusState()
+    );
   };
 
   disconnectedCallback() {
@@ -107,6 +121,12 @@ export default class QuanticSmartSnippet extends LightningElement {
       this.answer = this.state.answer;
       this.initializeExpandableAnswerClass();
       this.expandableAnswerDisplayUpdated = false;
+    }
+  }
+
+  updateSearchStatusState() {
+    if (!this.state.disliked && !this.state.liked) {
+      this.feedbackSubmitted = false;
     }
   }
 
@@ -386,6 +406,10 @@ export default class QuanticSmartSnippet extends LightningElement {
    * @returns {'liked' | 'disliked' | 'neutral'}
    */
   get feedbackState() {
-    return this.liked ? 'liked' : this.disliked ? 'disliked' : 'neutral';
+    return this.liked
+      ? FEEDBACK_LIKED_STATE
+      : this.disliked
+        ? FEEDBACK_DISLIKED_STATE
+        : FEEDBACK_NEUTRAL_STATE;
   }
 }

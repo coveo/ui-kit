@@ -1,4 +1,5 @@
 import {buildMockSearch} from '../../test/mock-search';
+import {restoreSearchParameters as commerceRestoreSearchParameters} from '../commerce/search-parameters/search-parameter-actions';
 import {change} from '../history/history-actions';
 import {getHistoryInitialState} from '../history/history-state';
 import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions';
@@ -102,24 +103,27 @@ describe('querySet slice', () => {
     expect(nextState).toEqual(expectedQuerySet);
   });
 
-  it('sets all queries to q on #restoreSearchParameters, when "q" defined', () => {
+  it.each([
+    {action: restoreSearchParameters},
+    {action: commerceRestoreSearchParameters},
+  ])('sets all queries to q on #$action, when "q" defined', ({action}) => {
     registerQueryWithId('foo');
     registerQueryWithId('bar');
 
     const expectedQuerySet = {foo: 'world', bar: 'world'};
-    const nextState = querySetReducer(
-      state,
-      restoreSearchParameters({q: 'world'})
-    );
+    const nextState = querySetReducer(state, action({q: 'world'}));
     expect(nextState).toEqual(expectedQuerySet);
   });
 
-  it('does not modify query on #restoreSearchParameters, when "q" not defined', () => {
+  it.each([
+    {action: restoreSearchParameters},
+    {action: commerceRestoreSearchParameters},
+  ])('does not modify query on #$action, when "q" not defined', ({action}) => {
     registerQueryWithId('foo', 'foo');
     registerQueryWithId('bar', 'bar');
 
     const expectedQuerySet = {foo: 'foo', bar: 'bar'};
-    const nextState = querySetReducer(state, restoreSearchParameters({}));
+    const nextState = querySetReducer(state, action({}));
     expect(nextState).toEqual(expectedQuerySet);
   });
 

@@ -6,7 +6,7 @@ import {
 import * as CoreBreadcrumbManager from '../breadcrumb-manager/headless-core-breadcrumb-manager';
 import * as CoreFacetGenerator from '../facets/generator/headless-commerce-facet-generator';
 import * as CorePagination from '../pagination/headless-core-commerce-pagination';
-import * as CoreInteractiveResult from '../result-list/headless-core-interactive-result';
+import * as CoreInteractiveProduct from '../product-list/headless-core-interactive-product';
 import * as CoreSort from '../sort/headless-core-commerce-sort';
 import {
   BaseSolutionTypeSubControllers,
@@ -18,7 +18,8 @@ import {
 describe('sub controllers', () => {
   let engine: MockedCommerceEngine;
   const mockResponseIdSelector = jest.fn();
-  const mockFetchResultsActionCreator = jest.fn();
+  const mockfetchProductsActionCreator = jest.fn();
+  const mockfetchMoreProductsActionCreator = jest.fn();
   const mockFacetResponseSelector = jest.fn();
   const mockIsFacetLoadingResponseSelector = jest.fn();
 
@@ -40,7 +41,7 @@ describe('sub controllers', () => {
       subControllersBuilder: buildBaseSolutionTypeControllers,
     },
   ])(
-    '#interactiveResult builds interactive result controller',
+    '#interactiveProduct builds interactive result controller',
     ({
       subControllersBuilder,
     }: {
@@ -50,13 +51,14 @@ describe('sub controllers', () => {
     }) => {
       const subControllers = subControllersBuilder(engine, {
         responseIdSelector: mockResponseIdSelector,
-        fetchResultsActionCreator: mockFetchResultsActionCreator,
+        fetchProductsActionCreator: mockfetchProductsActionCreator,
+        fetchMoreProductsActionCreator: mockfetchMoreProductsActionCreator,
         facetResponseSelector: mockFacetResponseSelector,
         isFacetLoadingResponseSelector: mockIsFacetLoadingResponseSelector,
       });
-      const buildCoreInteractiveResultMock = jest.spyOn(
-        CoreInteractiveResult,
-        'buildCoreInteractiveResult'
+      const buildCoreInteractiveProductMock = jest.spyOn(
+        CoreInteractiveProduct,
+        'buildCoreInteractiveProduct'
       );
 
       const props = {
@@ -70,12 +72,12 @@ describe('sub controllers', () => {
         },
       };
 
-      const interactiveResult = subControllers.interactiveResult({
+      const interactiveProduct = subControllers.interactiveProduct({
         ...props,
       });
 
-      expect(interactiveResult).toEqual(
-        buildCoreInteractiveResultMock.mock.results[0].value
+      expect(interactiveProduct).toEqual(
+        buildCoreInteractiveProductMock.mock.results[0].value
       );
     }
   );
@@ -86,7 +88,8 @@ describe('sub controllers', () => {
     beforeEach(() => {
       subControllers = buildSolutionTypeSubControllers(engine, {
         responseIdSelector: mockResponseIdSelector,
-        fetchResultsActionCreator: mockFetchResultsActionCreator,
+        fetchProductsActionCreator: mockfetchProductsActionCreator,
+        fetchMoreProductsActionCreator: mockfetchMoreProductsActionCreator,
         facetResponseSelector: mockFacetResponseSelector,
         isFacetLoadingResponseSelector: mockIsFacetLoadingResponseSelector,
       });
@@ -146,7 +149,8 @@ describe('sub controllers', () => {
       subControllers = buildBaseSolutionTypeControllers(engine, {
         slotId,
         responseIdSelector: mockResponseIdSelector,
-        fetchResultsActionCreator: mockFetchResultsActionCreator,
+        fetchProductsActionCreator: mockfetchProductsActionCreator,
+        fetchMoreProductsActionCreator: mockfetchMoreProductsActionCreator,
       });
     });
 
@@ -160,8 +164,11 @@ describe('sub controllers', () => {
 
       expect(pagination).toEqual(buildCorePaginationMock.mock.results[0].value);
       expect(buildCorePaginationMock).toHaveBeenCalledWith(engine, {
-        fetchResultsActionCreator: mockFetchResultsActionCreator,
-        slotId,
+        fetchProductsActionCreator: mockfetchProductsActionCreator,
+        fetchMoreProductsActionCreator: mockfetchMoreProductsActionCreator,
+        options: {
+          slotId,
+        },
       });
     });
   });

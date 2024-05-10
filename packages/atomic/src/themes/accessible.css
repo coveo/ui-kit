@@ -21,6 +21,13 @@
   --atomic-success-background: #c5f4e6;
   --atomic-error-background: #f6a5a8;
   --atomic-primary-background: #edf6ff;
+  --atomic-inline-code: #cd2113;
+
+  /* Table colors */
+  --atomic-table-outer-border: #757575;
+  --atomic-table-inner-border: #757575;
+  --atomic-table-header-background: #e0e0e0;
+  --atomic-table-header-delimiter: #424242;
 
   /* Border radius */
   --atomic-border-radius: 0.25rem;
