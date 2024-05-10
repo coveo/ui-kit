@@ -1,5 +1,5 @@
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../../features/commerce/facets/facet-set/facet-set-slice';
-import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
+import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/common';
 import {facetOrderReducer as facetOrder} from '../../../../../features/facets/facet-order/facet-order-slice';
 import {CommerceAppState} from '../../../../../state/commerce-app-state';
 import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search';
@@ -10,10 +10,6 @@ import {
   buildMockCommerceEngine,
 } from '../../../../../test/mock-engine-v2';
 import {buildMockFacetSearch} from '../../../../../test/mock-facet-search';
-import {buildProductListingCategoryFacet} from '../../../product-listing/facets/headless-product-listing-category-facet';
-import {buildProductListingDateFacet} from '../../../product-listing/facets/headless-product-listing-date-facet';
-import {buildProductListingNumericFacet} from '../../../product-listing/facets/headless-product-listing-numeric-facet';
-import {buildProductListingRegularFacet} from '../../../product-listing/facets/headless-product-listing-regular-facet';
 import {
   buildFacetGenerator,
   FacetGenerator,
@@ -25,6 +21,10 @@ describe('FacetGenerator', () => {
   let state: CommerceAppState;
   let options: FacetGeneratorOptions;
   let facetGenerator: FacetGenerator;
+  const mockBuildNumericFacet = jest.fn();
+  const mockBuildRegularFacet = jest.fn();
+  const mockBuildDateFacet = jest.fn();
+  const mockBuildCategoryFacet = jest.fn();
 
   function initEngine(preloadedState = buildMockCommerceState()) {
     engine = buildMockCommerceEngine(preloadedState);
@@ -53,10 +53,10 @@ describe('FacetGenerator', () => {
     jest.resetAllMocks();
 
     options = {
-      buildNumericFacet: buildProductListingNumericFacet,
-      buildRegularFacet: buildProductListingRegularFacet,
-      buildDateFacet: buildProductListingDateFacet,
-      buildCategoryFacet: buildProductListingCategoryFacet,
+      buildNumericFacet: mockBuildNumericFacet,
+      buildRegularFacet: mockBuildRegularFacet,
+      buildDateFacet: mockBuildDateFacet,
+      buildCategoryFacet: mockBuildCategoryFacet,
     };
 
     state = buildMockCommerceState();
@@ -87,9 +87,7 @@ describe('FacetGenerator', () => {
       setFacetState([{facetId, type: 'regular'}]);
 
       expect(facetGenerator.facets.length).toEqual(1);
-      expect(facetGenerator.facets[0].state).toEqual(
-        buildProductListingRegularFacet(engine, {facetId}).state
-      );
+      expect(mockBuildRegularFacet).toHaveBeenCalledWith(engine, {facetId});
     });
 
     it('when engine facet state contains a numeric facet, generates a numeric facet controller', () => {
@@ -97,9 +95,7 @@ describe('FacetGenerator', () => {
       setFacetState([{facetId, type: 'numericalRange'}]);
 
       expect(facetGenerator.facets.length).toEqual(1);
-      expect(facetGenerator.facets[0].state).toEqual(
-        buildProductListingNumericFacet(engine, {facetId}).state
-      );
+      expect(mockBuildNumericFacet).toHaveBeenCalledWith(engine, {facetId});
     });
 
     it('when engine facet state contains a date facet, generates a date facet controller', () => {
@@ -107,9 +103,7 @@ describe('FacetGenerator', () => {
       setFacetState([{facetId, type: 'dateRange'}]);
 
       expect(facetGenerator.facets.length).toEqual(1);
-      expect(facetGenerator.facets[0].state).toEqual(
-        buildProductListingDateFacet(engine, {facetId}).state
-      );
+      expect(mockBuildDateFacet).toHaveBeenCalledWith(engine, {facetId});
     });
 
     it('when engine facet state contains a category facet, generates a category facet controller', () => {
@@ -117,9 +111,7 @@ describe('FacetGenerator', () => {
       setFacetState([{facetId, type: 'hierarchical'}]);
 
       expect(facetGenerator.facets.length).toEqual(1);
-      expect(facetGenerator.facets[0].state).toEqual(
-        buildProductListingCategoryFacet(engine, {facetId}).state
-      );
+      expect(mockBuildCategoryFacet).toHaveBeenCalledWith(engine, {facetId});
     });
 
     it('when engine facet state contains multiple facets, generates the proper facet controllers', () => {
@@ -143,22 +135,24 @@ describe('FacetGenerator', () => {
       ];
       setFacetState(facets);
 
-      expect(facetGenerator.facets.length).toEqual(4);
-      expect(facetGenerator.facets[0].state).toEqual(
-        buildProductListingRegularFacet(engine, {facetId: facets[0].facetId})
-          .state
-      );
-      expect(facetGenerator.facets[1].state).toEqual(
-        buildProductListingNumericFacet(engine, {facetId: facets[1].facetId})
-          .state
-      );
-      expect(facetGenerator.facets[2].state).toEqual(
-        buildProductListingDateFacet(engine, {facetId: facets[2].facetId}).state
-      );
-      expect(facetGenerator.facets[3].state).toEqual(
-        buildProductListingCategoryFacet(engine, {facetId: facets[3].facetId})
-          .state
-      );
+      mockBuildRegularFacet.mockReturnValue({
+        state: {facetId: facets[0].facetId},
+      });
+      mockBuildNumericFacet.mockReturnValue({
+        state: {facetId: facets[1].facetId},
+      });
+      mockBuildDateFacet.mockReturnValue({state: {facetId: facets[2].facetId}});
+      mockBuildCategoryFacet.mockReturnValue({
+        state: {facetId: facets[3].facetId},
+      });
+
+      const facetState = facetGenerator.facets;
+
+      expect(facetState.length).toEqual(4);
+      expect(facetState[0].state.facetId).toEqual(facets[0].facetId);
+      expect(facetState[1].state.facetId).toEqual(facets[1].facetId);
+      expect(facetState[2].state.facetId).toEqual(facets[2].facetId);
+      expect(facetState[3].state.facetId).toEqual(facets[3].facetId);
     });
   });
 

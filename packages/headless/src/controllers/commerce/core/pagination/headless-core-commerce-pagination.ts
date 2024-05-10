@@ -4,6 +4,7 @@ import {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../app/state-key';
 import {
   nextPage,
   previousPage,
@@ -18,7 +19,7 @@ import {
   buildController,
   Controller,
 } from '../../../controller/headless-controller';
-import {FetchResultsActionCreator} from '../common';
+import {FetchProductsActionCreator} from '../common';
 
 /**
  * The `Pagination` controller is responsible for navigating between pages of results in a commerce interface.
@@ -49,6 +50,11 @@ export interface Pagination extends Controller {
   setPageSize(pageSize: number): void;
 
   /**
+   * Fetches the next page of products, and appends them to the current list of products.
+   */
+  fetchMoreProducts(): void;
+
+  /**
    * A scoped and simplified part of the headless state that is relevant to the `Pagination` controller.
    */
   state: PaginationState;
@@ -57,27 +63,29 @@ export interface Pagination extends Controller {
 export interface PaginationState {
   page: number;
   pageSize: number;
-  totalItems: number;
+  totalEntries: number;
   totalPages: number;
 }
 
-export interface PaginationOptions {
-  /**
-   * Recs slot id, or none for listings and search
-   */
+export interface CorePaginationOptions {
   slotId?: string;
+  /**
+   * The number of products to fetch per page.
+   */
   pageSize?: number;
 }
 
 export interface CorePaginationProps {
-  fetchResultsActionCreator: FetchResultsActionCreator;
-  options?: PaginationOptions;
+  fetchProductsActionCreator: FetchProductsActionCreator;
+  fetchMoreProductsActionCreator: FetchProductsActionCreator;
+  options?: CorePaginationOptions;
 }
 
-export type PaginationProps = Omit<
-  CorePaginationProps,
-  'fetchResultsActionCreator'
->;
+export type PaginationOptions = Omit<CorePaginationOptions, 'slotId'>;
+
+export interface PaginationProps {
+  options?: PaginationOptions;
+}
 
 const optionsSchema = new Schema({
   pageSize: new NumberValue({min: 1, max: 1000, required: false}),
@@ -134,7 +142,7 @@ export function buildCorePagination(
     ...controller,
 
     get state() {
-      return paginationSelector(engine.state);
+      return paginationSelector(engine[stateKey]);
     },
 
     selectPage(page: number) {
@@ -144,22 +152,26 @@ export function buildCorePagination(
           page,
         })
       );
-      dispatch(props.fetchResultsActionCreator());
+      dispatch(props.fetchProductsActionCreator());
     },
 
     nextPage() {
       dispatch(nextPage({slotId}));
-      dispatch(props.fetchResultsActionCreator());
+      dispatch(props.fetchProductsActionCreator());
     },
 
     previousPage() {
       dispatch(previousPage({slotId}));
-      dispatch(props.fetchResultsActionCreator());
+      dispatch(props.fetchProductsActionCreator());
     },
 
     setPageSize(pageSize: number) {
       dispatch(setPageSize({slotId, pageSize}));
-      dispatch(props.fetchResultsActionCreator());
+      dispatch(props.fetchProductsActionCreator());
+    },
+
+    fetchMoreProducts() {
+      dispatch(props.fetchMoreProductsActionCreator());
     },
   };
 }

@@ -121,7 +121,11 @@ export type SearchBoxSuggestionsEvent<
   bindings: SearchBoxSuggestionsBindings<SearchBoxController, Bindings>
 ) => SearchBoxSuggestions;
 
-const searchBoxElements = ['atomic-search-box', 'atomic-insight-search-box'];
+const searchBoxElements = [
+  'atomic-search-box',
+  'atomic-insight-search-box',
+  'atomic-commerce-search-box',
+];
 
 /**
  * The bindings passed from the search box to the suggestions.

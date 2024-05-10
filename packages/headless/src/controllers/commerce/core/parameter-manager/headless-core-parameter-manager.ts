@@ -1,14 +1,15 @@
 import {RecordValue, Schema, SchemaDefinition} from '@coveo/bueno';
-import {AnyAction} from '@reduxjs/toolkit';
+import {UnknownAction} from '@reduxjs/toolkit';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../app/state-key';
 import {Parameters} from '../../../../features/commerce/search-parameters/search-parameter-actions';
 import {deepEqualAnyOrder} from '../../../../utils/compare-utils';
 import {validateInitialState} from '../../../../utils/validate-payload';
 import {
-  buildController,
   Controller,
+  buildController,
 } from '../../../controller/headless-controller';
-import {FetchResultsActionCreator} from '../common';
+import {FetchProductsActionCreator} from '../common';
 
 export interface ParameterManagerProps<T extends Parameters> {
   /**
@@ -27,17 +28,17 @@ export interface CoreParameterManagerProps<T extends Parameters>
   /**
    * The selector to retrieve the active parameters from the state.
    */
-  activeParametersSelector: (state: CommerceEngine['state']) => T;
+  activeParametersSelector: (state: CommerceEngine[typeof stateKey]) => T;
 
   /**
    * The action to dispatch to update the parameters in the state.
    */
-  restoreActionCreator: (parameters: T) => AnyAction;
+  restoreActionCreator: (parameters: T) => UnknownAction;
 
   /**
    * The action to dispatch to fetch more results.
    */
-  fetchResultsActionCreator: FetchResultsActionCreator;
+  fetchProductsActionCreator: FetchProductsActionCreator;
 
   /**
    * Enriches the parameters with the active parameters.
@@ -45,7 +46,7 @@ export interface CoreParameterManagerProps<T extends Parameters>
    * @param activeParams
    */
   enrichParameters(
-    state: CommerceEngine['state'],
+    state: CommerceEngine[typeof stateKey],
     activeParams: T
   ): Required<T>;
 }
@@ -118,20 +119,20 @@ export function buildCoreParameterManager<T extends Parameters>(
     ...controller,
 
     synchronize(parameters: T) {
-      const activeParams = props.activeParametersSelector(engine.state);
-      const oldParams = props.enrichParameters(engine.state, activeParams);
-      const newParams = props.enrichParameters(engine.state, parameters);
+      const activeParams = props.activeParametersSelector(engine[stateKey]);
+      const oldParams = props.enrichParameters(engine[stateKey], activeParams);
+      const newParams = props.enrichParameters(engine[stateKey], parameters);
 
       if (deepEqualAnyOrder(oldParams, newParams)) {
         return;
       }
 
       dispatch(props.restoreActionCreator(parameters));
-      dispatch(props.fetchResultsActionCreator());
+      dispatch(props.fetchProductsActionCreator());
     },
 
     get state() {
-      const parameters = props.activeParametersSelector(engine.state);
+      const parameters = props.activeParametersSelector(engine[stateKey]);
       return {parameters};
     },
   };

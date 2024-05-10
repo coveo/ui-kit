@@ -1,5 +1,5 @@
-import {CommerceFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
-import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
+import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/common';
+import {DateFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
 import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
@@ -14,8 +14,6 @@ import {
   buildMockCommerceEngine,
   MockedCommerceEngine,
 } from '../../../../../test/mock-engine-v2';
-import {commonOptions} from '../../../product-listing/facets/headless-product-listing-facet-options';
-import {DateRangeRequest} from '../headless-core-commerce-facet';
 import {
   DateFacet,
   DateFacetOptions,
@@ -41,9 +39,7 @@ describe('DateFacet', () => {
     facet = buildCommerceDateFacet(engine, options);
   }
 
-  function setFacetRequest(
-    config: Partial<CommerceFacetRequest<DateRangeRequest>> = {}
-  ) {
+  function setFacetRequest(config: Partial<DateFacetRequest> = {}) {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, type, ...config}),
     });
@@ -55,7 +51,9 @@ describe('DateFacet', () => {
   beforeEach(() => {
     options = {
       facetId,
-      ...commonOptions,
+      fetchProductsActionCreator: jest.fn(),
+      facetResponseSelector: jest.fn(),
+      isFacetLoadingResponseSelector: jest.fn(),
     };
 
     state = buildMockCommerceState();

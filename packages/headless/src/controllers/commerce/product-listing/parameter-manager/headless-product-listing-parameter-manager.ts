@@ -1,4 +1,5 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../app/state-key';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {
   ProductListingParameters,
@@ -27,13 +28,13 @@ export function buildProductListingParameterManager(
     parametersDefinition: productListingParametersDefinition,
     activeParametersSelector,
     restoreActionCreator: restoreProductListingParameters,
-    fetchResultsActionCreator: fetchProductListing,
+    fetchProductsActionCreator: fetchProductListing,
     enrichParameters: () => ({}),
   });
 }
 
 function activeParametersSelector(
-  _state: CommerceEngine['state']
+  _state: CommerceEngine[typeof stateKey]
 ): ProductListingParameters {
   // eslint-disable-next-line @cspell/spellchecker
   // TODO CAPI-546: Handle facets, sort, and pagination

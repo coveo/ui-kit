@@ -1,8 +1,8 @@
+import {Trigger} from '../../common/trigger';
 import {
   SearchAPIErrorWithExceptionInBody,
   SearchAPIErrorWithStatusCode,
 } from '../search-api-error-response';
-import {Trigger} from '../trigger';
 
 /**
  * Describes the plan of execution of a search request.

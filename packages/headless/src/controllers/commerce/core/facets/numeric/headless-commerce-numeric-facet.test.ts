@@ -1,8 +1,10 @@
-import {CommerceFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
-import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
+import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/common';
+import {NumericFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
+import {NumericFacetValue} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
+  updateNumericFacetValues,
 } from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {CommerceAppState} from '../../../../../state/commerce-app-state';
 import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request';
@@ -14,8 +16,6 @@ import {
   buildMockCommerceEngine,
   MockedCommerceEngine,
 } from '../../../../../test/mock-engine-v2';
-import {commonOptions} from '../../../product-listing/facets/headless-product-listing-facet-options';
-import {NumericRangeRequest} from '../headless-core-commerce-facet';
 import {
   NumericFacet,
   NumericFacetOptions,
@@ -26,11 +26,17 @@ jest.mock(
   '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions'
 );
 
+jest.mock(
+  '../../../../../features/commerce/product-listing/product-listing-actions'
+);
+
 describe('NumericFacet', () => {
   const facetId: string = 'numeric_facet_id';
   const type: FacetType = 'numericalRange';
   const start = 0;
   const end = 100;
+  const facetResponseSelector = jest.fn();
+  const fetchProductsActionCreator = jest.fn();
   let options: NumericFacetOptions;
   let state: CommerceAppState;
   let engine: MockedCommerceEngine;
@@ -41,21 +47,23 @@ describe('NumericFacet', () => {
     facet = buildCommerceNumericFacet(engine, options);
   }
 
-  function setFacetRequest(
-    config: Partial<CommerceFacetRequest<NumericRangeRequest>> = {}
-  ) {
+  function setFacetRequest(config: Partial<NumericFacetRequest> = {}) {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, type, ...config}),
     });
-    state.productListing.facets = [
-      buildMockCommerceNumericFacetResponse({facetId}),
-    ];
+    facetResponseSelector.mockReturnValue(
+      buildMockCommerceNumericFacetResponse({facetId})
+    );
   }
 
   beforeEach(() => {
+    jest.resetAllMocks();
+
     options = {
       facetId,
-      ...commonOptions,
+      fetchProductsActionCreator,
+      facetResponseSelector,
+      isFacetLoadingResponseSelector: jest.fn(),
     };
 
     state = buildMockCommerceState();
@@ -91,6 +99,41 @@ describe('NumericFacet', () => {
         facetId,
         selection: facetValue,
       });
+    });
+  });
+
+  describe('#setRanges', () => {
+    let values: NumericFacetValue[];
+    beforeEach(() => {
+      values = [buildMockCommerceNumericFacetValue()];
+      facet.setRanges(values);
+    });
+    it('dispatches #updateNumericFacetValues with the correct payload', () => {
+      expect(updateNumericFacetValues).toHaveBeenCalledWith({
+        facetId,
+        values,
+      });
+    });
+
+    it('dispatches #fetchProductsActionCreator', () => {
+      expect(fetchProductsActionCreator).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('#state', () => {
+    it('includes #domain if present in the response state', () => {
+      const domain = {increment: 1, max: 100, min: 0};
+      facetResponseSelector.mockReturnValue(
+        buildMockCommerceNumericFacetResponse({facetId, domain})
+      );
+
+      initFacet();
+
+      expect(facet.state.domain).toEqual({min: domain.min, max: domain.max});
+    });
+
+    it('does not include #domain if not present in the response state', () => {
+      expect(facet.state.domain).toBeUndefined();
     });
   });
 

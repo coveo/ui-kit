@@ -121,3 +121,30 @@ export function assertDisclaimer(isDisplayed: boolean) {
     );
   });
 }
+
+export function assertShowButton(isDisplayed: boolean) {
+  it(`${should(isDisplayed)} show the show button`, () => {
+    GeneratedAnswerSelectors.showButton().should(
+      isDisplayed ? 'be.visible' : 'be.hidden'
+    );
+  });
+}
+
+export function assertAnswerCollapsed(isCollapsed: boolean) {
+  it(`${should(isCollapsed)} show the answer collapsed`, () => {
+    GeneratedAnswerSelectors.answerContainer().should(
+      isCollapsed ? 'have.class' : 'not.have.class',
+      'answer-collapsed'
+    );
+  });
+}
+
+export function assertShowMoreLabel(isShowMore: boolean) {
+  const expectedLabel = isShowMore ? 'show more' : 'show less';
+  it(`should show the ${expectedLabel} label`, () => {
+    GeneratedAnswerSelectors.showButton().should(
+      'have.text',
+      isShowMore ? 'Show more' : 'Show less'
+    );
+  });
+}
