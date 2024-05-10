@@ -76,10 +76,6 @@ export interface CorePaginationOptions {
 }
 
 export interface CorePaginationProps {
-  /**
-   * Recs slot id, or none for listings and search
-   */
-  slotId?: string;
   fetchProductsActionCreator: FetchProductsActionCreator;
   fetchMoreProductsActionCreator: FetchProductsActionCreator;
   options?: CorePaginationOptions;

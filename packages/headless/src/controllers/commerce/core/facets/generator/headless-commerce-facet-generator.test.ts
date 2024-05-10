@@ -163,6 +163,6 @@ describe('FacetGenerator', () => {
 
     initCommerceFacetGenerator();
 
-    expect(facetGenerator.state.length).toEqual(1);
+    expect(facetGenerator.state).toEqual(state.facetOrder);
   });
 });
