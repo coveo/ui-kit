@@ -320,6 +320,7 @@ export class AtomicCommerceRecommendationCarousel
                 : recommendation.ec_price ?? 0,
             productId: recommendation.permanentid,
           },
+          position: 1, // TODO: add position...
         },
       }),
       result: recommendation,
