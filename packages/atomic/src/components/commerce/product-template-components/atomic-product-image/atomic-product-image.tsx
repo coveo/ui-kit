@@ -39,9 +39,11 @@ export class AtomicProductImage implements InitializableComponent {
   @Prop({reflect: true}) field: string = 'ec_thumbnails';
 
   /**
-   * An optional fallback image URL that will be used in case the specified image is not available or an error is encountered.
+   * An fallback image URL that will be used in case the specified image is not available or an error is encountered.
    */
-  @Prop({reflect: true}) fallback?: string;
+  @Prop({reflect: true}) fallback: string =
+    // eslint-disable-next-line @cspell/spellchecker
+    'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50"%3E%3Crect width="50" height="50" fill="none" stroke="none"%3E%3C/rect%3E%3C/svg%3E';
 
   /**
    * Moves to the previous image, when the carousel is activated.
