@@ -1,5 +1,8 @@
 import {
   RegularFacet,
+  CategoryFacet,
+  DateFacet,
+  NumericFacet,
   buildProductListingFacetGenerator,
   buildSearchFacetGenerator,
   ProductListingFacetGenerator,
@@ -15,6 +18,11 @@ import {
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
+ * The `atomic-commerce-facets` component automatically renders commerce facets based on the search query response.
+ * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
+ *
+ * TODO: add more info and URL links
+ *
  * @internal
  */
 @Component({
@@ -42,7 +50,6 @@ export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
   public render() {
     return (
       <Host>
-        <h2>Facets {this.facetGenerator.facets.length}</h2>
         {this.facetGenerator.facets.map((facet) => {
           if (facet.state.values.length === 0) {
             return;
@@ -51,16 +58,23 @@ export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
             case 'regular':
               return (
                 <atomic-commerce-facet
-                  field={facet.state.field}
                   facet={facet as RegularFacet}
                 ></atomic-commerce-facet>
               );
             case 'numericalRange':
-              return <div>TODO: numericalRange</div>;
+              return (
+                <atomic-commerce-numeric-facet
+                  facet={facet as NumericFacet}
+                ></atomic-commerce-numeric-facet>
+              );
             case 'dateRange':
-              return <div>TODO: dateRange</div>;
+              return <atomic-TODO facet={facet as DateFacet}></atomic-TODO>;
             case 'hierarchical':
-              return <div>TODO: hierarchical</div>;
+              return (
+                <atomic-commerce-category-facet
+                  facet={facet as CategoryFacet}
+                ></atomic-commerce-category-facet>
+              );
             default:
               return <div>TODO: default</div>;
           }
