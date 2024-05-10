@@ -7,7 +7,7 @@ export const redactEngine = <TEngine extends CoreEngineNext>(
 ): TEngine =>
   new Proxy(engine, {
     ownKeys(target) {
-      return Reflect.ownKeys(target).filter((key) => typeof key !== 'symbol');
+      return Reflect.ownKeys(target).filter((key) => key !== stateKey);
     },
     get(target, prop, receiver) {
       if (
