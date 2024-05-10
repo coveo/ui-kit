@@ -208,6 +208,12 @@ export type {
 } from './controllers/commerce/product-listing/summary/headless-product-listing-summary';
 
 export {getOrganizationEndpoints} from './api/platform-client';
+
+export type {
+  DidYouMean,
+  DidYouMeanState,
+} from './controllers/commerce/did-you-mean/headless-did-you-mean';
+export {buildDidYouMean} from './controllers/commerce/did-you-mean/headless-did-you-mean';
 export {ProductTemplatesHelpers} from './features/commerce/product-templates/product-templates-helpers';
 
 export type {

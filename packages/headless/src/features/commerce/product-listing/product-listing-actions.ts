@@ -3,22 +3,12 @@ import {
   AsyncThunkCommerceOptions,
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client';
-import {
-  CartSection,
-  CommerceContextSection,
-  CommerceFacetSetSection,
-  CommercePaginationSection,
-  CommerceSortSection,
-  ConfigurationSection,
-  FacetOrderSection,
-  ProductListingV2Section,
-  VersionSection,
-} from '../../../state/state-sections';
+import {ProductListingV2Section} from '../../../state/state-sections';
 import {logQueryError} from '../../search/search-analytics-actions';
 import {
   buildCommerceAPIRequest,
   QueryCommerceAPIThunkReturn,
-  StateNeededByQueryCommerceAPI,
+  ListingAndSearchStateNeededByQueryCommerceAPI,
 } from '../common/actions';
 import {perPagePrincipalSelector} from '../pagination/pagination-selectors';
 import {
@@ -26,22 +16,13 @@ import {
   numberOfProductsSelector,
 } from './product-listing-selectors';
 
-export type StateNeededByFetchProductListingV2 = ConfigurationSection &
-  ProductListingV2Section &
-  CommerceContextSection &
-  CartSection &
-  Partial<
-    CommercePaginationSection &
-      CommerceFacetSetSection &
-      CommerceSortSection &
-      FacetOrderSection &
-      VersionSection
-  >;
+export type StateNeededByFetchProductListing =
+  ListingAndSearchStateNeededByQueryCommerceAPI & ProductListingV2Section;
 
 export const fetchProductListing = createAsyncThunk<
   QueryCommerceAPIThunkReturn,
   void,
-  AsyncThunkCommerceOptions<StateNeededByQueryCommerceAPI>
+  AsyncThunkCommerceOptions<StateNeededByFetchProductListing>
 >(
   'commerce/productListing/fetch',
   async (_action, {getState, dispatch, rejectWithValue, extra}) => {
@@ -65,9 +46,7 @@ export const fetchProductListing = createAsyncThunk<
 export const fetchMoreProducts = createAsyncThunk<
   QueryCommerceAPIThunkReturn | null,
   void,
-  AsyncThunkCommerceOptions<
-    StateNeededByQueryCommerceAPI & ProductListingV2Section
-  >
+  AsyncThunkCommerceOptions<StateNeededByFetchProductListing>
 >(
   'commerce/productListing/fetchMoreProducts',
   async (_action, {getState, dispatch, rejectWithValue, extra}) => {
