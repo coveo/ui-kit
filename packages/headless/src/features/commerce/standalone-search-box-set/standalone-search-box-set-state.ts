@@ -5,6 +5,7 @@ export type CommerceStandaloneSearchBoxSetState = Record<
 
 export type StandaloneSearchBoxEntry = {
   defaultRedirectionUrl: string;
+  isLoading: boolean;
   redirectTo: string;
 };
 

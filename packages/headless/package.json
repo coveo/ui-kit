@@ -14,7 +14,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "2.63.1",
+  "version": "2.63.2",
   "files": [
     "dist/",
     "recommendation/",
@@ -52,7 +52,7 @@
   "dependencies": {
     "@coveo/bueno": "0.45.8",
     "@coveo/relay": "0.7.7",
-    "@coveo/relay-event-types": "7.10.5",
+    "@coveo/relay-event-types": "7.10.8",
     "@microsoft/fetch-event-source": "2.0.1",
     "@reduxjs/toolkit": "2.2.3",
     "abab": "2.0.6",
@@ -69,8 +69,8 @@
   },
   "devDependencies": {
     "@coveo/release": "1.0.0",
-    "@microsoft/api-extractor": "7.43.1",
-    "@microsoft/api-extractor-model": "7.28.14",
+    "@microsoft/api-extractor": "7.43.2",
+    "@microsoft/api-extractor-model": "7.28.15",
     "@microsoft/tsdoc": "0.14.2",
     "eslint-plugin-canonical": "4.18.0",
     "execa": "8.0.1",

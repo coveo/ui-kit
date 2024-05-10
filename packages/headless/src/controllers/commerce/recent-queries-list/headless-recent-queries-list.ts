@@ -1,5 +1,6 @@
 import {ArrayValue, BooleanValue, NumberValue, Schema} from '@coveo/bueno';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../app/state-key';
 import {UpdateQueryActionCreatorPayload} from '../../../features/commerce/query/query-actions';
 import {recentQueriesReducer as recentQueries} from '../../../features/commerce/recent-queries/recent-queries-slice';
 import {
@@ -121,7 +122,7 @@ export function buildRecentQueriesList(
 
   const controller = buildController(engine);
   const {dispatch} = engine;
-  const getState = () => engine.state;
+  const getState = () => engine[stateKey];
 
   const registrationOptions: Required<RecentQueriesListOptions> = {
     ...defaultRecentQueriesOptions,

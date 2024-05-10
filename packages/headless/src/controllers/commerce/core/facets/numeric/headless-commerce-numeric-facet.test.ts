@@ -16,7 +16,6 @@ import {
   buildMockCommerceEngine,
   MockedCommerceEngine,
 } from '../../../../../test/mock-engine-v2';
-import {commonOptions} from '../../../product-listing/facets/headless-product-listing-facet-options';
 import {
   NumericFacet,
   NumericFacetOptions,
@@ -36,7 +35,8 @@ describe('NumericFacet', () => {
   const type: FacetType = 'numericalRange';
   const start = 0;
   const end = 100;
-  const fetchResultsActionCreator = jest.fn();
+  const facetResponseSelector = jest.fn();
+  const fetchProductsActionCreator = jest.fn();
   let options: NumericFacetOptions;
   let state: CommerceAppState;
   let engine: MockedCommerceEngine;
@@ -51,9 +51,9 @@ describe('NumericFacet', () => {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, type, ...config}),
     });
-    state.productListing.facets = [
-      buildMockCommerceNumericFacetResponse({facetId}),
-    ];
+    facetResponseSelector.mockReturnValue(
+      buildMockCommerceNumericFacetResponse({facetId})
+    );
   }
 
   beforeEach(() => {
@@ -61,8 +61,9 @@ describe('NumericFacet', () => {
 
     options = {
       facetId,
-      ...commonOptions,
-      fetchResultsActionCreator,
+      fetchProductsActionCreator,
+      facetResponseSelector,
+      isFacetLoadingResponseSelector: jest.fn(),
     };
 
     state = buildMockCommerceState();
@@ -114,20 +115,17 @@ describe('NumericFacet', () => {
       });
     });
 
-    it('dispatches #fetchResultsActionCreator', () => {
-      expect(fetchResultsActionCreator).toHaveBeenCalledTimes(1);
+    it('dispatches #fetchProductsActionCreator', () => {
+      expect(fetchProductsActionCreator).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('#state', () => {
     it('includes #domain if present in the response state', () => {
       const domain = {increment: 1, max: 100, min: 0};
-      state.productListing.facets = [
-        buildMockCommerceNumericFacetResponse({
-          facetId,
-          domain,
-        }),
-      ];
+      facetResponseSelector.mockReturnValue(
+        buildMockCommerceNumericFacetResponse({facetId, domain})
+      );
 
       initFacet();
 

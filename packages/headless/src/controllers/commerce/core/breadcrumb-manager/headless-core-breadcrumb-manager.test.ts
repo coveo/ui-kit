@@ -1,4 +1,5 @@
 import {Action} from '@reduxjs/toolkit';
+import {stateKey} from '../../../../app/state-key';
 import {deselectAllBreadcrumbs} from '../../../../features/breadcrumb/breadcrumb-actions';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {
@@ -61,7 +62,7 @@ describe('core breadcrumb manager', () => {
 
   const facetId = 'some_facet_id';
   const facetResponseSelector = jest.fn();
-  const fetchResultsActionCreator = jest.fn();
+  const fetchProductsActionCreator = jest.fn();
 
   function initEngine(preloadedState = buildMockCommerceState()) {
     engine = buildMockCommerceEngine(preloadedState);
@@ -72,8 +73,8 @@ describe('core breadcrumb manager', () => {
   }
 
   function setFacetsState({facetId, ...restOfResponse}: AnyFacetResponse) {
-    engine.state.facetOrder.push(facetId);
-    engine.state.commerceFacetSet[facetId] = {
+    engine[stateKey].facetOrder.push(facetId);
+    engine[stateKey].commerceFacetSet[facetId] = {
       request: buildMockCommerceFacetRequest(),
     };
     facetResponseSelector.mockReturnValue({facetId, ...restOfResponse});
@@ -84,7 +85,7 @@ describe('core breadcrumb manager', () => {
 
     options = {
       facetResponseSelector,
-      fetchResultsActionCreator,
+      fetchProductsActionCreator,
     };
 
     initEngine();
@@ -239,7 +240,7 @@ describe('core breadcrumb manager', () => {
       breadcrumb.state = 'excluded';
       deselectBreadcrumb();
 
-      expect(fetchResultsActionCreator).not.toHaveBeenCalled();
+      expect(fetchProductsActionCreator).not.toHaveBeenCalled();
     });
   });
 
@@ -270,8 +271,8 @@ describe('core breadcrumb manager', () => {
         });
       });
 
-      it('dispatches #fetchResultsActionCreator', () => {
-        expect(fetchResultsActionCreator).toHaveBeenCalled();
+      it('dispatches #fetchProductsActionCreator', () => {
+        expect(fetchProductsActionCreator).toHaveBeenCalled();
       });
     };
   }

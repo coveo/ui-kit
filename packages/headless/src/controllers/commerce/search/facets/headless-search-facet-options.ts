@@ -1,10 +1,8 @@
 import {isFacetResponse} from '../../../../features/commerce/facets/facet-set/facet-set-selector';
-import {executeSearch} from '../../../../features/commerce/search/search-actions';
 import {
   CommerceFacetSetSection,
   CommerceSearchSection,
 } from '../../../../state/state-sections';
-import {CoreCommerceFacetOptions} from '../../core/facets/headless-core-commerce-facet';
 
 export const facetResponseSelector = (
   state: CommerceSearchSection & CommerceFacetSetSection,
@@ -22,14 +20,3 @@ export const facetResponseSelector = (
 
 export const isFacetLoadingResponseSelector = (state: CommerceSearchSection) =>
   state.commerceSearch.isLoading;
-
-export const commonOptions: Pick<
-  CoreCommerceFacetOptions,
-  | 'fetchResultsActionCreator'
-  | 'facetResponseSelector'
-  | 'isFacetLoadingResponseSelector'
-> = {
-  fetchResultsActionCreator: executeSearch,
-  facetResponseSelector,
-  isFacetLoadingResponseSelector,
-};

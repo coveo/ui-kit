@@ -3,6 +3,7 @@ import {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../app/state-key';
 import {productClick} from '../../../../features/commerce/context/product/product-actions';
 import {
   buildInteractiveResultCore,
@@ -69,7 +70,7 @@ export function buildCoreInteractiveProduct(
       productClick({
         product: props.options.product,
         position: props.options.position,
-        responseId: props.responseIdSelector(engine.state),
+        responseId: props.responseIdSelector(engine[stateKey]),
       })
     );
   };

@@ -1,5 +1,6 @@
 export type ChildProduct = Omit<Product, 'children' | 'totalNumberOfChildren'>;
 
+// TODO: KIT-3164 update based on https://coveord.atlassian.net/browse/DOC-14667
 export interface Product {
   /**
    * The SKU of the product.
@@ -15,6 +16,12 @@ export interface Product {
    * From the `ec_name` field.
    */
   ec_name?: string;
+  /**
+   * The description of the product.
+   *
+   * From the `ec_description` field.
+   */
+  ec_description?: string;
   /**
    * The brand of the product.
    *
