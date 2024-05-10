@@ -63,8 +63,6 @@ export type {
   PaginationProps,
   PaginationOptions,
 } from './controllers/commerce/core/pagination/headless-core-commerce-pagination';
-export {buildProductListingPagination} from './controllers/commerce/product-listing/pagination/headless-product-listing-pagination';
-export {buildSearchPagination} from './controllers/commerce/search/pagination/headless-search-pagination';
 
 export type {
   InteractiveProduct,
@@ -101,9 +99,6 @@ export {
   SortDirection,
 } from './controllers/commerce/core/sort/headless-core-commerce-sort';
 
-export {buildProductListingSort} from './controllers/commerce/product-listing/sort/headless-product-listing-sort';
-export {buildSearchSort} from './controllers/commerce/search/sort/headless-search-sort';
-
 export type {
   CategoryFacet,
   CategoryFacetState,
@@ -131,10 +126,6 @@ export type {
   CategoryFacetValueRequest,
   CategoryFacetValue,
 } from './controllers/commerce/core/facets/headless-core-commerce-facet';
-export type {ProductListingFacetGenerator} from './controllers/commerce/product-listing/facets/headless-product-listing-facet-generator';
-export {buildProductListingFacetGenerator} from './controllers/commerce/product-listing/facets/headless-product-listing-facet-generator';
-export type {SearchFacetGenerator} from './controllers/commerce/search/facets/headless-search-facet-generator';
-export {buildSearchFacetGenerator} from './controllers/commerce/search/facets/headless-search-facet-generator';
 
 export type {
   RegularFacetSearch,
@@ -204,5 +195,29 @@ export type {
 export {buildProductListingBreadcrumbManager} from './controllers/commerce/product-listing/breadcrumb-manager/headless-product-listing-breadcrumb-manager';
 export {buildSearchBreadcrumbManager} from './controllers/commerce/search/breadcrumb-manager/headless-search-breadcrumb-manager';
 
+export {buildSearchSummary} from './controllers/commerce/search/summary/headless-search-summary';
+export type {
+  SearchSummary,
+  SearchSummaryState,
+} from './controllers/commerce/search/summary/headless-search-summary';
+
+export {buildListingSummary} from './controllers/commerce/product-listing/summary/headless-product-listing-summary';
+export type {
+  ListingSummary,
+  ListingSummaryState,
+} from './controllers/commerce/product-listing/summary/headless-product-listing-summary';
+
 export {getOrganizationEndpoints} from './api/platform-client';
+
+export type {
+  DidYouMean,
+  DidYouMeanState,
+} from './controllers/commerce/did-you-mean/headless-did-you-mean';
+export {buildDidYouMean} from './controllers/commerce/did-you-mean/headless-did-you-mean';
 export {ProductTemplatesHelpers} from './features/commerce/product-templates/product-templates-helpers';
+
+export type {
+  NotifyTrigger,
+  NotifyTriggerState,
+} from './controllers/core/triggers/headless-core-notify-trigger';
+export {buildNotifyTrigger} from './controllers/commerce/triggers/headless-commerce-notify-trigger';

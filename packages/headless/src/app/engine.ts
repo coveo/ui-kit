@@ -206,6 +206,12 @@ function getUpdateAnalyticsConfigurationPayload(
     };
   }
 
+  if (payloadWithURL.analyticsMode === 'next' && !payload.trackingId) {
+    throw new InvalidEngineConfiguration(
+      'analytics.trackingId is required when analytics.analyticsMode="next"'
+    );
+  }
+
   return payloadWithURL;
 }
 
@@ -404,4 +410,11 @@ function shouldWarnAboutMismatchBetweenOrganizationIDAndOrganizationEndpoints(
 
   const match = matchCoveoOrganizationEndpointUrlAnyOrganization(platform);
   return match && match.organizationId !== configuration.organizationId;
+}
+
+class InvalidEngineConfiguration extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'InvalidEngineConfiguration';
+  }
 }

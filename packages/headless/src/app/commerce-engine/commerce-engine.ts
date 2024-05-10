@@ -13,6 +13,7 @@ import {recommendationsReducer} from '../../features/commerce/recommendations/re
 import {executeSearch} from '../../features/commerce/search/search-actions';
 import {commerceSearchReducer} from '../../features/commerce/search/search-slice';
 import {sortReducer} from '../../features/commerce/sort/sort-slice';
+import {commerceTriggersReducer} from '../../features/commerce/triggers/triggers-slice';
 import {facetOrderReducer} from '../../features/facets/facet-order/facet-order-slice';
 import {categoryFacetSearchSetReducer} from '../../features/facets/facet-search-set/category/category-facet-search-set-slice';
 import {specificFacetSearchSetReducer} from '../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
@@ -47,6 +48,7 @@ const commerceEngineReducers = {
   commerceContext: contextReducer,
   commerceQuery: queryReducer,
   cart: cartReducer,
+  triggers: commerceTriggersReducer,
 };
 type CommerceEngineReducers = typeof commerceEngineReducers;
 

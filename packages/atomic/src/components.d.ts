@@ -13,6 +13,7 @@ import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout, ItemTarget } from "./components/common/layout/display-options";
 import { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
 import { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
+import { AriaLabelGenerator } from "./components/commerce/search-box-suggestions/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
@@ -29,7 +30,7 @@ import { i18nCompatibilityVersion as i18nCompatibilityVersion1 } from "./compone
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 import { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
-import { AriaLabelGenerator } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
+import { AriaLabelGenerator as AriaLabelGenerator1 } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 export { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
 export { CommerceEngine, InteractiveProduct, LogLevel, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition } from "@coveo/headless/commerce";
@@ -39,6 +40,7 @@ export { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout, ItemTarget } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
 export { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
+export { AriaLabelGenerator } from "./components/commerce/search-box-suggestions/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
@@ -55,7 +57,7 @@ export { i18nCompatibilityVersion as i18nCompatibilityVersion1 } from "./compone
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 export { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
 export { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
-export { AriaLabelGenerator } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
+export { AriaLabelGenerator as AriaLabelGenerator1 } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 export { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 export namespace Components {
     /**
@@ -370,6 +372,11 @@ export namespace Components {
         "setRenderFunction": (productRenderingFunction: ItemRenderingFunction) => Promise<void>;
     }
     /**
+     * The `atomic-commerce-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
+     */
+    interface AtomicCommerceQuerySummary {
+    }
+    /**
      * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
      */
     interface AtomicCommerceSearchBox {
@@ -407,6 +414,30 @@ export namespace Components {
         "suggestionTimeout": number;
     }
     /**
+     * The `atomic-commerce-search-box-instant-products` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
+     * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
+     * This component is not supported on mobile.
+     */
+    interface AtomicCommerceSearchBoxInstantProducts {
+        /**
+          * The callback to generate an [`aria-label`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label) for a given product so that accessibility tools can fully describe what's visually rendered by a product.  By default, or if an empty string is returned, `product.ec_name` is used.
+         */
+        "ariaLabelGenerator"?: AriaLabelGenerator;
+        /**
+          * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of different parts in a product.
+         */
+        "density": ItemDisplayDensity;
+        /**
+          * The expected size of the image displayed in the products.
+         */
+        "imageSize": ItemDisplayImageSize;
+        /**
+          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
+          * @param resultRenderingFunction
+         */
+        "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
+    }
+    /**
      * The `atomic-commerce-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
      */
     interface AtomicCommerceSearchBoxQuerySuggestions {
@@ -439,6 +470,11 @@ export namespace Components {
           * The maximum number of suggestions to display initially, when the input field is empty.
          */
         "maxWithoutQuery"?: number;
+    }
+    /**
+     * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
+     */
+    interface AtomicCommerceSortDropdown {
     }
     interface AtomicCommerceText {
         /**
@@ -1555,6 +1591,18 @@ export namespace Components {
          */
         "hrefTemplate"?: string;
     }
+    interface AtomicProductNumericFieldValue {
+        /**
+          * The field that the component should use. The component will try to find this field in the `Product.additionalFields` object unless it finds it in the `Product` object first.
+         */
+        "field": string;
+    }
+    interface AtomicProductPrice {
+        /**
+          * The currency to use in currency formatting. Allowed values are the [ISO 4217 currency codes](https://www.six-group.com/en/products-services/financial-information/data-standards.html#scrollTo=maintenance-agency), such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB.
+         */
+        "currency": string;
+    }
     interface AtomicProductTemplate {
         /**
           * A function that must return true on products for the product template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to products whose `ec_name` contains `singapore`: `document.querySelector('#target-template').conditions = [(product) => /singapore/i.test(product.ec_name)];`
@@ -2470,7 +2518,7 @@ export namespace Components {
         /**
           * The callback to generate an [`aria-label`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label) for a given result so that accessibility tools can fully describe what's visually rendered by a result.  By default, or if an empty string is returned, `result.title` is used.
          */
-        "ariaLabelGenerator"?: AriaLabelGenerator;
+        "ariaLabelGenerator"?: AriaLabelGenerator1;
         /**
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
@@ -3091,6 +3139,15 @@ declare global {
         prototype: HTMLAtomicCommerceProductListElement;
         new (): HTMLAtomicCommerceProductListElement;
     };
+    /**
+     * The `atomic-commerce-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
+     */
+    interface HTMLAtomicCommerceQuerySummaryElement extends Components.AtomicCommerceQuerySummary, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceQuerySummaryElement: {
+        prototype: HTMLAtomicCommerceQuerySummaryElement;
+        new (): HTMLAtomicCommerceQuerySummaryElement;
+    };
     interface HTMLAtomicCommerceSearchBoxElementEventMap {
         "redirect": RedirectionPayload;
     }
@@ -3112,6 +3169,17 @@ declare global {
         new (): HTMLAtomicCommerceSearchBoxElement;
     };
     /**
+     * The `atomic-commerce-search-box-instant-products` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
+     * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
+     * This component is not supported on mobile.
+     */
+    interface HTMLAtomicCommerceSearchBoxInstantProductsElement extends Components.AtomicCommerceSearchBoxInstantProducts, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceSearchBoxInstantProductsElement: {
+        prototype: HTMLAtomicCommerceSearchBoxInstantProductsElement;
+        new (): HTMLAtomicCommerceSearchBoxInstantProductsElement;
+    };
+    /**
      * The `atomic-commerce-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
      */
     interface HTMLAtomicCommerceSearchBoxQuerySuggestionsElement extends Components.AtomicCommerceSearchBoxQuerySuggestions, HTMLStencilElement {
@@ -3128,6 +3196,15 @@ declare global {
     var HTMLAtomicCommerceSearchBoxRecentQueriesElement: {
         prototype: HTMLAtomicCommerceSearchBoxRecentQueriesElement;
         new (): HTMLAtomicCommerceSearchBoxRecentQueriesElement;
+    };
+    /**
+     * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
+     */
+    interface HTMLAtomicCommerceSortDropdownElement extends Components.AtomicCommerceSortDropdown, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceSortDropdownElement: {
+        prototype: HTMLAtomicCommerceSortDropdownElement;
+        new (): HTMLAtomicCommerceSortDropdownElement;
     };
     interface HTMLAtomicCommerceTextElement extends Components.AtomicCommerceText, HTMLStencilElement {
     }
@@ -3792,6 +3869,18 @@ declare global {
     var HTMLAtomicProductLinkElement: {
         prototype: HTMLAtomicProductLinkElement;
         new (): HTMLAtomicProductLinkElement;
+    };
+    interface HTMLAtomicProductNumericFieldValueElement extends Components.AtomicProductNumericFieldValue, HTMLStencilElement {
+    }
+    var HTMLAtomicProductNumericFieldValueElement: {
+        prototype: HTMLAtomicProductNumericFieldValueElement;
+        new (): HTMLAtomicProductNumericFieldValueElement;
+    };
+    interface HTMLAtomicProductPriceElement extends Components.AtomicProductPrice, HTMLStencilElement {
+    }
+    var HTMLAtomicProductPriceElement: {
+        prototype: HTMLAtomicProductPriceElement;
+        new (): HTMLAtomicProductPriceElement;
     };
     interface HTMLAtomicProductTemplateElement extends Components.AtomicProductTemplate, HTMLStencilElement {
     }
@@ -4642,9 +4731,12 @@ declare global {
         "atomic-commerce-load-more-products": HTMLAtomicCommerceLoadMoreProductsElement;
         "atomic-commerce-pager": HTMLAtomicCommercePagerElement;
         "atomic-commerce-product-list": HTMLAtomicCommerceProductListElement;
+        "atomic-commerce-query-summary": HTMLAtomicCommerceQuerySummaryElement;
         "atomic-commerce-search-box": HTMLAtomicCommerceSearchBoxElement;
+        "atomic-commerce-search-box-instant-products": HTMLAtomicCommerceSearchBoxInstantProductsElement;
         "atomic-commerce-search-box-query-suggestions": HTMLAtomicCommerceSearchBoxQuerySuggestionsElement;
         "atomic-commerce-search-box-recent-queries": HTMLAtomicCommerceSearchBoxRecentQueriesElement;
+        "atomic-commerce-sort-dropdown": HTMLAtomicCommerceSortDropdownElement;
         "atomic-commerce-text": HTMLAtomicCommerceTextElement;
         "atomic-component-error": HTMLAtomicComponentErrorElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
@@ -4717,6 +4809,8 @@ declare global {
         "atomic-product-description": HTMLAtomicProductDescriptionElement;
         "atomic-product-image": HTMLAtomicProductImageElement;
         "atomic-product-link": HTMLAtomicProductLinkElement;
+        "atomic-product-numeric-field-value": HTMLAtomicProductNumericFieldValueElement;
+        "atomic-product-price": HTMLAtomicProductPriceElement;
         "atomic-product-template": HTMLAtomicProductTemplateElement;
         "atomic-product-text": HTMLAtomicProductTextElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
@@ -5077,6 +5171,11 @@ declare namespace LocalJSX {
         "imageSize"?: ItemDisplayImageSize;
     }
     /**
+     * The `atomic-commerce-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
+     */
+    interface AtomicCommerceQuerySummary {
+    }
+    /**
      * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
      */
     interface AtomicCommerceSearchBox {
@@ -5118,6 +5217,25 @@ declare namespace LocalJSX {
         "suggestionTimeout"?: number;
     }
     /**
+     * The `atomic-commerce-search-box-instant-products` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
+     * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
+     * This component is not supported on mobile.
+     */
+    interface AtomicCommerceSearchBoxInstantProducts {
+        /**
+          * The callback to generate an [`aria-label`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label) for a given product so that accessibility tools can fully describe what's visually rendered by a product.  By default, or if an empty string is returned, `product.ec_name` is used.
+         */
+        "ariaLabelGenerator"?: AriaLabelGenerator;
+        /**
+          * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of different parts in a product.
+         */
+        "density"?: ItemDisplayDensity;
+        /**
+          * The expected size of the image displayed in the products.
+         */
+        "imageSize"?: ItemDisplayImageSize;
+    }
+    /**
      * The `atomic-commerce-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
      */
     interface AtomicCommerceSearchBoxQuerySuggestions {
@@ -5150,6 +5268,11 @@ declare namespace LocalJSX {
           * The maximum number of suggestions to display initially, when the input field is empty.
          */
         "maxWithoutQuery"?: number;
+    }
+    /**
+     * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
+     */
+    interface AtomicCommerceSortDropdown {
     }
     interface AtomicCommerceText {
         /**
@@ -6224,6 +6347,18 @@ declare namespace LocalJSX {
          */
         "hrefTemplate"?: string;
     }
+    interface AtomicProductNumericFieldValue {
+        /**
+          * The field that the component should use. The component will try to find this field in the `Product.additionalFields` object unless it finds it in the `Product` object first.
+         */
+        "field": string;
+    }
+    interface AtomicProductPrice {
+        /**
+          * The currency to use in currency formatting. Allowed values are the [ISO 4217 currency codes](https://www.six-group.com/en/products-services/financial-information/data-standards.html#scrollTo=maintenance-agency), such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB.
+         */
+        "currency"?: string;
+    }
     interface AtomicProductTemplate {
         /**
           * A function that must return true on products for the product template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to products whose `ec_name` contains `singapore`: `document.querySelector('#target-template').conditions = [(product) => /singapore/i.test(product.ec_name)];`
@@ -7099,7 +7234,7 @@ declare namespace LocalJSX {
         /**
           * The callback to generate an [`aria-label`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label) for a given result so that accessibility tools can fully describe what's visually rendered by a result.  By default, or if an empty string is returned, `result.title` is used.
          */
-        "ariaLabelGenerator"?: AriaLabelGenerator;
+        "ariaLabelGenerator"?: AriaLabelGenerator1;
         /**
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
@@ -7517,9 +7652,12 @@ declare namespace LocalJSX {
         "atomic-commerce-load-more-products": AtomicCommerceLoadMoreProducts;
         "atomic-commerce-pager": AtomicCommercePager;
         "atomic-commerce-product-list": AtomicCommerceProductList;
+        "atomic-commerce-query-summary": AtomicCommerceQuerySummary;
         "atomic-commerce-search-box": AtomicCommerceSearchBox;
+        "atomic-commerce-search-box-instant-products": AtomicCommerceSearchBoxInstantProducts;
         "atomic-commerce-search-box-query-suggestions": AtomicCommerceSearchBoxQuerySuggestions;
         "atomic-commerce-search-box-recent-queries": AtomicCommerceSearchBoxRecentQueries;
+        "atomic-commerce-sort-dropdown": AtomicCommerceSortDropdown;
         "atomic-commerce-text": AtomicCommerceText;
         "atomic-component-error": AtomicComponentError;
         "atomic-did-you-mean": AtomicDidYouMean;
@@ -7592,6 +7730,8 @@ declare namespace LocalJSX {
         "atomic-product-description": AtomicProductDescription;
         "atomic-product-image": AtomicProductImage;
         "atomic-product-link": AtomicProductLink;
+        "atomic-product-numeric-field-value": AtomicProductNumericFieldValue;
+        "atomic-product-price": AtomicProductPrice;
         "atomic-product-template": AtomicProductTemplate;
         "atomic-product-text": AtomicProductText;
         "atomic-query-error": AtomicQueryError;
@@ -7716,9 +7856,19 @@ declare module "@stencil/core" {
             "atomic-commerce-pager": LocalJSX.AtomicCommercePager & JSXBase.HTMLAttributes<HTMLAtomicCommercePagerElement>;
             "atomic-commerce-product-list": LocalJSX.AtomicCommerceProductList & JSXBase.HTMLAttributes<HTMLAtomicCommerceProductListElement>;
             /**
+             * The `atomic-commerce-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
+             */
+            "atomic-commerce-query-summary": LocalJSX.AtomicCommerceQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicCommerceQuerySummaryElement>;
+            /**
              * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
              */
             "atomic-commerce-search-box": LocalJSX.AtomicCommerceSearchBox & JSXBase.HTMLAttributes<HTMLAtomicCommerceSearchBoxElement>;
+            /**
+             * The `atomic-commerce-search-box-instant-products` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
+             * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
+             * This component is not supported on mobile.
+             */
+            "atomic-commerce-search-box-instant-products": LocalJSX.AtomicCommerceSearchBoxInstantProducts & JSXBase.HTMLAttributes<HTMLAtomicCommerceSearchBoxInstantProductsElement>;
             /**
              * The `atomic-commerce-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
              */
@@ -7727,6 +7877,10 @@ declare module "@stencil/core" {
              * The `atomic-commerce-search-box-recent-queries` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of recent query suggestions.
              */
             "atomic-commerce-search-box-recent-queries": LocalJSX.AtomicCommerceSearchBoxRecentQueries & JSXBase.HTMLAttributes<HTMLAtomicCommerceSearchBoxRecentQueriesElement>;
+            /**
+             * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
+             */
+            "atomic-commerce-sort-dropdown": LocalJSX.AtomicCommerceSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicCommerceSortDropdownElement>;
             "atomic-commerce-text": LocalJSX.AtomicCommerceText & JSXBase.HTMLAttributes<HTMLAtomicCommerceTextElement>;
             /**
              * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
@@ -7898,6 +8052,8 @@ declare module "@stencil/core" {
              */
             "atomic-product-image": LocalJSX.AtomicProductImage & JSXBase.HTMLAttributes<HTMLAtomicProductImageElement>;
             "atomic-product-link": LocalJSX.AtomicProductLink & JSXBase.HTMLAttributes<HTMLAtomicProductLinkElement>;
+            "atomic-product-numeric-field-value": LocalJSX.AtomicProductNumericFieldValue & JSXBase.HTMLAttributes<HTMLAtomicProductNumericFieldValueElement>;
+            "atomic-product-price": LocalJSX.AtomicProductPrice & JSXBase.HTMLAttributes<HTMLAtomicProductPriceElement>;
             "atomic-product-template": LocalJSX.AtomicProductTemplate & JSXBase.HTMLAttributes<HTMLAtomicProductTemplateElement>;
             "atomic-product-text": LocalJSX.AtomicProductText & JSXBase.HTMLAttributes<HTMLAtomicProductTextElement>;
             /**
