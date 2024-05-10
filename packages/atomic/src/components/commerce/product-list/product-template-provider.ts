@@ -6,24 +6,20 @@ import {
 
 function defaultTemplate() {
   const content = document.createDocumentFragment();
-  const linkEl = document.createElement('atomic-product-link');
-  const descEl = document.createElement('atomic-product-description');
-  const imgEl = document.createElement('atomic-product-image');
-  imgEl.setAttribute(
-    'fallback',
-    'https://placehold.co/600?text=No+image+available'
-  );
 
-  const ratingEl = document.createElement('atomic-product-rating');
-  ratingEl.setAttribute('field', 'ec_rating');
+  const markup = `
+    <atomic-product-link class="font-bold"></atomic-product-link>
+    <atomic-product-text field="ec_brand" class="block text-neutral-dark"></atomic-product-text>
+    <atomic-product-image field="ec_thumbnails" fallback="https://placehold.co/600?text=No+image+available"></atomic-product-image>
+    <atomic-product-rating field="ec_rating"></atomic-product-rating>
+    <atomic-product-price currency="USD" class="text-2xl"></atomic-product-price>
+    <atomic-product-description></atomic-product-description>
+  `;
 
-  const priceEl = document.createElement('atomic-product-price');
-  priceEl.setAttribute('currency', 'USD');
-  priceEl.className = 'text-2xl';
+  const template = document.createElement('template');
+  template.innerHTML = markup.trim();
+  content.appendChild(template.content);
 
-  content.appendChild(linkEl);
-  content.appendChild(imgEl);
-  content.appendChild(descEl);
   return {
     content,
     conditions: [],
