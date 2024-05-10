@@ -105,12 +105,6 @@ export {buildProductListingSort} from './controllers/commerce/product-listing/so
 export {buildSearchSort} from './controllers/commerce/search/sort/headless-search-sort';
 
 export type {
-  FacetConditionsManager,
-  // FacetConditionsManagerProps,
-} from './controllers/commerce/core/facet-conditions-manager/headless-facet-conditions-manager';
-export {buildCoreFacetConditionsManager as buildFacetConditionsManager} from './controllers/commerce/core/facet-conditions-manager/headless-facet-conditions-manager';
-
-export type {
   CategoryFacet,
   CategoryFacetState,
 } from './controllers/commerce/core/facets/category/headless-commerce-category-facet';
