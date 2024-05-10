@@ -2,6 +2,7 @@
   "name": "ui-kit",
   "private": true,
   "scripts": {
+    "preinstall": "node ./hooks/preinstall.mjs",
     "postinstall": "husky install && patch-package && nx run-many --target=install:isolated",
     "reset:install": "git checkout origin/master package-lock.json && npm i",
     "clean:install": "git clean -xfd && npm run reset:install",
