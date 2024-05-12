@@ -263,6 +263,10 @@ export namespace Components {
      * TODO: add more info and URL links
      */
     interface AtomicCommerceFacets {
+        /**
+          * The number of expanded facets inside the manager. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded. Useful when you want to set the collapse state for each facet individually.
+         */
+        "collapseFacetsAfter": number;
     }
     interface AtomicCommerceInterface {
         /**
@@ -4995,6 +4999,10 @@ declare namespace LocalJSX {
      * TODO: add more info and URL links
      */
     interface AtomicCommerceFacets {
+        /**
+          * The number of expanded facets inside the manager. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded. Useful when you want to set the collapse state for each facet individually.
+         */
+        "collapseFacetsAfter"?: number;
     }
     interface AtomicCommerceInterface {
         /**
