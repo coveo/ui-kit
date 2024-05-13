@@ -1,6 +1,7 @@
 import type {CoreEngineNext} from './engine';
 
-export const stateKey = Symbol('state');
+const stateKeyDescription = 'state';
+export const stateKey = Symbol(stateKeyDescription);
 
 export const redactEngine = <TEngine extends CoreEngineNext>(
   engine: TEngine
@@ -12,7 +13,7 @@ export const redactEngine = <TEngine extends CoreEngineNext>(
     get(target, prop, receiver) {
       if (
         typeof prop === 'symbol' &&
-        prop.description === 'state' &&
+        prop.description === stateKeyDescription &&
         prop !== stateKey
       ) {
         engine.logger.warn(
