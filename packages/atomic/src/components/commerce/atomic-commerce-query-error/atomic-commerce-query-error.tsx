@@ -1,9 +1,12 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {
-  buildRecommendationList,
-  RecommendationList,
-  RecommendationListState,
-} from '@coveo/headless/recommendation';
+  Search,
+  ProductListing,
+  SearchState,
+  ProductListingState,
+  buildProductListing,
+  buildSearch,
+} from '@coveo/headless/commerce';
 import {Component, h, State} from '@stencil/core';
 import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {
@@ -20,74 +23,84 @@ import {QueryErrorLink} from '../../common/query-error/link';
 import {QueryErrorShowMore} from '../../common/query-error/show-more';
 import {QueryErrorTitle} from '../../common/query-error/title';
 import {getAriaMessageFromErrorType} from '../../common/query-error/utils';
-import {RecsBindings} from '../atomic-recs-interface/atomic-recs-interface';
+import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
- * The `atomic-recs-error` component handles fatal errors when performing a recommendations request on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
+ * The `atomic-commerce-query-error` component handles fatal errors when performing a query on the Commerce API. When the error is known, it displays a link to relevant documentation for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
  *
- * @part icon - The svg related to the error.
+ * @part icon - The SVG related to the error.
  * @part title - The title of the error.
  * @part description - A description of the error.
  * @part doc-link - A link to the relevant documentation.
  * @part more-info-btn - A button to request additional error information.
  * @part error-info - Additional error information.
+ *
+ * @internal
  */
 @Component({
-  tag: 'atomic-recs-error',
-  styleUrl: 'atomic-recs-error.pcss',
+  tag: 'atomic-commerce-query-error',
+  styleUrl: 'atomic-commerce-query-error.pcss',
   shadow: true,
 })
-export class AtomicRecsError implements InitializableComponent<RecsBindings> {
-  @InitializeBindings() public bindings!: RecsBindings;
-  public recommendationList!: RecommendationList;
+export class AtomicQueryError
+  implements InitializableComponent<CommerceBindings>
+{
+  @InitializeBindings() public bindings!: CommerceBindings;
+  public searchOrListing!: Search | ProductListing;
 
-  @BindStateToController('recommendationList')
+  @BindStateToController('searchOrListing')
   @State()
-  public recommendationListState!: RecommendationListState;
+  private searchOrListingState!: SearchState | ProductListingState;
   @State() public error!: Error;
   @State() showMoreInfo = false;
 
-  @AriaLiveRegion('recs-error')
+  @AriaLiveRegion('commerce-query-error')
   protected ariaMessage!: string;
 
   public initialize() {
-    this.recommendationList = buildRecommendationList(this.bindings.engine);
+    if (this.bindings.interfaceElement.type === 'product-listing') {
+      this.searchOrListing = buildProductListing(this.bindings.engine);
+    } else {
+      this.searchOrListing = buildSearch(this.bindings.engine);
+    }
   }
 
   public render() {
-    const {error} = this.recommendationListState;
+    const {error} = this.searchOrListingState;
 
     const {
       bindings: {
         i18n,
         engine: {
-          state: {
-            configuration: {organizationId, platformUrl},
-          },
+          configuration: {organizationId, organizationEndpoints, platformUrl},
         },
       },
     } = this;
-
     const hasError = !isNullOrUndefined(error);
-
+    const actualPlatformUrl =
+      organizationEndpoints?.platform || platformUrl || '';
     if (hasError) {
       this.ariaMessage = getAriaMessageFromErrorType(
         i18n,
         organizationId,
-        platformUrl,
+        actualPlatformUrl,
         error?.type
       );
     }
-
     return (
       <QueryErrorGuard hasError={hasError}>
         <QueryErrorContainer>
           <QueryErrorIcon errorType={error?.type} />
-          <QueryErrorTitle i18n={i18n} organizationId={organizationId} />
+          <QueryErrorTitle
+            errorType={error?.type}
+            i18n={i18n}
+            organizationId={organizationId}
+          />
           <QueryErrorDescription
             i18n={i18n}
             organizationId={organizationId}
-            url={platformUrl}
+            url={organizationEndpoints?.platform || platformUrl || ''}
+            errorType={error?.type}
           />
           <QueryErrorShowMore
             link={<QueryErrorLink i18n={i18n} errorType={error?.type} />}
