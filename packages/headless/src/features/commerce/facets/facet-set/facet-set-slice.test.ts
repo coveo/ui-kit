@@ -107,8 +107,12 @@ describe('commerceFacetSetReducer', () => {
       action,
       responseBuilder,
     }: {
-      action: typeof fetchProductListing.fulfilled;
-      responseBuilder: () => ReturnType<typeof buildSearchResponse>;
+      action:
+        | typeof fetchProductListing.fulfilled
+        | typeof executeSearch.fulfilled;
+      responseBuilder: () => ReturnType<
+        typeof buildSearchResponse | typeof buildFetchProductListingV2Response
+      >;
     }) => {
       const facetId = '1';
 
@@ -116,7 +120,8 @@ describe('commerceFacetSetReducer', () => {
         const response = responseBuilder();
         response.response.facets = facets;
 
-        return action(response, '');
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return action(response as any, '');
       }
 
       it('when a previously registered facet is not found in the response, removes that facet from the state', () => {

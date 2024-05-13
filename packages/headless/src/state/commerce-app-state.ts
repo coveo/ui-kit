@@ -15,6 +15,7 @@ import {
   QuerySetSection,
   FacetSearchSection,
   CategoryFacetSearchSection,
+  CommerceDidYouMeanSection,
   InstantProductsSection,
   CommerceStandaloneSearchBoxSection,
   RecentQueriesSection,
@@ -43,6 +44,7 @@ export type CommerceAppState = ConfigurationSection &
   RecentQueriesSection &
   QuerySuggestionSection &
   QuerySetSection &
+  CommerceDidYouMeanSection &
   InstantProductsSection &
   TriggerSection &
   VersionSection;

@@ -1,8 +1,10 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {createSelector} from '@reduxjs/toolkit';
+import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response';
 import {CommerceEngineState} from '../../../app/commerce-engine/commerce-engine';
 import {
   CommercePaginationSection,
+  CommerceQuerySection,
   CommerceSearchSection,
 } from '../../../state/state-sections';
 import {totalEntriesPrincipalSelector} from '../pagination/pagination-selectors';
@@ -37,7 +39,22 @@ export const errorSelector = createSelector(
 );
 
 export const querySelector = createSelector(
-  (state: Partial<CommerceSearchSection>) =>
-    state.commerceSearch?.queryExecuted,
+  (state: CommerceQuerySection) => state.commerceQuery?.query,
+  (query) => query ?? ''
+);
+
+export const queryExecutedSelector = createSelector(
+  (state: CommerceSearchSection) => state.commerceSearch?.queryExecuted,
   (query) => query
 );
+
+export const queryExecutedFromResponseSelector = (
+  state: CommerceQuerySection,
+  response: SearchCommerceSuccessResponse
+) => {
+  if (response.queryCorrection?.correctedQuery !== undefined) {
+    return response.queryCorrection?.correctedQuery;
+  }
+
+  return querySelector(state);
+};
