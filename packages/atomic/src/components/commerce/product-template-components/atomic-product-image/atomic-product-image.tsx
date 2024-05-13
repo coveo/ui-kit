@@ -175,6 +175,7 @@ export class AtomicProductImage implements InitializableComponent {
     }
 
     return (
+      // TODO: handle small/icon image sizes better on mobile
       <ImageCarousel
         bindings={this.bindings}
         currentImage={this.currentImage}
