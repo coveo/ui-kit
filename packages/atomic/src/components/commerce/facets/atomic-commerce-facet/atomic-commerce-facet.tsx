@@ -71,12 +71,36 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
   public searchStatusState!: SearchStatusState;
   @State() public error!: Error;
 
+  /**
+   * The facet controller
+   */
   @Prop() public facet!: RegularFacet;
+  /**
+   * Whether to allow excluding values from the facet.
+   */
   @Prop({reflect: true}) public enableExclusion = false;
+  /**
+   * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+   */
   @Prop({reflect: true}) public headingLevel = 0;
+  /**
+   * The number of values to request for this facet.
+   * Also determines the number of additional values to request each time more values are shown.
+   */
   @Prop({reflect: true}) public numberOfValues = 8;
+  /**
+   * The sort criterion to apply to the returned facet values.
+   * Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', and 'automatic'.
+   */
   @Prop({reflect: true}) public sortCriteria: FacetSortCriterion = 'automatic';
+  /**
+   * Whether this facet should contain a search box.
+   *
+   */
   @Prop({reflect: true}) public withSearch = true;
+  /**
+   * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
+   */
   @Prop({reflect: true, mutable: true}) public isCollapsed = false;
 
   private showLessFocus?: FocusTargetController;
