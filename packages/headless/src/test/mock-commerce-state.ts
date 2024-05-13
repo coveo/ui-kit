@@ -10,6 +10,7 @@ import {getCommerceSearchInitialState} from '../features/commerce/search/search-
 import {getCommerceSortInitialState} from '../features/commerce/sort/sort-state';
 import {getCommerceStandaloneSearchBoxSetInitialState} from '../features/commerce/standalone-search-box-set/standalone-search-box-set-state';
 import {getConfigurationInitialState} from '../features/configuration/configuration-state';
+import {getDidYouMeanInitialState} from '../features/did-you-mean/did-you-mean-state';
 import {getFacetOrderInitialState} from '../features/facets/facet-order/facet-order-state';
 import {getCategoryFacetSearchSetInitialState} from '../features/facets/facet-search-set/category/category-facet-search-set-state';
 import {getFacetSearchSetInitialState} from '../features/facets/facet-search-set/specific/specific-facet-search-set-state';
@@ -39,6 +40,7 @@ export function buildMockCommerceState(
     querySuggest: getQuerySuggestSetInitialState(),
     querySet: getQuerySetInitialState(),
     cart: getCartInitialState(),
+    didYouMean: getDidYouMeanInitialState(),
     instantProducts: getInstantProductsInitialState(),
     commerceStandaloneSearchBoxSet:
       getCommerceStandaloneSearchBoxSetInitialState(),

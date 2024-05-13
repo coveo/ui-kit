@@ -1618,6 +1618,18 @@ export namespace Components {
          */
         "hrefTemplate"?: string;
     }
+    interface AtomicProductNumericFieldValue {
+        /**
+          * The field that the component should use. The component will try to find this field in the `Product.additionalFields` object unless it finds it in the `Product` object first.
+         */
+        "field": string;
+    }
+    interface AtomicProductPrice {
+        /**
+          * The currency to use in currency formatting. Allowed values are the [ISO 4217 currency codes](https://www.six-group.com/en/products-services/financial-information/data-standards.html#scrollTo=maintenance-agency), such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB.
+         */
+        "currency": string;
+    }
     interface AtomicProductTemplate {
         /**
           * A function that must return true on products for the product template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to products whose `ec_name` contains `singapore`: `document.querySelector('#target-template').conditions = [(product) => /singapore/i.test(product.ec_name)];`
@@ -3885,6 +3897,18 @@ declare global {
         prototype: HTMLAtomicProductLinkElement;
         new (): HTMLAtomicProductLinkElement;
     };
+    interface HTMLAtomicProductNumericFieldValueElement extends Components.AtomicProductNumericFieldValue, HTMLStencilElement {
+    }
+    var HTMLAtomicProductNumericFieldValueElement: {
+        prototype: HTMLAtomicProductNumericFieldValueElement;
+        new (): HTMLAtomicProductNumericFieldValueElement;
+    };
+    interface HTMLAtomicProductPriceElement extends Components.AtomicProductPrice, HTMLStencilElement {
+    }
+    var HTMLAtomicProductPriceElement: {
+        prototype: HTMLAtomicProductPriceElement;
+        new (): HTMLAtomicProductPriceElement;
+    };
     interface HTMLAtomicProductTemplateElement extends Components.AtomicProductTemplate, HTMLStencilElement {
     }
     var HTMLAtomicProductTemplateElement: {
@@ -4812,6 +4836,8 @@ declare global {
         "atomic-product": HTMLAtomicProductElement;
         "atomic-product-description": HTMLAtomicProductDescriptionElement;
         "atomic-product-link": HTMLAtomicProductLinkElement;
+        "atomic-product-numeric-field-value": HTMLAtomicProductNumericFieldValueElement;
+        "atomic-product-price": HTMLAtomicProductPriceElement;
         "atomic-product-template": HTMLAtomicProductTemplateElement;
         "atomic-product-text": HTMLAtomicProductTextElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
@@ -6370,6 +6396,18 @@ declare namespace LocalJSX {
          */
         "hrefTemplate"?: string;
     }
+    interface AtomicProductNumericFieldValue {
+        /**
+          * The field that the component should use. The component will try to find this field in the `Product.additionalFields` object unless it finds it in the `Product` object first.
+         */
+        "field": string;
+    }
+    interface AtomicProductPrice {
+        /**
+          * The currency to use in currency formatting. Allowed values are the [ISO 4217 currency codes](https://www.six-group.com/en/products-services/financial-information/data-standards.html#scrollTo=maintenance-agency), such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB.
+         */
+        "currency"?: string;
+    }
     interface AtomicProductTemplate {
         /**
           * A function that must return true on products for the product template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to products whose `ec_name` contains `singapore`: `document.querySelector('#target-template').conditions = [(product) => /singapore/i.test(product.ec_name)];`
@@ -7741,6 +7779,8 @@ declare namespace LocalJSX {
         "atomic-product": AtomicProduct;
         "atomic-product-description": AtomicProductDescription;
         "atomic-product-link": AtomicProductLink;
+        "atomic-product-numeric-field-value": AtomicProductNumericFieldValue;
+        "atomic-product-price": AtomicProductPrice;
         "atomic-product-template": AtomicProductTemplate;
         "atomic-product-text": AtomicProductText;
         "atomic-query-error": AtomicQueryError;
@@ -8061,6 +8101,8 @@ declare module "@stencil/core" {
             "atomic-product": LocalJSX.AtomicProduct & JSXBase.HTMLAttributes<HTMLAtomicProductElement>;
             "atomic-product-description": LocalJSX.AtomicProductDescription & JSXBase.HTMLAttributes<HTMLAtomicProductDescriptionElement>;
             "atomic-product-link": LocalJSX.AtomicProductLink & JSXBase.HTMLAttributes<HTMLAtomicProductLinkElement>;
+            "atomic-product-numeric-field-value": LocalJSX.AtomicProductNumericFieldValue & JSXBase.HTMLAttributes<HTMLAtomicProductNumericFieldValueElement>;
+            "atomic-product-price": LocalJSX.AtomicProductPrice & JSXBase.HTMLAttributes<HTMLAtomicProductPriceElement>;
             "atomic-product-template": LocalJSX.AtomicProductTemplate & JSXBase.HTMLAttributes<HTMLAtomicProductTemplateElement>;
             "atomic-product-text": LocalJSX.AtomicProductText & JSXBase.HTMLAttributes<HTMLAtomicProductTextElement>;
             /**

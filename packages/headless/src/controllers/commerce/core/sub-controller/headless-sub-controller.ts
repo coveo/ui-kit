@@ -4,6 +4,10 @@ import {
 } from '../../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../../app/state-key';
 import {AnyFacetResponse} from '../../../../features/commerce/facets/facet-set/interfaces/response';
+import {
+  BreadcrumbManager,
+  buildCoreBreadcrumbManager,
+} from '../breadcrumb-manager/headless-core-breadcrumb-manager';
 import {FetchProductsActionCreator} from '../common';
 import {buildCategoryFacet} from '../facets/category/headless-commerce-category-facet';
 import {buildCommerceDateFacet} from '../facets/date/headless-commerce-date-facet';
@@ -22,7 +26,7 @@ import {
   buildCoreInteractiveProduct,
   InteractiveProduct,
   InteractiveProductProps,
-} from '../result-list/headless-core-interactive-result';
+} from '../product-list/headless-core-interactive-product';
 import {
   buildCoreSort,
   Sort,
@@ -38,6 +42,7 @@ export interface SearchAndListingSubControllers
   extends BaseSolutionTypeSubControllers {
   sort: (props?: SortProps) => Sort;
   facetGenerator: () => FacetGenerator;
+  breadcrumbManager: () => BreadcrumbManager;
 }
 
 interface BaseSubControllerProps {
@@ -63,7 +68,7 @@ export function buildSolutionTypeSubControllers(
   subControllerProps: SearchAndListingSubControllerProps
 ): SearchAndListingSubControllers {
   const {
-    fetchProductsActionCreator: fetchProductsActionCreator,
+    fetchProductsActionCreator,
     facetResponseSelector,
     isFacetLoadingResponseSelector,
   } = subControllerProps;
@@ -72,7 +77,7 @@ export function buildSolutionTypeSubControllers(
     sort(props?: SortProps) {
       return buildCoreSort(engine, {
         ...props,
-        fetchProductsActionCreator: fetchProductsActionCreator,
+        fetchProductsActionCreator,
       });
     },
     facetGenerator() {
@@ -90,6 +95,12 @@ export function buildSolutionTypeSubControllers(
           buildCommerceDateFacet(engine, {...options, ...commonOptions}),
         buildCategoryFacet: (_engine, options) =>
           buildCategoryFacet(engine, {...options, ...commonOptions}),
+      });
+    },
+    breadcrumbManager() {
+      return buildCoreBreadcrumbManager(engine, {
+        facetResponseSelector,
+        fetchProductsActionCreator,
       });
     },
   };

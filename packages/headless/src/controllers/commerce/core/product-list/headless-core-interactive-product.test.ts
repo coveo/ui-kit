@@ -5,7 +5,7 @@ import {
   buildMockCommerceEngine,
   MockedCommerceEngine,
 } from '../../../../test/mock-engine-v2';
-import {buildCoreInteractiveProduct} from './headless-core-interactive-result';
+import {buildCoreInteractiveProduct} from './headless-core-interactive-product';
 
 jest.mock('../../../../features/commerce/context/product/product-actions');
 

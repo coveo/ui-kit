@@ -1,7 +1,9 @@
-import {CommerceSuccessResponse} from '../../../api/commerce/common/response';
+import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response';
 import {buildMockProduct} from '../../../test/mock-product';
-import {QueryCommerceAPIThunkReturn} from '../common/actions';
-import {fetchInstantProducts} from '../search/search-actions';
+import {
+  fetchInstantProducts,
+  QuerySearchCommerceAPIThunkReturn,
+} from '../search/search-actions';
 import {
   registerInstantProducts,
   updateInstantProductsQuery,
@@ -195,8 +197,8 @@ describe('instant products slice', () => {
               products: [buildMockProduct()],
               pagination: {totalEntries: 123},
               responseId: 'someid',
-            } as unknown as CommerceSuccessResponse,
-          } as QueryCommerceAPIThunkReturn,
+            } as unknown as SearchCommerceSuccessResponse,
+          } as QuerySearchCommerceAPIThunkReturn,
           'req_id',
           {
             id: id1,
@@ -239,8 +241,8 @@ describe('instant products slice', () => {
               products: [buildMockProduct()],
               pagination: {totalEntries: 123},
               responseId: 'someid',
-            } as unknown as CommerceSuccessResponse,
-          } as QueryCommerceAPIThunkReturn,
+            } as unknown as SearchCommerceSuccessResponse,
+          } as QuerySearchCommerceAPIThunkReturn,
           'req_id',
           {
             id: id1,
