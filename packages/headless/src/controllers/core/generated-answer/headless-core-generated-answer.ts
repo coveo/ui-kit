@@ -204,7 +204,6 @@ const subscribeStateManager: SubscribeStateManager = {
           streamAnswer({
             setAbortControllerRef: (ref: AbortController) =>
               subscribeStateManager.setAbortControllerRef(ref, genQaEngineId),
-            searchRequestId: requestId,
           })
         );
       }
