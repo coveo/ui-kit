@@ -63,10 +63,14 @@ export class GeneratedAnswerCommon {
   }
 
   public readStoredData(): GeneratedAnswerData {
-    return this.storage.getParsedJSON<GeneratedAnswerData>(
+    const {withToggle} = this.props;
+    const storedData = this.storage.getParsedJSON<GeneratedAnswerData>(
       StorageItems.GENERATED_ANSWER_DATA,
       {isVisible: true}
     );
+
+    // This check ensures that the answer is visible when the toggle is hidden and visible is set to false in the local storage.
+    return {isVisible: (withToggle && storedData.isVisible) || !withToggle};
   }
 
   public writeStoredData(data: GeneratedAnswerData) {
