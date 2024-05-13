@@ -26,7 +26,7 @@ import {getAriaMessageFromErrorType} from '../../common/query-error/utils';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
- * The `atomic-commerce-query-error` component handles fatal errors when performing a query on the Commerce API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
+ * The `atomic-commerce-query-error` component handles fatal errors when performing a query on the Commerce API. When the error is known, it displays a link to relevant documentation for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
  *
  * @part icon - The svg related to the error.
  * @part title - The title of the error.
