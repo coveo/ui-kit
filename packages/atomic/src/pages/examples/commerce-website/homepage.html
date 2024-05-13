@@ -48,19 +48,10 @@
                   <atomic-product-text field="ec_brand"></atomic-product-text>
                 </atomic-field-condition>
 
-                <atomic-field-condition class="field" if-defined="ec_rating">
-                  <atomic-product-rating field="ec_rating"></atomic-product-rating>
-                </atomic-field-condition>
-
                 <atomic-field-condition class="mt-4 text-2xl font-bold field" if-defined="ec_price">
                   <atomic-product-price field="ec_price"></atomic-product-price>
                 </atomic-field-condition>
                 <atomic-product-description></atomic-product-description>
-                <atomic-result-fields-list>
-                  <atomic-field-condition must-match-ec_in_stock="true">
-                    <atomic-result-badge label="In stock"></atomic-result-badge>
-                  </atomic-field-condition>
-                </atomic-result-fields-list>
               </template>
             </atomic-product-template>
           </atomic-commerce-recommendation-list>
