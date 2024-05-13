@@ -28,7 +28,7 @@ import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-int
 /**
  * The `atomic-commerce-query-error` component handles fatal errors when performing a query on the Commerce API. When the error is known, it displays a link to relevant documentation for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
  *
- * @part icon - The svg related to the error.
+ * @part icon - The SVG related to the error.
  * @part title - The title of the error.
  * @part description - A description of the error.
  * @part doc-link - A link to the relevant documentation.
