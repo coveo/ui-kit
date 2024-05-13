@@ -1,18 +1,18 @@
 import {
   QueryCorrection,
   WordCorrection,
-} from '../../../api/search/search/query-corrections';
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
-import {stateKey} from '../../../app/state-key';
-import {didYouMeanReducer as didYouMean} from '../../../features/commerce/did-you-mean/did-you-mean-slice';
-import {hasQueryCorrectionSelector} from '../../../features/did-you-mean/did-you-mean-selectors';
-import {CommerceDidYouMeanSection} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
+} from '../../../../api/search/search/query-corrections';
+import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../app/state-key';
+import {didYouMeanReducer as didYouMean} from '../../../../features/commerce/did-you-mean/did-you-mean-slice';
+import {hasQueryCorrectionSelector} from '../../../../features/did-you-mean/did-you-mean-selectors';
+import {CommerceDidYouMeanSection} from '../../../../state/state-sections';
+import {loadReducerError} from '../../../../utils/errors';
 import {
   buildController,
   Controller,
-} from '../../controller/headless-controller';
-import {DidYouMeanState} from '../../did-you-mean/headless-did-you-mean';
+} from '../../../controller/headless-controller';
+import {DidYouMeanState} from '../../../did-you-mean/headless-did-you-mean';
 
 export type {QueryCorrection, WordCorrection, DidYouMeanState};
 
