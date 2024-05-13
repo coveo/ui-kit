@@ -231,10 +231,9 @@ export const streamAnswer = createAsyncThunk<
   const currentStreamRequestMatchesOriginalStreamRequest = (
     request: GeneratedAnswerStreamRequest
   ) => {
-    const state = config.getState();
     return (
       request.streamId ===
-      state.search.extendedResults.generativeQuestionAnsweringId
+      config.getState().search.extendedResults.generativeQuestionAnsweringId
     );
   };
   const abortController = extra.streamingClient?.streamGeneratedAnswer(
