@@ -1,10 +1,10 @@
-import {stateKey} from '../../../app/state-key';
-import {didYouMeanReducer} from '../../../features/commerce/did-you-mean/did-you-mean-slice';
-import {buildMockCommerceState} from '../../../test/mock-commerce-state';
+import {stateKey} from '../../../../app/state-key';
+import {didYouMeanReducer} from '../../../../features/commerce/did-you-mean/did-you-mean-slice';
+import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {
   buildMockCommerceEngine,
   MockedCommerceEngine,
-} from '../../../test/mock-engine-v2';
+} from '../../../../test/mock-engine-v2';
 import {buildDidYouMean, DidYouMean} from './headless-did-you-mean';
 
 describe('did you mean', () => {
