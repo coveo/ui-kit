@@ -1,6 +1,5 @@
 import {
   FacetSortCriterion,
-  FacetResultsMustMatch,
   buildSearchStatus,
   RegularFacet,
   SearchStatus,
@@ -25,7 +24,6 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {ArrayProp, MapProp} from '../../../../utils/props-utils';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
 import {FacetGuard} from '../../../common/facets/facet-guard';
@@ -50,7 +48,8 @@ import {initializePopover} from '../../../search/facets/atomic-popover/popover-t
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
- * TODO: document this component
+ * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
+ *
  * @internal
  */
 @Component({
@@ -73,26 +72,12 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
   @State() public error!: Error;
 
   @Prop() public facet!: RegularFacet;
-  @Prop({reflect: true}) public numberOfValues = 8;
-  @Prop({reflect: true}) public withSearch = true;
-  @Prop({reflect: true}) public resultsMustMatch: FacetResultsMustMatch =
-    'atLeastOneValue';
-  @Prop({reflect: true, mutable: true}) public isCollapsed = false;
-  @Prop({reflect: true}) public headingLevel = 0;
-  @Prop({reflect: true}) public filterFacetCount = true;
   @Prop({reflect: true}) public enableExclusion = false;
-  @Prop() public injectionDepth = 1000;
-
+  @Prop({reflect: true}) public headingLevel = 0;
+  @Prop({reflect: true}) public numberOfValues = 8;
   @Prop({reflect: true}) public sortCriteria: FacetSortCriterion = 'automatic';
-
-  @MapProp() @Prop() public dependsOn: Record<string, string> = {};
-  @ArrayProp()
-  @Prop({mutable: true})
-  public allowedValues: string[] | string = '[]';
-
-  @ArrayProp()
-  @Prop({mutable: true})
-  public customSort: string[] | string = '[]';
+  @Prop({reflect: true}) public withSearch = true;
+  @Prop({reflect: true, mutable: true}) public isCollapsed = false;
 
   private showLessFocus?: FocusTargetController;
   private showMoreFocus?: FocusTargetController;
