@@ -326,9 +326,6 @@ export namespace Components {
     | 'product-listing'
     | 'recommendations';
     }
-    /**
-     * The `atomic-commerce-layout` helps organize elements in the commerce page.
-     */
     interface AtomicCommerceLayout {
         /**
           * CSS value that defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
@@ -3140,9 +3137,6 @@ declare global {
         prototype: HTMLAtomicCommerceInterfaceElement;
         new (): HTMLAtomicCommerceInterfaceElement;
     };
-    /**
-     * The `atomic-commerce-layout` helps organize elements in the commerce page.
-     */
     interface HTMLAtomicCommerceLayoutElement extends Components.AtomicCommerceLayout, HTMLStencilElement {
     }
     var HTMLAtomicCommerceLayoutElement: {
@@ -5175,9 +5169,6 @@ declare namespace LocalJSX {
     | 'product-listing'
     | 'recommendations';
     }
-    /**
-     * The `atomic-commerce-layout` helps organize elements in the commerce page.
-     */
     interface AtomicCommerceLayout {
         /**
           * CSS value that defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
@@ -7924,9 +7915,6 @@ declare module "@stencil/core" {
              */
             "atomic-color-facet": LocalJSX.AtomicColorFacet & JSXBase.HTMLAttributes<HTMLAtomicColorFacetElement>;
             "atomic-commerce-interface": LocalJSX.AtomicCommerceInterface & JSXBase.HTMLAttributes<HTMLAtomicCommerceInterfaceElement>;
-            /**
-             * The `atomic-commerce-layout` helps organize elements in the commerce page.
-             */
             "atomic-commerce-layout": LocalJSX.AtomicCommerceLayout & JSXBase.HTMLAttributes<HTMLAtomicCommerceLayoutElement>;
             /**
              * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
