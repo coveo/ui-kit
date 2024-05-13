@@ -1,6 +1,6 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../../app/state-key';
-import {firstSearchExecutedSelector} from '../../../../features/commerce/search/search-selectors';
+import {firstSearchExecutedSelector} from '../../../../features/commerce/product-listing/product-listing-selectors';
 import {commerceSearchReducer as commerceSearch} from '../../../../features/commerce/search/search-slice';
 import {CommerceSearchSection} from '../../../../state/state-sections';
 import {loadReducerError} from '../../../../utils/errors';

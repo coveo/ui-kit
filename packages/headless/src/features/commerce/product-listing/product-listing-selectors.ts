@@ -35,3 +35,8 @@ export const errorSelector = createSelector(
   (state: Partial<ProductListingV2Section>) => state.productListing?.error,
   (error) => error
 );
+
+export const firstSearchExecutedSelector = createSelector(
+  (state: Partial<ProductListingV2Section>) => state.productListing?.responseId,
+  (responseId) => responseId !== ''
+);

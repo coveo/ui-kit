@@ -58,6 +58,3 @@ export const queryExecutedFromResponseSelector = (
 
   return querySelector(state);
 };
-
-export const firstSearchExecutedSelector = (state: CommerceSearchSection) =>
-  state.commerceSearch.responseId !== '';
