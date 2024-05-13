@@ -1,4 +1,4 @@
-import {buildFetchProductListingV2Response} from '../../../test/mock-product-listing-v2';
+import {buildSearchResponse} from '../../../test/mock-commerce-search';
 import {buildMockExecuteTrigger} from '../../../test/mock-trigger-execute';
 import {buildMockNotifyTrigger} from '../../../test/mock-trigger-notify';
 import {buildMockQueryTrigger} from '../../../test/mock-trigger-query';
@@ -48,7 +48,7 @@ describe('commerce triggers slice', () => {
   });
 
   it('on #executeSearch.fulfilled, updates state using #handleFetchItemsFulfilled', () => {
-    const searchResponse = buildFetchProductListingV2Response();
+    const searchResponse = buildSearchResponse();
     searchResponse.response.triggers = [
       buildMockQueryTrigger(),
       buildMockNotifyTrigger(),
