@@ -296,12 +296,7 @@ export class AtomicCommerceRecommendationList
           product: {
             ...recommendation,
             name: recommendation.ec_name ?? '',
-            price:
-              recommendation.ec_promo_price &&
-              recommendation.ec_price &&
-              recommendation.ec_promo_price > recommendation.ec_price
-                ? recommendation.ec_promo_price
-                : recommendation.ec_price ?? 0,
+            price: this.getPrice(recommendation),
             productId: recommendation.permanentid,
           },
           position: this.currentIndex,
@@ -322,6 +317,20 @@ export class AtomicCommerceRecommendationList
       display: this.display,
       imageSize: this.imageSize,
     };
+  }
+
+  private getPrice(recommendation: Product) {
+    if (recommendation.ec_price === undefined) {
+      return 0;
+    }
+
+    if (recommendation.ec_promo_price === undefined) {
+      return recommendation.ec_price;
+    }
+
+    return recommendation.ec_promo_price > recommendation.ec_price
+      ? recommendation.ec_promo_price
+      : recommendation.ec_price;
   }
 
   private computeListDisplayClasses() {
