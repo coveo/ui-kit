@@ -90,7 +90,6 @@ export interface Product {
    * The product ID.
    */
   ec_product_id?: string;
-
   /**
    * The requested additional fields for the product.
    */
