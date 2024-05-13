@@ -3,9 +3,10 @@ import {
   MockedCommerceEngine,
   buildMockCommerceEngine,
 } from '../../../../test/mock-engine-v2';
+import * as CoreBreadcrumbManager from '../breadcrumb-manager/headless-core-breadcrumb-manager';
 import * as CoreFacetGenerator from '../facets/generator/headless-commerce-facet-generator';
 import * as CorePagination from '../pagination/headless-core-commerce-pagination';
-import * as CoreInteractiveResult from '../result-list/headless-core-interactive-result';
+import * as CoreInteractiveProduct from '../product-list/headless-core-interactive-product';
 import * as CoreSort from '../sort/headless-core-commerce-sort';
 import {
   BaseSolutionTypeSubControllers,
@@ -55,8 +56,8 @@ describe('sub controllers', () => {
         facetResponseSelector: mockFacetResponseSelector,
         isFacetLoadingResponseSelector: mockIsFacetLoadingResponseSelector,
       });
-      const buildCoreInteractiveResultMock = jest.spyOn(
-        CoreInteractiveResult,
+      const buildCoreInteractiveProductMock = jest.spyOn(
+        CoreInteractiveProduct,
         'buildCoreInteractiveProduct'
       );
 
@@ -76,7 +77,7 @@ describe('sub controllers', () => {
       });
 
       expect(interactiveProduct).toEqual(
-        buildCoreInteractiveResultMock.mock.results[0].value
+        buildCoreInteractiveProductMock.mock.results[0].value
       );
     }
   );
@@ -123,6 +124,19 @@ describe('sub controllers', () => {
 
       expect(facetGenerator).toEqual(
         buildCoreFacetGenerator.mock.results[0].value
+      );
+    });
+
+    it('#breadcrumbManager builds breadcrumb manager', () => {
+      const buildCoreBreadcrumbManager = jest.spyOn(
+        CoreBreadcrumbManager,
+        'buildCoreBreadcrumbManager'
+      );
+
+      const breadcrumbManager = subControllers.breadcrumbManager();
+
+      expect(breadcrumbManager).toEqual(
+        buildCoreBreadcrumbManager.mock.results[0].value
       );
     });
   });
