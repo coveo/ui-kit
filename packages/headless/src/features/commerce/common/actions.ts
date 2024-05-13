@@ -20,23 +20,19 @@ import {SortBy, SortCriterion} from '../sort/sort';
 export type StateNeededByQueryCommerceAPI = ConfigurationSection &
   CommerceContextSection &
   CartSection &
-  Partial<
-    CommercePaginationSection &
-      CommerceSortSection &
-      CommerceFacetSetSection &
-      FacetOrderSection &
-      VersionSection
-  >;
+  Partial<CommercePaginationSection & VersionSection>;
+
+export type ListingAndSearchStateNeededByQueryCommerceAPI =
+  StateNeededByQueryCommerceAPI &
+    Partial<CommerceSortSection & CommerceFacetSetSection & FacetOrderSection>;
 
 export interface QueryCommerceAPIThunkReturn {
-  /** The query that was executed. */
-  queryExecuted?: string;
-  /** The successful search response. */
+  /** The successful response. */
   response: CommerceSuccessResponse;
 }
 
 export const buildCommerceAPIRequest = async (
-  state: StateNeededByQueryCommerceAPI
+  state: ListingAndSearchStateNeededByQueryCommerceAPI
 ): Promise<CommerceAPIRequest> => {
   return {
     ...(await buildBaseCommerceAPIRequest(state)),
@@ -91,7 +87,7 @@ const effectivePagination = (
   );
 };
 
-function getFacets(state: StateNeededByQueryCommerceAPI) {
+function getFacets(state: ListingAndSearchStateNeededByQueryCommerceAPI) {
   if (!state.facetOrder || !state.commerceFacetSet) {
     return [];
   }
