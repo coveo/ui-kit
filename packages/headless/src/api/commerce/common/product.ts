@@ -87,10 +87,6 @@ export interface Product {
    */
   ec_gender?: string;
   /**
-   * The listing page the product was returned in.
-   */
-  ec_listing?: string;
-  /**
    * The product ID.
    */
   ec_product_id?: string;
