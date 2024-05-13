@@ -263,12 +263,33 @@ export namespace Components {
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
      */
     interface AtomicCommerceFacet {
+        /**
+          * Whether to allow excluding values from the facet.
+         */
         "enableExclusion": boolean;
+        /**
+          * The facet controller
+         */
         "facet": RegularFacet;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+         */
         "headingLevel": number;
+        /**
+          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
+         */
         "isCollapsed": boolean;
+        /**
+          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
+         */
         "numberOfValues": number;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', and 'automatic'.
+         */
         "sortCriteria": FacetSortCriterion1;
+        /**
+          * Whether this facet should contain a search box.
+         */
         "withSearch": boolean;
     }
     /**
@@ -5096,12 +5117,33 @@ declare namespace LocalJSX {
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
      */
     interface AtomicCommerceFacet {
+        /**
+          * Whether to allow excluding values from the facet.
+         */
         "enableExclusion"?: boolean;
+        /**
+          * The facet controller
+         */
         "facet": RegularFacet;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+         */
         "headingLevel"?: number;
+        /**
+          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
+         */
         "isCollapsed"?: boolean;
+        /**
+          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
+         */
         "numberOfValues"?: number;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', and 'automatic'.
+         */
         "sortCriteria"?: FacetSortCriterion1;
+        /**
+          * Whether this facet should contain a search box.
+         */
         "withSearch"?: boolean;
     }
     /**
