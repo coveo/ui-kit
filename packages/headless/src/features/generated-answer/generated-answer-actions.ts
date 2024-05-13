@@ -172,6 +172,7 @@ export const setIsAnswerGenerated = createAction(
 
 interface StreamAnswerArgs {
   setAbortControllerRef: (ref: AbortController) => void;
+  searchRequestId: string;
 }
 
 export const streamAnswer = createAsyncThunk<
@@ -182,7 +183,7 @@ export const streamAnswer = createAsyncThunk<
   const state = config.getState();
   const {dispatch, extra} = config;
 
-  const {setAbortControllerRef} = params;
+  const {setAbortControllerRef, searchRequestId} = params;
 
   const request = await buildStreamingRequest(state);
 
@@ -231,9 +232,11 @@ export const streamAnswer = createAsyncThunk<
   const currentStreamRequestMatchesOriginalStreamRequest = (
     request: GeneratedAnswerStreamRequest
   ) => {
+    const state = config.getState();
     return (
       request.streamId ===
-      config.getState().search.extendedResults.generativeQuestionAnsweringId
+        state.search.extendedResults.generativeQuestionAnsweringId &&
+      searchRequestId === state.search.requestId
     );
   };
   const abortController = extra.streamingClient?.streamGeneratedAnswer(
