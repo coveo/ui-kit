@@ -35,9 +35,9 @@ const initializableElements = [
  * @param event Element on which to dispatch the event, which must be the child of a configured "atomic-search-interface" or "atomic-external" element.
  * @returns A promise that resolves on initialization of the parent "atomic-search-interface" or "atomic-external" element, and rejects when it's not the case.
  */
-export function initializeBindings<SpecificBindings extends AnyBindings>(
-  element: Element
-) {
+export function initializeBindings<
+  SpecificBindings extends AnyBindings = Bindings,
+>(element: Element) {
   return new Promise<SpecificBindings>((resolve, reject) => {
     const event = buildCustomEvent<InitializeEventHandler>(
       initializeEventName,
