@@ -46,9 +46,9 @@ const CarouselIndicator: FunctionalComponent<CarouselIndicatorProps> = ({
             part={`indicator ${isActive ? 'active-indicator' : ''}`}
             class={`rounded-md shadow cursor-pointer hover:bg-primary-light transition-all duration-200 ease-in-out ${
               isActive ? 'bg-primary' : 'bg-neutral'
-            } ${isLastDisplayed || isFirstDisplayed ? 'w-1 h-1 transform scale-75' : 'h-2 w-2 transform scale-100'} ${
+            } ${isLastDisplayed || isFirstDisplayed ? 'w-1 h-1 mobile-only:w-2 mobile-only:h-2 transform scale-75' : 'h-2 w-2 mobile-only:w-3 mobile-only:h-3 transform scale-100'} ${
               shouldDisplay
-                ? 'opacity-100 pointer-events-auto'
+                ? 'opacity-80 pointer-events-auto'
                 : 'opacity-0 pointer-events-none hidden'
             }`}
             onClick={() => navigateToImage(index)}
