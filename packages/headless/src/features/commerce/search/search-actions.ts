@@ -4,6 +4,7 @@ import {
   AsyncThunkCommerceOptions,
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client';
+import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response';
 import {
   CommerceQuerySection,
   CommerceSearchSection,
@@ -18,8 +19,7 @@ import {updatePage} from '../../pagination/pagination-actions';
 import {logQueryError} from '../../search/search-analytics-actions';
 import {
   buildCommerceAPIRequest,
-  QueryCommerceAPIThunkReturn,
-  StateNeededByQueryCommerceAPI,
+  ListingAndSearchStateNeededByQueryCommerceAPI,
 } from '../common/actions';
 import {perPagePrincipalSelector} from '../pagination/pagination-selectors';
 import {
@@ -27,13 +27,25 @@ import {
   updateQuery,
 } from '../query/query-actions';
 import {
+  querySelector,
   moreProductsAvailableSelector,
   numberOfProductsSelector,
+  queryExecutedFromResponseSelector,
 } from './search-selectors';
 
-export type StateNeededByExecuteSearch = StateNeededByQueryCommerceAPI &
-  CommerceSearchSection &
-  CommerceQuerySection;
+export interface QuerySearchCommerceAPIThunkReturn {
+  /** The successful response. */
+  response: SearchCommerceSuccessResponse;
+  /** The query that was executed. */
+  queryExecuted: string;
+  /** The original query expression that was received and automatically corrected. */
+  originalQuery: string;
+}
+
+export type StateNeededByExecuteSearch =
+  ListingAndSearchStateNeededByQueryCommerceAPI &
+    CommerceSearchSection &
+    CommerceQuerySection;
 
 export interface PrepareForSearchWithQueryOptions {
   /**
@@ -58,8 +70,13 @@ export interface FetchInstantProductsActionCreatorPayload {
   cacheTimeout?: number;
 }
 
+export interface FetchInstantProductsThunkReturn {
+  /** The successful response. */
+  response: SearchCommerceSuccessResponse;
+}
+
 export const executeSearch = createAsyncThunk<
-  QueryCommerceAPIThunkReturn,
+  QuerySearchCommerceAPIThunkReturn,
   void,
   AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
 >(
@@ -67,9 +84,11 @@ export const executeSearch = createAsyncThunk<
   async (_action, {getState, dispatch, rejectWithValue, extra}) => {
     const state = getState();
     const {apiClient} = extra;
+
+    const query = querySelector(state);
     const fetched = await apiClient.search({
       ...(await buildCommerceAPIRequest(state)),
-      query: state.commerceQuery?.query,
+      query,
     });
 
     if (isErrorResponse(fetched)) {
@@ -79,9 +98,47 @@ export const executeSearch = createAsyncThunk<
 
     return {
       response: fetched.success,
-      queryExecuted: state.commerceQuery?.query,
-      // eslint-disable-next-line @cspell/spellchecker
-      // TODO CAPI-244: Use actual search analytics action
+      originalQuery: query,
+      queryExecuted: queryExecutedFromResponseSelector(state, fetched.success),
+    };
+  }
+);
+
+export const fetchMoreProducts = createAsyncThunk<
+  QuerySearchCommerceAPIThunkReturn | null,
+  void,
+  AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
+>(
+  'commerce/search/fetchMoreProducts',
+  async (_action, {getState, dispatch, rejectWithValue, extra}) => {
+    const state = getState();
+    const moreProductsAvailable = moreProductsAvailableSelector(state);
+    if (!moreProductsAvailable) {
+      return null;
+    }
+
+    const {apiClient} = extra;
+
+    const perPage = perPagePrincipalSelector(state);
+    const numberOfProducts = numberOfProductsSelector(state);
+    const nextPageToRequest = numberOfProducts / perPage;
+    const query = querySelector(state);
+
+    const fetched = await apiClient.search({
+      ...(await buildCommerceAPIRequest(state)),
+      query,
+      page: nextPageToRequest,
+    });
+
+    if (isErrorResponse(fetched)) {
+      dispatch(logQueryError(fetched.error));
+      return rejectWithValue(fetched.error);
+    }
+
+    return {
+      response: fetched.success,
+      originalQuery: query,
+      queryExecuted: queryExecutedFromResponseSelector(state, fetched.success),
     };
   }
 );
@@ -112,7 +169,7 @@ export const prepareForSearchWithQuery = createAsyncThunk<
 });
 
 export const fetchInstantProducts = createAsyncThunk<
-  QueryCommerceAPIThunkReturn,
+  FetchInstantProductsThunkReturn,
   FetchInstantProductsActionCreatorPayload,
   AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
 >(
@@ -138,44 +195,6 @@ export const fetchInstantProducts = createAsyncThunk<
 
     return {
       response: {...fetched.success, products},
-      queryExecuted: q,
-    };
-  }
-);
-
-export const fetchMoreProducts = createAsyncThunk<
-  QueryCommerceAPIThunkReturn | null,
-  void,
-  AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
->(
-  'commerce/search/fetchMoreProducts',
-  async (_action, {getState, dispatch, rejectWithValue, extra}) => {
-    const state = getState();
-    const moreProductsAvailable = moreProductsAvailableSelector(state);
-    if (!moreProductsAvailable) {
-      return null;
-    }
-
-    const {apiClient} = extra;
-
-    const perPage = perPagePrincipalSelector(state);
-    const numberOfProducts = numberOfProductsSelector(state);
-    const nextPageToRequest = numberOfProducts / perPage;
-
-    const fetched = await apiClient.search({
-      ...(await buildCommerceAPIRequest(state)),
-      query: state.commerceQuery?.query,
-      page: nextPageToRequest,
-    });
-
-    if (isErrorResponse(fetched)) {
-      dispatch(logQueryError(fetched.error));
-      return rejectWithValue(fetched.error);
-    }
-
-    return {
-      response: fetched.success,
-      queryExecuted: state.commerceQuery?.query,
     };
   }
 );
