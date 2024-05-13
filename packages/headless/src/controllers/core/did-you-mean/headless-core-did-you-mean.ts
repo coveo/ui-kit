@@ -10,6 +10,7 @@ import {
   enableDidYouMean,
   setCorrectionMode,
 } from '../../../features/did-you-mean/did-you-mean-actions';
+import {hasQueryCorrectionSelector} from '../../../features/did-you-mean/did-you-mean-selectors';
 import {didYouMeanReducer as didYouMean} from '../../../features/did-you-mean/did-you-mean-slice';
 import {
   ConfigurationSection,
@@ -115,6 +116,8 @@ export function buildCoreDidYouMean(
   dispatch(setCorrectionMode(props.options?.queryCorrectionMode || 'legacy'));
 
   const getState = () => engine.state;
+  const hasQueryCorrection = () =>
+    hasQueryCorrectionSelector(getState().didYouMean);
 
   return {
     ...controller,
@@ -127,9 +130,7 @@ export function buildCoreDidYouMean(
         wasCorrectedTo: state.didYouMean.wasCorrectedTo,
         wasAutomaticallyCorrected: state.didYouMean.wasAutomaticallyCorrected,
         queryCorrection: state.didYouMean.queryCorrection,
-        hasQueryCorrection:
-          state.didYouMean.queryCorrection.correctedQuery !== '' ||
-          state.didYouMean.wasCorrectedTo !== '',
+        hasQueryCorrection: hasQueryCorrection(),
       };
     },
 

@@ -1,6 +1,7 @@
 import {buildMockCommerceState} from '../../../test/mock-commerce-state';
 import {buildMockProduct} from '../../../test/mock-product';
 import {
+  errorSelector,
   isLoadingSelector,
   moreProductsAvailableSelector,
   numberOfProductsSelector,
@@ -131,5 +132,24 @@ describe('commerce product listing selectors', () => {
   it('#isLoadingSelector should return false when the isLoading value is not set', () => {
     const state = buildMockCommerceState();
     expect(isLoadingSelector(state)).toBe(false);
+  });
+
+  it('#errorSelector should return the error value from the product listing section', () => {
+    const state = buildMockCommerceState({
+      productListing: {
+        responseId: 'some-response-id',
+        products: [],
+        isLoading: false,
+        error: {message: 'some-error', statusCode: 500, type: 'some-type'},
+        facets: [],
+        requestId: 'some-request-id',
+      },
+    });
+    expect(errorSelector(state)?.message).toEqual('some-error');
+  });
+
+  it('#errorSelector should return null when the error value is not set', () => {
+    const state = buildMockCommerceState();
+    expect(errorSelector(state)).toBeNull();
   });
 });

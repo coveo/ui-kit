@@ -41,6 +41,7 @@
 
           <atomic-layout-section section="main">
             <atomic-commerce-query-error></atomic-commerce-query-error>
+            <atomic-commerce-query-summary></atomic-commerce-query-summary>
             <atomic-commerce-sort-dropdown></atomic-commerce-sort-dropdown>
             <atomic-commerce-product-list display="list" density="compact" image-size="small">
               <atomic-product-template>
@@ -61,10 +62,8 @@
                     <atomic-result-rating field="ec_rating"></atomic-result-rating>
                   </atomic-field-condition>
 
-                  <atomic-field-condition class="mt-4 text-2xl font-bold field" if-defined="ec_price">
-                    <atomic-result-number field="ec_price">
-                      <atomic-format-currency currency="CAD"></atomic-format-currency>
-                    </atomic-result-number>
+                  <atomic-field-condition class="mt-4 text-2xl field" if-defined="ec_price">
+                    <atomic-product-price fallbackText="no price" currency="USD"></atomic-product-price>
                   </atomic-field-condition>
                   <atomic-product-description></atomic-product-description>
                   <atomic-result-fields-list>
