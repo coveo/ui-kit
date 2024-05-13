@@ -9,9 +9,8 @@ import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-int
 import {buildCommerceLayout} from './commerce-layout';
 
 /**
- * The `atomic-commerce-layout` helps organize elements in the commerce page.
- *
  * @internal
+ * The `atomic-commerce-layout` helps organize elements in the commerce page.
  */
 @Component({
   tag: 'atomic-commerce-layout',

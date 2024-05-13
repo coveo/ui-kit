@@ -139,28 +139,6 @@ export declare interface AtomicColorFacet extends Components.AtomicColorFacet {}
 
 
 @ProxyCmp({
-  inputs: ['mobileBreakpoint']
-})
-@Component({
-  selector: 'atomic-commerce-layout',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['mobileBreakpoint'],
-})
-export class AtomicCommerceLayout {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicCommerceLayout extends Components.AtomicCommerceLayout {}
-
-
-@ProxyCmp({
   inputs: ['element', 'error']
 })
 @Component({
