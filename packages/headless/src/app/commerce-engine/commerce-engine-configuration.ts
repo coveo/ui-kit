@@ -1,6 +1,8 @@
 import {RecordValue, Schema} from '@coveo/bueno';
 import {getOrganizationEndpoints} from '../../api/platform-client';
+import {CartInitialState} from '../../controllers/commerce/context/cart/headless-cart';
 import {ContextOptions} from '../../controllers/commerce/context/headless-context';
+import {cartDefinition} from '../../features/commerce/context/cart/cart-validation';
 import {contextDefinition} from '../../features/commerce/context/context-validation';
 import {
   EngineConfiguration,
@@ -14,6 +16,7 @@ import {
  */
 export interface CommerceEngineConfiguration extends EngineConfiguration {
   context: ContextOptions;
+  cart?: CartInitialState;
 }
 
 export const commerceEngineConfigurationSchema =
@@ -22,6 +25,9 @@ export const commerceEngineConfigurationSchema =
     context: new RecordValue({
       options: {required: true},
       values: contextDefinition,
+    }),
+    cart: new RecordValue({
+      values: cartDefinition,
     }),
   });
 
@@ -40,6 +46,17 @@ export function getSampleCommerceEngineConfiguration(): CommerceEngineConfigurat
       view: {
         url: 'https://www.example.com',
       },
+    },
+    cart: {
+      items: [
+        {
+          name: 'Sample Product',
+          quantity: 1,
+          price: 100,
+          productId: 'sample-product-id',
+          sku: 'sample-sku',
+        },
+      ],
     },
   };
 }

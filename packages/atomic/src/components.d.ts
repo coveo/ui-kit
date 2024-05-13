@@ -323,7 +323,8 @@ export namespace Components {
           * The type of the interface. - 'search': Indicates that the interface is used for Search. - 'product-listing': Indicates that the interface is used for Product listing.
          */
         "type": | 'search'
-    | 'product-listing';
+    | 'product-listing'
+    | 'recommendations';
     }
     /**
      * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
@@ -372,9 +373,61 @@ export namespace Components {
         "setRenderFunction": (productRenderingFunction: ItemRenderingFunction) => Promise<void>;
     }
     /**
+     * The `atomic-commerce-query-error` component handles fatal errors when performing a query on the Commerce API. When the error is known, it displays a link to relevant documentation for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
+     */
+    interface AtomicCommerceQueryError {
+    }
+    /**
      * The `atomic-commerce-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
      */
     interface AtomicCommerceQuerySummary {
+    }
+    /**
+     * The `atomic-commerce-recommendation-list` component displays a list of product recommendations by applying one or more product templates.
+     */
+    interface AtomicCommerceRecommendationList {
+        /**
+          * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of the parts of a product.
+         */
+        "density": ItemDisplayDensity;
+        /**
+          * The layout to apply when displaying the products. This does not affect the display of the surrounding list itself. To modify the number of products per column, modify the `--atomic-recs-number-of-columns` CSS variable.
+         */
+        "display": ItemDisplayBasicLayout;
+        /**
+          * The [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target) location to open the product link. This property is ignored unless the `display` property is set to `grid`.
+          * @defaultValue `_self`
+         */
+        "gridCellLinkTarget": ItemTarget;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
+         */
+        "headingLevel": number;
+        /**
+          * The expected size of the image displayed on the recommended products.
+         */
+        "imageSize": ItemDisplayImageSize;
+        /**
+          * Moves to the next page, when the carousel is activated.
+         */
+        "nextPage": () => Promise<void>;
+        /**
+          * Moves to the previous page, when the carousel is activated.
+         */
+        "previousPage": () => Promise<void>;
+        /**
+          * The number of products to display per page. The products will be displayed in a carousel if this property is set. This does not affect the display of the list itself, only the number of recommendation pages. If you want to display the recommendations in a carousel with a single row, set the `--atomic-recs-number-fof-columns` CSS variable to the same value as this property.
+         */
+        "productsPerPage"?: number;
+        /**
+          * Sets a rendering function to bypass the standard HTML template mechanism when rendering products. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular, or Vue.  Do not use this method if you integrate Atomic in a plain HTML implementation.
+          * @param productRenderingFunction
+         */
+        "setRenderFunction": (productRenderingFunction: ItemRenderingFunction) => Promise<void>;
+        /**
+          * The identifier used by the Commerce API to retrieve the desired recommendation list for the component. You can configure recommendation lists and get their respective slot IDs through the Coveo Merchandising Hub (CMH). You can include multiple `atomic-commerce-recommendation-list` components with different slot IDs in the same page to display several recommendation lists.
+         */
+        "slotId": string;
     }
     /**
      * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
@@ -3119,6 +3172,15 @@ declare global {
         new (): HTMLAtomicCommerceProductListElement;
     };
     /**
+     * The `atomic-commerce-query-error` component handles fatal errors when performing a query on the Commerce API. When the error is known, it displays a link to relevant documentation for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
+     */
+    interface HTMLAtomicCommerceQueryErrorElement extends Components.AtomicCommerceQueryError, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceQueryErrorElement: {
+        prototype: HTMLAtomicCommerceQueryErrorElement;
+        new (): HTMLAtomicCommerceQueryErrorElement;
+    };
+    /**
      * The `atomic-commerce-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
      */
     interface HTMLAtomicCommerceQuerySummaryElement extends Components.AtomicCommerceQuerySummary, HTMLStencilElement {
@@ -3126,6 +3188,15 @@ declare global {
     var HTMLAtomicCommerceQuerySummaryElement: {
         prototype: HTMLAtomicCommerceQuerySummaryElement;
         new (): HTMLAtomicCommerceQuerySummaryElement;
+    };
+    /**
+     * The `atomic-commerce-recommendation-list` component displays a list of product recommendations by applying one or more product templates.
+     */
+    interface HTMLAtomicCommerceRecommendationListElement extends Components.AtomicCommerceRecommendationList, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceRecommendationListElement: {
+        prototype: HTMLAtomicCommerceRecommendationListElement;
+        new (): HTMLAtomicCommerceRecommendationListElement;
     };
     interface HTMLAtomicCommerceSearchBoxElementEventMap {
         "redirect": RedirectionPayload;
@@ -4701,7 +4772,9 @@ declare global {
         "atomic-commerce-load-more-products": HTMLAtomicCommerceLoadMoreProductsElement;
         "atomic-commerce-pager": HTMLAtomicCommercePagerElement;
         "atomic-commerce-product-list": HTMLAtomicCommerceProductListElement;
+        "atomic-commerce-query-error": HTMLAtomicCommerceQueryErrorElement;
         "atomic-commerce-query-summary": HTMLAtomicCommerceQuerySummaryElement;
+        "atomic-commerce-recommendation-list": HTMLAtomicCommerceRecommendationListElement;
         "atomic-commerce-search-box": HTMLAtomicCommerceSearchBoxElement;
         "atomic-commerce-search-box-instant-products": HTMLAtomicCommerceSearchBoxInstantProductsElement;
         "atomic-commerce-search-box-query-suggestions": HTMLAtomicCommerceSearchBoxQuerySuggestionsElement;
@@ -5095,7 +5168,8 @@ declare namespace LocalJSX {
           * The type of the interface. - 'search': Indicates that the interface is used for Search. - 'product-listing': Indicates that the interface is used for Product listing.
          */
         "type"?: | 'search'
-    | 'product-listing';
+    | 'product-listing'
+    | 'recommendations';
     }
     /**
      * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
@@ -5140,9 +5214,48 @@ declare namespace LocalJSX {
         "imageSize"?: ItemDisplayImageSize;
     }
     /**
+     * The `atomic-commerce-query-error` component handles fatal errors when performing a query on the Commerce API. When the error is known, it displays a link to relevant documentation for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
+     */
+    interface AtomicCommerceQueryError {
+    }
+    /**
      * The `atomic-commerce-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
      */
     interface AtomicCommerceQuerySummary {
+    }
+    /**
+     * The `atomic-commerce-recommendation-list` component displays a list of product recommendations by applying one or more product templates.
+     */
+    interface AtomicCommerceRecommendationList {
+        /**
+          * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of the parts of a product.
+         */
+        "density"?: ItemDisplayDensity;
+        /**
+          * The layout to apply when displaying the products. This does not affect the display of the surrounding list itself. To modify the number of products per column, modify the `--atomic-recs-number-of-columns` CSS variable.
+         */
+        "display"?: ItemDisplayBasicLayout;
+        /**
+          * The [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target) location to open the product link. This property is ignored unless the `display` property is set to `grid`.
+          * @defaultValue `_self`
+         */
+        "gridCellLinkTarget"?: ItemTarget;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
+         */
+        "headingLevel"?: number;
+        /**
+          * The expected size of the image displayed on the recommended products.
+         */
+        "imageSize"?: ItemDisplayImageSize;
+        /**
+          * The number of products to display per page. The products will be displayed in a carousel if this property is set. This does not affect the display of the list itself, only the number of recommendation pages. If you want to display the recommendations in a carousel with a single row, set the `--atomic-recs-number-fof-columns` CSS variable to the same value as this property.
+         */
+        "productsPerPage"?: number;
+        /**
+          * The identifier used by the Commerce API to retrieve the desired recommendation list for the component. You can configure recommendation lists and get their respective slot IDs through the Coveo Merchandising Hub (CMH). You can include multiple `atomic-commerce-recommendation-list` components with different slot IDs in the same page to display several recommendation lists.
+         */
+        "slotId"?: string;
     }
     /**
      * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
@@ -7608,7 +7721,9 @@ declare namespace LocalJSX {
         "atomic-commerce-load-more-products": AtomicCommerceLoadMoreProducts;
         "atomic-commerce-pager": AtomicCommercePager;
         "atomic-commerce-product-list": AtomicCommerceProductList;
+        "atomic-commerce-query-error": AtomicCommerceQueryError;
         "atomic-commerce-query-summary": AtomicCommerceQuerySummary;
+        "atomic-commerce-recommendation-list": AtomicCommerceRecommendationList;
         "atomic-commerce-search-box": AtomicCommerceSearchBox;
         "atomic-commerce-search-box-instant-products": AtomicCommerceSearchBoxInstantProducts;
         "atomic-commerce-search-box-query-suggestions": AtomicCommerceSearchBoxQuerySuggestions;
@@ -7811,9 +7926,17 @@ declare module "@stencil/core" {
             "atomic-commerce-pager": LocalJSX.AtomicCommercePager & JSXBase.HTMLAttributes<HTMLAtomicCommercePagerElement>;
             "atomic-commerce-product-list": LocalJSX.AtomicCommerceProductList & JSXBase.HTMLAttributes<HTMLAtomicCommerceProductListElement>;
             /**
+             * The `atomic-commerce-query-error` component handles fatal errors when performing a query on the Commerce API. When the error is known, it displays a link to relevant documentation for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
+             */
+            "atomic-commerce-query-error": LocalJSX.AtomicCommerceQueryError & JSXBase.HTMLAttributes<HTMLAtomicCommerceQueryErrorElement>;
+            /**
              * The `atomic-commerce-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
              */
             "atomic-commerce-query-summary": LocalJSX.AtomicCommerceQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicCommerceQuerySummaryElement>;
+            /**
+             * The `atomic-commerce-recommendation-list` component displays a list of product recommendations by applying one or more product templates.
+             */
+            "atomic-commerce-recommendation-list": LocalJSX.AtomicCommerceRecommendationList & JSXBase.HTMLAttributes<HTMLAtomicCommerceRecommendationListElement>;
             /**
              * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
              */
