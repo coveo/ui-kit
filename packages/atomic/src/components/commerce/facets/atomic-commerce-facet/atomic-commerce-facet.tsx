@@ -5,7 +5,6 @@ import {
   RegularFacet,
   SearchStatus,
   SearchStatusState,
-  FacetConditionsManager,
   RegularFacetState,
 } from '@coveo/headless/commerce';
 import {
@@ -98,7 +97,6 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
   private showLessFocus?: FocusTargetController;
   private showMoreFocus?: FocusTargetController;
   private headerFocus?: FocusTargetController;
-  private facetConditionsManager?: FacetConditionsManager;
 
   @AriaLiveRegion('facet-search')
   protected facetSearchAriaMessage!: string;
@@ -106,13 +104,8 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.initAriaLive();
-    // this.initConditionManager();
     this.initPopover();
     this.registerFacet();
-  }
-
-  public disconnectedCallback() {
-    this.facetConditionsManager?.stopWatching();
   }
 
   public componentShouldUpdate(
@@ -313,18 +306,6 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
   private get isHidden() {
     return !this.facetState.values.length;
   }
-
-  // private initConditionManager() {
-  //   this.facetConditionsManager = buildFacetConditionsManager(
-  //     this.bindings.engine,
-  //     {
-  //       facetId: this.facet.state.facetId,
-  //       conditions: parseDependsOn<
-  //         FacetValueRequest | CategoryFacetValueRequest
-  //       >(this.dependsOn),
-  //     }
-  //   );
-  // }
 
   private registerFacet() {
     this.bindings.store.registerFacet('facets', this.facetInfo);
