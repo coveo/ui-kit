@@ -31,9 +31,9 @@ const initializableElements = [
 ];
 
 /**
- * Retrieves `Bindings` on a configured parent search interface.
- * @param event Element on which to dispatch the event, which must be the child of a configured "atomic-search-interface" or "atomic-external" element.
- * @returns A promise that resolves on initialization of the parent "atomic-search-interface" or "atomic-external" element, and rejects when it's not the case.
+ * Retrieves `Bindings` or `CommerceBindings` on a configured parent interface.
+ * @param event Element on which to dispatch the event, which must be the child of a configured atomic container element.
+ * @returns A promise that resolves on initialization of the parent container element, and rejects when it's not the case.
  */
 export function initializeBindings<
   SpecificBindings extends AnyBindings = Bindings,
