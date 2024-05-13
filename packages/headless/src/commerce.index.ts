@@ -99,7 +99,6 @@ export {
   SortDirection,
 } from './controllers/commerce/core/sort/headless-core-commerce-sort';
 
-export type {FacetSortCriterion} from './features/facets/facet-set/interfaces/request';
 export type {
   CategoryFacet,
   CategoryFacetState,
