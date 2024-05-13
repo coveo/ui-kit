@@ -13,7 +13,7 @@ if (!hasSymlinkGitEnabled) {
     execSync('git checkout');
   } catch (error) {
     console.error(
-      'Symlinks git support have been enabled in this repo, but automatic checkout failed. Please run `git checkout` to ensure symlinks are properly set up.'
+      'Symlink git support has been enabled in this repository, but automatic checkout has failed. Please run `git checkout` to ensure symlinks are properly set up.'
     );
     process.exit(1);
   }

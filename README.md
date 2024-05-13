@@ -12,9 +12,9 @@
 ## Install
 
 > [!IMPORTANT]
-> This repo uses symlinks for development purposes. Ensure you can create symlinks **without** evalated privileges
+> This repo uses symlinks for development purposes. Ensure you can create symlinks **without** elevated privileges
 >
-> - If you're on linux/macOS: You should be fine 👌
+> - If you're on Linux/macOS: You should be fine 👌
 > - If you're on Windows, see [this blog post](https://blogs.windows.com/windowsdeveloper/2016/12/02/symlinks-windows-10/#oTepts0M8148xRoj.97) from Microsoft.
 
 To install all dependencies and link local packages, run:
