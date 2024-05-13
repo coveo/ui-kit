@@ -21,8 +21,6 @@ import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atom
  * The `atomic-commerce-facets` component automatically renders commerce facets based on the search query response.
  * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
  *
- * TODO: add more info and URL links
- *
  * @internal
  */
 @Component({

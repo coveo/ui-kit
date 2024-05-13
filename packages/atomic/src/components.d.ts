@@ -262,7 +262,6 @@ export namespace Components {
     /**
      * The `atomic-commerce-facets` component automatically renders commerce facets based on the search query response.
      * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
-     * TODO: add more info and URL links
      */
     interface AtomicCommerceFacets {
         /**
@@ -3091,7 +3090,6 @@ declare global {
     /**
      * The `atomic-commerce-facets` component automatically renders commerce facets based on the search query response.
      * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
-     * TODO: add more info and URL links
      */
     interface HTMLAtomicCommerceFacetsElement extends Components.AtomicCommerceFacets, HTMLStencilElement {
     }
@@ -5075,7 +5073,6 @@ declare namespace LocalJSX {
     /**
      * The `atomic-commerce-facets` component automatically renders commerce facets based on the search query response.
      * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
-     * TODO: add more info and URL links
      */
     interface AtomicCommerceFacets {
         /**
@@ -7838,7 +7835,6 @@ declare module "@stencil/core" {
             /**
              * The `atomic-commerce-facets` component automatically renders commerce facets based on the search query response.
              * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
-             * TODO: add more info and URL links
              */
             "atomic-commerce-facets": LocalJSX.AtomicCommerceFacets & JSXBase.HTMLAttributes<HTMLAtomicCommerceFacetsElement>;
             "atomic-commerce-interface": LocalJSX.AtomicCommerceInterface & JSXBase.HTMLAttributes<HTMLAtomicCommerceInterfaceElement>;
