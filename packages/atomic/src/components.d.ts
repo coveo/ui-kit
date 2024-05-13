@@ -6,7 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-import { CommerceEngine, InteractiveProduct, LogLevel, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition } from "@coveo/headless/commerce";
+import { CommerceEngine, FacetResultsMustMatch as FacetResultsMustMatch1, FacetSortCriterion as FacetSortCriterion1, InteractiveProduct, LogLevel, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet } from "@coveo/headless/commerce";
 import { i18n } from "i18next";
 import { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
@@ -32,7 +32,7 @@ import { Bindings } from "./components/search/atomic-search-interface/atomic-sea
 import { AriaLabelGenerator } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 export { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-export { CommerceEngine, InteractiveProduct, LogLevel, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition } from "@coveo/headless/commerce";
+export { CommerceEngine, FacetResultsMustMatch as FacetResultsMustMatch1, FacetSortCriterion as FacetSortCriterion1, InteractiveProduct, LogLevel, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet } from "@coveo/headless/commerce";
 export { i18n } from "i18next";
 export { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { StandaloneSearchBoxData } from "./utils/local-storage-utils";
@@ -255,6 +255,24 @@ export namespace Components {
         /**
           * Whether this facet should contain a search box.
          */
+        "withSearch": boolean;
+    }
+    /**
+     * TODO: document this component
+     */
+    interface AtomicCommerceFacet {
+        "allowedValues": string[] | string;
+        "customSort": string[] | string;
+        "dependsOn": Record<string, string>;
+        "enableExclusion": boolean;
+        "facet": RegularFacet;
+        "filterFacetCount": boolean;
+        "headingLevel": number;
+        "injectionDepth": number;
+        "isCollapsed": boolean;
+        "numberOfValues": number;
+        "resultsMustMatch": FacetResultsMustMatch1;
+        "sortCriteria": FacetSortCriterion1;
         "withSearch": boolean;
     }
     /**
@@ -3046,6 +3064,15 @@ declare global {
         new (): HTMLAtomicColorFacetElement;
     };
     /**
+     * TODO: document this component
+     */
+    interface HTMLAtomicCommerceFacetElement extends Components.AtomicCommerceFacet, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceFacetElement: {
+        prototype: HTMLAtomicCommerceFacetElement;
+        new (): HTMLAtomicCommerceFacetElement;
+    };
+    /**
      * The `atomic-commerce-facets` component automatically renders commerce facets based on the search query response.
      * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
      * TODO: add more info and URL links
@@ -4644,6 +4671,7 @@ declare global {
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
         "atomic-citation": HTMLAtomicCitationElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
+        "atomic-commerce-facet": HTMLAtomicCommerceFacetElement;
         "atomic-commerce-facets": HTMLAtomicCommerceFacetsElement;
         "atomic-commerce-interface": HTMLAtomicCommerceInterfaceElement;
         "atomic-commerce-load-more-products": HTMLAtomicCommerceLoadMoreProductsElement;
@@ -4991,6 +5019,24 @@ declare namespace LocalJSX {
         /**
           * Whether this facet should contain a search box.
          */
+        "withSearch"?: boolean;
+    }
+    /**
+     * TODO: document this component
+     */
+    interface AtomicCommerceFacet {
+        "allowedValues"?: string[] | string;
+        "customSort"?: string[] | string;
+        "dependsOn"?: Record<string, string>;
+        "enableExclusion"?: boolean;
+        "facet": RegularFacet;
+        "filterFacetCount"?: boolean;
+        "headingLevel"?: number;
+        "injectionDepth"?: number;
+        "isCollapsed"?: boolean;
+        "numberOfValues"?: number;
+        "resultsMustMatch"?: FacetResultsMustMatch1;
+        "sortCriteria"?: FacetSortCriterion1;
         "withSearch"?: boolean;
     }
     /**
@@ -7523,6 +7569,7 @@ declare namespace LocalJSX {
         "atomic-category-facet": AtomicCategoryFacet;
         "atomic-citation": AtomicCitation;
         "atomic-color-facet": AtomicColorFacet;
+        "atomic-commerce-facet": AtomicCommerceFacet;
         "atomic-commerce-facets": AtomicCommerceFacets;
         "atomic-commerce-interface": AtomicCommerceInterface;
         "atomic-commerce-load-more-products": AtomicCommerceLoadMoreProducts;
@@ -7716,6 +7763,10 @@ declare module "@stencil/core" {
              * An `atomic-color-facet` displays a facet of the results for the current query as colors.
              */
             "atomic-color-facet": LocalJSX.AtomicColorFacet & JSXBase.HTMLAttributes<HTMLAtomicColorFacetElement>;
+            /**
+             * TODO: document this component
+             */
+            "atomic-commerce-facet": LocalJSX.AtomicCommerceFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceFacetElement>;
             /**
              * The `atomic-commerce-facets` component automatically renders commerce facets based on the search query response.
              * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.

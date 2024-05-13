@@ -30,3 +30,6 @@ export const isLoadingSelector = createSelector(
   (state: Partial<CommerceSearchSection>) => state.commerceSearch?.isLoading,
   (isLoading) => (isNullOrUndefined(isLoading) ? false : isLoading)
 );
+
+export const firstSearchExecutedSelector = (state: CommerceSearchSection) =>
+  state.commerceSearch.responseId !== '';
