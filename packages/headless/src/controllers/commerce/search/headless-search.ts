@@ -17,15 +17,15 @@ import {
   Controller,
 } from '../../controller/headless-controller';
 import {
-  buildSolutionTypeSubControllers,
-  SearchAndListingSubControllers,
+  buildSearchSubControllers,
+  SearchSubControllers,
 } from '../core/sub-controller/headless-sub-controller';
 import {
   facetResponseSelector,
   isFacetLoadingResponseSelector,
 } from './facets/headless-search-facet-options';
 
-export interface Search extends Controller, SearchAndListingSubControllers {
+export interface Search extends Controller, SearchSubControllers {
   /**
    * Executes the first search.
    */
@@ -57,7 +57,7 @@ export function buildSearch(engine: CommerceEngine): Search {
   const controller = buildController(engine);
   const {dispatch} = engine;
   const getState = () => engine[stateKey];
-  const subControllers = buildSolutionTypeSubControllers(engine, {
+  const subControllers = buildSearchSubControllers(engine, {
     responseIdSelector,
     fetchProductsActionCreator: executeSearch,
     fetchMoreProductsActionCreator: fetchMoreProducts,

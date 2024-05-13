@@ -16,7 +16,7 @@ import {
   Controller,
 } from '../../controller/headless-controller';
 import {
-  buildSolutionTypeSubControllers,
+  buildSearchAndListingsSubControllers,
   SearchAndListingSubControllers,
 } from '../core/sub-controller/headless-sub-controller';
 import {
@@ -62,7 +62,7 @@ export function buildProductListing(engine: CommerceEngine): ProductListing {
   const controller = buildController(engine);
   const {dispatch} = engine;
   const getState = () => engine[stateKey];
-  const subControllers = buildSolutionTypeSubControllers(engine, {
+  const subControllers = buildSearchAndListingsSubControllers(engine, {
     responseIdSelector,
     fetchProductsActionCreator: fetchProductListing,
     fetchMoreProductsActionCreator: fetchMoreProducts,

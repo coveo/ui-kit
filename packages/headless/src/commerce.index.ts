@@ -74,7 +74,7 @@ export type {
   InteractiveProduct,
   InteractiveProductOptions,
   InteractiveProductProps,
-} from './controllers/commerce/core/result-list/headless-core-interactive-result';
+} from './controllers/commerce/core/product-list/headless-core-interactive-product';
 
 export type {ProductView} from './controllers/commerce/product-view/headless-product-view';
 export {buildProductView} from './controllers/commerce/product-view/headless-product-view';
@@ -148,6 +148,7 @@ export type {
   CategoryFacetValueRequest,
   CategoryFacetValue,
 } from './controllers/commerce/core/facets/headless-core-commerce-facet';
+export type {FacetGenerator} from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator';
 
 export type {
   RegularFacetSearch,
@@ -216,8 +217,6 @@ export type {
   BreadcrumbValue,
   DeselectableValue,
 } from './controllers/commerce/core/breadcrumb-manager/headless-core-breadcrumb-manager';
-export {buildProductListingBreadcrumbManager} from './controllers/commerce/product-listing/breadcrumb-manager/headless-product-listing-breadcrumb-manager';
-export {buildSearchBreadcrumbManager} from './controllers/commerce/search/breadcrumb-manager/headless-search-breadcrumb-manager';
 
 export {buildSearchSummary} from './controllers/commerce/search/summary/headless-search-summary';
 export type {
@@ -232,6 +231,11 @@ export type {
 } from './controllers/commerce/product-listing/summary/headless-product-listing-summary';
 
 export {getOrganizationEndpoints} from './api/platform-client';
+
+export type {
+  DidYouMean,
+  DidYouMeanState,
+} from './controllers/commerce/search/did-you-mean/headless-did-you-mean';
 export {ProductTemplatesHelpers} from './features/commerce/product-templates/product-templates-helpers';
 
 export type {

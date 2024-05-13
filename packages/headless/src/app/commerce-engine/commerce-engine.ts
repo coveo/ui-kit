@@ -2,6 +2,7 @@ import {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
 import {CommerceAPIClient} from '../../api/commerce/commerce-api-client';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
+import {setItems} from '../../features/commerce/context/cart/cart-actions';
 import {cartReducer} from '../../features/commerce/context/cart/cart-slice';
 import {setContext} from '../../features/commerce/context/context-actions';
 import {contextReducer} from '../../features/commerce/context/context-slice';
@@ -116,6 +117,12 @@ export function buildCommerceEngine(
   const {state: _, ...engine} = internalEngine;
 
   engine.dispatch(setContext(options.configuration.context));
+  if (
+    options.configuration.cart !== undefined &&
+    options.configuration.cart.items !== undefined
+  ) {
+    engine.dispatch(setItems(options.configuration.cart.items));
+  }
 
   return {
     ...engine,

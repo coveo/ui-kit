@@ -70,7 +70,6 @@ export interface Product {
    * From the `ec_images` field.
    */
   ec_images?: string[];
-
   /**
    * Whether the product is currently in stock.
    *
@@ -83,7 +82,14 @@ export interface Product {
    * From the `ec_rating` field.
    */
   ec_rating?: number;
-
+  /**
+   * The gender the product is intended for.
+   */
+  ec_gender?: string;
+  /**
+   * The product ID.
+   */
+  ec_product_id?: string;
   /**
    * The requested additional fields for the product.
    */

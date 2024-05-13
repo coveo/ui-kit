@@ -3,8 +3,8 @@ import {stateKey} from '../../../../app/state-key';
 import {
   errorSelector,
   isLoadingSelector,
+  queryExecutedSelector,
   numberOfProductsSelector,
-  querySelector,
   responseIdSelector,
 } from '../../../../features/commerce/search/search-selectors';
 import {loadReducerError} from '../../../../utils/errors';
@@ -53,7 +53,7 @@ export const buildSearchSummary = (engine: CommerceEngine) => {
     get state(): SearchSummaryState {
       return {
         ...controller.state,
-        query: querySelector(engine[stateKey]) || '',
+        query: queryExecutedSelector(engine[stateKey]) || '',
       };
     },
   };

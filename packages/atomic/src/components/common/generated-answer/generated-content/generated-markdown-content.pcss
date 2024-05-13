@@ -36,6 +36,10 @@
     @apply leading-6;
   }
 
+  [part='answer-strong'] {
+    font-weight: var(--atomic-font-bold);
+  }
+
   [part='answer-ordered-list'] {
     @apply list-decimal ps-8 mb-2;
   }
@@ -85,6 +89,7 @@
       [part='answer-table-header'] {
         @apply p-4 text-left;
         background-color: var(--atomic-neutral);
+        font-weight: var(--atomic-font-bold);
         border-bottom: solid 2px var(--atomic-neutral-dim);
         border-left: solid 1px var(--atomic-neutral-dim);
       }
