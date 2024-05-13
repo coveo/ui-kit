@@ -1,20 +1,27 @@
 import {StringValue} from '@coveo/bueno';
-import {createAction} from '@reduxjs/toolkit';
+import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
+  AsyncThunkCommerceOptions,
+  isErrorResponse,
+} from '../../../api/commerce/commerce-api-client';
+import {CommerceSearchRequest} from '../../../api/commerce/search/request';
+import {isRedirectTrigger} from '../../../api/common/trigger';
+import {
+  CartSection,
   CommerceContextSection,
   CommerceQuerySection,
   ConfigurationSection,
-  PipelineSection,
-  SearchHubSection,
 } from '../../../state/state-sections';
 import {
   requiredNonEmptyString,
   validatePayload,
 } from '../../../utils/validate-payload';
+import {buildBaseCommerceAPIRequest} from '../common/actions';
 
 export type StateNeededForRedirect = ConfigurationSection &
+  CommerceContextSection &
   CommerceQuerySection &
-  Partial<CommerceContextSection & SearchHubSection & PipelineSection>;
+  CartSection;
 
 export interface RegisterStandaloneSearchBoxActionCreatorPayload {
   /**
@@ -57,19 +64,38 @@ export interface FetchRedirectUrlActionCreatorPayload {
    * The standalone search box id.
    */
   id: string;
-  /**
-   *  TODO: KIT-3134: remove once the `search/redirect` endpoint is implemented.
-   * This is a temporary hack to simulate the redirection URL. It will be removed once the `search/redirect` endpoint is implemented.
-   */
-  redirectionUrl: string;
 }
 
-export const fetchRedirectUrl = createAction(
-  // TODO: KIT-3134: implement createAsyncThunk logic to fetch the redirection URL from the Commerce API endpoint.
+// eslint-disable-next-line @cspell/spellchecker
+// TODO: CAPI-867 - Use Commerce API's equivalent of the /plan endpoint when it becomes available.
+export const fetchRedirectUrl = createAsyncThunk<
+  string,
+  FetchRedirectUrlActionCreatorPayload,
+  AsyncThunkCommerceOptions<StateNeededForRedirect>
+>(
   'commerce/standaloneSearchBox/fetchRedirect',
-  (payload: FetchRedirectUrlActionCreatorPayload) =>
-    validatePayload(payload, {
-      id: new StringValue({emptyAllowed: false}),
-      redirectionUrl: new StringValue({emptyAllowed: false}),
-    })
+  async (payload, {getState, rejectWithValue, extra}) => {
+    validatePayload(payload, {id: new StringValue({emptyAllowed: false})});
+    const state = getState();
+    const {apiClient} = extra;
+    const request = await buildPlanRequest(state);
+    const response = await apiClient.plan(request);
+    if (isErrorResponse(response)) {
+      return rejectWithValue(response.error);
+    }
+
+    const redirectTriggers =
+      response.success.triggers.filter(isRedirectTrigger);
+
+    return redirectTriggers.length ? redirectTriggers[0].content : '';
+  }
 );
+
+export const buildPlanRequest = async (
+  state: StateNeededForRedirect
+): Promise<CommerceSearchRequest> => {
+  return {
+    query: state.commerceQuery.query,
+    ...(await buildBaseCommerceAPIRequest(state)),
+  };
+};

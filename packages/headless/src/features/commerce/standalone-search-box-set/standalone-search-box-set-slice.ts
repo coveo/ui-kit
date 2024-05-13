@@ -9,7 +9,7 @@ import {
   StandaloneSearchBoxEntry,
 } from './standalone-search-box-set-state';
 
-export const standaloneSearchBoxSetReducer = createReducer(
+export const commerceStandaloneSearchBoxSetReducer = createReducer(
   getCommerceStandaloneSearchBoxSetInitialState(),
   (builder) =>
     builder
@@ -33,9 +33,18 @@ export const standaloneSearchBoxSetReducer = createReducer(
           return;
         }
       })
-      .addCase(fetchRedirectUrl, (state, action) => {
-        const {redirectionUrl} = action.payload;
-        const searchBox = state[action.payload.id];
+      .addCase(fetchRedirectUrl.pending, (state, action) => {
+        const searchBox = state[action.meta.arg.id];
+
+        if (!searchBox) {
+          return;
+        }
+
+        searchBox.isLoading = true;
+      })
+      .addCase(fetchRedirectUrl.fulfilled, (state, action) => {
+        const redirectionUrl = action.payload;
+        const searchBox = state[action.meta.arg.id];
 
         if (!searchBox) {
           return;
@@ -44,6 +53,18 @@ export const standaloneSearchBoxSetReducer = createReducer(
         searchBox.redirectTo = redirectionUrl
           ? redirectionUrl
           : searchBox.defaultRedirectionUrl;
+
+        searchBox.isLoading = false;
+      })
+
+      .addCase(fetchRedirectUrl.rejected, (state, action) => {
+        const searchBox = state[action.meta.arg.id];
+
+        if (!searchBox) {
+          return;
+        }
+
+        searchBox.isLoading = false;
       })
 );
 
@@ -53,5 +74,6 @@ function buildStandaloneSearchBoxEntry(
   return {
     defaultRedirectionUrl,
     redirectTo: '',
+    isLoading: false,
   };
 }
