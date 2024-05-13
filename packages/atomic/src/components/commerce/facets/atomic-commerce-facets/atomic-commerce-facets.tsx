@@ -4,11 +4,10 @@ import {
   CategoryFacet,
   DateFacet,
   NumericFacet,
-  buildProductListingFacetGenerator,
-  buildSearchFacetGenerator,
-  ProductListingFacetGenerator,
-  SearchFacetGenerator,
   FacetGeneratorState,
+  buildProductListing,
+  buildSearch,
+  FacetGenerator,
 } from '@coveo/headless/commerce';
 import {Component, h, Element, Host, State, Prop} from '@stencil/core';
 import {
@@ -33,7 +32,7 @@ import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atom
 })
 export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
   @InitializeBindings() public bindings!: Bindings;
-  public facetGenerator!: ProductListingFacetGenerator | SearchFacetGenerator;
+  public facetGenerator!: FacetGenerator;
   @Element() host!: HTMLElement;
 
   /**
@@ -53,11 +52,11 @@ export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
 
   public initialize() {
     this.validateProps();
-
-    this.facetGenerator =
+    const controller =
       this.bindings.interfaceElement.type === 'product-listing'
-        ? buildProductListingFacetGenerator(this.bindings.engine)
-        : buildSearchFacetGenerator(this.bindings.engine);
+        ? buildProductListing
+        : buildSearch;
+    this.facetGenerator = controller(this.bindings.engine).facetGenerator();
   }
 
   private validateProps() {
