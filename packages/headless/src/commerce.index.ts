@@ -131,13 +131,6 @@ export type {FacetGenerator} from './controllers/commerce/core/facets/generator/
 export type {FacetGeneratorState} from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator';
 
 export type {
-  SearchStatus,
-  SearchStatusState,
-} from './controllers/commerce/search-status/headless-search-status';
-export {buildSearchStatus} from './controllers/commerce/search-status/headless-search-status';
-export {buildProductListingStatus} from './controllers/commerce/product-listing-status/headless-product-listing-status';
-
-export type {
   RegularFacetSearch,
   RegularFacetSearchState,
 } from './controllers/commerce/core/facets/regular/headless-commerce-regular-facet-search';

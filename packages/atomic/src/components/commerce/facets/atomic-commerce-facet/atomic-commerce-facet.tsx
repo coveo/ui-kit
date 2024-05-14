@@ -1,10 +1,11 @@
 import {
-  buildSearchStatus,
   RegularFacet,
-  SearchStatus,
   SearchStatusState,
   RegularFacetState,
-  buildProductListingStatus,
+  buildListingSummary,
+  buildSearchSummary,
+  SearchSummary,
+  ListingSummary,
 } from '@coveo/headless/commerce';
 import {
   Component,
@@ -59,7 +60,7 @@ import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atom
 })
 export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
   @InitializeBindings() public bindings!: Bindings;
-  public searchStatus!: SearchStatus;
+  public summary!: SearchSummary | ListingSummary;
   @Element() private host!: HTMLElement;
 
   @BindStateToController('facet')
@@ -297,9 +298,9 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
 
   private initSearchStatus() {
     if (this.bindings.interfaceElement.type === 'product-listing') {
-      this.searchStatus = buildProductListingStatus(this.bindings.engine);
+      this.summary = buildListingSummary(this.bindings.engine);
     } else {
-      this.searchStatus = buildSearchStatus(this.bindings.engine);
+      this.summary = buildSearchSummary(this.bindings.engine);
     }
   }
 
