@@ -70,17 +70,19 @@ export interface Cart extends Controller {
    * Creates, updates, or deletes an item in the cart, and emits an `ec.cartAction` analytics event if the `quantity` of
    * the item in the cart changes.
    *
-   * If an item with the specified `productId` already exists in the cart:
-   * - Setting `quantity` to `0` deletes the item from the cart; `name` and `price` have no effect.
-   * - Setting `quantity` to a positive number updates the item's `name`, `price`, and `quantity` to the
-   * specified values.
+   * If an item with the specified `productId`, `name` and `price` already exists in the cart:
+   * - Setting `quantity` to `0` deletes the item from the cart.
+   * - Setting `quantity` to a positive number updates the item.
    *
    * Otherwise:
-   * - Setting `quantity` to a positive number creates the item in the cart with the specified `productName`,
-   * `pricePerUnit`, and `quantity`.
+   * - Setting `quantity` to a positive number creates the item in the cart with the specified `name`,
+   * `price`, and `quantity`.
    *
    * If the specified `quantity` is equivalent to the current quantity of the item in the cart, no analytics event is
    * emitted. Otherwise, the method emits an `ec.cartAction` event with the appropriate action (`add` or `remove`).
+   *
+   * Note: Updating the `name` or `price` will create a new item in the cart, leaving the previous item with the same
+   * `productId`, `name` and `price` unchanged. If you wish to change these items, delete and recreate the item.
    *
    * @param item - The cart item to create, update, or delete.
    */
