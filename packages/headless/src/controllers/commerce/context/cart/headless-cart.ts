@@ -40,12 +40,6 @@ export interface CartItem {
   productId: string;
 
   /**
-   * The stock keeping unit for the item being added to cart.
-   * Depending on how your catalog is structured, this may be the same value as the productId.
-   */
-  sku: string;
-
-  /**
    * The human-readable name of the product.
    */
   name: string;
@@ -90,7 +84,7 @@ export interface Cart extends Controller {
    *
    * @param item - The cart item to create, update, or delete.
    */
-  updateItem(item: CartItem): void;
+  updateItem(item: CartItem, update: CartItem): void;
 
   /**
    * Sets the quantity of each item in the cart to 0, effectively emptying the cart.
@@ -194,7 +188,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     currentItem: CartItem,
     prevItem: CartItemWithMetadata | undefined
   ): Ec.CartAction {
-    const {quantity: currentQuantity, sku, ...product} = currentItem;
+    const {quantity: currentQuantity, ...product} = currentItem;
     const action = getCartAction(currentItem, prevItem);
     const quantity = !prevItem
       ? currentQuantity
@@ -214,7 +208,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
 
     empty: function () {
       for (const item of itemsSelector(getState())) {
-        this.updateItem({...item, quantity: 0});
+        this.updateItem(item, {...item, quantity: 0});
       }
     },
 
@@ -222,8 +216,8 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
       dispatch(purchase(transaction));
     },
 
-    updateItem(item: CartItem) {
-      const prevItem = itemSelector(getState(), item.sku);
+    updateItem(item: CartItem, update: CartItem) {
+      const prevItem = itemSelector(getState(), item);
       const doesNotNeedUpdate = !prevItem && item.quantity <= 0;
 
       if (doesNotNeedUpdate || isEqual(item, prevItem)) {
@@ -237,7 +231,12 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
         );
       }
 
-      dispatch(updateItem(item));
+      dispatch(
+        updateItem({
+          item,
+          update,
+        })
+      );
     },
 
     get state() {
@@ -250,6 +249,12 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
       };
     },
   };
+}
+
+export type CartKey = string;
+
+export function createCartKey(item: CartItem): CartKey {
+  return `${item.productId},${item.name},${item.price}`;
 }
 
 function loadBaseCartReducers(

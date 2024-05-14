@@ -43,14 +43,12 @@ describe('headless commerce cart', () => {
       items: [
         {
           productId: 'product-id',
-          sku: 'product-id-1',
           quantity: 2,
           name: 'product-name-1',
           price: 100,
         },
         {
           productId: 'product-id',
-          sku: 'product-id-2',
           quantity: 4,
           name: 'product-name-2',
           price: 25,
@@ -102,7 +100,7 @@ describe('headless commerce cart', () => {
 
     const item = initialState.items![0];
 
-    expect(updateItemSpy).toHaveBeenCalledWith({
+    expect(updateItemSpy).toHaveBeenCalledWith(item, {
       ...item,
       quantity: 0,
     });
@@ -134,11 +132,9 @@ describe('headless commerce cart', () => {
   describe('#updateItem', () => {
     const productWithoutQuantity = {
       productId: 'product-id',
-      sku: 'product-id-1',
       name: 'product-name-1',
       price: 100,
     };
-    const {sku, ...productWithoutQuantityAndSku} = productWithoutQuantity;
 
     const productWithQuantity = (quantity: number) => ({
       ...productWithoutQuantity,
@@ -162,7 +158,7 @@ describe('headless commerce cart', () => {
       quantity: number = 1
     ) => ({
       action,
-      product: productWithoutQuantityAndSku,
+      product: productWithoutQuantity,
       quantity,
       currency: 'USD',
     });
@@ -182,7 +178,7 @@ describe('headless commerce cart', () => {
       const mockedUpdateItem = jest.mocked(updateItem);
       jest.mocked(itemSelector).mockReturnValue(productWithQuantity(3));
 
-      cart.updateItem(productWithQuantity(3));
+      cart.updateItem(productWithQuantity(3), productWithQuantity(3));
 
       expect(engine.relay.emit).toHaveBeenCalledTimes(0);
       expect(mockedUpdateItem).toHaveBeenCalledTimes(0);
@@ -194,7 +190,7 @@ describe('headless commerce cart', () => {
         .mocked(itemSelector)
         .mockReturnValue(undefined as unknown as CartItemWithMetadata);
 
-      cart.updateItem(productWithQuantity(0));
+      cart.updateItem(productWithQuantity(0), productWithQuantity(0));
 
       expect(engine.relay.emit).toHaveBeenCalledTimes(0);
       expect(mockedUpdateItem).toHaveBeenCalledTimes(0);
@@ -204,7 +200,7 @@ describe('headless commerce cart', () => {
       const mockedUpdateItem = jest.mocked(updateItem);
       jest.mocked(itemSelector).mockReturnValue(productWithQuantity(1));
 
-      cart.updateItem(productWithQuantity(3));
+      cart.updateItem(productWithQuantity(3), productWithQuantity(3));
 
       expect(mockedUpdateItem).toHaveBeenCalledTimes(1);
     });
@@ -215,7 +211,7 @@ describe('headless commerce cart', () => {
         .mocked(itemSelector)
         .mockReturnValue(undefined as unknown as CartItemWithMetadata);
 
-      cart.updateItem(productWithQuantity(3));
+      cart.updateItem(productWithQuantity(3), productWithQuantity(3));
 
       expect(mockedUpdateItem).toHaveBeenCalledTimes(1);
     });
@@ -226,7 +222,7 @@ describe('headless commerce cart', () => {
         .mocked(itemSelector)
         .mockReturnValue({...productWithQuantity(3), name: 'bap'});
 
-      cart.updateItem(productWithQuantity(3));
+      cart.updateItem(productWithQuantity(3), productWithQuantity(3));
 
       expect(mockedUpdateItem).toHaveBeenCalledTimes(1);
       expect(engine.relay.emit).toHaveBeenCalledTimes(0);
@@ -237,7 +233,7 @@ describe('headless commerce cart', () => {
         .mocked(itemSelector)
         .mockReturnValue(undefined as unknown as CartItemWithMetadata);
 
-      cart.updateItem(productWithQuantity(3));
+      cart.updateItem(productWithQuantity(3), productWithQuantity(3));
 
       expectCartAction('add', 3);
     });
@@ -245,7 +241,7 @@ describe('headless commerce cart', () => {
     it('emits #ec.cartAction with "add" action and correct payload if item exists in cart and new quantity > current', () => {
       jest.mocked(itemSelector).mockReturnValue(productWithQuantity(1));
 
-      cart.updateItem(productWithQuantity(5));
+      cart.updateItem(productWithQuantity(5), productWithQuantity(5));
 
       expectCartAction('add', 4);
     });
@@ -253,7 +249,7 @@ describe('headless commerce cart', () => {
     it('emits #ec.cartAction with "remove" action and correct payload if item exists in cart and new quantity < current', () => {
       jest.mocked(itemSelector).mockReturnValue(productWithQuantity(3));
 
-      cart.updateItem(productWithQuantity(1));
+      cart.updateItem(productWithQuantity(1), productWithQuantity(1));
 
       expectCartAction('remove', 2);
     });

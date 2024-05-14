@@ -1,4 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
+import {createCartKey} from '../../../../controllers/commerce/context/cart/headless-cart';
 import {purchase, setItems, updateItem} from './cart-actions';
 import {
   CartItemWithMetadata,
@@ -13,29 +14,32 @@ export const cartReducer = createReducer(
     builder
       .addCase(setItems, (state, {payload}) => {
         const {cart, cartItems} = payload.reduce((acc, item) => {
+          const key = createCartKey(item);
           return {
-            cartItems: [...acc.cartItems, item.sku],
+            cartItems: [...acc.cartItems, key],
             cart: {
               ...acc.cart,
-              [item.sku]: item,
+              [key]: item,
             },
-          } as CartState;
+          };
         }, getCartInitialState());
 
         setItemsInState(state, cartItems, cart);
       })
       .addCase(updateItem, (state, {payload}) => {
-        if (!(payload.sku in state.cart)) {
-          createItemInCart(payload, state);
+        const updateKey = createCartKey(payload.update);
+        if (!(updateKey in state.cart)) {
+          deleteProductFromCart(payload.item, state);
+          createItemInCart(payload.update, state);
           return;
         }
 
-        if (payload.quantity <= 0) {
-          deleteProductFromCart(payload.sku, state);
+        if (payload.update.quantity <= 0) {
+          deleteProductFromCart(payload.item, state);
           return;
         }
 
-        state.cart[payload.sku] = payload;
+        state.cart[updateKey] = payload.update;
         return;
       })
       .addCase(purchase.fulfilled, (state) => {
@@ -59,11 +63,13 @@ function createItemInCart(item: CartItemWithMetadata, state: CartState) {
     return;
   }
 
-  state.cartItems = [...state.cartItems, item.sku];
-  state.cart[item.sku] = item;
+  const key = createCartKey(item);
+  state.cartItems = [...state.cartItems, key];
+  state.cart[key] = item;
 }
 
-function deleteProductFromCart(sku: string, state: CartState) {
-  state.cartItems = state.cartItems.filter((itemId) => itemId !== sku);
-  delete state.cart[sku];
+function deleteProductFromCart(item: CartItemWithMetadata, state: CartState) {
+  const key = createCartKey(item);
+  state.cartItems = state.cartItems.filter((cartKey) => cartKey !== key);
+  delete state.cart[key];
 }

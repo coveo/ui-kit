@@ -58,10 +58,10 @@ export const buildBaseCommerceAPIRequest = async (
     context: {
       user,
       view,
-      cart: state.cart.cartItems.map((id) => {
-        const {sku, quantity} = state.cart.cart[id];
+      cart: state.cart.cartItems.map((key) => {
+        const {productId, quantity} = state.cart.cart[key];
         return {
-          sku,
+          productId,
           quantity,
         };
       }),

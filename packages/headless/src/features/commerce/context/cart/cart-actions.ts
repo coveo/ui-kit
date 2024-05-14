@@ -1,6 +1,5 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {AsyncThunkCommerceOptions} from '../../../../api/commerce/commerce-api-client';
-import {CartItemParam} from '../../../../api/commerce/commerce-api-params';
 import {CommerceEngineState} from '../../../../app/commerce-engine/commerce-engine';
 import {validatePayload} from '../../../../utils/validate-payload';
 import {Transaction, getECPurchasePayload} from './cart-selector';
@@ -9,6 +8,11 @@ import {
   setItemsPayloadDefinition,
   updateItemPayloadDefinition,
 } from './cart-validation';
+
+export interface updateItemPayload {
+  item: CartItemWithMetadata;
+  update: CartItemWithMetadata;
+}
 
 export const purchase = createAsyncThunk<
   void,
@@ -27,11 +31,11 @@ export const purchase = createAsyncThunk<
 export const setItems = createAction(
   'commerce/cart/setItems',
   (payload: CartItemWithMetadata[]) =>
-    validatePayload<CartItemParam[]>(payload, setItemsPayloadDefinition)
+    validatePayload<CartItemWithMetadata[]>(payload, setItemsPayloadDefinition)
 );
 
 export const updateItem = createAction(
   'commerce/cart/updateItem',
-  (payload: CartItemWithMetadata) =>
+  (payload: updateItemPayload) =>
     validatePayload(payload, updateItemPayloadDefinition)
 );
