@@ -28,11 +28,10 @@ export function getProductsFromCartState(state: CartState): CartItemParam[] {
       if (!(productId in acc)) {
         acc[productId] = {
           productId,
-          quantity,
+          0
         };
-      } else {
-        acc[productId].quantity += quantity;
       }
+      acc[productId].quantity += quantity;
 
       return acc;
     },
