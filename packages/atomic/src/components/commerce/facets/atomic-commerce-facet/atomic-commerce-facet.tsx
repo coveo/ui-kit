@@ -4,6 +4,7 @@ import {
   SearchStatus,
   SearchStatusState,
   RegularFacetState,
+  buildProductListingStatus,
 } from '@coveo/headless/commerce';
 import {
   Component,
@@ -81,7 +82,7 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
   protected facetSearchAriaMessage!: string;
 
   public initialize() {
-    this.searchStatus = buildSearchStatus(this.bindings.engine);
+    this.initSearchStatus();
     this.initAriaLive();
     this.initPopover();
     this.registerFacet();
@@ -292,6 +293,14 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
       hasValues: () => !!this.facet.state.values.length,
       numberOfActiveValues: () => this.activeValues.length,
     });
+  }
+
+  private initSearchStatus() {
+    if (this.bindings.interfaceElement.type === 'product-listing') {
+      this.searchStatus = buildProductListingStatus(this.bindings.engine);
+    } else {
+      this.searchStatus = buildSearchStatus(this.bindings.engine);
+    }
   }
 
   private initAriaLive() {

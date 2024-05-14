@@ -1,8 +1,10 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../../app/state-key';
-import {firstSearchExecutedSelector} from '../../../../features/commerce/product-listing/product-listing-selectors';
 import {commerceSearchReducer as commerceSearch} from '../../../../features/commerce/search/search-slice';
-import {CommerceSearchSection} from '../../../../state/state-sections';
+import {
+  CommerceSearchSection,
+  ProductListingV2Section,
+} from '../../../../state/state-sections';
 import {loadReducerError} from '../../../../utils/errors';
 import {buildController} from '../../../controller/headless-controller';
 import {
@@ -12,6 +14,12 @@ import {
 
 export type {SearchStatus, SearchStatusState};
 
+export interface CoreStatusProps {
+  firstSearchExecutedSelector: (
+    state: CommerceEngine[typeof stateKey]
+  ) => boolean;
+}
+
 /**
  * Creates a `SearchStatus` controller instance.
  *
@@ -20,11 +28,15 @@ export type {SearchStatus, SearchStatusState};
  *
  * @internal
  * */
-export function buildCoreStatus(engine: CommerceEngine): SearchStatus {
+export function buildCoreStatus(
+  engine: CommerceEngine,
+  props: CoreStatusProps
+): SearchStatus {
   if (!loadSearchStateReducers(engine)) {
     throw loadReducerError;
   }
 
+  const {firstSearchExecutedSelector} = props;
   const controller = buildController(engine);
   const getState = () => engine[stateKey];
 
@@ -46,7 +58,7 @@ export function buildCoreStatus(engine: CommerceEngine): SearchStatus {
 
 function loadSearchStateReducers(
   engine: CommerceEngine
-): engine is CommerceEngine<CommerceSearchSection> {
+): engine is CommerceEngine<CommerceSearchSection | ProductListingV2Section> {
   engine.addReducers({commerceSearch});
   return true;
 }

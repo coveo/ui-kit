@@ -1,4 +1,5 @@
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
+import {firstSearchExecutedSelector} from '../../../features/commerce/search/search-selectors';
 import {
   SearchStatusState,
   SearchStatus,
@@ -15,5 +16,7 @@ export type {SearchStatusState, SearchStatus};
  * @internal
  * */
 export function buildSearchStatus(engine: CommerceEngine): SearchStatus {
-  return buildCoreStatus(engine);
+  return buildCoreStatus(engine, {
+    firstSearchExecutedSelector,
+  });
 }

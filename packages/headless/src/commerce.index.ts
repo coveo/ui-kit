@@ -135,6 +135,7 @@ export type {
   SearchStatusState,
 } from './controllers/commerce/search-status/headless-search-status';
 export {buildSearchStatus} from './controllers/commerce/search-status/headless-search-status';
+export {buildProductListingStatus} from './controllers/commerce/product-listing-status/headless-product-listing-status';
 
 export type {
   RegularFacetSearch,

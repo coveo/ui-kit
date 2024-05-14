@@ -6,11 +6,16 @@ import {
   buildMockCommerceEngine,
 } from '../../../../test/mock-engine-v2';
 import {buildMockProduct} from '../../../../test/mock-product';
-import {buildCoreStatus} from './headless-core-status';
+import {CoreStatusProps, buildCoreStatus} from './headless-core-status';
 
 describe('CommerceCoreStatus', () => {
   let engine: MockedCommerceEngine;
   let state: CommerceAppState;
+  const coreStatusProps: CoreStatusProps = {
+    firstSearchExecutedSelector: jest.fn(),
+  };
+
+  const buildStatus = () => buildCoreStatus(engine, coreStatusProps);
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -20,39 +25,39 @@ describe('CommerceCoreStatus', () => {
   });
 
   it('it adds the correct reducers to engine', () => {
-    buildCoreStatus(engine);
+    buildStatus();
     expect(engine.addReducers).toHaveBeenCalledWith({commerceSearch});
   });
 
   it('returns right state "isLoading"', () => {
-    expect(buildCoreStatus(engine).state.isLoading).toBe(false);
+    expect(buildStatus().state.isLoading).toBe(false);
 
     state.commerceSearch.isLoading = true;
-    expect(buildCoreStatus(engine).state.isLoading).toBe(true);
+    expect(buildStatus().state.isLoading).toBe(true);
   });
 
   it('returns right state "hasResults"', () => {
-    expect(buildCoreStatus(engine).state.hasResults).toBe(false);
+    expect(buildStatus().state.hasResults).toBe(false);
 
     state.commerceSearch.products = [buildMockProduct()];
-    expect(buildCoreStatus(engine).state.hasResults).toBe(true);
+    expect(buildStatus().state.hasResults).toBe(true);
   });
 
   it('returns right state "firstSearchExecuted"', () => {
-    expect(buildCoreStatus(engine).state.firstSearchExecuted).toBe(false);
+    expect(buildStatus().state.firstSearchExecuted).toBe(false);
 
     state.commerceSearch.responseId = '1234567';
-    expect(buildCoreStatus(engine).state.firstSearchExecuted).toBe(true);
+    expect(buildStatus().state.firstSearchExecuted).toBe(true);
   });
 
   it('returns right state "hasError"', () => {
-    expect(buildCoreStatus(engine).state.hasError).toBe(false);
+    expect(buildStatus().state.hasError).toBe(false);
 
     state.commerceSearch.error = {
       message: 'unknown',
       statusCode: 0,
       type: 'unknown',
     };
-    expect(buildCoreStatus(engine).state.hasError).toBe(true);
+    expect(buildStatus().state.hasError).toBe(true);
   });
 });
