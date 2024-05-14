@@ -39,11 +39,11 @@ describe('headless-cart-selectors', () => {
     price: 100,
     quantity: 3,
   };
+  const item3Key = createCartKey(item3);
 
   beforeEach(() => {
     jest.resetAllMocks();
 
-    const item3Key = createCartKey(item3);
     cartOptions = {
       cart: {
         [item1Key]: item1,
