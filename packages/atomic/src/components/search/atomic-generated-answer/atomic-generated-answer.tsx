@@ -104,6 +104,11 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   @Prop() answerStyle: GeneratedAnswerStyle = 'default';
 
   /**
+   * Whether to render a toggle button that lets the user hide or show the answer.
+   */
+  @Prop() withToggle?: boolean;
+
+  /**
    * Whether to allow the answer to be collapsed when the text is taller than 250px.
    */
   @Prop() collapsible?: boolean;
@@ -118,6 +123,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   public initialize() {
     this.generatedAnswerCommon = new GeneratedAnswerCommon({
       host: this.host,
+      withToggle: this.withToggle,
       collapsible: this.collapsible,
       getGeneratedAnswer: () => this.generatedAnswer,
       getGeneratedAnswerState: () => this.generatedAnswerState,
