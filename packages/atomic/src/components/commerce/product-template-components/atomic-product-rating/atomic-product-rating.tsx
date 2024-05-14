@@ -30,9 +30,14 @@ export class AtomicProductRating
   @Element() host!: HTMLElement;
 
   /**
-   * The field whose values you want to display as a rating.
+   * The numerical field whose values you want to display as a rating.
    */
   @Prop({reflect: true}) public field: string = 'ec_rating';
+
+  /**
+   * The field whose value you want to display next to the rating. This field can be used to display the number of reviews or the numerical value of the rating, for example.
+   */
+  @Prop({reflect: true}) public ratingDetailsField?: string;
 
   /**
    * The maximum value of the field. This value is also used as the number of icons to be displayed.
@@ -57,6 +62,8 @@ export class AtomicProductRating
   public error!: Error;
 
   @State() numberOfStars: number | null = null;
+  @State() ratingDetails: string | number | null = null;
+
   private updateNumberOfStars() {
     const value = ProductTemplatesHelpers.getProductProperty(
       this.product,
@@ -77,8 +84,24 @@ export class AtomicProductRating
     this.numberOfStars = valueAsNumber;
   }
 
+  private updateRatingDetailsValue() {
+    if (this.ratingDetailsField === undefined) {
+      this.ratingDetails = null;
+      return;
+    }
+    const value = ProductTemplatesHelpers.getProductProperty(
+      this.product,
+      this.ratingDetailsField
+    );
+    if (value === null) {
+      this.ratingDetails = null;
+      return;
+    }
+  }
+
   componentWillRender() {
     this.updateNumberOfStars();
+    this.updateRatingDetailsValue();
   }
 
   render() {
@@ -95,6 +118,9 @@ export class AtomicProductRating
           numberOfActiveIcons={this.numberOfStars}
           iconSize={0.875}
         ></Rating>
+        {this.ratingDetails && (
+          <span class="rating-details">{this.ratingDetails}</span>
+        )}
       </div>
     );
   }
