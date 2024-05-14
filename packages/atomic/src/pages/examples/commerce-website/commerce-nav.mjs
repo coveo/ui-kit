@@ -56,3 +56,45 @@ nav.innerHTML = `
         `;
 
 document.body.querySelector('header').insertAdjacentElement('beforeend', nav);
+
+const isOnSearchPage = () => {
+  return window.location.pathname === '/examples/commerce-website/search.html';
+};
+
+if (!isOnSearchPage()) {
+  const standaloneSearchBoxHTML = `
+    <atomic-commerce-search-box redirection-url="./search.html" textarea  style="max-width: 1000px; margin: auto">
+      <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
+      <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
+      <atomic-commerce-search-box-instant-products image-size="small"></atomic-commerce-search-box-instant-products>
+    </atomic-commerce-search-box>
+  `;
+
+  const standaloneSearchBox = document.createElement('search');
+
+  const atomicCommerceInterface = document.body.querySelector(
+    'atomic-commerce-interface'
+  );
+
+  if (atomicCommerceInterface) {
+    standaloneSearchBox.innerHTML = standaloneSearchBoxHTML;
+    atomicCommerceInterface.insertAdjacentElement(
+      'afterbegin',
+      standaloneSearchBox
+    );
+  } else {
+    const script = document.createElement('script');
+    script.type = 'module';
+    script.src = './init-standalone-search-box.js';
+    document.head.insertAdjacentElement('beforeend', script);
+
+    standaloneSearchBox.innerHTML = `
+      <atomic-commerce-interface id="standaloneSearchBox" type="search">
+        ${standaloneSearchBoxHTML}
+      </atomic-commerce-interface>`;
+
+    document.body
+      .querySelector('main')
+      .insertAdjacentElement('afterbegin', standaloneSearchBox);
+  }
+}
