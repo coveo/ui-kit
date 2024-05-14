@@ -8,10 +8,10 @@ inputs:
 runs:
   using: composite
   steps:
-    # TODO KIT-3104
+    # TODO KIT-3104 again
     - run: exit 0
       shell: bash
-    # - uses: cypress-io/github-action@v6
+    # - uses: cypress-io/github-action@v5
     #   name: Run Cypress
     #   with:
     #     browser: chrome
