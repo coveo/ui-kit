@@ -30,6 +30,13 @@ export default class ExampleQuanticGeneratedAnswer extends LightningElement {
       defaultValue: false,
     },
     {
+      attribute: 'withToggle',
+      label: 'With Toggle',
+      description:
+        'Indicates whether the component should render the toggle button.',
+      defaultValue: false,
+    },
+    {
       attribute: 'collapsible',
       label: 'Collapsible',
       description: 'Indicates whether the answer should be collapsible.',

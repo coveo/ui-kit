@@ -91,6 +91,13 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * @default {false}
    */
   @api collapsible = false;
+  /**
+   * Whether the generated answer can be toggled on or off.
+   * @api
+   * @type {boolean}
+   * @default {false}
+   */
+  @api withToggle = false;
 
   labels = {
     generatedAnswerForYou,
@@ -144,10 +151,12 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       'quantic__generatedanswercopy',
       this.handleGeneratedAnswerCopyToClipboard
     );
-    this.template.addEventListener(
-      'quantic__generatedanswertoggle',
-      this.handleGeneratedAnswerToggle
-    );
+    if (this.withToggle) {
+      this.template.addEventListener(
+        'quantic__generatedanswertoggle',
+        this.handleGeneratedAnswerToggle
+      );
+    }
   }
 
   renderedCallback() {
@@ -181,12 +190,17 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   };
 
   buildHeadlessGeneratedAnswerController(engine) {
-    const storedGeneratedAnswerData = this.readStoredData();
-    const storedGeneratedAnswerVisibility =
-      storedGeneratedAnswerData?.isVisible;
+    let initialVisibility = true;
+    if (this.withToggle) {
+      const storedGeneratedAnswerData = this.readStoredData();
+      if (storedGeneratedAnswerData?.isVisible === false) {
+        initialVisibility = false;
+      }
+    }
+
     return this.headless.buildGeneratedAnswer(engine, {
       initialState: {
-        isVisible: storedGeneratedAnswerVisibility === false ? false : true,
+        isVisible: initialVisibility,
         responseFormat: {answerStyle: this.answerStyle},
       },
       fieldsToIncludeInCitations: this.citationFields,
@@ -322,6 +336,9 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   handleGeneratedAnswerToggle = (event) => {
     event.stopPropagation();
+    if (!this.withToggle) {
+      return;
+    }
     if (this.isVisible) {
       this.generatedAnswer.hide();
       this.writeStoredDate({isVisible: false});
