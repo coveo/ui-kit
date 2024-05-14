@@ -18,7 +18,7 @@ import {
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
- * The `atomic-commerce-facets` component automatically renders commerce facets based on the commerce API response
+ * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
  * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
  *
  * @internal
