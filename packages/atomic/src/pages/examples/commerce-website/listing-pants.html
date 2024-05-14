@@ -13,7 +13,7 @@
 
       (async () => {
         await customElements.whenDefined('atomic-commerce-interface');
-        const commerceInterface = document.getElementById('plp');
+        const commerceInterface = document.querySelector('atomic-commerce-interface');
 
         await commerceInterface.initialize(commerceEngineConfig);
       })();
@@ -24,7 +24,8 @@
     <h1>Product listing page</h1>
     <main>
       <section>
-        <atomic-commerce-interface id="plp" type="product-listing">
+        <atomic-commerce-interface type="product-listing">
+          <atomic-commerce-query-error></atomic-commerce-query-error>
           <atomic-commerce-query-summary></atomic-commerce-query-summary>
           <atomic-commerce-product-list display="grid" density="compact" image-size="small">
           </atomic-commerce-product-list>
