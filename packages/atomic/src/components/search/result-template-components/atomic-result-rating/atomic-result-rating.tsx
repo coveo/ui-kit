@@ -2,7 +2,7 @@ import {Result, ResultTemplatesHelpers} from '@coveo/headless';
 import {Component, Element, Prop, h, State} from '@stencil/core';
 import Star from '../../../../images/star.svg';
 import {InitializeBindings} from '../../../../utils/initialization-utils';
-import {Rating} from '../../atomic-rating/atomic-rating';
+import {Rating} from '../../../common/atomic-rating/atomic-rating';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {ResultContext} from '../result-template-decorators';
 
