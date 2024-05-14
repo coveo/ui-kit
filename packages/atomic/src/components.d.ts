@@ -1648,7 +1648,7 @@ export namespace Components {
      */
     interface AtomicProductRating {
         /**
-          * The field whose values you want to display as a rating.
+          * The numerical field whose values you want to display as a rating.
          */
         "field": string;
         /**
@@ -1659,6 +1659,10 @@ export namespace Components {
           * The maximum value of the field. This value is also used as the number of icons to be displayed.
          */
         "maxValueInIndex": number;
+        /**
+          * The field whose value you want to display next to the rating. This field can be used to display the number of reviews or the numerical value of the rating, for example.
+         */
+        "ratingDetailsField"?: string;
     }
     interface AtomicProductTemplate {
         /**
@@ -6476,7 +6480,7 @@ declare namespace LocalJSX {
      */
     interface AtomicProductRating {
         /**
-          * The field whose values you want to display as a rating.
+          * The numerical field whose values you want to display as a rating.
          */
         "field"?: string;
         /**
@@ -6487,6 +6491,10 @@ declare namespace LocalJSX {
           * The maximum value of the field. This value is also used as the number of icons to be displayed.
          */
         "maxValueInIndex"?: number;
+        /**
+          * The field whose value you want to display next to the rating. This field can be used to display the number of reviews or the numerical value of the rating, for example.
+         */
+        "ratingDetailsField"?: string;
     }
     interface AtomicProductTemplate {
         /**
