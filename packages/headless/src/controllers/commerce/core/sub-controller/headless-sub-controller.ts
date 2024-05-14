@@ -5,6 +5,10 @@ import {
 import {stateKey} from '../../../../app/state-key';
 import {AnyFacetResponse} from '../../../../features/commerce/facets/facet-set/interfaces/response';
 import {
+  buildDidYouMean,
+  DidYouMean,
+} from '../../search/did-you-mean/headless-did-you-mean';
+import {
   BreadcrumbManager,
   buildCoreBreadcrumbManager,
 } from '../breadcrumb-manager/headless-core-breadcrumb-manager';
@@ -45,6 +49,10 @@ export interface SearchAndListingSubControllers
   breadcrumbManager: () => BreadcrumbManager;
 }
 
+export interface SearchSubControllers extends SearchAndListingSubControllers {
+  didYouMean: () => DidYouMean;
+}
+
 interface BaseSubControllerProps {
   responseIdSelector: (state: CommerceEngineState) => string;
   fetchProductsActionCreator: FetchProductsActionCreator;
@@ -63,7 +71,19 @@ export interface SearchAndListingSubControllerProps
   ) => boolean;
 }
 
-export function buildSolutionTypeSubControllers(
+export function buildSearchSubControllers(
+  engine: CommerceEngine,
+  subControllerProps: SearchAndListingSubControllerProps
+): SearchSubControllers {
+  return {
+    ...buildSearchAndListingsSubControllers(engine, subControllerProps),
+    didYouMean() {
+      return buildDidYouMean(engine);
+    },
+  };
+}
+
+export function buildSearchAndListingsSubControllers(
   engine: CommerceEngine,
   subControllerProps: SearchAndListingSubControllerProps
 ): SearchAndListingSubControllers {
@@ -73,7 +93,7 @@ export function buildSolutionTypeSubControllers(
     isFacetLoadingResponseSelector,
   } = subControllerProps;
   return {
-    ...buildBaseSolutionTypeControllers(engine, subControllerProps),
+    ...buildBaseSubControllers(engine, subControllerProps),
     sort(props?: SortProps) {
       return buildCoreSort(engine, {
         ...props,
@@ -106,7 +126,7 @@ export function buildSolutionTypeSubControllers(
   };
 }
 
-export function buildBaseSolutionTypeControllers(
+export function buildBaseSubControllers(
   engine: CommerceEngine,
   subControllerProps: BaseSubControllerProps
 ): BaseSolutionTypeSubControllers {

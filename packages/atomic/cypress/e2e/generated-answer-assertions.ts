@@ -58,6 +58,14 @@ export function assertToggleValue(checked: boolean) {
   });
 }
 
+export function assertToggleVisibility(isVisible: boolean) {
+  it(`${should(isVisible)} show the toggle button`, () => {
+    GeneratedAnswerSelectors.toggle().should(
+      isVisible ? 'be.visible' : 'not.exist'
+    );
+  });
+}
+
 export function assertLocalStorageData(data: {isVisible: boolean}) {
   it(`should have value in local storage: ${JSON.stringify(data)}`, () => {
     cy.window().then((win) => {
