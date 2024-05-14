@@ -5,39 +5,39 @@ exports[`Search Layout #buildSearchLayout when the atomic-search-layout componen
 "atomic-search-layout#abc { display: grid }
 
 @media only screen and (min-width: 1024px) {
-      atomic-search-layout#abc atomic-layout-section[section="search"] {
-        justify-self: start;
-        width: 80%;
+    atomic-search-layout#abc atomic-layout-section[section="search"] {
+      justify-self: start;
+      width: 80%;
+    }
+  }
+
+@media only screen and (min-width: 1024px) {
+      atomic-search-layout#abc {
+        grid-template-areas:
+        '. .                     atomic-section-search .'
+        '. atomic-section-main   atomic-section-main   .';
+        grid-template-columns:
+          1fr minmax(17rem, 22rem) minmax(50%, 70rem) 1fr;
+        column-gap: var(--atomic-layout-spacing-x);
+      }
+
+      atomic-search-interface:not(.atomic-search-interface-no-results, .atomic-search-interface-error) atomic-search-layout#abc {
+        grid-template-areas:
+          '. .                     atomic-section-search .'
+          '. atomic-section-facets atomic-section-main   .'
+          '. atomic-section-facets .                     .';
+      }
+
+      atomic-search-interface:not(.atomic-search-interface-no-results, .atomic-search-interface-error) atomic-search-layout#abc atomic-layout-section[section="facets"] {
+        display: block;
       }
     }
 
 @media only screen and (min-width: 1024px) {
-        atomic-search-layout#abc {
-          grid-template-areas:
-          '. .                     atomic-section-search .'
-          '. atomic-section-main   atomic-section-main   .';
-          grid-template-columns:
-            1fr minmax(17rem, 22rem) minmax(50%, 70rem) 1fr;
-          column-gap: var(--atomic-layout-spacing-x);
-        }
-  
-        atomic-search-interface:not(.atomic-search-interface-no-results, .atomic-search-interface-error) atomic-search-layout#abc {
-          grid-template-areas:
-            '. .                     atomic-section-search .'
-            '. atomic-section-facets atomic-section-main   .'
-            '. atomic-section-facets .                     .';
-        }
-  
-        atomic-search-interface:not(.atomic-search-interface-no-results, .atomic-search-interface-error) atomic-search-layout#abc atomic-layout-section[section="facets"] {
-          display: block;
-        }
+      atomic-search-layout#abc atomic-layout-section[section="horizontal-facets"] > atomic-popover:not(.atomic-hidden) {
+        display: block;
       }
-
-@media only screen and (min-width: 1024px) {
-        atomic-search-layout#abc atomic-layout-section[section="horizontal-facets"] > atomic-popover:not(.atomic-hidden) {
-          display: block;
-        }
-      }"
+    }"
 `;
 
 exports[`Search Layout #buildSearchLayout when the atomic-search-layout component contains a status section which contains a atomic-refine-toggle component
@@ -45,31 +45,31 @@ exports[`Search Layout #buildSearchLayout when the atomic-search-layout componen
 "atomic-search-layout#abc { display: grid }
 
 @media only screen and (min-width: 1024px) {
-      atomic-search-layout#abc atomic-layout-section[section="search"] {
-        justify-self: start;
-        width: 80%;
-      }
+    atomic-search-layout#abc atomic-layout-section[section="search"] {
+      justify-self: start;
+      width: 80%;
     }
+  }
 
 atomic-search-layout#abc atomic-layout-section[section="status"] atomic-sort-dropdown {
-        display: none;
-      }
-  
-      @media only screen and (min-width: 1024px) {
-       atomic-search-layout#abc atomic-layout-section[section="status"] atomic-sort-dropdown {
-         display: block;
-        }
-  
-        atomic-search-layout#abc atomic-layout-section[section="status"] atomic-refine-toggle {
-          display: none;
-         }
+      display: none;
+    }
+
+    @media only screen and (min-width: 1024px) {
+     atomic-search-layout#abc atomic-layout-section[section="status"] atomic-sort-dropdown {
+       display: block;
       }
 
+      atomic-search-layout#abc atomic-layout-section[section="status"] atomic-refine-toggle {
+        display: none;
+       }
+    }
+
 @media only screen and (min-width: 1024px) {
-        atomic-search-layout#abc atomic-layout-section[section="horizontal-facets"] > atomic-popover:not(.atomic-hidden) {
-          display: block;
-        }
-      }"
+      atomic-search-layout#abc atomic-layout-section[section="horizontal-facets"] > atomic-popover:not(.atomic-hidden) {
+        display: block;
+      }
+    }"
 `;
 
 exports[`Search Layout #buildSearchLayout when the atomic-search-layout component is empty
@@ -77,17 +77,17 @@ exports[`Search Layout #buildSearchLayout when the atomic-search-layout componen
 "atomic-search-layout#abc { display: grid }
 
 @media only screen and (min-width: 1024px) {
-      atomic-search-layout#abc atomic-layout-section[section="search"] {
-        justify-self: start;
-        width: 80%;
-      }
+    atomic-search-layout#abc atomic-layout-section[section="search"] {
+      justify-self: start;
+      width: 80%;
     }
+  }
 
 @media only screen and (min-width: 1024px) {
-        atomic-search-layout#abc atomic-layout-section[section="horizontal-facets"] > atomic-popover:not(.atomic-hidden) {
-          display: block;
-        }
-      }"
+      atomic-search-layout#abc atomic-layout-section[section="horizontal-facets"] > atomic-popover:not(.atomic-hidden) {
+        display: block;
+      }
+    }"
 `;
 
 exports[`Search Layout #buildSearchLayout when the atomic-search-layout has custom breakpoint & min-width, max-width values
@@ -95,37 +95,37 @@ exports[`Search Layout #buildSearchLayout when the atomic-search-layout has cust
 "atomic-search-layout#abc { display: grid }
 
 @media only screen and (min-width: 1024px) {
-      atomic-search-layout#abc atomic-layout-section[section="search"] {
-        justify-self: start;
-        width: 80%;
+    atomic-search-layout#abc atomic-layout-section[section="search"] {
+      justify-self: start;
+      width: 80%;
+    }
+  }
+
+@media only screen and (min-width: 1024px) {
+      atomic-search-layout#abc {
+        grid-template-areas:
+        '. .                     atomic-section-search .'
+        '. atomic-section-main   atomic-section-main   .';
+        grid-template-columns:
+          1fr minmax(250px, 300px) minmax(300px, 1200px) 1fr;
+        column-gap: var(--atomic-layout-spacing-x);
+      }
+
+      atomic-search-interface:not(.atomic-search-interface-no-results, .atomic-search-interface-error) atomic-search-layout#abc {
+        grid-template-areas:
+          '. .                     atomic-section-search .'
+          '. atomic-section-facets atomic-section-main   .'
+          '. atomic-section-facets .                     .';
+      }
+
+      atomic-search-interface:not(.atomic-search-interface-no-results, .atomic-search-interface-error) atomic-search-layout#abc atomic-layout-section[section="facets"] {
+        display: block;
       }
     }
 
 @media only screen and (min-width: 1024px) {
-        atomic-search-layout#abc {
-          grid-template-areas:
-          '. .                     atomic-section-search .'
-          '. atomic-section-main   atomic-section-main   .';
-          grid-template-columns:
-            1fr minmax(250px, 300px) minmax(300px, 1200px) 1fr;
-          column-gap: var(--atomic-layout-spacing-x);
-        }
-  
-        atomic-search-interface:not(.atomic-search-interface-no-results, .atomic-search-interface-error) atomic-search-layout#abc {
-          grid-template-areas:
-            '. .                     atomic-section-search .'
-            '. atomic-section-facets atomic-section-main   .'
-            '. atomic-section-facets .                     .';
-        }
-  
-        atomic-search-interface:not(.atomic-search-interface-no-results, .atomic-search-interface-error) atomic-search-layout#abc atomic-layout-section[section="facets"] {
-          display: block;
-        }
+      atomic-search-layout#abc atomic-layout-section[section="horizontal-facets"] > atomic-popover:not(.atomic-hidden) {
+        display: block;
       }
-
-@media only screen and (min-width: 1024px) {
-        atomic-search-layout#abc atomic-layout-section[section="horizontal-facets"] > atomic-popover:not(.atomic-hidden) {
-          display: block;
-        }
-      }"
+    }"
 `;

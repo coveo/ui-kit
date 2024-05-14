@@ -1,4 +1,7 @@
-import {findSection, sectionSelector} from './sections';
+import {
+  findSection,
+  sectionSelector,
+} from '../../common/atomic-layout-section/sections';
 
 export function makeDesktopQuery(mobileBreakpoint: string) {
   return `only screen and (min-width: ${mobileBreakpoint})`;
@@ -16,11 +19,11 @@ export function buildSearchLayoutCommon(
 
   const display = `${layoutSelector} { display: grid }`;
   const search = `${mediaQuerySelector} {
-      ${layoutSelector} ${sectionSelector('search')} {
-        justify-self: start;
-        width: 80%;
-      }
-    }`;
+    ${layoutSelector} ${sectionSelector('search')} {
+      justify-self: start;
+      width: 80%;
+    }
+  }`;
 
   const facets = () => {
     const facetsSection = findSection(element, 'facets');
@@ -35,26 +38,26 @@ export function buildSearchLayoutCommon(
     const mainMax = mainSection.maxWidth || '70rem';
 
     return `${mediaQuerySelector} {
-        ${layoutSelector} {
-          grid-template-areas:
+      ${layoutSelector} {
+        grid-template-areas:
+        '. .                     atomic-section-search .'
+        '. atomic-section-main   atomic-section-main   .';
+        grid-template-columns:
+          1fr minmax(${facetsMin}, ${facetsMax}) minmax(${mainMin}, ${mainMax}) 1fr;
+        column-gap: var(--atomic-layout-spacing-x);
+      }
+
+      ${cleanStatusSelector} ${layoutSelector} {
+        grid-template-areas:
           '. .                     atomic-section-search .'
-          '. atomic-section-main   atomic-section-main   .';
-          grid-template-columns:
-            1fr minmax(${facetsMin}, ${facetsMax}) minmax(${mainMin}, ${mainMax}) 1fr;
-          column-gap: var(--atomic-layout-spacing-x);
-        }
-  
-        ${cleanStatusSelector} ${layoutSelector} {
-          grid-template-areas:
-            '. .                     atomic-section-search .'
-            '. atomic-section-facets atomic-section-main   .'
-            '. atomic-section-facets .                     .';
-        }
-  
-        ${cleanStatusSelector} ${layoutSelector} ${sectionSelector('facets')} {
-          display: block;
-        }
-      }`;
+          '. atomic-section-facets atomic-section-main   .'
+          '. atomic-section-facets .                     .';
+      }
+
+      ${cleanStatusSelector} ${layoutSelector} ${sectionSelector('facets')} {
+        display: block;
+      }
+    }`;
   };
 
   const refine = () => {
@@ -70,28 +73,28 @@ export function buildSearchLayoutCommon(
 
     const statusSelector = `${layoutSelector} ${sectionSelector('status')}`;
     return `${statusSelector} atomic-sort-dropdown {
-        display: none;
+      display: none;
+    }
+
+    ${mediaQuerySelector} {
+     ${statusSelector} atomic-sort-dropdown {
+       display: block;
       }
-  
-      ${mediaQuerySelector} {
-       ${statusSelector} atomic-sort-dropdown {
-         display: block;
-        }
-  
-        ${statusSelector} atomic-refine-toggle {
-          display: none;
-         }
-      }`;
+
+      ${statusSelector} atomic-refine-toggle {
+        display: none;
+       }
+    }`;
   };
 
   const horizontalFacets = () => {
     return `${mediaQuerySelector} {
-        ${layoutSelector} ${sectionSelector(
-          'horizontal-facets'
-        )} > atomic-popover:not(.atomic-hidden) {
-          display: block;
-        }
-      }`;
+      ${layoutSelector} ${sectionSelector(
+        'horizontal-facets'
+      )} > atomic-popover:not(.atomic-hidden) {
+        display: block;
+      }
+    }`;
   };
 
   return [display, search, facets(), refine(), horizontalFacets()]
