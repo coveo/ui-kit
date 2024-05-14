@@ -811,6 +811,10 @@ export namespace Components {
           * Whether to allow the answer to be collapsed when the text is taller than 250px.
          */
         "collapsible"?: boolean;
+        /**
+          * Whether to render a toggle button that lets the user hide or show the answer.
+         */
+        "withToggle"?: boolean;
     }
     interface AtomicGeneratedAnswerFeedbackModal {
         /**
@@ -942,6 +946,10 @@ export namespace Components {
           * Whether to allow the answer to be collapsed when the text is taller than 250px.
          */
         "collapsible"?: boolean;
+        /**
+          * Whether to render a toggle button that lets the user hide or show the answer.
+         */
+        "withToggle"?: boolean;
     }
     interface AtomicInsightHistoryToggle {
         "clickCallback": () => void;
@@ -2466,7 +2474,7 @@ export namespace Components {
          */
         "field": string;
         /**
-          * If this is set to true, it will look for the corresponding highlight property and use it if available.
+          * When this is set to `true`, the component attempts to highlight text based on the highlighting properties provided by the search API response.
          */
         "shouldHighlight": boolean;
     }
@@ -5638,6 +5646,10 @@ declare namespace LocalJSX {
           * Whether to allow the answer to be collapsed when the text is taller than 250px.
          */
         "collapsible"?: boolean;
+        /**
+          * Whether to render a toggle button that lets the user hide or show the answer.
+         */
+        "withToggle"?: boolean;
     }
     interface AtomicGeneratedAnswerFeedbackModal {
         /**
@@ -5766,6 +5778,10 @@ declare namespace LocalJSX {
           * Whether to allow the answer to be collapsed when the text is taller than 250px.
          */
         "collapsible"?: boolean;
+        /**
+          * Whether to render a toggle button that lets the user hide or show the answer.
+         */
+        "withToggle"?: boolean;
     }
     interface AtomicInsightHistoryToggle {
         "clickCallback"?: () => void;
@@ -7214,7 +7230,7 @@ declare namespace LocalJSX {
          */
         "field": string;
         /**
-          * If this is set to true, it will look for the corresponding highlight property and use it if available.
+          * When this is set to `true`, the component attempts to highlight text based on the highlighting properties provided by the search API response.
          */
         "shouldHighlight"?: boolean;
     }
