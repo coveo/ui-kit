@@ -11,9 +11,12 @@ export interface CartItemWithMetadata extends CartItemParam {
   price: number;
 }
 
+export interface Cart
+  extends Record<string, Record<number, CartItemWithMetadata>> {}
+
 export interface CartState {
   cartItems: string[];
-  cart: Record<string, CartItemWithMetadata>;
+  cart: Cart;
 }
 
 export const getCartInitialState = (): CartState => ({
