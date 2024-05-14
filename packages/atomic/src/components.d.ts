@@ -2474,7 +2474,7 @@ export namespace Components {
          */
         "field": string;
         /**
-          * When this is set to `true`, the component attempts to highlight text based on the highlights properties provided by the search API response.
+          * When this is set to `true`, the component attempts to highlight text based on the highlighting properties provided by the search API response.
          */
         "shouldHighlight": boolean;
     }
@@ -7230,7 +7230,7 @@ declare namespace LocalJSX {
          */
         "field": string;
         /**
-          * When this is set to `true`, the component attempts to highlight text based on the highlights properties provided by the search API response.
+          * When this is set to `true`, the component attempts to highlight text based on the highlighting properties provided by the search API response.
          */
         "shouldHighlight"?: boolean;
     }
