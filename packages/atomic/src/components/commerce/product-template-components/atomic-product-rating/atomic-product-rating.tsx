@@ -92,11 +92,14 @@ export class AtomicProductRating
     const value = ProductTemplatesHelpers.getProductProperty(
       this.product,
       this.ratingDetailsField
-    );
+    ) as string;
+
     if (value === null) {
       this.ratingDetails = null;
       return;
     }
+
+    this.ratingDetails = value;
   }
 
   componentWillRender() {
@@ -110,7 +113,7 @@ export class AtomicProductRating
       return;
     }
     return (
-      <div>
+      <div class="flex items-center align-middle">
         <Rating
           i18n={this.bindings.i18n}
           icon={this.icon}
@@ -118,8 +121,11 @@ export class AtomicProductRating
           numberOfActiveIcons={this.numberOfStars}
           iconSize={0.875}
         ></Rating>
-        {this.ratingDetails && (
-          <span class="rating-details">{this.ratingDetails}</span>
+
+        {this.ratingDetails !== null && (
+          <span class="pl-1 text-neutral-dark rating-details">
+            ({this.ratingDetails})
+          </span>
         )}
       </div>
     );
