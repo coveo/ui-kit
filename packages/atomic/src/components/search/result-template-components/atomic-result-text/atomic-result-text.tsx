@@ -32,7 +32,7 @@ export class AtomicResultText implements InitializableComponent {
    */
   @Prop({reflect: true}) public field!: string;
   /**
-   * When this is set to `true`, the component attempts to highlight text based on the highlights properties provided by the search API response.
+   * When this is set to `true`, the component attempts to highlight text based on the highlighting properties provided by the search API response.
    */
   @Prop({reflect: true}) public shouldHighlight = true;
 
