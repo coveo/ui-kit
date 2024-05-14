@@ -78,15 +78,7 @@ export const buildQuerySuggestRequest = async (
     context: {
       user,
       view,
-      cart: state.cart.cartItems.map((key) =>
-        Object.entries(state.cart.cart[key]).reduce(
-          (acc, [_, item]) => ({
-            productId: item.productId,
-            quantity: acc.quantity + item.quantity,
-          }),
-          {productId: '', quantity: 0}
-        )
-      ),
+      cart: state.cart.cartItems.map((id) => state.cart.cart[id]),
     },
   };
 };

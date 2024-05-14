@@ -3,10 +3,8 @@ import {itemsSelector} from '../../../../features/commerce/context/cart/cart-sel
 import {CartState} from '../../../../features/commerce/context/cart/cart-state';
 import {CartItem, createCartKey} from './headless-cart';
 
-export function itemSelector(cartState: CartState, cartItem: CartItem) {
-  return Object.entries(cartState.cart[createCartKey(cartItem)])
-    .filter(([_, item]) => item.price === cartItem.price)
-    .map(([_, item]) => item)[0];
+export function itemSelector(cartState: CartState, item: CartItem) {
+  return cartState.cart[createCartKey(item)];
 }
 
 export const totalQuantitySelector = createSelector(itemsSelector, (items) =>

@@ -4,7 +4,6 @@ import {CommerceEngineState} from '../../../../app/commerce-engine/commerce-engi
 import {CartKey} from '../../../../controllers/commerce/context/cart/headless-cart';
 import {getCurrency} from '../context-selector';
 import {CartState} from './cart-state';
-import {CartItemWithMetadata} from './cart-state';
 
 /**
  * The purchase transaction.
@@ -33,13 +32,7 @@ export const getECPurchasePayload = (
 export const itemsSelector = createSelector(
   (cartState: CartState) => cartState.cart,
   (cartState: CartState) => cartState.cartItems,
-  (cart, cartItems) =>
-    cartItems.flatMap((key: CartKey) => {
-      return Object.entries(cart[key]).reduce((acc, [_, item]) => {
-        acc.push(item);
-        return acc;
-      }, [] as CartItemWithMetadata[]);
-    })
+  (cart, cartItems) => cartItems.map((key: CartKey) => cart[key])
 );
 
 const productQuantitySelector = createSelector(itemsSelector, (items) =>

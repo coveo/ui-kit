@@ -37,15 +37,11 @@ describe('cart-slice', () => {
     const updatedState = cartReducer(state, setItems([someItem, secondItem]));
     const updatedStatefirstItemKey = updatedState.cartItems[0];
     const updatedStatefirstItem = updatedState.cart[updatedStatefirstItemKey];
-    expect(updatedStatefirstItem).toEqual({
-      [someItem.price]: someItem,
-    });
+    expect(updatedStatefirstItem).toEqual(someItem);
 
     const updatedStateSecondItemKey = updatedState.cartItems[1];
     const updatedStateSecondItem = updatedState.cart[updatedStateSecondItemKey];
-    expect(updatedStateSecondItem).toEqual({
-      [secondItem.price]: secondItem,
-    });
+    expect(updatedStateSecondItem).toEqual(secondItem);
   });
 
   it('#purchase.fulfilled replaces current cart state with empty state', async () => {
@@ -57,12 +53,8 @@ describe('cart-slice', () => {
     };
     state.cartItems = [createCartKey(someItem), createCartKey(secondItem)];
     state.cart = {
-      [createCartKey(someItem)]: {
-        [someItem.price]: someItem,
-      },
-      [createCartKey(secondItem)]: {
-        [secondItem.price]: secondItem,
-      },
+      [createCartKey(someItem)]: someItem,
+      [createCartKey(secondItem)]: secondItem,
     };
     const fakePurchaseAction = createAction(purchase.fulfilled.type);
     const updatedState = cartReducer(state, fakePurchaseAction());
@@ -76,9 +68,7 @@ describe('cart-slice', () => {
       const key = createCartKey(someItem);
       expect(updatedState.cartItems).toEqual([key]);
       expect(updatedState.cart).toEqual({
-        [key]: {
-          [someItem.price]: someItem,
-        },
+        [key]: someItem,
       });
     });
 
@@ -96,9 +86,7 @@ describe('cart-slice', () => {
         {
           cartItems: [someItemKey],
           cart: {
-            [someItemKey]: {
-              [someItem.price]: someItem,
-            },
+            [someItemKey]: someItem,
           },
         },
         updateItemQuantity({...someItem, quantity: 0})
@@ -116,9 +104,7 @@ describe('cart-slice', () => {
         {
           cartItems: [someItemKey],
           cart: {
-            [someItemKey]: {
-              [someItem.price]: someItem,
-            },
+            [someItemKey]: someItem,
           },
         },
         updateItemQuantity(updatedItem)
@@ -127,12 +113,10 @@ describe('cart-slice', () => {
       expect(updatedState.cartItems).toEqual([updatedItemKey]);
       expect(updatedState.cart).toEqual({
         [updatedItemKey]: {
-          [updatedItem.price]: {
-            productId: someItem.productId,
-            name: someItem.name,
-            price: someItem.price,
-            quantity: 5,
-          },
+          productId: someItem.productId,
+          name: someItem.name,
+          price: someItem.price,
+          quantity: 5,
         },
       });
     });

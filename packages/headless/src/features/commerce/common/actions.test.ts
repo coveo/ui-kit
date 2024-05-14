@@ -26,6 +26,7 @@ describe('commerce common actions', () => {
         name: 'product_name',
         quantity: 1,
         price: 1,
+        sku: 'product_sku',
       };
 
       expected = {
@@ -71,9 +72,7 @@ describe('commerce common actions', () => {
       state.cart.cartItems = [product.productId];
       state.cart.cart = {
         [product.productId]: {
-          [product.price]: {
-            ...product,
-          },
+          ...product,
         },
       };
     });

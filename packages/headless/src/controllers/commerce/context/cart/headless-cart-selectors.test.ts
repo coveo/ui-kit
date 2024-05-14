@@ -46,15 +46,9 @@ describe('headless-cart-selectors', () => {
     const item3Key = createCartKey(item3);
     cartOptions = {
       cart: {
-        [item1Key]: {
-          [item1.price]: item1,
-        },
-        [item2Key]: {
-          [item2.price]: item2,
-        },
-        [item3Key]: {
-          [item3.price]: item3,
-        },
+        [item1Key]: item1,
+        [item2Key]: item2,
+        [item3Key]: item3,
       },
       cartItems: [item1Key, item2Key, item3Key],
     };
@@ -64,7 +58,7 @@ describe('headless-cart-selectors', () => {
   describe('itemSelector', () => {
     it('should return the correct item from the cart', () => {
       const selectedItem = itemSelector(cartState, item1);
-      expect(selectedItem).toEqual(cartOptions.cart[item1Key][item1.price]);
+      expect(selectedItem).toEqual(cartOptions.cart[item1Key]);
     });
 
     it('should return undefined if the item is not found in the cart', () => {

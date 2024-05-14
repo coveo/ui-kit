@@ -58,15 +58,13 @@ export const buildBaseCommerceAPIRequest = async (
     context: {
       user,
       view,
-      cart: state.cart.cartItems.map((key) =>
-        Object.entries(state.cart.cart[key]).reduce(
-          (acc, [_, item]) => ({
-            productId: item.productId,
-            quantity: acc.quantity + item.quantity,
-          }),
-          {productId: '', quantity: 0}
-        )
-      ),
+      cart: state.cart.cartItems.map((key) => {
+        const {productId, quantity} = state.cart.cart[key];
+        return {
+          productId,
+          quantity,
+        };
+      }),
     },
     ...effectivePagination(state, slotId),
   };

@@ -249,7 +249,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
 export type CartKey = string;
 
 export function createCartKey(item: CartItem): CartKey {
-  return `${item.productId},${item.name}`;
+  return `${item.productId},${item.name},${item.price}`;
 }
 
 function loadBaseCartReducers(
