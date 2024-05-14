@@ -1,6 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {createCartKey} from '../../../../controllers/commerce/context/cart/headless-cart';
-import {purchase, setItems, updateItem} from './cart-actions';
+import {purchase, setItems, updateItemQuantity} from './cart-actions';
 import {
   CartItemWithMetadata,
   CartState,
@@ -26,20 +26,20 @@ export const cartReducer = createReducer(
 
         setItemsInState(state, cartItems, cart);
       })
-      .addCase(updateItem, (state, {payload}) => {
-        const updateKey = createCartKey(payload.update);
-        if (!(updateKey in state.cart)) {
-          deleteProductFromCart(payload.item, state);
-          createItemInCart(payload.update, state);
+      .addCase(updateItemQuantity, (state, {payload}) => {
+        const key = createCartKey(payload);
+        if (!(key in state.cart)) {
+          // deleteProductFromCart(payload.item, state);
+          createItemInCart(payload, state);
           return;
         }
 
-        if (payload.update.quantity <= 0) {
-          deleteProductFromCart(payload.item, state);
+        if (payload.quantity <= 0) {
+          deleteProductFromCart(payload, state);
           return;
         }
 
-        state.cart[updateKey] = payload.update;
+        state.cart[key] = payload;
         return;
       })
       .addCase(purchase.fulfilled, (state) => {

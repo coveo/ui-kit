@@ -1,6 +1,6 @@
 import {createAction} from '@reduxjs/toolkit';
 import {createCartKey} from '../../../../controllers/commerce/context/cart/headless-cart';
-import {purchase, setItems, updateItem} from './cart-actions';
+import {purchase, setItems, updateItemQuantity} from './cart-actions';
 import {cartReducer} from './cart-slice';
 import {
   CartItemWithMetadata,
@@ -62,12 +62,9 @@ describe('cart-slice', () => {
     expect(updatedState.cart).toEqual({});
   });
 
-  describe('#updateItem', () => {
+  describe('#updateItemQuantity', () => {
     it('adds new item to cart if item is not already in cart and specified quantity is positive', () => {
-      const updatedState = cartReducer(
-        state,
-        updateItem({item: someItem, update: someItem})
-      );
+      const updatedState = cartReducer(state, updateItemQuantity(someItem));
       const key = createCartKey(someItem);
       expect(updatedState.cartItems).toEqual([key]);
       expect(updatedState.cart).toEqual({
@@ -78,7 +75,7 @@ describe('cart-slice', () => {
     it('does not add new item to cart if item is not already in cart and specified quantity is 0', () => {
       const updatedState = cartReducer(
         state,
-        updateItem({item: someItem, update: {...someItem, quantity: 0}})
+        updateItemQuantity({...someItem, quantity: 0})
       );
       expect(updatedState.cartItems).toEqual([]);
       expect(updatedState.cart).toEqual({});
@@ -92,7 +89,7 @@ describe('cart-slice', () => {
             [someItemKey]: someItem,
           },
         },
-        updateItem({item: someItem, update: {...someItem, quantity: 0}})
+        updateItemQuantity({...someItem, quantity: 0})
       );
       expect(updatedState.cartItems).toEqual([]);
       expect(updatedState.cart).toEqual({});
@@ -101,9 +98,7 @@ describe('cart-slice', () => {
     it('updates existing item in cart if specified quantity is greater than 0', () => {
       const updatedItem = {
         ...someItem,
-        name: 'renamed product',
         quantity: 5,
-        price: 25,
       };
       const updatedState = cartReducer(
         {
@@ -112,16 +107,16 @@ describe('cart-slice', () => {
             [someItemKey]: someItem,
           },
         },
-        updateItem({item: someItem, update: updatedItem})
+        updateItemQuantity(updatedItem)
       );
       const updatedItemKey = createCartKey(updatedItem);
       expect(updatedState.cartItems).toEqual([updatedItemKey]);
       expect(updatedState.cart).toEqual({
         [updatedItemKey]: {
           productId: someItem.productId,
-          name: 'renamed product',
+          name: someItem.name,
+          price: someItem.price,
           quantity: 5,
-          price: 25,
         },
       });
     });

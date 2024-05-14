@@ -4,7 +4,7 @@ import {stateKey} from '../../../../app/state-key';
 import {
   purchase,
   setItems,
-  updateItem,
+  updateItemQuantity,
 } from '../../../../features/commerce/context/cart/cart-actions';
 import {
   Transaction,
@@ -84,7 +84,7 @@ export interface Cart extends Controller {
    *
    * @param item - The cart item to create, update, or delete.
    */
-  updateItem(item: CartItem, update: CartItem): void;
+  updateItemQuantity(item: CartItem): void;
 
   /**
    * Sets the quantity of each item in the cart to 0, effectively emptying the cart.
@@ -208,7 +208,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
 
     empty: function () {
       for (const item of itemsSelector(getState())) {
-        this.updateItem(item, {...item, quantity: 0});
+        this.updateItemQuantity({...item, quantity: 0});
       }
     },
 
@@ -216,7 +216,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
       dispatch(purchase(transaction));
     },
 
-    updateItem(item: CartItem, update: CartItem) {
+    updateItemQuantity(item: CartItem) {
       const prevItem = itemSelector(getState(), item);
       const doesNotNeedUpdate = !prevItem && item.quantity <= 0;
 
@@ -231,12 +231,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
         );
       }
 
-      dispatch(
-        updateItem({
-          item,
-          update,
-        })
-      );
+      dispatch(updateItemQuantity(item));
     },
 
     get state() {

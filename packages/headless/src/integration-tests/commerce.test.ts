@@ -45,20 +45,18 @@ describe.skip('commerce', () => {
     });
 
     const cart = buildCart(engine);
-    const item1 = {
+    cart.updateItemQuantity({
       productId: 'p1',
       quantity: 2,
       price: 100,
       name: 'Nice Shoes',
-    };
-    const item2 = {
+    });
+    cart.updateItemQuantity({
       productId: 'p1',
       quantity: 3,
       price: 200,
       name: 'Nicer Shoes',
-    };
-    cart.updateItem(item1, item1);
-    cart.updateItem(item2, item2);
+    });
   });
 
   const fetchProductListing = async (): Promise<ProductListing> => {

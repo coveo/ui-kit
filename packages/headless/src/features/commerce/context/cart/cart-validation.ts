@@ -18,11 +18,6 @@ export const itemPayloadDefinition = {
   price: new NumberValue({required: false, min: 0}),
 };
 
-export const updateItemPayloadDefinition = {
-  item: new RecordValue({values: itemPayloadDefinition}),
-  update: new RecordValue({values: itemPayloadDefinition}),
-};
-
 export const setItemsPayloadDefinition = new ArrayValue({
   each: new RecordValue({
     values: {

@@ -6,13 +6,8 @@ import {Transaction, getECPurchasePayload} from './cart-selector';
 import {CartItemWithMetadata} from './cart-state';
 import {
   setItemsPayloadDefinition,
-  updateItemPayloadDefinition,
+  itemPayloadDefinition,
 } from './cart-validation';
-
-export interface updateItemPayload {
-  item: CartItemWithMetadata;
-  update: CartItemWithMetadata;
-}
 
 export const purchase = createAsyncThunk<
   void,
@@ -34,8 +29,8 @@ export const setItems = createAction(
     validatePayload<CartItemWithMetadata[]>(payload, setItemsPayloadDefinition)
 );
 
-export const updateItem = createAction(
-  'commerce/cart/updateItem',
-  (payload: updateItemPayload) =>
-    validatePayload(payload, updateItemPayloadDefinition)
+export const updateItemQuantity = createAction(
+  'commerce/cart/updateItemQuantity',
+  (payload: CartItemWithMetadata) =>
+    validatePayload(payload, itemPayloadDefinition)
 );
