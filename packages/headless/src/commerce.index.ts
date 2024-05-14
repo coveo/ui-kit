@@ -94,6 +94,7 @@ export {buildCart} from './controllers/commerce/context/cart/headless-cart';
 export type {
   BaseSolutionTypeSubControllers,
   SearchAndListingSubControllers,
+  SearchSubControllers,
 } from './controllers/commerce/core/sub-controller/headless-sub-controller';
 
 export type {

@@ -16,10 +16,6 @@ const controllers: ControllerConfiguration[] = [
     samplePaths: {},
   },
   {
-    initializer: 'buildProductListingBreadcrumbManager',
-    samplePaths: {},
-  },
-  {
     initializer: 'buildProductListingParameterManager',
     samplePaths: {},
   },
@@ -37,10 +33,6 @@ const controllers: ControllerConfiguration[] = [
   },
   {
     initializer: 'buildSearch',
-    samplePaths: {},
-  },
-  {
-    initializer: 'buildSearchBreadcrumbManager',
     samplePaths: {},
   },
   {
