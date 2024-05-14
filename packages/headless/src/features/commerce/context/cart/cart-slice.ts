@@ -29,7 +29,6 @@ export const cartReducer = createReducer(
       .addCase(updateItemQuantity, (state, {payload}) => {
         const key = createCartKey(payload);
         if (!(key in state.cart)) {
-          // deleteProductFromCart(payload.item, state);
           createItemInCart(payload, state);
           return;
         }

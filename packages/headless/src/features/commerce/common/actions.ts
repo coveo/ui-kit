@@ -15,6 +15,7 @@ import {
   FacetOrderSection,
   VersionSection,
 } from '../../../state/state-sections';
+import {getProductsFromCartState} from '../context/cart/cart-state';
 import {SortBy, SortCriterion} from '../sort/sort';
 
 export type StateNeededByQueryCommerceAPI = ConfigurationSection &
@@ -58,13 +59,7 @@ export const buildBaseCommerceAPIRequest = async (
     context: {
       user,
       view,
-      cart: state.cart.cartItems.map((key) => {
-        const {productId, quantity} = state.cart.cart[key];
-        return {
-          productId,
-          quantity,
-        };
-      }),
+      cart: getProductsFromCartState(state.cart),
     },
     ...effectivePagination(state, slotId),
   };
