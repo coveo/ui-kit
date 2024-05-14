@@ -2,7 +2,6 @@ import {buildMockCommerceState} from '../../../test/mock-commerce-state';
 import {buildMockProduct} from '../../../test/mock-product';
 import {
   errorSelector,
-  firstSearchExecutedSelector,
   isLoadingSelector,
   moreProductsAvailableSelector,
   numberOfProductsSelector,
@@ -152,33 +151,5 @@ describe('commerce product listing selectors', () => {
   it('#errorSelector should return null when the error value is not set', () => {
     const state = buildMockCommerceState();
     expect(errorSelector(state)).toBeNull();
-  });
-
-  it('#firstSearchExecutedSelector should return true when the responseId is not an empty string', () => {
-    const state = buildMockCommerceState({
-      productListing: {
-        responseId: 'some-response-id',
-        products: [],
-        isLoading: false,
-        error: {message: 'some-error', statusCode: 500, type: 'some-type'},
-        facets: [],
-        requestId: 'some-request-id',
-      },
-    });
-    expect(firstSearchExecutedSelector(state)).toBe(true);
-  });
-
-  it('#firstSearchExecutedSelector should return false when the responseId is an empty string', () => {
-    const state = buildMockCommerceState({
-      productListing: {
-        responseId: '',
-        products: [],
-        isLoading: false,
-        error: {message: 'some-error', statusCode: 500, type: 'some-type'},
-        facets: [],
-        requestId: 'some-request-id',
-      },
-    });
-    expect(firstSearchExecutedSelector(state)).toBe(false);
   });
 });
