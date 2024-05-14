@@ -1,6 +1,5 @@
 import {
   RegularFacet,
-  SearchStatusState,
   RegularFacetState,
   buildListingSummary,
   buildSearchSummary,
@@ -63,16 +62,13 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
   public summary!: SearchSummary | ListingSummary;
   @Element() private host!: HTMLElement;
 
+  @Prop() public facet!: RegularFacet;
+
   @BindStateToController('facet')
   @State()
   public facetState!: RegularFacetState;
 
-  @BindStateToController('searchStatus')
-  @State()
-  public searchStatusState!: SearchStatusState;
   @State() public error!: Error;
-
-  @Prop() public facet!: RegularFacet;
 
   private isCollapsed = false;
   private showLessFocus?: FocusTargetController;
@@ -107,14 +103,15 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
   }
 
   public render() {
+    const {hasError, firstSearchExecuted} = this.summary.state;
     return (
       <FacetGuard
         enabled={true}
-        hasError={this.searchStatusState.hasError}
-        firstSearchExecuted={this.searchStatusState.firstSearchExecuted}
+        hasError={hasError}
+        firstSearchExecuted={firstSearchExecuted}
         hasResults={this.facetState.values.length > 0}
       >
-        {this.searchStatusState.firstSearchExecuted ? (
+        {firstSearchExecuted ? (
           <FacetContainer>
             <FacetHeader
               i18n={this.bindings.i18n}
