@@ -63,7 +63,7 @@ const isOnSearchPage = () => {
 
 if (!isOnSearchPage()) {
   const standaloneSearchBoxHTML = `
-    <atomic-commerce-search-box redirection-url="./search.html">
+    <atomic-commerce-search-box redirection-url="./search.html" textarea  style="max-width: 1000px; margin: auto">
       <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
       <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
       <atomic-commerce-search-box-instant-products image-size="small"></atomic-commerce-search-box-instant-products>
