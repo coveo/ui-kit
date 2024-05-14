@@ -260,12 +260,12 @@ export namespace Components {
         "withSearch": boolean;
     }
     /**
-     * The `atomic-commerce-facets` component automatically renders commerce facets based on the commerce API response
+     * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
      * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
      */
     interface AtomicCommerceFacets {
         /**
-          * The number of expanded facets inside the manager. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded.
+          * The maximum number of facets to expand. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded.
          */
         "collapseFacetsAfter": number;
     }
@@ -3149,7 +3149,7 @@ declare global {
         new (): HTMLAtomicColorFacetElement;
     };
     /**
-     * The `atomic-commerce-facets` component automatically renders commerce facets based on the commerce API response
+     * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
      * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
      */
     interface HTMLAtomicCommerceFacetsElement extends Components.AtomicCommerceFacets, HTMLStencilElement {
@@ -5152,12 +5152,12 @@ declare namespace LocalJSX {
         "withSearch"?: boolean;
     }
     /**
-     * The `atomic-commerce-facets` component automatically renders commerce facets based on the commerce API response
+     * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
      * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
      */
     interface AtomicCommerceFacets {
         /**
-          * The number of expanded facets inside the manager. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded.
+          * The maximum number of facets to expand. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded.
          */
         "collapseFacetsAfter"?: number;
     }
@@ -7964,7 +7964,7 @@ declare module "@stencil/core" {
              */
             "atomic-color-facet": LocalJSX.AtomicColorFacet & JSXBase.HTMLAttributes<HTMLAtomicColorFacetElement>;
             /**
-             * The `atomic-commerce-facets` component automatically renders commerce facets based on the commerce API response
+             * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
              * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
              */
             "atomic-commerce-facets": LocalJSX.AtomicCommerceFacets & JSXBase.HTMLAttributes<HTMLAtomicCommerceFacetsElement>;
