@@ -34,7 +34,7 @@ export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
   @Element() host!: HTMLElement;
 
   /**
-   * The number of expanded facets inside the manager.
+   * The maximum number of facets to expand.
    * Remaining facets are automatically collapsed.
    *
    * Using the value `0` collapses all facets.
