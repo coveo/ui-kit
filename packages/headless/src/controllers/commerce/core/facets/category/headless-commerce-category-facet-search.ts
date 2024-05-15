@@ -2,7 +2,7 @@ import {CategoryFacetSearchResult} from '../../../../../api/search/facet-search/
 import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
 import {
   executeCommerceFacetSearch,
-  executeCommerceFieldSuggestions,
+  executeCommerceFieldSuggest,
 } from '../../../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions';
 import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
 import {CategoryFacetSearchSection} from '../../../../../state/state-sections';
@@ -40,7 +40,7 @@ export function buildCategoryFacetSearch(
     buildCoreCategoryFacetSearch(engine, {
       ...props,
       executeFacetSearchActionCreator: executeCommerceFacetSearch,
-      executeFieldSuggestActionCreator: executeCommerceFieldSuggestions,
+      executeFieldSuggestActionCreator: executeCommerceFieldSuggest,
     });
 
   return restOfFacetSearch;

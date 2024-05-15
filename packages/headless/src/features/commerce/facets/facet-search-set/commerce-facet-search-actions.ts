@@ -63,7 +63,7 @@ export const executeCommerceFacetSearch = createAsyncThunk<
   getExecuteFacetSearchThunkPayloadCreator(false)
 );
 
-export const executeCommerceFieldSuggestions = createAsyncThunk<
+export const executeCommerceFieldSuggest = createAsyncThunk<
   ExecuteCommerceFacetSearchThunkReturn,
   string,
   AsyncThunkOptions<

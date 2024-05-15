@@ -1,7 +1,7 @@
 import {stateKey} from '../../../../../app/state-key';
 import {
   executeCommerceFacetSearch,
-  executeCommerceFieldSuggestions,
+  executeCommerceFieldSuggest,
 } from '../../../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions';
 import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
 import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search';
@@ -76,6 +76,6 @@ describe('CategoryFacetSearch', () => {
     props.isForFieldSuggestions = true;
     initFacetSearch();
     facetSearch.search();
-    expect(executeCommerceFieldSuggestions).toHaveBeenCalled();
+    expect(executeCommerceFieldSuggest).toHaveBeenCalled();
   });
 });

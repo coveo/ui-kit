@@ -1,4 +1,4 @@
-import {executeCommerceFieldSuggestions} from '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions';
+import {executeCommerceFieldSuggest} from '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions';
 import {RegularFacetRequest} from '../../../features/commerce/facets/facet-set/interfaces/request';
 import {updateFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
 import {CommerceAppState} from '../../../state/commerce-app-state';
@@ -62,6 +62,6 @@ describe('fieldSuggestions', () => {
   it('should dispatch an #updateFacetSearch and #executeFieldSuggest action on #updateText', () => {
     fieldSuggestions.updateText('foo');
     expect(updateFacetSearch).toHaveBeenCalled();
-    expect(executeCommerceFieldSuggestions).toHaveBeenCalled();
+    expect(executeCommerceFieldSuggest).toHaveBeenCalled();
   });
 });

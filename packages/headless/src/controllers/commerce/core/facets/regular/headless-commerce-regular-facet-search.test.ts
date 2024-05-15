@@ -1,7 +1,7 @@
 import {stateKey} from '../../../../../app/state-key';
 import {
   executeCommerceFacetSearch,
-  executeCommerceFieldSuggestions,
+  executeCommerceFieldSuggest,
 } from '../../../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions';
 import {specificFacetSearchSetReducer as facetSearchSet} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
@@ -79,6 +79,6 @@ describe('RegularFacetSearch', () => {
     props.isForFieldSuggestions = true;
     initFacetSearch();
     facetSearch.search();
-    expect(executeCommerceFieldSuggestions).toHaveBeenCalled();
+    expect(executeCommerceFieldSuggest).toHaveBeenCalled();
   });
 });

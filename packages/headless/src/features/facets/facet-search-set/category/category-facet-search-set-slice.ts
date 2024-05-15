@@ -2,7 +2,7 @@ import {createReducer} from '@reduxjs/toolkit';
 import {CategoryFacetSearchResponse} from '../../../../api/search/facet-search/category-facet-search/category-facet-search-response';
 import {
   executeCommerceFacetSearch,
-  executeCommerceFieldSuggestions,
+  executeCommerceFieldSuggest,
 } from '../../../commerce/facets/facet-search-set/commerce-facet-search-actions';
 import {fetchProductListing} from '../../../commerce/product-listing/product-listing-actions';
 import {fetchQuerySuggestions} from '../../../commerce/query-suggest/query-suggest-actions';
@@ -43,7 +43,7 @@ export const categoryFacetSearchSetReducer = createReducer(
         const facetId = action.meta.arg;
         handleFacetSearchPending(state, facetId, action.meta.requestId);
       })
-      .addCase(executeCommerceFieldSuggestions.pending, (state, action) => {
+      .addCase(executeCommerceFieldSuggest.pending, (state, action) => {
         const facetId = action.meta.arg;
         handleFacetSearchPending(state, facetId, action.meta.requestId);
       })
@@ -55,7 +55,7 @@ export const categoryFacetSearchSetReducer = createReducer(
         const facetId = action.meta.arg;
         handleFacetSearchRejected(state, facetId);
       })
-      .addCase(executeCommerceFieldSuggestions.rejected, (state, action) => {
+      .addCase(executeCommerceFieldSuggest.rejected, (state, action) => {
         const facetId = action.meta.arg;
         handleFacetSearchRejected(state, facetId);
       })
@@ -70,7 +70,7 @@ export const categoryFacetSearchSetReducer = createReducer(
           action.meta.requestId
         );
       })
-      .addCase(executeCommerceFieldSuggestions.fulfilled, (state, action) => {
+      .addCase(executeCommerceFieldSuggest.fulfilled, (state, action) => {
         handleCommerceFacetFieldSuggestionsFulfilled(
           state,
           action.payload,
