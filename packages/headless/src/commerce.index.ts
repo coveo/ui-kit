@@ -76,6 +76,8 @@ export type {
   InteractiveProductProps,
 } from './controllers/commerce/core/product-list/headless-core-interactive-product';
 
+export type {InteractiveResultCore} from './controllers/core/interactive-result/headless-core-interactive-result';
+
 export type {ProductView} from './controllers/commerce/product-view/headless-product-view';
 export {buildProductView} from './controllers/commerce/product-view/headless-product-view';
 
@@ -236,6 +238,8 @@ export {getOrganizationEndpoints} from './api/platform-client';
 export type {
   DidYouMean,
   DidYouMeanState,
+  QueryCorrection,
+  WordCorrection,
 } from './controllers/commerce/search/did-you-mean/headless-did-you-mean';
 export {ProductTemplatesHelpers} from './features/commerce/product-templates/product-templates-helpers';
 
