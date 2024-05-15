@@ -26,6 +26,7 @@ import {SourceCitations} from './source-citations';
 
 interface GeneratedAnswerCommonOptions {
   host: HTMLElement;
+  withToggle?: boolean;
   collapsible?: boolean;
   getGeneratedAnswer: () => GeneratedAnswer | undefined;
   getGeneratedAnswerState: () => GeneratedAnswerState | undefined;
@@ -62,10 +63,14 @@ export class GeneratedAnswerCommon {
   }
 
   public readStoredData(): GeneratedAnswerData {
-    return this.storage.getParsedJSON<GeneratedAnswerData>(
+    const {withToggle} = this.props;
+    const storedData = this.storage.getParsedJSON<GeneratedAnswerData>(
       StorageItems.GENERATED_ANSWER_DATA,
       {isVisible: true}
     );
+
+    // This check ensures that the answer is visible when the toggle is hidden and visible is set to false in the local storage.
+    return {isVisible: (withToggle && storedData.isVisible) || !withToggle};
   }
 
   public writeStoredData(data: GeneratedAnswerData) {
@@ -226,11 +231,23 @@ export class GeneratedAnswerCommon {
     const {liked, disliked, answer, isStreaming} =
       getGeneratedAnswerState() ?? {};
 
+    const containerClasses = [
+      'feedback-buttons',
+      'flex',
+      'h-9',
+      'absolute',
+      'top-6',
+      'shrink-0',
+      'gap-2',
+      this.props.withToggle ? 'right-20' : 'right-6',
+    ].join(' ');
+
     if (isStreaming) {
       return null;
     }
+
     return (
-      <div class="feedback-buttons flex h-9 absolute top-6 right-20 shrink-0 gap-2">
+      <div class={containerClasses}>
         <FeedbackButton
           title={i18n.t('this-answer-was-helpful')}
           variant="like"
@@ -382,6 +399,7 @@ export class GeneratedAnswerCommon {
               }}
               ariaLabel={i18n.t('generated-answer-title')}
               title={this.toggleTooltip}
+              withToggle={this.props.withToggle}
             ></Switch>
           </div>
         </div>

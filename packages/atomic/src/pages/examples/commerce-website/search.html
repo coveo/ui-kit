@@ -20,6 +20,12 @@
         commerceInterface.executeFirstSearch();
       })();
     </script>
+    <style>
+      atomic-product-image::part(testpart) {
+        background-color: red;
+        font-size: 26px;
+      }
+    </style>
   </head>
 
   <body>
@@ -37,15 +43,16 @@
                 ></atomic-commerce-search-box-instant-products>
               </atomic-commerce-search-box>
             </atomic-layout-section>
-            <atomic-layout-section section="facets">Here be facets</atomic-layout-section>
-
+            <atomic-layout-section section="facets"
+              ><atomic-commerce-facets></atomic-commerce-facets
+            ></atomic-layout-section>
             <atomic-layout-section section="main">
               <atomic-layout-section section="status">
                 <atomic-commerce-query-summary></atomic-commerce-query-summary>
                 <atomic-commerce-sort-dropdown></atomic-commerce-sort-dropdown>
               </atomic-layout-section>
               <atomic-layout-section section="products">
-                <atomic-commerce-product-list display="grid" image-size="large"> </atomic-commerce-product-list>
+                <atomic-commerce-product-list display="grid" image-size="large"></atomic-commerce-product-list>
                 <atomic-commerce-query-error></atomic-commerce-query-error>
               </atomic-layout-section>
               <atomic-layout-section section="pagination">
