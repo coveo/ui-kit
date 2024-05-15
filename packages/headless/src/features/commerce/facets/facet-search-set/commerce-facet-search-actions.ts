@@ -63,7 +63,7 @@ export const executeCommerceFacetSearch = createAsyncThunk<
   getExecuteFacetSearchThunkPayloadCreator(false)
 );
 
-export const executeCommerceFieldSuggest = createAsyncThunk<
+export const executeCommerceFieldSuggestions = createAsyncThunk<
   ExecuteCommerceFacetSearchThunkReturn,
   string,
   AsyncThunkOptions<
@@ -71,8 +71,10 @@ export const executeCommerceFieldSuggest = createAsyncThunk<
     ClientThunkExtraArguments<CommerceFacetSearchAPIClient>
   >
 >(
-  'commerce/facetSearch/executeSearch', // We use the same action type because this action is meant to be handled by reducers the same way.
-  getExecuteFacetSearchThunkPayloadCreator(true)
+  'commerce/facetSearch/facetFieldSuggest',
+  // eslint-disable-next-line @cspell/spellchecker
+  // TODO: CAPI-911 Handle field suggestions without having to pass in the search context.
+  getExecuteFacetSearchThunkPayloadCreator(false)
 );
 
 export const isRegularFacetSearchState = (

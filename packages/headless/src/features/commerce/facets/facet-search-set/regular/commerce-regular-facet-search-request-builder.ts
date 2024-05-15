@@ -9,7 +9,11 @@ export const buildFacetSearchRequest = async (
 ): Promise<CommerceFacetSearchRequest> => {
   const baseFacetQuery = state.facetSearchSet[facetId]!.options.query;
   const facetQuery = `*${baseFacetQuery}*`;
-  const query = state.commerceQuery?.query;
+  let query = state.commerceQuery?.query;
+
+  if (query === undefined) {
+    query = '';
+  }
 
   const {
     url,

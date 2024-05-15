@@ -143,6 +143,33 @@ export function handleCommerceFacetSearchFulfilled<
   }
 }
 
+export function handleCommerceFacetFieldSuggestionsFulfilled<
+  T extends FacetSearchResponse,
+>(
+  state: FacetSearchSetState<T>,
+  payload: {
+    facetId: string;
+    response: CommerceAPIResponse<T>;
+  },
+  requestId: string,
+  buildEmptyResponse: () => T
+) {
+  const {facetId, response} = payload;
+  let search = state[facetId];
+
+  if (!search) {
+    handleFacetSearchRegistration(state, {facetId}, buildEmptyResponse);
+    search = state[facetId];
+  } else if (search.requestId !== requestId) {
+    return;
+  }
+
+  search.isLoading = false;
+  if ('success' in response) {
+    search.response = response.success;
+  }
+}
+
 export function handleFacetSearchClear<T extends FacetSearchResponse>(
   state: FacetSearchSetState<T>,
   payload: FacetSearchOptions,

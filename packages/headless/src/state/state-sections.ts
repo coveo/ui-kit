@@ -8,6 +8,7 @@ import {CaseInputState} from '../features/case-input/case-input-state';
 import {CartState} from '../features/commerce/context/cart/cart-state';
 import {CommerceContextState} from '../features/commerce/context/context-state';
 import {CommerceFacetSetState} from '../features/commerce/facets/facet-set/facet-set-state';
+import {FieldSuggestionsOrderState} from '../features/commerce/facets/field-suggestions-order/field-suggestions-order-state';
 import {InstantProductsState} from '../features/commerce/instant-products/instant-products-state';
 import {CommercePaginationState} from '../features/commerce/pagination/pagination-state';
 import {ProductListingV2State} from '../features/commerce/product-listing/product-listing-state';
@@ -372,6 +373,13 @@ export interface CommerceQuerySection {
    * The current user query.
    */
   commerceQuery: CommerceQueryState;
+}
+
+export interface FieldSuggestionsOrderSection {
+  /**
+   * The facet field suggestions order.
+   */
+  fieldSuggestionsOrder: FieldSuggestionsOrderState;
 }
 
 export interface StructuredSortSection {
