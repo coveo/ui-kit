@@ -1,7 +1,7 @@
 import type {CoreEngineNext} from './engine';
 
-const stateKeyDescription = 'state';
-export const stateKey = Symbol(stateKeyDescription);
+const stateKeyDescription = 'coveo-headless-internal-state';
+export const stateKey = Symbol.for(stateKeyDescription);
 
 export const redactEngine = <TEngine extends CoreEngineNext>(
   engine: TEngine
