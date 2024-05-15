@@ -1,18 +1,3 @@
-@import '../../common/result/result.pcss';
-@import '../../common/result/result-with-sections.pcss';
+@import '../../common/template-system/template-system.pcss';
 
-.result-root {
-  &.with-sections {
-    @mixin result-with-sections map(post-css-map-for-sections, commerce);
-
-    &.display-list {
-      @screen desktop-only {
-        @mixin row-result-desktop map(post-css-map-for-sections, commerce);
-      }
-    }
-
-    &.display-table {
-      @mixin row-result-desktop map(post-css-map-for-sections, commerce);
-    }
-  }
-}
+@mixin atomic-template-system map(post-css-map-for-sections, commerce);

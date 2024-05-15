@@ -1,3 +1,15 @@
+variables:
+  - $section-visual
+  - $section-badges
+  - $section-actions
+  - $section-title
+  - $section-excerpt
+  - $section-bottom-metadata
+  - $section-title-metadata
+  - $section-emphasized
+  - $section-children
+  - $children-tag-name
+
 search:
   - atomic-result-section-visual
   - atomic-result-section-badges
@@ -6,6 +18,7 @@ search:
   - atomic-result-section-excerpt
   - atomic-result-section-bottom-metadata
   - atomic-result-section-title-metadata
+  - atomic-result-section-emphasized
   - atomic-result-section-children
   - atomic-result-children
 
@@ -17,6 +30,7 @@ insight:
   - atomic-result-section-excerpt
   - atomic-result-section-bottom-metadata
   - atomic-result-section-title-metadata
+  - atomic-result-section-emphasized
   - atomic-result-section-children
   - atomic-insight-result-children
 
@@ -28,5 +42,6 @@ commerce:
   - atomic-product-section-description
   - atomic-product-section-bottom-metadata
   - atomic-product-section-metadata
+  - atomic-product-section-emphasized
   - atomic-product-section-children
   - atomic-product-children

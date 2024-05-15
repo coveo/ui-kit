@@ -15,16 +15,6 @@ function defaultTemplate() {
     <atomic-product-section-visual>
       <atomic-product-image field="ec_thumbnails"></atomic-product-image>
     </atomic-product-section-visual>
-    <atomic-product-section-metadata>
-      <atomic-product-text field="ec_brand" class="block text-neutral-dark"></atomic-product-text>
-      <atomic-product-rating field="ec_rating"></atomic-product-rating>
-    </atomic-product-section-metadata>
-    <atomic-product-section-emphasized>
-      <atomic-product-price currency="USD" class="text-2xl"></atomic-product-price>
-    </atomic-product-section-emphasized>
-    <atomic-product-section-description>
-      <atomic-product-description></atomic-product-description>
-    </atomic-product-section-description>
   `;
 
   const template = document.createElement('template');

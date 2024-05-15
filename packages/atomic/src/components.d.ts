@@ -1691,26 +1691,12 @@ export namespace Components {
          */
         "currency": string;
     }
-    /**
-     * This section allows the information seeker to perform an action on an item without having to view its details.
-     * In Commerce you can add an item to the cart directly or add it to a wish list to view at a later time.
-     * Behavior:
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * ** You should ensure that elements inside of it have `height: var(--line-height)`.
-     * * Is a wrapping flexbox with a gap.
-     * * May appear over, next to, or beneath the visual section.
-     */
     interface AtomicProductSectionActions {
     }
     interface AtomicProductSectionBadges {
     }
     interface AtomicProductSectionBottomMetadata {
     }
-    /**
-     * This section displays the child product, available when using the <atomic-product-children> component.
-     * Behavior:
-     * * Shows children at the bottom of the result, indented and wrapped in a border.
-     */
     interface AtomicProductSectionChildren {
     }
     interface AtomicProductSectionDescription {
@@ -4053,15 +4039,6 @@ declare global {
         prototype: HTMLAtomicProductPriceElement;
         new (): HTMLAtomicProductPriceElement;
     };
-    /**
-     * This section allows the information seeker to perform an action on an item without having to view its details.
-     * In Commerce you can add an item to the cart directly or add it to a wish list to view at a later time.
-     * Behavior:
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * ** You should ensure that elements inside of it have `height: var(--line-height)`.
-     * * Is a wrapping flexbox with a gap.
-     * * May appear over, next to, or beneath the visual section.
-     */
     interface HTMLAtomicProductSectionActionsElement extends Components.AtomicProductSectionActions, HTMLStencilElement {
     }
     var HTMLAtomicProductSectionActionsElement: {
@@ -4080,11 +4057,6 @@ declare global {
         prototype: HTMLAtomicProductSectionBottomMetadataElement;
         new (): HTMLAtomicProductSectionBottomMetadataElement;
     };
-    /**
-     * This section displays the child product, available when using the <atomic-product-children> component.
-     * Behavior:
-     * * Shows children at the bottom of the result, indented and wrapped in a border.
-     */
     interface HTMLAtomicProductSectionChildrenElement extends Components.AtomicProductSectionChildren, HTMLStencilElement {
     }
     var HTMLAtomicProductSectionChildrenElement: {
@@ -6686,26 +6658,12 @@ declare namespace LocalJSX {
          */
         "currency"?: string;
     }
-    /**
-     * This section allows the information seeker to perform an action on an item without having to view its details.
-     * In Commerce you can add an item to the cart directly or add it to a wish list to view at a later time.
-     * Behavior:
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * ** You should ensure that elements inside of it have `height: var(--line-height)`.
-     * * Is a wrapping flexbox with a gap.
-     * * May appear over, next to, or beneath the visual section.
-     */
     interface AtomicProductSectionActions {
     }
     interface AtomicProductSectionBadges {
     }
     interface AtomicProductSectionBottomMetadata {
     }
-    /**
-     * This section displays the child product, available when using the <atomic-product-children> component.
-     * Behavior:
-     * * Shows children at the bottom of the result, indented and wrapped in a border.
-     */
     interface AtomicProductSectionChildren {
     }
     interface AtomicProductSectionDescription {
@@ -8453,23 +8411,9 @@ declare module "@stencil/core" {
             "atomic-product-link": LocalJSX.AtomicProductLink & JSXBase.HTMLAttributes<HTMLAtomicProductLinkElement>;
             "atomic-product-numeric-field-value": LocalJSX.AtomicProductNumericFieldValue & JSXBase.HTMLAttributes<HTMLAtomicProductNumericFieldValueElement>;
             "atomic-product-price": LocalJSX.AtomicProductPrice & JSXBase.HTMLAttributes<HTMLAtomicProductPriceElement>;
-            /**
-             * This section allows the information seeker to perform an action on an item without having to view its details.
-             * In Commerce you can add an item to the cart directly or add it to a wish list to view at a later time.
-             * Behavior:
-             * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-             * ** You should ensure that elements inside of it have `height: var(--line-height)`.
-             * * Is a wrapping flexbox with a gap.
-             * * May appear over, next to, or beneath the visual section.
-             */
             "atomic-product-section-actions": LocalJSX.AtomicProductSectionActions & JSXBase.HTMLAttributes<HTMLAtomicProductSectionActionsElement>;
             "atomic-product-section-badges": LocalJSX.AtomicProductSectionBadges & JSXBase.HTMLAttributes<HTMLAtomicProductSectionBadgesElement>;
             "atomic-product-section-bottom-metadata": LocalJSX.AtomicProductSectionBottomMetadata & JSXBase.HTMLAttributes<HTMLAtomicProductSectionBottomMetadataElement>;
-            /**
-             * This section displays the child product, available when using the <atomic-product-children> component.
-             * Behavior:
-             * * Shows children at the bottom of the result, indented and wrapped in a border.
-             */
             "atomic-product-section-children": LocalJSX.AtomicProductSectionChildren & JSXBase.HTMLAttributes<HTMLAtomicProductSectionChildrenElement>;
             "atomic-product-section-description": LocalJSX.AtomicProductSectionDescription & JSXBase.HTMLAttributes<HTMLAtomicProductSectionDescriptionElement>;
             "atomic-product-section-emphasized": LocalJSX.AtomicProductSectionEmphasized & JSXBase.HTMLAttributes<HTMLAtomicProductSectionEmphasizedElement>;

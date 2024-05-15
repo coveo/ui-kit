@@ -139,15 +139,17 @@ export const config: Config = {
     postcss({
       plugins: [
         atImport(),
+        postcssMap({
+          maps: [
+            'src/components/common/template-system/post-css-map-for-sections.yaml',
+          ],
+        }),
         mixins(),
         tailwindNesting(),
         tailwind(),
         focusVisible(),
         postcssNesting(),
         autoprefixer(),
-        postcssMap({
-          maps: ['src/components/common/result/post-css-map-for-sections.yaml'],
-        }),
       ],
     }),
     replace(),

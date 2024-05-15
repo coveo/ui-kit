@@ -2,6 +2,8 @@ import {Element, Component} from '@stencil/core';
 import {hideEmptySection} from '../../../../utils/item-section-utils';
 
 /**
+ * @internal
+ *
  * This section displays the child product, available when using the <atomic-product-children> component.
  *
  * Behavior:

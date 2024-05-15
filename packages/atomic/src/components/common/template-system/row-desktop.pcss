@@ -9,8 +9,7 @@
       padding: $margin-lg;
     }
 
-    $(children-tag-name)::part(show-hide-button),
-    atomic-insight-result-children::part(show-hide-button) {
+    $(children-tag-name)::part(show-hide-button) {
       margin-top: $margin-sm;
       margin-bottom: $margin-sm;
     }
@@ -21,8 +20,7 @@
   }
 }
 
-@define-mixin row-result-desktop $section-visual, $section-badges, $section-actions, $section-title, $section-excerpt,
-  $section-bottom-metadata, $section-title-metadata, $section-children, $children-tag-name {
+@define-mixin row-result-desktop map(post-css-map-for-sections, variables) {
   &.image-large.density-compact $(section-visual) {
     width: 10.25rem;
     height: 10.25rem;

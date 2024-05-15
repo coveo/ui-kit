@@ -52,7 +52,28 @@
                 <atomic-commerce-sort-dropdown></atomic-commerce-sort-dropdown>
               </atomic-layout-section>
               <atomic-layout-section section="products">
-                <atomic-commerce-product-list display="grid" image-size="large"></atomic-commerce-product-list>
+                <atomic-commerce-product-list display="list" image-size="large">
+                  <atomic-product-template>
+                    <template>
+                      <atomic-product-section-name>
+                        <atomic-product-link class="font-bold"></atomic-product-link>
+                      </atomic-product-section-name>
+                      <atomic-product-section-visual>
+                        <atomic-product-image field="ec_thumbnails"></atomic-product-image>
+                      </atomic-product-section-visual>
+                      <atomic-product-section-metadata>
+                        <atomic-product-text field="ec_brand" class="block text-neutral-dark"></atomic-product-text>
+                        <atomic-product-rating field="ec_rating"></atomic-product-rating>
+                      </atomic-product-section-metadata>
+                      <atomic-product-section-emphasized>
+                        <atomic-product-price currency="USD" class="text-2xl"></atomic-product-price>
+                      </atomic-product-section-emphasized>
+                      <atomic-product-section-description>
+                        <atomic-product-description></atomic-product-description>
+                      </atomic-product-section-description>
+                    </template>
+                  </atomic-product-template>
+                </atomic-commerce-product-list>
                 <atomic-commerce-query-error></atomic-commerce-query-error>
               </atomic-layout-section>
               <atomic-layout-section section="pagination">
