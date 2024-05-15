@@ -28,7 +28,7 @@ export function getProductsFromCartState(state: CartState): CartItemParam[] {
       if (!(productId in acc)) {
         acc[productId] = {
           productId,
-          0
+          quantity: 0,
         };
       }
       acc[productId].quantity += quantity;
