@@ -221,3 +221,8 @@ export type {
   NotifyTriggerState,
 } from './controllers/core/triggers/headless-core-notify-trigger';
 export {buildNotifyTrigger} from './controllers/commerce/triggers/headless-commerce-notify-trigger';
+
+export type {FieldSuggestions} from './controllers/commerce/field-suggestions/headless-field-suggestions';
+export type {CategoryFieldSuggestions} from './controllers/commerce/field-suggestions/headless-category-field-suggestions';
+export type {FieldSuggestionsGenerator} from './controllers/commerce/field-suggestions/headless-field-suggestions-generator';
+export {buildFieldSuggestionsGenerator} from './controllers/commerce/field-suggestions/headless-field-suggestions-generator';
