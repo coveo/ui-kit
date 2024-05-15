@@ -54,7 +54,6 @@ export function getSampleCommerceEngineConfiguration(): CommerceEngineConfigurat
           quantity: 1,
           price: 100,
           productId: 'sample-product-id',
-          sku: 'sample-sku',
         },
       ],
     },
