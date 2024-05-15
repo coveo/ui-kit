@@ -62,7 +62,11 @@ export function buildCategoryFieldSuggestions(
   const {dispatch} = engine;
 
   const facetSearch = buildCategoryFacetSearch(engine, {
-    options: {facetId: options.facetId, ...options.facetSearch},
+    options: {
+      facetId: options.facetId,
+      ...options.facetSearch,
+      numberOfValues: 10,
+    },
     select: () => {
       dispatch(options.fetchProductsActionCreator());
     },
