@@ -1,5 +1,5 @@
 import {executeCommerceFieldSuggestions} from '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions';
-import {CategoryFacetRequest} from '../../../features/facets/category-facet-set/interfaces/request';
+import {CategoryFacetRequest} from '../../../features/commerce/facets/facet-set/interfaces/request';
 import {updateFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
 import {CommerceAppState} from '../../../state/commerce-app-state';
 import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search';
