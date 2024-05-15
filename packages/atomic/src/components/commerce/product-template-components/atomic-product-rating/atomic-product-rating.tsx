@@ -5,7 +5,10 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {Rating} from '../../../common/atomic-rating/atomic-rating';
+import {
+  Rating,
+  computeNumberOfStars,
+} from '../../../common/atomic-rating/atomic-rating';
 import {CommerceBindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 import {ProductContext} from '../product-template-decorators';
 
@@ -69,19 +72,12 @@ export class AtomicProductRating
       this.product,
       this.field
     );
-    if (value === null) {
+    try {
+      this.numberOfStars = computeNumberOfStars(value, this.field);
+    } catch (error) {
+      this.error = error instanceof Error ? error : new Error(`${error}`);
       this.numberOfStars = null;
-      return;
     }
-    const valueAsNumber = parseFloat(`${value}`);
-    if (Number.isNaN(valueAsNumber)) {
-      this.error = new Error(
-        `Could not parse "${value}" from field "${this.field}" as a number.`
-      );
-      this.numberOfStars = null;
-      return;
-    }
-    this.numberOfStars = valueAsNumber;
   }
 
   private updateRatingDetailsValue() {
