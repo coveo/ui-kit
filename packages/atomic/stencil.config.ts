@@ -61,6 +61,44 @@ function externalizeHeadless() {
   }
 }
 
+function externalizeBueno() {
+  switch (process.env.TARGET) {
+    case 'cdn':
+      return externalizeBuenoForCDN();
+    case 'npm':
+    default:
+      return externalizeBuenoForNPM();
+  }
+}
+
+function externalizeBuenoForCDN() {
+  return {
+    name: 'externalize-bueno',
+    resolveId(id: string) {
+      if (id.startsWith('@coveo/bueno')) {
+        return {
+          id: `/bueno/v${getPackageVersion()}${id.replace('@coveo/bueno', '')}/bueno.esm.js`,
+          external: 'absolute',
+        };
+      }
+    },
+  };
+}
+
+function externalizeBuenoForNPM() {
+  return {
+    name: 'externalize-headless',
+    resolveId(id: string) {
+      if (id.startsWith('@coveo/headless')) {
+        return {
+          id,
+          external: true,
+        };
+      }
+    },
+  };
+}
+
 function externalizeHeadlessForNPM() {
   return {
     name: 'externalize-headless',
@@ -76,7 +114,6 @@ function externalizeHeadlessForNPM() {
 }
 
 function externalizeHeadlessForCDN() {
-  console.log('Externalizing headless for CDN');
   const headlessVersion = getHeadlessVersion();
   return {
     name: 'externalize-headless',
@@ -106,6 +143,17 @@ const isDevWatch: boolean =
   process.argv.indexOf('--dev') > -1 &&
   process.argv.indexOf('--watch') > -1;
 
+const npmTargets = [
+  angular({
+    componentCorePackage: '@coveo/atomic',
+    directivesProxyFile:
+      '../atomic-angular/projects/atomic-angular/src/lib/stencil-generated/components.ts',
+  }),
+  angularModule({
+    moduleFile:
+      '../atomic-angular/projects/atomic-angular/src/lib/stencil-generated/atomic-angular.module.ts',
+  }),
+];
 export const config: Config = {
   namespace: 'atomic',
   taskQueue: 'async',
@@ -121,15 +169,7 @@ export const config: Config = {
         'atomic-field-condition',
       ],
     }),
-    angular({
-      componentCorePackage: '@coveo/atomic',
-      directivesProxyFile:
-        '../atomic-angular/projects/atomic-angular/src/lib/stencil-generated/components.ts',
-    }),
-    angularModule({
-      moduleFile:
-        '../atomic-angular/projects/atomic-angular/src/lib/stencil-generated/atomic-angular.module.ts',
-    }),
+    ...(process.env.TARGET === 'npm' ? npmTargets : []),
     {
       type: 'dist-custom-elements',
       generateTypeDeclarations: false,
@@ -256,6 +296,7 @@ export const config: Config = {
         include: 'src/templates/**/*.html',
       }),
       isDevWatch && replaceHeadlessMap(),
+      externalizeBueno(),
       externalizeHeadless(),
     ],
   },
