@@ -1,10 +1,8 @@
 import {AnyAction} from '@reduxjs/toolkit';
-import {buildMockCommerceRegularFacetResponse} from '../../../../test/mock-commerce-facet-response';
-import {buildMockCommerceRegularFacetValue} from '../../../../test/mock-commerce-facet-value';
-import {buildSearchResponse} from '../../../../test/mock-commerce-search';
-import {facetOrderReducer} from '../../../facets/facet-order/facet-order-slice';
-import {executeSearch} from '../../search/search-actions';
+import {fetchQuerySuggestions} from '../../query-suggest/query-suggest-actions';
+import {fieldSuggestionsOrderReducer} from './field-suggestions-order-slice';
 import {
+  FieldSuggestionsFacet,
   FieldSuggestionsOrderState,
   getFieldSuggestionsOrderInitialState,
 } from './field-suggestions-order-state';
@@ -13,7 +11,7 @@ describe('field suggestions order slice', () => {
   let state: FieldSuggestionsOrderState;
 
   function dispatchMock(action: AnyAction) {
-    state = facetOrderReducer(state, action);
+    state = fieldSuggestionsOrderReducer(state, action);
   }
 
   beforeEach(() => {
@@ -21,26 +19,34 @@ describe('field suggestions order slice', () => {
   });
 
   it('initializes the state correctly', () => {
-    expect(facetOrderReducer(undefined, {type: ''})).toEqual([]);
+    expect(fieldSuggestionsOrderReducer(undefined, {type: ''})).toEqual([]);
   });
 
-  function buildQueryAction(facetIds: string[]) {
-    const facetValue = buildMockCommerceRegularFacetValue({
-      value: 'some-value',
-    });
-    const response = buildSearchResponse();
-    response.response.facets = facetIds.map((facetId) =>
-      buildMockCommerceRegularFacetResponse({
-        facetId,
-        values: [facetValue],
-      })
+  function buildQueryAction(facets: FieldSuggestionsFacet[]) {
+    return fetchQuerySuggestions.fulfilled(
+      {
+        completions: [],
+        id: '',
+        responseId: 'responseId',
+        query: 'abc',
+        fieldSuggestionsFacets: facets,
+      },
+      '',
+      {id: 'id'}
     );
-
-    return executeSearch.fulfilled(response, '');
   }
   it('saves the facet order when a query is successful', () => {
-    const facetIds = ['facetA', 'facetB'];
-    dispatchMock(buildQueryAction(facetIds));
-    expect(state).toEqual(facetIds);
+    const facets: FieldSuggestionsFacet[] = [
+      {
+        facetId: 'facetA',
+        type: 'regular',
+      },
+      {
+        facetId: 'facetB',
+        type: 'hierarchical',
+      },
+    ];
+    dispatchMock(buildQueryAction(facets));
+    expect(state).toEqual(facets);
   });
 });
