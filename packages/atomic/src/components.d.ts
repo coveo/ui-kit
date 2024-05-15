@@ -336,6 +336,12 @@ export namespace Components {
     | 'product-listing'
     | 'recommendations';
     }
+    interface AtomicCommerceLayout {
+        /**
+          * CSS value that defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
+         */
+        "mobileBreakpoint": string;
+    }
     /**
      * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
      */
@@ -1742,6 +1748,10 @@ export namespace Components {
          */
         "sandbox": string;
     }
+    /**
+     * The modal opened when clicking on a quickview button.
+     * Do not use this component directly; use `atomic-quickview` instead.
+     */
     interface AtomicQuickviewModal {
         "content"?: string;
         "current"?: number;
@@ -3211,6 +3221,12 @@ declare global {
         prototype: HTMLAtomicCommerceInterfaceElement;
         new (): HTMLAtomicCommerceInterfaceElement;
     };
+    interface HTMLAtomicCommerceLayoutElement extends Components.AtomicCommerceLayout, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceLayoutElement: {
+        prototype: HTMLAtomicCommerceLayoutElement;
+        new (): HTMLAtomicCommerceLayoutElement;
+    };
     /**
      * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
      */
@@ -4062,6 +4078,10 @@ declare global {
         "atomic/quickview/next": any;
         "atomic/quickview/previous": any;
     }
+    /**
+     * The modal opened when clicking on a quickview button.
+     * Do not use this component directly; use `atomic-quickview` instead.
+     */
     interface HTMLAtomicQuickviewModalElement extends Components.AtomicQuickviewModal, HTMLStencilElement {
         addEventListener<K extends keyof HTMLAtomicQuickviewModalElementEventMap>(type: K, listener: (this: HTMLAtomicQuickviewModalElement, ev: AtomicQuickviewModalCustomEvent<HTMLAtomicQuickviewModalElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
@@ -4863,6 +4883,7 @@ declare global {
         "atomic-color-facet": HTMLAtomicColorFacetElement;
         "atomic-commerce-facets": HTMLAtomicCommerceFacetsElement;
         "atomic-commerce-interface": HTMLAtomicCommerceInterfaceElement;
+        "atomic-commerce-layout": HTMLAtomicCommerceLayoutElement;
         "atomic-commerce-load-more-products": HTMLAtomicCommerceLoadMoreProductsElement;
         "atomic-commerce-pager": HTMLAtomicCommercePagerElement;
         "atomic-commerce-product-list": HTMLAtomicCommerceProductListElement;
@@ -5276,6 +5297,12 @@ declare namespace LocalJSX {
         "type"?: | 'search'
     | 'product-listing'
     | 'recommendations';
+    }
+    interface AtomicCommerceLayout {
+        /**
+          * CSS value that defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
+         */
+        "mobileBreakpoint"?: string;
     }
     /**
      * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
@@ -6614,6 +6641,10 @@ declare namespace LocalJSX {
          */
         "sandbox"?: string;
     }
+    /**
+     * The modal opened when clicking on a quickview button.
+     * Do not use this component directly; use `atomic-quickview` instead.
+     */
     interface AtomicQuickviewModal {
         "content"?: string;
         "current"?: number;
@@ -7867,6 +7898,7 @@ declare namespace LocalJSX {
         "atomic-color-facet": AtomicColorFacet;
         "atomic-commerce-facets": AtomicCommerceFacets;
         "atomic-commerce-interface": AtomicCommerceInterface;
+        "atomic-commerce-layout": AtomicCommerceLayout;
         "atomic-commerce-load-more-products": AtomicCommerceLoadMoreProducts;
         "atomic-commerce-pager": AtomicCommercePager;
         "atomic-commerce-product-list": AtomicCommerceProductList;
@@ -8072,6 +8104,7 @@ declare module "@stencil/core" {
              */
             "atomic-commerce-facets": LocalJSX.AtomicCommerceFacets & JSXBase.HTMLAttributes<HTMLAtomicCommerceFacetsElement>;
             "atomic-commerce-interface": LocalJSX.AtomicCommerceInterface & JSXBase.HTMLAttributes<HTMLAtomicCommerceInterfaceElement>;
+            "atomic-commerce-layout": LocalJSX.AtomicCommerceLayout & JSXBase.HTMLAttributes<HTMLAtomicCommerceLayoutElement>;
             /**
              * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
              */
@@ -8309,6 +8342,10 @@ declare module "@stencil/core" {
              * images/links may not work as expected in an `atomic-quickview`).
              */
             "atomic-quickview": LocalJSX.AtomicQuickview & JSXBase.HTMLAttributes<HTMLAtomicQuickviewElement>;
+            /**
+             * The modal opened when clicking on a quickview button.
+             * Do not use this component directly; use `atomic-quickview` instead.
+             */
             "atomic-quickview-modal": LocalJSX.AtomicQuickviewModal & JSXBase.HTMLAttributes<HTMLAtomicQuickviewModalElement>;
             /**
              * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
