@@ -22,7 +22,7 @@ import {
 } from '../product-template-components/product-template-decorators';
 
 /**
- * The `atomic-product` component is used internally by the `atomic-product-list` component.
+ * The `atomic-product` component is used internally by the `atomic-commerce-product-list` component.
  * @internal
  */
 @Component({

@@ -6,7 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-import { CommerceEngine, InteractiveProduct, LogLevel, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet } from "@coveo/headless/commerce";
+import { ChildProduct, CommerceEngine, InteractiveProduct, LogLevel, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet } from "@coveo/headless/commerce";
 import { i18n } from "i18next";
 import { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
@@ -33,7 +33,7 @@ import { Bindings } from "./components/search/atomic-search-interface/atomic-sea
 import { AriaLabelGenerator as AriaLabelGenerator1 } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 export { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-export { CommerceEngine, InteractiveProduct, LogLevel, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet } from "@coveo/headless/commerce";
+export { ChildProduct, CommerceEngine, InteractiveProduct, LogLevel, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet } from "@coveo/headless/commerce";
 export { i18n } from "i18next";
 export { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { StandaloneSearchBoxData } from "./utils/local-storage-utils";
@@ -1592,7 +1592,7 @@ export namespace Components {
     interface AtomicPopover {
     }
     /**
-     * The `atomic-product` component is used internally by the `atomic-product-list` component.
+     * The `atomic-product` component is used internally by the `atomic-commerce-product-list` component.
      */
     interface AtomicProduct {
         /**
@@ -1636,6 +1636,21 @@ export namespace Components {
           * Global Atomic state.
          */
         "store"?: AtomicCommonStore<AtomicCommonStoreData>;
+    }
+    interface AtomicProductChildren {
+        "childrenPerPage": number;
+        /**
+          * The non-localized label to display for the product children section.
+         */
+        "label": string;
+        /**
+          * Moves to the next page, when the carousel is activated.
+         */
+        "nextPage": () => Promise<void>;
+        /**
+          * Moves to the previous page, when the carousel is activated.
+         */
+        "previousPage": () => Promise<void>;
     }
     interface AtomicProductDescription {
         /**
@@ -3106,6 +3121,10 @@ export interface AtomicPagerCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicPagerElement;
 }
+export interface AtomicProductChildrenCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicProductChildrenElement;
+}
 export interface AtomicQuickviewModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicQuickviewModalElement;
@@ -3997,13 +4016,34 @@ declare global {
         new (): HTMLAtomicPopoverElement;
     };
     /**
-     * The `atomic-product` component is used internally by the `atomic-product-list` component.
+     * The `atomic-product` component is used internally by the `atomic-commerce-product-list` component.
      */
     interface HTMLAtomicProductElement extends Components.AtomicProduct, HTMLStencilElement {
     }
     var HTMLAtomicProductElement: {
         prototype: HTMLAtomicProductElement;
         new (): HTMLAtomicProductElement;
+    };
+    interface HTMLAtomicProductChildrenElementEventMap {
+        "atomic/hoverChildProduct": {
+    hoveredChildProduct: ChildProduct;
+    currentParentProductId: string;
+    originalParentProduct: Product;
+  };
+    }
+    interface HTMLAtomicProductChildrenElement extends Components.AtomicProductChildren, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicProductChildrenElementEventMap>(type: K, listener: (this: HTMLAtomicProductChildrenElement, ev: AtomicProductChildrenCustomEvent<HTMLAtomicProductChildrenElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicProductChildrenElementEventMap>(type: K, listener: (this: HTMLAtomicProductChildrenElement, ev: AtomicProductChildrenCustomEvent<HTMLAtomicProductChildrenElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLAtomicProductChildrenElement: {
+        prototype: HTMLAtomicProductChildrenElement;
+        new (): HTMLAtomicProductChildrenElement;
     };
     interface HTMLAtomicProductDescriptionElement extends Components.AtomicProductDescription, HTMLStencilElement {
     }
@@ -4980,6 +5020,7 @@ declare global {
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-popover": HTMLAtomicPopoverElement;
         "atomic-product": HTMLAtomicProductElement;
+        "atomic-product-children": HTMLAtomicProductChildrenElement;
         "atomic-product-description": HTMLAtomicProductDescriptionElement;
         "atomic-product-image": HTMLAtomicProductImageElement;
         "atomic-product-link": HTMLAtomicProductLinkElement;
@@ -6518,7 +6559,7 @@ declare namespace LocalJSX {
     interface AtomicPopover {
     }
     /**
-     * The `atomic-product` component is used internally by the `atomic-product-list` component.
+     * The `atomic-product` component is used internally by the `atomic-commerce-product-list` component.
      */
     interface AtomicProduct {
         /**
@@ -6562,6 +6603,18 @@ declare namespace LocalJSX {
           * Global Atomic state.
          */
         "store"?: AtomicCommonStore<AtomicCommonStoreData>;
+    }
+    interface AtomicProductChildren {
+        "childrenPerPage"?: number;
+        /**
+          * The non-localized label to display for the product children section.
+         */
+        "label"?: string;
+        "onAtomic/hoverChildProduct"?: (event: AtomicProductChildrenCustomEvent<{
+    hoveredChildProduct: ChildProduct;
+    currentParentProductId: string;
+    originalParentProduct: Product;
+  }>) => void;
     }
     interface AtomicProductDescription {
         /**
@@ -8002,6 +8055,7 @@ declare namespace LocalJSX {
         "atomic-pager": AtomicPager;
         "atomic-popover": AtomicPopover;
         "atomic-product": AtomicProduct;
+        "atomic-product-children": AtomicProductChildren;
         "atomic-product-description": AtomicProductDescription;
         "atomic-product-image": AtomicProductImage;
         "atomic-product-link": AtomicProductLink;
@@ -8337,9 +8391,10 @@ declare module "@stencil/core" {
              */
             "atomic-popover": LocalJSX.AtomicPopover & JSXBase.HTMLAttributes<HTMLAtomicPopoverElement>;
             /**
-             * The `atomic-product` component is used internally by the `atomic-product-list` component.
+             * The `atomic-product` component is used internally by the `atomic-commerce-product-list` component.
              */
             "atomic-product": LocalJSX.AtomicProduct & JSXBase.HTMLAttributes<HTMLAtomicProductElement>;
+            "atomic-product-children": LocalJSX.AtomicProductChildren & JSXBase.HTMLAttributes<HTMLAtomicProductChildrenElement>;
             "atomic-product-description": LocalJSX.AtomicProductDescription & JSXBase.HTMLAttributes<HTMLAtomicProductDescriptionElement>;
             /**
              * The `atomic-product-image` component renders an image from a product field.

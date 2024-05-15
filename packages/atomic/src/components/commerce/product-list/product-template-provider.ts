@@ -15,6 +15,7 @@ function defaultTemplate() {
     <atomic-product-rating rating-details-field="ec_rating" field="ec_rating"></atomic-product-rating>
     <atomic-product-price currency="USD" class="text-2xl"></atomic-product-price>
     <atomic-product-description></atomic-product-description>
+    <atomic-product-children></atomic-product-children>
   `;
 
   const template = document.createElement('template');

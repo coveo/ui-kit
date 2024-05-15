@@ -6,8 +6,17 @@ import {
   SearchState,
   Search,
   Product,
+  ChildProduct,
 } from '@coveo/headless/commerce';
-import {Component, Element, Method, Prop, State, h} from '@stencil/core';
+import {
+  Component,
+  Element,
+  Listen,
+  Method,
+  Prop,
+  State,
+  h,
+} from '@stencil/core';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
@@ -146,6 +155,32 @@ export class AtomicCommerceProductList
       nextNewItemTarget: this.focusTarget,
       store: this.bindings.store,
     });
+  }
+
+  @Listen('atomic/hoverChildProduct')
+  public onHoverChildProduct(
+    event: CustomEvent<{
+      hoveredChildProduct: ChildProduct;
+      currentParentProductId: string;
+      originalParentProduct: Product;
+    }>
+  ) {
+    const {currentParentProductId, hoveredChildProduct, originalParentProduct} =
+      event.detail;
+    const currentParentProductIndex = this.productState.products.findIndex(
+      (product) => product.permanentid === currentParentProductId
+    );
+
+    if (currentParentProductIndex === -1) {
+      return;
+    }
+
+    const stateCopy = JSON.parse(JSON.stringify(this.productState));
+    stateCopy.products[currentParentProductIndex] = {
+      ...hoveredChildProduct,
+      children: [originalParentProduct, ...originalParentProduct.children],
+    };
+    this.searchState = stateCopy;
   }
 
   get productState() {
