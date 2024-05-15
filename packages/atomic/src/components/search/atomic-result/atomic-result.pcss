@@ -1,0 +1,18 @@
+@import '../../common/result/result.pcss';
+@import '../../common/result/result-with-sections.pcss';
+
+.result-root {
+  &.with-sections {
+    @mixin result-with-sections map(post-css-map-for-sections, search);
+
+    &.display-list {
+      @screen desktop-only {
+        @mixin row-result-desktop map(post-css-map-for-sections, search);
+      }
+    }
+
+    &.display-table {
+      @mixin row-result-desktop map(post-css-map-for-sections, search);
+    }
+  }
+}

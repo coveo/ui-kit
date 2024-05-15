@@ -2,18 +2,20 @@ import {Element, Component} from '@stencil/core';
 import {hideEmptySection} from '../../../../utils/item-section-utils';
 
 /**
+ * @internal
+ *
  * This section displays the field that's important for its search criteria.
- * For example, in Commerce, a product's cost is often more important than the title itself.
+ * For example, in Commerce, a product's price is often more important than the title itself.
  *
  * Behavior:
  * * Has a very large font size.
- * * Is the second closest element beneath the title section.
+ * * Is the second closest element beneath the name section.
  */
 @Component({
-  tag: 'atomic-result-section-emphasized',
+  tag: 'atomic-product-section-emphasized',
   shadow: false,
 })
-export class AtomicResultSectionEmphasized {
+export class AtomicProductSectionEmphasized {
   @Element() private host!: HTMLElement;
 
   public componentDidRender() {

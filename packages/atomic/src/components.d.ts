@@ -1643,6 +1643,42 @@ export namespace Components {
          */
         "currency": string;
     }
+    /**
+     * This section allows the information seeker to perform an action on an item without having to view its details.
+     * In Commerce you can add an item to the cart directly or add it to a wish list to view at a later time.
+     * Behavior:
+     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
+     * ** You should ensure that elements inside of it have `height: var(--line-height)`.
+     * * Is a wrapping flexbox with a gap.
+     * * May appear over, next to, or beneath the visual section.
+     */
+    interface AtomicProductSectionActions {
+    }
+    interface AtomicProductSectionBadges {
+    }
+    interface AtomicProductSectionBottomMetadata {
+    }
+    /**
+     * This section displays the child product, available when using the <atomic-product-children> component.
+     * Behavior:
+     * * Shows children at the bottom of the result, indented and wrapped in a border.
+     */
+    interface AtomicProductSectionChildren {
+    }
+    interface AtomicProductSectionDescription {
+    }
+    interface AtomicProductSectionEmphasized {
+    }
+    interface AtomicProductSectionMetadata {
+    }
+    interface AtomicProductSectionName {
+    }
+    interface AtomicProductSectionVisual {
+        /**
+          * How large or small the visual section of product using this template should be.
+         */
+        "imageSize"?: Omit<ItemDisplayImageSize, 'icon'>;
+    }
     interface AtomicProductTemplate {
         /**
           * A function that must return true on products for the product template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to products whose `ec_name` contains `singapore`: `document.querySelector('#target-template').conditions = [(product) => /singapore/i.test(product.ec_name)];`
@@ -3931,6 +3967,74 @@ declare global {
         prototype: HTMLAtomicProductPriceElement;
         new (): HTMLAtomicProductPriceElement;
     };
+    /**
+     * This section allows the information seeker to perform an action on an item without having to view its details.
+     * In Commerce you can add an item to the cart directly or add it to a wish list to view at a later time.
+     * Behavior:
+     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
+     * ** You should ensure that elements inside of it have `height: var(--line-height)`.
+     * * Is a wrapping flexbox with a gap.
+     * * May appear over, next to, or beneath the visual section.
+     */
+    interface HTMLAtomicProductSectionActionsElement extends Components.AtomicProductSectionActions, HTMLStencilElement {
+    }
+    var HTMLAtomicProductSectionActionsElement: {
+        prototype: HTMLAtomicProductSectionActionsElement;
+        new (): HTMLAtomicProductSectionActionsElement;
+    };
+    interface HTMLAtomicProductSectionBadgesElement extends Components.AtomicProductSectionBadges, HTMLStencilElement {
+    }
+    var HTMLAtomicProductSectionBadgesElement: {
+        prototype: HTMLAtomicProductSectionBadgesElement;
+        new (): HTMLAtomicProductSectionBadgesElement;
+    };
+    interface HTMLAtomicProductSectionBottomMetadataElement extends Components.AtomicProductSectionBottomMetadata, HTMLStencilElement {
+    }
+    var HTMLAtomicProductSectionBottomMetadataElement: {
+        prototype: HTMLAtomicProductSectionBottomMetadataElement;
+        new (): HTMLAtomicProductSectionBottomMetadataElement;
+    };
+    /**
+     * This section displays the child product, available when using the <atomic-product-children> component.
+     * Behavior:
+     * * Shows children at the bottom of the result, indented and wrapped in a border.
+     */
+    interface HTMLAtomicProductSectionChildrenElement extends Components.AtomicProductSectionChildren, HTMLStencilElement {
+    }
+    var HTMLAtomicProductSectionChildrenElement: {
+        prototype: HTMLAtomicProductSectionChildrenElement;
+        new (): HTMLAtomicProductSectionChildrenElement;
+    };
+    interface HTMLAtomicProductSectionDescriptionElement extends Components.AtomicProductSectionDescription, HTMLStencilElement {
+    }
+    var HTMLAtomicProductSectionDescriptionElement: {
+        prototype: HTMLAtomicProductSectionDescriptionElement;
+        new (): HTMLAtomicProductSectionDescriptionElement;
+    };
+    interface HTMLAtomicProductSectionEmphasizedElement extends Components.AtomicProductSectionEmphasized, HTMLStencilElement {
+    }
+    var HTMLAtomicProductSectionEmphasizedElement: {
+        prototype: HTMLAtomicProductSectionEmphasizedElement;
+        new (): HTMLAtomicProductSectionEmphasizedElement;
+    };
+    interface HTMLAtomicProductSectionMetadataElement extends Components.AtomicProductSectionMetadata, HTMLStencilElement {
+    }
+    var HTMLAtomicProductSectionMetadataElement: {
+        prototype: HTMLAtomicProductSectionMetadataElement;
+        new (): HTMLAtomicProductSectionMetadataElement;
+    };
+    interface HTMLAtomicProductSectionNameElement extends Components.AtomicProductSectionName, HTMLStencilElement {
+    }
+    var HTMLAtomicProductSectionNameElement: {
+        prototype: HTMLAtomicProductSectionNameElement;
+        new (): HTMLAtomicProductSectionNameElement;
+    };
+    interface HTMLAtomicProductSectionVisualElement extends Components.AtomicProductSectionVisual, HTMLStencilElement {
+    }
+    var HTMLAtomicProductSectionVisualElement: {
+        prototype: HTMLAtomicProductSectionVisualElement;
+        new (): HTMLAtomicProductSectionVisualElement;
+    };
     interface HTMLAtomicProductTemplateElement extends Components.AtomicProductTemplate, HTMLStencilElement {
     }
     var HTMLAtomicProductTemplateElement: {
@@ -4861,6 +4965,15 @@ declare global {
         "atomic-product-link": HTMLAtomicProductLinkElement;
         "atomic-product-numeric-field-value": HTMLAtomicProductNumericFieldValueElement;
         "atomic-product-price": HTMLAtomicProductPriceElement;
+        "atomic-product-section-actions": HTMLAtomicProductSectionActionsElement;
+        "atomic-product-section-badges": HTMLAtomicProductSectionBadgesElement;
+        "atomic-product-section-bottom-metadata": HTMLAtomicProductSectionBottomMetadataElement;
+        "atomic-product-section-children": HTMLAtomicProductSectionChildrenElement;
+        "atomic-product-section-description": HTMLAtomicProductSectionDescriptionElement;
+        "atomic-product-section-emphasized": HTMLAtomicProductSectionEmphasizedElement;
+        "atomic-product-section-metadata": HTMLAtomicProductSectionMetadataElement;
+        "atomic-product-section-name": HTMLAtomicProductSectionNameElement;
+        "atomic-product-section-visual": HTMLAtomicProductSectionVisualElement;
         "atomic-product-template": HTMLAtomicProductTemplateElement;
         "atomic-product-text": HTMLAtomicProductTextElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
@@ -6444,6 +6557,42 @@ declare namespace LocalJSX {
          */
         "currency"?: string;
     }
+    /**
+     * This section allows the information seeker to perform an action on an item without having to view its details.
+     * In Commerce you can add an item to the cart directly or add it to a wish list to view at a later time.
+     * Behavior:
+     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
+     * ** You should ensure that elements inside of it have `height: var(--line-height)`.
+     * * Is a wrapping flexbox with a gap.
+     * * May appear over, next to, or beneath the visual section.
+     */
+    interface AtomicProductSectionActions {
+    }
+    interface AtomicProductSectionBadges {
+    }
+    interface AtomicProductSectionBottomMetadata {
+    }
+    /**
+     * This section displays the child product, available when using the <atomic-product-children> component.
+     * Behavior:
+     * * Shows children at the bottom of the result, indented and wrapped in a border.
+     */
+    interface AtomicProductSectionChildren {
+    }
+    interface AtomicProductSectionDescription {
+    }
+    interface AtomicProductSectionEmphasized {
+    }
+    interface AtomicProductSectionMetadata {
+    }
+    interface AtomicProductSectionName {
+    }
+    interface AtomicProductSectionVisual {
+        /**
+          * How large or small the visual section of product using this template should be.
+         */
+        "imageSize"?: Omit<ItemDisplayImageSize, 'icon'>;
+    }
     interface AtomicProductTemplate {
         /**
           * A function that must return true on products for the product template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to products whose `ec_name` contains `singapore`: `document.querySelector('#target-template').conditions = [(product) => /singapore/i.test(product.ec_name)];`
@@ -7818,6 +7967,15 @@ declare namespace LocalJSX {
         "atomic-product-link": AtomicProductLink;
         "atomic-product-numeric-field-value": AtomicProductNumericFieldValue;
         "atomic-product-price": AtomicProductPrice;
+        "atomic-product-section-actions": AtomicProductSectionActions;
+        "atomic-product-section-badges": AtomicProductSectionBadges;
+        "atomic-product-section-bottom-metadata": AtomicProductSectionBottomMetadata;
+        "atomic-product-section-children": AtomicProductSectionChildren;
+        "atomic-product-section-description": AtomicProductSectionDescription;
+        "atomic-product-section-emphasized": AtomicProductSectionEmphasized;
+        "atomic-product-section-metadata": AtomicProductSectionMetadata;
+        "atomic-product-section-name": AtomicProductSectionName;
+        "atomic-product-section-visual": AtomicProductSectionVisual;
         "atomic-product-template": AtomicProductTemplate;
         "atomic-product-text": AtomicProductText;
         "atomic-query-error": AtomicQueryError;
@@ -8144,6 +8302,29 @@ declare module "@stencil/core" {
             "atomic-product-link": LocalJSX.AtomicProductLink & JSXBase.HTMLAttributes<HTMLAtomicProductLinkElement>;
             "atomic-product-numeric-field-value": LocalJSX.AtomicProductNumericFieldValue & JSXBase.HTMLAttributes<HTMLAtomicProductNumericFieldValueElement>;
             "atomic-product-price": LocalJSX.AtomicProductPrice & JSXBase.HTMLAttributes<HTMLAtomicProductPriceElement>;
+            /**
+             * This section allows the information seeker to perform an action on an item without having to view its details.
+             * In Commerce you can add an item to the cart directly or add it to a wish list to view at a later time.
+             * Behavior:
+             * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
+             * ** You should ensure that elements inside of it have `height: var(--line-height)`.
+             * * Is a wrapping flexbox with a gap.
+             * * May appear over, next to, or beneath the visual section.
+             */
+            "atomic-product-section-actions": LocalJSX.AtomicProductSectionActions & JSXBase.HTMLAttributes<HTMLAtomicProductSectionActionsElement>;
+            "atomic-product-section-badges": LocalJSX.AtomicProductSectionBadges & JSXBase.HTMLAttributes<HTMLAtomicProductSectionBadgesElement>;
+            "atomic-product-section-bottom-metadata": LocalJSX.AtomicProductSectionBottomMetadata & JSXBase.HTMLAttributes<HTMLAtomicProductSectionBottomMetadataElement>;
+            /**
+             * This section displays the child product, available when using the <atomic-product-children> component.
+             * Behavior:
+             * * Shows children at the bottom of the result, indented and wrapped in a border.
+             */
+            "atomic-product-section-children": LocalJSX.AtomicProductSectionChildren & JSXBase.HTMLAttributes<HTMLAtomicProductSectionChildrenElement>;
+            "atomic-product-section-description": LocalJSX.AtomicProductSectionDescription & JSXBase.HTMLAttributes<HTMLAtomicProductSectionDescriptionElement>;
+            "atomic-product-section-emphasized": LocalJSX.AtomicProductSectionEmphasized & JSXBase.HTMLAttributes<HTMLAtomicProductSectionEmphasizedElement>;
+            "atomic-product-section-metadata": LocalJSX.AtomicProductSectionMetadata & JSXBase.HTMLAttributes<HTMLAtomicProductSectionMetadataElement>;
+            "atomic-product-section-name": LocalJSX.AtomicProductSectionName & JSXBase.HTMLAttributes<HTMLAtomicProductSectionNameElement>;
+            "atomic-product-section-visual": LocalJSX.AtomicProductSectionVisual & JSXBase.HTMLAttributes<HTMLAtomicProductSectionVisualElement>;
             "atomic-product-template": LocalJSX.AtomicProductTemplate & JSXBase.HTMLAttributes<HTMLAtomicProductTemplateElement>;
             "atomic-product-text": LocalJSX.AtomicProductText & JSXBase.HTMLAttributes<HTMLAtomicProductTextElement>;
             /**

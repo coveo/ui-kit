@@ -2,8 +2,9 @@ import {Element, Component} from '@stencil/core';
 import {hideEmptySection} from '../../../../utils/item-section-utils';
 
 /**
- * This section allows the information seeker to perform an action on an item without having to view its details.
- * For example, in Commerce you can add an item to the cart directly or add it to a wish list to view at a later time.
+ * @internal
+ *
+ * This section provides badges that highlight special features of the product.
  *
  * Behavior:
  * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
@@ -12,10 +13,10 @@ import {hideEmptySection} from '../../../../utils/item-section-utils';
  * * May appear over, next to, or beneath the visual section.
  */
 @Component({
-  tag: 'atomic-result-section-actions',
+  tag: 'atomic-product-section-badges',
   shadow: false,
 })
-export class AtomicResultSectionActions {
+export class AtomicResultSectionBadges {
   @Element() private host!: HTMLElement;
 
   public componentDidRender() {

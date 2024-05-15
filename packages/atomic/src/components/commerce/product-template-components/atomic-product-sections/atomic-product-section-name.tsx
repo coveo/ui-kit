@@ -2,8 +2,9 @@ import {Element, Component} from '@stencil/core';
 import {hideEmptySection} from '../../../../utils/item-section-utils';
 
 /**
- * This section identifies the item by its name, and its main use is to make the result list scannable.
- * This is usually the page title.
+ * @internal
+ *
+ * This section identifies the product by its name, and its main use is to make the product list scannable.
  *
  * Behavior:
  * * Has a fixed height of two lines on grid layouts.
@@ -11,10 +12,10 @@ import {hideEmptySection} from '../../../../utils/item-section-utils';
  * * Has a defined CSS `color` property for text.
  */
 @Component({
-  tag: 'atomic-result-section-title',
+  tag: 'atomic-product-section-name',
   shadow: false,
 })
-export class AtomicResultSectionTitle {
+export class AtomicProductSectionTitle {
   @Element() private host!: HTMLElement;
 
   public componentDidRender() {

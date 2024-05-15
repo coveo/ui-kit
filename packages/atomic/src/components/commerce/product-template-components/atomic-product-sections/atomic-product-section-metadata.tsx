@@ -2,8 +2,10 @@ import {Element, Component} from '@stencil/core';
 import {hideEmptySection} from '../../../../utils/item-section-utils';
 
 /**
- * This section surfaces some fields that are directly related to the title of the item.
- * For example, in Commerce, this could be the item's rating, which is tied to the nature of the product itself,
+ * @internal
+ *
+ * This section surfaces some fields that are directly related to the name of the item.
+ * In commerce, this could be the product rating, which is tied to the nature of the product itself,
  * rather than to the product's description.
  *
  * Behavior:
@@ -11,10 +13,10 @@ import {hideEmptySection} from '../../../../utils/item-section-utils';
  * * Is the closest element beneath the title section.
  */
 @Component({
-  tag: 'atomic-result-section-title-metadata',
+  tag: 'atomic-product-section-metadata',
   shadow: false,
 })
-export class AtomicResultSectionTitleMetadata {
+export class AtomicProductSectionMetadata {
   @Element() private host!: HTMLElement;
 
   public componentDidRender() {

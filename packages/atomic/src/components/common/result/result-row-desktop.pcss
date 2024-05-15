@@ -1,15 +1,15 @@
-@define-mixin atomic-children-desktop $margin-lg, $margin-sm {
+@define-mixin atomic-children-desktop $section-children, $children-tag-name, $margin-lg, $margin-sm {
   &.child-result:not(.last-child) {
     margin-bottom: $margin-lg;
   }
 
-  atomic-result-section-children {
-    atomic-result-children::part(children-root) {
+  & $(section-children) {
+    $(children-tag-name)::part(children-root) {
       margin-top: $margin-sm;
       padding: $margin-lg;
     }
 
-    atomic-result-children::part(show-hide-button),
+    $(children-tag-name)::part(show-hide-button),
     atomic-insight-result-children::part(show-hide-button) {
       margin-top: $margin-sm;
       margin-bottom: $margin-sm;
@@ -21,14 +21,15 @@
   }
 }
 
-@define-mixin row-result-desktop {
-  &.image-large.density-compact atomic-result-section-visual {
+@define-mixin row-result-desktop $section-visual, $section-badges, $section-actions, $section-title, $section-excerpt,
+  $section-bottom-metadata, $section-title-metadata, $section-children, $children-tag-name {
+  &.image-large.density-compact $(section-visual) {
     width: 10.25rem;
     height: 10.25rem;
   }
 
-  atomic-result-section-children {
-    atomic-result-children::part(children-root) {
+  $(section-children) {
+    $(children-tag-name)::part(children-root) {
       border: 1px solid var(--atomic-neutral);
       border-radius: 16px;
     }
@@ -36,21 +37,21 @@
 
   /* == Density styles == */
   &.density-comfortable {
-    atomic-result-section-visual {
+    $(section-visual) {
       margin-right: 1.5rem;
     }
 
-    atomic-result-section-badges,
-    atomic-result-section-actions {
+    $(section-badges),
+    $(section-actions) {
       margin-bottom: 1.5rem;
       --row-height: 2rem;
     }
 
-    atomic-result-section-title {
+    $(section-title) {
       @mixin set-font-size var(--atomic-text-2xl);
     }
 
-    atomic-result-section-excerpt {
+    $(section-excerpt) {
       margin-top: 1.75rem;
       @mixin set-font-size var(--atomic-text-lg);
 
@@ -58,36 +59,36 @@
       @mixin line-clamp 3;
     }
 
-    atomic-result-section-bottom-metadata {
+    $(section-bottom-metadata) {
       margin-top: 1.25rem;
       @mixin set-font-size var(--atomic-text-sm);
 
       max-height: 4rem;
     }
 
-    atomic-result-section-title-metadata {
+    $(section-title-metadata) {
       margin-top: 0.475rem;
     }
 
-    @mixin atomic-children-desktop 1.75rem, 1.25rem;
+    @mixin atomic-children-desktop $(section-children), $(children-tag-name), 1.75rem, 1.25rem;
   }
 
   &.density-normal {
-    atomic-result-section-visual {
+    $(section-visual) {
       margin-right: 1rem;
     }
 
-    atomic-result-section-badges,
-    atomic-result-section-actions {
+    $(section-badges),
+    $(section-actions) {
       margin-bottom: 1rem;
       --row-height: 2rem;
     }
 
-    atomic-result-section-title {
+    $(section-title) {
       @mixin set-font-size var(--atomic-text-xl);
     }
 
-    atomic-result-section-excerpt {
+    $(section-excerpt) {
       margin-top: 1.25rem;
       @mixin set-font-size var(--atomic-text-base);
 
@@ -95,36 +96,36 @@
       @mixin line-clamp 2;
     }
 
-    atomic-result-section-bottom-metadata {
+    $(section-bottom-metadata) {
       margin-top: 0.875rem;
       @mixin set-font-size var(--atomic-text-sm);
 
       max-height: 3.5rem;
     }
 
-    atomic-result-section-title-metadata {
+    $(section-title-metadata) {
       margin-top: 0.475rem;
     }
 
-    @mixin atomic-children-desktop 1.5rem, 0.875rem;
+    @mixin atomic-children-desktop $(section-children), $(children-tag-name), 1.5rem, 0.875rem;
   }
 
   &.density-compact {
-    atomic-result-section-visual {
+    $(section-visual) {
       margin-right: 1rem;
     }
 
-    atomic-result-section-badges,
-    atomic-result-section-actions {
+    $(section-badges),
+    $(section-actions) {
       margin-bottom: 1rem;
       --row-height: 2rem;
     }
 
-    atomic-result-section-title {
+    $(section-title) {
       @mixin set-font-size var(--atomic-text-xl);
     }
 
-    atomic-result-section-excerpt {
+    $(section-excerpt) {
       margin-top: 1rem;
       @mixin set-font-size var(--atomic-text-base);
 
@@ -132,18 +133,18 @@
       @mixin line-clamp 1;
     }
 
-    atomic-result-section-bottom-metadata {
+    $(section-bottom-metadata) {
       margin-top: 0.6875rem;
       @mixin set-font-size var(--atomic-text-sm);
 
       max-height: 3.25rem;
     }
 
-    atomic-result-section-title-metadata {
+    $(section-title-metadata) {
       margin-top: 0.475rem;
     }
 
-    @mixin atomic-children-desktop 1rem, 0.475rem;
+    @mixin atomic-children-desktop $(section-children), $(children-tag-name), 1rem, 0.475rem;
   }
 
   /* == Image styles == */
@@ -163,7 +164,7 @@
 
   &.image-large.density-comfortable,
   &.image-large.density-normal {
-    atomic-result-section-visual {
+    $(section-visual) {
       width: 20.375rem;
       height: 20.375rem;
     }
@@ -171,7 +172,7 @@
 
   &.image-small,
   &.image-large.density-compact {
-    atomic-result-section-visual {
+    $(section-visual) {
       width: 10rem;
       height: 10rem;
     }
@@ -189,7 +190,7 @@
     grid-template-columns: minmax(0, min-content) auto 1fr auto;
     grid-template-rows: repeat(7, minmax(0, min-content));
 
-    atomic-result-section-visual {
+    $(section-visual) {
       width: 2rem;
       height: 2rem;
     }
@@ -207,7 +208,7 @@
     grid-template-columns: auto 1fr auto;
     grid-template-rows: repeat(6, auto);
 
-    atomic-result-section-visual {
+    $(section-visual) {
       display: none;
     }
   }

@@ -1,17 +1,18 @@
-@define-mixin result-with-sections {
+@define-mixin result-with-sections $section-visual, $section-badges, $section-actions, $section-title, $section-excerpt,
+  $section-bottom-metadata, $section-title-metadata, $section-children, $children-tag-name {
   display: grid;
   justify-items: stretch;
 
   /* == Common styles == */
-  atomic-result-section-visual {
+  $(section-visual) {
     grid-area: visual;
   }
 
-  atomic-result-section-badges {
+  $(section-badges) {
     grid-area: badges;
   }
 
-  atomic-result-section-actions {
+  $(section-actions) {
     grid-area: actions;
 
     atomic-result-quickview {

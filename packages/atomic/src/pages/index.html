@@ -18,9 +18,6 @@
         accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
         organizationId: 'searchuisamples',
         organizationEndpoints: await searchInterface.getOrganizationEndpoints('searchuisamples'),
-        analytics: {
-          analyticsMode: 'next',
-        },
       });
 
       // Trigger a first search
@@ -220,19 +217,6 @@
             <atomic-smart-snippet></atomic-smart-snippet>
             <atomic-smart-snippet-suggestions></atomic-smart-snippet-suggestions>
             <atomic-result-list>
-              <atomic-result-template must-match-sourcetype="YouTube">
-                <template>
-                  <atomic-result-section-actions><atomic-quickview></atomic-quickview></atomic-result-section-actions>
-                  <atomic-result-section-visual image-size="small">
-                    <img loading="lazy" src="https://picsum.photos/350" class="thumbnail" />
-                  </atomic-result-section-visual>
-                  <atomic-result-section-title><atomic-result-link></atomic-result-link></atomic-result-section-title>
-                  <atomic-result-section-excerpt
-                    ><atomic-result-text field="excerpt"></atomic-result-text
-                  ></atomic-result-section-excerpt>
-                </template>
-              </atomic-result-template>
-
               <atomic-result-template>
                 <template>
                   <style>

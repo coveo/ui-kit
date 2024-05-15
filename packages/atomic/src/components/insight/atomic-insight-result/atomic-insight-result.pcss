@@ -1,4 +1,5 @@
 @import '../../common/result/result.pcss';
+@import '../../common/result/result-with-sections.pcss';
 
 :host {
   @apply relative;
@@ -30,5 +31,21 @@
   atomic-load-more-children-results::part(button) {
     margin-bottom: 0;
     padding: 0.2rem 0.5rem;
+  }
+}
+
+.result-root {
+  &.with-sections {
+    @mixin result-with-sections map(post-css-map-for-sections, insight);
+
+    &.display-list {
+      @screen desktop-only {
+        @mixin row-result-desktop map(post-css-map-for-sections, insight);
+      }
+    }
+
+    &.display-table {
+      @mixin row-result-desktop map(post-css-map-for-sections, insight);
+    }
   }
 }

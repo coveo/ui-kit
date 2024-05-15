@@ -9,6 +9,7 @@ import {readFileSync} from 'fs';
 import path from 'path';
 import focusVisible from 'postcss-focus-visible';
 import atImport from 'postcss-import';
+import postcssMap from 'postcss-map';
 import mixins from 'postcss-mixins';
 import postcssNesting from 'postcss-nested';
 import html from 'rollup-plugin-html';
@@ -144,6 +145,9 @@ export const config: Config = {
         focusVisible(),
         postcssNesting(),
         autoprefixer(),
+        postcssMap({
+          maps: ['src/components/common/result/post-css-map-for-sections.yaml'],
+        }),
       ],
     }),
     replace(),

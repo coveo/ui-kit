@@ -96,6 +96,7 @@
     "ncp": "2.0.0",
     "postcss-focus-visible": "9.0.1",
     "postcss-import": "16.1.0",
+    "postcss-map": "0.11.0",
     "postcss-mixins": "10.0.1",
     "postcss-nested": "6.0.1",
     "puppeteer": "22.8.1",
