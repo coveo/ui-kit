@@ -1711,6 +1711,10 @@ export namespace Components {
          */
         "sandbox": string;
     }
+    /**
+     * The modal opened when clicking on a quickview button.
+     * Do not use this component directly; use `atomic-quickview` instead.
+     */
     interface AtomicQuickviewModal {
         "content"?: string;
         "current"?: number;
@@ -4012,6 +4016,10 @@ declare global {
         "atomic/quickview/next": any;
         "atomic/quickview/previous": any;
     }
+    /**
+     * The modal opened when clicking on a quickview button.
+     * Do not use this component directly; use `atomic-quickview` instead.
+     */
     interface HTMLAtomicQuickviewModalElement extends Components.AtomicQuickviewModal, HTMLStencilElement {
         addEventListener<K extends keyof HTMLAtomicQuickviewModalElementEventMap>(type: K, listener: (this: HTMLAtomicQuickviewModalElement, ev: AtomicQuickviewModalCustomEvent<HTMLAtomicQuickviewModalElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
@@ -6531,6 +6539,10 @@ declare namespace LocalJSX {
          */
         "sandbox"?: string;
     }
+    /**
+     * The modal opened when clicking on a quickview button.
+     * Do not use this component directly; use `atomic-quickview` instead.
+     */
     interface AtomicQuickviewModal {
         "content"?: string;
         "current"?: number;
@@ -8215,6 +8227,10 @@ declare module "@stencil/core" {
              * images/links may not work as expected in an `atomic-quickview`).
              */
             "atomic-quickview": LocalJSX.AtomicQuickview & JSXBase.HTMLAttributes<HTMLAtomicQuickviewElement>;
+            /**
+             * The modal opened when clicking on a quickview button.
+             * Do not use this component directly; use `atomic-quickview` instead.
+             */
             "atomic-quickview-modal": LocalJSX.AtomicQuickviewModal & JSXBase.HTMLAttributes<HTMLAtomicQuickviewModalElement>;
             /**
              * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
