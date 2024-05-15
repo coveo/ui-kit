@@ -6,7 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-import { CommerceEngine, InteractiveProduct, LogLevel, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition } from "@coveo/headless/commerce";
+import { CommerceEngine, InteractiveProduct, LogLevel, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet } from "@coveo/headless/commerce";
 import { i18n } from "i18next";
 import { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
@@ -33,7 +33,7 @@ import { Bindings } from "./components/search/atomic-search-interface/atomic-sea
 import { AriaLabelGenerator as AriaLabelGenerator1 } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 export { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-export { CommerceEngine, InteractiveProduct, LogLevel, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition } from "@coveo/headless/commerce";
+export { CommerceEngine, InteractiveProduct, LogLevel, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet } from "@coveo/headless/commerce";
 export { i18n } from "i18next";
 export { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { StandaloneSearchBoxData } from "./utils/local-storage-utils";
@@ -258,6 +258,12 @@ export namespace Components {
           * Whether this facet should contain a search box.
          */
         "withSearch": boolean;
+    }
+    /**
+     * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
+     */
+    interface AtomicCommerceFacet {
+        "facet": RegularFacet;
     }
     /**
      * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
@@ -1684,6 +1690,27 @@ export namespace Components {
           * The currency to use in currency formatting. Allowed values are the [ISO 4217 currency codes](https://www.six-group.com/en/products-services/financial-information/data-standards.html#scrollTo=maintenance-agency), such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB.
          */
         "currency": string;
+    }
+    /**
+     * The `atomic-product-rating` element renders a star rating.
+     */
+    interface AtomicProductRating {
+        /**
+          * The numerical field whose values you want to display as a rating.
+         */
+        "field": string;
+        /**
+          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.  When using a custom icon, at least part of your icon should have the color set to `fill="currentColor"`. This part of the SVG will take on the colors set in the following [variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties):  - `--atomic-rating-icon-active-color` - `--atomic-rating-icon-inactive-color`
+         */
+        "icon": string;
+        /**
+          * The maximum value of the field. This value is also used as the number of icons to be displayed.
+         */
+        "maxValueInIndex": number;
+        /**
+          * The field whose value you want to display next to the rating. This field can be used to display the number of reviews or the numerical value of the rating, for example.
+         */
+        "ratingDetailsField"?: string;
     }
     interface AtomicProductTemplate {
         /**
@@ -3185,6 +3212,15 @@ declare global {
         new (): HTMLAtomicColorFacetElement;
     };
     /**
+     * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
+     */
+    interface HTMLAtomicCommerceFacetElement extends Components.AtomicCommerceFacet, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceFacetElement: {
+        prototype: HTMLAtomicCommerceFacetElement;
+        new (): HTMLAtomicCommerceFacetElement;
+    };
+    /**
      * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
      * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
      */
@@ -4001,6 +4037,15 @@ declare global {
     var HTMLAtomicProductPriceElement: {
         prototype: HTMLAtomicProductPriceElement;
         new (): HTMLAtomicProductPriceElement;
+    };
+    /**
+     * The `atomic-product-rating` element renders a star rating.
+     */
+    interface HTMLAtomicProductRatingElement extends Components.AtomicProductRating, HTMLStencilElement {
+    }
+    var HTMLAtomicProductRatingElement: {
+        prototype: HTMLAtomicProductRatingElement;
+        new (): HTMLAtomicProductRatingElement;
     };
     interface HTMLAtomicProductTemplateElement extends Components.AtomicProductTemplate, HTMLStencilElement {
     }
@@ -4851,6 +4896,7 @@ declare global {
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
         "atomic-citation": HTMLAtomicCitationElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
+        "atomic-commerce-facet": HTMLAtomicCommerceFacetElement;
         "atomic-commerce-facets": HTMLAtomicCommerceFacetsElement;
         "atomic-commerce-interface": HTMLAtomicCommerceInterfaceElement;
         "atomic-commerce-layout": HTMLAtomicCommerceLayoutElement;
@@ -4939,6 +4985,7 @@ declare global {
         "atomic-product-link": HTMLAtomicProductLinkElement;
         "atomic-product-numeric-field-value": HTMLAtomicProductNumericFieldValueElement;
         "atomic-product-price": HTMLAtomicProductPriceElement;
+        "atomic-product-rating": HTMLAtomicProductRatingElement;
         "atomic-product-template": HTMLAtomicProductTemplateElement;
         "atomic-product-text": HTMLAtomicProductTextElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
@@ -5207,6 +5254,12 @@ declare namespace LocalJSX {
           * Whether this facet should contain a search box.
          */
         "withSearch"?: boolean;
+    }
+    /**
+     * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
+     */
+    interface AtomicCommerceFacet {
+        "facet": RegularFacet;
     }
     /**
      * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
@@ -6551,6 +6604,27 @@ declare namespace LocalJSX {
          */
         "currency"?: string;
     }
+    /**
+     * The `atomic-product-rating` element renders a star rating.
+     */
+    interface AtomicProductRating {
+        /**
+          * The numerical field whose values you want to display as a rating.
+         */
+        "field"?: string;
+        /**
+          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.  When using a custom icon, at least part of your icon should have the color set to `fill="currentColor"`. This part of the SVG will take on the colors set in the following [variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties):  - `--atomic-rating-icon-active-color` - `--atomic-rating-icon-inactive-color`
+         */
+        "icon"?: string;
+        /**
+          * The maximum value of the field. This value is also used as the number of icons to be displayed.
+         */
+        "maxValueInIndex"?: number;
+        /**
+          * The field whose value you want to display next to the rating. This field can be used to display the number of reviews or the numerical value of the rating, for example.
+         */
+        "ratingDetailsField"?: string;
+    }
     interface AtomicProductTemplate {
         /**
           * A function that must return true on products for the product template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to products whose `ec_name` contains `singapore`: `document.querySelector('#target-template').conditions = [(product) => /singapore/i.test(product.ec_name)];`
@@ -7844,6 +7918,7 @@ declare namespace LocalJSX {
         "atomic-category-facet": AtomicCategoryFacet;
         "atomic-citation": AtomicCitation;
         "atomic-color-facet": AtomicColorFacet;
+        "atomic-commerce-facet": AtomicCommerceFacet;
         "atomic-commerce-facets": AtomicCommerceFacets;
         "atomic-commerce-interface": AtomicCommerceInterface;
         "atomic-commerce-layout": AtomicCommerceLayout;
@@ -7932,6 +8007,7 @@ declare namespace LocalJSX {
         "atomic-product-link": AtomicProductLink;
         "atomic-product-numeric-field-value": AtomicProductNumericFieldValue;
         "atomic-product-price": AtomicProductPrice;
+        "atomic-product-rating": AtomicProductRating;
         "atomic-product-template": AtomicProductTemplate;
         "atomic-product-text": AtomicProductText;
         "atomic-query-error": AtomicQueryError;
@@ -8045,6 +8121,10 @@ declare module "@stencil/core" {
              * An `atomic-color-facet` displays a facet of the results for the current query as colors.
              */
             "atomic-color-facet": LocalJSX.AtomicColorFacet & JSXBase.HTMLAttributes<HTMLAtomicColorFacetElement>;
+            /**
+             * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
+             */
+            "atomic-commerce-facet": LocalJSX.AtomicCommerceFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceFacetElement>;
             /**
              * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
              * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
@@ -8268,6 +8348,10 @@ declare module "@stencil/core" {
             "atomic-product-link": LocalJSX.AtomicProductLink & JSXBase.HTMLAttributes<HTMLAtomicProductLinkElement>;
             "atomic-product-numeric-field-value": LocalJSX.AtomicProductNumericFieldValue & JSXBase.HTMLAttributes<HTMLAtomicProductNumericFieldValueElement>;
             "atomic-product-price": LocalJSX.AtomicProductPrice & JSXBase.HTMLAttributes<HTMLAtomicProductPriceElement>;
+            /**
+             * The `atomic-product-rating` element renders a star rating.
+             */
+            "atomic-product-rating": LocalJSX.AtomicProductRating & JSXBase.HTMLAttributes<HTMLAtomicProductRatingElement>;
             "atomic-product-template": LocalJSX.AtomicProductTemplate & JSXBase.HTMLAttributes<HTMLAtomicProductTemplateElement>;
             "atomic-product-text": LocalJSX.AtomicProductText & JSXBase.HTMLAttributes<HTMLAtomicProductTextElement>;
             /**

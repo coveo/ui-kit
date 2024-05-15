@@ -39,10 +39,14 @@ describe('field suggestions order slice', () => {
     const facets: FieldSuggestionsFacet[] = [
       {
         facetId: 'facetA',
+        field: 'field_a',
+        displayName: 'Facet A',
         type: 'regular',
       },
       {
         facetId: 'facetB',
+        field: 'field_b',
+        displayName: 'Facet B',
         type: 'hierarchical',
       },
     ];
