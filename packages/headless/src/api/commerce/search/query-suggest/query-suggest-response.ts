@@ -19,6 +19,21 @@ export interface QuerySuggestCompletion {
 }
 
 /**
+ * A facet to use for field suggestions.
+ */
+export interface FieldSuggestionsFacet {
+  /**
+   * The facet ID.
+   */
+  facetId: string;
+
+  /**
+   * The facet type.
+   */
+  type: 'regular' | 'hierarchical';
+}
+
+/**
  * A response from the Coveo ML query suggest service.
  */
 export interface QuerySuggestSuccessResponse {
@@ -31,6 +46,11 @@ export interface QuerySuggestSuccessResponse {
    * The query suggest response ID.
    */
   responseId: string;
+
+  /**
+   * The list of facets to use for field suggestions.
+   */
+  fieldSuggestionsFacets: FieldSuggestionsFacet[];
 }
 
 export type QuerySuggest =

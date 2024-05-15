@@ -711,6 +711,35 @@ export declare interface AtomicQuickview extends Components.AtomicQuickview {}
 
 
 @ProxyCmp({
+  inputs: ['content', 'current', 'modalCloseCallback', 'result', 'sandbox', 'total'],
+  methods: ['reset']
+})
+@Component({
+  selector: 'atomic-quickview-modal',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['content', 'current', 'modalCloseCallback', 'result', 'sandbox', 'total'],
+})
+export class AtomicQuickviewModal {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+    proxyOutputs(this, this.el, ['atomic/quickview/next', 'atomic/quickview/previous']);
+  }
+}
+
+
+export declare interface AtomicQuickviewModal extends Components.AtomicQuickviewModal {
+
+  'atomic/quickview/next': EventEmitter<CustomEvent<any>>;
+
+  'atomic/quickview/previous': EventEmitter<CustomEvent<any>>;
+}
+
+
+@ProxyCmp({
   inputs: ['dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'icon', 'injectionDepth', 'isCollapsed', 'label', 'maxValueInIndex', 'minValueInIndex', 'numberOfIntervals']
 })
 @Component({
