@@ -1,18 +1,6 @@
-/**
- * A facet to use for field suggestions.
- */
-export interface FieldSuggestionsFacet {
-  /**
-   * The facet ID.
-   */
-  facetId: string;
+import {FieldSuggestionsFacet} from '../../../../api/commerce/search/query-suggest/query-suggest-response';
 
-  /**
-   * The facet type.
-   */
-  type: 'regular' | 'hierarchical';
-}
-
+export type {FieldSuggestionsFacet};
 export type FieldSuggestionsOrderState = FieldSuggestionsFacet[];
 
 export function getFieldSuggestionsOrderInitialState(): FieldSuggestionsOrderState {
