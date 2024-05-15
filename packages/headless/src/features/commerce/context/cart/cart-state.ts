@@ -2,10 +2,6 @@ import {CartItemParam} from '../../../../api/commerce/commerce-api-params';
 
 export interface CartItemWithMetadata extends CartItemParam {
   /**
-   * The unique identifier of the product.
-   */
-  productId: string;
-  /**
    * The name of the cart item.
    */
   name: string;
@@ -24,3 +20,23 @@ export const getCartInitialState = (): CartState => ({
   cartItems: [],
   cart: {},
 });
+
+export function getProductsFromCartState(state: CartState): CartItemParam[] {
+  const itemMap = state.cartItems.reduce(
+    (acc, key) => {
+      const {productId, quantity} = state.cart[key];
+      if (!(productId in acc)) {
+        acc[productId] = {
+          productId,
+          quantity: 0,
+        };
+      }
+      acc[productId].quantity += quantity;
+
+      return acc;
+    },
+    {} as Record<string, CartItemParam>
+  );
+
+  return [...Object.values(itemMap)];
+}
