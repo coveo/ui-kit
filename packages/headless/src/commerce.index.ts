@@ -178,7 +178,6 @@ export type {
   UrlManagerState,
   UrlManager,
 } from './controllers/commerce/core/url-manager/headless-core-url-manager';
-export {buildCoreUrlManager} from './controllers/commerce/core/url-manager/headless-core-url-manager';
 
 export type {
   ProductTemplate,
