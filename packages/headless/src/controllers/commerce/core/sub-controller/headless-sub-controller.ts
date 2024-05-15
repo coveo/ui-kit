@@ -4,6 +4,14 @@ import {
 } from '../../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../../app/state-key';
 import {AnyFacetResponse} from '../../../../features/commerce/facets/facet-set/interfaces/response';
+import {
+  buildDidYouMean,
+  DidYouMean,
+} from '../../search/did-you-mean/headless-did-you-mean';
+import {
+  BreadcrumbManager,
+  buildCoreBreadcrumbManager,
+} from '../breadcrumb-manager/headless-core-breadcrumb-manager';
 import {FetchProductsActionCreator} from '../common';
 import {buildCategoryFacet} from '../facets/category/headless-commerce-category-facet';
 import {buildCommerceDateFacet} from '../facets/date/headless-commerce-date-facet';
@@ -22,7 +30,7 @@ import {
   buildCoreInteractiveProduct,
   InteractiveProduct,
   InteractiveProductProps,
-} from '../result-list/headless-core-interactive-result';
+} from '../product-list/headless-core-interactive-product';
 import {
   buildCoreSort,
   Sort,
@@ -38,6 +46,11 @@ export interface SearchAndListingSubControllers
   extends BaseSolutionTypeSubControllers {
   sort: (props?: SortProps) => Sort;
   facetGenerator: () => FacetGenerator;
+  breadcrumbManager: () => BreadcrumbManager;
+}
+
+export interface SearchSubControllers extends SearchAndListingSubControllers {
+  didYouMean: () => DidYouMean;
 }
 
 interface BaseSubControllerProps {
@@ -58,21 +71,33 @@ export interface SearchAndListingSubControllerProps
   ) => boolean;
 }
 
-export function buildSolutionTypeSubControllers(
+export function buildSearchSubControllers(
+  engine: CommerceEngine,
+  subControllerProps: SearchAndListingSubControllerProps
+): SearchSubControllers {
+  return {
+    ...buildSearchAndListingsSubControllers(engine, subControllerProps),
+    didYouMean() {
+      return buildDidYouMean(engine);
+    },
+  };
+}
+
+export function buildSearchAndListingsSubControllers(
   engine: CommerceEngine,
   subControllerProps: SearchAndListingSubControllerProps
 ): SearchAndListingSubControllers {
   const {
-    fetchProductsActionCreator: fetchProductsActionCreator,
+    fetchProductsActionCreator,
     facetResponseSelector,
     isFacetLoadingResponseSelector,
   } = subControllerProps;
   return {
-    ...buildBaseSolutionTypeControllers(engine, subControllerProps),
+    ...buildBaseSubControllers(engine, subControllerProps),
     sort(props?: SortProps) {
       return buildCoreSort(engine, {
         ...props,
-        fetchProductsActionCreator: fetchProductsActionCreator,
+        fetchProductsActionCreator,
       });
     },
     facetGenerator() {
@@ -92,10 +117,16 @@ export function buildSolutionTypeSubControllers(
           buildCategoryFacet(engine, {...options, ...commonOptions}),
       });
     },
+    breadcrumbManager() {
+      return buildCoreBreadcrumbManager(engine, {
+        facetResponseSelector,
+        fetchProductsActionCreator,
+      });
+    },
   };
 }
 
-export function buildBaseSolutionTypeControllers(
+export function buildBaseSubControllers(
   engine: CommerceEngine,
   subControllerProps: BaseSubControllerProps
 ): BaseSolutionTypeSubControllers {

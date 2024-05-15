@@ -41,6 +41,7 @@ import {convertToNumericRangeRequests} from '../../../facets/range-facets/numeri
 import {setContext, setUser, setView} from '../../context/context-actions';
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
 import {executeSearch} from '../../search/search-actions';
+import {executeCommerceFieldSuggest} from '../facet-search-set/commerce-facet-search-actions';
 import {handleCategoryFacetNestedNumberOfValuesUpdate} from './facet-set-reducer-helpers';
 import {
   CommerceFacetSetState,
@@ -64,6 +65,10 @@ export const commerceFacetSetReducer = createReducer(
     builder
       .addCase(fetchProductListing.fulfilled, handleQueryFulfilled)
       .addCase(executeSearch.fulfilled, handleQueryFulfilled)
+      .addCase(
+        executeCommerceFieldSuggest.fulfilled,
+        handleFieldSuggestionsFulfilled
+      )
       .addCase(toggleSelectFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
         const facetRequest = state[facetId]?.request;
@@ -409,6 +414,20 @@ function handleQueryFulfilled(
 
   for (const facetId of existingFacets) {
     delete state[facetId];
+  }
+}
+
+function handleFieldSuggestionsFulfilled(
+  state: WritableDraft<CommerceFacetSetState>,
+  action: ReturnType<typeof executeCommerceFieldSuggest.fulfilled>
+) {
+  const facetId = action.payload.facetId;
+
+  let facetRequest = state[facetId]?.request;
+  if (!facetRequest) {
+    state[facetId] = {request: {} as AnyFacetRequest};
+    facetRequest = state[facetId].request;
+    facetRequest.initialNumberOfValues = 10;
   }
 }
 
