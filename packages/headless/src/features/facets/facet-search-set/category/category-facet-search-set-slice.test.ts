@@ -1,7 +1,11 @@
 import {buildMockFacetSearchResponse} from '../../../../test/mock-facet-search-response';
 import {QueryCommerceAPIThunkReturn} from '../../../commerce/common/actions';
-import {executeCommerceFacetSearch} from '../../../commerce/facets/facet-search-set/commerce-facet-search-actions';
+import {
+  executeCommerceFacetSearch,
+  executeCommerceFieldSuggest,
+} from '../../../commerce/facets/facet-search-set/commerce-facet-search-actions';
 import {fetchProductListing} from '../../../commerce/product-listing/product-listing-actions';
+import {fetchQuerySuggestions} from '../../../commerce/query-suggest/query-suggest-actions';
 import {executeSearch as executeCommerceSearch} from '../../../commerce/search/search-actions';
 import {
   executeSearch,
@@ -62,6 +66,16 @@ describe('CategoryFacetSearchSet slice', () => {
     ).toHaveBeenCalledTimes(1);
   });
 
+  it('#executeCommerceFieldSuggest.pending calls #handleFacetSearchPending', () => {
+    jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchPending');
+    const pendingAction = executeCommerceFieldSuggest.pending(facetId, '');
+    facetSearchSetReducer(state, pendingAction);
+
+    expect(
+      FacetSearchReducerHelpers.handleFacetSearchPending
+    ).toHaveBeenCalledTimes(1);
+  });
+
   it('#executeFacetSearch.pending calls #handleFacetSearchPending', () => {
     jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchPending');
     const pendingAction = executeFacetSearch.pending(facetId, '');
@@ -75,6 +89,20 @@ describe('CategoryFacetSearchSet slice', () => {
   it('#executeCommerceFacetSearch.rejected calls #handleFacetSearchRejected', () => {
     jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchRejected');
     const rejectedAction = executeCommerceFacetSearch.rejected(
+      {name: 'test', message: 'test'},
+      facetId,
+      facetId
+    );
+    facetSearchSetReducer(state, rejectedAction);
+
+    expect(
+      FacetSearchReducerHelpers.handleFacetSearchRejected
+    ).toHaveBeenCalledTimes(1);
+  });
+
+  it('#executeCommerceFieldSuggest.rejected calls #handleFacetSearchRejected', () => {
+    jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchRejected');
+    const rejectedAction = executeCommerceFieldSuggest.rejected(
       {name: 'test', message: 'test'},
       facetId,
       facetId
@@ -112,6 +140,49 @@ describe('CategoryFacetSearchSet slice', () => {
     facetSearchSetReducer(state, action);
     expect(
       FacetSearchReducerHelpers.handleCommerceFacetSearchFulfilled
+    ).toHaveBeenCalledTimes(1);
+  });
+
+  it('#executeCommerceFieldSuggest.fulfilled calls #handleCommerceFacetFieldSuggestionsFulfilled', () => {
+    jest.spyOn(
+      FacetSearchReducerHelpers,
+      'handleCommerceFacetFieldSuggestionsFulfilled'
+    );
+    const response = buildMockFacetSearchResponse();
+    const action = executeCommerceFieldSuggest.fulfilled(
+      {facetId, response: {success: response}},
+      '',
+      ''
+    );
+
+    facetSearchSetReducer(state, action);
+    expect(
+      FacetSearchReducerHelpers.handleCommerceFacetFieldSuggestionsFulfilled
+    ).toHaveBeenCalledTimes(1);
+  });
+
+  it('#fetchQuerySuggestions.fulfilled calls #handleCommerceFetchQuerySuggestionsFulfilled', () => {
+    jest.spyOn(
+      FacetSearchReducerHelpers,
+      'handleCommerceFetchQuerySuggestionsFulfilled'
+    );
+    const action = fetchQuerySuggestions.fulfilled(
+      {
+        id: '',
+        completions: [],
+        responseId: 'responseId',
+        query: 'abc',
+        fieldSuggestionsFacets: [],
+      },
+      '',
+      {
+        id: '',
+      }
+    );
+
+    facetSearchSetReducer(state, action);
+    expect(
+      FacetSearchReducerHelpers.handleCommerceFetchQuerySuggestionsFulfilled
     ).toHaveBeenCalledTimes(1);
   });
 

@@ -170,6 +170,41 @@ export function handleCommerceFacetFieldSuggestionsFulfilled<
   }
 }
 
+export function handleCommerceFetchQuerySuggestionsFulfilled<
+  T extends FacetSearchResponse,
+>(
+  state: FacetSearchSetState<T>,
+  payload: {
+    fieldSuggestionsFacets: {facetId: string; type: string}[];
+    query: string | undefined;
+  },
+  requestId: string,
+  buildEmptyResponse: () => T
+) {
+  if (!payload.fieldSuggestionsFacets) {
+    return;
+  }
+
+  payload.fieldSuggestionsFacets
+    .filter((fieldSuggestionFacet) => !(fieldSuggestionFacet.facetId in state))
+    .filter(
+      (fieldSuggestionFacet) => fieldSuggestionFacet.type === 'hierarchical'
+    )
+    .forEach((fieldSuggestionFacet) => {
+      state[fieldSuggestionFacet.facetId] = {
+        options: {
+          query: payload.query ?? '',
+          captions: {},
+          numberOfValues: defaultFacetSearchOptions.numberOfValues,
+        },
+        isLoading: false,
+        response: buildEmptyResponse(),
+        initialNumberOfValues: defaultFacetSearchOptions.numberOfValues,
+        requestId: requestId,
+      };
+    });
+}
+
 export function handleFacetSearchClear<T extends FacetSearchResponse>(
   state: FacetSearchSetState<T>,
   payload: FacetSearchOptions,

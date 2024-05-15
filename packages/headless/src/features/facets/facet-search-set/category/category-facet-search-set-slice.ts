@@ -17,8 +17,8 @@ import {
   handleFacetSearchClear,
   handleFacetSearchSetClear,
   handleCommerceFacetSearchFulfilled,
-  defaultFacetSearchOptions,
   handleCommerceFacetFieldSuggestionsFulfilled,
+  handleCommerceFetchQuerySuggestionsFulfilled,
 } from '../facet-search-reducer-helpers';
 import {
   clearFacetSearch,
@@ -79,31 +79,12 @@ export const categoryFacetSearchSetReducer = createReducer(
         );
       })
       .addCase(fetchQuerySuggestions.fulfilled, (state, action) => {
-        if (!action.payload.fieldSuggestionsFacets) {
-          return;
-        }
-
-        action.payload.fieldSuggestionsFacets
-          .filter(
-            (fieldSuggestionFacet) => !(fieldSuggestionFacet.facetId in state)
-          )
-          .filter(
-            (fieldSuggestionFacet) =>
-              fieldSuggestionFacet.type === 'hierarchical'
-          )
-          .forEach((fieldSuggestionFacet) => {
-            state[fieldSuggestionFacet.facetId] = {
-              options: {
-                query: action.payload.query ?? '',
-                captions: {},
-                numberOfValues: defaultFacetSearchOptions.numberOfValues,
-              },
-              isLoading: false,
-              response: buildEmptyResponse(),
-              initialNumberOfValues: defaultFacetSearchOptions.numberOfValues,
-              requestId: action.meta.requestId,
-            };
-          });
+        handleCommerceFetchQuerySuggestionsFulfilled(
+          state,
+          action.payload,
+          action.meta.requestId,
+          buildEmptyResponse
+        );
       })
       .addCase(executeFacetSearch.fulfilled, (state, action) => {
         handleFacetSearchFulfilled(
