@@ -51,6 +51,8 @@ describe('headless-cart-selectors', () => {
         [item3Key]: item3,
       },
       cartItems: [item1Key, item2Key, item3Key],
+      purchasedItems: [],
+      purchased: {},
     };
     initState(cartOptions);
   });
