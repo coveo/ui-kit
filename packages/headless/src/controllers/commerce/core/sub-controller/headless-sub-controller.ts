@@ -107,7 +107,7 @@ export interface SearchAndListingSubControllerProps
   extends BaseSubControllerProps {
   /**
    * A selector function that retrieves the facet response for a given facet ID from the state.
-   * @param state - The state object from the CommerceEngine.
+   * @param state - The state object from the Commerce engine.
    * @param facetId - The ID of the facet.
    * @returns The facet response or undefined if not found.
    */
@@ -118,7 +118,7 @@ export interface SearchAndListingSubControllerProps
 
   /**
    * A selector function that determines if the facet is currently loading in the state.
-   * @param state - The state object from the CommerceEngine.
+   * @param state - The state object from the Commerce engine.
    * @returns True if the facet is loading, false otherwise.
    */
   isFacetLoadingResponseSelector(
