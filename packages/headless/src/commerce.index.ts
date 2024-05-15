@@ -128,6 +128,8 @@ export type {
 } from './controllers/commerce/core/facets/headless-core-commerce-facet';
 export type {FacetGenerator} from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator';
 
+export type {FacetGeneratorState} from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator';
+
 export type {
   RegularFacetSearch,
   RegularFacetSearchState,
