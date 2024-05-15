@@ -14,17 +14,31 @@ export interface CartItemWithMetadata extends CartItemParam {
 export interface CartState {
   cartItems: string[];
   cart: Record<string, CartItemWithMetadata>;
+  purchasedItems: string[];
+  purchased: Record<string, CartItemWithMetadata>;
 }
 
 export const getCartInitialState = (): CartState => ({
   cartItems: [],
   cart: {},
+  purchasedItems: [],
+  purchased: {},
 });
 
-export function getProductsFromCartState(state: CartState): CartItemParam[] {
-  const itemMap = state.cartItems.reduce(
+export const getProductsFromCartState = (state: CartState): CartItemParam[] =>
+  getProductsFromCart(state.cartItems, state.cart);
+export const getProductsFromCartPurchasedState = (
+  state: CartState
+): CartItemParam[] =>
+  getProductsFromCart(state.purchasedItems, state.purchased);
+
+function getProductsFromCart(
+  items: string[],
+  itemMap: Record<string, CartItemWithMetadata>
+) {
+  const productsMap = items.reduce(
     (acc, key) => {
-      const {productId, quantity} = state.cart[key];
+      const {productId, quantity} = itemMap[key];
       if (!(productId in acc)) {
         acc[productId] = {
           productId,
@@ -38,5 +52,5 @@ export function getProductsFromCartState(state: CartState): CartItemParam[] {
     {} as Record<string, CartItemParam>
   );
 
-  return [...Object.values(itemMap)];
+  return [...Object.values(productsMap)];
 }

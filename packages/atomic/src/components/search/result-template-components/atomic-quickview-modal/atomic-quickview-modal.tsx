@@ -45,7 +45,11 @@ export interface HighlightKeywords {
 }
 
 /**
- * @internal
+ * The modal opened when clicking on a quickview button.
+ * Do not use this component directly; use `atomic-quickview` instead.
+ *
+ * @part quickview-modal-header-icon - The close icon of the modal.
+ * @part quickview-modal-header-title - The title of the modal.
  */
 @Component({
   tag: 'atomic-quickview-modal',
@@ -117,6 +121,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
               this.interactiveResult?.cancelPendingSelect()
             }
             className="truncate"
+            part="quickview-modal-header-title"
           >
             {this.result.title}
           </LinkWithItemAnalytics>

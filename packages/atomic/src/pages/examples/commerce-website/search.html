@@ -32,10 +32,10 @@
     <h1>Search page</h1>
     <main>
       <section>
-        <atomic-commerce-interface type="search" style="max-width: 1000px; margin: auto">
-          <atomic-search-layout>
+        <atomic-commerce-interface type="search">
+          <atomic-commerce-layout>
             <atomic-layout-section section="search">
-              <atomic-commerce-search-box textarea>
+              <atomic-commerce-search-box>
                 <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
                 <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
                 <atomic-commerce-search-box-instant-products
@@ -43,54 +43,26 @@
                 ></atomic-commerce-search-box-instant-products>
               </atomic-commerce-search-box>
             </atomic-layout-section>
-          </atomic-search-layout>
-
-          <atomic-layout-section section="main">
-            <atomic-commerce-query-error></atomic-commerce-query-error>
-            <atomic-commerce-query-summary></atomic-commerce-query-summary>
-            <atomic-commerce-sort-dropdown></atomic-commerce-sort-dropdown>
-            <atomic-commerce-product-list display="list" image-size="small">
-              <atomic-product-template>
-                <template>
-                  <atomic-result-section-visual>
-                    <atomic-product-image
-                      class="thumbnail"
-                      field="ec_thumbnails"
-                      fallback="https://picsum.photos/350"
-                    ></atomic-product-image>
-                  </atomic-result-section-visual>
-                  <atomic-result-section-title>
-                    <atomic-product-link class="font-bold"></atomic-product-link>
-
-                    <atomic-field-condition class="brand text-neutral-dark" if-defined="ec_brand">
-                      <atomic-product-text field="ec_brand"></atomic-product-text>
-                    </atomic-field-condition>
-                  </atomic-result-section-title>
-                  <atomic-result-section-title-metadata>
-                    <atomic-field-condition class="field" if-defined="ec_rating">
-                      <atomic-result-rating field="ec_rating"></atomic-result-rating>
-                    </atomic-field-condition>
-
-                    <atomic-field-condition class="mt-4 text-2xl field" if-defined="ec_price">
-                      <atomic-product-price fallbackText="no price" currency="USD"></atomic-product-price>
-                    </atomic-field-condition>
-                  </atomic-result-section-title-metadata>
-                  <atomic-result-section-excerpt>
-                    <atomic-product-description></atomic-product-description>
-                  </atomic-result-section-excerpt>
-                  <atomic-result-section-bottom-metadata>
-                    <atomic-result-fields-list>
-                      <atomic-field-condition must-match-ec_in_stock="true">
-                        <atomic-result-badge label="In stock"></atomic-result-badge>
-                      </atomic-field-condition>
-                    </atomic-result-fields-list>
-                  </atomic-result-section-bottom-metadata>
-                </template>
-              </atomic-product-template>
-            </atomic-commerce-product-list>
-            <atomic-commerce-load-more-products></atomic-commerce-load-more-products>
-            <atomic-commerce-pager></atomic-commerce-pager>
-          </atomic-layout-section>
+            <atomic-layout-section section="facets"
+              ><atomic-commerce-facets></atomic-commerce-facets
+            ></atomic-layout-section>
+            <atomic-layout-section section="main">
+              <atomic-layout-section section="status">
+                <atomic-commerce-query-summary></atomic-commerce-query-summary>
+                <atomic-commerce-sort-dropdown></atomic-commerce-sort-dropdown>
+              </atomic-layout-section>
+              <atomic-layout-section section="products">
+                <atomic-commerce-product-list display="grid" image-size="large"></atomic-commerce-product-list>
+                <atomic-commerce-query-error></atomic-commerce-query-error>
+              </atomic-layout-section>
+              <atomic-layout-section section="pagination">
+                <atomic-commerce-load-more-products></atomic-commerce-load-more-products>
+                <!-- Alternative pagination
+                <atomic-commerce-pager></atomic-commerce-pager>
+                -->
+              </atomic-layout-section>
+            </atomic-layout-section>
+          </atomic-commerce-layout>
         </atomic-commerce-interface>
       </section>
     </main>

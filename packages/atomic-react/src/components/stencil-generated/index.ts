@@ -57,6 +57,7 @@ export const AtomicProductText = /*@__PURE__*/createReactComponent<JSX.AtomicPro
 export const AtomicQueryError = /*@__PURE__*/createReactComponent<JSX.AtomicQueryError, HTMLAtomicQueryErrorElement>('atomic-query-error');
 export const AtomicQuerySummary = /*@__PURE__*/createReactComponent<JSX.AtomicQuerySummary, HTMLAtomicQuerySummaryElement>('atomic-query-summary');
 export const AtomicQuickview = /*@__PURE__*/createReactComponent<JSX.AtomicQuickview, HTMLAtomicQuickviewElement>('atomic-quickview');
+export const AtomicQuickviewModal = /*@__PURE__*/createReactComponent<JSX.AtomicQuickviewModal, HTMLAtomicQuickviewModalElement>('atomic-quickview-modal');
 export const AtomicRatingFacet = /*@__PURE__*/createReactComponent<JSX.AtomicRatingFacet, HTMLAtomicRatingFacetElement>('atomic-rating-facet');
 export const AtomicRatingRangeFacet = /*@__PURE__*/createReactComponent<JSX.AtomicRatingRangeFacet, HTMLAtomicRatingRangeFacetElement>('atomic-rating-range-facet');
 export const AtomicRecsError = /*@__PURE__*/createReactComponent<JSX.AtomicRecsError, HTMLAtomicRecsErrorElement>('atomic-recs-error');
