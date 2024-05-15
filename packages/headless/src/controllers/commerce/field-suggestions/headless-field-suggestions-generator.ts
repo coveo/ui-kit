@@ -5,6 +5,7 @@ import {
 } from '../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../app/state-key';
 import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice';
+import {FieldSuggestionsFacet} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-state';
 import {executeSearch} from '../../../features/commerce/search/search-actions';
 import {loadReducerError} from '../../../utils/errors';
 import {
@@ -33,6 +34,8 @@ export interface FieldSuggestionsGenerator extends Controller {
    * The facet controllers created by the facet generator.
    */
   fieldSuggestions: GeneratedFieldSuggestionsControllers;
+
+  state: FieldSuggestionsFacet[];
 }
 
 export function buildFieldSuggestionsGenerator(
