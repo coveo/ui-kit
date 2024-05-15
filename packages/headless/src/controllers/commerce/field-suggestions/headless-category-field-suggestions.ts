@@ -1,4 +1,6 @@
+import {FieldSuggestionsFacet} from '../../../api/commerce/search/query-suggest/query-suggest-response';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../app/state-key';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../features/commerce/facets/facet-set/facet-set-slice';
 import {loadReducerError} from '../../../utils/errors';
 import {
@@ -6,13 +8,17 @@ import {
   Subscribable,
 } from '../../controller/headless-controller';
 import {
-  CategoryFieldSuggestionsState,
+  CategoryFieldSuggestionsState as CoreCategoryFieldSuggestionsState,
   CategoryFieldSuggestionsValue,
 } from '../../field-suggestions/category-facet/headless-category-field-suggestions';
 import {CategoryFacetOptions} from '../core/facets/category/headless-commerce-category-facet';
 import {buildCategoryFacetSearch} from '../core/facets/category/headless-commerce-category-facet-search';
+import {FacetControllerType} from '../core/facets/headless-core-commerce-facet';
 
 export type {CategoryFieldSuggestionsValue};
+
+export type CategoryFieldSuggestionsState = CoreCategoryFieldSuggestionsState &
+  Pick<FieldSuggestionsFacet, 'facetId' | 'displayName' | 'field'>;
 
 /**
  * The `CategoryFieldSuggestions` controller provides query suggestions based on a particular category facet field.
@@ -21,7 +27,9 @@ export type {CategoryFieldSuggestionsValue};
  *
  * This controller is a wrapper around the basic category facet controller search functionality, and thus exposes similar options and properties.
  */
-export interface CategoryFieldSuggestions extends Subscribable {
+export interface CategoryFieldSuggestions
+  extends Subscribable,
+    FacetControllerType<'hierarchical'> {
   /**
    * Requests field suggestions based on a query.
    *
@@ -72,17 +80,34 @@ export function buildCategoryFieldSuggestions(
     },
     isForFieldSuggestions: true,
   });
+
+  const getFacetForFieldSuggestions = (facetId: string) => {
+    return engine[stateKey].fieldSuggestionsOrder!.find(
+      (facet) => facet.facetId === facetId
+    )!;
+  };
+
   const controller = buildController(engine);
   return {
     ...controller,
     ...facetSearch,
+
     updateText: function (text: string) {
       facetSearch.updateText(text);
       facetSearch.search();
     },
+
     get state() {
-      return facetSearch.state;
+      const facet = getFacetForFieldSuggestions(options.facetId);
+      return {
+        displayName: facet.displayName,
+        field: facet.field,
+        facetId: facet.facetId,
+        ...facetSearch.state,
+      };
     },
+
+    type: 'hierarchical',
   };
 }
 

@@ -1,3 +1,4 @@
+import {FieldSuggestionsFacet} from '../../../api/commerce/search/query-suggest/query-suggest-response';
 import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice';
 import {CommerceAppState} from '../../../state/commerce-app-state';
 import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search';
@@ -33,14 +34,9 @@ describe('fieldSuggestionsGenerator', () => {
     fieldSuggestionsGenerator = buildFieldSuggestionsGenerator(engine);
   }
 
-  function setFacetState(
-    config: {facetId: string; type: 'regular' | 'hierarchical'}[] = []
-  ) {
+  function setFacetState(config: FieldSuggestionsFacet[] = []) {
     for (const facet of config) {
-      state.fieldSuggestionsOrder.push({
-        facetId: facet.facetId,
-        type: facet.type,
-      });
+      state.fieldSuggestionsOrder.push(facet);
       state.commerceFacetSet[facet.facetId] = {
         request: buildMockCommerceFacetRequest({
           facetId: facet.facetId,
@@ -80,7 +76,14 @@ describe('fieldSuggestionsGenerator', () => {
   describe('#fieldSuggestions', () => {
     it('when engine facet state contains a regular facet, generates a field suggestions controller', () => {
       const facetId = 'regular_facet_id';
-      setFacetState([{facetId, type: 'regular'}]);
+      setFacetState([
+        {
+          facetId,
+          field: 'regular_field',
+          displayName: 'Facet',
+          type: 'regular',
+        },
+      ]);
 
       expect(fieldSuggestionsGenerator.fieldSuggestions.length).toEqual(1);
       expect(fieldSuggestionsGenerator.fieldSuggestions[0].state).toEqual(
@@ -90,7 +93,14 @@ describe('fieldSuggestionsGenerator', () => {
 
     it('when engine facet state contains a category facet, generates a category field suggestions controller', () => {
       const facetId = 'category_facet_id';
-      setFacetState([{facetId, type: 'hierarchical'}]);
+      setFacetState([
+        {
+          facetId,
+          field: 'category_field',
+          displayName: 'Facet',
+          type: 'hierarchical',
+        },
+      ]);
 
       expect(fieldSuggestionsGenerator.fieldSuggestions.length).toEqual(1);
       expect(fieldSuggestionsGenerator.fieldSuggestions[0].state).toEqual(
@@ -99,13 +109,17 @@ describe('fieldSuggestionsGenerator', () => {
     });
 
     it('when engine facet state contains multiple facets, generates the proper facet controllers', () => {
-      const facets: {facetId: string; type: 'regular' | 'hierarchical'}[] = [
+      const facets: FieldSuggestionsFacet[] = [
         {
           facetId: 'regular_facet_id',
+          field: 'regular_field',
+          displayName: 'Regular Facet',
           type: 'regular',
         },
         {
           facetId: 'category_facet_id',
+          field: 'category_field',
+          displayName: 'Category Facet',
           type: 'hierarchical',
         },
       ];
@@ -134,6 +148,8 @@ describe('fieldSuggestionsGenerator', () => {
 
     state.fieldSuggestionsOrder.push({
       facetId: 'new_facet_id',
+      field: 'new_facet_field',
+      displayName: 'New Facet',
       type: 'regular',
     });
 

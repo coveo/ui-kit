@@ -28,6 +28,16 @@ export interface FieldSuggestionsFacet {
   facetId: string;
 
   /**
+   * The facet display name.
+   */
+  displayName: string;
+
+  /**
+   * The facet field.
+   */
+  field: string;
+
+  /**
    * The facet type.
    */
   type: 'regular' | 'hierarchical';
