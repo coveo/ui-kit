@@ -11,6 +11,8 @@ export const buildFacetSearchRequest = async (
   const facetQuery = `*${baseFacetQuery}*`;
   let query = state.commerceQuery?.query;
 
+  // eslint-disable-next-line @cspell/spellchecker
+  // TODO: CAPI-911 Handle field suggestions without having to pass in the search context.
   if (query === undefined) {
     query = '';
   }
