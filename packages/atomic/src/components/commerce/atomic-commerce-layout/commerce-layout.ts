@@ -3,14 +3,14 @@ import {buildSearchLayoutCommon} from '../../common/atomic-layout-section/search
 export function makeDesktopQuery(mobileBreakpoint: string) {
   return `only screen and (min-width: ${mobileBreakpoint})`;
 }
-export function buildSearchLayout(
+export function buildCommerceLayout(
   element: HTMLElement,
   mobileBreakpoint: string
 ) {
   return buildSearchLayoutCommon(
     element,
     mobileBreakpoint,
-    'atomic-search-layout',
-    'atomic-search-interface'
+    'atomic-commerce-layout',
+    'atomic-commerce-interface'
   );
 }

@@ -336,6 +336,12 @@ export namespace Components {
     | 'product-listing'
     | 'recommendations';
     }
+    interface AtomicCommerceLayout {
+        /**
+          * CSS value that defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
+         */
+        "mobileBreakpoint": string;
+    }
     /**
      * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
      */
@@ -3194,6 +3200,12 @@ declare global {
         prototype: HTMLAtomicCommerceInterfaceElement;
         new (): HTMLAtomicCommerceInterfaceElement;
     };
+    interface HTMLAtomicCommerceLayoutElement extends Components.AtomicCommerceLayout, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceLayoutElement: {
+        prototype: HTMLAtomicCommerceLayoutElement;
+        new (): HTMLAtomicCommerceLayoutElement;
+    };
     /**
      * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
      */
@@ -4841,6 +4853,7 @@ declare global {
         "atomic-color-facet": HTMLAtomicColorFacetElement;
         "atomic-commerce-facets": HTMLAtomicCommerceFacetsElement;
         "atomic-commerce-interface": HTMLAtomicCommerceInterfaceElement;
+        "atomic-commerce-layout": HTMLAtomicCommerceLayoutElement;
         "atomic-commerce-load-more-products": HTMLAtomicCommerceLoadMoreProductsElement;
         "atomic-commerce-pager": HTMLAtomicCommercePagerElement;
         "atomic-commerce-product-list": HTMLAtomicCommerceProductListElement;
@@ -5253,6 +5266,12 @@ declare namespace LocalJSX {
         "type"?: | 'search'
     | 'product-listing'
     | 'recommendations';
+    }
+    interface AtomicCommerceLayout {
+        /**
+          * CSS value that defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
+         */
+        "mobileBreakpoint"?: string;
     }
     /**
      * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
@@ -7827,6 +7846,7 @@ declare namespace LocalJSX {
         "atomic-color-facet": AtomicColorFacet;
         "atomic-commerce-facets": AtomicCommerceFacets;
         "atomic-commerce-interface": AtomicCommerceInterface;
+        "atomic-commerce-layout": AtomicCommerceLayout;
         "atomic-commerce-load-more-products": AtomicCommerceLoadMoreProducts;
         "atomic-commerce-pager": AtomicCommercePager;
         "atomic-commerce-product-list": AtomicCommerceProductList;
@@ -8031,6 +8051,7 @@ declare module "@stencil/core" {
              */
             "atomic-commerce-facets": LocalJSX.AtomicCommerceFacets & JSXBase.HTMLAttributes<HTMLAtomicCommerceFacetsElement>;
             "atomic-commerce-interface": LocalJSX.AtomicCommerceInterface & JSXBase.HTMLAttributes<HTMLAtomicCommerceInterfaceElement>;
+            "atomic-commerce-layout": LocalJSX.AtomicCommerceLayout & JSXBase.HTMLAttributes<HTMLAtomicCommerceLayoutElement>;
             /**
              * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
              */
