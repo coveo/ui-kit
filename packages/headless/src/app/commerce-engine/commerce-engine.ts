@@ -27,7 +27,7 @@ import {
   ExternalEngineOptions,
 } from '../engine';
 import {buildLogger} from '../logger';
-import {stateKey} from '../state-key';
+import {redactEngine, stateKey} from '../state-key';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {
   CommerceEngineConfiguration,
@@ -127,7 +127,7 @@ export function buildCommerceEngine(
     engine.dispatch(setItems(options.configuration.cart.items));
   }
 
-  return {
+  return redactEngine({
     ...engine,
 
     get [stateKey]() {
@@ -147,7 +147,7 @@ export function buildCommerceEngine(
       const action = executeSearch();
       internalEngine.dispatch(action);
     },
-  };
+  });
 }
 
 function validateConfiguration(
