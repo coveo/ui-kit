@@ -48,6 +48,7 @@ export const AtomicPager = /*@__PURE__*/createReactComponent<JSX.AtomicPager, HT
 export const AtomicPopover = /*@__PURE__*/createReactComponent<JSX.AtomicPopover, HTMLAtomicPopoverElement>('atomic-popover');
 export const AtomicProduct = /*@__PURE__*/createReactComponent<JSX.AtomicProduct, HTMLAtomicProductElement>('atomic-product');
 export const AtomicProductDescription = /*@__PURE__*/createReactComponent<JSX.AtomicProductDescription, HTMLAtomicProductDescriptionElement>('atomic-product-description');
+export const AtomicProductImage = /*@__PURE__*/createReactComponent<JSX.AtomicProductImage, HTMLAtomicProductImageElement>('atomic-product-image');
 export const AtomicProductLink = /*@__PURE__*/createReactComponent<JSX.AtomicProductLink, HTMLAtomicProductLinkElement>('atomic-product-link');
 export const AtomicProductNumericFieldValue = /*@__PURE__*/createReactComponent<JSX.AtomicProductNumericFieldValue, HTMLAtomicProductNumericFieldValueElement>('atomic-product-numeric-field-value');
 export const AtomicProductPrice = /*@__PURE__*/createReactComponent<JSX.AtomicProductPrice, HTMLAtomicProductPriceElement>('atomic-product-price');
