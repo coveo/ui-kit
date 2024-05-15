@@ -421,8 +421,6 @@ function handleFieldSuggestionsFulfilled(
   state: WritableDraft<CommerceFacetSetState>,
   action: ReturnType<typeof executeCommerceFieldSuggest.fulfilled>
 ) {
-  //const facetResponse = action.payload.response;
-
   const facetId = action.payload.facetId;
 
   let facetRequest = state[facetId]?.request;
