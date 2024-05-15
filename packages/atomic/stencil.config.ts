@@ -30,6 +30,11 @@ function getHeadlessVersion(): string {
     readFileSync(path.resolve(__dirname, 'package.json'), 'utf-8')
   ).peerDependencies['@coveo/headless'];
 }
+function getBuenoVersion(): string {
+  return JSON.parse(
+    readFileSync(path.resolve(__dirname, 'package.json'), 'utf-8')
+  ).peerDependencies['@coveo/bueno'];
+}
 
 function replaceHeadlessMap() {
   return {
@@ -77,7 +82,7 @@ function externalizeBuenoForCDN() {
     resolveId(id: string) {
       if (id.startsWith('@coveo/bueno')) {
         return {
-          id: `/bueno/v${getPackageVersion()}${id.replace('@coveo/bueno', '')}/bueno.esm.js`,
+          id: `/bueno/v${getBuenoVersion()}${id.replace('@coveo/bueno', '')}/bueno.esm.js`,
           external: 'absolute',
         };
       }
