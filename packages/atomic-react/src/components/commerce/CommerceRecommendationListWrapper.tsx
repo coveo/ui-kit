@@ -1,5 +1,5 @@
 import type {JSX as AtomicJSX} from '@coveo/atomic';
-import type {Result} from '@coveo/headless/recommendation';
+import type {Product} from '@coveo/headless/commerce';
 import React, {useEffect, useRef} from 'react';
 import {createRoot} from 'react-dom/client';
 import {renderToString} from 'react-dom/server';
@@ -13,7 +13,7 @@ interface WrapperProps extends AtomicJSX.AtomicCommerceRecommendationList {
    * A template function that takes a result item and outputs its target rendering as a JSX element.
    * It can be used to conditionally render different type of result templates based on the properties of each result.
    */
-  template: (result: Result) => JSX.Element;
+  template: (result: Product) => JSX.Element;
 }
 
 /**
@@ -24,12 +24,18 @@ interface WrapperProps extends AtomicJSX.AtomicCommerceRecommendationList {
  */
 export const ListWrapper: React.FC<WrapperProps> = (props) => {
   const {template, ...otherProps} = props;
-  const recsListRef = useRef<HTMLAtomicCommerceRecommendationListElement>(null);
+  const commerceRecsListRef =
+    useRef<HTMLAtomicCommerceRecommendationListElement>(null);
   useEffect(() => {
-    recsListRef.current?.setRenderFunction((result, root) => {
-      createRoot(root).render(template(result as Result));
-      return renderToString(template(result as Result));
+    commerceRecsListRef.current?.setRenderFunction((result, root) => {
+      createRoot(root).render(template(result as Product));
+      return renderToString(template(result as Product));
     });
-  }, [recsListRef]);
-  return <AtomicCommerceRecommendationList ref={recsListRef} {...otherProps} />;
+  }, [commerceRecsListRef]);
+  return (
+    <AtomicCommerceRecommendationList
+      ref={commerceRecsListRef}
+      {...otherProps}
+    />
+  );
 };

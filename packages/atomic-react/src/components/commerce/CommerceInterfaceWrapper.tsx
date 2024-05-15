@@ -14,7 +14,7 @@ interface WrapperProps
    *
    * If not provided, a default function will be used, which execute the first query immediately after initialization.
    */
-  onReady?: (getRecommendations: ExecuteSearch) => Promise<void>;
+  onReady?: (executeFirstSearch: ExecuteSearch) => Promise<void>;
   /**
    * An optional callback that lets you control the interface localization.
    *

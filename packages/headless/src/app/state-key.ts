@@ -1,1 +1,1 @@
-export const stateKey = Symbol('state');
+export const stateKey = Symbol.for('coveo-headless-internal-state');

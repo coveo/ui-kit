@@ -1,6 +1,6 @@
 export * from '../stencil-generated/index';
-export * from '@coveo/headless/recommendation';
-export {RecsBindings, i18n} from '@coveo/atomic';
+export * from '@coveo/headless/commerce';
+export {CommerceBindings, i18n} from '@coveo/atomic';
 
 // Important: Re-exporting under the same name (eg: "AtomicCommerceInterface") shadows the original component
 // and should wrap it nicely for users of the library
