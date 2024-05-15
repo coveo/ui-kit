@@ -207,5 +207,7 @@ export {buildSearchBreadcrumbManager} from './controllers/commerce/search/breadc
 export {getOrganizationEndpoints} from './api/platform-client';
 export {ProductTemplatesHelpers} from './features/commerce/product-templates/product-templates-helpers';
 
+export type {FieldSuggestions} from './controllers/commerce/field-suggestions/headless-field-suggestions';
+export type {CategoryFieldSuggestions} from './controllers/commerce/field-suggestions/headless-category-field-suggestions';
 export type {FieldSuggestionsGenerator} from './controllers/commerce/field-suggestions/headless-field-suggestions-generator';
 export {buildFieldSuggestionsGenerator} from './controllers/commerce/field-suggestions/headless-field-suggestions-generator';
