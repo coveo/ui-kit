@@ -1,0 +1,154 @@
+import {
+  NumericFacet as HeadlessNumericFacetController,
+  NumericFacetState as HeadlessNumericFacetControllerState,
+} from '@coveo/headless/commerce';
+import {Component, h, Prop, Event, EventEmitter, State} from '@stencil/core';
+import {NumberInputType} from '../../../../components';
+import {Button} from '../../../common/button';
+import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
+
+export type Range = {start: number; end: number};
+
+/**
+ * Internal component made to be integrated in a NumericFacet.
+ * @internal
+ */
+@Component({
+  tag: 'atomic-commerce-facet-number-input',
+  styleUrl: 'atomic-commerce-facet-number-input.pcss',
+  shadow: false,
+})
+export class FacetNumberInput {
+  private startRef!: HTMLInputElement;
+  private endRef!: HTMLInputElement;
+
+  @State() private start?: number;
+  @State() private end?: number;
+
+  @Prop() public bindings!: Bindings;
+  @Prop() public type!: NumberInputType;
+  @Prop() public label!: string;
+  @Prop()
+  public domain!: Required<HeadlessNumericFacetControllerState>['domain'];
+  @Prop() public range?: Range;
+  @Prop() public setRanges!: HeadlessNumericFacetController['setRanges'];
+  @Prop() public facetId!: string;
+
+  @Event({
+    eventName: 'atomic/numberInputApply',
+  })
+  private applyInput!: EventEmitter;
+
+  public connectedCallback() {
+    this.start = this.range?.start;
+    this.end = this.range?.end;
+  }
+
+  private apply() {
+    if (!this.startRef.validity.valid || !this.endRef.validity.valid) {
+      return;
+    }
+
+    this.applyInput.emit({
+      start: this.start,
+      end: this.end,
+    });
+    this.setRanges([
+      {
+        start: this.start!,
+        end: this.end!,
+        endInclusive: true,
+        isAutoSelected: false,
+        state: 'selected',
+        numberOfResults: 0,
+        isSuggested: false,
+        moreValuesAvailable: false,
+      },
+    ]);
+  }
+
+  render() {
+    const label = this.bindings.i18n.t(this.label);
+    const minText = this.bindings.i18n.t('min');
+    const maxText = this.bindings.i18n.t('max');
+    const minAria = this.bindings.i18n.t('number-input-minimum', {label});
+    const maxAria = this.bindings.i18n.t('number-input-maximum', {label});
+    const apply = this.bindings.i18n.t('apply');
+    const applyAria = this.bindings.i18n.t('number-input-apply', {label});
+
+    const inputClasses =
+      'p-2.5 input-primary placeholder-neutral-dark min-w-0 mr-1';
+    const labelClasses = 'text-neutral-dark text-sm';
+
+    const step = this.type === 'integer' ? '1' : 'any';
+
+    return (
+      <form
+        class="mt-4 px-2 gap-y-0.5"
+        part="input-form"
+        onSubmit={(e) => {
+          e.preventDefault();
+          this.apply();
+          return false;
+        }}
+      >
+        <label
+          part="label-start"
+          class={labelClasses}
+          htmlFor={`${this.facetId}_start`}
+        >
+          {minText}
+        </label>
+        <input
+          part="input-start"
+          id={`${this.facetId}_start`}
+          type="number"
+          step={step}
+          ref={(ref) => (this.startRef = ref!)}
+          class={inputClasses}
+          aria-label={minAria}
+          required
+          min={Number.MIN_SAFE_INTEGER}
+          max={this.domain.max}
+          // value={this.range?.start}
+          value={this.range?.start} // TODO: not elegant
+          onInput={(e) =>
+            (this.start = (e.target as HTMLInputElement).valueAsNumber)
+          }
+        />
+        <label
+          part="label-end"
+          class={labelClasses}
+          htmlFor={`${this.facetId}_end`}
+        >
+          {maxText}
+        </label>
+        <input
+          part="input-end"
+          id={`${this.facetId}_end`}
+          type="number"
+          step={step}
+          ref={(ref) => (this.endRef = ref!)}
+          class={inputClasses}
+          aria-label={maxAria}
+          required
+          min={this.domain.min}
+          max={Number.MAX_SAFE_INTEGER}
+          // value={this.range?.end}
+          value={this.range?.end} // TODO: not elegant
+          onInput={(e) =>
+            (this.end = (e.target as HTMLInputElement).valueAsNumber)
+          }
+        />
+        <Button
+          style="outline-primary"
+          type="submit"
+          part="input-apply-button"
+          class="p-2.5 flex-none truncate"
+          ariaLabel={applyAria}
+          text={apply}
+        ></Button>
+      </form>
+    );
+  }
+}
