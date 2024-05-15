@@ -21,7 +21,7 @@ import {
 } from '../../controller/headless-controller';
 import {
   BaseSolutionTypeSubControllers,
-  buildBaseSolutionTypeControllers,
+  buildBaseSubControllers,
 } from '../core/sub-controller/headless-sub-controller';
 
 /**
@@ -96,7 +96,7 @@ export function buildRecommendations(
     (state: CommerceEngineState) => state.recommendations[slotId]!,
     (recommendations) => recommendations
   );
-  const subControllers = buildBaseSolutionTypeControllers(engine, {
+  const subControllers = buildBaseSubControllers(engine, {
     slotId,
     responseIdSelector: (state) => state.recommendations[slotId]!.responseId,
     fetchProductsActionCreator: () => fetchRecommendations({slotId}),

@@ -62,7 +62,13 @@ export type UserParams = (UserIdRequired | EmailRequired | UserIdAndEmail) & {
 };
 
 export interface CartItemParam {
-  sku: string;
+  /**
+   * The unique identifier of the product.
+   */
+  productId: string;
+  /**
+   * The quantity of the product in the cart.
+   */
   quantity: number;
 }
 

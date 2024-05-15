@@ -9,43 +9,59 @@
     <script nomodule src="/build/atomic.js"></script>
     <link rel="stylesheet" href="/themes/coveo.css" />
     <script type="module">
-      import {
-        setupEngine,
-        setupRecommendationsMostPurchased,
-        setupRecommendationsMostViewed,
-        renderProducts,
-      } from './engine.mjs';
+      import {commerceEngineConfig} from './engine.mjs';
 
-      const engine = await setupEngine();
+      (async () => {
+        await customElements.whenDefined('atomic-commerce-interface');
+        const commerceInterface = document.querySelector('atomic-commerce-interface');
 
-      /*
-       * The following code section should be replaced by actual atomic recommendations
-       */
-
-      const recommendationsMostPurchased = setupRecommendationsMostPurchased(engine);
-      recommendationsMostPurchased.subscribe(() => {
-        renderProducts('#mostPurchased', 'MOST PURCHASED', recommendationsMostPurchased.state.products);
-      });
-
-      const recommendationsMostViewed = setupRecommendationsMostViewed(engine);
-      recommendationsMostViewed.subscribe(() => {
-        renderProducts('#mostViewed', 'MOST VIEWED', recommendationsMostViewed.state.products);
-      });
-      /**
-       * End of section to be replaced
-       */
+        await commerceInterface.initialize(commerceEngineConfig);
+      })();
     </script>
+    <style>
+      atomic-commerce-recommendation-list {
+        --atomic-recs-number-of-columns: 3;
+      }
+    </style>
   </head>
   <body>
     <h1>HOMEPAGE</h1>
     <main>
       <section>
-        <article id="mostPurchased" style="border-bottom: 1px solid black; padding-bottom: 50px">
-          REPLACE ME; THIS SHOULD BE A RECOMMENDATION CAROUSEL FOR MOST POPULAR BOUGHT
-        </article>
-      </section>
-      <section>
-        <article id="mostViewed">REPLACE ME; THIS SHOULD BE A RECOMMENDATION CAROUSEL FOR MOST POPULAR VIEWED</article>
+        <atomic-commerce-interface type="recommendations">
+          <atomic-commerce-recommendation-list
+            id="popular_bought"
+            slot-id="3216339b-f776-4cb1-8a21-018c8ec0f08c"
+            products-per-page="3"
+          >
+            <atomic-product-template>
+              <template>
+                <atomic-product-image
+                  class="thumbnail"
+                  field="ec_thumbnails"
+                  fallback="https://picsum.photos/350"
+                ></atomic-product-image>
+
+                <atomic-product-link class="font-bold"></atomic-product-link>
+
+                <atomic-field-condition class="brand text-neutral-dark" if-defined="ec_brand">
+                  <atomic-product-text field="ec_brand"></atomic-product-text>
+                </atomic-field-condition>
+
+                <atomic-field-condition class="mt-4 text-2xl font-bold field" if-defined="ec_price">
+                  <atomic-product-price field="ec_price"></atomic-product-price>
+                </atomic-field-condition>
+                <atomic-product-description></atomic-product-description>
+              </template>
+            </atomic-product-template>
+          </atomic-commerce-recommendation-list>
+          <atomic-commerce-recommendation-list
+            id="popular_viewed"
+            slot-id="36ed24b6-d7e0-4c32-8815-c456cc1928e7"
+            products-per-page="3"
+          >
+          </atomic-commerce-recommendation-list>
+        </atomic-commerce-interface>
       </section>
     </main>
 

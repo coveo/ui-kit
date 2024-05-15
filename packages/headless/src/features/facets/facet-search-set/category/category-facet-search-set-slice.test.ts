@@ -6,7 +6,10 @@ import {
 } from '../../../commerce/facets/facet-search-set/commerce-facet-search-actions';
 import {fetchProductListing} from '../../../commerce/product-listing/product-listing-actions';
 import {fetchQuerySuggestions} from '../../../commerce/query-suggest/query-suggest-actions';
-import {executeSearch as executeCommerceSearch} from '../../../commerce/search/search-actions';
+import {
+  executeSearch as executeCommerceSearch,
+  QuerySearchCommerceAPIThunkReturn,
+} from '../../../commerce/search/search-actions';
 import {
   executeSearch,
   ExecuteSearchThunkReturn,
@@ -222,7 +225,7 @@ describe('CategoryFacetSearchSet slice', () => {
   it('#executeCommerceSearch.fulfilled calls #handleFacetSearchSetClear', () => {
     jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchSetClear');
     const action = executeCommerceSearch.fulfilled(
-      {} as QueryCommerceAPIThunkReturn,
+      {} as QuerySearchCommerceAPIThunkReturn,
       ''
     );
     facetSearchSetReducer(state, action);

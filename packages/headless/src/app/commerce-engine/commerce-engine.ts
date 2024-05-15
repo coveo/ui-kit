@@ -2,6 +2,7 @@ import {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
 import {CommerceAPIClient} from '../../api/commerce/commerce-api-client';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
+import {setItems} from '../../features/commerce/context/cart/cart-actions';
 import {cartReducer} from '../../features/commerce/context/cart/cart-slice';
 import {setContext} from '../../features/commerce/context/context-actions';
 import {contextReducer} from '../../features/commerce/context/context-slice';
@@ -13,6 +14,7 @@ import {recommendationsReducer} from '../../features/commerce/recommendations/re
 import {executeSearch} from '../../features/commerce/search/search-actions';
 import {commerceSearchReducer} from '../../features/commerce/search/search-slice';
 import {sortReducer} from '../../features/commerce/sort/sort-slice';
+import {commerceTriggersReducer} from '../../features/commerce/triggers/triggers-slice';
 import {facetOrderReducer} from '../../features/facets/facet-order/facet-order-slice';
 import {categoryFacetSearchSetReducer} from '../../features/facets/facet-search-set/category/category-facet-search-set-slice';
 import {specificFacetSearchSetReducer} from '../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
@@ -25,7 +27,7 @@ import {
   ExternalEngineOptions,
 } from '../engine';
 import {buildLogger} from '../logger';
-import {stateKey} from '../state-key';
+import {redactEngine, stateKey} from '../state-key';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {
   CommerceEngineConfiguration,
@@ -47,6 +49,7 @@ const commerceEngineReducers = {
   commerceContext: contextReducer,
   commerceQuery: queryReducer,
   cart: cartReducer,
+  triggers: commerceTriggersReducer,
 };
 type CommerceEngineReducers = typeof commerceEngineReducers;
 
@@ -117,8 +120,14 @@ export function buildCommerceEngine(
   const {state: _, ...engine} = internalEngine;
 
   engine.dispatch(setContext(options.configuration.context));
+  if (
+    options.configuration.cart !== undefined &&
+    options.configuration.cart.items !== undefined
+  ) {
+    engine.dispatch(setItems(options.configuration.cart.items));
+  }
 
-  return {
+  return redactEngine({
     ...engine,
 
     get [stateKey]() {
@@ -138,7 +147,7 @@ export function buildCommerceEngine(
       const action = executeSearch();
       internalEngine.dispatch(action);
     },
-  };
+  });
 }
 
 function validateConfiguration(

@@ -9,43 +9,34 @@
     <script nomodule src="/build/atomic.js"></script>
     <link rel="stylesheet" href="/themes/coveo.css" />
     <script type="module">
-      import {
-        setupEngine,
-        setupRecommendationsMostPurchased,
-        setupRecommendationsMostViewed,
-        renderProducts,
-      } from './engine.mjs';
+      import {commerceEngineConfig} from './engine.mjs';
 
-      const engine = await setupEngine();
-
-      /*
-       * The following code section should be replaced by actual atomic-commerce-recommendation component
-       */
-
-      const recommendationsMostPurchased = setupRecommendationsMostPurchased(engine);
-      recommendationsMostPurchased.subscribe(() => {
-        renderProducts('#mostPurchased', 'MOST PURCHASED', recommendationsMostPurchased.state.products);
-      });
-
-      const recommendationsMostViewed = setupRecommendationsMostViewed(engine);
-      recommendationsMostViewed.subscribe(() => {
-        renderProducts('#mostViewed', 'MOST VIEWED', recommendationsMostViewed.state.products);
-      });
-      /**
-       * End of section to be replaced
-       */
+      (async () => {
+        await customElements.whenDefined('atomic-commerce-interface');
+        const commerceInterface = document.querySelector('atomic-commerce-interface');
+        await commerceInterface.initialize(commerceEngineConfig);
+      })();
     </script>
+    <style>
+      atomic-commerce-recommendation-list {
+        --atomic-recs-number-of-columns: 3;
+      }
+    </style>
   </head>
   <body>
     <h1>Cart</h1>
     <main>
       <section>
-        <article id="mostPurchased" style="border-bottom: 1px solid black; padding-bottom: 50px">
-          REPLACE ME; THIS SHOULD BE A RECOMMENDATION CAROUSEL FOR MOST POPULAR BOUGHT
-        </article>
-      </section>
-      <section>
-        <article id="mostViewed">REPLACE ME; THIS SHOULD BE A RECOMMENDATION CAROUSEL FOR MOST POPULAR VIEWED</article>
+        <atomic-commerce-interface type="recommendations">
+          <atomic-commerce-recommendation-list
+            id="cart_recommendations"
+            slot-id="52870f54-4edc-4767-b8b5-f126ff2de9bf"
+            display="grid"
+            density="comfortable"
+            number-of-recommendations-per-page="3"
+          >
+          </atomic-commerce-recommendation-list>
+        </atomic-commerce-interface>
       </section>
     </main>
 

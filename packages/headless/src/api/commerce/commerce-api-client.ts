@@ -23,6 +23,7 @@ import {
 } from './search/query-suggest/query-suggest-request';
 import {QuerySuggestSuccessResponse} from './search/query-suggest/query-suggest-response';
 import {CommerceSearchRequest} from './search/request';
+import {SearchCommerceSuccessResponse} from './search/response';
 
 export interface CommerceFacetSearchAPIClient {
   facetSearch(
@@ -80,7 +81,7 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
 
   async search(
     req: CommerceSearchRequest
-  ): Promise<CommerceAPIResponse<CommerceSuccessResponse>> {
+  ): Promise<CommerceAPIResponse<SearchCommerceSuccessResponse>> {
     const requestOptions = buildRequest(req, 'search');
     return this.query({
       ...requestOptions,
@@ -116,6 +117,22 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
         ...requestOptions.requestParams,
         facetId: req?.facetId,
         facetQuery: req?.facetQuery,
+        query: req?.query,
+      },
+      ...this.options,
+    });
+  }
+
+  // eslint-disable-next-line @cspell/spellchecker
+  // TODO: CAPI-867 - Use Commerce API's equivalent of the /plan endpoint when it becomes available.
+  async plan(
+    req: CommerceSearchRequest
+  ): Promise<CommerceAPIResponse<CommerceSuccessResponse>> {
+    const requestOptions = buildRequest(req, 'search');
+    return this.query({
+      ...requestOptions,
+      requestParams: {
+        ...requestOptions.requestParams,
         query: req?.query,
       },
       ...this.options,
