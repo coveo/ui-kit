@@ -79,7 +79,7 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
   protected facetSearchAriaMessage!: string;
 
   public initialize() {
-    this.initSearchStatus();
+    this.initSummary();
     this.initAriaLive();
     this.initPopover();
     this.registerFacet();
@@ -293,7 +293,7 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
     });
   }
 
-  private initSearchStatus() {
+  private initSummary() {
     if (this.bindings.interfaceElement.type === 'product-listing') {
       this.summary = buildListingSummary(this.bindings.engine);
     } else {
