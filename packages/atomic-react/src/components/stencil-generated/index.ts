@@ -55,6 +55,7 @@ export const AtomicProductImage = /*@__PURE__*/createReactComponent<JSX.AtomicPr
 export const AtomicProductLink = /*@__PURE__*/createReactComponent<JSX.AtomicProductLink, HTMLAtomicProductLinkElement>('atomic-product-link');
 export const AtomicProductNumericFieldValue = /*@__PURE__*/createReactComponent<JSX.AtomicProductNumericFieldValue, HTMLAtomicProductNumericFieldValueElement>('atomic-product-numeric-field-value');
 export const AtomicProductPrice = /*@__PURE__*/createReactComponent<JSX.AtomicProductPrice, HTMLAtomicProductPriceElement>('atomic-product-price');
+export const AtomicProductRating = /*@__PURE__*/createReactComponent<JSX.AtomicProductRating, HTMLAtomicProductRatingElement>('atomic-product-rating');
 export const AtomicProductText = /*@__PURE__*/createReactComponent<JSX.AtomicProductText, HTMLAtomicProductTextElement>('atomic-product-text');
 export const AtomicQueryError = /*@__PURE__*/createReactComponent<JSX.AtomicQueryError, HTMLAtomicQueryErrorElement>('atomic-query-error');
 export const AtomicQuerySummary = /*@__PURE__*/createReactComponent<JSX.AtomicQuerySummary, HTMLAtomicQuerySummaryElement>('atomic-query-summary');
