@@ -146,6 +146,7 @@ describe('quantic-generated-answer', () => {
             Expect.sessionStorageContains(GENERATED_ANSWER_DATA_KEY, {});
             Expect.generatedAnswerFooterRowsIsOnMultiline(false);
             Expect.generatedAnswerCollapsed(false);
+            Expect.displayToggleGeneratedAnswerButton(false);
           });
 
           it('should display the correct message', () => {
@@ -280,6 +281,7 @@ describe('quantic-generated-answer', () => {
             Expect.generatedAnswerContains(testText);
             Expect.generatedAnswerIsStreaming(true);
             Expect.displayRephraseButtons(false);
+            Expect.displayToggleGeneratedAnswerButton(false);
             Expect.displayLikeButton(false);
             Expect.displayDislikeButton(false);
             Expect.displayCopyToClipboardButton(false);

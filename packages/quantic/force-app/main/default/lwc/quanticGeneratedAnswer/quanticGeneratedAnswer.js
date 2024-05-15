@@ -49,7 +49,7 @@ const GENERATED_ANSWER_DATA_KEY = 'coveo-generated-answer-data';
  * The `QuanticGeneratedAnswer` component automatically generates an answer using Coveo machine learning models to answer the query executed by the user.
  * @category Search
  * @example
- * <c-quantic-generated-answer engine-id={engineId} answer-style="step"></c-quantic-generated-answer>
+ * <c-quantic-generated-answer engine-id={engineId} answer-style="step" with-toggle collapsible></c-quantic-generated-answer>
  */
 export default class QuanticGeneratedAnswer extends LightningElement {
   /**
@@ -217,10 +217,12 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       'quantic__generatedanswercopy',
       this.handleGeneratedAnswerCopyToClipboard
     );
-    this.template.removeEventListener(
-      'quantic__generatedanswertoggle',
-      this.handleGeneratedAnswerToggle
-    );
+    if (this.withToggle) {
+      this.template.removeEventListener(
+        'quantic__generatedanswertoggle',
+        this.handleGeneratedAnswerToggle
+      );
+    }
   }
 
   updateState() {
