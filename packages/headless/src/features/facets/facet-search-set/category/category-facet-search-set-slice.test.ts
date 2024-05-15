@@ -185,7 +185,7 @@ describe('CategoryFacetSearchSet slice', () => {
 
     facetSearchSetReducer(state, action);
     expect(
-      FacetSearchReducerHelpers.handleCommerceFetchQuerySuggestionsFulfilled
+      FacetSearchReducerHelpers.handleCommerceFetchQuerySuggestionsFulfilledForCategoryFacet
     ).toHaveBeenCalledTimes(1);
   });
 

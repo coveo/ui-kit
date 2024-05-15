@@ -170,7 +170,39 @@ export function handleCommerceFacetFieldSuggestionsFulfilled<
   }
 }
 
-export function handleCommerceFetchQuerySuggestionsFulfilled<
+export function handleCommerceFetchQuerySuggestionsFulfilledForRegularFacet<
+  T extends FacetSearchResponse,
+>(
+  state: FacetSearchSetState<T>,
+  payload: {
+    fieldSuggestionsFacets: {facetId: string; type: string}[];
+    query: string | undefined;
+  },
+  requestId: string,
+  buildEmptyResponse: () => T
+) {
+  if (!payload.fieldSuggestionsFacets) {
+    return;
+  }
+
+  payload.fieldSuggestionsFacets
+    .filter((fieldSuggestionFacet) => !(fieldSuggestionFacet.facetId in state))
+    .filter((fieldSuggestionFacet) => fieldSuggestionFacet.type === 'regular')
+    .forEach((fieldSuggestionFacet) => {
+      state[fieldSuggestionFacet.facetId] = {
+        options: {
+          ...defaultFacetSearchOptions,
+          query: payload.query ?? '',
+        },
+        isLoading: false,
+        response: buildEmptyResponse(),
+        initialNumberOfValues: defaultFacetSearchOptions.numberOfValues,
+        requestId,
+      };
+    });
+}
+
+export function handleCommerceFetchQuerySuggestionsFulfilledForCategoryFacet<
   T extends FacetSearchResponse,
 >(
   state: FacetSearchSetState<T>,
@@ -193,14 +225,13 @@ export function handleCommerceFetchQuerySuggestionsFulfilled<
     .forEach((fieldSuggestionFacet) => {
       state[fieldSuggestionFacet.facetId] = {
         options: {
+          ...defaultFacetSearchOptions,
           query: payload.query ?? '',
-          captions: {},
-          numberOfValues: defaultFacetSearchOptions.numberOfValues,
         },
         isLoading: false,
         response: buildEmptyResponse(),
         initialNumberOfValues: defaultFacetSearchOptions.numberOfValues,
-        requestId: requestId,
+        requestId,
       };
     });
 }

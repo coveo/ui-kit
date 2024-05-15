@@ -18,7 +18,7 @@ import {
   handleFacetSearchSetClear,
   handleCommerceFacetSearchFulfilled,
   handleCommerceFacetFieldSuggestionsFulfilled,
-  handleCommerceFetchQuerySuggestionsFulfilled,
+  handleCommerceFetchQuerySuggestionsFulfilledForCategoryFacet,
 } from '../facet-search-reducer-helpers';
 import {
   clearFacetSearch,
@@ -79,7 +79,7 @@ export const categoryFacetSearchSetReducer = createReducer(
         );
       })
       .addCase(fetchQuerySuggestions.fulfilled, (state, action) => {
-        handleCommerceFetchQuerySuggestionsFulfilled(
+        handleCommerceFetchQuerySuggestionsFulfilledForCategoryFacet(
           state,
           action.payload,
           action.meta.requestId,
