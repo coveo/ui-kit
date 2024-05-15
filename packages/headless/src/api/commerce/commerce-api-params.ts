@@ -25,9 +25,14 @@ export interface ContextParam {
   context: ContextParams;
 }
 
+export interface ProductParam {
+  productId: string;
+}
+
 export interface ContextParams {
   view: ViewParams;
   user?: UserParams;
+  product?: ProductParam;
   cart?: CartItemParam[];
 }
 
@@ -57,7 +62,13 @@ export type UserParams = (UserIdRequired | EmailRequired | UserIdAndEmail) & {
 };
 
 export interface CartItemParam {
-  sku: string;
+  /**
+   * The unique identifier of the product.
+   */
+  productId: string;
+  /**
+   * The quantity of the product in the cart.
+   */
   quantity: number;
 }
 

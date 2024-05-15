@@ -27,6 +27,7 @@ import {
 } from '../headless-core-commerce-facet';
 import {NumericFacet} from '../numeric/headless-commerce-numeric-facet';
 import {RegularFacet} from '../regular/headless-commerce-regular-facet';
+import {SearchableFacetOptions} from '../searchable/headless-commerce-searchable-facet';
 
 /**
  * The `FacetGenerator` headless controller creates commerce facet controllers from the Commerce API search or
@@ -74,6 +75,12 @@ type CommerceFacetBuilder<
   >,
 > = (engine: CommerceEngine, options: CommerceFacetOptions) => Facet;
 
+export type CommerceSearchableFacetBuilder<
+  Facet extends CoreCommerceFacet<AnyFacetValueRequest, AnyFacetValueResponse>,
+> = (
+  engine: CommerceEngine,
+  options: CommerceFacetOptions & SearchableFacetOptions
+) => Facet;
 /**
  * @internal
  *

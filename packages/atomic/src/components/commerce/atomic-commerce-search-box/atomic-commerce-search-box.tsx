@@ -87,9 +87,9 @@ import type {CommerceBindings as Bindings} from '../atomic-commerce-interface/at
  * @part recent-query-title - The "recent searches" text of the clear button above suggestions from the `atomic-commerce-search-box-recent-queries` component.
  * @part recent-query-clear - The "clear" text of the clear button above suggestions from the `atomic-commerce-search-box-recent-queries` component.
  *
- * @part instant-results-item - An instant result rendered by an `atomic-commerce-search-box-instant-results` component.
- * @part instant-results-show-all - The clickable suggestion to show all items for the current instant results search rendered by an `atomic-commerce-search-box-instant-results` component.
- * @part instant-results-show-all-button - The button inside the clickable suggestion from the `atomic-commerce-search-box-instant-results` component.
+ * @part instant-results-item - An instant result rendered by an `atomic-commerce-search-box-instant-products` component.
+ * @part instant-results-show-all - The clickable suggestion to show all items for the current instant results search rendered by an `atomic-commerce-search-box-instant-products` component.
+ * @part instant-results-show-all-button - The button inside the clickable suggestion from the `atomic-commerce-search-box-instant-products` component.
  *
  * @internal
  */

@@ -80,7 +80,8 @@ export class AtomicCommerceInterface
    */
   @Prop({reflect: true, mutable: true}) public type:
     | 'search'
-    | 'product-listing' = 'search';
+    | 'product-listing'
+    | 'recommendations' = 'search';
 
   /**
    * Whether analytics should be enabled.

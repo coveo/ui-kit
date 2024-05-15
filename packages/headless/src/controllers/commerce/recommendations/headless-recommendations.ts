@@ -21,7 +21,7 @@ import {
 } from '../../controller/headless-controller';
 import {
   BaseSolutionTypeSubControllers,
-  buildBaseSolutionTypeControllers,
+  buildBaseSubControllers,
 } from '../core/sub-controller/headless-sub-controller';
 
 /**
@@ -54,6 +54,10 @@ export interface RecommendationsOptions {
    * The unique identifier of the recommendations slot (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
    */
   slotId: string;
+  /**
+   * The unique identifier of the product to use for seeded recommendations.
+   */
+  productId?: string;
 }
 
 interface RecommendationsProps {
@@ -85,14 +89,14 @@ export function buildRecommendations(
   const controller = buildController(engine);
   const {dispatch} = engine;
 
-  const {slotId} = props.options;
+  const {slotId, productId} = props.options;
   dispatch(registerRecommendationsSlot({slotId}));
 
   const recommendationStateSelector = createSelector(
     (state: CommerceEngineState) => state.recommendations[slotId]!,
     (recommendations) => recommendations
   );
-  const subControllers = buildBaseSolutionTypeControllers(engine, {
+  const subControllers = buildBaseSubControllers(engine, {
     slotId,
     responseIdSelector: (state) => state.recommendations[slotId]!.responseId,
     fetchProductsActionCreator: () => fetchRecommendations({slotId}),
@@ -107,7 +111,7 @@ export function buildRecommendations(
       return recommendationStateSelector(engine[stateKey]);
     },
 
-    refresh: () => dispatch(fetchRecommendations({slotId})),
+    refresh: () => dispatch(fetchRecommendations({slotId, productId})),
   };
 }
 

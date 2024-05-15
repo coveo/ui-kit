@@ -24,3 +24,15 @@ export const totalEntriesRecommendationSelector = createSelector(
     state.commercePagination?.recommendations[slotId]?.totalEntries || 0,
   (totalEntries) => totalEntries
 );
+
+export const pagePrincipalSelector = createSelector(
+  (state: Partial<CommercePaginationSection>) =>
+    state.commercePagination?.principal.page || 0,
+  (page) => page
+);
+
+export const pageRecommendationSelector = createSelector(
+  (state: Partial<CommercePaginationSection>, slotId: string) =>
+    state.commercePagination?.recommendations[slotId]?.page || 0,
+  (page) => page
+);

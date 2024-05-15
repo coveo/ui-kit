@@ -18,6 +18,9 @@
         accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
         organizationId: 'searchuisamples',
         organizationEndpoints: await searchInterface.getOrganizationEndpoints('searchuisamples'),
+        analytics: {
+          analyticsMode: 'next',
+        },
       });
 
       // Trigger a first search
@@ -209,7 +212,6 @@
             <atomic-refine-toggle></atomic-refine-toggle>
             <atomic-sort-dropdown>
               <atomic-sort-expression label="relevance" expression="relevancy"></atomic-sort-expression>
-              <atomic-sort-expression label="most-recent" expression="date descending"></atomic-sort-expression>
             </atomic-sort-dropdown>
             <atomic-did-you-mean></atomic-did-you-mean>
             <atomic-notifications></atomic-notifications>
