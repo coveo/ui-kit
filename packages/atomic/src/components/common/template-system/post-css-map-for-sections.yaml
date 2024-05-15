@@ -1,3 +1,8 @@
+# Used by `template-system.pcss` to generate the CSS for the sections.
+# variables sections define the list of variables names, with a specific order.
+# Use cases (search, insight, commerce) define the tag name that should be injected for each variable name.
+# As such, it is important to match properly the tag name position with their corresponding variable name.
+
 variables:
   - $section-visual
   - $section-badges
