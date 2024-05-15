@@ -14,11 +14,15 @@ export interface CartItemWithMetadata extends CartItemParam {
 export interface CartState {
   cartItems: string[];
   cart: Record<string, CartItemWithMetadata>;
+  purchasedItems: string[];
+  purchased: Record<string, CartItemWithMetadata>;
 }
 
 export const getCartInitialState = (): CartState => ({
   cartItems: [],
   cart: {},
+  purchasedItems: [],
+  purchased: {},
 });
 
 export function getProductsFromCartState(state: CartState): CartItemParam[] {
