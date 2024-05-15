@@ -1,4 +1,3 @@
-import alias from 'esbuild-plugin-alias';
 import {umdWrapper} from 'esbuild-plugin-umd-wrapper';
 import {readFileSync, promises, writeFileSync} from 'node:fs';
 import {createRequire} from 'node:module';
@@ -50,8 +49,16 @@ function getUmdGlobalName(useCase) {
   );
 }
 
+const __dirname = dirname(new URL(import.meta.url).pathname);
+
 function getPackageVersion() {
-  return JSON.parse(readFileSync('package.json', 'utf-8')).version;
+  return JSON.parse(readFileSync(resolve(__dirname, 'package.json'), 'utf-8'))
+    .version;
+}
+
+function getBuenoPackageVersion() {
+  return JSON.parse(readFileSync(resolve(__dirname, 'package.json'), 'utf-8'))
+    .dependencies['@coveo/bueno'];
 }
 
 function getUseCaseDir(prefix, useCase) {
@@ -180,19 +187,27 @@ async function buildBrowserConfig(options, outDir) {
     minify: true,
     sourcemap: true,
     metafile: true,
-    external: ['crypto'],
-    ...options,
-    plugins: [
-      alias({
-        'coveo.analytics': resolveEsm('coveo.analytics'),
-        '@coveo/please-give-me-fetch': resolve(
-          './ponyfills',
-          'fetch-ponyfill-browser.js'
-        ),
-        '@coveo/pendragon': resolve('./ponyfills', 'magic-cookie-browser.js'),
-      }),
-      ...(options.plugins || []),
+    external: [
+      'crypto',
+      process.env.TARGET === 'cdn'
+        ? `/bueno/v${getBuenoPackageVersion()}/bueno.esm.js`
+        : '',
     ],
+    ...options,
+    alias: {
+      'coveo.analytics': resolveEsm('coveo.analytics'),
+      '@coveo/please-give-me-fetch': resolve(
+        './ponyfills',
+        'fetch-ponyfill-browser.js'
+      ),
+      '@coveo/pendragon': resolve('./ponyfills', 'magic-cookie-browser.js'),
+      ...(process.env.TARGET === 'cdn'
+        ? {
+            '@coveo/bueno': `/bueno/v${getBuenoPackageVersion()}/bueno.esm.js`,
+          }
+        : {}),
+    },
+    plugins: options.plugins,
   });
   outputMetafile(`browser.${options.format}`, outDir, out.metafile);
   return out;
@@ -237,16 +252,15 @@ async function buildNodeConfig(options, outDir) {
     metafile: true,
     platform: 'node',
     treeShaking: true,
-    plugins: [
-      alias({
-        'coveo.analytics': require.resolve('coveo.analytics'),
-        '@coveo/please-give-me-fetch': resolve(
-          './ponyfills',
-          'fetch-ponyfill-node.js'
-        ),
-        '@coveo/pendragon': resolve('./ponyfills', 'magic-cookie-node.js'),
-      }),
-    ],
+    alias: {
+      'coveo.analytics': require.resolve('coveo.analytics'),
+      '@coveo/please-give-me-fetch': resolve(
+        './ponyfills',
+        'fetch-ponyfill-node.js'
+      ),
+      '@coveo/pendragon': resolve('./ponyfills', 'magic-cookie-node.js'),
+    },
+    packages: 'external',
     ...options,
   });
 
