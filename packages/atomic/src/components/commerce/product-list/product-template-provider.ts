@@ -12,7 +12,7 @@ function defaultTemplate() {
     <atomic-product-link class="font-bold"></atomic-product-link>
     <atomic-product-text field="ec_brand" class="block text-neutral-dark"></atomic-product-text>
     <atomic-product-image field="ec_thumbnails"></atomic-product-image>
-    <atomic-product-rating field="ec_rating"></atomic-product-rating>
+    <atomic-product-rating rating-details-field="ec_rating" field="ec_rating"></atomic-product-rating>
     <atomic-product-price currency="USD" class="text-2xl"></atomic-product-price>
     <atomic-product-description></atomic-product-description>
   `;
