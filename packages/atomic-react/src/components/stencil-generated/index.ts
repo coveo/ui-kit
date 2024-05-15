@@ -14,6 +14,7 @@ export const AtomicAutomaticFacetGenerator = /*@__PURE__*/createReactComponent<J
 export const AtomicBreadbox = /*@__PURE__*/createReactComponent<JSX.AtomicBreadbox, HTMLAtomicBreadboxElement>('atomic-breadbox');
 export const AtomicCategoryFacet = /*@__PURE__*/createReactComponent<JSX.AtomicCategoryFacet, HTMLAtomicCategoryFacetElement>('atomic-category-facet');
 export const AtomicColorFacet = /*@__PURE__*/createReactComponent<JSX.AtomicColorFacet, HTMLAtomicColorFacetElement>('atomic-color-facet');
+export const AtomicCommerceFacets = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceFacets, HTMLAtomicCommerceFacetsElement>('atomic-commerce-facets');
 export const AtomicCommerceInterface = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceInterface, HTMLAtomicCommerceInterfaceElement>('atomic-commerce-interface');
 export const AtomicCommercePager = /*@__PURE__*/createReactComponent<JSX.AtomicCommercePager, HTMLAtomicCommercePagerElement>('atomic-commerce-pager');
 export const AtomicCommerceProductList = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceProductList, HTMLAtomicCommerceProductListElement>('atomic-commerce-product-list');
