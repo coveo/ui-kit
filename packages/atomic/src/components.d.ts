@@ -6,7 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-import { CommerceEngine, InteractiveProduct, LogLevel, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet } from "@coveo/headless/commerce";
+import { CommerceEngine, InteractiveProduct, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet } from "@coveo/headless/commerce";
 import { i18n } from "i18next";
 import { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
@@ -33,7 +33,7 @@ import { Bindings } from "./components/search/atomic-search-interface/atomic-sea
 import { AriaLabelGenerator as AriaLabelGenerator1 } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 export { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-export { CommerceEngine, InteractiveProduct, LogLevel, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet } from "@coveo/headless/commerce";
+export { CommerceEngine, InteractiveProduct, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet } from "@coveo/headless/commerce";
 export { i18n } from "i18next";
 export { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { StandaloneSearchBoxData } from "./utils/local-storage-utils";
@@ -346,6 +346,10 @@ export namespace Components {
      * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
      */
     interface AtomicCommerceLoadMoreProducts {
+    }
+    interface AtomicCommerceNumericFacet {
+        "dependsOn": Record<string, string>;
+        "facet": NumericFacet;
     }
     /**
      * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
@@ -3188,6 +3192,12 @@ declare global {
         prototype: HTMLAtomicCommerceLoadMoreProductsElement;
         new (): HTMLAtomicCommerceLoadMoreProductsElement;
     };
+    interface HTMLAtomicCommerceNumericFacetElement extends Components.AtomicCommerceNumericFacet, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceNumericFacetElement: {
+        prototype: HTMLAtomicCommerceNumericFacetElement;
+        new (): HTMLAtomicCommerceNumericFacetElement;
+    };
     interface HTMLAtomicCommercePagerElementEventMap {
         "atomic/scrollToTop": any;
     }
@@ -4815,6 +4825,7 @@ declare global {
         "atomic-commerce-facets": HTMLAtomicCommerceFacetsElement;
         "atomic-commerce-interface": HTMLAtomicCommerceInterfaceElement;
         "atomic-commerce-load-more-products": HTMLAtomicCommerceLoadMoreProductsElement;
+        "atomic-commerce-numeric-facet": HTMLAtomicCommerceNumericFacetElement;
         "atomic-commerce-pager": HTMLAtomicCommercePagerElement;
         "atomic-commerce-product-list": HTMLAtomicCommerceProductListElement;
         "atomic-commerce-query-error": HTMLAtomicCommerceQueryErrorElement;
@@ -5236,6 +5247,10 @@ declare namespace LocalJSX {
      * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
      */
     interface AtomicCommerceLoadMoreProducts {
+    }
+    interface AtomicCommerceNumericFacet {
+        "dependsOn"?: Record<string, string>;
+        "facet": NumericFacet;
     }
     /**
      * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
@@ -7790,6 +7805,7 @@ declare namespace LocalJSX {
         "atomic-commerce-facets": AtomicCommerceFacets;
         "atomic-commerce-interface": AtomicCommerceInterface;
         "atomic-commerce-load-more-products": AtomicCommerceLoadMoreProducts;
+        "atomic-commerce-numeric-facet": AtomicCommerceNumericFacet;
         "atomic-commerce-pager": AtomicCommercePager;
         "atomic-commerce-product-list": AtomicCommerceProductList;
         "atomic-commerce-query-error": AtomicCommerceQueryError;
@@ -8000,6 +8016,7 @@ declare module "@stencil/core" {
              * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
              */
             "atomic-commerce-load-more-products": LocalJSX.AtomicCommerceLoadMoreProducts & JSXBase.HTMLAttributes<HTMLAtomicCommerceLoadMoreProductsElement>;
+            "atomic-commerce-numeric-facet": LocalJSX.AtomicCommerceNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceNumericFacetElement>;
             /**
              * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
              */
