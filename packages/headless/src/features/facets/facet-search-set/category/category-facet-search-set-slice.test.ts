@@ -164,10 +164,10 @@ describe('CategoryFacetSearchSet slice', () => {
     ).toHaveBeenCalledTimes(1);
   });
 
-  it('#fetchQuerySuggestions.fulfilled calls #handleCommerceFetchQuerySuggestionsFulfilled', () => {
+  it('#fetchQuerySuggestions.fulfilled calls #handleCommerceFetchQuerySuggestionsFulfilledForCategoryFacet', () => {
     jest.spyOn(
       FacetSearchReducerHelpers,
-      'handleCommerceFetchQuerySuggestionsFulfilled'
+      'handleCommerceFetchQuerySuggestionsFulfilledForCategoryFacet'
     );
     const action = fetchQuerySuggestions.fulfilled(
       {
