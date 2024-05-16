@@ -118,12 +118,6 @@ export class AtomicCommerceNumericFacet
   @Listen('atomic/numberInputApply')
   public applyNumberInput({detail}: CustomEvent<Range>) {
     this.range = {start: detail.start, end: detail.end};
-    // this.facet.state.facetId && // TODO: use getter
-    //   this.bindings.engine.dispatch(
-    //     loadNumericFacetSetActions(
-    //       this.bindings.engine
-    //     ).deselectAllNumericFacetValues(this.facet.state.facetId) // TODO: use getter
-    //   );
   }
 
   public render() {
