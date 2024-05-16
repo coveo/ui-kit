@@ -59,7 +59,7 @@ export function loadProductListingActions(
 /**
  * The product listing analytics action creators.
  *
- * WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
+ * @internal WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
  */
 export interface ProductListingAnalyticsActionCreators {
   /**
@@ -120,10 +120,9 @@ export interface ProductListingAnalyticsActionCreators {
 /**
  * Returns the possible product listing analytics action creators.
  *
- * WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
- *
  * @param engine - The product listing engine.
  * @returns An object holding the action creators.
+ * @internal WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
  */
 export function loadProductListingAnalyticsActions(
   engine: CommerceEngine
