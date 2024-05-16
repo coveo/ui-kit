@@ -139,6 +139,28 @@ export declare interface AtomicColorFacet extends Components.AtomicColorFacet {}
 
 
 @ProxyCmp({
+  inputs: ['facet']
+})
+@Component({
+  selector: 'atomic-commerce-numeric-facet',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['facet'],
+})
+export class AtomicCommerceNumericFacet {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicCommerceNumericFacet extends Components.AtomicCommerceNumericFacet {}
+
+
+@ProxyCmp({
   inputs: ['element', 'error']
 })
 @Component({
