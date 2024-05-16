@@ -49,8 +49,15 @@ export interface FacetGenerator extends Controller {
   facets: GeneratedFacetControllers;
 }
 
+/**
+ * Represents the state of a facet generator.
+ */
 export type FacetGeneratorState = FacetGenerator['state'];
 
+/**
+ * Represents an array of generated facet controllers.
+ * Each controller is mapped to a specific facet type.
+ */
 export type GeneratedFacetControllers = Array<
   MappedGeneratedFacetController[FacetType]
 >;
@@ -88,10 +95,28 @@ export type CommerceSearchableFacetBuilder<
  *
  * The `FacetGenerator` options used internally.
  */
+/**
+ * Options for the facet generator.
+ */
 export interface FacetGeneratorOptions {
+  /**
+   * Builder function for regular facets.
+   */
   buildRegularFacet: CommerceFacetBuilder<RegularFacet>;
+
+  /**
+   * Builder function for numeric facets.
+   */
   buildNumericFacet: CommerceFacetBuilder<NumericFacet>;
+
+  /**
+   * Builder function for date facets.
+   */
   buildDateFacet: CommerceFacetBuilder<DateFacet>;
+
+  /**
+   * Builder function for category facets.
+   */
   buildCategoryFacet: CommerceFacetBuilder<CategoryFacet>;
 }
 

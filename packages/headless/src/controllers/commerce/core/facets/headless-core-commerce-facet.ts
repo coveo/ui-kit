@@ -57,15 +57,36 @@ export interface CoreCommerceFacetProps {
   options: CoreCommerceFacetOptions;
 }
 
+/**
+ * Options for the CoreCommerceFacet.
+ */
 export interface CoreCommerceFacetOptions {
+  /**
+   * The identifier of the facet.
+   */
   facetId: string;
+  /**
+   * The action creator for toggling the selection of a facet value.
+   */
   toggleSelectActionCreator: ToggleActionCreator;
+  /**
+   * The action creator for toggling the exclusion of a facet value.
+   */
   toggleExcludeActionCreator?: ToggleActionCreator;
+  /**
+   * The action creator for fetching products based on the selected facet values.
+   */
   fetchProductsActionCreator: FetchProductsActionCreator;
+  /**
+   * A selector function that retrieves the facet response from the state.
+   */
   facetResponseSelector: (
     state: CommerceEngine[typeof stateKey],
     facetId: string
   ) => AnyFacetResponse | undefined;
+  /**
+   * A selector function that determines if the facet is currently loading.
+   */
   isFacetLoadingResponseSelector: (
     state: CommerceEngine[typeof stateKey]
   ) => boolean;
