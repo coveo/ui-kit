@@ -92,25 +92,14 @@ interface BaseSubControllerProps {
 
 export interface SearchAndListingSubControllerProps
   extends BaseSubControllerProps {
-  /**
-   * A selector function that retrieves the facet response for a given facet ID from the state.
-   * @param state - The Commerce engine state.
-   * @param facetId - The ID of the target facet.
-   * @returns The facet response or undefined if not found.
-   */
-  facetResponseSelector(
+  facetResponseSelector: (
     state: CommerceEngine[typeof stateKey],
     facetId: string
-  ): AnyFacetResponse | undefined;
+  ) => AnyFacetResponse | undefined;
 
-  /**
-   * A selector function that determines whether the facet is currently loading in the state.
-   * @param state - The Commerce engine state.
-   * @returns True if the facet is loading, false otherwise.
-   */
-  isFacetLoadingResponseSelector(
+  isFacetLoadingResponseSelector: (
     state: CommerceEngine[typeof stateKey]
-  ): boolean;
+  ) => boolean;
 }
 
 /**
@@ -150,23 +139,12 @@ export function buildSearchAndListingsSubControllers(
   } = subControllerProps;
   return {
     ...buildBaseSubControllers(engine, subControllerProps),
-    /**
-     * Sorts the products.
-     *
-     * @param props - The sort properties.
-     * @returns The sorted products.
-     */
     sort(props?: SortProps) {
       return buildCoreSort(engine, {
         ...props,
         fetchProductsActionCreator,
       });
     },
-    /**
-     * Generates the facet controllers.
-     *
-     * @returns The facet controllers.
-     */
     facetGenerator() {
       const commonOptions = {
         fetchProductsActionCreator,
@@ -174,49 +152,16 @@ export function buildSearchAndListingsSubControllers(
         isFacetLoadingResponseSelector,
       };
       return buildFacetGenerator(engine, {
-        /**
-         * Builds a regular facet.
-         *
-         * @param _engine - The commerce engine.
-         * @param options - The facet options.
-         * @returns The regular facet.
-         */
         buildRegularFacet: (_engine, options) =>
           buildCommerceRegularFacet(engine, {...options, ...commonOptions}),
-        /**
-         * Builds a numeric facet.
-         *
-         * @param _engine - The commerce engine.
-         * @param options - The facet options.
-         * @returns The numeric facet.
-         */
         buildNumericFacet: (_engine, options) =>
           buildCommerceNumericFacet(engine, {...options, ...commonOptions}),
-        /**
-         * Builds a date facet.
-         *
-         * @param _engine - The commerce engine.
-         * @param options - The facet options.
-         * @returns The date facet.
-         */
         buildDateFacet: (_engine, options) =>
           buildCommerceDateFacet(engine, {...options, ...commonOptions}),
-        /**
-         * Builds a category facet.
-         *
-         * @param _engine - The commerce engine.
-         * @param options - The facet options.
-         * @returns The category facet.
-         */
         buildCategoryFacet: (_engine, options) =>
           buildCategoryFacet(engine, {...options, ...commonOptions}),
       });
     },
-    /**
-     * Manages the breadcrumbs.
-     *
-     * @returns The breadcrumb manager.
-     */
     breadcrumbManager() {
       return buildCoreBreadcrumbManager(engine, {
         facetResponseSelector,
@@ -243,22 +188,12 @@ export function buildBaseSubControllers(
     slotId,
   } = subControllerProps;
   return {
-    /**
-     * Builds the interactive product sub-controller.
-     * @param props - The properties for the sub-controller.
-     * @returns The interactive product sub-controller.
-     */
     interactiveProduct(props: InteractiveProductProps) {
       return buildCoreInteractiveProduct(engine, {
         ...props,
         responseIdSelector,
       });
     },
-    /**
-     * Builds the pagination sub-controller.
-     * @param props - The optional properties for the sub-controller.
-     * @returns The pagination sub-controller.
-     */
     pagination(props?: PaginationProps) {
       return buildCorePagination(engine, {
         ...props,
