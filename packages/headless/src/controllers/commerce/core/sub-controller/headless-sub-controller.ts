@@ -37,9 +37,6 @@ import {
   SortProps,
 } from '../sort/headless-core-commerce-sort';
 
-/**
- * Represents a collection of sub-controllers for a base solution type.
- */
 export interface BaseSolutionTypeSubControllers {
   /**
    * Creates an instance of the InteractiveProduct sub-controller.
@@ -56,39 +53,32 @@ export interface BaseSolutionTypeSubControllers {
   pagination(props?: PaginationProps): Pagination;
 }
 
-/**
- * Represents the sub-controllers for search and listing functionality in a commerce application.
- */
 export interface SearchAndListingSubControllers
   extends BaseSolutionTypeSubControllers {
   /**
-   * Creates a `Sort` instance with the specified properties.
+   * Creates a `Sort` sub-controller.
    * @param props - Optional properties for configuring the sort behavior.
-   * @returns A `Sort` instance.
+   * @returns A `Sort` sub-controller.
    */
   sort(props?: SortProps): Sort;
 
   /**
-   * Creates a `FacetGenerator` instance.
-   * @returns A `FacetGenerator` instance.
+   * Creates a `FacetGenerator` sub-controller.
+   * @returns A `FacetGenerator` sub-controller.
    */
   facetGenerator(): FacetGenerator;
 
   /**
-   * Creates a `BreadcrumbManager` instance.
-   * @returns A `BreadcrumbManager` instance.
+   * Creates a `BreadcrumbManager` sub-controller.
+   * @returns A `BreadcrumbManager` sub-controller.
    */
   breadcrumbManager(): BreadcrumbManager;
 }
 
-/**
- * Represents a collection of sub-controllers related to search functionality.
- * Extends the base `SearchAndListingSubControllers` interface.
- */
 export interface SearchSubControllers extends SearchAndListingSubControllers {
   /**
    * Creates a `DidYouMean` sub-controller.
-   * @returns A `DidYouMean` instance.
+   * @returns A `DidYouMean` sub-controller.
    */
   didYouMean(): DidYouMean;
 }
@@ -100,15 +90,12 @@ interface BaseSubControllerProps {
   slotId?: string;
 }
 
-/**
- * Props for the SearchAndListingSubController.
- */
 export interface SearchAndListingSubControllerProps
   extends BaseSubControllerProps {
   /**
    * A selector function that retrieves the facet response for a given facet ID from the state.
-   * @param state - The state object from the Commerce engine.
-   * @param facetId - The ID of the facet.
+   * @param state - The Commerce engine state.
+   * @param facetId - The ID of the target facet.
    * @returns The facet response or undefined if not found.
    */
   facetResponseSelector(
@@ -117,8 +104,8 @@ export interface SearchAndListingSubControllerProps
   ): AnyFacetResponse | undefined;
 
   /**
-   * A selector function that determines if the facet is currently loading in the state.
-   * @param state - The state object from the Commerce engine.
+   * A selector function that determines whether the facet is currently loading in the state.
+   * @param state - The Commerce engine state.
    * @returns True if the facet is loading, false otherwise.
    */
   isFacetLoadingResponseSelector(
@@ -240,10 +227,10 @@ export function buildSearchAndListingsSubControllers(
 }
 
 /**
- * Builds the base sub-controllers for a commerce engine.
+ * Builds the `InteractiveProduct` and `Pagination` sub-controllers for a commerce engine.
  * @param engine - The commerce engine.
  * @param subControllerProps - The properties for the base sub-controllers.
- * @returns The base solution type sub-controllers.
+ * @returns The `InteractiveProduct` and `Pagination` sub-controllers.
  */
 export function buildBaseSubControllers(
   engine: CommerceEngine,
@@ -258,7 +245,7 @@ export function buildBaseSubControllers(
   return {
     /**
      * Builds the interactive product sub-controller.
-     * @param props - The properties for the interactive product.
+     * @param props - The properties for the sub-controller.
      * @returns The interactive product sub-controller.
      */
     interactiveProduct(props: InteractiveProductProps) {
@@ -269,7 +256,7 @@ export function buildBaseSubControllers(
     },
     /**
      * Builds the pagination sub-controller.
-     * @param props - The optional properties for the pagination.
+     * @param props - The optional properties for the sub-controller.
      * @returns The pagination sub-controller.
      */
     pagination(props?: PaginationProps) {

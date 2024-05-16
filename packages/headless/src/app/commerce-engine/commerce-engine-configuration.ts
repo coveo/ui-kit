@@ -12,6 +12,7 @@ import {
 /**
  * The commerce engine configuration options.
  *
+ * WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
  */
 export interface CommerceEngineConfiguration extends EngineConfiguration {
   context: ContextOptions;

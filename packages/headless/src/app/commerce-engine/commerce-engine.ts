@@ -60,6 +60,7 @@ export type CommerceEngineState =
 /**
  * The engine for powering commerce experiences.
  *
+ * WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
  */
 export interface CommerceEngine<State extends object = {}>
   extends CoreEngineNext<
@@ -80,6 +81,7 @@ export interface CommerceEngine<State extends object = {}>
 /**
  * The commerce engine options.
  *
+ * WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
  */
 export interface CommerceEngineOptions
   extends ExternalEngineOptions<CommerceEngineState> {
@@ -91,6 +93,8 @@ export interface CommerceEngineOptions
 
 /**
  * Creates a commerce engine instance.
+ *
+ * WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
  *
  * @param options - The commerce engine options.
  * @returns A commerce engine instance.

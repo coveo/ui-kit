@@ -23,6 +23,7 @@ import {fetchProductListing} from './product-listing-actions';
 /**
  * The product listing action creators.
  *
+ * WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
  */
 export interface ProductListingActionCreators {
   /**
@@ -40,6 +41,8 @@ export interface ProductListingActionCreators {
 /**
  * Loads the product listing reducer and returns the possible action creators.
  *
+ * WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
+ *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
  */
@@ -56,6 +59,7 @@ export function loadProductListingActions(
 /**
  * The product listing analytics action creators.
  *
+ * WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
  */
 export interface ProductListingAnalyticsActionCreators {
   /**
@@ -115,6 +119,8 @@ export interface ProductListingAnalyticsActionCreators {
 
 /**
  * Returns the possible product listing analytics action creators.
+ *
+ * WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
  *
  * @param engine - The product listing engine.
  * @returns An object holding the action creators.
