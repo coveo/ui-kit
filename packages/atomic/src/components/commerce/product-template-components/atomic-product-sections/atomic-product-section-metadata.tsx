@@ -4,7 +4,7 @@ import {hideEmptySection} from '../../../../utils/item-section-utils';
 /**
  * @internal
  *
- * This section surfaces some fields that are directly related to the name of the item.
+ * This section is intended to display some fields that are directly related to the name of the product.
  * In commerce, this could be the product rating, which is tied to the nature of the product itself,
  * rather than to the product's description.
  *

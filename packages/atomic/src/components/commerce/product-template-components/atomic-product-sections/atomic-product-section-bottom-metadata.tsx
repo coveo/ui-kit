@@ -4,7 +4,7 @@ import {hideEmptySection} from '../../../../utils/item-section-utils';
 /**
  * @internal
  *
- * This section displays additional descriptive information about the product.
+ * This section is meant to render additional descriptive information about the product.
  *
  * Behavior:
  * * Has a maximum height of two lines.

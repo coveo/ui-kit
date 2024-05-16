@@ -5,8 +5,8 @@ import {ItemDisplayImageSize} from '../../../common/layout/display-options';
 /**
  * @internal
  *
- * This section provides visual information about the product.
- * In Commerce, an image is a great shorthand for a product category.
+ * This section is intended to provide visual information about the product.
+ * In commerce, an image is a great shorthand for a product category.
  *
  * Behavior:
  * * Has a fixed size that depends on the specified image size, the layout, the density, and the screen size.

@@ -4,7 +4,7 @@ import {hideEmptySection} from '../../../../utils/item-section-utils';
 /**
  * @internal
  *
- * This section displays the field that's important for its search criteria.
+ * This section is intended to display the field that's important for its search criteria.
  * For example, in Commerce, a product's price is often more important than the title itself.
  *
  * Behavior:

@@ -4,8 +4,8 @@ import {hideEmptySection} from '../../../../utils/item-section-utils';
 /**
  * @internal
  *
- * This section allows the information seeker to perform an action on an item without having to view its details.
- * In Commerce you can add an item to the cart directly or add it to a wish list to view at a later time.
+ * This section is intented to display components that allow the user to perform an action on a product without having to view its details.
+ * In commerce interface, the user can usually add the product to their cart or wish list.
  *
  * Behavior:
  * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.

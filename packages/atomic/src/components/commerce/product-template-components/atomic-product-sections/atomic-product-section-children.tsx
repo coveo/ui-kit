@@ -4,7 +4,7 @@ import {hideEmptySection} from '../../../../utils/item-section-utils';
 /**
  * @internal
  *
- * This section displays the child product, available when using the <atomic-product-children> component.
+ * This section is meant to render child products, available when using the <atomic-product-children> component.
  *
  * Behavior:
  * * Shows children at the bottom of the result, indented and wrapped in a border.

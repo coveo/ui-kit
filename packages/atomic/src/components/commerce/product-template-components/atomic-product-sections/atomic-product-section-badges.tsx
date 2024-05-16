@@ -4,7 +4,7 @@ import {hideEmptySection} from '../../../../utils/item-section-utils';
 /**
  * @internal
  *
- * This section provides badges that highlight special features of the product.
+ * This section is meant to render badges that highlight special features of the product.
  *
  * Behavior:
  * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
