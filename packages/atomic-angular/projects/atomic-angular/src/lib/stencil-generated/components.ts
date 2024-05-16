@@ -647,6 +647,28 @@ export declare interface AtomicPopover extends Components.AtomicPopover {}
 
 
 @ProxyCmp({
+  inputs: ['ifDefined', 'ifNotDefined']
+})
+@Component({
+  selector: 'atomic-product-field-condition',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['ifDefined', 'ifNotDefined'],
+})
+export class AtomicProductFieldCondition {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicProductFieldCondition extends Components.AtomicProductFieldCondition {}
+
+
+@ProxyCmp({
 })
 @Component({
   selector: 'atomic-query-error',
