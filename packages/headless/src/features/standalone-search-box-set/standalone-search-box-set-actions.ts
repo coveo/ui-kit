@@ -162,7 +162,7 @@ export const buildPlanRequest = async (
       ? await legacyFromAnalyticsStateToAnalyticsParams(
           state.configuration.analytics
         )
-      : await fromAnalyticsStateToAnalyticsParams(
+      : fromAnalyticsStateToAnalyticsParams(
           state.configuration.analytics,
           navigatorContext,
           relay

@@ -10,12 +10,12 @@ import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-pa
 type StateNeededByExecuteSearchAndFolding = ConfigurationSection &
   Partial<SearchAppState>;
 
-export const buildSearchAndFoldingLoadCollectionRequest = async (
+export const buildSearchAndFoldingLoadCollectionRequest = (
   state: StateNeededByExecuteSearchAndFolding,
   navigatorContext: NavigatorContext,
   relay: Relay,
   eventDescription?: EventDescription
-): Promise<SearchRequest> => {
+): SearchRequest => {
   return {
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
@@ -64,12 +64,12 @@ export const buildSearchAndFoldingLoadCollectionRequest = async (
       sortCriteria: state.sortCriteria,
     }),
     ...(state.configuration.analytics.enabled &&
-      (await fromAnalyticsStateToAnalyticsParams(
+      fromAnalyticsStateToAnalyticsParams(
         state.configuration.analytics,
         navigatorContext,
         relay,
         eventDescription
-      ))),
+      )),
     ...(state.excerptLength &&
       !isNullOrUndefined(state.excerptLength.length) && {
         excerptLength: state.excerptLength.length,

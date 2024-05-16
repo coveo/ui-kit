@@ -184,7 +184,7 @@ export const buildQuerySuggestRequest = async (
         ? await legacyFromAnalyticsStateToAnalyticsParams(
             s.configuration.analytics
           )
-        : await fromAnalyticsStateToAnalyticsParams(
+        : fromAnalyticsStateToAnalyticsParams(
             s.configuration.analytics,
             navigatorContext,
             relay

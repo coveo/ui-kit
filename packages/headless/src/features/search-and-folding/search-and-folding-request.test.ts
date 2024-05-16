@@ -11,7 +11,7 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
       const state = createMockState();
       state.advancedSearchQueries.aq = 'a';
 
-      const request = await buildSearchAndFoldingLoadCollectionRequest(
+      const request = buildSearchAndFoldingLoadCollectionRequest(
         state,
         {location: '', referrer: '', userAgent: ''},
         mockRelay()
@@ -24,7 +24,7 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
       const state = createMockState();
       state.advancedSearchQueries.aq = '';
 
-      const request = await buildSearchAndFoldingLoadCollectionRequest(
+      const request = buildSearchAndFoldingLoadCollectionRequest(
         state,
         {location: '', referrer: '', userAgent: ''},
         mockRelay()
@@ -39,7 +39,7 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
       const state = createMockState();
       state.advancedSearchQueries.cq = 'a';
 
-      const request = await buildSearchAndFoldingLoadCollectionRequest(
+      const request = buildSearchAndFoldingLoadCollectionRequest(
         state,
         {location: '', referrer: '', userAgent: ''},
         mockRelay()
@@ -52,7 +52,7 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
       const state = createMockState();
       state.tabSet = {a: buildMockTabSlice({expression: 'a', isActive: true})};
 
-      const request = await buildSearchAndFoldingLoadCollectionRequest(
+      const request = buildSearchAndFoldingLoadCollectionRequest(
         state,
         {location: '', referrer: '', userAgent: ''},
         mockRelay()
@@ -67,7 +67,7 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
       const state = createMockState();
       state.advancedSearchQueries.lq = 'a';
 
-      const request = await buildSearchAndFoldingLoadCollectionRequest(
+      const request = buildSearchAndFoldingLoadCollectionRequest(
         state,
         {location: '', referrer: '', userAgent: ''},
         mockRelay()
@@ -80,7 +80,7 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
       const state = createMockState();
       state.advancedSearchQueries.lq = '';
 
-      const request = await buildSearchAndFoldingLoadCollectionRequest(
+      const request = buildSearchAndFoldingLoadCollectionRequest(
         state,
         {location: '', referrer: '', userAgent: ''},
         mockRelay()
@@ -95,7 +95,7 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
       const state = createMockState();
       state.advancedSearchQueries.dq = 'a';
 
-      const request = await buildSearchAndFoldingLoadCollectionRequest(
+      const request = buildSearchAndFoldingLoadCollectionRequest(
         state,
         {location: '', referrer: '', userAgent: ''},
         mockRelay()
@@ -108,7 +108,7 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
       const state = createMockState();
       state.advancedSearchQueries.dq = '';
 
-      const request = await buildSearchAndFoldingLoadCollectionRequest(
+      const request = buildSearchAndFoldingLoadCollectionRequest(
         state,
         {location: '', referrer: '', userAgent: ''},
         mockRelay()
@@ -123,7 +123,7 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
       const state = createMockState();
       state.excerptLength = {length: 1234};
 
-      const request = await buildSearchAndFoldingLoadCollectionRequest(
+      const request = buildSearchAndFoldingLoadCollectionRequest(
         state,
         {location: '', referrer: '', userAgent: ''},
         mockRelay()
@@ -134,7 +134,7 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
     it('when there is no excerptLength in the state, the parameter is not included in the request', async () => {
       const state = createMockState();
       state.excerptLength.length = undefined;
-      const request = await buildSearchAndFoldingLoadCollectionRequest(
+      const request = buildSearchAndFoldingLoadCollectionRequest(
         state,
         {location: '', referrer: '', userAgent: ''},
         mockRelay()
@@ -151,7 +151,7 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
     });
 
     it('#visitorId is included in the request', async () => {
-      const request = await buildSearchAndFoldingLoadCollectionRequest(
+      const request = buildSearchAndFoldingLoadCollectionRequest(
         state,
         {location: '', referrer: '', userAgent: ''},
         mockRelay()
@@ -168,7 +168,7 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
     });
 
     it('#visitorId is not included in the request', async () => {
-      const request = await buildSearchAndFoldingLoadCollectionRequest(
+      const request = buildSearchAndFoldingLoadCollectionRequest(
         state,
         {location: '', referrer: '', userAgent: ''},
         mockRelay()
@@ -177,7 +177,7 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
     });
 
     it('#actionsHistory is not included in the request', async () => {
-      const request = await buildSearchAndFoldingLoadCollectionRequest(
+      const request = buildSearchAndFoldingLoadCollectionRequest(
         state,
         {location: '', referrer: '', userAgent: ''},
         mockRelay()

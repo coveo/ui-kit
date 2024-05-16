@@ -33,7 +33,7 @@ export const buildSearchRequest = async (
           state,
           eventDescription
         )
-      : await buildSearchAndFoldingLoadCollectionRequest(
+      : buildSearchAndFoldingLoadCollectionRequest(
           state,
           navigatorContext,
           relay,

@@ -82,7 +82,7 @@ export const loadCollection = createAsyncThunk<
     const sharedWithSearchRequest =
       state.configuration.analytics.analyticsMode === 'legacy'
         ? await legacyBuildSearchAndFoldingLoadCollectionRequest(state)
-        : await buildSearchAndFoldingLoadCollectionRequest(
+        : buildSearchAndFoldingLoadCollectionRequest(
             state,
             navigatorContext,
             relay

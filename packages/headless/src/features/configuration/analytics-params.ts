@@ -6,12 +6,12 @@ import {AnalyticsParam} from '../../api/search/search-api-params';
 import {NavigatorContext} from '../../app/navigatorContextProvider';
 import {AnalyticsState} from './configuration-state';
 
-export const fromAnalyticsStateToAnalyticsParams = async (
+export const fromAnalyticsStateToAnalyticsParams = (
   s: AnalyticsState,
   navigatorContext: NavigatorContext,
   relay: Relay,
   eventDescription?: EventDescription
-): Promise<AnalyticsParam> => {
+): AnalyticsParam => {
   const isNextAnalytics = s.analyticsMode === 'next';
   return {
     analytics: {
