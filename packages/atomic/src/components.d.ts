@@ -355,6 +355,12 @@ export namespace Components {
     | 'product-listing'
     | 'recommendations';
     }
+    interface AtomicCommerceLayout {
+        /**
+          * CSS value that defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
+         */
+        "mobileBreakpoint": string;
+    }
     /**
      * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
      */
@@ -1701,6 +1707,27 @@ export namespace Components {
          */
         "currency": string;
     }
+    /**
+     * The `atomic-product-rating` element renders a star rating.
+     */
+    interface AtomicProductRating {
+        /**
+          * The numerical field whose values you want to display as a rating.
+         */
+        "field": string;
+        /**
+          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.  When using a custom icon, at least part of your icon should have the color set to `fill="currentColor"`. This part of the SVG will take on the colors set in the following [variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties):  - `--atomic-rating-icon-active-color` - `--atomic-rating-icon-inactive-color`
+         */
+        "icon": string;
+        /**
+          * The maximum value of the field. This value is also used as the number of icons to be displayed.
+         */
+        "maxValueInIndex": number;
+        /**
+          * The field whose value you want to display next to the rating. This field can be used to display the number of reviews or the numerical value of the rating, for example.
+         */
+        "ratingDetailsField"?: string;
+    }
     interface AtomicProductTemplate {
         /**
           * A function that must return true on products for the product template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to products whose `ec_name` contains `singapore`: `document.querySelector('#target-template').conditions = [(product) => /singapore/i.test(product.ec_name)];`
@@ -1743,6 +1770,10 @@ export namespace Components {
          */
         "sandbox": string;
     }
+    /**
+     * The modal opened when clicking on a quickview button.
+     * Do not use this component directly; use `atomic-quickview` instead.
+     */
     interface AtomicQuickviewModal {
         "content"?: string;
         "current"?: number;
@@ -3245,6 +3276,12 @@ declare global {
         prototype: HTMLAtomicCommerceInterfaceElement;
         new (): HTMLAtomicCommerceInterfaceElement;
     };
+    interface HTMLAtomicCommerceLayoutElement extends Components.AtomicCommerceLayout, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceLayoutElement: {
+        prototype: HTMLAtomicCommerceLayoutElement;
+        new (): HTMLAtomicCommerceLayoutElement;
+    };
     /**
      * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
      */
@@ -4047,6 +4084,15 @@ declare global {
         prototype: HTMLAtomicProductPriceElement;
         new (): HTMLAtomicProductPriceElement;
     };
+    /**
+     * The `atomic-product-rating` element renders a star rating.
+     */
+    interface HTMLAtomicProductRatingElement extends Components.AtomicProductRating, HTMLStencilElement {
+    }
+    var HTMLAtomicProductRatingElement: {
+        prototype: HTMLAtomicProductRatingElement;
+        new (): HTMLAtomicProductRatingElement;
+    };
     interface HTMLAtomicProductTemplateElement extends Components.AtomicProductTemplate, HTMLStencilElement {
     }
     var HTMLAtomicProductTemplateElement: {
@@ -4093,6 +4139,10 @@ declare global {
         "atomic/quickview/next": any;
         "atomic/quickview/previous": any;
     }
+    /**
+     * The modal opened when clicking on a quickview button.
+     * Do not use this component directly; use `atomic-quickview` instead.
+     */
     interface HTMLAtomicQuickviewModalElement extends Components.AtomicQuickviewModal, HTMLStencilElement {
         addEventListener<K extends keyof HTMLAtomicQuickviewModalElementEventMap>(type: K, listener: (this: HTMLAtomicQuickviewModalElement, ev: AtomicQuickviewModalCustomEvent<HTMLAtomicQuickviewModalElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
@@ -4896,6 +4946,7 @@ declare global {
         "atomic-commerce-facet-number-input": HTMLAtomicCommerceFacetNumberInputElement;
         "atomic-commerce-facets": HTMLAtomicCommerceFacetsElement;
         "atomic-commerce-interface": HTMLAtomicCommerceInterfaceElement;
+        "atomic-commerce-layout": HTMLAtomicCommerceLayoutElement;
         "atomic-commerce-load-more-products": HTMLAtomicCommerceLoadMoreProductsElement;
         "atomic-commerce-numeric-facet": HTMLAtomicCommerceNumericFacetElement;
         "atomic-commerce-pager": HTMLAtomicCommercePagerElement;
@@ -4982,6 +5033,7 @@ declare global {
         "atomic-product-link": HTMLAtomicProductLinkElement;
         "atomic-product-numeric-field-value": HTMLAtomicProductNumericFieldValueElement;
         "atomic-product-price": HTMLAtomicProductPriceElement;
+        "atomic-product-rating": HTMLAtomicProductRatingElement;
         "atomic-product-template": HTMLAtomicProductTemplateElement;
         "atomic-product-text": HTMLAtomicProductTextElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
@@ -5325,6 +5377,12 @@ declare namespace LocalJSX {
         "type"?: | 'search'
     | 'product-listing'
     | 'recommendations';
+    }
+    interface AtomicCommerceLayout {
+        /**
+          * CSS value that defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
+         */
+        "mobileBreakpoint"?: string;
     }
     /**
      * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
@@ -6607,6 +6665,27 @@ declare namespace LocalJSX {
          */
         "currency"?: string;
     }
+    /**
+     * The `atomic-product-rating` element renders a star rating.
+     */
+    interface AtomicProductRating {
+        /**
+          * The numerical field whose values you want to display as a rating.
+         */
+        "field"?: string;
+        /**
+          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.  When using a custom icon, at least part of your icon should have the color set to `fill="currentColor"`. This part of the SVG will take on the colors set in the following [variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties):  - `--atomic-rating-icon-active-color` - `--atomic-rating-icon-inactive-color`
+         */
+        "icon"?: string;
+        /**
+          * The maximum value of the field. This value is also used as the number of icons to be displayed.
+         */
+        "maxValueInIndex"?: number;
+        /**
+          * The field whose value you want to display next to the rating. This field can be used to display the number of reviews or the numerical value of the rating, for example.
+         */
+        "ratingDetailsField"?: string;
+    }
     interface AtomicProductTemplate {
         /**
           * A function that must return true on products for the product template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to products whose `ec_name` contains `singapore`: `document.querySelector('#target-template').conditions = [(product) => /singapore/i.test(product.ec_name)];`
@@ -6645,6 +6724,10 @@ declare namespace LocalJSX {
          */
         "sandbox"?: string;
     }
+    /**
+     * The modal opened when clicking on a quickview button.
+     * Do not use this component directly; use `atomic-quickview` instead.
+     */
     interface AtomicQuickviewModal {
         "content"?: string;
         "current"?: number;
@@ -7900,6 +7983,7 @@ declare namespace LocalJSX {
         "atomic-commerce-facet-number-input": AtomicCommerceFacetNumberInput;
         "atomic-commerce-facets": AtomicCommerceFacets;
         "atomic-commerce-interface": AtomicCommerceInterface;
+        "atomic-commerce-layout": AtomicCommerceLayout;
         "atomic-commerce-load-more-products": AtomicCommerceLoadMoreProducts;
         "atomic-commerce-numeric-facet": AtomicCommerceNumericFacet;
         "atomic-commerce-pager": AtomicCommercePager;
@@ -7986,6 +8070,7 @@ declare namespace LocalJSX {
         "atomic-product-link": AtomicProductLink;
         "atomic-product-numeric-field-value": AtomicProductNumericFieldValue;
         "atomic-product-price": AtomicProductPrice;
+        "atomic-product-rating": AtomicProductRating;
         "atomic-product-template": AtomicProductTemplate;
         "atomic-product-text": AtomicProductText;
         "atomic-query-error": AtomicQueryError;
@@ -8113,6 +8198,7 @@ declare module "@stencil/core" {
              */
             "atomic-commerce-facets": LocalJSX.AtomicCommerceFacets & JSXBase.HTMLAttributes<HTMLAtomicCommerceFacetsElement>;
             "atomic-commerce-interface": LocalJSX.AtomicCommerceInterface & JSXBase.HTMLAttributes<HTMLAtomicCommerceInterfaceElement>;
+            "atomic-commerce-layout": LocalJSX.AtomicCommerceLayout & JSXBase.HTMLAttributes<HTMLAtomicCommerceLayoutElement>;
             /**
              * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
              */
@@ -8330,6 +8416,10 @@ declare module "@stencil/core" {
             "atomic-product-link": LocalJSX.AtomicProductLink & JSXBase.HTMLAttributes<HTMLAtomicProductLinkElement>;
             "atomic-product-numeric-field-value": LocalJSX.AtomicProductNumericFieldValue & JSXBase.HTMLAttributes<HTMLAtomicProductNumericFieldValueElement>;
             "atomic-product-price": LocalJSX.AtomicProductPrice & JSXBase.HTMLAttributes<HTMLAtomicProductPriceElement>;
+            /**
+             * The `atomic-product-rating` element renders a star rating.
+             */
+            "atomic-product-rating": LocalJSX.AtomicProductRating & JSXBase.HTMLAttributes<HTMLAtomicProductRatingElement>;
             "atomic-product-template": LocalJSX.AtomicProductTemplate & JSXBase.HTMLAttributes<HTMLAtomicProductTemplateElement>;
             "atomic-product-text": LocalJSX.AtomicProductText & JSXBase.HTMLAttributes<HTMLAtomicProductTextElement>;
             /**
@@ -8347,6 +8437,10 @@ declare module "@stencil/core" {
              * images/links may not work as expected in an `atomic-quickview`).
              */
             "atomic-quickview": LocalJSX.AtomicQuickview & JSXBase.HTMLAttributes<HTMLAtomicQuickviewElement>;
+            /**
+             * The modal opened when clicking on a quickview button.
+             * Do not use this component directly; use `atomic-quickview` instead.
+             */
             "atomic-quickview-modal": LocalJSX.AtomicQuickviewModal & JSXBase.HTMLAttributes<HTMLAtomicQuickviewModalElement>;
             /**
              * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).

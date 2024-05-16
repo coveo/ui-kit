@@ -27,6 +27,7 @@ export type {PlatformEnvironment} from './utils/url-utils';
 export * from './features/commerce/product-listing/product-listing-actions-loader';
 export * from './features/commerce/query-suggest/query-suggest-actions-loader';
 export * from './features/configuration/configuration-actions-loader';
+export * from './features/commerce/query/query-actions-loader';
 
 // Controllers
 export type {
@@ -221,3 +222,14 @@ export type {
   NotifyTriggerState,
 } from './controllers/core/triggers/headless-core-notify-trigger';
 export {buildNotifyTrigger} from './controllers/commerce/triggers/headless-commerce-notify-trigger';
+
+export type {
+  FieldSuggestions,
+  FieldSuggestionsState,
+} from './controllers/commerce/field-suggestions/headless-field-suggestions';
+export type {
+  CategoryFieldSuggestions,
+  CategoryFieldSuggestionsState,
+} from './controllers/commerce/field-suggestions/headless-category-field-suggestions';
+export type {FieldSuggestionsGenerator} from './controllers/commerce/field-suggestions/headless-field-suggestions-generator';
+export {buildFieldSuggestionsGenerator} from './controllers/commerce/field-suggestions/headless-field-suggestions-generator';
