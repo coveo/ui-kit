@@ -95,28 +95,10 @@ export type CommerceSearchableFacetBuilder<
  *
  * The `FacetGenerator` options used internally.
  */
-/**
- * Options for the facet generator.
- */
 export interface FacetGeneratorOptions {
-  /**
-   * Builder function for regular facets.
-   */
   buildRegularFacet: CommerceFacetBuilder<RegularFacet>;
-
-  /**
-   * Builder function for numeric facets.
-   */
   buildNumericFacet: CommerceFacetBuilder<NumericFacet>;
-
-  /**
-   * Builder function for date facets.
-   */
   buildDateFacet: CommerceFacetBuilder<DateFacet>;
-
-  /**
-   * Builder function for category facets.
-   */
   buildCategoryFacet: CommerceFacetBuilder<CategoryFacet>;
 }
 
