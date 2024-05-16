@@ -64,26 +64,26 @@
                       </atomic-result-section-visual>
                       <atomic-result-section-title>
                         <atomic-product-link class="font-bold"></atomic-product-link>
-                        <atomic-field-condition class="brand text-neutral-dark" if-defined="ec_brand">
+                        <atomic-product-field-condition class="brand text-neutral-dark" if-defined="ec_brand">
                           <atomic-product-text field="ec_brand"></atomic-product-text>
-                        </atomic-field-condition>
+                        </atomic-product-field-condition>
                       </atomic-result-section-title>
                       <atomic-result-section-title-metadata>
-                        <atomic-field-condition class="field" if-defined="ec_rating">
+                        <atomic-product-field-condition class="field" if-defined="ec_rating">
                           <atomic-product-rating field="ec_rating"></atomic-product-rating>
-                        </atomic-field-condition>
-                        <atomic-field-condition class="mt-4 text-2xl field" if-defined="ec_price">
+                        </atomic-product-field-condition>
+                        <atomic-product-field-condition class="mt-4 text-2xl field" if-defined="ec_price">
                           <atomic-product-price fallbackText="no price" currency="USD"></atomic-product-price>
-                        </atomic-field-condition>
+                        </atomic-product-field-condition>
                       </atomic-result-section-title-metadata>
                       <atomic-result-section-excerpt>
                         <atomic-product-description></atomic-product-description>
                       </atomic-result-section-excerpt>
                       <atomic-result-section-bottom-metadata>
                         <atomic-result-fields-list>
-                          <atomic-field-condition must-match-ec_in_stock="true">
+                          <atomic-product-field-condition must-match-ec_in_stock="true">
                             <atomic-result-badge label="In stock"></atomic-result-badge>
-                          </atomic-field-condition>
+                          </atomic-product-field-condition>
                         </atomic-result-fields-list>
                       </atomic-result-section-bottom-metadata>
                     </template>
