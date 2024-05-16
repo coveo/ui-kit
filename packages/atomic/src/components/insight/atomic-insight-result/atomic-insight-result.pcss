@@ -1,3 +1,36 @@
 @import '../../common/template-system/template-system.pcss';
 
 @mixin atomic-template-system map(post-css-map-for-sections, insight);
+
+:host {
+  @apply relative;
+
+  .with-sections:not(.child-result) {
+    @apply p-6;
+  }
+
+  &(:hover) {
+    .with-sections {
+      background-color: var(--atomic-neutral-lighter);
+    }
+
+    atomic-insight-result-action-bar {
+      @apply visible;
+    }
+  }
+
+  &(:first-of-type) {
+    .with-sections:not(.child-result) {
+      @apply pt-8;
+    }
+
+    atomic-insight-result-action-bar {
+      @apply top-0;
+    }
+  }
+
+  atomic-load-more-children-results::part(button) {
+    margin-bottom: 0;
+    padding: 0.2rem 0.5rem;
+  }
+}
