@@ -155,7 +155,6 @@ export type {
 export type {
   FacetGenerator,
   GeneratedFacetControllers,
-  MappedGeneratedFacetController,
 } from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator';
 
 export type {FacetGeneratorState} from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator';
