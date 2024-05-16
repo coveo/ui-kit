@@ -114,5 +114,5 @@ function getEffectiveSlice(
 }
 
 function handlePaginationReset(state: CommercePaginationState) {
-  state.principal.page = getCommercePaginationInitialSlice().page;
+  state.principal = getCommercePaginationInitialSlice();
 }
