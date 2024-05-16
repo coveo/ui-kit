@@ -1,11 +1,14 @@
+import {FieldSuggestionsFacet} from '../../../api/commerce/search/query-suggest/query-suggest-response';
 import {SpecificFacetSearchResult} from '../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../app/state-key';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../features/commerce/facets/facet-set/facet-set-slice';
 import {loadReducerError} from '../../../utils/errors';
 import {
   buildController,
   Subscribable,
 } from '../../controller/headless-controller';
+import {FacetControllerType} from '../core/facets/headless-core-commerce-facet';
 import {RegularFacetOptions} from '../core/facets/regular/headless-commerce-regular-facet';
 import {
   buildRegularFacetSearch,
@@ -14,6 +17,9 @@ import {
 
 export type {SpecificFacetSearchResult};
 
+export type FieldSuggestionsState = RegularFacetSearchState &
+  Pick<FieldSuggestionsFacet, 'facetId' | 'displayName' | 'field'>;
+
 /**
  * The `FieldSuggestions` controller provides query suggestions based on a particular facet field.
  *
@@ -21,7 +27,9 @@ export type {SpecificFacetSearchResult};
  *
  * This controller is a wrapper around the basic facet controller search functionality, and thus exposes similar options and properties.
  */
-export interface FieldSuggestions extends Subscribable {
+export interface FieldSuggestions
+  extends Subscribable,
+    FacetControllerType<'regular'> {
   /**
    * Requests field suggestions based on a query.
    *
@@ -57,7 +65,7 @@ export interface FieldSuggestions extends Subscribable {
    */
   clear(): void;
 
-  state: RegularFacetSearchState;
+  state: FieldSuggestionsState;
 }
 
 /**
@@ -90,17 +98,34 @@ export function buildFieldSuggestions(
     },
     isForFieldSuggestions: true,
   });
+
+  const getFacetForFieldSuggestions = (facetId: string) => {
+    return engine[stateKey].fieldSuggestionsOrder!.find(
+      (facet) => facet.facetId === facetId
+    )!;
+  };
+
   const controller = buildController(engine);
   return {
     ...controller,
     ...facetSearch,
+
     updateText: function (text: string) {
       facetSearch.updateText(text);
       facetSearch.search();
     },
+
     get state() {
-      return facetSearch.state;
+      const facet = getFacetForFieldSuggestions(options.facetId);
+      return {
+        displayName: facet.displayName,
+        field: facet.field,
+        facetId: facet.facetId,
+        ...facetSearch.state,
+      };
     },
+
+    type: 'regular',
   };
 }
 

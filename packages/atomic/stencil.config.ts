@@ -70,6 +70,7 @@ export const config: Config = {
       includeDefineCustomElements: true,
       excludeComponents: [
         'atomic-result-template',
+        'atomic-product-template',
         'atomic-recs-result-template',
         'atomic-field-condition',
       ],

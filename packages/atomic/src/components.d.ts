@@ -1691,27 +1691,26 @@ export namespace Components {
          */
         "currency": string;
     }
-    interface AtomicProductSectionActions {
-    }
-    interface AtomicProductSectionBadges {
-    }
-    interface AtomicProductSectionBottomMetadata {
-    }
-    interface AtomicProductSectionChildren {
-    }
-    interface AtomicProductSectionDescription {
-    }
-    interface AtomicProductSectionEmphasized {
-    }
-    interface AtomicProductSectionMetadata {
-    }
-    interface AtomicProductSectionName {
-    }
-    interface AtomicProductSectionVisual {
+    /**
+     * The `atomic-product-rating` element renders a star rating.
+     */
+    interface AtomicProductRating {
         /**
-          * How large or small the visual section of product using this template should be.
+          * The numerical field whose values you want to display as a rating.
          */
-        "imageSize"?: Omit<ItemDisplayImageSize, 'icon'>;
+        "field": string;
+        /**
+          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.  When using a custom icon, at least part of your icon should have the color set to `fill="currentColor"`. This part of the SVG will take on the colors set in the following [variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties):  - `--atomic-rating-icon-active-color` - `--atomic-rating-icon-inactive-color`
+         */
+        "icon": string;
+        /**
+          * The maximum value of the field. This value is also used as the number of icons to be displayed.
+         */
+        "maxValueInIndex": number;
+        /**
+          * The field whose value you want to display next to the rating. This field can be used to display the number of reviews or the numerical value of the rating, for example.
+         */
+        "ratingDetailsField"?: string;
     }
     interface AtomicProductTemplate {
         /**
@@ -4039,59 +4038,14 @@ declare global {
         prototype: HTMLAtomicProductPriceElement;
         new (): HTMLAtomicProductPriceElement;
     };
-    interface HTMLAtomicProductSectionActionsElement extends Components.AtomicProductSectionActions, HTMLStencilElement {
+    /**
+     * The `atomic-product-rating` element renders a star rating.
+     */
+    interface HTMLAtomicProductRatingElement extends Components.AtomicProductRating, HTMLStencilElement {
     }
-    var HTMLAtomicProductSectionActionsElement: {
-        prototype: HTMLAtomicProductSectionActionsElement;
-        new (): HTMLAtomicProductSectionActionsElement;
-    };
-    interface HTMLAtomicProductSectionBadgesElement extends Components.AtomicProductSectionBadges, HTMLStencilElement {
-    }
-    var HTMLAtomicProductSectionBadgesElement: {
-        prototype: HTMLAtomicProductSectionBadgesElement;
-        new (): HTMLAtomicProductSectionBadgesElement;
-    };
-    interface HTMLAtomicProductSectionBottomMetadataElement extends Components.AtomicProductSectionBottomMetadata, HTMLStencilElement {
-    }
-    var HTMLAtomicProductSectionBottomMetadataElement: {
-        prototype: HTMLAtomicProductSectionBottomMetadataElement;
-        new (): HTMLAtomicProductSectionBottomMetadataElement;
-    };
-    interface HTMLAtomicProductSectionChildrenElement extends Components.AtomicProductSectionChildren, HTMLStencilElement {
-    }
-    var HTMLAtomicProductSectionChildrenElement: {
-        prototype: HTMLAtomicProductSectionChildrenElement;
-        new (): HTMLAtomicProductSectionChildrenElement;
-    };
-    interface HTMLAtomicProductSectionDescriptionElement extends Components.AtomicProductSectionDescription, HTMLStencilElement {
-    }
-    var HTMLAtomicProductSectionDescriptionElement: {
-        prototype: HTMLAtomicProductSectionDescriptionElement;
-        new (): HTMLAtomicProductSectionDescriptionElement;
-    };
-    interface HTMLAtomicProductSectionEmphasizedElement extends Components.AtomicProductSectionEmphasized, HTMLStencilElement {
-    }
-    var HTMLAtomicProductSectionEmphasizedElement: {
-        prototype: HTMLAtomicProductSectionEmphasizedElement;
-        new (): HTMLAtomicProductSectionEmphasizedElement;
-    };
-    interface HTMLAtomicProductSectionMetadataElement extends Components.AtomicProductSectionMetadata, HTMLStencilElement {
-    }
-    var HTMLAtomicProductSectionMetadataElement: {
-        prototype: HTMLAtomicProductSectionMetadataElement;
-        new (): HTMLAtomicProductSectionMetadataElement;
-    };
-    interface HTMLAtomicProductSectionNameElement extends Components.AtomicProductSectionName, HTMLStencilElement {
-    }
-    var HTMLAtomicProductSectionNameElement: {
-        prototype: HTMLAtomicProductSectionNameElement;
-        new (): HTMLAtomicProductSectionNameElement;
-    };
-    interface HTMLAtomicProductSectionVisualElement extends Components.AtomicProductSectionVisual, HTMLStencilElement {
-    }
-    var HTMLAtomicProductSectionVisualElement: {
-        prototype: HTMLAtomicProductSectionVisualElement;
-        new (): HTMLAtomicProductSectionVisualElement;
+    var HTMLAtomicProductRatingElement: {
+        prototype: HTMLAtomicProductRatingElement;
+        new (): HTMLAtomicProductRatingElement;
     };
     interface HTMLAtomicProductTemplateElement extends Components.AtomicProductTemplate, HTMLStencilElement {
     }
@@ -5031,15 +4985,7 @@ declare global {
         "atomic-product-link": HTMLAtomicProductLinkElement;
         "atomic-product-numeric-field-value": HTMLAtomicProductNumericFieldValueElement;
         "atomic-product-price": HTMLAtomicProductPriceElement;
-        "atomic-product-section-actions": HTMLAtomicProductSectionActionsElement;
-        "atomic-product-section-badges": HTMLAtomicProductSectionBadgesElement;
-        "atomic-product-section-bottom-metadata": HTMLAtomicProductSectionBottomMetadataElement;
-        "atomic-product-section-children": HTMLAtomicProductSectionChildrenElement;
-        "atomic-product-section-description": HTMLAtomicProductSectionDescriptionElement;
-        "atomic-product-section-emphasized": HTMLAtomicProductSectionEmphasizedElement;
-        "atomic-product-section-metadata": HTMLAtomicProductSectionMetadataElement;
-        "atomic-product-section-name": HTMLAtomicProductSectionNameElement;
-        "atomic-product-section-visual": HTMLAtomicProductSectionVisualElement;
+        "atomic-product-rating": HTMLAtomicProductRatingElement;
         "atomic-product-template": HTMLAtomicProductTemplateElement;
         "atomic-product-text": HTMLAtomicProductTextElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
@@ -6658,27 +6604,26 @@ declare namespace LocalJSX {
          */
         "currency"?: string;
     }
-    interface AtomicProductSectionActions {
-    }
-    interface AtomicProductSectionBadges {
-    }
-    interface AtomicProductSectionBottomMetadata {
-    }
-    interface AtomicProductSectionChildren {
-    }
-    interface AtomicProductSectionDescription {
-    }
-    interface AtomicProductSectionEmphasized {
-    }
-    interface AtomicProductSectionMetadata {
-    }
-    interface AtomicProductSectionName {
-    }
-    interface AtomicProductSectionVisual {
+    /**
+     * The `atomic-product-rating` element renders a star rating.
+     */
+    interface AtomicProductRating {
         /**
-          * How large or small the visual section of product using this template should be.
+          * The numerical field whose values you want to display as a rating.
          */
-        "imageSize"?: Omit<ItemDisplayImageSize, 'icon'>;
+        "field"?: string;
+        /**
+          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.  When using a custom icon, at least part of your icon should have the color set to `fill="currentColor"`. This part of the SVG will take on the colors set in the following [variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties):  - `--atomic-rating-icon-active-color` - `--atomic-rating-icon-inactive-color`
+         */
+        "icon"?: string;
+        /**
+          * The maximum value of the field. This value is also used as the number of icons to be displayed.
+         */
+        "maxValueInIndex"?: number;
+        /**
+          * The field whose value you want to display next to the rating. This field can be used to display the number of reviews or the numerical value of the rating, for example.
+         */
+        "ratingDetailsField"?: string;
     }
     interface AtomicProductTemplate {
         /**
@@ -8062,15 +8007,7 @@ declare namespace LocalJSX {
         "atomic-product-link": AtomicProductLink;
         "atomic-product-numeric-field-value": AtomicProductNumericFieldValue;
         "atomic-product-price": AtomicProductPrice;
-        "atomic-product-section-actions": AtomicProductSectionActions;
-        "atomic-product-section-badges": AtomicProductSectionBadges;
-        "atomic-product-section-bottom-metadata": AtomicProductSectionBottomMetadata;
-        "atomic-product-section-children": AtomicProductSectionChildren;
-        "atomic-product-section-description": AtomicProductSectionDescription;
-        "atomic-product-section-emphasized": AtomicProductSectionEmphasized;
-        "atomic-product-section-metadata": AtomicProductSectionMetadata;
-        "atomic-product-section-name": AtomicProductSectionName;
-        "atomic-product-section-visual": AtomicProductSectionVisual;
+        "atomic-product-rating": AtomicProductRating;
         "atomic-product-template": AtomicProductTemplate;
         "atomic-product-text": AtomicProductText;
         "atomic-query-error": AtomicQueryError;
@@ -8411,15 +8348,10 @@ declare module "@stencil/core" {
             "atomic-product-link": LocalJSX.AtomicProductLink & JSXBase.HTMLAttributes<HTMLAtomicProductLinkElement>;
             "atomic-product-numeric-field-value": LocalJSX.AtomicProductNumericFieldValue & JSXBase.HTMLAttributes<HTMLAtomicProductNumericFieldValueElement>;
             "atomic-product-price": LocalJSX.AtomicProductPrice & JSXBase.HTMLAttributes<HTMLAtomicProductPriceElement>;
-            "atomic-product-section-actions": LocalJSX.AtomicProductSectionActions & JSXBase.HTMLAttributes<HTMLAtomicProductSectionActionsElement>;
-            "atomic-product-section-badges": LocalJSX.AtomicProductSectionBadges & JSXBase.HTMLAttributes<HTMLAtomicProductSectionBadgesElement>;
-            "atomic-product-section-bottom-metadata": LocalJSX.AtomicProductSectionBottomMetadata & JSXBase.HTMLAttributes<HTMLAtomicProductSectionBottomMetadataElement>;
-            "atomic-product-section-children": LocalJSX.AtomicProductSectionChildren & JSXBase.HTMLAttributes<HTMLAtomicProductSectionChildrenElement>;
-            "atomic-product-section-description": LocalJSX.AtomicProductSectionDescription & JSXBase.HTMLAttributes<HTMLAtomicProductSectionDescriptionElement>;
-            "atomic-product-section-emphasized": LocalJSX.AtomicProductSectionEmphasized & JSXBase.HTMLAttributes<HTMLAtomicProductSectionEmphasizedElement>;
-            "atomic-product-section-metadata": LocalJSX.AtomicProductSectionMetadata & JSXBase.HTMLAttributes<HTMLAtomicProductSectionMetadataElement>;
-            "atomic-product-section-name": LocalJSX.AtomicProductSectionName & JSXBase.HTMLAttributes<HTMLAtomicProductSectionNameElement>;
-            "atomic-product-section-visual": LocalJSX.AtomicProductSectionVisual & JSXBase.HTMLAttributes<HTMLAtomicProductSectionVisualElement>;
+            /**
+             * The `atomic-product-rating` element renders a star rating.
+             */
+            "atomic-product-rating": LocalJSX.AtomicProductRating & JSXBase.HTMLAttributes<HTMLAtomicProductRatingElement>;
             "atomic-product-template": LocalJSX.AtomicProductTemplate & JSXBase.HTMLAttributes<HTMLAtomicProductTemplateElement>;
             "atomic-product-text": LocalJSX.AtomicProductText & JSXBase.HTMLAttributes<HTMLAtomicProductTextElement>;
             /**
