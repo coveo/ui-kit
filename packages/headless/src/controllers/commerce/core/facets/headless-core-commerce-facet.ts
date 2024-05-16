@@ -151,7 +151,7 @@ export type CoreCommerceFacet<
  */
 export type CoreCommerceFacetState<
   ValueResponse extends AnyFacetValueResponse,
-> = Omit<CoreFacetState, 'enabled' | 'sortCriterion' | 'values'> & {
+> = Omit<CoreFacetState, 'enabled' | 'sortCriterion' | 'values' | 'label'> & {
   /**
    * The type of facet.
    */
