@@ -3,6 +3,7 @@ import {buildMockProduct} from '../../../test/mock-product';
 import {
   moreProductsAvailableSelector,
   numberOfProductsSelector,
+  requestIdSelector,
   responseIdSelector,
 } from './search-selectors';
 
@@ -25,6 +26,26 @@ describe('commerce search selectors', () => {
   it('#responseIdSelector should return an empty string when the responseId value is not set', () => {
     const state = buildMockCommerceState();
     expect(responseIdSelector(state)).toBe('');
+  });
+
+  it('#requestIdSelector should return the requestId value from the search section', () => {
+    const state = buildMockCommerceState({
+      commerceSearch: {
+        responseId: 'some-response-id',
+        products: [],
+        isLoading: false,
+        error: null,
+        requestId: 'some-request-id',
+        facets: [],
+        queryExecuted: '',
+      },
+    });
+    expect(requestIdSelector(state)).toEqual('some-request-id');
+  });
+
+  it('#requestIdSelector should return an empty string when the requestId value is not set', () => {
+    const state = buildMockCommerceState();
+    expect(requestIdSelector(state)).toBe('');
   });
 
   it('#numberOfProductsSelector should return the number of products in the search section', () => {
