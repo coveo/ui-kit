@@ -29,6 +29,7 @@ import {
 export interface Search extends Controller, SearchSubControllers {
   /**
    * Executes the first search.
+   * @param analyticsEvent - The analytics event to log.
    */
   executeFirstSearch(analyticsEvent?: LegacySearchAction): void;
 
