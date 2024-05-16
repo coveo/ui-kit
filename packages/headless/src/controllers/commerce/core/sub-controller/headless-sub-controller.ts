@@ -39,14 +39,14 @@ import {
 
 export interface BaseSolutionTypeSubControllers {
   /**
-   * Creates an instance of the InteractiveProduct sub-controller.
+   * Creates an `InteractiveProduct` sub-controller.
    * @param props - The properties for the InteractiveProduct sub-controller.
    * @returns An instance of the InteractiveProduct sub-controller.
    */
   interactiveProduct(props: InteractiveProductProps): InteractiveProduct;
 
   /**
-   * Creates an instance of the Pagination sub-controller.
+   * Creates a `Pagination` sub-controller.
    * @param props - The optional properties for the Pagination sub-controller.
    * @returns An instance of the Pagination sub-controller.
    */
