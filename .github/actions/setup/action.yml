@@ -34,6 +34,7 @@ runs:
         path: ~/.cache/Cypress
         key: cy-${{ hashFiles('package-lock.json') }}-${{ hashFiles('utils/atomic-storybook/package-lock.json') }}
     - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
+      id: quantic-static-resources
       with:
         path: packages/quantic/force-app/main/default/staticresources
         key: cy-${{ hashFiles('package-lock.json') }}-${{ hashFiles('utils/atomic-storybook/package-lock.json') }}
