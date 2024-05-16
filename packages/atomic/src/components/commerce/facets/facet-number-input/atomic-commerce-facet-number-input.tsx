@@ -1,9 +1,5 @@
-import {
-  NumericFacet as HeadlessNumericFacetController,
-  NumericFacetState as HeadlessNumericFacetControllerState,
-} from '@coveo/headless/commerce';
+import {NumericFacet} from '@coveo/headless/commerce';
 import {Component, h, Prop, Event, EventEmitter, State} from '@stencil/core';
-import {NumberInputType} from '../../../../components';
 import {Button} from '../../../common/button';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 
@@ -26,13 +22,9 @@ export class FacetNumberInput {
   @State() private end?: number;
 
   @Prop() public bindings!: Bindings;
-  @Prop() public type!: NumberInputType;
   @Prop() public label!: string;
-  @Prop()
-  public domain!: Required<HeadlessNumericFacetControllerState>['domain'];
   @Prop() public range?: Range;
-  @Prop() public setRanges!: HeadlessNumericFacetController['setRanges'];
-  @Prop() public facetId!: string;
+  @Prop() public facet!: NumericFacet;
 
   @Event({
     eventName: 'atomic/numberInputApply',
@@ -53,7 +45,7 @@ export class FacetNumberInput {
       start: this.start,
       end: this.end,
     });
-    this.setRanges([
+    this.facet.setRanges([
       {
         start: this.start!,
         end: this.end!,
@@ -68,6 +60,7 @@ export class FacetNumberInput {
   }
 
   render() {
+    const {facetId, domain} = this.facet.state;
     const label = this.bindings.i18n.t(this.label);
     const minText = this.bindings.i18n.t('min');
     const maxText = this.bindings.i18n.t('max');
@@ -79,8 +72,7 @@ export class FacetNumberInput {
     const inputClasses =
       'p-2.5 input-primary placeholder-neutral-dark min-w-0 mr-1';
     const labelClasses = 'text-neutral-dark text-sm';
-
-    const step = this.type === 'integer' ? '1' : 'any';
+    const step = 'any';
 
     return (
       <form
@@ -95,13 +87,13 @@ export class FacetNumberInput {
         <label
           part="label-start"
           class={labelClasses}
-          htmlFor={`${this.facetId}_start`}
+          htmlFor={`${facetId}_start`}
         >
           {minText}
         </label>
         <input
           part="input-start"
-          id={`${this.facetId}_start`}
+          id={`${facetId}_start`}
           type="number"
           step={step}
           ref={(ref) => (this.startRef = ref!)}
@@ -109,33 +101,27 @@ export class FacetNumberInput {
           aria-label={minAria}
           required
           min={Number.MIN_SAFE_INTEGER}
-          max={this.domain.max}
-          // value={this.range?.start}
-          value={this.range?.start} // TODO: not elegant
+          max={domain!.max}
+          value={this.range?.start}
           onInput={(e) =>
             (this.start = (e.target as HTMLInputElement).valueAsNumber)
           }
         />
-        <label
-          part="label-end"
-          class={labelClasses}
-          htmlFor={`${this.facetId}_end`}
-        >
+        <label part="label-end" class={labelClasses} htmlFor={`${facetId}_end`}>
           {maxText}
         </label>
         <input
           part="input-end"
-          id={`${this.facetId}_end`}
+          id={`${facetId}_end`}
           type="number"
           step={step}
           ref={(ref) => (this.endRef = ref!)}
           class={inputClasses}
           aria-label={maxAria}
           required
-          min={this.domain.min}
+          min={domain!.min}
           max={Number.MAX_SAFE_INTEGER}
-          // value={this.range?.end}
-          value={this.range?.end} // TODO: not elegant
+          value={this.range?.end}
           onInput={(e) =>
             (this.end = (e.target as HTMLInputElement).valueAsNumber)
           }
