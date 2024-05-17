@@ -1,11 +1,22 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {createSelector} from '@reduxjs/toolkit';
-import {CommerceEngineState} from '../../../app/commerce-engine/commerce-engine';
+import {
+  CommerceEngineState,
+  CommerceEngine,
+} from '../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../app/state-key';
 import {
   CommercePaginationSection,
   ProductListingV2Section,
 } from '../../../state/state-sections';
 import {totalEntriesPrincipalSelector} from '../pagination/pagination-selectors';
+
+// TODO: duplicate selector since the state is no longer accessible externally
+// TODO: KIT-???? Update all other selectors to use the engine as a parameter
+export const responseIdSelectorFromEngine = createSelector(
+  (engine: CommerceEngine) => engine[stateKey].productListing.responseId,
+  (responseId) => responseId
+);
 
 export const responseIdSelector = createSelector(
   (state: CommerceEngineState) => state.productListing.responseId,

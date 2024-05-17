@@ -1,7 +1,9 @@
 import {
+  CommerceEngine,
   NumericFacetValue,
   DateFacetValue,
   SortCriterion,
+  responseIdSelectorFromEngine,
 } from '@coveo/headless/commerce';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
 import {
@@ -77,6 +79,10 @@ export function createAtomicCommerceStore(): AtomicCommerceStore {
       return !window.matchMedia(
         makeDesktopQuery(commonStore.state.mobileBreakpoint)
       ).matches;
+    },
+
+    getUniqueIDFromEngine(engine: CommerceEngine): string {
+      return responseIdSelectorFromEngine(engine);
     },
   };
 }

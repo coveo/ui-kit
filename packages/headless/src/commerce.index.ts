@@ -29,6 +29,9 @@ export * from './features/commerce/query-suggest/query-suggest-actions-loader';
 export * from './features/configuration/configuration-actions-loader';
 export * from './features/commerce/query/query-actions-loader';
 
+// Selectors
+export {responseIdSelectorFromEngine} from './features/commerce/product-listing/product-listing-selectors';
+
 // Controllers
 export type {
   Controller,

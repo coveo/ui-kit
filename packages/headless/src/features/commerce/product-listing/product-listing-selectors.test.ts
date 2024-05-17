@@ -1,4 +1,5 @@
 import {buildMockCommerceState} from '../../../test/mock-commerce-state';
+import {buildMockCommerceEngine} from '../../../test/mock-engine-v2';
 import {buildMockProduct} from '../../../test/mock-product';
 import {
   errorSelector,
@@ -6,6 +7,7 @@ import {
   moreProductsAvailableSelector,
   numberOfProductsSelector,
   responseIdSelector,
+  responseIdSelectorFromEngine,
 } from './product-listing-selectors';
 
 describe('commerce product listing selectors', () => {
@@ -21,6 +23,22 @@ describe('commerce product listing selectors', () => {
       },
     });
     expect(responseIdSelector(state)).toEqual('some-response-id');
+  });
+
+  it('#responseIdSelectorFromEngine should return the responseId value from the product listing section', () => {
+    const state = buildMockCommerceState({
+      productListing: {
+        responseId: 'some-response-id',
+        products: [],
+        isLoading: false,
+        error: null,
+        facets: [],
+        requestId: 'some-request-id',
+      },
+    });
+
+    const engine = buildMockCommerceEngine(state);
+    expect(responseIdSelectorFromEngine(engine)).toEqual('some-response-id');
   });
 
   it('#responseIdSelector should return an empty string when the responseId value is not set', () => {
