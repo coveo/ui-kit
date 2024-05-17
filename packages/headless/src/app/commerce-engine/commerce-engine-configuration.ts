@@ -12,7 +12,7 @@ import {
 /**
  * The commerce engine configuration options.
  *
- * @internal open beta
+ * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface CommerceEngineConfiguration extends EngineConfiguration {
   context: ContextOptions;
