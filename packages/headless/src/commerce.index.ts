@@ -107,6 +107,9 @@ export type {
   ParameterManagerInitialState,
 } from './controllers/commerce/core/parameter-manager/headless-core-parameter-manager';
 export {buildProductListingParameterManager} from './controllers/commerce/product-listing/parameter-manager/headless-product-listing-parameter-manager';
+export {buildProductListingUrlManager} from './controllers/commerce/product-listing/url-manager/headless-product-listing-url-manager';
+
+export {buildSearchUrlManager} from './controllers/commerce/search/url-manager/headless-search-url-manager';
 
 export type {
   SortByRelevance,
