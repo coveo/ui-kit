@@ -36,7 +36,7 @@ runs:
     - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
       with:
         path: |
-          **/staticresources/
+          **/node_modules/
         key: quantic-${{ hashFiles('package-lock.json') }}-${{ hashFiles('utils/atomic-storybook/package-lock.json') }}
     - if: inputs.load-cache == 'true'
       uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
