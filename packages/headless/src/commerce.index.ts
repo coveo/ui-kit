@@ -181,6 +181,7 @@ export {buildSearch} from './controllers/commerce/search/headless-search';
 export {buildSearchParameterManager} from './controllers/commerce/search/parameter-manager/headless-search-parameter-manager';
 
 export {updateQuery} from './features/commerce/query/query-actions';
+export type {UpdateQueryActionCreatorPayload} from './features/commerce/query/query-actions';
 
 export {buildSearchBox} from './controllers/commerce/search-box/headless-search-box';
 export type {
@@ -264,3 +265,5 @@ export type {
 } from './controllers/commerce/field-suggestions/headless-category-field-suggestions';
 export type {FieldSuggestionsGenerator} from './controllers/commerce/field-suggestions/headless-field-suggestions-generator';
 export {buildFieldSuggestionsGenerator} from './controllers/commerce/field-suggestions/headless-field-suggestions-generator';
+
+export type {FetchQuerySuggestionsActionCreatorPayload} from './features/query-suggest/query-suggest-actions';

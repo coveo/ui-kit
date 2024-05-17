@@ -61,6 +61,12 @@ const actionLoaders: ActionLoaderConfiguration[] = [
   {
     initializer: 'loadProductListingActions',
   },
+  {
+    initializer: 'loadConfigurationActions',
+  },
+  {
+    initializer: 'loadQueryActions',
+  },
 ];
 
 const engine: EngineConfiguration = {
