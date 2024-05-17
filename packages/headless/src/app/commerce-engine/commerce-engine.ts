@@ -94,9 +94,10 @@ export interface CommerceEngineOptions
 /**
  * Creates a commerce engine instance.
  *
+ * In Open Beta. Reach out to your Coveo team for support in adopting this.
+ *
  * @param options - The commerce engine options.
  * @returns A commerce engine instance.
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export function buildCommerceEngine(
   options: CommerceEngineOptions
