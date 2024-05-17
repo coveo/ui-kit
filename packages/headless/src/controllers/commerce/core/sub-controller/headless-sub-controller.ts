@@ -5,6 +5,12 @@ import {
 import {stateKey} from '../../../../app/state-key';
 import {AnyFacetResponse} from '../../../../features/commerce/facets/facet-set/interfaces/response';
 import {
+  CommerceSearchParameters,
+  Parameters,
+  ProductListingParameters,
+} from '../../../../features/commerce/search-parameters/search-parameter-actions';
+import {Serializer} from '../../../../features/commerce/search-parameters/search-parameter-serializer';
+import {
   buildDidYouMean,
   DidYouMean,
 } from '../../search/did-you-mean/headless-did-you-mean';
@@ -27,6 +33,10 @@ import {
   PaginationProps,
 } from '../pagination/headless-core-commerce-pagination';
 import {
+  ParameterManager,
+  ParameterManagerProps,
+} from '../parameter-manager/headless-core-parameter-manager';
+import {
   buildCoreInteractiveProduct,
   InteractiveProduct,
   InteractiveProductProps,
@@ -36,6 +46,11 @@ import {
   Sort,
   SortProps,
 } from '../sort/headless-core-commerce-sort';
+import {
+  buildCoreUrlManager,
+  UrlManager,
+  type UrlManagerProps,
+} from '../url-manager/headless-core-url-manager';
 
 export interface BaseSolutionTypeSubControllers {
   /**
@@ -56,24 +71,35 @@ export interface BaseSolutionTypeSubControllers {
 export interface SearchAndListingSubControllers
   extends BaseSolutionTypeSubControllers {
   /**
-   * Creates a `Sort` sub-controller.
-   * @param props - Optional properties for configuring the sort behavior.
-   * @returns A `Sort` sub-controller.
+   * Creates a `Sort` controller with the specified properties.
+   * @param props - Optional properties for configuring the Sort controller.
+   * @returns A `Sort` controller.
    */
   sort(props?: SortProps): Sort;
 
   /**
-   * Creates a `FacetGenerator` sub-controller.
-   * @returns A `FacetGenerator` sub-controller.
+   * Creates a `FacetGenerator` controller.
+   * @returns A `FacetGenerator` controller.
    */
   facetGenerator(): FacetGenerator;
 
   /**
-   * Creates a `BreadcrumbManager` sub-controller.
-   * @returns A `BreadcrumbManager` sub-controller.
+   * Creates a `BreadcrumbManager` controller.
+   * @returns A `BreadcrumbManager` controller.
    */
   breadcrumbManager(): BreadcrumbManager;
+
+  /**
+   * Creates a `UrlManager` controller with the specified properties.
+   * @param props - Properties for configuring the `UrlManager` controller.
+   * @returns A `UrlManager` controller.
+   */
+  urlManager(props: UrlManagerProps): UrlManager;
 }
+/**
+ * Represents a collection of sub-controllers related to search and listing functionality.
+ * Extends the `BaseSolutionTypeSubControllers` interface.
+ */
 
 export interface SearchSubControllers extends SearchAndListingSubControllers {
   /**
@@ -90,7 +116,7 @@ interface BaseSubControllerProps {
   slotId?: string;
 }
 
-export interface SearchAndListingSubControllerProps
+export interface SearchAndListingSubControllerProps<T extends Parameters>
   extends BaseSubControllerProps {
   facetResponseSelector: (
     state: CommerceEngine[typeof stateKey],
@@ -100,6 +126,12 @@ export interface SearchAndListingSubControllerProps
   isFacetLoadingResponseSelector: (
     state: CommerceEngine[typeof stateKey]
   ) => boolean;
+  requestIdSelector: (state: CommerceEngine[typeof stateKey]) => string;
+  parameterManagerBuilder: (
+    engine: CommerceEngine,
+    props: ParameterManagerProps<T>
+  ) => ParameterManager<T>;
+  serializer: Serializer<T>;
 }
 
 /**
@@ -111,7 +143,7 @@ export interface SearchAndListingSubControllerProps
  */
 export function buildSearchSubControllers(
   engine: CommerceEngine,
-  subControllerProps: SearchAndListingSubControllerProps
+  subControllerProps: SearchAndListingSubControllerProps<CommerceSearchParameters>
 ): SearchSubControllers {
   return {
     ...buildSearchAndListingsSubControllers(engine, subControllerProps),
@@ -122,20 +154,37 @@ export function buildSearchSubControllers(
 }
 
 /**
+ * Builds the sub-controllers for product listing.
+ *
+ * @param engine - The commerce engine.
+ * @param subControllerProps - The properties for the search and listing sub-controllers.
+ * @returns The search and listing sub-controllers.
+ */
+export function buildProductListingSubControllers(
+  engine: CommerceEngine,
+  subControllerProps: SearchAndListingSubControllerProps<ProductListingParameters>
+): SearchAndListingSubControllers {
+  return buildSearchAndListingsSubControllers(engine, subControllerProps);
+}
+
+/**
  * Builds the search and listings sub-controllers.
  *
  * @param engine - The commerce engine.
- * @param subControllerProps - The properties for the search and listings sub-controllers.
- * @returns The search and listings sub-controllers.
+ * @param subControllerProps - The properties for the search and listing sub-controllers.
+ * @returns The search and listing sub-controllers.
  */
-export function buildSearchAndListingsSubControllers(
+export function buildSearchAndListingsSubControllers<P extends Parameters>(
   engine: CommerceEngine,
-  subControllerProps: SearchAndListingSubControllerProps
+  subControllerProps: SearchAndListingSubControllerProps<P>
 ): SearchAndListingSubControllers {
   const {
     fetchProductsActionCreator,
     facetResponseSelector,
     isFacetLoadingResponseSelector,
+    requestIdSelector,
+    parameterManagerBuilder,
+    serializer,
   } = subControllerProps;
   return {
     ...buildBaseSubControllers(engine, subControllerProps),
@@ -166,6 +215,14 @@ export function buildSearchAndListingsSubControllers(
       return buildCoreBreadcrumbManager(engine, {
         facetResponseSelector,
         fetchProductsActionCreator,
+      });
+    },
+    urlManager(props: UrlManagerProps) {
+      return buildCoreUrlManager(engine, {
+        ...props,
+        requestIdSelector,
+        parameterManagerBuilder,
+        serializer,
       });
     },
   };
