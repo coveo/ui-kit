@@ -14,6 +14,11 @@ export const responseIdSelector = createSelector(
   (responseId) => responseId
 );
 
+export const requestIdSelector = createSelector(
+  (state: CommerceEngineState) => state.commerceSearch.requestId,
+  (requestId) => requestId
+);
+
 export const numberOfProductsSelector = createSelector(
   (state: Partial<CommerceSearchSection>) =>
     state.commerceSearch?.products.length || 0,
