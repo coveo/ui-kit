@@ -5,6 +5,16 @@ import {
 import {stateKey} from '../../../../app/state-key';
 import {AnyFacetResponse} from '../../../../features/commerce/facets/facet-set/interfaces/response';
 import {
+  CommerceSearchParameters,
+  Parameters,
+  ProductListingParameters,
+} from '../../../../features/commerce/search-parameters/search-parameter-actions';
+import {Serializer} from '../../../../features/commerce/search-parameters/search-parameter-serializer';
+import {
+  buildDidYouMean,
+  DidYouMean,
+} from '../../search/did-you-mean/headless-did-you-mean';
+import {
   BreadcrumbManager,
   buildCoreBreadcrumbManager,
 } from '../breadcrumb-manager/headless-core-breadcrumb-manager';
@@ -23,6 +33,10 @@ import {
   PaginationProps,
 } from '../pagination/headless-core-commerce-pagination';
 import {
+  ParameterManager,
+  ParameterManagerProps,
+} from '../parameter-manager/headless-core-parameter-manager';
+import {
   buildCoreInteractiveProduct,
   InteractiveProduct,
   InteractiveProductProps,
@@ -32,6 +46,11 @@ import {
   Sort,
   SortProps,
 } from '../sort/headless-core-commerce-sort';
+import {
+  buildCoreUrlManager,
+  UrlManager,
+  type UrlManagerProps,
+} from '../url-manager/headless-core-url-manager';
 
 export interface BaseSolutionTypeSubControllers {
   interactiveProduct: (props: InteractiveProductProps) => InteractiveProduct;
@@ -43,6 +62,11 @@ export interface SearchAndListingSubControllers
   sort: (props?: SortProps) => Sort;
   facetGenerator: () => FacetGenerator;
   breadcrumbManager: () => BreadcrumbManager;
+  urlManager: (props: UrlManagerProps) => UrlManager;
+}
+
+export interface SearchSubControllers extends SearchAndListingSubControllers {
+  didYouMean: () => DidYouMean;
 }
 
 interface BaseSubControllerProps {
@@ -52,7 +76,7 @@ interface BaseSubControllerProps {
   slotId?: string;
 }
 
-export interface SearchAndListingSubControllerProps
+export interface SearchAndListingSubControllerProps<T extends Parameters>
   extends BaseSubControllerProps {
   facetResponseSelector: (
     state: CommerceEngine[typeof stateKey],
@@ -61,19 +85,47 @@ export interface SearchAndListingSubControllerProps
   isFacetLoadingResponseSelector: (
     state: CommerceEngine[typeof stateKey]
   ) => boolean;
+  requestIdSelector: (state: CommerceEngine[typeof stateKey]) => string;
+  parameterManagerBuilder: (
+    engine: CommerceEngine,
+    props: ParameterManagerProps<T>
+  ) => ParameterManager<T>;
+  serializer: Serializer<T>;
 }
 
-export function buildSolutionTypeSubControllers(
+export function buildSearchSubControllers(
   engine: CommerceEngine,
-  subControllerProps: SearchAndListingSubControllerProps
+  subControllerProps: SearchAndListingSubControllerProps<CommerceSearchParameters>
+): SearchSubControllers {
+  return {
+    ...buildSearchAndListingsSubControllers(engine, subControllerProps),
+    didYouMean() {
+      return buildDidYouMean(engine);
+    },
+  };
+}
+
+export function buildProductListingSubControllers(
+  engine: CommerceEngine,
+  subControllerProps: SearchAndListingSubControllerProps<ProductListingParameters>
+): SearchAndListingSubControllers {
+  return buildSearchAndListingsSubControllers(engine, subControllerProps);
+}
+
+export function buildSearchAndListingsSubControllers<P extends Parameters>(
+  engine: CommerceEngine,
+  subControllerProps: SearchAndListingSubControllerProps<P>
 ): SearchAndListingSubControllers {
   const {
     fetchProductsActionCreator,
     facetResponseSelector,
     isFacetLoadingResponseSelector,
+    requestIdSelector,
+    parameterManagerBuilder,
+    serializer,
   } = subControllerProps;
   return {
-    ...buildBaseSolutionTypeControllers(engine, subControllerProps),
+    ...buildBaseSubControllers(engine, subControllerProps),
     sort(props?: SortProps) {
       return buildCoreSort(engine, {
         ...props,
@@ -103,10 +155,18 @@ export function buildSolutionTypeSubControllers(
         fetchProductsActionCreator,
       });
     },
+    urlManager(props: UrlManagerProps) {
+      return buildCoreUrlManager(engine, {
+        ...props,
+        requestIdSelector,
+        parameterManagerBuilder,
+        serializer,
+      });
+    },
   };
 }
 
-export function buildBaseSolutionTypeControllers(
+export function buildBaseSubControllers(
   engine: CommerceEngine,
   subControllerProps: BaseSubControllerProps
 ): BaseSolutionTypeSubControllers {

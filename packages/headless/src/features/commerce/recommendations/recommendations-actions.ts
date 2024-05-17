@@ -11,6 +11,7 @@ import {
   StateNeededByQueryCommerceAPI,
   buildBaseCommerceAPIRequest,
 } from '../common/actions';
+import {getProductsFromCartPurchasedState} from '../context/cart/cart-state';
 import {perPageRecommendationSelector} from '../pagination/pagination-selectors';
 import {recommendationsSlotDefinition} from './recommendations';
 import {
@@ -37,6 +38,7 @@ const buildRecommendationCommerceAPIRequest = async (
     context: {
       ...commerceAPIRequest.context,
       ...(productId ? {product: {productId}} : {}),
+      purchased: getProductsFromCartPurchasedState(state.cart),
     },
     slotId,
   };

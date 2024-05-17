@@ -43,7 +43,10 @@ export class AtomicProductTemplate {
       setError: (err) => {
         this.error = err;
       },
-      validParents: ['atomic-commerce-product-list'],
+      validParents: [
+        'atomic-commerce-product-list',
+        'atomic-commerce-recommendation-list',
+      ],
       allowEmpty: true,
     });
   }
