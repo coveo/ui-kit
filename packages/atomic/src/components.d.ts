@@ -1716,6 +1716,28 @@ export namespace Components {
          */
         "ratingDetailsField"?: string;
     }
+    interface AtomicProductSectionActions {
+    }
+    interface AtomicProductSectionBadges {
+    }
+    interface AtomicProductSectionBottomMetadata {
+    }
+    interface AtomicProductSectionChildren {
+    }
+    interface AtomicProductSectionDescription {
+    }
+    interface AtomicProductSectionEmphasized {
+    }
+    interface AtomicProductSectionMetadata {
+    }
+    interface AtomicProductSectionName {
+    }
+    interface AtomicProductSectionVisual {
+        /**
+          * How large or small the visual section of product using this template should be.
+         */
+        "imageSize"?: Omit<ItemDisplayImageSize, 'icon'>;
+    }
     interface AtomicProductTemplate {
         /**
           * A function that must return true on products for the product template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to products whose `ec_name` contains `singapore`: `document.querySelector('#target-template').conditions = [(product) => /singapore/i.test(product.ec_name)];`
@@ -4051,6 +4073,60 @@ declare global {
         prototype: HTMLAtomicProductRatingElement;
         new (): HTMLAtomicProductRatingElement;
     };
+    interface HTMLAtomicProductSectionActionsElement extends Components.AtomicProductSectionActions, HTMLStencilElement {
+    }
+    var HTMLAtomicProductSectionActionsElement: {
+        prototype: HTMLAtomicProductSectionActionsElement;
+        new (): HTMLAtomicProductSectionActionsElement;
+    };
+    interface HTMLAtomicProductSectionBadgesElement extends Components.AtomicProductSectionBadges, HTMLStencilElement {
+    }
+    var HTMLAtomicProductSectionBadgesElement: {
+        prototype: HTMLAtomicProductSectionBadgesElement;
+        new (): HTMLAtomicProductSectionBadgesElement;
+    };
+    interface HTMLAtomicProductSectionBottomMetadataElement extends Components.AtomicProductSectionBottomMetadata, HTMLStencilElement {
+    }
+    var HTMLAtomicProductSectionBottomMetadataElement: {
+        prototype: HTMLAtomicProductSectionBottomMetadataElement;
+        new (): HTMLAtomicProductSectionBottomMetadataElement;
+    };
+    interface HTMLAtomicProductSectionChildrenElement extends Components.AtomicProductSectionChildren, HTMLStencilElement {
+    }
+    var HTMLAtomicProductSectionChildrenElement: {
+        prototype: HTMLAtomicProductSectionChildrenElement;
+        new (): HTMLAtomicProductSectionChildrenElement;
+    };
+    interface HTMLAtomicProductSectionDescriptionElement extends Components.AtomicProductSectionDescription, HTMLStencilElement {
+    }
+    var HTMLAtomicProductSectionDescriptionElement: {
+        prototype: HTMLAtomicProductSectionDescriptionElement;
+        new (): HTMLAtomicProductSectionDescriptionElement;
+    };
+    interface HTMLAtomicProductSectionEmphasizedElement extends Components.AtomicProductSectionEmphasized, HTMLStencilElement {
+    }
+    var HTMLAtomicProductSectionEmphasizedElement: {
+        prototype: HTMLAtomicProductSectionEmphasizedElement;
+        new (): HTMLAtomicProductSectionEmphasizedElement;
+    };
+    interface HTMLAtomicProductSectionMetadataElement extends Components.AtomicProductSectionMetadata, HTMLStencilElement {
+    }
+    var HTMLAtomicProductSectionMetadataElement: {
+        prototype: HTMLAtomicProductSectionMetadataElement;
+        new (): HTMLAtomicProductSectionMetadataElement;
+    };
+    interface HTMLAtomicProductSectionNameElement extends Components.AtomicProductSectionName, HTMLStencilElement {
+    }
+    var HTMLAtomicProductSectionNameElement: {
+        prototype: HTMLAtomicProductSectionNameElement;
+        new (): HTMLAtomicProductSectionNameElement;
+    };
+    interface HTMLAtomicProductSectionVisualElement extends Components.AtomicProductSectionVisual, HTMLStencilElement {
+    }
+    var HTMLAtomicProductSectionVisualElement: {
+        prototype: HTMLAtomicProductSectionVisualElement;
+        new (): HTMLAtomicProductSectionVisualElement;
+    };
     interface HTMLAtomicProductTemplateElement extends Components.AtomicProductTemplate, HTMLStencilElement {
     }
     var HTMLAtomicProductTemplateElement: {
@@ -4990,6 +5066,15 @@ declare global {
         "atomic-product-numeric-field-value": HTMLAtomicProductNumericFieldValueElement;
         "atomic-product-price": HTMLAtomicProductPriceElement;
         "atomic-product-rating": HTMLAtomicProductRatingElement;
+        "atomic-product-section-actions": HTMLAtomicProductSectionActionsElement;
+        "atomic-product-section-badges": HTMLAtomicProductSectionBadgesElement;
+        "atomic-product-section-bottom-metadata": HTMLAtomicProductSectionBottomMetadataElement;
+        "atomic-product-section-children": HTMLAtomicProductSectionChildrenElement;
+        "atomic-product-section-description": HTMLAtomicProductSectionDescriptionElement;
+        "atomic-product-section-emphasized": HTMLAtomicProductSectionEmphasizedElement;
+        "atomic-product-section-metadata": HTMLAtomicProductSectionMetadataElement;
+        "atomic-product-section-name": HTMLAtomicProductSectionNameElement;
+        "atomic-product-section-visual": HTMLAtomicProductSectionVisualElement;
         "atomic-product-template": HTMLAtomicProductTemplateElement;
         "atomic-product-text": HTMLAtomicProductTextElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
@@ -6633,6 +6718,28 @@ declare namespace LocalJSX {
          */
         "ratingDetailsField"?: string;
     }
+    interface AtomicProductSectionActions {
+    }
+    interface AtomicProductSectionBadges {
+    }
+    interface AtomicProductSectionBottomMetadata {
+    }
+    interface AtomicProductSectionChildren {
+    }
+    interface AtomicProductSectionDescription {
+    }
+    interface AtomicProductSectionEmphasized {
+    }
+    interface AtomicProductSectionMetadata {
+    }
+    interface AtomicProductSectionName {
+    }
+    interface AtomicProductSectionVisual {
+        /**
+          * How large or small the visual section of product using this template should be.
+         */
+        "imageSize"?: Omit<ItemDisplayImageSize, 'icon'>;
+    }
     interface AtomicProductTemplate {
         /**
           * A function that must return true on products for the product template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to products whose `ec_name` contains `singapore`: `document.querySelector('#target-template').conditions = [(product) => /singapore/i.test(product.ec_name)];`
@@ -8016,6 +8123,15 @@ declare namespace LocalJSX {
         "atomic-product-numeric-field-value": AtomicProductNumericFieldValue;
         "atomic-product-price": AtomicProductPrice;
         "atomic-product-rating": AtomicProductRating;
+        "atomic-product-section-actions": AtomicProductSectionActions;
+        "atomic-product-section-badges": AtomicProductSectionBadges;
+        "atomic-product-section-bottom-metadata": AtomicProductSectionBottomMetadata;
+        "atomic-product-section-children": AtomicProductSectionChildren;
+        "atomic-product-section-description": AtomicProductSectionDescription;
+        "atomic-product-section-emphasized": AtomicProductSectionEmphasized;
+        "atomic-product-section-metadata": AtomicProductSectionMetadata;
+        "atomic-product-section-name": AtomicProductSectionName;
+        "atomic-product-section-visual": AtomicProductSectionVisual;
         "atomic-product-template": AtomicProductTemplate;
         "atomic-product-text": AtomicProductText;
         "atomic-query-error": AtomicQueryError;
@@ -8360,6 +8476,15 @@ declare module "@stencil/core" {
              * The `atomic-product-rating` element renders a star rating.
              */
             "atomic-product-rating": LocalJSX.AtomicProductRating & JSXBase.HTMLAttributes<HTMLAtomicProductRatingElement>;
+            "atomic-product-section-actions": LocalJSX.AtomicProductSectionActions & JSXBase.HTMLAttributes<HTMLAtomicProductSectionActionsElement>;
+            "atomic-product-section-badges": LocalJSX.AtomicProductSectionBadges & JSXBase.HTMLAttributes<HTMLAtomicProductSectionBadgesElement>;
+            "atomic-product-section-bottom-metadata": LocalJSX.AtomicProductSectionBottomMetadata & JSXBase.HTMLAttributes<HTMLAtomicProductSectionBottomMetadataElement>;
+            "atomic-product-section-children": LocalJSX.AtomicProductSectionChildren & JSXBase.HTMLAttributes<HTMLAtomicProductSectionChildrenElement>;
+            "atomic-product-section-description": LocalJSX.AtomicProductSectionDescription & JSXBase.HTMLAttributes<HTMLAtomicProductSectionDescriptionElement>;
+            "atomic-product-section-emphasized": LocalJSX.AtomicProductSectionEmphasized & JSXBase.HTMLAttributes<HTMLAtomicProductSectionEmphasizedElement>;
+            "atomic-product-section-metadata": LocalJSX.AtomicProductSectionMetadata & JSXBase.HTMLAttributes<HTMLAtomicProductSectionMetadataElement>;
+            "atomic-product-section-name": LocalJSX.AtomicProductSectionName & JSXBase.HTMLAttributes<HTMLAtomicProductSectionNameElement>;
+            "atomic-product-section-visual": LocalJSX.AtomicProductSectionVisual & JSXBase.HTMLAttributes<HTMLAtomicProductSectionVisualElement>;
             "atomic-product-template": LocalJSX.AtomicProductTemplate & JSXBase.HTMLAttributes<HTMLAtomicProductTemplateElement>;
             "atomic-product-text": LocalJSX.AtomicProductText & JSXBase.HTMLAttributes<HTMLAtomicProductTextElement>;
             /**
