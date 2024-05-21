@@ -106,8 +106,6 @@ export type {
   ParameterManagerProps,
   ParameterManagerInitialState,
 } from './controllers/commerce/core/parameter-manager/headless-core-parameter-manager';
-export {buildProductListingParameterManager} from './controllers/commerce/product-listing/parameter-manager/headless-product-listing-parameter-manager';
-export {buildProductListingUrlManager} from './controllers/commerce/product-listing/url-manager/headless-product-listing-url-manager';
 
 export {buildSearchUrlManager} from './controllers/commerce/search/url-manager/headless-search-url-manager';
 
@@ -178,7 +176,6 @@ export type {
   SearchState,
 } from './controllers/commerce/search/headless-search';
 export {buildSearch} from './controllers/commerce/search/headless-search';
-export {buildSearchParameterManager} from './controllers/commerce/search/parameter-manager/headless-search-parameter-manager';
 
 export {updateQuery} from './features/commerce/query/query-actions';
 export type {UpdateQueryActionCreatorPayload} from './features/commerce/query/query-actions';

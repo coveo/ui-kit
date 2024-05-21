@@ -50,9 +50,9 @@ export interface SearchState {
 }
 
 /**
- * Builds a search controller for the given commerce engine.
+ * Builds a `Search` controller for the given commerce engine.
  * @param engine - The commerce engine.
- * @returns The search controller.
+ * @returns A `Search` controller.
  */
 export function buildSearch(engine: CommerceEngine): Search {
   if (!loadBaseSearchReducers(engine)) {

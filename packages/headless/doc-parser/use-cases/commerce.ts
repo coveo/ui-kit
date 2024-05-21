@@ -16,14 +16,6 @@ const controllers: ControllerConfiguration[] = [
     samplePaths: {},
   },
   {
-    initializer: 'buildProductListingParameterManager',
-    samplePaths: {},
-  },
-  {
-    initializer: 'buildProductListingUrlManager',
-    samplePaths: {},
-  },
-  {
     initializer: 'buildProductView',
     samplePaths: {},
   },
@@ -36,23 +28,7 @@ const controllers: ControllerConfiguration[] = [
     samplePaths: {},
   },
   {
-    initializer: 'buildSearchParameterManager',
-    samplePaths: {},
-  },
-  {
-    initializer: 'buildSearchUrlManager',
-    samplePaths: {},
-  },
-  {
     initializer: 'buildSearchBox',
-    samplePaths: {},
-  },
-  {
-    initializer: 'buildRelevanceSortCriterion',
-    samplePaths: {},
-  },
-  {
-    initializer: 'buildFieldsSortCriterion',
     samplePaths: {},
   },
 ];
