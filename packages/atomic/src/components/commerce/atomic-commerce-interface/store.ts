@@ -30,12 +30,12 @@ export interface AtomicStoreData extends AtomicCommonStoreData {
   sortOptions: SortDropdownOption[];
   mobileBreakpoint: string;
   currentQuickviewPosition: number;
+  activeProductChild: {parentPermanentId: string; childPermanentId: string};
 }
 
 export interface AtomicCommerceStore
   extends AtomicCommonStore<AtomicStoreData> {
   getAllFacets(): FacetInfoMap;
-
   isMobile(): boolean;
 }
 
@@ -59,6 +59,7 @@ export function createAtomicCommerceStore(): AtomicCommerceStore {
     mobileBreakpoint: DEFAULT_MOBILE_BREAKPOINT,
     fieldsToInclude: [],
     currentQuickviewPosition: -1,
+    activeProductChild: {parentPermanentId: '', childPermanentId: ''},
   });
 
   return {
