@@ -366,7 +366,13 @@ export namespace Components {
      */
     interface AtomicCommerceLoadMoreProducts {
     }
+    /**
+     * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
+     */
     interface AtomicCommerceNumericFacet {
+        /**
+          * The field whose values you want to display in the facet.
+         */
         "facet": NumericFacet;
     }
     /**
@@ -3313,6 +3319,9 @@ declare global {
         prototype: HTMLAtomicCommerceLoadMoreProductsElement;
         new (): HTMLAtomicCommerceLoadMoreProductsElement;
     };
+    /**
+     * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
+     */
     interface HTMLAtomicCommerceNumericFacetElement extends Components.AtomicCommerceNumericFacet, HTMLStencilElement {
     }
     var HTMLAtomicCommerceNumericFacetElement: {
@@ -5474,7 +5483,13 @@ declare namespace LocalJSX {
      */
     interface AtomicCommerceLoadMoreProducts {
     }
+    /**
+     * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
+     */
     interface AtomicCommerceNumericFacet {
+        /**
+          * The field whose values you want to display in the facet.
+         */
         "facet": NumericFacet;
     }
     /**
@@ -8319,6 +8334,9 @@ declare module "@stencil/core" {
              * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
              */
             "atomic-commerce-load-more-products": LocalJSX.AtomicCommerceLoadMoreProducts & JSXBase.HTMLAttributes<HTMLAtomicCommerceLoadMoreProductsElement>;
+            /**
+             * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
+             */
             "atomic-commerce-numeric-facet": LocalJSX.AtomicCommerceNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceNumericFacetElement>;
             /**
              * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
