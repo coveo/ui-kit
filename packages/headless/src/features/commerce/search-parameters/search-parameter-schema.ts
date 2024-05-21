@@ -1,19 +1,24 @@
-import {StringValue, SchemaDefinition} from '@coveo/bueno';
+import {StringValue, SchemaDefinition, RecordValue, NumberValue} from '@coveo/bueno';
 import {
   CommerceSearchParameters,
-  ProductListingParameters,
+
 } from './search-parameter-actions';
+
+const commonParametersDefinition = {
+  f: new RecordValue(),
+  cf: new RecordValue(),
+  nf: new RecordValue(),
+  df: new RecordValue(),
+  sortCriteria: new RecordValue(),
+  page: new NumberValue({min: 0}),
+  perPage: new NumberValue({min: 1}),
+}
 
 export const searchParametersDefinition: SchemaDefinition<
   Required<CommerceSearchParameters>
 > = {
-  // eslint-disable-next-line @cspell/spellchecker
-  // TODO CAPI-546: Handle only the query param for now. Add facets, sort, pagination later.
   q: new StringValue(),
+  ...commonParametersDefinition
 };
 
-// eslint-disable-next-line @cspell/spellchecker
-// TODO CAPI-546: Add facets, sort, pagination later.
-export const productListingParametersDefinition: SchemaDefinition<
-  Required<ProductListingParameters>
-> = {};
+export const productListingParametersDefinition = commonParametersDefinition;

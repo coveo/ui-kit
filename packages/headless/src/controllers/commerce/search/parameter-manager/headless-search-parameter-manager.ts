@@ -8,13 +8,19 @@ import {
 } from '../../../../features/commerce/search-parameters/search-parameter-actions';
 import {searchParametersDefinition} from '../../../../features/commerce/search-parameters/search-parameter-schema';
 import {executeSearch} from '../../../../features/commerce/search/search-actions';
-import {CommerceSearchParametersState} from '../../../../state/commerce-app-state';
 import {loadReducerError} from '../../../../utils/errors';
 import {ParameterManager} from '../../core/parameter-manager/headless-core-parameter-manager';
 import {
   buildCoreParameterManager,
   ParameterManagerProps,
 } from '../../core/parameter-manager/headless-core-parameter-manager';
+import {
+  getQ,
+} from '../../../../features/parameter-manager/parameter-manager-selectors';
+import {
+  activeParametersSelector as coreActiveParametersSelector,
+  initialParametersSelector
+} from '../../../../features/commerce/search-parameters/search-parameter-selectors';
 
 /**
  * Creates a `ParameterManager` controller instance for commerce search.
@@ -37,8 +43,9 @@ export function buildSearchParameterManager(
     restoreActionCreator: restoreSearchParameters,
     parametersDefinition: searchParametersDefinition,
     fetchProductsActionCreator: executeSearch,
-    enrichParameters: (_state, activeParams) => ({
+    enrichParameters: (state, activeParams) => ({
       q: getCommerceQueryInitialState().query!,
+      ...initialParametersSelector(state),
       ...activeParams,
     }),
   });
@@ -48,18 +55,9 @@ function activeParametersSelector(
   state: CommerceEngine[typeof stateKey]
 ): CommerceSearchParameters {
   return {
-    ...getQ(state),
+    ...getQ(state?.commerceQuery, (s) => s.query, getCommerceQueryInitialState().query),
+    ...coreActiveParametersSelector(state),
   };
-}
-
-function getQ(state: Partial<CommerceSearchParametersState>) {
-  if (state.commerceQuery === undefined) {
-    return {};
-  }
-
-  const query = state.commerceQuery.query;
-  const shouldInclude = query !== getCommerceQueryInitialState().query;
-  return shouldInclude ? {q: query} : {};
 }
 
 function loadReducers(engine: CommerceEngine): engine is CommerceEngine {

@@ -7,7 +7,7 @@ import {AnyFacetResponse} from '../../../../features/commerce/facets/facet-set/i
 import {
   CommerceSearchParameters,
   Parameters,
-  ProductListingParameters,
+
 } from '../../../../features/commerce/search-parameters/search-parameter-actions';
 import {Serializer} from '../../../../features/commerce/search-parameters/search-parameter-serializer';
 import {
@@ -51,6 +51,9 @@ import {
   UrlManager,
   type UrlManagerProps,
 } from '../url-manager/headless-core-url-manager';
+import {
+  ProductListingParameters
+} from '../../../../features/commerce/product-listing-parameters/product-listing-parameter-actions';
 
 export interface BaseSolutionTypeSubControllers {
   interactiveProduct: (props: InteractiveProductProps) => InteractiveProduct;

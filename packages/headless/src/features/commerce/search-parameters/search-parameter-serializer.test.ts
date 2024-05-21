@@ -1,4 +1,7 @@
 import {searchSerializer} from './search-parameter-serializer';
+import {buildNumericRange} from '../../../controllers/core/facets/range-facet/numeric-facet/numeric-range';
+import {buildDateRange} from '../../../controllers/core/facets/range-facet/date-facet/date-range';
+import {CommerceSearchParameters} from './search-parameter-actions';
 
 const someSpecialCharactersThatNeedsEncoding = [
   '&',
@@ -76,8 +79,26 @@ describe('searchSerializer', () => {
   });
 
   it('can serialize and deserialize all search parameters', () => {
-    const parameters = {
+    const f = {author: ['a', 'b']};
+    const cf = {geography: ['a', 'b']};
+    const nf = {
+      size: [buildNumericRange({start: 0, end: 10, state: 'selected'})],
+    };
+    const df = {
+      created: [
+        buildDateRange({
+          start: '2010/01/01@05:00:00',
+          end: '2011/01/01@05:00:00',
+          state: 'selected',
+        }),
+      ],
+    };
+    const parameters: Required<Omit<CommerceSearchParameters, 'sortCriteria' | 'page' | 'perPage'>>  = {
       q: 'some query',
+      f,
+      cf,
+      nf,
+      df,
     };
 
     const serialized = serialize(parameters);

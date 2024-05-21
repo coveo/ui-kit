@@ -1,56 +1,71 @@
 import {
-  delimiter,
-  serializeSpecialCharacters,
+  castUnknownObject,
+  delimiter, isValidKey,
+  preprocessObjectPairs,
+  serializePair,
   splitOnFirstEqual,
 } from '../../search-parameters/search-parameter-serializer';
 import {serialize as coreSerialize} from '../../search-parameters/search-parameter-serializer';
 import {
   CommerceSearchParameters,
   Parameters,
-  ProductListingParameters,
 } from './search-parameter-actions';
+import {ProductListingParameters} from '../product-listing-parameters/product-listing-parameter-actions';
 
 export interface Serializer<T extends Parameters> {
   serialize: (parameters: T) => string;
   deserialize: (fragment: string) => T;
 }
 
-export const searchSerializer = {
+export const searchSerializer: Serializer<CommerceSearchParameters> = {
   serialize,
   deserialize,
-} as Serializer<CommerceSearchParameters>;
+};
 
 export const productListingSerializer = {
-  serialize: () => '',
+  serialize,
   deserialize: () => ({}) as ProductListingParameters,
 } as Serializer<ProductListingParameters>;
 
+type FacetSearchParameters = keyof Pick<
+  CommerceSearchParameters,
+  'f' | 'cf' | 'nf' | 'df'
+>;
+
+type FacetKey = keyof typeof supportedFacetParameters;
+const supportedFacetParameters: Record<FacetSearchParameters, boolean> = {
+  f: true,
+  cf: true,
+  nf: true,
+  df: true,
+};
+
 function serialize(parameters: CommerceSearchParameters): string {
-  return coreSerialize(commercePairSerializer)(parameters);
+  return coreSerialize(serializePair)(parameters);
 }
 
 function deserialize(fragment: string): CommerceSearchParameters {
   const parts = fragment.split(delimiter);
   const keyValuePairs = parts
     .map(splitOnFirstEqual)
+    .map(preprocessObjectPairs)
     .filter(isValidPair)
     .map(cast);
 
   return keyValuePairs.reduce((acc: CommerceSearchParameters, pair) => {
     const [key, val] = pair;
 
-    return {...acc, [key]: val as string};
+    if (keyHasObjectValue(key)) {
+      const mergedValues = {...acc[key], ...(val as object)};
+      return {...acc, [key]: mergedValues};
+    }
+
+    return {...acc, [key]: val};
   }, {});
 }
 
-function commercePairSerializer(pair: [string, unknown]) {
-  const [key, val] = pair;
-
-  if (key !== 'q') {
-    return '';
-  }
-
-  return serializeSpecialCharacters(key, val);
+export function keyHasObjectValue(key: string): key is FacetKey {
+  return key in supportedFacetParameters;
 }
 
 function isValidPair<K extends keyof CommerceSearchParameters>(
@@ -61,21 +76,18 @@ function isValidPair<K extends keyof CommerceSearchParameters>(
   return validKey && lengthOfTwo;
 }
 
-function isValidKey(key: string): key is keyof CommerceSearchParameters {
-  const supportedParameters: Record<
-    keyof Required<CommerceSearchParameters>,
-    boolean
-  > = {
-    q: true,
-  };
-
-  return key in supportedParameters;
-}
-
 function cast<K extends keyof CommerceSearchParameters>(
   pair: [K, string]
 ): [K, unknown] {
   const [key, value] = pair;
+
+  if (key === 'page' || key === 'perPage') {
+    return [key, parseInt(value)];
+  }
+
+  if (keyHasObjectValue(key)) {
+    return [key, castUnknownObject(value)];
+  }
 
   return [key, decodeURIComponent(value)];
 }
