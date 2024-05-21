@@ -11,11 +11,11 @@ import {buildCoreUrlManager} from '../../core/url-manager/headless-core-url-mana
 import {buildSearchParameterManager} from '../parameter-manager/headless-search-parameter-manager';
 
 /**
- * Creates a `UrlManager` controller instance.
+ * Creates a `UrlManager` sub-controller.
  *
- * @param engine - The headless commerce engine.
+ * @param engine - The commerce engine.
  * @param props - The configurable `UrlManager` properties.
- * @returns A `UrlManager` controller instance.
+ * @returns A `UrlManager` sub-controller instance.
  */
 export function buildSearchUrlManager(
   engine: CommerceEngine,
