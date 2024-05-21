@@ -1,4 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
+import {Product} from '../../../api/commerce/common/product';
 import {
   clearExpiredItems,
   fetchItemsFulfilled,
@@ -10,6 +11,7 @@ import {
 import {fetchInstantProducts} from '../search/search-actions';
 import {
   clearExpiredProducts,
+  promoteChildToParent,
   registerInstantProducts,
   updateInstantProductsQuery,
 } from './instant-products-actions';
@@ -51,12 +53,62 @@ export const instantProductsReducer = createReducer(
           },
           state,
           {
-            products,
+            products: products.map(prependProductInItsOwnChildrenIfNeeded),
           }
         );
       })
       .addCase(fetchInstantProducts.rejected, (state, action) => {
         fetchItemsRejected(action.meta.arg, state);
+      })
+      .addCase(promoteChildToParent, (state, action) => {
+        const cache = state[action.payload.id].cache[action.payload.query];
+        const products = cache.products;
+        const currentParentIndex = products.findIndex(
+          (product) => product.permanentid === action.payload.parentPermanentId
+        );
+
+        if (currentParentIndex === -1) {
+          console.log('parent not found');
+          return;
+        }
+
+        const {children, totalNumberOfChildren} = products[currentParentIndex];
+
+        const childToPromote = children.find(
+          (child) => child.permanentid === action.payload.childPermanentId
+        );
+
+        if (childToPromote === undefined) {
+          console.log('child not found');
+          return;
+        }
+
+        const newParent: Product = {
+          ...childToPromote,
+          children,
+          totalNumberOfChildren,
+        };
+
+        const newProducts = [...products];
+        newProducts.splice(currentParentIndex, 1, newParent);
+
+        cache.products = newProducts;
       });
   }
 );
+
+function prependProductInItsOwnChildrenIfNeeded(product: Product) {
+  const isParentAlreadyInChildren = product.children.some(
+    (child) => child.permanentid === product.permanentid
+  );
+  if (product.children.length === 0 || isParentAlreadyInChildren) {
+    return product;
+  }
+
+  const {children, totalNumberOfChildren, ...restOfProduct} = product;
+
+  return {
+    ...product,
+    children: [restOfProduct, ...children],
+  };
+}

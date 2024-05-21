@@ -7,6 +7,7 @@ import {contextReducer as commerceContext} from '../../../features/commerce/cont
 import {
   fetchProductListing,
   fetchMoreProducts,
+  promoteChildToParent,
 } from '../../../features/commerce/product-listing/product-listing-actions';
 import {responseIdSelector} from '../../../features/commerce/product-listing/product-listing-selectors';
 import {productListingV2Reducer as productListing} from '../../../features/commerce/product-listing/product-listing-slice';
@@ -15,6 +16,7 @@ import {
   buildController,
   Controller,
 } from '../../controller/headless-controller';
+import {ControllerWithPromotableChildProducts} from '../core/common';
 import {
   buildSearchAndListingsSubControllers,
   SearchAndListingSubControllers,
@@ -29,6 +31,7 @@ import {
  */
 export interface ProductListing
   extends Controller,
+    ControllerWithPromotableChildProducts,
     SearchAndListingSubControllers {
   /**
    * Fetches the product listing.
@@ -73,6 +76,10 @@ export function buildProductListing(engine: CommerceEngine): ProductListing {
   return {
     ...controller,
     ...subControllers,
+
+    promoteChildToParent(childPermanentId, parentPermanentId) {
+      dispatch(promoteChildToParent({childPermanentId, parentPermanentId}));
+    },
 
     get state() {
       const {products, error, isLoading, responseId} =

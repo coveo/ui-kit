@@ -5,6 +5,10 @@ import {
 } from '../../../api/commerce/commerce-api-client';
 import {CommerceRecommendationsRequest} from '../../../api/commerce/recommendations/recommendations-request';
 import {RecommendationsCommerceSuccessResponse} from '../../../api/commerce/recommendations/recommendations-response';
+import {
+  corePromoteChildToParentDefinition,
+  CorePromoteChildToParentActionCreatorPayload,
+} from '../../../controllers/commerce/core/common';
 import {RecommendationsSection} from '../../../state/state-sections';
 import {validatePayload} from '../../../utils/validate-payload';
 import {
@@ -122,4 +126,13 @@ export const registerRecommendationsSlot = createAction(
   'commerce/recommendations/registerSlot',
   (payload: SlotIdPayload) =>
     validatePayload(payload, recommendationsSlotDefinition)
+);
+
+export const promoteChildToParent = createAction(
+  'commerce/recommendations/promoteChildToParent',
+  (payload: CorePromoteChildToParentActionCreatorPayload & SlotIdPayload) =>
+    validatePayload(payload, {
+      ...corePromoteChildToParentDefinition,
+      ...recommendationsSlotDefinition,
+    })
 );

@@ -10,6 +10,7 @@ import {recommendationsOptionsSchema} from '../../../features/commerce/recommend
 import {
   fetchMoreRecommendations,
   fetchRecommendations,
+  promoteChildToParent,
   registerRecommendationsSlot,
 } from '../../../features/commerce/recommendations/recommendations-actions';
 import {recommendationsReducer as recommendations} from '../../../features/commerce/recommendations/recommendations-slice';
@@ -19,6 +20,7 @@ import {
   buildController,
   Controller,
 } from '../../controller/headless-controller';
+import {ControllerWithPromotableChildProducts} from '../core/common';
 import {
   BaseSolutionTypeSubControllers,
   buildBaseSubControllers,
@@ -29,6 +31,7 @@ import {
  */
 export interface Recommendations
   extends Controller,
+    ControllerWithPromotableChildProducts,
     BaseSolutionTypeSubControllers {
   /**
    * Fetches the recommendations.
@@ -106,6 +109,12 @@ export function buildRecommendations(
   return {
     ...controller,
     ...subControllers,
+
+    promoteChildToParent(childPermanentId, parentPermanentId) {
+      dispatch(
+        promoteChildToParent({childPermanentId, parentPermanentId, slotId})
+      );
+    },
 
     get state() {
       return recommendationStateSelector(engine[stateKey]);

@@ -1,9 +1,14 @@
-import {createAsyncThunk} from '@reduxjs/toolkit';
+import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   AsyncThunkCommerceOptions,
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client';
+import {
+  corePromoteChildToParentDefinition,
+  CorePromoteChildToParentActionCreatorPayload,
+} from '../../../controllers/commerce/core/common';
 import {ProductListingV2Section} from '../../../state/state-sections';
+import {validatePayload} from '../../../utils/validate-payload';
 import {logQueryError} from '../../search/search-analytics-actions';
 import {
   buildCommerceAPIRequest,
@@ -74,4 +79,10 @@ export const fetchMoreProducts = createAsyncThunk<
       response: fetched.success,
     };
   }
+);
+
+export const promoteChildToParent = createAction(
+  'commerce/productListing/promoteChildToParent',
+  (payload: CorePromoteChildToParentActionCreatorPayload) =>
+    validatePayload(payload, corePromoteChildToParentDefinition)
 );

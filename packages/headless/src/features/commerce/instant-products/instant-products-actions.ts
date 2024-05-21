@@ -1,48 +1,52 @@
 import {createAction} from '@reduxjs/toolkit';
 import {
+  corePromoteChildToParentDefinition,
+  CorePromoteChildToParentActionCreatorPayload,
+} from '../../../controllers/commerce/core/common';
+import {
   validatePayload,
   requiredEmptyAllowedString,
   requiredNonEmptyString,
 } from '../../../utils/validate-payload';
 
-export interface RegisterInstantProductActionCreatorPayload {
+export interface CoreInstantProductActionCreatorPayload {
   /**
    * The search box ID.
    */
   id: string;
 }
 
-export interface UpdateInstantProductQueryActionCreatorPayload {
-  /**
-   * The search box ID.
-   */
-  id: string;
+export interface RegisterInstantProductActionCreatorPayload
+  extends CoreInstantProductActionCreatorPayload {}
+
+export interface UpdateInstantProductQueryActionCreatorPayload
+  extends CoreInstantProductActionCreatorPayload {
   /**
    * The initial basic query expression for instant products.
    */
   query: string;
 }
 
-export interface ClearExpiredInstantProductsActionCreatorPayload {
-  /**
-   * The search box id.
-   */
-  id: string;
-}
+export interface ClearExpiredInstantProductsActionCreatorPayload
+  extends CoreInstantProductActionCreatorPayload {}
 
-const instantProductsRegisterDefinition = {
+export interface PromoteInstantProductChildToParentActionCreatorPayload
+  extends UpdateInstantProductQueryActionCreatorPayload,
+    CorePromoteChildToParentActionCreatorPayload {}
+
+const instantProductsIdDefinition = {
   id: requiredNonEmptyString,
 };
 
 const instantProductsQueryDefinition = {
-  ...instantProductsRegisterDefinition,
+  ...instantProductsIdDefinition,
   query: requiredEmptyAllowedString,
 };
 
 export const registerInstantProducts = createAction(
   'instantProducts/register',
   (payload: RegisterInstantProductActionCreatorPayload) =>
-    validatePayload(payload, instantProductsRegisterDefinition)
+    validatePayload(payload, instantProductsIdDefinition)
 );
 
 export const updateInstantProductsQuery = createAction(
@@ -54,24 +58,16 @@ export const updateInstantProductsQuery = createAction(
 export const clearExpiredProducts = createAction(
   'instantProducts/clearExpired',
   (payload: ClearExpiredInstantProductsActionCreatorPayload) =>
-    validatePayload(payload, instantProductsRegisterDefinition)
+    validatePayload(payload, instantProductsIdDefinition)
 );
 
-export interface FetchInstantProductsActionCreatorPayload {
-  /**
-   * The search box ID.
-   */
-  id: string;
-  /**
-   * The query for which instant products are retrieved.
-   */
-  query: string;
-  /**
-   * The maximum items to be stored in the instant product list for each query.
-   */
-  maxProductsPerQuery: number;
-  /**
-   * Number in milliseconds that cached products will be valid for. Set to 0 so that products never expire.
-   */
-  cacheTimeout?: number;
-}
+const promoteInstantProductChildToParentDefinition = {
+  ...corePromoteChildToParentDefinition,
+  ...instantProductsQueryDefinition,
+};
+
+export const promoteChildToParent = createAction(
+  'commerce/instantProducts/promoteChildToParent',
+  (payload: PromoteInstantProductChildToParentActionCreatorPayload) =>
+    validatePayload(payload, promoteInstantProductChildToParentDefinition)
+);

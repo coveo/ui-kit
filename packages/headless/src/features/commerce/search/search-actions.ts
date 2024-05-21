@@ -1,10 +1,14 @@
 import {BooleanValue, StringValue} from '@coveo/bueno';
-import {createAsyncThunk} from '@reduxjs/toolkit';
+import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   AsyncThunkCommerceOptions,
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client';
 import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response';
+import {
+  corePromoteChildToParentDefinition,
+  CorePromoteChildToParentActionCreatorPayload,
+} from '../../../controllers/commerce/core/common';
 import {
   CommerceQuerySection,
   CommerceSearchSection,
@@ -197,4 +201,10 @@ export const fetchInstantProducts = createAsyncThunk<
       response: {...fetched.success, products},
     };
   }
+);
+
+export const promoteChildToParent = createAction(
+  'commerce/search/promoteChildToParent',
+  (payload: CorePromoteChildToParentActionCreatorPayload) =>
+    validatePayload(payload, corePromoteChildToParentDefinition)
 );

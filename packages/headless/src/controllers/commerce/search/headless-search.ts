@@ -9,6 +9,7 @@ import {queryReducer as commerceQuery} from '../../../features/commerce/query/qu
 import {
   executeSearch,
   fetchMoreProducts,
+  promoteChildToParent,
 } from '../../../features/commerce/search/search-actions';
 import {responseIdSelector} from '../../../features/commerce/search/search-selectors';
 import {commerceSearchReducer as commerceSearch} from '../../../features/commerce/search/search-slice';
@@ -17,6 +18,7 @@ import {
   buildController,
   Controller,
 } from '../../controller/headless-controller';
+import {ControllerWithPromotableChildProducts} from '../core/common';
 import {
   buildSearchSubControllers,
   SearchSubControllers,
@@ -26,7 +28,10 @@ import {
   isFacetLoadingResponseSelector,
 } from './facets/headless-search-facet-options';
 
-export interface Search extends Controller, SearchSubControllers {
+export interface Search
+  extends Controller,
+    ControllerWithPromotableChildProducts,
+    SearchSubControllers {
   /**
    * Executes the first search.
    */
@@ -69,8 +74,10 @@ export function buildSearch(engine: CommerceEngine): Search {
       return getState().commerceSearch;
     },
 
-    // eslint-disable-next-line @cspell/spellchecker
-    // TODO CAPI-244: Handle analytics
+    promoteChildToParent(childPermanentId: string, parentPermanentId: string) {
+      dispatch(promoteChildToParent({childPermanentId, parentPermanentId}));
+    },
+
     executeFirstSearch() {
       const firstSearchExecuted = responseIdSelector(getState()) !== '';
 

@@ -6,6 +6,7 @@ import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../app/state-key';
 import {
   clearExpiredProducts,
+  promoteChildToParent,
   registerInstantProducts,
   updateInstantProductsQuery,
 } from '../../../features/commerce/instant-products/instant-products-actions';
@@ -20,6 +21,7 @@ import {
   Controller,
   buildController,
 } from '../../controller/headless-controller';
+import {ControllerWithPromotableChildProducts} from '../core/common';
 
 export interface InstantProductsOptions {
   /**
@@ -48,7 +50,9 @@ export interface InstantProductsProps {
 /**
  * The `InstantProducts` controller allows the end user to manage instant products queries.
  */
-export interface InstantProducts extends Controller {
+export interface InstantProducts
+  extends Controller,
+    ControllerWithPromotableChildProducts {
   /**
    * Updates the specified query and shows instant products for it.
    *
@@ -160,6 +164,17 @@ export function buildInstantProducts(
       dispatch(
         clearExpiredProducts({
           id: searchBoxId,
+        })
+      );
+    },
+
+    promoteChildToParent(childPermanentId, parentPermanentId) {
+      dispatch(
+        promoteChildToParent({
+          childPermanentId,
+          parentPermanentId,
+          id: searchBoxId,
+          query: getQuery(),
         })
       );
     },
