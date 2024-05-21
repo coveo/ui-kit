@@ -30,6 +30,7 @@ import {
 import {initializePopover} from '../../../search/facets/atomic-popover/popover-type';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 import type {Range} from '../facet-number-input/atomic-commerce-facet-number-input';
+
 /**
  * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
  *
@@ -58,7 +59,8 @@ export class AtomicCommerceNumericFacet
   private isCollapsed = false;
   private manualRanges: (NumericRangeRequest & {label?: string})[] = [];
   private formatter: NumberFormatter = defaultNumberFormatter;
- /**
+
+  /**
    * The field whose values you want to display in the facet.
    */
   @Prop({reflect: true}) public facet!: NumericFacet;
