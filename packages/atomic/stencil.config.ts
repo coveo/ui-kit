@@ -5,7 +5,7 @@ import {angularOutputTarget as angular} from '@stencil/angular-output-target';
 import {Config} from '@stencil/core';
 import {reactOutputTarget as react} from '@stencil/react-output-target';
 import autoprefixer from 'autoprefixer';
-import {readFileSync} from 'fs';
+import {readFileSync, readdirSync} from 'fs';
 import path from 'path';
 import focusVisible from 'postcss-focus-visible';
 import atImport from 'postcss-import';
@@ -19,6 +19,41 @@ import tailwindNesting from 'tailwindcss/nesting';
 import {generateAngularModuleDefinition as angularModule} from './stencil-plugin/atomic-angular-module';
 
 const isProduction = process.env.BUILD === 'production';
+
+function filterComponentsByUseCaseForReactOutput(useCasePath: string) {
+  return readdirSync(useCasePath, {
+    recursive: true,
+  })
+    .map((fileName) => /(atomic-[a-z-]+)\.tsx$/.exec(fileName.toString()))
+    .filter((m) => m !== null)
+    .flatMap((m) => m![1]);
+}
+/*
+const commerceComponents = readdirSync('src/components/commerce', {
+  recursive: true,
+})
+  .map((fileName) => /(atomic-[a-z-]+)\.tsx$/.exec(fileName.toString()))
+  .filter((m) => m !== null)
+  .flatMap((m) => m![1]);
+
+const searchComponents = readdirSync('src/components/search', {
+  recursive: true,
+})
+  .map((fileName) => /(atomic-[a-z-]+)\.tsx$/.exec(fileName.toString()))
+  .filter((m) => m !== null)
+  .flatMap((m) => m![1]);
+
+const recommendationsComponents = readdirSync(
+  'src/components/recommendations',
+  {
+    recursive: true,
+  }
+)
+  .map((fileName) => /(atomic-[a-z-]+)\.tsx$/.exec(fileName.toString()))
+  .filter((m) => m !== null)
+  .flatMap((m) => m![1]);
+
+console.log(commerceComponents, searchComponents);*/
 
 function getPackageVersion(): string {
   return JSON.parse(readFileSync('package.json', 'utf-8')).version;
@@ -66,14 +101,32 @@ export const config: Config = {
   outputTargets: [
     react({
       componentCorePackage: '@coveo/atomic',
-      proxiesFile: '../atomic-react/src/components/stencil-generated/index.ts',
+      proxiesFile:
+        '../atomic-react/src/components/stencil-generated/search/index.ts',
       includeDefineCustomElements: true,
       excludeComponents: [
         'atomic-result-template',
+        'atomic-recs-result-template',
+        'atomic-field-condition',
+      ].concat(
+        filterComponentsByUseCaseForReactOutput('src/components/commerce')
+      ),
+    }),
+    react({
+      componentCorePackage: '@coveo/atomic',
+      proxiesFile:
+        '../atomic-react/src/components/stencil-generated/commerce/index.ts',
+      includeDefineCustomElements: true,
+      excludeComponents: [
         'atomic-product-template',
         'atomic-recs-result-template',
         'atomic-field-condition',
-      ],
+      ].concat(
+        filterComponentsByUseCaseForReactOutput('src/components/search'),
+        filterComponentsByUseCaseForReactOutput(
+          'src/components/recommendations'
+        )
+      ),
     }),
     angular({
       componentCorePackage: '@coveo/atomic',

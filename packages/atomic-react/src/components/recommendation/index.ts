@@ -1,4 +1,4 @@
-export * from '../stencil-generated/index';
+export * from '../stencil-generated/search';
 export * from '@coveo/headless/recommendation';
 export {RecsBindings, i18n} from '@coveo/atomic';
 
