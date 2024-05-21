@@ -36,6 +36,8 @@ describe('cart-state', () => {
           price: 50,
         },
       },
+      purchasedItems: [],
+      purchased: {},
     };
 
     const products = getProductsFromCartState(state);

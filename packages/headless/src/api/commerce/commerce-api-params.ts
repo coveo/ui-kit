@@ -34,6 +34,7 @@ export interface ContextParams {
   user?: UserParams;
   product?: ProductParam;
   cart?: CartItemParam[];
+  purchased?: CartItemParam[];
 }
 
 export interface ViewParams {
