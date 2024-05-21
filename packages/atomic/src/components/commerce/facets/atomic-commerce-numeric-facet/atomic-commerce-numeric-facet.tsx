@@ -6,6 +6,7 @@ import {
   SearchSummary,
   buildListingSummary,
   buildSearchSummary,
+  NumericFacetValue,
 } from '@coveo/headless/commerce';
 import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
@@ -30,6 +31,7 @@ import {
 import {initializePopover} from '../../../search/facets/atomic-popover/popover-type';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 import type {Range} from '../facet-number-input/atomic-commerce-facet-number-input';
+
 /**
  * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
  *
@@ -58,7 +60,7 @@ export class AtomicCommerceNumericFacet
   private isCollapsed = false;
   private manualRanges: (NumericRangeRequest & {label?: string})[] = [];
   private formatter: NumberFormatter = defaultNumberFormatter;
- /**
+  /**
    * The field whose values you want to display in the facet.
    */
   @Prop({reflect: true}) public facet!: NumericFacet;
@@ -160,8 +162,16 @@ export class AtomicCommerceNumericFacet
                 <atomic-commerce-facet-number-input
                   bindings={this.bindings}
                   label={this.displayName}
+                  type={'any'}
                   facet={this.facet}
-                  range={this.range}
+                  state={this.facetState}
+                  applyRangeCallback={(start, end) =>
+                    this.setRanges(start, end)
+                  }
+                  // start={this.range?.start}
+                  // end={this.range?.end}
+                  domainMin={this.state.domain?.min}
+                  domainMax={this.state.domain?.max}
                 ></atomic-commerce-facet-number-input>
               ),
             ]}
@@ -271,5 +281,20 @@ export class AtomicCommerceNumericFacet
     }
 
     return !!this.valuesToRender.length;
+  }
+
+  private get rangeOptions(): Omit<NumericFacetValue, 'start' | 'end'> {
+    return {
+      endInclusive: true,
+      isAutoSelected: false,
+      state: 'selected',
+      numberOfResults: 0,
+      isSuggested: false,
+      moreValuesAvailable: false,
+    };
+  }
+
+  private setRanges(start: number, end: number) {
+    this.facet.setRanges([{...this.rangeOptions, start, end}]);
   }
 }

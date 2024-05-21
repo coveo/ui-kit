@@ -1,40 +1,47 @@
-import {NumericFacet} from '@coveo/headless/commerce';
+import {NumericFacet, NumericFacetState} from '@coveo/headless/commerce';
 import {Component, h, Prop, Event, EventEmitter, State} from '@stencil/core';
+import {AnyBindings, NumberInputType} from '../../../../components';
 import {Button} from '../../../common/button';
-import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 
-export type Range = {start: number; end: number};
+export type Range = {start: number; end: number}; // TODO: remove!
 
 /**
  * Internal component made to be integrated in a NumericFacet.
  * @internal
  */
 @Component({
+  // TODO: remove commerce from name and use old name
   tag: 'atomic-commerce-facet-number-input',
   styleUrl: 'atomic-commerce-facet-number-input.pcss',
   shadow: false,
 })
 export class FacetNumberInput {
-  private startRef!: HTMLInputElement;
-  private endRef!: HTMLInputElement;
-
   @State() private start?: number;
   @State() private end?: number;
 
-  @Prop() public bindings!: Bindings;
-  @Prop() public label!: string;
-  @Prop() public range?: Range;
+  private startRef!: HTMLInputElement;
+  private endRef!: HTMLInputElement;
+
+  @Prop() domainMin: number = Number.MIN_SAFE_INTEGER;
+  @Prop() domainMax: number = Number.MAX_SAFE_INTEGER;
+  @Prop() public bindings!: AnyBindings;
+  @Prop() public type!: NumberInputType;
   @Prop() public facet!: NumericFacet;
+  @Prop() public state!: NumericFacetState; // TODO: support other controller types (as long there is facetId and ({min, max}) domain)
+  @Prop() public label!: string;
+
+  // @Prop() public range?: Range;
+  @Prop() public applyRangeCallback!: (start: number, end: number) => void;
 
   @Event({
     eventName: 'atomic/numberInputApply',
   })
   private applyInput!: EventEmitter;
 
-  public connectedCallback() {
-    this.start = this.range?.start;
-    this.end = this.range?.end;
-  }
+  // public connectedCallback() {
+  //   this.start = this.domainMin;
+  //   this.end = this.domainMax;
+  // }
 
   private apply() {
     if (!this.startRef.validity.valid || !this.endRef.validity.valid) {
@@ -45,22 +52,11 @@ export class FacetNumberInput {
       start: this.start,
       end: this.end,
     });
-    this.facet.setRanges([
-      {
-        start: this.start!,
-        end: this.end!,
-        endInclusive: true,
-        isAutoSelected: false,
-        state: 'selected',
-        numberOfResults: 0,
-        isSuggested: false,
-        moreValuesAvailable: false,
-      },
-    ]);
+    this.applyRangeCallback(this.start!, this.end!);
   }
 
   render() {
-    const {facetId, domain} = this.facet.state;
+    const {facetId} = this.state;
     const label = this.bindings.i18n.t(this.label);
     const minText = this.bindings.i18n.t('min');
     const maxText = this.bindings.i18n.t('max');
@@ -72,7 +68,8 @@ export class FacetNumberInput {
     const inputClasses =
       'p-2.5 input-primary placeholder-neutral-dark min-w-0 mr-1';
     const labelClasses = 'text-neutral-dark text-sm';
-    const step = 'any';
+
+    const step = this.type === 'integer' ? '1' : 'any';
 
     return (
       <form
@@ -100,9 +97,9 @@ export class FacetNumberInput {
           class={inputClasses}
           aria-label={minAria}
           required
-          min={Number.MIN_SAFE_INTEGER}
-          max={domain!.max}
-          value={this.range?.start}
+          min={this.domainMin}
+          max={this.end}
+          value={this.start}
           onInput={(e) =>
             (this.start = (e.target as HTMLInputElement).valueAsNumber)
           }
@@ -119,9 +116,9 @@ export class FacetNumberInput {
           class={inputClasses}
           aria-label={maxAria}
           required
-          min={domain!.min}
-          max={Number.MAX_SAFE_INTEGER}
-          value={this.range?.end}
+          min={this.start}
+          max={this.domainMax}
+          value={this.end}
           onInput={(e) =>
             (this.end = (e.target as HTMLInputElement).valueAsNumber)
           }
