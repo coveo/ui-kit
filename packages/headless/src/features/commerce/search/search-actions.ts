@@ -182,7 +182,7 @@ export const fetchInstantProducts = createAsyncThunk<
     const state = getState();
     const {q} = payload;
     const {apiClient} = extra;
-    const fetched = await apiClient.search({
+    const fetched = await apiClient.productSuggestions({
       ...(await buildCommerceAPIRequest(state)),
       query: q,
     });

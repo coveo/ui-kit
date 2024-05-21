@@ -27,7 +27,7 @@ import {
  */
 @Component({
   tag: 'atomic-product',
-  styleUrl: '../../common/result/result.pcss',
+  styleUrl: 'atomic-product.pcss',
   shadow: true,
 })
 export class AtomicProduct {
