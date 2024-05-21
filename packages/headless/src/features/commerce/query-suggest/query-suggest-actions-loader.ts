@@ -21,8 +21,13 @@ import {fetchQuerySuggestions} from './query-suggest-actions';
 /**
  * The query suggest action creators for commerce.
  */
+export type BaseQuerySuggestActionCreators = Omit<
+  QuerySuggestActionCreators,
+  'fetchQuerySuggestions'
+>;
+
 export interface CommerceQuerySuggestActionCreators
-  extends Omit<QuerySuggestActionCreators, 'fetchQuerySuggestions'> {
+  extends BaseQuerySuggestActionCreators {
   /**
    * Fetches a list of query suggestions for a specific query suggest entity according to the current headless state.
    *

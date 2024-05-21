@@ -38,6 +38,9 @@ const actionLoaders: ActionLoaderConfiguration[] = [
     initializer: 'loadProductListingActions',
   },
   {
+    initializer: 'loadQuerySuggestActions',
+  },
+  {
     initializer: 'loadConfigurationActions',
   },
   {
