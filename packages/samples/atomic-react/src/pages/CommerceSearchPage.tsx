@@ -7,13 +7,21 @@ import {
   AtomicProductDescription,
   getOrganizationEndpoints,
   buildCommerceEngine,
-  AtomicResultBadge,
-  AtomicResultFieldsList,
-  AtomicResultRating,
   AtomicCommerceSearchBox,
   AtomicCommerceSearchBoxInstantProducts,
   AtomicCommerceSearchBoxQuerySuggestions,
   AtomicCommerceSearchBoxRecentQueries,
+  AtomicCommerceLayout,
+  AtomicLayoutSection,
+  AtomicCommerceFacets,
+  AtomicCommerceSortDropdown,
+  AtomicProductSectionVisual,
+  AtomicProductImage,
+  AtomicProductRating,
+  AtomicProductSectionDescription,
+  AtomicProductSectionEmphasized,
+  AtomicProductSectionMetadata,
+  AtomicProductSectionName,
 } from '@coveo/atomic-react/commerce';
 import React, {useMemo} from 'react';
 
@@ -75,17 +83,31 @@ export const CommerceSearchPage = () => {
 
   return (
     <AtomicCommerceInterface engine={engine} type="search">
-      <AtomicCommerceSearchBox>
-        <AtomicCommerceSearchBoxRecentQueries></AtomicCommerceSearchBoxRecentQueries>
-        <AtomicCommerceSearchBoxQuerySuggestions></AtomicCommerceSearchBoxQuerySuggestions>
-        <AtomicCommerceSearchBoxInstantProducts image-size="small"></AtomicCommerceSearchBoxInstantProducts>
-      </AtomicCommerceSearchBox>
-      <AtomicCommerceProductList
-        display="list"
-        density="compact"
-        image-size="small"
-        template={MyTemplate}
-      />
+      <AtomicCommerceLayout>
+        <AtomicLayoutSection section="search">
+          <AtomicCommerceSearchBox>
+            <AtomicCommerceSearchBoxRecentQueries></AtomicCommerceSearchBoxRecentQueries>
+            <AtomicCommerceSearchBoxQuerySuggestions></AtomicCommerceSearchBoxQuerySuggestions>
+            <AtomicCommerceSearchBoxInstantProducts image-size="small"></AtomicCommerceSearchBoxInstantProducts>
+          </AtomicCommerceSearchBox>
+        </AtomicLayoutSection>
+        <AtomicLayoutSection section="facets">
+          <AtomicCommerceFacets />
+        </AtomicLayoutSection>
+        <AtomicLayoutSection section="main">
+          <AtomicLayoutSection section="status">
+            <AtomicCommerceSortDropdown />
+          </AtomicLayoutSection>
+          <AtomicLayoutSection section="products">
+            <AtomicCommerceProductList
+              display="grid"
+              density="compact"
+              image-size="small"
+              template={MyTemplate}
+            />
+          </AtomicLayoutSection>
+        </AtomicLayoutSection>
+      </AtomicCommerceLayout>
     </AtomicCommerceInterface>
   );
 };
@@ -93,17 +115,25 @@ export const CommerceSearchPage = () => {
 function MyTemplate() {
   return (
     <>
-      <AtomicProductLink class="font-bold"></AtomicProductLink>
-
-      <AtomicProductText field="ec_brand"></AtomicProductText>
-
-      <AtomicResultRating field="ec_rating"></AtomicResultRating>
-
-      <AtomicProductPrice currency="USD"></AtomicProductPrice>
-      <AtomicProductDescription></AtomicProductDescription>
-      <AtomicResultFieldsList>
-        <AtomicResultBadge label="In stock"></AtomicResultBadge>
-      </AtomicResultFieldsList>
+      <AtomicProductSectionName>
+        <AtomicProductLink />
+      </AtomicProductSectionName>
+      <AtomicProductSectionVisual>
+        <AtomicProductImage field="ec_thumbnails"></AtomicProductImage>
+      </AtomicProductSectionVisual>
+      <AtomicProductSectionMetadata>
+        <AtomicProductText
+          field="ec_brand"
+          class="block text-neutral-dark"
+        ></AtomicProductText>
+        <AtomicProductRating field="ec_rating"></AtomicProductRating>
+      </AtomicProductSectionMetadata>
+      <AtomicProductSectionEmphasized>
+        <AtomicProductPrice currency="USD" />
+      </AtomicProductSectionEmphasized>
+      <AtomicProductSectionDescription>
+        <AtomicProductDescription />
+      </AtomicProductSectionDescription>
     </>
   );
 }
