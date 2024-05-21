@@ -12,7 +12,26 @@ const copy = async (source, dest) => {
 };
 
 const main = async () => {
-  console.info('Begin copy.');
+  console.info('Begin copy static resources');
+  await copyHeadless();
+  await copyMarked();
+};
+
+const copyMarked = async () => {
+  console.info('Begin copy Marked.');
+
+  await mkdir('./force-app/main/default/staticresources/marked', {
+    recursive: true,
+  });
+
+  await copy(
+    '../../node_modules/marked/marked.min.js',
+    './force-app/main/default/staticresources/marked/marked.min.js'
+  );
+};
+
+const copyHeadless = async () => {
+  console.info('Begin copy Headless.');
 
   await mkdir(
     './force-app/main/default/staticresources/coveoheadless/case-assist',

@@ -187,7 +187,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     return this.headless.buildGeneratedAnswer(engine, {
       initialState: {
         isVisible: storedGeneratedAnswerVisibility === false ? false : true,
-        responseFormat: {answerStyle: this.answerStyle},
+        responseFormat: {
+          answerStyle: this.answerStyle,
+          contentFormat: ['text/markdown', 'text/plain'],
+        },
       },
       fieldsToIncludeInCitations: this.citationFields,
     });
