@@ -425,9 +425,7 @@ export class AtomicCommerceRecommendationList
             previousPage={() => this.previousPage()}
             numberOfPages={this.numberOfPages}
           >
-            <div class="px-3 bg-slate-500">
-              {this.renderRecommendationList()}
-            </div>
+            <div class="px-3">{this.renderRecommendationList()}</div>
           </Carousel>
         ) : (
           this.renderRecommendationList()
