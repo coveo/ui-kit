@@ -6,7 +6,6 @@ import {
   SearchState,
   Search,
   Product,
-  ChildProduct,
 } from '@coveo/headless/commerce';
 import {
   Component,
@@ -46,6 +45,7 @@ import {
 } from '../../common/layout/display-options';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {ProductTemplateProvider} from '../product-list/product-template-provider';
+import {SelectChildProductEventArgs} from '../product-template-components/atomic-product-children/atomic-product-children';
 
 /**
  * @internal
@@ -157,30 +157,21 @@ export class AtomicCommerceProductList
     });
   }
 
-  @Listen('atomic/hoverChildProduct')
-  public onHoverChildProduct(
-    event: CustomEvent<{
-      hoveredChildProduct: ChildProduct;
-      currentParentProductId: string;
-      originalParentProduct: Product;
-    }>
-  ) {
-    const {currentParentProductId, hoveredChildProduct, originalParentProduct} =
-      event.detail;
-    const currentParentProductIndex = this.productState.products.findIndex(
-      (product) => product.permanentid === currentParentProductId
-    );
+  @Listen('atomic/selectChildProduct')
+  public onSelectChildProduct(event: CustomEvent<SelectChildProductEventArgs>) {
+    event.stopPropagation();
+    const {parentPermanentId, childPermanentId} = event.detail;
 
-    if (currentParentProductIndex === -1) {
-      return;
+    if (this.bindings.interfaceElement.type === 'product-listing') {
+      this.productListing.promoteChildToParent(
+        childPermanentId,
+        parentPermanentId
+      );
     }
 
-    const stateCopy = JSON.parse(JSON.stringify(this.productState));
-    stateCopy.products[currentParentProductIndex] = {
-      ...hoveredChildProduct,
-      children: [originalParentProduct, ...originalParentProduct.children],
-    };
-    this.searchState = stateCopy;
+    if (this.bindings.interfaceElement.type === 'search') {
+      this.search.promoteChildToParent(childPermanentId, parentPermanentId);
+    }
   }
 
   get productState() {

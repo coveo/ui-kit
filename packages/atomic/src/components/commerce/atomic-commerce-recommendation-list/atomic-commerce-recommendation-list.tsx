@@ -9,6 +9,7 @@ import {
   Component,
   Element,
   Fragment,
+  Listen,
   Method,
   Prop,
   State,
@@ -41,6 +42,7 @@ import {
 } from '../../common/layout/display-options';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {ProductTemplateProvider} from '../product-list/product-template-provider';
+import {SelectChildProductEventArgs} from '../product-template-components/atomic-product-children/atomic-product-children';
 
 /**
  * The `atomic-commerce-recommendation-list` component displays a list of product recommendations by applying one or more product templates.
@@ -66,7 +68,7 @@ export class AtomicCommerceRecommendationList
 {
   @InitializeBindings() public bindings!: CommerceBindings;
   public recommendations!: Recommendations;
-  private loadingFlag = randomID('firstRecommendationLoaded-');
+  private loadingFlag = randomID('firstProductLoaded-');
   private itemRenderingFunction: ItemRenderingFunction;
   private nextNewProductTarget?: FocusTargetController;
   private productTemplateProvider!: ProductTemplateProvider;
@@ -196,6 +198,17 @@ export class AtomicCommerceRecommendationList
     });
   }
 
+  @Listen('atomic/selectChildProduct')
+  public onSelectChildProduct(event: CustomEvent<SelectChildProductEventArgs>) {
+    event.stopPropagation();
+    const {parentPermanentId, childPermanentId} = event.detail;
+
+    this.recommendations.promoteChildToParent(
+      childPermanentId,
+      parentPermanentId
+    );
+  }
+
   public get focusTarget() {
     if (!this.nextNewProductTarget) {
       this.nextNewProductTarget = new FocusTargetController(this);
@@ -243,13 +256,6 @@ export class AtomicCommerceRecommendationList
       return;
     }
 
-    if (
-      this.augmentedRecommendationListState.firstRequestExecuted &&
-      !this.augmentedRecommendationListState.hasItems
-    ) {
-      return;
-    }
-
     return (
       <Heading level={this.headingLevel} part="label" class="m-0 mb-2">
         {this.bindings.i18n.t(this.recommendationsState.headline)}
@@ -287,6 +293,13 @@ export class AtomicCommerceRecommendationList
 
   private get shouldRenderPagination() {
     return this.hasPagination && this.augmentedRecommendationListState.hasItems;
+  }
+
+  private get hasNoProducts() {
+    return (
+      this.augmentedRecommendationListState.firstRequestExecuted &&
+      this.augmentedRecommendationListState.products.length === 0
+    );
   }
 
   private getAtomicProductProps(recommendation: Product) {
@@ -397,6 +410,10 @@ export class AtomicCommerceRecommendationList
   }
 
   public render() {
+    if (this.hasNoProducts) {
+      this.bindings.store.unsetLoadingFlag(this.loadingFlag);
+      return;
+    }
     return (
       <Fragment>
         {this.renderHeading()}
