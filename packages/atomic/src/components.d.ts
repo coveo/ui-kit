@@ -6,7 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-import { ChildProduct, CommerceEngine, InteractiveProduct, LogLevel, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet } from "@coveo/headless/commerce";
+import { CommerceEngine, InteractiveProduct, LogLevel, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet } from "@coveo/headless/commerce";
 import { i18n } from "i18next";
 import { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
@@ -24,6 +24,7 @@ import { AtomicInsightStore } from "./components/insight/atomic-insight-interfac
 import { InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { Section } from "./components/common/atomic-layout-section/sections";
 import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
+import { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
 import { PlatformEnvironment as PlatformEnvironment1, RecommendationEngine } from "@coveo/headless/recommendation";
 import { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
 import { i18nCompatibilityVersion as i18nCompatibilityVersion1 } from "./components";
@@ -33,7 +34,7 @@ import { Bindings } from "./components/search/atomic-search-interface/atomic-sea
 import { AriaLabelGenerator as AriaLabelGenerator1 } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 export { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-export { ChildProduct, CommerceEngine, InteractiveProduct, LogLevel, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet } from "@coveo/headless/commerce";
+export { CommerceEngine, InteractiveProduct, LogLevel, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet } from "@coveo/headless/commerce";
 export { i18n } from "i18next";
 export { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { StandaloneSearchBoxData } from "./utils/local-storage-utils";
@@ -51,6 +52,7 @@ export { AtomicInsightStore } from "./components/insight/atomic-insight-interfac
 export { InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { Section } from "./components/common/atomic-layout-section/sections";
 export { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
+export { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
 export { PlatformEnvironment as PlatformEnvironment1, RecommendationEngine } from "@coveo/headless/recommendation";
 export { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
 export { i18nCompatibilityVersion as i18nCompatibilityVersion1 } from "./components";
@@ -1638,19 +1640,10 @@ export namespace Components {
         "store"?: AtomicCommonStore<AtomicCommonStoreData>;
     }
     interface AtomicProductChildren {
-        "childrenPerPage": number;
         /**
           * The non-localized label to display for the product children section.
          */
         "label": string;
-        /**
-          * Moves to the next page, when the carousel is activated.
-         */
-        "nextPage": () => Promise<void>;
-        /**
-          * Moves to the previous page, when the carousel is activated.
-         */
-        "previousPage": () => Promise<void>;
     }
     interface AtomicProductDescription {
         /**
@@ -4025,11 +4018,7 @@ declare global {
         new (): HTMLAtomicProductElement;
     };
     interface HTMLAtomicProductChildrenElementEventMap {
-        "atomic/hoverChildProduct": {
-    hoveredChildProduct: ChildProduct;
-    currentParentProductId: string;
-    originalParentProduct: Product;
-  };
+        "atomic/selectChildProduct": SelectChildProductEventArgs;
     }
     interface HTMLAtomicProductChildrenElement extends Components.AtomicProductChildren, HTMLStencilElement {
         addEventListener<K extends keyof HTMLAtomicProductChildrenElementEventMap>(type: K, listener: (this: HTMLAtomicProductChildrenElement, ev: AtomicProductChildrenCustomEvent<HTMLAtomicProductChildrenElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -6605,16 +6594,11 @@ declare namespace LocalJSX {
         "store"?: AtomicCommonStore<AtomicCommonStoreData>;
     }
     interface AtomicProductChildren {
-        "childrenPerPage"?: number;
         /**
           * The non-localized label to display for the product children section.
          */
         "label"?: string;
-        "onAtomic/hoverChildProduct"?: (event: AtomicProductChildrenCustomEvent<{
-    hoveredChildProduct: ChildProduct;
-    currentParentProductId: string;
-    originalParentProduct: Product;
-  }>) => void;
+        "onAtomic/selectChildProduct"?: (event: AtomicProductChildrenCustomEvent<SelectChildProductEventArgs>) => void;
     }
     interface AtomicProductDescription {
         /**

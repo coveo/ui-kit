@@ -8,15 +8,18 @@ import {
   Event,
   EventEmitter,
   State,
-  Method,
 } from '@stencil/core';
 import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {Carousel} from '../../../common/carousel';
 import {CommerceBindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 import {ProductContext} from '../product-template-decorators';
+
+export interface SelectChildProductEventArgs {
+  childPermanentId: string;
+  parentPermanentId: string;
+}
 
 /**
  * @internal
@@ -37,15 +40,12 @@ export class AtomicProductChildren
 
   @Element() hostElement!: HTMLElement;
 
-  @State() private children: (Product | ChildProduct)[] = [];
-  @State() private currentPage = 0;
+  @State() private children: ChildProduct[] = [];
+  @State() private activeChildId: string = '';
 
   public error!: Error;
-  private originalParentProduct: Product | null = null;
 
   // TODO: there's a totalNumberOfRelatedProducts property on the Product that could be used to do server-side pagination. However I'm not sure how to (or even if we can) fetch additional related products with the commerce API
-  // TODO: remove this prop; we'll want the carousel to automatically kick in at the proper responsive breakpoint instead.
-  @Prop() public childrenPerPage: number = 6;
 
   /**
    * The non-localized label to display for the product children section.
@@ -53,31 +53,18 @@ export class AtomicProductChildren
   @Prop() public label: string = 'available-in';
 
   @Event({
-    eventName: 'atomic/hoverChildProduct',
+    eventName: 'atomic/selectChildProduct',
     bubbles: true,
   })
-  public hoverChildProduct!: EventEmitter<{
-    hoveredChildProduct: ChildProduct;
-    currentParentProductId: string;
-    originalParentProduct: Product;
-  }>;
+  public selectChildProduct!: EventEmitter<SelectChildProductEventArgs>;
 
   constructor() {
     this.validateProps();
   }
 
   public connectedCallback(): void {
-    this.originalParentProduct = this.isProduct(this.product.children[0])
-      ? this.product.children[0]
-      : this.product;
-    this.children = [
-      this.originalParentProduct,
-      ...this.originalParentProduct.children,
-    ];
-  }
-
-  private isProduct(child: Product | ChildProduct): child is Product {
-    return 'children' in child;
+    this.activeChildId = this.product.permanentid;
+    this.children = this.product.children ?? [];
   }
 
   private validateProps() {
@@ -88,100 +75,46 @@ export class AtomicProductChildren
     });
   }
 
-  private onHoverChild(
-    hoveredChildProduct: ChildProduct,
-    currentParentProductId: string
-  ) {
-    this.hoverChildProduct.emit({
-      hoveredChildProduct,
-      currentParentProductId,
-      originalParentProduct: this.originalParentProduct ?? this.product,
+  private onSelectChild(childPermanentId: string, parentPermanentId: string) {
+    this.activeChildId = childPermanentId;
+    this.selectChildProduct.emit({
+      childPermanentId,
+      parentPermanentId,
     });
   }
 
-  /**
-   * Moves to the previous page, when the carousel is activated.
-   */
-  @Method() public async previousPage() {
-    this.currentPage =
-      this.currentPage - 1 < 0 ? this.numberOfPages - 1 : this.currentPage - 1;
-  }
-
-  /**
-   * Moves to the next page, when the carousel is activated.
-   */
-  @Method() public async nextPage() {
-    this.currentPage = (this.currentPage + 1) % this.numberOfPages;
-  }
-
-  private get numberOfPages() {
-    return Math.ceil(this.children.length / this.childrenPerPage!);
-  }
-
-  private get currentIndex() {
-    return Math.abs(
-      (this.currentPage * this.childrenPerPage) % this.children.length
-    );
-  }
-
-  private get subsetOfChildren() {
-    if (!this.childrenPerPage) {
-      return this.children;
-    }
-
-    return this.children.slice(
-      this.currentIndex,
-      this.currentIndex + this.childrenPerPage
-    );
-  }
-
-  private renderCarousel() {
-    return (
-      <Carousel
-        bindings={this.bindings}
-        currentPage={this.currentPage}
-        nextPage={() => this.nextPage()}
-        previousPage={() => this.previousPage()}
-        numberOfPages={this.numberOfPages}
-      >
-        {this.subsetOfChildren.map((child) => this.renderChild(child))}
-      </Carousel>
-    );
-  }
-
-  // TODO: get rid of most of the inline styles; in most cases we'll use the generic stuff.
   private renderChild(child: ChildProduct) {
     return (
       <div class="inline-block">
-        <div
-          class={`flex mt-2 mr-3 w-8 h-8 ${this.product.permanentid === child.permanentid ? ' active-child ' : ' '}bg-contain bg-no-repeat cursor-pointer text-xs`}
+        <button
+          class={`w-8 h-8${child.permanentid === this.activeChildId ? ' box-border rounded border border-primary ' : ' '}bg-contain bg-no-repeat`}
           title={child.ec_name}
           style={{backgroundImage: `url(${child.ec_images![0]})`}}
           data-src={child.ec_thumbnails![0]}
           onMouseEnter={() =>
-            this.onHoverChild(child, this.product.permanentid)
+            this.onSelectChild(child.permanentid, this.product.permanentid)
           }
-        ></div>
+          onClick={() =>
+            this.onSelectChild(child.permanentid, this.product.permanentid)
+          }
+        ></button>
       </div>
     );
   }
 
-  // TODO: use correct semantic element (button? a?) to enable tab navigation.
   public render() {
     if (this.children.length === 0) {
       return null;
     }
 
     return (
-      <div class="w-full mb-2">
-        <div class="font-semibold text-neutral-dark ">
+      <div>
+        <div class="font-semibold text-neutral-dark mb-2">
           <atomic-commerce-text
             value={this.bindings.i18n.t(this.label)}
           ></atomic-commerce-text>
         </div>
-        {this.children.length > this.childrenPerPage
-          ? this.renderCarousel()
-          : this.children.map((child) => this.renderChild(child))}
+        {this.children.map((child) => this.renderChild(child))}
       </div>
     );
   }
