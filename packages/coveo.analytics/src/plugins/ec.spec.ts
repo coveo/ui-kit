@@ -45,12 +45,12 @@ describe('EC plugin', () => {
             expect(result).toEqual({...defaultResult, pr1id: 'C0V30'});
         });
 
-        it('should append the product with the pageview event', () => {
+        it('should not append the product with the pageview event', () => {
             ec.addProduct({name: 'Relevance T-Shirt'});
 
-            const result = executeRegisteredHook(ECPluginEventTypes.event, {});
+            const result = executeRegisteredHook(ECPluginEventTypes.pageview, {});
 
-            expect(result).toEqual({...defaultResult, pr1nm: 'Relevance T-Shirt'});
+            expect(result).toEqual({...defaultResult, hitType: ECPluginEventTypes.pageview});
         });
 
         it('should not append the product with a random event type', () => {
@@ -61,14 +61,15 @@ describe('EC plugin', () => {
             expect(result).toEqual({});
         });
 
-        it('should keep the products until a valid event type is used', () => {
+        it('should keep the products until an event type is used', () => {
             ec.addProduct({id: 'P12345'});
 
             executeRegisteredHook('🎲', {});
             executeRegisteredHook('🐟', {});
-            executeRegisteredHook('💀', {});
+            const pageviewResult = executeRegisteredHook(ECPluginEventTypes.pageview, {});
             const result = executeRegisteredHook(ECPluginEventTypes.event, {});
 
+            expect(pageviewResult).toEqual({...defaultResult, hitType: ECPluginEventTypes.pageview});
             expect(result).toEqual({...defaultResult, pr1id: 'P12345'});
         });
 
@@ -117,6 +118,18 @@ describe('EC plugin', () => {
             const secondResult = executeRegisteredHook(ECPluginEventTypes.event, {});
 
             expect(secondResult).toEqual({...defaultResult});
+        });
+
+        it('should not flush the products when the pageview is sent', () => {
+            ec.addProduct({name: 'boup'});
+
+            const result = executeRegisteredHook(ECPluginEventTypes.pageview, {});
+
+            expect(result).not.toEqual({});
+
+            const secondResult = executeRegisteredHook(ECPluginEventTypes.event, {});
+
+            expect(secondResult).toEqual({...defaultResult, pr1nm: 'boup'});
         });
 
         it('should convert position to number if possible', () => {
@@ -264,14 +277,14 @@ describe('EC plugin', () => {
             expect(result).toEqual({...defaultResult, il1pi1id: 'C0V30'});
         });
 
-        it('should append the impression with the pageview event', () => {
+        it('should not append the impression with the pageview event', () => {
             ec.addImpression({name: 'Relevance T-Shirt'});
 
-            const result = executeRegisteredHook(ECPluginEventTypes.event, {});
+            const result = executeRegisteredHook(ECPluginEventTypes.pageview, {});
 
             expect(result).toEqual({
                 ...defaultResult,
-                il1pi1nm: 'Relevance T-Shirt',
+                hitType: ECPluginEventTypes.pageview,
             });
         });
 
@@ -283,14 +296,15 @@ describe('EC plugin', () => {
             expect(result).toEqual({});
         });
 
-        it('should keep the impressions until a valid event type is used', () => {
+        it('should keep the impressions until an event type is used', () => {
             ec.addImpression({id: 'P12345'});
 
             executeRegisteredHook('🎲', {});
             executeRegisteredHook('🐟', {});
-            executeRegisteredHook('💀', {});
+            const pageviewResult = executeRegisteredHook(ECPluginEventTypes.pageview, {});
             const result = executeRegisteredHook(ECPluginEventTypes.event, {});
 
+            expect(pageviewResult).toEqual({...defaultResult, hitType: ECPluginEventTypes.pageview});
             expect(result).toEqual({...defaultResult, il1pi1id: 'P12345'});
         });
 
@@ -372,7 +386,7 @@ describe('EC plugin', () => {
             });
         });
 
-        it('should flush the products once they are sent', () => {
+        it('should flush the impressions once they are sent', () => {
             ec.addImpression({name: '🍟', price: 1.99});
             ec.addImpression({name: '🍿', price: 3});
 
@@ -383,6 +397,18 @@ describe('EC plugin', () => {
             const secondResult = executeRegisteredHook(ECPluginEventTypes.event, {});
 
             expect(secondResult).toEqual({...defaultResult});
+        });
+
+        it('should not flush the impressions when a pageview is sent', () => {
+            ec.addImpression({name: 'bap'});
+
+            const result = executeRegisteredHook(ECPluginEventTypes.pageview, {});
+
+            expect(result).not.toEqual({});
+
+            const secondResult = executeRegisteredHook(ECPluginEventTypes.event, {});
+
+            expect(secondResult).toEqual({...defaultResult, il1pi1nm: 'bap'});
         });
 
         describe('when the position is invalid', () => {
@@ -480,6 +506,17 @@ describe('EC plugin', () => {
         });
     });
 
+    it('should not set an action with a pageview', () => {
+        ec.setAction('ok');
+
+        const result = executeRegisteredHook(ECPluginEventTypes.pageview, {});
+
+        expect(result).toEqual({
+            ...defaultResult,
+            hitType: ECPluginEventTypes.pageview,
+        });
+    });
+
     it('should flush the action once it is sent', () => {
         ec.setAction('ok');
 
@@ -490,6 +527,18 @@ describe('EC plugin', () => {
         const secondResult = executeRegisteredHook(ECPluginEventTypes.event, {});
 
         expect(secondResult).toEqual({...defaultResult});
+    });
+
+    it('should not flush the action with the pageview', () => {
+        ec.setAction('ok');
+
+        const result = executeRegisteredHook(ECPluginEventTypes.pageview, {});
+
+        expect(result).not.toEqual({});
+
+        const secondResult = executeRegisteredHook(ECPluginEventTypes.event, {});
+
+        expect(secondResult).toEqual({...defaultResult, action: 'ok'});
     });
 
     it('should be able to clear all the data', () => {
