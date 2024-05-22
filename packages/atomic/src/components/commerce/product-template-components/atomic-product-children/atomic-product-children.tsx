@@ -45,7 +45,8 @@ export class AtomicProductChildren
 
   public error!: Error;
 
-  // TODO: there's a totalNumberOfRelatedProducts property on the Product that could be used to do server-side pagination. However I'm not sure how to (or even if we can) fetch additional related products with the commerce API
+  // TODO: We could leverage the totalNumberOfRelatedProducts property on the Product to show the number of available
+  // children (e.g., ...and 3 more). This would require some UX design though.
 
   /**
    * The non-localized label to display for the product children section.
