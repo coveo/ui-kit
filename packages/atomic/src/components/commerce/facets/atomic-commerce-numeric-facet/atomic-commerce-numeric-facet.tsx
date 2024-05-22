@@ -30,7 +30,7 @@ import {
 } from '../../../common/formats/format-common';
 import {initializePopover} from '../../../search/facets/atomic-popover/popover-type';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
-import {Range} from '../facet-number-input/atomic-commerce-facet-number-input';
+import type {Range} from '../facet-number-input/atomic-commerce-facet-number-input';
 
 /**
  * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.

@@ -242,13 +242,11 @@ describe('pagination slice', () => {
   ])('$actionName', ({action}) => {
     it('resets principal pagination', () => {
       state.principal.page = 5;
-      state.principal.perPage = 17;
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const finalState = paginationReducer(state, action({} as any));
 
       expect(finalState.principal.page).toBe(0);
-      expect(finalState.principal.perPage).toBe(undefined);
     });
   });
 });

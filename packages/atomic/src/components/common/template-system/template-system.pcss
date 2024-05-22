@@ -1,0 +1,80 @@
+@import '../../../global/global.pcss';
+@import '../../../global/mixins.pcss';
+@import './with-sections.pcss';
+@import './row-desktop.pcss';
+@import './row-mobile.pcss';
+@import './cell-desktop.pcss';
+@import './cell-mobile.pcss';
+
+@define-mixin atomic-template-system map(post-css-map-for-sections, variables) {
+  /* == Common styles == */
+  :host {
+    @apply font-sans font-normal;
+  }
+
+  $(section-badges) {
+    text-align: left;
+  }
+
+  $(section-actions) {
+    text-align: left;
+  }
+
+  $(section-title-metadata) {
+    @mixin set-font-size var(--atomic-text-sm);
+  }
+
+  $(section-emphasized) {
+    font-weight: 500;
+    @mixin set-font-size var(--atomic-text-2xl);
+    margin-top: 0.5rem;
+  }
+  /* == End of common styles == */
+
+  .result-root {
+    &.with-sections {
+      @mixin result-with-sections map(post-css-map-for-sections, variables);
+
+      &.display-list {
+        @screen desktop-only {
+          @mixin row-result-desktop map(post-css-map-for-sections, variables);
+        }
+        @screen mobile-only {
+          @mixin row-result-mobile map(post-css-map-for-sections, variables);
+        }
+      }
+      &.display-grid {
+        a,
+        button {
+          position: relative;
+        }
+
+        &.image-large {
+          @screen desktop-only {
+            @mixin cell-result-desktop map(post-css-map-for-sections, variables);
+          }
+          @screen mobile-only {
+            @mixin row-result-mobile map(post-css-map-for-sections, variables);
+          }
+        }
+        &.image-small,
+        &.image-icon,
+        &.image-none {
+          @screen desktop-only {
+            @mixin cell-result-desktop map(post-css-map-for-sections, variables);
+          }
+          @screen mobile-only {
+            @mixin cell-result-mobile map(post-css-map-for-sections, variables);
+          }
+        }
+      }
+      &.display-table {
+        @mixin row-result-desktop map(post-css-map-for-sections, variables);
+      }
+    }
+
+    atomic-table-element {
+      display: none;
+    }
+  }
+}

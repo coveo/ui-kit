@@ -28,6 +28,7 @@ interface GeneratedAnswerOptions {
   fieldsToIncludeInCitations: string;
   useCase: string;
   collapsible: boolean;
+  withToggle: boolean;
 }
 
 let analyticsMode: 'legacy' | 'next' = 'legacy';
@@ -145,6 +146,7 @@ describe('quantic-generated-answer', () => {
             Expect.sessionStorageContains(GENERATED_ANSWER_DATA_KEY, {});
             Expect.generatedAnswerFooterRowsIsOnMultiline(false);
             Expect.generatedAnswerCollapsed(false);
+            Expect.displayToggleGeneratedAnswerButton(false);
           });
 
           it('should display the correct message', () => {
@@ -258,6 +260,35 @@ describe('quantic-generated-answer', () => {
           });
         });
 
+        describe('when the generated answer is still streaming', () => {
+          const streamId = crypto.randomUUID();
+
+          const testMessagePayload = {
+            payloadType: 'genqa.messageType',
+            payload: JSON.stringify({
+              textDelta: testText,
+            }),
+          };
+
+          beforeEach(() => {
+            mockSearchWithGeneratedAnswer(streamId, param.useCase);
+            mockStreamResponse(streamId, testMessagePayload);
+            visitGeneratedAnswer({useCase: param.useCase});
+          });
+
+          it('should display the correct message and the streaming cursor', () => {
+            Expect.displayGeneratedAnswerCard(true);
+            Expect.generatedAnswerContains(testText);
+            Expect.generatedAnswerIsStreaming(true);
+            Expect.displayRephraseButtons(false);
+            Expect.displayToggleGeneratedAnswerButton(false);
+            Expect.displayLikeButton(false);
+            Expect.displayDislikeButton(false);
+            Expect.displayCopyToClipboardButton(false);
+            Expect.displayDisclaimer(false);
+          });
+        });
+
         describe('when the collapsible property is set to true', () => {
           describe('when the generated answer is still streaming', () => {
             it('should properly display the generating answer message', () => {
@@ -358,36 +389,6 @@ describe('quantic-generated-answer', () => {
               Expect.displayRephraseButtons(true);
               Expect.displayDisclaimer(true);
             });
-          });
-        });
-
-        describe('when the generated answer is still streaming', () => {
-          const streamId = crypto.randomUUID();
-
-          const testMessagePayload = {
-            payloadType: 'genqa.messageType',
-            payload: JSON.stringify({
-              textDelta: testText,
-            }),
-          };
-
-          beforeEach(() => {
-            mockSearchWithGeneratedAnswer(streamId, param.useCase);
-            mockStreamResponse(streamId, testMessagePayload);
-            visitGeneratedAnswer({useCase: param.useCase});
-          });
-
-          it('should display the correct message and the streaming cursor', () => {
-            Expect.displayGeneratedAnswerCard(true);
-            Expect.generatedAnswerContains(testText);
-            Expect.generatedAnswerIsStreaming(true);
-            Expect.displayRephraseButtons(false);
-            Expect.displayLikeButton(false);
-            Expect.displayDislikeButton(false);
-            Expect.displayCopyToClipboardButton(false);
-            Expect.displayToggleGeneratedAnswerButton(true);
-            Expect.toggleGeneratedAnswerButtonIsChecked(true);
-            Expect.displayDisclaimer(false);
           });
         });
 
@@ -762,7 +763,10 @@ describe('quantic-generated-answer', () => {
                   responseId
                 );
                 mockStreamResponse(streamId, genQaMessageTypePayload);
-                visitGeneratedAnswer({useCase: param.useCase});
+                visitGeneratedAnswer({
+                  useCase: param.useCase,
+                  withToggle: true,
+                });
               });
 
               it('should display the toggle generated answer button', () => {
