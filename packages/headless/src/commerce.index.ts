@@ -101,15 +101,6 @@ export type {
 } from './controllers/commerce/core/sub-controller/headless-sub-controller';
 
 export type {
-  ParameterManager,
-  ParameterManagerState,
-  ParameterManagerProps,
-  ParameterManagerInitialState,
-} from './controllers/commerce/core/parameter-manager/headless-core-parameter-manager';
-
-export {buildSearchUrlManager} from './controllers/commerce/search/url-manager/headless-search-url-manager';
-
-export type {
   SortByRelevance,
   SortByFields,
   SortByFieldsFields,
@@ -153,10 +144,7 @@ export type {
   CategoryFacetValueRequest,
   CategoryFacetValue,
 } from './controllers/commerce/core/facets/headless-core-commerce-facet';
-export type {
-  FacetGenerator,
-  GeneratedFacetControllers,
-} from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator';
+export type {FacetGenerator} from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator';
 
 export type {FacetGeneratorState} from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator';
 
