@@ -1,7 +1,6 @@
 import '@coveo/atomic/dist/atomic/atomic.esm.js';
 import type {HTMLAtomicSearchInterface} from '@coveo/atomic/dist/types/components';
 import {getSampleSearchEngineConfiguration} from '@coveo/headless';
-import {h} from '@stencil/core';
 import type {Meta, StoryObj} from '@storybook/web-components';
 //     `,
 //   }
@@ -31,6 +30,7 @@ const meta: Meta = {
   component: 'atomic-breadbox',
   title: 'Atomic/Breadbox',
   id: 'atomic-breadbox',
+  loaders: [async () => {}],
   render: (args, context) => {
     const shadowPartArgs = [];
     const attributeControls = [];
@@ -59,7 +59,7 @@ const meta: Meta = {
       ></atomic-breadbox>`;
   },
   decorators: [
-    (story, context) => html`
+    (story) => html`
       <atomic-search-interface>
         ${story()}
         <div style="margin:20px 0">
