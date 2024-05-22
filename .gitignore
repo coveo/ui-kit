@@ -17,3 +17,4 @@ scripts/translation-gpt/temporary.json
 topology.json
 .git-message
 .nx/cache
+packages/atomic/custom-elements.json
