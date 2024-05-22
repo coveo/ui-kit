@@ -8,6 +8,8 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
 import { CommerceEngine, InteractiveProduct, LogLevel, NumericFacet, NumericFacetState, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet } from "@coveo/headless/commerce";
 import { AnyBindings, i18nCompatibilityVersion as i18nCompatibilityVersion1, NumberInputType } from "./components";
+import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
+import { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 import { i18n } from "i18next";
 import { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
@@ -16,7 +18,6 @@ import { ItemRenderingFunction } from "./components/common/item-list/item-list-c
 import { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 import { AriaLabelGenerator } from "./components/commerce/search-box-suggestions/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products";
 import { AnyBindings as AnyBindings1 } from "./components/common/interface/bindings";
-import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { NumberInputType as NumberInputType1 } from "./components/common/facets/facet-number-input/number-input-type";
 import { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightGeneratedAnswerStyle, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 import { i18nCompatibilityVersion } from "./components/common/interface/i18n";
@@ -35,6 +36,8 @@ import { InitializationOptions } from "./components/search/atomic-search-interfa
 export { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
 export { CommerceEngine, InteractiveProduct, LogLevel, NumericFacet, NumericFacetState, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet } from "@coveo/headless/commerce";
 export { AnyBindings, i18nCompatibilityVersion as i18nCompatibilityVersion1, NumberInputType } from "./components";
+export { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
+export { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 export { i18n } from "i18next";
 export { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { StandaloneSearchBoxData } from "./utils/local-storage-utils";
@@ -43,7 +46,6 @@ export { ItemRenderingFunction } from "./components/common/item-list/item-list-c
 export { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 export { AriaLabelGenerator } from "./components/commerce/search-box-suggestions/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products";
 export { AnyBindings as AnyBindings1 } from "./components/common/interface/bindings";
-export { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 export { NumberInputType as NumberInputType1 } from "./components/common/facets/facet-number-input/number-input-type";
 export { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightGeneratedAnswerStyle, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 export { i18nCompatibilityVersion } from "./components/common/interface/i18n";
@@ -269,13 +271,13 @@ export namespace Components {
      * Internal component made to be integrated in a NumericFacet.
      */
     interface AtomicCommerceFacetNumberInput {
-        "applyRangeCallback": (start: number, end: number) => void;
         "bindings": AnyBindings;
         "domainMax": number;
         "domainMin": number;
-        "facet": NumericFacet;
+        "getRangeCallback": () => Range | undefined;
         "label": string;
-        "state": NumericFacetState;
+        "setRangeCallback": (start: number, end: number) => void;
+        "state": NumericFilterState | NumericFacetState;
         "type": NumberInputType;
     }
     /**
@@ -5322,14 +5324,14 @@ declare namespace LocalJSX {
      * Internal component made to be integrated in a NumericFacet.
      */
     interface AtomicCommerceFacetNumberInput {
-        "applyRangeCallback": (start: number, end: number) => void;
         "bindings": AnyBindings;
         "domainMax"?: number;
         "domainMin"?: number;
-        "facet": NumericFacet;
+        "getRangeCallback": () => Range | undefined;
         "label": string;
         "onAtomic/numberInputApply"?: (event: AtomicCommerceFacetNumberInputCustomEvent<any>) => void;
-        "state": NumericFacetState;
+        "setRangeCallback": (start: number, end: number) => void;
+        "state": NumericFilterState | NumericFacetState;
         "type": NumberInputType;
     }
     /**

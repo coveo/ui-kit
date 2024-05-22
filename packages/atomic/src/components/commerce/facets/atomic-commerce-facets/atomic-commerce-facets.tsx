@@ -1,6 +1,5 @@
 import {NumberValue, Schema} from '@coveo/bueno';
 import {
-  RegularFacet,
   CategoryFacet,
   DateFacet,
   NumericFacet,
@@ -84,13 +83,13 @@ export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
           const props = {isCollapsed: this.shouldCollapseFacet(index)};
 
           switch (facet.state.type) {
-            case 'regular':
-              return (
-                <atomic-commerce-facet
-                  {...props}
-                  facet={facet as RegularFacet}
-                ></atomic-commerce-facet>
-              );
+            // case 'regular':
+            //   return (
+            //     <atomic-commerce-facet
+            //       {...props}
+            //       facet={facet as RegularFacet}
+            //     ></atomic-commerce-facet>
+            //   );
             case 'numericalRange':
               return (
                 <atomic-commerce-numeric-facet

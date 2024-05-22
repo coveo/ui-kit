@@ -30,7 +30,7 @@ import {
 } from '../../../common/formats/format-common';
 import {initializePopover} from '../../../search/facets/atomic-popover/popover-type';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
-import type {Range} from '../facet-number-input/atomic-commerce-facet-number-input';
+import {Range} from '../facet-number-input/atomic-commerce-facet-number-input';
 
 /**
  * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
@@ -48,7 +48,7 @@ export class AtomicCommerceNumericFacet
   @InitializeBindings() public bindings!: Bindings;
   @Element() private host!: HTMLElement;
 
-  @State() private range?: Range;
+  @State() private inputRange?: Range; // TODO: test with range from state
 
   @BindStateToController('facet')
   @State()
@@ -112,7 +112,7 @@ export class AtomicCommerceNumericFacet
     initializePopover(this.host, {
       ...facetInfo,
       hasValues: () => this.hasValues,
-      numberOfActiveValues: () => this.numberOfSelectedValues,
+      numberOfActiveValues: () => this.state.numberOfSelectedValues,
     });
   }
 
@@ -125,10 +125,11 @@ export class AtomicCommerceNumericFacet
 
   @Listen('atomic/numberInputApply')
   public applyNumberInput({detail}: CustomEvent<Range>) {
-    this.range = {start: detail.start, end: detail.end};
+    this.inputRange = {start: detail.start, end: detail.end};
   }
 
   public render() {
+    console.log(this.state.numberOfSelectedValues);
     const {
       bindings: {i18n},
     } = this;
@@ -150,7 +151,7 @@ export class AtomicCommerceNumericFacet
                 this.facet.deselectAll();
                 this.facet.setRanges([]);
               }}
-              numberOfActiveValues={this.numberOfSelectedValues}
+              numberOfActiveValues={this.state.numberOfSelectedValues}
               isCollapsed={this.isCollapsed}
               headingLevel={0}
               onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
@@ -163,11 +164,9 @@ export class AtomicCommerceNumericFacet
                   bindings={this.bindings}
                   label={this.displayName}
                   type={'any'}
-                  facet={this.facet}
                   state={this.facetState}
-                  applyRangeCallback={(start, end) =>
-                    this.setRanges(start, end)
-                  }
+                  setRangeCallback={(start, end) => this.setRanges(start, end)}
+                  getRangeCallback={() => this.range}
                   // start={this.range?.start}
                   // end={this.range?.end}
                   domainMin={this.state.domain?.min}
@@ -220,19 +219,16 @@ export class AtomicCommerceNumericFacet
     return this.state.displayName || 'no-label';
   }
 
-  private get numberOfSelectedValues() {
-    if (this.range) {
-      return 1;
+  private get range(): NumericFacetValue | undefined {
+    if (this.state.numberOfSelectedValues === 0) {
+      return;
     }
 
-    return (
-      this.facet?.state.values.filter(({state}) => state === 'selected')
-        .length || 0
-    );
+    return this.facet.state.values.filter(({state}) => state === 'selected')[0];
   }
 
   private get hasInputRange() {
-    return !!this.range;
+    return !!this.inputRange;
   }
 
   private get shouldRenderValues() {
@@ -276,10 +272,7 @@ export class AtomicCommerceNumericFacet
   }
 
   private get hasValues() {
-    if (this.state.values.length) {
-      return true;
-    }
-
+    // TODO: check for input once we have 2 controllers
     return !!this.valuesToRender.length;
   }
 

@@ -1,9 +1,11 @@
-import {NumericFacet, NumericFacetState} from '@coveo/headless/commerce';
+import {NumericFacetState} from '@coveo/headless/commerce';
 import {Component, h, Prop, Event, EventEmitter, State} from '@stencil/core';
 import {AnyBindings, NumberInputType} from '../../../../components';
 import {Button} from '../../../common/button';
+import {NumericFilterState} from '../../../common/types';
 
-export type Range = {start: number; end: number}; // TODO: remove!
+// TODO: add in headless/commerce maybe
+export type Range = {start: number; end: number}; // TODO: rename to be more specific. e.g InputRange (numeric input range)
 
 /**
  * Internal component made to be integrated in a NumericFacet.
@@ -26,22 +28,24 @@ export class FacetNumberInput {
   @Prop() domainMax: number = Number.MAX_SAFE_INTEGER;
   @Prop() public bindings!: AnyBindings;
   @Prop() public type!: NumberInputType;
-  @Prop() public facet!: NumericFacet;
-  @Prop() public state!: NumericFacetState; // TODO: support other controller types (as long there is facetId and ({min, max}) domain)
+  // @Prop() public facet!: NumericFacet;
+  @Prop() public state!: NumericFilterState | NumericFacetState;
   @Prop() public label!: string;
 
   // @Prop() public range?: Range;
-  @Prop() public applyRangeCallback!: (start: number, end: number) => void;
+  @Prop() public setRangeCallback!: (start: number, end: number) => void;
+  @Prop() public getRangeCallback!: () => Range | undefined;
 
   @Event({
     eventName: 'atomic/numberInputApply',
   })
   private applyInput!: EventEmitter;
 
-  // public connectedCallback() {
-  //   this.start = this.domainMin;
-  //   this.end = this.domainMax;
-  // }
+  public connectedCallback() {
+    const range = this.getRangeCallback();
+    this.start = range?.start;
+    this.end = range?.end;
+  }
 
   private apply() {
     if (!this.startRef.validity.valid || !this.endRef.validity.valid) {
@@ -52,7 +56,7 @@ export class FacetNumberInput {
       start: this.start,
       end: this.end,
     });
-    this.applyRangeCallback(this.start!, this.end!);
+    this.setRangeCallback(this.start!, this.end!);
   }
 
   render() {
